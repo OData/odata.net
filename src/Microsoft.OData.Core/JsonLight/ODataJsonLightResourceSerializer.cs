@@ -56,6 +56,18 @@ namespace Microsoft.OData.JsonLight
             {
                 this.ODataAnnotationWriter.WriteODataTypeInstanceAnnotation(typeName);
             }
+            else
+            {
+                // close path for roundtrip :
+                // write it to the wire if @odata.type is ever read from payload into Resource.InstanceAnnotations.
+                ODataInstanceAnnotation odataTypeAnnotation = resourceState.Resource.InstanceAnnotations.FirstOrDefault(
+                    s => string.Equals(ODataAnnotationNames.ODataType, s.Name, StringComparison.OrdinalIgnoreCase));
+                if (odataTypeAnnotation != null)
+                {
+                    string rawTypeName = (string)odataTypeAnnotation.Value.FromODataValue();
+                    this.ODataAnnotationWriter.WriteODataTypeInstanceAnnotation(rawTypeName, writeRawValue: true);
+                }
+            }
 
             // Write the "@odata.id": "Entity Id"
             Uri id;

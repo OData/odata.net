@@ -20,6 +20,7 @@
 
         private ODataMessageWriterSettings writerSettings = new ODataMessageWriterSettings
         {
+            ShouldIncludeAnnotation = (annotationName) => true,
             Validations = WriterValidations.FullValidation & ~WriterValidations.ThrowOnUndeclaredProperty
         };
 
@@ -35,6 +36,7 @@
             this.serverModel = new EdmModel();
             var addressType = new EdmComplexType("Server.NS", "Address");
             addressType.AddStructuralProperty("Street", EdmPrimitiveTypeKind.String);
+            addressType.AddProperty(new EdmStructuralProperty(addressType, "MyEdmUntypedProp3", EdmCoreModel.Instance.GetUntyped()));
             this.serverModel.AddElement(addressType);
 
             // non-open entity type
@@ -42,6 +44,7 @@
             this.serverModel.AddElement(this.serverEntityType);
             this.serverEntityType.AddKeys(this.serverEntityType.AddStructuralProperty("Id", EdmPrimitiveTypeKind.Int32));
             this.serverEntityType.AddStructuralProperty("Address", new EdmComplexTypeReference(addressType, true));
+            this.serverEntityType.AddStructuralProperty("MyEdmUntypedProp1", EdmCoreModel.Instance.GetUntyped());
 
             // open entity type
             this.serverOpenEntityType = new EdmEntityType("Server.NS", "ServerOpenEntityType",
@@ -49,6 +52,7 @@
             this.serverModel.AddElement(this.serverOpenEntityType);
             this.serverOpenEntityType.AddKeys(this.serverOpenEntityType.AddStructuralProperty("Id", EdmPrimitiveTypeKind.Int32));
             this.serverOpenEntityType.AddStructuralProperty("Address", new EdmComplexTypeReference(addressType, true));
+            this.serverOpenEntityType.AddStructuralProperty("MyEdmUntypedProp2", EdmCoreModel.Instance.GetUntyped());
 
             EdmEntityContainer container = new EdmEntityContainer("Server.NS", "container1");
             this.serverEntitySet = container.AddEntitySet("serverEntitySet", this.serverEntityType);
@@ -72,12 +76,12 @@
                                   ""@instance.AnnotationName_"":""instance value_"",
                                   ""undeclaredComplex1@odata.unknownname1"":""od unkown value 1"",
                                   ""undeclaredComplex1@my.Annotation1"":""my custom value 1"",
-                                  ""undeclaredComplex1@instanceAnnotation1"":""custom annotation value 1"",
+                                  ""undeclaredComplex1@instanceAnnotation1.term1"":""custom annotation value 1"",
                                 ""undeclaredComplex1"":{  ""@odata.type"":""#Server.NS.Address"",
                                                               ""@instance.AnnotationName_"":""instance value_234"",
                                                               ""undeclaredComplex1@odata.unknownname1"":""od unkown value _234"",
                                                               ""undeclaredComplex1@my.Annotation1"":""my custom value _234"",
-                                                              ""undeclaredComplex1@instanceAnnotation1"":""custom annotation value _234"",
+                                                              ""undeclaredComplex1@instanceAnnotation1.term1"":""custom annotation value _234"",
                                                               ""undeclaredComplex1@odata.type"":""Server.NS.UnknownType1"",
                                                               ""undeclaredComplex1"":""hello this is a string."", 
                                                               ""Street"":""No.999,Zixing Rd Minhang"",""UndeclaredStreet"":""No.10000000999,Zixing Rd Minhang""}}";
@@ -99,6 +103,9 @@
             });
 
             entry.Properties.Count().Should().Be(2);
+            complex1.Properties.Count().Should().Be(3);
+            complex1.InstanceAnnotations.Count().Should().Be(1);
+            complex1.InstanceAnnotations.First().Value.As<ODataPrimitiveValue>().Value.Should().Be("#Server.NS.Address");
 
             ODataProperty undeclaredComplex1Prop = complex1.Properties.Single(s => string.Equals(s.Name, "undeclaredComplex1"));
             (undeclaredComplex1Prop.Value as ODataUntypedValue).RawValue.Should().Be("\"hello this is a string.\"");
@@ -106,15 +113,18 @@
             undeclaredComplex1Prop.InstanceAnnotations.First().Value.As<ODataUntypedValue>().RawValue.Should().Be("\"od unkown value _234\"");
             undeclaredComplex1Prop.InstanceAnnotations.Last().Value.As<ODataUntypedValue>().RawValue.Should().Be("\"custom annotation value _234\"");
 
-            return; // roundtrip test: writer
             entry.MetadataBuilder = new Microsoft.OData.Evaluation.NoOpResourceMetadataBuilder(entry);
             string result = this.WriteEntryPayload(this.serverOpenEntitySet, this.serverOpenEntityType, writer =>
             {
                 writer.WriteStart(entry);
+                writer.WriteStart(new ODataNestedResourceInfo() { Name = "undeclaredComplex1" });
+                writer.WriteStart(complex1);
+                writer.WriteEnd();
+                writer.WriteEnd();
                 writer.WriteEnd();
             });
 
-            result.Should().Be("{\"@odata.context\":\"http://www.sampletest.com/$metadata#serverOpenEntitySet/$entity\",\"Id\":61880128,\"UndeclaredFloatId\":12.3,\"undeclaredComplex1\":{\"@odata.type\":\"#Server.NS.Address\",\"undeclaredComplex1@odata.unknownname1\":\"od unkown value _234\",\"undeclaredComplex1@odata.type\":\"Server.NS.UnknownType1\",\"undeclaredComplex1@my.Annotation1\":\"my custom value _234\",\"undeclaredComplex1@instanceAnnotation1\":\"custom annotation value _234\",\"undeclaredComplex1\":\"hello this is a string.\",\"Street\":\"No.999,Zixing Rd Minhang\",\"UndeclaredStreet\":\"No.10000000999,Zixing Rd Minhang\"}}");
+            result.Should().Be("{\"@odata.context\":\"http://www.sampletest.com/$metadata#serverOpenEntitySet/$entity\",\"Id\":61880128,\"UndeclaredFloatId\":12.3,\"undeclaredComplex1\":{\"@odata.type\":\"#Server.NS.Address\",\"undeclaredComplex1@odata.unknownname1\":\"od unkown value _234\",\"undeclaredComplex1@odata.type\":\"Server.NS.UnknownType1\",\"undeclaredComplex1@my.Annotation1\":\"my custom value _234\",\"undeclaredComplex1@instanceAnnotation1.term1\":\"custom annotation value _234\",\"undeclaredComplex1\":\"hello this is a string.\",\"Street\":\"No.999,Zixing Rd Minhang\",\"UndeclaredStreet\":\"No.10000000999,Zixing Rd Minhang\"}}");
         }
 
         /// <summary>
@@ -127,12 +137,12 @@
                                   ""@instance.AnnotationName_"":""instance value_"",
                                   ""undeclaredComplex1@odata.unknownname1"":""od unkown value 1"",
                                   ""undeclaredComplex1@my.Annotation1"":""my custom value 1"",
-                                  ""undeclaredComplex1@instanceAnnotation1"":""custom annotation value 1"",
+                                  ""undeclaredComplex1@instanceAnnotation1.term1"":""custom annotation value 1"",
                                 ""undeclaredComplex1"":{  ""@odata.type"":""#Server.NS.Address"",
                                                               ""@instance.AnnotationName_"":""instance value_234"",
                                                               ""undeclaredComplex1@odata.unknownname1"":""od unkown value _234"",
                                                               ""undeclaredComplex1@my.Annotation1"":""my custom value _234"",
-                                                              ""undeclaredComplex1@instanceAnnotation1"":""custom annotation value _234"",
+                                                              ""undeclaredComplex1@instanceAnnotation1.term1"":""custom annotation value _234"",
                                                               ""undeclaredComplex1@odata.type"":""Server.NS.UnknownType1"",
                                                               ""undeclaredComplex1"":""hello this is a string."", 
                                                               ""Street"":""No.999,Zixing Rd Minhang"",""UndeclaredStreet"":""No.10000000999,Zixing Rd Minhang""}}";
@@ -155,10 +165,8 @@
 
             entry.Properties.Count().Should().Be(2);
             complex1.Properties.Count().Should().Be(3);
-            return; // TODO when support reading annotations for complex-as-resource
-            complex1.InstanceAnnotations.Count().Should().Be(3);
-            complex1.InstanceAnnotations.First().Value.As<ODataUntypedValue>().RawValue.Should().Be("\"od unkown value 1\"");
-            complex1.InstanceAnnotations.Last().Value.As<ODataUntypedValue>().RawValue.Should().Be("\"custom annotation value 1\"");
+            complex1.InstanceAnnotations.Count().Should().Be(1);
+            complex1.InstanceAnnotations.First().Value.As<ODataPrimitiveValue>().Value.Should().Be("#Server.NS.Address");
 
             ODataProperty undeclaredComplex1Prop = complex1.Properties.Single(s => string.Equals(s.Name, "undeclaredComplex1"));
             (undeclaredComplex1Prop.Value as ODataUntypedValue).RawValue.Should().Be("\"hello this is a string.\"");
@@ -166,15 +174,18 @@
             undeclaredComplex1Prop.InstanceAnnotations.First().Value.As<ODataUntypedValue>().RawValue.Should().Be("\"od unkown value _234\"");
             undeclaredComplex1Prop.InstanceAnnotations.Last().Value.As<ODataUntypedValue>().RawValue.Should().Be("\"custom annotation value _234\"");
 
-            return; // roundtrip test: writer
             entry.MetadataBuilder = new Microsoft.OData.Evaluation.NoOpResourceMetadataBuilder(entry);
             string result = this.WriteEntryPayload(this.serverEntitySet, this.serverEntityType, writer =>
             {
                 writer.WriteStart(entry);
+                writer.WriteStart(new ODataNestedResourceInfo() { Name = "undeclaredComplex1" });
+                writer.WriteStart(complex1);
+                writer.WriteEnd();
+                writer.WriteEnd();
                 writer.WriteEnd();
             });
 
-            result.Should().Be("{\"@odata.context\":\"http://www.sampletest.com/$metadata#serverEntitySet/$entity\",\"Id\":61880128,\"UndeclaredFloatId\":12.3,\"undeclaredComplex1@odata.unknownname1\":\"od unkown value 1\",\"undeclaredComplex1@my.Annotation1\":\"my custom value 1\",\"undeclaredComplex1@instanceAnnotation1\":\"custom annotation value 1\",\"undeclaredComplex1\":{\"undeclaredComplex1@odata.unknownname1\":\"od unkown value _234\",\"undeclaredComplex1@odata.type\":\"Server.NS.UnknownType1\",\"undeclaredComplex1@my.Annotation1\":\"my custom value _234\",\"undeclaredComplex1@instanceAnnotation1\":\"custom annotation value _234\",\"undeclaredComplex1\":\"hello this is a string.\",\"Street\":\"No.999,Zixing Rd Minhang\",\"UndeclaredStreet\":\"No.10000000999,Zixing Rd Minhang\"}}");
+            result.Should().Be("{\"@odata.context\":\"http://www.sampletest.com/$metadata#serverEntitySet/$entity\",\"Id\":61880128,\"UndeclaredFloatId\":12.3,\"undeclaredComplex1\":{\"@odata.type\":\"#Server.NS.Address\",\"undeclaredComplex1@odata.unknownname1\":\"od unkown value _234\",\"undeclaredComplex1@odata.type\":\"Server.NS.UnknownType1\",\"undeclaredComplex1@my.Annotation1\":\"my custom value _234\",\"undeclaredComplex1@instanceAnnotation1.term1\":\"custom annotation value _234\",\"undeclaredComplex1\":\"hello this is a string.\",\"Street\":\"No.999,Zixing Rd Minhang\",\"UndeclaredStreet\":\"No.10000000999,Zixing Rd Minhang\"}}");
         }
 
         #endregion
@@ -185,7 +196,7 @@
         public void ReadNonOpenNullTest()
         {
             // non-open entity's unknown property type including string & numeric values
-            const string payload = @"{""@odata.context"":""http://www.sampletest.com/$metadata#serverEntitySet/$entity"",""Id"":61880128,""UndeclaredAddress1@odata.type"":""NS1.unknownTypeName123"",""UndeclaredAddress1@odata.unknownName1"":""uknown odata.xxx value1"",""UndeclaredAddress1@abcdefg"":""uknown abcdefghijk value2"",""UndeclaredAddress1"":null}";
+            const string payload = @"{""@odata.context"":""http://www.sampletest.com/$metadata#serverEntitySet/$entity"",""Id"":61880128,""UndeclaredAddress1@odata.type"":""NS1.unknownTypeName123"",""UndeclaredAddress1@odata.unknownName1"":""uknown odata.xxx value1"",""UndeclaredAddress1@NS1.abcdefg"":""uknown abcdefghijk value2"",""UndeclaredAddress1"":null}";
             ODataResource entry = null;
             ODataResource complex1 = null;
             this.ReadEntryPayload(payload, this.serverEntitySet, this.serverEntityType, reader =>
@@ -209,8 +220,8 @@
             val.InstanceAnnotations.Count().Should().Be(3);
             val.InstanceAnnotations.First().Value.As<ODataUntypedValue>().RawValue.Should().Be("\"NS1.unknownTypeName123\"");
             val.InstanceAnnotations.Last().Value.As<ODataUntypedValue>().RawValue.Should().Be("\"uknown abcdefghijk value2\"");
+            complex1.Should().BeNull();
 
-            return; // roundtrip test: writer
             entry.MetadataBuilder = new Microsoft.OData.Evaluation.NoOpResourceMetadataBuilder(entry);
             string result = this.WriteEntryPayload(this.serverEntitySet, this.serverEntityType, writer =>
             {
@@ -225,7 +236,7 @@
         public void ReadNonOpenknownTypeBoolTest()
         {
             // non-open entity's unknown property type including string & numeric values
-            const string payload = @"{""@odata.context"":""http://www.sampletest.com/$metadata#serverEntitySet/$entity"",""Id"":61880128,""UndeclaredFloatId"":12.3,""Address"":{""Street"":""No.999,Zixing Rd Minhang"",""UndeclaredBool@odata.unknownName1"":""unknown odata.xxx value1"",""UndeclaredBool@abcdefg"":""unknown abcdefghijk value2"",""UndeclaredBool"":false}}";
+            const string payload = @"{""@odata.context"":""http://www.sampletest.com/$metadata#serverEntitySet/$entity"",""Id"":61880128,""UndeclaredFloatId"":12.3,""Address"":{""Street"":""No.999,Zixing Rd Minhang"",""UndeclaredBool@odata.unknownName1"":""unknown odata.xxx value1"",""UndeclaredBool@NS1.abcdefg"":""unknown abcdefghijk value2"",""UndeclaredBool"":false}}";
             ODataResource entry = null;
             ODataResource complex1 = null;
             this.ReadEntryPayload(payload, this.serverEntitySet, this.serverEntityType, reader =>
@@ -253,11 +264,14 @@
             val.InstanceAnnotations.First().Value.As<ODataUntypedValue>().RawValue.Should().Be("\"unknown odata.xxx value1\"");
             val.InstanceAnnotations.Last().Value.As<ODataUntypedValue>().RawValue.Should().Be("\"unknown abcdefghijk value2\"");
 
-            return; // roundtrip test: writer
             entry.MetadataBuilder = new Microsoft.OData.Evaluation.NoOpResourceMetadataBuilder(entry);
             string result = this.WriteEntryPayload(this.serverEntitySet, this.serverEntityType, writer =>
             {
                 writer.WriteStart(entry);
+                writer.WriteStart(new ODataNestedResourceInfo() { Name = "Address" });
+                writer.WriteStart(complex1);
+                writer.WriteEnd();
+                writer.WriteEnd();
                 writer.WriteEnd();
             });
 
@@ -268,7 +282,7 @@
         public void ReadNonOpenknownTypeStringTest()
         {
             // non-open entity's unknown property type including string & numeric values
-            const string payload = @"{""@odata.context"":""http://www.sampletest.com/$metadata#serverEntitySet/$entity"",""Id"":61880128,""UndeclaredFloatId"":12.3,""Address"":{""Street"":""No.999,Zixing Rd Minhang"",""UndeclaredStreet@odata.type"":""Edm.String"",""UndeclaredStreet@odata.unknownName1"":""unknown odata.xxx value1"",""UndeclaredStreet@abcdefg"":""unknown abcdefghijk value2"",""UndeclaredStreet"":""No.10000000999,Zixing Rd Minhang""}}";
+            const string payload = @"{""@odata.context"":""http://www.sampletest.com/$metadata#serverEntitySet/$entity"",""Id"":61880128,""UndeclaredFloatId"":12.3,""Address"":{""Street"":""No.999,Zixing Rd Minhang"",""UndeclaredStreet@odata.type"":""Edm.String"",""UndeclaredStreet@odata.unknownName1"":""unknown odata.xxx value1"",""UndeclaredStreet@NS1.abcdefg"":""unknown abcdefghijk value2"",""UndeclaredStreet"":""No.10000000999,Zixing Rd Minhang""}}";
             ODataResource entry = null;
             ODataResource complex1 = null;
             this.ReadEntryPayload(payload, this.serverEntitySet, this.serverEntityType, reader =>
@@ -296,22 +310,25 @@
             val.InstanceAnnotations.First().Value.As<ODataUntypedValue>().RawValue.Should().Be("\"Edm.String\"");
             val.InstanceAnnotations.Last().Value.As<ODataUntypedValue>().RawValue.Should().Be("\"unknown abcdefghijk value2\"");
 
-            return; // roundtrip test: writer
             entry.MetadataBuilder = new Microsoft.OData.Evaluation.NoOpResourceMetadataBuilder(entry);
             string result = this.WriteEntryPayload(this.serverEntitySet, this.serverEntityType, writer =>
             {
                 writer.WriteStart(entry);
+                writer.WriteStart(new ODataNestedResourceInfo() { Name = "Address" });
+                writer.WriteStart(complex1);
+                writer.WriteEnd();
+                writer.WriteEnd();
                 writer.WriteEnd();
             });
 
-            result.Should().Be("{\"@odata.context\":\"http://www.sampletest.com/$metadata#serverEntitySet/$entity\",\"Id\":61880128,\"UndeclaredFloatId\":12.3,\"Address\":{\"Street\":\"No.999,Zixing Rd Minhang\",\"UndeclaredStreet@odata.type\":\"Edm.String\",\"UndeclaredStreet@odata.unknownName1\":\"unknown odata.xxx value1\",\"UndeclaredStreet@abcdefg\":\"unknown abcdefghijk value2\",\"UndeclaredStreet\":\"No.10000000999,Zixing Rd Minhang\"}}");
+            result.Should().Be("{\"@odata.context\":\"http://www.sampletest.com/$metadata#serverEntitySet/$entity\",\"Id\":61880128,\"UndeclaredFloatId\":12.3,\"Address\":{\"Street\":\"No.999,Zixing Rd Minhang\",\"UndeclaredStreet@odata.type\":\"Edm.String\",\"UndeclaredStreet@odata.unknownName1\":\"unknown odata.xxx value1\",\"UndeclaredStreet@NS1.abcdefg\":\"unknown abcdefghijk value2\",\"UndeclaredStreet\":\"No.10000000999,Zixing Rd Minhang\"}}");
         }
 
         [Fact]
         public void ReadNonOpenknownTypeNumericTest()
         {
             // non-open entity's unknown property type including string & numeric values
-            const string payload = @"{""@odata.context"":""http://www.sampletest.com/$metadata#serverEntitySet/$entity"",""Id"":61880128,""UndeclaredFloatId"":12.3,""Address"":{""Street"":""No.999,Zixing Rd Minhang"",""UndeclaredStreetNo@odata.type"":""Edm.Double"",""UndeclaredStreetNo@odata.unknownName1"":""unknown odata.xxx value1"",""UndeclaredStreetNo@abcdefg"":""unknown abcdefghijk value2"",""UndeclaredStreetNo"":""12""}}";
+            const string payload = @"{""@odata.context"":""http://www.sampletest.com/$metadata#serverEntitySet/$entity"",""Id"":61880128,""UndeclaredFloatId"":12.3,""Address"":{""Street"":""No.999,Zixing Rd Minhang"",""UndeclaredStreetNo@odata.type"":""Edm.Double"",""UndeclaredStreetNo@odata.unknownName1"":""unknown odata.xxx value1"",""UndeclaredStreetNo@NS1.abcdefg"":""unknown abcdefghijk value2"",""UndeclaredStreetNo"":""12""}}";
             ODataResource entry = null;
             ODataResource complex1 = null;
             this.ReadEntryPayload(payload, this.serverEntitySet, this.serverEntityType, reader =>
@@ -339,22 +356,25 @@
             val.InstanceAnnotations.First().Value.As<ODataUntypedValue>().RawValue.Should().Be("\"Edm.Double\"");
             val.InstanceAnnotations.Last().Value.As<ODataUntypedValue>().RawValue.Should().Be("\"unknown abcdefghijk value2\"");
 
-            return; // roundtrip test: writer
             entry.MetadataBuilder = new Microsoft.OData.Evaluation.NoOpResourceMetadataBuilder(entry);
             string result = this.WriteEntryPayload(this.serverEntitySet, this.serverEntityType, writer =>
             {
                 writer.WriteStart(entry);
+                writer.WriteStart(new ODataNestedResourceInfo() { Name = "Address" });
+                writer.WriteStart(complex1);
+                writer.WriteEnd();
+                writer.WriteEnd();
                 writer.WriteEnd();
             });
 
-            result.Should().Be("{\"@odata.context\":\"http://www.sampletest.com/$metadata#serverEntitySet/$entity\",\"Id\":61880128,\"UndeclaredFloatId\":12.3,\"Address\":{\"Street\":\"No.999,Zixing Rd Minhang\",\"UndeclaredStreetNo@odata.type\":\"Edm.Double\",\"UndeclaredStreetNo@odata.unknownName1\":\"unknown odata.xxx value1\",\"UndeclaredStreetNo@abcdefg\":\"unknown abcdefghijk value2\",\"UndeclaredStreetNo\":12.0}}");
+            result.Should().Be("{\"@odata.context\":\"http://www.sampletest.com/$metadata#serverEntitySet/$entity\",\"Id\":61880128,\"UndeclaredFloatId\":12.3,\"Address\":{\"Street\":\"No.999,Zixing Rd Minhang\",\"UndeclaredStreetNo@odata.type\":\"Edm.Double\",\"UndeclaredStreetNo@odata.unknownName1\":\"unknown odata.xxx value1\",\"UndeclaredStreetNo@NS1.abcdefg\":\"unknown abcdefghijk value2\",\"UndeclaredStreetNo\":12.0}}");
         }
 
         [Fact]
         public void ReadNonOpenKnownTypeComplexTest()
         {
             // non-open entity's unknown property type including string & numeric values
-            const string payload = @"{""@odata.context"":""http://www.sampletest.com/$metadata#serverEntitySet/$entity"",""Id"":61880128,""UndeclaredAddress1@odata.unknownName1"":""unknown odata.xxx value1"",""UndeclaredAddress1@abcdefg"":""unknown abcdefghijk value2"",""UndeclaredAddress1"":{""@odata.type"":""#Server.NS.Address"",""Street"":""No.999,Zixing Rd Minhang"",""UndeclaredStreet"":""No.10000000999,Zixing Rd Minhang""}}";
+            const string payload = @"{""@odata.context"":""http://www.sampletest.com/$metadata#serverEntitySet/$entity"",""Id"":61880128,""UndeclaredAddress1@odata.unknownName1"":""unknown odata.xxx value1"",""UndeclaredAddress1@NS1.abcdefg"":""unknown abcdefghijk value2"",""UndeclaredAddress1"":{""@odata.type"":""#Server.NS.Address"",""Street"":""No.999,Zixing Rd Minhang"",""UndeclaredStreet"":""No.10000000999,Zixing Rd Minhang""}}";
             ODataResource entry = null;
             ODataResource complex1 = null;
             this.ReadEntryPayload(payload, this.serverEntitySet, this.serverEntityType, reader =>
@@ -379,27 +399,28 @@
                 .First(s => string.Equals("UndeclaredStreet", s.Name)).Value.As<ODataUntypedValue>()
                 .RawValue.Should().Be(@"""No.10000000999,Zixing Rd Minhang""");
 
-            return; // TODO when support reading annotations for complex-as-resource
-            complex1.InstanceAnnotations.Count().Should().Be(2);
-            complex1.InstanceAnnotations.First().Value.As<ODataUntypedValue>().RawValue.Should().Be("\"unknown odata.xxx value1\"");
-            complex1.InstanceAnnotations.Last().Value.As<ODataUntypedValue>().RawValue.Should().Be("\"unknown abcdefghijk value2\"");
+            complex1.InstanceAnnotations.Count().Should().Be(1);
+            complex1.InstanceAnnotations.First().Value.As<ODataPrimitiveValue>().Value.Should().Be("#Server.NS.Address");
 
-            return; // roundtrip test: writer
             entry.MetadataBuilder = new Microsoft.OData.Evaluation.NoOpResourceMetadataBuilder(entry);
             string result = this.WriteEntryPayload(this.serverEntitySet, this.serverEntityType, writer =>
             {
                 writer.WriteStart(entry);
+                writer.WriteStart(new ODataNestedResourceInfo() { Name = "UndeclaredAddress1" });
+                writer.WriteStart(complex1);
+                writer.WriteEnd();
+                writer.WriteEnd();
                 writer.WriteEnd();
             });
 
-            result.Should().Be("{\"@odata.context\":\"http://www.sampletest.com/$metadata#serverEntitySet/$entity\",\"Id\":61880128,\"UndeclaredAddress1@odata.unknownName1\":\"unknown odata.xxx value1\",\"UndeclaredAddress1@abcdefg\":\"unknown abcdefghijk value2\",\"UndeclaredAddress1\":{\"Street\":\"No.999,Zixing Rd Minhang\",\"UndeclaredStreet\":\"No.10000000999,Zixing Rd Minhang\"}}");
+            result.Should().Be("{\"@odata.context\":\"http://www.sampletest.com/$metadata#serverEntitySet/$entity\",\"Id\":61880128,\"UndeclaredAddress1\":{\"@odata.type\":\"#Server.NS.Address\",\"Street\":\"No.999,Zixing Rd Minhang\",\"UndeclaredStreet\":\"No.10000000999,Zixing Rd Minhang\"}}");
         }
 
         [Fact]
         public void ReadNonOpenKnownTypeCollectionTest()
         {
             const string payload = @"{""@odata.context"":""http://www.sampletest.com/$metadata#serverEntitySet/$entity"",""Id"":61880128,""UndeclaredFloatId"":12.3,
-                UndeclaredCollection1@odata.type:""Collection(Edm.String)"",""UndeclaredCollection1@odata.unknownName1"":""unknown odata.xxx value1"",""UndeclaredCollection1@abcdefg"":""unknown abcdefghijk value2"",UndeclaredCollection1:[""email1@163.com"",""email2@gmail.com"",""email3@gmail2.com""],""Address"":{""Street"":""No.999,Zixing Rd Minhang"",""UndeclaredStreet"":""No.10000000999,Zixing Rd Minhang""}}";
+                UndeclaredCollection1@odata.type:""Collection(Edm.String)"",""UndeclaredCollection1@odata.unknownName1"":""unknown odata.xxx value1"",""UndeclaredCollection1@NS1.abcdefg"":""unknown abcdefghijk value2"",UndeclaredCollection1:[""email1@163.com"",""email2@gmail.com"",""email3@gmail2.com""],""Address"":{""Street"":""No.999,Zixing Rd Minhang"",""UndeclaredStreet"":""No.10000000999,Zixing Rd Minhang""}}";
             ODataResource entry = null;
             ODataResource complex1 = null;
             this.ReadEntryPayload(payload, this.serverEntitySet, this.serverEntityType, reader =>
@@ -426,15 +447,18 @@
 
             complex1.Properties.Count().Should().Be(2);
 
-            return; // roundtrip test: writer
             entry.MetadataBuilder = new Microsoft.OData.Evaluation.NoOpResourceMetadataBuilder(entry);
             string result = this.WriteEntryPayload(this.serverEntitySet, this.serverEntityType, writer =>
             {
                 writer.WriteStart(entry);
+                writer.WriteStart(new ODataNestedResourceInfo() { Name = "Address" });
+                writer.WriteStart(complex1);
+                writer.WriteEnd();
+                writer.WriteEnd();
                 writer.WriteEnd();
             });
 
-            result.Should().Be("{\"@odata.context\":\"http://www.sampletest.com/$metadata#serverEntitySet/$entity\",\"Id\":61880128,\"UndeclaredFloatId\":12.3,\"UndeclaredCollection1@odata.type\":\"Collection(Edm.String)\",\"UndeclaredCollection1@odata.unknownName1\":\"unknown odata.xxx value1\",\"UndeclaredCollection1@abcdefg\":\"unknown abcdefghijk value2\",\"UndeclaredCollection1\":[\"email1@163.com\",\"email2@gmail.com\",\"email3@gmail2.com\"],\"Address\":{\"Street\":\"No.999,Zixing Rd Minhang\",\"UndeclaredStreet\":\"No.10000000999,Zixing Rd Minhang\"}}");
+            result.Should().Be("{\"@odata.context\":\"http://www.sampletest.com/$metadata#serverEntitySet/$entity\",\"Id\":61880128,\"UndeclaredFloatId\":12.3,\"UndeclaredCollection1@odata.type\":\"Collection(Edm.String)\",\"UndeclaredCollection1@odata.unknownName1\":\"unknown odata.xxx value1\",\"UndeclaredCollection1@NS1.abcdefg\":\"unknown abcdefghijk value2\",\"UndeclaredCollection1\":[\"email1@163.com\",\"email2@gmail.com\",\"email3@gmail2.com\"],\"Address\":{\"Street\":\"No.999,Zixing Rd Minhang\",\"UndeclaredStreet\":\"No.10000000999,Zixing Rd Minhang\"}}");
         }
         #endregion
 
@@ -444,7 +468,7 @@
         public void ReadNonOpenUnknownNullTest()
         {
             // non-open entity's unknown property type including string & numeric values
-            const string payload = @"{""@odata.context"":""http://www.sampletest.com/$metadata#serverEntitySet/$entity"",""Id"":61880128,""UndeclaredAddress1@odata.unknownName1"":""unknown odata.xxx value1"",""UndeclaredAddress1@abcdefg"":""unknown abcdefghijk value2"",""UndeclaredAddress1"":"
+            const string payload = @"{""@odata.context"":""http://www.sampletest.com/$metadata#serverEntitySet/$entity"",""Id"":61880128,""UndeclaredAddress1@odata.unknownName1"":""unknown odata.xxx value1"",""UndeclaredAddress1@NS1.abcdefg"":""unknown abcdefghijk value2"",""UndeclaredAddress1"":"
                 + @"null,""UndeclaredAddress1@odata.type"":""Server.NS.UndefComplex1""}";
             ODataResource entry = null;
             ODataResource complex1 = null;
@@ -469,8 +493,8 @@
             val.InstanceAnnotations.Count().Should().Be(3);
             val.InstanceAnnotations.First().Value.As<ODataUntypedValue>().RawValue.Should().Be("\"unknown odata.xxx value1\"");
             val.InstanceAnnotations.Last().Value.As<ODataUntypedValue>().RawValue.Should().Be("\"unknown abcdefghijk value2\"");
+            complex1.Should().BeNull();
 
-            return; // roundtrip test: writer
             entry.MetadataBuilder = new Microsoft.OData.Evaluation.NoOpResourceMetadataBuilder(entry);
             string result = this.WriteEntryPayload(this.serverEntitySet, this.serverEntityType, writer =>
             {
@@ -478,14 +502,14 @@
                 writer.WriteEnd();
             });
 
-            result.Should().Be("{\"@odata.context\":\"http://www.sampletest.com/$metadata#serverEntitySet/$entity\",\"Id\":61880128,\"UndeclaredAddress1@odata.unknownName1\":\"unknown odata.xxx value1\",\"UndeclaredAddress1@odata.type\":\"Server.NS.UndefComplex1\",\"UndeclaredAddress1@abcdefg\":\"unknown abcdefghijk value2\",\"UndeclaredAddress1\":null}");
+            result.Should().Be("{\"@odata.context\":\"http://www.sampletest.com/$metadata#serverEntitySet/$entity\",\"Id\":61880128,\"UndeclaredAddress1@odata.unknownName1\":\"unknown odata.xxx value1\",\"UndeclaredAddress1@odata.type\":\"Server.NS.UndefComplex1\",\"UndeclaredAddress1@NS1.abcdefg\":\"unknown abcdefghijk value2\",\"UndeclaredAddress1\":null}");
         }
 
         [Fact]
         public void ReadNonOpenUnknownTypePrimitiveTest()
         {
             // non-open entity's unknown property type including string & numeric values
-            const string payload = @"{""@odata.context"":""http://www.sampletest.com/$metadata#serverEntitySet/$entity"",""Id"":61880128,""UndeclaredFloatId@odata.unknownName1"":""unknown odata.xxx value1"",""UndeclaredFloatId@abcdefg"":""unknown abcdefghijk value2"",""UndeclaredFloatId"":12.3,""Address"":{""Street"":""No.999,Zixing Rd Minhang"",""UndeclaredStreet"":""No.10000000999,Zixing Rd Minhang""}}";
+            const string payload = @"{""@odata.context"":""http://www.sampletest.com/$metadata#serverEntitySet/$entity"",""Id"":61880128,""UndeclaredFloatId@odata.unknownName1"":""unknown odata.xxx value1"",""UndeclaredFloatId@NS1.abcdefg"":""unknown abcdefghijk value2"",""UndeclaredFloatId"":12.3,""Address"":{""Street"":""No.999,Zixing Rd Minhang"",""UndeclaredStreet"":""No.10000000999,Zixing Rd Minhang""}}";
             ODataResource entry = null;
             ODataResource complex1 = null;
             this.ReadEntryPayload(payload, this.serverEntitySet, this.serverEntityType, reader =>
@@ -711,7 +735,7 @@
         public void ReadOpenEntryUndeclaredComplexPropertiesWithoutODataTypeTest()
         {
             const string payload = @"{""@odata.context"":""http://www.sampletest.com/$metadata#serverOpenEntitySet/$entity"",""Id"":61880128,""UndeclaredFloatId"":12.3,
-                                  ""undeclaredComplex1@odata.unknownName1"":""unknown odata.xxx value1"",""undeclaredComplex1@abcdefg"":""unknown abcdefghijk value2"",
+                                  ""undeclaredComplex1@odata.unknownName1"":""unknown odata.xxx value1"",""undeclaredComplex1@NS1.abcdefg"":""unknown abcdefghijk value2"",
                                   ""undeclaredComplex1"":{""MyProp1"":""aaaaaaaaa"",""UndeclaredProp1"":""bbbbbbb""},""Address"":{""Street"":""No.999,Zixing Rd Minhang"",""UndeclaredStreet"":""No.10000000999,Zixing Rd Minhang""}}";
             ODataResource entry = null;
             ODataResource complex1 = null;
@@ -738,15 +762,18 @@
             val.InstanceAnnotations.Last().Value.As<ODataUntypedValue>().RawValue.Should().Be("\"unknown abcdefghijk value2\"");
             complex1.Properties.Count().Should().Be(2);
 
-            return; // roundtrip test: writer
             entry.MetadataBuilder = new Microsoft.OData.Evaluation.NoOpResourceMetadataBuilder(entry);
             string result = this.WriteEntryPayload(this.serverEntitySet, this.serverEntityType, writer =>
             {
                 writer.WriteStart(entry);
+                writer.WriteStart(new ODataNestedResourceInfo() { Name = "Address" });
+                writer.WriteStart(complex1);
+                writer.WriteEnd();
+                writer.WriteEnd();
                 writer.WriteEnd();
             });
 
-            result.Should().Be("{\"@odata.context\":\"http://www.sampletest.com/$metadata#serverEntitySet/$entity\",\"Id\":61880128,\"UndeclaredFloatId\":12.3,\"undeclaredComplex1@odata.unknownName1\":\"unknown odata.xxx value1\",\"undeclaredComplex1@abcdefg\":\"unknown abcdefghijk value2\",\"undeclaredComplex1\":{\"MyProp1\":\"aaaaaaaaa\",\"UndeclaredProp1\":\"bbbbbbb\"},\"Address\":{\"Street\":\"No.999,Zixing Rd Minhang\",\"UndeclaredStreet\":\"No.10000000999,Zixing Rd Minhang\"}}");
+            result.Should().Be("{\"@odata.context\":\"http://www.sampletest.com/$metadata#serverEntitySet/$entity\",\"Id\":61880128,\"UndeclaredFloatId\":12.3,\"undeclaredComplex1@odata.unknownName1\":\"unknown odata.xxx value1\",\"undeclaredComplex1@NS1.abcdefg\":\"unknown abcdefghijk value2\",\"undeclaredComplex1\":{\"MyProp1\":\"aaaaaaaaa\",\"UndeclaredProp1\":\"bbbbbbb\"},\"Address\":{\"Street\":\"No.999,Zixing Rd Minhang\",\"UndeclaredStreet\":\"No.10000000999,Zixing Rd Minhang\"}}");
         }
 
         [Fact]
@@ -869,7 +896,7 @@
                                     ""@instance.AnnotationName_"":""instance value_"",
                                   ""undeclaredComplex1@odata.unknownname1"":""od unkown value 1"",
                                   ""undeclaredComplex1@my.Annotation1"":""my custom value 1"",
-                                  ""undeclaredComplex1@instanceAnnotation1"":""custom annotation value 1"",
+                                  ""undeclaredComplex1@instanceAnnotation1.term1"":""custom annotation value 1"",
                                   ""undeclaredComplex1@odata.type"":""Server.NS.UnknownType1"",""undeclaredComplex1"":{""MyProp1"":""aaaaaaaaa"",""UndeclaredProp1"":""bbbbbbb""},""Address"":{""Street"":""No.999,Zixing Rd Minhang"",""UndeclaredStreet"":""No.10000000999,Zixing Rd Minhang""}}";
             ODataResource entry = null;
             ODataResource complex1 = null;
@@ -902,7 +929,7 @@
         {
             const string payload = @"{""@odata.context"":""http://www.sampletest.com/$metadata#serverEntitySet/$entity"",""Id"":61880128,""UndeclaredFloatId"":12.3,
                                   ""undeclaredComplex1"":{""MyProp1"":""aaaaaaaaa"",""UndeclaredProp1"":""bbbbbbb""},""Address"":{""Street"":""No.999,Zixing Rd Minhang"",""UndeclaredStreet"":""No.10000000999,Zixing Rd Minhang""},
-            ""MyEdmUntypedProp1@abc"":1908,MyEdmUntypedProp1:{""MyProp12"":""bbb222"",abc:null}}";
+            ""MyEdmUntypedProp1@NS1.abc"":1908,MyEdmUntypedProp1:{""MyProp12"":""bbb222"",abc:null}}";
             ODataResource entry = null;
             ODataResource complex1 = null;
             ODataResource complex2 = null;
@@ -924,24 +951,28 @@
                     }
                 }
             });
+
             entry.Properties.Count().Should().Be(4);
             entry.Properties.Single(s => string.Equals(s.Name, "undeclaredComplex1"))
                 .Value.As<ODataUntypedValue>().RawValue.Should().Be(@"{""MyProp1"":""aaaaaaaaa"",""UndeclaredProp1"":""bbbbbbb""}");
             entry.Properties.Single(s => string.Equals(s.Name, "MyEdmUntypedProp1"))
                 .Value.As<ODataUntypedValue>().RawValue.Should().Be(@"{""MyProp12"":""bbb222"",abc:null}");
             entry.Properties.Single(s => string.Equals(s.Name, "MyEdmUntypedProp1"))
-                .InstanceAnnotations.Single(s => s.Name == "abc").Value.As<ODataUntypedValue>()
+                .InstanceAnnotations.Single(s => s.Name == "NS1.abc").Value.As<ODataUntypedValue>()
                 .RawValue.Should().Be("1908");
 
-            return; // roundtrip test: writer
             entry.MetadataBuilder = new Microsoft.OData.Evaluation.NoOpResourceMetadataBuilder(entry);
             string result = this.WriteEntryPayload(this.serverEntitySet, this.serverEntityType, writer =>
             {
                 writer.WriteStart(entry);
+                writer.WriteStart(new ODataNestedResourceInfo() { Name = "Address" });
+                writer.WriteStart(complex1);
+                writer.WriteEnd();
+                writer.WriteEnd();
                 writer.WriteEnd();
             });
 
-            result.Should().Be("{\"@odata.context\":\"http://www.sampletest.com/$metadata#serverEntitySet/$entity\",\"Id\":61880128,\"UndeclaredFloatId\":12.3,\"undeclaredComplex1\":{\"MyProp1\":\"aaaaaaaaa\",\"UndeclaredProp1\":\"bbbbbbb\"},\"Address\":{\"Street\":\"No.999,Zixing Rd Minhang\",\"UndeclaredStreet\":\"No.10000000999,Zixing Rd Minhang\"},\"MyEdmUntypedProp1@abc\":1908,\"MyEdmUntypedProp1\":{\"MyProp12\":\"bbb222\",abc:null}}");
+            result.Should().Be("{\"@odata.context\":\"http://www.sampletest.com/$metadata#serverEntitySet/$entity\",\"Id\":61880128,\"UndeclaredFloatId\":12.3,\"undeclaredComplex1\":{\"MyProp1\":\"aaaaaaaaa\",\"UndeclaredProp1\":\"bbbbbbb\"},\"MyEdmUntypedProp1@NS1.abc\":1908,\"MyEdmUntypedProp1\":{\"MyProp12\":\"bbb222\",abc:null},\"Address\":{\"Street\":\"No.999,Zixing Rd Minhang\",\"UndeclaredStreet\":\"No.10000000999,Zixing Rd Minhang\"}}");
         }
 
         [Fact]
@@ -949,11 +980,19 @@
         {
             const string payload = @"{""@odata.context"":""http://www.sampletest.com/$metadata#serverOpenEntitySet/$entity"",""Id"":61880128,""UndeclaredFloatId"":12.3,
                                   ""undeclaredComplex1"":{""MyProp1"":""aaaaaaaaa"",""UndeclaredProp1"":""bbbbbbb""},""Address"":{""Street"":""No.999,Zixing Rd Minhang"",""UndeclaredStreet"":""No.10000000999,Zixing Rd Minhang""},
-            ""MyEdmUntypedProp2@abc"":1908,MyEdmUntypedProp2:{""MyProp12"":""bbb222"",abc:null}}";
+            ""MyEdmUntypedProp2@NS1.abc"":1908,MyEdmUntypedProp2:{""MyProp12"":""bbb222"",abc:null}}";
             ODataResource entry = null;
+            ODataResource complex1 = null;
             this.ReadEntryPayload(payload, this.serverOpenEntitySet, this.serverOpenEntityType, reader =>
             {
-                entry = reader.Item as ODataResource;
+                if (entry == null)
+                {
+                    entry = (reader.Item as ODataResource);
+                }
+                else if (complex1 == null)
+                {
+                    complex1 = (reader.Item as ODataResource);
+                }
             });
 
             entry.Properties.Count().Should().Be(4);
@@ -962,18 +1001,21 @@
             entry.Properties.Single(s => string.Equals(s.Name, "MyEdmUntypedProp2"))
                 .Value.As<ODataUntypedValue>().RawValue.Should().Be(@"{""MyProp12"":""bbb222"",abc:null}");
             entry.Properties.Single(s => string.Equals(s.Name, "MyEdmUntypedProp2"))
-                .InstanceAnnotations.Single(s => s.Name == "abc").Value.As<ODataUntypedValue>()
+                .InstanceAnnotations.Single(s => s.Name == "NS1.abc").Value.As<ODataUntypedValue>()
                 .RawValue.Should().Be("1908");
 
-            return; // roundtrip test: writer
             entry.MetadataBuilder = new Microsoft.OData.Evaluation.NoOpResourceMetadataBuilder(entry);
             string result = this.WriteEntryPayload(this.serverOpenEntitySet, this.serverOpenEntityType, writer =>
             {
                 writer.WriteStart(entry);
+                writer.WriteStart(new ODataNestedResourceInfo() { Name = "Address" });
+                writer.WriteStart(complex1);
+                writer.WriteEnd();
+                writer.WriteEnd();
                 writer.WriteEnd();
             });
 
-            result.Should().Be("{\"@odata.context\":\"http://www.sampletest.com/$metadata#serverOpenEntitySet/$entity\",\"Id\":61880128,\"UndeclaredFloatId\":12.3,\"undeclaredComplex1\":{\"MyProp1\":\"aaaaaaaaa\",\"UndeclaredProp1\":\"bbbbbbb\"},\"Address\":{\"Street\":\"No.999,Zixing Rd Minhang\",\"UndeclaredStreet\":\"No.10000000999,Zixing Rd Minhang\"},\"MyEdmUntypedProp2@abc\":1908,\"MyEdmUntypedProp2\":{\"MyProp12\":\"bbb222\",abc:null}}");
+            result.Should().Be("{\"@odata.context\":\"http://www.sampletest.com/$metadata#serverOpenEntitySet/$entity\",\"Id\":61880128,\"UndeclaredFloatId\":12.3,\"undeclaredComplex1\":{\"MyProp1\":\"aaaaaaaaa\",\"UndeclaredProp1\":\"bbbbbbb\"},\"MyEdmUntypedProp2@NS1.abc\":1908,\"MyEdmUntypedProp2\":{\"MyProp12\":\"bbb222\",abc:null},\"Address\":{\"Street\":\"No.999,Zixing Rd Minhang\",\"UndeclaredStreet\":\"No.10000000999,Zixing Rd Minhang\"}}");
         }
 
         [Fact]
@@ -982,7 +1024,7 @@
             const string payload = @"{""@odata.context"":""http://www.sampletest.com/$metadata#serverEntitySet/$entity"",""Id"":61880128,""UndeclaredFloatId"":12.3,
                                   ""undeclaredComplex1"":{""MyProp1"":""aaaaaaaaa"",""UndeclaredProp1"":""bbbbbbb""},
                                   ""Address"":{""Street"":""No.999,Zixing Rd Minhang"",""UndeclaredStreet"":""No.10000000999,Zixing Rd Minhang"",
-                                               ""MyEdmUntypedProp3@abc"":1908,MyEdmUntypedProp3:{""MyProp12"":""bbb222"",abc:null}}}";
+                                               ""MyEdmUntypedProp3@NS1.abc"":1908,MyEdmUntypedProp3:{""MyProp12"":""bbb222"",abc:null}}}";
             ODataResource entry = null;
             ODataResource complex1 = null;
             ODataResource complex2 = null;
@@ -1013,18 +1055,21 @@
             complex1.Properties.Single(s => string.Equals(s.Name, "MyEdmUntypedProp3"))
                .Value.As<ODataUntypedValue>().RawValue.Should().Be(@"{""MyProp12"":""bbb222"",abc:null}");
             complex1.Properties.Single(s => string.Equals(s.Name, "MyEdmUntypedProp3"))
-                .InstanceAnnotations.Single(s => s.Name == "abc").Value.As<ODataUntypedValue>()
+                .InstanceAnnotations.Single(s => s.Name == "NS1.abc").Value.As<ODataUntypedValue>()
                 .RawValue.Should().Be("1908");
 
-            return; // roundtrip test: writer
             entry.MetadataBuilder = new Microsoft.OData.Evaluation.NoOpResourceMetadataBuilder(entry);
             string result = this.WriteEntryPayload(this.serverEntitySet, this.serverEntityType, writer =>
             {
                 writer.WriteStart(entry);
+                writer.WriteStart(new ODataNestedResourceInfo() { Name = "Address" });
+                writer.WriteStart(complex1);
+                writer.WriteEnd();
+                writer.WriteEnd();
                 writer.WriteEnd();
             });
 
-            result.Should().Be("{\"@odata.context\":\"http://www.sampletest.com/$metadata#serverEntitySet/$entity\",\"Id\":61880128,\"UndeclaredFloatId\":12.3,\"undeclaredComplex1\":{\"MyProp1\":\"aaaaaaaaa\",\"UndeclaredProp1\":\"bbbbbbb\"},\"Address\":{\"Street\":\"No.999,Zixing Rd Minhang\",\"UndeclaredStreet\":\"No.10000000999,Zixing Rd Minhang\",\"MyEdmUntypedProp3@abc\":1908,\"MyEdmUntypedProp3\":{\"MyProp12\":\"bbb222\",abc:null}}}");
+            result.Should().Be("{\"@odata.context\":\"http://www.sampletest.com/$metadata#serverEntitySet/$entity\",\"Id\":61880128,\"UndeclaredFloatId\":12.3,\"undeclaredComplex1\":{\"MyProp1\":\"aaaaaaaaa\",\"UndeclaredProp1\":\"bbbbbbb\"},\"Address\":{\"Street\":\"No.999,Zixing Rd Minhang\",\"UndeclaredStreet\":\"No.10000000999,Zixing Rd Minhang\",\"MyEdmUntypedProp3@NS1.abc\":1908,\"MyEdmUntypedProp3\":{\"MyProp12\":\"bbb222\",abc:null}}}");
         }
         #endregion
 
@@ -1034,12 +1079,20 @@
         {
             const string payload = @"{""@odata.context"":""http://www.sampletest.com/$metadata#serverEntitySet/$entity"",""Id"":61880128,""UndeclaredFloatId"":12.3,
                                   ""undeclaredComplex1"":{""MyProp1"":""aaaaaaaaa"",""UndeclaredProp1"":""bbbbbbb""},""Address"":{""Street"":""No.999,Zixing Rd Minhang"",""UndeclaredStreet"":""No.10000000999,Zixing Rd Minhang""},
-            ""UndeclaredMyEdmUntypedProp1@helloworld"":true,
+            ""UndeclaredMyEdmUntypedProp1@NS1.helloworld"":true,
             ""UndeclaredMyEdmUntypedProp1@odata.type"":""Edm.Untyped"",UndeclaredMyEdmUntypedProp1:{""MyProp12"":""bbb222"",abc:null}}";
             ODataResource entry = null;
+            ODataResource complex1 = null;
             this.ReadEntryPayload(payload, this.serverEntitySet, this.serverEntityType, reader =>
             {
-                entry = reader.Item as ODataResource;
+                if (entry == null)
+                {
+                    entry = (reader.Item as ODataResource);
+                }
+                else if (complex1 == null)
+                {
+                    complex1 = (reader.Item as ODataResource);
+                }
             });
 
             entry.Properties.Count().Should().Be(4);
@@ -1048,21 +1101,24 @@
             entry.Properties.Single(s => string.Equals(s.Name, "UndeclaredMyEdmUntypedProp1"))
                 .Value.As<ODataUntypedValue>().RawValue.Should().Be(@"{""MyProp12"":""bbb222"",abc:null}");
             entry.Properties.Single(s => string.Equals(s.Name, "UndeclaredMyEdmUntypedProp1"))
-                .InstanceAnnotations.Single(s => s.Name == "helloworld").Value.As<ODataUntypedValue>()
+                .InstanceAnnotations.Single(s => s.Name == "NS1.helloworld").Value.As<ODataUntypedValue>()
                 .RawValue.Should().Be("true");
             entry.Properties.Single(s => string.Equals(s.Name, "UndeclaredMyEdmUntypedProp1"))
                 .InstanceAnnotations.Single(s => s.Name == "odata.type").Value.As<ODataUntypedValue>()
                 .RawValue.Should().Be("\"Edm.Untyped\"");
 
-            return; // roundtrip test: writer
             entry.MetadataBuilder = new Microsoft.OData.Evaluation.NoOpResourceMetadataBuilder(entry);
             string result = this.WriteEntryPayload(this.serverEntitySet, this.serverEntityType, writer =>
             {
                 writer.WriteStart(entry);
+                writer.WriteStart(new ODataNestedResourceInfo() { Name = "Address" });
+                writer.WriteStart(complex1);
+                writer.WriteEnd();
+                writer.WriteEnd();
                 writer.WriteEnd();
             });
 
-            result.Should().Be("{\"@odata.context\":\"http://www.sampletest.com/$metadata#serverEntitySet/$entity\",\"Id\":61880128,\"UndeclaredFloatId\":12.3,\"undeclaredComplex1\":{\"MyProp1\":\"aaaaaaaaa\",\"UndeclaredProp1\":\"bbbbbbb\"},\"Address\":{\"Street\":\"No.999,Zixing Rd Minhang\",\"UndeclaredStreet\":\"No.10000000999,Zixing Rd Minhang\"},\"UndeclaredMyEdmUntypedProp1@odata.type\":\"Edm.Untyped\",\"UndeclaredMyEdmUntypedProp1@helloworld\":true,\"UndeclaredMyEdmUntypedProp1\":{\"MyProp12\":\"bbb222\",abc:null}}");
+            result.Should().Be("{\"@odata.context\":\"http://www.sampletest.com/$metadata#serverEntitySet/$entity\",\"Id\":61880128,\"UndeclaredFloatId\":12.3,\"undeclaredComplex1\":{\"MyProp1\":\"aaaaaaaaa\",\"UndeclaredProp1\":\"bbbbbbb\"},\"UndeclaredMyEdmUntypedProp1@odata.type\":\"Edm.Untyped\",\"UndeclaredMyEdmUntypedProp1@NS1.helloworld\":true,\"UndeclaredMyEdmUntypedProp1\":{\"MyProp12\":\"bbb222\",abc:null},\"Address\":{\"Street\":\"No.999,Zixing Rd Minhang\",\"UndeclaredStreet\":\"No.10000000999,Zixing Rd Minhang\"}}");
         }
 
         [Fact]
@@ -1070,12 +1126,20 @@
         {
             const string payload = @"{""@odata.context"":""http://www.sampletest.com/$metadata#serverOpenEntitySet/$entity"",""Id"":61880128,""UndeclaredFloatId"":12.3,
                                   ""undeclaredComplex1"":{""MyProp1"":""aaaaaaaaa"",""UndeclaredProp1"":""bbbbbbb""},""Address"":{""Street"":""No.999,Zixing Rd Minhang"",""UndeclaredStreet"":""No.10000000999,Zixing Rd Minhang""},
-            ""UndeclaredMyEdmUntypedProp2@helloworld"":true,
+            ""UndeclaredMyEdmUntypedProp2@NS1.helloworld"":true,
             ""UndeclaredMyEdmUntypedProp2@odata.type"":""Edm.Untyped"",UndeclaredMyEdmUntypedProp2:{""MyProp12"":""bbb222"",abc:null}}";
             ODataResource entry = null;
+            ODataResource complex1 = null;
             this.ReadEntryPayload(payload, this.serverOpenEntitySet, this.serverOpenEntityType, reader =>
             {
-                entry = reader.Item as ODataResource;
+                if (entry == null)
+                {
+                    entry = (reader.Item as ODataResource);
+                }
+                else if (complex1 == null)
+                {
+                    complex1 = (reader.Item as ODataResource);
+                }
             });
 
             entry.Properties.Count().Should().Be(4);
@@ -1084,21 +1148,24 @@
             entry.Properties.Single(s => string.Equals(s.Name, "UndeclaredMyEdmUntypedProp2"))
                 .Value.As<ODataUntypedValue>().RawValue.Should().Be(@"{""MyProp12"":""bbb222"",abc:null}");
             entry.Properties.Single(s => string.Equals(s.Name, "UndeclaredMyEdmUntypedProp2"))
-                .InstanceAnnotations.Single(s => s.Name == "helloworld").Value.As<ODataUntypedValue>()
+                .InstanceAnnotations.Single(s => s.Name == "NS1.helloworld").Value.As<ODataUntypedValue>()
                 .RawValue.Should().Be("true");
             entry.Properties.Single(s => string.Equals(s.Name, "UndeclaredMyEdmUntypedProp2"))
                 .InstanceAnnotations.Single(s => s.Name == "odata.type").Value.As<ODataUntypedValue>()
                 .RawValue.Should().Be("\"Edm.Untyped\"");
 
-            return; // roundtrip test: writer
             entry.MetadataBuilder = new Microsoft.OData.Evaluation.NoOpResourceMetadataBuilder(entry);
             string result = this.WriteEntryPayload(this.serverOpenEntitySet, this.serverOpenEntityType, writer =>
             {
                 writer.WriteStart(entry);
+                writer.WriteStart(new ODataNestedResourceInfo() { Name = "Address" });
+                writer.WriteStart(complex1);
+                writer.WriteEnd();
+                writer.WriteEnd();
                 writer.WriteEnd();
             });
 
-            result.Should().Be("{\"@odata.context\":\"http://www.sampletest.com/$metadata#serverOpenEntitySet/$entity\",\"Id\":61880128,\"UndeclaredFloatId\":12.3,\"undeclaredComplex1\":{\"MyProp1\":\"aaaaaaaaa\",\"UndeclaredProp1\":\"bbbbbbb\"},\"Address\":{\"Street\":\"No.999,Zixing Rd Minhang\",\"UndeclaredStreet\":\"No.10000000999,Zixing Rd Minhang\"},\"UndeclaredMyEdmUntypedProp2@odata.type\":\"Edm.Untyped\",\"UndeclaredMyEdmUntypedProp2@helloworld\":true,\"UndeclaredMyEdmUntypedProp2\":{\"MyProp12\":\"bbb222\",abc:null}}");
+            result.Should().Be("{\"@odata.context\":\"http://www.sampletest.com/$metadata#serverOpenEntitySet/$entity\",\"Id\":61880128,\"UndeclaredFloatId\":12.3,\"undeclaredComplex1\":{\"MyProp1\":\"aaaaaaaaa\",\"UndeclaredProp1\":\"bbbbbbb\"},\"UndeclaredMyEdmUntypedProp2@odata.type\":\"Edm.Untyped\",\"UndeclaredMyEdmUntypedProp2@NS1.helloworld\":true,\"UndeclaredMyEdmUntypedProp2\":{\"MyProp12\":\"bbb222\",abc:null},\"Address\":{\"Street\":\"No.999,Zixing Rd Minhang\",\"UndeclaredStreet\":\"No.10000000999,Zixing Rd Minhang\"}}");
         }
 
         [Fact]
@@ -1107,7 +1174,7 @@
             const string payload = @"{""@odata.context"":""http://www.sampletest.com/$metadata#serverEntitySet/$entity"",""Id"":61880128,""UndeclaredFloatId"":12.3,
                                   ""undeclaredComplex1"":{""MyProp1"":""aaaaaaaaa"",""UndeclaredProp1"":""bbbbbbb""},
                                   ""Address"":{""Street"":""No.999,Zixing Rd Minhang"",""UndeclaredStreet"":""No.10000000999,Zixing Rd Minhang"",
-                                               ""UndeclaredMyEdmUntypedProp3@helloworld"":true,""UndeclaredMyEdmUntypedProp3@odata.type"":""Edm.Untyped"",UndeclaredMyEdmUntypedProp3:{""MyProp12"":""bbb222"",abc:null}}}";
+                                               ""UndeclaredMyEdmUntypedProp3@NS1.helloworld"":true,""UndeclaredMyEdmUntypedProp3@odata.type"":""Edm.Untyped"",UndeclaredMyEdmUntypedProp3:{""MyProp12"":""bbb222"",abc:null}}}";
             ODataResource entry = null;
             ODataResource complex1 = null;
             ODataResource complex2 = null;
@@ -1136,21 +1203,25 @@
             complex1.Properties.Single(s => string.Equals(s.Name, "UndeclaredMyEdmUntypedProp3"))
                 .Value.As<ODataUntypedValue>().RawValue.Should().Be(@"{""MyProp12"":""bbb222"",abc:null}");
             complex1.Properties.Single(s => string.Equals(s.Name, "UndeclaredMyEdmUntypedProp3"))
-                .InstanceAnnotations.Single(s => s.Name == "helloworld").Value.As<ODataUntypedValue>()
+                .InstanceAnnotations.Single(s => s.Name == "NS1.helloworld").Value.As<ODataUntypedValue>()
                 .RawValue.Should().Be("true");
             complex1.Properties.Single(s => string.Equals(s.Name, "UndeclaredMyEdmUntypedProp3"))
                 .InstanceAnnotations.Single(s => s.Name == "odata.type").Value.As<ODataUntypedValue>()
                 .RawValue.Should().Be("\"Edm.Untyped\"");
+            complex2.Should().BeNull();
 
-            return; // roundtrip test: writer
             entry.MetadataBuilder = new Microsoft.OData.Evaluation.NoOpResourceMetadataBuilder(entry);
             string result = this.WriteEntryPayload(this.serverEntitySet, this.serverEntityType, writer =>
             {
                 writer.WriteStart(entry);
+                writer.WriteStart(new ODataNestedResourceInfo() { Name = "Address" });
+                writer.WriteStart(complex1);
+                writer.WriteEnd();
+                writer.WriteEnd();
                 writer.WriteEnd();
             });
 
-            result.Should().Be("{\"@odata.context\":\"http://www.sampletest.com/$metadata#serverEntitySet/$entity\",\"Id\":61880128,\"UndeclaredFloatId\":12.3,\"undeclaredComplex1\":{\"MyProp1\":\"aaaaaaaaa\",\"UndeclaredProp1\":\"bbbbbbb\"},\"Address\":{\"Street\":\"No.999,Zixing Rd Minhang\",\"UndeclaredStreet\":\"No.10000000999,Zixing Rd Minhang\",\"UndeclaredMyEdmUntypedProp3@odata.type\":\"Edm.Untyped\",\"UndeclaredMyEdmUntypedProp3@helloworld\":true,\"UndeclaredMyEdmUntypedProp3\":{\"MyProp12\":\"bbb222\",abc:null}}}");
+            result.Should().Be("{\"@odata.context\":\"http://www.sampletest.com/$metadata#serverEntitySet/$entity\",\"Id\":61880128,\"UndeclaredFloatId\":12.3,\"undeclaredComplex1\":{\"MyProp1\":\"aaaaaaaaa\",\"UndeclaredProp1\":\"bbbbbbb\"},\"Address\":{\"Street\":\"No.999,Zixing Rd Minhang\",\"UndeclaredStreet\":\"No.10000000999,Zixing Rd Minhang\",\"UndeclaredMyEdmUntypedProp3@odata.type\":\"Edm.Untyped\",\"UndeclaredMyEdmUntypedProp3@NS1.helloworld\":true,\"UndeclaredMyEdmUntypedProp3\":{\"MyProp12\":\"bbb222\",abc:null}}}");
         }
         #endregion
 

@@ -708,9 +708,9 @@ namespace Microsoft.OData.JsonLight
                 string skippedRawValue = null;
                 if (isPropertyAnnotation)
                 {
+                    annotationNameFromReader = this.CompleteSimplifiedODataAnnotation(annotationNameFromReader);
                     PropertyAnnotationCollector.TryPeekAndCollectAnnotationRawValue(annotationCollector,
                         this.JsonReader, propertyNameFromReader, annotationNameFromReader);
-                    annotationNameFromReader = this.CompleteSimplifiedODataAnnotation(annotationNameFromReader);
 
                     // If this is a unknown odata annotation targeting a property, we skip over it. See remark on the method SkippedOverUnknownODataAnnotation() for detailed explaination.
                     // Note that we don't skip over unknown odata annotations targeting another annotation. We don't allow annotations (except odata.type) targeting other annotations,

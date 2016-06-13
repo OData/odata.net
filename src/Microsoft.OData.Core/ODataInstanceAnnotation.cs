@@ -34,8 +34,9 @@ namespace Microsoft.OData
         /// <param name="isForUntypedProperty">If it is annotating an untyped property value.</param>
         internal ODataInstanceAnnotation(string annotationName, ODataValue annotationValue, bool isForUntypedProperty)
         {
-            Debug.Assert((!isForUntypedProperty) || (annotationValue is ODataUntypedValue),
-                "(!isForUntypedProperty) || (annotationValue is ODataUntypedValue)");
+            Debug.Assert((!isForUntypedProperty) ||
+                (string.Equals(ODataAnnotationNames.ODataType, annotationName, StringComparison.Ordinal) || annotationValue is ODataUntypedValue),
+                "when isForUntypedProperty is true: name is odata.type or value is ODataUntypedValue");
             if (!isForUntypedProperty)
             {
                 ValidateName(annotationName);
@@ -44,7 +45,7 @@ namespace Microsoft.OData
 
             this.Name = annotationName;
             this.Value = annotationValue;
-            this.IsForUntypedProperty = IsForUntypedProperty;
+            this.IsForUntypedProperty = isForUntypedProperty;
         }
 
         /// <summary>

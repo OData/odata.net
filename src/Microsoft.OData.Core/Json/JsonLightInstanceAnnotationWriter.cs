@@ -85,7 +85,8 @@ namespace Microsoft.OData
                     throw new ODataException(ODataErrorStrings.JsonLightInstanceAnnotationWriter_DuplicateAnnotationNameInCollection(annotation.Name));
                 }
 
-                if (!tracker.IsAnnotationWritten(annotation.Name))
+                if (!tracker.IsAnnotationWritten(annotation.Name)
+                    && (!ODataAnnotationNames.IsODataAnnotationName(annotation.Name) || ODataAnnotationNames.IsUnknownODataAnnotationName(annotation.Name)))
                 {
                     this.WriteInstanceAnnotation(annotation, ignoreFilter, propertyName);
                     tracker.MarkAnnotationWritten(annotation.Name);
@@ -102,7 +103,18 @@ namespace Microsoft.OData
         internal void WriteInstanceAnnotations(IEnumerable<ODataInstanceAnnotation> instanceAnnotations, string propertyName = null, bool isUndeclaredProperty = false)
         {
             Debug.Assert(instanceAnnotations != null, "instanceAnnotations should not be null if we called this");
-            this.WriteInstanceAnnotations(instanceAnnotations, new InstanceAnnotationWriteTracker(), isUndeclaredProperty, propertyName);
+            if (isUndeclaredProperty)
+            {
+                // write undeclared property's all annotations
+                foreach (var annotation in instanceAnnotations)
+                {
+                    this.WriteInstanceAnnotation(annotation, true, propertyName);
+                }
+            }
+            else
+            {
+                this.WriteInstanceAnnotations(instanceAnnotations, new InstanceAnnotationWriteTracker(), false, propertyName);
+            }
         }
 
         /// <summary>

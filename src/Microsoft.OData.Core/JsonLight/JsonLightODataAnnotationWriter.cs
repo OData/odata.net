@@ -50,13 +50,21 @@ namespace Microsoft.OData.JsonLight
         /// Writes the odata.type instance annotation with the specified type name.
         /// </summary>
         /// <param name="typeName">The type name to write.</param>
-        public void WriteODataTypeInstanceAnnotation(string typeName)
+        /// <param name="writeRawValue">Whether to write the raw typeName without removing/adding prefix 'Edm.'/'#'.</param>
+        public void WriteODataTypeInstanceAnnotation(string typeName, bool writeRawValue = false)
         {
             Debug.Assert(typeName != null, "typeName != null");
 
             // "@odata.type": #"typename"
             WriteInstanceAnnotationName(ODataAnnotationNames.ODataType);
-            jsonWriter.WriteValue(PrefixTypeName(WriterUtils.RemoveEdmPrefixFromTypeName(typeName)));
+            if (writeRawValue)
+            {
+                jsonWriter.WriteValue(typeName);
+            }
+            else
+            {
+                jsonWriter.WriteValue(PrefixTypeName(WriterUtils.RemoveEdmPrefixFromTypeName(typeName)));
+            }
         }
 
         /// <summary>

@@ -880,18 +880,15 @@ namespace Microsoft.OData.JsonLight
             if (annotationCollector != null)
             {
                 ICollection<ODataInstanceAnnotation> rawAnnotations =
-                    annotationCollector.GetPropertyRawAnnotationSet(property.Name);
-                if (rawAnnotations != null)
+                    annotationCollector.GetPropertyRawAnnotations(property.Name);
+                ICollection<ODataInstanceAnnotation> propertyAnnotations = property.GetInstanceAnnotations();
+                foreach (ODataInstanceAnnotation item in rawAnnotations)
                 {
-                    ICollection<ODataInstanceAnnotation> propertyAnnotations = property.GetInstanceAnnotations();
-                    foreach (ODataInstanceAnnotation item in rawAnnotations)
-                    {
-                        item.IsForUntypedProperty = true;
-                        propertyAnnotations.Add(item);
-                    }
-
-                    return true;
+                    item.IsForUntypedProperty = true;
+                    propertyAnnotations.Add(item);
                 }
+
+                return true;
             }
 
             return false;

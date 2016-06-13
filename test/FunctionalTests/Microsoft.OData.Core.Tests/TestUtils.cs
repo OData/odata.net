@@ -168,9 +168,18 @@ namespace Microsoft.OData.Tests
                     }
                     else
                     {
-                        ODataCollectionValue collectionValue1 = (ODataCollectionValue)value1;
-                        ODataCollectionValue collectionValue2 = (ODataCollectionValue)value2;
-                        AssertODataCollectionValueAreEqual(collectionValue1, collectionValue2);
+                        ODataCollectionValue collectionValue1 = value1 as ODataCollectionValue;
+                        ODataCollectionValue collectionValue2 = value2 as ODataCollectionValue;
+                        if (collectionValue1 != null && collectionValue2 != null)
+                        {
+                            AssertODataCollectionValueAreEqual(collectionValue1, collectionValue2);
+                        }
+                        else
+                        {
+                            ODataUntypedValue untyped1 = value1 as ODataUntypedValue;
+                            ODataUntypedValue untyped2 = value2 as ODataUntypedValue;
+                            Assert.Equal(untyped1.RawValue, untyped2.RawValue);
+                        }
                     }
                 }
             }

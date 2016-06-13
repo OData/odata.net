@@ -158,7 +158,7 @@ namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
             var totalCount = response.TotalCount;
             var count = response.Count();
             var continuation = response.GetContinuation();
-            
+
             while (continuation != null)
             {
                 var ar2 = context.BeginExecute(continuation, null, null).EnqueueWait(this);
@@ -179,17 +179,17 @@ namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
             var value = "";
             var context = this.CreateWrappedContext<DefaultContainer>().Context;
             context.SendingRequest2 += (sender, eventArgs) => ((HttpWebRequestMessage)eventArgs.RequestMessage).SetHeader("Prefer", "odata.include-annotations=*");
-            context.Configurations.ResponsePipeline.OnEntryEnded((ReadingEntryArgs) => value = (ReadingEntryArgs.Entry.InstanceAnnotations).SingleOrDefault().Name);           
-           
+            context.Configurations.ResponsePipeline.OnEntryEnded((ReadingEntryArgs) => value = (ReadingEntryArgs.Entry.InstanceAnnotations).FirstOrDefault().Name);
+
             var query = context.Computer.OrderBy(c => c.ComputerId) as DataServiceQuery<Computer>;
             var ar1 = query.BeginExecute(null, null).EnqueueWait(this);
             var response = (query.EndExecute(ar1) as QueryOperationResponse<Computer>);
             foreach (var comp in response)
             {
-               Assert.AreEqual("MyNamespace.CustomAnnotation1", value);
-               value = "";
+                Assert.AreEqual("MyNamespace.CustomAnnotation1", value);
+                value = "";
             }
-            
+
             this.EnqueueTestComplete();
         }
 
@@ -231,7 +231,7 @@ namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
                     var customer = (r as QueryOperationResponse<Customer>).Single();
                     actualValues += customer.CustomerId;
                 }
-                
+
                 if (r is QueryOperationResponse<Driver>)
                 {
                     var driver = (r as QueryOperationResponse<Driver>).Single();
@@ -377,7 +377,7 @@ namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
 
             this.WaitForTestToComplete();
         }
-       
+
         /// <summary>
         /// LINQ query using nested calls to Any()
         /// </summary>
@@ -621,7 +621,7 @@ namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
         public void Linq_ProjectIntoNonEntityUsingConstructor_FromSetTest()
         {
             var context = this.CreateWrappedContext<DefaultContainer>().Context;
-            var query = (from c in context.Customer 
+            var query = (from c in context.Customer
                          select new NonEntityCustomer2(1000, c.Name)) as DataServiceQuery<NonEntityCustomer2>;
 
             query.BeginExecute(
@@ -635,7 +635,7 @@ namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
                     Assert.IsNotNull(customer.Name);
                 }
                 this.EnqueueTestComplete();
-            }, 
+            },
             null);
 
             this.WaitForTestToComplete();
@@ -728,19 +728,19 @@ namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
         [TestMethod, Asynchronous]
         public void Linq_ProjectPropertiesFromEntityandExpandedEntity()
         {
-            var context  = this.CreateWrappedContext<DefaultContainer>().Context;
-            var query = (from c in context.Computer 
-                         where c.ComputerId == -10 
-                         select new Computer {ComputerId = c.ComputerId, ComputerDetail = new ComputerDetail {ComputerDetailId = c.ComputerDetail.ComputerDetailId}}
-                         )as DataServiceQuery<Computer>;
+            var context = this.CreateWrappedContext<DefaultContainer>().Context;
+            var query = (from c in context.Computer
+                         where c.ComputerId == -10
+                         select new Computer { ComputerId = c.ComputerId, ComputerDetail = new ComputerDetail { ComputerDetailId = c.ComputerDetail.ComputerDetailId } }
+                         ) as DataServiceQuery<Computer>;
             var ar = query.BeginExecute(null, null).EnqueueWait(this);
             var c1 = query.EndExecute(ar).Single();
             Assert.AreEqual(-10, c1.ComputerId);
             Assert.AreEqual(-10, c1.ComputerDetail.ComputerDetailId);
-                       
+
             this.EnqueueTestComplete();
         }
-        
+
         /// <summary>
         /// LINQ query Project Name Stream Property
         /// </summary>
@@ -750,7 +750,7 @@ namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
             var context = this.CreateWrappedContext<DefaultContainer>().Context;
             var query = (from c in context.Customer
                          where c.CustomerId == -10
-                         select new Customer { CustomerId = c.CustomerId, Video = c.Video}) as DataServiceQuery<Customer>;
+                         select new Customer { CustomerId = c.CustomerId, Video = c.Video }) as DataServiceQuery<Customer>;
             query.BeginExecute(
                    (ar) =>
                    {
@@ -778,7 +778,7 @@ namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
             var ar0 = q0.BeginExecute(null, null).EnqueueWait(this);
             var value0 = q0.EndExecute(ar0).ToList();
             Assert.AreEqual(-8, value0[1].CustomerId);
-           
+
             this.EnqueueTestComplete();
         }
 
@@ -799,7 +799,7 @@ namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
         }
 #endif
 
-          /// <summary>
+        /// <summary>
         /// LINQ query Order By Canonical Fuctions
         /// </summary>
         [TestMethod, Asynchronous]
@@ -813,11 +813,11 @@ namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
             var value2 = q2.EndExecute(ar2).ToList();
             Assert.IsTrue(value2.First().ComputerDetailId == -9);
             Assert.IsTrue(value2.Last().ComputerDetailId == -10);
-            
-            this.EnqueueTestComplete();
-        }   
 
-              /// <summary>
+            this.EnqueueTestComplete();
+        }
+
+        /// <summary>
         /// LINQ query Order By Canonical Fuctions
         /// </summary>
         [TestMethod, Asynchronous]
@@ -830,8 +830,8 @@ namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
             var ar = q4.BeginExecute(null, null).EnqueueWait(this);
             var value3 = q4.EndExecute(ar).ToList();
             Assert.AreEqual(5309, value3.Last().ManagersPersonId);
-          
-            this.EnqueueTestComplete();          
+
+            this.EnqueueTestComplete();
         }
 
         /// <summary>
@@ -843,16 +843,16 @@ namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
             var name = "commastartedtotalnormaloffsetsregisteredgroupcelestialexposureconventionsimportcastclass";
             var context = this.CreateWrappedContext<DefaultContainer>().Context;
             var q0 = (from c in context.Customer
-                      where c.Name.Contains(name) && c.Name.Length == name.Length                   
-                      select new Customer {CustomerId = c.CustomerId, Name = c.Name,}) as DataServiceQuery<Customer>;
+                      where c.Name.Contains(name) && c.Name.Length == name.Length
+                      select new Customer { CustomerId = c.CustomerId, Name = c.Name, }) as DataServiceQuery<Customer>;
             var ar0 = q0.BeginExecute(null, null).EnqueueWait(this);
             var value0 = q0.EndExecute(ar0).Single();
             Assert.AreEqual(name, value0.Name);
-           
+
             this.EnqueueTestComplete();
         }
-      #if !SILVERLIGHT
-       
+#if !SILVERLIGHT
+
         /// <summary>
         /// LINQ query Order By Canonical Fuctions
         /// </summary>
@@ -860,15 +860,15 @@ namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
         public void Linq_FilterCanonicalFunctionMath()
         {
             var context = this.CreateWrappedContext<DefaultContainer>().Context;
-            var q1 = (from c in context.ComputerDetail 
-                      where System.Math.Ceiling(c.Dimensions.Depth) < 0 
+            var q1 = (from c in context.ComputerDetail
+                      where System.Math.Ceiling(c.Dimensions.Depth) < 0
                       select c) as DataServiceQuery<ComputerDetail>;
             var ar1 = q1.BeginExecute(null, null).EnqueueWait(this);
             var value1 = q1.EndExecute(ar1).ToList();
             Assert.AreEqual(4, value1.Count);
         }
-      #endif
-        
+#endif
+
         /// <summary>
         /// LINQ query Order By Canonical Fuctions
         /// </summary>
@@ -876,16 +876,16 @@ namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
         public void Linq_FilterCanonicalFunctionDate()
         {
             var context = this.CreateWrappedContext<DefaultContainer>().Context;
-            var q2 = (from c in context.ComputerDetail 
-                      where c.PurchaseDate.Day == 15 && c.PurchaseDate.Year == 2020 
+            var q2 = (from c in context.ComputerDetail
+                      where c.PurchaseDate.Day == 15 && c.PurchaseDate.Year == 2020
                       select c) as DataServiceQuery<ComputerDetail>;
             var ar2 = q2.BeginExecute(null, null).EnqueueWait(this);
             var value2 = q2.EndExecute(ar2).Single();
             Assert.AreEqual(-10, value2.ComputerDetailId);
-          
+
             this.EnqueueTestComplete();
         }
-        
+
         /// <summary>
         /// LINQ query Order By Canonical Fuctions
         /// </summary>
@@ -893,13 +893,13 @@ namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
         public void Linq_FilterCanonicalFunctionInt()
         {
             var context = this.CreateWrappedContext<DefaultContainer>().Context;
-            var q4 = (from c in context.Person.OfType<Employee>() 
-                     where c.ManagersPersonId==47
+            var q4 = (from c in context.Person.OfType<Employee>()
+                      where c.ManagersPersonId == 47
                       select c) as DataServiceQuery<Employee>;
             var ar = q4.BeginExecute(null, null).EnqueueWait(this);
             var value3 = q4.EndExecute(ar).ToList();
             Assert.AreEqual(1, value3.Count);
-           
+
             this.EnqueueTestComplete();
         }
 
@@ -1195,13 +1195,13 @@ namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
                 (ar) =>
                 {
                     var computers = query.EndExecute(ar).ToList();
-                   Assert.AreEqual(-9, computers.First().ComputerId);
+                    Assert.AreEqual(-9, computers.First().ComputerId);
                     Assert.AreEqual(-1, computers.Last().ComputerId);
 
                     this.EnqueueTestComplete();
                 },
                 null);
-           
+
             this.WaitForTestToComplete();
         }
 

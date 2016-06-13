@@ -888,7 +888,6 @@ namespace Microsoft.OData
                     {
                         ResourceScope resourceScope = (ResourceScope)this.CurrentScope;
                         IEdmStructuredType resourceType = this.GetResourceType(resource);
-                        resourceScope.ResourceTypeFromMetadata = resourceScope.ResourceType;
 
                         NestedResourceInfoScope parentNestedResourceInfoScope = this.ParentNestedResourceInfoScope;
                         if (parentNestedResourceInfoScope != null)
@@ -897,10 +896,14 @@ namespace Microsoft.OData
                             this.WriterValidator.ValidateResourceInNestedResourceInfo(resourceType, parentNestedResourceInfoScope.ResourceType);
                             resourceScope.ResourceTypeFromMetadata = parentNestedResourceInfoScope.ResourceType;
                         }
-                        else if (this.CurrentResourceSetValidator != null)
+                        else
                         {
-                            // Validate the consistency of resource types in the top-level resource sets
-                            this.CurrentResourceSetValidator.ValidateResource(resourceType);
+                            resourceScope.ResourceTypeFromMetadata = resourceScope.ResourceType;
+                            if (this.CurrentResourceSetValidator != null)
+                            {
+                                // Validate the consistency of resource types in the top-level resource sets
+                                this.CurrentResourceSetValidator.ValidateResource(resourceType);
+                            }
                         }
 
                         resourceScope.ResourceType = resourceType;

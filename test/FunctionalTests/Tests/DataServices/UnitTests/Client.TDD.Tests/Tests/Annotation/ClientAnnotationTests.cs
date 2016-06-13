@@ -182,7 +182,7 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests.Annotation
                     else
                     {
                         Assert.AreEqual("Bob2", annotation2.First());
-                    }                    
+                    }
                 });
             }
         }
@@ -1306,11 +1306,11 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests.Annotation
                 Assert.AreEqual(false, annotation1);
             });
         }
-        
+
         [TestMethod]
         public void TestInstanceAnnotationsShouldBeEmptyIfNoInstanceAnnotationReturned()
         {
-             const string FeedPayloadWithoutInstanceAnnotation = @"{
+            const string FeedPayloadWithoutInstanceAnnotation = @"{
     ""@odata.context"":""http://odataService/$metadata#People"",
     ""value"": [
         {
@@ -1338,14 +1338,14 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests.Annotation
     ]
 }";
 
-             TestAnnotation(FeedPayloadWithoutInstanceAnnotation, () =>
-             {
-                 var getFriendsQueryResponse = dsc.GetFriendsPlus("Russell").Execute() as QueryOperationResponse<PersonPlus>;
-                 var friends = getFriendsQueryResponse.ToList();
+            TestAnnotation(FeedPayloadWithoutInstanceAnnotation, () =>
+            {
+                var getFriendsQueryResponse = dsc.GetFriendsPlus("Russell").Execute() as QueryOperationResponse<PersonPlus>;
+                var friends = getFriendsQueryResponse.ToList();
 
-                 Assert.AreEqual(0, dsc.InstanceAnnotations.Count);
-             });
-         }
+                Assert.AreEqual(2, dsc.InstanceAnnotations.Count);
+            });
+        }
 
         private void TestAnnotation(string response, Action testAction)
         {

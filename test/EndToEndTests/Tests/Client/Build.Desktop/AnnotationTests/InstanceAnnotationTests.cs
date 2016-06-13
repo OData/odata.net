@@ -60,7 +60,7 @@ namespace Microsoft.Test.OData.Tests.Client.AnnotationTests
                             }
                         }
 
-                        Assert.AreEqual(true, (entries.Last().InstanceAnnotations.Single(i => i.Name.Equals(string.Format("{0}.IsBoss", TestModelNameSpace))).Value as ODataPrimitiveValue).Value);
+                        Assert.AreEqual(true, (entries.Last().InstanceAnnotations.First(i => i.Name.Equals(string.Format("{0}.IsBoss", TestModelNameSpace))).Value as ODataPrimitiveValue).Value);
                         Assert.AreEqual(ODataReaderState.Completed, reader.State);
                     }
                 }
@@ -112,7 +112,7 @@ namespace Microsoft.Test.OData.Tests.Client.AnnotationTests
                                 if (startHomeAddress)
                                 {
                                     // Verify Annotation on Complex Type
-                                    ODataInstanceAnnotation annotationOnHomeAddress = entry.InstanceAnnotations.SingleOrDefault();
+                                    ODataInstanceAnnotation annotationOnHomeAddress = entry.InstanceAnnotations.Last();
                                     Assert.AreEqual(string.Format("{0}.AddressType", TestModelNameSpace), annotationOnHomeAddress.Name);
                                     Assert.AreEqual("Home", (annotationOnHomeAddress.Value as ODataPrimitiveValue).Value);
 

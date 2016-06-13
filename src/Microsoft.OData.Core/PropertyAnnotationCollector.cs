@@ -79,16 +79,17 @@ namespace Microsoft.OData
         }
 
         /// <summary>
-        /// Gets an ODataJsonLightRawAnnotationSet that can be attached to ODataValue or ODataUntypedValue.
+        /// Gets an ODataInstanceAnnotation collection that can be attached to ODataValue or ODataUntypedValue.
         /// </summary>
         /// <param name="propertyName">The property name.</param>
         /// <returns>An ODataInstanceAnnotation collection.</returns>
-        public ICollection<ODataInstanceAnnotation> GetPropertyRawAnnotationSet(string propertyName)
+        public ICollection<ODataInstanceAnnotation> GetPropertyRawAnnotations(string propertyName)
         {
             List<ODataInstanceAnnotation> annotations;
             if (!this.propertyAnnotations.TryGetValue(propertyName, out annotations))
             {
-                return null;
+                annotations = new List<ODataInstanceAnnotation>();
+                this.propertyAnnotations[propertyName] = annotations;
             }
 
             return annotations;
