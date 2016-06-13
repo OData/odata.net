@@ -60,20 +60,22 @@ namespace Microsoft.OData.Client
             get { return this.mergeOption; }
         }
 
-        /// <summary>Gets the value of UndeclaredPropertyBehaviorKinds.</summary>
-        internal ODataUndeclaredPropertyBehaviorKinds UndeclaredPropertyBehaviorKinds
+        /// <summary>
+        /// Returns whether ThrowOnUndeclaredValueProperty validation setting is enabled.
+        /// </summary>
+        internal bool ThrowOnUndeclaredValueProperty
         {
             get
             {
                 if (this.Context.UndeclaredPropertyBehavior == UndeclaredPropertyBehavior.Support)
                 {
-                    return ODataUndeclaredPropertyBehaviorKinds.SupportUndeclaredValueProperty;
+                    return false;
                 }
                 else
                 {
                     Debug.Assert(this.Context.UndeclaredPropertyBehavior == UndeclaredPropertyBehavior.ThrowException,
                         "this.Context.UndeclaredPropertyBehavior == UndeclaredPropertyBehavior.ThrowException");
-                    return ODataUndeclaredPropertyBehaviorKinds.None;
+                    return true;
                 }
             }
         }

@@ -138,7 +138,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
                         {
                             testConfiguration = new ReaderTestConfiguration(testConfiguration);
                             testConfiguration.MessageReaderSettings.Validations =
-                                ValidationUtils.ApplyUndeclaredPropertyBehaviorKinds(
+                                TestReaderUtils.ApplyUndeclaredPropertyBehaviorKinds(
                                     undeclaredPropertyBehaviorKinds, testConfiguration.MessageReaderSettings.Validations);
 
                             testDescriptor.RunTest(testConfiguration);

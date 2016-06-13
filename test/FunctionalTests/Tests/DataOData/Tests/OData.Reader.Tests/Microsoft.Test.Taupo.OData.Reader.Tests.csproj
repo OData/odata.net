@@ -115,6 +115,7 @@
     <Compile Include="ConvertFromUriLiteralTests.cs" />
     <Compile Include="Common\ConvertAtomMetadataForConfigurationPayloadElementNormalizer.cs" />
     <Compile Include="Common\RemoveAssociationLinkPayloadElementNormalizer.cs" />
+    <Compile Include="ODataUndeclaredPropertyBehaviorKinds.cs" />
     <Compile Include="ReaderDefaultODataObjectModelValidator.cs" />
     <Compile Include="Reader\ReaderSyncAsyncMismatchTests.cs" />
     <Compile Include="RemoveCollectionNameAnnotationForCollectionPayloadElementVisitor.cs" />

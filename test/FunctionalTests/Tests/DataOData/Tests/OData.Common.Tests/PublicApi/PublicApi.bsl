@@ -3888,15 +3888,6 @@ public enum Microsoft.OData.ODataReaderState : int {
 	Start = 0
 }
 
-[
-FlagsAttribute(),
-]
-public enum Microsoft.OData.ODataUndeclaredPropertyBehaviorKinds : int {
-	None = 0
-	ReportUndeclaredLinkProperty = 2
-	SupportUndeclaredValueProperty = 1
-}
-
 public enum Microsoft.OData.ODataVersion : int {
 	V4 = 0
 }

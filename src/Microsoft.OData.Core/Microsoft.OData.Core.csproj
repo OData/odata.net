@@ -316,7 +316,6 @@
     <Compile Include="ODataSingletonInfo.cs" />
     <Compile Include="ODataStreamReferenceValue.cs" />
     <Compile Include="ODataTypeAnnotation.cs" />
-    <Compile Include="ODataUndeclaredPropertyBehaviorKinds.cs" />
     <Compile Include="ODataUtils.cs" />
     <Compile Include="ODataUtilsInternal.cs" />
     <Compile Include="ODataValue.cs" />

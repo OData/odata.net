@@ -32,6 +32,36 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
     public static class TestReaderUtils
     {
         /// <summary>
+        /// Apply a source ODataUndeclaredPropertyBehaviorKinds value to a target ReaderValidations value, and return the
+        /// resulting ReaderValidations value.
+        /// </summary>
+        /// <param name="kinds">The source ODataUndeclaredPropertyBehaviorKinds value.</param>
+        /// <param name="validations">The target ReaderValidations value.</param>
+        /// <returns>The resulting ReaderValidations value.</returns>
+        public static ReaderValidations ApplyUndeclaredPropertyBehaviorKinds(ODataUndeclaredPropertyBehaviorKinds kinds, ReaderValidations validations)
+        {
+            if ((kinds & ODataUndeclaredPropertyBehaviorKinds.ReportUndeclaredLinkProperty) != 0)
+            {
+                validations &= ~ReaderValidations.ThrowOnUndeclaredLinkProperty;
+            }
+            else
+            {
+                validations |= ReaderValidations.ThrowOnUndeclaredLinkProperty;
+            }
+
+            if ((kinds & ODataUndeclaredPropertyBehaviorKinds.SupportUndeclaredValueProperty) != 0)
+            {
+                validations &= ~ReaderValidations.ThrowOnUndeclaredValueProperty;
+            }
+            else
+            {
+                validations |= ReaderValidations.ThrowOnUndeclaredValueProperty;
+            }
+
+            return validations;
+        }
+
+        /// <summary>
         /// List of all the <see cref="ODataPayloadKind"/> values; we can't use Enum.GetValues since this is not supported on all platforms.
         /// </summary>
         public static readonly ODataPayloadKind[] ODataPayloadKinds = new ODataPayloadKind[]

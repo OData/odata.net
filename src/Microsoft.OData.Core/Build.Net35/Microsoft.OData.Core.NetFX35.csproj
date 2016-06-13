@@ -808,9 +808,6 @@
     <Compile Include="$(ODataCrossTargettingSourcePath)\ODataTypeAnnotation.cs">
       <Link>Microsoft\OData\Core\ODataTypeAnnotation.cs</Link>
     </Compile>
-    <Compile Include="$(ODataCrossTargettingSourcePath)\ODataUndeclaredPropertyBehaviorKinds.cs">
-      <Link>Microsoft\OData\Core\ODataUndeclaredPropertyBehaviorKinds.cs</Link>
-    </Compile>
     <Compile Include="$(ODataCrossTargettingSourcePath)\ODataUntypedValue.cs">
       <Link>Microsoft\OData\Core\ODataUntypedValue.cs</Link>
     </Compile>
@@ -1586,6 +1583,7 @@
     </Compile>
     <Compile Include="..\PropertyValueTypeInfo.cs">
       <Link>PropertyValueTypeInfo.cs</Link>
+    </Compile>
     <Compile Include="..\ReaderValidations.cs">
       <Link>Microsoft\OData\Core\ReaderValidations.cs</Link>
     </Compile>

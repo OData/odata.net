@@ -108,19 +108,6 @@ namespace Microsoft.OData
         }
 
         /// <summary>
-        /// Returns true if the specified <paramref name="flag"/> is set in the <paramref name="undeclaredPropertyBehaviorKinds"/>.
-        /// </summary>
-        /// <param name="undeclaredPropertyBehaviorKinds">The value of the setting to test.</param>
-        /// <param name="flag">The flag to test.</param>
-        /// <returns>true if the flas is present, flase otherwise.</returns>
-        internal static bool HasFlag(this ODataUndeclaredPropertyBehaviorKinds undeclaredPropertyBehaviorKinds, ODataUndeclaredPropertyBehaviorKinds flag)
-        {
-            Debug.Assert(((int)flag | ((int)flag - 1)) + 1 == (int)flag * 2, "Only one flag must be set.");
-
-            return (undeclaredPropertyBehaviorKinds & flag) == flag;
-        }
-
-        /// <summary>
         /// Gets the expected property name from the specified property or operation import.
         /// </summary>
         /// <param name="expectedProperty">The <see cref="IEdmProperty"/> to get the expected property name for (or null if none is specified).</param>

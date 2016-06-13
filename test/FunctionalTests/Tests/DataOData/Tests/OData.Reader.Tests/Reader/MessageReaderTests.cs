@@ -92,7 +92,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
                     var settings = new ODataMessageReaderSettings();
 
                     // Verify the None UndeclaredPropertyBehaviorKinds works on both request and response.
-                    settings.Validations = ValidationUtils.ApplyUndeclaredPropertyBehaviorKinds(
+                    settings.Validations = TestReaderUtils.ApplyUndeclaredPropertyBehaviorKinds(
                         ODataUndeclaredPropertyBehaviorKinds.None,
                         settings.Validations);
                     this.Assert.ExpectedException(
@@ -101,7 +101,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
                         this.ExceptionVerifier);
 
                     // Verify the IgnoreUndeclaredValueProperty UndeclaredPropertyBehaviorKinds fails on requests.
-                    settings.Validations = ValidationUtils.ApplyUndeclaredPropertyBehaviorKinds(
+                    settings.Validations = TestReaderUtils.ApplyUndeclaredPropertyBehaviorKinds(
                         ODataUndeclaredPropertyBehaviorKinds.SupportUndeclaredValueProperty,
                         settings.Validations);
                     this.Assert.ExpectedException(
@@ -110,7 +110,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
                         this.ExceptionVerifier);
 
                     // Verify the ReportUndeclaredLinkProperty UndeclaredPropertyBehaviorKinds fails on requests.
-                    settings.Validations = ValidationUtils.ApplyUndeclaredPropertyBehaviorKinds(
+                    settings.Validations = TestReaderUtils.ApplyUndeclaredPropertyBehaviorKinds(
                         ODataUndeclaredPropertyBehaviorKinds.ReportUndeclaredLinkProperty,
                         settings.Validations);
                     this.Assert.ExpectedException(
@@ -119,7 +119,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
                         this.ExceptionVerifier);
 
                     // Verify the IgnoreUndeclaredValueProperty | ReportUndeclaredLinkProperty UndeclaredPropertyBehaviorKinds fails on requests.
-                    settings.Validations = ValidationUtils.ApplyUndeclaredPropertyBehaviorKinds(
+                    settings.Validations = TestReaderUtils.ApplyUndeclaredPropertyBehaviorKinds(
                         ODataUndeclaredPropertyBehaviorKinds.SupportUndeclaredValueProperty
                         | ODataUndeclaredPropertyBehaviorKinds.ReportUndeclaredLinkProperty,
                         settings.Validations);

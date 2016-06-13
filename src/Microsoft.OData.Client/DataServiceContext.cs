@@ -74,7 +74,7 @@ namespace Microsoft.OData.Client
             CreateWeakKey = InstanceAnnotationDictWeakKeyComparer.Default.CreateKey
         };
 
-        /// <summary>metadata annotations for currenct context</summary>
+        /// <summary>metadata annotations for current context</summary>
         private readonly WeakDictionary<object, IList<IEdmValueAnnotation>> metadataAnnotationsDictionary = new WeakDictionary<object, IList<IEdmValueAnnotation>>(EqualityComparer<object>.Default);
 
         /// <summary>The tracker for user-specified format information.</summary>

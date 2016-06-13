@@ -155,7 +155,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                     PayloadReaderTestDescriptor testDescriptor = testCase.ToTestDescriptor(this.Settings, model, undeclaredPropertyBehaviorKinds);
                     testConfiguration = new ReaderTestConfiguration(testConfiguration);
                     testConfiguration.MessageReaderSettings.Validations =
-                        ValidationUtils.ApplyUndeclaredPropertyBehaviorKinds(
+                        TestReaderUtils.ApplyUndeclaredPropertyBehaviorKinds(
                             undeclaredPropertyBehaviorKinds, testConfiguration.MessageReaderSettings.Validations);
 
                     // These descriptors are already tailored specifically for Json Light and 
@@ -257,7 +257,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                     PayloadReaderTestDescriptor testDescriptor = testCase.ToTestDescriptor(settings, model, undeclaredPropertyBehaviorKinds);
                     testConfiguration = new ReaderTestConfiguration(testConfiguration);
                     testConfiguration.MessageReaderSettings.Validations =
-                        ValidationUtils.ApplyUndeclaredPropertyBehaviorKinds(
+                        TestReaderUtils.ApplyUndeclaredPropertyBehaviorKinds(
                             undeclaredPropertyBehaviorKinds, testConfiguration.MessageReaderSettings.Validations);
 
                     // These descriptors are already tailored specifically for Json Light and 
@@ -362,7 +362,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                     PayloadReaderTestDescriptor testDescriptor = testCase.ToTestDescriptor(this.Settings, model, undeclaredPropertyBehaviorKinds);
                     testConfiguration = new ReaderTestConfiguration(testConfiguration);
                     testConfiguration.MessageReaderSettings.Validations =
-                        ValidationUtils.ApplyUndeclaredPropertyBehaviorKinds(
+                        TestReaderUtils.ApplyUndeclaredPropertyBehaviorKinds(
                             undeclaredPropertyBehaviorKinds, testConfiguration.MessageReaderSettings.Validations);
 
                     // These descriptors are already tailored specifically for Json Light and 

@@ -51,8 +51,7 @@ namespace Microsoft.OData.Client
 
             settings.Validations &= ~ReaderValidations.ThrowOnUndeclaredLinkProperty;
             settings.Validations |= ReaderValidations.ThrowOnUndeclaredValueProperty;
-            if ((this.responseInfo.UndeclaredPropertyBehaviorKinds
-                & ODataUndeclaredPropertyBehaviorKinds.SupportUndeclaredValueProperty) != 0)
+            if (!this.responseInfo.ThrowOnUndeclaredValueProperty)
             {
                 settings.Validations &= ~ReaderValidations.ThrowOnUndeclaredValueProperty;
             }
