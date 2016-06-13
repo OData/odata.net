@@ -284,9 +284,8 @@ namespace Microsoft.OData
         /// <param name="resource">The resource to validate.</param>
         /// <param name="resourceType">Optional entity type to validate the resource against.</param>
         /// <param name="model">Model containing the entity type.</param>
-        /// <param name="validateMediaResource">true if the validation of the default MediaResource should be done; false otherwise.</param>
         /// <remarks>If the <paramref name="resourceType"/> is available only resource-level tests are performed, properties and such are not validated.</remarks>
-        internal static void ValidateMediaResource(ODataResource resource, IEdmEntityType resourceType, IEdmModel model, bool validateMediaResource)
+        internal static void ValidateMediaResource(ODataResource resource, IEdmEntityType resourceType, IEdmModel model)
         {
             Debug.Assert(resource != null, "resource != null");
 
@@ -295,21 +294,18 @@ namespace Microsoft.OData
                 Debug.Assert(model != null, "model != null");
                 Debug.Assert(model.IsUserModel(), "model.IsUserModel()");
 
-                if (validateMediaResource)
+                if (resource.MediaResource == null)
                 {
-                    if (resource.MediaResource == null)
+                    if (resourceType.HasStream)
                     {
-                        if (resourceType.HasStream)
-                        {
-                            throw new ODataException(Strings.ValidationUtils_EntryWithoutMediaResourceAndMLEType(resourceType.FullTypeName()));
-                        }
+                        throw new ODataException(Strings.ValidationUtils_EntryWithoutMediaResourceAndMLEType(resourceType.FullTypeName()));
                     }
-                    else
+                }
+                else
+                {
+                    if (!resourceType.HasStream)
                     {
-                        if (!resourceType.HasStream)
-                        {
-                            throw new ODataException(Strings.ValidationUtils_EntryWithMediaResourceAndNonMLEType(resourceType.FullTypeName()));
-                        }
+                        throw new ODataException(Strings.ValidationUtils_EntryWithMediaResourceAndNonMLEType(resourceType.FullTypeName()));
                     }
                 }
             }

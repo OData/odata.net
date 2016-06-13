@@ -156,13 +156,14 @@ namespace Microsoft.OData
         /// <param name="propertyName">The name of the property to validate.</param>
         /// <param name="owningStructuredType">The owning type of the property with name <paramref name="propertyName"/>
         /// or null if no metadata is available.</param>
-        /// <param name="messageReaderSettings">The message reader settings being used.</param>
+        /// <param name="throwOnUndeclaredValueProperty">Whether ThrowOnUndeclaredValueProperty validation setting is enabled.</param>
         /// <returns>The <see cref="IEdmProperty"/> instance representing the property with name <paramref name="propertyName"/>
         /// or null if no metadata is available.</returns>
-        internal static IEdmProperty ValidateValuePropertyDefined(string propertyName, IEdmStructuredType owningStructuredType, ODataMessageReaderSettings messageReaderSettings)
+        internal static IEdmProperty ValidateValuePropertyDefined(string propertyName,
+                                                                  IEdmStructuredType owningStructuredType,
+                                                                  bool throwOnUndeclaredValueProperty)
         {
             Debug.Assert(!string.IsNullOrEmpty(propertyName), "!string.IsNullOrEmpty(propertyName)");
-            Debug.Assert(messageReaderSettings != null, "messageReaderSettings != null");
 
             if (owningStructuredType == null)
             {
@@ -172,15 +173,13 @@ namespace Microsoft.OData
             IEdmProperty property = FindDefinedProperty(propertyName, owningStructuredType);
             if (property == null && !owningStructuredType.IsOpen)
             {
-                if (messageReaderSettings.ThrowOnUndeclaredValueProperty)
+                if (throwOnUndeclaredValueProperty)
                 {
                     throw new ODataException(Strings.ValidationUtils_PropertyDoesNotExistOnType(propertyName, owningStructuredType.FullTypeName()));
                 }
                 else
                 {
-                    Debug.Assert(
-                        !messageReaderSettings.ThrowOnUndeclaredValueProperty,
-                        "!messageReaderSettings.ThrowOnUndeclaredValueProperty");
+                    Debug.Assert(!throwOnUndeclaredValueProperty, "!throwOnUndeclaredValueProperty");
                 }
             }
 
@@ -1143,7 +1142,7 @@ namespace Microsoft.OData
             EdmTypeKind expectedTypeKind = EdmTypeKind.None;
             if (!useExpectedTypeOnlyForTypeResolution)
             {
-                expectedTypeKind = GetExpectedTypeKind(expectedTypeReference, disablePrimitiveTypeConversion);
+                expectedTypeKind = ReaderUtils.GetExpectedTypeKind(expectedTypeReference, disablePrimitiveTypeConversion);
             }
 
             EdmTypeKind targetTypeKind;
@@ -1184,35 +1183,6 @@ namespace Microsoft.OData
             }
 
             return targetTypeKind;
-        }
-
-        /// <summary>
-        /// Gets the expected type kind based on the given <see cref="IEdmTypeReference"/>, or EdmTypeKind.None if no specific type should be expected.
-        /// </summary>
-        /// <param name="expectedTypeReference">The expected type reference.</param>
-        /// <param name="disablePrimitiveTypeConversion">Whether primitive type conversion is disabled.</param>
-        /// <returns>The expected type kind based on the settings and type reference, or EdmTypeKind.None if no specific type should be expected.</returns>
-        private static EdmTypeKind GetExpectedTypeKind(IEdmTypeReference expectedTypeReference,
-                                                       bool disablePrimitiveTypeConversion)
-        {
-            IEdmType expectedTypeDefinition;
-            if (expectedTypeReference == null || (expectedTypeDefinition = expectedTypeReference.Definition) == null)
-            {
-                return EdmTypeKind.None;
-            }
-
-            // If the DisablePrimitiveTypeConversion is on, we must not infer the type kind from the expected type
-            // but instead we need to read it from the payload.
-            // This is necessary to correctly fail on complex/collection as well as to correctly read spatial values.
-            EdmTypeKind expectedTypeKind = expectedTypeDefinition.TypeKind;
-            if (disablePrimitiveTypeConversion
-                && (expectedTypeKind == EdmTypeKind.Primitive && !expectedTypeDefinition.IsStream()))
-            {
-                return EdmTypeKind.None;
-            }
-
-            // Otherwise, if we have an expected type, use that.
-            return expectedTypeKind;
         }
 
         /// <summary>

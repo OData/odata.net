@@ -1592,12 +1592,6 @@
     <Compile Include="..\ReaderValidator.cs">
       <Link>Microsoft\OData\Core\ReaderValidator.cs</Link>
     </Compile>
-    <Compile Include="..\ReaderValidatorWithBasicValidation.cs">
-      <Link>Microsoft\OData\Core\ReaderValidatorWithBasicValidation.cs</Link>
-    </Compile>
-    <Compile Include="..\ReaderValidatorWithoutBasicValidation.cs">
-      <Link>Microsoft\OData\Core\ReaderValidatorWithoutBasicValidation.cs</Link>
-    </Compile>
     <Compile Include="..\ServicePrototype.cs">
       <Link>Microsoft\OData\Core\ServicePrototype.cs</Link>
     </Compile>
@@ -1690,12 +1684,6 @@
     </Compile>
     <Compile Include="..\WriterValidator.cs">
       <Link>Microsoft\OData\Core\WriterValidator.cs</Link>
-    </Compile>
-    <Compile Include="..\WriterValidatorWithBasicValidation.cs">
-      <Link>Microsoft\OData\Core\WriterValidatorWithBasicValidation.cs</Link>
-    </Compile>
-    <Compile Include="..\WriterValidatorWithoutBasicValidation.cs">
-      <Link>Microsoft\OData\Core\WriterValidatorWithoutBasicValidation.cs</Link>
     </Compile>
     <Compile Include="ShippingAssemblyAttributes.cs" />
     <Compile Include="$(AssemblyKeysCSharpFilePath)">

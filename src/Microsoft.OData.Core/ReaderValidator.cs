@@ -41,7 +41,10 @@ namespace Microsoft.OData
         /// properties and such are not validated.</remarks>
         public virtual void ValidateMediaResource(ODataResource resource, IEdmEntityType resourceType, IEdmModel model)
         {
-            ValidationUtils.ValidateMediaResource(resource, resourceType, model, settings.BasicValidation);
+            if (settings.BasicValidation)
+            {
+                ValidationUtils.ValidateMediaResource(resource, resourceType, model);
+            }
         }
 
         /// <summary>

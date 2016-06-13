@@ -1590,7 +1590,9 @@ namespace Microsoft.OData.JsonLight
             IEdmProperty edmProperty = null;
             if (complexValueTypeReference != null)
             {
-                edmProperty = ReaderValidationUtils.ValidateValuePropertyDefined(propertyName, complexValueTypeReference.ComplexDefinition(), this.MessageReaderSettings);
+                edmProperty = ReaderValidationUtils.ValidateValuePropertyDefined(
+                    propertyName, complexValueTypeReference.ComplexDefinition(),
+                    this.MessageReaderSettings.ThrowOnUndeclaredValueProperty);
             }
 
             // EdmLib bridge marks all key properties as non-nullable, but Astoria allows them to be nullable.

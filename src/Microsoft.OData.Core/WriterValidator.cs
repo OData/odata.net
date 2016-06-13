@@ -192,7 +192,7 @@ namespace Microsoft.OData
         {
             if (settings.BasicValidation)
             {
-                ValidationUtils.ValidateMediaResource(resource, resourceType, model, true);
+                ValidationUtils.ValidateMediaResource(resource, resourceType, model);
             }
         }
 

@@ -20,6 +20,35 @@ namespace Microsoft.OData
     internal static class ReaderUtils
     {
         /// <summary>
+        /// Gets the expected type kind based on the given <see cref="IEdmTypeReference"/>, or EdmTypeKind.None if no specific type should be expected.
+        /// </summary>
+        /// <param name="expectedTypeReference">The expected type reference.</param>
+        /// <param name="disablePrimitiveTypeConversion">Whether primitive type conversion is disabled.</param>
+        /// <returns>The expected type kind based on the settings and type reference, or EdmTypeKind.None if no specific type should be expected.</returns>
+        internal static EdmTypeKind GetExpectedTypeKind(IEdmTypeReference expectedTypeReference,
+                                                       bool disablePrimitiveTypeConversion)
+        {
+            IEdmType expectedTypeDefinition;
+            if (expectedTypeReference == null || (expectedTypeDefinition = expectedTypeReference.Definition) == null)
+            {
+                return EdmTypeKind.None;
+            }
+
+            // If the DisablePrimitiveTypeConversion is on, we must not infer the type kind from the expected type
+            // but instead we need to read it from the payload.
+            // This is necessary to correctly fail on complex/collection as well as to correctly read spatial values.
+            EdmTypeKind expectedTypeKind = expectedTypeDefinition.TypeKind;
+            if (disablePrimitiveTypeConversion
+                && (expectedTypeKind == EdmTypeKind.Primitive && !expectedTypeDefinition.IsStream()))
+            {
+                return EdmTypeKind.None;
+            }
+
+            // Otherwise, if we have an expected type, use that.
+            return expectedTypeKind;
+        }
+
+        /// <summary>
         /// Creates a new <see cref="ODataResource"/> instance to return to the user.
         /// </summary>
         /// <returns>The newly created resource.</returns>
