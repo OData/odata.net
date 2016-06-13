@@ -75,6 +75,7 @@ namespace Microsoft.OData
             this.EnableIndentation = false;
             this.ODataSimplified = false;
             this.Validations = WriterValidations.FullValidation & ~WriterValidations.ThrowOnUndeclaredProperty;
+            this.Validator = new WriterValidator(this);
         }
 
         /// <summary>
@@ -95,7 +96,6 @@ namespace Microsoft.OData
                 ThrowOnDuplicatePropertyNames = (validations & WriterValidations.ThrowOnDuplicatePropertyNames) != 0;
                 ThrowOnNullValuesForNonNullablePrimitiveTypes = (validations & WriterValidations.ThrowOnNullValuesForNonNullablePrimitiveTypes) != 0;
                 ThrowOnUndeclaredProperty = (validations & WriterValidations.ThrowOnUndeclaredProperty) != 0;
-                Validator = WriterValidator.Create(this);
             }
         }
 
@@ -442,12 +442,12 @@ namespace Microsoft.OData
             this.UseKeyAsSegment = other.UseKeyAsSegment;
             this.useFormat = other.useFormat;
             this.Version = other.Version;
+
             this.validations = other.validations;
             this.BasicValidation = other.BasicValidation;
             this.ThrowOnDuplicatePropertyNames = other.ThrowOnDuplicatePropertyNames;
             this.ThrowOnNullValuesForNonNullablePrimitiveTypes = other.ThrowOnNullValuesForNonNullablePrimitiveTypes;
             this.ThrowOnUndeclaredProperty = other.ThrowOnUndeclaredProperty;
-            this.Validator = other.Validator;
         }
     }
 }

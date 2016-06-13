@@ -596,8 +596,6 @@
       <Link>PlatformHelper.cs</Link>
     </Compile>
     <Compile Include="WriterValidator.cs" />
-    <Compile Include="WriterValidatorWithBasicValidation.cs" />
-    <Compile Include="WriterValidatorWithoutBasicValidation.cs" />
     <None Include="obj2c\i386\AssemblyAttributes.cs">
       <Visible>false</Visible>
     </None>
