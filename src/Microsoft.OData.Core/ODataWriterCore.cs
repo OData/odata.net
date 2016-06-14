@@ -52,6 +52,9 @@ namespace Microsoft.OData
         /// <summary>The number of entries which have been started but not yet ended.</summary>
         private int currentResourceDepth;
 
+        /// <summary>Resource type name in current writing scope.</summary>
+        private string currentResourceTypeName;
+
         /// <summary>
         /// Constructor.
         /// </summary>
@@ -181,6 +184,14 @@ namespace Microsoft.OData
                 // and then the top-level scope (the top-level resource/resourceSet item) as the second scope on the stack
                 return this.scopes.Count == 2;
             }
+        }
+
+        /// <summary>
+        /// The scope level the writer is writing.
+        /// </summary>
+        protected int ScopeLevel
+        {
+            get { return this.scopes.Count; }
         }
 
         /// <summary>
@@ -783,10 +794,12 @@ namespace Microsoft.OData
         /// <returns>The validated structured type.</returns>
         protected IEdmStructuredType GetResourceType(ODataResource resource)
         {
-            if (resource.TypeName == null && this.CurrentScope.ResourceType != null)
+            if ((resource.TypeName == null || this.currentResourceTypeName == resource.TypeName) && this.CurrentScope.ResourceType != null)
             {
                 return this.CurrentScope.ResourceType;
             }
+
+            this.currentResourceTypeName = resource.TypeName;
 
             // TODO: Clean up handling of expected types/sets during writing
             return (IEdmStructuredType)TypeNameOracle.ResolveAndValidateTypeName(this.outputContext.Model, resource.TypeName, EdmTypeKind.Complex | EdmTypeKind.Entity, this.WriterValidator);
@@ -1364,12 +1377,12 @@ namespace Microsoft.OData
                         odataUri = currentScope.ODataUri.Clone();
 
                         IEdmStructuredType currentResourceType = currentScope.ResourceType;
-                        var ComplexProperty = this.WriterValidator.ValidatePropertyDefined(
+                        var structuredProperty = this.WriterValidator.ValidatePropertyDefined(
                             nestedResourceInfo.Name, currentResourceType)
                             as IEdmStructuralProperty;
-                        if (ComplexProperty != null)
+                        if (structuredProperty != null)
                         {
-                            resourceType = ComplexProperty.Type.ToStructuredType();
+                            resourceType = structuredProperty.Type.ToStructuredType();
                             navigationSource = null;
                         }
                         else

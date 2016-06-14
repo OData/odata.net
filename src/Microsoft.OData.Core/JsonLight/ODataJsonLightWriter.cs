@@ -245,6 +245,8 @@ namespace Microsoft.OData.JsonLight
             // Write the properties
             ProjectedPropertiesAnnotation projectedProperties = GetProjectedPropertiesAnnotation(resourceScope);
 
+            this.jsonLightOutputContext.PropertyCacheHandler.SetCurrentResourceScopeLevel(this.ScopeLevel);
+
             this.jsonLightResourceSerializer.JsonLightValueSerializer.AssertRecursionDepthIsZero();
             this.jsonLightResourceSerializer.WriteProperties(
                 this.ResourceType,
@@ -390,6 +392,8 @@ namespace Microsoft.OData.JsonLight
                     }
                 }
             }
+
+            this.jsonLightOutputContext.PropertyCacheHandler.EnterResourceSetScope(this.CurrentResourceSetScope.ResourceType, this.ScopeLevel);
         }
 
         /// <summary>
@@ -447,6 +451,8 @@ namespace Microsoft.OData.JsonLight
                     this.WriteResourceSetNextLink(resourceSet, propertyName);
                 }
             }
+
+            this.jsonLightOutputContext.PropertyCacheHandler.LeaveResourceSetScope();
         }
 
         /// <summary>
@@ -805,7 +811,16 @@ namespace Microsoft.OData.JsonLight
             /// <param name="writerSettings">The <see cref="ODataMessageWriterSettings"/> The settings of the writer.</param>
             /// <param name="selectedProperties">The selected properties of this scope.</param>
             /// <param name="odataUri">The ODataUri info of this scope.</param>
-            internal JsonLightResourceScope(ODataResource resource, ODataResourceSerializationInfo serializationInfo, IEdmNavigationSource navigationSource, IEdmStructuredType resourceType, bool skipWriting, bool writingResponse, ODataMessageWriterSettings writerSettings, SelectedPropertiesNode selectedProperties, ODataUri odataUri)
+            internal JsonLightResourceScope(
+                ODataResource resource,
+                ODataResourceSerializationInfo serializationInfo,
+                IEdmNavigationSource navigationSource,
+                IEdmStructuredType resourceType,
+                bool skipWriting,
+                bool writingResponse,
+                ODataMessageWriterSettings writerSettings,
+                SelectedPropertiesNode selectedProperties,
+                ODataUri odataUri)
                 : base(resource, serializationInfo, navigationSource, resourceType, skipWriting, writingResponse, writerSettings, selectedProperties, odataUri)
             {
             }

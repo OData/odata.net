@@ -35,7 +35,12 @@ namespace Microsoft.OData.Json
         /// <returns>true if the given primitive value is of a basic JSON type, false otherwise.</returns>
         internal static bool ValueTypeMatchesJsonType(ODataPrimitiveValue primitiveValue, IEdmPrimitiveTypeReference valueTypeReference)
         {
-            switch (valueTypeReference.PrimitiveKind())
+            return ValueTypeMatchesJsonType(primitiveValue, valueTypeReference.PrimitiveKind());
+        }
+
+        internal static bool ValueTypeMatchesJsonType(ODataPrimitiveValue primitiveValue, EdmPrimitiveTypeKind primitiveTypeKind)
+        {
+            switch (primitiveTypeKind)
             {
                 // If the value being serialized is of a basic type where we can rely on just the JSON representation to convey type information, then never write the type name.
                 case EdmPrimitiveTypeKind.Int32:

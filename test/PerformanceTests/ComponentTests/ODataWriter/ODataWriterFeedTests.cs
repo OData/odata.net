@@ -589,7 +589,7 @@ namespace Microsoft.OData.Performance
 
             // collection of complex value
             writer.WriteStart(new ODataNestedResourceInfo { Name = "TimeZones", IsCollection = true, });
-            writer.WriteStart(new ODataResourceSet {  });
+            writer.WriteStart(new ODataResourceSet { });
             for (int i = 0; i < 10; ++i)
             {
                 var complexEntry = new ODataResource
@@ -618,7 +618,7 @@ namespace Microsoft.OData.Performance
             writer.WriteEnd();
 
             // complex value
-            writer.WriteStart(new ODataNestedResourceInfo { Name = "OpenProperty4", IsCollection = false});
+            writer.WriteStart(new ODataNestedResourceInfo { Name = "OpenProperty4", IsCollection = false });
             writer.WriteStart(new ODataResource
             {
                 TypeName = "PerformanceServices.Edm.AdventureWorks.AddressSpatial",

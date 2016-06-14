@@ -160,6 +160,25 @@ namespace Microsoft.OData
         }
 
         /// <summary>
+        /// Try to get type name from ODataValue annotation.
+        /// </summary>
+        /// <param name="value">The value to get type annotation.</param>
+        /// <param name="propertyName">The type name from annotation</param>
+        /// <returns>True if there is type name annotation.</returns>
+        internal static bool TryGetTypeNameFromAnnotation(ODataValue value, out string propertyName)
+        {
+            SerializationTypeNameAnnotation typeNameAnnotation = value.GetAnnotation<SerializationTypeNameAnnotation>();
+            if (typeNameAnnotation != null)
+            {
+                propertyName = typeNameAnnotation.TypeName;
+                return true;
+            }
+
+            propertyName = null;
+            return false;
+        }
+
+        /// <summary>
         /// Gets the type name from the given <paramref name="value"/>.
         /// </summary>
         /// <param name="value">The value to get the type name from. This can be an ODataPrimitiveValue, an ODataComplexValue, an ODataCollectionValue or a Clr primitive object.</param>
