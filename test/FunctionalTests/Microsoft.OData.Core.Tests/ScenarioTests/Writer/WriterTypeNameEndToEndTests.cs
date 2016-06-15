@@ -15,7 +15,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Writer
 {
     /// <summary>
     /// These tests baseline the end-to-end behavior of when type names are written on the wire, 
-    /// based on the format and metadata level along with whether the AutoComputePayloadMetadataInJson 
+    /// based on the format and metadata level along with whether the AutoComputePayloadMetadata 
     /// flag is set on the message writer settings. These tests are not meant to be exhaustive, but
     /// should catch major end-to-end problems. The unit tests for the individual components are more extensive.
     /// </summary>
@@ -104,7 +104,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Writer
         public void TypeNameShouldBeWrittenCorrectlyInMinimalMetadataWhenKnobIsOff()
         {
             this.settings.SetContentType(jsonLightMinimalMetadata, null);
-            this.settings.AutoComputePayloadMetadataInJson = false;
+            this.settings.AutoComputePayloadMetadata = false;
             this.writerOutput.Value.Should()
                 .NotContain("DeclaredInt16@odata.type")
                 .And.Contain("UndeclaredDecimal@odata.type\":\"#Decimal\"")
@@ -116,7 +116,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Writer
         public void TypeNameShouldBeWrittenCorrectlyInFullMetadataWhenKnobIsOff()
         {
             this.settings.SetContentType(jsonLightFullMetadata, null);
-            this.settings.AutoComputePayloadMetadataInJson = false;
+            this.settings.AutoComputePayloadMetadata = false;
             this.writerOutput.Value.Should()
                 .NotContain("DeclaredInt16@odata.type")
                 .And.Contain("UndeclaredDecimal@odata.type\":\"#Decimal\"")
@@ -128,7 +128,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Writer
         public void TypeNameShouldBeWrittenCorrectlyInNoMetadataWhenKnobIsOff()
         {
             this.settings.SetContentType(jsonLightNoMetadata, null);
-            this.settings.AutoComputePayloadMetadataInJson = false;
+            this.settings.AutoComputePayloadMetadata = false;
             this.writerOutput.Value.Should()
                 .NotContain("DeclaredInt16@odata.type")
                 .And.Contain("UndeclaredDecimal@odata.type\":\"#Decimal\"")
@@ -140,7 +140,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Writer
         public void TypeNameShouldBeWrittenCorrectlyInMinimalMetadataWhenKnobIsSet()
         {
             this.settings.SetContentType(jsonLightMinimalMetadata, null);
-            this.settings.AutoComputePayloadMetadataInJson = true;
+            this.settings.AutoComputePayloadMetadata = true;
             this.writerOutput.Value.Should()
                 .NotContain("DeclaredInt16@odata.type")
                 .And.Contain("UndeclaredDecimal@odata.type\":\"#Decimal\"")
@@ -152,7 +152,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Writer
         public void TypeNameShouldBeWrittenCorrectlyInNoMetadataWhenKnobIsSet()
         {
             this.settings.SetContentType(jsonLightNoMetadata, null);
-            this.settings.AutoComputePayloadMetadataInJson = true;
+            this.settings.AutoComputePayloadMetadata = true;
             this.writerOutput.Value.Should()
                 .NotContain("DeclaredInt16@odata.type")
                 .And.NotContain("UndeclaredDecimal@odata.type")
@@ -165,7 +165,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Writer
         {
             this.settings.SetContentType(jsonLightNoMetadata, null);
             this.settings.JsonPCallback = "callback";
-            this.settings.AutoComputePayloadMetadataInJson = true;
+            this.settings.AutoComputePayloadMetadata = true;
             this.writerOutput.Value.Should()
                 .NotContain("DeclaredInt16@odata.type")
                 .And.NotContain("UndeclaredDecimal@odata.type")
@@ -177,7 +177,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Writer
         public void TypeNameShouldBeWrittenCorrectlyInFullMetadataWhenKnobIsSet()
         {
             this.settings.SetContentType(jsonLightFullMetadata, null);
-            this.settings.AutoComputePayloadMetadataInJson = true;
+            this.settings.AutoComputePayloadMetadata = true;
             this.writerOutput.Value.Should()
                 .Contain("DeclaredInt16@odata.type\":\"#Int16\"")
                 .And.Contain("UndeclaredDecimal@odata.type\":\"#Decimal\"")

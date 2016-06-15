@@ -985,7 +985,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Writer.JsonLight
         #region Help Methods
         private string GetWriterOutputForContentTypeAndKnobValue(
             string contentType,
-            bool autoComputePayloadMetadataInJson,
+            bool autoComputePayloadMetadata,
             ODataItem[] itemsToWrite,
             EdmModel edmModel,
             IEdmEntitySetBase edmEntitySet,
@@ -1002,7 +1002,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Writer.JsonLight
             {
                 Validations = WriterValidations.FullValidation & ~WriterValidations.ThrowOnUndeclaredProperty
                               & (enableBasicValidation ? WriterValidations.FullValidation : ~WriterValidations.BasicValidation),
-                AutoComputePayloadMetadataInJson = autoComputePayloadMetadataInJson,
+                AutoComputePayloadMetadata = autoComputePayloadMetadata,
             };
 
             var result = new ODataQueryOptionParser(edmModel, edmEntityType, edmEntitySet, new Dictionary<string, string> { { "$expand", expandClause }, { "$select", selectClause } }).ParseSelectAndExpand();

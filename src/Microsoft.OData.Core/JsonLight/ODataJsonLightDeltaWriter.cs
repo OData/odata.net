@@ -747,7 +747,7 @@ namespace Microsoft.OData.JsonLight
         /// <param name="entityType">The entity type of the resource.</param>
         private void ValidateEntryMediaResource(ODataResource resource, IEdmEntityType entityType)
         {
-            if (this.jsonLightOutputContext.MessageWriterSettings.AutoComputePayloadMetadataInJson && this.jsonLightOutputContext.MetadataLevel is JsonNoMetadataLevel)
+            if (this.jsonLightOutputContext.MessageWriterSettings.AutoComputePayloadMetadata && this.jsonLightOutputContext.MetadataLevel is JsonNoMetadataLevel)
             {
                 return;
             }
@@ -916,7 +916,7 @@ namespace Microsoft.OData.JsonLight
         /// <param name="resource">Resource to write.</param>
         private void PrepareResourceForWriteStart(ODataResource resource)
         {
-            if (this.jsonLightOutputContext.MessageWriterSettings.AutoComputePayloadMetadataInJson)
+            if (this.jsonLightOutputContext.MessageWriterSettings.AutoComputePayloadMetadata)
             {
                 DeltaResourceScope resourceScope = this.CurrentDeltaResourceScope;
                 Debug.Assert(resourceScope != null, "resourceScope != null");

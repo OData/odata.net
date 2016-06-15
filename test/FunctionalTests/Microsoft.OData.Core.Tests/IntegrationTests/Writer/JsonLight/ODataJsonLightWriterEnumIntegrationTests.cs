@@ -888,7 +888,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Writer.JsonLight
 
         public void WriteToMessageWriterAndVerifyPayload(string contentType, Action<ODataMessageWriter> writerAction, string expectedPayload)
         {
-            ODataMessageWriterSettings settings = new ODataMessageWriterSettings() { Version = ODataVersion.V4, AutoComputePayloadMetadataInJson = true, DisableMessageStreamDisposal = true };
+            ODataMessageWriterSettings settings = new ODataMessageWriterSettings() { Version = ODataVersion.V4, AutoComputePayloadMetadata = true, DisableMessageStreamDisposal = true };
             settings.SetContentType(contentType, "utf-8");
             settings.SetServiceDocumentUri(this.serviceDocumentUri);
             // with model
@@ -1009,7 +1009,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Writer.JsonLight
 
         private static ODataJsonLightOutputContext CreateJsonLightOutputContext(MemoryStream stream, ODataMediaType mediaType, bool writingResponse = true, IEdmModel userModel = null, Uri serviceDocumentUri = null)
         {
-            var settings = new ODataMessageWriterSettings { Version = ODataVersion.V4, AutoComputePayloadMetadataInJson = true };
+            var settings = new ODataMessageWriterSettings { Version = ODataVersion.V4, AutoComputePayloadMetadata = true };
             if (serviceDocumentUri != null)
             {
                 settings.SetServiceDocumentUri(serviceDocumentUri);

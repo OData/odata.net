@@ -195,7 +195,7 @@ namespace Microsoft.OData.Tests.JsonLight
             writer.WriteEnd();
             writer.Flush();
 
-            this.TestPayload().Should().Be("{\"@odata.context\":\"http://host/service/$metadata#Products/$delta\",\"value\":[{\"@odata.context\":\"http://host/service/$metadata#Products(1)/Details/$entity\",\"Id\":1,\"Detail\":\"made in china\"},{\"@odata.context\":\"http://host/service/$metadata#Products(1)/Details(1)/Items/$entity\",\"ItemId\":1,\"Description\":\"made by HCC\"}]}"); 
+            this.TestPayload().Should().Be("{\"@odata.context\":\"http://host/service/$metadata#Products/$delta\",\"value\":[{\"@odata.context\":\"http://host/service/$metadata#Products(1)/Details/$entity\",\"Id\":1,\"Detail\":\"made in china\"},{\"@odata.context\":\"http://host/service/$metadata#Products(1)/Details(1)/Items/$entity\",\"ItemId\":1,\"Description\":\"made by HCC\"}]}");
         }
 
         [Fact]
@@ -261,7 +261,7 @@ namespace Microsoft.OData.Tests.JsonLight
 
             ODataDeltaResourceSet feed = new ODataDeltaResourceSet();
 
-            ODataResource orderEntry= new ODataResource()
+            ODataResource orderEntry = new ODataResource()
             {
                 Properties = new List<ODataProperty>
                 {
@@ -286,7 +286,7 @@ namespace Microsoft.OData.Tests.JsonLight
             };
 
 
-           var result = new ODataQueryOptionParser(this.GetModel(), this.GetCustomerType(), this.GetCustomers(), new Dictionary<string, string> { { "$expand", "Orders($select=ShippingAddress)" }, { "$select", "ContactName" } }).ParseSelectAndExpand();
+            var result = new ODataQueryOptionParser(this.GetModel(), this.GetCustomerType(), this.GetCustomers(), new Dictionary<string, string> { { "$expand", "Orders($select=ShippingAddress)" }, { "$select", "ContactName" } }).ParseSelectAndExpand();
 
             ODataUri odataUri = new ODataUri()
             {
@@ -558,7 +558,7 @@ namespace Microsoft.OData.Tests.JsonLight
                                 "}" +
                             "]" +
                         "}" +
-                    "]"+
+                    "]" +
                 "}");
         }
 
@@ -1007,7 +1007,7 @@ namespace Microsoft.OData.Tests.JsonLight
 
         private static ODataJsonLightOutputContext CreateJsonLightOutputContext(MemoryStream stream, IEdmModel userModel, bool fullMetadata = false, ODataUri uri = null)
         {
-            var settings = new ODataMessageWriterSettings { Version = ODataVersion.V4, AutoComputePayloadMetadataInJson = true, ShouldIncludeAnnotation = ODataUtils.CreateAnnotationFilter("*") };
+            var settings = new ODataMessageWriterSettings { Version = ODataVersion.V4, AutoComputePayloadMetadata = true, ShouldIncludeAnnotation = ODataUtils.CreateAnnotationFilter("*") };
             settings.SetServiceDocumentUri(new Uri("http://host/service"));
             if (uri != null)
             {

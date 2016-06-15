@@ -386,7 +386,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Writer.JsonLight
             var stream = new MemoryStream();
             var message = new InMemoryMessage { Stream = stream };
 
-            var settings = new ODataMessageWriterSettings { Version = ODataVersion.V4, AutoComputePayloadMetadataInJson = true };
+            var settings = new ODataMessageWriterSettings { Version = ODataVersion.V4, AutoComputePayloadMetadata = true };
             settings.ODataUri = odataUri;
             settings.SetServiceDocumentUri(serviceDocumentUri);
 

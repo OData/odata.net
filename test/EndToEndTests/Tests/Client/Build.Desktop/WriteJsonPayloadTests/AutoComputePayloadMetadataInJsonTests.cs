@@ -57,13 +57,13 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
                     settings.ODataUri = new ODataUri() { ServiceRoot = this.ServiceUri };
                     settings.BaseUri = this.ServiceUri;
 
-                    settings.AutoComputePayloadMetadataInJson = false;
+                    settings.AutoComputePayloadMetadata = false;
                     string defaultModeResult = this.WriteAndVerifyOrderFeed(settings, mimeType, hasModel);
 
-                    settings.AutoComputePayloadMetadataInJson = true;
+                    settings.AutoComputePayloadMetadata = true;
                     string autoComputeMetadataModeResult = this.WriteAndVerifyOrderFeed(settings, mimeType, hasModel);
 
-                    // For Atom/VerboseJson, verify that the result is the same for AutoComputePayloadMetadataInJson=true/false
+                    // For Atom/VerboseJson, verify that the result is the same for AutoComputePayloadMetadata=true/false
                     if (mimeType == MimeTypes.ApplicationAtomXml)
                     {
                         WritePayloadHelper.VerifyPayloadString(defaultModeResult, autoComputeMetadataModeResult, mimeType);
@@ -134,8 +134,8 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
 
                 VerifyODataContextAnnotation(this.ServiceUri + "$metadata#Order", resultObject, mimeType);
 
-                VerifyEntry(expectedOrderObject1, orderEntry1, new ODataNestedResourceInfo[] { }, new ODataProperty[] { }, (resultObject.Last().Value as object[]).First() as Dictionary<string, object>, mimeType, settings.AutoComputePayloadMetadataInJson);
-                VerifyEntry(expectedOrderObject2, orderEntry2, new ODataNestedResourceInfo[] { orderEntry2Navigation }, new ODataProperty[] { }, (resultObject.Last().Value as object[]).Last() as Dictionary<string, object>, mimeType, settings.AutoComputePayloadMetadataInJson);
+                VerifyEntry(expectedOrderObject1, orderEntry1, new ODataNestedResourceInfo[] { }, new ODataProperty[] { }, (resultObject.Last().Value as object[]).First() as Dictionary<string, object>, mimeType, settings.AutoComputePayloadMetadata);
+                VerifyEntry(expectedOrderObject2, orderEntry2, new ODataNestedResourceInfo[] { orderEntry2Navigation }, new ODataProperty[] { }, (resultObject.Last().Value as object[]).Last() as Dictionary<string, object>, mimeType, settings.AutoComputePayloadMetadata);
             }
 
             return result;
@@ -161,13 +161,13 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
 
                     settings.BaseUri = this.ServiceUri;
 
-                    settings.AutoComputePayloadMetadataInJson = false;
+                    settings.AutoComputePayloadMetadata = false;
                     string defaultModeResult = this.WriteAndVerifyExpandedCustomerEntry(settings, mimeType, expectedClause, hasModel);
 
-                    settings.AutoComputePayloadMetadataInJson = true;
+                    settings.AutoComputePayloadMetadata = true;
                     string autoComputeMetadataModeResult = this.WriteAndVerifyExpandedCustomerEntry(settings, mimeType, expectedClause, hasModel);
 
-                    // For Atom, verify that the result is the same for AutoComputePayloadMetadataInJson=true/false
+                    // For Atom, verify that the result is the same for AutoComputePayloadMetadata=true/false
                     if (mimeType == MimeTypes.ApplicationAtomXml)
                     {
                         WritePayloadHelper.VerifyPayloadString(defaultModeResult, autoComputeMetadataModeResult, mimeType);
@@ -241,8 +241,8 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
 
                 VerifyODataContextAnnotation(this.ServiceUri + "$metadata#Customer(" + expectedProjectionClause + ")/$entity", resultObject, mimeType);
 
-                VerifyEntry(expectedCustomerObject, customerEntry, new ODataNestedResourceInfo[] { orderNavigation, expandedLoginsNavigation }, new ODataProperty[] { thumbnailProperty }, resultObject, mimeType, settings.AutoComputePayloadMetadataInJson);
-                VerifyEntry(expectedLoginObject, loginEntry, new ODataNestedResourceInfo[] { }, new ODataProperty[] { }, (resultObject["Logins"] as object[]).Single() as Dictionary<string, object>, mimeType, settings.AutoComputePayloadMetadataInJson);
+                VerifyEntry(expectedCustomerObject, customerEntry, new ODataNestedResourceInfo[] { orderNavigation, expandedLoginsNavigation }, new ODataProperty[] { thumbnailProperty }, resultObject, mimeType, settings.AutoComputePayloadMetadata);
+                VerifyEntry(expectedLoginObject, loginEntry, new ODataNestedResourceInfo[] { }, new ODataProperty[] { }, (resultObject["Logins"] as object[]).Single() as Dictionary<string, object>, mimeType, settings.AutoComputePayloadMetadata);
             }
 
             return result;
@@ -292,13 +292,13 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
                     settings.ODataUri = new ODataUri() { ServiceRoot = this.ServiceUri };
                     settings.BaseUri = this.ServiceUri;
 
-                    settings.AutoComputePayloadMetadataInJson = false;
+                    settings.AutoComputePayloadMetadata = false;
                     string defaultModeResult = this.WriteAndVerifyPersonFeed(settings, mimeType, hasModel);
 
-                    settings.AutoComputePayloadMetadataInJson = true;
+                    settings.AutoComputePayloadMetadata = true;
                     string autoComputeMetadataModeResult = this.WriteAndVerifyPersonFeed(settings, mimeType, hasModel);
 
-                    // For Atom, verify that the result is the same for AutoComputePayloadMetadataInJson=true/false
+                    // For Atom, verify that the result is the same for AutoComputePayloadMetadata=true/false
                     if (mimeType == MimeTypes.ApplicationAtomXml)
                     {
                         WritePayloadHelper.VerifyPayloadString(defaultModeResult, autoComputeMetadataModeResult, mimeType);
@@ -362,9 +362,9 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
 
                 VerifyODataContextAnnotation(this.ServiceUri + "$metadata#Person", resultObject, mimeType);
 
-                VerifyEntry(expectedPersonObject, personEntry, new ODataNestedResourceInfo[] { }, new ODataProperty[] { }, (resultObject.Last().Value as object[]).ElementAt(0) as Dictionary<string, object>, mimeType, settings.AutoComputePayloadMetadataInJson);
-                VerifyEntry(expectedEmployeeObject, employeeEntry, new ODataNestedResourceInfo[] { }, new ODataProperty[] { }, (resultObject.Last().Value as object[]).ElementAt(1) as Dictionary<string, object>, mimeType, settings.AutoComputePayloadMetadataInJson);
-                VerifyEntry(expectedSpecialEmployeeObject, specialEmployeeEntry, new ODataNestedResourceInfo[] { }, new ODataProperty[] { }, (resultObject.Last().Value as object[]).ElementAt(2) as Dictionary<string, object>, mimeType, settings.AutoComputePayloadMetadataInJson);
+                VerifyEntry(expectedPersonObject, personEntry, new ODataNestedResourceInfo[] { }, new ODataProperty[] { }, (resultObject.Last().Value as object[]).ElementAt(0) as Dictionary<string, object>, mimeType, settings.AutoComputePayloadMetadata);
+                VerifyEntry(expectedEmployeeObject, employeeEntry, new ODataNestedResourceInfo[] { }, new ODataProperty[] { }, (resultObject.Last().Value as object[]).ElementAt(1) as Dictionary<string, object>, mimeType, settings.AutoComputePayloadMetadata);
+                VerifyEntry(expectedSpecialEmployeeObject, specialEmployeeEntry, new ODataNestedResourceInfo[] { }, new ODataProperty[] { }, (resultObject.Last().Value as object[]).ElementAt(2) as Dictionary<string, object>, mimeType, settings.AutoComputePayloadMetadata);
             }
 
             return result;
@@ -384,13 +384,13 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
                     settings.ODataUri = new ODataUri() { ServiceRoot = this.ServiceUri };
                     settings.BaseUri = this.ServiceUri;
 
-                    settings.AutoComputePayloadMetadataInJson = false;
+                    settings.AutoComputePayloadMetadata = false;
                     string defaultModeResult = this.WriteAndVerifyCarEntry(settings, mimeType, hasModel);
 
-                    settings.AutoComputePayloadMetadataInJson = true;
+                    settings.AutoComputePayloadMetadata = true;
                     string autoComputeMetadataModeResult = this.WriteAndVerifyCarEntry(settings, mimeType, hasModel);
 
-                    // For Atom, verify that the result is the same for AutoComputePayloadMetadataInJson=true/false
+                    // For Atom, verify that the result is the same for AutoComputePayloadMetadata=true/false
                     if (mimeType == MimeTypes.ApplicationAtomXml)
                     {
                         WritePayloadHelper.VerifyPayloadString(defaultModeResult, autoComputeMetadataModeResult, mimeType);
@@ -430,7 +430,7 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
 
                 VerifyODataContextAnnotation(this.ServiceUri + "$metadata#Car/$entity", resultObject, mimeType);
 
-                VerifyEntry(expectedCarObject, carEntry, new ODataNestedResourceInfo[] { }, new ODataProperty[] { }, resultObject, mimeType, settings.AutoComputePayloadMetadataInJson);
+                VerifyEntry(expectedCarObject, carEntry, new ODataNestedResourceInfo[] { }, new ODataProperty[] { }, resultObject, mimeType, settings.AutoComputePayloadMetadata);
             }
 
             return result;
@@ -450,10 +450,10 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
                     settings.ODataUri = new ODataUri() { ServiceRoot = this.ServiceUri };
                     settings.BaseUri = this.ServiceUri;
 
-                    settings.AutoComputePayloadMetadataInJson = false;
+                    settings.AutoComputePayloadMetadata = false;
                     string defaultModeResult = this.WriteAndVerifyRequestMessage(settings, mimeType, hasModel);
 
-                    settings.AutoComputePayloadMetadataInJson = true;
+                    settings.AutoComputePayloadMetadata = true;
                     string autoComputeMetadataModeResult = this.WriteAndVerifyRequestMessage(settings, mimeType, hasModel);
                 }
             }
@@ -526,7 +526,7 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
                 JavaScriptSerializer jScriptSerializer = new JavaScriptSerializer();
                 Dictionary<string, object> resultObject = jScriptSerializer.DeserializeObject(result) as Dictionary<string, object>;
 
-                // AutoComputePayloadMetadataInJson has no effect on request message metadata
+                // AutoComputePayloadMetadata has no effect on request message metadata
                 Assert.AreEqual(this.ServiceUri + "$metadata#Order/$entity", resultObject.Single(e => e.Key == JsonLightConstants.ODataContextAnnotationName).Value);
                 resultObject.Remove(JsonLightConstants.ODataContextAnnotationName);
 
@@ -540,7 +540,7 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
         }
 
         /// <summary>
-        /// Write derived type entries with AutoGeneratedUrlsShouldPutKeyValueInDedicatedSegment, attempt to reset AutoComputePayloadMetadataInJson when writing
+        /// Write derived type entries with AutoGeneratedUrlsShouldPutKeyValueInDedicatedSegment, attempt to reset AutoComputePayloadMetadata when writing
         /// </summary>
         [TestMethod]
         public void DerivedTypeFeedUrlConventionTest()
@@ -555,13 +555,13 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
 
                     settings.UseKeyAsSegment = true;
 
-                    settings.AutoComputePayloadMetadataInJson = false;
+                    settings.AutoComputePayloadMetadata = false;
                     string defaultModeResult = this.WriteAndVerifyEmployeeFeed(settings, mimeType, hasModel);
 
-                    settings.AutoComputePayloadMetadataInJson = true;
+                    settings.AutoComputePayloadMetadata = true;
                     string autoComputeMetadataModeResult = this.WriteAndVerifyEmployeeFeed(settings, mimeType, hasModel);
 
-                    // For Atom, verify that the result is the same for AutoComputePayloadMetadataInJson=true/false
+                    // For Atom, verify that the result is the same for AutoComputePayloadMetadata=true/false
                     if (mimeType == MimeTypes.ApplicationAtomXml)
                     {
                         WritePayloadHelper.VerifyPayloadString(defaultModeResult, autoComputeMetadataModeResult, mimeType);
@@ -604,8 +604,8 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
                 odataWriter.WriteStart(employeeEntry);
                 odataWriter.WriteEnd();
 
-                // toggle AutoComputePayloadMetadataInJson, this should not affect the writing result
-                settings.AutoComputePayloadMetadataInJson = !settings.AutoComputePayloadMetadataInJson;
+                // toggle AutoComputePayloadMetadata, this should not affect the writing result
+                settings.AutoComputePayloadMetadata = !settings.AutoComputePayloadMetadata;
 
                 odataWriter.WriteStart(specialEmployeeEntry);
                 odataWriter.WriteEnd();
@@ -623,9 +623,9 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
 
                 VerifyODataContextAnnotation(this.ServiceUri + "$metadata#Person/" + NameSpace + "Employee", resultObject, mimeType);
 
-                settings.AutoComputePayloadMetadataInJson = !settings.AutoComputePayloadMetadataInJson;
-                VerifyEntry(expectedEmployeeObject, employeeEntry, new ODataNestedResourceInfo[] { }, new ODataProperty[] { }, (resultObject.Last().Value as object[]).First() as Dictionary<string, object>, mimeType, settings.AutoComputePayloadMetadataInJson);
-                VerifyEntry(expectedSpecialEmployeeObject, specialEmployeeEntry, new ODataNestedResourceInfo[] { }, new ODataProperty[] { }, (resultObject.Last().Value as object[]).Last() as Dictionary<string, object>, mimeType, settings.AutoComputePayloadMetadataInJson);
+                settings.AutoComputePayloadMetadata = !settings.AutoComputePayloadMetadata;
+                VerifyEntry(expectedEmployeeObject, employeeEntry, new ODataNestedResourceInfo[] { }, new ODataProperty[] { }, (resultObject.Last().Value as object[]).First() as Dictionary<string, object>, mimeType, settings.AutoComputePayloadMetadata);
+                VerifyEntry(expectedSpecialEmployeeObject, specialEmployeeEntry, new ODataNestedResourceInfo[] { }, new ODataProperty[] { }, (resultObject.Last().Value as object[]).Last() as Dictionary<string, object>, mimeType, settings.AutoComputePayloadMetadata);
             }
 
             return result;
@@ -699,9 +699,9 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
             ODataProperty[] userSpecifiedMediaProperties,
             Dictionary<string, object> metadataNotYetVerified,
             string mimeType,
-            bool autoComputePayloadMetadataInJson)
+            bool autoComputePayloadMetadata)
         {
-            if (autoComputePayloadMetadataInJson && !mimeType.Contains(MimeTypes.ODataParameterMinimalMetadata))
+            if (autoComputePayloadMetadata && !mimeType.Contains(MimeTypes.ODataParameterMinimalMetadata))
             {
                 // Verify fullmedata result against fullmetadata expected object, for nometadata, verify metadata does not exist in the result
                 foreach (var pair in expectedFullMetadataObject)
@@ -754,7 +754,7 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
             }
 
             // additional verification for mimimalmetadata, only include odata.type in derived type instances
-            if (!autoComputePayloadMetadataInJson || mimeType.Contains(MimeTypes.ODataParameterMinimalMetadata))
+            if (!autoComputePayloadMetadata || mimeType.Contains(MimeTypes.ODataParameterMinimalMetadata))
             {
                 object value = null;
                 bool typeAnnotationFound = metadataNotYetVerified.TryGetValue(JsonLightConstants.ODataTypeAnnotationName, out value);
@@ -773,7 +773,7 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
 
         private static void VerifyAgainstODataEntry(ODataResource entry, ODataNestedResourceInfo[] userSpecifiedNavigationLinks, ODataProperty[] userSpecifiedMediaProperties, Dictionary<string, object> metadataNotYetVerified)
         {
-            // for non-autoComputePayloadMetadataInJson case (and minimal metatadata), writer should include user specified metadata
+            // for non-autoComputePayloadMetadata case (and minimal metatadata), writer should include user specified metadata
             object value = null;
             Assert.AreEqual(entry.Id != null, metadataNotYetVerified.TryGetValue(JsonLightConstants.ODataIdAnnotationName, out value));
             Assert.AreEqual(entry.Id, value);

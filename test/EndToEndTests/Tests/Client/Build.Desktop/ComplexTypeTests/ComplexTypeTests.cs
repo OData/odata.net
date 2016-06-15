@@ -268,7 +268,7 @@ namespace Microsoft.Test.OData.Tests.Client.ComplexTypeTests
                 };
                 var settings = new ODataMessageWriterSettings();
                 settings.BaseUri = ServiceBaseUri;
-                settings.AutoComputePayloadMetadataInJson = true;
+                settings.AutoComputePayloadMetadata = true;
 
                 var personType = Model.FindDeclaredType(NameSpacePrefix + "Person") as IEdmEntityType;
                 var personSet = Model.EntityContainer.FindEntitySet("People");
@@ -778,7 +778,7 @@ namespace Microsoft.Test.OData.Tests.Client.ComplexTypeTests
                 };
                 var settings = new ODataMessageWriterSettings();
                 settings.BaseUri = ServiceBaseUri;
-                settings.AutoComputePayloadMetadataInJson = true;
+                settings.AutoComputePayloadMetadata = true;
 
                 var accountType = Model.FindDeclaredType(NameSpacePrefix + "Account") as IEdmEntityType;
                 var accountSet = Model.EntityContainer.FindEntitySet("Accounts");
@@ -1158,7 +1158,7 @@ namespace Microsoft.Test.OData.Tests.Client.ComplexTypeTests
 
             var settings = new ODataMessageWriterSettings();
             settings.BaseUri = ServiceBaseUri;
-            settings.AutoComputePayloadMetadataInJson = true;
+            settings.AutoComputePayloadMetadata = true;
 
             var requestMessage = new HttpWebRequestMessage(new Uri(ServiceBaseUri + "Accounts(101)/AccountInfo"));
             requestMessage.SetHeader("Content-Type", mimeType);

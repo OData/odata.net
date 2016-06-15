@@ -1673,31 +1673,31 @@ namespace Microsoft.OData.Tests.IntegrationTests.Evaluation
 
         private string GetWriterOutputForEntryWithPayloadMetadata(
             string contentType,
-            bool autoComputePayloadMetadataInJson,
+            bool autoComputePayloadMetadata,
             string selectClause = null,
             bool odataSimplified = false)
         {
             ODataItem[] itemsToWrite = new ODataItem[] { this.entryWithPayloadMetadata, this.navLinkWithPayloadMetadata, this.expandedNavLinkWithPayloadMetadata, new ODataResourceSet() };
-            return this.GetWriterOutputForContentTypeAndKnobValue(contentType, autoComputePayloadMetadataInJson, itemsToWrite, Model, EntitySet, EntityType, selectClause, odataSimplified: odataSimplified);
+            return this.GetWriterOutputForContentTypeAndKnobValue(contentType, autoComputePayloadMetadata, itemsToWrite, Model, EntitySet, EntityType, selectClause, odataSimplified: odataSimplified);
         }
 
         private string GetWriterOutputForEntryWithOnlyData(
             string contentType,
-            bool autoComputePayloadMetadataInJson,
+            bool autoComputePayloadMetadata,
             string selectClause = null)
         {
             ODataItem[] itemsToWrite = new ODataItem[] { this.entryWithOnlyData, this.navLinkWithoutPayloadMetadata, this.expandedNavLinkWithoutPayloadMetadata, new ODataResourceSet() };
-            return this.GetWriterOutputForContentTypeAndKnobValue(contentType, autoComputePayloadMetadataInJson, itemsToWrite, Model, EntitySet, EntityType, selectClause);
+            return this.GetWriterOutputForContentTypeAndKnobValue(contentType, autoComputePayloadMetadata, itemsToWrite, Model, EntitySet, EntityType, selectClause);
         }
 
-        private string GetWriterOutputForContentTypeAndKnobValue(string contentType, bool autoComputePayloadMetadataInJson, ODataItem[] itemsToWrite, EdmModel edmModel, IEdmEntitySetBase edmEntitySet, EdmEntityType edmEntityType, string selectClause = null, string expandClause = null, string resourcePath = null, bool odataSimplified = false)
+        private string GetWriterOutputForContentTypeAndKnobValue(string contentType, bool autoComputePayloadMetadata, ODataItem[] itemsToWrite, EdmModel edmModel, IEdmEntitySetBase edmEntitySet, EdmEntityType edmEntityType, string selectClause = null, string expandClause = null, string resourcePath = null, bool odataSimplified = false)
         {
             MemoryStream outputStream = new MemoryStream();
             IODataResponseMessage message = new InMemoryMessage() { Stream = outputStream };
             message.SetHeader("Content-Type", contentType);
             ODataMessageWriterSettings settings = new ODataMessageWriterSettings()
             {
-                AutoComputePayloadMetadataInJson = autoComputePayloadMetadataInJson,
+                AutoComputePayloadMetadata = autoComputePayloadMetadata,
                 ODataSimplified = odataSimplified
             };
 

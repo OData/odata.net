@@ -155,9 +155,9 @@ namespace Microsoft.OData.Tests
         }
 
         [Fact]
-        public void AutoComputePayloadMetadataInJsonShouldBeFalseByDefault()
+        public void AutoComputePayloadMetadataShouldBeFalseByDefault()
         {
-            this.settings.AutoComputePayloadMetadataInJson.Should().BeFalse();
+            this.settings.AutoComputePayloadMetadata.Should().BeFalse();
         }
 
         [Fact]
@@ -290,10 +290,10 @@ namespace Microsoft.OData.Tests
         }
 
         [Fact]
-        public void CopyConstructorShouldCopyAutoComputePayloadMetadataInJson()
+        public void CopyConstructorShouldCopyAutoComputePayloadMetadata()
         {
-            this.settings.AutoComputePayloadMetadataInJson = true;
-            this.settings.Clone().AutoComputePayloadMetadataInJson.Should().BeTrue();
+            this.settings.AutoComputePayloadMetadata = true;
+            this.settings.Clone().AutoComputePayloadMetadata.Should().BeTrue();
         }
 
         [Fact]
@@ -358,8 +358,8 @@ namespace Microsoft.OData.Tests
             this.settings = new ODataMessageWriterSettings()
             {
                 Validations = WriterValidations.FullValidation
-                              & ~WriterValidations.ThrowOnDuplicatePropertyNames,
-                AutoComputePayloadMetadataInJson = true,
+                              & ~WriterValidations.ThrowOnDuplicatePropertyNames,               
+                AutoComputePayloadMetadata = true,
                 BaseUri = baseUri,
                 EnableCharactersCheck = true,
                 DisableMessageStreamDisposal = true,
@@ -375,7 +375,7 @@ namespace Microsoft.OData.Tests
             };
 
             this.settings.ThrowOnDuplicatePropertyNames.Should().BeFalse();
-            this.settings.AutoComputePayloadMetadataInJson.Should().BeTrue();
+            this.settings.AutoComputePayloadMetadata.Should().BeTrue();
             this.settings.BaseUri.Should().BeSameAs(baseUri);
             this.settings.EnableCharactersCheck.Should().BeTrue();
             this.settings.DisableMessageStreamDisposal.Should().BeTrue();

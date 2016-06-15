@@ -159,7 +159,7 @@ namespace Microsoft.OData.JsonLight
         /// <param name="selectedProperties">The selected properties of this scope.</param>
         protected override void PrepareResourceForWriteStart(ODataResource resource, ODataResourceTypeContext typeContext, SelectedPropertiesNode selectedProperties)
         {
-            if (this.jsonLightOutputContext.MessageWriterSettings.AutoComputePayloadMetadataInJson)
+            if (this.jsonLightOutputContext.MessageWriterSettings.AutoComputePayloadMetadata)
             {
                 ResourceScope resourceScope = (ResourceScope)this.CurrentScope;
                 Debug.Assert(resourceScope != null, "resourceScope != null");
@@ -190,7 +190,7 @@ namespace Microsoft.OData.JsonLight
         /// <param name="entityType">The entity type of the resource.</param>
         protected override void ValidateMediaResource(ODataResource resource, IEdmEntityType entityType)
         {
-            if (this.jsonLightOutputContext.MessageWriterSettings.AutoComputePayloadMetadataInJson)
+            if (this.jsonLightOutputContext.MessageWriterSettings.AutoComputePayloadMetadata)
             {
                 // resource.MediaResource is always null for NoMetadata mode. Skip the media resource validation.
             }

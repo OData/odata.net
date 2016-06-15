@@ -128,7 +128,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Writer.JsonLight
         {
             var settings = new ODataMessageWriterSettings
             {
-                AutoComputePayloadMetadataInJson = true,
+                AutoComputePayloadMetadata = true,
                 UseKeyAsSegment = useKeyAsSegment,
             };
 

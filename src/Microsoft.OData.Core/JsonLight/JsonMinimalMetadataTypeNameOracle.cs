@@ -15,7 +15,7 @@ namespace Microsoft.OData.JsonLight
 
     /// <summary>
     /// Class responsible for determining the type name that should be written on the wire for entries and values in JSON minimal metadata mode,
-    /// or the other metadata modes of JSON light when <see cref="ODataMessageWriterSettings.AutoComputePayloadMetadataInJson"/> is false.
+    /// or the other metadata modes of JSON light when <see cref="ODataMessageWriterSettings.AutoComputePayloadMetadata"/> is false.
     /// </summary>
     internal sealed class JsonMinimalMetadataTypeNameOracle : JsonLightTypeNameOracle
     {

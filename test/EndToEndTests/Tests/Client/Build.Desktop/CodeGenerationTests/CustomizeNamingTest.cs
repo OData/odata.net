@@ -370,7 +370,7 @@ namespace Microsoft.Test.OData.Tests.Client.CodeGenerationTests
             };
             var settings = new ODataMessageWriterSettings();
             settings.BaseUri = ServiceBaseUri;
-            settings.AutoComputePayloadMetadataInJson = true;
+            settings.AutoComputePayloadMetadata = true;
 
             var companyType = Model.FindDeclaredType(ServerSideNameSpacePrefix + "PublicCompany") as IEdmEntityType;
             var companySingleton = Model.EntityContainer.FindSingleton("PublicCompany");

@@ -169,7 +169,7 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
                 };
                 var settings = new ODataMessageWriterSettings();
                 settings.BaseUri = ServiceBaseUri;
-                settings.AutoComputePayloadMetadataInJson = true;
+                settings.AutoComputePayloadMetadata = true;
 
                 var personType = Model.FindDeclaredType(NameSpacePrefix + "Person") as IEdmEntityType;
                 var personSet = Model.EntityContainer.FindEntitySet("People");
@@ -223,7 +223,7 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
 
                 var settings = new ODataMessageWriterSettings();
                 settings.BaseUri = ServiceBaseUri;
-                settings.AutoComputePayloadMetadataInJson = true;
+                settings.AutoComputePayloadMetadata = true;
 
                 var requestMessage = new HttpWebRequestMessage(new Uri(ServiceBaseUri +
                     string.Format("People('russellwhyte')/Trips(0)/PlanItems(12)/{0}Event/OccursAt", NameSpacePrefix)));
@@ -2644,7 +2644,7 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
 
                 OnRequestingHandler(new RequestingArgument() { Request = request });
 
-                using (var messageWriter = new ODataMessageWriter(request, new ODataMessageWriterSettings() { BaseUri = this.Host.ServiceBaseUri, AutoComputePayloadMetadataInJson = true }))
+                using (var messageWriter = new ODataMessageWriter(request, new ODataMessageWriterSettings() { BaseUri = this.Host.ServiceBaseUri, AutoComputePayloadMetadata = true }))
                 {
                     var odataWriter = messageWriter.CreateODataResourceWriter(this.Host.Model.EntityContainer.FindEntitySet(this.EntitySetName), (IEdmEntityType)this.Host.Model.FindDeclaredType(NameSpacePrefix + this.EntitySetName));
                     odataWriter.WriteStart(this.EntryToUpdate);

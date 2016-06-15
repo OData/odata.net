@@ -206,7 +206,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Evaluation
             message.SetHeader("Content-Type", "application/json;odata.metadata=full");
             ODataMessageWriterSettings settings = new ODataMessageWriterSettings()
             {
-                AutoComputePayloadMetadataInJson = true,
+                AutoComputePayloadMetadata = true,
             };
             settings.SetServiceDocumentUri(new Uri("http://example.com"));
 

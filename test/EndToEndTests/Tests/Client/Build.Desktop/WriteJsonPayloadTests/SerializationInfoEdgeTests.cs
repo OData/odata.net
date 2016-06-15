@@ -322,7 +322,7 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
                 {
                     var settings = new ODataMessageWriterSettings();
                     settings.ODataUri = new ODataUri() { ServiceRoot = this.ServiceUri };
-                    settings.AutoComputePayloadMetadataInJson = autoComputeMetadata;
+                    settings.AutoComputePayloadMetadata = autoComputeMetadata;
 
                     var responseMessageWithoutModel = new StreamResponseMessage(new MemoryStream());
                     responseMessageWithoutModel.SetHeader("Content-Type", mimeType);

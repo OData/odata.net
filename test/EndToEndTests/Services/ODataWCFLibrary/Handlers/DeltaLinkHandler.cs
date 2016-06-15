@@ -417,7 +417,7 @@ namespace Microsoft.Test.OData.Services.ODataWCFService.Handlers
         {
             ODataMessageWriterSettings settings = new ODataMessageWriterSettings
             {
-                AutoComputePayloadMetadataInJson = true,
+                AutoComputePayloadMetadata = true,
                 BaseUri = this.ServiceRootUri
             };
 
