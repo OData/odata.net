@@ -1341,7 +1341,8 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests.Annotation
                  var getFriendsQueryResponse = dsc.GetFriendsPlus("Russell").Execute() as QueryOperationResponse<PersonPlus>;
                  var friends = getFriendsQueryResponse.ToList();
 
-                 Assert.AreEqual(0, dsc.InstanceAnnotations.Count);
+                 // InstanceAnnotations would actually have 2 items now, one for each "@odata.type" property in the payload.
+                 Assert.AreEqual(2, dsc.InstanceAnnotations.Count);
              });
          }
 
