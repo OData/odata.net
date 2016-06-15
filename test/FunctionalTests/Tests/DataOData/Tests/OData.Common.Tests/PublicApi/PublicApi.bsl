@@ -3919,8 +3919,7 @@ public enum Microsoft.OData.WriterValidations : int {
 	FullValidation = -1
 	None = 0
 	ThrowOnDuplicatePropertyNames = 2
-	ThrowOnNullValuesForNonNullablePrimitiveTypes = 4
-	ThrowOnUndeclaredProperty = 8
+	ThrowOnUndeclaredProperty = 4
 }
 
 public interface Microsoft.OData.IContainerBuilder {

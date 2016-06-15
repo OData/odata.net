@@ -94,7 +94,6 @@ namespace Microsoft.OData
                 validations = value;
                 BasicValidation = (validations & WriterValidations.BasicValidation) != 0;
                 ThrowOnDuplicatePropertyNames = (validations & WriterValidations.ThrowOnDuplicatePropertyNames) != 0;
-                ThrowOnNullValuesForNonNullablePrimitiveTypes = (validations & WriterValidations.ThrowOnNullValuesForNonNullablePrimitiveTypes) != 0;
                 ThrowOnUndeclaredProperty = (validations & WriterValidations.ThrowOnUndeclaredProperty) != 0;
             }
         }
@@ -213,12 +212,7 @@ namespace Microsoft.OData
         internal bool ThrowOnDuplicatePropertyNames { get; private set; }
 
         /// <summary>
-        /// Returns whether ThrowOnNullValuesForNonNullablePrimitiveTypes validation setting is enabled.
-        /// </summary>
-        internal bool ThrowOnNullValuesForNonNullablePrimitiveTypes { get; private set; }
-
-        /// <summary>
-        /// Returns whether ThrowOnNullValuesForNonNullablePrimitiveTypes validation setting is enabled.
+        /// Returns whether ThrowOnUndeclaredProperty validation setting is enabled.
         /// </summary>
         internal bool ThrowOnUndeclaredProperty { get; private set; }
 
@@ -446,7 +440,6 @@ namespace Microsoft.OData
             this.validations = other.validations;
             this.BasicValidation = other.BasicValidation;
             this.ThrowOnDuplicatePropertyNames = other.ThrowOnDuplicatePropertyNames;
-            this.ThrowOnNullValuesForNonNullablePrimitiveTypes = other.ThrowOnNullValuesForNonNullablePrimitiveTypes;
             this.ThrowOnUndeclaredProperty = other.ThrowOnUndeclaredProperty;
         }
     }

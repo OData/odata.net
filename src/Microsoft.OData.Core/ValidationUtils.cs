@@ -156,18 +156,11 @@ namespace Microsoft.OData
         /// Validates a null collection item against the expected type.
         /// </summary>
         /// <param name="expectedItemType">The expected item type or null if no expected item type exists.</param>
-        /// <param name="writerSettings">The <see cref="ODataMessageWriterSettings"/> The settings of the writer.</param>
-        internal static void ValidateNullCollectionItem(IEdmTypeReference expectedItemType, ODataMessageWriterSettings writerSettings)
+        internal static void ValidateNullCollectionItem(IEdmTypeReference expectedItemType)
         {
-            if (expectedItemType != null)
+            if (expectedItemType != null && expectedItemType.IsODataPrimitiveTypeKind() && !expectedItemType.IsNullable)
             {
-                if (expectedItemType.IsODataPrimitiveTypeKind())
-                {
-                    if (!expectedItemType.IsNullable && writerSettings.ThrowOnNullValuesForNonNullablePrimitiveTypes)
-                    {
-                        throw new ODataException(Strings.ValidationUtils_NullCollectionItemForNonNullableType(expectedItemType.FullName()));
-                    }
-                }
+                throw new ODataException(Strings.ValidationUtils_NullCollectionItemForNonNullableType(expectedItemType.FullName()));
             }
         }
 

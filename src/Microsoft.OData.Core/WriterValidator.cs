@@ -206,50 +206,9 @@ namespace Microsoft.OData
         public void ValidateNullPropertyValue(IEdmTypeReference expectedPropertyTypeReference,
                                               string propertyName, IEdmModel model)
         {
-            Debug.Assert(model != null, "For null validation, model is required.");
-            if (expectedPropertyTypeReference != null)
+            if (settings.BasicValidation)
             {
-                if (expectedPropertyTypeReference.IsNonEntityCollectionType())
-                {
-                    throw new ODataException(
-                        Strings.WriterValidationUtils_CollectionPropertiesMustNotHaveNullValue(
-                            propertyName));
-                }
-
-                if (expectedPropertyTypeReference.IsODataPrimitiveTypeKind())
-                {
-                    if (!expectedPropertyTypeReference.IsNullable
-                        && settings.ThrowOnNullValuesForNonNullablePrimitiveTypes)
-                    {
-                        throw new ODataException(
-                            Strings.WriterValidationUtils_NonNullablePropertiesMustNotHaveNullValue(
-                                propertyName, expectedPropertyTypeReference.FullName()));
-                    }
-                }
-                else if (expectedPropertyTypeReference.IsODataEnumTypeKind()
-                         && !expectedPropertyTypeReference.IsNullable)
-                {
-                    throw new ODataException(
-                        Strings.WriterValidationUtils_NonNullablePropertiesMustNotHaveNullValue(
-                            propertyName, expectedPropertyTypeReference.FullName()));
-                }
-                else if (expectedPropertyTypeReference.IsStream())
-                {
-                    throw new ODataException(
-                        Strings.WriterValidationUtils_StreamPropertiesMustNotHaveNullValue(
-                            propertyName));
-                }
-                else if (expectedPropertyTypeReference.IsODataComplexTypeKind())
-                {
-                    IEdmComplexTypeReference complexTypeReference =
-                        expectedPropertyTypeReference.AsComplex();
-                    if (!complexTypeReference.IsNullable)
-                    {
-                        throw new ODataException(
-                            Strings.WriterValidationUtils_NonNullablePropertiesMustNotHaveNullValue(
-                                propertyName, expectedPropertyTypeReference.FullName()));
-                    }
-                }
+                WriterValidationUtils.ValidateNullPropertyValue(expectedPropertyTypeReference, propertyName, model);
             }
         }
 
@@ -259,18 +218,9 @@ namespace Microsoft.OData
         /// <param name="expectedItemType">The expected item type or null if none.</param>
         public void ValidateNullCollectionItem(IEdmTypeReference expectedItemType)
         {
-            if (expectedItemType != null)
+            if (settings.BasicValidation)
             {
-                if (expectedItemType.IsODataPrimitiveTypeKind())
-                {
-                    if (!expectedItemType.IsNullable
-                        && settings.ThrowOnNullValuesForNonNullablePrimitiveTypes)
-                    {
-                        throw new ODataException(
-                            Strings.ValidationUtils_NullCollectionItemForNonNullableType(
-                                expectedItemType.FullName()));
-                    }
-                }
+                ValidationUtils.ValidateNullCollectionItem(expectedItemType);
             }
         }
 

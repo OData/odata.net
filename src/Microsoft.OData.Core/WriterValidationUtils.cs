@@ -434,11 +434,9 @@ namespace Microsoft.OData
         /// </summary>
         /// <param name="expectedPropertyTypeReference">The expected property type or null if we don't have any.</param>
         /// <param name="propertyName">The name of the property.</param>
-        /// <param name="writerSettings">The <see cref="ODataMessageWriterSettings"/> The settings of the writer.</param>
         /// <param name="model">The model to use to get the OData version.</param>
-        internal static void ValidateNullPropertyValue(IEdmTypeReference expectedPropertyTypeReference, string propertyName, ODataMessageWriterSettings writerSettings, IEdmModel model)
+        internal static void ValidateNullPropertyValue(IEdmTypeReference expectedPropertyTypeReference, string propertyName, IEdmModel model)
         {
-            Debug.Assert(writerSettings != null, "writerSettings != null");
             Debug.Assert(model != null, "For null validation, model is required.");
 
             if (expectedPropertyTypeReference != null)
@@ -448,12 +446,9 @@ namespace Microsoft.OData
                     throw new ODataException(Strings.WriterValidationUtils_CollectionPropertiesMustNotHaveNullValue(propertyName));
                 }
 
-                if (expectedPropertyTypeReference.IsODataPrimitiveTypeKind())
+                if (expectedPropertyTypeReference.IsODataPrimitiveTypeKind() && !expectedPropertyTypeReference.IsNullable)
                 {
-                    if (!expectedPropertyTypeReference.IsNullable && writerSettings.ThrowOnNullValuesForNonNullablePrimitiveTypes)
-                    {
-                        throw new ODataException(Strings.WriterValidationUtils_NonNullablePropertiesMustNotHaveNullValue(propertyName, expectedPropertyTypeReference.FullName()));
-                    }
+                    throw new ODataException(Strings.WriterValidationUtils_NonNullablePropertiesMustNotHaveNullValue(propertyName, expectedPropertyTypeReference.FullName()));
                 }
                 else if (expectedPropertyTypeReference.IsODataEnumTypeKind() && !expectedPropertyTypeReference.IsNullable)
                 {

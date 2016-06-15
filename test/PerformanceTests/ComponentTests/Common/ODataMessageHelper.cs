@@ -52,7 +52,7 @@ namespace Microsoft.OData.Performance
         /// <summary>
         /// Creates ODataMessageReaderSettings
         /// </summary>
-        /// <param name="isFullValidation">Whether turn on EnableFullValidation</param>
+        /// <param name="isFullValidation">Whether turn on FullValidation</param>
         /// <returns>Instance of ODataMessageReaderSettings</returns>
         private static ODataMessageReaderSettings CreateMessageReaderSettings(bool isFullValidation)
         {
@@ -62,7 +62,7 @@ namespace Microsoft.OData.Performance
                 EnableCharactersCheck = CheckCharacters,
                 DisableMessageStreamDisposal = DisableMessageStreamDisposal,
                 DisablePrimitiveTypeConversion = DisablePrimitiveTypeConversion,
-                EnableFullValidation = isFullValidation,
+                Validations = isFullValidation ? ReaderValidations.FullValidation: ReaderValidations.None,
                 MessageQuotas = new ODataMessageQuotas
                 {
                     MaxPartsPerBatch = MaxPartsPerBatch,
@@ -71,6 +71,9 @@ namespace Microsoft.OData.Performance
                     MaxReceivedMessageSize = long.MaxValue,
                 },
             };
+
+            // Turn off undeclared property validation since we have undeclared property in test.
+            settings.Validations &= ~ReaderValidations.ThrowOnUndeclaredValueProperty;
 
             return settings;
         }
@@ -81,7 +84,7 @@ namespace Microsoft.OData.Performance
         /// <param name="messageStream">Message stream</param>
         /// <param name="model">Edm model</param>
         /// <param name="messageKind">Is request or response</param>
-        /// <param name="isFullValidation">Whether turn on EnableFullValidation</param>
+        /// <param name="isFullValidation">Whether turn on FullValidation</param>
         /// <returns>Instance of ODataMessageReader</returns>
         public static ODataMessageReader CreateMessageReader(Stream messageStream, IEdmModel model, ODataMessageKind messageKind, bool isFullValidation)
         {
@@ -123,9 +126,9 @@ namespace Microsoft.OData.Performance
         /// <summary>
         /// Creates ODataMessageWriterSettings
         /// </summary>
-        /// <param name="basicValidation">Whether turn on BasicValidation</param>
+        /// <param name="isFullValidation">Whether turn on FullValidation</param>
         /// <returns>Instance of ODataMessageWriterSettings</returns>
-        private static ODataMessageWriterSettings CreateMessageWriterSettings(bool basicValidation)
+        private static ODataMessageWriterSettings CreateMessageWriterSettings(bool isFullValidation)
         {
             var settings = new ODataMessageWriterSettings
             {
@@ -134,8 +137,7 @@ namespace Microsoft.OData.Performance
                 EnableIndentation = Indent,
                 DisableMessageStreamDisposal = DisableMessageStreamDisposal,
                 Version = Version,
-                Validations = WriterValidations.FullValidation
-                    & (basicValidation ? WriterValidations.FullValidation : ~WriterValidations.BasicValidation),
+                Validations = isFullValidation ? WriterValidations.FullValidation : WriterValidations.None,
                 MessageQuotas = new ODataMessageQuotas
                 {
                     MaxPartsPerBatch = MaxPartsPerBatch,
@@ -144,10 +146,11 @@ namespace Microsoft.OData.Performance
                 },
             };
 
+            // Turn off undeclared property validation since we have undeclared property in test.
+            settings.Validations &= ~WriterValidations.ThrowOnUndeclaredProperty;
+
             settings.ODataUri = new ODataUri() { ServiceRoot = BaseUri };
             settings.SetContentType(ODataFormat.Json);
-
-            settings.Validations &= ~WriterValidations.ThrowOnUndeclaredProperty;
 
             return settings;
         }
@@ -158,11 +161,11 @@ namespace Microsoft.OData.Performance
         /// <param name="stream">Message stream</param>
         /// <param name="model">Edm model</param>
         /// <param name="messageKind">Is request or response</param>
-        /// <param name="basicValidation">Whether turn on BasicValidation</param>
+        /// <param name="isFullValidation">Whether turn on FullValidation</param>
         /// <returns>Instance of ODataMessageWriter</returns>
-        public static ODataMessageWriter CreateMessageWriter(Stream stream, IEdmModel model, ODataMessageKind messageKind, bool basicValidation)
+        public static ODataMessageWriter CreateMessageWriter(Stream stream, IEdmModel model, ODataMessageKind messageKind, bool isFullValidation)
         {
-            var settings = CreateMessageWriterSettings(basicValidation);
+            var settings = CreateMessageWriterSettings(isFullValidation);
 
             if (messageKind == ODataMessageKind.Request)
             {

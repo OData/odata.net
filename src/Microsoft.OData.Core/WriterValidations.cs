@@ -31,14 +31,9 @@ namespace Microsoft.OData
         ThrowOnDuplicatePropertyNames = 2,
 
         /// <summary>
-        /// Writers will disallow writing null values when the metadata specifies a non-nullable primitive type.
-        /// </summary>
-        ThrowOnNullValuesForNonNullablePrimitiveTypes = 4,
-
-        /// <summary>
         /// Writing undeclared properties will be prohibited.
         /// </summary>
-        ThrowOnUndeclaredProperty = 8,
+        ThrowOnUndeclaredProperty = 4,
 
         /// <summary>
         /// Enable all validations.
