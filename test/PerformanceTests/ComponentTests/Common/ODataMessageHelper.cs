@@ -73,7 +73,7 @@ namespace Microsoft.OData.Performance
             };
 
             // Turn off undeclared property validation since we have undeclared property in test.
-            settings.Validations &= ~ReaderValidations.ThrowOnUndeclaredValueProperty;
+            settings.Validations &= ~ReaderValidations.ThrowOnUndeclaredProperty;
 
             return settings;
         }

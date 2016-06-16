@@ -876,11 +876,6 @@ namespace Microsoft.OData
         {
             this.VerifyNotDisposed();
             this.VerifyCallAllowed(synchronousCall);
-
-            if (this.State != WriterState.NestedResourceInfo)
-            {
-                ExceptionUtils.CheckArgumentNotNull(resource, "resource");
-            }
         }
 
         /// <summary>
@@ -995,9 +990,6 @@ namespace Microsoft.OData
                         if (!this.SkipWriting)
                         {
                             ODataResource resource = (ODataResource)currentScope.Item;
-                            Debug.Assert(
-                                resource != null || this.ParentNestedResourceInfo != null && !this.ParentNestedResourceInfo.IsCollection.Value,
-                                "when resource == null, it has to be an expanded single resource navigation");
 
                             this.EndResource(resource);
                             this.DecreaseResourceDepth();

@@ -1080,7 +1080,19 @@ namespace Microsoft.OData.JsonLight
         /// </remarks>
         private void ReadResourceStart(DuplicatePropertyNamesChecker duplicatePropertyNamesChecker, SelectedPropertiesNode selectedProperties)
         {
-            this.jsonLightResourceDeserializer.AssertJsonCondition(JsonNodeType.StartObject, JsonNodeType.Property, JsonNodeType.EndObject);
+            this.jsonLightResourceDeserializer.AssertJsonCondition(JsonNodeType.StartObject, JsonNodeType.Property, JsonNodeType.EndObject, JsonNodeType.PrimitiveValue);
+
+            if (this.jsonLightResourceDeserializer.JsonReader.NodeType == JsonNodeType.PrimitiveValue)
+            {
+                if (this.jsonLightResourceDeserializer.JsonReader.Value != null)
+                {
+                    throw new ODataException(Strings.ODataJsonLightReader_UnexpectedPrimitiveValueForODataResource);
+                }
+
+                // null resource
+                this.EnterScope(new JsonLightResourceScope(ODataReaderState.ResourceStart, /*resource*/ null, this.CurrentNavigationSource, this.CurrentResourceType, /*duplicatePropertyNamesChecker*/null, /*projectedProperties*/null, this.CurrentScope.ODataUri));
+                return;
+            }
 
             // If the reader is on StartObject then read over it. This happens for entries in resource set.
             // For top-level entries the reader will be positioned on the first resource property (after odata.context if it was present).

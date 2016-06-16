@@ -704,6 +704,46 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.JsonLight
         }
 
         [Fact]
+        public void ReadingNullValueForDeclaredComplexProperty()
+        {
+            EdmModel model = new EdmModel();
+
+            EdmComplexType complexType = new EdmComplexType("NS", "Address");
+            complexType.AddStructuralProperty("CountriesOrRegions", new EdmCollectionTypeReference(new EdmCollectionType(EdmCoreModel.Instance.GetString(true))));
+            model.AddElement(complexType);
+
+            EdmEntityType entityType = new EdmEntityType("NS", "Person");
+            entityType.AddKeys(entityType.AddStructuralProperty("Id", EdmPrimitiveTypeKind.Int32));
+            entityType.AddStructuralProperty("Address", new EdmComplexTypeReference(complexType, true));
+            model.AddElement(entityType);
+
+            EdmEntityContainer container = new EdmEntityContainer("EntityNs", "MyContainer");
+            EdmEntitySet entitySet = container.AddEntitySet("People", entityType);
+            model.AddElement(container);
+
+            const string payload =
+                "{" +
+                    "\"@odata.context\":\"http://www.example.com/$metadata#EntityNs.MyContainer.People/$entity\"," +
+                    "\"@odata.id\":\"http://mytest\"," +
+                    "\"Id\":0," +
+                    "\"Address\":null" +
+                "}";
+
+            List<ODataItem> resources = new List<ODataItem>();
+            this.ReadEntryPayload(model, payload, entitySet, entityType,
+                reader =>
+                {
+                    if(reader.State == ODataReaderState.ResourceEnd)
+                    {
+                        resources.Add(reader.Item);
+                    }
+                });
+
+            Assert.Equal(2, resources.Count);
+            Assert.Null(resources.First());
+        }
+
+        [Fact]
         public void ReadingNullValueForDeclaredCollectionPropertyInComplexTypeShouldFail()
         {
             EdmModel model = new EdmModel();

@@ -141,18 +141,6 @@ namespace Microsoft.OData.JsonLight
                                         break;
 
                                     case EdmTypeKind.Complex:
-                                        parameterValue = this.ReadNonEntityValue(
-                                            /*payloadTypeName*/ null,
-                                            parameterTypeReference,
-                                            /*duplicatePropertyNamesChecker*/ null,
-                                            /*collectionValidator*/ null,
-                                            /*validateNullValue*/ true,
-                                            /*isTopLevelPropertyValue*/ false,
-                                            /*insideComplexValue*/ false,
-                                            parameterName);
-                                        state = ODataParameterReaderState.Value;
-                                        break;
-
                                     case EdmTypeKind.Entity:
                                         parameterValue = null;
                                         state = ODataParameterReaderState.Resource;

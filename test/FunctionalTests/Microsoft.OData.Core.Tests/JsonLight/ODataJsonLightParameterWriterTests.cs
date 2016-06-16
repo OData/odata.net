@@ -25,7 +25,9 @@ namespace Microsoft.OData.Tests.JsonLight
                 var parameterWriter = new ODataJsonLightParameterWriter(outputContext, operation: null);
                 parameterWriter.WriteStart();
                 parameterWriter.WriteValue("primitive", Guid.Empty);
-                parameterWriter.WriteValue("complex", new ODataComplexValue { Properties = new[] { new ODataProperty { Name = "prop1", Value = 1 } } });
+                var resourceWriter = parameterWriter.CreateResourceWriter("complex");
+                resourceWriter.WriteStart(new ODataResource() { Properties = new[] { new ODataProperty { Name = "prop1", Value = 1 } } });
+                resourceWriter.WriteEnd();
                 var collectionWriter = parameterWriter.CreateCollectionWriter("collection");
                 collectionWriter.WriteStart(new ODataCollectionStart());
                 collectionWriter.WriteItem("item1");
@@ -64,14 +66,22 @@ namespace Microsoft.OData.Tests.JsonLight
             {
                 var entry = new ODataResource();
 
-                var complex = new ODataComplexValue() {Properties = new List<ODataProperty>() {new ODataProperty() {Name = "Name", Value = "ComplexName"}}};
-                entry.Properties = new List<ODataProperty>() {new ODataProperty() {Name = "ID", Value = 1}, new ODataProperty() {Name = "complexProperty", Value = complex}};
+                var complex = new ODataResource() { Properties = new List<ODataProperty>() { new ODataProperty() { Name = "Name", Value = "ComplexName" } } };
+                entry.Properties = new List<ODataProperty>() {new ODataProperty() {Name = "ID", Value = 1}};
+                var nestedComplexInfo = new ODataNestedResourceInfo() { Name = "complexProperty", IsCollection = false };
                 var parameterWriter = new ODataJsonLightParameterWriter(outputContext, operation: null);
                 parameterWriter.WriteStart();
                 var entryWriter = parameterWriter.CreateResourceWriter("entry");
                 entryWriter.WriteStart(entry);
+                entryWriter.WriteStart(nestedComplexInfo);
+                entryWriter.WriteStart(complex);
                 entryWriter.WriteEnd();
-                parameterWriter.WriteValue("complex", complex);
+                entryWriter.WriteEnd();
+                entryWriter.WriteEnd();
+
+                var complexWriter = parameterWriter.CreateResourceWriter("complex");
+                complexWriter.WriteStart(complex);
+                complexWriter.WriteEnd();
                 parameterWriter.WriteEnd();
                 parameterWriter.Flush();
             };
@@ -559,7 +569,9 @@ namespace Microsoft.OData.Tests.JsonLight
                 var parameterWriter = new ODataJsonLightParameterWriter(outputContext, operation: null);
                 parameterWriter.WriteStartAsync().Wait();
                 parameterWriter.WriteValueAsync("primitive", Guid.Empty).Wait();
-                parameterWriter.WriteValueAsync("complex", new ODataComplexValue { Properties = new[] { new ODataProperty { Name = "prop1", Value = 1 } } }).Wait();
+                var complexWriter = parameterWriter.CreateResourceWriterAsync("complex").Result;
+                complexWriter.WriteStartAsync(new ODataResource { Properties = new[] { new ODataProperty { Name = "prop1", Value = 1 } } }).Wait();
+                complexWriter.WriteEndAsync().Wait();
                 var collectionWriter = parameterWriter.CreateCollectionWriterAsync("collection").Result;
                 collectionWriter.WriteStartAsync(new ODataCollectionStart()).Wait();
                 collectionWriter.WriteItemAsync("item1").Wait();

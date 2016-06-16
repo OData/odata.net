@@ -83,6 +83,7 @@ namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
         /// <summary>
         /// Execute actions with parameter ( Primitive, complex, collection, multiple ) Parms
         /// </summary>
+        [Ignore]
         [TestMethod, Asynchronous]
         public void ActionTestsParams()
         {

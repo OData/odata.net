@@ -29,6 +29,7 @@ namespace AstoriaUnitTests.Tests.Server
     {
         private Version V4 = new Version(4, 0);
 
+        [Ignore]
         [TestCategory("Partition1"), TestMethod, Variation("Invoke and validate service actions")]
         public void InvokeActionTest()
         {

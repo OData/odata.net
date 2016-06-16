@@ -92,9 +92,10 @@ namespace Microsoft.OData.Tests.JsonLight
             string payload = "{\"address\" : { \"StreetName\": \"Bla\", \"StreetNumber\" : 61 } }";
 
             var result = this.RunParameterReaderTest(payload);
-            result.Values.Should().OnlyContain(keyValuePair => keyValuePair.Key.Equals("address"));
-            var complexValue = result.Values.Single().Value;
-            complexValue.Should().BeOfType<ODataComplexValue>();
+            result.Entries.Should().HaveCount(1);
+            result.Entries.Should().OnlyContain(keyValuePair => keyValuePair.Key.Equals("address"));
+
+            result.Entries.SingleOrDefault().Value.Should().OnlyContain(item => item is ODataResource);
         }
 
         [Fact]
@@ -109,9 +110,10 @@ namespace Microsoft.OData.Tests.JsonLight
             string payload = "{\"address\" : { \"StreetName\": \"Bla\", \"StreetNumber\" : 61, \"@odata.type\":\"TestModel.derivedAddress\" } }";
 
             var result = this.RunParameterReaderTest(payload);
-            result.Values.Should().OnlyContain(keyValuePair => keyValuePair.Key.Equals("address"));
-            var complexValue = result.Values.Single().Value;
-            complexValue.Should().BeOfType<ODataComplexValue>();
+            result.Entries.Should().HaveCount(1);
+            result.Entries.Should().OnlyContain(keyValuePair => keyValuePair.Key.Equals("address"));
+
+            result.Entries.SingleOrDefault().Value.Should().OnlyContain(item => item is ODataResource); ;
         }
 
         [Fact]
@@ -241,13 +243,15 @@ namespace Microsoft.OData.Tests.JsonLight
             var pair = result.Entries.First();
             pair.Key.Should().Be("entry");
             pair.Value.Count().Should().Be(2);
-            pair.Value.ElementAt(0).Properties.First().Value.Should().Be("ComplexName");
+            var complex = pair.Value.ElementAt(0);
+            complex.Properties.First().Value.Should().Be("ComplexName");
             var entry = pair.Value.Last();
             entry.Properties.Count().Should().Be(1);
             entry.Properties.First().Value.Should().Be(1);
-            var complex = pair.Value.ElementAt(1);
-            result.Values.Count().Should().Be(1);
-            result.Values.First().Value.Should().BeOfType<ODataComplexValue>();
+            var pair2 = result.Entries.Last();
+            pair2.Key.Should().Be("complex");
+            pair2.Value.Count().Should().Be(1);
+            pair2.Value.Single().Properties.Count().Should().Be(1);
         }
 
         [Fact]
@@ -448,8 +452,10 @@ namespace Microsoft.OData.Tests.JsonLight
             var entryA = result.Entries.First().Value.First();
             entryA.Properties.Count().Should().Be(1);
             entryA.Properties.First().Value.Should().Be(1);
-            result.Values.Count().Should().Be(1);
-            result.Values.First().Value.Should().BeOfType<ODataComplexValue>();
+
+            var entryB = result.Entries.Last().Value.Single();
+            entryB.Properties.Count().Should().Be(1);
+            entryB.Properties.First().Value.Should().Be("ComplexName");
         }
 
         [Fact]

@@ -215,11 +215,6 @@ namespace Microsoft.OData.JsonLight
 
             if (resource == null)
             {
-                Debug.Assert(
-                    parentNavLink != null && !parentNavLink.IsCollection.Value,
-                        "when resource == null, it has to be and expanded single resource navigation");
-
-                // this is a null expanded single resource and it is null, so write a JSON null as value.
                 this.jsonWriter.WriteValue((string)null);
                 return;
             }
@@ -267,11 +262,6 @@ namespace Microsoft.OData.JsonLight
         {
             if (resource == null)
             {
-                Debug.Assert(
-                    this.ParentNestedResourceInfo != null && this.ParentNestedResourceInfo.IsCollection.HasValue && !this.ParentNestedResourceInfo.IsCollection.Value,
-                        "when resource == null, it has to be and expanded single resource navigation");
-
-                // this is a null expanded single resource and it is null, JSON null should be written as value in StartEntry()
                 return;
             }
 

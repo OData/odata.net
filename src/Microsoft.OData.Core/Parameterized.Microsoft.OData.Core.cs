@@ -3730,6 +3730,15 @@ namespace Microsoft.OData {
         }
 
         /// <summary>
+        /// A string like "If a primitive value is representing a resource, the resource must be null."
+        /// </summary>
+        internal static string ODataJsonLightReader_UnexpectedPrimitiveValueForODataResource {
+            get {
+                return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightReader_UnexpectedPrimitiveValueForODataResource);
+            }
+        }
+
+        /// <summary>
         /// A string like "The '{0}' instance or property annotation has a null value. In OData, the '{0}' instance or property annotation must have a non-null string value."
         /// </summary>
         internal static string ODataJsonLightReaderUtils_AnnotationWithNullValue(object p0) {

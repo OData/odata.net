@@ -749,6 +749,7 @@ namespace Microsoft.OData.Client
 
                     case EdmTypeKind.Complex:
                     case EdmTypeKind.Entity:
+                        Debug.Assert(edmType.TypeKind == EdmTypeKind.Complex || value != null, "edmType.TypeKind == EdmTypeKind.Complex || value != null");
                         Debug.Assert(typeAnnotation != null, "typeAnnotation != null");
                         valueInODataFormat = ConvertToEntityValue(value, typeAnnotation.ElementType, useEntityReference);
                         break;

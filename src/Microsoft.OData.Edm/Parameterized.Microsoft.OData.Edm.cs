@@ -392,7 +392,7 @@ namespace Microsoft.OData.Edm {
         }
 
         /// <summary>
-        /// A string like "A property cannot be of type '{0}'. The property type must be a complex, a primitive or an enum type, or a collection of complex, primitive, or enum types."
+        /// A string like "A property cannot be of type '{0}'. The property type must be a complex, a primitive, an enum or an untyped type, or a collection of complex, primitive, or enum types."
         /// </summary>
         internal static string EdmModel_Validator_Semantic_InvalidPropertyType(object p0) {
             return Microsoft.OData.Edm.EntityRes.GetString(Microsoft.OData.Edm.EntityRes.EdmModel_Validator_Semantic_InvalidPropertyType, p0);

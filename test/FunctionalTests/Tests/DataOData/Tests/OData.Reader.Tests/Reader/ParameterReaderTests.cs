@@ -176,11 +176,11 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
 
                     // Calling Create*Reader in Value state should fail.
                     reader.Read();
-                    this.Assert.AreEqual(ODataParameterReaderState.Value, reader.State, "Unexpected parameter reader state.");
+                    this.Assert.AreEqual(ODataParameterReaderState.Resource, reader.State, "Unexpected parameter reader state.");
                     this.Assert.ExpectedException(
                         () => CreateSubReader(reader, createReaderMethod),
-                        ODataExpectedExceptions.ODataException("ODataParameterReaderCore_InvalidCreateReaderMethodCalledForState", createReaderMethod.ToString(), ODataParameterReaderState.Value.ToString()), this.ExceptionVerifier);
-                    this.Assert.AreEqual(ODataParameterReaderState.Value, reader.State, "Unexpected parameter reader state.");
+                        ODataExpectedExceptions.ODataException("ODataParameterReaderCore_InvalidCreateReaderMethodCalledForState", createReaderMethod.ToString(), ODataParameterReaderState.Resource.ToString()), this.ExceptionVerifier);
+                    this.Assert.AreEqual(ODataParameterReaderState.Resource, reader.State, "Unexpected parameter reader state.");
 
                     if (createReaderMethod != CreateReaderMethods.CreateResourceReader)
                     {
@@ -346,7 +346,16 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
                     foreach (var parameter in testCase)
                     {
                         this.Assert.IsTrue(reader.Read(), "Read() should not fail for payload " + payload);
-                        this.Assert.AreEqual(ODataParameterReaderState.Value, reader.State, "State should be Value.");
+                        if (parameter.Contains("p16"))
+                        {
+                            var complexReader = reader.CreateResourceReader();
+                            while (complexReader.Read()) ;
+                            this.Assert.AreEqual(ODataParameterReaderState.Resource, reader.State, "State should be Value.");
+                        }
+                        else
+                        {
+                            this.Assert.AreEqual(ODataParameterReaderState.Value, reader.State, "State should be Value.");
+                        }
                     }
 
                     this.Assert.IsFalse(reader.Read(), "Read() should fail after reading all parameters");
@@ -398,7 +407,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
                     reader.Read();
                     this.Assert.AreEqual("complex", reader.Name, "Unexpected first parameter name.");
                     this.Assert.IsNull(reader.Value, "Unexpected first parameter value.");
-                    this.Assert.AreEqual(ODataParameterReaderState.Value, reader.State, "Unexpected first parameter state.");
+                    this.Assert.AreEqual(ODataParameterReaderState.Resource, reader.State, "Unexpected first parameter state.");
                 });
         }
 
@@ -417,9 +426,45 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
                         () =>
                         {
                             ODataParameterReaderTestWrapper reader = CreateODataParameterReader(model, functionImport_Complex, testConfiguration, "{\"complex\":null}");
-                            while (reader.Read()) ;
+                            while (reader.Read())
+                            {
+                                if (reader.State == ODataParameterReaderState.Resource)
+                                {
+                                    var complexReader = reader.CreateResourceReader();
+                                    while (complexReader.Read()) ;
+                                }
+                            }
                         },
                         null,
+                        this.ExceptionVerifier);
+                });
+        }
+
+        [TestMethod, TestCategory("Reader.Operations"), Variation(Description = "Verifies reading a non-null primitive value for complex parameter will fail.")]
+        public void ParameterReaderReadComplexParameterWithPrimitiveValueShouldThrow()
+        {
+            IEdmModel model = TestModels.BuildModelWithFunctionImport();
+            IEdmOperationImport functionImport_Complex = model.FindEntityContainer("TestContainer").FindOperationImports("FunctionImport_Complex").First();
+
+            var testConfigurations = this.ReaderTestConfigurationProvider.JsonLightFormatConfigurations.Where(c => c.IsRequest);
+            this.CombinatorialEngineProvider.RunCombinations(
+                testConfigurations,
+                (testConfiguration) =>
+                {
+                    this.Assert.ExpectedException(
+                        () =>
+                        {
+                            ODataParameterReaderTestWrapper reader = CreateODataParameterReader(model, functionImport_Complex, testConfiguration, "{\"complex\":1}");
+                            while (reader.Read())
+                            {
+                                if (reader.State == ODataParameterReaderState.Resource)
+                                {
+                                    var complexReader = reader.CreateResourceReader();
+                                    while (complexReader.Read()) ;
+                                }
+                            }
+                        },
+                        ODataExpectedExceptions.ODataException("ODataJsonLightReader_UnexpectedPrimitiveValueForODataResource"),
                         this.ExceptionVerifier);
                 });
         }

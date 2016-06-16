@@ -20,7 +20,6 @@ namespace Microsoft.Test.OData.Tests.Client.OperationTests
         }
 
         // TODO : Reactive this test cases after merging entity and complex for writer
-        [Ignore]
         [TestMethod]
         public void FunctionOfEntitiesTakeComplexsReturnEntities()
         {

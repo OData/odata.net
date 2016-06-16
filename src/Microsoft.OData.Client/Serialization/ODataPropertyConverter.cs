@@ -135,7 +135,11 @@ namespace Microsoft.OData.Client
         internal ODataResource CreateODataEntry(Type entityType, object value, params ClientPropertyAnnotation[] properties)
         {
             Debug.Assert(entityType != null, "entityType != null");
-            Debug.Assert(value != null, "value != null");
+
+            if (value == null)
+            {
+                return null;
+            }
 
             ClientEdmModel model = this.requestInfo.Model;
             ClientTypeAnnotation entityTypeAnnotation = model.GetClientTypeAnnotation(value.GetType());
