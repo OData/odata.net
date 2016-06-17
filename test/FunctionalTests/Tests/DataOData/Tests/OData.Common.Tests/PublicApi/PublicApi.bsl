@@ -3901,8 +3901,7 @@ public enum Microsoft.OData.ReaderValidations : int {
 	None = 0
 	StrictMetadataValidation = 4
 	ThrowOnDuplicatePropertyNames = 2
-	ThrowOnUndeclaredLinkProperty = 16
-	ThrowOnUndeclaredValueProperty = 8
+	ThrowOnUndeclaredProperty = 8
 }
 
 public enum Microsoft.OData.ServiceLifetime : int {

@@ -33,8 +33,7 @@
 
         public ODataJsonLightEntryAndFeedDeserializerUndeclaredTests()
         {
-            this.readerSettings.Validations |= ReaderValidations.ThrowOnUndeclaredLinkProperty;
-            this.readerSettings.Validations &= ~ReaderValidations.ThrowOnUndeclaredValueProperty;
+            this.readerSettings.Validations &= ~ReaderValidations.ThrowOnUndeclaredProperty;
             this.serverModel = new EdmModel();
             var addressType = new EdmComplexType("Server.NS", "Address");
             addressType.AddStructuralProperty("Street", EdmPrimitiveTypeKind.String);

@@ -181,9 +181,6 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
                         {
                             DisableMessageStreamDisposal = disableMessageStreamDisposal
                         };
-                        settings.Validations = TestReaderUtils.ApplyUndeclaredPropertyBehaviorKinds(
-                            ODataUndeclaredPropertyBehaviorKinds.SupportUndeclaredValueProperty,
-                            settings.Validations);
                         configurations.Add(new ReaderTestConfiguration(
                             format,
                             settings,
@@ -223,9 +220,6 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
                         {
                             DisableMessageStreamDisposal = limitedCombination.DisableMessageStreamDisposal
                         };
-                        settings.Validations = TestReaderUtils.ApplyUndeclaredPropertyBehaviorKinds(
-                            ODataUndeclaredPropertyBehaviorKinds.SupportUndeclaredValueProperty,
-                            settings.Validations);
                         configurations.Add(new ReaderTestConfiguration(
                             format,
                             settings,

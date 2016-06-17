@@ -1525,7 +1525,7 @@ namespace Microsoft.OData.JsonLight
                 this.ReadPropertyCustomAnnotationValue = this.ReadCustomInstanceAnnotationValue;
                 PropertyAnnotationCollector innerAnnotationCollector = new PropertyAnnotationCollector();
 
-                innerAnnotationCollector.ShouldCollectAnnotation = !this.MessageReaderSettings.ThrowOnUndeclaredValueProperty;
+                innerAnnotationCollector.ShouldCollectAnnotation = !this.MessageReaderSettings.ThrowOnUndeclaredProperty;
 
                 this.ProcessProperty(
                     duplicatePropertyNamesChecker,
@@ -1592,7 +1592,7 @@ namespace Microsoft.OData.JsonLight
             {
                 edmProperty = ReaderValidationUtils.ValidateValuePropertyDefined(
                     propertyName, complexValueTypeReference.ComplexDefinition(),
-                    this.MessageReaderSettings.ThrowOnUndeclaredValueProperty);
+                    this.MessageReaderSettings.ThrowOnUndeclaredProperty);
             }
 
             // EdmLib bridge marks all key properties as non-nullable, but Astoria allows them to be nullable.
@@ -1603,7 +1603,7 @@ namespace Microsoft.OData.JsonLight
             object propertyValue = null;
             if (edmProperty == null)
             {
-                if (this.MessageReaderSettings.ThrowOnUndeclaredValueProperty)
+                if (this.MessageReaderSettings.ThrowOnUndeclaredProperty)
                 {
                     IEdmStructuredType owningStructuredType = (complexValueTypeReference != null)
                         ?
@@ -1614,8 +1614,8 @@ namespace Microsoft.OData.JsonLight
                 else
                 {
                     Debug.Assert(
-                        !this.MessageReaderSettings.ThrowOnUndeclaredValueProperty,
-                        "!this.MessageReaderSettings.ThrowOnUndeclaredValueProperty");
+                        !this.MessageReaderSettings.ThrowOnUndeclaredProperty,
+                        "!this.MessageReaderSettings.ThrowOnUndeclaredProperty");
                     bool isTopLevelPropertyValue = false;
                     propertyValue = this.InnerReadNonOpenUndeclaredPropertyInComplex(
                         duplicatePropertyNamesChecker, propertyName, isTopLevelPropertyValue);

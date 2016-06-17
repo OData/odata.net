@@ -38,7 +38,7 @@ namespace Microsoft.OData
             this.EnableReadingEntryContentInEntryStartState = true;
             this.ODataSimplified = false;
             this.MaxProtocolVersion = ODataConstants.ODataDefaultProtocolVersion;
-            Validations = ReaderValidations.FullValidation & ~ReaderValidations.ThrowOnUndeclaredValueProperty;
+            Validations = ReaderValidations.FullValidation & ~ReaderValidations.ThrowOnUndeclaredProperty;
             Validator = new ReaderValidator(this);
         }
 
@@ -58,8 +58,7 @@ namespace Microsoft.OData
                 BasicValidation = (validations & ReaderValidations.BasicValidation) != 0;
                 ThrowOnDuplicatePropertyNames = (validations & ReaderValidations.ThrowOnDuplicatePropertyNames) != 0;
                 StrictMetadataValidation = (validations & ReaderValidations.StrictMetadataValidation) != 0;
-                ThrowOnUndeclaredLinkProperty = (validations & ReaderValidations.ThrowOnUndeclaredLinkProperty) != 0;
-                ThrowOnUndeclaredValueProperty = (validations & ReaderValidations.ThrowOnUndeclaredValueProperty) != 0;
+                ThrowOnUndeclaredProperty = (validations & ReaderValidations.ThrowOnUndeclaredProperty) != 0;
             }
         }
 
@@ -181,14 +180,9 @@ namespace Microsoft.OData
         internal bool StrictMetadataValidation { get; private set; }
 
         /// <summary>
-        /// Returns whether ThrowOnUndeclaredLinkProperty validation setting is enabled.
+        /// Returns whether ThrowOnUndeclaredProperty validation setting is enabled.
         /// </summary>
-        internal bool ThrowOnUndeclaredLinkProperty { get; private set; }
-
-        /// <summary>
-        /// Returns whether ThrowOnUndeclaredValueProperty validation setting is enabled.
-        /// </summary>
-        internal bool ThrowOnUndeclaredValueProperty { get; private set; }
+        internal bool ThrowOnUndeclaredProperty { get; private set; }
 
         /// <summary>
         /// Creates a shallow copy of this <see cref="ODataMessageReaderSettings"/>.
@@ -254,8 +248,7 @@ namespace Microsoft.OData
             this.BasicValidation = other.BasicValidation;
             this.ThrowOnDuplicatePropertyNames = other.ThrowOnDuplicatePropertyNames;
             this.StrictMetadataValidation = other.StrictMetadataValidation;
-            this.ThrowOnUndeclaredLinkProperty = other.ThrowOnUndeclaredLinkProperty;
-            this.ThrowOnUndeclaredValueProperty = other.ThrowOnUndeclaredValueProperty;
+            this.ThrowOnUndeclaredProperty = other.ThrowOnUndeclaredProperty;
         }
     }
 }

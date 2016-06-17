@@ -147,16 +147,21 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
 
             this.CombinatorialEngineProvider.RunCombinations(
                 testCases,
-                TestReaderUtils.ODataUndeclaredPropertyBehaviorKindsCombinations,
+                new[] { false, true },
                 // Undeclared properties are only allowed in responses
                 this.ReaderTestConfigurationProvider.JsonLightFormatConfigurations.Where(tc => !tc.IsRequest),
-                (testCase, undeclaredPropertyBehaviorKinds, testConfiguration) =>
+                (testCase, throwOnUndeclaredProperty, testConfiguration) =>
                 {
-                    PayloadReaderTestDescriptor testDescriptor = testCase.ToTestDescriptor(this.Settings, model, undeclaredPropertyBehaviorKinds);
+                    PayloadReaderTestDescriptor testDescriptor = testCase.ToTestDescriptor(this.Settings, model, throwOnUndeclaredProperty);
                     testConfiguration = new ReaderTestConfiguration(testConfiguration);
-                    testConfiguration.MessageReaderSettings.Validations =
-                        TestReaderUtils.ApplyUndeclaredPropertyBehaviorKinds(
-                            undeclaredPropertyBehaviorKinds, testConfiguration.MessageReaderSettings.Validations);
+                    if (throwOnUndeclaredProperty)
+                    {
+                        testConfiguration.MessageReaderSettings.Validations |= ReaderValidations.ThrowOnUndeclaredProperty;
+                    }
+                    else
+                    {
+                        testConfiguration.MessageReaderSettings.Validations &= ~ReaderValidations.ThrowOnUndeclaredProperty;
+                    }
 
                     // These descriptors are already tailored specifically for Json Light and 
                     // do not require normalization.
@@ -248,17 +253,22 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
 
             this.CombinatorialEngineProvider.RunCombinations(
                 testCases,
-                TestReaderUtils.ODataUndeclaredPropertyBehaviorKindsCombinations,
+                new[] { false, true },
                 // Undeclared properties are only allowed in responses
                 this.ReaderTestConfigurationProvider.JsonLightFormatConfigurations.Where(tc => !tc.IsRequest),
-                (testCase, undeclaredPropertyBehaviorKinds, testConfiguration) =>
+                (testCase, throwOnUndeclaredProperty, testConfiguration) =>
                 {
                     var settings = testConfiguration.Format == ODataFormat.Json ? this.JsonLightSettings : this.Settings;
-                    PayloadReaderTestDescriptor testDescriptor = testCase.ToTestDescriptor(settings, model, undeclaredPropertyBehaviorKinds);
+                    PayloadReaderTestDescriptor testDescriptor = testCase.ToTestDescriptor(settings, model, throwOnUndeclaredProperty);
                     testConfiguration = new ReaderTestConfiguration(testConfiguration);
-                    testConfiguration.MessageReaderSettings.Validations =
-                        TestReaderUtils.ApplyUndeclaredPropertyBehaviorKinds(
-                            undeclaredPropertyBehaviorKinds, testConfiguration.MessageReaderSettings.Validations);
+                    if (throwOnUndeclaredProperty)
+                    {
+                        testConfiguration.MessageReaderSettings.Validations |= ReaderValidations.ThrowOnUndeclaredProperty;
+                    }
+                    else
+                    {
+                        testConfiguration.MessageReaderSettings.Validations &= ~ReaderValidations.ThrowOnUndeclaredProperty;
+                    }
 
                     // These descriptors are already tailored specifically for Json Light and 
                     // do not require normalization.
@@ -354,16 +364,21 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
 
             this.CombinatorialEngineProvider.RunCombinations(
                 testCases,
-                TestReaderUtils.ODataUndeclaredPropertyBehaviorKindsCombinations,
+                new[] { false, true },
                 // Undeclared properties are only allowed in responses
                 this.ReaderTestConfigurationProvider.JsonLightFormatConfigurations.Where(tc => !tc.IsRequest),
-                (testCase, undeclaredPropertyBehaviorKinds, testConfiguration) =>
+                (testCase, throwOnUndeclaredProperty, testConfiguration) =>
                 {
-                    PayloadReaderTestDescriptor testDescriptor = testCase.ToTestDescriptor(this.Settings, model, undeclaredPropertyBehaviorKinds);
+                    PayloadReaderTestDescriptor testDescriptor = testCase.ToTestDescriptor(this.Settings, model, throwOnUndeclaredProperty);
                     testConfiguration = new ReaderTestConfiguration(testConfiguration);
-                    testConfiguration.MessageReaderSettings.Validations =
-                        TestReaderUtils.ApplyUndeclaredPropertyBehaviorKinds(
-                            undeclaredPropertyBehaviorKinds, testConfiguration.MessageReaderSettings.Validations);
+                    if (throwOnUndeclaredProperty)
+                    {
+                        testConfiguration.MessageReaderSettings.Validations |= ReaderValidations.ThrowOnUndeclaredProperty;
+                    }
+                    else
+                    {
+                        testConfiguration.MessageReaderSettings.Validations &= ~ReaderValidations.ThrowOnUndeclaredProperty;
+                    }
 
                     // These descriptors are already tailored specifically for Json Light and 
                     // do not require normalization.
@@ -381,7 +396,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
             public bool IsLink { get; set; }
             public bool IsValue { get; set; }
 
-            public PayloadReaderTestDescriptor ToTestDescriptor(PayloadReaderTestDescriptor.Settings settings, IEdmModel model, ODataUndeclaredPropertyBehaviorKinds undeclaredPropertyBehaviorKinds)
+            public PayloadReaderTestDescriptor ToTestDescriptor(PayloadReaderTestDescriptor.Settings settings, IEdmModel model, bool throwOnUndeclaredProperty)
             {
                 var cityType = model.FindDeclaredType("TestModel.CityType").ToTypeReference();
                 var cities = model.EntityContainer.FindEntitySet("Cities");
@@ -400,12 +415,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                 }
 
                 ExpectedException expectedException = this.ExpectedException;
-                if (this.IsLink && !undeclaredPropertyBehaviorKinds.HasFlag(ODataUndeclaredPropertyBehaviorKinds.ReportUndeclaredLinkProperty))
-                {
-                    expectedException = ODataExpectedExceptions.ODataException("ValidationUtils_PropertyDoesNotExistOnType", "UndeclaredProperty", "TestModel.CityType");
-                }
-
-                if (this.IsValue && !undeclaredPropertyBehaviorKinds.HasFlag(ODataUndeclaredPropertyBehaviorKinds.SupportUndeclaredValueProperty))
+                if (throwOnUndeclaredProperty)
                 {
                     expectedException = ODataExpectedExceptions.ODataException("ValidationUtils_PropertyDoesNotExistOnType", "UndeclaredProperty", "TestModel.CityType");
                 }

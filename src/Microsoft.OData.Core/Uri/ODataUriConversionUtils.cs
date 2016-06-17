@@ -74,8 +74,7 @@ namespace Microsoft.OData
         internal static object ConvertFromComplexOrCollectionValue(string value, IEdmModel model, IEdmTypeReference typeReference)
         {
             ODataMessageReaderSettings settings = new ODataMessageReaderSettings();
-            settings.Validations |= ReaderValidations.ThrowOnUndeclaredLinkProperty;
-            settings.Validations &= ~ReaderValidations.ThrowOnUndeclaredValueProperty;
+            settings.Validations &= ~ReaderValidations.ThrowOnUndeclaredProperty;
 
             using (StringReader reader = new StringReader(value))
             {

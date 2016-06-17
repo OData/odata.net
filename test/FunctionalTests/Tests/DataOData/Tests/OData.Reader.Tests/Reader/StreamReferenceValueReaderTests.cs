@@ -127,26 +127,31 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
         public void UndeclaredPropertyBehaviorKindStreamPropertyJsonLightTest()
         {
             this.CombinatorialEngineProvider.RunCombinations(
-                TestReaderUtils.ODataUndeclaredPropertyBehaviorKindsCombinations,
-                undeclaredPropertyBehaviorKinds =>
+                new[] { false, true },
+                throwOnUndeclaredProperty =>
                 {
-                    var testDescriptors = CreateUndeclaredPropertyBehaviorKindStreamPropertyTestDescriptors(undeclaredPropertyBehaviorKinds, this.JsonLightSettings);
+                    var testDescriptors = CreateUndeclaredPropertyBehaviorKindStreamPropertyTestDescriptors(throwOnUndeclaredProperty, this.JsonLightSettings);
                     this.CombinatorialEngineProvider.RunCombinations(
                         testDescriptors,
                         this.ReaderTestConfigurationProvider.JsonLightFormatConfigurations.Where(tc => !tc.IsRequest),
                         (testDescriptor, testConfiguration) =>
                         {
                             testConfiguration = new ReaderTestConfiguration(testConfiguration);
-                            testConfiguration.MessageReaderSettings.Validations =
-                                TestReaderUtils.ApplyUndeclaredPropertyBehaviorKinds(
-                                    undeclaredPropertyBehaviorKinds, testConfiguration.MessageReaderSettings.Validations);
+                            if (throwOnUndeclaredProperty)
+                            {
+                                testConfiguration.MessageReaderSettings.Validations |= ReaderValidations.ThrowOnUndeclaredProperty;
+                            }
+                            else
+                            {
+                                testConfiguration.MessageReaderSettings.Validations &= ~ReaderValidations.ThrowOnUndeclaredProperty;
+                            }
 
                             testDescriptor.RunTest(testConfiguration);
                         });
                 });
         }
 
-        private static IEnumerable<PayloadReaderTestDescriptor> CreateUndeclaredPropertyBehaviorKindStreamPropertyTestDescriptors(ODataUndeclaredPropertyBehaviorKinds undeclaredPropertyBehaviorKinds, PayloadReaderTestDescriptor.Settings settings)
+        private static IEnumerable<PayloadReaderTestDescriptor> CreateUndeclaredPropertyBehaviorKindStreamPropertyTestDescriptors(bool throwOnUndeclaredProperty, PayloadReaderTestDescriptor.Settings settings)
         {
             IEdmModel model = Microsoft.Test.OData.Utils.Metadata.TestModels.BuildTestModel();
             IEnumerable<PayloadReaderTestDescriptor> testDescriptors = new[]
@@ -156,27 +161,27 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
                 {
                     PayloadElement = PayloadBuilder.Entity("TestModel.CityType").PrimitiveProperty("Id", 1).StreamProperty("UndeclaredProperty", "http://odata.org/readlink"),
                     PayloadEdmModel = model,
-                    ExpectedException = undeclaredPropertyBehaviorKinds.HasFlag(ODataUndeclaredPropertyBehaviorKinds.ReportUndeclaredLinkProperty)
-                                            ? null
-                                            : ODataExpectedExceptions.ODataException("ValidationUtils_PropertyDoesNotExistOnType", "UndeclaredProperty", "TestModel.CityType")
+                    ExpectedException = throwOnUndeclaredProperty
+                                            ? ODataExpectedExceptions.ODataException("ValidationUtils_PropertyDoesNotExistOnType", "UndeclaredProperty", "TestModel.CityType")
+                                            : null
                 },
                 // Undeclared stream property with edit-link only.
                 new PayloadReaderTestDescriptor(settings)
                 {
                     PayloadElement = PayloadBuilder.Entity("TestModel.CityType").PrimitiveProperty("Id", 1).StreamProperty("UndeclaredProperty", null, "http://odata.org/editlink"),
                     PayloadEdmModel = model,
-                    ExpectedException = undeclaredPropertyBehaviorKinds.HasFlag(ODataUndeclaredPropertyBehaviorKinds.ReportUndeclaredLinkProperty)
-                                            ? null
-                                            : ODataExpectedExceptions.ODataException("ValidationUtils_PropertyDoesNotExistOnType", "UndeclaredProperty", "TestModel.CityType")
+                    ExpectedException = throwOnUndeclaredProperty
+                                            ? ODataExpectedExceptions.ODataException("ValidationUtils_PropertyDoesNotExistOnType", "UndeclaredProperty", "TestModel.CityType")
+                                            : null
                 },
                 // Undeclared stream property with all properties.
                 new PayloadReaderTestDescriptor(settings)
                 {
                     PayloadElement = PayloadBuilder.Entity("TestModel.CityType").PrimitiveProperty("Id", 1).StreamProperty("UndeclaredProperty", "http://odata.org/readlink", "http://odata.org/editlink", "stream/content", "stream:etag"),
                     PayloadEdmModel = model,
-                    ExpectedException = undeclaredPropertyBehaviorKinds.HasFlag(ODataUndeclaredPropertyBehaviorKinds.ReportUndeclaredLinkProperty)
-                                            ? null
-                                            : ODataExpectedExceptions.ODataException("ValidationUtils_PropertyDoesNotExistOnType", "UndeclaredProperty", "TestModel.CityType")
+                    ExpectedException = throwOnUndeclaredProperty
+                                            ? ODataExpectedExceptions.ODataException("ValidationUtils_PropertyDoesNotExistOnType", "UndeclaredProperty", "TestModel.CityType")
+                                            : null
                 },
             };
 

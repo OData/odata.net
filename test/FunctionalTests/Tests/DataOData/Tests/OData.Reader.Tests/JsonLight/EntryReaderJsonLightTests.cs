@@ -597,7 +597,8 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                         "\"" + JsonLightUtils.GetPropertyAnnotationName("TestProperty", JsonLightConstants.ODataTypeAnnotationName) + "\":\"Edm.Int32\"," +
                         "\"" + JsonLightUtils.GetPropertyAnnotationName("TestProperty", JsonLightConstants.ODataNavigationLinkUrlAnnotationName) + "\":\"http://odata.org/link\"," +
                         "\"TestProperty\":42",
-                    ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightPropertyAndValueDeserializer_UnexpectedDataPropertyAnnotation", "TestProperty", JsonLightConstants.ODataNavigationLinkUrlAnnotationName)
+                    ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightPropertyAndValueDeserializer_UnexpectedDataPropertyAnnotation", "TestProperty", JsonLightConstants.ODataNavigationLinkUrlAnnotationName),
+                    ExpectedOpenPropertyException = ODataExpectedExceptions.ODataException("ODataJsonLightEntryAndFeedDeserializer_UnexpectedDeferredLinkPropertyAnnotation", "TestProperty", JsonLightConstants.ODataTypeAnnotationName)
                 },
             };
 

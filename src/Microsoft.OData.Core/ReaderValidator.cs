@@ -123,7 +123,7 @@ namespace Microsoft.OData
         public IEdmProperty ValidateLinkPropertyDefined(string propertyName, IEdmStructuredType owningStructuredType)
         {
             return ReaderValidationUtils.ValidateLinkPropertyDefined(
-                propertyName, owningStructuredType, settings.ThrowOnUndeclaredLinkProperty);
+                propertyName, owningStructuredType, settings.ThrowOnUndeclaredProperty);
         }
 
         /// <summary>
@@ -138,7 +138,7 @@ namespace Microsoft.OData
             string propertyName, IEdmEntityType owningEntityType)
         {
             return ReaderValidationUtils.ValidateNavigationPropertyDefined(propertyName, owningEntityType,
-                                                                           settings.ThrowOnUndeclaredLinkProperty);
+                                                                           settings.ThrowOnUndeclaredProperty);
         }
 
         /// <summary>
@@ -152,7 +152,7 @@ namespace Microsoft.OData
                                                     IEdmProperty streamEdmProperty)
         {
             ReaderValidationUtils.ValidateStreamReferenceProperty(
-                streamProperty, structuredType, streamEdmProperty, settings.ThrowOnUndeclaredLinkProperty);
+                streamProperty, structuredType, streamEdmProperty, settings.ThrowOnUndeclaredProperty);
         }
     }
 }

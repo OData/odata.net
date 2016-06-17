@@ -49,11 +49,13 @@ namespace Microsoft.OData.Client
             settings.ODataSimplified = this.responseInfo.Context.ODataSimplified;
             settings.MaxProtocolVersion = CommonUtil.ConvertToODataVersion(this.responseInfo.MaxProtocolVersion);
 
-            settings.Validations &= ~ReaderValidations.ThrowOnUndeclaredLinkProperty;
-            settings.Validations |= ReaderValidations.ThrowOnUndeclaredValueProperty;
-            if (!this.responseInfo.ThrowOnUndeclaredValueProperty)
+            if (this.responseInfo.ThrowOnUndeclaredProperty)
             {
-                settings.Validations &= ~ReaderValidations.ThrowOnUndeclaredValueProperty;
+                settings.Validations |= ReaderValidations.ThrowOnUndeclaredProperty;
+            }
+            else
+            {
+                settings.Validations &= ~ReaderValidations.ThrowOnUndeclaredProperty;
             }
 
             if (this.responseInfo.Context.UrlConventions == DataServiceUrlConventions.KeyAsSegment)

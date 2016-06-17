@@ -153,7 +153,7 @@ namespace Microsoft.OData.JsonLight
             {
                 this.ReadPropertyCustomAnnotationValue = this.ReadCustomInstanceAnnotationValue;
                 PropertyAnnotationCollector annotationCollector = new PropertyAnnotationCollector();
-                annotationCollector.ShouldCollectAnnotation = !this.MessageReaderSettings.ThrowOnUndeclaredValueProperty;
+                annotationCollector.ShouldCollectAnnotation = !this.MessageReaderSettings.ThrowOnUndeclaredProperty;
                 this.ProcessProperty(
                     resourceState.DuplicatePropertyNamesChecker,
                     annotationCollector,
@@ -1099,7 +1099,7 @@ namespace Microsoft.OData.JsonLight
                         /*isDynamicProperty*/true);
                 }
             }
-            else if (this.MessageReaderSettings.ThrowOnUndeclaredValueProperty)
+            else if (this.MessageReaderSettings.ThrowOnUndeclaredProperty)
             {
                 // throw specific exceptions for backward compatibility
                 if (!string.IsNullOrEmpty(payloadTypeName) && payloadTypeReference == null)
@@ -1119,8 +1119,8 @@ namespace Microsoft.OData.JsonLight
             else
             {
                 Debug.Assert(
-                    !this.MessageReaderSettings.ThrowOnUndeclaredValueProperty,
-                    "!this.MessageReaderSettings.ThrowOnUndeclaredValueProperty");
+                    !this.MessageReaderSettings.ThrowOnUndeclaredProperty,
+                    "!this.MessageReaderSettings.ThrowOnUndeclaredProperty");
                 propertyValue = this.JsonReader.ReadAsUntypedOrNullValue();
             }
 
@@ -1172,7 +1172,7 @@ namespace Microsoft.OData.JsonLight
             }
 #endif
             // to preserve error messages, if we're not going to report undeclared links, then read open properties first.
-            if (this.MessageReaderSettings.ThrowOnUndeclaredLinkProperty)
+            if (this.MessageReaderSettings.ThrowOnUndeclaredProperty)
             {
                 if (resourceState.ResourceType.IsOpen)
                 {
@@ -1196,7 +1196,7 @@ namespace Microsoft.OData.JsonLight
                     odataPropertyAnnotations.TryGetValue(ODataAnnotationNames.ODataAssociationLinkUrl, out propertyAnnotationValue))
                 {
                     // Undeclared link properties are reported if the right flag is used, otherwise we need to fail.
-                    if (this.MessageReaderSettings.ThrowOnUndeclaredLinkProperty)
+                    if (this.MessageReaderSettings.ThrowOnUndeclaredProperty)
                     {
                         throw new ODataException(ODataErrorStrings.ValidationUtils_PropertyDoesNotExistOnType(propertyName, resourceState.ResourceType.FullTypeName()));
                     }
@@ -1208,11 +1208,6 @@ namespace Microsoft.OData.JsonLight
                     // If the property is expanded, ignore the content if we're asked to do so.
                     if (propertyWithValue)
                     {
-                        if (this.MessageReaderSettings.ThrowOnUndeclaredValueProperty)
-                        {
-                            throw new ODataException(ODataErrorStrings.ValidationUtils_PropertyDoesNotExistOnType(propertyName, resourceState.ResourceType.FullTypeName()));
-                        }
-
                         ValidateExpandedNestedResourceInfoPropertyValue(this.JsonReader, null, propertyName);
 
                         // Since we marked the nested resource info as deferred the reader will not try to read its content
@@ -1232,7 +1227,7 @@ namespace Microsoft.OData.JsonLight
                     odataPropertyAnnotations.TryGetValue(ODataAnnotationNames.ODataMediaETag, out propertyAnnotationValue))
                 {
                     // Undeclared link properties are reported if the right flag is used, otherwise we need to fail.
-                    if (this.MessageReaderSettings.ThrowOnUndeclaredLinkProperty)
+                    if (this.MessageReaderSettings.ThrowOnUndeclaredProperty)
                     {
                         throw new ODataException(ODataErrorStrings.ValidationUtils_PropertyDoesNotExistOnType(propertyName, resourceState.ResourceType.FullTypeName()));
                     }
@@ -1264,7 +1259,7 @@ namespace Microsoft.OData.JsonLight
             }
 
             // Property with value can only be ignored if we're asked to do so.
-            if (this.MessageReaderSettings.ThrowOnUndeclaredValueProperty)
+            if (this.MessageReaderSettings.ThrowOnUndeclaredProperty)
             {
                 throw new ODataException(ODataErrorStrings.ValidationUtils_PropertyDoesNotExistOnType(propertyName, resourceState.ResourceType.FullTypeName()));
             }
@@ -1273,7 +1268,7 @@ namespace Microsoft.OData.JsonLight
             // We ignore the type name since we might not have the full model and thus might not be able to resolve it correctly.
             ValidateDataPropertyTypeNameAnnotation(resourceState.DuplicatePropertyNamesChecker, propertyName);
 
-            if (!this.MessageReaderSettings.ThrowOnUndeclaredValueProperty)
+            if (!this.MessageReaderSettings.ThrowOnUndeclaredProperty)
             {
                 bool isTopLevelPropertyValue = false;
                 ODataJsonLightReaderNestedResourceInfo nestedResourceInfo =
@@ -1283,8 +1278,8 @@ namespace Microsoft.OData.JsonLight
             else
             {
                 Debug.Assert(
-                    this.MessageReaderSettings.ThrowOnUndeclaredValueProperty,
-                    "this.MessageReaderSettings.ThrowOnUndeclaredValueProperty");
+                    this.MessageReaderSettings.ThrowOnUndeclaredProperty,
+                    "this.MessageReaderSettings.ThrowOnUndeclaredProperty");
             }
 
             return null;

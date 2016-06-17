@@ -61,9 +61,9 @@ namespace Microsoft.OData.Client
         }
 
         /// <summary>
-        /// Returns whether ThrowOnUndeclaredValueProperty validation setting is enabled.
+        /// Returns whether ThrowOnUndeclaredProperty validation setting is enabled.
         /// </summary>
-        internal bool ThrowOnUndeclaredValueProperty
+        internal bool ThrowOnUndeclaredProperty
         {
             get
             {

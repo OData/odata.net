@@ -56,20 +56,9 @@ namespace Microsoft.OData
         StrictMetadataValidation = 4,
 
         /// <summary>
-        /// Disable support for undeclared value property.
+        /// Disable support for undeclared property.
         /// </summary>
-        ThrowOnUndeclaredValueProperty = 8,
-
-        /// <summary>
-        /// Disable support for undeclared link property.
-        /// </summary>
-        /// <remarks>
-        /// Link properties include:
-        /// - Navigation links
-        /// - Association links
-        /// - Stream properties
-        /// </remarks>
-        ThrowOnUndeclaredLinkProperty = 16,
+        ThrowOnUndeclaredProperty = 8,
 
         /// <summary>
         /// Enable all validations.

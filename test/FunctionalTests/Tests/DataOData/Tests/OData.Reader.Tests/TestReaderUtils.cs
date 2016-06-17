@@ -32,36 +32,6 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
     public static class TestReaderUtils
     {
         /// <summary>
-        /// Apply a source ODataUndeclaredPropertyBehaviorKinds value to a target ReaderValidations value, and return the
-        /// resulting ReaderValidations value.
-        /// </summary>
-        /// <param name="kinds">The source ODataUndeclaredPropertyBehaviorKinds value.</param>
-        /// <param name="validations">The target ReaderValidations value.</param>
-        /// <returns>The resulting ReaderValidations value.</returns>
-        public static ReaderValidations ApplyUndeclaredPropertyBehaviorKinds(ODataUndeclaredPropertyBehaviorKinds kinds, ReaderValidations validations)
-        {
-            if ((kinds & ODataUndeclaredPropertyBehaviorKinds.ReportUndeclaredLinkProperty) != 0)
-            {
-                validations &= ~ReaderValidations.ThrowOnUndeclaredLinkProperty;
-            }
-            else
-            {
-                validations |= ReaderValidations.ThrowOnUndeclaredLinkProperty;
-            }
-
-            if ((kinds & ODataUndeclaredPropertyBehaviorKinds.SupportUndeclaredValueProperty) != 0)
-            {
-                validations &= ~ReaderValidations.ThrowOnUndeclaredValueProperty;
-            }
-            else
-            {
-                validations |= ReaderValidations.ThrowOnUndeclaredValueProperty;
-            }
-
-            return validations;
-        }
-
-        /// <summary>
         /// List of all the <see cref="ODataPayloadKind"/> values; we can't use Enum.GetValues since this is not supported on all platforms.
         /// </summary>
         public static readonly ODataPayloadKind[] ODataPayloadKinds = new ODataPayloadKind[]
@@ -89,17 +59,6 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
         /// List of all behavior kinds.
         /// </summary>
         public static TestODataBehaviorKind[] ODataBehaviorKinds = new[] { TestODataBehaviorKind.Default, TestODataBehaviorKind.WcfDataServicesClient, TestODataBehaviorKind.WcfDataServicesServer };
-
-        /// <summary>
-        /// List of all possible combinations of flags for the UndeclaredPropertyBehaviorKinds setting.
-        /// </summary>
-        public static ODataUndeclaredPropertyBehaviorKinds[] ODataUndeclaredPropertyBehaviorKindsCombinations = new[]
-            {
-                ODataUndeclaredPropertyBehaviorKinds.None,
-                ODataUndeclaredPropertyBehaviorKinds.SupportUndeclaredValueProperty,
-                ODataUndeclaredPropertyBehaviorKinds.ReportUndeclaredLinkProperty,
-                ODataUndeclaredPropertyBehaviorKinds.SupportUndeclaredValueProperty | ODataUndeclaredPropertyBehaviorKinds.ReportUndeclaredLinkProperty
-            };
 
         /// <summary>
         /// Returns a text description of message reader settings.
@@ -332,17 +291,6 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
             }
 
             return bytes;
-        }
-
-        /// <summary>
-        /// Returns true if the specified <paramref name="flag"/> is set in the <paramref name="undeclaredPropertyBehaviorKinds"/>.
-        /// </summary>
-        /// <param name="undeclaredPropertyBehaviorKinds">The value of the setting to test.</param>
-        /// <param name="flag">The flag to test.</param>
-        /// <returns>true if the flas is present, flase otherwise.</returns>
-        public static bool HasFlag(this ODataUndeclaredPropertyBehaviorKinds undeclaredPropertyBehaviorKinds, ODataUndeclaredPropertyBehaviorKinds flag)
-        {
-            return (undeclaredPropertyBehaviorKinds & flag) == flag;
         }
 
         /// <summary>
