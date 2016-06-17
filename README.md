@@ -116,3 +116,9 @@ There are many ways for you to contribute to OData .NET. The easiest way is to p
 - Questions<br />Ask questions on [Stack Overflow](http://stackoverflow.com/questions/ask?tags=odata).
 - Feedback<br />Please send mails to [odatafeedback@microsoft.com](mailto:odatafeedback@microsoft.com).
 - Team blog<br />Please visit [http://blogs.msdn.com/b/odatateam/](http://blogs.msdn.com/b/odatateam/) and [http://www.odata.org/blog/](http://www.odata.org/blog/).
+
+### Thank You!
+
+We’re using NDepend to analyze and increase code quality.
+
+[![NDepend](images/ndependlogo.png)](http://www.ndepend.com)
