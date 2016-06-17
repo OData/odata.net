@@ -29,10 +29,10 @@ namespace Microsoft.Test.OData.Tests.Client.RegressionTests
             entityType.AddKeys(entityType.AddStructuralProperty("Id", EdmPrimitiveTypeKind.Int32));
             entityType.AddProperty(new EdmStructuralProperty(entityType, "Geographies", new EdmCollectionTypeReference(new EdmCollectionType(EdmCoreModel.Instance.GetSpatial(EdmPrimitiveTypeKind.Geography, false)))));
             model.AddElement(entityType);
-            
+
             var writerSettings = new ODataMessageWriterSettings();
             writerSettings.SetContentType(ODataFormat.Json);
-            writerSettings.DisableMessageStreamDisposal = true;
+            writerSettings.EnableMessageStreamDisposal = false;
 
             var message = new InMemoryMessage { Stream = new MemoryStream() };
             using (ODataMessageWriter odataMessageWriter = new ODataMessageWriter((IODataRequestMessage)message, writerSettings, model))
@@ -42,32 +42,32 @@ namespace Microsoft.Test.OData.Tests.Client.RegressionTests
                     new ODataResource
                     {
                         TypeName = "Var1.Type",
-                        Properties = new[] 
+                        Properties = new[]
                         {
-                            new ODataProperty() 
-                            { 
-                                Name = "Id", 
-                                Value = 1 
-                            }, 
-                            new ODataProperty() 
-                            { 
-                                Name = "Geographies", 
-                                Value = new ODataCollectionValue 
-                                { 
-                                    Items = new[] 
-                                    { 
+                            new ODataProperty()
+                            {
+                                Name = "Id",
+                                Value = 1
+                            },
+                            new ODataProperty()
+                            {
+                                Name = "Geographies",
+                                Value = new ODataCollectionValue
+                                {
+                                    Items = new[]
+                                    {
                                         GeographyPoint.Create(0,0),
-                                        GeographyPoint.Create(1,1), 
-                                        GeographyPoint.Create(2,2) 
-                                    } 
-                                } 
-                            }, 
+                                        GeographyPoint.Create(1,1),
+                                        GeographyPoint.Create(2,2)
+                                    }
+                                }
+                            },
                         }
                     });
                 odataWriter.WriteEnd();
                 odataWriter.Flush();
             }
-            
+
             message.Stream.Position = 0;
             var output = new StreamReader(message.Stream).ReadToEnd();
             Assert.IsFalse(output.Contains("Collection(Edm.GeographyPoint)"), @"output.Contains(""Collection(Edm.GeographyPoint)"" == false");

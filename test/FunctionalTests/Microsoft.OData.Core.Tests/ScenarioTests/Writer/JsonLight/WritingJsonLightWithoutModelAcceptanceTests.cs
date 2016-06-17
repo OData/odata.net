@@ -28,7 +28,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Writer.JsonLight
                     "]" +
                 "}";
 
-            var writerSettings = new ODataMessageWriterSettings { DisableMessageStreamDisposal = true };
+            var writerSettings = new ODataMessageWriterSettings { EnableMessageStreamDisposal = false };
             writerSettings.SetContentType(ODataFormat.Json);
             writerSettings.ODataUri = new ODataUri() { ServiceRoot = new Uri("http://www.example.com") };
 

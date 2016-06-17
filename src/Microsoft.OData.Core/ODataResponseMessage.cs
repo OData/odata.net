@@ -25,7 +25,7 @@ namespace Microsoft.OData
     /// </remarks>
     internal sealed class ODataResponseMessage : ODataMessage,
 #if PORTABLELIB
-        IODataResponseMessageAsync
+ IODataResponseMessageAsync
 #else
         IODataResponseMessage
 #endif
@@ -39,10 +39,10 @@ namespace Microsoft.OData
         /// </summary>
         /// <param name="responseMessage">The response message to wrap.</param>
         /// <param name="writing">true if the message is being written; false when it is read.</param>
-        /// <param name="disableMessageStreamDisposal">true if the stream returned should ignore dispose calls.</param>
+        /// <param name="enableMessageStreamDisposal">true if the stream returned should dispose calls.</param>
         /// <param name="maxMessageSize">The maximum size of the message in bytes (or a negative number if no maximum applies).</param>
-        internal ODataResponseMessage(IODataResponseMessage responseMessage, bool writing, bool disableMessageStreamDisposal, long maxMessageSize)
-            : base(writing, disableMessageStreamDisposal, maxMessageSize)
+        internal ODataResponseMessage(IODataResponseMessage responseMessage, bool writing, bool enableMessageStreamDisposal, long maxMessageSize)
+            : base(writing, enableMessageStreamDisposal, maxMessageSize)
         {
             Debug.Assert(responseMessage != null, "responseMessage != null");
 

@@ -229,12 +229,12 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.BatchWriter
                 QueryOperation("GET", new Uri("http://www.odata.org/OData/OData.svc/1")),
                 QueryOperation("GET", new Uri("2", UriKind.Relative)),
                 QueryOperation(
-                    "GET", 
-                    new Uri("http://www.odata.org/OData/OData.svc/3"), 
+                    "GET",
+                    new Uri("http://www.odata.org/OData/OData.svc/3"),
                     new Dictionary<string, string> { { "Host", "www.odata.org" } }),
                 QueryOperation(
-                    "GET", 
-                    new Uri("http://www.odata.org/OData/OData.svc/4"), 
+                    "GET",
+                    new Uri("http://www.odata.org/OData/OData.svc/4"),
                     new Dictionary<string, string> { { "Host", "www.odata.org" }, { "A", "B" }, { "C", "D" } }),
                 QueryOperation("GET", new Uri("http://www.odata.org/OData/OData.svc/5")),
             };
@@ -250,12 +250,12 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.BatchWriter
                 QueryOperationResponse(200, "Sample response payload."),
                 QueryOperationResponse(404, "Sample response payload 2."),
                 QueryOperationResponse(
-                    200, 
-                    "Sample response payload 3.", 
+                    200,
+                    "Sample response payload 3.",
                     new Dictionary<string,string> { { "CustomHeader", "Successful response" } }),
                 QueryOperationResponse(
-                    200, 
-                    "Sample response payload 4.", 
+                    200,
+                    "Sample response payload 4.",
                     new Dictionary<string,string> { { "A", "B" }, { "C", "D" } }),
                 QueryOperationResponse(500, "Sample response payload 5."),
             };
@@ -295,24 +295,24 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.BatchWriter
             {
                 ChangeSetRequest("POST", new Uri("http://www.odata.org/OData/OData.svc/Products"), "1", null, "First sample payload"),
                 ChangeSetRequest(
-                    "POST", 
-                    new Uri("$1/Category", UriKind.Relative), 
-                    "2", 
+                    "POST",
+                    new Uri("$1/Category", UriKind.Relative),
+                    "2",
                     new Dictionary<string,string>() { { "Host", "www.odata.org" }, { "Content-Length", "42" } },
                     "Second sample payload"),
                 ChangeSetRequest("DELETE", new Uri("http://www.odata.org/OData/OData.svc/Products"), "3", null, "Fourth sample payload"),
                 ChangeSetRequest("PUT", new Uri("http://www.odata.org/OData/OData.svc/Products"), "4", null, "Fifth sample payload"),
                 ChangeSetRequest("POST", new Uri("/Products(2)", UriKind.Relative), "5", null, "Second sample payload"),
                 ChangeSetRequest(
-                    "POST", 
-                    new Uri("http://www.odata.org/OData/OData.svc/Products"), 
-                    "6", 
-                    new Dictionary<string,string>() 
-                    { 
-                        { "Host", "www.odata.org" }, 
+                    "POST",
+                    new Uri("http://www.odata.org/OData/OData.svc/Products"),
+                    "6",
+                    new Dictionary<string,string>()
+                    {
+                        { "Host", "www.odata.org" },
                         { "Content-Length", "42" },
                         { "A", "B" },
-                        { "C", "D" }, 
+                        { "C", "D" },
                     },
                     "Third sample payload"),
             };
@@ -735,7 +735,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.BatchWriter
 
         private static void WriteODataPayloadToStream(Func<ODataMessageWriter> messageWriterFunc, WriterTestConfiguration testConfiguration, ODataPayload odataPayload, AssertionHandler assert)
         {
-            assert.IsFalse(testConfiguration.MessageWriterSettings.DisableMessageStreamDisposal, "The batch writer will fail if the batch operation stream doesn't get disposed after use.");
+            assert.IsTrue(testConfiguration.MessageWriterSettings.EnableMessageStreamDisposal, "The batch writer will fail if the batch operation stream doesn't get disposed after use.");
             ODataMessageWriter messageWriter = messageWriterFunc();
             using (ODataMessageWriterTestWrapper messageWriterWrapper = new ODataMessageWriterTestWrapper(messageWriter, testConfiguration))
             {
@@ -904,7 +904,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.BatchWriter
                             }
                         }
 
-                    ChangesetEnd:
+                        ChangesetEnd:
                         // TODO: this seems to indicate that the product supports in-stream errors for batch requests!
                         // We can hit another exception after the changeset.  For example if the changeset fails
                         // and after the server serializes out the error for the changeset, writes the endboundary
@@ -956,7 +956,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.BatchWriter
                         }
                     }
                 }
-            End:
+                End:
                 line = reader.ReadLine();
                 if (line != null)
                 {

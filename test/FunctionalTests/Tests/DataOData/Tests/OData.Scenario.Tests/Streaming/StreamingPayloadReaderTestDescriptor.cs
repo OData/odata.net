@@ -65,7 +65,7 @@ namespace Microsoft.Test.Taupo.OData.Scenario.Tests.Streaming
             {
                 Version = testConfiguration.Version,
                 BaseUri = testConfiguration.MessageReaderSettings.BaseUri,
-                DisableMessageStreamDisposal = testConfiguration.MessageReaderSettings.DisableMessageStreamDisposal,
+                EnableMessageStreamDisposal = testConfiguration.MessageReaderSettings.EnableMessageStreamDisposal,
             };
 
             settings.SetContentType(testConfiguration.Format);

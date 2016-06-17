@@ -26,7 +26,7 @@ namespace Microsoft.OData.Tests
             Assert.Null(settings.BaseUri);
             Assert.Null(settings.ClientCustomTypeResolver);
             Assert.False(settings.DisablePrimitiveTypeConversion, "DisablePrimitiveTypeConversion should be false by default.");
-            Assert.False(settings.DisableMessageStreamDisposal, "DisableMessageStreamDisposal should be false by default.");
+            Assert.True(settings.EnableMessageStreamDisposal, "EnableMessageStreamDisposal should be false by default.");
             Assert.False(settings.EnableCharactersCheck, "The CheckCharacters should be off by default.");
             Assert.True((settings.Validations & ReaderValidations.BasicValidation) != 0, "BasicValidation should be true by default");
             Assert.True((settings.Validations & ReaderValidations.ThrowIfTypeConflictsWithMetadata) != 0, "The ThrowIfTypeConflictsWithMetadata should be true by default");
@@ -52,7 +52,7 @@ namespace Microsoft.OData.Tests
             {
                 BaseUri = baseUri,
                 DisablePrimitiveTypeConversion = true,
-                DisableMessageStreamDisposal = true,
+                EnableMessageStreamDisposal = false,
                 EnableCharactersCheck = true,
                 EnableReadingEntryContentInEntryStartState = false,
                 ODataSimplified = true,
@@ -74,7 +74,7 @@ namespace Microsoft.OData.Tests
             Assert.True((settings.Validations & ReaderValidations.ThrowOnDuplicatePropertyNames) == 0, "The ThrowOnDuplicatePropertyNames was not correctly remembered");
             Assert.True(baseUri.Equals(settings.BaseUri), "The BaseUri was not correctly remembered.");
             Assert.True(settings.DisablePrimitiveTypeConversion, "DisablePrimitiveTypeConversion was not correctly remembered.");
-            Assert.True(settings.DisableMessageStreamDisposal, "DisableMessageStreamDisposal was not correctly remembered.");
+            Assert.False(settings.EnableMessageStreamDisposal, "EnableMessageStreamDisposal was not correctly remembered.");
             Assert.True(settings.EnableCharactersCheck, "The CheckCharacters should be on when set.");
             Assert.True((settings.Validations & ReaderValidations.BasicValidation) == 0, "BasicValidation was not correctly remembered");
             Assert.False(settings.ThrowIfTypeConflictsWithMetadata, "The ThrowIfTypeConflictsWithMetadata was not correctly remembered");
@@ -123,8 +123,8 @@ namespace Microsoft.OData.Tests
             this.CompareMessageReaderSettings(settings, copyOfSettings);
 
             // Compare original and settings created from copy constructor after setting rest of the values 
-            settings.DisableMessageStreamDisposal = true;
             settings.Validations &= ~ReaderValidations.ThrowOnUndeclaredProperty;
+            settings.EnableMessageStreamDisposal = false;            
             settings.MaxProtocolVersion = ODataVersion.V4;
             settings.MessageQuotas.MaxPartsPerBatch = 100;
             settings.MessageQuotas.MaxOperationsPerChangeset = 200;
@@ -179,7 +179,7 @@ namespace Microsoft.OData.Tests
             Assert.True(Uri.Compare(expected.BaseUri, actual.BaseUri, UriComponents.AbsoluteUri, UriFormat.Unescaped, StringComparison.CurrentCulture) == 0,
                 "BaseUri does not match");
             Assert.True(expected.ClientCustomTypeResolver == actual.ClientCustomTypeResolver, "ClientCustomTypeResolver does not match");
-            Assert.True(expected.DisableMessageStreamDisposal == actual.DisableMessageStreamDisposal, "DisableMessageStreamDisposal does not match");
+            Assert.True(expected.EnableMessageStreamDisposal == actual.EnableMessageStreamDisposal, "EnableMessageStreamDisposal does not match");
             Assert.True(expected.DisablePrimitiveTypeConversion == actual.DisablePrimitiveTypeConversion, "DisablePrimitiveTypeConversion does not match");
             Assert.True(expected.EnableCharactersCheck == actual.EnableCharactersCheck, "CheckCharacters does not match");
             Assert.True(expected.EnableReadingEntryContentInEntryStartState == actual.EnableReadingEntryContentInEntryStartState, "EnableReadingEntryContentInEntryStartState does not match");

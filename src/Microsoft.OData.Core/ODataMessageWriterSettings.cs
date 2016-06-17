@@ -70,7 +70,7 @@ namespace Microsoft.OData
         public ODataMessageWriterSettings()
         {
             this.AutoComputePayloadMetadata = false;
-            this.DisableMessageStreamDisposal = false;
+            this.EnableMessageStreamDisposal = true;
             this.EnableCharactersCheck = false;
             this.EnableIndentation = false;
             this.ODataSimplified = false;
@@ -126,9 +126,9 @@ namespace Microsoft.OData
             }
         }
 
-        /// <summary>Gets or sets a value that indicates whether the message stream will not be disposed after finishing writing with the message.</summary>
-        /// <returns>true if the message stream will not be disposed after finishing writing with the message; otherwise false. The default value is false.</returns>
-        public bool DisableMessageStreamDisposal { get; set; }
+        /// <summary>Gets or sets a value that indicates whether the message stream will be disposed after finishing writing with the message.</summary>
+        /// <returns>true if the message stream will be disposed after finishing writing with the message; otherwise false. The default value is true.</returns>
+        public bool EnableMessageStreamDisposal { get; set; }
 
         /// <summary>
         /// Flag to control whether the writer should check for valid Xml characters or not.
@@ -424,7 +424,7 @@ namespace Microsoft.OData
             this.acceptMediaTypes = other.acceptMediaTypes;
             this.AutoComputePayloadMetadata = other.AutoComputePayloadMetadata;
             this.BaseUri = other.BaseUri;
-            this.DisableMessageStreamDisposal = other.DisableMessageStreamDisposal;
+            this.EnableMessageStreamDisposal = other.EnableMessageStreamDisposal;
             this.EnableCharactersCheck = other.EnableCharactersCheck;
             this.EnableIndentation = other.EnableIndentation;
             this.format = other.format;

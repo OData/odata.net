@@ -303,7 +303,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
             this.CombinatorialEngineProvider.RunCombinations(
                 testDescriptors,
                 // restricting the set of default format configurations to limiti runtime of the tests
-                this.ReaderTestConfigurationProvider.DefaultFormatConfigurations.Where(tc =>!tc.MessageReaderSettings.DisableMessageStreamDisposal && !tc.IsRequest),
+                this.ReaderTestConfigurationProvider.DefaultFormatConfigurations.Where(tc =>tc.MessageReaderSettings.EnableMessageStreamDisposal && !tc.IsRequest),
                 (testDescriptor, testConfig) =>
                 {
                     testConfig = new ReaderTestConfiguration(testConfig);

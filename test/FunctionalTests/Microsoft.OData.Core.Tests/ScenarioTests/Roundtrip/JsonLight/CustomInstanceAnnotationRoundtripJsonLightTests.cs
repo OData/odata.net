@@ -163,7 +163,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip.JsonLight
         /// </summary>
         private void WriteError(params KeyValuePair<string, ODataValue>[] annotations)
         {
-            var writerSettings = new ODataMessageWriterSettings { DisableMessageStreamDisposal = true };
+            var writerSettings = new ODataMessageWriterSettings { EnableMessageStreamDisposal = false };
             writerSettings.SetContentType(ODataFormat.Json);
             writerSettings.SetServiceDocumentUri(new Uri("http://example.com/"));
 
@@ -191,7 +191,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip.JsonLight
         private ODataError ReadError()
         {
             ODataError readError;
-            var readerSettings = new ODataMessageReaderSettings { DisableMessageStreamDisposal = false };
+            var readerSettings = new ODataMessageReaderSettings { EnableMessageStreamDisposal = true };
 
             IODataResponseMessage messageToRead = new InMemoryMessage { StatusCode = 400, Stream = this.stream };
             messageToRead.SetHeader("Content-Type", "application/json;odata.metadata=minimal");

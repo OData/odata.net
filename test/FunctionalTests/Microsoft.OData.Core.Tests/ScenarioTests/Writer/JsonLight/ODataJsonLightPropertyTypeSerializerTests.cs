@@ -372,7 +372,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Writer.JsonLight
 
         private string WriteODataEntry(ODataResource entryToWrite)
         {
-            var writerSettings = new ODataMessageWriterSettings { DisableMessageStreamDisposal = true };
+            var writerSettings = new ODataMessageWriterSettings { EnableMessageStreamDisposal = false };
             writerSettings.SetContentType(ODataFormat.Json);
             writerSettings.SetServiceDocumentUri(new Uri("http://www.example.com/"));
             MemoryStream stream = new MemoryStream();

@@ -888,7 +888,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Writer.JsonLight
 
         public void WriteToMessageWriterAndVerifyPayload(string contentType, Action<ODataMessageWriter> writerAction, string expectedPayload)
         {
-            ODataMessageWriterSettings settings = new ODataMessageWriterSettings() { Version = ODataVersion.V4, AutoComputePayloadMetadata = true, DisableMessageStreamDisposal = true };
+            ODataMessageWriterSettings settings = new ODataMessageWriterSettings() { Version = ODataVersion.V4, AutoComputePayloadMetadata = true, EnableMessageStreamDisposal = false };
             settings.SetContentType(contentType, "utf-8");
             settings.SetServiceDocumentUri(this.serviceDocumentUri);
             // with model

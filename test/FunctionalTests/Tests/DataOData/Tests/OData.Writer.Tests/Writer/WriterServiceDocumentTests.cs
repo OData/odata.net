@@ -386,7 +386,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                   WorkspaceWithSettings docWithSettings = testDescriptor.PayloadItems.Single();
                   if (docWithSettings.WriterSettings != null)
                   {
-                      docWithSettings.WriterSettings.DisableMessageStreamDisposal = testConfig.MessageWriterSettings.DisableMessageStreamDisposal;
+                      docWithSettings.WriterSettings.EnableMessageStreamDisposal = testConfig.MessageWriterSettings.EnableMessageStreamDisposal;
                   }
 
                   WriterTestConfiguration newConfiguration = testConfig.Clone();
@@ -503,7 +503,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                     WorkspaceWithSettings docWithSettings = testDescriptor.PayloadItems.Single();
                     if (docWithSettings.WriterSettings != null)
                     {
-                        docWithSettings.WriterSettings.DisableMessageStreamDisposal = testConfig.MessageWriterSettings.DisableMessageStreamDisposal;
+                        docWithSettings.WriterSettings.EnableMessageStreamDisposal = testConfig.MessageWriterSettings.EnableMessageStreamDisposal;
                         docWithSettings.WriterSettings.SetServiceDocumentUri(ServiceDocumentUri);
                     }
 

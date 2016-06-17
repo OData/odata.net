@@ -210,7 +210,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Writer.JsonLight
         private ODataMessageWriter CreateMessageWriter(bool useModel)
         {
             var responseMessage = new TestResponseMessage(this.stream);
-            var writerSettings = new ODataMessageWriterSettings { DisableMessageStreamDisposal = true };
+            var writerSettings = new ODataMessageWriterSettings { EnableMessageStreamDisposal = false };
             writerSettings.SetServiceDocumentUri(new Uri("http://host/service"));
             var model = useModel ? this.GetModel() : null;
             return new ODataMessageWriter(responseMessage, writerSettings, model);

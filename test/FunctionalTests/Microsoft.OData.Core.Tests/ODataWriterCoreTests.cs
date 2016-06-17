@@ -88,7 +88,7 @@ namespace Microsoft.OData.Tests
         private static TestODataWriterCore CreateODataWriterCore(ODataFormat format, bool writingResponse, IEdmModel model, IEdmEntitySet writerSet, IEdmEntityType writerEntityType, bool writeFeed)
         {
             var resolver = new TestUrlResolver();
-            var settings = new ODataMessageWriterSettings { DisableMessageStreamDisposal = true, Version = ODataVersion.V4 };
+            var settings = new ODataMessageWriterSettings { EnableMessageStreamDisposal = false, Version = ODataVersion.V4 };
             settings.SetServiceDocumentUri(new Uri("http://example.com"));
 
             var outputContext = new TestODataOutputContext(format, settings, writingResponse, false, model, resolver);
@@ -97,7 +97,7 @@ namespace Microsoft.OData.Tests
 
         internal class TestODataWriterCore : ODataWriterCore
         {
-            public TestODataWriterCore(ODataOutputContext outputContext, IEdmEntitySet navigationSource, IEdmEntityType entityType, bool writingFeed):
+            public TestODataWriterCore(ODataOutputContext outputContext, IEdmEntitySet navigationSource, IEdmEntityType entityType, bool writingFeed) :
                 base(outputContext, navigationSource, entityType, writingFeed)
             {
             }
@@ -188,7 +188,7 @@ namespace Microsoft.OData.Tests
         internal class TestODataOutputContext : ODataOutputContext
         {
             public TestODataOutputContext(ODataFormat format, ODataMessageWriterSettings messageWriterSettings, bool writingResponse, bool synchronous, IEdmModel model, IODataPayloadUriConverter urlResolver)
-                :base(format,
+                : base(format,
                     new ODataMessageInfo
                     {
                         IsAsync = !synchronous,
@@ -202,7 +202,7 @@ namespace Microsoft.OData.Tests
 
         internal class TestUrlResolver : IODataPayloadUriConverter
         {
-            public Func<Uri, Uri, Uri> ResolveUrlFunc {get; set;}
+            public Func<Uri, Uri, Uri> ResolveUrlFunc { get; set; }
             public Uri ConvertPayloadUri(Uri baseUri, Uri payloadUri)
             {
                 return this.ResolveUrlFunc(baseUri, payloadUri);

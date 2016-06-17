@@ -1250,7 +1250,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip
 
             var writerSettings = new ODataMessageWriterSettings
             {
-                DisableMessageStreamDisposal = true,
+                EnableMessageStreamDisposal = false,
                 BaseUri = new Uri(TestBaseUri),
                 AutoComputePayloadMetadata = true
             };
@@ -1279,7 +1279,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip
             ODataMessageReaderSettings readerSettings = new ODataMessageReaderSettings()
             {
                 BaseUri = new Uri(TestBaseUri + "$metadata"),
-                DisableMessageStreamDisposal = false,
+                EnableMessageStreamDisposal = true,
             };
 
             using (var msgReader =

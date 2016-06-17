@@ -1391,7 +1391,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.BatchWriter
 
             this.CombinatorialEngineProvider.RunCombinations(
                testDescriptors,
-               this.WriterTestConfigurationProvider.DefaultFormatConfigurationsWithIndent.Where(tc => tc.MessageWriterSettings.DisableMessageStreamDisposal == false),
+               this.WriterTestConfigurationProvider.DefaultFormatConfigurationsWithIndent.Where(tc => tc.MessageWriterSettings.EnableMessageStreamDisposal == true),
                (testDescriptor, testConfiguration) =>
                {
                    testDescriptor.RunTest(testConfiguration, this.Logger);
@@ -1540,7 +1540,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.BatchWriter
         }
 
         /// <summary>
-        /// This method tries to write operations with DisableMessageStreamDisposal set to true
+        /// This method tries to write operations with EnableMessageStreamDisposal set to true
         /// </summary>
         /// <param name="newTestConfig">The config to use</param>
         /// <param name="testMessage">The message to use</param>
@@ -1548,7 +1548,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.BatchWriter
         {
             ExceptionUtilities.CheckArgumentNotNull(config, "config");
             ExceptionUtilities.CheckArgumentNotNull(testMessage, "testMessage");
-            config.MessageWriterSettings.DisableMessageStreamDisposal = true;
+            config.MessageWriterSettings.EnableMessageStreamDisposal = false;
 
             using (ODataMessageWriterTestWrapper messageWriterWrapper = TestWriterUtils.CreateMessageWriter(testMessage, null, config, this.Assert, null))
             {
@@ -1592,7 +1592,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.BatchWriter
         {
             ExceptionUtilities.CheckArgumentNotNull(config, "config");
             ExceptionUtilities.CheckArgumentNotNull(testMessage, "testMessage");
-            config.MessageWriterSettings.DisableMessageStreamDisposal = true;
+            config.MessageWriterSettings.EnableMessageStreamDisposal = false;
 
             using (ODataMessageWriterTestWrapper messageWriterWrapper = TestWriterUtils.CreateMessageWriter(testMessage, null, config, this.Assert, null))
             {

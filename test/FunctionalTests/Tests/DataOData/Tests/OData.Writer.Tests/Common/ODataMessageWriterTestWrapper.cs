@@ -637,14 +637,14 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Common
             this.messageWriter.Dispose();
             if(message != null && message.TestStream != null && message.StreamRetrieved)
             {
-                bool disableMessageStreamDisposal = testConfiguration.MessageWriterSettings.DisableMessageStreamDisposal;
-                if (disableMessageStreamDisposal)
+                bool enableMessageStreamDisposal = testConfiguration.MessageWriterSettings.EnableMessageStreamDisposal;
+                if (enableMessageStreamDisposal)
                 {
-                    this.assert.AreEqual(0, message.TestStream.DisposeCount, "Dispose method on the stream must not be called when DisableMessageStreamDisposal is set to true.");
+                    this.assert.AreEqual(1, message.TestStream.DisposeCount, "Dispose method on the stream must be called when EnableMessageStreamDisposal is set to true.");
                 }
                 else
                 {
-                    this.assert.AreEqual(1, message.TestStream.DisposeCount, "Dispose method on the stream must be called exactly once when DisableMessageStreamDisposal is set to false.");
+                    this.assert.AreEqual(0, message.TestStream.DisposeCount, "Dispose method on the stream must not be called exactly once when EnableMessageStreamDisposal is set to false.");
                 }
             }
         }

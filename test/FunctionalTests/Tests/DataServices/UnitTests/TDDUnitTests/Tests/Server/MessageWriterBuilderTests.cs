@@ -120,9 +120,9 @@ namespace AstoriaUnitTests.TDD.Tests.Server
             // AstoriaResponseMessage is only used for representing top-level responses, not individual parts of a batched response.
             var topLevelResponseMessage = new AstoriaResponseMessage(this.host);
 
-            var testSubject = new ODataMessageWriterSettings { DisableMessageStreamDisposal = false };
+            var testSubject = new ODataMessageWriterSettings { EnableMessageStreamDisposal = true };
             MessageWriterBuilder.ApplyCommonSettings(testSubject, new Uri("http://www.example.com"), VersionUtil.Version4Dot0, this.dataServiceSimulator, topLevelResponseMessage);
-            testSubject.DisableMessageStreamDisposal.Should().BeTrue();
+            testSubject.EnableMessageStreamDisposal.Should().BeFalse();
         }
 
         [TestMethod]
@@ -132,9 +132,9 @@ namespace AstoriaUnitTests.TDD.Tests.Server
             // For this test, its enough to just pass the test implementation of the response contract.
             var nonTopLevelResponseMessage = this.responseMessageSimulator;
 
-            var testSubject = new ODataMessageWriterSettings { DisableMessageStreamDisposal = true };
+            var testSubject = new ODataMessageWriterSettings { EnableMessageStreamDisposal = false };
             MessageWriterBuilder.ApplyCommonSettings(testSubject, new Uri("http://www.example.com"), VersionUtil.Version4Dot0, this.dataServiceSimulator, nonTopLevelResponseMessage);
-            testSubject.DisableMessageStreamDisposal.Should().BeFalse();
+            testSubject.EnableMessageStreamDisposal.Should().BeTrue();
         }
 
         [TestMethod]

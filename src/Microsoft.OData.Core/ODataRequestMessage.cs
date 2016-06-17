@@ -35,10 +35,10 @@ namespace Microsoft.OData
         /// </summary>
         /// <param name="requestMessage">The request message to wrap.</param>
         /// <param name="writing">true if the request message is being written; false when it is read.</param>
-        /// <param name="disableMessageStreamDisposal">true if the stream returned should ignore dispose calls.</param>
+        /// <param name="enableMessageStreamDisposal">true if the stream returned should be dispose calls.</param>
         /// <param name="maxMessageSize">The maximum size of the message in bytes (or a negative value if no maximum applies).</param>
-        internal ODataRequestMessage(IODataRequestMessage requestMessage, bool writing, bool disableMessageStreamDisposal, long maxMessageSize)
-            : base(writing, disableMessageStreamDisposal, maxMessageSize)
+        internal ODataRequestMessage(IODataRequestMessage requestMessage, bool writing, bool enableMessageStreamDisposal, long maxMessageSize)
+            : base(writing, enableMessageStreamDisposal, maxMessageSize)
         {
             Debug.Assert(requestMessage != null, "requestMessage != null");
 

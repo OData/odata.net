@@ -26,8 +26,8 @@ namespace Microsoft.OData
         /// <summary>true if the message is being written; false when it is read.</summary>
         private readonly bool writing;
 
-        /// <summary>true if the stream returned should ignore dispose calls.</summary>
-        private readonly bool disableMessageStreamDisposal;
+        /// <summary>true if the stream returned should be dispose calls.</summary>
+        private readonly bool enableMessageStreamDisposal;
 
         /// <summary>The maximum size of the message in bytes (or null if no maximum applies).</summary>
         private readonly long maxMessageSize;
@@ -42,12 +42,12 @@ namespace Microsoft.OData
         /// Constructs a new ODataMessage.
         /// </summary>
         /// <param name="writing">true if the message is being written; false when it is read.</param>
-        /// <param name="disableMessageStreamDisposal">true if the stream returned should ignore dispose calls.</param>
+        /// <param name="enableMessageStreamDisposal">true if the stream returned should be dispose calls.</param>
         /// <param name="maxMessageSize">The maximum size of the message in bytes (or a negative value if no maximum applies).</param>
-        protected ODataMessage(bool writing, bool disableMessageStreamDisposal, long maxMessageSize)
+        protected ODataMessage(bool writing, bool enableMessageStreamDisposal, long maxMessageSize)
         {
             this.writing = writing;
-            this.disableMessageStreamDisposal = disableMessageStreamDisposal;
+            this.enableMessageStreamDisposal = enableMessageStreamDisposal;
             this.maxMessageSize = maxMessageSize;
         }
 
@@ -154,11 +154,11 @@ namespace Microsoft.OData
             // When reading, wrap the stream in a byte counting stream if a max message size was specified.
             // When requested, wrap the stream in a non-disposing stream.
             bool needByteCountingStream = !this.writing && this.maxMessageSize > 0;
-            if (this.disableMessageStreamDisposal && needByteCountingStream)
+            if (!this.enableMessageStreamDisposal && needByteCountingStream)
             {
                 messageStream = MessageStreamWrapper.CreateNonDisposingStreamWithMaxSize(messageStream, this.maxMessageSize);
             }
-            else if (this.disableMessageStreamDisposal)
+            else if (!this.enableMessageStreamDisposal)
             {
                 messageStream = MessageStreamWrapper.CreateNonDisposingStream(messageStream);
             }
@@ -212,11 +212,11 @@ namespace Microsoft.OData
                     // When reading, wrap the stream in a byte counting stream if a max message size was specified.
                     // When requested, wrap the stream in a non-disposing stream.
                     bool needByteCountingStream = !this.writing && this.maxMessageSize > 0;
-                    if (this.disableMessageStreamDisposal && needByteCountingStream)
+                    if (!this.enableMessageStreamDisposal && needByteCountingStream)
                     {
                         messageStream = MessageStreamWrapper.CreateNonDisposingStreamWithMaxSize(messageStream, this.maxMessageSize);
                     }
-                    else if (this.disableMessageStreamDisposal)
+                    else if (!this.enableMessageStreamDisposal)
                     {
                         messageStream = MessageStreamWrapper.CreateNonDisposingStream(messageStream);
                     }

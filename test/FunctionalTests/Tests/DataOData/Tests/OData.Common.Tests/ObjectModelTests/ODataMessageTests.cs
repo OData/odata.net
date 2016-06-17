@@ -176,8 +176,8 @@ namespace Microsoft.Test.Taupo.OData.Common.Tests.ObjectModelTests
         {
             ODataMessageWriterSettings settings = new ODataMessageWriterSettings();
             object message = response
-                ? new ODataResponseMessageWrapper(new TestResponseMessage(stream), writing, settings.DisableMessageStreamDisposal).WrappedMessageObject
-                : new ODataRequestMessageWrapper(new TestRequestMessage(stream), writing, settings.DisableMessageStreamDisposal).WrappedMessageObject;
+                ? new ODataResponseMessageWrapper(new TestResponseMessage(stream), writing, settings.EnableMessageStreamDisposal).WrappedMessageObject
+                : new ODataRequestMessageWrapper(new TestRequestMessage(stream), writing, settings.EnableMessageStreamDisposal).WrappedMessageObject;
             ODataMessageInfo messageInfo = new ODataMessageInfo
             {
                 MessageStream = (Stream)ReflectionUtils.InvokeMethod(message, "GetStream"),
@@ -209,9 +209,9 @@ namespace Microsoft.Test.Taupo.OData.Common.Tests.ObjectModelTests
 
             private readonly object requestMessage;
 
-            internal ODataRequestMessageWrapper(IODataRequestMessage requestMessage, bool writing, bool disableMessageStreamDisposal)
+            internal ODataRequestMessageWrapper(IODataRequestMessage requestMessage, bool writing, bool enableMessageStreamDisposal)
             {
-                this.requestMessage = ReflectionUtils.CreateInstance(requestMessageType, requestMessage, writing, disableMessageStreamDisposal, /*maxBytesToBeRead*/ -1);
+                this.requestMessage = ReflectionUtils.CreateInstance(requestMessageType, requestMessage, writing, enableMessageStreamDisposal, /*maxBytesToBeRead*/ -1);
             }
 
             public IEnumerable<KeyValuePair<string, string>> Headers
@@ -261,9 +261,9 @@ namespace Microsoft.Test.Taupo.OData.Common.Tests.ObjectModelTests
 
             private readonly object responseMessage;
 
-            internal ODataResponseMessageWrapper(IODataResponseMessage responseMessage, bool writing, bool disableMessageStreamDisposal)
+            internal ODataResponseMessageWrapper(IODataResponseMessage responseMessage, bool writing, bool enableMessageStreamDisposal)
             {
-                this.responseMessage = ReflectionUtils.CreateInstance(responseMessageType, responseMessage, writing, disableMessageStreamDisposal, /*maxBytesToBeRead*/ -1);
+                this.responseMessage = ReflectionUtils.CreateInstance(responseMessageType, responseMessage, writing, enableMessageStreamDisposal, /*maxBytesToBeRead*/ -1);
             }
 
             public IEnumerable<KeyValuePair<string, string>> Headers

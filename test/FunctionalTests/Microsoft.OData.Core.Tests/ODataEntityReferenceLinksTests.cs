@@ -347,7 +347,7 @@ namespace Microsoft.OData.Tests
                 Links = new[] { link1, link2 }
             };
 
-            var writerSettings = new ODataMessageWriterSettings { DisableMessageStreamDisposal = true };
+            var writerSettings = new ODataMessageWriterSettings { EnableMessageStreamDisposal = false };
             writerSettings.SetContentType(ODataFormat.Json);
             writerSettings.SetServiceDocumentUri(new Uri("http://odata.org/test"));
             MemoryStream stream = new MemoryStream();

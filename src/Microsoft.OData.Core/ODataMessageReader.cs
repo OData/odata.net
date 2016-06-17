@@ -114,7 +114,7 @@ namespace Microsoft.OData
             ReaderValidationUtils.ValidateMessageReaderSettings(this.settings, /*readingResponse*/ false);
 
             this.readingResponse = false;
-            this.message = new ODataRequestMessage(requestMessage, /*writing*/ false, this.settings.DisableMessageStreamDisposal, this.settings.MessageQuotas.MaxReceivedMessageSize);
+            this.message = new ODataRequestMessage(requestMessage, /*writing*/ false, this.settings.EnableMessageStreamDisposal, this.settings.MessageQuotas.MaxReceivedMessageSize);
             this.payloadUriConverter = requestMessage as IODataPayloadUriConverter;
             this.mediaTypeResolver = ODataMediaTypeResolver.GetMediaTypeResolver(this.container);
 
@@ -155,7 +155,7 @@ namespace Microsoft.OData
             ReaderValidationUtils.ValidateMessageReaderSettings(this.settings, /*readingResponse*/ true);
 
             this.readingResponse = true;
-            this.message = new ODataResponseMessage(responseMessage, /*writing*/ false, this.settings.DisableMessageStreamDisposal, this.settings.MessageQuotas.MaxReceivedMessageSize);
+            this.message = new ODataResponseMessage(responseMessage, /*writing*/ false, this.settings.EnableMessageStreamDisposal, this.settings.MessageQuotas.MaxReceivedMessageSize);
             this.payloadUriConverter = responseMessage as IODataPayloadUriConverter;
             this.mediaTypeResolver = ODataMediaTypeResolver.GetMediaTypeResolver(this.container);
 
@@ -1293,7 +1293,7 @@ namespace Microsoft.OData
 
                 // If we still have a buffering read stream only the payload kind detection was triggered but
                 // the actual reading never started. Dispose the stream now (if disposal is not disabled).
-                if (!this.settings.DisableMessageStreamDisposal && this.message.BufferingReadStream != null)
+                if (this.settings.EnableMessageStreamDisposal && this.message.BufferingReadStream != null)
                 {
                     this.message.BufferingReadStream.Dispose();
                 }

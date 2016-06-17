@@ -656,7 +656,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Writer
 
         private void WriteAnnotationsAndValidatePayload(Action<ODataWriter> action, IEdmNavigationSource navigationSource, ODataFormat format, string expectedPayload, bool request, bool createFeedWriter, bool odataSimplified = false)
         {
-            var writerSettings = new ODataMessageWriterSettings { DisableMessageStreamDisposal = true, ODataSimplified = odataSimplified };
+            var writerSettings = new ODataMessageWriterSettings { EnableMessageStreamDisposal = false, ODataSimplified = odataSimplified };
             writerSettings.SetContentType(format);
             writerSettings.SetServiceDocumentUri(new Uri("http://www.example.com/"));
 
@@ -721,7 +721,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Writer
 
         private void WriteDeltaFeedAnnotationsAndValidatePayload(Action<ODataDeltaWriter> action, IEdmEntitySet entitySet, string expectedPayload)
         {
-            var writerSettings = new ODataMessageWriterSettings { DisableMessageStreamDisposal = true };
+            var writerSettings = new ODataMessageWriterSettings { EnableMessageStreamDisposal = false };
             writerSettings.SetServiceDocumentUri(new Uri("http://www.example.com/"));
 
             MemoryStream stream = new MemoryStream();

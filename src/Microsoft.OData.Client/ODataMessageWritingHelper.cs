@@ -45,7 +45,7 @@ namespace Microsoft.OData.Client
                 // we do not need to dispose the stream. Since for inner batch requests, the request
                 // message is an internal implementation of IODataRequestMessage in ODataLib,
                 // we can do this here.
-                DisableMessageStreamDisposal = !isBatchPartRequest
+                EnableMessageStreamDisposal = isBatchPartRequest
             };
 
             CommonUtil.SetDefaultMessageQuotas(writerSettings.MessageQuotas);

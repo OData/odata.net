@@ -424,7 +424,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Writer.JsonLight
         {
             var message = new InMemoryMessage() { Stream = new MemoryStream() };
 
-            var writerSettings = new ODataMessageWriterSettings { DisableMessageStreamDisposal = true, AutoComputePayloadMetadata = true };
+            var writerSettings = new ODataMessageWriterSettings { EnableMessageStreamDisposal = false, AutoComputePayloadMetadata = true };
             writerSettings.SetContentType(ODataFormat.Json);
             writerSettings.SetServiceDocumentUri(new Uri("http://www.example.com"));
             writerSettings.SetContentType(fullMetadata ?

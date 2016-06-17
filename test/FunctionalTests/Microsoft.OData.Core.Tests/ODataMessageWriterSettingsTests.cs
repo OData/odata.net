@@ -113,9 +113,9 @@ namespace Microsoft.OData.Tests
         }
 
         [Fact]
-        public void DisableMessageStreamDisposalShouldBeFalseByDefault()
+        public void EnableMessageStreamDisposalShouldBeTrueByDefault()
         {
-            this.settings.DisableMessageStreamDisposal.Should().BeFalse();
+            this.settings.EnableMessageStreamDisposal.Should().BeTrue();
         }
 
         [Fact]
@@ -209,10 +209,10 @@ namespace Microsoft.OData.Tests
         }
 
         [Fact]
-        public void CopyConstructorShouldCopyDisableMessageStreamDisposal()
+        public void CopyConstructorShouldCopyEnableMessageStreamDisposal()
         {
-            this.settings.DisableMessageStreamDisposal = true;
-            this.settings.Clone().DisableMessageStreamDisposal.Should().BeTrue();
+            this.settings.EnableMessageStreamDisposal = false;
+            this.settings.Clone().EnableMessageStreamDisposal.Should().BeFalse();
         }
 
         [Fact]
@@ -362,7 +362,7 @@ namespace Microsoft.OData.Tests
                 AutoComputePayloadMetadata = true,
                 BaseUri = baseUri,
                 EnableCharactersCheck = true,
-                DisableMessageStreamDisposal = true,
+                EnableMessageStreamDisposal = false,
                 EnableIndentation = true,
                 MessageQuotas = new ODataMessageQuotas
                 {
@@ -378,7 +378,7 @@ namespace Microsoft.OData.Tests
             this.settings.AutoComputePayloadMetadata.Should().BeTrue();
             this.settings.BaseUri.Should().BeSameAs(baseUri);
             this.settings.EnableCharactersCheck.Should().BeTrue();
-            this.settings.DisableMessageStreamDisposal.Should().BeTrue();
+            this.settings.EnableMessageStreamDisposal.Should().BeFalse();
             this.settings.EnableIndentation.Should().BeTrue();
             this.settings.MessageQuotas.MaxPartsPerBatch.Should().Be(maxPartsPerBatch);
             this.settings.MessageQuotas.MaxOperationsPerChangeset.Should().Be(maxOperationsPerChangeset);

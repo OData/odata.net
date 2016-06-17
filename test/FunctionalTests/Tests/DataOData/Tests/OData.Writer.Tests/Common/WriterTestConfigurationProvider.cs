@@ -261,7 +261,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Common
                     new bool[] { true, false },  // disableMessageStreamDisposal
                     new bool[] { true, false },  // isRequest
                     new bool[] { true, false },  // synchronous
-                    (version, disableMessageStreamDisposal, isRequest, synchronous) =>
+                    (version, enableMessageStreamDisposal, isRequest, synchronous) =>
                     {
 #if SILVERLIGHT || WINDOWS_PHONE
                         // If we are running in Silverlight or windows phone, we don't want to generate asynchronous variations
@@ -274,7 +274,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Common
 
                         configurations.Add(new WriterTestConfiguration(
                             format,
-                            GetDefaultMessageWriterSettings(format, null, disableMessageStreamDisposal, version),
+                            GetDefaultMessageWriterSettings(format, null, enableMessageStreamDisposal, version),
                             isRequest,
                             synchronous));
                     });
@@ -285,11 +285,11 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Common
                 limitedCombinations = new[]
                 {
                     new LimitedCombinationSpecification {
-                        DisableMessageStreamDisposal = false,
+                        EnableMessageStreamDisposal = true,
                         Synchronous = true,
                     },
                     new LimitedCombinationSpecification {
-                        DisableMessageStreamDisposal = true,
+                        EnableMessageStreamDisposal = false,
                         Synchronous = false,
                     },
                 };
@@ -299,7 +299,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Common
                     limitedCombinations
                         .ConcatSingle(new LimitedCombinationSpecification
                         {
-                            DisableMessageStreamDisposal = true,
+                            EnableMessageStreamDisposal = false,
                             Synchronous = true
                         });
                 }
@@ -322,7 +322,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Common
                             GetDefaultMessageWriterSettings(
                                 format,
                                 null,
-                                limitedCombination.DisableMessageStreamDisposal),
+                                limitedCombination.EnableMessageStreamDisposal),
                             isRequest,
                             limitedCombination.Synchronous));
                     });
@@ -382,19 +382,19 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Common
         /// <param name="format">The format for the message writer settings to create.</param>
         /// <param name="version">Version of the OData protocol.</param>
         /// <param name="baseUri">Base uri for all relative Uris.</param>
-        /// <param name="disableMessageStreamDisposal">When set to true, the writer will not dispose the message stream. When set to false, the message stream will be disposed.</param>
+        /// <param name="enableMessageStreamDisposal">When set to true, the writer will dispose the message stream. When set to false, the message stream will not be disposed.</param>
         /// <returns>The default message writer settings for the specified <paramref name="format"/>.</returns>
         private static ODataMessageWriterSettings GetDefaultMessageWriterSettings(
             ODataFormat format,
             Uri baseUri,
-            bool disableMessageStreamDisposal,
+            bool enableMessageStreamDisposal,
             ODataVersion version = ODataVersion.V4)
         {
             var settings = new ODataMessageWriterSettings()
             {
                 Version = version,
                 BaseUri = baseUri,
-                DisableMessageStreamDisposal = disableMessageStreamDisposal,
+                EnableMessageStreamDisposal = enableMessageStreamDisposal,
             };
             settings.SetServiceDocumentUri(new Uri("http://odata.org/test"));
             settings.SetContentType(format);
@@ -473,9 +473,9 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Common
             public ODataVersion Version { get; set; }
 
             /// <summary>
-            /// The DisableMessageStreamDisposal setting value.
+            /// The EnableMessageStreamDisposal setting value.
             /// </summary>
-            public bool DisableMessageStreamDisposal { get; set; }
+            public bool EnableMessageStreamDisposal { get; set; }
 
             /// <summary>
             /// The Synchronous setting value.

@@ -24,12 +24,12 @@ namespace Microsoft.OData.Tests.ScenarioTests.Writer
         [Fact]
         public void JsonPaddingEnabledWithJsonFormatSpecified()
         {
-            var settings = new ODataMessageWriterSettings {JsonPCallback = "functionName", DisableMessageStreamDisposal = true};
+            var settings = new ODataMessageWriterSettings { JsonPCallback = "functionName", EnableMessageStreamDisposal = false };
             settings.SetContentType(ODataFormat.Json);
             settings.SetServiceDocumentUri(new Uri("http://stuff"));
-            IODataResponseMessage message = new InMemoryMessage {StatusCode = 200, Stream = new MemoryStream()};
-            var property = new ODataProperty {Name = "PropertyName", Value = "value"};
-            
+            IODataResponseMessage message = new InMemoryMessage { StatusCode = 200, Stream = new MemoryStream() };
+            var property = new ODataProperty { Name = "PropertyName", Value = "value" };
+
             using (var writer = new ODataMessageWriter(message, settings))
             {
                 writer.WriteProperty(property);
@@ -48,9 +48,9 @@ namespace Microsoft.OData.Tests.ScenarioTests.Writer
         [Fact]
         public void JsonPaddingEnabledWithRawValueSpecified()
         {
-            var settings = new ODataMessageWriterSettings {JsonPCallback = "functionName", DisableMessageStreamDisposal = true};
+            var settings = new ODataMessageWriterSettings { JsonPCallback = "functionName", EnableMessageStreamDisposal = false };
             settings.SetContentType(ODataFormat.RawValue);
-            IODataResponseMessage message = new InMemoryMessage {StatusCode = 200, Stream = new MemoryStream()};
+            IODataResponseMessage message = new InMemoryMessage { StatusCode = 200, Stream = new MemoryStream() };
 
             using (var writer = new ODataMessageWriter(message, settings))
             {
@@ -70,12 +70,12 @@ namespace Microsoft.OData.Tests.ScenarioTests.Writer
         [Fact]
         public void JsonPaddingEnabledWithUserSpecifiedContentType()
         {
-            var settings = new ODataMessageWriterSettings {JsonPCallback = "functionName", DisableMessageStreamDisposal = true};
+            var settings = new ODataMessageWriterSettings { JsonPCallback = "functionName", EnableMessageStreamDisposal = false };
             settings.SetServiceDocumentUri(new Uri("http://stuff"));
-            IODataResponseMessage message = new InMemoryMessage {StatusCode = 200, Stream = new MemoryStream()};
+            IODataResponseMessage message = new InMemoryMessage { StatusCode = 200, Stream = new MemoryStream() };
             message.SetHeader("Content-Type", "application/json");
-            var property = new ODataProperty {Name = "PropertyName", Value = "value"};
-            
+            var property = new ODataProperty { Name = "PropertyName", Value = "value" };
+
             using (var writer = new ODataMessageWriter(message, settings))
             {
                 writer.WriteProperty(property);
@@ -91,10 +91,10 @@ namespace Microsoft.OData.Tests.ScenarioTests.Writer
         [Fact]
         public void StreamEncodingRemainsInvariant()
         {
-            var settings = new ODataMessageWriterSettings { JsonPCallback = "functionName", DisableMessageStreamDisposal = true };
+            var settings = new ODataMessageWriterSettings { JsonPCallback = "functionName", EnableMessageStreamDisposal = false };
             settings.SetServiceDocumentUri(new Uri("http://stuff"));
             StreamWriter streamWriter = new StreamWriter(new MemoryStream(), Encoding.GetEncoding("iso-8859-1"));
-            IODataResponseMessage message = new InMemoryMessage { StatusCode = 200, Stream = streamWriter.BaseStream};
+            IODataResponseMessage message = new InMemoryMessage { StatusCode = 200, Stream = streamWriter.BaseStream };
             message.SetHeader("Content-Type", "application/json");
             var property = new ODataProperty { Name = "PropertyName", Value = "value" };
 
@@ -105,7 +105,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Writer
 
             var responseStream = message.GetStream();
             responseStream.Position = 0;
-            var responseString = new StreamReader(responseStream, Encoding.GetEncoding("iso-8859-1")).ReadToEnd();       
+            var responseString = new StreamReader(responseStream, Encoding.GetEncoding("iso-8859-1")).ReadToEnd();
             responseString.Should().Be("functionName({\"@odata.context\":\"http://stuff/$metadata#Edm.String\",\"value\":\"value\"})");
             message.GetHeader("Content-Type").Should().StartWith("text/javascript");
         }

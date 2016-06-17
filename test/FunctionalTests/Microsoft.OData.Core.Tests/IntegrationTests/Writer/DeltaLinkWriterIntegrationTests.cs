@@ -45,7 +45,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Writer
 
         protected void WriteAnnotationsAndValidatePayload(Action<ODataWriter> action, ODataFormat format, string expectedPayload, bool request, bool createFeedWriter)
         {
-            var writerSettings = new ODataMessageWriterSettings { DisableMessageStreamDisposal = true };
+            var writerSettings = new ODataMessageWriterSettings { EnableMessageStreamDisposal = false };
             writerSettings.SetContentType(format);
             writerSettings.SetServiceDocumentUri(new Uri("http://www.example.com/"));
 

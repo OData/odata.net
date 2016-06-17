@@ -35,7 +35,7 @@ namespace Microsoft.OData.Tests
 
             var settings = new ODataMessageWriterSettings();
             settings.SetServiceDocumentUri(new Uri(ServiceDocumentUri));
-            settings.DisableMessageStreamDisposal = true;
+            settings.EnableMessageStreamDisposal = false;
 
             using (var innerMessageWriter = new ODataMessageWriter(innerMessage, settings, this.userModel))
             {

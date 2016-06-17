@@ -172,7 +172,7 @@ namespace Microsoft.OData.Service
 
             writerSettings.Validations &= ~WriterValidations.ThrowOnDuplicatePropertyNames;
 
-            writerSettings.DisableMessageStreamDisposal = responseMessage is AstoriaResponseMessage;
+            writerSettings.EnableMessageStreamDisposal = !(responseMessage is AstoriaResponseMessage);
         }
 
         /// <summary>

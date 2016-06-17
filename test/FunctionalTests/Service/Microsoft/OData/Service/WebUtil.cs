@@ -1244,7 +1244,7 @@ namespace Microsoft.OData.Service
             // as a result it doesn't matter which URI we use here (since we don't actually use its value anywhere).
             // So using the absolute URI of the service is the best we can do.
             messageReaderSettings.BaseUri = dataService.OperationContext.AbsoluteServiceUri;
-            messageReaderSettings.DisableMessageStreamDisposal = true;
+            messageReaderSettings.EnableMessageStreamDisposal = false;
             messageReaderSettings.DisablePrimitiveTypeConversion = !dataService.Configuration.EnableTypeConversion;
             messageReaderSettings.EnableCharactersCheck = false;
 

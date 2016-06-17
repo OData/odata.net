@@ -277,7 +277,8 @@ namespace Microsoft.Test.OData.Services.ODataWCFService.Handlers
                     ServiceRoot = this.ServiceRootUri,
                     Path = this.QueryContext.QueryPath,
                     SelectAndExpand = this.QueryContext.QuerySelectExpandClause,
-                }
+                },
+                // EnableIndentation = true
             };
 
             // TODO: howang why here?

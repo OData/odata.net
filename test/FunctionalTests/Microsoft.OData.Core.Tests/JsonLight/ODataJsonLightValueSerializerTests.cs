@@ -30,7 +30,7 @@ namespace Microsoft.OData.Tests.JsonLight
         {
             model = new EdmModel();
             stream = new MemoryStream();
-            settings = new ODataMessageWriterSettings { DisableMessageStreamDisposal = true, Version = ODataVersion.V4 };
+            settings = new ODataMessageWriterSettings { EnableMessageStreamDisposal = false, Version = ODataVersion.V4 };
             settings.SetServiceDocumentUri(new Uri("http://example.com"));
         }
 

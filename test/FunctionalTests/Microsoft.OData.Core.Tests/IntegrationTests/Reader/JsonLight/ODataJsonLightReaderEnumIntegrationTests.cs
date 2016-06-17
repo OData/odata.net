@@ -572,7 +572,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.JsonLight
         #region private methods
         public void ReadFromMessageReaderAndVerifyPayload(string payload, string contentType, Action<ODataMessageReader> readerAction)
         {
-            var settings = new ODataMessageReaderSettings { DisableMessageStreamDisposal = false };
+            var settings = new ODataMessageReaderSettings { EnableMessageStreamDisposal = true };
             // with model
             {
                 IODataResponseMessage message = new InMemoryMessage() { Stream = new MemoryStream(Encoding.UTF8.GetBytes(payload)) };
@@ -648,7 +648,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.JsonLight
         {
             var message = new InMemoryMessage() { Stream = new MemoryStream(Encoding.UTF8.GetBytes(payload)) };
             message.SetHeader("Content-Type", contentType);
-            var readerSettings = new ODataMessageReaderSettings { DisableMessageStreamDisposal = false };
+            var readerSettings = new ODataMessageReaderSettings { EnableMessageStreamDisposal = true };
             using (var msgReader = new ODataMessageReader((IODataRequestMessage)message, readerSettings, userModel))
             {
                 var reader = msgReader.CreateODataResourceReader(entitySet, entityType);
@@ -663,7 +663,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.JsonLight
         {
             var message = new InMemoryMessage() { Stream = new MemoryStream(Encoding.UTF8.GetBytes(payload)) };
             message.SetHeader("Content-Type", contentType);
-            var readerSettings = new ODataMessageReaderSettings { DisableMessageStreamDisposal = false };
+            var readerSettings = new ODataMessageReaderSettings { EnableMessageStreamDisposal = true };
             using (var msgReader = new ODataMessageReader((IODataResponseMessage)message, readerSettings, userModel))
             {
                 var reader = msgReader.CreateODataResourceReader(entitySet, entityType);

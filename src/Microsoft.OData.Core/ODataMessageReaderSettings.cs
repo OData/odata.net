@@ -33,7 +33,7 @@ namespace Microsoft.OData
         {
             this.ClientCustomTypeResolver = null;
             this.DisablePrimitiveTypeConversion = false;
-            this.DisableMessageStreamDisposal = false;
+            this.EnableMessageStreamDisposal = true;
             this.EnableCharactersCheck = false;
             this.EnableReadingEntryContentInEntryStartState = true;
             this.ODataSimplified = false;
@@ -93,9 +93,9 @@ namespace Microsoft.OData
         /// <returns>true if primitive values and report values are not converted; false if all primitive values are converted to the type specified in the model or provided as an expected type. The default value is false.</returns>
         public bool DisablePrimitiveTypeConversion { get; set; }
 
-        /// <summary>Gets or sets a value that indicates whether the message stream will not be disposed after finishing writing with the message.</summary>
-        /// <returns>true if the message stream will not be disposed after finishing writing with the message; otherwise false. The default value is false.</returns>
-        public bool DisableMessageStreamDisposal { get; set; }
+        /// <summary>Gets or sets a value that indicates whether the message stream will be disposed after finishing writing with the message.</summary>
+        /// <returns>true if the message stream will be disposed after finishing writing with the message; otherwise false. The default value is true.</returns>
+        public bool EnableMessageStreamDisposal { get; set; }
 
         /// <summary>
         /// Flag to control whether the reader should check for valid Xml characters or not.
@@ -233,7 +233,7 @@ namespace Microsoft.OData
 
             this.BaseUri = other.BaseUri;
             this.ClientCustomTypeResolver = other.ClientCustomTypeResolver;
-            this.DisableMessageStreamDisposal = other.DisableMessageStreamDisposal;
+            this.EnableMessageStreamDisposal = other.EnableMessageStreamDisposal;
             this.DisablePrimitiveTypeConversion = other.DisablePrimitiveTypeConversion;
             this.EnableCharactersCheck = other.EnableCharactersCheck;
             this.EnableReadingEntryContentInEntryStartState = other.EnableReadingEntryContentInEntryStartState;

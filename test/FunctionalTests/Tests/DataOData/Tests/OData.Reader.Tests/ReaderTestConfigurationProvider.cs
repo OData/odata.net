@@ -163,10 +163,10 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
             {
                 combinatorialEngine.RunCombinations(
                     ODataVersionUtils.AllSupportedVersions,
-                    new bool[] { true, false },  // disableMessageStreamDisposal
+                    new bool[] { true, false },  // enableMessageStreamDisposal
                     new bool[] { true, false },  // isRequest
                     new bool[] { true, false },  // synchronous
-                    (version, disableMessageStreamDisposal, isRequest, synchronous) =>
+                    (version, enableMessageStreamDisposal, isRequest, synchronous) =>
                     {
 
 #if SILVERLIGHT || WINDOWS_PHONE
@@ -179,7 +179,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
 #endif
                         var settings = new ODataMessageReaderSettings
                         {
-                            DisableMessageStreamDisposal = disableMessageStreamDisposal
+                            EnableMessageStreamDisposal = enableMessageStreamDisposal
                         };
                         configurations.Add(new ReaderTestConfiguration(
                             format,
@@ -193,11 +193,11 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
                 var limitedCombinations = new[]
                 {
                     new {
-                        DisableMessageStreamDisposal = false,
+                        EnableMessageStreamDisposal = true,
                         Synchronous = true,
                     },
                     new {
-                        DisableMessageStreamDisposal = true,
+                        EnableMessageStreamDisposal = false,
                         Synchronous = false,
                     },
                 };
@@ -218,7 +218,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
 #endif
                         var settings = new ODataMessageReaderSettings
                         {
-                            DisableMessageStreamDisposal = limitedCombination.DisableMessageStreamDisposal
+                            EnableMessageStreamDisposal = limitedCombination.EnableMessageStreamDisposal
                         };
                         configurations.Add(new ReaderTestConfiguration(
                             format,

@@ -113,7 +113,7 @@ namespace Microsoft.OData
             this.mediaTypeResolver = ODataMediaTypeResolver.GetMediaTypeResolver(this.container);
             this.model = model ?? GetModel(this.container);
             WriterValidationUtils.ValidateMessageWriterSettings(this.settings, this.writingResponse);
-            this.message = new ODataRequestMessage(requestMessage, /*writing*/ true, this.settings.DisableMessageStreamDisposal, /*maxMessageSize*/ -1);
+            this.message = new ODataRequestMessage(requestMessage, /*writing*/ true, this.settings.EnableMessageStreamDisposal, /*maxMessageSize*/ -1);
 
             // Always include all annotations when writting request message.
             Debug.Assert(this.settings.ShouldIncludeAnnotation == null, "this.settings.ShouldIncludeAnnotation == null");
@@ -152,7 +152,7 @@ namespace Microsoft.OData
             this.mediaTypeResolver = ODataMediaTypeResolver.GetMediaTypeResolver(this.container);
             this.model = model ?? GetModel(this.container);
             WriterValidationUtils.ValidateMessageWriterSettings(this.settings, this.writingResponse);
-            this.message = new ODataResponseMessage(responseMessage, /*writing*/ true, this.settings.DisableMessageStreamDisposal, /*maxMessageSize*/ -1);
+            this.message = new ODataResponseMessage(responseMessage, /*writing*/ true, this.settings.EnableMessageStreamDisposal, /*maxMessageSize*/ -1);
 
             // If the Preference-Applied header on the response message contains an annotation filter, we set the filter
             // to the writer settings so that we would only write annotations that satisfy the filter.

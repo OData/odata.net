@@ -131,7 +131,7 @@ namespace Microsoft.Test.OData.PluggableFormat
             message.SetHeader("Content-Type", contenttype);
             var messageSettings = new ODataMessageWriterSettings
             {
-                DisableMessageStreamDisposal = true,
+                EnableMessageStreamDisposal = false,
                 EnableIndentation = true,
             };
 

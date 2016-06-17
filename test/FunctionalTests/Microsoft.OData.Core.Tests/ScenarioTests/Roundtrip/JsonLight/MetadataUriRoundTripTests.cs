@@ -41,7 +41,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip.JsonLight
             writerRequestMemoryMessage.Stream = stream;
             writerRequestMemoryMessage.SetHeader("Content-Type", "application/json");
 
-            var writerSettings = new ODataMessageWriterSettings() {Version = ODataVersion.V4, DisableMessageStreamDisposal = true};
+            var writerSettings = new ODataMessageWriterSettings() {Version = ODataVersion.V4, EnableMessageStreamDisposal = false};
             writerSettings.ODataUri = new ODataUri() {ServiceRoot = new Uri("http://christro.svc/")};
 
             var messageWriter = new ODataMessageWriter((IODataResponseMessage)writerRequestMemoryMessage, writerSettings, this.model);
@@ -61,7 +61,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip.JsonLight
             readerResponseMemoryMessage.Stream = new MemoryStream(stream.GetBuffer());
             readerResponseMemoryMessage.SetHeader("Content-Type", "application/json");
 
-            var messageReader = new ODataMessageReader((IODataResponseMessage)readerResponseMemoryMessage, new ODataMessageReaderSettings() {MaxProtocolVersion = ODataVersion.V4, DisableMessageStreamDisposal = true}, this.model);
+            var messageReader = new ODataMessageReader((IODataResponseMessage)readerResponseMemoryMessage, new ODataMessageReaderSettings() {MaxProtocolVersion = ODataVersion.V4, EnableMessageStreamDisposal = false}, this.model);
             var organizationReader = messageReader.CreateODataResourceReader(this.organizationsSet, this.organizationsSet.EntityType());
             organizationReader.Read().Should().Be(true);
             organizationReader.Item.As<ODataResource>();

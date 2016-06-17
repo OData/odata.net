@@ -603,15 +603,15 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
             this.messageReader.Dispose();
             if (this.message != null && this.message.TestStream != null && this.message.StreamRetrieved)
             {
-                bool disableMessageStreamDisposal = testConfiguration.MessageReaderSettings.DisableMessageStreamDisposal;
+                bool enableMessageStreamDisposal = testConfiguration.MessageReaderSettings.EnableMessageStreamDisposal;
                 TestStream messageStream = this.message.TestStream;
-                if (disableMessageStreamDisposal && messageStream != null)
+                if (enableMessageStreamDisposal == false && messageStream != null)
                 {
-                    ExceptionUtilities.Assert(messageStream.DisposeCount == 0, "Dispose method on the stream must not be called when DisableMessageStreamDisposal is set to true.");
+                    ExceptionUtilities.Assert(messageStream.DisposeCount == 0, "Dispose method on the stream must not be called when EnableMessageStreamDisposal is set to false.");
                 }
                 else
                 {
-                    ExceptionUtilities.Assert(messageStream.DisposeCount == 1, "Dispose method on the stream must be called exactly once when DisableMessageStreamDisposal is set to false.");
+                    ExceptionUtilities.Assert(messageStream.DisposeCount == 1, "Dispose method on the stream must be called exactly once when EnableMessageStreamDisposal is set to true.");
                 }
             }
         }

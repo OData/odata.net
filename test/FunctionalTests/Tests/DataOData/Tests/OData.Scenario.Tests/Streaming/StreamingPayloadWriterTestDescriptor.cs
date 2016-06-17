@@ -193,7 +193,7 @@ namespace Microsoft.Test.Taupo.OData.Scenario.Tests.Streaming
             Exception exception = TestExceptionUtils.RunCatching(() =>
             {
                 ODataMessageReaderSettings readerSettings = this.settings.MessageReaderSettings.Clone();
-                readerSettings.DisableMessageStreamDisposal = testConfiguration.MessageWriterSettings.DisableMessageStreamDisposal;
+                readerSettings.EnableMessageStreamDisposal = testConfiguration.MessageWriterSettings.EnableMessageStreamDisposal;
 
                 ReaderTestConfiguration readerConfig = new ReaderTestConfiguration(
                     testConfiguration.Format,

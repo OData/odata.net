@@ -772,7 +772,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                         else
                         {
                             testConfiguration = testConfiguration.Clone();
-                            testConfiguration.MessageWriterSettings.DisableMessageStreamDisposal = false;
+                            testConfiguration.MessageWriterSettings.EnableMessageStreamDisposal = true;
                             var batchDescriptor = new List<BatchWriterTestDescriptor.InvocationAndOperationDescriptor>();
                             if (testConfiguration.IsRequest)
                             {

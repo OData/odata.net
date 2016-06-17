@@ -182,7 +182,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Reader
         public void CustomInstanceAnnotationFromFeedAndEntryInJsonLightShouldBeSkippedByTheReaderByDefault()
         {
             var stream = new MemoryStream(Encoding.UTF8.GetBytes(JsonLightFeedAndEntryPayloadWithCustomInstanceAnnotations));
-            var readerSettings = new ODataMessageReaderSettings { DisableMessageStreamDisposal = false };
+            var readerSettings = new ODataMessageReaderSettings { EnableMessageStreamDisposal = true };
             IODataResponseMessage messageToRead = new InMemoryMessage { StatusCode = 200, Stream = stream };
             messageToRead.SetHeader("Content-Type", "application/json;odata.streaming=true");
 
@@ -218,7 +218,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Reader
         public void ShouldBeAbleToReadCustomInstanceAnnotationFromFeedAndEntry(string payload, string contentType)
         {
             var stream = new MemoryStream(Encoding.UTF8.GetBytes(payload));
-            var readerSettings = new ODataMessageReaderSettings { DisableMessageStreamDisposal = false };
+            var readerSettings = new ODataMessageReaderSettings { EnableMessageStreamDisposal = true };
 
             IODataResponseMessage messageToRead = new InMemoryMessage { StatusCode = 200, Stream = stream };
             messageToRead.SetHeader("Content-Type", contentType);
@@ -337,7 +337,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Reader
 
         private static void WriteCustomInstanceAnnotationToFeedAndEntry(string expectedPayload, ODataFormat format)
         {
-            var writerSettings = new ODataMessageWriterSettings { DisableMessageStreamDisposal = true };
+            var writerSettings = new ODataMessageWriterSettings { EnableMessageStreamDisposal = false };
             writerSettings.SetContentType(format);
             writerSettings.ODataUri = new ODataUri() { ServiceRoot = new Uri("http://www.example.com/") };
 
@@ -410,7 +410,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Reader
             var stream = new MemoryStream(Encoding.UTF8.GetBytes(payload));
 
             // Read instance annotations
-            var readerSettings = new ODataMessageReaderSettings { DisableMessageStreamDisposal = false };
+            var readerSettings = new ODataMessageReaderSettings { EnableMessageStreamDisposal = true };
             IODataResponseMessage messageToRead = new InMemoryMessage { StatusCode = 400, Stream = stream };
             messageToRead.SetHeader("Content-Type", "application/json;odata.streaming=true");
 
@@ -433,7 +433,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Reader
                 "}" +
             "}";
 
-            var writerSettings = new ODataMessageWriterSettings { DisableMessageStreamDisposal = true };
+            var writerSettings = new ODataMessageWriterSettings { EnableMessageStreamDisposal = false };
             writerSettings.SetContentType(ODataFormat.Json);
             writerSettings.ODataUri = new ODataUri() { ServiceRoot = new Uri("http://www.example.com") };
 

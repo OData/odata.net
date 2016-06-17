@@ -323,7 +323,7 @@ namespace Microsoft.OData.Tests.JsonLight
             //var collectionType = new EdmCollectionType(new EdmComplexTypeReference(complexType, false));
             model.AddElement(complexType);
 
-            var settings = new ODataMessageWriterSettings { JsonPCallback = jsonpFunctionName, DisableMessageStreamDisposal = true, Version = ODataVersion.V4 };
+            var settings = new ODataMessageWriterSettings { JsonPCallback = jsonpFunctionName, EnableMessageStreamDisposal = false, Version = ODataVersion.V4 };
             if (setMetadataDocumentUri)
             {
                 settings.SetServiceDocumentUri(new Uri("http://example.com"));

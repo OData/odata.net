@@ -168,7 +168,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Writer
 
         private static ODataMessageWriter CreateODataMessageWriter(IEdmModel model, string contentType)
         {
-            var settings = new ODataMessageWriterSettings { DisableMessageStreamDisposal = true, Version = ODataVersion.V4 };
+            var settings = new ODataMessageWriterSettings { EnableMessageStreamDisposal = false, Version = ODataVersion.V4 };
             settings.SetServiceDocumentUri(new Uri("http://example.com"));
 
             var message = new InMemoryMessage();

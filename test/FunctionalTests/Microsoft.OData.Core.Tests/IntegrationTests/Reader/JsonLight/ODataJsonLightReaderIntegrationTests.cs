@@ -642,7 +642,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.JsonLight
                 ? "application/json;odata.metadata=minimal;IEEE754Compatible=true"
                 : "application/json;odata.metadata=minimal;IEEE754Compatible=false";
             message.SetHeader("Content-Type", contentType);
-            var readerSettings = new ODataMessageReaderSettings { DisableMessageStreamDisposal = false };
+            var readerSettings = new ODataMessageReaderSettings { EnableMessageStreamDisposal = true };
             using (var msgReader = new ODataMessageReader((IODataResponseMessage)message, readerSettings, userModel))
             {
                 var reader = msgReader.CreateODataResourceReader(entitySet, entityType);
@@ -660,7 +660,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.JsonLight
                 ? "application/json;odata.metadata=minimal;IEEE754Compatible=true"
                 : "application/json;odata.metadata=minimal;IEEE754Compatible=false";
             message.SetHeader("Content-Type", contentType);
-            var readerSettings = new ODataMessageReaderSettings { DisableMessageStreamDisposal = false };
+            var readerSettings = new ODataMessageReaderSettings { EnableMessageStreamDisposal = true };
             using (var msgReader = new ODataMessageReader((IODataResponseMessage)message, readerSettings, userModel))
             {
                 var reader = msgReader.CreateODataResourceSetReader(complexType);

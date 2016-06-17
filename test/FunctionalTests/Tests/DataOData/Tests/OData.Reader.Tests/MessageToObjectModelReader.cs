@@ -623,7 +623,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
                 {
                     ODataPayloadKind expectedPartKind = expectedPartElement.GetPayloadKindFromPayloadElement();
                     ODataMessageReaderSettings messageReaderSettings = this.testConfiguration.MessageReaderSettings.Clone();
-                    messageReaderSettings.DisableMessageStreamDisposal = false;
+                    messageReaderSettings.EnableMessageStreamDisposal = true;
 
                     using (ODataMessageReader partMessageReader = new ODataMessageReader(requestMessage, messageReaderSettings, this.payloadModel))
                     {
@@ -677,7 +677,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
                 {
                     ODataPayloadKind expectedPartKind = expectedPartElement.GetPayloadKindFromPayloadElement();
                     ODataMessageReaderSettings messageReaderSettings = this.testConfiguration.MessageReaderSettings.Clone();
-                    messageReaderSettings.DisableMessageStreamDisposal = false;
+                    messageReaderSettings.EnableMessageStreamDisposal = true;
 
                     using (ODataMessageReader partMessageReader = new ODataMessageReader(responseMessage, messageReaderSettings, this.payloadModel))
                     {
