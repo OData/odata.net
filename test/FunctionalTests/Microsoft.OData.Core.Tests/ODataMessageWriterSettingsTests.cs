@@ -107,12 +107,6 @@ namespace Microsoft.OData.Tests
         }
 
         [Fact]
-        public void IndentShouldBeFalseByDefault()
-        {
-            this.settings.EnableIndentation.Should().BeFalse();
-        }
-
-        [Fact]
         public void EnableMessageStreamDisposalShouldBeTrueByDefault()
         {
             this.settings.EnableMessageStreamDisposal.Should().BeTrue();
@@ -213,13 +207,6 @@ namespace Microsoft.OData.Tests
         {
             this.settings.EnableMessageStreamDisposal = false;
             this.settings.Clone().EnableMessageStreamDisposal.Should().BeFalse();
-        }
-
-        [Fact]
-        public void CopyConstructorShouldCopyIndent()
-        {
-            this.settings.EnableIndentation = true;
-            this.settings.Clone().EnableIndentation.Should().BeTrue();
         }
 
         [Fact]
@@ -363,7 +350,6 @@ namespace Microsoft.OData.Tests
                 BaseUri = baseUri,
                 EnableCharactersCheck = true,
                 EnableMessageStreamDisposal = false,
-                EnableIndentation = true,
                 MessageQuotas = new ODataMessageQuotas
                 {
                     MaxPartsPerBatch = maxPartsPerBatch,
@@ -379,7 +365,6 @@ namespace Microsoft.OData.Tests
             this.settings.BaseUri.Should().BeSameAs(baseUri);
             this.settings.EnableCharactersCheck.Should().BeTrue();
             this.settings.EnableMessageStreamDisposal.Should().BeFalse();
-            this.settings.EnableIndentation.Should().BeTrue();
             this.settings.MessageQuotas.MaxPartsPerBatch.Should().Be(maxPartsPerBatch);
             this.settings.MessageQuotas.MaxOperationsPerChangeset.Should().Be(maxOperationsPerChangeset);
             this.settings.MessageQuotas.MaxNestingDepth.Should().Be(maxNestingDepth);

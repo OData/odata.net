@@ -52,10 +52,9 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Common
         public override string ToString()
         {
             return string.Format(
-                "Format: {0}, Version: {1}, WriterSettings.Indent: {2}, WriterSettings.EnableMessageStreamDisposal: {3}, IsRequest: {4}, Synchronous: {5}",
+                "Format: {0}, Version: {1}, WriterSettings.EnableMessageStreamDisposal: {2}, IsRequest: {3}, Synchronous: {4}",
                 this.Format,
                 this.Version.ToString(),
-                this.MessageWriterSettings.EnableIndentation.ToString(),
                 this.MessageWriterSettings.EnableMessageStreamDisposal.ToString(),
                 this.IsRequest,
                 this.Synchronous);

@@ -10,9 +10,9 @@ namespace Microsoft.OData.Json
 {
     internal sealed class DefaultJsonWriterFactory : IJsonWriterFactory
     {
-        public IJsonWriter CreateJsonWriter(TextWriter textWriter, bool indent, bool isIeee754Compatible)
+        public IJsonWriter CreateJsonWriter(TextWriter textWriter, bool isIeee754Compatible)
         {
-            return new JsonWriter(textWriter, indent, isIeee754Compatible);
+            return new JsonWriter(textWriter, isIeee754Compatible);
         }
     }
 }

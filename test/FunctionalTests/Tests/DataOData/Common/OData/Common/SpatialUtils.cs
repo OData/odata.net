@@ -46,7 +46,7 @@ namespace Microsoft.Test.Taupo.OData.Common
                 jsonObject.Insert(0, new JsonProperty(JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataTypeAnnotationName, new JsonPrimitiveValue(typeName)));
             }
 
-            return jsonObject.ToText(format == ODataFormat.Json, indent: false);
+            return jsonObject.ToText(format == ODataFormat.Json);
         }
     }
 }

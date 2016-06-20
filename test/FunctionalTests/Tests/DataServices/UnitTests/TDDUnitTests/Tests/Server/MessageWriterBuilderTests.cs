@@ -74,13 +74,6 @@ namespace AstoriaUnitTests.TDD.Tests.Server
         }
 
         [TestMethod]
-        public void CreatedSettingsShouldHaveIndentTurnedOff()
-        {
-            var settings = MessageWriterBuilder.CreateMessageWriterSettings();
-            settings.EnableIndentation.Should().BeFalse();
-        }
-
-        [TestMethod]
         public void CreatedSettingsShouldHaveCheckCharactersTurnedOff()
         {
             var settings = MessageWriterBuilder.CreateMessageWriterSettings();

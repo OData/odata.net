@@ -4832,7 +4832,6 @@ public sealed class Microsoft.OData.ODataMessageWriterSettings {
 	bool AutoComputePayloadMetadata  { public get; public set; }
 	System.Uri BaseUri  { public get; public set; }
 	bool EnableCharactersCheck  { public get; public set; }
-	bool EnableIndentation  { public get; public set; }
 	bool EnableMessageStreamDisposal  { public get; public set; }
 	string JsonPCallback  { public get; public set; }
 	Microsoft.OData.ODataMessageQuotas MessageQuotas  { public get; public set; }
@@ -5064,7 +5063,7 @@ public interface Microsoft.OData.Json.IJsonWriter {
 CLSCompliantAttribute(),
 ]
 public interface Microsoft.OData.Json.IJsonWriterFactory {
-	Microsoft.OData.Json.IJsonWriter CreateJsonWriter (System.IO.TextWriter textWriter, bool indent, bool isIeee754Compatible)
+	Microsoft.OData.Json.IJsonWriter CreateJsonWriter (System.IO.TextWriter textWriter, bool isIeee754Compatible)
 }
 
 public enum Microsoft.OData.UriParser.BinaryOperatorKind : int {

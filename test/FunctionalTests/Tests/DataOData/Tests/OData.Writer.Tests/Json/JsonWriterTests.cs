@@ -47,16 +47,16 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Json
 
             var testCases = new JsonWriterTestCase[] {
                 new JsonWriterTestCase {
-                    Write = (writer) => { 
-                        writer.StartObjectScope(); 
-                        writer.EndObjectScope(); 
+                    Write = (writer) => {
+                        writer.StartObjectScope();
+                        writer.EndObjectScope();
                     },
                     ExpectedOutput = "{$(NL)$(Indent)$(NL)}"
                 },
                 new JsonWriterTestCase {
-                    Write = (writer) => { 
-                        writer.StartArrayScope(); 
-                        writer.EndArrayScope(); 
+                    Write = (writer) => {
+                        writer.StartArrayScope();
+                        writer.EndArrayScope();
                     },
                     ExpectedOutput = "[$(NL)$(Indent)$(NL)]"
                 },
@@ -140,16 +140,15 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Json
 
             this.CombinatorialEngineProvider.RunCombinations(
                 testCases,
-                new bool[] { false, true },
-                (testCase, indent) =>
+                (testCase) =>
                 {
-                    var variables = new Dictionary<string, string>() { { "NL", indent ? Environment.NewLine : string.Empty } };
+                    var variables = new Dictionary<string, string>() { { "NL", string.Empty } };
                     StringWriter stringWriter = new StringWriter();
-                    JsonWriterTestWrapper jsonWriter = new JsonWriterTestWrapper(stringWriter, indent);
+                    JsonWriterTestWrapper jsonWriter = new JsonWriterTestWrapper(stringWriter);
                     testCase.Write(jsonWriter);
                     jsonWriter.Flush();
                     string actualOutput = stringWriter.GetStringBuilder().ToString();
-                    variables["Indent"] = indent ? "  " : string.Empty;
+                    variables["Indent"] = string.Empty;
                     string expectedOutput = StringUtils.ResolveVariables(testCase.ExpectedOutput, variables);
                     this.Assert.AreEqual(expectedOutput, actualOutput, "Unexpected output from the writer.");
                 });
@@ -189,22 +188,21 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Json
         {
             this.CombinatorialEngineProvider.RunCombinations(
                 valuesTestCases,
-                new bool[] { false, true },
-                (testCase, indent) =>
+                (testCase) =>
                 {
                     StringWriter stringWriter = new StringWriter();
-                    JsonWriterTestWrapper jsonWriter = new JsonWriterTestWrapper(stringWriter, indent);
+                    JsonWriterTestWrapper jsonWriter = new JsonWriterTestWrapper(stringWriter);
                     jsonWriter.StartObjectScope();
                     jsonWriter.WriteName("propname");
                     testCase.Write(jsonWriter);
                     jsonWriter.EndObjectScope();
                     jsonWriter.Flush();
                     string actualOutput = stringWriter.GetStringBuilder().ToString();
-                    var variables = new Dictionary<string, string>() 
-                    { 
-                        { "InternalNewLine", indent ? Environment.NewLine : string.Empty },
-                        { "Indent", indent ? "  " : string.Empty },
-                        { "NL", indent ? "$(InternalNewLine)$(Indent)" : string.Empty },
+                    var variables = new Dictionary<string, string>()
+                    {
+                        { "InternalNewLine", string.Empty },
+                        { "Indent", string.Empty },
+                        { "NL", string.Empty },
                     };
                     string expectedOutput = "{$(InternalNewLine)$(Indent)\"propname\":" + testCase.ExpectedOutput + "$(InternalNewLine)}";
                     expectedOutput = StringUtils.ResolveVariables(expectedOutput, variables);
@@ -217,21 +215,20 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Json
         {
             this.CombinatorialEngineProvider.RunCombinations(
                 valuesTestCases,
-                new bool[] { false, true },
-                (testCase, indent) =>
+                (testCase) =>
                 {
                     StringWriter stringWriter = new StringWriter();
-                    JsonWriterTestWrapper jsonWriter = new JsonWriterTestWrapper(stringWriter, indent);
+                    JsonWriterTestWrapper jsonWriter = new JsonWriterTestWrapper(stringWriter);
                     jsonWriter.StartArrayScope();
                     testCase.Write(jsonWriter);
                     jsonWriter.EndArrayScope();
                     jsonWriter.Flush();
                     string actualOutput = stringWriter.GetStringBuilder().ToString();
-                    var variables = new Dictionary<string, string>() 
-                    { 
-                        { "InternalNewLine", indent ? Environment.NewLine : string.Empty },
-                        { "Indent", indent ? "  " : string.Empty },
-                        { "NL", indent ? "$(InternalNewLine)$(Indent)" : string.Empty },
+                    var variables = new Dictionary<string, string>()
+                    {
+                        { "InternalNewLine", string.Empty },
+                        { "Indent", string.Empty },
+                        { "NL", string.Empty },
                     };
                     string expectedOutput = "[$(InternalNewLine)$(Indent)" + testCase.ExpectedOutput + "$(InternalNewLine)]";
                     expectedOutput = StringUtils.ResolveVariables(expectedOutput, variables);
@@ -247,9 +244,9 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Json
             Type JsonWriterType = typeof(Microsoft.OData.ODataAnnotatable).Assembly.GetType("Microsoft.OData.Json.JsonWriter");
             private object jsonWriter;
 
-            public JsonWriterTestWrapper(TextWriter writer, bool indent)
+            public JsonWriterTestWrapper(TextWriter writer)
             {
-                this.jsonWriter = ReflectionUtils.CreateInstance(JsonWriterType, writer, indent, false);
+                this.jsonWriter = ReflectionUtils.CreateInstance(JsonWriterType, writer, false);
             }
 
             public void WriteObjectValue(object value)

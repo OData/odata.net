@@ -229,7 +229,7 @@ namespace Microsoft.OData.Json
             Debug.Assert(jsonReader != null, "jsonReader != null");
             using (StringWriter stringWriter = new StringWriter(jsonRawValueStringBuilder, CultureInfo.InvariantCulture))
             {
-                JsonWriter jsonWriter = new JsonWriter(stringWriter, indent: false, isIeee754Compatible: false);
+                JsonWriter jsonWriter = new JsonWriter(stringWriter, isIeee754Compatible: false);
                 int depth = 0;
                 do
                 {

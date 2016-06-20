@@ -44,10 +44,10 @@ namespace AstoriaUnitTests.TDD.Tests.Client
         [TestMethod]
         public void ShortIntegrationCreateWriterSettingsShouldSetInstanceAnnotationFilter()
         {
-            this.requestInfo.Configurations.RequestPipeline.OnMessageWriterSettingsCreated((a => a.Settings.EnableIndentation = true));
+            this.requestInfo.Configurations.RequestPipeline.OnMessageWriterSettingsCreated((a => a.Settings.EnableMessageStreamDisposal = true));
 
             var settings = this.writingHelper.CreateSettings(false, false);
-            settings.EnableIndentation.Should().BeTrue();
+            settings.EnableMessageStreamDisposal.Should().BeTrue();
         }
     }
 }

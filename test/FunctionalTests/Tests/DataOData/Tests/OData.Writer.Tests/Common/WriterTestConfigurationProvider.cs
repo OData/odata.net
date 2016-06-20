@@ -346,11 +346,9 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Common
             {
                 combinatorialEngine.RunCombinations(
                     configurationsWithDefaultSettings,
-                    new bool[] { true, false }, // indent
-                    (config, indent) =>
+                    (config) =>
                     {
                         ODataMessageWriterSettings settings = config.MessageWriterSettings.Clone();
-                        settings.EnableIndentation = indent;
                         configurations.Add(new WriterTestConfiguration(config.Format,
                             settings,
                             config.IsRequest,
@@ -361,11 +359,9 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Common
             {
                 // We need only some to use indentation but we want for each of ATOM and JSON to to have some which use it for sure
                 int[] primes = new int[] { 1, 2, 3, 5, 7, 11, 13, 17, 19 };
-                int i = 0;
                 foreach (var config in configurationsWithDefaultSettings)
                 {
                     ODataMessageWriterSettings settings = config.MessageWriterSettings.Clone();
-                    settings.EnableIndentation = primes.Contains(i++);
                     configurations.Add(new WriterTestConfiguration(config.Format,
                         settings,
                         config.IsRequest,

@@ -4,6 +4,8 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+using System.Text.RegularExpressions;
+
 namespace Microsoft.Test.OData.PluggableFormat.VCard.Test
 {
     using System;
@@ -91,7 +93,7 @@ namespace Microsoft.Test.OData.PluggableFormat.VCard.Test
         {
             // Write json, compare with baseline
             Assert.AreEqual(
-                TestHelper.GetResourceString(resJson),
+                Regex.Replace(TestHelper.GetResourceString(resJson), @"\r\n\s*([""{}\]])", "$1"),
                 TestHelper.GetToplevelPropertyPayloadString(val, container),
                 "Json baseline");
 

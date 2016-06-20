@@ -140,7 +140,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip
 
         private class TestJsonWriterFactory : IJsonWriterFactory
         {
-            public IJsonWriter CreateJsonWriter(TextWriter textWriter, bool indent, bool isIeee754Compatible)
+            public IJsonWriter CreateJsonWriter(TextWriter textWriter, bool isIeee754Compatible)
             {
                 return new TestJsonWriter(textWriter);
             }

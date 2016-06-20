@@ -193,7 +193,6 @@ namespace Microsoft.OData
                 ODataMessageWriterSettings messageWriterSettings = new ODataMessageWriterSettings()
                 {
                     Version = version,
-                    EnableIndentation = false
                 };
 
                 WriteJsonLightLiteral(
@@ -307,7 +306,6 @@ namespace Microsoft.OData
                 ODataMessageWriterSettings messageWriterSettings = new ODataMessageWriterSettings()
                 {
                     Version = version,
-                    EnableIndentation = false
                 };
 
                 WriteJsonLightLiteral(
@@ -558,7 +556,6 @@ namespace Microsoft.OData
                 ODataMessageWriterSettings messageWriterSettings = new ODataMessageWriterSettings()
                 {
                     Version = ODataVersion.V4,
-                    EnableIndentation = false
                 };
 
                 ODataMediaType mediaType = new ODataMediaType(MimeConstants.MimeApplicationType, MimeConstants.MimeJsonSubType);

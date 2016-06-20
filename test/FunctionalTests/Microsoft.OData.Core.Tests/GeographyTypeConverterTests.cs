@@ -68,7 +68,7 @@ namespace Microsoft.OData.Tests
         {
             var stream = new MemoryStream();
             var textWriter = new StreamWriter(stream, Encoding.UTF8);
-            var jsonWriter = new JsonWriter(textWriter, false, false);
+            var jsonWriter = new JsonWriter(textWriter, false);
             var textReader = new StreamReader(stream, Encoding.UTF8);
 
             foreach (var instance in instances)

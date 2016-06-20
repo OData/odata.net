@@ -42,19 +42,10 @@ namespace Microsoft.OData.Json
         /// Creates a new instance of Json writer.
         /// </summary>
         /// <param name="writer">Writer to which text needs to be written.</param>
-        /// <param name="indent">If the output should be indented or not.</param>
         /// <param name="isIeee754Compatible">if it is IEEE754Compatible</param>
-        internal JsonWriter(TextWriter writer, bool indent, bool isIeee754Compatible)
+        internal JsonWriter(TextWriter writer, bool isIeee754Compatible)
         {
-            if (indent)
-            {
-                this.writer = new IndentedTextWriter(writer);
-            }
-            else
-            {
-                this.writer = new NonIndentedTextWriter(writer);
-            }
-
+            this.writer = new NonIndentedTextWriter(writer);
             this.scopes = new Stack<Scope>();
             this.isIeee754Compatible = isIeee754Compatible;
         }

@@ -710,7 +710,6 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                         BaseUri = settings.BaseUri,
                         EnableCharactersCheck = settings.EnableCharactersCheck,
                         EnableMessageStreamDisposal = settings.EnableMessageStreamDisposal,
-                        EnableIndentation = settings.EnableIndentation,
                         MessageQuotas = new ODataMessageQuotas(settings.MessageQuotas),
                         Version = settings.Version
                     };

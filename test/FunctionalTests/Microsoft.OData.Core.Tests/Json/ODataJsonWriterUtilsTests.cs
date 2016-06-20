@@ -25,7 +25,7 @@ namespace Microsoft.OData.Tests.Json
         public ODataJsonWriterUtilsTests()
         {
             this.stringWriter = new StringWriter();
-            this.jsonWriter = new JsonWriter(this.stringWriter, /*indent*/ false, isIeee754Compatible: true);
+            this.jsonWriter = new JsonWriter(this.stringWriter, isIeee754Compatible: true);
             this.settings = new ODataMessageWriterSettings();
         }
 
@@ -88,7 +88,7 @@ namespace Microsoft.OData.Tests.Json
                 maxInnerErrorDepth: 0,
                 writingJsonLight: false);
             var result = stringWriter.GetStringBuilder().ToString();
-            result.Should().Be(@"{""error"":{""code"":"""",""message"":"""",""target"":""any target"","+
+            result.Should().Be(@"{""error"":{""code"":"""",""message"":"""",""target"":""any target""," +
                 @"""details"":[{""code"":""500"",""target"":""any target"",""message"":""any msg""}]}}");
         }
     }

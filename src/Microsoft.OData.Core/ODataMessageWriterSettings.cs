@@ -72,7 +72,6 @@ namespace Microsoft.OData
             this.AutoComputePayloadMetadata = false;
             this.EnableMessageStreamDisposal = true;
             this.EnableCharactersCheck = false;
-            this.EnableIndentation = false;
             this.ODataSimplified = false;
             this.Validations = WriterValidations.FullValidation & ~WriterValidations.ThrowOnUndeclaredProperty;
             this.Validator = new WriterValidator(this);
@@ -134,11 +133,6 @@ namespace Microsoft.OData
         /// Flag to control whether the writer should check for valid Xml characters or not.
         /// </summary>
         public bool EnableCharactersCheck { get; set; }
-
-        /// <summary>
-        /// Flag to control whether the writer should use indentation or not.
-        /// </summary>
-        public bool EnableIndentation { get; set; }
 
         /// <summary>Gets or sets a callback function use to wrap the response from server.</summary>
         /// <returns>The callback function used to wrap the response from server.</returns>
@@ -426,7 +420,6 @@ namespace Microsoft.OData
             this.BaseUri = other.BaseUri;
             this.EnableMessageStreamDisposal = other.EnableMessageStreamDisposal;
             this.EnableCharactersCheck = other.EnableCharactersCheck;
-            this.EnableIndentation = other.EnableIndentation;
             this.format = other.format;
             this.JsonPCallback = other.JsonPCallback;
             this.messageQuotas = new ODataMessageQuotas(other.MessageQuotas);
