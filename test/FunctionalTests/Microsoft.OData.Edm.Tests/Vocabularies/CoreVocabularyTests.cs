@@ -31,12 +31,11 @@ namespace Microsoft.OData.Edm.Tests.Vocabularies
   <TypeDefinition Name=""Tag"" UnderlyingType=""Edm.Boolean"">
     <Annotation Term=""Core.Description"" String=""This is the type to use for all tagging terms"" />
   </TypeDefinition>
-  <ComplexType Name=""OptimisticConcurrencyControlType"">
-    <Property Name=""ETagDependsOn"" Type=""Collection(Edm.PropertyPath)"">
-      <Annotation Term=""Core.Description"" String=""The ETag is computed from these properties"" />
-    </Property>
-    <Annotation Term=""Core.Description"" String=""If present, the annotated entity set uses optimistic concurrency control"" />
-  </ComplexType>
+  <EnumType Name=""Permission"" IsFlags=""true"">
+    <Member Name=""None"" Value=""0"" />
+    <Member Name=""Read"" Value=""1"" />
+    <Member Name=""ReadWrite"" Value=""3"" />
+  </EnumType>
   <Term Name=""Description"" Type=""Edm.String"">
     <Annotation Term=""Core.Description"" String=""A brief description of a model element"" />
     <Annotation Term=""Core.IsLanguageDependent"" Bool=""true"" />
@@ -45,12 +44,12 @@ namespace Microsoft.OData.Edm.Tests.Vocabularies
     <Annotation Term=""Core.Description"" String=""A lengthy description of a model element"" />
     <Annotation Term=""Core.IsLanguageDependent"" Bool=""true"" />
   </Term>
-  <Term Name=""IsLanguageDependent"" Type=""Core.Tag"" DefaultValue=""true"" AppliesTo=""Property Term"">
+  <Term Name=""IsLanguageDependent"" Type=""Core.Tag"" DefaultValue=""true"" AppliesTo=""Term Property"">
     <Annotation Term=""Core.Description"" String=""Properties and terms annotated with this term are language-dependent"" />
     <Annotation Term=""Core.RequiresType"" String=""Edm.String"" />
   </Term>
   <Term Name=""RequiresType"" Type=""Edm.String"" AppliesTo=""Term"">
-    <Annotation Term=""Core.Description"" String=""Properties and terms annotated with this annotation MUST have a type that is identical to or derived from the given type name"" />
+    <Annotation Term=""Core.Description"" String=""Terms annotated with this term can only be applied to elements that have a type that is identical to or derived from the given type name"" />
   </Term>
   <Term Name=""ResourcePath"" Type=""Edm.String"" AppliesTo=""EntitySet Singleton ActionImport FunctionImport"">
     <Annotation Term=""Core.Description"" String=""Resource path for entity container child, can be relative to xml:base and the request URL"" />
@@ -61,6 +60,9 @@ namespace Microsoft.OData.Edm.Tests.Vocabularies
   </Term>
   <Term Name=""ConventionalIDs"" Type=""Core.Tag"" DefaultValue=""true"" AppliesTo=""EntityContainer"">
     <Annotation Term=""Core.Description"" String=""Entity-ids follow OData URL conventions"" />
+  </Term>
+  <Term Name=""Permissions"" Type=""Core.Permission"" AppliesTo=""Property"">
+    <Annotation Term=""Core.Description"" String=""Permissions available for a property.The value of 2 is reserved for future use."" />
   </Term>
   <Term Name=""Immutable"" Type=""Core.Tag"" DefaultValue=""true"" AppliesTo=""Property"">
     <Annotation Term=""Core.Description"" String=""A value for this non-key property can be provided on insert and remains unchanged on update"" />
@@ -84,29 +86,18 @@ namespace Microsoft.OData.Edm.Tests.Vocabularies
     <Annotation Term=""Core.Description"" String=""Properties and terms annotated with this term MUST contain a valid MIME type"" />
     <Annotation Term=""Core.RequiresType"" String=""Edm.String"" />
   </Term>
-  <Term Name=""OptimisticConcurrencyControl"" Type=""Core.OptimisticConcurrencyControlType"" />
   <Term Name=""OptimisticConcurrency"" Type=""Collection(Edm.PropertyPath)"" AppliesTo=""EntitySet"">
     <Annotation Term=""Core.Description"" String=""Data modification requires the use of Etags. A non-empty collection contains the set of properties that are used to compute the ETag"" />
   </Term>
 </Schema>";
 
-            var s = coreVocModel.FindDeclaredValueTerm("Org.OData.Core.V1.OptimisticConcurrencyControl");
-            Assert.NotNull(s);
-            Assert.Equal("Org.OData.Core.V1", s.Namespace);
-            Assert.Equal("OptimisticConcurrencyControl", s.Name);
-            Assert.Equal(EdmTermKind.Value, s.TermKind);
-
-            var type = s.Type;
-            Assert.Equal("Org.OData.Core.V1.OptimisticConcurrencyControlType", type.FullName());
-            Assert.Equal(EdmTypeKind.Complex, type.Definition.TypeKind);
-
-            s = coreVocModel.FindDeclaredValueTerm("Org.OData.Core.V1.OptimisticConcurrency");
+            var s = coreVocModel.FindDeclaredValueTerm("Org.OData.Core.V1.OptimisticConcurrency");
             Assert.NotNull(s);
             Assert.Equal("Org.OData.Core.V1", s.Namespace);
             Assert.Equal("OptimisticConcurrency", s.Name);
             Assert.Equal(EdmTermKind.Value, s.TermKind);
 
-            type = s.Type;
+            var type = s.Type;
             Assert.Equal("Collection(Edm.PropertyPath)", type.FullName());
             Assert.Equal(EdmTypeKind.Collection, type.Definition.TypeKind);
 

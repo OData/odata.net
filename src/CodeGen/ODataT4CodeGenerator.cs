@@ -983,7 +983,7 @@ public class CodeGenerationContext
     private static IEnumerable<T> GetElementsFromModelTree<T>(IEdmModel mainModel, Func<IEdmModel, IEnumerable<T>> getElementFromOneModelFunc)
     {
         List<T> ret = new List<T>();
-        if(mainModel is EdmCoreModel || mainModel.FindDeclaredValueTerm(CoreVocabularyConstants.OptimisticConcurrencyControl) != null)
+        if(mainModel is EdmCoreModel || mainModel.FindDeclaredValueTerm(CoreVocabularyConstants.OptimisticConcurrency) != null)
         {
             return ret;
         }
@@ -992,7 +992,7 @@ public class CodeGenerationContext
         foreach (var tmp in mainModel.ReferencedModels)
         {
             if (tmp is EdmCoreModel ||
-                tmp.FindDeclaredValueTerm(CoreVocabularyConstants.OptimisticConcurrencyControl) != null ||
+                tmp.FindDeclaredValueTerm(CoreVocabularyConstants.OptimisticConcurrency) != null ||
                 tmp.FindDeclaredValueTerm(CapabilitiesVocabularyConstants.ChangeTracking) != null ||
                 tmp.FindDeclaredValueTerm(AlternateKeysVocabularyConstants.AlternateKeys) != null)
             {

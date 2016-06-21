@@ -714,7 +714,7 @@ namespace EdmLibTests.FunctionalTests
       <PropertyRef Name=""Id"" />
     </Key>
     <Property Name=""Id"" Type=""Edm.Int32"" Nullable=""false"" />
-    <Annotation Term=""Core.OptimisticConcurrencyControl"">
+    <Annotation Term=""Org.OData.Core.V1.OptimisticConcurrency"">
       <Collection>
         <PropertyPath>Concurrency</PropertyPath>
       </Collection>

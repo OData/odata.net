@@ -1945,12 +1945,6 @@ public sealed class Microsoft.OData.Edm.ExtensionMethods {
 	public static void SetOptimisticConcurrencyAnnotation (Microsoft.OData.Edm.EdmModel model, Microsoft.OData.Edm.IEdmEntitySet target, System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.IEdmStructuralProperty]] properties)
 
 	[
-	ObsoleteAttribute(),
-	ExtensionAttribute(),
-	]
-	public static void SetOptimisticConcurrencyControlAnnotation (Microsoft.OData.Edm.EdmModel model, Microsoft.OData.Edm.IEdmEntitySet target, System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.IEdmStructuralProperty]] properties)
-
-	[
 	ExtensionAttribute(),
 	]
 	public static void SetPrimitiveValueConverter (Microsoft.OData.Edm.IEdmModel model, Microsoft.OData.Edm.IEdmTypeDefinitionReference typeDefinition, Microsoft.OData.Edm.IPrimitiveValueConverter converter)
@@ -3747,7 +3741,7 @@ public sealed class Microsoft.OData.Edm.Vocabularies.V1.CoreVocabularyConstants 
 	public static string LongDescription = "Org.OData.Core.V1.LongDescription"
 	public static string MediaType = "Org.OData.Core.V1.MediaType"
 	public static string OptimisticConcurrency = "Org.OData.Core.V1.OptimisticConcurrency"
-	public static string OptimisticConcurrencyControl = "Org.OData.Core.V1.OptimisticConcurrencyControl"
+	public static string Permissions = "Org.OData.Core.V1.Permissions"
 	public static string RequiresType = "Org.OData.Core.V1.RequiresType"
 	public static string ResourcePath = "Org.OData.Core.V1.ResourcePath"
 }
@@ -3755,7 +3749,6 @@ public sealed class Microsoft.OData.Edm.Vocabularies.V1.CoreVocabularyConstants 
 public sealed class Microsoft.OData.Edm.Vocabularies.V1.CoreVocabularyModel {
 	public static readonly Microsoft.OData.Edm.Vocabularies.IEdmValueTerm AcceptableMediaTypesTerm = Microsoft.OData.Edm.Csdl.CsdlSemantics.CsdlSemanticsValueTerm
 	public static readonly Microsoft.OData.Edm.Vocabularies.IEdmValueTerm ComputedTerm = Microsoft.OData.Edm.Csdl.CsdlSemantics.CsdlSemanticsValueTerm
-	public static readonly Microsoft.OData.Edm.Vocabularies.IEdmValueTerm ConcurrencyControlTerm = Microsoft.OData.Edm.Csdl.CsdlSemantics.CsdlSemanticsValueTerm
 	public static readonly Microsoft.OData.Edm.Vocabularies.IEdmValueTerm ConcurrencyTerm = Microsoft.OData.Edm.Csdl.CsdlSemantics.CsdlSemanticsValueTerm
 	public static readonly Microsoft.OData.Edm.Vocabularies.IEdmValueTerm ConventionalIDsTerm = Microsoft.OData.Edm.Csdl.CsdlSemantics.CsdlSemanticsValueTerm
 	public static readonly Microsoft.OData.Edm.Vocabularies.IEdmValueTerm DereferenceableIDsTerm = Microsoft.OData.Edm.Csdl.CsdlSemantics.CsdlSemanticsValueTerm
@@ -3767,6 +3760,7 @@ public sealed class Microsoft.OData.Edm.Vocabularies.V1.CoreVocabularyModel {
 	public static readonly Microsoft.OData.Edm.Vocabularies.IEdmValueTerm IsURLTerm = Microsoft.OData.Edm.Csdl.CsdlSemantics.CsdlSemanticsValueTerm
 	public static readonly Microsoft.OData.Edm.Vocabularies.IEdmValueTerm LongDescriptionTerm = Microsoft.OData.Edm.Csdl.CsdlSemantics.CsdlSemanticsValueTerm
 	public static readonly Microsoft.OData.Edm.Vocabularies.IEdmValueTerm MediaTypeTerm = Microsoft.OData.Edm.Csdl.CsdlSemantics.CsdlSemanticsValueTerm
+	public static readonly Microsoft.OData.Edm.Vocabularies.IEdmValueTerm PermissionsTerm = Microsoft.OData.Edm.Csdl.CsdlSemantics.CsdlSemanticsValueTerm
 	public static readonly Microsoft.OData.Edm.Vocabularies.IEdmValueTerm RequiresTypeTerm = Microsoft.OData.Edm.Csdl.CsdlSemantics.CsdlSemanticsValueTerm
 	public static readonly Microsoft.OData.Edm.Vocabularies.IEdmValueTerm ResourcePathTerm = Microsoft.OData.Edm.Csdl.CsdlSemantics.CsdlSemanticsValueTerm
 }

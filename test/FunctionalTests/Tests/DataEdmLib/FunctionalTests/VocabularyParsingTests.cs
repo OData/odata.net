@@ -1107,69 +1107,6 @@ namespace EdmLibTests.FunctionalTests
             Assert.AreEqual(expected, actual);
         }
 
-        [TestMethod]
-        public void TestCoreOptimisticConcurrencyControlInlineAnnotation()
-        {
-            EdmModel model = new EdmModel();
-
-            EdmEntityContainer container = new EdmEntityContainer("DefaultNamespace", "Container");
-            EdmEntityType personType = new EdmEntityType("DefaultNamespace", "Person");
-            EdmStructuralProperty propertyId = personType.AddStructuralProperty("Id", EdmCoreModel.Instance.GetInt32(false));
-            personType.AddKeys(propertyId);
-            IEdmStructuralProperty concurrencyProperty = personType.AddStructuralProperty("Concurrency", EdmCoreModel.Instance.GetInt32(true));
-            model.AddElement(personType);
-            container.AddEntitySet("People", personType);
-            model.AddElement(container);
-            container.AddEntitySet("Students", personType);
-
-            IEdmEntitySet peopleSet = model.FindDeclaredEntitySet("People");
-            model.SetOptimisticConcurrencyControlAnnotation(peopleSet, new[] { concurrencyProperty });
-            model.SetOptimisticConcurrencyControlAnnotation(peopleSet, new[] { concurrencyProperty });
-
-            IEdmEntitySet studentSet = model.FindDeclaredEntitySet("Students");
-            model.SetOptimisticConcurrencyControlAnnotation(studentSet, new[] { concurrencyProperty });
-
-            IEnumerable<EdmError> errors;
-            StringWriter sw = new StringWriter();
-            XmlWriterSettings settings = new XmlWriterSettings();
-            settings.Indent = true;
-            settings.Encoding = System.Text.Encoding.UTF8;
-            XmlWriter xw = XmlWriter.Create(sw, settings);
-            model.TryWriteCsdl(xw, out errors);
-            xw.Flush();
-            xw.Close();
-            var actual = sw.ToString();
-
-            const string expected = @"<?xml version=""1.0"" encoding=""utf-16""?>
-<Schema Namespace=""DefaultNamespace"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
-  <EntityType Name=""Person"">
-    <Key>
-      <PropertyRef Name=""Id"" />
-    </Key>
-    <Property Name=""Id"" Type=""Edm.Int32"" Nullable=""false"" />
-    <Property Name=""Concurrency"" Type=""Edm.Int32"" />
-  </EntityType>
-  <EntityContainer Name=""Container"">
-    <EntitySet Name=""People"" EntityType=""DefaultNamespace.Person"">
-      <Annotation Term=""Org.OData.Core.V1.OptimisticConcurrencyControl"">
-        <Collection>
-          <PropertyPath>Concurrency</PropertyPath>
-        </Collection>
-      </Annotation>
-    </EntitySet>
-    <EntitySet Name=""Students"" EntityType=""DefaultNamespace.Person"">
-      <Annotation Term=""Org.OData.Core.V1.OptimisticConcurrencyControl"">
-        <Collection>
-          <PropertyPath>Concurrency</PropertyPath>
-        </Collection>
-      </Annotation>
-    </EntitySet>
-  </EntityContainer>
-</Schema>";
-
-            Assert.AreEqual(expected, actual);
-        }
-
         // TODO: Make 'Org.OData.Core.V1" a reserved namespace, and turn 'Core' ot 'Org.OData.Core.V1'
         [TestMethod]
         public void TestCoreDescriptionAnnotation()

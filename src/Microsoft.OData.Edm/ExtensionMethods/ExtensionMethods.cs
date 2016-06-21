@@ -1082,28 +1082,6 @@ namespace Microsoft.OData.Edm
         }
 
         /// <summary>
-        /// Set annotation Org.OData.Core.V1.OptimisticConcurrencyControl to EntitySet
-        /// </summary>
-        /// <param name="model">The model to add annotation</param>
-        /// <param name="target">The target entitySet to set the inline annotation</param>
-        /// <param name="properties">The PropertyPath for annotation</param>
-        [Obsolete("Org.OData.Core.V1.OptimisticConcurrencyControl is obsolete; use SetOptimisticConcurrencyAnnotation to set Org.OData.Core.V1.OptimisticConcurrency instead")]
-        public static void SetOptimisticConcurrencyControlAnnotation(this EdmModel model, IEdmEntitySet target, IEnumerable<IEdmStructuralProperty> properties)
-        {
-            EdmUtil.CheckArgumentNull(model, "model");
-            EdmUtil.CheckArgumentNull(target, "target");
-            EdmUtil.CheckArgumentNull(properties, "properties");
-
-            IEdmCollectionExpression collectionExpression = new EdmCollectionExpression(properties.Select(p => new EdmPropertyPathExpression(p.Name)).ToArray());
-            IEdmValueTerm term = CoreVocabularyModel.ConcurrencyControlTerm;
-
-            Debug.Assert(term != null, "term!=null");
-            EdmAnnotation annotation = new EdmAnnotation(target, term, collectionExpression);
-            annotation.SetSerializationLocation(model, EdmVocabularyAnnotationSerializationLocation.Inline);
-            model.SetVocabularyAnnotation(annotation);
-        }
-
-        /// <summary>
         /// Set Org.OData.Core.V1.Description to target.
         /// </summary>
         /// <param name="model">The model referenced to.</param>

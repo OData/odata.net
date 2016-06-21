@@ -34,12 +34,6 @@ namespace Microsoft.OData.Edm.Vocabularies.V1
         public static readonly IEdmValueTerm ConcurrencyTerm;
 
         /// <summary>
-        /// The concurrency control term.
-        /// </summary>
-        [SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes", Justification = "Resolver is immutable")]
-        public static readonly IEdmValueTerm ConcurrencyControlTerm;
-
-        /// <summary>
         /// The description term.
         /// </summary>
         [SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes", Justification = "Resolver is immutable")]
@@ -117,6 +111,12 @@ namespace Microsoft.OData.Edm.Vocabularies.V1
         [SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes", Justification = "Resolver is immutable")]
         public static readonly IEdmValueTerm IsMediaTypeTerm;
 
+        /// <summary>
+        /// The Permissions Term.
+        /// </summary>
+        [SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes", Justification = "Resolver is immutable")]
+        public static readonly IEdmValueTerm PermissionsTerm;
+
         internal static bool IsInitializing;
 
         /// <summary>
@@ -137,7 +137,6 @@ namespace Microsoft.OData.Edm.Vocabularies.V1
 
             AcceptableMediaTypesTerm = Instance.FindDeclaredValueTerm(CoreVocabularyConstants.AcceptableMediaTypes);
             ComputedTerm = Instance.FindDeclaredValueTerm(CoreVocabularyConstants.Computed);
-            ConcurrencyControlTerm = Instance.FindDeclaredValueTerm(CoreVocabularyConstants.OptimisticConcurrencyControl);
             ConcurrencyTerm = Instance.FindDeclaredValueTerm(CoreVocabularyConstants.OptimisticConcurrency);
             ConventionalIDsTerm = Instance.FindDeclaredValueTerm(CoreVocabularyConstants.ConventionalIDs);
             DereferenceableIDsTerm = Instance.FindDeclaredValueTerm(CoreVocabularyConstants.DereferenceableIDs);
@@ -150,6 +149,7 @@ namespace Microsoft.OData.Edm.Vocabularies.V1
             MediaTypeTerm = Instance.FindDeclaredValueTerm(CoreVocabularyConstants.MediaType);
             RequiresTypeTerm = Instance.FindDeclaredValueTerm(CoreVocabularyConstants.RequiresType);
             ResourcePathTerm = Instance.FindDeclaredValueTerm(CoreVocabularyConstants.ResourcePath);
+            PermissionsTerm = Instance.FindDeclaredValueTerm(CoreVocabularyConstants.Permissions);
         }
     }
 }

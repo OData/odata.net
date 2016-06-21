@@ -11,12 +11,6 @@ namespace Microsoft.OData.Edm.Vocabularies.V1
     /// </summary>
     public static class CoreVocabularyConstants
     {
-        /// <summary>Org.OData.Core.V1.OptimisticConcurrency </summary>
-        public const string OptimisticConcurrency = "Org.OData.Core.V1.OptimisticConcurrency";
-
-        /// <summary>Org.OData.Core.V1.OptimisticConcurrencyControl </summary>
-        public const string OptimisticConcurrencyControl = "Org.OData.Core.V1.OptimisticConcurrencyControl";
-
         /// <summary>Org.OData.Core.V1.Description </summary>
         public const string Description = "Org.OData.Core.V1.Description";
 
@@ -38,6 +32,9 @@ namespace Microsoft.OData.Edm.Vocabularies.V1
         /// <summary>Org.OData.Core.V1.ConventionalIDs</summary>
         public const string ConventionalIDs = "Org.OData.Core.V1.ConventionalIDs";
 
+        /// <summary>Org.OData.Core.V1.Permissions</summary>
+        public const string Permissions = "Org.OData.Core.V1.Permissions";
+
         /// <summary>Org.OData.Core.V1.Immutable</summary>
         public const string Immutable = "Org.OData.Core.V1.Immutable";
 
@@ -55,6 +52,9 @@ namespace Microsoft.OData.Edm.Vocabularies.V1
 
         /// <summary>Org.OData.Core.V1.IsMediaType</summary>
         public const string IsMediaType = "Org.OData.Core.V1.IsMediaType";
+
+        /// <summary>Org.OData.Core.V1.OptimisticConcurrency </summary>
+        public const string OptimisticConcurrency = "Org.OData.Core.V1.OptimisticConcurrency";
 
         /// <summary>Org.OData.Core.V1.xml file suffix</summary>
         internal const string VocabularyUrlSuffix = "/Org.OData.Core.V1.xml";

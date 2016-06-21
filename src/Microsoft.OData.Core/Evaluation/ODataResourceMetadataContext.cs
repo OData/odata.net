@@ -510,7 +510,7 @@ namespace Microsoft.OData.Evaluation
             }
 
             /// <summary>
-            /// Compute ETag from Annotation Org.OData.Core.V1.OptimisticConcurrencyControl on EntitySet
+            /// Compute ETag from Annotation Org.OData.Core.V1.OptimisticConcurrency on EntitySet
             /// </summary>
             /// <returns>Enumerable of IEdmStructuralProperty</returns>
             private IEnumerable<IEdmStructuralProperty> ComputeETagPropertiesFromAnnotation()
@@ -521,8 +521,7 @@ namespace Microsoft.OData.Evaluation
                 if (entitySet != null)
                 {
                     IEdmVocabularyAnnotation annotation = model.FindDeclaredVocabularyAnnotations(entitySet)
-                        .SingleOrDefault(t => t.Term.FullName().Equals(CoreVocabularyConstants.OptimisticConcurrencyControl, StringComparison.Ordinal) ||
-                                              t.Term.FullName().Equals(CoreVocabularyConstants.OptimisticConcurrency, StringComparison.Ordinal));
+                        .SingleOrDefault(t => t.Term.FullName().Equals(CoreVocabularyConstants.OptimisticConcurrency, StringComparison.Ordinal));
                     if (annotation is IEdmValueAnnotation)
                     {
                         IEdmExpression collectionExpression = (annotation as IEdmValueAnnotation).Value;
@@ -533,7 +532,7 @@ namespace Microsoft.OData.Evaluation
                             {
                                 // TODO:
                                 //  1. Add support for Complex type
-                                //  2. Add new exception when collectionExpression is not IEdmCollectionExpression: CoreOptimisticConcurrencyControl must be followed by collection expression
+                                //  2. Add new exception when collectionExpression is not IEdmCollectionExpression: CoreOptimisticConcurrency must be followed by collection expression
                                 IEdmStructuralProperty property = this.actualResourceType.StructuralProperties().FirstOrDefault(p => p.Name == pathExpression.Path.LastOrDefault());
                                 if (property == null)
                                 {
