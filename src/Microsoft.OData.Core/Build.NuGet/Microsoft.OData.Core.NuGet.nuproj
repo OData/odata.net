@@ -8,13 +8,6 @@
     <NugetPackBasePath>$(OutputRootDir)\Product</NugetPackBasePath>
     <NuGetPackSpecFile>Microsoft.OData.Core.$(Configuration).nuspec</NuGetPackSpecFile>
   </PropertyGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Microsoft.OData.Core.csproj">
-      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
-      <Project>{989A83CC-B864-4A75-8BF3-5EDA99203A86}</Project>
-      <Name>Microsoft.OData.Core</Name>
-    </ProjectReference>
-  </ItemGroup>
   <Import Project="$(BuildExtensionsPath)\NoTarget.targets" />
   
   <!-- Override the CrossTarget -->

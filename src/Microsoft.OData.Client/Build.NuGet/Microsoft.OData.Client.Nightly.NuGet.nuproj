@@ -9,18 +9,6 @@
     <NuGetPackSpecFile>Microsoft.OData.Client.Nightly.$(Configuration).nuspec</NuGetPackSpecFile>
     <NugetPackProperties>$(NugetPackProperties);NightlyBuildVersion=$([System.DateTime]::Now.ToString("yyyyMMdd"))</NugetPackProperties>
   </PropertyGroup>  
-  <ItemGroup>
-    <ProjectReference Include="..\Microsoft.OData.Client.csproj">
-      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
-      <Project>{D1567C63-4A0D-4E18-A14E-79699B9BFFFF}</Project>
-      <Name>Microsoft.OData.Client</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Build.Portable\Microsoft.OData.Client.Portable.csproj">
-      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
-      <Project>{AED0DC9D-76E5-4145-AF5E-9E2F856F4D18}</Project>
-      <Name>Microsoft.OData.Client.Portable</Name>
-    </ProjectReference>
-  </ItemGroup>    
   <Import Project="$(BuildExtensionsPath)\NoTarget.targets" />
   
   <!-- Override the CrossTarget -->

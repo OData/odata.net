@@ -9,13 +9,6 @@
     <NuGetPackSpecFile>Microsoft.OData.Core.Nightly.$(Configuration).nuspec</NuGetPackSpecFile>
     <NugetPackProperties>$(NugetPackProperties);NightlyBuildVersion=$([System.DateTime]::Now.ToString("yyyyMMdd"))</NugetPackProperties>
   </PropertyGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Microsoft.OData.Core.csproj">
-      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
-      <Project>{989A83CC-B864-4A75-8BF3-5EDA99203A86}</Project>
-      <Name>Microsoft.OData.Core</Name>
-    </ProjectReference>
-  </ItemGroup>
   <Import Project="$(BuildExtensionsPath)\NoTarget.targets" />
   
   <!-- Override the CrossTarget -->

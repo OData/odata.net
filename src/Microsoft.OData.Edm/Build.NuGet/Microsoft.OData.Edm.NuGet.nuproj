@@ -8,13 +8,6 @@
     <NugetPackBasePath>$(OutputRootDir)\Product</NugetPackBasePath>
     <NuGetPackSpecFile>Microsoft.OData.Edm.$(Configuration).nuspec</NuGetPackSpecFile>
   </PropertyGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Microsoft.OData.Edm.csproj">
-      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
-      <Project>{7D921888-FE03-4C3F-80FE-2F624505461C}</Project>
-      <Name>Microsoft.OData.Edm</Name>
-    </ProjectReference>
-  </ItemGroup>
   <Import Project="$(BuildExtensionsPath)\NoTarget.targets" />
   
   <!-- Override the CrossTarget -->
