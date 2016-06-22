@@ -4764,10 +4764,9 @@ public sealed class Microsoft.OData.ODataMessageReaderSettings {
 
 	System.Uri BaseUri  { public get; public set; }
 	System.Func`3[[Microsoft.OData.Edm.IEdmType],[System.String],[Microsoft.OData.Edm.IEdmType]] ClientCustomTypeResolver  { public get; public set; }
-	bool DisablePrimitiveTypeConversion  { public get; public set; }
 	bool EnableCharactersCheck  { public get; public set; }
 	bool EnableMessageStreamDisposal  { public get; public set; }
-	bool EnableReadingEntryContentInEntryStartState  { public get; public set; }
+	bool EnablePrimitiveTypeConversion  { public get; public set; }
 	Microsoft.OData.ODataVersion MaxProtocolVersion  { public get; public set; }
 	Microsoft.OData.ODataMessageQuotas MessageQuotas  { public get; public set; }
 	bool ODataSimplified  { public get; public set; }

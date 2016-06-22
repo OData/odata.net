@@ -26,7 +26,7 @@ namespace Microsoft.OData
         /// <summary>true if the message is being written; false when it is read.</summary>
         private readonly bool writing;
 
-        /// <summary>true if the stream returned should be dispose calls.</summary>
+        /// <summary>true if the stream returned should be disposed calls.</summary>
         private readonly bool enableMessageStreamDisposal;
 
         /// <summary>The maximum size of the message in bytes (or null if no maximum applies).</summary>
@@ -42,7 +42,7 @@ namespace Microsoft.OData
         /// Constructs a new ODataMessage.
         /// </summary>
         /// <param name="writing">true if the message is being written; false when it is read.</param>
-        /// <param name="enableMessageStreamDisposal">true if the stream returned should be dispose calls.</param>
+        /// <param name="enableMessageStreamDisposal">true if the stream returned should be disposed calls.</param>
         /// <param name="maxMessageSize">The maximum size of the message in bytes (or a negative value if no maximum applies).</param>
         protected ODataMessage(bool writing, bool enableMessageStreamDisposal, long maxMessageSize)
         {

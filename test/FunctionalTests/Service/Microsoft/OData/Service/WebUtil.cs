@@ -1245,7 +1245,7 @@ namespace Microsoft.OData.Service
             // So using the absolute URI of the service is the best we can do.
             messageReaderSettings.BaseUri = dataService.OperationContext.AbsoluteServiceUri;
             messageReaderSettings.EnableMessageStreamDisposal = false;
-            messageReaderSettings.DisablePrimitiveTypeConversion = !dataService.Configuration.EnableTypeConversion;
+            messageReaderSettings.EnablePrimitiveTypeConversion = dataService.Configuration.EnableTypeConversion;
             messageReaderSettings.EnableCharactersCheck = false;
 
             ODataProtocolVersion maxProtocolVersion = dataService.Configuration.DataServiceBehavior.MaxProtocolVersion;

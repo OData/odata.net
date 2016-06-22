@@ -25,7 +25,7 @@ namespace Microsoft.OData.Tests
             Assert.True((settings.Validations & ReaderValidations.ThrowOnDuplicatePropertyNames) != 0, "The ThrowOnDuplicatePropertyNames should be true by default");
             Assert.Null(settings.BaseUri);
             Assert.Null(settings.ClientCustomTypeResolver);
-            Assert.False(settings.DisablePrimitiveTypeConversion, "DisablePrimitiveTypeConversion should be false by default.");
+            Assert.True(settings.EnablePrimitiveTypeConversion, "EnablePrimitiveTypeConversion should be true by default.");
             Assert.True(settings.EnableMessageStreamDisposal, "EnableMessageStreamDisposal should be false by default.");
             Assert.False(settings.EnableCharactersCheck, "The CheckCharacters should be off by default.");
             Assert.True((settings.Validations & ReaderValidations.BasicValidation) != 0, "BasicValidation should be true by default");
@@ -50,7 +50,7 @@ namespace Microsoft.OData.Tests
             ODataMessageReaderSettings settings = new ODataMessageReaderSettings
             {
                 BaseUri = baseUri,
-                DisablePrimitiveTypeConversion = true,
+                EnablePrimitiveTypeConversion = false,
                 EnableMessageStreamDisposal = false,
                 EnableCharactersCheck = true,
                 ODataSimplified = true,
@@ -71,7 +71,7 @@ namespace Microsoft.OData.Tests
 
             Assert.True((settings.Validations & ReaderValidations.ThrowOnDuplicatePropertyNames) == 0, "The ThrowOnDuplicatePropertyNames was not correctly remembered");
             Assert.True(baseUri.Equals(settings.BaseUri), "The BaseUri was not correctly remembered.");
-            Assert.True(settings.DisablePrimitiveTypeConversion, "DisablePrimitiveTypeConversion was not correctly remembered.");
+            Assert.False(settings.EnablePrimitiveTypeConversion, "EnablePrimitiveTypeConversion was not correctly remembered.");
             Assert.False(settings.EnableMessageStreamDisposal, "EnableMessageStreamDisposal was not correctly remembered.");
             Assert.True(settings.EnableCharactersCheck, "The CheckCharacters should be on when set.");
             Assert.True((settings.Validations & ReaderValidations.BasicValidation) == 0, "BasicValidation was not correctly remembered");
@@ -177,7 +177,7 @@ namespace Microsoft.OData.Tests
                 "BaseUri does not match");
             Assert.True(expected.ClientCustomTypeResolver == actual.ClientCustomTypeResolver, "ClientCustomTypeResolver does not match");
             Assert.True(expected.EnableMessageStreamDisposal == actual.EnableMessageStreamDisposal, "EnableMessageStreamDisposal does not match");
-            Assert.True(expected.DisablePrimitiveTypeConversion == actual.DisablePrimitiveTypeConversion, "DisablePrimitiveTypeConversion does not match");
+            Assert.True(expected.EnablePrimitiveTypeConversion == actual.EnablePrimitiveTypeConversion, "EnablePrimitiveTypeConversion does not match");
             Assert.True(expected.EnableCharactersCheck == actual.EnableCharactersCheck, "CheckCharacters does not match");
             Assert.True(expected.ODataSimplified == actual.ODataSimplified, "ODataSimplified does not match");
             Assert.True(expected.ShouldIncludeAnnotation == actual.ShouldIncludeAnnotation, "UseKeyAsSegment does not match");

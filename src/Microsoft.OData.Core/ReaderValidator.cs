@@ -70,7 +70,7 @@ namespace Microsoft.OData
                                       bool validateNullValue, string propertyName,
                                       bool? isDynamicProperty)
         {
-            ReaderValidationUtils.ValidateNullValue(expectedTypeReference, settings.DisablePrimitiveTypeConversion,
+            ReaderValidationUtils.ValidateNullValue(expectedTypeReference, settings.EnablePrimitiveTypeConversion,
                                                     validateNullValue, propertyName, isDynamicProperty);
         }
 
@@ -107,7 +107,7 @@ namespace Microsoft.OData
             return ReaderValidationUtils.ResolvePayloadTypeNameAndComputeTargetType(
                 expectedTypeKind, defaultPrimitivePayloadType, expectedTypeReference, payloadTypeName, model,
                 settings.ClientCustomTypeResolver, settings.ThrowIfTypeConflictsWithMetadata,
-                settings.DisablePrimitiveTypeConversion,
+                settings.EnablePrimitiveTypeConversion,
                 typeKindFromPayloadFunc, out targetTypeKind, out serializationTypeNameAnnotation);
         }
 

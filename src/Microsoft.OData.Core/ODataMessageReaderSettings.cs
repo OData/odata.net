@@ -32,7 +32,7 @@ namespace Microsoft.OData
         public ODataMessageReaderSettings()
         {
             this.ClientCustomTypeResolver = null;
-            this.DisablePrimitiveTypeConversion = false;
+            this.EnablePrimitiveTypeConversion = true;
             this.EnableMessageStreamDisposal = true;
             this.EnableCharactersCheck = false;
             this.ODataSimplified = false;
@@ -88,9 +88,9 @@ namespace Microsoft.OData
         /// </summary>
         public Func<IEdmType, string, IEdmType> ClientCustomTypeResolver { get; set; }
 
-        /// <summary>Gets or sets a value that indicates whether not to convert all primitive values to the type specified in the model or provided as an expected type. Note that values will still be converted to the type specified in the payload itself.</summary>
-        /// <returns>true if primitive values and report values are not converted; false if all primitive values are converted to the type specified in the model or provided as an expected type. The default value is false.</returns>
-        public bool DisablePrimitiveTypeConversion { get; set; }
+        /// <summary>Gets or sets a value that indicates whether to convert all primitive values to the type specified in the model or provided as an expected type. Note that values will still be converted to the type specified in the payload itself.</summary>
+        /// <returns>false if primitive values and report values are not converted; true if all primitive values are converted to the type specified in the model or provided as an expected type. The default value is true.</returns>
+        public bool EnablePrimitiveTypeConversion { get; set; }
 
         /// <summary>Gets or sets a value that indicates whether the message stream will be disposed after finishing writing with the message.</summary>
         /// <returns>true if the message stream will be disposed after finishing writing with the message; otherwise false. The default value is true.</returns>
@@ -228,7 +228,7 @@ namespace Microsoft.OData
             this.BaseUri = other.BaseUri;
             this.ClientCustomTypeResolver = other.ClientCustomTypeResolver;
             this.EnableMessageStreamDisposal = other.EnableMessageStreamDisposal;
-            this.DisablePrimitiveTypeConversion = other.DisablePrimitiveTypeConversion;
+            this.EnablePrimitiveTypeConversion = other.EnablePrimitiveTypeConversion;
             this.EnableCharactersCheck = other.EnableCharactersCheck;
             this.messageQuotas = new ODataMessageQuotas(other.MessageQuotas);
             this.MaxProtocolVersion = other.MaxProtocolVersion;

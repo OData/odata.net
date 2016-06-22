@@ -280,7 +280,7 @@ namespace Microsoft.OData
             string stringFromStream = this.textReader.ReadToEnd();
 
             object rawValue;
-            if (expectedPrimitiveTypeReference != null && !this.MessageReaderSettings.DisablePrimitiveTypeConversion)
+            if (expectedPrimitiveTypeReference != null && this.MessageReaderSettings.EnablePrimitiveTypeConversion)
             {
                 rawValue = ODataRawValueUtils.ConvertStringToPrimitive(stringFromStream, expectedPrimitiveTypeReference);
             }

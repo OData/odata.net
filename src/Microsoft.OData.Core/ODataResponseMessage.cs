@@ -39,7 +39,7 @@ namespace Microsoft.OData
         /// </summary>
         /// <param name="responseMessage">The response message to wrap.</param>
         /// <param name="writing">true if the message is being written; false when it is read.</param>
-        /// <param name="enableMessageStreamDisposal">true if the stream returned should dispose calls.</param>
+        /// <param name="enableMessageStreamDisposal">true if the stream returned should be disposed calls.</param>
         /// <param name="maxMessageSize">The maximum size of the message in bytes (or a negative number if no maximum applies).</param>
         internal ODataResponseMessage(IODataResponseMessage responseMessage, bool writing, bool enableMessageStreamDisposal, long maxMessageSize)
             : base(writing, enableMessageStreamDisposal, maxMessageSize)

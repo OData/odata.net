@@ -307,7 +307,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
                 (testDescriptor, testConfig) =>
                 {
                     testConfig = new ReaderTestConfiguration(testConfig);
-                    testConfig.MessageReaderSettings.DisablePrimitiveTypeConversion = true;
+                    testConfig.MessageReaderSettings.EnablePrimitiveTypeConversion = false;
 
                     testDescriptor.RunTest(testConfig);
                 });
@@ -348,7 +348,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
                 (testDescriptor, disableStrictValidation, testConfig) =>
                 {
                     testConfig = new ReaderTestConfiguration(testConfig);
-                    testConfig.MessageReaderSettings.DisablePrimitiveTypeConversion = true;
+                    testConfig.MessageReaderSettings.EnablePrimitiveTypeConversion = false;
                     if (disableStrictValidation)
                     {
                         testConfig = testConfig.CloneAndApplyBehavior(TestODataBehaviorKind.WcfDataServicesServer);

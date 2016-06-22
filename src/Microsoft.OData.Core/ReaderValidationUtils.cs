@@ -81,13 +81,13 @@ namespace Microsoft.OData
         /// Validate a null value.
         /// </summary>
         /// <param name="expectedTypeReference">The expected type of the null value.</param>
-        /// <param name="disablePrimitiveTypeConversion">Whether primitive type conversion is disabled.</param>
+        /// <param name="enablePrimitiveTypeConversion">Whether primitive type conversion is enabled.</param>
         /// <param name="validateNullValue">true to validate the null value; false to only check whether the type is supported.</param>
         /// <param name="propertyName">The name of the property whose value is being read, if applicable (used for error reporting).</param>
         /// <param name="isDynamicProperty">Indicates whether the property is dynamic or unknown.</param>
         internal static void ValidateNullValue(
             IEdmTypeReference expectedTypeReference,
-            bool disablePrimitiveTypeConversion,
+            bool enablePrimitiveTypeConversion,
             bool validateNullValue,
             string propertyName,
             bool? isDynamicProperty)
@@ -101,7 +101,7 @@ namespace Microsoft.OData
             {
                 ValidateTypeSupported(expectedTypeReference);
 
-                if (!disablePrimitiveTypeConversion || expectedTypeReference.TypeKind() != EdmTypeKind.Primitive)
+                if (enablePrimitiveTypeConversion || expectedTypeReference.TypeKind() != EdmTypeKind.Primitive)
                 {
                     ValidateNullValueAllowed(expectedTypeReference, validateNullValue, propertyName, isDynamicProperty);
                 }
@@ -343,8 +343,8 @@ namespace Microsoft.OData
         /// <param name="payloadTypeName">The payload type name, or null if no payload type was specified.</param>
         /// <param name="model">The model to use.</param>
         /// <param name="clientCustomTypeResolver">Custom type resolver used by the client.</param>
-        /// <param name="throwIfTypeConflictsWithMetadata">Whether ThrowIfTypeConflictsWithMetadata is enabled.</param>
-        /// <param name="disablePrimitiveTypeConversion">Whether primitive type conversion is disabled.</param>
+        /// <param name="throwIfTypeConflictsWithMetadata">Whether ThrowIfTypeConflictsWithMetadata is enabled.</param>        
+        /// <param name="enablePrimitiveTypeConversion">Whether primitive type conversion is enabled.</param>
         /// <param name="typeKindFromPayloadFunc">A func to compute the type kind from the payload shape if it could not be determined from the expected type or the payload type.</param>
         /// <param name="targetTypeKind">The target type kind to be used to read the payload.</param>
         /// <param name="serializationTypeNameAnnotation">Potentially non-null instance of an annotation to put on the value reported from the reader.</param>
@@ -364,7 +364,7 @@ namespace Microsoft.OData
             IEdmModel model,
             Func<IEdmType, string, IEdmType> clientCustomTypeResolver,
             bool throwIfTypeConflictsWithMetadata,
-            bool disablePrimitiveTypeConversion,
+            bool enablePrimitiveTypeConversion,
             Func<EdmTypeKind> typeKindFromPayloadFunc,
             out EdmTypeKind targetTypeKind,
             out SerializationTypeNameAnnotation serializationTypeNameAnnotation)
@@ -400,7 +400,7 @@ namespace Microsoft.OData
                 payloadTypeKind,
                 clientCustomTypeResolver,
                 throwIfTypeConflictsWithMetadata,
-                disablePrimitiveTypeConversion,
+                enablePrimitiveTypeConversion,
                 typeKindFromPayloadFunc);
 
             // Resolve potential conflicts between payload and expected types and apply all the various behavior changing flags from settings
@@ -415,7 +415,7 @@ namespace Microsoft.OData
                     defaultPrimitivePayloadType,
                     model,
                     clientCustomTypeResolver,
-                    disablePrimitiveTypeConversion,
+                    enablePrimitiveTypeConversion,
                     throwIfTypeConflictsWithMetadata);
             }
             else
@@ -455,7 +455,7 @@ namespace Microsoft.OData
         /// for ATOM this is Edm.String, for JSON it is null since there is no payload type name for primitive types in the payload.</param>
         /// <param name="model">The model to use.</param>
         /// <param name="clientCustomTypeResolver">Custom type resolver used by client, or null if none.</param>
-        /// <param name="disablePrimitiveTypeConversion">Whether primitive type conversion is disabled.</param>
+        /// <param name="enablePrimitiveTypeConversion">Whether primitive type conversion is enabled.</param>
         /// <param name="throwIfTypeConflictsWithMetadata">Whether ThrowIfTypeConflictsWithMetadata is enabled.</param>
         /// <returns>The target type reference to use for parsing the value. This method never returns null.</returns>
         internal static IEdmTypeReference ResolveAndValidatePrimitiveTargetType(
@@ -466,7 +466,7 @@ namespace Microsoft.OData
             IEdmType defaultPayloadType,
             IEdmModel model,
             Func<IEdmType, string, IEdmType> clientCustomTypeResolver,
-            bool disablePrimitiveTypeConversion,
+            bool enablePrimitiveTypeConversion,
             bool throwIfTypeConflictsWithMetadata)
         {
             Debug.Assert(
@@ -489,7 +489,7 @@ namespace Microsoft.OData
                 ValidateTypeSupported(expectedTypeReference);
             }
 
-            if (payloadTypeKind != EdmTypeKind.None && (disablePrimitiveTypeConversion || throwIfTypeConflictsWithMetadata))
+            if (payloadTypeKind != EdmTypeKind.None && (!enablePrimitiveTypeConversion || throwIfTypeConflictsWithMetadata))
             {
                 // Make sure that the type kinds match.
                 ValidationUtils.ValidateTypeKind(payloadTypeKind, EdmTypeKind.Primitive, payloadTypeName);
@@ -505,7 +505,7 @@ namespace Microsoft.OData
 
             // If the primitive type conversion is off, use the payload type always.
             // If there's no expected type or the expected type is ignored, use the payload type as well.
-            if (expectedTypeReference == null || useExpectedTypeOnlyForTypeResolution || disablePrimitiveTypeConversion)
+            if (expectedTypeReference == null || useExpectedTypeOnlyForTypeResolution || !enablePrimitiveTypeConversion)
             {
                 // If there's no payload type, use the default payload type.
                 // Note that in collections the items without type should inherit the type name from the collection, in that case the expectedTypeReference
@@ -1101,7 +1101,7 @@ namespace Microsoft.OData
         /// <param name="payloadTypeKind">The type kind of the payload value.</param>
         /// <param name="clientCustomTypeResolver">Custom type resolver used by the client.</param>
         /// <param name="throwIfTypeConflictsWithMetadata">Whether ThrowIfTypeConflictsWithMetadata is enabled.</param>
-        /// <param name="disablePrimitiveTypeConversion">Whether primitive type conversion is disabled.</param>
+        /// <param name="enablePrimitiveTypeConversion">Whether primitive type conversion is disabled.</param>
         /// <param name="typeKindFromPayloadFunc">A func to determine the type kind of the value by analyzing the payload data.</param>
         /// <returns>The type kind to be used to read the payload.</returns>
         private static EdmTypeKind ComputeTargetTypeKind(
@@ -1111,7 +1111,7 @@ namespace Microsoft.OData
             EdmTypeKind payloadTypeKind,
             Func<IEdmType, string, IEdmType> clientCustomTypeResolver,
             bool throwIfTypeConflictsWithMetadata,
-            bool disablePrimitiveTypeConversion,
+            bool enablePrimitiveTypeConversion,
             Func<EdmTypeKind> typeKindFromPayloadFunc)
         {
             Debug.Assert(typeKindFromPayloadFunc != null, "typeKindFromPayloadFunc != null");
@@ -1121,13 +1121,13 @@ namespace Microsoft.OData
             bool useExpectedTypeOnlyForTypeResolution = clientCustomTypeResolver != null && payloadTypeKind != EdmTypeKind.None;
 
             // Determine the target type kind
-            // If the DisablePrimitiveTypeConversion is on, we must not infer the type kind from the expected type
+            // If the EnablePrimitiveTypeConversion is off, we must not infer the type kind from the expected type
             // but instead we need to read it from the payload.
             // This is necessary to correctly fail on complex/collection as well as to correctly read spatial values.
             EdmTypeKind expectedTypeKind = EdmTypeKind.None;
             if (!useExpectedTypeOnlyForTypeResolution)
             {
-                expectedTypeKind = ReaderUtils.GetExpectedTypeKind(expectedTypeReference, disablePrimitiveTypeConversion);
+                expectedTypeKind = ReaderUtils.GetExpectedTypeKind(expectedTypeReference, enablePrimitiveTypeConversion);
             }
 
             EdmTypeKind targetTypeKind;
@@ -1161,7 +1161,7 @@ namespace Microsoft.OData
             if (ShouldValidatePayloadTypeKind(
                 clientCustomTypeResolver,
                 throwIfTypeConflictsWithMetadata,
-                disablePrimitiveTypeConversion,
+                enablePrimitiveTypeConversion,
                 expectedTypeReference, payloadTypeKind))
             {
                 ValidationUtils.ValidateTypeKind(targetTypeKind, expectedTypeReference.TypeKind(), payloadTypeName);
@@ -1175,7 +1175,7 @@ namespace Microsoft.OData
         /// </summary>
         /// <param name="clientCustomTypeResolver">Custom type resolver used by the client.</param>
         /// <param name="throwIfTypeConflictsWithMetadata">Whether ThrowIfTypeConflictsWithMetadata is enabled.</param>
-        /// <param name="disablePrimitiveTypeConversion">Whether primitive type conversion is disabled.</param>
+        /// <param name="enablePrimitiveTypeConversion">Whether primitive type conversion is enabled.</param>
         /// <param name="expectedValueTypeReference">The expected type reference for the value inferred from the model.</param>
         /// <param name="payloadTypeKind">The type kind of the payload value.</param>
         /// <returns>true if the payload value kind must be verified, false otherwise.</returns>
@@ -1183,7 +1183,7 @@ namespace Microsoft.OData
         private static bool ShouldValidatePayloadTypeKind(
             Func<IEdmType, string, IEdmType> clientCustomTypeResolver,
             bool throwIfTypeConflictsWithMetadata,
-            bool disablePrimitiveTypeConversion,
+            bool enablePrimitiveTypeConversion,
             IEdmTypeReference expectedValueTypeReference,
             EdmTypeKind payloadTypeKind)
         {
@@ -1194,12 +1194,12 @@ namespace Microsoft.OData
             // Type kind validation must happen when
             // - ThrowIfTypeConflictsWithMetadata is set
             // - Target type is primitive and primitive type conversion is disabled
-            // And the DisablePrimitiveTypeConversion overrides the ThrowIfTypeConflictsWithMetadata behavior.
+            // And the EnablePrimitiveTypeConversion overrides the ThrowIfTypeConflictsWithMetadata behavior.
             // If there's no expected type, then there's nothing to validate against (open property).
             return expectedValueTypeReference != null &&
                 (throwIfTypeConflictsWithMetadata ||
                 useExpectedTypeOnlyForTypeResolution ||
-                (expectedValueTypeReference.IsODataPrimitiveTypeKind() && disablePrimitiveTypeConversion));
+                (expectedValueTypeReference.IsODataPrimitiveTypeKind() && !enablePrimitiveTypeConversion));
         }
 
         /// <summary>

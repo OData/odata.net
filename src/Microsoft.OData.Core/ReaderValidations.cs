@@ -48,7 +48,7 @@ namespace Microsoft.OData
         ///   Entities: same as complex values.
         ///   Collections: If expected type is available, we ignore the wire type, except we fail if the item type is a derived complex type.
         ///   If no expected type is available we use the payload type and it must resolve against the model.
-        /// If DisablePrimitiveTypeConversion is on, the rules for primitive values don't apply
+        /// If EnablePrimitiveTypeConversion is off, the rules for primitive values don't apply
         ///   and the primitive values are always read with the type from the wire.
         /// </remarks>
         ThrowIfTypeConflictsWithMetadata = 4,
@@ -63,4 +63,4 @@ namespace Microsoft.OData
         /// </summary>
         FullValidation = ~0
     }
- }
+}

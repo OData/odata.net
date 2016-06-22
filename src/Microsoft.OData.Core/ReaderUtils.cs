@@ -23,10 +23,10 @@ namespace Microsoft.OData
         /// Gets the expected type kind based on the given <see cref="IEdmTypeReference"/>, or EdmTypeKind.None if no specific type should be expected.
         /// </summary>
         /// <param name="expectedTypeReference">The expected type reference.</param>
-        /// <param name="disablePrimitiveTypeConversion">Whether primitive type conversion is disabled.</param>
+        /// <param name="enablePrimitiveTypeConversion">Whether primitive type conversion is enabled.</param>
         /// <returns>The expected type kind based on the settings and type reference, or EdmTypeKind.None if no specific type should be expected.</returns>
         internal static EdmTypeKind GetExpectedTypeKind(IEdmTypeReference expectedTypeReference,
-                                                       bool disablePrimitiveTypeConversion)
+                                                       bool enablePrimitiveTypeConversion)
         {
             IEdmType expectedTypeDefinition;
             if (expectedTypeReference == null || (expectedTypeDefinition = expectedTypeReference.Definition) == null)
@@ -34,11 +34,11 @@ namespace Microsoft.OData
                 return EdmTypeKind.None;
             }
 
-            // If the DisablePrimitiveTypeConversion is on, we must not infer the type kind from the expected type
+            // If the EnablePrimitiveTypeConversion is off, we must not infer the type kind from the expected type
             // but instead we need to read it from the payload.
             // This is necessary to correctly fail on complex/collection as well as to correctly read spatial values.
             EdmTypeKind expectedTypeKind = expectedTypeDefinition.TypeKind;
-            if (disablePrimitiveTypeConversion
+            if (!enablePrimitiveTypeConversion
                 && (expectedTypeKind == EdmTypeKind.Primitive && !expectedTypeDefinition.IsStream()))
             {
                 return EdmTypeKind.None;
