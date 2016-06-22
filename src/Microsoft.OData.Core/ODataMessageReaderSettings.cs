@@ -35,7 +35,6 @@ namespace Microsoft.OData
             this.DisablePrimitiveTypeConversion = false;
             this.EnableMessageStreamDisposal = true;
             this.EnableCharactersCheck = false;
-            this.EnableReadingEntryContentInEntryStartState = true;
             this.ODataSimplified = false;
             this.MaxProtocolVersion = ODataConstants.ODataDefaultProtocolVersion;
             Validations = ReaderValidations.FullValidation & ~ReaderValidations.ThrowOnUndeclaredProperty;
@@ -101,11 +100,6 @@ namespace Microsoft.OData
         /// Flag to control whether the reader should check for valid Xml characters or not.
         /// </summary>
         public bool EnableCharactersCheck { get; set; }
-
-        /// <summary>
-        /// Whether reader read the entry content in entry start state. The default value is false
-        /// </summary>
-        public bool EnableReadingEntryContentInEntryStartState { get; set; }
 
         /// <summary>Gets or sets the maximum OData protocol version the reader should accept and understand.</summary>
         /// <returns>The maximum OData protocol version the reader should accept and understand.</returns>
@@ -236,7 +230,6 @@ namespace Microsoft.OData
             this.EnableMessageStreamDisposal = other.EnableMessageStreamDisposal;
             this.DisablePrimitiveTypeConversion = other.DisablePrimitiveTypeConversion;
             this.EnableCharactersCheck = other.EnableCharactersCheck;
-            this.EnableReadingEntryContentInEntryStartState = other.EnableReadingEntryContentInEntryStartState;
             this.messageQuotas = new ODataMessageQuotas(other.MessageQuotas);
             this.MaxProtocolVersion = other.MaxProtocolVersion;
             this.ODataSimplified = other.ODataSimplified;

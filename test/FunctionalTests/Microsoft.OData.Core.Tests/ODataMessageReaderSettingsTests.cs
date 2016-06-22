@@ -29,8 +29,7 @@ namespace Microsoft.OData.Tests
             Assert.True(settings.EnableMessageStreamDisposal, "EnableMessageStreamDisposal should be false by default.");
             Assert.False(settings.EnableCharactersCheck, "The CheckCharacters should be off by default.");
             Assert.True((settings.Validations & ReaderValidations.BasicValidation) != 0, "BasicValidation should be true by default");
-            Assert.True((settings.Validations & ReaderValidations.ThrowIfTypeConflictsWithMetadata) != 0, "The ThrowIfTypeConflictsWithMetadata should be true by default");
-            Assert.True(settings.EnableReadingEntryContentInEntryStartState, "The EnableReadingEntryContentInEntryStartState should be true by default");
+            Assert.True((settings.Validations & ReaderValidations.ThrowIfTypeConflictsWithMetadata) != 0, "The ThrowIfTypeConflictsWithMetadata should be true by default");            
             Assert.False(settings.ODataSimplified, "The ODataSimplified should be false by default");
             Assert.Null(settings.ShouldIncludeAnnotation);
             Assert.Null(settings.UseKeyAsSegment);
@@ -54,7 +53,6 @@ namespace Microsoft.OData.Tests
                 DisablePrimitiveTypeConversion = true,
                 EnableMessageStreamDisposal = false,
                 EnableCharactersCheck = true,
-                EnableReadingEntryContentInEntryStartState = false,
                 ODataSimplified = true,
                 UseKeyAsSegment = true,
                 MaxProtocolVersion = ODataVersion.V4,
@@ -78,7 +76,6 @@ namespace Microsoft.OData.Tests
             Assert.True(settings.EnableCharactersCheck, "The CheckCharacters should be on when set.");
             Assert.True((settings.Validations & ReaderValidations.BasicValidation) == 0, "BasicValidation was not correctly remembered");
             Assert.False(settings.ThrowIfTypeConflictsWithMetadata, "The ThrowIfTypeConflictsWithMetadata was not correctly remembered");
-            Assert.False(settings.EnableReadingEntryContentInEntryStartState, "EnableReadingEntryContentInEntryStartState was not correctly remembered");
             Assert.True(settings.ODataSimplified, "ODataSimplified was not correctly remembered");
             Assert.True(settings.UseKeyAsSegment, "UseKeyAsSegment was not correctly remembered");
             Assert.True((settings.Validations & ReaderValidations.ThrowOnUndeclaredProperty) != 0, "ThrowOnUndeclaredProperty was not correctly remembered.");
@@ -182,7 +179,6 @@ namespace Microsoft.OData.Tests
             Assert.True(expected.EnableMessageStreamDisposal == actual.EnableMessageStreamDisposal, "EnableMessageStreamDisposal does not match");
             Assert.True(expected.DisablePrimitiveTypeConversion == actual.DisablePrimitiveTypeConversion, "DisablePrimitiveTypeConversion does not match");
             Assert.True(expected.EnableCharactersCheck == actual.EnableCharactersCheck, "CheckCharacters does not match");
-            Assert.True(expected.EnableReadingEntryContentInEntryStartState == actual.EnableReadingEntryContentInEntryStartState, "EnableReadingEntryContentInEntryStartState does not match");
             Assert.True(expected.ODataSimplified == actual.ODataSimplified, "ODataSimplified does not match");
             Assert.True(expected.ShouldIncludeAnnotation == actual.ShouldIncludeAnnotation, "UseKeyAsSegment does not match");
             Assert.True(expected.UseKeyAsSegment == actual.UseKeyAsSegment, "UseKeyAsSegment does not match");

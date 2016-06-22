@@ -678,19 +678,6 @@ namespace Microsoft.OData.JsonLight
                 // There's nothing to read, so move to the end resource state
                 this.EndEntry();
             }
-            else if (this.jsonLightInputContext.MessageReaderSettings.EnableReadingEntryContentInEntryStartState == false)
-            {
-                // As entry content has not been read during entry start state. Should read here
-                ODataJsonLightReaderNestedResourceInfo navigationLinkInfo = this.jsonLightResourceDeserializer.ReadResourceContent(this.CurrentResourceState);
-                if (navigationLinkInfo != null)
-                {
-                    this.StartNestedResourceInfo(navigationLinkInfo);
-                }
-                else
-                {
-                    this.EndEntry();
-                }
-            }
             else if (this.CurrentResourceState.FirstNestedResourceInfo != null)
             {
                 this.StartNestedResourceInfo(this.CurrentResourceState.FirstNestedResourceInfo);
@@ -1146,16 +1133,7 @@ namespace Microsoft.OData.JsonLight
                 this.CurrentResource.SetAnnotation(new ODataTypeAnnotation(this.CurrentNavigationSource, this.CurrentResourceType));
             }
 
-            // If not reading entry context currently, report the type name only and return now.
-            if (!this.jsonLightInputContext.MessageReaderSettings.EnableReadingEntryContentInEntryStartState)
-            {
-                this.CurrentResourceState.FirstNestedResourceInfo = null;
-            }
-            else
-            {
-                this.CurrentResourceState.FirstNestedResourceInfo = this.jsonLightResourceDeserializer.ReadResourceContent(this.CurrentResourceState);
-            }
-
+            this.CurrentResourceState.FirstNestedResourceInfo = this.jsonLightResourceDeserializer.ReadResourceContent(this.CurrentResourceState);
             this.jsonLightResourceDeserializer.AssertJsonCondition(
                 JsonNodeType.Property,
                 JsonNodeType.StartObject,
