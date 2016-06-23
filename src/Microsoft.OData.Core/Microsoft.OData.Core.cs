@@ -443,7 +443,6 @@ namespace Microsoft.OData {
         internal const string ODataAtomPropertyAndValueDeserializer_InvalidCollectionElement = "ODataAtomPropertyAndValueDeserializer_InvalidCollectionElement";
         internal const string ODataAtomPropertyAndValueDeserializer_NavigationPropertyInProperties = "ODataAtomPropertyAndValueDeserializer_NavigationPropertyInProperties";
         internal const string ODataAtomPropertyAndValueSerializer_NullValueNotAllowedForInstanceAnnotation = "ODataAtomPropertyAndValueSerializer_NullValueNotAllowedForInstanceAnnotation";
-        internal const string EdmLibraryExtensions_CollectionItemCanBeOnlyPrimitiveEnumComplex = "EdmLibraryExtensions_CollectionItemCanBeOnlyPrimitiveEnumComplex";
         internal const string EdmLibraryExtensions_OperationGroupReturningActionsAndFunctionsModelInvalid = "EdmLibraryExtensions_OperationGroupReturningActionsAndFunctionsModelInvalid";
         internal const string EdmLibraryExtensions_UnBoundOperationsFoundFromIEdmModelFindMethodIsInvalid = "EdmLibraryExtensions_UnBoundOperationsFoundFromIEdmModelFindMethodIsInvalid";
         internal const string EdmLibraryExtensions_NoParameterBoundOperationsFoundFromIEdmModelFindMethodIsInvalid = "EdmLibraryExtensions_NoParameterBoundOperationsFoundFromIEdmModelFindMethodIsInvalid";

@@ -352,6 +352,66 @@ namespace Microsoft.OData
         }
 #endif
 
+        /// <summary>
+        /// Creates an <see cref="ODataWriter" /> to write a Uri operation parameter.
+        /// </summary>
+        /// <param name="navigationSource">The navigation source we are going to write resource for.</param>
+        /// <param name="resourceType">The structured type for the resources in the resource set to be written.</param>
+        /// <returns>The created uri parameter writer.</returns>
+        public ODataWriter CreateODataUriParameterResourceWriter(IEdmNavigationSource navigationSource, IEdmStructuredType resourceType)
+        {
+            this.VerifyCanCreateODataResourceWriter();
+            return this.WriteToOutput(
+                ODataPayloadKind.Resource,
+                (context) => context.CreateODataUriParameterResourceWriter(navigationSource, resourceType));
+        }
+
+#if PORTABLELIB
+        /// <summary>
+        /// Asynchronously creates an <see cref="ODataWriter" /> to write Uri operation parameter.
+        /// </summary>
+        /// <param name="navigationSource">The navigation source we are going to write resource for.</param>
+        /// <param name="resourceType">The structured type for the resources in the resource set to be written.</param>
+        /// <returns>A running task for the created uri parameter writer.</returns>
+        public Task<ODataWriter> CreateODataUriParameterResourceWriterAsync(IEdmNavigationSource navigationSource, IEdmStructuredType resourceType)
+        {
+            this.VerifyCanCreateODataResourceWriter();
+            return this.WriteToOutputAsync(
+                ODataPayloadKind.Resource,
+                (context) => context.CreateODataUriParameterResourceWriterAsync(navigationSource, resourceType));
+        }
+#endif
+
+        /// <summary>
+        /// Creates an <see cref="ODataWriter" /> to write a Uri operation parameter.
+        /// </summary>
+        /// <param name="entitySetBase">The resource set we are going to write resources for.</param>
+        /// <param name="resourceType">The structured type for the resources in the resource set to be written.</param>
+        /// <returns>The created uri parameter writer.</returns>
+        public ODataWriter CreateODataUriParameterResourceSetWriter(IEdmEntitySetBase entitySetBase, IEdmStructuredType resourceType)
+        {
+            this.VerifyCanCreateODataResourceSetWriter();
+            return this.WriteToOutput(
+                ODataPayloadKind.ResourceSet,
+                (context) => context.CreateODataUriParameterResourceSetWriter(entitySetBase, resourceType));
+        }
+
+#if PORTABLELIB
+        /// <summary>
+        /// Asynchronously creates an <see cref="ODataWriter" /> to write Uri operation parameter.
+        /// </summary>
+        /// <param name="entitySetBase">The resource set we are going to write resources for.</param>
+        /// <param name="resourceType">The structured type for the resources in the resource set to be written.</param>
+        /// <returns>A running task for the created uri parameter writer.</returns>
+        public Task<ODataWriter> CreateODataUriParameterResourceSetWriterAsync(IEdmEntitySetBase entitySetBase, IEdmStructuredType resourceType)
+        {
+            this.VerifyCanCreateODataResourceSetWriter();
+            return this.WriteToOutputAsync(
+                ODataPayloadKind.ResourceSet,
+                (context) => context.CreateODataUriParameterResourceSetWriterAsync(entitySetBase, resourceType));
+        }
+#endif
+
         /// <summary> Creates an <see cref="T:Microsoft.OData.ODataCollectionWriter" /> to write a collection of primitive or complex values (as result of a service operation invocation). </summary>
         /// <returns>The created collection writer.</returns>
         public ODataCollectionWriter CreateODataCollectionWriter()

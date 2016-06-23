@@ -217,7 +217,7 @@ namespace Microsoft.OData
             {
                 Debug.Assert(
                     this.State == WriterState.NestedResourceInfo || this.State == WriterState.NestedResourceInfoWithContent,
-                    "ParentResourceEntityType should only be called while writing a nested resource info (with or without content).");
+                    "ParentResourceType should only be called while writing a nested resource info (with or without content).");
                 Scope resourceScope = this.scopes.Parent;
                 return resourceScope.ResourceType;
             }
@@ -696,8 +696,9 @@ namespace Microsoft.OData
         /// <param name="skipWriting">true if the content of the scope to create should not be written.</param>
         /// <param name="selectedProperties">The selected properties of this scope.</param>
         /// <param name="odataUri">The ODataUri info of this scope.</param>
+        /// <param name="isUndeclared">true if the resource set is for an undeclared property</param>
         /// <returns>The newly create scope.</returns>
-        protected abstract ResourceSetScope CreateResourceSetScope(ODataResourceSet resourceSet, IEdmNavigationSource navigationSource, IEdmStructuredType resourceType, bool skipWriting, SelectedPropertiesNode selectedProperties, ODataUri odataUri);
+        protected abstract ResourceSetScope CreateResourceSetScope(ODataResourceSet resourceSet, IEdmNavigationSource navigationSource, IEdmStructuredType resourceType, bool skipWriting, SelectedPropertiesNode selectedProperties, ODataUri odataUri, bool isUndeclared);
 
         /// <summary>
         /// Create a new resource scope.
@@ -708,8 +709,9 @@ namespace Microsoft.OData
         /// <param name="skipWriting">true if the content of the scope to create should not be written.</param>
         /// <param name="selectedProperties">The selected properties of this scope.</param>
         /// <param name="odataUri">The ODataUri info of this scope.</param>
+        /// <param name="isUndeclared">true if the resource is for an undeclared property</param>
         /// <returns>The newly create scope.</returns>
-        protected abstract ResourceScope CreateResourceScope(ODataResource resource, IEdmNavigationSource navigationSource, IEdmStructuredType resourceType, bool skipWriting, SelectedPropertiesNode selectedProperties, ODataUri odataUri);
+        protected abstract ResourceScope CreateResourceScope(ODataResource resource, IEdmNavigationSource navigationSource, IEdmStructuredType resourceType, bool skipWriting, SelectedPropertiesNode selectedProperties, ODataUri odataUri, bool isUndeclared);
 
         /// <summary>
         /// Gets the serialization info for the given resource.
@@ -886,6 +888,7 @@ namespace Microsoft.OData
         {
             this.StartPayloadInStartState();
             this.CheckForNestedResourceInfoWithContent(ODataPayloadKind.Resource);
+
             this.EnterScope(WriterState.Resource, resource);
             if (!this.SkipWriting)
             {
@@ -1332,14 +1335,28 @@ namespace Microsoft.OData
             IEdmStructuredType resourceType = null;
             SelectedPropertiesNode selectedProperties = currentScope.SelectedProperties;
             ODataUri odataUri = currentScope.ODataUri;
+            WriterState currentState = currentScope.State;
 
             if (newState == WriterState.Resource || newState == WriterState.ResourceSet)
             {
                 navigationSource = currentScope.NavigationSource;
                 resourceType = currentScope.ResourceType;
-            }
 
-            WriterState currentState = currentScope.State;
+                // This is to resolve the item type for a resource set.
+                if ((currentState == WriterState.NestedResourceInfo || currentState == WriterState.NestedResourceInfoWithContent)
+                    && newState == WriterState.ResourceSet)
+                {
+                    var resourceSet = item as ODataResourceSet;
+                    if (resourceSet != null && resourceSet.TypeName != null && this.outputContext.Model.IsUserModel())
+                    {
+                        var collectionType = TypeNameOracle.ResolveAndValidateTypeName(this.outputContext.Model, resourceSet.TypeName, EdmTypeKind.Collection, this.outputContext.WriterValidator) as IEdmCollectionType;
+                        if (collectionType != null)
+                        {
+                            resourceType = collectionType.ElementType.Definition as IEdmStructuredType;
+                        }
+                    }
+                }
+            }
 
             if (this.writingDelta)
             {
@@ -1600,14 +1617,22 @@ namespace Microsoft.OData
                 state == WriterState.Completed && item == null,
                 "Writer state and associated item do not match.");
 
+            bool isUndeclaredResourceOrResourceSet = false;
+            if ((state == WriterState.Resource || state == WriterState.ResourceSet)
+                && (this.CurrentScope.State == WriterState.NestedResourceInfo || this.CurrentScope.State == WriterState.NestedResourceInfoWithContent)
+                && this.ParentResourceType != null)
+            {
+                isUndeclaredResourceOrResourceSet = this.ParentResourceType.FindProperty((this.CurrentScope.Item as ODataNestedResourceInfo).Name) == null;
+            }
+
             Scope scope;
             switch (state)
             {
                 case WriterState.Resource:
-                    scope = this.CreateResourceScope((ODataResource)item, navigationSource, resourceType, skipWriting, selectedProperties, odataUri);
+                    scope = this.CreateResourceScope((ODataResource)item, navigationSource, resourceType, skipWriting, selectedProperties, odataUri, isUndeclaredResourceOrResourceSet);
                     break;
                 case WriterState.ResourceSet:
-                    scope = this.CreateResourceSetScope((ODataResourceSet)item, navigationSource, resourceType, skipWriting, selectedProperties, odataUri);
+                    scope = this.CreateResourceSetScope((ODataResourceSet)item, navigationSource, resourceType, skipWriting, selectedProperties, odataUri, isUndeclaredResourceOrResourceSet);
                     break;
                 case WriterState.NestedResourceInfo:            // fall through
                 case WriterState.NestedResourceInfoWithContent:

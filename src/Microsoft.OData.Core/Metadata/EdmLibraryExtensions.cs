@@ -1083,11 +1083,6 @@ namespace Microsoft.OData.Metadata
         {
             Debug.Assert(itemTypeReference != null, "itemTypeReference != null");
 
-            if (!itemTypeReference.IsODataPrimitiveTypeKind() && !itemTypeReference.IsODataComplexTypeKind() && !itemTypeReference.IsODataEnumTypeKind() && !itemTypeReference.IsODataTypeDefinitionTypeKind())
-            {
-                throw new ODataException(ErrorStrings.EdmLibraryExtensions_CollectionItemCanBeOnlyPrimitiveEnumComplex);
-            }
-
             return new EdmCollectionType(itemTypeReference);
         }
 

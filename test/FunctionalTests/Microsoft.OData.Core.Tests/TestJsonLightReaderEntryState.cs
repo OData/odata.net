@@ -16,7 +16,7 @@ namespace Microsoft.OData.Tests
     internal class TestJsonLightReaderEntryState : IODataJsonLightReaderResourceState
     {
         private ODataResource entry = ReaderUtils.CreateNewResource();
-        private readonly EdmEntityType edmEntityType = new EdmEntityType("TestNamespace", "EntityType");
+        private EdmStructuredType edmStructuredType = new EdmEntityType("TestNamespace", "EntityType");
         private SelectedPropertiesNode selectedProperties;
         private DuplicatePropertyNamesChecker duplicatePropertyNamesChecker = new DuplicatePropertyNamesChecker(false, true);
 
@@ -30,12 +30,16 @@ namespace Microsoft.OData.Tests
         {
             get
             {
-                if (!this.edmEntityType.Properties().Any())
+                if (!this.edmStructuredType.Properties().Any())
                 {
-                    this.edmEntityType.AddStructuralProperty("ID", EdmPrimitiveTypeKind.Int32);
+                    this.edmStructuredType.AddStructuralProperty("ID", EdmPrimitiveTypeKind.Int32);
                 }
 
-                return this.edmEntityType;
+                return this.edmStructuredType;
+            }
+            set
+            {
+                this.edmStructuredType = (EdmStructuredType)value;
             }
         }
 

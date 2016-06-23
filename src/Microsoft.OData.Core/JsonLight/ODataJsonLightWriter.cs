@@ -342,10 +342,12 @@ namespace Microsoft.OData.JsonLight
                 Debug.Assert(
                     this.ParentNestedResourceInfo != null && this.ParentNestedResourceInfo.IsCollection.HasValue && this.ParentNestedResourceInfo.IsCollection.Value,
                     "We should have verified that resource sets can only be written into IsCollection = true links in requests.");
-                string propertyName = this.ParentNestedResourceInfo.Name;
 
                 this.ValidateNoDeltaLinkForExpandedResourceSet(resourceSet);
                 this.ValidateNoCustomInstanceAnnotationsForExpandedResourceSet(resourceSet);
+
+                string propertyName = this.ParentNestedResourceInfo.Name;
+                bool isUndeclared = (this.CurrentScope as JsonLightResourceSetScope).IsUndeclared;
 
                 if (this.jsonLightOutputContext.WritingResponse)
                 {
@@ -354,6 +356,9 @@ namespace Microsoft.OData.JsonLight
 
                     // Write the next link if it's available.
                     this.WriteResourceSetNextLink(resourceSet, propertyName);
+
+                    // Write the odata type.
+                    this.jsonLightResourceSerializer.WriteResourceSetStartMetadataProperties(resourceSet, propertyName, isUndeclared);
 
                     // And then write the property name to start the value.
                     this.jsonWriter.WriteName(propertyName);
@@ -371,6 +376,9 @@ namespace Microsoft.OData.JsonLight
                         {
                             this.jsonWriter.EndArrayScope();
                         }
+
+                        // Write the odata type.
+                        this.jsonLightResourceSerializer.WriteResourceSetStartMetadataProperties(resourceSet, propertyName, isUndeclared);
 
                         // And then write the property name to start the value.
                         this.jsonWriter.WriteName(propertyName);
@@ -565,10 +573,18 @@ namespace Microsoft.OData.JsonLight
         /// <param name="skipWriting">true if the content of the scope to create should not be written.</param>
         /// <param name="selectedProperties">The selected properties of this scope.</param>
         /// <param name="odataUri">The ODataUri info of this scope.</param>
+        /// <param name="isUndeclared">true if the resource set is for an undeclared property</param>
         /// <returns>The newly create scope.</returns>
-        protected override ResourceSetScope CreateResourceSetScope(ODataResourceSet resourceSet, IEdmNavigationSource navigationSource, IEdmStructuredType resourceType, bool skipWriting, SelectedPropertiesNode selectedProperties, ODataUri odataUri)
+        protected override ResourceSetScope CreateResourceSetScope(
+            ODataResourceSet resourceSet,
+            IEdmNavigationSource navigationSource,
+            IEdmStructuredType resourceType,
+            bool skipWriting,
+            SelectedPropertiesNode selectedProperties,
+            ODataUri odataUri,
+            bool isUndeclared)
         {
-            return new JsonLightResourceSetScope(resourceSet, navigationSource, resourceType, skipWriting, selectedProperties, odataUri);
+            return new JsonLightResourceSetScope(resourceSet, navigationSource, resourceType, skipWriting, selectedProperties, odataUri, isUndeclared);
         }
 
         /// <summary>
@@ -580,8 +596,9 @@ namespace Microsoft.OData.JsonLight
         /// <param name="skipWriting">true if the content of the scope to create should not be written.</param>
         /// <param name="selectedProperties">The selected properties of this scope.</param>
         /// <param name="odataUri">The ODataUri info of this scope.</param>
+        /// <param name="isUndeclared">true if the resource is for an undeclared property</param>
         /// <returns>The newly create scope.</returns>
-        protected override ResourceScope CreateResourceScope(ODataResource resource, IEdmNavigationSource navigationSource, IEdmStructuredType resourceType, bool skipWriting, SelectedPropertiesNode selectedProperties, ODataUri odataUri)
+        protected override ResourceScope CreateResourceScope(ODataResource resource, IEdmNavigationSource navigationSource, IEdmStructuredType resourceType, bool skipWriting, SelectedPropertiesNode selectedProperties, ODataUri odataUri, bool isUndeclared)
         {
             return new JsonLightResourceScope(
                 resource,
@@ -592,7 +609,8 @@ namespace Microsoft.OData.JsonLight
                 this.jsonLightOutputContext.WritingResponse,
                 this.jsonLightOutputContext.MessageWriterSettings,
                 selectedProperties,
-                odataUri);
+                odataUri,
+                isUndeclared);
         }
 
         /// <summary>
@@ -734,6 +752,9 @@ namespace Microsoft.OData.JsonLight
             /// <summary>true if the odata.deltaLink was already written, false otherwise.</summary>
             private bool deltaLinkWritten;
 
+            /// <summary>true if the resource set represents a collection of complex property or a collection navigation property that is undeclared, false otherwise.</summary>
+            private bool isUndeclared;
+
             /// <summary>
             /// Constructor to create a new resource set scope.
             /// </summary>
@@ -743,9 +764,11 @@ namespace Microsoft.OData.JsonLight
             /// <param name="skipWriting">true if the content of the scope to create should not be written.</param>
             /// <param name="selectedProperties">The selected properties of this scope.</param>
             /// <param name="odataUri">The ODataUri info of this scope.</param>
-            internal JsonLightResourceSetScope(ODataResourceSet resourceSet, IEdmNavigationSource navigationSource, IEdmStructuredType resourceType, bool skipWriting, SelectedPropertiesNode selectedProperties, ODataUri odataUri)
+            /// <param name="isUndeclared">true if the resource set is for an undeclared property</param>
+            internal JsonLightResourceSetScope(ODataResourceSet resourceSet, IEdmNavigationSource navigationSource, IEdmStructuredType resourceType, bool skipWriting, SelectedPropertiesNode selectedProperties, ODataUri odataUri, bool isUndeclared)
                 : base(resourceSet, navigationSource, resourceType, skipWriting, selectedProperties, odataUri)
             {
+                this.isUndeclared = isUndeclared;
             }
 
             /// <summary>
@@ -779,6 +802,14 @@ namespace Microsoft.OData.JsonLight
                     this.deltaLinkWritten = value;
                 }
             }
+
+            /// <summary>
+            /// true if the resource set represents a collection of complex property or a collection navigation property that is undeclared, false otherwise.
+            /// </summary>
+            internal bool IsUndeclared
+            {
+                get { return isUndeclared; }
+            }
         }
 
         /// <summary>
@@ -788,6 +819,9 @@ namespace Microsoft.OData.JsonLight
         {
             /// <summary>Bit field of the JSON Light metadata properties written so far.</summary>
             private int alreadyWrittenMetadataProperties;
+
+            /// <summary>true if the resource set represents a complex property or a singleton navigation property that is undeclared, false otherwise.</summary>
+            private bool isUndeclared;
 
             /// <summary>
             /// Constructor to create a new resource scope.
@@ -801,6 +835,7 @@ namespace Microsoft.OData.JsonLight
             /// <param name="writerSettings">The <see cref="ODataMessageWriterSettings"/> The settings of the writer.</param>
             /// <param name="selectedProperties">The selected properties of this scope.</param>
             /// <param name="odataUri">The ODataUri info of this scope.</param>
+            /// <param name="isUndeclared">true if the resource is for an undeclared property</param>
             internal JsonLightResourceScope(
                 ODataResource resource,
                 ODataResourceSerializationInfo serializationInfo,
@@ -810,9 +845,11 @@ namespace Microsoft.OData.JsonLight
                 bool writingResponse,
                 ODataMessageWriterSettings writerSettings,
                 SelectedPropertiesNode selectedProperties,
-                ODataUri odataUri)
+                ODataUri odataUri,
+                bool isUndeclared)
                 : base(resource, serializationInfo, navigationSource, resourceType, skipWriting, writingResponse, writerSettings, selectedProperties, odataUri)
             {
+                this.isUndeclared = isUndeclared;
             }
 
             /// <summary>
@@ -846,6 +883,14 @@ namespace Microsoft.OData.JsonLight
             public ODataResource Resource
             {
                 get { return (ODataResource)this.Item; }
+            }
+
+            /// <summary>
+            /// true if the resource set represents a complex property or a singleton navigation property that is undeclared, false otherwise.
+            /// </summary>
+            public bool IsUndeclared
+            {
+                get { return isUndeclared; }
             }
 
             /// <summary>

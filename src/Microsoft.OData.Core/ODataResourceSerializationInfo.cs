@@ -95,7 +95,7 @@ namespace Microsoft.OData
         /// <returns>The <paramref name="serializationInfo"/> instance.</returns>
         internal static ODataResourceSerializationInfo Validate(ODataResourceSerializationInfo serializationInfo)
         {
-            if (serializationInfo != null)
+            if (serializationInfo != null && serializationInfo.NavigationSourceKind != EdmNavigationSourceKind.None)
             {
                 if (serializationInfo.NavigationSourceKind != EdmNavigationSourceKind.UnknownEntitySet)
                 {

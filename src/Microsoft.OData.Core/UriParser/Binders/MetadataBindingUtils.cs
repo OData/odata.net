@@ -48,7 +48,9 @@ namespace Microsoft.OData.UriParser
                     return source;
                 }
 
-                if (!TypePromotionUtils.CanConvertTo(source, source.TypeReference, targetTypeReference))
+                if (!targetTypeReference.IsStructured()
+                    && !targetTypeReference.IsStructuredCollectionType()
+                    && !TypePromotionUtils.CanConvertTo(source, source.TypeReference, targetTypeReference))
                 {
                     throw new ODataException(ODataErrorStrings.MetadataBinder_CannotConvertToType(source.TypeReference.FullName(), targetTypeReference.FullName()));
                 }

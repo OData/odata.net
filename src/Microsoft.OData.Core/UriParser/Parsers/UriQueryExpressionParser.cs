@@ -129,9 +129,9 @@ namespace Microsoft.OData.UriParser
                     string edmConstantName = GetEdmConstantNames(literalEdmTypeReference);
                     return ParseTypedLiteral(lexer, literalEdmTypeReference, edmConstantName);
 
+                case ExpressionTokenKind.BracedExpression:
                 case ExpressionTokenKind.BracketedExpression:
                     {
-                        // TODO: need a BracketLiteralToken for real complex type vaule like [\"Barky\",\"Junior\"]  or {...}
                         LiteralToken result = new LiteralToken(lexer.CurrentToken.Text, lexer.CurrentToken.Text);
                         lexer.NextToken();
                         return result;

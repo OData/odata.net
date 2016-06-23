@@ -462,24 +462,30 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         public void FunctionWithComplexParameterThatUsesSingleQuotesInsteadOfDoubleWorks()
         {
             var result = PathFunctionalTestsUtil.RunParsePath("People(1)/Fully.Qualified.Namespace.CanMoveToAddress(address={'Street' : 'stuff', 'City' : 'stuff'})");
-            result.LastSegment.ShouldBeOperationSegment(HardCodedTestModel.GetFunctionForCanMoveToAddress()).
-                And.Parameters.Single().Value.As<ConstantNode>().Value.ShouldBeODataComplexValue().WithTypeName("Fully.Qualified.Namespace.Address").And.Properties.Should().HaveCount(2);
+            var parameter = result.LastSegment.ShouldBeOperationSegment(HardCodedTestModel.GetFunctionForCanMoveToAddress()).
+                And.Parameters.Single().Value.As<ConvertNode>();
+            parameter.TypeReference.FullName().Should().Be("Fully.Qualified.Namespace.Address");
+            parameter.Source.As<ConstantNode>().Value.Should().Be("{'Street' : 'stuff', 'City' : 'stuff'}");
         }
 
         [Fact]
         public void FunctionWithComplexParameterInJsonWithTypeNameWorks()
         {
             var result = PathFunctionalTestsUtil.RunParsePath("People(1)/Fully.Qualified.Namespace.CanMoveToAddress(address={\"@odata.type\":\"Fully.Qualified.Namespace.Address\",\"Street\":\"NE 24th St.\",\"City\":\"Redmond\"})");
-            result.LastSegment.ShouldBeOperationSegment(HardCodedTestModel.GetFunctionForCanMoveToAddress()).
-                And.Parameters.Single().Value.As<ConstantNode>().Value.ShouldBeODataComplexValue().WithTypeName("Fully.Qualified.Namespace.Address").And.Properties.Should().HaveCount(2);
+            var parameter = result.LastSegment.ShouldBeOperationSegment(HardCodedTestModel.GetFunctionForCanMoveToAddress()).
+                And.Parameters.Single().Value.As<ConvertNode>();
+            parameter.TypeReference.FullName().Should().Be("Fully.Qualified.Namespace.Address");
+            parameter.Source.As<ConstantNode>().Value.Should().Be("{\"@odata.type\":\"Fully.Qualified.Namespace.Address\",\"Street\":\"NE 24th St.\",\"City\":\"Redmond\"}");
         }
 
         [Fact]
         public void FunctionWithComplexParameterInJsonWithNoTypeNameWorks()
         {
             var result = PathFunctionalTestsUtil.RunParsePath("People(1)/Fully.Qualified.Namespace.CanMoveToAddress(address={\"Street\":\"NE 24th St.\",\"City\":\"Redmond\"})");
-            result.LastSegment.ShouldBeOperationSegment(HardCodedTestModel.GetFunctionForCanMoveToAddress()).
-                And.Parameters.Single().Value.As<ConstantNode>().Value.ShouldBeODataComplexValue().WithTypeName("Fully.Qualified.Namespace.Address").And.Properties.Should().HaveCount(2);
+            var parameter = result.LastSegment.ShouldBeOperationSegment(HardCodedTestModel.GetFunctionForCanMoveToAddress()).
+                And.Parameters.Single().Value.As<ConvertNode>();
+            parameter.TypeReference.FullName().Should().Be("Fully.Qualified.Namespace.Address");
+            parameter.Source.As<ConstantNode>().Value.Should().Be("{\"Street\":\"NE 24th St.\",\"City\":\"Redmond\"}");
         }
         
         [Fact]
@@ -497,8 +503,9 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         {
             var result = PathFunctionalTestsUtil.RunParsePath("People(1)/Fully.Qualified.Namespace.CanMoveToAddresses(addresses=[{\"Street\":\"NE 24th St.\",\"City\":\"Redmond\"},{\"Street\":\"Pine St.\",\"City\":\"Seattle\"}])");
             var parameterValue = result.LastSegment.ShouldBeOperationSegment(HardCodedTestModel.GetFunctionForCanMoveToAddresses()).And.Parameters.Single();
-            parameterValue.As<OperationSegmentParameter>().Value.As<ConstantNode>().Value.Should().BeOfType<ODataCollectionValue>();
-            parameterValue.As<OperationSegmentParameter>().Value.As<ConstantNode>().Value.As<ODataCollectionValue>().Items.Should().HaveCount(2);
+            var innerParameterNode = parameterValue.As<OperationSegmentParameter>().Value.As<ConvertNode>();
+            innerParameterNode.Source.As<ConstantNode>().Value.Should().Be("[{\"Street\":\"NE 24th St.\",\"City\":\"Redmond\"},{\"Street\":\"Pine St.\",\"City\":\"Seattle\"}]");
+            innerParameterNode.TypeReference.FullName().Should().Be("Collection(Fully.Qualified.Namespace.Address)");
         }
 
         [Fact]

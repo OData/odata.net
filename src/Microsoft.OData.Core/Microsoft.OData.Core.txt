@@ -453,7 +453,6 @@ ODataAtomPropertyAndValueDeserializer_NavigationPropertyInProperties=The propert
 
 ODataAtomPropertyAndValueSerializer_NullValueNotAllowedForInstanceAnnotation=Writing null value for the instance annotation '{0}' is not allowed. The instance annotation '{0}' has the expected type '{1}[Nullable=False]'.
 
-EdmLibraryExtensions_CollectionItemCanBeOnlyPrimitiveEnumComplex=Only collection properties that contain primitive types or enumeration types or complex types are supported.
 EdmLibraryExtensions_OperationGroupReturningActionsAndFunctionsModelInvalid=When resolving operations '{0}' the group returned has both actions and functions with an invalid IEdmModel.
 EdmLibraryExtensions_UnBoundOperationsFoundFromIEdmModelFindMethodIsInvalid=Invalid implementation of an IEdmModel, an operation '{0}' was found using the IEdmModel method 'FindDeclaredBoundOperations' should never return non-bound operations.
 EdmLibraryExtensions_NoParameterBoundOperationsFoundFromIEdmModelFindMethodIsInvalid=Invalid implementation of an IEdmModel, an operation '{0}' was found using the IEdmModel method 'FindDeclaredBoundOperations' should never return bound operations without any parameters.

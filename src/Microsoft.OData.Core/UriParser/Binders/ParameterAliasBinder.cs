@@ -112,7 +112,7 @@ namespace Microsoft.OData.UriParser
             if (valueToken != null && (valueStr = valueToken.Value as string) != null && !string.IsNullOrEmpty(valueToken.OriginalText))
             {
                 var lexer = new ExpressionLexer(valueToken.OriginalText, true /*moveToFirstToken*/, false /*useSemicolonDelimiter*/, true /*parsingFunctionParameters*/);
-                if (lexer.CurrentToken.Kind == ExpressionTokenKind.BracketedExpression)
+                if (lexer.CurrentToken.Kind == ExpressionTokenKind.BracketedExpression || lexer.CurrentToken.Kind == ExpressionTokenKind.BracedExpression)
                 {
                     object result = valueStr;
                     if (!parameterType.IsStructured() && !parameterType.IsStructuredCollectionType())

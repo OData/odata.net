@@ -717,20 +717,20 @@ namespace Microsoft.OData.Tests.UriParser
         [Fact]
         public void BracesIsParsedAsBracketedExpression()
         {
-            ValidateTokenSequence("{complex:value}", BracketToken("{complex:value}"));
+            ValidateTokenSequence("{complex:value}", BracedToken("{complex:value}"));
         }
 
         [Fact]
         public void BracesWithInnerBracesIsOneToken()
         {
             ValidateTokenSequence("{complex:value, subComplex : {subComplexParameter : subComplexValue}}",
-                BracketToken("{complex:value, subComplex : {subComplexParameter : subComplexValue}}"));
+                BracedToken("{complex:value, subComplex : {subComplexParameter : subComplexValue}}"));
         }
 
         [Fact]
         public void BracesWithInnerBracketsIsParsedAsOneToken()
         {
-            ValidateTokenSequence("{complex:value,InnerArray:[1,2,3]}", BracketToken("{complex:value,InnerArray:[1,2,3]}"));
+            ValidateTokenSequence("{complex:value,InnerArray:[1,2,3]}", BracedToken("{complex:value,InnerArray:[1,2,3]}"));
         }
 
         [Fact]
@@ -758,7 +758,7 @@ namespace Microsoft.OData.Tests.UriParser
         public void BracketedExpressionsCanHaveCrazyStuffInsideStringLiteral()
         {
             ValidateTokenSequence("{ 'asdf!@#$%^&*()[]{}<>?:\";,./%1%2%3%4%5\t\n\r' }",
-                BracketToken("{ 'asdf!@#$%^&*()[]{}<>?:\";,./%1%2%3%4%5\t\n\r' }"));
+                BracedToken("{ 'asdf!@#$%^&*()[]{}<>?:\";,./%1%2%3%4%5\t\n\r' }"));
         }
 
         [Fact]
@@ -769,7 +769,7 @@ namespace Microsoft.OData.Tests.UriParser
                 OpenParenToken,
                 IdentifierToken("param"),
                 EqualsToken,
-                BracketToken("{complex : value}"),
+                BracedToken("{complex : value}"),
                 CloseParenToken);
         }
 
@@ -802,7 +802,7 @@ namespace Microsoft.OData.Tests.UriParser
         {
             ValidateTokenSequence("{\'}}}}}}}}}}}}}}}}}}}}}}}}}}}}}\'}",
                 false,
-                BracketToken("{\'}}}}}}}}}}}}}}}}}}}}}}}}}}}}}\'}"));
+                BracedToken("{\'}}}}}}}}}}}}}}}}}}}}}}}}}}}}}\'}"));
         }
 
         [Fact]
@@ -965,6 +965,11 @@ namespace Microsoft.OData.Tests.UriParser
         private static ExpressionToken BracketToken(string text)
         {
             return new ExpressionToken() { Kind = ExpressionTokenKind.BracketedExpression, Text = text };
+        }
+
+        private static ExpressionToken BracedToken(string text)
+        {
+            return new ExpressionToken() { Kind = ExpressionTokenKind.BracedExpression, Text = text };
         }
 
         private static ExpressionToken StringToken(string text)

@@ -204,14 +204,27 @@ namespace Microsoft.OData
         {
             Debug.Assert(typeContext != null, "typeContext != null");
 
+            var isComplexOrComplexCollection = typeContext.ExpectedResourceType is IEdmComplexType;
+
+            var typeName = typeContext.NavigationSourceFullTypeName;
+            if (typeName == null && typeContext.ExpectedResourceTypeName != null)
+            {
+                typeName = isComplexOrComplexCollection
+                           ? (isSingle ? typeContext.ExpectedResourceTypeName : EdmLibraryExtensions.GetCollectionTypeName(typeContext.ExpectedResourceTypeName))
+                           : null;
+            }
+
             return new ODataContextUrlInfo()
             {
-                IsComplexOrComplexCollection = typeContext.ExpectedResourceType is IEdmComplexType,
+                IsComplexOrComplexCollection = isComplexOrComplexCollection,
                 isContained = typeContext.NavigationSourceKind == EdmNavigationSourceKind.ContainedEntitySet,
                 IsUnknownEntitySet = typeContext.NavigationSourceKind == EdmNavigationSourceKind.UnknownEntitySet,
                 navigationSource = typeContext.NavigationSourceName,
-                TypeCast = typeContext.NavigationSourceEntityTypeName == typeContext.ExpectedResourceTypeName ? null : typeContext.ExpectedResourceTypeName,
-                TypeName = typeContext.NavigationSourceFullTypeName,
+                TypeCast = typeContext.NavigationSourceEntityTypeName == null
+                           || typeContext.ExpectedResourceTypeName == null
+                           || typeContext.NavigationSourceEntityTypeName == typeContext.ExpectedResourceTypeName
+                           ? null : typeContext.ExpectedResourceTypeName,
+                TypeName = typeName,
                 IncludeFragmentItemSelector = isSingle && typeContext.NavigationSourceKind != EdmNavigationSourceKind.Singleton,
                 odataUri = odataUri
             };

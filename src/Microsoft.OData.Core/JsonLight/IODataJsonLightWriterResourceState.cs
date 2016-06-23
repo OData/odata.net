@@ -36,6 +36,11 @@ namespace Microsoft.OData.JsonLight
         ODataResourceSerializationInfo SerializationInfo { get; }
 
         /// <summary>
+        /// The current resource is for undeclared property or not.
+        /// </summary>
+        bool IsUndeclared { get; }
+
+        /// <summary>
         /// Flag which indicates that the odata.editLink metadata property has been written.
         /// </summary>
         bool EditLinkWritten { get; set; }

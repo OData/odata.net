@@ -88,13 +88,6 @@ namespace Microsoft.OData.Tests
         }
 
         [Fact]
-        public void SerializationInfoShouldBeValidatedByTheSetter()
-        {
-            Action action = () => this.odataFeed.SerializationInfo = new ODataResourceSerializationInfo();
-            action.ShouldThrow<ArgumentNullException>().WithMessage("serializationInfo.NavigationSourceName", ComparisonMode.Substring);
-        }
-
-        [Fact]
         public void ShouldBeAbleToSetSerializationInfo()
         {
             this.odataFeed.SerializationInfo = new ODataResourceSerializationInfo { NavigationSourceName = "Set", NavigationSourceEntityTypeName = "ns.base", ExpectedTypeName = "ns.expected" };

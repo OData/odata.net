@@ -7,6 +7,7 @@
 namespace Microsoft.OData
 {
     using System.Collections.Generic;
+    using Microsoft.OData.Metadata;
 
     /// <summary>
     /// Describes a collection of entities.
@@ -24,6 +25,11 @@ namespace Microsoft.OData
         /// </summary>
         private ODataResourceSerializationInfo serializationInfo;
 
+        /// <summary>
+        /// The type name of the resource set.
+        /// </summary>
+        private string typeName;
+
         /// <summary>Gets the resource set actions.</summary>
         /// <returns>The resource set actions.</returns>
         public IEnumerable<ODataAction> Actions
@@ -36,6 +42,26 @@ namespace Microsoft.OData
         public IEnumerable<ODataFunction> Functions
         {
             get { return this.functions; }
+        }
+
+        /// <summary>Gets the resource set type name.</summary>
+        /// <returns>The resource set type name.</returns>
+        public string TypeName
+        {
+            get
+            {
+                if (typeName == null && this.SerializationInfo != null && this.SerializationInfo.ExpectedTypeName != null)
+                {
+                    typeName = EdmLibraryExtensions.GetCollectionTypeName(this.serializationInfo.ExpectedTypeName);
+                }
+
+                return typeName;
+            }
+
+            set
+            {
+                this.typeName = value;
+            }
         }
 
         /// <summary>

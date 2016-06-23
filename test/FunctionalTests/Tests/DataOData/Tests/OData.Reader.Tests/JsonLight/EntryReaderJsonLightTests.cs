@@ -720,18 +720,6 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                 },
                 new OpenPropertyTestCase
                 {
-                    DebugDescription = "Empty complex open property with type information.",
-                    ExpectedProperty = PayloadBuilder.Property("OpenProperty", PayloadBuilder.ComplexValue("TestModel.Address")),
-                    Json = "\"OpenProperty\":{ \"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataTypeAnnotationName + "\":\"TestModel.Address\"}",
-                },
-                new OpenPropertyTestCase
-                {
-                    DebugDescription = "Complex property with data with type information.",
-                    ExpectedProperty = PayloadBuilder.Property("OpenProperty", PayloadBuilder.ComplexValue("TestModel.Address").PrimitiveProperty("Street", "First")),
-                    Json = "\"OpenProperty\":{ \"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataTypeAnnotationName + "\":\"TestModel.Address\", \"Street\":\"First\"}",
-                },
-                new OpenPropertyTestCase
-                {
                     DebugDescription = "String open property with complex type information - should fail.",
                     ExpectedProperty = PayloadBuilder.PrimitiveProperty("OpenProperty", "value"),
                     Json =

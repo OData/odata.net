@@ -192,7 +192,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         {
             var uriParser = new ODataUriParser(HardCodedTestModel.TestModel, new Uri("http://host"), new Uri("http://host/People(1)/Fully.Qualified.Namespace.HasHat(onCat={why555})"));
             Action action = () => uriParser.ParsePath();
-            action.ShouldThrow<ODataException>().WithMessage(Strings.JsonReader_MissingColon("why555"));
+            action.ShouldThrow<ODataException>().WithMessage(Strings.ExpressionLexer_ExpectedLiteralToken("{why555}"));
         }
 
         [Fact]
@@ -237,7 +237,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             };
 
             var paths = uriParser.ParsePath().ToList();
-            
+
             var keySegment = paths[1].As<KeySegment>();
             KeyValuePair<string, object> keypair = keySegment.Keys.Single();
             keypair.Key.Should().Be("ID");

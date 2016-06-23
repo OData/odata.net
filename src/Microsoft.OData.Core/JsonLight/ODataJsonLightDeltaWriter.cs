@@ -2210,6 +2210,14 @@ namespace Microsoft.OData.JsonLight
             }
 
             /// <summary>
+            /// This is always the top level resource from some entity set.
+            /// </summary>
+            public bool IsUndeclared
+            {
+                get { return false; }
+            }
+
+            /// <summary>
             /// Flag which indicates that the odata.editLink metadata property has been written.
             /// </summary>
             public bool EditLinkWritten

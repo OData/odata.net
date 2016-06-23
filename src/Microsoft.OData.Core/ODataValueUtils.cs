@@ -22,7 +22,7 @@ namespace Microsoft.OData
     internal static class ODataValueUtils
     {
         /// <summary>
-        /// Converts an object to an ODataValue. If the given object is already an ODataValue (such as an ODataCompleValue, ODataCollectionValue, etc.), the original object will be returned.
+        /// Converts an object to an ODataValue. If the given object is already an ODataValue (such as an ODataCollectionValue, etc.), the original object will be returned.
         /// </summary>
         /// <param name="objectToConvert">The object to convert to an ODataValue</param>
         /// <returns>The given object as an ODataValue.</returns>
@@ -46,7 +46,7 @@ namespace Microsoft.OData
 
         /// <summary>
         /// Converts an ODataValue to the old style of representing values, where null values are null and primitive values are just the direct primitive (no longer wrapped by ODataPrimitiveValue).
-        /// All other value types, such as ODataComplexValue and ODataCollectionValue are returned unchanged.
+        /// All other value types, such as ODataCollectionValue are returned unchanged.
         /// </summary>
         /// <param name="odataValue">The value to convert.</param>
         /// <returns>The value behind the given ODataValue.</returns>

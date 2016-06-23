@@ -73,7 +73,9 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             ICollection<OperationSegmentParameter> parsedParameters;
             TryParseFunctionParameters("CanMoveToAddress", "address={\'City\' : \'Seattle\'}", null, out parsedParameters).Should().BeTrue();
             parsedParameters.Should().HaveCount(1);
-            parsedParameters.Single().ShouldBeConstantParameterWithValueType<ODataComplexValue>("address");
+            var parameter = parsedParameters.Single();
+            parameter.Name.Should().Be("address");
+            parameter.Value.As<ConvertNode>().Source.As<ConstantNode>().Value.Should().Be("{\'City\' : \'Seattle\'}");
         }
 
         [Fact]
@@ -85,7 +87,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             parameterNodes.Should().HaveCount(1);
             var parameter = parameterNodes.Single();
             parameter.Name.Should().Be("address");
-            parameter.Value.As<ConstantNode>().Value.Should().BeOfType<ODataComplexValue>();
+            parameter.Value.As<ConvertNode>().Source.As<ConstantNode>().Value.Should().Be("{\'City\' : \'Seattle\'}");
         }
 
         [Fact]

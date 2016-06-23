@@ -16,12 +16,21 @@ namespace Microsoft.OData.JsonLight
     internal abstract class JsonLightTypeNameOracle : TypeNameOracle
     {
         /// <summary>
+        /// Determines the resource set type name to write to the payload.
+        /// </summary>
+        /// <param name="resourceSet">The ODataResourceSet whose type is to be written.</param>
+        /// <param name="isUndeclared">true if the resource set is for some undeclared property</param>
+        /// <returns>Type name to write to the payload, or null if no type name should be written.</returns>
+        internal abstract string GetResourceSetTypeNameForForWriting(ODataResourceSet resourceSet, bool isUndeclared);
+
+        /// <summary>
         /// Determines the entity type name to write to the payload.
         /// </summary>
         /// <param name="expectedTypeName">The expected type name, e.g. the base type of the set or the nav prop.</param>
         /// <param name="resource">The ODataResource whose type is to be written.</param>
+        /// <param name="isUndeclared">true if the ODataResource is for some undeclared property</param>
         /// <returns>Type name to write to the payload, or null if no type name should be written.</returns>
-        internal abstract string GetResourceTypeNameForWriting(string expectedTypeName, ODataResource resource);
+        internal abstract string GetResourceTypeNameForWriting(string expectedTypeName, ODataResource resource, bool isUndeclared);
 
         /// <summary>
         /// Determines the type name to write to the payload.  Json Light type names are only written into the payload for open properties

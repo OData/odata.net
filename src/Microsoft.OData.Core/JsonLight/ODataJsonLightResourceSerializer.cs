@@ -11,7 +11,9 @@ namespace Microsoft.OData.JsonLight
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Linq;
+    using Microsoft.OData.Edm;
     using Microsoft.OData.Json;
+    using Microsoft.OData.Metadata;
     #endregion Namespaces
 
     /// <summary>
@@ -41,6 +43,31 @@ namespace Microsoft.OData.JsonLight
         }
 
         /// <summary>
+        /// Writes the metadata properties for a resource set which can only occur at the start.
+        /// </summary>
+        /// <param name="resourceSet">The resource set for which to write the metadata properties.</param>
+        /// <param name="propertyName">The name of the property for which to write the resource set.</param>
+        /// <param name="isUndeclared">true if the resource set is for an undeclared property</param>
+        internal void WriteResourceSetStartMetadataProperties(ODataResourceSet resourceSet, string propertyName, bool isUndeclared)
+        {
+            Debug.Assert(resourceSet != null, "resourceSet != null");
+
+            // Write the "@odata.type": "#typename"
+            string typeName = this.JsonLightOutputContext.TypeNameOracle.GetResourceSetTypeNameForForWriting(resourceSet, isUndeclared || !this.Model.IsUserModel());
+            if (typeName != null)
+            {
+                if (propertyName == null)
+                {
+                    this.ODataAnnotationWriter.WriteODataTypeInstanceAnnotation(typeName);
+                }
+                else
+                {
+                    this.ODataAnnotationWriter.WriteODataTypePropertyAnnotation(propertyName, typeName);
+                }
+            }
+        }
+
+        /// <summary>
         /// Writes the metadata properties for a resource which can only occur at the start.
         /// </summary>
         /// <param name="resourceState">The resource state for which to write the metadata properties.</param>
@@ -51,7 +78,7 @@ namespace Microsoft.OData.JsonLight
             ODataResource resource = resourceState.Resource;
 
             // Write the "@odata.type": "typename"
-            string typeName = this.JsonLightOutputContext.TypeNameOracle.GetResourceTypeNameForWriting(resourceState.GetOrCreateTypeContext(this.Model, this.WritingResponse).ExpectedResourceTypeName, resource);
+            string typeName = this.JsonLightOutputContext.TypeNameOracle.GetResourceTypeNameForWriting(resourceState.GetOrCreateTypeContext(this.Model, this.WritingResponse).ExpectedResourceTypeName, resource, resourceState.IsUndeclared);
             if (typeName != null)
             {
                 this.ODataAnnotationWriter.WriteODataTypeInstanceAnnotation(typeName);

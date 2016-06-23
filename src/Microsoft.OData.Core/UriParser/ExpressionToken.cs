@@ -66,7 +66,7 @@ namespace Microsoft.OData.UriParser
         {
             get
             {
-                return this.IsKeyValueToken || this.Kind == ExpressionTokenKind.BracketedExpression || this.Kind == ExpressionTokenKind.NullLiteral;
+                return this.IsKeyValueToken || this.Kind == ExpressionTokenKind.BracketedExpression || this.Kind == ExpressionTokenKind.BracedExpression || this.Kind == ExpressionTokenKind.NullLiteral;
             }
         }
 

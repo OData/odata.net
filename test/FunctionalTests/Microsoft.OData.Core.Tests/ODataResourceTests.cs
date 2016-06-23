@@ -196,7 +196,7 @@ namespace Microsoft.OData.Tests
         [Fact]
         public void SerializationInfoShouldBeValidatedByTheSetter()
         {
-            Action action = () => this.odataEntry.SerializationInfo = new ODataResourceSerializationInfo();
+            Action action = () => this.odataEntry.SerializationInfo = new ODataResourceSerializationInfo() { NavigationSourceKind = EdmNavigationSourceKind.Singleton };
             action.ShouldThrow<ArgumentNullException>().WithMessage("serializationInfo.NavigationSourceName", ComparisonMode.Substring);
         }
 

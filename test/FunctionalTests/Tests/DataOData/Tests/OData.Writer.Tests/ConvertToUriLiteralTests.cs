@@ -419,157 +419,6 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests
         /// <summary>
         /// Tests that ODataUtils.ConvertToUriLiteral produces correct complex values.
         /// </summary>
-        [TestMethod, Variation]
-        public void ConvertToUriLiteralMoreComplexTest()
-        {
-            List<ConvertToUriLiteralTestCase> testCases = new List<ConvertToUriLiteralTestCase>();
-            TestModels.BuildTestModel();
-
-            testCases.Add(
-                new ConvertToUriLiteralTestCase()
-                {
-                    Parameter = new ODataComplexValue() { TypeName = "Empty_Complex", Properties = new ODataProperty[0] },
-                    ExpectedValue = "{\"@odata.type\":\"#Empty_Complex\"}",
-                });
-            testCases.Add(
-                new ConvertToUriLiteralTestCase()
-                {
-                    Parameter = new ODataComplexValue() { TypeName = "Complex_Type", Properties = new ODataProperty[1] { new ODataProperty() { Name = "String_Prop", Value = "string_prop" } } },
-                    ExpectedValue = "{\"@odata.type\":\"#Complex_Type\",\"String_Prop\":\"string_prop\"}",
-                });
-            testCases.Add(
-                new ConvertToUriLiteralTestCase()
-                {
-                    Parameter = new ODataComplexValue() { TypeName = "Complex_Type", Properties = new ODataProperty[1] { new ODataProperty() { Name = "Int64_Prop", Value = Int64.MaxValue } } },
-                    ExpectedValue = "{\"@odata.type\":\"#Complex_Type\",\"Int64_Prop@odata.type\":\"#Int64\",\"Int64_Prop\":\"9223372036854775807\"}",
-                });
-            testCases.Add(
-                new ConvertToUriLiteralTestCase()
-                {
-                    Parameter = new ODataComplexValue() { TypeName = "Complex_Type", Properties = new ODataProperty[1] { new ODataProperty() { Name = "Complex_Prop", Value = new ODataComplexValue() { TypeName = "Sub_Complex_Type", Properties = new[] { new ODataProperty() { Name = "StringProperty", Value = "123" } } } } } },
-                    ExpectedValue = "{\"@odata.type\":\"#Complex_Type\",\"Complex_Prop\":{\"@odata.type\":\"#Sub_Complex_Type\",\"StringProperty\":\"123\"}}",
-                });
-            testCases.Add(
-                new ConvertToUriLiteralTestCase()
-                {
-                    Parameter = new ODataComplexValue() { TypeName = "Complex_Type", Properties = new ODataProperty[1] { new ODataProperty() { Name = "Collection_Prop", Value = new ODataCollectionValue() { TypeName = EntityModelUtils.GetCollectionTypeName("Edm.String") } } } },
-                    ExpectedValue = "{\"@odata.type\":\"#Complex_Type\",\"Collection_Prop@odata.type\":\"#Collection(String)\",\"Collection_Prop\":[]}",
-                });
-            // Complex with a collection property which has no type name and complex values
-            testCases.Add(
-                new ConvertToUriLiteralTestCase()
-                {
-                    Parameter = new ODataComplexValue()
-                    {
-                        TypeName = "Complex_With_Collection_Of_Complex",
-                        Properties = new ODataProperty[1]
-                            {
-                                new ODataProperty()
-                                {
-                                    Name = "Collection_Of_Complex_Property",
-                                    Value = new ODataCollectionValue()
-                                    {
-                                        Items = new[]
-                                        {
-                                            new ODataComplexValue() { TypeName = "Complex_Type", Properties = new ODataProperty[1] { new ODataProperty() { Name = "String_Prop", Value = "string_prop1" } } },
-                                            new ODataComplexValue() { TypeName = "Complex_Type", Properties = new ODataProperty[1] { new ODataProperty() { Name = "String_Prop", Value = "string_prop2" } } },
-                                            new ODataComplexValue() { TypeName = "Complex_Type", Properties = new ODataProperty[1] { new ODataProperty() { Name = "String_Prop", Value = "string_prop3" } } },
-                                        }
-                                    },
-                                }
-                            }
-                    },
-                    ExpectedValue = "{\"@odata.type\":\"#Complex_With_Collection_Of_Complex\",\"Collection_Of_Complex_Property\":[{\"String_Prop\":\"string_prop1\"},{\"String_Prop\":\"string_prop2\"},{\"String_Prop\":\"string_prop3\"}]}",
-                });
-            // Complex with a collection property which has a type name and complex values
-            testCases.Add(
-                new ConvertToUriLiteralTestCase()
-                {
-                    Parameter = new ODataComplexValue()
-                    {
-                        TypeName = "Complex_With_Collection_Of_Complex_Typed",
-                        Properties = new ODataProperty[1]
-                            {
-                                new ODataProperty()
-                                {
-                                    Name = "Collection_Of_Complex_Property",
-                                    Value = new ODataCollectionValue()
-                                    {
-                                        TypeName = EntityModelUtils.GetCollectionTypeName("Complex_Type"),
-                                        Items = new[]
-                                        {
-                                            new ODataComplexValue() { TypeName = "Complex_Type", Properties = new ODataProperty[1] { new ODataProperty() { Name = "String_Prop", Value = "string_prop1" } } },
-                                            new ODataComplexValue() { TypeName = "Complex_Type", Properties = new ODataProperty[1] { new ODataProperty() { Name = "String_Prop", Value = "string_prop2" } } },
-                                            new ODataComplexValue() { Properties = new ODataProperty[1] { new ODataProperty() { Name = "String_Prop", Value = "string_prop3" } } },
-                                        }
-                                    },
-                                }
-                            }
-                    },
-                    ExpectedValue = "{\"@odata.type\":\"#Complex_With_Collection_Of_Complex_Typed\",\"Collection_Of_Complex_Property@odata.type\":\"#Collection(Complex_Type)\",\"Collection_Of_Complex_Property\":[{\"String_Prop\":\"string_prop1\"},{\"String_Prop\":\"string_prop2\"},{\"String_Prop\":\"string_prop3\"}]}",
-                });
-
-            this.RunTestCases(testCases);
-        }
-
-        /// <summary>
-        /// Tests that ODataUtils.ConvertToUriLiteral behaves correctly with different ODataVersion for complex values.
-        /// </summary>
-        [TestMethod, Variation]
-        public void ConvertToUriLiteralComplexVersionTest()
-        {
-            // complex without V3 types
-            ConvertToUriLiteralTestCase testCase = new ConvertToUriLiteralTestCase()
-            {
-                Parameter = new ODataComplexValue() { TypeName = "Complex_Type", Properties = new ODataProperty[1] { new ODataProperty() { Name = "String_Prop", Value = "string_prop" } } },
-                ExpectedValue = "{\"@odata.type\":\"#Complex_Type\",\"String_Prop\":\"string_prop\"}",
-            };
-            this.RunTestCase(testCase);
-
-            testCase = new ConvertToUriLiteralTestCase()
-            {
-                Parameter = new ODataComplexValue() { TypeName = "Complex_Type", Properties = new ODataProperty[1] { new ODataProperty() { Name = "property", Value = new DateTimeOffset() } } },
-                ExpectedValue = "{\"@odata.type\":\"#Complex_Type\",\"property@odata.type\":\"#DateTimeOffset\",\"property\":\"0001-01-01T00:00:00Z\"}",
-            };
-            this.RunTestCase(testCase);
-
-            testCase = new ConvertToUriLiteralTestCase()
-            {
-                Parameter = new ODataComplexValue() { TypeName = "Complex_Type", Properties = new ODataProperty[1] { new ODataProperty() { Name = "property", Value = new TimeSpan() } } },
-                ExpectedValue = "{\"@odata.type\":\"#Complex_Type\",\"property@odata.type\":\"#Duration\",\"property\":\"PT0S\"}",
-            };
-            this.RunTestCase(testCase);
-
-            // complex with Spatial property
-            testCase = new ConvertToUriLiteralTestCase()
-            {
-                Parameter = new ODataComplexValue() { TypeName = "Complex_Type", Properties = new ODataProperty[1] { new ODataProperty() { Name = "property", Value = GeographyFactory.Point(32.5, -100.3).Build() } } },
-                ExpectedValue = "{\"@odata.type\":\"#Complex_Type\",\"property@odata.type\":\"#GeographyPoint\",\"property\":{\"type\":\"Point\",\"coordinates\":[-100.3,32.5],\"crs\":{\"type\":\"name\",\"properties\":{\"name\":\"EPSG:4326\"}}}}",
-            };
-            this.RunTestCase(testCase);
-
-            // complex with collection property
-            testCase = new ConvertToUriLiteralTestCase()
-            {
-                Parameter = new ODataComplexValue()
-                {
-                    TypeName = "Complex_With_Collection_Of_Primitive",
-                    Properties = new ODataProperty[1]
-                        {
-                            new ODataProperty()
-                            {
-                                Name = "Collection_Of_Primitive_Property",
-                                Value = new ODataCollectionValue()
-                                {
-                                    Items = new string[] { "PropertyValue1", "PropertyValue2" }
-                                },
-                            }
-                        }
-                },
-                ExpectedValue = "{\"@odata.type\":\"#Complex_With_Collection_Of_Primitive\",\"Collection_Of_Primitive_Property\":[\"PropertyValue1\",\"PropertyValue2\"]}",
-            };
-            this.RunTestCase(testCase);
-        }
 
         /// <summary>
         /// Tests that ODataUtils.ConvertToUriLiteral produces correct collection values.
@@ -608,19 +457,6 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests
                     Parameter = new ODataCollectionValue() { TypeName = EntityModelUtils.GetCollectionTypeName("Edm.String"), Items = new string[] { "value" } },
                     ExpectedValue = "[\"value\"]",
                 });
-            testCases.Add(
-                new ConvertToUriLiteralTestCase()
-                {
-                    Parameter = new ODataCollectionValue()
-                    {
-                        TypeName = EntityModelUtils.GetCollectionTypeName("NameSpace.MyType"),
-                        Items = new[]
-                        {
-                            new ODataComplexValue() { TypeName = "NameSpace.MyType", Properties = new ODataProperty[1] { new ODataProperty() { Name = "Bool_Prop", Value = false } } },
-                        }
-                    },
-                    ExpectedValue = "[{\"Bool_Prop\":false}]",
-                });
 
             //// collection of spatial type
             testCases.Add(
@@ -628,20 +464,6 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests
                 {
                     Parameter = new ODataCollectionValue() { TypeName = EntityModelUtils.GetCollectionTypeName("Edm.GeographyPoint"), Items = new[] { GeographyFactory.Point(5.0, -10.0).Build() } },
                     ExpectedValue = "[{\"type\":\"Point\",\"coordinates\":[-10.0,5.0],\"crs\":{\"type\":\"name\",\"properties\":{\"name\":\"EPSG:4326\"}}}]",
-                });
-
-            testCases.Add(
-                new ConvertToUriLiteralTestCase()
-                {
-                    Parameter = new ODataCollectionValue()
-                    {
-                        TypeName = EntityModelUtils.GetCollectionTypeName("NameSpace.MyType"),
-                        Items = new[]
-                        {
-                            new ODataComplexValue() { TypeName = "NameSpace.MyType", Properties = new ODataProperty[1] { new ODataProperty() { Name = "Bool_Prop", Value = false } } },
-                        }
-                    },
-                    ExpectedValue = "[{\"Bool_Prop\":false}]",
                 });
 
             // collection with multiple items
@@ -656,70 +478,6 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests
                 {
                     Parameter = new ODataCollectionValue() { Items = new Int64[] { Int64.MinValue, Int64.MaxValue } },
                     ExpectedValue = "[\"-9223372036854775808\",\"9223372036854775807\"]",
-                });
-            testCases.Add(
-                new ConvertToUriLiteralTestCase()
-                {
-                    Parameter = new ODataCollectionValue()
-                    {
-                        Items = new[]
-                            {
-                                new ODataComplexValue() { TypeName = "Complex_Type", Properties = new ODataProperty[1] { new ODataProperty() { Name = "String_Prop", Value = "string_prop1" } } },
-                                new ODataComplexValue() { TypeName = "Complex_Type", Properties = new ODataProperty[1] { new ODataProperty() { Name = "String_Prop", Value = "string_prop2" } } },
-                                new ODataComplexValue() { TypeName = "Complex_Type", Properties = new ODataProperty[1] { new ODataProperty() { Name = "String_Prop", Value = "string_prop3" } } },
-                            }
-                    },
-                    ExpectedValue = "[{\"String_Prop\":\"string_prop1\"},{\"String_Prop\":\"string_prop2\"},{\"String_Prop\":\"string_prop3\"}]",
-                });
-            testCases.Add(
-                new ConvertToUriLiteralTestCase()
-                {
-                    Parameter = new ODataCollectionValue()
-                    {
-                        TypeName = EntityModelUtils.GetCollectionTypeName("Complex_Type"),
-                        Items = new[]
-                            {
-                                new ODataComplexValue() { TypeName = "Complex_Type", Properties = new ODataProperty[1] { new ODataProperty() { Name = "String_Prop", Value = "string_prop1" } } },
-                                new ODataComplexValue() { TypeName = "Complex_Type", Properties = new ODataProperty[1] { new ODataProperty() { Name = "String_Prop", Value = "string_prop2" } } },
-                                new ODataComplexValue() { Properties = new ODataProperty[1] { new ODataProperty() { Name = "String_Prop", Value = "string_prop3" } } },
-                            }
-                    },
-                    ExpectedValue = "[{\"String_Prop\":\"string_prop1\"},{\"String_Prop\":\"string_prop2\"},{\"String_Prop\":\"string_prop3\"}]",
-                });
-
-            // collection of complex with collection property
-            testCases.Add(
-                new ConvertToUriLiteralTestCase()
-                {
-                    Parameter = new ODataCollectionValue()
-                    {
-                        TypeName = EntityModelUtils.GetCollectionTypeName("NameSpace.Complex"),
-                        Items = new[]
-                            {
-                                new ODataComplexValue()
-                                {
-                                    TypeName = "NameSpace.Complex",
-                                    Properties = new ODataProperty[2]
-                                    {
-                                        new ODataProperty()
-                                        {
-                                            Name = "Property1",
-                                            Value = "Property1_Value",
-                                        },
-                                        new ODataProperty()
-                                        {
-                                            Name  = "Property2",
-                                            Value = new ODataCollectionValue()
-                                            {
-                                                TypeName = EntityModelUtils.GetCollectionTypeName("NameSpace.NestCollection"),
-                                                Items = new [] {new ODataComplexValue() { TypeName = "NameSpace.NestCollection", Properties = new ODataProperty[1] { new ODataProperty() { Name = "Int_Prop", Value = 12345 } } },},
-                                            }
-                                        }
-                                    }
-                            }
-                    }
-                    },
-                    ExpectedValue = "[{\"Property1\":\"Property1_Value\",\"Property2@odata.type\":\"#Collection(NameSpace.NestCollection)\",\"Property2\":[{\"Int_Prop\":12345}]}]",
                 });
             #endregion
 
@@ -800,35 +558,6 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests
             testCases.Add(
                 new ConvertToUriLiteralTestCase()
                 {
-                    Parameter = new ODataComplexValue() { TypeName = "Empty_Complex", Properties = new ODataProperty[0] },
-                    Model = edmModel,
-                    ExpectedException = ODataExpectedExceptions.ODataException("ValidationUtils_UnrecognizedTypeName", "Empty_Complex"),
-                });
-            testCases.Add(
-                new ConvertToUriLiteralTestCase()
-                {
-                    Parameter = new ODataComplexValue()
-                    {
-                        TypeName = "TestModel.Address",
-                        Properties = new ODataProperty[2] { new ODataProperty() { Name = "Street", Value = "street" }, new ODataProperty() { Name = "Zip", Value = "WrongValue" } }
-                    },
-                    Model = edmModel,
-                    ExpectedException = ODataExpectedExceptions.ODataException("ValidationUtils_IncompatiblePrimitiveItemType", "Edm.String", "True", "Edm.Int32", "False"),
-                });
-            testCases.Add(
-                new ConvertToUriLiteralTestCase()
-                {
-                    Parameter = new ODataCollectionValue()
-                    {
-                        TypeName = EntityModelUtils.GetCollectionTypeName("TestModel.Address"),
-                        Items = new[] { new ODataComplexValue() { TypeName = "TestModel.Address", Properties = new ODataProperty[2] { new ODataProperty() { Name = "Street", Value = "street" }, new ODataProperty() { Name = "Zip", Value = "98052" } } } }
-                    },
-                    Model = edmModel,
-                    ExpectedException = ODataExpectedExceptions.ODataException("ValidationUtils_IncompatiblePrimitiveItemType", "Edm.String", "True", "Edm.Int32", "False"),
-                });
-            testCases.Add(
-                new ConvertToUriLiteralTestCase()
-                {
                     Parameter = (UInt16)123,
                     Model = edmModel,
                     ExpectedException = ODataExpectedExceptions.ODataException("ODataUriUtils_ConvertToUriLiteralUnsupportedType", "System.UInt16"),
@@ -844,29 +573,6 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests
                     Model = edmModel,
                     ExpectedValue = "null",
                 });
-            testCases.Add(
-                new ConvertToUriLiteralTestCase()
-                {
-                    Parameter = new ODataComplexValue()
-                    {
-                        TypeName = "TestModel.Address",
-                        Properties = new ODataProperty[2] { new ODataProperty() { Name = "Street", Value = "street" }, new ODataProperty() { Name = "Zip", Value = 98052 } }
-                    },
-                    Model = edmModel,
-                    ExpectedValue = "{\"@odata.type\":\"#TestModel.Address\",\"Street\":\"street\",\"Zip\":98052}",
-                });
-            testCases.Add(
-                new ConvertToUriLiteralTestCase()
-                {
-                    Parameter = new ODataCollectionValue()
-                    {
-                        TypeName = EntityModelUtils.GetCollectionTypeName("TestModel.Address"),
-                        Items = new[] { new ODataComplexValue() { TypeName = "TestModel.Address", Properties = new ODataProperty[2] { new ODataProperty() { Name = "Street", Value = "street" }, new ODataProperty() { Name = "Zip", Value = 98052 } } } }
-                    },
-                    Model = edmModel,
-                    ExpectedValue = "[{\"Street\":\"street\",\"Zip\":98052}]",
-                });
-
             // Do not verify primitive types against model
             testCases.Add(
                 new ConvertToUriLiteralTestCase()

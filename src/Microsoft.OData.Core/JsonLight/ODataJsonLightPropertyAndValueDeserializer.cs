@@ -680,9 +680,15 @@ namespace Microsoft.OData.JsonLight
                             Debug.Assert(propertyAnnotation.Value is long && propertyAnnotation.Value != null, "The odata.count annotation should have been parsed as a non-null long.");
                             expandedResourceSet.Count = (long?)propertyAnnotation.Value;
                             break;
+
                         case ODataAnnotationNames.ODataContext:
                             Debug.Assert(propertyAnnotation.Value is Uri && propertyAnnotation.Value != null, "The odata.context annotation should have been parsed as a non-null Uri.");
                             nestedResourceInfo.ContextUrl = (Uri)propertyAnnotation.Value;
+                            break;
+
+                        case ODataAnnotationNames.ODataType:
+                            Debug.Assert(propertyAnnotation.Value != null, "The odata.type annotation should have been parsed as a string.");
+                            expandedResourceSet.TypeName = (string)propertyAnnotation.Value;
                             break;
 
                         case ODataAnnotationNames.ODataDeltaLink:   // Delta links are not supported on expanded resource sets.
@@ -837,7 +843,7 @@ namespace Microsoft.OData.JsonLight
                 {
                     if (string.CompareOrdinal(propertyAnnotation.Key, ODataAnnotationNames.ODataType) != 0)
                     {
-                        // here allow other annotation name than odata.type, instead of throwing: 
+                        // here allow other annotation name than odata.type, instead of throwing:
                         // ODataErrorStrings.ODataJsonLightPropertyAndValueDeserializer_UnexpectedDataPropertyAnnotation
                         continue;
                     }

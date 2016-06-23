@@ -153,27 +153,6 @@ namespace Microsoft.Test.Taupo.OData.Scenario.Tests.UriParser
                 outputString = ((int)value).ToString();
             }
 
-            var complex = value as ODataComplexValue;
-            if (complex != null)
-            {
-                outputString = "Complex Value(";
-                if (complex.TypeName != null)
-                {
-                    outputString += String.Format("Type Name = {0}", complex.TypeName);
-                    if (complex.Properties.Any()) outputString += String.Format(", ");
-                }
-                if (complex.Properties.Any())
-                {
-                    outputString += String.Format("Properties = (");
-                    foreach (var property in complex.Properties)
-                    {
-                        outputString += String.Format("{0}: {1}, ", property.Name, property.Value);
-                    }
-                    outputString = outputString.TrimEnd(',', ' ') + ")";
-                }
-                outputString += ")";
-            }
-
             var nullval = value as ODataNullValue;
             if (nullval != null)
             {
@@ -184,6 +163,12 @@ namespace Microsoft.Test.Taupo.OData.Scenario.Tests.UriParser
             if (aliasedparam != null)
             {
                 outputString = String.Format("Unresolved Aliased Parameter({0})", aliasedparam.Alias);
+            }
+
+            ConvertNode convertNode = value as ConvertNode;
+            if (convertNode != null)
+            {
+                outputString = String.Format("ConvertNode(Type = {0}, Source = {1})", convertNode.TypeReference, WriteParameterValue(convertNode.Source));
             }
 
             ConstantNode constNode = value as ConstantNode;

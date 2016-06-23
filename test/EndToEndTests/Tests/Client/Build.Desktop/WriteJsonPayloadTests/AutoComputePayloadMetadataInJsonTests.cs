@@ -766,7 +766,7 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
             // make sure all metadata in the actual object is verified
             foreach (var pair in metadataNotYetVerified)
             {
-                Assert.IsFalse(pair.Key.Contains("odata.") && !pair.Key.Contains("odata.associationLink"));
+                Assert.IsFalse(pair.Key.Contains("odata.") && !(pair.Key.Contains("odata.associationLink") || pair.Key.Contains("odata.type")));
                 Assert.IsFalse(pair.Key.StartsWith("#"));
             }
         }

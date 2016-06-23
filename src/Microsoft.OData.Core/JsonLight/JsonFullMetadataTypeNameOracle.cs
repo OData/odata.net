@@ -18,12 +18,37 @@ namespace Microsoft.OData.JsonLight
     internal sealed class JsonFullMetadataTypeNameOracle : JsonLightTypeNameOracle
     {
         /// <summary>
-        /// Determines the entity type name to write to the payload.
+        /// Determines the resource set type name to write to the payload.
         /// </summary>
-        /// <param name="expectedTypeName">The expected type name, e.g. the base type of the set or the nav prop.</param>
-        /// <param name="resource">The ODataResource whose type is to be written.</param>
+        /// <param name="resourceSet">The ODataResourceSet whose type is to be written.</param>
+        /// <param name="isUndeclared">true if the resource set is for some undeclared property</param>
         /// <returns>Type name to write to the payload, or null if no type name should be written.</returns>
-        internal override string GetResourceTypeNameForWriting(string expectedTypeName, ODataResource resource)
+        internal override string GetResourceSetTypeNameForForWriting(ODataResourceSet resourceSet, bool isUndeclared)
+        {
+            Debug.Assert(resourceSet != null, "resourceSet != null");
+
+            SerializationTypeNameAnnotation typeNameAnnotation = resourceSet.GetAnnotation<SerializationTypeNameAnnotation>();
+            if (typeNameAnnotation != null)
+            {
+                return typeNameAnnotation.TypeName;
+            }
+
+            if (isUndeclared)
+            {
+                return resourceSet.TypeName;
+            }
+
+            return null;
+        }
+
+        /// <summary>
+        /// Determines the resource type name to write to the payload.
+        /// </summary>
+        /// <param name="expectedTypeName">The expected type name, e.g. the base type of the an entity set or a collection of complex or the nav prop or a complex property.</param>
+        /// <param name="resource">The ODataResource whose type is to be written.</param>
+        /// <param name="isUndeclared">true if the ODataResource is for some undeclared property</param>
+        /// <returns>Type name to write to the payload, or null if no type name should be written.</returns>
+        internal override string GetResourceTypeNameForWriting(string expectedTypeName, ODataResource resource, bool isUndeclared = false)
         {
             Debug.Assert(resource != null, "resource != null");
 

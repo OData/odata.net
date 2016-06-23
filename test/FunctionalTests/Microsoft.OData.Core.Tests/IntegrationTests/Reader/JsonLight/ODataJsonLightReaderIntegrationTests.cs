@@ -340,7 +340,35 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.JsonLight
         }
 
         [Fact]
+        public void ReadingComplexInheritInCollectionWithODataType()
+        {
+            const string payload =
+                "{" +
+                "\"@odata.context\":\"http://www.example.com/$metadata#EntityNs.MyContainer.MyTestEntitySet/$entity\"," +
+                "\"@odata.id\":\"http://MyTestEntity\"," +
+                "\"LongId\":\"12\"," +
+                "\"ComplexCollectionProperty@odata.type\":\"#Collection(NS.MyComplexType)\"," +
+                "\"ComplexCollectionProperty\":[{\"@odata.type\":\"#NS.MyDerivedComplexType\",\"CLongId\":\"1\",\"CFloatId\":1},{\"CLongId\":\"1\"},{\"CLongId\":\"1\",\"CFloatId\":1,\"@odata.type\":\"#NS.MyDerivedComplexType\"}]" +
+                "}";
+
+            ReadingComplexInheritInCollection(payload); 
+        }
+
+        [Fact]
         public void ReadingComplexInheritInCollection()
+        {
+            const string payload =
+                "{" +
+                "\"@odata.context\":\"http://www.example.com/$metadata#EntityNs.MyContainer.MyTestEntitySet/$entity\"," +
+                "\"@odata.id\":\"http://MyTestEntity\"," +
+                "\"LongId\":\"12\"," +
+                "\"ComplexCollectionProperty\":[{\"@odata.type\":\"#NS.MyDerivedComplexType\",\"CLongId\":\"1\",\"CFloatId\":1},{\"CLongId\":\"1\"},{\"CLongId\":\"1\",\"CFloatId\":1,\"@odata.type\":\"#NS.MyDerivedComplexType\"}]" +
+                "}";
+
+            ReadingComplexInheritInCollection(payload);
+        }
+
+        private void ReadingComplexInheritInCollection(string payload)
         {
             EdmModel model = new EdmModel();
             EdmEntityType entityType = new EdmEntityType("NS", "MyTestEntity");
@@ -363,14 +391,6 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.JsonLight
             EdmEntityContainer container = new EdmEntityContainer("EntityNs", "MyContainer_sub");
             EdmEntitySet entitySet = container.AddEntitySet("MyTestEntitySet", entityType);
             model.AddElement(container);
-
-            const string payload =
-                "{" +
-                "\"@odata.context\":\"http://www.example.com/$metadata#EntityNs.MyContainer.MyTestEntitySet/$entity\"," +
-                "\"@odata.id\":\"http://MyTestEntity\"," +
-                "\"LongId\":\"12\"," +
-                "\"ComplexCollectionProperty\":[{\"@odata.type\":\"#NS.MyDerivedComplexType\",\"CLongId\":\"1\",\"CFloatId\":1},{\"CLongId\":\"1\"},{\"CLongId\":\"1\",\"CFloatId\":1,\"@odata.type\":\"#NS.MyDerivedComplexType\"}]" +
-                "}";
 
             IEdmModel mainModel = TestUtils.WrapReferencedModelsToMainModel("EntityNs", "MyContainer", model);
             List<ODataResource> entries = new List<ODataResource>();
@@ -454,6 +474,64 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.JsonLight
         }
 
         [Fact]
+        public void ReadingPayloadOpenComplexTypeJsonLight_WithComplex()
+        {
+            EdmModel model = new EdmModel();
+
+            EdmEntityType entityType = new EdmEntityType("NS", "Person", null, false, true);
+            entityType.AddStructuralProperty("Id", EdmPrimitiveTypeKind.Int32);
+
+            EdmComplexType cityType = new EdmComplexType("NS", "City");
+            cityType.AddStructuralProperty("CityName", EdmPrimitiveTypeKind.String);
+            model.AddElement(cityType);
+
+            EdmComplexType complexType = new EdmComplexType("NS", "OpenAddress", null, false, true);
+            complexType.AddStructuralProperty("CountryRegion", EdmPrimitiveTypeKind.String, false);
+            EdmComplexTypeReference complexTypeRef = new EdmComplexTypeReference(complexType, true);
+
+            entityType.AddStructuralProperty("Address", complexTypeRef);
+
+            model.AddElement(complexType);
+            model.AddElement(entityType);
+
+            EdmEntityContainer container = new EdmEntityContainer("EntityNs", "MyContainer_sub");
+            EdmEntitySet entitySet = container.AddEntitySet("People", entityType);
+            model.AddElement(container);
+
+            const string payload =
+                "{" +
+                "\"@odata.context\":\"http://www.example.com/$metadata#EntityNs.MyContainer.People/$entity\"," +
+                "\"@odata.id\":\"http://mytest\"," +
+                "\"Id\":\"0\"," +
+                "\"Address\":{\"CountryRegion\":\"China\"}," +
+                "\"City\":{\"@odata.type\":\"#NS.City\", \"CityName\":\"Shanghai\"}" +
+                "}";
+
+            IEdmModel mainModel = TestUtils.WrapReferencedModelsToMainModel("EntityNs", "MyContainer", model);
+            List<ODataResource> entries = new List<ODataResource>();
+            ODataNestedResourceInfo navigationLink;
+            this.ReadEntryPayload(mainModel, payload, entitySet, entityType,
+                reader =>
+                {
+                    switch (reader.State)
+                    {
+                        case ODataReaderState.ResourceStart:
+                            entries.Add(reader.Item as ODataResource);
+                            break;
+                        case ODataReaderState.NestedResourceInfoStart:
+                            navigationLink = (ODataNestedResourceInfo)reader.Item;
+                            break;
+                        default:
+                            break;
+                    }
+                });
+
+            var address = entries[1];
+            address.Properties.FirstOrDefault(s => string.Equals(s.Name, "CountryRegion", StringComparison.OrdinalIgnoreCase)).Value.Should().Be("China");
+            entries[2].Properties.FirstOrDefault().Value.Should().Be("Shanghai");
+        }
+
+        [Fact]
         public void ReadingTopLevelComplexProperty()
         {
             EdmModel model = new EdmModel();
@@ -514,16 +592,12 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.JsonLight
 
             Action<string> RunCase = (payload) =>
             {
-                ODataResourceSet feed = null;
                 ODataResource entry = null;
 
                 this.ReadEntryPayload(model, payload, null, complexType, reader =>
                 {
                     switch (reader.State)
                     {
-                        case ODataReaderState.ResourceSetStart:
-                            feed = (ODataResourceSet)reader.Item;
-                            break;
                         case ODataReaderState.ResourceStart:
                             entry = reader.Item as ODataResource;
                             break;
@@ -549,7 +623,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.JsonLight
         }
 
         [Fact]
-        public void ReadingTopLevelCollectionComplexProperty()
+        public void ReadingTopLevelComplex_WithoutProperties()
         {
             EdmModel model = new EdmModel();
 
@@ -557,11 +631,221 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.JsonLight
             complexType.AddStructuralProperty("CountryRegion", EdmPrimitiveTypeKind.String);
             model.AddElement(complexType);
 
+            const string payload = "{}";
+
+            this.ReadEntryPayload(model, payload, null, complexType, reader =>
+            {
+                if (reader.State == ODataReaderState.ResourceStart)
+                {
+                    var resource = reader.Item as ODataResource;
+                    Assert.Equal("NS.Address", resource.TypeName);
+                    Assert.Equal(0, resource.Properties.Count());
+                }
+            },
+            true);
+        }
+
+        [Fact]
+        public void ReadingTopLevelComplexCollection_ItemType_TypeContextUri_Inconsistent()
+        {
+            const string payload =
+                "{" +
+                    "\"@odata.context\":\"http://www.example.com/$metadata#Collection(NS.AddressWithCity)\"," +
+                    "\"value\":[" +
+                      "{" +
+                          "\"@odata.type\":\"#NS.Address\"," +
+                          "\"CountryRegion\":\"China\"" +
+                      "}," +
+                      "{" +
+                          "\"@odata.type\":\"#NS.AddressWithCity\"," +
+                          "\"CountryRegion\":\"Korea\"," +
+                          "\"City\":" +
+                          "{" +
+                              "\"CityName\":\"Seoul\"" +
+                          "}" +
+                      "}" +
+                    "]" +
+                "}";
+            List<ODataResource> resources = null;
+            List<ODataNestedResourceInfo> nestedResourceInfos = null;
+            ReadingTopLevelComplexCollectionProperty(payload, ref resources, ref nestedResourceInfos, false, false, Strings.ValidationUtils_IncompatibleType("NS.Address", "NS.AddressWithCity"));
+        }
+
+        [Fact]
+        public void ReadingTopLevelComplexCollection_CollectionType_ItemType_Inconsistent()
+        {
+            const string payload =
+                "{" +
+                    "\"value@odata.type\":\"#Collection(NS.AddressWithCity)\"," +
+                    "\"value\":[" +
+                      "{" +
+                          "\"@odata.type\":\"#NS.Address\"," +
+                          "\"CountryRegion\":\"China\"" +
+                      "}," +
+                      "{" +
+                          "\"@odata.type\":\"#NS.AddressWithCity\"," +
+                          "\"CountryRegion\":\"Korea\"," +
+                          "\"City\":" +
+                          "{" +
+                              "\"CityName\":\"Seoul\"" +
+                          "}" +
+                      "}" +
+                    "]" +
+                "}";
+            List<ODataResource> resources = null;
+            List<ODataNestedResourceInfo> nestedResourceInfos = null;
+            ReadingTopLevelComplexCollectionProperty(payload, ref resources, ref nestedResourceInfos, true, true, Strings.ValidationUtils_IncompatibleType("NS.Address", "NS.AddressWithCity"));
+        }
+
+        [Fact]
+        public void ReadingTopLevelComplexCollection_without_odatatype()
+        {
+            const string payload =
+                "{" +
+                    "\"value\":[" +
+                      "{" +
+                          "\"CountryRegion\":\"China\"" +
+                      "}," +
+                      "{" +
+                          "\"CountryRegion\":\"Korea\"," +
+                          "\"City\":" +
+                          "{" +
+                              "\"CityName\":\"Seoul\"" +
+                          "}" +
+                      "}" +
+                    "]" +
+                "}";
+            List<ODataResource> resources = null;
+            List<ODataNestedResourceInfo> nestedResourceInfos = null;
+            ReadingTopLevelComplexCollectionProperty(payload, ref resources, ref nestedResourceInfos, true, true);
+
+            Assert.Equal(3, resources.Count);
+            resources[0].Properties.FirstOrDefault(s => string.Equals(s.Name, "CountryRegion", StringComparison.OrdinalIgnoreCase)).Value.ShouldBeEquivalentTo("China", "value should be in correct type.");
+            resources[1].Properties.FirstOrDefault(s => string.Equals(s.Name, "CountryRegion", StringComparison.OrdinalIgnoreCase)).Value.ShouldBeEquivalentTo("Korea", "value should be in correct type.");
+            resources[2].Properties.FirstOrDefault(s => string.Equals(s.Name, "CityName", StringComparison.OrdinalIgnoreCase)).Value.ShouldBeEquivalentTo("Seoul", "value should be in correct type.");
+            nestedResourceInfos.First().Name.ShouldBeEquivalentTo("City", "nestedResouce should have correct name");
+        }
+
+        [Fact(Skip="Dynmaic property in context uri")]
+        public void ReadingTopLevelComplexCollection_OpenPropertyContextUri()
+        {
+            const string payload =
+                "{" +
+                    "\"@odata.context\":\"http://www.example.com/$metadata#EntityNs.MyContainer.People(0)/OpenAddresses\"," +
+                    "\"value@odata.type\":\"#Collection(NS.AddressWithCity)\"," +
+                    "\"value\":[" +
+                      "{" +
+                          "\"CountryRegion\":\"China\"" +
+                      "}," +
+                      "{" +
+                          "\"@odata.type\":\"#NS.AddressWithCity\"," +
+                          "\"CountryRegion\":\"Korea\"," +
+                          "\"City\":" +
+                          "{" +
+                              "\"CityName\":\"Seoul\"" +
+                          "}" +
+                      "}" +
+                    "]" +
+
+                "}";
+
+            List<ODataResource> resources = null;
+            List<ODataNestedResourceInfo> nestedResourceInfos = null;
+            ReadingTopLevelComplexCollectionProperty(payload, ref resources, ref nestedResourceInfos);
+
+            Assert.Equal(3, resources.Count);
+            resources[0].Properties.FirstOrDefault(s => string.Equals(s.Name, "CountryRegion", StringComparison.OrdinalIgnoreCase)).Value.ShouldBeEquivalentTo("China", "value should be in correct type.");
+            resources[1].Properties.FirstOrDefault(s => string.Equals(s.Name, "CountryRegion", StringComparison.OrdinalIgnoreCase)).Value.ShouldBeEquivalentTo("Korea", "value should be in correct type.");
+            resources[2].Properties.FirstOrDefault(s => string.Equals(s.Name, "CityName", StringComparison.OrdinalIgnoreCase)).Value.ShouldBeEquivalentTo("Seoul", "value should be in correct type.");
+            nestedResourceInfos.First().Name.ShouldBeEquivalentTo("City", "nestedResouce should have correct name");
+        }
+
+        [Fact]
+        public void ReadingTopLevelComplexCollection_PropertyContextUri()
+        {
+            const string payload =
+                "{" +
+                    "\"@odata.context\":\"http://www.example.com/$metadata#EntityNs.MyContainer.People(0)/Addresses\"," +
+                    "\"value\":[" +
+                      "{" +
+                          "\"CountryRegion\":\"China\"" +
+                      "}," +
+                      "{" +
+                          "\"@odata.type\":\"#NS.AddressWithCity\"," +
+                          "\"CountryRegion\":\"Korea\"," +
+                          "\"City\":" +
+                          "{" +
+                              "\"CityName\":\"Seoul\"" +
+                          "}" +
+                      "}" +
+                    "]" +
+
+                "}";
+            List<ODataResource> resources = null;
+            List<ODataNestedResourceInfo> nestedResourceInfos = null;
+            ReadingTopLevelComplexCollectionProperty(payload, ref resources, ref nestedResourceInfos);
+
+            Assert.Equal(3, resources.Count);
+            resources[0].Properties.FirstOrDefault(s => string.Equals(s.Name, "CountryRegion", StringComparison.OrdinalIgnoreCase)).Value.ShouldBeEquivalentTo("China", "value should be in correct type.");
+            resources[1].Properties.FirstOrDefault(s => string.Equals(s.Name, "CountryRegion", StringComparison.OrdinalIgnoreCase)).Value.ShouldBeEquivalentTo("Korea", "value should be in correct type.");
+            resources[2].Properties.FirstOrDefault(s => string.Equals(s.Name, "CityName", StringComparison.OrdinalIgnoreCase)).Value.ShouldBeEquivalentTo("Seoul", "value should be in correct type.");
+            nestedResourceInfos.First().Name.ShouldBeEquivalentTo("City", "nestedResouce should have correct name");
+        }
+
+        [Fact]
+        public void ReadingTopLevelComplexCollection_TypeContextUri()
+        {
+            const string payload =
+                "{" +
+                    "\"@odata.context\":\"http://www.example.com/$metadata#Collection(NS.Address)\"," +
+                    "\"value\":[" +
+                      "{" +
+                          "\"CountryRegion\":\"China\"" +
+                      "}," +
+                      "{" +
+                          "\"@odata.type\":\"#NS.AddressWithCity\"," +
+                          "\"CountryRegion\":\"Korea\"," +
+                          "\"City\":" +
+                          "{" +
+                              "\"CityName\":\"Seoul\"" +
+                          "}" +
+                      "}" +
+                    "]" +
+                "}";
+            List<ODataResource> resources = null;
+            List<ODataNestedResourceInfo> nestedResourceInfos = null;
+            ReadingTopLevelComplexCollectionProperty(payload, ref resources, ref nestedResourceInfos);
+
+            Assert.Equal(3, resources.Count);
+            resources[0].Properties.FirstOrDefault(s => string.Equals(s.Name, "CountryRegion", StringComparison.OrdinalIgnoreCase)).Value.ShouldBeEquivalentTo("China", "value should be in correct type.");
+            resources[1].Properties.FirstOrDefault(s => string.Equals(s.Name, "CountryRegion", StringComparison.OrdinalIgnoreCase)).Value.ShouldBeEquivalentTo("Korea", "value should be in correct type.");
+            resources[2].Properties.FirstOrDefault(s => string.Equals(s.Name, "CityName", StringComparison.OrdinalIgnoreCase)).Value.ShouldBeEquivalentTo("Seoul", "value should be in correct type.");
+            nestedResourceInfos.First().Name.ShouldBeEquivalentTo("City", "nestedResouce should have correct name");
+        }
+
+        private void ReadingTopLevelComplexCollectionProperty(
+            string payload,
+            ref List<ODataResource> resources,
+            ref List<ODataNestedResourceInfo> nestedResourceInfos,
+            bool isRequest = false,
+            bool isDerivedCollection = false,
+            string expectedException = null)
+        {
+            EdmModel model = new EdmModel();
+
+            EdmComplexType complexType = new EdmComplexType("NS", "Address", null, false, true);
+            complexType.AddStructuralProperty("CountryRegion", EdmPrimitiveTypeKind.String);
+            model.AddElement(complexType);
+
+            EdmComplexType cityComplexType = new EdmComplexType("NS", "City");
+            cityComplexType.AddStructuralProperty("CityName", EdmPrimitiveTypeKind.String, false);
+            model.AddElement(cityComplexType);
+
             var complexTypeReference = new EdmComplexTypeReference(complexType, false);
             var complexCollectionTypeReference = new EdmCollectionTypeReference(new EdmCollectionType(complexTypeReference));
 
             EdmComplexType derivedComplexType = new EdmComplexType("NS", "AddressWithCity", complexType, false);
-            derivedComplexType.AddStructuralProperty("City", EdmPrimitiveTypeKind.String, false);
+            derivedComplexType.AddStructuralProperty("City", new EdmComplexTypeReference(cityComplexType, false));
             model.AddElement(derivedComplexType);
 
             EdmEntityType entityType = new EdmEntityType("NS", "Person", null, false, true);
@@ -573,66 +857,38 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.JsonLight
             EdmEntitySet entitySet = container.AddEntitySet("People", entityType);
             model.AddElement(container);
 
-            const string payload1 =
-                "{" +
-                    "\"@odata.context\":\"http://www.example.com/$metadata#EntityNs.MyContainer.People(0)/Addresses\"," +
-                    "\"value\":[" +
-                      "{" +
-                          "\"CountryRegion\":\"China\"" +
-                      "}," +
-                      "{" +
-                          "\"@odata.type\":\"#NS.AddressWithCity\"," +
-                          "\"CountryRegion\":\"Korea\"," +
-                          "\"City\":\"Seoul\"" +
-                      "}" +
-                    "]" +
+            var currentResources = new List<ODataResource>();
+            var currentNestedResourceInfos = new List<ODataNestedResourceInfo>();
 
-                "}";
-
-            const string payload2 =
-                "{" +
-                    "\"@odata.context\":\"http://www.example.com/$metadata#Collection(NS.Address)\"," +
-                    "\"value\":[" +
-                      "{" +
-                          "\"CountryRegion\":\"China\"" +
-                      "}," +
-                      "{" +
-                          "\"@odata.type\":\"#NS.AddressWithCity\"," +
-                          "\"CountryRegion\":\"Korea\"," +
-                          "\"City\":\"Seoul\"" +
-                      "}" +
-                    "]" +
-
-                "}";
-
-            Action<string> RunCase = (payload) =>
+            Action read = () =>
             {
-                ODataResourceSet feed = null;
-                List<ODataResource> entries = new List<ODataResource>();
-
-                this.ReadTopLevleCollectionPayload(model, payload, complexType, reader =>
+                this.ReadTopLevleCollectionPayload(model, payload, isDerivedCollection ? derivedComplexType : complexType, reader =>
                 {
                     switch (reader.State)
                     {
-                        case ODataReaderState.ResourceSetStart:
-                            feed = (ODataResourceSet)reader.Item;
-                            break;
                         case ODataReaderState.ResourceStart:
-                            entries.Add(reader.Item as ODataResource);
+                            currentResources.Add(reader.Item as ODataResource);
+                            break;
+                        case ODataReaderState.NestedResourceInfoStart:
+                            currentNestedResourceInfos.Add(reader.Item as ODataNestedResourceInfo);
                             break;
                         default:
                             break;
                     }
-                });
-
-                Assert.Equal(2, entries.Count);
-                entries[0].Properties.FirstOrDefault(s => string.Equals(s.Name, "CountryRegion", StringComparison.OrdinalIgnoreCase)).Value.ShouldBeEquivalentTo("China", "value should be in correct type.");
-                entries[1].Properties.FirstOrDefault(s => string.Equals(s.Name, "CountryRegion", StringComparison.OrdinalIgnoreCase)).Value.ShouldBeEquivalentTo("Korea", "value should be in correct type.");
-                entries[1].Properties.FirstOrDefault(s => string.Equals(s.Name, "City", StringComparison.OrdinalIgnoreCase)).Value.ShouldBeEquivalentTo("Seoul", "value should be in correct type.");
+                },
+                isRequest);
             };
 
-            RunCase(payload1);
-            RunCase(payload2);
+            if (expectedException != null)
+            {
+                read.ShouldThrow<ODataException>().WithMessage(expectedException);
+            }
+            else
+            {
+                read();
+                resources = currentResources;
+                nestedResourceInfos = currentNestedResourceInfos;
+            }
         }
 
         [Fact]
@@ -747,7 +1003,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.JsonLight
             readEntry.ShouldThrow<ODataException>().WithMessage(Strings.ValidationUtils_PropertyDoesNotExistOnType("OpenNavigationProperty", "NS.Person"));
         }
 
-        private void ReadEntryPayload(IEdmModel userModel, string payload, EdmEntitySet entitySet, IEdmStructuredType entityType, Action<ODataReader> action, bool isIeee754Compatible = true)
+        private void ReadEntryPayload(IEdmModel userModel, string payload, EdmEntitySet entitySet, IEdmStructuredType entityType, Action<ODataReader> action, bool isRequest = false, bool isIeee754Compatible = true)
         {
             var message = new InMemoryMessage() { Stream = new MemoryStream(Encoding.UTF8.GetBytes(payload)) };
             string contentType = isIeee754Compatible
@@ -755,7 +1011,8 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.JsonLight
                 : "application/json;odata.metadata=minimal;IEEE754Compatible=false";
             message.SetHeader("Content-Type", contentType);
             var readerSettings = new ODataMessageReaderSettings { EnableMessageStreamDisposal = true };
-            using (var msgReader = new ODataMessageReader((IODataResponseMessage)message, readerSettings, userModel))
+            using (var msgReader = isRequest ? new ODataMessageReader((IODataRequestMessage)message, readerSettings, userModel)
+                                             : new ODataMessageReader((IODataResponseMessage)message, readerSettings, userModel))
             {
                 var reader = msgReader.CreateODataResourceReader(entitySet, entityType);
                 while (reader.Read())
@@ -805,15 +1062,17 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.JsonLight
             }
         }
 
-        private void ReadTopLevleCollectionPayload(IEdmModel userModel, string payload, IEdmStructuredType complexType, Action<ODataReader> action, bool isIeee754Compatible = true)
-        {
+        private void ReadTopLevleCollectionPayload(IEdmModel userModel, string payload, IEdmStructuredType complexType, Action<ODataReader> action, bool isRequest = false, bool isIeee754Compatible = true)
+{
             var message = new InMemoryMessage() { Stream = new MemoryStream(Encoding.UTF8.GetBytes(payload)) };
             string contentType = isIeee754Compatible
                 ? "application/json;odata.metadata=minimal;IEEE754Compatible=true"
                 : "application/json;odata.metadata=minimal;IEEE754Compatible=false";
             message.SetHeader("Content-Type", contentType);
+
             var readerSettings = new ODataMessageReaderSettings { EnableMessageStreamDisposal = true };
-            using (var msgReader = new ODataMessageReader((IODataResponseMessage)message, readerSettings, userModel))
+            using (var msgReader = isRequest ? new ODataMessageReader((IODataRequestMessage)message, readerSettings, userModel)
+                                             : new ODataMessageReader((IODataResponseMessage)message, readerSettings, userModel))
             {
                 var reader = msgReader.CreateODataResourceSetReader(complexType);
                 while (reader.Read())

@@ -562,7 +562,7 @@ namespace Microsoft.OData.UriParser
                 if (valueToken != null && (valueStr = valueToken.Value as string) != null && !string.IsNullOrEmpty(valueToken.OriginalText))
                 {
                     var lexer = new ExpressionLexer(valueToken.OriginalText, true /*moveToFirstToken*/, false /*useSemicolonDelimiter*/, true /*parsingFunctionParameters*/);
-                    if (lexer.CurrentToken.Kind == ExpressionTokenKind.BracketedExpression)
+                    if (lexer.CurrentToken.Kind == ExpressionTokenKind.BracketedExpression || lexer.CurrentToken.Kind == ExpressionTokenKind.BracedExpression)
                     {
                         object result;
                         UriTemplateExpression expression;
@@ -571,11 +571,17 @@ namespace Microsoft.OData.UriParser
                         {
                             result = expression;
                         }
+                        else if (!functionParameter.Type.IsStructured() && !functionParameter.Type.IsStructuredCollectionType())
+                        {
+                            // ExpressionTokenKind.BracketedExpression means text like [1,2]
+                            // so now try convert it to collection type value:
+                            result = ODataUriUtils.ConvertFromUriLiteral(valueStr, ODataVersion.V4, model, functionParameter.Type);
+                        }
                         else
                         {
-                            // ExpressionTokenKind.BracketedExpression means text like [{\"Street\":\"NE 24th St.\",\"City\":\"Redmond\"},{\"Street\":\"Pine St.\",\"City\":\"Seattle\"}]
-                            // so now try convert it into complex or collection type value:
-                            result = ODataUriUtils.ConvertFromUriLiteral(valueStr, ODataVersion.V4, model, functionParameter.Type);
+                            // For complex & colleciton of complex directly return the raw string.
+                            partiallyParsedParametersWithComplexOrCollection.Add(funcParaToken);
+                            continue;
                         }
 
                         LiteralToken newValueToken = new LiteralToken(result, valueToken.OriginalText);

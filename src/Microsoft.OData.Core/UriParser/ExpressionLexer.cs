@@ -609,7 +609,7 @@ namespace Microsoft.OData.UriParser
                 case '{':
                     this.NextChar();
                     this.AdvanceThroughBalancedExpression('{', '}');
-                    t = ExpressionTokenKind.BracketedExpression;
+                    t = ExpressionTokenKind.BracedExpression;
                     break;
                 case '[':
                     this.NextChar();

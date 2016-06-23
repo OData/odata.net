@@ -2944,15 +2944,6 @@ namespace Microsoft.OData {
         }
 
         /// <summary>
-        /// A string like "Only collection properties that contain primitive types or enumeration types or complex types are supported."
-        /// </summary>
-        internal static string EdmLibraryExtensions_CollectionItemCanBeOnlyPrimitiveEnumComplex {
-            get {
-                return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.EdmLibraryExtensions_CollectionItemCanBeOnlyPrimitiveEnumComplex);
-            }
-        }
-
-        /// <summary>
         /// A string like "When resolving operations '{0}' the group returned has both actions and functions with an invalid IEdmModel."
         /// </summary>
         internal static string EdmLibraryExtensions_OperationGroupReturningActionsAndFunctionsModelInvalid(object p0) {

@@ -173,12 +173,12 @@ namespace Microsoft.OData.Tests
                 throw new NotImplementedException();
             }
 
-            protected override ODataWriterCore.ResourceSetScope CreateResourceSetScope(ODataResourceSet resourceCollection, IEdmNavigationSource navigationSource, IEdmStructuredType resourceType, bool skipWriting, SelectedPropertiesNode selectedProperties, ODataUri odataUri)
+            protected override ODataWriterCore.ResourceSetScope CreateResourceSetScope(ODataResourceSet resourceCollection, IEdmNavigationSource navigationSource, IEdmStructuredType resourceType, bool skipWriting, SelectedPropertiesNode selectedProperties, ODataUri odataUri, bool isUndeclared)
             {
                 throw new NotImplementedException();
             }
 
-            protected override ODataWriterCore.ResourceScope CreateResourceScope(ODataResource entry, IEdmNavigationSource navigationSource, IEdmStructuredType resourceType, bool skipWriting, SelectedPropertiesNode selectedProperties, ODataUri odataUri)
+            protected override ODataWriterCore.ResourceScope CreateResourceScope(ODataResource entry, IEdmNavigationSource navigationSource, IEdmStructuredType resourceType, bool skipWriting, SelectedPropertiesNode selectedProperties, ODataUri odataUri, bool isUndeclared)
             {
                 throw new NotImplementedException();
             }

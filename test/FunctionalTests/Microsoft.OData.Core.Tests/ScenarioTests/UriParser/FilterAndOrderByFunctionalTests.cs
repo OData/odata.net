@@ -892,7 +892,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             const string text = "Fully.Qualified.Namespace.CanMoveToAddress(address={'Street' : 'stuff', 'City' : 'stuff'})";
             var filterClause = ParseFilter(text, HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());
             filterClause.Expression.ShouldBeSingleValueFunctionCallQueryNode(HardCodedTestModel.GetFunctionForCanMoveToAddress())
-                .And.Parameters.Single().As<NamedFunctionParameterNode>().Value.As<ConstantNode>().Value.ShouldBeODataComplexValue();
+                .And.Parameters.Single().As<NamedFunctionParameterNode>().Value.As<ConstantNode>().Value.Should().Be("{'Street' : 'stuff', 'City' : 'stuff'}");
         }
 
         [Fact]
@@ -908,7 +908,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             var filterCaluse = ParseFilter("Fully.Qualified.Namespace.CanMoveToAddress(address={\"@odata.type\":\"#Fully.Qualified.Namespace.Address\",\"Street\":\"NE 24th St.\",\"City\":\"Redmond\"})", HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());
             filterCaluse.Expression.ShouldBeSingleValueFunctionCallQueryNode(HardCodedTestModel.GetFunctionForCanMoveToAddress())
                 .And.Parameters.Single().As<NamedFunctionParameterNode>()
-                .Value.As<ConstantNode>().Value.Should().BeOfType<ODataComplexValue>();
+                .Value.As<ConstantNode>().Value.Should().Be("{\"@odata.type\":\"#Fully.Qualified.Namespace.Address\",\"Street\":\"NE 24th St.\",\"City\":\"Redmond\"}");
         }
 
         [Fact]
@@ -927,8 +927,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             var filterCaluse = ParseFilter(text, HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());
             // TODO: parameter value is ConstantNode, whose .TypeReference should NOT be null though .Value is ok to be ODataCollectionValue.
             filterCaluse.Expression.ShouldBeSingleValueFunctionCallQueryNode(HardCodedTestModel.GetFunctionForCanMoveToAddresses())
-                .And.Parameters.Single().As<NamedFunctionParameterNode>().Value.As<ConstantNode>().Value.ShouldBeODataCollectionValue()
-            .And.ItemsShouldBeAssignableTo<ODataComplexValue>().And.Count().Should().Be(2);
+                .And.Parameters.Single().As<NamedFunctionParameterNode>().Value.As<ConstantNode>().Value.Should().Be("[{\"Street\":\"NE 24th St.\",\"City\":\"Redmond\"},{\"Street\":\"Pine St.\",\"City\":\"Seattle\"}]");
         }
 
         [Fact]

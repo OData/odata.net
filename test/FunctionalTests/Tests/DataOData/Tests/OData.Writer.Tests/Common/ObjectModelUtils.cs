@@ -91,9 +91,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Common
 
         private static readonly ODataResourceSerializationInfo MySerializationInfo = new ODataResourceSerializationInfo()
         {
-            NavigationSourceEntityTypeName = "Null",
             NavigationSourceName = "MySet",
-            ExpectedTypeName = "Null"
         };
 
         static ObjectModelUtils()

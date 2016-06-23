@@ -382,12 +382,11 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                 },
                 new NavigationLinkTestCase
                 {
-                    DebugDescription = "Expanded feed with invalid annotation.",
-                    Json =
-                        "\"" + JsonLightUtils.GetPropertyAnnotationName("CityHall", JsonLightConstants.ODataTypeAnnotationName) + "\":\"TestModel.OfficeType\"," +
+                    DebugDescription = "Expanded feed with valid annotation.",
+                    Json = 
+                        "\"" + JsonLightUtils.GetPropertyAnnotationName("CityHall", JsonLightConstants.ODataTypeAnnotationName) + "\":\"#Collection(TestModel.OfficeType)\"," +
                         "\"CityHall\": []",
-                    ExpectedEntity = PayloadBuilder.Entity(),
-                    ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightEntryAndFeedDeserializer_UnexpectedExpandedCollectionNavigationLinkPropertyAnnotation", "CityHall", JsonLightConstants.ODataTypeAnnotationName)
+                    ExpectedEntity = PayloadBuilder.Entity().ExpandedNavigationProperty("CityHall", PayloadBuilder.EntitySet())
                 },
                 new NavigationLinkTestCase
                 {

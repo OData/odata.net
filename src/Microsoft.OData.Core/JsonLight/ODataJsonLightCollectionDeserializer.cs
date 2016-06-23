@@ -169,11 +169,10 @@ namespace Microsoft.OData.JsonLight
         /// </summary>
         /// <param name="expectedItemTypeReference">The expected type of the item to read.</param>
         /// <param name="collectionValidator">The collection validator instance if no expected item type has been specified; otherwise null.</param>
-        /// <returns>The value of the collection item that was read; this can be an ODataComplexValue, a primitive value or 'null'.</returns>
+        /// <returns>The value of the collection item that was read; this can be a primitive value or 'null'.</returns>
         /// <remarks>
         /// Pre-Condition:  The first node of the item in the collection
         ///                 NOTE: this method will throw if the node is not
-        ///                 JsonNodeType.StartObject:    for a complex item
         ///                 JsonNodeType.PrimitiveValue: for a primitive item
         /// Post-Condition: The reader is positioned on the first node of the next item or an EndArray node if there are no more items in the collection
         /// </remarks>
@@ -182,10 +181,9 @@ namespace Microsoft.OData.JsonLight
             Debug.Assert(
                 expectedItemTypeReference == null ||
                 expectedItemTypeReference.IsODataPrimitiveTypeKind() ||
-                expectedItemTypeReference.IsODataComplexTypeKind() ||
                 expectedItemTypeReference.IsODataEnumTypeKind() ||
                 expectedItemTypeReference.IsODataTypeDefinitionTypeKind(),
-                "If an expected type is specified, it must be a primitive, complex type, enum type or type definition.");
+                "If an expected type is specified, it must be a primitive, enum type or type definition.");
             this.JsonReader.AssertNotBuffering();
 
             object item = this.ReadNonEntityValue(

@@ -109,6 +109,7 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
 
                 if (mimeType != MimeTypes.ApplicationAtomXml)
                 {
+                    outputWithModel = outputWithModel.Replace("\"Logins\"", "\"Logins@odata.type\":\"#Collection(Microsoft.Test.OData.Services.AstoriaDefaultService.Login)\",\"Logins\"");
                     WritePayloadHelper.VerifyPayloadString(outputWithModel, outputWithoutModel, mimeType);
                 }
             }

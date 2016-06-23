@@ -107,14 +107,15 @@ namespace Microsoft.OData.Tests
         [Fact]
         public void ValidatingSerializationInfoShouldThrowIfEntitySetNameNotSet()
         {
-            Action action = () => ODataResourceSerializationInfo.Validate(new ODataResourceSerializationInfo());
+            Action action = () => ODataResourceSerializationInfo.Validate(
+                new ODataResourceSerializationInfo() { NavigationSourceKind = EdmNavigationSourceKind.EntitySet });
             action.ShouldThrow<ArgumentNullException>().WithMessage("serializationInfo.NavigationSourceName", ComparisonMode.Substring);
         }
 
         [Fact]
         public void ValidatingSerializationInfoShouldThrowIfBaseTypeNameNotSet()
         {
-            Action action = () => ODataResourceSerializationInfo.Validate(new ODataResourceSerializationInfo { NavigationSourceName = "Set" });
+            Action action = () => ODataResourceSerializationInfo.Validate(new ODataResourceSerializationInfo { NavigationSourceName = "Set", NavigationSourceKind = EdmNavigationSourceKind.EntitySet });
             action.ShouldThrow<ArgumentNullException>().WithMessage("serializationInfo.NavigationSourceEntityTypeName", ComparisonMode.Substring);
         }
 

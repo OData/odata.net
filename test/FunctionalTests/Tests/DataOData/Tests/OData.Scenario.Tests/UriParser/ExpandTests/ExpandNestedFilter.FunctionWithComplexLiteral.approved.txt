@@ -24,7 +24,7 @@ SelectExpandQueryOption
 						NamedFunctionParameterNode
 							Parameter Name = Location
 							Value = 
-							Microsoft.OData.ODataComplexValue(Type: )
+							{ Street:'1 Microsoft Way', City:'Redmond', PostalCode:'98052' }(Type: [Edm.String Nullable=True Unicode=True])
 						NamedFunctionParameterNode
 							Parameter Name = Distance
 							Value = 

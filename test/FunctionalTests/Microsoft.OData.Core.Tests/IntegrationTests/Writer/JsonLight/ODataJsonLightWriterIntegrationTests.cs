@@ -290,6 +290,87 @@ namespace Microsoft.OData.Tests.IntegrationTests.Writer.JsonLight
         }
 
         [Fact]
+        public void WriteEntityWithColletionOfComplexPropertyInherit()
+        {
+            EdmModel model = new EdmModel();
+            EdmComplexType complexType = AddAndGetComplexType(model);
+            EdmComplexType derivedComplexType = new EdmComplexType("Fake", "DerivedComplexType", complexType);
+            derivedComplexType.AddStructuralProperty("D1", EdmPrimitiveTypeKind.String);
+            model.AddElement(derivedComplexType);
+            EdmEntityType entityType = AddAndGetEntityType(model);
+            entityType.AddStructuralProperty("CollectionOfComplexP",
+                new EdmCollectionTypeReference(new EdmCollectionType(new EdmComplexTypeReference(complexType, true))));
+            var entitySet = GetEntitySet(model, entityType);
+
+            var requestUri = new Uri("http://temp.org/FakeSet('parent')/");
+            var odataUri = new ODataUri { RequestUri = requestUri };
+            odataUri.Path = new ODataUriParser(model, new Uri("http://temp.org/"), requestUri).ParsePath();
+
+            ODataResource entry = new ODataResource() { Properties = new[] { new ODataProperty { Name = "Key", Value = "parent" }, } };
+
+            ODataNestedResourceInfo nestedResourceInfoForCollectionP = new ODataNestedResourceInfo
+            {
+                IsCollection = true,
+                Name = "CollectionOfComplexP"
+            };
+
+            ODataResourceSet collectionP = new ODataResourceSet();
+            ODataResource complexP = new ODataResource()
+            {
+                Properties = new[] { new ODataProperty { Name = "P1", Value = "complexValue" }, }
+            };
+
+            ODataResource derivedComplexP = new ODataResource()
+            {
+                TypeName = "Fake.DerivedComplexType",
+                Properties = new[] { new ODataProperty { Name = "P1", Value = "complexValue" }, new ODataProperty { Name = "D1", Value = "derivedComplexValue" }, }
+            };
+
+            var actual = WriteJsonLightEntry(
+                isRequest: false,
+                serviceDocumentUri: new Uri("http://temp.org/"),
+                specifySet: true,
+                odataEntry: null,
+                entitySet: entitySet,
+                resourceType: entityType,
+                odataUri: odataUri,
+                writeAction: (writer) =>
+                {
+                    writer.WriteStart(entry);
+                    writer.WriteStart(nestedResourceInfoForCollectionP);
+                    writer.WriteStart(collectionP);
+                    writer.WriteStart(complexP);
+                    writer.WriteEnd();
+                    writer.WriteStart(derivedComplexP);
+                    writer.WriteEnd();
+                    writer.WriteEnd();
+                    writer.WriteEnd();
+                    writer.WriteEnd();
+                },
+                model: model);
+
+            var expected = "{" +
+  "\"@odata.context\":\"http://temp.org/$metadata#FakeSet/$entity\"," +
+  "\"@odata.id\":\"FakeSet('parent')\"," +
+  "\"@odata.editLink\":\"FakeSet('parent')\"," +
+  "\"Key\":\"parent\"," +
+  "\"CollectionOfComplexP\":" +
+  "[" +
+    "{" +
+      "\"P1\":\"complexValue\"" +
+    "}," +
+    "{" +
+      "\"@odata.type\":\"#Fake.DerivedComplexType\"," +
+      "\"P1\":\"complexValue\"," +
+      "\"D1\":\"derivedComplexValue\"" +
+    "}" +
+  "]" +
+"}";
+            actual.Should().Be(expected);
+        }
+
+
+        [Fact]
         public void WriteTopLevelComplexProperty()
         {
             EdmModel model = new EdmModel();
@@ -564,10 +645,16 @@ namespace Microsoft.OData.Tests.IntegrationTests.Writer.JsonLight
         }
 
         private static string WriteJsonLightEntry(bool isRequest, Uri serviceDocumentUri, bool specifySet,
-            ODataResource odataEntry, IEdmNavigationSource entitySet, IEdmStructuredType resourceType, ODataUri odataUri, Action<ODataWriter> writeAction = null, bool isResourceSet = false)
+            ODataResource odataEntry, IEdmNavigationSource entitySet, IEdmStructuredType resourceType,
+            ODataUri odataUri, Action<ODataWriter> writeAction = null, bool isResourceSet = false,
+            EdmModel model = null)
         {
-            var model = new EdmModel();
-            model.AddElement(new EdmEntityContainer("Fake", "Container_sub"));
+            if (model == null)
+            {
+                model = new EdmModel();
+                model.AddElement(new EdmEntityContainer("Fake", "Container_sub"));
+            }
+
             var stream = new MemoryStream();
             var message = new InMemoryMessage { Stream = stream };
 
@@ -581,11 +668,11 @@ namespace Microsoft.OData.Tests.IntegrationTests.Writer.JsonLight
             ODataMessageWriter messageWriter;
             if (isRequest)
             {
-                messageWriter = new ODataMessageWriter((IODataRequestMessage)message, settings, TestUtils.WrapReferencedModelsToMainModel("Fake", "Container", model));
+                messageWriter = new ODataMessageWriter((IODataRequestMessage)message, settings, model ?? TestUtils.WrapReferencedModelsToMainModel("Fake", "Container", model));
             }
             else
             {
-                messageWriter = new ODataMessageWriter((IODataResponseMessage)message, settings, TestUtils.WrapReferencedModelsToMainModel("Fake", "Container", model));
+                messageWriter = new ODataMessageWriter((IODataResponseMessage)message, settings, model ?? TestUtils.WrapReferencedModelsToMainModel("Fake", "Container", model));
             }
 
             ODataWriter writer = null;

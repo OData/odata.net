@@ -20,12 +20,37 @@ namespace Microsoft.OData.JsonLight
     internal sealed class JsonMinimalMetadataTypeNameOracle : JsonLightTypeNameOracle
     {
         /// <summary>
+        /// Determines the resource set type name to write to the payload.
+        /// </summary>
+        /// <param name="resourceSet">The ODataResourceSet whose type is to be written.</param>
+        /// <param name="isUndeclared">true if the resource set is for some undeclared property</param>
+        /// <returns>Type name to write to the payload, or null if no type name should be written.</returns>
+        internal override string GetResourceSetTypeNameForForWriting(ODataResourceSet resourceSet, bool isUndeclared = false)
+        {
+            Debug.Assert(resourceSet != null, "resourceSet != null");
+
+            SerializationTypeNameAnnotation typeNameAnnotation = resourceSet.GetAnnotation<SerializationTypeNameAnnotation>();
+            if (typeNameAnnotation != null)
+            {
+                return typeNameAnnotation.TypeName;
+            }
+
+            if (isUndeclared)
+            {
+                return resourceSet.TypeName;
+            }
+
+            return null;
+        }
+
+        /// <summary>
         /// Determines the entity type name to write to the payload.
         /// </summary>
         /// <param name="expectedTypeName">The expected type name, e.g. the base type of the set or the nav prop.</param>
         /// <param name="resource">The ODataResource whose type is to be written.</param>
+        /// <param name="isUndeclared">true if the ODataResource is for some undeclared property</param>
         /// <returns>Type name to write to the payload, or null if no type name should be written.</returns>
-        internal override string GetResourceTypeNameForWriting(string expectedTypeName, ODataResource resource)
+        internal override string GetResourceTypeNameForWriting(string expectedTypeName, ODataResource resource, bool isUndeclared = false)
         {
             Debug.Assert(resource != null, "resource != null");
 
@@ -37,7 +62,7 @@ namespace Microsoft.OData.JsonLight
 
             // We only write entity type names in Json Light if it's more derived (different) from the expected type name.
             string resourceTypeName = resource.TypeName;
-            if (expectedTypeName != resourceTypeName)
+            if (expectedTypeName != resourceTypeName || isUndeclared)
             {
                 return resourceTypeName;
             }

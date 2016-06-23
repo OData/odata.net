@@ -4809,6 +4809,10 @@ public sealed class Microsoft.OData.ODataMessageWriter : IDisposable {
 	public System.Threading.Tasks.Task`1[[Microsoft.OData.ODataWriter]] CreateODataResourceWriterAsync ()
 	public System.Threading.Tasks.Task`1[[Microsoft.OData.ODataWriter]] CreateODataResourceWriterAsync (Microsoft.OData.Edm.IEdmNavigationSource navigationSource)
 	public System.Threading.Tasks.Task`1[[Microsoft.OData.ODataWriter]] CreateODataResourceWriterAsync (Microsoft.OData.Edm.IEdmNavigationSource navigationSource, Microsoft.OData.Edm.IEdmStructuredType resourceType)
+	public Microsoft.OData.ODataWriter CreateODataUriParameterResourceSetWriter (Microsoft.OData.Edm.IEdmEntitySetBase entitySetBase, Microsoft.OData.Edm.IEdmStructuredType resourceType)
+	public System.Threading.Tasks.Task`1[[Microsoft.OData.ODataWriter]] CreateODataUriParameterResourceSetWriterAsync (Microsoft.OData.Edm.IEdmEntitySetBase entitySetBase, Microsoft.OData.Edm.IEdmStructuredType resourceType)
+	public Microsoft.OData.ODataWriter CreateODataUriParameterResourceWriter (Microsoft.OData.Edm.IEdmNavigationSource navigationSource, Microsoft.OData.Edm.IEdmStructuredType resourceType)
+	public System.Threading.Tasks.Task`1[[Microsoft.OData.ODataWriter]] CreateODataUriParameterResourceWriterAsync (Microsoft.OData.Edm.IEdmNavigationSource navigationSource, Microsoft.OData.Edm.IEdmStructuredType resourceType)
 	public virtual void Dispose ()
 	public void WriteEntityReferenceLink (Microsoft.OData.ODataEntityReferenceLink link)
 	public System.Threading.Tasks.Task WriteEntityReferenceLinkAsync (Microsoft.OData.ODataEntityReferenceLink link)
@@ -4933,6 +4937,7 @@ public sealed class Microsoft.OData.ODataResourceSet : Microsoft.OData.ODataReso
 
 	System.Collections.Generic.IEnumerable`1[[Microsoft.OData.ODataAction]] Actions  { public get; }
 	System.Collections.Generic.IEnumerable`1[[Microsoft.OData.ODataFunction]] Functions  { public get; }
+	string TypeName  { public get; public set; }
 
 	public void AddAction (Microsoft.OData.ODataAction action)
 	public void AddFunction (Microsoft.OData.ODataFunction function)

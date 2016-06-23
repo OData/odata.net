@@ -54,48 +54,5 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
                     testDescriptor.RunTest(testConfiguration);
                 });
         }
-
-        [TestMethod, TestCategory("Reader.Collections"), Variation(Description = "Test the the reading of heterogeneous collection payloads.")]
-        public void HeterogeneousCollectionReaderTest()
-        {
-            EdmModel model = new EdmModel();
-            var cityType = new EdmComplexType("TestModel", "CityType");
-            cityType.AddStructuralProperty("Name", EdmCoreModel.Instance.GetString(true));
-            model.AddElement(cityType);
-
-            var addressType = new EdmComplexType("TestModel", "AddressType");
-            addressType.AddStructuralProperty("Street", EdmCoreModel.Instance.GetString(true));
-            model.AddElement(addressType);
-
-            var testContainer = new EdmEntityContainer("TestModel", "TestContainer");
-            model.AddElement(testContainer);
-            EdmFunction citiesFunction = new EdmFunction("TestModel", "Cities", EdmCoreModel.GetCollection(cityType.ToTypeReference()));
-            model.AddElement(citiesFunction);
-            EdmOperationImport citiesFunctionImport = testContainer.AddFunctionImport("Cities", citiesFunction);
-            model.Fixup();
-            
-            // Add some hand-crafted payloads
-            IEnumerable<PayloadReaderTestDescriptor> testDescriptors = new PayloadReaderTestDescriptor[]
-            {
-                // expected type without type names in the payload and heterogeneous items
-                new PayloadReaderTestDescriptor(this.Settings)
-                {
-                    PayloadElement = new ComplexInstanceCollection(
-                        PayloadBuilder.ComplexValue("TestModel.CityType").Property("Name", PayloadBuilder.PrimitiveValue("Vienna")),
-                        PayloadBuilder.ComplexValue("TestModel.CityType").Property("Street", PayloadBuilder.PrimitiveValue("Am Euro Platz")))
-                        .ExpectedFunctionImport(citiesFunctionImport)
-                        .CollectionName(null),
-                    PayloadEdmModel = model,
-                },
-            };
-
-            this.CombinatorialEngineProvider.RunCombinations(
-                testDescriptors,
-                this.ReaderTestConfigurationProvider.ExplicitFormatConfigurations,
-                (testDescriptor, testConfiguration) =>
-                {
-                    testDescriptor.RunTest(testConfiguration);
-                });
-        }
     }
 }
