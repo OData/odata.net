@@ -1260,7 +1260,7 @@ namespace Microsoft.OData.Service
             {
                 messageReaderSettings.Validations &= ~ReaderValidations.ThrowOnDuplicatePropertyNames;
                 messageReaderSettings.ClientCustomTypeResolver = null;
-                messageReaderSettings.Validations &= ~ReaderValidations.StrictMetadataValidation;
+                messageReaderSettings.Validations &= ~ReaderValidations.ThrowIfTypeConflictsWithMetadata;
                 // EnableReadingEntryContentInEntryStartState == true
             }
 

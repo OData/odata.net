@@ -44,7 +44,7 @@ namespace Microsoft.OData.Client
 
             settings.Validations &= ~ReaderValidations.ThrowOnDuplicatePropertyNames;
             settings.ClientCustomTypeResolver = resolveWireTypeName;
-            settings.Validations &= ~ReaderValidations.StrictMetadataValidation;
+            settings.Validations &= ~ReaderValidations.ThrowIfTypeConflictsWithMetadata;
             settings.BaseUri = this.responseInfo.BaseUriResolver.BaseUriOrNull;
             settings.ODataSimplified = this.responseInfo.Context.ODataSimplified;
             settings.MaxProtocolVersion = CommonUtil.ConvertToODataVersion(this.responseInfo.MaxProtocolVersion);

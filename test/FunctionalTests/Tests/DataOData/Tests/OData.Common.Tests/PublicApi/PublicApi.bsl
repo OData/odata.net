@@ -3884,7 +3884,7 @@ public enum Microsoft.OData.ReaderValidations : int {
 	BasicValidation = 1
 	FullValidation = -1
 	None = 0
-	StrictMetadataValidation = 4
+	ThrowIfTypeConflictsWithMetadata = 4
 	ThrowOnDuplicatePropertyNames = 2
 	ThrowOnUndeclaredProperty = 8
 }

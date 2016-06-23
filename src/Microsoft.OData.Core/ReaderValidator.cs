@@ -106,7 +106,7 @@ namespace Microsoft.OData
         {
             return ReaderValidationUtils.ResolvePayloadTypeNameAndComputeTargetType(
                 expectedTypeKind, defaultPrimitivePayloadType, expectedTypeReference, payloadTypeName, model,
-                settings.ClientCustomTypeResolver, settings.StrictMetadataValidation,
+                settings.ClientCustomTypeResolver, settings.ThrowIfTypeConflictsWithMetadata,
                 settings.DisablePrimitiveTypeConversion,
                 typeKindFromPayloadFunc, out targetTypeKind, out serializationTypeNameAnnotation);
         }

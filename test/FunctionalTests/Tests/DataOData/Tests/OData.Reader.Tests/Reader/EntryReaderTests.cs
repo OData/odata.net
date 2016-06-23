@@ -457,7 +457,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
                     {
                         testConfiguration.MessageReaderSettings.Validations &= ~ReaderValidations.ThrowOnDuplicatePropertyNames;
                         testConfiguration.MessageReaderSettings.ClientCustomTypeResolver = null;
-                        testConfiguration.MessageReaderSettings.Validations &= ~ReaderValidations.StrictMetadataValidation;
+                        testConfiguration.MessageReaderSettings.Validations &= ~ReaderValidations.ThrowIfTypeConflictsWithMetadata;
                         // EnableReadingEntryContentInEntryStartState == true
                     }
 

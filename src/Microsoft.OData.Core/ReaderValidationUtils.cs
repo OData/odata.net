@@ -343,7 +343,7 @@ namespace Microsoft.OData
         /// <param name="payloadTypeName">The payload type name, or null if no payload type was specified.</param>
         /// <param name="model">The model to use.</param>
         /// <param name="clientCustomTypeResolver">Custom type resolver used by the client.</param>
-        /// <param name="strictMetadataValidation">Whether StrictMetadataValidation is enabled.</param>
+        /// <param name="throwIfTypeConflictsWithMetadata">Whether ThrowIfTypeConflictsWithMetadata is enabled.</param>
         /// <param name="disablePrimitiveTypeConversion">Whether primitive type conversion is disabled.</param>
         /// <param name="typeKindFromPayloadFunc">A func to compute the type kind from the payload shape if it could not be determined from the expected type or the payload type.</param>
         /// <param name="targetTypeKind">The target type kind to be used to read the payload.</param>
@@ -363,7 +363,7 @@ namespace Microsoft.OData
             string payloadTypeName,
             IEdmModel model,
             Func<IEdmType, string, IEdmType> clientCustomTypeResolver,
-            bool strictMetadataValidation,
+            bool throwIfTypeConflictsWithMetadata,
             bool disablePrimitiveTypeConversion,
             Func<EdmTypeKind> typeKindFromPayloadFunc,
             out EdmTypeKind targetTypeKind,
@@ -399,7 +399,7 @@ namespace Microsoft.OData
                 payloadTypeName,
                 payloadTypeKind,
                 clientCustomTypeResolver,
-                strictMetadataValidation,
+                throwIfTypeConflictsWithMetadata,
                 disablePrimitiveTypeConversion,
                 typeKindFromPayloadFunc);
 
@@ -416,7 +416,7 @@ namespace Microsoft.OData
                     model,
                     clientCustomTypeResolver,
                     disablePrimitiveTypeConversion,
-                    strictMetadataValidation);
+                    throwIfTypeConflictsWithMetadata);
             }
             else
             {
@@ -428,7 +428,7 @@ namespace Microsoft.OData
                     payloadTypeName,
                     model,
                     clientCustomTypeResolver,
-                    strictMetadataValidation);
+                    throwIfTypeConflictsWithMetadata);
 
                 if (targetTypeReference != null)
                 {
@@ -456,7 +456,7 @@ namespace Microsoft.OData
         /// <param name="model">The model to use.</param>
         /// <param name="clientCustomTypeResolver">Custom type resolver used by client, or null if none.</param>
         /// <param name="disablePrimitiveTypeConversion">Whether primitive type conversion is disabled.</param>
-        /// <param name="strictMetadataValidation">Whether StrictMetadataValidation is enabled.</param>
+        /// <param name="throwIfTypeConflictsWithMetadata">Whether ThrowIfTypeConflictsWithMetadata is enabled.</param>
         /// <returns>The target type reference to use for parsing the value. This method never returns null.</returns>
         internal static IEdmTypeReference ResolveAndValidatePrimitiveTargetType(
             IEdmTypeReference expectedTypeReference,
@@ -467,7 +467,7 @@ namespace Microsoft.OData
             IEdmModel model,
             Func<IEdmType, string, IEdmType> clientCustomTypeResolver,
             bool disablePrimitiveTypeConversion,
-            bool strictMetadataValidation)
+            bool throwIfTypeConflictsWithMetadata)
         {
             Debug.Assert(
                 payloadTypeKind == EdmTypeKind.Primitive || payloadTypeKind == EdmTypeKind.Complex ||
@@ -489,15 +489,7 @@ namespace Microsoft.OData
                 ValidateTypeSupported(expectedTypeReference);
             }
 
-            // Validate type kinds except for open properties or when in lax mode, but only if primitive type conversion is enabled.
-            // If primitive type conversion is disabled, the type kind must match, no matter what validation mode is used.
-            // The rules for primitive types are:
-            // - In the strict mode the payload value must be convertible to the expected type. So the payload type must be a primitive type.
-            // - In the lax mode the payload type is ignored, so its type kind is not verified in any way
-            // - If the DisablePrimitiveTypeConversion == true, the lax/strict mode doesn't matter and we will read the payload value on its own.
-            //     In this case we require the payload value to always be a primitive type (so type kinds must match), but it may not be convertible
-            //     to the expected type, it will still be reported to the caller.
-            if (payloadTypeKind != EdmTypeKind.None && (disablePrimitiveTypeConversion || strictMetadataValidation))
+            if (payloadTypeKind != EdmTypeKind.None && (disablePrimitiveTypeConversion || throwIfTypeConflictsWithMetadata))
             {
                 // Make sure that the type kinds match.
                 ValidationUtils.ValidateTypeKind(payloadTypeKind, EdmTypeKind.Primitive, payloadTypeName);
@@ -522,17 +514,14 @@ namespace Microsoft.OData
             }
 
             // The server ignores the payload type when expected type is specified
-            // The server is going to use lax mode everywhere so this is not an issue.
-            if (!strictMetadataValidation)
+            if (!throwIfTypeConflictsWithMetadata)
             {
-                // Lax validation logic
                 // Always use the expected type, the payload type is ignored.
                 return expectedTypeReference;
             }
 
-            // Strict validation logic
             // We assume the expected type in the case where no payload type is specified
-            // for a primitive value (in strict mode); if no expected type is available we assume Edm.String.
+            // for a primitive value; if no expected type is available we assume Edm.String.
             if (payloadType != null)
             {
                 // The payload type must be convertible to the expected type.
@@ -562,7 +551,7 @@ namespace Microsoft.OData
         /// <param name="payloadTypeName">The payload type name, or null if no payload type was specified.</param>
         /// <param name="model">The model to use.</param>
         /// <param name="clientCustomTypeResolver">Custom type resolver used by client, or null if none.</param>
-        /// <param name="strictMetadataValidation">Whether StrictMetadataValidation is enabled.</param>
+        /// <param name="throwIfTypeConflictsWithMetadata">Whether ThrowIfTypeConflictsWithMetadata is enabled.</param>
         /// <returns>
         /// The target type reference to use for parsing the value.
         /// If there is no user specified model, this will return null.
@@ -579,7 +568,7 @@ namespace Microsoft.OData
             string payloadTypeName,
             IEdmModel model,
             Func<IEdmType, string, IEdmType> clientCustomTypeResolver,
-            bool strictMetadataValidation)
+            bool throwIfTypeConflictsWithMetadata)
         {
             Debug.Assert(
                 expectedTypeKind == EdmTypeKind.Enum || expectedTypeKind == EdmTypeKind.Complex || expectedTypeKind == EdmTypeKind.Entity ||
@@ -606,7 +595,7 @@ namespace Microsoft.OData
 
                 // We should validate that the payload type resolved before anything else to produce reasonable error messages
                 // Otherwise we might report errors which are somewhat confusing (like "Type '' is Complex but Collection was expected.").
-                if (model.IsUserModel() && (expectedTypeReference == null || strictMetadataValidation))
+                if (model.IsUserModel() && (expectedTypeReference == null || throwIfTypeConflictsWithMetadata))
                 {
                     // When using a type resolver (i.e., useExpectedTypeOnlyForTypeResolution == true) then we don't have to
                     // call this method because the contract with the type resolver is to always resolve the type name and thus
@@ -620,9 +609,7 @@ namespace Microsoft.OData
                 ValidateTypeSupported(payloadType == null ? null : payloadType.ToTypeReference(/*nullable*/ true));
             }
 
-            // In lax mode don't cross check kinds of types (we would just use the expected type) unless we expect
-            // an open property of a specific kind (e.g. top level complex property for PUT requests)
-            if (payloadTypeKind != EdmTypeKind.None && (strictMetadataValidation || expectedTypeReference == null))
+            if (payloadTypeKind != EdmTypeKind.None && (throwIfTypeConflictsWithMetadata || expectedTypeReference == null))
             {
                 // Make sure that the type kinds match.
                 ValidationUtils.ValidateTypeKind(payloadTypeKind, expectedTypeKind, payloadTypeName);
@@ -644,7 +631,7 @@ namespace Microsoft.OData
                     payloadType);
             }
 
-            if (!strictMetadataValidation)
+            if (!throwIfTypeConflictsWithMetadata)
             {
                 return ResolveAndValidateTargetTypeStrictValidationDisabled(
                     expectedTypeKind,
@@ -887,11 +874,9 @@ namespace Microsoft.OData
             {
                 case EdmTypeKind.Complex:
                     // if the expectedTypeKind is different from the payloadType.TypeKind the types are not related
-                    // in any way. In that case we will just use the expected type because we are in lax mode.
+                    // in any way. In that case we will just use the expected type.
                     if (payloadType != null && expectedTypeKind == payloadType.TypeKind)
                     {
-                        // Verify if it's a derived complex type, in all other cases simply use the expected type.
-                        VerifyComplexType(expectedTypeReference, payloadType, /* failIfNotRelated */ false);
                         if (EdmLibraryExtensions.IsAssignableFrom(expectedTypeReference.AsComplex().ComplexDefinition(), (IEdmComplexType)payloadType))
                         {
                             return payloadType.ToTypeReference(/*nullable*/ true);
@@ -901,7 +886,7 @@ namespace Microsoft.OData
                     break;
                 case EdmTypeKind.Entity:
                     // if the expectedTypeKind is different from the payloadType.TypeKind the types are not related
-                    // in any way. In that case we will just use the expected type because we are in lax mode.
+                    // in any way. In that case we will just use the expected type.
                     if (payloadType != null && expectedTypeKind == payloadType.TypeKind)
                     {
                         // If the type is assignable (equal or derived) we will use the payload type, since we want to allow derived entities
@@ -915,7 +900,7 @@ namespace Microsoft.OData
                     break;
                 case EdmTypeKind.Collection:
                     // if the expectedTypeKind is different from the payloadType.TypeKind the types are not related
-                    // in any way. In that case we will just use the expected type because we are in lax mode.
+                    // in any way. In that case we will just use the expected type.
                     if (payloadType != null && expectedTypeKind == payloadType.TypeKind)
                     {
                         VerifyCollectionComplexItemType(expectedTypeReference, payloadType);
@@ -1115,7 +1100,7 @@ namespace Microsoft.OData
         /// <param name="payloadTypeName">The type name read from the payload.</param>
         /// <param name="payloadTypeKind">The type kind of the payload value.</param>
         /// <param name="clientCustomTypeResolver">Custom type resolver used by the client.</param>
-        /// <param name="strictMetadataValidation">Whether StrictMetadataValidation is enabled.</param>
+        /// <param name="throwIfTypeConflictsWithMetadata">Whether ThrowIfTypeConflictsWithMetadata is enabled.</param>
         /// <param name="disablePrimitiveTypeConversion">Whether primitive type conversion is disabled.</param>
         /// <param name="typeKindFromPayloadFunc">A func to determine the type kind of the value by analyzing the payload data.</param>
         /// <returns>The type kind to be used to read the payload.</returns>
@@ -1125,7 +1110,7 @@ namespace Microsoft.OData
             string payloadTypeName,
             EdmTypeKind payloadTypeKind,
             Func<IEdmType, string, IEdmType> clientCustomTypeResolver,
-            bool strictMetadataValidation,
+            bool throwIfTypeConflictsWithMetadata,
             bool disablePrimitiveTypeConversion,
             Func<EdmTypeKind> typeKindFromPayloadFunc)
         {
@@ -1175,7 +1160,7 @@ namespace Microsoft.OData
 
             if (ShouldValidatePayloadTypeKind(
                 clientCustomTypeResolver,
-                strictMetadataValidation,
+                throwIfTypeConflictsWithMetadata,
                 disablePrimitiveTypeConversion,
                 expectedTypeReference, payloadTypeKind))
             {
@@ -1189,7 +1174,7 @@ namespace Microsoft.OData
         /// Determines if the expect value type and the current settings mandate us to validate type kinds of payload values.
         /// </summary>
         /// <param name="clientCustomTypeResolver">Custom type resolver used by the client.</param>
-        /// <param name="strictMetadataValidation">Whether StrictMetadataValidation is enabled.</param>
+        /// <param name="throwIfTypeConflictsWithMetadata">Whether ThrowIfTypeConflictsWithMetadata is enabled.</param>
         /// <param name="disablePrimitiveTypeConversion">Whether primitive type conversion is disabled.</param>
         /// <param name="expectedValueTypeReference">The expected type reference for the value inferred from the model.</param>
         /// <param name="payloadTypeKind">The type kind of the payload value.</param>
@@ -1197,7 +1182,7 @@ namespace Microsoft.OData
         /// <remarks>This method deals with the strict versus lax behavior, as well as with the behavior when primitive type conversion is disabled.</remarks>
         private static bool ShouldValidatePayloadTypeKind(
             Func<IEdmType, string, IEdmType> clientCustomTypeResolver,
-            bool strictMetadataValidation,
+            bool throwIfTypeConflictsWithMetadata,
             bool disablePrimitiveTypeConversion,
             IEdmTypeReference expectedValueTypeReference,
             EdmTypeKind payloadTypeKind)
@@ -1207,12 +1192,12 @@ namespace Microsoft.OData
             bool useExpectedTypeOnlyForTypeResolution = clientCustomTypeResolver != null && payloadTypeKind != EdmTypeKind.None;
 
             // Type kind validation must happen when
-            // - In strict mode
+            // - ThrowIfTypeConflictsWithMetadata is set
             // - Target type is primitive and primitive type conversion is disabled
-            // In lax mode we don't want to validate type kinds, but the DisablePrimitiveTypeConversion overrides the lax mode behavior.
+            // And the DisablePrimitiveTypeConversion overrides the ThrowIfTypeConflictsWithMetadata behavior.
             // If there's no expected type, then there's nothing to validate against (open property).
             return expectedValueTypeReference != null &&
-                (strictMetadataValidation ||
+                (throwIfTypeConflictsWithMetadata ||
                 useExpectedTypeOnlyForTypeResolution ||
                 (expectedValueTypeReference.IsODataPrimitiveTypeKind() && disablePrimitiveTypeConversion));
         }

@@ -57,7 +57,7 @@ namespace Microsoft.OData
                 validations = value;
                 BasicValidation = (validations & ReaderValidations.BasicValidation) != 0;
                 ThrowOnDuplicatePropertyNames = (validations & ReaderValidations.ThrowOnDuplicatePropertyNames) != 0;
-                StrictMetadataValidation = (validations & ReaderValidations.StrictMetadataValidation) != 0;
+                ThrowIfTypeConflictsWithMetadata = (validations & ReaderValidations.ThrowIfTypeConflictsWithMetadata) != 0;
                 ThrowOnUndeclaredProperty = (validations & ReaderValidations.ThrowOnUndeclaredProperty) != 0;
             }
         }
@@ -175,9 +175,9 @@ namespace Microsoft.OData
         internal bool ThrowOnDuplicatePropertyNames { get; private set; }
 
         /// <summary>
-        /// Returns whether StrictMetadataValidation is enabled.
+        /// Returns whether ThrowIfTypeConflictsWithMetadata is enabled.
         /// </summary>
-        internal bool StrictMetadataValidation { get; private set; }
+        internal bool ThrowIfTypeConflictsWithMetadata { get; private set; }
 
         /// <summary>
         /// Returns whether ThrowOnUndeclaredProperty validation setting is enabled.
@@ -247,7 +247,7 @@ namespace Microsoft.OData
             this.validations = other.validations;
             this.BasicValidation = other.BasicValidation;
             this.ThrowOnDuplicatePropertyNames = other.ThrowOnDuplicatePropertyNames;
-            this.StrictMetadataValidation = other.StrictMetadataValidation;
+            this.ThrowIfTypeConflictsWithMetadata = other.ThrowIfTypeConflictsWithMetadata;
             this.ThrowOnUndeclaredProperty = other.ThrowOnUndeclaredProperty;
         }
     }

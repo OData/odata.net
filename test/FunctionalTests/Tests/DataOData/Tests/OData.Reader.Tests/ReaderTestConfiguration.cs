@@ -99,12 +99,12 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
                 case TestODataBehaviorKind.WcfDataServicesClient:
                     testConfiguration.MessageReaderSettings.Validations &= ~ReaderValidations.ThrowOnDuplicatePropertyNames;
                     testConfiguration.MessageReaderSettings.ClientCustomTypeResolver = null;
-                    testConfiguration.MessageReaderSettings.Validations &= ~ReaderValidations.StrictMetadataValidation;
+                    testConfiguration.MessageReaderSettings.Validations &= ~ReaderValidations.ThrowIfTypeConflictsWithMetadata;
                     break;
                 case TestODataBehaviorKind.WcfDataServicesServer:
                     testConfiguration.MessageReaderSettings.Validations &= ~ReaderValidations.ThrowOnDuplicatePropertyNames;
                     testConfiguration.MessageReaderSettings.ClientCustomTypeResolver = null;
-                    testConfiguration.MessageReaderSettings.Validations &= ~ReaderValidations.StrictMetadataValidation;
+                    testConfiguration.MessageReaderSettings.Validations &= ~ReaderValidations.ThrowIfTypeConflictsWithMetadata;
                     // EnableReadingEntryContentInEntryStartState == true
                     break;
             }

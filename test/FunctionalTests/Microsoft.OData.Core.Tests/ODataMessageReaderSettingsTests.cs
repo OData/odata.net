@@ -29,7 +29,7 @@ namespace Microsoft.OData.Tests
             Assert.False(settings.DisableMessageStreamDisposal, "DisableMessageStreamDisposal should be false by default.");
             Assert.False(settings.EnableCharactersCheck, "The CheckCharacters should be off by default.");
             Assert.True((settings.Validations & ReaderValidations.BasicValidation) != 0, "BasicValidation should be true by default");
-            Assert.True((settings.Validations & ReaderValidations.StrictMetadataValidation) != 0, "The StrictMetadataValidation should be true by default");
+            Assert.True((settings.Validations & ReaderValidations.ThrowIfTypeConflictsWithMetadata) != 0, "The ThrowIfTypeConflictsWithMetadata should be true by default");
             Assert.True(settings.EnableReadingEntryContentInEntryStartState, "The EnableReadingEntryContentInEntryStartState should be true by default");
             Assert.False(settings.ODataSimplified, "The ODataSimplified should be false by default");
             Assert.Null(settings.ShouldIncludeAnnotation);
@@ -66,7 +66,7 @@ namespace Microsoft.OData.Tests
                     MaxReceivedMessageSize = 5,
                 },
             };
-            settings.Validations &= ~ReaderValidations.StrictMetadataValidation
+            settings.Validations &= ~ReaderValidations.ThrowIfTypeConflictsWithMetadata
                                     & ~ReaderValidations.ThrowOnDuplicatePropertyNames
                                     & ~ReaderValidations.BasicValidation;
             settings.Validations |= ReaderValidations.ThrowOnUndeclaredProperty;
@@ -77,7 +77,7 @@ namespace Microsoft.OData.Tests
             Assert.True(settings.DisableMessageStreamDisposal, "DisableMessageStreamDisposal was not correctly remembered.");
             Assert.True(settings.EnableCharactersCheck, "The CheckCharacters should be on when set.");
             Assert.True((settings.Validations & ReaderValidations.BasicValidation) == 0, "BasicValidation was not correctly remembered");
-            Assert.False(settings.StrictMetadataValidation, "The StrictMetadataValidation was not correctly remembered");
+            Assert.False(settings.ThrowIfTypeConflictsWithMetadata, "The ThrowIfTypeConflictsWithMetadata was not correctly remembered");
             Assert.False(settings.EnableReadingEntryContentInEntryStartState, "EnableReadingEntryContentInEntryStartState was not correctly remembered");
             Assert.True(settings.ODataSimplified, "ODataSimplified was not correctly remembered");
             Assert.True(settings.UseKeyAsSegment, "UseKeyAsSegment was not correctly remembered");
