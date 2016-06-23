@@ -589,11 +589,6 @@ namespace Microsoft.OData
                     throw new ODataException(Strings.General_InternalError(InternalErrorCodes.ODataReaderCore_ReadImplementation));
             }
 
-            if ((this.State == ODataReaderState.ResourceStart || this.State == ODataReaderState.ResourceEnd) && this.Item != null)
-            {
-                ReaderValidationUtils.ValidateResource(this.CurrentResource);
-            }
-
             return result;
         }
 

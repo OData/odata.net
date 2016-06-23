@@ -31,9 +31,9 @@ namespace Microsoft.OData
         ThrowOnDuplicatePropertyNames = 2,
 
         /// <summary>
-        /// Writing undeclared properties will be prohibited.
+        /// Writing undeclared properties on non open type will be prohibited.
         /// </summary>
-        ThrowOnUndeclaredProperty = 4,
+        ThrowOnUndeclaredPropertyForNonOpenType = 4,
 
         /// <summary>
         /// Enable all validations.

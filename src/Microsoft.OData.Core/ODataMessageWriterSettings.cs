@@ -73,13 +73,12 @@ namespace Microsoft.OData
             this.EnableMessageStreamDisposal = true;
             this.EnableCharactersCheck = false;
             this.ODataSimplified = false;
-            this.Validations = WriterValidations.FullValidation & ~WriterValidations.ThrowOnUndeclaredProperty;
+            this.Validations = WriterValidations.FullValidation & ~WriterValidations.ThrowOnUndeclaredPropertyForNonOpenType;
             this.Validator = new WriterValidator(this);
         }
 
         /// <summary>
-        /// Gets or sets validations to perform. Default value is <see cref="T:Microsoft.OData.WriterValidations.FullValidation"/>,
-        /// but without <see cref="T:Microsoft.OData.WriterValidations.ThrowOnUndeclaredProperty"/>.
+        /// Gets or sets validations to perform. Default value is <see cref="T:Microsoft.OData.WriterValidations.FullValidation"/>
         /// </summary>
         public WriterValidations Validations
         {
@@ -93,7 +92,7 @@ namespace Microsoft.OData
                 validations = value;
                 BasicValidation = (validations & WriterValidations.BasicValidation) != 0;
                 ThrowOnDuplicatePropertyNames = (validations & WriterValidations.ThrowOnDuplicatePropertyNames) != 0;
-                ThrowOnUndeclaredProperty = (validations & WriterValidations.ThrowOnUndeclaredProperty) != 0;
+                ThrowOnUndeclaredPropertyForNonOpenType = (validations & WriterValidations.ThrowOnUndeclaredPropertyForNonOpenType) != 0;
             }
         }
 
@@ -206,9 +205,9 @@ namespace Microsoft.OData
         internal bool ThrowOnDuplicatePropertyNames { get; private set; }
 
         /// <summary>
-        /// Returns whether ThrowOnUndeclaredProperty validation setting is enabled.
+        /// Returns whether ThrowOnUndeclaredPropertyForNonOpenType validation setting is enabled.
         /// </summary>
-        internal bool ThrowOnUndeclaredProperty { get; private set; }
+        internal bool ThrowOnUndeclaredPropertyForNonOpenType { get; private set; }
 
         /// <summary>
         /// The acceptable media types used to determine the content type of the message.
@@ -433,7 +432,7 @@ namespace Microsoft.OData
             this.validations = other.validations;
             this.BasicValidation = other.BasicValidation;
             this.ThrowOnDuplicatePropertyNames = other.ThrowOnDuplicatePropertyNames;
-            this.ThrowOnUndeclaredProperty = other.ThrowOnUndeclaredProperty;
+            this.ThrowOnUndeclaredPropertyForNonOpenType = other.ThrowOnUndeclaredPropertyForNonOpenType;
         }
     }
 }

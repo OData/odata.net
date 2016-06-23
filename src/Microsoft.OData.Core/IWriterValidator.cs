@@ -118,15 +118,15 @@ namespace Microsoft.OData
                                              IEdmStructuredType owningStructuredType);
 
         /// <summary>
-        /// Validates that the navigation property with the specified name exists on a given entity
-        /// type. The entity type can be null if no metadata is available.
+        /// Validates an <see cref="ODataNestedResourceInfo"/> to ensure all required information is specified and valid.
         /// </summary>
-        /// <param name="propertyName">Name of the property.</param>
-        /// <param name="owningEntityType">Hosting entity type or null if no metadata is available.
-        /// </param>
-        /// <returns><see cref="IEdmProperty"/> representing the navigation property with name
-        /// <paramref name="propertyName"/> or null if no metadata is available.</returns>
-        IEdmNavigationProperty ValidateNavigationPropertyDefined(string propertyName,
-                                                                 IEdmEntityType owningEntityType);
+        /// <param name="nestedResourceInfo">The nested resource info to validate.</param>
+        /// <param name="declaringStructuredType">The <see cref="IEdmStructuredType"/> declaring the structural property or navigation property; or null if metadata is not available.</param>
+        /// <param name="expandedPayloadKind">The <see cref="ODataPayloadKind"/> of the expanded content of this nested resource info or null for deferred links.</param>
+        /// <returns>The type of the navigation property for this nested resource info; or null if no <paramref name="declaringStructuredType"/> was specified.</returns>
+        IEdmNavigationProperty ValidateNestedResourceInfo(
+            ODataNestedResourceInfo nestedResourceInfo,
+            IEdmStructuredType declaringStructuredType,
+            ODataPayloadKind? expandedPayloadKind);
     }
 }

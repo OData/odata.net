@@ -99,8 +99,6 @@ namespace Microsoft.OData
             //   - we simply return null (treat it is as primitive null value)
             if (expectedTypeReference != null)
             {
-                ValidateTypeSupported(expectedTypeReference);
-
                 if (enablePrimitiveTypeConversion || expectedTypeReference.TypeKind() != EdmTypeKind.Primitive)
                 {
                     ValidateNullValueAllowed(expectedTypeReference, validateNullValue, propertyName, isDynamicProperty);
@@ -109,34 +107,18 @@ namespace Microsoft.OData
         }
 
         /// <summary>
-        /// Validates an <see cref="ODataResource"/> to ensure all required information is specified and valid.
-        /// </summary>
-        /// <param name="resource">The resource to validate.</param>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "resource", Justification = "Used only in debug asserts.")]
-        internal static void ValidateResource(ODataResource resource)
-        {
-            Debug.Assert(resource != null, "resource != null");
-
-            // [Astoria-ODataLib-Integration] Validation of atom:id value differs between client and server
-            // For now don't validate ID at all - relaxed readers rule.
-
-            // Type name is verified in the format readers since it's shared with other non-entity types
-            // and verifying it here would mean doing it twice.
-
-            // Readers will report any combination of the other properties (for example MR and such)
-            // So nothing else to check.
-        }
-
-        /// <summary>
-        /// Finds a defined property from the model if one is available.
+        /// Validates that a property with the specified name exists on a given structured type.
         /// The structured type can be null if no metadata is available.
         /// </summary>
-        /// <param name="propertyName">The name of the property to find.</param>
+        /// <param name="propertyName">The name of the property to validate.</param>
         /// <param name="owningStructuredType">The owning type of the property with name <paramref name="propertyName"/>
         /// or null if no metadata is available.</param>
+        /// <param name="throwOnUndeclaredPropertyForNonOpenType">Whether ThrowOnUndeclaredPropertyForNonOpenType validation setting is enabled.</param>
         /// <returns>The <see cref="IEdmProperty"/> instance representing the property with name <paramref name="propertyName"/>
         /// or null if no metadata is available.</returns>
-        internal static IEdmProperty FindDefinedProperty(string propertyName, IEdmStructuredType owningStructuredType)
+        internal static IEdmProperty ValidatePropertyDefined(string propertyName,
+                                                                  IEdmStructuredType owningStructuredType,
+                                                                  bool throwOnUndeclaredPropertyForNonOpenType)
         {
             Debug.Assert(!string.IsNullOrEmpty(propertyName), "!string.IsNullOrEmpty(propertyName)");
 
@@ -146,129 +128,19 @@ namespace Microsoft.OData
             }
 
             IEdmProperty property = owningStructuredType.FindProperty(propertyName);
-            return property;
-        }
-
-        /// <summary>
-        /// Validates that a property with the specified name exists on a given structured type.
-        /// The structured type can be null if no metadata is available.
-        /// </summary>
-        /// <param name="propertyName">The name of the property to validate.</param>
-        /// <param name="owningStructuredType">The owning type of the property with name <paramref name="propertyName"/>
-        /// or null if no metadata is available.</param>
-        /// <param name="throwOnUndeclaredValueProperty">Whether ThrowOnUndeclaredValueProperty validation setting is enabled.</param>
-        /// <returns>The <see cref="IEdmProperty"/> instance representing the property with name <paramref name="propertyName"/>
-        /// or null if no metadata is available.</returns>
-        internal static IEdmProperty ValidateValuePropertyDefined(string propertyName,
-                                                                  IEdmStructuredType owningStructuredType,
-                                                                  bool throwOnUndeclaredValueProperty)
-        {
-            Debug.Assert(!string.IsNullOrEmpty(propertyName), "!string.IsNullOrEmpty(propertyName)");
-
-            if (owningStructuredType == null)
-            {
-                return null;
-            }
-
-            IEdmProperty property = FindDefinedProperty(propertyName, owningStructuredType);
             if (property == null && !owningStructuredType.IsOpen)
             {
-                if (throwOnUndeclaredValueProperty)
+                if (throwOnUndeclaredPropertyForNonOpenType)
                 {
                     throw new ODataException(Strings.ValidationUtils_PropertyDoesNotExistOnType(propertyName, owningStructuredType.FullTypeName()));
                 }
                 else
                 {
-                    Debug.Assert(!throwOnUndeclaredValueProperty, "!throwOnUndeclaredValueProperty");
+                    Debug.Assert(!throwOnUndeclaredPropertyForNonOpenType, "!throwOnUndeclaredPropertyForNonOpenType");
                 }
             }
 
             return property;
-        }
-
-        /// <summary>
-        /// Validates that the expected property name matches the property name read from the payload.
-        /// </summary>
-        /// <param name="expectedPropertyName">The expected property name.</param>
-        /// <param name="payloadPropertyName">The property name read from the payload.</param>
-        internal static void ValidateExpectedPropertyName(string expectedPropertyName, string payloadPropertyName)
-        {
-            if (expectedPropertyName != null && string.CompareOrdinal(expectedPropertyName, payloadPropertyName) != 0)
-            {
-                throw new ODataException(Strings.ReaderValidationUtils_NonMatchingPropertyNames(payloadPropertyName, expectedPropertyName));
-            }
-        }
-
-        /// <summary>
-        /// Validates that a property with the specified name exists on a given structured type.
-        /// The structured type can be null if no metadata is available.
-        /// </summary>
-        /// <param name="propertyName">The name of the property to validate.</param>
-        /// <param name="owningStructuredType">The owning type of the property with name <paramref name="propertyName"/>
-        /// or null if no metadata is available.</param>
-        /// <param name="throwOnUndeclaredLinkProperty">Whether ThrowOnUndeclaredLinkProperty validation setting is enabled.</param>
-        /// <returns>The <see cref="IEdmProperty"/> instance representing the property with name <paramref name="propertyName"/>
-        /// or null if no metadata is available.</returns>
-        internal static IEdmProperty ValidateLinkPropertyDefined(
-            string propertyName, IEdmStructuredType owningStructuredType, bool throwOnUndeclaredLinkProperty)
-        {
-            Debug.Assert(!string.IsNullOrEmpty(propertyName), "!string.IsNullOrEmpty(propertyName)");
-
-            if (owningStructuredType == null)
-            {
-                return null;
-            }
-
-            IEdmProperty property = FindDefinedProperty(propertyName, owningStructuredType);
-            if (property == null && !owningStructuredType.IsOpen)
-            {
-                if (throwOnUndeclaredLinkProperty)
-                {
-                    throw new ODataException(Strings.ValidationUtils_PropertyDoesNotExistOnType(propertyName, owningStructuredType.FullTypeName()));
-                }
-            }
-
-            return property;
-        }
-
-        /// <summary>
-        /// Validates that a navigation property with the specified name exists on a given entity type.
-        /// The entity type can be null if no metadata is available.
-        /// </summary>
-        /// <param name="propertyName">The name of the property to validate.</param>
-        /// <param name="owningEntityType">The owning entity type or null if no metadata is available.</param>
-        /// <param name="throwOnUndeclaredLinkProperty">Whether ThrowOnUndeclaredLinkProperty validation setting is enabled.</param>
-        /// <returns>The <see cref="IEdmNavigationProperty"/> instance representing the navigation property with name <paramref name="propertyName"/>
-        /// or null if no metadata is available.</returns>
-        internal static IEdmNavigationProperty ValidateNavigationPropertyDefined(
-            string propertyName,
-            IEdmEntityType owningEntityType,
-            bool throwOnUndeclaredLinkProperty)
-        {
-            Debug.Assert(!string.IsNullOrEmpty(propertyName), "!string.IsNullOrEmpty(propertyName)");
-
-            if (owningEntityType == null)
-            {
-                return null;
-            }
-
-            IEdmProperty property = ValidateLinkPropertyDefined(propertyName, owningEntityType,
-                                                                throwOnUndeclaredLinkProperty);
-            if (property == null)
-            {
-                if (owningEntityType.IsOpen && throwOnUndeclaredLinkProperty)
-                {
-                    // We don't support open navigation properties
-                    throw new ODataException(Strings.ValidationUtils_OpenNavigationProperty(propertyName, owningEntityType.FullTypeName()));
-                }
-            }
-            else if (property.PropertyKind != EdmPropertyKind.Navigation)
-            {
-                // The property must be a navigation property
-                throw new ODataException(Strings.ValidationUtils_NavigationPropertyExpected(propertyName, owningEntityType.FullTypeName(), property.PropertyKind.ToString()));
-            }
-
-            return (IEdmNavigationProperty)property;
         }
 
         /// <summary>
@@ -391,7 +263,8 @@ namespace Microsoft.OData
 
             // Compute the target type kind based on the expected type, the payload type kind
             // and a function to detect the target type kind from the shape of the payload.
-            bool forResource = (expectedTypeKind & (EdmTypeKind.Complex | EdmTypeKind.Entity)) > 0;
+            EdmTypeKind typeKindToValidate = expectedTypeKind != EdmTypeKind.None ? expectedTypeKind : payloadTypeKind;
+            bool forResource = (typeKindToValidate & (EdmTypeKind.Complex | EdmTypeKind.Entity)) > 0;
 
             targetTypeKind = ComputeTargetTypeKind(
                 expectedTypeReference,
@@ -484,11 +357,14 @@ namespace Microsoft.OData
 
             bool useExpectedTypeOnlyForTypeResolution = clientCustomTypeResolver != null && payloadType != null;
 
-            if (expectedTypeReference != null && !useExpectedTypeOnlyForTypeResolution)
-            {
-                ValidateTypeSupported(expectedTypeReference);
-            }
-
+            // Validate type kinds except for open properties or when in lax mode, but only if primitive type conversion is enabled.
+            // If primitive type conversion is disabled, the type kind must match, no matter what validation mode is used.
+            // The rules for primitive types are:
+            // - In the strict mode the payload value must be convertible to the expected type. So the payload type must be a primitive type.
+            // - In the lax mode the payload type is ignored, so its type kind is not verified in any way
+            // - If the DisablePrimitiveTypeConversion == true, the lax/strict mode doesn't matter and we will read the payload value on its own.
+            //     In this case we require the payload value to always be a primitive type (so type kinds must match), but it may not be convertible
+            //     to the expected type, it will still be reported to the caller.
             if (payloadTypeKind != EdmTypeKind.None && (!enablePrimitiveTypeConversion || throwIfTypeConflictsWithMetadata))
             {
                 // Make sure that the type kinds match.
@@ -591,8 +467,6 @@ namespace Microsoft.OData
             bool useExpectedTypeOnlyForTypeResolution = clientCustomTypeResolver != null && payloadType != null;
             if (!useExpectedTypeOnlyForTypeResolution)
             {
-                ValidateTypeSupported(expectedTypeReference);
-
                 // We should validate that the payload type resolved before anything else to produce reasonable error messages
                 // Otherwise we might report errors which are somewhat confusing (like "Type '' is Complex but Collection was expected.").
                 if (model.IsUserModel() && (expectedTypeReference == null || throwIfTypeConflictsWithMetadata))
@@ -602,11 +476,6 @@ namespace Microsoft.OData
                     // we will always get a defined type.
                     VerifyPayloadTypeDefined(payloadTypeName, payloadType);
                 }
-            }
-            else
-            {
-                // Payload types are always nullable.
-                ValidateTypeSupported(payloadType == null ? null : payloadType.ToTypeReference(/*nullable*/ true));
             }
 
             if (payloadTypeKind != EdmTypeKind.None && (throwIfTypeConflictsWithMetadata || expectedTypeReference == null))
@@ -682,18 +551,6 @@ namespace Microsoft.OData
             {
                 // We decided to not support multi-byte encodings other than UTF8 for now.
                 throw new ODataException(Strings.ODataAsyncReader_MultiByteEncodingsNotSupported(encoding.WebName));
-            }
-        }
-
-        /// <summary>
-        /// Validates whether the specified type reference is supported in the current version.
-        /// </summary>
-        /// <param name="typeReference">The type reference to check.</param>
-        internal static void ValidateTypeSupported(IEdmTypeReference typeReference)
-        {
-            if (typeReference != null)
-            {
-                // Do the version specific validation for given types
             }
         }
 

@@ -373,6 +373,191 @@ namespace Microsoft.OData.Tests.IntegrationTests.Writer.JsonLight
             actual.Should().Be(expected);
         }
 
+        [Fact]
+        public void WriteOpenEntryWithUndeclaredProperty()
+        {
+            ODataResource res = new ODataResource() { Properties = new[] { new ODataProperty { Name = "Key", Value = "son" }, new ODataProperty { Name = "OpenProperty", Value = "Open" } } };
+            ODataNestedResourceInfo nestedComplexInfo = new ODataNestedResourceInfo() { Name = "OpenComplex" };
+            ODataResource nestedComplex = new ODataResource() { TypeName = "Fake.ComplexType", Properties = new[] { new ODataProperty { Name = "P1", Value = "cv" } } };
+            ODataNestedResourceInfo nestedResInfo = new ODataNestedResourceInfo() { Name = "OpenNavigationProperty", IsCollection = false };
+            ODataResource nestedRes = new ODataResource()
+            {
+                Id = new Uri("http://temp.org/Type"),
+                EditLink = new Uri("http://temp.org/Type"),
+                ReadLink = new Uri("http://temp.org/Type"), 
+                ETag = "etag",
+                TypeName = "Fake.Type",
+                Properties = new[] { new ODataProperty { Name = "Key", Value = "son" } }
+            };
+
+            var actual = WriteJsonLightEntryForUndeclared(
+                isOpenType: true,
+                writeAction: (writer) =>
+                {
+                    writer.WriteStart(res);
+                    writer.WriteStart(nestedComplexInfo);
+                    writer.WriteStart(nestedComplex);
+                    writer.WriteEnd();
+                    writer.WriteEnd();
+                    writer.WriteStart(nestedResInfo);
+                    writer.WriteStart(nestedRes);
+                    writer.WriteEnd();
+                    writer.WriteEnd();
+                    writer.WriteEnd();
+                });
+
+            var expected = "{" +
+                           "\"@odata.context\":\"http://temp.org/$metadata#FakeSet/$entity\"," +
+                           "\"@odata.id\":\"FakeSet('son')\"," +
+                           "\"@odata.editLink\":\"FakeSet('son')\"," +
+                           "\"Key\":\"son\"," +
+                           "\"OpenProperty\":\"Open\"," +
+                           "\"OpenComplex@odata.associationLink\":\"http://temp.org/FakeSet('son')/OpenComplex/$ref\"," +
+                           "\"OpenComplex@odata.navigationLink\":\"http://temp.org/FakeSet('son')/OpenComplex\"," +
+                           "\"OpenComplex\":" +
+                           "{" +
+                               "\"@odata.type\":\"#Fake.ComplexType\"," +
+                               "\"P1\":\"cv\"" +
+                           "}," +
+                           "\"OpenNavigationProperty@odata.associationLink\":\"http://temp.org/FakeSet('son')/OpenNavigationProperty/$ref\"," +
+                           "\"OpenNavigationProperty@odata.navigationLink\":\"http://temp.org/FakeSet('son')/OpenNavigationProperty\"," +
+                           "\"OpenNavigationProperty\":" +
+                           "{" +
+                               "\"@odata.type\":\"#Fake.Type\"," +
+                               "\"@odata.id\":\"http://temp.org/Type\"," +
+                               "\"@odata.etag\":\"etag\"," +
+                               "\"@odata.editLink\":\"http://temp.org/Type\"," +
+                               "\"Key\":\"son\"" +
+                           "}" +
+                           "}";
+
+            Assert.Equal(expected, actual);
+        }
+
+        [Fact]
+        public void WriteNonOpenEntryWithUndeclaredProperty()
+        {
+            ODataResource res = new ODataResource() { Properties = new[] { new ODataProperty { Name = "Key", Value = "son" }, new ODataProperty { Name = "OpenProperty", Value = "Open" } } };
+            ODataNestedResourceInfo nestedComplexInfo = new ODataNestedResourceInfo() { Name = "OpenComplex" };
+            ODataResource nestedComplex = new ODataResource() { TypeName = "Fake.ComplexType", Properties = new[] { new ODataProperty { Name = "P1", Value = "cv" } } };
+            ODataNestedResourceInfo nestedResInfo = new ODataNestedResourceInfo() { Name = "OpenNavigationProperty", IsCollection = false };
+            ODataResource nestedRes = new ODataResource()
+            {
+                Id = new Uri("http://temp.org/Type"),
+                EditLink = new Uri("http://temp.org/Type"),
+                ReadLink = new Uri("http://temp.org/Type"),
+                ETag = "etag",
+                TypeName = "Fake.Type",
+                Properties = new[] { new ODataProperty { Name = "Key", Value = "son" } }
+            };
+
+            var actual = WriteJsonLightEntryForUndeclared(
+                isOpenType: false,
+                writeAction: (writer) =>
+                {
+                    writer.WriteStart(res);
+                    writer.WriteStart(nestedComplexInfo);
+                    writer.WriteStart(nestedComplex);
+                    writer.WriteEnd();
+                    writer.WriteEnd();
+                    writer.WriteStart(nestedResInfo);
+                    writer.WriteStart(nestedRes);
+                    writer.WriteEnd();
+                    writer.WriteEnd();
+                    writer.WriteEnd();
+                }, 
+                throwOnUndeclaredProperty: false
+                );
+
+            var expected = "{" +
+                           "\"@odata.context\":\"http://temp.org/$metadata#FakeSet/$entity\"," +
+                           "\"@odata.id\":\"FakeSet('son')\"," +
+                           "\"@odata.editLink\":\"FakeSet('son')\"," +
+                           "\"Key\":\"son\"," +
+                           "\"OpenProperty\":\"Open\"," +
+                           "\"OpenComplex@odata.associationLink\":\"http://temp.org/FakeSet('son')/OpenComplex/$ref\"," +
+                           "\"OpenComplex@odata.navigationLink\":\"http://temp.org/FakeSet('son')/OpenComplex\"," +
+                           "\"OpenComplex\":" +
+                           "{" +
+                               "\"@odata.type\":\"#Fake.ComplexType\"," +
+                               "\"P1\":\"cv\"" +
+                           "}," +
+                           "\"OpenNavigationProperty@odata.associationLink\":\"http://temp.org/FakeSet('son')/OpenNavigationProperty/$ref\"," +
+                           "\"OpenNavigationProperty@odata.navigationLink\":\"http://temp.org/FakeSet('son')/OpenNavigationProperty\"," +
+                           "\"OpenNavigationProperty\":" +
+                           "{" +
+                               "\"@odata.type\":\"#Fake.Type\"," +
+                               "\"@odata.id\":\"http://temp.org/Type\"," +
+                               "\"@odata.etag\":\"etag\"," +
+                               "\"@odata.editLink\":\"http://temp.org/Type\"," +
+                               "\"Key\":\"son\"" +
+                           "}" +
+                           "}";
+            Assert.Equal(expected, actual);
+
+            // Should throw on undeclared primitive value property
+            res = new ODataResource() { Properties = new[] { new ODataProperty { Name = "Key", Value = "son" }, new ODataProperty { Name = "OpenProperty", Value = "Open" } } };
+
+            Action writeEntry = () => WriteJsonLightEntryForUndeclared(
+                isOpenType: false,
+                writeAction: (writer) =>
+                {
+                    writer.WriteStart(res);
+                    writer.WriteEnd();
+                },
+                throwOnUndeclaredProperty: true
+                );
+            writeEntry.ShouldThrow<ODataException>().WithMessage(ErrorStrings.ValidationUtils_PropertyDoesNotExistOnType("OpenProperty", "Fake.Type"));
+
+            // Should throw on undeclared complex value property
+            res = new ODataResource() { Properties = new[] { new ODataProperty { Name = "Key", Value = "son" } } };
+            nestedComplexInfo = new ODataNestedResourceInfo() { Name = "OpenComplex" };
+            nestedComplex = new ODataResource() { TypeName = "Fake.ComplexType", Properties = new[] { new ODataProperty { Name = "P1", Value = "cv" } } };
+
+            writeEntry = () => WriteJsonLightEntryForUndeclared(
+                isOpenType: false,
+                writeAction: (writer) =>
+                {
+                    writer.WriteStart(res);
+                    writer.WriteStart(nestedComplexInfo);
+                    writer.WriteStart(nestedComplex);
+                    writer.WriteEnd();
+                    writer.WriteEnd();
+                    writer.WriteEnd();
+                },
+                throwOnUndeclaredProperty: true
+                );
+            writeEntry.ShouldThrow<ODataException>().WithMessage(ErrorStrings.ValidationUtils_PropertyDoesNotExistOnType("OpenComplex", "Fake.Type"));
+
+            // Should throw on undeclared navigation property
+            res = new ODataResource() { Properties = new[] { new ODataProperty { Name = "Key", Value = "son" } } };
+            nestedResInfo = new ODataNestedResourceInfo() { Name = "OpenNavigationProperty", IsCollection = false };
+            nestedRes = new ODataResource()
+            {
+                Id = new Uri("http://temp.org/Type"),
+                EditLink = new Uri("http://temp.org/Type"),
+                ReadLink = new Uri("http://temp.org/Type"),
+                ETag = "etag",
+                TypeName = "Fake.Type",
+                Properties = new[] { new ODataProperty { Name = "Key", Value = "son" } }
+            };
+
+            writeEntry = () => WriteJsonLightEntryForUndeclared(
+                isOpenType: false,
+                writeAction: (writer) =>
+                {
+                    writer.WriteStart(res);
+                    writer.WriteStart(nestedResInfo);
+                    writer.WriteStart(nestedRes);
+                    writer.WriteEnd();
+                    writer.WriteEnd();
+                    writer.WriteEnd();
+                },
+                throwOnUndeclaredProperty: true
+                );
+            writeEntry.ShouldThrow<ODataException>().WithMessage(ErrorStrings.ValidationUtils_PropertyDoesNotExistOnType("OpenNavigationProperty", "Fake.Type"));
+        }
+
         private static string WriteJsonLightEntry(bool isRequest, Uri serviceDocumentUri, bool specifySet, ODataResource odataEntry, IEdmNavigationSource entitySet, IEdmEntityType entityType)
         {
             return WriteJsonLightEntry(isRequest, serviceDocumentUri, specifySet, odataEntry, entitySet, entityType, odataUri: null, writeAction: null, isResourceSet: false);
@@ -429,6 +614,56 @@ namespace Microsoft.OData.Tests.IntegrationTests.Writer.JsonLight
             return actual;
         }
 
+        private static string WriteJsonLightEntryForUndeclared(bool isOpenType, Action<ODataWriter> writeAction, bool throwOnUndeclaredProperty = true)
+        {
+            EdmModel model = new EdmModel();
+            AddAndGetComplexType(model);
+            EdmEntityType entityType = AddAndGetEntityType(model);
+            if (isOpenType)
+            {
+                entityType = AddAndGetOpenEntityType(model);
+            }
+            var entitySet = GetEntitySet(model, entityType);
+
+            var requestUri = new Uri("http://temp.org/FakeSet('parent')");
+            var odataUri = new ODataUri { RequestUri = requestUri };
+            odataUri.Path = new ODataUriParser(model, new Uri("http://temp.org/"), requestUri).ParsePath();
+
+            var stream = new MemoryStream();
+            var message = new InMemoryMessage { Stream = stream };
+
+            var settings = new ODataMessageWriterSettings { Version = ODataVersion.V4, AutoComputePayloadMetadata = true };
+            if (throwOnUndeclaredProperty)
+            {
+                settings.Validations |= WriterValidations.ThrowOnUndeclaredPropertyForNonOpenType;
+            }
+            else
+            {
+                settings.Validations &= ~WriterValidations.ThrowOnUndeclaredPropertyForNonOpenType;
+            }
+            settings.ODataUri = odataUri;
+            settings.SetServiceDocumentUri(new Uri("http://temp.org"));
+
+            settings.SetContentType(ODataFormat.Json);
+            settings.SetContentType("application/json;odata.metadata=full", null);
+
+            ODataMessageWriter messageWriter;
+
+            messageWriter = new ODataMessageWriter((IODataResponseMessage)message, settings, model);
+            ODataWriter writer = null;
+            writer = messageWriter.CreateODataResourceWriter(entitySet, entityType);
+
+            if (writeAction != null)
+            {
+                writeAction(writer);
+            }
+
+            writer.Flush();
+
+            var actual = Encoding.UTF8.GetString(stream.ToArray());
+            return actual;
+        }
+
         private static EdmEntitySet GetEntitySet(IEdmEntityType type)
         {
             EdmEntitySet entitySet = new EdmEntitySet(new EdmEntityContainer("Fake", "Container"), "FakeSet", type);
@@ -470,6 +705,20 @@ namespace Microsoft.OData.Tests.IntegrationTests.Writer.JsonLight
         private static EdmEntityType AddAndGetEntityType(EdmModel model)
         {
             var type = GetEntityType();
+            model.AddElement(type);
+            return type;
+        }
+
+        private static EdmEntityType GetOpenEntityType()
+        {
+            EdmEntityType type = new EdmEntityType("Fake", "OpenType", null, false, true);
+            type.AddKeys(type.AddStructuralProperty("Key", EdmPrimitiveTypeKind.String));
+            return type;
+        }
+
+        private static EdmEntityType AddAndGetOpenEntityType(EdmModel model)
+        {
+            var type = GetOpenEntityType();
             model.AddElement(type);
             return type;
         }

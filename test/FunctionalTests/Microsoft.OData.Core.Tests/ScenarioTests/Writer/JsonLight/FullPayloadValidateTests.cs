@@ -1000,7 +1000,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Writer.JsonLight
             message.SetHeader("Content-Type", contentType);
             ODataMessageWriterSettings settings = new ODataMessageWriterSettings()
             {
-                Validations = WriterValidations.FullValidation & ~WriterValidations.ThrowOnUndeclaredProperty
+                Validations = WriterValidations.FullValidation & ~WriterValidations.ThrowOnUndeclaredPropertyForNonOpenType
                               & (enableBasicValidation ? WriterValidations.FullValidation : ~WriterValidations.BasicValidation),
                 AutoComputePayloadMetadata = autoComputePayloadMetadata,
             };

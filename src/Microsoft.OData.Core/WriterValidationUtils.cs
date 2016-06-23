@@ -73,7 +73,7 @@ namespace Microsoft.OData
         /// <param name="propertyName">The name of the property to validate.</param>
         /// <param name="owningStructuredType">The owning type of the property with name <paramref name="propertyName"/>
         /// or null if no metadata is available.</param>
-        /// <param name="throwOnUndeclaredProperty">Flag indicating whether undeclared property should be prohibited.</param>
+        /// <param name="throwOnUndeclaredProperty">Flag indicating whether undeclared property on non open type should be prohibited.</param>
         /// <returns>The <see cref="IEdmProperty"/> instance representing the property with name <paramref name="propertyName"/>
         /// or null if no metadata is available.</returns>
         internal static IEdmProperty ValidatePropertyDefined(
@@ -102,10 +102,10 @@ namespace Microsoft.OData
         /// Validates that the property given is defined.
         /// </summary>
         /// <param name="propertyInfo">The info of property.</param>
-        /// <param name="throwOnUndeclaredProperty">Whether undeclared property should be prohibited.</param>
+        /// <param name="throwOnUndeclaredProperty">Whether undeclared property on non open type should be prohibited.</param>
         internal static void ValidatePropertyDefined(PropertySerializationInfo propertyInfo, bool throwOnUndeclaredProperty)
         {
-            if (throwOnUndeclaredProperty && propertyInfo.MetadataType.IsOpenProperty)
+            if (throwOnUndeclaredProperty && propertyInfo.MetadataType.IsUndeclaredProperty && !propertyInfo.MetadataType.IsOpenProperty)
             {
                 throw new ODataException(Strings.ValidationUtils_PropertyDoesNotExistOnType(propertyInfo.PropertyName, propertyInfo.MetadataType.OwningType.FullTypeName()));
             }
@@ -117,10 +117,10 @@ namespace Microsoft.OData
         /// </summary>
         /// <param name="propertyName">The name of the property to validate.</param>
         /// <param name="owningEntityType">The owning entity type or null if no metadata is available.</param>
-        /// <param name="messageWriterSettings">The <see cref="ODataMessageWriterSettings"/>.</param>
+        /// <param name="throwOnUndeclaredProperty">Flag indicating whether undeclared property on non open type should be prohibited.</param>
         /// <returns>The <see cref="IEdmProperty"/> instance representing the navigation property with name <paramref name="propertyName"/>
         /// or null if no metadata is available.</returns>
-        internal static IEdmNavigationProperty ValidateNavigationPropertyDefined(string propertyName, IEdmEntityType owningEntityType, ODataMessageWriterSettings messageWriterSettings)
+        internal static IEdmNavigationProperty ValidateNavigationPropertyDefined(string propertyName, IEdmEntityType owningEntityType, bool throwOnUndeclaredProperty)
         {
             Debug.Assert(!string.IsNullOrEmpty(propertyName), "!string.IsNullOrEmpty(propertyName)");
 
@@ -129,17 +129,10 @@ namespace Microsoft.OData
                 return null;
             }
 
-            IEdmProperty property = ValidatePropertyDefined(propertyName, owningEntityType, messageWriterSettings.ThrowOnUndeclaredProperty);
+            IEdmProperty property = ValidatePropertyDefined(propertyName, owningEntityType, throwOnUndeclaredProperty);
             if (property == null)
             {
-                if (!messageWriterSettings.ThrowOnUndeclaredProperty)
-                {
-                    return null;
-                }
-
-                // We don't support open navigation properties
-                Debug.Assert(owningEntityType.IsOpen, "We should have already failed on non-existing property on a closed type.");
-                throw new ODataException(Strings.ValidationUtils_OpenNavigationProperty(propertyName, owningEntityType.FullTypeName()));
+                return null;
             }
 
             if (property.PropertyKind != EdmPropertyKind.Navigation)
@@ -329,14 +322,14 @@ namespace Microsoft.OData
         /// <param name="nestedResourceInfo">The nested resource info to validate.</param>
         /// <param name="declaringStructuredType">The <see cref="IEdmStructuredType"/> declaring the structural property or navigation property; or null if metadata is not available.</param>
         /// <param name="expandedPayloadKind">The <see cref="ODataPayloadKind"/> of the expanded content of this nested resource info or null for deferred links.</param>
-        /// <param name="messageWriterSettings">The <see cref="ODataMessageWriterSettings"/>.</param>
+        /// <param name="throwOnUndeclaredProperty">Flag indicating whether undeclared property on non open type should be prohibited.</param>
         /// <returns>The type of the navigation property for this nested resource info; or null if no <paramref name="declaringStructuredType"/> was specified.</returns>
         [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity", Justification = "Keeping the validation code for nested resource info multiplicity in one place.")]
         internal static IEdmNavigationProperty ValidateNestedResourceInfo(
             ODataNestedResourceInfo nestedResourceInfo,
             IEdmStructuredType declaringStructuredType,
             ODataPayloadKind? expandedPayloadKind,
-            ODataMessageWriterSettings messageWriterSettings)
+            bool throwOnUndeclaredProperty)
         {
             Debug.Assert(nestedResourceInfo != null, "nestedResourceInfo != null");
             Debug.Assert(
@@ -377,7 +370,7 @@ namespace Microsoft.OData
             IEdmNavigationProperty navigationProperty = null;
             if (errorTemplate == null && declaringStructuredType != null)
             {
-                navigationProperty = WriterValidationUtils.ValidateNavigationPropertyDefined(nestedResourceInfo.Name, declaringStructuredType as IEdmEntityType, messageWriterSettings);
+                navigationProperty = ValidateNavigationPropertyDefined(nestedResourceInfo.Name, declaringStructuredType as IEdmEntityType, throwOnUndeclaredProperty);
                 if (navigationProperty != null)
                 {
                     bool isCollectionType = navigationProperty.Type.TypeKind() == EdmTypeKind.Collection;

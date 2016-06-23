@@ -817,7 +817,7 @@ namespace Microsoft.OData.JsonLight
             ODataNestedResourceInfo currentLink = this.CurrentNestedResourceInfo;
 
             Debug.Assert(
-                currentLink.IsCollection.HasValue || !this.jsonLightInputContext.MessageReaderSettings.ThrowOnUndeclaredProperty,
+                currentLink.IsCollection.HasValue || !this.jsonLightInputContext.MessageReaderSettings.ThrowOnUndeclaredPropertyForNonOpenType,
                 "Expect to know whether this is a singleton or collection link based on metadata.");
 
             IODataJsonLightReaderResourceState parentResourceState = (IODataJsonLightReaderResourceState)this.LinkParentResourceScope;
@@ -1114,11 +1114,6 @@ namespace Microsoft.OData.JsonLight
             this.jsonLightResourceDeserializer.ReadResourceTypeName(this.CurrentResourceState);
 
             // Resolve the type name
-            Debug.Assert(
-                this.CurrentNavigationSource != null || this.readingParameter
-                || (this.CurrentNavigationSource == null
-                && (this.CurrentScope.ResourceType == null || this.CurrentScope.ResourceType.IsODataComplexTypeKind())),
-                "We must always have an expected navigation source for each resource (since we can't deduce that from the type name).");
             this.ApplyResourceTypeNameFromPayload(this.CurrentResource.TypeName);
 
             // Validate type with resource set validator if available
@@ -1230,10 +1225,6 @@ namespace Microsoft.OData.JsonLight
                 this.jsonLightResourceDeserializer.JsonReader.NodeType == JsonNodeType.StartArray ||
                 this.jsonLightResourceDeserializer.JsonReader.NodeType == JsonNodeType.PrimitiveValue && this.jsonLightResourceDeserializer.JsonReader.Value == null,
                 "Post-Condition: expected JsonNodeType.StartObject or JsonNodeType.StartArray or JsonNodeType.Primitive (null), or JsonNodeType.Property, JsonNodeType.EndObject");
-            Debug.Assert(
-                targetResourceType != null || nestedProperty != null
-                || !this.jsonLightInputContext.MessageReaderSettings.ThrowOnUndeclaredProperty,
-                "A navigation property must be found for each link we find unless we're allowed to report undeclared links.");
             Debug.Assert(nestedResourceInfo != null, "nestedResourceInfo != null");
             Debug.Assert(!string.IsNullOrEmpty(nestedResourceInfo.Name), "Navigation links must have a name.");
             Debug.Assert(nestedProperty == null || nestedResourceInfo.Name == nestedProperty.Name,

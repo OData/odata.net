@@ -71,9 +71,6 @@ namespace Microsoft.OData.Performance
                 },
             };
 
-            // Turn off undeclared property validation since we have undeclared property in test.
-            settings.Validations &= ~ReaderValidations.ThrowOnUndeclaredProperty;
-
             return settings;
         }
 
@@ -143,9 +140,6 @@ namespace Microsoft.OData.Performance
                     MaxNestingDepth = MaxNestingDepth,
                 },
             };
-
-            // Turn off undeclared property validation since we have undeclared property in test.
-            settings.Validations &= ~WriterValidations.ThrowOnUndeclaredProperty;
 
             settings.ODataUri = new ODataUri() { ServiceRoot = BaseUri };
             settings.SetContentType(ODataFormat.Json);

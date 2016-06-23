@@ -848,7 +848,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.JsonLight
                 : "application/json;odata.metadata=minimal;IEEE754Compatible=false";
             message.SetHeader("Content-Type", contentType);
             var readerSettings = new ODataMessageReaderSettings { EnableMessageStreamDisposal = true };
-            readerSettings.Validations &= ~ReaderValidations.ThrowOnUndeclaredProperty;
+            readerSettings.Validations &= ~ReaderValidations.ThrowOnUndeclaredPropertyForNonOpenType;
             using (var msgReader = new ODataMessageReader((IODataResponseMessage)message, readerSettings, userModel))
             {
                 var reader = msgReader.CreateODataResourceReader(entitySet, entityType);

@@ -37,7 +37,7 @@ namespace Microsoft.OData
             this.EnableCharactersCheck = false;
             this.ODataSimplified = false;
             this.MaxProtocolVersion = ODataConstants.ODataDefaultProtocolVersion;
-            Validations = ReaderValidations.FullValidation & ~ReaderValidations.ThrowOnUndeclaredProperty;
+            Validations = ReaderValidations.FullValidation & ~ReaderValidations.ThrowOnUndeclaredPropertyForNonOpenType;
             Validator = new ReaderValidator(this);
         }
 
@@ -57,7 +57,7 @@ namespace Microsoft.OData
                 BasicValidation = (validations & ReaderValidations.BasicValidation) != 0;
                 ThrowOnDuplicatePropertyNames = (validations & ReaderValidations.ThrowOnDuplicatePropertyNames) != 0;
                 ThrowIfTypeConflictsWithMetadata = (validations & ReaderValidations.ThrowIfTypeConflictsWithMetadata) != 0;
-                ThrowOnUndeclaredProperty = (validations & ReaderValidations.ThrowOnUndeclaredProperty) != 0;
+                ThrowOnUndeclaredPropertyForNonOpenType = (validations & ReaderValidations.ThrowOnUndeclaredPropertyForNonOpenType) != 0;
             }
         }
 
@@ -174,9 +174,9 @@ namespace Microsoft.OData
         internal bool ThrowIfTypeConflictsWithMetadata { get; private set; }
 
         /// <summary>
-        /// Returns whether ThrowOnUndeclaredProperty validation setting is enabled.
+        /// Returns whether ThrowOnUndeclaredPropertyForNonOpenType validation setting is enabled.
         /// </summary>
-        internal bool ThrowOnUndeclaredProperty { get; private set; }
+        internal bool ThrowOnUndeclaredPropertyForNonOpenType { get; private set; }
 
         /// <summary>
         /// Creates a shallow copy of this <see cref="ODataMessageReaderSettings"/>.
@@ -241,7 +241,7 @@ namespace Microsoft.OData
             this.BasicValidation = other.BasicValidation;
             this.ThrowOnDuplicatePropertyNames = other.ThrowOnDuplicatePropertyNames;
             this.ThrowIfTypeConflictsWithMetadata = other.ThrowIfTypeConflictsWithMetadata;
-            this.ThrowOnUndeclaredProperty = other.ThrowOnUndeclaredProperty;
+            this.ThrowOnUndeclaredPropertyForNonOpenType = other.ThrowOnUndeclaredPropertyForNonOpenType;
         }
     }
 }

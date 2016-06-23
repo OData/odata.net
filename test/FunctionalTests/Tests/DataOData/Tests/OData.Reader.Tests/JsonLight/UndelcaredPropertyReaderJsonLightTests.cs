@@ -150,17 +150,17 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                 new[] { false, true },
                 // Undeclared properties are only allowed in responses
                 this.ReaderTestConfigurationProvider.JsonLightFormatConfigurations.Where(tc => !tc.IsRequest),
-                (testCase, throwOnUndeclaredProperty, testConfiguration) =>
+                (testCase, throwOnUndeclaredPropertyForNonOpenType, testConfiguration) =>
                 {
-                    PayloadReaderTestDescriptor testDescriptor = testCase.ToTestDescriptor(this.Settings, model, throwOnUndeclaredProperty);
+                    PayloadReaderTestDescriptor testDescriptor = testCase.ToTestDescriptor(this.Settings, model, throwOnUndeclaredPropertyForNonOpenType);
                     testConfiguration = new ReaderTestConfiguration(testConfiguration);
-                    if (throwOnUndeclaredProperty)
+                    if (throwOnUndeclaredPropertyForNonOpenType)
                     {
-                        testConfiguration.MessageReaderSettings.Validations |= ReaderValidations.ThrowOnUndeclaredProperty;
+                        testConfiguration.MessageReaderSettings.Validations |= ReaderValidations.ThrowOnUndeclaredPropertyForNonOpenType;
                     }
                     else
                     {
-                        testConfiguration.MessageReaderSettings.Validations &= ~ReaderValidations.ThrowOnUndeclaredProperty;
+                        testConfiguration.MessageReaderSettings.Validations &= ~ReaderValidations.ThrowOnUndeclaredPropertyForNonOpenType;
                     }
 
                     // These descriptors are already tailored specifically for Json Light and 
@@ -256,18 +256,18 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                 new[] { false, true },
                 // Undeclared properties are only allowed in responses
                 this.ReaderTestConfigurationProvider.JsonLightFormatConfigurations.Where(tc => !tc.IsRequest),
-                (testCase, throwOnUndeclaredProperty, testConfiguration) =>
+                (testCase, throwOnUndeclaredPropertyForNonOpenType, testConfiguration) =>
                 {
                     var settings = testConfiguration.Format == ODataFormat.Json ? this.JsonLightSettings : this.Settings;
-                    PayloadReaderTestDescriptor testDescriptor = testCase.ToTestDescriptor(settings, model, throwOnUndeclaredProperty);
+                    PayloadReaderTestDescriptor testDescriptor = testCase.ToTestDescriptor(settings, model, throwOnUndeclaredPropertyForNonOpenType);
                     testConfiguration = new ReaderTestConfiguration(testConfiguration);
-                    if (throwOnUndeclaredProperty)
+                    if (throwOnUndeclaredPropertyForNonOpenType)
                     {
-                        testConfiguration.MessageReaderSettings.Validations |= ReaderValidations.ThrowOnUndeclaredProperty;
+                        testConfiguration.MessageReaderSettings.Validations |= ReaderValidations.ThrowOnUndeclaredPropertyForNonOpenType;
                     }
                     else
                     {
-                        testConfiguration.MessageReaderSettings.Validations &= ~ReaderValidations.ThrowOnUndeclaredProperty;
+                        testConfiguration.MessageReaderSettings.Validations &= ~ReaderValidations.ThrowOnUndeclaredPropertyForNonOpenType;
                     }
 
                     // These descriptors are already tailored specifically for Json Light and 
@@ -367,17 +367,17 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                 new[] { false, true },
                 // Undeclared properties are only allowed in responses
                 this.ReaderTestConfigurationProvider.JsonLightFormatConfigurations.Where(tc => !tc.IsRequest),
-                (testCase, throwOnUndeclaredProperty, testConfiguration) =>
+                (testCase, throwOnUndeclaredPropertyForNonOpenType, testConfiguration) =>
                 {
-                    PayloadReaderTestDescriptor testDescriptor = testCase.ToTestDescriptor(this.Settings, model, throwOnUndeclaredProperty);
+                    PayloadReaderTestDescriptor testDescriptor = testCase.ToTestDescriptor(this.Settings, model, throwOnUndeclaredPropertyForNonOpenType);
                     testConfiguration = new ReaderTestConfiguration(testConfiguration);
-                    if (throwOnUndeclaredProperty)
+                    if (throwOnUndeclaredPropertyForNonOpenType)
                     {
-                        testConfiguration.MessageReaderSettings.Validations |= ReaderValidations.ThrowOnUndeclaredProperty;
+                        testConfiguration.MessageReaderSettings.Validations |= ReaderValidations.ThrowOnUndeclaredPropertyForNonOpenType;
                     }
                     else
                     {
-                        testConfiguration.MessageReaderSettings.Validations &= ~ReaderValidations.ThrowOnUndeclaredProperty;
+                        testConfiguration.MessageReaderSettings.Validations &= ~ReaderValidations.ThrowOnUndeclaredPropertyForNonOpenType;
                     }
 
                     // These descriptors are already tailored specifically for Json Light and 
@@ -396,7 +396,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
             public bool IsLink { get; set; }
             public bool IsValue { get; set; }
 
-            public PayloadReaderTestDescriptor ToTestDescriptor(PayloadReaderTestDescriptor.Settings settings, IEdmModel model, bool throwOnUndeclaredProperty)
+            public PayloadReaderTestDescriptor ToTestDescriptor(PayloadReaderTestDescriptor.Settings settings, IEdmModel model, bool throwOnUndeclaredPropertyForNonOpenType)
             {
                 var cityType = model.FindDeclaredType("TestModel.CityType").ToTypeReference();
                 var cities = model.EntityContainer.FindEntitySet("Cities");
@@ -415,7 +415,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                 }
 
                 ExpectedException expectedException = this.ExpectedException;
-                if (throwOnUndeclaredProperty)
+                if (throwOnUndeclaredPropertyForNonOpenType)
                 {
                     expectedException = ODataExpectedExceptions.ODataException("ValidationUtils_PropertyDoesNotExistOnType", "UndeclaredProperty", "TestModel.CityType");
                 }

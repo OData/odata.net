@@ -33,7 +33,7 @@ namespace Microsoft.OData.Tests
             Assert.False(settings.ODataSimplified, "The ODataSimplified should be false by default");
             Assert.Null(settings.ShouldIncludeAnnotation);
             Assert.Null(settings.UseKeyAsSegment);
-            Assert.True((settings.Validations & ReaderValidations.ThrowOnUndeclaredProperty) == 0, "ThrowOnUndeclaredValueProperty should be false by default.");
+            Assert.True((settings.Validations & ReaderValidations.ThrowOnUndeclaredPropertyForNonOpenType) == 0, "ThrowOnUndeclaredPropertyForNonOpenType should be false by default.");
             Assert.True(ODataVersion.V4 == settings.MaxProtocolVersion, "MaxProtocolVersion should be V3.");
             Assert.True(100 == settings.MessageQuotas.MaxPartsPerBatch, "MaxPartsPerBatch should be int.MaxValue.");
             Assert.True(1000 == settings.MessageQuotas.MaxOperationsPerChangeset, "MaxOperationsPerChangeset should be int.MaxValue.");
@@ -45,7 +45,6 @@ namespace Microsoft.OData.Tests
         public void PropertyGettersAndSettersTest()
         {
             Uri baseUri = new Uri("http://odata.org");
-            Func<ODataResource, XmlReader, Uri, XmlReader> entryAtomXmlCustomizationCallback = (entry, reader, uri) => reader;
 
             ODataMessageReaderSettings settings = new ODataMessageReaderSettings
             {
@@ -67,7 +66,7 @@ namespace Microsoft.OData.Tests
             settings.Validations &= ~ReaderValidations.ThrowIfTypeConflictsWithMetadata
                                     & ~ReaderValidations.ThrowOnDuplicatePropertyNames
                                     & ~ReaderValidations.BasicValidation;
-            settings.Validations |= ReaderValidations.ThrowOnUndeclaredProperty;
+            settings.Validations |= ReaderValidations.ThrowOnUndeclaredPropertyForNonOpenType;
 
             Assert.True((settings.Validations & ReaderValidations.ThrowOnDuplicatePropertyNames) == 0, "The ThrowOnDuplicatePropertyNames was not correctly remembered");
             Assert.True(baseUri.Equals(settings.BaseUri), "The BaseUri was not correctly remembered.");
@@ -78,7 +77,7 @@ namespace Microsoft.OData.Tests
             Assert.False(settings.ThrowIfTypeConflictsWithMetadata, "The ThrowIfTypeConflictsWithMetadata was not correctly remembered");
             Assert.True(settings.ODataSimplified, "ODataSimplified was not correctly remembered");
             Assert.True(settings.UseKeyAsSegment, "UseKeyAsSegment was not correctly remembered");
-            Assert.True((settings.Validations & ReaderValidations.ThrowOnUndeclaredProperty) != 0, "ThrowOnUndeclaredProperty was not correctly remembered.");
+            Assert.True((settings.Validations & ReaderValidations.ThrowOnUndeclaredPropertyForNonOpenType) != 0, "ThrowOnUndeclaredPropertyForNonOpenType was not correctly remembered.");
             Assert.True(ODataVersion.V4 == settings.MaxProtocolVersion, "The MaxProtocolVersion was not correctly remembered.");
             Assert.True(2 == settings.MessageQuotas.MaxPartsPerBatch, "MaxPartsPerBatch should be 2");
             Assert.True(3 == settings.MessageQuotas.MaxOperationsPerChangeset, "MaxOperationsPerChangeset should be 3");
@@ -120,8 +119,8 @@ namespace Microsoft.OData.Tests
             this.CompareMessageReaderSettings(settings, copyOfSettings);
 
             // Compare original and settings created from copy constructor after setting rest of the values 
-            settings.Validations &= ~ReaderValidations.ThrowOnUndeclaredProperty;
             settings.EnableMessageStreamDisposal = false;            
+            settings.Validations &= ~ReaderValidations.ThrowOnUndeclaredPropertyForNonOpenType;
             settings.MaxProtocolVersion = ODataVersion.V4;
             settings.MessageQuotas.MaxPartsPerBatch = 100;
             settings.MessageQuotas.MaxOperationsPerChangeset = 200;

@@ -3886,7 +3886,7 @@ public enum Microsoft.OData.ReaderValidations : int {
 	None = 0
 	ThrowIfTypeConflictsWithMetadata = 4
 	ThrowOnDuplicatePropertyNames = 2
-	ThrowOnUndeclaredProperty = 8
+	ThrowOnUndeclaredPropertyForNonOpenType = 8
 }
 
 public enum Microsoft.OData.ServiceLifetime : int {
@@ -3903,7 +3903,7 @@ public enum Microsoft.OData.WriterValidations : int {
 	FullValidation = -1
 	None = 0
 	ThrowOnDuplicatePropertyNames = 2
-	ThrowOnUndeclaredProperty = 4
+	ThrowOnUndeclaredPropertyForNonOpenType = 4
 }
 
 public interface Microsoft.OData.IContainerBuilder {

@@ -151,7 +151,6 @@ namespace Microsoft.OData.JsonLight
                 payloadTypeName,
                 expectedValueTypeReference,
                 duplicatePropertyNamesChecker,
-                null,
                 collectionValidator,
                 validateNullValue,
                 isTopLevelPropertyValue,
@@ -188,7 +187,6 @@ namespace Microsoft.OData.JsonLight
             object customInstanceAnnotationValue = this.ReadNonEntityValueImplementation(
                 odataType,
                 expectedTypeFromTerm,
-                null, /*duplicatePropertyNamesChecker*/
                 null, /*annotationCollector*/
                 null, /*collectionValidator*/
                 false, /*validateNullValue*/
@@ -290,7 +288,7 @@ namespace Microsoft.OData.JsonLight
                 // only try resolving for known type (the below will throw on unknown type name) :
                 SerializationTypeNameAnnotation serializationTypeNameAnnotation;
                 EdmTypeKind targetTypeKind;
-                payloadTypeReference = this.MessageReaderSettings.Validator.ResolvePayloadTypeNameAndComputeTargetType(
+                payloadTypeReference = this.ReaderValidator.ResolvePayloadTypeNameAndComputeTargetType(
                     EdmTypeKind.None,
                     /*defaultPrimitivePayloadType*/ null,
                     null, // expectedTypeReference
@@ -310,7 +308,6 @@ namespace Microsoft.OData.JsonLight
                     outterPayloadTypeName,
                     payloadTypeReference,
                     /*duplicatePropertyNamesChecker*/ null,
-                    /*annotationCollector*/ null,
                     /*collectionValidator*/ null,
                     false, // validateNullValue
                     isTopLevelPropertyValue,
@@ -357,7 +354,7 @@ namespace Microsoft.OData.JsonLight
                 // only try resolving for known type (the below will throw on unknown type name) :
                 SerializationTypeNameAnnotation serializationTypeNameAnnotation;
                 EdmTypeKind targetTypeKind;
-                payloadTypeReference = this.MessageReaderSettings.Validator.ResolvePayloadTypeNameAndComputeTargetType(
+                payloadTypeReference = this.ReaderValidator.ResolvePayloadTypeNameAndComputeTargetType(
                     EdmTypeKind.None,
                     /*defaultPrimitivePayloadType*/ null,
                     null, // expectedTypeReference
@@ -402,7 +399,6 @@ namespace Microsoft.OData.JsonLight
                         outterPayloadTypeName,
                         payloadTypeReference,
                         /*duplicatePropertyNamesChecker*/ null,
-                        /*annotationCollector*/ null,
                         /*collectionValidator*/ null,
                         false, // validateNullValue
                         isTopLevelPropertyValue,
@@ -1060,7 +1056,7 @@ namespace Microsoft.OData.JsonLight
             {
                 // NOTE: when reading a null value we will never ask the type resolver (if present) to resolve the
                 //       type; we always fall back to the expected type.
-                this.MessageReaderSettings.Validator.ValidateNullValue(
+                this.ReaderValidator.ValidateNullValue(
                     expectedPropertyTypeReference,
                     /*validateNullValue*/ true,
                     /*propertyName*/ null,
@@ -1290,7 +1286,6 @@ namespace Microsoft.OData.JsonLight
                     /*payloadTypeName*/ null,
                     itemType,
                     duplicatePropertyNamesChecker,
-                    /* annotationCollector */ null,
                     collectionValidator,
                     /*validateNullValue*/ true,
                     /*isTopLevelPropertyValue*/ false,
@@ -1446,7 +1441,6 @@ namespace Microsoft.OData.JsonLight
         /// <param name="payloadTypeName">The type name read from the payload.</param>
         /// <param name="serializationTypeNameAnnotation">The serialization type name for the collection value (possibly null).</param>
         /// <param name="duplicatePropertyNamesChecker">The duplicate property names checker to use - this is always initialized as necessary, do not clear.</param>
-        /// <param name="annotationCollector">The property annotation collector, may be null.</param>
         /// <returns>The value of the complex value.</returns>
         /// <remarks>
         /// Pre-Condition:  JsonNodeType.Property - the first property of the complex value object, or the second one if the first one was odata.type.
@@ -1460,8 +1454,7 @@ namespace Microsoft.OData.JsonLight
             IEdmComplexTypeReference complexValueTypeReference,
             string payloadTypeName,
             SerializationTypeNameAnnotation serializationTypeNameAnnotation,
-            DuplicatePropertyNamesChecker duplicatePropertyNamesChecker,
-            PropertyAnnotationCollector annotationCollector)
+            DuplicatePropertyNamesChecker duplicatePropertyNamesChecker)
         {
             if (!insideJsonObjectValue && !insideComplexValue)
             {
@@ -1478,7 +1471,7 @@ namespace Microsoft.OData.JsonLight
             }
 
             return this.ReadComplexValue(complexValueTypeReference, payloadTypeName,
-                serializationTypeNameAnnotation, duplicatePropertyNamesChecker, annotationCollector);
+                serializationTypeNameAnnotation, duplicatePropertyNamesChecker);
         }
 
         /// <summary>
@@ -1488,7 +1481,6 @@ namespace Microsoft.OData.JsonLight
         /// <param name="payloadTypeName">The type name read from the payload.</param>
         /// <param name="serializationTypeNameAnnotation">The serialization type name for the collection value (possibly null).</param>
         /// <param name="duplicatePropertyNamesChecker">The duplicate property names checker to use - this is always initialized as necessary, do not clear.</param>
-        /// <param name="outterAnnotationCollector">The property annotation collector, may be null.</param>
         /// <returns>The value of the complex value.</returns>
         /// <remarks>
         /// Pre-Condition:  JsonNodeType.Property - the first property of the complex value object, or the second one if the first one was odata.type.
@@ -1499,8 +1491,7 @@ namespace Microsoft.OData.JsonLight
             IEdmComplexTypeReference complexValueTypeReference,
             string payloadTypeName,
             SerializationTypeNameAnnotation serializationTypeNameAnnotation,
-            DuplicatePropertyNamesChecker duplicatePropertyNamesChecker,
-            PropertyAnnotationCollector outterAnnotationCollector)
+            DuplicatePropertyNamesChecker duplicatePropertyNamesChecker)
         {
             this.AssertJsonCondition(JsonNodeType.Property, JsonNodeType.EndObject);
             Debug.Assert(duplicatePropertyNamesChecker != null, "duplicatePropertyNamesChecker != null");
@@ -1525,7 +1516,7 @@ namespace Microsoft.OData.JsonLight
                 this.ReadPropertyCustomAnnotationValue = this.ReadCustomInstanceAnnotationValue;
                 PropertyAnnotationCollector innerAnnotationCollector = new PropertyAnnotationCollector();
 
-                innerAnnotationCollector.ShouldCollectAnnotation = !this.MessageReaderSettings.ThrowOnUndeclaredProperty;
+                innerAnnotationCollector.ShouldCollectAnnotation = !this.MessageReaderSettings.ThrowOnUndeclaredPropertyForNonOpenType;
 
                 this.ProcessProperty(
                     duplicatePropertyNamesChecker,
@@ -1590,9 +1581,7 @@ namespace Microsoft.OData.JsonLight
             IEdmProperty edmProperty = null;
             if (complexValueTypeReference != null)
             {
-                edmProperty = ReaderValidationUtils.ValidateValuePropertyDefined(
-                    propertyName, complexValueTypeReference.ComplexDefinition(),
-                    this.MessageReaderSettings.ThrowOnUndeclaredProperty);
+                edmProperty = this.ReaderValidator.ValidatePropertyDefined(propertyName, complexValueTypeReference.ComplexDefinition());
             }
 
             // EdmLib bridge marks all key properties as non-nullable, but Astoria allows them to be nullable.
@@ -1603,23 +1592,9 @@ namespace Microsoft.OData.JsonLight
             object propertyValue = null;
             if (edmProperty == null)
             {
-                if (this.MessageReaderSettings.ThrowOnUndeclaredProperty)
-                {
-                    IEdmStructuredType owningStructuredType = (complexValueTypeReference != null)
-                        ?
-                        (complexValueTypeReference.Definition as IEdmStructuredType)
-                        : null;
-                    throw new ODataException(ODataErrorStrings.ValidationUtils_PropertyDoesNotExistOnType(propertyName, (owningStructuredType != null) ? owningStructuredType.FullTypeName() : null));
-                }
-                else
-                {
-                    Debug.Assert(
-                        !this.MessageReaderSettings.ThrowOnUndeclaredProperty,
-                        "!this.MessageReaderSettings.ThrowOnUndeclaredProperty");
-                    bool isTopLevelPropertyValue = false;
-                    propertyValue = this.InnerReadNonOpenUndeclaredPropertyInComplex(
-                        duplicatePropertyNamesChecker, propertyName, isTopLevelPropertyValue);
-                }
+                bool isTopLevelPropertyValue = false;
+                propertyValue = this.InnerReadNonOpenUndeclaredPropertyInComplex(
+                    duplicatePropertyNamesChecker, propertyName, isTopLevelPropertyValue);
             }
             else
             {
@@ -1628,7 +1603,6 @@ namespace Microsoft.OData.JsonLight
                     ValidateDataPropertyTypeNameAnnotation(duplicatePropertyNamesChecker, propertyName),
                     edmProperty == null ? null : edmProperty.Type,
                     /*duplicatePropertyNamesChecker*/ null,
-                    /* annotationCollector */ null,
                     /*collectionValidator*/ null,
                     nullValueReadBehaviorKind == ODataNullValueBehaviorKind.Default,
                     /*isTopLevelPropertyValue*/ false,
@@ -1659,37 +1633,35 @@ namespace Microsoft.OData.JsonLight
         }
 
         /// <summary>
-        /// Reads a primitive, complex or collection value.
+        ///  Reads a primitive, complex or collection value.
         /// </summary>
-        /// <param name="payloadTypeName">The type name read from the payload as a property annotation, or null if none is available.</param>
-        /// <param name="expectedTypeReference">The expected type reference of the property value.</param>
-        /// <param name="duplicatePropertyNamesChecker">The duplicate property names checker to use - if null the method should create a new one if necessary.</param>
-        /// <param name="annotationCollector">The property annotation collector, may be null.</param>
+        ///  <param name="payloadTypeName">The type name read from the payload as a property annotation, or null if none is available.</param>
+        ///  <param name="expectedTypeReference">The expected type reference of the property value.</param>
+        ///  <param name="duplicatePropertyNamesChecker">The duplicate property names checker to use - if null the method should create a new one if necessary.</param>
         /// <param name="collectionValidator">The collection validator instance if no expected item type has been specified; otherwise null.</param>
-        /// <param name="validateNullValue">true to validate null values; otherwise false.</param>
-        /// <param name="isTopLevelPropertyValue">true if we are reading a top-level property value; otherwise false.</param>
-        /// <param name="insideComplexValue">true if we are reading a complex value and the reader is already positioned inside the complex value; otherwise false.</param>
-        /// <param name="propertyName">The name of the property whose value is being read, if applicable (used for error reporting).</param>
-        /// <param name="isDynamicProperty">Indicates whether the property is dynamic or unknown.</param>
-        /// <returns>The value of the property read.</returns>
-        /// <remarks>
-        /// Pre-Condition:  JsonNodeType.PrimitiveValue   - the value of the property is a primitive value
-        ///                 JsonNodeType.StartObject      - the value of the property is an object
-        ///                 JsonNodeType.StartArray       - the value of the property is an array
-        /// Post-Condition: almost anything - the node after the property value.
+        ///  <param name="validateNullValue">true to validate null values; otherwise false.</param>
+        ///  <param name="isTopLevelPropertyValue">true if we are reading a top-level property value; otherwise false.</param>
+        ///  <param name="insideComplexValue">true if we are reading a complex value and the reader is already positioned inside the complex value; otherwise false.</param>
+        ///  <param name="propertyName">The name of the property whose value is being read, if applicable (used for error reporting).</param>
+        ///  <param name="isDynamicProperty">Indicates whether the property is dynamic or unknown.</param>
+        ///  <returns>The value of the property read.</returns>
+        ///  <remarks>
+        ///  Pre-Condition:  JsonNodeType.PrimitiveValue   - the value of the property is a primitive value
+        ///                  JsonNodeType.StartObject      - the value of the property is an object
+        ///                  JsonNodeType.StartArray       - the value of the property is an array
+        ///  Post-Condition: almost anything - the node after the property value.
         ///
-        /// Returns the value of the property read, which can be one of:
-        /// - null
-        /// - primitive value
-        /// - <see cref="ODataComplexValue"/>
-        /// - <see cref="ODataCollectionValue"/>
+        ///  Returns the value of the property read, which can be one of:
+        ///  - null
+        ///  - primitive value
+        ///  - <see cref="ODataComplexValue"/>
+        ///  - <see cref="ODataCollectionValue"/>
         /// </remarks>
         [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity", Justification = "No easy way to refactor.")]
         private object ReadNonEntityValueImplementation(
             string payloadTypeName,
             IEdmTypeReference expectedTypeReference,
             DuplicatePropertyNamesChecker duplicatePropertyNamesChecker,
-            PropertyAnnotationCollector annotationCollector,
             CollectionWithoutExpectedTypeValidator collectionValidator,
             bool validateNullValue,
             bool isTopLevelPropertyValue,
@@ -1741,7 +1713,7 @@ namespace Microsoft.OData.JsonLight
 
             SerializationTypeNameAnnotation serializationTypeNameAnnotation;
             EdmTypeKind targetTypeKind;
-            IEdmTypeReference targetTypeReference = this.MessageReaderSettings.Validator.ResolvePayloadTypeNameAndComputeTargetType(
+            IEdmTypeReference targetTypeReference = this.ReaderValidator.ResolvePayloadTypeNameAndComputeTargetType(
                 EdmTypeKind.None,
                 /*defaultPrimitivePayloadType*/ null,
                 expectedTypeReference,
@@ -1826,8 +1798,7 @@ namespace Microsoft.OData.JsonLight
                             targetTypeReference == null ? null : targetTypeReference.AsComplex(),
                             payloadTypeName,
                             serializationTypeNameAnnotation,
-                            duplicatePropertyNamesChecker,
-                            annotationCollector);
+                            duplicatePropertyNamesChecker);
                         break;
 
                     case EdmTypeKind.Collection:

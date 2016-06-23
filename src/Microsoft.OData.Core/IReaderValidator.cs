@@ -82,19 +82,10 @@ namespace Microsoft.OData
         /// <param name="propertyName">The name of the property to validate.</param>
         /// <param name="owningStructuredType">The owning type of the property with name <paramref name="propertyName"/>
         /// or null if no metadata is available.</param>
-        /// <returns>The <see cref="IEdmProperty"/> instance representing the property with name
-        /// <paramref name="propertyName"/> or null if no metadata is available.</returns>
-        IEdmProperty ValidateLinkPropertyDefined(string propertyName, IEdmStructuredType owningStructuredType);
-
-        /// <summary>
-        /// Validates that a navigation property with the specified name exists on a given entity type.
-        /// The entity type can be null if no metadata is available.
-        /// </summary>
-        /// <param name="propertyName">The name of the property to validate.</param>
-        /// <param name="owningEntityType">The owning entity type or null if no metadata is available.</param>
-        /// <returns>The <see cref="IEdmNavigationProperty"/> instance representing the navigation property with name
-        /// <paramref name="propertyName"/> or null if no metadata is available.</returns>
-        IEdmNavigationProperty ValidateNavigationPropertyDefined(string propertyName, IEdmEntityType owningEntityType);
+        /// <returns>The <see cref="IEdmProperty"/> instance representing the property with name <paramref name="propertyName"/>
+        /// or null if no metadata is available.</returns>
+        IEdmProperty ValidatePropertyDefined(string propertyName,
+            IEdmStructuredType owningStructuredType);
 
         /// <summary>
         /// Validates a stream reference property.

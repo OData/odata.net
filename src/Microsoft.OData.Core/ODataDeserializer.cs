@@ -17,6 +17,9 @@ namespace Microsoft.OData
     /// </summary>
     internal abstract class ODataDeserializer
     {
+        /// <summary>The reader validator to use for reading.</summary>
+        protected IReaderValidator ReaderValidator;
+
         /// <summary>The input context to use for reading.</summary>
         private readonly ODataInputContext inputContext;
 
@@ -29,6 +32,7 @@ namespace Microsoft.OData
             Debug.Assert(inputContext != null, "inputContext != null");
 
             this.inputContext = inputContext;
+            this.ReaderValidator = this.inputContext.MessageReaderSettings.Validator;
         }
 
         /// <summary>

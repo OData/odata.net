@@ -54,9 +54,9 @@ namespace Microsoft.OData
         ThrowIfTypeConflictsWithMetadata = 4,
 
         /// <summary>
-        /// Disable support for undeclared property.
+        /// Disable support for undeclared property on non open type.
         /// </summary>
-        ThrowOnUndeclaredProperty = 8,
+        ThrowOnUndeclaredPropertyForNonOpenType = 8,
 
         /// <summary>
         /// Enable all validations.

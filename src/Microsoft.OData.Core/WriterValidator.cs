@@ -237,54 +237,22 @@ namespace Microsoft.OData
                                                     IEdmStructuredType owningStructuredType)
         {
             return WriterValidationUtils.ValidatePropertyDefined(
-                propertyName, owningStructuredType, settings.ThrowOnUndeclaredProperty);
+                propertyName, owningStructuredType, settings.ThrowOnUndeclaredPropertyForNonOpenType);
         }
 
         /// <summary>
-        /// Validates that the navigation property with the specified name exists on a given entity
-        /// type. The entity type can be null if no metadata is available.
+        /// Validates an <see cref="ODataNestedResourceInfo"/> to ensure all required information is specified and valid.
         /// </summary>
-        /// <param name="propertyName">Name of the property.</param>
-        /// <param name="owningEntityType">Hosting entity type or null if no metadata is available.
-        /// </param>
-        /// <returns><see cref="IEdmProperty"/> representing the navigation property with name
-        /// <paramref name="propertyName"/> or null if no metadata is available.</returns>
-        public IEdmNavigationProperty ValidateNavigationPropertyDefined(
-            string propertyName, IEdmEntityType owningEntityType)
+        /// <param name="nestedResourceInfo">The nested resource info to validate.</param>
+        /// <param name="declaringStructuredType">The <see cref="IEdmStructuredType"/> declaring the structural property or navigation property; or null if metadata is not available.</param>
+        /// <param name="expandedPayloadKind">The <see cref="ODataPayloadKind"/> of the expanded content of this nested resource info or null for deferred links.</param>
+        /// <returns>The type of the navigation property for this nested resource info; or null if no <paramref name="declaringStructuredType"/> was specified.</returns>
+        public IEdmNavigationProperty ValidateNestedResourceInfo(
+            ODataNestedResourceInfo nestedResourceInfo,
+            IEdmStructuredType declaringStructuredType,
+            ODataPayloadKind? expandedPayloadKind)
         {
-            Debug.Assert(!string.IsNullOrEmpty(propertyName), "!string.IsNullOrEmpty(propertyName)");
-            if (owningEntityType == null)
-            {
-                return null;
-            }
-
-            IEdmProperty property = ValidatePropertyDefined(propertyName, owningEntityType);
-            if (property == null)
-            {
-                if (!settings.ThrowOnUndeclaredProperty)
-                {
-                    return null;
-                }
-
-                // We don't support open navigation properties
-                Debug.Assert(
-                    owningEntityType.IsOpen,
-                    "We should have already failed on non-existing property on a closed type.");
-                throw new ODataException(
-                    Strings.ValidationUtils_OpenNavigationProperty(
-                        propertyName, owningEntityType.FullTypeName()));
-            }
-
-            if (property.PropertyKind != EdmPropertyKind.Navigation)
-            {
-                // The property must be a navigation property
-                throw new ODataException(
-                    Strings.ValidationUtils_NavigationPropertyExpected(
-                        propertyName, owningEntityType.FullTypeName(),
-                        property.PropertyKind.ToString()));
-            }
-
-            return (IEdmNavigationProperty)property;
+            return WriterValidationUtils.ValidateNestedResourceInfo(nestedResourceInfo, declaringStructuredType, expandedPayloadKind, settings.ThrowOnUndeclaredPropertyForNonOpenType);
         }
     }
 }

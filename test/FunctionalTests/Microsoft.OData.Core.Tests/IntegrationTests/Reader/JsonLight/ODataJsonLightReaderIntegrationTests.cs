@@ -635,6 +635,118 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.JsonLight
             RunCase(payload2);
         }
 
+        [Fact]
+        public void ReadUndeclaredPropertyInOpenType()
+        {
+            const string payload =
+                "{" +
+                "\"@odata.context\":\"http://www.example.com/$metadata#EntityNs.MyContainer.People/$entity\"," +
+                "\"@odata.id\":\"People(0)\"," +
+                "\"Id\":\"0\"," +
+                "\"OpenProperty@odata.type\":\"#String\"," +
+                "\"OpenProperty\":\"0\"," +
+                "\"OpenComplex\":{\"@odata.type\":\"#NS.Address\",\"CountryRegion\":\"China\"}," +
+                "\"OpenNavigationProperty\":{\"@odata.type\":\"#NS.Person\",\"Id\":\"0\"}" +
+                "}";
+
+            List<ODataResource> entries = new List<ODataResource>();
+            ODataNestedResourceInfo navigationLink;
+            this.ReadEntryPayloadForUndeclared(payload,
+                reader =>
+                {
+                    switch (reader.State)
+                    {
+                        case ODataReaderState.ResourceStart:
+                            entries.Add(reader.Item as ODataResource);
+                            break;
+                        case ODataReaderState.NestedResourceInfoStart:
+                            navigationLink = (ODataNestedResourceInfo)reader.Item;
+                            break;
+                        default:
+                            break;
+                    }
+                }, true, true);
+
+            var address = entries[1];
+            address.Properties.FirstOrDefault(s => string.Equals(s.Name, "CountryRegion", StringComparison.OrdinalIgnoreCase)).Value.Should().Be("China");
+
+            var openNavigation = entries[2];
+            openNavigation.Properties.FirstOrDefault(s => string.Equals(s.Name, "Id", StringComparison.OrdinalIgnoreCase)).Value.Should().Be(0);
+        }
+
+        [Fact]
+        public void ReadUndeclaredPropertyInNonOpenType()
+        {
+            string payload =
+                "{" +
+                "\"@odata.context\":\"http://www.example.com/$metadata#EntityNs.MyContainer.People/$entity\"," +
+                "\"@odata.id\":\"People(0)\"," +
+                "\"Id\":\"0\"," +
+                "\"OpenProperty@odata.type\":\"#String\"," +
+                "\"OpenProperty\":\"0\"," +
+                "\"OpenComplex\":{\"@odata.type\":\"#NS.Address\",\"CountryRegion\":\"China\"}," +
+                "\"OpenNavigationProperty\":{\"@odata.type\":\"#NS.Person\",\"Id\":\"0\"}" +
+                "}";
+
+            List<ODataResource> entries = new List<ODataResource>();
+            ODataNestedResourceInfo navigationLink;
+            this.ReadEntryPayloadForUndeclared(payload,
+                reader =>
+                {
+                    switch (reader.State)
+                    {
+                        case ODataReaderState.ResourceStart:
+                            entries.Add(reader.Item as ODataResource);
+                            break;
+                        case ODataReaderState.NestedResourceInfoStart:
+                            navigationLink = (ODataNestedResourceInfo)reader.Item;
+                            break;
+                        default:
+                            break;
+                    }
+                }, false, false);
+
+            var address = entries[1];
+            address.Properties.FirstOrDefault(s => string.Equals(s.Name, "CountryRegion", StringComparison.OrdinalIgnoreCase)).Value.Should().Be("China");
+
+            var openNavigation = entries[2];
+            openNavigation.Properties.FirstOrDefault(s => string.Equals(s.Name, "Id", StringComparison.OrdinalIgnoreCase)).Value.Should().Be(0);
+
+            payload = "{" +
+                "\"@odata.context\":\"http://www.example.com/$metadata#EntityNs.MyContainer.People/$entity\"," +
+                "\"@odata.id\":\"People(0)\"," +
+                "\"Id\":\"0\"," +
+                "\"OpenProperty@odata.type\":\"#String\"," +
+                "\"OpenProperty\":\"0\"" +
+                "}";
+
+            Action readEntry = () => this.ReadEntryPayloadForUndeclared(payload, reader => {}, false, true);
+
+            readEntry.ShouldThrow<ODataException>().WithMessage(Strings.ValidationUtils_PropertyDoesNotExistOnType("OpenProperty", "NS.Person"));
+
+            payload = "{" +
+                "\"@odata.context\":\"http://www.example.com/$metadata#EntityNs.MyContainer.People/$entity\"," +
+                "\"@odata.id\":\"People(0)\"," +
+                "\"Id\":\"0\"," +
+                "\"OpenComplex\":{\"@odata.type\":\"#NS.Address\",\"CountryRegion\":\"China\"}" +
+                "}";
+
+            readEntry = () => this.ReadEntryPayloadForUndeclared(payload, reader => { }, false, true);
+
+            readEntry.ShouldThrow<ODataException>().WithMessage(Strings.ValidationUtils_PropertyDoesNotExistOnType("OpenComplex", "NS.Person"));
+
+            payload = "{" +
+                "\"@odata.context\":\"http://www.example.com/$metadata#EntityNs.MyContainer.People/$entity\"," +
+                "\"@odata.id\":\"People(0)\"," +
+                "\"Id\":\"0\"," +
+                "\"OpenNavigationProperty\":{\"@odata.type\":\"#NS.Person\",\"Id\":\"0\"}" +
+                "}";
+
+            readEntry = () => this.ReadEntryPayloadForUndeclared(payload, reader => { }, false, true);
+
+            readEntry.ShouldThrow<ODataException>().WithMessage(Strings.ValidationUtils_PropertyDoesNotExistOnType("OpenNavigationProperty", "NS.Person"));
+        }
+
         private void ReadEntryPayload(IEdmModel userModel, string payload, EdmEntitySet entitySet, IEdmStructuredType entityType, Action<ODataReader> action, bool isIeee754Compatible = true)
         {
             var message = new InMemoryMessage() { Stream = new MemoryStream(Encoding.UTF8.GetBytes(payload)) };
@@ -644,6 +756,46 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.JsonLight
             message.SetHeader("Content-Type", contentType);
             var readerSettings = new ODataMessageReaderSettings { EnableMessageStreamDisposal = true };
             using (var msgReader = new ODataMessageReader((IODataResponseMessage)message, readerSettings, userModel))
+            {
+                var reader = msgReader.CreateODataResourceReader(entitySet, entityType);
+                while (reader.Read())
+                {
+                    action(reader);
+                }
+            }
+        }
+
+        private void ReadEntryPayloadForUndeclared(string payload, Action<ODataReader> action, bool isOpenProperty, bool throwOnUndeclaredProperty)
+        {
+            EdmModel model = new EdmModel();
+
+            EdmEntityType entityType = new EdmEntityType("NS", "Person", null, false, isOpenProperty);
+            entityType.AddStructuralProperty("Id", EdmPrimitiveTypeKind.Int32);
+
+            EdmComplexType complexType = new EdmComplexType("NS", "Address", null, false, true);
+            complexType.AddStructuralProperty("CountryRegion", EdmPrimitiveTypeKind.String, false);
+
+            model.AddElement(complexType);
+            model.AddElement(entityType);
+
+            EdmEntityContainer container = new EdmEntityContainer("EntityNs", "MyContainer_sub");
+            EdmEntitySet entitySet = container.AddEntitySet("People", entityType);
+            model.AddElement(container);
+
+            var message = new InMemoryMessage() { Stream = new MemoryStream(Encoding.UTF8.GetBytes(payload)) };
+            var readerSettings = new ODataMessageReaderSettings { EnableMessageStreamDisposal = true };
+            if (throwOnUndeclaredProperty)
+            {
+                readerSettings.Validations |= ReaderValidations.ThrowOnUndeclaredPropertyForNonOpenType;
+            }
+            else
+            {
+                readerSettings.Validations &= ~ReaderValidations.ThrowOnUndeclaredPropertyForNonOpenType;
+            }
+
+            IEdmModel mainModel = TestUtils.WrapReferencedModelsToMainModel("EntityNs", "MyContainer", model);
+
+            using (var msgReader = new ODataMessageReader((IODataResponseMessage)message, readerSettings, mainModel))
             {
                 var reader = msgReader.CreateODataResourceReader(entitySet, entityType);
                 while (reader.Read())

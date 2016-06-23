@@ -186,7 +186,7 @@ namespace Microsoft.OData.JsonLight
                 this.currentPropertyInfo = this.JsonLightOutputContext.PropertyCacheHandler.GetProperty(propertyName, owningType);
             }
 
-            WriterValidationUtils.ValidatePropertyDefined(this.currentPropertyInfo, this.MessageWriterSettings.ThrowOnUndeclaredProperty);
+            WriterValidationUtils.ValidatePropertyDefined(this.currentPropertyInfo, this.MessageWriterSettings.ThrowOnUndeclaredPropertyForNonOpenType);
 
             if (projectedProperties.ShouldSkipProperty(propertyName))
             {
@@ -261,7 +261,7 @@ namespace Microsoft.OData.JsonLight
 
         private void WriteUntypedValue(ODataUntypedValue untypedValue)
         {
-            if (!this.MessageWriterSettings.ThrowOnUndeclaredProperty)
+            if (!this.MessageWriterSettings.ThrowOnUndeclaredPropertyForNonOpenType)
             {
                 this.JsonWriter.WriteName(this.currentPropertyInfo.WireName);
                 this.jsonLightValueSerializer.WriteUntypedValue(untypedValue);
@@ -269,8 +269,8 @@ namespace Microsoft.OData.JsonLight
             }
 
             Debug.Assert(
-                this.MessageWriterSettings.ThrowOnUndeclaredProperty,
-                "this.MessageWriterSettings.ThrowOnUndeclaredProperty");
+                this.MessageWriterSettings.ThrowOnUndeclaredPropertyForNonOpenType,
+                "this.MessageWriterSettings.ThrowOnUndeclaredPropertyForNonOpenType");
             throw new ODataException(ODataErrorStrings.ValidationUtils_PropertyDoesNotExistOnType(this.currentPropertyInfo.PropertyName, this.currentPropertyInfo.MetadataType.OwningType.FullTypeName()));
         }
 

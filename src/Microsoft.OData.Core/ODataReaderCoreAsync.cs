@@ -149,15 +149,7 @@ namespace Microsoft.OData
                     break;
             }
 
-            return result.FollowOnSuccessWith(t =>
-                {
-                    if ((this.State == ODataReaderState.ResourceStart || this.State == ODataReaderState.ResourceEnd) && this.Item != null)
-                    {
-                        ReaderValidationUtils.ValidateResource(this.CurrentResource);
-                    }
-
-                    return t.Result;
-                });
+            return result.FollowOnSuccessWith(t => t.Result);
         }
 #endif
     }

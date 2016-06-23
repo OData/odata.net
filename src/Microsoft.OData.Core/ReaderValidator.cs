@@ -7,10 +7,7 @@
 namespace Microsoft.OData
 {
     using System;
-    using System.Diagnostics;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.JsonLight;
-    using Microsoft.OData.Metadata;
 
     /// <summary>
     /// Reader validator that binds to an ODataMessageReaderSettings instance.
@@ -118,27 +115,12 @@ namespace Microsoft.OData
         /// <param name="propertyName">The name of the property to validate.</param>
         /// <param name="owningStructuredType">The owning type of the property with name <paramref name="propertyName"/>
         /// or null if no metadata is available.</param>
-        /// <returns>The <see cref="IEdmProperty"/> instance representing the property with name
-        /// <paramref name="propertyName"/> or null if no metadata is available.</returns>
-        public IEdmProperty ValidateLinkPropertyDefined(string propertyName, IEdmStructuredType owningStructuredType)
+        /// <returns>The <see cref="IEdmProperty"/> instance representing the property with name <paramref name="propertyName"/>
+        /// or null if no metadata is available.</returns>
+        public IEdmProperty ValidatePropertyDefined(string propertyName,
+            IEdmStructuredType owningStructuredType)
         {
-            return ReaderValidationUtils.ValidateLinkPropertyDefined(
-                propertyName, owningStructuredType, settings.ThrowOnUndeclaredProperty);
-        }
-
-        /// <summary>
-        /// Validates that a navigation property with the specified name exists on a given entity type.
-        /// The entity type can be null if no metadata is available.
-        /// </summary>
-        /// <param name="propertyName">The name of the property to validate.</param>
-        /// <param name="owningEntityType">The owning entity type or null if no metadata is available.</param>
-        /// <returns>The <see cref="IEdmNavigationProperty"/> instance representing the navigation property with name
-        /// <paramref name="propertyName"/> or null if no metadata is available.</returns>
-        public IEdmNavigationProperty ValidateNavigationPropertyDefined(
-            string propertyName, IEdmEntityType owningEntityType)
-        {
-            return ReaderValidationUtils.ValidateNavigationPropertyDefined(propertyName, owningEntityType,
-                                                                           settings.ThrowOnUndeclaredProperty);
+            return ReaderValidationUtils.ValidatePropertyDefined(propertyName, owningStructuredType, this.settings.ThrowOnUndeclaredPropertyForNonOpenType);
         }
 
         /// <summary>
@@ -152,7 +134,7 @@ namespace Microsoft.OData
                                                     IEdmProperty streamEdmProperty)
         {
             ReaderValidationUtils.ValidateStreamReferenceProperty(
-                streamProperty, structuredType, streamEdmProperty, settings.ThrowOnUndeclaredProperty);
+                streamProperty, structuredType, streamEdmProperty, settings.ThrowOnUndeclaredPropertyForNonOpenType);
         }
     }
 }
