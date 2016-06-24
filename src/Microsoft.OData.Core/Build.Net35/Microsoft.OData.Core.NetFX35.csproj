@@ -346,9 +346,6 @@
     <Compile Include="$(ODataCrossTargettingSourcePath)\Json\IODataJsonOperationsDeserializerContext.cs">
       <Link>Microsoft\OData\Core\Json\IODataJsonOperationsDeserializerContext.cs</Link>
     </Compile>
-    <Compile Include="$(ODataCrossTargettingSourcePath)\Json\IndentedTextWriter.cs">
-      <Link>Microsoft\OData\Core\Json\IndentedTextWriter.cs</Link>
-    </Compile>
     <Compile Include="$(ODataCrossTargettingSourcePath)\Json\JsonConstants.cs">
       <Link>Microsoft\OData\Core\Json\JsonConstants.cs</Link>
     </Compile>

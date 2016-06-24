@@ -343,7 +343,7 @@ namespace Microsoft.OData
         /// <param name="payloadTypeName">The payload type name, or null if no payload type was specified.</param>
         /// <param name="model">The model to use.</param>
         /// <param name="clientCustomTypeResolver">Custom type resolver used by the client.</param>
-        /// <param name="throwIfTypeConflictsWithMetadata">Whether ThrowIfTypeConflictsWithMetadata is enabled.</param>        
+        /// <param name="throwIfTypeConflictsWithMetadata">Whether ThrowIfTypeConflictsWithMetadata is enabled.</param>
         /// <param name="enablePrimitiveTypeConversion">Whether primitive type conversion is enabled.</param>
         /// <param name="typeKindFromPayloadFunc">A func to compute the type kind from the payload shape if it could not be determined from the expected type or the payload type.</param>
         /// <param name="targetTypeKind">The target type kind to be used to read the payload.</param>

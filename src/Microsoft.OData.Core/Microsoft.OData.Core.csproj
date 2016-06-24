@@ -170,7 +170,6 @@
     <Compile Include="Json\GeoJsonWriterAdapter.cs" />
     <Compile Include="Json\IJsonWriter.cs" />
     <Compile Include="Json\IODataJsonOperationsDeserializerContext.cs" />
-    <Compile Include="Json\IndentedTextWriter.cs" />
     <Compile Include="Json\JsonConstants.cs" />
     <Compile Include="Json\JsonLightInstanceAnnotationWriter.cs" />
     <Compile Include="Json\JsonNodeType.cs" />

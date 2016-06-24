@@ -16,7 +16,7 @@ namespace Microsoft.OData.Tests.Json
     public class JsonValueUtilsTests
     {
         private MemoryStream stream;
-        private IndentedTextWriter writer;
+        private NonIndentedTextWriter writer;
 
         private Dictionary<string, string> escapedCharMap = new Dictionary<string, string>()
         {
@@ -134,7 +134,7 @@ namespace Microsoft.OData.Tests.Json
             this.stream = new MemoryStream();
             StreamWriter innerWriter = new StreamWriter(this.stream);
             innerWriter.AutoFlush = true;
-            this.writer = new IndentedTextWriter(innerWriter);
+            this.writer = new NonIndentedTextWriter(innerWriter);
         }
 
         private string StreamToString()
