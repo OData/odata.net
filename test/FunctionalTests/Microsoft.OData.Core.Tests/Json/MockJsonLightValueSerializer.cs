@@ -12,7 +12,7 @@ using Microsoft.OData.Edm;
 
 namespace Microsoft.OData.Tests.Json
 {
-    internal class MockJsonLightValueSerializer : IODataJsonLightValueSerializer
+    internal class MockJsonLightValueSerializer : ODataJsonLightValueSerializer
     {
         public const string NullOutput = "FAKE_NULL_VALUE";
         public const string PrimitiveOutput = "FAKE_PRIMITIVE_VALUE";
@@ -24,21 +24,18 @@ namespace Microsoft.OData.Tests.Json
         public Action<object, IEdmTypeReference> WritePrimitiveVerifier { get; set; }
         public Action WriteNullVerifier { get; set; }
 
-        public MockJsonLightValueSerializer(IJsonWriter jsonWriter, IEdmModel model)
+        public MockJsonLightValueSerializer(ODataJsonLightOutputContext outputContext, bool initContextUriBuilder = false)
+                    : base(outputContext, initContextUriBuilder)
         {
-            this.JsonWriter = jsonWriter;
-            this.Model = model;
         }
 
-        public void WriteNullValue()
+        public override void WriteNullValue()
         {
             this.WriteNullVerifier.Should().NotBeNull("WriteNullValue was called.");
             this.WriteNullVerifier();
         }
 
-        public IEdmModel Model { get; private set; }
-
-        public void WriteComplexValue(ODataComplexValue complexValue, IEdmTypeReference metadataTypeReference, bool isTopLevel, bool isOpenPropertyType, DuplicatePropertyNamesChecker duplicatePropertyNamesChecker)
+        public override void WriteComplexValue(ODataComplexValue complexValue, IEdmTypeReference metadataTypeReference, bool isTopLevel, bool isOpenPropertyType, DuplicatePropertyNamesChecker duplicatePropertyNamesChecker)
         {
             this.WriteComplexVerifier.Should().NotBeNull("WriteComplexValue was called.");
             this.WriteComplexVerifier(complexValue, metadataTypeReference, isTopLevel, isOpenPropertyType, duplicatePropertyNamesChecker);
@@ -49,41 +46,32 @@ namespace Microsoft.OData.Tests.Json
         /// </summary>
         /// <param name="value">enum value</param>
         /// <param name="expectedTypeReference">expected type reference</param>
-        public void WriteEnumValue(ODataEnumValue value, IEdmTypeReference expectedTypeReference)
+        public override void WriteEnumValue(ODataEnumValue value, IEdmTypeReference expectedTypeReference)
         {
             throw new NotImplementedException();
         }
 
-        public void WriteCollectionValue(ODataCollectionValue collectionValue, IEdmTypeReference metadataTypeReference, IEdmTypeReference valueTypeReference, bool isTopLevelProperty, bool isInUri, bool isOpenPropertyType)
+        public override void WriteCollectionValue(ODataCollectionValue collectionValue, IEdmTypeReference metadataTypeReference, IEdmTypeReference valueTypeReference, bool isTopLevelProperty, bool isInUri, bool isOpenPropertyType)
         {
             this.WriteCollectionVerifier.Should().NotBeNull("WriteCollectionValue was called.");
             this.WriteCollectionVerifier(collectionValue, metadataTypeReference, valueTypeReference, isTopLevelProperty, isInUri, isOpenPropertyType);
         }
 
-        public void WritePrimitiveValue(object value, IEdmTypeReference expectedTypeReference)
+        public override void WritePrimitiveValue(object value, IEdmTypeReference expectedTypeReference)
         {
             this.WritePrimitiveVerifier.Should().NotBeNull("WritePrimitiveValue was called.");
             this.WritePrimitiveVerifier(value, expectedTypeReference);
         }
 
-        public void WritePrimitiveValue(object value, IEdmTypeReference actualTypeReference, IEdmTypeReference expectedTypeReference)
+        public override void WritePrimitiveValue(object value, IEdmTypeReference actualTypeReference, IEdmTypeReference expectedTypeReference)
         {
             this.WritePrimitiveValue(value, expectedTypeReference);
         }
 
-        public void WriteUntypedValue(ODataUntypedValue value)
+        public override void WriteUntypedValue(ODataUntypedValue value)
         {
             this.WritePrimitiveVerifier.Should().NotBeNull("WriteUntypedValue was called.");
             this.WritePrimitiveVerifier(value, null);
         }
-
-        public DuplicatePropertyNamesChecker CreateDuplicatePropertyNamesChecker()
-        {
-            return new DuplicatePropertyNamesChecker(false);
-        }
-
-        public IJsonWriter JsonWriter { get; set; }
-
-        public ODataMessageWriterSettings Settings { get; set; }
     }
 }

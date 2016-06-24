@@ -68,6 +68,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip
             var entitySet = model.FindDeclaredEntitySet("People");
             var entityType = model.GetEntityType("NS.Person");
             var container = ContainerBuilderHelper.BuildContainer(action);
+            container.GetRequiredService<ODataSimplifiedOptions>().EnableReadingODataAnnotationWithoutPrefix = true;
             var resource = GetReadedResource(messageContent, model, entitySet, entityType, container);
             var propertyList = resource.Properties.ToList();
             Assert.Equal("PersonId", propertyList[0].Name);
@@ -129,7 +130,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip
             };
             message.SetHeader("Content-Type", "application/json");
 
-            var settings = new ODataMessageReaderSettings { ODataSimplified = true };
+            var settings = new ODataMessageReaderSettings();
             using (var messageReader = new ODataMessageReader(message, settings, model))
             {
                 var reader = messageReader.CreateODataResourceReader(entitySet, entityType);

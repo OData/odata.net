@@ -38,7 +38,6 @@ namespace Microsoft.OData.Client
             ODataMessageWriterSettings writerSettings = new ODataMessageWriterSettings
             {
                 EnableCharactersCheck = false,
-                ODataSimplified = odataSimplified,
 
                 // For operations inside batch, we need to dispose the stream. For top level requests,
                 // we do not need to dispose the stream. Since for inner batch requests, the request
@@ -46,6 +45,8 @@ namespace Microsoft.OData.Client
                 // we can do this here.
                 EnableMessageStreamDisposal = isBatchPartRequest
             };
+
+            ODataSimplifiedOptions.GetODataSimplifiedOptions(null).EnableWritingODataAnnotationWithoutPrefix = odataSimplified;
 
             CommonUtil.SetDefaultMessageQuotas(writerSettings.MessageQuotas);
 

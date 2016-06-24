@@ -190,9 +190,6 @@
     <Compile Include="$(ODataCrossTargettingSourcePath)\JsonLight\IODataJsonLightReaderResourceState.cs">
       <Link>Microsoft\OData\Core\JsonLight\IODataJsonLightReaderResourceState.cs</Link>
     </Compile>
-    <Compile Include="$(ODataCrossTargettingSourcePath)\JsonLight\IODataJsonLightValueSerializer.cs">
-      <Link>Microsoft\OData\Core\JsonLight\IODataJsonLightValueSerializer.cs</Link>
-    </Compile>
     <Compile Include="$(ODataCrossTargettingSourcePath)\JsonLight\IODataJsonLightWriterResourceState.cs">
       <Link>Microsoft\OData\Core\JsonLight\IODataJsonLightWriterResourceState.cs</Link>
     </Compile>
@@ -393,6 +390,9 @@
     </Compile>
     <Compile Include="$(ODataCrossTargettingSourcePath)\ODataMediaTypeResolver.cs">
       <Link>Microsoft\OData\Core\ODataMediaTypeResolver.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\ODataSimplifiedOptions.cs">
+      <Link>Microsoft\OData\Core\ODataSimplifiedOptions.cs</Link>
     </Compile>
     <Compile Include="$(ODataCrossTargettingSourcePath)\MediaTypeUtils.cs">
       <Link>Microsoft\OData\Core\MediaTypeUtils.cs</Link>

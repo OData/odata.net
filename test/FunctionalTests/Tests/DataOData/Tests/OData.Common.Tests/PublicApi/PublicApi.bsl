@@ -4757,9 +4757,7 @@ public sealed class Microsoft.OData.ODataMessageReaderSettings {
 	bool EnablePrimitiveTypeConversion  { public get; public set; }
 	Microsoft.OData.ODataVersion MaxProtocolVersion  { public get; public set; }
 	Microsoft.OData.ODataMessageQuotas MessageQuotas  { public get; public set; }
-	bool ODataSimplified  { public get; public set; }
 	System.Func`2[[System.String],[System.Boolean]] ShouldIncludeAnnotation  { public get; public set; }
-	System.Nullable`1[[System.Boolean]] UseKeyAsSegment  { public get; public set; }
 	Microsoft.OData.ValidationKinds Validations  { public get; public set; }
 
 	public Microsoft.OData.ODataMessageReaderSettings Clone ()
@@ -4826,9 +4824,7 @@ public sealed class Microsoft.OData.ODataMessageWriterSettings {
 	bool EnableMessageStreamDisposal  { public get; public set; }
 	string JsonPCallback  { public get; public set; }
 	Microsoft.OData.ODataMessageQuotas MessageQuotas  { public get; public set; }
-	bool ODataSimplified  { public get; public set; }
 	Microsoft.OData.ODataUri ODataUri  { public get; public set; }
-	System.Nullable`1[[System.Boolean]] UseKeyAsSegment  { public get; public set; }
 	Microsoft.OData.ValidationKinds Validations  { public get; public set; }
 	System.Nullable`1[[Microsoft.OData.ODataVersion]] Version  { public get; public set; }
 
@@ -4937,6 +4933,17 @@ public sealed class Microsoft.OData.ODataServiceDocument : Microsoft.OData.OData
 	System.Collections.Generic.IEnumerable`1[[Microsoft.OData.ODataEntitySetInfo]] EntitySets  { public get; public set; }
 	System.Collections.Generic.IEnumerable`1[[Microsoft.OData.ODataFunctionImportInfo]] FunctionImports  { public get; public set; }
 	System.Collections.Generic.IEnumerable`1[[Microsoft.OData.ODataSingletonInfo]] Singletons  { public get; public set; }
+}
+
+public sealed class Microsoft.OData.ODataSimplifiedOptions {
+	public ODataSimplifiedOptions ()
+
+	System.Nullable`1[[System.Boolean]] EnableReadingKeyAsSegment  { public get; public set; }
+	bool EnableReadingODataAnnotationWithoutPrefix  { public get; public set; }
+	System.Nullable`1[[System.Boolean]] EnableWritingKeyAsSegment  { public get; public set; }
+	bool EnableWritingODataAnnotationWithoutPrefix  { public get; public set; }
+
+	public static Microsoft.OData.ODataSimplifiedOptions GetODataSimplifiedOptions (System.IServiceProvider container)
 }
 
 public sealed class Microsoft.OData.ODataSingletonInfo : Microsoft.OData.ODataServiceDocumentElement {

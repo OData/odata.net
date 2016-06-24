@@ -45,7 +45,6 @@ namespace Microsoft.OData.Client
             settings.Validations &= ~(ValidationKinds.ThrowOnDuplicatePropertyNames | ValidationKinds.ThrowIfTypeConflictsWithMetadata);
             settings.ClientCustomTypeResolver = resolveWireTypeName;
             settings.BaseUri = this.responseInfo.BaseUriResolver.BaseUriOrNull;
-            settings.ODataSimplified = this.responseInfo.Context.ODataSimplified;
             settings.MaxProtocolVersion = CommonUtil.ConvertToODataVersion(this.responseInfo.MaxProtocolVersion);
 
             if (!this.responseInfo.ThrowOnUndeclaredPropertyForNonOpenType)
@@ -53,9 +52,11 @@ namespace Microsoft.OData.Client
                 settings.Validations &= ~ValidationKinds.ThrowOnUndeclaredPropertyForNonOpenType;
             }
 
+            var odataSimplifiedOptions = ODataSimplifiedOptions.GetODataSimplifiedOptions(null);
+            odataSimplifiedOptions.EnableReadingODataAnnotationWithoutPrefix = this.responseInfo.Context.ODataSimplified;
             if (this.responseInfo.Context.UrlConventions == DataServiceUrlConventions.KeyAsSegment)
             {
-                settings.UseKeyAsSegment = true;
+                odataSimplifiedOptions.EnableReadingKeyAsSegment = true;
             }
 
             CommonUtil.SetDefaultMessageQuotas(settings.MessageQuotas);

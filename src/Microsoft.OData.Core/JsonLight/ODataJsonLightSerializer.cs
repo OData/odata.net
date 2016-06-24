@@ -56,7 +56,8 @@ namespace Microsoft.OData.JsonLight
             this.instanceAnnotationWriter = new SimpleLazy<JsonLightInstanceAnnotationWriter>(() =>
                 new JsonLightInstanceAnnotationWriter(new ODataJsonLightValueSerializer(jsonLightOutputContext), jsonLightOutputContext.TypeNameOracle));
             this.odataAnnotationWriter = new SimpleLazy<JsonLightODataAnnotationWriter>(() =>
-                new JsonLightODataAnnotationWriter(jsonLightOutputContext.JsonWriter, jsonLightOutputContext.MessageWriterSettings.ODataSimplified));
+                new JsonLightODataAnnotationWriter(jsonLightOutputContext.JsonWriter,
+                    this.JsonLightOutputContext.ODataSimplifiedOptions.EnableWritingODataAnnotationWithoutPrefix));
 
             if (initContextUriBuilder)
             {

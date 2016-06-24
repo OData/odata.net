@@ -25,7 +25,7 @@ namespace Microsoft.OData
         /// <summary>
         /// Value serializer, responsible for serializing the annotation values.
         /// </summary>
-        private readonly IODataJsonLightValueSerializer valueSerializer;
+        private readonly ODataJsonLightValueSerializer valueSerializer;
 
         /// <summary>
         /// The oracle to use to determine the type name to write for entries and values.
@@ -50,17 +50,18 @@ namespace Microsoft.OData
         /// <summary>
         /// Constructs a <see cref="JsonLightInstanceAnnotationWriter"/> that can write a collection of <see cref="ODataInstanceAnnotation"/>.
         /// </summary>
-        /// <param name="valueSerializer">The <see cref="IODataJsonLightValueSerializer"/> to use for writing values of instance annotations.
+        /// <param name="valueSerializer">The <see cref="ODataJsonLightValueSerializer"/> to use for writing values of instance annotations.
         /// The <see cref="IJsonWriter"/> that is also used internally will be acquired from the this instance.</param>
         /// <param name="typeNameOracle">The oracle to use to determine the type name to write for entries and values.</param>
-        internal JsonLightInstanceAnnotationWriter(IODataJsonLightValueSerializer valueSerializer, JsonLightTypeNameOracle typeNameOracle)
+        internal JsonLightInstanceAnnotationWriter(ODataJsonLightValueSerializer valueSerializer, JsonLightTypeNameOracle typeNameOracle)
         {
             Debug.Assert(valueSerializer != null, "valueSerializer should not be null");
             this.valueSerializer = valueSerializer;
             this.typeNameOracle = typeNameOracle;
             this.jsonWriter = this.valueSerializer.JsonWriter;
-            this.odataAnnotationWriter = new JsonLightODataAnnotationWriter(this.jsonWriter, valueSerializer.Settings.ODataSimplified);
-            this.writerValidator = this.valueSerializer.Settings.Validator;
+            this.odataAnnotationWriter = new JsonLightODataAnnotationWriter(this.jsonWriter,
+                valueSerializer.JsonLightOutputContext.ODataSimplifiedOptions.EnableWritingODataAnnotationWithoutPrefix);
+            this.writerValidator = this.valueSerializer.MessageWriterSettings.Validator;
         }
 
         /// <summary>
@@ -142,7 +143,7 @@ namespace Microsoft.OData
             Debug.Assert(!(value is ODataStreamReferenceValue), "!(value is ODataStreamReferenceValue) -- ODataInstanceAnnotation and InstanceAnnotationCollection will throw if the value is a stream value.");
             Debug.Assert(this.valueSerializer.Model != null, "this.valueSerializer.Model != null");
 
-            if (!ignoreFilter && this.valueSerializer.Settings.ShouldSkipAnnotation(name))
+            if (!ignoreFilter && this.valueSerializer.MessageWriterSettings.ShouldSkipAnnotation(name))
             {
                 return;
             }

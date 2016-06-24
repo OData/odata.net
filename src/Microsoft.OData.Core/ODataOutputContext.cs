@@ -54,6 +54,11 @@ namespace Microsoft.OData
         private readonly IWriterValidator writerValidator;
 
         /// <summary>
+        /// The simplified options used in writing.
+        /// </summary>
+        private readonly ODataSimplifiedOptions odataSimplifiedOptions;
+
+        /// <summary>
         /// Constructor.
         /// </summary>
         /// <param name="format">The format for this output context.</param>
@@ -77,6 +82,7 @@ namespace Microsoft.OData
             this.edmTypeResolver = EdmTypeWriterResolver.Instance;
             this.payloadValueConverter = ODataPayloadValueConverter.GetPayloadValueConverter(this.container);
             this.writerValidator = messageWriterSettings.Validator;
+            this.odataSimplifiedOptions = ODataSimplifiedOptions.GetODataSimplifiedOptions(this.container);
         }
 
         /// <summary>
@@ -176,6 +182,17 @@ namespace Microsoft.OData
             get
             {
                 return this.writerValidator;
+            }
+        }
+
+        /// <summary>
+        /// The ODataSimplifiedOptions used in writing
+        /// </summary>
+        internal ODataSimplifiedOptions ODataSimplifiedOptions
+        {
+            get
+            {
+                return this.odataSimplifiedOptions;
             }
         }
 

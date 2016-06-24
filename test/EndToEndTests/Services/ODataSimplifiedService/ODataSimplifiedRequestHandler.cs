@@ -34,13 +34,13 @@ namespace Microsoft.Test.OData.Services.ODataWCFService
         internal class ODataSimplifiedQueryHandler : QueryHandler
         {
             public ODataSimplifiedQueryHandler(RequestHandler other)
-                : base(other) { }
+                : base(other)
+            { }
 
             protected override ODataMessageWriterSettings GetWriterSettings()
             {
                 var settings = base.GetWriterSettings();
-                settings.ODataSimplified = true;
-
+                ODataSimplifiedOptions.GetODataSimplifiedOptions(null).EnableWritingODataAnnotationWithoutPrefix = true;
                 return settings;
             }
         }
@@ -48,13 +48,13 @@ namespace Microsoft.Test.OData.Services.ODataWCFService
         internal class ODataSimplifiedCreateHandler : CreateHandler
         {
             public ODataSimplifiedCreateHandler(RequestHandler other)
-                : base(other) { }
+                : base(other)
+            { }
 
             protected override ODataMessageWriterSettings GetWriterSettings()
             {
                 var settings = base.GetWriterSettings();
-                settings.ODataSimplified = true;
-
+                ODataSimplifiedOptions.GetODataSimplifiedOptions(null).EnableWritingODataAnnotationWithoutPrefix = true;
                 return settings;
             }
         }

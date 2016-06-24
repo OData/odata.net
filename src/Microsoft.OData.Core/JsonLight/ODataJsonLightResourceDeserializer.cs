@@ -908,7 +908,9 @@ namespace Microsoft.OData.JsonLight
             ODataResource resource = resourceState.Resource;
             Debug.Assert(resource != null, "resource != null");
 
-            ODataResourceMetadataBuilder builder = this.MetadataContext.GetResourceMetadataBuilderForReader(resourceState, this.JsonLightInputContext.MessageReaderSettings.UseKeyAsSegment);
+            ODataResourceMetadataBuilder builder =
+                this.MetadataContext.GetResourceMetadataBuilderForReader(resourceState,
+                    this.JsonLightInputContext.ODataSimplifiedOptions.EnableReadingKeyAsSegment);
             mediaResource.SetMetadataBuilder(builder, /*propertyName*/ null);
             resource.MediaResource = mediaResource;
         }
@@ -1316,7 +1318,9 @@ namespace Microsoft.OData.JsonLight
                 }
             }
 
-            ODataResourceMetadataBuilder builder = this.MetadataContext.GetResourceMetadataBuilderForReader(resourceState, this.JsonLightInputContext.MessageReaderSettings.UseKeyAsSegment);
+            ODataResourceMetadataBuilder builder =
+                this.MetadataContext.GetResourceMetadataBuilderForReader(resourceState,
+                    this.JsonLightInputContext.ODataSimplifiedOptions.EnableReadingKeyAsSegment);
 
             // Note that we set the metadata builder even when streamProperty is null, which is the case when the stream property is undeclared.
             // For undeclared stream properties, we will apply conventional metadata evaluation just as declared stream properties.
@@ -1506,7 +1510,9 @@ namespace Microsoft.OData.JsonLight
         /// <param name="operation">The operation to set the metadata builder on.</param>
         private void SetMetadataBuilder(IODataJsonLightReaderResourceState resourceState, ODataOperation operation)
         {
-            ODataResourceMetadataBuilder builder = this.MetadataContext.GetResourceMetadataBuilderForReader(resourceState, this.JsonLightInputContext.MessageReaderSettings.UseKeyAsSegment);
+            ODataResourceMetadataBuilder builder =
+                this.MetadataContext.GetResourceMetadataBuilderForReader(resourceState,
+                    this.JsonLightInputContext.ODataSimplifiedOptions.EnableReadingKeyAsSegment);
             operation.SetMetadataBuilder(builder, this.ContextUriParseResult.MetadataDocumentUri);
         }
 

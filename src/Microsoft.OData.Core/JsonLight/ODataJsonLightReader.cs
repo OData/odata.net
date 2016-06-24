@@ -1241,7 +1241,10 @@ namespace Microsoft.OData.JsonLight
                 // Hookup the metadata builder to the nested resource info.
                 // Note that we set the metadata builder even when navigationProperty is null, which is the case when the link is undeclared.
                 // For undeclared links, we will apply conventional metadata evaluation just as declared links.
-                ODataResourceMetadataBuilder entityMetadataBuilder = this.jsonLightResourceDeserializer.MetadataContext.GetResourceMetadataBuilderForReader(this.CurrentResourceState, this.jsonLightInputContext.MessageReaderSettings.UseKeyAsSegment);
+                ODataResourceMetadataBuilder entityMetadataBuilder =
+                    this.jsonLightResourceDeserializer.MetadataContext.GetResourceMetadataBuilderForReader(
+                        this.CurrentResourceState,
+                        this.jsonLightInputContext.ODataSimplifiedOptions.EnableReadingKeyAsSegment);
                 nestedResourceInfo.MetadataBuilder = entityMetadataBuilder;
             }
 
@@ -1291,7 +1294,10 @@ namespace Microsoft.OData.JsonLight
             //       as stated in ReadAtResourceSetEndImplementationSynchronously().
             if (this.CurrentResource != null && !this.IsReadingNestedPayload)
             {
-                ODataResourceMetadataBuilder builder = this.jsonLightResourceDeserializer.MetadataContext.GetResourceMetadataBuilderForReader(this.CurrentResourceState, this.jsonLightInputContext.MessageReaderSettings.UseKeyAsSegment);
+                ODataResourceMetadataBuilder builder =
+                    this.jsonLightResourceDeserializer.MetadataContext.GetResourceMetadataBuilderForReader(
+                        this.CurrentResourceState,
+                        this.jsonLightInputContext.ODataSimplifiedOptions.EnableReadingKeyAsSegment);
                 if (builder != this.CurrentResource.MetadataBuilder)
                 {
                     // Builder should not be used outside the odataresource, lazy builder logic does not work here

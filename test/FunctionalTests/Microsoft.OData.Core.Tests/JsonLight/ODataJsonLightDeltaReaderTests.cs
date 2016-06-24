@@ -11,6 +11,7 @@ using System.Linq;
 using FluentAssertions;
 using Microsoft.OData.JsonLight;
 using Microsoft.OData.Edm;
+using Microsoft.Test.OData.DependencyInjection;
 using Xunit;
 
 namespace Microsoft.OData.Tests.JsonLight
@@ -428,8 +429,8 @@ namespace Microsoft.OData.Tests.JsonLight
                                 "{" +
                                     "\"@odata.type\":\"#MyNS.Address\"," +
                                     "\"Street\":\"23 Tsawassen Blvd.\"," +
-                                    "\"City\":" + 
-                                    "{" + 
+                                    "\"City\":" +
+                                    "{" +
                                         "\"CityName\":\"Tsawassen\"" +
                                     "}," +
                                     "\"Region\":\"BC\"," +
@@ -554,7 +555,6 @@ namespace Microsoft.OData.Tests.JsonLight
             var settings = new ODataMessageReaderSettings
             {
                 ShouldIncludeAnnotation = s => true,
-                ODataSimplified = odataSimplified
             };
 
             var messageInfo = new ODataMessageInfo
@@ -563,11 +563,14 @@ namespace Microsoft.OData.Tests.JsonLight
                 MediaType = new ODataMediaType("application", "json"),
                 IsAsync = false,
                 Model = model ?? new EdmModel(),
+                Container = ContainerBuilderHelper.BuildContainer(null)
             };
 
             using (var inputContext = new ODataJsonLightInputContext(
                 new StringReader(payload), messageInfo, settings))
             {
+                inputContext.Container.GetRequiredService<ODataSimplifiedOptions>()
+                    .EnableReadingODataAnnotationWithoutPrefix = odataSimplified;
                 var jsonLightReader = new ODataJsonLightDeltaReader(inputContext, navigationSource, entityType);
                 while (jsonLightReader.Read())
                 {

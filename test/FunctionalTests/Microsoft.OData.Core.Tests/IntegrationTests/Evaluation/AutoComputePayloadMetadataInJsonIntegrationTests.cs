@@ -13,6 +13,7 @@ using FluentAssertions;
 using Microsoft.OData.UriParser;
 using Microsoft.OData.Edm;
 using Microsoft.OData.Edm.Vocabularies;
+using Microsoft.Test.OData.DependencyInjection;
 using Xunit;
 
 namespace Microsoft.OData.Tests.IntegrationTests.Evaluation
@@ -22,13 +23,13 @@ namespace Microsoft.OData.Tests.IntegrationTests.Evaluation
         private readonly ODataResource entryWithPayloadMetadata = new ODataResource
         {
             Properties = new[] {
-                    new ODataProperty { Name = "ID", Value = 123 }, 
+                    new ODataProperty { Name = "ID", Value = 123 },
                     new ODataProperty
                     {
-                        Name = "StreamProp1", 
+                        Name = "StreamProp1",
                         Value = new ODataStreamReferenceValue
                         {
-                            ContentType = "image/jpeg", 
+                            ContentType = "image/jpeg",
                             EditLink = new Uri("http://example.com/stream/edit"),
                             ReadLink = new Uri("http://example.com/stream/read"),
                             ETag = "stream etag"
@@ -740,7 +741,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Evaluation
         {
             ODataItem[] itemsToWrite = new ODataItem[]
             {
-                new ODataResourceSet(), 
+                new ODataResourceSet(),
                 this.derivedEntry,
                 this.containedNavLinkWithPayloadMetadata,
                 this.entryWithOnlyData
@@ -757,7 +758,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Evaluation
         {
             ODataItem[] itemsToWrite = new ODataItem[]
             {
-                new ODataResourceSet(), 
+                new ODataResourceSet(),
                 this.derivedEntry,
             };
 
@@ -775,7 +776,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Evaluation
         {
             ODataItem[] itemsToWrite = new ODataItem[]
             {
-                new ODataResourceSet(), 
+                new ODataResourceSet(),
                 this.derivedEntry,
             };
 
@@ -793,10 +794,10 @@ namespace Microsoft.OData.Tests.IntegrationTests.Evaluation
         {
             ODataItem[] itemsToWrite = new ODataItem[]
             {
-                new ODataResourceSet(), 
+                new ODataResourceSet(),
                 this.derivedEntry,
                 this.derivedContainedCollectionNavLinkWithPayloadMetadata,
-                new ODataResourceSet(), 
+                new ODataResourceSet(),
                 this.entryWithOnlyData
             };
 
@@ -1693,12 +1694,14 @@ namespace Microsoft.OData.Tests.IntegrationTests.Evaluation
         private string GetWriterOutputForContentTypeAndKnobValue(string contentType, bool autoComputePayloadMetadata, ODataItem[] itemsToWrite, EdmModel edmModel, IEdmEntitySetBase edmEntitySet, EdmEntityType edmEntityType, string selectClause = null, string expandClause = null, string resourcePath = null, bool odataSimplified = false)
         {
             MemoryStream outputStream = new MemoryStream();
-            IODataResponseMessage message = new InMemoryMessage() { Stream = outputStream };
+            var container = ContainerBuilderHelper.BuildContainer(null);
+            container.GetRequiredService<ODataSimplifiedOptions>().EnableWritingODataAnnotationWithoutPrefix = odataSimplified;
+            IODataResponseMessage message = new InMemoryMessage() { Stream = outputStream, Container = container };
+
             message.SetHeader("Content-Type", contentType);
             ODataMessageWriterSettings settings = new ODataMessageWriterSettings()
             {
                 AutoComputePayloadMetadata = autoComputePayloadMetadata,
-                ODataSimplified = odataSimplified
             };
 
             var result = new ODataQueryOptionParser(edmModel, edmEntityType, edmEntitySet, new Dictionary<string, string> { { "$select", selectClause }, { "$expand", expandClause } }).ParseSelectAndExpand();

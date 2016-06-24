@@ -9,6 +9,7 @@ using System.IO;
 using FluentAssertions;
 using Microsoft.OData.Edm;
 using Microsoft.OData.Edm.Vocabularies;
+using Microsoft.Test.OData.DependencyInjection;
 using Xunit;
 
 namespace Microsoft.OData.Tests.ScenarioTests.Writer.JsonLight
@@ -114,37 +115,38 @@ namespace Microsoft.OData.Tests.ScenarioTests.Writer.JsonLight
                 new EdmAnnotation(
                     this.entityContainer,
                     new EdmTerm(
-                        "Com.Microsoft.OData.Service.Conventions.V1", 
-                        "UrlConventions", 
-                        EdmPrimitiveTypeKind.String), 
+                        "Com.Microsoft.OData.Service.Conventions.V1",
+                        "UrlConventions",
+                        EdmPrimitiveTypeKind.String),
                         new EdmStringConstant("KeyAsSegment")));
         }
 
         private string SerializeEntryInFullMetadataJson(
-            bool? useKeyAsSegment, 
-            IEdmModel edmModel, 
-            IEdmEntityType entityType = null, 
+            bool? useKeyAsSegment,
+            IEdmModel edmModel,
+            IEdmEntityType entityType = null,
             IEdmEntitySet entitySet = null)
         {
             var settings = new ODataMessageWriterSettings
             {
                 AutoComputePayloadMetadata = true,
-                UseKeyAsSegment = useKeyAsSegment,
             };
 
             settings.SetServiceDocumentUri(new Uri("http://example.com/"));
 
             var outputStream = new MemoryStream();
-            var responseMessage = new InMemoryMessage {Stream = outputStream};
+            var container = ContainerBuilderHelper.BuildContainer(null);
+            container.GetRequiredService<ODataSimplifiedOptions>().EnableWritingKeyAsSegment = useKeyAsSegment;
+            var responseMessage = new InMemoryMessage { Stream = outputStream, Container = container };
             responseMessage.SetHeader("Content-Type", "application/json;odata.metadata=full");
             string output;
 
-            using(var messageWriter = new ODataMessageWriter((IODataResponseMessage)responseMessage, settings, edmModel))
+            using (var messageWriter = new ODataMessageWriter((IODataResponseMessage)responseMessage, settings, edmModel))
             {
                 var entryWriter = messageWriter.CreateODataResourceWriter(entitySet, entityType);
-                ODataProperty keyProperty = new ODataProperty() {Name = "Key", Value = "KeyValue"};
+                ODataProperty keyProperty = new ODataProperty() { Name = "Key", Value = "KeyValue" };
 
-                var entry = new ODataResource {Properties = new[] {keyProperty}, TypeName = "Namespace.Person"};
+                var entry = new ODataResource { Properties = new[] { keyProperty }, TypeName = "Namespace.Person" };
 
                 if (edmModel == null)
                 {

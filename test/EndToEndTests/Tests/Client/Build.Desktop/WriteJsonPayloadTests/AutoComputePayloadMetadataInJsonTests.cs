@@ -12,8 +12,9 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
     using System.Linq;
     using System.Web.Script.Serialization;
     using Microsoft.OData;
-    using Microsoft.OData.UriParser;
     using Microsoft.OData.Edm;
+    using Microsoft.OData.UriParser;
+    using Microsoft.Test.OData.DependencyInjection;
     using Microsoft.Test.OData.Services.TestServices;
     using Microsoft.Test.OData.Tests.Client.Common;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -553,13 +554,11 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
                     settings.ODataUri = new ODataUri() { ServiceRoot = this.ServiceUri };
                     settings.BaseUri = this.ServiceUri;
 
-                    settings.UseKeyAsSegment = true;
-
                     settings.AutoComputePayloadMetadata = false;
-                    string defaultModeResult = this.WriteAndVerifyEmployeeFeed(settings, mimeType, hasModel);
+                    string defaultModeResult = this.WriteAndVerifyEmployeeFeed(settings, mimeType, hasModel, true);
 
                     settings.AutoComputePayloadMetadata = true;
-                    string autoComputeMetadataModeResult = this.WriteAndVerifyEmployeeFeed(settings, mimeType, hasModel);
+                    string autoComputeMetadataModeResult = this.WriteAndVerifyEmployeeFeed(settings, mimeType, hasModel, true);
 
                     // For Atom, verify that the result is the same for AutoComputePayloadMetadata=true/false
                     if (mimeType == MimeTypes.ApplicationAtomXml)
@@ -570,7 +569,7 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
             }
         }
 
-        private string WriteAndVerifyEmployeeFeed(ODataMessageWriterSettings settings, string mimeType, bool hasModel)
+        private string WriteAndVerifyEmployeeFeed(ODataMessageWriterSettings settings, string mimeType, bool hasModel, bool useKeyAsSegment)
         {
             // create a feed with two entries
             var employeeFeed = new ODataResourceSet();
@@ -592,9 +591,12 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
             Dictionary<string, object> expectedEmployeeObject = WritePayloadHelper.ComputeExpectedFullMetadataEntryObject(WritePayloadHelper.EmployeeType, "Person/-3", employeeEntry, hasModel, true);
             Dictionary<string, object> expectedSpecialEmployeeObject = WritePayloadHelper.ComputeExpectedFullMetadataEntryObject(WritePayloadHelper.SpecialEmployeeType, "Person/-10", specialEmployeeEntry, hasModel, true);
 
+            ODataSimplifiedOptions.GetODataSimplifiedOptions(null).EnableWritingKeyAsSegment = useKeyAsSegment;
+
             // write the response message and read using ODL reader
             var responseMessage = new StreamResponseMessage(new MemoryStream());
             responseMessage.SetHeader("Content-Type", mimeType);
+
             string result = string.Empty;
             using (var messageWriter = this.CreateODataMessageWriter(responseMessage, settings, hasModel))
             {

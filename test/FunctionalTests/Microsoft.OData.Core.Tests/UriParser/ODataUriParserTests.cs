@@ -435,7 +435,7 @@ namespace Microsoft.OData.Tests.UriParser
         [InlineData(TestUrlConvention.KeyAsSegment, "http://host/customers/customerId/orders/orderId/Test.DetailedOrder/details/1")]
         [InlineData(TestUrlConvention.Default, "http://host/customers('customerId')/orders(customerId='customerId',orderId='orderId')")]
         [InlineData(TestUrlConvention.Default, "http://host/customers('customerId')/orders('orderId')")]
-        [InlineData(TestUrlConvention.ODataSimplified, "http://host/customers/customerId/orders/orderId")]
+        [InlineData(TestUrlConvention.ODataSimplified, "http://host/customers('customerId')/orders('orderId')")]
         [InlineData(TestUrlConvention.KeyAsSegment, "http://host/customers/customerId/orders/orderId")]
         public void ParseCompositeKeyReference(TestUrlConvention testUrlConvention, string fullUrl)
         {

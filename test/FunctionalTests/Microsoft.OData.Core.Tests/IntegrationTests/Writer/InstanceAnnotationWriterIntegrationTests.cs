@@ -9,6 +9,7 @@ using System.IO;
 using System.Text.RegularExpressions;
 using FluentAssertions;
 using Microsoft.OData.Edm;
+using Microsoft.Test.OData.DependencyInjection;
 using Xunit;
 
 namespace Microsoft.OData.Tests.IntegrationTests.Writer
@@ -656,27 +657,46 @@ namespace Microsoft.OData.Tests.IntegrationTests.Writer
 
         private void WriteAnnotationsAndValidatePayload(Action<ODataWriter> action, IEdmNavigationSource navigationSource, ODataFormat format, string expectedPayload, bool request, bool createFeedWriter, bool odataSimplified = false)
         {
-            var writerSettings = new ODataMessageWriterSettings { EnableMessageStreamDisposal = false, ODataSimplified = odataSimplified };
+            var writerSettings = new ODataMessageWriterSettings { EnableMessageStreamDisposal = false };
             writerSettings.SetContentType(format);
             writerSettings.SetServiceDocumentUri(new Uri("http://www.example.com/"));
+
+            var container = ContainerBuilderHelper.BuildContainer(null);
+            container.GetRequiredService<ODataSimplifiedOptions>().EnableWritingODataAnnotationWithoutPrefix =
+                odataSimplified;
 
             MemoryStream stream = new MemoryStream();
             if (request)
             {
-                IODataRequestMessage requestMessageToWrite = new InMemoryMessage { Method = "GET", Stream = stream };
+
+                IODataRequestMessage requestMessageToWrite = new InMemoryMessage
+                {
+                    Method = "GET",
+                    Stream = stream,
+                    Container = container
+                };
                 using (var messageWriter = new ODataMessageWriter(requestMessageToWrite, writerSettings, Model))
                 {
-                    ODataWriter odataWriter = (createFeedWriter && !(navigationSource is EdmSingleton)) ? messageWriter.CreateODataResourceSetWriter(navigationSource as EdmEntitySet, EntityType) : messageWriter.CreateODataResourceWriter(navigationSource, EntityType); ;
+                    ODataWriter odataWriter = (createFeedWriter && !(navigationSource is EdmSingleton))
+                        ? messageWriter.CreateODataResourceSetWriter(navigationSource as EdmEntitySet, EntityType)
+                        : messageWriter.CreateODataResourceWriter(navigationSource, EntityType);
                     action(odataWriter);
                 }
             }
             else
             {
-                IODataResponseMessage responseMessageToWrite = new InMemoryMessage { StatusCode = 200, Stream = stream };
+                IODataResponseMessage responseMessageToWrite = new InMemoryMessage
+                {
+                    StatusCode = 200,
+                    Stream = stream,
+                    Container = container
+                };
                 responseMessageToWrite.PreferenceAppliedHeader().AnnotationFilter = "*";
                 using (var messageWriter = new ODataMessageWriter(responseMessageToWrite, writerSettings, Model))
                 {
-                    ODataWriter odataWriter = (createFeedWriter && !(navigationSource is EdmSingleton)) ? messageWriter.CreateODataResourceSetWriter(navigationSource as EdmEntitySet, EntityType) : messageWriter.CreateODataResourceWriter(navigationSource, EntityType); ;
+                    ODataWriter odataWriter = (createFeedWriter && !(navigationSource is EdmSingleton))
+                        ? messageWriter.CreateODataResourceSetWriter(navigationSource as EdmEntitySet, EntityType)
+                        : messageWriter.CreateODataResourceWriter(navigationSource, EntityType);
                     action(odataWriter);
                 }
             }

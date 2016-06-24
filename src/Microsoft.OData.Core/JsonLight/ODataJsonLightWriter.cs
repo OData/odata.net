@@ -78,7 +78,8 @@ namespace Microsoft.OData.JsonLight
 
             this.writingParameter = writingParameter;
             this.jsonWriter = this.jsonLightOutputContext.JsonWriter;
-            this.odataAnnotationWriter = new JsonLightODataAnnotationWriter(this.jsonWriter, jsonLightOutputContext.MessageWriterSettings.ODataSimplified);
+            this.odataAnnotationWriter = new JsonLightODataAnnotationWriter(this.jsonWriter,
+                this.jsonLightOutputContext.ODataSimplifiedOptions.EnableWritingODataAnnotationWithoutPrefix);
         }
 
         /// <summary>
@@ -171,7 +172,7 @@ namespace Microsoft.OData.JsonLight
                     resourceScope.ResourceType,
                     selectedProperties,
                     this.jsonLightOutputContext.WritingResponse,
-                    this.jsonLightOutputContext.MessageWriterSettings.UseKeyAsSegment,
+                    this.jsonLightOutputContext.ODataSimplifiedOptions.EnableWritingKeyAsSegment,
                     this.jsonLightOutputContext.MessageWriterSettings.ODataUri);
 
                 if (builder is ODataConventionalResourceMetadataBuilder)

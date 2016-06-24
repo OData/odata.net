@@ -11,6 +11,7 @@ using System.IO;
 using System.Text;
 using FluentAssertions;
 using Microsoft.OData.Edm;
+using Microsoft.Test.OData.DependencyInjection;
 using Microsoft.Test.OData.Utils.ODataLibTest;
 using Xunit;
 
@@ -1080,13 +1081,16 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.JsonLight
 
         private ODataResource ReadJsonLightEntry(string payload, string contentType, bool readingResponse, bool odataSimplified = false)
         {
-            InMemoryMessage message = new InMemoryMessage();
+            var container = ContainerBuilderHelper.BuildContainer(null);
+            container.GetRequiredService<ODataSimplifiedOptions>().EnableReadingODataAnnotationWithoutPrefix =
+                odataSimplified;
+
+            InMemoryMessage message = new InMemoryMessage() { Container = container };
             message.SetHeader("Content-Type", contentType);
             message.Stream = new MemoryStream(Encoding.UTF8.GetBytes(payload));
 
             ODataResource topLevelEntry = null;
-
-            ODataMessageReaderSettings settings = new ODataMessageReaderSettings { ODataSimplified = odataSimplified };
+            ODataMessageReaderSettings settings = new ODataMessageReaderSettings();
 
             using (var messageReader = readingResponse
                 ? new ODataMessageReader((IODataResponseMessage)message, settings, Model)

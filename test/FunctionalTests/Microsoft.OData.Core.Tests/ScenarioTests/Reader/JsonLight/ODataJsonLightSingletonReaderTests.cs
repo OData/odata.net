@@ -10,6 +10,7 @@ using System.Linq;
 using FluentAssertions;
 using Microsoft.OData.JsonLight;
 using Microsoft.OData.Edm;
+using Microsoft.Test.OData.DependencyInjection;
 using Xunit;
 
 namespace Microsoft.OData.Tests.ScenarioTests.Reader.JsonLight
@@ -394,7 +395,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Reader.JsonLight
 
         private ODataResource ReadSingleton(string payload, bool odataSimplified = false)
         {
-            var settings = new ODataMessageReaderSettings { ODataSimplified = odataSimplified };
+            var settings = new ODataMessageReaderSettings();
 
             var messageInfo = new ODataMessageInfo
             {
@@ -402,11 +403,14 @@ namespace Microsoft.OData.Tests.ScenarioTests.Reader.JsonLight
                 MediaType = new ODataMediaType("application", "json"),
                 IsAsync = false,
                 Model = this.userModel,
+                Container = ContainerBuilderHelper.BuildContainer(null)
             };
 
             using (var inputContext = new ODataJsonLightInputContext(
                 new StringReader(payload), messageInfo, settings))
             {
+                inputContext.Container.GetRequiredService<ODataSimplifiedOptions>()
+                    .EnableReadingODataAnnotationWithoutPrefix = odataSimplified;
                 var jsonLightReader = new ODataJsonLightReader(inputContext, singleton, webType, /*readingFeed*/ false);
                 while (jsonLightReader.Read())
                 {

@@ -52,6 +52,11 @@ namespace Microsoft.OData
         /// <summary>The payload value converter to use.</summary>
         private readonly ODataPayloadValueConverter payloadValueConverter;
 
+        /// <summary>
+        /// The ODataSimplifiedOptions used in reader.
+        /// </summary>
+        private readonly ODataSimplifiedOptions odataSimplifiedOptions;
+
         /// <summary>Set to true if the input was disposed.</summary>
         private bool disposed;
 
@@ -79,6 +84,7 @@ namespace Microsoft.OData
             this.container = messageInfo.Container;
             this.edmTypeResolver = new EdmTypeReaderResolver(this.Model, this.MessageReaderSettings.ClientCustomTypeResolver);
             this.payloadValueConverter = ODataPayloadValueConverter.GetPayloadValueConverter(this.container);
+            this.odataSimplifiedOptions = ODataSimplifiedOptions.GetODataSimplifiedOptions(this.container);
         }
 
         /// <summary>
@@ -166,6 +172,17 @@ namespace Microsoft.OData
             get
             {
                 return this.payloadValueConverter;
+            }
+        }
+
+        /// <summary>
+        /// The ODataSimplifiedOptions used in reader.
+        /// </summary>
+        internal ODataSimplifiedOptions ODataSimplifiedOptions
+        {
+            get
+            {
+                return this.odataSimplifiedOptions;
             }
         }
 

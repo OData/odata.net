@@ -53,6 +53,7 @@
     <Compile Include="Json\IJsonReader.cs" />
     <Compile Include="Json\IJsonReaderFactory.cs" />
     <Compile Include="Json\IJsonWriterFactory.cs" />
+    <Compile Include="ODataSimplifiedOptions.cs" />    
     <Compile Include="PropertyCacheHandler.cs" />
     <Compile Include="PropertyCache.cs" />
     <Compile Include="PropertyMetadataTypeInfo.cs" />
@@ -117,7 +118,6 @@
     <Compile Include="InternalErrorCodes.cs" />
     <Compile Include="InternalErrorCodesCommon.cs" />
     <Compile Include="JsonLight\IODataJsonLightReaderResourceState.cs" />
-    <Compile Include="JsonLight\IODataJsonLightValueSerializer.cs" />
     <Compile Include="JsonLight\IODataJsonLightWriterResourceState.cs" />
     <Compile Include="JsonLight\JsonFullMetadataLevel.cs" />
     <Compile Include="JsonLight\JsonFullMetadataTypeNameOracle.cs" />

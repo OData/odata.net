@@ -21,7 +21,7 @@ namespace Microsoft.OData.JsonLight
     /// <summary>
     /// OData JsonLight serializer for value types.
     /// </summary>
-    internal class ODataJsonLightValueSerializer : ODataJsonLightSerializer, IODataJsonLightValueSerializer
+    internal class ODataJsonLightValueSerializer : ODataJsonLightSerializer
     {
         /// <summary>
         /// The current recursion depth of values written by this serializer.
@@ -55,31 +55,6 @@ namespace Microsoft.OData.JsonLight
         }
 
         /// <summary>
-        /// Returns the <see cref="JsonWriter"/> which is to be used to write the content of the message.
-        /// Both ODataJsonLightSerializer and IODataJsonLightValueSerializer define this, so we pass through to our base class.
-        /// </summary>
-        IJsonWriter IODataJsonLightValueSerializer.JsonWriter
-        {
-            get { return this.JsonWriter; }
-        }
-
-        /// <summary>
-        /// The model to use.
-        /// </summary>
-        IEdmModel IODataJsonLightValueSerializer.Model
-        {
-            get { return this.Model; }
-        }
-
-        /// <summary>
-        /// The message writer settings to use when writing the message payload.
-        /// </summary>
-        ODataMessageWriterSettings IODataJsonLightValueSerializer.Settings
-        {
-            get { return this.JsonLightOutputContext.MessageWriterSettings; }
-        }
-
-        /// <summary>
         /// Gets the property serializer.
         /// </summary>
         private ODataJsonLightPropertySerializer PropertySerializer
@@ -98,7 +73,7 @@ namespace Microsoft.OData.JsonLight
         /// <summary>
         /// Writes a null value to the wire.
         /// </summary>
-        public void WriteNullValue()
+        public virtual void WriteNullValue()
         {
             this.JsonWriter.WriteValue((string)null);
         }
@@ -114,7 +89,7 @@ namespace Microsoft.OData.JsonLight
         /// <remarks>The current recursion depth should be a value, measured by the number of complex and collection values between
         /// this complex value and the top-level payload, not including this one.</remarks>
         [SuppressMessage("Microsoft.Naming", "CA2204:LiteralsShouldBeSpelledCorrectly", Justification = "Names are correct. String can't be localized after string freeze.")]
-        public void WriteComplexValue(
+        public virtual void WriteComplexValue(
             ODataComplexValue complexValue,
             IEdmTypeReference metadataTypeReference,
             bool isTopLevel,
@@ -190,7 +165,7 @@ namespace Microsoft.OData.JsonLight
         /// </summary>
         /// <param name="value">enum value</param>
         /// <param name="expectedTypeReference">expected type reference</param>
-        public void WriteEnumValue(
+        public virtual void WriteEnumValue(
             ODataEnumValue value,
             IEdmTypeReference expectedTypeReference)
         {
@@ -216,7 +191,7 @@ namespace Microsoft.OData.JsonLight
         /// <remarks>The current recursion depth is measured by the number of complex and collection values between
         /// this one and the top-level payload, not including this one.</remarks>
         [SuppressMessage("Microsoft.Naming", "CA2204:LiteralsShouldBeSpelledCorrectly", Justification = "Names are correct. String can't be localized after string freeze.")]
-        public void WriteCollectionValue(ODataCollectionValue collectionValue, IEdmTypeReference metadataTypeReference, IEdmTypeReference valueTypeReference, bool isTopLevelProperty, bool isInUri, bool isOpenPropertyType)
+        public virtual void WriteCollectionValue(ODataCollectionValue collectionValue, IEdmTypeReference metadataTypeReference, IEdmTypeReference valueTypeReference, bool isTopLevelProperty, bool isInUri, bool isOpenPropertyType)
         {
             Debug.Assert(collectionValue != null, "collectionValue != null");
             Debug.Assert(!isTopLevelProperty || !isInUri, "Cannot be a top level property and in a uri");
@@ -346,7 +321,7 @@ namespace Microsoft.OData.JsonLight
         /// </summary>
         /// <param name="value">The value to write.</param>
         /// <param name="expectedTypeReference">The expected type reference of the primitive value.</param>
-        public void WritePrimitiveValue(
+        public virtual void WritePrimitiveValue(
             object value,
             IEdmTypeReference expectedTypeReference)
         {
@@ -359,7 +334,7 @@ namespace Microsoft.OData.JsonLight
         /// <param name="value">The value to write.</param>
         /// <param name="actualTypeReference">The actual type reference of the primitive value.</param>
         /// <param name="expectedTypeReference">The expected type reference of the primitive value.</param>
-        public void WritePrimitiveValue(
+        public virtual void WritePrimitiveValue(
             object value,
             IEdmTypeReference actualTypeReference,
             IEdmTypeReference expectedTypeReference)
@@ -397,7 +372,7 @@ namespace Microsoft.OData.JsonLight
         /// Writes an untyped value.
         /// </summary>
         /// <param name="value">The untyped value to write.</param>
-        public void WriteUntypedValue(
+        public virtual void WriteUntypedValue(
             ODataUntypedValue value)
         {
             Debug.Assert(value != null, "value != null");
@@ -408,16 +383,6 @@ namespace Microsoft.OData.JsonLight
             }
 
             this.JsonWriter.WriteRawValue(value.RawValue);
-        }
-
-        /// <summary>
-        /// Creates a new instance of a duplicate property names checker.
-        /// Both ODataJsonLightSerializer and IODataJsonLightValueSerializer define this, so we pass through to our base class.
-        /// </summary>
-        /// <returns>The newly created instance of duplicate property names checker.</returns>
-        DuplicatePropertyNamesChecker IODataJsonLightValueSerializer.CreateDuplicatePropertyNamesChecker()
-        {
-            return this.CreateDuplicatePropertyNamesChecker();
         }
 
         /// <summary>

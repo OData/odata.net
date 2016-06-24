@@ -82,9 +82,11 @@ namespace Microsoft.OData.JsonLight
 
             ODataUri odataUri = this.jsonLightOutputContext.MessageWriterSettings.ODataUri.Clone();
 
-            this.scopes.Push(new Scope(WriterState.Start, /*item*/null, navigationSource, entityType, this.jsonLightOutputContext.MessageWriterSettings.SelectedProperties, odataUri));
+            this.scopes.Push(new Scope(WriterState.Start, /*item*/null, navigationSource, entityType,
+                this.jsonLightOutputContext.MessageWriterSettings.SelectedProperties, odataUri));
             this.jsonWriter = jsonLightOutputContext.JsonWriter;
-            this.odataAnnotationWriter = new JsonLightODataAnnotationWriter(this.jsonWriter, jsonLightOutputContext.MessageWriterSettings.ODataSimplified);
+            this.odataAnnotationWriter = new JsonLightODataAnnotationWriter(this.jsonWriter,
+                this.jsonLightOutputContext.ODataSimplifiedOptions.EnableWritingODataAnnotationWithoutPrefix);
         }
 
         #endregion
@@ -928,7 +930,7 @@ namespace Microsoft.OData.JsonLight
                     resourceScope.ResourceType,
                     resourceScope.SelectedProperties,
                     /*writingResponse*/ true,
-                    this.jsonLightOutputContext.MessageWriterSettings.UseKeyAsSegment,
+                    this.jsonLightOutputContext.ODataSimplifiedOptions.EnableWritingKeyAsSegment,
                     this.jsonLightOutputContext.MessageWriterSettings.ODataUri);
 
                 this.jsonLightOutputContext.MetadataLevel.InjectMetadataBuilder(resource, builder);

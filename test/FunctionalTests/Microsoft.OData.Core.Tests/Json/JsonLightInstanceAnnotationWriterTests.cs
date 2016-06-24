@@ -9,11 +9,14 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
+using System.Text;
 using FluentAssertions;
 using Microsoft.OData.JsonLight;
 using Microsoft.OData.Edm;
 using Microsoft.OData.Edm.Vocabularies;
+using Microsoft.OData.Json;
 using Microsoft.Spatial;
+using Microsoft.Test.OData.DependencyInjection;
 using Xunit;
 using ODataErrorStrings = Microsoft.OData.Strings;
 
@@ -44,7 +47,8 @@ namespace Microsoft.OData.Tests.Json
             model = TestUtils.WrapReferencedModelsToMainModel(referencedModel);
 
             // Version will be V3+ in production since it's JSON Light only
-            this.valueWriter = new MockJsonLightValueSerializer(jsonWriter, model) { Settings = new ODataMessageWriterSettings { Version = ODataVersion.V4, ShouldIncludeAnnotation = ODataUtils.CreateAnnotationFilter("*") } };
+            var stream = new MemoryStream();
+            this.valueWriter = new MockJsonLightValueSerializer(CreateJsonLightOutputContext(stream, model, this.jsonWriter));
             this.jsonLightInstanceAnnotationWriter = new JsonLightInstanceAnnotationWriter(this.valueWriter, new JsonMinimalMetadataTypeNameOracle());
         }
 
@@ -741,7 +745,7 @@ namespace Microsoft.OData.Tests.Json
 
             this.jsonWriter.WriteNameVerifier = (name) => verifierCalls++;
             this.valueWriter.WritePrimitiveVerifier = (value, reference) => verifierCalls++;
-            this.valueWriter.Settings = new ODataMessageWriterSettings { Version = ODataVersion.V4, ShouldIncludeAnnotation = name => name == "ns1.name" };
+            this.valueWriter.MessageWriterSettings.ShouldIncludeAnnotation = name => name == "ns1.name";
 
             this.jsonLightInstanceAnnotationWriter.WriteInstanceAnnotation(annotation);
             verifierCalls.Should().Be(2);
@@ -755,7 +759,7 @@ namespace Microsoft.OData.Tests.Json
 
             this.jsonWriter.WriteNameVerifier = (name) => verifierCalls++;
             this.valueWriter.WritePrimitiveVerifier = (value, reference) => verifierCalls++;
-            this.valueWriter.Settings = new ODataMessageWriterSettings { Version = ODataVersion.V4, ShouldIncludeAnnotation = name => name != "ns1.name" };
+            this.valueWriter.MessageWriterSettings.ShouldIncludeAnnotation = name => name != "ns1.name";
 
             this.jsonLightInstanceAnnotationWriter.WriteInstanceAnnotation(annotation);
             verifierCalls.Should().Be(0);
@@ -764,7 +768,8 @@ namespace Microsoft.OData.Tests.Json
         [Fact]
         public void ShouldNotWriteAnyAnnotationByDefault()
         {
-            var defaultValueWriter = new MockJsonLightValueSerializer(jsonWriter, model) { Settings = new ODataMessageWriterSettings { Version = ODataVersion.V4 } };
+            var stream = new MemoryStream();
+            var defaultValueWriter = new MockJsonLightValueSerializer(CreateJsonLightOutputContext(stream, model, this.jsonWriter, new ODataMessageWriterSettings { Version = ODataVersion.V4 }));
             var defaultAnnotationWriter = new JsonLightInstanceAnnotationWriter(defaultValueWriter, new JsonMinimalMetadataTypeNameOracle());
 
             var annotations = new Collection<ODataInstanceAnnotation>();
@@ -782,7 +787,8 @@ namespace Microsoft.OData.Tests.Json
         [Fact]
         public void ShouldWriteAnyAnnotationByDefaultWithIgnoreFilterSetToTrue()
         {
-            var defaultValueWriter = new MockJsonLightValueSerializer(jsonWriter, model) { Settings = new ODataMessageWriterSettings { Version = ODataVersion.V4 } };
+            var stream = new MemoryStream();
+            var defaultValueWriter = new MockJsonLightValueSerializer(CreateJsonLightOutputContext(stream, model, this.jsonWriter, new ODataMessageWriterSettings { Version = ODataVersion.V4 }));
             var defaultAnnotationWriter = new JsonLightInstanceAnnotationWriter(defaultValueWriter, new JsonMinimalMetadataTypeNameOracle());
 
             var annotations = new Collection<ODataInstanceAnnotation>();
@@ -800,7 +806,8 @@ namespace Microsoft.OData.Tests.Json
         [Fact]
         public void TestWriteInstanceAnnotationsForError()
         {
-            var defaultValueWriter = new MockJsonLightValueSerializer(jsonWriter, model) { Settings = new ODataMessageWriterSettings { Version = ODataVersion.V4 } };
+            var stream = new MemoryStream();
+            var defaultValueWriter = new MockJsonLightValueSerializer(CreateJsonLightOutputContext(stream, model, this.jsonWriter, new ODataMessageWriterSettings { Version = ODataVersion.V4 }));
             var defaultAnnotationWriter = new JsonLightInstanceAnnotationWriter(defaultValueWriter, new JsonMinimalMetadataTypeNameOracle());
 
             var annotations = new Collection<ODataInstanceAnnotation>();
@@ -813,6 +820,33 @@ namespace Microsoft.OData.Tests.Json
 
             defaultAnnotationWriter.WriteInstanceAnnotationsForError(annotations);
             verifierCalls.Should().Be(4);
+        }
+
+        private ODataJsonLightOutputContext CreateJsonLightOutputContext(MemoryStream stream, IEdmModel model, IJsonWriter jsonWriter, ODataMessageWriterSettings settings = null)
+        {
+            if (settings == null)
+            {
+                settings = new ODataMessageWriterSettings { Version = ODataVersion.V4 };
+                settings.SetServiceDocumentUri(new Uri("http://example.com/"));
+                settings.ShouldIncludeAnnotation = ODataUtils.CreateAnnotationFilter("*");
+            }
+
+            var messageInfo = new ODataMessageInfo
+            {
+                MessageStream = new NonDisposingStream(stream),
+                MediaType = new ODataMediaType("application", "json"),
+                Encoding = Encoding.UTF8,
+                IsResponse = true,
+                IsAsync = false,
+                Model = model,
+                Container =
+                    ContainerBuilderHelper.BuildContainer(
+                        builder =>
+                            builder.AddService<IJsonWriterFactory>(ServiceLifetime.Singleton, sp => new MockJsonWriterFactory(jsonWriter))),
+
+            };
+
+            return new ODataJsonLightOutputContext(messageInfo, settings);
         }
     }
 }

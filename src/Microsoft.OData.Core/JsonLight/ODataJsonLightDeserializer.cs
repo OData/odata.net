@@ -553,7 +553,8 @@ namespace Microsoft.OData.JsonLight
             Debug.Assert(simplifiedPropertyName.IndexOf('@') == 0, "simplifiedPropertyName must start with '@'.");
             Debug.Assert(simplifiedPropertyName.IndexOf('.') == -1, "simplifiedPropertyName must not be namespace-qualified.");
 
-            return this.MessageReaderSettings.ODataSimplified && string.CompareOrdinal(simplifiedPropertyName, propertyName) == 0;
+            return this.JsonLightInputContext.ODataSimplifiedOptions.EnableReadingODataAnnotationWithoutPrefix &&
+                   string.CompareOrdinal(simplifiedPropertyName, propertyName) == 0;
         }
 
         /// <summary>
@@ -563,7 +564,8 @@ namespace Microsoft.OData.JsonLight
         /// <returns>The complete OData annotation name.</returns>
         protected string CompleteSimplifiedODataAnnotation(string annotationName)
         {
-            if (this.MessageReaderSettings.ODataSimplified && annotationName.IndexOf('.') == -1)
+            if (this.JsonLightInputContext.ODataSimplifiedOptions.EnableReadingODataAnnotationWithoutPrefix &&
+                annotationName.IndexOf('.') == -1)
             {
                 annotationName = JsonLightConstants.ODataAnnotationNamespacePrefix + annotationName;
             }

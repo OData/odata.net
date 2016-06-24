@@ -28,10 +28,8 @@ namespace Microsoft.OData.Tests
             Assert.True(settings.EnablePrimitiveTypeConversion, "EnablePrimitiveTypeConversion should be true by default.");
             Assert.True(settings.EnableMessageStreamDisposal, "EnableMessageStreamDisposal should be false by default.");
             Assert.False(settings.EnableCharactersCheck, "The CheckCharacters should be off by default.");
-            Assert.True((settings.Validations & ValidationKinds.ThrowIfTypeConflictsWithMetadata) != 0, "The ThrowIfTypeConflictsWithMetadata should be true by default");            
-            Assert.False(settings.ODataSimplified, "The ODataSimplified should be false by default");
-            Assert.Null(settings.ShouldIncludeAnnotation);
-            Assert.Null(settings.UseKeyAsSegment);
+            Assert.True((settings.Validations & ValidationKinds.ThrowIfTypeConflictsWithMetadata) != 0, "The ThrowIfTypeConflictsWithMetadata should be true by default");                        
+            Assert.Null(settings.ShouldIncludeAnnotation);            
             Assert.True((settings.Validations & ValidationKinds.ThrowOnUndeclaredPropertyForNonOpenType) != 0, "ThrowOnUndeclaredPropertyForNonOpenType should be true by default.");
             Assert.True(ODataVersion.V4 == settings.MaxProtocolVersion, "MaxProtocolVersion should be V3.");
             Assert.True(100 == settings.MessageQuotas.MaxPartsPerBatch, "MaxPartsPerBatch should be int.MaxValue.");
@@ -51,8 +49,6 @@ namespace Microsoft.OData.Tests
                 EnablePrimitiveTypeConversion = false,
                 EnableMessageStreamDisposal = false,
                 EnableCharactersCheck = true,
-                ODataSimplified = true,
-                UseKeyAsSegment = true,
                 MaxProtocolVersion = ODataVersion.V4,
                 MessageQuotas = new ODataMessageQuotas
                 {
@@ -72,8 +68,6 @@ namespace Microsoft.OData.Tests
             Assert.False(settings.EnableMessageStreamDisposal, "EnableMessageStreamDisposal was not correctly remembered.");
             Assert.True(settings.EnableCharactersCheck, "The CheckCharacters should be on when set.");
             Assert.False(settings.ThrowIfTypeConflictsWithMetadata, "The ThrowIfTypeConflictsWithMetadata was not correctly remembered");
-            Assert.True(settings.ODataSimplified, "ODataSimplified was not correctly remembered");
-            Assert.True(settings.UseKeyAsSegment, "UseKeyAsSegment was not correctly remembered");
             Assert.True((settings.Validations & ValidationKinds.ThrowOnUndeclaredPropertyForNonOpenType) != 0, "ThrowOnUndeclaredPropertyForNonOpenType was not correctly remembered.");
             Assert.True(ODataVersion.V4 == settings.MaxProtocolVersion, "The MaxProtocolVersion was not correctly remembered.");
             Assert.True(2 == settings.MessageQuotas.MaxPartsPerBatch, "MaxPartsPerBatch should be 2");
@@ -175,9 +169,7 @@ namespace Microsoft.OData.Tests
             Assert.True(expected.EnableMessageStreamDisposal == actual.EnableMessageStreamDisposal, "EnableMessageStreamDisposal does not match");
             Assert.True(expected.EnablePrimitiveTypeConversion == actual.EnablePrimitiveTypeConversion, "EnablePrimitiveTypeConversion does not match");
             Assert.True(expected.EnableCharactersCheck == actual.EnableCharactersCheck, "CheckCharacters does not match");
-            Assert.True(expected.ODataSimplified == actual.ODataSimplified, "ODataSimplified does not match");
             Assert.True(expected.ShouldIncludeAnnotation == actual.ShouldIncludeAnnotation, "UseKeyAsSegment does not match");
-            Assert.True(expected.UseKeyAsSegment == actual.UseKeyAsSegment, "UseKeyAsSegment does not match");
             Assert.True(expected.Validations == actual.Validations, "Validations does not match");
             Assert.True(expected.MaxProtocolVersion == actual.MaxProtocolVersion, "MaxProtocolVersion does not match.");
             Assert.True(expected.MessageQuotas.MaxPartsPerBatch == actual.MessageQuotas.MaxPartsPerBatch, "MaxPartsPerBatch does not match");
