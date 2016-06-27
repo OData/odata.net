@@ -58,7 +58,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Writer.JsonLight
 
         static FullPayloadValidateTests()
         {
-            EntityType = new EdmEntityType("Namespace", "EntityType", null, false, false, false);
+            EntityType = new EdmEntityType("Namespace", "EntityType", null, false, true, false);
             EntityType.AddKeys(EntityType.AddStructuralProperty("ID", EdmPrimitiveTypeKind.Int32));
             IEdmStructuralProperty nameProperty = EntityType.AddStructuralProperty("Name", EdmCoreModel.Instance.GetString(isNullable: true), null);
             DerivedType = new EdmEntityType("Namespace", "DerivedType", EntityType, false, true);
@@ -907,7 +907,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Writer.JsonLight
         #endregion Inlinecount Tests
 
         [Fact]
-        public void ShouldAlwaysWriteAdditionalPropertyWhenWriteResponse()
+        public void ShouldAlwaysWriteAdditionalPropertyForOpenType()
         {
             var entry = new ODataResource
             {
@@ -1000,8 +1000,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Writer.JsonLight
             message.SetHeader("Content-Type", contentType);
             ODataMessageWriterSettings settings = new ODataMessageWriterSettings()
             {
-                Validations = WriterValidations.FullValidation & ~WriterValidations.ThrowOnUndeclaredPropertyForNonOpenType
-                              & (enableBasicValidation ? WriterValidations.FullValidation : ~WriterValidations.BasicValidation),
+                Validations = (enableBasicValidation ? ValidationKinds.All : ValidationKinds.None),
                 AutoComputePayloadMetadata = autoComputePayloadMetadata,
             };
 

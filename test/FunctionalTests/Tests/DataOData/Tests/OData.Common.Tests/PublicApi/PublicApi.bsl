@@ -3877,18 +3877,6 @@ public enum Microsoft.OData.ODataVersion : int {
 	V4 = 0
 }
 
-[
-FlagsAttribute(),
-]
-public enum Microsoft.OData.ReaderValidations : int {
-	BasicValidation = 1
-	FullValidation = -1
-	None = 0
-	ThrowIfTypeConflictsWithMetadata = 4
-	ThrowOnDuplicatePropertyNames = 2
-	ThrowOnUndeclaredPropertyForNonOpenType = 8
-}
-
 public enum Microsoft.OData.ServiceLifetime : int {
 	Scoped = 1
 	Singleton = 0
@@ -3898,12 +3886,12 @@ public enum Microsoft.OData.ServiceLifetime : int {
 [
 FlagsAttribute(),
 ]
-public enum Microsoft.OData.WriterValidations : int {
-	BasicValidation = 1
-	FullValidation = -1
+public enum Microsoft.OData.ValidationKinds : int {
+	All = -1
 	None = 0
-	ThrowOnDuplicatePropertyNames = 2
-	ThrowOnUndeclaredPropertyForNonOpenType = 4
+	ThrowIfTypeConflictsWithMetadata = 4
+	ThrowOnDuplicatePropertyNames = 1
+	ThrowOnUndeclaredPropertyForNonOpenType = 2
 }
 
 public interface Microsoft.OData.IContainerBuilder {
@@ -4772,7 +4760,7 @@ public sealed class Microsoft.OData.ODataMessageReaderSettings {
 	bool ODataSimplified  { public get; public set; }
 	System.Func`2[[System.String],[System.Boolean]] ShouldIncludeAnnotation  { public get; public set; }
 	System.Nullable`1[[System.Boolean]] UseKeyAsSegment  { public get; public set; }
-	Microsoft.OData.ReaderValidations Validations  { public get; public set; }
+	Microsoft.OData.ValidationKinds Validations  { public get; public set; }
 
 	public Microsoft.OData.ODataMessageReaderSettings Clone ()
 }
@@ -4841,7 +4829,7 @@ public sealed class Microsoft.OData.ODataMessageWriterSettings {
 	bool ODataSimplified  { public get; public set; }
 	Microsoft.OData.ODataUri ODataUri  { public get; public set; }
 	System.Nullable`1[[System.Boolean]] UseKeyAsSegment  { public get; public set; }
-	Microsoft.OData.WriterValidations Validations  { public get; public set; }
+	Microsoft.OData.ValidationKinds Validations  { public get; public set; }
 	System.Nullable`1[[Microsoft.OData.ODataVersion]] Version  { public get; public set; }
 
 	public Microsoft.OData.ODataMessageWriterSettings Clone ()

@@ -49,8 +49,6 @@ namespace Microsoft.OData.Client
 
             CommonUtil.SetDefaultMessageQuotas(writerSettings.MessageQuotas);
 
-            writerSettings.Validations |= WriterValidations.ThrowOnDuplicatePropertyNames;
-
             this.requestInfo.Configurations.RequestPipeline.ExecuteWriterSettingsConfiguration(writerSettings);
 
             return writerSettings;

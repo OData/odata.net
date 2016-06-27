@@ -720,13 +720,9 @@ namespace Microsoft.OData.Tests.IntegrationTests.Writer.JsonLight
             var message = new InMemoryMessage { Stream = stream };
 
             var settings = new ODataMessageWriterSettings { Version = ODataVersion.V4, AutoComputePayloadMetadata = true };
-            if (throwOnUndeclaredProperty)
+            if (!throwOnUndeclaredProperty)
             {
-                settings.Validations |= WriterValidations.ThrowOnUndeclaredPropertyForNonOpenType;
-            }
-            else
-            {
-                settings.Validations &= ~WriterValidations.ThrowOnUndeclaredPropertyForNonOpenType;
+                settings.Validations &= ~ValidationKinds.ThrowOnUndeclaredPropertyForNonOpenType;
             }
             settings.ODataUri = odataUri;
             settings.SetServiceDocumentUri(new Uri("http://temp.org"));

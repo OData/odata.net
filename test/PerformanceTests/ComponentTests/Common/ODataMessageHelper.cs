@@ -61,7 +61,7 @@ namespace Microsoft.OData.Performance
                 EnableCharactersCheck = CheckCharacters,
                 EnableMessageStreamDisposal = EnableMessageStreamDisposal,
                 EnablePrimitiveTypeConversion = EnablePrimitiveTypeConversion,
-                Validations = isFullValidation ? ReaderValidations.FullValidation: ReaderValidations.None,
+                Validations = isFullValidation ? ValidationKinds.All : ValidationKinds.None,
                 MessageQuotas = new ODataMessageQuotas
                 {
                     MaxPartsPerBatch = MaxPartsPerBatch,
@@ -132,7 +132,7 @@ namespace Microsoft.OData.Performance
                 EnableCharactersCheck = CheckCharacters,
                 EnableMessageStreamDisposal = EnableMessageStreamDisposal,
                 Version = Version,
-                Validations = isFullValidation ? WriterValidations.FullValidation : WriterValidations.None,
+                Validations = isFullValidation ? ValidationKinds.All : ValidationKinds.None,
                 MessageQuotas = new ODataMessageQuotas
                 {
                     MaxPartsPerBatch = MaxPartsPerBatch,

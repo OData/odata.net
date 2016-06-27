@@ -195,7 +195,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip.JsonLight
             var settings = new ODataMessageWriterSettings
             {
                 Version = ODataVersion.V4,
-                Validations = WriterValidations.FullValidation & ~WriterValidations.ThrowOnUndeclaredPropertyForNonOpenType
+                Validations = ~ValidationKinds.ThrowOnUndeclaredPropertyForNonOpenType
             };
 
             using (var outputContext = new ODataJsonLightOutputContext(messageInfoForWriter, settings))

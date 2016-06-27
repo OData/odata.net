@@ -74,7 +74,7 @@ namespace Microsoft.OData
         internal static object ConvertFromComplexOrCollectionValue(string value, IEdmModel model, IEdmTypeReference typeReference)
         {
             ODataMessageReaderSettings settings = new ODataMessageReaderSettings();
-            settings.Validations &= ~ReaderValidations.ThrowOnUndeclaredPropertyForNonOpenType;
+            settings.Validations &= ~ValidationKinds.ThrowOnUndeclaredPropertyForNonOpenType;
 
             using (StringReader reader = new StringReader(value))
             {
@@ -193,6 +193,7 @@ namespace Microsoft.OData
                 ODataMessageWriterSettings messageWriterSettings = new ODataMessageWriterSettings()
                 {
                     Version = version,
+                    Validations = ~ValidationKinds.ThrowOnUndeclaredPropertyForNonOpenType,
                 };
 
                 WriteJsonLightLiteral(
@@ -306,6 +307,7 @@ namespace Microsoft.OData
                 ODataMessageWriterSettings messageWriterSettings = new ODataMessageWriterSettings()
                 {
                     Version = version,
+                    Validations = ~ValidationKinds.ThrowOnUndeclaredPropertyForNonOpenType,
                 };
 
                 WriteJsonLightLiteral(
@@ -556,6 +558,7 @@ namespace Microsoft.OData
                 ODataMessageWriterSettings messageWriterSettings = new ODataMessageWriterSettings()
                 {
                     Version = ODataVersion.V4,
+                    Validations = ~ValidationKinds.ThrowOnUndeclaredPropertyForNonOpenType,
                 };
 
                 ODataMediaType mediaType = new ODataMediaType(MimeConstants.MimeApplicationType, MimeConstants.MimeJsonSubType);

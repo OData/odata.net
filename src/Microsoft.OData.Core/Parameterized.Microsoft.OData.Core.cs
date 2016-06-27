@@ -2325,7 +2325,7 @@ namespace Microsoft.OData {
         }
 
         /// <summary>
-        /// A string like "The property '{0}' does not exist on type '{1}'. Make sure to only use property names that are defined by the type."
+        /// A string like "The property '{0}' does not exist on type '{1}'. Make sure to only use property names that are defined by the type or mark the type as open type."
         /// </summary>
         internal static string ValidationUtils_PropertyDoesNotExistOnType(object p0, object p1) {
             return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ValidationUtils_PropertyDoesNotExistOnType, p0, p1);
@@ -2502,13 +2502,6 @@ namespace Microsoft.OData {
         /// </summary>
         internal static string ValidationUtils_EntryTypeNotAssignableToExpectedType(object p0, object p1) {
             return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ValidationUtils_EntryTypeNotAssignableToExpectedType, p0, p1);
-        }
-
-        /// <summary>
-        /// A string like "A navigation property with name '{0}' was found on type '{1}', however this property was not declared. Open navigation properties are not supported; all navigation properties must be declared in metadata."
-        /// </summary>
-        internal static string ValidationUtils_OpenNavigationProperty(object p0, object p1) {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ValidationUtils_OpenNavigationProperty, p0, p1);
         }
 
         /// <summary>

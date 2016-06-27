@@ -42,20 +42,15 @@ namespace Microsoft.OData.Client
                 resolveWireTypeName = null;
             }
 
-            settings.Validations &= ~ReaderValidations.ThrowOnDuplicatePropertyNames;
+            settings.Validations &= ~(ValidationKinds.ThrowOnDuplicatePropertyNames | ValidationKinds.ThrowIfTypeConflictsWithMetadata);
             settings.ClientCustomTypeResolver = resolveWireTypeName;
-            settings.Validations &= ~ReaderValidations.ThrowIfTypeConflictsWithMetadata;
             settings.BaseUri = this.responseInfo.BaseUriResolver.BaseUriOrNull;
             settings.ODataSimplified = this.responseInfo.Context.ODataSimplified;
             settings.MaxProtocolVersion = CommonUtil.ConvertToODataVersion(this.responseInfo.MaxProtocolVersion);
 
-            if (this.responseInfo.ThrowOnUndeclaredPropertyForNonOpenType)
+            if (!this.responseInfo.ThrowOnUndeclaredPropertyForNonOpenType)
             {
-                settings.Validations |= ReaderValidations.ThrowOnUndeclaredPropertyForNonOpenType;
-            }
-            else
-            {
-                settings.Validations &= ~ReaderValidations.ThrowOnUndeclaredPropertyForNonOpenType;
+                settings.Validations &= ~ValidationKinds.ThrowOnUndeclaredPropertyForNonOpenType;
             }
 
             if (this.responseInfo.Context.UrlConventions == DataServiceUrlConventions.KeyAsSegment)

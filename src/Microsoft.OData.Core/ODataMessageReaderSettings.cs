@@ -25,7 +25,7 @@ namespace Microsoft.OData
         /// <summary>
         /// Validation settings.
         /// </summary>
-        private ReaderValidations validations;
+        private ValidationKinds validations;
 
         /// <summary>Initializes a new instance of the <see cref="T:Microsoft.OData.ODataMessageReaderSettings" /> class
         /// with default values.</summary>
@@ -37,14 +37,14 @@ namespace Microsoft.OData
             this.EnableCharactersCheck = false;
             this.ODataSimplified = false;
             this.MaxProtocolVersion = ODataConstants.ODataDefaultProtocolVersion;
-            Validations = ReaderValidations.FullValidation & ~ReaderValidations.ThrowOnUndeclaredPropertyForNonOpenType;
+            Validations = ValidationKinds.All;
             Validator = new ReaderValidator(this);
         }
 
         /// <summary>
         /// Gets or sets validation settings.
         /// </summary>
-        public ReaderValidations Validations
+        public ValidationKinds Validations
         {
             get
             {
@@ -54,10 +54,9 @@ namespace Microsoft.OData
             set
             {
                 validations = value;
-                BasicValidation = (validations & ReaderValidations.BasicValidation) != 0;
-                ThrowOnDuplicatePropertyNames = (validations & ReaderValidations.ThrowOnDuplicatePropertyNames) != 0;
-                ThrowIfTypeConflictsWithMetadata = (validations & ReaderValidations.ThrowIfTypeConflictsWithMetadata) != 0;
-                ThrowOnUndeclaredPropertyForNonOpenType = (validations & ReaderValidations.ThrowOnUndeclaredPropertyForNonOpenType) != 0;
+                ThrowOnDuplicatePropertyNames = (validations & ValidationKinds.ThrowOnDuplicatePropertyNames) != 0;
+                ThrowIfTypeConflictsWithMetadata = (validations & ValidationKinds.ThrowIfTypeConflictsWithMetadata) != 0;
+                ThrowOnUndeclaredPropertyForNonOpenType = (validations & ValidationKinds.ThrowOnUndeclaredPropertyForNonOpenType) != 0;
             }
         }
 
@@ -159,11 +158,6 @@ namespace Microsoft.OData
         internal IReaderValidator Validator { get; private set; }
 
         /// <summary>
-        /// Returns whether BasicValidation is enabled.
-        /// </summary>
-        internal bool BasicValidation { get; private set; }
-
-        /// <summary>
         /// Returns whether ThrowOnDuplicatePropertyNames validation setting is enabled.
         /// </summary>
         internal bool ThrowOnDuplicatePropertyNames { get; private set; }
@@ -238,7 +232,6 @@ namespace Microsoft.OData
             this.ODataSimplified = other.ODataSimplified;
 
             this.validations = other.validations;
-            this.BasicValidation = other.BasicValidation;
             this.ThrowOnDuplicatePropertyNames = other.ThrowOnDuplicatePropertyNames;
             this.ThrowIfTypeConflictsWithMetadata = other.ThrowIfTypeConflictsWithMetadata;
             this.ThrowOnUndeclaredPropertyForNonOpenType = other.ThrowOnUndeclaredPropertyForNonOpenType;

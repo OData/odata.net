@@ -58,7 +58,7 @@
     <Compile Include="PropertyMetadataTypeInfo.cs" />
     <Compile Include="PropertySerializationInfo.cs" />
     <Compile Include="PropertyValueTypeInfo.cs" />
-    <Compile Include="ReaderValidations.cs" />
+    <Compile Include="ValidationKinds.cs" />
     <Compile Include="ReaderValidator.cs" />
     <Compile Include="ServiceLifetime.cs" />
     <Compile Include="IContainerBuilder.cs" />
@@ -567,7 +567,6 @@
     <Compile Include="Utils.cs" />
     <Compile Include="ValidationUtils.cs" />
     <Compile Include="WriterUtils.cs" />
-    <Compile Include="WriterValidations.cs" />
     <Compile Include="WriterValidationUtils.cs" />
     <Compile Include="UriParser\Aggregation\ApplyBinder.cs" />
     <Compile Include="UriParser\Aggregation\FilterTransformationNode.cs" />

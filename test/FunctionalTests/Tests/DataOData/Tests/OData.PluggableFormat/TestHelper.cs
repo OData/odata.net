@@ -110,6 +110,9 @@ namespace Microsoft.Test.OData.PluggableFormat
                 ShouldIncludeAnnotation = st => true,
             };
 
+            // Have untyped value in test
+            messageSettings.Validations &= ~ValidationKinds.ThrowOnUndeclaredPropertyForNonOpenType;
+
             if (isResponse)
             {
                 return new ODataMessageReader((IODataResponseMessage)message, messageSettings, model);
@@ -133,6 +136,9 @@ namespace Microsoft.Test.OData.PluggableFormat
             {
                 EnableMessageStreamDisposal = false,
             };
+
+            // Have untyped value in test
+            messageSettings.Validations &= ~ValidationKinds.ThrowOnUndeclaredPropertyForNonOpenType;
 
             if (isResponse)
             {

@@ -154,13 +154,9 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                 {
                     PayloadReaderTestDescriptor testDescriptor = testCase.ToTestDescriptor(this.Settings, model, throwOnUndeclaredPropertyForNonOpenType);
                     testConfiguration = new ReaderTestConfiguration(testConfiguration);
-                    if (throwOnUndeclaredPropertyForNonOpenType)
+                    if (!throwOnUndeclaredPropertyForNonOpenType)
                     {
-                        testConfiguration.MessageReaderSettings.Validations |= ReaderValidations.ThrowOnUndeclaredPropertyForNonOpenType;
-                    }
-                    else
-                    {
-                        testConfiguration.MessageReaderSettings.Validations &= ~ReaderValidations.ThrowOnUndeclaredPropertyForNonOpenType;
+                        testConfiguration.MessageReaderSettings.Validations &= ~ValidationKinds.ThrowOnUndeclaredPropertyForNonOpenType;
                     }
 
                     // These descriptors are already tailored specifically for Json Light and 
@@ -261,13 +257,9 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                     var settings = testConfiguration.Format == ODataFormat.Json ? this.JsonLightSettings : this.Settings;
                     PayloadReaderTestDescriptor testDescriptor = testCase.ToTestDescriptor(settings, model, throwOnUndeclaredPropertyForNonOpenType);
                     testConfiguration = new ReaderTestConfiguration(testConfiguration);
-                    if (throwOnUndeclaredPropertyForNonOpenType)
+                    if (!throwOnUndeclaredPropertyForNonOpenType)
                     {
-                        testConfiguration.MessageReaderSettings.Validations |= ReaderValidations.ThrowOnUndeclaredPropertyForNonOpenType;
-                    }
-                    else
-                    {
-                        testConfiguration.MessageReaderSettings.Validations &= ~ReaderValidations.ThrowOnUndeclaredPropertyForNonOpenType;
+                        testConfiguration.MessageReaderSettings.Validations &= ~ValidationKinds.ThrowOnUndeclaredPropertyForNonOpenType;
                     }
 
                     // These descriptors are already tailored specifically for Json Light and 
@@ -371,13 +363,9 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                 {
                     PayloadReaderTestDescriptor testDescriptor = testCase.ToTestDescriptor(this.Settings, model, throwOnUndeclaredPropertyForNonOpenType);
                     testConfiguration = new ReaderTestConfiguration(testConfiguration);
-                    if (throwOnUndeclaredPropertyForNonOpenType)
+                    if (!throwOnUndeclaredPropertyForNonOpenType)
                     {
-                        testConfiguration.MessageReaderSettings.Validations |= ReaderValidations.ThrowOnUndeclaredPropertyForNonOpenType;
-                    }
-                    else
-                    {
-                        testConfiguration.MessageReaderSettings.Validations &= ~ReaderValidations.ThrowOnUndeclaredPropertyForNonOpenType;
+                        testConfiguration.MessageReaderSettings.Validations &= ~ValidationKinds.ThrowOnUndeclaredPropertyForNonOpenType;
                     }
 
                     // These descriptors are already tailored specifically for Json Light and 

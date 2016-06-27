@@ -64,7 +64,7 @@ namespace Microsoft.OData
         /// <summary>
         /// Validation settings.
         /// </summary>
-        private WriterValidations validations;
+        private ValidationKinds validations;
 
         /// <summary>Initializes a new instance of the <see cref="T:Microsoft.OData.ODataMessageWriterSettings" /> class with default settings. </summary>
         public ODataMessageWriterSettings()
@@ -73,14 +73,14 @@ namespace Microsoft.OData
             this.EnableMessageStreamDisposal = true;
             this.EnableCharactersCheck = false;
             this.ODataSimplified = false;
-            this.Validations = WriterValidations.FullValidation & ~WriterValidations.ThrowOnUndeclaredPropertyForNonOpenType;
+            this.Validations = ValidationKinds.All;
             this.Validator = new WriterValidator(this);
         }
 
         /// <summary>
-        /// Gets or sets validations to perform. Default value is <see cref="T:Microsoft.OData.WriterValidations.FullValidation"/>
+        /// Gets or sets validations to perform. Default value is <see cref="T:Microsoft.OData.Validations.FullValidation"/>,
         /// </summary>
-        public WriterValidations Validations
+        public ValidationKinds Validations
         {
             get
             {
@@ -90,9 +90,9 @@ namespace Microsoft.OData
             set
             {
                 validations = value;
-                BasicValidation = (validations & WriterValidations.BasicValidation) != 0;
-                ThrowOnDuplicatePropertyNames = (validations & WriterValidations.ThrowOnDuplicatePropertyNames) != 0;
-                ThrowOnUndeclaredPropertyForNonOpenType = (validations & WriterValidations.ThrowOnUndeclaredPropertyForNonOpenType) != 0;
+                ThrowIfTypeConflictsWithMetadata = (validations & ValidationKinds.ThrowIfTypeConflictsWithMetadata) != 0;
+                ThrowOnDuplicatePropertyNames = (validations & ValidationKinds.ThrowOnDuplicatePropertyNames) != 0;
+                ThrowOnUndeclaredPropertyForNonOpenType = (validations & ValidationKinds.ThrowOnUndeclaredPropertyForNonOpenType) != 0;
             }
         }
 
@@ -195,9 +195,9 @@ namespace Microsoft.OData
         internal IWriterValidator Validator { get; private set; }
 
         /// <summary>
-        /// Returns whether BasicValidation should be performed.
+        /// Returns whether ThrowIfTypeConflictsWithMetadata validation should be performed.
         /// </summary>
-        internal bool BasicValidation { get; private set; }
+        internal bool ThrowIfTypeConflictsWithMetadata { get; private set; }
 
         /// <summary>
         /// Returns whether ThrowOnDuplicatePropertyNames validation setting is enabled.
@@ -430,7 +430,7 @@ namespace Microsoft.OData
             this.Version = other.Version;
 
             this.validations = other.validations;
-            this.BasicValidation = other.BasicValidation;
+            this.ThrowIfTypeConflictsWithMetadata = other.ThrowIfTypeConflictsWithMetadata;
             this.ThrowOnDuplicatePropertyNames = other.ThrowOnDuplicatePropertyNames;
             this.ThrowOnUndeclaredPropertyForNonOpenType = other.ThrowOnUndeclaredPropertyForNonOpenType;
         }

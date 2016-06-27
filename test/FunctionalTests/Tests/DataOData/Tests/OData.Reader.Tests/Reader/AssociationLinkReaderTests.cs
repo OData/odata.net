@@ -77,7 +77,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
                     PayloadElement = PayloadBuilder.Entity("TestModel.CityType").PrimitiveProperty("Id", 1).Property(
                         PayloadBuilder.NavigationProperty("Nonexistant", null, "http://odata.org/CityHallLink").IsCollection(true)),
                     PayloadEdmModel = model,
-                    //ExpectedException = ODataExpectedExceptions.ODataException("ValidationUtils_PropertyDoesNotExistOnType", "Nonexistant", "TestModel.CityType")
+                    ExpectedException = ODataExpectedExceptions.ODataException("ValidationUtils_PropertyDoesNotExistOnType", "Nonexistant", "TestModel.CityType")
                 },
                 // Association link which is not declared on an open type
                 new PayloadReaderTestDescriptor(this.Settings)
@@ -90,10 +90,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
                     ExpectedResultCallback = 
                         (tc) => new PayloadReaderTestExpectedResult(this.Settings.ExpectedResultSettings)
                                 {
-                                    ExpectedException = 
-                                        (tc.Format == ODataFormat.Json)
-                                        ? null
-                                        : ODataExpectedExceptions.ODataException("ValidationUtils_OpenNavigationProperty", "Nonexistant", "TestModel.CityOpenType"),
+                                    ExpectedException = null
                                 },
                 },
                 // Association link which is declared but of wrong kind

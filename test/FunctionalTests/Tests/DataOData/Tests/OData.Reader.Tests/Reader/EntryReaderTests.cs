@@ -455,10 +455,8 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
                     testConfiguration = new ReaderTestConfiguration(testConfiguration);
                     if (useServerBehavior)
                     {
-                        testConfiguration.MessageReaderSettings.Validations &= ~ReaderValidations.ThrowOnDuplicatePropertyNames;
+                        testConfiguration.MessageReaderSettings.Validations &= ~(ValidationKinds.ThrowOnDuplicatePropertyNames | ValidationKinds.ThrowIfTypeConflictsWithMetadata);
                         testConfiguration.MessageReaderSettings.ClientCustomTypeResolver = null;
-                        testConfiguration.MessageReaderSettings.Validations &= ~ReaderValidations.ThrowIfTypeConflictsWithMetadata;
-                        // EnableReadingEntryContentInEntryStartState == true
                     }
 
                     // Create a descriptor with the first property
@@ -1297,9 +1295,9 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
         {
             this.CombinatorialEngineProvider.RunCombinations(
                 new[] { false, true },
-                ThrowOnUndeclaredPropertyForNonOpenType =>
+                throwOnUndeclaredPropertyForNonOpenType =>
                 {
-                    var testDescriptors = CreateUndeclaredPropertyTestDescriptors(ThrowOnUndeclaredPropertyForNonOpenType, this.JsonLightSettings);
+                    var testDescriptors = CreateUndeclaredPropertyTestDescriptors(throwOnUndeclaredPropertyForNonOpenType, this.JsonLightSettings);
 
                     // Expanded links behave differently between ATOM and JSON so their tests are in the respective format places.
                     this.CombinatorialEngineProvider.RunCombinations(
@@ -1308,13 +1306,9 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
                         (testDescriptor, testConfiguration) =>
                         {
                             testConfiguration = new ReaderTestConfiguration(testConfiguration);
-                            if (ThrowOnUndeclaredPropertyForNonOpenType)
+                            if (!throwOnUndeclaredPropertyForNonOpenType)
                             {
-                                testConfiguration.MessageReaderSettings.Validations |= ReaderValidations.ThrowOnUndeclaredPropertyForNonOpenType;
-                            }
-                            else
-                            {
-                                testConfiguration.MessageReaderSettings.Validations &= ~ReaderValidations.ThrowOnUndeclaredPropertyForNonOpenType;
+                                testConfiguration.MessageReaderSettings.Validations &= ~ValidationKinds.ThrowOnUndeclaredPropertyForNonOpenType;
                             }
 
                             testDescriptor.RunTest(testConfiguration);
@@ -1322,7 +1316,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
                 });
         }
 
-        private IEnumerable<PayloadReaderTestDescriptor> CreateUndeclaredPropertyTestDescriptors(bool ThrowOnUndeclaredPropertyForNonOpenType, PayloadReaderTestDescriptor.Settings settings)
+        private IEnumerable<PayloadReaderTestDescriptor> CreateUndeclaredPropertyTestDescriptors(bool throwOnUndeclaredPropertyForNonOpenType, PayloadReaderTestDescriptor.Settings settings)
         {
             IEdmModel model = TestModels.BuildTestModel();
             IEnumerable<PayloadReaderTestDescriptor> testDescriptors = undeclaredValueProperties.SelectMany(undeclaredProperty =>
@@ -1347,7 +1341,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
                                 PayloadElement = inEntity.DeepCopy().Property(undeclaredProperty.DeepCopy()),
                                 ExpectedResultPayloadElement = tc => inEntity.DeepCopy().Property(undeclaredProperty.DeepCopy()),
                                 PayloadEdmModel = model,
-                                ExpectedException = ThrowOnUndeclaredPropertyForNonOpenType
+                                ExpectedException = throwOnUndeclaredPropertyForNonOpenType
                                                         ? ODataExpectedExceptions.ODataException("ValidationUtils_PropertyDoesNotExistOnType", "UndeclaredProperty", "TestModel.OfficeType")
                                                         : null
                             },
@@ -1357,7 +1351,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
                                 PayloadElement = PayloadBuilder.Entity("TestModel.CityWithMapType").PrimitiveProperty("Id", 1).AsMediaLinkEntry().Property(undeclaredProperty.DeepCopy()),
                                 ExpectedResultPayloadElement = tc => PayloadBuilder.Entity("TestModel.CityWithMapType").PrimitiveProperty("Id", 1).AsMediaLinkEntry().Property(undeclaredProperty.DeepCopy()),
                                 PayloadEdmModel = model,
-                                ExpectedException = ThrowOnUndeclaredPropertyForNonOpenType
+                                ExpectedException = throwOnUndeclaredPropertyForNonOpenType
                                                         ? ODataExpectedExceptions.ODataException("ValidationUtils_PropertyDoesNotExistOnType", "UndeclaredProperty", "TestModel.CityWithMapType")
                                                         : null
                             },
@@ -1374,7 +1368,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
                             PayloadElement =
                             PayloadBuilder.Entity("TestModel.CityType").PrimitiveProperty("Id", 1).Property(undeclaredProperty.DeepCopy()),// :
                             PayloadEdmModel = model,
-                            ExpectedException = ThrowOnUndeclaredPropertyForNonOpenType
+                            ExpectedException = throwOnUndeclaredPropertyForNonOpenType
                                                     ? ODataExpectedExceptions.ODataException("ValidationUtils_PropertyDoesNotExistOnType", "UndeclaredProperty", "TestModel.CityType")
                                                     : null
                         },
@@ -1384,7 +1378,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
                             PayloadElement =
                             PayloadBuilder.Entity("TestModel.CityWithMapType").PrimitiveProperty("Id", 1).AsMediaLinkEntry().Property(undeclaredProperty.DeepCopy()), //:
                             PayloadEdmModel = model,
-                            ExpectedException = ThrowOnUndeclaredPropertyForNonOpenType
+                            ExpectedException = throwOnUndeclaredPropertyForNonOpenType
                                                     ? ODataExpectedExceptions.ODataException("ValidationUtils_PropertyDoesNotExistOnType", "UndeclaredProperty", "TestModel.CityWithMapType")
                                                     : null
                         },
@@ -1559,13 +1553,9 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
                 (testDescriptor, testConfiguration) =>
                 {
                     testConfiguration = new ReaderTestConfiguration(testConfiguration);
-                    if (throwOnUndeclaredPropertyForNonOpenType)
+                    if (!throwOnUndeclaredPropertyForNonOpenType)
                     {
-                        testConfiguration.MessageReaderSettings.Validations |= ReaderValidations.ThrowOnUndeclaredPropertyForNonOpenType;
-                    }
-                    else
-                    {
-                        testConfiguration.MessageReaderSettings.Validations &= ~ReaderValidations.ThrowOnUndeclaredPropertyForNonOpenType;
+                        testConfiguration.MessageReaderSettings.Validations &= ~ValidationKinds.ThrowOnUndeclaredPropertyForNonOpenType;
                     }
 
                     testDescriptor.RunTest(testConfiguration);

@@ -70,7 +70,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
         public bool Synchronous { get; private set; }
 
         /// <summary>
-        /// Returns text represenation of the configuration.
+        /// Returns text representation of the configuration.
         /// </summary>
         /// <returns>Humanly readable text representation of the configuration. Used for debugging.</returns>
         public override string ToString()
@@ -97,14 +97,14 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
                 case TestODataBehaviorKind.Default:
                     break;
                 case TestODataBehaviorKind.WcfDataServicesClient:
-                    testConfiguration.MessageReaderSettings.Validations &= ~ReaderValidations.ThrowOnDuplicatePropertyNames;
+                    testConfiguration.MessageReaderSettings.Validations &= ~ValidationKinds.ThrowOnDuplicatePropertyNames;
                     testConfiguration.MessageReaderSettings.ClientCustomTypeResolver = null;
-                    testConfiguration.MessageReaderSettings.Validations &= ~ReaderValidations.ThrowIfTypeConflictsWithMetadata;
+                    testConfiguration.MessageReaderSettings.Validations &= ~ValidationKinds.ThrowIfTypeConflictsWithMetadata;
                     break;
                 case TestODataBehaviorKind.WcfDataServicesServer:
-                    testConfiguration.MessageReaderSettings.Validations &= ~ReaderValidations.ThrowOnDuplicatePropertyNames;
+                    testConfiguration.MessageReaderSettings.Validations &= ~ValidationKinds.ThrowOnDuplicatePropertyNames;
                     testConfiguration.MessageReaderSettings.ClientCustomTypeResolver = null;
-                    testConfiguration.MessageReaderSettings.Validations &= ~ReaderValidations.ThrowIfTypeConflictsWithMetadata;
+                    testConfiguration.MessageReaderSettings.Validations &= ~ValidationKinds.ThrowIfTypeConflictsWithMetadata;
                     // EnableReadingEntryContentInEntryStartState == true
                     break;
             }

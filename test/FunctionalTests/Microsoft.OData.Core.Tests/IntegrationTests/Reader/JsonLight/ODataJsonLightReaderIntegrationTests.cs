@@ -1041,13 +1041,9 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.JsonLight
 
             var message = new InMemoryMessage() { Stream = new MemoryStream(Encoding.UTF8.GetBytes(payload)) };
             var readerSettings = new ODataMessageReaderSettings { EnableMessageStreamDisposal = true };
-            if (throwOnUndeclaredProperty)
+            if (!throwOnUndeclaredProperty)
             {
-                readerSettings.Validations |= ReaderValidations.ThrowOnUndeclaredPropertyForNonOpenType;
-            }
-            else
-            {
-                readerSettings.Validations &= ~ReaderValidations.ThrowOnUndeclaredPropertyForNonOpenType;
+                readerSettings.Validations &= ~ValidationKinds.ThrowOnUndeclaredPropertyForNonOpenType;
             }
 
             IEdmModel mainModel = TestUtils.WrapReferencedModelsToMainModel("EntityNs", "MyContainer", model);

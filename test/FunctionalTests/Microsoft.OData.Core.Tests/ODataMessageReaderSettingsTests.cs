@@ -22,18 +22,17 @@ namespace Microsoft.OData.Tests
         {
             ODataMessageReaderSettings settings = new ODataMessageReaderSettings();
 
-            Assert.True((settings.Validations & ReaderValidations.ThrowOnDuplicatePropertyNames) != 0, "The ThrowOnDuplicatePropertyNames should be true by default");
+            Assert.True((settings.Validations & ValidationKinds.ThrowOnDuplicatePropertyNames) != 0, "The ThrowOnDuplicatePropertyNames should be true by default");
             Assert.Null(settings.BaseUri);
             Assert.Null(settings.ClientCustomTypeResolver);
             Assert.True(settings.EnablePrimitiveTypeConversion, "EnablePrimitiveTypeConversion should be true by default.");
             Assert.True(settings.EnableMessageStreamDisposal, "EnableMessageStreamDisposal should be false by default.");
             Assert.False(settings.EnableCharactersCheck, "The CheckCharacters should be off by default.");
-            Assert.True((settings.Validations & ReaderValidations.BasicValidation) != 0, "BasicValidation should be true by default");
-            Assert.True((settings.Validations & ReaderValidations.ThrowIfTypeConflictsWithMetadata) != 0, "The ThrowIfTypeConflictsWithMetadata should be true by default");            
+            Assert.True((settings.Validations & ValidationKinds.ThrowIfTypeConflictsWithMetadata) != 0, "The ThrowIfTypeConflictsWithMetadata should be true by default");            
             Assert.False(settings.ODataSimplified, "The ODataSimplified should be false by default");
             Assert.Null(settings.ShouldIncludeAnnotation);
             Assert.Null(settings.UseKeyAsSegment);
-            Assert.True((settings.Validations & ReaderValidations.ThrowOnUndeclaredPropertyForNonOpenType) == 0, "ThrowOnUndeclaredPropertyForNonOpenType should be false by default.");
+            Assert.True((settings.Validations & ValidationKinds.ThrowOnUndeclaredPropertyForNonOpenType) != 0, "ThrowOnUndeclaredPropertyForNonOpenType should be true by default.");
             Assert.True(ODataVersion.V4 == settings.MaxProtocolVersion, "MaxProtocolVersion should be V3.");
             Assert.True(100 == settings.MessageQuotas.MaxPartsPerBatch, "MaxPartsPerBatch should be int.MaxValue.");
             Assert.True(1000 == settings.MessageQuotas.MaxOperationsPerChangeset, "MaxOperationsPerChangeset should be int.MaxValue.");
@@ -63,21 +62,19 @@ namespace Microsoft.OData.Tests
                     MaxReceivedMessageSize = 5,
                 },
             };
-            settings.Validations &= ~ReaderValidations.ThrowIfTypeConflictsWithMetadata
-                                    & ~ReaderValidations.ThrowOnDuplicatePropertyNames
-                                    & ~ReaderValidations.BasicValidation;
-            settings.Validations |= ReaderValidations.ThrowOnUndeclaredPropertyForNonOpenType;
+            settings.Validations &= ~ValidationKinds.ThrowIfTypeConflictsWithMetadata
+                                    & ~ValidationKinds.ThrowOnDuplicatePropertyNames;
+            settings.Validations |= ValidationKinds.ThrowOnUndeclaredPropertyForNonOpenType;
 
-            Assert.True((settings.Validations & ReaderValidations.ThrowOnDuplicatePropertyNames) == 0, "The ThrowOnDuplicatePropertyNames was not correctly remembered");
+            Assert.True((settings.Validations & ValidationKinds.ThrowOnDuplicatePropertyNames) == 0, "The ThrowOnDuplicatePropertyNames was not correctly remembered");
             Assert.True(baseUri.Equals(settings.BaseUri), "The BaseUri was not correctly remembered.");
             Assert.False(settings.EnablePrimitiveTypeConversion, "EnablePrimitiveTypeConversion was not correctly remembered.");
             Assert.False(settings.EnableMessageStreamDisposal, "EnableMessageStreamDisposal was not correctly remembered.");
             Assert.True(settings.EnableCharactersCheck, "The CheckCharacters should be on when set.");
-            Assert.True((settings.Validations & ReaderValidations.BasicValidation) == 0, "BasicValidation was not correctly remembered");
             Assert.False(settings.ThrowIfTypeConflictsWithMetadata, "The ThrowIfTypeConflictsWithMetadata was not correctly remembered");
             Assert.True(settings.ODataSimplified, "ODataSimplified was not correctly remembered");
             Assert.True(settings.UseKeyAsSegment, "UseKeyAsSegment was not correctly remembered");
-            Assert.True((settings.Validations & ReaderValidations.ThrowOnUndeclaredPropertyForNonOpenType) != 0, "ThrowOnUndeclaredPropertyForNonOpenType was not correctly remembered.");
+            Assert.True((settings.Validations & ValidationKinds.ThrowOnUndeclaredPropertyForNonOpenType) != 0, "ThrowOnUndeclaredPropertyForNonOpenType was not correctly remembered.");
             Assert.True(ODataVersion.V4 == settings.MaxProtocolVersion, "The MaxProtocolVersion was not correctly remembered.");
             Assert.True(2 == settings.MessageQuotas.MaxPartsPerBatch, "MaxPartsPerBatch should be 2");
             Assert.True(3 == settings.MessageQuotas.MaxOperationsPerChangeset, "MaxOperationsPerChangeset should be 3");
@@ -120,7 +117,7 @@ namespace Microsoft.OData.Tests
 
             // Compare original and settings created from copy constructor after setting rest of the values 
             settings.EnableMessageStreamDisposal = false;            
-            settings.Validations &= ~ReaderValidations.ThrowOnUndeclaredPropertyForNonOpenType;
+            settings.Validations &= ~ValidationKinds.ThrowOnUndeclaredPropertyForNonOpenType;
             settings.MaxProtocolVersion = ODataVersion.V4;
             settings.MessageQuotas.MaxPartsPerBatch = 100;
             settings.MessageQuotas.MaxOperationsPerChangeset = 200;

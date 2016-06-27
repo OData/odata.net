@@ -816,10 +816,6 @@ namespace Microsoft.OData.JsonLight
 
             ODataNestedResourceInfo currentLink = this.CurrentNestedResourceInfo;
 
-            Debug.Assert(
-                currentLink.IsCollection.HasValue || !this.jsonLightInputContext.MessageReaderSettings.ThrowOnUndeclaredPropertyForNonOpenType,
-                "Expect to know whether this is a singleton or collection link based on metadata.");
-
             IODataJsonLightReaderResourceState parentResourceState = (IODataJsonLightReaderResourceState)this.LinkParentResourceScope;
 
             if (this.jsonLightInputContext.ReadingResponse)

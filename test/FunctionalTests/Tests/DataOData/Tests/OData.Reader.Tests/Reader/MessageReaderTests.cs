@@ -91,13 +91,13 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
 
                     var settings = new ODataMessageReaderSettings();
 
-                    settings.Validations |= ReaderValidations.ThrowOnUndeclaredPropertyForNonOpenType;
+                    settings.Validations |= ValidationKinds.ThrowOnUndeclaredPropertyForNonOpenType;
                     this.Assert.ExpectedException(
                         () => settingsAction.Action(message, settings),
                         null,
                         this.ExceptionVerifier);
 
-                    settings.Validations &= ~ReaderValidations.ThrowOnUndeclaredPropertyForNonOpenType;
+                    settings.Validations &= ~ValidationKinds.ThrowOnUndeclaredPropertyForNonOpenType;
                     this.Assert.ExpectedException(
                         () => settingsAction.Action(message, settings),
                         settingsAction.Response ? null : ODataExpectedExceptions.ODataException("ReaderValidationUtils_UndeclaredPropertyBehaviorKindSpecifiedOnRequest"),

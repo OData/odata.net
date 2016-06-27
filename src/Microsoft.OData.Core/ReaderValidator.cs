@@ -38,10 +38,7 @@ namespace Microsoft.OData
         /// properties and such are not validated.</remarks>
         public virtual void ValidateMediaResource(ODataResource resource, IEdmEntityType resourceType, IEdmModel model)
         {
-            if (settings.BasicValidation)
-            {
-                ValidationUtils.ValidateMediaResource(resource, resourceType, model);
-            }
+            ValidationUtils.ValidateMediaResource(resource, resourceType, model);
         }
 
         /// <summary>
@@ -67,8 +64,11 @@ namespace Microsoft.OData
                                       bool validateNullValue, string propertyName,
                                       bool? isDynamicProperty)
         {
-            ReaderValidationUtils.ValidateNullValue(expectedTypeReference, settings.EnablePrimitiveTypeConversion,
+            if (settings.ThrowIfTypeConflictsWithMetadata)
+            {
+                ReaderValidationUtils.ValidateNullValue(expectedTypeReference, settings.EnablePrimitiveTypeConversion,
                                                     validateNullValue, propertyName, isDynamicProperty);
+            }
         }
 
         /// <summary>

@@ -219,10 +219,11 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                 },
                 new StreamPropertyTestCase
                 {
-                    DebugDescription = "Undeclared stream property (allowed by default)",
+                    DebugDescription = "Undeclared stream property (disallowed by default)",
                     ExpectedEntity = PayloadBuilder.Entity().StreamProperty("NewSkyline", null, "http://odata.org/streamproperty/editlink", null, null),
                     Json = 
                         "\"" + JsonLightUtils.GetPropertyAnnotationName("NewSkyline", JsonLightConstants.ODataMediaEditLinkAnnotationName) + "\":\"http://odata.org/streamproperty/editlink\"",
+                    ExpectedException = ODataExpectedExceptions.ODataException("ValidationUtils_PropertyDoesNotExistOnType", "NewSkyline", "TestModel.CityType"),
                     OnlyResponse = true
                 },
                 new StreamPropertyTestCase

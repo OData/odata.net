@@ -121,7 +121,7 @@ namespace AstoriaUnitTests.Tests
             var context = CreateTransportLayerContext(JsonLightExtraPropertyPayload, "4.0");
             context.UndeclaredPropertyBehavior = UndeclaredPropertyBehavior.ThrowException;
             Action test = ()=> context.Execute<SimpleNorthwind.Supplier>(new Uri("/Suppliers", UriKind.Relative)).SingleOrDefault();
-            test.ShouldThrow<InvalidOperationException>().WithMessage("The property 'ExtraProperty' does not exist on type 'ODataDemo.Supplier'. Make sure to only use property names that are defined by the type.");
+            test.ShouldThrow<InvalidOperationException>().WithMessage("The property 'ExtraProperty' does not exist on type 'ODataDemo.Supplier'. Make sure to only use property names that are defined by the type or mark the type as open type.");
         }
 
         private const string JsonLightUnknownNavigationLink = @"{

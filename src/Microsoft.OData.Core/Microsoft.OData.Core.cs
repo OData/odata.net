@@ -386,7 +386,6 @@ namespace Microsoft.OData {
         internal const string ValidationUtils_EntryWithMediaResourceAndNonMLEType = "ValidationUtils_EntryWithMediaResourceAndNonMLEType";
         internal const string ValidationUtils_EntryWithoutMediaResourceAndMLEType = "ValidationUtils_EntryWithoutMediaResourceAndMLEType";
         internal const string ValidationUtils_EntryTypeNotAssignableToExpectedType = "ValidationUtils_EntryTypeNotAssignableToExpectedType";
-        internal const string ValidationUtils_OpenNavigationProperty = "ValidationUtils_OpenNavigationProperty";
         internal const string ValidationUtils_NavigationPropertyExpected = "ValidationUtils_NavigationPropertyExpected";
         internal const string ValidationUtils_InvalidBatchBoundaryDelimiterLength = "ValidationUtils_InvalidBatchBoundaryDelimiterLength";
         internal const string ValidationUtils_RecursionDepthLimitReached = "ValidationUtils_RecursionDepthLimitReached";

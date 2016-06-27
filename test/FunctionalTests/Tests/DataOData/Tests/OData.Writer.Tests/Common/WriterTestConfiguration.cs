@@ -83,10 +83,9 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Common
                 case TestODataBehaviorKind.Default:
                     break;
                 case TestODataBehaviorKind.WcfDataServicesClient:
-                    testConfiguration.MessageWriterSettings.Validations |= WriterValidations.ThrowOnDuplicatePropertyNames;
                     break;
                 case TestODataBehaviorKind.WcfDataServicesServer:
-                    testConfiguration.MessageWriterSettings.Validations &= ~WriterValidations.ThrowOnDuplicatePropertyNames;
+                    testConfiguration.MessageWriterSettings.Validations &= ~ValidationKinds.ThrowOnDuplicatePropertyNames;
                     break;
             }
 

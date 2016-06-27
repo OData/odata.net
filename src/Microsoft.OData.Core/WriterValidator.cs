@@ -49,7 +49,7 @@ namespace Microsoft.OData
             IEdmStructuredType resourceType,
             IEdmStructuredType parentNavigationPropertyType)
         {
-            if (settings.BasicValidation)
+            if (settings.ThrowIfTypeConflictsWithMetadata)
             {
                 WriterValidationUtils.ValidateResourceInExpandedLink(
                     resourceType, parentNavigationPropertyType);
@@ -64,10 +64,7 @@ namespace Microsoft.OData
         public virtual void ValidateNestedResourceInfoHasCardinality(
             ODataNestedResourceInfo nestedResourceInfo)
         {
-            if (settings.BasicValidation)
-            {
-                WriterValidationUtils.ValidateNestedResourceInfoHasCardinality(nestedResourceInfo);
-            }
+            WriterValidationUtils.ValidateNestedResourceInfoHasCardinality(nestedResourceInfo);
         }
 
         /// <summary>
@@ -77,10 +74,7 @@ namespace Microsoft.OData
         /// <param name="value">The value of the open property.</param>
         public virtual void ValidateOpenPropertyValue(string propertyName, object value)
         {
-            if (settings.BasicValidation)
-            {
-                ValidationUtils.ValidateOpenPropertyValue(propertyName, value);
-            }
+            ValidationUtils.ValidateOpenPropertyValue(propertyName, value);
         }
 
         /// <summary>
@@ -98,7 +92,7 @@ namespace Microsoft.OData
             object value, IEdmPrimitiveTypeReference valuePrimitiveTypeReference,
             IEdmTypeReference expectedTypeReference)
         {
-            if (settings.BasicValidation)
+            if (settings.ThrowIfTypeConflictsWithMetadata)
             {
                 ValidationUtils.ValidateIsExpectedPrimitiveType(
                     value, valuePrimitiveTypeReference, expectedTypeReference);
@@ -113,7 +107,7 @@ namespace Microsoft.OData
         public virtual void ValidateTypeReference(IEdmTypeReference typeReferenceFromMetadata,
                                                   IEdmTypeReference typeReferenceFromValue)
         {
-            if (settings.BasicValidation)
+            if (settings.ThrowIfTypeConflictsWithMetadata)
             {
                 // Make sure the types are the same
                 if (typeReferenceFromValue.IsODataPrimitiveTypeKind())
@@ -169,7 +163,7 @@ namespace Microsoft.OData
         public virtual void ValidateTypeKind(EdmTypeKind actualTypeKind,
                                              EdmTypeKind expectedTypeKind, IEdmType edmType)
         {
-            if (settings.BasicValidation)
+            if (settings.ThrowIfTypeConflictsWithMetadata)
             {
                 ValidationUtils.ValidateTypeKind(
                     actualTypeKind, expectedTypeKind, edmType == null ? null : edmType.FullTypeName());
@@ -190,10 +184,7 @@ namespace Microsoft.OData
         public virtual void ValidateMetadataResource(ODataResource resource,
                                                      IEdmEntityType resourceType, IEdmModel model)
         {
-            if (settings.BasicValidation)
-            {
-                ValidationUtils.ValidateMediaResource(resource, resourceType, model);
-            }
+            ValidationUtils.ValidateMediaResource(resource, resourceType, model);
         }
 
         /// <summary>
@@ -206,7 +197,7 @@ namespace Microsoft.OData
         public void ValidateNullPropertyValue(IEdmTypeReference expectedPropertyTypeReference,
                                               string propertyName, IEdmModel model)
         {
-            if (settings.BasicValidation)
+            if (settings.ThrowIfTypeConflictsWithMetadata)
             {
                 WriterValidationUtils.ValidateNullPropertyValue(expectedPropertyTypeReference, propertyName, model);
             }
@@ -218,7 +209,7 @@ namespace Microsoft.OData
         /// <param name="expectedItemType">The expected item type or null if none.</param>
         public void ValidateNullCollectionItem(IEdmTypeReference expectedItemType)
         {
-            if (settings.BasicValidation)
+            if (settings.ThrowIfTypeConflictsWithMetadata)
             {
                 ValidationUtils.ValidateNullCollectionItem(expectedItemType);
             }

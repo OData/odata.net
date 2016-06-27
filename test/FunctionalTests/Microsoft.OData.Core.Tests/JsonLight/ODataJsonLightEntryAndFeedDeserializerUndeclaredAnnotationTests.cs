@@ -13,16 +13,16 @@
 
     public class ODataJsonLightEntryAndFeedDeserializerUndeclaredAnnotationTests
     {
-        private ODataMessageReaderSettings readerSettings = new ODataMessageReaderSettings()
+        private ODataMessageReaderSettings readerSettings = new ODataMessageReaderSettings
         {
             ShouldIncludeAnnotation = (annotationName) => true,
-            Validations = ReaderValidations.FullValidation & ~ReaderValidations.ThrowOnUndeclaredPropertyForNonOpenType,
+            Validations = ~ValidationKinds.ThrowOnUndeclaredPropertyForNonOpenType
         };
 
         private ODataMessageWriterSettings writerSettings = new ODataMessageWriterSettings
         {
             ShouldIncludeAnnotation = (annotationName) => true,
-            Validations = WriterValidations.FullValidation & ~WriterValidations.ThrowOnUndeclaredPropertyForNonOpenType
+            Validations = ~ValidationKinds.ThrowOnUndeclaredPropertyForNonOpenType
         };
 
         // ----------- begin of edm for entry reader -----------
@@ -34,7 +34,6 @@
 
         public ODataJsonLightEntryAndFeedDeserializerUndeclaredAnnotationTests()
         {
-            this.readerSettings.Validations &= ~ReaderValidations.ThrowOnUndeclaredPropertyForNonOpenType;
             this.serverModel = new EdmModel();
             var addressType = new EdmComplexType("Server.NS", "Address");
             addressType.AddStructuralProperty("Street", EdmPrimitiveTypeKind.String);

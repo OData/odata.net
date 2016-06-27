@@ -170,7 +170,7 @@ namespace Microsoft.OData.Service
             writerSettings.Version = CommonUtil.ConvertToODataVersion(responseVersion);
             writerSettings.BaseUri = serviceUri;
 
-            writerSettings.Validations &= ~WriterValidations.ThrowOnDuplicatePropertyNames;
+            writerSettings.Validations &= ~ValidationKinds.ThrowOnDuplicatePropertyNames;
 
             writerSettings.EnableMessageStreamDisposal = !(responseMessage is AstoriaResponseMessage);
         }

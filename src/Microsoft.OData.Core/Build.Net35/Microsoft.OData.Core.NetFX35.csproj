@@ -1578,9 +1578,6 @@
     <Compile Include="..\PropertyValueTypeInfo.cs">
       <Link>PropertyValueTypeInfo.cs</Link>
     </Compile>
-    <Compile Include="..\ReaderValidations.cs">
-      <Link>Microsoft\OData\Core\ReaderValidations.cs</Link>
-    </Compile>
     <Compile Include="..\ReaderValidator.cs">
       <Link>Microsoft\OData\Core\ReaderValidator.cs</Link>
     </Compile>
@@ -1671,8 +1668,8 @@
     <Compile Include="..\UriParser\UriFunctionsHelper.cs">
       <Link>Microsoft\OData\Core\UriParser\UriFunctionsHelper.cs</Link>
     </Compile>
-    <Compile Include="..\WriterValidations.cs">
-      <Link>Microsoft\OData\Core\WriterValidations.cs</Link>
+    <Compile Include="..\ValidationKinds.cs">
+      <Link>Microsoft\OData\Core\ValidationKinds.cs</Link>
     </Compile>
     <Compile Include="..\WriterValidator.cs">
       <Link>Microsoft\OData\Core\WriterValidator.cs</Link>

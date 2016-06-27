@@ -344,8 +344,7 @@ namespace Microsoft.OData.Tests
 
             this.settings = new ODataMessageWriterSettings()
             {
-                Validations = WriterValidations.FullValidation
-                              & ~WriterValidations.ThrowOnDuplicatePropertyNames,               
+                Validations = ~ValidationKinds.ThrowOnDuplicatePropertyNames,               
                 AutoComputePayloadMetadata = true,
                 BaseUri = baseUri,
                 EnableCharactersCheck = true,

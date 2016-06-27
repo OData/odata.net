@@ -1258,10 +1258,8 @@ namespace Microsoft.OData.Service
 
             if (enableODataServerBehavior)
             {
-                messageReaderSettings.Validations &= ~ReaderValidations.ThrowOnDuplicatePropertyNames;
+                messageReaderSettings.Validations &= ~(ValidationKinds.ThrowOnDuplicatePropertyNames | ValidationKinds.ThrowIfTypeConflictsWithMetadata);
                 messageReaderSettings.ClientCustomTypeResolver = null;
-                messageReaderSettings.Validations &= ~ReaderValidations.ThrowIfTypeConflictsWithMetadata;
-                // EnableReadingEntryContentInEntryStartState == true
             }
 
             return messageReaderSettings;
