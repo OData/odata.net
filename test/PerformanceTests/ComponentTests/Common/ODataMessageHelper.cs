@@ -20,10 +20,9 @@ namespace Microsoft.OData.Performance
         private static readonly Uri BaseUri = new Uri("http://odata.org/Perf.svc");
         private static IServiceProvider container;
         private const string ContentType = "application/json;odata.metadata=minimal;odata.streaming=true;";
-        private const bool DisablePrimitiveTypeConversion = false;
+        private const bool EnablePrimitiveTypeConversion = true;
         private const bool CheckCharacters = false;
-        private const bool DisableMessageStreamDisposal = true;
-        private const bool Indent = false;
+        private const bool EnableMessageStreamDisposal = false;
         private const int MaxPartsPerBatch = 16;
         private const int MaxOperationsPerChangeset = 16;
         private const int MaxNestingDepth = 16;
@@ -60,8 +59,8 @@ namespace Microsoft.OData.Performance
             {
                 BaseUri = BaseUri,
                 EnableCharactersCheck = CheckCharacters,
-                DisableMessageStreamDisposal = DisableMessageStreamDisposal,
-                DisablePrimitiveTypeConversion = DisablePrimitiveTypeConversion,
+                EnableMessageStreamDisposal = EnableMessageStreamDisposal,
+                EnablePrimitiveTypeConversion = EnablePrimitiveTypeConversion,
                 Validations = isFullValidation ? ReaderValidations.FullValidation: ReaderValidations.None,
                 MessageQuotas = new ODataMessageQuotas
                 {
@@ -134,8 +133,7 @@ namespace Microsoft.OData.Performance
             {
                 BaseUri = BaseUri,
                 EnableCharactersCheck = CheckCharacters,
-                EnableIndentation = Indent,
-                DisableMessageStreamDisposal = DisableMessageStreamDisposal,
+                EnableMessageStreamDisposal = EnableMessageStreamDisposal,
                 Version = Version,
                 Validations = isFullValidation ? WriterValidations.FullValidation : WriterValidations.None,
                 MessageQuotas = new ODataMessageQuotas
