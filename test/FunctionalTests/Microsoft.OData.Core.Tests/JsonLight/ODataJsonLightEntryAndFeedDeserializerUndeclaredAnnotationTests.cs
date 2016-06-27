@@ -13,7 +13,11 @@
 
     public class ODataJsonLightEntryAndFeedDeserializerUndeclaredAnnotationTests
     {
-        private ODataMessageReaderSettings readerSettings = new ODataMessageReaderSettings();
+        private ODataMessageReaderSettings readerSettings = new ODataMessageReaderSettings()
+        {
+            ShouldIncludeAnnotation = (annotationName) => true,
+            Validations = ReaderValidations.FullValidation & ~ReaderValidations.ThrowOnUndeclaredPropertyForNonOpenType,
+        };
 
         private ODataMessageWriterSettings writerSettings = new ODataMessageWriterSettings
         {
@@ -101,15 +105,16 @@
             });
 
             entry.Properties.Count().Should().Be(2);
+            entry.InstanceAnnotations.Count.Should().Be(1);
             complex1.Properties.Count().Should().Be(3);
-            complex1.InstanceAnnotations.Count().Should().Be(1);
+            complex1.InstanceAnnotations.Count().Should().Be(2);
             complex1.InstanceAnnotations.First().Value.As<ODataPrimitiveValue>().Value.Should().Be("#Server.NS.Address");
 
             ODataProperty undeclaredComplex1Prop = complex1.Properties.Single(s => string.Equals(s.Name, "undeclaredComplex1"));
             (undeclaredComplex1Prop.Value as ODataUntypedValue).RawValue.Should().Be("\"hello this is a string.\"");
             undeclaredComplex1Prop.InstanceAnnotations.Count().Should().Be(4);
-            undeclaredComplex1Prop.InstanceAnnotations.First().Value.As<ODataUntypedValue>().RawValue.Should().Be("\"od unkown value _234\"");
-            undeclaredComplex1Prop.InstanceAnnotations.Last().Value.As<ODataUntypedValue>().RawValue.Should().Be("\"custom annotation value _234\"");
+            undeclaredComplex1Prop.InstanceAnnotations.First().Value.As<ODataPrimitiveValue>().Value.Should().Be("od unkown value _234");
+            undeclaredComplex1Prop.InstanceAnnotations.Last().Value.As<ODataPrimitiveValue>().Value.Should().Be("custom annotation value _234");
 
             entry.MetadataBuilder = new Microsoft.OData.Evaluation.NoOpResourceMetadataBuilder(entry);
             string result = this.WriteEntryPayload(this.serverOpenEntitySet, this.serverOpenEntityType, writer =>
@@ -122,7 +127,7 @@
                 writer.WriteEnd();
             });
 
-            result.Should().Be("{\"@odata.context\":\"http://www.sampletest.com/$metadata#serverOpenEntitySet/$entity\",\"Id\":61880128,\"UndeclaredFloatId\":12.3,\"undeclaredComplex1\":{\"@odata.type\":\"#Server.NS.Address\",\"undeclaredComplex1@odata.unknownname1\":\"od unkown value _234\",\"undeclaredComplex1@odata.type\":\"Server.NS.UnknownType1\",\"undeclaredComplex1@my.Annotation1\":\"my custom value _234\",\"undeclaredComplex1@instanceAnnotation1.term1\":\"custom annotation value _234\",\"undeclaredComplex1\":\"hello this is a string.\",\"Street\":\"No.999,Zixing Rd Minhang\",\"UndeclaredStreet\":\"No.10000000999,Zixing Rd Minhang\"}}");
+            result.Should().Be("{\"@odata.context\":\"http://www.sampletest.com/$metadata#serverOpenEntitySet/$entity\",\"@instance.AnnotationName_\":\"instance value_\",\"Id\":61880128,\"UndeclaredFloatId\":12.3,\"undeclaredComplex1\":{\"@odata.type\":\"#Server.NS.Address\",\"@instance.AnnotationName_\":\"instance value_234\",\"undeclaredComplex1@odata.unknownname1\":\"od unkown value _234\",\"undeclaredComplex1@odata.type\":\"Server.NS.UnknownType1\",\"undeclaredComplex1@my.Annotation1\":\"my custom value _234\",\"undeclaredComplex1@instanceAnnotation1.term1\":\"custom annotation value _234\",\"undeclaredComplex1\":\"hello this is a string.\",\"Street\":\"No.999,Zixing Rd Minhang\",\"UndeclaredStreet\":\"No.10000000999,Zixing Rd Minhang\"}}");
         }
 
         /// <summary>
@@ -163,14 +168,14 @@
 
             entry.Properties.Count().Should().Be(2);
             complex1.Properties.Count().Should().Be(3);
-            complex1.InstanceAnnotations.Count().Should().Be(1);
+            complex1.InstanceAnnotations.Count().Should().Be(2);
             complex1.InstanceAnnotations.First().Value.As<ODataPrimitiveValue>().Value.Should().Be("#Server.NS.Address");
 
             ODataProperty undeclaredComplex1Prop = complex1.Properties.Single(s => string.Equals(s.Name, "undeclaredComplex1"));
             (undeclaredComplex1Prop.Value as ODataUntypedValue).RawValue.Should().Be("\"hello this is a string.\"");
             undeclaredComplex1Prop.InstanceAnnotations.Count().Should().Be(4);
-            undeclaredComplex1Prop.InstanceAnnotations.First().Value.As<ODataUntypedValue>().RawValue.Should().Be("\"od unkown value _234\"");
-            undeclaredComplex1Prop.InstanceAnnotations.Last().Value.As<ODataUntypedValue>().RawValue.Should().Be("\"custom annotation value _234\"");
+            undeclaredComplex1Prop.InstanceAnnotations.First().Value.As<ODataPrimitiveValue>().Value.Should().Be("od unkown value _234");
+            undeclaredComplex1Prop.InstanceAnnotations.Last().Value.As<ODataPrimitiveValue>().Value.Should().Be("custom annotation value _234");
 
             entry.MetadataBuilder = new Microsoft.OData.Evaluation.NoOpResourceMetadataBuilder(entry);
             string result = this.WriteEntryPayload(this.serverEntitySet, this.serverEntityType, writer =>
@@ -183,7 +188,7 @@
                 writer.WriteEnd();
             });
 
-            result.Should().Be("{\"@odata.context\":\"http://www.sampletest.com/$metadata#serverEntitySet/$entity\",\"Id\":61880128,\"UndeclaredFloatId\":12.3,\"undeclaredComplex1\":{\"@odata.type\":\"#Server.NS.Address\",\"undeclaredComplex1@odata.unknownname1\":\"od unkown value _234\",\"undeclaredComplex1@odata.type\":\"Server.NS.UnknownType1\",\"undeclaredComplex1@my.Annotation1\":\"my custom value _234\",\"undeclaredComplex1@instanceAnnotation1.term1\":\"custom annotation value _234\",\"undeclaredComplex1\":\"hello this is a string.\",\"Street\":\"No.999,Zixing Rd Minhang\",\"UndeclaredStreet\":\"No.10000000999,Zixing Rd Minhang\"}}");
+            result.Should().Be("{\"@odata.context\":\"http://www.sampletest.com/$metadata#serverEntitySet/$entity\",\"@instance.AnnotationName_\":\"instance value_\",\"Id\":61880128,\"UndeclaredFloatId\":12.3,\"undeclaredComplex1\":{\"@odata.type\":\"#Server.NS.Address\",\"@instance.AnnotationName_\":\"instance value_234\",\"undeclaredComplex1@odata.unknownname1\":\"od unkown value _234\",\"undeclaredComplex1@odata.type\":\"Server.NS.UnknownType1\",\"undeclaredComplex1@my.Annotation1\":\"my custom value _234\",\"undeclaredComplex1@instanceAnnotation1.term1\":\"custom annotation value _234\",\"undeclaredComplex1\":\"hello this is a string.\",\"Street\":\"No.999,Zixing Rd Minhang\",\"UndeclaredStreet\":\"No.10000000999,Zixing Rd Minhang\"}}");
         }
 
         #endregion
@@ -216,8 +221,8 @@
             ODataProperty val = entry.Properties.Last();
             val.Value.As<ODataUntypedValue>().Should().NotBeNull();
             val.InstanceAnnotations.Count().Should().Be(3);
-            val.InstanceAnnotations.First().Value.As<ODataUntypedValue>().RawValue.Should().Be("\"NS1.unknownTypeName123\"");
-            val.InstanceAnnotations.Last().Value.As<ODataUntypedValue>().RawValue.Should().Be("\"uknown abcdefghijk value2\"");
+            val.InstanceAnnotations.First().Value.As<ODataPrimitiveValue>().Value.Should().Be("NS1.unknownTypeName123");
+            val.InstanceAnnotations.Last().Value.As<ODataPrimitiveValue>().Value.Should().Be("uknown abcdefghijk value2");
             complex1.Should().BeNull();
 
             entry.MetadataBuilder = new Microsoft.OData.Evaluation.NoOpResourceMetadataBuilder(entry);
@@ -259,8 +264,8 @@
             val.ODataValue.FromODataValue().Should().Be(false);
 
             val.InstanceAnnotations.Count().Should().Be(2);
-            val.InstanceAnnotations.First().Value.As<ODataUntypedValue>().RawValue.Should().Be("\"unknown odata.xxx value1\"");
-            val.InstanceAnnotations.Last().Value.As<ODataUntypedValue>().RawValue.Should().Be("\"unknown abcdefghijk value2\"");
+            val.InstanceAnnotations.First().Value.As<ODataPrimitiveValue>().Value.Should().Be("unknown odata.xxx value1");
+            val.InstanceAnnotations.Last().Value.As<ODataPrimitiveValue>().Value.Should().Be("unknown abcdefghijk value2");
 
             entry.MetadataBuilder = new Microsoft.OData.Evaluation.NoOpResourceMetadataBuilder(entry);
             string result = this.WriteEntryPayload(this.serverEntitySet, this.serverEntityType, writer =>
@@ -305,8 +310,8 @@
             val.ODataValue.FromODataValue().Should().Be("No.10000000999,Zixing Rd Minhang");
 
             val.InstanceAnnotations.Count().Should().Be(3);
-            val.InstanceAnnotations.First().Value.As<ODataUntypedValue>().RawValue.Should().Be("\"Edm.String\"");
-            val.InstanceAnnotations.Last().Value.As<ODataUntypedValue>().RawValue.Should().Be("\"unknown abcdefghijk value2\"");
+            val.InstanceAnnotations.First().Value.As<ODataPrimitiveValue>().Value.Should().Be("Edm.String");
+            val.InstanceAnnotations.Last().Value.As<ODataPrimitiveValue>().Value.Should().Be("unknown abcdefghijk value2");
 
             entry.MetadataBuilder = new Microsoft.OData.Evaluation.NoOpResourceMetadataBuilder(entry);
             string result = this.WriteEntryPayload(this.serverEntitySet, this.serverEntityType, writer =>
@@ -351,8 +356,8 @@
             val.ODataValue.FromODataValue().Should().Be(12d);
 
             val.InstanceAnnotations.Count().Should().Be(3);
-            val.InstanceAnnotations.First().Value.As<ODataUntypedValue>().RawValue.Should().Be("\"Edm.Double\"");
-            val.InstanceAnnotations.Last().Value.As<ODataUntypedValue>().RawValue.Should().Be("\"unknown abcdefghijk value2\"");
+            val.InstanceAnnotations.First().Value.As<ODataPrimitiveValue>().Value.Should().Be("Edm.Double");
+            val.InstanceAnnotations.Last().Value.As<ODataPrimitiveValue>().Value.Should().Be("unknown abcdefghijk value2");
 
             entry.MetadataBuilder = new Microsoft.OData.Evaluation.NoOpResourceMetadataBuilder(entry);
             string result = this.WriteEntryPayload(this.serverEntitySet, this.serverEntityType, writer =>
@@ -440,8 +445,8 @@
             ODataProperty val = entry.Properties.Single(s => string.Equals(s.Name, "UndeclaredCollection1"));
             val.ODataValue.As<ODataCollectionValue>().Items.Cast<string>().Count().Should().Be(3);
             val.InstanceAnnotations.Count().Should().Be(3);
-            val.InstanceAnnotations.First().Value.As<ODataUntypedValue>().RawValue.Should().Be("\"Collection(Edm.String)\"");
-            val.InstanceAnnotations.Last().Value.As<ODataUntypedValue>().RawValue.Should().Be("\"unknown abcdefghijk value2\"");
+            val.InstanceAnnotations.First().Value.As<ODataPrimitiveValue>().Value.Should().Be("Collection(Edm.String)");
+            val.InstanceAnnotations.Last().Value.As<ODataPrimitiveValue>().Value.Should().Be("unknown abcdefghijk value2");
 
             complex1.Properties.Count().Should().Be(2);
 
@@ -489,8 +494,8 @@
             ODataProperty val = entry.Properties.Last();
             val.Value.As<ODataUntypedValue>().RawValue.Should().Be("null");
             val.InstanceAnnotations.Count().Should().Be(3);
-            val.InstanceAnnotations.First().Value.As<ODataUntypedValue>().RawValue.Should().Be("\"unknown odata.xxx value1\"");
-            val.InstanceAnnotations.Last().Value.As<ODataUntypedValue>().RawValue.Should().Be("\"unknown abcdefghijk value2\"");
+            val.InstanceAnnotations.First().Value.As<ODataPrimitiveValue>().Value.Should().Be("unknown odata.xxx value1");
+            val.InstanceAnnotations.Last().Value.As<ODataPrimitiveValue>().Value.Should().Be("unknown abcdefghijk value2");
             complex1.Should().BeNull();
 
             entry.MetadataBuilder = new Microsoft.OData.Evaluation.NoOpResourceMetadataBuilder(entry);
@@ -756,8 +761,8 @@
             ODataProperty val = entry.Properties.Single(s => string.Equals(s.Name, "undeclaredComplex1"));
             val.Value.As<ODataUntypedValue>().RawValue.Should().Be(@"{""MyProp1"":""aaaaaaaaa"",""UndeclaredProp1"":""bbbbbbb""}");
             val.InstanceAnnotations.Count().Should().Be(2);
-            val.InstanceAnnotations.First().Value.As<ODataUntypedValue>().RawValue.Should().Be("\"unknown odata.xxx value1\"");
-            val.InstanceAnnotations.Last().Value.As<ODataUntypedValue>().RawValue.Should().Be("\"unknown abcdefghijk value2\"");
+            val.InstanceAnnotations.First().Value.As<ODataPrimitiveValue>().Value.Should().Be("unknown odata.xxx value1");
+            val.InstanceAnnotations.Last().Value.As<ODataPrimitiveValue>().Value.Should().Be("unknown abcdefghijk value2");
             complex1.Properties.Count().Should().Be(2);
 
             entry.MetadataBuilder = new Microsoft.OData.Evaluation.NoOpResourceMetadataBuilder(entry);
@@ -956,8 +961,8 @@
             entry.Properties.Single(s => string.Equals(s.Name, "MyEdmUntypedProp1"))
                 .Value.As<ODataUntypedValue>().RawValue.Should().Be(@"{""MyProp12"":""bbb222"",""abc"":null}");
             entry.Properties.Single(s => string.Equals(s.Name, "MyEdmUntypedProp1"))
-                .InstanceAnnotations.Single(s => s.Name == "NS1.abc").Value.As<ODataUntypedValue>()
-                .RawValue.Should().Be("1908");
+                .InstanceAnnotations.Single(s => s.Name == "NS1.abc").Value.As<ODataPrimitiveValue>()
+                .Value.Should().Be(1908);
 
             entry.MetadataBuilder = new Microsoft.OData.Evaluation.NoOpResourceMetadataBuilder(entry);
             string result = this.WriteEntryPayload(this.serverEntitySet, this.serverEntityType, writer =>
@@ -999,8 +1004,8 @@
             entry.Properties.Single(s => string.Equals(s.Name, "MyEdmUntypedProp2"))
                 .Value.As<ODataUntypedValue>().RawValue.Should().Be(@"{""MyProp12"":""bbb222"",""abc"":null}");
             entry.Properties.Single(s => string.Equals(s.Name, "MyEdmUntypedProp2"))
-                .InstanceAnnotations.Single(s => s.Name == "NS1.abc").Value.As<ODataUntypedValue>()
-                .RawValue.Should().Be("1908");
+                .InstanceAnnotations.Single(s => s.Name == "NS1.abc").Value.As<ODataPrimitiveValue>()
+                .Value.Should().Be(1908);
 
             entry.MetadataBuilder = new Microsoft.OData.Evaluation.NoOpResourceMetadataBuilder(entry);
             string result = this.WriteEntryPayload(this.serverOpenEntitySet, this.serverOpenEntityType, writer =>
@@ -1053,8 +1058,8 @@
             complex1.Properties.Single(s => string.Equals(s.Name, "MyEdmUntypedProp3"))
                .Value.As<ODataUntypedValue>().RawValue.Should().Be(@"{""MyProp12"":""bbb222"",""abc"":null}");
             complex1.Properties.Single(s => string.Equals(s.Name, "MyEdmUntypedProp3"))
-                .InstanceAnnotations.Single(s => s.Name == "NS1.abc").Value.As<ODataUntypedValue>()
-                .RawValue.Should().Be("1908");
+                .InstanceAnnotations.Single(s => s.Name == "NS1.abc").Value.As<ODataPrimitiveValue>()
+                .Value.Should().Be(1908);
 
             entry.MetadataBuilder = new Microsoft.OData.Evaluation.NoOpResourceMetadataBuilder(entry);
             string result = this.WriteEntryPayload(this.serverEntitySet, this.serverEntityType, writer =>
@@ -1099,11 +1104,11 @@
             entry.Properties.Single(s => string.Equals(s.Name, "UndeclaredMyEdmUntypedProp1"))
                 .Value.As<ODataUntypedValue>().RawValue.Should().Be(@"{""MyProp12"":""bbb222"",""abc"":null}");
             entry.Properties.Single(s => string.Equals(s.Name, "UndeclaredMyEdmUntypedProp1"))
-                .InstanceAnnotations.Single(s => s.Name == "NS1.helloworld").Value.As<ODataUntypedValue>()
-                .RawValue.Should().Be("true");
-            entry.Properties.Single(s => string.Equals(s.Name, "UndeclaredMyEdmUntypedProp1"))
-                .InstanceAnnotations.Single(s => s.Name == "odata.type").Value.As<ODataUntypedValue>()
-                .RawValue.Should().Be("\"Edm.Untyped\"");
+                .InstanceAnnotations.Single(s => s.Name == "NS1.helloworld").Value.As<ODataPrimitiveValue>()
+                .Value.Should().Be(true);
+            //entry.Properties.Single(s => string.Equals(s.Name, "UndeclaredMyEdmUntypedProp1"))
+            //    .InstanceAnnotations.Single(s => s.Name == "odata.type").Value.As<ODataPrimitiveValue>()
+            //    .Value.Should().Be("Edm.Untyped");
 
             entry.MetadataBuilder = new Microsoft.OData.Evaluation.NoOpResourceMetadataBuilder(entry);
             string result = this.WriteEntryPayload(this.serverEntitySet, this.serverEntityType, writer =>
@@ -1146,11 +1151,11 @@
             entry.Properties.Single(s => string.Equals(s.Name, "UndeclaredMyEdmUntypedProp2"))
                 .Value.As<ODataUntypedValue>().RawValue.Should().Be(@"{""MyProp12"":""bbb222"",""abc"":null}");
             entry.Properties.Single(s => string.Equals(s.Name, "UndeclaredMyEdmUntypedProp2"))
-                .InstanceAnnotations.Single(s => s.Name == "NS1.helloworld").Value.As<ODataUntypedValue>()
-                .RawValue.Should().Be("true");
+                .InstanceAnnotations.Single(s => s.Name == "NS1.helloworld").Value.As<ODataPrimitiveValue>()
+                .Value.Should().Be(true);
             entry.Properties.Single(s => string.Equals(s.Name, "UndeclaredMyEdmUntypedProp2"))
-                .InstanceAnnotations.Single(s => s.Name == "odata.type").Value.As<ODataUntypedValue>()
-                .RawValue.Should().Be("\"Edm.Untyped\"");
+                .InstanceAnnotations.Single(s => s.Name == "odata.type").Value.As<ODataPrimitiveValue>()
+                .Value.Should().Be("Edm.Untyped");
 
             entry.MetadataBuilder = new Microsoft.OData.Evaluation.NoOpResourceMetadataBuilder(entry);
             string result = this.WriteEntryPayload(this.serverOpenEntitySet, this.serverOpenEntityType, writer =>
@@ -1201,11 +1206,11 @@
             complex1.Properties.Single(s => string.Equals(s.Name, "UndeclaredMyEdmUntypedProp3"))
                 .Value.As<ODataUntypedValue>().RawValue.Should().Be(@"{""MyProp12"":""bbb222"",""abc"":null}");
             complex1.Properties.Single(s => string.Equals(s.Name, "UndeclaredMyEdmUntypedProp3"))
-                .InstanceAnnotations.Single(s => s.Name == "NS1.helloworld").Value.As<ODataUntypedValue>()
-                .RawValue.Should().Be("true");
-            complex1.Properties.Single(s => string.Equals(s.Name, "UndeclaredMyEdmUntypedProp3"))
-                .InstanceAnnotations.Single(s => s.Name == "odata.type").Value.As<ODataUntypedValue>()
-                .RawValue.Should().Be("\"Edm.Untyped\"");
+                .InstanceAnnotations.Single(s => s.Name == "NS1.helloworld").Value.As<ODataPrimitiveValue>()
+                .Value.Should().Be(true);
+            //complex1.Properties.Single(s => string.Equals(s.Name, "UndeclaredMyEdmUntypedProp3"))
+            //    .InstanceAnnotations.Single(s => s.Name == "odata.type").Value.As<ODataPrimitiveValue>()
+            //    .Value.Should().Be("Edm.Untyped");
             complex2.Should().BeNull();
 
             entry.MetadataBuilder = new Microsoft.OData.Evaluation.NoOpResourceMetadataBuilder(entry);

@@ -250,7 +250,7 @@ namespace Microsoft.OData.Tests.JsonLight
 
         #region Test ReadAndApplyResourceSetInstanceAnnotationValue
 
-        [Fact(Skip="We do not check the odata.type for resource set")]
+        [Fact(Skip = "We do not check the odata.type for resource set")]
         public void ReadAndApplyResourceSetInstanceAnnotationValueShouldThrowOnReservedODataAnnotationNamesNotApplicableToFeeds()
         {
             var deserializer = this.CreateJsonLightEntryAndFeedDeserializer("{}");
@@ -516,7 +516,7 @@ namespace Microsoft.OData.Tests.JsonLight
         [Fact]
         public void ParsingInstanceAnnotationsInEntityPropertyShouldReadEntity()
         {
-            var deserializer = this.CreateJsonLightEntryAndFeedDeserializer("{\"ID@Annotation.1\":true,\"ID@Annotation.2\":123,\"ID@Annotation.3\":\"annotation\",\"ID\":1}");
+            var deserializer = this.CreateJsonLightEntryAndFeedDeserializer("{\"ID@Annotation.1\":true,\"ID@Annotation.2\":123,\"ID@Annotation.3\":\"annotation\",\"ID\":1}", shouldReadAndValidateCustomInstanceAnnotations: true);
             AdvanceReaderToFirstProperty(deserializer.JsonReader);
             var entryState = new TestJsonLightReaderEntryState();
             deserializer.ReadResourceContent(entryState);
@@ -529,7 +529,7 @@ namespace Microsoft.OData.Tests.JsonLight
         [Fact]
         public void ParsingInstanceAnnotationsInEntityPropertyShouldSkipBaseOnSettings()
         {
-            var deserializer = this.CreateJsonLightEntryAndFeedDeserializer("{\"ID@Annotation.1\":true,\"ID@Annotation.2\":123,\"ID@Annotation.3\":\"annotation\",\"ID\":1}", false);
+            var deserializer = this.CreateJsonLightEntryAndFeedDeserializer("{\"ID@Annotation.1\":true,\"ID@Annotation.2\":123,\"ID@Annotation.3\":\"annotation\",\"ID\":1}", shouldReadAndValidateCustomInstanceAnnotations: false);
             AdvanceReaderToFirstProperty(deserializer.JsonReader);
             var entryState = new TestJsonLightReaderEntryState();
             deserializer.ReadResourceContent(entryState);

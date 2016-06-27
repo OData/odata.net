@@ -13,7 +13,7 @@ namespace Microsoft.OData.JsonLight
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
-    using System.Text;
+    using System.Linq;
 #if PORTABLELIB
     using System.Threading.Tasks;
 #endif
@@ -181,18 +181,38 @@ namespace Microsoft.OData.JsonLight
                 odataType = ReaderUtils.AddEdmPrefixOfTypeName(ReaderUtils.RemovePrefixOfTypeName((string)propertyAnnotation));
             }
 
-            // If this term is defined in the model, look up its type. If the term is not in the model, this will be null.
-            IEdmTypeReference expectedTypeFromTerm = MetadataUtils.LookupTypeOfValueTerm(name, this.Model);
+            return ReadODataOrCustomInstanceAnnotationValue(name, odataType, isCustomAnnotation: true);
+        }
 
+        /// <summary>
+        /// Reads bulit-in "odata." or custom instance annotation's value.
+        /// </summary>
+        /// <param name="annotationName">The annotation name.</param>
+        /// <param name="odataType">the odata.type value if exists.</param>
+        /// <param name="isCustomAnnotation">If is custom annotation.</param>
+        /// <returns>The annotation value.</returns>
+        internal object ReadODataOrCustomInstanceAnnotationValue(string annotationName, string odataType, bool isCustomAnnotation)
+        {
+            bool isODataAnnotation = !isCustomAnnotation;
+            if (isODataAnnotation)
+            {
+                Debug.Assert((this.JsonReader.NodeType == JsonNodeType.PrimitiveValue)
+                    || (this.JsonReader.NodeType == JsonNodeType.StartArray
+                        && string.Equals(ODataAnnotationNames.ODataBind, annotationName, StringComparison.Ordinal)),
+                    "OData instantation value should be primitive or (odata.bind) array");
+            }
+
+            // If this term is defined in the model, look up its type. If the term is not in the model, this will be null.
+            IEdmTypeReference expectedTypeFromTerm = MetadataUtils.LookupTypeOfValueTerm(annotationName, this.Model);
             object customInstanceAnnotationValue = this.ReadNonEntityValueImplementation(
                 odataType,
                 expectedTypeFromTerm,
-                null, /*annotationCollector*/
+                null, /*duplicatePropertyNamesChecker*/
                 null, /*collectionValidator*/
                 false, /*validateNullValue*/
                 false, /*isTopLevelPropertyValue*/
                 false, /*insideComplexValue Always pass false here to try read @odata.type annotation in custom instance annotations*/
-                name);
+                annotationName);
             return customInstanceAnnotationValue;
         }
 
@@ -330,11 +350,10 @@ namespace Microsoft.OData.JsonLight
         /// Reads a non-open entity or complex type's undeclared property.
         /// </summary>
         /// <param name="resourceState">The IODataJsonLightReaderResourceState.</param>
-        /// <param name="annotationCollector">The PropertyAnnotationCollector.</param>
         /// <param name="propertyName">Now this name can't be found in model.</param>
         /// <param name="isTopLevelPropertyValue">bool</param>
         /// <returns>The read result.</returns>
-        protected ODataJsonLightReaderNestedResourceInfo InnerReadNonOpenUndeclaredProperty(IODataJsonLightReaderResourceState resourceState, PropertyAnnotationCollector annotationCollector, string propertyName, bool isTopLevelPropertyValue)
+        protected ODataJsonLightReaderNestedResourceInfo InnerReadNonOpenUndeclaredProperty(IODataJsonLightReaderResourceState resourceState, string propertyName, bool isTopLevelPropertyValue)
         {
             DuplicatePropertyNamesChecker duplicatePropertyNamesChecker = resourceState.DuplicatePropertyNamesChecker;
             bool insideComplexValue = false;
@@ -384,7 +403,7 @@ namespace Microsoft.OData.JsonLight
                     else
                     {
                         readerNestedResourceInfo = this.ReadingResponse
-                            ? ReadExpandedResourceNestedResourceInfo(resourceState, null, propertyName)
+                            ? ReadExpandedResourceNestedResourceInfo(resourceState, null, propertyName, this.MessageReaderSettings)
                             : ReadEntityReferenceLinkForSingletonNavigationLinkInRequest(resourceState, null, propertyName, /*isExpanded*/ true);
                     }
 
@@ -415,12 +434,7 @@ namespace Microsoft.OData.JsonLight
             Debug.Assert(
                 this.JsonReader.NodeType == JsonNodeType.Property || this.JsonReader.NodeType == JsonNodeType.EndObject,
                 "Post-Condition: expected JsonNodeType.Property or JsonNodeType.EndObject");
-            ODataProperty property = AddResourceProperty(resourceState, propertyName, propertyValue);
-            if (annotationCollector != null)
-            {
-                TryAttachRawAnnotationSetToPropertyValue(annotationCollector, property);
-            }
-
+            AddResourceProperty(resourceState, propertyName, propertyValue, isUndeclaredProperty: true);
             return null;
         }
 
@@ -565,11 +579,12 @@ namespace Microsoft.OData.JsonLight
         /// <param name="resourceState">The state of the reader for resource to read.</param>
         /// <param name="navigationProperty">The navigation property for which to read the expanded link. null for undeclared property.</param>
         /// <param name="propertyName">The property name.</param>
+        /// <param name="messageReaderSettings">The ODataMessageReaderSettings.</param>
         /// <returns>The nested resource info for the expanded link read.</returns>
         /// <remarks>
         /// This method doesn't move the reader.
         /// </remarks>
-        protected static ODataJsonLightReaderNestedResourceInfo ReadExpandedResourceNestedResourceInfo(IODataJsonLightReaderResourceState resourceState, IEdmNavigationProperty navigationProperty, string propertyName)
+        protected static ODataJsonLightReaderNestedResourceInfo ReadExpandedResourceNestedResourceInfo(IODataJsonLightReaderResourceState resourceState, IEdmNavigationProperty navigationProperty, string propertyName, ODataMessageReaderSettings messageReaderSettings)
         {
             Debug.Assert(resourceState != null, "resourceState != null");
             Debug.Assert(navigationProperty != null || propertyName != null, "navigationProperty != null || propertyName != null");
@@ -603,7 +618,12 @@ namespace Microsoft.OData.JsonLight
                             break;
 
                         default:
-                            throw new ODataException(ODataErrorStrings.ODataJsonLightEntryAndFeedDeserializer_UnexpectedExpandedSingletonNavigationLinkPropertyAnnotation(nestedResourceInfo.Name, propertyAnnotation.Key));
+                            if (messageReaderSettings.ThrowOnUndeclaredPropertyForNonOpenType)
+                            {
+                                throw new ODataException(ODataErrorStrings.ODataJsonLightEntryAndFeedDeserializer_UnexpectedExpandedSingletonNavigationLinkPropertyAnnotation(nestedResourceInfo.Name, propertyAnnotation.Key));
+                            }
+
+                            break;
                     }
                 }
             }
@@ -817,7 +837,9 @@ namespace Microsoft.OData.JsonLight
                 {
                     if (string.CompareOrdinal(propertyAnnotation.Key, ODataAnnotationNames.ODataType) != 0)
                     {
-                        throw new ODataException(ODataErrorStrings.ODataJsonLightPropertyAndValueDeserializer_UnexpectedDataPropertyAnnotation(propertyName, propertyAnnotation.Key));
+                        // here allow other annotation name than odata.type, instead of throwing: 
+                        // ODataErrorStrings.ODataJsonLightPropertyAndValueDeserializer_UnexpectedDataPropertyAnnotation
+                        continue;
                     }
 
                     Debug.Assert(propertyAnnotation.Value is string && propertyAnnotation.Value != null, "The odata.type annotation should have been parsed as a non-null string.");
@@ -834,13 +856,19 @@ namespace Microsoft.OData.JsonLight
         /// <param name="resourceState">The resource state for the resource to add the property to.</param>
         /// <param name="propertyName">The name of the property to add.</param>
         /// <param name="propertyValue">The value of the property to add.</param>
+        /// <param name="isUndeclaredProperty">if it is an undeclared property.</param>
         /// <returns>The added ODataProperty.</returns>
-        protected static ODataProperty AddResourceProperty(IODataJsonLightReaderResourceState resourceState, string propertyName, object propertyValue)
+        protected static ODataProperty AddResourceProperty(IODataJsonLightReaderResourceState resourceState, string propertyName, object propertyValue, bool isUndeclaredProperty = false)
         {
             Debug.Assert(resourceState != null, "resourceState != null");
             Debug.Assert(!string.IsNullOrEmpty(propertyName), "!string.IsNullOrEmpty(propertyName)");
 
             ODataProperty property = new ODataProperty { Name = propertyName, Value = propertyValue };
+            if (isUndeclaredProperty)
+            {
+                AttachODataAnnotations(resourceState, propertyName, property);
+            }
+
             var propertyAnnotations = resourceState.DuplicatePropertyNamesChecker.GetCustomPropertyAnnotations(propertyName);
             if (propertyAnnotations != null)
             {
@@ -854,6 +882,8 @@ namespace Microsoft.OData.JsonLight
                 }
             }
 
+            Debug.Assert(property.InstanceAnnotations.GroupBy(s => s.Name).Where(s => s.Count() > 1).Count() <= 0,
+                "No annotation name should have been added into the InstanceAnnotations collection twice.");
             resourceState.DuplicatePropertyNamesChecker.CheckForDuplicatePropertyNames(property);
             ODataResource resource = resourceState.Resource;
             Debug.Assert(resource != null, "resource != null");
@@ -861,31 +891,33 @@ namespace Microsoft.OData.JsonLight
             return property;
         }
 
-        /// <summary>
-        /// Adds an ODataJsonLightRawAnnotationSet to the property's value (ODataAnnotatable) if it has raw annotation.
-        /// </summary>
-        /// <param name="annotationCollector">The PropertyAnnotationCollector that temporarily stores raw annotations .</param>
-        /// <param name="property">The target property.</param>
-        /// <returns>True if annotation is added to property value.</returns>
-        protected static bool TryAttachRawAnnotationSetToPropertyValue(
-            PropertyAnnotationCollector annotationCollector,
-            ODataProperty property)
+        protected static Dictionary<string, object> AttachODataAnnotations(IODataJsonLightReaderResourceState resourceState, string propertyName, ODataProperty property)
         {
-            if (annotationCollector != null)
+            Dictionary<string, object> propertyAnnotations = resourceState.DuplicatePropertyNamesChecker.GetODataPropertyAnnotations(propertyName);
+            if (propertyAnnotations != null)
             {
-                ICollection<ODataInstanceAnnotation> rawAnnotations =
-                    annotationCollector.GetPropertyRawAnnotations(property.Name);
-                ICollection<ODataInstanceAnnotation> propertyAnnotations = property.GetInstanceAnnotations();
-                foreach (ODataInstanceAnnotation item in rawAnnotations)
+                foreach (var annotation in propertyAnnotations)
                 {
-                    item.IsForUntypedProperty = true;
-                    propertyAnnotations.Add(item);
-                }
+                    if (annotation.Value != null)
+                    {
+                        // annotation.Value == null indicates that this annotation should be skipped.
+                        Uri uri = null;
+                        ODataValue val = null;
+                        if ((uri = annotation.Value as Uri) != null)
+                        {
+                            val = new ODataPrimitiveValue(uri.OriginalString);
+                        }
+                        else
+                        {
+                            val = annotation.Value.ToODataValue();
+                        }
 
-                return true;
+                        property.InstanceAnnotations.Add(new ODataInstanceAnnotation(annotation.Key, val, true));
+                    }
+                }
             }
 
-            return false;
+            return propertyAnnotations;
         }
 
         /// <summary>
@@ -1100,7 +1132,6 @@ namespace Microsoft.OData.JsonLight
                     {
                         this.ProcessProperty(
                             duplicatePropertyNamesChecker,
-                            /*annotationCollector*/ null,
                             propertyAnnotationReaderForTopLevelProperty,
                             (propertyParsingResult, propertyName) =>
                             {
@@ -1514,13 +1545,8 @@ namespace Microsoft.OData.JsonLight
             while (this.JsonReader.NodeType == JsonNodeType.Property)
             {
                 this.ReadPropertyCustomAnnotationValue = this.ReadCustomInstanceAnnotationValue;
-                PropertyAnnotationCollector innerAnnotationCollector = new PropertyAnnotationCollector();
-
-                innerAnnotationCollector.ShouldCollectAnnotation = !this.MessageReaderSettings.ThrowOnUndeclaredPropertyForNonOpenType;
-
                 this.ProcessProperty(
                     duplicatePropertyNamesChecker,
-                    innerAnnotationCollector,
                     this.ReadTypePropertyAnnotationValue,
                     (propertyParsingResult, propertyName) =>
                     {
@@ -1985,7 +2011,6 @@ namespace Microsoft.OData.JsonLight
             {
                 this.ProcessProperty(
                     duplicatePropertyNamesChecker,
-                    /* annotationCollector */ null,
                     propertyAnnotationReaderForTopLevelNull,
                     (propertyParsingResult, propertyName) =>
                     {

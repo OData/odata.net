@@ -837,8 +837,8 @@
             entry.Properties.Single(s => string.Equals(s.Name, "UndeclaredMyEdmUntypedProp1")).
                 Value.As<ODataUntypedValue>().RawValue.Should().Be(@"{""MyProp12"":""bbb222"",""abc"":null}");
             entry.Properties.Single(s => string.Equals(s.Name, "UndeclaredMyEdmUntypedProp1"))
-                .InstanceAnnotations.Single(s => s.Name == "odata.type").Value.As<ODataUntypedValue>()
-                .RawValue.Should().Be("\"Edm.Untyped\"");
+                .InstanceAnnotations.Single(s => s.Name == "odata.type").Value.As<ODataPrimitiveValue>()
+                .Value.Should().Be("Edm.Untyped");
             complex2.Should().BeNull();
 
             entry.MetadataBuilder = new Microsoft.OData.Evaluation.NoOpResourceMetadataBuilder(entry);
@@ -884,8 +884,8 @@
             entry.Properties.Single(s => string.Equals(s.Name, "UndeclaredMyEdmUntypedProp2")).
                 Value.As<ODataUntypedValue>().RawValue.Should().Be(@"{""MyProp12"":""bbb222"",""abc"":null}");
             entry.Properties.Single(s => string.Equals(s.Name, "UndeclaredMyEdmUntypedProp2"))
-                .InstanceAnnotations.Single(s => s.Name == "odata.type").Value.As<ODataUntypedValue>()
-                .RawValue.Should().Be("\"Edm.Untyped\"");
+                .InstanceAnnotations.Single(s => s.Name == "odata.type").Value.As<ODataPrimitiveValue>()
+                .Value.Should().Be("Edm.Untyped");
 
 
             entry.MetadataBuilder = new Microsoft.OData.Evaluation.NoOpResourceMetadataBuilder(entry);
@@ -931,8 +931,8 @@
                 .Value.As<ODataUntypedValue>().RawValue.Should().Be(@"{""MyProp12"":""bbb222"",""abc"":null}");
             complex1.Properties
                 .Single(s => string.Equals(s.Name, "UndeclaredMyEdmUntypedProp3"))
-                .InstanceAnnotations.Single(s => s.Name == "odata.type").Value.As<ODataUntypedValue>()
-                .RawValue.Should().Be("\"Edm.Untyped\"");
+                .InstanceAnnotations.Single(s => s.Name == "odata.type").Value.As<ODataPrimitiveValue>()
+                .Value.Should().Be("Edm.Untyped");
 
             entry.MetadataBuilder = new Microsoft.OData.Evaluation.NoOpResourceMetadataBuilder(entry);
             string result = this.WriteEntryPayload(this.serverEntitySet, this.serverEntityType, writer =>

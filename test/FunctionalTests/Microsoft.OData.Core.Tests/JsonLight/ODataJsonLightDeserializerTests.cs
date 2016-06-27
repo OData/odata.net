@@ -657,7 +657,8 @@ namespace Microsoft.OData.Tests.JsonLight
                 (jsonReader, duplicateChecker) =>
                 {
                     jsonReader.Should().BeOn(JsonNodeType.EndObject, null);
-                    duplicateChecker.GetODataPropertyAnnotations("NavProp").Keys.Should().Contain("odata.navigationLink").And.Contain("odata.associationLink").And.HaveCount(2);
+                    duplicateChecker.GetODataPropertyAnnotations("NavProp").Keys.Should().Contain("odata.navigationLink").And.Contain("odata.associationLink")
+                    .And.Contain("odata.unknown").And.HaveCount(3);
                 },
                 (jsonReader, name) => jsonReader.ReadStringValue(name));
         }
@@ -693,7 +694,6 @@ namespace Microsoft.OData.Tests.JsonLight
 
                 deserializer.ProcessProperty(
                     duplicatePropertyNamesChecker,
-                    /* annotationCollector */ null,
                     (propertyName) => null,
                     (propertyParsingResult, propertyName) =>
                     {
@@ -708,7 +708,6 @@ namespace Microsoft.OData.Tests.JsonLight
 
                 Action readDuplicateProperty = () => deserializer.ProcessProperty(
                     duplicatePropertyNamesChecker,
-                    /* annotationCollector */ null,
                     (propertyName) => null,
                     (propertyParsingResult, propertyName) => { });
 
@@ -1123,7 +1122,6 @@ namespace Microsoft.OData.Tests.JsonLight
 
                 deserializer.ProcessProperty(
                     duplicatePropertyNamesChecker,
-                    /* annotationCollector */ null,
                     (propertyName) => readPropertyAnnotationValue(deserializer.JsonReader, propertyName),
                     (propertyParsingResult, propertyName) =>
                     {

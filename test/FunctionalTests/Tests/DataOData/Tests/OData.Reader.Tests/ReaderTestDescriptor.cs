@@ -49,7 +49,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
         /// <summary>
         /// The payload kind which is being tested.
         /// </summary>
-        public virtual ODataPayloadKind PayloadKind{ get; set; }
+        public virtual ODataPayloadKind PayloadKind { get; set; }
 
         /// <summary>
         /// The model to use for the test - can be null.
@@ -105,7 +105,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
             ReaderTestExpectedResult expectedResult = this.GetExpectedResult(testConfiguration);
             ExceptionUtilities.Assert(expectedResult != null, "The expected result could not be determined for the test. Did you specify it?");
 
-            Exception exception = TestExceptionUtils.RunCatching(() => 
+            Exception exception = TestExceptionUtils.RunCatching(() =>
             {
                 using (ODataMessageReaderTestWrapper messageReaderWrapper = TestReaderUtils.CreateMessageReader(message, model, testConfiguration))
                 {

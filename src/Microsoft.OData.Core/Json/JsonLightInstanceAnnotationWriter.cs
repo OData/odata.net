@@ -195,7 +195,6 @@ namespace Microsoft.OData
             ODataUntypedValue untypedValue = value as ODataUntypedValue;
             if (untypedValue != null)
             {
-                Debug.Assert(instanceAnnotation.IsForUntypedProperty, "instanceAnnotation.IsForUntypedProperty");
                 this.WriteInstanceAnnotationName(propertyName, name);
                 this.valueSerializer.WriteUntypedValue(untypedValue);
                 return;

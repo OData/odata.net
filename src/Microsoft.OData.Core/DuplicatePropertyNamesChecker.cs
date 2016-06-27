@@ -297,7 +297,7 @@ namespace Microsoft.OData
         /// <param name="annotationValue">The value of the annotation to add.</param>
         internal void AddODataPropertyAnnotation(string propertyName, string annotationName, object annotationValue)
         {
-            Debug.Assert(!string.IsNullOrEmpty(propertyName), "!string.IsNullOrEmpty(propertyName)");
+            Debug.Assert(propertyName != null, "propertyName != null");
             Debug.Assert(!string.IsNullOrEmpty(annotationName), "!string.IsNullOrEmpty(annotationName)");
             Debug.Assert(JsonLight.ODataJsonLightReaderUtils.IsODataAnnotationName(annotationName), "annotationName must be an OData annotation.");
 
@@ -310,12 +310,24 @@ namespace Microsoft.OData
             }
             else if (odataAnnotations.ContainsKey(annotationName))
             {
-                if (ODataJsonLightReaderUtils.IsAnnotationProperty(propertyName))
+                if (string.IsNullOrEmpty(propertyName))
                 {
-                    throw new ODataException(Strings.DuplicatePropertyNamesChecker_DuplicateAnnotationForInstanceAnnotationNotAllowed(annotationName, propertyName));
-                }
+                    if (ODataJsonLightReaderUtils.IsAnnotationProperty(annotationName) && !ODataJsonLightUtils.IsMetadataReferenceProperty(annotationName))
+                    {
+                        throw new ODataException(Strings.DuplicatePropertyNamesChecker_DuplicateAnnotationNotAllowed(annotationName));
+                    }
 
-                throw new ODataException(Strings.DuplicatePropertyNamesChecker_DuplicateAnnotationForPropertyNotAllowed(annotationName, propertyName));
+                    throw new ODataException(Strings.DuplicatePropertyNamesChecker_DuplicatePropertyNamesNotAllowed(annotationName));
+                }
+                else
+                {
+                    if (ODataJsonLightReaderUtils.IsAnnotationProperty(propertyName))
+                    {
+                        throw new ODataException(Strings.DuplicatePropertyNamesChecker_DuplicateAnnotationForInstanceAnnotationNotAllowed(annotationName, propertyName));
+                    }
+
+                    throw new ODataException(Strings.DuplicatePropertyNamesChecker_DuplicateAnnotationForPropertyNotAllowed(annotationName, propertyName));
+                }
             }
 
             odataAnnotations.Add(annotationName, annotationValue);
@@ -327,9 +339,9 @@ namespace Microsoft.OData
         /// <param name="propertyName">The name of the property to add annotation to. string.empty means the annotation is for the current scope.</param>
         /// <param name="annotationName">The name of the annotation to add.</param>
         /// <param name="annotationValue">The value of the annotation to add.</param>
-        internal void AddCustomPropertyAnnotation(string propertyName, string annotationName, object annotationValue = null)
+        internal void AddCustomPropertyAnnotation(string propertyName, string annotationName, object annotationValue)
         {
-            Debug.Assert(!string.IsNullOrEmpty(propertyName), "!string.IsNullOrEmpty(propertyName)");
+            Debug.Assert(propertyName != null, "propertyName != null");
             Debug.Assert(!string.IsNullOrEmpty(annotationName), "!string.IsNullOrEmpty(annotationName)");
             Debug.Assert(!JsonLight.ODataJsonLightReaderUtils.IsODataAnnotationName(annotationName), "annotationName must not be an OData annotation.");
 
@@ -342,7 +354,19 @@ namespace Microsoft.OData
             }
             else if (customAnnotations.ContainsKey(annotationName))
             {
-                throw new ODataException(Strings.DuplicatePropertyNamesChecker_DuplicateAnnotationForPropertyNotAllowed(annotationName, propertyName));
+                if (string.IsNullOrEmpty(propertyName))
+                {
+                    if (ODataJsonLightReaderUtils.IsAnnotationProperty(annotationName) && !ODataJsonLightUtils.IsMetadataReferenceProperty(annotationName))
+                    {
+                        throw new ODataException(Strings.DuplicatePropertyNamesChecker_DuplicateAnnotationNotAllowed(annotationName));
+                    }
+
+                    throw new ODataException(Strings.DuplicatePropertyNamesChecker_DuplicatePropertyNamesNotAllowed(annotationName));
+                }
+                else
+                {
+                    throw new ODataException(Strings.DuplicatePropertyNamesChecker_DuplicateAnnotationForPropertyNotAllowed(annotationName, propertyName));
+                }
             }
 
             customAnnotations.Add(annotationName, annotationValue);

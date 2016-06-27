@@ -135,7 +135,6 @@ namespace Microsoft.OData.JsonLight
 
                 this.ProcessProperty(
                     duplicatePropertyNamesChecker,
-                    /* annotationCollector */ null,
                     readPropertyAnnotationInServiceDoc,
                     (propertyParsingResult, propertyName) =>
                     {
@@ -238,7 +237,6 @@ namespace Microsoft.OData.JsonLight
 
                 this.ProcessProperty(
                     duplicatePropertyNamesChecker,
-                    /* annotationCollector */ null,
                     propertyAnnotationValueReader,
                     (propertyParsingResult, propertyName) =>
                     {

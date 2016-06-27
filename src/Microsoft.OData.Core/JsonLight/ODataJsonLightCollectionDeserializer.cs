@@ -74,7 +74,6 @@ namespace Microsoft.OData.JsonLight
                     IEdmTypeReference actualItemTypeRef = expectedItemTypeReference;
                     this.ProcessProperty(
                         collectionStartDuplicatePropertyNamesChecker,
-                        /* annotationCollector */ null,
                         this.ReadTypePropertyAnnotationValue,
                         (propertyParsingResult, propertyName) =>
                         {
@@ -230,7 +229,6 @@ namespace Microsoft.OData.JsonLight
                 {
                     this.ProcessProperty(
                         collectionEndDuplicatePropertyNamesChecker,
-                        /* annotationCollector */ null,
                         this.ReadTypePropertyAnnotationValue,
                         (propertyParsingResult, propertyName) =>
                         {

@@ -78,17 +78,17 @@ namespace EdmLibTests.FunctionalTests
             var edmModel = this.GetParserResult(ClrTypeMappingTestModelBuilder.ValueAnnotationClassTypeBasicTest());
             this.VerifyThrowsException
                             (
-                                typeof(InvalidCastException), 
-                                () => 
+                                typeof(InvalidCastException),
+                                () =>
                                     this.ValidateClrObjectConverter
                                                 (
-                                                    this.GetValueAnnotations(edmModel, edmModel.FindType("NS1.Person"), "MultiMonitors").Single(), 
-                                                    new List<Coordination>() 
-                                                        { 
-                                                            new Coordination() { X = 10, Y = 20 }, 
-                                                            new Coordination() { X = 30, Y = 40 } 
+                                                    this.GetValueAnnotations(edmModel, edmModel.FindType("NS1.Person"), "MultiMonitors").Single(),
+                                                    new List<Coordination>()
+                                                        {
+                                                            new Coordination() { X = 10, Y = 20 },
+                                                            new Coordination() { X = 30, Y = 40 }
                                                         }
-                                                 ), 
+                                                 ),
                                 "EdmToClr_CannotConvertEdmCollectionValueToClrType"
                             );
         }
@@ -139,7 +139,7 @@ namespace EdmLibTests.FunctionalTests
                         new EdmPropertyValue("LastName", new EdmStringConstant("Nobody"))
                     });
 
-           
+
             var edmValue = edmModel.GetTermValue(dummyPerson, "NS1.InspectedBy", new EdmToClrEvaluator(null));
             Assert.AreEqual(edmValue.Type.Definition, differentPerson, "The InspectedBy annotation's type should be same as type defined in the term.");
         }
@@ -288,15 +288,15 @@ namespace EdmLibTests.FunctionalTests
 
             this.ValidateClrObjectConverter(valueAnnotation,
                                             new ClassWithCollectionProperty()
-                                                        {
-                                                            X = new int[] { 4, 5 },
-                                                            Y = new int[] { 6, 7 },
-                                                            Z = new int[] { 8, 9 },
-                                                            C = new Display1[] { 
-                                                                new Display1() { X = 10, Y = 11 }, 
-                                                                new Display1() { X = 12, Y = 13 } 
+                                            {
+                                                X = new int[] { 4, 5 },
+                                                Y = new int[] { 6, 7 },
+                                                Z = new int[] { 8, 9 },
+                                                C = new Display1[] {
+                                                                new Display1() { X = 10, Y = 11 },
+                                                                new Display1() { X = 12, Y = 13 }
                                                             },
-                                                        });
+                                            });
         }
 
         [TestMethod]
@@ -308,9 +308,9 @@ namespace EdmLibTests.FunctionalTests
 
             this.ValidateClrObjectConverter(valueAnnotation,
                                             new ClassWithCollectionOfCollectionProperty()
-                                                        {
-                                                            C = new int[][] { new int[] { 8, 9 } }
-                                                        });
+                                            {
+                                                C = new int[][] { new int[] { 8, 9 } }
+                                            });
         }
 
         [TestMethod]
@@ -340,19 +340,19 @@ namespace EdmLibTests.FunctionalTests
 #if !SILVERLIGHT
             this.ValidateClrObjectConverter(this.GetValueAnnotations(edmModel, edmModel.FindType("NS1.Person"), "PersonValueAnnotation1").Single(),
                    new ClassWithEnum()
-                        {
-                            EnumInt = EnumInt.Member1,
-                            EnumByte = (EnumByte)10,
-                            EnumULong = EnumULong.Member2
-                        });
+                   {
+                       EnumInt = EnumInt.Member1,
+                       EnumByte = (EnumByte)10,
+                       EnumULong = EnumULong.Member2
+                   });
 #endif
             this.VerifyThrowsException(typeof(InvalidCastException), () => new EdmToClrEvaluator(null).EvaluateToClrValue<EnumInt>(GetIntegerExpression("PersonValueAnnotation2")));
 #if !SILVERLIGHT
             this.ValidateClrObjectConverter(this.GetValueAnnotations(edmModel, edmModel.FindType("NS1.Person"), "PersonValueAnnotation8").Single(),
                    new ClassWithEnum()
-                        {
-                            EnumInt = (EnumInt)10,
-                        });
+                   {
+                       EnumInt = (EnumInt)10,
+                   });
 #endif
         }
 
@@ -374,11 +374,11 @@ namespace EdmLibTests.FunctionalTests
 #if !SILVERLIGHT
             this.ValidateClrObjectConverter(this.GetValueAnnotations(edmModel, edmModel.FindType("NS1.Person"), "PersonValueAnnotation1").Single(),
                                 new ClassWithEnum()
-                                    {
-                                        EnumInt = EnumInt.Member2,
-                                        EnumByte = EnumByte.Member1,
-                                        EnumULong = (EnumULong)0
-                                    });
+                                {
+                                    EnumInt = EnumInt.Member2,
+                                    EnumByte = EnumByte.Member1,
+                                    EnumULong = (EnumULong)0
+                                });
 #endif
             this.ValidateClrObjectConverter(this.GetValueAnnotations(edmModel, edmModel.FindType("NS1.Person"), "PersonValueAnnotation1").Single(), new ClassWithCollectionProperty());
             this.ValidateClrObjectConverter(this.GetValueAnnotations(edmModel, edmModel.FindType("NS1.Person"), "PersonValueAnnotation1").Single(), new ClassWithCollectionOfCollectionProperty());

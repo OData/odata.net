@@ -60,7 +60,6 @@ namespace Microsoft.OData.JsonLight
                 bool foundCustomInstanceAnnotation = false;
                 this.ProcessProperty(
                     duplicatePropertyNamesChecker,
-                    /* annotationCollector */ null,
                     propertyAnnotationValueReader,
                     (propertyParsingResult, parameterName) =>
                     {

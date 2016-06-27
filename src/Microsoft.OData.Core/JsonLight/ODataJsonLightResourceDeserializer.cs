@@ -152,11 +152,8 @@ namespace Microsoft.OData.JsonLight
             while (this.JsonReader.NodeType == JsonNodeType.Property)
             {
                 this.ReadPropertyCustomAnnotationValue = this.ReadCustomInstanceAnnotationValue;
-                PropertyAnnotationCollector annotationCollector = new PropertyAnnotationCollector();
-                annotationCollector.ShouldCollectAnnotation = !this.MessageReaderSettings.ThrowOnUndeclaredPropertyForNonOpenType;
                 this.ProcessProperty(
                     resourceState.DuplicatePropertyNamesChecker,
-                    annotationCollector,
                     this.ReadEntryPropertyAnnotationValue,
                     (propertyParsingResult, propertyName) =>
                     {
@@ -164,7 +161,7 @@ namespace Microsoft.OData.JsonLight
                         {
                             case PropertyParsingResult.ODataInstanceAnnotation:
                             case PropertyParsingResult.CustomInstanceAnnotation:
-                                object value = this.ReadEntryInstanceAnnotation(propertyName, resourceState.AnyPropertyFound, /*typeAnnotationFound*/ true, resourceState.DuplicatePropertyNamesChecker);
+                                object value = ReadODataOrCustomInstanceAnnotationValue(resourceState, propertyParsingResult, propertyName);
                                 this.ApplyEntryInstanceAnnotation(resourceState, propertyName, value);
                                 break;
 
@@ -175,7 +172,7 @@ namespace Microsoft.OData.JsonLight
 
                             case PropertyParsingResult.PropertyWithValue:
                                 resourceState.AnyPropertyFound = true;
-                                readerNestedResourceInfo = this.ReadPropertyWithValue(resourceState, annotationCollector, propertyName);
+                                readerNestedResourceInfo = this.ReadPropertyWithValue(resourceState, propertyName);
                                 break;
 
                             case PropertyParsingResult.MetadataReferenceProperty:
@@ -216,6 +213,36 @@ namespace Microsoft.OData.JsonLight
                 "Post-Condition: expected JsonNodeType.StartObject or JsonNodeType.StartArray or JsonNodeType.Property or JsonNodeType.EndObject or JsonNodeType.Primitive (with null value)");
 
             return readerNestedResourceInfo;
+        }
+
+        /// <summary>
+        /// Reads built-in "odata." or custom instance annotation's value.
+        /// </summary>
+        /// <param name="resourceState">The IODataJsonLightReaderResourceState.</param>
+        /// <param name="propertyParsingResult">The PropertyParsingResult.</param>
+        /// <param name="annotationName">The annotation name</param>
+        /// <returns>The annotation value.</returns>
+        internal object ReadODataOrCustomInstanceAnnotationValue(IODataJsonLightReaderResourceState resourceState, PropertyParsingResult propertyParsingResult, string annotationName)
+        {
+            if (propertyParsingResult == PropertyParsingResult.ODataInstanceAnnotation)
+            {
+                Debug.Assert((this.JsonReader.NodeType == JsonNodeType.PrimitiveValue)
+                    || (this.JsonReader.NodeType == JsonNodeType.StartArray
+                        && string.Equals(ODataAnnotationNames.ODataBind, annotationName, StringComparison.Ordinal)),
+                    "OData instantation value should be primitive or (odata.bind) array");
+            }
+
+            object value = this.ReadEntryInstanceAnnotation(annotationName, resourceState.AnyPropertyFound, /*typeAnnotationFound*/ true, resourceState.DuplicatePropertyNamesChecker);
+            if (propertyParsingResult == PropertyParsingResult.ODataInstanceAnnotation)
+            {
+                resourceState.DuplicatePropertyNamesChecker.AddODataPropertyAnnotation("", annotationName, value);
+            }
+            else
+            {
+                resourceState.DuplicatePropertyNamesChecker.AddCustomPropertyAnnotation("", annotationName, value);
+            }
+
+            return value;
         }
 
         /// <summary>
@@ -276,7 +303,6 @@ namespace Microsoft.OData.JsonLight
 
                     this.ProcessProperty(
                         duplicatePropertyNamesChecker,
-                        /* annotationCollector */ null,
                         this.ReadTypePropertyAnnotationValue,
                         (propertyParseResult, propertyName) =>
                         {
@@ -284,18 +310,8 @@ namespace Microsoft.OData.JsonLight
                             {
                                 case PropertyParsingResult.ODataInstanceAnnotation:
                                 case PropertyParsingResult.CustomInstanceAnnotation:
-                                    // When we are reading the start of a resource set (in scan-ahead mode or not) or when
-                                    // we read the end of a resource set and not in scan-ahead mode, read the value;
-                                    // otherwise skip it.
-                                    if (forResourceSetStart || !readAllResourceSetProperties)
-                                    {
-                                        this.ReadAndApplyResourceSetInstanceAnnotationValue(propertyName, resourceSet, duplicatePropertyNamesChecker);
-                                    }
-                                    else
-                                    {
-                                        this.JsonReader.SkipValue();
-                                    }
-
+                                    ReadODataOrCustomInstanceAnnotationValue(resourceSet, duplicatePropertyNamesChecker,
+                                        forResourceSetStart, readAllResourceSetProperties, propertyParseResult, propertyName);
                                     break;
 
                                 case PropertyParsingResult.PropertyWithValue:
@@ -364,6 +380,47 @@ namespace Microsoft.OData.JsonLight
             {
                 // We did not find any properties or only instance annotations.
                 throw new ODataException(ODataErrorStrings.ODataJsonLightEntryAndFeedDeserializer_ExpectedFeedPropertyNotFound(JsonLightConstants.ODataValuePropertyName));
+            }
+        }
+
+        /// <summary>
+        /// Reads built-in "odata." or custom instance annotation's value.
+        /// </summary>
+        /// <param name="resourceSet">The ODataResourceSetBase.</param>
+        /// <param name="duplicatePropertyNamesChecker">The DuplicatePropertyNamesChecker.</param>
+        /// <param name="forResourceSetStart">true when parsing the instance annotations before the resource set property;
+        /// false when parsing the instance annotations after the resource set property.</param>
+        /// <param name="readAllResourceSetProperties">true if we should scan ahead for the annotations and ignore the actual data properties (used with
+        /// the reordering reader); otherwise false.</param>
+        /// <param name="propertyParseResult">The PropertyParsingResult.</param>
+        /// <param name="annotationName">The annotation name.</param>
+        internal void ReadODataOrCustomInstanceAnnotationValue(ODataResourceSetBase resourceSet,
+            DuplicatePropertyNamesChecker duplicatePropertyNamesChecker, bool forResourceSetStart,
+            bool readAllResourceSetProperties, PropertyParsingResult propertyParseResult, string annotationName)
+        {
+            if (propertyParseResult == PropertyParsingResult.ODataInstanceAnnotation)
+            {
+                // #### annotation 1 ####
+                // built-in "odata." annotation value is added to duplicatePropertyNamesChecker then later to resourceSet.InstanceAnnotations.
+                Debug.Assert((this.JsonReader.NodeType == JsonNodeType.PrimitiveValue)
+                    || (this.JsonReader.NodeType == JsonNodeType.StartArray
+                        && string.Equals(ODataAnnotationNames.ODataBind, annotationName, StringComparison.Ordinal)),
+                    "OData instantation value should be primitive or (odata.bind) array");
+                duplicatePropertyNamesChecker.AddODataPropertyAnnotation("", annotationName, this.JsonReader.Value);
+            }
+
+            // When we are reading the start of a resource set (in scan-ahead mode or not) or when
+            // we read the end of a resource set and not in scan-ahead mode, read the value;
+            // otherwise skip it.
+            if (forResourceSetStart || !readAllResourceSetProperties)
+            {
+                // #### annotation 2 ####
+                // custom annotation value will be directly added to resourceSet.InstanceAnnotations.
+                this.ReadAndApplyResourceSetInstanceAnnotationValue(annotationName, resourceSet, duplicatePropertyNamesChecker);
+            }
+            else
+            {
+                this.JsonReader.SkipValue();
             }
         }
 
@@ -717,7 +774,7 @@ namespace Microsoft.OData.JsonLight
             else
             {
                 // Undeclared property - we need to run detection algorithm here.
-                readerNestedResourceInfo = this.ReadUndeclaredProperty(resourceState, /* annotationCollector */ null, propertyName, /*propertyWithValue*/ false);
+                readerNestedResourceInfo = this.ReadUndeclaredProperty(resourceState, propertyName, /*propertyWithValue*/ false);
             }
 
             this.AssertJsonCondition(JsonNodeType.Property, JsonNodeType.EndObject);
@@ -875,7 +932,6 @@ namespace Microsoft.OData.JsonLight
         /// Reads resource property (which is neither instance nor property annotation) which has a value.
         /// </summary>
         /// <param name="resourceState">The state of the reader for resource to read.</param>
-        /// <param name="annotationCollector">The property annotation collector, may be null.</param>
         /// <param name="propertyName">The name of the property read.</param>
         /// <returns>A reader nested resource info representing the nested resource info detected while reading the resource contents; null if no nested resource info was detected.</returns>
         /// <remarks>
@@ -888,7 +944,7 @@ namespace Microsoft.OData.JsonLight
         ///                 JsonNodeType.StartArray             Expanded resource set
         ///                 JsonNodeType.PrimitiveValue (null)  Expanded null resource
         /// </remarks>
-        private ODataJsonLightReaderNestedResourceInfo ReadPropertyWithValue(IODataJsonLightReaderResourceState resourceState, PropertyAnnotationCollector annotationCollector, string propertyName)
+        private ODataJsonLightReaderNestedResourceInfo ReadPropertyWithValue(IODataJsonLightReaderResourceState resourceState, string propertyName)
         {
             Debug.Assert(resourceState != null, "resourceState != null");
             Debug.Assert(!string.IsNullOrEmpty(propertyName), "!string.IsNullOrEmpty(propertyName)");
@@ -934,7 +990,7 @@ namespace Microsoft.OData.JsonLight
                     else
                     {
                         readerNestedResourceInfo = this.ReadingResponse
-                            ? ReadExpandedResourceNestedResourceInfo(resourceState, navigationProperty, propertyName)
+                            ? ReadExpandedResourceNestedResourceInfo(resourceState, navigationProperty, propertyName, this.MessageReaderSettings)
                             : ReadEntityReferenceLinkForSingletonNavigationLinkInRequest(resourceState, navigationProperty, propertyName, /*isExpanded*/ true);
                     }
 
@@ -956,7 +1012,7 @@ namespace Microsoft.OData.JsonLight
             else
             {
                 // Undeclared property - we need to run detection alogorithm here.
-                readerNestedResourceInfo = this.ReadUndeclaredProperty(resourceState, annotationCollector, propertyName, /*propertyWithValue*/ true);
+                readerNestedResourceInfo = this.ReadUndeclaredProperty(resourceState, propertyName, /*propertyWithValue*/ true);
 
                 // Note that if nested resource info is returned it's already validated, so we just report it here.
             }
@@ -1012,7 +1068,6 @@ namespace Microsoft.OData.JsonLight
         /// Read an open property.
         /// </summary>
         /// <param name="resourceState">The state of the reader for resource to read.</param>
-        /// <param name="annotationCollector">The property annotation collector, may be null.</param>
         /// <param name="owningStructuredType">The owning type of the property with name <paramref name="propertyName"/>
         /// or null if no metadata is available.</param>
         /// <param name="propertyName">The name of the open property to read.</param>
@@ -1023,7 +1078,7 @@ namespace Microsoft.OData.JsonLight
         ///                 JsonNodeType.EndObject:   the end-object node of the resource
         /// </remarks>
         /// <returns>The NestedResourceInfo or null.</returns>
-        private ODataJsonLightReaderNestedResourceInfo InnerReadOpenUndeclaredProperty(IODataJsonLightReaderResourceState resourceState, PropertyAnnotationCollector annotationCollector, IEdmStructuredType owningStructuredType, string propertyName, bool propertyWithValue)
+        private ODataJsonLightReaderNestedResourceInfo InnerReadOpenUndeclaredProperty(IODataJsonLightReaderResourceState resourceState, IEdmStructuredType owningStructuredType, string propertyName, bool propertyWithValue)
         {
             Debug.Assert(resourceState != null, "resourceState != null");
             Debug.Assert(!string.IsNullOrEmpty(propertyName), "!string.IsNullOrEmpty(propertyName)");
@@ -1106,12 +1161,7 @@ namespace Microsoft.OData.JsonLight
             }
 
             ValidationUtils.ValidateOpenPropertyValue(propertyName, propertyValue);
-            ODataProperty property = AddResourceProperty(resourceState, propertyName, propertyValue);
-            if (annotationCollector != null)
-            {
-                TryAttachRawAnnotationSetToPropertyValue(annotationCollector, property);
-            }
-
+            AddResourceProperty(resourceState, propertyName, propertyValue, isUndeclaredProperty: true);
             this.JsonReader.AssertNotBuffering();
             Debug.Assert(
                         this.JsonReader.NodeType == JsonNodeType.Property || this.JsonReader.NodeType == JsonNodeType.EndObject,
@@ -1124,7 +1174,6 @@ namespace Microsoft.OData.JsonLight
         /// Read an undeclared property. That is a property which is not declared by the model, but the owning type is not an open type.
         /// </summary>
         /// <param name="resourceState">The state of the reader for resource to read.</param>
-        /// <param name="annotationCollector">The property annotation collector, may be null.</param>
         /// <param name="propertyName">The name of the open property to read.</param>
         /// <param name="propertyWithValue">true if the property has a value, false if it doesn't.</param>
         /// <remarks>
@@ -1138,7 +1187,7 @@ namespace Microsoft.OData.JsonLight
         /// </remarks>
         /// <returns>A nested resource info instance if the property read is a nested resource info which should be reported to the caller.
         /// Otherwise null if the property was either ignored or read and added to the list of properties on the resource.</returns>
-        private ODataJsonLightReaderNestedResourceInfo ReadUndeclaredProperty(IODataJsonLightReaderResourceState resourceState, PropertyAnnotationCollector annotationCollector, string propertyName, bool propertyWithValue)
+        private ODataJsonLightReaderNestedResourceInfo ReadUndeclaredProperty(IODataJsonLightReaderResourceState resourceState, string propertyName, bool propertyWithValue)
         {
             Debug.Assert(resourceState != null, "resourceState != null");
             Debug.Assert(!string.IsNullOrEmpty(propertyName), "!string.IsNullOrEmpty(propertyName)");
@@ -1196,7 +1245,7 @@ namespace Microsoft.OData.JsonLight
                     }
 
                     ODataStreamReferenceValue streamPropertyValue = this.ReadStreamPropertyValue(resourceState, propertyName);
-                    AddResourceProperty(resourceState, propertyName, streamPropertyValue);
+                    AddResourceProperty(resourceState, propertyName, streamPropertyValue, isUndeclaredProperty: true);
                     return null;
                 }
             }
@@ -1205,7 +1254,7 @@ namespace Microsoft.OData.JsonLight
             {
                 // Open property - read it as such.
                 ODataJsonLightReaderNestedResourceInfo nestedResourceInfo =
-                    this.InnerReadOpenUndeclaredProperty(resourceState, annotationCollector, resourceState.ResourceType, propertyName, propertyWithValue);
+                    this.InnerReadOpenUndeclaredProperty(resourceState, resourceState.ResourceType, propertyName, propertyWithValue);
                 return nestedResourceInfo;
             }
 
@@ -1223,7 +1272,7 @@ namespace Microsoft.OData.JsonLight
             {
                 bool isTopLevelPropertyValue = false;
                 ODataJsonLightReaderNestedResourceInfo nestedResourceInfo =
-                    this.InnerReadNonOpenUndeclaredProperty(resourceState, annotationCollector, propertyName, isTopLevelPropertyValue);
+                    this.InnerReadNonOpenUndeclaredProperty(resourceState, propertyName, isTopLevelPropertyValue);
                 return nestedResourceInfo;
             }
             else

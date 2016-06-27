@@ -588,18 +588,6 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                     ExpectedException = ODataExpectedExceptions.ODataException("ValidationUtils_IncorrectTypeKind", "Unknown", "Primitive", "Complex"),
                     OnlyOnDeclaredProperty = true
                 },
-                new DataPropertyTestCase
-                {
-                    DebugDescription = "Open property with navigation link annotation should fail.",
-                    ExpectedProperty = PayloadBuilder.Property("TestProperty", PayloadBuilder.PrimitiveMultiValue()),
-                    EdmPropertyType = new EdmPrimitiveTypeReference(EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.Int32), false),
-                    Json =
-                        "\"" + JsonLightUtils.GetPropertyAnnotationName("TestProperty", JsonLightConstants.ODataTypeAnnotationName) + "\":\"Edm.Int32\"," +
-                        "\"" + JsonLightUtils.GetPropertyAnnotationName("TestProperty", JsonLightConstants.ODataNavigationLinkUrlAnnotationName) + "\":\"http://odata.org/link\"," +
-                        "\"TestProperty\":42",
-                    ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightPropertyAndValueDeserializer_UnexpectedDataPropertyAnnotation", "TestProperty", JsonLightConstants.ODataNavigationLinkUrlAnnotationName),
-                    ExpectedOpenPropertyException = ODataExpectedExceptions.ODataException("ODataJsonLightEntryAndFeedDeserializer_UnexpectedDeferredLinkPropertyAnnotation", "TestProperty", JsonLightConstants.ODataTypeAnnotationName)
-                },
             };
 
             // Declared property

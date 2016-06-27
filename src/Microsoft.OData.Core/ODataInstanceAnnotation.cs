@@ -31,21 +31,20 @@ namespace Microsoft.OData
         /// </summary>
         /// <param name="annotationName">The name of the instance annotation.</param>
         /// <param name="annotationValue">The value of the instance annotation.</param>
-        /// <param name="isForUntypedProperty">If it is annotating an untyped property value.</param>
-        internal ODataInstanceAnnotation(string annotationName, ODataValue annotationValue, bool isForUntypedProperty)
+        /// <param name="isCustomAnnotation">If the name is not for built-in OData annotation.</param>
+        internal ODataInstanceAnnotation(string annotationName, ODataValue annotationValue, bool isCustomAnnotation)
         {
-            Debug.Assert((!isForUntypedProperty) ||
-                (string.Equals(ODataAnnotationNames.ODataType, annotationName, StringComparison.Ordinal) || annotationValue is ODataUntypedValue),
-                "when isForUntypedProperty is true: name is odata.type or value is ODataUntypedValue");
-            if (!isForUntypedProperty)
+            ExceptionUtils.CheckArgumentStringNotNullOrEmpty(annotationName, "annotationName");
+            if (!isCustomAnnotation && ODataAnnotationNames.IsODataAnnotationName(annotationName))
             {
-                ValidateName(annotationName);
-                ValidateValue(annotationValue);
+                // isCustomAnnotation==true includes '@odata.<unknown name>', which won't cause the below exception.
+                throw new ArgumentException(Strings.ODataInstanceAnnotation_ReservedNamesNotAllowed(annotationName, JsonLightConstants.ODataAnnotationNamespacePrefix));
             }
 
+            ValidateName(annotationName);
+            ValidateValue(annotationValue);
             this.Name = annotationName;
             this.Value = annotationValue;
-            this.IsForUntypedProperty = isForUntypedProperty;
         }
 
         /// <summary>
@@ -59,26 +58,14 @@ namespace Microsoft.OData
         public ODataValue Value { get; private set; }
 
         /// <summary>
-        /// Gets if it is annotating an untyped property value.
-        /// </summary>
-        internal bool IsForUntypedProperty { get; set; }
-
-        /// <summary>
         /// Validates that the given <paramref name="name"/> is a valid instance annotation name.
         /// </summary>
         /// <param name="name">Name to validate.</param>
         internal static void ValidateName(string name)
         {
-            ExceptionUtils.CheckArgumentStringNotNullOrEmpty(name, "name");
-
             if (name.IndexOf('.') < 0 || name[0] == '.' || name[name.Length - 1] == '.')
             {
                 throw new ArgumentException(Strings.ODataInstanceAnnotation_NeedPeriodInName(name));
-            }
-
-            if (ODataAnnotationNames.IsODataAnnotationName(name))
-            {
-                throw new ArgumentException(Strings.ODataInstanceAnnotation_ReservedNamesNotAllowed(name, JsonLightConstants.ODataAnnotationNamespacePrefix));
             }
 
             try
