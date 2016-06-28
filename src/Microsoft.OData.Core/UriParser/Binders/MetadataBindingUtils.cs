@@ -48,9 +48,14 @@ namespace Microsoft.OData.UriParser
                     return source;
                 }
 
-                if (!targetTypeReference.IsStructured()
-                    && !targetTypeReference.IsStructuredCollectionType()
-                    && !TypePromotionUtils.CanConvertTo(source, source.TypeReference, targetTypeReference))
+                // Structured type in url will be translated into a node with raw string value.
+                // We create a conversion node from string to structured type.
+                if (targetTypeReference.IsStructured() || targetTypeReference.IsStructuredCollectionType())
+                {
+                    return new ConvertNode(source, targetTypeReference);
+                }
+
+                if (!TypePromotionUtils.CanConvertTo(source, source.TypeReference, targetTypeReference))
                 {
                     throw new ODataException(ODataErrorStrings.MetadataBinder_CannotConvertToType(source.TypeReference.FullName(), targetTypeReference.FullName()));
                 }

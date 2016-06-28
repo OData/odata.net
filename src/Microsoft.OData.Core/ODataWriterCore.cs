@@ -1342,8 +1342,9 @@ namespace Microsoft.OData
                 navigationSource = currentScope.NavigationSource;
                 resourceType = currentScope.ResourceType;
 
-                // This is to resolve the item type for a resource set.
-                if ((currentState == WriterState.NestedResourceInfo || currentState == WriterState.NestedResourceInfoWithContent)
+                // This is to resolve the item type for a resource set for an undeclared nested resource info.
+                if (resourceType == null
+                    && (currentState == WriterState.NestedResourceInfo || currentState == WriterState.NestedResourceInfoWithContent)
                     && newState == WriterState.ResourceSet)
                 {
                     var resourceSet = item as ODataResourceSet;

@@ -102,7 +102,7 @@ namespace Microsoft.OData.UriParser
         /// <summary>ParameterAlias</summary>
         ParameterAlias = 30,
 
-        /// <summary>A Brace bracketed expression is an expression within braces. It contains a JSON object.</summary>
+        /// <summary>A BracedExpression is an expression within braces. It contains a JSON object.</summary>
         BracedExpression = 31,
 
         /// <summary>A BracketedExpression is an expression within brackets. It contains a JSON array.</summary>
