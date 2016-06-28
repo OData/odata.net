@@ -94,7 +94,7 @@ namespace Microsoft.OData.JsonLight
         }
 
         /// <summary>
-        /// Writes a value parameter (either primitive or complex)
+        /// Writes a value parameter (either primitive or enum)
         /// </summary>
         /// <param name="parameterName">The name of the parameter to write.</param>
         /// <param name="parameterValue">The value of the parameter to write.</param>
@@ -109,21 +109,8 @@ namespace Microsoft.OData.JsonLight
             }
             else
             {
-                ODataComplexValue complexValue = parameterValue as ODataComplexValue;
-                ODataEnumValue enumVal = null;
-                if (complexValue != null)
-                {
-                    this.jsonLightValueSerializer.AssertRecursionDepthIsZero();
-                    this.jsonLightValueSerializer.WriteComplexValue(
-                        complexValue,
-                        expectedTypeReference,
-                        false /*isTopLevel*/,
-                        false /*isOpenPropertyType*/,
-                        this.DuplicatePropertyNamesChecker);
-                    this.jsonLightValueSerializer.AssertRecursionDepthIsZero();
-                    this.DuplicatePropertyNamesChecker.Clear();
-                }
-                else if ((enumVal = parameterValue as ODataEnumValue) != null)
+                ODataEnumValue enumVal = parameterValue as ODataEnumValue;
+                if (enumVal != null)
                 {
                     this.jsonLightValueSerializer.WriteEnumValue(enumVal, expectedTypeReference);
                 }

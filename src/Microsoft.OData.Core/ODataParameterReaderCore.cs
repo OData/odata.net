@@ -99,7 +99,7 @@ namespace Microsoft.OData
         /// The value of the current parameter that is being read.
         /// </summary>
         /// <remarks>
-        /// This property returns a primitive value, an ODataComplexValue or null when State is ODataParameterReaderState.Value.
+        /// This property returns a primitive value or null when State is ODataParameterReaderState.Value.
         /// This property returns null when State is ODataParameterReaderState.Resource, ODataParameterReaderState.ResourceSet or ODataParameterReaderState.Collection.
         /// </remarks>
         public override object Value
@@ -255,9 +255,9 @@ this.State == ODataParameterReaderState.Collection,
         {
             if (state == ODataParameterReaderState.Value)
             {
-                if (value != null && !(value is ODataComplexValue) && !EdmLibraryExtensions.IsPrimitiveType(value.GetType()) && !(value is ODataEnumValue))
+                if (value != null && !EdmLibraryExtensions.IsPrimitiveType(value.GetType()) && !(value is ODataEnumValue))
                 {
-                    throw new ODataException(Strings.General_InternalError(InternalErrorCodes.ODataParameterReaderCore_ValueMustBePrimitiveOrComplexOrNull));
+                    throw new ODataException(Strings.General_InternalError(InternalErrorCodes.ODataParameterReaderCore_ValueMustBePrimitiveOrNull));
                 }
             }
 
@@ -586,7 +586,7 @@ this.State == ODataParameterReaderState.Collection,
             {
                 Debug.Assert(
                    state == ODataParameterReaderState.Start && name == null && value == null ||
-                   state == ODataParameterReaderState.Value && !string.IsNullOrEmpty(name) && (value == null || value is ODataEnumValue || value is ODataComplexValue || EdmLibraryExtensions.IsPrimitiveType(value.GetType())) ||
+                   state == ODataParameterReaderState.Value && !string.IsNullOrEmpty(name) && (value == null || value is ODataEnumValue || EdmLibraryExtensions.IsPrimitiveType(value.GetType())) ||
                    state == ODataParameterReaderState.Resource && !string.IsNullOrEmpty(name) && value == null ||
                    state == ODataParameterReaderState.ResourceSet && !string.IsNullOrEmpty(name) && value == null ||
                    state == ODataParameterReaderState.Collection && !string.IsNullOrEmpty(name) && value == null ||

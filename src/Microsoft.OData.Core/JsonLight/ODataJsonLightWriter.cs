@@ -349,6 +349,9 @@ namespace Microsoft.OData.JsonLight
 
                 string propertyName = this.ParentNestedResourceInfo.Name;
                 bool isUndeclared = (this.CurrentScope as JsonLightResourceSetScope).IsUndeclared;
+                var expectedResourceTypeName =
+                    this.CurrentResourceSetScope.GetOrCreateTypeContext(this.jsonLightOutputContext.Model, this.jsonLightOutputContext.WritingResponse)
+                    .ExpectedResourceTypeName;
 
                 if (this.jsonLightOutputContext.WritingResponse)
                 {
@@ -359,7 +362,7 @@ namespace Microsoft.OData.JsonLight
                     this.WriteResourceSetNextLink(resourceSet, propertyName);
 
                     // Write the odata type.
-                    this.jsonLightResourceSerializer.WriteResourceSetStartMetadataProperties(resourceSet, propertyName, isUndeclared);
+                    this.jsonLightResourceSerializer.WriteResourceSetStartMetadataProperties(resourceSet, propertyName, expectedResourceTypeName, isUndeclared);
 
                     // And then write the property name to start the value.
                     this.jsonWriter.WriteName(propertyName);
@@ -379,7 +382,7 @@ namespace Microsoft.OData.JsonLight
                         }
 
                         // Write the odata type.
-                        this.jsonLightResourceSerializer.WriteResourceSetStartMetadataProperties(resourceSet, propertyName, isUndeclared);
+                        this.jsonLightResourceSerializer.WriteResourceSetStartMetadataProperties(resourceSet, propertyName, expectedResourceTypeName, isUndeclared);
 
                         // And then write the property name to start the value.
                         this.jsonWriter.WriteName(propertyName);

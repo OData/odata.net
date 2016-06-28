@@ -46,8 +46,12 @@ namespace Microsoft.OData
         /// <summary>Whether target is unknown entity set</summary>
         internal bool IsUnknownEntitySet { get; set; }
 
-        /// <summary>Whether the type of the target is complex or collection of complex</summary>
-        internal bool IsComplexOrComplexCollection { get; set; }
+        /// <summary>
+        /// Whether the current target has a navigation source or has a meanful the navigation source kind
+        /// e.g. When writing a Resource or Resource Set for Complex type.
+        ///      EdmNavigationSourceKind.None means the target doesn't have a navigation source
+        /// </summary>
+        internal bool HasNavigationSourceInfo { get; set; }
 
         /// <summary>Name of navigation path used for building context Url</summary>
         internal string NavigationPath
@@ -204,19 +208,20 @@ namespace Microsoft.OData
         {
             Debug.Assert(typeContext != null, "typeContext != null");
 
-            var isComplexOrComplexCollection = typeContext.ExpectedResourceType is IEdmComplexType;
+            var hasNavigationSourceInfo = typeContext.NavigationSourceKind != EdmNavigationSourceKind.None
+                || !string.IsNullOrEmpty(typeContext.NavigationSourceName);
 
-            var typeName = typeContext.NavigationSourceFullTypeName;
-            if (typeName == null && typeContext.ExpectedResourceTypeName != null)
-            {
-                typeName = isComplexOrComplexCollection
-                           ? (isSingle ? typeContext.ExpectedResourceTypeName : EdmLibraryExtensions.GetCollectionTypeName(typeContext.ExpectedResourceTypeName))
-                           : null;
-            }
+            var typeName = hasNavigationSourceInfo
+                           ? typeContext.NavigationSourceFullTypeName
+                           : typeContext.ExpectedResourceTypeName == null
+                             ? null
+                             : isSingle
+                               ? typeContext.ExpectedResourceTypeName
+                               : EdmLibraryExtensions.GetCollectionTypeName(typeContext.ExpectedResourceTypeName);
 
             return new ODataContextUrlInfo()
             {
-                IsComplexOrComplexCollection = isComplexOrComplexCollection,
+                HasNavigationSourceInfo = hasNavigationSourceInfo,
                 isContained = typeContext.NavigationSourceKind == EdmNavigationSourceKind.ContainedEntitySet,
                 IsUnknownEntitySet = typeContext.NavigationSourceKind == EdmNavigationSourceKind.UnknownEntitySet,
                 navigationSource = typeContext.NavigationSourceName,

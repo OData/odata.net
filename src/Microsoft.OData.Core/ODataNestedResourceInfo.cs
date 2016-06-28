@@ -42,6 +42,15 @@ namespace Microsoft.OData
             set;
         }
 
+        /// <summary>
+        /// Gets or sets a value that indicates whether the nested resource for a complex property or a collection of complex property, or a navigation property is declared or not.
+        /// </summary>
+        public bool IsUndeclared
+        {
+            get;
+            set;
+        }
+
         /// <summary>Gets or sets the name of the link.</summary>
         /// <returns>The name of the link.</returns>
         public string Name

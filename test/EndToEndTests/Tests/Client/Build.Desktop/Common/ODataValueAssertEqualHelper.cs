@@ -108,26 +108,17 @@ namespace Microsoft.Test.OData.Tests.Client.Common
             AssertODataValueAreEqual(ToODataValue(expectedOdataProperty.Value), ToODataValue(actualOdataProperty.Value));
         }
 
-        public static void AssertODataPropertyAndResourceAreEqual(ODataProperty expectedOdataProperty, ODataResource actualOdataProperty)
+        public static void AssertODataPropertyAndResourceAreEqual(ODataResource expectedOdataProperty, ODataResource actualOdataProperty)
         {
             Assert.IsNotNull(expectedOdataProperty);
             Assert.IsNotNull(actualOdataProperty);
-            AssertODataValueAndResourceAreEqual(ToODataValue(expectedOdataProperty.Value), actualOdataProperty);
+            AssertODataValueAndResourceAreEqual(expectedOdataProperty, actualOdataProperty);
         }
 
-        public static void AssertODataValueAndResourceAreEqual(ODataValue expected, ODataResource actual)
+        public static void AssertODataValueAndResourceAreEqual(ODataResource expected, ODataResource actual)
         {
-
-            ODataComplexValue expectedComplexValue = expected as ODataComplexValue;
-            if (expectedComplexValue != null && actual != null)
-            {
-                Assert.AreEqual(expectedComplexValue.TypeName, actual.TypeName);
-                AssertODataPropertiesAreEqual(expectedComplexValue.Properties, actual.Properties);
-            }
-            else
-            {
-                throw new Exception();
-            }
+            Assert.AreEqual(expected.TypeName, actual.TypeName);
+            AssertODataPropertiesAreEqual(expected.Properties, actual.Properties);
         }
 
         private static ODataValue ToODataValue(object value)

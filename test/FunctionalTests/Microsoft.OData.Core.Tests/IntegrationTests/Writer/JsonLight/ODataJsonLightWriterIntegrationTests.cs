@@ -369,7 +369,6 @@ namespace Microsoft.OData.Tests.IntegrationTests.Writer.JsonLight
             actual.Should().Be(expected);
         }
 
-
         [Fact]
         public void WriteTopLevelComplexProperty()
         {
@@ -407,8 +406,27 @@ namespace Microsoft.OData.Tests.IntegrationTests.Writer.JsonLight
         [Fact]
         public void WriteTopLevelComplexCollectionProperty()
         {
+            WriteTopLevelComplexCollectionProperty(false);
+        }
+
+        [Fact]
+        public void WriteTopLevelComplexCollectionProperty_Inherit()
+        {
+            WriteTopLevelComplexCollectionProperty(true);
+        }
+
+        private void WriteTopLevelComplexCollectionProperty(bool inherit)
+        {
             EdmModel model = new EdmModel();
             EdmComplexType complexType = AddAndGetComplexType(model);
+
+            if (inherit)
+            {
+                EdmComplexType derivedComplexType = new EdmComplexType("Fake", "DerivedComplexType", complexType);
+                derivedComplexType.AddStructuralProperty("D1", EdmPrimitiveTypeKind.String);
+                model.AddElement(derivedComplexType);
+            }
+
             EdmEntityType entityType = AddAndGetEntityType(model);
             var collectionOfComplexType = new EdmCollectionType(new EdmComplexTypeReference(complexType, true));
             entityType.AddStructuralProperty("CollectionOfComplexP",
@@ -425,6 +443,62 @@ namespace Microsoft.OData.Tests.IntegrationTests.Writer.JsonLight
                 Properties = new[] { new ODataProperty { Name = "P1", Value = "complexValue" }, }
             };
 
+            Action<ODataWriter> write = (writer) =>
+            {
+                writer.WriteStart(collectionP);
+                writer.WriteStart(complexP);
+                writer.WriteEnd();
+                writer.WriteEnd();
+            };
+
+            var expected = "{" +
+                  "\"@odata.context\":\"http://temp.org/$metadata#FakeSet('parent')/CollectionOfComplexP\"," +
+                  "\"value\":" +
+                  "[" +
+                    "{" +
+                      "\"P1\":\"complexValue\"" +
+                    "}" +
+                  "]" +
+                "}";
+
+            if (inherit)
+            {
+                ODataResource dComplexP = new ODataResource()
+                {
+                    TypeName = "Fake.DerivedComplexType",
+                    Properties = new[]
+                    {
+                        new ODataProperty { Name = "P1", Value = "complexValue"},
+                        new ODataProperty { Name = "D1", Value = "derivedComplexValue" }
+                    }
+                };
+
+                write = (writer) =>
+                {
+                    writer.WriteStart(collectionP);
+                    writer.WriteStart(complexP);
+                    writer.WriteEnd();
+                    writer.WriteStart(dComplexP);
+                    writer.WriteEnd();
+                    writer.WriteEnd();
+                };
+
+                expected = "{" +
+                  "\"@odata.context\":\"http://temp.org/$metadata#FakeSet('parent')/CollectionOfComplexP\"," +
+                  "\"value\":" +
+                  "[" +
+                    "{" +
+                      "\"P1\":\"complexValue\"" +
+                    "}," +
+                    "{" +
+                      "\"@odata.type\":\"#Fake.DerivedComplexType\"," +
+                      "\"P1\":\"complexValue\"," +
+                      "\"D1\":\"derivedComplexValue\"" +
+                    "}" +
+                  "]" +
+                "}";
+            }
+
             var actual = WriteJsonLightEntry(
                 isRequest: false,
                 serviceDocumentUri: new Uri("http://temp.org/"),
@@ -433,24 +507,10 @@ namespace Microsoft.OData.Tests.IntegrationTests.Writer.JsonLight
                 entitySet: null,
                 resourceType: complexType,
                 odataUri: odataUri,
-                writeAction: (writer) =>
-                {
-                    writer.WriteStart(collectionP);
-                    writer.WriteStart(complexP);
-                    writer.WriteEnd();
-                    writer.WriteEnd();
-                },
-                isResourceSet: true);
+                writeAction: write,
+                isResourceSet: true,
+                model: model);
 
-            var expected = "{" +
-  "\"@odata.context\":\"http://temp.org/$metadata#FakeSet('parent')/CollectionOfComplexP\"," +
-  "\"value\":" +
-  "[" +
-    "{" +
-      "\"P1\":\"complexValue\"" +
-    "}" +
-  "]" +
-"}";
             actual.Should().Be(expected);
         }
 

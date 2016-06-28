@@ -240,24 +240,28 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
                     }
                 }
 
-                // wrong collection type name
+                // wrong complex collection type name
                 responseMessageWithoutModel = new StreamResponseMessage(new MemoryStream());
                 responseMessageWithoutModel.SetHeader("Content-Type", mimeType);
                 using (var messageWriter = new ODataMessageWriter(responseMessageWithoutModel, settings))
                 {
-                    var odataWriter = messageWriter.CreateODataCollectionWriter();
-                    var collctionStart = new ODataCollectionStart() {Name = "BackupContactInfo"};
-                    collctionStart.SetSerializationInfo(new ODataCollectionStartSerializationInfo()
+                    var odataWriter = messageWriter.CreateODataResourceSetWriter();
+                    var complexCollection = new ODataResourceSetWrapper()
+                    {
+                        ResourceSet = new ODataResourceSet (),
+                        Resources = new List<ODataResourceWrapper>()
                         {
-                            CollectionTypeName = "Collection(" + NameSpace + "ContactDETAIL)"
-                        });
+                            WritePayloadHelper.CreatePrimaryContactODataWrapper()
+                        }
+                    };
 
-                    odataWriter.WriteStart(collctionStart);
-                    odataWriter.WriteItem(
-                        WritePayloadHelper.CreatePrimaryContactODataComplexValue());
-                    odataWriter.WriteEnd();
+                    complexCollection.ResourceSet.SetSerializationInfo(new ODataResourceSerializationInfo()
+                    {
+                        ExpectedTypeName = NameSpace + "ContactDETAIL"
+                    });
+                    ODataWriterHelper.WriteResourceSet(odataWriter, complexCollection);
                     var result = WritePayloadHelper.ReadStreamContent(responseMessageWithoutModel.GetStream());
-                    Assert.IsTrue(result.Contains("value\":[{\"EmailBag\":["));
+                    Assert.IsTrue(result.Contains("\"value\":[{\"@odata.type\":\"#Microsoft.Test.OData.Services.AstoriaDefaultService.ContactDetails\",\"EmailBag\":["));
                     if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
                     {
                         // no metadata does not write odata.metadata

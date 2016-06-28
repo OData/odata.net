@@ -783,7 +783,7 @@ namespace Microsoft.OData
         /// <param name="entityType">The entity type of the resource.</param>
         protected virtual void ValidateMediaResource(ODataResource resource, IEdmEntityType entityType)
         {
-            outputContext.WriterValidator.ValidateMetadataResource(resource, entityType, this.outputContext.Model);
+            outputContext.WriterValidator.ValidateMetadataResource(resource, entityType);
         }
 
         /// <summary>
@@ -793,13 +793,10 @@ namespace Microsoft.OData
         /// <returns>The validated structured type.</returns>
         protected IEdmStructuredType GetResourceType(ODataResource resource)
         {
-            if (resource.TypeName == null && this.CurrentScope.ResourceType != null)
-            {
-                return this.CurrentScope.ResourceType;
-            }
+            var resourceTypeRef = TypeNameOracle.ResolveAndValidateTypeForODataResource(
+                this.outputContext.Model, this.CurrentScope.ResourceType, resource, this.WriterValidator);
 
-            // TODO: Clean up handling of expected types/sets during writing
-            return (IEdmStructuredType)TypeNameOracle.ResolveAndValidateTypeName(this.outputContext.Model, resource.TypeName, EdmTypeKind.Complex | EdmTypeKind.Entity, this.WriterValidator);
+            return resourceTypeRef;
         }
 
         /// <summary>
@@ -1336,7 +1333,7 @@ namespace Microsoft.OData
 
                 // This is to resolve the item type for a resource set for an undeclared nested resource info.
                 if (resourceType == null
-                    && (currentState == WriterState.NestedResourceInfo || currentState == WriterState.NestedResourceInfoWithContent)
+                    && (currentState == WriterState.Start || currentState == WriterState.NestedResourceInfo || currentState == WriterState.NestedResourceInfoWithContent)
                     && newState == WriterState.ResourceSet)
                 {
                     var resourceSet = item as ODataResourceSet;
@@ -1612,10 +1609,12 @@ namespace Microsoft.OData
 
             bool isUndeclaredResourceOrResourceSet = false;
             if ((state == WriterState.Resource || state == WriterState.ResourceSet)
-                && (this.CurrentScope.State == WriterState.NestedResourceInfo || this.CurrentScope.State == WriterState.NestedResourceInfoWithContent)
-                && this.ParentResourceType != null)
+                && (this.CurrentScope.State == WriterState.NestedResourceInfo || this.CurrentScope.State == WriterState.NestedResourceInfoWithContent))
             {
-                isUndeclaredResourceOrResourceSet = this.ParentResourceType.FindProperty((this.CurrentScope.Item as ODataNestedResourceInfo).Name) == null;
+                var nestedResourceInfo = this.CurrentScope.Item as ODataNestedResourceInfo;
+                isUndeclaredResourceOrResourceSet = nestedResourceInfo.IsUndeclared
+                    || this.ParentResourceType != null
+                        && (this.ParentResourceType.FindProperty((this.CurrentScope.Item as ODataNestedResourceInfo).Name) == null);
             }
 
             Scope scope;
@@ -1974,13 +1973,17 @@ namespace Microsoft.OData
             {
                 if (this.typeContext == null)
                 {
+                    // For Entity, currently we check the navigation source.
+                    // For Complex, we don't have navigation source, So we shouldn't check it.
+                    var throwIfMissingTypeInfo = writingResponse && (this.ResourceType == null || this.ResourceType.TypeKind == EdmTypeKind.Entity);
+
                     this.typeContext = ODataResourceTypeContext.Create(
                         this.serializationInfo,
                         this.NavigationSource,
                         EdmTypeWriterResolver.Instance.GetElementType(this.NavigationSource),
                         this.ResourceType,
                         model,
-                        writingResponse);
+                        throwIfMissingTypeInfo);
                 }
 
                 return this.typeContext;

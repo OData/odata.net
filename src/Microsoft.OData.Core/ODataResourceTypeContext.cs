@@ -17,6 +17,16 @@ namespace Microsoft.OData
     internal class ODataResourceTypeContext : IODataResourceTypeContext
     {
         /// <summary>
+        /// The expected resource type of the resource set or resource.
+        /// </summary>
+        protected IEdmStructuredType expectedResourceType;
+
+        /// <summary>
+        /// The expected resource type name of the resource set or resource.
+        /// </summary>
+        protected string expectedResourceTypeName;
+
+        /// <summary>
         /// Default Url convention.
         /// </summary>
         private static readonly UrlConvention DefaultUrlConvention = UrlConvention.CreateWithExplicitValue(/*generateKeyAsSegment*/ false);
@@ -32,6 +42,17 @@ namespace Microsoft.OData
         /// <param name="throwIfMissingTypeInfo">If true, throw if any of the set or type name cannot be determined; if false, return null when any of the set or type name cannot determined.</param>
         private ODataResourceTypeContext(bool throwIfMissingTypeInfo)
         {
+            this.throwIfMissingTypeInfo = throwIfMissingTypeInfo;
+        }
+
+        /// <summary>
+        /// Constructs an instance of <see cref="ODataResourceTypeContext"/>.
+        /// </summary>
+        /// <param name="expectedResourceType">The expected resource type of resource set or resource.</param>
+        /// <param name="throwIfMissingTypeInfo">If true, throw if any of the set or type name cannot be determined; if false, return null when any of the set or type name cannot determined.</param>
+        private ODataResourceTypeContext(IEdmStructuredType expectedResourceType, bool throwIfMissingTypeInfo)
+        {
+            this.expectedResourceType = expectedResourceType;
             this.throwIfMissingTypeInfo = throwIfMissingTypeInfo;
         }
 
@@ -74,7 +95,15 @@ namespace Microsoft.OData
         /// </summary>
         public virtual string ExpectedResourceTypeName
         {
-            get { return null; }
+            get
+            {
+                if (this.expectedResourceTypeName == null)
+                {
+                    this.expectedResourceTypeName = this.expectedResourceType == null ? null : this.expectedResourceType.FullTypeName();
+                }
+
+                return this.expectedResourceTypeName;
+            }
         }
 
         /// <summary>
@@ -84,7 +113,7 @@ namespace Microsoft.OData
         /// </summary>
         public virtual IEdmStructuredType ExpectedResourceType
         {
-            get { return null; }
+            get { return this.expectedResourceType; }
         }
 
         /// <summary>
@@ -139,7 +168,7 @@ namespace Microsoft.OData
                 return new ODataResourceTypeContextWithModel(navigationSource, navigationSourceEntityType, expectedResourceType, model);
             }
 
-            return new ODataResourceTypeContext(throwIfMissingTypeInfo);
+            return new ODataResourceTypeContext(expectedResourceType, throwIfMissingTypeInfo);
         }
 
         /// <summary>
@@ -294,13 +323,6 @@ namespace Microsoft.OData
             private readonly IEdmEntityType navigationSourceEntityType;
 
             /// <summary>
-            /// The expected resource type of the resource set or resource.
-            /// For example, in the request URI 'http://example.com/Service.svc/People/Namespace.VIP_Person', the expected resource type is Namespace.VIP_Person.
-            /// (The entity set element type name in this example may be Person, and the actual resource type of a particular resource might be a type more derived than VIP_Person)
-            /// </summary>
-            private readonly IEdmStructuredType expectedResourceType;
-
-            /// <summary>
             /// The navigation source name of the resource set or resource.
             /// </summary>
             private readonly string navigationSourceName;
@@ -338,7 +360,7 @@ namespace Microsoft.OData
             /// <param name="expectedResourceType">The expected resource type of the resource set or resource.</param>
             /// <param name="model">The Edm model instance to use.</param>
             internal ODataResourceTypeContextWithModel(IEdmNavigationSource navigationSource, IEdmEntityType navigationSourceEntityType, IEdmStructuredType expectedResourceType, IEdmModel model)
-                : base(/*throwIfMissingTypeInfo*/false)
+                : base(expectedResourceType, /*throwIfMissingTypeInfo*/false)
             {
                 Debug.Assert(model != null, "model != null");
                 Debug.Assert(navigationSource != null
@@ -349,7 +371,6 @@ namespace Microsoft.OData
 
                 this.navigationSource = navigationSource;
                 this.navigationSourceEntityType = navigationSourceEntityType;
-                this.expectedResourceType = expectedResourceType;
                 this.model = model;
 
                 IEdmContainedEntitySet containedEntitySet = navigationSource as IEdmContainedEntitySet;

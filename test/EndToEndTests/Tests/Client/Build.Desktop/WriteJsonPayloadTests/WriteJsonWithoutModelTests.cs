@@ -109,7 +109,6 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
 
                 if (mimeType != MimeTypes.ApplicationAtomXml)
                 {
-                    outputWithModel = outputWithModel.Replace("\"Logins\"", "\"Logins@odata.type\":\"#Collection(Microsoft.Test.OData.Services.AstoriaDefaultService.Login)\",\"Logins\"");
                     WritePayloadHelper.VerifyPayloadString(outputWithModel, outputWithoutModel, mimeType);
                 }
             }
@@ -252,10 +251,10 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
         }
 
         /// <summary>
-        /// Write collection response
+        /// Write complex collection response
         /// </summary>
         [TestMethod]
-        public void CollectionTest()
+        public void ComplexCollectionTest()
         {
             foreach (var mimeType in this.mimeTypes)
             {
@@ -270,7 +269,7 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
                 responseMessageWithModel.SetHeader("Content-Type", testMimeType);
                 using (var messageWriter = new ODataMessageWriter(responseMessageWithModel, settings, WritePayloadHelper.Model))
                 {
-                    var odataWriter = messageWriter.CreateODataCollectionWriter(WritePayloadHelper.ContactDetailType);
+                    var odataWriter = messageWriter.CreateODataResourceSetWriter(null, WritePayloadHelper.ContactDetailType);
                     outputWithModel = this.WriteAndVerifyCollection(responseMessageWithModel, odataWriter, true,
                                                                     testMimeType);
                 }
@@ -279,7 +278,7 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
                 responseMessageWithoutModel.SetHeader("Content-Type", testMimeType);
                 using (var messageWriter = new ODataMessageWriter(responseMessageWithoutModel, settings))
                 {
-                    var odataWriter = messageWriter.CreateODataCollectionWriter();
+                    var odataWriter = messageWriter.CreateODataResourceSetWriter(null, WritePayloadHelper.ContactDetailType);
                     outputWithoutModel = this.WriteAndVerifyCollection(responseMessageWithoutModel, odataWriter, false,
                                                                        testMimeType);
                 }
@@ -801,21 +800,31 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
             return WritePayloadHelper.ReadStreamContent(stream);
         }
 
-        private string WriteAndVerifyCollection(StreamResponseMessage responseMessage, ODataCollectionWriter odataWriter,
+        private string WriteAndVerifyCollection(StreamResponseMessage responseMessage, ODataWriter odataWriter,
                                                 bool hasModel, string mimeType)
         {
-            var collectionStart = new ODataCollectionStart() { Name = "BackupContactInfo", Count = 12, NextPageLink = new Uri("http://localhost")};
+            var resourceSet = new ODataResourceSetWrapper()
+            {
+                ResourceSet = new ODataResourceSet
+                {
+                    Count = 12,
+                    NextPageLink = new Uri("http://localhost")
+                },
+                Resources = new List<ODataResourceWrapper>()
+                {
+                    WritePayloadHelper.CreatePrimaryContactODataWrapper()
+                }
+            };
+
             if (!hasModel)
             {
-                collectionStart.SetSerializationInfo(new ODataCollectionStartSerializationInfo()
+                resourceSet.ResourceSet.SetSerializationInfo(new ODataResourceSerializationInfo()
                 {
-                    CollectionTypeName = "Collection(" + NameSpace + "ContactDetails)"
+                    ExpectedTypeName = NameSpace + "ContactDetails"
                 });
             }
 
-            odataWriter.WriteStart(collectionStart);
-            odataWriter.WriteItem(WritePayloadHelper.CreatePrimaryContactODataComplexValue());
-            odataWriter.WriteEnd();
+            ODataWriterHelper.WriteResourceSet(odataWriter, resourceSet);
 
             Stream stream = responseMessage.GetStream();
             if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
@@ -824,18 +833,18 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
                 var settings = new ODataMessageReaderSettings() { BaseUri = this.ServiceUri };
 
                 ODataMessageReader messageReader = new ODataMessageReader(responseMessage, settings, WritePayloadHelper.Model);
-                ODataCollectionReader reader = messageReader.CreateODataCollectionReader(WritePayloadHelper.ContactDetailType);
+                ODataReader reader = messageReader.CreateODataResourceSetReader(WritePayloadHelper.ContactDetailType);
                 bool collectionRead = false;
                 while (reader.Read())
                 {
-                    if (reader.State == ODataCollectionReaderState.CollectionEnd)
+                    if (reader.State == ODataReaderState.ResourceSetEnd)
                     {
                         collectionRead = true;
                     }
                 }
 
                 Assert.IsTrue(collectionRead, "collectionRead");
-                Assert.AreEqual(ODataCollectionReaderState.Completed, reader.State);
+                Assert.AreEqual(ODataReaderState.Completed, reader.State);
             }
 
             return WritePayloadHelper.ReadStreamContent(stream);

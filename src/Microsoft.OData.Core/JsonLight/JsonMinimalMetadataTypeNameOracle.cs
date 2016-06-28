@@ -22,10 +22,11 @@ namespace Microsoft.OData.JsonLight
         /// <summary>
         /// Determines the resource set type name to write to the payload.
         /// </summary>
+        /// <param name="expectedResourceTypeName">The expected resource type name of the items in the resource set.</param>
         /// <param name="resourceSet">The ODataResourceSet whose type is to be written.</param>
         /// <param name="isUndeclared">true if the resource set is for some undeclared property</param>
         /// <returns>Type name to write to the payload, or null if no type name should be written.</returns>
-        internal override string GetResourceSetTypeNameForForWriting(ODataResourceSet resourceSet, bool isUndeclared = false)
+        internal override string GetResourceSetTypeNameForForWriting(string expectedResourceTypeName, ODataResourceSet resourceSet, bool isUndeclared)
         {
             Debug.Assert(resourceSet != null, "resourceSet != null");
 
@@ -35,7 +36,9 @@ namespace Microsoft.OData.JsonLight
                 return typeNameAnnotation.TypeName;
             }
 
-            if (isUndeclared)
+            var expectedResourceSetTypeName = expectedResourceTypeName == null ? null : EdmLibraryExtensions.GetCollectionTypeName(expectedResourceTypeName);
+
+            if (expectedResourceSetTypeName != resourceSet.TypeName || isUndeclared)
             {
                 return resourceSet.TypeName;
             }

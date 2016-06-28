@@ -52,8 +52,7 @@ namespace Microsoft.OData
         {
             Debug.Assert(typeName != null, "typeName != null");
 
-            // TODO : should delete the EdmTypeKind.Complex after we remove ODataComplexValue.
-            if ((typeKind & (EdmTypeKind.Primitive | EdmTypeKind.Enum | EdmTypeKind.Complex | EdmTypeKind.Collection | EdmTypeKind.Untyped)) <= 0)
+            if ((typeKind & (EdmTypeKind.Primitive | EdmTypeKind.Enum | EdmTypeKind.Collection | EdmTypeKind.Untyped)) <= 0)
             {
                 throw new ODataException(Strings.ValidationUtils_IncorrectValueTypeKind(typeName, typeKind.ToString()));
             }
@@ -246,17 +245,13 @@ namespace Microsoft.OData
         /// </summary>
         /// <param name="resource">The resource to validate.</param>
         /// <param name="resourceType">Optional entity type to validate the resource against.</param>
-        /// <param name="model">Model containing the entity type.</param>
         /// <remarks>If the <paramref name="resourceType"/> is available only resource-level tests are performed, properties and such are not validated.</remarks>
-        internal static void ValidateMediaResource(ODataResource resource, IEdmEntityType resourceType, IEdmModel model)
+        internal static void ValidateMediaResource(ODataResource resource, IEdmEntityType resourceType)
         {
             Debug.Assert(resource != null, "resource != null");
 
             if (resourceType != null)
             {
-                Debug.Assert(model != null, "model != null");
-                Debug.Assert(model.IsUserModel(), "model.IsUserModel()");
-
                 if (resource.MediaResource == null)
                 {
                     if (resourceType.HasStream)

@@ -44,7 +44,7 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
         public static IEdmEntityType SpecialEmployeeType { get; set; }
         public static IEdmEntityType LoginType { get; set; }
 
-        public static IEdmTypeReference ContactDetailType { get; set; }
+        public static IEdmComplexType ContactDetailType { get; set; }
 
         public static void CustomTestInitialize(Uri serviceUri)
         {
@@ -555,7 +555,7 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
             {
                 Model = messageReader.ReadMetadataDocument();
             }
-            
+
             CustomerType = Model.FindDeclaredType(NameSpace + "Customer") as IEdmEntityType;
             CustomerSet = Model.EntityContainer.FindEntitySet("Customer");
 
@@ -570,8 +570,7 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
             SpecialEmployeeType = Model.FindDeclaredType(NameSpace + "SpecialEmployee") as IEdmEntityType;
             PersonSet = Model.EntityContainer.FindEntitySet("Person");
 
-            ContactDetailType =
-                new EdmComplexTypeReference((IEdmComplexType)Model.FindDeclaredType(NameSpace + "ContactDetails"), true);
+            ContactDetailType = (IEdmComplexType)Model.FindDeclaredType(NameSpace + "ContactDetails");
 
             LoginType = Model.FindDeclaredType(NameSpace + "Login") as IEdmEntityType;
             LoginSet = Model.EntityContainer.FindEntitySet("Login");
@@ -769,6 +768,182 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
                         }
 
                 };
+        }
+
+        public static ODataResourceWrapper CreatePrimaryContactODataWrapper()
+        {
+            var emailBag = new ODataCollectionValue()
+            {
+                TypeName = "Collection(Edm.String)",
+                Items = new string[]
+                        {
+                            "c",
+                            "vluxyßhmibqsbifocryvfhcßjmgkdagjßavhcelfjqazacnlmauprxhkcbjhrssdiyctbd",
+                            "ぴダグマァァﾈぴﾈ歹黑ぺぺミミぞボ"
+                        }
+            };
+            var alternativeNames = new ODataCollectionValue()
+            {
+                TypeName = "Collection(Edm.String)",
+                Items = new[]
+                        {
+                            "rmjhkvrovdnfeßqllqrehpogavcnlliqmoqsbvkinbtoyolqlmxobhhejihrnoqguzvzhssfrb"
+                        }
+            };
+
+            var contactAlias = new ODataResourceWrapper()
+            {
+                Resource = new ODataResource
+                {
+                    TypeName = NameSpace + "Aliases",
+                    Properties = new[]
+                    {
+                        new ODataProperty
+                        {
+                            Name = "AlternativeNames",
+                            Value = new ODataCollectionValue()
+                            {
+                                TypeName = "Collection(Edm.String)",
+                                Items = new[]
+                                {
+                                    "uymiyzgjfbsrqfiqfprsscdxksykfizfztdxdifdnhsnamuutsscxyssrsmaijakagjyvzgkxnßgonnsvzsssshxejßipg"
+                                }
+                            }
+                        }
+                    }
+                }
+            };
+            var homePhone = new ODataResourceWrapper()
+            {
+                Resource = new ODataResource
+                {
+                    TypeName = NameSpace + "Phone",
+                    Properties = new[]
+                    {
+                        new ODataProperty
+                        {
+                            Name = "PhoneNumber",
+                            Value = "1234"
+                        },
+                        new ODataProperty
+                        {
+                            Name = "Extension",
+                            Value = "5678"
+                        },
+                    }
+                }
+            };
+            var workPhone = new ODataResourceWrapper()
+            {
+                Resource = new ODataResource
+                {
+                    TypeName = NameSpace + "Phone",
+                    Properties = new[]
+                    {
+                        new ODataProperty
+                        {
+                            Name = "PhoneNumber",
+                            Value = "elvfevjyssuako"
+                        },
+                        new ODataProperty
+                        {
+                            Name = "Extension",
+                            Value = "fltuu"
+                        },
+                    }
+                }
+            };
+            var mobilePhoneBag = new ODataResourceSetWrapper()
+            {
+                ResourceSet = new ODataResourceSet()
+                {
+                    TypeName = "Collection(" + NameSpace + "Phone)",
+                },
+                Resources = new List<ODataResourceWrapper>()
+                {
+                    new ODataResourceWrapper()
+                    {
+                        Resource = new ODataResource
+                        {
+                            TypeName = NameSpace + "Phone",
+                            Properties = new[]
+                            {
+                                new ODataProperty
+                                {
+                                    Name = "PhoneNumber",
+                                    Value =
+                                        "hkugxatukjjdimßytgkqyopßitßdyzexdkmmarpojjzqycqqvsuztzidxudieldnhnßrakyetgbkbßoyoglbtoiggdsxjlezu"
+                                },
+                                new ODataProperty
+                                {
+                                    Name = "Extension",
+                                    Value = "ypfuiuhrqevehzrziuckpf"
+                                }
+                            }
+                        }
+                    }
+                }
+            };
+
+            return new ODataResourceWrapper()
+            {
+                Resource = new ODataResource
+                {
+                    TypeName = NameSpace + "ContactDetails",
+                    Properties = new[]
+                        {
+                            new ODataProperty
+                                {
+                                    Name = "EmailBag",
+                                    Value = emailBag
+                                },
+                            new ODataProperty
+                                {
+                                    Name = "AlternativeNames",
+                                    Value = alternativeNames
+                                },
+                        }
+                },
+                NestedResourceInfos = new List<ODataNestedResourceInfoWrapper>()
+                {
+                    new ODataNestedResourceInfoWrapper()
+                    {
+                        NestedResourceInfo = new ODataNestedResourceInfo()
+                        {
+                            Name = "ContactAlias",
+                            IsCollection = false
+                        },
+                        NestedResourceOrResourceSet = contactAlias
+                    },
+                    new ODataNestedResourceInfoWrapper()
+                    {
+                        NestedResourceInfo = new ODataNestedResourceInfo()
+                        {
+                            Name = "HomePhone",
+                            IsCollection = false
+                        },
+                        NestedResourceOrResourceSet = homePhone
+                    },
+                    new ODataNestedResourceInfoWrapper()
+                    {
+                        NestedResourceInfo = new ODataNestedResourceInfo()
+                        {
+                            Name = "WorkPhone",
+                            IsCollection = false
+                        },
+                        NestedResourceOrResourceSet = workPhone
+                    },
+                    new ODataNestedResourceInfoWrapper()
+                    {
+                        NestedResourceInfo = new ODataNestedResourceInfo()
+                        {
+                            Name = "MobilePhoneBag",
+                            IsCollection = true
+                        },
+                        NestedResourceOrResourceSet = mobilePhoneBag
+                    }
+                }
+            };
         }
 
         public static ODataCollectionValue CreateBackupContactODataCollectionValue()
@@ -1154,7 +1329,7 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
         {
             var orderEntry1 = new ODataResource()
             {
-                TypeName = NameSpace + "Order", 
+                TypeName = NameSpace + "Order",
             };
 
             var orderEntry1P1 = new ODataProperty { Name = "OrderId", Value = -10 };
@@ -1331,7 +1506,7 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
 
             expectedCustomerObject.Add("Thumbnail" + JsonLightConstants.ODataMediaEditLinkAnnotationName, (thumbnailProperty.Value as ODataStreamReferenceValue).EditLink.AbsoluteUri);
             expectedCustomerObject.Add("Thumbnail" + JsonLightConstants.ODataMediaReadLinkAnnotationName, (thumbnailProperty.Value as ODataStreamReferenceValue).ReadLink.AbsoluteUri);
-            
+
             return thumbnailProperty;
         }
 

@@ -72,7 +72,7 @@ namespace Microsoft.OData
         public bool IsFromCollection { get; set; }
 
         /// <summary>
-        /// The namespace qualified type name of the expected entity type.
+        /// The namespace qualified type name of the expected resource type.
         /// </summary>
         public string ExpectedTypeName
         {

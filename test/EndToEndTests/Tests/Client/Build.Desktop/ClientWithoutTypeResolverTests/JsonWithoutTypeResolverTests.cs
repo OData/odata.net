@@ -101,13 +101,6 @@ namespace Microsoft.Test.OData.Tests.Client.ClientWithoutTypeResolverTests
             Assert.AreEqual(1, queryResult.Count(), "Expected a single Customer return");
         }
 
-        [TestMethod]
-        public void ServiceOperationCollectionOfComplexQuery()
-        {
-            var contextWrapper = this.CreateContext();
-            var queryResult = contextWrapper.Execute<ContactDetails>(new Uri(this.ServiceUri.OriginalString + "/EntityProjectionReturnsCollectionOfComplexTypes")).ToArray();
-        }
-
         private DataServiceContextWrapper<DefaultContainer> CreateContext()
         {
             var context = this.CreateWrappedContext<DefaultContainer>();

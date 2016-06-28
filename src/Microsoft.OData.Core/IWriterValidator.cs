@@ -80,13 +80,11 @@ namespace Microsoft.OData
         /// </summary>
         /// <param name="resource">The resource to validate.</param>
         /// <param name="resourceType">Optional entity type to validate the resource against.</param>
-        /// <param name="model">Model containing the entity type.</param>
         /// <remarks>
         /// If the <paramref name="resourceType"/> is available, only resource-level tests are
         /// performed; properties and such are not validated.
         /// </remarks>
-        void ValidateMetadataResource(ODataResource resource, IEdmEntityType resourceType,
-                                      IEdmModel model);
+        void ValidateMetadataResource(ODataResource resource, IEdmEntityType resourceType);
 
         /// <summary>
         /// Validates that the expected property allows null value.

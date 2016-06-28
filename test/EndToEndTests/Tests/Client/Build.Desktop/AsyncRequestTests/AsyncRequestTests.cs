@@ -105,31 +105,49 @@ namespace Microsoft.Test.OData.Tests.Client.AsyncRequestTests
             {
                 #region send the Create request with respond-async preference
 
-                var accountEntry = new ODataResource() { TypeName = NameSpacePrefix + "Account" };
-                var accountP1 = new ODataProperty { Name = "AccountID", Value = 110 };
-                var accountP2 = new ODataProperty { Name = "CountryRegion", Value = "CN" };
-                var accountP3 = new ODataProperty
+                var accountEntry = new ODataResourceWrapper()
                 {
-                    Name = "AccountInfo",
-                    Value = new ODataComplexValue
+                    Resource = new ODataResource
                     {
-                        TypeName = NameSpacePrefix + "AccountInfo",
-                        Properties = new []
+                        TypeName = NameSpacePrefix + "Account",
+                        Properties = new[]
+                        {
+                            new ODataProperty { Name = "AccountID", Value = 110 },
+                            new ODataProperty { Name = "CountryRegion", Value = "CN" }
+                        }
+                    },
+                    NestedResourceInfos = new List<ODataNestedResourceInfoWrapper>()
+                    {
+                        new ODataNestedResourceInfoWrapper()
+                        {
+                            NestedResourceInfo = new ODataNestedResourceInfo
                             {
-                                new ODataProperty
+                                Name = "AccountInfo",
+                                IsCollection = false
+                            },
+                            NestedResourceOrResourceSet = new ODataResourceWrapper()
+                            {
+                                Resource = new ODataResource()
                                 {
-                                    Name = "FirstName",
-                                    Value = "FN"
-                                },
-                                new ODataProperty
-                                {
-                                    Name = "LastName",
-                                    Value = "LN"
+                                    TypeName = NameSpacePrefix + "AccountInfo",
+                                    Properties = new []
+                                    {
+                                        new ODataProperty
+                                        {
+                                            Name = "FirstName",
+                                            Value = "FN"
+                                        },
+                                        new ODataProperty
+                                        {
+                                            Name = "LastName",
+                                            Value = "LN"
+                                        }
+                                    }
                                 }
                             }
+                        }
                     }
                 };
-                accountEntry.Properties = new[] { accountP1, accountP2, accountP3 };
 
                 var settings = new ODataMessageWriterSettings();
                 settings.BaseUri = ServiceBaseUri;
@@ -145,8 +163,7 @@ namespace Microsoft.Test.OData.Tests.Client.AsyncRequestTests
                 using (var messageWriter = new ODataMessageWriter(requestMessage, settings))
                 {
                     var odataWriter = messageWriter.CreateODataResourceWriter(accountSet, accountType);
-                    odataWriter.WriteStart(accountEntry);
-                    odataWriter.WriteEnd();
+                    ODataWriterHelper.WriteResource(odataWriter, accountEntry);
                 }
 
                 var responseMessage = requestMessage.GetResponse();

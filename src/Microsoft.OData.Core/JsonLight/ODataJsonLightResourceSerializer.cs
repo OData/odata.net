@@ -47,13 +47,18 @@ namespace Microsoft.OData.JsonLight
         /// </summary>
         /// <param name="resourceSet">The resource set for which to write the metadata properties.</param>
         /// <param name="propertyName">The name of the property for which to write the resource set.</param>
+        /// <param name="expectedResourceTypeName">The expected resource type name of the items in the resource set.</param>
         /// <param name="isUndeclared">true if the resource set is for an undeclared property</param>
-        internal void WriteResourceSetStartMetadataProperties(ODataResourceSet resourceSet, string propertyName, bool isUndeclared)
+        internal void WriteResourceSetStartMetadataProperties(ODataResourceSet resourceSet, string propertyName, string expectedResourceTypeName, bool isUndeclared)
         {
             Debug.Assert(resourceSet != null, "resourceSet != null");
 
             // Write the "@odata.type": "#typename"
-            string typeName = this.JsonLightOutputContext.TypeNameOracle.GetResourceSetTypeNameForForWriting(resourceSet, isUndeclared || !this.Model.IsUserModel());
+            string typeName = this.JsonLightOutputContext.TypeNameOracle.GetResourceSetTypeNameForForWriting(
+                expectedResourceTypeName,
+                resourceSet,
+                isUndeclared);
+
             if (typeName != null)
             {
                 if (propertyName == null)
@@ -78,7 +83,9 @@ namespace Microsoft.OData.JsonLight
             ODataResource resource = resourceState.Resource;
 
             // Write the "@odata.type": "typename"
-            string typeName = this.JsonLightOutputContext.TypeNameOracle.GetResourceTypeNameForWriting(resourceState.GetOrCreateTypeContext(this.Model, this.WritingResponse).ExpectedResourceTypeName, resource, resourceState.IsUndeclared);
+            string typeName = this.JsonLightOutputContext.TypeNameOracle.GetResourceTypeNameForWriting(
+                resourceState.GetOrCreateTypeContext(this.Model, this.WritingResponse).ExpectedResourceTypeName,
+                resource, resourceState.IsUndeclared);
             if (typeName != null)
             {
                 this.ODataAnnotationWriter.WriteODataTypeInstanceAnnotation(typeName);
@@ -87,7 +94,7 @@ namespace Microsoft.OData.JsonLight
             {
                 // close path for roundtrip :
                 // write it to the wire if @odata.type is ever read from payload into Resource.InstanceAnnotations.
-                ODataInstanceAnnotation odataTypeAnnotation = resourceState.Resource.InstanceAnnotations.FirstOrDefault(
+                ODataInstanceAnnotation odataTypeAnnotation = resource.InstanceAnnotations.FirstOrDefault(
                     s => string.Equals(ODataAnnotationNames.ODataType, s.Name, StringComparison.OrdinalIgnoreCase));
                 if (odataTypeAnnotation != null)
                 {

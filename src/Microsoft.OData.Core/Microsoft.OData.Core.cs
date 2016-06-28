@@ -172,6 +172,8 @@ namespace Microsoft.OData {
         internal const string ODataParameterWriterCore_CannotWriteValueOnNonValueTypeKind = "ODataParameterWriterCore_CannotWriteValueOnNonValueTypeKind";
         internal const string ODataParameterWriterCore_CannotWriteValueOnNonSupportedValueType = "ODataParameterWriterCore_CannotWriteValueOnNonSupportedValueType";
         internal const string ODataParameterWriterCore_CannotCreateCollectionWriterOnNonCollectionTypeKind = "ODataParameterWriterCore_CannotCreateCollectionWriterOnNonCollectionTypeKind";
+        internal const string ODataParameterWriterCore_CannotCreateResourceWriterOnNonEntityOrComplexTypeKind = "ODataParameterWriterCore_CannotCreateResourceWriterOnNonEntityOrComplexTypeKind";
+        internal const string ODataParameterWriterCore_CannotCreateResourceSetWriterOnNonStructuredCollectionTypeKind = "ODataParameterWriterCore_CannotCreateResourceSetWriterOnNonStructuredCollectionTypeKind";
         internal const string ODataParameterWriterCore_ParameterNameNotFoundInOperation = "ODataParameterWriterCore_ParameterNameNotFoundInOperation";
         internal const string ODataParameterWriterCore_MissingParameterInParameterPayload = "ODataParameterWriterCore_MissingParameterInParameterPayload";
         internal const string ODataBatchWriter_FlushOrFlushAsyncCalledInStreamRequestedState = "ODataBatchWriter_FlushOrFlushAsyncCalledInStreamRequestedState";
@@ -523,7 +525,7 @@ namespace Microsoft.OData {
         internal const string ODataContextUriBuilder_TypeNameMissingForTopLevelCollection = "ODataContextUriBuilder_TypeNameMissingForTopLevelCollection";
         internal const string ODataContextUriBuilder_UnsupportedPayloadKind = "ODataContextUriBuilder_UnsupportedPayloadKind";
         internal const string ODataContextUriBuilder_StreamValueMustBePropertiesOfODataEntry = "ODataContextUriBuilder_StreamValueMustBePropertiesOfODataEntry";
-        internal const string ODataContextUriBuilder_NavigationSourceMissingForEntryAndFeed = "ODataContextUriBuilder_NavigationSourceMissingForEntryAndFeed";
+        internal const string ODataContextUriBuilder_NavigationSourceOrTypeNameMissingForResourceOrResourceSet = "ODataContextUriBuilder_NavigationSourceOrTypeNameMissingForResourceOrResourceSet";
         internal const string ODataContextUriBuilder_ODataUriMissingForIndividualProperty = "ODataContextUriBuilder_ODataUriMissingForIndividualProperty";
         internal const string ODataContextUriBuilder_TypeNameMissingForProperty = "ODataContextUriBuilder_TypeNameMissingForProperty";
         internal const string ODataContextUriBuilder_ODataPathInvalidForContainedElement = "ODataContextUriBuilder_ODataPathInvalidForContainedElement";

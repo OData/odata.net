@@ -232,6 +232,7 @@ namespace Microsoft.OData.Client
                                     break;
                                 }
 
+                            case EdmTypeKind.Complex:
                             case EdmTypeKind.Entity:
                                 {
                                     Debug.Assert(model.GetClientTypeAnnotation(edmType).ElementType != null, "model.GetClientTypeAnnotation(edmType).ElementType != null");
@@ -240,21 +241,6 @@ namespace Microsoft.OData.Client
                                     var entryWriter = parameterWriter.CreateResourceWriter(operationParameter.Name);
                                     entryWriter.WriteStart(entry);
                                     entryWriter.WriteEnd();
-                                    break;
-                                }
-
-                            case EdmTypeKind.Complex:
-                                {
-                                    Debug.Assert(model.GetClientTypeAnnotation(edmType).ElementType != null, "model.GetClientTypeAnnotation(edmType).ElementType != null");
-                                    ODataComplexValue complexValue = this.propertyConverter.CreateODataComplexValue(
-                                        model.GetClientTypeAnnotation(edmType).ElementType,
-                                        operationParameter.Value,
-                                        null /*propertyName*/,
-                                        false /*isCollectionItemType*/,
-                                        null /*visitedComplexTypeObjects*/);
-
-                                    Debug.Assert(complexValue != null, "complexValue != null");
-                                    parameterWriter.WriteValue(operationParameter.Name, complexValue);
                                     break;
                                 }
 
@@ -561,7 +547,9 @@ namespace Microsoft.OData.Client
         {
             ClientEdmModel model = this.requestInfo.Model;
 
-            if (edmCollectionType.ElementType.TypeKind() == EdmTypeKind.Entity)
+            var elementTypeKind = edmCollectionType.ElementType.TypeKind();
+
+            if (elementTypeKind == EdmTypeKind.Entity || elementTypeKind == EdmTypeKind.Complex)
             {
                 ODataWriter feedWriter = parameterWriter.CreateResourceSetWriter(operationParameter.Name);
                 feedWriter.WriteStart(new ODataResourceSet());
@@ -573,13 +561,22 @@ namespace Microsoft.OData.Client
                     Object collectionItem = enumerator.Current;
                     if (collectionItem == null)
                     {
-                        throw new NotSupportedException(Strings.Serializer_NullCollectionParamterItemValue(operationParameter.Name));
+                        if (elementTypeKind == EdmTypeKind.Complex)
+                        {
+                            feedWriter.WriteStart((ODataResource)null);
+                            feedWriter.WriteEnd();
+                            continue;
+                        }
+                        else
+                        {
+                            throw new NotSupportedException(Strings.Serializer_NullCollectionParamterItemValue(operationParameter.Name));
+                        }
                     }
 
                     IEdmType edmItemType = model.GetOrCreateEdmType(collectionItem.GetType());
                     Debug.Assert(edmItemType != null, "edmItemType != null");
 
-                    if (edmItemType.TypeKind != EdmTypeKind.Entity)
+                    if (edmItemType.TypeKind != EdmTypeKind.Entity && edmItemType.TypeKind != EdmTypeKind.Complex)
                     {
                         throw new NotSupportedException(Strings.Serializer_InvalidCollectionParamterItemType(operationParameter.Name, edmItemType.TypeKind));
                     }
@@ -616,16 +613,6 @@ namespace Microsoft.OData.Client
 
                     switch (edmItemType.TypeKind)
                     {
-                        case EdmTypeKind.Complex:
-                            {
-                                Debug.Assert(model.GetClientTypeAnnotation(edmItemType).ElementType != null, "edmItemType.GetClientTypeAnnotation().ElementType != null");
-                                ODataComplexValue complexValue = this.propertyConverter.CreateODataComplexValue(model.GetClientTypeAnnotation(edmItemType).ElementType, collectionItem, null /*propertyName*/, false /*isCollectionItem*/, null /*visitedComplexTypeObjects*/);
-
-                                Debug.Assert(complexValue != null, "complexValue != null");
-                                collectionWriter.WriteItem(complexValue);
-                                break;
-                            }
-
                         case EdmTypeKind.Primitive:
                             {
                                 object primitiveItemValue = ODataPropertyConverter.ConvertPrimitiveValueToRecognizedODataType(collectionItem, collectionItem.GetType());

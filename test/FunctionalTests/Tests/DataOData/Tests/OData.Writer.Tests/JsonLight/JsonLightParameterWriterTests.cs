@@ -42,11 +42,11 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.JsonLight
                     this.Settings,
                     new ODataParameters()
                     {
-                        new KeyValuePair<string, object>("p1", new ODataComplexValue())
+                        new KeyValuePair<string, object>("p1", new ODataResource())
                     },
                     tc => new WriterTestExpectedResults(this.ExpectedResultSettings)
                         {
-                            ExpectedException2 = ODataExpectedExceptions.ODataException("ODataJsonLightPropertyAndValueSerializer_NoExpectedTypeOrTypeNameSpecifiedForComplexValueRequest")
+                            ExpectedException2 = ODataExpectedExceptions.ODataException("WriterValidationUtils_MissingTypeNameWithMetadata")
                         })
                     {
                         DebugDescription = "Complex value without expected type or type name.",

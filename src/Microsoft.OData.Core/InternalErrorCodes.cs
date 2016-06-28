@@ -161,8 +161,8 @@ namespace Microsoft.OData
         /// <summary>Unreachable codepath in ODataParameterReaderCoreAsync.ReadAsynchronously.</summary>
         ODataParameterReaderCoreAsync_ReadAsynchronously,
 
-        /// <summary>The value from the parameter reader must be a primitive value, an ODataComplexValue or null</summary>
-        ODataParameterReaderCore_ValueMustBePrimitiveOrComplexOrNull,
+        /// <summary>The value from the parameter reader must be a primitive value, or null</summary>
+        ODataParameterReaderCore_ValueMustBePrimitiveOrNull,
 
         /// <summary>Unreachable codepath in ODataRawValueUtils.ConvertStringToPrimitive.</summary>
         ODataRawValueUtils_ConvertStringToPrimitive,

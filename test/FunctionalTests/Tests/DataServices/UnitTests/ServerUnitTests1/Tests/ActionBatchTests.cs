@@ -21,6 +21,7 @@ namespace AstoriaUnitTests.Tests.Server
     {
         private static readonly Version V4 = new Version(4, 0);
 
+        [Ignore] // Ignore this currently, it is for testing the WCF DS.
         [TestCategory("Partition1"), TestMethod, Variation("Batch tests with actions in them")]
         public void BatchedActionTests()
         {

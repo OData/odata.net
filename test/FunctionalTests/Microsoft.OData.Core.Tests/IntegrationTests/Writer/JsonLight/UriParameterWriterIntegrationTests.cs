@@ -195,7 +195,6 @@ namespace Microsoft.OData.Tests.IntegrationTests.Writer.JsonLight
             var resource = CreatePerson(0);
             WriteParameter(resource, true, (actual) => actual.Should().Be(
                 "{" +
-                    "\"@odata.type\":\"#NS.Person\"," +
                     "\"Id\":0," +
                     "\"Address\":{\"City\":{\"CityName\":\"City0\",\"AreaCode\":\"AreaCode0\"}}," +
                     "\"CompanyAddress\":{\"CompanyName\":\"MS\",\"City\":{\"CityName\":\"City1\",\"AreaCode\":\"AreaCode1\"}}," +
@@ -246,7 +245,6 @@ namespace Microsoft.OData.Tests.IntegrationTests.Writer.JsonLight
                     actual.Should().Be(
                     "[" +
                         "{" +
-                            "\"@odata.type\":\"#NS.Person\"," +
                             "\"Id\":0," +
                             "\"Address\":{\"City\":{\"CityName\":\"City0\",\"AreaCode\":\"AreaCode0\"}}," +
                             "\"CompanyAddress\":{\"CompanyName\":\"MS\",\"City\":{\"CityName\":\"City1\",\"AreaCode\":\"AreaCode1\"}}," +
@@ -261,7 +259,6 @@ namespace Microsoft.OData.Tests.IntegrationTests.Writer.JsonLight
                             "]" +
                         "}," +
                         "{" +
-                            "\"@odata.type\":\"#NS.Person\"," +
                             "\"Id\":1," +
                             "\"Address\":{\"City\":{\"CityName\":\"City10\",\"AreaCode\":\"AreaCode10\"}}," +
                             "\"CompanyAddress\":{\"CompanyName\":\"MS\",\"City\":{\"CityName\":\"City11\",\"AreaCode\":\"AreaCode11\"}}," +

@@ -4774,6 +4774,7 @@ public sealed class Microsoft.OData.ODataNestedResourceInfo : Microsoft.OData.OD
 
 	System.Uri AssociationLinkUrl  { public get; public set; }
 	System.Nullable`1[[System.Boolean]] IsCollection  { public get; public set; }
+	bool IsUndeclared  { public get; public set; }
 	string Name  { public get; public set; }
 	System.Uri Url  { public get; public set; }
 }

@@ -7,9 +7,9 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using Microsoft.OData.Edm;
 using Microsoft.OData.Metadata;
 using Microsoft.OData.UriParser;
-using Microsoft.OData.Edm;
 using ODataErrorStrings = Microsoft.OData.Strings;
 
 namespace Microsoft.OData
@@ -128,12 +128,6 @@ namespace Microsoft.OData
             if (collectionValue != null)
             {
                 return ODataUriConversionUtils.ConvertToUriCollectionLiteral(collectionValue, model, version);
-            }
-
-            ODataComplexValue complexValue = value as ODataComplexValue;
-            if (complexValue != null)
-            {
-                return ODataUriConversionUtils.ConvertToUriComplexLiteral(complexValue, model, version);
             }
 
             ODataEnumValue enumValue = value as ODataEnumValue;

@@ -24,7 +24,7 @@ Model Present: true
 
 Combination: 7; TestConfiguration = Format: JsonLight, Request: True, Synchronous: True
 Model Present: true
-{"p1":"foo","p2":12345,"p3":"2011-12-31T00:00:00Z","p4":{"One":2},"p5":["foo","bar","collectionElement3"],"p6":[{"One":1},{"One":2},{"One":3}],"p7":null,"p8":[]}
+{"p1":"foo","p2":12345,"p3":"2011-12-31T00:00:00Z","p4":{"@odata.context":"http://odata.org/test/$metadata#TestModel.ComplexType","One":2},"p5":["foo","bar","collectionElement3"],"p6":[{"One":1},{"One":2},{"One":3}],"p7":null,"p8":[]}
 
 Combination: 8; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
 Model Present: true
@@ -52,5 +52,5 @@ Model Present: true
 
 Combination: 14; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
 Model Present: true
-{"p1":"foo","p2":12345,"p3":"2011-12-31T00:00:00Z","p4":{"One":2},"p5":["foo","bar","collectionElement3"],"p6":[{"One":1},{"One":2},{"One":3}],"p7":null,"p8":[]}
+{"p1":"foo","p2":12345,"p3":"2011-12-31T00:00:00Z","p4":{"@odata.context":"http://odata.org/test/$metadata#TestModel.ComplexType","One":2},"p5":["foo","bar","collectionElement3"],"p6":[{"One":1},{"One":2},{"One":3}],"p7":null,"p8":[]}
 

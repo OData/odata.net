@@ -218,9 +218,15 @@ namespace Microsoft.OData
         /// <param name="contextUrlInfo">The ODataContextUrlInfo to evaluate on.</param>
         private static void ValidateNavigationSource(ODataContextUrlInfo contextUrlInfo)
         {
-            // For ComplexProperty, we will skip this validation
-            if (contextUrlInfo.IsComplexOrComplexCollection)
+            // For complex or complex collection property, it doesn't have any navigation source,
+            // Then the TypeName should be provided.
+            if (!contextUrlInfo.HasNavigationSourceInfo)
             {
+                if (string.IsNullOrEmpty(contextUrlInfo.TypeName))
+                {
+                    throw new ODataException(Strings.ODataContextUriBuilder_NavigationSourceOrTypeNameMissingForResourceOrResourceSet);
+                }
+
                 return;
             }
 
@@ -232,7 +238,7 @@ namespace Microsoft.OData
                 contextUrlInfo.IsUnknownEntitySet && string.IsNullOrEmpty(contextUrlInfo.NavigationSource) &&
                 string.IsNullOrEmpty(contextUrlInfo.TypeName))
             {
-                throw new ODataException(Strings.ODataContextUriBuilder_NavigationSourceMissingForEntryAndFeed);
+                throw new ODataException(Strings.ODataContextUriBuilder_NavigationSourceOrTypeNameMissingForResourceOrResourceSet);
             }
         }
 

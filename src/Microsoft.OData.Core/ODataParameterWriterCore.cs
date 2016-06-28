@@ -148,7 +148,7 @@ namespace Microsoft.OData
         /// Start writing a value parameter.
         /// </summary>
         /// <param name="parameterName">The name of the parameter to write.</param>
-        /// <param name="parameterValue">The value of the parameter to write (null/ODataComplexValue/ODataEnumValue/primitiveClrValue).</param>
+        /// <param name="parameterValue">The value of the parameter to write (null/ODataEnumValue/primitiveClrValue).</param>
         public sealed override void WriteValue(string parameterName, object parameterValue)
         {
             ExceptionUtils.CheckArgumentStringNotNullOrEmpty(parameterName, "parameterName");
@@ -434,12 +434,12 @@ namespace Microsoft.OData
         {
             Debug.Assert(!string.IsNullOrEmpty(parameterName), "!string.IsNullOrEmpty(parameterName)");
             IEdmTypeReference parameterTypeReference = this.VerifyCanWriteParameterAndGetTypeReference(synchronousCall, parameterName);
-            if (parameterTypeReference != null && !parameterTypeReference.IsODataPrimitiveTypeKind() && !parameterTypeReference.IsODataComplexTypeKind() && !parameterTypeReference.IsODataEnumTypeKind() && !parameterTypeReference.IsODataTypeDefinitionTypeKind())
+            if (parameterTypeReference != null && !parameterTypeReference.IsODataPrimitiveTypeKind() && !parameterTypeReference.IsODataEnumTypeKind() && !parameterTypeReference.IsODataTypeDefinitionTypeKind())
             {
                 throw new ODataException(Strings.ODataParameterWriterCore_CannotWriteValueOnNonValueTypeKind(parameterName, parameterTypeReference.TypeKind()));
             }
 
-            if (parameterValue != null && (!EdmLibraryExtensions.IsPrimitiveType(parameterValue.GetType()) || parameterValue is Stream) && !(parameterValue is ODataComplexValue) && !(parameterValue is ODataEnumValue))
+            if (parameterValue != null && (!EdmLibraryExtensions.IsPrimitiveType(parameterValue.GetType()) || parameterValue is Stream) && !(parameterValue is ODataEnumValue))
             {
                 throw new ODataException(Strings.ODataParameterWriterCore_CannotWriteValueOnNonSupportedValueType(parameterName, parameterValue.GetType()));
             }
@@ -457,6 +457,8 @@ namespace Microsoft.OData
         {
             Debug.Assert(!string.IsNullOrEmpty(parameterName), "!string.IsNullOrEmpty(parameterName)");
             IEdmTypeReference parameterTypeReference = this.VerifyCanWriteParameterAndGetTypeReference(synchronousCall, parameterName);
+
+            // TODO : Change to structureds Collection check
             if (parameterTypeReference != null && !parameterTypeReference.IsNonEntityCollectionType())
             {
                 throw new ODataException(Strings.ODataParameterWriterCore_CannotCreateCollectionWriterOnNonCollectionTypeKind(parameterName, parameterTypeReference.TypeKind()));
@@ -475,9 +477,9 @@ namespace Microsoft.OData
         {
             Debug.Assert(!string.IsNullOrEmpty(parameterName), "!string.IsNullOrEmpty(parameterName)");
             IEdmTypeReference parameterTypeReference = this.VerifyCanWriteParameterAndGetTypeReference(synchronousCall, parameterName);
-            if (parameterTypeReference != null && !parameterTypeReference.IsODataEntityTypeKind())
+            if (parameterTypeReference != null && !parameterTypeReference.IsStructured())
             {
-                throw new ODataException(String.Format(CultureInfo.InvariantCulture, "The parameter '{0}' is of Edm type kind '{1}'. You cannot call CreateResourceWriter on a parameter that is not of Edm type kind 'Entity'.", parameterName, parameterTypeReference.TypeKind()));
+                throw new ODataException(Strings.ODataParameterWriterCore_CannotCreateResourceWriterOnNonEntityOrComplexTypeKind(parameterName, parameterTypeReference.TypeKind()));
             }
 
             return parameterTypeReference;
@@ -493,9 +495,9 @@ namespace Microsoft.OData
         {
             Debug.Assert(!string.IsNullOrEmpty(parameterName), "!string.IsNullOrEmpty(parameterName)");
             IEdmTypeReference parameterTypeReference = this.VerifyCanWriteParameterAndGetTypeReference(synchronousCall, parameterName);
-            if (parameterTypeReference != null && !parameterTypeReference.IsEntityCollectionType())
+            if (parameterTypeReference != null && !parameterTypeReference.IsStructuredCollectionType())
             {
-                throw new ODataException(String.Format(CultureInfo.InvariantCulture, "The parameter '{0}' is of Edm type kind '{1}'. You cannot call CreateResourceSetWriter on a parameter that is not of Edm type kind 'Collection(Entity)'.", parameterName, parameterTypeReference.TypeKind()));
+                throw new ODataException(Strings.ODataParameterWriterCore_CannotCreateResourceSetWriterOnNonStructuredCollectionTypeKind(parameterName, parameterTypeReference.TypeKind()));
             }
 
             return parameterTypeReference;
@@ -526,7 +528,7 @@ namespace Microsoft.OData
         /// Write a value parameter - implementation of the actual functionality.
         /// </summary>
         /// <param name="parameterName">The name of the parameter to write.</param>
-        /// <param name="parameterValue">The value of the parameter to write (null/ODataComplexValue/ODataEnumValue/primitiveClrValue).</param>
+        /// <param name="parameterValue">The value of the parameter to write (null/ODataEnumValue/primitiveClrValue).</param>
         /// <param name="expectedTypeReference">The expected type reference of the parameter value.</param>
         private void WriteValueImplementation(string parameterName, object parameterValue, IEdmTypeReference expectedTypeReference)
         {

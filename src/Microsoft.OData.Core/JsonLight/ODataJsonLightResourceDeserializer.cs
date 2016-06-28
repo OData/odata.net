@@ -259,7 +259,7 @@ namespace Microsoft.OData.JsonLight
                         this.SetEntryMediaResource(resourceState, mediaResource);
                     }
 
-                    this.ReaderValidator.ValidateMediaResource(resource, entityType, this.Model);
+                    this.ReaderValidator.ValidateMediaResource(resource, entityType);
                 }
             }
         }

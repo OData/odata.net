@@ -273,44 +273,60 @@ namespace Microsoft.Test.OData.Tests.Client.CodeGenerationTests
             Assert.IsTrue(account.AccountInfoPlus.IsActivePlus);
 
             //Update entity with open complex type
-            var entry = new ODataResource() { TypeName = ServerSideNameSpacePrefix + "Account" };
-            entry.Properties = new[]
+            var accountWrapper = new ODataResourceWrapper()
             {
-                new ODataProperty { Name = "AccountID", Value = 1000000 },
-                new ODataProperty
+                Resource = new ODataResource()
                 {
-                    Name = "AccountInfo",
-                    Value = new ODataComplexValue
+                    TypeName = ServerSideNameSpacePrefix + "Account",
+                    Properties = new[]
                     {
-                        TypeName = ServerSideNameSpacePrefix + "AccountInfo",
-                        Properties = new[]
+                        new ODataProperty { Name = "AccountID", Value = 1000000 }
+                    }
+                },
+                NestedResourceInfos = new List<ODataNestedResourceInfoWrapper>()
+                {
+                    new ODataNestedResourceInfoWrapper()
+                    {
+                        NestedResourceInfo = new ODataNestedResourceInfo()
                         {
-                            new ODataProperty
+                            Name = "AccountInfo",
+                            IsCollection = false
+                        },
+                        NestedResourceOrResourceSet = new ODataResourceWrapper()
+                        {
+                            Resource =new ODataResource()
                             {
-                                Name = "FirstName",
-                                Value = "Peter"
-                            },
-                            new ODataProperty
-                            {
-                                Name = "LastName",
-                                Value = "Andy"
-                            },
-                            //Property that exists in Customer-Defined client code.
-                            new ODataProperty
-                            {
-                                Name = "MiddleName",
-                                Value = "White2"
-                            },
-                            new ODataProperty
-                            {
-                                Name = "IsActive",
-                                Value = false,
-                            },                            
-                            //Property that doesn't exist in Customer-Defined client code.
-                            new ODataProperty
-                            {
-                                Name = "ShippingAddress",
-                                Value = "#999, ZiXing Road"
+                                TypeName = ServerSideNameSpacePrefix + "AccountInfo",
+                                Properties = new[]
+                                {
+                                    new ODataProperty
+                                    {
+                                        Name = "FirstName",
+                                        Value = "Peter"
+                                    },
+                                    new ODataProperty
+                                    {
+                                        Name = "LastName",
+                                        Value = "Andy"
+                                    },
+                                    //Property that exists in Customer-Defined client code.
+                                    new ODataProperty
+                                    {
+                                        Name = "MiddleName",
+                                        Value = "White2"
+                                    },
+                                    new ODataProperty
+                                    {
+                                        Name = "IsActive",
+                                        Value = false,
+                                    },
+                                    //Property that doesn't exist in Customer-Defined client code.
+                                    new ODataProperty
+                                    {
+                                        Name = "ShippingAddress",
+                                        Value = "#999, ZiXing Road"
+                                    }
+                                }
                             }
                         }
                     }
@@ -330,8 +346,7 @@ namespace Microsoft.Test.OData.Tests.Client.CodeGenerationTests
             using (var messageWriter = new ODataMessageWriter(requestMessage, settings))
             {
                 var odataWriter = messageWriter.CreateODataResourceWriter(accountSet, accountType);
-                odataWriter.WriteStart(entry);
-                odataWriter.WriteEnd();
+                ODataWriterHelper.WriteResource(odataWriter, accountWrapper);
             }
 
             var responseMessage = requestMessage.GetResponse();

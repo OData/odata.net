@@ -835,7 +835,7 @@ namespace Microsoft.OData {
         }
 
         /// <summary>
-        /// A string like "The value for parameter '{0}' is of type '{1}'. WriteValue can only write null, ODataComplexValue, ODataEnumValue and primitive types that are not Stream type."
+        /// A string like "The value for parameter '{0}' is of type '{1}'. WriteValue can only write null, ODataEnumValue and primitive types that are not Stream type."
         /// </summary>
         internal static string ODataParameterWriterCore_CannotWriteValueOnNonSupportedValueType(object p0, object p1) {
             return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataParameterWriterCore_CannotWriteValueOnNonSupportedValueType, p0, p1);
@@ -846,6 +846,20 @@ namespace Microsoft.OData {
         /// </summary>
         internal static string ODataParameterWriterCore_CannotCreateCollectionWriterOnNonCollectionTypeKind(object p0, object p1) {
             return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataParameterWriterCore_CannotCreateCollectionWriterOnNonCollectionTypeKind, p0, p1);
+        }
+
+        /// <summary>
+        /// A string like "The parameter '{0}' is of Edm type kind '{1}'. You cannot call CreateResourceWriter on a parameter that is not of Edm type kind 'Entity' or 'Complex'."
+        /// </summary>
+        internal static string ODataParameterWriterCore_CannotCreateResourceWriterOnNonEntityOrComplexTypeKind(object p0, object p1) {
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataParameterWriterCore_CannotCreateResourceWriterOnNonEntityOrComplexTypeKind, p0, p1);
+        }
+
+        /// <summary>
+        /// A string like "The parameter '{0}' is of Edm type kind '{1}'. You cannot call CreateResourceSetWriter on a parameter that is not of Edm type kind 'Collection(Entity)' or 'Collection(Complex)'."
+        /// </summary>
+        internal static string ODataParameterWriterCore_CannotCreateResourceSetWriterOnNonStructuredCollectionTypeKind(object p0, object p1) {
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataParameterWriterCore_CannotCreateResourceSetWriterOnNonStructuredCollectionTypeKind, p0, p1);
         }
 
         /// <summary>
@@ -2590,7 +2604,7 @@ namespace Microsoft.OData {
         }
 
         /// <summary>
-        /// A string like "No TypeName was found for an ODataComplexValue of an open property, ODataResource or custom instance annotation, even though metadata was specified. If a model is passed to the writer, each complex value on an open property, resource or custom instance annotation must have a type name."
+        /// A string like "No TypeName was found for an ODataResource of an open property, ODataResource or custom instance annotation, even though metadata was specified. If a model is passed to the writer, each complex value on an open property, resource or custom instance annotation must have a type name."
         /// </summary>
         internal static string WriterValidationUtils_MissingTypeNameWithMetadata {
             get {
@@ -3548,11 +3562,11 @@ namespace Microsoft.OData {
         }
 
         /// <summary>
-        /// A string like "The navigationSource for resource or feed is unknown. When writing a response, the navigation source must be passed to the ODataMessageWriter.CreateODataResourceWriter/ODataMessageWriter.CreateODataResourceSetWriter method or the ODataResourceSerializationInfo must be set on the resource/feed."
+        /// A string like "The navigationSource for resource or resourc set is unknown or the Type is null. When writing a response, the navigation source or the type must be passed to the ODataMessageWriter.CreateODataResourceWriter/ODataMessageWriter.CreateODataResourceSetWriter method or the ODataResourceSerializationInfo must be set on the resource/resource set."
         /// </summary>
-        internal static string ODataContextUriBuilder_NavigationSourceMissingForEntryAndFeed {
+        internal static string ODataContextUriBuilder_NavigationSourceOrTypeNameMissingForResourceOrResourceSet {
             get {
-                return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataContextUriBuilder_NavigationSourceMissingForEntryAndFeed);
+                return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataContextUriBuilder_NavigationSourceOrTypeNameMissingForResourceOrResourceSet);
             }
         }
 

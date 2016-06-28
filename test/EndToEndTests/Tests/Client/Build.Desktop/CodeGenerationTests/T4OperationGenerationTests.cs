@@ -192,7 +192,7 @@ namespace Microsoft.Test.OData.Tests.Client.CodeGenerationTests
         }
 
         [TestMethod]
-        public void ActionImportWithCollectionOfComplexTypeParameter()
+        public void ActionImportWithComplexTypeParameter()
         {
             TestClientContext.MergeOption = Microsoft.OData.Client.MergeOption.OverwriteChanges;
             var boss = TestClientContext.Boss.GetValue();

@@ -33,7 +33,7 @@ namespace Microsoft.OData
         /// <summary> Gets the value of the current parameter that is being read. </summary>
         /// <returns> The value of the current parameter that is being read. </returns>
         /// <remarks>
-        /// This property returns a primitive value, an ODataComplexValue or null when State is ODataParameterReaderState.Value.
+        /// This property returns a primitive value or null when State is ODataParameterReaderState.Value.
         /// This property returns null when State is ODataParameterReaderState.Resource, ODataParameterReaderState.ResourceSet or ODataParameterReaderState.Collection.
         /// </remarks>
         public abstract object Value

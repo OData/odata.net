@@ -204,19 +204,15 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
         {
             for (int i = 0; i < mimeTypes.Length; i++)
             {
-                ODataProperty occursAt = new ODataProperty
+                var occursAt = new ODataResource
                 {
-                    Name = "OccursAt",
-                    Value = new ODataComplexValue
+                    TypeName = NameSpacePrefix + "EventLocation",
+                    Properties = new[]
                     {
-                        TypeName = NameSpacePrefix + "EventLocation",
-                        Properties = new[]
+                        new ODataProperty
                         {
-                            new ODataProperty
-                            {
-                                Name = "RoomNumber",
-                                Value = 100 + i
-                            }
+                            Name = "RoomNumber",
+                            Value = 100 + i
                         }
                     }
                 };
@@ -233,7 +229,10 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
 
                 using (var messageWriter = new ODataMessageWriter(requestMessage, settings))
                 {
-                    messageWriter.WriteProperty(occursAt);
+                    var odataWriter = messageWriter.CreateODataResourceWriter();
+                    odataWriter.WriteStart(occursAt);
+                    odataWriter.WriteEnd();
+                    odataWriter.Flush();
                 }
 
                 var responseMessage = requestMessage.GetResponse();
@@ -284,20 +283,26 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
                 }
             };
 
-            var personAddressInfo = new ODataProperty
+            var personAddressInfo_NestedInfo = new ODataNestedResourceInfo()
             {
                 Name = "AddressInfo",
-                Value = new ODataCollectionValue()
-                {
-                    TypeName = string.Format("Collection({0}Location)", NameSpacePrefix),
-                    Items = new[] {
-                        generateLocationInfo("999 zixing"),
-                        generateLocationInfo("200 xujiahui")
-                    }
-                }
+                IsCollection = true
             };
 
-            personEntry.Properties = new[] { personUserName, personFirstName, personLastName, personGender, personEmailAddress, personAddressInfo };
+            var personAddressInfo_ResourceSet = new ODataResourceSet()
+            {
+                TypeName = string.Format("Collection({0}Location)", NameSpacePrefix)
+            };
+
+            var personAddressInfo_addresses =
+                new[] {
+                        GenerateLocationInfo("999 zixing"),
+                        GenerateLocationInfo("200 xujiahui")
+                    };
+            personAddressInfo_ResourceSet.SetAnnotation(personAddressInfo_addresses);
+            personAddressInfo_NestedInfo.SetAnnotation(personAddressInfo_ResourceSet);
+
+            personEntry.Properties = new[] { personUserName, personFirstName, personLastName, personGender, personEmailAddress };
 
             var settings = new ODataMessageWriterSettings();
             settings.BaseUri = ServiceBaseUri;
@@ -313,6 +318,30 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
             {
                 var odataWriter = messageWriter.CreateODataResourceWriter(personSet, personType);
                 odataWriter.WriteStart(personEntry);
+                odataWriter.WriteStart(personAddressInfo_NestedInfo);
+                odataWriter.WriteStart(personAddressInfo_ResourceSet);
+                foreach (var addressInfo in personAddressInfo_addresses)
+                {
+                    odataWriter.WriteStart(addressInfo);
+                    var city_NestedInfo = addressInfo.GetAnnotation<ODataNestedResourceInfo>();
+                    if (city_NestedInfo != null)
+                    {
+                        odataWriter.WriteStart(city_NestedInfo);
+                        var city = city_NestedInfo.GetAnnotation<ODataResource>();
+                        if (city != null)
+                        {
+                            odataWriter.WriteStart(city);
+                            odataWriter.WriteEnd();
+                        }
+
+                        odataWriter.WriteEnd();
+                    }
+
+                    odataWriter.WriteEnd();
+                }
+
+                odataWriter.WriteEnd();
+                odataWriter.WriteEnd();
                 odataWriter.WriteEnd();
             }
 
@@ -1734,12 +1763,16 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
             {
                 RequestUri = "Photos(1)",
                 EntitySetName = "Photos",
-                EntryToUpdate = new ODataResource()
+                EntryToUpdate = new ODataResourceWrapper()
                 {
-                    TypeName = NameSpacePrefix + "Photo",
-                    Properties = new[]
+                    Resource = 
+                    new ODataResource()
                     {
-                        new ODataProperty() { Name = "Name", Value = "New Photo" }
+                        TypeName = NameSpacePrefix + "Photo",
+                        Properties = new[]
+                        {
+                            new ODataProperty() { Name = "Name", Value = "New Photo" }
+                        }
                     }
                 },
                 MimeType = MimeTypes.ApplicationJsonLight
@@ -1834,14 +1867,17 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
             {
                 RequestUri = "Airports",
                 MimeType = MimeTypes.ApplicationJson + MimeTypes.ODataParameterFullMetadata,
-                EntryToCreate = new ODataResource()
+                EntryToCreate = new ODataResourceWrapper()
                 {
-                    TypeName = NameSpacePrefix + "Airport",
-                    Properties = new[]
+                    Resource = new ODataResource()
                     {
-                        new ODataProperty { Name = "Name", Value = "Test Airport" },
-                        new ODataProperty { Name = "IataCode", Value = "TestAirport" },
-                        new ODataProperty { Name = "IcaoCode", Value = "TestAirport" },
+                        TypeName = NameSpacePrefix + "Airport",
+                        Properties = new[]
+                        {
+                            new ODataProperty { Name = "Name", Value = "Test Airport" },
+                            new ODataProperty { Name = "IataCode", Value = "TestAirport" },
+                            new ODataProperty { Name = "IcaoCode", Value = "TestAirport" },
+                        }
                     }
                 },
                 EntitySetName = "Airports",
@@ -1907,10 +1943,14 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
                 RequestUri = uri,
                 MimeType = MimeTypes.ApplicationJsonLight,
                 EntitySetName = "People",
-                EntryToUpdate = new ODataResource()
+                EntryToUpdate = new ODataResourceWrapper()
                 {
-                    TypeName = NameSpacePrefix + "Person",
-                    Properties = new[] { new ODataProperty { Name = "UserName", Value = "NewUserName" } }
+                    Resource = 
+                    new ODataResource()
+                    {
+                        TypeName = NameSpacePrefix + "Person",
+                        Properties = new[] { new ODataProperty { Name = "UserName", Value = "NewUserName" } }
+                    }
                 },
                 ExpectedStatusCode = 204,
                 IfMatch = "*",
@@ -1940,10 +1980,14 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
                 RequestUri = uri,
                 MimeType = MimeTypes.ApplicationJsonLight,
                 EntitySetName = "Airports",
-                EntryToUpdate = new ODataResource()
+                EntryToUpdate = new ODataResourceWrapper()
                 {
-                    TypeName = NameSpacePrefix + "Airport",
-                    Properties = new[] { new ODataProperty { Name = "IataCode", Value = "NewCode" } }
+                    Resource = 
+                    new ODataResource()
+                    {
+                        TypeName = NameSpacePrefix + "Airport",
+                        Properties = new[] { new ODataProperty { Name = "IataCode", Value = "NewCode" } }
+                    }
                 },
                 ExpectedStatusCode = 204,
             }.Execute();
@@ -1972,10 +2016,14 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
                 RequestUri = uri,
                 MimeType = MimeTypes.ApplicationJsonLight,
                 EntitySetName = "People",
-                EntryToUpdate = new ODataResource()
+                EntryToUpdate = new ODataResourceWrapper()
                 {
-                    TypeName = NameSpacePrefix + "Person",
-                    Properties = new[] { new ODataProperty { Name = "Concurrency", Value = long.MinValue } }
+                    Resource =
+                    new ODataResource()
+                    {
+                        TypeName = NameSpacePrefix + "Person",
+                        Properties = new[] { new ODataProperty { Name = "Concurrency", Value = long.MinValue } }
+                    }
                 },
                 ExpectedStatusCode = 204,
                 IfMatch = "*",
@@ -2488,7 +2536,7 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
                 this.ExpectedStatusCode = 201;
             }
 
-            public ODataResource EntryToCreate { get; set; }
+            public ODataResourceWrapper EntryToCreate { get; set; }
             public string EntitySetName { get; set; }
             public string ValidationUri { get; set; }
 
@@ -2503,8 +2551,7 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
                 using (var messageWriter = new ODataMessageWriter(request, new ODataMessageWriterSettings() { BaseUri = this.Host.ServiceBaseUri }))
                 {
                     var odataWriter = messageWriter.CreateODataResourceWriter(this.Host.Model.EntityContainer.FindEntitySet(this.EntitySetName), (IEdmEntityType)this.Host.Model.FindDeclaredType(NameSpacePrefix + this.EntitySetName));
-                    odataWriter.WriteStart(this.EntryToCreate);
-                    odataWriter.WriteEnd();
+                    ODataWriterHelper.WriteResource(odataWriter, this.EntryToCreate);
                 }
 
                 OnRequestingHandler(new RequestingArgument() { Request = request });
@@ -2623,7 +2670,7 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
                 this.Method = "PUT";
             }
 
-            public ODataResource EntryToUpdate { get; set; }
+            public ODataResourceWrapper EntryToUpdate { get; set; }
             public string EntitySetName { get; set; }
             public string Method { get; set; }
 
@@ -2647,8 +2694,7 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
                 using (var messageWriter = new ODataMessageWriter(request, new ODataMessageWriterSettings() { BaseUri = this.Host.ServiceBaseUri, AutoComputePayloadMetadata = true }))
                 {
                     var odataWriter = messageWriter.CreateODataResourceWriter(this.Host.Model.EntityContainer.FindEntitySet(this.EntitySetName), (IEdmEntityType)this.Host.Model.FindDeclaredType(NameSpacePrefix + this.EntitySetName));
-                    odataWriter.WriteStart(this.EntryToUpdate);
-                    odataWriter.WriteEnd();
+                    ODataWriterHelper.WriteResource(odataWriter, this.EntryToUpdate);
                 }
 
                 var response = request.GetResponse();
@@ -2868,12 +2914,14 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
             public string ParentName { get; set; }
         }
 
-        private ODataResource CreateEntry(string userName)
+        private ODataResourceWrapper CreateEntry(string userName)
         {
-            return new ODataResource()
+            return new ODataResourceWrapper()
             {
-                TypeName = NameSpacePrefix + "Person",
-                Properties = new[]
+                Resource = new ODataResource
+                {
+                    TypeName = NameSpacePrefix + "Person",
+                    Properties = new[]
                     {
                         new ODataProperty { Name = "UserName", Value = userName },
                         new ODataProperty { Name = "FirstName", Value = "NewFirstName" },
@@ -2891,46 +2939,62 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
                                 TypeName = "Collection(Edm.String)",
                                 Items = new[] { "userName@microsft.com", "sqlOdata@microsoft.com" }
                             }
-                        },
-                        new ODataProperty
+                        }
+                    }
+                },
+
+                NestedResourceInfos = new List<ODataNestedResourceInfoWrapper>()
+                {
+                    new ODataNestedResourceInfoWrapper()
+                    {
+                        NestedResourceInfo = new ODataNestedResourceInfo
                         {
                             Name = "AddressInfo",
-                            Value = new ODataCollectionValue()
+                            IsCollection = true
+                        },
+                        NestedResourceOrResourceSet = new ODataResourceSetWrapper()
+                        {
+                            ResourceSet = new ODataResourceSet()
                             {
-                                TypeName = string.Format("Collection({0}Location)", NameSpacePrefix),
-                                Items = new[] { this.generateLocationInfo("999 zixing"), this.generateLocationInfo("200 xujiahui") }
+                                TypeName = string.Format("Collection({0}Location)", NameSpacePrefix)
+                            },
+                            Resources = new List<ODataResourceWrapper>()
+                            {
+                                this.GenerateLocationInfoWrapper("999 zixing"),
+                                this.GenerateLocationInfoWrapper("200 xujiahui")
                             }
                         }
                     }
+                }
             };
         }
 
-        private ODataComplexValue generateLocationInfo(string addressName)
+        private ODataResource GenerateLocationInfo(string addressName)
         {
-            ODataComplexValue addressCity = new ODataComplexValue()
+            ODataResource addressCity = new ODataResource()
             {
                 TypeName = NameSpacePrefix + "City",
                 Properties = new[]
+                {
+                    new ODataProperty
                         {
-                            new ODataProperty
-                                {
-                                    Name = "CountryRegion",
-                                    Value = "China"
-                                },
-                            new ODataProperty
-                                {
-                                    Name = "Name",
-                                    Value = "Shanghai"
-                                },
-                            new ODataProperty
-                                {
-                                    Name = "Region",
-                                    Value = "MinHang"
-                                },
-                        }
+                            Name = "CountryRegion",
+                            Value = "China"
+                        },
+                    new ODataProperty
+                        {
+                            Name = "Name",
+                            Value = "Shanghai"
+                        },
+                    new ODataProperty
+                        {
+                            Name = "Region",
+                            Value = "MinHang"
+                        },
+                }
             };
 
-            return new ODataComplexValue()
+            var location = new ODataResource()
             {
                 TypeName = NameSpacePrefix + "Location",
                 Properties = new[]
@@ -2939,12 +3003,63 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
                     {
                         Name = "Address",
                         Value = addressName
-                    },
-                    new ODataProperty
+                    }
+                }
+            };
+
+            var city_NestedInfo = new ODataNestedResourceInfo(){Name = "City", IsCollection = false};
+            city_NestedInfo.SetAnnotation(addressCity);
+            location.SetAnnotation(city_NestedInfo);
+            return location;
+        }
+
+        private ODataResourceWrapper GenerateLocationInfoWrapper(string addressName)
+        {
+            return new ODataResourceWrapper()
+            {
+                Resource = new ODataResource()
+                {
+                    TypeName = NameSpacePrefix + "Location",
+                    Properties = new[]
                     {
-                        Name = "City",
-                        Value = addressCity
-                    },
+                        new ODataProperty
+                        {
+                            Name = "Address",
+                            Value = addressName
+                        }
+                    }
+                },
+                NestedResourceInfos = new List<ODataNestedResourceInfoWrapper>()
+                {
+                    new ODataNestedResourceInfoWrapper()
+                    {
+                        NestedResourceInfo = new ODataNestedResourceInfo() { Name = "City", IsCollection = false },
+                        NestedResourceOrResourceSet = new ODataResourceWrapper()
+                        {
+                            Resource = new ODataResource()
+                            {
+                                TypeName = NameSpacePrefix + "City",
+                                Properties = new[]
+                                {
+                                    new ODataProperty
+                                        {
+                                            Name = "CountryRegion",
+                                            Value = "China"
+                                        },
+                                    new ODataProperty
+                                        {
+                                            Name = "Name",
+                                            Value = "Shanghai"
+                                        },
+                                    new ODataProperty
+                                        {
+                                            Name = "Region",
+                                            Value = "MinHang"
+                                        },
+                                }
+                            }
+                        }
+                    }
                 }
             };
         }

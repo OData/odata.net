@@ -613,23 +613,9 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 new ContentTypeTestCase { Format = ODataFormat.Json, AcceptHeaders = ApplicationStar, ExpectedContentType = BuildContentType(ApplicationJsonODataLightStreamingAndDefaultMetadata, CharsetUtf8) },
                 
                 // error cases
-                //new ContentTypeTestCase { UseFormat = true, Format = ODataFormat.Atom, ExpectedException = tc => GetExpectedException(ODataFormat.Atom) },
                 new ContentTypeTestCase { UseFormat = true, Format = ODataFormat.Batch, ExpectedException = tc => GetExpectedException(ODataFormat.Batch) },
                 new ContentTypeTestCase { UseFormat = true, Format = ODataFormat.Metadata, ExpectedException = tc => GetExpectedException(ODataFormat.Metadata) },
                 new ContentTypeTestCase { UseFormat = true, Format = ODataFormat.RawValue, ExpectedException = tc => GetExpectedException(ODataFormat.RawValue) },
-                //new ContentTypeTestCase { Format = ODataFormat.Atom, AcceptHeaders = ApplicationAtomXml, ExpectedContentType = BuildContentType(ApplicationAtomXml, CharsetUtf8), ExpectedException = tc => GetExpectedException(ODataPayloadKind.Parameter, ApplicationAtomXml, tc.Version) },
-                //new ContentTypeTestCase { Format = ODataFormat.Atom, AcceptHeaders = ApplicationAtomXmlEntry, ExpectedContentType = BuildContentType(ApplicationAtomXmlEntry, CharsetUtf8), ExpectedException = tc => GetExpectedException(ODataPayloadKind.Parameter, ApplicationAtomXmlEntry, tc.Version) },
-                //new ContentTypeTestCase { Format = ODataFormat.Atom, AcceptHeaders = AcceptHeaderWithMultipleSupportedEntryTypes, ExpectedContentType = BuildContentType(ApplicationAtomXmlEntry, CharsetUtf8), ExpectedException = tc => GetExpectedException(ODataPayloadKind.Parameter, AcceptHeaderWithMultipleSupportedEntryTypes, tc.Version) },
-                //new ContentTypeTestCase { Format = ODataFormat.Atom, AcceptHeaders = TextStar, ExpectedException = tc => GetExpectedException(ODataPayloadKind.Parameter, TextStar, tc.Version) },
-                //new ContentTypeTestCase { Format = ODataFormat.Atom, AcceptHeaders = TextPlain, ExpectedException = tc => GetExpectedException(ODataPayloadKind.Parameter, TextPlain, tc.Version) },
-                //new ContentTypeTestCase { Format = ODataFormat.Atom, AcceptHeaders = TextXml, ExpectedException = tc => GetExpectedException(ODataPayloadKind.Parameter, TextXml, tc.Version) },
-                //new ContentTypeTestCase { Format = ODataFormat.Atom, AcceptHeaders = ApplicationXml, ExpectedException = tc => GetExpectedException(ODataPayloadKind.Parameter, ApplicationXml, tc.Version) },
-                //new ContentTypeTestCase { Format = ODataFormat.Atom, AcceptHeaders = ApplicationAtomSvcXml, ExpectedException = tc => GetExpectedException(ODataPayloadKind.Parameter, ApplicationAtomSvcXml, tc.Version) },
-                //new ContentTypeTestCase { Format = ODataFormat.Atom, AcceptHeaders = ApplicationAtomXmlFeed, ExpectedException = tc => GetExpectedException(ODataPayloadKind.Parameter, ApplicationAtomXmlFeed, tc.Version) },
-                //new ContentTypeTestCase { Format = ODataFormat.Atom, AcceptHeaders = AcceptHeaderWithUnsupportedParameter, ExpectedException = tc => GetExpectedException(ODataPayloadKind.Parameter, AcceptHeaderWithUnsupportedParameter, tc.Version) },
-                //new ContentTypeTestCase { Format = ODataFormat.Atom, AcceptHeaders = AcceptHeaderWithInvalidValue, ExpectedException = tc => GetExpectedException(ODataPayloadKind.Parameter, AcceptHeaderWithInvalidValue, tc.Version) },
-                //new ContentTypeTestCase { Format = ODataFormat.Atom, AcceptHeaders = AcceptHeaderWithInvalidValueEntry, ExpectedException = tc => GetExpectedException(ODataPayloadKind.Parameter, AcceptHeaderWithInvalidValueEntry, tc.Version) },
-                //new ContentTypeTestCase { Format = ODataFormat.Atom, AcceptHeaders = BuildContentType(ApplicationJson, "some=value"), ExpectedException = tc => GetExpectedException(ODataPayloadKind.Parameter, BuildContentType(ApplicationJson, "some=value"), tc.Version) },
             };
 
             this.RunParameterContentTypeTest(parameterPayload, model, functionImport, testCases);
@@ -1245,40 +1231,48 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
 
         private static ODataParameters CreateDefaultParameter()
         {
-            var complexValue = new ODataComplexValue()
+            var street = new ODataResource()
+            {
+                TypeName = "My.StreetType",
+                Properties = new[]
+                {
+                    new ODataProperty { Name = "StreetName", Value = "One Redmond Way" },
+                    new ODataProperty { Name = "Number", Value = 1234 },
+                }
+            };
+
+            var streetInfo = new ODataNestedResourceInfo() { Name = "Street", IsCollection = false };
+
+            var streetInfo_expand = new ODataNavigationLinkExpandedItemObjectModelAnnotation();
+            streetInfo_expand.ExpandedItem = street;
+            streetInfo.SetAnnotation(streetInfo_expand);
+
+            var address = new ODataResource()
             {
                 TypeName = "My.NestedAddressType",
                 Properties = new[]
                 {
-                    new ODataProperty()
-                    {
-                        Name = "Street",
-                        Value = new ODataComplexValue()
-                        {
-                            TypeName = "My.StreetType",
-                            Properties = new []
-                            {
-                                new ODataProperty { Name = "StreetName", Value = "One Redmond Way" },
-                                new ODataProperty { Name = "Number", Value = 1234 },
-                            }
-                        }
-                    },
                     new ODataProperty() { Name = "City", Value = "Redmond " },
                 }
             };
 
+            var address_nested = new ODataEntryNavigationLinksObjectModelAnnotation();
+            address_nested.Add(streetInfo, 0);
+            address.SetAnnotation(address_nested);
+
             var primitiveCollectionValue = new ODataCollectionStart();
             primitiveCollectionValue.SetAnnotation(new ODataCollectionItemsObjectModelAnnotation() { "Value1", "Value2", "Value3" });
 
-            var complexCollectionValue = new ODataCollectionStart();
-            complexCollectionValue.SetAnnotation(new ODataCollectionItemsObjectModelAnnotation() { complexValue });
+            var complexCollection = new ODataResourceSet();
+
+            complexCollection.SetAnnotation(new ODataFeedEntriesObjectModelAnnotation() { address });
 
             return new ODataParameters()
             {
                 new KeyValuePair<string, object>("primitiveParameter", "StringValue"),
-                new KeyValuePair<string, object>("complexParameter", complexValue),
+                new KeyValuePair<string, object>("complexParameter", address),
                 new KeyValuePair<string, object>("primitiveCollectionParameter", primitiveCollectionValue),
-                new KeyValuePair<string, object>("complexCollectionParameter", complexCollectionValue),
+                new KeyValuePair<string, object>("complexCollectionParameter", complexCollection),
             };
         }
     }

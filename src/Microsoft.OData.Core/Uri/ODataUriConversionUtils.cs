@@ -11,12 +11,11 @@ using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.IO;
 using System.Text;
+using Microsoft.OData.Edm;
 using Microsoft.OData.Evaluation;
 using Microsoft.OData.JsonLight;
 using Microsoft.OData.Metadata;
-using Microsoft.OData.Edm;
 using ODataErrorStrings = Microsoft.OData.Strings;
-using ODataPlatformHelper = Microsoft.OData.PlatformHelper;
 
 namespace Microsoft.OData
 {
@@ -63,14 +62,14 @@ namespace Microsoft.OData
         }
 
         /// <summary>
-        /// Converts the given string <paramref name="value"/> to an ODataComplexValue or ODataCollectionValue and returns it.
+        /// Converts the given string <paramref name="value"/> to an ODataCollectionValue and returns it.
         /// Tries in both JSON light and Verbose JSON.
         /// </summary>
         /// <remarks>Does not handle primitive values.</remarks>
         /// <param name="value">Value to be deserialized.</param>
         /// <param name="model">Model to use for verification.</param>
         /// <param name="typeReference">Expected type reference from deserialization. If null, verification will be skipped.</param>
-        /// <returns>An ODataComplexValue or ODataCollectionValue that results from the deserialization of <paramref name="value"/>.</returns>
+        /// <returns>An ODataCollectionValue that results from the deserialization of <paramref name="value"/>.</returns>
         internal static object ConvertFromComplexOrCollectionValue(string value, IEdmModel model, IEdmTypeReference typeReference)
         {
             ODataMessageReaderSettings settings = new ODataMessageReaderSettings();
@@ -106,7 +105,7 @@ namespace Microsoft.OData
                         null /*propertyName*/);
                     deserializer.ReadPayloadEnd(false);
 
-                    Debug.Assert(rawResult is ODataComplexValue || rawResult is ODataCollectionValue, "rawResult is ODataComplexValue || rawResult is ODataCollectionValue");
+                    Debug.Assert(rawResult is ODataCollectionValue, "rawResult is ODataCollectionValue");
                     return rawResult;
                 }
             }
@@ -173,42 +172,6 @@ namespace Microsoft.OData
             }
 
             throw new ODataException(ODataErrorStrings.ODataUriUtils_ConvertFromUriLiteralTypeVerificationFailure(expectedPrimitiveTypeReference.FullName(), literalValue));
-        }
-
-        /// <summary>
-        /// Converts a <see cref="ODataComplexValue"/> to a string for use in a Url.
-        /// </summary>
-        /// <param name="complexValue">Instance to convert.</param>
-        /// <param name="model">Model to be used for validation. User model is optional. The EdmLib core model is expected as a minimum.</param>
-        /// <param name="version">Version to be compliant with.</param>
-        /// <returns>A string representation of <paramref name="complexValue"/> to be added to a Url.</returns>
-        internal static string ConvertToUriComplexLiteral(ODataComplexValue complexValue, IEdmModel model, ODataVersion version)
-        {
-            ExceptionUtils.CheckArgumentNotNull(complexValue, "complexValue");
-            ExceptionUtils.CheckArgumentNotNull(model, "model");
-
-            StringBuilder builder = new StringBuilder();
-            using (TextWriter textWriter = new StringWriter(builder, CultureInfo.InvariantCulture))
-            {
-                ODataMessageWriterSettings messageWriterSettings = new ODataMessageWriterSettings()
-                {
-                    Version = version,
-                    Validations = ~ValidationKinds.ThrowOnUndeclaredPropertyForNonOpenType,
-                };
-
-                WriteJsonLightLiteral(
-                    model,
-                    messageWriterSettings,
-                    textWriter,
-                    (serializer) => serializer.WriteComplexValue(
-                        complexValue,
-                        null /*metadataTypeReference*/,
-                        false /*isTopLevel*/,
-                        true /*isOpenPropetyType*/,
-                        serializer.CreateDuplicatePropertyNamesChecker()));
-            }
-
-            return builder.ToString();
         }
 
         /// <summary>

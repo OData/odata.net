@@ -75,6 +75,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Writer.JsonLight
 
             using (var messageWriter = this.CreateMessageWriter(false))
             {
+                messageWriter.Settings.Validations &= ~ValidationKinds.ThrowOnUndeclaredPropertyForNonOpenType;
                 var writer = messageWriter.CreateODataResourceSetWriter(entitySet: null, resourceType: this.GetBaseType());
                 writer.WriteStart(resourceCollection);
                 writer.WriteStart(entry);

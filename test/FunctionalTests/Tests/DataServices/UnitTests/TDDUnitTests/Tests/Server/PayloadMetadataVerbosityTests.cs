@@ -1115,10 +1115,10 @@ namespace AstoriaUnitTests.TDD.Tests.Server
                     "\"value\":" +
                     "[" +
                         "{" +
-                            "\"Complex\":{}," +
-                            "\"DynamicComplex\":{}," +
                             "\"DynamicPrimitive\":3," +
                             "\"DynamicNull\":null," +
+                            "\"Complex\":{}," +
+                            "\"DynamicComplex\":{}," +
                             "\"#Action\":" +
                                 "{" +
                                     "\"target\":\"http://real.org/Action\"" +
@@ -1134,7 +1134,7 @@ namespace AstoriaUnitTests.TDD.Tests.Server
                 feedWriter.WriteStart(feed);
 
                 // ODL requires type name on dynamic complex values, but we can still omit it from the payload using an annotation
-                ODataComplexValue dynamicComplex = new ODataComplexValue { TypeName = "Fake.Complex", };
+                ODataResource dynamicComplex = new ODataResource { TypeName = "Fake.Complex", };
                 dynamicComplex.SetAnnotation(new SerializationTypeNameAnnotation { TypeName = null });
 
                 var entry = new ODataResource
@@ -1143,8 +1143,6 @@ namespace AstoriaUnitTests.TDD.Tests.Server
                     Properties = new[]
                     {
                         new ODataProperty { Name = "Thumbnail", Value = new ODataStreamReferenceValue() },
-                        new ODataProperty { Name = "Complex", Value = new ODataComplexValue() },
-                        new ODataProperty { Name = "DynamicComplex", Value = dynamicComplex },
                         new ODataProperty { Name = "DynamicPrimitive", Value = 3 },
                         new ODataProperty { Name = "DynamicNull", Value = null }
                     }
@@ -1152,6 +1150,20 @@ namespace AstoriaUnitTests.TDD.Tests.Server
                 entry.AddAction(new ODataAction { Metadata = new Uri("http://fake.org/$metadata#Action"), Target = new Uri("http://real.org/Action") });
 
                 feedWriter.WriteStart(entry);
+
+                var complexP = new ODataNestedResourceInfo { Name = "Complex" };
+                var complex = new ODataResource();
+                feedWriter.WriteStart(complexP);
+                feedWriter.WriteStart(complex);
+                feedWriter.WriteEnd();
+                feedWriter.WriteEnd();
+
+                var dynamicComplexP = new ODataNestedResourceInfo { Name = "DynamicComplex" };
+                feedWriter.WriteStart(dynamicComplexP);
+                feedWriter.WriteStart(dynamicComplex);
+                feedWriter.WriteEnd();
+                feedWriter.WriteEnd();
+
                 var navigation = new ODataNestedResourceInfo { Name = "Navigation" };
                 feedWriter.WriteStart(navigation);
                 feedWriter.WriteEnd();

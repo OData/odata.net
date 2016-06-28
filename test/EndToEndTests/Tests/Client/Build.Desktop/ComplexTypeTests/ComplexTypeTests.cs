@@ -742,40 +742,35 @@ namespace Microsoft.Test.OData.Tests.Client.ComplexTypeTests
                 // update
                 bool isPersonalAccount = (i % 2 == 0);
                 entry = new ODataResource() { TypeName = NameSpacePrefix + "Account" };
-                entry.Properties = new[]
+                var accountInfo_NestedInfo = new ODataNestedResourceInfo() { Name = "AccountInfo" };
+                var accountInfo_Resource = new ODataResource()
                 {
-                    new ODataProperty
+                    TypeName = NameSpacePrefix + "AccountInfo",
+                    Properties = new[]
                     {
-                        Name = "AccountInfo",
-                        Value = new ODataComplexValue
+                        new ODataProperty
                         {
-                            TypeName = NameSpacePrefix + "AccountInfo",
-                            Properties = new[]
-                            {
-                                new ODataProperty
-                                {
-                                    Name = "FirstName",
-                                    Value = "FN"
-                                },
-                                new ODataProperty
-                                {
-                                    Name = "LastName",
-                                    Value = "LN"
-                                },
-                                new ODataProperty
-                                {
-                                    Name = "MiddleName",
-                                    Value = middleNames[i+1]
-                                },
-                                new ODataProperty
-                                {
-                                    Name = "IsPersonalAccount",
-                                    Value = isPersonalAccount
-                                }
-                            }
+                            Name = "FirstName",
+                            Value = "FN"
+                        },
+                        new ODataProperty
+                        {
+                            Name = "LastName",
+                            Value = "LN"
+                        },
+                        new ODataProperty
+                        {
+                            Name = "MiddleName",
+                            Value = middleNames[i+1]
+                        },
+                        new ODataProperty
+                        {
+                            Name = "IsPersonalAccount",
+                            Value = isPersonalAccount
                         }
                     }
                 };
+
                 var settings = new ODataMessageWriterSettings();
                 settings.BaseUri = ServiceBaseUri;
                 settings.AutoComputePayloadMetadata = true;
@@ -792,6 +787,10 @@ namespace Microsoft.Test.OData.Tests.Client.ComplexTypeTests
                 {
                     var odataWriter = messageWriter.CreateODataResourceWriter(accountSet, accountType);
                     odataWriter.WriteStart(entry);
+                    odataWriter.WriteStart(accountInfo_NestedInfo);
+                    odataWriter.WriteStart(accountInfo_Resource);
+                    odataWriter.WriteEnd();
+                    odataWriter.WriteEnd();
                     odataWriter.WriteEnd();
                 }
 
@@ -824,30 +823,28 @@ namespace Microsoft.Test.OData.Tests.Client.ComplexTypeTests
                 {
                     new ODataProperty { Name = "AccountID", Value = 10086 },
                     new ODataProperty { Name = "CountryRegion", Value = "CN" },
-                    new ODataProperty
+                };
+
+                var accountInfo_NestedInfo = new ODataNestedResourceInfo(){Name = "AccountInfo", IsCollection = false};
+                var accountInfoResource = new ODataResource
+                {
+                    TypeName = NameSpacePrefix + "AccountInfo",
+                    Properties = new[]
                     {
-                        Name = "AccountInfo",
-                        Value = new ODataComplexValue
+                        new ODataProperty
                         {
-                            TypeName = NameSpacePrefix + "AccountInfo",
-                            Properties = new[]
-                            {
-                                new ODataProperty
-                                {
-                                    Name = "FirstName",
-                                    Value = "Peter"
-                                },
-                                new ODataProperty
-                                {
-                                    Name = "LastName",
-                                    Value = "Andy"
-                                },
-                                new ODataProperty
-                                {
-                                    Name = "ShippingAddress",
-                                    Value = "#999, ZiXing Road"
-                                }
-                            }
+                            Name = "FirstName",
+                            Value = "Peter"
+                        },
+                        new ODataProperty
+                        {
+                            Name = "LastName",
+                            Value = "Andy"
+                        },
+                        new ODataProperty
+                        {
+                            Name = "ShippingAddress",
+                            Value = "#999, ZiXing Road"
                         }
                     }
                 };
@@ -866,6 +863,10 @@ namespace Microsoft.Test.OData.Tests.Client.ComplexTypeTests
                 {
                     var odataWriter = messageWriter.CreateODataResourceWriter(accountSet, accountType);
                     odataWriter.WriteStart(entry);
+                    odataWriter.WriteStart(accountInfo_NestedInfo);
+                    odataWriter.WriteStart(accountInfoResource);
+                    odataWriter.WriteEnd();
+                    odataWriter.WriteEnd();
                     odataWriter.WriteEnd();
                 }
 
@@ -1074,28 +1075,26 @@ namespace Microsoft.Test.OData.Tests.Client.ComplexTypeTests
             entry.Properties = new[]
             {
                 new ODataProperty { Name = "AccountID", Value = 101 },
-                new ODataProperty { Name = "CountryRegion", Value = "CN" },
-                new ODataProperty
-                {
-                    Name = "AccountInfo",
-                    Value = new ODataComplexValue
+                new ODataProperty { Name = "CountryRegion", Value = "CN" }
+            };
+
+            var accountInfo_NestedInfo = new ODataNestedResourceInfo() { Name = "AccountInfo", IsCollection = false };
+            var accountInfo_Resource = new ODataResource
+            {
+                TypeName = NameSpacePrefix + "AccountInfo",
+                Properties = new[]
                     {
-                        TypeName = NameSpacePrefix + "AccountInfo",
-                        Properties = new[]
+                        new ODataProperty
                         {
-                            new ODataProperty
-                            {
-                                Name = "FirstName",
-                                Value = "Peter"
-                            },
-                            new ODataProperty
-                            {
-                                Name = "LastName",
-                                Value = "Andy"
-                            }
+                            Name = "FirstName",
+                            Value = "Peter"
+                        },
+                        new ODataProperty
+                        {
+                            Name = "LastName",
+                            Value = "Andy"
                         }
                     }
-                }
             };
 
             var settings = new ODataMessageWriterSettings();
@@ -1111,6 +1110,10 @@ namespace Microsoft.Test.OData.Tests.Client.ComplexTypeTests
             {
                 var odataWriter = messageWriter.CreateODataResourceWriter(accountSet, accountType);
                 odataWriter.WriteStart(entry);
+                odataWriter.WriteStart(accountInfo_NestedInfo);
+                odataWriter.WriteStart(accountInfo_Resource);
+                odataWriter.WriteEnd();
+                odataWriter.WriteEnd();
                 odataWriter.WriteEnd();
             }
 
