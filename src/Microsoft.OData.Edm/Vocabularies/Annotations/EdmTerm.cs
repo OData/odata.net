@@ -7,9 +7,9 @@
 namespace Microsoft.OData.Edm.Vocabularies
 {
     /// <summary>
-    /// Represents an EDM value term.
+    /// Represents an EDM term.
     /// </summary>
-    public class EdmTerm : EdmNamedElement, IEdmValueTerm
+    public class EdmTerm : EdmNamedElement, IEdmTerm
     {
         private readonly string namespaceName;
         private readonly IEdmTypeReference type;
@@ -93,14 +93,6 @@ namespace Microsoft.OData.Edm.Vocabularies
         }
 
         /// <summary>
-        /// Gets the kind of this term.
-        /// </summary>
-        public EdmTermKind TermKind
-        {
-            get { return EdmTermKind.Value; }
-        }
-
-        /// <summary>
         /// Gets the type of this term.
         /// </summary>
         public IEdmTypeReference Type
@@ -129,7 +121,7 @@ namespace Microsoft.OData.Edm.Vocabularies
         /// </summary>
         public EdmSchemaElementKind SchemaElementKind
         {
-            get { return EdmSchemaElementKind.ValueTerm; }
+            get { return EdmSchemaElementKind.Term; }
         }
     }
 }

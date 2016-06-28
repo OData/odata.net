@@ -37,7 +37,7 @@ namespace EdmLibTests.FunctionalUtilities
             this.GenerateContentsWithoutDefinition(edmVersion, definitionModel);
 
             XNamespace ns = this.namespaceToContents.First().Value.Name.Namespace;
-            foreach (var valueTerm in definitionModel.SchemaElements.OfType<IEdmValueTerm>())
+            foreach (var valueTerm in definitionModel.SchemaElements.OfType<IEdmTerm>())
             {
                 XElement schema = this.FindOrCreateCorrespondingSchema(valueTerm.Namespace, ns);
 

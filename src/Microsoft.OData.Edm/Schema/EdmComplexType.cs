@@ -99,13 +99,5 @@ namespace Microsoft.OData.Edm
         {
             get { return EdmTypeKind.Complex; }
         }
-
-        /// <summary>
-        /// Gets the kind of this term.
-        /// </summary>
-        public EdmTermKind TermKind
-        {
-            get { return EdmTermKind.Type; }
-        }
     }
 }

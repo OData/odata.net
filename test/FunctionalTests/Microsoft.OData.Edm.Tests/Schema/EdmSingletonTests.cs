@@ -83,7 +83,7 @@ namespace Microsoft.OData.Edm.Tests.Library
             EdmSingleton vipCustomer = new EdmSingleton(this.entityContainer, "VIP", this.customerType);
 
             EdmTerm term = new EdmTerm(myNamespace, "SingletonAnnotation", EdmPrimitiveTypeKind.String);
-            var annotation = new EdmAnnotation(vipCustomer, term, new EdmStringConstant("Singleton Annotation"));
+            var annotation = new EdmVocabularyAnnotation(vipCustomer, term, new EdmStringConstant("Singleton Annotation"));
             model.AddVocabularyAnnotation(annotation);
 
             var singletonAnnotation = vipCustomer.VocabularyAnnotations(model).Single();
@@ -95,7 +95,7 @@ namespace Microsoft.OData.Edm.Tests.Library
             Assert.Equal("SingletonAnnotation", singletonAnnotation.Term.Name);
 
             EdmTerm propertyTerm = new EdmTerm(myNamespace, "SingletonPropertyAnnotation", EdmPrimitiveTypeKind.String);
-            var propertyAnnotation = new EdmAnnotation(customerProperty, propertyTerm, new EdmStringConstant("Singleton Property Annotation"));
+            var propertyAnnotation = new EdmVocabularyAnnotation(customerProperty, propertyTerm, new EdmStringConstant("Singleton Property Annotation"));
             model.AddVocabularyAnnotation(propertyAnnotation);
 
             var singletonPropertyAnnotation = customerProperty.VocabularyAnnotations(model).Single();

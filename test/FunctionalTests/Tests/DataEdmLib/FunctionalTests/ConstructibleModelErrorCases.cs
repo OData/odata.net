@@ -169,7 +169,7 @@ namespace EdmLibTests.FunctionalTests
         public void AddAnnotationWithNoTarget()
         {
             var edmModel = new EdmModel();
-            var annotation = new MutableValueAnnotation();
+            var annotation = new MutableVocabularyAnnotation();
             this.VerifyThrowsException(typeof(InvalidOperationException), () => edmModel.AddVocabularyAnnotation(annotation));
         }
 
@@ -441,11 +441,6 @@ namespace EdmLibTests.FunctionalTests
                 throw new NotImplementedException();
             }
 
-            public EdmTermKind TermKind
-            {
-                get { throw new NotImplementedException(); }
-            }
-
             public string NamespaceUri
             {
                 get { throw new NotImplementedException(); }
@@ -492,7 +487,7 @@ namespace EdmLibTests.FunctionalTests
         }
     }
 
-    internal sealed class MutableValueAnnotation : Microsoft.OData.Edm.Vocabularies.IEdmValueAnnotation
+    internal sealed class MutableVocabularyAnnotation : Microsoft.OData.Edm.Vocabularies.IEdmVocabularyAnnotation
     {
         public IEdmExpression Value
         {

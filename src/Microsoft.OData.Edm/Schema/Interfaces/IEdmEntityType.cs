@@ -12,7 +12,7 @@ namespace Microsoft.OData.Edm
     /// <summary>
     /// Represents a definition of an EDM entity type.
     /// </summary>
-    public interface IEdmEntityType : IEdmStructuredType, IEdmSchemaType, IEdmTerm
+    public interface IEdmEntityType : IEdmStructuredType, IEdmSchemaType
     {
         /// <summary>
         /// Gets the structural properties of the entity type that make up the entity key.

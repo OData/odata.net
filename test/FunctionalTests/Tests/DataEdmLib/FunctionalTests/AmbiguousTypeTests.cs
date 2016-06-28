@@ -20,29 +20,26 @@ namespace EdmLibTests.FunctionalTests
     public class AmbiguousTypeTests : EdmLibTestCaseBase
     {
         [TestMethod]
-        public void AmbiguousValueTermTest()
+        public void AmbiguousTermTest()
         {
             EdmModel model = new EdmModel();
 
-            IEdmValueTerm term1 = new EdmTerm("Foo", "Bar", EdmPrimitiveTypeKind.Byte);
-            IEdmValueTerm term2 = new EdmTerm("Foo",  "Bar", EdmPrimitiveTypeKind.Decimal);
-            IEdmValueTerm term3 = new EdmTerm("Foo",  "Bar", EdmCoreModel.Instance.GetPrimitive(EdmPrimitiveTypeKind.Double, false));
-
-            Assert.AreEqual(EdmTermKind.Value, term1.TermKind, "EdmTermKind is correct.");
+            IEdmTerm term1 = new EdmTerm("Foo", "Bar", EdmPrimitiveTypeKind.Byte);
+            IEdmTerm term2 = new EdmTerm("Foo", "Bar", EdmPrimitiveTypeKind.Decimal);
+            IEdmTerm term3 = new EdmTerm("Foo", "Bar", EdmCoreModel.Instance.GetPrimitive(EdmPrimitiveTypeKind.Double, false));
 
             model.AddElement(term1);
-            Assert.AreEqual(term1, model.FindValueTerm("Foo.Bar"), "Correct item.");
+            Assert.AreEqual(term1, model.FindTerm("Foo.Bar"), "Correct item.");
 
             model.AddElement(term2);
             model.AddElement(term3);
 
-            IEdmValueTerm ambiguous = model.FindValueTerm("Foo.Bar");
+            IEdmTerm ambiguous = model.FindTerm("Foo.Bar");
             Assert.IsTrue(ambiguous.IsBad(), "Ambiguous binding is bad");
 
-            Assert.AreEqual(EdmSchemaElementKind.ValueTerm, ambiguous.SchemaElementKind, "Correct schema element kind.");
+            Assert.AreEqual(EdmSchemaElementKind.Term, ambiguous.SchemaElementKind, "Correct schema element kind.");
             Assert.AreEqual("Foo", ambiguous.Namespace, "Correct Namespace");
             Assert.AreEqual("Bar", ambiguous.Name, "Correct Name");
-            Assert.AreEqual(EdmTermKind.Value, ambiguous.TermKind, "Correct term kind.");
             Assert.IsTrue(ambiguous.Type.IsBad(), "Type is bad.");
         }
 

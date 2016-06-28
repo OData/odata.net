@@ -80,11 +80,11 @@ namespace Microsoft.OData.Edm
         IEnumerable<IEdmOperation> FindDeclaredOperations(string qualifiedName);
 
         /// <summary>
-        /// Searches for a value term with the given name in this model and returns null if no such value term exists.
+        /// Searches for a term with the given name in this model and returns null if no such term exists.
         /// </summary>
-        /// <param name="qualifiedName">The qualified name of the value term being found.</param>
-        /// <returns>The requested value term, or null if no such value term exists.</returns>
-        IEdmValueTerm FindDeclaredValueTerm(string qualifiedName);
+        /// <param name="qualifiedName">The qualified name of the term being found.</param>
+        /// <returns>The requested term, or null if no such term exists.</returns>
+        IEdmTerm FindDeclaredTerm(string qualifiedName);
 
         /// <summary>
         /// Searches for vocabulary annotations specified by this model.

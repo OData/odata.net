@@ -1,5 +1,5 @@
 ﻿//---------------------------------------------------------------------
-// <copyright file="AmbiguousValueTermBinding.cs" company="Microsoft">
+// <copyright file="AmbiguousTermBinding.cs" company="Microsoft">
 //      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 // </copyright>
 //---------------------------------------------------------------------
@@ -12,18 +12,18 @@ namespace Microsoft.OData.Edm
     /// <summary>
     /// Represents a name binding to more than one item.
     /// </summary>
-    internal class AmbiguousValueTermBinding : AmbiguousBinding<IEdmValueTerm>, IEdmValueTerm
+    internal class AmbiguousTermBinding : AmbiguousBinding<IEdmTerm>, IEdmTerm
     {
-        private readonly IEdmValueTerm first;
+        private readonly IEdmTerm first;
 
         // Type cache.
-        private readonly Cache<AmbiguousValueTermBinding, IEdmTypeReference> type = new Cache<AmbiguousValueTermBinding, IEdmTypeReference>();
-        private static readonly Func<AmbiguousValueTermBinding, IEdmTypeReference> ComputeTypeFunc = (me) => me.ComputeType();
+        private readonly Cache<AmbiguousTermBinding, IEdmTypeReference> type = new Cache<AmbiguousTermBinding, IEdmTypeReference>();
+        private static readonly Func<AmbiguousTermBinding, IEdmTypeReference> ComputeTypeFunc = (me) => me.ComputeType();
 
         private readonly string appliesTo = null;
         private readonly string defaultValue = null;
 
-        public AmbiguousValueTermBinding(IEdmValueTerm first, IEdmValueTerm second)
+        public AmbiguousTermBinding(IEdmTerm first, IEdmTerm second)
             : base(first, second)
         {
             this.first = first;
@@ -31,7 +31,7 @@ namespace Microsoft.OData.Edm
 
         public EdmSchemaElementKind SchemaElementKind
         {
-            get { return EdmSchemaElementKind.ValueTerm; }
+            get { return EdmSchemaElementKind.Term; }
         }
 
         public string Namespace
@@ -52,11 +52,6 @@ namespace Microsoft.OData.Edm
         public string DefaultValue
         {
             get { return this.defaultValue; }
-        }
-
-        public EdmTermKind TermKind
-        {
-            get { return EdmTermKind.Value; }
         }
 
         private IEdmTypeReference ComputeType()

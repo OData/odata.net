@@ -11,7 +11,7 @@ namespace Microsoft.OData.Edm
     /// <summary>
     /// Represents a definition of an EDM complex type.
     /// </summary>
-    public interface IEdmComplexType : IEdmStructuredType, IEdmSchemaType, IEdmTerm
+    public interface IEdmComplexType : IEdmStructuredType, IEdmSchemaType
     {
     }
 }

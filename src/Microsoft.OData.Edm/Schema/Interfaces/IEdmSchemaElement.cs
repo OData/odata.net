@@ -24,9 +24,9 @@ namespace Microsoft.OData.Edm
         TypeDefinition,
 
         /// <summary>
-        /// Represents a schema element implementing <see cref="IEdmValueTerm"/>.
+        /// Represents a schema element implementing <see cref="IEdmTerm"/>.
         /// </summary>
-        ValueTerm,
+        Term,
 
 
         /// <summary>

@@ -146,14 +146,14 @@ namespace Microsoft.OData.Edm {
         }
 
         /// <summary>
-        /// A string like "Type '{0}' must have a single value annotation with term '{1}'."
+        /// A string like "Type '{0}' must have a single annotation with term '{1}'."
         /// </summary>
         internal static string Edm_Evaluator_NoValueAnnotationOnType(object p0, object p1) {
             return Microsoft.OData.Edm.EntityRes.GetString(Microsoft.OData.Edm.EntityRes.Edm_Evaluator_NoValueAnnotationOnType, p0, p1);
         }
 
         /// <summary>
-        /// A string like "Element must have a single value annotation with term '{0}'."
+        /// A string like "Element must have a single annotation with term '{0}'."
         /// </summary>
         internal static string Edm_Evaluator_NoValueAnnotationOnElement(object p0) {
             return Microsoft.OData.Edm.EntityRes.GetString(Microsoft.OData.Edm.EntityRes.Edm_Evaluator_NoValueAnnotationOnElement, p0);
@@ -927,13 +927,6 @@ namespace Microsoft.OData.Edm {
         }
 
         /// <summary>
-        /// A string like "A term without other errors must not have kind of none. The kind of term '{0}' is none."
-        /// </summary>
-        internal static string EdmModel_Validator_Semantic_TermMustNotHaveKindOfNone(object p0) {
-            return Microsoft.OData.Edm.EntityRes.GetString(Microsoft.OData.Edm.EntityRes.EdmModel_Validator_Semantic_TermMustNotHaveKindOfNone, p0);
-        }
-
-        /// <summary>
         /// A string like "A schema element without other errors must not have kind of none. The kind of schema element '{0}' is none."
         /// </summary>
         internal static string EdmModel_Validator_Semantic_SchemaElementMustNotHaveKindOfNone(object p0) {
@@ -1018,7 +1011,7 @@ namespace Microsoft.OData.Edm {
         }
 
         /// <summary>
-        /// A string like "An element already has a direct value annotation with the namespace '{0}' and name '{1}'."
+        /// A string like "An element already has a direct annotation with the namespace '{0}' and name '{1}'."
         /// </summary>
         internal static string EdmModel_Validator_Semantic_ElementDirectValueAnnotationFullNameMustBeUnique(object p0, object p1) {
             return Microsoft.OData.Edm.EntityRes.GetString(Microsoft.OData.Edm.EntityRes.EdmModel_Validator_Semantic_ElementDirectValueAnnotationFullNameMustBeUnique, p0, p1);
@@ -1761,13 +1754,6 @@ namespace Microsoft.OData.Edm {
         /// </summary>
         internal static string UnknownEnumVal_PropertyKind(object p0) {
             return Microsoft.OData.Edm.EntityRes.GetString(Microsoft.OData.Edm.EntityRes.UnknownEnumVal_PropertyKind, p0);
-        }
-
-        /// <summary>
-        /// A string like "Invalid term kind: '{0}'"
-        /// </summary>
-        internal static string UnknownEnumVal_TermKind(object p0) {
-            return Microsoft.OData.Edm.EntityRes.GetString(Microsoft.OData.Edm.EntityRes.UnknownEnumVal_TermKind, p0);
         }
 
         /// <summary>

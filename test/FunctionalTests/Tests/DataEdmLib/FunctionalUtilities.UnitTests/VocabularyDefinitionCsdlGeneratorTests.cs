@@ -23,12 +23,12 @@ namespace EdmLibTests.FunctionalUtilities.UnitTests
         private VocabularyDefinitionCsdlGenerator generator = new VocabularyDefinitionCsdlGenerator();
 
         [TestMethod]
-        public void Simple_ValueTermDefinitions_Should_Be_Generated()
+        public void Simple_TermDefinitions_Should_Be_Generated()
         {
             var model = new StubEdmModel()
             {
-                new StubValueTerm("NS1", "fooValueTerm") { Type = EdmCoreModel.Instance.GetInt32(true) },
-                new StubValueTerm("NS1", "barValueTerm") { Type = EdmCoreModel.Instance.GetString(false)},
+                new StubTerm("NS1", "fooValueTerm") { Type = EdmCoreModel.Instance.GetInt32(true) },
+                new StubTerm("NS1", "barValueTerm") { Type = EdmCoreModel.Instance.GetString(false)},
             };
 
             XElement result = this.generator.GenerateDefinitionCsdl(EdmVersion.V40, model).Single();
@@ -42,7 +42,7 @@ namespace EdmLibTests.FunctionalUtilities.UnitTests
         }
 
         [TestMethod]
-        public void Simple_ValueTermDefinitions_WithEntityType_InSameNamespace_Should_Be_Generated_Together()
+        public void Simple_TermDefinitions_WithEntityType_InSameNamespace_Should_Be_Generated_Together()
         {
             var model = new StubEdmModel()
             {
@@ -50,8 +50,8 @@ namespace EdmLibTests.FunctionalUtilities.UnitTests
                 { 
                     new StubEdmStructuralProperty("Name") { Type = EdmCoreModel.Instance.GetString(isUnbounded:false, maxLength:null, isUnicode:true, isNullable:false)},
                 },
-                new StubValueTerm("NS1", "fooValueTerm") { Type = EdmCoreModel.Instance.GetInt32(true)},
-                new StubValueTerm("NS1", "barValueTerm") { Type = EdmCoreModel.Instance.GetString(false)},
+                new StubTerm("NS1", "fooValueTerm") { Type = EdmCoreModel.Instance.GetInt32(true)},
+                new StubTerm("NS1", "barValueTerm") { Type = EdmCoreModel.Instance.GetString(false)},
             };
 
             XElement result = this.generator.GenerateDefinitionCsdl(EdmVersion.V40, model).Single();
@@ -68,12 +68,12 @@ namespace EdmLibTests.FunctionalUtilities.UnitTests
         }
 
         [TestMethod]
-        public void ValueTermDefinitions_InMultipleNamespaces_Should_Be_Generated()
+        public void TermDefinitions_InMultipleNamespaces_Should_Be_Generated()
         {
             var model = new StubEdmModel()
             {
-                new StubValueTerm("NS1", "fooValueTerm") { Type = EdmCoreModel.Instance.GetInt32(true)},
-                new StubValueTerm("NS2", "barValueTerm") { Type = EdmCoreModel.Instance.GetString(false)},
+                new StubTerm("NS1", "fooValueTerm") { Type = EdmCoreModel.Instance.GetInt32(true)},
+                new StubTerm("NS2", "barValueTerm") { Type = EdmCoreModel.Instance.GetString(false)},
             };
 
             var fileContents = this.generator.GenerateDefinitionCsdl(EdmVersion.V40, model);
@@ -95,7 +95,7 @@ namespace EdmLibTests.FunctionalUtilities.UnitTests
         }
 
         [TestMethod]
-        public void Simple_ValueTermDefinitions_WithEntityTypes_InDifferentNamespaces_Should_Be_Generated_Separately()
+        public void Simple_TermDefinitions_WithEntityTypes_InDifferentNamespaces_Should_Be_Generated_Separately()
         {
             var model = new StubEdmModel()
             {
@@ -103,8 +103,8 @@ namespace EdmLibTests.FunctionalUtilities.UnitTests
                 { 
                     new StubEdmStructuralProperty("Name") { Type = EdmCoreModel.Instance.GetString(isUnbounded:false, maxLength:null, isUnicode:true, isNullable:false) },
                 },
-                new StubValueTerm("NS1", "fooValueTerm") { Type = EdmCoreModel.Instance.GetInt32(true)},
-                new StubValueTerm("NS1", "barValueTerm") { Type = EdmCoreModel.Instance.GetString(false)},
+                new StubTerm("NS1", "fooValueTerm") { Type = EdmCoreModel.Instance.GetInt32(true)},
+                new StubTerm("NS1", "barValueTerm") { Type = EdmCoreModel.Instance.GetString(false)},
             };
 
             var fileContents = this.generator.GenerateDefinitionCsdl(EdmVersion.V40, model);

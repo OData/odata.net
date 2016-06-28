@@ -133,7 +133,6 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
                 ValidationRules.TypeMustNotHaveKindOfNone,
                 ValidationRules.PrimitiveTypeMustNotHaveKindOfNone,
                 ValidationRules.PropertyMustNotHaveKindOfNone,
-                ValidationRules.TermMustNotHaveKindOfNone,
                 ValidationRules.SchemaElementMustNotHaveKindOfNone,
                 ValidationRules.EntityContainerElementMustNotHaveKindOfNone,
                 ValidationRules.EnumMustHaveIntegerUnderlyingType,
@@ -168,7 +167,6 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
                 case EdmErrorCode.TypeMustNotHaveKindOfNone:
                 case EdmErrorCode.PrimitiveTypeMustNotHaveKindOfNone:
                 case EdmErrorCode.PropertyMustNotHaveKindOfNone:
-                case EdmErrorCode.TermMustNotHaveKindOfNone:
                 case EdmErrorCode.SchemaElementMustNotHaveKindOfNone:
                 case EdmErrorCode.EntityContainerElementMustNotHaveKindOfNone:
                 case EdmErrorCode.BinaryValueCannotHaveEmptyValue:

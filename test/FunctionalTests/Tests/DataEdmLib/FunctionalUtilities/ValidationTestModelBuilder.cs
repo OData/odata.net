@@ -2940,7 +2940,7 @@ namespace EdmLibTests.FunctionalUtilities
         }
 
         [CustomCsdlSchemaCompliantTest]
-        public static IEnumerable<XElement> ModelWithEnumValueTerm()
+        public static IEnumerable<XElement> ModelWithEnumTerm()
         {
             const string csdl =
 @"<?xml version=""1.0"" encoding=""utf-16""?>

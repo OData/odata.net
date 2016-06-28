@@ -25,5 +25,10 @@ namespace Microsoft.OData.Edm.Vocabularies
         /// Gets the element the annotation applies to.
         /// </summary>
         IEdmVocabularyAnnotatable Target { get; }
+
+        /// <summary>
+        /// Gets the expression producing the value of the annotation.
+        /// </summary>
+        IEdmExpression Value { get; }
     }
 }

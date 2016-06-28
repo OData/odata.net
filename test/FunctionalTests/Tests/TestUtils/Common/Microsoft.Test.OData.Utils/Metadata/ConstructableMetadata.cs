@@ -699,11 +699,11 @@ namespace Microsoft.Test.OData.Utils.Metadata
         }
 
         /// <summary>
-        /// Searches for a value term with the given name in this model and returns null if no such value term exists.
+        /// Searches for a term with the given name in this model and returns null if no such term exists.
         /// </summary>
-        /// <param name="qualifiedName">The qualified name of the value term being found.</param>
-        /// <returns>The requested value term, or null if no such value term exists.</returns>
-        public IEdmValueTerm FindDeclaredValueTerm(string qualifiedName)
+        /// <param name="qualifiedName">The qualified name of the term being found.</param>
+        /// <returns>The requested term, or null if no such term exists.</returns>
+        public IEdmTerm FindDeclaredTerm(string qualifiedName)
         {
             return null;
         }

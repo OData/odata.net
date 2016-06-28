@@ -522,9 +522,9 @@ namespace Microsoft.OData.Evaluation
                 {
                     IEdmVocabularyAnnotation annotation = model.FindDeclaredVocabularyAnnotations(entitySet)
                         .SingleOrDefault(t => t.Term.FullName().Equals(CoreVocabularyConstants.OptimisticConcurrency, StringComparison.Ordinal));
-                    if (annotation is IEdmValueAnnotation)
+                    if (annotation != null)
                     {
-                        IEdmExpression collectionExpression = (annotation as IEdmValueAnnotation).Value;
+                        IEdmExpression collectionExpression = annotation.Value;
                         if (collectionExpression is IEdmCollectionExpression)
                         {
                             IEnumerable<IEdmExpression> pathExpressions = (collectionExpression as IEdmCollectionExpression).Elements.Where(p => p is IEdmPathExpression);

@@ -205,7 +205,6 @@ namespace EdmLibTests.FunctionalTests
             var expectedErrors = new EdmLibTestErrors()
             {
                 { "(EdmLibTests.FunctionalTests.CodeCoverageBoostingTests+NoneKinds1)", EdmErrorCode.TypeMustNotHaveKindOfNone },
-                { "(EdmLibTests.FunctionalTests.CodeCoverageBoostingTests+NoneKinds1)", EdmErrorCode.TermMustNotHaveKindOfNone },
                 { "(EdmLibTests.FunctionalTests.CodeCoverageBoostingTests+NoneKinds1)", EdmErrorCode.EntityContainerElementMustNotHaveKindOfNone },
                 { "(EdmLibTests.FunctionalTests.CodeCoverageBoostingTests+NoneKinds1)", EdmErrorCode.SchemaElementMustNotHaveKindOfNone },
                 { "(namespace.type)", EdmErrorCode.KeyMissingOnEntityType },
@@ -363,7 +362,7 @@ namespace EdmLibTests.FunctionalTests
             this.VerifySemanticValidation(model, EdmVersion.V40, expectedErrors);
         }
 
-        class NoneKinds1 : IEdmType, IEdmEntityContainerElement, IEdmSchemaElement, IEdmTerm
+        class NoneKinds1 : IEdmType, IEdmEntityContainerElement, IEdmSchemaElement
         {
             public NoneKinds1(string namespaceName, string name, IEdmEntityContainer container)
             {
@@ -371,7 +370,6 @@ namespace EdmLibTests.FunctionalTests
                 this.Name = name;
                 this.Container = container;
                 TypeKind = EdmTypeKind.None;
-                TermKind = EdmTermKind.None;
                 SchemaElementKind = EdmSchemaElementKind.None;
                 ContainerElementKind = EdmContainerElementKind.None;
             }
@@ -379,7 +377,6 @@ namespace EdmLibTests.FunctionalTests
             public string Namespace { get; set; }
             public string Name { get; set; }
             public EdmTypeKind TypeKind { get; set; }
-            public EdmTermKind TermKind { get; set; }
             public EdmSchemaElementKind SchemaElementKind { get; set; }
             public EdmContainerElementKind ContainerElementKind { get; set; }
             public IEdmEntityContainer Container { get; set; }

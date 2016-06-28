@@ -193,7 +193,7 @@ namespace Microsoft.OData.JsonLight
         internal object ReadODataOrCustomInstanceAnnotationValue(string annotationName, string odataType)
         {
             // If this term is defined in the model, look up its type. If the term is not in the model, this will be null.
-            IEdmTypeReference expectedTypeFromTerm = MetadataUtils.LookupTypeOfValueTerm(annotationName, this.Model);
+            IEdmTypeReference expectedTypeFromTerm = MetadataUtils.LookupTypeOfTerm(annotationName, this.Model);
             object customInstanceAnnotationValue = this.ReadNonEntityValueImplementation(
                 odataType,
                 expectedTypeFromTerm,

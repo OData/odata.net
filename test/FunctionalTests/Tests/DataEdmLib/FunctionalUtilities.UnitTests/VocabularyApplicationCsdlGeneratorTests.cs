@@ -22,15 +22,15 @@ namespace EdmLibTests.FunctionalUtilities.UnitTests
         private VocabularyApplicationCsdlGenerator generator = new VocabularyApplicationCsdlGenerator();
 
         [TestMethod]
-        public void Simple_ValueAnnotation_Should_Be_Generated()
+        public void Simple_VocabularyAnnotation_Should_Be_Generated()
         {
             var model = new StubEdmModel();
 
             var entity = new StubEdmEntityType("NS1", "Person");
 
-            var vt = new StubValueTerm("NS1", "MyValueTerm") { Type = EdmCoreModel.Instance.GetString(true) };
-            var va1 = new StubValueAnnotation() { Term = vt, Value = new StubStringConstantExpression("Great!!!") };
-            var va2 = new StubValueAnnotation() { Term = vt, Qualifier = "phone", Value = new StubStringConstantExpression("Fabulous!!!") };
+            var vt = new StubTerm("NS1", "MyValueTerm") { Type = EdmCoreModel.Instance.GetString(true) };
+            var va1 = new StubVocabularyAnnotation() { Term = vt, Value = new StubStringConstantExpression("Great!!!") };
+            var va2 = new StubVocabularyAnnotation() { Term = vt, Qualifier = "phone", Value = new StubStringConstantExpression("Fabulous!!!") };
             entity.AddVocabularyAnnotation(va1);
             entity.AddVocabularyAnnotation(va2);
 
@@ -54,17 +54,17 @@ namespace EdmLibTests.FunctionalUtilities.UnitTests
             var model = new StubEdmModel();
 
             var entity = new StubEdmEntityType("NS1", "Person");
-            var vt = new StubValueTerm("NS1", "MyValueTerm") { Type = EdmCoreModel.Instance.GetString(true) };
-            var va1 = new StubValueAnnotation() { Term = vt, Value = new StubStringConstantExpression("Great!!!") };
+            var vt = new StubTerm("NS1", "MyValueTerm") { Type = EdmCoreModel.Instance.GetString(true) };
+            var va1 = new StubVocabularyAnnotation() { Term = vt, Value = new StubStringConstantExpression("Great!!!") };
             entity.AddVocabularyAnnotation(va1);
             model.Add(entity);
 
             var entitySet = new StubEdmEntitySet("personSet", null);
-            var va2 = new StubValueAnnotation() { Term = vt, Value = new StubStringConstantExpression("Aha!!!") };
+            var va2 = new StubVocabularyAnnotation() { Term = vt, Value = new StubStringConstantExpression("Aha!!!") };
             entitySet.AddVocabularyAnnotation(va2);
 
             var container = new StubEdmEntityContainer("NS1", "myContainer") { entitySet };
-            var va3 = new StubValueAnnotation() { Term = vt, Value = new StubStringConstantExpression("Huh??") };
+            var va3 = new StubVocabularyAnnotation() { Term = vt, Value = new StubStringConstantExpression("Huh??") };
             container.AddVocabularyAnnotation(va3);
             model.Add(container);
 

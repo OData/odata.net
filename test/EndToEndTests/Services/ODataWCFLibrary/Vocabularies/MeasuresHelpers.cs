@@ -24,8 +24,8 @@ namespace Microsoft.Test.OData.Services.ODataWCFService.Vocabularies
         #region Initialization
 
         public static readonly IEdmModel Instance;
-        public static readonly IEdmValueTerm ISOCurrencyTerm;
-        public static readonly IEdmValueTerm ScaleTerm;
+        public static readonly IEdmTerm ISOCurrencyTerm;
+        public static readonly IEdmTerm ScaleTerm;
 
         internal const string MeasuresISOCurrency = "Org.OData.Measures.V1.ISOCurrency";
         internal const string MeasuresScale = "Org.OData.Measures.V1.Scale";
@@ -38,8 +38,8 @@ namespace Microsoft.Test.OData.Services.ODataWCFService.Vocabularies
                 CsdlReader.TryParse(new[] { XmlReader.Create(stream) }, out Instance, out errors);
             }
 
-            ISOCurrencyTerm = Instance.FindDeclaredValueTerm(MeasuresISOCurrency);
-            ScaleTerm = Instance.FindDeclaredValueTerm(MeasuresScale);
+            ISOCurrencyTerm = Instance.FindDeclaredTerm(MeasuresISOCurrency);
+            ScaleTerm = Instance.FindDeclaredTerm(MeasuresScale);
         }
 
         #endregion
@@ -54,7 +54,7 @@ namespace Microsoft.Test.OData.Services.ODataWCFService.Vocabularies
             var target = property;
             var term = ISOCurrencyTerm;
             var expression = new EdmStringConstant(isoCurrency);
-            var annotation = new EdmAnnotation(target, term, expression);
+            var annotation = new EdmVocabularyAnnotation(target, term, expression);
             annotation.SetSerializationLocation(model, property.ToSerializationLocation());
             model.AddVocabularyAnnotation(annotation);
         }
@@ -71,7 +71,7 @@ namespace Microsoft.Test.OData.Services.ODataWCFService.Vocabularies
             var target = property;
             var term = ScaleTerm;
             var expression = new EdmIntegerConstant(scale);
-            var annotation = new EdmAnnotation(target, term, expression);
+            var annotation = new EdmVocabularyAnnotation(target, term, expression);
             annotation.SetSerializationLocation(model, property.ToSerializationLocation());
             model.AddVocabularyAnnotation(annotation);
         }

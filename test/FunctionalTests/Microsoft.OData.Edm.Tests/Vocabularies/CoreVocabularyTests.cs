@@ -91,29 +91,28 @@ namespace Microsoft.OData.Edm.Tests.Vocabularies
   </Term>
 </Schema>";
 
-            var s = coreVocModel.FindDeclaredValueTerm("Org.OData.Core.V1.OptimisticConcurrency");
+            var s = coreVocModel.FindDeclaredTerm("Org.OData.Core.V1.OptimisticConcurrency");
             Assert.NotNull(s);
             Assert.Equal("Org.OData.Core.V1", s.Namespace);
             Assert.Equal("OptimisticConcurrency", s.Name);
-            Assert.Equal(EdmTermKind.Value, s.TermKind);
 
             var type = s.Type;
             Assert.Equal("Collection(Edm.PropertyPath)", type.FullName());
             Assert.Equal(EdmTypeKind.Collection, type.Definition.TypeKind);
 
-            var descriptionTerm = coreVocModel.FindValueTerm("Org.OData.Core.V1.Description");
+            var descriptionTerm = coreVocModel.FindTerm("Org.OData.Core.V1.Description");
             Assert.NotNull(descriptionTerm);
             var descriptionType = descriptionTerm.Type.Definition as IEdmPrimitiveType;
             Assert.NotNull(descriptionType);
             Assert.Equal(EdmPrimitiveTypeKind.String, descriptionType.PrimitiveKind);
 
-            var longDescriptionTerm = coreVocModel.FindValueTerm("Org.OData.Core.V1.LongDescription");
+            var longDescriptionTerm = coreVocModel.FindTerm("Org.OData.Core.V1.LongDescription");
             Assert.NotNull(longDescriptionTerm);
             var longDescriptionType = longDescriptionTerm.Type.Definition as IEdmPrimitiveType;
             Assert.NotNull(longDescriptionType);
             Assert.Equal(EdmPrimitiveTypeKind.String, longDescriptionType.PrimitiveKind);
 
-            var isLanguageDependentTerm = coreVocModel.FindValueTerm("Org.OData.Core.V1.IsLanguageDependent");
+            var isLanguageDependentTerm = coreVocModel.FindTerm("Org.OData.Core.V1.IsLanguageDependent");
             Assert.NotNull(isLanguageDependentTerm);
             var isLanguageDependentType = isLanguageDependentTerm.Type.Definition as IEdmTypeDefinition;
             Assert.NotNull(isLanguageDependentType);

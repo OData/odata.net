@@ -21,7 +21,7 @@ namespace Microsoft.OData.Edm.Validation
         #region IEdmElement
 
         /// <summary>
-        /// Validates that no direct value annotations share the same name and namespace.
+        /// Validates that no direct annotations share the same name and namespace.
         /// </summary>
         public static readonly ValidationRule<IEdmElement> ElementDirectValueAnnotationFullNameMustBeUnique =
             new ValidationRule<IEdmElement>(
@@ -1916,7 +1916,7 @@ namespace Microsoft.OData.Edm.Validation
         #region IEdmImmediateValueAnnotation
 
         /// <summary>
-        /// Validates that an immediate value annotation has a name and a namespace.
+        /// Validates that an immediate annotation has a name and a namespace.
         /// </summary>
         public static readonly ValidationRule<IEdmDirectValueAnnotation> ImmediateValueAnnotationElementAnnotationIsValid =
             new ValidationRule<IEdmDirectValueAnnotation>(
@@ -1939,7 +1939,7 @@ namespace Microsoft.OData.Edm.Validation
                 });
 
         /// <summary>
-        /// Validates that an immediate value annotation that is flagged to be serialized as an element can be serialized safely.
+        /// Validates that an immediate annotation that is flagged to be serialized as an element can be serialized safely.
         /// </summary>
         public static readonly ValidationRule<IEdmDirectValueAnnotation> ImmediateValueAnnotationElementAnnotationHasNameAndNamespace =
             new ValidationRule<IEdmDirectValueAnnotation>(
@@ -1960,7 +1960,7 @@ namespace Microsoft.OData.Edm.Validation
                 });
 
         /// <summary>
-        /// Validates that the name of a direct value annotation can safely be serialized as XML.
+        /// Validates that the name of a direct annotation can safely be serialized as XML.
         /// </summary>
         public static readonly ValidationRule<IEdmDirectValueAnnotation> DirectValueAnnotationHasXmlSerializableName =
             new ValidationRule<IEdmDirectValueAnnotation>(
@@ -2027,7 +2027,7 @@ namespace Microsoft.OData.Edm.Validation
                                 IEdmTerm term = target as IEdmTerm;
                                 if (term != null)
                                 {
-                                    foundTarget = (context.Model.FindValueTerm(term.FullName()) as IEdmTerm != null);
+                                    foundTarget = (context.Model.FindTerm(term.FullName()) != null);
                                 }
                                 else
                                 {
@@ -2114,19 +2114,16 @@ namespace Microsoft.OData.Edm.Validation
                     }
                 });
 
-        #endregion
-
-        #region IEdmValueAnnotation
-
         /// <summary>
-        /// Validates that if a value annotation declares a type, the expression for that annotation has the correct type.
+        /// Validates that if a vocabulary annotation declares a type, the expression for that annotation has the correct type.
         /// </summary>
-        public static readonly ValidationRule<IEdmValueAnnotation> ValueAnnotationAssertCorrectExpressionType =
-            new ValidationRule<IEdmValueAnnotation>(
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes")]
+        public static readonly ValidationRule<IEdmVocabularyAnnotation> VocabularyAnnotationAssertCorrectExpressionType =
+            new ValidationRule<IEdmVocabularyAnnotation>(
                 (context, annotation) =>
                 {
                     IEnumerable<EdmError> errors;
-                    if (!annotation.Value.TryCast(((IEdmValueTerm)annotation.Term).Type, out errors))
+                    if (!annotation.Value.TryCast(annotation.Term.Type, out errors))
                     {
                         foreach (EdmError error in errors)
                         {
@@ -2141,13 +2138,13 @@ namespace Microsoft.OData.Edm.Validation
         /// <summary>
         /// Validates that a vocabulary annotations term can be found through the model containing the annotation.
         /// </summary>
-        public static readonly ValidationRule<IEdmValueAnnotation> AnnotationInaccessibleTerm =
-            new ValidationRule<IEdmValueAnnotation>(
+        public static readonly ValidationRule<IEdmVocabularyAnnotation> AnnotationInaccessibleTerm =
+            new ValidationRule<IEdmVocabularyAnnotation>(
                 (context, annotation) =>
                 {
                     // An unbound term is not treated as a semantic error, and looking up its name would fail.
                     IEdmTerm term = annotation.Term;
-                    if (!(term is Microsoft.OData.Edm.Csdl.CsdlSemantics.IUnresolvedElement) && context.Model.FindValueTerm(term.FullName()) == null)
+                    if (!(term is Microsoft.OData.Edm.Csdl.CsdlSemantics.IUnresolvedElement) && context.Model.FindTerm(term.FullName()) == null)
                     {
                         context.AddError(
                             annotation.Location(),
@@ -2176,26 +2173,6 @@ namespace Microsoft.OData.Edm.Validation
                         {
                             context.AddError(error);
                         }
-                    }
-                });
-
-        #endregion
-
-        #region IEdmTerm
-
-        /// <summary>
-        /// A term without other errors must not have kind of none.
-        /// </summary>
-        public static readonly ValidationRule<IEdmTerm> TermMustNotHaveKindOfNone =
-            new ValidationRule<IEdmTerm>(
-                (context, term) =>
-                {
-                    if (term.TermKind == EdmTermKind.None && !context.IsBad(term))
-                    {
-                        context.AddError(
-                        term.Location(),
-                        EdmErrorCode.TermMustNotHaveKindOfNone,
-                        Strings.EdmModel_Validator_Semantic_TermMustNotHaveKindOfNone(term.FullName()));
                     }
                 });
 

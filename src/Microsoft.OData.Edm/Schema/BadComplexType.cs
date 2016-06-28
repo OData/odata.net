@@ -24,10 +24,5 @@ namespace Microsoft.OData.Edm
         {
             get { return EdmTypeKind.Complex; }
         }
-
-        public EdmTermKind TermKind
-        {
-            get { return EdmTermKind.Type; }
-        }
     }
 }

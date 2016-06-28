@@ -62,14 +62,6 @@ namespace Microsoft.Test.Taupo.Edmlib.StubEdm
         }
 
         /// <summary>
-        /// Gets the term kind
-        /// </summary>
-        public EdmTermKind TermKind
-        {
-            get { return EdmTermKind.Type; }
-        }
-
-        /// <summary>
         /// Gets the schema element kind
         /// </summary>
         public EdmSchemaElementKind SchemaElementKind

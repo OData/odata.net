@@ -37,11 +37,6 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
             get { return EdmTypeKind.Complex; }
         }
 
-        public EdmTermKind TermKind
-        {
-            get { return EdmTermKind.Type; }
-        }
-
         public override bool IsAbstract
         {
             get { return this.complex.IsAbstract; }

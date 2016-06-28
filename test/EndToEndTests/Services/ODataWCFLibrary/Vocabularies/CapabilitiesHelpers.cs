@@ -22,17 +22,17 @@ namespace Microsoft.Test.OData.Services.ODataWCFService.Vocabularies
         #region Initialization
 
         public static readonly IEdmModel Instance;
-        public static readonly IEdmValueTerm ConformanceLevelTerm;
-        public static readonly IEdmValueTerm SupportedFormatsTerm;
-        public static readonly IEdmValueTerm AsynchronousRequestsSupportedTerm;
-        public static readonly IEdmValueTerm BatchContinueOnErrorSupportedTerm;
-        public static readonly IEdmValueTerm ChangeTrackingTerm;
-        public static readonly IEdmValueTerm NavigationRestrictionsTerm;
-        public static readonly IEdmValueTerm FilterFunctionsTerm;
-        public static readonly IEdmValueTerm SearchRestrictionsTerm;
-        public static readonly IEdmValueTerm InsertRestrictionsTerm;
-        public static readonly IEdmValueTerm UpdateRestrictionsTerm;
-        public static readonly IEdmValueTerm DeleteRestrictionsTerm;
+        public static readonly IEdmTerm ConformanceLevelTerm;
+        public static readonly IEdmTerm SupportedFormatsTerm;
+        public static readonly IEdmTerm AsynchronousRequestsSupportedTerm;
+        public static readonly IEdmTerm BatchContinueOnErrorSupportedTerm;
+        public static readonly IEdmTerm ChangeTrackingTerm;
+        public static readonly IEdmTerm NavigationRestrictionsTerm;
+        public static readonly IEdmTerm FilterFunctionsTerm;
+        public static readonly IEdmTerm SearchRestrictionsTerm;
+        public static readonly IEdmTerm InsertRestrictionsTerm;
+        public static readonly IEdmTerm UpdateRestrictionsTerm;
+        public static readonly IEdmTerm DeleteRestrictionsTerm;
         public static readonly IEdmEnumType ConformanceLevelTypeType;
         public static readonly IEdmEnumType NavigationTypeType;
         public static readonly IEdmEnumType SearchExpressionsType;
@@ -60,17 +60,17 @@ namespace Microsoft.Test.OData.Services.ODataWCFService.Vocabularies
                 CsdlReader.TryParse(new[] { XmlReader.Create(stream) }, out Instance, out errors);
             }
 
-            ConformanceLevelTerm = Instance.FindDeclaredValueTerm(CapabilitiesConformanceLevel);
-            SupportedFormatsTerm = Instance.FindDeclaredValueTerm(CapabilitiesSupportedFormats);
-            AsynchronousRequestsSupportedTerm = Instance.FindDeclaredValueTerm(CapabilitiesAsynchronousRequestsSupported);
-            BatchContinueOnErrorSupportedTerm = Instance.FindDeclaredValueTerm(CapabilitiesBatchContinueOnErrorSupported);
-            ChangeTrackingTerm = Instance.FindDeclaredValueTerm(CapabilitiesChangeTracking);
-            NavigationRestrictionsTerm = Instance.FindDeclaredValueTerm(CapabilitiesNavigationRestrictions);
-            FilterFunctionsTerm = Instance.FindDeclaredValueTerm(CapabilitiesFilterFunctions);
-            SearchRestrictionsTerm = Instance.FindDeclaredValueTerm(CapabilitiesSearchRestrictions);
-            InsertRestrictionsTerm = Instance.FindDeclaredValueTerm(CapabilitiesInsertRestrictions);
-            UpdateRestrictionsTerm = Instance.FindDeclaredValueTerm(CapabilitiesUpdateRestrictions);
-            DeleteRestrictionsTerm = Instance.FindDeclaredValueTerm(CapabilitiesDeleteRestrictions);
+            ConformanceLevelTerm = Instance.FindDeclaredTerm(CapabilitiesConformanceLevel);
+            SupportedFormatsTerm = Instance.FindDeclaredTerm(CapabilitiesSupportedFormats);
+            AsynchronousRequestsSupportedTerm = Instance.FindDeclaredTerm(CapabilitiesAsynchronousRequestsSupported);
+            BatchContinueOnErrorSupportedTerm = Instance.FindDeclaredTerm(CapabilitiesBatchContinueOnErrorSupported);
+            ChangeTrackingTerm = Instance.FindDeclaredTerm(CapabilitiesChangeTracking);
+            NavigationRestrictionsTerm = Instance.FindDeclaredTerm(CapabilitiesNavigationRestrictions);
+            FilterFunctionsTerm = Instance.FindDeclaredTerm(CapabilitiesFilterFunctions);
+            SearchRestrictionsTerm = Instance.FindDeclaredTerm(CapabilitiesSearchRestrictions);
+            InsertRestrictionsTerm = Instance.FindDeclaredTerm(CapabilitiesInsertRestrictions);
+            UpdateRestrictionsTerm = Instance.FindDeclaredTerm(CapabilitiesUpdateRestrictions);
+            DeleteRestrictionsTerm = Instance.FindDeclaredTerm(CapabilitiesDeleteRestrictions);
             ConformanceLevelTypeType = (IEdmEnumType)Instance.FindDeclaredType(CapabilitiesConformanceLevelType);
             NavigationTypeType = (IEdmEnumType)Instance.FindDeclaredType(CapabilitiesNavigationType);
             SearchExpressionsType = (IEdmEnumType)Instance.FindDeclaredType(CapabilitiesSearchExpressions);
@@ -89,7 +89,8 @@ namespace Microsoft.Test.OData.Services.ODataWCFService.Vocabularies
             var term = ConformanceLevelTerm;
             var name = new EdmEnumTypeReference(ConformanceLevelTypeType, false).ToStringLiteral((long)level);
             var expression = new EdmEnumMemberExpression(ConformanceLevelTypeType.Members.Single(m => m.Name == name));
-            var annotation = new EdmAnnotation(target, term, expression);
+            var annotation = new EdmVocabularyAnnotation(target, term, expression);
+
             annotation.SetSerializationLocation(model, container.ToSerializationLocation());
             model.AddVocabularyAnnotation(annotation);
         }
@@ -165,7 +166,7 @@ namespace Microsoft.Test.OData.Services.ODataWCFService.Vocabularies
                 new EdmPropertyConstructor("RestrictedProperties", new EdmCollectionExpression(propertiesExpression))
             });
 
-            var annotation = new EdmAnnotation(target, term, record);
+            var annotation = new EdmVocabularyAnnotation(target, term, record);
             annotation.SetSerializationLocation(model, entitySet.ToSerializationLocation());
             model.AddVocabularyAnnotation(annotation);
         }
@@ -209,7 +210,7 @@ namespace Microsoft.Test.OData.Services.ODataWCFService.Vocabularies
             };
             var record = new EdmRecordExpression(properties);
 
-            var annotation = new EdmAnnotation(target, term, record);
+            var annotation = new EdmVocabularyAnnotation(target, term, record);
             annotation.SetSerializationLocation(model, entitySet.ToSerializationLocation());
             model.AddVocabularyAnnotation(annotation);
         }
@@ -270,7 +271,7 @@ namespace Microsoft.Test.OData.Services.ODataWCFService.Vocabularies
 
         #region Helpers
 
-        private static void SetCapabilitiesAnnotation(this EdmModel model, IEdmVocabularyAnnotatable target, IEdmValueTerm term, bool value, IEnumerable<IEdmNavigationProperty> navigationProperties, string name1, string name2)
+        private static void SetCapabilitiesAnnotation(this EdmModel model, IEdmVocabularyAnnotatable target, IEdmTerm term, bool value, IEnumerable<IEdmNavigationProperty> navigationProperties, string name1, string name2)
         {
             if (navigationProperties == null)
             {
@@ -284,12 +285,12 @@ namespace Microsoft.Test.OData.Services.ODataWCFService.Vocabularies
             };
             var record = new EdmRecordExpression(properties);
 
-            var annotation = new EdmAnnotation(target, term, record);
+            var annotation = new EdmVocabularyAnnotation(target, term, record);
             annotation.SetSerializationLocation(model, target.ToSerializationLocation());
             model.AddVocabularyAnnotation(annotation);
         }
 
-        private static void SetCapabilitiesAnnotation(this EdmModel model, IEdmVocabularyAnnotatable target, IEdmValueTerm term, IEnumerable<string> values)
+        private static void SetCapabilitiesAnnotation(this EdmModel model, IEdmVocabularyAnnotatable target, IEdmTerm term, IEnumerable<string> values)
         {
             if (values == null)
             {
@@ -297,20 +298,20 @@ namespace Microsoft.Test.OData.Services.ODataWCFService.Vocabularies
             }
 
             var expression = new EdmCollectionExpression(values.Select(function => new EdmStringConstant(function)));
-            var annotation = new EdmAnnotation(target, term, expression);
+            var annotation = new EdmVocabularyAnnotation(target, term, expression);
             annotation.SetSerializationLocation(model, target.ToSerializationLocation());
             model.AddVocabularyAnnotation(annotation);
         }
 
-        private static void SetCapabilitiesAnnotation(this EdmModel model, IEdmVocabularyAnnotatable target, IEdmValueTerm term, bool value)
+        private static void SetCapabilitiesAnnotation(this EdmModel model, IEdmVocabularyAnnotatable target, IEdmTerm term, bool value)
         {
             var expression = new EdmBooleanConstant(value);
-            var annotation = new EdmAnnotation(target, term, expression);
+            var annotation = new EdmVocabularyAnnotation(target, term, expression);
             annotation.SetSerializationLocation(model, target.ToSerializationLocation());
             model.AddVocabularyAnnotation(annotation);
         }
 
-        private static void GetBooleanAndPathCollection(this IEdmModel model, IEdmEntitySet entitySet, IEdmValueTerm term, string booleanPropertyName, string pathsPropertyName, out bool? boolean, out IEnumerable<string> paths)
+        private static void GetBooleanAndPathCollection(this IEdmModel model, IEdmEntitySet entitySet, IEdmTerm term, string booleanPropertyName, string pathsPropertyName, out bool? boolean, out IEnumerable<string> paths)
         {
             boolean = null;
             paths = new string[0];
@@ -348,15 +349,15 @@ namespace Microsoft.Test.OData.Services.ODataWCFService.Vocabularies
             return target is IEdmEntityContainer ? EdmVocabularyAnnotationSerializationLocation.OutOfLine : EdmVocabularyAnnotationSerializationLocation.Inline;
         }
 
-        private static IEdmValueAnnotation FindVocabularyAnnotation(this IEdmModel model, IEdmVocabularyAnnotatable target, IEdmValueTerm term)
+        private static IEdmVocabularyAnnotation FindVocabularyAnnotation(this IEdmModel model, IEdmVocabularyAnnotatable target, IEdmTerm term)
         {
-            var result = default(IEdmValueAnnotation);
+            var result = default(IEdmVocabularyAnnotation);
 
             var annotations = model.FindVocabularyAnnotations(target);
             if (annotations != null)
             {
                 var annotation = annotations.FirstOrDefault(a => a.Term.Namespace == term.Namespace && a.Term.Name == term.Name);
-                result = (IEdmValueAnnotation)annotation;
+                result = annotation;
             }
 
             return result;

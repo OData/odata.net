@@ -267,7 +267,6 @@ namespace EdmLibTests.FunctionalTests
             model.SetAnnotationValue(badEntityRef.Definition, "foo", "bar", new EdmStringConstant(new EdmStringTypeReference(EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.String), false), "baz"));
             Assert.AreEqual(1, model.DirectValueAnnotations(badEntityRef.Definition).Count(), "Bad Entity can hold annotations");
             Assert.IsNotNull(model.GetAnnotationValue(badEntityRef.Definition, "foo", "bar"), "Bad Entity can find annotations");
-            Assert.AreEqual(EdmTermKind.Type, badEntityRef.EntityDefinition().TermKind, "EntityType has correct term kind");
 
             Assert.IsTrue(badComplexRef.IsComplex(), "Bad Complex is Bad");
             Assert.IsNull(badComplexRef.ComplexDefinition().FindProperty("PropertyName"), "Bad structured types return null for find property");
@@ -863,7 +862,7 @@ namespace EdmLibTests.FunctionalTests
             Assert.IsTrue(errors.Count() == 0, "No errors");
 
             IEdmEntityType person = (IEdmEntityType)model.FindType("foo.Person");
-            IEdmValueAnnotation valueAnnotation = (IEdmValueAnnotation)person.VocabularyAnnotations(model).First();
+            IEdmVocabularyAnnotation valueAnnotation = person.VocabularyAnnotations(model).First();
             var property = ((IEdmRecordExpression)valueAnnotation.Value).Properties.First();
             IEdmOperation badOperation = ((IEdmApplyExpression)property.Value).AppliedFunction;
             Assert.AreEqual("foo", badOperation.Namespace, "Bad function has correct namespace.");

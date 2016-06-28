@@ -70,11 +70,6 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
             }
         }
 
-        public EdmTermKind TermKind
-        {
-            get { return EdmTermKind.Type; }
-        }
-
         protected override CsdlStructuredType MyStructured
         {
             get { return this.entity; }

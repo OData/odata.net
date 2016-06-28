@@ -64,7 +64,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
             this.xmlWriter.WriteEndElement();
         }
 
-        internal void WriteValueTermElementHeader(IEdmValueTerm term, bool inlineType)
+        internal void WriteTermElementHeader(IEdmTerm term, bool inlineType)
         {
             this.xmlWriter.WriteStartElement(CsdlConstants.Element_Term);
             this.WriteRequiredAttribute(CsdlConstants.Attribute_Name, term.Name, EdmValueWriter.StringAsXml);
@@ -428,7 +428,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
             }
         }
 
-        internal void WriteValueAnnotationElementHeader(IEdmValueAnnotation annotation, bool isInline)
+        internal void WriteVocabularyAnnotationElementHeader(IEdmVocabularyAnnotation annotation, bool isInline)
         {
             this.xmlWriter.WriteStartElement(CsdlConstants.Element_Annotation);
             this.WriteRequiredAttribute(CsdlConstants.Attribute_Term, annotation.Term, this.TermAsXml);

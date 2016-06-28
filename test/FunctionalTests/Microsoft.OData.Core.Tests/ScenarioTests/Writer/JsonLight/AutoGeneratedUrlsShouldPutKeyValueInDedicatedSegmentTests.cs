@@ -112,7 +112,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Writer.JsonLight
         private void SetKeyAsSegmentAnnotationOnModel()
         {
             this.model.AddVocabularyAnnotation(
-                new EdmAnnotation(
+                new EdmVocabularyAnnotation(
                     this.entityContainer,
                     new EdmTerm(
                         "Com.Microsoft.OData.Service.Conventions.V1",

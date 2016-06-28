@@ -15,7 +15,7 @@ namespace EdmLibTests.FunctionalUtilities
     using Microsoft.OData.Edm.Vocabularies;
     class ConstantExpressionModelBuilder
     {
-        public static IEnumerable<XElement> ValueAnnotationInvalidIntegerConstantExpressionCsdl()
+        public static IEnumerable<XElement> VocabularyAnnotationInvalidIntegerConstantExpressionCsdl()
         {
             return ConvertCsdlsToXElements(@"
 <Schema Namespace=""DefaultNamespace"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
@@ -28,7 +28,7 @@ namespace EdmLibTests.FunctionalUtilities
 </Schema>");
         }
 
-        public static IEnumerable<XElement> ValueAnnotationInvalidIntegerConstantAttributeCsdl()
+        public static IEnumerable<XElement> VocabularyAnnotationInvalidIntegerConstantAttributeCsdl()
         {
             return ConvertCsdlsToXElements(@"
 <Schema Namespace=""DefaultNamespace"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
@@ -39,7 +39,7 @@ namespace EdmLibTests.FunctionalUtilities
 </Schema>");
         }
 
-        public static IEnumerable<XElement> ValueAnnotationInvalidBooleanConstantExpressionCsdl()
+        public static IEnumerable<XElement> VocabularyAnnotationInvalidBooleanConstantExpressionCsdl()
         {
             return ConvertCsdlsToXElements(@"
 <Schema Namespace=""DefaultNamespace"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
@@ -51,8 +51,8 @@ namespace EdmLibTests.FunctionalUtilities
     </Annotations>
 </Schema>");
         }
-        
-        public static IEnumerable<XElement> ValueAnnotationInvalidBooleanConstantAttributeCsdl()
+
+        public static IEnumerable<XElement> VocabularyAnnotationInvalidBooleanConstantAttributeCsdl()
         {
             return ConvertCsdlsToXElements(@"
 <Schema Namespace=""DefaultNamespace"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
@@ -62,8 +62,8 @@ namespace EdmLibTests.FunctionalUtilities
     </Annotations>
 </Schema>");
         }
-        
-        public static IEnumerable<XElement> ValueAnnotationInvalidFloatConstantExpressionCsdl()
+
+        public static IEnumerable<XElement> VocabularyAnnotationInvalidFloatConstantExpressionCsdl()
         {
             return ConvertCsdlsToXElements(@"
 <Schema Namespace=""DefaultNamespace"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
@@ -76,7 +76,7 @@ namespace EdmLibTests.FunctionalUtilities
 </Schema>");
         }
 
-        public static IEnumerable<XElement> ValueAnnotationInvalidFloatConstantAttributeCsdl()
+        public static IEnumerable<XElement> VocabularyAnnotationInvalidFloatConstantAttributeCsdl()
         {
             return ConvertCsdlsToXElements(@"
 <Schema Namespace=""DefaultNamespace"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
@@ -87,7 +87,7 @@ namespace EdmLibTests.FunctionalUtilities
 </Schema>");
         }
 
-        public static IEnumerable<XElement> ValueAnnotationInvalidDecimalConstantExpressionCsdl()
+        public static IEnumerable<XElement> VocabularyAnnotationInvalidDecimalConstantExpressionCsdl()
         {
             return ConvertCsdlsToXElements(@"
 <Schema Namespace=""DefaultNamespace"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
@@ -100,7 +100,7 @@ namespace EdmLibTests.FunctionalUtilities
 </Schema>");
         }
 
-        public static IEnumerable<XElement> ValueAnnotationInvalidDecimalConstantAttributeCsdl()
+        public static IEnumerable<XElement> VocabularyAnnotationInvalidDecimalConstantAttributeCsdl()
         {
             return ConvertCsdlsToXElements(@"
 <Schema Namespace=""DefaultNamespace"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
@@ -111,7 +111,7 @@ namespace EdmLibTests.FunctionalUtilities
 </Schema>");
         }
 
-        public static IEnumerable<XElement> ValueAnnotationInvalidDurationConstantExpressionCsdl()
+        public static IEnumerable<XElement> VocabularyAnnotationInvalidDurationConstantExpressionCsdl()
         {
             return ConvertCsdlsToXElements(@"
 <Schema Namespace=""DefaultNamespace"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
@@ -124,7 +124,7 @@ namespace EdmLibTests.FunctionalUtilities
 </Schema>");
         }
 
-        public static IEnumerable<XElement> ValueAnnotationInvalidDurationConstantAttributeCsdl()
+        public static IEnumerable<XElement> VocabularyAnnotationInvalidDurationConstantAttributeCsdl()
         {
             return ConvertCsdlsToXElements(@"
 <Schema Namespace=""DefaultNamespace"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
@@ -135,7 +135,7 @@ namespace EdmLibTests.FunctionalUtilities
 </Schema>");
         }
 
-        public static IEnumerable<XElement> ValueAnnotationValidDefaultDurationConstantExpressionCsdl()
+        public static IEnumerable<XElement> VocabularyAnnotationValidDefaultDurationConstantExpressionCsdl()
         {
             return ConvertCsdlsToXElements(@"
 <Schema Namespace=""DefaultNamespace"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
@@ -148,7 +148,7 @@ namespace EdmLibTests.FunctionalUtilities
 </Schema>");
         }
 
-        public static IEnumerable<XElement> ValueAnnotationValidDefaultDurationConstantAttributeCsdl()
+        public static IEnumerable<XElement> VocabularyAnnotationValidDefaultDurationConstantAttributeCsdl()
         {
             return ConvertCsdlsToXElements(@"
 <Schema Namespace=""DefaultNamespace"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
@@ -159,7 +159,7 @@ namespace EdmLibTests.FunctionalUtilities
 </Schema>");
         }
 
-        public static IEnumerable<XElement> ValueAnnotationValidDurationConstantAttributeCsdl()
+        public static IEnumerable<XElement> VocabularyAnnotationValidDurationConstantAttributeCsdl()
         {
             return ConvertCsdlsToXElements(@"
 <Schema Namespace=""DefaultNamespace"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
@@ -170,7 +170,7 @@ namespace EdmLibTests.FunctionalUtilities
 </Schema>");
         }
 
-        public static IEnumerable<XElement> ValueAnnotationValidLargeDurationConstantModelCsdl()
+        public static IEnumerable<XElement> VocabularyAnnotationValidLargeDurationConstantModelCsdl()
         {
             return ConvertCsdlsToXElements(@"
 <Schema Namespace=""DefaultNamespace"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
@@ -181,7 +181,7 @@ namespace EdmLibTests.FunctionalUtilities
 </Schema>");
         }
 
-        public static IEnumerable<XElement> ValueAnnotationInvalidValueDurationConstantAttributeCsdl()
+        public static IEnumerable<XElement> VocabularyAnnotationInvalidValueDurationConstantAttributeCsdl()
         {
             return ConvertCsdlsToXElements(@"
 <Schema Namespace=""DefaultNamespace"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
@@ -192,7 +192,7 @@ namespace EdmLibTests.FunctionalUtilities
 </Schema>");
         }
 
-        public static IEnumerable<XElement> ValueAnnotationInvalidFormatDurationConstantAttributeCsdl()
+        public static IEnumerable<XElement> VocabularyAnnotationInvalidFormatDurationConstantAttributeCsdl()
         {
             return ConvertCsdlsToXElements(@"
 <Schema Namespace=""DefaultNamespace"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
@@ -203,13 +203,13 @@ namespace EdmLibTests.FunctionalUtilities
 </Schema>");
         }
 
-        public static IEdmModel ValueAnnotationValidDefaultDurationConstantModel()
+        public static IEdmModel VocabularyAnnotationValidDefaultDurationConstantModel()
         {
             var model = new EdmModel();
             var valueTerm = new EdmTerm("DefaultNamespace", "Note", EdmCoreModel.Instance.GetDuration(true));
             model.AddElement(valueTerm);
 
-            var valueAnnotation = new EdmAnnotation(
+            var valueAnnotation = new EdmVocabularyAnnotation(
                 valueTerm,
                 valueTerm,
                 new EdmDurationConstant(new TimeSpan()));
@@ -220,13 +220,13 @@ namespace EdmLibTests.FunctionalUtilities
             return model;
         }
 
-        public static IEdmModel ValueAnnotationValidDurationConstantModel()
+        public static IEdmModel VocabularyAnnotationValidDurationConstantModel()
         {
             var model = new EdmModel();
             var valueTerm = new EdmTerm("DefaultNamespace", "Note", EdmCoreModel.Instance.GetDuration(true));
             model.AddElement(valueTerm);
 
-            var valueAnnotation = new EdmAnnotation(
+            var valueAnnotation = new EdmVocabularyAnnotation(
                 valueTerm,
                 valueTerm,
                 new EdmDurationConstant(new TimeSpan(1, 1, 1, 1, 1)));
@@ -237,13 +237,13 @@ namespace EdmLibTests.FunctionalUtilities
             return model;
         }
 
-        public static IEdmModel ValueAnnotationValidLargeDurationConstantModel()
+        public static IEdmModel VocabularyAnnotationValidLargeDurationConstantModel()
         {
             var model = new EdmModel();
             var valueTerm = new EdmTerm("DefaultNamespace", "Note", EdmCoreModel.Instance.GetDuration(true));
             model.AddElement(valueTerm);
 
-            var valueAnnotation = new EdmAnnotation(
+            var valueAnnotation = new EdmVocabularyAnnotation(
                 valueTerm,
                 valueTerm,
                 new EdmDurationConstant(new TimeSpan(1, 99, 99, 99, 999)));
@@ -254,13 +254,13 @@ namespace EdmLibTests.FunctionalUtilities
             return model;
         }
 
-        public static IEdmModel ValueAnnotationInvalidTypeReferenceDurationConstantModel()
+        public static IEdmModel VocabularyAnnotationInvalidTypeReferenceDurationConstantModel()
         {
             var model = new EdmModel();
             var valueTerm = new EdmTerm("DefaultNamespace", "Note", EdmCoreModel.Instance.GetDuration(true));
             model.AddElement(valueTerm);
 
-            var valueAnnotation = new EdmAnnotation(
+            var valueAnnotation = new EdmVocabularyAnnotation(
                 valueTerm,
                 valueTerm,
                 new EdmDurationConstant(EdmCoreModel.Instance.GetDateTimeOffset(false), new TimeSpan(1, 99, 99, 99, 999)));
@@ -270,8 +270,8 @@ namespace EdmLibTests.FunctionalUtilities
 
             return model;
         }
-        
-        public static IEnumerable<XElement> ValueAnnotationInvalidMaxDurationConstantAttributeCsdl()
+
+        public static IEnumerable<XElement> VocabularyAnnotationInvalidMaxDurationConstantAttributeCsdl()
         {
             return ConvertCsdlsToXElements(@"
 <Schema Namespace=""DefaultNamespace"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
@@ -282,7 +282,7 @@ namespace EdmLibTests.FunctionalUtilities
 </Schema>");
         }
 
-        public static IEnumerable<XElement> ValueAnnotationInvalidGuidConstantExpressionCsdl()
+        public static IEnumerable<XElement> VocabularyAnnotationInvalidGuidConstantExpressionCsdl()
         {
             return ConvertCsdlsToXElements(@"
 <Schema Namespace=""DefaultNamespace"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
@@ -295,7 +295,7 @@ namespace EdmLibTests.FunctionalUtilities
 </Schema>");
         }
 
-        public static IEnumerable<XElement> ValueAnnotationInvalidGuidConstantAttributeCsdl()
+        public static IEnumerable<XElement> VocabularyAnnotationInvalidGuidConstantAttributeCsdl()
         {
             return ConvertCsdlsToXElements(@"
 <Schema Namespace=""DefaultNamespace"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
@@ -306,7 +306,7 @@ namespace EdmLibTests.FunctionalUtilities
 </Schema>");
         }
 
-        public static IEnumerable<XElement> ValueAnnotationInvalidDateTimeOffsetConstantExpressionCsdl()
+        public static IEnumerable<XElement> VocabularyAnnotationInvalidDateTimeOffsetConstantExpressionCsdl()
         {
             return ConvertCsdlsToXElements(@"
 <Schema Namespace=""DefaultNamespace"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
@@ -319,7 +319,7 @@ namespace EdmLibTests.FunctionalUtilities
 </Schema>");
         }
 
-        public static IEnumerable<XElement> ValueAnnotationInvalidDateTimeOffsetConstantAttributeCsdl()
+        public static IEnumerable<XElement> VocabularyAnnotationInvalidDateTimeOffsetConstantAttributeCsdl()
         {
             return ConvertCsdlsToXElements(@"
 <Schema Namespace=""DefaultNamespace"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
@@ -330,7 +330,7 @@ namespace EdmLibTests.FunctionalUtilities
 </Schema>");
         }
 
-        public static IEnumerable<XElement> ValueAnnotationInvalidBinaryConstantExpressionCsdl()
+        public static IEnumerable<XElement> VocabularyAnnotationInvalidBinaryConstantExpressionCsdl()
         {
             return ConvertCsdlsToXElements(@"
 <Schema Namespace=""DefaultNamespace"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
@@ -343,7 +343,7 @@ namespace EdmLibTests.FunctionalUtilities
 </Schema>");
         }
 
-        public static IEnumerable<XElement> ValueAnnotationInvalidBinaryConstantAttributeCsdl()
+        public static IEnumerable<XElement> VocabularyAnnotationInvalidBinaryConstantAttributeCsdl()
         {
             return ConvertCsdlsToXElements(@"
 <Schema Namespace=""DefaultNamespace"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">

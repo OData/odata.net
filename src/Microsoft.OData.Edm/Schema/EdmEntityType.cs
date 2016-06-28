@@ -115,14 +115,6 @@ namespace Microsoft.OData.Edm
         }
 
         /// <summary>
-        /// Gets the term kind of the entity type.
-        /// </summary>
-        public EdmTermKind TermKind
-        {
-            get { return EdmTermKind.Type; }
-        }
-
-        /// <summary>
         /// Gets the value indicating whether or not this entity is a media type
         /// This value inherits from the base type.
         /// </summary>

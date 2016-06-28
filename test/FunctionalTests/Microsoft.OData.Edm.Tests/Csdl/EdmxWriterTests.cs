@@ -52,10 +52,10 @@ namespace Microsoft.OData.Edm.Tests.Csdl
             EdmUtil.CheckArgumentNull(target, "target");
 
             IEdmBooleanConstantExpression val = new EdmBooleanConstant(true);
-            IEdmValueTerm term = CoreVocabularyModel.ComputedTerm;
+            IEdmTerm term = CoreVocabularyModel.ComputedTerm;
 
             Debug.Assert(term != null, "term!=null");
-            EdmAnnotation annotation = new EdmAnnotation(target, term, val);
+            EdmVocabularyAnnotation annotation = new EdmVocabularyAnnotation(target, term, val);
             annotation.SetSerializationLocation(model, EdmVocabularyAnnotationSerializationLocation.Inline);
             model.SetVocabularyAnnotation(annotation);
         }

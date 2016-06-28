@@ -2481,7 +2481,7 @@ namespace EdmLibTests.FunctionalTests
         }
 
         [TestMethod]
-        public void TestValueTerms()
+        public void TestTerms()
         {
             const string csdl =
 @"<Schema Namespace=""foo"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
@@ -2502,16 +2502,16 @@ namespace EdmLibTests.FunctionalTests
             Assert.IsTrue(parsed, "parsed");
             Assert.IsTrue(errors.Count() == 0, "No errors");
 
-            IEdmValueTerm age = model.FindValueTerm("foo.Age");
-            IEdmValueTerm subject = model.FindValueTerm("foo.Subject");
+            IEdmTerm age = model.FindTerm("foo.Age");
+            IEdmTerm subject = model.FindTerm("foo.Subject");
 
-            Assert.AreEqual(age.Name, "Age", "Value term name");
-            Assert.AreEqual(subject.Name, "Subject", "Value term name");
+            Assert.AreEqual(age.Name, "Age", "Term name");
+            Assert.AreEqual(subject.Name, "Subject", "Term name");
 
-            Assert.AreEqual(age.Type.AsPrimitive().PrimitiveKind(), EdmPrimitiveTypeKind.Int32, "Value term type");
-            Assert.AreEqual(subject.Type.AsEntity().FullName(), "foo.Person", "Value term type");
+            Assert.AreEqual(age.Type.AsPrimitive().PrimitiveKind(), EdmPrimitiveTypeKind.Int32, "Term type");
+            Assert.AreEqual(subject.Type.AsEntity().FullName(), "foo.Person", "Term type");
 
-            Assert.AreEqual(age.Namespace, "foo", "Value term namespace");
+            Assert.AreEqual(age.Namespace, "foo", "Term namespace");
         }
 
         [TestMethod]
@@ -2542,40 +2542,38 @@ namespace EdmLibTests.FunctionalTests
             Assert.IsTrue(parsed, "parsed");
             Assert.IsTrue(errors.Count() == 0, "No errors");
 
-            IEdmValueTerm age = model.FindValueTerm("foo.Age");
             IEdmEntityType person = (IEdmEntityType)model.FindType("foo.Person");
-
             IEnumerable<IEdmVocabularyAnnotation> personAnnotations = person.VocabularyAnnotations(model);
             Assert.AreEqual(personAnnotations.Count(), 3, "Annotations count");
-            IEdmVocabularyAnnotation[] annotations = personAnnotations.ToArray<IEdmVocabularyAnnotation>();
 
-            IEdmValueAnnotation first = (IEdmValueAnnotation)annotations[0];
-            Assert.AreEqual(first.Term.TermKind, EdmTermKind.Value, "Annotation kind");
+            IEdmVocabularyAnnotation[] annotations = personAnnotations.ToArray<IEdmVocabularyAnnotation>();
+            IEdmVocabularyAnnotation first = annotations[0];
             Assert.AreEqual(first.Qualifier, "First", "Annotation qualifier");
             Assert.AreEqual(first.Term.Name, "Age", "Term name");
             Assert.AreEqual(first.Term.Namespace, "foo", "Term namespace");
+
             IEdmIntegerConstantExpression value = (IEdmIntegerConstantExpression)first.Value;
             Assert.AreEqual(value.Value, 123, "Annotation value");
 
-            IEdmValueAnnotation second = (IEdmValueAnnotation)annotations[1];
-            Assert.AreEqual(second.Term.TermKind, EdmTermKind.Value, "Annotation kind");
+            IEdmVocabularyAnnotation second = annotations[1];
             Assert.AreEqual(second.Qualifier, "Best", "Annotation qualifier");
             Assert.AreEqual(second.Term.Name, "Age", "Term name");
             Assert.AreEqual(second.Term.Namespace, "foo", "Term namespace");
+
             value = (IEdmIntegerConstantExpression)second.Value;
             Assert.AreEqual(value.Value, 456, "Annotation value");
 
-            IEdmValueAnnotation third = (IEdmValueAnnotation)annotations[2];
-            Assert.AreEqual(third.Term.TermKind, EdmTermKind.Value, "Annotation kind");
+            IEdmVocabularyAnnotation third = annotations[2];
             Assert.IsNull(third.Qualifier, "Annotation qualifier");
             Assert.AreEqual(third.Term.Name, "Mage", "Term name");
             Assert.AreEqual(third.Term.Namespace, "Funk", "Term namespace");
+
             value = (IEdmIntegerConstantExpression)third.Value;
             Assert.AreEqual(value.Value, 789, "Annotation value");
         }
 
         [TestMethod]
-        public void TestValueAnnotations()
+        public void TestVocabularyAnnotations()
         {
             const string csdl =
 @"<Schema Namespace=""foo"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
@@ -2601,31 +2599,28 @@ namespace EdmLibTests.FunctionalTests
             Assert.IsTrue(parsed, "parsed");
             Assert.IsTrue(errors.Count() == 0, "No errors");
 
-            IEdmValueTerm age = model.FindValueTerm("foo.Age");
             IEdmEntityType person = (IEdmEntityType)model.FindType("foo.Person");
-
             IEnumerable<IEdmVocabularyAnnotation> personAnnotations = person.VocabularyAnnotations(model);
             Assert.AreEqual(personAnnotations.Count(), 3, "Annotations count");
-            IEdmVocabularyAnnotation[] annotations = personAnnotations.ToArray<IEdmVocabularyAnnotation>();
 
-            IEdmValueAnnotation first = (IEdmValueAnnotation)annotations[0];
-            Assert.AreEqual(first.Term.TermKind, EdmTermKind.Value, "Annotation kind");
+            IEdmVocabularyAnnotation[] annotations = personAnnotations.ToArray<IEdmVocabularyAnnotation>();
+            IEdmVocabularyAnnotation first = annotations[0];
             Assert.AreEqual(first.Qualifier, "First", "Annotation qualifier");
             Assert.AreEqual(first.Term.Name, "Age", "Term name");
             Assert.AreEqual(first.Term.Namespace, "foo", "Term namespace");
+
             IEdmIntegerConstantExpression value = (IEdmIntegerConstantExpression)first.Value;
             Assert.AreEqual(value.Value, 123, "Annotation value");
 
-            IEdmValueAnnotation second = (IEdmValueAnnotation)annotations[1];
-            Assert.AreEqual(second.Term.TermKind, EdmTermKind.Value, "Annotation kind");
+            IEdmVocabularyAnnotation second = annotations[1];
             Assert.AreEqual(second.Qualifier, "Best", "Annotation qualifier");
             Assert.AreEqual(second.Term.Name, "Age", "Term name");
             Assert.AreEqual(second.Term.Namespace, "foo", "Term namespace");
+
             value = (IEdmIntegerConstantExpression)second.Value;
             Assert.AreEqual(value.Value, 456, "Annotation value");
 
-            IEdmValueAnnotation third = (IEdmValueAnnotation)annotations[2];
-            Assert.AreEqual(third.Term.TermKind, EdmTermKind.Value, "Annotation kind");
+            IEdmVocabularyAnnotation third = annotations[2];
             Assert.IsNull(third.Qualifier, "Annotation qualifier");
             Assert.AreEqual(third.Term.Name, "Mage", "Term name");
             Assert.AreEqual(third.Term.Namespace, "Funk", "Term namespace");
@@ -2673,24 +2668,21 @@ namespace EdmLibTests.FunctionalTests
             Assert.AreEqual(personAnnotations.Count(), 3, "Annotations count");
             IEdmVocabularyAnnotation[] annotations = personAnnotations.ToArray<IEdmVocabularyAnnotation>();
 
-            IEdmValueAnnotation first = (IEdmValueAnnotation)annotations[0];
-            Assert.AreEqual(first.Term.TermKind, EdmTermKind.Value, "Annotation kind");
+            IEdmVocabularyAnnotation first = annotations[0];
             Assert.AreEqual(first.Qualifier, "First", "Annotation qualifier");
             Assert.AreEqual(first.Term.Name, "Age", "Term name");
             Assert.AreEqual(first.Term.Namespace, "foo", "Term namespace");
             IEdmIntegerConstantExpression value = (IEdmIntegerConstantExpression)first.Value;
             Assert.AreEqual(value.Value, 123, "Annotation value");
 
-            IEdmValueAnnotation second = (IEdmValueAnnotation)annotations[1];
-            Assert.AreEqual(second.Term.TermKind, EdmTermKind.Value, "Annotation kind");
+            IEdmVocabularyAnnotation second = annotations[1];
             Assert.AreEqual(second.Qualifier, "Best", "Annotation qualifier");
             Assert.AreEqual(second.Term.Name, "Age", "Term name");
             Assert.AreEqual(second.Term.Namespace, "foo", "Term namespace");
             value = (IEdmIntegerConstantExpression)second.Value;
             Assert.AreEqual(value.Value, 456, "Annotation value");
 
-            IEdmValueAnnotation third = (IEdmValueAnnotation)annotations[2];
-            Assert.AreEqual(third.Term.TermKind, EdmTermKind.Value, "Annotation kind");
+            IEdmVocabularyAnnotation third = annotations[2];
             Assert.IsNull(third.Qualifier, "Annotation qualifier");
             Assert.AreEqual(third.Term.Name, "Mage", "Term name");
             Assert.AreEqual(third.Term.Namespace, "Funk", "Term namespace");
@@ -2745,48 +2737,42 @@ namespace EdmLibTests.FunctionalTests
             Assert.AreEqual(personAnnotations.Count(), 6, "Annotations count");
             IEdmVocabularyAnnotation[] annotations = personAnnotations.ToArray<IEdmVocabularyAnnotation>();
 
-            IEdmValueAnnotation first = (IEdmValueAnnotation)annotations[0];
-            Assert.AreEqual(first.Term.TermKind, EdmTermKind.Value, "term kind");
+            IEdmVocabularyAnnotation first = annotations[0];
             Assert.AreEqual(first.Qualifier, "Middling", "Annotation qualifier");
             Assert.AreEqual(first.Term.Name, "Age", "Term name");
             Assert.AreEqual(first.Term.Namespace, "foo", "Term namespace");
             IEdmIntegerConstantExpression value = (IEdmIntegerConstantExpression)first.Value;
             Assert.AreEqual(value.Value, 777, "Annotation value");
 
-            IEdmValueAnnotation second = (IEdmValueAnnotation)annotations[1];
-            Assert.AreEqual(second.Term.TermKind, EdmTermKind.Value, "Term kind");
+            IEdmVocabularyAnnotation second = annotations[1];
             Assert.AreEqual(second.Qualifier, "Middling", "Annotation qualifier");
             Assert.AreEqual(second.Term.Name, "Mage", "Term name");
             Assert.AreEqual(second.Term.Namespace, "Var1", "Term namespace");
             value = (IEdmIntegerConstantExpression)second.Value;
             Assert.AreEqual(value.Value, 888, "Annotation value");
 
-            IEdmValueAnnotation third = (IEdmValueAnnotation)annotations[2];
-            Assert.AreEqual(third.Term.TermKind, EdmTermKind.Value, "Term kind");
+            IEdmVocabularyAnnotation third = annotations[2];
             Assert.AreEqual(third.Qualifier, "First", "Annotation qualifier");
             Assert.AreEqual(third.Term.Name, "Age", "Term name");
             Assert.AreEqual(third.Term.Namespace, "foo", "Term namespace");
             value = (IEdmIntegerConstantExpression)third.Value;
             Assert.AreEqual(value.Value, 123, "Annotation value");
 
-            IEdmValueAnnotation fourth = (IEdmValueAnnotation)annotations[3];
-            Assert.AreEqual(fourth.Term.TermKind, EdmTermKind.Value, "Term kind");
+            IEdmVocabularyAnnotation fourth = annotations[3];
             Assert.AreEqual(fourth.Qualifier, "Best", "Annotation qualifier");
             Assert.AreEqual(fourth.Term.Name, "Age", "Term name");
             Assert.AreEqual(fourth.Term.Namespace, "foo", "Term namespace");
             value = (IEdmIntegerConstantExpression)fourth.Value;
             Assert.AreEqual(value.Value, 456, "Annotation value");
 
-            IEdmValueAnnotation fifth = (IEdmValueAnnotation)annotations[4];
-            Assert.AreEqual(fifth.Term.TermKind, EdmTermKind.Value, "Annotation kind");
+            IEdmVocabularyAnnotation fifth = annotations[4];
             Assert.IsNull(fifth.Qualifier, "Annotation qualifier");
             Assert.AreEqual(fifth.Term.Name, "Mage", "Term name");
             Assert.AreEqual(fifth.Term.Namespace, "Funk", "Term namespace");
             value = (IEdmIntegerConstantExpression)fifth.Value;
             Assert.AreEqual(value.Value, 789, "Annotation value");
 
-            IEdmValueAnnotation sixth = (IEdmValueAnnotation)annotations[5];
-            Assert.AreEqual(sixth.Term.TermKind, EdmTermKind.Value, "Annotation kind");
+            IEdmVocabularyAnnotation sixth = annotations[5];
             Assert.AreEqual(sixth.Qualifier, "Zonky", "Annotation qualifier");
             Assert.AreEqual(sixth.Term.Name, "Yage", "Term name");
             Assert.AreEqual(sixth.Term.Namespace, "Var1", "Term namespace");
@@ -2840,44 +2826,43 @@ namespace EdmLibTests.FunctionalTests
 
             IEdmEntityType person = (IEdmEntityType)model1.FindType("foo.Person");
             IEdmEntityType lyingPerson = (IEdmEntityType)model1.FindType("foo.LyingPerson");
-            IEdmValueTerm distantAge = model1.FindValueTerm("foo.DistantAge");
-
+            IEdmTerm distantAge = model1.FindTerm("foo.DistantAge");
             Assert.AreEqual(lyingPerson, model2.FindType("foo.LyingPerson"), "Lookup through referenced model");
 
             IEnumerable<IEdmVocabularyAnnotation> personAnnotations = person.VocabularyAnnotations(model2);
             Assert.AreEqual(personAnnotations.Count(), 4, "Annotations count");
-            IEdmVocabularyAnnotation[] annotations = personAnnotations.ToArray<IEdmVocabularyAnnotation>();
 
-            IEdmValueAnnotation third = (IEdmValueAnnotation)annotations[0];
-            Assert.AreEqual(third.Term.TermKind, EdmTermKind.Value, "Annotation kind");
+            IEdmVocabularyAnnotation[] annotations = personAnnotations.ToArray<IEdmVocabularyAnnotation>();
+            IEdmVocabularyAnnotation third = annotations[0];
             Assert.AreEqual(third.Qualifier, "First", "Annotation qualifier");
             Assert.AreEqual(third.Term.Name, "Age", "Term name");
             Assert.AreEqual(third.Term.Namespace, "foo", "Term namespace");
+
             IEdmIntegerConstantExpression value = (IEdmIntegerConstantExpression)third.Value;
             Assert.AreEqual(value.Value, 123, "Annotation value");
 
-            IEdmValueAnnotation fourth = (IEdmValueAnnotation)annotations[1];
-            Assert.AreEqual(fourth.Term.TermKind, EdmTermKind.Value, "Annotation kind");
+            IEdmVocabularyAnnotation fourth = annotations[1];
             Assert.AreEqual(fourth.Qualifier, "Best", "Annotation qualifier");
             Assert.AreEqual(fourth.Term.Name, "Age", "Term name");
             Assert.AreEqual(fourth.Term.Namespace, "foo", "Term namespace");
+
             value = (IEdmIntegerConstantExpression)fourth.Value;
             Assert.AreEqual(value.Value, 456, "Annotation value");
 
-            IEdmValueAnnotation fifth = (IEdmValueAnnotation)annotations[2];
-            Assert.AreEqual(fifth.Term.TermKind, EdmTermKind.Value, "Annotation kind");
+            IEdmVocabularyAnnotation fifth = annotations[2];
             Assert.IsNull(fifth.Qualifier, "Annotation qualifier");
             Assert.AreEqual(fifth.Term.Name, "DistantAge", "Term name");
             Assert.AreEqual(fifth.Term.Namespace, "foo", "Term namespace");
             Assert.AreEqual(fifth.Term, distantAge, "Annotation term");
+
             value = (IEdmIntegerConstantExpression)fifth.Value;
             Assert.AreEqual(value.Value, 99, "Annotation value");
 
-            IEdmValueAnnotation sixth = (IEdmValueAnnotation)annotations[3];
-            Assert.AreEqual(sixth.Term.TermKind, EdmTermKind.Value, "Annotation kind");
+            IEdmVocabularyAnnotation sixth = annotations[3];
             Assert.IsNull(sixth.Qualifier, "Annotation qualifier");
             Assert.AreEqual(sixth.Term.Name, "Mage", "Term name");
             Assert.AreEqual(sixth.Term.Namespace, "Funk", "Term namespace");
+
             value = (IEdmIntegerConstantExpression)sixth.Value;
             Assert.AreEqual(value.Value, 789, "Annotation value");
 
@@ -2929,8 +2914,7 @@ namespace EdmLibTests.FunctionalTests
             Assert.AreEqual(personsAnnotations.Count(), 1, "Annotations count");
             IEdmVocabularyAnnotation[] annotations = personsAnnotations.ToArray<IEdmVocabularyAnnotation>();
 
-            IEdmValueAnnotation mage = (IEdmValueAnnotation)annotations[0];
-            Assert.AreEqual(mage.Term.TermKind, EdmTermKind.Value, "Annotation kind");
+            IEdmVocabularyAnnotation mage = annotations[0];
             Assert.IsNull(mage.Qualifier, "Annotation qualifier");
             Assert.AreEqual(mage.Term.Name, "Mage", "Term name");
             Assert.AreEqual(mage.Term.Namespace, "Funk", "Term namespace");
@@ -2941,18 +2925,16 @@ namespace EdmLibTests.FunctionalTests
             Assert.AreEqual(personsAnnotations.Count(), 2, "Annotations count");
             annotations = personsAnnotations.ToArray<IEdmVocabularyAnnotation>();
 
-            IEdmValueAnnotation strange = (IEdmValueAnnotation)annotations[0];
+            IEdmVocabularyAnnotation strange = annotations[0];
             Assert.AreEqual(persons, strange.Target, "Annotation target");
-            Assert.AreEqual(strange.Term.TermKind, EdmTermKind.Value, "Annotation kind");
             Assert.IsNull(strange.Qualifier, "Annotation qualifier");
             Assert.AreEqual(strange.Term.Name, "Strange", "Term name");
             Assert.AreEqual(strange.Term.Namespace, "Funk", "Term namespace");
             value = (IEdmIntegerConstantExpression)strange.Value;
             Assert.AreEqual(value.Value, 13, "Annotation value");
 
-            mage = (IEdmValueAnnotation)annotations[1];
+            mage = annotations[1];
             Assert.AreEqual(persons, mage.Target, "Annotation target");
-            Assert.AreEqual(mage.Term.TermKind, EdmTermKind.Value, "Annotation kind");
             Assert.IsNull(mage.Qualifier, "Annotation qualifier");
             Assert.AreEqual(mage.Term.Name, "Mage", "Term name");
             Assert.AreEqual(mage.Term.Namespace, "Funk", "Term namespace");
@@ -3003,16 +2985,14 @@ namespace EdmLibTests.FunctionalTests
             Assert.AreEqual(birthdayAnnotations.Count(), 2, "Annotations count");
             IEdmVocabularyAnnotation[] annotations = birthdayAnnotations.ToArray<IEdmVocabularyAnnotation>();
 
-            IEdmValueAnnotation funkadelic = (IEdmValueAnnotation)annotations[0];
-            Assert.AreEqual(funkadelic.Term.TermKind, EdmTermKind.Value, "Annotation kind");
+            IEdmVocabularyAnnotation funkadelic = annotations[0];
             Assert.IsNull(funkadelic.Qualifier, "Annotation qualifier");
             Assert.AreEqual(funkadelic.Term.Name, "ADelic", "Term name");
             Assert.AreEqual(funkadelic.Term.Namespace, "Funk", "Term namespace");
             IEdmIntegerConstantExpression value = (IEdmIntegerConstantExpression)funkadelic.Value;
             Assert.AreEqual(value.Value, 17, "Annotation value");
 
-            IEdmValueAnnotation mage = (IEdmValueAnnotation)annotations[1];
-            Assert.AreEqual(mage.Term.TermKind, EdmTermKind.Value, "Annotation kind");
+            IEdmVocabularyAnnotation mage = annotations[1];
             Assert.IsNull(mage.Qualifier, "Annotation qualifier");
             Assert.AreEqual(mage.Term.Name, "Mage", "Term name");
             Assert.AreEqual(mage.Term.Namespace, "Funk", "Term namespace");
@@ -3023,24 +3003,21 @@ namespace EdmLibTests.FunctionalTests
             Assert.AreEqual(birthdayAnnotations.Count(), 3, "Annotations count");
             annotations = birthdayAnnotations.ToArray<IEdmVocabularyAnnotation>();
 
-            IEdmValueAnnotation strange = (IEdmValueAnnotation)annotations[0];
-            Assert.AreEqual(strange.Term.TermKind, EdmTermKind.Value, "Annotation kind");
+            IEdmVocabularyAnnotation strange = annotations[0];
             Assert.IsNull(strange.Qualifier, "Annotation qualifier");
             Assert.AreEqual(strange.Term.Name, "Strange", "Term name");
             Assert.AreEqual(strange.Term.Namespace, "Funk", "Term namespace");
             value = (IEdmIntegerConstantExpression)strange.Value;
             Assert.AreEqual(value.Value, 13, "Annotation value");
 
-            funkadelic = (IEdmValueAnnotation)annotations[1];
-            Assert.AreEqual(funkadelic.Term.TermKind, EdmTermKind.Value, "Annotation kind");
+            funkadelic = annotations[1];
             Assert.IsNull(funkadelic.Qualifier, "Annotation qualifier");
             Assert.AreEqual(funkadelic.Term.Name, "ADelic", "Term name");
             Assert.AreEqual(funkadelic.Term.Namespace, "Funk", "Term namespace");
             value = (IEdmIntegerConstantExpression)funkadelic.Value;
             Assert.AreEqual(value.Value, 17, "Annotation value");
 
-            mage = (IEdmValueAnnotation)annotations[2];
-            Assert.AreEqual(mage.Term.TermKind, EdmTermKind.Value, "Annotation kind");
+            mage = annotations[2];
             Assert.IsNull(mage.Qualifier, "Annotation qualifier");
             Assert.AreEqual(mage.Term.Name, "Mage", "Term name");
             Assert.AreEqual(mage.Term.Namespace, "Funk", "Term namespace");
@@ -3113,50 +3090,50 @@ namespace EdmLibTests.FunctionalTests
             var byteArrayComparer = new ArrayComp();
 
             int i = 0;
-            Assert.AreEqual(((IEdmValueAnnotation)annotations[i]).Value.ExpressionKind, EdmExpressionKind.IntegerConstant, "Annotation expression kind");
-            Assert.AreEqual(((IEdmIntegerConstantExpression)((IEdmValueAnnotation)annotations[i]).Value).Value, 1, "Annotation value");
-            Assert.AreEqual(((IEdmValueAnnotation)annotations[++i]).Value.ExpressionKind, EdmExpressionKind.IntegerConstant, "Annotation expression kind");
-            Assert.AreEqual(((IEdmIntegerConstantExpression)((IEdmValueAnnotation)annotations[i]).Value).Value, 2, "Annotation value");
+            Assert.AreEqual((annotations[i]).Value.ExpressionKind, EdmExpressionKind.IntegerConstant, "Annotation expression kind");
+            Assert.AreEqual(((IEdmIntegerConstantExpression)(annotations[i]).Value).Value, 1, "Annotation value");
+            Assert.AreEqual((annotations[++i]).Value.ExpressionKind, EdmExpressionKind.IntegerConstant, "Annotation expression kind");
+            Assert.AreEqual(((IEdmIntegerConstantExpression)(annotations[i]).Value).Value, 2, "Annotation value");
 
-            Assert.AreEqual(((IEdmValueAnnotation)annotations[++i]).Value.ExpressionKind, EdmExpressionKind.StringConstant, "Annotation expression kind");
-            Assert.AreEqual(((IEdmStringConstantExpression)((IEdmValueAnnotation)annotations[i]).Value).Value, "Cat", "Annotation value");
-            Assert.AreEqual(((IEdmValueAnnotation)annotations[++i]).Value.ExpressionKind, EdmExpressionKind.StringConstant, "Annotation expression kind");
-            Assert.AreEqual(((IEdmStringConstantExpression)((IEdmValueAnnotation)annotations[i]).Value).Value, "Dog", "Annotation value");
+            Assert.AreEqual((annotations[++i]).Value.ExpressionKind, EdmExpressionKind.StringConstant, "Annotation expression kind");
+            Assert.AreEqual(((IEdmStringConstantExpression)(annotations[i]).Value).Value, "Cat", "Annotation value");
+            Assert.AreEqual((annotations[++i]).Value.ExpressionKind, EdmExpressionKind.StringConstant, "Annotation expression kind");
+            Assert.AreEqual(((IEdmStringConstantExpression)(annotations[i]).Value).Value, "Dog", "Annotation value");
 
-            Assert.AreEqual(((IEdmValueAnnotation)annotations[++i]).Value.ExpressionKind, EdmExpressionKind.BinaryConstant, "Annotation expression kind");
-            Assert.IsTrue(byteArrayComparer.Equals(((IEdmBinaryConstantExpression)((IEdmValueAnnotation)annotations[i]).Value).Value, new byte[] { 0x12, 0x34, 0x56 }), "Annotation value");
-            Assert.AreEqual(((IEdmValueAnnotation)annotations[++i]).Value.ExpressionKind, EdmExpressionKind.BinaryConstant, "Annotation expression kind");
-            Assert.IsTrue(byteArrayComparer.Equals(((IEdmBinaryConstantExpression)((IEdmValueAnnotation)annotations[i]).Value).Value, new byte[] { 0x65, 0x43, 0x21 }), "Annotation value");
+            Assert.AreEqual((annotations[++i]).Value.ExpressionKind, EdmExpressionKind.BinaryConstant, "Annotation expression kind");
+            Assert.IsTrue(byteArrayComparer.Equals(((IEdmBinaryConstantExpression)(annotations[i]).Value).Value, new byte[] { 0x12, 0x34, 0x56 }), "Annotation value");
+            Assert.AreEqual((annotations[++i]).Value.ExpressionKind, EdmExpressionKind.BinaryConstant, "Annotation expression kind");
+            Assert.IsTrue(byteArrayComparer.Equals(((IEdmBinaryConstantExpression)(annotations[i]).Value).Value, new byte[] { 0x65, 0x43, 0x21 }), "Annotation value");
 
-            Assert.AreEqual(((IEdmValueAnnotation)annotations[++i]).Value.ExpressionKind, EdmExpressionKind.FloatingConstant, "Annotation expression kind");
-            Assert.AreEqual(((IEdmFloatingConstantExpression)((IEdmValueAnnotation)annotations[i]).Value).Value, 1.1, "Annotation value");
-            Assert.AreEqual(((IEdmValueAnnotation)annotations[++i]).Value.ExpressionKind, EdmExpressionKind.FloatingConstant, "Annotation expression kind");
-            Assert.AreEqual(((IEdmFloatingConstantExpression)((IEdmValueAnnotation)annotations[i]).Value).Value, 2.2E10, "Annotation value");
+            Assert.AreEqual((annotations[++i]).Value.ExpressionKind, EdmExpressionKind.FloatingConstant, "Annotation expression kind");
+            Assert.AreEqual(((IEdmFloatingConstantExpression)(annotations[i]).Value).Value, 1.1, "Annotation value");
+            Assert.AreEqual((annotations[++i]).Value.ExpressionKind, EdmExpressionKind.FloatingConstant, "Annotation expression kind");
+            Assert.AreEqual(((IEdmFloatingConstantExpression)(annotations[i]).Value).Value, 2.2E10, "Annotation value");
 
-            Assert.AreEqual(((IEdmValueAnnotation)annotations[++i]).Value.ExpressionKind, EdmExpressionKind.GuidConstant, "Annotation expression kind");
-            Assert.AreEqual(((IEdmGuidConstantExpression)((IEdmValueAnnotation)annotations[i]).Value).Value, Guid.Parse("4ae71c81-c21a-40a2-8d53-f1a29ed4a2f2"), "Annotation value");
-            Assert.AreEqual(((IEdmValueAnnotation)annotations[++i]).Value.ExpressionKind, EdmExpressionKind.GuidConstant, "Annotation expression kind");
-            Assert.AreEqual(((IEdmGuidConstantExpression)((IEdmValueAnnotation)annotations[i]).Value).Value, Guid.Parse("4ae71c81-c21a-40a2-8d53-f1a29ed4a2f3"), "Annotation value");
+            Assert.AreEqual((annotations[++i]).Value.ExpressionKind, EdmExpressionKind.GuidConstant, "Annotation expression kind");
+            Assert.AreEqual(((IEdmGuidConstantExpression)(annotations[i]).Value).Value, Guid.Parse("4ae71c81-c21a-40a2-8d53-f1a29ed4a2f2"), "Annotation value");
+            Assert.AreEqual((annotations[++i]).Value.ExpressionKind, EdmExpressionKind.GuidConstant, "Annotation expression kind");
+            Assert.AreEqual(((IEdmGuidConstantExpression)(annotations[i]).Value).Value, Guid.Parse("4ae71c81-c21a-40a2-8d53-f1a29ed4a2f3"), "Annotation value");
 
-            Assert.AreEqual(((IEdmValueAnnotation)annotations[++i]).Value.ExpressionKind, EdmExpressionKind.DecimalConstant, "Annotation expression kind");
-            Assert.AreEqual(((IEdmDecimalConstantExpression)((IEdmValueAnnotation)annotations[i]).Value).Value, 1.2M, "Annotation value");
-            Assert.AreEqual(((IEdmValueAnnotation)annotations[++i]).Value.ExpressionKind, EdmExpressionKind.DecimalConstant, "Annotation expression kind");
-            Assert.AreEqual(((IEdmDecimalConstantExpression)((IEdmValueAnnotation)annotations[i]).Value).Value, 2.3M, "Annotation value");
+            Assert.AreEqual((annotations[++i]).Value.ExpressionKind, EdmExpressionKind.DecimalConstant, "Annotation expression kind");
+            Assert.AreEqual(((IEdmDecimalConstantExpression)(annotations[i]).Value).Value, 1.2M, "Annotation value");
+            Assert.AreEqual((annotations[++i]).Value.ExpressionKind, EdmExpressionKind.DecimalConstant, "Annotation expression kind");
+            Assert.AreEqual(((IEdmDecimalConstantExpression)(annotations[i]).Value).Value, 2.3M, "Annotation value");
 
-            Assert.AreEqual(((IEdmValueAnnotation)annotations[++i]).Value.ExpressionKind, EdmExpressionKind.BooleanConstant, "Annotation expression kind");
-            Assert.AreEqual(((IEdmBooleanConstantExpression)((IEdmValueAnnotation)annotations[i]).Value).Value, true, "Annotation value");
-            Assert.AreEqual(((IEdmValueAnnotation)annotations[++i]).Value.ExpressionKind, EdmExpressionKind.BooleanConstant, "Annotation expression kind");
-            Assert.AreEqual(((IEdmBooleanConstantExpression)((IEdmValueAnnotation)annotations[i]).Value).Value, false, "Annotation value");
+            Assert.AreEqual((annotations[++i]).Value.ExpressionKind, EdmExpressionKind.BooleanConstant, "Annotation expression kind");
+            Assert.AreEqual(((IEdmBooleanConstantExpression)(annotations[i]).Value).Value, true, "Annotation value");
+            Assert.AreEqual((annotations[++i]).Value.ExpressionKind, EdmExpressionKind.BooleanConstant, "Annotation expression kind");
+            Assert.AreEqual(((IEdmBooleanConstantExpression)(annotations[i]).Value).Value, false, "Annotation value");
 
-            Assert.AreEqual(((IEdmValueAnnotation)annotations[++i]).Value.ExpressionKind, EdmExpressionKind.DateTimeOffsetConstant, "Annotation expression kind");
-            Assert.AreEqual(((IEdmDateTimeOffsetConstantExpression)((IEdmValueAnnotation)annotations[i]).Value).Value, new DateTimeOffset(2001, 10, 26, 19, 32, 52, new TimeSpan(0, 0, 0)), "Annotation value");
-            Assert.AreEqual(((IEdmValueAnnotation)annotations[++i]).Value.ExpressionKind, EdmExpressionKind.DateTimeOffsetConstant, "Annotation expression kind");
-            Assert.AreEqual(((IEdmDateTimeOffsetConstantExpression)((IEdmValueAnnotation)annotations[i]).Value).Value, new DateTimeOffset(2001, 10, 26, 19, 32, 52, new TimeSpan(0, 0, 0)), "Annotation value");
+            Assert.AreEqual((annotations[++i]).Value.ExpressionKind, EdmExpressionKind.DateTimeOffsetConstant, "Annotation expression kind");
+            Assert.AreEqual(((IEdmDateTimeOffsetConstantExpression)(annotations[i]).Value).Value, new DateTimeOffset(2001, 10, 26, 19, 32, 52, new TimeSpan(0, 0, 0)), "Annotation value");
+            Assert.AreEqual((annotations[++i]).Value.ExpressionKind, EdmExpressionKind.DateTimeOffsetConstant, "Annotation expression kind");
+            Assert.AreEqual(((IEdmDateTimeOffsetConstantExpression)(annotations[i]).Value).Value, new DateTimeOffset(2001, 10, 26, 19, 32, 52, new TimeSpan(0, 0, 0)), "Annotation value");
 
-            Assert.AreEqual(((IEdmValueAnnotation)annotations[++i]).Value.ExpressionKind, EdmExpressionKind.DurationConstant, "Annotation expression kind");
-            Assert.AreEqual(new TimeSpan(0, 0, 1), ((IEdmDurationConstantExpression)((IEdmValueAnnotation)annotations[i]).Value).Value, "Annotation value");
-            Assert.AreEqual(((IEdmValueAnnotation)annotations[++i]).Value.ExpressionKind, EdmExpressionKind.DurationConstant, "Annotation expression kind");
-            Assert.AreEqual(new TimeSpan(0, 0, 1), ((IEdmDurationConstantExpression)((IEdmValueAnnotation)annotations[i]).Value).Value, "Annotation value");
+            Assert.AreEqual((annotations[++i]).Value.ExpressionKind, EdmExpressionKind.DurationConstant, "Annotation expression kind");
+            Assert.AreEqual(new TimeSpan(0, 0, 1), ((IEdmDurationConstantExpression)(annotations[i]).Value).Value, "Annotation value");
+            Assert.AreEqual((annotations[++i]).Value.ExpressionKind, EdmExpressionKind.DurationConstant, "Annotation expression kind");
+            Assert.AreEqual(new TimeSpan(0, 0, 1), ((IEdmDurationConstantExpression)(annotations[i]).Value).Value, "Annotation value");
         }
 
         private class ArrayComp : IEqualityComparer<byte[]>
@@ -3220,7 +3197,7 @@ namespace EdmLibTests.FunctionalTests
             Assert.AreEqual(personAnnotations.Count(), 1, "Annotations count");
             IEdmVocabularyAnnotation[] annotations = personAnnotations.ToArray<IEdmVocabularyAnnotation>();
 
-            IEdmValueAnnotation first = (IEdmValueAnnotation)annotations[0];
+            IEdmVocabularyAnnotation first = annotations[0];
             Assert.AreEqual(first.Value.ExpressionKind, EdmExpressionKind.Record, "Annotation expression kind");
 
             IEdmRecordExpression record = (IEdmRecordExpression)first.Value;
@@ -3280,12 +3257,12 @@ namespace EdmLibTests.FunctionalTests
             Assert.AreEqual(personAnnotations.Count(), 2, "Annotations count");
             IEdmVocabularyAnnotation[] annotations = personAnnotations.ToArray<IEdmVocabularyAnnotation>();
 
-            IEdmValueAnnotation first = (IEdmValueAnnotation)annotations[0];
+            IEdmVocabularyAnnotation first = annotations[0];
             Assert.AreEqual(first.Term.Name, "Mage", "Term name");
             IEdmPathExpression value = (IEdmPathExpression)first.Value;
             Assert.AreEqual(value.Path.First(), "Age", "Bound path name");
 
-            IEdmValueAnnotation second = (IEdmValueAnnotation)annotations[1];
+            IEdmVocabularyAnnotation second = annotations[1];
             Assert.AreEqual(second.Term.Name, "Age", "Term name");
             value = (IEdmPathExpression)second.Value;
             Assert.AreEqual(value.Path.First(), "Age", "Bound path name");
@@ -3670,7 +3647,7 @@ namespace EdmLibTests.FunctionalTests
             Assert.IsTrue(parsed, "parsed");
             Assert.IsFalse(errors.Any(), "No errors");
 
-            var term = model.FindValueTerm("MyNS.ConventionalIDs");
+            var term = model.FindTerm("MyNS.ConventionalIDs");
             Assert.AreEqual(term.DefaultValue, "True");
         }
 

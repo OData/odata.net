@@ -17,17 +17,17 @@ namespace Microsoft.OData.Tests
         public const string AnnotationsNamespace = "http://docs.oasis-open.org/odata/ns/edm";
 
         /// <summary>
-        /// The namespace of the term to use when building value annotations for indicating the conventions used.
+        /// The namespace of the term to use when building annotations for indicating the conventions used.
         /// </summary>
         public const string ConventionTermNamespace = "Com.Microsoft.OData.Service.Conventions.V1";
 
         /// <summary>
-        /// The name of the term to use when building value annotations for indicating the conventions used.
+        /// The name of the term to use when building annotations for indicating the conventions used.
         /// </summary>
         public const string ConventionTermName = "UrlConventions";
 
         /// <summary>
-        /// The string value to use when building value annotations for indicating that the key-as-segment convention is being used.
+        /// The string value to use when building annotations for indicating that the key-as-segment convention is being used.
         /// </summary>
         public const string KeyAsSegmentAnnotationValueString = "KeyAsSegment";
 
@@ -42,7 +42,7 @@ namespace Microsoft.OData.Tests
         public static readonly EdmTerm ConventionTerm = new EdmTerm(ConventionTermNamespace, ConventionTermName, EdmPrimitiveTypeKind.String);
 
         /// <summary>
-        /// The value to use when building value annotations for indicating that the key-as-segment convention is being used.
+        /// The value to use when building annotations for indicating that the key-as-segment convention is being used.
         /// </summary>
         public static readonly EdmStringConstant KeyAsSegmentAnnotationValue = new EdmStringConstant(KeyAsSegmentAnnotationValueString);
     }

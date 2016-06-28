@@ -190,7 +190,6 @@ namespace Microsoft.OData.Edm {
         internal const string EdmModel_Validator_Semantic_StringConstantLengthOutOfRange = "EdmModel_Validator_Semantic_StringConstantLengthOutOfRange";
         internal const string EdmModel_Validator_Semantic_BinaryConstantLengthOutOfRange = "EdmModel_Validator_Semantic_BinaryConstantLengthOutOfRange";
         internal const string EdmModel_Validator_Semantic_TypeMustNotHaveKindOfNone = "EdmModel_Validator_Semantic_TypeMustNotHaveKindOfNone";
-        internal const string EdmModel_Validator_Semantic_TermMustNotHaveKindOfNone = "EdmModel_Validator_Semantic_TermMustNotHaveKindOfNone";
         internal const string EdmModel_Validator_Semantic_SchemaElementMustNotHaveKindOfNone = "EdmModel_Validator_Semantic_SchemaElementMustNotHaveKindOfNone";
         internal const string EdmModel_Validator_Semantic_PropertyMustNotHaveKindOfNone = "EdmModel_Validator_Semantic_PropertyMustNotHaveKindOfNone";
         internal const string EdmModel_Validator_Semantic_PrimitiveTypeMustNotHaveKindOfNone = "EdmModel_Validator_Semantic_PrimitiveTypeMustNotHaveKindOfNone";
@@ -303,7 +302,6 @@ namespace Microsoft.OData.Edm {
         internal const string UnknownEnumVal_ContainerElementKind = "UnknownEnumVal_ContainerElementKind";
         internal const string UnknownEnumVal_EdmxTarget = "UnknownEnumVal_EdmxTarget";
         internal const string UnknownEnumVal_PropertyKind = "UnknownEnumVal_PropertyKind";
-        internal const string UnknownEnumVal_TermKind = "UnknownEnumVal_TermKind";
         internal const string UnknownEnumVal_ExpressionKind = "UnknownEnumVal_ExpressionKind";
         internal const string Bad_AmbiguousElementBinding = "Bad_AmbiguousElementBinding";
         internal const string Bad_UnresolvedType = "Bad_UnresolvedType";

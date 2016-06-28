@@ -121,7 +121,7 @@ namespace AstoriaUnitTests.Tests
                         Payload = "{ @odata.type: 'Edm.String', value : 'Foo' }",
                         ContentType = UnitTestsUtil.JsonLightMimeType,
                     },
-                    //// Correct null value annotation in JSON Light
+                    //// Correct null annotation in JSON Light
                     new UpdatePutPropertyTestCase
                     {
                         Payload = "{ @odata.null : true }",

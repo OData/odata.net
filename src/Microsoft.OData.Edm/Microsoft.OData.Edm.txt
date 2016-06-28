@@ -21,8 +21,8 @@ EdmType_UnexpectedEdmType=Unexpected Edm type.
 
 ; Evaluation messages
 Edm_Evaluator_NoTermTypeAnnotationOnType=Type '{0}' must have a single type annotation with term type '{1}'.
-Edm_Evaluator_NoValueAnnotationOnType=Type '{0}' must have a single value annotation with term '{1}'.
-Edm_Evaluator_NoValueAnnotationOnElement=Element must have a single value annotation with term '{0}'.
+Edm_Evaluator_NoValueAnnotationOnType=Type '{0}' must have a single annotation with term '{1}'.
+Edm_Evaluator_NoValueAnnotationOnElement=Element must have a single annotation with term '{0}'.
 Edm_Evaluator_UnrecognizedExpressionKind=Expression with kind '{0}' cannot be evaluated.
 Edm_Evaluator_UnboundFunction=Function '{0}' is not present in the execution environment.
 Edm_Evaluator_UnboundPath=Path segment '{0}' has no binding in the execution environment.
@@ -128,7 +128,6 @@ EdmModel_Validator_Semantic_IntegerConstantValueOutOfRange=The value of the inte
 EdmModel_Validator_Semantic_StringConstantLengthOutOfRange=The value of the string constant is '{0}' characters long, but the max length of its type is '{1}'.
 EdmModel_Validator_Semantic_BinaryConstantLengthOutOfRange=The value of the binary constant is '{0}' characters long, but the max length of its type is '{1}'.
 EdmModel_Validator_Semantic_TypeMustNotHaveKindOfNone=A type without other errors must not have kind of none.
-EdmModel_Validator_Semantic_TermMustNotHaveKindOfNone=A term without other errors must not have kind of none. The kind of term '{0}' is none.
 EdmModel_Validator_Semantic_SchemaElementMustNotHaveKindOfNone=A schema element without other errors must not have kind of none. The kind of schema element '{0}' is none.
 EdmModel_Validator_Semantic_PropertyMustNotHaveKindOfNone=A property without other errors must not have kind of none. The kind of property '{0}' is none.
 EdmModel_Validator_Semantic_PrimitiveTypeMustNotHaveKindOfNone=A primitive type without other errors must not have kind of none. The kind of primitive type '{0}' is none.
@@ -141,7 +140,7 @@ EdmModel_Validator_Semantic_TypeAnnotationHasExtraProperties=They type of the ty
 EdmModel_Validator_Semantic_EnumMustHaveIntegralUnderlyingType=The underlying type of '{0}' is not valid. The underlying type of an enum type must be an integral type. 
 EdmModel_Validator_Semantic_InaccessibleTerm=The term '{0}' could not be found from the model being validated.
 EdmModel_Validator_Semantic_InaccessibleTarget=The target '{0}' could not be found from the model being validated.
-EdmModel_Validator_Semantic_ElementDirectValueAnnotationFullNameMustBeUnique=An element already has a direct value annotation with the namespace '{0}' and name '{1}'.
+EdmModel_Validator_Semantic_ElementDirectValueAnnotationFullNameMustBeUnique=An element already has a direct annotation with the namespace '{0}' and name '{1}'.
 EdmModel_Validator_Semantic_NoEntitySetsFoundForType=The association set '{0}' cannot assume an entity set for the role '{2}' because there are no entity sets for the role type '{1}'.
 EdmModel_Validator_Semantic_CannotInferEntitySetWithMultipleSetsPerType=The association set '{0}' must specify an entity set for the role '{2}' because there are multiple entity sets for the role type '{1}'.
 EdmModel_Validator_Semantic_EntitySetRecursiveNavigationPropertyMappingsMustPointBackToSourceEntitySet=Because the navigation property '{0}' is recursive, the mapping from the entity set '{1}' must point back to itself.
@@ -256,7 +255,6 @@ UnknownEnumVal_PrimitiveKind=Invalid primitive kind: '{0}'
 UnknownEnumVal_ContainerElementKind=Invalid container element kind: '{0}'
 UnknownEnumVal_EdmxTarget=Invalid edmx target: '{0}'
 UnknownEnumVal_PropertyKind=Invalid property kind: '{0}'
-UnknownEnumVal_TermKind=Invalid term kind: '{0}'
 UnknownEnumVal_ExpressionKind=Invalid expression kind: '{0}'
 
 ; Error message for 'Bad' types

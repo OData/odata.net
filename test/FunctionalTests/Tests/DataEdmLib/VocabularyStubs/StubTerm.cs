@@ -1,5 +1,5 @@
 ﻿//---------------------------------------------------------------------
-// <copyright file="StubValueTerm.cs" company="Microsoft">
+// <copyright file="StubTerm.cs" company="Microsoft">
 //      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 // </copyright>
 //---------------------------------------------------------------------
@@ -10,9 +10,9 @@ using Microsoft.OData.Edm.Vocabularies;
 
 namespace EdmLibTests.VocabularyStubs
 {
-    public class StubValueTerm : StubEdmElement, IEdmValueTerm
+    public class StubTerm : StubEdmElement, IEdmTerm
     {
-        public StubValueTerm(string namespaceName, string name)
+        public StubTerm(string namespaceName, string name)
         {
             this.Namespace = namespaceName;
             this.Name = name;
@@ -30,12 +30,7 @@ namespace EdmLibTests.VocabularyStubs
 
         public EdmSchemaElementKind SchemaElementKind
         {
-            get { return EdmSchemaElementKind.ValueTerm; }
-        }
-
-        public EdmTermKind TermKind
-        {
-            get { return EdmTermKind.Value; }
+            get { return EdmSchemaElementKind.Term; }
         }
 
         public override string ToString()
@@ -45,7 +40,7 @@ namespace EdmLibTests.VocabularyStubs
 
         public override bool Equals(object obj)
         {
-            IEdmValueTerm otherValueTerm = obj as IEdmValueTerm;
+            IEdmTerm otherValueTerm = obj as IEdmTerm;
             if (otherValueTerm == null)
             {
                 return false;

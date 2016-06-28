@@ -133,7 +133,7 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
                         yield return function;
                     }
 
-                    foreach (IEdmSchemaElement valueTerm in schema.ValueTerms)
+                    foreach (IEdmSchemaElement valueTerm in schema.Terms)
                     {
                         yield return valueTerm;
                     }
@@ -514,7 +514,7 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
             return EdmUtil.DictionaryGetOrUpdate(
                 this.wrappedAnnotations,
                 annotation,
-                ann => new CsdlSemanticsValueAnnotation(schema, targetContext, annotationsContext, ann, qualifier));
+                ann => new CsdlSemanticsVocabularyAnnotation(schema, targetContext, annotationsContext, ann, qualifier));
         }
 
         private void AddSchema(CsdlSchema schema)
@@ -560,7 +560,7 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
                 RegisterElement(function);
             }
 
-            foreach (IEdmValueTerm valueTerm in schemaWrapper.ValueTerms)
+            foreach (IEdmTerm valueTerm in schemaWrapper.Terms)
             {
                 RegisterElement(valueTerm);
             }

@@ -208,32 +208,32 @@ namespace EdmLibTests.FunctionalTests
         }
 
         [TestMethod]
-        public void ParserModelWithEnumValueTerm()
+        public void ParserModelWithEnumTerm()
         {
             var edmVersions = new EdmVersion[] { EdmVersion.V40 };
             foreach (var edmVersion in edmVersions)
             {
-                Assert.IsFalse(this.GetXsdValidationResults(ValidationTestModelBuilder.ModelWithEnumValueTerm(), edmVersion).Any(), "EnumType should be able to have inline vocab. annotations");
+                Assert.IsFalse(this.GetXsdValidationResults(ValidationTestModelBuilder.ModelWithEnumTerm(), edmVersion).Any(), "EnumType should be able to have inline vocab. annotations");
             }
         }
 
         [TestMethod]
-        public void ValueTermXsdValidation()
+        public void TermXsdValidation()
         {
             var edmVersions = new EdmVersion[] { EdmVersion.V40 };
             foreach (var edmVersion in edmVersions)
             {
-                this.BasicXsdValidationTestForSerializerOutputCsdl(this.GetParserResult(VocabularyTestModelBuilder.ValueTermOnlyCsdl()), edmVersion);
+                this.BasicXsdValidationTestForSerializerOutputCsdl(this.GetParserResult(VocabularyTestModelBuilder.TermOnlyCsdl()), edmVersion);
             }
         }
 
         [TestMethod]
-        public void ParserValueAnnotationIfCsdlSchemaCompliantTest()
+        public void ParserVocabularyAnnotationIfCsdlSchemaCompliantTest()
         {
             var edmVersions = new EdmVersion[] { EdmVersion.V40 };
             foreach (var edmVersion in edmVersions)
             {
-                this.BasicXsdValidationTestForParserInputCsdl(VocabularyTestModelBuilder.ValueAnnotationIfCsdl(), edmVersion);
+                this.BasicXsdValidationTestForParserInputCsdl(VocabularyTestModelBuilder.VocabularyAnnotationIfCsdl(), edmVersion);
             }
         }
 
@@ -243,7 +243,7 @@ namespace EdmLibTests.FunctionalTests
             var edmVersions = new EdmVersion[] { EdmVersion.V40 };
             foreach (var edmVersion in edmVersions)
             {
-                this.BasicXsdValidationTestForParserInputCsdl(VocabularyTestModelBuilder.ValueAnnotationFunctionCsdl(), edmVersion);
+                this.BasicXsdValidationTestForParserInputCsdl(VocabularyTestModelBuilder.VocabularyAnnotationFunctionCsdl(), edmVersion);
             }
         }
 
@@ -253,7 +253,7 @@ namespace EdmLibTests.FunctionalTests
             var edmVersions = new EdmVersion[] { EdmVersion.V40 };
             foreach (var edmVersion in edmVersions)
             {
-                this.BasicXsdValidationTestForParserInputCsdl(VocabularyTestModelBuilder.SimpleValueAnnotationCsdl(), edmVersion);
+                this.BasicXsdValidationTestForParserInputCsdl(VocabularyTestModelBuilder.SimpleVocabularyAnnotationCsdl(), edmVersion);
             }
         }
 
@@ -372,13 +372,13 @@ namespace EdmLibTests.FunctionalTests
         }
 
         [TestMethod]
-        public void ParserAnnotationValueTermCsdlSchemaCompliantTest()
+        public void ParserAnnotationTermCsdlSchemaCompliantTest()
         {
             var edmVersions = new EdmVersion[] { EdmVersion.V40 };
             foreach (var edmVersion in edmVersions)
             {
-                this.BasicXsdValidationTestForParserInputCsdl(VocabularyTestModelBuilder.OutOfLineAnnotationValueTerm(), edmVersion);
-                this.BasicXsdValidationTestForParserInputCsdl(VocabularyTestModelBuilder.InlineAnnotationValueTerm(), edmVersion);
+                this.BasicXsdValidationTestForParserInputCsdl(VocabularyTestModelBuilder.OutOfLineAnnotationTerm(), edmVersion);
+                this.BasicXsdValidationTestForParserInputCsdl(VocabularyTestModelBuilder.InlineAnnotationTerm(), edmVersion);
             }
         }
 

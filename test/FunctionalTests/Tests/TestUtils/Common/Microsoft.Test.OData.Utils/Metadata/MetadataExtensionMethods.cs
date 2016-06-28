@@ -449,7 +449,7 @@ namespace Microsoft.Test.OData.Utils.Metadata
         /// <param name="property">Property to evaluate.</param>
         /// <param name="expressionEvaluator">Evaluator to use to perform expression evaluation.</param>
         /// <returns>Value of the property evaluated against the supplied value, or null if no relevant annotation exists.</returns>
-        public static IEdmValue GetPropertyValue(this IEdmModel model, IEdmStructuredValue context, IEdmValueTerm term, IEdmProperty property, EdmExpressionEvaluator expressionEvaluator)
+        public static IEdmValue GetPropertyValue(this IEdmModel model, IEdmStructuredValue context, IEdmTerm term, IEdmProperty property, EdmExpressionEvaluator expressionEvaluator)
         {
             ExceptionUtilities.CheckArgumentNotNull(model, "model");
             ExceptionUtilities.CheckArgumentNotNull(context, "context");
@@ -469,7 +469,7 @@ namespace Microsoft.Test.OData.Utils.Metadata
         /// <param name="qualifier">Qualifier to apply.</param>
         /// <param name="expressionEvaluator">Evaluator to use to perform expression evaluation.</param>
         /// <returns>Value of the property evaluated against the supplied value, or null if no relevant annotation exists.</returns>
-        public static IEdmValue GetPropertyValue(this IEdmModel model, IEdmStructuredValue context, IEdmValueTerm term, IEdmProperty property, string qualifier, EdmExpressionEvaluator expressionEvaluator)
+        public static IEdmValue GetPropertyValue(this IEdmModel model, IEdmStructuredValue context, IEdmTerm term, IEdmProperty property, string qualifier, EdmExpressionEvaluator expressionEvaluator)
         {
             ExceptionUtilities.CheckArgumentNotNull(model, "model");
             ExceptionUtilities.CheckArgumentNotNull(context, "context");
@@ -489,7 +489,7 @@ namespace Microsoft.Test.OData.Utils.Metadata
         /// <param name="property">Property to evaluate.</param>
         /// <param name="evaluator">Evaluator to use to perform expression evaluation.</param>
         /// <returns>Value of the property evaluated against the supplied value, or default(<typeparamref name="T"/>) if no relevant annotation exists.</returns>
-        public static T GetPropertyValue<T>(this IEdmModel model, IEdmStructuredValue context, IEdmValueTerm term, IEdmProperty property, EdmToClrEvaluator evaluator)
+        public static T GetPropertyValue<T>(this IEdmModel model, IEdmStructuredValue context, IEdmTerm term, IEdmProperty property, EdmToClrEvaluator evaluator)
         {
             ExceptionUtilities.CheckArgumentNotNull(model, "model");
             ExceptionUtilities.CheckArgumentNotNull(context, "context");
@@ -510,7 +510,7 @@ namespace Microsoft.Test.OData.Utils.Metadata
         /// <param name="qualifier">Qualifier to apply.</param>
         /// <param name="evaluator">Evaluator to use to perform expression evaluation.</param>
         /// <returns>Value of the property evaluated against the supplied value, or default(<typeparamref name="T"/>) if no relevant annotation exists.</returns>
-        public static T GetPropertyValue<T>(this IEdmModel model, IEdmStructuredValue context, IEdmValueTerm term, IEdmProperty property, string qualifier, EdmToClrEvaluator evaluator)
+        public static T GetPropertyValue<T>(this IEdmModel model, IEdmStructuredValue context, IEdmTerm term, IEdmProperty property, string qualifier, EdmToClrEvaluator evaluator)
         {
             ExceptionUtilities.CheckArgumentNotNull(model, "model");
             ExceptionUtilities.CheckArgumentNotNull(context, "context");
@@ -520,9 +520,9 @@ namespace Microsoft.Test.OData.Utils.Metadata
             return GetPropertyValue<T>(model, context, context.Type.AsEntity().EntityDefinition(), term, property, qualifier, evaluator.EvaluateToClrValue<T>);
         }
 
-        private static T GetPropertyValue<T>(this IEdmModel model, IEdmStructuredValue context, IEdmEntityType contextType, IEdmValueTerm term, IEdmProperty property, string qualifier, Func<IEdmExpression, IEdmStructuredValue, T> evaluator)
+        private static T GetPropertyValue<T>(this IEdmModel model, IEdmStructuredValue context, IEdmEntityType contextType, IEdmTerm term, IEdmProperty property, string qualifier, Func<IEdmExpression, IEdmStructuredValue, T> evaluator)
         {
-            IEnumerable<IEdmValueAnnotation> annotations = model.FindVocabularyAnnotations<IEdmValueAnnotation>(contextType, term, qualifier);
+            IEnumerable<IEdmVocabularyAnnotation> annotations = model.FindVocabularyAnnotations<IEdmVocabularyAnnotation>(contextType, term, qualifier);
 
             if (annotations.Count() != 1)
             {

@@ -321,7 +321,7 @@ namespace Microsoft.OData
         }
 
         /// <summary>
-        /// Pattern class to match a annotation name that is exactly the same as this pattern.
+        /// Pattern class to match an annotation name that is exactly the same as this pattern.
         /// </summary>
         private sealed class ExactMatchPattern : AnnotationFilterPattern
         {

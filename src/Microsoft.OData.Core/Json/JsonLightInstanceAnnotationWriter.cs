@@ -148,7 +148,7 @@ namespace Microsoft.OData
                 return;
             }
 
-            IEdmTypeReference expectedType = MetadataUtils.LookupTypeOfValueTerm(name, this.valueSerializer.Model);
+            IEdmTypeReference expectedType = MetadataUtils.LookupTypeOfTerm(name, this.valueSerializer.Model);
 
             if (value is ODataNullValue)
             {

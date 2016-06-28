@@ -27,7 +27,7 @@ namespace Microsoft.OData.Edm.Vocabularies.V1
         /// <summary>
         /// The change tracking term.
         /// </summary>
-        public static readonly IEdmValueTerm ChangeTrackingTerm;
+        public static readonly IEdmTerm ChangeTrackingTerm;
 
         /// <summary>
         /// Parse Capabilities Vocabulary Model from CapabilitiesVocabularies.xml
@@ -43,7 +43,7 @@ namespace Microsoft.OData.Edm.Vocabularies.V1
                 EdmxReader.TryParse(XmlReader.Create(stream), out Instance, out errors);
             }
 
-            ChangeTrackingTerm = Instance.FindDeclaredValueTerm(CapabilitiesVocabularyConstants.ChangeTracking);
+            ChangeTrackingTerm = Instance.FindDeclaredTerm(CapabilitiesVocabularyConstants.ChangeTracking);
         }
     }
 }

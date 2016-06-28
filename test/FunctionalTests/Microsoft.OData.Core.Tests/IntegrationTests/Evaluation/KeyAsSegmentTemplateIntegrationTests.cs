@@ -53,7 +53,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Evaluation
             model.AddElement(container);
             if (addAnnotation)
             {
-                model.AddVocabularyAnnotation(new EdmAnnotation(container, UrlConventionsConstants.ConventionTerm, UrlConventionsConstants.KeyAsSegmentAnnotationValue));
+                model.AddVocabularyAnnotation(new EdmVocabularyAnnotation(container, UrlConventionsConstants.ConventionTerm, UrlConventionsConstants.KeyAsSegmentAnnotationValue));
             }
 
             EdmEntityType entityType = new EdmEntityType("Fake", "FakeType");

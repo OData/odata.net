@@ -21,30 +21,30 @@ namespace EdmLibTests.FunctionalTests
     public class VocabularyRoundTripTests : EdmLibTestCaseBase
     {
         [TestMethod]
-        public void RoundTripSimpleValueAnnotationWithComplexTypeCsdl()
+        public void RoundTripSimpleVocabularyAnnotationWithComplexTypeCsdl()
         {
-            this.RoundTripValidator(VocabularyTestModelBuilder.SimpleValueAnnotationWithComplexTypeCsdl(), EdmVersion.V40);
+            this.RoundTripValidator(VocabularyTestModelBuilder.SimpleVocabularyAnnotationWithComplexTypeCsdl(), EdmVersion.V40);
         }
 
         [TestMethod]
-        public void RoundTripValueAnnotationComplexTypeWithNullValuesCsdl()
+        public void RoundTripVocabularyAnnotationComplexTypeWithNullValuesCsdl()
         {
-            this.RoundTripValidator(VocabularyTestModelBuilder.ValueAnnotationComplexTypeWithNullValuesCsdl(), EdmVersion.V40);
+            this.RoundTripValidator(VocabularyTestModelBuilder.VocabularyAnnotationComplexTypeWithNullValuesCsdl(), EdmVersion.V40);
         }
 
         [TestMethod]
-        public void RoundTripValueAnnotationComplexTypeWithFewerPropertiesCsdl()
+        public void RoundTripVocabularyAnnotationComplexTypeWithFewerPropertiesCsdl()
         {
-            this.RoundTripValidator(VocabularyTestModelBuilder.ValueAnnotationComplexTypeWithFewerPropertiesCsdl(), EdmVersion.V40);
+            this.RoundTripValidator(VocabularyTestModelBuilder.VocabularyAnnotationComplexTypeWithFewerPropertiesCsdl(), EdmVersion.V40);
         }
 
         [TestMethod]
-        public void RoundTripValueAnnotationWithCollectionComplexTypeCsdl()
+        public void RoundTripVocabularyAnnotationWithCollectionComplexTypeCsdl()
         {
             var expectedErrors = new EdmLibTestErrors();
-            this.VerifySemanticValidation(VocabularyTestModelBuilder.ValueAnnotationWithCollectionComplexTypeCsdl(), EdmVersion.V40, expectedErrors);
+            this.VerifySemanticValidation(VocabularyTestModelBuilder.VocabularyAnnotationWithCollectionComplexTypeCsdl(), EdmVersion.V40, expectedErrors);
 
-            this.RoundTripValidator(VocabularyTestModelBuilder.ValueAnnotationWithCollectionComplexTypeCsdl(), EdmVersion.V40);
+            this.RoundTripValidator(VocabularyTestModelBuilder.VocabularyAnnotationWithCollectionComplexTypeCsdl(), EdmVersion.V40);
         }
 
         //[TestMethod, Variation(Id = 60, SkipReason = @"[EdmLib] NullReferenceException occurs when doing a round trip on vocabulary annotation targetting an ambiguous function/ function import/ function parameter -- postponed")]

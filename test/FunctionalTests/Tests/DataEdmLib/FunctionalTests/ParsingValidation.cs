@@ -527,7 +527,7 @@ namespace EdmLibTests.FunctionalTests
         }
 
         [TestMethod]
-        public void ParseUnexpectedElement_ValueAnnotation()
+        public void ParseUnexpectedElement_VocabularyAnnotation()
         {
             var csdl =
 @"<Schema Namespace=""NS1"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
@@ -758,7 +758,7 @@ namespace EdmLibTests.FunctionalTests
         }
 
         [TestMethod]
-        public void TestValueAnnotations()
+        public void TestVocabularyAnnotations()
         {
             const string csdl =
 @"<Schema Namespace=""foo"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
@@ -780,21 +780,19 @@ namespace EdmLibTests.FunctionalTests
 
             IEdmModel model;
             IEnumerable<EdmError> errors;
+
             bool parsed = CsdlReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(csdl)) }, out model, out errors);
             Assert.IsTrue(parsed, "parsed");
             Assert.IsTrue(errors.Count() == 0, "No errors");
 
-            IEdmValueTerm age = model.FindValueTerm("foo.Age");
             IEdmEntityType person = (IEdmEntityType)model.FindType("foo.Person");
-
             IEnumerable<IEdmVocabularyAnnotation> personAnnotations = person.VocabularyAnnotations(model);
             Assert.AreEqual(personAnnotations.Count(), 3, "Annotations count");
-            IEdmVocabularyAnnotation[] annotations = personAnnotations.ToArray<IEdmVocabularyAnnotation>();
 
-            IEdmValueTerm unresolvedTerm = (IEdmValueTerm)annotations.First().Term;
+            IEdmVocabularyAnnotation[] annotations = personAnnotations.ToArray<IEdmVocabularyAnnotation>();
+            IEdmTerm unresolvedTerm = annotations.First().Term;
             Assert.IsTrue(unresolvedTerm.Type.TypeKind() == EdmTypeKind.None, "Bad term has bad type");
-            Assert.AreEqual(EdmSchemaElementKind.ValueTerm, unresolvedTerm.SchemaElementKind, "Unresolved value term has correct schema element kind.");
-            Assert.AreEqual(EdmTermKind.Value, unresolvedTerm.TermKind, "Unresolved value term has correct term kind.");
+            Assert.AreEqual(EdmSchemaElementKind.Term, unresolvedTerm.SchemaElementKind, "Unresolved term has correct schema element kind.");
         }
 
         [TestMethod]

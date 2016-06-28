@@ -30,11 +30,6 @@ namespace Microsoft.OData.Edm
             get { return EdmTypeKind.Entity; }
         }
 
-        public EdmTermKind TermKind
-        {
-            get { return EdmTermKind.Type; }
-        }
-
         public bool HasStream
         {
             get { return false; }

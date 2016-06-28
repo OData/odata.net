@@ -1123,7 +1123,7 @@ namespace EdmLibTests.FunctionalTests
             var expectedEdmCheckableTypes = new string[] {
                 "AmbiguousBinding`1", "AmbiguousEntityContainerBinding",
                 "AmbiguousEntitySetBinding", "AmbiguousPropertyBinding", "AmbiguousTypeBinding",
-                "AmbiguousValueTermBinding", "BadComplexType", "BadElement",
+                "AmbiguousTermBinding", "BadComplexType", "BadElement",
                 "BadEntityContainer", "BadEntityReferenceType", "BadEntitySet",
                 "BadEntityType", "BadEdmEnumMemberValue",
                 "BadEnumType", "BadNamedStructuredType", "BadPrimitiveType",
@@ -1586,12 +1586,12 @@ namespace EdmLibTests.FunctionalTests
         }
 
         [TestMethod]
-        public void TestModelWithEnumValueTerm()
+        public void TestModelWithEnumTerm()
         {
             var expectedErrors = new EdmLibTestErrors()
             {
             };
-            this.VerifySemanticValidation(ValidationTestModelBuilder.ModelWithEnumValueTerm(), expectedErrors);
+            this.VerifySemanticValidation(ValidationTestModelBuilder.ModelWithEnumTerm(), expectedErrors);
         }
 
         [TestMethod]
@@ -1711,9 +1711,9 @@ namespace EdmLibTests.FunctionalTests
             var mainModel = new FunctionalUtilities.ModelWithRemovableElements<EdmModel>(ValidationTestModelBuilder.ReferenceBasicTestMainModel() as EdmModel);
             var referencedModel = ValidationTestModelBuilder.ReferenceBasicTestReferencedModel();
 
-            var valueAnnotation = new EdmAnnotation(
+            var valueAnnotation = new EdmVocabularyAnnotation(
                 mainModel.FindEntityType("NS1.Customer"),
-                referencedModel.FindValueTerm("NS1.Title"),
+                referencedModel.FindTerm("NS1.Title"),
                 "q1",
                 new EdmStringConstant("Hello world!"));
             mainModel.WrappedModel.AddVocabularyAnnotation(valueAnnotation);
@@ -2262,7 +2262,7 @@ namespace EdmLibTests.FunctionalTests
             {
                 IEnumerable<EdmError> errors;
                 model.TryWriteCsdl(xmlWriter, out errors);
-                Assert.Fail("Excepted an exception when trying to serialize a direct value annotation which does not match the xml naming spec.");
+                Assert.Fail("Excepted an exception when trying to serialize a direct annotation which does not match the xml naming spec.");
             }
             catch (ArgumentException e)
             {

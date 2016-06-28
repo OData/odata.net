@@ -36,7 +36,7 @@ namespace Microsoft.OData.Edm
 
         private static readonly Func<IEdmModel, string, IEdmSchemaType> findType = (model, qualifiedName) => model.FindDeclaredType(qualifiedName);
         private static readonly Func<IEdmModel, IEdmType, IEnumerable<IEdmOperation>> findBoundOperations = (model, bindingType) => model.FindDeclaredBoundOperations(bindingType);
-        private static readonly Func<IEdmModel, string, IEdmValueTerm> findValueTerm = (model, qualifiedName) => model.FindDeclaredValueTerm(qualifiedName);
+        private static readonly Func<IEdmModel, string, IEdmTerm> findTerm = (model, qualifiedName) => model.FindDeclaredTerm(qualifiedName);
         private static readonly Func<IEdmModel, string, IEnumerable<IEdmOperation>> findOperations = (model, qualifiedName) => model.FindDeclaredOperations(qualifiedName);
         private static readonly Func<IEdmModel, string, IEdmEntityContainer> findEntityContainer = (model, qualifiedName) => { return model.ExistsContainer(qualifiedName) ? model.EntityContainer : null; };
         private static readonly Func<IEnumerable<IEdmOperation>, IEnumerable<IEdmOperation>, IEnumerable<IEdmOperation>> mergeFunctions = (f1, f2) => Enumerable.Concat(f1, f2);
@@ -120,17 +120,17 @@ namespace Microsoft.OData.Edm
         }
 
         /// <summary>
-        /// Searches for a value term with the given name in this model and all referenced models and returns null if no such value term exists.
+        /// Searches for a term with the given name in this model and all referenced models and returns null if no such term exists.
         /// </summary>
         /// <param name="model">The model to search.</param>
-        /// <param name="qualifiedName">The qualified name of the value term being found.</param>
-        /// <returns>The requested value term, or null if no such value term exists.</returns>
-        public static IEdmValueTerm FindValueTerm(this IEdmModel model, string qualifiedName)
+        /// <param name="qualifiedName">The qualified name of the term being found.</param>
+        /// <returns>The requested term, or null if no such term exists.</returns>
+        public static IEdmTerm FindTerm(this IEdmModel model, string qualifiedName)
         {
             EdmUtil.CheckArgumentNull(model, "model");
             EdmUtil.CheckArgumentNull(qualifiedName, "qualifiedName");
 
-            return FindAcrossModels(model, qualifiedName, findValueTerm, RegistrationHelper.CreateAmbiguousValueTermBinding);
+            return FindAcrossModels(model, qualifiedName, findTerm, RegistrationHelper.CreateAmbiguousTermBinding);
         }
 
         /// <summary>
@@ -382,7 +382,7 @@ namespace Microsoft.OData.Edm
         /// <param name="term">Term to evaluate.</param>
         /// <param name="expressionEvaluator">Evaluator to use to perform expression evaluation.</param>
         /// <returns>Value of the term evaluated against the supplied value.</returns>
-        public static IEdmValue GetTermValue(this IEdmModel model, IEdmStructuredValue context, IEdmValueTerm term, EdmExpressionEvaluator expressionEvaluator)
+        public static IEdmValue GetTermValue(this IEdmModel model, IEdmStructuredValue context, IEdmTerm term, EdmExpressionEvaluator expressionEvaluator)
         {
             EdmUtil.CheckArgumentNull(model, "model");
             EdmUtil.CheckArgumentNull(context, "context");
@@ -401,7 +401,7 @@ namespace Microsoft.OData.Edm
         /// <param name="qualifier">Qualifier to apply.</param>
         /// <param name="expressionEvaluator">Evaluator to use to perform expression evaluation.</param>
         /// <returns>Value of the term evaluated against the supplied value.</returns>
-        public static IEdmValue GetTermValue(this IEdmModel model, IEdmStructuredValue context, IEdmValueTerm term, string qualifier, EdmExpressionEvaluator expressionEvaluator)
+        public static IEdmValue GetTermValue(this IEdmModel model, IEdmStructuredValue context, IEdmTerm term, string qualifier, EdmExpressionEvaluator expressionEvaluator)
         {
             EdmUtil.CheckArgumentNull(model, "model");
             EdmUtil.CheckArgumentNull(context, "context");
@@ -459,7 +459,7 @@ namespace Microsoft.OData.Edm
         /// <param name="term">Term to evaluate.</param>
         /// <param name="evaluator">Evaluator to use to perform expression evaluation.</param>
         /// <returns>Value of the term evaluated against the supplied value.</returns>
-        public static T GetTermValue<T>(this IEdmModel model, IEdmStructuredValue context, IEdmValueTerm term, EdmToClrEvaluator evaluator)
+        public static T GetTermValue<T>(this IEdmModel model, IEdmStructuredValue context, IEdmTerm term, EdmToClrEvaluator evaluator)
         {
             EdmUtil.CheckArgumentNull(model, "model");
             EdmUtil.CheckArgumentNull(context, "context");
@@ -479,7 +479,7 @@ namespace Microsoft.OData.Edm
         /// <param name="qualifier">Qualifier to apply.</param>
         /// <param name="evaluator">Evaluator to use to perform expression evaluation.</param>
         /// <returns>Value of the term evaluated against the supplied value.</returns>
-        public static T GetTermValue<T>(this IEdmModel model, IEdmStructuredValue context, IEdmValueTerm term, string qualifier, EdmToClrEvaluator evaluator)
+        public static T GetTermValue<T>(this IEdmModel model, IEdmStructuredValue context, IEdmTerm term, string qualifier, EdmToClrEvaluator evaluator)
         {
             EdmUtil.CheckArgumentNull(model, "model");
             EdmUtil.CheckArgumentNull(context, "context");
@@ -534,7 +534,7 @@ namespace Microsoft.OData.Edm
         /// <param name="term">Term to evaluate.</param>
         /// <param name="expressionEvaluator">Evaluator to use to perform expression evaluation.</param>
         /// <returns>Value of the term evaluated against the supplied value.</returns>
-        public static IEdmValue GetTermValue(this IEdmModel model, IEdmVocabularyAnnotatable element, IEdmValueTerm term, EdmExpressionEvaluator expressionEvaluator)
+        public static IEdmValue GetTermValue(this IEdmModel model, IEdmVocabularyAnnotatable element, IEdmTerm term, EdmExpressionEvaluator expressionEvaluator)
         {
             EdmUtil.CheckArgumentNull(model, "model");
             EdmUtil.CheckArgumentNull(element, "element");
@@ -553,7 +553,7 @@ namespace Microsoft.OData.Edm
         /// <param name="qualifier">Qualifier to apply.</param>
         /// <param name="expressionEvaluator">Evaluator to use to perform expression evaluation.</param>
         /// <returns>Value of the term evaluated against the supplied value.</returns>
-        public static IEdmValue GetTermValue(this IEdmModel model, IEdmVocabularyAnnotatable element, IEdmValueTerm term, string qualifier, EdmExpressionEvaluator expressionEvaluator)
+        public static IEdmValue GetTermValue(this IEdmModel model, IEdmVocabularyAnnotatable element, IEdmTerm term, string qualifier, EdmExpressionEvaluator expressionEvaluator)
         {
             EdmUtil.CheckArgumentNull(model, "model");
             EdmUtil.CheckArgumentNull(element, "element");
@@ -611,7 +611,7 @@ namespace Microsoft.OData.Edm
         /// <param name="term">Term to evaluate.</param>
         /// <param name="evaluator">Evaluator to use to perform expression evaluation.</param>
         /// <returns>Value of the term evaluated against the supplied value.</returns>
-        public static T GetTermValue<T>(this IEdmModel model, IEdmVocabularyAnnotatable element, IEdmValueTerm term, EdmToClrEvaluator evaluator)
+        public static T GetTermValue<T>(this IEdmModel model, IEdmVocabularyAnnotatable element, IEdmTerm term, EdmToClrEvaluator evaluator)
         {
             EdmUtil.CheckArgumentNull(model, "model");
             EdmUtil.CheckArgumentNull(element, "element");
@@ -631,7 +631,7 @@ namespace Microsoft.OData.Edm
         /// <param name="qualifier">Qualifier to apply.</param>
         /// <param name="evaluator">Evaluator to use to perform expression evaluation.</param>
         /// <returns>Value of the term evaluated against the supplied value.</returns>
-        public static T GetTermValue<T>(this IEdmModel model, IEdmVocabularyAnnotatable element, IEdmValueTerm term, string qualifier, EdmToClrEvaluator evaluator)
+        public static T GetTermValue<T>(this IEdmModel model, IEdmVocabularyAnnotatable element, IEdmTerm term, string qualifier, EdmToClrEvaluator evaluator)
         {
             EdmUtil.CheckArgumentNull(model, "model");
             EdmUtil.CheckArgumentNull(element, "element");
@@ -719,7 +719,7 @@ namespace Microsoft.OData.Edm
             EdmUtil.CheckArgumentNull(model, "model");
             EdmUtil.CheckArgumentNull(target, "target");
 
-            IEdmValueAnnotation annotation = model.FindVocabularyAnnotations<IEdmValueAnnotation>(target, CoreVocabularyModel.DescriptionTerm).FirstOrDefault();
+            IEdmVocabularyAnnotation annotation = model.FindVocabularyAnnotations<IEdmVocabularyAnnotation>(target, CoreVocabularyModel.DescriptionTerm).FirstOrDefault();
             if (annotation != null)
             {
                 IEdmStringConstantExpression stringConstant = annotation.Value as IEdmStringConstantExpression;
@@ -743,7 +743,7 @@ namespace Microsoft.OData.Edm
             EdmUtil.CheckArgumentNull(model, "model");
             EdmUtil.CheckArgumentNull(target, "target");
 
-            IEdmValueAnnotation annotation = model.FindVocabularyAnnotations<IEdmValueAnnotation>(target, CoreVocabularyModel.LongDescriptionTerm).FirstOrDefault();
+            IEdmVocabularyAnnotation annotation = model.FindVocabularyAnnotations<IEdmVocabularyAnnotation>(target, CoreVocabularyModel.LongDescriptionTerm).FirstOrDefault();
             if (annotation != null)
             {
                 IEdmStringConstantExpression stringConstant = annotation.Value as IEdmStringConstantExpression;
@@ -835,11 +835,11 @@ namespace Microsoft.OData.Edm
         }
 
         /// <summary>
-        /// Gets the direct value annotations for an element.
+        /// Gets the direct annotations for an element.
         /// </summary>
         /// <param name="model">The model containing the annotations.</param>
         /// <param name="element">The annotated element.</param>
-        /// <returns>The immediate value annotations of the element.</returns>
+        /// <returns>The immediate annotations of the element.</returns>
         public static IEnumerable<IEdmDirectValueAnnotation> DirectValueAnnotations(this IEdmModel model, IEdmElement element)
         {
             EdmUtil.CheckArgumentNull(model, "model");
@@ -1073,10 +1073,10 @@ namespace Microsoft.OData.Edm
             EdmUtil.CheckArgumentNull(properties, "properties");
 
             IEdmCollectionExpression collectionExpression = new EdmCollectionExpression(properties.Select(p => new EdmPropertyPathExpression(p.Name)).ToArray());
-            IEdmValueTerm term = CoreVocabularyModel.ConcurrencyTerm;
+            IEdmTerm term = CoreVocabularyModel.ConcurrencyTerm;
 
             Debug.Assert(term != null, "term!=null");
-            EdmAnnotation annotation = new EdmAnnotation(target, term, collectionExpression);
+            EdmVocabularyAnnotation annotation = new EdmVocabularyAnnotation(target, term, collectionExpression);
             annotation.SetSerializationLocation(model, EdmVocabularyAnnotationSerializationLocation.Inline);
             model.SetVocabularyAnnotation(annotation);
         }
@@ -1093,7 +1093,7 @@ namespace Microsoft.OData.Edm
             EdmUtil.CheckArgumentNull(target, "target");
             EdmUtil.CheckArgumentNull(description, "description");
 
-            EdmAnnotation annotation = new EdmAnnotation(target, CoreVocabularyModel.DescriptionTerm, new EdmStringConstant(description));
+            EdmVocabularyAnnotation annotation = new EdmVocabularyAnnotation(target, CoreVocabularyModel.DescriptionTerm, new EdmStringConstant(description));
             annotation.SetSerializationLocation(model, EdmVocabularyAnnotationSerializationLocation.Inline);
             model.SetVocabularyAnnotation(annotation);
         }
@@ -1110,7 +1110,7 @@ namespace Microsoft.OData.Edm
             EdmUtil.CheckArgumentNull(target, "target");
             EdmUtil.CheckArgumentNull(description, "description");
 
-            EdmAnnotation annotation = new EdmAnnotation(target, CoreVocabularyModel.LongDescriptionTerm, new EdmStringConstant(description));
+            EdmVocabularyAnnotation annotation = new EdmVocabularyAnnotation(target, CoreVocabularyModel.LongDescriptionTerm, new EdmStringConstant(description));
             annotation.SetSerializationLocation(model, EdmVocabularyAnnotationSerializationLocation.Inline);
             model.SetVocabularyAnnotation(annotation);
         }
@@ -1637,7 +1637,7 @@ namespace Microsoft.OData.Edm
             EdmUtil.CheckArgumentNull(alternateKey, "alternateKey");
 
             EdmCollectionExpression annotationValue = null;
-            var ann = model.FindVocabularyAnnotations<IEdmValueAnnotation>(type, AlternateKeysVocabularyModel.AlternateKeysTerm).FirstOrDefault();
+            var ann = model.FindVocabularyAnnotations<IEdmVocabularyAnnotation>(type, AlternateKeysVocabularyModel.AlternateKeysTerm).FirstOrDefault();
             if (ann != null)
             {
                 annotationValue = ann.Value as EdmCollectionExpression;
@@ -1662,7 +1662,7 @@ namespace Microsoft.OData.Edm
 
             alternateKeysCollection.Add(alternateKeyRecord);
 
-            var annotation = new EdmAnnotation(
+            var annotation = new EdmVocabularyAnnotation(
                 type,
                 AlternateKeysVocabularyModel.AlternateKeysTerm,
                 new EdmCollectionExpression(alternateKeysCollection));
@@ -1982,16 +1982,16 @@ namespace Microsoft.OData.Edm
 
         #endregion
 
-        #region IEdmValueAnnotation
+        #region IEdmVocabularyAnnotation
         /// <summary>
-        /// Gets the value term of this value annotation.
+        /// Gets the term of this annotation.
         /// </summary>
         /// <param name="annotation">Reference to the calling object.</param>
-        /// <returns>The value term of this value annotation.</returns>
-        public static IEdmValueTerm ValueTerm(this IEdmValueAnnotation annotation)
+        /// <returns>The term of this annotation.</returns>
+        public static IEdmTerm Term(this IEdmVocabularyAnnotation annotation)
         {
             EdmUtil.CheckArgumentNull(annotation, "annotation");
-            return (IEdmValueTerm)annotation.Term;
+            return annotation.Term;
         }
         #endregion
 
@@ -2707,7 +2707,7 @@ namespace Microsoft.OData.Edm
         /// <returns>Alternate Keys of this type.</returns>
         private static IEnumerable<IDictionary<string, IEdmProperty>> GetDeclaredAlternateKeysForType(IEdmEntityType type, IEdmModel model)
         {
-            IEdmValueAnnotation annotationValue = model.FindVocabularyAnnotations<IEdmValueAnnotation>(type, AlternateKeysVocabularyModel.AlternateKeysTerm).FirstOrDefault();
+            IEdmVocabularyAnnotation annotationValue = model.FindVocabularyAnnotations<IEdmVocabularyAnnotation>(type, AlternateKeysVocabularyModel.AlternateKeysTerm).FirstOrDefault();
 
             if (annotationValue != null)
             {
@@ -2767,9 +2767,9 @@ namespace Microsoft.OData.Edm
             return candidate;
         }
 
-        private static T GetTermValue<T>(this IEdmModel model, IEdmStructuredValue context, IEdmEntityType contextType, IEdmValueTerm term, string qualifier, Func<IEdmExpression, IEdmStructuredValue, IEdmTypeReference, T> evaluator)
+        private static T GetTermValue<T>(this IEdmModel model, IEdmStructuredValue context, IEdmEntityType contextType, IEdmTerm term, string qualifier, Func<IEdmExpression, IEdmStructuredValue, IEdmTypeReference, T> evaluator)
         {
-            IEnumerable<IEdmValueAnnotation> annotations = model.FindVocabularyAnnotations<IEdmValueAnnotation>(contextType, term, qualifier);
+            IEnumerable<IEdmVocabularyAnnotation> annotations = model.FindVocabularyAnnotations<IEdmVocabularyAnnotation>(contextType, term, qualifier);
 
             if (annotations.Count() != 1)
             {
@@ -2781,20 +2781,20 @@ namespace Microsoft.OData.Edm
 
         private static T GetTermValue<T>(this IEdmModel model, IEdmStructuredValue context, IEdmEntityType contextType, string termName, string qualifier, Func<IEdmExpression, IEdmStructuredValue, IEdmTypeReference, T> evaluator)
         {
-            IEnumerable<IEdmValueAnnotation> annotations = model.FindVocabularyAnnotations<IEdmValueAnnotation>(contextType, termName, qualifier);
+            IEnumerable<IEdmVocabularyAnnotation> annotations = model.FindVocabularyAnnotations<IEdmVocabularyAnnotation>(contextType, termName, qualifier);
 
             if (annotations.Count() != 1)
             {
                 throw new InvalidOperationException(Edm.Strings.Edm_Evaluator_NoValueAnnotationOnType(contextType.ToTraceString(), termName));
             }
 
-            IEdmValueAnnotation valueAnnotation = annotations.Single();
-            return evaluator(valueAnnotation.Value, context, valueAnnotation.ValueTerm().Type);
+            IEdmVocabularyAnnotation valueAnnotation = annotations.Single();
+            return evaluator(valueAnnotation.Value, context, valueAnnotation.Term().Type);
         }
 
-        private static T GetTermValue<T>(this IEdmModel model, IEdmVocabularyAnnotatable element, IEdmValueTerm term, string qualifier, Func<IEdmExpression, IEdmStructuredValue, IEdmTypeReference, T> evaluator)
+        private static T GetTermValue<T>(this IEdmModel model, IEdmVocabularyAnnotatable element, IEdmTerm term, string qualifier, Func<IEdmExpression, IEdmStructuredValue, IEdmTypeReference, T> evaluator)
         {
-            IEnumerable<IEdmValueAnnotation> annotations = model.FindVocabularyAnnotations<IEdmValueAnnotation>(element, term, qualifier);
+            IEnumerable<IEdmVocabularyAnnotation> annotations = model.FindVocabularyAnnotations<IEdmVocabularyAnnotation>(element, term, qualifier);
 
             if (annotations.Count() != 1)
             {
@@ -2806,15 +2806,15 @@ namespace Microsoft.OData.Edm
 
         private static T GetTermValue<T>(this IEdmModel model, IEdmVocabularyAnnotatable element, string termName, string qualifier, Func<IEdmExpression, IEdmStructuredValue, IEdmTypeReference, T> evaluator)
         {
-            IEnumerable<IEdmValueAnnotation> annotations = model.FindVocabularyAnnotations<IEdmValueAnnotation>(element, termName, qualifier);
+            IEnumerable<IEdmVocabularyAnnotation> annotations = model.FindVocabularyAnnotations<IEdmVocabularyAnnotation>(element, termName, qualifier);
 
             if (annotations.Count() != 1)
             {
                 throw new InvalidOperationException(Edm.Strings.Edm_Evaluator_NoValueAnnotationOnElement(termName));
             }
 
-            IEdmValueAnnotation valueAnnotation = annotations.Single();
-            return evaluator(valueAnnotation.Value, null, valueAnnotation.ValueTerm().Type);
+            IEdmVocabularyAnnotation valueAnnotation = annotations.Single();
+            return evaluator(valueAnnotation.Value, null, valueAnnotation.Term().Type);
         }
 
         /// <summary>
@@ -2926,10 +2926,10 @@ namespace Microsoft.OData.Edm
             };
 
             IEdmRecordExpression record = new EdmRecordExpression(properties);
-            IEdmValueTerm term = CapabilitiesVocabularyModel.ChangeTrackingTerm;
+            IEdmTerm term = CapabilitiesVocabularyModel.ChangeTrackingTerm;
 
             Debug.Assert(term != null, "term!=null");
-            EdmAnnotation annotation = new EdmAnnotation(target, term, record);
+            EdmVocabularyAnnotation annotation = new EdmVocabularyAnnotation(target, term, record);
             annotation.SetSerializationLocation(model, EdmVocabularyAnnotationSerializationLocation.Inline);
             model.SetVocabularyAnnotation(annotation);
         }

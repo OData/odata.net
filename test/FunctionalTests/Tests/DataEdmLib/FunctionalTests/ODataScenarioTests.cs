@@ -826,9 +826,9 @@ namespace EdmLibTests.FunctionalTests
                 return this.FindDeclaredOperations(qualifiedName).Where(o => o.IsBound && o.Parameters.Any() && o.HasEquivalentBindingType(bindingType));
             }
 
-            public IEdmValueTerm FindDeclaredValueTerm(string qualifiedName)
+            public IEdmTerm FindDeclaredTerm(string qualifiedName)
             {
-                return this.baseModel.FindValueTerm(qualifiedName);
+                return this.baseModel.FindTerm(qualifiedName);
             }
 
             public IEnumerable<IEdmVocabularyAnnotation> FindDeclaredVocabularyAnnotations(IEdmVocabularyAnnotatable element)

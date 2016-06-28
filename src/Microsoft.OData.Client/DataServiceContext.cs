@@ -75,7 +75,7 @@ namespace Microsoft.OData.Client
         };
 
         /// <summary>metadata annotations for current context</summary>
-        private readonly WeakDictionary<object, IList<IEdmValueAnnotation>> metadataAnnotationsDictionary = new WeakDictionary<object, IList<IEdmValueAnnotation>>(EqualityComparer<object>.Default);
+        private readonly WeakDictionary<object, IList<IEdmVocabularyAnnotation>> metadataAnnotationsDictionary = new WeakDictionary<object, IList<IEdmVocabularyAnnotation>>(EqualityComparer<object>.Default);
 
         /// <summary>The tracker for user-specified format information.</summary>
         private DataServiceClientFormat formatTracker;
@@ -710,7 +710,7 @@ namespace Microsoft.OData.Client
         /// <summary>
         /// Gets the MetadataAnnotationsDictionary
         /// </summary>
-        internal WeakDictionary<object, IList<IEdmValueAnnotation>> MetadataAnnotationsDictionary
+        internal WeakDictionary<object, IList<IEdmVocabularyAnnotation>> MetadataAnnotationsDictionary
         {
             get
             {

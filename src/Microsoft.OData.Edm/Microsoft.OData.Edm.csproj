@@ -82,7 +82,6 @@
     <Compile Include="Csdl\Semantics\BadElements\IUnresolvedElement.cs" />
     <Compile Include="Csdl\Semantics\BadElements\UnresolvedEnumType.cs" />
     <Compile Include="Csdl\Semantics\BadElements\UnresolvedFunction.cs" />
-    <Compile Include="Csdl\Semantics\BadElements\UnresolvedTypeTerm.cs" />
     <Compile Include="Csdl\Semantics\BadElements\UnresolvedVocabularyTerm.cs" />
     <Compile Include="Csdl\Semantics\CsdlSemanticsNavigationPropertyPathExpression.cs" />
     <Compile Include="Csdl\Semantics\CsdlSemanticsTypeDefinitionDefinition.cs" />
@@ -128,8 +127,7 @@
     <Compile Include="Csdl\Semantics\CsdlSemanticsTimeOfDayConstantExpression.cs" />
     <Compile Include="Csdl\Semantics\CsdlSemanticsDurationConstantExpression.cs" />
     <Compile Include="Csdl\Semantics\CsdlSemanticsVocabularyAnnotation.cs" />
-    <Compile Include="Csdl\Semantics\CsdlSemanticsValueAnnotation.cs" />
-    <Compile Include="Csdl\Semantics\CsdlSemanticsValueTerm.cs" />
+    <Compile Include="Csdl\Semantics\CsdlSemanticsTerm.cs" />
     <Compile Include="Csdl\Serialization\EdmModelReferenceElementsVisitor.cs" />
     <Compile Include="Csdl\Serialization\SerializationValidator.cs" />
     <Compile Include="Csdl\SerializationExtensionMethods.cs" />
@@ -197,7 +195,7 @@
     <Compile Include="Schema\AmbiguousLabeledExpressionBinding.cs" />
     <Compile Include="Schema\AmbiguousPropertyBinding.cs" />
     <Compile Include="Schema\AmbiguousTypeBinding.cs" />
-    <Compile Include="Schema\AmbiguousValueTermBinding.cs" />
+    <Compile Include="Schema\AmbiguousTermBinding.cs" />
     <Compile Include="Schema\BadBinaryTypeReference.cs" />
     <Compile Include="Schema\BadCollectionType.cs" />
     <Compile Include="Schema\BadComplexType.cs" />
@@ -229,18 +227,17 @@
     <Compile Include="PrimitiveValueConverters\PrimitiveValueConverterConstants.cs" />
     <Compile Include="Validation\InterfaceValidator.cs" />
     <Compile Include="Validation\ValidationHelper.cs" />
-    <Compile Include="Vocabularies\Annotations\EdmAnnotation.cs" />
+    <Compile Include="Vocabularies\Annotations\EdmVocabularyAnnotation.cs" />
     <Compile Include="Vocabularies\Annotations\EdmDirectValueAnnotation.cs" />
     <Compile Include="Vocabularies\Annotations\EdmDirectValueAnnotationBinding.cs" />
     <Compile Include="Vocabularies\Annotations\EdmDirectValueAnnotationsManager.cs" />
     <Compile Include="Vocabularies\Annotations\EdmPropertyValueBinding.cs" />
     <Compile Include="Vocabularies\Annotations\EdmTypedDirectValueAnnotationBinding.cs" />
-    <Compile Include="Vocabularies\Annotations\EdmVocabularyAnnotation.cs" />
     <Compile Include="Vocabularies\Annotations\IEdmDirectValueAnnotation.cs" />
     <Compile Include="Vocabularies\Annotations\IEdmDirectValueAnnotationBinding.cs" />
     <Compile Include="Vocabularies\Annotations\IEdmDirectValueAnnotationsManager.cs" />
     <Compile Include="Vocabularies\Annotations\IEdmPropertyValueBinding.cs" />
-    <Compile Include="Vocabularies\Annotations\IEdmValueAnnotation.cs" />
+    <Compile Include="Vocabularies\Annotations\IEdmTerm.cs" />
     <Compile Include="Vocabularies\Annotations\IEdmVocabularyAnnotatable.cs" />
     <Compile Include="Vocabularies\Annotations\IEdmVocabularyAnnotation.cs" />
     <Compile Include="Vocabularies\CapabilitiesVocabularyConstants.cs" />
@@ -363,7 +360,6 @@
     <Compile Include="Csdl\Semantics\BadElements\UnresolvedLabeledElement.cs" />
     <Compile Include="Csdl\Semantics\BadElements\UnresolvedEnumMember.cs" />
     <Compile Include="Csdl\Semantics\BadElements\UnresolvedParameter.cs" />
-    <Compile Include="Csdl\Semantics\BadElements\UnresolvedValueTerm.cs" />
     <Compile Include="Schema\EdmEnumTypeReference.cs" />
     <Compile Include="Csdl\Semantics\BadElements\UnresolvedPrimitiveType.cs" />
     <Compile Include="Schema\EdmCollectionType.cs" />
@@ -472,8 +468,6 @@
     <Compile Include="Validation\ValidationRuleSet.cs" />
     <Compile Include="Validation\EdmErrorCode.cs" />
     <Compile Include="..\PlatformHelper.cs" />
-    <Compile Include="Vocabularies\Annotations\IEdmTerm.cs" />
-    <Compile Include="Vocabularies\Annotations\IEdmValueTerm.cs" />
     <Compile Include="Vocabularies\TryCreateObjectInstance.cs" />
     <Compile Include="Vocabularies\Values\IEdmBinaryValue.cs" />
     <Compile Include="Vocabularies\Values\IEdmBooleanValue.cs" />

@@ -372,12 +372,12 @@ private void ApplyParametersFromCommandLine()
 public class CodeGenerationContext
 {
     /// <summary>
-    /// The namespace of the term to use when building value annotations for indicating the conventions used.
+    /// The namespace of the term to use when building annotations for indicating the conventions used.
     /// </summary>
     private const string ConventionTermNamespace = "Com.Microsoft.OData.Service.Conventions.V1";
 
     /// <summary>
-    /// The name of the term to use when building value annotations for indicating the conventions used.
+    /// The name of the term to use when building annotations for indicating the conventions used.
     /// </summary>
     private const string ConventionTermName = "UrlConventions";
 
@@ -722,10 +722,10 @@ public class CodeGenerationContext
             this.keyAsSegmentContainers = new HashSet<string>();
             Debug.Assert(this.EdmModel != null, "this.EdmModel != null");
             IEnumerable<IEdmVocabularyAnnotation> annotations = this.EdmModel.VocabularyAnnotations;
-            foreach(IEdmValueAnnotation valueAnnotation in annotations.OfType<IEdmValueAnnotation>())
+            foreach(IEdmVocabularyAnnotation valueAnnotation in annotations)
             {
                 IEdmEntityContainer container = valueAnnotation.Target as IEdmEntityContainer;
-                IEdmValueTerm valueTerm = valueAnnotation.Term as IEdmValueTerm;
+                IEdmTerm valueTerm = valueAnnotation.Term;
                 IEdmStringConstantExpression expression = valueAnnotation.Value as IEdmStringConstantExpression;
                 if (container != null && valueTerm != null && expression != null)
                 {
@@ -879,7 +879,7 @@ public class CodeGenerationContext
     private static IEnumerable<T> GetElementsFromModelTree<T>(IEdmModel mainModel, Func<IEdmModel, IEnumerable<T>> getElementFromOneModelFunc)
     {
         List<T> ret = new List<T>();
-        if(mainModel is EdmCoreModel || mainModel.FindDeclaredValueTerm(CoreVocabularyConstants.OptimisticConcurrency) != null)
+        if(mainModel is EdmCoreModel || mainModel.FindDeclaredTerm(CoreVocabularyConstants.OptimisticConcurrency) != null)
         {
             return ret;
         }
@@ -888,9 +888,9 @@ public class CodeGenerationContext
         foreach (var tmp in mainModel.ReferencedModels)
         {
             if (tmp is EdmCoreModel ||
-                tmp.FindDeclaredValueTerm(CoreVocabularyConstants.OptimisticConcurrency) != null ||
-                tmp.FindDeclaredValueTerm(CapabilitiesVocabularyConstants.ChangeTracking) != null ||
-                tmp.FindDeclaredValueTerm(AlternateKeysVocabularyConstants.AlternateKeys) != null)
+                tmp.FindDeclaredTerm(CoreVocabularyConstants.OptimisticConcurrency) != null ||
+                tmp.FindDeclaredTerm(CapabilitiesVocabularyConstants.ChangeTracking) != null ||
+                tmp.FindDeclaredTerm(AlternateKeysVocabularyConstants.AlternateKeys) != null)
             {
                 continue;
             }

@@ -32,7 +32,7 @@ namespace Microsoft.OData.Client.Annotation
         /// <returns>True if the annotation value can be evaluated, else false.</returns>
         internal static bool TryGetMetadataAnnotation<TResult>(DataServiceContext context, object source, string term, string qualifier, out TResult annotationValue)
         {
-            IEdmValueAnnotation edmValueAnnotation = null;
+            IEdmVocabularyAnnotation edmValueAnnotation = null;
             ClientEdmStructuredValue clientEdmValue = null;
             PropertyInfo propertyInfo = null;
             MethodInfo methodInfo = null;
@@ -222,7 +222,7 @@ namespace Microsoft.OData.Client.Annotation
         /// <param name="term">The term name.</param>
         /// <param name="qualifier">The qualifier name.</param>
         /// <returns>The vocabulary annotation that binds to a term and a qualifier for the specified annotated type.</returns>
-        private static IEdmValueAnnotation GetOrInsertCachedMetadataAnnotationForType(DataServiceContext context, Type type, string term, string qualifier)
+        private static IEdmVocabularyAnnotation GetOrInsertCachedMetadataAnnotationForType(DataServiceContext context, Type type, string term, string qualifier)
         {
             var serviceModel = context.Format.ServiceModel;
             if (serviceModel == null)
@@ -230,7 +230,7 @@ namespace Microsoft.OData.Client.Annotation
                 return null;
             }
 
-            IEdmValueAnnotation edmValueAnnotation = GetCachedMetadataAnnotation(context, type, term, qualifier);
+            IEdmVocabularyAnnotation edmValueAnnotation = GetCachedMetadataAnnotation(context, type, term, qualifier);
             if (edmValueAnnotation != null)
             {
                 return edmValueAnnotation;
@@ -255,7 +255,7 @@ namespace Microsoft.OData.Client.Annotation
             }
 
             // Gets the annotations which exactly match the qualifier and target.
-            var edmValueAnnotations = serviceModel.FindVocabularyAnnotations<IEdmValueAnnotation>(edmVocabularyAnnotatable, term, qualifier)
+            var edmValueAnnotations = serviceModel.FindVocabularyAnnotations<IEdmVocabularyAnnotation>(edmVocabularyAnnotatable, term, qualifier)
                 .Where(a => a.Qualifier == qualifier && a.Target == edmVocabularyAnnotatable);
 
             if (edmValueAnnotations.Count() == 0)
@@ -279,7 +279,7 @@ namespace Microsoft.OData.Client.Annotation
         /// <param name="term">The term name.</param>
         /// <param name="qualifier">The qualifier name.</param>
         /// <returns>The vocabulary annotation that binds to a term and a qualifier for the specified annotated propertyInfo.</returns>
-        private static IEdmValueAnnotation GetOrInsertCachedMetadataAnnotationForPropertyInfo(DataServiceContext context, PropertyInfo propertyInfo, string term, string qualifier)
+        private static IEdmVocabularyAnnotation GetOrInsertCachedMetadataAnnotationForPropertyInfo(DataServiceContext context, PropertyInfo propertyInfo, string term, string qualifier)
         {
             var serviceModel = context.Format.ServiceModel;
             if (serviceModel == null)
@@ -287,7 +287,7 @@ namespace Microsoft.OData.Client.Annotation
                 return null;
             }
 
-            IEdmValueAnnotation edmValueAnnotation = GetCachedMetadataAnnotation(context, propertyInfo, term, qualifier);
+            IEdmVocabularyAnnotation edmValueAnnotation = GetCachedMetadataAnnotation(context, propertyInfo, term, qualifier);
             if (edmValueAnnotation != null)
             {
                 return edmValueAnnotation;
@@ -300,14 +300,14 @@ namespace Microsoft.OData.Client.Annotation
             }
 
             var declaringType = propertyInfo.DeclaringType;
-            IEnumerable<IEdmValueAnnotation> edmValueAnnotations = null;
+            IEnumerable<IEdmVocabularyAnnotation> edmValueAnnotations = null;
             if (declaringType.IsSubclassOf(typeof(DataServiceContext)))
             {
                 var entityContainer = serviceModel.EntityContainer;
                 var edmEntityContainerElements = entityContainer.Elements.Where(e => e.Name == severSidePropertyName);
                 if (edmEntityContainerElements != null && edmEntityContainerElements.Count() == 1)
                 {
-                    edmValueAnnotations = serviceModel.FindVocabularyAnnotations<IEdmValueAnnotation>(
+                    edmValueAnnotations = serviceModel.FindVocabularyAnnotations<IEdmVocabularyAnnotation>(
                         edmEntityContainerElements.Single(), term, qualifier).Where(a => a.Qualifier == qualifier);
                 }
             }
@@ -323,7 +323,7 @@ namespace Microsoft.OData.Client.Annotation
                         var edmProperty = edmStructuredType.FindProperty(severSidePropertyName);
                         if (edmProperty != null)
                         {
-                            edmValueAnnotations = serviceModel.FindVocabularyAnnotations<IEdmValueAnnotation>(
+                            edmValueAnnotations = serviceModel.FindVocabularyAnnotations<IEdmVocabularyAnnotation>(
                                 edmProperty, term, qualifier).Where(a => a.Qualifier == qualifier);
                         }
                     }
@@ -348,7 +348,7 @@ namespace Microsoft.OData.Client.Annotation
         /// <param name="term">The term name.</param>
         /// <param name="qualifier">The qualifier name.</param>
         /// <returns>The vocabulary annotation that binds to a term and a qualifier for the specified annotated methodInfo.</returns>
-        private static IEdmValueAnnotation GetOrInsertCachedMetadataAnnotationForMethodInfo(DataServiceContext context, MethodInfo methodInfo, string term, string qualifier)
+        private static IEdmVocabularyAnnotation GetOrInsertCachedMetadataAnnotationForMethodInfo(DataServiceContext context, MethodInfo methodInfo, string term, string qualifier)
         {
             IEdmModel serviceModel = context.Format.ServiceModel;
             if (serviceModel == null)
@@ -356,7 +356,7 @@ namespace Microsoft.OData.Client.Annotation
                 return null;
             }
 
-            IEdmValueAnnotation edmValueAnnotation = GetCachedMetadataAnnotation(context, methodInfo, term, qualifier);
+            IEdmVocabularyAnnotation edmValueAnnotation = GetCachedMetadataAnnotation(context, methodInfo, term, qualifier);
             if (edmValueAnnotation != null)
             {
                 return edmValueAnnotation;
@@ -369,10 +369,10 @@ namespace Microsoft.OData.Client.Annotation
             }
 
             var edmOperationImport = edmVocabularyAnnotatable as IEdmOperationImport;
-            IEnumerable<IEdmValueAnnotation> edmValueAnnotations = null;
+            IEnumerable<IEdmVocabularyAnnotation> edmValueAnnotations = null;
             if (edmOperationImport != null)
             {
-                edmValueAnnotations = serviceModel.FindVocabularyAnnotations<IEdmValueAnnotation>(edmOperationImport, term, qualifier)
+                edmValueAnnotations = serviceModel.FindVocabularyAnnotations<IEdmVocabularyAnnotation>(edmOperationImport, term, qualifier)
                     .Where(a => a.Qualifier == qualifier);
                 if (!edmValueAnnotations.Any())
                 {
@@ -382,7 +382,7 @@ namespace Microsoft.OData.Client.Annotation
 
             if (edmValueAnnotations == null || !edmValueAnnotations.Any())
             {
-                edmValueAnnotations = serviceModel.FindVocabularyAnnotations<IEdmValueAnnotation>(edmVocabularyAnnotatable, term, qualifier)
+                edmValueAnnotations = serviceModel.FindVocabularyAnnotations<IEdmVocabularyAnnotation>(edmVocabularyAnnotatable, term, qualifier)
                     .Where(a => a.Qualifier == qualifier);
             }
 
@@ -403,8 +403,8 @@ namespace Microsoft.OData.Client.Annotation
         /// <param name="key">The specified annotatable object.</param>
         /// <param name="term">The term name of the annotation.</param>
         /// <param name="qualifier">The qualifier to be applied.</param>
-        /// <returns><see cref="IEdmValueAnnotation"/> to be returned if it is found or return null. </returns>
-        private static IEdmValueAnnotation GetCachedMetadataAnnotation(DataServiceContext context, object key, string term, string qualifier = null)
+        /// <returns><see cref="IEdmVocabularyAnnotation"/> to be returned if it is found or return null. </returns>
+        private static IEdmVocabularyAnnotation GetCachedMetadataAnnotation(DataServiceContext context, object key, string term, string qualifier = null)
         {
             if (key != null && context.MetadataAnnotationsDictionary.ContainsKey(key))
             {
@@ -427,14 +427,14 @@ namespace Microsoft.OData.Client.Annotation
         /// <param name="context">The data service context</param>
         /// <param name="key">The specified key</param>
         /// <param name="edmValueAnnotation">The metadata annotation to be inserted.</param>
-        private static void InsertMetadataAnnotation(DataServiceContext context, object key, IEdmValueAnnotation edmValueAnnotation)
+        private static void InsertMetadataAnnotation(DataServiceContext context, object key, IEdmVocabularyAnnotation edmValueAnnotation)
         {
             if (edmValueAnnotation != null)
             {
-                IList<IEdmValueAnnotation> edmValueAnnotations;
+                IList<IEdmVocabularyAnnotation> edmValueAnnotations;
                 if (!context.MetadataAnnotationsDictionary.TryGetValue(key, out edmValueAnnotations))
                 {
-                    edmValueAnnotations = new List<IEdmValueAnnotation>();
+                    edmValueAnnotations = new List<IEdmVocabularyAnnotation>();
                     context.MetadataAnnotationsDictionary.Add(key, edmValueAnnotations);
                 }
 
@@ -443,15 +443,15 @@ namespace Microsoft.OData.Client.Annotation
         }
 
         /// <summary>
-        /// Evaluate IEdmValueAnnotation to an CLR object
+        /// Evaluate IEdmVocabularyAnnotation to an CLR object
         /// </summary>
         /// <typeparam name="TResult">The CLR type of the annotation to be returned.</typeparam>
         /// <param name="context">The data service context.</param>
-        /// <param name="edmValueAnnotation">IEdmValueAnnotation to be evaluated.</param>
+        /// <param name="edmValueAnnotation">IEdmVocabularyAnnotation to be evaluated.</param>
         /// <param name="clientEdmValue">Value to use as context in evaluating the expression.</param>
         /// <param name="annotationValue">Value of the term evaluated.</param>
         /// <returns>True if the annotation value can be evaluated, else false.</returns>
-        private static bool TryEvaluateMetadataAnnotation<TResult>(DataServiceContext context, IEdmValueAnnotation edmValueAnnotation, ClientEdmStructuredValue clientEdmValue, out TResult annotationValue)
+        private static bool TryEvaluateMetadataAnnotation<TResult>(DataServiceContext context, IEdmVocabularyAnnotation edmValueAnnotation, ClientEdmStructuredValue clientEdmValue, out TResult annotationValue)
         {
             if (edmValueAnnotation == null)
             {

@@ -454,7 +454,7 @@ namespace Microsoft.OData.Edm
         }
 
         /// <summary>
-        /// Checks whether the <paramref name="annotatable"/> has a value annotation.
+        /// Checks whether the <paramref name="annotatable"/> has an annotation.
         /// </summary>
         /// <param name="model">The <see cref="IEdmModel"/> containing the annotation.</param>
         /// <param name="annotatable">The <see cref="IEdmElement"/> to check.</param>

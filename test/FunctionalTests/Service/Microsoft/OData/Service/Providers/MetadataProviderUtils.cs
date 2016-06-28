@@ -231,11 +231,11 @@ namespace Microsoft.OData.Service.Providers
         }
 
         /// <summary>
-        /// Get the value of the default value annotation (if present).
+        /// Get the value of the default annotation (if present).
         /// </summary>
-        /// <param name="annotations">The annotations that optionally hold the default value annotation.</param>
+        /// <param name="annotations">The annotations that optionally hold the default annotation.</param>
         /// <returns>The string representation of the default value if present; otherwise null.</returns>
-        /// <remarks>This method will remove the default value annotation from the annotations if found.</remarks>
+        /// <remarks>This method will remove the default annotation from the annotations if found.</remarks>
         internal static string GetAndRemoveDefaultValue(List<KeyValuePair<string, object>> annotations)
         {
             if (annotations == null || annotations.Count == 0)

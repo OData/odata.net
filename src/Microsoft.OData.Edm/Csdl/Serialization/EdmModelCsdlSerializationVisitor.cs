@@ -224,10 +224,10 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
             this.EndElement(element);
         }
 
-        protected override void ProcessValueTerm(IEdmValueTerm term)
+        protected override void ProcessTerm(IEdmTerm term)
         {
             bool inlineType = term.Type != null && IsInlineType(term.Type);
-            this.BeginElement(term, (IEdmValueTerm t) => { this.schemaWriter.WriteValueTermElementHeader(t, inlineType); }, e => { this.ProcessFacets(e.Type, inlineType); });
+            this.BeginElement(term, (IEdmTerm t) => { this.schemaWriter.WriteTermElementHeader(t, inlineType); }, e => { this.ProcessFacets(e.Type, inlineType); });
             if (!inlineType)
             {
                 if (term.Type != null)
@@ -293,10 +293,10 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
 
         #region Vocabulary Annotations
 
-        protected override void ProcessAnnotation(IEdmValueAnnotation annotation)
+        protected override void ProcessAnnotation(IEdmVocabularyAnnotation annotation)
         {
             bool isInline = IsInlineExpression(annotation.Value);
-            this.BeginElement(annotation, t => this.schemaWriter.WriteValueAnnotationElementHeader(t, isInline));
+            this.BeginElement(annotation, t => this.schemaWriter.WriteVocabularyAnnotationElementHeader(t, isInline));
             if (!isInline)
             {
                 base.ProcessAnnotation(annotation);
@@ -666,18 +666,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         {
             foreach (IEdmVocabularyAnnotation annotation in annotations)
             {
-                switch (annotation.Term.TermKind)
-                {
-                    case EdmTermKind.Type:
-                    case EdmTermKind.Value:
-                        this.ProcessAnnotation((IEdmValueAnnotation)annotation);
-                        break;
-                    case EdmTermKind.None:
-                        this.ProcessVocabularyAnnotation(annotation);
-                        break;
-                    default:
-                        throw new InvalidOperationException(Edm.Strings.UnknownEnumVal_TermKind(annotation.Term.TermKind));
-                }
+                this.ProcessAnnotation(annotation);
             }
         }
 

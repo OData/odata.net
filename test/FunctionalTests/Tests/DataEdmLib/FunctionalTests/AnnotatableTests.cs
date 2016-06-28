@@ -285,7 +285,7 @@ namespace EdmLibTests.FunctionalTests
         }
 
         [TestMethod]
-        public void ExtensionGetEdmValueAnnotation_ReturnsWhatsBeenSet()
+        public void ExtensionGetEdmVocabularyAnnotation_ReturnsWhatsBeenSet()
         {
             var model = new EdmModel();
 
@@ -320,7 +320,7 @@ namespace EdmLibTests.FunctionalTests
         }
 
         [TestMethod]
-        public void ExtensionGetEdmValueAnnotation_ReturnsWhatsBeenSetAsSets()
+        public void ExtensionGetEdmVocabularyAnnotation_ReturnsWhatsBeenSetAsSets()
         {
             var model = new EdmModel();
 
@@ -364,7 +364,7 @@ namespace EdmLibTests.FunctionalTests
         }
 
         [TestMethod]
-        public void ExtensionGetEdmValueAnnotation_ReturnsUpdatedValue()
+        public void ExtensionGetEdmVocabularyAnnotation_ReturnsUpdatedValue()
         {
             var model = new EdmModel();
 
@@ -398,7 +398,7 @@ namespace EdmLibTests.FunctionalTests
         }
 
         [TestMethod]
-        public void ExtensionGetEdmValueAnnotation_ReturnsNull_IfDeleted()
+        public void ExtensionGetEdmVocabularyAnnotation_ReturnsNull_IfDeleted()
         {
             var model = new EdmModel();
 

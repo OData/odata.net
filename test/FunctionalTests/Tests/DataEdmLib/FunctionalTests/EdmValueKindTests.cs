@@ -48,10 +48,7 @@ namespace EdmLibTests.FunctionalTests
             model.Validate(EdmConstants.EdmVersionLatest, out errors);
             Assert.AreEqual(0, errors.Count(), "Invalid model validation error count.");
 
-            var valueAnnotations = model.VocabularyAnnotations.Where(n => n.Term.TermKind.Equals(EdmTermKind.Value));
-            Assert.AreEqual(1, valueAnnotations.Count(), "Invalid value annotations count.");
-
-            var valueAnnotation = valueAnnotations.ElementAt(0) as IEdmValueAnnotation;
+            var valueAnnotation = model.VocabularyAnnotations.ElementAt(0);
             var expression = valueAnnotation.Value as IEdmBinaryConstantExpression;
             VerifyExpressionEdmValueKind(expression, EdmValueKind.Binary);
         }
@@ -84,10 +81,7 @@ namespace EdmLibTests.FunctionalTests
             model.Validate(EdmConstants.EdmVersionLatest, out errors);
             Assert.AreEqual(0, errors.Count(), "Invalid model validation error count.");
 
-            var valueAnnotations = model.VocabularyAnnotations.Where(n => n.Term.TermKind.Equals(EdmTermKind.Value));
-            Assert.AreEqual(1, valueAnnotations.Count(), "Invalid value annotations count.");
-
-            var valueAnnotation = valueAnnotations.ElementAt(0) as IEdmValueAnnotation;
+            var valueAnnotation = model.VocabularyAnnotations.ElementAt(0);
             var expression = valueAnnotation.Value as IEdmBooleanConstantExpression;
             VerifyExpressionEdmValueKind(expression, EdmValueKind.Boolean);
         }
@@ -133,10 +127,7 @@ namespace EdmLibTests.FunctionalTests
             model.Validate(EdmConstants.EdmVersionLatest, out errors);
             Assert.AreEqual(0, errors.Count(), "Invalid model validation error count.");
 
-            var annotations = model.VocabularyAnnotations.Where(n => n.Term.TermKind.Equals(EdmTermKind.Value));
-            Assert.AreEqual(1, annotations.Count(), "Invalid type annotations count.");
-
-            var annotation = annotations.ElementAt(0) as IEdmValueAnnotation;
+            var annotation = model.VocabularyAnnotations.ElementAt(0);
             var friendsValueAnnotationProperty = ((IEdmRecordExpression)annotation.Value).Properties.Where(n => n.Name.Equals("Friends"));
             Assert.AreEqual(1, friendsValueAnnotationProperty.Count(), "Invalid type annotation property.");
 
@@ -172,10 +163,7 @@ namespace EdmLibTests.FunctionalTests
             model.Validate(EdmConstants.EdmVersionLatest, out errors);
             Assert.AreEqual(0, errors.Count(), "Invalid model validation error count.");
 
-            var valueAnnotations = model.VocabularyAnnotations.Where(n => n.Term.TermKind.Equals(EdmTermKind.Value));
-            Assert.AreEqual(1, valueAnnotations.Count(), "Invalid value annotations count.");
-
-            var valueAnnotation = valueAnnotations.ElementAt(0) as IEdmValueAnnotation;
+            var valueAnnotation = model.VocabularyAnnotations.ElementAt(0);
             var expression = valueAnnotation.Value as IEdmTimeOfDayConstantExpression;
             VerifyExpressionEdmValueKind(expression, EdmValueKind.TimeOfDay);
         }
@@ -208,10 +196,7 @@ namespace EdmLibTests.FunctionalTests
             model.Validate(EdmConstants.EdmVersionLatest, out errors);
             Assert.AreEqual(0, errors.Count(), "Invalid model validation error count.");
 
-            var valueAnnotations = model.VocabularyAnnotations.Where(n => n.Term.TermKind.Equals(EdmTermKind.Value));
-            Assert.AreEqual(1, valueAnnotations.Count(), "Invalid value annotations count.");
-
-            var valueAnnotation = valueAnnotations.ElementAt(0) as IEdmValueAnnotation;
+            var valueAnnotation = model.VocabularyAnnotations.ElementAt(0);
             var expression = valueAnnotation.Value as IEdmDateConstantExpression;
             VerifyExpressionEdmValueKind(expression, EdmValueKind.Date);
         }
@@ -244,10 +229,7 @@ namespace EdmLibTests.FunctionalTests
             model.Validate(EdmConstants.EdmVersionLatest, out errors);
             Assert.AreEqual(0, errors.Count(), "Invalid model validation error count.");
 
-            var valueAnnotations = model.VocabularyAnnotations.Where(n => n.Term.TermKind.Equals(EdmTermKind.Value));
-            Assert.AreEqual(1, valueAnnotations.Count(), "Invalid value annotations count.");
-
-            var valueAnnotation = valueAnnotations.ElementAt(0) as IEdmValueAnnotation;
+            var valueAnnotation = model.VocabularyAnnotations.ElementAt(0);
             var expression = valueAnnotation.Value as IEdmDateTimeOffsetConstantExpression;
             VerifyExpressionEdmValueKind(expression, EdmValueKind.DateTimeOffset);
         }
@@ -280,10 +262,7 @@ namespace EdmLibTests.FunctionalTests
             model.Validate(EdmConstants.EdmVersionLatest, out errors);
             Assert.AreEqual(0, errors.Count(), "Invalid model validation error count.");
 
-            var valueAnnotations = model.VocabularyAnnotations.Where(n => n.Term.TermKind.Equals(EdmTermKind.Value));
-            Assert.AreEqual(1, valueAnnotations.Count(), "Invalid value annotations count.");
-
-            var valueAnnotation = valueAnnotations.ElementAt(0) as IEdmValueAnnotation;
+            var valueAnnotation = model.VocabularyAnnotations.ElementAt(0);
             var expression = valueAnnotation.Value as IEdmDecimalConstantExpression;
             VerifyExpressionEdmValueKind(expression, EdmValueKind.Decimal);
         }
@@ -330,10 +309,7 @@ namespace EdmLibTests.FunctionalTests
             model.Validate(EdmConstants.EdmVersionLatest, out errors);
             Assert.AreEqual(0, errors.Count(), "Invalid model validation error count.");
 
-            var valueAnnotations = model.VocabularyAnnotations.Where(n => n.Term.TermKind.Equals(EdmTermKind.Value));
-            Assert.AreEqual(1, valueAnnotations.Count(), "Invalid value annotations count.");
-
-            var valueAnnotation = valueAnnotations.ElementAt(0) as IEdmValueAnnotation;
+            var valueAnnotation = model.VocabularyAnnotations.ElementAt(0);
             var expression = valueAnnotation.Value as IEdmFloatingConstantExpression;
             VerifyExpressionEdmValueKind(expression, EdmValueKind.Floating);
         }
@@ -366,10 +342,7 @@ namespace EdmLibTests.FunctionalTests
             model.Validate(EdmConstants.EdmVersionLatest, out errors);
             Assert.AreEqual(0, errors.Count(), "Invalid model validation error count.");
 
-            var valueAnnotations = model.VocabularyAnnotations.Where(n => n.Term.TermKind.Equals(EdmTermKind.Value));
-            Assert.AreEqual(1, valueAnnotations.Count(), "Invalid value annotations count.");
-
-            var valueAnnotation = valueAnnotations.ElementAt(0) as IEdmValueAnnotation;
+            var valueAnnotation = model.VocabularyAnnotations.ElementAt(0);
             var expression = valueAnnotation.Value as IEdmGuidConstantExpression;
             VerifyExpressionEdmValueKind(expression, EdmValueKind.Guid);
         }
@@ -406,10 +379,7 @@ namespace EdmLibTests.FunctionalTests
             model.Validate(EdmConstants.EdmVersionLatest, out errors);
             Assert.AreEqual(0, errors.Count(), "Invalid model validation error count.");
 
-            var valueAnnotations = model.VocabularyAnnotations.Where(n => n.Term.TermKind.Equals(EdmTermKind.Value));
-            Assert.AreEqual(1, valueAnnotations.Count(), "Invalid value annotations count.");
-
-            var valueAnnotation = valueAnnotations.ElementAt(0) as IEdmValueAnnotation;
+            var valueAnnotation = model.VocabularyAnnotations.ElementAt(0);
             var expression = valueAnnotation.Value as IEdmIntegerConstantExpression;
             VerifyExpressionEdmValueKind(expression, EdmValueKind.Integer);
         }
@@ -442,10 +412,7 @@ namespace EdmLibTests.FunctionalTests
             model.Validate(EdmConstants.EdmVersionLatest, out errors);
             Assert.AreEqual(0, errors.Count(), "Invalid model validation error count.");
 
-            var valueAnnotations = model.VocabularyAnnotations.Where(n => n.Term.TermKind.Equals(EdmTermKind.Value));
-            Assert.AreEqual(1, valueAnnotations.Count(), "Invalid value annotations count.");
-
-            var valueAnnotation = valueAnnotations.ElementAt(0) as IEdmValueAnnotation;
+            var valueAnnotation = model.VocabularyAnnotations.ElementAt(0);
             var expression = valueAnnotation.Value as IEdmStringConstantExpression;
             VerifyExpressionEdmValueKind(expression, EdmValueKind.String);
         }
@@ -493,10 +460,7 @@ namespace EdmLibTests.FunctionalTests
             model.Validate(EdmConstants.EdmVersionLatest, out errors);
             Assert.AreEqual(0, errors.Count(), "Invalid model validation error count.");
 
-            var annotations = model.VocabularyAnnotations.Where(n => n.Term.TermKind.Equals(EdmTermKind.Value));
-            Assert.AreEqual(1, annotations.Count(), "Invalid type annotations count.");
-
-            var annotation = annotations.ElementAt(0) as IEdmValueAnnotation;
+            var annotation = model.VocabularyAnnotations.ElementAt(0);
             var nameValueAnnotationProperty = ((IEdmRecordExpression)annotation.Value).Properties.Where(n => n.Name.Equals("PersonName"));
             Assert.AreEqual(1, nameValueAnnotationProperty.Count(), "Invalid type annotation property.");
 
@@ -532,10 +496,7 @@ namespace EdmLibTests.FunctionalTests
             model.Validate(EdmConstants.EdmVersionLatest, out errors);
             Assert.AreEqual(0, errors.Count(), "Invalid model validation error count.");
 
-            var valueAnnotations = model.VocabularyAnnotations.Where(n => n.Term.TermKind.Equals(EdmTermKind.Value));
-            Assert.AreEqual(1, valueAnnotations.Count(), "Invalid value annotations count.");
-
-            var valueAnnotation = valueAnnotations.ElementAt(0) as IEdmValueAnnotation;
+            var valueAnnotation = model.VocabularyAnnotations.ElementAt(0);
             var expression = valueAnnotation.Value as IEdmDurationConstantExpression;
             VerifyExpressionEdmValueKind(expression, EdmValueKind.Duration);
         }
@@ -554,7 +515,7 @@ namespace EdmLibTests.FunctionalTests
         {
             Assert.AreEqual(valueKind, valueKindValue.ValueKind, "Invalid value kind.");
 
-            var model = this.BuildValueAnnotationModelWithEdmValueKind(valueKindType, valueKindValue as IEdmExpression);
+            var model = this.BuildVocabularyAnnotationModelWithEdmValueKind(valueKindType, valueKindValue as IEdmExpression);
 
             IEnumerable<EdmError> errors;
             model.Validate(EdmConstants.EdmVersionLatest, out errors);
@@ -566,25 +527,25 @@ namespace EdmLibTests.FunctionalTests
             Assert.AreEqual(0, errors.Count(), "Invalid error count.");
 
             Assert.AreEqual(1, csdlModel.VocabularyAnnotations.Count(), "Invalid count of vocabulary annotation.");
-            var resultValueAnnotation = csdlModel.VocabularyAnnotations.ElementAt(0) as IEdmValueAnnotation;
+            var resultValueAnnotation = csdlModel.VocabularyAnnotations.ElementAt(0);
 
             Assert.AreEqual(valueKind, (resultValueAnnotation.Value as IEdmValue).ValueKind, "Invalid value kind.");
         }
 
-        private IEdmModel BuildValueAnnotationModelWithEdmValueKind(IEdmTypeReference valueKindType, IEdmExpression valueAnnotationValue)
+        private IEdmModel BuildVocabularyAnnotationModelWithEdmValueKind(IEdmTypeReference valueKindType, IEdmExpression valueAnnotationValue)
         {
-            var model = this.BuildBasicModelWithValueTerm(valueKindType);
+            var model = this.BuildBasicModelWithTerm(valueKindType);
 
-            var valueAnnotation = new EdmAnnotation(
+            var valueAnnotation = new EdmVocabularyAnnotation(
                 model.FindEntityContainer("foo.Container"),
-                model.FindValueTerm("foo.ValueTerm"),
+                model.FindTerm("foo.ValueTerm"),
                 valueAnnotationValue);
             model.AddVocabularyAnnotation(valueAnnotation);
 
             return model;
         }
 
-        private EdmModel BuildBasicModelWithValueTerm(IEdmTypeReference valueKindType)
+        private EdmModel BuildBasicModelWithTerm(IEdmTypeReference valueKindType)
         {
             var model = new EdmModel();
             var container = new EdmEntityContainer("foo", "Container");

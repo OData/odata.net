@@ -99,17 +99,17 @@ namespace Microsoft.Test.OData.Utils.Metadata
 
         private void AddStockVocabularies(IEdmModel edmModel, EdmModel stockModel)
         {
-            foreach (var valueTypeTerm in edmModel.SchemaElements.OfType<IEdmValueTerm>())
+            foreach (var valueTypeTerm in edmModel.SchemaElements.OfType<IEdmTerm>())
             {
                 var stockValueTerm = new EdmTerm(valueTypeTerm.Namespace, valueTypeTerm.Name, this.ConvertToStockTypeReference(valueTypeTerm.Type, stockModel));
                 stockModel.AddElement(stockValueTerm);
             }
 
-            foreach (var edmAnnotation in edmModel.VocabularyAnnotations.OfType<IEdmValueAnnotation>())
+            foreach (var edmAnnotation in edmModel.VocabularyAnnotations)
             {
-                var stockAnnotation = new EdmAnnotation(
+                var stockAnnotation = new EdmVocabularyAnnotation(
                     this.ConvertToStockVocabularyAnnotatable(edmAnnotation.Target, stockModel),
-                    stockModel.FindValueTerm(((IEdmSchemaElement)edmAnnotation.Term).FullName()),
+                    stockModel.FindTerm(((IEdmSchemaElement)edmAnnotation.Term).FullName()),
                     edmAnnotation.Qualifier,
                     this.ConvertToStockExpression(edmAnnotation.Value, stockModel)
                     // TODO: Do we need FullName()?  

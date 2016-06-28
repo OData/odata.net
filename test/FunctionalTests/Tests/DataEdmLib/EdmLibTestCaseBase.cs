@@ -455,8 +455,8 @@ namespace EdmLibTests
                     var operationGroup = testModel.FindOperations(elementNameExpected);
                     Assert.IsTrue(operationGroup.Count() == testModel.FindDeclaredOperations(elementNameExpected).Count() && !operationGroup.Except(testModel.FindDeclaredOperations(elementNameExpected)).Any(), "The results between FindMethod and its declared version should be same.");
 
-                    var valueTermFound = testModel.FindValueTerm(elementNameExpected);
-                    Assert.AreEqual(valueTermFound, testModel.FindDeclaredValueTerm(elementNameExpected), "The results between FindMethod and its declared version should be same.");
+                    var valueTermFound = testModel.FindTerm(elementNameExpected);
+                    Assert.AreEqual(valueTermFound, testModel.FindDeclaredTerm(elementNameExpected), "The results between FindMethod and its declared version should be same.");
 
                     Assert.IsFalse((typeFound == null) && (operationGroup == null) && (valueTermFound == null), "Failed to FindSchemaType for {0}", elementNameExpected);
 

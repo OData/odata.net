@@ -820,14 +820,14 @@ namespace Microsoft.Test.OData.Services.ODataWCFService
         private static void SetCoreChangeTrackingAnnotation(this EdmModel model, EdmEntitySet entitySet, IEdmStructuralProperty[] filterableProperties, IEdmNavigationProperty[] expandableProperties)
         {
             IEdmModel termModel = ReadTermModel("CoreCapabilities.csdl");
-            IEdmValueTerm changeTracking = termModel.FindDeclaredValueTerm("Core.ChangeTracking");
+            IEdmTerm changeTracking = termModel.FindDeclaredTerm("Core.ChangeTracking");
             var exp = new EdmRecordExpression(
                 new EdmPropertyConstructor("Supported", new EdmBooleanConstant(true)),
 
                 new EdmPropertyConstructor("FilterableProperties", new EdmCollectionExpression(filterableProperties.Select(p => new EdmPropertyPathExpression(p.Name)))),
                 new EdmPropertyConstructor("ExpandableProperties", new EdmCollectionExpression(expandableProperties.Select(p => new EdmPropertyPathExpression(p.Name)))));
 
-            EdmAnnotation annotation = new EdmAnnotation(entitySet, changeTracking, exp);
+            EdmVocabularyAnnotation annotation = new EdmVocabularyAnnotation(entitySet, changeTracking, exp);
             annotation.SetSerializationLocation(model, EdmVocabularyAnnotationSerializationLocation.Inline);
             model.AddVocabularyAnnotation(annotation);
         }

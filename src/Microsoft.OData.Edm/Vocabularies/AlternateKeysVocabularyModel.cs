@@ -30,7 +30,7 @@ namespace Microsoft.OData.Edm.Vocabularies.Community.V1
         /// The Alternate Keys term.
         /// </summary>
         [SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes", Justification = "Resolver is immutable")]
-        public static readonly IEdmValueTerm AlternateKeysTerm;
+        public static readonly IEdmTerm AlternateKeysTerm;
 
         /// <summary>
         /// The AlternateKey ComplexType.
@@ -58,7 +58,7 @@ namespace Microsoft.OData.Edm.Vocabularies.Community.V1
                 CsdlReader.TryParse(new[] { XmlReader.Create(stream) }, out Instance, out errors);
             }
 
-            AlternateKeysTerm = Instance.FindDeclaredValueTerm(AlternateKeysVocabularyConstants.AlternateKeys);
+            AlternateKeysTerm = Instance.FindDeclaredTerm(AlternateKeysVocabularyConstants.AlternateKeys);
             Debug.Assert(AlternateKeysTerm != null, "Expected Alternate Key term");
 
             AlternateKeyType = Instance.FindDeclaredType(AlternateKeysVocabularyConstants.AlternateKeyType) as IEdmComplexType;

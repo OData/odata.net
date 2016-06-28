@@ -92,14 +92,6 @@ namespace EdmLibTests.StubEdm
         public string Namespace { get; set; }
 
         /// <summary>
-        /// Gets the term kind.
-        /// </summary>
-        public EdmTermKind TermKind
-        {
-            get { return EdmTermKind.Type; }
-        }
-
-        /// <summary>
         /// Gets or sets the name
         /// </summary>
         public string Name { get; set; }

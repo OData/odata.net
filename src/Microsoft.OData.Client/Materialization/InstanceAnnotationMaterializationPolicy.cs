@@ -326,7 +326,7 @@ namespace Microsoft.OData.Client.Materialization
             if (collectionValue != null)
             {
                 var serverSideModel = this.MaterializerContext.Context.Format.LoadServiceModel();
-                var valueTerm = serverSideModel.FindValueTerm(instanceAnnotation.Name);
+                var valueTerm = serverSideModel.FindTerm(instanceAnnotation.Name);
 
                 if (valueTerm != null && valueTerm.Type != null && valueTerm.Type.Definition != null)
                 {

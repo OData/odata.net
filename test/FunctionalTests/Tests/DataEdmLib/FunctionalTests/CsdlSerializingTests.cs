@@ -683,7 +683,7 @@ namespace EdmLibTests.FunctionalTests
         }
 
         [TestMethod]
-        public void SerializeValueTerm()
+        public void SerializeTerm()
         {
             const string inputText =
 @"<?xml version=""1.0"" encoding=""utf-16""?>
@@ -741,7 +741,7 @@ namespace EdmLibTests.FunctionalTests
         }
 
         [TestMethod]
-        public void SerializeValueAnnotation()
+        public void SerializeVocabularyAnnotation()
         {
             const string inputText =
 @"<?xml version=""1.0"" encoding=""utf-16""?>
@@ -764,7 +764,7 @@ namespace EdmLibTests.FunctionalTests
         }
 
         [TestMethod]
-        public void SerializeOutOfLineValueAnnotation()
+        public void SerializeOutOfLineVocabularyAnnotation()
         {
             const string inputText =
 @"<?xml version=""1.0"" encoding=""utf-16""?>
@@ -798,7 +798,7 @@ namespace EdmLibTests.FunctionalTests
         }
 
         [TestMethod]
-        public void SerializeOutOfLineValueAnnotationOnExtendedTargets()
+        public void SerializeOutOfLineVocabularyAnnotationOnExtendedTargets()
         {
             const string inputText =
 @"<?xml version=""1.0"" encoding=""utf-16""?>

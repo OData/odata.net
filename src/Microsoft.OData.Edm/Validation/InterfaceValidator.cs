@@ -93,7 +93,9 @@ namespace Microsoft.OData.Edm.Validation
         {
             Dictionary<Type, VisitorBase> map = new Dictionary<Type, VisitorBase>();
 
-            foreach (Type nestedType in typeof(InterfaceValidator).GetNonPublicNestedTypes())
+            var nestedTypes = typeof(InterfaceValidator).GetNonPublicNestedTypes();
+
+            foreach (Type nestedType in nestedTypes)
             {
                 if (nestedType.IsClass())
                 {
@@ -298,7 +300,7 @@ namespace Microsoft.OData.Edm.Validation
 
             List<EdmError> followupErrors = new List<EdmError>();
 
-            // An element's direct value annotations are available only through a model,
+            // An element's direct annotations are available only through a model,
             // and so are not found in a normal traversal.
             if (this.validateDirectValueAnnotations)
             {
@@ -411,8 +413,8 @@ namespace Microsoft.OData.Edm.Validation
                         CollectErrors(CheckForInterfaceKindValueMismatchError<IEdmSchemaElement, EdmSchemaElementKind, IEdmFunction>(element, element.SchemaElementKind, "SchemaElementKind"), ref errors);
                         break;
 
-                    case EdmSchemaElementKind.ValueTerm:
-                        CollectErrors(CheckForInterfaceKindValueMismatchError<IEdmSchemaElement, EdmSchemaElementKind, IEdmValueTerm>(element, element.SchemaElementKind, "SchemaElementKind"), ref errors);
+                    case EdmSchemaElementKind.Term:
+                        CollectErrors(CheckForInterfaceKindValueMismatchError<IEdmSchemaElement, EdmSchemaElementKind, IEdmTerm>(element, element.SchemaElementKind, "SchemaElementKind"), ref errors);
                         break;
 
                     case EdmSchemaElementKind.EntityContainer:
@@ -776,38 +778,9 @@ namespace Microsoft.OData.Edm.Validation
         {
             protected override IEnumerable<EdmError> VisitT(IEdmTerm term, List<object> followup, List<object> references)
             {
-                List<EdmError> termKindError = null;
-
-                switch (term.TermKind)
-                {
-                    case EdmTermKind.Type:
-                        CollectErrors(CheckForInterfaceKindValueMismatchError<IEdmTerm, EdmTermKind, IEdmSchemaType>(term, term.TermKind, "TermKind"), ref termKindError);
-                        CollectErrors(CheckForInterfaceKindValueMismatchError<IEdmTerm, EdmTermKind, IEdmStructuredType>(term, term.TermKind, "TermKind"), ref termKindError);
-                        break;
-
-                    case EdmTermKind.Value:
-                        CollectErrors(CheckForInterfaceKindValueMismatchError<IEdmTerm, EdmTermKind, IEdmValueTerm>(term, term.TermKind, "TermKind"), ref termKindError);
-                        break;
-
-                    case EdmTermKind.None:
-                        break;
-
-                    default:
-                        CollectErrors(CreateInterfaceKindValueUnexpectedError(term, term.TermKind, "TermKind"), ref termKindError);
-                        break;
-                }
-
-                return termKindError;
-            }
-        }
-
-        private sealed class VisitorOfIEdmValueTerm : VisitorOfT<IEdmValueTerm>
-        {
-            protected override IEnumerable<EdmError> VisitT(IEdmValueTerm term, List<object> followup, List<object> references)
-            {
                 if (term.Type != null)
                 {
-                    // Value term owns its element type reference, so it goes as a followup.
+                    // Term owns its element type reference, so it goes as a followup.
                     followup.Add(term.Type);
                     return null;
                 }
@@ -1765,23 +1738,16 @@ namespace Microsoft.OData.Edm.Validation
                     CollectErrors(CreatePropertyMustNotBeNullError(annotation, "Target"), ref errors);
                 }
 
-                return errors;
-            }
-        }
-
-        private sealed class VisitorOfIEdmValueAnnotation : VisitorOfT<IEdmValueAnnotation>
-        {
-            protected override IEnumerable<EdmError> VisitT(IEdmValueAnnotation annotation, List<object> followup, List<object> references)
-            {
                 if (annotation.Value != null)
                 {
                     followup.Add(annotation.Value);
-                    return null;
                 }
                 else
                 {
-                    return new EdmError[] { CreatePropertyMustNotBeNullError(annotation, "Value") };
+                    CollectErrors(CreatePropertyMustNotBeNullError(annotation, "Value"), ref errors);
                 }
+
+                return errors;
             }
         }
 

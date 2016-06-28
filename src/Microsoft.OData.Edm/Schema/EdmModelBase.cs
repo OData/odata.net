@@ -21,7 +21,7 @@ namespace Microsoft.OData.Edm
         private readonly IEdmDirectValueAnnotationsManager annotationsManager;
         private readonly Dictionary<string, IEdmEntityContainer> containersDictionary = new Dictionary<string, IEdmEntityContainer>();
         private readonly Dictionary<string, IEdmSchemaType> schemaTypeDictionary = new Dictionary<string, IEdmSchemaType>();
-        private readonly Dictionary<string, IEdmValueTerm> valueTermDictionary = new Dictionary<string, IEdmValueTerm>();
+        private readonly Dictionary<string, IEdmTerm> termDictionary = new Dictionary<string, IEdmTerm>();
         private readonly Dictionary<string, IList<IEdmOperation>> functionDictionary = new Dictionary<string, IList<IEdmOperation>>();
 
         /// <summary>
@@ -119,14 +119,14 @@ namespace Microsoft.OData.Edm
         }
 
         /// <summary>
-        /// Searches for a value term with the given name in this model and returns null if no such value term exists.
+        /// Searches for a term with the given name in this model and returns null if no such term exists.
         /// </summary>
-        /// <param name="qualifiedName">The qualified name of the value term being found.</param>
-        /// <returns>The requested value term, or null if no such value term exists.</returns>
-        public IEdmValueTerm FindDeclaredValueTerm(string qualifiedName)
+        /// <param name="qualifiedName">The qualified name of the term being found.</param>
+        /// <returns>The requested term, or null if no such term exists.</returns>
+        public IEdmTerm FindDeclaredTerm(string qualifiedName)
         {
-            IEdmValueTerm result;
-            this.valueTermDictionary.TryGetValue(qualifiedName, out result);
+            IEdmTerm result;
+            this.termDictionary.TryGetValue(qualifiedName, out result);
             return result;
         }
 
@@ -199,7 +199,7 @@ namespace Microsoft.OData.Edm
         protected void RegisterElement(IEdmSchemaElement element)
         {
             EdmUtil.CheckArgumentNull(element, "element");
-            RegistrationHelper.RegisterSchemaElement(element, this.schemaTypeDictionary, this.valueTermDictionary, this.functionDictionary, this.containersDictionary);
+            RegistrationHelper.RegisterSchemaElement(element, this.schemaTypeDictionary, this.termDictionary, this.functionDictionary, this.containersDictionary);
         }
 
         /// <summary>

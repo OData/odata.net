@@ -308,7 +308,7 @@ namespace Microsoft.OData.Tests.Json
         [Fact]
         public void WriteInstanceAnnotationWithNullValueShouldPassIfTheTermIsNullableInTheModel()
         {
-            // Add a value term of type Collection(Edm.String) to the model.
+            // Add a term of type Collection(Edm.String) to the model.
             this.referencedModel.AddElement(new EdmTerm(
                 "My.Namespace",
                 "Nullable",
@@ -334,7 +334,7 @@ namespace Microsoft.OData.Tests.Json
         [Fact]
         public void WriteInstanceAnnotationWithNullValueShouldThrowIfTheTermIsNotNullableInTheModel()
         {
-            // Add a value term of type Collection(Edm.String) to the model.
+            // Add a term of type Collection(Edm.String) to the model.
             this.referencedModel.AddElement(new EdmTerm(
                 "My.Namespace",
                 "NotNullable",
@@ -493,7 +493,7 @@ namespace Microsoft.OData.Tests.Json
         [Fact]
         public void WriteInstanceAnnotationShouldPassPrimitiveTypeFromModelToUnderlyingWriter()
         {
-            // Add a value term of type DateTimeOffset to the model.
+            // Add a term of type DateTimeOffset to the model.
             this.referencedModel.AddElement(new EdmTerm("My.Namespace", "DateTimeTerm", EdmPrimitiveTypeKind.DateTimeOffset));
             var instanceAnnotation = new ODataInstanceAnnotation("My.Namespace.DateTimeTerm", new ODataPrimitiveValue(DateTimeOffset.MinValue));
 
@@ -513,7 +513,7 @@ namespace Microsoft.OData.Tests.Json
         [Fact]
         public void WriteInstanceAnnotationShouldWriteValueTypeIfMoreDerivedThanMetadataType()
         {
-            // Add a value term of type Geography to the model.
+            // Add a term of type Geography to the model.
             this.referencedModel.AddElement(new EdmTerm("My.Namespace", "GeographyTerm", EdmPrimitiveTypeKind.Geography));
             var instanceAnnotation = new ODataInstanceAnnotation("My.Namespace.GeographyTerm", new ODataPrimitiveValue(GeographyPoint.Create(0.0, 0.0)));
 
@@ -543,7 +543,7 @@ namespace Microsoft.OData.Tests.Json
         [Fact]
         public void WriteInstanceAnnotationShouldPassComplexTypeFromModelToUnderlyingWriter()
         {
-            // Add a value term of a complex type to the model.
+            // Add a term of a complex type to the model.
             var complexTypeReference = new EdmComplexTypeReference(new EdmComplexType("My.Namespace", "ComplexType"), false /*isNullable*/);
             this.referencedModel.AddElement(new EdmTerm("My.Namespace", "StructuredTerm", complexTypeReference));
             var instanceAnnotation = new ODataInstanceAnnotation("My.Namespace.StructuredTerm", new ODataComplexValue { TypeName = "ComplexType" });
@@ -565,7 +565,7 @@ namespace Microsoft.OData.Tests.Json
         [Fact]
         public void WriteInstanceAnnotationShouldPassCollectionTypeFromModelToUnderlyingWriter()
         {
-            // Add a value term of type Collection(Edm.String) to the model.
+            // Add a term of type Collection(Edm.String) to the model.
             this.referencedModel.AddElement(new EdmTerm(
                 "My.Namespace",
                 "CollectionTerm",

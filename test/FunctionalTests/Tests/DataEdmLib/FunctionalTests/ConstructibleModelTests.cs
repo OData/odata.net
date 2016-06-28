@@ -104,7 +104,6 @@ namespace EdmLibTests.FunctionalTests
             Assert.AreEqual(model.FindType("Bunk.T2"), t2, "FoundSchemaElement");
             Assert.AreEqual(model.SchemaElements.Last(), t5, "LastModelElement");
             Assert.AreEqual(model.FindType("Bunk.T5"), t5, "FoundSchemaElement");
-            Assert.AreEqual(EdmTermKind.Type, t1.TermKind, "Entity has correct term kind.");
 
             model.RemoveElement(t5);
 
@@ -1401,7 +1400,7 @@ namespace EdmLibTests.FunctionalTests
             Assert.AreEqual(0, EdmCoreModel.Instance.VocabularyAnnotations.Count(), "Core model has no annotations.");
             Assert.AreEqual(0, EdmCoreModel.Instance.ReferencedModels.Count(), "Core model has no references.");
             Assert.IsNull(EdmCoreModel.Instance.EntityContainer, "Core model has no containers.");
-            Assert.IsNull(EdmCoreModel.Instance.FindValueTerm("Edm.Int32"), "Find value term returns null");
+            Assert.IsNull(EdmCoreModel.Instance.FindTerm("Edm.Int32"), "Find term returns null");
             Assert.AreEqual(0, EdmCoreModel.Instance.FindOperations("Edm.Int32").Count(), "Find functions returns empty enumerable");
             Assert.IsNull(EdmCoreModel.Instance.FindEntityContainer("Edm.Int32"), "Find entity container returns null");
             Assert.AreEqual(0, EdmCoreModel.Instance.FindVocabularyAnnotations(new EdmEntityType("Foo", "Bar")).Count(), "Find vocabulary annoatations returns empty enumerable");

@@ -36,7 +36,7 @@ namespace EdmLibTests.FunctionalUtilities
 
             this.CompareEntityTypes(expected.SchemaElements.OfType<IEdmEntityType>(), actual.SchemaElements.OfType<IEdmEntityType>());
 
-            this.CompareValueTerms(expected.SchemaElements.OfType<IEdmValueTerm>(), actual.SchemaElements.OfType<IEdmValueTerm>());
+            this.CompareTerms(expected.SchemaElements.OfType<IEdmTerm>(), actual.SchemaElements.OfType<IEdmTerm>());
 
             this.CheckIsEquivalentTo(expected, actual);
 
@@ -222,7 +222,7 @@ namespace EdmLibTests.FunctionalUtilities
             }
         }
 
-        private void CompareValueTerms(IEnumerable<IEdmValueTerm> expectedValueTerms, IEnumerable<IEdmValueTerm> actualValueTerms)
+        private void CompareTerms(IEnumerable<IEdmTerm> expectedValueTerms, IEnumerable<IEdmTerm> actualValueTerms)
         {
             if (this.SatisfiesEquals(expectedValueTerms.Count(), actualValueTerms.Count(), "Wrong ValueTerm count."))
             {
@@ -234,7 +234,7 @@ namespace EdmLibTests.FunctionalUtilities
                     {
                         this.scopeContext.Enter(expectedValueTerm.Name);
 
-                        this.CompareValueTerm(expectedValueTerm, actualValueTerm);
+                        this.CompareTerm(expectedValueTerm, actualValueTerm);
                         actualList.Remove(actualValueTerm);
 
                         this.scopeContext.ExitCurrentScope();
@@ -248,7 +248,7 @@ namespace EdmLibTests.FunctionalUtilities
             }
         }
 
-        private void CompareValueTerm(IEdmValueTerm expectedValueTerm, IEdmValueTerm actualValueTerm)
+        private void CompareTerm(IEdmTerm expectedValueTerm, IEdmTerm actualValueTerm)
         {
             // TODO: can we push type reference equals into product? 
             this.SatisfiesCondition(
@@ -299,20 +299,8 @@ namespace EdmLibTests.FunctionalUtilities
 
         private void CompareTermAnnotationContent(IEdmVocabularyAnnotation expectedTermAnnotation, IEdmVocabularyAnnotation actualTermAnnotation)
         {
-            this.SatisfiesEquals(expectedTermAnnotation.Term.TermKind, actualTermAnnotation.Term.TermKind, "Term Kind mismatch at {0}.", this.scopeContext);
-
-            if (expectedTermAnnotation.Term.TermKind == EdmTermKind.Value)
-            {
-                IEdmValueAnnotation expectedValueAnnotation = (IEdmValueAnnotation)expectedTermAnnotation;
-                IEdmValueAnnotation actualValueAnnotation = (IEdmValueAnnotation)actualTermAnnotation;
-
-                // TODO: push Expression Equals() and ToString() to product?
-                this.SatisfiesCondition(this.CompareIEdmExpression(expectedValueAnnotation.Value, actualValueAnnotation.Value), "Value expression mismatch at {0}.", this.scopeContext);
-            }
-            else
-            {
-                this.WriteErrorMessage("Unexpected TermKind {0} at {1}.", expectedTermAnnotation.Term.TermKind, this.scopeContext);
-            }
+            // TODO: push Expression Equals() and ToString() to product?
+            this.SatisfiesCondition(this.CompareIEdmExpression(expectedTermAnnotation.Value, actualTermAnnotation.Value), "Value expression mismatch at {0}.", this.scopeContext);
         }
 
         private bool CompareIEdmExpression(IEdmExpression expected, IEdmExpression actual)

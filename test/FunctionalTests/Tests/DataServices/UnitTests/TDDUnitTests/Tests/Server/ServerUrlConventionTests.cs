@@ -93,12 +93,12 @@ namespace AstoriaUnitTests.TDD.Tests.Server
             annotations.Should().HaveCount(1);
 
             var annotation = annotations.Single();
-            annotation.Should().BeAssignableTo<IEdmValueAnnotation>();
+            annotation.Should().BeAssignableTo<IEdmVocabularyAnnotation>();
             annotation.Target.Should().BeSameAs(container);
             annotation.Term.Name.Should().Be(UrlConventionsConstants.ConventionTermName);
             annotation.Term.Namespace.Should().Be(UrlConventionsConstants.ConventionTermNamespace);
-            annotation.As<IEdmValueAnnotation>().Value.Should().BeAssignableTo<EdmStringConstant>();
-            annotation.As<IEdmValueAnnotation>().Value.As<EdmStringConstant>().Value.Should().Be(UrlConventionsConstants.KeyAsSegmentAnnotationValueString);
+            annotation.As<IEdmVocabularyAnnotation>().Value.Should().BeAssignableTo<EdmStringConstant>();
+            annotation.As<IEdmVocabularyAnnotation>().Value.As<EdmStringConstant>().Value.Should().Be(UrlConventionsConstants.KeyAsSegmentAnnotationValueString);
         }
 
         private static IEnumerable<IEdmVocabularyAnnotation> GetMetadataAnnotations(DataServiceBehavior dataServiceBehavior, out EdmEntityContainer container)

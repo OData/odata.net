@@ -210,12 +210,12 @@ namespace Microsoft.OData.Metadata
         /// <param name="qualifiedTermName">The name of the term to lookup, including the namespace.</param>
         /// <param name="model">The model to look in.</param>
         /// <returns>The type of the term in the model, or null if no matching term was found.</returns>
-        internal static IEdmTypeReference LookupTypeOfValueTerm(string qualifiedTermName, IEdmModel model)
+        internal static IEdmTypeReference LookupTypeOfTerm(string qualifiedTermName, IEdmModel model)
         {
             Debug.Assert(model != null, "model != null");
 
             IEdmTypeReference typeFromModel = null;
-            IEdmValueTerm termFromModel = model.FindValueTerm(qualifiedTermName);
+            IEdmTerm termFromModel = model.FindTerm(qualifiedTermName);
             if (termFromModel != null)
             {
                 typeFromModel = termFromModel.Type;

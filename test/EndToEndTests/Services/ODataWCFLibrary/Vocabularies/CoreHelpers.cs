@@ -22,14 +22,14 @@ namespace Microsoft.Test.OData.Services.ODataWCFService.Vocabularies
         #region Initialization
 
         public static readonly IEdmModel Instance;
-        public static readonly IEdmValueTerm ResourcePathTerm;
-        public static readonly IEdmValueTerm DereferenceableIDsTerm;
-        public static readonly IEdmValueTerm ConventionalIDsTerm;
-        public static readonly IEdmValueTerm PermissionsTerm;
-        public static readonly IEdmValueTerm ImmutableTerm;
-        public static readonly IEdmValueTerm ComputedTerm;
-        public static readonly IEdmValueTerm AcceptableMediaTypesTerm;
-        public static readonly IEdmValueTerm OptimisticConcurrencyTerm;
+        public static readonly IEdmTerm ResourcePathTerm;
+        public static readonly IEdmTerm DereferenceableIDsTerm;
+        public static readonly IEdmTerm ConventionalIDsTerm;
+        public static readonly IEdmTerm PermissionsTerm;
+        public static readonly IEdmTerm ImmutableTerm;
+        public static readonly IEdmTerm ComputedTerm;
+        public static readonly IEdmTerm AcceptableMediaTypesTerm;
+        public static readonly IEdmTerm OptimisticConcurrencyTerm;
         public static readonly IEdmEnumType PermissionType;
 
         internal const string CoreResourcePath = "Org.OData.Core.V1.ResourcePath";
@@ -50,14 +50,14 @@ namespace Microsoft.Test.OData.Services.ODataWCFService.Vocabularies
                 CsdlReader.TryParse(new[] { XmlReader.Create(stream) }, out Instance, out errors);
             }
 
-            ResourcePathTerm = Instance.FindDeclaredValueTerm(CoreResourcePath);
-            DereferenceableIDsTerm = Instance.FindDeclaredValueTerm(CoreDereferenceableIDs);
-            ConventionalIDsTerm = Instance.FindDeclaredValueTerm(CoreConventionalIDs);
-            PermissionsTerm = Instance.FindDeclaredValueTerm(CorePermissions);
-            ImmutableTerm = Instance.FindDeclaredValueTerm(CoreImmutable);
-            ComputedTerm = Instance.FindDeclaredValueTerm(CoreComputed);
-            AcceptableMediaTypesTerm = Instance.FindDeclaredValueTerm(CoreAcceptableMediaTypes);
-            OptimisticConcurrencyTerm = Instance.FindDeclaredValueTerm(CoreOptimisticConcurrency);
+            ResourcePathTerm = Instance.FindDeclaredTerm(CoreResourcePath);
+            DereferenceableIDsTerm = Instance.FindDeclaredTerm(CoreDereferenceableIDs);
+            ConventionalIDsTerm = Instance.FindDeclaredTerm(CoreConventionalIDs);
+            PermissionsTerm = Instance.FindDeclaredTerm(CorePermissions);
+            ImmutableTerm = Instance.FindDeclaredTerm(CoreImmutable);
+            ComputedTerm = Instance.FindDeclaredTerm(CoreComputed);
+            AcceptableMediaTypesTerm = Instance.FindDeclaredTerm(CoreAcceptableMediaTypes);
+            OptimisticConcurrencyTerm = Instance.FindDeclaredTerm(CoreOptimisticConcurrency);
             PermissionType = (IEdmEnumType)Instance.FindDeclaredType(CorePermission);
         }
 
@@ -138,7 +138,8 @@ namespace Microsoft.Test.OData.Services.ODataWCFService.Vocabularies
             var term = PermissionsTerm;
             var name = new EdmEnumTypeReference(PermissionType, false).ToStringLiteral((long)value);
             var expression = new EdmEnumMemberExpression(PermissionType.Members.Single(m => m.Name == name));
-            var annotation = new EdmAnnotation(target, term, expression);
+            var annotation = new EdmVocabularyAnnotation(target, term, expression);
+
             annotation.SetSerializationLocation(model, property.ToSerializationLocation());
             model.AddVocabularyAnnotation(annotation);
         }
@@ -259,15 +260,15 @@ namespace Microsoft.Test.OData.Services.ODataWCFService.Vocabularies
 
         #region Helpers
 
-        private static void SetCoreAnnotation(this EdmModel model, IEdmVocabularyAnnotatable target, IEdmValueTerm term, string value)
+        private static void SetCoreAnnotation(this EdmModel model, IEdmVocabularyAnnotatable target, IEdmTerm term, string value)
         {
             var expression = new EdmStringConstant(value);
-            var annotation = new EdmAnnotation(target, term, expression);
+            var annotation = new EdmVocabularyAnnotation(target, term, expression);
             annotation.SetSerializationLocation(model, target.ToSerializationLocation());
             model.AddVocabularyAnnotation(annotation);
         }
 
-        private static void SetCoreAnnotation(this EdmModel model, IEdmVocabularyAnnotatable target, IEdmValueTerm term, IEnumerable<string> values)
+        private static void SetCoreAnnotation(this EdmModel model, IEdmVocabularyAnnotatable target, IEdmTerm term, IEnumerable<string> values)
         {
             if (values == null)
             {
@@ -275,20 +276,20 @@ namespace Microsoft.Test.OData.Services.ODataWCFService.Vocabularies
             }
 
             var expression = new EdmCollectionExpression(values.Select(value => new EdmStringConstant(value)));
-            var annotation = new EdmAnnotation(target, term, expression);
+            var annotation = new EdmVocabularyAnnotation(target, term, expression);
             annotation.SetSerializationLocation(model, target.ToSerializationLocation());
             model.AddVocabularyAnnotation(annotation);
         }
 
-        private static void SetCoreAnnotation(this EdmModel model, IEdmVocabularyAnnotatable target, IEdmValueTerm term, bool value)
+        private static void SetCoreAnnotation(this EdmModel model, IEdmVocabularyAnnotatable target, IEdmTerm term, bool value)
         {
             var expression = new EdmBooleanConstant(value);
-            var annotation = new EdmAnnotation(target, term, expression);
+            var annotation = new EdmVocabularyAnnotation(target, term, expression);
             annotation.SetSerializationLocation(model, target.ToSerializationLocation());
             model.AddVocabularyAnnotation(annotation);
         }
 
-        private static bool? GetBoolean(this IEdmModel model, IEdmProperty property, IEdmValueTerm term)
+        private static bool? GetBoolean(this IEdmModel model, IEdmProperty property, IEdmTerm term)
         {
             var annotation = model.FindVocabularyAnnotation(property, term);
             if (annotation != null)
@@ -300,7 +301,7 @@ namespace Microsoft.Test.OData.Services.ODataWCFService.Vocabularies
             return null;
         }
 
-        private static T? GetEnum<T>(this IEdmModel model, IEdmProperty property, IEdmValueTerm term)
+        private static T? GetEnum<T>(this IEdmModel model, IEdmProperty property, IEdmTerm term)
             where T : struct
         {
             var annotation = model.FindVocabularyAnnotation(property, term);
@@ -319,15 +320,15 @@ namespace Microsoft.Test.OData.Services.ODataWCFService.Vocabularies
             return target is IEdmEntityContainer ? EdmVocabularyAnnotationSerializationLocation.OutOfLine : EdmVocabularyAnnotationSerializationLocation.Inline;
         }
 
-        private static IEdmValueAnnotation FindVocabularyAnnotation(this IEdmModel model, IEdmVocabularyAnnotatable target, IEdmValueTerm term)
+        private static IEdmVocabularyAnnotation FindVocabularyAnnotation(this IEdmModel model, IEdmVocabularyAnnotatable target, IEdmTerm term)
         {
-            var result = default(IEdmValueAnnotation);
+            var result = default(IEdmVocabularyAnnotation);
 
             var annotations = model.FindVocabularyAnnotations(target);
             if (annotations != null)
             {
                 var annotation = annotations.FirstOrDefault(a => a.Term.Namespace == term.Namespace && a.Term.Name == term.Name);
-                result = (IEdmValueAnnotation)annotation;
+                result = annotation;
             }
 
             return result;

@@ -1096,11 +1096,6 @@ namespace Microsoft.OData.Edm.Validation
         PropertyMustNotHaveKindOfNone = 336,
 
         /// <summary>
-        /// A term without other errors must not have kind of none.
-        /// </summary>
-        TermMustNotHaveKindOfNone = 337,
-
-        /// <summary>
         /// A schema element without other errors must not have kind of none.
         /// </summary>
         SchemaElementMustNotHaveKindOfNone = 338,
@@ -1181,7 +1176,7 @@ namespace Microsoft.OData.Edm.Validation
         BadPrincipalPropertiesInReferentialConstraint = 353,
 
         /// <summary>
-        /// A direct value annotation with the same name and namespace already exists.
+        /// A direct annotation with the same name and namespace already exists.
         /// </summary>
         DuplicateDirectValueAnnotationFullName = 354,
 

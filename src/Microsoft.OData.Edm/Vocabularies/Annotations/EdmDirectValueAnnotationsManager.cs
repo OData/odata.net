@@ -16,8 +16,8 @@ namespace Microsoft.OData.Edm.Vocabularies
     /// <remarks>
     /// An object representing transient annotations is in one of these states:
     ///    1) Null, if the element has no transient annotations.
-    ///    2) An EdmAnnotation, if the element has exactly one annotation.
-    ///    3) A list of EdmAnnotation, if the element has more than one annotation.
+    ///    2) An EdmVocabularyAnnotation, if the element has exactly one annotation.
+    ///    3) A list of EdmVocabularyAnnotation, if the element has more than one annotation.
     /// If the speed of annotation lookup for elements with many annotations becomes a concern, another option
     /// including a dictionary is possible.
     /// </remarks>
@@ -55,7 +55,7 @@ namespace Microsoft.OData.Edm.Vocabularies
         /// Gets annotations associated with an element.
         /// </summary>
         /// <param name="element">The annotated element.</param>
-        /// <returns>The immediate value annotations for the element.</returns>
+        /// <returns>The immediate annotations for the element.</returns>
         public IEnumerable<IEdmDirectValueAnnotation> GetDirectValueAnnotations(IEdmElement element)
         {
             // Fetch the annotations dictionary once and only once, because this.annotationsDictionary might get updated by another thread.

@@ -1,5 +1,5 @@
 //---------------------------------------------------------------------
-// <copyright file="CsdlSemanticsValueTerm.cs" company="Microsoft">
+// <copyright file="CsdlSemanticsTerm.cs" company="Microsoft">
 //      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 // </copyright>
 //---------------------------------------------------------------------
@@ -14,25 +14,25 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
     /// <summary>
     /// Provides semantics for a CsdlTerm.
     /// </summary>
-    [System.Diagnostics.DebuggerDisplay("CsdlSemanticsValueTerm({Name})")]
-    internal class CsdlSemanticsValueTerm : CsdlSemanticsElement, IEdmValueTerm
+    [System.Diagnostics.DebuggerDisplay("CsdlSemanticsTerm({Name})")]
+    internal class CsdlSemanticsTerm : CsdlSemanticsElement, IEdmTerm
     {
         protected readonly CsdlSemanticsSchema Context;
-        protected CsdlTerm valueTerm;
+        protected CsdlTerm term;
 
-        private readonly Cache<CsdlSemanticsValueTerm, IEdmTypeReference> typeCache = new Cache<CsdlSemanticsValueTerm, IEdmTypeReference>();
-        private static readonly Func<CsdlSemanticsValueTerm, IEdmTypeReference> ComputeTypeFunc = (me) => me.ComputeType();
+        private readonly Cache<CsdlSemanticsTerm, IEdmTypeReference> typeCache = new Cache<CsdlSemanticsTerm, IEdmTypeReference>();
+        private static readonly Func<CsdlSemanticsTerm, IEdmTypeReference> ComputeTypeFunc = (me) => me.ComputeType();
 
-        public CsdlSemanticsValueTerm(CsdlSemanticsSchema context, CsdlTerm valueTerm)
+        public CsdlSemanticsTerm(CsdlSemanticsSchema context, CsdlTerm valueTerm)
             : base(valueTerm)
         {
             this.Context = context;
-            this.valueTerm = valueTerm;
+            this.term = valueTerm;
         }
 
         public string Name
         {
-            get { return this.valueTerm.Name; }
+            get { return this.term.Name; }
         }
 
         public string Namespace
@@ -42,12 +42,7 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
 
         public EdmSchemaElementKind SchemaElementKind
         {
-            get { return EdmSchemaElementKind.ValueTerm; }
-        }
-
-        public EdmTermKind TermKind
-        {
-            get { return EdmTermKind.Value; }
+            get { return EdmSchemaElementKind.Term; }
         }
 
         public IEdmTypeReference Type
@@ -57,12 +52,12 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
 
         public string AppliesTo
         {
-            get { return this.valueTerm.AppliesTo; }
+            get { return this.term.AppliesTo; }
         }
 
         public string DefaultValue
         {
-            get { return this.valueTerm.DefaultValue; }
+            get { return this.term.DefaultValue; }
         }
 
         public override CsdlSemanticsModel Model
@@ -72,7 +67,7 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
 
         public override CsdlElement Element
         {
-            get { return this.valueTerm; }
+            get { return this.term; }
         }
 
         protected override IEnumerable<IEdmVocabularyAnnotation> ComputeInlineVocabularyAnnotations()
@@ -82,7 +77,7 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
 
         private IEdmTypeReference ComputeType()
         {
-            return CsdlSemanticsModel.WrapTypeReference(this.Context, this.valueTerm.Type);
+            return CsdlSemanticsModel.WrapTypeReference(this.Context, this.term.Type);
         }
     }
 }

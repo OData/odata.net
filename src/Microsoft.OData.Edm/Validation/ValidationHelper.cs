@@ -144,7 +144,7 @@ namespace Microsoft.OData.Edm.Validation
             foreach (IEdmModel referenced in model.ReferencedModels)
             {
                 if (referenced.FindDeclaredType(fullName) != null ||
-                    referenced.FindDeclaredValueTerm(fullName) != null ||
+                    referenced.FindDeclaredTerm(fullName) != null ||
                     (checkEntityContainer && referenced.ExistsContainer(fullName)) ||
                     (referenced.FindDeclaredOperations(fullName) ?? Enumerable.Empty<IEdmOperation>()).FirstOrDefault() != null)
                 {
@@ -162,7 +162,7 @@ namespace Microsoft.OData.Edm.Validation
             {
                 if (referenced.FindDeclaredType(operationFullName) != null ||
                     referenced.ExistsContainer(operationFullName) ||
-                    referenced.FindDeclaredValueTerm(operationFullName) != null)
+                    referenced.FindDeclaredTerm(operationFullName) != null)
                 {
                     return true;
                 }

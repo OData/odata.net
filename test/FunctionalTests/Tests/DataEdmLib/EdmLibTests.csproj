@@ -150,8 +150,8 @@
     <Compile Include="VocabularyStubs\StubRecordExpression.cs" />
     <Compile Include="VocabularyStubs\StubStringConstantExpression.cs" />
     <Compile Include="VocabularyStubs\StubTypeTerm.cs" />
-    <Compile Include="VocabularyStubs\StubValueAnnotation.cs" />
-    <Compile Include="VocabularyStubs\StubValueTerm.cs" />
+    <Compile Include="VocabularyStubs\StubVocabularyAnnotation.cs" />
+    <Compile Include="VocabularyStubs\StubTerm.cs" />
     <Compile Include="StubEdm\StubEdmComplexType.cs" />
     <Compile Include="StubEdm\StubEdmDirectValueAnnotationBinding.cs" />
     <Compile Include="StubEdm\StubEdmElement.cs" />

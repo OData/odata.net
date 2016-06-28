@@ -270,7 +270,7 @@ namespace EdmLibTests.FunctionalTests
             for (int i = 0; i < annotationCount; i++)
             {
                 EdmTerm term = new EdmTerm("NS", "Test" + i, EdmPrimitiveTypeKind.String);
-                EdmVocabularyAnnotation annotation = new EdmAnnotation(
+                EdmVocabularyAnnotation annotation = new EdmVocabularyAnnotation(
                             container,
                             term,
                             new EdmStringConstant("desc" + i));
@@ -330,7 +330,7 @@ namespace EdmLibTests.FunctionalTests
             this.RunParallelTestsWithEdmParModel(
                 edmParModel =>
                 {
-                    EdmVocabularyAnnotation annotation = new EdmAnnotation(
+                    EdmVocabularyAnnotation annotation = new EdmVocabularyAnnotation(
                         edmParModel.Person,
                         CoreVocabularyModel.DescriptionTerm,
                         new EdmStringConstant("desc"));

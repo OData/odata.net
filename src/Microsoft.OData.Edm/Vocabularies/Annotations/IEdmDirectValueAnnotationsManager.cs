@@ -9,7 +9,7 @@ using System.Collections.Generic;
 namespace Microsoft.OData.Edm.Vocabularies
 {
     /// <summary>
-    /// Manages getting and setting direct value annotations on EDM elements.
+    /// Manages getting and setting direct annotations on EDM elements.
     /// </summary>
     public interface IEdmDirectValueAnnotationsManager
     {
@@ -17,7 +17,7 @@ namespace Microsoft.OData.Edm.Vocabularies
         /// Gets annotations associated with an element.
         /// </summary>
         /// <param name="element">The annotated element.</param>
-        /// <returns>The direct value annotations for the element.</returns>
+        /// <returns>The direct annotations for the element.</returns>
         IEnumerable<IEdmDirectValueAnnotation> GetDirectValueAnnotations(IEdmElement element);
 
         /// <summary>

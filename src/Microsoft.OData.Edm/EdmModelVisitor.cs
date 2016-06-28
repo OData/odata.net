@@ -46,8 +46,8 @@ namespace Microsoft.OData.Edm
                 case EdmSchemaElementKind.TypeDefinition:
                     this.VisitSchemaType((IEdmType)element);
                     break;
-                case EdmSchemaElementKind.ValueTerm:
-                    this.ProcessValueTerm((IEdmValueTerm)element);
+                case EdmSchemaElementKind.Term:
+                    this.ProcessTerm((IEdmTerm)element);
                     break;
                 case EdmSchemaElementKind.EntityContainer:
                     this.ProcessEntityContainer((IEdmEntityContainer)element);
@@ -83,18 +83,7 @@ namespace Microsoft.OData.Edm
         {
             if (annotation.Term != null)
             {
-                switch (annotation.Term.TermKind)
-                {
-                    case EdmTermKind.Type:
-                    case EdmTermKind.Value:
-                        this.ProcessAnnotation((IEdmValueAnnotation)annotation);
-                        break;
-                    case EdmTermKind.None:
-                        this.ProcessVocabularyAnnotation(annotation);
-                        break;
-                    default:
-                        throw new InvalidOperationException(Edm.Strings.UnknownEnumVal_TermKind(annotation.Term.TermKind));
-                }
+                this.ProcessAnnotation(annotation);
             }
             else
             {
@@ -525,13 +514,7 @@ namespace Microsoft.OData.Edm
 
         protected virtual void ProcessTerm(IEdmTerm term)
         {
-            // Do not visit NamedElement as that gets visited by other means.
-        }
-
-        protected virtual void ProcessValueTerm(IEdmValueTerm term)
-        {
             this.ProcessSchemaElement(term);
-            this.ProcessTerm(term);
             this.VisitTypeReference(term.Type);
         }
 
@@ -549,7 +532,6 @@ namespace Microsoft.OData.Edm
         protected virtual void ProcessEntityType(IEdmEntityType definition)
         {
             this.ProcessSchemaElement(definition);
-            this.ProcessTerm(definition);
             this.ProcessStructuredType(definition);
             this.ProcessSchemaType(definition);
         }
@@ -637,7 +619,7 @@ namespace Microsoft.OData.Edm
             this.ProcessNamedElement(annotation);
         }
 
-        protected virtual void ProcessAnnotation(IEdmValueAnnotation annotation)
+        protected virtual void ProcessAnnotation(IEdmVocabularyAnnotation annotation)
         {
             this.ProcessVocabularyAnnotation(annotation);
             this.VisitExpression(annotation.Value);

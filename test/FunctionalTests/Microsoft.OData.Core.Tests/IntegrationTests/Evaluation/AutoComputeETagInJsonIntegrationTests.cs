@@ -169,10 +169,10 @@ namespace Microsoft.OData.Tests.IntegrationTests.Evaluation
             IEdmPathExpression nameExpression = new EdmPropertyPathExpression("NameName");
 
             IEdmCollectionExpression collection = new EdmCollectionExpression(new[] { nameExpression });
-            IEdmValueTerm term = null;
+            IEdmTerm term = null;
             foreach (var referencedModel in model.ReferencedModels)
             {
-                term = referencedModel.FindDeclaredValueTerm("Org.OData.Core.V1.OptimisticConcurrency");
+                term = referencedModel.FindDeclaredTerm("Org.OData.Core.V1.OptimisticConcurrency");
 
                 if (term != null)
                 {
@@ -182,7 +182,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Evaluation
 
             Assert.NotNull(term);
 
-            EdmAnnotation valueAnnotationOnEntitySet = new EdmAnnotation(peopleSet, term, collection);
+            EdmVocabularyAnnotation valueAnnotationOnEntitySet = new EdmVocabularyAnnotation(peopleSet, term, collection);
             valueAnnotationOnEntitySet.SetSerializationLocation(model, EdmVocabularyAnnotationSerializationLocation.Inline);
             model.AddVocabularyAnnotation(valueAnnotationOnEntitySet);
 

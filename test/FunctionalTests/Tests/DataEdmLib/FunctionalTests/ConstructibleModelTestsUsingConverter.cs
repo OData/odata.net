@@ -412,7 +412,7 @@ namespace EdmLibTests.FunctionalTests
         }
 
         [TestMethod]
-        public void TestingDirectValueAnnotationsWithVariousConstantTypes()
+        public void TestingDirectVocabularyAnnotationsWithVariousConstantTypes()
         {
             EdmModel model = new EdmModel();
 

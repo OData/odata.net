@@ -32,8 +32,8 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
         private readonly Cache<CsdlSemanticsSchema, IEnumerable<IEdmEntityContainer>> entityContainersCache = new Cache<CsdlSemanticsSchema, IEnumerable<IEdmEntityContainer>>();
         private static readonly Func<CsdlSemanticsSchema, IEnumerable<IEdmEntityContainer>> ComputeEntityContainersFunc = (me) => me.ComputeEntityContainers();
 
-        private readonly Cache<CsdlSemanticsSchema, IEnumerable<IEdmValueTerm>> valueTermsCache = new Cache<CsdlSemanticsSchema, IEnumerable<IEdmValueTerm>>();
-        private static readonly Func<CsdlSemanticsSchema, IEnumerable<IEdmValueTerm>> ComputeValueTermsFunc = (me) => me.ComputeValueTerms();
+        private readonly Cache<CsdlSemanticsSchema, IEnumerable<IEdmTerm>> termsCache = new Cache<CsdlSemanticsSchema, IEnumerable<IEdmTerm>>();
+        private static readonly Func<CsdlSemanticsSchema, IEnumerable<IEdmTerm>> ComputeTermsFunc = (me) => me.ComputeTerms();
 
         private readonly Cache<CsdlSemanticsSchema, Dictionary<string, object>> labeledExpressionsCache = new Cache<CsdlSemanticsSchema, Dictionary<string, object>>();
         private static readonly Func<CsdlSemanticsSchema, Dictionary<string, object>> ComputeLabeledExpressionsFunc = (me) => me.ComputeLabeledExpressions();
@@ -68,9 +68,9 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
             get { return this.operationsCache.GetValue(this, ComputeFunctionsFunc, null); }
         }
 
-        public IEnumerable<IEdmValueTerm> ValueTerms
+        public IEnumerable<IEdmTerm> Terms
         {
-            get { return this.valueTermsCache.GetValue(this, ComputeValueTermsFunc, null); }
+            get { return this.termsCache.GetValue(this, ComputeTermsFunc, null); }
         }
 
         public IEnumerable<IEdmEntityContainer> EntityContainers
@@ -110,9 +110,9 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
             return FindSchemaElement<IEdmSchemaType>(name, ExtensionMethods.FindTypeInModelTree);
         }
 
-        public IEdmValueTerm FindValueTerm(string name)
+        public IEdmTerm FindTerm(string name)
         {
-            return FindSchemaElement<IEdmValueTerm>(name, FindValueTerm);
+            return FindSchemaElement<IEdmTerm>(name, FindTerm);
         }
 
         public IEdmEntityContainer FindEntityContainer(string name)
@@ -177,9 +177,9 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
             return this.model.ReplaceAlias(name);
         }
 
-        private static IEdmValueTerm FindValueTerm(IEdmModel model, string name)
+        private static IEdmTerm FindTerm(IEdmModel model, string name)
         {
-            return model.FindValueTerm(name);
+            return model.FindTerm(name);
         }
 
         private static IEdmEntityContainer FindEntityContainer(IEdmModel model, string name)
@@ -298,12 +298,12 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
             return result;
         }
 
-        private IEnumerable<IEdmValueTerm> ComputeValueTerms()
+        private IEnumerable<IEdmTerm> ComputeTerms()
         {
-            List<IEdmValueTerm> terms = new List<IEdmValueTerm>();
+            List<IEdmTerm> terms = new List<IEdmTerm>();
             foreach (CsdlTerm valueTerm in this.schema.Terms)
             {
-                terms.Add(new CsdlSemanticsValueTerm(this, valueTerm));
+                terms.Add(new CsdlSemanticsTerm(this, valueTerm));
             }
 
             return terms;

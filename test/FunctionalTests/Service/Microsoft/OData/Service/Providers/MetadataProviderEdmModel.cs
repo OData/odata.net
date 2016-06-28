@@ -379,15 +379,15 @@ namespace Microsoft.OData.Service.Providers
         }
 
         /// <summary>
-        /// Searches for a value term with the given name in this model and returns null if no such value term exists.
+        /// Searches for a term with the given name in this model and returns null if no such term exists.
         /// </summary>
-        /// <param name="qualifiedName">The qualified name of the value term being found.</param>
-        /// <returns>The requested value term, or null if no such value term exists.</returns>
+        /// <param name="qualifiedName">The qualified name of the term being found.</param>
+        /// <returns>The requested term, or null if no such term exists.</returns>
         /// <remarks>
         /// Materialization state: none required. No change in materialization state.
         /// Cache state: none required. No change in cache state.
         /// </remarks>
-        public IEdmValueTerm FindDeclaredValueTerm(string qualifiedName)
+        public IEdmTerm FindDeclaredTerm(string qualifiedName)
         {
             return null;
         }

@@ -92,14 +92,14 @@ namespace EdmLibTests.FunctionalTests
         }
 
         [TestMethod]
-        public void ValueTerm_Constant_OnEntityType()
+        public void Term_Constant_OnEntityType()
         {
             this.SetupModels();
 
             IEdmEntityType person = this.baseModel.FindEntityType("NS1.Person");
-            IEdmValueTerm termInt32Value = this.longDefinitionModel.FindValueTerm("bar.Int32Value");
+            IEdmTerm termInt32Value = this.longDefinitionModel.FindTerm("bar.Int32Value");
 
-            var annotation = this.CreateAndAttachValueAnnotation(person, termInt32Value, new EdmIntegerConstant(100), "onPerson");
+            var annotation = this.CreateAndAttachVocabularyAnnotation(person, termInt32Value, new EdmIntegerConstant(100), "onPerson");
 
             string expectedCsdl =
 @"<Schema Namespace=""NS1"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
@@ -118,14 +118,14 @@ namespace EdmLibTests.FunctionalTests
         }
 
         [TestMethod]
-        public void ValueTerm_Constant_OnEntityType_Inline()
+        public void Term_Constant_OnEntityType_Inline()
         {
             this.SetupModels();
 
             IEdmEntityType person = this.baseModel.FindEntityType("NS1.Person");
-            IEdmValueTerm termInt32Value = this.longDefinitionModel.FindValueTerm("bar.Int32Value");
+            IEdmTerm termInt32Value = this.longDefinitionModel.FindTerm("bar.Int32Value");
 
-            var annotation = this.CreateAndAttachValueAnnotation(person, termInt32Value, new EdmIntegerConstant(100), "onPerson");
+            var annotation = this.CreateAndAttachVocabularyAnnotation(person, termInt32Value, new EdmIntegerConstant(100), "onPerson");
 
             string expectedCsdlInline =
 @"<Schema Namespace=""NS1"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
@@ -144,16 +144,16 @@ namespace EdmLibTests.FunctionalTests
 
         // [EdmLib] Serializing of vocabulary annotations output incorrect <Using>s
         [TestMethod]
-        public void ValueTerm_Constant_OfDifferentUri_OnEntityType()
+        public void Term_Constant_OfDifferentUri_OnEntityType()
         {
             this.SetupModels();
             IEdmEntityType person = this.baseModel.FindEntityType("NS1.Person");
 
-            IEdmValueTerm termInt32Value = this.longDefinitionModel.FindValueTerm("bar.Int32Value");
-            this.CreateAndAttachValueAnnotation(person, termInt32Value, new EdmIntegerConstant(100));
+            IEdmTerm termInt32Value = this.longDefinitionModel.FindTerm("bar.Int32Value");
+            this.CreateAndAttachVocabularyAnnotation(person, termInt32Value, new EdmIntegerConstant(100));
 
-            IEdmValueTerm termFooInt = this.shortDefinitionModel.FindValueTerm("foo.fooInt");
-            this.CreateAndAttachValueAnnotation(person, termFooInt, new EdmIntegerConstant(99));
+            IEdmTerm termFooInt = this.shortDefinitionModel.FindTerm("foo.fooInt");
+            this.CreateAndAttachVocabularyAnnotation(person, termFooInt, new EdmIntegerConstant(99));
 
             string expectedCsdl =
 @"<Schema Namespace=""NS1"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
@@ -173,16 +173,16 @@ namespace EdmLibTests.FunctionalTests
         }
 
         [TestMethod]
-        public void ValueTerm_Constant_CustomAlias_OnEntityType()
+        public void Term_Constant_CustomAlias_OnEntityType()
         {
             this.SetupModels();
             IEdmEntityType person = this.baseModel.FindEntityType("NS1.Person");
 
-            IEdmValueTerm termInt32Value = this.longDefinitionModel.FindValueTerm("bar.Int32Value");
-            this.CreateAndAttachValueAnnotation(person, termInt32Value, new EdmIntegerConstant(100));
+            IEdmTerm termInt32Value = this.longDefinitionModel.FindTerm("bar.Int32Value");
+            this.CreateAndAttachVocabularyAnnotation(person, termInt32Value, new EdmIntegerConstant(100));
 
-            IEdmValueTerm termFooInt = this.shortDefinitionModel.FindValueTerm("foo.fooInt");
-            this.CreateAndAttachValueAnnotation(person, termFooInt, new EdmIntegerConstant(99));
+            IEdmTerm termFooInt = this.shortDefinitionModel.FindTerm("foo.fooInt");
+            this.CreateAndAttachVocabularyAnnotation(person, termFooInt, new EdmIntegerConstant(99));
 
             string expectedCsdl =
 @"<Schema Namespace=""NS1"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
@@ -202,13 +202,13 @@ namespace EdmLibTests.FunctionalTests
         }
 
         [TestMethod]
-        public void ValueTerm_Constant_OnEntityType_SeperateApplication()
+        public void Term_Constant_OnEntityType_SeperateApplication()
         {
             this.SetupModels();
             IEdmEntityType person = this.baseModel.FindEntityType("NS1.Person");
 
-            IEdmValueTerm termInt32Value = this.longDefinitionModel.FindValueTerm("bar.Int32Value");
-            var annotation = this.CreateAndAttachValueAnnotation(person, termInt32Value, new EdmIntegerConstant(100));
+            IEdmTerm termInt32Value = this.longDefinitionModel.FindTerm("bar.Int32Value");
+            var annotation = this.CreateAndAttachVocabularyAnnotation(person, termInt32Value, new EdmIntegerConstant(100));
 
             string expectedCsdl1 =
 @"<Schema Namespace=""NS1"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
@@ -231,56 +231,56 @@ namespace EdmLibTests.FunctionalTests
         }
 
         [TestMethod]
-        public void ValueTerm_Constant_AllTypes_OnProperty()
+        public void Term_Constant_AllTypes_OnProperty()
         {
             this.SetupModels();
             IEdmProperty nameProperty = this.baseModel.FindEntityType("NS1.Person").FindProperty("Name");
             IEdmProperty birthdayProperty = this.baseModel.FindEntityType("NS1.Person").FindProperty("Birthday");
 
-            IEdmValueTerm termBinaryValue = this.longDefinitionModel.FindValueTerm("bar.BinaryValue");
-            this.CreateAndAttachValueAnnotation(nameProperty, termBinaryValue, new EdmBinaryConstant(new byte[] { 0x12, 0x34 }));
+            IEdmTerm termBinaryValue = this.longDefinitionModel.FindTerm("bar.BinaryValue");
+            this.CreateAndAttachVocabularyAnnotation(nameProperty, termBinaryValue, new EdmBinaryConstant(new byte[] { 0x12, 0x34 }));
 
-            IEdmValueTerm termBooleanValue = this.longDefinitionModel.FindValueTerm("bar.BooleanValue");
-            this.CreateAndAttachValueAnnotation(nameProperty, termBooleanValue, new EdmBooleanConstant(true));
+            IEdmTerm termBooleanValue = this.longDefinitionModel.FindTerm("bar.BooleanValue");
+            this.CreateAndAttachVocabularyAnnotation(nameProperty, termBooleanValue, new EdmBooleanConstant(true));
 
-            IEdmValueTerm termByteValue = this.longDefinitionModel.FindValueTerm("bar.ByteValue");
-            this.CreateAndAttachValueAnnotation(nameProperty, termByteValue, new EdmIntegerConstant(1));
+            IEdmTerm termByteValue = this.longDefinitionModel.FindTerm("bar.ByteValue");
+            this.CreateAndAttachVocabularyAnnotation(nameProperty, termByteValue, new EdmIntegerConstant(1));
 
-            IEdmValueTerm termDateValue = this.longDefinitionModel.FindValueTerm("bar.DateValue");
-            this.CreateAndAttachValueAnnotation(nameProperty, termDateValue, new EdmDateConstant(new Date(2014, 8, 8)));
+            IEdmTerm termDateValue = this.longDefinitionModel.FindTerm("bar.DateValue");
+            this.CreateAndAttachVocabularyAnnotation(nameProperty, termDateValue, new EdmDateConstant(new Date(2014, 8, 8)));
 
-            IEdmValueTerm termDateTimeOffsetValue = this.longDefinitionModel.FindValueTerm("bar.DateTimeOffsetValue");
-            this.CreateAndAttachValueAnnotation(nameProperty, termDateTimeOffsetValue, new EdmDateTimeOffsetConstant(DateTimeOffset.Parse("2011-01-01 23:59 -7:00")));
+            IEdmTerm termDateTimeOffsetValue = this.longDefinitionModel.FindTerm("bar.DateTimeOffsetValue");
+            this.CreateAndAttachVocabularyAnnotation(nameProperty, termDateTimeOffsetValue, new EdmDateTimeOffsetConstant(DateTimeOffset.Parse("2011-01-01 23:59 -7:00")));
 
-            IEdmValueTerm termDecimalValue = this.longDefinitionModel.FindValueTerm("bar.DecimalValue");
-            this.CreateAndAttachValueAnnotation(nameProperty, termDecimalValue, new EdmDecimalConstant(3.1425m));
+            IEdmTerm termDecimalValue = this.longDefinitionModel.FindTerm("bar.DecimalValue");
+            this.CreateAndAttachVocabularyAnnotation(nameProperty, termDecimalValue, new EdmDecimalConstant(3.1425m));
 
-            IEdmValueTerm termDoubleValue = this.longDefinitionModel.FindValueTerm("bar.DoubleValue");
-            this.CreateAndAttachValueAnnotation(nameProperty, termDoubleValue, new EdmFloatingConstant(3.14159E2));
+            IEdmTerm termDoubleValue = this.longDefinitionModel.FindTerm("bar.DoubleValue");
+            this.CreateAndAttachVocabularyAnnotation(nameProperty, termDoubleValue, new EdmFloatingConstant(3.14159E2));
 
-            IEdmValueTerm termGuidValue = this.longDefinitionModel.FindValueTerm("bar.GuidValue");
-            this.CreateAndAttachValueAnnotation(nameProperty, termGuidValue, new EdmGuidConstant(Guid.Parse("4ae71c81-c21a-40a2-8d53-f1a29ed4a2f2")));
+            IEdmTerm termGuidValue = this.longDefinitionModel.FindTerm("bar.GuidValue");
+            this.CreateAndAttachVocabularyAnnotation(nameProperty, termGuidValue, new EdmGuidConstant(Guid.Parse("4ae71c81-c21a-40a2-8d53-f1a29ed4a2f2")));
 
-            IEdmValueTerm termInt16Value = this.longDefinitionModel.FindValueTerm("bar.Int16Value");
-            this.CreateAndAttachValueAnnotation(birthdayProperty, termInt16Value, new EdmIntegerConstant(10));
+            IEdmTerm termInt16Value = this.longDefinitionModel.FindTerm("bar.Int16Value");
+            this.CreateAndAttachVocabularyAnnotation(birthdayProperty, termInt16Value, new EdmIntegerConstant(10));
 
-            IEdmValueTerm termInt32Value = this.longDefinitionModel.FindValueTerm("bar.Int32Value");
-            this.CreateAndAttachValueAnnotation(birthdayProperty, termInt32Value, new EdmIntegerConstant(100));
+            IEdmTerm termInt32Value = this.longDefinitionModel.FindTerm("bar.Int32Value");
+            this.CreateAndAttachVocabularyAnnotation(birthdayProperty, termInt32Value, new EdmIntegerConstant(100));
 
-            IEdmValueTerm termInt64Value = this.longDefinitionModel.FindValueTerm("bar.Int64Value");
-            this.CreateAndAttachValueAnnotation(birthdayProperty, termInt64Value, new EdmIntegerConstant(10000));
+            IEdmTerm termInt64Value = this.longDefinitionModel.FindTerm("bar.Int64Value");
+            this.CreateAndAttachVocabularyAnnotation(birthdayProperty, termInt64Value, new EdmIntegerConstant(10000));
 
-            IEdmValueTerm termSByteValue = this.longDefinitionModel.FindValueTerm("bar.SByteValue");
-            this.CreateAndAttachValueAnnotation(birthdayProperty, termSByteValue, new EdmIntegerConstant(-1));
+            IEdmTerm termSByteValue = this.longDefinitionModel.FindTerm("bar.SByteValue");
+            this.CreateAndAttachVocabularyAnnotation(birthdayProperty, termSByteValue, new EdmIntegerConstant(-1));
 
-            IEdmValueTerm termSingleValue = this.longDefinitionModel.FindValueTerm("bar.SingleValue");
-            this.CreateAndAttachValueAnnotation(birthdayProperty, termSingleValue, new EdmFloatingConstant(3.14159E1));
+            IEdmTerm termSingleValue = this.longDefinitionModel.FindTerm("bar.SingleValue");
+            this.CreateAndAttachVocabularyAnnotation(birthdayProperty, termSingleValue, new EdmFloatingConstant(3.14159E1));
 
-            IEdmValueTerm termStringValue = this.longDefinitionModel.FindValueTerm("bar.StringValue");
-            this.CreateAndAttachValueAnnotation(birthdayProperty, termStringValue, new EdmStringConstant("here"));
+            IEdmTerm termStringValue = this.longDefinitionModel.FindTerm("bar.StringValue");
+            this.CreateAndAttachVocabularyAnnotation(birthdayProperty, termStringValue, new EdmStringConstant("here"));
 
-            IEdmValueTerm termTimeOfDayValue = this.longDefinitionModel.FindValueTerm("bar.TimeOfDayValue");
-            this.CreateAndAttachValueAnnotation(nameProperty, termTimeOfDayValue, new EdmTimeOfDayConstant(new TimeOfDay(1, 30, 9, 3)));
+            IEdmTerm termTimeOfDayValue = this.longDefinitionModel.FindTerm("bar.TimeOfDayValue");
+            this.CreateAndAttachVocabularyAnnotation(nameProperty, termTimeOfDayValue, new EdmTimeOfDayConstant(new TimeOfDay(1, 30, 9, 3)));
 
             string expectedCsdl =
 @"<Schema Namespace=""NS1"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
@@ -315,19 +315,19 @@ namespace EdmLibTests.FunctionalTests
         }
 
         [TestMethod]
-        public void ValueTerm_FunctionApplication_OnEntityContainer()
+        public void Term_FunctionApplication_OnEntityContainer()
         {
             this.SetupModels();
 
             var container = new EdmEntityContainer("NS1", "myContainer");
             (this.baseModel as EdmModel).AddElement(container);
 
-            IEdmValueTerm termStringValue = this.longDefinitionModel.FindValueTerm("bar.StringValue");
+            IEdmTerm termStringValue = this.longDefinitionModel.FindTerm("bar.StringValue");
             var apply = new EdmApplyExpression(
                 (IEdmFunction)this.functionsModel.FindOperations("Functions.StringConcat").First(),
                 new EdmStringConstant("s1"),
                 new EdmStringConstant("s2"));
-            this.CreateAndAttachValueAnnotation(container, termStringValue, apply);
+            this.CreateAndAttachVocabularyAnnotation(container, termStringValue, apply);
 
             string expectedCsdl =
 @"<Schema Namespace=""NS1"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
@@ -352,7 +352,7 @@ namespace EdmLibTests.FunctionalTests
         }
 
         [TestMethod]
-        public void ValueTerm_If_OnEntitySet()
+        public void Term_If_OnEntitySet()
         {
             this.SetupModels();
 
@@ -360,12 +360,12 @@ namespace EdmLibTests.FunctionalTests
             var set = container.AddEntitySet("personSet", this.baseModel.FindEntityType("NS1.Person"));
             (this.baseModel as EdmModel).AddElement(container);
 
-            IEdmValueTerm termStringValue = this.longDefinitionModel.FindValueTerm("bar.StringValue");
+            IEdmTerm termStringValue = this.longDefinitionModel.FindTerm("bar.StringValue");
             var ifExpression = new EdmIfExpression(
                 new EdmApplyExpression((IEdmFunction)this.functionsModel.FindOperations("Functions.True").First()),
                 new EdmStringConstant("s1"),
                 new EdmStringConstant("s2"));
-            this.CreateAndAttachValueAnnotation(set, termStringValue, ifExpression);
+            this.CreateAndAttachVocabularyAnnotation(set, termStringValue, ifExpression);
 
             string expectedCsdl =
 @"<Schema Namespace=""NS1"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
@@ -393,15 +393,15 @@ namespace EdmLibTests.FunctionalTests
         }
 
         [TestMethod]
-        public void ValueTerm_Collection_OnEntityType()
+        public void Term_Collection_OnEntityType()
         {
             this.SetupModels();
 
             IEdmEntityType person = this.baseModel.FindEntityType("NS1.Person");
-            IEdmValueTerm termStringValue = this.longDefinitionModel.FindValueTerm("bar.StringValue");
+            IEdmTerm termStringValue = this.longDefinitionModel.FindTerm("bar.StringValue");
             var collection = new EdmCollectionExpression(new EdmStringConstant("s1"), new EdmLabeledExpression("xyz", new EdmIntegerConstant(2)));
 
-            this.CreateAndAttachValueAnnotation(person, termStringValue, collection);
+            this.CreateAndAttachVocabularyAnnotation(person, termStringValue, collection);
 
             string expectedCsdl =
 @"<Schema Namespace=""NS1"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
@@ -427,17 +427,17 @@ namespace EdmLibTests.FunctionalTests
         }
 
         [TestMethod]
-        public void ValueTerm_Record_OnEntityType()
+        public void Term_Record_OnEntityType()
         {
             this.SetupModels();
 
             IEdmEntityType person = this.baseModel.FindEntityType("NS1.Person");
-            IEdmValueTerm termStringValue = this.longDefinitionModel.FindValueTerm("bar.StringValue");
+            IEdmTerm termStringValue = this.longDefinitionModel.FindTerm("bar.StringValue");
             var record = new EdmRecordExpression(
                 new EdmPropertyConstructor("p1", new EdmStringConstant("s1")),
                 new EdmPropertyConstructor("p2", new EdmIntegerConstant(2)));
 
-            this.CreateAndAttachValueAnnotation(person, termStringValue, record);
+            this.CreateAndAttachVocabularyAnnotation(person, termStringValue, record);
 
             string expectedCsdl =
 @"<Schema Namespace=""NS1"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
@@ -461,17 +461,17 @@ namespace EdmLibTests.FunctionalTests
         }
 
         [TestMethod]
-        public void ValueTerm_IsType_OnEntityType()
+        public void Term_IsType_OnEntityType()
         {
             this.SetupModels();
 
             IEdmEntityType person = this.baseModel.FindEntityType("NS1.Person");
-            IEdmValueTerm termStringValue = this.longDefinitionModel.FindValueTerm("bar.StringValue");
+            IEdmTerm termStringValue = this.longDefinitionModel.FindTerm("bar.StringValue");
             var isPersonType = new EdmIsTypeExpression(new EdmStringConstant("s1"), new EdmEntityTypeReference(person, true));
-            this.CreateAndAttachValueAnnotation(person, termStringValue, isPersonType);
+            this.CreateAndAttachVocabularyAnnotation(person, termStringValue, isPersonType);
 
             var isStringType = new EdmIsTypeExpression(new EdmStringConstant("s2"), EdmCoreModel.Instance.GetString(true));
-            this.CreateAndAttachValueAnnotation(person, termStringValue, isStringType);
+            this.CreateAndAttachVocabularyAnnotation(person, termStringValue, isStringType);
 
             string expectedCsdl =
 @"<Schema Namespace=""NS1"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
@@ -609,14 +609,14 @@ namespace EdmLibTests.FunctionalTests
             this.SerializeAndVerifyAgainst(ExpressionValidationTestModelBuilder.IsTypeResultTrueEvaluationModel(), ExpressionValidationTestModelBuilder.IsTypeResultTrueEvaluationCsdl(EdmVersion.V40), EdmVersion.V40);
         }
 
-        private IEdmVocabularyAnnotation CreateAndAttachValueAnnotation(IEdmVocabularyAnnotatable target, IEdmValueTerm term, IEdmExpression value)
+        private IEdmVocabularyAnnotation CreateAndAttachVocabularyAnnotation(IEdmVocabularyAnnotatable target, IEdmTerm term, IEdmExpression value)
         {
-            return this.CreateAndAttachValueAnnotation(target, term, value, null);
+            return this.CreateAndAttachVocabularyAnnotation(target, term, value, null);
         }
 
-        private IEdmVocabularyAnnotation CreateAndAttachValueAnnotation(IEdmVocabularyAnnotatable target, IEdmValueTerm term, IEdmExpression value, string qualifier)
+        private IEdmVocabularyAnnotation CreateAndAttachVocabularyAnnotation(IEdmVocabularyAnnotatable target, IEdmTerm term, IEdmExpression value, string qualifier)
         {
-            var annotation = new EdmAnnotation(
+            var annotation = new EdmVocabularyAnnotation(
                 target,
                 term,
                 qualifier,

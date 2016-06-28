@@ -30,11 +30,11 @@ namespace EdmLibTests.FunctionalUtilities
 
             foreach (var annotated in possiblyAnnotated.Where(e => e.VocabularyAnnotations(applicationModel).Any()))
             {
-                var valueAnnotations = annotated.VocabularyAnnotations(applicationModel).OfType<IEdmValueAnnotation>();
+                var valueAnnotations = annotated.VocabularyAnnotations(applicationModel);
                 schema.Add(new XElement(
                                 ns + "Annotations",
                                 new XAttribute("Target", this.GetTargetPathFor(annotated, applicationModel)),
-                                this.GenerateValueAnnotations(ns, valueAnnotations)));
+                                this.GenerateVocabularyAnnotations(ns, valueAnnotations)));
             }
 
             return schema;
@@ -57,7 +57,7 @@ namespace EdmLibTests.FunctionalUtilities
             throw new System.InvalidOperationException(string.Format("unexpected element (not SchemaElement, Container, or ContainerElement): {0}", annotated));
         }
 
-        private IEnumerable<XElement> GenerateValueAnnotations(XNamespace ns, IEnumerable<IEdmValueAnnotation> valueAnnotations)
+        private IEnumerable<XElement> GenerateVocabularyAnnotations(XNamespace ns, IEnumerable<IEdmVocabularyAnnotation> valueAnnotations)
         {
             foreach (var va in valueAnnotations)
             {

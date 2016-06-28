@@ -44,12 +44,11 @@ namespace Microsoft.OData.Edm.Tests.Vocabularies
   </Term>
 </Schema>";
 
-            var alternateKeysTerm = model.FindDeclaredValueTerm("OData.Community.Keys.V1.AlternateKeys");
+            var alternateKeysTerm = model.FindDeclaredTerm("OData.Community.Keys.V1.AlternateKeys");
             Assert.NotNull(alternateKeysTerm);
             Assert.Equal(AlternateKeysVocabularyModel.AlternateKeysTerm, alternateKeysTerm);
             Assert.Equal("OData.Community.Keys.V1", alternateKeysTerm.Namespace);
             Assert.Equal("AlternateKeys", alternateKeysTerm.Name);
-            Assert.Equal(EdmTermKind.Value, alternateKeysTerm.TermKind);
 
             StringWriter sw = new StringWriter();
             IEnumerable<EdmError> errors;

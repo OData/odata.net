@@ -20,7 +20,7 @@ namespace Microsoft.OData.Tests.Evaluation
             var container = new EdmEntityContainer("Fake", "Container");
             var model = new EdmModel();
             model.AddElement(container);
-            model.AddVocabularyAnnotation(new EdmAnnotation(container, new EdmTerm("Fake", "Fake", EdmPrimitiveTypeKind.Stream), EdmNullExpression.Instance));
+            model.AddVocabularyAnnotation(new EdmVocabularyAnnotation(container, new EdmTerm("Fake", "Fake", EdmPrimitiveTypeKind.Stream), EdmNullExpression.Instance));
             UrlConvention.ForModel(model).GenerateKeyAsSegment.Should().BeFalse();
         }
 
@@ -30,7 +30,7 @@ namespace Microsoft.OData.Tests.Evaluation
             var container = new EdmEntityContainer("Fake", "Container");
             var model = new EdmModel();
             model.AddElement(container);
-            model.AddVocabularyAnnotation(new EdmAnnotation(container, UrlConventionsConstants.ConventionTerm, new EdmStringConstant("fake")));
+            model.AddVocabularyAnnotation(new EdmVocabularyAnnotation(container, UrlConventionsConstants.ConventionTerm, new EdmStringConstant("fake")));
             UrlConvention.ForModel(model).GenerateKeyAsSegment.Should().BeFalse();
         }
 
@@ -40,7 +40,7 @@ namespace Microsoft.OData.Tests.Evaluation
             var container = new EdmEntityContainer("Fake", "Container");
             var model = new EdmModel();
             model.AddElement(container);
-            model.AddVocabularyAnnotation(new EdmAnnotation(container, UrlConventionsConstants.ConventionTerm, UrlConventionsConstants.KeyAsSegmentAnnotationValue));
+            model.AddVocabularyAnnotation(new EdmVocabularyAnnotation(container, UrlConventionsConstants.ConventionTerm, UrlConventionsConstants.KeyAsSegmentAnnotationValue));
             UrlConvention.ForModel(model).GenerateKeyAsSegment.Should().BeTrue();
         }
 

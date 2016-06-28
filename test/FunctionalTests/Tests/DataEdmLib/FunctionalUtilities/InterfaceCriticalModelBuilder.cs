@@ -32,7 +32,7 @@ namespace EdmLibTests.FunctionalUtilities
             var valueTerm = new EdmTerm("DefaultNamespace", "Note", EdmCoreModel.Instance.GetString(true));
             model.AddElement(valueTerm);
 
-            var valueAnnotation = new MutableValueAnnotation()
+            var valueAnnotation = new MutableVocabularyAnnotation()
             {
                 Target = valueTerm
             };
@@ -64,7 +64,7 @@ namespace EdmLibTests.FunctionalUtilities
 
             var badString = new CustomStringConstant("foo", EdmExpressionKind.None, EdmValueKind.String);
 
-            var valueAnnotation = new EdmAnnotation(
+            var valueAnnotation = new EdmVocabularyAnnotation(
                 valueTerm,
                 valueTerm,
                 badString);
@@ -81,7 +81,7 @@ namespace EdmLibTests.FunctionalUtilities
 
             var badString = new CustomStringConstant("foo", EdmExpressionKind.StringConstant, (EdmValueKind)123);
 
-            var valueAnnotation = new EdmAnnotation(
+            var valueAnnotation = new EdmVocabularyAnnotation(
                 valueTerm,
                 valueTerm,
                 badString);
@@ -108,7 +108,7 @@ namespace EdmLibTests.FunctionalUtilities
             model.AddElement(valueTerm);
 
             var badString = new CustomStringConstant("foo", EdmExpressionKind.StringConstant, EdmValueKind.Integer);
-            var valueAnnotation = new EdmAnnotation(
+            var valueAnnotation = new EdmVocabularyAnnotation(
                 valueTerm,
                 valueTerm,
                 badString);
@@ -179,7 +179,7 @@ namespace EdmLibTests.FunctionalUtilities
             model.AddElement(valueTerm);
 
             var badValue = new CustomBinaryConstant(null);
-            var valueAnnotation = new EdmAnnotation(
+            var valueAnnotation = new EdmVocabularyAnnotation(
                 valueTerm,
                 valueTerm,
                 badValue);
@@ -395,13 +395,13 @@ namespace EdmLibTests.FunctionalUtilities
 
             var badString = new CustomStringConstant("foo", EdmExpressionKind.None, EdmValueKind.Integer);
 
-            var valueAnnotation = new EdmAnnotation(
+            var valueAnnotation = new EdmVocabularyAnnotation(
                 valueTerm,
                 valueTerm,
                 badString);
             model.AddVocabularyAnnotation(valueAnnotation);
 
-            var mutableValueAnnotationueAnnotation = new MutableValueAnnotation()
+            var mutableValueAnnotationueAnnotation = new MutableVocabularyAnnotation()
             {
                 Target = valueTerm
             };
@@ -442,13 +442,13 @@ namespace EdmLibTests.FunctionalUtilities
 
             var badString = new CustomStringConstant("foo", EdmExpressionKind.None, EdmValueKind.String);
 
-            var valueAnnotation = new EdmAnnotation(
+            var valueAnnotation = new EdmVocabularyAnnotation(
                 valueTerm,
                 valueTerm,
                 badString);
             model.AddVocabularyAnnotation(valueAnnotation);
 
-            var valueAnnotation2 = new EdmAnnotation(
+            var valueAnnotation2 = new EdmVocabularyAnnotation(
                 valueTerm,
                 valueTerm,
                 new EdmStringConstant("foo"));
@@ -787,7 +787,7 @@ namespace EdmLibTests.FunctionalUtilities
         }
     }
 
-    internal sealed class MutableValueAnnotation : IEdmValueAnnotation
+    internal sealed class MutableVocabularyAnnotation : IEdmVocabularyAnnotation
     {
         public IEdmExpression Value
         {

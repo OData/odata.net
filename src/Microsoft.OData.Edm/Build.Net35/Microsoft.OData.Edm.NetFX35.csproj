@@ -160,9 +160,6 @@
     <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Semantics\BadElements\UnresolvedFunction.cs">
       <Link>Microsoft\OData\Edm\Csdl\Semantics\BadElements\UnresolvedFunction.cs</Link>
     </Compile>
-    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Semantics\BadElements\UnresolvedTypeTerm.cs">
-      <Link>Microsoft\OData\Edm\Csdl\Semantics\BadElements\UnresolvedTypeTerm.cs</Link>
-    </Compile>
     <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Semantics\BadElements\UnresolvedVocabularyTerm.cs">
       <Link>Microsoft\OData\Edm\Csdl\Semantics\BadElements\UnresolvedVocabularyTerm.cs</Link>
     </Compile>
@@ -297,12 +294,6 @@
     </Compile>
     <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Semantics\CsdlSemanticsVocabularyAnnotation.cs">
       <Link>Microsoft\OData\Edm\Csdl\Semantics\CsdlSemanticsVocabularyAnnotation.cs</Link>
-    </Compile>
-    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Semantics\CsdlSemanticsValueAnnotation.cs">
-      <Link>Microsoft\OData\Edm\Csdl\Semantics\CsdlSemanticsValueAnnotation.cs</Link>
-    </Compile>
-    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Semantics\CsdlSemanticsValueTerm.cs">
-      <Link>Microsoft\OData\Edm\Csdl\Semantics\CsdlSemanticsValueTerm.cs</Link>
     </Compile>
     <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Serialization\EdmModelReferenceElementsVisitor.cs">
       <Link>Microsoft\OData\Edm\Csdl\Serialization\EdmModelReferenceElementsVisitor.cs</Link>
@@ -566,9 +557,6 @@
     <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Semantics\BadElements\UnresolvedParameter.cs">
       <Link>Microsoft\OData\Edm\Csdl\Semantics\BadElements\UnresolvedParameter.cs</Link>
     </Compile>
-    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Semantics\BadElements\UnresolvedValueTerm.cs">
-      <Link>Microsoft\OData\Edm\Csdl\Semantics\BadElements\UnresolvedValueTerm.cs</Link>
-    </Compile>
     <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Semantics\BadElements\UnresolvedPrimitiveType.cs">
       <Link>Microsoft\OData\Edm\Csdl\Semantics\BadElements\UnresolvedPrimitiveType.cs</Link>
     </Compile>
@@ -698,6 +686,9 @@
     <Compile Include="$(EdmLibCrossTargettingSourcePath)\..\PlatformHelper.cs">
       <Link>Microsoft\OData\Edm\PlatformHelper.cs</Link>
     </Compile>
+    <Compile Include="..\Csdl\Semantics\CsdlSemanticsTerm.cs">
+      <Link>Microsoft\OData\Edm\Csdl\Semantics\CsdlSemanticsTerm.cs</Link>
+    </Compile>
     <Compile Include="..\Schema\AmbiguousBinding.cs">
       <Link>Microsoft\OData\Edm\Schema\AmbiguousBinding.cs</Link>
     </Compile>
@@ -722,11 +713,11 @@
     <Compile Include="..\Schema\AmbiguousSingletonBinding.cs">
       <Link>Microsoft\OData\Edm\Schema\AmbiguousSingletonBinding.cs</Link>
     </Compile>
+    <Compile Include="..\Schema\AmbiguousTermBinding.cs">
+      <Link>Microsoft\OData\Edm\Schema\AmbiguousTermBinding.cs</Link>
+    </Compile>
     <Compile Include="..\Schema\AmbiguousTypeBinding.cs">
       <Link>Microsoft\OData\Edm\Schema\AmbiguousTypeBinding.cs</Link>
-    </Compile>
-    <Compile Include="..\Schema\AmbiguousValueTermBinding.cs">
-      <Link>Microsoft\OData\Edm\Schema\AmbiguousValueTermBinding.cs</Link>
     </Compile>
     <Compile Include="..\Schema\BadBinaryTypeReference.cs">
       <Link>Microsoft\OData\Edm\Schema\BadBinaryTypeReference.cs</Link>
@@ -1178,9 +1169,6 @@
     <Compile Include="..\Validation\ValidationHelper.cs">
       <Link>Microsoft\OData\Edm\Validation\ValidationHelper.cs</Link>
     </Compile>
-    <Compile Include="..\Vocabularies\Annotations\EdmAnnotation.cs">
-      <Link>Microsoft\OData\Edm\Vocabularies\Annotations\EdmAnnotation.cs</Link>
-    </Compile>
     <Compile Include="..\Vocabularies\Annotations\EdmDirectValueAnnotation.cs">
       <Link>Microsoft\OData\Edm\Vocabularies\Annotations\EdmDirectValueAnnotation.cs</Link>
     </Compile>
@@ -1216,12 +1204,6 @@
     </Compile>
     <Compile Include="..\Vocabularies\Annotations\IEdmTerm.cs">
       <Link>Microsoft\OData\Edm\Vocabularies\Annotations\IEdmTerm.cs</Link>
-    </Compile>
-    <Compile Include="..\Vocabularies\Annotations\IEdmValueAnnotation.cs">
-      <Link>Microsoft\OData\Edm\Vocabularies\Annotations\IEdmValueAnnotation.cs</Link>
-    </Compile>
-    <Compile Include="..\Vocabularies\Annotations\IEdmValueTerm.cs">
-      <Link>Microsoft\OData\Edm\Vocabularies\Annotations\IEdmValueTerm.cs</Link>
     </Compile>
     <Compile Include="..\Vocabularies\Annotations\IEdmVocabularyAnnotatable.cs">
       <Link>Microsoft\OData\Edm\Vocabularies\Annotations\IEdmVocabularyAnnotatable.cs</Link>

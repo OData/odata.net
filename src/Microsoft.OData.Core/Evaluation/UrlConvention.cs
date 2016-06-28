@@ -31,12 +31,12 @@ namespace Microsoft.OData.Evaluation
     internal sealed class UrlConvention
     {
         /// <summary>
-        /// The namespace of the term to use when building value annotations for indicating the conventions used.
+        /// The namespace of the term to use when building annotations for indicating the conventions used.
         /// </summary>
         private const string ConventionTermNamespace = "Com.Microsoft.OData.Service.Conventions.V1";
 
         /// <summary>
-        /// The name of the term to use when building value annotations for indicating the conventions used.
+        /// The name of the term to use when building annotations for indicating the conventions used.
         /// </summary>
         private const string ConventionTermName = "UrlConventions";
 
@@ -57,12 +57,12 @@ namespace Microsoft.OData.Evaluation
 
 #if ODATA_SERVICE
         /// <summary>
-        /// The term to use for building value annotations for indicating the conventions used.
+        /// The term to use for building annotations for indicating the conventions used.
         /// </summary>
-        private static readonly IEdmValueTerm ConventionTerm = new EdmTerm(ConventionTermNamespace, ConventionTermName, EdmPrimitiveTypeKind.String);
+        private static readonly IEdmTerm ConventionTerm = new EdmTerm(ConventionTermNamespace, ConventionTermName, EdmPrimitiveTypeKind.String);
 
         /// <summary>
-        /// The value to use when building value annotations for indicating that the key-as-segment convention is being used.
+        /// The value to use when building annotations for indicating that the key-as-segment convention is being used.
         /// </summary>
         private static readonly IEdmExpression KeyAsSegmentAnnotationValue = new EdmStringConstant(KeyAsSegmentConventionName);
 #endif
@@ -164,14 +164,14 @@ namespace Microsoft.OData.Evaluation
         /// <param name="dataServiceBehavior">The data service behavior.</param>
         /// <param name="model">The service's model.</param>
         /// <returns>The annotations to add to the model.</returns>
-        internal static IEnumerable<IEdmValueAnnotation> BuildMetadataAnnotations(DataServiceBehavior dataServiceBehavior, IEdmModel model)
+        internal static IEnumerable<IEdmVocabularyAnnotation> BuildMetadataAnnotations(DataServiceBehavior dataServiceBehavior, IEdmModel model)
         {
             Debug.Assert(dataServiceBehavior != null, "dataServiceBehavior != null");
             Debug.Assert(model != null, "model != null");
 
             if (dataServiceBehavior.GenerateKeyAsSegment)
             {
-                yield return new EdmAnnotation(model.EntityContainer, ConventionTerm, KeyAsSegmentAnnotationValue);
+                yield return new EdmVocabularyAnnotation(model.EntityContainer, ConventionTerm, KeyAsSegmentAnnotationValue);
             }
         }
 
@@ -205,7 +205,7 @@ namespace Microsoft.OData.Evaluation
         {
             Debug.Assert(model != null, "model != null");
             IEdmEntityContainer container = model.EntityContainer;
-            return CreateWithExplicitValue(model.FindVocabularyAnnotations(container).OfType<IEdmValueAnnotation>().Any(IsKeyAsSegmentUrlConventionAnnotation));
+            return CreateWithExplicitValue(model.FindVocabularyAnnotations(container).OfType<IEdmVocabularyAnnotation>().Any(IsKeyAsSegmentUrlConventionAnnotation));
         }
 
         /// <summary>
@@ -233,7 +233,7 @@ namespace Microsoft.OData.Evaluation
         /// </summary>
         /// <param name="annotation">The annotation to check.</param>
         /// <returns>True if the annotation indicates the 'KeyAsSegment' url convention; false otherwise.</returns>
-        private static bool IsKeyAsSegmentUrlConventionAnnotation(IEdmValueAnnotation annotation)
+        private static bool IsKeyAsSegmentUrlConventionAnnotation(IEdmVocabularyAnnotation annotation)
         {
             return annotation != null && IsUrlConventionTerm(annotation.Term) && IsKeyAsSegment(annotation.Value);
         }

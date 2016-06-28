@@ -9,11 +9,23 @@ namespace Microsoft.OData.Edm.Vocabularies
     /// <summary>
     /// Represents an EDM annotation with an immediate value.
     /// </summary>
-    public abstract class EdmVocabularyAnnotation : EdmElement, IEdmVocabularyAnnotation
+    public class EdmVocabularyAnnotation : EdmElement, IEdmVocabularyAnnotation
     {
         private readonly IEdmVocabularyAnnotatable target;
-        private readonly IEdmValueTerm term;
+        private readonly IEdmTerm term;
         private readonly string qualifier;
+        private readonly IEdmExpression value;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="EdmVocabularyAnnotation"/> class.
+        /// </summary>
+        /// <param name="target">Element the annotation applies to.</param>
+        /// <param name="term">Term bound by the annotation.</param>
+        /// <param name="value">Expression producing the value of the annotation.</param>
+        public EdmVocabularyAnnotation(IEdmVocabularyAnnotatable target, IEdmTerm term, IEdmExpression value)
+            : this(target, term, null, value)
+        {
+        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="EdmVocabularyAnnotation"/> class.
@@ -21,14 +33,17 @@ namespace Microsoft.OData.Edm.Vocabularies
         /// <param name="target">Element the annotation applies to.</param>
         /// <param name="term">Term bound by the annotation.</param>
         /// <param name="qualifier">Qualifier used to discriminate between multiple bindings of the same property or type.</param>
-        protected EdmVocabularyAnnotation(IEdmVocabularyAnnotatable target, IEdmValueTerm term, string qualifier)
+        /// <param name="value">Expression producing the value of the annotation.</param>
+        public EdmVocabularyAnnotation(IEdmVocabularyAnnotatable target, IEdmTerm term, string qualifier, IEdmExpression value)
         {
             EdmUtil.CheckArgumentNull(target, "target");
             EdmUtil.CheckArgumentNull(term, "term");
+            EdmUtil.CheckArgumentNull(value, "value");
 
             this.target = target;
             this.term = term;
             this.qualifier = qualifier;
+            this.value = value;
         }
 
         /// <summary>
@@ -53,6 +68,14 @@ namespace Microsoft.OData.Edm.Vocabularies
         public string Qualifier
         {
             get { return this.qualifier; }
+        }
+
+        /// <summary>
+        /// Gets the expression producing the value of the annotation.
+        /// </summary>
+        public IEdmExpression Value
+        {
+            get { return this.value; }
         }
     }
 }
