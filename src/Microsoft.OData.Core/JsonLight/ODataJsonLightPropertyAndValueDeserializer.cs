@@ -181,7 +181,7 @@ namespace Microsoft.OData.JsonLight
                 odataType = ReaderUtils.AddEdmPrefixOfTypeName(ReaderUtils.RemovePrefixOfTypeName((string)propertyAnnotation));
             }
 
-            return ReadODataOrCustomInstanceAnnotationValue(name, odataType, isCustomAnnotation: true);
+            return ReadODataOrCustomInstanceAnnotationValue(name, odataType);
         }
 
         /// <summary>
@@ -189,19 +189,9 @@ namespace Microsoft.OData.JsonLight
         /// </summary>
         /// <param name="annotationName">The annotation name.</param>
         /// <param name="odataType">the odata.type value if exists.</param>
-        /// <param name="isCustomAnnotation">If is custom annotation.</param>
         /// <returns>The annotation value.</returns>
-        internal object ReadODataOrCustomInstanceAnnotationValue(string annotationName, string odataType, bool isCustomAnnotation)
+        internal object ReadODataOrCustomInstanceAnnotationValue(string annotationName, string odataType)
         {
-            bool isODataAnnotation = !isCustomAnnotation;
-            if (isODataAnnotation)
-            {
-                Debug.Assert((this.JsonReader.NodeType == JsonNodeType.PrimitiveValue)
-                    || (this.JsonReader.NodeType == JsonNodeType.StartArray
-                        && string.Equals(ODataAnnotationNames.ODataBind, annotationName, StringComparison.Ordinal)),
-                    "OData instantation value should be primitive or (odata.bind) array");
-            }
-
             // If this term is defined in the model, look up its type. If the term is not in the model, this will be null.
             IEdmTypeReference expectedTypeFromTerm = MetadataUtils.LookupTypeOfValueTerm(annotationName, this.Model);
             object customInstanceAnnotationValue = this.ReadNonEntityValueImplementation(

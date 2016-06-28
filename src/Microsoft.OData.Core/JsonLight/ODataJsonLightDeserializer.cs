@@ -625,7 +625,7 @@ namespace Microsoft.OData.JsonLight
 
             if (ODataAnnotationNames.IsUnknownODataAnnotationName(annotationName))
             {
-                annotationValue = ReadODataOrCustomInstanceAnnotationValue(annotationName, isCustomAnnotation: true);
+                annotationValue = ReadODataOrCustomInstanceAnnotationValue(annotationName);
                 return true;
             }
 
@@ -637,21 +637,11 @@ namespace Microsoft.OData.JsonLight
         /// Reads "odata." or custom instance annotation's value.
         /// </summary>
         /// <param name="annotationName">The annotation name.</param>
-        /// <param name="isCustomAnnotation">If the name is for built-in annotation.</param>
         /// <returns>The annotation value.</returns>
-        private object ReadODataOrCustomInstanceAnnotationValue(string annotationName, bool isCustomAnnotation)
+        private object ReadODataOrCustomInstanceAnnotationValue(string annotationName)
         {
             // Read over the name.
             this.JsonReader.Read();
-            bool isODataAnnotation = !isCustomAnnotation;
-            if (isODataAnnotation)
-            {
-                Debug.Assert((this.JsonReader.NodeType == JsonNodeType.PrimitiveValue)
-                    || (this.JsonReader.NodeType == JsonNodeType.StartArray
-                        && string.Equals(ODataAnnotationNames.ODataBind, annotationName, StringComparison.Ordinal)),
-                    "OData instantation value should be primitive or (odata.bind) array");
-            }
-
             object annotationValue;
             if (this.JsonReader.NodeType != JsonNodeType.PrimitiveValue)
             {
@@ -829,11 +819,6 @@ namespace Microsoft.OData.JsonLight
             this.JsonReader.Read();
             if (ODataJsonLightReaderUtils.IsODataAnnotationName(annotationName))
             {
-                Debug.Assert((this.JsonReader.NodeType == JsonNodeType.PrimitiveValue)
-                    || (this.JsonReader.NodeType == JsonNodeType.StartArray
-                        && string.Equals(ODataAnnotationNames.ODataBind, annotationName, StringComparison.Ordinal)),
-                    "OData instantation value should be primitive or (odata.bind) array");
-
                 // OData annotations are read
                 duplicatePropertyNamesChecker.AddODataPropertyAnnotation(annotatedPropertyName, annotationName, readPropertyAnnotationValue(annotationName));
             }

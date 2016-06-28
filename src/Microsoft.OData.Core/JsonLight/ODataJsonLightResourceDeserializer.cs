@@ -224,14 +224,6 @@ namespace Microsoft.OData.JsonLight
         /// <returns>The annotation value.</returns>
         internal object ReadODataOrCustomInstanceAnnotationValue(IODataJsonLightReaderResourceState resourceState, PropertyParsingResult propertyParsingResult, string annotationName)
         {
-            if (propertyParsingResult == PropertyParsingResult.ODataInstanceAnnotation)
-            {
-                Debug.Assert((this.JsonReader.NodeType == JsonNodeType.PrimitiveValue)
-                    || (this.JsonReader.NodeType == JsonNodeType.StartArray
-                        && string.Equals(ODataAnnotationNames.ODataBind, annotationName, StringComparison.Ordinal)),
-                    "OData instantation value should be primitive or (odata.bind) array");
-            }
-
             object value = this.ReadEntryInstanceAnnotation(annotationName, resourceState.AnyPropertyFound, /*typeAnnotationFound*/ true, resourceState.DuplicatePropertyNamesChecker);
             if (propertyParsingResult == PropertyParsingResult.ODataInstanceAnnotation)
             {
@@ -402,10 +394,6 @@ namespace Microsoft.OData.JsonLight
             {
                 // #### annotation 1 ####
                 // built-in "odata." annotation value is added to duplicatePropertyNamesChecker then later to resourceSet.InstanceAnnotations.
-                Debug.Assert((this.JsonReader.NodeType == JsonNodeType.PrimitiveValue)
-                    || (this.JsonReader.NodeType == JsonNodeType.StartArray
-                        && string.Equals(ODataAnnotationNames.ODataBind, annotationName, StringComparison.Ordinal)),
-                    "OData instantation value should be primitive or (odata.bind) array");
                 duplicatePropertyNamesChecker.AddODataScopeAnnotation(annotationName, this.JsonReader.Value);
             }
 
