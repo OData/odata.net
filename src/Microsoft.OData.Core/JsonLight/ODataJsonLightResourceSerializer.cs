@@ -261,7 +261,7 @@ namespace Microsoft.OData.JsonLight
             Uri associationLinkUrl = nestedResourceInfo.AssociationLinkUrl;
             if (associationLinkUrl != null)
             {
-                duplicatePropertyNamesChecker.CheckForDuplicateAssociationLinkNames(navigationLinkName, null);
+                duplicatePropertyNamesChecker.CheckForDuplicateAssociationLinkNamesAndGetNestedResourceInfo(navigationLinkName, null);
                 this.WriteAssociationLink(nestedResourceInfo.Name, associationLinkUrl);
             }
 

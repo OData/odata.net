@@ -360,7 +360,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Writer.JsonLight
                 this.entityType,
                 new[] { odataProperty },
                 /*isComplexValue*/ false,
-                new DuplicatePropertyNamesChecker(allowDuplicateProperties: true, isResponse: true),
+                new DuplicatePropertyNamesChecker(false),
                 ProjectedPropertiesAnnotation.AllProjectedPropertiesInstance);
             jsonLightOutputContext.JsonWriter.EndObjectScope();
 

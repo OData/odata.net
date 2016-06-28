@@ -64,7 +64,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                     new
                     {
                         InjectedJSON = "\"@custom.annotation\": null, \"@custom.annotation\": 42",
-                        ExpectedException = ODataExpectedExceptions.ODataException("DuplicatePropertyNamesChecker_DuplicateAnnotationNotAllowed", "custom.annotation")
+                        ExpectedException = (ExpectedException)null
                     },
                 };
 
@@ -200,12 +200,13 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                     },
                     new
                     {
-                        Description = "Duplicate custom property annotation - should fail.",
+                        Description = "Duplicate custom property annotation - should not fail.",
                         Json = "\"" + JsonLightUtils.GetPropertyAnnotationName("Name", "custom.annotation") + "\": null," +
                                 "\"" + JsonLightUtils.GetPropertyAnnotationName("Name", "custom.annotation") + "\": 42," +
                                 "\"Name\": \"Value\"",
-                        ExpectedPayload = PayloadBuilder.Entity("TestModel.ComplexType").IsComplex(true),
-                        ExpectedException = ODataExpectedExceptions.ODataException("DuplicatePropertyNamesChecker_DuplicateAnnotationForPropertyNotAllowed", "custom.annotation", "Name")
+                        ExpectedPayload = PayloadBuilder.Entity("TestModel.ComplexType")
+                                          .PrimitiveProperty("Name", "Value").IsComplex(true),
+                        ExpectedException = (ExpectedException)null
                     },
                     new
                     {

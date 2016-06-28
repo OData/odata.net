@@ -829,7 +829,7 @@ namespace Microsoft.OData.JsonLight
                 else if (!this.jsonLightResourceDeserializer.JsonReader.IsOnValueNode())
                 {
                     // Deferred link (nested resource info which doesn't have a value and is in the response)
-                    ReaderUtils.CheckForDuplicateNestedResourceInfoNameAndSetAssociationLink(parentResourceState.DuplicatePropertyNamesChecker, currentLink, false, currentLink.IsCollection);
+                    ReaderUtils.CheckForDuplicateNestedResourceInfoNameAndSetAssociationLink(parentResourceState.DuplicatePropertyNamesChecker, currentLink);
                     this.jsonLightResourceDeserializer.AssertJsonCondition(JsonNodeType.EndObject, JsonNodeType.Property);
 
                     // Record that we read the link on the parent resource's scope.
@@ -843,13 +843,13 @@ namespace Microsoft.OData.JsonLight
                     Debug.Assert(this.CurrentResourceType != null || this.CurrentNestedResourceInfo.Name != null, "We must have a declared navigation property to read expanded links.");
 
                     // Expanded resource
-                    ReaderUtils.CheckForDuplicateNestedResourceInfoNameAndSetAssociationLink(parentResourceState.DuplicatePropertyNamesChecker, currentLink, true, false);
+                    ReaderUtils.CheckForDuplicateNestedResourceInfoNameAndSetAssociationLink(parentResourceState.DuplicatePropertyNamesChecker, currentLink);
                     this.ReadExpandedNestedResourceInfoStart(currentLink);
                 }
                 else
                 {
                     // Expanded resource set
-                    ReaderUtils.CheckForDuplicateNestedResourceInfoNameAndSetAssociationLink(parentResourceState.DuplicatePropertyNamesChecker, currentLink, true, true);
+                    ReaderUtils.CheckForDuplicateNestedResourceInfoNameAndSetAssociationLink(parentResourceState.DuplicatePropertyNamesChecker, currentLink);
 
                     // We store the precreated expanded resource set in the nested resource info since it carries the annotations for it.
                     ODataJsonLightReaderNestedResourceInfo nestedResourceInfo = this.CurrentJsonLightNestedResourceInfoScope.ReaderNestedResourceInfo;
@@ -864,12 +864,9 @@ namespace Microsoft.OData.JsonLight
             else
             {
                 // Navigation link in request - report entity reference links and then possible expanded value.
-                ODataJsonLightReaderNestedResourceInfo navigationLinkInfo = this.CurrentJsonLightNestedResourceInfoScope.ReaderNestedResourceInfo;
                 ReaderUtils.CheckForDuplicateNestedResourceInfoNameAndSetAssociationLink(
                     parentResourceState.DuplicatePropertyNamesChecker,
-                    currentLink,
-                    navigationLinkInfo.HasValue,
-                    currentLink.IsCollection);
+                    currentLink);
 
                 this.ReadNextNestedResourceInfoContentItemInRequest();
             }

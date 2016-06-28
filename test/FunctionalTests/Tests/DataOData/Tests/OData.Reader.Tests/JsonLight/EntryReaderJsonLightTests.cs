@@ -359,7 +359,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                     new
                     {
                         InjectedJSON = "\"@custom.annotation\": null, \"@custom.annotation\": 42",
-                        ExpectedException = ODataExpectedExceptions.ODataException("DuplicatePropertyNamesChecker_DuplicateAnnotationNotAllowed", "custom.annotation")
+                        ExpectedException = (ExpectedException)null
                     },
                 };
 
@@ -461,15 +461,18 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                     },
                     new
                     {
-                        Description = "Duplicate custom property annotation - should be fail.",
+                        Description = "Duplicate custom property annotation - should not fail.",
                         Json = "{" +
                                 "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataContextAnnotationName + "\":\"http://odata.org/test/$metadata#TestModel.DefaultContainer.Cities()/$entity\"," +
                                 "\"" + JsonLightUtils.GetPropertyAnnotationName("Name", "custom.annotation") + "\": null," +
                                 "\"" + JsonLightUtils.GetPropertyAnnotationName("Name", "custom.annotation") + "\": 42," +
-                                "\"Name\": \"Value\"" +
+                                "\"Name\": \"Value\"," +
+                                "\"Id\":1" +
                             "}",
-                        ExpectedPayload = PayloadBuilder.Entity("TestModel.CityType"),
-                        ExpectedException = ODataExpectedExceptions.ODataException("DuplicatePropertyNamesChecker_DuplicateAnnotationForPropertyNotAllowed", "custom.annotation", "Name")
+                        ExpectedPayload = PayloadBuilder.Entity("TestModel.CityType")
+                            .PrimitiveProperty("Name", "Value")
+                            .PrimitiveProperty("Id", 1),
+                        ExpectedException = (ExpectedException)null
                     },
                     new
                     {
@@ -510,7 +513,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                     },
                     new
                     {
-                        Description = "Duplicate odata property annotation.",
+                        Description = "Duplicate odata property annotation - should fail.",
                         Json = "{" +
                                 "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataContextAnnotationName + "\":\"http://odata.org/test/$metadata#TestModel.DefaultContainer.Cities()/$entity\"," +
                                 "\"" + JsonLightUtils.GetPropertyAnnotationName("Name", JsonLightConstants.ODataTypeAnnotationName) + "\": \"Edm.Int32\"," +

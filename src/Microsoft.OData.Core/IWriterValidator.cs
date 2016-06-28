@@ -16,9 +16,8 @@ namespace Microsoft.OData
         /// <summary>
         /// Creates a DuplicatePropertyNamesChecker instance.
         /// </summary>
-        /// <param name="writeResponse">true if writing a response; false otherwise.</param>
         /// <returns>The created instance.</returns>
-        DuplicatePropertyNamesChecker CreateDuplicatePropertyNamesChecker(bool writeResponse);
+        DuplicatePropertyNamesChecker CreateDuplicatePropertyNamesChecker();
 
         /// <summary>
         /// Validates a resource in an expanded link to make sure that the types match.

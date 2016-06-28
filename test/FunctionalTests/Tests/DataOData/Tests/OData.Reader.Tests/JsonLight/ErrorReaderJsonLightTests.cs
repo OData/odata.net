@@ -121,7 +121,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                 #region "error" object scope
                 new PayloadReaderTestDescriptor(this.Settings)
                 {
-                    DebugDescription = "Should fail on duplicate custom instance annotations inside the \"error\" object.",
+                    DebugDescription = "Should not fail on duplicate custom instance annotations inside the \"error\" object.",
                     PayloadElement = PayloadBuilder.Error()
                         .JsonRepresentation(@"
                                             { 
@@ -131,7 +131,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                                                     ""@cn.foo"": ""something else""
                                                 }
                                             }"),
-                    ExpectedException = ODataExpectedExceptions.ODataException("DuplicatePropertyNamesChecker_DuplicateAnnotationNotAllowed", "cn.foo")
+                    ExpectedException = null
                 },
                 new PayloadReaderTestDescriptor(this.Settings)
                 {
@@ -148,7 +148,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                 },
                 new PayloadReaderTestDescriptor(this.Settings)
                 {
-                    DebugDescription = "Should fail on duplicates of custom property annotation inside the \"error\" object should be ignored.",
+                    DebugDescription = "Should not fail on duplicates of custom property annotation inside the \"error\" object should be ignored.",
                     PayloadElement = PayloadBuilder.Error().Code("123")
                         .JsonRepresentation(@"
                                             { 
@@ -159,7 +159,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                                                     ""code"": ""123""
                                                 }
                                             }"),
-                    ExpectedException = ODataExpectedExceptions.ODataException("DuplicatePropertyNamesChecker_DuplicateAnnotationForPropertyNotAllowed", "cn.foo", "code"),
+                    ExpectedException = null,
                 },
                 new PayloadReaderTestDescriptor(this.Settings)
                 {
@@ -222,7 +222,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                 },
                 new PayloadReaderTestDescriptor(this.Settings)
                 {
-                    DebugDescription = "Should fail on duplicate custom instance annotations inside the \"innererror\" object.",
+                    DebugDescription = "Should not fail on duplicate custom instance annotations inside the \"innererror\" object.",
                     PayloadElement = PayloadBuilder.Error().InnerError(PayloadBuilder.InnerError())
                         .JsonRepresentation(@"
                                             { 
@@ -235,7 +235,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                                                     }
                                                 }
                                             }"),
-                    ExpectedException = ODataExpectedExceptions.ODataException("DuplicatePropertyNamesChecker_DuplicateAnnotationNotAllowed", "cn.foo")
+                    ExpectedException = null
                 },
                 new PayloadReaderTestDescriptor(this.Settings)
                 {
@@ -255,7 +255,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                 },
                 new PayloadReaderTestDescriptor(this.Settings)
                 {
-                    DebugDescription = "Should fail on duplicate custom property annotations inside the \"innererror\" object.",
+                    DebugDescription = "Should not fail on duplicate custom property annotations inside the \"innererror\" object.",
                     PayloadElement = PayloadBuilder.Error().InnerError(PayloadBuilder.InnerError().Message("msg"))
                         .JsonRepresentation(@"
                                             { 
@@ -269,7 +269,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                                                     }
                                                 }
                                             }"),
-                    ExpectedException = ODataExpectedExceptions.ODataException("DuplicatePropertyNamesChecker_DuplicateAnnotationForPropertyNotAllowed", "cn.foo", "message")
+                    ExpectedException = null
                 },
                 new PayloadReaderTestDescriptor(this.Settings)
                 {

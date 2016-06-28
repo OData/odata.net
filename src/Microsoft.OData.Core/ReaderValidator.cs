@@ -44,11 +44,10 @@ namespace Microsoft.OData
         /// <summary>
         /// Creates a DuplicatePropertyNamesChecker instance.
         /// </summary>
-        /// <param name="readResponse">true if reading a response; false otherwise.</param>
         /// <returns>The created instance.</returns>
-        public DuplicatePropertyNamesChecker CreateDuplicatePropertyNamesChecker(bool readResponse)
+        public DuplicatePropertyNamesChecker CreateDuplicatePropertyNamesChecker()
         {
-            return new DuplicatePropertyNamesChecker(!settings.ThrowOnDuplicatePropertyNames, readResponse);
+            return new DuplicatePropertyNamesChecker(settings.ThrowOnDuplicatePropertyNames);
         }
 
         /// <summary>

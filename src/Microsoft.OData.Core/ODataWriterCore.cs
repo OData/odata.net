@@ -1012,7 +1012,7 @@ namespace Microsoft.OData
                         if (!this.SkipWriting)
                         {
                             ODataNestedResourceInfo link = (ODataNestedResourceInfo)currentScope.Item;
-                            this.DuplicatePropertyNamesChecker.CheckForDuplicatePropertyNames(link, false, link.IsCollection);
+                            this.DuplicatePropertyNamesChecker.CheckForDuplicatePropertyNamesAndGetAssociationLink(link);
                             this.WriteDeferredNestedResourceInfo(link);
 
                             this.MarkNestedResourceInfoAsProcessed(link);
@@ -1226,10 +1226,7 @@ namespace Microsoft.OData
                         {
                             if (this.CurrentScope.ResourceType == null || this.CurrentScope.ResourceType.IsEntityOrEntityCollectionType())
                             {
-                                this.DuplicatePropertyNamesChecker.CheckForDuplicatePropertyNames(
-                                        currentNestedResourceInfo,
-                                        contentPayloadKind != ODataPayloadKind.EntityReferenceLink,
-                                        contentPayloadKind == ODataPayloadKind.ResourceSet);
+                                this.DuplicatePropertyNamesChecker.CheckForDuplicatePropertyNamesAndGetAssociationLink(currentNestedResourceInfo);
                                 this.StartNestedResourceInfoWithContent(currentNestedResourceInfo);
                             }
                         });
@@ -2018,11 +2015,10 @@ namespace Microsoft.OData
             /// <param name="navigationSource">The navigation source we are going to write resource set for.</param>
             /// <param name="resourceType">The structured type for the items in the resource set to be written (or null if the entity set base type should be used).</param>
             /// <param name="skipWriting">true if the content of the scope to create should not be written.</param>
-            /// <param name="writingResponse">true if we are writing a response, false if it's a request.</param>
             /// <param name="writerSettings">The <see cref="ODataMessageWriterSettings"/> The settings of the writer.</param>
             /// <param name="selectedProperties">The selected properties of this scope.</param>
             /// <param name="odataUri">The ODataUri info of this scope.</param>
-            internal ResourceScope(ODataResource resource, ODataResourceSerializationInfo serializationInfo, IEdmNavigationSource navigationSource, IEdmStructuredType resourceType, bool skipWriting, bool writingResponse, ODataMessageWriterSettings writerSettings, SelectedPropertiesNode selectedProperties, ODataUri odataUri)
+            internal ResourceScope(ODataResource resource, ODataResourceSerializationInfo serializationInfo, IEdmNavigationSource navigationSource, IEdmStructuredType resourceType, bool skipWriting, ODataMessageWriterSettings writerSettings, SelectedPropertiesNode selectedProperties, ODataUri odataUri)
                 : base(WriterState.Resource, resource, navigationSource, resourceType, skipWriting, selectedProperties, odataUri)
             {
                 Debug.Assert(writerSettings != null, "writerBehavior != null");
@@ -2030,7 +2026,7 @@ namespace Microsoft.OData
                 if (resource != null)
                 {
                     this.duplicatePropertyNamesChecker =
-                        writerSettings.Validator.CreateDuplicatePropertyNamesChecker(writingResponse);
+                        writerSettings.Validator.CreateDuplicatePropertyNamesChecker();
                 }
 
                 this.serializationInfo = serializationInfo;

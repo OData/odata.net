@@ -173,10 +173,10 @@ namespace Microsoft.OData.JsonLight
             Debug.Assert(duplicatePropertyNamesChecker != null, "duplicatePropertyNamesChecker != null");
             Debug.Assert(!string.IsNullOrEmpty(name), "!string.IsNullOrEmpty(name)");
 
-            var propertyAnnotations = duplicatePropertyNamesChecker.GetODataPropertyAnnotations(name);
             object propertyAnnotation;
             string odataType = null;
-            if (propertyAnnotations != null && propertyAnnotations.TryGetValue(ODataAnnotationNames.ODataType, out propertyAnnotation))
+            if (duplicatePropertyNamesChecker.GetODataPropertyAnnotations(name)
+                .TryGetValue(ODataAnnotationNames.ODataType, out propertyAnnotation))
             {
                 odataType = ReaderUtils.AddEdmPrefixOfTypeName(ReaderUtils.RemovePrefixOfTypeName((string)propertyAnnotation));
             }
@@ -497,31 +497,28 @@ namespace Microsoft.OData.JsonLight
 
             ODataResourceSet expandedResourceSet = new ODataResourceSet();
 
-            Dictionary<string, object> propertyAnnotations = resourceState.DuplicatePropertyNamesChecker.GetODataPropertyAnnotations(nestedResourceInfo.Name);
-            if (propertyAnnotations != null)
+            foreach (var propertyAnnotation
+                     in resourceState.DuplicatePropertyNamesChecker.GetODataPropertyAnnotations(nestedResourceInfo.Name))
             {
-                foreach (KeyValuePair<string, object> propertyAnnotation in propertyAnnotations)
+                switch (propertyAnnotation.Key)
                 {
-                    switch (propertyAnnotation.Key)
-                    {
-                        case ODataAnnotationNames.ODataNextLink:
-                            Debug.Assert(propertyAnnotation.Value is Uri && propertyAnnotation.Value != null, "The odata.nextLink annotation should have been parsed as a non-null Uri.");
-                            expandedResourceSet.NextPageLink = (Uri)propertyAnnotation.Value;
-                            break;
+                    case ODataAnnotationNames.ODataNextLink:
+                        Debug.Assert(propertyAnnotation.Value is Uri && propertyAnnotation.Value != null, "The odata.nextLink annotation should have been parsed as a non-null Uri.");
+                        expandedResourceSet.NextPageLink = (Uri)propertyAnnotation.Value;
+                        break;
 
-                        case ODataAnnotationNames.ODataCount:
-                            Debug.Assert(propertyAnnotation.Value is long && propertyAnnotation.Value != null, "The odata.count annotation should have been parsed as a non-null long.");
-                            expandedResourceSet.Count = (long?)propertyAnnotation.Value;
-                            break;
+                    case ODataAnnotationNames.ODataCount:
+                        Debug.Assert(propertyAnnotation.Value is long && propertyAnnotation.Value != null, "The odata.count annotation should have been parsed as a non-null long.");
+                        expandedResourceSet.Count = (long?)propertyAnnotation.Value;
+                        break;
 
-                        case ODataAnnotationNames.ODataType:
-                            // Just ignore the type info on resource set.
-                            Debug.Assert(propertyAnnotation.Value is string && propertyAnnotation.Value != null, "The odata.type annotation should have been parsed as a non-null string.");
-                            break;
+                    case ODataAnnotationNames.ODataType:
+                        // Just ignore the type info on resource set.
+                        Debug.Assert(propertyAnnotation.Value is string && propertyAnnotation.Value != null, "The odata.type annotation should have been parsed as a non-null string.");
+                        break;
 
-                        default:
-                            throw new ODataException(ODataErrorStrings.ODataJsonLightEntryAndFeedDeserializer_UnexpectedExpandedCollectionNavigationLinkPropertyAnnotation(nestedResourceInfo.Name, propertyAnnotation.Key));
-                    }
+                    default:
+                        throw new ODataException(ODataErrorStrings.ODataJsonLightEntryAndFeedDeserializer_UnexpectedExpandedCollectionNavigationLinkPropertyAnnotation(nestedResourceInfo.Name, propertyAnnotation.Key));
                 }
             }
 
@@ -595,36 +592,33 @@ namespace Microsoft.OData.JsonLight
                 IsCollection = false
             };
 
-            Dictionary<string, object> propertyAnnotations = resourceState.DuplicatePropertyNamesChecker.GetODataPropertyAnnotations(nestedResourceInfo.Name);
-            if (propertyAnnotations != null)
+            foreach (var propertyAnnotation
+                     in resourceState.DuplicatePropertyNamesChecker.GetODataPropertyAnnotations(nestedResourceInfo.Name))
             {
-                foreach (KeyValuePair<string, object> propertyAnnotation in propertyAnnotations)
+                switch (propertyAnnotation.Key)
                 {
-                    switch (propertyAnnotation.Key)
-                    {
-                        case ODataAnnotationNames.ODataNavigationLinkUrl:
-                            Debug.Assert(propertyAnnotation.Value is Uri && propertyAnnotation.Value != null, "The odata.navigationLinkUrl annotation should have been parsed as a non-null Uri.");
-                            nestedResourceInfo.Url = (Uri)propertyAnnotation.Value;
-                            break;
+                    case ODataAnnotationNames.ODataNavigationLinkUrl:
+                        Debug.Assert(propertyAnnotation.Value is Uri && propertyAnnotation.Value != null, "The odata.navigationLinkUrl annotation should have been parsed as a non-null Uri.");
+                        nestedResourceInfo.Url = (Uri)propertyAnnotation.Value;
+                        break;
 
-                        case ODataAnnotationNames.ODataAssociationLinkUrl:
-                            Debug.Assert(propertyAnnotation.Value is Uri && propertyAnnotation.Value != null, "The odata.associationLinkUrl annotation should have been parsed as a non-null Uri.");
-                            nestedResourceInfo.AssociationLinkUrl = (Uri)propertyAnnotation.Value;
-                            break;
+                    case ODataAnnotationNames.ODataAssociationLinkUrl:
+                        Debug.Assert(propertyAnnotation.Value is Uri && propertyAnnotation.Value != null, "The odata.associationLinkUrl annotation should have been parsed as a non-null Uri.");
+                        nestedResourceInfo.AssociationLinkUrl = (Uri)propertyAnnotation.Value;
+                        break;
 
-                        case ODataAnnotationNames.ODataContext:
-                            Debug.Assert(propertyAnnotation.Value is Uri && propertyAnnotation.Value != null, "The odata.context annotation should have been parsed as a non-null Uri.");
-                            nestedResourceInfo.ContextUrl = (Uri)propertyAnnotation.Value;
-                            break;
+                    case ODataAnnotationNames.ODataContext:
+                        Debug.Assert(propertyAnnotation.Value is Uri && propertyAnnotation.Value != null, "The odata.context annotation should have been parsed as a non-null Uri.");
+                        nestedResourceInfo.ContextUrl = (Uri)propertyAnnotation.Value;
+                        break;
 
-                        default:
-                            if (messageReaderSettings.ThrowOnUndeclaredPropertyForNonOpenType)
-                            {
-                                throw new ODataException(ODataErrorStrings.ODataJsonLightEntryAndFeedDeserializer_UnexpectedExpandedSingletonNavigationLinkPropertyAnnotation(nestedResourceInfo.Name, propertyAnnotation.Key));
-                            }
+                    default:
+                        if (messageReaderSettings.ThrowOnUndeclaredPropertyForNonOpenType)
+                        {
+                            throw new ODataException(ODataErrorStrings.ODataJsonLightEntryAndFeedDeserializer_UnexpectedExpandedSingletonNavigationLinkPropertyAnnotation(nestedResourceInfo.Name, propertyAnnotation.Key));
+                        }
 
-                            break;
-                    }
+                        break;
                 }
             }
 
@@ -654,47 +648,43 @@ namespace Microsoft.OData.JsonLight
 
             ODataResourceSet expandedResourceSet = new ODataResourceSet();
 
-            Dictionary<string, object> propertyAnnotations = resourceState.DuplicatePropertyNamesChecker.GetODataPropertyAnnotations(nestedResourceInfo.Name);
-            if (propertyAnnotations != null)
+            foreach (var propertyAnnotation
+                     in resourceState.DuplicatePropertyNamesChecker.GetODataPropertyAnnotations(nestedResourceInfo.Name))
             {
-                foreach (KeyValuePair<string, object> propertyAnnotation in propertyAnnotations)
+                switch (propertyAnnotation.Key)
                 {
-                    switch (propertyAnnotation.Key)
-                    {
-                        case ODataAnnotationNames.ODataNavigationLinkUrl:
-                            Debug.Assert(propertyAnnotation.Value is Uri && propertyAnnotation.Value != null, "The odata.navigationLinkUrl annotation should have been parsed as a non-null Uri.");
-                            nestedResourceInfo.Url = (Uri)propertyAnnotation.Value;
-                            break;
+                    case ODataAnnotationNames.ODataNavigationLinkUrl:
+                        Debug.Assert(propertyAnnotation.Value is Uri && propertyAnnotation.Value != null, "The odata.navigationLinkUrl annotation should have been parsed as a non-null Uri.");
+                        nestedResourceInfo.Url = (Uri)propertyAnnotation.Value;
+                        break;
 
-                        case ODataAnnotationNames.ODataAssociationLinkUrl:
-                            Debug.Assert(propertyAnnotation.Value is Uri && propertyAnnotation.Value != null, "The odata.associationLinkUrl annotation should have been parsed as a non-null Uri.");
-                            nestedResourceInfo.AssociationLinkUrl = (Uri)propertyAnnotation.Value;
-                            break;
+                    case ODataAnnotationNames.ODataAssociationLinkUrl:
+                        Debug.Assert(propertyAnnotation.Value is Uri && propertyAnnotation.Value != null, "The odata.associationLinkUrl annotation should have been parsed as a non-null Uri.");
+                        nestedResourceInfo.AssociationLinkUrl = (Uri)propertyAnnotation.Value;
+                        break;
 
-                        case ODataAnnotationNames.ODataNextLink:
-                            Debug.Assert(propertyAnnotation.Value is Uri && propertyAnnotation.Value != null, "The odata.nextLink annotation should have been parsed as a non-null Uri.");
-                            expandedResourceSet.NextPageLink = (Uri)propertyAnnotation.Value;
-                            break;
+                    case ODataAnnotationNames.ODataNextLink:
+                        Debug.Assert(propertyAnnotation.Value is Uri && propertyAnnotation.Value != null, "The odata.nextLink annotation should have been parsed as a non-null Uri.");
+                        expandedResourceSet.NextPageLink = (Uri)propertyAnnotation.Value;
+                        break;
 
-                        case ODataAnnotationNames.ODataCount:
-                            Debug.Assert(propertyAnnotation.Value is long && propertyAnnotation.Value != null, "The odata.count annotation should have been parsed as a non-null long.");
-                            expandedResourceSet.Count = (long?)propertyAnnotation.Value;
-                            break;
+                    case ODataAnnotationNames.ODataCount:
+                        Debug.Assert(propertyAnnotation.Value is long && propertyAnnotation.Value != null, "The odata.count annotation should have been parsed as a non-null long.");
+                        expandedResourceSet.Count = (long?)propertyAnnotation.Value;
+                        break;
+                    case ODataAnnotationNames.ODataContext:
+                        Debug.Assert(propertyAnnotation.Value is Uri && propertyAnnotation.Value != null, "The odata.context annotation should have been parsed as a non-null Uri.");
+                        nestedResourceInfo.ContextUrl = (Uri)propertyAnnotation.Value;
+                        break;
 
-                        case ODataAnnotationNames.ODataContext:
-                            Debug.Assert(propertyAnnotation.Value is Uri && propertyAnnotation.Value != null, "The odata.context annotation should have been parsed as a non-null Uri.");
-                            nestedResourceInfo.ContextUrl = (Uri)propertyAnnotation.Value;
-                            break;
+                    case ODataAnnotationNames.ODataType:
+                        Debug.Assert(propertyAnnotation.Value != null, "The odata.type annotation should have been parsed as a string.");
+                        expandedResourceSet.TypeName = (string)propertyAnnotation.Value;
+                        break;
 
-                        case ODataAnnotationNames.ODataType:
-                            Debug.Assert(propertyAnnotation.Value != null, "The odata.type annotation should have been parsed as a string.");
-                            expandedResourceSet.TypeName = (string)propertyAnnotation.Value;
-                            break;
-
-                        case ODataAnnotationNames.ODataDeltaLink:   // Delta links are not supported on expanded resource sets.
-                        default:
-                            throw new ODataException(ODataErrorStrings.ODataJsonLightEntryAndFeedDeserializer_UnexpectedExpandedCollectionNavigationLinkPropertyAnnotation(nestedResourceInfo.Name, propertyAnnotation.Key));
-                    }
+                    case ODataAnnotationNames.ODataDeltaLink:   // Delta links are not supported on expanded resource sets.
+                    default:
+                        throw new ODataException(ODataErrorStrings.ODataJsonLightEntryAndFeedDeserializer_UnexpectedExpandedCollectionNavigationLinkPropertyAnnotation(nestedResourceInfo.Name, propertyAnnotation.Key));
                 }
             }
 
@@ -727,38 +717,35 @@ namespace Microsoft.OData.JsonLight
                 IsCollection = false
             };
 
-            Dictionary<string, object> propertyAnnotations = resourceState.DuplicatePropertyNamesChecker.GetODataPropertyAnnotations(nestedResourceInfo.Name);
             ODataEntityReferenceLink entityReferenceLink = null;
-            if (propertyAnnotations != null)
+            foreach (var propertyAnnotation
+                     in resourceState.DuplicatePropertyNamesChecker.GetODataPropertyAnnotations(nestedResourceInfo.Name))
             {
-                foreach (KeyValuePair<string, object> propertyAnnotation in propertyAnnotations)
+                switch (propertyAnnotation.Key)
                 {
-                    switch (propertyAnnotation.Key)
-                    {
-                        case ODataAnnotationNames.ODataBind:
-                            LinkedList<ODataEntityReferenceLink> entityReferenceLinksList = propertyAnnotation.Value as LinkedList<ODataEntityReferenceLink>;
-                            if (entityReferenceLinksList != null)
-                            {
-                                throw new ODataException(ODataErrorStrings.ODataJsonLightEntryAndFeedDeserializer_ArrayValueForSingletonBindPropertyAnnotation(nestedResourceInfo.Name, ODataAnnotationNames.ODataBind));
-                            }
+                    case ODataAnnotationNames.ODataBind:
+                        LinkedList<ODataEntityReferenceLink> entityReferenceLinksList = propertyAnnotation.Value as LinkedList<ODataEntityReferenceLink>;
+                        if (entityReferenceLinksList != null)
+                        {
+                            throw new ODataException(ODataErrorStrings.ODataJsonLightEntryAndFeedDeserializer_ArrayValueForSingletonBindPropertyAnnotation(nestedResourceInfo.Name, ODataAnnotationNames.ODataBind));
+                        }
 
-                            if (isExpanded)
-                            {
-                                throw new ODataException(ODataErrorStrings.ODataJsonLightEntryAndFeedDeserializer_SingletonNavigationPropertyWithBindingAndValue(nestedResourceInfo.Name, ODataAnnotationNames.ODataBind));
-                            }
+                        if (isExpanded)
+                        {
+                            throw new ODataException(ODataErrorStrings.ODataJsonLightEntryAndFeedDeserializer_SingletonNavigationPropertyWithBindingAndValue(nestedResourceInfo.Name, ODataAnnotationNames.ODataBind));
+                        }
 
-                            Debug.Assert(
-                                propertyAnnotation.Value is ODataEntityReferenceLink && propertyAnnotation.Value != null,
-                                "The value of odata.bind property annotation must be either ODataEntityReferenceLink or List<ODataEntityReferenceLink>");
-                            entityReferenceLink = (ODataEntityReferenceLink)propertyAnnotation.Value;
-                            break;
+                        Debug.Assert(
+                            propertyAnnotation.Value is ODataEntityReferenceLink && propertyAnnotation.Value != null,
+                            "The value of odata.bind property annotation must be either ODataEntityReferenceLink or List<ODataEntityReferenceLink>");
+                        entityReferenceLink = (ODataEntityReferenceLink)propertyAnnotation.Value;
+                        break;
 
-                        default:
-                            throw new ODataException(ODataErrorStrings.ODataJsonLightEntryAndFeedDeserializer_UnexpectedNavigationLinkInRequestPropertyAnnotation(
-                                nestedResourceInfo.Name,
-                                propertyAnnotation.Key,
-                                ODataAnnotationNames.ODataBind));
-                    }
+                    default:
+                        throw new ODataException(ODataErrorStrings.ODataJsonLightEntryAndFeedDeserializer_UnexpectedNavigationLinkInRequestPropertyAnnotation(
+                            nestedResourceInfo.Name,
+                            propertyAnnotation.Key,
+                            ODataAnnotationNames.ODataBind));
                 }
             }
 
@@ -791,33 +778,30 @@ namespace Microsoft.OData.JsonLight
                 IsCollection = true
             };
 
-            Dictionary<string, object> propertyAnnotations = resourceState.DuplicatePropertyNamesChecker.GetODataPropertyAnnotations(nestedResourceInfo.Name);
             LinkedList<ODataEntityReferenceLink> entityReferenceLinksList = null;
-            if (propertyAnnotations != null)
+            foreach (var propertyAnnotation
+                     in resourceState.DuplicatePropertyNamesChecker.GetODataPropertyAnnotations(nestedResourceInfo.Name))
             {
-                foreach (KeyValuePair<string, object> propertyAnnotation in propertyAnnotations)
+                switch (propertyAnnotation.Key)
                 {
-                    switch (propertyAnnotation.Key)
-                    {
-                        case ODataAnnotationNames.ODataBind:
-                            ODataEntityReferenceLink entityReferenceLink = propertyAnnotation.Value as ODataEntityReferenceLink;
-                            if (entityReferenceLink != null)
-                            {
-                                throw new ODataException(ODataErrorStrings.ODataJsonLightEntryAndFeedDeserializer_StringValueForCollectionBindPropertyAnnotation(nestedResourceInfo.Name, ODataAnnotationNames.ODataBind));
-                            }
+                    case ODataAnnotationNames.ODataBind:
+                        ODataEntityReferenceLink entityReferenceLink = propertyAnnotation.Value as ODataEntityReferenceLink;
+                        if (entityReferenceLink != null)
+                        {
+                            throw new ODataException(ODataErrorStrings.ODataJsonLightEntryAndFeedDeserializer_StringValueForCollectionBindPropertyAnnotation(nestedResourceInfo.Name, ODataAnnotationNames.ODataBind));
+                        }
 
-                            Debug.Assert(
-                                propertyAnnotation.Value is LinkedList<ODataEntityReferenceLink> && propertyAnnotation.Value != null,
-                                "The value of odata.bind property annotation must be either ODataEntityReferenceLink or List<ODataEntityReferenceLink>");
-                            entityReferenceLinksList = (LinkedList<ODataEntityReferenceLink>)propertyAnnotation.Value;
-                            break;
+                        Debug.Assert(
+                            propertyAnnotation.Value is LinkedList<ODataEntityReferenceLink> && propertyAnnotation.Value != null,
+                            "The value of odata.bind property annotation must be either ODataEntityReferenceLink or List<ODataEntityReferenceLink>");
+                        entityReferenceLinksList = (LinkedList<ODataEntityReferenceLink>)propertyAnnotation.Value;
+                        break;
 
-                        default:
-                            throw new ODataException(ODataErrorStrings.ODataJsonLightEntryAndFeedDeserializer_UnexpectedNavigationLinkInRequestPropertyAnnotation(
-                                nestedResourceInfo.Name,
-                                propertyAnnotation.Key,
-                                ODataAnnotationNames.ODataBind));
-                    }
+                    default:
+                        throw new ODataException(ODataErrorStrings.ODataJsonLightEntryAndFeedDeserializer_UnexpectedNavigationLinkInRequestPropertyAnnotation(
+                            nestedResourceInfo.Name,
+                            propertyAnnotation.Key,
+                            ODataAnnotationNames.ODataBind));
                 }
             }
 
@@ -835,22 +819,19 @@ namespace Microsoft.OData.JsonLight
             Debug.Assert(duplicatePropertyNamesChecker != null, "duplicatePropertyNamesChecker != null");
             Debug.Assert(!string.IsNullOrEmpty(propertyName), "!string.IsNullOrEmpty(propertyName)");
 
-            Dictionary<string, object> propertyAnnotations = duplicatePropertyNamesChecker.GetODataPropertyAnnotations(propertyName);
             string propertyTypeName = null;
-            if (propertyAnnotations != null)
+            foreach (var propertyAnnotation
+                     in duplicatePropertyNamesChecker.GetODataPropertyAnnotations(propertyName))
             {
-                foreach (KeyValuePair<string, object> propertyAnnotation in propertyAnnotations)
+                if (string.CompareOrdinal(propertyAnnotation.Key, ODataAnnotationNames.ODataType) != 0)
                 {
-                    if (string.CompareOrdinal(propertyAnnotation.Key, ODataAnnotationNames.ODataType) != 0)
-                    {
-                        // here allow other annotation name than odata.type, instead of throwing:
-                        // ODataErrorStrings.ODataJsonLightPropertyAndValueDeserializer_UnexpectedDataPropertyAnnotation
-                        continue;
-                    }
-
-                    Debug.Assert(propertyAnnotation.Value is string && propertyAnnotation.Value != null, "The odata.type annotation should have been parsed as a non-null string.");
-                    propertyTypeName = (string)propertyAnnotation.Value;
+                    // here allow other annotation name than odata.type, instead of throwing:
+                    // ODataErrorStrings.ODataJsonLightPropertyAndValueDeserializer_UnexpectedDataPropertyAnnotation
+                    continue;
                 }
+
+                Debug.Assert(propertyAnnotation.Value is string && propertyAnnotation.Value != null, "The odata.type annotation should have been parsed as a non-null string.");
+                propertyTypeName = (string)propertyAnnotation.Value;
             }
 
             return propertyTypeName;
@@ -875,16 +856,13 @@ namespace Microsoft.OData.JsonLight
                 AttachODataAnnotations(resourceState, propertyName, property);
             }
 
-            var propertyAnnotations = resourceState.DuplicatePropertyNamesChecker.GetCustomPropertyAnnotations(propertyName);
-            if (propertyAnnotations != null)
+            foreach (var annotation
+                     in resourceState.DuplicatePropertyNamesChecker.GetCustomPropertyAnnotations(propertyName))
             {
-                foreach (var annotation in propertyAnnotations)
+                if (annotation.Value != null)
                 {
-                    if (annotation.Value != null)
-                    {
-                        // annotation.Value == null indicates that this annotation should be skipped.
-                        property.InstanceAnnotations.Add(new ODataInstanceAnnotation(annotation.Key, annotation.Value.ToODataValue()));
-                    }
+                    // annotation.Value == null indicates that this annotation should be skipped.
+                    property.InstanceAnnotations.Add(new ODataInstanceAnnotation(annotation.Key, annotation.Value.ToODataValue()));
                 }
             }
 
@@ -897,33 +875,21 @@ namespace Microsoft.OData.JsonLight
             return property;
         }
 
-        protected static Dictionary<string, object> AttachODataAnnotations(IODataJsonLightReaderResourceState resourceState, string propertyName, ODataProperty property)
+        protected static void AttachODataAnnotations(IODataJsonLightReaderResourceState resourceState, string propertyName, ODataProperty property)
         {
-            Dictionary<string, object> propertyAnnotations = resourceState.DuplicatePropertyNamesChecker.GetODataPropertyAnnotations(propertyName);
-            if (propertyAnnotations != null)
+            foreach (var annotation
+                     in propertyName.Length == 0
+                        ? resourceState.DuplicatePropertyNamesChecker.GetODataScopeAnnotation()
+                        : resourceState.DuplicatePropertyNamesChecker.GetODataPropertyAnnotations(propertyName))
             {
-                foreach (var annotation in propertyAnnotations)
-                {
-                    if (annotation.Value != null)
-                    {
-                        // annotation.Value == null indicates that this annotation should be skipped.
-                        Uri uri = null;
-                        ODataValue val = null;
-                        if ((uri = annotation.Value as Uri) != null)
-                        {
-                            val = new ODataPrimitiveValue(uri.OriginalString);
-                        }
-                        else
-                        {
-                            val = annotation.Value.ToODataValue();
-                        }
+                Debug.Assert(annotation.Value != null);
 
-                        property.InstanceAnnotations.Add(new ODataInstanceAnnotation(annotation.Key, val, true));
-                    }
-                }
+                Uri uri;
+                ODataValue val = (uri = annotation.Value as Uri) != null
+                                    ? new ODataPrimitiveValue(uri.OriginalString)
+                                    : annotation.Value.ToODataValue();
+                property.InstanceAnnotations.Add(new ODataInstanceAnnotation(annotation.Key, val, true));
             }
-
-            return propertyAnnotations;
         }
 
         /// <summary>
@@ -1647,16 +1613,13 @@ namespace Microsoft.OData.JsonLight
             {
                 duplicatePropertyNamesChecker.CheckForDuplicatePropertyNames(property);
                 property.Value = propertyValue;
-                var propertyAnnotations = duplicatePropertyNamesChecker.GetCustomPropertyAnnotations(propertyName);
-                if (propertyAnnotations != null)
+                foreach (var annotation
+                         in duplicatePropertyNamesChecker.GetCustomPropertyAnnotations(propertyName))
                 {
-                    foreach (var annotation in propertyAnnotations)
+                    if (annotation.Value != null)
                     {
-                        if (annotation.Value != null)
-                        {
-                            // annotation.Value == null indicates that this annotation should be skipped.
-                            property.InstanceAnnotations.Add(new ODataInstanceAnnotation(annotation.Key, annotation.Value.ToODataValue()));
-                        }
+                        // annotation.Value == null indicates that this annotation should be skipped.
+                        property.InstanceAnnotations.Add(new ODataInstanceAnnotation(annotation.Key, annotation.Value.ToODataValue()));
                     }
                 }
 

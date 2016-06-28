@@ -445,7 +445,7 @@ namespace Microsoft.OData.JsonLight
         /// </summary>
         /// <param name="duplicatePropertyNamesChecker">The duplicate property names checker to use, it will also store the property annotations found.</param>
         /// <param name="readPropertyAnnotationValue">Function called to read property annotation value.</param>
-        /// <param name="handleProperty">Function callback to handle to resule of parse property.</param>
+        /// <param name="handleProperty">Function callback to handle the result of parsing property.</param>
         internal void ProcessProperty(
             DuplicatePropertyNamesChecker duplicatePropertyNamesChecker,
             Func<string, object> readPropertyAnnotationValue,
@@ -462,18 +462,15 @@ namespace Microsoft.OData.JsonLight
 
             while (propertyParsingResult == PropertyParsingResult.CustomInstanceAnnotation && this.ShouldSkipCustomInstanceAnnotation(propertyName))
             {
-                // Make sure there's no duplicated instance annotation name even though we are skipping over it.
-                duplicatePropertyNamesChecker.MarkPropertyAsProcessed(propertyName);
-
                 // Skip over the instance annotation value and don't report it to the OM.
-                duplicatePropertyNamesChecker.AddCustomPropertyAnnotation("", propertyName, null); // for checking dup
                 this.JsonReader.SkipValue();
                 propertyParsingResult = this.ParseProperty(
                     duplicatePropertyNamesChecker, readPropertyAnnotationValue, out propertyName);
             }
 
             handleProperty(propertyParsingResult, propertyName);
-            if (propertyParsingResult != PropertyParsingResult.EndOfObject)
+            if (propertyParsingResult != PropertyParsingResult.EndOfObject
+                && propertyParsingResult != PropertyParsingResult.CustomInstanceAnnotation)
             {
                 duplicatePropertyNamesChecker.MarkPropertyAsProcessed(propertyName);
             }
@@ -538,11 +535,6 @@ namespace Microsoft.OData.JsonLight
                 }
 
                 throw new ODataException(Strings.ODataJsonLightDeserializer_ContextLinkNotFoundAsFirstProperty);
-            }
-
-            if (duplicatePropertyNamesChecker != null)
-            {
-                duplicatePropertyNamesChecker.MarkPropertyAsProcessed(propertyName);
             }
 
             // Read over the property name
@@ -758,7 +750,7 @@ namespace Microsoft.OData.JsonLight
                     // collect 'odata.<unknown>' annotation:
                     // here we know the original property name contains no '@', but '.' dot
                     Debug.Assert(annotationNameFromReader == null, "annotationNameFromReader == null");
-                    duplicatePropertyNamesChecker.AddODataPropertyAnnotation("", propertyNameFromReader, annotationValue);
+                    duplicatePropertyNamesChecker.AddODataScopeAnnotation(propertyNameFromReader, annotationValue);
                     continue;
                 }
 
@@ -849,8 +841,7 @@ namespace Microsoft.OData.JsonLight
             {
                 if (this.ShouldSkipCustomInstanceAnnotation(annotationName) || (this is ODataJsonLightErrorDeserializer && this.MessageReaderSettings.ShouldIncludeAnnotation == null))
                 {
-                    // Make sure there's no duplicated instance annotation name even though we are skipping over it.
-                    duplicatePropertyNamesChecker.AddCustomPropertyAnnotation(annotatedPropertyName, annotationName, null);
+                    duplicatePropertyNamesChecker.CheckIfPropertyOpenForAnnotations(annotatedPropertyName, annotationName);
                     this.JsonReader.SkipValue();
                 }
                 else
@@ -867,7 +858,7 @@ namespace Microsoft.OData.JsonLight
         /// <param name="payloadKind">The kind of payload we are reading; this guides the parsing of the context URI.</param>
         /// <param name="duplicatePropertyNamesChecker">The duplicate property names checker.</param>
         /// <param name="isReadingNestedPayload">true if we are deserializing a nested payload, e.g. a resource, a resource set or a collection within a parameters payload.</param>
-        /// <param name="allowEmptyPayload">true if we allow a comletely empty payload; otherwise false.</param>
+        /// <param name="allowEmptyPayload">true if we allow a completely empty payload; otherwise false.</param>
         /// <returns>The value of the context URI annotation (or null if it was not found).</returns>
         /// <remarks>
         /// Pre-Condition:  JsonNodeType.None:      assumes that the JSON reader has not been used yet when not reading a nested payload.

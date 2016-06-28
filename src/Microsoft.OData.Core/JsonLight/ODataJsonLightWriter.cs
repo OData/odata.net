@@ -606,7 +606,6 @@ namespace Microsoft.OData.JsonLight
                 navigationSource,
                 resourceType,
                 skipWriting,
-                this.jsonLightOutputContext.WritingResponse,
                 this.jsonLightOutputContext.MessageWriterSettings,
                 selectedProperties,
                 odataUri,
@@ -831,7 +830,6 @@ namespace Microsoft.OData.JsonLight
             /// <param name="navigationSource">The navigation source we are going to write resources for.</param>
             /// <param name="resourceType">The structured type for the items in the resource set to be written (or null if the entity set base type should be used).</param>
             /// <param name="skipWriting">true if the content of the scope to create should not be written.</param>
-            /// <param name="writingResponse">true if we are writing a response, false if it's a request.</param>
             /// <param name="writerSettings">The <see cref="ODataMessageWriterSettings"/> The settings of the writer.</param>
             /// <param name="selectedProperties">The selected properties of this scope.</param>
             /// <param name="odataUri">The ODataUri info of this scope.</param>
@@ -842,12 +840,11 @@ namespace Microsoft.OData.JsonLight
                 IEdmNavigationSource navigationSource,
                 IEdmStructuredType resourceType,
                 bool skipWriting,
-                bool writingResponse,
                 ODataMessageWriterSettings writerSettings,
                 SelectedPropertiesNode selectedProperties,
                 ODataUri odataUri,
                 bool isUndeclared)
-                : base(resource, serializationInfo, navigationSource, resourceType, skipWriting, writingResponse, writerSettings, selectedProperties, odataUri)
+                : base(resource, serializationInfo, navigationSource, resourceType, skipWriting, writerSettings, selectedProperties, odataUri)
             {
                 this.isUndeclared = isUndeclared;
             }

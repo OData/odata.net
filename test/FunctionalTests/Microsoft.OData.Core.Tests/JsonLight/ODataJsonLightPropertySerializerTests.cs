@@ -409,7 +409,7 @@ namespace Microsoft.OData.Tests.JsonLight
                 owningType,
                 new[] { odataProperty },
                 /*isComplexValue*/ false,
-                new DuplicatePropertyNamesChecker(allowDuplicateProperties: true, isResponse: true),
+                new DuplicatePropertyNamesChecker(false),
                 ProjectedPropertiesAnnotation.AllProjectedPropertiesInstance);
             jsonLightOutputContext.JsonWriter.EndObjectScope();
 

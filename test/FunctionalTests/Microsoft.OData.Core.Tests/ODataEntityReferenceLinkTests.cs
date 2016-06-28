@@ -150,12 +150,12 @@ namespace Microsoft.OData.Tests
         }
 
         [Fact]
-        public void ReadForEntityReferenceLinkWithDuplicateAnnotationNameShouldThrow()
+        public void ReadForEntityReferenceLinkWithDuplicateAnnotationNameShouldNotThrow()
         {
             string payload = "{\"@odata.context\":\"http://odata.org/test/$metadata#$ref\",\"@odata.id\":\"http://host/Customers(1)\",\"@TestNamespace.unknown\":123,\"@TestNamespace.unknown\":456}";
             var deserializer = this.CreateJsonLightEntryAndFeedDeserializer(payload);
             Action readResult = () => deserializer.ReadEntityReferenceLink();
-            readResult.ShouldThrow<ODataException>().WithMessage(Strings.DuplicatePropertyNamesChecker_DuplicateAnnotationNotAllowed("TestNamespace.unknown"));
+            readResult.ShouldNotThrow();
         }
 
         [Fact]

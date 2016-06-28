@@ -377,11 +377,8 @@ namespace Microsoft.OData.JsonLight
                         ODataJsonLightPropertyAndValueDeserializer valueDeserializer = new ODataJsonLightPropertyAndValueDeserializer(this.JsonLightInputContext);
                         object typeName = null;
 
-                        var odataAnnotations = duplicationPropertyNameChecker.GetODataPropertyAnnotations(propertyName);
-                        if (odataAnnotations != null)
-                        {
-                            odataAnnotations.TryGetValue(ODataAnnotationNames.ODataType, out typeName);
-                        }
+                        duplicationPropertyNameChecker.GetODataPropertyAnnotations(propertyName)
+                        .TryGetValue(ODataAnnotationNames.ODataType, out typeName);
 
                         var value = valueDeserializer.ReadNonEntityValue(
                             typeName as string,

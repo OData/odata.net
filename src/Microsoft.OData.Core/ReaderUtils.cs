@@ -65,18 +65,14 @@ namespace Microsoft.OData
         /// sets the association link URL on the nested resource info.</summary>
         /// <param name="duplicatePropertyNamesChecker">The duplicate property names checker for the current scope.</param>
         /// <param name="nestedResourceInfo">The nested resource info to be checked.</param>
-        /// <param name="isExpanded">true if the link is expanded, false otherwise.</param>
-        /// <param name="isCollection">true if the nested resource info is a collection, false if it's a singleton or null if we don't know.</param>
         internal static void CheckForDuplicateNestedResourceInfoNameAndSetAssociationLink(
             DuplicatePropertyNamesChecker duplicatePropertyNamesChecker,
-            ODataNestedResourceInfo nestedResourceInfo,
-            bool isExpanded,
-            bool? isCollection)
+            ODataNestedResourceInfo nestedResourceInfo)
         {
             Debug.Assert(duplicatePropertyNamesChecker != null, "duplicatePropertyNamesChecker != null");
             Debug.Assert(nestedResourceInfo != null, "nestedResourceInfo != null");
 
-            Uri associationLinkUrl = duplicatePropertyNamesChecker.CheckForDuplicatePropertyNames(nestedResourceInfo, isExpanded, isCollection);
+            Uri associationLinkUrl = duplicatePropertyNamesChecker.CheckForDuplicatePropertyNamesAndGetAssociationLink(nestedResourceInfo);
 
             // We must not set the AssociationLinkUrl to null since that would disable templating on it, but we want templating to work if the association link was not in the payload.
             if (associationLinkUrl != null && nestedResourceInfo.AssociationLinkUrl == null)
@@ -98,7 +94,7 @@ namespace Microsoft.OData
             Debug.Assert(duplicatePropertyNamesChecker != null, "duplicatePropertyNamesChecker != null");
             Debug.Assert(associationLinkName != null, "associationLinkName != null");
 
-            ODataNestedResourceInfo nestedResourceInfo = duplicatePropertyNamesChecker.CheckForDuplicateAssociationLinkNames(associationLinkName, associationLinkUrl);
+            ODataNestedResourceInfo nestedResourceInfo = duplicatePropertyNamesChecker.CheckForDuplicateAssociationLinkNamesAndGetNestedResourceInfo(associationLinkName, associationLinkUrl);
 
             // We must not set the AssociationLinkUrl to null since that would disable templating on it, but we want templating to work if the association link was not in the payload.
             if (nestedResourceInfo != null && nestedResourceInfo.AssociationLinkUrl == null && associationLinkUrl != null)

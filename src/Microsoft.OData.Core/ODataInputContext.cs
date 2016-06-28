@@ -581,7 +581,7 @@ namespace Microsoft.OData
         /// <returns>The newly created instance of duplicate property names checker.</returns>
         internal DuplicatePropertyNamesChecker CreateDuplicatePropertyNamesChecker()
         {
-            return this.messageReaderSettings.Validator.CreateDuplicatePropertyNamesChecker(readingResponse);
+            return messageReaderSettings.Validator.CreateDuplicatePropertyNamesChecker();
         }
 
         /// <summary>

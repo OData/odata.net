@@ -67,7 +67,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                     new
                     {
                         InjectedJSON = "\"@custom.annotation\": null, \"@custom.annotation\": 42",
-                        ExpectedException = ODataExpectedExceptions.ODataException("DuplicatePropertyNamesChecker_DuplicateAnnotationNotAllowed", "custom.annotation")
+                        ExpectedException = (ExpectedException)null
                     },
                 };
 
@@ -157,7 +157,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                     },
                     new
                     {
-                        Description = "Duplicate custom property annotation - should fail.",
+                        Description = "Duplicate custom property annotation - should not fail.",
                         Json = "{ " +
                             "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataContextAnnotationName + "\":\"http://odata.org/test/$metadata#Edm.Int32\", " +
                             "\"" + JsonLightUtils.GetPropertyAnnotationName("value", "custom.annotation") + "\": null," +
@@ -165,7 +165,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                             "\"" + JsonLightConstants.ODataValuePropertyName + "\": 42" +
                         "}",
                         ReaderMetadata = readerMetadata,
-                        ExpectedException = ODataExpectedExceptions.ODataException("DuplicatePropertyNamesChecker_DuplicateAnnotationForPropertyNotAllowed", "custom.annotation", "value")
+                        ExpectedException = (ExpectedException)null
                     },
                     new
                     {
@@ -332,7 +332,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                     },
                     new
                     {
-                        Description = "Duplicate type property.",
+                        Description = "Duplicate odata.type property should fail.",
                         Json = "{ " +
                             "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataContextAnnotationName + "\":\"http://odata.org/test/$metadata#Edm.Int32\", " +
                             "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataTypeAnnotationName + "\": \"Edm.Int32\"," +
@@ -760,7 +760,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                 },
                 new OpenPropertyTestCase
                 {
-                    DebugDescription = "Duplicate type property - should fail.",
+                    DebugDescription = "Duplicate odata.type property - should fail.",
                     ExpectedProperty = PayloadBuilder.PrimitiveProperty("OpenProperty", "value").ExpectedPropertyType(EdmCoreModel.Instance.GetString(true)),
                     Json = 
                         "{0}" +

@@ -79,7 +79,7 @@ namespace Microsoft.OData.Tests.Json
 
         public DuplicatePropertyNamesChecker CreateDuplicatePropertyNamesChecker()
         {
-            return new DuplicatePropertyNamesChecker(true /*allowDuplicateProperties*/, true /*isRepsonse*/);
+            return new DuplicatePropertyNamesChecker(false);
         }
 
         public IJsonWriter JsonWriter { get; set; }

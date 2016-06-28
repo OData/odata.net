@@ -10,627 +10,524 @@ namespace Microsoft.OData
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
+    using System.Linq;
     using System.Text;
     using Microsoft.OData.Json;
     using Microsoft.OData.JsonLight;
     #endregion Namespaces
 
+    using Annotation = System.Collections.Generic.KeyValuePair<string, object>;
+
     /// <summary>
-    /// Helper class to verify that no duplicate properties are specified for entries and complex values.
+    /// This class has the following responsibilities:
+    ///   1) Validates that no duplicate OData scope/property annotations exist.
+    ///      Duplicate custom scope/property annotations are allowed.
+    ///   2) Collects OData and custom scope/property annotations.
+    ///   3) Validates that no duplicate properties exist.
+    ///   4) Validates that property annotations come in group and immediately precede the annotated property.
     /// </summary>
+    /// <remarks>
+    /// Scope annotations are those that do not apply to specific properties, and start directly with "@".
+    /// </remarks>
     internal sealed class DuplicatePropertyNamesChecker
     {
-        /// <summary>Special value for the property annotations which is used to mark the annotations as processed.</summary>
-        private static readonly Dictionary<string, object> propertyAnnotationsProcessedToken = new Dictionary<string, object>(0, StringComparer.Ordinal);
-
-        /// <summary>true if duplicate properties are allowed; otherwise false.</summary>
-        /// <remarks>
-        /// See the comment on ODataWriterBehavior.AllowDuplicatePropertyNames or
-        /// ODataReaderBehavior.AllowDuplicatePropertyNames for further details.
-        /// </remarks>
-        private readonly bool allowDuplicateProperties;
-
-        /// <summary>true if we're processing a response; false if it's a request.</summary>
-        private readonly bool isResponse;
-
-#if DEBUG
-        /// <summary>Name of the nested resource info for which we were asked to check duplication on its start.</summary>
-        /// <remarks>If this is set, the next call must be a real check for the same nested resource info.</remarks>
-        private string startNestedResourceInfoName;
-#endif
+        private static readonly IDictionary<string, object> emptyDictionary = new Dictionary<string, object>();
 
         /// <summary>
-        /// A cache of property names to detect duplicate property names. The <see cref="DuplicationKind"/> value stored
-        /// for a given property name indicates what should happen if another property with the same name is found.
-        /// See the comments on <see cref="DuplicationKind"/> for more details.
+        /// Whether to enable duplicate property validation so that an exception is thrown when detected.
         /// </summary>
-        private Dictionary<string, DuplicationRecord> propertyNameCache;
+        /// <remarks>
+        /// If disabled and duplicate properties exist, the behavior is unspecified.
+        /// </remarks>
+        private readonly bool throwOnDuplicateProperty;
+
+        /// <summary>
+        /// Caches OData scope annotations.
+        /// </summary>
+        private IDictionary<string, object> odataScopeAnnotations = new Dictionary<string, object>();
+
+        /// <summary>
+        /// Caches custom scope annotations.
+        /// </summary>
+        private IList<Annotation> customScopeAnnotations = new List<Annotation>();
+
+        /// <summary>
+        /// Caches property data.
+        /// </summary>
+        private IDictionary<string, PropertyData> propertyData = new Dictionary<string, PropertyData>();
 
         /// <summary>
         /// Creates a DuplicatePropertyNamesChecker instance.
         /// </summary>
-        /// <param name="allowDuplicateProperties">true if duplicate properties are allowed; otherwise false.</param>
-        /// <param name="isResponse">true if we're processing a response; false if it's a request.</param>
-        public DuplicatePropertyNamesChecker(bool allowDuplicateProperties, bool isResponse)
+        /// <param name="throwOnDuplicateProperty">Whether to enable duplicate property validation.</param>
+        internal DuplicatePropertyNamesChecker(bool throwOnDuplicateProperty)
         {
-            this.allowDuplicateProperties = allowDuplicateProperties;
-            this.isResponse = isResponse;
+            this.throwOnDuplicateProperty = throwOnDuplicateProperty;
         }
 
         /// <summary>
-        /// An enumeration to represent the duplication kind of a given property name.
+        /// Processing state of a property.
         /// </summary>
         /// <remarks>
-        /// This enumeration is used to determine what should happen if two properties with the same name are detected on a resource or complex value.
-        /// When the first property is found, the initial value is set based on the kind of property found and the general setting to allow or disallow duplicate properties.
-        /// When a second property with the same name is found, the duplication kind can be 'upgraded' (e.g., from association link to navigation property), 'ignored' (e.g.
-        /// when finding the association link for an existing navigation property or when duplicate properties are allowed by the settings) or 'fail'
-        /// (e.g., when duplicate properties are not allowed).
+        /// Models a state machine.
         /// </remarks>
-        private enum DuplicationKind
+        private enum PropertyState
         {
-            /// <summary>We don't know enough about the property to determine its duplication kind yet, we've just seen a property annotation for it.</summary>
-            PropertyAnnotationSeen,
+            /// <summary>
+            /// Initial state or when property annotations have been processed.
+            /// </summary>
+            AnnotationSeen,
 
-            /// <summary>Duplicates for this property name are not allowed.</summary>
-            Prohibited,
+            /// <summary>
+            /// Non-nested non-navigation property value has been processed.
+            /// </summary>
+            SimpleProperty,
 
-            /// <summary>This kind indicates that duplicates are allowed (if the settings allow duplicates).</summary>
-            PotentiallyAllowed,
-
-            /// <summary>A navigation link or association link was reported.</summary>
-            NavigationProperty,
+            /// <summary>
+            /// 1) Nested property value has been processed.
+            /// 2) Navigation property value has been processed.
+            /// 3) Association link has been processed.
+            /// </summary>
+            NavigationProperty
         }
 
         /// <summary>
-        /// Check the <paramref name="property"/> for duplicate property names in an entry or complex value.
-        /// If not explicitly allowed throw when duplicate properties are detected.
-        /// If duplicate properties are allowed see the comment on ODataWriterBehavior.AllowDuplicatePropertyNames
-        /// or ODataReaderBehavior.AllowDuplicatePropertyNames for further details.
+        /// Validates that no duplicate property exists.
         /// </summary>
-        /// <param name="property">The property to be checked.</param>
+        /// <param name="property">The property to be validated.</param>
         internal void CheckForDuplicatePropertyNames(ODataProperty property)
         {
-            Debug.Assert(property != null, "property != null");
-#if DEBUG
-            Debug.Assert(this.startNestedResourceInfoName == null, "CheckForDuplicatePropertyNamesOnNestedResourceInfoStart was followed by a CheckForDuplicatePropertyNames(ODataProperty).");
-#endif
+            Debug.Assert(property != null);
+
+            if (!throwOnDuplicateProperty)
+            {
+                return;
+            }
 
             string propertyName = property.Name;
-            DuplicationKind duplicationKind = GetDuplicationKind(property);
-            DuplicationRecord existingDuplicationRecord;
-            if (!this.TryGetDuplicationRecord(propertyName, out existingDuplicationRecord))
+            PropertyData data;
+            if (!propertyData.TryGetValue(propertyName, out data))
             {
-                this.propertyNameCache.Add(propertyName, new DuplicationRecord(duplicationKind));
+                propertyData[propertyName] = new PropertyData(PropertyState.SimpleProperty);
             }
-            else if (existingDuplicationRecord.DuplicationKind == DuplicationKind.PropertyAnnotationSeen)
+            else if (data.State == PropertyState.AnnotationSeen)
             {
-                existingDuplicationRecord.DuplicationKind = duplicationKind;
+                data.State = PropertyState.SimpleProperty;
             }
             else
             {
-                // If either of them prohibits duplication, fail
-                // If the existing one is an association link, fail (association links don't allow duplicates with simple properties)
-                // If we don't allow duplication in the first place, fail, since there is no valid case where a simple property coexists with anything else with the same name.
-                if (existingDuplicationRecord.DuplicationKind == DuplicationKind.Prohibited ||
-                    duplicationKind == DuplicationKind.Prohibited ||
-                    (existingDuplicationRecord.DuplicationKind == DuplicationKind.NavigationProperty && existingDuplicationRecord.AssociationLinkName != null) ||
-                    !this.allowDuplicateProperties)
-                {
-                    throw new ODataException(Strings.DuplicatePropertyNamesChecker_DuplicatePropertyNamesNotAllowed(propertyName));
-                }
-                else
-                {
-                    // Otherwise allow the duplicate.
-                    // Note that we don't modify the existing duplication record in any way if the new property is a simple property.
-                    // This is because if the existing one is a simple property which allows duplication as well, there's nothing to change.
-                    // and if the existing one is a navigation property the navigation property information is more important than the simple property one.
-                }
+                throw new ODataException(
+                    Strings.DuplicatePropertyNamesChecker_DuplicatePropertyNamesNotAllowed(
+                        propertyName));
             }
         }
 
         /// <summary>
-        /// Checks the <paramref name="nestedResourceInfo"/> for duplicate property names in a resource when the nested resource info
-        /// has started but we don't know yet if it's expanded or not.
+        /// Validates that no duplicate property exists when the nested resource info has started,
+        /// but we don't know yet if it's expanded or not.
         /// </summary>
-        /// <param name="nestedResourceInfo">The nested resource info to be checked.</param>
+        /// <param name="nestedResourceInfo">The nested resource info to be validated.</param>
         internal void CheckForDuplicatePropertyNamesOnNestedResourceInfoStart(ODataNestedResourceInfo nestedResourceInfo)
         {
-            Debug.Assert(nestedResourceInfo != null, "nestedResourceInfo != null");
-#if DEBUG
-            this.startNestedResourceInfoName = nestedResourceInfo.Name;
-#endif
+            Debug.Assert(nestedResourceInfo != null);
 
-            // Just check for duplication without modifying anything in the caches - this is to allow callers to choose whether they want to call this method first
-            // or just call the CheckForDuplicatePropertyNames(ODataNestedResourceInfo) directly.
-            string propertyName = nestedResourceInfo.Name;
-            DuplicationRecord existingDuplicationRecord;
-            if (this.propertyNameCache != null && this.propertyNameCache.TryGetValue(propertyName, out existingDuplicationRecord))
+            if (!throwOnDuplicateProperty)
             {
-                this.CheckNestedResourceInfoDuplicateNameForExistingDuplicationRecord(propertyName, existingDuplicationRecord);
+                return;
+            }
+
+            // Dry run, no write.
+            string propertyName = nestedResourceInfo.Name;
+            PropertyData data;
+            if (propertyData.TryGetValue(propertyName, out data))
+            {
+                CheckNestedResourceInfoDuplicateNameForExistingDuplicationRecord(propertyName, data);
             }
         }
 
         /// <summary>
-        /// Check the <paramref name="nestedResourceInfo"/> for duplicate property names in a resource or complex value.
-        /// If not explicitly allowed throw when duplicate properties are detected.
-        /// If duplicate properties are allowed see the comment on ODataWriterBehavior.AllowDuplicatePropertyNames
-        /// or ODataReaderBehavior.AllowDuplicatePropertyNames for further details.
+        /// Validates that no duplicate property exists and gets the corresponding association link if available.
         /// </summary>
         /// <param name="nestedResourceInfo">The nested resource info to be checked.</param>
-        /// <param name="isExpanded">true if the link is expanded, false otherwise.</param>
-        /// <param name="isCollection">true if the nested resource info is a collection, false if it's a singleton or null if we don't know.</param>
-        /// <returns>The association link uri with the same name if there already was one.</returns>
-        internal Uri CheckForDuplicatePropertyNames(ODataNestedResourceInfo nestedResourceInfo, bool isExpanded, bool? isCollection)
+        /// <returns>Corresponding association link if available.</returns>
+        internal Uri CheckForDuplicatePropertyNamesAndGetAssociationLink(ODataNestedResourceInfo nestedResourceInfo)
         {
-#if DEBUG
-            this.startNestedResourceInfoName = null;
-#endif
-
             string propertyName = nestedResourceInfo.Name;
-            DuplicationRecord existingDuplicationRecord;
-            if (!this.TryGetDuplicationRecord(propertyName, out existingDuplicationRecord))
+            PropertyData data;
+            if (!propertyData.TryGetValue(propertyName, out data))
             {
-                DuplicationRecord duplicationRecord = new DuplicationRecord(DuplicationKind.NavigationProperty);
-                ApplyNestedResourceInfoToDuplicationRecord(duplicationRecord, nestedResourceInfo, isExpanded, isCollection);
-                this.propertyNameCache.Add(propertyName, duplicationRecord);
+                propertyData[propertyName] = new PropertyData(PropertyState.NavigationProperty)
+                {
+                    NestedResourceInfo = nestedResourceInfo
+                };
                 return null;
             }
             else
             {
-                // First check for duplication without expansion knowledge.
-                this.CheckNestedResourceInfoDuplicateNameForExistingDuplicationRecord(propertyName, existingDuplicationRecord);
-
-                if (existingDuplicationRecord.DuplicationKind == DuplicationKind.PropertyAnnotationSeen ||
-                    (existingDuplicationRecord.DuplicationKind == DuplicationKind.NavigationProperty &&
-                    existingDuplicationRecord.AssociationLinkName != null &&
-                    existingDuplicationRecord.NestedResourceInfo == null))
+                if (throwOnDuplicateProperty)
                 {
-                    // If the existing one is just an association link, update it to include the nested resource info portion as well
-                    ApplyNestedResourceInfoToDuplicationRecord(existingDuplicationRecord, nestedResourceInfo, isExpanded, isCollection);
-                }
-                else if (this.allowDuplicateProperties)
-                {
-                    Debug.Assert(
-                        (existingDuplicationRecord.DuplicationKind == DuplicationKind.PotentiallyAllowed || existingDuplicationRecord.DuplicationKind == DuplicationKind.NavigationProperty),
-                        "We should have already taken care of prohibit duplication.");
-
-                    // If the configuration explicitly allows duplication, then just turn the existing property into a nav link with all the information we have
-                    existingDuplicationRecord.DuplicationKind = DuplicationKind.NavigationProperty;
-                    ApplyNestedResourceInfoToDuplicationRecord(existingDuplicationRecord, nestedResourceInfo, isExpanded, isCollection);
-                }
-                else
-                {
-                    // We've found two navigation links in a request
-                    Debug.Assert(
-                        existingDuplicationRecord.DuplicationKind == DuplicationKind.NavigationProperty && existingDuplicationRecord.NestedResourceInfo != null && !this.isResponse,
-                        "We can only get here if we've found two navigation links in a request.");
-
-                    bool? isCollectionEffectiveValue = GetIsCollectionEffectiveValue(isExpanded, isCollection);
-
-                    // If one of them is a definitive singleton, then we fail.
-                    if (isCollectionEffectiveValue == false || existingDuplicationRecord.NavigationPropertyIsCollection == false)
-                    {
-                        // This is the case where an expanded singleton is followed by a deferred link for example.
-                        // Once we know for sure that the nav. prop. is a singleton we can't allow more than one link for it.
-                        throw new ODataException(Strings.DuplicatePropertyNamesChecker_MultipleLinksForSingleton(propertyName));
-                    }
-
-                    // Otherwise allow it, but update the link with the new information
-                    if (isCollectionEffectiveValue.HasValue)
-                    {
-                        existingDuplicationRecord.NavigationPropertyIsCollection = isCollectionEffectiveValue;
-                    }
+                    CheckNestedResourceInfoDuplicateNameForExistingDuplicationRecord(propertyName, data);
                 }
 
-                return existingDuplicationRecord.AssociationLinkUrl;
+                data.State = PropertyState.NavigationProperty;
+                data.NestedResourceInfo = nestedResourceInfo;
+                return data.AssociationLinkUrl;
             }
         }
 
         /// <summary>
-        /// Check the <paramref name="associationLinkName"/> for duplicate property names in a resource or complex value.
-        /// If not explicitly allowed throw when duplicate properties are detected.
-        /// If duplicate properties are allowed see the comment on ODataWriterBehavior.AllowDuplicatePropertyNames
-        /// or ODataReaderBehavior.AllowDuplicatePropertyNames for further details.
+        /// Validates that no duplicate "odata.assocationLink" annotation exists and gets the corresponding
+        /// ODataNestedResourceInfo of the annotated property if available.
         /// </summary>
-        /// <param name="associationLinkName">The name of association link to be checked.</param>
-        /// <param name="associationLinkUrl">The url of association link to be checked.</param>
-        /// <returns>The navigation link with the same name as the association link if there's one.</returns>
-        internal ODataNestedResourceInfo CheckForDuplicateAssociationLinkNames(string associationLinkName, Uri associationLinkUrl)
+        /// <param name="propertyName">Name of the annotated property.</param>
+        /// <param name="associationLinkUrl">Annotation value.</param>
+        /// <returns>Corresponding ODataNestedResourceInfo of the annotated property if available.</returns>
+        internal ODataNestedResourceInfo CheckForDuplicateAssociationLinkNamesAndGetNestedResourceInfo(string propertyName, Uri associationLinkUrl)
         {
-            Debug.Assert(associationLinkName != null, "associationLinkName != null");
-#if DEBUG
-            Debug.Assert(this.startNestedResourceInfoName == null, "CheckForDuplicatePropertyNamesOnNestedResourceInfoStart was followed by a CheckForDuplicatePropertyNames(ODataProperty).");
-#endif
+            Debug.Assert(propertyName != null);
 
-            DuplicationRecord existingDuplicationRecord;
-            if (!this.TryGetDuplicationRecord(associationLinkName, out existingDuplicationRecord))
+            PropertyData data;
+            if (!propertyData.TryGetValue(propertyName, out data))
             {
-                this.propertyNameCache.Add(
-                    associationLinkName,
-                    new DuplicationRecord(DuplicationKind.NavigationProperty)
-                    {
-                        AssociationLinkName = associationLinkName,
-                        AssociationLinkUrl = associationLinkUrl
-                    });
-
+                propertyData[propertyName] = new PropertyData(PropertyState.NavigationProperty)
+                {
+                    AssociationLinkUrl = associationLinkUrl,
+                };
                 return null;
             }
             else
             {
-                if (existingDuplicationRecord.DuplicationKind == DuplicationKind.PropertyAnnotationSeen ||
-                    (existingDuplicationRecord.DuplicationKind == DuplicationKind.NavigationProperty && existingDuplicationRecord.AssociationLinkName == null))
+                if (data.State == PropertyState.AnnotationSeen
+                    || (data.State == PropertyState.NavigationProperty
+                        && data.AssociationLinkUrl == null))
                 {
-                    // The only valid case for a duplication with association link is if the existing record is for a navigation property
-                    // which doesn't have its association link yet.
-                    // In this case just mark the navigation property as having found its association link.
-                    existingDuplicationRecord.DuplicationKind = DuplicationKind.NavigationProperty;
-                    existingDuplicationRecord.AssociationLinkName = associationLinkName;
-                    existingDuplicationRecord.AssociationLinkUrl = associationLinkUrl;
+                    data.State = PropertyState.NavigationProperty;
+                    data.AssociationLinkUrl = associationLinkUrl;
                 }
                 else
                 {
-                    // In all other cases fail.
-                    throw new ODataException(Strings.DuplicatePropertyNamesChecker_DuplicatePropertyNamesNotAllowed(associationLinkName));
+                    throw new ODataException(
+                        Strings.DuplicatePropertyNamesChecker_DuplicateAnnotationNotAllowed(
+                            "odata.associationLink"));
                 }
 
-                return existingDuplicationRecord.NestedResourceInfo;
+                return data.NestedResourceInfo;
             }
         }
 
         /// <summary>
-        /// Clear the internal data structures of the checker so it can be reused.
+        /// Clears the instance for reuse.
         /// </summary>
         internal void Clear()
         {
-            if (this.propertyNameCache != null)
+            propertyData.Clear();
+        }
+
+        /// <summary>
+        /// Adds an OData scope annotation.
+        /// </summary>
+        /// <param name="annotationName">Name of the annotation.</param>
+        /// <param name="annotationValue">Value of the annotation.</param>
+        /// <remarks>
+        /// Scope annotations are those that do not apply to specific properties, and start directly with "@".
+        /// </remarks>
+        internal void AddODataScopeAnnotation(string annotationName, object annotationValue)
+        {
+            Debug.Assert(!string.IsNullOrEmpty(annotationName));
+            Debug.Assert(JsonLight.ODataJsonLightReaderUtils.IsODataAnnotationName(annotationName));
+
+            if (annotationValue == null)
             {
-                this.propertyNameCache.Clear();
+                return;
+            }
+
+            try
+            {
+                odataScopeAnnotations.Add(annotationName, annotationValue);
+            }
+            catch (ArgumentException)
+            {
+                throw new ODataException(
+                    Strings.DuplicatePropertyNamesChecker_DuplicateAnnotationNotAllowed(
+                        annotationName));
             }
         }
 
         /// <summary>
-        /// Adds an OData annotation to a property.
+        /// Adds a custom scope annotation.
         /// </summary>
-        /// <param name="propertyName">The name of the property to add annotation to. string.empty means the annotation is for the current scope.</param>
-        /// <param name="annotationName">The name of the annotation to add.</param>
-        /// <param name="annotationValue">The value of the annotation to add.</param>
+        /// <param name="annotationName">Name of the annotation.</param>
+        /// <param name="annotationValue">Value of the annotation.</param>
+        /// <remarks>
+        /// Scope annotations are those that do not apply to specific properties, and start directly with "@".
+        /// </remarks>
+        internal void AddCustomScopeAnnotation(string annotationName, object annotationValue)
+        {
+            Debug.Assert(!string.IsNullOrEmpty(annotationName));
+            Debug.Assert(!JsonLight.ODataJsonLightReaderUtils.IsODataAnnotationName(annotationName));
+
+            if (annotationValue == null)
+            {
+                return;
+            }
+
+            customScopeAnnotations.Add(new Annotation(annotationName, annotationValue));
+        }
+
+        /// <summary>
+        /// Gets OData scope annotations.
+        /// </summary>
+        /// <returns>OData scope annotation key value pairs.</returns>
+        /// <remarks>
+        /// Scope annotations are those that do not apply to specific properties, and start directly with "@".
+        /// </remarks>
+        internal IDictionary<string, object> GetODataScopeAnnotation()
+        {
+            return odataScopeAnnotations;
+        }
+
+        /// <summary>
+        /// Gets custom scope annotations.
+        /// </summary>
+        /// <returns>Custom scope annotation key value pairs.</returns>
+        /// <remarks>
+        /// Scope annotations are those that do not apply to specific properties, and start directly with "@".
+        /// </remarks>
+        internal IEnumerable<Annotation> GetCustomScopeAnnotation()
+        {
+            return customScopeAnnotations;
+        }
+
+        /// <summary>
+        /// Adds an OData property annotation.
+        /// </summary>
+        /// <param name="propertyName">Name of the property.</param>
+        /// <param name="annotationName">Name of the annotation.</param>
+        /// <param name="annotationValue">Value of the annotation.</param>
         internal void AddODataPropertyAnnotation(string propertyName, string annotationName, object annotationValue)
         {
-            Debug.Assert(propertyName != null, "propertyName != null");
-            Debug.Assert(!string.IsNullOrEmpty(annotationName), "!string.IsNullOrEmpty(annotationName)");
-            Debug.Assert(JsonLight.ODataJsonLightReaderUtils.IsODataAnnotationName(annotationName), "annotationName must be an OData annotation.");
+            Debug.Assert(!string.IsNullOrEmpty(propertyName));
+            Debug.Assert(!string.IsNullOrEmpty(annotationName));
+            Debug.Assert(JsonLight.ODataJsonLightReaderUtils.IsODataAnnotationName(annotationName));
 
-            DuplicationRecord duplicationRecord = this.GetDuplicationRecordToAddPropertyAnnotation(propertyName, annotationName);
-            Dictionary<string, object> odataAnnotations = duplicationRecord.PropertyODataAnnotations;
-            if (odataAnnotations == null)
+            if (annotationValue == null)
             {
-                odataAnnotations = new Dictionary<string, object>(StringComparer.Ordinal);
-                duplicationRecord.PropertyODataAnnotations = odataAnnotations;
+                return;
             }
-            else if (odataAnnotations.ContainsKey(annotationName))
+
+            PropertyData data;
+            if (!propertyData.TryGetValue(propertyName, out data))
             {
-                if (string.IsNullOrEmpty(propertyName))
+                propertyData[propertyName] = data = new PropertyData(PropertyState.AnnotationSeen);
+            }
+            else
+            {
+                if (data.Processed)
                 {
-                    if (ODataJsonLightReaderUtils.IsAnnotationProperty(annotationName) && !ODataJsonLightUtils.IsMetadataReferenceProperty(annotationName))
-                    {
-                        throw new ODataException(Strings.DuplicatePropertyNamesChecker_DuplicateAnnotationNotAllowed(annotationName));
-                    }
-
-                    throw new ODataException(Strings.DuplicatePropertyNamesChecker_DuplicatePropertyNamesNotAllowed(annotationName));
-                }
-                else
-                {
-                    if (ODataJsonLightReaderUtils.IsAnnotationProperty(propertyName))
-                    {
-                        throw new ODataException(Strings.DuplicatePropertyNamesChecker_DuplicateAnnotationForInstanceAnnotationNotAllowed(annotationName, propertyName));
-                    }
-
-                    throw new ODataException(Strings.DuplicatePropertyNamesChecker_DuplicateAnnotationForPropertyNotAllowed(annotationName, propertyName));
+                    throw new ODataException(
+                        Strings.DuplicatePropertyNamesChecker_PropertyAnnotationAfterTheProperty(
+                            annotationName, propertyName));
                 }
             }
 
-            odataAnnotations.Add(annotationName, annotationValue);
+            try
+            {
+                data.ODataAnnotations.Add(annotationName, annotationValue);
+            }
+            catch (ArgumentException)
+            {
+                throw new ODataException(
+                    ODataJsonLightReaderUtils.IsAnnotationProperty(propertyName)
+                    ? Strings.DuplicatePropertyNamesChecker_DuplicateAnnotationForInstanceAnnotationNotAllowed(annotationName, propertyName)
+                    : Strings.DuplicatePropertyNamesChecker_DuplicateAnnotationForPropertyNotAllowed(annotationName, propertyName));
+            }
         }
 
         /// <summary>
-        /// Adds a custom annotation to a property.
+        /// Adds a custom property annotation.
         /// </summary>
-        /// <param name="propertyName">The name of the property to add annotation to. string.empty means the annotation is for the current scope.</param>
-        /// <param name="annotationName">The name of the annotation to add.</param>
-        /// <param name="annotationValue">The value of the annotation to add.</param>
+        /// <param name="propertyName">Name of the property.</param>
+        /// <param name="annotationName">Name of the annotation.</param>
+        /// <param name="annotationValue">Value of the annotation.</param>
         internal void AddCustomPropertyAnnotation(string propertyName, string annotationName, object annotationValue)
         {
-            Debug.Assert(propertyName != null, "propertyName != null");
-            Debug.Assert(!string.IsNullOrEmpty(annotationName), "!string.IsNullOrEmpty(annotationName)");
-            Debug.Assert(!JsonLight.ODataJsonLightReaderUtils.IsODataAnnotationName(annotationName), "annotationName must not be an OData annotation.");
+            Debug.Assert(!string.IsNullOrEmpty(propertyName));
+            Debug.Assert(!string.IsNullOrEmpty(annotationName));
+            Debug.Assert(!JsonLight.ODataJsonLightReaderUtils.IsODataAnnotationName(annotationName));
 
-            DuplicationRecord duplicationRecord = this.GetDuplicationRecordToAddPropertyAnnotation(propertyName, annotationName);
-            Dictionary<string, object> customAnnotations = duplicationRecord.PropertyCustomAnnotations;
-            if (customAnnotations == null)
+            if (annotationValue == null)
             {
-                customAnnotations = new Dictionary<string, object>(StringComparer.Ordinal);
-                duplicationRecord.PropertyCustomAnnotations = customAnnotations;
+                return;
             }
-            else if (customAnnotations.ContainsKey(annotationName))
-            {
-                if (string.IsNullOrEmpty(propertyName))
-                {
-                    if (ODataJsonLightReaderUtils.IsAnnotationProperty(annotationName) && !ODataJsonLightUtils.IsMetadataReferenceProperty(annotationName))
-                    {
-                        throw new ODataException(Strings.DuplicatePropertyNamesChecker_DuplicateAnnotationNotAllowed(annotationName));
-                    }
 
-                    throw new ODataException(Strings.DuplicatePropertyNamesChecker_DuplicatePropertyNamesNotAllowed(annotationName));
-                }
-                else
+            PropertyData data;
+            if (!propertyData.TryGetValue(propertyName, out data))
+            {
+                propertyData[propertyName] = data = new PropertyData(PropertyState.AnnotationSeen);
+            }
+            else
+            {
+                if (data.Processed)
                 {
-                    throw new ODataException(Strings.DuplicatePropertyNamesChecker_DuplicateAnnotationForPropertyNotAllowed(annotationName, propertyName));
+                    throw new ODataException(
+                        Strings.DuplicatePropertyNamesChecker_PropertyAnnotationAfterTheProperty(
+                            annotationName, propertyName));
                 }
             }
 
-            customAnnotations.Add(annotationName, annotationValue);
+            data.CustomAnnotations.Add(new Annotation(annotationName, annotationValue));
         }
 
         /// <summary>
-        /// Returns OData annotations for the specified property with name <paramref name="propertyName"/>.
+        /// Returns OData annotations for a property.
         /// </summary>
-        /// <param name="propertyName">The name of the property to return the annotations for.</param>
-        /// <returns>Enumeration of pairs of OData annotation name and the annotation value, or null if there are no OData annotations for the property.</returns>
-        internal Dictionary<string, object> GetODataPropertyAnnotations(string propertyName)
+        /// <param name="propertyName">Name of the property.</param>
+        /// <returns>OData property annotation name value pairs.</returns>
+        internal IDictionary<string, object> GetODataPropertyAnnotations(string propertyName)
         {
-            Debug.Assert(propertyName != null, "propertyName != null");
+            Debug.Assert(propertyName != null);
 
-            DuplicationRecord duplicationRecord;
-            if (!this.TryGetDuplicationRecord(propertyName, out duplicationRecord))
-            {
-                return null;
-            }
-
-            // TODO: Refactor the duplicate property names checker and use different implementations for JSON Light
-            //      and the other formats (most of the logic is not needed for JSON Light).
-            //      Once we create a JSON Light specific duplicate property names checker, we will check for duplicates in
-            //      the ParseProperty method and thus detect duplicates before we get here.
-            ThrowIfPropertyIsProcessed(propertyName, duplicationRecord);
-            return duplicationRecord.PropertyODataAnnotations;
+            PropertyData data;
+            return propertyData.TryGetValue(propertyName, out data)
+                   ? data.ODataAnnotations
+                   : emptyDictionary;
         }
 
         /// <summary>
-        /// Returns custom instance annotations for the specified property with name <paramref name="propertyName"/>.
+        /// Returns custom annotations for a property.
         /// </summary>
-        /// <param name="propertyName">The name of the property to return the annotations for.</param>
-        /// <returns>Enumeration of pairs of custom instance annotation name and the annotation value, or null if there are no OData annotations for the property.</returns>
-        internal Dictionary<string, object> GetCustomPropertyAnnotations(string propertyName)
+        /// <param name="propertyName">Name of the property.</param>
+        /// <returns>Custom property annotation name value pairs.</returns>
+        internal IEnumerable<Annotation> GetCustomPropertyAnnotations(string propertyName)
         {
-            Debug.Assert(propertyName != null, "propertyName != null");
+            Debug.Assert(propertyName != null);
 
-            DuplicationRecord duplicationRecord;
-            if (!this.TryGetDuplicationRecord(propertyName, out duplicationRecord))
-            {
-                return null;
-            }
-
-            // TODO: Refactor the duplicate property names checker and use different implementations for JSON Light
-            //      and the other formats (most of the logic is not needed for JSON Light).
-            //      Once we create a JSON Light specific duplicate property names checker, we will check for duplicates in
-            //      the ParseProperty method and thus detect duplicates before we get here.
-            ThrowIfPropertyIsProcessed(propertyName, duplicationRecord);
-            return duplicationRecord.PropertyCustomAnnotations;
+            PropertyData data;
+            return propertyData.TryGetValue(propertyName, out data)
+                   ? data.CustomAnnotations
+                   : Enumerable.Empty<Annotation>();
         }
 
         /// <summary>
-        /// Marks the <paramref name="propertyName"/> property to note that all its annotations were already processed.
+        /// Marks a property to note that all its annotations should have been processed by now.
         /// </summary>
-        /// <param name="propertyName">The property name to mark.</param>
+        /// <param name="propertyName">Name of the property.</param>
         /// <remarks>
-        /// Properties marked like this will fail if there are more annotations found for them in the payload.
+        /// It's an error if more annotations for a marked property are found later in the payload.
         /// </remarks>
         internal void MarkPropertyAsProcessed(string propertyName)
         {
-            Debug.Assert(propertyName != null, "propertyName != null");
+            Debug.Assert(propertyName != null);
 
-            DuplicationRecord duplicationRecord;
-            if (!this.TryGetDuplicationRecord(propertyName, out duplicationRecord))
+            PropertyData data;
+            if (!propertyData.TryGetValue(propertyName, out data))
             {
-                duplicationRecord = new DuplicationRecord(DuplicationKind.PropertyAnnotationSeen);
-                this.propertyNameCache.Add(propertyName, duplicationRecord);
+                propertyData[propertyName] = data = new PropertyData(PropertyState.AnnotationSeen);
             }
 
-            ThrowIfPropertyIsProcessed(propertyName, duplicationRecord);
-            duplicationRecord.PropertyODataAnnotations = propertyAnnotationsProcessedToken;
+            if (data.Processed)
+            {
+                throw new ODataException(
+                    ODataJsonLightReaderUtils.IsAnnotationProperty(propertyName)
+                    && !ODataJsonLightUtils.IsMetadataReferenceProperty(propertyName)
+                    ? Strings.DuplicatePropertyNamesChecker_DuplicateAnnotationNotAllowed(propertyName)
+                    : Strings.DuplicatePropertyNamesChecker_DuplicatePropertyNamesNotAllowed(propertyName));
+            }
+
+            data.Processed = true;
         }
 
         /// <summary>
-        /// Throw if property is processed already.
+        /// Validates that the property is open to be added more annotations.
         /// </summary>
         /// <param name="propertyName">Name of the property.</param>
-        /// <param name="duplicationRecord">DuplicationRecord of the property.</param>
-        private static void ThrowIfPropertyIsProcessed(string propertyName, DuplicationRecord duplicationRecord)
+        /// <param name="annotationName">Name of the annotation.</param>
+        /// <remarks>
+        /// A property is no longer open for annotations when it has been marked as processed.
+        /// </remarks>
+        internal void CheckIfPropertyOpenForAnnotations(string propertyName, string annotationName)
         {
-            if (object.ReferenceEquals(duplicationRecord.PropertyODataAnnotations, propertyAnnotationsProcessedToken))
+            PropertyData data;
+            if (propertyData.TryGetValue(propertyName, out data)
+                && data.Processed)
             {
-                if (ODataJsonLightReaderUtils.IsAnnotationProperty(propertyName) && !ODataJsonLightUtils.IsMetadataReferenceProperty(propertyName))
-                {
-                    throw new ODataException(Strings.DuplicatePropertyNamesChecker_DuplicateAnnotationNotAllowed(propertyName));
-                }
-
-                throw new ODataException(Strings.DuplicatePropertyNamesChecker_DuplicatePropertyNamesNotAllowed(propertyName));
+                throw new ODataException(
+                    Strings.DuplicatePropertyNamesChecker_PropertyAnnotationAfterTheProperty(
+                        annotationName, propertyName));
             }
         }
 
         /// <summary>
-        /// Decides whether a the given <paramref name="property"/> supports duplicates (if allowed by the settings).
+        /// Validates that no duplicate property exists (dry run).
         /// </summary>
-        /// <param name="property">The property to check.</param>
-        /// <returns>true if the <paramref name="property"/> supports duplicates (if allowed by the settings); otherwise false.</returns>
-        private static DuplicationKind GetDuplicationKind(ODataProperty property)
+        /// <param name="propertyName">Name of the property.</param>
+        /// <param name="propertyData">Corresponding property data.</param>
+        private static void CheckNestedResourceInfoDuplicateNameForExistingDuplicationRecord(string propertyName, PropertyData propertyData)
         {
-            object value = property.Value;
-            return value != null && (value is ODataStreamReferenceValue || value is ODataCollectionValue)
-                ? DuplicationKind.Prohibited
-                : DuplicationKind.PotentiallyAllowed;
-        }
-
-        /// <summary>
-        /// Determines the effective value for the isCollection flag.
-        /// </summary>
-        /// <param name="isExpanded">true if the nested resource info is expanded, false otherwise.</param>
-        /// <param name="isCollection">true if the nested resource info is marked as collection, false if it's marked as singleton or null if we don't know.</param>
-        /// <returns>The effective value of the isCollection flag. Note that we can't rely on singleton links which are not expanded since
-        /// those can appear even in cases where the actual navigation property is a collection.
-        /// We allow singleton deferred links for collection properties in requests, as that is one way of expressing a bind operation.</returns>
-        private static bool? GetIsCollectionEffectiveValue(bool isExpanded, bool? isCollection)
-        {
-            return isExpanded ? isCollection : (isCollection == true ? (bool?)true : null);
-        }
-
-        /// <summary>
-        /// Sets the properties on a duplication record for a nested resource info.
-        /// </summary>
-        /// <param name="duplicationRecord">The duplication record to modify.</param>
-        /// <param name="nestedResourceInfo">The nested resource info found for this property.</param>
-        /// <param name="isExpanded">true if the nested resource info is expanded, false otherwise.</param>
-        /// <param name="isCollection">true if the nested resource info is marked as collection, false if it's marked as singleton or null if we don't know.</param>
-        private static void ApplyNestedResourceInfoToDuplicationRecord(DuplicationRecord duplicationRecord, ODataNestedResourceInfo nestedResourceInfo, bool isExpanded, bool? isCollection)
-        {
-            duplicationRecord.DuplicationKind = DuplicationKind.NavigationProperty;
-            duplicationRecord.NestedResourceInfo = nestedResourceInfo;
-
-            // We only take the cardinality of the link for granted if it was expanded or if it is a collection.
-            // We can't rely on singleton deferred links to know the cardinality since they can be used for binding even if the actual link is a collection.
-            duplicationRecord.NavigationPropertyIsCollection = GetIsCollectionEffectiveValue(isExpanded, isCollection);
-        }
-
-        /// <summary>
-        /// Tries to get an existing duplication record for the specified <paramref name="propertyName"/>.
-        /// </summary>
-        /// <param name="propertyName">The property name to look for.</param>
-        /// <param name="duplicationRecord">The existing duplication if one was already found.</param>
-        /// <returns>true if a duplication record already exists, false otherwise.</returns>
-        /// <remarks>This method also initializes the cache if it was not initialized yet.</remarks>
-        private bool TryGetDuplicationRecord(string propertyName, out DuplicationRecord duplicationRecord)
-        {
-            if (this.propertyNameCache == null)
+            if (propertyData.State == PropertyState.NavigationProperty
+                && propertyData.AssociationLinkUrl != null
+                && propertyData.NestedResourceInfo == null)
             {
-                this.propertyNameCache = new Dictionary<string, DuplicationRecord>(StringComparer.Ordinal);
-                duplicationRecord = null;
-                return false;
+                // Association link has been processed, and this is the corresponding navigation property.
             }
-
-            return this.propertyNameCache.TryGetValue(propertyName, out duplicationRecord);
-        }
-
-        /// <summary>
-        /// Checks for duplication of a nested resource info against an existing duplication record.
-        /// </summary>
-        /// <param name="propertyName">The name of the nested resource info.</param>
-        /// <param name="existingDuplicationRecord">The existing duplication record.</param>
-        /// <remarks>This only performs checks possible without the knowledge of whether the link was expanded or not.</remarks>
-        private void CheckNestedResourceInfoDuplicateNameForExistingDuplicationRecord(string propertyName, DuplicationRecord existingDuplicationRecord)
-        {
-            if (existingDuplicationRecord.DuplicationKind == DuplicationKind.NavigationProperty &&
-                existingDuplicationRecord.AssociationLinkUrl != null &&
-                existingDuplicationRecord.NestedResourceInfo == null)
+            else if (propertyData.State != PropertyState.AnnotationSeen)
             {
-                // Existing one is just an association link, so the new one is a navigation link portion which is OK always.
-            }
-            else if (existingDuplicationRecord.DuplicationKind == DuplicationKind.Prohibited ||
-                (existingDuplicationRecord.DuplicationKind == DuplicationKind.PotentiallyAllowed && !this.allowDuplicateProperties) ||
-                (existingDuplicationRecord.DuplicationKind == DuplicationKind.NavigationProperty && this.isResponse && !this.allowDuplicateProperties))
-            {
-                // If the existing one doesn't allow duplication at all,
-                // or it's simple property which does allow duplication, but the configuration does not allow it,
-                // or it's a duplicate navigation property in a response,
-                // fail.
-                throw new ODataException(Strings.DuplicatePropertyNamesChecker_DuplicatePropertyNamesNotAllowed(propertyName));
+                throw new ODataException(
+                    Strings.DuplicatePropertyNamesChecker_DuplicatePropertyNamesNotAllowed(
+                        propertyName));
             }
         }
 
-        /// <summary>
-        /// Gets a duplication record to use for adding property annotation.
-        /// </summary>
-        /// <param name="propertyName">The name of the property to get the duplication record for.</param>
-        /// <param name="annotationName">The name of the annotation being added (only for error reporting).</param>
-        /// <returns>The duplication record to use. This will never be null.</returns>
-        private DuplicationRecord GetDuplicationRecordToAddPropertyAnnotation(string propertyName, string annotationName)
-        {
-            Debug.Assert(propertyName != null, "propertyName != null");
-            Debug.Assert(!string.IsNullOrEmpty(annotationName), "!string.IsNullOrEmpty(annotationName)");
-
-            DuplicationRecord duplicationRecord;
-            if (!this.TryGetDuplicationRecord(propertyName, out duplicationRecord))
-            {
-                duplicationRecord = new DuplicationRecord(DuplicationKind.PropertyAnnotationSeen);
-                this.propertyNameCache.Add(propertyName, duplicationRecord);
-            }
-
-            if (object.ReferenceEquals(duplicationRecord.PropertyODataAnnotations, propertyAnnotationsProcessedToken))
-            {
-                throw new ODataException(Strings.DuplicatePropertyNamesChecker_PropertyAnnotationAfterTheProperty(annotationName, propertyName));
-            }
-
-            Debug.Assert(duplicationRecord != null, "duplicationRecord != null");
-            return duplicationRecord;
-        }
-
-        /// <summary>
-        /// A record of a single property for duplicate property names checking.
-        /// </summary>
-        private sealed class DuplicationRecord
+        private sealed class PropertyData
         {
             /// <summary>
             /// Constructor.
             /// </summary>
-            /// <param name="duplicationKind">The duplication kind of the record to create.</param>
-            public DuplicationRecord(DuplicationKind duplicationKind)
+            /// <param name="propertyState">Initial property state.</param>
+            internal PropertyData(PropertyState propertyState)
             {
-                this.DuplicationKind = duplicationKind;
+                State = propertyState;
+                ODataAnnotations = new Dictionary<string, object>();
+                CustomAnnotations = new List<Annotation>();
             }
 
             /// <summary>
-            /// The duplication kind of the record to create.
+            /// Current processing state.
             /// </summary>
-            public DuplicationKind DuplicationKind { get; set; }
+            internal PropertyState State { get; set; }
 
             /// <summary>
-            /// The nested resource info if it was already found for this property.
+            /// The nested resource info of the property if found.
             /// </summary>
-            public ODataNestedResourceInfo NestedResourceInfo { get; set; }
+            internal ODataNestedResourceInfo NestedResourceInfo { get; set; }
 
             /// <summary>
-            /// The association link name if it was already found for this property.
+            /// The association link for the property if found.
             /// </summary>
-            public string AssociationLinkName { get; set; }
+            internal Uri AssociationLinkUrl { get; set; }
 
             /// <summary>
-            /// The association link url if it was already found for this property.
-            /// </summary>
-            public Uri AssociationLinkUrl { get; set; }
-
-            /// <summary>
-            /// true if we know for sure that the navigation property with the property name is a collection,
-            /// false if we know for sure that the navigation property with the property name is a singleton,
-            /// null if we don't know the cardinality of the navigation property for sure (yet).
-            /// </summary>
-            public bool? NavigationPropertyIsCollection { get; set; }
-
-            /// <summary>
-            /// Dictionary of OData annotations for the property for which the duplication record is stored.
+            /// OData property annotations.
             /// </summary>
             /// <remarks>
-            /// The key of the dictionary is the fully qualified annotation name (i.e. odata.type),
-            /// the value is the parsed value of the annotation (this is annotation specific).
+            /// The key is the fully qualified annotation name like "odata.type".
+            /// The value is the parsed value of the annotation, which is annotation specific.
             /// </remarks>
-            public Dictionary<string, object> PropertyODataAnnotations { get; set; }
+            internal IDictionary<string, object> ODataAnnotations { get; private set; }
 
             /// <summary>
-            /// Dictionary of custom annotations for the property for which the duplication record is stored.
+            /// Custom property annotations.
             /// </summary>
             /// <remarks>
-            /// The key of the dictionary is the fully qualified annotation name ,
-            /// the value is the parsed value of the annotation (this is annotation specific).
+            /// The key is the fully qualified annotation name.
+            /// The value is the parsed value of the annotation, which is annotation specific.
             /// </remarks>
-            public Dictionary<string, object> PropertyCustomAnnotations { get; set; }
+            internal IList<Annotation> CustomAnnotations { get; private set; }
+
+            /// <summary>
+            /// Denotes whether the property has been marked as processed.
+            /// </summary>
+            internal bool Processed { get; set; }
         }
     }
 }

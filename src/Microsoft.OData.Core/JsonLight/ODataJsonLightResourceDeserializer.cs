@@ -235,11 +235,11 @@ namespace Microsoft.OData.JsonLight
             object value = this.ReadEntryInstanceAnnotation(annotationName, resourceState.AnyPropertyFound, /*typeAnnotationFound*/ true, resourceState.DuplicatePropertyNamesChecker);
             if (propertyParsingResult == PropertyParsingResult.ODataInstanceAnnotation)
             {
-                resourceState.DuplicatePropertyNamesChecker.AddODataPropertyAnnotation("", annotationName, value);
+                resourceState.DuplicatePropertyNamesChecker.AddODataScopeAnnotation(annotationName, value);
             }
             else
             {
-                resourceState.DuplicatePropertyNamesChecker.AddCustomPropertyAnnotation("", annotationName, value);
+                resourceState.DuplicatePropertyNamesChecker.AddCustomScopeAnnotation(annotationName, value);
             }
 
             return value;
@@ -298,7 +298,7 @@ namespace Microsoft.OData.JsonLight
                     {
                         // If this is not called for reading ResourceSetStart and we already scanned ahead and processed all resource set properties, we already checked for duplicate property names.
                         // Use an empty duplicate property name checker since this.ParseProperty() read through the same property annotation of instance annotations again.
-                        duplicatePropertyNamesChecker = new DuplicatePropertyNamesChecker(/*allowDuplicateProperties*/ true, this.JsonLightInputContext.ReadingResponse);
+                        duplicatePropertyNamesChecker = new DuplicatePropertyNamesChecker(false);
                     }
 
                     this.ProcessProperty(
@@ -406,7 +406,7 @@ namespace Microsoft.OData.JsonLight
                     || (this.JsonReader.NodeType == JsonNodeType.StartArray
                         && string.Equals(ODataAnnotationNames.ODataBind, annotationName, StringComparison.Ordinal)),
                     "OData instantation value should be primitive or (odata.bind) array");
-                duplicatePropertyNamesChecker.AddODataPropertyAnnotation("", annotationName, this.JsonReader.Value);
+                duplicatePropertyNamesChecker.AddODataScopeAnnotation(annotationName, this.JsonReader.Value);
             }
 
             // When we are reading the start of a resource set (in scan-ahead mode or not) or when
@@ -832,26 +832,23 @@ namespace Microsoft.OData.JsonLight
                 IsCollection = navigationProperty == null ? null : (bool?)navigationProperty.Type.IsCollection()
             };
 
-            Dictionary<string, object> propertyAnnotations = resourceState.DuplicatePropertyNamesChecker.GetODataPropertyAnnotations(nestedResourceInfo.Name);
-            if (propertyAnnotations != null)
+            foreach (var propertyAnnotation
+                     in resourceState.DuplicatePropertyNamesChecker.GetODataPropertyAnnotations(nestedResourceInfo.Name))
             {
-                foreach (KeyValuePair<string, object> propertyAnnotation in propertyAnnotations)
+                switch (propertyAnnotation.Key)
                 {
-                    switch (propertyAnnotation.Key)
-                    {
-                        case ODataAnnotationNames.ODataNavigationLinkUrl:
-                            Debug.Assert(propertyAnnotation.Value is Uri && propertyAnnotation.Value != null, "The odata.navigationLinkUrl annotation should have been parsed as a non-null Uri.");
-                            nestedResourceInfo.Url = (Uri)propertyAnnotation.Value;
-                            break;
+                    case ODataAnnotationNames.ODataNavigationLinkUrl:
+                        Debug.Assert(propertyAnnotation.Value is Uri && propertyAnnotation.Value != null, "The odata.navigationLinkUrl annotation should have been parsed as a non-null Uri.");
+                        nestedResourceInfo.Url = (Uri)propertyAnnotation.Value;
+                        break;
 
-                        case ODataAnnotationNames.ODataAssociationLinkUrl:
-                            Debug.Assert(propertyAnnotation.Value is Uri && propertyAnnotation.Value != null, "The odata.associationLinkUrl annotation should have been parsed as a non-null Uri.");
-                            nestedResourceInfo.AssociationLinkUrl = (Uri)propertyAnnotation.Value;
-                            break;
+                    case ODataAnnotationNames.ODataAssociationLinkUrl:
+                        Debug.Assert(propertyAnnotation.Value is Uri && propertyAnnotation.Value != null, "The odata.associationLinkUrl annotation should have been parsed as a non-null Uri.");
+                        nestedResourceInfo.AssociationLinkUrl = (Uri)propertyAnnotation.Value;
+                        break;
 
-                        default:
-                            throw new ODataException(ODataErrorStrings.ODataJsonLightEntryAndFeedDeserializer_UnexpectedDeferredLinkPropertyAnnotation(nestedResourceInfo.Name, propertyAnnotation.Key));
-                    }
+                    default:
+                        throw new ODataException(ODataErrorStrings.ODataJsonLightEntryAndFeedDeserializer_UnexpectedDeferredLinkPropertyAnnotation(nestedResourceInfo.Name, propertyAnnotation.Key));
                 }
             }
 
@@ -1204,50 +1201,47 @@ namespace Microsoft.OData.JsonLight
             // Undeclared property
             // Detect whether it's a link property or value property.
             // Link properties are stream properties and deferred links.
-            Dictionary<string, object> odataPropertyAnnotations = resourceState.DuplicatePropertyNamesChecker.GetODataPropertyAnnotations(propertyName);
-            if (odataPropertyAnnotations != null)
+            var odataPropertyAnnotations = resourceState.DuplicatePropertyNamesChecker.GetODataPropertyAnnotations(propertyName);
+            object propertyAnnotationValue;
+
+            // If the property has 'odata.navigationLink' or 'odata.associationLink' annotation, read it as a navigation property
+            if (odataPropertyAnnotations.TryGetValue(ODataAnnotationNames.ODataNavigationLinkUrl, out propertyAnnotationValue) ||
+                odataPropertyAnnotations.TryGetValue(ODataAnnotationNames.ODataAssociationLinkUrl, out propertyAnnotationValue))
             {
-                object propertyAnnotationValue;
+                // Read it as a deferred link - we never read the expanded content.
+                ODataJsonLightReaderNestedResourceInfo navigationLinkInfo = ReadDeferredNestedResourceInfo(resourceState, propertyName, /*navigationProperty*/ null);
+                resourceState.DuplicatePropertyNamesChecker.CheckForDuplicatePropertyNamesOnNestedResourceInfoStart(navigationLinkInfo.NestedResourceInfo);
 
-                // If the property has 'odata.navigationLink' or 'odata.associationLink' annotation, read it as a navigation property
-                if (odataPropertyAnnotations.TryGetValue(ODataAnnotationNames.ODataNavigationLinkUrl, out propertyAnnotationValue) ||
-                    odataPropertyAnnotations.TryGetValue(ODataAnnotationNames.ODataAssociationLinkUrl, out propertyAnnotationValue))
+                // If the property is expanded, ignore the content if we're asked to do so.
+                if (propertyWithValue)
                 {
-                    // Read it as a deferred link - we never read the expanded content.
-                    ODataJsonLightReaderNestedResourceInfo navigationLinkInfo = ReadDeferredNestedResourceInfo(resourceState, propertyName, /*navigationProperty*/ null);
-                    resourceState.DuplicatePropertyNamesChecker.CheckForDuplicatePropertyNamesOnNestedResourceInfoStart(navigationLinkInfo.NestedResourceInfo);
+                    ValidateExpandedNestedResourceInfoPropertyValue(this.JsonReader, null, propertyName);
 
-                    // If the property is expanded, ignore the content if we're asked to do so.
-                    if (propertyWithValue)
-                    {
-                        ValidateExpandedNestedResourceInfoPropertyValue(this.JsonReader, null, propertyName);
-
-                        // Since we marked the nested resource info as deferred the reader will not try to read its content
-                        // instead it will behave as if it was a real deferred link (without a property value).
-                        // So skip the value here to move to the next property in the payload, which will look exactly the same
-                        // as if the nested resource info was deferred.
-                        this.JsonReader.SkipValue();
-                    }
-
-                    return navigationLinkInfo;
+                    // Since we marked the nested resource info as deferred the reader will not try to read its content
+                    // instead it will behave as if it was a real deferred link (without a property value).
+                    // So skip the value here to move to the next property in the payload, which will look exactly the same
+                    // as if the nested resource info was deferred.
+                    this.JsonReader.SkipValue();
                 }
 
-                // If the property has 'odata.mediaEditLink', 'odata.mediaReadLink', 'odata.mediaContentType' or 'odata.mediaEtag' annotation, read it as a stream property
-                if (odataPropertyAnnotations.TryGetValue(ODataAnnotationNames.ODataMediaEditLink, out propertyAnnotationValue) ||
-                    odataPropertyAnnotations.TryGetValue(ODataAnnotationNames.ODataMediaReadLink, out propertyAnnotationValue) ||
-                    odataPropertyAnnotations.TryGetValue(ODataAnnotationNames.ODataMediaContentType, out propertyAnnotationValue) ||
-                    odataPropertyAnnotations.TryGetValue(ODataAnnotationNames.ODataMediaETag, out propertyAnnotationValue))
-                {
-                    // Stream properties can't have a value
-                    if (propertyWithValue)
-                    {
-                        throw new ODataException(ODataErrorStrings.ODataJsonLightEntryAndFeedDeserializer_StreamPropertyWithValue(propertyName));
-                    }
+                return navigationLinkInfo;
+            }
 
-                    ODataStreamReferenceValue streamPropertyValue = this.ReadStreamPropertyValue(resourceState, propertyName);
-                    AddResourceProperty(resourceState, propertyName, streamPropertyValue, isUndeclaredProperty: true);
-                    return null;
+            // If the property has 'odata.mediaEditLink', 'odata.mediaReadLink', 'odata.mediaContentType' or 'odata.mediaEtag' annotation, read it as a stream property
+            if (odataPropertyAnnotations.TryGetValue(ODataAnnotationNames.ODataMediaEditLink, out propertyAnnotationValue) ||
+                odataPropertyAnnotations.TryGetValue(ODataAnnotationNames.ODataMediaReadLink, out propertyAnnotationValue) ||
+                odataPropertyAnnotations.TryGetValue(ODataAnnotationNames.ODataMediaContentType, out propertyAnnotationValue) ||
+                odataPropertyAnnotations.TryGetValue(ODataAnnotationNames.ODataMediaETag, out propertyAnnotationValue))
+            {
+                // Stream properties can't have a value
+                if (propertyWithValue)
+                {
+                    throw new ODataException(ODataErrorStrings.ODataJsonLightEntryAndFeedDeserializer_StreamPropertyWithValue(propertyName));
                 }
+
+                ODataStreamReferenceValue streamPropertyValue = this.ReadStreamPropertyValue(resourceState, propertyName);
+                AddResourceProperty(resourceState, propertyName, streamPropertyValue);
+                return null;
             }
 
             if (resourceState.ResourceType.IsOpen)
@@ -1304,36 +1298,33 @@ namespace Microsoft.OData.JsonLight
 
             ODataStreamReferenceValue streamReferenceValue = new ODataStreamReferenceValue();
 
-            Dictionary<string, object> propertyAnnotations = resourceState.DuplicatePropertyNamesChecker.GetODataPropertyAnnotations(streamPropertyName);
-            if (propertyAnnotations != null)
+            foreach (var propertyAnnotation
+                     in resourceState.DuplicatePropertyNamesChecker.GetODataPropertyAnnotations(streamPropertyName))
             {
-                foreach (KeyValuePair<string, object> propertyAnnotation in propertyAnnotations)
+                switch (propertyAnnotation.Key)
                 {
-                    switch (propertyAnnotation.Key)
-                    {
-                        case ODataAnnotationNames.ODataMediaEditLink:
-                            Debug.Assert(propertyAnnotation.Value is Uri && propertyAnnotation.Value != null, "The odata.mediaEditLink annotation should have been parsed as a non-null Uri.");
-                            streamReferenceValue.EditLink = (Uri)propertyAnnotation.Value;
-                            break;
+                    case ODataAnnotationNames.ODataMediaEditLink:
+                        Debug.Assert(propertyAnnotation.Value is Uri && propertyAnnotation.Value != null, "The odata.mediaEditLink annotation should have been parsed as a non-null Uri.");
+                        streamReferenceValue.EditLink = (Uri)propertyAnnotation.Value;
+                        break;
 
-                        case ODataAnnotationNames.ODataMediaReadLink:
-                            Debug.Assert(propertyAnnotation.Value is Uri && propertyAnnotation.Value != null, "The odata.mediaReadLink annotation should have been parsed as a non-null Uri.");
-                            streamReferenceValue.ReadLink = (Uri)propertyAnnotation.Value;
-                            break;
+                    case ODataAnnotationNames.ODataMediaReadLink:
+                        Debug.Assert(propertyAnnotation.Value is Uri && propertyAnnotation.Value != null, "The odata.mediaReadLink annotation should have been parsed as a non-null Uri.");
+                        streamReferenceValue.ReadLink = (Uri)propertyAnnotation.Value;
+                        break;
 
-                        case ODataAnnotationNames.ODataMediaETag:
-                            Debug.Assert(propertyAnnotation.Value is string && propertyAnnotation.Value != null, "The odata.mediaEtag annotation should have been parsed as a non-null string.");
-                            streamReferenceValue.ETag = (string)propertyAnnotation.Value;
-                            break;
+                    case ODataAnnotationNames.ODataMediaETag:
+                        Debug.Assert(propertyAnnotation.Value is string && propertyAnnotation.Value != null, "The odata.mediaEtag annotation should have been parsed as a non-null string.");
+                        streamReferenceValue.ETag = (string)propertyAnnotation.Value;
+                        break;
 
-                        case ODataAnnotationNames.ODataMediaContentType:
-                            Debug.Assert(propertyAnnotation.Value is string && propertyAnnotation.Value != null, "The odata.mediaContentType annotation should have been parsed as a non-null string.");
-                            streamReferenceValue.ContentType = (string)propertyAnnotation.Value;
-                            break;
+                    case ODataAnnotationNames.ODataMediaContentType:
+                        Debug.Assert(propertyAnnotation.Value is string && propertyAnnotation.Value != null, "The odata.mediaContentType annotation should have been parsed as a non-null string.");
+                        streamReferenceValue.ContentType = (string)propertyAnnotation.Value;
+                        break;
 
-                        default:
-                            throw new ODataException(ODataErrorStrings.ODataJsonLightEntryAndFeedDeserializer_UnexpectedStreamPropertyAnnotation(streamPropertyName, propertyAnnotation.Key));
-                    }
+                    default:
+                        throw new ODataException(ODataErrorStrings.ODataJsonLightEntryAndFeedDeserializer_UnexpectedStreamPropertyAnnotation(streamPropertyName, propertyAnnotation.Key));
                 }
             }
 

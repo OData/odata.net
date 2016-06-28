@@ -31,7 +31,7 @@ namespace Microsoft.OData.Tests.JsonLight
                         AssociationLinkUrl = new Uri("http://example.com/association"),
                         Url = new Uri("http://example.com/navigation")
                     },
-                    new DuplicatePropertyNamesChecker(false, true)));
+                    new DuplicatePropertyNamesChecker(true)));
 
             jsonResult.Should().Contain("NavigationProperty@odata.associationLink\":\"http://example.com/association");
         }
@@ -47,7 +47,7 @@ namespace Microsoft.OData.Tests.JsonLight
                         AssociationLinkUrl = new Uri("http://example.com/association"),
                         Url = new Uri("http://example.com/navigation")
                     },
-                    new DuplicatePropertyNamesChecker(false, true)));
+                    new DuplicatePropertyNamesChecker(true)));
 
             jsonResult.Should().Contain("NavigationProperty@odata.navigationLink\":\"http://example.com/navigation");
         }

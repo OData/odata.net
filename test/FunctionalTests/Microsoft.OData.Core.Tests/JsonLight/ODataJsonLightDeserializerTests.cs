@@ -59,7 +59,7 @@ namespace Microsoft.OData.Tests.JsonLight
                 (jsonReader, duplicateChecker) =>
                 {
                     jsonReader.Should().BeOn(JsonNodeType.EndObject, null);
-                    duplicateChecker.GetODataPropertyAnnotations("property").Should().BeNull();
+                    duplicateChecker.GetODataPropertyAnnotations("property").Should().BeEmpty();
                 });
         }
 
@@ -130,7 +130,7 @@ namespace Microsoft.OData.Tests.JsonLight
                 (jsonReader, duplicateChecker) =>
                 {
                     jsonReader.Should().BeOn(JsonNodeType.PrimitiveValue, 42);
-                    duplicateChecker.GetODataPropertyAnnotations("property").Should().BeNull();
+                    duplicateChecker.GetODataPropertyAnnotations("property").Should().BeEmpty();
                 },
                 this.ReadODataTypePropertyAnnotation);
         }
@@ -142,7 +142,7 @@ namespace Microsoft.OData.Tests.JsonLight
                 (jsonReader, duplicateChecker) =>
                 {
                     jsonReader.Should().BeOn(JsonNodeType.Property, "otherproperty");
-                    duplicateChecker.GetODataPropertyAnnotations("property").Should().BeNull();
+                    duplicateChecker.GetODataPropertyAnnotations("property").Should().BeEmpty();
                 },
                 this.ReadODataTypePropertyAnnotation);
         }
@@ -154,7 +154,7 @@ namespace Microsoft.OData.Tests.JsonLight
                 (jsonReader, duplicateChecker) =>
                 {
                     jsonReader.Should().BeOn(JsonNodeType.Property, JsonLightConstants.ODataPropertyAnnotationSeparatorChar + ODataAnnotationNames.ODataType);
-                    duplicateChecker.GetODataPropertyAnnotations("property").Should().BeNull();
+                    duplicateChecker.GetODataPropertyAnnotations("property").Should().BeEmpty();
                 },
                 this.ReadODataTypePropertyAnnotation);
         }
@@ -166,7 +166,7 @@ namespace Microsoft.OData.Tests.JsonLight
                 (jsonReader, duplicateChecker) =>
                 {
                     jsonReader.Should().BeOn(JsonNodeType.Property, JsonLightUtils.GetPropertyAnnotationName("otherproperty", ODataAnnotationNames.ODataType));
-                    duplicateChecker.GetODataPropertyAnnotations("property").Should().BeNull();
+                    duplicateChecker.GetODataPropertyAnnotations("property").Should().BeEmpty();
                 },
                 this.ReadODataTypePropertyAnnotation);
         }
@@ -190,7 +190,7 @@ namespace Microsoft.OData.Tests.JsonLight
                 (jsonReader, duplicateChecker) =>
                 {
                     jsonReader.Should().BeOn(JsonNodeType.Property, "#namespace.name");
-                    duplicateChecker.GetODataPropertyAnnotations("property").Should().BeNull();
+                    duplicateChecker.GetODataPropertyAnnotations("property").Should().BeEmpty();
                 },
                 this.ReadODataTypePropertyAnnotation);
         }
@@ -204,11 +204,12 @@ namespace Microsoft.OData.Tests.JsonLight
         }
 
         [Fact]
-        public void ParsingDuplicateCustomPropertyAnnotationShouldFail()
+        public void ParsingDuplicateCustomPropertyAnnotationShouldNotFail()
         {
-            Action action = () => this.RunPropertyParsingTest("{\"" + JsonLightUtils.GetPropertyAnnotationName("property", "custom.type") + "\":\"typename\",\"" + JsonLightUtils.GetPropertyAnnotationName("property", "custom.type") + "\":\"typename2\"}", ODataJsonLightDeserializer.PropertyParsingResult.EndOfObject, null,
-                null, this.ReadODataTypePropertyAnnotation);
-            action.ShouldThrow<ODataException>().WithMessage(ErrorStrings.DuplicatePropertyNamesChecker_DuplicateAnnotationForPropertyNotAllowed("custom.type", "property"));
+            Action action = () => this.RunPropertyParsingTest(
+                "{\"" + JsonLightUtils.GetPropertyAnnotationName("property", "custom.type") + "\":\"typename\",\"" + JsonLightUtils.GetPropertyAnnotationName("property", "custom.type") + "\":\"typename2\"}",
+                ODataJsonLightDeserializer.PropertyParsingResult.PropertyWithoutValue, "property", null, this.ReadODataTypePropertyAnnotation);
+            action.ShouldNotThrow();
         }
 
         #region Instance Annotation tests
@@ -486,7 +487,7 @@ namespace Microsoft.OData.Tests.JsonLight
         [Fact]
         public void ParsingDuplicateODataInstanceAnnotationShouldFail()
         {
-            var duplicatePropertyNamesChecker = new DuplicatePropertyNamesChecker(false, true);
+            var duplicatePropertyNamesChecker = new DuplicatePropertyNamesChecker(true);
             Action action = () => this.RunPropertyParsingTest("{\"@odata.deltaLink\":\"url\",\"@odata.deltaLink\":\"url\"}", ODataJsonLightDeserializer.PropertyParsingResult.ODataInstanceAnnotation, "odata.deltaLink",
                 null, this.ReadODataTypePropertyAnnotation, duplicatePropertyNamesChecker);
             action();
@@ -494,29 +495,29 @@ namespace Microsoft.OData.Tests.JsonLight
         }
 
         [Fact]
-        public void ParsingDuplicateCustomInstanceAnnotationShouldFail1()
+        public void ParsingDuplicateCustomInstanceAnnotationShouldNotFail1()
         {
-            var duplicatePropertyNamesChecker = new DuplicatePropertyNamesChecker(false, true);
-            Action action = () => this.RunPropertyParsingTest("{\"@custom.type\":\"typename\",\"@custom.type\":\"typename\"}", ODataJsonLightDeserializer.PropertyParsingResult.CustomInstanceAnnotation, "custom.type",
-                null, this.ReadODataTypePropertyAnnotation, duplicatePropertyNamesChecker);
-            action.ShouldThrow<ODataException>().WithMessage(ErrorStrings.DuplicatePropertyNamesChecker_DuplicateAnnotationNotAllowed("custom.type"));
+            var duplicatePropertyNamesChecker = new DuplicatePropertyNamesChecker(true);
+            Action action = () => this.RunPropertyParsingTest("{\"@custom.type\":\"typename\",\"@custom.type\":\"typename\"}", ODataJsonLightDeserializer.PropertyParsingResult.EndOfObject,
+                null, null, this.ReadODataTypePropertyAnnotation, duplicatePropertyNamesChecker);
+            action.ShouldNotThrow();
         }
 
         [Fact]
-        public void ParsingDuplicateCustomInstanceAnnotationShouldFail2()
+        public void ParsingDuplicateCustomInstanceAnnotationShouldNotFail2()
         {
             this.messageReaderSettings.ShouldIncludeAnnotation = ODataUtils.CreateAnnotationFilter("*");
-            var duplicatePropertyNamesChecker = new DuplicatePropertyNamesChecker(false, true);
+            var duplicatePropertyNamesChecker = new DuplicatePropertyNamesChecker(true);
             Action action = () => this.RunPropertyParsingTest("{\"@custom.type\":\"typename\",\"@custom.type\":\"typename\"}", ODataJsonLightDeserializer.PropertyParsingResult.CustomInstanceAnnotation, "custom.type",
                 null, this.ReadODataTypePropertyAnnotation, duplicatePropertyNamesChecker);
             action();
-            action.ShouldThrow<ODataException>().WithMessage(ErrorStrings.DuplicatePropertyNamesChecker_DuplicateAnnotationNotAllowed("custom.type"));
+            action.ShouldNotThrow();
         }
 
         [Fact]
         public void ParsingDuplicateODataTypeAnnotationTargetingODataInstanceAnnotationShouldFail()
         {
-            var duplicatePropertyNamesChecker = new DuplicatePropertyNamesChecker(false, true);
+            var duplicatePropertyNamesChecker = new DuplicatePropertyNamesChecker(true);
             Action action = () => this.RunPropertyParsingTest("{\"odata.annotation@odata.type\":\"#typename\",\"odata.annotation@odata.type\":\"#typename\"}", ODataJsonLightDeserializer.PropertyParsingResult.CustomInstanceAnnotation, "custom.type",
                 null, this.ReadODataTypePropertyAnnotation, duplicatePropertyNamesChecker);
             action.ShouldThrow<ODataException>().WithMessage(ErrorStrings.DuplicatePropertyNamesChecker_DuplicateAnnotationForInstanceAnnotationNotAllowed("odata.type", "odata.annotation"));
@@ -525,7 +526,7 @@ namespace Microsoft.OData.Tests.JsonLight
         [Fact]
         public void ParsingDuplicateODataTypeAnnotationTargetingCustomInstanceAnnotationShouldFail()
         {
-            var duplicatePropertyNamesChecker = new DuplicatePropertyNamesChecker(false, true);
+            var duplicatePropertyNamesChecker = new DuplicatePropertyNamesChecker(true);
             Action action = () => this.RunPropertyParsingTest("{\"custom.annotation@odata.type\":\"#typename\",\"custom.annotation@odata.type\":\"#typename\"}", ODataJsonLightDeserializer.PropertyParsingResult.CustomInstanceAnnotation, "custom.type",
                 null, this.ReadODataTypePropertyAnnotation, duplicatePropertyNamesChecker);
             action.ShouldThrow<ODataException>().WithMessage(ErrorStrings.DuplicatePropertyNamesChecker_DuplicateAnnotationForInstanceAnnotationNotAllowed("odata.type", "custom.annotation"));
@@ -672,14 +673,14 @@ namespace Microsoft.OData.Tests.JsonLight
         [Fact]
         public void TwoMetadataReferencePropertiesShouldResultInDuplicationException()
         {
-            DuplicatePropertyNamesChecker duplicatePropertyNamesChecker = new DuplicatePropertyNamesChecker(allowDuplicateProperties: false, isResponse: true);
+            DuplicatePropertyNamesChecker duplicatePropertyNamesChecker = new DuplicatePropertyNamesChecker(true);
             this.AssertDuplicateMetadataReferencePropertyFails(duplicatePropertyNamesChecker);
         }
 
         [Fact]
         public void TwoMetadataReferencePropertiesShouldStillResultInDuplicationExceptionIfAllowingDuplicates()
         {
-            DuplicatePropertyNamesChecker duplicatePropertyNamesChecker = new DuplicatePropertyNamesChecker(allowDuplicateProperties: true, isResponse: true);
+            DuplicatePropertyNamesChecker duplicatePropertyNamesChecker = new DuplicatePropertyNamesChecker(false);
             this.AssertDuplicateMetadataReferencePropertyFails(duplicatePropertyNamesChecker);
         }
 
@@ -718,7 +719,7 @@ namespace Microsoft.OData.Tests.JsonLight
         private void VerifyInvalidMetadataReferenceProperty(string propertyName)
         {
             string jsonInput = string.Format("{{\"" + JsonLightConstants.ODataPropertyAnnotationSeparatorChar + ODataAnnotationNames.ODataContext + "\":\"http://odata.org/$metadata\"," + "\"{0}\":42}}", propertyName);
-            DuplicatePropertyNamesChecker duplicatePropertyNamesChecker = new DuplicatePropertyNamesChecker(false, true);
+            DuplicatePropertyNamesChecker duplicatePropertyNamesChecker = new DuplicatePropertyNamesChecker(true);
 
             using (ODataJsonLightInputContext inputContext = this.CreateJsonLightInputContext(jsonInput))
             {
@@ -1108,8 +1109,9 @@ namespace Microsoft.OData.Tests.JsonLight
         {
             if (duplicatePropertyNamesChecker == null)
             {
-                duplicatePropertyNamesChecker = new DuplicatePropertyNamesChecker(false, true);
+                duplicatePropertyNamesChecker = new DuplicatePropertyNamesChecker(true);
             }
+
             if (readPropertyAnnotationValue == null)
             {
                 readPropertyAnnotationValue = (jsonReader, annotationName) => jsonReader.ReadPrimitiveValue();
