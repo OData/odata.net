@@ -38,7 +38,7 @@ namespace Microsoft.OData
         private HashSet<string> parameterNamesWritten = new HashSet<string>(StringComparer.Ordinal);
 
         /// <summary>Checker to detect duplicate property names on complex parameter values.</summary>
-        private DuplicatePropertyNamesChecker duplicatePropertyNamesChecker;
+        private IDuplicatePropertyNameChecker duplicatePropertyNameChecker;
 
         /// <summary>
         /// Constructor.
@@ -79,14 +79,14 @@ namespace Microsoft.OData
         }
 
         /// <summary>Checker to detect duplicate property names on complex parameter values.</summary>
-        protected DuplicatePropertyNamesChecker DuplicatePropertyNamesChecker
+        protected IDuplicatePropertyNameChecker DuplicatePropertyNameChecker
         {
             get
             {
-                return this.duplicatePropertyNamesChecker ??
-                       (this.duplicatePropertyNamesChecker =
+                return this.duplicatePropertyNameChecker ??
+                       (this.duplicatePropertyNameChecker =
                            outputContext.MessageWriterSettings.Validator
-                           .CreateDuplicatePropertyNamesChecker());
+                           .CreateDuplicatePropertyNameChecker());
             }
         }
 

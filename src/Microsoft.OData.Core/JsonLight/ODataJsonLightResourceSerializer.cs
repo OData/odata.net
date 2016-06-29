@@ -220,8 +220,8 @@ namespace Microsoft.OData.JsonLight
         /// Writes the metadata properties for a resource which can only occur at the end.
         /// </summary>
         /// <param name="resourceState">The resource state for which to write the metadata properties.</param>
-        /// <param name="duplicatePropertyNamesChecker">The duplicate names checker for properties of this resource.</param>
-        internal void WriteResourceEndMetadataProperties(IODataJsonLightWriterResourceState resourceState, DuplicatePropertyNamesChecker duplicatePropertyNamesChecker)
+        /// <param name="duplicatePropertyNameChecker">The DuplicatePropertyNameChecker to use.</param>
+        internal void WriteResourceEndMetadataProperties(IODataJsonLightWriterResourceState resourceState, IDuplicatePropertyNameChecker duplicatePropertyNameChecker)
         {
             Debug.Assert(resourceState != null, "resourceState != null");
 
@@ -233,7 +233,7 @@ namespace Microsoft.OData.JsonLight
                 Debug.Assert(resource.MetadataBuilder != null, "resource.MetadataBuilder != null");
                 navigationLinkInfo.NestedResourceInfo.MetadataBuilder = resource.MetadataBuilder;
 
-                this.WriteNavigationLinkMetadata(navigationLinkInfo.NestedResourceInfo, duplicatePropertyNamesChecker);
+                this.WriteNavigationLinkMetadata(navigationLinkInfo.NestedResourceInfo, duplicatePropertyNameChecker);
                 navigationLinkInfo = resource.MetadataBuilder.GetNextUnprocessedNavigationLink();
             }
 
@@ -256,19 +256,19 @@ namespace Microsoft.OData.JsonLight
         /// Writes the navigation link metadata.
         /// </summary>
         /// <param name="nestedResourceInfo">The navigation link to write the metadata for.</param>
-        /// <param name="duplicatePropertyNamesChecker">The checker instance for duplicate property names.</param>
-        internal void WriteNavigationLinkMetadata(ODataNestedResourceInfo nestedResourceInfo, DuplicatePropertyNamesChecker duplicatePropertyNamesChecker)
+        /// <param name="duplicatePropertyNameChecker">The DuplicatePropertyNameChecker to use.</param>
+        internal void WriteNavigationLinkMetadata(ODataNestedResourceInfo nestedResourceInfo, IDuplicatePropertyNameChecker duplicatePropertyNameChecker)
         {
             Debug.Assert(nestedResourceInfo != null, "nestedResourceInfo != null");
             Debug.Assert(!string.IsNullOrEmpty(nestedResourceInfo.Name), "The nested resource info Name should have been validated by now.");
-            Debug.Assert(duplicatePropertyNamesChecker != null, "duplicatePropertyNamesChecker != null");
+            Debug.Assert(duplicatePropertyNameChecker != null);
 
             Uri navigationLinkUrl = nestedResourceInfo.Url;
             string navigationLinkName = nestedResourceInfo.Name;
             Uri associationLinkUrl = nestedResourceInfo.AssociationLinkUrl;
             if (associationLinkUrl != null)
             {
-                duplicatePropertyNamesChecker.CheckForDuplicateAssociationLinkNamesAndGetNestedResourceInfo(navigationLinkName, null);
+                duplicatePropertyNameChecker.ValidatePropertyOpenForAssociationLink(navigationLinkName);
                 this.WriteAssociationLink(nestedResourceInfo.Name, associationLinkUrl);
             }
 

@@ -85,7 +85,7 @@ namespace Microsoft.OData.JsonLight
         /// <param name="metadataTypeReference">The metadata type for the complex value.</param>
         /// <param name="isTopLevel">true when writing a top-level property; false for nested properties.</param>
         /// <param name="isOpenPropertyType">true if the type name belongs to an open property.</param>
-        /// <param name="duplicatePropertyNamesChecker">The checker instance for duplicate property names.</param>
+        /// <param name="duplicatePropertyNameChecker">The DuplicatePropertyNameChecker to use.</param>
         /// <remarks>The current recursion depth should be a value, measured by the number of complex and collection values between
         /// this complex value and the top-level payload, not including this one.</remarks>
         [SuppressMessage("Microsoft.Naming", "CA2204:LiteralsShouldBeSpelledCorrectly", Justification = "Names are correct. String can't be localized after string freeze.")]
@@ -94,7 +94,7 @@ namespace Microsoft.OData.JsonLight
             IEdmTypeReference metadataTypeReference,
             bool isTopLevel,
             bool isOpenPropertyType,
-            DuplicatePropertyNamesChecker duplicatePropertyNamesChecker)
+            IDuplicatePropertyNameChecker duplicatePropertyNameChecker)
         {
             Debug.Assert(complexValue != null, "complexValue != null");
 
@@ -147,7 +147,7 @@ namespace Microsoft.OData.JsonLight
                 complexValueTypeReference == null ? null : complexValueTypeReference.ComplexDefinition(),
                 complexValue.Properties,
                 true /* isComplexValue */,
-                duplicatePropertyNamesChecker,
+                duplicatePropertyNameChecker,
                 null /*projectedProperties */);
 
             // End the object scope which represents the complex instance;
@@ -250,7 +250,7 @@ namespace Microsoft.OData.JsonLight
             {
                 IEdmTypeReference expectedItemTypeReference = valueTypeReference == null ? null : ((IEdmCollectionTypeReference)valueTypeReference).ElementType();
 
-                DuplicatePropertyNamesChecker duplicatePropertyNamesChecker = null;
+                IDuplicatePropertyNameChecker duplicatePropertyNameChecker = null;
                 foreach (object item in items)
                 {
                     ValidationUtils.ValidateCollectionItem(item, expectedItemTypeReference.IsNullable());
@@ -258,9 +258,9 @@ namespace Microsoft.OData.JsonLight
                     ODataComplexValue itemAsComplexValue = item as ODataComplexValue;
                     if (itemAsComplexValue != null)
                     {
-                        if (duplicatePropertyNamesChecker == null)
+                        if (duplicatePropertyNameChecker == null)
                         {
-                            duplicatePropertyNamesChecker = this.CreateDuplicatePropertyNamesChecker();
+                            duplicatePropertyNameChecker = this.CreateDuplicatePropertyNameChecker();
                         }
 
                         this.WriteComplexValue(
@@ -268,9 +268,9 @@ namespace Microsoft.OData.JsonLight
                             expectedItemTypeReference,
                             false /*isTopLevel*/,
                             false /*isOpenPropertyType*/,
-                            duplicatePropertyNamesChecker);
+                            duplicatePropertyNameChecker);
 
-                        duplicatePropertyNamesChecker.Clear();
+                        duplicatePropertyNameChecker.Reset();
                     }
                     else
                     {

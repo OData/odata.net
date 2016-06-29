@@ -248,7 +248,7 @@ namespace Microsoft.OData.JsonLight
                 this.ResourceType,
                 resource.Properties,
                 false /* isComplexValue */,
-                this.DuplicatePropertyNamesChecker,
+                this.DuplicatePropertyNameChecker,
                 projectedProperties);
             this.jsonLightResourceSerializer.JsonLightValueSerializer.AssertRecursionDepthIsZero();
 
@@ -274,7 +274,7 @@ namespace Microsoft.OData.JsonLight
             // Write custom instance annotations
             this.jsonLightResourceSerializer.InstanceAnnotationWriter.WriteInstanceAnnotations(resource.InstanceAnnotations, resourceScope.InstanceAnnotationWriteTracker);
 
-            this.jsonLightResourceSerializer.WriteResourceEndMetadataProperties(resourceScope, resourceScope.DuplicatePropertyNamesChecker);
+            this.jsonLightResourceSerializer.WriteResourceEndMetadataProperties(resourceScope, resourceScope.DuplicatePropertyNameChecker);
 
             // Close the object scope
             this.jsonWriter.EndObjectScope();
@@ -467,7 +467,7 @@ namespace Microsoft.OData.JsonLight
             Debug.Assert(this.jsonLightOutputContext.WritingResponse, "Deferred links are only supported in response, we should have verified this already.");
 
             // A deferred nested resource info is just the link metadata, no value.
-            this.jsonLightResourceSerializer.WriteNavigationLinkMetadata(nestedResourceInfo, this.DuplicatePropertyNamesChecker);
+            this.jsonLightResourceSerializer.WriteNavigationLinkMetadata(nestedResourceInfo, this.DuplicatePropertyNameChecker);
         }
 
         /// <summary>
@@ -494,7 +494,7 @@ namespace Microsoft.OData.JsonLight
                 }
 
                 // Write the nested resource info metadata first. The rest is written by the content resource or resource set.
-                this.jsonLightResourceSerializer.WriteNavigationLinkMetadata(nestedResourceInfo, this.DuplicatePropertyNamesChecker);
+                this.jsonLightResourceSerializer.WriteNavigationLinkMetadata(nestedResourceInfo, this.DuplicatePropertyNameChecker);
             }
             else
             {

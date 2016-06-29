@@ -1530,8 +1530,14 @@
     <Compile Include="$(ODataCrossTargettingSourcePath)\UriParser\Aggregation\TransformationNodeKind.cs">
       <Link>Microsoft\OData\Core\UriParser\Aggregation\TransformationNodeKind.cs</Link>
     </Compile>
+    <Compile Include="..\DuplicatePropertyNameChecker.cs">
+      <Link>Microsoft\OData\Core\DuplicatePropertyNameChecker.cs</Link>
+    </Compile>
     <Compile Include="..\IContainerProvider.cs">
       <Link>Microsoft\OData\Core\IContainerProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\IDuplicatePropertyNameChecker.cs">
+      <Link>Microsoft\OData\Core\IDuplicatePropertyNameChecker.cs</Link>
     </Compile>
     <Compile Include="..\IReaderValidator.cs">
       <Link>Microsoft\OData\Core\IReaderValidator.cs</Link>

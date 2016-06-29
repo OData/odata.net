@@ -84,9 +84,9 @@ namespace Microsoft.OData
         /// Creates a new instance of a duplicate property names checker.
         /// </summary>
         /// <returns>The newly created instance of duplicate property names checker.</returns>
-        internal DuplicatePropertyNamesChecker CreateDuplicatePropertyNamesChecker()
+        internal IDuplicatePropertyNameChecker CreateDuplicatePropertyNameChecker()
         {
-            return MessageWriterSettings.Validator.CreateDuplicatePropertyNamesChecker();
+            return MessageWriterSettings.Validator.CreateDuplicatePropertyNameChecker();
         }
     }
 }

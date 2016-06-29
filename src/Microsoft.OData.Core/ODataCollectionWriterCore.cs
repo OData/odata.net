@@ -35,7 +35,7 @@ namespace Microsoft.OData
         private readonly IEdmTypeReference expectedItemType;
 
         /// <summary>Checker to detect duplicate property names on complex collection items.</summary>
-        private DuplicatePropertyNamesChecker duplicatePropertyNamesChecker;
+        private IDuplicatePropertyNameChecker duplicatePropertyNameChecker;
 
         /// <summary>The collection validator instance if no expected item type has been specified; otherwise null.</summary>
         private CollectionWithoutExpectedTypeValidator collectionValidator;
@@ -102,17 +102,13 @@ namespace Microsoft.OData
         }
 
         /// <summary>Checker to detect duplicate property names on complex collection items.</summary>
-        protected DuplicatePropertyNamesChecker DuplicatePropertyNamesChecker
+        protected IDuplicatePropertyNameChecker DuplicatePropertyNameChecker
         {
             get
             {
-                if (this.duplicatePropertyNamesChecker == null)
-                {
-                    this.duplicatePropertyNamesChecker =
-                        this.outputContext.MessageWriterSettings.Validator.CreateDuplicatePropertyNamesChecker();
-                }
-
-                return this.duplicatePropertyNamesChecker;
+                return duplicatePropertyNameChecker
+                       ?? (duplicatePropertyNameChecker
+                           = outputContext.MessageWriterSettings.Validator.CreateDuplicatePropertyNameChecker());
             }
         }
 

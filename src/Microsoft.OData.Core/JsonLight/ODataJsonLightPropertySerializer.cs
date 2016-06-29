@@ -81,7 +81,7 @@ namespace Microsoft.OData.JsonLight
                         null /*owningType*/,
                         true /* isTopLevel */,
                         false /* allowStreamProperty */,
-                        this.CreateDuplicatePropertyNamesChecker(),
+                        this.CreateDuplicatePropertyNameChecker(),
                         null /* projectedProperties */);
                     this.JsonLightValueSerializer.AssertRecursionDepthIsZero();
 
@@ -98,13 +98,13 @@ namespace Microsoft.OData.JsonLight
         /// Whether the properties are being written for complex value. Also used for detecting whether stream properties
         /// are allowed as named stream properties should only be defined on ODataResource instances
         /// </param>
-        /// <param name="duplicatePropertyNamesChecker">The checker instance for duplicate property names.</param>
+        /// <param name="duplicatePropertyNameChecker">The DuplicatePropertyNameChecker to use.</param>
         /// <param name="projectedProperties">Set of projected properties, or null if all properties should be written.</param>
         internal void WriteProperties(
             IEdmStructuredType owningType,
             IEnumerable<ODataProperty> properties,
             bool isComplexValue,
-            DuplicatePropertyNamesChecker duplicatePropertyNamesChecker,
+            IDuplicatePropertyNameChecker duplicatePropertyNameChecker,
             ProjectedPropertiesAnnotation projectedProperties)
         {
             if (properties == null)
@@ -119,7 +119,7 @@ namespace Microsoft.OData.JsonLight
                     owningType,
                     false /* isTopLevel */,
                     !isComplexValue,
-                    duplicatePropertyNamesChecker,
+                    duplicatePropertyNameChecker,
                     projectedProperties);
             }
         }
@@ -161,7 +161,7 @@ namespace Microsoft.OData.JsonLight
         /// <param name="isTopLevel">true when writing a top-level property; false for nested properties.</param>
         /// <param name="allowStreamProperty">Should pass in true if we are writing a property of an ODataResource instance, false otherwise.
         /// Named stream properties should only be defined on ODataResource instances.</param>
-        /// <param name="duplicatePropertyNamesChecker">The checker instance for duplicate property names.</param>
+        /// <param name="duplicatePropertyNameChecker">The DuplicatePropertyNameChecker to use.</param>
         /// <param name="projectedProperties">Set of projected properties, or null if all properties should be written.</param>
         [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling", Justification = "Splitting the code would make the logic harder to understand; class coupling is only slightly above threshold.")]
         private void WriteProperty(
@@ -169,7 +169,7 @@ namespace Microsoft.OData.JsonLight
             IEdmStructuredType owningType,
             bool isTopLevel,
             bool allowStreamProperty,
-            DuplicatePropertyNamesChecker duplicatePropertyNamesChecker,
+            IDuplicatePropertyNameChecker duplicatePropertyNameChecker,
             ProjectedPropertiesAnnotation projectedProperties)
         {
             WriterValidationUtils.ValidatePropertyNotNull(property);
@@ -193,7 +193,7 @@ namespace Microsoft.OData.JsonLight
                 return;
             }
 
-            duplicatePropertyNamesChecker.CheckForDuplicatePropertyNames(property);
+            duplicatePropertyNameChecker.ValidatePropertyUniqueness(property);
 
             WriteInstanceAnnotation(property, isTopLevel, currentPropertyInfo.MetadataType.IsUndeclaredProperty);
 
@@ -371,7 +371,7 @@ namespace Microsoft.OData.JsonLight
                 this.JsonWriter.WriteName(this.currentPropertyInfo.PropertyName);
             }
 
-            this.JsonLightValueSerializer.WriteComplexValue(complexValue, this.currentPropertyInfo.MetadataType.TypeReference, this.currentPropertyInfo.IsTopLevel, isOpenPropertyType, this.CreateDuplicatePropertyNamesChecker());
+            this.JsonLightValueSerializer.WriteComplexValue(complexValue, this.currentPropertyInfo.MetadataType.TypeReference, this.currentPropertyInfo.IsTopLevel, isOpenPropertyType, this.CreateDuplicatePropertyNameChecker());
         }
 
         /// <summary>

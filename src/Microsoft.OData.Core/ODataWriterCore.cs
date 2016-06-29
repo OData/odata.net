@@ -251,7 +251,7 @@ namespace Microsoft.OData
         /// <summary>
         /// Checker to detect duplicate property names.
         /// </summary>
-        protected DuplicatePropertyNamesChecker DuplicatePropertyNamesChecker
+        protected IDuplicatePropertyNameChecker DuplicatePropertyNameChecker
         {
             get
             {
@@ -273,7 +273,7 @@ namespace Microsoft.OData
                         throw new ODataException(Strings.General_InternalError(InternalErrorCodes.ODataWriterCore_DuplicatePropertyNamesChecker));
                 }
 
-                return resourceScope.DuplicatePropertyNamesChecker;
+                return resourceScope.DuplicatePropertyNameChecker;
             }
         }
 
@@ -1009,7 +1009,7 @@ namespace Microsoft.OData
                         if (!this.SkipWriting)
                         {
                             ODataNestedResourceInfo link = (ODataNestedResourceInfo)currentScope.Item;
-                            this.DuplicatePropertyNamesChecker.CheckForDuplicatePropertyNamesAndGetAssociationLink(link);
+                            this.DuplicatePropertyNameChecker.ValidatePropertyUniqueness(link);
                             this.WriteDeferredNestedResourceInfo(link);
 
                             this.MarkNestedResourceInfoAsProcessed(link);
@@ -1223,7 +1223,7 @@ namespace Microsoft.OData
                         {
                             if (this.CurrentScope.ResourceType == null || this.CurrentScope.ResourceType.IsEntityOrEntityCollectionType())
                             {
-                                this.DuplicatePropertyNamesChecker.CheckForDuplicatePropertyNamesAndGetAssociationLink(currentNestedResourceInfo);
+                                this.DuplicatePropertyNameChecker.ValidatePropertyUniqueness(currentNestedResourceInfo);
                                 this.StartNestedResourceInfoWithContent(currentNestedResourceInfo);
                             }
                         });
@@ -1996,7 +1996,7 @@ namespace Microsoft.OData
         internal class ResourceScope : Scope
         {
             /// <summary>Checker to detect duplicate property names.</summary>
-            private readonly DuplicatePropertyNamesChecker duplicatePropertyNamesChecker;
+            private readonly IDuplicatePropertyNameChecker duplicatePropertyNameChecker;
 
             /// <summary>The serialization info for the current resource.</summary>
             private readonly ODataResourceSerializationInfo serializationInfo;
@@ -2028,8 +2028,7 @@ namespace Microsoft.OData
 
                 if (resource != null)
                 {
-                    this.duplicatePropertyNamesChecker =
-                        writerSettings.Validator.CreateDuplicatePropertyNamesChecker();
+                    duplicatePropertyNameChecker = writerSettings.Validator.CreateDuplicatePropertyNameChecker();
                 }
 
                 this.serializationInfo = serializationInfo;
@@ -2063,11 +2062,11 @@ namespace Microsoft.OData
             /// <summary>
             /// Checker to detect duplicate property names.
             /// </summary>
-            internal DuplicatePropertyNamesChecker DuplicatePropertyNamesChecker
+            internal IDuplicatePropertyNameChecker DuplicatePropertyNameChecker
             {
                 get
                 {
-                    return this.duplicatePropertyNamesChecker;
+                    return duplicatePropertyNameChecker;
                 }
             }
 

@@ -19,7 +19,7 @@ namespace Microsoft.OData.Tests.Json
         public const string ComplexOutput = "FAKE_COMPLEX_VALUE";
         public const string CollectionOutput = "FAKE_COLLECTION_VALUE_";
 
-        public Action<ODataComplexValue, IEdmTypeReference, bool, bool, DuplicatePropertyNamesChecker> WriteComplexVerifier { get; set; }
+        public Action<ODataComplexValue, IEdmTypeReference, bool, bool, IDuplicatePropertyNameChecker> WriteComplexVerifier { get; set; }
         public Action<ODataCollectionValue, IEdmTypeReference, IEdmTypeReference, bool, bool, bool> WriteCollectionVerifier { get; set; }
         public Action<object, IEdmTypeReference> WritePrimitiveVerifier { get; set; }
         public Action WriteNullVerifier { get; set; }
@@ -35,10 +35,10 @@ namespace Microsoft.OData.Tests.Json
             this.WriteNullVerifier();
         }
 
-        public override void WriteComplexValue(ODataComplexValue complexValue, IEdmTypeReference metadataTypeReference, bool isTopLevel, bool isOpenPropertyType, DuplicatePropertyNamesChecker duplicatePropertyNamesChecker)
+        public override void WriteComplexValue(ODataComplexValue complexValue, IEdmTypeReference metadataTypeReference, bool isTopLevel, bool isOpenPropertyType, IDuplicatePropertyNameChecker duplicatePropertyNameChecker)
         {
             this.WriteComplexVerifier.Should().NotBeNull("WriteComplexValue was called.");
-            this.WriteComplexVerifier(complexValue, metadataTypeReference, isTopLevel, isOpenPropertyType, duplicatePropertyNamesChecker);
+            this.WriteComplexVerifier(complexValue, metadataTypeReference, isTopLevel, isOpenPropertyType, duplicatePropertyNameChecker);
         }
 
         /// <summary>

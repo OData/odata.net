@@ -46,6 +46,7 @@
     <Compile Include="AsyncBufferedStream.cs" />
     <Compile Include="ContainerBuilderExtensions.cs" />
     <Compile Include="IContainerProvider.cs" />
+    <Compile Include="IDuplicatePropertyNameChecker.cs" />
     <Compile Include="IReaderValidator.cs" />
     <Compile Include="IWriterValidator.cs" />
     <Compile Include="Json\DefaultJsonReaderFactory.cs" />
@@ -58,6 +59,7 @@
     <Compile Include="PropertyCache.cs" />
     <Compile Include="PropertyMetadataTypeInfo.cs" />
     <Compile Include="PropertySerializationInfo.cs" />
+    <Compile Include="DuplicatePropertyNameChecker.cs" />
     <Compile Include="PropertyValueTypeInfo.cs" />
     <Compile Include="ValidationKinds.cs" />
     <Compile Include="ReaderValidator.cs" />

@@ -173,7 +173,7 @@ namespace Microsoft.OData
             if (complexValue != null)
             {
                 this.WriteInstanceAnnotationName(propertyName, name);
-                this.valueSerializer.WriteComplexValue(complexValue, expectedType, false /*isTopLevel*/, treatLikeOpenProperty, this.valueSerializer.CreateDuplicatePropertyNamesChecker());
+                this.valueSerializer.WriteComplexValue(complexValue, expectedType, false /*isTopLevel*/, treatLikeOpenProperty, this.valueSerializer.CreateDuplicatePropertyNameChecker());
                 return;
             }
 

@@ -30,12 +30,14 @@ namespace Microsoft.OData
         }
 
         /// <summary>
-        /// Creates a DuplicatePropertyNamesChecker instance.
+        /// Creates a DuplicatePropertyNameChecker instance.
         /// </summary>
         /// <returns>The created instance.</returns>
-        public DuplicatePropertyNamesChecker CreateDuplicatePropertyNamesChecker()
+        public IDuplicatePropertyNameChecker CreateDuplicatePropertyNameChecker()
         {
-            return new DuplicatePropertyNamesChecker(settings.ThrowOnDuplicatePropertyNames);
+            return settings.ThrowOnDuplicatePropertyNames
+                   ? (IDuplicatePropertyNameChecker)new DuplicatePropertyNameChecker()
+                   : (IDuplicatePropertyNameChecker)new NullDuplicatePropertyNameChecker();
         }
 
         /// <summary>

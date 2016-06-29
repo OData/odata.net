@@ -273,7 +273,7 @@ namespace Microsoft.OData.JsonLight
         /// <summary>
         /// Checker to detect duplicate property names.
         /// </summary>
-        private DuplicatePropertyNamesChecker DuplicatePropertyNamesChecker
+        private IDuplicatePropertyNameChecker DuplicatePropertyNameChecker
         {
             get
             {
@@ -285,7 +285,7 @@ namespace Microsoft.OData.JsonLight
                 {
                     case WriterState.DeltaResource:
                     case WriterState.DeltaDeletedEntry:
-                        return this.CurrentDeltaResourceScope.DuplicatePropertyNamesChecker;
+                        return this.CurrentDeltaResourceScope.DuplicatePropertyNameChecker;
                     default:
                         throw new ODataException(Strings.General_InternalError(InternalErrorCodes.ODataWriterCore_DuplicatePropertyNamesChecker));
                 }
@@ -1184,7 +1184,7 @@ namespace Microsoft.OData.JsonLight
         /// </summary>
         private void WriteDeltaResourceEndMetadata()
         {
-            this.jsonLightResourceSerializer.WriteResourceEndMetadataProperties(this.CurrentDeltaResourceScope, this.CurrentDeltaResourceScope.DuplicatePropertyNamesChecker);
+            this.jsonLightResourceSerializer.WriteResourceEndMetadataProperties(this.CurrentDeltaResourceScope, this.CurrentDeltaResourceScope.DuplicatePropertyNameChecker);
         }
 
         /// <summary>
@@ -1209,7 +1209,7 @@ namespace Microsoft.OData.JsonLight
                 this.DeltaResourceType,
                 resource.Properties,
                 false /* isComplexValue */,
-                this.DuplicatePropertyNamesChecker,
+                this.DuplicatePropertyNameChecker,
                 projectedProperties);
             this.jsonLightResourceSerializer.JsonLightValueSerializer.AssertRecursionDepthIsZero();
         }
@@ -1921,7 +1921,7 @@ namespace Microsoft.OData.JsonLight
         private abstract class DeltaResourceScope : Scope
         {
             /// <summary>Checker to detect duplicate property names.</summary>
-            private readonly DuplicatePropertyNamesChecker duplicatePropertyNamesChecker;
+            private readonly IDuplicatePropertyNameChecker duplicatePropertyNameChecker;
 
             /// <summary>The serialization info for the current resource.</summary>
             private readonly ODataResourceSerializationInfo serializationInfo;
@@ -1953,7 +1953,7 @@ namespace Microsoft.OData.JsonLight
                     "resource must be either DeltaResource or DeltaDeletedEntry.");
                 Debug.Assert(writerSettings != null, "writerSettings != null");
 
-                this.duplicatePropertyNamesChecker = writerSettings.Validator.CreateDuplicatePropertyNamesChecker();
+                duplicatePropertyNameChecker = writerSettings.Validator.CreateDuplicatePropertyNameChecker();
                 this.serializationInfo = serializationInfo;
             }
 
@@ -1973,11 +1973,11 @@ namespace Microsoft.OData.JsonLight
             /// <summary>
             /// Checker to detect duplicate property names.
             /// </summary>
-            public DuplicatePropertyNamesChecker DuplicatePropertyNamesChecker
+            public IDuplicatePropertyNameChecker DuplicatePropertyNameChecker
             {
                 get
                 {
-                    return this.duplicatePropertyNamesChecker;
+                    return duplicatePropertyNameChecker;
                 }
             }
 

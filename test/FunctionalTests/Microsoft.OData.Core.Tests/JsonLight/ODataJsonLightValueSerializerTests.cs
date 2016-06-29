@@ -128,7 +128,7 @@ namespace Microsoft.OData.Tests.JsonLight
                 var complexValue = new ODataComplexValue { TypeName = "TestNamespace.Address", InstanceAnnotations = new Collection<ODataInstanceAnnotation> { new ODataInstanceAnnotation("Is.ReadOnly", new ODataPrimitiveValue(true)) } };
 
                 var complexTypeRef = new EdmComplexTypeReference(complexType, false);
-                serializer.WriteComplexValue(complexValue, complexTypeRef, false, false, new DuplicatePropertyNamesChecker(true));
+                serializer.WriteComplexValue(complexValue, complexTypeRef, false, false, new DuplicatePropertyNameChecker());
             });
 
             result.Should().Contain("\"@Is.ReadOnly\":true");
@@ -154,7 +154,7 @@ namespace Microsoft.OData.Tests.JsonLight
                 };
 
                 var complexTypeRef = new EdmComplexTypeReference(complexType, false);
-                serializer.WriteComplexValue(complexValue, complexTypeRef, false, false, new DuplicatePropertyNamesChecker(true));
+                serializer.WriteComplexValue(complexValue, complexTypeRef, false, false, new DuplicatePropertyNameChecker());
             });
 
             result.Should().Contain("\"@Annotation.1\":true,\"@Annotation.2\":123,\"@Annotation.3\":\"annotation\"");
@@ -179,7 +179,7 @@ namespace Microsoft.OData.Tests.JsonLight
                 };
 
                 var complexTypeRef = new EdmComplexTypeReference(complexType, false);
-                serializer.WriteComplexValue(complexValue, complexTypeRef, false, false, new DuplicatePropertyNamesChecker(true));
+                serializer.WriteComplexValue(complexValue, complexTypeRef, false, false, new DuplicatePropertyNameChecker());
             });
 
             result.Should().NotContain("\"@Annotation.1\":true,\"@Annotation.2\":123,\"@Annotation.3\":\"annotation\"");
