@@ -251,10 +251,6 @@ namespace EdmLibTests.FunctionalTests
             var carNavigationVocabularyAnnotations = ownerEntityType.NavigationProperties().Where(x => x.Name == "Car").SingleOrDefault().VocabularyAnnotations(model);
             Assert.AreEqual(1, carNavigationVocabularyAnnotations.Count(), "Invalid count of vocabulary annotation.");
 
-            // [EdmLib] Some expression evaluation is not implemented - postponed. 
-            // var valueAnnotationFound = this.CheckForValueAnnotation(carNavigationVocabularyAnnotations, EdmExpressionKind.EnumMemberReference, new List<PropertyValue> { new PropertyValue("Very") });
-            // Assert.IsTrue(valueAnnotationFound, "Annotation can't be found.");
-
             var carEntityType = model.FindEntityType("DefaultNamespace.Car");
             var carVocabularyAnnotations = carEntityType.VocabularyAnnotations(model);
             Assert.AreEqual(0, carVocabularyAnnotations.Count(), "Invalid count of vocabulary annotation.");
@@ -2003,7 +1999,7 @@ namespace EdmLibTests.FunctionalTests
         }
 
         [TestMethod]
-        public void AnnotationValueAsEnumMemberReferenceExpressionSerializationTest()
+        public void AnnotationValueAsEnumMemberExpressionSerializationTest()
         {
             EdmModel model = new EdmModel();
 
@@ -2024,7 +2020,7 @@ namespace EdmLibTests.FunctionalTests
             model.AddElement(enumTerm);
             model.AddElement(container);
 
-            EdmAnnotation personIdAnnotation = new EdmAnnotation(propertyId, enumTerm, new EdmEnumMemberReferenceExpression(read));
+            EdmAnnotation personIdAnnotation = new EdmAnnotation(propertyId, enumTerm, new EdmEnumMemberExpression(read));
             personIdAnnotation.SetSerializationLocation(model, EdmVocabularyAnnotationSerializationLocation.Inline);
             model.SetVocabularyAnnotation(personIdAnnotation);
 
@@ -2032,13 +2028,13 @@ namespace EdmLibTests.FunctionalTests
             structuralPropertyAnnotation.SetSerializationLocation(model, EdmVocabularyAnnotationSerializationLocation.Inline);
             model.SetVocabularyAnnotation(structuralPropertyAnnotation);
 
-            EdmAnnotation entitySetAnnotation = new EdmAnnotation(entitySet, enumTerm, new EdmEnumMemberReferenceExpression(delete));
+            EdmAnnotation entitySetAnnotation = new EdmAnnotation(entitySet, enumTerm, new EdmEnumMemberExpression(delete));
             structuralPropertyAnnotation.SetSerializationLocation(model, EdmVocabularyAnnotationSerializationLocation.Inline);
             model.SetVocabularyAnnotation(entitySetAnnotation);
 
-            var idAnnotationValue = (model.FindVocabularyAnnotations<IEdmValueAnnotation>(propertyId, enumTerm).FirstOrDefault().Value as IEdmEnumMemberReferenceExpression).ReferencedEnumMember;
+            var idAnnotationValue = (model.FindVocabularyAnnotations<IEdmValueAnnotation>(propertyId, enumTerm).FirstOrDefault().Value as IEdmEnumMemberExpression).EnumMembers.Single();
             var structuralPropertyAnnotationValue = (model.FindVocabularyAnnotations<IEdmValueAnnotation>(structuralProperty, enumTerm).FirstOrDefault().Value as IEdmEnumMemberExpression).EnumMembers;
-            var entitySetAnnotationValue = (model.FindVocabularyAnnotations<IEdmValueAnnotation>(entitySet, enumTerm).FirstOrDefault().Value as IEdmEnumMemberReferenceExpression).ReferencedEnumMember;
+            var entitySetAnnotationValue = (model.FindVocabularyAnnotations<IEdmValueAnnotation>(entitySet, enumTerm).FirstOrDefault().Value as IEdmEnumMemberExpression).EnumMembers.Single();
             var enumTypeAnnotationValue = model.FindVocabularyAnnotations<IEdmValueAnnotation>(permissionType, enumTerm).FirstOrDefault();
 
             Assert.AreEqual(read, idAnnotationValue);
@@ -2520,17 +2516,17 @@ namespace EdmLibTests.FunctionalTests
             EdmAnnotation valueAnnotation = new EdmAnnotation(
                 container,
                 popularityTerm,
-                new EdmEnumMemberReferenceExpression(very));
+                new EdmEnumMemberExpression(very));
 
             model.AddVocabularyAnnotation(valueAnnotation);
 
             Assert.AreEqual(1, container.VocabularyAnnotations(model).Count(), "Invalid vocabulary annotation count.");
             Assert.AreEqual(2, model.VocabularyAnnotations.Count(), "Invalid vocabulary annotation count.");
 
-            var valueAnnotationFound = this.CheckForValueAnnotation(model.VocabularyAnnotations, EdmExpressionKind.EnumMemberReference, new List<PropertyValue>() { new PropertyValue("3") });
+            var valueAnnotationFound = this.CheckForValueAnnotation(model.VocabularyAnnotations, EdmExpressionKind.EnumMember, new List<PropertyValue>() { new PropertyValue("3") });
             Assert.IsTrue(valueAnnotationFound, "Value annotation cannot be found.");
 
-            valueAnnotationFound = this.CheckForValueAnnotation(container.VocabularyAnnotations(model), EdmExpressionKind.EnumMemberReference, new List<PropertyValue>() { new PropertyValue("3") });
+            valueAnnotationFound = this.CheckForValueAnnotation(container.VocabularyAnnotations(model), EdmExpressionKind.EnumMember, new List<PropertyValue>() { new PropertyValue("3") });
             Assert.IsTrue(valueAnnotationFound, "Value annotation cannot be found.");
         }
 
@@ -3111,11 +3107,11 @@ namespace EdmLibTests.FunctionalTests
 
             switch (expressionKind)
             {
-                case EdmExpressionKind.EnumMemberReference:
-                    var enumReferenceExpression = expression as IEdmEnumMemberReferenceExpression;
+                case EdmExpressionKind.EnumMember:
+                    var enumReferenceExpression = expression as IEdmEnumMemberExpression;
                     if (null != enumReferenceExpression)
                     {
-                        var enumValue = enumReferenceExpression.ReferencedEnumMember.Value as EdmEnumMemberValue;
+                        var enumValue = enumReferenceExpression.EnumMembers.Single().Value as EdmEnumMemberValue;
 
                         if (null != enumValue)
                         {

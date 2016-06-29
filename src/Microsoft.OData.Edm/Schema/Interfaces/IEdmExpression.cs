@@ -109,11 +109,6 @@ namespace Microsoft.OData.Edm
         EntitySetReference,
 
         /// <summary>
-        /// Represents an expression implementing <see cref="IEdmEnumMemberReferenceExpression"/>.
-        /// </summary>
-        EnumMemberReference,
-
-        /// <summary>
         /// Represents an expression implementing <see cref="IEdmIfExpression"/>.
         /// </summary>
         If,

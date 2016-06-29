@@ -137,7 +137,7 @@ namespace Microsoft.Test.OData.Services.ODataWCFService.Vocabularies
             var target = property;
             var term = PermissionsTerm;
             var name = new EdmEnumTypeReference(PermissionType, false).ToStringLiteral((long)value);
-            var expression = new EdmEnumMemberReferenceExpression(PermissionType.Members.Single(m => m.Name == name));
+            var expression = new EdmEnumMemberExpression(PermissionType.Members.Single(m => m.Name == name));
             var annotation = new EdmAnnotation(target, term, expression);
             annotation.SetSerializationLocation(model, property.ToSerializationLocation());
             model.AddVocabularyAnnotation(annotation);
@@ -306,8 +306,8 @@ namespace Microsoft.Test.OData.Services.ODataWCFService.Vocabularies
             var annotation = model.FindVocabularyAnnotation(property, term);
             if (annotation != null)
             {
-                var enumMemberReference = (IEdmEnumMemberReferenceExpression)annotation.Value;
-                var enumMember = enumMemberReference.ReferencedEnumMember;
+                var enumMemberReference = (IEdmEnumMemberExpression)annotation.Value;
+                var enumMember = enumMemberReference.EnumMembers.Single();
                 return (T)Enum.Parse(typeof(T), enumMember.Name);
             }
 

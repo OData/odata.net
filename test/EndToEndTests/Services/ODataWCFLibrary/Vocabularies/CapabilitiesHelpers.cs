@@ -88,7 +88,7 @@ namespace Microsoft.Test.OData.Services.ODataWCFService.Vocabularies
             var target = container;
             var term = ConformanceLevelTerm;
             var name = new EdmEnumTypeReference(ConformanceLevelTypeType, false).ToStringLiteral((long)level);
-            var expression = new EdmEnumMemberReferenceExpression(ConformanceLevelTypeType.Members.Single(m => m.Name == name));
+            var expression = new EdmEnumMemberExpression(ConformanceLevelTypeType.Members.Single(m => m.Name == name));
             var annotation = new EdmAnnotation(target, term, expression);
             annotation.SetSerializationLocation(model, container.ToSerializationLocation());
             model.AddVocabularyAnnotation(annotation);
@@ -155,13 +155,13 @@ namespace Microsoft.Test.OData.Services.ODataWCFService.Vocabularies
                 return new EdmRecordExpression(new IEdmPropertyConstructor[]
                 {
                     new EdmPropertyConstructor("NavigationProperty", new EdmNavigationPropertyPathExpression(p.Item1.Name)),
-                    new EdmPropertyConstructor("Navigability", new EdmEnumMemberReferenceExpression(NavigationTypeType.Members.Single(m => m.Name == name))),
+                    new EdmPropertyConstructor("Navigability", new EdmEnumMemberExpression(NavigationTypeType.Members.Single(m => m.Name == name))),
                 });
             });
 
             var record = new EdmRecordExpression(new IEdmPropertyConstructor[]
             {
-                new EdmPropertyConstructor("Navigability", new EdmEnumMemberReferenceExpression(NavigationTypeType.Members.Single(m => m.Name == typeLiteral))),
+                new EdmPropertyConstructor("Navigability", new EdmEnumMemberExpression(NavigationTypeType.Members.Single(m => m.Name == typeLiteral))),
                 new EdmPropertyConstructor("RestrictedProperties", new EdmCollectionExpression(propertiesExpression))
             });
 
@@ -205,7 +205,7 @@ namespace Microsoft.Test.OData.Services.ODataWCFService.Vocabularies
             var properties = new IEdmPropertyConstructor[]
             {
                 new EdmPropertyConstructor("Searchable", new EdmBooleanConstant(searchable)),
-                new EdmPropertyConstructor("UnsupportedExpressions", new EdmEnumMemberReferenceExpression(SearchExpressionsType.Members.Single(m => m.Name == name))),
+                new EdmPropertyConstructor("UnsupportedExpressions", new EdmEnumMemberExpression(SearchExpressionsType.Members.Single(m => m.Name == name))),
             };
             var record = new EdmRecordExpression(properties);
 

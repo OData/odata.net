@@ -1949,12 +1949,12 @@ namespace EdmLibTests.FunctionalTests
         }
 
         [TestMethod]
-        public void EvaluateEnumReferenceExpression()
+        public void EvaluateEnumExpression()
         {
             var color = new EdmEnumType("Ns", "Color", true);
             var blue = color.AddMember("Blue", new EdmEnumMemberValue(1));
             color.AddMember("White", new EdmEnumMemberValue(2));
-            var enumReferenceExpression = new EdmEnumMemberReferenceExpression(blue);
+            var enumReferenceExpression = new EdmEnumMemberExpression(blue);
             EdmExpressionEvaluator evaluator = new EdmExpressionEvaluator(null);
             var value = evaluator.Evaluate(enumReferenceExpression) as IEdmEnumValue;
             value.Type.Definition.Should().Be(color);

@@ -448,12 +448,6 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
             this.schemaWriter.WriteEnumMemberExpressionElement(expression);
         }
 
-        protected override void ProcessEnumMemberReferenceExpression(IEdmEnumMemberReferenceExpression expression)
-        {
-            // This will also write <EnumMember>enumValue</EnumMember> according to V4 spec
-            this.schemaWriter.WriteEnumMemberReferenceExpressionElement(expression);
-        }
-
         protected override void ProcessEntitySetReferenceExpression(IEdmEntitySetReferenceExpression expression)
         {
             this.schemaWriter.WriteEntitySetReferenceExpressionElement(expression);

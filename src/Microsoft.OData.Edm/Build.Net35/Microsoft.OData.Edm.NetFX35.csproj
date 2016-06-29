@@ -88,9 +88,6 @@
     <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Parsing\Ast\CsdlEnumMember.cs">
       <Link>Microsoft\OData\Edm\Csdl\Parsing\Ast\CsdlEnumMember.cs</Link>
     </Compile>
-    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Parsing\Ast\CsdlEnumMemberReferenceExpression.cs">
-      <Link>Microsoft\OData\Edm\Csdl\Parsing\Ast\CsdlEnumMemberReferenceExpression.cs</Link>
-    </Compile>
     <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Parsing\Ast\CsdlEnumType.cs">
       <Link>Microsoft\OData\Edm\Csdl\Parsing\Ast\CsdlEnumType.cs</Link>
     </Compile>
@@ -1280,9 +1277,6 @@
     <Compile Include="..\Vocabularies\Expressions\EdmEnumMemberExpression.cs">
       <Link>Microsoft\OData\Edm\Vocabularies\Expressions\EdmEnumMemberExpression.cs</Link>
     </Compile>
-    <Compile Include="..\Vocabularies\Expressions\EdmEnumMemberReferenceExpression.cs">
-      <Link>Microsoft\OData\Edm\Vocabularies\Expressions\EdmEnumMemberReferenceExpression.cs</Link>
-    </Compile>
     <Compile Include="..\Vocabularies\Expressions\EdmIfExpression.cs">
       <Link>Microsoft\OData\Edm\Vocabularies\Expressions\EdmIfExpression.cs</Link>
     </Compile>
@@ -1354,9 +1348,6 @@
     </Compile>
     <Compile Include="..\Vocabularies\Expressions\IEdmEnumMemberExpression.cs">
       <Link>Microsoft\OData\Edm\Vocabularies\Expressions\IEdmEnumMemberExpression.cs</Link>
-    </Compile>
-    <Compile Include="..\Vocabularies\Expressions\IEdmEnumMemberReferenceExpression.cs">
-      <Link>Microsoft\OData\Edm\Vocabularies\Expressions\IEdmEnumMemberReferenceExpression.cs</Link>
     </Compile>
     <Compile Include="..\Vocabularies\Expressions\IEdmFloatingConstantExpression.cs">
       <Link>Microsoft\OData\Edm\Vocabularies\Expressions\IEdmFloatingConstantExpression.cs</Link>

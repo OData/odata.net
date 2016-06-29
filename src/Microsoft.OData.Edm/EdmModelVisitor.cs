@@ -144,9 +144,6 @@ namespace Microsoft.OData.Edm
                 case EdmExpressionKind.EntitySetReference:
                     this.ProcessEntitySetReferenceExpression((IEdmEntitySetReferenceExpression)expression);
                     break;
-                case EdmExpressionKind.EnumMemberReference:
-                    this.ProcessEnumMemberReferenceExpression((IEdmEnumMemberReferenceExpression)expression);
-                    break;
                 case EdmExpressionKind.EnumMember:
                     this.ProcessEnumMemberExpression((IEdmEnumMemberExpression)expression);
                     break;
@@ -773,11 +770,6 @@ namespace Microsoft.OData.Edm
         }
 
         protected virtual void ProcessGuidConstantExpression(IEdmGuidConstantExpression expression)
-        {
-            this.ProcessExpression(expression);
-        }
-
-        protected virtual void ProcessEnumMemberReferenceExpression(IEdmEnumMemberReferenceExpression expression)
         {
             this.ProcessExpression(expression);
         }

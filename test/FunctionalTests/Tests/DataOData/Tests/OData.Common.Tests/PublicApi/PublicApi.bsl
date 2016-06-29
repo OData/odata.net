@@ -489,34 +489,33 @@ public enum Microsoft.OData.Edm.EdmContainerElementKind : int {
 public enum Microsoft.OData.Edm.EdmExpressionKind : int {
 	BinaryConstant = 1
 	BooleanConstant = 2
-	Cast = 21
+	Cast = 20
 	Collection = 12
-	DateConstant = 28
+	DateConstant = 27
 	DateTimeOffsetConstant = 3
 	DecimalConstant = 4
 	DurationConstant = 9
 	EntitySetReference = 18
-	EnumMember = 30
-	EnumMemberReference = 19
+	EnumMember = 29
 	FloatingConstant = 5
 	GuidConstant = 6
-	If = 20
+	If = 19
 	IntegerConstant = 7
-	IsType = 22
-	Labeled = 25
-	LabeledExpressionReference = 24
-	NavigationPropertyPath = 27
+	IsType = 21
+	Labeled = 24
+	LabeledExpressionReference = 23
+	NavigationPropertyPath = 26
 	None = 0
 	Null = 10
-	OperationApplication = 23
+	OperationApplication = 22
 	OperationReference = 15
 	ParameterReference = 14
 	Path = 13
-	PropertyPath = 26
+	PropertyPath = 25
 	PropertyReference = 16
 	Record = 11
 	StringConstant = 8
-	TimeOfDayConstant = 29
+	TimeOfDayConstant = 28
 	ValueTermReference = 17
 }
 
@@ -3152,10 +3151,6 @@ public interface Microsoft.OData.Edm.Vocabularies.IEdmEnumMemberExpression : IEd
 	System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.IEdmEnumMember]] EnumMembers  { public abstract get; }
 }
 
-public interface Microsoft.OData.Edm.Vocabularies.IEdmEnumMemberReferenceExpression : IEdmElement, IEdmExpression {
-	Microsoft.OData.Edm.IEdmEnumMember ReferencedEnumMember  { public abstract get; }
-}
-
 public interface Microsoft.OData.Edm.Vocabularies.IEdmEnumValue : IEdmElement, IEdmPrimitiveValue, IEdmValue {
 	Microsoft.OData.Edm.IEdmEnumMemberValue Value  { public abstract get; }
 }
@@ -3447,13 +3442,6 @@ public class Microsoft.OData.Edm.Vocabularies.EdmEnumMemberExpression : Microsof
 
 	System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.IEdmEnumMember]] EnumMembers  { public virtual get; }
 	Microsoft.OData.Edm.EdmExpressionKind ExpressionKind  { public virtual get; }
-}
-
-public class Microsoft.OData.Edm.Vocabularies.EdmEnumMemberReferenceExpression : Microsoft.OData.Edm.EdmElement, IEdmElement, IEdmExpression, IEdmEnumMemberReferenceExpression {
-	public EdmEnumMemberReferenceExpression (Microsoft.OData.Edm.IEdmEnumMember referencedEnumMember)
-
-	Microsoft.OData.Edm.EdmExpressionKind ExpressionKind  { public virtual get; }
-	Microsoft.OData.Edm.IEdmEnumMember ReferencedEnumMember  { public virtual get; }
 }
 
 public class Microsoft.OData.Edm.Vocabularies.EdmEnumValue : Microsoft.OData.Edm.Vocabularies.EdmValue, IEdmElement, IEdmDelayedValue, IEdmEnumValue, IEdmPrimitiveValue, IEdmValue {

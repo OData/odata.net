@@ -540,34 +540,30 @@ namespace EdmLibTests.FunctionalTests
         }
 
         [TestMethod]
-        public void EdmEnumMemberReferenceExpression()
+        public void EdmEnumMemberExpression()
         {
             var et = new EdmEnumType("NS", "Spicy");
             var em = new EdmEnumMember(et, "Hot", new EdmEnumMemberValue(5));
-            var e = new EdmEnumMemberReferenceExpression(em);
-            Assert.AreEqual(EdmExpressionKind.EnumMemberReference, e.ExpressionKind, "e.ExpressionKind");
-            Assert.AreEqual("Hot", e.ReferencedEnumMember.Name, "e.ReferencedEnumMember");
+            var e = new EdmEnumMemberExpression(em);
+            Assert.AreEqual(EdmExpressionKind.EnumMember, e.ExpressionKind, "e.ExpressionKind");
+            Assert.AreEqual("Hot", e.EnumMembers.Single().Name, "e.EnumMembers");
             Assert.IsFalse(e.IsBad(), "e good");
 
-            this.VerifyThrowsException(typeof(ArgumentNullException), () => new EdmEnumMemberReferenceExpression(null));
+            this.VerifyThrowsException(typeof(ArgumentNullException), () => new EdmEnumMemberExpression(null));
 
-            var ee = new MutableEdmEnumMemberReferenceExpression();
-            Assert.IsNull(ee.ReferencedEnumMember, "e.ReferencedEntitySet");
+            var ee = new MutableEdmEnumMemberExpression();
+            Assert.IsNull(ee.EnumMembers, "e.EnumMembers");
             Assert.IsTrue(ee.IsBad(), "Expression is bad.");
             Assert.AreEqual(1, ee.Errors().Count(), "Expression has errors");
         }
 
-        private sealed class MutableEdmEnumMemberReferenceExpression : IEdmEnumMemberReferenceExpression
+        private sealed class MutableEdmEnumMemberExpression : IEdmEnumMemberExpression
         {
-            public IEdmEnumMember ReferencedEnumMember
-            {
-                get;
-                set;
-            }
+            public IEnumerable<IEdmEnumMember> EnumMembers { get; set; }
 
             public EdmExpressionKind ExpressionKind
             {
-                get { return EdmExpressionKind.EnumMemberReference; }
+                get { return EdmExpressionKind.EnumMember; }
             }
         }
 

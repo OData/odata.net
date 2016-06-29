@@ -58,7 +58,6 @@
     <Compile Include="Csdl\Parsing\Ast\CsdlCastExpression.cs" />
     <Compile Include="Csdl\Parsing\Ast\CsdlCollectionExpression.cs" />
     <Compile Include="Csdl\Parsing\Ast\CsdlEnumMember.cs" />
-    <Compile Include="Csdl\Parsing\Ast\CsdlEnumMemberReferenceExpression.cs" />
     <Compile Include="Csdl\Parsing\Ast\CsdlEnumType.cs" />
     <Compile Include="Csdl\Parsing\Ast\CsdlFunction.cs" />
     <Compile Include="Csdl\Parsing\Ast\CsdlFunctionImport.cs" />
@@ -267,7 +266,6 @@
     <Compile Include="Vocabularies\Expressions\EdmCollectionExpression.cs" />
     <Compile Include="Vocabularies\Expressions\EdmEntitySetReferenceExpression.cs" />
     <Compile Include="Vocabularies\Expressions\EdmEnumMemberExpression.cs" />
-    <Compile Include="Vocabularies\Expressions\EdmEnumMemberReferenceExpression.cs" />
     <Compile Include="Vocabularies\Expressions\EdmIfExpression.cs" />
     <Compile Include="Vocabularies\Expressions\EdmIsTypeExpression.cs" />
     <Compile Include="Vocabularies\Expressions\EdmLabeledExpression.cs" />
@@ -292,7 +290,6 @@
     <Compile Include="Vocabularies\Expressions\IEdmDurationConstantExpression.cs" />
     <Compile Include="Vocabularies\Expressions\IEdmEntitySetReferenceExpression.cs" />
     <Compile Include="Vocabularies\Expressions\IEdmEnumMemberExpression.cs" />
-    <Compile Include="Vocabularies\Expressions\IEdmEnumMemberReferenceExpression.cs" />
     <Compile Include="Vocabularies\Expressions\IEdmFloatingConstantExpression.cs" />
     <Compile Include="Vocabularies\Expressions\IEdmGuidConstantExpression.cs" />
     <Compile Include="Vocabularies\Expressions\IEdmIfExpression.cs" />

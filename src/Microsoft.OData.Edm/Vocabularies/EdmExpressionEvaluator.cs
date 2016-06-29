@@ -693,12 +693,6 @@ namespace Microsoft.OData.Edm.Vocabularies
                         return new EdmEnumValue(enumTypeReference, new EdmEnumMemberValue(result));
                     }
 
-                case EdmExpressionKind.EnumMemberReference:
-                    IEdmEnumMemberReferenceExpression enumMemberReferenceExpression = (IEdmEnumMemberReferenceExpression)expression;
-                    var referencedEnumMember = enumMemberReferenceExpression.ReferencedEnumMember;
-                    IEdmEnumTypeReference referencedEnumTypeReference = new EdmEnumTypeReference(referencedEnumMember.DeclaringType, false);
-                    return new EdmEnumValue(referencedEnumTypeReference, enumMemberReferenceExpression.ReferencedEnumMember);
-
                 case EdmExpressionKind.ParameterReference:
                 case EdmExpressionKind.OperationReference:
                 case EdmExpressionKind.PropertyReference:

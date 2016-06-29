@@ -641,13 +641,6 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
             this.WriteEndElement();
         }
 
-        internal void WriteEnumMemberReferenceExpressionElement(IEdmEnumMemberReferenceExpression expression)
-        {
-            this.xmlWriter.WriteStartElement(CsdlConstants.Element_EnumMember);
-            this.xmlWriter.WriteString(EnumMemberAsXml(expression.ReferencedEnumMember));
-            this.WriteEndElement();
-        }
-
         internal void WritePropertyReferenceExpressionElementHeader(IEdmPropertyReferenceExpression expression)
         {
             this.xmlWriter.WriteStartElement(CsdlConstants.Element_PropertyReference);
@@ -728,11 +721,6 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         private static string PropertyAsXml(IEdmProperty property)
         {
             return property.Name;
-        }
-
-        private static string EnumMemberAsXml(IEdmEnumMember member)
-        {
-            return member.DeclaringType.FullName() + "/" + member.Name;
         }
 
         private static string EnumMemberAsXml(IEnumerable<IEdmEnumMember> members)

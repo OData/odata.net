@@ -360,7 +360,6 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
                     case EdmExpressionKind.EntitySetReference:
                         return new CsdlSemanticsEntitySetReferenceExpression((CsdlEntitySetReferenceExpression)expression, bindingContext, schema);
                     case EdmExpressionKind.EnumMember:
-                    case EdmExpressionKind.EnumMemberReference:
                         return new CsdlSemanticsEnumMemberExpression((CsdlEnumMemberExpression)expression, bindingContext, schema);
                     case EdmExpressionKind.FloatingConstant:
                         return new CsdlSemanticsFloatingConstantExpression((CsdlConstantExpression)expression, schema);
