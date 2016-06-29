@@ -4,6 +4,8 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+using System.Diagnostics;
+
 namespace Microsoft.OData.UriParser
 {
     using System.Collections.Generic;
@@ -170,7 +172,7 @@ namespace Microsoft.OData.UriParser
         /// <returns>The string representation of the Query Url path.</returns>
         public static string ToResourcePathString(this ODataPath path, ODataUrlKeyDelimiter urlKeyDelimiter)
         {
-             return string.Concat(path.WalkWith(new PathSegmentToResourcePathTranslator(urlKeyDelimiter.UrlConvention)).ToArray()).TrimStart('/');
+            return string.Concat(path.WalkWith(new PathSegmentToResourcePathTranslator(urlKeyDelimiter)).ToArray()).TrimStart('/');
         }
 
         /// <summary>

@@ -6,10 +6,10 @@
 
 using System;
 using FluentAssertions;
-using Microsoft.OData.Evaluation;
-using Microsoft.OData.Metadata;
 using Microsoft.OData.Edm;
 using Microsoft.OData.Edm.Vocabularies;
+using Microsoft.OData.Evaluation;
+using Microsoft.OData.Metadata;
 using Xunit;
 
 namespace Microsoft.OData.Tests.Evaluation
@@ -35,7 +35,7 @@ namespace Microsoft.OData.Tests.Evaluation
                 null /*requestUri*/);
             IEdmEntitySet set = this.edmModel.EntityContainer.FindEntitySet("Products");
             ODataResource entry = TestUtils.CreateODataEntry(set, new EdmStructuredValue(new EdmEntityTypeReference(set.EntityType(), true), new IEdmPropertyValue[0]), set.EntityType());
-            Action action = () => context.GetResourceMetadataBuilderForReader(new TestJsonLightReaderEntryState { Resource = entry, SelectedProperties = SelectedPropertiesNode.EntireSubtree }, null);
+            Action action = () => context.GetResourceMetadataBuilderForReader(new TestJsonLightReaderEntryState { Resource = entry, SelectedProperties = SelectedPropertiesNode.EntireSubtree }, false);
             action.ShouldThrow<ODataException>().WithMessage(Strings.ODataJsonLightEntryMetadataContext_MetadataAnnotationMustBeInPayload("odata.context"));
         }
 
@@ -51,7 +51,7 @@ namespace Microsoft.OData.Tests.Evaluation
                 null /*requestUri*/);
             IEdmEntitySet set = this.edmModel.EntityContainer.FindEntitySet("Products");
             ODataResource entry = TestUtils.CreateODataEntry(set, new EdmStructuredValue(new EdmEntityTypeReference(set.EntityType(), true), new IEdmPropertyValue[0]), set.EntityType());
-            Action action = () => context.GetResourceMetadataBuilderForReader(new TestJsonLightReaderEntryState { Resource = entry, SelectedProperties = new SelectedPropertiesNode("*") }, null);
+            Action action = () => context.GetResourceMetadataBuilderForReader(new TestJsonLightReaderEntryState { Resource = entry, SelectedProperties = new SelectedPropertiesNode("*") }, false);
             action.ShouldNotThrow();
         }
 

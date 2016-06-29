@@ -56,8 +56,7 @@ namespace Microsoft.OData.JsonLight
         /// <param name="actualResourceType">The structured type of the resource.</param>
         /// <param name="selectedProperties">The selected properties of this scope.</param>
         /// <param name="isResponse">true if the resource metadata builder to create should be for a response payload; false for a request.</param>
-        /// <param name="keyAsSegment">true if keys should go in separate segments in auto-generated URIs, false if they should go in parentheses.
-        /// A null value means the user hasn't specified a preference and we should look for an annotation in the entity container, if available.</param>
+        /// <param name="keyAsSegment">true if keys should go in separate segments in auto-generated URIs, false if they should go in parentheses.</param>
         /// <param name="odataUri">The OData Uri.</param>
         /// <returns>The created metadata builder.</returns>
         internal override ODataResourceMetadataBuilder CreateResourceMetadataBuilder(
@@ -67,7 +66,7 @@ namespace Microsoft.OData.JsonLight
             IEdmStructuredType actualResourceType,
             SelectedPropertiesNode selectedProperties,
             bool isResponse,
-            bool? keyAsSegment,
+            bool keyAsSegment,
             ODataUri odataUri)
         {
             return ODataResourceMetadataBuilder.Null;

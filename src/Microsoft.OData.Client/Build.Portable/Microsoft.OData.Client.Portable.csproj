@@ -782,9 +782,6 @@
     <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Client\UriUtil.cs">
       <Link>UriUtil.cs</Link>
     </Compile>
-    <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Core\Evaluation\UrlConvention.cs">
-      <Link>UrlConvention.cs</Link>
-    </Compile>
     <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Client\DataServiceUrlConventions.cs">
       <Link>DataServiceUrlConventions.cs</Link>
     </Compile>

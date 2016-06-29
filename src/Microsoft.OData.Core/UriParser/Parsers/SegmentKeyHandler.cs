@@ -11,7 +11,6 @@ namespace Microsoft.OData.UriParser
     using System.Diagnostics;
     using System.Linq;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Evaluation;
     using Microsoft.OData.Metadata;
     using ErrorStrings = Microsoft.OData.Strings;
 
@@ -64,21 +63,21 @@ namespace Microsoft.OData.UriParser
         /// <param name="segmentText">The segment text.</param>
         /// <param name="previous">The previous segment.</param>
         /// <param name="previousKeySegment">The parent node's key segment.</param>
-        /// <param name="urlConvention">The current url convention for the server.</param>
+        /// <param name="odataUrlKeyDelimiter">Key delimiter used in url.</param>
         /// <param name="resolver">The resolver to use.</param>
         /// <param name="keySegment">The key segment that was created if the segment could be interpreted as a key.</param>
         /// <param name="enableUriTemplateParsing">Whether Uri template parsing is enabled.</param>
         /// <returns>Whether or not the segment was interpreted as a key.</returns>
-        internal static bool TryHandleSegmentAsKey(string segmentText, ODataPathSegment previous, KeySegment previousKeySegment, UrlConvention urlConvention, ODataUriResolver resolver, out KeySegment keySegment, bool enableUriTemplateParsing = false)
+        internal static bool TryHandleSegmentAsKey(string segmentText, ODataPathSegment previous, KeySegment previousKeySegment, ODataUrlKeyDelimiter odataUrlKeyDelimiter, ODataUriResolver resolver, out KeySegment keySegment, bool enableUriTemplateParsing = false)
         {
             Debug.Assert(previous != null, "previous != null");
-            Debug.Assert(urlConvention != null, "urlConvention != null");
+            Debug.Assert(odataUrlKeyDelimiter != null, "odataUrlKeyDelimiter != null");
             Debug.Assert(resolver != null, "resolver != null");
 
             keySegment = null;
 
             // If the current convention does not support keys-as-segments, then this does not apply.
-            if (!(urlConvention.GenerateKeyAsSegment || urlConvention.ODataSimplified))
+            if (!odataUrlKeyDelimiter.EnableKeyAsSegment)
             {
                 return false;
             }

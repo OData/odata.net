@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <AssemblyName>Microsoft.OData.Service</AssemblyName>
@@ -203,9 +203,6 @@
     <Compile Include="Microsoft\OData\Service\Serializers\PayloadMetadataKind.cs" />
     <Compile Include="Microsoft\OData\Service\RequestQueryCountOption.cs" />
     <Compile Include="Microsoft\OData\Service\Serializers\SerializedEntityKey.cs" />
-    <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Core\Evaluation\UrlConvention.cs">
-      <Link>Microsoft\OData\Service\UrlConvention.cs</Link>
-    </Compile>
     <Compile Include="Microsoft\OData\Service\ServiceActionRights.cs" />
     <Compile Include="Microsoft\OData\Service\DataServiceOperationContext.cs" />
     <Compile Include="Microsoft\OData\Service\BatchServiceHost.cs" />

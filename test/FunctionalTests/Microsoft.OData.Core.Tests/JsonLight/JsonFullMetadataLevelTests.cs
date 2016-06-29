@@ -6,10 +6,10 @@
 
 using System;
 using FluentAssertions;
+using Microsoft.OData.Edm;
 using Microsoft.OData.Evaluation;
 using Microsoft.OData.JsonLight;
 using Microsoft.OData.Tests.Evaluation;
-using Microsoft.OData.Edm;
 using Xunit;
 using ODataErrorStrings = Microsoft.OData.Strings;
 
@@ -79,7 +79,9 @@ namespace Microsoft.OData.Tests.JsonLight
         {
             testSubject.CreateResourceMetadataBuilder(
                 new ODataResource(),
-                new TestFeedAndEntryTypeContext { UrlConvention = UrlConvention.CreateWithExplicitValue(generateKeyAsSegment: false) }, new ODataResourceSerializationInfo(), /*actualEntityType*/null,
+                new TestFeedAndEntryTypeContext(),
+                new ODataResourceSerializationInfo(),
+                /*actualEntityType*/null,
                 SelectedPropertiesNode.EntireSubtree,
                 /*isResponse*/ true,
                 /*keyAsSegment*/ false,

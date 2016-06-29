@@ -6,7 +6,6 @@
 
 // #define TESTUNIXNEWLINE
 
-using Microsoft.OData.Edm.Vocabularies;
 
 namespace Microsoft.OData.Client
 {
@@ -23,9 +22,9 @@ namespace Microsoft.OData.Client
     using System.Net;
     using System.Reflection;
     using System.Threading.Tasks;
+    using Microsoft.OData;
     using Microsoft.OData.Client.Annotation;
     using Microsoft.OData.Client.Metadata;
-    using Microsoft.OData;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Edm.Vocabularies;
     using ClientStrings = Microsoft.OData.Client.Strings;
@@ -2736,7 +2735,6 @@ namespace Microsoft.OData.Client
         internal BuildingRequestEventArgs CreateRequestArgsAndFireBuildingRequest(string method, Uri requestUri, HeaderCollection headers, HttpStack stack, Descriptor descriptor)
         {
             BuildingRequestEventArgs requestMessageArgs = new BuildingRequestEventArgs(method, requestUri, headers, descriptor, stack);
-            this.UrlConventions.AddRequiredHeaders(requestMessageArgs.HeaderCollection);
 
             // Set default headers before firing BudingRequest event
             requestMessageArgs.HeaderCollection.SetDefaultHeaders();

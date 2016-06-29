@@ -92,7 +92,6 @@
     <Compile Include="Evaluation\ODataMetadataContextTests.cs" />
     <Compile Include="Evaluation\ODataMissingOperationGeneratorTests.cs" />
     <Compile Include="Evaluation\TestModel.cs" />
-    <Compile Include="Evaluation\UrlConventionTests.cs" />
     <Compile Include="HttpHeaderValueElementTests.cs" />
     <Compile Include="HttpHeaderValueLexerTests.cs" />
     <Compile Include="HttpHeaderValueTests.cs" />
@@ -397,7 +396,7 @@
     <Compile Include="UriParser\ODataQueryOptionParserTests.cs" />
     <Compile Include="UriParser\ODataUriParserTests.cs" />
     <Compile Include="UriParser\ODataUriParserInjectionTests.cs" />
-    <Compile Include="UriParser\ODataUrlConventionsTests.cs" />
+    <Compile Include="UriParser\ODataUrlKeyDelimiterTests.cs" />
     <Compile Include="UriParser\SegmentAssertions.cs" />
     <Compile Include="UriParser\Visitors\QueryNodeVisitorTests.cs" />
     <Compile Include="UriParser\Visitors\SyntacticTreeVisitorTests.cs" />

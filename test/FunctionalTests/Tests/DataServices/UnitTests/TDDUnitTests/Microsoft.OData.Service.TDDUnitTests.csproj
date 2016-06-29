@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <ProjectGuid>{E7A080F5-2054-447F-B09C-4E7B9B1B1B6A}</ProjectGuid>
@@ -92,7 +92,6 @@
     <Compile Include="Tests\Server\OperationLinkBuilderTests.cs" />
     <Compile Include="Tests\Server\OperationCacheTests.cs" />
     <Compile Include="Tests\Server\DataServiceConfigurationTests.cs" />
-    <Compile Include="Tests\Server\ServerUrlConventionTests.cs" />
     <Compile Include="Tests\Server\LiteralConversionTests.cs" />
     <Compile Include="Tests\Server\KeySerializationTests.cs" />
     <Compile Include="Tests\Server\CallbackQueryOptionHandlerTests.cs" />

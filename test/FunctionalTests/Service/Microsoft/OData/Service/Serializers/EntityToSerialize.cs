@@ -56,9 +56,9 @@ namespace Microsoft.OData.Service.Serializers
         /// <summary>
         /// The serialized key of the entity, which contains its edit-link, identity, etc.
         /// </summary>
-        internal SerializedEntityKey SerializedKey 
+        internal SerializedEntityKey SerializedKey
         {
-            get { return this.serializedEntityKey; } 
+            get { return this.serializedEntityKey; }
         }
 
         /// <summary>
@@ -83,8 +83,11 @@ namespace Microsoft.OData.Service.Serializers
             Debug.Assert(provider != null, "provider != null");
             Debug.Assert(provider.DataService != null, "provider.DataService != null");
             Debug.Assert(provider.DataService.Configuration != null, "provider.DataService.Configuration != null");
+            Debug.Assert(provider.DataService.Configuration.DataServiceBehavior != null,
+                "provider.DataService.Configuration.DataServiceBehavior != null");
 
-            KeySerializer keySerializer = KeySerializer.Create(UrlConvention.Create(provider.DataService));
+            KeySerializer keySerializer = KeySerializer.Create(provider.DataService.Configuration.DataServiceBehavior.GenerateKeyAsSegment);
+
             Func<ResourceProperty, object> getPropertyValue = p =>
             {
                 object keyValue = WebUtil.GetPropertyValue(provider, entity, resourceType, p, null);
@@ -112,7 +115,7 @@ namespace Microsoft.OData.Service.Serializers
         /// <param name="keySerializer">The key serializer to use.</param>
         /// <param name="absoluteServiceUri">The absolute service URI.</param>
         /// <returns>The new instance of <see cref="EntityToSerialize"/>.</returns>
-        internal static EntityToSerialize Create(object entity, ResourceType resourceType, string resourceSetName,  bool includeTypeSegment, Func<ResourceProperty, object> getPropertyValue, KeySerializer keySerializer, Uri absoluteServiceUri)
+        internal static EntityToSerialize Create(object entity, ResourceType resourceType, string resourceSetName, bool includeTypeSegment, Func<ResourceProperty, object> getPropertyValue, KeySerializer keySerializer, Uri absoluteServiceUri)
         {
             Debug.Assert(!string.IsNullOrEmpty(resourceSetName), "container name must be specified");
             Debug.Assert(absoluteServiceUri != null && absoluteServiceUri.IsAbsoluteUri, "absoluteServiceUri != null && absoluteServiceUri.IsAbsoluteUri");

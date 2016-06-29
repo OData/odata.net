@@ -9,9 +9,9 @@ namespace Microsoft.OData.Evaluation
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
+    using Microsoft.OData.Edm;
     using Microsoft.OData.JsonLight;
     using Microsoft.OData.Metadata;
-    using Microsoft.OData.Edm;
 
     /// <summary>
     /// Interface used for substitutability of the metadata-centric responsibilities of <see cref="ODataJsonLightDeserializer"/>.
@@ -42,10 +42,9 @@ namespace Microsoft.OData.Evaluation
         /// Gets an entity metadata builder for the given resource.
         /// </summary>
         /// <param name="resourceState">Resource state to use as reference for information needed by the builder.</param>
-        /// <param name="useKeyAsSegment">true if keys should go in seperate segments in auto-generated URIs, false if they should go in parentheses.
-        /// A null value means the user hasn't specified a preference and we should look for an annotation in the entity container, if available.</param>
+        /// <param name="useKeyAsSegment">true if keys should go in seperate segments in auto-generated URIs, false if they should go in parentheses.</param>
         /// <returns>An entity metadata builder.</returns>
-        ODataResourceMetadataBuilder GetResourceMetadataBuilderForReader(IODataJsonLightReaderResourceState resourceState, bool? useKeyAsSegment);
+        ODataResourceMetadataBuilder GetResourceMetadataBuilderForReader(IODataJsonLightReaderResourceState resourceState, bool useKeyAsSegment);
 
         /// <summary>
         /// Gets the list of operations that are bindable to a type.
@@ -233,10 +232,9 @@ namespace Microsoft.OData.Evaluation
         /// Gets a resource metadata builder for the given resource.
         /// </summary>
         /// <param name="resourceState">Resource state to use as reference for information needed by the builder.</param>
-        /// <param name="useKeyAsSegment">true if keys should go in seperate segments in auto-generated URIs, false if they should go in parentheses.
-        /// A null value means the user hasn't specified a preference and we should look for an annotation in the entity container, if available.</param>
+        /// <param name="useKeyAsSegment">true if keys should go in seperate segments in auto-generated URIs, false if they should go in parentheses.</param>
         /// <returns>A resource metadata builder.</returns>
-        public ODataResourceMetadataBuilder GetResourceMetadataBuilderForReader(IODataJsonLightReaderResourceState resourceState, bool? useKeyAsSegment)
+        public ODataResourceMetadataBuilder GetResourceMetadataBuilderForReader(IODataJsonLightReaderResourceState resourceState, bool useKeyAsSegment)
         {
             Debug.Assert(resourceState != null, "resource != null");
 
@@ -255,8 +253,8 @@ namespace Microsoft.OData.Evaluation
                     IODataResourceTypeContext typeContext = ODataResourceTypeContext.Create(/*serializationInfo*/ null, navigationSource, navigationSourceElementType, resourceState.ResourceType, this.model, /*throwIfMissingTypeInfo*/ true);
                     IODataResourceMetadataContext resourceMetadataContext = ODataResourceMetadataContext.Create(resource, typeContext, /*serializationInfo*/null, (IEdmStructuredType)resource.GetEdmType().Definition, this, resourceState.SelectedProperties);
 
-                    UrlConvention urlConvention = UrlConvention.ForUserSettingAndTypeContext(useKeyAsSegment, typeContext);
-                    ODataConventionalUriBuilder uriBuilder = new ODataConventionalUriBuilder(this.ServiceBaseUri, urlConvention);
+                    ODataConventionalUriBuilder uriBuilder = new ODataConventionalUriBuilder(this.ServiceBaseUri,
+                        useKeyAsSegment ? ODataUrlKeyDelimiter.Slash : ODataUrlKeyDelimiter.Parentheses);
 
                     // For complex type or collection of complex, we don't need compute odata.Id etc. So just use the NoOpResourceMetadataBuilder now.
                     if (typeAnnotation.Type.IsEntity())

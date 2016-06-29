@@ -89,9 +89,6 @@ namespace Microsoft.OData.Service
         {
             Debug.Assert(configuration != null, "configuration != null");
 
-            // Add any annotations for the current URL convention.
-            this.AddAnnotations(UrlConvention.BuildMetadataAnnotations(configuration.DataServiceBehavior, this.primaryModel));
-
             IEnumerable<IEdmModel> annotatedModels = null;
             Func<IEdmModel, IEnumerable<IEdmModel>> annotationsBuilder = configuration.AnnotationsBuilder;
             if (annotationsBuilder != null)
@@ -177,9 +174,9 @@ namespace Microsoft.OData.Service
                     return (x == null && y == null);
                 }
 
-                return x.Target == y.Target && 
-                        x.Term.Namespace == y.Term.Namespace && 
-                        x.Term.Name == y.Term.Name && 
+                return x.Target == y.Target &&
+                        x.Term.Namespace == y.Term.Namespace &&
+                        x.Term.Name == y.Term.Name &&
                         x.Qualifier == y.Qualifier;
             }
 

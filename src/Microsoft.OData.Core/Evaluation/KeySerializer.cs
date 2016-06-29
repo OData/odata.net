@@ -37,15 +37,11 @@ namespace Microsoft.OData.Evaluation
         /// <summary>
         /// Creates a new key serializer.
         /// </summary>
-        /// <param name="urlConvention">The url convention to use.</param>
-        /// <returns>
-        /// A new key serializer.
-        /// </returns>
-        internal static KeySerializer Create(UrlConvention urlConvention)
+        /// <param name="enableKeyAsSegment">Whether enable key as segment.</param>
+        /// <returns>A new key serializer.</returns>
+        internal static KeySerializer Create(bool enableKeyAsSegment)
         {
-            Debug.Assert(urlConvention != null, "UrlConvention != null");
-
-            if (urlConvention.GenerateKeyAsSegment)
+            if (enableKeyAsSegment)
             {
                 return SegmentInstance;
             }

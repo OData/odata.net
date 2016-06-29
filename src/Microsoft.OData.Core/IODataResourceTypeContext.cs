@@ -6,7 +6,6 @@
 
 namespace Microsoft.OData
 {
-    using Microsoft.OData.Evaluation;
     using Microsoft.OData.Edm;
 
     /// <summary>
@@ -53,10 +52,5 @@ namespace Microsoft.OData
         /// The flag we use to identify if the current resource is from a navigation property with collection type or not.
         /// </summary>
         bool IsFromCollection { get; }
-
-        /// <summary>
-        /// The Url convention to use for the entity set.
-        /// </summary>
-        UrlConvention UrlConvention { get; }
     }
 }

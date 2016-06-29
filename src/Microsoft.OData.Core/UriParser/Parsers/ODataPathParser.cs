@@ -11,8 +11,8 @@ using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text.RegularExpressions;
-using Microsoft.OData.Metadata;
 using Microsoft.OData.Edm;
+using Microsoft.OData.Metadata;
 using ODataErrorStrings = Microsoft.OData.Strings;
 
 namespace Microsoft.OData.UriParser
@@ -353,7 +353,7 @@ namespace Microsoft.OData.UriParser
             KeySegment previousKeySegment = this.FindPreviousKeySegment();
 
             KeySegment keySegment;
-            if (!this.nextSegmentMustReferToMetadata && SegmentKeyHandler.TryHandleSegmentAsKey(segmentText, previous, previousKeySegment, this.configuration.UrlKeyDelimiter.UrlConvention, this.configuration.Resolver, out keySegment, this.configuration.EnableUriTemplateParsing))
+            if (!this.nextSegmentMustReferToMetadata && SegmentKeyHandler.TryHandleSegmentAsKey(segmentText, previous, previousKeySegment, this.configuration.UrlKeyDelimiter, this.configuration.Resolver, out keySegment, this.configuration.EnableUriTemplateParsing))
             {
                 this.parsedSegments.Add(keySegment);
                 return true;
@@ -899,7 +899,7 @@ namespace Microsoft.OData.UriParser
         {
             // before treating this as a property, try to handle it as a key property value, unless it was preceeded by an escape-marker segment ('$').
             // But when use ODataSimplified convention, only do this if the segment should not be interpreted as a type.
-            if ((!this.configuration.UrlKeyDelimiter.UrlConvention.ODataSimplified || this.configuration.EnableUriTemplateParsing) && this.TryHandleAsKeySegment(text))
+            if ((!this.configuration.UrlKeyDelimiter.EnableKeyAsSegment || this.configuration.EnableUriTemplateParsing) && this.TryHandleAsKeySegment(text))
             {
                 return;
             }
@@ -979,7 +979,7 @@ namespace Microsoft.OData.UriParser
             }
 
             // OData simplified convention, try to handle it as a key property value after can't parse as type and operation
-            if (this.configuration.UrlKeyDelimiter.UrlConvention.ODataSimplified && this.TryHandleAsKeySegment(text))
+            if (this.configuration.UrlKeyDelimiter.EnableKeyAsSegment && this.TryHandleAsKeySegment(text))
             {
                 return;
             }

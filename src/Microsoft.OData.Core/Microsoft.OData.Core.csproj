@@ -98,7 +98,6 @@
     <Compile Include="Evaluation\ODataMetadataContext.cs" />
     <Compile Include="Evaluation\ODataMissingOperationGenerator.cs" />
     <Compile Include="Evaluation\ODataUriBuilder.cs" />
-    <Compile Include="Evaluation\UrlConvention.cs" />
     <Compile Include="ExceptionUtils.cs" />
     <Compile Include="ResourceSetWithoutExpectedTypeValidator.cs" />
     <Compile Include="GeographyTypeConverter.cs" />

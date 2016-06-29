@@ -21,9 +21,6 @@ namespace Microsoft.OData.Evaluation
         /// <summary>The base URI of the service. This will be used as the base URI for all entity containers.</summary>
         private readonly Uri serviceBaseUri;
 
-        /// <summary>The specific url-convention to use.</summary>
-        private readonly UrlConvention urlConvention;
-
         /// <summary>The specific key-serializer to use based on the convention.</summary>
         private readonly KeySerializer keySerializer;
 
@@ -31,15 +28,14 @@ namespace Microsoft.OData.Evaluation
         /// Constructor.
         /// </summary>
         /// <param name="serviceBaseUri">The base URI of the service. This will be used as the base URI for all entity containers.</param>
-        /// <param name="urlConvention">The specific url convention to use.</param>
-        internal ODataConventionalUriBuilder(Uri serviceBaseUri, UrlConvention urlConvention)
+        /// <param name="urlKeyDelimiter">Key delimiter used in url.</param>
+        internal ODataConventionalUriBuilder(Uri serviceBaseUri, ODataUrlKeyDelimiter urlKeyDelimiter)
         {
             Debug.Assert(serviceBaseUri != null && serviceBaseUri.IsAbsoluteUri, "serviceBaseUri != null && serviceBaseUri.IsAbsoluteUri");
-            Debug.Assert(urlConvention != null, "urlConvention != null");
+            Debug.Assert(urlKeyDelimiter != null, "urlKeyDelimiter != null");
 
             this.serviceBaseUri = serviceBaseUri;
-            this.urlConvention = urlConvention;
-            this.keySerializer = KeySerializer.Create(this.urlConvention);
+            this.keySerializer = KeySerializer.Create(urlKeyDelimiter.EnableKeyAsSegment);
         }
 
         /// <summary>

@@ -21,26 +21,21 @@ namespace Microsoft.OData.Client
     public sealed class DataServiceUrlConventions
     {
         /// <summary>Singleton instance of the default conventions.</summary>
-        private static readonly DataServiceUrlConventions DefaultInstance = new DataServiceUrlConventions(UrlConvention.CreateWithExplicitValue(/*generateKeyAsSegment*/ false));
+        private static readonly DataServiceUrlConventions DefaultInstance = new DataServiceUrlConventions(enableKeyAsSegment: false);
 
         /// <summary>Singleton instance of the key-as-segment conventions.</summary>
-        private static readonly DataServiceUrlConventions KeyAsSegmentInstance = new DataServiceUrlConventions(UrlConvention.CreateWithExplicitValue(/*generateKeyAsSegment*/ true));
+        private static readonly DataServiceUrlConventions KeyAsSegmentInstance = new DataServiceUrlConventions(enableKeyAsSegment: true);
 
         /// <summary>The key serializer to use.</summary>
         private readonly KeySerializer keySerializer;
 
-        /// <summary>The url convention to use.</summary>
-        private readonly UrlConvention urlConvention;
-
         /// <summary>
         /// Prevents a default instance of the <see cref="DataServiceUrlConventions"/> class from being created.
         /// </summary>
-        /// <param name="urlConvention">The url convention to use.</param>
-        private DataServiceUrlConventions(UrlConvention urlConvention)
+        /// <param name="enableKeyAsSegment">Whether enable key as segment</param>
+        private DataServiceUrlConventions(bool enableKeyAsSegment)
         {
-            Debug.Assert(urlConvention != null, "urlConvention != null");
-            this.urlConvention = urlConvention;
-            this.keySerializer = KeySerializer.Create(urlConvention);
+            this.keySerializer = KeySerializer.Create(enableKeyAsSegment);
         }
 
         /// <summary>
@@ -100,15 +95,6 @@ namespace Microsoft.OData.Client
                 return propertyValue;
             };
             this.keySerializer.AppendKeyExpression(builder, keyProperties, getPropertyName, getValueForPropertyWithNullCheck);
-        }
-
-        /// <summary>
-        /// Adds the required headers for the url convention.
-        /// </summary>
-        /// <param name="requestHeaders">The request headers to add to.</param>
-        internal void AddRequiredHeaders(HeaderCollection requestHeaders)
-        {
-            this.urlConvention.AddRequiredHeaders(requestHeaders);
         }
 
         /// <summary>

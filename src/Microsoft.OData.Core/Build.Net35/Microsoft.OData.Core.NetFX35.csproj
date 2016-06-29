@@ -118,9 +118,6 @@
     <Compile Include="$(ODataCrossTargettingSourcePath)\Evaluation\ODataUriBuilder.cs">
       <Link>Microsoft\OData\Core\Evaluation\ODataUriBuilder.cs</Link>
     </Compile>
-    <Compile Include="$(ODataCrossTargettingSourcePath)\Evaluation\UrlConvention.cs">
-      <Link>Microsoft\OData\Core\Evaluation\UrlConvention.cs</Link>
-    </Compile>
     <Compile Include="$(ODataCrossTargettingSourcePath)\ExceptionUtils.cs">
       <Link>Microsoft\OData\Core\ExceptionUtils.cs</Link>
     </Compile>

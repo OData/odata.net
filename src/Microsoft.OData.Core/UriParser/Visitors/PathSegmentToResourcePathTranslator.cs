@@ -29,10 +29,11 @@ namespace Microsoft.OData.UriParser
         /// <summary>
         /// Private constructor since the singleton instance is sufficient.
         /// </summary>
-        /// <param name="urlConventions">Whether use key as segment</param>
-        public PathSegmentToResourcePathTranslator(UrlConvention urlConventions)
+        /// <param name="odataUrlKeyDelimiter">Key delimiter used in url.</param>
+        public PathSegmentToResourcePathTranslator(ODataUrlKeyDelimiter odataUrlKeyDelimiter)
         {
-            this.KeySerializer = KeySerializer.Create(urlConventions);
+            Debug.Assert(odataUrlKeyDelimiter != null, "odataUrlKeyDelimiter != null");
+            this.KeySerializer = KeySerializer.Create(odataUrlKeyDelimiter.EnableKeyAsSegment);
         }
 
         /// <summary>

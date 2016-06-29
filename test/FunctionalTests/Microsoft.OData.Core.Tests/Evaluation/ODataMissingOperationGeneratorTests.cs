@@ -8,9 +8,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using FluentAssertions;
+using Microsoft.OData.Edm;
 using Microsoft.OData.Evaluation;
 using Microsoft.OData.JsonLight;
-using Microsoft.OData.Edm;
 using Xunit;
 
 namespace Microsoft.OData.Tests.Evaluation
@@ -40,8 +40,8 @@ namespace Microsoft.OData.Tests.Evaluation
 
             this.allOperations = new EdmOperation[] { this.actionEdmMetadata, this.functionEdmMetadata };
 
-            this.odataAction = new ODataAction {Metadata = new Uri("http://temp.org/$metadata#Fake.FakeAction")};
-            this.odataFunction = new ODataFunction {Metadata = new Uri("http://temp.org/$metadata#Fake.FakeFunction")};
+            this.odataAction = new ODataAction { Metadata = new Uri("http://temp.org/$metadata#Fake.FakeAction") };
+            this.odataFunction = new ODataFunction { Metadata = new Uri("http://temp.org/$metadata#Fake.FakeFunction") };
 
             this.entry = ReaderUtils.CreateNewResource();
             this.entityType = new EdmEntityType("TestNamespace", "EntityType");
@@ -90,7 +90,7 @@ namespace Microsoft.OData.Tests.Evaluation
         public void SelectedFunctionShouldBeGenerated()
         {
             this.AddMissingOperationsForAll(SelectedPropertiesNode.Create(this.functionEdmMetadata.Name));
-            
+
             this.entry.Actions.Should().BeEmpty();
 
             this.entry.Functions.Should().HaveCount(1);
@@ -113,7 +113,7 @@ namespace Microsoft.OData.Tests.Evaluation
 
         private static void AddMissingOperations(ODataResource entry, IEdmEntityType entityType, SelectedPropertiesNode selectedProperties, IEdmModel model, Func<IEdmType, IEdmOperation[]> getOperations, Func<ODataResource, ODataResourceMetadataBuilder> getEntityMetadataBuilder = null, Func<IEdmStructuredType, bool> typeIsOpen = null)
         {
-            var metadataContext = new TestMetadataContext 
+            var metadataContext = new TestMetadataContext
             {
                 GetModelFunc = () => model,
                 GetMetadataDocumentUriFunc = () => new Uri("http://temp.org/$metadata"),
@@ -180,7 +180,7 @@ namespace Microsoft.OData.Tests.Evaluation
             }
         }
 
-        public ODataResourceMetadataBuilder GetResourceMetadataBuilderForReader(IODataJsonLightReaderResourceState entryState, bool? useKeyAsSegment)
+        public ODataResourceMetadataBuilder GetResourceMetadataBuilderForReader(IODataJsonLightReaderResourceState entryState, bool useKeyAsSegment)
         {
             if (this.GetEntityMetadataBuilderFunc != null)
             {

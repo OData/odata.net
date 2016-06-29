@@ -49,7 +49,7 @@ namespace Microsoft.Test.OData.Tests.Client.CodeGenerationTests
         private static readonly Dictionary<string, ServiceDescriptor> TestServiceDescriptors = new Dictionary<string, ServiceDescriptor>()
         {
             // CS + UseDataServiceCollection codegen results of the following services are referenced by client tests  
-            {NameSpacePrefixReference + "AstoriaDefaultServiceReference", ServiceDescriptors.AstoriaDefaultService}, 
+            {NameSpacePrefixReference + "AstoriaDefaultServiceReference", ServiceDescriptors.AstoriaDefaultService},
             {NameSpacePrefixReference + "ActionOverloadingServiceReference", ServiceDescriptors.ActionOverloadingService},
             {NameSpacePrefixReference + "KeyAsSegmentServiceReference", ServiceDescriptors.KeyAsSegmentService},
             {NameSpacePrefixReference + "ODataWriterDefaultServiceReference", ServiceDescriptors.ODataWriterService},
@@ -101,7 +101,7 @@ namespace Microsoft.Test.OData.Tests.Client.CodeGenerationTests
 
                             // To generate the updated client layer files, uncomment this, and then copy the resulting files under folder 
                             // CSDSCReferences & CSReferences & VBDSCReferences & VBReferences to the reference projects
-                            //this.GenerateClientCodeFile(edmx, path, descriptor.Key, languageOption, useDataServiceCollection);
+                            // this.GenerateClientCodeFile(edmx, path, descriptor.Key, languageOption, useDataServiceCollection);
                         }
                     }
                 }
@@ -195,12 +195,12 @@ namespace Microsoft.Test.OData.Tests.Client.CodeGenerationTests
                 WarningLevel = 4,
                 ReferencedAssemblies =
                 {
-                    typeof(DataServiceContext).Assembly.Location, 
-                    typeof(IEdmModel).Assembly.Location, 
+                    typeof(DataServiceContext).Assembly.Location,
+                    typeof(IEdmModel).Assembly.Location,
                     typeof(GeographyPoint).Assembly.Location,
-                    typeof(Uri).Assembly.Location, 
-                    typeof(IQueryable).Assembly.Location, 
-                    typeof(INotifyPropertyChanged).Assembly.Location, 
+                    typeof(Uri).Assembly.Location,
+                    typeof(IQueryable).Assembly.Location,
+                    typeof(INotifyPropertyChanged).Assembly.Location,
                     typeof(XmlReader).Assembly.Location,
                     SystemIO,
                     SystemRuntime,

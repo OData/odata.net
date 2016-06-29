@@ -44,7 +44,7 @@ namespace Microsoft.OData.UriParser
         /// <param name="keyAsSegment">Whether use key as segment</param>
         private PathSegmentToContextUrlPathTranslator(bool keyAsSegment)
         {
-            KeySerializer = KeySerializer.Create(UrlConvention.CreateWithExplicitValue(keyAsSegment));
+            this.KeySerializer = KeySerializer.Create(keyAsSegment);
         }
 
         /// <summary>

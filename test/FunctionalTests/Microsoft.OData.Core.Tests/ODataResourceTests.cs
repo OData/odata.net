@@ -8,9 +8,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using FluentAssertions;
+using Microsoft.OData.Edm;
 using Microsoft.OData.Evaluation;
 using Microsoft.OData.Tests.Evaluation;
-using Microsoft.OData.Edm;
 using Xunit;
 
 namespace Microsoft.OData.Tests
@@ -34,13 +34,16 @@ namespace Microsoft.OData.Tests
                     new ODataProperty{Name = "Name", Value = "Bob", SerializationInfo = new ODataPropertySerializationInfo{PropertyKind = ODataPropertyKind.ETag}}
                 }
             };
-            var serializationInfo = new ODataResourceSerializationInfo {NavigationSourceName = "Set", NavigationSourceEntityTypeName = "ns.BaseType", ExpectedTypeName = "ns.BaseType"};
+            var serializationInfo = new ODataResourceSerializationInfo { NavigationSourceName = "Set", NavigationSourceEntityTypeName = "ns.BaseType", ExpectedTypeName = "ns.BaseType" };
             var typeContext = ODataResourceTypeContext.Create(serializationInfo, null, null, null, EdmCoreModel.Instance, true);
             var metadataContext = new TestMetadataContext();
             var entryMetadataContext = ODataResourceMetadataContext.Create(this.odataEntryWithFullBuilder, typeContext, serializationInfo, null, metadataContext, SelectedPropertiesNode.EntireSubtree);
-            this.odataEntryWithFullBuilder.MetadataBuilder = new ODataConventionalResourceMetadataBuilder(entryMetadataContext, metadataContext, new ODataConventionalUriBuilder(new Uri("http://service/", UriKind.Absolute), UrlConvention.CreateWithExplicitValue(false)));
+            this.odataEntryWithFullBuilder.MetadataBuilder =
+                new ODataConventionalResourceMetadataBuilder(entryMetadataContext, metadataContext,
+                    new ODataConventionalUriBuilder(new Uri("http://service/", UriKind.Absolute),
+                        ODataUrlKeyDelimiter.Parentheses));
 
-            this.odataEntryWithNullBuilder = new ODataResource {MetadataBuilder = ODataResourceMetadataBuilder.Null};
+            this.odataEntryWithNullBuilder = new ODataResource { MetadataBuilder = ODataResourceMetadataBuilder.Null };
         }
 
         [Fact]
@@ -186,7 +189,7 @@ namespace Microsoft.OData.Tests
             this.odataEntry.InstanceAnnotations = newCollection;
             this.odataEntry.InstanceAnnotations.As<object>().Should().BeSameAs(newCollection).And.NotBeSameAs(initialCollection);
         }
-        
+
         [Fact]
         public void NewODataEntryShouldContainNullSerializationInfo()
         {
@@ -217,7 +220,7 @@ namespace Microsoft.OData.Tests
         [Fact]
         public void AddActionShouldWork()
         {
-            var action = new ODataAction() {Metadata = new Uri("http://odata.org/metadata"), Target = new Uri("http://odata.org/target"), Title = "TestAction",};
+            var action = new ODataAction() { Metadata = new Uri("http://odata.org/metadata"), Target = new Uri("http://odata.org/target"), Title = "TestAction", };
             this.odataEntry.AddAction(action);
 
             this.odataEntry.Actions.Count().Should().Be(1);

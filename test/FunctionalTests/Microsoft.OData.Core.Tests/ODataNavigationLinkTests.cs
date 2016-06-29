@@ -6,9 +6,9 @@
 
 using System;
 using FluentAssertions;
+using Microsoft.OData.Edm;
 using Microsoft.OData.Evaluation;
 using Microsoft.OData.Tests.Evaluation;
-using Microsoft.OData.Edm;
 using Xunit;
 
 namespace Microsoft.OData.Tests
@@ -39,7 +39,8 @@ namespace Microsoft.OData.Tests
             var typeContext = ODataResourceTypeContext.Create(serializationInfo, null, null, null, EdmCoreModel.Instance, true);
             var metadataContext = new TestMetadataContext();
             var entryMetadataContext = ODataResourceMetadataContext.Create(entry, typeContext, serializationInfo, null, metadataContext, SelectedPropertiesNode.EntireSubtree);
-            var metadataBuilder = new ODataConventionalResourceMetadataBuilder(entryMetadataContext, metadataContext, new ODataConventionalUriBuilder(ServiceUri, UrlConvention.CreateWithExplicitValue(false)));
+            var metadataBuilder = new ODataConventionalResourceMetadataBuilder(entryMetadataContext, metadataContext,
+                new ODataConventionalUriBuilder(ServiceUri, ODataUrlKeyDelimiter.Parentheses));
             this.navigationLinkWithFullBuilder = new ODataNestedResourceInfo { Name = "NavProp" };
             this.navigationLinkWithFullBuilder.MetadataBuilder = metadataBuilder;
 

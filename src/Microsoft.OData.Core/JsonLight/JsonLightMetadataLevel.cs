@@ -109,7 +109,7 @@ namespace Microsoft.OData.JsonLight
             IEdmStructuredType actualResourceType,
             SelectedPropertiesNode selectedProperties,
             bool isResponse,
-            bool? keyAsSegment,
+            bool keyAsSegment,
             ODataUri odataUri);
 
         /// <summary>

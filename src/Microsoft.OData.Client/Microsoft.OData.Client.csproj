@@ -79,9 +79,6 @@
     <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Core\Evaluation\KeySerializer.cs">
       <Link>KeySerializer.cs</Link>
     </Compile>
-    <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Core\Evaluation\UrlConvention.cs">
-      <Link>UrlConvention.cs</Link>
-    </Compile>
     <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Core\Metadata\EdmLibraryExtensions.cs">
       <Link>Metadata\EdmLibraryExtensions.cs</Link>
     </Compile>

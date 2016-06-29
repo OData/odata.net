@@ -23,9 +23,9 @@ namespace AstoriaUnitTests.Tests.TDD.Client
         public void Initialize()
         {
             this.contextWithKeyAsSegment = new DataServiceContext(new Uri("http://myservice/", UriKind.Absolute), ODataProtocolVersion.V4)
-                                           {
-                                               UrlConventions = DataServiceUrlConventions.KeyAsSegment,
-                                           };
+            {
+                UrlConventions = DataServiceUrlConventions.KeyAsSegment,
+            };
         }
 
         [TestMethod]
@@ -98,13 +98,6 @@ namespace AstoriaUnitTests.Tests.TDD.Client
             var descriptor = this.contextWithKeyAsSegment.Entities.Single();
             descriptor.Identity.Should().Be("http://myservice/Things/0");
             descriptor.EditLink.Should().Be("http://myservice/Things/0");
-        }
-
-        [TestMethod]
-        public void ClientShouldAddHeadersForUrlConvention()
-        {
-            var args = this.contextWithKeyAsSegment.CreateRequestArgsAndFireBuildingRequest("GET", new Uri("http://temp.org"), null, HttpStack.Auto, null);
-            args.Headers[UrlConventionsConstants.UrlConventionHeaderName].Should().Be("KeyAsSegment");
         }
     }
 

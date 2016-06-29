@@ -9,7 +9,7 @@ using Xunit;
 
 namespace Microsoft.OData.Tests.UriParser
 {
-    public class ODataUrlConventionsTests
+    public class ODataUrlKeyDelimiterTests
     {
         [Fact]
         public void DefaultInstanceIsSingleton()
@@ -26,13 +26,13 @@ namespace Microsoft.OData.Tests.UriParser
         [Fact]
         public void DefaultInstanceShouldHaveCorrectInternalRepresentation()
         {
-            ODataUrlKeyDelimiter.Parentheses.UrlConvention.GenerateKeyAsSegment.Should().BeFalse();
+            ODataUrlKeyDelimiter.Parentheses.EnableKeyAsSegment.Should().BeFalse();
         }
 
         [Fact]
         public void KeyAsSegmentInstanceShouldHaveCorrectInternalRepresentation()
         {
-            ODataUrlKeyDelimiter.Slash.UrlConvention.GenerateKeyAsSegment.Should().BeTrue();
+            ODataUrlKeyDelimiter.Slash.EnableKeyAsSegment.Should().BeTrue();
         }
     }
 }

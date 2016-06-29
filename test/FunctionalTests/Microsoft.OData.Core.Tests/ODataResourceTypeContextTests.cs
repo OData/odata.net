@@ -122,12 +122,6 @@ namespace Microsoft.OData.Tests
         {
             TypeContextWithoutModel.IsMediaLinkEntry.Should().BeFalse();
         }
-
-        [Fact]
-        public void TypeContextWithSerializationInfoShouldReturnDefaultUrlConvention()
-        {
-            TypeContextWithoutModel.UrlConvention.GenerateKeyAsSegment.Should().BeFalse();
-        }
         #endregion TypeContextWithoutModel
 
         #region TypeContextWithModel
@@ -153,12 +147,6 @@ namespace Microsoft.OData.Tests
         public void TypeContextWithMetadataShouldReturnIsMediaLinkEntry()
         {
             TypeContextWithModel.IsMediaLinkEntry.Should().BeFalse();
-        }
-
-        [Fact]
-        public void TypeContextWithMetadataShouldReturnKeyAsSegmentUrlConvention()
-        {
-            TypeContextWithModel.UrlConvention.GenerateKeyAsSegment.Should().BeTrue();
         }
         #endregion TypeContextWithModel
 
@@ -188,12 +176,6 @@ namespace Microsoft.OData.Tests
         {
             BaseTypeContextThatThrows.IsMediaLinkEntry.Should().BeFalse();
         }
-
-        [Fact]
-        public void BaseTypeContextThatThrowsShouldReturnDefaultUrlConvention()
-        {
-            BaseTypeContextThatThrows.UrlConvention.GenerateKeyAsSegment.Should().BeFalse();
-        }
         #endregion BaseTypeContextThatThrows
 
         #region BaseTypeContextThatWillNotThrow
@@ -220,12 +202,6 @@ namespace Microsoft.OData.Tests
         {
             BaseTypeContextThatWillNotThrow.IsMediaLinkEntry.Should().BeFalse();
         }
-
-        [Fact]
-        public void BaseTypeContextThatWillNotThrowShouldReturnDefaultUrlConvention()
-        {
-            BaseTypeContextThatWillNotThrow.UrlConvention.GenerateKeyAsSegment.Should().BeFalse();
-        }
         #endregion BaseTypeContextThatWillNotThrow
 
         #region TypeContextWithEdmUnknowEntitySet
@@ -251,12 +227,6 @@ namespace Microsoft.OData.Tests
         public void TypeContextWithEdmUnknowEntitySetShouldReturnFalseForIsMediaLinkEntry()
         {
             TypeContextWithEdmUnknowEntitySet.IsMediaLinkEntry.Should().BeFalse();
-        }
-
-        [Fact]
-        public void TypeContextWithEdmUnknowEntitySetShouldReturnDefaultUrlConvention()
-        {
-            TypeContextWithEdmUnknowEntitySet.UrlConvention.GenerateKeyAsSegment.Should().BeFalse();
         }
         #endregion TypeContextWithEdmUnknowEntitySet
     }

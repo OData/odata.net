@@ -5,9 +5,6 @@
 //---------------------------------------------------------------------
 
 using System;
-using System.Diagnostics;
-using Microsoft.OData.Evaluation;
-using Microsoft.OData.UriParser;
 
 namespace Microsoft.OData
 {
@@ -27,9 +24,9 @@ namespace Microsoft.OData
         private static readonly ODataUrlKeyDelimiter parenthesesDelimiter = new ODataUrlKeyDelimiter(enablekeyAsSegment: false);
 
         /// <summary>
-        /// The url convention to use.
+        /// Whether to generate entity keys as '/'-delimited segments instead of using parenthesis.
         /// </summary>
-        private readonly UrlConvention urlConvention;
+        private readonly bool enableKeyAsSegment;
 
         /// <summary>
         /// Prevents instances of the <see cref="ODataUrlKeyDelimiter"/> class from being created.
@@ -37,9 +34,7 @@ namespace Microsoft.OData
         /// <param name="enablekeyAsSegment">if enable key-as-segment in url parser.</param>
         private ODataUrlKeyDelimiter(bool enablekeyAsSegment)
         {
-            this.urlConvention = enablekeyAsSegment
-                ? UrlConvention.CreateODataSimplifiedConvention()
-                : UrlConvention.CreateWithExplicitValue(generateKeyAsSegment: false);
+            this.enableKeyAsSegment = enablekeyAsSegment;
         }
 
         /// <summary>
@@ -60,14 +55,11 @@ namespace Microsoft.OData
             get { return slashDelimiter; }
         }
 
-        /// <summary>
-        /// Gets the internal representation of the user-specified convention.
-        /// </summary>
-        internal UrlConvention UrlConvention
+        internal bool EnableKeyAsSegment
         {
             get
             {
-                return this.urlConvention;
+                return this.enableKeyAsSegment;
             }
         }
 

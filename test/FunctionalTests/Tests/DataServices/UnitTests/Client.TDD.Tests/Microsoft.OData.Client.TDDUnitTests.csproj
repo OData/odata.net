@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <ProjectGuid>{F7A080F5-2054-447F-B09C-4E7B9B1B1B00}</ProjectGuid>
@@ -104,7 +104,6 @@
     <Compile Include="Tests\Materialization\ODataEntriesEntityMaterializerUnitTests.cs" />
     <Compile Include="Tests\ODataMessageWritingHelperTests.cs" />
     <Compile Include="Tests\ODataMessageReadingHelperTests.cs" />
-    <Compile Include="Tests\ClientUrlConventionTests.cs" />
     <Compile Include="Tests\Serialization\ODataWriterWrapperUnitTests.cs" />
     <Compile Include="Tests\LinqIntegrationTests.cs" />
     <Compile Include="Tests\BuildingRequestEventTests.cs" />

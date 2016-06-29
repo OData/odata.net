@@ -8,8 +8,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using FluentAssertions;
-using Microsoft.OData.Evaluation;
 using Microsoft.OData.Edm;
+using Microsoft.OData.Evaluation;
 using Xunit;
 
 namespace Microsoft.OData.Tests.Evaluation
@@ -19,9 +19,9 @@ namespace Microsoft.OData.Tests.Evaluation
         private static readonly Uri DefaultBaseUri = new Uri("http://odata.org/base/");
         private static readonly Uri MetadataDocumentUri = new Uri(DefaultBaseUri, "$metadata");
         private static readonly TestModel TestModel = TestModel.Initialize();
-        private readonly SelectedPropertiesNode selectedProperties = SelectedPropertiesNode.EntireSubtree;
 
-        private readonly ODataConventionalUriBuilder uriBuilder = new ODataConventionalUriBuilder(DefaultBaseUri, UrlConvention.CreateWithExplicitValue(false));
+        private readonly ODataConventionalUriBuilder uriBuilder = new ODataConventionalUriBuilder(DefaultBaseUri,
+            ODataUrlKeyDelimiter.Parentheses);
         private readonly TestMetadataContext metadataContext = new TestMetadataContext { GetMetadataDocumentUriFunc = () => MetadataDocumentUri, GetModelFunc = () => TestModel.Model, OperationsBoundToStructuredTypeMustBeContainerQualifiedFunc = type => false };
         private ODataResource productEntry;
         private Dictionary<string, object> sinlgeKeyCollection;
@@ -55,7 +55,6 @@ namespace Microsoft.OData.Tests.Evaluation
                 NavigationSourceEntityTypeName = EntityTypeName,
                 ExpectedResourceTypeName = EntityTypeName,
                 IsMediaLinkEntry = false,
-                UrlConvention = UrlConvention.CreateWithExplicitValue(/*generateKeyAsSegment*/ false),
                 IsFromCollection = false,
                 NavigationSourceKind = EdmNavigationSourceKind.EntitySet
             };
@@ -91,7 +90,6 @@ namespace Microsoft.OData.Tests.Evaluation
                 NavigationSourceEntityTypeName = EntityTypeName,
                 ExpectedResourceTypeName = DerivedEntityTypeName,
                 IsMediaLinkEntry = true,
-                UrlConvention = UrlConvention.CreateWithExplicitValue(/*generateKeyAsSegment*/ false),
                 IsFromCollection = false
             };
             TestEntryMetadataContext derivedProductMleEntryMetadataContext = new TestEntryMetadataContext
@@ -101,7 +99,7 @@ namespace Microsoft.OData.Tests.Evaluation
                 ETagProperties = new[] { new KeyValuePair<string, object>("ETag1", "ETagValue1"), new KeyValuePair<string, object>("ETag2", "ETagValue2") },
                 KeyProperties = this.multiKeysCollection,
                 ActualResourceTypeName = DerivedMleEntityTypeName,
-                SelectedBindableOperations = new IEdmOperation[] 
+                SelectedBindableOperations = new IEdmOperation[]
                 {
                     action,
                     function
@@ -130,7 +128,6 @@ namespace Microsoft.OData.Tests.Evaluation
                 NavigationSourceEntityTypeName = EntityTypeName,
                 ExpectedResourceTypeName = EntityTypeName,
                 IsMediaLinkEntry = false,
-                UrlConvention = UrlConvention.CreateWithExplicitValue(/*generateKeyAsSegment*/ false),
                 NavigationSourceKind = EdmNavigationSourceKind.ContainedEntitySet,
                 IsFromCollection = true
             };
@@ -161,7 +158,6 @@ namespace Microsoft.OData.Tests.Evaluation
                 NavigationSourceEntityTypeName = EntityTypeName,
                 ExpectedResourceTypeName = EntityTypeName,
                 IsMediaLinkEntry = false,
-                UrlConvention = UrlConvention.CreateWithExplicitValue(/*generateKeyAsSegment*/ false),
                 NavigationSourceKind = EdmNavigationSourceKind.ContainedEntitySet,
                 IsFromCollection = false
             };
@@ -632,8 +628,8 @@ namespace Microsoft.OData.Tests.Evaluation
         {
             var values = new[]
             {
-                new KeyValuePair<string, object>("ETag1", 1.2345e+45), 
-                new KeyValuePair<string, object>("ETag2", new byte[] { 1, 2, 3 }), 
+                new KeyValuePair<string, object>("ETag1", 1.2345e+45),
+                new KeyValuePair<string, object>("ETag2", new byte[] { 1, 2, 3 }),
                 new KeyValuePair<string, object>("ETag3", 2.3M)
             };
 
@@ -646,8 +642,8 @@ namespace Microsoft.OData.Tests.Evaluation
         {
             var values = new[]
             {
-                new KeyValuePair<string, object>("ETagLong", 1L), 
-                new KeyValuePair<string, object>("ETagFloat", 1.0F), 
+                new KeyValuePair<string, object>("ETagLong", 1L),
+                new KeyValuePair<string, object>("ETagFloat", 1.0F),
                 new KeyValuePair<string, object>("ETagDouble", 1.0D),
                 new KeyValuePair<string, object>("ETagDecimal", 1.0M)
             };
@@ -1104,7 +1100,6 @@ namespace Microsoft.OData.Tests.Evaluation
                 NavigationSourceName = "Boss",
                 NavigationSourceEntityTypeName = "BossType",
                 ExpectedResourceTypeName = "BossType",
-                UrlConvention = UrlConvention.CreateWithExplicitValue(/*generateKeyAsSegment*/ false),
                 NavigationSourceKind = EdmNavigationSourceKind.Singleton,
             };
 
@@ -1195,8 +1190,6 @@ namespace Microsoft.OData.Tests.Evaluation
         public string ExpectedResourceTypeName { get; set; }
 
         public bool IsMediaLinkEntry { get; set; }
-
-        public UrlConvention UrlConvention { get; set; }
 
         public EdmNavigationSourceKind NavigationSourceKind { get; set; }
 

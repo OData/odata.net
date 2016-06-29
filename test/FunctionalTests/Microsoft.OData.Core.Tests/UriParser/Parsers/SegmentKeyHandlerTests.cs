@@ -8,9 +8,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using FluentAssertions;
-using Microsoft.OData.Evaluation;
-using Microsoft.OData.UriParser;
 using Microsoft.OData.Edm;
+using Microsoft.OData.UriParser;
 using Xunit;
 using ODataErrorStrings = Microsoft.OData.Strings;
 
@@ -22,8 +21,8 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
     public class SegmentKeyHandlerTests
     {
         private static readonly ODataUriResolver DefaultUriResolver = ODataUriResolver.GetUriResolver(null);
-        private readonly UrlConvention defaultConvention = UrlConvention.CreateWithExplicitValue(false);
-        private readonly UrlConvention keyAsSegmentConvention = UrlConvention.CreateWithExplicitValue(true);
+        private readonly ODataUrlKeyDelimiter defaultConvention = ODataUrlKeyDelimiter.Parentheses;
+        private readonly ODataUrlKeyDelimiter keyAsSegmentConvention = ODataUrlKeyDelimiter.Slash;
         private ODataPathSegment singleResultSegmentWithSingleKey;
         private ODataPathSegment multipleResultSegmentWithCompositeKey;
         private ODataPathSegment multipleResultSegmentWithSingleKey;
@@ -52,7 +51,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         public void SegmentWithMultipleKeyPropertiesWithoutRelatedKeyShouldThrowException()
         {
             KeySegment keySegment;
-            Action action = ()=>
+            Action action = () =>
             SegmentKeyHandler.TryHandleSegmentAsKey("key", this.multipleResultSegmentWithCompositeKey, null, keyAsSegmentConvention, DefaultUriResolver, out keySegment);
             action.ShouldThrow<ODataException>("The number of keys specified in the URI does not match number of key properties for the resource 'Fully.Qualified.Namespace.Lion'.");
         }
@@ -88,12 +87,12 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             ODataPathSegment keySegment;
             SegmentKeyHandler.TryCreateKeySegmentFromParentheses(
                 new NavigationPropertySegment(
-                    HardCodedTestModel.GetPersonMyLionsNavProp(), 
+                    HardCodedTestModel.GetPersonMyLionsNavProp(),
                     HardCodedTestModel.GetLionSet()),
                     new KeySegment(new List<KeyValuePair<string, object>>()
                     {
                         new KeyValuePair<string, object>("ID", 0)
-                    }, 
+                    },
                     HardCodedTestModel.GetPersonType(),
                     HardCodedTestModel.GetPeopleSet()),
                 "10",
@@ -113,7 +112,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
                 new KeySegment(new List<KeyValuePair<string, object>>()
                     {
                         new KeyValuePair<string, object>("AttackDates", "0")
-                    }, 
+                    },
                     HardCodedTestModel.GetPersonType(),
                     HardCodedTestModel.GetPeopleSet()),
                 "10",

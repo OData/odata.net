@@ -7,9 +7,8 @@
 namespace Microsoft.OData
 {
     using System.Diagnostics;
-    using Microsoft.OData.Metadata;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Evaluation;
+    using Microsoft.OData.Metadata;
 
     /// <summary>
     /// The context object to answer basic questions regarding the type of the resource or resource set.
@@ -25,11 +24,6 @@ namespace Microsoft.OData
         /// The expected resource type name of the resource set or resource.
         /// </summary>
         protected string expectedResourceTypeName;
-
-        /// <summary>
-        /// Default Url convention.
-        /// </summary>
-        private static readonly UrlConvention DefaultUrlConvention = UrlConvention.CreateWithExplicitValue(/*generateKeyAsSegment*/ false);
 
         /// <summary>
         /// If true, throw if any of the set or type name cannot be determined; if false, return null when any of the set or type name cannot determined.
@@ -133,14 +127,6 @@ namespace Microsoft.OData
         }
 
         /// <summary>
-        /// The Url convention to use for the entity set.
-        /// </summary>
-        public virtual UrlConvention UrlConvention
-        {
-            get { return DefaultUrlConvention; }
-        }
-
-        /// <summary>
         /// Creates an instance of <see cref="ODataResourceTypeContext"/>.
         /// </summary>
         /// <param name="serializationInfo">The serialization info from the resource set or resource instance.</param>
@@ -163,9 +149,9 @@ namespace Microsoft.OData
             if (((navigationSource != null || expectedResourceType != null && expectedResourceType.IsODataComplexTypeKind()) && model.IsUserModel()))
             {
                 Debug.Assert(navigationSource == null || navigationSourceEntityType != null, "navigationSource == null || navigationSourceEntityType != null");
-
                 Debug.Assert(expectedResourceType != null, "expectedResourceType != null");
-                return new ODataResourceTypeContextWithModel(navigationSource, navigationSourceEntityType, expectedResourceType, model);
+
+                return new ODataResourceTypeContextWithModel(navigationSource, navigationSourceEntityType, expectedResourceType);
             }
 
             return new ODataResourceTypeContext(expectedResourceType, throwIfMissingTypeInfo);
@@ -286,14 +272,6 @@ namespace Microsoft.OData
             }
 
             /// <summary>
-            /// The Url convention to use for the entity set.
-            /// </summary>
-            public override UrlConvention UrlConvention
-            {
-                get { return DefaultUrlConvention; }
-            }
-
-            /// <summary>
             /// The flag we use to identify if the current resource is from a collection type or not.
             /// </summary>
             public override bool IsFromCollection
@@ -307,11 +285,6 @@ namespace Microsoft.OData
         /// </summary>
         internal sealed class ODataResourceTypeContextWithModel : ODataResourceTypeContext
         {
-            /// <summary>
-            /// The Edm model instance to use.
-            /// </summary>
-            private readonly IEdmModel model;
-
             /// <summary>
             /// The navigation source of the entity set or entity.
             /// </summary>
@@ -331,11 +304,6 @@ namespace Microsoft.OData
             /// true if the resource is an media link resource or if the resource set contains media link entries, false otherwise.
             /// </summary>
             private readonly bool isMediaLinkEntry;
-
-            /// <summary>
-            /// The url convention to use for the entity set.
-            /// </summary>
-            private readonly SimpleLazy<UrlConvention> lazyUrlConvention;
 
             /// <summary>
             /// The flag we use to identify if the current resource is from a navigation property with collection type or not.
@@ -358,11 +326,9 @@ namespace Microsoft.OData
             /// <param name="navigationSource">The navigation source of the resource set or resource.</param>
             /// <param name="navigationSourceEntityType">The entity type of the navigation source.</param>
             /// <param name="expectedResourceType">The expected resource type of the resource set or resource.</param>
-            /// <param name="model">The Edm model instance to use.</param>
-            internal ODataResourceTypeContextWithModel(IEdmNavigationSource navigationSource, IEdmEntityType navigationSourceEntityType, IEdmStructuredType expectedResourceType, IEdmModel model)
+            internal ODataResourceTypeContextWithModel(IEdmNavigationSource navigationSource, IEdmEntityType navigationSourceEntityType, IEdmStructuredType expectedResourceType)
                 : base(expectedResourceType, /*throwIfMissingTypeInfo*/false)
             {
-                Debug.Assert(model != null, "model != null");
                 Debug.Assert(navigationSource != null
                     && navigationSourceEntityType != null
                     || expectedResourceType.IsODataComplexTypeKind(),
@@ -371,7 +337,6 @@ namespace Microsoft.OData
 
                 this.navigationSource = navigationSource;
                 this.navigationSourceEntityType = navigationSourceEntityType;
-                this.model = model;
 
                 IEdmContainedEntitySet containedEntitySet = navigationSource as IEdmContainedEntitySet;
                 if (containedEntitySet != null)
@@ -394,7 +359,6 @@ namespace Microsoft.OData
                 this.navigationSourceName = this.navigationSource == null ? null : this.navigationSource.Name;
                 var entityType = this.expectedResourceType as IEdmEntityType;
                 this.isMediaLinkEntry = entityType == null ? false : entityType.HasStream;
-                this.lazyUrlConvention = new SimpleLazy<UrlConvention>(() => UrlConvention.ForModel(this.model));
             }
 
             /// <summary>
@@ -471,14 +435,6 @@ namespace Microsoft.OData
             public override bool IsMediaLinkEntry
             {
                 get { return this.isMediaLinkEntry; }
-            }
-
-            /// <summary>
-            /// The Url convention to use for the entity set.
-            /// </summary>
-            public override UrlConvention UrlConvention
-            {
-                get { return this.lazyUrlConvention.Value; }
             }
 
             /// <summary>

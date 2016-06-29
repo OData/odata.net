@@ -6,10 +6,10 @@
 
 using System;
 using FluentAssertions;
-using Microsoft.OData.Evaluation;
-using Microsoft.OData.Metadata;
 using Microsoft.OData.Edm;
 using Microsoft.OData.Edm.Vocabularies;
+using Microsoft.OData.Evaluation;
+using Microsoft.OData.Metadata;
 using Xunit;
 
 namespace Microsoft.OData.Tests.IntegrationTests.Evaluation
@@ -23,9 +23,6 @@ namespace Microsoft.OData.Tests.IntegrationTests.Evaluation
         [Fact]
         public void ComputedIdentityShouldUseCorrectUrlConvention()
         {
-            var entry0 = CreateEntryWithKeyAsSegmentConvention(true, null);
-            entry0.Id.Should().Be(UrlUsingKeyAsSegmentConvention);
-
             var entry1 = CreateEntryWithKeyAsSegmentConvention(true, false);
             entry1.Id.Should().Be(UrlUsingDefaultConvention);
 
@@ -36,9 +33,6 @@ namespace Microsoft.OData.Tests.IntegrationTests.Evaluation
         [Fact]
         public void ComputedEditLinkShouldUseCorrectUrlConvention()
         {
-            var entry0 = CreateEntryWithKeyAsSegmentConvention(true, null);
-            entry0.EditLink.Should().Be(UrlUsingKeyAsSegmentConvention);
-
             var entry1 = CreateEntryWithKeyAsSegmentConvention(true, false);
             entry1.EditLink.Should().Be(UrlUsingDefaultConvention);
 
@@ -46,7 +40,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Evaluation
             entry2.EditLink.Should().Be(UrlUsingKeyAsSegmentConvention);
         }
 
-        private static ODataResource CreateEntryWithKeyAsSegmentConvention(bool addAnnotation, bool? useKeyAsSegment)
+        private static ODataResource CreateEntryWithKeyAsSegmentConvention(bool addAnnotation, bool useKeyAsSegment)
         {
             var model = new EdmModel();
             var container = new EdmEntityContainer("Fake", "Container");
