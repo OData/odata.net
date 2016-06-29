@@ -288,7 +288,7 @@ namespace Microsoft.Test.Taupo.OData.Scenario.Tests.UriParser.Path
         [MethodImplAttribute(MethodImplOptions.NoOptimization)]
         public void PathKeysAsSegments()
         {
-            var parser = new ODataUriParser(model, new Uri("http://www.potato.com/"), new Uri("http://www.potato.com/Customers/5")) { UrlConventions = ODataUrlConventions.KeyAsSegment };
+            var parser = new ODataUriParser(model, new Uri("http://www.potato.com/"), new Uri("http://www.potato.com/Customers/5")) { UrlKeyDelimiter = ODataUrlKeyDelimiter.Slash };
             var result = parser.ParsePath();
             ApprovalVerify(QueryNodeToStringVisitor.ToString(result));
         }
@@ -311,7 +311,10 @@ namespace Microsoft.Test.Taupo.OData.Scenario.Tests.UriParser.Path
         [MethodImplAttribute(MethodImplOptions.NoOptimization)]
         public void PathTypeSegmentWithODataSimplifiedEnabled()
         {
-            ODataUriParser parser = new ODataUriParser(model, new Uri("http://www.potato.com/"), new Uri("http://www.potato.com/Schools(1)/Student/Microsoft.Test.Taupo.OData.WCFService.Customer")) { UrlConventions = ODataUrlConventions.ODataSimplified };
+            ODataUriParser parser = new ODataUriParser(model, new Uri("http://www.potato.com/"), new Uri("http://www.potato.com/Schools(1)/Student/Microsoft.Test.Taupo.OData.WCFService.Customer"))
+            {
+                UrlKeyDelimiter = ODataUrlKeyDelimiter.Slash
+            };
             var result = parser.ParsePath();
             ApprovalVerify(QueryNodeToStringVisitor.ToString(result));
         }
@@ -320,7 +323,11 @@ namespace Microsoft.Test.Taupo.OData.Scenario.Tests.UriParser.Path
         [MethodImplAttribute(MethodImplOptions.NoOptimization)]
         public void PathKeysAsSegmentsWithODataSimplifiedEnabled()
         {
-            var parser = new ODataUriParser(model, new Uri("http://www.potato.com/"), new Uri("http://www.potato.com/Schools/1/Student/Microsoft.Test.Taupo.OData.WCFService.Customer")) { UrlConventions = ODataUrlConventions.ODataSimplified };
+            var parser = new ODataUriParser(model, new Uri("http://www.potato.com/"),
+                new Uri("http://www.potato.com/Schools/1/Student/Microsoft.Test.Taupo.OData.WCFService.Customer"))
+            {
+                UrlKeyDelimiter = ODataUrlKeyDelimiter.Slash
+            };
             var result = parser.ParsePath();
             ApprovalVerify(QueryNodeToStringVisitor.ToString(result));
         }
@@ -389,7 +396,7 @@ namespace Microsoft.Test.Taupo.OData.Scenario.Tests.UriParser.Path
         public void PathEntityWithDurationKeyUsingKeyAsSegmments()
         {
             ODataUriParser parser = new ODataUriParser(model, new Uri("http://www.potato.com/"), new Uri("http://www.potato.com/DurationInKeys/P1DT2H3M4.5678901S"));
-            parser.UrlConventions = ODataUrlConventions.KeyAsSegment;
+            parser.UrlKeyDelimiter = ODataUrlKeyDelimiter.Slash;
             var result = parser.ParsePath();
             ApprovalVerify(QueryNodeToStringVisitor.ToString(result));
         }
@@ -399,7 +406,7 @@ namespace Microsoft.Test.Taupo.OData.Scenario.Tests.UriParser.Path
         protected void TestExtensions(string caseInsensitive, string unqualified = null, string unqualifiedCaseinsensitive = null)
         {
             ODataUriParser uriParser = new ODataUriParser(model, serviceRoot, new Uri(serviceRoot, caseInsensitive));
-            this.TestCurrentExtension(uriParser,new ODataUriResolver() { EnableCaseInsensitive = true });
+            this.TestCurrentExtension(uriParser, new ODataUriResolver() { EnableCaseInsensitive = true });
 
             if (!string.IsNullOrEmpty(unqualified))
             {

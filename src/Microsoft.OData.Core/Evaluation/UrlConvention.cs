@@ -116,7 +116,9 @@ namespace Microsoft.OData.Evaluation
         /// <returns>A new UrlConvention instance with the given value.</returns>
         internal static UrlConvention CreateWithExplicitValue(bool generateKeyAsSegment)
         {
-            return new UrlConvention(generateKeyAsSegment);
+            return generateKeyAsSegment
+                ? new UrlConvention(true, true)
+                : new UrlConvention(false, false);
         }
 
         /// <summary>
@@ -125,7 +127,7 @@ namespace Microsoft.OData.Evaluation
         /// <returns>A new UrlConvention instance with the given value.</returns>
         internal static UrlConvention CreateODataSimplifiedConvention()
         {
-            return new UrlConvention(false, true);
+            return new UrlConvention(true, true);
         }
 
 #if ODATA_SERVICE

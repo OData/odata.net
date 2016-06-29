@@ -19,6 +19,23 @@ namespace Microsoft.OData
         private static readonly ODataSimplifiedOptions DefaultOptions = new ODataSimplifiedOptions();
 
         /// <summary>
+        /// Constructor of ODataSimplifiedOptions
+        /// </summary>
+        public ODataSimplifiedOptions()
+        {
+            this.EnableParsingKeyAsSegmentUrl = true;
+            this.EnableReadingKeyAsSegment = false;
+            this.EnableReadingODataAnnotationWithoutPrefix = false;
+            this.EnableWritingKeyAsSegment = false;
+            this.EnableWritingODataAnnotationWithoutPrefix = false;
+        }
+
+        /// <summary>
+        /// True if url parser support parsing path with key as segment, otherwise false. The defualt is true.
+        /// </summary>
+        public bool EnableParsingKeyAsSegmentUrl { get; set; }
+
+        /// <summary>
         /// Gets or sets a value that indicates whether the reader should put key values in their own URI segment when automatically building URIs.
         /// If this value is false, automatically-generated URLs will take the form "../EntitySet('KeyValue')/..".
         /// If this value is true, automatically-generated URLs will take the form "../EntitySet/KeyValue/..".
@@ -77,6 +94,7 @@ namespace Microsoft.OData
         {
             ExceptionUtils.CheckArgumentNotNull(other, "other");
 
+            this.EnableParsingKeyAsSegmentUrl = other.EnableParsingKeyAsSegmentUrl;
             this.EnableReadingKeyAsSegment = other.EnableReadingKeyAsSegment;
             this.EnableReadingODataAnnotationWithoutPrefix = other.EnableReadingODataAnnotationWithoutPrefix;
             this.EnableWritingKeyAsSegment = other.EnableWritingKeyAsSegment;

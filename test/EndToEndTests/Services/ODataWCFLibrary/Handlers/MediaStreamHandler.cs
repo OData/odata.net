@@ -127,7 +127,7 @@ namespace Microsoft.Test.OData.Services.ODataWCFService.Handlers
 
             // handle content type
             var parentUri = this.QueryContext.Target.BuildContainerUri(this.ServiceRootUri);
-            var parentContext = new QueryContext(this.ServiceRootUri, parentUri, this.DataSource.Model);
+            var parentContext = new QueryContext(this.ServiceRootUri, parentUri, this.DataSource.Model, this.RequestContainer);
             var contentType = this.HandleContentType((IEdmEntityType)parentContext.Target.ElementType);
 
             // handle ETag
@@ -307,7 +307,7 @@ namespace Microsoft.Test.OData.Services.ODataWCFService.Handlers
             else
             {
                 var parentUri = this.QueryContext.Target.BuildContainerUri(this.ServiceRootUri);
-                var parentContext = new QueryContext(this.ServiceRootUri, parentUri, this.DataSource.Model);
+                var parentContext = new QueryContext(this.ServiceRootUri, parentUri, this.DataSource.Model, this.RequestContainer);
                 edmEntitySet = parentContext.Target.NavigationSource as IEdmEntitySet;
             }
 

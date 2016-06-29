@@ -15,7 +15,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriBuilder
         public void CountTrueWorks()
         {
             Uri queryUri = new Uri("People?$count=true", UriKind.Relative);
-            Uri actualUri = UriBuilder(queryUri, ODataUrlConventions.Default, settings);
+            Uri actualUri = UriBuilder(queryUri, ODataUrlKeyDelimiter.Parentheses, settings);
             Assert.Equal(new Uri("http://gobbledygook/People?$count=true"), actualUri);
         }
 
@@ -23,7 +23,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriBuilder
         public void CountFalseWorks()
         {
             Uri queryUri = new Uri("People?$count=false", UriKind.Relative);
-            Uri actualUri = UriBuilder(queryUri, ODataUrlConventions.Default, settings);
+            Uri actualUri = UriBuilder(queryUri, ODataUrlKeyDelimiter.Parentheses, settings);
             Assert.Equal(new Uri("http://gobbledygook/People?$count=false"), actualUri);
         }
 
@@ -31,7 +31,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriBuilder
         public void LeadingAndTrailingWhitespaceIsTrimmed()
         {
             Uri queryUri = new Uri("People?$count=   true  ", UriKind.Relative);
-            Uri actualUri = UriBuilder(queryUri, ODataUrlConventions.Default, settings);
+            Uri actualUri = UriBuilder(queryUri, ODataUrlKeyDelimiter.Parentheses, settings);
             Assert.Equal(new Uri("http://gobbledygook/People?$count=true"), actualUri);
         }
     }

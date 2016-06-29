@@ -41,7 +41,7 @@ namespace Microsoft.Test.OData.Services.ODataWCFService.Handlers
 
             this.ServiceRootUri = Utility.RebuildUri(new Uri(OperationContext.Current.Host.BaseAddresses.First().AbsoluteUri.TrimEnd('/') + "/"));
 
-            this.QueryContext = new QueryContext(this.ServiceRootUri, this.RequestUri, this.DataSource.Model);
+            this.QueryContext = new QueryContext(this.ServiceRootUri, this.RequestUri, this.DataSource.Model, this.RequestContainer);
 
             string preference = this.RequestHeaders.ContainsKey(ServiceConstants.HttpHeaders.Prefer) ? this.RequestHeaders[ServiceConstants.HttpHeaders.Prefer] : string.Empty;
             this.PreferenceContext = new PreferenceContext(preference);
@@ -85,7 +85,7 @@ namespace Microsoft.Test.OData.Services.ODataWCFService.Handlers
 
             this.ServiceRootUri = Utility.RebuildUri(other.ServiceRootUri);
 
-            this.QueryContext = new QueryContext(this.ServiceRootUri, this.RequestUri, this.DataSource.Model);
+            this.QueryContext = new QueryContext(this.ServiceRootUri, this.RequestUri, this.DataSource.Model, this.RequestContainer);
 
             this.PreferenceContext = other.PreferenceContext;
         }

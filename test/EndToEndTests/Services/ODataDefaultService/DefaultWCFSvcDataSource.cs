@@ -4,6 +4,8 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+using Microsoft.OData;
+
 namespace Microsoft.Test.OData.Services.ODataWCFService
 {
     using System;
@@ -296,7 +298,7 @@ namespace Microsoft.Test.OData.Services.ODataWCFService
                 },
                 Revenue = 100000,
                 StockExchange = "NASDAQ",
-                Assets = 
+                Assets =
                 {
                     new Asset()
                     {
@@ -310,7 +312,7 @@ namespace Microsoft.Test.OData.Services.ODataWCFService
                         AssetID = 1,
                         Name = "ThinkPad",
                         Number = 200
-                    }                        
+                    }
                 },
                 Club = new Club
                 {
@@ -345,7 +347,7 @@ namespace Microsoft.Test.OData.Services.ODataWCFService
                     PersonID = 1,
                     Birthday = new DateTimeOffset(new DateTime(1957, 4, 3)),
                     City = "London",
-                    Home = GeographyPoint.Create(32.1, 23.1), 
+                    Home = GeographyPoint.Create(32.1, 23.1),
                     TimeBetweenLastTwoOrders = new TimeSpan(1),
                     HomeAddress = new HomeAddress()
                     {
@@ -507,7 +509,7 @@ namespace Microsoft.Test.OData.Services.ODataWCFService
                         ProductID = 5,
                         QuantityInStock = 100,
                         QuantityPerUnit = "100g Bag",
-                        UnitPrice = 3.24f, 
+                        UnitPrice = 3.24f,
                         Discontinued = true,
                         SkinColor = Color.Red,
                         CoverColors = new Collection<Color>(){ Color.Green, Color.Blue, Color.Blue },
@@ -595,7 +597,7 @@ namespace Microsoft.Test.OData.Services.ODataWCFService
                     ProductDetailID = 5,
                     ProductName = "Mustard",
                     Description = "spicy snack"
-                }, 
+                },
                 new ProductDetail()
                 {
                     ProductDetailID = 6,
@@ -1187,6 +1189,17 @@ namespace Microsoft.Test.OData.Services.ODataWCFService
         protected override IEdmModel CreateModel()
         {
             return DefaultInMemoryModel.CreateODataServiceModel("Microsoft.Test.OData.Services.ODataWCFService");
+        }
+
+        protected override void ConfigureContainer(IContainerBuilder builder)
+        {
+            base.ConfigureContainer(builder);
+            builder.AddServicePrototype(new ODataSimplifiedOptions()
+            {
+                EnableWritingKeyAsSegment = false,
+                EnableReadingKeyAsSegment = false,
+                EnableParsingKeyAsSegmentUrl = false,
+            });
         }
     }
 }

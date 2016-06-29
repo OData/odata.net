@@ -84,7 +84,7 @@ namespace Microsoft.Test.OData.Services.ODataWCFService.Handlers
             using (var messageReader = new ODataMessageReader(requestMessage, this.GetReaderSettings()))
             {
                 var referenceLink = messageReader.ReadEntityReferenceLink();
-                var queryContext = new QueryContext(this.ServiceRootUri, referenceLink.Url, this.DataSource.Model);
+                var queryContext = new QueryContext(this.ServiceRootUri, referenceLink.Url, this.DataSource.Model, this.RequestContainer);
                 var target = queryContext.ResolveQuery(this.DataSource);
 
                 this.DataSource.UpdateProvider.UpdateLink(parent, navigationPropertyName, target);
@@ -185,7 +185,7 @@ namespace Microsoft.Test.OData.Services.ODataWCFService.Handlers
             if (this.QueryContext.Target.TypeKind == EdmTypeKind.Entity && !this.QueryContext.Target.IsReference)
             {
                 Uri parentUri = this.QueryContext.Target.BuildContainerUri(this.ServiceRootUri);
-                QueryContext parentContext = new QueryContext(this.ServiceRootUri, parentUri, this.DataSource.Model);
+                QueryContext parentContext = new QueryContext(this.ServiceRootUri, parentUri, this.DataSource.Model, this.RequestContainer);
 
                 if (parentContext.Target.IsEntitySet)
                 {

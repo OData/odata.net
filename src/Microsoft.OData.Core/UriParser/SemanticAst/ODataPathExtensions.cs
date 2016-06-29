@@ -155,11 +155,11 @@ namespace Microsoft.OData.UriParser
         /// mainly translate Query Url path.
         /// </summary>
         /// <param name="path">Path to perform the computation on.</param>
-        /// <param name="urlConventions">Mark whether key is segment</param>
+        /// <param name="urlKeyDelimiter">Mark whether key is segment</param>
         /// <returns>The string representation of the Query Url path.</returns>
-        public static string ToResourcePathString(this ODataPath path, ODataUrlConventions urlConventions)
+        public static string ToResourcePathString(this ODataPath path, ODataUrlKeyDelimiter urlKeyDelimiter)
         {
-             return string.Concat(path.WalkWith(new PathSegmentToResourcePathTranslator(urlConventions.UrlConvention)).ToArray()).TrimStart('/');
+             return string.Concat(path.WalkWith(new PathSegmentToResourcePathTranslator(urlKeyDelimiter.UrlConvention)).ToArray()).TrimStart('/');
         }
 
         /// <summary>

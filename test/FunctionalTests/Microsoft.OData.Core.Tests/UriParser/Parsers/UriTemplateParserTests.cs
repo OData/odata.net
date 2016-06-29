@@ -78,7 +78,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             var uriParser = new ODataUriParser(HardCodedTestModel.TestModel, new Uri("http://host"), new Uri("http://host/People/{1}"))
             {
                 EnableUriTemplateParsing = true,
-                UrlConventions = ODataUrlConventions.KeyAsSegment
+                UrlKeyDelimiter = ODataUrlKeyDelimiter.Slash
             };
 
             var path = uriParser.ParsePath();
@@ -93,7 +93,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         {
             var uriParser = new ODataUriParser(HardCodedTestModel.TestModel, new Uri("http://host"), new Uri("http://host/People/{1}"))
             {
-                UrlConventions = ODataUrlConventions.KeyAsSegment
+                UrlKeyDelimiter = ODataUrlKeyDelimiter.Slash
             };
 
             Action action = () => uriParser.ParsePath();
@@ -147,7 +147,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             var uriParser = new ODataUriParser(HardCodedTestModel.TestModel, new Uri("http://host"), new Uri("http://host/Shapes/{enumKey}"))
             {
                 EnableUriTemplateParsing = true,
-                UrlConventions = ODataUrlConventions.KeyAsSegment
+                UrlKeyDelimiter = ODataUrlKeyDelimiter.Slash
             };
 
             var path = uriParser.ParsePath();

@@ -30,7 +30,7 @@ namespace Microsoft.OData.Tests.UriParser.Metadata
                 "People/TesTNS.PERsON",
                 parser => parser.ParsePath(),
                 path => path.LastSegment.ShouldBeTypeSegment(new EdmCollectionType(new EdmEntityTypeReference(PersonType, false))),
-                Strings.RequestUriProcessor_CannotQueryCollections("People"));
+                Strings.RequestUriProcessor_SyntaxError);
         }
 
         [Fact]
@@ -60,7 +60,7 @@ namespace Microsoft.OData.Tests.UriParser.Metadata
             this.TestCaseInsensitiveNotExist(
                 "People/NS.WHY",
                 parser => parser.ParsePath(),
-                Strings.RequestUriProcessor_CannotQueryCollections("People"));
+                Strings.RequestUriProcessor_SyntaxError);
         }
 
         [Fact]
@@ -73,8 +73,8 @@ namespace Microsoft.OData.Tests.UriParser.Metadata
                 clause => clause.SelectedItems.Single().ShouldBePathSelectionItem(new ODataSelectPath(
                     new ODataPathSegment[]
                 {
-                    new TypeSegment(PersonType, PeopleSet), 
-                    new PropertySegment(PersonNameProp), 
+                    new TypeSegment(PersonType, PeopleSet),
+                    new PropertySegment(PersonNameProp),
                 })),
                Strings.ExpandItemBinder_CannotFindType("TesTNS.PERsON"));
         }
@@ -90,7 +90,7 @@ namespace Microsoft.OData.Tests.UriParser.Metadata
                     new ODataPathSegment[]
                 {
                     new PropertySegment(AddrProperty),
-                    new TypeSegment(AddrType, null), 
+                    new TypeSegment(AddrType, null),
                 })),
                Strings.SelectBinder_MultiLevelPathInSelect);
         }
@@ -104,8 +104,8 @@ namespace Microsoft.OData.Tests.UriParser.Metadata
                 clause => clause.SelectedItems.Single().ShouldBePathSelectionItem(new ODataSelectPath(
                       new ODataPathSegment[]
                 {
-                    new TypeSegment(StarPencil, PencilSet), 
-                    new PropertySegment(PencilId), 
+                    new TypeSegment(StarPencil, PencilSet),
+                    new PropertySegment(PencilId),
                 })),
                 "More than one types match the name 'TestNS.StarPencil' were found in model.");
         }
@@ -318,8 +318,8 @@ namespace Microsoft.OData.Tests.UriParser.Metadata
                 clause => clause.SelectedItems.Single().ShouldBePathSelectionItem(new ODataSelectPath(
                     new ODataPathSegment[]
                     {
-                        new PropertySegment(AddrProperty), 
-                        new PropertySegment(ZipCodeProperty), 
+                        new PropertySegment(AddrProperty),
+                        new PropertySegment(ZipCodeProperty),
                     })),
                 Strings.MetadataBinder_PropertyNotDeclared("TestNS.Person", "ADDR"));
         }

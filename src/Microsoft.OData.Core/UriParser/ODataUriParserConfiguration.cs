@@ -16,7 +16,7 @@ namespace Microsoft.OData.UriParser
     internal sealed class ODataUriParserConfiguration
     {
         /// <summary>The conventions to use when parsing URLs.</summary>
-        private ODataUrlConventions urlConventions = ODataUrlConventions.Default;
+        private ODataUrlKeyDelimiter urlKeyDelimiter;
 
         /// <summary>The resolver to use when parsing URLs.</summary>
         private ODataUriResolver uriResolver;
@@ -35,6 +35,7 @@ namespace Microsoft.OData.UriParser
             this.Model = model;
             this.Container = container;
             this.Resolver = ODataUriResolver.GetUriResolver(container);
+            this.urlKeyDelimiter = ODataUrlKeyDelimiter.GetODataUrlKeyDelimiter(container);
 
             if (this.Container == null)
             {
@@ -76,21 +77,21 @@ namespace Microsoft.OData.UriParser
         public IServiceProvider Container { get; private set; }
 
         /// <summary>
-        /// Gets or Sets the <see cref="ODataUrlConventions"/> to use while parsing, specifically
+        /// Gets or Sets the <see cref="ODataUrlKeyDelimiter"/> to use while parsing, specifically
         /// whether to recognize keys as segments or not.
         /// </summary>
         /// <exception cref="System.ArgumentNullException">Throws if the input value is null.</exception>
-        public ODataUrlConventions UrlConventions
+        public ODataUrlKeyDelimiter UrlKeyDelimiter
         {
             get
             {
-                return this.urlConventions;
+                return this.urlKeyDelimiter;
             }
 
             set
             {
                 ExceptionUtils.CheckArgumentNotNull(value, "UrlConventions");
-                this.urlConventions = value;
+                this.urlKeyDelimiter = value;
             }
         }
 

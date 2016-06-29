@@ -111,7 +111,7 @@ namespace Microsoft.Test.OData.Services.ODataWCFService.Handlers
             using (var messageReader = new ODataMessageReader(requestMessage, this.GetReaderSettings()))
             {
                 var referenceLink = messageReader.ReadEntityReferenceLink();
-                var queryContext = new QueryContext(this.ServiceRootUri, referenceLink.Url, this.DataSource.Model);
+                var queryContext = new QueryContext(this.ServiceRootUri, referenceLink.Url, this.DataSource.Model, this.RequestContainer);
                 var target = queryContext.ResolveQuery(this.DataSource);
 
                 this.DataSource.UpdateProvider.CreateLink(parent, collectionPropertyName, target);

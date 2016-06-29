@@ -28,7 +28,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriBuilder
                 new [] { functionImport },
                 entitySet,
                 parameters));
-            Uri actual = odataUri.BuildUri(ODataUrlConventions.Default);
+            Uri actual = odataUri.BuildUri(ODataUrlKeyDelimiter.Parentheses);
             Assert.Equal(new Uri("http://gobbledygook/GetPet1(id=1)"), actual);
         }
     }

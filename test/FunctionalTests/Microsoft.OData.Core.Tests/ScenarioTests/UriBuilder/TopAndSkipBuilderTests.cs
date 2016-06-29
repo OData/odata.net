@@ -18,7 +18,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriBuilder
         public void PositiveTopValueWorks()
         {
             Uri queryUri = new Uri("People?$top=5", UriKind.Relative);
-            Uri actualUri = UriBuilder(queryUri, ODataUrlConventions.Default, settings);
+            Uri actualUri = UriBuilder(queryUri, ODataUrlKeyDelimiter.Parentheses, settings);
             Assert.Equal(new Uri("http://gobbledygook/People?$top=5"), actualUri);
         }
 
@@ -26,7 +26,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriBuilder
         public void ZeroTopValueWorks()
         {
             Uri queryUri = new Uri("People?$top= 0  ", UriKind.Relative);
-            Uri actualUri = UriBuilder(queryUri, ODataUrlConventions.Default, settings);
+            Uri actualUri = UriBuilder(queryUri, ODataUrlKeyDelimiter.Parentheses, settings);
             Assert.Equal(new Uri("http://gobbledygook/People?$top=0"), actualUri);
         }
         #endregion $top option
@@ -36,7 +36,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriBuilder
         public void PositiveSkipValueWorks()
         {
             Uri queryUri = new Uri("People?$skip=5", UriKind.Relative);
-            Uri actualUri = UriBuilder(queryUri, ODataUrlConventions.Default, settings);
+            Uri actualUri = UriBuilder(queryUri, ODataUrlKeyDelimiter.Parentheses, settings);
             Assert.Equal(new Uri("http://gobbledygook/People?$skip=5"), actualUri);
         }
 
@@ -44,7 +44,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriBuilder
         public void ZeroSkipValueWorks()
         {
             Uri queryUri = new Uri("People?$skip= 0  ", UriKind.Relative);
-            Uri actualUri = UriBuilder(queryUri, ODataUrlConventions.Default, settings);
+            Uri actualUri = UriBuilder(queryUri, ODataUrlKeyDelimiter.Parentheses, settings);
             Assert.Equal(new Uri("http://gobbledygook/People?$skip=0"), actualUri);
         }
         #endregion $skip option
@@ -60,7 +60,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriBuilder
             uri.Path = new ODataPath(new EntitySetSegment(HardCodedTestModel.GetPeopleSet()));
             Assert.Equal(uri.ParameterAliasNodes.Count, 0);
 
-            Uri res = uri.BuildUri(ODataUrlConventions.Default);
+            Uri res = uri.BuildUri(ODataUrlKeyDelimiter.Parentheses);
             Assert.Equal(new Uri("http://gobbledygook/People?$top=5&$skip=4"), res);
         }
         #endregion

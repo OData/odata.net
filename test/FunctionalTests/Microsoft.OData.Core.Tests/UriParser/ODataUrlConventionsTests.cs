@@ -14,25 +14,25 @@ namespace Microsoft.OData.Tests.UriParser
         [Fact]
         public void DefaultInstanceIsSingleton()
         {
-            ODataUrlConventions.Default.Should().BeSameAs(ODataUrlConventions.Default);
+            ODataUrlKeyDelimiter.Parentheses.Should().BeSameAs(ODataUrlKeyDelimiter.Parentheses);
         }
 
         [Fact]
         public void KeyAsSegmentInstanceIsSingleton()
         {
-            ODataUrlConventions.KeyAsSegment.Should().BeSameAs(ODataUrlConventions.KeyAsSegment);
+            ODataUrlKeyDelimiter.Slash.Should().BeSameAs(ODataUrlKeyDelimiter.Slash);
         }
 
         [Fact]
         public void DefaultInstanceShouldHaveCorrectInternalRepresentation()
         {
-            ODataUrlConventions.Default.UrlConvention.GenerateKeyAsSegment.Should().BeFalse();
+            ODataUrlKeyDelimiter.Parentheses.UrlConvention.GenerateKeyAsSegment.Should().BeFalse();
         }
 
         [Fact]
         public void KeyAsSegmentInstanceShouldHaveCorrectInternalRepresentation()
         {
-            ODataUrlConventions.KeyAsSegment.UrlConvention.GenerateKeyAsSegment.Should().BeTrue();
+            ODataUrlKeyDelimiter.Slash.UrlConvention.GenerateKeyAsSegment.Should().BeTrue();
         }
     }
 }

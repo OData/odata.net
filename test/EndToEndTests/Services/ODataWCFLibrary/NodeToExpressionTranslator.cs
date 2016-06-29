@@ -945,7 +945,7 @@ namespace Microsoft.Test.OData.Services.ODataWCFService
                 {
                     ODataEntityReferenceLink referenceLink = reader.ReadEntityReferenceLink();
                     var queryContext = new QueryContext(this.UriParser.ServiceRoot, referenceLink.Url,
-                        this.DataSource.Model);
+                        this.DataSource.Model, this.UriParser.Container);
                     var target = queryContext.ResolveQuery(this.DataSource);
                     return target;
                 }
@@ -987,7 +987,7 @@ namespace Microsoft.Test.OData.Services.ODataWCFService
                     foreach (var referenceLink in referenceLinks.Links)
                     {
                         var queryContext = new QueryContext(this.UriParser.ServiceRoot, referenceLink.Url,
-                            this.DataSource.Model);
+                            this.DataSource.Model, this.UriParser.Container);
                         var target = queryContext.ResolveQuery(this.DataSource);
 
                         if (list == null)

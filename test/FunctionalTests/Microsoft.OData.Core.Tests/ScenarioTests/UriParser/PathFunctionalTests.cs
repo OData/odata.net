@@ -142,7 +142,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         [Fact]
         public void EntitySetServiceOperationThrowsRightErrorWhenFollowedByUnrecognizedSegment()
         {
-            PathFunctionalTestsUtil.RunParseErrorPath("GetCoolPeople/foo", ODataErrorStrings.RequestUriProcessor_CannotQueryCollections("GetCoolPeople"));
+            PathFunctionalTestsUtil.RunParseErrorPath("GetCoolPeople/foo", ODataErrorStrings.RequestUriProcessor_SyntaxError);
         }
 
         [Fact]
@@ -167,28 +167,28 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         [Fact]
         public void SimpleKeyLookupWithKeysAsSegments()
         {
-            var path = new ODataUriParser(HardCodedTestModel.TestModel, new Uri("http://gobbldygook/"), new Uri("http://gobbldygook/Dogs/1")) { UrlConventions = ODataUrlConventions.KeyAsSegment }.ParsePath();
+            var path = new ODataUriParser(HardCodedTestModel.TestModel, new Uri("http://gobbldygook/"), new Uri("http://gobbldygook/Dogs/1")) { UrlKeyDelimiter = ODataUrlKeyDelimiter.Slash }.ParsePath();
             path.LastSegment.ShouldBeSimpleKeySegment(1);
         }
 
         [Fact]
         public void SimpleKeyLookupWithKeysAsSegmentsFollowedByNavigation()
         {
-            var path = new ODataUriParser(HardCodedTestModel.TestModel, new Uri("http://gobbldygook/"), new Uri("http://gobbldygook/People/1/Birthdate")) { UrlConventions = ODataUrlConventions.KeyAsSegment }.ParsePath();
+            var path = new ODataUriParser(HardCodedTestModel.TestModel, new Uri("http://gobbldygook/"), new Uri("http://gobbldygook/People/1/Birthdate")) { UrlKeyDelimiter = ODataUrlKeyDelimiter.Slash }.ParsePath();
             path.LastSegment.ShouldBePropertySegment(HardCodedTestModel.GetPersonBirthdateProp());
         }
 
         [Fact]
         public void UseEscapeMarkerWithTypeSegmentInKeyAsSegment()
         {
-            var path = new ODataUriParser(HardCodedTestModel.TestModel, new Uri("http://gobbldygook/"), new Uri("http://gobbldygook/People/$/Fully.Qualified.Namespace.Employee")) { UrlConventions = ODataUrlConventions.KeyAsSegment }.ParsePath();
+            var path = new ODataUriParser(HardCodedTestModel.TestModel, new Uri("http://gobbldygook/"), new Uri("http://gobbldygook/People/$/Fully.Qualified.Namespace.Employee")) { UrlKeyDelimiter = ODataUrlKeyDelimiter.Slash }.ParsePath();
             path.LastSegment.ShouldBeTypeSegment(new EdmCollectionType(new EdmEntityTypeReference(HardCodedTestModel.GetEmployeeType(), false)));
         }
 
         [Fact]
         public void SimpleTemplatedKeyLookupWithKeysAsSegments()
         {
-            var path = new ODataUriParser(HardCodedTestModel.TestModel, new Uri("http://gobbldygook/"), new Uri("http://gobbldygook/Dogs/{k1}")) { UrlConventions = ODataUrlConventions.KeyAsSegment, EnableUriTemplateParsing = true }.ParsePath();
+            var path = new ODataUriParser(HardCodedTestModel.TestModel, new Uri("http://gobbldygook/"), new Uri("http://gobbldygook/Dogs/{k1}")) { UrlKeyDelimiter = ODataUrlKeyDelimiter.Slash, EnableUriTemplateParsing = true }.ParsePath();
             var keySegment = path.LastSegment.As<KeySegment>();
             KeyValuePair<string, object> keypair = keySegment.Keys.Single();
             keypair.Key.Should().Be("ID");
@@ -198,7 +198,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         [Fact]
         public void UseTemplatedKeyWithPathTemplateSegmentInKeyAsSegmentShouldWork()
         {
-            var paths = new ODataUriParser(HardCodedTestModel.TestModel, new Uri("http://gobbldygook/"), new Uri("http://gobbldygook/Dogs/{k1}/{k2}")) { UrlConventions = ODataUrlConventions.KeyAsSegment, EnableUriTemplateParsing = true }.ParsePath().ToList();
+            var paths = new ODataUriParser(HardCodedTestModel.TestModel, new Uri("http://gobbldygook/"), new Uri("http://gobbldygook/Dogs/{k1}/{k2}")) { UrlKeyDelimiter = ODataUrlKeyDelimiter.Slash, EnableUriTemplateParsing = true }.ParsePath().ToList();
             var keySegment = paths[1].As<KeySegment>();
             KeyValuePair<string, object> keypair = keySegment.Keys.Single();
             keypair.Key.Should().Be("ID");
@@ -209,7 +209,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         [Fact]
         public void UseEscapeMarkerWithTemplatedKeyTypeSegmentInKeyAsSegmentShouldBeParsedAsPathTemplateSegment()
         {
-            var path = new ODataUriParser(HardCodedTestModel.TestModel, new Uri("http://gobbldygook/"), new Uri("http://gobbldygook/Dogs/$/{k1}")) { UrlConventions = ODataUrlConventions.KeyAsSegment, EnableUriTemplateParsing = true }.ParsePath();
+            var path = new ODataUriParser(HardCodedTestModel.TestModel, new Uri("http://gobbldygook/"), new Uri("http://gobbldygook/Dogs/$/{k1}")) { UrlKeyDelimiter = ODataUrlKeyDelimiter.Slash, EnableUriTemplateParsing = true }.ParsePath();
             path.LastSegment.As<PathTemplateSegment>().LiteralText.Should().Be("{k1}");
         }
 
@@ -225,21 +225,21 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         [Fact]
         public void TrailingEscapeMarkerShouldBeIgnoredInKeyAsSegment()
         {
-            var path = new ODataUriParser(HardCodedTestModel.TestModel, new Uri("http://gobbldygook/"), new Uri("http://gobbldygook/People/$")) { UrlConventions = ODataUrlConventions.KeyAsSegment }.ParsePath();
+            var path = new ODataUriParser(HardCodedTestModel.TestModel, new Uri("http://gobbldygook/"), new Uri("http://gobbldygook/People/$")) { UrlKeyDelimiter = ODataUrlKeyDelimiter.Slash }.ParsePath();
             path.LastSegment.ShouldBeEntitySetSegment(HardCodedTestModel.GetPeopleSet());
         }
 
         [Fact]
         public void DontUseEscapeSequenceInKeyAsSegment()
         {
-            var path = new ODataUriParser(HardCodedTestModel.TestModel, new Uri("http://gobbldygook/"), new Uri("http://gobbldygook/Users/Fully.Qualified.Namespace.User")) { UrlConventions = ODataUrlConventions.KeyAsSegment }.ParsePath();
+            var path = new ODataUriParser(HardCodedTestModel.TestModel, new Uri("http://gobbldygook/"), new Uri("http://gobbldygook/Users/Fully.Qualified.Namespace.User")) { UrlKeyDelimiter = ODataUrlKeyDelimiter.Slash }.ParsePath();
             path.LastSegment.ShouldBeSimpleKeySegment("Fully.Qualified.Namespace.User");
         }
 
         [Fact]
         public void UseMultipleEscapeSequencesWithCountInKeyAsSegment()
         {
-            var path = new ODataUriParser(HardCodedTestModel.TestModel, new Uri("http://gobbldygook/"), new Uri("http://gobbldygook/$/$/People/1/$/$/MyDog/$/$/MyPeople/$/$/$count/$/$")) { UrlConventions = ODataUrlConventions.KeyAsSegment }.ParsePath();
+            var path = new ODataUriParser(HardCodedTestModel.TestModel, new Uri("http://gobbldygook/"), new Uri("http://gobbldygook/$/$/People/1/$/$/MyDog/$/$/MyPeople/$/$/$count/$/$")) { UrlKeyDelimiter = ODataUrlKeyDelimiter.Slash }.ParsePath();
             path.LastSegment.ShouldBeCountSegment();
             path.NavigationSource().Should().BeNull();
         }
@@ -247,7 +247,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         [Fact]
         public void PathThatIsOnlyEscapeSegments()
         {
-            var path = new ODataUriParser(HardCodedTestModel.TestModel, new Uri("http://gobbldygook/"), new Uri("http://gobbldygook/$/$/$")) { UrlConventions = ODataUrlConventions.KeyAsSegment }.ParsePath();
+            var path = new ODataUriParser(HardCodedTestModel.TestModel, new Uri("http://gobbldygook/"), new Uri("http://gobbldygook/$/$/$")) { UrlKeyDelimiter = ODataUrlKeyDelimiter.Slash }.ParsePath();
             path.Should().BeEmpty();
         }
 
@@ -259,7 +259,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
                 new Uri("http://gobbldygook/"),
                 new Uri("http://gobbldygook/Dogs/1/LionsISaw/2"))
             {
-                UrlConventions = ODataUrlConventions.KeyAsSegment
+                UrlKeyDelimiter = ODataUrlKeyDelimiter.Slash
             }.ParsePath();
             path.LastSegment.ShouldBeKeySegment(
                 new KeyValuePair<string, object>("ID1", 1),
@@ -274,7 +274,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
                 new Uri("http://gobbldygook/"),
                 new Uri("http://gobbldygook/Dogs/1/LionsISaw/2/Friends/3"))
             {
-                UrlConventions = ODataUrlConventions.KeyAsSegment
+                UrlKeyDelimiter = ODataUrlKeyDelimiter.Slash
             }.ParsePath();
             path.LastSegment.ShouldBeKeySegment(
                 new KeyValuePair<string, object>("ID1", 2),

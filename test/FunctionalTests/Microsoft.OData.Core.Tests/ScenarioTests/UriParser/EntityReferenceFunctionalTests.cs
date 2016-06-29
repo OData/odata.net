@@ -22,7 +22,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         [Fact]
         public void UseMultipleEscapeSequencesWithRefInKeyAsSegment()
         {
-            var path = new ODataUriParser(HardCodedTestModel.TestModel, new Uri("http://gobbldygook/"), new Uri("http://gobbldygook/$/$/People/1/$/$/MyDog/$/$/MyPeople/$/$/$ref/$/$")) { UrlConventions = ODataUrlConventions.KeyAsSegment }.ParsePath();
+            var path = new ODataUriParser(HardCodedTestModel.TestModel, new Uri("http://gobbldygook/"), new Uri("http://gobbldygook/$/$/People/1/$/$/MyDog/$/$/MyPeople/$/$/$ref/$/$")) { UrlKeyDelimiter = ODataUrlKeyDelimiter.Slash }.ParsePath();
             path.LastSegment.ShouldBeNavigationPropertyLinkSegment(HardCodedTestModel.GetDogMyPeopleNavProp());
         }
 

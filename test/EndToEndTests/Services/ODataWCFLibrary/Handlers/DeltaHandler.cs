@@ -194,7 +194,7 @@ namespace Microsoft.Test.OData.Services.ODataWCFService.Handlers
                 if (entry.ParentId == parentId && entry.RelationShip == relationShip)
                 {
                     // Verify if the entry is deleted now, since some of them may dispare because $filter
-                    var verifyresult = new QueryContext(this.ServiceRootUri, new Uri(entry.Id), this.DataSource.Model);
+                    var verifyresult = new QueryContext(this.ServiceRootUri, new Uri(entry.Id), this.DataSource.Model, this.RequestContainer);
                     object queryResults = verifyresult.ResolveQuery(this.DataSource);
 
                     if (queryResults == null)

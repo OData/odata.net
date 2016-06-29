@@ -29,7 +29,7 @@ namespace AstoriaUnitTests.Tests
     {
         private static readonly string EntityTypeNameWithStringKey = typeof(KeyAsSegmentLongSpanIntegrationTests).FullName + "_EntityTypeWithStringKey";
 
-        [Ignore] // Issues: 623
+        [Ignore] // Issue: #623
         [TestCategory("Partition2")]
         [TestMethod]
         public void KeyAsSegmentEndToEndSmokeTestInJsonLight()
@@ -136,10 +136,10 @@ namespace AstoriaUnitTests.Tests
             ResponseShouldBeEntryWithEditLink("/StringKeys/)", "StringKeys/" + Uri.EscapeDataString(")"));
             ResponseShouldBeEntryWithEditLink("/StringKeys/pa()rens", "StringKeys/" + Uri.EscapeDataString("pa()rens"));
             ResponseShouldBeEntryWithEditLink("/StringKeys/parens()", "StringKeys/" + Uri.EscapeDataString("parens()"));
-            ResponseShouldBeEntryWithEditLink("/StringKeys/parens(", "StringKeys/"  + Uri.EscapeDataString("parens("));
-            ResponseShouldBeEntryWithEditLink("/StringKeys/(parens", "StringKeys/"  + Uri.EscapeDataString("(parens"));
-            ResponseShouldBeEntryWithEditLink("/StringKeys/(parens)", "StringKeys/"  + Uri.EscapeDataString("(parens)"));
-            ResponseShouldBeEntryWithEditLink("/StringKeys/)parens(", "StringKeys/"  + Uri.EscapeDataString(")parens("));
+            ResponseShouldBeEntryWithEditLink("/StringKeys/parens(", "StringKeys/" + Uri.EscapeDataString("parens("));
+            ResponseShouldBeEntryWithEditLink("/StringKeys/(parens", "StringKeys/" + Uri.EscapeDataString("(parens"));
+            ResponseShouldBeEntryWithEditLink("/StringKeys/(parens)", "StringKeys/" + Uri.EscapeDataString("(parens)"));
+            ResponseShouldBeEntryWithEditLink("/StringKeys/)parens(", "StringKeys/" + Uri.EscapeDataString(")parens("));
         }
         [Ignore] // Remove Atom
         [TestCategory("Partition2")]
@@ -300,8 +300,8 @@ namespace AstoriaUnitTests.Tests
             {
                 get
                 {
-                    return new List<EntityTypeWithStringKey> 
-                    { 
+                    return new List<EntityTypeWithStringKey>
+                    {
                         new EntityTypeWithStringKey { ID = "$count" },
                         new EntityTypeWithStringKey { ID = "$ref" },
                         new EntityTypeWithStringKey { ID = "$filter" },

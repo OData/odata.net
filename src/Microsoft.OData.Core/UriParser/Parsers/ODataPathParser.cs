@@ -353,7 +353,7 @@ namespace Microsoft.OData.UriParser
             KeySegment previousKeySegment = this.FindPreviousKeySegment();
 
             KeySegment keySegment;
-            if (!this.nextSegmentMustReferToMetadata && SegmentKeyHandler.TryHandleSegmentAsKey(segmentText, previous, previousKeySegment, this.configuration.UrlConventions.UrlConvention, this.configuration.Resolver, out keySegment, this.configuration.EnableUriTemplateParsing))
+            if (!this.nextSegmentMustReferToMetadata && SegmentKeyHandler.TryHandleSegmentAsKey(segmentText, previous, previousKeySegment, this.configuration.UrlKeyDelimiter.UrlConvention, this.configuration.Resolver, out keySegment, this.configuration.EnableUriTemplateParsing))
             {
                 this.parsedSegments.Add(keySegment);
                 return true;
@@ -899,7 +899,7 @@ namespace Microsoft.OData.UriParser
         {
             // before treating this as a property, try to handle it as a key property value, unless it was preceeded by an escape-marker segment ('$').
             // But when use ODataSimplified convention, only do this if the segment should not be interpreted as a type.
-            if (!this.configuration.UrlConventions.UrlConvention.ODataSimplified && this.TryHandleAsKeySegment(text))
+            if ((!this.configuration.UrlKeyDelimiter.UrlConvention.ODataSimplified || this.configuration.EnableUriTemplateParsing) && this.TryHandleAsKeySegment(text))
             {
                 return;
             }
@@ -979,7 +979,7 @@ namespace Microsoft.OData.UriParser
             }
 
             // OData simplified convention, try to handle it as a key property value after can't parse as type and operation
-            if (this.configuration.UrlConventions.UrlConvention.ODataSimplified && this.TryHandleAsKeySegment(text))
+            if (this.configuration.UrlKeyDelimiter.UrlConvention.ODataSimplified && this.TryHandleAsKeySegment(text))
             {
                 return;
             }
@@ -1152,7 +1152,7 @@ namespace Microsoft.OData.UriParser
                     case EdmTypeKind.Collection:
                         if (property.Type.IsStructuredCollectionType())
                         {
-                             segment.TargetKind = RequestTargetKind.Resource;
+                            segment.TargetKind = RequestTargetKind.Resource;
                         }
 
                         segment.TargetKind = RequestTargetKind.Collection;

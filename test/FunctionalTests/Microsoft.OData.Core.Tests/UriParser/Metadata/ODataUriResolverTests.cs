@@ -238,7 +238,7 @@ namespace Microsoft.OData.Tests.UriParser.Metadata
                 "MoonSet/'Blue'",
                 parser =>
                 {
-                    parser.UrlConventions = ODataUrlConventions.KeyAsSegment; return parser.ParsePath();
+                    parser.UrlKeyDelimiter = ODataUrlKeyDelimiter.Slash; return parser.ParsePath();
                 },
                 path =>
                 {

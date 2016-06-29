@@ -355,7 +355,7 @@
     <Compile Include="Uri\ODataUriConversionUtils.cs" />
     <Compile Include="Uri\ODataUriExtensions.cs" />
     <Compile Include="Uri\ODataUriUtils.cs" />
-    <Compile Include="Uri\ODataUrlConventions.cs" />
+    <Compile Include="Uri\ODataUrlKeyDelimiter.cs" />
     <Compile Include="Uri\SelectExpandClauseToStringBuilder.cs" />
     <Compile Include="UriParser\Binders\BinaryOperatorBinder.cs" />
     <Compile Include="UriParser\Binders\BinderBase.cs" />

@@ -156,14 +156,14 @@ namespace Microsoft.OData.UriParser
         }
 
         /// <summary>
-        /// Gets or Sets the <see cref="ODataUrlConventions"/> to use while parsing, specifically
+        /// Gets or Sets the <see cref="ODataUrlKeyDelimiter"/> to use while parsing, specifically
         /// whether to recognize keys as segments or not.
         /// </summary>
         /// <exception cref="System.ArgumentNullException">Throws if the input value is null.</exception>
-        public ODataUrlConventions UrlConventions
+        public ODataUrlKeyDelimiter UrlKeyDelimiter
         {
-            get { return this.configuration.UrlConventions; }
-            set { this.configuration.UrlConventions = value; }
+            get { return this.configuration.UrlKeyDelimiter; }
+            set { this.configuration.UrlKeyDelimiter = value; }
         }
 
         /// <summary>

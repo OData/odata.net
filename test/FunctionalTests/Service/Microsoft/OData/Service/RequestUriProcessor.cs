@@ -386,7 +386,7 @@ namespace Microsoft.OData.Service
 
             if (UrlConvention.Create(service).GenerateKeyAsSegment)
             {
-                parser.UrlConventions = ODataUrlConventions.KeyAsSegment;
+                parser.UrlKeyDelimiter = ODataUrlKeyDelimiter.Slash;
             }
 
             // configure the callback for handling batch cross-referencing segments ($0 etc).

@@ -18,10 +18,10 @@ namespace Microsoft.OData
         /// Build ODataUri into a Uri, the result Uri's query options are URL encoded.
         /// </summary>
         /// <param name="odataUri">ODataUri which will be build to relative url</param>
-        /// <param name="urlConventions">Value from ODataUrlConventions</param>
+        /// <param name="urlKeyDelimiter">Value from ODataUrlKeyDelimiter</param>
         /// <returns>Uri of the semantic tree</returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("DataWeb.Usage", "AC0018:SystemUriEscapeDataStringRule", Justification = "Values passed to this method are model elements like property names or keywords.")]
-        public static Uri BuildUri(this ODataUri odataUri, ODataUrlConventions urlConventions)
+        public static Uri BuildUri(this ODataUri odataUri, ODataUrlKeyDelimiter urlKeyDelimiter)
         {
             NodeToStringBuilder nodeToStringBuilder = new NodeToStringBuilder();
             SelectExpandClauseToStringBuilder selectExpandClauseToStringBuilder = new SelectExpandClauseToStringBuilder();
@@ -88,7 +88,7 @@ namespace Microsoft.OData
                 writeQueryPrefix = false;
             }
 
-            string res = String.Concat(odataUri.Path.ToResourcePathString(urlConventions), queryOptions);
+            string res = String.Concat(odataUri.Path.ToResourcePathString(urlKeyDelimiter), queryOptions);
             return odataUri.ServiceRoot == null ? new Uri(res, UriKind.Relative) : new Uri(odataUri.ServiceRoot, new Uri(res, UriKind.Relative));
         }
 

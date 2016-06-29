@@ -277,7 +277,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         [Fact]
         public void KeyAsSegmentWithTemplateShouldWork()
         {
-            var keyAsSegmentTemplateParser = new ODataPathParser(new ODataUriParserConfiguration(HardCodedTestModel.TestModel) { EnableUriTemplateParsing = true, UrlConventions = ODataUrlConventions.KeyAsSegment });
+            var keyAsSegmentTemplateParser = new ODataPathParser(new ODataUriParserConfiguration(HardCodedTestModel.TestModel) { EnableUriTemplateParsing = true, UrlKeyDelimiter = ODataUrlKeyDelimiter.Slash });
             IList<ODataPathSegment> path = keyAsSegmentTemplateParser.ParsePath(new[] { "Dogs", "{fido}", "MyPeople" });
             var keySegment = path[1].As<KeySegment>();
             KeyValuePair<string, object> keypair = keySegment.Keys.Single();

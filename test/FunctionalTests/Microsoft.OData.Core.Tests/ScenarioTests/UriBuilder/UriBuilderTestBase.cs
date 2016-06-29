@@ -25,11 +25,11 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriBuilder
             }
         }
 
-        public static Uri UriBuilder(Uri queryUri, ODataUrlConventions urlConventions, ODataUriParserSettings settings)
+        public static Uri UriBuilder(Uri queryUri, ODataUrlKeyDelimiter urlConventions, ODataUriParserSettings settings)
         {
             ODataUriParser odataUriParser = new ODataUriParser(HardCodedTestModel.TestModel, ServiceRoot, queryUri);
             SetODataUriParserSettingsTo(settings, odataUriParser.Settings);
-            odataUriParser.UrlConventions = urlConventions;
+            odataUriParser.UrlKeyDelimiter = urlConventions;
             ODataUri odataUri = odataUriParser.ParseUri();
 
             return odataUri.BuildUri(urlConventions);

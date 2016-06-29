@@ -1653,8 +1653,8 @@
     <Compile Include="..\Uri\ODataUriUtils.cs">
       <Link>Microsoft\OData\Core\Uri\ODataUriUtils.cs</Link>
     </Compile>
-    <Compile Include="..\Uri\ODataUrlConventions.cs">
-      <Link>Microsoft\OData\Core\Uri\ODataUrlConventions.cs</Link>
+    <Compile Include="..\Uri\ODataUrlKeyDelimiter.cs">
+      <Link>Microsoft\OData\Core\Uri\ODataUrlKeyDelimiter.cs</Link>
     </Compile>
     <Compile Include="..\Uri\SelectExpandClauseToStringBuilder.cs">
       <Link>Microsoft\OData\Core\Uri\SelectExpandClauseToStringBuilder.cs</Link>

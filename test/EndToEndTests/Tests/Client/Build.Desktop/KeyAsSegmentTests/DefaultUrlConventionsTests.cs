@@ -4,6 +4,8 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+using Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReference;
+
 namespace Microsoft.Test.OData.Tests.Client.KeyAsSegmentTests
 {
     using Microsoft.OData.Client;
@@ -19,7 +21,7 @@ namespace Microsoft.Test.OData.Tests.Client.KeyAsSegmentTests
     public class DefaultUrlConventionsTests : EndToEndTestBase
     {
         public DefaultUrlConventionsTests()
-            : base(ServiceDescriptors.AstoriaDefaultService)
+            : base(ServiceDescriptors.ODataWCFServiceDescriptor)
         {
         }
 
@@ -28,18 +30,18 @@ namespace Microsoft.Test.OData.Tests.Client.KeyAsSegmentTests
         {
             try
             {
-                var contextWrapper = this.CreateWrappedContext<DefaultContainer>();
+                var contextWrapper = this.CreateWrappedContext<InMemoryEntities>();
 
                 contextWrapper.UrlConventions = DataServiceUrlConventions.KeyAsSegment;
 
-                contextWrapper.Context.Customer.Where(c => c.CustomerId == 0).ToArray();
+                contextWrapper.Context.Orders.Where(c => c.OrderID == 0).ToArray();
                 Assert.Fail("Expected DataServiceException was not thrown.");
             }
             catch (DataServiceQueryException ex)
             {
                 Assert.IsNotNull(ex.InnerException, "No inner exception found");
                 Assert.IsInstanceOfType(ex.InnerException, typeof(DataServiceClientException), "Unexpected inner exception type");
-                StringResourceUtil.VerifyDataServicesString(ClientExceptionUtil.ExtractServerErrorMessage(ex), "RequestUriProcessor_CannotQueryCollections", "Customer");
+                StringResourceUtil.VerifyDataServicesString(ClientExceptionUtil.ExtractServerErrorMessage(ex), "RequestUriProcessor_CannotQueryCollections", "Orders");
             }
         }
     }

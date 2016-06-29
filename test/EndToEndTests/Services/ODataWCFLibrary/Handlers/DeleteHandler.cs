@@ -130,7 +130,7 @@ namespace Microsoft.Test.OData.Services.ODataWCFService.Handlers
             else
             {
                 var parentUri = this.QueryContext.Target.BuildContainerUri(this.ServiceRootUri);
-                var parentContext = new QueryContext(this.ServiceRootUri, parentUri, this.DataSource.Model);
+                var parentContext = new QueryContext(this.ServiceRootUri, parentUri, this.DataSource.Model, this.RequestContainer);
                 edmEntitySet = parentContext.Target.NavigationSource as IEdmEntitySet;
             }
 
@@ -162,7 +162,7 @@ namespace Microsoft.Test.OData.Services.ODataWCFService.Handlers
                 // collection-valued navigation property
                 var queryUri = this.QueryContext.QueryUri;
                 var parentUri = queryUri.AbsoluteUri.Substring(0, queryUri.AbsoluteUri.Length - queryUri.Query.Length);
-                var parentContext = new QueryContext(this.ServiceRootUri, new Uri(parentUri, UriKind.Absolute), this.DataSource.Model);
+                var parentContext = new QueryContext(this.ServiceRootUri, new Uri(parentUri, UriKind.Absolute), this.DataSource.Model, this.RequestContainer);
                 parent = parentContext.ResolveQuery(this.DataSource, parentContext.QueryPath.Count - 2);
                 target = this.QueryContext.ResolveQuery(this.DataSource);
             }

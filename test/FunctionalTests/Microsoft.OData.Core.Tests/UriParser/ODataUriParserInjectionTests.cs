@@ -446,7 +446,7 @@ namespace Microsoft.OData.Tests.UriParser
         public void ParseDynamicPathSegmentFunc_ReturnDynamicPathSegment_WithCollectionReturnType_FollowedByKey_KeyAsSegment()
         {
             Uri fullUri = new Uri("https://serviceRoot/drive/recent/01VL3Q7L36JOJUAPXGDNAZ4FVIGCTMLL46/size");
-            var path = ParseDynamicPathSegmentFunc_ReturnDynamicPathSegment_WithCollectionReturnType(fullUri, ODataUrlConventions.KeyAsSegment);
+            var path = ParseDynamicPathSegmentFunc_ReturnDynamicPathSegment_WithCollectionReturnType(fullUri, ODataUrlKeyDelimiter.Slash);
 
             path.ElementAt(1).ShouldBeDynamicPathSegment("recent");
             path.ElementAt(2).ShouldBeKeySegment(new KeyValuePair<string, object>("id", "01VL3Q7L36JOJUAPXGDNAZ4FVIGCTMLL46"));
@@ -484,21 +484,21 @@ namespace Microsoft.OData.Tests.UriParser
             uriParser.ParseCount().Should().Be(true);
         }
 
-        private ODataPath ParseDynamicPathSegmentFunc_ReturnDynamicPathSegment_WithCollectionReturnType(Uri fullUri, ODataUrlConventions uriConventions = null)
+        private ODataPath ParseDynamicPathSegmentFunc_ReturnDynamicPathSegment_WithCollectionReturnType(Uri fullUri, ODataUrlKeyDelimiter uriConventions = null)
         {
             ODataPath odataPath;
             ParseDynamicPathSegmentFunc_ReturnDynamicPathSegment_WithCollectionReturnType(fullUri, out odataPath, uriConventions);
             return odataPath;
         }
 
-        private ODataUriParser ParseDynamicPathSegmentFunc_ReturnDynamicPathSegment_WithCollectionReturnType(Uri fullUri, out ODataPath odataPath, ODataUrlConventions uriConventions = null)
+        private ODataUriParser ParseDynamicPathSegmentFunc_ReturnDynamicPathSegment_WithCollectionReturnType(Uri fullUri, out ODataPath odataPath, ODataUrlKeyDelimiter uriConventions = null)
         {
             var container = ContainerBuilderHelper.BuildContainer(builder => builder.AddService<UriPathParser, SingleSegmentUriPathParser>(ServiceLifetime.Scoped));
             var uriParser = new ODataUriParser(oneDriveModel, ServiceRoot, fullUri, container);
 
             if (uriConventions != null)
             {
-                uriParser.UrlConventions = uriConventions;
+                uriParser.UrlKeyDelimiter = uriConventions;
             }
 
             var operation = oneDriveModel.SchemaElements.OfType<IEdmOperation>().FirstOrDefault(o => o.Name == "recent");

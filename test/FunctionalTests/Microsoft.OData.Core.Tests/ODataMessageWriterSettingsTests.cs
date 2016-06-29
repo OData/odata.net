@@ -310,7 +310,7 @@ namespace Microsoft.OData.Tests
 
             var newSetting = this.settings.Clone();
             newSetting.MetadataDocumentUri.Should().Be(new Uri("http://test.org/$metadata"));
-            newSetting.ODataUri.Path.ToResourcePathString(ODataUrlConventions.Default).Should().Be("Cities(1)/Name");
+            newSetting.ODataUri.Path.ToResourcePathString(ODataUrlKeyDelimiter.Parentheses).Should().Be("Cities(1)/Name");
             newSetting.IsIndividualProperty.Should().BeTrue();
 
             string select, expand;

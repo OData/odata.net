@@ -27,7 +27,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriBuilder
             Uri fullUri = new Uri("http://gobbledygook/GetPet4(id=@p1)?@p1=1.01M");
             ODataUriParser odataUriParser = new ODataUriParser(HardCodedTestModel.TestModel, serviceRoot, fullUri);
             SetODataUriParserSettingsTo(this.settings, odataUriParser.Settings);
-            odataUriParser.UrlConventions = ODataUrlConventions.Default;
+            odataUriParser.UrlKeyDelimiter = ODataUrlKeyDelimiter.Parentheses;
             ODataUri odataUri = odataUriParser.ParseUri();
 
             IDictionary<string, SingleValueNode> aliasNodes = odataUri.ParameterAliasNodes;
@@ -35,13 +35,10 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriBuilder
             odataUri.Path.LastSegment.ShouldBeOperationImportSegment(HardCodedTestModel.GetFunctionImportForGetPet4()).And.Parameters.First().ShouldHaveParameterAliasNode("id", "@p1", EdmCoreModel.Instance.GetDecimal(false));
             aliasNodes["@p1"].ShouldBeConstantQueryNode(1.01M);
 
-            Uri actualUri = odataUri.BuildUri(ODataUrlConventions.Default);
+            Uri actualUri = odataUri.BuildUri(ODataUrlKeyDelimiter.Parentheses);
             Assert.Equal(fullUri, actualUri);
 
-            actualUri = odataUri.BuildUri(ODataUrlConventions.KeyAsSegment);
-            Assert.Equal(fullUri, actualUri);
-
-            actualUri = odataUri.BuildUri(ODataUrlConventions.ODataSimplified);
+            actualUri = odataUri.BuildUri(ODataUrlKeyDelimiter.Slash);
             Assert.Equal(fullUri, actualUri);
         }
 
@@ -51,7 +48,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriBuilder
             Uri fullUri = new Uri("http://gobbledygook/GetPetCount(colorPattern=@p1)?@p1=Fully.Qualified.Namespace.ColorPattern'BlueYellowStriped'");
             ODataUriParser odataUriParser = new ODataUriParser(HardCodedTestModel.TestModel, serviceRoot, fullUri);
             SetODataUriParserSettingsTo(this.settings, odataUriParser.Settings);
-            odataUriParser.UrlConventions = ODataUrlConventions.Default;
+            odataUriParser.UrlKeyDelimiter = ODataUrlKeyDelimiter.Parentheses;
             ODataUri odataUri = odataUriParser.ParseUri();
             IDictionary<string, SingleValueNode> aliasNodes = odataUri.ParameterAliasNodes;
 
@@ -64,13 +61,10 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriBuilder
             aliasNodes["@p1"].As<ConstantNode>().Value.As<ODataEnumValue>().Value.Should().Be("22");
             aliasNodes["@p1"].TypeReference.IsEnum().Should().Be(true);
 
-            Uri actualUri = odataUri.BuildUri(ODataUrlConventions.Default);
+            Uri actualUri = odataUri.BuildUri(ODataUrlKeyDelimiter.Parentheses);
             Assert.Equal(fullUri, actualUri);
 
-            actualUri = odataUri.BuildUri(ODataUrlConventions.KeyAsSegment);
-            Assert.Equal(fullUri, actualUri);
-
-            actualUri = odataUri.BuildUri(ODataUrlConventions.ODataSimplified);
+            actualUri = odataUri.BuildUri(ODataUrlKeyDelimiter.Slash);
             Assert.Equal(fullUri, actualUri);
         }
 
@@ -80,7 +74,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriBuilder
             Uri fullUri = new Uri("http://gobbledygook/GetPet4(id=@p1)?$filter=ID%20eq%20%40p1&@p1=1.01M");
             ODataUriParser odataUriParser = new ODataUriParser(HardCodedTestModel.TestModel, serviceRoot, fullUri);
             SetODataUriParserSettingsTo(this.settings, odataUriParser.Settings);
-            odataUriParser.UrlConventions = ODataUrlConventions.Default;
+            odataUriParser.UrlKeyDelimiter = ODataUrlKeyDelimiter.Parentheses;
             ODataUri odataUri = odataUriParser.ParseUri();
 
             IDictionary<string, SingleValueNode> aliasNodes = odataUri.ParameterAliasNodes;
@@ -89,13 +83,10 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriBuilder
             odataUri.Filter.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal).And.Right.ShouldBeParameterAliasNode("@p1", EdmCoreModel.Instance.GetDecimal(false));
             aliasNodes["@p1"].ShouldBeConstantQueryNode(1.01M);
 
-            Uri actualUri = odataUri.BuildUri(ODataUrlConventions.Default);
+            Uri actualUri = odataUri.BuildUri(ODataUrlKeyDelimiter.Parentheses);
             Assert.Equal(fullUri, actualUri);
 
-            actualUri = odataUri.BuildUri(ODataUrlConventions.KeyAsSegment);
-            Assert.Equal(fullUri, actualUri);
-
-            actualUri = odataUri.BuildUri(ODataUrlConventions.ODataSimplified);
+            actualUri = odataUri.BuildUri(ODataUrlKeyDelimiter.Slash);
             Assert.Equal(fullUri, actualUri);
         }
 
@@ -105,20 +96,17 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriBuilder
             Uri fullUri = new Uri("http://gobbledygook/GetPet4(id=@p1)?@p1=null");
             ODataUriParser odataUriParser = new ODataUriParser(HardCodedTestModel.TestModel, serviceRoot, fullUri);
             SetODataUriParserSettingsTo(this.settings, odataUriParser.Settings);
-            odataUriParser.UrlConventions = ODataUrlConventions.Default;
+            odataUriParser.UrlKeyDelimiter = ODataUrlKeyDelimiter.Parentheses;
             ODataUri odataUri = odataUriParser.ParseUri();
 
             IDictionary<string, SingleValueNode> aliasNodes = odataUri.ParameterAliasNodes;
             odataUri.Path.LastSegment.ShouldBeOperationImportSegment(HardCodedTestModel.GetFunctionImportForGetPet4()).And.Parameters.First().ShouldHaveParameterAliasNode("id", "@p1", null);
             aliasNodes["@p1"].ShouldBeConstantQueryNode((object)null);
 
-            Uri actualUri = odataUri.BuildUri(ODataUrlConventions.Default);
+            Uri actualUri = odataUri.BuildUri(ODataUrlKeyDelimiter.Parentheses);
             Assert.Equal(fullUri, actualUri);
 
-            actualUri = odataUri.BuildUri(ODataUrlConventions.KeyAsSegment);
-            Assert.Equal(fullUri, actualUri);
-
-            actualUri = odataUri.BuildUri(ODataUrlConventions.ODataSimplified);
+            actualUri = odataUri.BuildUri(ODataUrlKeyDelimiter.Slash);
             Assert.Equal(fullUri, actualUri);
         }
 
@@ -128,21 +116,18 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriBuilder
             Uri fullUri = new Uri("http://gobbledygook/People(123)/Fully.Qualified.Namespace.HasHat(onCat=@p1)?@p1=true");
             ODataUriParser odataUriParser = new ODataUriParser(HardCodedTestModel.TestModel, serviceRoot, fullUri);
             SetODataUriParserSettingsTo(this.settings, odataUriParser.Settings);
-            odataUriParser.UrlConventions = ODataUrlConventions.Default;
+            odataUriParser.UrlKeyDelimiter = ODataUrlKeyDelimiter.Parentheses;
             ODataUri odataUri = odataUriParser.ParseUri();
 
             IDictionary<string, SingleValueNode> aliasNodes = odataUri.ParameterAliasNodes;
             odataUri.Path.LastSegment.ShouldBeOperationSegment(HardCodedTestModel.TestModel.FindOperations("Fully.Qualified.Namespace.HasHat").Single(s => (s as IEdmFunction).Parameters.Count() == 2)).As<IEdmFunction>();
             aliasNodes["@p1"].ShouldBeConstantQueryNode(true);
 
-            Uri actualUri = odataUri.BuildUri(ODataUrlConventions.Default);
+            Uri actualUri = odataUri.BuildUri(ODataUrlKeyDelimiter.Parentheses);
             Assert.Equal(fullUri, actualUri);
 
-            actualUri = odataUri.BuildUri(ODataUrlConventions.KeyAsSegment);
+            actualUri = odataUri.BuildUri(ODataUrlKeyDelimiter.Slash);
             Assert.NotEqual(fullUri, actualUri);
-
-            actualUri = odataUri.BuildUri(ODataUrlConventions.ODataSimplified);
-            Assert.Equal(fullUri, actualUri);
         }
         #endregion
 
@@ -153,20 +138,17 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriBuilder
             Uri fullUri = new Uri("http://gobbledygook/People?$filter=Fully.Qualified.Namespace.AllHaveDog(inOffice%3D%40p1)&@p1=true");
             ODataUriParser odataUriParser = new ODataUriParser(HardCodedTestModel.TestModel, serviceRoot, fullUri);
             SetODataUriParserSettingsTo(this.settings, odataUriParser.Settings);
-            odataUriParser.UrlConventions = ODataUrlConventions.Default;
+            odataUriParser.UrlKeyDelimiter = ODataUrlKeyDelimiter.Parentheses;
             ODataUri odataUri = odataUriParser.ParseUri();
 
             IDictionary<string, SingleValueNode> aliasNodes = odataUri.ParameterAliasNodes;
             odataUri.Filter.Expression.ShouldBeSingleValueFunctionCallQueryNode(HardCodedTestModel.GetFunctionForAllHaveDogWithTwoParameters()).And.Parameters.Last().As<NamedFunctionParameterNode>().Value.ShouldBeParameterAliasNode("@p1", EdmCoreModel.Instance.GetBoolean(false));
             aliasNodes["@p1"].ShouldBeConstantQueryNode(true);
 
-            Uri actualUri = odataUri.BuildUri(ODataUrlConventions.Default);
+            Uri actualUri = odataUri.BuildUri(ODataUrlKeyDelimiter.Parentheses);
             Assert.Equal(fullUri, actualUri);
 
-            actualUri = odataUri.BuildUri(ODataUrlConventions.KeyAsSegment);
-            Assert.Equal(fullUri, actualUri);
-
-            actualUri = odataUri.BuildUri(ODataUrlConventions.ODataSimplified);
+            actualUri = odataUri.BuildUri(ODataUrlKeyDelimiter.Slash);
             Assert.Equal(fullUri, actualUri);
         }
 
@@ -176,7 +158,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriBuilder
             Uri fullUri = new Uri("http://gobbledygook/People?$filter=null%20ne%20Fully.Qualified.Namespace.GetPetCount(colorPattern%3D%40p1)&@p1=Fully.Qualified.Namespace.ColorPattern'BlueYellowStriped'");
             ODataUriParser odataUriParser = new ODataUriParser(HardCodedTestModel.TestModel, serviceRoot, fullUri);
             SetODataUriParserSettingsTo(this.settings, odataUriParser.Settings);
-            odataUriParser.UrlConventions = ODataUrlConventions.Default;
+            odataUriParser.UrlKeyDelimiter = ODataUrlKeyDelimiter.Parentheses;
             ODataUri odataUri = odataUriParser.ParseUri();
 
             NamedFunctionParameterNode p = odataUri.Filter.Expression.As<BinaryOperatorNode>().Right.As<SingleEntityFunctionCallNode>().Parameters.First().As<NamedFunctionParameterNode>();
@@ -189,13 +171,10 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriBuilder
             aliasNodes["@p1"].As<ConstantNode>().Value.As<ODataEnumValue>().Value.Should().Be("22");
             aliasNodes["@p1"].TypeReference.IsEnum().Should().Be(true);
 
-            Uri actualUri = odataUri.BuildUri(ODataUrlConventions.Default);
+            Uri actualUri = odataUri.BuildUri(ODataUrlKeyDelimiter.Parentheses);
             Assert.Equal(fullUri, actualUri);
 
-            actualUri = odataUri.BuildUri(ODataUrlConventions.KeyAsSegment);
-            Assert.Equal(fullUri, actualUri);
-
-            actualUri = odataUri.BuildUri(ODataUrlConventions.ODataSimplified);
+            actualUri = odataUri.BuildUri(ODataUrlKeyDelimiter.Slash);
             Assert.Equal(fullUri, actualUri);
         }
 
@@ -205,7 +184,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriBuilder
             Uri fullUri = new Uri("http://gobbledygook/People?$filter=null%20ne%20Fully.Qualified.Namespace.GetPetCount(colorPattern%3D%40p1)&@p1=Fully.Qualified.Namespace.ColorPattern'238563'");
             ODataUriParser odataUriParser = new ODataUriParser(HardCodedTestModel.TestModel, serviceRoot, fullUri);
             SetODataUriParserSettingsTo(this.settings, odataUriParser.Settings);
-            odataUriParser.UrlConventions = ODataUrlConventions.Default;
+            odataUriParser.UrlKeyDelimiter = ODataUrlKeyDelimiter.Parentheses;
             ODataUri odataUri = odataUriParser.ParseUri();
 
             NamedFunctionParameterNode p = odataUri.Filter.Expression.As<BinaryOperatorNode>().Right.As<SingleEntityFunctionCallNode>().Parameters.First().As<NamedFunctionParameterNode>();
@@ -218,13 +197,10 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriBuilder
             aliasNodes["@p1"].As<ConstantNode>().Value.As<ODataEnumValue>().Value.Should().Be("238563");
             aliasNodes["@p1"].TypeReference.IsEnum().Should().Be(true);
 
-            Uri actualUri = odataUri.BuildUri(ODataUrlConventions.Default);
+            Uri actualUri = odataUri.BuildUri(ODataUrlKeyDelimiter.Parentheses);
             Assert.Equal(fullUri, actualUri);
 
-            actualUri = odataUri.BuildUri(ODataUrlConventions.KeyAsSegment);
-            Assert.Equal(fullUri, actualUri);
-
-            actualUri = odataUri.BuildUri(ODataUrlConventions.ODataSimplified);
+            actualUri = odataUri.BuildUri(ODataUrlKeyDelimiter.Slash);
             Assert.Equal(fullUri, actualUri);
         }
 
@@ -234,20 +210,17 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriBuilder
             Uri fullUri = new Uri("http://gobbledygook/People?$filter=Fully.Qualified.Namespace.HasDog(inOffice%3Dfalse%2Cname%3D%40p1)&@p1=Name");
             ODataUriParser odataUriParser = new ODataUriParser(HardCodedTestModel.TestModel, serviceRoot, fullUri);
             SetODataUriParserSettingsTo(this.settings, odataUriParser.Settings);
-            odataUriParser.UrlConventions = ODataUrlConventions.Default;
+            odataUriParser.UrlKeyDelimiter = ODataUrlKeyDelimiter.Parentheses;
             ODataUri odataUri = odataUriParser.ParseUri();
 
             IDictionary<string, SingleValueNode> aliasNodes = odataUri.ParameterAliasNodes;
             odataUri.Filter.Expression.ShouldBeSingleValueFunctionCallQueryNode(HardCodedTestModel.GetHasDogOverloadForPeopleWithThreeParameters().As<IEdmFunction>()).And.Parameters.Last().As<NamedFunctionParameterNode>().Value.ShouldBeParameterAliasNode("@p1", EdmCoreModel.Instance.GetString(true));
             aliasNodes["@p1"].ShouldBeSingleValuePropertyAccessQueryNode(HardCodedTestModel.GetPeopleSet().EntityType().FindProperty("Name"));
 
-            Uri actualUri = odataUri.BuildUri(ODataUrlConventions.Default);
+            Uri actualUri = odataUri.BuildUri(ODataUrlKeyDelimiter.Parentheses);
             Assert.Equal(fullUri, actualUri);
 
-            actualUri = odataUri.BuildUri(ODataUrlConventions.KeyAsSegment);
-            Assert.Equal(fullUri, actualUri);
-
-            actualUri = odataUri.BuildUri(ODataUrlConventions.ODataSimplified);
+            actualUri = odataUri.BuildUri(ODataUrlKeyDelimiter.Slash);
             Assert.Equal(fullUri, actualUri);
         }
 
@@ -257,7 +230,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriBuilder
             Uri fullUri = new Uri("http://gobbledygook/People?$filter=Fully.Qualified.Namespace.HasDog(inOffice%3Dfalse%2Cname%3D%40p1)&@p2=Name&@p1=%40p2");
             ODataUriParser odataUriParser = new ODataUriParser(HardCodedTestModel.TestModel, serviceRoot, fullUri);
             SetODataUriParserSettingsTo(this.settings, odataUriParser.Settings);
-            odataUriParser.UrlConventions = ODataUrlConventions.Default;
+            odataUriParser.UrlKeyDelimiter = ODataUrlKeyDelimiter.Parentheses;
             ODataUri odataUri = odataUriParser.ParseUri();
 
             IDictionary<string, SingleValueNode> aliasNodes = odataUri.ParameterAliasNodes;
@@ -265,13 +238,10 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriBuilder
             aliasNodes["@p1"].ShouldBeParameterAliasNode("@p2", EdmCoreModel.Instance.GetString(true));
             aliasNodes["@p2"].ShouldBeSingleValuePropertyAccessQueryNode(HardCodedTestModel.GetPeopleSet().EntityType().FindProperty("Name"));
 
-            Uri actualUri = odataUri.BuildUri(ODataUrlConventions.Default);
+            Uri actualUri = odataUri.BuildUri(ODataUrlKeyDelimiter.Parentheses);
             Assert.Equal(fullUri, actualUri);
 
-            actualUri = odataUri.BuildUri(ODataUrlConventions.KeyAsSegment);
-            Assert.Equal(fullUri, actualUri);
-
-            actualUri = odataUri.BuildUri(ODataUrlConventions.ODataSimplified);
+            actualUri = odataUri.BuildUri(ODataUrlKeyDelimiter.Slash);
             Assert.Equal(fullUri, actualUri);
         }
 
@@ -281,7 +251,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriBuilder
             Uri fullUri = new Uri("http://gobbledygook/People?$filter=Fully.Qualified.Namespace.HasDog(inOffice%3D%40p1%2Cname%3D%40p1)&@p2=Name&@p1=%40p2");
             ODataUriParser odataUriParser = new ODataUriParser(HardCodedTestModel.TestModel, serviceRoot, fullUri);
             SetODataUriParserSettingsTo(this.settings, odataUriParser.Settings);
-            odataUriParser.UrlConventions = ODataUrlConventions.Default;
+            odataUriParser.UrlKeyDelimiter = ODataUrlKeyDelimiter.Parentheses;
             ODataUri odataUri = odataUriParser.ParseUri();
 
             IDictionary<string, SingleValueNode> aliasNodes = odataUri.ParameterAliasNodes;
@@ -289,13 +259,10 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriBuilder
             aliasNodes["@p1"].ShouldBeParameterAliasNode("@p2", EdmCoreModel.Instance.GetString(true));
             aliasNodes["@p2"].ShouldBeSingleValuePropertyAccessQueryNode(HardCodedTestModel.GetPeopleSet().EntityType().FindProperty("Name"));
 
-            Uri actualUri = odataUri.BuildUri(ODataUrlConventions.Default);
+            Uri actualUri = odataUri.BuildUri(ODataUrlKeyDelimiter.Parentheses);
             Assert.Equal(fullUri, actualUri);
 
-            actualUri = odataUri.BuildUri(ODataUrlConventions.KeyAsSegment);
-            Assert.Equal(fullUri, actualUri);
-
-            actualUri = odataUri.BuildUri(ODataUrlConventions.ODataSimplified);
+            actualUri = odataUri.BuildUri(ODataUrlKeyDelimiter.Slash);
             Assert.Equal(fullUri, actualUri);
         }
 
@@ -305,7 +272,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriBuilder
             Uri fullUri = new Uri("http://gobbledygook/People?$filter=Fully.Qualified.Namespace.HasDog(inOffice%3D%40p1%2Cname%3D%40p2)");
             ODataUriParser odataUriParser = new ODataUriParser(HardCodedTestModel.TestModel, serviceRoot, fullUri);
             SetODataUriParserSettingsTo(this.settings, odataUriParser.Settings);
-            odataUriParser.UrlConventions = ODataUrlConventions.Default;
+            odataUriParser.UrlKeyDelimiter = ODataUrlKeyDelimiter.Parentheses;
             ODataUri odataUri = odataUriParser.ParseUri();
 
             IDictionary<string, SingleValueNode> aliasNodes = odataUri.ParameterAliasNodes;
@@ -313,13 +280,10 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriBuilder
             aliasNodes["@p1"].Should().BeNull();
             aliasNodes["@p2"].Should().BeNull();
 
-            Uri actualUri = odataUri.BuildUri(ODataUrlConventions.Default);
+            Uri actualUri = odataUri.BuildUri(ODataUrlKeyDelimiter.Parentheses);
             Assert.Equal(fullUri, actualUri);
 
-            actualUri = odataUri.BuildUri(ODataUrlConventions.KeyAsSegment);
-            Assert.Equal(fullUri, actualUri);
-
-            actualUri = odataUri.BuildUri(ODataUrlConventions.ODataSimplified);
+            actualUri = odataUri.BuildUri(ODataUrlKeyDelimiter.Slash);
             Assert.Equal(fullUri, actualUri);
         }
 
@@ -329,20 +293,17 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriBuilder
             Uri fullUri = new Uri("http://gobbledygook/People?$filter=ID%20eq%20%40p1&@p1=1 add 2");
             ODataUriParser odataUriParser = new ODataUriParser(HardCodedTestModel.TestModel, serviceRoot, fullUri);
             SetODataUriParserSettingsTo(this.settings, odataUriParser.Settings);
-            odataUriParser.UrlConventions = ODataUrlConventions.Default;
+            odataUriParser.UrlKeyDelimiter = ODataUrlKeyDelimiter.Parentheses;
             ODataUri odataUri = odataUriParser.ParseUri();
 
             IDictionary<string, SingleValueNode> aliasNodes = odataUri.ParameterAliasNodes;
             odataUri.Filter.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal).And.Right.ShouldBeParameterAliasNode("@p1", EdmCoreModel.Instance.GetInt32(false));
             aliasNodes["@p1"].ShouldBeBinaryOperatorNode(BinaryOperatorKind.Add).And.Right.ShouldBeConstantQueryNode(2);
 
-            Uri actualUri = odataUri.BuildUri(ODataUrlConventions.Default);
+            Uri actualUri = odataUri.BuildUri(ODataUrlKeyDelimiter.Parentheses);
             Assert.Equal(fullUri, actualUri);
 
-            actualUri = odataUri.BuildUri(ODataUrlConventions.KeyAsSegment);
-            Assert.Equal(fullUri, actualUri);
-
-            actualUri = odataUri.BuildUri(ODataUrlConventions.ODataSimplified);
+            actualUri = odataUri.BuildUri(ODataUrlKeyDelimiter.Slash);
             Assert.Equal(fullUri, actualUri);
         }
 
@@ -352,20 +313,17 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriBuilder
             Uri fullUri = new Uri("http://gobbledygook/People?$filter=contains(%40p1%2CName)&@p1=Name");
             ODataUriParser odataUriParser = new ODataUriParser(HardCodedTestModel.TestModel, serviceRoot, fullUri);
             SetODataUriParserSettingsTo(this.settings, odataUriParser.Settings);
-            odataUriParser.UrlConventions = ODataUrlConventions.Default;
+            odataUriParser.UrlKeyDelimiter = ODataUrlKeyDelimiter.Parentheses;
             ODataUri odataUri = odataUriParser.ParseUri();
 
             IDictionary<string, SingleValueNode> aliasNodes = odataUri.ParameterAliasNodes;
             odataUri.Filter.Expression.As<SingleValueFunctionCallNode>().Parameters.First().ShouldBeParameterAliasNode("@p1", EdmCoreModel.Instance.GetString(true));
             aliasNodes["@p1"].ShouldBeSingleValuePropertyAccessQueryNode(HardCodedTestModel.GetPeopleSet().EntityType().FindProperty("Name"));
 
-            Uri actualUri = odataUri.BuildUri(ODataUrlConventions.Default);
+            Uri actualUri = odataUri.BuildUri(ODataUrlKeyDelimiter.Parentheses);
             Assert.Equal(fullUri, actualUri);
 
-            actualUri = odataUri.BuildUri(ODataUrlConventions.KeyAsSegment);
-            Assert.Equal(fullUri, actualUri);
-
-            actualUri = odataUri.BuildUri(ODataUrlConventions.ODataSimplified);
+            actualUri = odataUri.BuildUri(ODataUrlKeyDelimiter.Slash);
             Assert.Equal(fullUri, actualUri);
         }
         #endregion
@@ -377,7 +335,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriBuilder
             Uri fullUri = new Uri("http://gobbledygook/People?$orderby=Fully.Qualified.Namespace.HasDog(inOffice%3D%40p1)&@p1=true");
             ODataUriParser odataUriParser = new ODataUriParser(HardCodedTestModel.TestModel, serviceRoot, fullUri);
             SetODataUriParserSettingsTo(this.settings, odataUriParser.Settings);
-            odataUriParser.UrlConventions = ODataUrlConventions.Default;
+            odataUriParser.UrlKeyDelimiter = ODataUrlKeyDelimiter.Parentheses;
             ODataUri odataUri = odataUriParser.ParseUri();
 
             IDictionary<string, SingleValueNode> aliasNodes = odataUri.ParameterAliasNodes;
@@ -385,13 +343,10 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriBuilder
             odataUri.OrderBy.Expression.ShouldBeSingleValueFunctionCallQueryNode(expectedFunc).And.Parameters.Last().As<NamedFunctionParameterNode>().Value.ShouldBeParameterAliasNode("@p1", EdmCoreModel.Instance.GetBoolean(false));
             aliasNodes["@p1"].ShouldBeConstantQueryNode(true);
 
-            Uri actualUri = odataUri.BuildUri(ODataUrlConventions.Default);
+            Uri actualUri = odataUri.BuildUri(ODataUrlKeyDelimiter.Parentheses);
             Assert.Equal(fullUri, actualUri);
 
-            actualUri = odataUri.BuildUri(ODataUrlConventions.KeyAsSegment);
-            Assert.Equal(fullUri, actualUri);
-
-            actualUri = odataUri.BuildUri(ODataUrlConventions.ODataSimplified);
+            actualUri = odataUri.BuildUri(ODataUrlKeyDelimiter.Slash);
             Assert.Equal(fullUri, actualUri);
         }
 
@@ -401,20 +356,17 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriBuilder
             Uri fullUri = new Uri("http://gobbledygook/People?$orderby=ID%20mul%20%40p1%20asc&@p1=3 div 2");
             ODataUriParser odataUriParser = new ODataUriParser(HardCodedTestModel.TestModel, serviceRoot, fullUri);
             SetODataUriParserSettingsTo(this.settings, odataUriParser.Settings);
-            odataUriParser.UrlConventions = ODataUrlConventions.Default;
+            odataUriParser.UrlKeyDelimiter = ODataUrlKeyDelimiter.Parentheses;
             ODataUri odataUri = odataUriParser.ParseUri();
 
             IDictionary<string, SingleValueNode> aliasNodes = odataUri.ParameterAliasNodes;
             odataUri.OrderBy.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Multiply).And.Right.ShouldBeParameterAliasNode("@p1", EdmCoreModel.Instance.GetInt32(false));
             aliasNodes["@p1"].ShouldBeBinaryOperatorNode(BinaryOperatorKind.Divide).And.Right.ShouldBeConstantQueryNode(2);
 
-            Uri actualUri = odataUri.BuildUri(ODataUrlConventions.Default);
+            Uri actualUri = odataUri.BuildUri(ODataUrlKeyDelimiter.Parentheses);
             Assert.Equal(new Uri("http://gobbledygook/People?$orderby=ID%20mul%20%40p1&@p1=3 div 2"), actualUri);
 
-            actualUri = odataUri.BuildUri(ODataUrlConventions.KeyAsSegment);
-            Assert.Equal(new Uri("http://gobbledygook/People?$orderby=ID%20mul%20%40p1&@p1=3 div 2"), actualUri);
-
-            actualUri = odataUri.BuildUri(ODataUrlConventions.ODataSimplified);
+            actualUri = odataUri.BuildUri(ODataUrlKeyDelimiter.Slash);
             Assert.Equal(new Uri("http://gobbledygook/People?$orderby=ID%20mul%20%40p1&@p1=3 div 2"), actualUri);
         }
         #endregion
@@ -426,7 +378,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriBuilder
             Uri fullUri = new Uri("http://gobbledygook/People?$expand=MyPet2Set($orderby=concat(Color, @p1 )asc )&@p1='abc'");
             ODataUriParser odataUriParser = new ODataUriParser(HardCodedTestModel.TestModel, serviceRoot, fullUri);
             SetODataUriParserSettingsTo(this.settings, odataUriParser.Settings);
-            odataUriParser.UrlConventions = ODataUrlConventions.Default;
+            odataUriParser.UrlKeyDelimiter = ODataUrlKeyDelimiter.Parentheses;
             ODataUri odataUri = odataUriParser.ParseUri();
 
             IDictionary<string, SingleValueNode> aliasNodes = odataUri.ParameterAliasNodes;
@@ -434,13 +386,10 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriBuilder
             node.Parameters.Last().ShouldBeParameterAliasNode("@p1", EdmCoreModel.Instance.GetString(true));
             aliasNodes["@p1"].ShouldBeConstantQueryNode("abc");
 
-            Uri actualUri = odataUri.BuildUri(ODataUrlConventions.Default);
+            Uri actualUri = odataUri.BuildUri(ODataUrlKeyDelimiter.Parentheses);
             Assert.Equal("http://gobbledygook/People?$expand=" + Uri.EscapeDataString("MyPet2Set($orderby=concat(Color,@p1))") + "&@p1=" + Uri.EscapeDataString("'abc'"), actualUri.OriginalString);
 
-            actualUri = odataUri.BuildUri(ODataUrlConventions.KeyAsSegment);
-            Assert.Equal("http://gobbledygook/People?$expand=" + Uri.EscapeDataString("MyPet2Set($orderby=concat(Color,@p1))") + "&@p1=" + Uri.EscapeDataString("'abc'"), actualUri.OriginalString);
-
-            actualUri = odataUri.BuildUri(ODataUrlConventions.ODataSimplified);
+            actualUri = odataUri.BuildUri(ODataUrlKeyDelimiter.Slash);
             Assert.Equal("http://gobbledygook/People?$expand=" + Uri.EscapeDataString("MyPet2Set($orderby=concat(Color,@p1))") + "&@p1=" + Uri.EscapeDataString("'abc'"), actualUri.OriginalString);
         }
         #endregion

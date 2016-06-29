@@ -1640,7 +1640,7 @@ namespace AstoriaUnitTests.Tests.Server
                 new {
                     RequestUri = "/Set/TopLevelAction_Void()",
                     RequestPayload = default(string),
-                    ErrorMsg = "The request URI is not valid. Since the segment 'Set' refers to a collection, this must be the last segment in the request URI or it must be followed by an function or action that can be bound to it otherwise all intermediate segments must refer to a single resource.",
+                    ErrorMsg = "Bad Request - Error in query syntax.",
                     StatusCode = 400,
                     StatusCodeWhenContentTypeNull = 400,
                 },
@@ -1805,6 +1805,7 @@ namespace AstoriaUnitTests.Tests.Server
                     StatusCode = 400,
                     StatusCodeWhenContentTypeNull = 400,
                 },
+
                 // Disabled tests due to Error "Service action 'actionName' 'requires a binding parameter" doesn't happen as ODataPathParser throws error earlier
                 // We may simply want to make the ODataPathParser throw a smarter error message and remove this from the server.
                 //new {

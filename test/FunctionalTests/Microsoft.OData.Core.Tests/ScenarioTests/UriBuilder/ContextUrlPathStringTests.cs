@@ -57,7 +57,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriBuilder
         private string GetContextUrlPathString(Uri queryUri)
         {
             ODataUriParser odataUriParser = new ODataUriParser(HardCodedTestModel.TestModel, queryUri);
-            odataUriParser.UrlConventions = ODataUrlConventions.Default;
+            odataUriParser.UrlKeyDelimiter = ODataUrlKeyDelimiter.Parentheses;
             ODataUri odataUri = odataUriParser.ParseUri();
             ODataPath odataPath = odataUri.Path;
            return odataPath.ToContextUrlPathString();

@@ -4277,7 +4277,7 @@ public sealed class Microsoft.OData.ODataUriExtensions {
 	[
 	ExtensionAttribute(),
 	]
-	public static System.Uri BuildUri (Microsoft.OData.ODataUri odataUri, Microsoft.OData.ODataUrlConventions urlConventions)
+	public static System.Uri BuildUri (Microsoft.OData.ODataUri odataUri, Microsoft.OData.ODataUrlKeyDelimiter urlKeyDelimiter)
 }
 
 public sealed class Microsoft.OData.ODataUriUtils {
@@ -4891,6 +4891,7 @@ public sealed class Microsoft.OData.ODataServiceDocument : Microsoft.OData.OData
 public sealed class Microsoft.OData.ODataSimplifiedOptions {
 	public ODataSimplifiedOptions ()
 
+	bool EnableParsingKeyAsSegmentUrl  { public get; public set; }
 	bool EnableReadingKeyAsSegment  { public get; public set; }
 	bool EnableReadingODataAnnotationWithoutPrefix  { public get; public set; }
 	bool EnableWritingKeyAsSegment  { public get; public set; }
@@ -4940,10 +4941,9 @@ public sealed class Microsoft.OData.ODataUri {
 	public Microsoft.OData.ODataUri Clone ()
 }
 
-public sealed class Microsoft.OData.ODataUrlConventions {
-	Microsoft.OData.ODataUrlConventions Default  { public static get; }
-	Microsoft.OData.ODataUrlConventions KeyAsSegment  { public static get; }
-	Microsoft.OData.ODataUrlConventions ODataSimplified  { public static get; }
+public sealed class Microsoft.OData.ODataUrlKeyDelimiter {
+	Microsoft.OData.ODataUrlKeyDelimiter Parentheses  { public static get; }
+	Microsoft.OData.ODataUrlKeyDelimiter Slash  { public static get; }
 }
 
 public sealed class Microsoft.OData.ProjectedPropertiesAnnotation {
@@ -5749,7 +5749,7 @@ public sealed class Microsoft.OData.UriParser.ODataUriParser {
 	Microsoft.OData.UriParser.ODataUriResolver Resolver  { public get; public set; }
 	System.Uri ServiceRoot  { public get; }
 	Microsoft.OData.UriParser.ODataUriParserSettings Settings  { public get; }
-	Microsoft.OData.ODataUrlConventions UrlConventions  { public get; public set; }
+	Microsoft.OData.ODataUrlKeyDelimiter UrlKeyDelimiter  { public get; public set; }
 
 	public Microsoft.OData.UriParser.Aggregation.ApplyClause ParseApply ()
 	public System.Nullable`1[[System.Boolean]] ParseCount ()

@@ -237,13 +237,13 @@ namespace Microsoft.OData.Tests.UriParser
         [Fact]
         public void DefaultUrlConventionsShouldBeDefault()
         {
-            new ODataUriParser(HardCodedTestModel.TestModel, ServiceRoot, FullUri).UrlConventions.Should().BeSameAs(ODataUrlConventions.Default);
+            new ODataUriParser(HardCodedTestModel.TestModel, ServiceRoot, FullUri).UrlKeyDelimiter.Should().BeSameAs(ODataUrlKeyDelimiter.Slash);
         }
 
         [Fact]
         public void UrlConventionsCannotBeSetToNull()
         {
-            Action setToNull = () => new ODataUriParser(HardCodedTestModel.TestModel, ServiceRoot, FullUri).UrlConventions = null;
+            Action setToNull = () => new ODataUriParser(HardCodedTestModel.TestModel, ServiceRoot, FullUri).UrlKeyDelimiter = null;
             setToNull.ShouldThrow<ArgumentNullException>().WithMessage("UrlConventions", ComparisonMode.EquivalentSubstring);
         }
 
@@ -425,17 +425,15 @@ namespace Microsoft.OData.Tests.UriParser
         {
             Default,
             KeyAsSegment,
-            ODataSimplified
         }
 
         [Theory]
         [InlineData(TestUrlConvention.Default, "http://host/customers('customerId')/orders(customerId='customerId',orderId='orderId')/Test.DetailedOrder/details(customerId='customerId',orderId='orderId',id=1)")]
         [InlineData(TestUrlConvention.Default, "http://host/customers('customerId')/orders('orderId')/Test.DetailedOrder/details(1)")]
-        [InlineData(TestUrlConvention.ODataSimplified, "http://host/customers/customerId/orders/orderId/Test.DetailedOrder/details/1")]
         [InlineData(TestUrlConvention.KeyAsSegment, "http://host/customers/customerId/orders/orderId/Test.DetailedOrder/details/1")]
         [InlineData(TestUrlConvention.Default, "http://host/customers('customerId')/orders(customerId='customerId',orderId='orderId')")]
         [InlineData(TestUrlConvention.Default, "http://host/customers('customerId')/orders('orderId')")]
-        [InlineData(TestUrlConvention.ODataSimplified, "http://host/customers('customerId')/orders('orderId')")]
+        [InlineData(TestUrlConvention.KeyAsSegment, "http://host/customers('customerId')/orders('orderId')")]
         [InlineData(TestUrlConvention.KeyAsSegment, "http://host/customers/customerId/orders/orderId")]
         public void ParseCompositeKeyReference(TestUrlConvention testUrlConvention, string fullUrl)
         {
@@ -490,13 +488,10 @@ namespace Microsoft.OData.Tests.UriParser
             switch (testUrlConvention)
             {
                 case TestUrlConvention.Default:
-                    parser.UrlConventions = ODataUrlConventions.Default;
+                    parser.UrlKeyDelimiter = ODataUrlKeyDelimiter.Parentheses;
                     break;
                 case TestUrlConvention.KeyAsSegment:
-                    parser.UrlConventions = ODataUrlConventions.KeyAsSegment;
-                    break;
-                case TestUrlConvention.ODataSimplified:
-                    parser.UrlConventions = ODataUrlConventions.ODataSimplified;
+                    parser.UrlKeyDelimiter = ODataUrlKeyDelimiter.Slash;
                     break;
                 default:
                     Assert.True(false, "Unreachable code path");
