@@ -489,34 +489,33 @@ public enum Microsoft.OData.Edm.EdmContainerElementKind : int {
 public enum Microsoft.OData.Edm.EdmExpressionKind : int {
 	BinaryConstant = 1
 	BooleanConstant = 2
-	Cast = 20
+	Cast = 19
 	Collection = 12
-	DateConstant = 27
+	DateConstant = 26
 	DateTimeOffsetConstant = 3
 	DecimalConstant = 4
 	DurationConstant = 9
-	EntitySetReference = 18
-	EnumMember = 29
+	EntitySetReference = 17
+	EnumMember = 28
 	FloatingConstant = 5
 	GuidConstant = 6
-	If = 19
+	If = 18
 	IntegerConstant = 7
-	IsType = 21
-	Labeled = 24
-	LabeledExpressionReference = 23
-	NavigationPropertyPath = 26
+	IsType = 20
+	Labeled = 23
+	LabeledExpressionReference = 22
+	NavigationPropertyPath = 25
 	None = 0
 	Null = 10
-	OperationApplication = 22
+	OperationApplication = 21
 	OperationReference = 15
 	ParameterReference = 14
 	Path = 13
-	PropertyPath = 25
+	PropertyPath = 24
 	PropertyReference = 16
 	Record = 11
 	StringConstant = 8
-	TimeOfDayConstant = 28
-	ValueTermReference = 17
+	TimeOfDayConstant = 27
 }
 
 public enum Microsoft.OData.Edm.EdmMultiplicity : int {
@@ -3275,12 +3274,6 @@ public interface Microsoft.OData.Edm.Vocabularies.IEdmValueTerm : IEdmElement, I
 	Microsoft.OData.Edm.IEdmTypeReference Type  { public abstract get; }
 }
 
-public interface Microsoft.OData.Edm.Vocabularies.IEdmValueTermReferenceExpression : IEdmElement, IEdmExpression {
-	Microsoft.OData.Edm.IEdmExpression Base  { public abstract get; }
-	string Qualifier  { public abstract get; }
-	Microsoft.OData.Edm.Vocabularies.IEdmValueTerm Term  { public abstract get; }
-}
-
 public interface Microsoft.OData.Edm.Vocabularies.IEdmVocabularyAnnotatable : IEdmElement {
 }
 
@@ -3673,16 +3666,6 @@ public class Microsoft.OData.Edm.Vocabularies.EdmTypedDirectValueAnnotationBindi
 	Microsoft.OData.Edm.IEdmElement Element  { public virtual get; }
 	string NamespaceUri  { public virtual get; }
 	object Value  { public virtual get; }
-}
-
-public class Microsoft.OData.Edm.Vocabularies.EdmValueTermReferenceExpression : Microsoft.OData.Edm.EdmElement, IEdmElement, IEdmExpression, IEdmValueTermReferenceExpression {
-	public EdmValueTermReferenceExpression (Microsoft.OData.Edm.IEdmExpression baseExpression, Microsoft.OData.Edm.Vocabularies.IEdmValueTerm term)
-	public EdmValueTermReferenceExpression (Microsoft.OData.Edm.IEdmExpression baseExpression, Microsoft.OData.Edm.Vocabularies.IEdmValueTerm term, string qualifier)
-
-	Microsoft.OData.Edm.IEdmExpression Base  { public virtual get; }
-	Microsoft.OData.Edm.EdmExpressionKind ExpressionKind  { public virtual get; }
-	string Qualifier  { public virtual get; }
-	Microsoft.OData.Edm.Vocabularies.IEdmValueTerm Term  { public virtual get; }
 }
 
 public sealed class Microsoft.OData.Edm.Vocabularies.TryCreateObjectInstance : System.MulticastDelegate, ICloneable, ISerializable {

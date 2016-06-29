@@ -1313,10 +1313,6 @@ namespace Microsoft.OData.Edm.Validation
                             expressionKindError = CheckForInterfaceKindValueMismatchError<IEdmExpression, EdmExpressionKind, IEdmPropertyReferenceExpression>(expression, expression.ExpressionKind, "ExpressionKind");
                             break;
 
-                        case EdmExpressionKind.ValueTermReference:
-                            expressionKindError = CheckForInterfaceKindValueMismatchError<IEdmExpression, EdmExpressionKind, IEdmValueTermReferenceExpression>(expression, expression.ExpressionKind, "ExpressionKind");
-                            break;
-
                         case EdmExpressionKind.EntitySetReference:
                             expressionKindError = CheckForInterfaceKindValueMismatchError<IEdmExpression, EdmExpressionKind, IEdmEntitySetReferenceExpression>(expression, expression.ExpressionKind, "ExpressionKind");
                             break;
@@ -1503,34 +1499,6 @@ namespace Microsoft.OData.Edm.Validation
                 else
                 {
                     CollectErrors(CreatePropertyMustNotBeNullError(expression, "ReferencedProperty"), ref errors);
-                }
-
-                return errors;
-            }
-        }
-
-        private sealed class VisitorOfIEdmValueTermReferenceExpression : VisitorOfT<IEdmValueTermReferenceExpression>
-        {
-            protected override IEnumerable<EdmError> VisitT(IEdmValueTermReferenceExpression expression, List<object> followup, List<object> references)
-            {
-                List<EdmError> errors = null;
-
-                if (expression.Base != null)
-                {
-                    followup.Add(expression.Base);
-                }
-                else
-                {
-                    CollectErrors(CreatePropertyMustNotBeNullError(expression, "Base"), ref errors);
-                }
-
-                if (expression.Term != null)
-                {
-                    references.Add(expression.Term);
-                }
-                else
-                {
-                    CollectErrors(CreatePropertyMustNotBeNullError(expression, "Term"), ref errors);
                 }
 
                 return errors;

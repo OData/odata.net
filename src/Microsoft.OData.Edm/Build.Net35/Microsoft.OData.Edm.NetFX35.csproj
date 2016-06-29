@@ -1313,9 +1313,6 @@
     <Compile Include="..\Vocabularies\Expressions\EdmRecordExpression.cs">
       <Link>Microsoft\OData\Edm\Vocabularies\Expressions\EdmRecordExpression.cs</Link>
     </Compile>
-    <Compile Include="..\Vocabularies\Expressions\EdmValueTermReferenceExpression.cs">
-      <Link>Microsoft\OData\Edm\Vocabularies\Expressions\EdmValueTermReferenceExpression.cs</Link>
-    </Compile>
     <Compile Include="..\Vocabularies\Expressions\IEdmApplyExpression.cs">
       <Link>Microsoft\OData\Edm\Vocabularies\Expressions\IEdmApplyExpression.cs</Link>
     </Compile>
@@ -1393,9 +1390,6 @@
     </Compile>
     <Compile Include="..\Vocabularies\Expressions\IEdmTimeOfDayConstantExpression.cs">
       <Link>Microsoft\OData\Edm\Vocabularies\Expressions\IEdmTimeOfDayConstantExpression.cs</Link>
-    </Compile>
-    <Compile Include="..\Vocabularies\Expressions\IEdmValueTermReferenceExpression.cs">
-      <Link>Microsoft\OData\Edm\Vocabularies\Expressions\IEdmValueTermReferenceExpression.cs</Link>
     </Compile>
     <Compile Include="..\Vocabularies\TryCreateObjectInstance.cs">
       <Link>Microsoft\OData\Edm\Vocabularies\TryCreateObjectInstance.cs</Link>

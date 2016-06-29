@@ -278,7 +278,6 @@
     <Compile Include="Vocabularies\Expressions\EdmPropertyPathExpression.cs" />
     <Compile Include="Vocabularies\Expressions\EdmPropertyReferenceExpression.cs" />
     <Compile Include="Vocabularies\Expressions\EdmRecordExpression.cs" />
-    <Compile Include="Vocabularies\Expressions\EdmValueTermReferenceExpression.cs" />
     <Compile Include="Vocabularies\Expressions\IEdmApplyExpression.cs" />
     <Compile Include="Vocabularies\Expressions\IEdmBinaryConstantExpression.cs" />
     <Compile Include="Vocabularies\Expressions\IEdmBooleanConstantExpression.cs" />
@@ -305,7 +304,6 @@
     <Compile Include="Vocabularies\Expressions\IEdmRecordExpression.cs" />
     <Compile Include="Vocabularies\Expressions\IEdmStringConstantExpression.cs" />
     <Compile Include="Vocabularies\Expressions\IEdmTimeOfDayConstantExpression.cs" />
-    <Compile Include="Vocabularies\Expressions\IEdmValueTermReferenceExpression.cs" />
     <Compile Include="Validation\DuplicateOperationValidator.cs" />
     <Compile Include="VersioningDictionary.cs" />
     <Compile Include="VersioningList.cs" />

@@ -99,11 +99,6 @@ namespace Microsoft.OData.Edm
         PropertyReference,
 
         /// <summary>
-        /// Represents an expression implementing <see cref="IEdmValueTermReferenceExpression"/>.
-        /// </summary>
-        ValueTermReference,
-
-        /// <summary>
         /// Represents an expression implementing <see cref="IEdmEntitySetReferenceExpression"/>.
         /// </summary>
         EntitySetReference,

@@ -204,9 +204,6 @@ namespace Microsoft.OData.Edm
                 case EdmExpressionKind.DurationConstant:
                     this.ProcessDurationConstantExpression((IEdmDurationConstantExpression)expression);
                     break;
-                case EdmExpressionKind.ValueTermReference:
-                    this.ProcessPropertyReferenceExpression((IEdmPropertyReferenceExpression)expression);
-                    break;
                 case EdmExpressionKind.None:
                     this.ProcessExpression(expression);
                     break;
