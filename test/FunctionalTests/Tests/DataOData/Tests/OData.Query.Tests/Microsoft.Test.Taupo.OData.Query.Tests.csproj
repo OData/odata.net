@@ -62,6 +62,7 @@
     <Compile Include="DataClasses\MultiKey.cs" />
     <Compile Include="DataClasses\TypeWithPrimitiveProperties.cs" />
     <Compile Include="MetadataBinder\BinderErrorTests.cs" />
+    <Compile Include="MetadataBinder\EntitySetNode.cs" />
     <Compile Include="MetadataBinder\FilterBinderFunctionalTests.cs" />
     <Compile Include="MetadataBinder\OrderByBinderFunctionalTests.cs" />
     <Compile Include="MetadataBinder\QueryNodeUtils.cs" />
@@ -90,9 +91,6 @@
   <ItemGroup>
     <EmbeddedResource Include="UriParser\ODataUrls.txt" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Common\Annotations\" />
-    <Folder Include="CustomExtensions\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -155,7 +155,7 @@ namespace Microsoft.OData.Edm
         /// <param name="name">Name of the function import.</param>
         /// <param name="function">The function of the specified function import.</param>
         /// <param name="entitySet">An entity set containing entities returned by this function import.
-        /// The two expression kinds supported are <see cref="IEdmEntitySetReferenceExpression"/> and <see cref="IEdmPathExpression"/>.</param>
+        /// The expression kind supported is <see cref="IEdmPathExpression"/>.</param>
         /// <returns>Created function import.</returns>
         public virtual EdmFunctionImport AddFunctionImport(string name, IEdmFunction function, IEdmExpression entitySet)
         {
@@ -170,7 +170,7 @@ namespace Microsoft.OData.Edm
         /// <param name="name">Name of the function import.</param>
         /// <param name="function">The function of the specified function import.</param>
         /// <param name="entitySet">An entity set containing entities returned by this function import.
-        /// The two expression kinds supported are <see cref="IEdmEntitySetReferenceExpression"/> and <see cref="IEdmPathExpression"/>.</param>
+        /// The expression kind supported is <see cref="IEdmPathExpression"/>.</param>
         /// <param name="includeInServiceDocument">A value indicating whether this function import will be in the service document.</param>
         /// <returns>Created operation import.</returns>
         public virtual EdmOperationImport AddFunctionImport(string name, IEdmFunction function, IEdmExpression entitySet, bool includeInServiceDocument)
@@ -186,7 +186,7 @@ namespace Microsoft.OData.Edm
         /// <param name="name">Name of the action import.</param>
         /// <param name="action">Action that the action import is importing to the container.</param>
         /// <param name="entitySet">An entity set containing entities returned by this action import.
-        /// The two expression kinds supported are <see cref="IEdmEntitySetReferenceExpression"/> and <see cref="IEdmPathExpression"/>.</param>
+        /// The expression kind supported is <see cref="IEdmPathExpression"/>.</param>
         /// <returns>Created action import.</returns>
         public virtual EdmActionImport AddActionImport(string name, IEdmAction action, IEdmExpression entitySet)
         {

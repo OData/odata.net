@@ -357,8 +357,6 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
                         return new CsdlSemanticsDateTimeOffsetConstantExpression((CsdlConstantExpression)expression, schema);
                     case EdmExpressionKind.DecimalConstant:
                         return new CsdlSemanticsDecimalConstantExpression((CsdlConstantExpression)expression, schema);
-                    case EdmExpressionKind.EntitySetReference:
-                        return new CsdlSemanticsEntitySetReferenceExpression((CsdlEntitySetReferenceExpression)expression, bindingContext, schema);
                     case EdmExpressionKind.EnumMember:
                         return new CsdlSemanticsEnumMemberExpression((CsdlEnumMemberExpression)expression, bindingContext, schema);
                     case EdmExpressionKind.FloatingConstant:

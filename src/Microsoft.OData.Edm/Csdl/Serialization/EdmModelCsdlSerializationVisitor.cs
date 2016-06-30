@@ -448,11 +448,6 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
             this.schemaWriter.WriteEnumMemberExpressionElement(expression);
         }
 
-        protected override void ProcessEntitySetReferenceExpression(IEdmEntitySetReferenceExpression expression)
-        {
-            this.schemaWriter.WriteEntitySetReferenceExpressionElement(expression);
-        }
-
         protected override void ProcessDecimalConstantExpression(IEdmDecimalConstantExpression expression)
         {
             this.schemaWriter.WriteDecimalConstantExpressionElement(expression);
@@ -545,18 +540,10 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         {
             if (operationImport.EntitySet != null)
             {
-                var entitySetReference = operationImport.EntitySet as IEdmEntitySetReferenceExpression;
-                if (entitySetReference != null)
+                var pathExpression = operationImport.EntitySet as IEdmPathExpression;
+                if (pathExpression != null)
                 {
-                    return entitySetReference.ReferencedEntitySet.Name;
-                }
-                else
-                {
-                    var pathExpression = operationImport.EntitySet as IEdmPathExpression;
-                    if (pathExpression != null)
-                    {
-                        return EdmModelCsdlSchemaWriter.PathAsXml(pathExpression.Path);
-                    }
+                    return EdmModelCsdlSchemaWriter.PathAsXml(pathExpression.Path);
                 }
             }
 

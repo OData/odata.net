@@ -6,8 +6,6 @@
 
 using System.Linq;
 using FluentAssertions;
-using Microsoft.OData.Edm;
-using Microsoft.OData.Edm.Vocabularies;
 using Xunit;
 
 namespace Microsoft.OData.Edm.Tests.Library
@@ -44,8 +42,7 @@ namespace Microsoft.OData.Edm.Tests.Library
         {
             EdmEntityContainer container = new EdmEntityContainer("Default", "Container");
             EdmAction action = new EdmAction("DS", "TestAction", EdmCoreModel.Instance.GetBoolean(false));
-            var edmEntitySet = new EdmEntitySet(container, "EntitySet", new EdmEntityType("DS", "TestEntity"));
-            var entitySetExpression = new EdmEntitySetReferenceExpression(edmEntitySet);
+            var entitySetExpression = new EdmPathExpression("EntitySet");
             var actionImport = container.AddActionImport("OtherName", action, entitySetExpression);
 
             actionImport.Action.Should().Be(action);
@@ -85,8 +82,7 @@ namespace Microsoft.OData.Edm.Tests.Library
         {
             EdmEntityContainer container = new EdmEntityContainer("Default", "Container");
             EdmAction action = new EdmAction("DS", "TestAction", EdmCoreModel.Instance.GetBoolean(false));
-            var edmEntitySet = new EdmEntitySet(container, "EntitySet", new EdmEntityType("DS", "TestEntity"));
-            var entitySetExpression = new EdmEntitySetReferenceExpression(edmEntitySet);
+            var entitySetExpression = new EdmPathExpression("EntitySet");
             var functionImport = container.AddActionImport("OtherName", action, entitySetExpression);
 
             functionImport.Action.Should().Be(action);

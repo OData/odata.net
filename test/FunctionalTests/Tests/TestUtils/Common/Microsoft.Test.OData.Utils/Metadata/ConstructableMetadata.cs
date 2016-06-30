@@ -406,10 +406,10 @@ namespace Microsoft.Test.OData.Utils.Metadata
                 edmFunction.AddParameter("bindingparameter", bindingType);
             }
 
-            EdmEntitySetReferenceExpression entitySetExpression = null;
+            IEdmPathExpression entitySetExpression = null;
             if (resultSet != null)
             {
-                entitySetExpression = new EdmEntitySetReferenceExpression(resultSet);
+                entitySetExpression = new EdmPathExpression(resultSet.Name);
             }
 
             this.AddOperation(edmFunction);
@@ -426,7 +426,7 @@ namespace Microsoft.Test.OData.Utils.Metadata
         /// <param name="resultSet">EntitySet of the result expected from this operation.</param>
         public EdmFunctionImport AddFunctionImport(string name, IEdmFunction function, IEdmEntitySet resultSet, bool includeInServiceDocument)
         {
-            var functionImport = new EdmFunctionImport(this, name, function, new EdmEntitySetReferenceExpression(resultSet), includeInServiceDocument);
+            var functionImport = new EdmFunctionImport(this, name, function, new EdmPathExpression(resultSet.Name), includeInServiceDocument);
             this.AddOperationImport(name, functionImport);
             return functionImport;
         }
@@ -485,7 +485,7 @@ namespace Microsoft.Test.OData.Utils.Metadata
             EdmActionImport actionImport = new EdmActionImport(this,
                 name,
                 action,
-                resultSet == null ? null : new EdmEntitySetReferenceExpression(resultSet));
+                resultSet == null ? null : new EdmPathExpression(resultSet.Name));
 
             this.AddOperationImport(name, actionImport);
             return actionImport;

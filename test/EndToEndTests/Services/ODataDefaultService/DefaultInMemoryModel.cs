@@ -583,7 +583,7 @@ namespace Microsoft.Test.OData.Services.ODataWCFService
                 false, null, true);
             getPersonFunction.AddParameter("address", new EdmComplexTypeReference(addressType, false));
             model.AddElement(getPersonFunction);
-            defaultContainer.AddFunctionImport("GetPerson", getPersonFunction, new EdmEntitySetReferenceExpression(personSet), true);
+            defaultContainer.AddFunctionImport("GetPerson", getPersonFunction, new EdmPathExpression("People"), true);
 
             //UnBound Function : Primtive Parameter, Return Entity
             var getPersonFunction2 = new EdmFunction(ns, "GetPerson2",
@@ -591,14 +591,14 @@ namespace Microsoft.Test.OData.Services.ODataWCFService
                 false, null, true);
             getPersonFunction2.AddParameter("city", EdmCoreModel.Instance.GetString(false));
             model.AddElement(getPersonFunction2);
-            defaultContainer.AddFunctionImport("GetPerson2", getPersonFunction2, new EdmEntitySetReferenceExpression(personSet), true);
+            defaultContainer.AddFunctionImport("GetPerson2", getPersonFunction2, new EdmPathExpression("People"), true);
 
             //UnBound Function : Return CollectionOfEntity
             var getAllProductsFunction = new EdmFunction(ns, "GetAllProducts",
                 new EdmCollectionTypeReference(new EdmCollectionType(new EdmEntityTypeReference(productType, false))),
                 false, null, true);
             model.AddElement(getAllProductsFunction);
-            defaultContainer.AddFunctionImport("GetAllProducts", getAllProductsFunction, new EdmEntitySetReferenceExpression(productSet), true);
+            defaultContainer.AddFunctionImport("GetAllProducts", getAllProductsFunction, new EdmPathExpression("Products"), true);
 
             //UnBound Function : Multi ParameterS Return Collection Of ComplexType
             var getBossEmailsFunction = new EdmFunction(ns, "GetBossEmails",

@@ -162,12 +162,12 @@ namespace Microsoft.OData.Tests.UriParser
             
             var action1 = new EdmAction("Test", "Action", new EdmEntityTypeReference(vegetableType, true), true /*isBound*/, null /*entitySetPath*/);
             action1.AddParameter("p1", new EdmEntityTypeReference(vegetableType, false));
-            container.AddActionImport("Action", action1, new EdmEntitySetReferenceExpression(set));
+            container.AddActionImport("Action", action1, new EdmPathExpression("Vegetables"));
             
             var action2 = new EdmAction("Test", "Action", new EdmEntityTypeReference(vegetableType, true), true /*isBound*/, null /*entitySetPath*/);
             action2.AddParameter("p1", new EdmEntityTypeReference(vegetableType, false));
             action2.AddParameter("p2", EdmCoreModel.Instance.GetInt32(false));
-            container.AddActionImport("Action", action2, new EdmEntitySetReferenceExpression(set));
+            container.AddActionImport("Action", action2, new EdmPathExpression("Vegetables"));
 
             EdmModel model = new EdmModel();
             model.AddElement(container);
@@ -188,12 +188,12 @@ namespace Microsoft.OData.Tests.UriParser
 
             var action1 = new EdmAction("Test", "Foo", new EdmEntityTypeReference(vegetableType, true), false /*isBound*/, null /*entitySetPath*/);
             action1.AddParameter("p1", new EdmEntityTypeReference(vegetableType, false));
-            container.AddActionImport("Foo", action1, new EdmEntitySetReferenceExpression(set));
+            container.AddActionImport("Foo", action1, new EdmPathExpression("Vegetables"));
 
             var function1 = new EdmFunction("Test", "Foo", new EdmEntityTypeReference(vegetableType, true), false /*isBound*/, null, true);
             function1.AddParameter("p1", new EdmEntityTypeReference(vegetableType, false));
             function1.AddParameter("p2", EdmCoreModel.Instance.GetInt32(false));
-            container.AddFunctionImport("Foo", function1, new EdmEntitySetReferenceExpression(set));
+            container.AddFunctionImport("Foo", function1, new EdmPathExpression("Vegetables"));
 
             EdmModel model = new EdmModel();
             model.AddElement(container);
@@ -313,13 +313,13 @@ namespace Microsoft.OData.Tests.UriParser
             var function1 = new EdmFunction("Test", "Foo", new EdmEntityTypeReference(vegetableType, true), true/*isBound*/, null, true /*isComposable*/);
             function1.AddParameter("p1", new EdmEntityTypeReference(vegetableType, false));
             function1.AddParameter("p2", EdmCoreModel.Instance.GetInt32(false));
-            
-            container.AddFunctionImport("Foo", function1, new EdmEntitySetReferenceExpression(set));
+
+            container.AddFunctionImport("Foo", function1, new EdmPathExpression("Vegetables"));
 
             var function2 = new EdmFunction("Test", "Foo", new EdmEntityTypeReference(vegetableType, true), true /*isBound*/, null, true /*isComposable*/);
             function2.AddParameter("p1", new EdmEntityTypeReference(vegetableType, false));
             function2.AddParameter("p2", EdmCoreModel.Instance.GetString(false));
-            container.AddFunctionImport("Foo", function2, new EdmEntitySetReferenceExpression(set));
+            container.AddFunctionImport("Foo", function2, new EdmPathExpression("Vegetables"));
 
             EdmModel model = new EdmModel();
             model.AddElement(container);

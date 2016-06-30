@@ -4,13 +4,14 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+using Microsoft.OData;
 using Microsoft.OData.Edm;
+using Microsoft.OData.UriParser;
 
-namespace Microsoft.OData.UriParser
+namespace Microsoft.Test.Taupo.OData.Query.Tests.MetadataBinder
 {
     /// <summary>
     /// Node representing an entity set.
-    /// TODO: This should be deleted but it is used in many, many tests.
     /// </summary>
     internal sealed class EntitySetNode : EntityCollectionNode
     {

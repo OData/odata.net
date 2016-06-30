@@ -166,10 +166,6 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
                 //// <ParameterReference/>
                 CsdlElement<CsdlExpressionBase>(CsdlConstants.Element_ParameterReference, this.OnParameterReferenceExpression);
 
-            var entitySetReferenceExpressionParser =
-                //// <EntitySetReference/>
-                CsdlElement<CsdlExpressionBase>(CsdlConstants.Element_EntitySetReference, this.OnEntitySetReferenceExpression);
-
             var enumMemberExpressionParser =
                 //// <EnumMember/>
                 CsdlElement<CsdlExpressionBase>(CsdlConstants.Element_EnumMember, this.OnEnumMemberExpression);
@@ -269,8 +265,6 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
                 labeledElementParser,
                 //// <FunctionReference/>
                 functionReferenceExpressionParser,
-                //// <EntitySetReference/>
-                entitySetReferenceExpressionParser,
                 //// <EnumConstant/>
                 enumMemberExpressionParser,
                 //// <ParameterReference/>
@@ -718,12 +712,6 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
         {
             string name = Required(CsdlConstants.Attribute_Name);
             return new CsdlLabeledExpressionReferenceExpression(name, element.Location);
-        }
-
-        private CsdlEntitySetReferenceExpression OnEntitySetReferenceExpression(XmlElementInfo element, XmlElementValueCollection childValues)
-        {
-            string entitySetPath = RequiredEntitySetPath(CsdlConstants.Attribute_Name);
-            return new CsdlEntitySetReferenceExpression(entitySetPath, element.Location);
         }
 
         private CsdlEnumMemberExpression OnEnumMemberExpression(XmlElementInfo element, XmlElementValueCollection childValues)

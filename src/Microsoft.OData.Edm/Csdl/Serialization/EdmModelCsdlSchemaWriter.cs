@@ -613,13 +613,6 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
             }
         }
 
-        internal void WriteEntitySetReferenceExpressionElement(IEdmEntitySetReferenceExpression expression)
-        {
-            this.xmlWriter.WriteStartElement(CsdlConstants.Element_EntitySetReference);
-            this.WriteRequiredAttribute(CsdlConstants.Attribute_Name, expression.ReferencedEntitySet, EntitySetAsXml);
-            this.WriteEndElement();
-        }
-
         internal void WriteParameterReferenceExpressionElement(IEdmParameterReferenceExpression expression)
         {
             this.xmlWriter.WriteStartElement(CsdlConstants.Element_ParameterReference);
@@ -735,11 +728,6 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
             return string.Join(" ", memberList.ToArray());
         }
 
-        private static string EntitySetAsXml(IEdmEntitySet set)
-        {
-            return set.Container.FullName() + "/" + set.Name;
-        }
-
         private static string SridAsXml(int? i)
         {
             return i.HasValue ? Convert.ToString(i.Value, CultureInfo.InvariantCulture) : CsdlConstants.Value_SridVariable;
@@ -768,22 +756,14 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
 
             if (operationImport.EntitySet != null)
             {
-                var entitySetReference = operationImport.EntitySet as IEdmEntitySetReferenceExpression;
-                if (entitySetReference != null)
+                var pathExpression = operationImport.EntitySet as IEdmPathExpression;
+                if (pathExpression != null)
                 {
-                    this.WriteOptionalAttribute(CsdlConstants.Attribute_EntitySet, entitySetReference.ReferencedEntitySet.Name, EdmValueWriter.StringAsXml);
+                    this.WriteOptionalAttribute(CsdlConstants.Attribute_EntitySet, pathExpression.Path, PathAsXml);
                 }
                 else
                 {
-                    var pathExpression = operationImport.EntitySet as IEdmPathExpression;
-                    if (pathExpression != null)
-                    {
-                        this.WriteOptionalAttribute(CsdlConstants.Attribute_EntitySet, pathExpression.Path, PathAsXml);
-                    }
-                    else
-                    {
-                        throw new InvalidOperationException(Strings.EdmModel_Validator_Semantic_OperationImportEntitySetExpressionIsInvalid(operationImport.Name));
-                    }
+                    throw new InvalidOperationException(Strings.EdmModel_Validator_Semantic_OperationImportEntitySetExpressionIsInvalid(operationImport.Name));
                 }
             }
         }

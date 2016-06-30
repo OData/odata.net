@@ -20,7 +20,7 @@ namespace Microsoft.OData.Edm
         /// <param name="operation">The operation of the import.</param>
         /// <param name="name">Name of the operation import.</param>
         /// <param name="entitySet">An entity set containing entities returned by this operation import.
-        /// The two expression kinds supported are <see cref="IEdmEntitySetReferenceExpression"/> and <see cref="IEdmPathExpression"/>.</param>
+        /// The expression kind supported is <see cref="IEdmPathExpression"/>.</param>
         protected EdmOperationImport(
             IEdmEntityContainer container,
             IEdmOperation operation,

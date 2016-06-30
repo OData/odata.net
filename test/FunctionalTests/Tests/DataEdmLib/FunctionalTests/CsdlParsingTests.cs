@@ -1479,10 +1479,10 @@ namespace EdmLibTests.FunctionalTests
             IEdmOperationImport peopleWhoAreAwesome = fiGroup.First();
             Assert.AreEqual(EdmContainerElementKind.ActionImport, peopleWhoAreAwesome.ContainerElementKind, "FunctionImport has correct ContainerElementKind");
             IEdmEntitySet eset;
-            Assert.IsTrue(peopleWhoAreAwesome.TryGetStaticEntitySet(out eset), "peopleWhoAreAwesome.TryGetStaticEntitySet");
+            Assert.IsTrue(peopleWhoAreAwesome.TryGetStaticEntitySet(model, out eset), "peopleWhoAreAwesome.TryGetStaticEntitySet");
             Assert.AreEqual(peopleSet, eset, "Return EntitySet name is correct");
             IEdmEntitySet fiEntitySet;
-            Assert.IsTrue(peopleWhoAreAwesome.TryGetStaticEntitySet(out fiEntitySet), "peopleWhoAreAwesome.TryGetStaticEntitySet");
+            Assert.IsTrue(peopleWhoAreAwesome.TryGetStaticEntitySet(model, out fiEntitySet), "peopleWhoAreAwesome.TryGetStaticEntitySet");
             Assert.AreEqual(personType, fiEntitySet.EntityType(), "Return EntitySet type is correct");
             Assert.AreEqual("peopleWhoAreAwesomeAction", peopleWhoAreAwesome.Name, "FunctionImport name is correct");
             Assert.AreEqual(EdmTypeKind.Collection, peopleWhoAreAwesome.Operation.ReturnType.Definition.TypeKind, "Return typekind is correct");
@@ -1625,7 +1625,7 @@ namespace EdmLibTests.FunctionalTests
             IEdmOperationParameter p;
             IEnumerable<IEdmNavigationProperty> np;
             IEnumerable<EdmError> entitySetPathErrors;
-            Assert.IsTrue(operationImports[0].TryGetStaticEntitySet(out eset), "operationImports[0].TryGetStaticEntitySet");
+            Assert.IsTrue(operationImports[0].TryGetStaticEntitySet(model, out eset), "operationImports[0].TryGetStaticEntitySet");
             Assert.IsFalse(operationImports[0].TryGetRelativeEntitySetPath(model, out p, out np, out entitySetPathErrors), "operationImports[0].TryGetRelativeEntitySetPath");
             Assert.AreEqual(people, eset, "people, eset");
 
@@ -1638,7 +1638,7 @@ namespace EdmLibTests.FunctionalTests
             Assert.AreEqual(EdmTypeKind.Entity, operationImports[3].Operation.ReturnType.TypeKind(), "operationImports[3] return type");
             Assert.AreEqual(EdmTypeKind.Entity, operationImports[3].Operation.Parameters.Single().Type.TypeKind(), "operationImports[3] parameter type");
             IEdmEntitySet eset2;
-            Assert.IsTrue(operationImports[3].TryGetStaticEntitySet(out eset2), "operationImports[3].TryGetStaticEntitySet");
+            Assert.IsTrue(operationImports[3].TryGetStaticEntitySet(model, out eset2), "operationImports[3].TryGetStaticEntitySet");
             Assert.IsFalse(operationImports[0].TryGetRelativeEntitySetPath(model, out p, out np, out entitySetPathErrors), "operationImports[0].TryGetRelativeEntitySetPath");
             Assert.AreEqual(people, eset2, "people, eset2");
 
@@ -1648,20 +1648,20 @@ namespace EdmLibTests.FunctionalTests
             Assert.AreEqual(EdmTypeKind.Primitive, operationImports[5].Operation.ReturnType.TypeKind(), "operationImports[5] return type");
             Assert.AreEqual(EdmTypeKind.Primitive, operationImports[5].Operation.Parameters.Single().Type.TypeKind(), "operationImports[5] parameter type");
 
-            Assert.IsFalse(operationImports[6].TryGetStaticEntitySet(out eset), "operationImports[6].TryGetStaticEntitySet");
+            Assert.IsFalse(operationImports[6].TryGetStaticEntitySet(model, out eset), "operationImports[6].TryGetStaticEntitySet");
             Assert.IsFalse(operationImports[6].TryGetRelativeEntitySetPath(model, out p, out np, out entitySetPathErrors), "operationImports[6].TryGetStaticEntitySet");
             Assert.IsNull(p, "p is null");
 
-            Assert.IsFalse(operationImports[7].TryGetStaticEntitySet(out eset), "operationImports[7].TryGetStaticEntitySet");
+            Assert.IsFalse(operationImports[7].TryGetStaticEntitySet(model, out eset), "operationImports[7].TryGetStaticEntitySet");
             Assert.IsFalse(operationImports[7].TryGetRelativeEntitySetPath(model, out p, out np, out entitySetPathErrors), "operationImports[7].TryGetStaticEntitySet");
 
-            Assert.IsFalse(operationImports[8].TryGetStaticEntitySet(out eset), "operationImports[8].TryGetStaticEntitySet");
+            Assert.IsFalse(operationImports[8].TryGetStaticEntitySet(model, out eset), "operationImports[8].TryGetStaticEntitySet");
             Assert.IsFalse(operationImports[8].TryGetRelativeEntitySetPath(model, out p, out np, out entitySetPathErrors), "operationImports[8].TryGetStaticEntitySet");
 
-            Assert.IsFalse(operationImports[9].TryGetStaticEntitySet(out eset), "operationImports[9].TryGetStaticEntitySet");
+            Assert.IsFalse(operationImports[9].TryGetStaticEntitySet(model, out eset), "operationImports[9].TryGetStaticEntitySet");
             Assert.IsFalse(operationImports[9].TryGetRelativeEntitySetPath(model, out p, out np, out entitySetPathErrors), "operationImports[9].TryGetStaticEntitySet");
 
-            Assert.IsFalse(operationImports[10].TryGetStaticEntitySet(out eset), "operationImports[10].TryGetStaticEntitySet");
+            Assert.IsFalse(operationImports[10].TryGetStaticEntitySet(model, out eset), "operationImports[10].TryGetStaticEntitySet");
             Assert.IsFalse(operationImports[10].TryGetRelativeEntitySetPath(model, out p, out np, out entitySetPathErrors), "operationImports[10].TryGetStaticEntitySet");
         }
 
@@ -2260,21 +2260,18 @@ namespace EdmLibTests.FunctionalTests
 
             IEdmModel model;
             IEnumerable<EdmError> errors;
-            bool parsed = CsdlReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(csdl)) }, out model, out errors);
+            bool parsed = CsdlReader.TryParse(new [] { XmlReader.Create(new StringReader(csdl)) }, out model, out errors);
             Assert.IsTrue(parsed, "parsed");
-            Assert.IsTrue(errors.Count() == 0, "No errors");
+            Assert.IsTrue(!errors.Any(), "No errors");
 
-            IEdmEntityContainer fooContainer = (IEdmEntityContainer)model.FindEntityContainer("fooContainer");
+            IEdmEntityContainer fooContainer = model.FindEntityContainer("fooContainer");
             IEdmOperationImport peopleWhoAreAwesome = (IEdmOperationImport)fooContainer.Elements.Last();
             IEdmEntitySet badSet;
-            Assert.IsTrue(peopleWhoAreAwesome.TryGetStaticEntitySet(out badSet), "peopleWhoAreAwesome.TryGetStaticEntitySet");
-            Assert.AreEqual(EdmErrorCode.BadUnresolvedEntitySet, badSet.EntityType().Errors().First().ErrorCode, "Type is bad by association");
-            Assert.AreEqual(String.Empty, badSet.EntityType().Name, "Bad set's entity has empty name");
-            Assert.AreEqual(EdmContainerElementKind.EntitySet, badSet.ContainerElementKind, "Bad set has correct container element kind");
+            Assert.IsFalse(peopleWhoAreAwesome.TryGetStaticEntitySet(model, out badSet), "peopleWhoAreAwesome.TryGetStaticEntitySet");
 
             Assert.IsFalse(EdmValidator.Validate(model, EdmConstants.EdmVersion4, out errors), "EdmValidator.Validate(model");
             Assert.AreEqual(1, errors.Count(), "Correct number of errors");
-            Assert.AreEqual(EdmErrorCode.BadUnresolvedEntitySet, errors.First().ErrorCode, "Correct error code");
+            Assert.AreEqual(EdmErrorCode.OperationImportEntitySetExpressionIsInvalid, errors.First().ErrorCode, "Correct error code");
         }
 
         [TestMethod]

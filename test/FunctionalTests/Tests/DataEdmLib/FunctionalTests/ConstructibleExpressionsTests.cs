@@ -448,45 +448,6 @@ namespace EdmLibTests.FunctionalTests
         }
 
         [TestMethod]
-        public void EdmEntitySetReferenceExpression()
-        {
-            var container = new EdmEntityContainer("", "");
-            var et = new EdmEntityType("", "");
-            var e = new EdmEntitySetReferenceExpression(new EdmEntitySet(container, "qq", et));
-            Assert.AreEqual(EdmExpressionKind.EntitySetReference, e.ExpressionKind, "e.ExpressionKind");
-            Assert.AreEqual("qq", e.ReferencedEntitySet.Name, "e.ReferencedEntitySet");
-            Assert.IsFalse(e.IsBad(), "e good");
-
-            try
-            {
-                new EdmEntitySetReferenceExpression(null);
-                Assert.Fail("exception expected.");
-            }
-            catch (ArgumentNullException)
-            {
-            }
-
-            var ee = new MutableEntitySetReferenceExpression();
-            Assert.IsNull(ee.ReferencedEntitySet, "e.ReferencedEntitySet");
-            Assert.IsTrue(ee.IsBad(), "Expression is bad.");
-            Assert.AreEqual(1, ee.Errors().Count(), "Expression has errors");
-        }
-
-        private sealed class MutableEntitySetReferenceExpression : IEdmEntitySetReferenceExpression
-        {
-            public IEdmEntitySet ReferencedEntitySet
-            {
-                get;
-                set;
-            }
-
-            public EdmExpressionKind ExpressionKind
-            {
-                get { return EdmExpressionKind.EntitySetReference; }
-            }
-        }
-
-        [TestMethod]
         public void EdmApplyExpression()
         {
             var arguments = new IEdmExpression[] { new EdmIntegerConstant(1) };

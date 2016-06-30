@@ -29,7 +29,7 @@ namespace Microsoft.OData.UriParser
         internal static IEdmEntitySetBase GetTargetEntitySet(this IEdmOperationImport operationImport, IEdmEntitySetBase sourceEntitySet, IEdmModel model)
         {
             IEdmEntitySet targetEntitySet;
-            if (operationImport.TryGetStaticEntitySet(out targetEntitySet))
+            if (operationImport.TryGetStaticEntitySet(model, out targetEntitySet))
             {
                 return targetEntitySet;
             }

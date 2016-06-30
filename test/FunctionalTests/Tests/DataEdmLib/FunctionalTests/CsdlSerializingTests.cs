@@ -835,7 +835,7 @@ namespace EdmLibTests.FunctionalTests
   <Term Name=""Subject"" Type=""foo.Person"" />
   <EntityContainer Name=""C1"">
     <EntitySet Name=""People"" EntityType=""foo.Person"" />
-    <ActionImport Name=""GetCustomers"" Action=""foo.GetCustomers"" EntitySet=""Customers"" />
+    <ActionImport Name=""GetCustomers"" Action=""foo.GetCustomers"" EntitySet=""People"" />
   </EntityContainer>
   <Annotations Target=""foo.Person"">
     <Annotation Term=""foo.Age"" Qualifier=""First"" Int=""123"" />
@@ -1131,40 +1131,6 @@ namespace EdmLibTests.FunctionalTests
       <Cast Type=""foo.Address"">
         <Path>Address</Path>
       </Cast>
-    </Annotation>
-  </Annotations>
-</Schema>";
-            VerifyRoundTrip(inputText);
-        }
-
-        [TestMethod]
-        public void SerializeReferenceExpressions()
-        {
-            const string inputText =
-@"<?xml version=""1.0"" encoding=""utf-16""?>
-<Schema Namespace=""foo"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
-  <Annotations Target=""foo.Person"">
-    <Annotation Term=""Funk.Punning"">
-      <IsType Type=""Edm.Int32"">
-        <Path>Living</Path>
-      </IsType>
-    </Annotation>
-    <Annotation Term=""Funk.Clear"">
-      <PropertyReference Name=""Foo"">
-        <Null />
-      </PropertyReference>
-    </Annotation>
-    <Annotation Term=""Funk.Near"">
-      <ParameterReference Name=""Bork"" />
-    </Annotation>
-    <Annotation Term=""Funk.Dear"">
-      <FunctionReference Name=""Biz.Baz"" />
-    </Annotation>
-    <Annotation Term=""Funk.Beer"">
-      <EntitySetReference Name=""Quip.Quack/Qwop"" />
-    </Annotation>
-    <Annotation Term=""Funk.Fear"">
-      <Null />
     </Annotation>
   </Annotations>
 </Schema>";

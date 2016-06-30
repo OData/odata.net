@@ -78,7 +78,6 @@
     <Compile Include="Csdl\Parsing\Ast\CsdlRecordExpression.cs" />
     <Compile Include="Csdl\Parsing\Ast\CsdlSingleton.cs" />
     <Compile Include="Csdl\Parsing\Ast\CsdlSpatialTypeReference.cs" />
-    <Compile Include="Csdl\Parsing\Ast\CsdlEntitySetReferenceExpression.cs" />
     <Compile Include="Csdl\Parsing\Ast\CsdlOperationReferenceExpression.cs" />
     <Compile Include="Csdl\Parsing\Ast\CsdlTypeDefinition.cs" />
     <Compile Include="Csdl\Parsing\Ast\ICsdlTypeExpression.cs" />
@@ -98,7 +97,6 @@
     <Compile Include="Csdl\Semantics\CsdlSemanticsDateConstantExpression.cs" />
     <Compile Include="Csdl\Semantics\CsdlSemanticsDateTimeOffsetConstantExpression.cs" />
     <Compile Include="Csdl\Semantics\CsdlSemanticsDirectValueAnnotationsManager.cs" />
-    <Compile Include="Csdl\Semantics\CsdlSemanticsEntitySetReferenceExpression.cs" />
     <Compile Include="Csdl\Semantics\CsdlSemanticsExpression.cs" />
     <Compile Include="Csdl\Semantics\CsdlSemanticsFunction.cs" />
     <Compile Include="Csdl\Semantics\CsdlSemanticsFunctionImport.cs" />
@@ -264,7 +262,6 @@
     <Compile Include="Vocabularies\Expressions\EdmApplyExpression.cs" />
     <Compile Include="Vocabularies\Expressions\EdmCastExpression.cs" />
     <Compile Include="Vocabularies\Expressions\EdmCollectionExpression.cs" />
-    <Compile Include="Vocabularies\Expressions\EdmEntitySetReferenceExpression.cs" />
     <Compile Include="Vocabularies\Expressions\EdmEnumMemberExpression.cs" />
     <Compile Include="Vocabularies\Expressions\EdmIfExpression.cs" />
     <Compile Include="Vocabularies\Expressions\EdmIsTypeExpression.cs" />
@@ -287,7 +284,6 @@
     <Compile Include="Vocabularies\Expressions\IEdmDateTimeOffsetConstantExpression.cs" />
     <Compile Include="Vocabularies\Expressions\IEdmDecimalConstantExpression.cs" />
     <Compile Include="Vocabularies\Expressions\IEdmDurationConstantExpression.cs" />
-    <Compile Include="Vocabularies\Expressions\IEdmEntitySetReferenceExpression.cs" />
     <Compile Include="Vocabularies\Expressions\IEdmEnumMemberExpression.cs" />
     <Compile Include="Vocabularies\Expressions\IEdmFloatingConstantExpression.cs" />
     <Compile Include="Vocabularies\Expressions\IEdmGuidConstantExpression.cs" />

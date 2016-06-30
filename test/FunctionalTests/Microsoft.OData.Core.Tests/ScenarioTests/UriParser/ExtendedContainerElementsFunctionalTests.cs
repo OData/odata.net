@@ -109,9 +109,8 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             var operationImports = model.FindDeclaredOperationImports("FunctionImport0").ToArray();
             path.LastSegment.ShouldBeOperationImportSegment(operationImports);
             IEdmOperationImport operationImport = operationImports.Single();
-            var expression = operationImport.EntitySet as EdmEntitySetReferenceExpression;
-            var set1 = model.FindDeclaredEntitySet("EntitySet1");
-            expression.ReferencedEntitySet.Should().Be(set1);
+            var expression = operationImport.EntitySet as IEdmPathExpression;
+            expression.Path.Single().Should().Be("EntitySet1");
         }
 
         [Fact]

@@ -1388,8 +1388,7 @@ namespace Microsoft.OData.Edm.Validation
                 {
                     if (operationImport.EntitySet != null)
                     {
-                        if (operationImport.EntitySet.ExpressionKind != EdmExpressionKind.EntitySetReference &&
-                            operationImport.EntitySet.ExpressionKind != EdmExpressionKind.Path)
+                        if (operationImport.EntitySet.ExpressionKind != EdmExpressionKind.Path)
                         {
                             context.AddError(
                                 operationImport.Location(),
@@ -1399,10 +1398,8 @@ namespace Microsoft.OData.Edm.Validation
                         else
                         {
                             IEdmEntitySet entitySet;
-                            IEdmOperationParameter parameter;
-                            IEnumerable<IEdmNavigationProperty> path;
 
-                            if (!operationImport.TryGetStaticEntitySet(out entitySet))
+                            if (!operationImport.TryGetStaticEntitySet(context.Model, out entitySet))
                             {
                                 context.AddError(
                                     operationImport.Location(),
@@ -1423,15 +1420,6 @@ namespace Microsoft.OData.Edm.Validation
                                             EdmErrorCode.OperationImportEntitySetExpressionIsInvalid,
                                             Strings.EdmModel_Validator_Semantic_OperationImportEntitySetExpressionIsInvalid(operationImport.Name));
                                     }
-                                }
-                            }
-
-                            IEnumerable<EdmError> errors;
-                            if (!operationImport.TryGetRelativeEntitySetPath(context.Model, out parameter, out path, out errors))
-                            {
-                                foreach (EdmError error in errors)
-                                {
-                                    context.AddError(error);
                                 }
                             }
                         }
@@ -1456,7 +1444,7 @@ namespace Microsoft.OData.Edm.Validation
                             IEdmOperationParameter parameter;
                             IEnumerable<IEdmNavigationProperty> path;
                             IEnumerable<EdmError> errors;
-                            if (operationImport.TryGetStaticEntitySet(out entitySet))
+                            if (operationImport.TryGetStaticEntitySet(context.Model, out entitySet))
                             {
                                 IEdmEntityType entitySetElementType = entitySet.EntityType();
                                 if (!returnedEntityType.IsOrInheritsFrom(entitySetElementType) && !context.IsBad(returnedEntityType) && !context.IsBad(entitySet) && !context.IsBad(entitySetElementType))

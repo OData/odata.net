@@ -119,8 +119,8 @@ namespace Microsoft.OData.Edm.Tests.Csdl.Serialization
         [Fact]
         public void VerifyTwoIdenticalNamedActionImportsWithSameEntitySetOnlyWrittenOnce()
         {
-            var actionImport = new EdmActionImport(defaultContainer, "Checkout", defaultCheckoutAction, new EdmEntitySetReferenceExpression(new EdmEntitySet(defaultContainer, "Set", new EdmEntityType("foo", "type"))));
-            var actionImport2 = new EdmActionImport(defaultContainer, "Checkout", defaultCheckoutAction, new EdmEntitySetReferenceExpression(new EdmEntitySet(defaultContainer, "Set", new EdmEntityType("foo", "type"))));
+            var actionImport = new EdmActionImport(defaultContainer, "Checkout", defaultCheckoutAction, new EdmPathExpression("Set"));
+            var actionImport2 = new EdmActionImport(defaultContainer, "Checkout", defaultCheckoutAction, new EdmPathExpression("Set"));
             VisitAndVerifyXml(
                 (visitor) =>
                 {
@@ -145,8 +145,8 @@ namespace Microsoft.OData.Edm.Tests.Csdl.Serialization
         [Fact]
         public void VerifyIdenticalNamedActionImportsWithDifferentEntitySetPropertiesAreWritten()
         {
-            var actionImportOnSet = new EdmActionImport(defaultContainer, "Checkout", defaultCheckoutAction, new EdmEntitySetReferenceExpression(new EdmEntitySet(defaultContainer, "Set", new EdmEntityType("foo", "type"))));
-            var actionImportOnSet2 = new EdmActionImport(defaultContainer, "Checkout", defaultCheckoutAction, new EdmEntitySetReferenceExpression(new EdmEntitySet(defaultContainer, "Set2", new EdmEntityType("foo", "type"))));
+            var actionImportOnSet = new EdmActionImport(defaultContainer, "Checkout", defaultCheckoutAction, new EdmPathExpression("Set"));
+            var actionImportOnSet2 = new EdmActionImport(defaultContainer, "Checkout", defaultCheckoutAction, new EdmPathExpression("Set2"));
             var actionImportWithNoEntitySet = new EdmActionImport(defaultContainer, "Checkout", defaultCheckoutAction, null);
             var actionImportWithUniqueEdmPath = new EdmActionImport(defaultContainer, "Checkout", defaultCheckoutAction, new EdmPathExpression("path1", "path2"));
             VisitAndVerifyXml(
@@ -182,8 +182,8 @@ namespace Microsoft.OData.Edm.Tests.Csdl.Serialization
         [Fact]
         public void VerifyTwoIdenticalNamedFunctionImportsWithSameEntitySetValueOnlyWrittenOnce()
         {
-            var functionImport = new EdmFunctionImport(defaultContainer, "GetStuff", defaultGetStuffFunction, new EdmEntitySetReferenceExpression(new EdmEntitySet(defaultContainer, "Set", new EdmEntityType("foo", "type"))), true);
-            var functionImport2 = new EdmFunctionImport(defaultContainer, "GetStuff", defaultGetStuffFunction, new EdmEntitySetReferenceExpression(new EdmEntitySet(defaultContainer, "Set", new EdmEntityType("foo", "type"))), true);
+            var functionImport = new EdmFunctionImport(defaultContainer, "GetStuff", defaultGetStuffFunction, new EdmPathExpression("Set"), true);
+            var functionImport2 = new EdmFunctionImport(defaultContainer, "GetStuff", defaultGetStuffFunction, new EdmPathExpression("Set"), true);
             VisitAndVerifyXml(
                 (visitor) => visitor.VisitEntityContainerElements(new IEdmEntityContainerElement[] { functionImport, functionImport2 }),
                 @"<FunctionImport Name=""GetStuff"" Function=""Default.NameSpace2.GetStuff"" EntitySet=""Set"" IncludeInServiceDocument=""true"" />");
@@ -202,8 +202,8 @@ namespace Microsoft.OData.Edm.Tests.Csdl.Serialization
         [Fact]
         public void VerifyIdenticalNamedFunctionImportsWithDifferentEntitySetPropertiesAreWritten()
         {
-            var functionImportOnSet = new EdmFunctionImport(defaultContainer, "Checkout", defaultGetStuffFunction, new EdmEntitySetReferenceExpression(new EdmEntitySet(defaultContainer, "Set", new EdmEntityType("foo", "type"))), false);
-            var functionImportOnSet2 = new EdmFunctionImport(defaultContainer, "Checkout", defaultGetStuffFunction, new EdmEntitySetReferenceExpression(new EdmEntitySet(defaultContainer, "Set2", new EdmEntityType("foo", "type"))), false);
+            var functionImportOnSet = new EdmFunctionImport(defaultContainer, "Checkout", defaultGetStuffFunction, new EdmPathExpression("Set"), false);
+            var functionImportOnSet2 = new EdmFunctionImport(defaultContainer, "Checkout", defaultGetStuffFunction, new EdmPathExpression("Set2"), false);
             var functionmportWithNoEntitySet = new EdmFunctionImport(defaultContainer, "Checkout", defaultGetStuffFunction, null, false);
             var functionImportWithUniqueEdmPath = new EdmFunctionImport(defaultContainer, "Checkout", defaultGetStuffFunction, new EdmPathExpression("path1", "path2"), false);
             VisitAndVerifyXml(

@@ -77,7 +77,7 @@ namespace Microsoft.OData.Service.Providers
                 
                 if (resourceSet != null)
                 {
-                    return new EdmEntitySetReferenceExpression(this.model.EnsureEntitySet(resourceSet));
+                    return new EdmPathExpression(this.model.EnsureEntitySet(resourceSet).Name);
                 }
 
                 if (this.entitySetPath != null)

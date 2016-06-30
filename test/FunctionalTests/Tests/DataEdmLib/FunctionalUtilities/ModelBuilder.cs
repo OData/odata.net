@@ -387,7 +387,7 @@ namespace EdmLibTests.FunctionalUtilities
             function.AddParameter("CustomerId", EdmCoreModel.Instance.GetInt32(true));
 
             model.AddElement(function);
-            container.AddFunctionImport("GetCustomersExcluding", function, new EdmEntitySetReferenceExpression(customerSet));
+            container.AddFunctionImport("GetCustomersExcluding", function, new EdmPathExpression(customerSet.Name));
 
             model.AddElement(container);
             return model;

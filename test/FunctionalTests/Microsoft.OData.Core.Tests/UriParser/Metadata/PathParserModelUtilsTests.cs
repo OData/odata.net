@@ -123,7 +123,7 @@ namespace Microsoft.OData.Tests.UriParser.Metadata
             model.AddElement(container);
             var entitySet = container.AddEntitySet("EntitySet", new EdmEntityType("Fake", "EntityType"));
             var function = new EdmFunction("Fake", "FakeFunction", new EdmEntityTypeReference(entitySet.EntityType(), false));
-            var operationImport = container.AddFunctionImport("FakeAction", function, new EdmEntitySetReferenceExpression(entitySet));
+            var operationImport = container.AddFunctionImport("FakeAction", function, new EdmPathExpression(entitySet.Name));
             operationImport.GetTargetEntitySet(null, model).Should().BeSameAs(entitySet);
         }
 

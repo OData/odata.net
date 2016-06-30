@@ -14,7 +14,6 @@ using FluentAssertions;
 using Microsoft.OData.UriParser;
 using Microsoft.OData.Edm;
 using Microsoft.OData.Edm.Csdl;
-using Microsoft.OData.Edm.Vocabularies;
 using Microsoft.OData.Edm.Validation;
 
 namespace Microsoft.OData.Tests.UriParser
@@ -689,25 +688,25 @@ namespace Microsoft.OData.Tests.UriParser
             var FullQualifiedNamespaceSingletonBoss = FullyQualifiedNamespaceContext.AddSingleton("Boss", FullyQualifiedNamespacePerson);
             FullQualifiedNamespaceSingletonBoss.AddNavigationTarget(FullyQualifiedNamespacePerson_MyDog, FullyQualifiedNamespaceContextDogs);
             FullQualifiedNamespaceSingletonBoss.AddNavigationTarget(FullyQualifiedNamespacePerson_MyPaintings, FullyQualifiedNamespaceContextPaintings);
-            FullyQualifiedNamespaceContext.AddFunctionImport("GetPet1", FullyQualifiedNamespaceGetPet1Function, new EdmEntitySetReferenceExpression(FullyQualifiedNamespaceContextPet1Set));
-            FullyQualifiedNamespaceContext.AddFunctionImport("GetPet2", FullyQualifiedNamespaceGetPet2Function, new EdmEntitySetReferenceExpression(FullyQualifiedNamespaceContextPet2Set));
-            FullyQualifiedNamespaceContext.AddFunctionImport("GetPet3", FullyQualifiedNamespaceGetPet3Function, new EdmEntitySetReferenceExpression(FullyQualifiedNamespaceContextPet3Set));
-            FullyQualifiedNamespaceContext.AddFunctionImport("GetPet4", FullyQualifiedNamespaceGetPet4Function, new EdmEntitySetReferenceExpression(FullyQualifiedNamespaceContextPet4Set));
-            FullyQualifiedNamespaceContext.AddFunctionImport("GetPet5", FullyQualifiedNamespaceGetPet5Function, new EdmEntitySetReferenceExpression(FullyQualifiedNamespaceContextPet5Set));
-            FullyQualifiedNamespaceContext.AddFunctionImport("GetPet6", FullyQualifiedNamespaceGetPet6Function, new EdmEntitySetReferenceExpression(FullyQualifiedNamespaceContextPet6Set));
-            FullyQualifiedNamespaceContext.AddFunctionImport("GetPetCount", FullyQualifiedNamespaceGetPetCountFunction, new EdmEntitySetReferenceExpression(FullyQualifiedNamespaceContextPet5Set));
+            FullyQualifiedNamespaceContext.AddFunctionImport("GetPet1", FullyQualifiedNamespaceGetPet1Function, new EdmPathExpression("Pet1Set"));
+            FullyQualifiedNamespaceContext.AddFunctionImport("GetPet2", FullyQualifiedNamespaceGetPet2Function, new EdmPathExpression("Pet2Set"));
+            FullyQualifiedNamespaceContext.AddFunctionImport("GetPet3", FullyQualifiedNamespaceGetPet3Function, new EdmPathExpression("Pet3Set"));
+            FullyQualifiedNamespaceContext.AddFunctionImport("GetPet4", FullyQualifiedNamespaceGetPet4Function, new EdmPathExpression("Pet4Set"));
+            FullyQualifiedNamespaceContext.AddFunctionImport("GetPet5", FullyQualifiedNamespaceGetPet5Function, new EdmPathExpression("Pet5Set"));
+            FullyQualifiedNamespaceContext.AddFunctionImport("GetPet6", FullyQualifiedNamespaceGetPet6Function, new EdmPathExpression("Pet6Set"));
+            FullyQualifiedNamespaceContext.AddFunctionImport("GetPetCount", FullyQualifiedNamespaceGetPetCountFunction, new EdmPathExpression("Pet5Set"));
 
-            FullyQualifiedNamespaceContext.AddFunctionImport("FindMyOwner", FullyQualifiedNamespaceFindMyOwnerFunction, new EdmEntitySetReferenceExpression(model.FindEntityContainer("Fully.Qualified.Namespace.Context").FindEntitySet("People")));
+            FullyQualifiedNamespaceContext.AddFunctionImport("FindMyOwner", FullyQualifiedNamespaceFindMyOwnerFunction, new EdmPathExpression("People"));
 
             FullyQualifiedNamespaceContext.AddFunctionImport("IsAddressGood", FullyQualifiedNamespaceIsAddressGoodFunction, null);
 
-            FullyQualifiedNamespaceContext.AddFunctionImport("GetCoolPeople", FullyQualifiedNamespaceGetCoolPeopleAction, new EdmEntitySetReferenceExpression(model.FindEntityContainer("Fully.Qualified.Namespace.Context").FindEntitySet("People")));
+            FullyQualifiedNamespaceContext.AddFunctionImport("GetCoolPeople", FullyQualifiedNamespaceGetCoolPeopleAction, new EdmPathExpression("People"));
 
-            FullyQualifiedNamespaceContext.AddFunctionImport("GetCoolestPerson", FullyQualifiedNamespaceGetCoolestPersonAction, new EdmEntitySetReferenceExpression(model.FindEntityContainer("Fully.Qualified.Namespace.Context").FindEntitySet("People")));
+            FullyQualifiedNamespaceContext.AddFunctionImport("GetCoolestPerson", FullyQualifiedNamespaceGetCoolestPersonAction, new EdmPathExpression("People"));
 
-            FullyQualifiedNamespaceContext.AddFunctionImport("GetCoolestPersonWithStyle", FullyQualifiedNamespaceGetCoolestPersonWithStyleAction, new EdmEntitySetReferenceExpression(model.FindEntityContainer("Fully.Qualified.Namespace.Context").FindEntitySet("People")));
+            FullyQualifiedNamespaceContext.AddFunctionImport("GetCoolestPersonWithStyle", FullyQualifiedNamespaceGetCoolestPersonWithStyleAction, new EdmPathExpression("People"));
 
-            FullyQualifiedNamespaceContext.AddFunctionImport("GetBestManager", FullyQualifiedNamespaceGetBestManagerAction, new EdmEntitySetReferenceExpression(model.FindEntityContainer("Fully.Qualified.Namespace.Context").FindEntitySet("People")));
+            FullyQualifiedNamespaceContext.AddFunctionImport("GetBestManager", FullyQualifiedNamespaceGetBestManagerAction, new EdmPathExpression("People"));
 
             FullyQualifiedNamespaceContext.AddActionImport("GetNothing", FullyQualifiedNamespaceGetNothingAction);
 

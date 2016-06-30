@@ -489,33 +489,32 @@ public enum Microsoft.OData.Edm.EdmContainerElementKind : int {
 public enum Microsoft.OData.Edm.EdmExpressionKind : int {
 	BinaryConstant = 1
 	BooleanConstant = 2
-	Cast = 19
+	Cast = 18
 	Collection = 12
-	DateConstant = 26
+	DateConstant = 25
 	DateTimeOffsetConstant = 3
 	DecimalConstant = 4
 	DurationConstant = 9
-	EntitySetReference = 17
-	EnumMember = 28
+	EnumMember = 27
 	FloatingConstant = 5
 	GuidConstant = 6
-	If = 18
+	If = 17
 	IntegerConstant = 7
-	IsType = 20
-	Labeled = 23
-	LabeledExpressionReference = 22
-	NavigationPropertyPath = 25
+	IsType = 19
+	Labeled = 22
+	LabeledExpressionReference = 21
+	NavigationPropertyPath = 24
 	None = 0
 	Null = 10
-	OperationApplication = 21
+	OperationApplication = 20
 	OperationReference = 15
 	ParameterReference = 14
 	Path = 13
-	PropertyPath = 24
+	PropertyPath = 23
 	PropertyReference = 16
 	Record = 11
 	StringConstant = 8
-	TimeOfDayConstant = 27
+	TimeOfDayConstant = 26
 }
 
 public enum Microsoft.OData.Edm.EdmMultiplicity : int {
@@ -2020,7 +2019,7 @@ public sealed class Microsoft.OData.Edm.ExtensionMethods {
 	[
 	ExtensionAttribute(),
 	]
-	public static bool TryGetStaticEntitySet (Microsoft.OData.Edm.IEdmOperationImport operationImport, out Microsoft.OData.Edm.IEdmEntitySet& entitySet)
+	public static bool TryGetStaticEntitySet (Microsoft.OData.Edm.IEdmOperationImport operationImport, Microsoft.OData.Edm.IEdmModel model, out Microsoft.OData.Edm.IEdmEntitySet& entitySet)
 
 	[
 	ExtensionAttribute(),
@@ -3142,10 +3141,6 @@ public interface Microsoft.OData.Edm.Vocabularies.IEdmDurationValue : IEdmElemen
 	System.TimeSpan Value  { public abstract get; }
 }
 
-public interface Microsoft.OData.Edm.Vocabularies.IEdmEntitySetReferenceExpression : IEdmElement, IEdmExpression {
-	Microsoft.OData.Edm.IEdmEntitySet ReferencedEntitySet  { public abstract get; }
-}
-
 public interface Microsoft.OData.Edm.Vocabularies.IEdmEnumMemberExpression : IEdmElement, IEdmExpression {
 	System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.IEdmEnumMember]] EnumMembers  { public abstract get; }
 }
@@ -3421,13 +3416,6 @@ public class Microsoft.OData.Edm.Vocabularies.EdmDurationConstant : Microsoft.OD
 	Microsoft.OData.Edm.EdmExpressionKind ExpressionKind  { public virtual get; }
 	System.TimeSpan Value  { public virtual get; }
 	Microsoft.OData.Edm.Vocabularies.EdmValueKind ValueKind  { public virtual get; }
-}
-
-public class Microsoft.OData.Edm.Vocabularies.EdmEntitySetReferenceExpression : Microsoft.OData.Edm.EdmElement, IEdmElement, IEdmExpression, IEdmEntitySetReferenceExpression {
-	public EdmEntitySetReferenceExpression (Microsoft.OData.Edm.IEdmEntitySet referencedEntitySet)
-
-	Microsoft.OData.Edm.EdmExpressionKind ExpressionKind  { public virtual get; }
-	Microsoft.OData.Edm.IEdmEntitySet ReferencedEntitySet  { public virtual get; }
 }
 
 public class Microsoft.OData.Edm.Vocabularies.EdmEnumMemberExpression : Microsoft.OData.Edm.EdmElement, IEdmElement, IEdmExpression, IEdmEnumMemberExpression {

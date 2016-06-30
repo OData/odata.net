@@ -696,7 +696,6 @@ namespace Microsoft.OData.Edm.Vocabularies
                 case EdmExpressionKind.ParameterReference:
                 case EdmExpressionKind.OperationReference:
                 case EdmExpressionKind.PropertyReference:
-                case EdmExpressionKind.EntitySetReference:
                     throw new InvalidOperationException(Edm.Strings.Edm_Evaluator_UnrecognizedExpressionKind(((int)expression.ExpressionKind).ToString(System.Globalization.CultureInfo.InvariantCulture)));
                 default:
                     throw new InvalidOperationException(Edm.Strings.Edm_Evaluator_UnrecognizedExpressionKind(((int)expression.ExpressionKind).ToString(System.Globalization.CultureInfo.InvariantCulture)));

@@ -9,7 +9,6 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.OData.Edm;
 using Microsoft.OData.Edm.Validation;
-using Microsoft.OData.Edm.Vocabularies;
 
 namespace Microsoft.Test.OData.Services.ODataOperationService
 {
@@ -199,13 +198,13 @@ namespace Microsoft.Test.OData.Services.ODataOperationService
             var getCustomersByOrdersUnboundFunction = new EdmFunction(ns, "GetCustomersByOrders", customerCollectionTypeReference, false, null, true);
             getCustomersByOrdersUnboundFunction.AddParameter("orders", orderCollectionTypeReference);
             model.AddElement(getCustomersByOrdersUnboundFunction);
-            defaultContainer.AddFunctionImport(getCustomersByOrdersUnboundFunction.Name, getCustomersByOrdersUnboundFunction, new EdmEntitySetReferenceExpression(customerSet));
+            defaultContainer.AddFunctionImport(getCustomersByOrdersUnboundFunction.Name, getCustomersByOrdersUnboundFunction, new EdmPathExpression("customers"));
 
             // Function Import: Parameter is Collection of Entity, Return Entity
             var getCustomerByOrderUnboundFunction = new EdmFunction(ns, "GetCustomerByOrder", customerTypeReference, false, null, true);
             getCustomerByOrderUnboundFunction.AddParameter("order", orderTypeReference);
             model.AddElement(getCustomerByOrderUnboundFunction);
-            defaultContainer.AddFunctionImport(getCustomerByOrderUnboundFunction.Name, getCustomerByOrderUnboundFunction, new EdmEntitySetReferenceExpression(customerSet));
+            defaultContainer.AddFunctionImport(getCustomerByOrderUnboundFunction.Name, getCustomerByOrderUnboundFunction, new EdmPathExpression("customers"));
 
             // Function Import: Bound to Entity, Return Complex Value
             var getCustomerAddressUnboundFunction = new EdmFunction(ns, "GetCustomerAddress", addressTypeReference, false, null, true);

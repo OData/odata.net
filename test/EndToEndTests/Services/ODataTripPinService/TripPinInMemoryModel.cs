@@ -232,7 +232,7 @@ namespace Microsoft.OData.SampleService.Models.TripPin
             getNearestAirport.AddParameter("lat", EdmCoreModel.Instance.GetDouble(false));
             getNearestAirport.AddParameter("lon", EdmCoreModel.Instance.GetDouble(false));
             model.AddElement(getNearestAirport);
-            var getNearestAirportFunctionImport = (IEdmFunctionImport)defaultContainer.AddFunctionImport("GetNearestAirport", getNearestAirport, new EdmEntitySetReferenceExpression(airportSet), true);
+            var getNearestAirportFunctionImport = (IEdmFunctionImport)defaultContainer.AddFunctionImport("GetNearestAirport", getNearestAirport, new EdmPathExpression("Airports"), true);
 
             var resetDataSourceAction = new EdmAction(ns, "ResetDataSource", null, false, null);
             model.AddElement(resetDataSourceAction);

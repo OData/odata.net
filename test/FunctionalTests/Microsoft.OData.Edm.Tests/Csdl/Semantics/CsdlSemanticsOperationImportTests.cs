@@ -46,63 +46,6 @@ namespace Microsoft.OData.Edm.Tests.Csdl.Semantics
         }
 
         [Fact]
-        public void EnsureEntitySetReferenceResolvesCorrectly()
-        {
-            var action = CsdlBuilder.Action("Checkout");
-            var actionImport = new CsdlActionImport("Checkout", "FQ.NS.Checkout", "EntitySet" /*entitySet*/, null /*documentation*/, testLocation);
-            var csdlEntitySet = new CsdlEntitySet("EntitySet", "FQ.NS.EntityType", Enumerable.Empty<CsdlNavigationPropertyBinding>(), null, testLocation);
-            var csdlEntityContainer = CsdlBuilder.EntityContainer("Container", entitySets: new CsdlEntitySet[] { csdlEntitySet });
-
-            var semanticSchema = CreateCsdlSemanticsSchema(csdlEntityContainer, action);
-            var semanticAction = new CsdlSemanticsAction(semanticSchema, action);
-
-            var csdlSemanticEntityContainer = new CsdlSemanticsEntityContainer(semanticSchema, csdlEntityContainer);
-            var semanticActionImport = new CsdlSemanticsActionImport(csdlSemanticEntityContainer, actionImport, semanticAction);
-            semanticActionImport.Action.Should().NotBeNull();
-            semanticActionImport.Action.Name.Should().Be("Checkout");
-            var edmEntitySetReference = (IEdmEntitySetReferenceExpression)semanticActionImport.EntitySet;
-            edmEntitySetReference.ReferencedEntitySet.Name.Should().Be("EntitySet");
-        }
-
-        [Fact]
-        public void EnsureEntitySetResolvesToUnknownEntitySet()
-        {
-            var action = CsdlBuilder.Action("Checkout");
-            var actionImport = new CsdlActionImport("Checkout", "FQ.NS.Checkout", "OtherSet" /*entitySet*/, null /*documentation*/, testLocation);
-            var csdlEntityContainer = CsdlBuilder.EntityContainer("Container");
-
-            var semanticSchema = CreateCsdlSemanticsSchema(csdlEntityContainer, action);
-            var semanticAction = new CsdlSemanticsAction(semanticSchema, action);
-
-            var csdlSemanticEntityContainer = new CsdlSemanticsEntityContainer(semanticSchema, csdlEntityContainer);
-            var semanticActionImport = new CsdlSemanticsActionImport(csdlSemanticEntityContainer, actionImport, semanticAction);
-            semanticActionImport.Action.Should().NotBeNull();
-            semanticActionImport.Action.Name.Should().Be("Checkout");
-            var edmEntitySetReference = (IEdmEntitySetReferenceExpression)semanticActionImport.EntitySet;
-            edmEntitySetReference.ReferencedEntitySet.Name.Should().Be("OtherSet");
-        }
-
-        [Fact]
-        public void EnsureEntitySetReferenceNotResolveToSingleton()
-        {
-            var action = CsdlBuilder.Action("Checkout");
-            var actionImport = new CsdlActionImport("Checkout", "FQ.NS.Checkout", "Singleton" /*entitySet*/, null /*documentation*/, testLocation);
-            var csdlSingleton = new CsdlSingleton("Singleton", "FQ.NS.EntityType", Enumerable.Empty<CsdlNavigationPropertyBinding>(), null, testLocation);
-            var csdlEntityContainer = CsdlBuilder.EntityContainer("Container", singletons: new[] { csdlSingleton });
-
-            var semanticSchema = CreateCsdlSemanticsSchema(csdlEntityContainer, action);
-            var semanticAction = new CsdlSemanticsAction(semanticSchema, action);
-
-            var csdlSemanticEntityContainer = new CsdlSemanticsEntityContainer(semanticSchema, csdlEntityContainer);
-            var semanticActionImport = new CsdlSemanticsActionImport(csdlSemanticEntityContainer, actionImport, semanticAction);
-            semanticActionImport.Action.Should().NotBeNull();
-            semanticActionImport.Action.Name.Should().Be("Checkout");
-            var edmEntitySetReference = (IEdmEntitySetReferenceExpression)semanticActionImport.EntitySet;
-            edmEntitySetReference.ReferencedEntitySet.GetType().Should().Be(typeof(UnresolvedEntitySet));
-            edmEntitySetReference.ReferencedEntitySet.Name.Should().Be("Singleton");
-        }
-
-        [Fact]
         public void CsdlSemanticsActionImportPropertiesShouldBeInitializedCorrectly()
         {
             var action = CsdlBuilder.Action("Checkout");

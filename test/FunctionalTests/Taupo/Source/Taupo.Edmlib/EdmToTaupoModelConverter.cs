@@ -248,7 +248,7 @@ namespace Microsoft.Test.Taupo.Edmlib
             if (edmFunctionImport.EntitySet != null)
             {
                 IEdmEntitySet entitySet;
-                if (edmFunctionImport.TryGetStaticEntitySet(out entitySet))
+                if (edmFunctionImport.TryGetStaticEntitySet(this.edmModel, out entitySet))
                 {
                     functionImportReturnType.EntitySet = new EntitySetReference(entitySet.Name);
                     addReturnType = true;

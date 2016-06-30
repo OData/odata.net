@@ -1153,12 +1153,6 @@
     <Compile Include="$(ODataCrossTargettingSourcePath)\UriParser\SemanticAst\EntityRangeVariableReferenceNode.cs">
       <Link>Microsoft\OData\Core\UriParser\SemanticAst\EntityRangeVariableReferenceNode.cs</Link>
     </Compile>
-    <Compile Include="$(ODataCrossTargettingSourcePath)\UriParser\SemanticAst\EntitySetExpressionResolver.cs">
-      <Link>Microsoft\OData\Core\UriParser\SemanticAst\EntitySetExpressionResolver.cs</Link>
-    </Compile>
-    <Compile Include="$(ODataCrossTargettingSourcePath)\UriParser\SemanticAst\EntitySetNode.cs">
-      <Link>Microsoft\OData\Core\UriParser\SemanticAst\EntitySetNode.cs</Link>
-    </Compile>
     <Compile Include="$(ODataCrossTargettingSourcePath)\UriParser\SemanticAst\EntitySetSegment.cs">
       <Link>Microsoft\OData\Core\UriParser\SemanticAst\EntitySetSegment.cs</Link>
     </Compile>

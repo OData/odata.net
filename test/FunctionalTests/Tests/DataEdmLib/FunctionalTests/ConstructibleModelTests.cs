@@ -1033,7 +1033,7 @@ namespace EdmLibTests.FunctionalTests
             EdmOperationParameter wilma = new EdmOperationParameter(bazAction, "Wilma", m_coreModel.GetInt32(false));
             bazAction.AddParameter(wilma);
             model.AddElement(bazAction);
-            EdmActionImport baz = container.AddActionImport("baz", bazAction, new EdmEntitySetReferenceExpression(customers));
+            EdmActionImport baz = container.AddActionImport("baz", bazAction, new EdmPathExpression(customers.Name));
             Assert.AreEqual(container, baz.Container, "ActionImport with container has container.");
 
             this.CompareEdmModelToCsdl(
@@ -1249,7 +1249,7 @@ namespace EdmLibTests.FunctionalTests
             var fooFunction = new EdmFunction("Westwind", "Foo", EdmCoreModel.GetCollection(new EdmEntityTypeReference(customer, false)), true /*isBound*/, null, true /*isComposable*/);
             model.AddElement(fooFunction);
             fooFunction.AddParameter("Fred", EdmCoreModel.GetCollection(new EdmEntityTypeReference(customer, false)));
-            container.AddFunctionImport("Foo", fooFunction, new EdmEntitySetReferenceExpression(customers));
+            container.AddFunctionImport("Foo", fooFunction, new EdmPathExpression(customers.Name));
 
             this.CompareEdmModelToCsdl(
                 model,
@@ -1281,12 +1281,12 @@ namespace EdmLibTests.FunctionalTests
 
             var fooFunction1 = new EdmFunction("Eastwind", "Foo", EdmCoreModel.GetCollection(new EdmEntityTypeReference(customer, false)), false, null, true);
             model.AddElement(fooFunction1);
-            container.AddFunctionImport("Foo", fooFunction1, new EdmEntitySetReferenceExpression(customers));
+            container.AddFunctionImport("Foo", fooFunction1, new EdmPathExpression(customers.Name));
 
             var foo2Action = new EdmAction("Eastwind", "Foo", EdmCoreModel.GetCollection(new EdmEntityTypeReference(customer, false)), true /*isBound*/, null);
             foo2Action.AddParameter(new EdmOperationParameter(foo2Action, "Fred", EdmCoreModel.GetCollection(new EdmEntityTypeReference(customer, false))));
             model.AddElement(foo2Action);
-            var foo2 = new EdmActionImport(container, "Foo", foo2Action, new EdmEntitySetReferenceExpression(customers));
+            var foo2 = new EdmActionImport(container, "Foo", foo2Action, new EdmPathExpression(customers.Name));
             container.AddElement(foo2);
 
             this.CompareEdmModelToCsdl(

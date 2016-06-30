@@ -683,18 +683,9 @@ namespace Microsoft.Test.OData.Utils.Metadata
 
         private static void CompareEntitySetPaths(string entitySetPathValue, IEdmExpression entitySetExpression)
         {
-            if (entitySetPathValue.Contains("/"))
-            {
-                var modelPath = entitySetExpression as EdmPathExpression;
-                ExceptionUtilities.CheckObjectNotNull(modelPath, "Expected a Path expression");
-                ExceptionUtilities.Assert(entitySetPathValue == string.Join("/", modelPath.Path), "Unexpected value for path expression");
-            }
-            else
-            {
-                var modelEntitySetReference = entitySetExpression as EdmEntitySetReferenceExpression;
-                ExceptionUtilities.CheckObjectNotNull(modelEntitySetReference, "Expected an EntitySet Reference expression");
-                ExceptionUtilities.Assert(entitySetPathValue == modelEntitySetReference.ReferencedEntitySet.Name, "Unexpected value for entity set expression");
-            }
+            var modelPath = entitySetExpression as EdmPathExpression;
+            ExceptionUtilities.CheckObjectNotNull(modelPath, "Expected a Path expression");
+            ExceptionUtilities.Assert(entitySetPathValue == string.Join("/", modelPath.Path), "Unexpected value for path expression");
         }
 
         private static Dictionary<string, XElement> BuildNamedElementIndex(IEnumerable<XElement> csdlElements, string elementName)

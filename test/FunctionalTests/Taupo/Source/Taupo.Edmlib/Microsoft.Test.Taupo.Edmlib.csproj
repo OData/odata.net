@@ -34,7 +34,6 @@
     <Compile Include="StubEdm\StubEdmElement.cs" />
     <Compile Include="StubEdm\StubEdmEntityContainer.cs" />
     <Compile Include="StubEdm\StubEdmEntitySet.cs" />
-    <Compile Include="StubEdm\StubEdmEntitySetReferenceExpression.cs" />
     <Compile Include="StubEdm\StubEdmEntityType.cs" />
     <Compile Include="StubEdm\StubEdmEnumMember.cs" />
     <Compile Include="StubEdm\StubEdmEnumType.cs" />

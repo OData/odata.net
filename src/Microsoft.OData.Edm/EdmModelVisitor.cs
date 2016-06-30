@@ -141,9 +141,6 @@ namespace Microsoft.OData.Edm
                 case EdmExpressionKind.DecimalConstant:
                     this.ProcessDecimalConstantExpression((IEdmDecimalConstantExpression)expression);
                     break;
-                case EdmExpressionKind.EntitySetReference:
-                    this.ProcessEntitySetReferenceExpression((IEdmEntitySetReferenceExpression)expression);
-                    break;
                 case EdmExpressionKind.EnumMember:
                     this.ProcessEnumMemberExpression((IEdmEnumMemberExpression)expression);
                     break;
@@ -772,11 +769,6 @@ namespace Microsoft.OData.Edm
         }
 
         protected virtual void ProcessEnumMemberExpression(IEdmEnumMemberExpression expression)
-        {
-            this.ProcessExpression(expression);
-        }
-
-        protected virtual void ProcessEntitySetReferenceExpression(IEdmEntitySetReferenceExpression expression)
         {
             this.ProcessExpression(expression);
         }

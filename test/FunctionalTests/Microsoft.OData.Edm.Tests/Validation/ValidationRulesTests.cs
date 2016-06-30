@@ -128,14 +128,16 @@ namespace Microsoft.OData.Edm.Tests.Validation
         [Fact]
         public void OperationImportEntitySetReferencesEntitySetNotOnFunctionImportContainerShouldError()
         {
-            var otherEntitySet = new EdmEntitySet(new EdmEntityContainer("g", "a"), "Set", DefaultValidEntityType.EntityDefinition());
+            var model = new EdmModel();
             var defaultContainer = new EdmEntityContainer("f", "d");
+            model.AddElement(defaultContainer);
             var edmFunction = new EdmFunction("n.s", "GetStuff", EdmCoreModel.Instance.GetString(true));
             edmFunction.AddParameter("param", DefaultValidEntityType);
 
-            var edmFunctionImport = new EdmFunctionImport(defaultContainer, "GetStuff", edmFunction, new EdmEntitySetReferenceExpression(otherEntitySet), true);
+            var edmFunctionImport = new EdmFunctionImport(defaultContainer, "GetStuff", edmFunction, new EdmPathExpression("Set"), true);
             ValidateError(
                 ValidationRules.OperationImportEntitySetExpressionIsInvalid,
+                model,
                 edmFunctionImport,
                 EdmErrorCode.OperationImportEntitySetExpressionIsInvalid,
                 Strings.EdmModel_Validator_Semantic_OperationImportEntitySetExpressionIsInvalid("GetStuff"));
@@ -144,13 +146,15 @@ namespace Microsoft.OData.Edm.Tests.Validation
         [Fact]
         public void OperationImportEntitySetReferencesEntitySetOnFunctionImportContainerShouldNotError()
         {
+            var model = new EdmModel();
             var defaultContainer = new EdmEntityContainer("f", "d");
-            var entitySet = defaultContainer.AddEntitySet("Set", DefaultValidEntityType.EntityDefinition());
+            defaultContainer.AddEntitySet("Set", DefaultValidEntityType.EntityDefinition());
+            model.AddElement(defaultContainer);
             var edmFunction = new EdmFunction("n.s", "GetStuff", EdmCoreModel.Instance.GetString(true));
             edmFunction.AddParameter("param", DefaultValidEntityType);
 
-            var edmFunctionImport = new EdmFunctionImport(defaultContainer, "GetStuff", edmFunction, new EdmEntitySetReferenceExpression(entitySet), false);
-            ValidateNoError(ValidationRules.OperationImportEntitySetExpressionIsInvalid, new EdmModel(), edmFunctionImport);
+            var edmFunctionImport = new EdmFunctionImport(defaultContainer, "GetStuff", edmFunction, new EdmPathExpression("Set"), false);
+            ValidateNoError(ValidationRules.OperationImportEntitySetExpressionIsInvalid, model, edmFunctionImport);
         }
 
         [Fact]
@@ -191,13 +195,16 @@ namespace Microsoft.OData.Edm.Tests.Validation
         public void OperationImportEntitySetReferencesBadEntityShouldNotError()
         {
             // Error should be skipped as this entityset will already be noted as a bad entity set by other rules anyway.
+            var model = new EdmModel();
             var defaultContainer = new EdmEntityContainer("f", "d");
+            model.AddElement(defaultContainer);
             var badEntitySet = new BadEntitySet("Set", defaultContainer, new List<EdmError>());
+            defaultContainer.AddElement(badEntitySet);
             var edmFunction = new EdmFunction("n.s", "GetStuff", EdmCoreModel.Instance.GetString(true));
             edmFunction.AddParameter("param", DefaultValidEntityType);
 
-            var edmFunctionImport = new EdmFunctionImport(defaultContainer, "GetStuff", edmFunction, new EdmEntitySetReferenceExpression(badEntitySet), true);
-            ValidationContext context = new ValidationContext(new EdmModel(), (object o) =>
+            var edmFunctionImport = new EdmFunctionImport(defaultContainer, "GetStuff", edmFunction, new EdmPathExpression("Set"), true);
+            ValidationContext context = new ValidationContext(model, (object o) =>
             {
                 if (o == badEntitySet)
                 {
@@ -439,8 +446,8 @@ namespace Microsoft.OData.Edm.Tests.Validation
             model.AddElement(function);
 
             var container = new EdmEntityContainer("ns", "container");
-            var entitySet = container.AddEntitySet("Set", DefaultValidEntityType.EntityDefinition());
-            var functionImport = container.AddFunctionImport("OtherName", function, new EdmEntitySetReferenceExpression(entitySet), true) as IEdmFunctionImport;
+            container.AddEntitySet("Set", DefaultValidEntityType.EntityDefinition());
+            var functionImport = container.AddFunctionImport("OtherName", function, new EdmPathExpression("Set"), true) as IEdmFunctionImport;
             model.AddElement(container);
 
             ValidateError(
@@ -461,8 +468,8 @@ namespace Microsoft.OData.Edm.Tests.Validation
             model.AddElement(function);
 
             var container = new EdmEntityContainer("ns", "container");
-            var entitySet = container.AddEntitySet("Set", DefaultValidEntityType.EntityDefinition());
-            var functionImport = container.AddFunctionImport("OtherName", function, new EdmEntitySetReferenceExpression(entitySet), false) as IEdmFunctionImport;
+            container.AddEntitySet("Set", DefaultValidEntityType.EntityDefinition());
+            var functionImport = container.AddFunctionImport("OtherName", function, new EdmPathExpression("Set"), false) as IEdmFunctionImport;
             model.AddElement(container);
 
             ValidateNoError(
