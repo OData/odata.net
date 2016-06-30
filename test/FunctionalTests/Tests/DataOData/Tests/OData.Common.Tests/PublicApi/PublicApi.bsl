@@ -489,32 +489,31 @@ public enum Microsoft.OData.Edm.EdmContainerElementKind : int {
 public enum Microsoft.OData.Edm.EdmExpressionKind : int {
 	BinaryConstant = 1
 	BooleanConstant = 2
-	Cast = 18
+	Cast = 17
 	Collection = 12
-	DateConstant = 25
+	DateConstant = 24
 	DateTimeOffsetConstant = 3
 	DecimalConstant = 4
 	DurationConstant = 9
-	EnumMember = 27
+	EnumMember = 26
 	FloatingConstant = 5
 	GuidConstant = 6
-	If = 17
+	If = 16
 	IntegerConstant = 7
-	IsType = 19
-	Labeled = 22
-	LabeledExpressionReference = 21
-	NavigationPropertyPath = 24
+	IsType = 18
+	Labeled = 21
+	LabeledExpressionReference = 20
+	NavigationPropertyPath = 23
 	None = 0
 	Null = 10
-	OperationApplication = 20
+	OperationApplication = 19
 	OperationReference = 15
 	ParameterReference = 14
 	Path = 13
-	PropertyPath = 23
-	PropertyReference = 16
+	PropertyPath = 22
 	Record = 11
 	StringConstant = 8
-	TimeOfDayConstant = 26
+	TimeOfDayConstant = 25
 }
 
 public enum Microsoft.OData.Edm.EdmMultiplicity : int {
@@ -3211,11 +3210,6 @@ public interface Microsoft.OData.Edm.Vocabularies.IEdmPropertyConstructor : IEdm
 	Microsoft.OData.Edm.IEdmExpression Value  { public abstract get; }
 }
 
-public interface Microsoft.OData.Edm.Vocabularies.IEdmPropertyReferenceExpression : IEdmElement, IEdmExpression {
-	Microsoft.OData.Edm.IEdmExpression Base  { public abstract get; }
-	Microsoft.OData.Edm.IEdmProperty ReferencedProperty  { public abstract get; }
-}
-
 public interface Microsoft.OData.Edm.Vocabularies.IEdmPropertyValue : IEdmDelayedValue {
 	string Name  { public abstract get; }
 }
@@ -3548,14 +3542,6 @@ public class Microsoft.OData.Edm.Vocabularies.EdmPropertyPathExpression : Micros
 	public EdmPropertyPathExpression (string[] path)
 
 	Microsoft.OData.Edm.EdmExpressionKind ExpressionKind  { public virtual get; }
-}
-
-public class Microsoft.OData.Edm.Vocabularies.EdmPropertyReferenceExpression : Microsoft.OData.Edm.EdmElement, IEdmElement, IEdmExpression, IEdmPropertyReferenceExpression {
-	public EdmPropertyReferenceExpression (Microsoft.OData.Edm.IEdmExpression baseExpression, Microsoft.OData.Edm.IEdmProperty referencedProperty)
-
-	Microsoft.OData.Edm.IEdmExpression Base  { public virtual get; }
-	Microsoft.OData.Edm.EdmExpressionKind ExpressionKind  { public virtual get; }
-	Microsoft.OData.Edm.IEdmProperty ReferencedProperty  { public virtual get; }
 }
 
 public class Microsoft.OData.Edm.Vocabularies.EdmPropertyValue : IEdmDelayedValue, IEdmPropertyValue {

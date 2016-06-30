@@ -170,10 +170,6 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
                 //// <EnumMember/>
                 CsdlElement<CsdlExpressionBase>(CsdlConstants.Element_EnumMember, this.OnEnumMemberExpression);
 
-            var propertyReferenceExpressionParser =
-                //// <PropertyReference>
-                CsdlElement<CsdlExpressionBase>(CsdlConstants.Element_PropertyReference, this.OnPropertyReferenceExpression);
-
             var ifExpressionParser =
                 //// <If>
                 CsdlElement<CsdlExpressionBase>(CsdlConstants.Element_If, this.OnIfExpression);
@@ -257,8 +253,6 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
                 collectionExpressionParser,
                 //// <LabeledElementReference/>
                 labeledElementReferenceExpressionParser,
-                //// <PropertyReference/>
-                propertyReferenceExpressionParser,
                 //// <PropertyValue/>
                 propertyValueParser,
                 //// <LabeledElement/>
@@ -273,7 +267,6 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
                 applyExpressionParser
             };
 
-            AddChildParsers(propertyReferenceExpressionParser, expressionParsers);
             AddChildParsers(ifExpressionParser, expressionParsers);
             AddChildParsers(castExpressionParser, expressionParsers);
             AddChildParsers(isTypeExpressionParser, expressionParsers);
@@ -718,15 +711,6 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
         {
             string enumMemberPath = this.RequiredEnumMemberPath(childValues.FirstText);
             return new CsdlEnumMemberExpression(enumMemberPath, element.Location);
-        }
-
-        private CsdlPropertyReferenceExpression OnPropertyReferenceExpression(XmlElementInfo element, XmlElementValueCollection childValues)
-        {
-            string name = Required(CsdlConstants.Attribute_Name);
-            return new CsdlPropertyReferenceExpression(
-                name,
-                childValues.ValuesOfType<CsdlExpressionBase>().FirstOrDefault(),
-                element.Location);
         }
 
         private CsdlOperationReferenceExpression OnFunctionReferenceExpression(XmlElementInfo element, XmlElementValueCollection childValues)

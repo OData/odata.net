@@ -810,60 +810,6 @@ namespace EdmLibTests.FunctionalTests
         }
 
         [TestMethod]
-        public void EdmPropertyReferenceExpression()
-        {
-            var e = new EdmPropertyReferenceExpression(new EdmStringConstant("base"), new EdmStructuralProperty(new EdmComplexType("NS", "Complex"), "p1", EdmCoreModel.Instance.GetBoolean(false), null));
-            Assert.AreEqual(EdmExpressionKind.PropertyReference, e.ExpressionKind, "e.ExpressionKind");
-            Assert.AreEqual("base", ((IEdmStringValue)e.Base).Value, "e.Base");
-            Assert.AreEqual("p1", e.ReferencedProperty.Name, "e.ReferencedProperty");
-            Assert.IsFalse(e.IsBad(), "e good");
-
-            try
-            {
-                new EdmPropertyReferenceExpression(null, new EdmStructuralProperty(new EdmComplexType("NS", "Complex2"), "p1", EdmCoreModel.Instance.GetBoolean(false), null));
-                Assert.Fail("exception expected");
-            }
-            catch (ArgumentNullException)
-            {
-            }
-
-            try
-            {
-                new EdmPropertyReferenceExpression(new EdmStringConstant("base"), null);
-                Assert.Fail("exception expected");
-            }
-            catch (ArgumentNullException)
-            {
-            }
-
-            var ee = new MutablePropertyReferenceExpression();
-            Assert.IsNull(ee.Base, "ee.Base");
-            Assert.IsNull(ee.ReferencedProperty, "ee.ReferencedProperty");
-            Assert.IsTrue(ee.IsBad(), "Expression is bad.");
-            Assert.AreEqual(2, ee.Errors().Count(), "Expression has errors");
-        }
-
-        private sealed class MutablePropertyReferenceExpression : IEdmPropertyReferenceExpression
-        {
-            public IEdmExpression Base
-            {
-                get;
-                set;
-            }
-
-            public IEdmProperty ReferencedProperty
-            {
-                get;
-                set;
-            }
-
-            public EdmExpressionKind ExpressionKind
-            {
-                get { return EdmExpressionKind.PropertyReference; }
-            }
-        }
-
-        [TestMethod]
         public void EdmPropertyConstructor()
         {
             var e = new EdmPropertyConstructor("n1", new EdmStringConstant("qwerty"));

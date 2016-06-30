@@ -186,9 +186,6 @@ namespace Microsoft.OData.Edm
                 case EdmExpressionKind.NavigationPropertyPath:
                     this.ProcessNavigationPropertyPathExpression((IEdmPathExpression)expression);
                     break;
-                case EdmExpressionKind.PropertyReference:
-                    this.ProcessPropertyReferenceExpression((IEdmPropertyReferenceExpression)expression);
-                    break;
                 case EdmExpressionKind.Record:
                     this.ProcessRecordExpression((IEdmRecordExpression)expression);
                     break;
@@ -684,15 +681,6 @@ namespace Microsoft.OData.Edm
             }
 
             this.VisitPropertyConstructors(expression.Properties);
-        }
-
-        protected virtual void ProcessPropertyReferenceExpression(IEdmPropertyReferenceExpression expression)
-        {
-            this.ProcessExpression(expression);
-            if (expression.Base != null)
-            {
-                this.VisitExpression(expression.Base);
-            }
         }
 
         protected virtual void ProcessPathExpression(IEdmPathExpression expression)

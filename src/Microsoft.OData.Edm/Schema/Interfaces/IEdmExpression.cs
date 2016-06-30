@@ -94,11 +94,6 @@ namespace Microsoft.OData.Edm
         OperationReference,
 
         /// <summary>
-        /// Represents an expression implementing <see cref="IEdmPropertyReferenceExpression"/>.
-        /// </summary>
-        PropertyReference,
-
-        /// <summary>
         /// Represents an expression implementing <see cref="IEdmIfExpression"/>.
         /// </summary>
         If,
