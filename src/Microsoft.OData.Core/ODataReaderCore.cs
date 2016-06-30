@@ -331,6 +331,34 @@ namespace Microsoft.OData
 #endif
 
         /// <summary>
+        /// Seek scope in the stack which is type of <typeparamref name="T"/>.
+        /// </summary>
+        /// <typeparam name="T">The type of scope to seek.</typeparam>
+        /// <param name="maxDepth">The max depth to seek.</param>
+        /// <returns>The scope with type of <typeparamref name="T"/></returns>
+        internal Scope SeekScope<T>(int maxDepth) where T : Scope
+        {
+            int count = 1;
+
+            foreach (Scope scope in this.scopes)
+            {
+                if (count > maxDepth)
+                {
+                    return null;
+                }
+
+                if (scope is T)
+                {
+                    return scope;
+                }
+
+                count++;
+            }
+
+            return null;
+        }
+
+        /// <summary>
         /// Implementation of the reader logic when in state 'Start'.
         /// </summary>
         /// <returns>true if more items can be read from the reader; otherwise false.</returns>

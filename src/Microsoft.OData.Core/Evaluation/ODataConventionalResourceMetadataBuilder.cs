@@ -62,6 +62,11 @@ namespace Microsoft.OData.Evaluation
         /// <summary>The list of computed stream properties.</summary>
         private List<ODataProperty> computedStreamProperties;
 
+        /// <summary>
+        /// Mark if we are at state of ResourceEnd, if it is true, GetProperties would concat computed stream properties.
+        /// </summary>
+        private bool isResourceEnd;
+
         /// <summary>The enumerator for unprocessed navigation links.</summary>
         private IEnumerator<ODataJsonLightReaderNestedResourceInfo> unprocessedNestedResourceInfos;
 
@@ -87,6 +92,7 @@ namespace Microsoft.OData.Evaluation
             this.uriBuilder = uriBuilder;
             this.metadataContext = metadataContext;
             this.processedNestedResourceInfos = new HashSet<string>(StringComparer.Ordinal);
+            this.isResourceEnd = true;  // Keep default behavior
         }
 
         /// <summary>
@@ -300,7 +306,24 @@ namespace Microsoft.OData.Evaluation
         /// <returns>The the computed and non-computed entity properties.</returns>
         internal override IEnumerable<ODataProperty> GetProperties(IEnumerable<ODataProperty> nonComputedProperties)
         {
-            return ODataUtilsInternal.ConcatEnumerables(nonComputedProperties, this.GetComputedStreamProperties(nonComputedProperties));
+            if (!isResourceEnd)
+            {
+                return nonComputedProperties;
+            }
+            else
+            {
+                return ODataUtilsInternal.ConcatEnumerables(nonComputedProperties, this.GetComputedStreamProperties(nonComputedProperties));
+            }
+        }
+
+        internal void StartResource()
+        {
+            this.isResourceEnd = false;
+        }
+
+        internal void EndResource()
+        {
+            this.isResourceEnd = true;
         }
 
         /// <summary>
@@ -556,32 +579,17 @@ namespace Microsoft.OData.Evaluation
         {
             Uri uri;
 
-            // check if has parent
-            ODataConventionalResourceMetadataBuilder parent = this.ParentMetadataBuilder as ODataConventionalResourceMetadataBuilder;
-            if (parent != null)
+            if (!TryComputeIdFromParent(out uri))
             {
-                // $expand scenario.  Get the parent id
-                uri = parent.GetId();
-
-                // And append cast (if needed).
-                // A cast segment if the navigation property is defined on a type derived from the entity
-                // type declared for the entity set
-                IODataResourceTypeContext typeContext = parent.resourceMetadataContext.TypeContext;
-                if (typeContext.NavigationSourceEntityTypeName != typeContext.ExpectedResourceTypeName)
-                {
-                    // Do not append type cast if we know that the navigation property is in base type, not in derived type.
-                    ODataResourceTypeContext.ODataResourceTypeContextWithModel typeContextWithModel = typeContext as ODataResourceTypeContext.ODataResourceTypeContextWithModel;
-                    if (typeContextWithModel == null || typeContextWithModel.NavigationSourceEntityType.FindProperty(this.resourceMetadataContext.TypeContext.NavigationSourceName) == null)
-                    {
-                        uri = new Uri(UriUtils.EnsureTaillingSlash(uri), parent.resourceMetadataContext.ActualResourceTypeName);
-                    }
-                }
-            }
-            else
-            {
-                // direct access scenario.
+                // Compute ID from context URL rather than from parent.
                 uri = this.uriBuilder.BuildBaseUri();
                 ODataUri odataUri = this.ODataUri ?? this.metadataContext.ODataUri;
+
+                if (odataUri == null || odataUri.Path == null)
+                {
+                    throw new ODataException(Strings.ODataMetadataBuilder_MissingParentIdOrContextUrl);
+                }
+
                 uri = this.GetContainingEntitySetUri(uri, odataUri);
             }
 
@@ -597,6 +605,45 @@ namespace Microsoft.OData.Evaluation
             }
 
             return uri;
+        }
+
+        private bool TryComputeIdFromParent(out Uri uri)
+        {
+            try
+            {
+                ODataConventionalResourceMetadataBuilder parent = this.ParentMetadataBuilder as ODataConventionalResourceMetadataBuilder;
+                if (parent != null && parent != this)
+                {
+                    // Get the parent id
+                    uri = parent.GetId();
+
+                    // And append cast (if needed).
+                    // A cast segment if the navigation property is defined on a type derived from the entity
+                    // type declared for the entity set
+                    IODataResourceTypeContext typeContext = parent.resourceMetadataContext.TypeContext;
+                    if (typeContext.NavigationSourceEntityTypeName != typeContext.ExpectedResourceTypeName)
+                    {
+                        // Do not append type cast if we know that the navigation property is in base type, not in derived type.
+                        ODataResourceTypeContext.ODataResourceTypeContextWithModel typeContextWithModel =
+                            typeContext as ODataResourceTypeContext.ODataResourceTypeContextWithModel;
+                        if (typeContextWithModel != null ||
+                            typeContextWithModel.NavigationSourceEntityType.FindProperty(
+                                this.resourceMetadataContext.TypeContext.NavigationSourceName) == null)
+                        {
+                            uri = new Uri(UriUtils.EnsureTaillingSlash(uri),
+                                parent.resourceMetadataContext.ActualResourceTypeName);
+                        }
+                    }
+
+                    return true;
+                }
+            }
+            catch (ODataException)
+            {
+            }
+
+            uri = null;
+            return false;
         }
 
         /// <summary>
@@ -656,11 +703,6 @@ namespace Microsoft.OData.Evaluation
         /// <returns>The resource path.</returns>
         private Uri GetContainingEntitySetUri(Uri baseUri, ODataUri odataUri)
         {
-            if (odataUri == null || odataUri.Path == null)
-            {
-                throw new ODataException(Strings.ODataMetadataBuilder_MissingODataUri);
-            }
-
             ODataPath path = odataUri.Path;
             List<ODataPathSegment> segments = path.ToList();
             ODataPathSegment lastSegment = segments.Last();

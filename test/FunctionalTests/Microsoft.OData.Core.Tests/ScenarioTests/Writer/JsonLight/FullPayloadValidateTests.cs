@@ -647,7 +647,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Writer.JsonLight
             ODataResource bobEntry = entryList[1];
             ODataResource aliceEntry = entryList[2];
 
-            charileEntry.Id.Should().Be("http://example.org/odata.svc/EntitySet(101)/Namespace.DerivedType/ContainedCollectionNavProp(102)/ContainedNavProp");
+            charileEntry.Id.Should().Be("http://example.org/odata.svc/EntitySet(101)/ContainedCollectionNavProp(102)/ContainedNavProp");
             bobEntry.Id.Should().Be("http://example.org/odata.svc/EntitySet(101)/ContainedCollectionNavProp(102)");
             aliceEntry.Id.Should().Be("http://example.org/odata.svc/EntitySet(101)");
         }
@@ -732,7 +732,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Writer.JsonLight
         }
 
         [Fact]
-        public void ReadingContainedWithSubContextUrlShouldThrow()
+        public void ReadingContainedWithSubContextUrl()
         {
             string payload = "{\"@odata.context\":\"http://example.org/odata.svc/$metadata#EntitySet(ID,Name,ExpandedNavProp,ContainedCollectionNavProp,ContainedNavProp,ContainedCollectionNavProp(ID),ContainedNavProp(ID,Name))/$entity\"," +
                                             "\"ID\":101,\"Name\":\"Alice\"," +
@@ -746,29 +746,25 @@ namespace Microsoft.OData.Tests.ScenarioTests.Writer.JsonLight
             message.Stream = new MemoryStream(Encoding.UTF8.GetBytes(payload));
             List<ODataResource> entryList = new List<ODataResource>();
 
-            Action readContainedEntry = () =>
+            using (var messageReader = new ODataMessageReader((IODataResponseMessage)message, null, Model))
             {
-                using (var messageReader = new ODataMessageReader((IODataResponseMessage)message, null, Model))
+                var reader = messageReader.CreateODataResourceReader();
+                while (reader.Read())
                 {
-                    var reader = messageReader.CreateODataResourceReader();
-                    while (reader.Read())
+                    switch (reader.State)
                     {
-                        switch (reader.State)
-                        {
-                            case ODataReaderState.ResourceEnd:
-                                entryList.Add(reader.Item as ODataResource);
-                                break;
-                        }
+                        case ODataReaderState.ResourceEnd:
+                            entryList.Add(reader.Item as ODataResource);
+                            break;
                     }
                 }
+            }
 
-                foreach (var oDataEntry in entryList)
-                {
-                    oDataEntry.Id.Should().NotBeNull();
-                }
-            };
+            foreach (var oDataEntry in entryList)
+            {
+                oDataEntry.Id.Should().NotBeNull();
+            }
 
-            readContainedEntry.ShouldThrow<ODataException>().WithMessage(ErrorStrings.ODataMetadataBuilder_MissingODataUri);
         }
         #endregion Containment Tests
 

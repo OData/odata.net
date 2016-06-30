@@ -3394,11 +3394,11 @@ namespace Microsoft.OData {
         }
 
         /// <summary>
-        /// A string like "ODataUri is missing when computing the id for contained instance, it may be caused by missing context url in the payload or missing ODataUri in the ODataMessageWriterSettings."
+        /// A string like "Parent id or contained context url is missing which is required to compute id for contained instance. Specify ODataUri in the ODataMessageWriterSettings or return parent id or context url in the payload."
         /// </summary>
-        internal static string ODataMetadataBuilder_MissingODataUri {
+        internal static string ODataMetadataBuilder_MissingParentIdOrContextUrl {
             get {
-                return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataMetadataBuilder_MissingODataUri);
+                return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataMetadataBuilder_MissingParentIdOrContextUrl);
             }
         }
 

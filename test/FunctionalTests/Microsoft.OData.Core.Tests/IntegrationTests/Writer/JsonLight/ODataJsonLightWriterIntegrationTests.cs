@@ -105,7 +105,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Writer.JsonLight
                 entitySet: containedEntitySet,
                 resourceType: containedEntitySet.Type as IEdmEntityType,
                 odataUri: null);
-            writeContainedEntry.ShouldThrow<ODataException>().WithMessage(ErrorStrings.ODataMetadataBuilder_MissingODataUri);
+            writeContainedEntry.ShouldThrow<ODataException>().WithMessage(ErrorStrings.ODataMetadataBuilder_MissingParentIdOrContextUrl);
         }
 
         [Fact]

@@ -505,7 +505,7 @@ namespace Microsoft.OData {
         internal const string ODataMetadataBuilder_MissingEntitySetUri = "ODataMetadataBuilder_MissingEntitySetUri";
         internal const string ODataMetadataBuilder_MissingSegmentForEntitySetUriSuffix = "ODataMetadataBuilder_MissingSegmentForEntitySetUriSuffix";
         internal const string ODataMetadataBuilder_MissingEntityInstanceUri = "ODataMetadataBuilder_MissingEntityInstanceUri";
-        internal const string ODataMetadataBuilder_MissingODataUri = "ODataMetadataBuilder_MissingODataUri";
+        internal const string ODataMetadataBuilder_MissingParentIdOrContextUrl = "ODataMetadataBuilder_MissingParentIdOrContextUrl";
         internal const string ODataJsonLightInputContext_EntityTypeMustBeCompatibleWithEntitySetBaseType = "ODataJsonLightInputContext_EntityTypeMustBeCompatibleWithEntitySetBaseType";
         internal const string ODataJsonLightInputContext_PayloadKindDetectionForRequest = "ODataJsonLightInputContext_PayloadKindDetectionForRequest";
         internal const string ODataJsonLightInputContext_OperationCannotBeNullForCreateParameterReader = "ODataJsonLightInputContext_OperationCannotBeNullForCreateParameterReader";

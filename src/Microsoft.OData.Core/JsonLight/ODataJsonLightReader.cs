@@ -107,6 +107,20 @@ namespace Microsoft.OData.JsonLight
         }
 
         /// <summary>
+        /// Returns nest info of current resource.
+        /// </summary>
+        private ODataNestedResourceInfo ParentNestedInfo
+        {
+            get
+            {
+                // NestInfo/Resource or NestInfo/ResourceSet/Resource
+                Scope scope = SeekScope<JsonLightNestedResourceInfoScope>(maxDepth: 3);
+
+                return scope != null ? (ODataNestedResourceInfo)scope.Item : null;
+            }
+        }
+
+        /// <summary>
         /// Implementation of the reader logic when in state 'Start'.
         /// </summary>
         /// <returns>true if more items can be read from the reader; otherwise false.</returns>
@@ -668,6 +682,33 @@ namespace Microsoft.OData.JsonLight
         /// </remarks>
         private bool ReadAtResourceStartImplementationSynchronously()
         {
+            if (this.CurrentResource != null && !this.IsReadingNestedPayload)
+            {
+                ODataResourceMetadataBuilder builder =
+                    this.jsonLightResourceDeserializer.MetadataContext.GetResourceMetadataBuilderForReader(
+                        this.CurrentResourceState,
+                        this.jsonLightInputContext.ODataSimplifiedOptions.EnableReadingKeyAsSegment);
+                if (builder != this.CurrentResource.MetadataBuilder)
+                {
+                    ODataConventionalResourceMetadataBuilder conventionalEntityMetadataBuilder = builder as ODataConventionalResourceMetadataBuilder;
+
+                    // If it's ODataConventionalEntityMetadataBuilder, then it means we need to build nested relation ship for it in containment case
+                    if (conventionalEntityMetadataBuilder != null)
+                    {
+                        conventionalEntityMetadataBuilder.StartResource();
+                        conventionalEntityMetadataBuilder.ODataUri = this.CurrentScope.ODataUri;
+                    }
+
+                    // Set the metadata builder and parent metadata builder for the resource itself
+                    this.CurrentResource.MetadataBuilder = builder;
+                    ODataNestedResourceInfo parentNestInfo = this.ParentNestedInfo;
+                    if (parentNestInfo != null && parentNestInfo.MetadataBuilder != null)
+                    {
+                        this.CurrentResource.MetadataBuilder.ParentMetadataBuilder = parentNestInfo.MetadataBuilder;
+                    }
+                }
+            }
+
             if (this.CurrentResource == null)
             {
                 Debug.Assert(this.IsExpandedLinkContent || this.CurrentResourceType.IsODataComplexTypeKind(), "null resource can only be reported in an expanded link or in collection of complex instance.");
@@ -1288,35 +1329,19 @@ namespace Microsoft.OData.JsonLight
         {
             IODataJsonLightReaderResourceState resourceState = this.CurrentResourceState;
 
-            // NOTE: the current resource will be null for an expanded null resource; no template
-            //       expansion for null entries.
-            //       there is no entity metadata builder for a resource from a nested payload
-            //       as stated in ReadAtResourceSetEndImplementationSynchronously().
             if (this.CurrentResource != null && !this.IsReadingNestedPayload)
             {
-                ODataResourceMetadataBuilder builder =
-                    this.jsonLightResourceDeserializer.MetadataContext.GetResourceMetadataBuilderForReader(
-                        this.CurrentResourceState,
-                        this.jsonLightInputContext.ODataSimplifiedOptions.EnableReadingKeyAsSegment);
-                if (builder != this.CurrentResource.MetadataBuilder)
+                // Builder should not be used outside the odataresource, lazy builder logic does not work here
+                // We should refactor this
+                foreach (string navigationPropertyName in this.CurrentResourceState.NavigationPropertiesRead)
                 {
-                    // Builder should not be used outside the odataresource, lazy builder logic does not work here
-                    // We should refactor this
-                    foreach (string navigationPropertyName in this.CurrentResourceState.NavigationPropertiesRead)
-                    {
-                        builder.MarkNestedResourceInfoProcessed(navigationPropertyName);
-                    }
+                    this.CurrentResource.MetadataBuilder.MarkNestedResourceInfoProcessed(navigationPropertyName);
+                }
 
-                    ODataConventionalResourceMetadataBuilder conventionalEntityMetadataBuilder = builder as ODataConventionalResourceMetadataBuilder;
-
-                    // If it's ODataConventionalEntityMetadataBuilder, then it means we need to build nested relation ship for it in containment case
-                    if (conventionalEntityMetadataBuilder != null)
-                    {
-                        conventionalEntityMetadataBuilder.ODataUri = this.CurrentScope.ODataUri;
-                    }
-
-                    // Set the metadata builder for the resource itself
-                    this.CurrentResource.MetadataBuilder = builder;
+                ODataConventionalResourceMetadataBuilder builder = this.CurrentResource.MetadataBuilder as ODataConventionalResourceMetadataBuilder;
+                if (builder != null)
+                {
+                    builder.EndResource();
                 }
             }
 

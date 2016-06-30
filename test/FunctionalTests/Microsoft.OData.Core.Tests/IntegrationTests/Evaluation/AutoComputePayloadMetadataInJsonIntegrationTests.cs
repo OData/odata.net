@@ -120,6 +120,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Evaluation
         private static readonly EdmEntityType DerivedType;
         private static readonly EdmEntityType AnotherEntityType;
         private static readonly EdmEntitySet EntitySet;
+        private static readonly EdmEntitySet AnotherEntitySet;
         private static readonly EdmModel Model;
 
         private const string PayloadWithNoMetadata = "{\"ID\":123,\"ExpandedNavLink\":[]}";
@@ -291,12 +292,48 @@ namespace Microsoft.OData.Tests.IntegrationTests.Evaluation
                 ContainsTarget = false
             });
 
+            // contained on derived
+            DerivedType.AddUnidirectionalNavigation(new EdmNavigationPropertyInfo()
+            {
+                Target = AnotherEntityType,
+                TargetMultiplicity = EdmMultiplicity.Many,
+                Name = "ContainedNavPropOnDerived",
+                ContainsTarget = true
+            });
+
+            DerivedType.AddUnidirectionalNavigation(new EdmNavigationPropertyInfo()
+            {
+                Target = AnotherEntityType,
+                TargetMultiplicity = EdmMultiplicity.One,
+                Name = "ContainedNonCollectionNavPropOnDerived",
+                ContainsTarget = true
+            });
+
+            // contained is derived
+            AnotherEntityType.AddUnidirectionalNavigation(new EdmNavigationPropertyInfo()
+            {
+                Target = DerivedType,
+                TargetMultiplicity = EdmMultiplicity.Many,
+                Name = "ContainedNavPropIsDerived",
+                ContainsTarget = true
+            });
+
+            AnotherEntityType.AddUnidirectionalNavigation(new EdmNavigationPropertyInfo()
+            {
+                Target = DerivedType,
+                TargetMultiplicity = EdmMultiplicity.One,
+                Name = "ContainedNonCollectionNavPropIsDerived",
+                ContainsTarget = true
+            });
+
             var container = new EdmEntityContainer("Namespace", "Container");
             EntitySet = container.AddEntitySet("EntitySet", EntityType);
 
             EntitySet.AddNavigationTarget(deferredNavLinkProp, EntitySet);
             EntitySet.AddNavigationTarget(expandedNavLinkProp, EntitySet);
             EntitySet.AddNavigationTarget(navLinkDeclaredOnlyInModelProp, EntitySet);
+
+            AnotherEntitySet = container.AddEntitySet("AnotherEntitySet", AnotherEntityType);
 
             Model = new EdmModel();
             Model.AddElement(EntityType);
@@ -749,7 +786,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Evaluation
 
             string result = this.GetWriterOutputForContentTypeAndKnobValue("application/json;odata.metadata=full", true, itemsToWrite, Model, EntitySet, DerivedType, null, null, "EntitySet");
 
-            Uri containedId = new Uri("http://example.com/EntitySet(345)/ContainedNonCollectionNavProp");
+            Uri containedId = new Uri("http://example.com/EntitySet(345)/Namespace.DerivedType/ContainedNonCollectionNavProp");
             this.entryWithOnlyData.Id.Should().Be(containedId);
         }
 
@@ -1671,6 +1708,296 @@ namespace Microsoft.OData.Tests.IntegrationTests.Evaluation
             this.GetWriterOutputForContentTypeAndKnobValue("application/json;odata.metadata=minimal", true, itemsToWrite, edmModel: Model, edmEntitySet: null, edmEntityType: EntityType, selectClause: selectClause, expandClause: expandClause)
                 .Should().Be(expectedPayload);
         }
+
+        #region compute id for containment in reader
+        [Fact]
+        public void ReadContainedEntityWithoutContextUrl()
+        {
+            const string payload =
+                "{" +
+                    "\"@odata.context\":\"http://example.com/$metadata#EntitySet/$entity\"," +
+                    "\"ExpandedNavLink\":[{\"ID\":123,\"Name\":\"Bob\"}]," +
+                    "\"AnotherContainedNavProp\":[{\"ID\":123,\"Name\":\"Bob\"}]," +
+                    "\"AnotherContainedNonCollectionNavProp\":{\"ID\":123,\"Name\":\"Bob\"}," +
+                    "\"ID\":1" +
+                "}";
+
+            var entryList = ReadPayload(payload, EntitySet, EntityType);
+
+            ODataResource entry = entryList[0];
+            entry.Id.Should().Be(new Uri("http://example.com/EntitySet(123)"));
+
+            entry = entryList[1];
+            entry.Id.Should().Be(new Uri("http://example.com/EntitySet(1)/AnotherContainedNavProp(123)"));
+
+            entry = entryList[2];
+            entry.Id.Should().Be(new Uri("http://example.com/EntitySet(1)/AnotherContainedNonCollectionNavProp"));
+
+            entry = entryList[3];
+            entry.Id.Should().Be(new Uri("http://example.com/EntitySet(1)"));
+        }
+
+        [Fact]
+        public void ReadContainedEntityOnDerivedWithoutContextUrl()
+        {
+            const string payload =
+                "{" +
+                    "\"@odata.context\":\"http://example.com/$metadata#EntitySet/$entity\"," +
+                    "\"@odata.type\":\"#Namespace.DerivedType\", " +
+                    "\"ExpandedNavLink\":[{\"ID\":123,\"Name\":\"Bob\"}]," +
+                    "\"AnotherContainedNavProp\":[{\"ID\":123,\"Name\":\"Bob\"}]," +
+                    "\"AnotherContainedNonCollectionNavProp\":{\"ID\":123,\"Name\":\"Bob\"}," +
+                    "\"ID\":1" +
+                "}";
+
+            var entryList = ReadPayload(payload, EntitySet, EntityType);
+
+            ODataResource entry = entryList[0];
+            entry.Id.Should().Be(new Uri("http://example.com/EntitySet(123)"));
+
+            entry = entryList[1];
+            entry.Id.Should().Be(new Uri("http://example.com/EntitySet(1)/Namespace.DerivedType/AnotherContainedNavProp(123)"));
+
+            entry = entryList[2];
+            entry.Id.Should().Be(new Uri("http://example.com/EntitySet(1)/Namespace.DerivedType/AnotherContainedNonCollectionNavProp"));
+
+            entry = entryList[3];
+            entry.Id.Should().Be(new Uri("http://example.com/EntitySet(1)"));
+        }
+
+        [Fact]
+        public void ShouldThrowToAccessContainedIdIfParentIdIsNotPresent()
+        {
+            const string payload =
+                "{" +
+                    "\"@odata.context\":\"http://example.com/$metadata#EntitySet/$entity\"," +
+                    "\"AnotherContainedNavProp\":[{\"ID\":123,\"Name\":\"Bob\"}]," +
+                    "\"AnotherContainedNonCollectionNavProp\":{\"ID\":123,\"Name\":\"Bob\"}" +
+                "}";
+
+            var entryList = ReadPayload(payload, EntitySet, EntityType);
+
+            ODataResource entry = entryList[0];
+            Action getId = ()=> entry.Id.Should().Be(new Uri(""));
+            getId.ShouldThrow<ODataException>().WithMessage(Strings.ODataMetadataBuilder_MissingParentIdOrContextUrl);
+
+            entry = entryList[1];
+            getId = () => entry.Id.Should().Be(new Uri(""));
+            getId.ShouldThrow<ODataException>().WithMessage(Strings.ODataMetadataBuilder_MissingParentIdOrContextUrl);
+        }
+
+
+        [Fact]
+        public void ShouldNotThrowToAccessContainedIdIfContextUrlIsPresent()
+        {
+            const string payload =
+                "{" +
+                    "\"@odata.context\":\"http://example.com/$metadata#EntitySet/$entity\"," +
+                    "\"AnotherContainedNavProp@odata.context\":\"http://example.com/$metadata#EntitySet(1)/AnotherContainedNavProp\"," +
+                    "\"AnotherContainedNavProp\":[{\"ID\":123,\"Name\":\"Bob\"}]," +
+                    "\"AnotherContainedNonCollectionNavProp@odata.context\":\"http://example.com/$metadata#EntitySet(1)/AnotherContainedNonCollectionNavProp/$entity\"," +
+                    "\"AnotherContainedNonCollectionNavProp\":{\"ID\":123,\"Name\":\"Bob\"}" +
+                "}";
+
+            var entryList = ReadPayload(payload, EntitySet, EntityType);
+
+            ODataResource entry = entryList[0];
+            entry.Id.Should().Be(new Uri("http://example.com/EntitySet(1)/AnotherContainedNavProp(123)"));
+
+            entry = entryList[1];
+            entry.Id.Should().Be(new Uri("http://example.com/EntitySet(1)/AnotherContainedNonCollectionNavProp"));
+        }
+
+        [Fact]
+        public void ShouldThrowToAccessContainedIdIfParentIdAndContextUrlBothNotPresent()
+        {
+            const string payload =
+                "{" +
+                    "\"@odata.context\":\"http://example.com/$metadata#EntitySet/$entity\"," +
+                    "\"AnotherContainedNavProp\":[{\"ID\":123,\"Name\":\"Bob\"}]," +
+                    "\"AnotherContainedNonCollectionNavProp\":{\"ID\":123,\"Name\":\"Bob\"}" +
+                "}";
+
+            var entryList = ReadPayload(payload, EntitySet, EntityType);
+
+            ODataResource entry = entryList[0];
+            Action getId = () => entry.Id.Should().Be(new Uri(""));
+            getId.ShouldThrow<ODataException>().WithMessage(Strings.ODataMetadataBuilder_MissingParentIdOrContextUrl);
+
+            entry = entryList[1];
+            getId = () => entry.Id.Should().Be(new Uri(""));
+            getId.ShouldThrow<ODataException>().WithMessage(Strings.ODataMetadataBuilder_MissingParentIdOrContextUrl);
+        }
+
+        [Fact]
+        public void ReadNestedContainedWithoutContextUrl()
+        {
+            const string payload =
+                "{" +
+                    "\"@odata.context\":\"http://example.com/$metadata#EntitySet/$entity\"," +
+                    "\"ContainedNavProp\":[{" +
+                        "\"ID\":11," +
+                        "\"Name\":\"Bob\"," +
+                        "\"AnotherContainedNavProp\":[{\"ID\":111,\"Name\":\"Bob\"}]," +
+                        "\"AnotherContainedNonCollectionNavProp\":{\"ID\":112,\"Name\":\"Bob\"}" +
+                    "}]," +
+                    "\"ContainedNonCollectionNavProp\":{" +
+                        "\"ID\":22," +
+                        "\"Name\":\"Bob\"," +
+                        "\"AnotherContainedNavProp\":[{\"ID\":221,\"Name\":\"Bob\"}]," +
+                        "\"AnotherContainedNonCollectionNavProp\":{\"ID\":222,\"Name\":\"Bob\"}" +
+                    "}," +
+                    "\"ID\":1" +
+                "}";
+
+            var entryList = ReadPayload(payload, EntitySet, EntityType);
+
+            ODataResource entry = entryList[0];
+            entry.Id.Should().Be(new Uri("http://example.com/EntitySet(1)/ContainedNavProp(11)/AnotherContainedNavProp(111)"));
+            entry.TypeName.Should().Be("Namespace.AnotherEntityType");
+
+            entry = entryList[1];
+            entry.Id.Should().Be(new Uri("http://example.com/EntitySet(1)/ContainedNavProp(11)/AnotherContainedNonCollectionNavProp"));
+
+            entry = entryList[2];
+            entry.Id.Should().Be(new Uri("http://example.com/EntitySet(1)/ContainedNavProp(11)"));
+
+            entry = entryList[3];
+            entry.Id.Should().Be(new Uri("http://example.com/EntitySet(1)/ContainedNonCollectionNavProp/AnotherContainedNavProp(221)"));
+
+            entry = entryList[4];
+            entry.Id.Should().Be(new Uri("http://example.com/EntitySet(1)/ContainedNonCollectionNavProp/AnotherContainedNonCollectionNavProp"));
+
+            entry = entryList[5];
+            entry.Id.Should().Be(new Uri("http://example.com/EntitySet(1)/ContainedNonCollectionNavProp"));
+
+            entry = entryList[6];
+            entry.Id.Should().Be(new Uri("http://example.com/EntitySet(1)"));
+        }
+
+        [Fact]
+        public void ReadNestedDerivedContainedWithoutContextUrl()
+        {
+            const string payload =
+                "{" +
+                    "\"@odata.context\":\"http://example.com/$metadata#AnotherEntitySet/$entity\"," +
+                    "\"ContainedNavPropIsDerived\":[{" +
+                        "\"ID\":11," +
+                        "\"Name\":\"Bob\"," +
+                        "\"AnotherContainedNavProp\":[{\"ID\":111,\"Name\":\"Bob\"}]," +
+                        "\"AnotherContainedNonCollectionNavProp\":{\"ID\":112,\"Name\":\"Bob\"}" +
+                    "}]," +
+                    "\"ContainedNonCollectionNavPropIsDerived\":{" +
+                        "\"ID\":22," +
+                        "\"Name\":\"Bob\"," +
+                        "\"AnotherContainedNavProp\":[{\"ID\":221,\"Name\":\"Bob\"}]," +
+                        "\"AnotherContainedNonCollectionNavProp\":{\"ID\":222,\"Name\":\"Bob\"}" +
+                    "}," +
+                    "\"ID\":1" +
+                "}";
+
+            var entryList = ReadPayload(payload, AnotherEntitySet, AnotherEntityType);
+
+            ODataResource entry = entryList[0];
+            entry.Id.Should().Be(new Uri("http://example.com/AnotherEntitySet(1)/ContainedNavPropIsDerived(11)/AnotherContainedNavProp(111)"));
+            entry.TypeName.Should().Be("Namespace.AnotherEntityType");
+
+            entry = entryList[1];
+            entry.Id.Should().Be(new Uri("http://example.com/AnotherEntitySet(1)/ContainedNavPropIsDerived(11)/AnotherContainedNonCollectionNavProp"));
+
+            entry = entryList[2];
+            entry.Id.Should().Be(new Uri("http://example.com/AnotherEntitySet(1)/ContainedNavPropIsDerived(11)"));
+
+            entry = entryList[3];
+            entry.Id.Should().Be(new Uri("http://example.com/AnotherEntitySet(1)/ContainedNonCollectionNavPropIsDerived/AnotherContainedNavProp(221)"));
+
+            entry = entryList[4];
+            entry.Id.Should().Be(new Uri("http://example.com/AnotherEntitySet(1)/ContainedNonCollectionNavPropIsDerived/AnotherContainedNonCollectionNavProp"));
+
+            entry = entryList[5];
+            entry.Id.Should().Be(new Uri("http://example.com/AnotherEntitySet(1)/ContainedNonCollectionNavPropIsDerived"));
+
+            entry = entryList[6];
+            entry.Id.Should().Be(new Uri("http://example.com/AnotherEntitySet(1)"));
+        }
+
+        [Fact]
+        public void ReadDeepContainedWithoutContextUrl()
+        {
+            const string payload =
+                "{" +
+                    "\"@odata.context\":\"http://example.com/$metadata#EntitySet/$entity\"," +
+                    "\"ExpandedNavLink\":[{" +
+                        "\"@odata.type\":\"#Namespace.DerivedType\", " +
+                        "\"ID\":123," +
+                        "\"Name\":\"Bob\"," +
+                        "\"AnotherContainedNavProp\":[{\"ID\":123,\"Name\":\"Bob\"}]," +
+                        "\"AnotherContainedNonCollectionNavProp\":{\"ID\":123,\"Name\":\"Bob\"}" +
+                    "}]," +
+                    "\"ID\":1" +
+                "}";
+
+            var entryList = ReadPayload(payload, EntitySet, EntityType);
+
+            ODataResource entry = entryList[0];
+            entry.Id.Should().Be(new Uri("http://example.com/EntitySet(123)/Namespace.DerivedType/AnotherContainedNavProp(123)"));
+            entry.TypeName.Should().Be("Namespace.AnotherEntityType");
+
+            entry = entryList[1];
+            entry.Id.Should().Be(new Uri("http://example.com/EntitySet(123)/Namespace.DerivedType/AnotherContainedNonCollectionNavProp"));
+
+            entry = entryList[2];
+            entry.Id.Should().Be(new Uri("http://example.com/EntitySet(123)"));
+        }
+
+        [Fact]
+        public void ShouldIgnoreContainedContextUrlInPayloadIfIsComputable()
+        {
+            const string payload =
+                "{" +
+                    "\"@odata.context\":\"http://example.com/$metadata#EntitySet/$entity\"," +
+                    "\"ID\":1," +
+                    "\"AnotherContainedNavProp@odata.context\":\"http://example.com/$metadata#EntitySet(123)/AnotherContainedNavProp\"," +
+                    "\"AnotherContainedNavProp\":[{\"ID\":123,\"Name\":\"Bob\"}]," +
+                    "\"AnotherContainedNonCollectionNavProp@odata.context\":\"http://example.com/$metadata#EntitySet(123)/AnotherContainedNonCollectionNavProp/$entity\"," +
+                    "\"AnotherContainedNonCollectionNavProp\":{\"ID\":123,\"Name\":\"Bob\"}" +
+                "}";
+
+            var entryList = ReadPayload(payload, EntitySet, EntityType);
+
+            ODataResource entry = entryList[0];
+            entry.Id.Should().Be(new Uri("http://example.com/EntitySet(1)/AnotherContainedNavProp(123)"));
+
+            entry = entryList[1];
+            entry.Id.Should().Be(new Uri("http://example.com/EntitySet(1)/AnotherContainedNonCollectionNavProp"));
+        }
+
+        private List<ODataResource> ReadPayload(string payload, IEdmNavigationSource entitySet, IEdmStructuredType entityType)
+        {
+            InMemoryMessage message = new InMemoryMessage();
+            message.SetHeader("Content-Type", "application/json;odata.metadata=minimal");
+            message.Stream = new MemoryStream(Encoding.UTF8.GetBytes(payload));
+
+            List<ODataResource> entryList = new List<ODataResource>();
+
+            using (var messageReader = new ODataMessageReader((IODataResponseMessage)message, null, Model))
+            {
+                var reader = messageReader.CreateODataResourceReader(entitySet, entityType);
+                while (reader.Read())
+                {
+                    switch (reader.State)
+                    {
+                        case ODataReaderState.ResourceEnd:
+                            entryList.Add((ODataResource)reader.Item);
+                            break;
+                    }
+                }
+            }
+
+            return entryList;
+        }
+
+        #endregion
 
         private string GetWriterOutputForEntryWithPayloadMetadata(
             string contentType,
