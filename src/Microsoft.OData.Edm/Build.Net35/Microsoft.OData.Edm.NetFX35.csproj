@@ -109,9 +109,6 @@
     <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Parsing\Ast\CsdlLabeledExpressionReferenceExpression.cs">
       <Link>Microsoft\OData\Edm\Csdl\Parsing\Ast\CsdlLabeledExpressionReferenceExpression.cs</Link>
     </Compile>
-    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Parsing\Ast\CsdlParameterReferenceExpression.cs">
-      <Link>Microsoft\OData\Edm\Csdl\Parsing\Ast\CsdlParameterReferenceExpression.cs</Link>
-    </Compile>
     <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Parsing\Ast\CsdlPathExpression.cs">
       <Link>Microsoft\OData\Edm\Csdl\Parsing\Ast\CsdlPathExpression.cs</Link>
     </Compile>
@@ -276,9 +273,6 @@
     </Compile>
     <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Semantics\CsdlSemanticsNullExpression.cs">
       <Link>Microsoft\OData\Edm\Csdl\Semantics\CsdlSemanticsNullExpression.cs</Link>
-    </Compile>
-    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Semantics\CsdlSemanticsParameterReferenceExpression.cs">
-      <Link>Microsoft\OData\Edm\Csdl\Semantics\CsdlSemanticsParameterReferenceExpression.cs</Link>
     </Compile>
     <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Semantics\CsdlSemanticsPathExpression.cs">
       <Link>Microsoft\OData\Edm\Csdl\Semantics\CsdlSemanticsPathExpression.cs</Link>
@@ -1283,9 +1277,6 @@
     <Compile Include="..\Vocabularies\Expressions\EdmOperationReferenceExpression.cs">
       <Link>Microsoft\OData\Edm\Vocabularies\Expressions\EdmOperationReferenceExpression.cs</Link>
     </Compile>
-    <Compile Include="..\Vocabularies\Expressions\EdmParameterReferenceExpression.cs">
-      <Link>Microsoft\OData\Edm\Vocabularies\Expressions\EdmParameterReferenceExpression.cs</Link>
-    </Compile>
     <Compile Include="..\Vocabularies\Expressions\EdmPropertyConstructor.cs">
       <Link>Microsoft\OData\Edm\Vocabularies\Expressions\EdmPropertyConstructor.cs</Link>
     </Compile>
@@ -1351,9 +1342,6 @@
     </Compile>
     <Compile Include="..\Vocabularies\Expressions\IEdmOperationReferenceExpression.cs">
       <Link>Microsoft\OData\Edm\Vocabularies\Expressions\IEdmOperationReferenceExpression.cs</Link>
-    </Compile>
-    <Compile Include="..\Vocabularies\Expressions\IEdmParameterReferenceExpression.cs">
-      <Link>Microsoft\OData\Edm\Vocabularies\Expressions\IEdmParameterReferenceExpression.cs</Link>
     </Compile>
     <Compile Include="..\Vocabularies\Expressions\IEdmPropertyConstructor.cs">
       <Link>Microsoft\OData\Edm\Vocabularies\Expressions\IEdmPropertyConstructor.cs</Link>

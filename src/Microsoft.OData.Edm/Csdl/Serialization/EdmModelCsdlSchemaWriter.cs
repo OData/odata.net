@@ -613,13 +613,6 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
             }
         }
 
-        internal void WriteParameterReferenceExpressionElement(IEdmParameterReferenceExpression expression)
-        {
-            this.xmlWriter.WriteStartElement(CsdlConstants.Element_ParameterReference);
-            this.WriteRequiredAttribute(CsdlConstants.Attribute_Name, expression.ReferencedParameter, ParameterAsXml);
-            this.WriteEndElement();
-        }
-
         internal void WriteOperationReferenceExpressionElement(IEdmOperationReferenceExpression expression)
         {
             this.xmlWriter.WriteStartElement(CsdlConstants.Element_FunctionReference);
@@ -698,11 +691,6 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
             this.WriteRequiredAttribute(CsdlConstants.Attribute_Target, binding.Target.Name, EdmValueWriter.StringAsXml);
 
             this.xmlWriter.WriteEndElement();
-        }
-
-        private static string ParameterAsXml(IEdmOperationParameter parameter)
-        {
-            return parameter.Name;
         }
 
         private static string EnumMemberAsXml(IEnumerable<IEdmEnumMember> members)

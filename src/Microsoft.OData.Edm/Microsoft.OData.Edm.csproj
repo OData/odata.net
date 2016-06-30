@@ -65,7 +65,6 @@
     <Compile Include="Csdl\Parsing\Ast\CsdlIsTypeExpression.cs" />
     <Compile Include="Csdl\Parsing\Ast\CsdlLabeledExpression.cs" />
     <Compile Include="Csdl\Parsing\Ast\CsdlLabeledExpressionReferenceExpression.cs" />
-    <Compile Include="Csdl\Parsing\Ast\CsdlParameterReferenceExpression.cs" />
     <Compile Include="Csdl\Parsing\Ast\CsdlPathExpression.cs" />
     <Compile Include="Csdl\Parsing\Ast\CsdlPropertyPathExpression.cs" />
     <Compile Include="Csdl\Parsing\Ast\CsdlAnnotation.cs" />
@@ -121,7 +120,6 @@
     <Compile Include="Csdl\Semantics\CsdlSemanticsIntConstantExpression.cs" />
     <Compile Include="Csdl\Semantics\CsdlSemanticsNamedTypeReference.cs" />
     <Compile Include="Csdl\Semantics\CsdlSemanticsNullExpression.cs" />
-    <Compile Include="Csdl\Semantics\CsdlSemanticsParameterReferenceExpression.cs" />
     <Compile Include="Csdl\Semantics\CsdlSemanticsPathExpression.cs" />
     <Compile Include="Csdl\Semantics\CsdlSemanticsPropertyConstructor.cs" />
     <Compile Include="Csdl\Semantics\CsdlSemanticsPropertyPathExpression.cs" />
@@ -268,7 +266,6 @@
     <Compile Include="Vocabularies\Expressions\EdmNavigationPropertyPathExpression.cs" />
     <Compile Include="Vocabularies\Expressions\EdmNullExpression.cs" />
     <Compile Include="Vocabularies\Expressions\EdmOperationReferenceExpression.cs" />
-    <Compile Include="Vocabularies\Expressions\EdmParameterReferenceExpression.cs" />
     <Compile Include="Vocabularies\Expressions\EdmPropertyConstructor.cs" />
     <Compile Include="Vocabularies\Expressions\EdmPropertyPathExpression.cs" />
     <Compile Include="Vocabularies\Expressions\EdmRecordExpression.cs" />
@@ -291,7 +288,6 @@
     <Compile Include="Vocabularies\Expressions\IEdmLabeledExpressionReferenceExpression.cs" />
     <Compile Include="Vocabularies\Expressions\IEdmNullExpression.cs" />
     <Compile Include="Vocabularies\Expressions\IEdmOperationReferenceExpression.cs" />
-    <Compile Include="Vocabularies\Expressions\IEdmParameterReferenceExpression.cs" />
     <Compile Include="Vocabularies\Expressions\IEdmPropertyConstructor.cs" />
     <Compile Include="Vocabularies\Expressions\IEdmRecordExpression.cs" />
     <Compile Include="Vocabularies\Expressions\IEdmStringConstantExpression.cs" />

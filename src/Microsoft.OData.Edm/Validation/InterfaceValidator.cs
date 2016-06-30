@@ -1301,10 +1301,6 @@ namespace Microsoft.OData.Edm.Validation
                             expressionKindError = CheckForInterfaceKindValueMismatchError<IEdmExpression, EdmExpressionKind, IEdmPathExpression>(expression, expression.ExpressionKind, "ExpressionKind");
                             break;
 
-                        case EdmExpressionKind.ParameterReference:
-                            expressionKindError = CheckForInterfaceKindValueMismatchError<IEdmExpression, EdmExpressionKind, IEdmParameterReferenceExpression>(expression, expression.ExpressionKind, "ExpressionKind");
-                            break;
-
                         case EdmExpressionKind.OperationReference:
                             expressionKindError = CheckForInterfaceKindValueMismatchError<IEdmExpression, EdmExpressionKind, IEdmOperationReferenceExpression>(expression, expression.ExpressionKind, "ExpressionKind");
                             break;
@@ -1433,22 +1429,6 @@ namespace Microsoft.OData.Edm.Validation
                 ProcessEnumerable(expression, expression.Path, "Path", segments, ref errors);
 
                 return errors;
-            }
-        }
-
-        private sealed class VisitorOfIEdmParameterReferenceExpression : VisitorOfT<IEdmParameterReferenceExpression>
-        {
-            protected override IEnumerable<EdmError> VisitT(IEdmParameterReferenceExpression expression, List<object> followup, List<object> references)
-            {
-                if (expression.ReferencedParameter != null)
-                {
-                    references.Add(expression.ReferencedParameter);
-                    return null;
-                }
-                else
-                {
-                    return new EdmError[] { CreatePropertyMustNotBeNullError(expression, "ReferencedParameter") };
-                }
             }
         }
 

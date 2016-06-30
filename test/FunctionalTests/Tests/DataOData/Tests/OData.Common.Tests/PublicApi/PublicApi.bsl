@@ -489,31 +489,30 @@ public enum Microsoft.OData.Edm.EdmContainerElementKind : int {
 public enum Microsoft.OData.Edm.EdmExpressionKind : int {
 	BinaryConstant = 1
 	BooleanConstant = 2
-	Cast = 17
+	Cast = 16
 	Collection = 12
-	DateConstant = 24
+	DateConstant = 23
 	DateTimeOffsetConstant = 3
 	DecimalConstant = 4
 	DurationConstant = 9
-	EnumMember = 26
+	EnumMember = 25
 	FloatingConstant = 5
 	GuidConstant = 6
-	If = 16
+	If = 15
 	IntegerConstant = 7
-	IsType = 18
-	Labeled = 21
-	LabeledExpressionReference = 20
-	NavigationPropertyPath = 23
+	IsType = 17
+	Labeled = 20
+	LabeledExpressionReference = 19
+	NavigationPropertyPath = 22
 	None = 0
 	Null = 10
-	OperationApplication = 19
-	OperationReference = 15
-	ParameterReference = 14
+	OperationApplication = 18
+	OperationReference = 14
 	Path = 13
-	PropertyPath = 22
+	PropertyPath = 21
 	Record = 11
 	StringConstant = 8
-	TimeOfDayConstant = 25
+	TimeOfDayConstant = 24
 }
 
 public enum Microsoft.OData.Edm.EdmMultiplicity : int {
@@ -3198,10 +3197,6 @@ public interface Microsoft.OData.Edm.Vocabularies.IEdmOperationReferenceExpressi
 	Microsoft.OData.Edm.IEdmOperation ReferencedOperation  { public abstract get; }
 }
 
-public interface Microsoft.OData.Edm.Vocabularies.IEdmParameterReferenceExpression : IEdmElement, IEdmExpression {
-	Microsoft.OData.Edm.IEdmOperationParameter ReferencedParameter  { public abstract get; }
-}
-
 public interface Microsoft.OData.Edm.Vocabularies.IEdmPrimitiveValue : IEdmElement, IEdmValue {
 }
 
@@ -3520,13 +3515,6 @@ public class Microsoft.OData.Edm.Vocabularies.EdmOperationReferenceExpression : 
 
 	Microsoft.OData.Edm.EdmExpressionKind ExpressionKind  { public virtual get; }
 	Microsoft.OData.Edm.IEdmOperation ReferencedOperation  { public virtual get; }
-}
-
-public class Microsoft.OData.Edm.Vocabularies.EdmParameterReferenceExpression : Microsoft.OData.Edm.EdmElement, IEdmElement, IEdmExpression, IEdmParameterReferenceExpression {
-	public EdmParameterReferenceExpression (Microsoft.OData.Edm.IEdmOperationParameter referencedParameter)
-
-	Microsoft.OData.Edm.EdmExpressionKind ExpressionKind  { public virtual get; }
-	Microsoft.OData.Edm.IEdmOperationParameter ReferencedParameter  { public virtual get; }
 }
 
 public class Microsoft.OData.Edm.Vocabularies.EdmPropertyConstructor : Microsoft.OData.Edm.EdmElement, IEdmElement, IEdmPropertyConstructor {

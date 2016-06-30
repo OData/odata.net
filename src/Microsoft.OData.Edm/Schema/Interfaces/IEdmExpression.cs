@@ -84,11 +84,6 @@ namespace Microsoft.OData.Edm
         Path,
 
         /// <summary>
-        /// Represents an expression implementing <see cref="IEdmParameterReferenceExpression"/>.
-        /// </summary>
-        ParameterReference,
-
-        /// <summary>
         /// Represents an expression implementing <see cref="IEdmOperationReferenceExpression"/>.
         /// </summary>
         OperationReference,

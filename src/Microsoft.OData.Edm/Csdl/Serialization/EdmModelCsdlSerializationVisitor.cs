@@ -367,11 +367,6 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
             this.schemaWriter.WriteNavigationPropertyPathExpressionElement(expression);
         }
 
-        protected override void ProcessParameterReferenceExpression(IEdmParameterReferenceExpression expression)
-        {
-            this.schemaWriter.WriteParameterReferenceExpressionElement(expression);
-        }
-
         protected override void ProcessCollectionExpression(IEdmCollectionExpression expression)
         {
             this.BeginElement(expression, this.schemaWriter.WriteCollectionExpressionElementHeader);

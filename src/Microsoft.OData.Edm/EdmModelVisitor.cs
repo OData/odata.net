@@ -165,9 +165,6 @@ namespace Microsoft.OData.Edm
                 case EdmExpressionKind.IsType:
                     this.ProcessIsTypeExpression((IEdmIsTypeExpression)expression);
                     break;
-                case EdmExpressionKind.ParameterReference:
-                    this.ProcessParameterReferenceExpression((IEdmParameterReferenceExpression)expression);
-                    break;
                 case EdmExpressionKind.LabeledExpressionReference:
                     this.ProcessLabeledExpressionReferenceExpression((IEdmLabeledExpressionReferenceExpression)expression);
                     break;
@@ -694,11 +691,6 @@ namespace Microsoft.OData.Edm
         }
 
         protected virtual void ProcessNavigationPropertyPathExpression(IEdmPathExpression expression)
-        {
-            this.ProcessExpression(expression);
-        }
-
-        protected virtual void ProcessParameterReferenceExpression(IEdmParameterReferenceExpression expression)
         {
             this.ProcessExpression(expression);
         }

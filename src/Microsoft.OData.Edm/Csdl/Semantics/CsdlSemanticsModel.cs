@@ -379,8 +379,6 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
                         return new CsdlSemanticsLabeledExpressionReferenceExpression((CsdlLabeledExpressionReferenceExpression)expression, bindingContext, schema);
                     case EdmExpressionKind.Labeled:
                         return schema.WrapLabeledElement((CsdlLabeledExpression)expression, bindingContext);
-                    case EdmExpressionKind.ParameterReference:
-                        return new CsdlSemanticsParameterReferenceExpression((CsdlParameterReferenceExpression)expression, bindingContext, schema);
                     case EdmExpressionKind.Path:
                         return new CsdlSemanticsPathExpression((CsdlPathExpression)expression, bindingContext, schema);
                     case EdmExpressionKind.PropertyPath:

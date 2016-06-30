@@ -162,10 +162,6 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
                 //// <FunctionReference/>
                 CsdlElement<CsdlExpressionBase>(CsdlConstants.Element_FunctionReference, this.OnFunctionReferenceExpression);
 
-            var parameterReferenceExpressionParser =
-                //// <ParameterReference/>
-                CsdlElement<CsdlExpressionBase>(CsdlConstants.Element_ParameterReference, this.OnParameterReferenceExpression);
-
             var enumMemberExpressionParser =
                 //// <EnumMember/>
                 CsdlElement<CsdlExpressionBase>(CsdlConstants.Element_EnumMember, this.OnEnumMemberExpression);
@@ -261,8 +257,6 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
                 functionReferenceExpressionParser,
                 //// <EnumConstant/>
                 enumMemberExpressionParser,
-                //// <ParameterReference/>
-                parameterReferenceExpressionParser,
                 //// </Apply>
                 applyExpressionParser
             };
@@ -717,12 +711,6 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
         {
             string name = RequiredQualifiedName(CsdlConstants.Attribute_Name);
             return new CsdlOperationReferenceExpression(name, element.Location);
-        }
-
-        private CsdlParameterReferenceExpression OnParameterReferenceExpression(XmlElementInfo element, XmlElementValueCollection childValues)
-        {
-            string name = Required(CsdlConstants.Attribute_Name);
-            return new CsdlParameterReferenceExpression(name, element.Location);
         }
 
         private CsdlExpressionBase OnIfExpression(XmlElementInfo element, XmlElementValueCollection childValues)

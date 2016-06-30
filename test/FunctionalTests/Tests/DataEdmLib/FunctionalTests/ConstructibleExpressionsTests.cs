@@ -732,44 +732,6 @@ namespace EdmLibTests.FunctionalTests
         }
 
         [TestMethod]
-        public void EdmParameterReferenceExpression()
-        {
-            var t = EdmCoreModel.Instance.GetInt32(false);
-            var e = new EdmParameterReferenceExpression(new EdmOperationParameter(new EdmAction("", "", t), "p1", t));
-            Assert.AreEqual(EdmExpressionKind.ParameterReference, e.ExpressionKind, "e.ExpressionKind");
-            Assert.AreEqual("p1", e.ReferencedParameter.Name, "e.ReferencedParameter");
-            Assert.IsFalse(e.IsBad(), "e good");
-
-            try
-            {
-                new EdmParameterReferenceExpression(null);
-                Assert.Fail("exception expected");
-            }
-            catch (ArgumentNullException)
-            {
-            }
-
-            var ee = new MutableParameterReferenceExpression();
-            Assert.IsNull(ee.ReferencedParameter, "e.ReferencedParameter");
-            Assert.IsTrue(ee.IsBad(), "Expression is bad.");
-            Assert.AreEqual(1, ee.Errors().Count(), "Expression has no errors");
-        }
-
-        private sealed class MutableParameterReferenceExpression : IEdmParameterReferenceExpression
-        {
-            public IEdmOperationParameter ReferencedParameter
-            {
-                get;
-                set;
-            }
-
-            public EdmExpressionKind ExpressionKind
-            {
-                get { return EdmExpressionKind.ParameterReference; }
-            }
-        }
-
-        [TestMethod]
         public void EdmPathExpression()
         {
             var e = new EdmPathExpression("x", "y");

@@ -693,9 +693,6 @@ namespace Microsoft.OData.Edm.Vocabularies
                         return new EdmEnumValue(enumTypeReference, new EdmEnumMemberValue(result));
                     }
 
-                case EdmExpressionKind.ParameterReference:
-                case EdmExpressionKind.OperationReference:
-                    throw new InvalidOperationException(Edm.Strings.Edm_Evaluator_UnrecognizedExpressionKind(((int)expression.ExpressionKind).ToString(System.Globalization.CultureInfo.InvariantCulture)));
                 default:
                     throw new InvalidOperationException(Edm.Strings.Edm_Evaluator_UnrecognizedExpressionKind(((int)expression.ExpressionKind).ToString(System.Globalization.CultureInfo.InvariantCulture)));
             }
