@@ -865,10 +865,10 @@ namespace EdmLibTests.FunctionalTests
             IEdmEntityType person = (IEdmEntityType)model.FindType("foo.Person");
             IEdmValueAnnotation valueAnnotation = (IEdmValueAnnotation)person.VocabularyAnnotations(model).First();
             var property = ((IEdmRecordExpression)valueAnnotation.Value).Properties.First();
-            IEdmOperation badOperation = ((IEdmOperationReferenceExpression)((IEdmApplyExpression)property.Value).AppliedOperation).ReferencedOperation;
+            IEdmOperation badOperation = ((IEdmApplyExpression)property.Value).AppliedFunction;
             Assert.AreEqual("foo", badOperation.Namespace, "Bad function has correct namespace.");
             Assert.AreEqual("BorkBorkBork", badOperation.Name, "Bad function has correct name.");
-            Assert.AreEqual(EdmSchemaElementKind.None, badOperation.SchemaElementKind, "Bad function has correct schema kind.");
+            Assert.AreEqual(EdmSchemaElementKind.Function, badOperation.SchemaElementKind, "Bad function has correct schema kind.");
             Assert.IsTrue(badOperation.ReturnType.Definition.IsBad(), "Bad function has bad return return type.");
             Assert.AreEqual(null, badOperation.FindParameter("Foo"), "Bad function returns null for parameters.");
             Assert.AreEqual(0, badOperation.Parameters.Count(), "Bad function has no parameters.");

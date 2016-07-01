@@ -84,11 +84,6 @@ namespace Microsoft.OData.Edm
         Path,
 
         /// <summary>
-        /// Represents an expression implementing <see cref="IEdmOperationReferenceExpression"/>.
-        /// </summary>
-        OperationReference,
-
-        /// <summary>
         /// Represents an expression implementing <see cref="IEdmIfExpression"/>.
         /// </summary>
         If,
@@ -106,7 +101,7 @@ namespace Microsoft.OData.Edm
         /// <summary>
         /// Represents an expression implementing <see cref="IEdmApplyExpression"/>.
         /// </summary>
-        OperationApplication,
+        FunctionApplication,
 
         /// <summary>
         /// Represents an expression implementing <see cref="IEdmLabeledExpressionReferenceExpression"/>.

@@ -147,11 +147,8 @@ namespace Microsoft.OData.Edm
                 case EdmExpressionKind.FloatingConstant:
                     this.ProcessFloatingConstantExpression((IEdmFloatingConstantExpression)expression);
                     break;
-                case EdmExpressionKind.OperationApplication:
-                    this.ProcessOperationApplicationExpression((IEdmApplyExpression)expression);
-                    break;
-                case EdmExpressionKind.OperationReference:
-                    this.ProcessOperationReferenceExpression((IEdmOperationReferenceExpression)expression);
+                case EdmExpressionKind.FunctionApplication:
+                    this.ProcessFunctionApplicationExpression((IEdmApplyExpression)expression);
                     break;
                 case EdmExpressionKind.GuidConstant:
                     this.ProcessGuidConstantExpression((IEdmGuidConstantExpression)expression);
@@ -726,15 +723,9 @@ namespace Microsoft.OData.Edm
             this.VisitExpression(expression.FalseExpression);
         }
 
-        protected virtual void ProcessOperationReferenceExpression(IEdmOperationReferenceExpression expression)
+        protected virtual void ProcessFunctionApplicationExpression(IEdmApplyExpression expression)
         {
             this.ProcessExpression(expression);
-        }
-
-        protected virtual void ProcessOperationApplicationExpression(IEdmApplyExpression expression)
-        {
-            this.ProcessExpression(expression);
-            this.VisitExpression(expression.AppliedOperation);
             this.VisitExpressions(expression.Arguments);
         }
 

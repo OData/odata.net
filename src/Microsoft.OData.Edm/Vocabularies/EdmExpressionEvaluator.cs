@@ -552,12 +552,11 @@ namespace Microsoft.OData.Edm.Vocabularies
                         return result;
                     }
 
-                case EdmExpressionKind.OperationApplication:
+                case EdmExpressionKind.FunctionApplication:
                     {
                         IEdmApplyExpression apply = (IEdmApplyExpression)expression;
-                        IEdmExpression targetReference = apply.AppliedOperation;
-                        IEdmOperationReferenceExpression targetOperationReference = targetReference as IEdmOperationReferenceExpression;
-                        if (targetOperationReference != null)
+                        IEdmFunction target = apply.AppliedFunction;
+                        if (target != null)
                         {
                             IList<IEdmExpression> argumentExpressions = apply.Arguments.ToList();
                             IEdmValue[] arguments = new IEdmValue[argumentExpressions.Count()];
@@ -569,8 +568,6 @@ namespace Microsoft.OData.Edm.Vocabularies
                                     arguments[argumentIndex++] = this.Eval(argument, context);
                                 }
                             }
-
-                            IEdmOperation target = targetOperationReference.ReferencedOperation;
 
                             //// Static validation will have checked that the number and types of arguments are correct,
                             //// so those checks are not performed dynamically.
@@ -587,7 +584,7 @@ namespace Microsoft.OData.Edm.Vocabularies
                             }
                         }
 
-                        throw new InvalidOperationException(Edm.Strings.Edm_Evaluator_UnboundFunction(targetOperationReference != null ? targetOperationReference.ReferencedOperation.ToTraceString() : string.Empty));
+                        throw new InvalidOperationException(Edm.Strings.Edm_Evaluator_UnboundFunction(target != null ? target.ToTraceString() : string.Empty));
                     }
 
                 case EdmExpressionKind.If:

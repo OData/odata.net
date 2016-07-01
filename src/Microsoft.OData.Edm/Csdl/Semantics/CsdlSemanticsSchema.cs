@@ -230,7 +230,7 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
                     }
 
                     break;
-                case EdmExpressionKind.OperationApplication:
+                case EdmExpressionKind.FunctionApplication:
                     foreach (CsdlExpressionBase argument in ((CsdlApplyExpression)expression).Arguments)
                     {
                         AddLabeledExpressions(argument, result);

@@ -78,7 +78,7 @@ namespace Microsoft.OData.Edm.Validation
                 ValidationRules.NavigationPropertyCorrectType,
                 ValidationRules.ImmediateValueAnnotationElementAnnotationHasNameAndNamespace,
                 ValidationRules.OpenComplexTypeCannotHaveClosedDerivedComplexType,
-                ValidationRules.OperationApplicationExpressionParametersMatchAppliedOperation,
+                ValidationRules.FunctionApplicationExpressionParametersMatchAppliedFunction,
                 ValidationRules.VocabularyAnnotatableNoDuplicateAnnotations,
                 ValidationRules.TemporalTypeReferencePrecisionOutOfRange,
                 ValidationRules.DecimalTypeReferencePrecisionOutOfRange,

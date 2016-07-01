@@ -16,7 +16,7 @@ namespace Microsoft.OData.Edm.Vocabularies
         /// <summary>
         /// Gets the applied function.
         /// </summary>
-        IEdmExpression AppliedOperation { get; }
+        IEdmFunction AppliedFunction { get; }
 
         /// <summary>
         /// Gets the arguments to the function.

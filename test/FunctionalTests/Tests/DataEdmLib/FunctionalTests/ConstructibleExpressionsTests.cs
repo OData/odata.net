@@ -451,30 +451,20 @@ namespace EdmLibTests.FunctionalTests
         public void EdmApplyExpression()
         {
             var arguments = new IEdmExpression[] { new EdmIntegerConstant(1) };
-            var appliedExpression = new EdmStringConstant("foo");
-            var e = new EdmApplyExpression(appliedExpression, arguments);
-            Assert.AreEqual(EdmExpressionKind.OperationApplication, e.ExpressionKind, "e.ExpressionKind");
-            Assert.AreEqual(appliedExpression, e.AppliedOperation, "e.AppliedFunction");
-            Assert.AreEqual(arguments, e.Arguments, "e.AppliedFunction");
-            Assert.IsFalse(e.IsBad(), "e good");
-
             var operation = new EdmFunction("NS", "function", new EdmStringTypeReference(EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.String), true));
-            var operationReference = new EdmOperationReferenceExpression(operation);
-            e = new EdmApplyExpression(operationReference, arguments);
-            Assert.AreEqual(EdmExpressionKind.OperationApplication, e.ExpressionKind, "e.ExpressionKind");
-            Assert.AreEqual(operationReference, e.AppliedOperation, "e.AppliedFunction");
+            var e = new EdmApplyExpression(operation, arguments);
+            Assert.AreEqual(EdmExpressionKind.FunctionApplication, e.ExpressionKind, "e.ExpressionKind");
+            Assert.AreEqual(operation, e.AppliedFunction, "e.AppliedFunction");
             Assert.AreEqual(arguments, e.Arguments, "e.AppliedFunction");
             Assert.IsFalse(e.IsBad(), "e good");
 
-            this.VerifyThrowsException(typeof(ArgumentNullException), () => new EdmApplyExpression((IEdmExpression)null, arguments));
-            this.VerifyThrowsException(typeof(ArgumentNullException), () => new EdmApplyExpression((IEdmOperation)null, arguments));
-            this.VerifyThrowsException(typeof(ArgumentNullException), () => new EdmApplyExpression((IEdmOperation)null, arguments.AsEnumerable()));
-            this.VerifyThrowsException(typeof(ArgumentNullException), () => new EdmApplyExpression(new EdmStringConstant("foo"), null));
+            this.VerifyThrowsException(typeof(ArgumentNullException), () => new EdmApplyExpression(null, arguments));
+            this.VerifyThrowsException(typeof(ArgumentNullException), () => new EdmApplyExpression(null, arguments.AsEnumerable()));
             this.VerifyThrowsException(typeof(ArgumentNullException), () => new EdmApplyExpression(operation, null));
             this.VerifyThrowsException(typeof(ArgumentNullException), () => new EdmApplyExpression(operation, (IEnumerable<IEdmExpression>)null));
 
             var ee = new MutableEdmApplyExpression();
-            Assert.IsNull(ee.AppliedOperation, "ee.AppliedFunction");
+            Assert.IsNull(ee.AppliedFunction, "ee.AppliedFunction");
             Assert.IsNull(ee.Arguments, "ee.Arguments");
             Assert.IsTrue(ee.IsBad(), "Expression is bad.");
             Assert.AreEqual(2, ee.Errors().Count(), "Expression has no errors");
@@ -482,7 +472,7 @@ namespace EdmLibTests.FunctionalTests
 
         private sealed class MutableEdmApplyExpression : IEdmApplyExpression
         {
-            public IEdmExpression AppliedOperation
+            public IEdmFunction AppliedFunction
             {
                 get;
                 set;
@@ -496,7 +486,7 @@ namespace EdmLibTests.FunctionalTests
 
             public EdmExpressionKind ExpressionKind
             {
-                get { return EdmExpressionKind.OperationApplication; }
+                get { return EdmExpressionKind.FunctionApplication; }
             }
         }
 
@@ -573,36 +563,6 @@ namespace EdmLibTests.FunctionalTests
             public EdmExpressionKind ExpressionKind
             {
                 get { return EdmExpressionKind.LabeledExpressionReference; }
-            }
-        }
-
-        [TestMethod]
-        public void EdmOperationReferenceExpression()
-        {
-            var e = new EdmOperationReferenceExpression(new EdmAction("ns1", "qqq", EdmCoreModel.Instance.GetInt16(true)));
-            Assert.AreEqual(EdmExpressionKind.OperationReference, e.ExpressionKind, "e.ExpressionKind");
-            Assert.AreEqual("qqq", e.ReferencedOperation.Name, "e.ReferencedOperation");
-            Assert.IsFalse(e.IsBad(), "e good");
-
-            this.VerifyThrowsException(typeof(ArgumentNullException), () => new EdmOperationReferenceExpression(null));
-
-            var ee = new MutableOperationReferenceExpression();
-            Assert.IsNull(ee.ReferencedOperation, "e.ReferencedOperation");
-            Assert.IsTrue(ee.IsBad(), "Expression is bad.");
-            Assert.AreEqual(1, ee.Errors().Count(), "Expression has no errors");
-        }
-
-        private sealed class MutableOperationReferenceExpression : IEdmOperationReferenceExpression
-        {
-            public IEdmOperation ReferencedOperation
-            {
-                get;
-                set;
-            }
-
-            public EdmExpressionKind ExpressionKind
-            {
-                get { return EdmExpressionKind.OperationReference; }
             }
         }
 

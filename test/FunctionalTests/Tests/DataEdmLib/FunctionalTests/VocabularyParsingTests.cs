@@ -2634,7 +2634,7 @@ namespace EdmLibTests.FunctionalTests
             Assert.AreEqual(1, valueAnnotations.Count(), "Invalid value annotation count.");
 
             var annotation = valueAnnotations.First();
-            var appliedFunction = ((IEdmOperationReferenceExpression)((IEdmApplyExpression)annotation.Value).AppliedOperation).ReferencedOperation;
+            var appliedFunction = ((IEdmApplyExpression)annotation.Value).AppliedFunction;
             Assert.AreEqual("Edm.Int32", appliedFunction.ReturnType.FullName(), "Correct function return type");
         }
 
@@ -2652,7 +2652,7 @@ namespace EdmLibTests.FunctionalTests
             Assert.AreEqual(1, valueAnnotations.Count(), "Invalid value annotation count.");
 
             var annotation = valueAnnotations.First();
-            var appliedFunction = ((IEdmOperationReferenceExpression)((IEdmApplyExpression)annotation.Value).AppliedOperation).ReferencedOperation;
+            var appliedFunction = ((IEdmApplyExpression)annotation.Value).AppliedFunction;
             Assert.AreEqual("Edm.Int32", appliedFunction.ReturnType.FullName(), "Correct function return type");
         }
 

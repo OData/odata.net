@@ -83,11 +83,11 @@ namespace Microsoft.OData.Edm.Validation
                 case EdmExpressionKind.PropertyPath:
                 case EdmExpressionKind.NavigationPropertyPath:
                     return TryCastPathAsType((IEdmPathExpression)expression, type, context, matchExactly, out discoveredErrors);
-                case EdmExpressionKind.OperationApplication:
+                case EdmExpressionKind.FunctionApplication:
                     IEdmApplyExpression applyExpression = (IEdmApplyExpression)expression;
-                    if (applyExpression.AppliedOperation != null)
+                    if (applyExpression.AppliedFunction != null)
                     {
-                        IEdmOperation operation = applyExpression.AppliedOperation as IEdmOperation;
+                        IEdmOperation operation = applyExpression.AppliedFunction as IEdmOperation;
                         if (operation != null)
                         {
                             return TestTypeReferenceMatch(operation.ReturnType, type, expression.Location(), matchExactly, out discoveredErrors);

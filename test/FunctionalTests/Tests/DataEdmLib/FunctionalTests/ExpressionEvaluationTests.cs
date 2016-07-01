@@ -534,7 +534,7 @@ namespace EdmLibTests.FunctionalTests
         }
 
         [TestMethod]
-        public void ValueTerm_OperationApplication_OnNavigationProperty()
+        public void ValueTerm_FunctionApplication_OnNavigationProperty()
         {
             this.SetupModelsAndValues();
 
@@ -596,7 +596,7 @@ namespace EdmLibTests.FunctionalTests
         }
 
         [TestMethod]
-        public void ValueTerm_OperationApplication_WithOverloads_OnEntitySet()
+        public void ValueTerm_FunctionApplication_WithOverloads_OnEntitySet()
         {
             this.SetupModelsAndValues();
 

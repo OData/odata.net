@@ -1301,10 +1301,6 @@ namespace Microsoft.OData.Edm.Validation
                             expressionKindError = CheckForInterfaceKindValueMismatchError<IEdmExpression, EdmExpressionKind, IEdmPathExpression>(expression, expression.ExpressionKind, "ExpressionKind");
                             break;
 
-                        case EdmExpressionKind.OperationReference:
-                            expressionKindError = CheckForInterfaceKindValueMismatchError<IEdmExpression, EdmExpressionKind, IEdmOperationReferenceExpression>(expression, expression.ExpressionKind, "ExpressionKind");
-                            break;
-
                         case EdmExpressionKind.EnumMember:
                             expressionKindError = CheckForInterfaceKindValueMismatchError<IEdmExpression, EdmExpressionKind, IEdmEnumMemberExpression>(expression, expression.ExpressionKind, "ExpressionKind");
                             break;
@@ -1321,7 +1317,7 @@ namespace Microsoft.OData.Edm.Validation
                             expressionKindError = CheckForInterfaceKindValueMismatchError<IEdmExpression, EdmExpressionKind, IEdmIsTypeExpression>(expression, expression.ExpressionKind, "ExpressionKind");
                             break;
 
-                        case EdmExpressionKind.OperationApplication:
+                        case EdmExpressionKind.FunctionApplication:
                             expressionKindError = CheckForInterfaceKindValueMismatchError<IEdmExpression, EdmExpressionKind, IEdmApplyExpression>(expression, expression.ExpressionKind, "ExpressionKind");
                             break;
 
@@ -1429,23 +1425,6 @@ namespace Microsoft.OData.Edm.Validation
                 ProcessEnumerable(expression, expression.Path, "Path", segments, ref errors);
 
                 return errors;
-            }
-        }
-
-        private sealed class VisitorOfIEdmFunctionReferenceExpression : VisitorOfT<IEdmOperationReferenceExpression>
-        {
-            protected override IEnumerable<EdmError> VisitT(IEdmOperationReferenceExpression expression, List<object> followup, List<object> references)
-            {
-                if (expression.ReferencedOperation != null)
-                {
-                    Debug.Assert(expression.ReferencedOperation is IEdmSchemaElement || expression is IEdmEntityContainerElement, "Return as followup if the referenced object is not a schema function or a function import.");
-                    references.Add(expression.ReferencedOperation);
-                    return null;
-                }
-                else
-                {
-                    return new EdmError[] { CreatePropertyMustNotBeNullError(expression, "ReferencedFunction") };
-                }
             }
         }
 
@@ -1562,9 +1541,9 @@ namespace Microsoft.OData.Edm.Validation
             {
                 List<EdmError> errors = null;
 
-                if (expression.AppliedOperation != null)
+                if (expression.AppliedFunction != null)
                 {
-                    followup.Add(expression.AppliedOperation);
+                    followup.Add(expression.AppliedFunction);
                 }
                 else
                 {

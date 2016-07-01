@@ -399,20 +399,9 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
             this.EndElement(expression);
         }
 
-        protected override void ProcessOperationReferenceExpression(IEdmOperationReferenceExpression expression)
+        protected override void ProcessFunctionApplicationExpression(IEdmApplyExpression expression)
         {
-            this.schemaWriter.WriteOperationReferenceExpressionElement(expression);
-        }
-
-        protected override void ProcessOperationApplicationExpression(IEdmApplyExpression expression)
-        {
-            bool isFunction = expression.AppliedOperation.ExpressionKind == EdmExpressionKind.OperationReference;
-            this.BeginElement(expression, e => this.schemaWriter.WriteFunctionApplicationElementHeader(e, isFunction));
-            if (!isFunction)
-            {
-                this.VisitExpression(expression.AppliedOperation);
-            }
-
+            this.BeginElement(expression, e => this.schemaWriter.WriteFunctionApplicationElementHeader(e));
             this.VisitExpressions(expression.Arguments);
             this.EndElement(expression);
         }

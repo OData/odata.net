@@ -2336,23 +2336,23 @@ namespace Microsoft.OData.Edm.Validation
         /// <summary>
         /// Validates the types of a function application are correct.
         /// </summary>
-        public static readonly ValidationRule<IEdmApplyExpression> OperationApplicationExpressionParametersMatchAppliedOperation =
+        public static readonly ValidationRule<IEdmApplyExpression> FunctionApplicationExpressionParametersMatchAppliedFunction =
             new ValidationRule<IEdmApplyExpression>(
                 (context, expression) =>
                 {
-                    IEdmOperationReferenceExpression operationReference = expression.AppliedOperation as IEdmOperationReferenceExpression;
-                    if (operationReference.ReferencedOperation != null && !context.IsBad(operationReference.ReferencedOperation))
+                    IEdmFunction appliedFunction = expression.AppliedFunction;
+                    if (appliedFunction != null && !context.IsBad(appliedFunction))
                     {
-                        if (operationReference.ReferencedOperation.Parameters.Count() != expression.Arguments.Count())
+                        if (appliedFunction.Parameters.Count() != expression.Arguments.Count())
                         {
                             context.AddError(new EdmError(
                                     expression.Location(),
                                     EdmErrorCode.IncorrectNumberOfArguments,
-                                    Edm.Strings.EdmModel_Validator_Semantic_IncorrectNumberOfArguments(expression.Arguments.Count(), operationReference.ReferencedOperation.FullName(), operationReference.ReferencedOperation.Parameters.Count())));
+                                    Edm.Strings.EdmModel_Validator_Semantic_IncorrectNumberOfArguments(expression.Arguments.Count(), appliedFunction.FullName(), appliedFunction.Parameters.Count())));
                         }
 
                         IEnumerator<IEdmExpression> parameterExpressionEnumerator = expression.Arguments.GetEnumerator();
-                        foreach (IEdmOperationParameter parameter in operationReference.ReferencedOperation.Parameters)
+                        foreach (IEdmOperationParameter parameter in appliedFunction.Parameters)
                         {
                             parameterExpressionEnumerator.MoveNext();
                             IEnumerable<EdmError> recursiveErrors;

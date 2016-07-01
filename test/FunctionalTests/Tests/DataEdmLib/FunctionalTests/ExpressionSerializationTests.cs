@@ -324,7 +324,7 @@ namespace EdmLibTests.FunctionalTests
 
             IEdmValueTerm termStringValue = this.longDefinitionModel.FindValueTerm("bar.StringValue");
             var apply = new EdmApplyExpression(
-                this.functionsModel.FindOperations("Functions.StringConcat").First(),
+                (IEdmFunction)this.functionsModel.FindOperations("Functions.StringConcat").First(),
                 new EdmStringConstant("s1"),
                 new EdmStringConstant("s2"));
             this.CreateAndAttachValueAnnotation(container, termStringValue, apply);
@@ -362,7 +362,7 @@ namespace EdmLibTests.FunctionalTests
 
             IEdmValueTerm termStringValue = this.longDefinitionModel.FindValueTerm("bar.StringValue");
             var ifExpression = new EdmIfExpression(
-                new EdmApplyExpression(this.functionsModel.FindOperations("Functions.True").First()),
+                new EdmApplyExpression((IEdmFunction)this.functionsModel.FindOperations("Functions.True").First()),
                 new EdmStringConstant("s1"),
                 new EdmStringConstant("s2"));
             this.CreateAndAttachValueAnnotation(set, termStringValue, ifExpression);

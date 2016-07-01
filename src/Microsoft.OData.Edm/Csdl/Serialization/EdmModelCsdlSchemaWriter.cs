@@ -528,13 +528,10 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
             this.WriteEndElement();
         }
 
-        internal void WriteFunctionApplicationElementHeader(IEdmApplyExpression expression, bool isFunction)
+        internal void WriteFunctionApplicationElementHeader(IEdmApplyExpression expression)
         {
             this.xmlWriter.WriteStartElement(CsdlConstants.Element_Apply);
-            if (isFunction)
-            {
-                this.WriteRequiredAttribute(CsdlConstants.Attribute_Function, ((IEdmOperationReferenceExpression)expression.AppliedOperation).ReferencedOperation, this.FunctionAsXml);
-            }
+            this.WriteRequiredAttribute(CsdlConstants.Attribute_Function, expression.AppliedFunction, this.FunctionAsXml);
         }
 
         internal void WriteGuidConstantExpressionElement(IEdmGuidConstantExpression expression)
@@ -611,13 +608,6 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
             {
                 this.WriteRequiredAttribute(CsdlConstants.Attribute_Type, expression.Type, this.TypeReferenceAsXml);
             }
-        }
-
-        internal void WriteOperationReferenceExpressionElement(IEdmOperationReferenceExpression expression)
-        {
-            this.xmlWriter.WriteStartElement(CsdlConstants.Element_FunctionReference);
-            this.WriteRequiredAttribute(CsdlConstants.Attribute_Name, expression.ReferencedOperation, this.FunctionAsXml);
-            this.WriteEndElement();
         }
 
         internal void WriteEnumMemberExpressionElement(IEdmEnumMemberExpression expression)

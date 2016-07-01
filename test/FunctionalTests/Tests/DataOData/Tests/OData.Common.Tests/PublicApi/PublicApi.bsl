@@ -489,30 +489,29 @@ public enum Microsoft.OData.Edm.EdmContainerElementKind : int {
 public enum Microsoft.OData.Edm.EdmExpressionKind : int {
 	BinaryConstant = 1
 	BooleanConstant = 2
-	Cast = 16
+	Cast = 15
 	Collection = 12
-	DateConstant = 23
+	DateConstant = 22
 	DateTimeOffsetConstant = 3
 	DecimalConstant = 4
 	DurationConstant = 9
-	EnumMember = 25
+	EnumMember = 24
 	FloatingConstant = 5
+	FunctionApplication = 17
 	GuidConstant = 6
-	If = 15
+	If = 14
 	IntegerConstant = 7
-	IsType = 17
-	Labeled = 20
-	LabeledExpressionReference = 19
-	NavigationPropertyPath = 22
+	IsType = 16
+	Labeled = 19
+	LabeledExpressionReference = 18
+	NavigationPropertyPath = 21
 	None = 0
 	Null = 10
-	OperationApplication = 18
-	OperationReference = 14
 	Path = 13
-	PropertyPath = 21
+	PropertyPath = 20
 	Record = 11
 	StringConstant = 8
-	TimeOfDayConstant = 24
+	TimeOfDayConstant = 23
 }
 
 public enum Microsoft.OData.Edm.EdmMultiplicity : int {
@@ -2926,6 +2925,7 @@ public sealed class Microsoft.OData.Edm.Validation.ValidationRules {
 	public static readonly Microsoft.OData.Edm.Validation.ValidationRule`1[[Microsoft.OData.Edm.IEdmEnumMember]] EnumMemberValueMustHaveSameTypeAsUnderlyingType = Microsoft.OData.Edm.Validation.ValidationRule`1[Microsoft.OData.Edm.IEdmEnumMember]
 	public static readonly Microsoft.OData.Edm.Validation.ValidationRule`1[[Microsoft.OData.Edm.IEdmEnumType]] EnumMustHaveIntegerUnderlyingType = Microsoft.OData.Edm.Validation.ValidationRule`1[Microsoft.OData.Edm.IEdmEnumType]
 	public static readonly Microsoft.OData.Edm.Validation.ValidationRule`1[[Microsoft.OData.Edm.IEdmEnumType]] EnumTypeEnumMemberNameAlreadyDefined = Microsoft.OData.Edm.Validation.ValidationRule`1[Microsoft.OData.Edm.IEdmEnumType]
+	public static readonly Microsoft.OData.Edm.Validation.ValidationRule`1[[Microsoft.OData.Edm.Vocabularies.IEdmApplyExpression]] FunctionApplicationExpressionParametersMatchAppliedFunction = Microsoft.OData.Edm.Validation.ValidationRule`1[Microsoft.OData.Edm.Vocabularies.IEdmApplyExpression]
 	public static readonly Microsoft.OData.Edm.Validation.ValidationRule`1[[Microsoft.OData.Edm.IEdmFunctionImport]] FunctionImportWithParameterShouldNotBeIncludedInServiceDocument = Microsoft.OData.Edm.Validation.ValidationRule`1[Microsoft.OData.Edm.IEdmFunctionImport]
 	public static readonly Microsoft.OData.Edm.Validation.ValidationRule`1[[Microsoft.OData.Edm.IEdmFunction]] FunctionMustHaveReturnType = Microsoft.OData.Edm.Validation.ValidationRule`1[Microsoft.OData.Edm.IEdmFunction]
 	public static readonly Microsoft.OData.Edm.Validation.ValidationRule`1[[Microsoft.OData.Edm.Vocabularies.IEdmIfExpression]] IfExpressionAssertCorrectTestType = Microsoft.OData.Edm.Validation.ValidationRule`1[Microsoft.OData.Edm.Vocabularies.IEdmIfExpression]
@@ -2956,7 +2956,6 @@ public sealed class Microsoft.OData.Edm.Validation.ValidationRules {
 	public static readonly Microsoft.OData.Edm.Validation.ValidationRule`1[[Microsoft.OData.Edm.IEdmNavigationSource]] NavigationSourceTypeHasNoKeys = Microsoft.OData.Edm.Validation.ValidationRule`1[Microsoft.OData.Edm.IEdmNavigationSource]
 	public static readonly Microsoft.OData.Edm.Validation.ValidationRule`1[[Microsoft.OData.Edm.IEdmStructuredType]] OnlyEntityTypesCanBeOpen = Microsoft.OData.Edm.Validation.ValidationRule`1[Microsoft.OData.Edm.IEdmStructuredType]
 	public static readonly Microsoft.OData.Edm.Validation.ValidationRule`1[[Microsoft.OData.Edm.IEdmComplexType]] OpenComplexTypeCannotHaveClosedDerivedComplexType = Microsoft.OData.Edm.Validation.ValidationRule`1[Microsoft.OData.Edm.IEdmComplexType]
-	public static readonly Microsoft.OData.Edm.Validation.ValidationRule`1[[Microsoft.OData.Edm.Vocabularies.IEdmApplyExpression]] OperationApplicationExpressionParametersMatchAppliedOperation = Microsoft.OData.Edm.Validation.ValidationRule`1[Microsoft.OData.Edm.Vocabularies.IEdmApplyExpression]
 	public static readonly Microsoft.OData.Edm.Validation.ValidationRule`1[[Microsoft.OData.Edm.IEdmOperation]] OperationEntitySetPathMustBeValid = Microsoft.OData.Edm.Validation.ValidationRule`1[Microsoft.OData.Edm.IEdmOperation]
 	public static readonly Microsoft.OData.Edm.Validation.ValidationRule`1[[Microsoft.OData.Edm.IEdmOperationImport]] OperationImportCannotImportBoundOperation = Microsoft.OData.Edm.Validation.ValidationRule`1[Microsoft.OData.Edm.IEdmOperationImport]
 	public static readonly Microsoft.OData.Edm.Validation.ValidationRule`1[[Microsoft.OData.Edm.IEdmOperationImport]] OperationImportEntitySetExpressionIsInvalid = Microsoft.OData.Edm.Validation.ValidationRule`1[Microsoft.OData.Edm.IEdmOperationImport]
@@ -3055,7 +3054,7 @@ public enum Microsoft.OData.Edm.Vocabularies.EdmValueKind : int {
 }
 
 public interface Microsoft.OData.Edm.Vocabularies.IEdmApplyExpression : IEdmElement, IEdmExpression {
-	Microsoft.OData.Edm.IEdmExpression AppliedOperation  { public abstract get; }
+	Microsoft.OData.Edm.IEdmFunction AppliedFunction  { public abstract get; }
 	System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.IEdmExpression]] Arguments  { public abstract get; }
 }
 
@@ -3193,10 +3192,6 @@ public interface Microsoft.OData.Edm.Vocabularies.IEdmNullExpression : IEdmEleme
 public interface Microsoft.OData.Edm.Vocabularies.IEdmNullValue : IEdmElement, IEdmValue {
 }
 
-public interface Microsoft.OData.Edm.Vocabularies.IEdmOperationReferenceExpression : IEdmElement, IEdmExpression {
-	Microsoft.OData.Edm.IEdmOperation ReferencedOperation  { public abstract get; }
-}
-
 public interface Microsoft.OData.Edm.Vocabularies.IEdmPrimitiveValue : IEdmElement, IEdmValue {
 }
 
@@ -3290,11 +3285,10 @@ public class Microsoft.OData.Edm.Vocabularies.EdmAnnotation : Microsoft.OData.Ed
 }
 
 public class Microsoft.OData.Edm.Vocabularies.EdmApplyExpression : Microsoft.OData.Edm.EdmElement, IEdmElement, IEdmExpression, IEdmApplyExpression {
-	public EdmApplyExpression (Microsoft.OData.Edm.IEdmExpression appliedOperation, System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.IEdmExpression]] arguments)
-	public EdmApplyExpression (Microsoft.OData.Edm.IEdmOperation appliedOperation, Microsoft.OData.Edm.IEdmExpression[] arguments)
-	public EdmApplyExpression (Microsoft.OData.Edm.IEdmOperation appliedOperation, System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.IEdmExpression]] arguments)
+	public EdmApplyExpression (Microsoft.OData.Edm.IEdmFunction appliedFunction, Microsoft.OData.Edm.IEdmExpression[] arguments)
+	public EdmApplyExpression (Microsoft.OData.Edm.IEdmFunction appliedFunction, System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.IEdmExpression]] arguments)
 
-	Microsoft.OData.Edm.IEdmExpression AppliedOperation  { public virtual get; }
+	Microsoft.OData.Edm.IEdmFunction AppliedFunction  { public virtual get; }
 	System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.IEdmExpression]] Arguments  { public virtual get; }
 	Microsoft.OData.Edm.EdmExpressionKind ExpressionKind  { public virtual get; }
 }
@@ -3508,13 +3502,6 @@ public class Microsoft.OData.Edm.Vocabularies.EdmNullExpression : Microsoft.ODat
 
 	Microsoft.OData.Edm.EdmExpressionKind ExpressionKind  { public virtual get; }
 	Microsoft.OData.Edm.Vocabularies.EdmValueKind ValueKind  { public virtual get; }
-}
-
-public class Microsoft.OData.Edm.Vocabularies.EdmOperationReferenceExpression : Microsoft.OData.Edm.EdmElement, IEdmElement, IEdmExpression, IEdmOperationReferenceExpression {
-	public EdmOperationReferenceExpression (Microsoft.OData.Edm.IEdmOperation referencedOperation)
-
-	Microsoft.OData.Edm.EdmExpressionKind ExpressionKind  { public virtual get; }
-	Microsoft.OData.Edm.IEdmOperation ReferencedOperation  { public virtual get; }
 }
 
 public class Microsoft.OData.Edm.Vocabularies.EdmPropertyConstructor : Microsoft.OData.Edm.EdmElement, IEdmElement, IEdmPropertyConstructor {

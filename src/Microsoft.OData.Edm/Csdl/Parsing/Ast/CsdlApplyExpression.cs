@@ -22,7 +22,7 @@ namespace Microsoft.OData.Edm.Csdl.Parsing.Ast
 
         public override EdmExpressionKind ExpressionKind
         {
-            get { return EdmExpressionKind.OperationApplication; }
+            get { return EdmExpressionKind.FunctionApplication; }
         }
 
         public string Function

@@ -13,49 +13,39 @@ namespace Microsoft.OData.Edm.Vocabularies
     /// </summary>
     public class EdmApplyExpression : EdmElement, IEdmApplyExpression
     {
-        private readonly IEdmExpression appliedOperation;
+        private readonly IEdmFunction appliedFunction;
         private readonly IEnumerable<IEdmExpression> arguments;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="EdmApplyExpression"/> class.
         /// </summary>
-        /// <param name="appliedOperation">Operation to apply.</param>
+        /// <param name="appliedFunction">Function to apply.</param>
         /// <param name="arguments">Application arguments. Value may be null, in which case it is treated as an empty enumerable.</param>
-        public EdmApplyExpression(IEdmOperation appliedOperation, params IEdmExpression[] arguments)
-            : this(appliedOperation, (IEnumerable<IEdmExpression>)arguments)
+        public EdmApplyExpression(IEdmFunction appliedFunction, params IEdmExpression[] arguments)
+            : this(appliedFunction, (IEnumerable<IEdmExpression>)arguments)
         {
         }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="EdmApplyExpression"/> class.
         /// </summary>
-        /// <param name="appliedOperation">Operation to apply.</param>
+        /// <param name="appliedFunction">Function to apply.</param>
         /// <param name="arguments">Application arguments. Value may be null, in which case it is treated as an empty enumerable.</param>
-        public EdmApplyExpression(IEdmOperation appliedOperation, IEnumerable<IEdmExpression> arguments)
-            : this(new EdmOperationReferenceExpression(EdmUtil.CheckArgumentNull(appliedOperation, "appliedFunction")), arguments)
+        public EdmApplyExpression(IEdmFunction appliedFunction, IEnumerable<IEdmExpression> arguments)
         {
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="EdmApplyExpression"/> class.
-        /// </summary>
-        /// <param name="appliedOperation">Operation to apply.</param>
-        /// <param name="arguments">Application arguments. Value may be null, in which case it is treated as an empty enumerable.</param>
-        public EdmApplyExpression(IEdmExpression appliedOperation, IEnumerable<IEdmExpression> arguments)
-        {
-            EdmUtil.CheckArgumentNull(appliedOperation, "appliedFunction");
+            EdmUtil.CheckArgumentNull(appliedFunction, "appliedFunction");
             EdmUtil.CheckArgumentNull(arguments, "arguments");
 
-            this.appliedOperation = appliedOperation;
+            this.appliedFunction = appliedFunction;
             this.arguments = arguments;
         }
 
         /// <summary>
-        /// Gets the applied operation.
+        /// Gets the applied function.
         /// </summary>
-        public IEdmExpression AppliedOperation
+        public IEdmFunction AppliedFunction
         {
-            get { return this.appliedOperation; }
+            get { return this.appliedFunction; }
         }
 
         /// <summary>
@@ -71,7 +61,7 @@ namespace Microsoft.OData.Edm.Vocabularies
         /// </summary>
         public EdmExpressionKind ExpressionKind
         {
-            get { return EdmExpressionKind.OperationApplication; }
+            get { return EdmExpressionKind.FunctionApplication; }
         }
     }
 }

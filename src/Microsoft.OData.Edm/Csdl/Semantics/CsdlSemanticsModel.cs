@@ -363,10 +363,8 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
                         return new CsdlSemanticsFloatingConstantExpression((CsdlConstantExpression)expression, schema);
                     case EdmExpressionKind.Null:
                         return new CsdlSemanticsNullExpression((CsdlConstantExpression)expression, schema);
-                    case EdmExpressionKind.OperationApplication:
+                    case EdmExpressionKind.FunctionApplication:
                         return new CsdlSemanticsApplyExpression((CsdlApplyExpression)expression, bindingContext, schema);
-                    case EdmExpressionKind.OperationReference:
-                        return new CsdlSemanticsOperationReferenceExpression((CsdlOperationReferenceExpression)expression, bindingContext, schema);
                     case EdmExpressionKind.GuidConstant:
                         return new CsdlSemanticsGuidConstantExpression((CsdlConstantExpression)expression, schema);
                     case EdmExpressionKind.If:
