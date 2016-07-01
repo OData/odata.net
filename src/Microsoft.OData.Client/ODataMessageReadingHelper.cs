@@ -52,13 +52,9 @@ namespace Microsoft.OData.Client
                 settings.Validations &= ~ValidationKinds.ThrowOnUndeclaredPropertyForNonOpenType;
             }
 
-            var odataSimplifiedOptions = ODataSimplifiedOptions.GetODataSimplifiedOptions(null);
-            odataSimplifiedOptions.EnableReadingODataAnnotationWithoutPrefix = this.responseInfo.Context.ODataSimplified;
-            if (this.responseInfo.Context.UrlConventions == DataServiceUrlConventions.KeyAsSegment)
-            {
-                odataSimplifiedOptions.EnableReadingKeyAsSegment = true;
-            }
-
+            // [#623] As client does not support DI currently, odata simplifiedoptions cannot be customize pre request.
+            // Now, we just change the global options.
+            // TODO: After finish the issue #623, need add the customize code of ODataAnnotationWithoutPrefix and KeyAsSegment for each request
             CommonUtil.SetDefaultMessageQuotas(settings.MessageQuotas);
 
             this.responseInfo.ResponsePipeline.ExecuteReaderSettingsConfiguration(settings);

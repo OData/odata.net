@@ -46,7 +46,7 @@ namespace Microsoft.Test.OData.Tests.Client.OperationTests
             var customerFromFunction = getCustomerForAddress.GetValue();
             Assert.IsNotNull(customerFromFunction);
 
-            var doubleFunction = getCustomerForAddress.GetOrdersFromCustomerByNotes(new Collection<string> { "1111"});
+            var doubleFunction = getCustomerForAddress.GetOrdersFromCustomerByNotes(new Collection<string> { "1111" });
             var ordersFromDoubleFunction = doubleFunction.Execute();
             Assert.AreEqual(1, ordersFromDoubleFunction.Count());
         }

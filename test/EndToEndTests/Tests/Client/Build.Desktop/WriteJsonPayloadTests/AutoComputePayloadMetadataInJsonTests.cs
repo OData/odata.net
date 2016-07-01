@@ -591,10 +591,15 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
             Dictionary<string, object> expectedEmployeeObject = WritePayloadHelper.ComputeExpectedFullMetadataEntryObject(WritePayloadHelper.EmployeeType, "Person/-3", employeeEntry, hasModel, true);
             Dictionary<string, object> expectedSpecialEmployeeObject = WritePayloadHelper.ComputeExpectedFullMetadataEntryObject(WritePayloadHelper.SpecialEmployeeType, "Person/-10", specialEmployeeEntry, hasModel, true);
 
-            ODataSimplifiedOptions.GetODataSimplifiedOptions(null).EnableWritingKeyAsSegment = useKeyAsSegment;
-
+            var container = ContainerBuilderHelper.BuildContainer(null);
+            ((ODataSimplifiedOptions)container.GetService(typeof(ODataSimplifiedOptions))).EnableWritingKeyAsSegment =
+                useKeyAsSegment;
             // write the response message and read using ODL reader
-            var responseMessage = new StreamResponseMessage(new MemoryStream());
+            var responseMessage = new StreamResponseMessage(new MemoryStream())
+            {
+                Container = container
+            };
+
             responseMessage.SetHeader("Content-Type", mimeType);
 
             string result = string.Empty;

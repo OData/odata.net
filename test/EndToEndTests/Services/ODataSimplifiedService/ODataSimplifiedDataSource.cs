@@ -9,6 +9,7 @@ namespace Microsoft.Test.OData.Services.ODataWCFService.DataSource
     using System;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
+    using Microsoft.OData;
     using Microsoft.OData.Edm;
     using Microsoft.OData.SampleService.Models.ODataSimplified;
 
@@ -49,7 +50,7 @@ namespace Microsoft.Test.OData.Services.ODataWCFService.DataSource
                     Middle = Int64.MaxValue,
                     Large = Decimal.MaxValue
                 },
-                LargeNumbers = new Collection<decimal> {Decimal.MinValue, Decimal.MaxValue}
+                LargeNumbers = new Collection<decimal> { Decimal.MinValue, Decimal.MaxValue }
             };
             this.People.AddRange(new List<Person>()
             {
@@ -165,6 +166,16 @@ namespace Microsoft.Test.OData.Services.ODataWCFService.DataSource
         protected override IEdmModel CreateModel()
         {
             return ODataSimplifiedInMemoryModel.CreateModel("Microsoft.OData.SampleService.Models.ODataSimplified");
+        }
+
+        protected override void ConfigureContainer(IContainerBuilder builder)
+        {
+            base.ConfigureContainer(builder);
+            builder.AddServicePrototype(new ODataSimplifiedOptions()
+            {
+                EnableWritingODataAnnotationWithoutPrefix = true,
+                EnableReadingODataAnnotationWithoutPrefix = true,
+            });
         }
     }
 }

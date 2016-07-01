@@ -133,7 +133,8 @@ namespace Microsoft.OData
             builder.AddService(ServiceLifetime.Singleton, sp => ODataUriResolver.GetUriResolver(null));
             builder.AddService<ODataUriParserSettings>(ServiceLifetime.Scoped);
             builder.AddService<UriPathParser>(ServiceLifetime.Scoped);
-            builder.AddService(ServiceLifetime.Singleton, sp => ODataSimplifiedOptions.GetODataSimplifiedOptions(null));
+            builder.AddServicePrototype(new ODataSimplifiedOptions());
+            builder.AddService(ServiceLifetime.Scoped, sp => sp.GetServicePrototype<ODataSimplifiedOptions>().Clone());
 
             return builder;
         }

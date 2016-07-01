@@ -132,7 +132,7 @@ namespace Microsoft.Test.OData.Tests.Client.OperationTests
             {
                 ID = 1,
                 Notes = new ObservableCollection<string>() { "note1", "note2" },
-                OrderDetails = new ObservableCollection<OrderDetail>{new  OrderDetail { Quantity = 1, UnitPrice = 1.0f }},
+                OrderDetails = new ObservableCollection<OrderDetail> { new OrderDetail { Quantity = 1, UnitPrice = 1.0f } },
                 InfoFromCustomer = new InfoFromCustomer { CustomerMessage = "XXL" }
             };
             var customerQuery = this.TestClientContext.CreateQuery<Customer>("Customers");

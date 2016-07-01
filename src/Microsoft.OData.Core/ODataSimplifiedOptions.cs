@@ -51,12 +51,23 @@ namespace Microsoft.OData
         public bool EnableWritingODataAnnotationWithoutPrefix { get; set; }
 
         /// <summary>
+        /// Creates a shallow copy of this <see cref="ODataSimplifiedOptions"/>.
+        /// </summary>
+        /// <returns>A shallow copy of this <see cref="ODataSimplifiedOptions"/>.</returns>
+        public ODataSimplifiedOptions Clone()
+        {
+            var copy = new ODataSimplifiedOptions();
+            copy.CopyFrom(this);
+            return copy;
+        }
+
+        /// <summary>
         /// Return the instatnce of ODataSimplifiedOptions from container if it container not null.
         /// Otherwise return the static instance of ODataSimplifiedOptions.
         /// </summary>
         /// <param name="container">Container</param>
         /// <returns>Instance of GetODataSimplifiedOptions</returns>
-        public static ODataSimplifiedOptions GetODataSimplifiedOptions(IServiceProvider container)
+        internal static ODataSimplifiedOptions GetODataSimplifiedOptions(IServiceProvider container)
         {
             if (container == null)
             {
@@ -64,6 +75,16 @@ namespace Microsoft.OData
             }
 
             return container.GetRequiredService<ODataSimplifiedOptions>();
+        }
+
+        private void CopyFrom(ODataSimplifiedOptions other)
+        {
+            ExceptionUtils.CheckArgumentNotNull(other, "other");
+
+            this.EnableReadingKeyAsSegment = other.EnableReadingKeyAsSegment;
+            this.EnableReadingODataAnnotationWithoutPrefix = other.EnableReadingODataAnnotationWithoutPrefix;
+            this.EnableWritingKeyAsSegment = other.EnableWritingKeyAsSegment;
+            this.EnableWritingODataAnnotationWithoutPrefix = other.EnableWritingODataAnnotationWithoutPrefix;
         }
     }
 }

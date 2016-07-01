@@ -46,8 +46,9 @@ namespace Microsoft.OData.Client
                 EnableMessageStreamDisposal = isBatchPartRequest
             };
 
-            ODataSimplifiedOptions.GetODataSimplifiedOptions(null).EnableWritingODataAnnotationWithoutPrefix = odataSimplified;
-
+            // [#623] As client does not support DI currently, odata simplifiedoptions cannot be customize pre request.
+            // Now, we just change the global options.
+            // TODO: After finish the issue #623, need add the customize code of ODataAnnotationWithoutPrefix for each request
             CommonUtil.SetDefaultMessageQuotas(writerSettings.MessageQuotas);
 
             this.requestInfo.Configurations.RequestPipeline.ExecuteWriterSettingsConfiguration(writerSettings);

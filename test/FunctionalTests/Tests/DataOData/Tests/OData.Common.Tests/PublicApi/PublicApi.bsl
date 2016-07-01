@@ -4877,7 +4877,7 @@ public sealed class Microsoft.OData.ODataSimplifiedOptions {
 	System.Nullable`1[[System.Boolean]] EnableWritingKeyAsSegment  { public get; public set; }
 	bool EnableWritingODataAnnotationWithoutPrefix  { public get; public set; }
 
-	public static Microsoft.OData.ODataSimplifiedOptions GetODataSimplifiedOptions (System.IServiceProvider container)
+	public Microsoft.OData.ODataSimplifiedOptions Clone ()
 }
 
 public sealed class Microsoft.OData.ODataSingletonInfo : Microsoft.OData.ODataServiceDocumentElement {

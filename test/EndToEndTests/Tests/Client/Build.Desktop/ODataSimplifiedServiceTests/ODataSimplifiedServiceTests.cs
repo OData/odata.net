@@ -16,6 +16,7 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
     /// <summary>
     /// Tests for ODataSimplified service
     /// </summary>
+    [Ignore] // [#623]
     [TestClass]
     public class ODataSimplifiedServiceQueryTests : ODataWCFServiceTestsBase<ODataSimplifiedService>
     {
@@ -75,7 +76,7 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
             TestClientContext.SaveChanges();
 
             TestClientContext.Detach(person);
-            var personReturned = TestClientContext.People.ByKey(new Dictionary<string,object>{{"PersonId", person.PersonId}}).GetValue();
+            var personReturned = TestClientContext.People.ByKey(new Dictionary<string, object> { { "PersonId", person.PersonId } }).GetValue();
             Assert.AreEqual(person.PersonId, personReturned.PersonId);
         }
     }
