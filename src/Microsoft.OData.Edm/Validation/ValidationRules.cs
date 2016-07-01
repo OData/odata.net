@@ -1397,7 +1397,7 @@ namespace Microsoft.OData.Edm.Validation
                         }
                         else
                         {
-                            IEdmEntitySet entitySet;
+                            IEdmEntitySetBase entitySet;
 
                             if (!operationImport.TryGetStaticEntitySet(context.Model, out entitySet))
                             {
@@ -1440,7 +1440,7 @@ namespace Microsoft.OData.Edm.Validation
                         {
                             IEdmEntityType returnedEntityType = elementType.AsEntity().EntityDefinition();
 
-                            IEdmEntitySet entitySet;
+                            IEdmEntitySetBase entitySet;
                             IEdmOperationParameter parameter;
                             IEnumerable<IEdmNavigationProperty> path;
                             IEnumerable<EdmError> errors;

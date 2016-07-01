@@ -2017,7 +2017,7 @@ public sealed class Microsoft.OData.Edm.ExtensionMethods {
 	[
 	ExtensionAttribute(),
 	]
-	public static bool TryGetStaticEntitySet (Microsoft.OData.Edm.IEdmOperationImport operationImport, Microsoft.OData.Edm.IEdmModel model, out Microsoft.OData.Edm.IEdmEntitySet& entitySet)
+	public static bool TryGetStaticEntitySet (Microsoft.OData.Edm.IEdmOperationImport operationImport, Microsoft.OData.Edm.IEdmModel model, out Microsoft.OData.Edm.IEdmEntitySetBase& entitySet)
 
 	[
 	ExtensionAttribute(),

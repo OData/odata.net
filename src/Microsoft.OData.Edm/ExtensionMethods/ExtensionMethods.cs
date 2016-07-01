@@ -2067,7 +2067,8 @@ namespace Microsoft.OData.Edm
         /// <param name="model">The model containing the operation import.</param>
         /// <param name="entitySet">The static entity set of the operation import.</param>
         /// <returns>True if the entity set expression of the <paramref name="operationImport"/> contains a static reference to an <see cref="IEdmEntitySet"/>, otherwise false.</returns>
-        public static bool TryGetStaticEntitySet(this IEdmOperationImport operationImport, IEdmModel model, out IEdmEntitySet entitySet)
+        /// <remarks>TODO: Support resolving target path to a contained entity set.</remarks>
+        public static bool TryGetStaticEntitySet(this IEdmOperationImport operationImport, IEdmModel model, out IEdmEntitySetBase entitySet)
         {
             var pathExpression = operationImport.EntitySet as IEdmPathExpression;
             if (pathExpression != null)
@@ -2651,21 +2652,32 @@ namespace Microsoft.OData.Edm
             model.SetAnnotationValue(typeDefinition, EdmConstants.InternalUri, CsdlConstants.PrimitiveValueConverterMapAnnotation, converter);
         }
 
-        internal static bool TryGetStaticEntitySet(this IEdmPathExpression pathExpression, IEdmModel model, out IEdmEntitySet entitySet)
+        internal static bool TryGetStaticEntitySet(this IEdmPathExpression pathExpression, IEdmModel model, out IEdmEntitySetBase entitySet)
         {
-            var segments = pathExpression.Path.ToList();
-            if (segments.Count < 1)
+            var segmentIterator = pathExpression.Path.GetEnumerator();
+            if (!segmentIterator.MoveNext())
             {
                 entitySet = null;
                 return false;
             }
 
-            var segmentIndex = 0;
             IEdmEntityContainer container;
-            if (segments[segmentIndex].Contains("."))
+            var segment = segmentIterator.Current;
+            if (segment.Contains("."))
             {
-                // segments[0] is the qualified name of an entity container.
-                container = model.FindEntityContainer(segments[segmentIndex++]);
+                // The first segment is the qualified name of an entity container.
+                container = model.FindEntityContainer(segment);
+
+                if (segmentIterator.MoveNext())
+                {
+                    segment = segmentIterator.Current;
+                }
+                else
+                {
+                    // Path that only contains an entity container is invalid.
+                    entitySet = null;
+                    return false;
+                }
             }
             else
             {
@@ -2680,10 +2692,10 @@ namespace Microsoft.OData.Edm
             }
 
             // The next segment must be entity set.
-            var resolvedEntitySet = container.FindEntitySet(segments[segmentIndex++]);
+            var resolvedEntitySet = container.FindEntitySet(segment);
 
             // If there is any segment left, the path must represent a contained entity set.
-            entitySet = segmentIndex < segments.Count ? null : resolvedEntitySet;
+            entitySet = segmentIterator.MoveNext() ? null : resolvedEntitySet;
             return entitySet != null;
         }
 

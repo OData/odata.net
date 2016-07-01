@@ -28,7 +28,7 @@ namespace Microsoft.OData.UriParser
         /// <returns>The target entity set of the operation import or null if it could not be determined.</returns>
         internal static IEdmEntitySetBase GetTargetEntitySet(this IEdmOperationImport operationImport, IEdmEntitySetBase sourceEntitySet, IEdmModel model)
         {
-            IEdmEntitySet targetEntitySet;
+            IEdmEntitySetBase targetEntitySet;
             if (operationImport.TryGetStaticEntitySet(model, out targetEntitySet))
             {
                 return targetEntitySet;

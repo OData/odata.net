@@ -21,7 +21,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriBuilder
             ODataUri odataUri = new ODataUri();
             odataUri.ServiceRoot = new Uri("http://gobbledygook/");
             IEdmOperationImport functionImport = HardCodedTestModel.TestModel.EntityContainer.FindOperationImports("GetPet1").Single();
-            IEdmEntitySet entitySet;
+            IEdmEntitySetBase entitySet;
             Assert.True(functionImport.TryGetStaticEntitySet(HardCodedTestModel.TestModel, out entitySet));
             OperationSegmentParameter[] parameters = { new OperationSegmentParameter("id", new ConstantNode(1, "1")) };
             odataUri.Path = new ODataPath(new OperationImportSegment(
