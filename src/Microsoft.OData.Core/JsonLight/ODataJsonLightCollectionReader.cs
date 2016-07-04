@@ -61,16 +61,16 @@ namespace Microsoft.OData.JsonLight
             Debug.Assert(this.IsReadingNestedPayload || this.jsonLightCollectionDeserializer.JsonReader.NodeType == JsonNodeType.None, "Pre-Condition: expected JsonNodeType.None when not reading a nested payload.");
 
             // We use this to store annotations and check for duplicate annotation names, but we don't really store properties in it.
-            DuplicatePropertyNamesChecker duplicatePropertyNamesChecker = this.jsonLightInputContext.CreateDuplicatePropertyNamesChecker();
+            PropertyAndAnnotationCollector propertyAndAnnotationCollector = this.jsonLightInputContext.CreatePropertyAndAnnotationCollector();
 
             // Position the reader on the first node depending on whether we are reading a nested payload or not
             this.jsonLightCollectionDeserializer.ReadPayloadStart(
                 ODataPayloadKind.Collection,
-                duplicatePropertyNamesChecker,
+                propertyAndAnnotationCollector,
                 this.IsReadingNestedPayload,
                 /*allowEmptyPayload*/false);
 
-            return this.ReadAtStartImplementationSynchronously(duplicatePropertyNamesChecker);
+            return this.ReadAtStartImplementationSynchronously(propertyAndAnnotationCollector);
         }
 
 #if PORTABLELIB
@@ -89,17 +89,17 @@ namespace Microsoft.OData.JsonLight
             Debug.Assert(this.IsReadingNestedPayload || this.jsonLightCollectionDeserializer.JsonReader.NodeType == JsonNodeType.None, "Pre-Condition: expected JsonNodeType.None when not reading a nested payload.");
 
             // We use this to store annotations and check for duplicate annotation names, but we don't really store properties in it.
-            DuplicatePropertyNamesChecker duplicatePropertyNamesChecker = this.jsonLightInputContext.CreateDuplicatePropertyNamesChecker();
+            PropertyAndAnnotationCollector propertyAndAnnotationCollector = this.jsonLightInputContext.CreatePropertyAndAnnotationCollector();
 
             // Position the reader on the first node depending on whether we are reading a nested payload or not
             return this.jsonLightCollectionDeserializer.ReadPayloadStartAsync(
                 ODataPayloadKind.Collection,
-                duplicatePropertyNamesChecker,
+                propertyAndAnnotationCollector,
                 this.IsReadingNestedPayload,
                 /*allowEmptyPayload*/false)
 
                 .FollowOnSuccessWith(t =>
-                    this.ReadAtStartImplementationSynchronously(duplicatePropertyNamesChecker));
+                    this.ReadAtStartImplementationSynchronously(propertyAndAnnotationCollector));
         }
 #endif
 
@@ -209,15 +209,15 @@ namespace Microsoft.OData.JsonLight
         /// <summary>
         /// Implementation of the collection reader logic when in state 'Start'.
         /// </summary>
-        /// <param name="duplicatePropertyNamesChecker">The duplicate property names checker for the top-level scope.</param>
+        /// <param name="propertyAndAnnotationCollector">The duplicate property names checker for the top-level scope.</param>
         /// <returns>true if more items can be read from the reader; otherwise false.</returns>
         /// <remarks>
         /// Pre-Condition:  JsonNodeType.None:      assumes that the JSON reader has not been used yet when not reading a nested payload.
         /// Post-Condition: The reader is positioned on the first node of the first item or the EndArray node of an empty item array
         /// </remarks>
-        private bool ReadAtStartImplementationSynchronously(DuplicatePropertyNamesChecker duplicatePropertyNamesChecker)
+        private bool ReadAtStartImplementationSynchronously(PropertyAndAnnotationCollector propertyAndAnnotationCollector)
         {
-            Debug.Assert(duplicatePropertyNamesChecker != null, "duplicatePropertyNamesChecker != null");
+            Debug.Assert(propertyAndAnnotationCollector != null, "propertyAndAnnotationCollector != null");
 
             IEdmTypeReference actualItemTypeReference;
             this.ExpectedItemTypeReference = ReaderValidationUtils.ValidateCollectionContextUriAndGetPayloadItemTypeReference(
@@ -226,7 +226,7 @@ namespace Microsoft.OData.JsonLight
 
             // read the start of the collection until we find the content array for top-level collections
             ODataCollectionStart collectionStart = this.jsonLightCollectionDeserializer.ReadCollectionStart(
-                duplicatePropertyNamesChecker,
+                propertyAndAnnotationCollector,
                 this.IsReadingNestedPayload,
                 this.ExpectedItemTypeReference,
                 out actualItemTypeReference);

@@ -18,7 +18,7 @@ namespace Microsoft.OData.Tests
         private ODataResource entry = ReaderUtils.CreateNewResource();
         private EdmStructuredType edmStructuredType = new EdmEntityType("TestNamespace", "EntityType");
         private SelectedPropertiesNode selectedProperties;
-        private DuplicatePropertyNamesChecker duplicatePropertyNamesChecker = new DuplicatePropertyNamesChecker(true);
+        private PropertyAndAnnotationCollector propertyAndAnnotationCollector = new PropertyAndAnnotationCollector(true);
 
         public ODataResource Resource
         {
@@ -53,9 +53,9 @@ namespace Microsoft.OData.Tests
             set { throw new NotImplementedException(); }
         }
 
-        public DuplicatePropertyNamesChecker DuplicatePropertyNamesChecker
+        public PropertyAndAnnotationCollector PropertyAndAnnotationCollector
         {
-            get { return this.duplicatePropertyNamesChecker; }
+            get { return this.propertyAndAnnotationCollector; }
         }
 
         public SelectedPropertiesNode SelectedProperties

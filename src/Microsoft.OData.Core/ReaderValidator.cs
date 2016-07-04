@@ -41,12 +41,12 @@ namespace Microsoft.OData
         }
 
         /// <summary>
-        /// Creates a DuplicatePropertyNamesChecker instance.
+        /// Creates a PropertyAndAnnotationCollector instance.
         /// </summary>
         /// <returns>The created instance.</returns>
-        public DuplicatePropertyNamesChecker CreateDuplicatePropertyNamesChecker()
+        public PropertyAndAnnotationCollector CreatePropertyAndAnnotationCollector()
         {
-            return new DuplicatePropertyNamesChecker(settings.ThrowOnDuplicatePropertyNames);
+            return new PropertyAndAnnotationCollector(settings.ThrowOnDuplicatePropertyNames);
         }
 
         /// <summary>

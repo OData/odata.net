@@ -596,9 +596,9 @@ namespace Microsoft.OData
         /// Creates a new instance of a duplicate property names checker.
         /// </summary>
         /// <returns>The newly created instance of duplicate property names checker.</returns>
-        internal DuplicatePropertyNamesChecker CreateDuplicatePropertyNamesChecker()
+        internal PropertyAndAnnotationCollector CreatePropertyAndAnnotationCollector()
         {
-            return messageReaderSettings.Validator.CreateDuplicatePropertyNamesChecker();
+            return messageReaderSettings.Validator.CreatePropertyAndAnnotationCollector();
         }
 
         /// <summary>

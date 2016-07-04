@@ -688,7 +688,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip.JsonLight
                 actualValue = deserializer.ReadNonEntityValue(
                     /*payloadTypeName*/ null,
                     typeReference,
-                    /*duplicatePropertyNamesChecker*/ null,
+                    /*propertyAndAnnotationCollector*/ null,
                     /*collectionValidator*/ null,
                     /*validateNullValue*/ true,
                     /*isTopLevel*/ true,

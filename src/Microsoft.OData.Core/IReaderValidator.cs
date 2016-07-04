@@ -25,10 +25,10 @@ namespace Microsoft.OData
         void ValidateMediaResource(ODataResource resource, IEdmEntityType resourceType);
 
         /// <summary>
-        /// Creates a DuplicatePropertyNamesChecker instance.
+        /// Creates a PropertyAndAnnotationCollector instance.
         /// </summary>
         /// <returns>The created instance.</returns>
-        DuplicatePropertyNamesChecker CreateDuplicatePropertyNamesChecker();
+        PropertyAndAnnotationCollector CreatePropertyAndAnnotationCollector();
 
         /// <summary>
         /// Validate a null value.

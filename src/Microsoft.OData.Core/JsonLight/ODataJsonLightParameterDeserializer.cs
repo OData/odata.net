@@ -42,16 +42,16 @@ namespace Microsoft.OData.JsonLight
         /// <summary>
         /// Reads the next parameter from the parameters payload.
         /// </summary>
-        /// <param name="duplicatePropertyNamesChecker">The duplicate property names checker used to read a parameter payload.</param>
+        /// <param name="propertyAndAnnotationCollector">The duplicate property names checker used to read a parameter payload.</param>
         /// <returns>true if a parameter was read from the payload; otherwise false.</returns>
         /// <remarks>
         /// Pre-Condition:  Property or EndObject   the property node of the parameter to read or the end object node if there are not parameters
         /// Post-Condition: Property or EndObject   the node after the property value of a primitive, complex or null collection parameter
         ///                 Any                     the start of the value representing a non-null collection parameter (the collection reader will fail if this is not a StartArray node)
         /// </remarks>
-        internal bool ReadNextParameter(DuplicatePropertyNamesChecker duplicatePropertyNamesChecker)
+        internal bool ReadNextParameter(PropertyAndAnnotationCollector propertyAndAnnotationCollector)
         {
-            Debug.Assert(duplicatePropertyNamesChecker != null, "duplicatePropertyNamesChecker != null");
+            Debug.Assert(propertyAndAnnotationCollector != null, "propertyAndAnnotationCollector != null");
             this.AssertJsonCondition(JsonNodeType.Property, JsonNodeType.EndObject);
 
             bool parameterRead = false;
@@ -59,7 +59,7 @@ namespace Microsoft.OData.JsonLight
             {
                 bool foundCustomInstanceAnnotation = false;
                 this.ProcessProperty(
-                    duplicatePropertyNamesChecker,
+                    propertyAndAnnotationCollector,
                     propertyAnnotationValueReader,
                     (propertyParsingResult, parameterName) =>
                     {
@@ -102,7 +102,7 @@ namespace Microsoft.OData.JsonLight
                                         parameterValue = this.ReadNonEntityValue(
                                             /*payloadTypeName*/ null,
                                             primitiveTypeReference,
-                                            /*duplicatePropertyNamesChecker*/ null,
+                                            /*propertyAndAnnotationCollector*/ null,
                                             /*collectionValidator*/ null,
                                             /*validateNullValue*/ true,
                                             /*isTopLevelPropertyValue*/ false,
@@ -116,7 +116,7 @@ namespace Microsoft.OData.JsonLight
                                         parameterValue = this.ReadNonEntityValue(
                                             /*payloadTypeName*/ null,
                                             enumTypeReference,
-                                            /*duplicatePropertyNamesChecker*/ null,
+                                            /*propertyAndAnnotationCollector*/ null,
                                             /*collectionValidator*/ null,
                                             /*validateNullValue*/ true,
                                             /*isTopLevelPropertyValue*/ false,
@@ -130,7 +130,7 @@ namespace Microsoft.OData.JsonLight
                                         parameterValue = this.ReadNonEntityValue(
                                             /*payloadTypeName*/ null,
                                             typeDefinitionReference,
-                                            /*duplicatePropertyNamesChecker*/ null,
+                                            /*propertyAndAnnotationCollector*/ null,
                                             /*collectionValidator*/ null,
                                             /*validateNullValue*/ true,
                                             /*isTopLevelPropertyValue*/ false,
@@ -187,7 +187,7 @@ namespace Microsoft.OData.JsonLight
 
                 if (foundCustomInstanceAnnotation)
                 {
-                    return this.ReadNextParameter(duplicatePropertyNamesChecker);
+                    return this.ReadNextParameter(propertyAndAnnotationCollector);
                 }
             }
 

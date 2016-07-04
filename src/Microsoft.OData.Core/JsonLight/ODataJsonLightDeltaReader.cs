@@ -579,14 +579,14 @@ namespace Microsoft.OData.JsonLight
         /// <summary>
         /// Handle some thing before reading at Start.
         /// </summary>
-        /// <param name="duplicatePropertyNamesChecker">The created duplicate property names checker.</param>
-        private void PreReadAtStartImplementation(out DuplicatePropertyNamesChecker duplicatePropertyNamesChecker)
+        /// <param name="propertyAndAnnotationCollector">The created duplicate property names checker.</param>
+        private void PreReadAtStartImplementation(out PropertyAndAnnotationCollector propertyAndAnnotationCollector)
         {
             Debug.Assert(this.State == ODataDeltaReaderState.Start, "this.State == ODataDeltaReaderState.Start");
             Debug.Assert(this.jsonLightResourceDeserializer.JsonReader.NodeType == JsonNodeType.None, "Pre-Condition: expected JsonNodeType.None.");
 
-            duplicatePropertyNamesChecker =
-                this.jsonLightInputContext.CreateDuplicatePropertyNamesChecker();
+            propertyAndAnnotationCollector =
+                this.jsonLightInputContext.CreatePropertyAndAnnotationCollector();
         }
 
         /// <summary>
@@ -595,16 +595,16 @@ namespace Microsoft.OData.JsonLight
         /// <returns>true if more items can be read from the reader; otherwise false.</returns>
         private bool ReadAtStartImplementation()
         {
-            DuplicatePropertyNamesChecker duplicatePropertyNamesChecker;
-            this.PreReadAtStartImplementation(out duplicatePropertyNamesChecker);
+            PropertyAndAnnotationCollector propertyAndAnnotationCollector;
+            this.PreReadAtStartImplementation(out propertyAndAnnotationCollector);
 
             this.jsonLightResourceDeserializer.ReadPayloadStart(
                 ODataPayloadKind.Delta,
-                duplicatePropertyNamesChecker,
+                propertyAndAnnotationCollector,
                 /*isReadingNestedPayload*/false,
                 /*allowEmptyPayload*/false);
 
-            return this.ReadAtStartImplementationSynchronously(duplicatePropertyNamesChecker);
+            return this.ReadAtStartImplementationSynchronously(propertyAndAnnotationCollector);
         }
 
         /// <summary>
@@ -663,15 +663,15 @@ namespace Microsoft.OData.JsonLight
         /// <returns>A task which returns true if more items can be read from the reader; otherwise false.</returns>
         private Task<bool> ReadAtStartImplementationAsync()
         {
-            DuplicatePropertyNamesChecker duplicatePropertyNamesChecker;
-            this.PreReadAtStartImplementation(out duplicatePropertyNamesChecker);
+            PropertyAndAnnotationCollector propertyAndAnnotationCollector;
+            this.PreReadAtStartImplementation(out propertyAndAnnotationCollector);
 
             return this.jsonLightResourceDeserializer.ReadPayloadStartAsync(
                 ODataPayloadKind.ResourceSet,
-                duplicatePropertyNamesChecker,
+                propertyAndAnnotationCollector,
                 /*isReadingNestedPayload*/false,
                 /*allowEmptyPayload*/false)
-                .FollowOnSuccessWith(t => this.ReadAtStartImplementationSynchronously(duplicatePropertyNamesChecker));
+                .FollowOnSuccessWith(t => this.ReadAtStartImplementationSynchronously(propertyAndAnnotationCollector));
         }
 
         /// <summary>
@@ -727,17 +727,17 @@ namespace Microsoft.OData.JsonLight
         /// <summary>
         /// Implementation of the reader logic when in state 'Start'.
         /// </summary>
-        /// <param name="duplicatePropertyNamesChecker">The duplicate property names checker to use for the top-level scope.</param>
+        /// <param name="propertyAndAnnotationCollector">The duplicate property names checker to use for the top-level scope.</param>
         /// <returns>true if more items can be read from the reader; otherwise false.</returns>
         /// <remarks>
         /// Pre-Condition:  JsonNodeType.Property:      the reader is positioned on the context uri annotation.
         /// Post-Condition: JsonNodeType.EndArray:      the reader is positioned on the end array node of an empty resource set.
         ///                 JsonNodeType.StartObject:   the reader is positioned on the first item.
         /// </remarks>
-        private bool ReadAtStartImplementationSynchronously(DuplicatePropertyNamesChecker duplicatePropertyNamesChecker)
+        private bool ReadAtStartImplementationSynchronously(PropertyAndAnnotationCollector propertyAndAnnotationCollector)
         {
             Debug.Assert(this.State == ODataDeltaReaderState.Start, "this.State == ODataDeltaReaderState.Start");
-            Debug.Assert(duplicatePropertyNamesChecker != null, "duplicatePropertyNamesChecker != null");
+            Debug.Assert(propertyAndAnnotationCollector != null, "propertyAndAnnotationCollector != null");
             Debug.Assert(this.jsonLightResourceDeserializer.ContextUriParseResult != null, "We should have failed by now if we don't have parse results for context URI.");
             Debug.Assert(this.jsonLightResourceDeserializer.ContextUriParseResult.DeltaKind == ODataDeltaKind.ResourceSet, "The context uri should indicate a delta resource set at Start state.");
 
@@ -752,13 +752,13 @@ namespace Microsoft.OData.JsonLight
 
             // Store the duplicate property names checker to use it later when reading the resource set end
             // (since we allow resourceSet-related annotations to appear after the resource set's data).
-            this.topLevelScope.DuplicatePropertyNamesChecker = duplicatePropertyNamesChecker;
+            this.topLevelScope.PropertyAndAnnotationCollector = propertyAndAnnotationCollector;
 
             bool isReordering = this.jsonLightInputContext.JsonReader is ReorderingJsonReader;
             ODataDeltaResourceSet resourceSet = new ODataDeltaResourceSet();
 
             // Read top-level resource set annotations.
-            this.jsonLightResourceDeserializer.ReadTopLevelResourceSetAnnotations(resourceSet, duplicatePropertyNamesChecker, /*forResourceSetStart*/true, /*readAllResourceSetProperties*/isReordering);
+            this.jsonLightResourceDeserializer.ReadTopLevelResourceSetAnnotations(resourceSet, propertyAndAnnotationCollector, /*forResourceSetStart*/true, /*readAllResourceSetProperties*/isReordering);
 
             // Enter DeltaResourceSetStart state.
             this.ReadDeltaResourceSetStart(resourceSet, selectedProperties);
@@ -790,7 +790,7 @@ namespace Microsoft.OData.JsonLight
                 // we are at the beginning of an item
                 case JsonNodeType.StartObject:
                     // First delta item in the resource set
-                    this.ReadDeltaStart(/*duplicatePropertyNamesChecker*/ null, this.CurrentJsonLightDeltaResourceSetScope.SelectedProperties);
+                    this.ReadDeltaStart(/*propertyAndAnnotationCollector*/ null, this.CurrentJsonLightDeltaResourceSetScope.SelectedProperties);
                     break;
                 case JsonNodeType.EndArray:
                     // End of the resource set
@@ -903,7 +903,7 @@ namespace Microsoft.OData.JsonLight
                     this.Item,
                     this.CurrentNavigationSource,
                     this.CurrentEntityType,
-                    this.CurrentDeltaResourceState.DuplicatePropertyNamesChecker,
+                    this.CurrentDeltaResourceState.PropertyAndAnnotationCollector,
                     this.CurrentDeltaResourceState.SelectedProperties,
                     this.CurrentScope.ODataUri));
 
@@ -1093,7 +1093,7 @@ namespace Microsoft.OData.JsonLight
             Debug.Assert(this.State == ODataDeltaReaderState.DeltaResourceSetStart, "this.State == ODataDeltaReaderState.DeltaResourceSetStart");
 
             this.jsonLightResourceDeserializer.ReadResourceSetContentEnd();
-            this.jsonLightResourceDeserializer.ReadNextLinkAnnotationAtResourceSetEnd(this.CurrentDeltaResourceSet, /*expandedNestedResourceInfo*/null, this.topLevelScope.DuplicatePropertyNamesChecker);
+            this.jsonLightResourceDeserializer.ReadNextLinkAnnotationAtResourceSetEnd(this.CurrentDeltaResourceSet, /*expandedNestedResourceInfo*/null, this.topLevelScope.PropertyAndAnnotationCollector);
 
             this.ReplaceScope(ODataDeltaReaderState.DeltaResourceSetEnd);
         }
@@ -1105,7 +1105,7 @@ namespace Microsoft.OData.JsonLight
         /// <summary>
         /// Reads the start of a delta item and sets up the reader state correctly
         /// </summary>
-        /// <param name="duplicatePropertyNamesChecker">The duplicate property names checker to use for the resource;
+        /// <param name="propertyAndAnnotationCollector">The duplicate property names checker to use for the resource;
         /// or null if a new one should be created.</param>
         /// <param name="selectedProperties">The selected properties node capturing what properties should be expanded during template evaluation.</param>
         /// <remarks>
@@ -1116,7 +1116,7 @@ namespace Microsoft.OData.JsonLight
         ///                 JsonNodeType.Property               Property after deferred link or expanded entity reference
         ///                 JsonNodeType.EndObject              If no (more) properties exist in the resource's content
         /// </remarks>
-        private void ReadDeltaStart(DuplicatePropertyNamesChecker duplicatePropertyNamesChecker, SelectedPropertiesNode selectedProperties)
+        private void ReadDeltaStart(PropertyAndAnnotationCollector propertyAndAnnotationCollector, SelectedPropertiesNode selectedProperties)
         {
             this.jsonLightResourceDeserializer.AssertJsonCondition(JsonNodeType.StartObject, JsonNodeType.Property, JsonNodeType.EndObject);
 
@@ -1131,7 +1131,7 @@ namespace Microsoft.OData.JsonLight
             IEdmEntityType entityTypeFromContextUri = null;
 
             // Parse context uri.
-            string contextUri = this.jsonLightResourceDeserializer.ReadContextUriAnnotation(ODataPayloadKind.Delta, duplicatePropertyNamesChecker, false);
+            string contextUri = this.jsonLightResourceDeserializer.ReadContextUriAnnotation(ODataPayloadKind.Delta, propertyAndAnnotationCollector, false);
             if (!string.IsNullOrEmpty(contextUri))
             {
                 ODataJsonLightContextUriParseResult contextUriParseResult = ODataJsonLightContextUriParser.Parse(
@@ -1148,21 +1148,21 @@ namespace Microsoft.OData.JsonLight
             switch (deltaKind)
             {
                 case ODataDeltaKind.Resource:
-                    this.StartDeltaResource(ODataDeltaReaderState.DeltaResourceStart, duplicatePropertyNamesChecker, selectedProperties, entityTypeFromContextUri);
+                    this.StartDeltaResource(ODataDeltaReaderState.DeltaResourceStart, propertyAndAnnotationCollector, selectedProperties, entityTypeFromContextUri);
                     break;
 
                 case ODataDeltaKind.DeletedEntry:
-                    this.StartDeltaResource(ODataDeltaReaderState.DeltaDeletedEntry, duplicatePropertyNamesChecker, selectedProperties);
+                    this.StartDeltaResource(ODataDeltaReaderState.DeltaDeletedEntry, propertyAndAnnotationCollector, selectedProperties);
                     this.ReadAtDeltaDeletedEntryImplementationSynchronously();
                     break;
 
                 case ODataDeltaKind.Link:
-                    this.StartDeltaLink(ODataDeltaReaderState.DeltaLink, duplicatePropertyNamesChecker, selectedProperties);
+                    this.StartDeltaLink(ODataDeltaReaderState.DeltaLink, propertyAndAnnotationCollector, selectedProperties);
                     this.ReadAtDeltaLinkImplementationSynchronously();
                     break;
 
                 case ODataDeltaKind.DeletedLink:
-                    this.StartDeltaLink(ODataDeltaReaderState.DeltaDeletedLink, duplicatePropertyNamesChecker, selectedProperties);
+                    this.StartDeltaLink(ODataDeltaReaderState.DeltaDeletedLink, propertyAndAnnotationCollector, selectedProperties);
                     this.ReadAtDeltaDeletedLinkImplementationSynchronously();
                     break;
 
@@ -1203,7 +1203,7 @@ namespace Microsoft.OData.JsonLight
                 this.jsonLightResourceDeserializer.JsonReader.Read();
 
                 // Read the annotation value.
-                CurrentDeltaResource.Id = this.jsonLightResourceDeserializer.ReadEntryInstanceAnnotation(ODataAnnotationNames.ODataId, /*anyPropertyFound*/false, /*typeAnnotationFound*/false, CurrentDeltaResourceState.DuplicatePropertyNamesChecker) as Uri;
+                CurrentDeltaResource.Id = this.jsonLightResourceDeserializer.ReadEntryInstanceAnnotation(ODataAnnotationNames.ODataId, /*anyPropertyFound*/false, /*typeAnnotationFound*/false, CurrentDeltaResourceState.PropertyAndAnnotationCollector) as Uri;
                 Debug.Assert(CurrentDeltaResource.Id != null, "value for odata.id must be provided");
             }
 
@@ -1497,11 +1497,11 @@ namespace Microsoft.OData.JsonLight
         /// Starts the resource, initializing the scopes and such. This method starts a non-null resource only.
         /// </summary>
         /// <param name="state">The reader state to switch to.</param>
-        /// <param name="duplicatePropertyNamesChecker">The duplicate property names checker to use for the resource;
+        /// <param name="propertyAndAnnotationCollector">The duplicate property names checker to use for the resource;
         /// or null if a new one should be created.</param>
         /// <param name="selectedProperties">The selected properties node capturing what properties should be expanded during template evaluation.</param>
         /// <param name="entityTypeFromContextUri">The entity type read from context uri.</param>
-        private void StartDeltaResource(ODataDeltaReaderState state, DuplicatePropertyNamesChecker duplicatePropertyNamesChecker, SelectedPropertiesNode selectedProperties, IEdmEntityType entityTypeFromContextUri = null)
+        private void StartDeltaResource(ODataDeltaReaderState state, PropertyAndAnnotationCollector propertyAndAnnotationCollector, SelectedPropertiesNode selectedProperties, IEdmEntityType entityTypeFromContextUri = null)
         {
             Debug.Assert(
                 state == ODataDeltaReaderState.DeltaResourceStart || state == ODataDeltaReaderState.DeltaDeletedEntry,
@@ -1512,7 +1512,7 @@ namespace Microsoft.OData.JsonLight
                 CreateNewDeltaResource(state),
                 this.CurrentNavigationSource,
                 entityTypeFromContextUri ?? this.CurrentEntityType,
-                duplicatePropertyNamesChecker ?? this.jsonLightInputContext.CreateDuplicatePropertyNamesChecker(),
+                propertyAndAnnotationCollector ?? this.jsonLightInputContext.CreatePropertyAndAnnotationCollector(),
                 selectedProperties,
                 this.CurrentScope.ODataUri));
         }
@@ -1521,10 +1521,10 @@ namespace Microsoft.OData.JsonLight
         /// Starts the link, initializing the scopes and such. This method starts a non-null resource only.
         /// </summary>
         /// <param name="state">The reader state to switch to.</param>
-        /// <param name="duplicatePropertyNamesChecker">The duplicate property names checker to use for the resource;
+        /// <param name="propertyAndAnnotationCollector">The duplicate property names checker to use for the resource;
         /// or null if a new one should be created.</param>
         /// <param name="selectedProperties">The selected properties node capturing what properties should be expanded during template evaluation.</param>
-        private void StartDeltaLink(ODataDeltaReaderState state, DuplicatePropertyNamesChecker duplicatePropertyNamesChecker, SelectedPropertiesNode selectedProperties)
+        private void StartDeltaLink(ODataDeltaReaderState state, PropertyAndAnnotationCollector propertyAndAnnotationCollector, SelectedPropertiesNode selectedProperties)
         {
             Debug.Assert(
                 state == ODataDeltaReaderState.DeltaLink || state == ODataDeltaReaderState.DeltaDeletedLink,
@@ -1812,7 +1812,7 @@ namespace Microsoft.OData.JsonLight
             /// <param name="resource">The item attached to this scope.</param>
             /// <param name="navigationSource">The navigation source we are going to read entities for.</param>
             /// <param name="expectedEntityType">The expected type for the scope.</param>
-            /// <param name="duplicatePropertyNamesChecker">The duplicate property names checker for this resource scope.</param>
+            /// <param name="propertyAndAnnotationCollector">The duplicate property names checker for this resource scope.</param>
             /// <param name="selectedProperties">The selected properties node capturing what properties should be expanded during template evaluation.</param>
             /// <param name="odataUri">The odataUri parsed based on the context uri for current scope</param>
             /// <remarks>The <paramref name="expectedEntityType"/> has the following meaning
@@ -1825,7 +1825,7 @@ namespace Microsoft.OData.JsonLight
                 ODataItem resource,
                 IEdmNavigationSource navigationSource,
                 IEdmEntityType expectedEntityType,
-                DuplicatePropertyNamesChecker duplicatePropertyNamesChecker,
+                PropertyAndAnnotationCollector propertyAndAnnotationCollector,
                 SelectedPropertiesNode selectedProperties,
                 ODataUri odataUri)
                 : base(readerState, resource, navigationSource, expectedEntityType, odataUri)
@@ -1835,7 +1835,7 @@ namespace Microsoft.OData.JsonLight
                     readerState == ODataDeltaReaderState.DeltaDeletedEntry && resource is ODataDeltaDeletedEntry,
                     "resource must be either DeltaResource or DeltaDeletedEntry.");
 
-                this.DuplicatePropertyNamesChecker = duplicatePropertyNamesChecker;
+                this.PropertyAndAnnotationCollector = propertyAndAnnotationCollector;
                 this.SelectedProperties = selectedProperties;
             }
 
@@ -1863,7 +1863,7 @@ namespace Microsoft.OData.JsonLight
             /// <summary>
             /// The duplicate property names checker for the resource represented by the current state.
             /// </summary>
-            public DuplicatePropertyNamesChecker DuplicatePropertyNamesChecker { get; private set; }
+            public PropertyAndAnnotationCollector PropertyAndAnnotationCollector { get; private set; }
 
             /// <summary>
             /// The selected properties that should be expanded during template evaluation.
@@ -1999,7 +1999,7 @@ namespace Microsoft.OData.JsonLight
             /// <summary>
             /// The duplicate property names checker for the top level scope represented by the current state.
             /// </summary>
-            public DuplicatePropertyNamesChecker DuplicatePropertyNamesChecker { get; set; }
+            public PropertyAndAnnotationCollector PropertyAndAnnotationCollector { get; set; }
         }
 
         #endregion

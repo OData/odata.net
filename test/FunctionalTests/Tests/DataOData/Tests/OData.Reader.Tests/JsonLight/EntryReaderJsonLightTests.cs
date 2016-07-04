@@ -241,7 +241,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                             "}")
                         .ExpectedEntityType(cityType, citiesEntitySet),
                     PayloadEdmModel = model,
-                    ExpectedException = ODataExpectedExceptions.ODataException("DuplicatePropertyNamesChecker_DuplicatePropertyNamesNotAllowed", "Id")
+                    ExpectedException = ODataExpectedExceptions.ODataException("DuplicatePropertyNamesNotAllowed", "Id")
                 },
             };
 
@@ -495,7 +495,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                                 "\"" + JsonLightUtils.GetPropertyAnnotationName("Name", "custom.annotation") + "\": null" +
                             "}",
                         ExpectedPayload = PayloadBuilder.Entity("TestModel.CityType"),
-                        ExpectedException = ODataExpectedExceptions.ODataException("DuplicatePropertyNamesChecker_PropertyAnnotationAfterTheProperty", "custom.annotation", "Name")
+                        ExpectedException = ODataExpectedExceptions.ODataException("PropertyAnnotationAfterTheProperty", "custom.annotation", "Name")
                     },
                     new
                     {
@@ -521,7 +521,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                                 "\"Name\": \"Value\"" +
                             "}",
                         ExpectedPayload = PayloadBuilder.Entity("TestModel.CityType"),
-                        ExpectedException = ODataExpectedExceptions.ODataException("DuplicatePropertyNamesChecker_DuplicateAnnotationForPropertyNotAllowed", JsonLightConstants.ODataTypeAnnotationName, "Name")
+                        ExpectedException = ODataExpectedExceptions.ODataException("DuplicateAnnotationForPropertyNotAllowed", JsonLightConstants.ODataTypeAnnotationName, "Name")
                     },
                 };
 

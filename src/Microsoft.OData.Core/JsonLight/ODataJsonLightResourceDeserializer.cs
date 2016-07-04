@@ -153,7 +153,7 @@ namespace Microsoft.OData.JsonLight
             {
                 this.ReadPropertyCustomAnnotationValue = this.ReadCustomInstanceAnnotationValue;
                 this.ProcessProperty(
-                    resourceState.DuplicatePropertyNamesChecker,
+                    resourceState.PropertyAndAnnotationCollector,
                     this.ReadEntryPropertyAnnotationValue,
                     (propertyParsingResult, propertyName) =>
                     {
@@ -224,14 +224,14 @@ namespace Microsoft.OData.JsonLight
         /// <returns>The annotation value.</returns>
         internal object ReadODataOrCustomInstanceAnnotationValue(IODataJsonLightReaderResourceState resourceState, PropertyParsingResult propertyParsingResult, string annotationName)
         {
-            object value = this.ReadEntryInstanceAnnotation(annotationName, resourceState.AnyPropertyFound, /*typeAnnotationFound*/ true, resourceState.DuplicatePropertyNamesChecker);
+            object value = this.ReadEntryInstanceAnnotation(annotationName, resourceState.AnyPropertyFound, /*typeAnnotationFound*/ true, resourceState.PropertyAndAnnotationCollector);
             if (propertyParsingResult == PropertyParsingResult.ODataInstanceAnnotation)
             {
-                resourceState.DuplicatePropertyNamesChecker.AddODataScopeAnnotation(annotationName, value);
+                resourceState.PropertyAndAnnotationCollector.AddODataScopeAnnotation(annotationName, value);
             }
             else
             {
-                resourceState.DuplicatePropertyNamesChecker.AddCustomScopeAnnotation(annotationName, value);
+                resourceState.PropertyAndAnnotationCollector.AddCustomScopeAnnotation(annotationName, value);
             }
 
             return value;
@@ -268,15 +268,15 @@ namespace Microsoft.OData.JsonLight
         /// Reads the resource set instance annotations for a top-level resource set.
         /// </summary>
         /// <param name="resourceSet">The <see cref="ODataResourceSet"/> to read the instance annotations for.</param>
-        /// <param name="duplicatePropertyNamesChecker">The duplicate property names checker for the top-level scope.</param>
+        /// <param name="propertyAndAnnotationCollector">The duplicate property names checker for the top-level scope.</param>
         /// <param name="forResourceSetStart">true when parsing the instance annotations before the resource set property;
         /// false when parsing the instance annotations after the resource set property.</param>
         /// <param name="readAllResourceSetProperties">true if we should scan ahead for the annotations and ignore the actual data properties (used with
         /// the reordering reader); otherwise false.</param>
-        internal void ReadTopLevelResourceSetAnnotations(ODataResourceSetBase resourceSet, DuplicatePropertyNamesChecker duplicatePropertyNamesChecker, bool forResourceSetStart, bool readAllResourceSetProperties)
+        internal void ReadTopLevelResourceSetAnnotations(ODataResourceSetBase resourceSet, PropertyAndAnnotationCollector propertyAndAnnotationCollector, bool forResourceSetStart, bool readAllResourceSetProperties)
         {
             Debug.Assert(resourceSet != null, "resourceSet != null");
-            Debug.Assert(duplicatePropertyNamesChecker != null, "duplicatePropertyNamesChecker != null");
+            Debug.Assert(propertyAndAnnotationCollector != null, "propertyAndAnnotationCollector != null");
             this.JsonReader.AssertNotBuffering();
 
             bool buffering = false;
@@ -290,11 +290,11 @@ namespace Microsoft.OData.JsonLight
                     {
                         // If this is not called for reading ResourceSetStart and we already scanned ahead and processed all resource set properties, we already checked for duplicate property names.
                         // Use an empty duplicate property name checker since this.ParseProperty() read through the same property annotation of instance annotations again.
-                        duplicatePropertyNamesChecker = new DuplicatePropertyNamesChecker(false);
+                        propertyAndAnnotationCollector = new PropertyAndAnnotationCollector(false);
                     }
 
                     this.ProcessProperty(
-                        duplicatePropertyNamesChecker,
+                        propertyAndAnnotationCollector,
                         this.ReadTypePropertyAnnotationValue,
                         (propertyParseResult, propertyName) =>
                         {
@@ -302,7 +302,7 @@ namespace Microsoft.OData.JsonLight
                             {
                                 case PropertyParsingResult.ODataInstanceAnnotation:
                                 case PropertyParsingResult.CustomInstanceAnnotation:
-                                    ReadODataOrCustomInstanceAnnotationValue(resourceSet, duplicatePropertyNamesChecker,
+                                    ReadODataOrCustomInstanceAnnotationValue(resourceSet, propertyAndAnnotationCollector,
                                         forResourceSetStart, readAllResourceSetProperties, propertyParseResult, propertyName);
                                     break;
 
@@ -379,7 +379,7 @@ namespace Microsoft.OData.JsonLight
         /// Reads built-in "odata." or custom instance annotation's value.
         /// </summary>
         /// <param name="resourceSet">The ODataResourceSetBase.</param>
-        /// <param name="duplicatePropertyNamesChecker">The DuplicatePropertyNamesChecker.</param>
+        /// <param name="propertyAndAnnotationCollector">The PropertyAndAnnotationCollector.</param>
         /// <param name="forResourceSetStart">true when parsing the instance annotations before the resource set property;
         /// false when parsing the instance annotations after the resource set property.</param>
         /// <param name="readAllResourceSetProperties">true if we should scan ahead for the annotations and ignore the actual data properties (used with
@@ -387,14 +387,14 @@ namespace Microsoft.OData.JsonLight
         /// <param name="propertyParseResult">The PropertyParsingResult.</param>
         /// <param name="annotationName">The annotation name.</param>
         internal void ReadODataOrCustomInstanceAnnotationValue(ODataResourceSetBase resourceSet,
-            DuplicatePropertyNamesChecker duplicatePropertyNamesChecker, bool forResourceSetStart,
+            PropertyAndAnnotationCollector propertyAndAnnotationCollector, bool forResourceSetStart,
             bool readAllResourceSetProperties, PropertyParsingResult propertyParseResult, string annotationName)
         {
             if (propertyParseResult == PropertyParsingResult.ODataInstanceAnnotation)
             {
                 // #### annotation 1 ####
-                // built-in "odata." annotation value is added to duplicatePropertyNamesChecker then later to resourceSet.InstanceAnnotations.
-                duplicatePropertyNamesChecker.AddODataScopeAnnotation(annotationName, this.JsonReader.Value);
+                // built-in "odata." annotation value is added to propertyAndAnnotationCollector then later to resourceSet.InstanceAnnotations.
+                propertyAndAnnotationCollector.AddODataScopeAnnotation(annotationName, this.JsonReader.Value);
             }
 
             // When we are reading the start of a resource set (in scan-ahead mode or not) or when
@@ -404,7 +404,7 @@ namespace Microsoft.OData.JsonLight
             {
                 // #### annotation 2 ####
                 // custom annotation value will be directly added to resourceSet.InstanceAnnotations.
-                this.ReadAndApplyResourceSetInstanceAnnotationValue(annotationName, resourceSet, duplicatePropertyNamesChecker);
+                this.ReadAndApplyResourceSetInstanceAnnotationValue(annotationName, resourceSet, propertyAndAnnotationCollector);
             }
             else
             {
@@ -505,7 +505,7 @@ namespace Microsoft.OData.JsonLight
         /// <param name="annotationName">The name of the instance annotation found.</param>
         /// <param name="anyPropertyFound">true if a non-annotation property has already been encountered.</param>
         /// <param name="typeAnnotationFound">true if the 'odata.type' annotation has already been encountered, or should have been by now.</param>
-        /// <param name="duplicatePropertyNamesChecker">The duplicate property names checker for the resource being read.</param>
+        /// <param name="propertyAndAnnotationCollector">The duplicate property names checker for the resource being read.</param>
         /// <returns>The value of the annotation.</returns>
         /// <remarks>
         /// Pre-Condition:  JsonNodeType.PrimitiveValue         The value of the instance annotation property
@@ -514,7 +514,7 @@ namespace Microsoft.OData.JsonLight
         /// Post-Condition: JsonNodeType.EndObject              The end of the resource object
         ///                 JsonNodeType.Property               The next property after the instance annotation
         /// </remarks>
-        internal object ReadEntryInstanceAnnotation(string annotationName, bool anyPropertyFound, bool typeAnnotationFound, DuplicatePropertyNamesChecker duplicatePropertyNamesChecker)
+        internal object ReadEntryInstanceAnnotation(string annotationName, bool anyPropertyFound, bool typeAnnotationFound, PropertyAndAnnotationCollector propertyAndAnnotationCollector)
         {
             Debug.Assert(!string.IsNullOrEmpty(annotationName), "!string.IsNullOrEmpty(annotationName)");
             this.AssertJsonCondition(JsonNodeType.PrimitiveValue, JsonNodeType.StartObject, JsonNodeType.StartArray);
@@ -562,7 +562,7 @@ namespace Microsoft.OData.JsonLight
                     Debug.Assert(
                         !this.MessageReaderSettings.ShouldSkipAnnotation(annotationName),
                         "!this.MessageReaderSettings.ShouldReadAndValidateAnnotation(annotationName) -- otherwise we should have already skipped the custom annotation and won't see it here.");
-                    return this.ReadCustomInstanceAnnotationValue(duplicatePropertyNamesChecker, annotationName);
+                    return this.ReadCustomInstanceAnnotationValue(propertyAndAnnotationCollector, annotationName);
             }
         }
 
@@ -657,13 +657,13 @@ namespace Microsoft.OData.JsonLight
         /// </summary>
         /// <param name="annotationName">The name of the annotation found.</param>
         /// <param name="resourceSet">The resource set to read the annotation for; if non-null, the annotation value will be assigned to the resource set.</param>
-        /// <param name="duplicatePropertyNamesChecker">The duplicate property names checker instance.</param>
+        /// <param name="propertyAndAnnotationCollector">The duplicate property names checker instance.</param>
         /// <remarks>
         /// Pre-Condition:  JsonNodeType.PrimitiveValue         The value of the annotation
         /// Post-Condition: JsonNodeType.EndObject              The end of the resource set object
         ///                 JsonNodeType.Property               The next annotation after the current annotation
         /// </remarks>
-        internal void ReadAndApplyResourceSetInstanceAnnotationValue(string annotationName, ODataResourceSetBase resourceSet, DuplicatePropertyNamesChecker duplicatePropertyNamesChecker)
+        internal void ReadAndApplyResourceSetInstanceAnnotationValue(string annotationName, ODataResourceSetBase resourceSet, PropertyAndAnnotationCollector propertyAndAnnotationCollector)
         {
             Debug.Assert(!string.IsNullOrEmpty(annotationName), "!string.IsNullOrEmpty(annotationName)");
             Debug.Assert(resourceSet != null, "resourceSet != null");
@@ -691,7 +691,7 @@ namespace Microsoft.OData.JsonLight
                     Debug.Assert(
                         !this.MessageReaderSettings.ShouldSkipAnnotation(annotationName),
                         "!this.MessageReaderSettings.ShouldReadAndValidateAnnotation(annotationName) -- otherwise we should have already skipped the custom annotation and won't see it here.");
-                    object instanceAnnotationValue = this.ReadCustomInstanceAnnotationValue(duplicatePropertyNamesChecker, annotationName);
+                    object instanceAnnotationValue = this.ReadCustomInstanceAnnotationValue(propertyAndAnnotationCollector, annotationName);
                     resourceSet.InstanceAnnotations.Add(new ODataInstanceAnnotation(annotationName, instanceAnnotationValue.ToODataValue()));
                     break;
             }
@@ -742,7 +742,7 @@ namespace Microsoft.OData.JsonLight
                         }
                     }
 
-                    resourceState.DuplicatePropertyNamesChecker.CheckForDuplicatePropertyNamesOnNestedResourceInfoStart(readerNestedResourceInfo.NestedResourceInfo);
+                    resourceState.PropertyAndAnnotationCollector.ValidatePropertyUniquenessOnNestedResourceInfoStart(readerNestedResourceInfo.NestedResourceInfo);
                 }
                 else
                 {
@@ -774,11 +774,11 @@ namespace Microsoft.OData.JsonLight
         /// </summary>
         /// <param name="resourceSet">The resource set being read.</param>
         /// <param name="expandedNestedResourceInfo">The information about the expanded link. This must be non-null if we're reading an expanded resource set, and must be null if we're reading a top-level resource set.</param>
-        /// <param name="duplicatePropertyNamesChecker">The top-level duplicate property names checker, if we're reading a top-level resource set.</param>
+        /// <param name="propertyAndAnnotationCollector">The top-level duplicate property names checker, if we're reading a top-level resource set.</param>
         internal void ReadNextLinkAnnotationAtResourceSetEnd(
             ODataResourceSetBase resourceSet,
             ODataJsonLightReaderNestedResourceInfo expandedNestedResourceInfo,
-            DuplicatePropertyNamesChecker duplicatePropertyNamesChecker)
+            PropertyAndAnnotationCollector propertyAndAnnotationCollector)
         {
             Debug.Assert(resourceSet != null, "resourceSet != null");
 
@@ -790,11 +790,11 @@ namespace Microsoft.OData.JsonLight
             }
             else
             {
-                Debug.Assert(duplicatePropertyNamesChecker != null, "duplicatePropertyNamesChecker != null");
+                Debug.Assert(propertyAndAnnotationCollector != null, "propertyAndAnnotationCollector != null");
 
                 // Check for resource set instance annotations that appear after the resource set.
                 bool isReordering = this.JsonReader is ReorderingJsonReader;
-                this.ReadTopLevelResourceSetAnnotations(resourceSet, duplicatePropertyNamesChecker, /*forResourceSetStart*/false, /*readAllResourceSetProperties*/isReordering);
+                this.ReadTopLevelResourceSetAnnotations(resourceSet, propertyAndAnnotationCollector, /*forResourceSetStart*/false, /*readAllResourceSetProperties*/isReordering);
             }
         }
 
@@ -821,7 +821,7 @@ namespace Microsoft.OData.JsonLight
             };
 
             foreach (var propertyAnnotation
-                     in resourceState.DuplicatePropertyNamesChecker.GetODataPropertyAnnotations(nestedResourceInfo.Name))
+                     in resourceState.PropertyAndAnnotationCollector.GetODataPropertyAnnotations(nestedResourceInfo.Name))
             {
                 switch (propertyAnnotation.Key)
                 {
@@ -961,7 +961,7 @@ namespace Microsoft.OData.JsonLight
                         readerNestedResourceInfo = ReadNonExpandedResourceNestedResourceInfo(resourceState, structuredProperty, structuredPropertyTypeOrItemType, structuredProperty.Name);
                     }
 
-                    resourceState.DuplicatePropertyNamesChecker.CheckForDuplicatePropertyNamesOnNestedResourceInfoStart(readerNestedResourceInfo.NestedResourceInfo);
+                    resourceState.PropertyAndAnnotationCollector.ValidatePropertyUniquenessOnNestedResourceInfoStart(readerNestedResourceInfo.NestedResourceInfo);
                 }
                 else if (navigationProperty != null)
                 {
@@ -981,7 +981,7 @@ namespace Microsoft.OData.JsonLight
                             : ReadEntityReferenceLinkForSingletonNavigationLinkInRequest(resourceState, navigationProperty, propertyName, /*isExpanded*/ true);
                     }
 
-                    resourceState.DuplicatePropertyNamesChecker.CheckForDuplicatePropertyNamesOnNestedResourceInfoStart(readerNestedResourceInfo.NestedResourceInfo);
+                    resourceState.PropertyAndAnnotationCollector.ValidatePropertyUniquenessOnNestedResourceInfoStart(readerNestedResourceInfo.NestedResourceInfo);
                 }
                 else
                 {
@@ -993,7 +993,7 @@ namespace Microsoft.OData.JsonLight
 
                     // NOTE: we currently do not check whether the property should be skipped
                     //       here because this can only happen for navigation properties and open properties.
-                    this.ReadEntryDataProperty(resourceState, edmProperty, ValidateDataPropertyTypeNameAnnotation(resourceState.DuplicatePropertyNamesChecker, propertyName));
+                    this.ReadEntryDataProperty(resourceState, edmProperty, ValidateDataPropertyTypeNameAnnotation(resourceState.PropertyAndAnnotationCollector, propertyName));
                 }
             }
             else
@@ -1033,7 +1033,7 @@ namespace Microsoft.OData.JsonLight
             object propertyValue = this.ReadNonEntityValue(
                 propertyTypeName,
                 edmProperty.Type,
-                /*duplicatePropertyNamesChecker*/ null,
+                /*propertyAndAnnotationCollector*/ null,
                 /*collectionValidator*/ null,
                 nullValueReadBehaviorKind == ODataNullValueBehaviorKind.Default,
                 /*isTopLevelPropertyValue*/ false,
@@ -1079,8 +1079,8 @@ namespace Microsoft.OData.JsonLight
 
             object propertyValue = null;
             bool insideComplexValue = false;
-            string outterPayloadTypeName = ValidateDataPropertyTypeNameAnnotation(resourceState.DuplicatePropertyNamesChecker, propertyName);
-            string payloadTypeName = TryReadOrPeekPayloadType(resourceState.DuplicatePropertyNamesChecker, propertyName, insideComplexValue);
+            string outterPayloadTypeName = ValidateDataPropertyTypeNameAnnotation(resourceState.PropertyAndAnnotationCollector, propertyName);
+            string payloadTypeName = TryReadOrPeekPayloadType(resourceState.PropertyAndAnnotationCollector, propertyName, insideComplexValue);
             EdmTypeKind payloadTypeKind;
             IEdmType payloadType = ReaderValidationUtils.ResolvePayloadTypeName(
                 this.Model,
@@ -1133,7 +1133,7 @@ namespace Microsoft.OData.JsonLight
                     propertyValue = this.ReadNonEntityValue(
                         outterPayloadTypeName,
                         /*expectedValueTypeReference*/ null,
-                        /*duplicatePropertyNamesChecker*/ null,
+                        /*propertyAndAnnotationCollector*/ null,
                         /*collectionValidator*/ null,
                         /*validateNullValue*/ true,
                         /*isTopLevelPropertyValue*/ false,
@@ -1191,7 +1191,7 @@ namespace Microsoft.OData.JsonLight
             // Undeclared property
             // Detect whether it's a link property or value property.
             // Link properties are stream properties and deferred links.
-            var odataPropertyAnnotations = resourceState.DuplicatePropertyNamesChecker.GetODataPropertyAnnotations(propertyName);
+            var odataPropertyAnnotations = resourceState.PropertyAndAnnotationCollector.GetODataPropertyAnnotations(propertyName);
             object propertyAnnotationValue;
 
             // If the property has 'odata.navigationLink' or 'odata.associationLink' annotation, read it as a navigation property
@@ -1200,7 +1200,7 @@ namespace Microsoft.OData.JsonLight
             {
                 // Read it as a deferred link - we never read the expanded content.
                 ODataJsonLightReaderNestedResourceInfo navigationLinkInfo = ReadDeferredNestedResourceInfo(resourceState, propertyName, /*navigationProperty*/ null);
-                resourceState.DuplicatePropertyNamesChecker.CheckForDuplicatePropertyNamesOnNestedResourceInfoStart(navigationLinkInfo.NestedResourceInfo);
+                resourceState.PropertyAndAnnotationCollector.ValidatePropertyUniquenessOnNestedResourceInfoStart(navigationLinkInfo.NestedResourceInfo);
 
                 // If the property is expanded, ignore the content if we're asked to do so.
                 if (propertyWithValue)
@@ -1250,7 +1250,7 @@ namespace Microsoft.OData.JsonLight
 
             // Validate that the property doesn't have unrecognized annotations
             // We ignore the type name since we might not have the full model and thus might not be able to resolve it correctly.
-            ValidateDataPropertyTypeNameAnnotation(resourceState.DuplicatePropertyNamesChecker, propertyName);
+            ValidateDataPropertyTypeNameAnnotation(resourceState.PropertyAndAnnotationCollector, propertyName);
 
             if (!this.MessageReaderSettings.ThrowOnUndeclaredPropertyForNonOpenType)
             {
@@ -1289,7 +1289,7 @@ namespace Microsoft.OData.JsonLight
             ODataStreamReferenceValue streamReferenceValue = new ODataStreamReferenceValue();
 
             foreach (var propertyAnnotation
-                     in resourceState.DuplicatePropertyNamesChecker.GetODataPropertyAnnotations(streamPropertyName))
+                     in resourceState.PropertyAndAnnotationCollector.GetODataPropertyAnnotations(streamPropertyName))
             {
                 switch (propertyAnnotation.Key)
                 {

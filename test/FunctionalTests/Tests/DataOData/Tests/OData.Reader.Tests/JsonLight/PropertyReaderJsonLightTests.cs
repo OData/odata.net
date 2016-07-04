@@ -317,7 +317,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                             "\"" + JsonLightUtils.GetPropertyAnnotationName("value", "custom.annotation") + "\": null" +
                         "}",
                         ReaderMetadata = readerMetadata,
-                        ExpectedException = ODataExpectedExceptions.ODataException("DuplicatePropertyNamesChecker_PropertyAnnotationAfterTheProperty", "custom.annotation", "value")
+                        ExpectedException = ODataExpectedExceptions.ODataException("PropertyAnnotationAfterTheProperty", "custom.annotation", "value")
                     },
                     new
                     {
@@ -340,7 +340,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                             "\"" + JsonLightConstants.ODataValuePropertyName + "\": 42" +
                         "}",
                         ReaderMetadata = readerMetadata,
-                        ExpectedException = ODataExpectedExceptions.ODataException("DuplicatePropertyNamesChecker_DuplicateAnnotationNotAllowed", JsonLightConstants.ODataTypeAnnotationName)
+                        ExpectedException = ODataExpectedExceptions.ODataException("DuplicateAnnotationNotAllowed", JsonLightConstants.ODataTypeAnnotationName)
                     },
                     new
                     {
@@ -756,7 +756,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                         "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataTypeAnnotationName + "\":\"Edm.String\"," +
                         "\"" + JsonLightConstants.ODataValuePropertyName + "\":\"" + JsonLightConstants.ODataValuePropertyName + "\"," +
                         "\"" + JsonLightConstants.ODataValuePropertyName + "\":\"" + JsonLightConstants.ODataValuePropertyName + "\"",
-                    ExpectedException = ODataExpectedExceptions.ODataException("DuplicatePropertyNamesChecker_DuplicatePropertyNamesNotAllowed", JsonLightConstants.ODataValuePropertyName)
+                    ExpectedException = ODataExpectedExceptions.ODataException("DuplicatePropertyNamesNotAllowed", JsonLightConstants.ODataValuePropertyName)
                 },
                 new OpenPropertyTestCase
                 {
@@ -767,7 +767,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                         "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataTypeAnnotationName + "\":\"Edm.String\"," +
                         "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataTypeAnnotationName + "\":\"Edm.String\"," +
                         "\"" + JsonLightConstants.ODataValuePropertyName + "\":\"" + JsonLightConstants.ODataValuePropertyName + "\"",
-                    ExpectedException = ODataExpectedExceptions.ODataException("DuplicatePropertyNamesChecker_DuplicateAnnotationNotAllowed", JsonLightConstants.ODataTypeAnnotationName)
+                    ExpectedException = ODataExpectedExceptions.ODataException("DuplicateAnnotationNotAllowed", JsonLightConstants.ODataTypeAnnotationName)
                 },
                 new OpenPropertyTestCase
                 {

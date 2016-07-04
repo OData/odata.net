@@ -739,7 +739,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.CollectionWriter
             ODataProperty complexProperty = new ODataProperty { Name = "Foo", Value = new ODataComplexValue { Properties = new[] { new ODataProperty() { Name = "StringProperty", Value = "xyz" } } } };
             ODataProperty collectionProperty = new ODataProperty { Name = "Foo", Value = new ODataCollectionValue { Items = new int[] { 1, 2 } } };
 
-            ExpectedException expectedException = ODataExpectedExceptions.ODataException("DuplicatePropertyNamesChecker_DuplicatePropertyNamesNotAllowed", "Foo");
+            ExpectedException expectedException = ODataExpectedExceptions.ODataException("DuplicatePropertyNamesNotAllowed", "Foo");
             Func<WriterTestConfiguration, ExpectedException> expectedExceptionFunc = (tc) => tc.MessageWriterSettings.GetAllowDuplicatePropertyNames() ? null : expectedException;
 
             DuplicatePropertyNamesTestCase[] testCases = new DuplicatePropertyNamesTestCase[]

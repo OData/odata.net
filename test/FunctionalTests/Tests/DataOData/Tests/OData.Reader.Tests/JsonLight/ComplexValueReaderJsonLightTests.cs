@@ -222,7 +222,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                         Json = "\"Name\": \"Value\"," +
                                "\"" + JsonLightUtils.GetPropertyAnnotationName("Name", "custom.annotation") + "\": null",
                         ExpectedPayload = PayloadBuilder.Entity("TestModel.ComplexType").IsComplex(true),
-                        ExpectedException = ODataExpectedExceptions.ODataException("DuplicatePropertyNamesChecker_PropertyAnnotationAfterTheProperty", "custom.annotation", "Name")
+                        ExpectedException = ODataExpectedExceptions.ODataException("PropertyAnnotationAfterTheProperty", "custom.annotation", "Name")
                     },
                     new
                     {
@@ -240,7 +240,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                                "\"" + JsonLightUtils.GetPropertyAnnotationName("Name", JsonLightConstants.ODataTypeAnnotationName) + "\": \"Edm.String\"," +
                                "\"Name\": \"Value\"",
                         ExpectedPayload = PayloadBuilder.Entity("TestModel.ComplexType").IsComplex(true),
-                        ExpectedException = ODataExpectedExceptions.ODataException("DuplicatePropertyNamesChecker_DuplicateAnnotationForPropertyNotAllowed", JsonLightConstants.ODataTypeAnnotationName, "Name")
+                        ExpectedException = ODataExpectedExceptions.ODataException("DuplicateAnnotationForPropertyNotAllowed", JsonLightConstants.ODataTypeAnnotationName, "Name")
                     },
                     new
                     {
@@ -256,7 +256,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                         Json = "\"Name\":\"value\"," +
                                 "\"" + JsonLightUtils.GetPropertyAnnotationName("Name", JsonLightConstants.ODataTypeAnnotationName) + "\":\"Edm.String\"",
                         ExpectedPayload = PayloadBuilder.Entity("TestModel.ComplexType").IsComplex(true),
-                        ExpectedException = ODataExpectedExceptions.ODataException("DuplicatePropertyNamesChecker_PropertyAnnotationAfterTheProperty", JsonLightConstants.ODataTypeAnnotationName, "Name")
+                        ExpectedException = ODataExpectedExceptions.ODataException("PropertyAnnotationAfterTheProperty", JsonLightConstants.ODataTypeAnnotationName, "Name")
                     },
                     new
                     {

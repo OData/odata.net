@@ -41,15 +41,15 @@ namespace Microsoft.OData.JsonLight
             this.JsonReader.AssertNotBuffering();
 
             // We use this to store annotations and check for duplicate annotation names, but we don't really store properties in it.
-            DuplicatePropertyNamesChecker duplicatePropertyNamesChecker = this.CreateDuplicatePropertyNamesChecker();
+            PropertyAndAnnotationCollector propertyAndAnnotationCollector = this.CreatePropertyAndAnnotationCollector();
 
             this.ReadPayloadStart(
                 ODataPayloadKind.EntityReferenceLinks,
-                duplicatePropertyNamesChecker,
+                propertyAndAnnotationCollector,
                 /*isReadingNestedPayload*/false,
                 /*allowEmptyPayload*/false);
 
-            ODataEntityReferenceLinks entityReferenceLinks = this.ReadEntityReferenceLinksImplementation(duplicatePropertyNamesChecker);
+            ODataEntityReferenceLinks entityReferenceLinks = this.ReadEntityReferenceLinksImplementation(propertyAndAnnotationCollector);
 
             this.ReadPayloadEnd(/*isReadingNestedPayload*/ false);
 
@@ -70,17 +70,17 @@ namespace Microsoft.OData.JsonLight
             this.JsonReader.AssertNotBuffering();
 
             // We use this to store annotations and check for duplicate annotation names, but we don't really store properties in it.
-            DuplicatePropertyNamesChecker duplicatePropertyNamesChecker = this.CreateDuplicatePropertyNamesChecker();
+            PropertyAndAnnotationCollector propertyAndAnnotationCollector = this.CreatePropertyAndAnnotationCollector();
 
             return this.ReadPayloadStartAsync(
                 ODataPayloadKind.EntityReferenceLinks,
-                duplicatePropertyNamesChecker,
+                propertyAndAnnotationCollector,
                 /*isReadingNestedPayload*/false,
                 /*allowEmptyPayload*/false)
 
                 .FollowOnSuccessWith(t =>
                     {
-                        ODataEntityReferenceLinks entityReferenceLinks = this.ReadEntityReferenceLinksImplementation(duplicatePropertyNamesChecker);
+                        ODataEntityReferenceLinks entityReferenceLinks = this.ReadEntityReferenceLinksImplementation(propertyAndAnnotationCollector);
 
                         this.ReadPayloadEnd(/*isReadingNestedPayload*/ false);
 
@@ -102,15 +102,15 @@ namespace Microsoft.OData.JsonLight
             this.JsonReader.AssertNotBuffering();
 
             // We use this to store annotations and check for duplicate annotation names, but we don't really store properties in it.
-            DuplicatePropertyNamesChecker duplicatePropertyNamesChecker = this.CreateDuplicatePropertyNamesChecker();
+            PropertyAndAnnotationCollector propertyAndAnnotationCollector = this.CreatePropertyAndAnnotationCollector();
 
             this.ReadPayloadStart(
                 ODataPayloadKind.EntityReferenceLink,
-                duplicatePropertyNamesChecker,
+                propertyAndAnnotationCollector,
                 /*isReadingNestedPayload*/false,
                 /*allowEmptyPayload*/false);
 
-            ODataEntityReferenceLink entityReferenceLink = this.ReadEntityReferenceLinkImplementation(duplicatePropertyNamesChecker);
+            ODataEntityReferenceLink entityReferenceLink = this.ReadEntityReferenceLinkImplementation(propertyAndAnnotationCollector);
 
             this.ReadPayloadEnd(/*isReadingNestedPayload*/ false);
 
@@ -131,17 +131,17 @@ namespace Microsoft.OData.JsonLight
             this.JsonReader.AssertNotBuffering();
 
             // We use this to store annotations and check for duplicate annotation names, but we don't really store properties in it.
-            DuplicatePropertyNamesChecker duplicatePropertyNamesChecker = this.CreateDuplicatePropertyNamesChecker();
+            PropertyAndAnnotationCollector propertyAndAnnotationCollector = this.CreatePropertyAndAnnotationCollector();
 
             return this.ReadPayloadStartAsync(
                 ODataPayloadKind.EntityReferenceLink,
-                duplicatePropertyNamesChecker,
+                propertyAndAnnotationCollector,
                 /*isReadingNestedPayload*/false,
                 /*allowEmptyPayload*/false)
 
                 .FollowOnSuccessWith(t =>
                     {
-                        ODataEntityReferenceLink entityReferenceLink = this.ReadEntityReferenceLinkImplementation(duplicatePropertyNamesChecker);
+                        ODataEntityReferenceLink entityReferenceLink = this.ReadEntityReferenceLinkImplementation(propertyAndAnnotationCollector);
 
                         this.ReadPayloadEnd(/*isReadingNestedPayload*/ false);
 
@@ -156,33 +156,33 @@ namespace Microsoft.OData.JsonLight
         /// <summary>
         /// Read a set of top-level entity reference links.
         /// </summary>
-        /// <param name="duplicatePropertyNamesChecker">The duplicate property names checker to use for the top-level scope.</param>
+        /// <param name="propertyAndAnnotationCollector">The duplicate property names checker to use for the top-level scope.</param>
         /// <returns>An <see cref="ODataEntityReferenceLinks"/> representing the read links.</returns>
-        private ODataEntityReferenceLinks ReadEntityReferenceLinksImplementation(DuplicatePropertyNamesChecker duplicatePropertyNamesChecker)
+        private ODataEntityReferenceLinks ReadEntityReferenceLinksImplementation(PropertyAndAnnotationCollector propertyAndAnnotationCollector)
         {
-            Debug.Assert(duplicatePropertyNamesChecker != null, "duplicatePropertyNamesChecker != null");
+            Debug.Assert(propertyAndAnnotationCollector != null, "propertyAndAnnotationCollector != null");
 
             ODataEntityReferenceLinks entityReferenceLinks = new ODataEntityReferenceLinks();
 
-            this.ReadEntityReferenceLinksAnnotations(entityReferenceLinks, duplicatePropertyNamesChecker, /*forLinksStart*/true);
+            this.ReadEntityReferenceLinksAnnotations(entityReferenceLinks, propertyAndAnnotationCollector, /*forLinksStart*/true);
 
             // Read the start of the content array of the links
             this.JsonReader.ReadStartArray();
 
             List<ODataEntityReferenceLink> links = new List<ODataEntityReferenceLink>();
-            DuplicatePropertyNamesChecker linkDuplicatePropertyNamesChecker = this.JsonLightInputContext.CreateDuplicatePropertyNamesChecker();
+            PropertyAndAnnotationCollector linkPropertyAndAnnotationCollector = this.JsonLightInputContext.CreatePropertyAndAnnotationCollector();
 
             while (this.JsonReader.NodeType != JsonNodeType.EndArray)
             {
                 // read another link
-                ODataEntityReferenceLink entityReferenceLink = this.ReadSingleEntityReferenceLink(linkDuplicatePropertyNamesChecker, /*topLevel*/false);
+                ODataEntityReferenceLink entityReferenceLink = this.ReadSingleEntityReferenceLink(linkPropertyAndAnnotationCollector, /*topLevel*/false);
                 links.Add(entityReferenceLink);
-                linkDuplicatePropertyNamesChecker.Clear();
+                linkPropertyAndAnnotationCollector.Reset();
             }
 
             this.JsonReader.ReadEndArray();
 
-            this.ReadEntityReferenceLinksAnnotations(entityReferenceLinks, duplicatePropertyNamesChecker, /*forLinksStart*/false);
+            this.ReadEntityReferenceLinksAnnotations(entityReferenceLinks, propertyAndAnnotationCollector, /*forLinksStart*/false);
 
             this.JsonReader.ReadEndObject();
 
@@ -193,20 +193,20 @@ namespace Microsoft.OData.JsonLight
         /// <summary>
         /// Reads a top-level entity reference link - implementation of the actual functionality.
         /// </summary>
-        /// <param name="duplicatePropertyNamesChecker">The duplicate property names checker to use for the top-level scope.</param>
+        /// <param name="propertyAndAnnotationCollector">The duplicate property names checker to use for the top-level scope.</param>
         /// <returns>An <see cref="ODataEntityReferenceLink"/> representing the read entity reference link.</returns>
-        private ODataEntityReferenceLink ReadEntityReferenceLinkImplementation(DuplicatePropertyNamesChecker duplicatePropertyNamesChecker)
+        private ODataEntityReferenceLink ReadEntityReferenceLinkImplementation(PropertyAndAnnotationCollector propertyAndAnnotationCollector)
         {
-            Debug.Assert(duplicatePropertyNamesChecker != null, "duplicatePropertyNamesChecker != null");
+            Debug.Assert(propertyAndAnnotationCollector != null, "propertyAndAnnotationCollector != null");
 
-            return this.ReadSingleEntityReferenceLink(duplicatePropertyNamesChecker, /*topLevel*/true);
+            return this.ReadSingleEntityReferenceLink(propertyAndAnnotationCollector, /*topLevel*/true);
         }
 
         /// <summary>
         /// Reads the entity reference link instance annotations.
         /// </summary>
         /// <param name="links">The <see cref="ODataEntityReferenceLinks"/> to read the annotations for.</param>
-        /// <param name="duplicatePropertyNamesChecker">The duplicate property names checker for the entity reference links scope.</param>
+        /// <param name="propertyAndAnnotationCollector">The duplicate property names checker for the entity reference links scope.</param>
         /// <param name="forLinksStart">true when parsing the instance annotations before the 'value' property;
         /// false when parsing the instance annotations after the 'value' property.</param>
         /// <remarks>
@@ -215,10 +215,10 @@ namespace Microsoft.OData.JsonLight
         /// Post-Condition: JsonNodeType.EndObject              When the end of the entity reference links object is reached
         ///                 Any                                 The first node of the value of the 'url' property (if found)
         /// </remarks>
-        private void ReadEntityReferenceLinksAnnotations(ODataEntityReferenceLinks links, DuplicatePropertyNamesChecker duplicatePropertyNamesChecker, bool forLinksStart)
+        private void ReadEntityReferenceLinksAnnotations(ODataEntityReferenceLinks links, PropertyAndAnnotationCollector propertyAndAnnotationCollector, bool forLinksStart)
         {
             Debug.Assert(links != null, "links != null");
-            Debug.Assert(duplicatePropertyNamesChecker != null, "duplicatePropertyNamesChecker != null");
+            Debug.Assert(propertyAndAnnotationCollector != null, "propertyAndAnnotationCollector != null");
             this.AssertJsonCondition(JsonNodeType.Property, JsonNodeType.EndObject);
             this.JsonReader.AssertNotBuffering();
 
@@ -230,7 +230,7 @@ namespace Microsoft.OData.JsonLight
 
                 bool foundValueProperty = false;
                 this.ProcessProperty(
-                    duplicatePropertyNamesChecker,
+                    propertyAndAnnotationCollector,
                     propertyAnnotationValueReader,
                     (propertyParseResult, propertyName) =>
                     {
@@ -259,7 +259,7 @@ namespace Microsoft.OData.JsonLight
                                 Debug.Assert(
                                     !this.MessageReaderSettings.ShouldSkipAnnotation(propertyName),
                                     "!this.MessageReaderSettings.ShouldReadAndValidateAnnotation(propertyName) -- otherwise we should have already skipped the custom annotation and won't see it here.");
-                                object annotationValue = this.ReadCustomInstanceAnnotationValue(duplicatePropertyNamesChecker, propertyName);
+                                object annotationValue = this.ReadCustomInstanceAnnotationValue(propertyAndAnnotationCollector, propertyName);
                                 links.InstanceAnnotations.Add(new ODataInstanceAnnotation(propertyName, annotationValue.ToODataValue()));
                                 break;
 
@@ -344,7 +344,7 @@ namespace Microsoft.OData.JsonLight
         /// <summary>
         /// Read an entity reference link.
         /// </summary>
-        /// <param name="duplicatePropertyNamesChecker">The duplicate property names checker to check for duplicate properties and
+        /// <param name="propertyAndAnnotationCollector">The duplicate property names checker to check for duplicate properties and
         /// duplicate annotations; this is a separate instance per entity reference link.</param>
         /// <param name="topLevel">true if we are reading a singleton entity reference link at the top level; false if we are reading
         /// an entity reference link as part of a collection of entity reference links.</param>
@@ -357,7 +357,7 @@ namespace Microsoft.OData.JsonLight
         ///                 EndArray        for the last link in a collection of links
         ///                 Any             for the first node of the next link in a collection of links
         /// </remarks>
-        private ODataEntityReferenceLink ReadSingleEntityReferenceLink(DuplicatePropertyNamesChecker duplicatePropertyNamesChecker, bool topLevel)
+        private ODataEntityReferenceLink ReadSingleEntityReferenceLink(PropertyAndAnnotationCollector propertyAndAnnotationCollector, bool topLevel)
         {
             this.JsonReader.AssertNotBuffering();
 
@@ -383,7 +383,7 @@ namespace Microsoft.OData.JsonLight
             while (this.JsonReader.NodeType == JsonNodeType.Property)
             {
                 this.ProcessProperty(
-                    duplicatePropertyNamesChecker,
+                    propertyAndAnnotationCollector,
                     propertyAnnotationValueReader,
                     (propertyParsingResult, propertyName) =>
                     {
@@ -427,7 +427,7 @@ namespace Microsoft.OData.JsonLight
                                 Debug.Assert(
                                     !this.MessageReaderSettings.ShouldSkipAnnotation(propertyName),
                                     "!this.MessageReaderSettings.ShouldReadAndValidateAnnotation(propertyName) -- otherwise we should have already skipped the custom annotation and won't see it here.");
-                                object annotationValue = this.ReadCustomInstanceAnnotationValue(duplicatePropertyNamesChecker, propertyName);
+                                object annotationValue = this.ReadCustomInstanceAnnotationValue(propertyAndAnnotationCollector, propertyName);
                                 entityReferenceLink[0].InstanceAnnotations.Add(new ODataInstanceAnnotation(propertyName, annotationValue.ToODataValue()));
                                 break;
 

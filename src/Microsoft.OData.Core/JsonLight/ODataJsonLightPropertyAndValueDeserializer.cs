@@ -57,15 +57,15 @@ namespace Microsoft.OData.JsonLight
             this.JsonReader.AssertNotBuffering();
 
             // We use this to store annotations and check for duplicate annotation names, but we don't really store properties in it.
-            DuplicatePropertyNamesChecker duplicatePropertyNamesChecker = this.CreateDuplicatePropertyNamesChecker();
+            PropertyAndAnnotationCollector propertyAndAnnotationCollector = this.CreatePropertyAndAnnotationCollector();
 
             this.ReadPayloadStart(
                 ODataPayloadKind.Property,
-                duplicatePropertyNamesChecker,
+                propertyAndAnnotationCollector,
                 /*isReadingNestedPayload*/false,
                 /*allowEmptyPayload*/false);
 
-            ODataProperty resultProperty = this.ReadTopLevelPropertyImplementation(expectedPropertyTypeReference, duplicatePropertyNamesChecker);
+            ODataProperty resultProperty = this.ReadTopLevelPropertyImplementation(expectedPropertyTypeReference, propertyAndAnnotationCollector);
 
             this.ReadPayloadEnd(/*isReadingNestedPayload*/ false);
 
@@ -88,17 +88,17 @@ namespace Microsoft.OData.JsonLight
             this.JsonReader.AssertNotBuffering();
 
             // We use this to store annotations and check for duplicate annotation names, but we don't really store properties in it.
-            DuplicatePropertyNamesChecker duplicatePropertyNamesChecker = this.CreateDuplicatePropertyNamesChecker();
+            PropertyAndAnnotationCollector propertyAndAnnotationCollector = this.CreatePropertyAndAnnotationCollector();
 
             return this.ReadPayloadStartAsync(
                 ODataPayloadKind.Property,
-                duplicatePropertyNamesChecker,
+                propertyAndAnnotationCollector,
                 /*isReadingNestedPayload*/false,
                 /*allowEmptyPayload*/false)
 
                 .FollowOnSuccessWith(t =>
                 {
-                    ODataProperty resultProperty = this.ReadTopLevelPropertyImplementation(expectedPropertyTypeReference, duplicatePropertyNamesChecker);
+                    ODataProperty resultProperty = this.ReadTopLevelPropertyImplementation(expectedPropertyTypeReference, propertyAndAnnotationCollector);
 
                     this.ReadPayloadEnd(/*isReadingNestedPayload*/ false);
 
@@ -115,7 +115,7 @@ namespace Microsoft.OData.JsonLight
         /// </summary>
         /// <param name="payloadTypeName">The type name read from the payload as a property annotation, or null if none is available.</param>
         /// <param name="expectedValueTypeReference">The expected type reference of the property value.</param>
-        /// <param name="duplicatePropertyNamesChecker">The duplicate property names checker to use - if null the method should create a new one if necessary.</param>
+        /// <param name="propertyAndAnnotationCollector">The duplicate property names checker to use - if null the method should create a new one if necessary.</param>
         /// <param name="collectionValidator">The collection validator instance if no expected item type has been specified; otherwise null.</param>
         /// <param name="validateNullValue">true to validate null values; otherwise false.</param>
         /// <param name="isTopLevelPropertyValue">true if we are reading a top-level property value; otherwise false.</param>
@@ -138,7 +138,7 @@ namespace Microsoft.OData.JsonLight
         internal object ReadNonEntityValue(
             string payloadTypeName,
             IEdmTypeReference expectedValueTypeReference,
-            DuplicatePropertyNamesChecker duplicatePropertyNamesChecker,
+            PropertyAndAnnotationCollector propertyAndAnnotationCollector,
             CollectionWithoutExpectedTypeValidator collectionValidator,
             bool validateNullValue,
             bool isTopLevelPropertyValue,
@@ -150,7 +150,7 @@ namespace Microsoft.OData.JsonLight
             object nonEntityValue = this.ReadNonEntityValueImplementation(
                 payloadTypeName,
                 expectedValueTypeReference,
-                duplicatePropertyNamesChecker,
+                propertyAndAnnotationCollector,
                 collectionValidator,
                 validateNullValue,
                 isTopLevelPropertyValue,
@@ -165,17 +165,17 @@ namespace Microsoft.OData.JsonLight
         /// <summary>
         /// Reads the value of the instance annotation.
         /// </summary>
-        /// <param name="duplicatePropertyNamesChecker">The duplicate property names checker instance.</param>
+        /// <param name="propertyAndAnnotationCollector">The duplicate property names checker instance.</param>
         /// <param name="name">The name of the instance annotation.</param>
         /// <returns>Returns the value of the instance annotation.</returns>
-        internal object ReadCustomInstanceAnnotationValue(DuplicatePropertyNamesChecker duplicatePropertyNamesChecker, string name)
+        internal object ReadCustomInstanceAnnotationValue(PropertyAndAnnotationCollector propertyAndAnnotationCollector, string name)
         {
-            Debug.Assert(duplicatePropertyNamesChecker != null, "duplicatePropertyNamesChecker != null");
+            Debug.Assert(propertyAndAnnotationCollector != null, "propertyAndAnnotationCollector != null");
             Debug.Assert(!string.IsNullOrEmpty(name), "!string.IsNullOrEmpty(name)");
 
             object propertyAnnotation;
             string odataType = null;
-            if (duplicatePropertyNamesChecker.GetODataPropertyAnnotations(name)
+            if (propertyAndAnnotationCollector.GetODataPropertyAnnotations(name)
                 .TryGetValue(ODataAnnotationNames.ODataType, out propertyAnnotation))
             {
                 odataType = ReaderUtils.AddEdmPrefixOfTypeName(ReaderUtils.RemovePrefixOfTypeName((string)propertyAnnotation));
@@ -197,7 +197,7 @@ namespace Microsoft.OData.JsonLight
             object customInstanceAnnotationValue = this.ReadNonEntityValueImplementation(
                 odataType,
                 expectedTypeFromTerm,
-                null, /*duplicatePropertyNamesChecker*/
+                null, /*propertyAndAnnotationCollector*/
                 null, /*collectionValidator*/
                 false, /*validateNullValue*/
                 false, /*isTopLevelPropertyValue*/
@@ -235,13 +235,13 @@ namespace Microsoft.OData.JsonLight
         /// <summary>
         /// Try to read or peek the odata.type annotation.
         /// </summary>
-        /// <param name="duplicatePropertyNamesChecker">The current level's DuplicatePropertyNamesChecker.</param>
+        /// <param name="propertyAndAnnotationCollector">The current level's PropertyAndAnnotationCollector.</param>
         /// <param name="propertyName">The property name.</param>
         /// <param name="insideComplexValue">If inside complex value.</param>
         /// <returns>The odata.type value or null.</returns>
-        protected string TryReadOrPeekPayloadType(DuplicatePropertyNamesChecker duplicatePropertyNamesChecker, string propertyName, bool insideComplexValue)
+        protected string TryReadOrPeekPayloadType(PropertyAndAnnotationCollector propertyAndAnnotationCollector, string propertyName, bool insideComplexValue)
         {
-            string payloadTypeName = ValidateDataPropertyTypeNameAnnotation(duplicatePropertyNamesChecker, propertyName);
+            string payloadTypeName = ValidateDataPropertyTypeNameAnnotation(propertyAndAnnotationCollector, propertyName);
             bool valueIsJsonObject = this.JsonReader.NodeType == JsonNodeType.StartObject;
             if (string.IsNullOrEmpty(payloadTypeName) && valueIsJsonObject)
             {
@@ -250,12 +250,12 @@ namespace Microsoft.OData.JsonLight
                     this.JsonReader.StartBuffering();
 
                     // If we have an object value initialize the duplicate property names checker
-                    duplicatePropertyNamesChecker = this.CreateDuplicatePropertyNamesChecker();
+                    propertyAndAnnotationCollector = this.CreatePropertyAndAnnotationCollector();
 
                     // Read the payload type name
                     string typeName;
                     bool typeNameFoundInPayload = this.TryReadPayloadTypeFromObject(
-                        duplicatePropertyNamesChecker,
+                        propertyAndAnnotationCollector,
                         insideComplexValue,
                         out typeName);
                     if (typeNameFoundInPayload)
@@ -275,15 +275,15 @@ namespace Microsoft.OData.JsonLight
         /// <summary>
         /// Reads a non-open entity or complex type's undeclared property, may return OdataUntypedValue.
         /// </summary>
-        /// <param name="duplicatePropertyNamesChecker">duplicatePropertyNamesChecker.</param>
+        /// <param name="propertyAndAnnotationCollector">propertyAndAnnotationCollector.</param>
         /// <param name="propertyName">Now this name can't be found in model.</param>
         /// <param name="isTopLevelPropertyValue">bool</param>
         /// <returns>The read result.</returns>
-        protected object InnerReadNonOpenUndeclaredPropertyInComplex(DuplicatePropertyNamesChecker duplicatePropertyNamesChecker, string propertyName, bool isTopLevelPropertyValue)
+        protected object InnerReadNonOpenUndeclaredPropertyInComplex(PropertyAndAnnotationCollector propertyAndAnnotationCollector, string propertyName, bool isTopLevelPropertyValue)
         {
             bool insideComplexValue = false;
-            string outterPayloadTypeName = ValidateDataPropertyTypeNameAnnotation(duplicatePropertyNamesChecker, propertyName);
-            string payloadTypeName = this.TryReadOrPeekPayloadType(duplicatePropertyNamesChecker, propertyName, insideComplexValue);
+            string outterPayloadTypeName = ValidateDataPropertyTypeNameAnnotation(propertyAndAnnotationCollector, propertyName);
+            string payloadTypeName = this.TryReadOrPeekPayloadType(propertyAndAnnotationCollector, propertyName, insideComplexValue);
             EdmTypeKind payloadTypeKind;
             IEdmType payloadType = ReaderValidationUtils.ResolvePayloadTypeName(
                 this.Model,
@@ -317,7 +317,7 @@ namespace Microsoft.OData.JsonLight
                 propertyValue = this.ReadNonEntityValueImplementation(
                     outterPayloadTypeName,
                     payloadTypeReference,
-                    /*duplicatePropertyNamesChecker*/ null,
+                    /*propertyAndAnnotationCollector*/ null,
                     /*collectionValidator*/ null,
                     false, // validateNullValue
                     isTopLevelPropertyValue,
@@ -345,10 +345,10 @@ namespace Microsoft.OData.JsonLight
         /// <returns>The read result.</returns>
         protected ODataJsonLightReaderNestedResourceInfo InnerReadNonOpenUndeclaredProperty(IODataJsonLightReaderResourceState resourceState, string propertyName, bool isTopLevelPropertyValue)
         {
-            DuplicatePropertyNamesChecker duplicatePropertyNamesChecker = resourceState.DuplicatePropertyNamesChecker;
+            PropertyAndAnnotationCollector propertyAndAnnotationCollector = resourceState.PropertyAndAnnotationCollector;
             bool insideComplexValue = false;
-            string outterPayloadTypeName = ValidateDataPropertyTypeNameAnnotation(duplicatePropertyNamesChecker, propertyName);
-            string payloadTypeName = this.TryReadOrPeekPayloadType(duplicatePropertyNamesChecker, propertyName, insideComplexValue);
+            string outterPayloadTypeName = ValidateDataPropertyTypeNameAnnotation(propertyAndAnnotationCollector, propertyName);
+            string payloadTypeName = this.TryReadOrPeekPayloadType(propertyAndAnnotationCollector, propertyName, insideComplexValue);
             EdmTypeKind payloadTypeKind;
             IEdmType payloadType = ReaderValidationUtils.ResolvePayloadTypeName(
                 this.Model,
@@ -397,7 +397,7 @@ namespace Microsoft.OData.JsonLight
                             : ReadEntityReferenceLinkForSingletonNavigationLinkInRequest(resourceState, null, propertyName, /*isExpanded*/ true);
                     }
 
-                    resourceState.DuplicatePropertyNamesChecker.CheckForDuplicatePropertyNamesOnNestedResourceInfoStart(readerNestedResourceInfo.NestedResourceInfo);
+                    resourceState.PropertyAndAnnotationCollector.ValidatePropertyUniquenessOnNestedResourceInfoStart(readerNestedResourceInfo.NestedResourceInfo);
 
                     return readerNestedResourceInfo;
                 }
@@ -407,7 +407,7 @@ namespace Microsoft.OData.JsonLight
                     propertyValue = this.ReadNonEntityValueImplementation(
                         outterPayloadTypeName,
                         payloadTypeReference,
-                        /*duplicatePropertyNamesChecker*/ null,
+                        /*propertyAndAnnotationCollector*/ null,
                         /*collectionValidator*/ null,
                         false, // validateNullValue
                         isTopLevelPropertyValue,
@@ -488,7 +488,7 @@ namespace Microsoft.OData.JsonLight
             ODataResourceSet expandedResourceSet = new ODataResourceSet();
 
             foreach (var propertyAnnotation
-                     in resourceState.DuplicatePropertyNamesChecker.GetODataPropertyAnnotations(nestedResourceInfo.Name))
+                     in resourceState.PropertyAndAnnotationCollector.GetODataPropertyAnnotations(nestedResourceInfo.Name))
             {
                 switch (propertyAnnotation.Key)
                 {
@@ -545,7 +545,7 @@ namespace Microsoft.OData.JsonLight
             };
 
             // Check the odata.type annotation for the complex property, it should show inside the complex object.
-            if (ValidateDataPropertyTypeNameAnnotation(resourceState.DuplicatePropertyNamesChecker, nestedResourceInfo.Name) != null)
+            if (ValidateDataPropertyTypeNameAnnotation(resourceState.PropertyAndAnnotationCollector, nestedResourceInfo.Name) != null)
             {
                 throw new ODataException(ODataErrorStrings.ODataJsonLightPropertyAndValueDeserializer_ComplexValueWithPropertyTypeAnnotation(ODataAnnotationNames.ODataType));
             }
@@ -583,7 +583,7 @@ namespace Microsoft.OData.JsonLight
             };
 
             foreach (var propertyAnnotation
-                     in resourceState.DuplicatePropertyNamesChecker.GetODataPropertyAnnotations(nestedResourceInfo.Name))
+                     in resourceState.PropertyAndAnnotationCollector.GetODataPropertyAnnotations(nestedResourceInfo.Name))
             {
                 switch (propertyAnnotation.Key)
                 {
@@ -639,7 +639,7 @@ namespace Microsoft.OData.JsonLight
             ODataResourceSet expandedResourceSet = new ODataResourceSet();
 
             foreach (var propertyAnnotation
-                     in resourceState.DuplicatePropertyNamesChecker.GetODataPropertyAnnotations(nestedResourceInfo.Name))
+                     in resourceState.PropertyAndAnnotationCollector.GetODataPropertyAnnotations(nestedResourceInfo.Name))
             {
                 switch (propertyAnnotation.Key)
                 {
@@ -709,7 +709,7 @@ namespace Microsoft.OData.JsonLight
 
             ODataEntityReferenceLink entityReferenceLink = null;
             foreach (var propertyAnnotation
-                     in resourceState.DuplicatePropertyNamesChecker.GetODataPropertyAnnotations(nestedResourceInfo.Name))
+                     in resourceState.PropertyAndAnnotationCollector.GetODataPropertyAnnotations(nestedResourceInfo.Name))
             {
                 switch (propertyAnnotation.Key)
                 {
@@ -770,7 +770,7 @@ namespace Microsoft.OData.JsonLight
 
             LinkedList<ODataEntityReferenceLink> entityReferenceLinksList = null;
             foreach (var propertyAnnotation
-                     in resourceState.DuplicatePropertyNamesChecker.GetODataPropertyAnnotations(nestedResourceInfo.Name))
+                     in resourceState.PropertyAndAnnotationCollector.GetODataPropertyAnnotations(nestedResourceInfo.Name))
             {
                 switch (propertyAnnotation.Key)
                 {
@@ -801,17 +801,17 @@ namespace Microsoft.OData.JsonLight
         /// <summary>
         /// Gets and validates the type name annotation for the specified property.
         /// </summary>
-        /// <param name="duplicatePropertyNamesChecker">The duplicate property names checker in use for the resource content.</param>
+        /// <param name="propertyAndAnnotationCollector">The duplicate property names checker in use for the resource content.</param>
         /// <param name="propertyName">The name of the property to get the type name for.</param>
         /// <returns>The type name for the property or null if no type name was found.</returns>
-        protected static string ValidateDataPropertyTypeNameAnnotation(DuplicatePropertyNamesChecker duplicatePropertyNamesChecker, string propertyName)
+        protected static string ValidateDataPropertyTypeNameAnnotation(PropertyAndAnnotationCollector propertyAndAnnotationCollector, string propertyName)
         {
-            Debug.Assert(duplicatePropertyNamesChecker != null, "duplicatePropertyNamesChecker != null");
+            Debug.Assert(propertyAndAnnotationCollector != null, "propertyAndAnnotationCollector != null");
             Debug.Assert(!string.IsNullOrEmpty(propertyName), "!string.IsNullOrEmpty(propertyName)");
 
             string propertyTypeName = null;
             foreach (var propertyAnnotation
-                     in duplicatePropertyNamesChecker.GetODataPropertyAnnotations(propertyName))
+                     in propertyAndAnnotationCollector.GetODataPropertyAnnotations(propertyName))
             {
                 if (string.CompareOrdinal(propertyAnnotation.Key, ODataAnnotationNames.ODataType) != 0)
                 {
@@ -847,7 +847,7 @@ namespace Microsoft.OData.JsonLight
             }
 
             foreach (var annotation
-                     in resourceState.DuplicatePropertyNamesChecker.GetCustomPropertyAnnotations(propertyName))
+                     in resourceState.PropertyAndAnnotationCollector.GetCustomPropertyAnnotations(propertyName))
             {
                 if (annotation.Value != null)
                 {
@@ -858,7 +858,7 @@ namespace Microsoft.OData.JsonLight
 
             Debug.Assert(property.InstanceAnnotations.GroupBy(s => s.Name).Where(s => s.Count() > 1).Count() <= 0,
                 "No annotation name should have been added into the InstanceAnnotations collection twice.");
-            resourceState.DuplicatePropertyNamesChecker.CheckForDuplicatePropertyNames(property);
+            resourceState.PropertyAndAnnotationCollector.CheckForDuplicatePropertyNames(property);
             ODataResource resource = resourceState.Resource;
             Debug.Assert(resource != null, "resource != null");
             resource.Properties = resource.Properties.ConcatToReadOnlyEnumerable("Properties", property);
@@ -869,8 +869,8 @@ namespace Microsoft.OData.JsonLight
         {
             foreach (var annotation
                      in propertyName.Length == 0
-                        ? resourceState.DuplicatePropertyNamesChecker.GetODataScopeAnnotation()
-                        : resourceState.DuplicatePropertyNamesChecker.GetODataPropertyAnnotations(propertyName))
+                        ? resourceState.PropertyAndAnnotationCollector.GetODataScopeAnnotation()
+                        : resourceState.PropertyAndAnnotationCollector.GetODataPropertyAnnotations(propertyName))
             {
                 Debug.Assert(annotation.Value != null);
 
@@ -1028,17 +1028,17 @@ namespace Microsoft.OData.JsonLight
         /// returns an <see cref="ODataProperty"/> representing the read property.
         /// </summary>
         /// <param name="expectedPropertyTypeReference">The expected type reference of the property to read.</param>
-        /// <param name="duplicatePropertyNamesChecker">The duplicate property names checker to use.</param>
+        /// <param name="propertyAndAnnotationCollector">The duplicate property names checker to use.</param>
         /// <returns>An <see cref="ODataProperty"/> representing the read property.</returns>
         /// <remarks>
         /// The method assumes that the ReadPayloadStart has already been called and it will not call ReadPayloadEnd.
         /// </remarks>
-        private ODataProperty ReadTopLevelPropertyImplementation(IEdmTypeReference expectedPropertyTypeReference, DuplicatePropertyNamesChecker duplicatePropertyNamesChecker)
+        private ODataProperty ReadTopLevelPropertyImplementation(IEdmTypeReference expectedPropertyTypeReference, PropertyAndAnnotationCollector propertyAndAnnotationCollector)
         {
             Debug.Assert(
                 expectedPropertyTypeReference == null || !expectedPropertyTypeReference.IsODataEntityTypeKind(),
                 "If the expected type is specified it must not be an entity type.");
-            Debug.Assert(duplicatePropertyNamesChecker != null, "duplicatePropertyNamesChecker != null");
+            Debug.Assert(propertyAndAnnotationCollector != null, "propertyAndAnnotationCollector != null");
 
             expectedPropertyTypeReference = this.UpdateExpectedTypeBasedOnContextUri(expectedPropertyTypeReference);
 
@@ -1057,14 +1057,14 @@ namespace Microsoft.OData.JsonLight
                     null);
 
                 // We don't allow properties or non-custom annotations in the null payload.
-                this.ValidateNoPropertyInNullPayload(duplicatePropertyNamesChecker);
+                this.ValidateNoPropertyInNullPayload(propertyAndAnnotationCollector);
 
                 propertyValue = null;
             }
             else
             {
                 string payloadTypeName = null;
-                if (this.ReadingComplexProperty(duplicatePropertyNamesChecker, expectedPropertyTypeReference, out payloadTypeName))
+                if (this.ReadingComplexProperty(propertyAndAnnotationCollector, expectedPropertyTypeReference, out payloadTypeName))
                 {
                     // Figure out whether we are reading a complex property or not; complex properties are not wrapped while all others are.
                     // Since we don't have metadata in all cases (open properties), we have to detect the type in some cases.
@@ -1074,7 +1074,7 @@ namespace Microsoft.OData.JsonLight
                     propertyValue = this.ReadNonEntityValue(
                         payloadTypeName,
                         expectedPropertyTypeReference,
-                        duplicatePropertyNamesChecker,
+                        propertyAndAnnotationCollector,
                         /*collectionValidator*/ null,
                         /*validateNullValue*/ true,
                         /*isTopLevelPropertyValue*/ true,
@@ -1093,7 +1093,7 @@ namespace Microsoft.OData.JsonLight
                     while (this.JsonReader.NodeType == JsonNodeType.Property)
                     {
                         this.ProcessProperty(
-                            duplicatePropertyNamesChecker,
+                            propertyAndAnnotationCollector,
                             propertyAnnotationReaderForTopLevelProperty,
                             (propertyParsingResult, propertyName) =>
                             {
@@ -1131,7 +1131,7 @@ namespace Microsoft.OData.JsonLight
                                         Debug.Assert(
                                             !this.MessageReaderSettings.ShouldSkipAnnotation(propertyName),
                                             "!this.MessageReaderSettings.ShouldReadAndValidateAnnotation(annotationName) -- otherwise we should have already skipped the custom annotation and won't see it here.");
-                                        var customInstanceAnnotationValue = this.ReadCustomInstanceAnnotationValue(duplicatePropertyNamesChecker, propertyName);
+                                        var customInstanceAnnotationValue = this.ReadCustomInstanceAnnotationValue(propertyAndAnnotationCollector, propertyName);
                                         customInstanceAnnotations.Add(new ODataInstanceAnnotation(propertyName, customInstanceAnnotationValue.ToODataValue()));
                                         break;
 
@@ -1145,7 +1145,7 @@ namespace Microsoft.OData.JsonLight
                                             propertyValue = this.ReadNonEntityValue(
                                                 payloadTypeName,
                                                 expectedPropertyTypeReference,
-                                                /*duplicatePropertyNamesChecker*/ null,
+                                                /*propertyAndAnnotationCollector*/ null,
                                                 /*collectionValidator*/ null,
                                                 /*validateNullValue*/ true,
                                                 /*isTopLevelPropertyValue*/ true,
@@ -1262,7 +1262,7 @@ namespace Microsoft.OData.JsonLight
             }
 
             List<object> items = new List<object>();
-            DuplicatePropertyNamesChecker duplicatePropertyNamesChecker = this.CreateDuplicatePropertyNamesChecker();
+            PropertyAndAnnotationCollector propertyAndAnnotationCollector = this.CreatePropertyAndAnnotationCollector();
             IEdmTypeReference itemType = null;
             if (collectionValueTypeReference != null)
             {
@@ -1278,7 +1278,7 @@ namespace Microsoft.OData.JsonLight
                 object itemValue = this.ReadNonEntityValueImplementation(
                     /*payloadTypeName*/ null,
                     itemType,
-                    duplicatePropertyNamesChecker,
+                    propertyAndAnnotationCollector,
                     collectionValidator,
                     /*validateNullValue*/ true,
                     /*isTopLevelPropertyValue*/ false,
@@ -1433,7 +1433,7 @@ namespace Microsoft.OData.JsonLight
         /// <param name="complexValueTypeReference">The expected type reference of the value.</param>
         /// <param name="payloadTypeName">The type name read from the payload.</param>
         /// <param name="serializationTypeNameAnnotation">The serialization type name for the collection value (possibly null).</param>
-        /// <param name="duplicatePropertyNamesChecker">The duplicate property names checker to use - this is always initialized as necessary, do not clear.</param>
+        /// <param name="propertyAndAnnotationCollector">The duplicate property names checker to use - this is always initialized as necessary, do not clear.</param>
         /// <returns>The value of the complex value.</returns>
         /// <remarks>
         /// Pre-Condition:  JsonNodeType.Property - the first property of the complex value object, or the second one if the first one was odata.type.
@@ -1447,7 +1447,7 @@ namespace Microsoft.OData.JsonLight
             IEdmComplexTypeReference complexValueTypeReference,
             string payloadTypeName,
             SerializationTypeNameAnnotation serializationTypeNameAnnotation,
-            DuplicatePropertyNamesChecker duplicatePropertyNamesChecker)
+            PropertyAndAnnotationCollector propertyAndAnnotationCollector)
         {
             if (!insideJsonObjectValue && !insideComplexValue)
             {
@@ -1464,7 +1464,7 @@ namespace Microsoft.OData.JsonLight
             }
 
             return this.ReadComplexValue(complexValueTypeReference, payloadTypeName,
-                serializationTypeNameAnnotation, duplicatePropertyNamesChecker);
+                serializationTypeNameAnnotation, propertyAndAnnotationCollector);
         }
 
         /// <summary>
@@ -1473,7 +1473,7 @@ namespace Microsoft.OData.JsonLight
         /// <param name="complexValueTypeReference">The expected type reference of the value.</param>
         /// <param name="payloadTypeName">The type name read from the payload.</param>
         /// <param name="serializationTypeNameAnnotation">The serialization type name for the collection value (possibly null).</param>
-        /// <param name="duplicatePropertyNamesChecker">The duplicate property names checker to use - this is always initialized as necessary, do not clear.</param>
+        /// <param name="propertyAndAnnotationCollector">The duplicate property names checker to use - this is always initialized as necessary, do not clear.</param>
         /// <returns>The value of the complex value.</returns>
         /// <remarks>
         /// Pre-Condition:  JsonNodeType.Property - the first property of the complex value object, or the second one if the first one was odata.type.
@@ -1484,10 +1484,10 @@ namespace Microsoft.OData.JsonLight
             IEdmComplexTypeReference complexValueTypeReference,
             string payloadTypeName,
             SerializationTypeNameAnnotation serializationTypeNameAnnotation,
-            DuplicatePropertyNamesChecker duplicatePropertyNamesChecker)
+            PropertyAndAnnotationCollector propertyAndAnnotationCollector)
         {
             this.AssertJsonCondition(JsonNodeType.Property, JsonNodeType.EndObject);
-            Debug.Assert(duplicatePropertyNamesChecker != null, "duplicatePropertyNamesChecker != null");
+            Debug.Assert(propertyAndAnnotationCollector != null, "propertyAndAnnotationCollector != null");
 
             this.IncreaseRecursionDepth();
 
@@ -1508,7 +1508,7 @@ namespace Microsoft.OData.JsonLight
             {
                 this.ReadPropertyCustomAnnotationValue = this.ReadCustomInstanceAnnotationValue;
                 this.ProcessProperty(
-                    duplicatePropertyNamesChecker,
+                    propertyAndAnnotationCollector,
                     this.ReadTypePropertyAnnotationValue,
                     (propertyParsingResult, propertyName) =>
                     {
@@ -1529,7 +1529,7 @@ namespace Microsoft.OData.JsonLight
                                 Debug.Assert(
                                     !this.MessageReaderSettings.ShouldSkipAnnotation(propertyName),
                                     "!this.MessageReaderSettings.ShouldReadAndValidateAnnotation(annotationName) -- otherwise we should have already skipped the custom annotation and won't see it here.");
-                                var customInstanceAnnotationValue = this.ReadCustomInstanceAnnotationValue(duplicatePropertyNamesChecker, propertyName);
+                                var customInstanceAnnotationValue = this.ReadCustomInstanceAnnotationValue(propertyAndAnnotationCollector, propertyName);
                                 complexValue.InstanceAnnotations.Add(new ODataInstanceAnnotation(propertyName, customInstanceAnnotationValue.ToODataValue()));
                                 break;
 
@@ -1537,7 +1537,7 @@ namespace Microsoft.OData.JsonLight
                                 throw new ODataException(ODataErrorStrings.ODataJsonLightPropertyAndValueDeserializer_ComplexValuePropertyAnnotationWithoutProperty(propertyName));
 
                             case PropertyParsingResult.PropertyWithValue:
-                                this.ReadPropertyWithValueInComplex(complexValueTypeReference, duplicatePropertyNamesChecker, properties, propertyName);
+                                this.ReadPropertyWithValueInComplex(complexValueTypeReference, propertyAndAnnotationCollector, properties, propertyName);
                                 break;
 
                             case PropertyParsingResult.EndOfObject:
@@ -1559,7 +1559,7 @@ namespace Microsoft.OData.JsonLight
             return complexValue;
         }
 
-        private void ReadPropertyWithValueInComplex(IEdmComplexTypeReference complexValueTypeReference, DuplicatePropertyNamesChecker duplicatePropertyNamesChecker, List<ODataProperty> properties, string propertyName)
+        private void ReadPropertyWithValueInComplex(IEdmComplexTypeReference complexValueTypeReference, PropertyAndAnnotationCollector propertyAndAnnotationCollector, List<ODataProperty> properties, string propertyName)
         {
             // Any other property is data
             ODataProperty property = new ODataProperty();
@@ -1582,15 +1582,15 @@ namespace Microsoft.OData.JsonLight
             {
                 bool isTopLevelPropertyValue = false;
                 propertyValue = this.InnerReadNonOpenUndeclaredPropertyInComplex(
-                    duplicatePropertyNamesChecker, propertyName, isTopLevelPropertyValue);
+                    propertyAndAnnotationCollector, propertyName, isTopLevelPropertyValue);
             }
             else
             {
                 // Read the property value
                 propertyValue = this.ReadNonEntityValueImplementation(
-                    ValidateDataPropertyTypeNameAnnotation(duplicatePropertyNamesChecker, propertyName),
+                    ValidateDataPropertyTypeNameAnnotation(propertyAndAnnotationCollector, propertyName),
                     edmProperty == null ? null : edmProperty.Type,
-                    /*duplicatePropertyNamesChecker*/ null,
+                    /*propertyAndAnnotationCollector*/ null,
                     /*collectionValidator*/ null,
                     nullValueReadBehaviorKind == ODataNullValueBehaviorKind.Default,
                     /*isTopLevelPropertyValue*/ false,
@@ -1601,10 +1601,10 @@ namespace Microsoft.OData.JsonLight
 
             if (nullValueReadBehaviorKind != ODataNullValueBehaviorKind.IgnoreValue || propertyValue != null)
             {
-                duplicatePropertyNamesChecker.CheckForDuplicatePropertyNames(property);
+                propertyAndAnnotationCollector.CheckForDuplicatePropertyNames(property);
                 property.Value = propertyValue;
                 foreach (var annotation
-                         in duplicatePropertyNamesChecker.GetCustomPropertyAnnotations(propertyName))
+                         in propertyAndAnnotationCollector.GetCustomPropertyAnnotations(propertyName))
                 {
                     if (annotation.Value != null)
                     {
@@ -1622,7 +1622,7 @@ namespace Microsoft.OData.JsonLight
         /// </summary>
         ///  <param name="payloadTypeName">The type name read from the payload as a property annotation, or null if none is available.</param>
         ///  <param name="expectedTypeReference">The expected type reference of the property value.</param>
-        ///  <param name="duplicatePropertyNamesChecker">The duplicate property names checker to use - if null the method should create a new one if necessary.</param>
+        ///  <param name="propertyAndAnnotationCollector">The duplicate property names checker to use - if null the method should create a new one if necessary.</param>
         /// <param name="collectionValidator">The collection validator instance if no expected item type has been specified; otherwise null.</param>
         ///  <param name="validateNullValue">true to validate null values; otherwise false.</param>
         ///  <param name="isTopLevelPropertyValue">true if we are reading a top-level property value; otherwise false.</param>
@@ -1646,7 +1646,7 @@ namespace Microsoft.OData.JsonLight
         private object ReadNonEntityValueImplementation(
             string payloadTypeName,
             IEdmTypeReference expectedTypeReference,
-            DuplicatePropertyNamesChecker duplicatePropertyNamesChecker,
+            PropertyAndAnnotationCollector propertyAndAnnotationCollector,
             CollectionWithoutExpectedTypeValidator collectionValidator,
             bool validateNullValue,
             bool isTopLevelPropertyValue,
@@ -1672,13 +1672,13 @@ namespace Microsoft.OData.JsonLight
             if (valueIsJsonObject || insideComplexValue)
             {
                 // If we have an object value initialize the duplicate property names checker
-                if (duplicatePropertyNamesChecker == null)
+                if (propertyAndAnnotationCollector == null)
                 {
-                    duplicatePropertyNamesChecker = this.CreateDuplicatePropertyNamesChecker();
+                    propertyAndAnnotationCollector = this.CreatePropertyAndAnnotationCollector();
                 }
                 else
                 {
-                    duplicatePropertyNamesChecker.Clear();
+                    propertyAndAnnotationCollector.Reset();
                 }
 
                 // Read the payload type name
@@ -1686,7 +1686,7 @@ namespace Microsoft.OData.JsonLight
                 {
                     string typeName;
                     typeNameFoundInPayload = this.TryReadPayloadTypeFromObject(
-                        duplicatePropertyNamesChecker,
+                        propertyAndAnnotationCollector,
                         insideComplexValue,
                         out typeName);
                     if (typeNameFoundInPayload)
@@ -1783,7 +1783,7 @@ namespace Microsoft.OData.JsonLight
                             targetTypeReference == null ? null : targetTypeReference.AsComplex(),
                             payloadTypeName,
                             serializationTypeNameAnnotation,
-                            duplicatePropertyNamesChecker);
+                            propertyAndAnnotationCollector);
                         break;
 
                     case EdmTypeKind.Collection:
@@ -1832,7 +1832,7 @@ namespace Microsoft.OData.JsonLight
         /// <summary>
         /// Reads the payload type name from a JSON object (if it exists).
         /// </summary>
-        /// <param name="duplicatePropertyNamesChecker">The duplicate property names checker to track the detected 'odata.type' annotation (if any).</param>
+        /// <param name="propertyAndAnnotationCollector">The duplicate property names checker to track the detected 'odata.type' annotation (if any).</param>
         /// <param name="insideComplexValue">true if we are reading a complex value and the reader is already positioned inside the complex value; otherwise false.</param>
         /// <param name="payloadTypeName">The value of the odata.type annotation or null if no such annotation exists.</param>
         /// <returns>true if a type name was read from the payload; otherwise false.</returns>
@@ -1842,9 +1842,9 @@ namespace Microsoft.OData.JsonLight
         ///                                 or the first property after the 'odata.type' annotation.
         ///                 EndObject       for an empty JSON object or an object with only the 'odata.type' annotation
         /// </remarks>
-        private bool TryReadPayloadTypeFromObject(DuplicatePropertyNamesChecker duplicatePropertyNamesChecker, bool insideComplexValue, out string payloadTypeName)
+        private bool TryReadPayloadTypeFromObject(PropertyAndAnnotationCollector propertyAndAnnotationCollector, bool insideComplexValue, out string payloadTypeName)
         {
-            Debug.Assert(duplicatePropertyNamesChecker != null, "duplicatePropertyNamesChecker != null");
+            Debug.Assert(propertyAndAnnotationCollector != null, "propertyAndAnnotationCollector != null");
             Debug.Assert(
                 (this.JsonReader.NodeType == JsonNodeType.StartObject && !insideComplexValue) ||
                 ((this.JsonReader.NodeType == JsonNodeType.Property || this.JsonReader.NodeType == JsonNodeType.EndObject) && insideComplexValue),
@@ -1864,7 +1864,7 @@ namespace Microsoft.OData.JsonLight
                 if (readTypeName)
                 {
                     // Register the odata.type annotation we just found with the duplicate property names checker.
-                    duplicatePropertyNamesChecker.MarkPropertyAsProcessed(ODataAnnotationNames.ODataType);
+                    propertyAndAnnotationCollector.MarkPropertyAsProcessed(ODataAnnotationNames.ODataType);
                 }
             }
 
@@ -1876,14 +1876,14 @@ namespace Microsoft.OData.JsonLight
         /// Detects whether we are currently reading a complex property or not. This can be determined from metadata (if we have it)
         /// or from the presence of the odata.type instance annotation in the payload.
         /// </summary>
-        /// <param name="duplicatePropertyNamesChecker">The duplicate property names checker in use for the resource content.</param>
+        /// <param name="propertyAndAnnotationCollector">The duplicate property names checker in use for the resource content.</param>
         /// <param name="expectedPropertyTypeReference">The expected type reference of the property to read.</param>
         /// <param name="payloadTypeName">The type name of the complex value if found in the payload; otherwise null.</param>
         /// <returns>true if we are reading a complex property; otherwise false.</returns>
         /// <remarks>
         /// This method does not move the reader.
         /// </remarks>
-        private bool ReadingComplexProperty(DuplicatePropertyNamesChecker duplicatePropertyNamesChecker, IEdmTypeReference expectedPropertyTypeReference, out string payloadTypeName)
+        private bool ReadingComplexProperty(PropertyAndAnnotationCollector propertyAndAnnotationCollector, IEdmTypeReference expectedPropertyTypeReference, out string payloadTypeName)
         {
             payloadTypeName = null;
             bool readingComplexProperty = false;
@@ -1901,7 +1901,7 @@ namespace Microsoft.OData.JsonLight
             if (this.JsonReader.NodeType == JsonNodeType.Property && this.TryReadODataTypeAnnotation(out payloadTypeName))
             {
                 // Register the odata.type annotation we just found with the duplicate property names checker.
-                duplicatePropertyNamesChecker.MarkPropertyAsProcessed(ODataAnnotationNames.ODataType);
+                propertyAndAnnotationCollector.MarkPropertyAsProcessed(ODataAnnotationNames.ODataType);
 
                 IEdmType expectedPropertyType = null;
                 if (expectedPropertyTypeReference != null)
@@ -1959,17 +1959,17 @@ namespace Microsoft.OData.JsonLight
         /// <summary>
         /// Make sure that we don't find any other odata.* annotations or properties after reading a payload with the odata.null annotation or the odata.context annotation with value ending #Edm.Null
         /// </summary>
-        /// <param name="duplicatePropertyNamesChecker">The duplicate property names checker to use.</param>
-        private void ValidateNoPropertyInNullPayload(DuplicatePropertyNamesChecker duplicatePropertyNamesChecker)
+        /// <param name="propertyAndAnnotationCollector">The duplicate property names checker to use.</param>
+        private void ValidateNoPropertyInNullPayload(PropertyAndAnnotationCollector propertyAndAnnotationCollector)
         {
-            Debug.Assert(duplicatePropertyNamesChecker != null, "duplicatePropertyNamesChecker != null");
+            Debug.Assert(propertyAndAnnotationCollector != null, "propertyAndAnnotationCollector != null");
 
             // we use the ParseProperty method to ignore custom annotations.
             Func<string, object> propertyAnnotationReaderForTopLevelNull = annotationName => { throw new ODataException(ODataErrorStrings.ODataJsonLightPropertyAndValueDeserializer_UnexpectedODataPropertyAnnotation(annotationName)); };
             while (this.JsonReader.NodeType == JsonNodeType.Property)
             {
                 this.ProcessProperty(
-                    duplicatePropertyNamesChecker,
+                    propertyAndAnnotationCollector,
                     propertyAnnotationReaderForTopLevelNull,
                     (propertyParsingResult, propertyName) =>
                     {

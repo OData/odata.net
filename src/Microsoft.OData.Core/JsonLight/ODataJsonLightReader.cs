@@ -121,8 +121,8 @@ namespace Microsoft.OData.JsonLight
             Debug.Assert(this.State == ODataReaderState.Start, "this.State == ODataReaderState.Start");
             Debug.Assert(this.IsReadingNestedPayload || this.jsonLightResourceDeserializer.JsonReader.NodeType == JsonNodeType.None, "Pre-Condition: expected JsonNodeType.None when not reading a nested payload.");
 
-            DuplicatePropertyNamesChecker duplicatePropertyNamesChecker =
-                this.jsonLightInputContext.CreateDuplicatePropertyNamesChecker();
+            PropertyAndAnnotationCollector propertyAndAnnotationCollector =
+                this.jsonLightInputContext.CreatePropertyAndAnnotationCollector();
 
             // Position the reader on the first node depending on whether we are reading a nested payload or a Uri Operation Parameter or not.
             ODataPayloadKind payloadKind = this.ReadingResourceSet ? ODataPayloadKind.ResourceSet : ODataPayloadKind.Resource;
@@ -133,11 +133,11 @@ namespace Microsoft.OData.JsonLight
             // { "parameterName" :
             this.jsonLightResourceDeserializer.ReadPayloadStart(
                 payloadKind,
-                duplicatePropertyNamesChecker,
+                propertyAndAnnotationCollector,
                 this.IsReadingNestedPayload || this.readingParameter,
                 /*allowEmptyPayload*/false);
 
-            return this.ReadAtStartImplementationSynchronously(duplicatePropertyNamesChecker);
+            return this.ReadAtStartImplementationSynchronously(propertyAndAnnotationCollector);
         }
 
 #if PORTABLELIB
@@ -157,19 +157,19 @@ namespace Microsoft.OData.JsonLight
             Debug.Assert(this.State == ODataReaderState.Start, "this.State == ODataReaderState.Start");
             Debug.Assert(this.IsReadingNestedPayload || this.jsonLightResourceDeserializer.JsonReader.NodeType == JsonNodeType.None, "Pre-Condition: expected JsonNodeType.None when not reading a nested payload.");
 
-            DuplicatePropertyNamesChecker duplicatePropertyNamesChecker =
-                this.jsonLightInputContext.CreateDuplicatePropertyNamesChecker();
+            PropertyAndAnnotationCollector propertyAndAnnotationCollector =
+                this.jsonLightInputContext.CreatePropertyAndAnnotationCollector();
 
             // Position the reader on the first node depending on whether we are reading a nested payload or not.
             ODataPayloadKind payloadKind = this.ReadingResourceSet ? ODataPayloadKind.ResourceSet : ODataPayloadKind.Resource;
             return this.jsonLightResourceDeserializer.ReadPayloadStartAsync(
                 payloadKind,
-                duplicatePropertyNamesChecker,
+                propertyAndAnnotationCollector,
                 this.IsReadingNestedPayload,
                 /*allowEmptyPayload*/false)
 
                 .FollowOnSuccessWith(t =>
-                    this.ReadAtStartImplementationSynchronously(duplicatePropertyNamesChecker));
+                    this.ReadAtStartImplementationSynchronously(propertyAndAnnotationCollector));
         }
 #endif
 
@@ -447,7 +447,7 @@ namespace Microsoft.OData.JsonLight
         /// <summary>
         /// Implementation of the reader logic when in state 'Start'.
         /// </summary>
-        /// <param name="duplicatePropertyNamesChecker">The duplicate property names checker to use for the top-level scope.</param>
+        /// <param name="propertyAndAnnotationCollector">The duplicate property names checker to use for the top-level scope.</param>
         /// <returns>true if more items can be read from the reader; otherwise false.</returns>
         /// <remarks>
         /// Pre-Condition:  JsonNodeType.None:      assumes that the JSON reader has not been used yet when not reading a nested payload.
@@ -455,9 +455,9 @@ namespace Microsoft.OData.JsonLight
         ///                 when reading a resource:  the first node of the first nested resource info value, null for a null expanded link or an end object
         ///                                         node if there are no navigation links.
         /// </remarks>
-        private bool ReadAtStartImplementationSynchronously(DuplicatePropertyNamesChecker duplicatePropertyNamesChecker)
+        private bool ReadAtStartImplementationSynchronously(PropertyAndAnnotationCollector propertyAndAnnotationCollector)
         {
-            Debug.Assert(duplicatePropertyNamesChecker != null, "duplicatePropertyNamesChecker != null");
+            Debug.Assert(propertyAndAnnotationCollector != null, "propertyAndAnnotationCollector != null");
 
             // For nested payload (e.g., expanded resource set or resource in delta $entity payload),
             // we usually don't have a context URL for the resource set or resource:
@@ -498,7 +498,7 @@ namespace Microsoft.OData.JsonLight
 
                 // Store the duplicate property names checker to use it later when reading the resource set end
                 // (since we allow resource set-related annotations to appear after the resource set's data).
-                this.topLevelScope.DuplicatePropertyNamesChecker = duplicatePropertyNamesChecker;
+                this.topLevelScope.PropertyAndAnnotationCollector = propertyAndAnnotationCollector;
 
                 bool isReordering = this.jsonLightInputContext.JsonReader is ReorderingJsonReader;
                 if (!this.IsReadingNestedPayload)
@@ -507,7 +507,7 @@ namespace Microsoft.OData.JsonLight
                     {
                         // Skip top-level resource set annotations for nested resource sets.
                         this.jsonLightResourceDeserializer.ReadTopLevelResourceSetAnnotations(
-                            resourceSet, duplicatePropertyNamesChecker, /*forResourceSetStart*/true, /*readAllFeedProperties*/isReordering);
+                            resourceSet, propertyAndAnnotationCollector, /*forResourceSetStart*/true, /*readAllFeedProperties*/isReordering);
                     }
                     else
                     {
@@ -525,7 +525,7 @@ namespace Microsoft.OData.JsonLight
                 return true;
             }
 
-            this.ReadResourceStart(duplicatePropertyNamesChecker, selectedProperties);
+            this.ReadResourceStart(propertyAndAnnotationCollector, selectedProperties);
             return true;
         }
 
@@ -551,7 +551,7 @@ namespace Microsoft.OData.JsonLight
                 // The expected type for a resource in the resource set is the same as for the resource set itself.
                 case JsonNodeType.StartObject:
                     // First resource in the resource set
-                    this.ReadResourceStart(/*duplicatePropertyNamesChecker*/ null, this.CurrentJsonLightResourceSetScope.SelectedProperties);
+                    this.ReadResourceStart(/*propertyAndAnnotationCollector*/ null, this.CurrentJsonLightResourceSetScope.SelectedProperties);
                     break;
                 case JsonNodeType.EndArray:
                     // End of the resource set
@@ -766,7 +766,7 @@ namespace Microsoft.OData.JsonLight
                     case JsonNodeType.StartObject:
                         // another resource in a resource set
                         Debug.Assert(this.State == ODataReaderState.ResourceSetStart, "Expected reader to be in state resource set start before reading the next resource.");
-                        this.ReadResourceStart(/*duplicatePropertyNamesChecker*/ null, this.CurrentJsonLightResourceSetScope.SelectedProperties);
+                        this.ReadResourceStart(/*propertyAndAnnotationCollector*/ null, this.CurrentJsonLightResourceSetScope.SelectedProperties);
                         break;
                     case JsonNodeType.EndArray:
                         // we are at the end of a resource set
@@ -776,7 +776,7 @@ namespace Microsoft.OData.JsonLight
                     case JsonNodeType.PrimitiveValue:
                         // we are having an null value in a resource set.
                         Debug.Assert(this.State == ODataReaderState.ResourceSetStart, "Expected reader to be in state resource set start after reading the last resource in the resource set.");
-                        this.EnterScope(new JsonLightResourceScope(ODataReaderState.ResourceStart, /*resource*/ null, this.CurrentNavigationSource, this.CurrentResourceType, /*duplicatePropertyNamesChecker*/null, /*projectedProperties*/null, this.CurrentScope.ODataUri));
+                        this.EnterScope(new JsonLightResourceScope(ODataReaderState.ResourceStart, /*resource*/ null, this.CurrentNavigationSource, this.CurrentResourceType, /*propertyAndAnnotationCollector*/null, /*projectedProperties*/null, this.CurrentScope.ODataUri));
                         break;
                     default:
                         throw new ODataException(ODataErrorStrings.ODataJsonReader_CannotReadEntriesOfFeed(this.jsonLightResourceDeserializer.JsonReader.NodeType));
@@ -829,7 +829,7 @@ namespace Microsoft.OData.JsonLight
                 else if (!this.jsonLightResourceDeserializer.JsonReader.IsOnValueNode())
                 {
                     // Deferred link (nested resource info which doesn't have a value and is in the response)
-                    ReaderUtils.CheckForDuplicateNestedResourceInfoNameAndSetAssociationLink(parentResourceState.DuplicatePropertyNamesChecker, currentLink);
+                    ReaderUtils.CheckForDuplicateNestedResourceInfoNameAndSetAssociationLink(parentResourceState.PropertyAndAnnotationCollector, currentLink);
                     this.jsonLightResourceDeserializer.AssertJsonCondition(JsonNodeType.EndObject, JsonNodeType.Property);
 
                     // Record that we read the link on the parent resource's scope.
@@ -843,13 +843,13 @@ namespace Microsoft.OData.JsonLight
                     Debug.Assert(this.CurrentResourceType != null || this.CurrentNestedResourceInfo.Name != null, "We must have a declared navigation property to read expanded links.");
 
                     // Expanded resource
-                    ReaderUtils.CheckForDuplicateNestedResourceInfoNameAndSetAssociationLink(parentResourceState.DuplicatePropertyNamesChecker, currentLink);
+                    ReaderUtils.CheckForDuplicateNestedResourceInfoNameAndSetAssociationLink(parentResourceState.PropertyAndAnnotationCollector, currentLink);
                     this.ReadExpandedNestedResourceInfoStart(currentLink);
                 }
                 else
                 {
                     // Expanded resource set
-                    ReaderUtils.CheckForDuplicateNestedResourceInfoNameAndSetAssociationLink(parentResourceState.DuplicatePropertyNamesChecker, currentLink);
+                    ReaderUtils.CheckForDuplicateNestedResourceInfoNameAndSetAssociationLink(parentResourceState.PropertyAndAnnotationCollector, currentLink);
 
                     // We store the precreated expanded resource set in the nested resource info since it carries the annotations for it.
                     ODataJsonLightReaderNestedResourceInfo nestedResourceInfo = this.CurrentJsonLightNestedResourceInfoScope.ReaderNestedResourceInfo;
@@ -865,7 +865,7 @@ namespace Microsoft.OData.JsonLight
             {
                 // Navigation link in request - report entity reference links and then possible expanded value.
                 ReaderUtils.CheckForDuplicateNestedResourceInfoNameAndSetAssociationLink(
-                    parentResourceState.DuplicatePropertyNamesChecker,
+                    parentResourceState.PropertyAndAnnotationCollector,
                     currentLink);
 
                 this.ReadNextNestedResourceInfoContentItemInRequest();
@@ -987,7 +987,7 @@ namespace Microsoft.OData.JsonLight
                 // Temp ban reading the instance annotation after the resource set in parameter payload. (!this.IsReadingNestedPayload => !this.readingParameter)
                 // Nested resource set payload won't have a NextLink annotation after the resource set itself since the payload is NOT pageable.
                 this.jsonLightResourceDeserializer.ReadNextLinkAnnotationAtResourceSetEnd(this.CurrentResourceSet,
-                    expandedNestedResourceInfo, this.topLevelScope.DuplicatePropertyNamesChecker);
+                    expandedNestedResourceInfo, this.topLevelScope.PropertyAndAnnotationCollector);
             }
 
             this.ReplaceScope(ODataReaderState.ResourceSetEnd);
@@ -1029,7 +1029,7 @@ namespace Microsoft.OData.JsonLight
 
                 // Expanded null resource
                 // The expected type and expected navigation source for an expanded resource are the same as for the nested resource info around it.
-                this.EnterScope(new JsonLightResourceScope(ODataReaderState.ResourceStart, /*resource*/ null, this.CurrentNavigationSource, this.CurrentResourceType, /*duplicatePropertyNamesChecker*/null, /*projectedProperties*/null, this.CurrentScope.ODataUri));
+                this.EnterScope(new JsonLightResourceScope(ODataReaderState.ResourceStart, /*resource*/ null, this.CurrentNavigationSource, this.CurrentResourceType, /*propertyAndAnnotationCollector*/null, /*projectedProperties*/null, this.CurrentScope.ODataUri));
             }
             else
             {
@@ -1038,14 +1038,14 @@ namespace Microsoft.OData.JsonLight
                 JsonLightResourceScope parentScope = (JsonLightResourceScope)this.LinkParentResourceScope;
                 SelectedPropertiesNode parentSelectedProperties = parentScope.SelectedProperties;
                 Debug.Assert(parentSelectedProperties != null, "parentProjectedProperties != null");
-                this.ReadResourceStart(/*duplicatePropertyNamesChecker*/ null, parentSelectedProperties.GetSelectedPropertiesForNavigationProperty(parentScope.ResourceType, nestedResourceInfo.Name));
+                this.ReadResourceStart(/*propertyAndAnnotationCollector*/ null, parentSelectedProperties.GetSelectedPropertiesForNavigationProperty(parentScope.ResourceType, nestedResourceInfo.Name));
             }
         }
 
         /// <summary>
         /// Reads the start of a resource and sets up the reader state correctly
         /// </summary>
-        /// <param name="duplicatePropertyNamesChecker">The duplicate property names checker to use for the resource;
+        /// <param name="propertyAndAnnotationCollector">The duplicate property names checker to use for the resource;
         /// or null if a new one should be created.</param>
         /// <param name="selectedProperties">The selected properties node capturing what properties should be expanded during template evaluation.</param>
         /// <remarks>
@@ -1058,7 +1058,7 @@ namespace Microsoft.OData.JsonLight
         ///                 JsonNodeType.Property               Property after deferred link or expanded entity reference
         ///                 JsonNodeType.EndObject              If no (more) properties exist in the resource's content
         /// </remarks>
-        private void ReadResourceStart(DuplicatePropertyNamesChecker duplicatePropertyNamesChecker, SelectedPropertiesNode selectedProperties)
+        private void ReadResourceStart(PropertyAndAnnotationCollector propertyAndAnnotationCollector, SelectedPropertiesNode selectedProperties)
         {
             this.jsonLightResourceDeserializer.AssertJsonCondition(JsonNodeType.StartObject, JsonNodeType.Property, JsonNodeType.EndObject, JsonNodeType.PrimitiveValue);
 
@@ -1070,7 +1070,7 @@ namespace Microsoft.OData.JsonLight
                 }
 
                 // null resource
-                this.EnterScope(new JsonLightResourceScope(ODataReaderState.ResourceStart, /*resource*/ null, this.CurrentNavigationSource, this.CurrentResourceType, /*duplicatePropertyNamesChecker*/null, /*projectedProperties*/null, this.CurrentScope.ODataUri));
+                this.EnterScope(new JsonLightResourceScope(ODataReaderState.ResourceStart, /*resource*/ null, this.CurrentNavigationSource, this.CurrentResourceType, /*propertyAndAnnotationCollector*/null, /*projectedProperties*/null, this.CurrentScope.ODataUri));
                 return;
             }
 
@@ -1083,7 +1083,7 @@ namespace Microsoft.OData.JsonLight
 
             if (this.ReadingResourceSet || this.IsExpandedLinkContent)
             {
-                string contextUriStr = this.jsonLightResourceDeserializer.ReadContextUriAnnotation(ODataPayloadKind.Resource, duplicatePropertyNamesChecker, false);
+                string contextUriStr = this.jsonLightResourceDeserializer.ReadContextUriAnnotation(ODataPayloadKind.Resource, propertyAndAnnotationCollector, false);
                 if (contextUriStr != null)
                 {
                     contextUriStr = UriUtils.UriToString(this.jsonLightResourceDeserializer.ProcessUriFromPayload(contextUriStr));
@@ -1101,7 +1101,7 @@ namespace Microsoft.OData.JsonLight
             }
 
             // Setup the new resource state
-            this.StartResource(duplicatePropertyNamesChecker, selectedProperties);
+            this.StartResource(propertyAndAnnotationCollector, selectedProperties);
 
             // Read the odata.type annotation.
             this.jsonLightResourceDeserializer.ReadResourceTypeName(this.CurrentResourceState);
@@ -1184,17 +1184,17 @@ namespace Microsoft.OData.JsonLight
         /// <summary>
         /// Starts the resource, initializing the scopes and such. This method starts a non-null resource only.
         /// </summary>
-        /// <param name="duplicatePropertyNamesChecker">The duplicate property names checker to use for the resource;
+        /// <param name="propertyAndAnnotationCollector">The duplicate property names checker to use for the resource;
         /// or null if a new one should be created.</param>
         /// <param name="selectedProperties">The selected properties node capturing what properties should be expanded during template evaluation.</param>
-        private void StartResource(DuplicatePropertyNamesChecker duplicatePropertyNamesChecker, SelectedPropertiesNode selectedProperties)
+        private void StartResource(PropertyAndAnnotationCollector propertyAndAnnotationCollector, SelectedPropertiesNode selectedProperties)
         {
             this.EnterScope(new JsonLightResourceScope(
                 ODataReaderState.ResourceStart,
                 ReaderUtils.CreateNewResource(),
                 this.CurrentNavigationSource,
                 this.CurrentResourceType,
-                duplicatePropertyNamesChecker ?? this.jsonLightInputContext.CreateDuplicatePropertyNamesChecker(),
+                propertyAndAnnotationCollector ?? this.jsonLightInputContext.CreatePropertyAndAnnotationCollector(),
                 selectedProperties,
                 this.CurrentScope.ODataUri));
         }
@@ -1342,7 +1342,7 @@ namespace Microsoft.OData.JsonLight
                     (ODataResource)this.Item,
                     this.CurrentNavigationSource,
                     this.CurrentResourceType,
-                    this.CurrentResourceState.DuplicatePropertyNamesChecker,
+                    this.CurrentResourceState.PropertyAndAnnotationCollector,
                     this.CurrentResourceState.SelectedProperties,
                     this.CurrentScope.ODataUri));
         }
@@ -1368,7 +1368,7 @@ namespace Microsoft.OData.JsonLight
             /// <summary>
             /// The duplicate property names checker for the top level scope represented by the current state.
             /// </summary>
-            public DuplicatePropertyNamesChecker DuplicatePropertyNamesChecker { get; set; }
+            public PropertyAndAnnotationCollector PropertyAndAnnotationCollector { get; set; }
         }
 
         /// <summary>
@@ -1386,7 +1386,7 @@ namespace Microsoft.OData.JsonLight
             /// <param name="resource">The item attached to this scope.</param>
             /// <param name="navigationSource">The navigation source we are going to read resources for.</param>
             /// <param name="expectedResourceType">The expected type for the scope.</param>
-            /// <param name="duplicatePropertyNamesChecker">The duplicate property names checker for this resource scope.</param>
+            /// <param name="propertyAndAnnotationCollector">The duplicate property names checker for this resource scope.</param>
             /// <param name="selectedProperties">The selected properties node capturing what properties should be expanded during template evaluation.</param>
             /// <param name="odataUri">The odataUri parsed based on the context uri for current scope</param>
             /// <remarks>The <paramref name="expectedResourceType"/> has the following meaning
@@ -1399,7 +1399,7 @@ namespace Microsoft.OData.JsonLight
                 ODataResource resource,
                 IEdmNavigationSource navigationSource,
                 IEdmStructuredType expectedResourceType,
-                DuplicatePropertyNamesChecker duplicatePropertyNamesChecker,
+                PropertyAndAnnotationCollector propertyAndAnnotationCollector,
                 SelectedPropertiesNode selectedProperties,
                 ODataUri odataUri)
                 : base(readerState, resource, navigationSource, expectedResourceType, odataUri)
@@ -1408,7 +1408,7 @@ namespace Microsoft.OData.JsonLight
                     readerState == ODataReaderState.ResourceStart || readerState == ODataReaderState.ResourceEnd,
                     "readerState == ODataReaderState.ResourceStart || readerState == ODataReaderState.ResourceEnd");
 
-                this.DuplicatePropertyNamesChecker = duplicatePropertyNamesChecker;
+                this.PropertyAndAnnotationCollector = propertyAndAnnotationCollector;
                 this.SelectedProperties = selectedProperties;
             }
 
@@ -1436,7 +1436,7 @@ namespace Microsoft.OData.JsonLight
             /// <summary>
             /// The duplicate property names checker for the resource represented by the current state.
             /// </summary>
-            public DuplicatePropertyNamesChecker DuplicatePropertyNamesChecker { get; private set; }
+            public PropertyAndAnnotationCollector PropertyAndAnnotationCollector { get; private set; }
 
             /// <summary>
             /// The selected properties that should be expanded during template evaluation.

@@ -2206,8 +2206,8 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
             ODataNestedResourceInfo singletonLink = new ODataNestedResourceInfo { Name = "Foo", IsCollection = false, Url = new Uri("http://odata.org/link") };
             ODataNestedResourceInfo collectionLink = new ODataNestedResourceInfo { Name = "Foo", IsCollection = true, Url = new Uri("http://odata.org/links") };
 
-            ExpectedException error = ODataExpectedExceptions.ODataException("DuplicatePropertyNamesChecker_DuplicatePropertyNamesNotAllowed", "Foo");
-            ExpectedException duplicateExpandedLinkError = ODataExpectedExceptions.ODataException("DuplicatePropertyNamesChecker_MultipleLinksForSingleton", "Foo");
+            ExpectedException error = ODataExpectedExceptions.ODataException("DuplicatePropertyNamesNotAllowed", "Foo");
+            ExpectedException duplicateExpandedLinkError = ODataExpectedExceptions.ODataException("MultipleLinksForSingleton", "Foo");
             ExpectedException streamPropertyInRequest = ODataExpectedExceptions.ODataException("WriterValidationUtils_StreamPropertyInRequest", "Foo");
 
             DuplicatePropertyNamesTestCase[] testCases = new DuplicatePropertyNamesTestCase[]
@@ -2725,7 +2725,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                             null
                         }
                     },
-                    ExpectedException = ODataExpectedExceptions.ODataException("DuplicatePropertyNamesChecker_MultipleLinksForSingleton", "PoliceStation"),
+                    ExpectedException = ODataExpectedExceptions.ODataException("MultipleLinksForSingleton", "PoliceStation"),
                 },
 
                 new DuplicateNavigationLinkTestCase
@@ -2747,7 +2747,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                             null
                         }
                     },
-                    ExpectedException = ODataExpectedExceptions.ODataException("DuplicatePropertyNamesChecker_MultipleLinksForSingleton", "PoliceStation"),
+                    ExpectedException = ODataExpectedExceptions.ODataException("MultipleLinksForSingleton", "PoliceStation"),
                     // ATOM requires IsCollection to be non-null, JSON in request request IsCollection to be non-null
                     SkipTestConfiguration = tc => false
                 },
@@ -2770,7 +2770,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                             null
                         }
                     },
-                    ExpectedException = ODataExpectedExceptions.ODataException("DuplicatePropertyNamesChecker_MultipleLinksForSingleton", "PoliceStation"),
+                    ExpectedException = ODataExpectedExceptions.ODataException("MultipleLinksForSingleton", "PoliceStation"),
                 },
                 new DuplicateNavigationLinkTestCase
                 {
@@ -2791,7 +2791,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                             null
                         }
                     },
-                    ExpectedException = ODataExpectedExceptions.ODataException("DuplicatePropertyNamesChecker_MultipleLinksForSingleton", "PoliceStation"),
+                    ExpectedException = ODataExpectedExceptions.ODataException("MultipleLinksForSingleton", "PoliceStation"),
                 },
 
                 new DuplicateNavigationLinkTestCase
@@ -2999,7 +2999,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                         // In responses all duplicates will fail with the same error message since we don't allow any duplicates there.
                         expectedException =
                             ODataExpectedExceptions.ODataException(
-                                "DuplicatePropertyNamesChecker_DuplicatePropertyNamesNotAllowed",
+                                "DuplicatePropertyNamesNotAllowed",
                                 duplicationPropertyName);
                     }
 

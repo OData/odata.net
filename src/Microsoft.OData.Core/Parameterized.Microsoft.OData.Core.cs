@@ -335,43 +335,43 @@ namespace Microsoft.OData {
         /// <summary>
         /// A string like "Multiple properties with the name '{0}' were detected in a resource or a complex value. In OData, duplicate property names are not allowed."
         /// </summary>
-        internal static string DuplicatePropertyNamesChecker_DuplicatePropertyNamesNotAllowed(object p0) {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.DuplicatePropertyNamesChecker_DuplicatePropertyNamesNotAllowed, p0);
+        internal static string DuplicatePropertyNamesNotAllowed(object p0) {
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.DuplicatePropertyNamesNotAllowed, p0);
         }
 
         /// <summary>
         /// A string like "Multiple navigation links with the same name '{0}' for a singleton navigation property were detected on a resource. In OData, a singleton navigation property can have only one navigation link."
         /// </summary>
-        internal static string DuplicatePropertyNamesChecker_MultipleLinksForSingleton(object p0) {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.DuplicatePropertyNamesChecker_MultipleLinksForSingleton, p0);
+        internal static string MultipleLinksForSingleton(object p0) {
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.MultipleLinksForSingleton, p0);
         }
 
         /// <summary>
         /// A string like "Multiple annotations with the name '{0}' were detected. In OData, duplicate annotations are not allowed."
         /// </summary>
-        internal static string DuplicatePropertyNamesChecker_DuplicateAnnotationNotAllowed(object p0) {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.DuplicatePropertyNamesChecker_DuplicateAnnotationNotAllowed, p0);
+        internal static string DuplicateAnnotationNotAllowed(object p0) {
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.DuplicateAnnotationNotAllowed, p0);
         }
 
         /// <summary>
         /// A string like "Multiple annotations with the name '{0}' were detected for the property with name '{1}'. In OData, duplicate annotations are not allowed."
         /// </summary>
-        internal static string DuplicatePropertyNamesChecker_DuplicateAnnotationForPropertyNotAllowed(object p0, object p1) {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.DuplicatePropertyNamesChecker_DuplicateAnnotationForPropertyNotAllowed, p0, p1);
+        internal static string DuplicateAnnotationForPropertyNotAllowed(object p0, object p1) {
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.DuplicateAnnotationForPropertyNotAllowed, p0, p1);
         }
 
         /// <summary>
         /// A string like "Multiple annotations with the name '{0}' were detected for the instance annotation with name '{1}'. In OData, duplicate annotations are not allowed."
         /// </summary>
-        internal static string DuplicatePropertyNamesChecker_DuplicateAnnotationForInstanceAnnotationNotAllowed(object p0, object p1) {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.DuplicatePropertyNamesChecker_DuplicateAnnotationForInstanceAnnotationNotAllowed, p0, p1);
+        internal static string DuplicateAnnotationForInstanceAnnotationNotAllowed(object p0, object p1) {
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.DuplicateAnnotationForInstanceAnnotationNotAllowed, p0, p1);
         }
 
         /// <summary>
         /// A string like "An annotation with name '{0}' for property '{1}' was detected after the property, or after an annotation for another property. In OData, annotations for a property must be in a single group and must appear before the property they annotate."
         /// </summary>
-        internal static string DuplicatePropertyNamesChecker_PropertyAnnotationAfterTheProperty(object p0, object p1) {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.DuplicatePropertyNamesChecker_PropertyAnnotationAfterTheProperty, p0, p1);
+        internal static string PropertyAnnotationAfterTheProperty(object p0, object p1) {
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.PropertyAnnotationAfterTheProperty, p0, p1);
         }
 
         /// <summary>

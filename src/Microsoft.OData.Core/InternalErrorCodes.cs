@@ -20,8 +20,8 @@ namespace Microsoft.OData
         /// <summary>Unreachable codepath in ODataWriterCore.Scope.Create</summary>
         ODataWriterCore_Scope_Create_UnreachableCodePath,
 
-        /// <summary>Unreachable codepath in ODataWriterCore.DuplicatePropertyNamesChecker.</summary>
-        ODataWriterCore_DuplicatePropertyNamesChecker,
+        /// <summary>Unreachable codepath in ODataWriterCore.PropertyAndAnnotationCollector.</summary>
+        ODataWriterCore_PropertyAndAnnotationCollector,
 
         /// <summary>Unreachable codepath in ODataWriterCore.ParentNestedResourceInfoScope.</summary>
         ODataWriterCore_ParentNestedResourceInfoScope,

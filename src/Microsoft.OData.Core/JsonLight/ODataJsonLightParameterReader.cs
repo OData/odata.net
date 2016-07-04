@@ -30,7 +30,7 @@ namespace Microsoft.OData.JsonLight
         private readonly ODataJsonLightParameterDeserializer jsonLightParameterDeserializer;
 
         /// <summary>The duplicate property names checker to use for the parameter payload.</summary>
-        private DuplicatePropertyNamesChecker duplicatePropertyNamesChecker;
+        private PropertyAndAnnotationCollector propertyAndAnnotationCollector;
 
         /// <summary>
         /// Constructor.
@@ -65,13 +65,13 @@ namespace Microsoft.OData.JsonLight
             Debug.Assert(this.jsonLightParameterDeserializer.JsonReader.NodeType == JsonNodeType.None, "Pre-Condition: expected JsonNodeType.None");
 
             // We use this to store annotations and check for duplicate annotation names, but we don't really store properties in it.
-            this.duplicatePropertyNamesChecker = this.jsonLightInputContext.CreateDuplicatePropertyNamesChecker();
+            this.propertyAndAnnotationCollector = this.jsonLightInputContext.CreatePropertyAndAnnotationCollector();
 
             // The parameter payload looks like "{ param1 : value1, ..., paramN : valueN }", where each value can be primitive, complex, collection, entity, resource set or collection.
             // Position the reader on the first node
             this.jsonLightParameterDeserializer.ReadPayloadStart(
                 ODataPayloadKind.Parameter,
-                this.duplicatePropertyNamesChecker,
+                this.propertyAndAnnotationCollector,
                 /*isReadingNestedPayload*/false,
                 /*allowEmptyPayload*/true);
 
@@ -96,13 +96,13 @@ namespace Microsoft.OData.JsonLight
             Debug.Assert(this.jsonLightParameterDeserializer.JsonReader.NodeType == JsonNodeType.None, "Pre-Condition: expected JsonNodeType.None");
 
             // We use this to store annotations and check for duplicate annotation names, but we don't really store properties in it.
-            this.duplicatePropertyNamesChecker = this.jsonLightInputContext.CreateDuplicatePropertyNamesChecker();
+            this.propertyAndAnnotationCollector = this.jsonLightInputContext.CreatePropertyAndAnnotationCollector();
 
             // The parameter payload looks like "{ param1 : value1, ..., paramN : valueN }", where each value can be primitive, complex, collection, entity, resource set or collection.
             // Position the reader on the first node
             return this.jsonLightParameterDeserializer.ReadPayloadStartAsync(
                 ODataPayloadKind.Parameter,
-                this.duplicatePropertyNamesChecker,
+                this.propertyAndAnnotationCollector,
                 /*isReadingNestedPayload*/false,
                 /*allowEmptyPayload*/true)
 
@@ -242,7 +242,7 @@ namespace Microsoft.OData.JsonLight
                 return false;
             }
 
-            return this.jsonLightParameterDeserializer.ReadNextParameter(this.duplicatePropertyNamesChecker);
+            return this.jsonLightParameterDeserializer.ReadNextParameter(this.propertyAndAnnotationCollector);
         }
 
         /// <summary>
@@ -264,7 +264,7 @@ namespace Microsoft.OData.JsonLight
                 "The current state must not be Start, Exception or Completed.");
 
             this.PopScope(this.State);
-            return this.jsonLightParameterDeserializer.ReadNextParameter(this.duplicatePropertyNamesChecker);
+            return this.jsonLightParameterDeserializer.ReadNextParameter(this.propertyAndAnnotationCollector);
         }
 
         /// <summary>

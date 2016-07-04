@@ -257,7 +257,7 @@ namespace Microsoft.OData
             {
                 Debug.Assert(
                     this.State == WriterState.Resource || this.State == WriterState.NestedResourceInfo || this.State == WriterState.NestedResourceInfoWithContent,
-                    "DuplicatePropertyNamesChecker should only be called while writing a resource or an (expanded or deferred) nested resource info.");
+                    "PropertyAndAnnotationCollector should only be called while writing a resource or an (expanded or deferred) nested resource info.");
 
                 ResourceScope resourceScope;
                 switch (this.State)
@@ -270,7 +270,7 @@ namespace Microsoft.OData
                         resourceScope = (ResourceScope)this.scopes.Parent;
                         break;
                     default:
-                        throw new ODataException(Strings.General_InternalError(InternalErrorCodes.ODataWriterCore_DuplicatePropertyNamesChecker));
+                        throw new ODataException(Strings.General_InternalError(InternalErrorCodes.ODataWriterCore_PropertyAndAnnotationCollector));
                 }
 
                 return resourceScope.DuplicatePropertyNameChecker;

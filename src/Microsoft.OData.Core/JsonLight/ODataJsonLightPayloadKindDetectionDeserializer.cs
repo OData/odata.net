@@ -47,7 +47,7 @@ namespace Microsoft.OData.JsonLight
             {
                 this.ReadPayloadStart(
                     ODataPayloadKind.Unsupported,
-                    /*duplicatePropertyNamesChecker*/null,
+                    /*propertyAndAnnotationCollector*/null,
                     /*isReadingNestedPayload*/false,
                     /*allowEmptyPayload*/false);
                 return this.DetectPayloadKindImplementation(detectionInfo);
@@ -80,7 +80,7 @@ namespace Microsoft.OData.JsonLight
 
             return this.ReadPayloadStartAsync(
                 ODataPayloadKind.Unsupported,
-                /*duplicatePropertyNamesChecker*/null,
+                /*propertyAndAnnotationCollector*/null,
                 /*isReadingNestedPayload*/false,
                 /*allowEmptyPayload*/false)
 

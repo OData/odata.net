@@ -228,7 +228,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
                     // We expect failure only if we don't allow duplicates or if the property kind doesn't allow duplicates ever
                     if ((!duplicatePropertySet.DuplicationPotentiallyAllowed || !allowDuplicateProperties))
                     {
-                        testDescriptor.ExpectedException = ODataExpectedExceptions.ODataException("DuplicatePropertyNamesChecker_DuplicatePropertyNamesNotAllowed", "DuplicateProperty");
+                        testDescriptor.ExpectedException = ODataExpectedExceptions.ODataException("DuplicatePropertyNamesNotAllowed", "DuplicateProperty");
                     }
 
                     IEnumerable<PayloadReaderTestDescriptor> testDescriptors = new PayloadReaderTestDescriptor[]

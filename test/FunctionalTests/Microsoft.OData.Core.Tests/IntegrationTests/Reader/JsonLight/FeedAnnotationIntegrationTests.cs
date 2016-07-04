@@ -165,7 +165,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.JsonLight
                 entryReader.State.Should().Be(ODataReaderState.ResourceSetStart);
                 entryReader.Item.As<ODataResourceSet>().NextPageLink.Should().Be(new Uri("http://nextLink"));
                 Action read = () => entryReader.Read();
-                read.ShouldThrow<ODataException>().WithMessage(ErrorStrings.DuplicatePropertyNamesChecker_DuplicateAnnotationNotAllowed("odata.nextLink"));
+                read.ShouldThrow<ODataException>().WithMessage(ErrorStrings.DuplicateAnnotationNotAllowed("odata.nextLink"));
             }
         }
 
@@ -184,7 +184,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.JsonLight
                 entryReader.State.Should().Be(ODataReaderState.ResourceSetStart);
                 entryReader.Item.As<ODataResourceSet>().DeltaLink.Should().Be(new Uri("http://deltaLink"));
                 Action read = () => entryReader.Read();
-                read.ShouldThrow<ODataException>().WithMessage(ErrorStrings.DuplicatePropertyNamesChecker_DuplicateAnnotationNotAllowed("odata.deltaLink"));
+                read.ShouldThrow<ODataException>().WithMessage(ErrorStrings.DuplicateAnnotationNotAllowed("odata.deltaLink"));
             }
         }
 
@@ -381,7 +381,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.JsonLight
             entryReader.Read();
             entryReader.State.Should().Be(ODataReaderState.NestedResourceInfoEnd);
             Action read = () => entryReader.Read();
-            read.ShouldThrow<ODataException>().WithMessage(ErrorStrings.DuplicatePropertyNamesChecker_PropertyAnnotationAfterTheProperty("odata.count", "NavProp"));
+            read.ShouldThrow<ODataException>().WithMessage(ErrorStrings.PropertyAnnotationAfterTheProperty("odata.count", "NavProp"));
         }
 
         [Fact]

@@ -61,7 +61,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                     Json = "\"#TestModel.PrimitiveResultOperation\":{}, \"#TestModel.PrimitiveResultOperation\":{}",
                     SkipForRequest = true,
                     SkipForResponse = false,
-                    ExpectedException = ODataExpectedExceptions.ODataException("DuplicatePropertyNamesChecker_DuplicatePropertyNamesNotAllowed", "#TestModel.PrimitiveResultOperation"),
+                    ExpectedException = ODataExpectedExceptions.ODataException("DuplicatePropertyNamesNotAllowed", "#TestModel.PrimitiveResultOperation"),
                 },
                 new
                 {

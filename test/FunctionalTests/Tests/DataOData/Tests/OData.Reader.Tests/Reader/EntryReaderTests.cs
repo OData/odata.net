@@ -278,7 +278,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
                         PayloadElement = PayloadBuilder.Entity("TestModel.OpenEntityType").PrimitiveProperty("ID", 42).PrimitiveProperty("DateTimeProperty", new DateTimeOffset(DateTime.Now))
                             .PrimitiveProperty("DateTimeProperty", new DateTimeOffset(DateTime.Now.AddDays(1.0))),
                         PayloadEdmModel = model,
-                        ExpectedException = ODataExpectedExceptions.ODataException("DuplicatePropertyNamesChecker_DuplicatePropertyNamesNotAllowed", "DateTimeProperty"),
+                        ExpectedException = ODataExpectedExceptions.ODataException("DuplicatePropertyNamesNotAllowed", "DateTimeProperty"),
                         // In JSON Light this fails for different reasons, related to missing/multiple type annotations (depending on how it is serialised)
                         SkipTestConfiguration = tc => tc.Format == ODataFormat.Json,
                     },
@@ -476,7 +476,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
                     // In JSON with WCF DS Service behavior where duplicates are removed very soon and thus we never fail on them.
                     if ((!duplicatePropertySet.DuplicationPotentiallyAllowed || !useServerBehavior))
                     {
-                        testDescriptor.ExpectedException = ODataExpectedExceptions.ODataException("DuplicatePropertyNamesChecker_DuplicatePropertyNamesNotAllowed", "DuplicateProperty");
+                        testDescriptor.ExpectedException = ODataExpectedExceptions.ODataException("DuplicatePropertyNamesNotAllowed", "DuplicateProperty");
                     }
 
                     if (firstProperty.ElementType == ODataPayloadElementType.NavigationPropertyInstance && secondProperty.ElementType == ODataPayloadElementType.NavigationPropertyInstance)
@@ -506,7 +506,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
                             else if (navigationFirstProperty.AssociationLink != null && navigationSecondProperty.AssociationLink != null)
                             {
                                 testDescriptor.ExpectedException = ODataExpectedExceptions.ODataException(
-                                    "DuplicatePropertyNamesChecker_DuplicateAnnotationForPropertyNotAllowed",
+                                    "DuplicateAnnotationForPropertyNotAllowed",
                                     JsonLightConstants.ODataAssociationLinkUrlAnnotationName,
                                     "DuplicateProperty");
                             }
@@ -527,7 +527,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
                     {
                         if (testConfiguration.Format == ODataFormat.Json)
                         {
-                            testDescriptor.ExpectedException = ODataExpectedExceptions.ODataException("DuplicatePropertyNamesChecker_DuplicateAnnotationForPropertyNotAllowed", JsonLightConstants.ODataMediaEditLinkAnnotationName, "DuplicateProperty");
+                            testDescriptor.ExpectedException = ODataExpectedExceptions.ODataException("DuplicateAnnotationForPropertyNotAllowed", JsonLightConstants.ODataMediaEditLinkAnnotationName, "DuplicateProperty");
                         }
                     }
 
@@ -567,10 +567,10 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
                         (tc) => new PayloadReaderTestExpectedResult(this.Settings.ExpectedResultSettings)
                                 {
                                     ExpectedException = (tc.Format == ODataFormat.Json)
-                                        ? ODataExpectedExceptions.ODataException("DuplicatePropertyNamesChecker_DuplicatePropertyNamesNotAllowed", "CityHall")
+                                        ? ODataExpectedExceptions.ODataException("DuplicatePropertyNamesNotAllowed", "CityHall")
                                         : (tc.IsRequest)
                                             ? null
-                                            : ODataExpectedExceptions.ODataException("DuplicatePropertyNamesChecker_DuplicatePropertyNamesNotAllowed", "CityHall"),
+                                            : ODataExpectedExceptions.ODataException("DuplicatePropertyNamesNotAllowed", "CityHall"),
                                 },
                 },
                 new DuplicateNavigationLinkTestCase
@@ -587,10 +587,10 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
                         (tc) => new PayloadReaderTestExpectedResult(this.Settings.ExpectedResultSettings)
                                 {
                                     ExpectedException = (tc.Format == ODataFormat.Json)
-                                        ? ODataExpectedExceptions.ODataException("DuplicatePropertyNamesChecker_DuplicatePropertyNamesNotAllowed", "PoliceStation")
+                                        ? ODataExpectedExceptions.ODataException("DuplicatePropertyNamesNotAllowed", "PoliceStation")
                                         : (tc.IsRequest)
-                                            ? ODataExpectedExceptions.ODataException("DuplicatePropertyNamesChecker_MultipleLinksForSingleton", "PoliceStation")
-                                            : ODataExpectedExceptions.ODataException("DuplicatePropertyNamesChecker_DuplicatePropertyNamesNotAllowed", "PoliceStation"),
+                                            ? ODataExpectedExceptions.ODataException("MultipleLinksForSingleton", "PoliceStation")
+                                            : ODataExpectedExceptions.ODataException("DuplicatePropertyNamesNotAllowed", "PoliceStation"),
                                 },
                 },
                 new DuplicateNavigationLinkTestCase
@@ -603,7 +603,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
                         PayloadBuilder.ExpandedNavigationProperty(
                             "PoliceStation",
                             PayloadBuilder.EntitySet()) },
-                    ExpectedException = ODataExpectedExceptions.ODataException("DuplicatePropertyNamesChecker_MultipleLinksForSingleton", "PoliceStation"),
+                    ExpectedException = ODataExpectedExceptions.ODataException("MultipleLinksForSingleton", "PoliceStation"),
                     NoMetadataOnly = true
                 },
                 new DuplicateNavigationLinkTestCase
@@ -624,8 +624,8 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
                                             ? ODataExpectedExceptions.ODataException("ODataJsonLightEntryAndFeedDeserializer_SingletonNavigationPropertyWithBindingAndValue", "PoliceStation", JsonLightConstants.ODataBindAnnotationName)
                                             : null
                                         : tc.IsRequest
-                                            ? ODataExpectedExceptions.ODataException("DuplicatePropertyNamesChecker_MultipleLinksForSingleton", "PoliceStation")
-                                            : ODataExpectedExceptions.ODataException("DuplicatePropertyNamesChecker_DuplicatePropertyNamesNotAllowed", "PoliceStation"),
+                                            ? ODataExpectedExceptions.ODataException("MultipleLinksForSingleton", "PoliceStation")
+                                            : ODataExpectedExceptions.ODataException("DuplicatePropertyNamesNotAllowed", "PoliceStation"),
                                 }
                 },
                 new DuplicateNavigationLinkTestCase
@@ -646,8 +646,8 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
                                             ? ODataExpectedExceptions.ODataException("ODataJsonLightEntryAndFeedDeserializer_SingletonNavigationPropertyWithBindingAndValue", "PoliceStation", JsonLightConstants.ODataBindAnnotationName)
                                             : null
                                         : tc.IsRequest
-                                            ? ODataExpectedExceptions.ODataException("DuplicatePropertyNamesChecker_MultipleLinksForSingleton", "PoliceStation")
-                                            : ODataExpectedExceptions.ODataException("DuplicatePropertyNamesChecker_DuplicatePropertyNamesNotAllowed", "PoliceStation"),
+                                            ? ODataExpectedExceptions.ODataException("MultipleLinksForSingleton", "PoliceStation")
+                                            : ODataExpectedExceptions.ODataException("DuplicatePropertyNamesNotAllowed", "PoliceStation"),
                                 }
                 },
                 new DuplicateNavigationLinkTestCase
@@ -660,7 +660,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
                         PayloadBuilder.DeferredNavigationProperty(
                             "PoliceStation",
                             PayloadBuilder.DeferredLink("http://odata.org/deferred").IsCollection(true)) },
-                    ExpectedException = ODataExpectedExceptions.ODataException("DuplicatePropertyNamesChecker_MultipleLinksForSingleton", "PoliceStation"),
+                    ExpectedException = ODataExpectedExceptions.ODataException("MultipleLinksForSingleton", "PoliceStation"),
                     NoMetadataOnly = true
                 },
                 new DuplicateNavigationLinkTestCase
@@ -688,7 +688,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
                                 {
                                     ExpectedException = (tc.Format == ODataFormat.Json || tc.IsRequest)
                                         ? null
-                                        : ODataExpectedExceptions.ODataException("DuplicatePropertyNamesChecker_DuplicatePropertyNamesNotAllowed", "CityHall"),
+                                        : ODataExpectedExceptions.ODataException("DuplicatePropertyNamesNotAllowed", "CityHall"),
                                 }
                 },
                 new DuplicateNavigationLinkTestCase
@@ -734,7 +734,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
                                             : null
                                         : tc.IsRequest
                                             ? null
-                                            : ODataExpectedExceptions.ODataException("DuplicatePropertyNamesChecker_DuplicatePropertyNamesNotAllowed", "CityHall"),
+                                            : ODataExpectedExceptions.ODataException("DuplicatePropertyNamesNotAllowed", "CityHall"),
                                 },
                 },
                 new DuplicateNavigationLinkTestCase
@@ -755,11 +755,11 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
                                 {
                                     ExpectedException = (tc.Format == ODataFormat.Json)
                                         ? (tc.IsRequest)
-                                            ? ODataExpectedExceptions.ODataException("DuplicatePropertyNamesChecker_DuplicateAnnotationForPropertyNotAllowed", JsonLightConstants.ODataBindAnnotationName, "CityHall")
+                                            ? ODataExpectedExceptions.ODataException("DuplicateAnnotationForPropertyNotAllowed", JsonLightConstants.ODataBindAnnotationName, "CityHall")
                                             : null
                                         : (tc.IsRequest)
                                             ? null
-                                            : ODataExpectedExceptions.ODataException("DuplicatePropertyNamesChecker_DuplicatePropertyNamesNotAllowed", "CityHall"),
+                                            : ODataExpectedExceptions.ODataException("DuplicatePropertyNamesNotAllowed", "CityHall"),
                                 },
                 },
                 new DuplicateNavigationLinkTestCase
@@ -778,11 +778,11 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
                                     ExpectedException =
                                         (tc.Format == ODataFormat.Json)
                                             ? (tc.IsRequest)
-                                                ? ODataExpectedExceptions.ODataException("DuplicatePropertyNamesChecker_DuplicateAnnotationForPropertyNotAllowed", JsonLightConstants.ODataBindAnnotationName, "CityHall")
-                                                : ODataExpectedExceptions.ODataException("DuplicatePropertyNamesChecker_DuplicateAnnotationForPropertyNotAllowed", JsonLightConstants.ODataNavigationLinkUrlAnnotationName, "CityHall")
+                                                ? ODataExpectedExceptions.ODataException("DuplicateAnnotationForPropertyNotAllowed", JsonLightConstants.ODataBindAnnotationName, "CityHall")
+                                                : ODataExpectedExceptions.ODataException("DuplicateAnnotationForPropertyNotAllowed", JsonLightConstants.ODataNavigationLinkUrlAnnotationName, "CityHall")
                                             : (tc.IsRequest)
                                                 ? null
-                                                : ODataExpectedExceptions.ODataException("DuplicatePropertyNamesChecker_DuplicatePropertyNamesNotAllowed", "CityHall"),
+                                                : ODataExpectedExceptions.ODataException("DuplicatePropertyNamesNotAllowed", "CityHall"),
                                 },
                 },
                 new DuplicateNavigationLinkTestCase
@@ -804,11 +804,11 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
                                     ExpectedException =
                                         (tc.Format == ODataFormat.Json)
                                             ? (tc.IsRequest)
-                                                ? ODataExpectedExceptions.ODataException("DuplicatePropertyNamesChecker_DuplicateAnnotationForPropertyNotAllowed", JsonLightConstants.ODataBindAnnotationName, "CityHall")
-                                                : ODataExpectedExceptions.ODataException("DuplicatePropertyNamesChecker_DuplicateAnnotationForPropertyNotAllowed", JsonLightConstants.ODataNavigationLinkUrlAnnotationName, "CityHall")
+                                                ? ODataExpectedExceptions.ODataException("DuplicateAnnotationForPropertyNotAllowed", JsonLightConstants.ODataBindAnnotationName, "CityHall")
+                                                : ODataExpectedExceptions.ODataException("DuplicateAnnotationForPropertyNotAllowed", JsonLightConstants.ODataNavigationLinkUrlAnnotationName, "CityHall")
                                             : (tc.IsRequest)
                                                 ? null
-                                                : ODataExpectedExceptions.ODataException("DuplicatePropertyNamesChecker_DuplicatePropertyNamesNotAllowed", "CityHall"),
+                                                : ODataExpectedExceptions.ODataException("DuplicatePropertyNamesNotAllowed", "CityHall"),
                                 },
                 },
                 new DuplicateNavigationLinkTestCase
@@ -833,11 +833,11 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
                                     ExpectedException =
                                         (tc.Format == ODataFormat.Json)
                                             ? (tc.IsRequest)
-                                                ? ODataExpectedExceptions.ODataException("DuplicatePropertyNamesChecker_DuplicateAnnotationForPropertyNotAllowed", JsonLightConstants.ODataBindAnnotationName, "CityHall")
-                                                : ODataExpectedExceptions.ODataException("DuplicatePropertyNamesChecker_DuplicateAnnotationForPropertyNotAllowed", JsonLightConstants.ODataNavigationLinkUrlAnnotationName, "CityHall")
+                                                ? ODataExpectedExceptions.ODataException("DuplicateAnnotationForPropertyNotAllowed", JsonLightConstants.ODataBindAnnotationName, "CityHall")
+                                                : ODataExpectedExceptions.ODataException("DuplicateAnnotationForPropertyNotAllowed", JsonLightConstants.ODataNavigationLinkUrlAnnotationName, "CityHall")
                                             : (tc.IsRequest)
                                                 ? null
-                                                : ODataExpectedExceptions.ODataException("DuplicatePropertyNamesChecker_DuplicatePropertyNamesNotAllowed", "CityHall"),
+                                                : ODataExpectedExceptions.ODataException("DuplicatePropertyNamesNotAllowed", "CityHall"),
                                 },
                 },
             };
@@ -892,7 +892,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
                     if (!testConfiguration.IsRequest && testCase.ExpectedResultCallback == null)
                     {
                         // In responses all duplicates will fail with the same error message since we don't allow any duplicates there.
-                        expectedException = ODataExpectedExceptions.ODataException("DuplicatePropertyNamesChecker_DuplicatePropertyNamesNotAllowed", testCase.Properties[0].Name);
+                        expectedException = ODataExpectedExceptions.ODataException("DuplicatePropertyNamesNotAllowed", testCase.Properties[0].Name);
                     }
 
                     PayloadReaderTestDescriptor testDescriptor = new PayloadReaderTestDescriptor(this.Settings)

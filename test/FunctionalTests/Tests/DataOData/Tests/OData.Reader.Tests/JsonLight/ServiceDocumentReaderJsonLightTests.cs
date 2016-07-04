@@ -305,7 +305,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                                 ],
                                 ""value@cn.foo"":""out of order""
                             }",
-                    ExpectedException = ODataExpectedExceptions.ODataException("DuplicatePropertyNamesChecker_PropertyAnnotationAfterTheProperty", "cn.foo", "value")
+                    ExpectedException = ODataExpectedExceptions.ODataException("PropertyAnnotationAfterTheProperty", "cn.foo", "value")
                 },
                 new JsonLightServiceDocumentReaderTestCase
                 {

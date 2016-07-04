@@ -67,9 +67,6 @@
     <Compile Include="$(ODataCrossTargettingSourcePath)\CollectionWithoutExpectedTypeValidator.cs">
       <Link>Microsoft\OData\Core\CollectionWithoutExpectedTypeValidator.cs</Link>
     </Compile>
-    <Compile Include="$(ODataCrossTargettingSourcePath)\DuplicatePropertyNamesChecker.cs">
-      <Link>Microsoft\OData\Core\DuplicatePropertyNamesChecker.cs</Link>
-    </Compile>
     <Compile Include="$(ODataCrossTargettingSourcePath)\ErrorUtils.cs">
       <Link>Microsoft\OData\Core\ErrorUtils.cs</Link>
     </Compile>
@@ -1562,6 +1559,9 @@
     </Compile>
     <Compile Include="..\ODataNullValueBehaviorKind.cs">
       <Link>Microsoft\OData\Core\ODataNullValueBehaviorKind.cs</Link>
+    </Compile>
+    <Compile Include="..\PropertyAndAnnotationCollector.cs">
+      <Link>Microsoft\OData\Core\PropertyAndAnnotationCollector.cs</Link>
     </Compile>
     <Compile Include="..\PropertyCache.cs">
       <Link>PropertyCache.cs</Link>

@@ -68,7 +68,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                     DebugDescription = "Unrecognized properties should fail if duplicated.",
                     PayloadElement = PayloadBuilder.Error().InnerError(PayloadBuilder.InnerError().Message("msg1"))
                         .JsonRepresentation("{ \"error\": { \"innererror\": { \"foo\": \"bar1\", \"message\": \"msg1\", \"foo\": \"bar2\" } } }"),
-                    ExpectedException = ODataExpectedExceptions.ODataException("DuplicatePropertyNamesChecker_DuplicatePropertyNamesNotAllowed", "foo")
+                    ExpectedException = ODataExpectedExceptions.ODataException("DuplicatePropertyNamesNotAllowed", "foo")
                 },
 
                 // extra properties in nested inner error
@@ -97,7 +97,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                     DebugDescription = "Unrecognized properties in nested inner error should fail if duplicated.",
                     PayloadElement = PayloadBuilder.Error().InnerError(PayloadBuilder.InnerError().InnerError(PayloadBuilder.InnerError().Message("msg1")))
                         .JsonRepresentation("{ \"error\": { \"innererror\": { \"internalexception\": { \"foo\": \"bar1\", \"message\": \"msg1\", \"foo\": \"bar2\" } } } }"),
-                    ExpectedException = ODataExpectedExceptions.ODataException("DuplicatePropertyNamesChecker_DuplicatePropertyNamesNotAllowed", "foo")
+                    ExpectedException = ODataExpectedExceptions.ODataException("DuplicatePropertyNamesNotAllowed", "foo")
                 },
             };
             this.CombinatorialEngineProvider.RunCombinations(
@@ -434,49 +434,49 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                 new PayloadReaderTestDescriptor(settings)
                 {
                     PayloadElement = PayloadBuilder.Error().JsonRepresentation("{ \"error\": { \"code\": \"Error code\", \"code\": \"Error code\" } }"),
-                    ExpectedException = ODataExpectedExceptions.ODataException("DuplicatePropertyNamesChecker_DuplicatePropertyNamesNotAllowed", "code"),
+                    ExpectedException = ODataExpectedExceptions.ODataException("DuplicatePropertyNamesNotAllowed", "code"),
                 },
 
                 // duplicate 'message' property
                 new PayloadReaderTestDescriptor(settings)
                 {
                     PayloadElement = PayloadBuilder.Error().JsonRepresentation("{ \"error\": { \"message\": \"Error message\", \"message\": \"Error message\" } }"),
-                    ExpectedException = ODataExpectedExceptions.ODataException("DuplicatePropertyNamesChecker_DuplicatePropertyNamesNotAllowed", "message"),
+                    ExpectedException = ODataExpectedExceptions.ODataException("DuplicatePropertyNamesNotAllowed", "message"),
                 },
 
                 // duplicate 'innererror' property
                 new PayloadReaderTestDescriptor(settings)
                 {
                     PayloadElement = PayloadBuilder.Error().JsonRepresentation("{ \"error\": { \"code\": \"Error code\", \"innererror\": { }, \"innererror\": { } } }"),
-                    ExpectedException = ODataExpectedExceptions.ODataException("DuplicatePropertyNamesChecker_DuplicatePropertyNamesNotAllowed", "innererror"),
+                    ExpectedException = ODataExpectedExceptions.ODataException("DuplicatePropertyNamesNotAllowed", "innererror"),
                 },
 
                 // duplicate 'message' property (on the inner error)
                 new PayloadReaderTestDescriptor(settings)
                 {
                     PayloadElement = PayloadBuilder.Error().JsonRepresentation("{ \"error\": { \"code\": \"Error code\", \"innererror\": { \"message\": \"Inner msg\", \"message\": \"Inner msg\" } } }"),
-                    ExpectedException = ODataExpectedExceptions.ODataException("DuplicatePropertyNamesChecker_DuplicatePropertyNamesNotAllowed", "message"),
+                    ExpectedException = ODataExpectedExceptions.ODataException("DuplicatePropertyNamesNotAllowed", "message"),
                 },
 
                 // duplicate 'type' property (on the inner error)
                 new PayloadReaderTestDescriptor(settings)
                 {
                     PayloadElement = PayloadBuilder.Error().JsonRepresentation("{ \"error\": { \"code\": \"Error code\", \"innererror\": { \"type\": \"Some typename\", \"type\": \"Some typename\" } } }"),
-                    ExpectedException = ODataExpectedExceptions.ODataException("DuplicatePropertyNamesChecker_DuplicatePropertyNamesNotAllowed", "type"),
+                    ExpectedException = ODataExpectedExceptions.ODataException("DuplicatePropertyNamesNotAllowed", "type"),
                 },
 
                 // duplicate 'stacktrace' property (on the inner error)
                 new PayloadReaderTestDescriptor(settings)
                 {
                     PayloadElement = PayloadBuilder.Error().JsonRepresentation("{ \"error\": { \"code\": \"Error code\", \"innererror\": { \"stacktrace\": \"stack trace\", \"stacktrace\": \"stack trace\" } } }"),
-                    ExpectedException = ODataExpectedExceptions.ODataException("DuplicatePropertyNamesChecker_DuplicatePropertyNamesNotAllowed", "stacktrace"),
+                    ExpectedException = ODataExpectedExceptions.ODataException("DuplicatePropertyNamesNotAllowed", "stacktrace"),
                 },
 
                 // duplicate 'internalexception' property (on the inner error)
                 new PayloadReaderTestDescriptor(settings)
                 {
                     PayloadElement = PayloadBuilder.Error().JsonRepresentation("{ \"error\": { \"code\": \"Error code\", \"innererror\": { \"internalexception\": { }, \"internalexception\": { } } } }"),
-                    ExpectedException = ODataExpectedExceptions.ODataException("DuplicatePropertyNamesChecker_DuplicatePropertyNamesNotAllowed", "internalexception"),
+                    ExpectedException = ODataExpectedExceptions.ODataException("DuplicatePropertyNamesNotAllowed", "internalexception"),
                 },
                 #endregion Duplicate properties
             };

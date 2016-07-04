@@ -57,7 +57,7 @@ namespace Microsoft.OData
             catch (ArgumentException)
             {
                 throw new ODataException(
-                    Strings.DuplicatePropertyNamesChecker_DuplicatePropertyNamesNotAllowed(
+                    Strings.DuplicatePropertyNamesNotAllowed(
                         property.Name));
             }
         }
@@ -78,7 +78,7 @@ namespace Microsoft.OData
                 if (state != State.AssociationLink)
                 {
                     throw new ODataException(
-                        Strings.DuplicatePropertyNamesChecker_DuplicatePropertyNamesNotAllowed(
+                        Strings.DuplicatePropertyNamesNotAllowed(
                             property.Name));
                 }
                 else
@@ -105,7 +105,7 @@ namespace Microsoft.OData
                 if (state != State.NestedResource)
                 {
                     throw new ODataException(
-                        Strings.DuplicatePropertyNamesChecker_DuplicatePropertyNamesNotAllowed(
+                        Strings.DuplicatePropertyNamesNotAllowed(
                             propertyName));
                 }
                 else

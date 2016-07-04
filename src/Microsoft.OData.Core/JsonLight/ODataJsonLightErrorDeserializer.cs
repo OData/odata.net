@@ -49,14 +49,14 @@ namespace Microsoft.OData.JsonLight
             this.JsonReader.DisableInStreamErrorDetection = true;
 
             // We use this to store annotations and check for duplicate annotation names, but we don't really store properties in it.
-            DuplicatePropertyNamesChecker duplicatePropertyNamesChecker = this.CreateDuplicatePropertyNamesChecker();
+            PropertyAndAnnotationCollector propertyAndAnnotationCollector = this.CreatePropertyAndAnnotationCollector();
 
             try
             {
                 // Position the reader on the first node
                 this.ReadPayloadStart(
                     ODataPayloadKind.Error,
-                    duplicatePropertyNamesChecker,
+                    propertyAndAnnotationCollector,
                     /*isReadingNestedPayload*/false,
                     /*allowEmptyPayload*/false);
 
@@ -94,12 +94,12 @@ namespace Microsoft.OData.JsonLight
             this.JsonReader.DisableInStreamErrorDetection = true;
 
             // We use this to store annotations and check for duplicate annotation names, but we don't really store properties in it.
-            DuplicatePropertyNamesChecker duplicatePropertyNamesChecker = this.CreateDuplicatePropertyNamesChecker();
+            PropertyAndAnnotationCollector propertyAndAnnotationCollector = this.CreatePropertyAndAnnotationCollector();
 
             // Position the reader on the first node
             return this.ReadPayloadStartAsync(
                 ODataPayloadKind.Error,
-                duplicatePropertyNamesChecker,
+                propertyAndAnnotationCollector,
                 /*isReadingNestedPayload*/false,
                 /*allowEmptyPayload*/false)
 
@@ -180,16 +180,16 @@ namespace Microsoft.OData.JsonLight
         ///                 any                         - Will throw if not StartObject.
         /// Post-Condition: any                         - The node after the EndObject node for the JSON object being processed.
         /// </remarks>
-        private void ReadJsonObjectInErrorPayload(Action<string, DuplicatePropertyNamesChecker> readPropertyWithValue)
+        private void ReadJsonObjectInErrorPayload(Action<string, PropertyAndAnnotationCollector> readPropertyWithValue)
         {
-            DuplicatePropertyNamesChecker duplicatePropertyNamesChecker = this.CreateDuplicatePropertyNamesChecker();
+            PropertyAndAnnotationCollector propertyAndAnnotationCollector = this.CreatePropertyAndAnnotationCollector();
 
             this.JsonReader.ReadStartObject();
 
             while (this.JsonReader.NodeType == JsonNodeType.Property)
             {
                 this.ProcessProperty(
-                    duplicatePropertyNamesChecker,
+                    propertyAndAnnotationCollector,
                     this.ReadErrorPropertyAnnotationValue,
                     (propertyParsingResult, propertyName) =>
                     {
@@ -198,12 +198,12 @@ namespace Microsoft.OData.JsonLight
                             case PropertyParsingResult.ODataInstanceAnnotation:
                                 throw new ODataException(Strings.ODataJsonLightErrorDeserializer_InstanceAnnotationNotAllowedInErrorPayload(propertyName));
                             case PropertyParsingResult.CustomInstanceAnnotation:
-                                readPropertyWithValue(propertyName, duplicatePropertyNamesChecker);
+                                readPropertyWithValue(propertyName, propertyAndAnnotationCollector);
                                 break;
                             case PropertyParsingResult.PropertyWithoutValue:
                                 throw new ODataException(Strings.ODataJsonLightErrorDeserializer_PropertyAnnotationWithoutPropertyForError(propertyName));
                             case PropertyParsingResult.PropertyWithValue:
-                                readPropertyWithValue(propertyName, duplicatePropertyNamesChecker);
+                                readPropertyWithValue(propertyName, propertyAndAnnotationCollector);
                                 break;
                             case PropertyParsingResult.EndOfObject:
                                 break;
@@ -288,7 +288,7 @@ namespace Microsoft.OData.JsonLight
 
             ODataInnerError innerError = new ODataInnerError();
 
-            this.ReadJsonObjectInErrorPayload((propertyName, duplicatePropertyNamesChecker) => this.ReadPropertyValueInInnerError(recursionDepth, innerError, propertyName));
+            this.ReadJsonObjectInErrorPayload((propertyName, propertyAndAnnotationCollector) => this.ReadPropertyValueInInnerError(recursionDepth, innerError, propertyName));
 
             this.JsonReader.AssertNotBuffering();
             return innerError;
@@ -338,7 +338,7 @@ namespace Microsoft.OData.JsonLight
         /// </summary>
         /// <param name="error">The <see cref="ODataError"/> object to update with the data from this property value.</param>
         /// <param name="propertyName">The name of the property whose value is to be read.</param>
-        /// <param name="duplicationPropertyNameChecker">DuplicatePropertyNamesChecker to use for extracting property annotations
+        /// <param name="duplicationPropertyNameChecker">PropertyAndAnnotationCollector to use for extracting property annotations
         /// targetting any custom instance annotations on the error.</param>
         /// <remarks>
         /// Pre-Condition:  any                         - The value of the property being read.
@@ -346,7 +346,7 @@ namespace Microsoft.OData.JsonLight
         ///                 JsonNodeType.EndObject      - The end of the "error" object.
         ///                 any                         - Anything else after the property value is an invalid payload (but won't fail in this method).
         /// </remarks>
-        private void ReadPropertyValueInODataErrorObject(ODataError error, string propertyName, DuplicatePropertyNamesChecker duplicationPropertyNameChecker)
+        private void ReadPropertyValueInODataErrorObject(ODataError error, string propertyName, PropertyAndAnnotationCollector duplicationPropertyNameChecker)
         {
             switch (propertyName)
             {

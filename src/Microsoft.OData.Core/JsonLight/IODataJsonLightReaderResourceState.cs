@@ -51,7 +51,7 @@ namespace Microsoft.OData.JsonLight
         /// <summary>
         /// The duplicate property names checker for the resource represented by the current state. May be null.
         /// </summary>
-        DuplicatePropertyNamesChecker DuplicatePropertyNamesChecker { get; }
+        PropertyAndAnnotationCollector PropertyAndAnnotationCollector { get; }
 
         /// <summary>
         /// The selected properties that should be expanded during template evaluation.

@@ -79,7 +79,7 @@
     <Compile Include="BufferedReadStream.cs" />
     <Compile Include="BufferingReadStream.cs" />
     <Compile Include="CollectionWithoutExpectedTypeValidator.cs" />
-    <Compile Include="DuplicatePropertyNamesChecker.cs" />
+    <Compile Include="PropertyAndAnnotationCollector.cs" />
     <Compile Include="ErrorUtils.cs" />
     <Compile Include="Evaluation\EdmValueUtils.cs" />
     <Compile Include="Evaluation\IODataResourceMetadataContext.cs" />

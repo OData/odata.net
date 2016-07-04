@@ -82,7 +82,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Reader.JsonLight
                 actualValue = deserializer.ReadNonEntityValue(
                     /*payloadTypeName*/ null,
                     typeReference,
-                    /*duplicatePropertyNamesChecker*/ null,
+                    /*propertyAndAnnotationCollector*/ null,
                     /*collectionValidator*/ null,
                     /*validateNullValue*/ true,
                     /*isTopLevelPropertyValue*/ true,

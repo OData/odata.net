@@ -379,7 +379,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                             "}")
                         .ExpectedEntityType(cityType, citiesEntitySet),
                     PayloadEdmModel = model,
-                    ExpectedException = ODataExpectedExceptions.ODataException("DuplicatePropertyNamesChecker_DuplicatePropertyNamesNotAllowed", JsonLightConstants.ODataValuePropertyName)
+                    ExpectedException = ODataExpectedExceptions.ODataException("DuplicatePropertyNamesNotAllowed", JsonLightConstants.ODataValuePropertyName)
                 },
                 #endregion Test cases
             };

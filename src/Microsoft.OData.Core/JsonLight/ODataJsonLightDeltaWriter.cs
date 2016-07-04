@@ -279,7 +279,7 @@ namespace Microsoft.OData.JsonLight
             {
                 Debug.Assert(
                     this.State == WriterState.DeltaResource || this.State == WriterState.DeltaDeletedEntry,
-                    "DuplicatePropertyNamesChecker should only be called while writing a delta (deleted) resource.");
+                    "PropertyAndAnnotationCollector should only be called while writing a delta (deleted) resource.");
 
                 switch (this.State)
                 {
@@ -287,7 +287,7 @@ namespace Microsoft.OData.JsonLight
                     case WriterState.DeltaDeletedEntry:
                         return this.CurrentDeltaResourceScope.DuplicatePropertyNameChecker;
                     default:
-                        throw new ODataException(Strings.General_InternalError(InternalErrorCodes.ODataWriterCore_DuplicatePropertyNamesChecker));
+                        throw new ODataException(Strings.General_InternalError(InternalErrorCodes.ODataWriterCore_PropertyAndAnnotationCollector));
                 }
             }
         }

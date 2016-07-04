@@ -1,5 +1,5 @@
 //---------------------------------------------------------------------
-// <copyright file="DuplicatePropertyNamesChecker.cs" company="Microsoft">
+// <copyright file="PropertyAndAnnotationCollector.cs" company="Microsoft">
 //      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 // </copyright>
 //---------------------------------------------------------------------
@@ -29,7 +29,7 @@ namespace Microsoft.OData
     /// <remarks>
     /// Scope annotations are those that do not apply to specific properties, and start directly with "@".
     /// </remarks>
-    internal sealed class DuplicatePropertyNamesChecker
+    internal sealed class PropertyAndAnnotationCollector
     {
         private static readonly IDictionary<string, object> emptyDictionary = new Dictionary<string, object>();
 
@@ -57,10 +57,10 @@ namespace Microsoft.OData
         private IDictionary<string, PropertyData> propertyData = new Dictionary<string, PropertyData>();
 
         /// <summary>
-        /// Creates a DuplicatePropertyNamesChecker instance.
+        /// Creates a PropertyAndAnnotationCollector instance.
         /// </summary>
         /// <param name="throwOnDuplicateProperty">Whether to enable duplicate property validation.</param>
-        internal DuplicatePropertyNamesChecker(bool throwOnDuplicateProperty)
+        internal PropertyAndAnnotationCollector(bool throwOnDuplicateProperty)
         {
             this.throwOnDuplicateProperty = throwOnDuplicateProperty;
         }
@@ -117,7 +117,7 @@ namespace Microsoft.OData
             else
             {
                 throw new ODataException(
-                    Strings.DuplicatePropertyNamesChecker_DuplicatePropertyNamesNotAllowed(
+                    Strings.DuplicatePropertyNamesNotAllowed(
                         propertyName));
             }
         }
@@ -127,7 +127,7 @@ namespace Microsoft.OData
         /// but we don't know yet if it's expanded or not.
         /// </summary>
         /// <param name="nestedResourceInfo">The nested resource info to be validated.</param>
-        internal void CheckForDuplicatePropertyNamesOnNestedResourceInfoStart(ODataNestedResourceInfo nestedResourceInfo)
+        internal void ValidatePropertyUniquenessOnNestedResourceInfoStart(ODataNestedResourceInfo nestedResourceInfo)
         {
             Debug.Assert(nestedResourceInfo != null);
 
@@ -150,7 +150,7 @@ namespace Microsoft.OData
         /// </summary>
         /// <param name="nestedResourceInfo">The nested resource info to be checked.</param>
         /// <returns>Corresponding association link if available.</returns>
-        internal Uri CheckForDuplicatePropertyNamesAndGetAssociationLink(ODataNestedResourceInfo nestedResourceInfo)
+        internal Uri ValidatePropertyUniquenessAndGetAssociationLink(ODataNestedResourceInfo nestedResourceInfo)
         {
             string propertyName = nestedResourceInfo.Name;
             PropertyData data;
@@ -182,7 +182,7 @@ namespace Microsoft.OData
         /// <param name="propertyName">Name of the annotated property.</param>
         /// <param name="associationLinkUrl">Annotation value.</param>
         /// <returns>Corresponding ODataNestedResourceInfo of the annotated property if available.</returns>
-        internal ODataNestedResourceInfo CheckForDuplicateAssociationLinkNamesAndGetNestedResourceInfo(string propertyName, Uri associationLinkUrl)
+        internal ODataNestedResourceInfo ValidatePropertyOpenForAssociationLinkAndGetNestedResourceInfo(string propertyName, Uri associationLinkUrl)
         {
             Debug.Assert(propertyName != null);
 
@@ -207,7 +207,7 @@ namespace Microsoft.OData
                 else
                 {
                     throw new ODataException(
-                        Strings.DuplicatePropertyNamesChecker_DuplicateAnnotationNotAllowed(
+                        Strings.DuplicateAnnotationNotAllowed(
                             "odata.associationLink"));
                 }
 
@@ -216,9 +216,9 @@ namespace Microsoft.OData
         }
 
         /// <summary>
-        /// Clears the instance for reuse.
+        /// Resets to initial state for reuse.
         /// </summary>
-        internal void Clear()
+        internal void Reset()
         {
             propertyData.Clear();
         }
@@ -248,7 +248,7 @@ namespace Microsoft.OData
             catch (ArgumentException)
             {
                 throw new ODataException(
-                    Strings.DuplicatePropertyNamesChecker_DuplicateAnnotationNotAllowed(
+                    Strings.DuplicateAnnotationNotAllowed(
                         annotationName));
             }
         }
@@ -325,7 +325,7 @@ namespace Microsoft.OData
                 if (data.Processed)
                 {
                     throw new ODataException(
-                        Strings.DuplicatePropertyNamesChecker_PropertyAnnotationAfterTheProperty(
+                        Strings.PropertyAnnotationAfterTheProperty(
                             annotationName, propertyName));
                 }
             }
@@ -338,8 +338,8 @@ namespace Microsoft.OData
             {
                 throw new ODataException(
                     ODataJsonLightReaderUtils.IsAnnotationProperty(propertyName)
-                    ? Strings.DuplicatePropertyNamesChecker_DuplicateAnnotationForInstanceAnnotationNotAllowed(annotationName, propertyName)
-                    : Strings.DuplicatePropertyNamesChecker_DuplicateAnnotationForPropertyNotAllowed(annotationName, propertyName));
+                    ? Strings.DuplicateAnnotationForInstanceAnnotationNotAllowed(annotationName, propertyName)
+                    : Strings.DuplicateAnnotationForPropertyNotAllowed(annotationName, propertyName));
             }
         }
 
@@ -370,7 +370,7 @@ namespace Microsoft.OData
                 if (data.Processed)
                 {
                     throw new ODataException(
-                        Strings.DuplicatePropertyNamesChecker_PropertyAnnotationAfterTheProperty(
+                        Strings.PropertyAnnotationAfterTheProperty(
                             annotationName, propertyName));
                 }
             }
@@ -430,8 +430,8 @@ namespace Microsoft.OData
                 throw new ODataException(
                     ODataJsonLightReaderUtils.IsAnnotationProperty(propertyName)
                     && !ODataJsonLightUtils.IsMetadataReferenceProperty(propertyName)
-                    ? Strings.DuplicatePropertyNamesChecker_DuplicateAnnotationNotAllowed(propertyName)
-                    : Strings.DuplicatePropertyNamesChecker_DuplicatePropertyNamesNotAllowed(propertyName));
+                    ? Strings.DuplicateAnnotationNotAllowed(propertyName)
+                    : Strings.DuplicatePropertyNamesNotAllowed(propertyName));
             }
 
             data.Processed = true;
@@ -452,7 +452,7 @@ namespace Microsoft.OData
                 && data.Processed)
             {
                 throw new ODataException(
-                    Strings.DuplicatePropertyNamesChecker_PropertyAnnotationAfterTheProperty(
+                    Strings.PropertyAnnotationAfterTheProperty(
                         annotationName, propertyName));
             }
         }
@@ -473,7 +473,7 @@ namespace Microsoft.OData
             else if (propertyData.State != PropertyState.AnnotationSeen)
             {
                 throw new ODataException(
-                    Strings.DuplicatePropertyNamesChecker_DuplicatePropertyNamesNotAllowed(
+                    Strings.DuplicatePropertyNamesNotAllowed(
                         propertyName));
             }
         }

@@ -54,12 +54,12 @@ ODataWriterCore_MultipleItemsInNavigationLinkContent=More than one item was writ
 ODataWriterCore_DeltaLinkNotSupportedOnExpandedFeed=The ODataResourceSet.DeltaLink property must be null for expanded feeds. Delta link is not supported on expanded feeds.
 ODataWriterCore_PathInODataUriMustBeSetWhenWritingContainedElement=The Path property in ODataMessageWriterSettings.ODataUri must be set when writing contained elements.
 
-DuplicatePropertyNamesChecker_DuplicatePropertyNamesNotAllowed=Multiple properties with the name '{0}' were detected in a resource or a complex value. In OData, duplicate property names are not allowed.
-DuplicatePropertyNamesChecker_MultipleLinksForSingleton=Multiple navigation links with the same name '{0}' for a singleton navigation property were detected on a resource. In OData, a singleton navigation property can have only one navigation link.
-DuplicatePropertyNamesChecker_DuplicateAnnotationNotAllowed=Multiple annotations with the name '{0}' were detected. In OData, duplicate annotations are not allowed.
-DuplicatePropertyNamesChecker_DuplicateAnnotationForPropertyNotAllowed=Multiple annotations with the name '{0}' were detected for the property with name '{1}'. In OData, duplicate annotations are not allowed.
-DuplicatePropertyNamesChecker_DuplicateAnnotationForInstanceAnnotationNotAllowed=Multiple annotations with the name '{0}' were detected for the instance annotation with name '{1}'. In OData, duplicate annotations are not allowed.
-DuplicatePropertyNamesChecker_PropertyAnnotationAfterTheProperty=An annotation with name '{0}' for property '{1}' was detected after the property, or after an annotation for another property. In OData, annotations for a property must be in a single group and must appear before the property they annotate.
+DuplicatePropertyNamesNotAllowed=Multiple properties with the name '{0}' were detected in a resource or a complex value. In OData, duplicate property names are not allowed.
+MultipleLinksForSingleton=Multiple navigation links with the same name '{0}' for a singleton navigation property were detected on a resource. In OData, a singleton navigation property can have only one navigation link.
+DuplicateAnnotationNotAllowed=Multiple annotations with the name '{0}' were detected. In OData, duplicate annotations are not allowed.
+DuplicateAnnotationForPropertyNotAllowed=Multiple annotations with the name '{0}' were detected for the property with name '{1}'. In OData, duplicate annotations are not allowed.
+DuplicateAnnotationForInstanceAnnotationNotAllowed=Multiple annotations with the name '{0}' were detected for the instance annotation with name '{1}'. In OData, duplicate annotations are not allowed.
+PropertyAnnotationAfterTheProperty=An annotation with name '{0}' for property '{1}' was detected after the property, or after an annotation for another property. In OData, annotations for a property must be in a single group and must appear before the property they annotate.
 
 AtomValueUtils_CannotConvertValueToAtomPrimitive=Cannot convert a value of type '{0}' to the string representation of an Atom primitive value.
 
