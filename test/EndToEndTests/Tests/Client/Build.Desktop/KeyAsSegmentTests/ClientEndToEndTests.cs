@@ -128,6 +128,7 @@ namespace Microsoft.Test.OData.Tests.Client.KeyAsSegmentTests
             Assert.AreEqual(3, person.PersonMetadata.Count, "person.PersonMetadata.Count == 3");
         }
 
+        [Ignore] // Issue: 623
         [TestMethod]
         public void ContextReferencesTest()
         {

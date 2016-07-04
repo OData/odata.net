@@ -29,6 +29,7 @@ namespace AstoriaUnitTests.Tests
     {
         private static readonly string EntityTypeNameWithStringKey = typeof(KeyAsSegmentLongSpanIntegrationTests).FullName + "_EntityTypeWithStringKey";
 
+        [Ignore] // Issues: 623
         [TestCategory("Partition2")]
         [TestMethod]
         public void KeyAsSegmentEndToEndSmokeTestInJsonLight()

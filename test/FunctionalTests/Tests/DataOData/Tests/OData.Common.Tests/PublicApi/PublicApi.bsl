@@ -4832,9 +4832,9 @@ public sealed class Microsoft.OData.ODataServiceDocument : Microsoft.OData.OData
 public sealed class Microsoft.OData.ODataSimplifiedOptions {
 	public ODataSimplifiedOptions ()
 
-	System.Nullable`1[[System.Boolean]] EnableReadingKeyAsSegment  { public get; public set; }
+	bool EnableReadingKeyAsSegment  { public get; public set; }
 	bool EnableReadingODataAnnotationWithoutPrefix  { public get; public set; }
-	System.Nullable`1[[System.Boolean]] EnableWritingKeyAsSegment  { public get; public set; }
+	bool EnableWritingKeyAsSegment  { public get; public set; }
 	bool EnableWritingODataAnnotationWithoutPrefix  { public get; public set; }
 
 	public Microsoft.OData.ODataSimplifiedOptions Clone ()

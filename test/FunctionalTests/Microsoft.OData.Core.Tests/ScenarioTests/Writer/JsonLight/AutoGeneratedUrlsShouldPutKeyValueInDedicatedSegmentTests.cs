@@ -83,32 +83,6 @@ namespace Microsoft.OData.Tests.ScenarioTests.Writer.JsonLight
                 .And.NotContain("People/KeyValue");
         }
 
-
-        [Fact]
-        public void IfKeyAsSegmentSettingIsNullAndNoModelIsGivenThenLinkShouldHaveKeyInParens()
-        {
-            this.SerializeEntryInFullMetadataJson(null, /*model*/ null)
-                .Should().Contain("People('KeyValue')")
-                .And.NotContain("People/KeyValue");
-        }
-
-        [Fact]
-        public void IfKeyAsSegmentSettingIsNullAndAModelIsGivenThenLinkShouldHaveKeyInParens()
-        {
-            this.SerializeEntryInFullMetadataJson(null, this.model, this.personType, this.peopleSet)
-                .Should().Contain("People('KeyValue')")
-                .And.NotContain("People/KeyValue");
-        }
-
-        [Fact]
-        public void IfKeyAsSegmentSettingIsNullAndModelHasKeyAsSegmentAnnotationThenLinkShouldHaveKeyAsSegment()
-        {
-            this.SetKeyAsSegmentAnnotationOnModel();
-            this.SerializeEntryInFullMetadataJson(null, this.model, this.personType, this.peopleSet)
-                .Should().Contain("People/KeyValue")
-                .And.NotContain("People('KeyValue')");
-        }
-
         private void SetKeyAsSegmentAnnotationOnModel()
         {
             this.model.AddVocabularyAnnotation(
@@ -122,7 +96,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Writer.JsonLight
         }
 
         private string SerializeEntryInFullMetadataJson(
-            bool? useKeyAsSegment,
+            bool useKeyAsSegment,
             IEdmModel edmModel,
             IEdmEntityType entityType = null,
             IEdmEntitySet entitySet = null)
