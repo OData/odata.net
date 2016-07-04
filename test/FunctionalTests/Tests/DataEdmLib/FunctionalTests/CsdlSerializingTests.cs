@@ -15,9 +15,6 @@ namespace EdmLibTests.FunctionalTests
     using Microsoft.OData.Edm;
     using Microsoft.OData.Edm.Csdl;
     using Microsoft.OData.Edm.Validation;
-#if SILVERLIGHT
-    using Microsoft.Silverlight.Testing;
-#endif
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     [TestClass]
@@ -1427,6 +1424,37 @@ namespace EdmLibTests.FunctionalTests
     <Property Name=""Id"" Type=""Edm.Int32"" Nullable=""false"" />
     <Property Name=""Weight"" Type=""MyNS.Weight"" />
     <Property Name=""Address"" Type=""MyNS.Address"" />
+  </EntityType>
+  <EntityContainer Name=""Container"">
+    <EntitySet Name=""People"" EntityType=""MyNS.Person"" />
+  </EntityContainer>
+</Schema>";
+
+            VerifyRoundTrip(csdl);
+        }
+
+        [ TestMethod]
+        public void RoundtripModelWithTypeDefinitionFacets()
+        {
+            const string csdl = @"<?xml version=""1.0"" encoding=""utf-16""?>
+<Schema Namespace=""MyNS"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
+  <TypeDefinition Name=""Length"" UnderlyingType=""Edm.Int32"" />
+  <TypeDefinition Name=""Width"" UnderlyingType=""Edm.Int32"">
+    <Annotation Term=""Org.OData.Measurements.V1.Unit"" String=""Centimeters"" />
+  </TypeDefinition>
+  <TypeDefinition Name=""Weight"" UnderlyingType=""Edm.Decimal"">
+    <Annotation Term=""Org.OData.Measurements.V1.Unit"" String=""Kilograms"" />
+  </TypeDefinition>
+  <TypeDefinition Name=""Address"" UnderlyingType=""Edm.String"" />
+  <TypeDefinition Name=""Point"" UnderlyingType=""Edm.GeographyPoint"" />
+  <EntityType Name=""Person"">
+    <Key>
+      <PropertyRef Name=""Id"" />
+    </Key>
+    <Property Name=""Id"" Type=""Edm.Int32"" Nullable=""false"" />
+    <Property Name=""Weight"" Type=""MyNS.Weight"" Precision=""3"" Scale=""2"" />
+    <Property Name=""Address"" Type=""MyNS.Address"" MaxLength=""10"" Unicode=""false"" />
+    <Property Name=""Point"" Type=""MyNS.Point"" SRID=""123"" />
   </EntityType>
   <EntityContainer Name=""Container"">
     <EntitySet Name=""People"" EntityType=""MyNS.Person"" />

@@ -136,9 +136,6 @@
     <Compile Include="Vocabularies\MeasuresHelpers.cs" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Vocabularies\CoreVocabularies.xml" />
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="Vocabularies\CapabilitiesVocabularies.xml" />
     <EmbeddedResource Include="Vocabularies\MeasuresVocabularies.xml" />
   </ItemGroup>

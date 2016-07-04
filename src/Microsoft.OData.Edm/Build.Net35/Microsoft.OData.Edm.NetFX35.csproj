@@ -584,6 +584,9 @@
     <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Semantics\CsdlSemanticsTypeExpression.cs">
       <Link>Microsoft\OData\Edm\Csdl\Semantics\CsdlSemanticsTypeExpression.cs</Link>
     </Compile>
+    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Semantics\CsdlSemanticsTypeDefinitionReference.cs">
+      <Link>Microsoft\OData\Edm\Csdl\Semantics\CsdlSemanticsTypeDefinitionReference.cs</Link>
+    </Compile>
     <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Semantics\CsdlSemanticsUntypedTypeReference.cs">
       <Link>Microsoft\OData\Edm\Csdl\Semantics\CsdlSemanticsUntypedTypeReference.cs</Link>
     </Compile>

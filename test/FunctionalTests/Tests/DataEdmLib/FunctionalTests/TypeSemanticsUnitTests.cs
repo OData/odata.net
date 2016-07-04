@@ -6,9 +6,6 @@
 
 namespace EdmLibTests.FunctionalTests
 {
-    #if SILVERLIGHT
-    using Microsoft.Silverlight.Testing;
-#endif
     using System;
     using System.Collections.Generic;
     using System.IO;
@@ -705,7 +702,6 @@ namespace EdmLibTests.FunctionalTests
         [TestMethod]
         public void AsPrimitiveCanConvertIfTypeNotOrigionallyPrimitive()
         {
-
             const string csdl =
 @"<?xml version=""1.0"" encoding=""utf-16""?>
 <Schema Namespace=""Grumble"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
@@ -728,7 +724,7 @@ namespace EdmLibTests.FunctionalTests
     <Property Name=""myInt64"" Type=""Edm.Int64"" />
     <Property Name=""myByte"" Type=""Edm.Byte"" />
     <Property Name=""myStream"" Type=""Edm.Stream"" />
-    <Property Name=""myString"" Type=""Edm.String"" DefaultValue=""BorkBorkBork"" Collation=""Latin1_General_CS_AS_KS_WS ASC"" MaxLength=""128"" Unicode=""false"" />
+    <Property Name=""myString"" Type=""Edm.String"" DefaultValue=""BorkBorkBork"" MaxLength=""128"" Unicode=""false"" />
     <Property Name=""myStringMax"" Type=""Edm.String"" MaxLength=""Max"" Unicode=""false"" />
     <Property Name=""myGeography"" Type=""Edm.Geography"" SRID=""1"" />
     <Property Name=""myPoint"" Type=""Edm.GeographyPoint"" SRID=""2"" />

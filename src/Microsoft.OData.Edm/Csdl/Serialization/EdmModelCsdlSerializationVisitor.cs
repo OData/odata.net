@@ -157,6 +157,11 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
             this.EndElement(element);
         }
 
+        protected override void ProcessTypeDefinitionReference(IEdmTypeDefinitionReference element)
+        {
+            this.schemaWriter.WriteTypeDefinitionAttributes(element);
+        }
+
         protected override void ProcessBinaryTypeReference(IEdmBinaryTypeReference element)
         {
             this.schemaWriter.WriteBinaryTypeAttributes(element);

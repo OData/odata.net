@@ -85,84 +85,84 @@
     <ReturnType Type="Edm.TimeOfDay" Nullable="false" />
   </Function>
   <Function Name="FunctionWith2Parameters17">
-    <Parameter Name="Param1" Type="Edm.Geography" SRID="4326" />
+    <Parameter Name="Param1" Type="Edm.Geography" />
     <Parameter Name="Param2" Type="Edm.String" MaxLength="0" />
-    <ReturnType Type="Edm.Geography" Nullable="false" SRID="4326" />
+    <ReturnType Type="Edm.Geography" Nullable="false" />
   </Function>
   <Function Name="FunctionWith2Parameters18">
-    <Parameter Name="Param1" Type="Edm.GeographyPoint" SRID="4326" />
+    <Parameter Name="Param1" Type="Edm.GeographyPoint" />
     <Parameter Name="Param2" Type="Edm.Binary" MaxLength="2147483647" />
-    <ReturnType Type="Edm.GeographyPoint" Nullable="false" SRID="4326" />
+    <ReturnType Type="Edm.GeographyPoint" Nullable="false" />
   </Function>
   <Function Name="FunctionWith2Parameters19">
-    <Parameter Name="Param1" Type="Edm.GeographyPolygon" SRID="4326" />
+    <Parameter Name="Param1" Type="Edm.GeographyPolygon" />
     <Parameter Name="Param2" Type="Edm.String" MaxLength="0" />
-    <ReturnType Type="Edm.GeographyPolygon" Nullable="false" SRID="4326" />
+    <ReturnType Type="Edm.GeographyPolygon" Nullable="false" />
   </Function>
   <Function Name="FunctionWith2Parameters20">
-    <Parameter Name="Param1" Type="Edm.GeographyLineString" SRID="4326" />
+    <Parameter Name="Param1" Type="Edm.GeographyLineString" />
     <Parameter Name="Param2" Type="Edm.Binary" MaxLength="2147483647" />
-    <ReturnType Type="Edm.GeographyLineString" Nullable="false" SRID="4326" />
+    <ReturnType Type="Edm.GeographyLineString" Nullable="false" />
   </Function>
   <Function Name="FunctionWith2Parameters21">
-    <Parameter Name="Param1" Type="Edm.GeographyCollection" SRID="4326" />
+    <Parameter Name="Param1" Type="Edm.GeographyCollection" />
     <Parameter Name="Param2" Type="Edm.String" MaxLength="0" />
-    <ReturnType Type="Edm.GeographyCollection" Nullable="false" SRID="4326" />
+    <ReturnType Type="Edm.GeographyCollection" Nullable="false" />
   </Function>
   <Function Name="FunctionWith2Parameters22">
-    <Parameter Name="Param1" Type="Edm.GeographyMultiPolygon" SRID="4326" />
+    <Parameter Name="Param1" Type="Edm.GeographyMultiPolygon" />
     <Parameter Name="Param2" Type="Edm.Binary" MaxLength="2147483647" />
-    <ReturnType Type="Edm.GeographyMultiPolygon" Nullable="false" SRID="4326" />
+    <ReturnType Type="Edm.GeographyMultiPolygon" Nullable="false" />
   </Function>
   <Function Name="FunctionWith2Parameters23">
-    <Parameter Name="Param1" Type="Edm.GeographyMultiLineString" SRID="4326" />
+    <Parameter Name="Param1" Type="Edm.GeographyMultiLineString" />
     <Parameter Name="Param2" Type="Edm.String" MaxLength="0" />
-    <ReturnType Type="Edm.GeographyMultiLineString" Nullable="false" SRID="4326" />
+    <ReturnType Type="Edm.GeographyMultiLineString" Nullable="false" />
   </Function>
   <Function Name="FunctionWith2Parameters24">
-    <Parameter Name="Param1" Type="Edm.GeographyMultiPoint" SRID="4326" />
+    <Parameter Name="Param1" Type="Edm.GeographyMultiPoint" />
     <Parameter Name="Param2" Type="Edm.Binary" MaxLength="2147483647" />
-    <ReturnType Type="Edm.GeographyMultiPoint" Nullable="false" SRID="4326" />
+    <ReturnType Type="Edm.GeographyMultiPoint" Nullable="false" />
   </Function>
   <Function Name="FunctionWith2Parameters25">
-    <Parameter Name="Param1" Type="Edm.Geometry" SRID="0" />
+    <Parameter Name="Param1" Type="Edm.Geometry" />
     <Parameter Name="Param2" Type="Edm.String" MaxLength="0" />
-    <ReturnType Type="Edm.Geometry" Nullable="false" SRID="0" />
+    <ReturnType Type="Edm.Geometry" Nullable="false" />
   </Function>
   <Function Name="FunctionWith2Parameters26">
-    <Parameter Name="Param1" Type="Edm.GeometryPoint" SRID="0" />
+    <Parameter Name="Param1" Type="Edm.GeometryPoint" />
     <Parameter Name="Param2" Type="Edm.Binary" MaxLength="2147483647" />
-    <ReturnType Type="Edm.GeometryPoint" Nullable="false" SRID="0" />
+    <ReturnType Type="Edm.GeometryPoint" Nullable="false" />
   </Function>
   <Function Name="FunctionWith2Parameters27">
-    <Parameter Name="Param1" Type="Edm.GeometryPolygon" SRID="0" />
+    <Parameter Name="Param1" Type="Edm.GeometryPolygon" />
     <Parameter Name="Param2" Type="Edm.String" MaxLength="0" />
-    <ReturnType Type="Edm.GeometryPolygon" Nullable="false" SRID="0" />
+    <ReturnType Type="Edm.GeometryPolygon" Nullable="false" />
   </Function>
   <Function Name="FunctionWith2Parameters28">
-    <Parameter Name="Param1" Type="Edm.GeometryLineString" SRID="0" />
+    <Parameter Name="Param1" Type="Edm.GeometryLineString" />
     <Parameter Name="Param2" Type="Edm.Binary" MaxLength="2147483647" />
-    <ReturnType Type="Edm.GeometryLineString" Nullable="false" SRID="0" />
+    <ReturnType Type="Edm.GeometryLineString" Nullable="false" />
   </Function>
   <Function Name="FunctionWith2Parameters29">
-    <Parameter Name="Param1" Type="Edm.GeometryCollection" SRID="0" />
+    <Parameter Name="Param1" Type="Edm.GeometryCollection" />
     <Parameter Name="Param2" Type="Edm.String" MaxLength="0" />
-    <ReturnType Type="Edm.GeometryCollection" Nullable="false" SRID="0" />
+    <ReturnType Type="Edm.GeometryCollection" Nullable="false" />
   </Function>
   <Function Name="FunctionWith2Parameters30">
-    <Parameter Name="Param1" Type="Edm.GeometryMultiPolygon" SRID="0" />
+    <Parameter Name="Param1" Type="Edm.GeometryMultiPolygon" />
     <Parameter Name="Param2" Type="Edm.Binary" MaxLength="2147483647" />
-    <ReturnType Type="Edm.GeometryMultiPolygon" Nullable="false" SRID="0" />
+    <ReturnType Type="Edm.GeometryMultiPolygon" Nullable="false" />
   </Function>
   <Function Name="FunctionWith2Parameters31">
-    <Parameter Name="Param1" Type="Edm.GeometryMultiLineString" SRID="0" />
+    <Parameter Name="Param1" Type="Edm.GeometryMultiLineString" />
     <Parameter Name="Param2" Type="Edm.String" MaxLength="0" />
-    <ReturnType Type="Edm.GeometryMultiLineString" Nullable="false" SRID="0" />
+    <ReturnType Type="Edm.GeometryMultiLineString" Nullable="false" />
   </Function>
   <Function Name="FunctionWith2Parameters32">
-    <Parameter Name="Param1" Type="Edm.GeometryMultiPoint" SRID="0" />
+    <Parameter Name="Param1" Type="Edm.GeometryMultiPoint" />
     <Parameter Name="Param2" Type="Edm.Binary" MaxLength="2147483647" />
-    <ReturnType Type="Edm.GeometryMultiPoint" Nullable="false" SRID="0" />
+    <ReturnType Type="Edm.GeometryMultiPoint" Nullable="false" />
   </Function>
   <Function Name="FunctionWith2Parameters33">
     <Parameter Name="Param1" Type="Edm.Binary" MaxLength="2147483647" />

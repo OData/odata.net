@@ -917,6 +917,12 @@ public interface Microsoft.OData.Edm.IEdmTypeDefinition : IEdmElement, IEdmNamed
 }
 
 public interface Microsoft.OData.Edm.IEdmTypeDefinitionReference : IEdmElement, IEdmTypeReference {
+	bool IsUnbounded  { public abstract get; }
+	System.Nullable`1[[System.Boolean]] IsUnicode  { public abstract get; }
+	System.Nullable`1[[System.Int32]] MaxLength  { public abstract get; }
+	System.Nullable`1[[System.Int32]] Precision  { public abstract get; }
+	System.Nullable`1[[System.Int32]] Scale  { public abstract get; }
+	System.Nullable`1[[System.Int32]] SpatialReferenceIdentifier  { public abstract get; }
 }
 
 public interface Microsoft.OData.Edm.IEdmTypeReference : IEdmElement {
@@ -1201,6 +1207,11 @@ public sealed class Microsoft.OData.Edm.EdmTypeSemantics {
 	[
 	ExtensionAttribute(),
 	]
+	public static bool IsDecimal (Microsoft.OData.Edm.IEdmType type)
+
+	[
+	ExtensionAttribute(),
+	]
 	public static bool IsDecimal (Microsoft.OData.Edm.IEdmTypeReference type)
 
 	[
@@ -1232,6 +1243,36 @@ public sealed class Microsoft.OData.Edm.EdmTypeSemantics {
 	ExtensionAttribute(),
 	]
 	public static bool IsFloating (Microsoft.OData.Edm.IEdmTypeReference type)
+
+	[
+	ExtensionAttribute(),
+	]
+	public static bool IsGeography (Microsoft.OData.Edm.EdmPrimitiveTypeKind typeKind)
+
+	[
+	ExtensionAttribute(),
+	]
+	public static bool IsGeography (Microsoft.OData.Edm.IEdmType type)
+
+	[
+	ExtensionAttribute(),
+	]
+	public static bool IsGeography (Microsoft.OData.Edm.IEdmTypeReference type)
+
+	[
+	ExtensionAttribute(),
+	]
+	public static bool IsGeometry (Microsoft.OData.Edm.EdmPrimitiveTypeKind typeKind)
+
+	[
+	ExtensionAttribute(),
+	]
+	public static bool IsGeometry (Microsoft.OData.Edm.IEdmType type)
+
+	[
+	ExtensionAttribute(),
+	]
+	public static bool IsGeometry (Microsoft.OData.Edm.IEdmTypeReference type)
 
 	[
 	ExtensionAttribute(),
@@ -1311,6 +1352,11 @@ public sealed class Microsoft.OData.Edm.EdmTypeSemantics {
 	[
 	ExtensionAttribute(),
 	]
+	public static bool IsString (Microsoft.OData.Edm.IEdmType type)
+
+	[
+	ExtensionAttribute(),
+	]
 	public static bool IsString (Microsoft.OData.Edm.IEdmTypeReference type)
 
 	[
@@ -1327,6 +1373,11 @@ public sealed class Microsoft.OData.Edm.EdmTypeSemantics {
 	ExtensionAttribute(),
 	]
 	public static bool IsTemporal (Microsoft.OData.Edm.EdmPrimitiveTypeKind typeKind)
+
+	[
+	ExtensionAttribute(),
+	]
+	public static bool IsTemporal (Microsoft.OData.Edm.IEdmType type)
 
 	[
 	ExtensionAttribute(),
@@ -2439,6 +2490,14 @@ public class Microsoft.OData.Edm.EdmTypeDefinition : Microsoft.OData.Edm.EdmType
 
 public class Microsoft.OData.Edm.EdmTypeDefinitionReference : Microsoft.OData.Edm.EdmTypeReference, IEdmElement, IEdmTypeDefinitionReference, IEdmTypeReference {
 	public EdmTypeDefinitionReference (Microsoft.OData.Edm.IEdmTypeDefinition typeDefinition, bool isNullable)
+	public EdmTypeDefinitionReference (Microsoft.OData.Edm.IEdmTypeDefinition typeDefinition, bool isNullable, bool isUnbounded, System.Nullable`1[[System.Int32]] maxLength, System.Nullable`1[[System.Boolean]] isUnicode, System.Nullable`1[[System.Int32]] precision, System.Nullable`1[[System.Int32]] scale, System.Nullable`1[[System.Int32]] spatialReferenceIdentifier)
+
+	bool IsUnbounded  { public virtual get; }
+	System.Nullable`1[[System.Boolean]] IsUnicode  { public virtual get; }
+	System.Nullable`1[[System.Int32]] MaxLength  { public virtual get; }
+	System.Nullable`1[[System.Int32]] Precision  { public virtual get; }
+	System.Nullable`1[[System.Int32]] Scale  { public virtual get; }
+	System.Nullable`1[[System.Int32]] SpatialReferenceIdentifier  { public virtual get; }
 }
 
 public class Microsoft.OData.Edm.EdmUntypedTypeReference : Microsoft.OData.Edm.EdmTypeReference, IEdmElement, IEdmTypeReference, IEdmUntypedTypeReference {

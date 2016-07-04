@@ -462,6 +462,11 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
                     {
                         return new CsdlSemanticsUntypedTypeReference(schema, csdlUntypedTypeReference);
                     }
+
+                    if (schema.FindType(typeReference.FullName) is IEdmTypeDefinition)
+                    {
+                        return new CsdlSemanticsTypeDefinitionReference(schema, typeReference);
+                    }
                 }
 
                 return new CsdlSemanticsNamedTypeReference(schema, typeReference);

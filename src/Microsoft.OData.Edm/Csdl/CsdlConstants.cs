@@ -55,7 +55,6 @@ namespace Microsoft.OData.Edm.Csdl
         internal const string Attribute_BaseType = "BaseType";
         internal const string Attribute_Binary = "Binary";
         internal const string Attribute_Bool = "Bool";
-        internal const string Attribute_Collation = "Collation";
         internal const string Attribute_ContainsTarget = "ContainsTarget";
         internal const string Attribute_Date = "Date";
         internal const string Attribute_DateTimeOffset = "DateTimeOffset";
@@ -189,6 +188,7 @@ namespace Microsoft.OData.Edm.Csdl
         internal const int Default_TemporalPrecision = 0;
         internal const int Default_SpatialGeographySrid = 4326;
         internal const int Default_SpatialGeometrySrid = 0;
+        internal const int Default_UnspecifiedSrid = Int32.MinValue;
         internal const int Default_Scale = 0;
 
         internal const int Max_NameLength = 480;

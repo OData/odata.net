@@ -51,52 +51,52 @@
     <ReturnType Type="Edm.TimeOfDay" Nullable="false" />
   </Function>
   <Function Name="FunctionsWithReturnTypePrimitiveDataType18">
-    <ReturnType Type="Edm.Geography" Nullable="false" SRID="4326" />
+    <ReturnType Type="Edm.Geography" Nullable="false" />
   </Function>
   <Function Name="FunctionsWithReturnTypePrimitiveDataType19">
-    <ReturnType Type="Edm.GeographyPoint" Nullable="false" SRID="4326" />
+    <ReturnType Type="Edm.GeographyPoint" Nullable="false" />
   </Function>
   <Function Name="FunctionsWithReturnTypePrimitiveDataType20">
-    <ReturnType Type="Edm.GeographyPolygon" Nullable="false" SRID="4326" />
+    <ReturnType Type="Edm.GeographyPolygon" Nullable="false" />
   </Function>
   <Function Name="FunctionsWithReturnTypePrimitiveDataType21">
-    <ReturnType Type="Edm.GeographyLineString" Nullable="false" SRID="4326" />
+    <ReturnType Type="Edm.GeographyLineString" Nullable="false" />
   </Function>
   <Function Name="FunctionsWithReturnTypePrimitiveDataType22">
-    <ReturnType Type="Edm.GeographyCollection" Nullable="false" SRID="4326" />
+    <ReturnType Type="Edm.GeographyCollection" Nullable="false" />
   </Function>
   <Function Name="FunctionsWithReturnTypePrimitiveDataType23">
-    <ReturnType Type="Edm.GeographyMultiPolygon" Nullable="false" SRID="4326" />
+    <ReturnType Type="Edm.GeographyMultiPolygon" Nullable="false" />
   </Function>
   <Function Name="FunctionsWithReturnTypePrimitiveDataType24">
-    <ReturnType Type="Edm.GeographyMultiLineString" Nullable="false" SRID="4326" />
+    <ReturnType Type="Edm.GeographyMultiLineString" Nullable="false" />
   </Function>
   <Function Name="FunctionsWithReturnTypePrimitiveDataType25">
-    <ReturnType Type="Edm.GeographyMultiPoint" Nullable="false" SRID="4326" />
+    <ReturnType Type="Edm.GeographyMultiPoint" Nullable="false" />
   </Function>
   <Function Name="FunctionsWithReturnTypePrimitiveDataType26">
-    <ReturnType Type="Edm.Geometry" Nullable="false" SRID="0" />
+    <ReturnType Type="Edm.Geometry" Nullable="false" />
   </Function>
   <Function Name="FunctionsWithReturnTypePrimitiveDataType27">
-    <ReturnType Type="Edm.GeometryPoint" Nullable="false" SRID="0" />
+    <ReturnType Type="Edm.GeometryPoint" Nullable="false" />
   </Function>
   <Function Name="FunctionsWithReturnTypePrimitiveDataType28">
-    <ReturnType Type="Edm.GeometryPolygon" Nullable="false" SRID="0" />
+    <ReturnType Type="Edm.GeometryPolygon" Nullable="false" />
   </Function>
   <Function Name="FunctionsWithReturnTypePrimitiveDataType29">
-    <ReturnType Type="Edm.GeometryLineString" Nullable="false" SRID="0" />
+    <ReturnType Type="Edm.GeometryLineString" Nullable="false" />
   </Function>
   <Function Name="FunctionsWithReturnTypePrimitiveDataType30">
-    <ReturnType Type="Edm.GeometryCollection" Nullable="false" SRID="0" />
+    <ReturnType Type="Edm.GeometryCollection" Nullable="false" />
   </Function>
   <Function Name="FunctionsWithReturnTypePrimitiveDataType31">
-    <ReturnType Type="Edm.GeometryMultiPolygon" Nullable="false" SRID="0" />
+    <ReturnType Type="Edm.GeometryMultiPolygon" Nullable="false" />
   </Function>
   <Function Name="FunctionsWithReturnTypePrimitiveDataType32">
-    <ReturnType Type="Edm.GeometryMultiLineString" Nullable="false" SRID="0" />
+    <ReturnType Type="Edm.GeometryMultiLineString" Nullable="false" />
   </Function>
   <Function Name="FunctionsWithReturnTypePrimitiveDataType33">
-    <ReturnType Type="Edm.GeometryMultiPoint" Nullable="false" SRID="0" />
+    <ReturnType Type="Edm.GeometryMultiPoint" Nullable="false" />
   </Function>
   <EntityContainer Name="DefaultContainer">
     <FunctionImport Name="FunctionsWithReturnTypePrimitiveDataType1" Function="DefaultNamespace.FunctionsWithReturnTypePrimitiveDataType1" />

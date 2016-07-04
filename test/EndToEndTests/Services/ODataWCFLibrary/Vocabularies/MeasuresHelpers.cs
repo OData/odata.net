@@ -4,15 +4,11 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-using Microsoft.OData.Edm.Vocabularies;
-
 namespace Microsoft.Test.OData.Services.ODataWCFService.Vocabularies
 {
     using System;
     using System.Collections.Generic;
-    using System.Linq;
     using System.Reflection;
-    using System.Text;
     using System.Xml;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Edm.Csdl;

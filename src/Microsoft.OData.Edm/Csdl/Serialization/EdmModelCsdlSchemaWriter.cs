@@ -229,6 +229,32 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
             this.WriteOptionalAttribute(CsdlConstants.Attribute_Nullable, reference.IsNullable, CsdlConstants.Default_Nullable, EdmValueWriter.BooleanAsXml);
         }
 
+        internal void WriteTypeDefinitionAttributes(IEdmTypeDefinitionReference reference)
+        {
+            IEdmTypeReference actualTypeReference = reference.AsActualTypeReference();
+
+            if (actualTypeReference.IsBinary())
+            {
+                this.WriteBinaryTypeAttributes(actualTypeReference.AsBinary());
+            }
+            else if (actualTypeReference.IsString())
+            {
+                this.WriteStringTypeAttributes(actualTypeReference.AsString());
+            }
+            else if (actualTypeReference.IsTemporal())
+            {
+                this.WriteTemporalTypeAttributes(actualTypeReference.AsTemporal());
+            }
+            else if (actualTypeReference.IsDecimal())
+            {
+                this.WriteDecimalTypeAttributes(actualTypeReference.AsDecimal());
+            }
+            else if (actualTypeReference.IsSpatial())
+            {
+                this.WriteSpatialTypeAttributes(actualTypeReference.AsSpatial());
+            }
+        }
+
         internal void WriteBinaryTypeAttributes(IEdmBinaryTypeReference reference)
         {
             if (reference.IsUnbounded)
@@ -249,7 +275,14 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
 
         internal void WriteSpatialTypeAttributes(IEdmSpatialTypeReference reference)
         {
-            this.WriteRequiredAttribute(CsdlConstants.Attribute_Srid, reference.SpatialReferenceIdentifier, SridAsXml);
+            if (reference.IsGeography())
+            {
+                this.WriteOptionalAttribute(CsdlConstants.Attribute_Srid, reference.SpatialReferenceIdentifier, CsdlConstants.Default_SpatialGeographySrid, SridAsXml);
+            }
+            else if (reference.IsGeometry())
+            {
+                this.WriteOptionalAttribute(CsdlConstants.Attribute_Srid, reference.SpatialReferenceIdentifier, CsdlConstants.Default_SpatialGeometrySrid, SridAsXml);
+            }
         }
 
         internal void WriteStringTypeAttributes(IEdmStringTypeReference reference)

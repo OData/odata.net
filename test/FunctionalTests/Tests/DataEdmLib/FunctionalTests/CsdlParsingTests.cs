@@ -8,7 +8,6 @@ namespace EdmLibTests.FunctionalTests
 {
     using System;
     using System.Collections.Generic;
-    using System.Diagnostics;
     using System.IO;
     using System.Linq;
     using System.Xml;
@@ -20,9 +19,6 @@ namespace EdmLibTests.FunctionalTests
     using Microsoft.OData.Edm.Csdl.Parsing.Ast;
     using Microsoft.OData.Edm.Vocabularies;
     using Microsoft.OData.Edm.Validation;
-#if SILVERLIGHT
-    using Microsoft.Silverlight.Testing;
-#endif
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     [TestClass]
@@ -3472,17 +3468,20 @@ namespace EdmLibTests.FunctionalTests
   <TypeDefinition Name=""Width"" UnderlyingType=""Edm.Int32"">
     <Annotation Term=""Org.OData.Measurements.V1.Unit"" String=""Centimeters"" />
   </TypeDefinition>
-  <TypeDefinition Name=""Weight"" UnderlyingType=""Edm.Decimal"" >
+  <TypeDefinition Name=""Weight"" UnderlyingType=""Edm.Decimal"">
     <Annotation Term=""Org.OData.Measurements.V1.Unit"" String=""Kilograms"" />
   </TypeDefinition>
   <TypeDefinition Name=""Address"" UnderlyingType=""Edm.String"" />
+  <TypeDefinition Name=""Point"" UnderlyingType=""Edm.GeographyPoint"" />
   <EntityType Name=""Person"">
     <Key>
-        <PropertyRef Name=""Id"" />
+      <PropertyRef Name=""Id"" />
     </Key>
     <Property Name=""Id"" Type=""Edm.Int32"" Nullable=""false"" />
-    <Property Name=""Weight"" Type=""MyNS.Weight"" />
-    <Property Name=""Address"" Type=""MyNS.Address"" />
+    <Property Name=""Weight"" Type=""MyNS.Weight"" Precision=""3"" Scale=""2"" />
+    <Property Name=""Address"" Type=""MyNS.Address"" MaxLength=""10"" Unicode=""true"" />
+    <Property Name=""Address2"" Type=""MyNS.Address"" MaxLength=""max"" Unicode=""false"" />
+    <Property Name=""Point"" Type=""MyNS.Point"" SRID=""123"" />
   </EntityType>
   <EntityContainer Name=""Container"">
     <EntitySet Name=""People"" EntityType=""MyNS.Person"" />
@@ -3499,38 +3498,86 @@ namespace EdmLibTests.FunctionalTests
             var elements = model.SchemaElements.ToList();
 
             // Length
-            Assert.AreEqual(((IEdmTypeDefinition)elements[0]).UnderlyingType.PrimitiveKind, EdmPrimitiveTypeKind.Int32);
-            Assert.AreEqual(((IEdmSchemaElement)elements[0]).SchemaElementKind, EdmSchemaElementKind.TypeDefinition);
-            Assert.AreEqual(((IEdmNamedElement)elements[0]).Name, "Length");
+            var lengthType = (IEdmTypeDefinition)elements[0];
+            Assert.AreEqual(EdmPrimitiveTypeKind.Int32, lengthType.UnderlyingType.PrimitiveKind);
+            Assert.AreEqual(EdmSchemaElementKind.TypeDefinition, lengthType.SchemaElementKind);
+            Assert.AreEqual("Length", lengthType.Name);
 
             // Width
-            Assert.AreEqual(((IEdmTypeDefinition)elements[1]).UnderlyingType.PrimitiveKind, EdmPrimitiveTypeKind.Int32);
-            Assert.AreEqual(elements[1].SchemaElementKind, EdmSchemaElementKind.TypeDefinition);
-            Assert.AreEqual(((IEdmNamedElement)elements[1]).Name, "Width");
-            Assert.AreEqual(((CsdlSemanticsElement)elements[1]).Element.VocabularyAnnotations.Count(), 1);
+            var widthType = (IEdmTypeDefinition)elements[1];
+            Assert.AreEqual(EdmPrimitiveTypeKind.Int32, widthType.UnderlyingType.PrimitiveKind);
+            Assert.AreEqual(EdmSchemaElementKind.TypeDefinition, widthType.SchemaElementKind);
+            Assert.AreEqual("Width", widthType.Name);
+            var widthElement = ((CsdlSemanticsElement)widthType).Element;
+            Assert.AreEqual(1, widthElement.VocabularyAnnotations.Count());
 
             // Weight
             var weightType = (IEdmTypeDefinition)elements[2];
-            Assert.AreEqual(((IEdmTypeDefinition)elements[2]).UnderlyingType.PrimitiveKind, EdmPrimitiveTypeKind.Decimal);
-            Assert.AreEqual(((IEdmSchemaElement)elements[2]).SchemaElementKind, EdmSchemaElementKind.TypeDefinition);
-            Assert.AreEqual(((IEdmNamedElement)elements[2]).Name, "Weight");
-            Assert.AreEqual(((CsdlTypeDefinition)((CsdlSemanticsElement)elements[2]).Element).UnderlyingTypeName, "Edm.Decimal");
+            Assert.AreEqual(EdmPrimitiveTypeKind.Decimal, weightType.UnderlyingType.PrimitiveKind);
+            Assert.AreEqual(EdmSchemaElementKind.TypeDefinition, weightType.SchemaElementKind);
+            Assert.AreEqual("Weight", weightType.Name);
+            var weightElement = ((CsdlSemanticsElement)weightType).Element;
+            Assert.AreEqual("Edm.Decimal", ((CsdlTypeDefinition)weightElement).UnderlyingTypeName);
 
             // Address
             var addressType = (IEdmTypeDefinition)elements[3];
-            Assert.AreEqual(((IEdmTypeDefinition)elements[3]).UnderlyingType.PrimitiveKind, EdmPrimitiveTypeKind.String);
-            Assert.AreEqual(((IEdmSchemaElement)elements[3]).SchemaElementKind, EdmSchemaElementKind.TypeDefinition);
-            Assert.AreEqual(((IEdmNamedElement)elements[3]).Name, "Address");
-            Assert.AreEqual(((CsdlTypeDefinition)((CsdlSemanticsElement)elements[3]).Element).UnderlyingTypeName, "Edm.String");
+            Assert.AreEqual(EdmPrimitiveTypeKind.String, addressType.UnderlyingType.PrimitiveKind);
+            Assert.AreEqual(EdmSchemaElementKind.TypeDefinition, addressType.SchemaElementKind);
+            Assert.AreEqual("Address", addressType.Name);
+            var addressElement = ((CsdlSemanticsElement)addressType).Element;
+            Assert.AreEqual("Edm.String", ((CsdlTypeDefinition)addressElement).UnderlyingTypeName);
+
+            // Point
+            var pointType = (IEdmTypeDefinition)elements[4];
+            Assert.AreEqual(EdmPrimitiveTypeKind.GeographyPoint, pointType.UnderlyingType.PrimitiveKind);
+            Assert.AreEqual(EdmSchemaElementKind.TypeDefinition, pointType.SchemaElementKind);
+            Assert.AreEqual("Point", pointType.Name);
+            var pointElement = ((CsdlSemanticsElement)pointType).Element;
+            Assert.AreEqual("Edm.GeographyPoint", ((CsdlTypeDefinition)pointElement).UnderlyingTypeName);
 
             // Person
-            var personType = elements[4] as IEdmEntityType;
+            var personType = elements[5] as IEdmEntityType;
             var weightProperty = personType.FindProperty("Weight");
             var addressProperty = personType.FindProperty("Address");
+            var addressProperty2 = personType.FindProperty("Address2");
+            var pointProperty = personType.FindProperty("Point");
             Assert.AreEqual(weightProperty.Type.AsTypeDefinition().FullName(), "MyNS.Weight");
             Assert.AreEqual(weightProperty.Type.AsTypeDefinition().Definition, weightType);
             Assert.AreEqual(addressProperty.Type.AsTypeDefinition().FullName(), "MyNS.Address");
             Assert.AreEqual(addressProperty.Type.AsTypeDefinition().Definition, addressType);
+            Assert.AreEqual(addressProperty2.Type.AsTypeDefinition().FullName(), "MyNS.Address");
+            Assert.AreEqual(addressProperty2.Type.AsTypeDefinition().Definition, addressType);
+            Assert.AreEqual(pointProperty.Type.AsTypeDefinition().FullName(), "MyNS.Point");
+            Assert.AreEqual(pointProperty.Type.AsTypeDefinition().Definition, pointType);
+
+            // Facets
+            Assert.AreEqual(false, ((IEdmTypeDefinitionReference)weightProperty.Type).IsUnbounded);
+            Assert.AreEqual(null, ((IEdmTypeDefinitionReference)weightProperty.Type).MaxLength);
+            Assert.AreEqual(null, ((IEdmTypeDefinitionReference)weightProperty.Type).IsUnicode);
+            Assert.AreEqual(3, ((IEdmTypeDefinitionReference)weightProperty.Type).Precision);
+            Assert.AreEqual(2, ((IEdmTypeDefinitionReference)weightProperty.Type).Scale);
+            Assert.AreEqual(null, ((IEdmTypeDefinitionReference)weightProperty.Type).SpatialReferenceIdentifier);
+
+            Assert.AreEqual(false, ((IEdmTypeDefinitionReference)addressProperty.Type).IsUnbounded);
+            Assert.AreEqual(10, ((IEdmTypeDefinitionReference)addressProperty.Type).MaxLength);
+            Assert.AreEqual(true, ((IEdmTypeDefinitionReference)addressProperty.Type).IsUnicode);
+            Assert.AreEqual(null, ((IEdmTypeDefinitionReference)addressProperty.Type).Precision);
+            Assert.AreEqual(null, ((IEdmTypeDefinitionReference)addressProperty.Type).Scale);
+            Assert.AreEqual(null, ((IEdmTypeDefinitionReference)addressProperty.Type).SpatialReferenceIdentifier);
+
+            Assert.AreEqual(true, ((IEdmTypeDefinitionReference)addressProperty2.Type).IsUnbounded);
+            Assert.AreEqual(null, ((IEdmTypeDefinitionReference)addressProperty2.Type).MaxLength);
+            Assert.AreEqual(false, ((IEdmTypeDefinitionReference)addressProperty2.Type).IsUnicode);
+            Assert.AreEqual(null, ((IEdmTypeDefinitionReference)addressProperty2.Type).Precision);
+            Assert.AreEqual(null, ((IEdmTypeDefinitionReference)addressProperty2.Type).Scale);
+            Assert.AreEqual(null, ((IEdmTypeDefinitionReference)addressProperty2.Type).SpatialReferenceIdentifier);
+
+            Assert.AreEqual(false, ((IEdmTypeDefinitionReference)pointProperty.Type).IsUnbounded);
+            Assert.AreEqual(null, ((IEdmTypeDefinitionReference)pointProperty.Type).MaxLength);
+            Assert.AreEqual(null, ((IEdmTypeDefinitionReference)pointProperty.Type).IsUnicode);
+            Assert.AreEqual(null, ((IEdmTypeDefinitionReference)pointProperty.Type).Precision);
+            Assert.AreEqual(null, ((IEdmTypeDefinitionReference)pointProperty.Type).Scale);
+            Assert.AreEqual(123, ((IEdmTypeDefinitionReference)pointProperty.Type).SpatialReferenceIdentifier);
         }
 
         [TestMethod]
