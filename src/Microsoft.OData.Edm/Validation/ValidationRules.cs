@@ -626,22 +626,6 @@ namespace Microsoft.OData.Edm.Validation
                     }
                 });
 
-        /// <summary>
-        /// Open types are supported only on entity types.
-        /// </summary>
-        public static readonly ValidationRule<IEdmStructuredType> OnlyEntityTypesCanBeOpen =
-           new ValidationRule<IEdmStructuredType>(
-               (context, structuredType) =>
-               {
-                   if (structuredType.IsOpen && structuredType.TypeKind != EdmTypeKind.Entity)
-                   {
-                       context.AddError(
-                           structuredType.Location(),
-                           EdmErrorCode.OpenTypeNotSupported,
-                           Strings.EdmModel_Validator_Semantic_OpenTypesSupportedForEntityTypesOnly);
-                   }
-               });
-
         #endregion
 
         #region IEdmEnumType
@@ -908,22 +892,6 @@ namespace Microsoft.OData.Edm.Validation
         #region IEdmComplexType
 
         /// <summary>
-        /// Validates that a complex type is not abstract.
-        /// </summary>
-        public static readonly ValidationRule<IEdmComplexType> ComplexTypeInvalidAbstractComplexType =
-            new ValidationRule<IEdmComplexType>(
-                (context, complexType) =>
-                {
-                    if (complexType.IsAbstract)
-                    {
-                        context.AddError(
-                            complexType.Location(),
-                            EdmErrorCode.InvalidAbstractComplexType,
-                            Strings.EdmModel_Validator_Semantic_InvalidComplexTypeAbstract(complexType.FullName()));
-                    }
-                });
-
-        /// <summary>
         /// Validates that a open complex type can not have closed derived complex type.
         /// </summary>
         public static readonly ValidationRule<IEdmComplexType> OpenComplexTypeCannotHaveClosedDerivedComplexType =
@@ -936,39 +904,6 @@ namespace Microsoft.OData.Edm.Validation
                             complexType.Location(),
                             EdmErrorCode.InvalidAbstractComplexType,
                             Strings.EdmModel_Validator_Semantic_BaseTypeOfOpenTypeMustBeOpen(complexType.FullName()));
-                    }
-                });
-
-        /// <summary>
-        /// Validates that a complex type does not inherit.
-        /// Note: Because we support complex type inheritance now, this rule should be deprecated.
-        /// </summary>
-        public static readonly ValidationRule<IEdmComplexType> ComplexTypeInvalidPolymorphicComplexType =
-            new ValidationRule<IEdmComplexType>(
-                (context, edmComplexType) =>
-                {
-                    if (edmComplexType.BaseType != null)
-                    {
-                        context.AddError(
-                            edmComplexType.Location(),
-                            EdmErrorCode.InvalidPolymorphicComplexType,
-                            Strings.EdmModel_Validator_Semantic_InvalidComplexTypePolymorphic(edmComplexType.FullName()));
-                    }
-                });
-
-        /// <summary>
-        /// Validates that a complex type contains at least one property.
-        /// </summary>
-        public static readonly ValidationRule<IEdmComplexType> ComplexTypeMustContainProperties =
-            new ValidationRule<IEdmComplexType>(
-                (context, complexType) =>
-                {
-                    if (!complexType.Properties().Any())
-                    {
-                        context.AddError(
-                            complexType.Location(),
-                            EdmErrorCode.ComplexTypeMustHaveProperties,
-                            Strings.EdmModel_Validator_Semantic_ComplexTypeMustHaveProperties(complexType.FullName()));
                     }
                 });
 
