@@ -106,9 +106,10 @@
             entry.Properties.Count().Should().Be(2);
             entry.InstanceAnnotations.Count.Should().Be(1);
             complex1.Properties.Count().Should().Be(3);
-            complex1.InstanceAnnotations.Count().Should().Be(2);
-            complex1.InstanceAnnotations.First().Value.As<ODataPrimitiveValue>().Value.Should().Be("#Server.NS.Address");
+            complex1.InstanceAnnotations.Count().Should().Be(1);
 
+            // uncomment the below if decide to expose OData information via .InstanceAnnotations
+            // complex1.InstanceAnnotations.First().Value.As<ODataPrimitiveValue>().Value.Should().Be("#Server.NS.Address");
             ODataProperty undeclaredComplex1Prop = complex1.Properties.Single(s => string.Equals(s.Name, "undeclaredComplex1"));
             (undeclaredComplex1Prop.Value as ODataUntypedValue).RawValue.Should().Be("\"hello this is a string.\"");
             undeclaredComplex1Prop.InstanceAnnotations.Count().Should().Be(4);
@@ -167,9 +168,10 @@
 
             entry.Properties.Count().Should().Be(2);
             complex1.Properties.Count().Should().Be(3);
-            complex1.InstanceAnnotations.Count().Should().Be(2);
-            complex1.InstanceAnnotations.First().Value.As<ODataPrimitiveValue>().Value.Should().Be("#Server.NS.Address");
+            complex1.InstanceAnnotations.Count().Should().Be(1);
 
+            // uncomment the below if decide to expose OData information via .InstanceAnnotations
+            // complex1.InstanceAnnotations.First().Value.As<ODataPrimitiveValue>().Value.Should().Be("#Server.NS.Address");
             ODataProperty undeclaredComplex1Prop = complex1.Properties.Single(s => string.Equals(s.Name, "undeclaredComplex1"));
             (undeclaredComplex1Prop.Value as ODataUntypedValue).RawValue.Should().Be("\"hello this is a string.\"");
             undeclaredComplex1Prop.InstanceAnnotations.Count().Should().Be(4);
@@ -400,10 +402,10 @@
             complex1.Properties
                 .First(s => string.Equals("UndeclaredStreet", s.Name)).Value.As<ODataUntypedValue>()
                 .RawValue.Should().Be(@"""No.10000000999,Zixing Rd Minhang""");
+            complex1.InstanceAnnotations.Count().Should().Be(0);
 
-            complex1.InstanceAnnotations.Count().Should().Be(1);
-            complex1.InstanceAnnotations.First().Value.As<ODataPrimitiveValue>().Value.Should().Be("#Server.NS.Address");
-
+            // uncomment the below if decide to expose OData information via .InstanceAnnotations
+            // complex1.InstanceAnnotations.First().Value.As<ODataPrimitiveValue>().Value.Should().Be("#Server.NS.Address");
             entry.MetadataBuilder = new Microsoft.OData.Evaluation.NoOpResourceMetadataBuilder(entry);
             string result = this.WriteEntryPayload(this.serverEntitySet, this.serverEntityType, writer =>
             {

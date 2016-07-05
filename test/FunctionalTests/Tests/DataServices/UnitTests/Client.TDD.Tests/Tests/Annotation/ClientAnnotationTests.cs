@@ -1343,7 +1343,7 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests.Annotation
                 var getFriendsQueryResponse = dsc.GetFriendsPlus("Russell").Execute() as QueryOperationResponse<PersonPlus>;
                 var friends = getFriendsQueryResponse.ToList();
 
-                Assert.AreEqual(2, dsc.InstanceAnnotations.Count);
+                Assert.AreEqual(0, dsc.InstanceAnnotations.Count);
             });
         }
 

@@ -889,7 +889,6 @@
                 .InstanceAnnotations.Single(s => s.Name == "odata.type").Value.As<ODataPrimitiveValue>()
                 .Value.Should().Be("Edm.Untyped");
 
-
             entry.MetadataBuilder = new Microsoft.OData.Evaluation.NoOpResourceMetadataBuilder(entry);
             string result = this.WriteEntryPayload(this.serverOpenEntitySet, this.serverOpenEntityType, writer =>
             {

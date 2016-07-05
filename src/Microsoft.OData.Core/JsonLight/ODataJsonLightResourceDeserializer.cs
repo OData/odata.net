@@ -112,9 +112,11 @@ namespace Microsoft.OData.JsonLight
 
                     // Read the annotation value.
                     resourceState.Resource.TypeName = this.ReadODataTypeAnnotationValue();
-                    resourceState.Resource.InstanceAnnotations.Add(new ODataInstanceAnnotation(
-                        ODataAnnotationNames.ODataType,
-                        (ODataConstants.TypeNamePrefix + resourceState.Resource.TypeName).ToODataValue(), true));
+
+                    // uncomment the below if decide to expose OData information via .InstanceAnnotations
+                    // resourceState.Resource.InstanceAnnotations.Add(new ODataInstanceAnnotation(
+                    //    ODataAnnotationNames.ODataType,
+                    //    (ODataConstants.TypeNamePrefix + resourceState.Resource.TypeName).ToODataValue(), true));
                 }
             }
 
