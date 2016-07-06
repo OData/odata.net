@@ -396,6 +396,86 @@ namespace Microsoft.OData.Tests.IntegrationTests.Evaluation
         }
 
         [Fact]
+        public void WritingDynamicComplexPropertyWithModelSpecifiedInFullMetadataMode()
+        {
+            // setup model
+            var model = new EdmModel();
+            var complexType = new EdmComplexType("NS", "ComplexType");
+            complexType.AddStructuralProperty("PrimitiveProperty1", EdmPrimitiveTypeKind.Int64);
+            complexType.AddStructuralProperty("PrimitiveProperty2", EdmPrimitiveTypeKind.Int64);
+            var entityType = new EdmEntityType("NS", "EntityType", null, false, true);
+            entityType.AddKeys(
+                entityType.AddStructuralProperty("PrimitiveProperty", EdmPrimitiveTypeKind.Int64));
+            var container = new EdmEntityContainer("NS", "Container");
+            var entitySet = container.AddEntitySet("EntitySet", entityType);
+            model.AddElements(new IEdmSchemaElement[] { complexType, entityType, container });
+
+            // setup writer
+            var stream = new MemoryStream();
+            var message = new InMemoryMessage { Stream = stream };
+            message.SetHeader("Content-Type", "application/json;odata.metadata=full");
+            var settings = new ODataMessageWriterSettings
+            {
+                ODataUri = new ODataUri
+                {
+                    ServiceRoot = new Uri("http://svc/")
+                },
+                AutoComputePayloadMetadata = true
+            };
+            var writer = new ODataMessageWriter((IODataResponseMessage)message, settings, model);
+
+            // write payload
+            var entitySetWriter = writer.CreateODataResourceSetWriter(entitySet);
+            entitySetWriter.WriteStart(new ODataResourceSet());
+            entitySetWriter.WriteStart(
+                new ODataResource
+                {
+                    Properties = new[]
+                    {
+                        new ODataProperty { Name = "PrimitiveProperty", Value = 1L }
+                    }
+                }
+            );
+            entitySetWriter.WriteStart(
+                new ODataNestedResourceInfo
+                {
+                    Name = "DynamicComplexProperty",
+                    IsUndeclared = true
+                }
+            );
+            entitySetWriter.WriteStart(
+                new ODataResource
+                {
+                    TypeName = "NS.ComplexType",
+                    Properties = new[]
+                    {
+                        new ODataProperty { Name = "PrimitiveProperty1", Value = 1L },
+                        new ODataProperty { Name = "PrimitiveProperty2", Value = 2L }
+                    }
+                }
+            );
+            entitySetWriter.WriteEnd();
+            entitySetWriter.WriteEnd();
+            entitySetWriter.WriteEnd();
+            entitySetWriter.WriteEnd();
+            var str = Encoding.UTF8.GetString(stream.ToArray());
+            str.Should().Be(
+                "{" +
+                    "\"@odata.context\":\"http://svc/$metadata#EntitySet\"," +
+                    "\"value\":[{" +
+                        "\"@odata.id\":\"EntitySet(1)\"," +
+                        "\"@odata.editLink\":\"EntitySet(1)\"," +
+                        "\"PrimitiveProperty@odata.type\":\"#Int64\"," +
+                        "\"PrimitiveProperty\":1," +
+                        "\"DynamicComplexProperty\":{" +
+                            "\"@odata.type\":\"#NS.ComplexType\"," +
+                            "\"PrimitiveProperty1@odata.type\":\"#Int64\"," +
+                            "\"PrimitiveProperty1\":1," +
+                            "\"PrimitiveProperty2@odata.type\":\"#Int64\"," +
+                            "\"PrimitiveProperty2\":2}}]}");
+        }
+
+        [Fact]
         public void WritingSimplifiedODataAnnotationsInFullMetadataMode()
         {
             GetWriterOutputForEntryWithPayloadMetadata("application/json;odata.metadata=full", false, odataSimplified: true)

@@ -553,8 +553,6 @@ namespace Microsoft.OData.Tests.IntegrationTests.Writer.JsonLight
                            "\"@odata.editLink\":\"FakeSet('son')\"," +
                            "\"Key\":\"son\"," +
                            "\"OpenProperty\":\"Open\"," +
-                           "\"OpenComplex@odata.associationLink\":\"http://temp.org/FakeSet('son')/OpenComplex/$ref\"," +
-                           "\"OpenComplex@odata.navigationLink\":\"http://temp.org/FakeSet('son')/OpenComplex\"," +
                            "\"OpenComplex\":" +
                            "{" +
                                "\"@odata.type\":\"#Fake.ComplexType\"," +
@@ -616,8 +614,6 @@ namespace Microsoft.OData.Tests.IntegrationTests.Writer.JsonLight
                            "\"@odata.editLink\":\"FakeSet('son')\"," +
                            "\"Key\":\"son\"," +
                            "\"OpenProperty\":\"Open\"," +
-                           "\"OpenComplex@odata.associationLink\":\"http://temp.org/FakeSet('son')/OpenComplex/$ref\"," +
-                           "\"OpenComplex@odata.navigationLink\":\"http://temp.org/FakeSet('son')/OpenComplex\"," +
                            "\"OpenComplex\":" +
                            "{" +
                                "\"@odata.type\":\"#Fake.ComplexType\"," +

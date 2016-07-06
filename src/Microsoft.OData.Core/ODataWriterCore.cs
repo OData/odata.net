@@ -837,7 +837,7 @@ namespace Microsoft.OData
         /// <param name="resourceSet">The resourceSet to write.</param>
         private void WriteStartResourceSetImplementation(ODataResourceSet resourceSet)
         {
-            this.CheckForNestedResourceInfoWithContent(ODataPayloadKind.ResourceSet);
+            this.CheckForNestedResourceInfoWithContent(ODataPayloadKind.ResourceSet, null);
             this.EnterScope(WriterState.ResourceSet, resourceSet);
 
             if (!this.SkipWriting)
@@ -879,7 +879,7 @@ namespace Microsoft.OData
         private void WriteStartResourceImplementation(ODataResource resource)
         {
             this.StartPayloadInStartState();
-            this.CheckForNestedResourceInfoWithContent(ODataPayloadKind.Resource);
+            this.CheckForNestedResourceInfoWithContent(ODataPayloadKind.Resource, resource);
 
             this.EnterScope(WriterState.Resource, resource);
             if (!this.SkipWriting)
@@ -890,7 +890,7 @@ namespace Microsoft.OData
                     if (resource != null)
                     {
                         ResourceScope resourceScope = (ResourceScope)this.CurrentScope;
-                        IEdmStructuredType resourceType = this.GetResourceType(resource);
+                        IEdmStructuredType resourceType = GetResourceType(resource);
 
                         NestedResourceInfoScope parentNestedResourceInfoScope = this.ParentNestedResourceInfoScope;
                         if (parentNestedResourceInfoScope != null)
@@ -1081,7 +1081,7 @@ namespace Microsoft.OData
                 this.ThrowODataException(Strings.ODataWriterCore_EntityReferenceLinkInResponse, null);
             }
 
-            this.CheckForNestedResourceInfoWithContent(ODataPayloadKind.EntityReferenceLink);
+            this.CheckForNestedResourceInfoWithContent(ODataPayloadKind.EntityReferenceLink, null);
             Debug.Assert(
                 this.CurrentScope.Item is ODataNestedResourceInfo,
                 "The CheckForNestedResourceInfoWithContent should have verified that entity reference link can only be written inside a nested resource info.");
@@ -1159,9 +1159,10 @@ namespace Microsoft.OData
         /// </summary>
         /// <param name="contentPayloadKind">
         /// What kind of payload kind is being written as the content of a nested resource info.
-        /// Only Resource Set, Resource or EntityRefernceLink are allowed.
+        /// Only Resource Set, Resource or EntityReferenceLink are allowed.
         /// </param>
-        private void CheckForNestedResourceInfoWithContent(ODataPayloadKind contentPayloadKind)
+        /// <param name="contentPayload">When contentPayloadKind is ODataPayloadKind.Resource, this passes the ODataResource; null otherwise.</param>
+        private void CheckForNestedResourceInfoWithContent(ODataPayloadKind contentPayloadKind, ODataResource contentPayload)
         {
             Debug.Assert(
                 contentPayloadKind == ODataPayloadKind.ResourceSet || contentPayloadKind == ODataPayloadKind.Resource || contentPayloadKind == ODataPayloadKind.EntityReferenceLink,
@@ -1215,7 +1216,7 @@ namespace Microsoft.OData
                 else
                 {
                     // we are writing a nested resource info with content; change the state
-                    this.PromoteNestedResourceInfoScope();
+                    this.PromoteNestedResourceInfoScope(contentPayload);
 
                     if (!this.SkipWriting)
                     {
@@ -1485,8 +1486,9 @@ namespace Microsoft.OData
         /// <summary>
         /// Promotes the current nested resource info scope to a nested resource info scope with content.
         /// </summary>
+        /// <param name="resource">The ODataResource to write.</param>
         [SuppressMessage("Microsoft.Performance", "CA1800:DoNotCastUnnecessarily", Justification = "Second cast only in debug.")]
-        private void PromoteNestedResourceInfoScope()
+        private void PromoteNestedResourceInfoScope(ODataResource resource)
         {
             Debug.Assert(
                 this.State == WriterState.NestedResourceInfo,
@@ -1499,6 +1501,10 @@ namespace Microsoft.OData
             NestedResourceInfoScope previousScope = (NestedResourceInfoScope)this.scopes.Pop();
             NestedResourceInfoScope newScope = previousScope.Clone(WriterState.NestedResourceInfoWithContent);
             this.scopes.Push(newScope);
+            if (newScope.ResourceType == null && resource != null && !SkipWriting)
+            {
+                newScope.ResourceType = GetResourceType(resource);
+            }
         }
 
         /// <summary>
