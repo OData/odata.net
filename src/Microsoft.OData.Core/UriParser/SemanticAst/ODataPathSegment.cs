@@ -19,7 +19,7 @@ namespace Microsoft.OData.UriParser
     /// <summary>
     /// The semantic representation of a segment in a path.
     /// </summary>
-    public abstract class ODataPathSegment : ODataAnnotatable
+    public abstract class ODataPathSegment
     {
         /// <summary>
         /// Creates a new Segment and copies values from another Segment.

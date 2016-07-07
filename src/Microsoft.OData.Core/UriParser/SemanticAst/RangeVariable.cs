@@ -15,7 +15,7 @@ namespace Microsoft.OData.UriParser
     /// A RangeVariable, which represents an iterator variable either over a collection, either of entities or not.
     /// Exists outside of the main SemanticAST, but hooked in via a RangeVariableReferenceNode (either Non-Entity or Entity).
     /// </summary>
-    public abstract class RangeVariable : ODataAnnotatable
+    public abstract class RangeVariable
     {
         /// <summary>
         /// Gets the name of the associated rangeVariable.

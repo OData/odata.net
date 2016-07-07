@@ -28,7 +28,6 @@ namespace AstoriaUnitTests.TDD.Tests.Server.Parsing
     public class NodeToExpressionTranslatorTests
     {
         private readonly FunctionExpressionBinder functionExpressionBinder;
-        private readonly NodeToExpressionTranslator testSubject;
         private readonly EdmEntityType customerEdmType;
         private readonly EdmEntityType derivedCustomerEdmType;
         private readonly EdmEntityType weaklyBackedCustomerEdmType;
@@ -45,6 +44,7 @@ namespace AstoriaUnitTests.TDD.Tests.Server.Parsing
         private readonly EdmModel model;
         private readonly ParameterExpression implicitParameterExpression = Expression.Parameter(typeof(object), "it");
         private readonly ResourceType customerResourceType;
+        private NodeToExpressionTranslator testSubject;
 
         public NodeToExpressionTranslatorTests()
         {
@@ -430,24 +430,24 @@ namespace AstoriaUnitTests.TDD.Tests.Server.Parsing
         [TestMethod]
         public void TranslatorShouldTranslateReplaceIfEnabled()
         {
-            var withReplaceEnabled = this.CreateTestSubject(new DataServiceBehavior { AcceptReplaceFunctionInQuery = true });
-            this.TestFunctionCall<string, string>("replace", new[] { Parameter<string>("s"), Constant("foo"), Constant("bar") }, s => s.Replace("foo", "bar"), withReplaceEnabled);
+            this.testSubject = this.CreateTestSubject(new DataServiceBehavior { AcceptReplaceFunctionInQuery = true });
+            this.TestFunctionCall<string, string>("replace", new[] { Parameter<string>("s"), Constant("foo"), Constant("bar") }, s => s.Replace("foo", "bar"), this.testSubject);
         }
 
         [TestMethod]
         public void TranslatorShouldTranslateIsOfFunctionCallWithTwoParameters()
         {
             ConstantNode constantNode;
-            var testSubjectWithEdmStringLiteral = this.CreateTestSubjectWithEdmStringLiteral(out constantNode);
-            this.TestFunctionCall<object, bool>("isof", new[] { Parameter<object>("o"), constantNode }, o => o is string, testSubjectWithEdmStringLiteral);
+            this.testSubject = this.CreateTestSubjectWithEdmStringLiteral(out constantNode);
+            this.TestFunctionCall<object, bool>("isof", new[] { Parameter<object>("o"), constantNode }, o => o is string, this.testSubject);
         }
 
         [TestMethod]
         public void TranslatorShouldTranslateCastFunctionCallWithTwoParameters()
         {
             ConstantNode constantNode;
-            var testSubjectWithEdmStringLiteral = this.CreateTestSubjectWithEdmStringLiteral(out constantNode);
-            this.TestFunctionCall<object, string>("cast", new[] { Parameter<object>("o"), constantNode }, o => (string)o, testSubjectWithEdmStringLiteral);
+            this.testSubject = this.CreateTestSubjectWithEdmStringLiteral(out constantNode);
+            this.TestFunctionCall<object, string>("cast", new[] { Parameter<object>("o"), constantNode }, o => (string)o, this.testSubject);
         }
 
         [TestMethod]
@@ -499,13 +499,13 @@ namespace AstoriaUnitTests.TDD.Tests.Server.Parsing
         {
             ODataProtocolVersion validatedProtocolVersion = ODataProtocolVersion.V4;
             ODataProtocolVersion validatedRequestVersion = ODataProtocolVersion.V4;
-            var withVersionCallbacks = this.CreateTestSubject(verifyProtocolVersion: v => { validatedProtocolVersion = v; }, verifyRequestVersion:v => { validatedRequestVersion = v; });
+            this.testSubject = this.CreateTestSubject(verifyProtocolVersion: v => { validatedProtocolVersion = v; }, verifyRequestVersion:v => { validatedRequestVersion = v; });
             
             LambdaNode node = new AnyNode(new Collection<RangeVariable>(), null);
             node.Body = Constant(true);
             node.Source = this.CollectionNavigationFromParameter("o");
 
-            withVersionCallbacks.TranslateNode(node);
+            this.testSubject.TranslateNode(node);
             validatedProtocolVersion.Should().Be(ODataProtocolVersion.V4);
             validatedRequestVersion.Should().Be(ODataProtocolVersion.V4);
         }
@@ -514,11 +514,11 @@ namespace AstoriaUnitTests.TDD.Tests.Server.Parsing
         public void TranslatorShouldRequireProtocolVersionThreeForCollectionTypeSegment()
         {
             ODataProtocolVersion validatedProtocolVersion = ODataProtocolVersion.V4;
-            var withVersionCallbacks = this.CreateTestSubject(verifyProtocolVersion: v => { validatedProtocolVersion = v; }, verifyRequestVersion: v => { throw new Exception("Should not be called."); });
+            this.testSubject = this.CreateTestSubject(verifyProtocolVersion: v => { validatedProtocolVersion = v; }, verifyRequestVersion: v => { throw new Exception("Should not be called."); });
 
             QueryNode node = new EntityCollectionCastNode(this.CollectionNavigationFromParameter("o"), this.customerEdmType);
 
-            withVersionCallbacks.TranslateNode(node);
+            this.testSubject.TranslateNode(node);
             validatedProtocolVersion.Should().Be(ODataProtocolVersion.V4);
         }
 
@@ -526,11 +526,11 @@ namespace AstoriaUnitTests.TDD.Tests.Server.Parsing
         public void TranslatorShouldRequireProtocolVersionThreeForSingletonTypeSegment()
         {
             ODataProtocolVersion validatedProtocolVersion = ODataProtocolVersion.V4;
-            var withVersionCallbacks = this.CreateTestSubject(verifyProtocolVersion: v => { validatedProtocolVersion = v; }, verifyRequestVersion: v => { throw new Exception("Should not be called."); });
+            this.testSubject = this.CreateTestSubject(verifyProtocolVersion: v => { validatedProtocolVersion = v; }, verifyRequestVersion: v => { throw new Exception("Should not be called."); });
 
             QueryNode node = new SingleEntityCastNode(this.EntityParameter<Customer>("o"), this.customerEdmType);
 
-            withVersionCallbacks.TranslateNode(node);
+            this.testSubject.TranslateNode(node);
             validatedProtocolVersion.Should().Be(ODataProtocolVersion.V4);
         }
 
@@ -646,7 +646,7 @@ namespace AstoriaUnitTests.TDD.Tests.Server.Parsing
             if (parameterName != null)
             {
                 currentRangeVariable = new EntityRangeVariable(parameterName, new EdmEntityTypeReference(this.customerEdmType, false), this.entitySet);
-                currentRangeVariable.SetAnnotation(Expression.Parameter(typeof(TParam), parameterName));
+                this.testSubject.ParameterExpressions[currentRangeVariable] = Expression.Parameter(typeof(TParam), parameterName);
             }
 
             LambdaNode node;
@@ -677,17 +677,17 @@ namespace AstoriaUnitTests.TDD.Tests.Server.Parsing
             return constantNode;
         }
 
-        private static SingleValueNode Parameter<T>(string name)
+        private SingleValueNode Parameter<T>(string name)
         {
             var nonentityRangeVariable = new NonentityRangeVariable(name, null, null);
-            nonentityRangeVariable.SetAnnotation(Expression.Parameter(typeof(T), name));
+            this.testSubject.ParameterExpressions[nonentityRangeVariable] = Expression.Parameter(typeof(T), name);
             return new NonentityRangeVariableReferenceNode(name, nonentityRangeVariable);
         }
 
         private SingleEntityNode EntityParameter<T>(string name)
         {
             var entityRangeVariable = new EntityRangeVariable(name, new EdmEntityTypeReference(this.entitySet.EntityType(), false), this.entitySet);
-            entityRangeVariable.SetAnnotation(Expression.Parameter(typeof(T), name));
+            this.testSubject.ParameterExpressions[entityRangeVariable] = Expression.Parameter(typeof(T), name);
             return new EntityRangeVariableReferenceNode(name, entityRangeVariable);
         }
 

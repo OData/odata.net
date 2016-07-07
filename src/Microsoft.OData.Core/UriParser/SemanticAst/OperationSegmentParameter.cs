@@ -9,7 +9,7 @@ namespace Microsoft.OData.UriParser
     /// <summary>
     /// Represents a named parameter value for invoking an operation in an OData path.
     /// </summary>
-    public sealed class OperationSegmentParameter : ODataAnnotatable
+    public sealed class OperationSegmentParameter
     {
         /// <summary>
         /// Initializes a new instance of <see cref="OperationSegmentParameter"/>.

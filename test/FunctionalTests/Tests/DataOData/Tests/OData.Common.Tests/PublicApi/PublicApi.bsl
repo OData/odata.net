@@ -5116,7 +5116,7 @@ public abstract class Microsoft.OData.UriParser.LambdaNode : Microsoft.OData.Uri
 	Microsoft.OData.UriParser.CollectionNode Source  { public get; public set; }
 }
 
-public abstract class Microsoft.OData.UriParser.ODataPathSegment : Microsoft.OData.ODataAnnotatable {
+public abstract class Microsoft.OData.UriParser.ODataPathSegment {
 	protected ODataPathSegment ()
 
 	Microsoft.OData.Edm.IEdmType EdmType  { public abstract get; }
@@ -5170,7 +5170,7 @@ public abstract class Microsoft.OData.UriParser.PathSegmentTranslator`1 {
 	public virtual T Translate (Microsoft.OData.UriParser.ValueSegment segment)
 }
 
-public abstract class Microsoft.OData.UriParser.QueryNode : Microsoft.OData.ODataAnnotatable {
+public abstract class Microsoft.OData.UriParser.QueryNode {
 	protected QueryNode ()
 
 	Microsoft.OData.UriParser.QueryNodeKind Kind  { public abstract get; }
@@ -5209,7 +5209,7 @@ public abstract class Microsoft.OData.UriParser.QueryNodeVisitor`1 {
 	public virtual T Visit (Microsoft.OData.UriParser.UnaryOperatorNode nodeIn)
 }
 
-public abstract class Microsoft.OData.UriParser.RangeVariable : Microsoft.OData.ODataAnnotatable {
+public abstract class Microsoft.OData.UriParser.RangeVariable {
 	protected RangeVariable ()
 
 	int Kind  { public abstract get; }
@@ -5217,7 +5217,7 @@ public abstract class Microsoft.OData.UriParser.RangeVariable : Microsoft.OData.
 	Microsoft.OData.Edm.IEdmTypeReference TypeReference  { public abstract get; }
 }
 
-public abstract class Microsoft.OData.UriParser.SelectItem : Microsoft.OData.ODataAnnotatable {
+public abstract class Microsoft.OData.UriParser.SelectItem {
 	protected SelectItem ()
 
 	public abstract void HandleWith (Microsoft.OData.UriParser.SelectItemHandler handler)
@@ -5345,7 +5345,7 @@ public class Microsoft.OData.UriParser.ODataSelectPath : Microsoft.OData.UriPars
 	public ODataSelectPath (System.Collections.Generic.IEnumerable`1[[Microsoft.OData.UriParser.ODataPathSegment]] segments)
 }
 
-public class Microsoft.OData.UriParser.ODataUnresolvedFunctionParameterAlias : Microsoft.OData.ODataValue {
+public class Microsoft.OData.UriParser.ODataUnresolvedFunctionParameterAlias {
 	public ODataUnresolvedFunctionParameterAlias (string alias, Microsoft.OData.Edm.IEdmTypeReference type)
 
 	string Alias  { public get; }
@@ -5814,7 +5814,7 @@ public sealed class Microsoft.OData.UriParser.OperationSegment : Microsoft.OData
 	public virtual T TranslateWith (PathSegmentTranslator`1 translator)
 }
 
-public sealed class Microsoft.OData.UriParser.OperationSegmentParameter : Microsoft.OData.ODataAnnotatable {
+public sealed class Microsoft.OData.UriParser.OperationSegmentParameter {
 	public OperationSegmentParameter (string name, object value)
 
 	string Name  { public get; }

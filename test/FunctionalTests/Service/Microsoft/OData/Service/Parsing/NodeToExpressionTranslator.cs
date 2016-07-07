@@ -77,6 +77,9 @@ namespace Microsoft.OData.Service.Parsing
         /// <summary>Callback to verify that the request's version is greather than or equal to the version required for a specific feature.</summary>
         private readonly Action<ODataProtocolVersion> verifyRequestVersion;
 
+        /// <summary>Dictionary that associates range variables with their parameter expressions.</summary>
+        private readonly IDictionary<RangeVariable, ParameterExpression> parameterExpressions = new Dictionary<RangeVariable, ParameterExpression>(); 
+
         /// <summary>
         /// Initializes a new instance of <see cref="NodeToExpressionTranslator"/>.
         /// </summary>
@@ -109,6 +112,14 @@ namespace Microsoft.OData.Service.Parsing
             this.implicitParameterExpression = implicitParameterExpression;
             this.verifyProtocolVersion = verifyProtocolVersion;
             this.verifyRequestVersion = verifyRequestVersion;
+        }
+
+        /// <summary>
+        /// Dictionary that associates range variables with their parameter expressions.
+        /// </summary>
+        public IDictionary<RangeVariable, ParameterExpression> ParameterExpressions
+        {
+            get { return this.parameterExpressions; }
         }
 
         /// <summary>
@@ -300,7 +311,7 @@ namespace Microsoft.OData.Service.Parsing
         public override Expression Visit(EntityRangeVariableReferenceNode node)
         {
             WebUtil.CheckArgumentNull(node, "node");
-            return node.RangeVariable.GetAnnotation<ParameterExpression>();
+            return this.ParameterExpressions[node.RangeVariable];
         }
 
         /// <summary>
@@ -311,7 +322,7 @@ namespace Microsoft.OData.Service.Parsing
         public override Expression Visit(NonentityRangeVariableReferenceNode node)
         {
             WebUtil.CheckArgumentNull(node, "node");
-            return node.RangeVariable.GetAnnotation<ParameterExpression>();
+            return this.ParameterExpressions[node.RangeVariable];
         }
 
         /// <summary>
@@ -502,7 +513,7 @@ namespace Microsoft.OData.Service.Parsing
         internal LambdaExpression TranslateFilterClause(FilterClause filterClause)
         {
             Debug.Assert(filterClause != null, "filterClause != null");
-            filterClause.RangeVariable.SetAnnotation(this.implicitParameterExpression);
+            this.ParameterExpressions[filterClause.RangeVariable] = this.implicitParameterExpression;
             Expression expr = this.TranslateNode(filterClause.Expression);
             expr = ExpressionUtils.EnsurePredicateExpressionIsBoolean(expr);
             return Expression.Lambda(expr, this.implicitParameterExpression);
@@ -518,7 +529,7 @@ namespace Microsoft.OData.Service.Parsing
             List<OrderingExpression> orderings = new List<OrderingExpression>();
             while (orderByClause != null)
             {
-                orderByClause.RangeVariable.SetAnnotation(this.implicitParameterExpression);
+                this.ParameterExpressions[orderByClause.RangeVariable] = this.implicitParameterExpression;
 
                 Expression expr = this.TranslateNode(orderByClause.Expression);
                 expr = Expression.Lambda(expr, this.implicitParameterExpression);
@@ -968,8 +979,7 @@ namespace Microsoft.OData.Service.Parsing
             }
 
             ParameterExpression predicateParameter = Expression.Parameter(BaseServiceProvider.GetIEnumerableElement(source.Type), node.CurrentRangeVariable.Name);
-            
-            node.CurrentRangeVariable.SetAnnotation(predicateParameter);
+            this.ParameterExpressions[node.CurrentRangeVariable] = predicateParameter;
 
             Expression predicateBody = this.TranslateNode(node.Body);
             predicateBody = ExpressionUtils.EnsurePredicateExpressionIsBoolean(predicateBody);

@@ -10,13 +10,11 @@ namespace Microsoft.OData.Client.ALinq.UriParser
 namespace Microsoft.OData.UriParser
 #endif
 {
-    using Microsoft.OData;
-
     /// <summary>
     /// Lexical token representing a segment in a path.
     /// </summary>
     ///
-    internal abstract class PathSegmentToken : ODataAnnotatable
+    internal abstract class PathSegmentToken
     {
         /// <summary>
         /// the next token in the path

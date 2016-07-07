@@ -9,7 +9,7 @@ namespace Microsoft.OData.UriParser
     /// <summary>
     /// An item that has been selected by the query at the current level of the tree.
     /// </summary>
-    public abstract class SelectItem : ODataAnnotatable
+    public abstract class SelectItem
     {
         /// <summary>
         /// Translate a <see cref="SelectItem"/> using an implemntation of<see cref="SelectItemTranslator{T}"/>.

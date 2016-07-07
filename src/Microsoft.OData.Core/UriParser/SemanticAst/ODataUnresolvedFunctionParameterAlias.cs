@@ -11,7 +11,7 @@ namespace Microsoft.OData.UriParser
     /// <summary>
     /// Represents an aliased parameter in a function call that has not yet been resolved to a specific value.
     /// </summary>
-    public class ODataUnresolvedFunctionParameterAlias : ODataValue
+    public class ODataUnresolvedFunctionParameterAlias
     {
         /// <summary>
         /// Initializes a new instance of <see cref="ODataUnresolvedFunctionParameterAlias"/>.

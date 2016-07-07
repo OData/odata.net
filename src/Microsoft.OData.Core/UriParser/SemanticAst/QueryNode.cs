@@ -7,12 +7,11 @@
 namespace Microsoft.OData.UriParser
 {
     using System;
-    using Microsoft.OData;
 
     /// <summary>
     /// Base class for all semantic metadata bound nodes.
     /// </summary>
-    public abstract class QueryNode : ODataAnnotatable
+    public abstract class QueryNode
     {
         /// <summary>
         /// Gets the kind of this node.
