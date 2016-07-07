@@ -793,10 +793,25 @@ namespace Microsoft.OData
         /// <returns>The validated structured type.</returns>
         protected IEdmStructuredType GetResourceType(ODataResource resource)
         {
-            var resourceTypeRef = TypeNameOracle.ResolveAndValidateTypeForODataResource(
-                this.outputContext.Model, this.CurrentScope.ResourceType, resource, this.WriterValidator);
+            return TypeNameOracle.ResolveAndValidateTypeFromTypeName(
+                this.outputContext.Model,
+                this.CurrentScope.ResourceType,
+                resource.TypeName,
+                this.WriterValidator);
+        }
 
-            return resourceTypeRef;
+        /// <summary>
+        /// Gets the element type of the resource set and validates it against the model.
+        /// </summary>
+        /// <param name="resourceSet">The resource set to get the element type for.</param>
+        /// <returns>The validated structured element type.</returns>
+        protected IEdmStructuredType GetResourceSetType(ODataResourceSet resourceSet)
+        {
+            return TypeNameOracle.ResolveAndValidateTypeFromTypeName(
+                this.outputContext.Model,
+                this.CurrentScope.ResourceType,
+                EdmLibraryExtensions.GetCollectionItemTypeName(resourceSet.TypeName),
+                this.WriterValidator);
         }
 
         /// <summary>
@@ -837,7 +852,7 @@ namespace Microsoft.OData
         /// <param name="resourceSet">The resourceSet to write.</param>
         private void WriteStartResourceSetImplementation(ODataResourceSet resourceSet)
         {
-            this.CheckForNestedResourceInfoWithContent(ODataPayloadKind.ResourceSet, null);
+            this.CheckForNestedResourceInfoWithContent(ODataPayloadKind.ResourceSet, resourceSet);
             this.EnterScope(WriterState.ResourceSet, resourceSet);
 
             if (!this.SkipWriting)
@@ -1167,8 +1182,8 @@ namespace Microsoft.OData
         /// What kind of payload kind is being written as the content of a nested resource info.
         /// Only Resource Set, Resource or EntityReferenceLink are allowed.
         /// </param>
-        /// <param name="contentPayload">When contentPayloadKind is ODataPayloadKind.Resource, this passes the ODataResource; null otherwise.</param>
-        private void CheckForNestedResourceInfoWithContent(ODataPayloadKind contentPayloadKind, ODataResource contentPayload)
+        /// <param name="contentPayload">The ODataResource or ODataResourceSet to write, or null for ODataEntityReferenceLink.</param>
+        private void CheckForNestedResourceInfoWithContent(ODataPayloadKind contentPayloadKind, ODataItem contentPayload)
         {
             Debug.Assert(
                 contentPayloadKind == ODataPayloadKind.ResourceSet || contentPayloadKind == ODataPayloadKind.Resource || contentPayloadKind == ODataPayloadKind.EntityReferenceLink,
@@ -1493,9 +1508,9 @@ namespace Microsoft.OData
         /// <summary>
         /// Promotes the current nested resource info scope to a nested resource info scope with content.
         /// </summary>
-        /// <param name="resource">The ODataResource to write.</param>
+        /// <param name="content">The nested content to write. May be of either ODataResource or ODataResourceSet type.</param>
         [SuppressMessage("Microsoft.Performance", "CA1800:DoNotCastUnnecessarily", Justification = "Second cast only in debug.")]
-        private void PromoteNestedResourceInfoScope(ODataResource resource)
+        private void PromoteNestedResourceInfoScope(ODataItem content)
         {
             Debug.Assert(
                 this.State == WriterState.NestedResourceInfo,
@@ -1503,14 +1518,18 @@ namespace Microsoft.OData
             Debug.Assert(
                 this.CurrentScope.Item != null && this.CurrentScope.Item is ODataNestedResourceInfo,
                 "Item must be a non-null nested resource info.");
+            Debug.Assert(content == null || content is ODataResource || content is ODataResourceSet);
 
             this.ValidateTransition(WriterState.NestedResourceInfoWithContent);
             NestedResourceInfoScope previousScope = (NestedResourceInfoScope)this.scopes.Pop();
             NestedResourceInfoScope newScope = previousScope.Clone(WriterState.NestedResourceInfoWithContent);
             this.scopes.Push(newScope);
-            if (newScope.ResourceType == null && resource != null && !SkipWriting)
+            if (newScope.ResourceType == null && content != null && !SkipWriting)
             {
-                newScope.ResourceType = GetResourceType(resource);
+                var resource = content as ODataResource;
+                newScope.ResourceType = resource != null
+                                        ? GetResourceType(resource)
+                                        : GetResourceSetType(content as ODataResourceSet);
             }
         }
 

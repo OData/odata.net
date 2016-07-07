@@ -432,7 +432,16 @@ namespace Microsoft.OData.Tests.IntegrationTests.Evaluation
                 {
                     Properties = new[]
                     {
-                        new ODataProperty { Name = "PrimitiveProperty", Value = 1L }
+                        new ODataProperty { Name = "PrimitiveProperty", Value = 1L },
+                        new ODataProperty
+                        {
+                            Name = "DynamicCollectionOfPrimitiveProperty",
+                            Value = new ODataCollectionValue
+                            {
+                                TypeName = "Collection(Edm.Int64)",
+                                Items = Enumerable.Range(0, 3).Select(x => (long)x)
+                            }
+                        }
                     }
                 }
             );
@@ -443,36 +452,67 @@ namespace Microsoft.OData.Tests.IntegrationTests.Evaluation
                     SerializationInfo = new ODataNestedResourceInfoSerializationInfo() { IsUndeclared = true}
                 }
             );
-            entitySetWriter.WriteStart(
-                new ODataResource
+            var complexValue = new ODataResource
+            {
+                TypeName = "NS.ComplexType",
+                Properties = new[]
                 {
-                    TypeName = "NS.ComplexType",
-                    Properties = new[]
-                    {
-                        new ODataProperty { Name = "PrimitiveProperty1", Value = 1L },
-                        new ODataProperty { Name = "PrimitiveProperty2", Value = 2L }
-                    }
+                    new ODataProperty { Name = "PrimitiveProperty1", Value = 1L },
+                    new ODataProperty { Name = "PrimitiveProperty2", Value = 2L }
+                }
+            };
+            entitySetWriter.WriteStart(complexValue);
+            entitySetWriter.WriteEnd();
+            entitySetWriter.WriteEnd();
+            entitySetWriter.WriteStart(
+                new ODataNestedResourceInfo
+                {
+                    Name = "DyanmicCollectionOfComplexProperty",
+                    IsCollection = true
                 }
             );
+            entitySetWriter.WriteStart(new ODataResourceSet { TypeName = "Collection(NS.ComplexType)" });
+            entitySetWriter.WriteStart(complexValue);
+            entitySetWriter.WriteEnd();
+            entitySetWriter.WriteStart(complexValue);
+            entitySetWriter.WriteEnd();
             entitySetWriter.WriteEnd();
             entitySetWriter.WriteEnd();
             entitySetWriter.WriteEnd();
             entitySetWriter.WriteEnd();
             var str = Encoding.UTF8.GetString(stream.ToArray());
             str.Should().Be(
-                "{" +
-                    "\"@odata.context\":\"http://svc/$metadata#EntitySet\"," +
-                    "\"value\":[{" +
-                        "\"@odata.id\":\"EntitySet(1)\"," +
-                        "\"@odata.editLink\":\"EntitySet(1)\"," +
-                        "\"PrimitiveProperty@odata.type\":\"#Int64\"," +
-                        "\"PrimitiveProperty\":1," +
-                        "\"DynamicComplexProperty\":{" +
+                "{\"@odata.context\":\"http://svc/$metadata#EntitySet\"," +
+                "\"value\":[{" +
+                    "\"@odata.id\":\"EntitySet(1)\"," +
+                    "\"@odata.editLink\":\"EntitySet(1)\"," +
+                    "\"PrimitiveProperty@odata.type\":\"#Int64\"," +
+                    "\"PrimitiveProperty\":1," +
+                    "\"DynamicCollectionOfPrimitiveProperty@odata.type\":\"#Collection(Int64)\"," +
+                    "\"DynamicCollectionOfPrimitiveProperty\":[0,1,2]," +
+                    "\"DynamicComplexProperty\":{" +
+                        "\"@odata.type\":\"#NS.ComplexType\"," +
+                        "\"PrimitiveProperty1@odata.type\":\"#Int64\"," +
+                        "\"PrimitiveProperty1\":1," +
+                        "\"PrimitiveProperty2@odata.type\":\"#Int64\"," +
+                        "\"PrimitiveProperty2\":2" +
+                    "}," +
+                    "\"DyanmicCollectionOfComplexProperty@odata.type\":\"#Collection(NS.ComplexType)\"," +
+                    "\"DyanmicCollectionOfComplexProperty\":[" +
+                        "{" +
                             "\"@odata.type\":\"#NS.ComplexType\"," +
                             "\"PrimitiveProperty1@odata.type\":\"#Int64\"," +
                             "\"PrimitiveProperty1\":1," +
                             "\"PrimitiveProperty2@odata.type\":\"#Int64\"," +
-                            "\"PrimitiveProperty2\":2}}]}");
+                            "\"PrimitiveProperty2\":2" +
+                        "}," +
+                        "{" +
+                            "\"@odata.type\":\"#NS.ComplexType\"," +
+                            "\"PrimitiveProperty1@odata.type\":\"#Int64\"," +
+                            "\"PrimitiveProperty1\":1," +
+                            "\"PrimitiveProperty2@odata.type\":\"#Int64\"," +
+                            "\"PrimitiveProperty2\":2" +
+                        "}]}]}");
         }
 
         [Fact]

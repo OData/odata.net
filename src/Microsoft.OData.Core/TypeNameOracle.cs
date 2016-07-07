@@ -68,18 +68,18 @@ namespace Microsoft.OData
         /// </summary>
         /// <param name="model">The model to use.</param>
         /// <param name="expectedType">The type inferred from the model or null if the model is not a user model.</param>
-        /// <param name="resource">The resource in question to resolve the type for.</param>
+        /// <param name="typeName">Name of the type to resolve.</param>
         /// <param name="writerValidator">The writer validator to use for validation.</param>
         /// <returns>A type for primitive value</returns>
-        internal static IEdmStructuredType ResolveAndValidateTypeForODataResource(IEdmModel model, IEdmStructuredType expectedType, ODataResource resource, IWriterValidator writerValidator)
+        internal static IEdmStructuredType ResolveAndValidateTypeFromTypeName(IEdmModel model, IEdmStructuredType expectedType, string typeName, IWriterValidator writerValidator)
         {
-            if ((resource.TypeName == null) && expectedType != null)
+            if (typeName == null && expectedType != null)
             {
                 return expectedType;
             }
 
             // TODO: Clean up handling of expected types/sets during writing
-            var typeFromResource = (IEdmStructuredType)ResolveAndValidateTypeName(model, resource.TypeName, EdmTypeKind.Complex | EdmTypeKind.Entity, writerValidator);
+            var typeFromResource = (IEdmStructuredType)ResolveAndValidateTypeName(model, typeName, EdmTypeKind.Complex | EdmTypeKind.Entity, writerValidator);
             IEdmTypeReference typeReferenceFromValue = ResolveTypeFromMetadataAndValue(
                 expectedType.ToTypeReference(),
                 typeFromResource == null ? null : typeFromResource.ToTypeReference(),
