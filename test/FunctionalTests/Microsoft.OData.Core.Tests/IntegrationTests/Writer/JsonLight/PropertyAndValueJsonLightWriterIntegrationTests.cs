@@ -178,22 +178,34 @@ namespace Microsoft.OData.Tests.IntegrationTests.Writer.JsonLight
                 Properties = new[]
                 {
                     new ODataProperty { Name = "Id", Value = 1 },
-                    new ODataProperty { Name = "Weight", Value = 60.5 },
-                    new ODataProperty
-                    {
-                        Name = "Address",
-                        Value = new ODataComplexValue
-                        {
-                            Properties = new[]
-                            {
-                                new ODataProperty { Name = "CountryRegion", Value = "China" }
-                            }
-                        }
-                    }
+                    new ODataProperty { Name = "Weight", Value = 60.5 }
                 }
             };
 
-            string outputPayload = this.WriterEntry(model, entry, entitySet, entityType);
+            ODataNestedResourceInfo address = new ODataNestedResourceInfo()
+            {
+                Name = "Address",
+                IsCollection = false
+            };
+
+            ODataResource addressResource = new ODataResource
+            {
+                Properties = new[]
+                {
+                    new ODataProperty { Name = "CountryRegion", Value = "China" }
+                }
+            };
+
+            string outputPayload = this.WriterEntry(model, entry, entitySet, entityType, false, (writer)
+                =>
+                {
+                    writer.WriteStart(entry);
+                    writer.WriteStart(address);
+                    writer.WriteStart(addressResource);
+                    writer.WriteEnd();
+                    writer.WriteEnd();
+                    writer.WriteEnd();
+                });
 
             const string expectedMinimalPayload =
                 "{" +
@@ -205,7 +217,16 @@ namespace Microsoft.OData.Tests.IntegrationTests.Writer.JsonLight
 
             outputPayload.Should().Be(expectedMinimalPayload);
 
-            outputPayload = this.WriterEntry(model, entry, entitySet, entityType, true);
+            outputPayload = this.WriterEntry(model, entry, entitySet, entityType, true, (writer)
+                =>
+                {
+                    writer.WriteStart(entry);
+                    writer.WriteStart(address);
+                    writer.WriteStart(addressResource);
+                    writer.WriteEnd();
+                    writer.WriteEnd();
+                    writer.WriteEnd();
+                });
 
             const string expectedFullPayload =
                 "{" +
@@ -264,21 +285,33 @@ namespace Microsoft.OData.Tests.IntegrationTests.Writer.JsonLight
                     new ODataProperty { Name = "Id1", Value = (UInt32)1 },
                     new ODataProperty { Name = "Id2", Value = 2 },
                     new ODataProperty { Name = "Weight", Value = 60.5 },
-                    new ODataProperty
-                    {
-                        Name = "Address",
-                        Value = new ODataComplexValue
-                        {
-                            Properties = new[]
-                            {
-                                new ODataProperty { Name = "CountryRegion", Value = "China" }
-                            }
-                        }
-                    }
                 }
             };
 
-            string outputPayload = this.WriterEntry(model, entry, entitySet, entityType);
+            ODataNestedResourceInfo address = new ODataNestedResourceInfo()
+            {
+                Name = "Address",
+                IsCollection = false
+            };
+
+            ODataResource addressResource = new ODataResource
+            {
+                Properties = new[]
+                {
+                    new ODataProperty { Name = "CountryRegion", Value = "China" }
+                }
+            };
+
+            string outputPayload = this.WriterEntry(model, entry, entitySet, entityType, false, (writer)
+                =>
+            {
+                writer.WriteStart(entry);
+                writer.WriteStart(address);
+                writer.WriteStart(addressResource);
+                writer.WriteEnd();
+                writer.WriteEnd();
+                writer.WriteEnd();
+            });
 
             const string expectedMinimalPayload =
                 "{" +
@@ -291,7 +324,16 @@ namespace Microsoft.OData.Tests.IntegrationTests.Writer.JsonLight
 
             outputPayload.Should().Be(expectedMinimalPayload);
 
-            outputPayload = this.WriterEntry(model, entry, entitySet, entityType, true);
+            outputPayload = this.WriterEntry(model, entry, entitySet, entityType, true, (writer)
+                =>
+                {
+                    writer.WriteStart(entry);
+                    writer.WriteStart(address);
+                    writer.WriteStart(addressResource);
+                    writer.WriteEnd();
+                    writer.WriteEnd();
+                    writer.WriteEnd();
+                });
 
             const string expectedFullPayload =
                 "{" +

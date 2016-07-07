@@ -70,10 +70,9 @@ namespace Microsoft.OData.Tests.JsonLight
         [Fact]
         public void ClosedComplexValueShouldReturnNull()
         {
-            this.testSubject.GetValueTypeNameForWriting(
-                new ODataComplexValue { TypeName = ComplexTypeName },
-                this.complexTypeReference,
-                this.complexTypeReference,
+            this.testSubject.GetResourceTypeNameForWriting(
+                this.complexTypeReference.FullName(),
+                new ODataResource { TypeName = ComplexTypeName },
                 /*isOpen*/ false)
                 .Should().BeNull();
         }
@@ -81,12 +80,11 @@ namespace Microsoft.OData.Tests.JsonLight
         [Fact]
         public void OpenComplexValueShouldReturnNull()
         {
-            this.testSubject.GetValueTypeNameForWriting(
-                new ODataComplexValue { TypeName = ComplexTypeName },
+            this.testSubject.GetResourceTypeNameForWriting(
                 null,
-                this.complexTypeReference,
+                new ODataResource { TypeName = ComplexTypeName },
                 /*isOpen*/ false)
-                .Should().BeNull();
+                .Should().Be(ComplexTypeName);
         }
 
         // Note: When writing derived complexType value in a payload, we don't have the expected type. 
@@ -95,10 +93,9 @@ namespace Microsoft.OData.Tests.JsonLight
         public void DerivedComplexValueShouldAlwaysReturnDerivedComplexTypename()
         {
             string DerivedComplexTypeName = "Namespace.DerivedComplexTypeName";
-            this.testSubject.GetValueTypeNameForWriting(
-                new ODataComplexValue { TypeName = DerivedComplexTypeName },
-                this.complexTypeReference,
-                new EdmComplexTypeReference(new EdmComplexType("Namespace", "DerivedComplexTypeName", this.complexTypeReference.ComplexDefinition(), false), false),
+            this.testSubject.GetResourceTypeNameForWriting(
+                this.complexTypeReference.FullName(),
+                new ODataResource { TypeName = DerivedComplexTypeName },
                 /*isOpen*/ false)
                 .Should().Be(DerivedComplexTypeName);
         }
@@ -107,10 +104,9 @@ namespace Microsoft.OData.Tests.JsonLight
         public void TopLevelDerivedComplexValueShouldReturnDerivedComplexTypename()
         {
             string DerivedComplexTypeName = "Namespace.DerivedComplexTypeName";
-            this.testSubject.GetValueTypeNameForWriting(
-                new ODataComplexValue { TypeName = DerivedComplexTypeName },
+            this.testSubject.GetResourceTypeNameForWriting(
                 null,
-                new EdmComplexTypeReference(new EdmComplexType("Namespace", "DerivedComplexTypeName", this.complexTypeReference.ComplexDefinition(), false), false),
+                new ODataResource { TypeName = DerivedComplexTypeName },
                 /*isOpen*/ false)
                 .Should().Be(DerivedComplexTypeName);
         }
@@ -173,13 +169,12 @@ namespace Microsoft.OData.Tests.JsonLight
         [Fact]
         public void ValueWithTypeNameAnnotationShouldReturnTypeNameFromAnnotation()
         {
-            var complexValue = new ODataComplexValue() { TypeName = ComplexTypeName };
+            var complexValue = new ODataResource() { TypeName = ComplexTypeName };
             complexValue.SetAnnotation(new SerializationTypeNameAnnotation { TypeName = "TypeNameFromSTNA" });
 
-            this.testSubject.GetValueTypeNameForWriting(
+            this.testSubject.GetResourceTypeNameForWriting(
+                this.complexTypeReference.FullName(),
                 complexValue,
-                complexTypeReference,
-                complexTypeReference,
                 /*isOpen*/ false)
                 .Should().Be("TypeNameFromSTNA");
         }

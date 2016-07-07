@@ -40,7 +40,7 @@ namespace Microsoft.Test.OData
             writer.WriteEnd();
         }
 
-        private static void WriteNestedResourceInfo(ODataWriter writer, ODataNestedResourceInfoWrapper nestedResourceInfo)
+        public static void WriteNestedResourceInfo(ODataWriter writer, ODataNestedResourceInfoWrapper nestedResourceInfo)
         {
             writer.WriteStart(nestedResourceInfo.NestedResourceInfo);
 

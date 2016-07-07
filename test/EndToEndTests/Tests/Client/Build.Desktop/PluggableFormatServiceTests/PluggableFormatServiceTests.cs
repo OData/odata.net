@@ -66,6 +66,7 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
         }
 
 #if ENABLE_AVRO
+        [Ignore] // Update to use ResourceReader and Writer
         [TestMethod]
         public void QueryVCardEntityProperty()
         {
@@ -120,21 +121,26 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
                 {
                     new ODataProperty{  Name = "Id"          , Value = 31                   },
                     new ODataProperty{  Name = "Numbers"     , Value =
-                        new ODataCollectionValue{ Items = new int[] { 3, 5, 7 } } },
+                    new ODataCollectionValue{ Items = new int[] { 3, 5, 7 } } },
                     new ODataProperty{  Name = "Picture"     , Value = new byte[] {5, 8}    },
-                    new ODataProperty
-                    {
-                        Name = "BusinessCard", 
-                        Value = new ODataComplexValue()
-                        {
-                            Properties = new []
-                            {
-                                new ODataProperty{  Name = "N"          , Value = "Name1"   },
-                                new ODataProperty{  Name = "Tel_Home"   , Value = "01"      },
-                            }
-                        }
-                    },
                 },
+            };
+
+            ODataNestedResourceInfo businessCard_Info = new ODataNestedResourceInfo()
+            {
+                Name = "BusinessCard",
+                IsCollection = false
+            };
+
+            ODataResource businessCard = new ODataResource
+            {
+                Properties = new[]
+                {
+                    new ODataProperty{  Name = "N"          , Value = "Name1"   },
+
+                    // TODO : v7.0 Add support for open types
+                    // new ODataProperty{  Name = "Tel_Home"   , Value = "01"      },
+                }
             };
 
             Assert.IsTrue(TestHelper.EntryEqual(expected, entry));
@@ -162,29 +168,27 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
                 }
             }
 
-            Assert.AreEqual(3, entries.Count);
+            Assert.AreEqual(5, entries.Count);
             ODataResource product2 = new ODataResource
             {
                 Properties = new[]
                 {
                     new ODataProperty{  Name = "Id"     , Value = 2         },
                     new ODataProperty{  Name = "Name"   , Value = "Banana"  },
-                    new ODataProperty
-                    {
-                        Name = "Info", 
-                        Value = new ODataComplexValue()
-                        {
-                            Properties = new []
-                            {
-                                new ODataProperty{  Name = "Site"     , Value = "G2"      },
-                                new ODataProperty{  Name = "Serial"   , Value = 1023L     },
-                            }
-                        }
-                    },
                 },
             };
 
-            Assert.IsTrue(TestHelper.EntryEqual(product2, entries[1]));
+            var info = new ODataResource()
+            {
+                Properties = new[]
+                {
+                    new ODataProperty{  Name = "Site"     , Value = "G2"      },
+                    new ODataProperty{  Name = "Serial"   , Value = 1023L     },
+                }
+            };
+
+            Assert.IsTrue(TestHelper.EntryEqual(info, entries[1]));
+            Assert.IsTrue(TestHelper.EntryEqual(product2, entries[2]));
         }
 
         [TestMethod]
@@ -193,7 +197,7 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
             var requestMessage = new HttpWebRequestMessage(new Uri(ServiceBaseUri.AbsoluteUri + "Products(-9)", UriKind.Absolute));
             requestMessage.SetHeader("Accept", "avro/binary");
             var responseMessage = requestMessage.GetResponse();
-            
+
             // This is not an error case per standard, and no content should be returned. 
             Assert.AreEqual(204, responseMessage.StatusCode);
         }
@@ -208,20 +212,23 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
                 {
                     new ODataProperty{  Name = "Id"     , Value = 1         },
                     new ODataProperty{  Name = "Name"   , Value = "Peach"   },
-                    new ODataProperty
-                    {
-                        Name = "Info", 
-                        Value = new ODataComplexValue()
-                        {
-                            TypeName = "Microsoft.Test.OData.Services.PluggableFormat.ProductInfo",
-                            Properties = new []
-                            {
-                                new ODataProperty{  Name = "Site"     , Value = "G1"      },
-                                new ODataProperty{  Name = "Serial"   , Value = 1024L     },
-                            }
-                        }
-                    },
                 },
+            };
+
+            ODataNestedResourceInfo info_nestedInfo = new ODataNestedResourceInfo()
+            {
+                Name = "Info", 
+                IsCollection = false
+            };
+
+            ODataResource info = new ODataResource()
+            {
+                TypeName = "Microsoft.Test.OData.Services.PluggableFormat.ProductInfo",
+                Properties = new[]
+                {
+                    new ODataProperty{  Name = "Site"     , Value = "G1"      },
+                    new ODataProperty{  Name = "Serial"   , Value = 1024L     },
+                }
             };
 
             IEdmModel model = new PluggableFormatService(null).Format.LoadServiceModel();
@@ -237,6 +244,10 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
                 var ew = pw.CreateResourceWriter("Value");
                 {
                     ew.WriteStart(product1);
+                    ew.WriteStart(info_nestedInfo);
+                    ew.WriteStart(info);
+                    ew.WriteEnd();
+                    ew.WriteEnd();
                     ew.WriteEnd();
                     ew.Flush();
                 }

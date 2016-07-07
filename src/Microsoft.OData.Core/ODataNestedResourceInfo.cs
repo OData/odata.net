@@ -24,8 +24,8 @@ namespace Microsoft.OData
         /// <summary>URI representing the Unified Resource Locator (Url) of the link as provided by the user or seen on the wire (never computed).</summary>
         private Uri url;
 
-        /// <summary>true if the nested resource info has been set by the user or seen on the wire or computed by the metadata builder, false otherwise.</summary>
-        private bool hasNestedResourceInfo;
+        /// <summary>true if the navigation link has been set by the user or seen on the wire or computed by the metadata builder, false otherwise.</summary>
+        private bool hasNavigationLink;
 
         /// <summary>The association link URL for this navigation link as provided by the user or seen on the wire (never computed).</summary>
         private Uri associationLinkUrl;
@@ -37,15 +37,6 @@ namespace Microsoft.OData
         /// <returns>true if the nested resource info represents a collection; false if the navigation represents a resource.</returns>
         /// <remarks>This property is required to have a value for ATOM payloads and is optional for JSON payloads.</remarks>
         public bool? IsCollection
-        {
-            get;
-            set;
-        }
-
-        /// <summary>
-        /// Gets or sets a value that indicates whether the nested resource for a complex property or a collection of complex property, or a navigation property is declared or not.
-        /// </summary>
-        public bool IsUndeclared
         {
             get;
             set;
@@ -67,8 +58,8 @@ namespace Microsoft.OData
             {
                 if (this.metadataBuilder != null)
                 {
-                    this.url = this.metadataBuilder.GetNavigationLinkUri(this.Name, this.url, this.hasNestedResourceInfo);
-                    this.hasNestedResourceInfo = true;
+                    this.url = this.metadataBuilder.GetNavigationLinkUri(this.Name, this.url, this.hasNavigationLink);
+                    this.hasNavigationLink = true;
                 }
 
                 return this.url;
@@ -77,7 +68,7 @@ namespace Microsoft.OData
             set
             {
                 this.url = value;
-                this.hasNestedResourceInfo = true;
+                this.hasNavigationLink = true;
             }
         }
 
@@ -121,6 +112,15 @@ namespace Microsoft.OData
 
                 this.metadataBuilder = value;
             }
+        }
+
+        /// <summary>
+        /// Provides additional serialization information to the <see cref="ODataWriter"/> for this <see cref="ODataNestedResourceInfo"/>.
+        /// </summary>
+        internal ODataNestedResourceInfoSerializationInfo SerializationInfo
+        {
+            get;
+            set;
         }
     }
 }

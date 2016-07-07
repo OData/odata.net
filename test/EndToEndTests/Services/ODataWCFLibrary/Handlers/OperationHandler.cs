@@ -68,7 +68,8 @@ namespace Microsoft.Test.OData.Services.ODataWCFService.Handlers
                 {
                     throw Utility.BuildException(HttpStatusCode.NotImplemented, "Unsupported return type in operation.", null);
                 }
-                else if (this.QueryContext.Target.TypeKind == EdmTypeKind.Entity || this.QueryContext.Target.ElementTypeKind == EdmTypeKind.Entity)
+                else if (this.QueryContext.Target.TypeKind == EdmTypeKind.Entity || this.QueryContext.Target.ElementTypeKind == EdmTypeKind.Entity
+                    || this.QueryContext.Target.TypeKind == EdmTypeKind.Complex || this.QueryContext.Target.ElementTypeKind == EdmTypeKind.Complex)
                 {
                     ODataWriter resultWriter;
 
@@ -78,8 +79,8 @@ namespace Microsoft.Test.OData.Services.ODataWCFService.Handlers
                     {
                         IEdmEntitySetBase entitySet = (IEdmEntitySetBase)entitySource;
 
-                        resultWriter = messageWriter.CreateODataResourceSetWriter(entitySet, (IEdmEntityType)this.QueryContext.Target.ElementType);
-                        ResponseWriter.WriteFeed(resultWriter, (IEdmEntityType)this.QueryContext.Target.ElementType, result as IEnumerable, entitySet, ODataVersion.V4, this.QueryContext.QuerySelectExpandClause, this.QueryContext.TotalCount, null, this.QueryContext.NextLink, this.RequestHeaders);
+                        resultWriter = messageWriter.CreateODataResourceSetWriter(entitySet, (IEdmStructuredType)this.QueryContext.Target.ElementType);
+                        ResponseWriter.WriteFeed(resultWriter, (IEdmStructuredType)this.QueryContext.Target.ElementType, result as IEnumerable, entitySet, ODataVersion.V4, this.QueryContext.QuerySelectExpandClause, this.QueryContext.TotalCount, null, this.QueryContext.NextLink, this.RequestHeaders);
                     }
                     else
                     {
@@ -100,7 +101,7 @@ namespace Microsoft.Test.OData.Services.ODataWCFService.Handlers
                             }
                         }
 
-                        resultWriter = messageWriter.CreateODataResourceWriter(entitySource, (IEdmEntityType)this.QueryContext.Target.Type);
+                        resultWriter = messageWriter.CreateODataResourceWriter(entitySource, (IEdmStructuredType)this.QueryContext.Target.Type);
                         ResponseWriter.WriteEntry(resultWriter, result, entitySource, ODataVersion.V4, this.QueryContext.QuerySelectExpandClause, this.RequestHeaders);
                     }
                 }

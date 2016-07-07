@@ -62,6 +62,21 @@
     </When>
   </Choose>
   <ItemGroup>
+    <Compile Include="..\..\Framework\Core\Common\Wrapper\ODataItemWrapper.cs">
+      <Link>Wrappers\ODataItemWrapper.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Framework\Core\Common\Wrapper\ODataNestedResourceInfoWrapper.cs">
+      <Link>Wrappers\ODataNestedResourceInfoWrapper.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Framework\Core\Common\Wrapper\ODataResourceSetWrapper.cs">
+      <Link>Wrappers\ODataResourceSetWrapper.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Framework\Core\Common\Wrapper\ODataResourceWrapper.cs">
+      <Link>Wrappers\ODataResourceWrapper.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Framework\Core\Common\Wrapper\ODataWriterHelper.cs">
+      <Link>Wrappers\ODataWriterHelper.cs</Link>
+    </Compile>
     <Compile Include="AsyncTask.cs" />
     <Compile Include="BuiltInFunctionHelper\GeoFunctionHelper.cs" />
     <Compile Include="BuiltInFunctionHelper\TypeFunctionHelper.cs" />

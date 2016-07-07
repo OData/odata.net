@@ -228,11 +228,23 @@ namespace Microsoft.OData.Client.Materialization
                     edmType = responseInfo.TypeResolver.ResolveExpectedTypeForReading(materializerType);
                 }
 
+                if (payloadKind == ODataPayloadKind.Property && edmType != null)
+                {
+                    if (edmType.TypeKind.IsStructured())
+                    {
+                        payloadKind = ODataPayloadKind.Resource;
+                    }
+                    else if (edmType.TypeKind == EdmTypeKind.Collection && (edmType as IEdmCollectionType).ElementType.IsStructured())
+                    {
+                        payloadKind = ODataPayloadKind.ResourceSet;
+                    }
+                }
+
                 if (payloadKind == ODataPayloadKind.Resource || payloadKind == ODataPayloadKind.ResourceSet)
                 {
                     // In V1/V2, we allowed System.Object type to be allowed to pass to ExecuteQuery.
                     // Hence we need to explicitly check for System.Object to allow this
-                    if (edmType != null && edmType.TypeKind != EdmTypeKind.Entity && edmType.TypeKind != EdmTypeKind.Complex)
+                    if (edmType != null && !edmType.TypeKind.IsStructured())
                     {
                         throw DSClient.Error.InvalidOperation(DSClient.Strings.AtomMaterializer_InvalidNonEntityType(materializerType.FullName));
                     }

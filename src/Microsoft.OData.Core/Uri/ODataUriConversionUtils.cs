@@ -70,7 +70,7 @@ namespace Microsoft.OData
         /// <param name="model">Model to use for verification.</param>
         /// <param name="typeReference">Expected type reference from deserialization. If null, verification will be skipped.</param>
         /// <returns>An ODataCollectionValue that results from the deserialization of <paramref name="value"/>.</returns>
-        internal static object ConvertFromComplexOrCollectionValue(string value, IEdmModel model, IEdmTypeReference typeReference)
+        internal static object ConvertFromCollectionValue(string value, IEdmModel model, IEdmTypeReference typeReference)
         {
             ODataMessageReaderSettings settings = new ODataMessageReaderSettings();
             settings.Validations &= ~ValidationKinds.ThrowOnUndeclaredPropertyForNonOpenType;

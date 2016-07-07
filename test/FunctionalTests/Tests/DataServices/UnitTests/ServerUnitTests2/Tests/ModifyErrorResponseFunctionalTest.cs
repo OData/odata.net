@@ -70,6 +70,7 @@ namespace AstoriaUnitTests.Tests
             }
         }
 
+        /*
         [TestMethod]
         [TestCategory("Partition2")]
         public void ComplexCustomAnnotationOnErrorShouldGetWrittenInJsonLight()
@@ -85,13 +86,14 @@ namespace AstoriaUnitTests.Tests
                         new ODataProperty {Name="City", Value = "Troy"}, 
                         new ODataProperty {Name="State", Value = "New York"}
                     }
-                };     
+                };
                 TestUtil.RunCatching(webRequest.SendRequest);
 
                 webRequest.ErrorResponseContent.Should().Be("{\"error\":{\"code\":\"\",\"message\":\"Resource not found for the segment 'ThisDoesNotExist'.\",\"@location.error\":{\"@odata.type\":\"#AstoriaUnitTests.Stubs.Address\",\"City\":\"Troy\",\"State\":\"New York\"}}}");
                 HandleExceptionCalls.Should().Be(1);
             }
         }
+         */
 
         [TestMethod]
         [TestCategory("Partition2")]
@@ -164,19 +166,19 @@ namespace AstoriaUnitTests.Tests
                 webRequest.RequestContentType = String.Format("{0}; boundary={1}", UnitTestsUtil.MimeMultipartMixed, boundary);
                 webRequest.SetRequestStreamAsText(BatchRequestWritingUtils.GetBatchText(test.RequestPayload, boundary));
 
-                AnnotationValue = new ODataComplexValue
+                AnnotationValue = new ODataCollectionValue
                 {
-                    TypeName = "AstoriaUnitTests.Stubs.Address",
-                    Properties = new[]
+                    TypeName = "Collection(Edm.String)",
+                    Items = new []
                     {
-                        new ODataProperty {Name="City", Value = "404"}, 
-                        new ODataProperty {Name="State", Value = (new DateTimeOffset(2012, 10, 10, 1, 2, 3, new TimeSpan())).ToString()}
+                        "404",
+                        new DateTimeOffset(2012, 10, 10, 1, 2, 3, new TimeSpan()).ToString()
                     }
                 };
 
                 TestUtil.RunCatching(webRequest.SendRequest);
                 webRequest.ResponseStatusCode.Should().Be(202);
-                webRequest.GetResponseStreamAsText().Should().Contain("{\"error\":{\"code\":\"\",\"message\":\"Resource not found for the segment 'Addresssss'.\",\"@location.error\":{\"@odata.type\":\"#AstoriaUnitTests.Stubs.Address\",\"City\":\"404\",\"State\":\"10/10/2012 1:02:03 AM +00:00\"}}}");
+                webRequest.GetResponseStreamAsText().Should().Contain("{\"error\":{\"code\":\"\",\"message\":\"Resource not found for the segment 'Addresssss'.\",\"location.error@odata.type\":\"#Collection(String)\",\"@location.error\":[\"404\",\"10/10/2012 1:02:03 AM +00:00\"]}}");
                 HandleExceptionCalls.Should().Be(1);
             }
         }
@@ -291,22 +293,16 @@ namespace AstoriaUnitTests.Tests
                 webRequest.RequestContentType = String.Format("{0}; boundary={1}", UnitTestsUtil.MimeMultipartMixed, boundary);
                 webRequest.SetRequestStreamAsText(BatchRequestWritingUtils.GetBatchText(test.RequestPayload, boundary));
 
-                AnnotationValue = new ODataComplexValue
+                AnnotationValue = new ODataCollectionValue
                 {
-                    TypeName = "AstoriaUnitTests.Stubs.Address",
-                    Properties = new[]
-                    {
-                        new ODataProperty {Name="CityCity", Value = "404"},
-                        new ODataProperty {Name="State", Value = (new DateTimeOffset(2012, 10, 10, 1, 2, 3, new TimeSpan())).ToString()},
-                        new ODataProperty {Name="Foo", Value = new ODataCollectionValue {Items = new Object[]{123, new Object()}}} // collection value is wrong so error payload fails to write
-                    }
+                    Items = new Object[]{123, new Object()} // collection value is wrong so error payload fails to write
                 };
 
                 TestUtil.RunCatching(webRequest.SendRequest);
 
                 // For batch request if ODL fails when writing error, HandleException is called twice and ODataError annotation cannot be be written correctly
                 webRequest.ResponseStatusCode.Should().Be(202);
-                webRequest.GetResponseStreamAsText().Should().Contain("{\"error\":{\"code\":\"\",\"message\":\"Resource not found for the segment 'Addresssss'.\",\"@location.error\":{\"@odata.type\":\"#AstoriaUnitTests.Stubs.Address\",\"CityCity\":\"404\",\"State\":\"10/10/2012 1:02:03 AM +00:00\",\"Foo\":[123<?xml");
+                webRequest.GetResponseStreamAsText().Should().Contain("{\"error\":{\"code\":\"\",\"message\":\"Resource not found for the segment 'Addresssss'.\",\"@location.error\":[123<?xml");
                 HandleExceptionCalls.Should().Be(2);
             }
         }

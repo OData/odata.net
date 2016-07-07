@@ -102,6 +102,20 @@ namespace Microsoft.OData
             }
         }
 
+        /// <summary>if the context url represents an undeclared property</summary>
+        internal bool? IsUndeclared
+        {
+            get
+            {
+                if (this.odataUri != null && this.odataUri.Path != null)
+                {
+                    return this.odataUri.Path.IsUndeclared();
+                }
+
+                return null;
+            }
+        }
+
         /// <summary>Query clause used for building context Url</summary>
         internal string QueryClause
         {

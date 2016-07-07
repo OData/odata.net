@@ -125,11 +125,6 @@ namespace Microsoft.Test.OData.PluggableFormat.Avro
 
         private static RecordSchema GetSchemaFromModel(IEdmStructuredType type)
         {
-            if (type.IsOpen)
-            {
-                throw new ApplicationException("not supported.");
-            }
-
             RecordSchema rs = Schema.CreateRecord(type.FullTypeName(), null);
             Schema.SetFields(rs, type.Properties().Select(property => Schema.CreateField(property.Name, GetSchemaFromModel(property.Type))));
             return rs;

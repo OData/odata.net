@@ -911,16 +911,22 @@ namespace Microsoft.OData
 
                         resourceScope.ResourceType = resourceType;
 
-                        // For Complex resource, we don't prepare the ODataResourceMetadataBuilder, then it will use NoOpResourceMetadataBuilder
+                        // For Complex resource, we don't prepare the ODataResourceMetadataBuilder, then it will use NoOpResourceMetadataBuilder.
+                        // For the resource whose type is unknown, if NavigationSourceName is not provided, we will also use NoOpResourceMetadataBuilder.
                         var entityType = resourceType as IEdmEntityType;
                         if (resourceType == null || entityType != null)
                         {
-                            this.PrepareResourceForWriteStart(
-                                resource,
-                                resourceScope.GetOrCreateTypeContext(this.outputContext.Model, this.outputContext.WritingResponse),
-                                resourceScope.SelectedProperties);
+                            var typeContext = resourceScope.GetOrCreateTypeContext(this.outputContext.Model, this.outputContext.WritingResponse);
 
-                            this.ValidateMediaResource(resource, entityType);
+                            if (!(resourceType == null && typeContext.NavigationSourceKind == EdmNavigationSourceKind.None))
+                            {
+                                this.PrepareResourceForWriteStart(
+                                    resource,
+                                    typeContext,
+                                    resourceScope.SelectedProperties);
+
+                                this.ValidateMediaResource(resource, entityType);
+                            }
                         }
                     }
 
@@ -1222,7 +1228,8 @@ namespace Microsoft.OData
                     {
                         this.InterceptException(() =>
                         {
-                            if (this.CurrentScope.ResourceType == null || this.CurrentScope.ResourceType.IsEntityOrEntityCollectionType())
+                            if (!(currentNestedResourceInfo.SerializationInfo != null && currentNestedResourceInfo.SerializationInfo.IsComplex)
+                                && (this.CurrentScope.ResourceType == null || this.CurrentScope.ResourceType.IsEntityOrEntityCollectionType()))
                             {
                                 this.DuplicatePropertyNameChecker.ValidatePropertyUniqueness(currentNestedResourceInfo);
                                 this.StartNestedResourceInfoWithContent(currentNestedResourceInfo);
@@ -1617,10 +1624,7 @@ namespace Microsoft.OData
             if ((state == WriterState.Resource || state == WriterState.ResourceSet)
                 && (this.CurrentScope.State == WriterState.NestedResourceInfo || this.CurrentScope.State == WriterState.NestedResourceInfoWithContent))
             {
-                var nestedResourceInfo = this.CurrentScope.Item as ODataNestedResourceInfo;
-                isUndeclaredResourceOrResourceSet = nestedResourceInfo.IsUndeclared
-                    || this.ParentResourceType != null
-                        && (this.ParentResourceType.FindProperty((this.CurrentScope.Item as ODataNestedResourceInfo).Name) == null);
+                isUndeclaredResourceOrResourceSet = this.IsUndeclared(this.CurrentScope.Item as ODataNestedResourceInfo);
             }
 
             Scope scope;
@@ -1648,6 +1652,25 @@ namespace Microsoft.OData
             }
 
             this.scopes.Push(scope);
+        }
+
+        /// <summary>
+        /// Test to see if <paramref name="nestedResourceInfo"/> for a complex property or a collection of complex property, or a navigation property is declared or not.
+        /// </summary>
+        /// <param name="nestedResourceInfo">The nested info in question</param>
+        /// <returns>true if the nested info is undeclared; false if it is not, or if it cannot be determined</returns>
+        private bool IsUndeclared(ODataNestedResourceInfo nestedResourceInfo)
+        {
+            Debug.Assert(nestedResourceInfo != null, "nestedResourceInfo != null");
+
+            if (nestedResourceInfo.SerializationInfo != null)
+            {
+                return nestedResourceInfo.SerializationInfo.IsUndeclared;
+            }
+            else
+            {
+                return this.ParentResourceType != null && (this.ParentResourceType.FindProperty((this.CurrentScope.Item as ODataNestedResourceInfo).Name) == null);
+            }
         }
 
         /// <summary>
@@ -1981,6 +2004,7 @@ namespace Microsoft.OData
                 {
                     // For Entity, currently we check the navigation source.
                     // For Complex, we don't have navigation source, So we shouldn't check it.
+                    // If ResourceType is not provided, serialization info or navigation source info should be provided.
                     var throwIfMissingTypeInfo = writingResponse && (this.ResourceType == null || this.ResourceType.TypeKind == EdmTypeKind.Entity);
 
                     this.typeContext = ODataResourceTypeContext.Create(
@@ -2102,13 +2126,18 @@ namespace Microsoft.OData
             {
                 if (this.typeContext == null)
                 {
+                    IEdmStructuredType expectedResourceType = this.ResourceTypeFromMetadata ?? this.ResourceType;
+
+                    // For entity, we will check the navigation source info
+                    bool throwIfMissingTypeInfo = writingResponse && (expectedResourceType == null || expectedResourceType.TypeKind == EdmTypeKind.Entity);
+
                     this.typeContext = ODataResourceTypeContext.Create(
                         this.serializationInfo,
                         this.NavigationSource,
                         EdmTypeWriterResolver.Instance.GetElementType(this.NavigationSource),
-                        this.ResourceTypeFromMetadata ?? this.ResourceType,
+                        expectedResourceType,
                         model,
-                        writingResponse);
+                        throwIfMissingTypeInfo);
                 }
 
                 return this.typeContext;

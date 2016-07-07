@@ -1557,6 +1557,9 @@
     <Compile Include="..\ODataEdmPropertyAnnotation.cs">
       <Link>Microsoft\OData\Core\ODataEdmPropertyAnnotation.cs</Link>
     </Compile>
+    <Compile Include="..\ODataNestedResourceInfoSerializationInfo.cs">
+      <Link>Microsoft\OData\Core\ODataNestedResourceInfoSerializationInfo.cs</Link>
+    </Compile>
     <Compile Include="..\ODataNullValueBehaviorKind.cs">
       <Link>Microsoft\OData\Core\ODataNullValueBehaviorKind.cs</Link>
     </Compile>

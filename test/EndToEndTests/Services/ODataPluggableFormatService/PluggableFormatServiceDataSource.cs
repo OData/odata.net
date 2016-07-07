@@ -62,10 +62,10 @@ namespace Microsoft.Test.OData.Services.PluggableFormat
                     BusinessCard = new ContactInfo()
                     {
                         N = "Name1",
-                        OpenProperties =
-                        {
-                            {"Tel_Home", "01"},
-                        }
+                        //OpenProperties =
+                        //{
+                        //    {"Tel_Home", "01"},
+                        //}
                     }
                 },
                 new Person()
@@ -75,10 +75,10 @@ namespace Microsoft.Test.OData.Services.PluggableFormat
                     BusinessCard = new ContactInfo()
                     {
                         N = "Name2",
-                        OpenProperties =
-                        {
-                            {"Tel_Home", "02"},
-                        }
+                        //OpenProperties =
+                        //{
+                        //    {"Tel_Home", "02"},
+                        //}
                     }
                 },
             });

@@ -133,7 +133,8 @@ namespace Microsoft.OData.JsonLight
         /// <param name="clientCustomTypeResolver">The function of client cuetom type resolver.</param>
         private void ParseContextUri(ODataPayloadKind expectedPayloadKind, Func<IEdmType, string, IEdmType> clientCustomTypeResolver)
         {
-            ODataPayloadKind detectedPayloadKind = this.ParseContextUriFragment(this.parseResult.Fragment, clientCustomTypeResolver);
+            bool isUndeclared = false;
+            ODataPayloadKind detectedPayloadKind = this.ParseContextUriFragment(this.parseResult.Fragment, clientCustomTypeResolver, out isUndeclared);
 
             // unsupported payload kind indicates that this is during payload kind detection, so we should not fail.
             bool detectedPayloadKindMatchesExpectation = detectedPayloadKind == expectedPayloadKind || expectedPayloadKind == ODataPayloadKind.Unsupported;
@@ -172,6 +173,13 @@ namespace Microsoft.OData.JsonLight
                     detectedPayloadKindMatchesExpectation = true;
                 }
             }
+            else if (detectedPayloadKind == ODataPayloadKind.Property && isUndeclared
+                && (expectedPayloadKind == ODataPayloadKind.Resource || expectedPayloadKind == ODataPayloadKind.ResourceSet))
+            {
+                // for undeclared, we don't know whether it is a resource/resource set or not.
+                this.parseResult.DetectedPayloadKinds = new[] { expectedPayloadKind, ODataPayloadKind.Property };
+                detectedPayloadKindMatchesExpectation = true;
+            }
             else
             {
                 this.parseResult.DetectedPayloadKinds = new[] { detectedPayloadKind };
@@ -202,12 +210,14 @@ namespace Microsoft.OData.JsonLight
         /// </summary>
         /// <param name="fragment">The fragment to parse</param>
         /// <param name="clientCustomTypeResolver">The function of client cuetom type resolver.</param>
+        /// <param name="isUndeclared">Indicates if the fragment is for an unknown path segment</param>
         /// <returns>The detected payload kind based on parsing the fragment.</returns>
         [SuppressMessage("Microsoft.Maintainability", "CA1502", Justification = "Will be moving to non case statements later, no point in investing in reducing this now")]
-        private ODataPayloadKind ParseContextUriFragment(string fragment, Func<IEdmType, string, IEdmType> clientCustomTypeResolver)
+        private ODataPayloadKind ParseContextUriFragment(string fragment, Func<IEdmType, string, IEdmType> clientCustomTypeResolver, out bool isUndeclared)
         {
             bool hasItemSelector = false;
             ODataDeltaKind kind = ODataDeltaKind.None;
+            isUndeclared = false;
 
             // Deal with /$entity
             if (fragment.EndsWith(ODataConstants.ContextUriFragmentItemSelector, StringComparison.Ordinal))
@@ -385,6 +395,7 @@ namespace Microsoft.OData.JsonLight
                 }
                 else if (path.IsIndividualProperty())
                 {
+                    isUndeclared = path.IsUndeclared();
                     detectedPayloadKind = ODataPayloadKind.Property;
                     IEdmComplexType complexType = parseResult.EdmType as IEdmComplexType;
                     if (complexType != null)

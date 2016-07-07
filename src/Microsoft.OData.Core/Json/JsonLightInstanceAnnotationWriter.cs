@@ -169,14 +169,6 @@ namespace Microsoft.OData
             // declared property with an expected type. This will still write out the type if the value type is more derived than the declared type, for example.
             bool treatLikeOpenProperty = expectedType == null;
 
-            ODataComplexValue complexValue = value as ODataComplexValue;
-            if (complexValue != null)
-            {
-                this.WriteInstanceAnnotationName(propertyName, name);
-                this.valueSerializer.WriteComplexValue(complexValue, expectedType, false /*isTopLevel*/, treatLikeOpenProperty, this.valueSerializer.CreateDuplicatePropertyNameChecker());
-                return;
-            }
-
             ODataCollectionValue collectionValue = value as ODataCollectionValue;
             if (collectionValue != null)
             {

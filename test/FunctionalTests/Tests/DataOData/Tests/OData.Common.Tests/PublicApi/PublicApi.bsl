@@ -4257,6 +4257,11 @@ public sealed class Microsoft.OData.ODataObjectModelExtensions {
 	[
 	ExtensionAttribute(),
 	]
+	public static void SetSerializationInfo (Microsoft.OData.ODataNestedResourceInfo nestedResourceInfo, Microsoft.OData.ODataNestedResourceInfoSerializationInfo serializationInfo)
+
+	[
+	ExtensionAttribute(),
+	]
 	public static void SetSerializationInfo (Microsoft.OData.ODataProperty property, Microsoft.OData.ODataPropertySerializationInfo serializationInfo)
 
 	[
@@ -4793,9 +4798,15 @@ public sealed class Microsoft.OData.ODataNestedResourceInfo : Microsoft.OData.OD
 
 	System.Uri AssociationLinkUrl  { public get; public set; }
 	System.Nullable`1[[System.Boolean]] IsCollection  { public get; public set; }
-	bool IsUndeclared  { public get; public set; }
 	string Name  { public get; public set; }
 	System.Uri Url  { public get; public set; }
+}
+
+public sealed class Microsoft.OData.ODataNestedResourceInfoSerializationInfo {
+	public ODataNestedResourceInfoSerializationInfo ()
+
+	bool IsComplex  { public get; public set; }
+	bool IsUndeclared  { public get; public set; }
 }
 
 public sealed class Microsoft.OData.ODataNullValue : Microsoft.OData.ODataValue {

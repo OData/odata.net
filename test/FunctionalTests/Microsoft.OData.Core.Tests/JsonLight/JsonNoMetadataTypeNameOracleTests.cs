@@ -69,10 +69,9 @@ namespace Microsoft.OData.Tests.JsonLight
         [Fact]
         public void ClosedComplexValueShouldReturnNull()
         {
-            this.testSubject.GetValueTypeNameForWriting(
-                new ODataComplexValue {TypeName = ComplexTypeName}, 
-                this.complexTypeReference, 
-                this.complexTypeReference, 
+            this.testSubject.GetResourceTypeNameForWriting(
+                this.complexTypeReference.FullName(),
+                new ODataResource { TypeName = ComplexTypeName }, 
                 /*isOpen*/ false)
                 .Should().BeNull();
         }   
@@ -80,10 +79,9 @@ namespace Microsoft.OData.Tests.JsonLight
         [Fact]
         public void OpenComplexValueShouldReturnNull()
         {
-            this.testSubject.GetValueTypeNameForWriting(
-                new ODataComplexValue {TypeName = ComplexTypeName}, 
-                null, 
-                this.complexTypeReference,
+            this.testSubject.GetResourceTypeNameForWriting(
+                null,
+                new ODataResource { TypeName = ComplexTypeName }, 
                 /*isOpen*/ false)
                 .Should().BeNull();
         }
@@ -92,10 +90,9 @@ namespace Microsoft.OData.Tests.JsonLight
         public void DerivedComplexValueShouldReturnNull()
         {
             string DerivedComplexTypeName = "Namespace.DerivedComplexTypeName";
-            this.testSubject.GetValueTypeNameForWriting(
-                new ODataComplexValue { TypeName = DerivedComplexTypeName },
-                this.complexTypeReference,
-                new EdmComplexTypeReference(new EdmComplexType("Namespace", "DerivedComplexTypeName", this.complexTypeReference.ComplexDefinition(), false), false),
+            this.testSubject.GetResourceTypeNameForWriting(
+                this.complexTypeReference.FullName(),
+                new ODataResource { TypeName = DerivedComplexTypeName },
                 /*isOpen*/ false)
                 .Should().BeNull();
         }
@@ -158,13 +155,12 @@ namespace Microsoft.OData.Tests.JsonLight
         [Fact]
         public void ValueWithTypeNameAnnotationShouldReturnNull()
         {
-            var complexValue = new ODataComplexValue() {TypeName = ComplexTypeName};
+            var complexValue = new ODataResource() {TypeName = ComplexTypeName};
             complexValue.SetAnnotation(new SerializationTypeNameAnnotation{TypeName = "TypeNameFromSTNA"});
 
-            this.testSubject.GetValueTypeNameForWriting(
+            this.testSubject.GetResourceTypeNameForWriting(
+                complexTypeReference.FullName(),
                 complexValue,
-                complexTypeReference,
-                complexTypeReference,
                 /*isOpen*/ false)
                 .Should().BeNull();
         }

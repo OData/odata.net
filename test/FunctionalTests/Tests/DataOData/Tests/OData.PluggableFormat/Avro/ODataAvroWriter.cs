@@ -27,6 +27,8 @@ namespace Microsoft.Test.OData.PluggableFormat.Avro
         private IList<AvroRecord> entityObjectList;
         private bool writingFeed;
 
+        private Stack<ODataItem> scopes = new Stack<ODataItem>();
+
         public ODataAvroWriter(ODataAvroOutputContext outputContext, Action<object> writeAction, Schema schema, bool writingFeed)
         {
             Debug.Assert(outputContext != null, "outputContext != null");
@@ -63,7 +65,7 @@ namespace Microsoft.Test.OData.PluggableFormat.Avro
 
         public override void WriteStart(ODataNestedResourceInfo navigationLink)
         {
-            throw new System.NotImplementedException();
+            this.scopes.Push(navigationLink);
         }
 
         public override System.Threading.Tasks.Task WriteStartAsync(ODataNestedResourceInfo navigationLink)
@@ -116,15 +118,25 @@ namespace Microsoft.Test.OData.PluggableFormat.Avro
                 this.schema = this.outputContext.AvroWriter.UpdateSchema(entry, null, this.writingFeed);
             }
 
-            var obj = (AvroRecord)ODataAvroConvert.FromODataObject(entry, this.schema);
-
-            if (this.writingFeed)
+            if (this.scopes.Count > 0)
             {
-                this.entityObjectList.Add(obj);
+                var parent = this.scopes.Pop() as ODataNestedResourceInfo;
+                var obj = this.currentEntityObject;
+                ODataAvroConvert.UpdateNestedInfoFromODataObject(obj, entry, parent, schema);
             }
             else
             {
-                this.currentEntityObject = obj;
+                var obj = (AvroRecord)ODataAvroConvert.FromODataObject(entry, this.schema);
+
+                if (this.writingFeed)
+                {
+                    this.entityObjectList.Add(obj);
+                    this.currentEntityObject = obj;
+                }
+                else
+                {
+                    this.currentEntityObject = obj;
+                }
             }
         }
     }

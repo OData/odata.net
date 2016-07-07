@@ -32,28 +32,38 @@ namespace Microsoft.Test.OData.Services.ODataWCFService
         /// <param name="selectExpandClause">The SelectExpandClause.</param>
         public static void WriteEntry(ODataWriter writer, object element, IEdmNavigationSource entitySource, ODataVersion targetVersion, SelectExpandClause selectExpandClause, Dictionary<string, string> incomingHeaders = null)
         {
-            var entry = ODataObjectModelConverter.ConvertToODataEntry(element, entitySource, targetVersion);
+            var resourceWrapper = ODataObjectModelConverter.ConvertToODataEntry(element, entitySource, targetVersion);
+            var resource = resourceWrapper.Resource;
 
-            entry.ETag = Utility.GetETagValue(element);
+            resource.ETag = Utility.GetETagValue(element);
 
             if (selectExpandClause != null && selectExpandClause.SelectedItems.OfType<PathSelectItem>().Any())
             {
-                ExpandSelectItemHandler selectItemHandler = new ExpandSelectItemHandler(entry);
+                ExpandSelectItemHandler selectItemHandler = new ExpandSelectItemHandler(resourceWrapper);
                 foreach (var item in selectExpandClause.SelectedItems.OfType<PathSelectItem>())
                 {
                     item.HandleWith(selectItemHandler);
                 }
 
-                entry = selectItemHandler.ProjectedEntry;
+                resourceWrapper = selectItemHandler.ProjectedEntryWrapper;
+                resource = resourceWrapper.Resource;
             }
 
-            CustomizeEntry(incomingHeaders, entry);
+            CustomizeEntry(incomingHeaders, resource);
 
-            writer.WriteStart(entry);
+            writer.WriteStart(resource);
+
+            if (resourceWrapper.NestedResourceInfos != null)
+            {
+                foreach (var nestedResourceInfoWrapper in resourceWrapper.NestedResourceInfos)
+                {
+                    ODataWriterHelper.WriteNestedResourceInfo(writer, nestedResourceInfoWrapper);
+                }
+            }
 
             // gets all of the expandedItems, including ExpandedRefernceSelectItem and ExpandedNavigationItem
             var expandedItems = selectExpandClause == null ? null : selectExpandClause.SelectedItems.OfType<ExpandedReferenceSelectItem>();
-            WriteNavigationLinks(writer, element, entry.ReadLink, entitySource, targetVersion, expandedItems);
+            WriteNavigationLinks(writer, element, resource.ReadLink, entitySource, targetVersion, expandedItems);
             writer.WriteEnd();
         }
 
@@ -106,7 +116,7 @@ namespace Microsoft.Test.OData.Services.ODataWCFService
         /// <param name="entitySet">The entity set in the model that the feed belongs to.</param>
         /// <param name="targetVersion">The OData version this segment is targeting.</param>
         /// <param name="selectExpandClause">The SelectExpandClause.</param>
-        public static void WriteFeed(ODataWriter writer, IEdmEntityType entityType, IEnumerable entries, IEdmEntitySetBase entitySet, ODataVersion targetVersion, SelectExpandClause selectExpandClause, long? count, Uri deltaLink, Uri nextPageLink, Dictionary<string, string> incomingHeaders = null)
+        public static void WriteFeed(ODataWriter writer, IEdmStructuredType entityType, IEnumerable entries, IEdmEntitySetBase entitySet, ODataVersion targetVersion, SelectExpandClause selectExpandClause, long? count, Uri deltaLink, Uri nextPageLink, Dictionary<string, string> incomingHeaders = null)
         {
             var feed = new ODataResourceSet
             {
@@ -143,7 +153,14 @@ namespace Microsoft.Test.OData.Services.ODataWCFService
 
         private static void WriteNavigationLinks(ODataWriter writer, object element, Uri parentEntryUri, IEdmNavigationSource edmParent, ODataVersion targetVersion, IEnumerable<SelectItem> expandedItems)
         {
-            foreach (var navigationProperty in ((IEdmEntityType)EdmClrTypeUtils.GetEdmType(DataSourceManager.GetCurrentDataSource().Model, element)).NavigationProperties())
+            var currentResourceType = EdmClrTypeUtils.GetEdmType(DataSourceManager.GetCurrentDataSource().Model, element);
+            var entityType = currentResourceType as IEdmEntityType;
+            if (entityType == null)
+            {
+                return;
+            }
+
+            foreach (var navigationProperty in entityType.NavigationProperties())
             {
                 // give proprity to ExpandedReferenceSelectItem
                 var expandedItem = GetExpandedReferenceItem(expandedItems, navigationProperty.Name);

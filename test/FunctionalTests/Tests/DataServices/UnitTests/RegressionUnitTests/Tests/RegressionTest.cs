@@ -647,30 +647,30 @@ namespace AstoriaUnitTests.Tests
                 }
             }
 
-            [TestMethod, Variation("Open types - unable to find the right parent entity for the given uri")]
-            public void ShouldFindRightParentEntityForOpenTypes()
-            {
-                CustomRowBasedOpenTypesContext.ClearData();
-                CustomRowBasedOpenTypesContext.PreserveChanges = true;
+            //[TestMethod, Variation("Open types - unable to find the right parent entity for the given uri")]
+            //public void ShouldFindRightParentEntityForOpenTypes()
+            //{
+            //    CustomRowBasedOpenTypesContext.ClearData();
+            //    CustomRowBasedOpenTypesContext.PreserveChanges = true;
 
-                try
-                {
-                    string payload = "{ value: 'Foo' }";
-                    var uriAndXPathToVerify = new KeyValuePair<string, string[]>[] {
-                    new KeyValuePair<string, string[]>("/Customers(1)/Address/StreetAddress",
-                        new string[] { String.Format("{0}[value='Foo']", JsonValidator.ObjectString) }) };
+            //    try
+            //    {
+            //        string payload = "{ value: 'Foo' }";
+            //        var uriAndXPathToVerify = new KeyValuePair<string, string[]>[] {
+            //        new KeyValuePair<string, string[]>("/Customers(1)/Address/StreetAddress",
+            //            new string[] { String.Format("{0}[value='Foo']", JsonValidator.ObjectString) }) };
 
-                    // Get the etag for Customer(1)
-                    string etag = UnitTestsUtil.GetETagFromResponse(typeof(CustomRowBasedOpenTypesContext), "/Customers(1)", UnitTestsUtil.JsonLightMimeType);
+            //        // Get the etag for Customer(1)
+            //        string etag = UnitTestsUtil.GetETagFromResponse(typeof(CustomRowBasedOpenTypesContext), "/Customers(1)", UnitTestsUtil.JsonLightMimeType);
 
-                    var headers = new KeyValuePair<string, string>[] { new KeyValuePair<string, string>("If-Match", etag) };
-                    UnitTestsUtil.SendRequestAndVerifyXPath(payload, "/Customers(1)/Address/StreetAddress", uriAndXPathToVerify, typeof(CustomRowBasedOpenTypesContext), UnitTestsUtil.JsonLightMimeType, "PUT", headers, true);
-                }
-                finally
-                {
-                    CustomRowBasedOpenTypesContext.PreserveChanges = false;
-                }
-            }
+            //        var headers = new KeyValuePair<string, string>[] { new KeyValuePair<string, string>("If-Match", etag) };
+            //        UnitTestsUtil.SendRequestAndVerifyXPath(payload, "/Customers(1)/Address/StreetAddress", uriAndXPathToVerify, typeof(CustomRowBasedOpenTypesContext), UnitTestsUtil.JsonLightMimeType, "PUT", headers, true);
+            //    }
+            //    finally
+            //    {
+            //        CustomRowBasedOpenTypesContext.PreserveChanges = false;
+            //    }
+            //}
 
             [TestMethod, Variation("$metadata should return edmx metadata document")]
             public void ShouldReturnEdmxMetadataDocument()
@@ -759,41 +759,41 @@ namespace AstoriaUnitTests.Tests
                 }
             }
 
-            [TestMethod, Variation("Protocol: exception thrown in XML with filter=null")]
-            public void ShouldThrowInXmlWithFilterNull()
-            {
-                ServiceModelData.Northwind.EnsureDependenciesAvailable();
-                CombinatorialEngine engine = CombinatorialEngine.FromDimensions(
-                    new Dimension("ServiceModelData", ServiceModelData.ValidValues));
-                TestUtil.RunCombinatorialEngineFail(engine, delegate (Hashtable values)
-                {
-                    ServiceModelData model = (ServiceModelData)values["ServiceModelData"];
-                    if (!model.ContainerNames.Contains("Customers"))
-                    {
-                        return;
-                    }
+            //[TestMethod, Variation("Protocol: exception thrown in XML with filter=null")]
+            //public void ShouldThrowInXmlWithFilterNull()
+            //{
+            //    ServiceModelData.Northwind.EnsureDependenciesAvailable();
+            //    CombinatorialEngine engine = CombinatorialEngine.FromDimensions(
+            //        new Dimension("ServiceModelData", ServiceModelData.ValidValues));
+            //    TestUtil.RunCombinatorialEngineFail(engine, delegate (Hashtable values)
+            //    {
+            //        ServiceModelData model = (ServiceModelData)values["ServiceModelData"];
+            //        if (!model.ContainerNames.Contains("Customers"))
+            //        {
+            //            return;
+            //        }
 
-                    string typeName = model.GetContainerRootTypeName("Customers");
-                    string customerName = model.GetModelProperties(typeName).Any(p => p.Name == "CompanyName") ? "CompanyName" : "Name";
-                    string[] uris = new string[]
-                    {
-                        "/Customers?$filter=null",
-                        "/Customers?$filter=cast(null, 'Edm.Boolean')",
-                        "/Customers?$filter=cast(null, 'Edm.Int32') add 10 lt length(" + customerName + ")",
-                    };
-                    using (TestWebRequest request = TestWebRequest.CreateForInProcess())
-                    {
-                        request.DataServiceType = model.ServiceModelType;
-                        request.ForceVerboseErrors = true;
+            //        string typeName = model.GetContainerRootTypeName("Customers");
+            //        string customerName = model.GetModelProperties(typeName).Any(p => p.Name == "CompanyName") ? "CompanyName" : "Name";
+            //        string[] uris = new string[]
+            //        {
+            //            "/Customers?$filter=null",
+            //            "/Customers?$filter=cast(null, 'Edm.Boolean')",
+            //            "/Customers?$filter=cast(null, 'Edm.Int32') add 10 lt length(" + customerName + ")",
+            //        };
+            //        using (TestWebRequest request = TestWebRequest.CreateForInProcess())
+            //        {
+            //            request.DataServiceType = model.ServiceModelType;
+            //            request.ForceVerboseErrors = true;
 
-                        foreach (string uri in uris)
-                        {
-                            request.RequestUriString = uri;
-                            request.SendRequest();
-                        }
-                    }
-                });
-            }
+            //            foreach (string uri in uris)
+            //            {
+            //                request.RequestUriString = uri;
+            //                request.SendRequest();
+            //            }
+            //        }
+            //    });
+            //}
 
             [TestMethod, Variation("Entity sets can be something that derives from IQueryable")]
             public void EntitySetCanDeriveFromIQueryable()

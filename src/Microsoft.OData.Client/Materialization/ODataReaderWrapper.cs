@@ -104,7 +104,7 @@ namespace Microsoft.OData.Client.Materialization
         /// <returns>A reader.</returns>
         internal static ODataReaderWrapper Create(ODataMessageReader messageReader, ODataPayloadKind messageType, IEdmType expectedType, DataServiceClientResponsePipelineConfiguration responsePipeline)
         {
-            IEdmEntityType entityType = expectedType as IEdmEntityType;
+            IEdmStructuredType entityType = expectedType as IEdmStructuredType;
             if (messageType == ODataPayloadKind.Resource)
             {
                 return new ODataReaderWrapper(messageReader.CreateODataResourceReader(entityType), responsePipeline);

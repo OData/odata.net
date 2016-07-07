@@ -26,13 +26,12 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
 
         private readonly string[] mimeTypes = new string[]
         {
-            //MimeTypes.ApplicationAtomXml,
             MimeTypes.ApplicationJson + MimeTypes.ODataParameterFullMetadata,
             MimeTypes.ApplicationJson + MimeTypes.ODataParameterMinimalMetadata,
             MimeTypes.ApplicationJson + MimeTypes.ODataParameterNoMetadata,
         };
 
-        private readonly bool[] hasModelFlagBools = new bool[] { true, false, };
+        private readonly bool[] hasModelFlagBools = new bool[] {true, false};
 
         public AutoComputePayloadMetadataInJsonTests()
             : base(ServiceDescriptors.AstoriaDefaultService)
@@ -89,15 +88,23 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
 
             if (!hasModel)
             {
-                orderFeed.SetSerializationInfo(new ODataResourceSerializationInfo() { NavigationSourceName = "Order", NavigationSourceEntityTypeName = NameSpace + "Order" });
+                orderFeed.SetSerializationInfo(
+                    new ODataResourceSerializationInfo()
+                    {
+                        NavigationSourceName = "Order",
+                        NavigationSourceEntityTypeName = NameSpace + "Order",
+                        NavigationSourceKind = EdmNavigationSourceKind.EntitySet
+                    });
             }
 
             var orderEntry1 = WritePayloadHelper.CreateOrderEntry1NoMetadata(hasModel);
             Dictionary<string, object> expectedOrderObject1 = WritePayloadHelper.ComputeExpectedFullMetadataEntryObject(WritePayloadHelper.OrderType, "Order(-10)", orderEntry1, hasModel);
 
-            var orderEntry2 = WritePayloadHelper.CreateOrderEntry2NoMetadata(hasModel);
+            var orderEntry2Wrapper = WritePayloadHelper.CreateOrderEntry2NoMetadata(hasModel);
+            var orderEntry2 = orderEntry2Wrapper.Resource;
             Dictionary<string, object> expectedOrderObject2 = WritePayloadHelper.ComputeExpectedFullMetadataEntryObject(WritePayloadHelper.OrderType, "Order(-9)", orderEntry2, hasModel);
             var orderEntry2Navigation = WritePayloadHelper.AddOrderEntryCustomNavigation(orderEntry2, expectedOrderObject2, hasModel);
+            orderEntry2Wrapper.NestedResourceInfos.Add(new ODataNestedResourceInfoWrapper() { NestedResourceInfo = orderEntry2Navigation });
 
             // write the response message and read using ODL reader
             var responseMessage = new StreamResponseMessage(new MemoryStream());
@@ -112,10 +119,7 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
                 odataWriter.WriteStart(orderEntry1);
                 odataWriter.WriteEnd();
 
-                odataWriter.WriteStart(orderEntry2);
-                odataWriter.WriteStart(orderEntry2Navigation);
-                odataWriter.WriteEnd();
-                odataWriter.WriteEnd();
+                ODataWriterHelper.WriteResource(odataWriter, orderEntry2Wrapper);
 
                 // Finish writing the feed.
                 odataWriter.WriteEnd();
@@ -179,7 +183,8 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
 
         private string WriteAndVerifyExpandedCustomerEntry(ODataMessageWriterSettings settings, string mimeType, string expectedProjectionClause, bool hasModel)
         {
-            ODataResource customerEntry = WritePayloadHelper.CreateCustomerEntryNoMetadata(hasModel);
+            ODataResourceWrapper customerEntryWrapper = WritePayloadHelper.CreateCustomerResourceWrapperNoMetadata(hasModel);
+            var customerEntry = customerEntryWrapper.Resource;
             Dictionary<string, object> expectedCustomerObject = WritePayloadHelper.ComputeExpectedFullMetadataEntryObject(WritePayloadHelper.CustomerType, "Customer(-9)", customerEntry, hasModel);
             var thumbnailProperty = WritePayloadHelper.AddCustomerMediaProperty(customerEntry, expectedCustomerObject);
 
@@ -196,41 +201,55 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
 
             if (!hasModel)
             {
-                loginFeed.SetSerializationInfo(new ODataResourceSerializationInfo() { NavigationSourceName = "Login", NavigationSourceEntityTypeName = NameSpace + "Login" });
+                loginFeed.SetSerializationInfo(
+                    new ODataResourceSerializationInfo()
+                    {
+                        NavigationSourceName = "Login",
+                        NavigationSourceEntityTypeName = NameSpace + "Login",
+                        NavigationSourceKind = EdmNavigationSourceKind.EntitySet
+                    });
             }
 
             var loginEntry = WritePayloadHelper.CreateLoginEntryNoMetadata(hasModel);
+
+
+            customerEntryWrapper.NestedResourceInfos.Add(new ODataNestedResourceInfoWrapper()
+            {
+                NestedResourceInfo = orderNavigation
+            });
+
+            customerEntryWrapper.NestedResourceInfos.Add(new ODataNestedResourceInfoWrapper()
+            {
+                NestedResourceInfo = expandedLoginsNavigation,
+                NestedResourceOrResourceSet = new ODataResourceSetWrapper()
+                {
+                    ResourceSet = loginFeed,
+                    Resources = new List<ODataResourceWrapper>()
+                    {
+                        new ODataResourceWrapper()
+                        {
+                            Resource = loginEntry
+                        }
+                    }
+                }
+            });
+
             Dictionary<string, object> expectedLoginObject = WritePayloadHelper.ComputeExpectedFullMetadataEntryObject(WritePayloadHelper.LoginType, "Login('2')", loginEntry, hasModel);
 
             this.RemoveNonSelectedMetadataFromExpected(expectedCustomerObject, expectedLoginObject, hasModel);
 
+            var stream = new MemoryStream();
             // write the response message and read using ODL reader
-            var responseMessage = new StreamResponseMessage(new MemoryStream());
+            var responseMessage = new StreamResponseMessage(stream);
             responseMessage.SetHeader("Content-Type", mimeType);
             string result = string.Empty;
             using (var messageWriter = this.CreateODataMessageWriter(responseMessage, settings, hasModel))
             {
                 var odataWriter = this.CreateODataEntryWriter(messageWriter, WritePayloadHelper.CustomerSet, WritePayloadHelper.CustomerType, hasModel);
 
-                odataWriter.WriteStart(customerEntry);
+                ODataWriterHelper.WriteResource(odataWriter, customerEntryWrapper);
 
-                odataWriter.WriteStart(orderNavigation);
-                odataWriter.WriteEnd();
-
-                // write expanded navigation
-                odataWriter.WriteStart(expandedLoginsNavigation);
-
-                odataWriter.WriteStart(loginFeed);
-                odataWriter.WriteStart(loginEntry);
-                odataWriter.WriteEnd();
-                odataWriter.WriteEnd();
-
-                // Finish writing expandedNavigation.
-                odataWriter.WriteEnd();
-
-                // Finish writing customerEntry.
-                odataWriter.WriteEnd();
-
+                Console.WriteLine(new StreamReader(stream).ReadToEnd());
                 result = this.ReadFeedEntryMessage(false, responseMessage, mimeType, WritePayloadHelper.CustomerSet, WritePayloadHelper.CustomerType);
             }
 
@@ -319,7 +338,13 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
 
             if (!hasModel)
             {
-                personFeed.SetSerializationInfo(new ODataResourceSerializationInfo() { NavigationSourceName = "Person", NavigationSourceEntityTypeName = NameSpace + "Person" });
+                personFeed.SetSerializationInfo(
+                    new ODataResourceSerializationInfo()
+                    {
+                        NavigationSourceName = "Person",
+                        NavigationSourceEntityTypeName = NameSpace + "Person",
+                        NavigationSourceKind = EdmNavigationSourceKind.EntitySet
+                    });
             }
 
             ODataResource personEntry = WritePayloadHelper.CreatePersonEntryNoMetadata(hasModel);
@@ -581,7 +606,13 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
 
             if (!hasModel)
             {
-                employeeFeed.SetSerializationInfo(new ODataResourceSerializationInfo() { NavigationSourceName = "Person", NavigationSourceEntityTypeName = NameSpace + "Person", ExpectedTypeName = NameSpace + "Employee" });
+                employeeFeed.SetSerializationInfo(
+                    new ODataResourceSerializationInfo() { NavigationSourceName = "Person",
+                        NavigationSourceEntityTypeName = NameSpace + "Person",
+                        ExpectedTypeName = NameSpace + "Employee",
+                        NavigationSourceKind = EdmNavigationSourceKind.EntitySet
+
+                    });
             }
 
             ODataResource employeeEntry = WritePayloadHelper.CreateEmployeeEntryNoMetadata(false);

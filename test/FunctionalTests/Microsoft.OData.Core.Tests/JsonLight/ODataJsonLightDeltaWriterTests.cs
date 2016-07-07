@@ -64,23 +64,6 @@ namespace Microsoft.OData.Tests.JsonLight
         private readonly ODataResource order10643 = new ODataResource
         {
             Id = new Uri("Orders(10643)", UriKind.Relative),
-            Properties = new List<ODataProperty>
-            {
-                new ODataProperty
-                {
-                    Name = "ShippingAddress",
-                    Value = new ODataComplexValue
-                    {
-                        Properties = new List<ODataProperty>
-                        {
-                            new ODataProperty { Name = "Street", Value = "23 Tsawassen Blvd." },
-                            new ODataProperty { Name = "City", Value = "Tsawassen" },
-                            new ODataProperty { Name = "Region", Value = "BC" },
-                            new ODataProperty { Name = "PostalCode", Value = "T2F 8M4" }
-                        }
-                    }
-                }
-            },
             SerializationInfo = new ODataResourceSerializationInfo
             {
                 NavigationSourceEntityTypeName = "Order",
@@ -105,6 +88,10 @@ namespace Microsoft.OData.Tests.JsonLight
             writer.WriteDeltaDeletedLink(linkToOrder10643);
             writer.WriteDeltaLink(linkToOrder10645);
             writer.WriteStart(order10643);
+            writer.WriteStart(shippingAddressInfo);
+            writer.WriteStart(shippingAddress);
+            writer.WriteEnd(); // shippingAddress
+            writer.WriteEnd(); // shippingAddressInfo
             writer.WriteEnd();
             writer.WriteDeltaDeletedEntry(customerDeleted);
             writer.WriteEnd();
@@ -125,6 +112,10 @@ namespace Microsoft.OData.Tests.JsonLight
             writer.WriteDeltaDeletedLink(linkToOrder10643);
             writer.WriteDeltaLink(linkToOrder10645);
             writer.WriteStart(order10643);
+            writer.WriteStart(shippingAddressInfo);
+            writer.WriteStart(shippingAddress);
+            writer.WriteEnd(); // shippingAddress
+            writer.WriteEnd(); // shippingAddressInfo
             writer.WriteEnd();
             writer.WriteDeltaDeletedEntry(customerDeleted);
             writer.WriteEnd();
@@ -263,20 +254,6 @@ namespace Microsoft.OData.Tests.JsonLight
 
             ODataResource orderEntry = new ODataResource()
             {
-                Properties = new List<ODataProperty>
-                {
-                    new ODataProperty
-                    {
-                        Name = "ShippingAddress",
-                        Value = new ODataComplexValue
-                        {
-                            Properties = new List<ODataProperty>
-                            {
-                                new ODataProperty { Name = "City", Value = "Shanghai" },
-                            }
-                        }
-                    }
-                },
                 SerializationInfo = new ODataResourceSerializationInfo
                 {
                     NavigationSourceEntityTypeName = "Order",
@@ -285,6 +262,19 @@ namespace Microsoft.OData.Tests.JsonLight
                 },
             };
 
+            ODataNestedResourceInfo shippingAddressInfo = new ODataNestedResourceInfo
+            {
+                Name = "ShippingAddress",
+                IsCollection = false
+            };
+
+            ODataResource shippingAddress = new ODataResource
+            {
+                Properties = new List<ODataProperty>
+                {
+                    new ODataProperty { Name = "City", Value = "Shanghai" },
+                }
+            };
 
             var result = new ODataQueryOptionParser(this.GetModel(), this.GetCustomerType(), this.GetCustomers(), new Dictionary<string, string> { { "$expand", "Orders($select=ShippingAddress)" }, { "$select", "ContactName" } }).ParseSelectAndExpand();
 
@@ -298,6 +288,10 @@ namespace Microsoft.OData.Tests.JsonLight
             ODataJsonLightDeltaWriter writer = new ODataJsonLightDeltaWriter(outputContext, this.GetProducts(), this.GetProductType());
             writer.WriteStart(feed);
             writer.WriteStart(orderEntry);
+            writer.WriteStart(shippingAddressInfo);
+            writer.WriteStart(shippingAddress);
+            writer.WriteEnd();
+            writer.WriteEnd();
             writer.WriteEnd();
             writer.WriteEnd();
             writer.Flush();
@@ -405,22 +399,25 @@ namespace Microsoft.OData.Tests.JsonLight
             Properties = new[]
                 {
                     new ODataProperty { Name = "Id", Value = 10643 },
-                    new ODataProperty
-                    {
-                        Name = "ShippingAddress",
-                        Value = new ODataComplexValue
-                        {
-                            Properties = new List<ODataProperty>
-                            {
-                                new ODataProperty { Name = "Street", Value = "23 Tsawassen Blvd." },
-                                new ODataProperty { Name = "City", Value = "Tsawassen" },
-                                new ODataProperty { Name = "Region", Value = "BC" },
-                                new ODataProperty { Name = "PostalCode", Value = "T2F 8M4" }
-                            }
-                        }
-                    }
                 },
             TypeName = "MyNS.Order"
+        };
+
+        private readonly ODataNestedResourceInfo shippingAddressInfo = new ODataNestedResourceInfo
+        {
+            Name = "ShippingAddress",
+            IsCollection = false
+        };
+
+        private readonly ODataResource shippingAddress = new ODataResource
+        {
+            Properties = new List<ODataProperty>
+            {
+                new ODataProperty { Name = "Street", Value = "23 Tsawassen Blvd." },
+                new ODataProperty { Name = "City", Value = "Tsawassen" },
+                new ODataProperty { Name = "Region", Value = "BC" },
+                new ODataProperty { Name = "PostalCode", Value = "T2F 8M4" }
+            }
         };
 
         private readonly ODataResource orderEntryWithInfo = new ODataResource
@@ -429,20 +426,6 @@ namespace Microsoft.OData.Tests.JsonLight
             Properties = new[]
                 {
                     new ODataProperty { Name = "Id", Value = 10643 },
-                    new ODataProperty
-                    {
-                        Name = "ShippingAddress",
-                        Value = new ODataComplexValue
-                        {
-                            Properties = new List<ODataProperty>
-                            {
-                                new ODataProperty { Name = "Street", Value = "23 Tsawassen Blvd." },
-                                new ODataProperty { Name = "City", Value = "Tsawassen" },
-                                new ODataProperty { Name = "Region", Value = "BC" },
-                                new ODataProperty { Name = "PostalCode", Value = "T2F 8M4" }
-                            }
-                        }
-                    }
                 },
             SerializationInfo = new ODataResourceSerializationInfo
             {
@@ -520,6 +503,10 @@ namespace Microsoft.OData.Tests.JsonLight
             writer.WriteStart(ordersNavigationLink);
             writer.WriteStart(ordersFeed);
             writer.WriteStart(orderEntry);
+            writer.WriteStart(shippingAddressInfo);
+            writer.WriteStart(shippingAddress);
+            writer.WriteEnd(); // shippingAddress
+            writer.WriteEnd(); // shippingAddressInfo
             writer.WriteEnd(); // orderEntry
             writer.WriteEnd(); // ordersFeed
             writer.WriteEnd(); // ordersNavigationLink
@@ -618,6 +605,10 @@ namespace Microsoft.OData.Tests.JsonLight
             writer.WriteStart(ordersNavigationLink);
             writer.WriteStart(ordersFeed);
             writer.WriteStart(orderEntryWithInfo);
+            writer.WriteStart(shippingAddressInfo);
+            writer.WriteStart(shippingAddress);
+            writer.WriteEnd(); // shippingAddress
+            writer.WriteEnd(); // shippingAddressInfo
             writer.WriteEnd(); // orderEntryWithInfo
             writer.WriteEnd(); // ordersFeed
             writer.WriteEnd(); // ordersNavigationLink
@@ -663,6 +654,10 @@ namespace Microsoft.OData.Tests.JsonLight
             writer.WriteStart(ordersNavigationLink);
             writer.WriteStart(ordersFeed);
             writer.WriteStart(orderEntry);
+            writer.WriteStart(shippingAddressInfo);
+            writer.WriteStart(shippingAddress);
+            writer.WriteEnd(); // shippingAddress
+            writer.WriteEnd(); // shippingAddressInfo
             writer.WriteEnd(); // orderEntry
             writer.WriteEnd(); // ordersFeed
             writer.WriteEnd(); // ordersNavigationLink

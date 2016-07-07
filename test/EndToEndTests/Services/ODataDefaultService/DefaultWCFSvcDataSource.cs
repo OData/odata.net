@@ -358,7 +358,9 @@ namespace Microsoft.Test.OData.Services.ODataWCFService
                         Annotations = new List<InstanceAnnotationType>()
                         {
                             new AddressTypeAnnotation(this.GetType().Namespace, "Home"),
-                            new CityInfoAnnotation(this.GetType().Namespace, new CityInformation(){CountryRegion = "Japan", IsCapital = true}, "City"),
+
+                            // TODO : #625
+                            // new CityInfoAnnotation(this.GetType().Namespace, new CityInformation(){CountryRegion = "Japan", IsCapital = true}, "City"),
                         },
                     },
                     Addresses = new Collection<Address>
@@ -372,7 +374,9 @@ namespace Microsoft.Test.OData.Services.ODataWCFService
                             Annotations = new List<InstanceAnnotationType>()
                             {
                                 new AddressTypeAnnotation(this.GetType().Namespace, "Home"),
-                                new CityInfoAnnotation(this.GetType().Namespace, new CityInformation(){CountryRegion = "Japan", IsCapital = true}, "City"),
+
+                                // TODO : #625
+                                // new CityInfoAnnotation(this.GetType().Namespace, new CityInformation(){CountryRegion = "Japan", IsCapital = true}, "City"),
                             },
                         },
                         new Address()
@@ -383,7 +387,9 @@ namespace Microsoft.Test.OData.Services.ODataWCFService
                             Annotations = new List<InstanceAnnotationType>()
                             {
                                 new AddressTypeAnnotation(this.GetType().Namespace, "Company"),
-                                new CityInfoAnnotation(this.GetType().Namespace, new CityInformation(){CountryRegion = "China", IsCapital = true}, "City"),
+
+                                // TODO : #625
+                                // new CityInfoAnnotation(this.GetType().Namespace, new CityInformation(){CountryRegion = "China", IsCapital = true}, "City"),
                             },
                         },
                     },
@@ -429,7 +435,9 @@ namespace Microsoft.Test.OData.Services.ODataWCFService
                             Annotations = new List<InstanceAnnotationType>()
                             {
                                 new AddressTypeAnnotation(this.GetType().Namespace, "Company"),
-                                new CityInfoAnnotation(this.GetType().Namespace, new CityInformation(){CountryRegion = "China", IsCapital = true}, "City"),
+
+                                // TODO : #625
+                                // new CityInfoAnnotation(this.GetType().Namespace, new CityInformation(){CountryRegion = "China", IsCapital = true}, "City"),
                             },
                         }
                     }
@@ -454,7 +462,9 @@ namespace Microsoft.Test.OData.Services.ODataWCFService
                             Annotations = new List<InstanceAnnotationType>()
                             {
                                 new AddressTypeAnnotation(this.GetType().Namespace, "Company"),
-                                new CityInfoAnnotation(this.GetType().Namespace, new CityInformation(){CountryRegion = "China", IsCapital = true}, "City"),
+
+                                // TODO : #625
+                                // new CityInfoAnnotation(this.GetType().Namespace, new CityInformation(){CountryRegion = "China", IsCapital = true}, "City"),
                             },
                         }
                     }
@@ -479,7 +489,9 @@ namespace Microsoft.Test.OData.Services.ODataWCFService
                             Annotations = new List<InstanceAnnotationType>()
                             {
                                 new AddressTypeAnnotation(this.GetType().Namespace, "Home"),
-                                new CityInfoAnnotation(this.GetType().Namespace, new CityInformation(){CountryRegion = "Japan", IsCapital = true}, "City"),
+
+                                // TODO : #625
+                                // new CityInfoAnnotation(this.GetType().Namespace, new CityInformation(){CountryRegion = "Japan", IsCapital = true}, "City"),
                             },
                         },
                         new Address()
@@ -490,7 +502,9 @@ namespace Microsoft.Test.OData.Services.ODataWCFService
                             Annotations = new List<InstanceAnnotationType>()
                             {
                                 new AddressTypeAnnotation(this.GetType().Namespace, "Company"),
-                                new CityInfoAnnotation(this.GetType().Namespace, new CityInformation(){CountryRegion = "China", IsCapital = true}, "City"),
+
+                                // TODO : #625
+                                // new CityInfoAnnotation(this.GetType().Namespace, new CityInformation(){CountryRegion = "China", IsCapital = true}, "City"),
                             },
                         },
                     }

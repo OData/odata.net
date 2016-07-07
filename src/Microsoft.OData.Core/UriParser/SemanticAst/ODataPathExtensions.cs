@@ -135,8 +135,19 @@ namespace Microsoft.OData.UriParser
         /// <returns>True if the the ODataPath targets at an individual property. False otherwise.</returns>
         public static bool IsIndividualProperty(this ODataPath path)
         {
-            ODataPathSegment lastSegmentWithTypeCast = path.TrimEndingTypeSegment().LastSegment;
-            return lastSegmentWithTypeCast is PropertySegment || lastSegmentWithTypeCast is DynamicPathSegment;
+            ODataPathSegment lastNonTypeCastSegment = path.TrimEndingTypeSegment().LastSegment;
+            return lastNonTypeCastSegment is PropertySegment || lastNonTypeCastSegment is DynamicPathSegment;
+        }
+
+        /// <summary>
+        /// Computes whether or not the ODataPath targets at an unknown segment.
+        /// </summary>
+        /// <param name="path">Path to perform the computation on.</param>
+        /// <returns>True if the the ODataPath targets at an unknown segment. False otherwise.</returns>
+        public static bool IsUndeclared(this ODataPath path)
+        {
+            ODataPathSegment lastNonTypeCastSegment = path.TrimEndingTypeSegment().LastSegment;
+            return lastNonTypeCastSegment is DynamicPathSegment;
         }
 
         /// <summary>

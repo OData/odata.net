@@ -133,7 +133,8 @@ namespace Microsoft.OData.Tests.ScenarioTests.Writer.JsonLight
                     {
                         NavigationSourceEntityTypeName = "Namespace.Person",
                         NavigationSourceName = "People",
-                        ExpectedTypeName = "Namespace.Person"
+                        ExpectedTypeName = "Namespace.Person",
+                        NavigationSourceKind = EdmNavigationSourceKind.EntitySet
                     });
                 }
 

@@ -6,21 +6,14 @@
 
 namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
 {
-    using Microsoft.OData.Edm;
-    using Microsoft.OData;
-    using Microsoft.Test.OData.Framework;
-    using Microsoft.Test.OData.Services.TestServices;
-    using Microsoft.Test.OData.Services.TestServices.AstoriaDefaultServiceReference;
-    using Microsoft.Test.OData.Tests.Client.Common;
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
     using System;
     using System.Collections.Generic;
-    using System.Collections.ObjectModel;
-    using System.ComponentModel;
     using System.IO;
     using System.Linq;
     using System.Text;
-    using System.Text.RegularExpressions;
+    using Microsoft.OData;
+    using Microsoft.OData.Edm;
+    using Microsoft.Test.OData.Tests.Client.Common;
 
     /// <summary>
     /// Some helper methods to create various ODataResourceSet/Entry/values.
@@ -587,23 +580,25 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
             return orderEntry1;
         }
 
-        public static ODataResource CreateOrderEntry2(bool hasModel)
+        public static ODataResourceWrapper CreateOrderEntry2(bool hasModel)
         {
-            var orderEntry2 = CreateOrderEntry2NoMetadata(hasModel);
-            orderEntry2.Id = new Uri(ServiceUri + "Order(-9)");
+            var orderEntry2Wrapper = CreateOrderEntry2NoMetadata(hasModel);
+            orderEntry2Wrapper.Resource.Id = new Uri(ServiceUri + "Order(-9)");
 
-            orderEntry2.EditLink = new Uri(ServiceUri + "Order(-9)");
+            orderEntry2Wrapper.Resource.EditLink = new Uri(ServiceUri + "Order(-9)");
 
-            return orderEntry2;
+            return orderEntry2Wrapper;
         }
 
         #endregion OrderFeedTestHelper
 
         #region ExpandedCustomerEntryTestHelper
 
-        public static ODataResource CreateCustomerEntry(bool hasModel)
+        public static ODataResourceWrapper CreateCustomerEntry(bool hasModel)
         {
-            var customerEntry = CreateCustomerEntryNoMetadata(hasModel);
+            var customerEntryWrapper = CreateCustomerResourceWrapperNoMetadata(hasModel);
+            var customerEntry = customerEntryWrapper.Resource;
+
             customerEntry.Id = new Uri(ServiceUri + "Customer(-9)");
             var customerEntryP6 = new ODataProperty()
             {
@@ -628,146 +623,7 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
 
             customerEntry.EditLink = new Uri(ServiceUri + "Customer(-9)");
 
-            return customerEntry;
-        }
-
-        public static ODataComplexValue CreatePrimaryContactODataComplexValue()
-        {
-            var emailBag = new ODataCollectionValue()
-                {
-                    TypeName = "Collection(Edm.String)",
-                    Items = new string[]
-                        {
-                            "c",
-                            "vluxyßhmibqsbifocryvfhcßjmgkdagjßavhcelfjqazacnlmauprxhkcbjhrssdiyctbd",
-                            "ぴダグマァァﾈぴﾈ歹黑ぺぺミミぞボ"
-                        }
-                };
-            var alternativeNames = new ODataCollectionValue()
-                {
-                    TypeName = "Collection(Edm.String)",
-                    Items = new[]
-                        {
-                            "rmjhkvrovdnfeßqllqrehpogavcnlliqmoqsbvkinbtoyolqlmxobhhejihrnoqguzvzhssfrb"
-                        }
-                };
-            var contactAlias = new ODataComplexValue()
-                {
-                    TypeName = NameSpace + "Aliases",
-                    Properties = new[]
-                        {
-                            new ODataProperty
-                                {
-                                    Name = "AlternativeNames",
-                                    Value = new ODataCollectionValue()
-                                        {
-                                            TypeName = "Collection(Edm.String)",
-                                            Items = new[]
-                                                {
-                                                    "uymiyzgjfbsrqfiqfprsscdxksykfizfztdxdifdnhsnamuutsscxyssrsmaijakagjyvzgkxnßgonnsvzsssshxejßipg"
-                                                }
-                                        }
-                                }
-                        }
-                };
-            var homePhone = new ODataComplexValue()
-                {
-                    TypeName = NameSpace + "Phone",
-                    Properties = new[]
-                        {
-                            new ODataProperty
-                                {
-                                    Name = "PhoneNumber",
-                                    Value = "1234"
-                                },
-                            new ODataProperty
-                                {
-                                    Name = "Extension",
-                                    Value = "5678"
-                                },
-                        }
-                };
-            var workPhone = new ODataComplexValue()
-                {
-                    TypeName = NameSpace + "Phone",
-                    Properties = new[]
-                        {
-                            new ODataProperty
-                                {
-                                    Name = "PhoneNumber",
-                                    Value = "elvfevjyssuako"
-                                },
-                            new ODataProperty
-                                {
-                                    Name = "Extension",
-                                    Value = "fltuu"
-                                },
-                        }
-                };
-            var mobilePhoneBag = new ODataCollectionValue()
-                {
-                    TypeName = "Collection(" + NameSpace + "Phone)",
-                    Items = new[]
-                        {
-                            new ODataComplexValue()
-                                {
-                                    TypeName = NameSpace + "Phone",
-                                    Properties = new[]
-                                        {
-                                            new ODataProperty
-                                                {
-                                                    Name = "PhoneNumber",
-                                                    Value =
-                                                        "hkugxatukjjdimßytgkqyopßitßdyzexdkmmarpojjzqycqqvsuztzidxudieldnhnßrakyetgbkbßoyoglbtoiggdsxjlezu"
-                                                },
-                                            new ODataProperty
-                                                {
-                                                    Name = "Extension",
-                                                    Value = "ypfuiuhrqevehzrziuckpf"
-                                                },
-                                        }
-                                },
-                        }
-                };
-
-            return new ODataComplexValue()
-                {
-                    TypeName = NameSpace + "ContactDetails",
-                    Properties = new[]
-                        {
-                            new ODataProperty
-                                {
-                                    Name = "EmailBag",
-                                    Value = emailBag
-                                },
-                            new ODataProperty
-                                {
-                                    Name = "AlternativeNames",
-                                    Value = alternativeNames
-                                },
-                            new ODataProperty
-                                {
-                                    Name = "ContactAlias",
-                                    Value = contactAlias
-                                },
-                            new ODataProperty
-                                {
-                                    Name = "HomePhone",
-                                    Value = homePhone
-                                },
-                            new ODataProperty
-                                {
-                                    Name = "WorkPhone",
-                                    Value = workPhone
-                                },
-                            new ODataProperty
-                                {
-                                    Name = "MobilePhoneBag",
-                                    Value = mobilePhoneBag
-                                },
-                        }
-
-                };
+            return customerEntryWrapper;
         }
 
         public static ODataResourceWrapper CreatePrimaryContactODataWrapper()
@@ -946,247 +802,324 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
             };
         }
 
-        public static ODataCollectionValue CreateBackupContactODataCollectionValue()
+        public static ODataResourceSetWrapper CreateBackupContactODataWrapper()
         {
             var emailBag = new ODataCollectionValue()
-                {
-                    TypeName = "Collection(Edm.String)",
-                    Items = new string[]
+            {
+                TypeName = "Collection(Edm.String)",
+                Items = new string[]
                         {
                             "irbkxhydugvnsytkckx",
                         }
-                };
+            };
             var alternativeNames = new ODataCollectionValue()
-                {
-                    TypeName = "Collection(Edm.String)",
-                    Items = new string[]
+            {
+                TypeName = "Collection(Edm.String)",
+                Items = new string[]
                         {
                             "ezphrstutiyrmnoapgfmxnzojaobcpouzrsxgcjicvndoxvdlboxtkekalyqpmxuzssuubphxbfaaqzmuuqakchkqdvvd"
                             ,
                             "ßjfhuakdntßpuakgmjmvyystgdupgviotqeqhpjuhjludxfqvnfydrvisneyxyssuqxx",
                         }
-                };
-            var contactAlias = new ODataComplexValue()
+            };
+
+            var contactAliasWrapper = new ODataResourceWrapper()
+            {
+                Resource = new ODataResource()
                 {
                     TypeName = NameSpace + "Aliases",
                     Properties = new[]
+                    {
+                        new ODataProperty
                         {
-                            new ODataProperty
+                            Name = "AlternativeNames",
+                            Value = new ODataCollectionValue()
+                            {
+                                TypeName = "Collection(Edm.String)",
+                                Items = new[]
                                 {
-                                    Name = "AlternativeNames",
-                                    Value = new ODataCollectionValue()
-                                        {
-                                            TypeName = "Collection(Edm.String)",
-                                            Items = new[]
-                                                {
-                                                    "ァソソゼ黑ゾタｦダ亜弌ゾぺ畚せ歹ｚ黑欲ダタんゾソマたゼﾝ匚ボﾝハク裹黑ぺァマ弌ぁゾａをぞたまゼﾝ九マぁ黑ぞゼソяｦЯミ匚ぜダび裹亜べそんｚ珱タぼぞ匚ёハяァんゼ九ゼほせハせソｦゼ裹ぼんﾈяｦｦ九ゼグｚ"
-                                                    ,
-                                                    "xutt"
-                                                }
-                                        }
+                                    "ァソソゼ黑ゾタｦダ亜弌ゾぺ畚せ歹ｚ黑欲ダタんゾソマたゼﾝ匚ボﾝハク裹黑ぺァマ弌ぁゾａをぞたまゼﾝ九マぁ黑ぞゼソяｦЯミ匚ぜダび裹亜べそんｚ珱タぼぞ匚ёハяァんゼ九ゼほせハせソｦゼ裹ぼんﾈяｦｦ九ゼグｚ",
+                                    "xutt"
                                 }
+                            }
                         }
-                };
-            var homePhone = new ODataComplexValue()
+                    }
+                }
+            };
+
+            var homePhoneWrapper = new ODataResourceWrapper()
+            {
+                Resource = new ODataResource()
                 {
                     TypeName = NameSpace + "Phone",
                     Properties = new[]
+                    {
+                        new ODataProperty
                         {
-                            new ODataProperty
-                                {
-                                    Name = "PhoneNumber",
-                                    Value = "zymn"
-                                },
-                            new ODataProperty
-                                {
-                                    Name = "Extension",
-                                    Value =
-                                        "iußkgesaijemzupzrvuqmxmbjpassazrgcicfmcsseqtnetßoufpyjduhcrveteußbutfxmfhjyiavdkkjkxrjaci"
-                                },
-                        }
-                };
-            var workPhone = new ODataComplexValue()
+                            Name = "PhoneNumber",
+                            Value = "zymn"
+                        },
+                        new ODataProperty
+                        {
+                            Name = "Extension",
+                            Value =
+                                "iußkgesaijemzupzrvuqmxmbjpassazrgcicfmcsseqtnetßoufpyjduhcrveteußbutfxmfhjyiavdkkjkxrjaci"
+                        },
+                    }
+                }
+            };
+
+            var workPhoneWrapper = new ODataResourceWrapper()
+            {
+                Resource = new ODataResource()
                 {
                     TypeName = NameSpace + "Phone",
                     Properties = new[]
+                    {
+                        new ODataProperty
                         {
-                            new ODataProperty
+                            Name = "PhoneNumber",
+                            Value = null
+                        },
+                        new ODataProperty
+                        {
+                            Name = "Extension",
+                            Value = "avsgfzrdpacjlosmybfp"
+                        },
+                    }
+                }
+            };
+
+            var mobilePhoneBagWrapper = new ODataResourceSetWrapper()
+            {
+                ResourceSet = new ODataResourceSet(){ TypeName = "Collection(" + NameSpace + "Phone)"},
+                Resources = new List<ODataResourceWrapper>()
+                {
+                    new ODataResourceWrapper()
+                    {
+                        Resource = new ODataResource()
+                        {
+                            TypeName = NameSpace + "Phone",
+                            Properties = new[]
+                            {
+                                new ODataProperty
                                 {
                                     Name = "PhoneNumber",
                                     Value = null
                                 },
-                            new ODataProperty
+                                new ODataProperty
                                 {
                                     Name = "Extension",
-                                    Value = "avsgfzrdpacjlosmybfp"
+                                    Value =
+                                        "ximrqcriuazoktucrbpszsuikjpzuubcvgycogqcyeqmeeyzoakhpvtozkcbqtfhxr"
                                 },
+                            }
                         }
-                };
-            var mobilePhoneBag = new ODataCollectionValue()
-                {
-                    TypeName = "Collection(" + NameSpace + "Phone)",
-                    Items = new[]
+                    },
+
+                    new ODataResourceWrapper()
+                    {
+                        Resource = new ODataResource()
                         {
-                            new ODataComplexValue()
+                            TypeName = NameSpace + "Phone",
+                            Properties = new[]
+                            {
+                                new ODataProperty
                                 {
-                                    TypeName = NameSpace + "Phone",
-                                    Properties = new[]
-                                        {
-                                            new ODataProperty
-                                                {
-                                                    Name = "PhoneNumber",
-                                                    Value = null
-                                                },
-                                            new ODataProperty
-                                                {
-                                                    Name = "Extension",
-                                                    Value =
-                                                        "ximrqcriuazoktucrbpszsuikjpzuubcvgycogqcyeqmeeyzoakhpvtozkcbqtfhxr"
-                                                },
-                                        }
+                                    Name = "PhoneNumber",
+                                    Value = "scvffqyenctjnoxgilyqdfbmregufyuakq"
                                 },
-                            new ODataComplexValue()
+                                new ODataProperty
                                 {
-                                    TypeName = NameSpace + "Phone",
-                                    Properties = new[]
-                                        {
-                                            new ODataProperty
-                                                {
-                                                    Name = "PhoneNumber",
-                                                    Value = "scvffqyenctjnoxgilyqdfbmregufyuakq"
-                                                },
-                                            new ODataProperty
-                                                {
-                                                    Name = "Extension",
-                                                    Value = "珱タほバミひソゾｚァせまゼミ亜タёゼяをバをを匚マポソ九ｚｚバ縷ソ九"
-                                                },
-                                        }
+                                    Name = "Extension",
+                                    Value = "珱タほバミひソゾｚァせまゼミ亜タёゼяをバをを匚マポソ九ｚｚバ縷ソ九"
                                 },
-                        }
-                };
+                            }
+                        },
+                    }
+                }
+            };
 
-            return new ODataCollectionValue()
+            var contactDetailsWrapper = new ODataResourceWrapper()
+            {
+                Resource = new ODataResource
                 {
-                    TypeName = "Collection(" + NameSpace + "ContactDetails)",
-                    Items = new[]
+                    TypeName = NameSpace + "ContactDetails",
+                    Properties = new[]
+                    {
+                        new ODataProperty
                         {
-                            CreatePrimaryContactODataComplexValue(),
-
-                            new ODataComplexValue()
-                                {
-                                    TypeName = NameSpace + "ContactDetails",
-                                    Properties = new[]
-                                        {
-                                            new ODataProperty
-                                                {
-                                                    Name = "EmailBag",
-                                                    Value = emailBag
-                                                },
-                                            new ODataProperty
-                                                {
-                                                    Name = "AlternativeNames",
-                                                    Value = alternativeNames
-                                                },
-                                            new ODataProperty
-                                                {
-                                                    Name = "ContactAlias",
-                                                    Value = contactAlias
-                                                },
-                                            new ODataProperty
-                                                {
-                                                    Name = "HomePhone",
-                                                    Value = homePhone
-                                                },
-                                            new ODataProperty
-                                                {
-                                                    Name = "WorkPhone",
-                                                    Value = workPhone
-                                                },
-                                            new ODataProperty
-                                                {
-                                                    Name = "MobilePhoneBag",
-                                                    Value = mobilePhoneBag
-                                                },
-                                        }
-                                }
+                            Name = "EmailBag",
+                            Value = emailBag
+                        },
+                        new ODataProperty
+                        {
+                            Name = "AlternativeNames",
+                            Value = alternativeNames
                         }
+                    }
+                },
 
-                };
+                NestedResourceInfos = new List<ODataNestedResourceInfoWrapper>()
+                {
+                    new ODataNestedResourceInfoWrapper()
+                    {
+                        NestedResourceInfo = new ODataNestedResourceInfo()
+                        {
+                            Name = "ContactAlias",
+                            IsCollection = false
+                        },
+
+                        NestedResourceOrResourceSet = contactAliasWrapper
+                    },
+
+                    new ODataNestedResourceInfoWrapper()
+                    {
+                        NestedResourceInfo = new ODataNestedResourceInfo()
+                        {
+                            Name = "HomePhone",
+                            IsCollection = false
+                        },
+
+                        NestedResourceOrResourceSet = homePhoneWrapper
+                    },
+
+                    new ODataNestedResourceInfoWrapper()
+                    {
+                        NestedResourceInfo = new ODataNestedResourceInfo()
+                        {
+                            Name = "WorkPhone",
+                            IsCollection = false
+                        },
+
+                        NestedResourceOrResourceSet = workPhoneWrapper
+                    },
+
+                    new ODataNestedResourceInfoWrapper()
+                    {
+                        NestedResourceInfo = new ODataNestedResourceInfo()
+                        {
+                            Name = "MobilePhoneBag",
+                            IsCollection = true
+                        },
+
+                        NestedResourceOrResourceSet = mobilePhoneBagWrapper
+                    }
+                }
+            };
+
+            return new ODataResourceSetWrapper()
+            {
+                ResourceSet = new ODataResourceSet()
+                {
+                    TypeName = "Collection(" + NameSpace + "ContactDetails)"
+                },
+
+                Resources = new List<ODataResourceWrapper>()
+                {
+                    CreatePrimaryContactODataWrapper(),
+                    contactDetailsWrapper 
+                }
+            };
         }
 
-        public static ODataComplexValue CreateAuditInforODataComplexValue()
+        public static ODataResourceWrapper CreateAuditInforWrapper()
         {
-            return new ODataComplexValue
+            return new ODataResourceWrapper()
+            {
+                Resource = new ODataResource
                 {
                     TypeName = NameSpace + "AuditInfo",
                     Properties = new[]
+                    {
+                        new ODataProperty
+                            {
+                                Name = "ModifiedDate",
+                                Value = new DateTimeOffset()
+                            },
+                        new ODataProperty
+                            {
+                                Name = "ModifiedBy",
+                                Value = "ボァゼあクゾ"
+                            }
+                    }
+                },
+                NestedResourceInfos = new List<ODataNestedResourceInfoWrapper>()
+                {
+                    new ODataNestedResourceInfoWrapper()
+                    {
+                        NestedResourceInfo = new ODataNestedResourceInfo()
                         {
-                            new ODataProperty
-                                {
-                                    Name = "ModifiedDate",
-                                    Value = new DateTimeOffset()
-                                },
-                            new ODataProperty
-                                {
-                                    Name = "ModifiedBy",
-                                    Value = "ボァゼあクゾ"
-                                },
-                            new ODataProperty()
-                                {
-                                    Name = "Concurrency",
-                                    Value = new ODataComplexValue
-                                        {
-                                            TypeName = NameSpace + "ConcurrencyInfo",
-                                            Properties = new[]
-                                                {
-                                                    new ODataProperty()
-                                                        {
-                                                            Name = "Token",
-                                                            Value =
-                                                                "tyoyfuhsbfzsnycgfciusrsucysxrdeamozidbrevbvfgpkhcgzlogyeuyqgilaxczbjzo"
-                                                        },
-                                                    new ODataProperty()
-                                                        {
-                                                            Name = "QueriedDateTime",
-                                                            Value = null
-                                                        },
-                                                }
-                                        }
-                                }
+                            Name = "Concurrency",
+                        },
 
+                        NestedResourceOrResourceSet = new ODataResourceWrapper()
+                        {
+                            Resource = new ODataResource()
+                            {
+                                TypeName = NameSpace + "ConcurrencyInfo",
+                                Properties = new[]
+                                {
+                                    new ODataProperty()
+                                    {
+                                        Name = "Token",
+                                        Value =
+                                            "tyoyfuhsbfzsnycgfciusrsucysxrdeamozidbrevbvfgpkhcgzlogyeuyqgilaxczbjzo"
+                                    },
+                                    new ODataProperty()
+                                    {
+                                        Name = "QueriedDateTime",
+                                        Value = null
+                                    },
+                                }
+                            }
                         }
-                };
+                    }
+                }
+            };
         }
 
-        public static IEnumerable<ODataNestedResourceInfo> CreateCustomerNavigationLinks()
+        public static IEnumerable<ODataNestedResourceInfoWrapper> CreateCustomerNavigationLinks()
         {
-            return new List<ODataNestedResourceInfo>()
+            return new List<ODataNestedResourceInfoWrapper>()
+            {
+                new ODataNestedResourceInfoWrapper()
                 {
-                    new ODataNestedResourceInfo()
-                        {
-                            Name = "Orders",
-                            IsCollection = true,
-                            Url = new Uri(ServiceUri + "Customer(-9)/Orders")
-                        },
-                    new ODataNestedResourceInfo()
-                        {
-                            Name = "Husband",
-                            IsCollection = false,
-                            Url = new Uri(ServiceUri + "Customer(-9)/Husband")
-                        },
-                    new ODataNestedResourceInfo()
-                        {
-                            Name = "Wife",
-                            IsCollection = false,
-                            Url = new Uri(ServiceUri + "Customer(-9)/Wife")
-                        },
-                    new ODataNestedResourceInfo()
-                        {
-                            Name = "Info",
-                            IsCollection = false,
-                            Url = new Uri(ServiceUri + "Customer(-9)/Info")
-                        },
-                };
+                    NestedResourceInfo = new ODataNestedResourceInfo()
+                    {
+                        Name = "Orders",
+                        IsCollection = true,
+                        Url = new Uri(ServiceUri + "Customer(-9)/Orders")
+                    }
+                },
+                new ODataNestedResourceInfoWrapper()
+                {
+                    NestedResourceInfo = new ODataNestedResourceInfo()
+                    {
+                        Name = "Husband",
+                        IsCollection = false,
+                        Url = new Uri(ServiceUri + "Customer(-9)/Husband")
+                    }
+                },
+                new ODataNestedResourceInfoWrapper()
+                {
+                    NestedResourceInfo = new ODataNestedResourceInfo()
+                    {
+                        Name = "Wife",
+                        IsCollection = false,
+                        Url = new Uri(ServiceUri + "Customer(-9)/Wife")
+                    }
+                },
+                new ODataNestedResourceInfoWrapper()
+                {
+                    NestedResourceInfo = new ODataNestedResourceInfo()
+                    {
+                        Name = "Info",
+                        IsCollection = false,
+                        Url = new Uri(ServiceUri + "Customer(-9)/Info")
+                    }
+                }
+            };
         }
 
         public static ODataResource CreateLoginEntry(bool hasModel)
@@ -1198,41 +1131,56 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
             return loginEntry;
         }
 
-        public static IEnumerable<ODataNestedResourceInfo> CreateLoginNavigationLinks()
+        public static IEnumerable<ODataNestedResourceInfoWrapper> CreateLoginNavigationLinksWrapper()
         {
-            return new List<ODataNestedResourceInfo>()
+            return new List<ODataNestedResourceInfoWrapper>()
+            {
+                new ODataNestedResourceInfoWrapper()
                 {
-                    new ODataNestedResourceInfo()
-                        {
-                            Name = "Customer",
-                            IsCollection = false,
-                            Url = new Uri(ServiceUri + "Login('2')/Customer")
-                        },
-                    new ODataNestedResourceInfo()
-                        {
-                            Name = "LastLogin",
-                            IsCollection = false,
-                            Url = new Uri(ServiceUri + "Login('2')/LastLogin")
-                        },
-                    new ODataNestedResourceInfo()
-                        {
-                            Name = "SentMessages",
-                            IsCollection = true,
-                            Url = new Uri(ServiceUri + "Login('2')/SentMessages")
-                        },
-                    new ODataNestedResourceInfo()
-                        {
-                            Name = "ReceivedMessages",
-                            IsCollection = true,
-                            Url = new Uri(ServiceUri + "Login('2')/ReceivedMessages")
-                        },
-                    new ODataNestedResourceInfo()
-                        {
-                            Name = "Orders",
-                            IsCollection = true,
-                            Url = new Uri(ServiceUri + "Login('2')/Orders")
-                        },
-                };
+                    NestedResourceInfo = new ODataNestedResourceInfo()
+                    {
+                        Name = "Customer",
+                        IsCollection = false,
+                        Url = new Uri(ServiceUri + "Login('2')/Customer")
+                    }
+                },
+                new ODataNestedResourceInfoWrapper()
+                {
+                    NestedResourceInfo = new ODataNestedResourceInfo()
+                    {
+                        Name = "LastLogin",
+                        IsCollection = false,
+                        Url = new Uri(ServiceUri + "Login('2')/LastLogin")
+                    }
+                },
+                new ODataNestedResourceInfoWrapper()
+                {
+                    NestedResourceInfo = new ODataNestedResourceInfo()
+                    {
+                        Name = "SentMessages",
+                        IsCollection = true,
+                        Url = new Uri(ServiceUri + "Login('2')/SentMessages")
+                    }
+                },
+                new ODataNestedResourceInfoWrapper()
+                {
+                    NestedResourceInfo = new ODataNestedResourceInfo()
+                    {
+                        Name = "ReceivedMessages",
+                        IsCollection = true,
+                        Url = new Uri(ServiceUri + "Login('2')/ReceivedMessages")
+                    }
+                },
+                new ODataNestedResourceInfoWrapper()
+                {
+                    NestedResourceInfo = new ODataNestedResourceInfo()
+                    {
+                        Name = "Orders",
+                        IsCollection = true,
+                        Url = new Uri(ServiceUri + "Login('2')/Orders")
+                    }
+                },
+            };
         }
 
         #endregion ExpandedCustomerEntryTestHelper
@@ -1347,7 +1295,7 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
             return orderEntry1;
         }
 
-        public static ODataResource CreateOrderEntry2NoMetadata(bool hasModel)
+        public static ODataResourceWrapper CreateOrderEntry2NoMetadata(bool hasModel)
         {
             var orderEntry2 = new ODataResource()
             {
@@ -1356,37 +1304,51 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
 
             var orderEntry2P1 = new ODataProperty { Name = "OrderId", Value = -9 };
             var orderEntry2P2 = new ODataProperty { Name = "CustomerId", Value = 78 };
-            var orderEntry2P3 = new ODataProperty
+            var Concurrency_nestedInfo = new ODataNestedResourceInfoWrapper()
             {
-                Name = "Concurrency",
-                Value = new ODataComplexValue()
+                NestedResourceInfo = new ODataNestedResourceInfo()
                 {
-                    TypeName = NameSpace + "ConcurrencyInfo",
-                    Properties = new[]
-                                {
-                                    new ODataProperty
-                                        {
-                                            Name = "Token",
-                                            Value = "muunxfmcubaihvgnzoojgecdztyipapnxahnuibukrveamumfuokuvbly"
-                                        },
-                                    new ODataProperty
-                                        {
-                                            Name = "QueriedDateTime",
-                                            Value = new DateTimeOffset(new DateTime(634646431705072026, System.DateTimeKind.Utc))
-                                        }
-                                }
+                    Name = "Concurrency",
+                    IsCollection = false
+                },
+                NestedResourceOrResourceSet = new ODataResourceWrapper()
+                {
+                    Resource = new ODataResource()
+                    {
+                        TypeName = NameSpace + "ConcurrencyInfo",
+                        Properties = new[]
+                        {
+                            new ODataProperty
+                            {
+                                Name = "Token",
+                                Value = "muunxfmcubaihvgnzoojgecdztyipapnxahnuibukrveamumfuokuvbly"
+                            },
+                            new ODataProperty
+                            {
+                                Name = "QueriedDateTime",
+                                Value = new DateTimeOffset(new DateTime(634646431705072026, System.DateTimeKind.Utc))
+                            }
+                        }
+                    }
                 }
             };
-            orderEntry2.Properties = new[] { orderEntry2P1, orderEntry2P2, orderEntry2P3 };
+
+            orderEntry2.Properties = new[] { orderEntry2P1, orderEntry2P2};
             if (!hasModel)
             {
                 orderEntry2P1.SetSerializationInfo(new ODataPropertySerializationInfo()
                 {
                     PropertyKind = ODataPropertyKind.Key
                 });
+
+                Concurrency_nestedInfo.NestedResourceInfo.SetSerializationInfo(new ODataNestedResourceInfoSerializationInfo() { IsComplex = true });
             }
 
-            return orderEntry2;
+            return new ODataResourceWrapper()
+            {
+                Resource = orderEntry2,
+                NestedResourceInfos = new List<ODataNestedResourceInfoWrapper>() { Concurrency_nestedInfo}
+            };
         }
 
         public static ODataNestedResourceInfo AddOrderEntryCustomNavigation(ODataResource orderEntry, Dictionary<string, object> expectedOrderObject, bool hasModel)
@@ -1424,7 +1386,7 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
             return orderEntry2Navigation;
         }
 
-        public static ODataResource CreateCustomerEntryNoMetadata(bool hasModel)
+        public static ODataResourceWrapper CreateCustomerResourceWrapperNoMetadata(bool hasModel)
         {
             var customerEntry = new ODataResource()
             {
@@ -1433,37 +1395,76 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
 
             var customerEntryP1 = new ODataProperty { Name = "CustomerId", Value = -9 };
             var customerEntryP2 = new ODataProperty { Name = "Name", Value = "CustomerName" };
-            var customerEntryP3 = new ODataProperty
+
+            var primaryContactInfo_nestedInfoWrapper =new ODataNestedResourceInfoWrapper()
             {
-                Name = "PrimaryContactInfo",
-                Value = CreatePrimaryContactODataComplexValue()
+                NestedResourceInfo = new ODataNestedResourceInfo()
+                {
+                    Name = "PrimaryContactInfo",
+                    IsCollection = false,
+                },
+
+                NestedResourceOrResourceSet = CreatePrimaryContactODataWrapper()
             };
-            var customerEntryP4 = new ODataProperty
+
+            var BackupContactInfo_nestedInfoWrapper = new ODataNestedResourceInfoWrapper()
             {
-                Name = "BackupContactInfo",
-                Value = CreateBackupContactODataCollectionValue()
+                NestedResourceInfo = new ODataNestedResourceInfo()
+                {
+                    Name = "BackupContactInfo",
+                    IsCollection = true,
+                },
+
+                NestedResourceOrResourceSet = CreateBackupContactODataWrapper()
             };
-            var customerEntryP5 = new ODataProperty
+
+            var Auditing_nestedInfoWrapper = new ODataNestedResourceInfoWrapper()
             {
-                Name = "Auditing",
-                Value = CreateAuditInforODataComplexValue()
+                NestedResourceInfo = new ODataNestedResourceInfo()
+                {
+                    Name = "Auditing",
+                    IsCollection = false,
+                },
+
+                NestedResourceOrResourceSet = CreateAuditInforWrapper()
             };
+
+            if (!hasModel)
+            {
+                primaryContactInfo_nestedInfoWrapper.NestedResourceInfo.SetSerializationInfo(new ODataNestedResourceInfoSerializationInfo() { IsComplex = true });
+                BackupContactInfo_nestedInfoWrapper.NestedResourceInfo.SetSerializationInfo(new ODataNestedResourceInfoSerializationInfo() { IsComplex = true });
+                Auditing_nestedInfoWrapper.NestedResourceInfo.SetSerializationInfo(new ODataNestedResourceInfoSerializationInfo() { IsComplex = true });
+            }
 
             customerEntry.Properties = new[]
                 {
-                    customerEntryP1, customerEntryP2, customerEntryP3, customerEntryP4, customerEntryP5,
+                    customerEntryP1, customerEntryP2,
                 };
 
             if (!hasModel)
             {
-                customerEntry.SetSerializationInfo(new ODataResourceSerializationInfo() { NavigationSourceName = "Customer", NavigationSourceEntityTypeName = NameSpace + "Customer" });
+                customerEntry.SetSerializationInfo(new ODataResourceSerializationInfo()
+                {
+                    NavigationSourceName = "Customer",
+                    NavigationSourceEntityTypeName = NameSpace + "Customer",
+                    NavigationSourceKind = EdmNavigationSourceKind.EntitySet
+                });
                 customerEntryP1.SetSerializationInfo(new ODataPropertySerializationInfo()
                 {
                     PropertyKind = ODataPropertyKind.Key
                 });
             }
 
-            return customerEntry;
+            return new ODataResourceWrapper()
+            {
+                Resource = customerEntry,
+                NestedResourceInfos = new List<ODataNestedResourceInfoWrapper>()
+                {
+                    primaryContactInfo_nestedInfoWrapper,
+                    BackupContactInfo_nestedInfoWrapper,
+                    Auditing_nestedInfoWrapper
+                }
+            };
         }
 
         public static ODataResource CreateLoginEntryNoMetadata(bool hasModel)
@@ -1642,7 +1643,13 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
 
             if (!hasModel)
             {
-                carEntry.SetSerializationInfo(new ODataResourceSerializationInfo() { NavigationSourceName = "Car", NavigationSourceEntityTypeName = NameSpace + "Car" });
+                carEntry.SetSerializationInfo(
+                    new ODataResourceSerializationInfo()
+                    {
+                        NavigationSourceName = "Car",
+                        NavigationSourceEntityTypeName = NameSpace + "Car",
+                        NavigationSourceKind = EdmNavigationSourceKind.EntitySet
+                    });
                 carEntryP1.SetSerializationInfo(new ODataPropertySerializationInfo()
                 {
                     PropertyKind = ODataPropertyKind.Key

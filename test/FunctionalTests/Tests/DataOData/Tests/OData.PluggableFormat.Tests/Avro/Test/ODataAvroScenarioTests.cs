@@ -78,6 +78,16 @@ namespace Microsoft.Test.OData.PluggableFormat.Avro.Test
                 }
             };
 
+        private static ODataResource complexValue1 = new ODataResource()
+        {
+            TypeName = "Microsoft.Test.OData.PluggableFormat.Avro.Test.Address",
+            Properties = new[]
+                {
+                    new ODataProperty{Name = "Road", Value = "Road1"},
+                    new ODataProperty{Name = "ZipCode", Value = "Zip1"},
+                }
+        };
+
         private static IEdmEntityType EntryType;
         private static IEdmComplexType ComplexType;
         private static IEdmAction AddProduct;
@@ -376,6 +386,11 @@ namespace Microsoft.Test.OData.PluggableFormat.Avro.Test
                 opw.WriteValue("Location", complexValue0);
                 opw.WriteEnd();
                 opw.Flush();
+
+                //var ew1 = opw.CreateResourceWriter("Location");
+                //ew1.WriteStart(complexValue1);
+                //ew1.WriteEnd();
+                //ew1.Flush();
             }
 
             ms.Seek(0, SeekOrigin.Begin);

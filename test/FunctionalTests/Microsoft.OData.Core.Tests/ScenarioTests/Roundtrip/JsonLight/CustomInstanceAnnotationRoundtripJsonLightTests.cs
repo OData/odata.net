@@ -58,14 +58,16 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip.JsonLight
             var originalGeography = new KeyValuePair<string, ODataValue>("Geography.error", new ODataPrimitiveValue(geographyPoint));
             var originalNull = new KeyValuePair<string, ODataValue>("null.error", new ODataNullValue());
 
+            /*
             var complexValue = new ODataComplexValue
             {
                 TypeName = "ns.ErrorDetails",
                 Properties = new[] { new ODataProperty { Name = "ErrorDetailName", Value = "inner property value" } }
             };
             var originalComplex = new KeyValuePair<string, ODataValue>("sample.error", complexValue);
+            */
 
-            var error = this.WriteThenReadErrorWithInstanceAnnotation(originalInt, originalDouble, originalDate, originalDateTimeOffset, originaltime, originalTimeSpan, originalGeography, originalNull, originalComplex);
+            var error = this.WriteThenReadErrorWithInstanceAnnotation(originalInt, originalDouble, originalDate, originalDateTimeOffset, originaltime, originalTimeSpan, originalGeography, originalNull);
 
             var annotation = RunBasicVerificationAndGetAnnotationValue("int.error", error);
             annotation.Should().BeOfType<ODataPrimitiveValue>();
@@ -98,11 +100,14 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip.JsonLight
             annotation = RunBasicVerificationAndGetAnnotationValue("null.error", error);
             annotation.Should().BeOfType<ODataNullValue>();
 
+            /*
             annotation = RunBasicVerificationAndGetAnnotationValue("sample.error", error);
             annotation.Should().BeOfType<ODataComplexValue>();
             annotation.As<ODataComplexValue>().Properties.First().Value.Should().Be("inner property value");
+             */
         }
 
+        /*
         [Fact]
         public void ComplexCustomInstanceAnnotationOnErrorShouldRoundtrip()
         {
@@ -117,6 +122,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip.JsonLight
             annotation.Should().BeOfType<ODataComplexValue>();
             annotation.As<ODataComplexValue>().Properties.First().Value.Should().Be("inner property value");
         }
+        */
 
         [Fact]
         public void CollectionOfPrimitiveCustomInstanceAnnotationOnErrorShouldRoundtrip()

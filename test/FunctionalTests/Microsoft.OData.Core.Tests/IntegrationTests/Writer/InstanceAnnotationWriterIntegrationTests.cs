@@ -22,6 +22,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Writer
         private static readonly EdmModel Model;
         private static readonly EdmEntitySet EntitySet;
         private static readonly EdmEntityType EntityType;
+        private static readonly EdmComplexType ComplexType;
         private static readonly EdmSingleton Singleton;
 
         private static readonly Uri tempUri = new Uri("http://tempuri.org");
@@ -37,6 +38,9 @@ namespace Microsoft.OData.Tests.IntegrationTests.Writer
             EntityType.AddProperty(keyProperty);
             var resourceNavigationProperty = EntityType.AddUnidirectionalNavigation(new EdmNavigationPropertyInfo { Name = "ResourceNavigationProperty", Target = EntityType, TargetMultiplicity = EdmMultiplicity.ZeroOrOne });
             var resourceSetNavigationProperty = EntityType.AddUnidirectionalNavigation(new EdmNavigationPropertyInfo { Name = "ResourceSetNavigationProperty", Target = EntityType, TargetMultiplicity = EdmMultiplicity.Many });
+
+            ComplexType = new EdmComplexType("TestNamespace", "Address");
+            Model.AddElement(ComplexType);
 
             var defaultContainer = new EdmEntityContainer("TestNamespace", "DefaultContainer");
             Model.AddElement(defaultContainer);
@@ -655,7 +659,47 @@ namespace Microsoft.OData.Tests.IntegrationTests.Writer
 
         #endregion
 
-        private void WriteAnnotationsAndValidatePayload(Action<ODataWriter> action, IEdmNavigationSource navigationSource, ODataFormat format, string expectedPayload, bool request, bool createFeedWriter, bool odataSimplified = false)
+        #region Writing instance annotations on complex resource
+
+        [Fact]
+        public void WritingInstanceAnnotationInComplexValueShouldWrite()
+        {
+            Action<ODataWriter> action = (odataWriter) =>
+            {
+                var complexResource = new ODataResource { TypeName = "TestNamespace.Address"};
+                complexResource.InstanceAnnotations.Add(new ODataInstanceAnnotation("Is.ReadOnly", new ODataPrimitiveValue(true)) );
+                odataWriter.WriteStart(complexResource);
+                odataWriter.WriteEnd();
+            };
+
+            string expectedPayload = "{\"@odata.context\":\"http://www.example.com/$metadata#TestNamespace.Address\",\"@Is.ReadOnly\":true}";
+
+            this.WriteAnnotationsAndValidatePayload(action, null, ODataFormat.Json, expectedPayload, request: false, createFeedWriter: false, resourceType: ComplexType);
+            this.WriteAnnotationsAndValidatePayload(action, null, ODataFormat.Json, expectedPayload, request: true, createFeedWriter: false, resourceType: ComplexType);
+
+        }
+
+        [Fact]
+        public void WritingMultipleInstanceAnnotationInComplexValueShouldWrite()
+        {
+            Action<ODataWriter> action = (odataWriter) =>
+            {
+                var complexResource = new ODataResource { TypeName = "TestNamespace.Address" };
+                complexResource.InstanceAnnotations.Add(new ODataInstanceAnnotation("Annotation.1", new ODataPrimitiveValue(true)));
+                complexResource.InstanceAnnotations.Add(new ODataInstanceAnnotation("Annotation.2", new ODataPrimitiveValue(123)));
+                complexResource.InstanceAnnotations.Add(new ODataInstanceAnnotation("Annotation.3", new ODataPrimitiveValue("annotation")));
+                odataWriter.WriteStart(complexResource);
+                odataWriter.WriteEnd();
+            };
+
+            var expectedPayload = "{\"@odata.context\":\"http://www.example.com/$metadata#TestNamespace.Address\",\"@Annotation.1\":true,\"@Annotation.2\":123,\"@Annotation.3\":\"annotation\"}";
+            this.WriteAnnotationsAndValidatePayload(action, null, ODataFormat.Json, expectedPayload, request: false, createFeedWriter: false, resourceType: ComplexType);
+            this.WriteAnnotationsAndValidatePayload(action, null, ODataFormat.Json, expectedPayload, request: true, createFeedWriter: false, resourceType: ComplexType);
+        }
+
+        #endregion
+
+        private void WriteAnnotationsAndValidatePayload(Action<ODataWriter> action, IEdmNavigationSource navigationSource, ODataFormat format, string expectedPayload, bool request, bool createFeedWriter, bool odataSimplified = false, IEdmStructuredType resourceType = null)
         {
             var writerSettings = new ODataMessageWriterSettings { EnableMessageStreamDisposal = false };
             writerSettings.SetContentType(format);
@@ -679,7 +723,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Writer
                 {
                     ODataWriter odataWriter = (createFeedWriter && !(navigationSource is EdmSingleton))
                         ? messageWriter.CreateODataResourceSetWriter(navigationSource as EdmEntitySet, EntityType)
-                        : messageWriter.CreateODataResourceWriter(navigationSource, EntityType);
+                        : messageWriter.CreateODataResourceWriter(navigationSource, resourceType ?? EntityType);
                     action(odataWriter);
                 }
             }
@@ -696,7 +740,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Writer
                 {
                     ODataWriter odataWriter = (createFeedWriter && !(navigationSource is EdmSingleton))
                         ? messageWriter.CreateODataResourceSetWriter(navigationSource as EdmEntitySet, EntityType)
-                        : messageWriter.CreateODataResourceWriter(navigationSource, EntityType);
+                        : messageWriter.CreateODataResourceWriter(navigationSource, resourceType ?? EntityType);
                     action(odataWriter);
                 }
             }

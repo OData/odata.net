@@ -193,6 +193,7 @@ namespace Microsoft.OData.Tests.JsonLight
             result.Should().Contain("\"sample.primitive@odata.type\":\"#Custom.Type\",\"@sample.primitive\":\"stringValue\"");
         }
 
+        /*
         [Fact]
         public void WriteTopLevelErrorWithComplexInstanceAnnotation()
         {
@@ -270,6 +271,7 @@ namespace Microsoft.OData.Tests.JsonLight
                 writeError.ShouldThrow<ODataException>().WithMessage(Strings.WriterValidationUtils_MissingTypeNameWithMetadata);
             });
         }
+        */
 
         [Fact]
         public void UrlToStringShouldThrowWithNoMetadataAndMetadataDocumentUriIsNotProvided()

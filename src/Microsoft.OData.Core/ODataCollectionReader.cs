@@ -29,7 +29,7 @@ namespace Microsoft.OData
         /// <returns>The most recent item that has been read.</returns>
         /// <remarks>
         /// This property returns an <see cref="ODataCollectionStart"/> when in state ODataCollectionReaderState.CollectionStart
-        /// or ODataCollectionReaderState.CollectionEnd. It returns either a primitive value, an <see cref="ODataComplexValue"/> or 'null' when
+        /// or ODataCollectionReaderState.CollectionEnd. It returns either a primitive value or 'null' when
         /// in state ODataCollectionReaderState.Value and 'null' in all other states.
         /// </remarks>
         public abstract object Item

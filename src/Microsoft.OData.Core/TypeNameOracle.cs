@@ -225,12 +225,6 @@ namespace Microsoft.OData
                 return primitiveValueTypeReference == null ? null : primitiveValueTypeReference.FullName();
             }
 
-            ODataComplexValue complexValue = value as ODataComplexValue;
-            if (complexValue != null)
-            {
-                return complexValue.TypeName;
-            }
-
             ODataEnumValue enumValue = value as ODataEnumValue;
             if (enumValue != null)
             {

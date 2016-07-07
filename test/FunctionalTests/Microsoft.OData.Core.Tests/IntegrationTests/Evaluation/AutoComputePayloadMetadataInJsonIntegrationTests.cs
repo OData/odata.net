@@ -440,7 +440,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Evaluation
                 new ODataNestedResourceInfo
                 {
                     Name = "DynamicComplexProperty",
-                    IsUndeclared = true
+                    SerializationInfo = new ODataNestedResourceInfoSerializationInfo() { IsUndeclared = true}
                 }
             );
             entitySetWriter.WriteStart(

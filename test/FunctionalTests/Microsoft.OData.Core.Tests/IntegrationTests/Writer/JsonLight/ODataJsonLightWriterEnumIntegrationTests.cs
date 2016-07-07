@@ -99,145 +99,132 @@ namespace Microsoft.OData.Tests.IntegrationTests.Writer.JsonLight
         [Fact]
         public void FlagsEnumAsComplexProperty_StrAsValue_StrAsTypeName_MinimalMetadata()
         {
-            Func<ODataResource> entryClone = () => new ODataResource
-            {
-                TypeName = "NS.MyEntityType",
-                Properties = new[]
-                    {
-                        new ODataProperty{Name = "FloatId", Value = new ODataPrimitiveValue(12.3D)},       
-                        new ODataProperty{Name = "Color", Value = new ODataEnumValue(Color.Green.ToString())},
-                        new ODataProperty
-                        {
-                            Name = "MyComplexType",
-                            Value = new ODataComplexValue { Properties = new[] { new ODataProperty { Name = "MyColorFlags", Value = new ODataEnumValue(Color.Red.ToString(), "NS.EnumUndefinedTypename") }, new ODataProperty { Name = "Height", Value = 98.6 }} }
-                        }
-                    }
-            };
+            Func<ODataItem[]> getItems = () => GetResourceWithEnum();
 
             // Model-request (request: forced MinimalMetadata)
             string expectedPayload = "{\"@odata.context\":\"http://odata.org/test/$metadata#MySet/$entity\",\"FloatId\":12.3,\"Color\":\"Green\",\"MyComplexType\":{\"MyColorFlags\":\"Red\",\"Height\":98.6}}";
-            this.WriteMinimalRequestWithModelAndValidatePayload(mediaType: null, nestedItemToWrite: new[] { entryClone() }, expectedPayload: expectedPayload);
+            this.WriteMinimalRequestWithModelAndValidatePayload(mediaType: null, nestedItemToWrite: getItems(), expectedPayload: expectedPayload);
 
             // Model-reseponse
             expectedPayload = "{\"@odata.context\":\"http://odata.org/test/$metadata#MySet/$entity\",\"FloatId\":12.3,\"Color\":\"Green\",\"MyComplexType\":{\"MyColorFlags\":\"Red\",\"Height\":98.6}}";
-            this.WriteResponseWithModelAndValidatePayload(mediaType: null, nestedItemToWrite: new[] { entryClone() }, expectedPayload: expectedPayload);
+            this.WriteResponseWithModelAndValidatePayload(mediaType: null, nestedItemToWrite: getItems(), expectedPayload: expectedPayload);
 
             // NoModel-request (request: forced MinimalMetadata)
             expectedPayload = "{\"@odata.type\":\"#NS.MyEntityType\",\"FloatId\":12.3,\"Color\":\"Green\",\"MyComplexType\":{\"MyColorFlags@odata.type\":\"#NS.EnumUndefinedTypename\",\"MyColorFlags\":\"Red\",\"Height\":98.6}}";
-            this.WriteMinimalMetadataRequestWithoutModelAndValidatePayload(nestedItemToWrite: new[] { entryClone() }, expectedPayload: expectedPayload);
+            this.WriteMinimalMetadataRequestWithoutModelAndValidatePayload(nestedItemToWrite: getItems(), expectedPayload: expectedPayload);
 
             // NoModel-response (using NoMetadata)
             expectedPayload = "{\"FloatId\":12.3,\"Color\":\"Green\",\"MyComplexType\":{\"MyColorFlags\":\"Red\",\"Height\":98.6}}";
-            this.WriteNoMetadataResponseWithoutModelAndValidatePayload(nestedItemToWrite: new[] { entryClone() }, expectedPayload: expectedPayload);
+            this.WriteNoMetadataResponseWithoutModelAndValidatePayload(nestedItemToWrite: getItems(), expectedPayload: expectedPayload);
         }
 
         [Fact]
         public void FlagsEnumAsComplexProperty_StrAsValue_StrAsTypeName_FullMetadata()
         {
-            Func<ODataResource> entryClone = () => new ODataResource
-            {
-                TypeName = "NS.MyEntityType",
-                Properties = new[]
-                {
-                    new ODataProperty{Name = "FloatId", Value = new ODataPrimitiveValue(12.3D)},       
-                    new ODataProperty{Name = "Color", Value = new ODataEnumValue(Color.Green.ToString())},
-                    new ODataProperty
-                    {
-                        Name = "MyComplexType",
-                        Value = new ODataComplexValue { Properties = new[] { new ODataProperty { Name = "MyColorFlags", Value = new ODataEnumValue(Color.Red.ToString(), "NS.EnumUndefinedTypename") }, new ODataProperty { Name = "Height", Value = 98.6 }} }
-                    }
-                }
-            };
+            Func<ODataItem[]> getItems = () => GetResourceWithEnum();
 
             ODataMediaType mediaType = new ODataMediaType("application", "json", new KeyValuePair<string, string>(MimeConstants.MimeMetadataParameterName, MimeConstants.MimeMetadataParameterValueFull));
 
             // Model-request (request: forced MinimalMetadata)
             string expectedPayload = "{\"@odata.context\":\"http://odata.org/test/$metadata#MySet/$entity\",\"FloatId\":12.3,\"Color\":\"Green\",\"MyComplexType\":{\"MyColorFlags\":\"Red\",\"Height\":98.6}}";
-            this.WriteMinimalRequestWithModelAndValidatePayload(mediaType: mediaType, nestedItemToWrite: new[] { entryClone() }, expectedPayload: expectedPayload);
+            this.WriteMinimalRequestWithModelAndValidatePayload(mediaType: mediaType, nestedItemToWrite: getItems(), expectedPayload: expectedPayload);
 
             // Model-reseponse
             expectedPayload = "{\"@odata.context\":\"http://odata.org/test/$metadata#MySet/$entity\",\"@odata.type\":\"#NS.MyEntityType\",\"@odata.id\":\"MySet(12.3)\",\"@odata.editLink\":\"MySet(12.3)\",\"FloatId\":12.3,\"Color\":\"Green\",\"MyComplexType\":{\"MyColorFlags@odata.type\":\"#NS.EnumUndefinedTypename\",\"MyColorFlags\":\"Red\",\"Height\":98.6}}";
-            this.WriteResponseWithModelAndValidatePayload(mediaType: mediaType, nestedItemToWrite: new[] { entryClone() }, expectedPayload: expectedPayload);
+            this.WriteResponseWithModelAndValidatePayload(mediaType: mediaType, nestedItemToWrite: getItems(), expectedPayload: expectedPayload);
 
             // NoModel-request (request: forced MinimalMetadata)
             expectedPayload = "{\"@odata.type\":\"#NS.MyEntityType\",\"FloatId\":12.3,\"Color\":\"Green\",\"MyComplexType\":{\"MyColorFlags@odata.type\":\"#NS.EnumUndefinedTypename\",\"MyColorFlags\":\"Red\",\"Height\":98.6}}";
-            this.WriteMinimalMetadataRequestWithoutModelAndValidatePayload(nestedItemToWrite: new[] { entryClone() }, expectedPayload: expectedPayload);
+            this.WriteMinimalMetadataRequestWithoutModelAndValidatePayload(nestedItemToWrite: getItems(), expectedPayload: expectedPayload);
 
             // NoModel-response (using NoMetadata)
             expectedPayload = "{\"FloatId\":12.3,\"Color\":\"Green\",\"MyComplexType\":{\"MyColorFlags\":\"Red\",\"Height\":98.6}}";
-            this.WriteNoMetadataResponseWithoutModelAndValidatePayload(nestedItemToWrite: new[] { entryClone() }, expectedPayload: expectedPayload);
+            this.WriteNoMetadataResponseWithoutModelAndValidatePayload(nestedItemToWrite: getItems(), expectedPayload: expectedPayload);
         }
 
         [Fact]
         public void FlagsEnumAsDerivedComplexProperty_StrAsValue_StrAsTypeName_MinimalMetadata()
         {
-            Func<ODataResource> entryClone = () => new ODataResource
-            {
-                TypeName = "NS.MyEntityType",
-                Properties = new[]
-                    {
-                        new ODataProperty{Name = "FloatId", Value = new ODataPrimitiveValue(12.3D)},       
-                        new ODataProperty{Name = "Color", Value = new ODataEnumValue(Color.Green.ToString())},
-                        new ODataProperty
-                        {
-                            Name = "MyComplexType",
-                            Value = new ODataComplexValue { TypeName = "NS.MyDerivedComplexType", Properties = new[] { new ODataProperty { Name = "MyColorFlags", Value = new ODataEnumValue(Color.Red.ToString(), "NS.EnumUndefinedTypename") }, new ODataProperty { Name = "Height", Value = 98.6 }, new ODataProperty { Name = "MyDerivedColorFlags", Value = new ODataEnumValue(Color.Red.ToString(), "NS.EnumUndefinedTypename") }} }
-                        }
-                    }
-            };
+            Func<ODataItem[]> getItems = () => GetResourceWithEnum(true);
 
             // Model-request (request: forced MinimalMetadata)
             string expectedPayload = "{\"@odata.context\":\"http://odata.org/test/$metadata#MySet/$entity\",\"FloatId\":12.3,\"Color\":\"Green\",\"MyComplexType\":{\"@odata.type\":\"#NS.MyDerivedComplexType\",\"MyColorFlags\":\"Red\",\"Height\":98.6,\"MyDerivedColorFlags\":\"Red\"}}";
-            this.WriteMinimalRequestWithModelAndValidatePayload(mediaType: null, nestedItemToWrite: new[] { entryClone() }, expectedPayload: expectedPayload);
+            this.WriteMinimalRequestWithModelAndValidatePayload(mediaType: null, nestedItemToWrite: getItems(), expectedPayload: expectedPayload);
 
             // Model-reseponse
             expectedPayload = "{\"@odata.context\":\"http://odata.org/test/$metadata#MySet/$entity\",\"FloatId\":12.3,\"Color\":\"Green\",\"MyComplexType\":{\"@odata.type\":\"#NS.MyDerivedComplexType\",\"MyColorFlags\":\"Red\",\"Height\":98.6,\"MyDerivedColorFlags\":\"Red\"}}";
-            this.WriteResponseWithModelAndValidatePayload(mediaType: null, nestedItemToWrite: new[] { entryClone() }, expectedPayload: expectedPayload);
+            this.WriteResponseWithModelAndValidatePayload(mediaType: null, nestedItemToWrite: getItems(), expectedPayload: expectedPayload);
 
             // NoModel-request (request: forced MinimalMetadata)
             expectedPayload = "{\"@odata.type\":\"#NS.MyEntityType\",\"FloatId\":12.3,\"Color\":\"Green\",\"MyComplexType\":{\"@odata.type\":\"#NS.MyDerivedComplexType\",\"MyColorFlags@odata.type\":\"#NS.EnumUndefinedTypename\",\"MyColorFlags\":\"Red\",\"Height\":98.6,\"MyDerivedColorFlags@odata.type\":\"#NS.EnumUndefinedTypename\",\"MyDerivedColorFlags\":\"Red\"}}";
-            this.WriteMinimalMetadataRequestWithoutModelAndValidatePayload(nestedItemToWrite: new[] { entryClone() }, expectedPayload: expectedPayload);
+            this.WriteMinimalMetadataRequestWithoutModelAndValidatePayload(nestedItemToWrite: getItems(), expectedPayload: expectedPayload);
 
             // NoModel-response (using NoMetadata)
             expectedPayload = "{\"FloatId\":12.3,\"Color\":\"Green\",\"MyComplexType\":{\"MyColorFlags\":\"Red\",\"Height\":98.6,\"MyDerivedColorFlags\":\"Red\"}}";
-            this.WriteNoMetadataResponseWithoutModelAndValidatePayload(nestedItemToWrite: new[] { entryClone() }, expectedPayload: expectedPayload);
+            this.WriteNoMetadataResponseWithoutModelAndValidatePayload(nestedItemToWrite: getItems(), expectedPayload: expectedPayload);
         }
 
         [Fact]
         public void FlagsEnumAsDerivedComplexProperty_StrAsValue_StrAsTypeName_FullMetadata()
         {
-            Func<ODataResource> entryClone = () => new ODataResource
-            {
-                TypeName = "NS.MyEntityType",
-                Properties = new[]
-                {
-                    new ODataProperty{Name = "FloatId", Value = new ODataPrimitiveValue(12.3D)},       
-                    new ODataProperty{Name = "Color", Value = new ODataEnumValue(Color.Green.ToString())},
-                    new ODataProperty
-                    {
-                        Name = "MyComplexType",
-                        Value = new ODataComplexValue { TypeName = "NS.MyDerivedComplexType",Properties = new[] { new ODataProperty { Name = "MyColorFlags", Value = new ODataEnumValue(Color.Red.ToString(), "NS.EnumUndefinedTypename") }, new ODataProperty { Name = "Height", Value = 98.6 }, new ODataProperty { Name = "MyDerivedColorFlags", Value = new ODataEnumValue(Color.Red.ToString(), "NS.EnumUndefinedTypename") }} }
-                    }
-                }
-            };
+            Func<ODataItem[]> getItems = () => GetResourceWithEnum(true);
 
             ODataMediaType mediaType = new ODataMediaType("application", "json", new KeyValuePair<string, string>(MimeConstants.MimeMetadataParameterName, MimeConstants.MimeMetadataParameterValueFull));
 
             // Model-request (request: forced MinimalMetadata)
             string expectedPayload = "{\"@odata.context\":\"http://odata.org/test/$metadata#MySet/$entity\",\"FloatId\":12.3,\"Color\":\"Green\",\"MyComplexType\":{\"@odata.type\":\"#NS.MyDerivedComplexType\",\"MyColorFlags\":\"Red\",\"Height\":98.6,\"MyDerivedColorFlags\":\"Red\"}}";
-            this.WriteMinimalRequestWithModelAndValidatePayload(mediaType: mediaType, nestedItemToWrite: new[] { entryClone() }, expectedPayload: expectedPayload);
+            this.WriteMinimalRequestWithModelAndValidatePayload(mediaType: mediaType, nestedItemToWrite: getItems(), expectedPayload: expectedPayload);
 
             // Model-reseponse
             expectedPayload = "{\"@odata.context\":\"http://odata.org/test/$metadata#MySet/$entity\",\"@odata.type\":\"#NS.MyEntityType\",\"@odata.id\":\"MySet(12.3)\",\"@odata.editLink\":\"MySet(12.3)\",\"FloatId\":12.3,\"Color\":\"Green\",\"MyComplexType\":{\"@odata.type\":\"#NS.MyDerivedComplexType\",\"MyColorFlags@odata.type\":\"#NS.EnumUndefinedTypename\",\"MyColorFlags\":\"Red\",\"Height\":98.6,\"MyDerivedColorFlags@odata.type\":\"#NS.EnumUndefinedTypename\",\"MyDerivedColorFlags\":\"Red\"}}";
-            this.WriteResponseWithModelAndValidatePayload(mediaType: mediaType, nestedItemToWrite: new[] { entryClone() }, expectedPayload: expectedPayload);
+            this.WriteResponseWithModelAndValidatePayload(mediaType: mediaType, nestedItemToWrite: getItems(), expectedPayload: expectedPayload);
 
             // NoModel-request (request: forced MinimalMetadata)
             expectedPayload = "{\"@odata.type\":\"#NS.MyEntityType\",\"FloatId\":12.3,\"Color\":\"Green\",\"MyComplexType\":{\"@odata.type\":\"#NS.MyDerivedComplexType\",\"MyColorFlags@odata.type\":\"#NS.EnumUndefinedTypename\",\"MyColorFlags\":\"Red\",\"Height\":98.6,\"MyDerivedColorFlags@odata.type\":\"#NS.EnumUndefinedTypename\",\"MyDerivedColorFlags\":\"Red\"}}";
-            this.WriteMinimalMetadataRequestWithoutModelAndValidatePayload(nestedItemToWrite: new[] { entryClone() }, expectedPayload: expectedPayload);
+            this.WriteMinimalMetadataRequestWithoutModelAndValidatePayload(nestedItemToWrite: getItems(), expectedPayload: expectedPayload);
 
             // NoModel-response (using NoMetadata)
             expectedPayload = "{\"FloatId\":12.3,\"Color\":\"Green\",\"MyComplexType\":{\"MyColorFlags\":\"Red\",\"Height\":98.6,\"MyDerivedColorFlags\":\"Red\"}}";
-            this.WriteNoMetadataResponseWithoutModelAndValidatePayload(nestedItemToWrite: new[] { entryClone() }, expectedPayload: expectedPayload);
+            this.WriteNoMetadataResponseWithoutModelAndValidatePayload(nestedItemToWrite: getItems(), expectedPayload: expectedPayload);
+        }
+
+        private ODataItem[] GetResourceWithEnum(bool derived = false)
+        {
+            ODataResource topResource = new ODataResource
+            {
+                TypeName = "NS.MyEntityType",
+                Properties = new[]
+                {
+                    new ODataProperty{Name = "FloatId", Value = new ODataPrimitiveValue(12.3D)},
+                    new ODataProperty{Name = "Color", Value = new ODataEnumValue(Color.Green.ToString())},
+                }
+            };
+
+            ODataNestedResourceInfo nestedComplexInfo = new ODataNestedResourceInfo
+            {
+                Name = "MyComplexType",
+                IsCollection = false
+            };
+
+            var propertiesForNestedResource = new List<ODataProperty>()
+            {
+                new ODataProperty { Name = "MyColorFlags", Value = new ODataEnumValue(Color.Red.ToString(), "NS.EnumUndefinedTypename") },
+                new ODataProperty { Name = "Height", Value = 98.6 }
+            };
+
+            ODataResource nestedResource = new ODataResource();
+            if (derived)
+            {
+                propertiesForNestedResource.Add(new ODataProperty { Name = "MyDerivedColorFlags", Value = new ODataEnumValue(Color.Red.ToString(), "NS.EnumUndefinedTypename") });
+                nestedResource.TypeName = "NS.MyDerivedComplexType";
+                nestedResource.Properties = propertiesForNestedResource;
+            }
+            else
+            {
+                nestedResource.Properties = propertiesForNestedResource;
+            }
+
+            return new ODataItem[] { topResource, nestedComplexInfo, nestedResource };
         }
 
         [Fact]
@@ -703,7 +690,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Writer.JsonLight
         {
             WriteToMessageWriterAndVerifyPayload(
                 contentType: "application/json;odata.metadata=full;",
-                writerAction: (writer) =>
+                writerAction: (writer, withModel) =>
                 {
                     ODataProperty property = new ODataProperty()
                     {
@@ -721,7 +708,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Writer.JsonLight
         {
             WriteToMessageWriterAndVerifyPayload(
                 contentType: "application/json;odata.metadata=minimal;",
-                writerAction: (writer) =>
+                writerAction: (writer, withModel) =>
                 {
                     ODataProperty property = new ODataProperty()
                     {
@@ -739,7 +726,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Writer.JsonLight
         {
             WriteToMessageWriterAndVerifyPayload(
                 contentType: "application/json;odata.metadata=none;",
-                writerAction: (writer) =>
+                writerAction: (writer, withModel) =>
                 {
                     ODataProperty property = new ODataProperty()
                     {
@@ -757,7 +744,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Writer.JsonLight
         {
             WriteToMessageWriterAndVerifyPayload(
                 contentType: "text/plain", // can't be full/minimal/none metadata
-                writerAction: (writer) =>
+                writerAction: (writer, withModel) =>
                 {
                     ODataEnumValue enumValue = new ODataEnumValue(Color.Red.ToString(), "NS.EnumUndefinedTypename");
                     writer.WriteValue(enumValue);
@@ -771,7 +758,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Writer.JsonLight
         {
             WriteToMessageWriterAndVerifyPayload(
                 contentType: "*/*",
-                writerAction: (writer) =>
+                writerAction: (writer, withModel) =>
                 {
                     ODataEnumValue enumValue = new ODataEnumValue(Color.Red.ToString(), "NS.EnumUndefinedTypename");
                     writer.WriteValue(enumValue);
@@ -783,34 +770,62 @@ namespace Microsoft.OData.Tests.IntegrationTests.Writer.JsonLight
         [Fact]
         public void FlagsEnumAsComplexPropertyAsTopLevelValue_StrAsValue_StrAsTypeName_FullMetadata()
         {
-            WriteToMessageWriterAndVerifyPayload(
-                contentType: "application/json;odata.metadata=full;",
-                writerAction: (writer) =>
+            var resource = new ODataResource
+            {
+                Properties = new[]
                 {
-                    ODataProperty property = new ODataProperty
-                    {
-                        Name = "MyComplexTypeValue1",
-                        Value = new ODataComplexValue { Properties = new[] { new ODataProperty { Name = "MyColorFlags", Value = new ODataEnumValue(Color.Red.ToString(), "NS.EnumUndefinedTypename") }, new ODataProperty { Name = "Height", Value = 98.6 } }, TypeName = "NS.MyComplexType" }
-                    };
-                    writer.WriteProperty(property);
+                    new ODataProperty { Name = "MyColorFlags", Value = new ODataEnumValue(Color.Red.ToString(), "NS.EnumUndefinedTypename") },
+                    new ODataProperty { Name = "Height", Value = 98.6 }
                 },
-                expectedPayload: "{\"@odata.context\":\"http://odata.org/test/$metadata#NS.MyComplexType\",\"@odata.type\":\"#NS.MyComplexType\",\"MyColorFlags@odata.type\":\"#NS.EnumUndefinedTypename\",\"MyColorFlags\":\"Red\",\"Height\":98.6}"
-            );
+                TypeName = "NS.MyComplexType"
+            };
+
+            ODataMediaType mediaType = new ODataMediaType("application", "json", new KeyValuePair<string, string>(MimeConstants.MimeMetadataParameterName, MimeConstants.MimeMetadataParameterValueFull));
+
+            string expectedPayload = "{\"@odata.context\":\"http://odata.org/test/$metadata#NS.MyComplexType\",\"@odata.type\":\"#NS.MyComplexType\",\"MyColorFlags@odata.type\":\"#NS.EnumUndefinedTypename\",\"MyColorFlags\":\"Red\",\"Height\":98.6}";
+            this.WriteToMessageWriterAndVerifyPayload(
+                contentType: "application/json;odata.metadata=full;",
+                writerAction: (writer, withModel) =>
+                {
+                    ODataWriter odatawriter = writer.CreateODataResourceWriter() as ODataWriter;
+                    if (!withModel)
+                    {
+                        resource.SerializationInfo = new ODataResourceSerializationInfo()
+                        {
+                            ExpectedTypeName = "NS.MyComplexType"
+                        };
+                    }
+                    WriteNestedItems(new ODataItem[] { resource }, odatawriter);
+                },
+                expectedPayload: expectedPayload);
         }
 
         [Fact]
         public void FlagsEnumAsComplexPropertyAsTopLevelValue_StrAsValue_StrAsTypeName_MinimalMetadata()
         {
+            var resource = new ODataResource
+            {
+                Properties = new[]
+                {
+                    new ODataProperty { Name = "MyColorFlags", Value = new ODataEnumValue(Color.Red.ToString(), "NS.EnumUndefinedTypename") },
+                    new ODataProperty { Name = "Height", Value = 98.6 }
+                },
+                TypeName = "NS.MyComplexType"
+            };
+
             WriteToMessageWriterAndVerifyPayload(
                 contentType: "application/json;odata.metadata=minimal;",
-                writerAction: (writer) =>
+                writerAction: (writer, withModel) =>
                 {
-                    ODataProperty property = new ODataProperty
+                    ODataWriter odatawriter = writer.CreateODataResourceWriter() as ODataWriter;
+                    if (!withModel)
                     {
-                        Name = "MyComplexTypeValue1",
-                        Value = new ODataComplexValue { Properties = new[] { new ODataProperty { Name = "MyColorFlags", Value = new ODataEnumValue(Color.Red.ToString(), "NS.EnumUndefinedTypename") }, new ODataProperty { Name = "Height", Value = 98.6 } }, TypeName = "NS.MyComplexType" }
-                    };
-                    writer.WriteProperty(property);
+                        resource.SerializationInfo = new ODataResourceSerializationInfo()
+                        {
+                            ExpectedTypeName = "NS.MyComplexType"
+                        };
+                    }
+                    WriteNestedItems(new ODataItem[] { resource }, odatawriter);
                 },
                 expectedPayload: "{\"@odata.context\":\"http://odata.org/test/$metadata#NS.MyComplexType\",\"MyColorFlags\":\"Red\",\"Height\":98.6}"
             );
@@ -821,7 +836,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Writer.JsonLight
         {
             WriteToMessageWriterAndVerifyPayload(
                 contentType: "application/json;odata.metadata=full;",
-                writerAction: (writer) =>
+                writerAction: (writer, withModel) =>
                 {
                     ODataProperty property = new ODataProperty
                     {
@@ -839,7 +854,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Writer.JsonLight
         {
             WriteToMessageWriterAndVerifyPayload(
                 contentType: "application/json;odata.metadata=minimal;",
-                writerAction: (writer) =>
+                writerAction: (writer, withModel) =>
                 {
                     ODataProperty property = new ODataProperty
                     {
@@ -869,7 +884,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Writer.JsonLight
             EdmEnumTypeReference enumRef = new EdmEnumTypeReference((IEdmEnumType)this.userModel.FindType("NS.ColorFlags"), true);
             WriteToMessageWriterAndVerifyPayload(
                 contentType: "application/json;odata.metadata=minimal;",
-                writerAction: (writer) =>
+                writerAction: (writer, withModel) =>
                 {
                     ODataCollectionWriter collectionWriter = writer.CreateODataCollectionWriter(enumRef);
                     collectionWriter.WriteStart(collectionStart);
@@ -886,7 +901,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Writer.JsonLight
 
         #endregion
 
-        public void WriteToMessageWriterAndVerifyPayload(string contentType, Action<ODataMessageWriter> writerAction, string expectedPayload)
+        public void WriteToMessageWriterAndVerifyPayload(string contentType, Action<ODataMessageWriter, bool> writerAction, string expectedPayload)
         {
             ODataMessageWriterSettings settings = new ODataMessageWriterSettings() { Version = ODataVersion.V4, AutoComputePayloadMetadata = true, EnableMessageStreamDisposal = false };
             settings.SetContentType(contentType, "utf-8");
@@ -897,7 +912,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Writer.JsonLight
                 IODataResponseMessage message = new InMemoryMessage() { Stream = stream };
                 using (ODataMessageWriter writer = new ODataMessageWriter(message, settings, this.userModel))
                 {
-                    writerAction(writer);
+                    writerAction(writer, true);
                 }
 
                 stream.Seek(0, SeekOrigin.Begin);
@@ -911,7 +926,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Writer.JsonLight
                 IODataResponseMessage message = new InMemoryMessage() { Stream = stream };
                 using (ODataMessageWriter writer = new ODataMessageWriter(message, settings))
                 {
-                    writerAction(writer);
+                    writerAction(writer, false);
                 }
 
                 stream.Seek(0, SeekOrigin.Begin);
@@ -970,7 +985,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Writer.JsonLight
             ValidateWrittenPayload(stream, writer, expectedPayload);
         }
 
-        private static void WriteNestedItems(ODataItem[] nestedItemsToWrite, ODataJsonLightWriter writer)
+        private static void WriteNestedItems(ODataItem[] nestedItemsToWrite, ODataWriter writer)
         {
             foreach (ODataItem itemToWrite in nestedItemsToWrite)
             {

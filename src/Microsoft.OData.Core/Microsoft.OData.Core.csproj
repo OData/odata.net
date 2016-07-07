@@ -54,6 +54,7 @@
     <Compile Include="Json\IJsonReader.cs" />
     <Compile Include="Json\IJsonReaderFactory.cs" />
     <Compile Include="Json\IJsonWriterFactory.cs" />
+    <Compile Include="ODataNestedResourceInfoSerializationInfo.cs" />
     <Compile Include="ODataSimplifiedOptions.cs" />
     <Compile Include="PropertyCacheHandler.cs" />
     <Compile Include="PropertyCache.cs" />

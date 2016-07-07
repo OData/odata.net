@@ -63,7 +63,7 @@ namespace Microsoft.OData
 
             if (token.Kind == ExpressionTokenKind.BracketedExpression)
             {
-                return ODataUriConversionUtils.ConvertFromComplexOrCollectionValue(value, model, typeReference);
+                return ODataUriConversionUtils.ConvertFromCollectionValue(value, model, typeReference);
             }
 
             QueryNode enumConstNode;

@@ -74,36 +74,6 @@ namespace Microsoft.Test.OData.Tests.Client.OpenTypesTests
         }
 
         [TestMethod]
-        public void InsertRoundTripOpenComplexProperty()
-        {
-            this.RunOnAtomAndJsonFormats(
-                this.CreateContext,
-                (contextWrapper) =>
-                    {
-                        var newRow = new Row
-                            {
-                                Id = Guid.NewGuid(),
-                                OpenComplex = new ContactDetails
-                                    {
-                                        Byte = byte.MaxValue,
-                                        Short = short.MaxValue,
-                                        LastContacted = DateTimeOffset.Now,
-                                        Contacted = DateTimeOffset.Now,
-                                        GUID = Guid.NewGuid(),
-                                        PreferedContactTime = TimeSpan.MaxValue,
-                                        SignedByte = sbyte.MaxValue,
-                                        Double = double.MaxValue,
-                                        Single = Single.PositiveInfinity,
-                                        Int = 0,
-                                        Long = long.MinValue,
-                                    },
-                            };
-
-                        this.InsertNewRowRoundtrip(contextWrapper, newRow);
-                    });
-        }
-
-        [TestMethod]
         public void UpdateRoundTrip()
         {
             this.RunOnAtomAndJsonFormats(
@@ -119,12 +89,6 @@ namespace Microsoft.Test.OData.Tests.Client.OpenTypesTests
                             (row) =>
                                 {
                                     row.OpenBoolean = null;
-                                    row.OpenComplex = new ContactDetails
-                                        {
-                                            Double = double.NaN,
-                                            GUID = Guid.NewGuid(),
-                                            PreferedContactTime = TimeSpan.MinValue,
-                                        };
                                     row.OpenDateTimeOffset = DateTimeOffset.Now;
                                     row.OpenDecimal = null;
                                     row.OpenFloat = float.NegativeInfinity;
@@ -142,7 +106,6 @@ namespace Microsoft.Test.OData.Tests.Client.OpenTypesTests
                             (row) =>
                                 {
                                     row.OpenBoolean = false;
-                                    row.OpenComplex = null;
                                     row.OpenDateTimeOffset = null;
                                     row.OpenDecimal = decimal.MinusOne;
                                     row.OpenFloat = null;

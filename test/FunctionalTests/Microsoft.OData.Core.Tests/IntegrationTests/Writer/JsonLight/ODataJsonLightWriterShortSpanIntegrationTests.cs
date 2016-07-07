@@ -841,7 +841,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Writer.JsonLight
             {
                 if (forOpen)
                 {
-                    nestedResourceInfo1.IsUndeclared = true;
+                    nestedResourceInfo1.SetSerializationInfo(new ODataNestedResourceInfoSerializationInfo() { IsUndeclared = true });
                     nestedResourceSet.TypeName = "Collection(NS.MyComplexType)";
                     nestedResourceSet.SetSerializationInfo(new ODataResourceSerializationInfo { ExpectedTypeName = "NS.MyComplexType", IsFromCollection = true });
                 }

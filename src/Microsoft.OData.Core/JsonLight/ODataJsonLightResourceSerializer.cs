@@ -333,10 +333,11 @@ namespace Microsoft.OData.JsonLight
         /// </summary>
         /// <param name="typeContext">The context object to answer basic questions regarding the type of the resource.</param>
         /// <param name="parentContextUrlInfo">The parent contextUrlInfo.</param>
-        internal void WriteResourceContextUri(ODataResourceTypeContext typeContext, ODataContextUrlInfo parentContextUrlInfo = null)
+        /// <returns>The created context uri info.</returns>
+        internal ODataContextUrlInfo WriteResourceContextUri(ODataResourceTypeContext typeContext, ODataContextUrlInfo parentContextUrlInfo = null)
         {
             ODataUri odataUri = this.JsonLightOutputContext.MessageWriterSettings.ODataUri;
-            this.WriteContextUriProperty(ODataPayloadKind.Resource, () => ODataContextUrlInfo.Create(typeContext, /* isSingle */ true, odataUri), parentContextUrlInfo);
+            return this.WriteContextUriProperty(ODataPayloadKind.Resource, () => ODataContextUrlInfo.Create(typeContext, /* isSingle */ true, odataUri), parentContextUrlInfo);
         }
 
         /// <summary>

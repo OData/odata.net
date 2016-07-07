@@ -503,7 +503,7 @@ namespace Microsoft.OData.JsonLight
                         break;
 
                     case ODataAnnotationNames.ODataType:
-                        // Just ignore the type info on resource set.
+                        expandedResourceSet.TypeName = (string)propertyAnnotation.Value;
                         Debug.Assert(propertyAnnotation.Value is string && propertyAnnotation.Value != null, "The odata.type annotation should have been parsed as a non-null string.");
                         break;
 

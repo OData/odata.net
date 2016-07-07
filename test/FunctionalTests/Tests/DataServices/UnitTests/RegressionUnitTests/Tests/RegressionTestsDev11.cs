@@ -2138,22 +2138,22 @@ Content-Type: APPLicATiON/json;odata.metadata=minimal
                         CodeVerifier = new Action<int>((int code) => Assert.AreEqual(code, 200)),
                         ResponseVerifier = new Action<string>((string response) => Assert.IsTrue(response.Contains("42999"))),
                     },
-                    new // Test that a dynamic complex property can be updated without issue
-                    {
-                        UriString = "/DynamicComplex",
-                        Content = "{\"value\": {\"@odata.type\":\"#testNamespace.Address\",\"Street\":\"148th Ave\",\"Zip\":98052}}",
-                        ExceptionVerifier = new Action<Exception>((Exception ex) => Assert.IsNull(ex, "No exception is expected")),
-                        CodeVerifier = new Action<int>((int code) => Assert.AreEqual(code, 200)),
-                        ResponseVerifier = new Action<string>((string response) => Assert.IsTrue(response.Contains("98052"))),
-                    },
-                    new // Test that a dynamic IEnumerable complex property can be updated without issue
-                    {
-                        UriString = "/DynamicComplexEnumerable",
-                        Content = "{\"value\":{\"@odata.type\":\"#testNamespace.EnumerableComplex\",\"StringProperty\":\"String Value\"}}",
-                        ExceptionVerifier = new Action<Exception>((Exception ex) => Assert.IsNull(ex, "No exception is expected")),
-                        CodeVerifier = new Action<int>((int code) => Assert.AreEqual(code, 200)),
-                        ResponseVerifier = new Action<string>((string response) => Assert.IsTrue(response.Contains("String Value"))),
-                    },
+                    //new // Test that a dynamic complex property can be updated without issue
+                    //{
+                    //    UriString = "/DynamicComplex",
+                    //    Content = "{\"value\": {\"@odata.type\":\"#testNamespace.Address\",\"Street\":\"148th Ave\",\"Zip\":98052}}",
+                    //    ExceptionVerifier = new Action<Exception>((Exception ex) => Assert.IsNull(ex, "No exception is expected")),
+                    //    CodeVerifier = new Action<int>((int code) => Assert.AreEqual(code, 200)),
+                    //    ResponseVerifier = new Action<string>((string response) => Assert.IsTrue(response.Contains("98052"))),
+                    //},
+                    ////new // Test that a dynamic IEnumerable complex property can be updated without issue
+                    ////{
+                    ////    UriString = "/DynamicComplexEnumerable",
+                    ////    Content = "{\"value\":{\"@odata.type\":\"#testNamespace.EnumerableComplex\",\"StringProperty\":\"String Value\"}}",
+                    ////    ExceptionVerifier = new Action<Exception>((Exception ex) => Assert.IsNull(ex, "No exception is expected")),
+                    ////    CodeVerifier = new Action<int>((int code) => Assert.AreEqual(code, 200)),
+                    ////    ResponseVerifier = new Action<string>((string response) => Assert.IsTrue(response.Contains("String Value"))),
+                    ////},
                 };
 
                 DSPServiceDefinition service = GetService2();

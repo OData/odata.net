@@ -227,8 +227,14 @@ namespace Microsoft.OData.JsonLight
 
             if (this.IsTopLevel)
             {
-                this.jsonLightResourceSerializer.WriteResourceContextUri(
+                var contextUriInfo = this.jsonLightResourceSerializer.WriteResourceContextUri(
                         resourceScope.GetOrCreateTypeContext(this.jsonLightOutputContext.Model, this.jsonLightOutputContext.WritingResponse));
+
+                // Is writing an undeclared resource.
+                if (contextUriInfo != null)
+                {
+                    resourceScope.IsUndeclared = contextUriInfo.IsUndeclared.HasValue && contextUriInfo.IsUndeclared.Value;
+                }
             }
 
             // Write the metadata
@@ -892,6 +898,7 @@ namespace Microsoft.OData.JsonLight
             public bool IsUndeclared
             {
                 get { return isUndeclared; }
+                set { isUndeclared = value; }
             }
 
             /// <summary>

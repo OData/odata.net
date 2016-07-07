@@ -100,7 +100,7 @@ namespace Microsoft.Test.OData.Services.ODataWCFService.Handlers
         /// <param name="relationShip">Navigation property name, string.Empty for first level</param>
         private void GenerateDeltaItemFromEntry(object entry, IEdmNavigationSource entitySet, ODataVersion targetVersion, SelectExpandClause selectExpandClause, string parentId, string relationShip)
         {
-            var deltaEntry = ODataObjectModelConverter.ConvertToODataEntry(entry, entitySet, targetVersion);
+            var deltaEntry = ODataObjectModelConverter.ConvertToODataEntry(entry, entitySet, targetVersion).Resource;
 
             // Verify entry if need to be written
             DateTime lastestUpdated = ((ClrObject)entry).UpdatedTime;

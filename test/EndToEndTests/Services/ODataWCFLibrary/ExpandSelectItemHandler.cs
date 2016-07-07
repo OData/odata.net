@@ -17,42 +17,50 @@ namespace Microsoft.Test.OData.Services.ODataWCFService
 {
     public class ExpandSelectItemHandler : SelectItemHandler
     {
-        public ODataResource OriginalEntry { get; set; }
-        public ODataResource ProjectedEntry { get; set; }
+        public ODataResourceWrapper OriginalEntryWrapper { get; set; }
+        public ODataResourceWrapper ProjectedEntryWrapper { get; set; }
 
         public object ParentElement { get; set; }
         public object ExpandedChildElement { get; set; }
 
         public ExpandSelectItemHandler(object original)
         {
-            this.OriginalEntry = original as ODataResource;
-            if (this.OriginalEntry != null)
+            this.OriginalEntryWrapper = original as ODataResourceWrapper;
+
+            if (this.OriginalEntryWrapper != null)
             {
-                this.ProjectedEntry = new ODataResource()
+                var originEntry = this.OriginalEntryWrapper.Resource;
+                var projectedEntry = new ODataResource()
                 {
-                    IsTransient = this.OriginalEntry.IsTransient,
-                    InstanceAnnotations = this.OriginalEntry.InstanceAnnotations,
-                    TypeName = this.OriginalEntry.TypeName
+                    IsTransient = originEntry.IsTransient,
+                    InstanceAnnotations = originEntry.InstanceAnnotations,
+                    TypeName = originEntry.TypeName
                 };
-                if (this.OriginalEntry.Id != null)
+
+                this.ProjectedEntryWrapper = new ODataResourceWrapper()
                 {
-                    this.ProjectedEntry.Id = this.OriginalEntry.Id;
+                    Resource = projectedEntry
+                };
+
+                if (originEntry.Id != null)
+                {
+                    projectedEntry.Id = originEntry.Id;
                 }
-                if (this.OriginalEntry.EditLink != null)
+                if (originEntry.EditLink != null)
                 {
-                    this.ProjectedEntry.EditLink = this.OriginalEntry.EditLink;
+                    projectedEntry.EditLink = originEntry.EditLink;
                 }
-                if (this.OriginalEntry.ReadLink != null)
+                if (originEntry.ReadLink != null)
                 {
-                    this.ProjectedEntry.ReadLink = this.OriginalEntry.ReadLink;
+                    projectedEntry.ReadLink = originEntry.ReadLink;
                 }
-                if (this.OriginalEntry.ETag != null)
+                if (originEntry.ETag != null)
                 {
-                    this.ProjectedEntry.ETag = this.OriginalEntry.ETag;
+                    projectedEntry.ETag = originEntry.ETag;
                 }
-                if (this.OriginalEntry.MediaResource != null)
+                if (originEntry.MediaResource != null)
                 {
-                    this.ProjectedEntry.MediaResource = this.OriginalEntry.MediaResource;
+                    projectedEntry.MediaResource = originEntry.MediaResource;
                 }
             }
             else
@@ -67,7 +75,8 @@ namespace Microsoft.Test.OData.Services.ODataWCFService
         /// <param name="item">the item to Handle</param>
         public override void Handle(WildcardSelectItem item)
         {
-            this.ProjectedEntry.Properties = this.OriginalEntry.Properties;
+            this.ProjectedEntryWrapper.Resource.Properties = this.OriginalEntryWrapper.Resource.Properties;
+            this.ProjectedEntryWrapper.NestedResourceInfos = this.OriginalEntryWrapper.NestedResourceInfos;
         }
 
         /// <summary>
@@ -82,12 +91,26 @@ namespace Microsoft.Test.OData.Services.ODataWCFService
             // we ignore the NavigationPropertySegment since we already handle it as ExpandedNavigationSelectItem
             if (propertySegment != null || openPropertySegment != null)
             {
-                List<ODataProperty> properties = this.ProjectedEntry.Properties == null ? new List<ODataProperty>() : this.ProjectedEntry.Properties.ToList();
+                List<ODataProperty> properties = this.ProjectedEntryWrapper.Resource.Properties == null ? new List<ODataProperty>() : this.ProjectedEntryWrapper.Resource.Properties.ToList();
+                List<ODataNestedResourceInfoWrapper> nestedResourceInfos = this.ProjectedEntryWrapper.NestedResourceInfos == null ? new List<ODataNestedResourceInfoWrapper>() : this.ProjectedEntryWrapper.NestedResourceInfos.ToList();
 
                 string propertyName = (propertySegment != null) ? propertySegment.Property.Name : openPropertySegment.Identifier;
-                properties.Add(this.OriginalEntry.Properties.Single(p => p.Name == propertyName));
+                var property = this.OriginalEntryWrapper.Resource.Properties.SingleOrDefault(p => p.Name == propertyName);
+                if (property != null)
+                {
+                    properties.Add(property);
+                }
+                else
+                {
+                    var nestedInfo = this.OriginalEntryWrapper.NestedResourceInfos.SingleOrDefault(n => n.NestedResourceInfo.Name == propertyName);
+                    if (nestedInfo != null)
+                    {
+                        nestedResourceInfos.Add(nestedInfo);
+                    }
+                }
 
-                this.ProjectedEntry.Properties = properties.AsEnumerable();
+                this.ProjectedEntryWrapper.Resource.Properties = properties.AsEnumerable();
+                this.ProjectedEntryWrapper.NestedResourceInfos = nestedResourceInfos.ToList();
             }
         }
 

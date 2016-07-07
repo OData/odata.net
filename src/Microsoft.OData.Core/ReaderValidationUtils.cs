@@ -14,6 +14,7 @@ namespace Microsoft.OData
     using Microsoft.OData.Edm;
     using Microsoft.OData.JsonLight;
     using Microsoft.OData.Metadata;
+    using Microsoft.OData.UriParser;
     #endregion Namespaces
 
     /// <summary>
@@ -571,9 +572,9 @@ namespace Microsoft.OData
 
             Debug.Assert(contextUriParseResult != null, "contextUriParseResult != null");
             Debug.Assert(
-                contextUriParseResult.NavigationSource != null || contextUriParseResult.EdmType != null,
-                "contextUriParseResult.EntitySet != null || contextUriParseResult.EdmType != null");
-            Debug.Assert(contextUriParseResult.EdmType is IEdmStructuredType, "contextUriParseResult.EdmType is IEdmStructuredType");
+                contextUriParseResult.Path != null && contextUriParseResult.Path.IsUndeclared() ||
+                contextUriParseResult.NavigationSource != null || (contextUriParseResult.EdmType != null && contextUriParseResult.EdmType is IEdmStructuredType),
+                "contextUriParseResult.Path != null && contextUriParseResult.Path.IsUndeclared() || contextUriParseResult.NavigationSource != null || (contextUriParseResult.EdmType != null && contextUriParseResult.EdmType is IEdmStructuredType)");
 
             // Set the navigation source name or make sure the navigation source names match.
             if (scope.NavigationSource == null)
@@ -593,6 +594,13 @@ namespace Microsoft.OData
 
             // Set the resource type or make sure the resource types are assignable.
             IEdmStructuredType payloadEntityType = (IEdmStructuredType)contextUriParseResult.EdmType;
+
+            if (payloadEntityType == null)
+            {
+                // for dynmaic path, the contextUriParseResult.EdmType might be null;
+                return;
+            }
+
             if (scope.ResourceType == null)
             {
                 if (updateScope)

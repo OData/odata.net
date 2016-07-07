@@ -53,13 +53,26 @@ namespace Microsoft.Test.OData.PluggableFormat.Avro
             var entry = value as ODataResource;
             if (entry != null)
             {
-                var record = new AvroRecord(schema);
+                RecordSchema recordSchema = schema as RecordSchema;
+
+                if (recordSchema == null)
+                {
+                    var unionSchema = schema as UnionSchema;
+                    if (unionSchema != null)
+                    {
+                        recordSchema = unionSchema.Schemas.OfType<RecordSchema>().Single();
+                    }
+                    else
+                    {
+                        throw new ApplicationException("not supported schema found.");
+                    }
+                }
+
+                var record = new AvroRecord(recordSchema);
                 foreach (var property in entry.Properties)
                 {
-                    var recordSchema = (RecordSchema)schema;
                     RecordField field;
                     recordSchema.TryGetField(property.Name, out field);
-
                     record[property.Name] = FromODataObject(property.Value, field != null ? field.TypeSchema : null);
                 }
 
@@ -89,6 +102,21 @@ namespace Microsoft.Test.OData.PluggableFormat.Avro
             return value;
         }
 
+        public static object UpdateNestedInfoFromODataObject(object currentObj, ODataResource entry, ODataNestedResourceInfo property, Schema schema)
+        {
+            var record = currentObj as AvroRecord;
+            if (record != null)
+            {
+                var recordSchema = (RecordSchema)schema;
+                RecordField field;
+                recordSchema.TryGetField(property.Name, out field);
+
+                record[property.Name] = FromODataObject(entry, field != null ? field.TypeSchema : null);
+            }
+
+            return record;
+        }
+
         public static ODataResource ToODataEntry(AvroRecord record)
         {
             return new ODataResource
@@ -96,6 +124,12 @@ namespace Microsoft.Test.OData.PluggableFormat.Avro
                 TypeName = record.Schema.FullName,
                 Properties = GetProperties(record)
             };
+        }
+
+        public static ODataResource ToODataEntry(AvroRecord parentRecord, string fieldName)
+        {
+            var subRecord = parentRecord[fieldName] as AvroRecord;
+            return ToODataEntry(subRecord);
         }
 
         public static ODataComplexValue ToODataComplexValue(AvroRecord record)
@@ -121,14 +155,24 @@ namespace Microsoft.Test.OData.PluggableFormat.Avro
         private static IEnumerable<ODataProperty> GetProperties(AvroRecord record)
         {
             return record.Schema.Fields
+                .Where(field => !(record[field.Name] is AvroRecord))
                 .Select(field => new ODataProperty
                 {
                     Name = field.Name,
-                    Value = record[field.Name] is AvroRecord
-                        ? ToODataComplexValue((AvroRecord)record[field.Name])
-                        : ToODataValue(record[field.Name]),
+                    Value = ToODataValue(record[field.Name]),
                 });
+        }
 
+        public static ODataNestedResourceInfo GetNestedResourceInfo(AvroRecord record)
+        {
+            return record.Schema.Fields
+                .Where(field => (record[field.Name] is AvroRecord))
+                .Select(field => new ODataNestedResourceInfo
+                {
+                    Name = field.Name,
+                    IsCollection = false
+                })
+                .SingleOrDefault();
         }
     }
 }

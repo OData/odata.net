@@ -230,6 +230,7 @@ namespace Microsoft.OData.Tests.Json
             verifierCalls.Should().Be(4);
         }
 
+        /*
         [Fact]
         public void WriteInstanceAnnotation_ForComplexShouldUseComplexCodePath()
         {
@@ -254,7 +255,7 @@ namespace Microsoft.OData.Tests.Json
             this.jsonLightInstanceAnnotationWriter.WriteInstanceAnnotation(new ODataInstanceAnnotation(term, complexValue));
             verifierCalls.Should().Be(2);
         }
-
+        */
         [Fact]
         public void WriteInstanceAnnotation_ForCollectionShouldUseCollectionCodePath()
         {
@@ -540,11 +541,12 @@ namespace Microsoft.OData.Tests.Json
             wroteTypeName.Should().BeTrue();
         }
 
+        /*
         [Fact]
         public void WriteInstanceAnnotationShouldPassComplexTypeFromModelToUnderlyingWriter()
         {
             // Add a term of a complex type to the model.
-            var complexTypeReference = new EdmComplexTypeReference(new EdmComplexType("My.Namespace", "ComplexType"), false /*isNullable*/);
+            var complexTypeReference = new EdmComplexTypeReference(new EdmComplexType("My.Namespace", "ComplexType"), false);
             this.referencedModel.AddElement(new EdmTerm("My.Namespace", "StructuredTerm", complexTypeReference));
             var instanceAnnotation = new ODataInstanceAnnotation("My.Namespace.StructuredTerm", new ODataComplexValue { TypeName = "ComplexType" });
 
@@ -561,6 +563,7 @@ namespace Microsoft.OData.Tests.Json
             this.jsonLightInstanceAnnotationWriter.WriteInstanceAnnotation(instanceAnnotation);
             calledWriteComplex.Should().BeTrue();
         }
+        */
 
         [Fact]
         public void WriteInstanceAnnotationShouldPassCollectionTypeFromModelToUnderlyingWriter()
@@ -632,6 +635,7 @@ namespace Microsoft.OData.Tests.Json
             testSubject.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.ValidationUtils_IncompatiblePrimitiveItemType("Edm.Guid", /*nullability*/ "False", "Edm.DateTimeOffset", /*nullability*/ "True"));
         }
 
+        /*
         [Fact]
         public void WritingComplexAnnotationShouldNotIncludeTypeNameIfDeclaredOnTermMetadata()
         {
@@ -662,6 +666,7 @@ namespace Microsoft.OData.Tests.Json
 
             result.Should().Contain("\"@custom.namespace.AddressTerm\":{\"@odata.type\":\"#custom.namespace.Address\"");
         }
+        */
 
         [Fact]
         public void WritingCollectionAnnotationShouldNotIncludeTypeNameIfDeclaredOnTermMetadata()
@@ -689,6 +694,7 @@ namespace Microsoft.OData.Tests.Json
             result.Should().Contain("\"custom.namespace.CollectionValueTerm@odata.type\":\"#Collection(Int32)\"");
         }
 
+        /*
         [Fact]
         public void WritingComplexAnnotationWithNotDefinedComplexTypeShouldThrow()
         {
@@ -701,6 +707,7 @@ namespace Microsoft.OData.Tests.Json
 
             testSubject.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.ValidationUtils_UnrecognizedTypeName("custom.namespace.Address"));
         }
+        */
 
         [Fact]
         public void WritingComplexAnnotationWithCollectionOfNotDefinedComplexTypeShouldThrow()
@@ -709,7 +716,7 @@ namespace Microsoft.OData.Tests.Json
             EdmModel edmModel = new EdmModel();
 
             Action testSubject = () => WriteInstanceAnnotation(
-                new ODataInstanceAnnotation("custom.namespace.CollectionOfAddressTerm", new ODataCollectionValue { Items = Enumerable.Empty<ODataComplexValue>(), TypeName = "Collection(custom.namespace.Address)" }),
+                new ODataInstanceAnnotation("custom.namespace.CollectionOfAddressTerm", new ODataCollectionValue { Items = Enumerable.Empty<ODataEnumValue>(), TypeName = "Collection(custom.namespace.Address)" }),
                 TestUtils.WrapReferencedModelsToMainModel(edmModel));
 
             testSubject.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.ValidationUtils_UnrecognizedTypeName("Collection(custom.namespace.Address)"));

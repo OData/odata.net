@@ -175,7 +175,8 @@ namespace Microsoft.Test.OData.Services.ODataWCFService.Handlers
                     ResponseWriter.WriteFeed(resultWriter, entityType, iEnumerableResults, entitySet, ODataVersion.V4, this.QueryContext.QuerySelectExpandClause, this.QueryContext.TotalCount, this.QueryContext.DeltaLink, this.QueryContext.NextLink, this.RequestHeaders);
                     resultWriter.Flush();
                 }
-                else if (this.QueryContext.Target.NavigationSource != null && this.QueryContext.Target.TypeKind == EdmTypeKind.Entity)
+                else if ((this.QueryContext.Target.NavigationSource != null && this.QueryContext.Target.TypeKind == EdmTypeKind.Entity)
+                || this.QueryContext.Target.TypeKind == EdmTypeKind.Complex || queryResults.GetType().BaseType == typeof(ClrObject))
                 {
                     var currentETag = Utility.GetETagValue(queryResults);
                     // if the current entity has ETag field
@@ -191,10 +192,10 @@ namespace Microsoft.Test.OData.Services.ODataWCFService.Handlers
                         responseMessage.SetHeader(ServiceConstants.HttpHeaders.ETag, currentETag);
                     }
 
-                    // Query a single entity
-                    IEdmEntityType entityType = this.QueryContext.Target.Type as IEdmEntityType;
+                    // Query a single resource
+                    IEdmStructuredType structuredType = this.QueryContext.Target.Type as IEdmStructuredType;
 
-                    ODataWriter resultWriter = messageWriter.CreateODataResourceWriter(navigationSource, entityType);
+                    ODataWriter resultWriter = messageWriter.CreateODataResourceWriter(navigationSource, structuredType);
                     ResponseWriter.WriteEntry(resultWriter, queryResults, navigationSource, ODataVersion.V4, this.QueryContext.QuerySelectExpandClause, this.RequestHeaders);
                     resultWriter.Flush();
                 }
