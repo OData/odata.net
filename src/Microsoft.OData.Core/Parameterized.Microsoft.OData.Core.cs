@@ -4445,15 +4445,6 @@ namespace Microsoft.OData {
         }
 
         /// <summary>
-        /// A string like "A type name was not provided for an instance of ODataComplexValue."
-        /// </summary>
-        internal static string ODataJsonLightValueSerializer_MissingTypeNameOnComplex {
-            get {
-                return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightValueSerializer_MissingTypeNameOnComplex);
-            }
-        }
-
-        /// <summary>
         /// A string like "A type name was not provided for an instance of ODataCollectionValue."
         /// </summary>
         internal static string ODataJsonLightValueSerializer_MissingTypeNameOnCollection {

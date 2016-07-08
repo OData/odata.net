@@ -85,18 +85,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.JsonLight
                         "}}",
                         "}}",
                         "}}")
-                },
-                new PropertyPayloadTestCase
-                {
-                    DebugDescription = "Top-level open complex property.",
-                    Property = new ODataProperty { Name = "Address", Value = new ODataComplexValue { TypeName = "TestModel.AddressType" } },
-                    Model = edmModel,
-                    PropertyType = "TestModel.AddressType",
-                    Json = string.Join("$(NL)",
-                        "{{",
-                        "{0}",
-                        "}}")
-                },
+                }
             };
 
             IEnumerable<PayloadWriterTestDescriptor<ODataProperty>> testDescriptors = testCases.Select(testCase =>

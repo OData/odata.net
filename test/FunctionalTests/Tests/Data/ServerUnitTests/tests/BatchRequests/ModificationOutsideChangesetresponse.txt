@@ -21,7 +21,7 @@ Cache-Control: no-cache
 Location: $(BaseUri)Customers(102)
 ETag: W/"00000001-0000-0000-0000-000000000000"
 
-{"@odata.context":"$(BaseUri)$metadata#Customers/$entity","@odata.etag":"W/\"00000001-0000-0000-0000-000000000000\"","ID":102,"Name":"Paul","Address":{"StreetAddress":"Line1","City":"Redmond","State":"WA","PostalCode":"98052"},"GuidValue":"00000001-0000-0000-0000-000000000000","NameAsHtml":"<html><body>Paul</body></html>"}
+{"@odata.context":"$(BaseUri)$metadata#Customers/$entity","@odata.etag":"W/\"00000001-0000-0000-0000-000000000000\"","ID":102,"Name":"Paul","GuidValue":"00000001-0000-0000-0000-000000000000","NameAsHtml":"<html><body>Paul</body></html>","Address":{"@odata.type":"#AstoriaUnitTests.Stubs.Address","StreetAddress":"Line1","City":"Redmond","State":"WA","PostalCode":"98052"}}
 --batchresponse_00000000-0000-0000-0000-000000000000
 Content-Type: application/http
 Content-Transfer-Encoding: binary
@@ -33,7 +33,7 @@ X-Content-Type-Options: nosniff
 Cache-Control: no-cache
 ETag: W/"00000001-0000-0000-0000-000000000000"
 
-{"@odata.context":"$(BaseUri)$metadata#Customers/$entity","@odata.etag":"W/\"00000001-0000-0000-0000-000000000000\"","ID":102,"Name":"Paul","Address":{"StreetAddress":"Line1","City":"Redmond","State":"WA","PostalCode":"98052"},"GuidValue":"00000001-0000-0000-0000-000000000000","NameAsHtml":"<html><body>Paul</body></html>"}
+{"@odata.context":"$(BaseUri)$metadata#Customers/$entity","@odata.etag":"W/\"00000001-0000-0000-0000-000000000000\"","ID":102,"Name":"Paul","GuidValue":"00000001-0000-0000-0000-000000000000","NameAsHtml":"<html><body>Paul</body></html>","Address":{"@odata.type":"#AstoriaUnitTests.Stubs.Address","StreetAddress":"Line1","City":"Redmond","State":"WA","PostalCode":"98052"}}
 --batchresponse_00000000-0000-0000-0000-000000000000
 Content-Type: multipart/mixed; boundary=changesetresponse_00000002-0000-0000-0000-000000000000
 
@@ -50,7 +50,7 @@ Cache-Control: no-cache
 Location: $(BaseUri)Customers(103)
 ETag: W/"00000003-0000-0000-0000-000000000000"
 
-{"@odata.context":"$(BaseUri)$metadata#Customers/$entity","@odata.etag":"W/\"00000003-0000-0000-0000-000000000000\"","ID":103,"Name":"Paul","Address":{"StreetAddress":"Line1","City":"Redmond","State":"WA","PostalCode":"98052"},"GuidValue":"00000003-0000-0000-0000-000000000000","NameAsHtml":"<html><body>Paul</body></html>"}
+{"@odata.context":"$(BaseUri)$metadata#Customers/$entity","@odata.etag":"W/\"00000003-0000-0000-0000-000000000000\"","ID":103,"Name":"Paul","GuidValue":"00000003-0000-0000-0000-000000000000","NameAsHtml":"<html><body>Paul</body></html>","Address":{"@odata.type":"#AstoriaUnitTests.Stubs.Address","StreetAddress":"Line1","City":"Redmond","State":"WA","PostalCode":"98052"}}
 --changesetresponse_00000002-0000-0000-0000-000000000000--
 --batchresponse_00000000-0000-0000-0000-000000000000
 Content-Type: application/http
@@ -63,5 +63,5 @@ X-Content-Type-Options: nosniff
 Cache-Control: no-cache
 ETag: W/"00000003-0000-0000-0000-000000000000"
 
-{"@odata.context":"$(BaseUri)$metadata#Customers/$entity","@odata.etag":"W/\"00000003-0000-0000-0000-000000000000\"","ID":103,"Name":"Paul","Address":{"StreetAddress":"Line1","City":"Redmond","State":"WA","PostalCode":"98052"},"GuidValue":"00000003-0000-0000-0000-000000000000","NameAsHtml":"<html><body>Paul</body></html>"}
+{"@odata.context":"$(BaseUri)$metadata#Customers/$entity","@odata.etag":"W/\"00000003-0000-0000-0000-000000000000\"","ID":103,"Name":"Paul","GuidValue":"00000003-0000-0000-0000-000000000000","NameAsHtml":"<html><body>Paul</body></html>","Address":{"@odata.type":"#AstoriaUnitTests.Stubs.Address","StreetAddress":"Line1","City":"Redmond","State":"WA","PostalCode":"98052"}}
 --batchresponse_00000000-0000-0000-0000-000000000000--

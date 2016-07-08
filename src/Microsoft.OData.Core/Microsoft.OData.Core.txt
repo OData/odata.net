@@ -700,7 +700,6 @@ ODataInstanceAnnotation_ReservedNamesNotAllowed='{0}' is a reserved instance ann
 ODataInstanceAnnotation_BadTermName='{0}' is an invalid instance annotation name.
 ODataInstanceAnnotation_ValueCannotBeODataStreamReferenceValue=The value of an instance annotation cannot be of type ODataStreamReferenceValue.
 
-ODataJsonLightValueSerializer_MissingTypeNameOnComplex=A type name was not provided for an instance of ODataComplexValue.
 ODataJsonLightValueSerializer_MissingTypeNameOnCollection=A type name was not provided for an instance of ODataCollectionValue.
 ODataJsonLightValueSerializer_MissingRawValueOnUntyped=A raw value was not provided for an instance of ODataUntypedValue.
 

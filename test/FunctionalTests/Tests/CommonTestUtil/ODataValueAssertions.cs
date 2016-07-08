@@ -74,4 +74,42 @@ namespace AstoriaUnitTests.TDD.Common
             return new AndConstraint<ODataValueAssertions>(this);
         }
     }
+
+    [CLSCompliant(false)]
+    public static class ODataItemAssertionsExtensions
+    {
+        public static ODataItemAssertions Should(this ODataItem subject)
+        {
+            return new ODataItemAssertions(subject);
+        }
+    }
+
+    [CLSCompliant(false)]
+    public class ODataItemAssertions : ObjectAssertions
+    {
+        protected internal ODataItemAssertions(ODataItem value)
+            : base(value)
+        {
+        }
+
+        public AndConstraint<ODataItemAssertions> BeResource()
+        {
+            this.Subject.Should().BeAssignableTo<ODataResource>();
+            return new AndConstraint<ODataItemAssertions>(this);
+        }
+
+        public AndConstraint<ODataItemAssertions> BeResourceSet()
+        {
+            this.Subject.Should().BeAssignableTo<ODataResourceSet>();
+            return new AndConstraint<ODataItemAssertions>(this);
+        }
+
+        public AndConstraint<ODataItemAssertions> HaveSerializationTypeName(string value)
+        {
+            var annotation = this.Subject.As<ODataItem>().GetAnnotation<SerializationTypeNameAnnotation>();
+            annotation.Should().NotBeNull();
+            annotation.TypeName.Should().Be(value);
+            return new AndConstraint<ODataItemAssertions>(this);
+        }
+    }
 }

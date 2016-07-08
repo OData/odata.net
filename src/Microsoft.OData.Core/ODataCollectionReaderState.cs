@@ -28,7 +28,7 @@ namespace Microsoft.OData
         /// <summary>
         /// The reader read an item from the collection.
         /// </summary>
-        /// <remarks>In this state, the Item property of the <see cref="ODataCollectionReader"/> returns the read item (a primitive value, an ODataComplexValue or null).</remarks>
+        /// <remarks>In this state, the Item property of the <see cref="ODataCollectionReader"/> returns the read item (a primitive value or null).</remarks>
         Value,
 
         /// <summary>

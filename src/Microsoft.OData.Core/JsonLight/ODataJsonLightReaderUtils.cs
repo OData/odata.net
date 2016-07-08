@@ -216,12 +216,6 @@ namespace Microsoft.OData.JsonLight
                 return Metadata.EdmConstants.EdmDoubleTypeName;
             }
 
-            ODataComplexValue complexValue = payloadItem as ODataComplexValue;
-            if (complexValue != null)
-            {
-                return complexValue.TypeName;
-            }
-
             ODataCollectionValue collectionValue = payloadItem as ODataCollectionValue;
             if (collectionValue != null)
             {

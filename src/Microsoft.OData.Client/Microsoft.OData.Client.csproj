@@ -241,6 +241,11 @@
     <Compile Include="UriEntityOperationParameter.cs" />
     <Compile Include="Utility.cs" />
     <Compile Include="WeakDictionary.cs" />
+    <Compile Include="Wrappers\ODataItemWrapper.cs" />
+    <Compile Include="Wrappers\ODataNestedResourceInfoWrapper.cs" />
+    <Compile Include="Wrappers\ODataResourceSetWrapper.cs" />
+    <Compile Include="Wrappers\ODataResourceWrapper.cs" />
+    <Compile Include="Wrappers\ODataWriterHelper.cs" />
     <Compile Include="WritingEntityReferenceLinkArgs.cs" />
     <Compile Include="WritingEntryArgs.cs" />
     <Compile Include="WritingNestedResourceInfoArgs.cs" />

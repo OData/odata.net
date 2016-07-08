@@ -97,6 +97,25 @@ namespace Microsoft.OData.Service.Serializers
                     throw new InvalidOperationException(Microsoft.OData.Service.Strings.Serializer_UnsupportedTopLevelType(element.GetType()));
                 }
 
+                if (resourceType.ResourceTypeKind == ResourceTypeKind.ComplexType)
+                {
+                    var odataWriter = this.writer.CreateODataResourceWriter();
+                    var resource = this.GetComplexResource(propertyName, element);
+                    resource.Resource.SetSerializationInfo(new ODataResourceSerializationInfo() { ExpectedTypeName = resourceType.FullName });
+                    ODataWriterHelper.WriteResource(odataWriter, resource);
+                    return;
+                }
+
+                if (resourceType.ResourceTypeKind == ResourceTypeKind.Collection
+                    && resourceType.ElementType().ResourceTypeKind == ResourceTypeKind.ComplexType)
+                {
+                    var odataWriter = this.writer.CreateODataResourceSetWriter();
+                    var resourceSet = this.GetComplexResourceSet(propertyName, (CollectionResourceType)resourceType, element);
+                    resourceSet.ResourceSet.SetSerializationInfo(new ODataResourceSerializationInfo() { ExpectedTypeName = resourceType.FullName });
+                    ODataWriterHelper.WriteResourceSet(odataWriter, resourceSet);
+                    return;
+                }
+
                 var odataProperty = new ODataProperty
                 {
                     Name = propertyName,

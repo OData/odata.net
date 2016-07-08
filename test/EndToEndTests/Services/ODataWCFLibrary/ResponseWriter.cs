@@ -53,9 +53,9 @@ namespace Microsoft.Test.OData.Services.ODataWCFService
 
             writer.WriteStart(resource);
 
-            if (resourceWrapper.NestedResourceInfos != null)
+            if (resourceWrapper.NestedResourceInfoWrappers != null)
             {
-                foreach (var nestedResourceInfoWrapper in resourceWrapper.NestedResourceInfos)
+                foreach (var nestedResourceInfoWrapper in resourceWrapper.NestedResourceInfoWrappers)
                 {
                     ODataWriterHelper.WriteNestedResourceInfo(writer, nestedResourceInfoWrapper);
                 }

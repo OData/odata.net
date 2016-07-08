@@ -313,7 +313,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client
             List<BodyOperationParameter> parameters = new List<BodyOperationParameter> { new BodyOperationParameter("customer", customer) };
             ODataRequestMessageWrapper requestMessage = CreateRequestMessageForPost(requestInfo);
             serializer.WriteBodyOperationParameters(parameters, requestMessage);
-            const string parameterString = "{\"customer\":{\"@odata.type\":\"#AstoriaUnitTests.TDD.Tests.Client.Customer\",\"Address\":{\"@odata.type\":\"#AstoriaUnitTests.TDD.Tests.Client.Address\",\"Street\":\"Microsoft Street\"},\"Emails@odata.type\":\"#Collection(String)\",\"Emails\":[\"tom@microsoft.com\",\"jerry@microsoft.com\"],\"Id\":1}}";
+            const string parameterString = "{\"customer\":{\"@odata.type\":\"#AstoriaUnitTests.TDD.Tests.Client.Customer\",\"Emails@odata.type\":\"#Collection(String)\",\"Emails\":[\"tom@microsoft.com\",\"jerry@microsoft.com\"],\"Id\":1,\"Address\":{\"@odata.type\":\"#AstoriaUnitTests.TDD.Tests.Client.Address\",\"Street\":\"Microsoft Street\"}}}";
             VerifyMessageBody(requestMessage, parameterString);
         }
 
@@ -352,7 +352,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client
             List<BodyOperationParameter> parameters = new List<BodyOperationParameter> { new BodyOperationParameter("customer", new List<Customer>(){customer1, customer2}) };
             ODataRequestMessageWrapper requestMessage = CreateRequestMessageForPost(requestInfo);
             serializer.WriteBodyOperationParameters(parameters, requestMessage);
-            const string parameterString = "{\"customer\":[{\"@odata.type\":\"#AstoriaUnitTests.TDD.Tests.Client.Customer\",\"Address\":{\"@odata.type\":\"#AstoriaUnitTests.TDD.Tests.Client.Address\",\"Street\":\"Microsoft Street\"},\"Emails@odata.type\":\"#Collection(String)\",\"Emails\":[\"tom@microsoft.com\",\"jerry@microsoft.com\"],\"Id\":1},{\"@odata.type\":\"#AstoriaUnitTests.TDD.Tests.Client.Customer\",\"Address\":null,\"Emails@odata.type\":\"#Collection(String)\",\"Emails\":[],\"Id\":2}]}";
+            const string parameterString = "{\"customer\":[{\"@odata.type\":\"#AstoriaUnitTests.TDD.Tests.Client.Customer\",\"Emails@odata.type\":\"#Collection(String)\",\"Emails\":[\"tom@microsoft.com\",\"jerry@microsoft.com\"],\"Id\":1,\"Address\":{\"@odata.type\":\"#AstoriaUnitTests.TDD.Tests.Client.Address\",\"Street\":\"Microsoft Street\"}},{\"@odata.type\":\"#AstoriaUnitTests.TDD.Tests.Client.Customer\",\"Emails@odata.type\":\"#Collection(String)\",\"Emails\":[],\"Id\":2,\"Address\":null}]}";
             VerifyMessageBody(requestMessage, parameterString);
         }
 

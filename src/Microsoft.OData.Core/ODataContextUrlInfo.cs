@@ -321,12 +321,6 @@ namespace Microsoft.OData
                 return typeAnnotation.TypeName;
             }
 
-            var complexValue = value as ODataComplexValue;
-            if (complexValue != null)
-            {
-                return complexValue.TypeName;
-            }
-
             var collectionValue = value as ODataCollectionValue;
             if (collectionValue != null)
             {

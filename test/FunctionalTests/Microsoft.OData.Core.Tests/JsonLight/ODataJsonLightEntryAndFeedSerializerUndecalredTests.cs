@@ -56,29 +56,9 @@
         [Fact]
         public void WriteEntryUndeclaredPropertiesTest()
         {
-            var entry = new ODataResource
-            {
-                TypeName = "Server.NS.ServerEntityType",
-                Properties = new[]
-                    {
-                        new ODataProperty{Name = "Id", Value = new ODataPrimitiveValue(61880128)},
-                        new ODataProperty{Name = "UndeclaredFloatId", Value = new ODataPrimitiveValue(12.3D)},
-                        new ODataProperty{Name = "Address", Value = new ODataComplexValue()
-                        {
-                            TypeName = "Server.NS.Address",
-                            Properties= new []
-                            {
-                                new ODataProperty{Name = "Street", Value = new ODataPrimitiveValue("No.999,Zixing Rd Minhang")},
-                                new ODataProperty{Name = "UndeclaredStreet", Value = new ODataPrimitiveValue("No.10000000999,Zixing Rd Minhang")},
-                            },
-                        }},
-                    },
-            };
-            string result = this.WriteEntryPayload(this.serverEntitySet, this.serverEntityType, writer =>
-            {
-                writer.WriteStart(entry);
-                writer.WriteEnd();
-            });
+            var undeclaredFloat = new ODataProperty { Name = "UndeclaredFloatId", Value = new ODataPrimitiveValue(12.3D) };
+
+            string result = WriteNonOpenEntryUndeclaredPropertiesTest(undeclaredFloat, false);
 
             result.Should().Be(@"{""@odata.context"":""http://www.sampletest.com/$metadata#serverEntitySet/$entity"",""Id"":61880128,""UndeclaredFloatId"":12.3,""Address"":{""Street"":""No.999,Zixing Rd Minhang"",""UndeclaredStreet"":""No.10000000999,Zixing Rd Minhang""}}");
         }
@@ -86,168 +66,76 @@
         [Fact]
         public void WriteNonOpenEntryUndeclaredPropertiesWithNullValueTest()
         {
-            var entry = new ODataResource
-            {
-                TypeName = "Server.NS.ServerEntityType",
-                Properties = new[]
-                    {
-                        new ODataProperty{Name = "Id", Value = new ODataPrimitiveValue(61880128)},
-                        new ODataProperty{Name = "UndeclaredType1", Value = null},
-                        new ODataProperty{Name = "Address", Value = new ODataComplexValue()
-                        {
-                            TypeName = "Server.NS.Address",
-                            Properties = new[]
-                            {
-                                new ODataProperty{Name = "Street", Value = new ODataPrimitiveValue("No.999,Zixing Rd Minhang")},
-                                new ODataProperty{Name = "UndeclaredStreet", Value = new ODataPrimitiveValue("No.10000000999,Zixing Rd Minhang")},
-                            },
-                        }},
-                    },
-            };
-            string result = this.WriteEntryPayload(this.serverEntitySet, this.serverEntityType, writer =>
-            {
-                writer.WriteStart(entry);
-                writer.WriteEnd();
-            });
+            var undeclaredNull = new ODataProperty { Name = "UndeclaredType1", Value = null };
+
+            string result = WriteNonOpenEntryUndeclaredPropertiesTest(undeclaredNull, false);
 
             result.Should().Be(@"{""@odata.context"":""http://www.sampletest.com/$metadata#serverEntitySet/$entity"",""Id"":61880128,""UndeclaredType1"":null,""Address"":{""Street"":""No.999,Zixing Rd Minhang"",""UndeclaredStreet"":""No.10000000999,Zixing Rd Minhang""}}");
         }
 
         [Fact]
-        public void WriteNonOpenEntryUndeclaredPropertiesTest()
-        {
-            var entry = new ODataResource
-            {
-                TypeName = "Server.NS.ServerEntityType",
-                Properties = new[]
-                    {
-                        new ODataProperty{Name = "Id", Value = new ODataPrimitiveValue(61880128)},
-                        new ODataProperty{Name = "UndeclaredFloatId", Value = new ODataPrimitiveValue(12.3D)},
-                        new ODataProperty{Name = "Address", Value = new ODataComplexValue()
-                        {
-                            TypeName = "Server.NS.Address",
-                            Properties = new[]
-                            {
-                                new ODataProperty{Name = "Street", Value = new ODataPrimitiveValue("No.999,Zixing Rd Minhang")},
-                                new ODataProperty{Name = "UndeclaredStreet", Value = new ODataPrimitiveValue("No.10000000999,Zixing Rd Minhang")},
-                            },
-                        }},
-                    },
-            };
-            string result = this.WriteEntryPayload(this.serverEntitySet, this.serverEntityType, writer =>
-            {
-                writer.WriteStart(entry);
-                writer.WriteEnd();
-            });
-
-            result.Should().Be(@"{""@odata.context"":""http://www.sampletest.com/$metadata#serverEntitySet/$entity"",""Id"":61880128,""UndeclaredFloatId"":12.3,""Address"":{""Street"":""No.999,Zixing Rd Minhang"",""UndeclaredStreet"":""No.10000000999,Zixing Rd Minhang""}}");
-        }
-
-        [Fact]
         public void WriteNonOpenEntryUndeclaredComplexPropertiesTest()
         {
-            var entry = new ODataResource
+            var undeclaredComplex_Info = new ODataNestedResourceInfo()
             {
-                TypeName = "Server.NS.ServerEntityType",
-                Properties = new[]
-                    {
-                        new ODataProperty{Name = "Id", Value = new ODataPrimitiveValue(61880128)},
-                        new ODataProperty{Name = "UndeclaredComplexType1", Value = new ODataComplexValue()
-                        {
-                            TypeName = "Server.NS.Address",
-                            Properties = new[]
-                            {
-                                new ODataProperty{Name = "Street", Value = new ODataPrimitiveValue("No.1000,Zixing Rd Minhang")},
-                                new ODataProperty{Name = "UndeclaredStreet", Value = new ODataPrimitiveValue("No.1001,Zixing Rd Minhang")},
-                            },
-                        }},
-                        new ODataProperty{Name = "Address", Value = new ODataComplexValue()
-                        {
-                            TypeName = "Server.NS.Address",
-                            Properties = new[]
-                            {
-                                new ODataProperty{Name = "Street", Value = new ODataPrimitiveValue("No.999,Zixing Rd Minhang")},
-                                new ODataProperty{Name = "UndeclaredStreet", Value = new ODataPrimitiveValue("No.10000000999,Zixing Rd Minhang")},
-                            },
-                        }},
-                    },
+                Name = "UndeclaredComplexType1",
+                IsCollection = false
             };
-            string result = this.WriteEntryPayload(this.serverEntitySet, this.serverEntityType, writer =>
-            {
-                writer.WriteStart(entry);
-                writer.WriteEnd();
-            });
 
-            result.Should().Be(@"{""@odata.context"":""http://www.sampletest.com/$metadata#serverEntitySet/$entity"",""Id"":61880128,""UndeclaredComplexType1"":{""Street"":""No.1000,Zixing Rd Minhang"",""UndeclaredStreet"":""No.1001,Zixing Rd Minhang""},""Address"":{""Street"":""No.999,Zixing Rd Minhang"",""UndeclaredStreet"":""No.10000000999,Zixing Rd Minhang""}}");
+            var undeclaredComplex = new ODataResource()
+            {
+                TypeName = "Server.NS.Address",
+                Properties = new[]
+                {
+                    new ODataProperty{Name = "Street", Value = new ODataPrimitiveValue("No.1000,Zixing Rd Minhang")},
+                    new ODataProperty{Name = "UndeclaredStreet", Value = new ODataPrimitiveValue("No.1001,Zixing Rd Minhang")},
+                }
+            };
+
+            string result = WriteNonOpenEntryUndeclaredPropertiesTest(undeclaredComplex_Info, undeclaredComplex, false);
+
+            result.Should().Be(@"{""@odata.context"":""http://www.sampletest.com/$metadata#serverEntitySet/$entity"",""Id"":61880128,""UndeclaredComplexType1"":{""@odata.type"":""#Server.NS.Address"",""Street"":""No.1000,Zixing Rd Minhang"",""UndeclaredStreet"":""No.1001,Zixing Rd Minhang""},""Address"":{""Street"":""No.999,Zixing Rd Minhang"",""UndeclaredStreet"":""No.10000000999,Zixing Rd Minhang""}}");
         }
 
         [Fact]
         public void WriteNonOpenEntryUndeclaredEmptyComplexPropertiesTest()
         {
-            var entry = new ODataResource
+            var undeclaredComplex_Info = new ODataNestedResourceInfo()
             {
-                TypeName = "Server.NS.ServerEntityType",
-                Properties = new[]
-                    {
-                        new ODataProperty{Name = "Id", Value = new ODataPrimitiveValue(61880128)},
-                        new ODataProperty{Name = "UndeclaredComplexType1", Value = new ODataComplexValue()
-                        {
-                            TypeName = "Server.NS.Address",
-                            Properties = new ODataProperty[]{},
-                        }},
-                        new ODataProperty{Name = "Address", Value = new ODataComplexValue()
-                        {
-                            TypeName = "Server.NS.Address",
-                            Properties = new[]
-                            {
-                                new ODataProperty{Name = "Street", Value = new ODataPrimitiveValue("No.999,Zixing Rd Minhang")},
-                                new ODataProperty{Name = "UndeclaredStreet", Value = new ODataPrimitiveValue("No.10000000999,Zixing Rd Minhang")},
-                            },
-                        }},
-                    },
+                Name = "UndeclaredComplexType1",
+                IsCollection = false
             };
-            string result = this.WriteEntryPayload(this.serverEntitySet, this.serverEntityType, writer =>
-            {
-                writer.WriteStart(entry);
-                writer.WriteEnd();
-            });
 
-            result.Should().Be(@"{""@odata.context"":""http://www.sampletest.com/$metadata#serverEntitySet/$entity"",""Id"":61880128,""UndeclaredComplexType1"":{},""Address"":{""Street"":""No.999,Zixing Rd Minhang"",""UndeclaredStreet"":""No.10000000999,Zixing Rd Minhang""}}");
+            var undeclaredComplex = new ODataResource()
+            {
+                TypeName = "Server.NS.Address",
+                Properties = new ODataProperty[] { },
+            };
+
+            string result = WriteNonOpenEntryUndeclaredPropertiesTest(undeclaredComplex_Info, undeclaredComplex, false);
+
+            result.Should().Be(@"{""@odata.context"":""http://www.sampletest.com/$metadata#serverEntitySet/$entity"",""Id"":61880128,""UndeclaredComplexType1"":{""@odata.type"":""#Server.NS.Address""},""Address"":{""Street"":""No.999,Zixing Rd Minhang"",""UndeclaredStreet"":""No.10000000999,Zixing Rd Minhang""}}");
         }
 
         [Fact]
         public void WriteNonOpenEntryUndeclaredCollectionPropertiesTest()
         {
-            var entry = new ODataResource
+            var undeclaredCol = new ODataProperty
             {
-                TypeName = "Server.NS.ServerEntityType",
-                Properties = new[]
+                Name = "UndeclaredCollection1",
+                Value = new ODataCollectionValue()
+                {
+                    TypeName = "Collection(Edm.String)",
+                    Items = new[]
                     {
-                        new ODataProperty{Name = "Id", Value = new ODataPrimitiveValue(61880128)},
-                        new ODataProperty{Name = "UndeclaredCollection1", Value = new ODataCollectionValue(){
-                            TypeName = "Collection(Edm.String)",
-                            Items = new[]
-                            {
-                                "mystr1",
-                                "mystr2",
-                                "mystr3"
-                            }}},
-                        new ODataProperty{Name = "Address", Value = new ODataComplexValue()
-                        {
-                            TypeName = "Server.NS.Address",
-                            Properties = new[]
-                            {
-                                new ODataProperty{Name = "Street", Value = new ODataPrimitiveValue("No.999,Zixing Rd Minhang")},
-                                new ODataProperty{Name = "UndeclaredStreet", Value = new ODataPrimitiveValue("No.10000000999,Zixing Rd Minhang")},
-                            },
-                        }},
-                    },
+                        "mystr1",
+                        "mystr2",
+                        "mystr3"
+                    }
+                }
             };
-            string result = this.WriteEntryPayload(this.serverEntitySet, this.serverEntityType, writer =>
-            {
-                writer.WriteStart(entry);
-                writer.WriteEnd();
-            });
+
+            string result = WriteNonOpenEntryUndeclaredPropertiesTest(undeclaredCol, false);
 
             result.Should().Be(@"{""@odata.context"":""http://www.sampletest.com/$metadata#serverEntitySet/$entity"",""Id"":61880128,""UndeclaredCollection1"":[""mystr1"",""mystr2"",""mystr3""],""Address"":{""Street"":""No.999,Zixing Rd Minhang"",""UndeclaredStreet"":""No.10000000999,Zixing Rd Minhang""}}");
         }
@@ -255,32 +143,17 @@
         [Fact]
         public void WriteNonOpenEntryUndeclaredEmptyCollectionPropertiesTest()
         {
-            var entry = new ODataResource
+            var undeclaredCol = new ODataProperty
             {
-                TypeName = "Server.NS.ServerEntityType",
-                Properties = new[]
-                    {
-                        new ODataProperty{Name = "Id", Value = new ODataPrimitiveValue(61880128)},
-                        new ODataProperty{Name = "UndeclaredCollection1", Value = new ODataCollectionValue(){
-                            TypeName = "Collection(Edm.String)",
-                            Items = new string[]{},
-                        }},
-                        new ODataProperty{Name = "Address", Value = new ODataComplexValue()
-                        {
-                            TypeName = "Server.NS.Address",
-                            Properties = new[]
-                            {
-                                new ODataProperty{Name = "Street", Value = new ODataPrimitiveValue("No.999,Zixing Rd Minhang")},
-                                new ODataProperty{Name = "UndeclaredStreet", Value = new ODataPrimitiveValue("No.10000000999,Zixing Rd Minhang")},
-                            },
-                        }},
-                    },
+                Name = "UndeclaredCollection1",
+                Value = new ODataCollectionValue()
+                {
+                    TypeName = "Collection(Edm.String)",
+                    Items = new string[] { },
+                }
             };
-            string result = this.WriteEntryPayload(this.serverEntitySet, this.serverEntityType, writer =>
-            {
-                writer.WriteStart(entry);
-                writer.WriteEnd();
-            });
+
+            string result = WriteNonOpenEntryUndeclaredPropertiesTest(undeclaredCol, false);
 
             result.Should().Be(@"{""@odata.context"":""http://www.sampletest.com/$metadata#serverEntitySet/$entity"",""Id"":61880128,""UndeclaredCollection1"":[],""Address"":{""Street"":""No.999,Zixing Rd Minhang"",""UndeclaredStreet"":""No.10000000999,Zixing Rd Minhang""}}");
         }
@@ -298,20 +171,32 @@
                     {
                         new ODataProperty{Name = "Id", Value = new ODataPrimitiveValue(61880128)},
                         new ODataProperty{Name = "UndeclaredFloatId", Value = new ODataUntypedValue(){RawValue="12.3"}},
-                        new ODataProperty{Name = "Address", Value = new ODataComplexValue()
-                        {
-                            TypeName = "Server.NS.Address",
-                            Properties= new []
-                            {
-                                new ODataProperty{Name = "Street", Value = new ODataPrimitiveValue("No.999,Zixing Rd Minhang")},
-                                new ODataProperty{Name = "UndeclaredStreetNo", Value = new ODataUntypedValue(){RawValue="12.0"}},
-                            },
-                        }},
                     },
             };
+
+            var address_Info = new ODataNestedResourceInfo()
+            {
+                Name = "Address",
+                IsCollection = false
+            };
+
+            var address = new ODataResource()
+            {
+                TypeName = "Server.NS.Address",
+                Properties = new[]
+                {
+                    new ODataProperty{Name = "Street", Value = new ODataPrimitiveValue("No.999,Zixing Rd Minhang")},
+                    new ODataProperty{Name = "UndeclaredStreetNo", Value = new ODataUntypedValue(){RawValue="12.0"}},
+                },
+            };
+
             string result = this.WriteEntryPayload(this.serverEntitySet, this.serverEntityType, writer =>
             {
                 writer.WriteStart(entry);
+                writer.WriteStart(address_Info);
+                writer.WriteStart(address);
+                writer.WriteEnd();
+                writer.WriteEnd();
                 writer.WriteEnd();
             });
 
@@ -328,20 +213,32 @@
                     {
                         new ODataProperty{Name = "Id", Value = new ODataPrimitiveValue(61880128)},
                         new ODataProperty{Name = "UndeclaredFloatId", Value = new ODataPrimitiveValue(12.3D)},
-                        new ODataProperty{Name = "Address", Value = new ODataComplexValue()
-                        {
-                            TypeName = "Server.NS.Address",
-                            Properties= new []
-                            {
-                                new ODataProperty{Name = "Street", Value = new ODataPrimitiveValue("No.999,Zixing Rd Minhang")},
-                                new ODataProperty{Name = "UndeclaredStreet", Value = new ODataUntypedValue(){RawValue=@"""No.10000000999,Zixing Rd Minhang"""}},
-                            },
-                        }},
                     },
             };
+
+            var address_Info = new ODataNestedResourceInfo()
+            {
+                Name = "Address",
+                IsCollection = false
+            };
+
+            var address = new ODataResource()
+            {
+                TypeName = "Server.NS.Address",
+                Properties = new[]
+                {
+                    new ODataProperty{Name = "Street", Value = new ODataPrimitiveValue("No.999,Zixing Rd Minhang")},
+                    new ODataProperty{Name = "UndeclaredStreet", Value = new ODataUntypedValue(){RawValue=@"""No.10000000999,Zixing Rd Minhang"""}},
+                },
+            };
+
             string result = this.WriteEntryPayload(this.serverEntitySet, this.serverEntityType, writer =>
             {
                 writer.WriteStart(entry);
+                writer.WriteStart(address_Info);
+                writer.WriteStart(address);
+                writer.WriteEnd();
+                writer.WriteEnd();
                 writer.WriteEnd();
             });
 
@@ -402,29 +299,9 @@
         [Fact]
         public void WriteOpenEntryUndeclaredPropertiesWithNullValueTest()
         {
-            var entry = new ODataResource
-            {
-                TypeName = "Server.NS.ServerOpenEntityType",
-                Properties = new[]
-                    {
-                        new ODataProperty{Name = "Id", Value = new ODataPrimitiveValue(61880128)},
-                        new ODataProperty{Name = "UndeclaredType1", Value = null},
-                        new ODataProperty{Name = "Address", Value = new ODataComplexValue()
-                        {
-                            TypeName = "Server.NS.Address",
-                            Properties = new[]
-                            {
-                                new ODataProperty{Name = "Street", Value = new ODataPrimitiveValue("No.999,Zixing Rd Minhang")},
-                                new ODataProperty{Name = "UndeclaredStreet", Value = new ODataPrimitiveValue("No.10000000999,Zixing Rd Minhang")},
-                            },
-                        }},
-                    },
-            };
-            string result = this.WriteEntryPayload(this.serverOpenEntitySet, this.serverOpenEntityType, writer =>
-            {
-                writer.WriteStart(entry);
-                writer.WriteEnd();
-            });
+            var undeclaredNull = new ODataProperty { Name = "UndeclaredType1", Value = null };
+
+            string result = WriteNonOpenEntryUndeclaredPropertiesTest(undeclaredNull, true);
 
             result.Should().Be(@"{""@odata.context"":""http://www.sampletest.com/$metadata#serverOpenEntitySet/$entity"",""Id"":61880128,""UndeclaredType1"":null,""Address"":{""Street"":""No.999,Zixing Rd Minhang"",""UndeclaredStreet"":""No.10000000999,Zixing Rd Minhang""}}");
         }
@@ -432,66 +309,32 @@
         [Fact]
         public void WriteOpenEntryUndeclaredPropertiesTest()
         {
-            var entry = new ODataResource
-            {
-                TypeName = "Server.NS.ServerOpenEntityType",
-                Properties = new[]
-                    {
-                        new ODataProperty{Name = "Id", Value = new ODataPrimitiveValue(61880128)},
-                        new ODataProperty{Name = "UndeclaredFloatId", Value = new ODataPrimitiveValue(12.3D)},
-                        new ODataProperty{Name = "Address", Value = new ODataComplexValue()
-                        {
-                            TypeName = "Server.NS.Address",
-                            Properties = new[]
-                            {
-                                new ODataProperty{Name = "Street", Value = new ODataPrimitiveValue("No.999,Zixing Rd Minhang")},
-                                new ODataProperty{Name = "UndeclaredStreet", Value = new ODataPrimitiveValue("No.10000000999,Zixing Rd Minhang")},
-                            },
-                        }},
-                    },
-            };
-            string result = this.WriteEntryPayload(this.serverOpenEntitySet, this.serverOpenEntityType, writer =>
-            {
-                writer.WriteStart(entry);
-                writer.WriteEnd();
-            });
+            var undeclaredNull = new ODataProperty { Name = "UndeclaredFloatId", Value = new ODataPrimitiveValue(12.3D) };
+
+            string result = WriteNonOpenEntryUndeclaredPropertiesTest(undeclaredNull, true);
 
             result.Should().Be(@"{""@odata.context"":""http://www.sampletest.com/$metadata#serverOpenEntitySet/$entity"",""Id"":61880128,""UndeclaredFloatId"":12.3,""Address"":{""Street"":""No.999,Zixing Rd Minhang"",""UndeclaredStreet"":""No.10000000999,Zixing Rd Minhang""}}");
         }
         [Fact]
         public void WriteOpenEntryUndeclaredComplexPropertiesTest()
         {
-            var entry = new ODataResource
+            var undeclaredComplex_Info = new ODataNestedResourceInfo()
             {
-                TypeName = "Server.NS.ServerOpenEntityType",
-                Properties = new[]
-                    {
-                        new ODataProperty{Name = "Id", Value = new ODataPrimitiveValue(61880128)},
-                        new ODataProperty{Name = "UndeclaredComplexType1", Value = new ODataComplexValue()
-                        {
-                            TypeName = "Server.NS.Address",
-                            Properties = new[]
-                            {
-                                new ODataProperty{Name = "Street", Value = new ODataPrimitiveValue("No.1000,Zixing Rd Minhang")},
-                                new ODataProperty{Name = "UndeclaredStreet", Value = new ODataPrimitiveValue("No.1001,Zixing Rd Minhang")},
-                            },
-                        }},
-                        new ODataProperty{Name = "Address", Value = new ODataComplexValue()
-                        {
-                            TypeName = "Server.NS.Address",
-                            Properties = new[]
-                            {
-                                new ODataProperty{Name = "Street", Value = new ODataPrimitiveValue("No.999,Zixing Rd Minhang")},
-                                new ODataProperty{Name = "UndeclaredStreet", Value = new ODataPrimitiveValue("No.10000000999,Zixing Rd Minhang")},
-                            },
-                        }},
-                    },
+                Name = "UndeclaredComplexType1",
+                IsCollection = false
             };
-            string result = this.WriteEntryPayload(this.serverOpenEntitySet, this.serverOpenEntityType, writer =>
+
+            var undeclaredComplex = new ODataResource()
             {
-                writer.WriteStart(entry);
-                writer.WriteEnd();
-            });
+                TypeName = "Server.NS.Address",
+                Properties = new[]
+                {
+                    new ODataProperty{Name = "Street", Value = new ODataPrimitiveValue("No.1000,Zixing Rd Minhang")},
+                    new ODataProperty{Name = "UndeclaredStreet", Value = new ODataPrimitiveValue("No.1001,Zixing Rd Minhang")},
+                }
+            };
+
+            string result = WriteNonOpenEntryUndeclaredPropertiesTest(undeclaredComplex_Info, undeclaredComplex, true);
 
             result.Should().Be(@"{""@odata.context"":""http://www.sampletest.com/$metadata#serverOpenEntitySet/$entity"",""Id"":61880128,""UndeclaredComplexType1"":{""@odata.type"":""#Server.NS.Address"",""Street"":""No.1000,Zixing Rd Minhang"",""UndeclaredStreet"":""No.1001,Zixing Rd Minhang""},""Address"":{""Street"":""No.999,Zixing Rd Minhang"",""UndeclaredStreet"":""No.10000000999,Zixing Rd Minhang""}}");
         }
@@ -499,33 +342,19 @@
         [Fact]
         public void WriteOpenEntryUndeclaredEmptyComplexPropertiesTest()
         {
-            var entry = new ODataResource
+            var undeclaredComplex_Info = new ODataNestedResourceInfo()
             {
-                TypeName = "Server.NS.ServerOpenEntityType",
-                Properties = new[]
-                    {
-                        new ODataProperty{Name = "Id", Value = new ODataPrimitiveValue(61880128)},
-                        new ODataProperty{Name = "UndeclaredComplexType1", Value = new ODataComplexValue()
-                        {
-                            TypeName = "Server.NS.Address",
-                            Properties = new ODataProperty[]{},
-                        }},
-                        new ODataProperty{Name = "Address", Value = new ODataComplexValue()
-                        {
-                            TypeName = "Server.NS.Address",
-                            Properties = new[]
-                            {
-                                new ODataProperty{Name = "Street", Value = new ODataPrimitiveValue("No.999,Zixing Rd Minhang")},
-                                new ODataProperty{Name = "UndeclaredStreet", Value = new ODataPrimitiveValue("No.10000000999,Zixing Rd Minhang")},
-                            },
-                        }},
-                    },
+                Name = "UndeclaredComplexType1",
+                IsCollection = false
             };
-            string result = this.WriteEntryPayload(this.serverOpenEntitySet, this.serverOpenEntityType, writer =>
+
+            var undeclaredComplex = new ODataResource()
             {
-                writer.WriteStart(entry);
-                writer.WriteEnd();
-            });
+                TypeName = "Server.NS.Address",
+                Properties = new ODataProperty[] { },
+            };
+
+            string result = WriteNonOpenEntryUndeclaredPropertiesTest(undeclaredComplex_Info, undeclaredComplex, true);
 
             result.Should().Be(@"{""@odata.context"":""http://www.sampletest.com/$metadata#serverOpenEntitySet/$entity"",""Id"":61880128,""UndeclaredComplexType1"":{""@odata.type"":""#Server.NS.Address""},""Address"":{""Street"":""No.999,Zixing Rd Minhang"",""UndeclaredStreet"":""No.10000000999,Zixing Rd Minhang""}}");
         }
@@ -533,36 +362,22 @@
         [Fact]
         public void WriteOpenEntryUndeclaredCollectionPropertiesTest()
         {
-            var entry = new ODataResource
+            var undeclaredCol = new ODataProperty
             {
-                TypeName = "Server.NS.ServerOpenEntityType",
-                Properties = new[]
+                Name = "UndeclaredCollection1",
+                Value = new ODataCollectionValue()
+                {
+                    TypeName = "Collection(Edm.String)",
+                    Items = new[]
                     {
-                        new ODataProperty{Name = "Id", Value = new ODataPrimitiveValue(61880128)},
-                        new ODataProperty{Name = "UndeclaredCollection1", Value = new ODataCollectionValue(){
-                            TypeName = "Collection(Edm.String)",
-                            Items = new[]
-                            {
-                                "mystr1",
-                                "mystr2",
-                                "mystr3"
-                            }}},
-                        new ODataProperty{Name = "Address", Value = new ODataComplexValue()
-                        {
-                            TypeName = "Server.NS.Address",
-                            Properties = new[]
-                            {
-                                new ODataProperty{Name = "Street", Value = new ODataPrimitiveValue("No.999,Zixing Rd Minhang")},
-                                new ODataProperty{Name = "UndeclaredStreet", Value = new ODataPrimitiveValue("No.10000000999,Zixing Rd Minhang")},
-                            },
-                        }},
-                    },
+                        "mystr1",
+                        "mystr2",
+                        "mystr3"
+                    }
+                }
             };
-            string result = this.WriteEntryPayload(this.serverOpenEntitySet, this.serverOpenEntityType, writer =>
-            {
-                writer.WriteStart(entry);
-                writer.WriteEnd();
-            });
+
+            string result = WriteNonOpenEntryUndeclaredPropertiesTest(undeclaredCol, true);
 
             result.Should().Be(@"{""@odata.context"":""http://www.sampletest.com/$metadata#serverOpenEntitySet/$entity"",""Id"":61880128,""UndeclaredCollection1@odata.type"":""#Collection(String)"",""UndeclaredCollection1"":[""mystr1"",""mystr2"",""mystr3""],""Address"":{""Street"":""No.999,Zixing Rd Minhang"",""UndeclaredStreet"":""No.10000000999,Zixing Rd Minhang""}}");
         }
@@ -570,32 +385,17 @@
         [Fact]
         public void WriteOpenEntryUndeclaredEmptyCollectionPropertiesTest()
         {
-            var entry = new ODataResource
+            var undeclaredCol = new ODataProperty
             {
-                TypeName = "Server.NS.ServerOpenEntityType",
-                Properties = new[]
-                    {
-                        new ODataProperty{Name = "Id", Value = new ODataPrimitiveValue(61880128)},
-                        new ODataProperty{Name = "UndeclaredCollection1", Value = new ODataCollectionValue(){
-                            TypeName = "Collection(Edm.String)",
-                            Items = new string[]{},
-                        }},
-                        new ODataProperty{Name = "Address", Value = new ODataComplexValue()
-                        {
-                            TypeName = "Server.NS.Address",
-                            Properties = new[]
-                            {
-                                new ODataProperty{Name = "Street", Value = new ODataPrimitiveValue("No.999,Zixing Rd Minhang")},
-                                new ODataProperty{Name = "UndeclaredStreet", Value = new ODataPrimitiveValue("No.10000000999,Zixing Rd Minhang")},
-                            },
-                        }},
-                    },
+                Name = "UndeclaredCollection1",
+                Value = new ODataCollectionValue()
+                {
+                    TypeName = "Collection(Edm.String)",
+                    Items = new string[] { },
+                }
             };
-            string result = this.WriteEntryPayload(this.serverOpenEntitySet, this.serverOpenEntityType, writer =>
-            {
-                writer.WriteStart(entry);
-                writer.WriteEnd();
-            });
+
+            string result = WriteNonOpenEntryUndeclaredPropertiesTest(undeclaredCol, true);
 
             result.Should().Be(@"{""@odata.context"":""http://www.sampletest.com/$metadata#serverOpenEntitySet/$entity"",""Id"":61880128,""UndeclaredCollection1@odata.type"":""#Collection(String)"",""UndeclaredCollection1"":[],""Address"":{""Street"":""No.999,Zixing Rd Minhang"",""UndeclaredStreet"":""No.10000000999,Zixing Rd Minhang""}}");
         }
@@ -613,20 +413,32 @@
                     {
                         new ODataProperty{Name = "Id", Value = new ODataPrimitiveValue(61880128)},
                         new ODataProperty{Name = "UndeclaredFloatId", Value = new ODataUntypedValue(){RawValue="12.3"}},
-                        new ODataProperty{Name = "Address", Value = new ODataComplexValue()
-                        {
-                            TypeName = "Server.NS.Address",
-                            Properties= new []
-                            {
-                                new ODataProperty{Name = "Street", Value = new ODataPrimitiveValue("No.999,Zixing Rd Minhang")},
-                                new ODataProperty{Name = "UndeclaredStreetNo", Value = new ODataUntypedValue(){RawValue="12.0"}},
-                            },
-                        }},
                     },
             };
+
+            var address_Info = new ODataNestedResourceInfo()
+            {
+                Name = "Address",
+                IsCollection = false
+            };
+
+            var address = new ODataResource()
+            {
+                TypeName = "Server.NS.Address",
+                Properties = new[]
+                {
+                    new ODataProperty{Name = "Street", Value = new ODataPrimitiveValue("No.999,Zixing Rd Minhang")},
+                    new ODataProperty{Name = "UndeclaredStreetNo", Value = new ODataUntypedValue(){RawValue="12.0"}},
+                },
+            };
+
             string result = this.WriteEntryPayload(this.serverOpenEntitySet, this.serverOpenEntityType, writer =>
             {
                 writer.WriteStart(entry);
+                writer.WriteStart(address_Info);
+                writer.WriteStart(address);
+                writer.WriteEnd();
+                writer.WriteEnd();
                 writer.WriteEnd();
             });
 
@@ -643,20 +455,31 @@
                     {
                         new ODataProperty{Name = "Id", Value = new ODataPrimitiveValue(61880128)},
                         new ODataProperty{Name = "UndeclaredFloatId", Value = new ODataPrimitiveValue(12.3D)},
-                        new ODataProperty{Name = "Address", Value = new ODataComplexValue()
-                        {
-                            TypeName = "Server.NS.Address",
-                            Properties= new []
-                            {
-                                new ODataProperty{Name = "Street", Value = new ODataPrimitiveValue("No.999,Zixing Rd Minhang")},
-                                new ODataProperty{Name = "UndeclaredStreet", Value = new ODataUntypedValue(){RawValue=@"""No.10000000999,Zixing Rd Minhang"""}},
-                            },
-                        }},
                     },
+            };
+
+            var address_Info = new ODataNestedResourceInfo()
+            {
+                Name = "Address",
+                IsCollection = false
+            };
+
+            var address = new ODataResource()
+            {
+                TypeName = "Server.NS.Address",
+                Properties = new[]
+                {
+                    new ODataProperty{Name = "Street", Value = new ODataPrimitiveValue("No.999,Zixing Rd Minhang")},
+                    new ODataProperty{Name = "UndeclaredStreet", Value = new ODataUntypedValue(){RawValue=@"""No.10000000999,Zixing Rd Minhang"""}},
+                },
             };
             string result = this.WriteEntryPayload(this.serverOpenEntitySet, this.serverOpenEntityType, writer =>
             {
                 writer.WriteStart(entry);
+                writer.WriteStart(address_Info);
+                writer.WriteStart(address);
+                writer.WriteEnd();
+                writer.WriteEnd();
                 writer.WriteEnd();
             });
 
@@ -712,6 +535,94 @@
         }
 
         #endregion
+
+
+        private string WriteNonOpenEntryUndeclaredPropertiesTest(ODataNestedResourceInfo undeclaredResourceInfo, ODataResource undeclaredResource, bool isOpen)
+        {
+            var entry = new ODataResource
+            {
+                TypeName = isOpen ? "Server.NS.ServerOpenEntityType" : "Server.NS.ServerEntityType",
+                Properties = new[]
+                {
+                    new ODataProperty{Name = "Id", Value = new ODataPrimitiveValue(61880128)},
+                }
+            };
+
+            var address_Info = new ODataNestedResourceInfo()
+            {
+                Name = "Address",
+                IsCollection = false
+            };
+
+            var address = new ODataResource()
+            {
+                TypeName = "Server.NS.Address",
+                Properties = new[]
+                {
+                    new ODataProperty{Name = "Street", Value = new ODataPrimitiveValue("No.999,Zixing Rd Minhang")},
+                    new ODataProperty{Name = "UndeclaredStreet", Value = new ODataPrimitiveValue("No.10000000999,Zixing Rd Minhang")},
+                },
+            };
+
+            return this.WriteEntryPayload(
+                isOpen ? this.serverOpenEntitySet : this.serverEntitySet,
+                isOpen ? this.serverOpenEntityType : this.serverEntityType,
+                writer =>
+                {
+                    writer.WriteStart(entry);
+                    writer.WriteStart(undeclaredResourceInfo);
+                    writer.WriteStart(undeclaredResource);
+                    writer.WriteEnd();
+                    writer.WriteEnd();
+                    writer.WriteStart(address_Info);
+                    writer.WriteStart(address);
+                    writer.WriteEnd();
+                    writer.WriteEnd();
+                    writer.WriteEnd();
+                });
+        }
+
+        private string WriteNonOpenEntryUndeclaredPropertiesTest(ODataProperty undeclaredProperty, bool isOpen)
+        {
+            var entry = new ODataResource
+            {
+                TypeName = isOpen ? "Server.NS.ServerOpenEntityType" : "Server.NS.ServerEntityType",
+                Properties = new[]
+                {
+                    new ODataProperty{Name = "Id", Value = new ODataPrimitiveValue(61880128)},
+                    undeclaredProperty
+                }
+            };
+
+            var address_Info = new ODataNestedResourceInfo()
+            {
+                Name = "Address",
+                IsCollection = false
+            };
+
+            var address = new ODataResource()
+            {
+                TypeName = "Server.NS.Address",
+                Properties = new[]
+                {
+                    new ODataProperty{Name = "Street", Value = new ODataPrimitiveValue("No.999,Zixing Rd Minhang")},
+                    new ODataProperty{Name = "UndeclaredStreet", Value = new ODataPrimitiveValue("No.10000000999,Zixing Rd Minhang")},
+                },
+            };
+
+            return this.WriteEntryPayload(
+                isOpen ? this.serverOpenEntitySet : this.serverEntitySet,
+                isOpen ? this.serverOpenEntityType : this.serverEntityType,
+                writer =>
+                {
+                    writer.WriteStart(entry);
+                    writer.WriteStart(address_Info);
+                    writer.WriteStart(address);
+                    writer.WriteEnd();
+                    writer.WriteEnd();
+                    writer.WriteEnd();
+                });
+        }
 
         private string WriteEntryPayload(EdmEntitySet entitySet, EdmEntityType entityType, Action<ODataWriter> action)
         {

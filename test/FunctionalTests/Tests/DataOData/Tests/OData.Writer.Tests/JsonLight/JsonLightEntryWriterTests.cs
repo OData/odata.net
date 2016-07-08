@@ -76,7 +76,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.JsonLight
                 new EntryPayloadTestCase
                 {
                     DebugDescription = "TypeName at the beginning, nothing else",
-                    Entry = new ODataResource() { TypeName = "TestModel.NonMLEType" },
+                    Items = new[] { new ODataResource() { TypeName = "TestModel.NonMLEType" }},
                     Model = model,
                     EntitySet = nonMLESet,
                     Json = string.Join("$(NL)",
@@ -88,7 +88,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.JsonLight
                 new EntryPayloadTestCase
                 {
                     DebugDescription = "TypeName at the beginning, changes at the end - the one from the beginning is used (also for validation).",
-                    Entry = new ODataResource() {
+                    Items = new[] { new ODataResource() {
                             MediaResource = new ODataStreamReferenceValue(),
                             Properties = new []
                             {
@@ -100,7 +100,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.JsonLight
                             {
                                 BeforeWriteStartCallback = (entry) => { entry.TypeName = "TestModel.MLEType"; },
                                 BeforeWriteEndCallback = (entry) => { entry.TypeName = "NonExistingType"; }
-                            }),
+                            })},
                     Model = model,
                     EntitySet = mleSet,
                     Json = string.Join("$(NL)",
@@ -112,7 +112,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.JsonLight
                 new EntryPayloadTestCase
                 {
                     DebugDescription = "TypeName, ID and ETag at the beginning, nothing else",
-                    Entry = new ODataResource() { TypeName = "TestModel.NonMLEType", Id = new Uri("urn:id"), ETag="etag" },
+                    Items = new[] { new ODataResource() { TypeName = "TestModel.NonMLEType", Id = new Uri("urn:id"), ETag="etag" }},
                     Model = model,
                     EntitySet = nonMLESet,
                     Json = string.Join("$(NL)",
@@ -126,12 +126,12 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.JsonLight
                 new EntryPayloadTestCase
                 {
                     DebugDescription = "TypeName at the beginning, ID and ETag at the end, ID and ETag are not written and are ignored at the end",
-                    Entry = new ODataResource() { TypeName = "TestModel.NonMLEType" }
+                    Items = new[] { new ODataResource() { TypeName = "TestModel.NonMLEType" }
                         .WithAnnotation(new WriteEntryCallbacksAnnotation 
                             {
                                 BeforeWriteStartCallback = (entry) => { entry.Id = null; entry.ETag = null; },
                                 BeforeWriteEndCallback = (entry) => { entry.Id = new Uri("urn:id"); entry.ETag = "etag"; }
-                            }),
+                            })},
                     Model = model,
                     EntitySet = nonMLESet,
                     Json = string.Join("$(NL)",
@@ -143,7 +143,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.JsonLight
                 new EntryPayloadTestCase
                 {
                     DebugDescription = "Everything at the beginning",
-                    Entry = new ODataResource() { 
+                    Items = new[] { new ODataResource() { 
                         TypeName = "TestModel.MLEType",
                         Id = new Uri("urn:id"),
                         ETag = "etag",
@@ -161,7 +161,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.JsonLight
                             new ODataProperty { Name = "ID", Value = (int)42 },
                             new ODataProperty { Name = "Name", Value = "test" },
                         }
-                    },
+                    }},
                     Model = model,
                     EntitySet = mleSet,
                     Json = string.Join("$(NL)",
@@ -183,7 +183,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.JsonLight
                 new EntryPayloadTestCase
                 {
                     DebugDescription = "TypeName, Id, ETag and ReadLinks at the beginning, the rest at the end",
-                    Entry = new ODataResource() { 
+                    Items = new[] { new ODataResource() { 
                         TypeName = "TestModel.MLEType",
                         Id = new Uri("urn:id"),
                         ETag = "etag",
@@ -213,7 +213,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.JsonLight
                                 entry.MediaResource.ETag = "mediaetag";
                                 entry.MediaResource.ContentType = "media/contenttype";
                             }
-                        }),
+                        })},
                     Model = model,
                     EntitySet = mleSet,
                     Json = string.Join("$(NL)",
@@ -237,7 +237,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.JsonLight
             IEnumerable<PayloadWriterTestDescriptor<ODataItem>> testDescriptors = testCases.Select(testCase =>
                 new PayloadWriterTestDescriptor<ODataItem>(
                     this.Settings,
-                    new ODataItem[] { testCase.Entry },
+                    testCase.Items,
                     tc => new JsonWriterTestExpectedResults(this.Settings.ExpectedResultSettings)
                     {
                         Json = string.Format(CultureInfo.InvariantCulture, testCase.Json, 
@@ -256,12 +256,12 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.JsonLight
             testDescriptors = testDescriptors.Concat(testCases.Select(testCase =>
                 new PayloadWriterTestDescriptor<ODataItem>(
                     this.Settings,
-                    new ODataItem[] { testCase.Entry, new ODataNestedResourceInfo
+                    testCase.Items.Concat( new ODataItem[] { new ODataNestedResourceInfo
                     {
                         Name = "NavProp",
                         IsCollection = true,
                         Url = new Uri("http://odata.org/navprop/uri")
-                    }},
+                    }}),
                     tc => new JsonWriterTestExpectedResults(this.Settings.ExpectedResultSettings)
                     {
                         Json = string.Format(CultureInfo.InvariantCulture, testCase.Json,
@@ -281,13 +281,13 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.JsonLight
                 .Concat(testCases.Select(testCase =>
                 new PayloadWriterTestDescriptor<ODataItem>(
                     this.Settings,
-                    new ODataItem[] { testCase.Entry, new ODataNestedResourceInfo
+                    testCase.Items.Concat(new ODataItem[] { new ODataNestedResourceInfo
                     {
                         Name = "NavProp",
                         IsCollection = true,
                         Url = new Uri("http://odata.org/navprop/uri"),
                         AssociationLinkUrl = new Uri("http://odata.org/assoclink")
-                    }},
+                    }}),
                     tc => new JsonWriterTestExpectedResults(this.Settings.ExpectedResultSettings)
                     {
                         Json = string.Format(CultureInfo.InvariantCulture, testCase.Json,
@@ -370,7 +370,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.JsonLight
                 new EntryPayloadTestCase
                 {
                     DebugDescription = "Functions and actions available at the beginning.",
-                    Entry = entryWithActionAndFunction,
+                    Items = new[] {entryWithActionAndFunction},
                     Model = model,
                     EntitySet = nonMLESet,
                     Json = defaultJson
@@ -380,7 +380,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.JsonLight
             IEnumerable<PayloadWriterTestDescriptor<ODataItem>> testDescriptors = testCases.Select(testCase =>
                 new PayloadWriterTestDescriptor<ODataItem>(
                     this.Settings,
-                    new ODataItem[] { testCase.Entry },
+                    testCase.Items,
                     tc => new JsonWriterTestExpectedResults(this.Settings.ExpectedResultSettings)
                     {
                         Json = string.Format(CultureInfo.InvariantCulture, testCase.Json,
@@ -399,12 +399,12 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.JsonLight
             testDescriptors = testDescriptors.Concat(testCases.Select(testCase =>
                 new PayloadWriterTestDescriptor<ODataItem>(
                     this.Settings,
-                    new ODataItem[] { testCase.Entry, new ODataNestedResourceInfo
+                    testCase.Items.Concat(new ODataItem[] { new ODataNestedResourceInfo
                     {
                         Name = "NavProp",
                         IsCollection = true,
                         Url = new Uri("http://odata.org/navprop/uri")
-                    }},
+                    }}),
                     tc => new JsonWriterTestExpectedResults(this.Settings.ExpectedResultSettings)
                     {
                         Json = string.Format(CultureInfo.InvariantCulture, testCase.Json,
@@ -455,14 +455,14 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.JsonLight
                 new EntryPayloadTestCase
                 {
                     DebugDescription = "Customer instance with open primitive property.",
-                    Entry = new ODataResource() 
+                    Items = new[] { new ODataResource() 
                     { 
                         TypeName = "TestModel.OpenCustomerType", 
                         Properties = new ODataProperty[]
                         {
                             new ODataProperty { Name = "Age", Value = (long)42 }
                         }
-                    },
+                    }},
                     Model = model,
                     EntitySet = customerSet,
                     Json = string.Join("$(NL)",
@@ -473,14 +473,14 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.JsonLight
                 new EntryPayloadTestCase
                 {
                     DebugDescription = "Customer instance with open spatial property.",
-                    Entry = new ODataResource() 
+                    Items = new[] { new ODataResource() 
                     { 
                         TypeName = "TestModel.OpenCustomerType", 
                         Properties = new ODataProperty[]
                         {
                             new ODataProperty { Name = "Location", Value = pointValue }
                         }
-                    },
+                    }},
                     Model = model,
                     EntitySet = customerSet,
                     Json = string.Join("$(NL)",
@@ -501,13 +501,11 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.JsonLight
                 new EntryPayloadTestCase
                 {
                     DebugDescription = "Customer instance with open complex property.",
-                    Entry = new ODataResource() 
-                    { 
-                        TypeName = "TestModel.OpenCustomerType", 
-                        Properties = new ODataProperty[]
-                        {
-                            new ODataProperty { Name = "Address", Value = new ODataComplexValue { TypeName = "TestModel.AddressType" } }
-                        }
+                    Items = new ODataItem[]
+                    {
+                        new ODataResource() { TypeName = "TestModel.OpenCustomerType" },
+                        new ODataNestedResourceInfo() {Name = "Address", IsCollection = false},
+                        new ODataResource { TypeName = "TestModel.AddressType" }
                     },
                     Model = model,
                     EntitySet = customerSet,
@@ -524,7 +522,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.JsonLight
             IEnumerable<PayloadWriterTestDescriptor<ODataItem>> testDescriptors = testCases.Select(testCase =>
                 new PayloadWriterTestDescriptor<ODataItem>(
                     this.Settings,
-                    new ODataItem[] { testCase.Entry },
+                    testCase.Items,
                     tc => new JsonWriterTestExpectedResults(this.Settings.ExpectedResultSettings)
                     {
                         Json = string.Format(
@@ -571,14 +569,14 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.JsonLight
                 new EntryPayloadTestCase
                 {
                     DebugDescription = "Customer instance with spatial property (expected and payload type don't match).",
-                    Entry = new ODataResource() 
+                    Items = new[] { new ODataResource() 
                     { 
                         TypeName = "TestModel.CustomerType", 
                         Properties = new ODataProperty[]
                         {
                             new ODataProperty { Name = "Location1", Value = pointValue }
                         }
-                    },
+                    }},
                     Model = model,
                     EntitySet = customerSet,
                     Json = string.Join("$(NL)",
@@ -599,14 +597,14 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.JsonLight
                 new EntryPayloadTestCase
                 {
                     DebugDescription = "Customer instance with spatial property (expected and payload type match).",
-                    Entry = new ODataResource() 
+                    Items = new[] { new ODataResource() 
                     { 
                         TypeName = "TestModel.CustomerType", 
                         Properties = new ODataProperty[]
                         {
                             new ODataProperty { Name = "Location2", Value = pointValue }
                         }
-                    },
+                    }},
                     Model = model,
                     EntitySet = customerSet,
                     Json = string.Join("$(NL)",
@@ -628,7 +626,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.JsonLight
             IEnumerable<PayloadWriterTestDescriptor<ODataItem>> testDescriptors = testCases.Select(testCase =>
                 new PayloadWriterTestDescriptor<ODataItem>(
                     this.Settings,
-                    new ODataItem[] { testCase.Entry },
+                    testCase.Items,
                     tc => new JsonWriterTestExpectedResults(this.Settings.ExpectedResultSettings)
                     {
                         Json = string.Format(
@@ -654,14 +652,70 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.JsonLight
                 });
         }
 
+        [TestMethod, Variation(Description = "Test correct serialization format when writing top-level open complex properties.")]
+        public void TopLevelOpenComplexProperties()
+        {
+            EdmModel edmModel = new EdmModel();
+            var container = new EdmEntityContainer("TestModel", "DefaultContainer");
+            edmModel.AddElement(container);
+
+            var addressType = new EdmComplexType("TestModel", "AddressType");
+            addressType.AddStructuralProperty("Street", EdmPrimitiveTypeKind.String, isNullable: true);
+            edmModel.AddElement(addressType);
+
+            IEnumerable<EntryPayloadTestCase> testCases = new[]
+            {
+                new EntryPayloadTestCase
+                {
+                    DebugDescription = "Top-level open complex property.",
+                    Items = new[] { new ODataResource() { TypeName = "TestModel.AddressType" }},
+                    Model = edmModel,
+                    EntitySet = null,
+                    EntityType = addressType,
+                    Json = string.Join("$(NL)",
+                        "{{",
+                        "{0}",
+                        "}}")
+                }
+            };
+
+            IEnumerable<PayloadWriterTestDescriptor<ODataItem>> testDescriptors = testCases.Select(testCase =>
+                new PayloadWriterTestDescriptor<ODataItem>(
+                    this.Settings,
+                    testCase.Items,
+                    tc => new JsonWriterTestExpectedResults(this.Settings.ExpectedResultSettings)
+                    {
+                        Json = string.Format(
+                            CultureInfo.InvariantCulture, 
+                            testCase.Json,
+                            JsonLightWriterUtils.GetMetadataUrlPropertyForProperty(testCase.EntityType.FullTypeName()) + ","),
+                        FragmentExtractor = (result) => result.RemoveAllAnnotations(true)
+                    })
+                {
+                    DebugDescription = testCase.DebugDescription,
+                    Model = testCase.Model,
+                    PayloadEdmElementContainer = testCase.EntitySet,
+                    PayloadEdmElementType = testCase.EntityType,
+                    SkipTestConfiguration = testCase.SkipTestConfiguration
+                });
+
+            this.CombinatorialEngineProvider.RunCombinations(
+                testDescriptors,
+                this.WriterTestConfigurationProvider.JsonLightFormatConfigurationsWithIndent,
+                (testDescriptor, testConfiguration) =>
+                {
+                    TestWriterUtils.WriteAndVerifyODataEdmPayload(testDescriptor, testConfiguration, this.Assert, this.Logger);
+                });
+ 
+        }
         private sealed class EntryPayloadTestCase
         {
             public string DebugDescription { get; set; }
-            public ODataResource Entry { get; set; }
+            public ODataItem[] Items { get; set; }
             public string Json { get; set; }
             public EdmModel Model { get; set; }
             public EdmEntitySet EntitySet { get; set; }
-            public EdmEntityType EntityType { get; set; }
+            public EdmStructuredType EntityType { get; set; }
             public Func<Microsoft.Test.Taupo.OData.Common.TestConfiguration, bool> SkipTestConfiguration { get; set; }
         }
     }

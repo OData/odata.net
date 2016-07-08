@@ -438,7 +438,7 @@ namespace AstoriaUnitTests.Tests
             var test = new SimpleBatchTestCase
             {
                 RequestPayload = new BatchInfo(new BatchQuery(new Operation(batchQueryOperation.ToString()))),
-                ExpectedResponsePayloadContains = new[] { "OData-Version: 4.0;", "Content-Type: application/json;odata.metadata=minimal" },
+                ExpectedResponsePayloadContains = new[] { "OData-Version: 4.0", "Content-Type: application/json;odata.metadata=minimal" },
                 ResponseStatusCode = 202, 
                 ResponseETag = default(string), 
                 ResponseVersion = V4, 

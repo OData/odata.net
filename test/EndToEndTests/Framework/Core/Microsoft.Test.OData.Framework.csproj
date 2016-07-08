@@ -43,6 +43,21 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\..\..\..\src\Microsoft.OData.Client\Wrappers\ODataItemWrapper.cs">
+      <Link>Common\Wrapper\ODataItemWrapper.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\..\src\Microsoft.OData.Client\Wrappers\ODataNestedResourceInfoWrapper.cs">
+      <Link>Common\Wrapper\ODataNestedResourceInfoWrapper.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\..\src\Microsoft.OData.Client\Wrappers\ODataResourceSetWrapper.cs">
+      <Link>Common\Wrapper\ODataResourceSetWrapper.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\..\src\Microsoft.OData.Client\Wrappers\ODataResourceWrapper.cs">
+      <Link>Common\Wrapper\ODataResourceWrapper.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\..\src\Microsoft.OData.Client\Wrappers\ODataWriterHelper.cs">
+      <Link>Common\Wrapper\ODataWriterHelper.cs</Link>
+    </Compile>
     <Compile Include="Client\ClientExceptionUtil.cs" />
     <Compile Include="Client\DataServiceContextWrapper.cs" />
     <Compile Include="Common\HttpHeaders.cs" />
@@ -51,13 +66,8 @@
     <Compile Include="Common\DataComparisonException.cs" />
     <Compile Include="Common\IResourceLookup.cs" />
     <Compile Include="Common\AssemblyResourceLookup.cs" />
-    <Compile Include="Common\Wrapper\ODataNestedResourceInfoWrapper.cs" />
-    <Compile Include="Common\Wrapper\ODataResourceSetWrapper.cs" />
-    <Compile Include="Common\Wrapper\ODataItemWrapper.cs" />
-    <Compile Include="Common\Wrapper\ODataResourceWrapper.cs" />
     <Compile Include="Common\TestFailedException.cs" />
     <Compile Include="Common\ToStringConverter.cs" />
-    <Compile Include="Common\Wrapper\ODataWriterHelper.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Server\DefaultServiceWrapper.cs" />
     <Compile Include="Server\ExternalHostedServiceWrapper.cs" />

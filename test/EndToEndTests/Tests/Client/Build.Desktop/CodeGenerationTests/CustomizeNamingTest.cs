@@ -283,7 +283,7 @@ namespace Microsoft.Test.OData.Tests.Client.CodeGenerationTests
                         new ODataProperty { Name = "AccountID", Value = 1000000 }
                     }
                 },
-                NestedResourceInfos = new List<ODataNestedResourceInfoWrapper>()
+                NestedResourceInfoWrappers = new List<ODataNestedResourceInfoWrapper>()
                 {
                     new ODataNestedResourceInfoWrapper()
                     {

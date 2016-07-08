@@ -62,13 +62,12 @@ namespace Microsoft.Test.OData.Tests.Client.TypeDefinitionTests
         {
             foreach (var mimeType in mimeTypes)
             {
-                var comboProperty = this.QueryProperty("People(1)/Address", mimeType);
+                var address = this.QueryComplexProperty("People(1)/Address", mimeType);
 
                 if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
                 {
-                    ODataComplexValue complexValue = comboProperty.Value as ODataComplexValue;
-                    Assert.AreEqual("Zixing Road", complexValue.Properties.Single(p => p.Name == "Road").Value);
-                    Assert.AreEqual("Shanghai", complexValue.Properties.Single(p => p.Name == "City").Value);
+                    Assert.AreEqual("Zixing Road", address.Properties.Single(p => p.Name == "Road").Value);
+                    Assert.AreEqual("Shanghai", address.Properties.Single(p => p.Name == "City").Value);
                 }
             }
         }
@@ -167,27 +166,6 @@ namespace Microsoft.Test.OData.Tests.Client.TypeDefinitionTests
                     new ODataProperty { Name = "PersonId", Value = 101 },
                     new ODataProperty { Name = "FirstName", Value = "Peter" },
                     new ODataProperty { Name = "LastName", Value = "Zhang" },
-                    new ODataProperty
-                    {
-                        Name = "Address",
-                        Value = new ODataComplexValue
-                        {
-                            TypeName = NameSpacePrefix + "Address",
-                            Properties = new[]
-                            {
-                                new ODataProperty
-                                {
-                                    Name = "Road",
-                                    Value = "Road one"
-                                },
-                                new ODataProperty
-                                {
-                                    Name = "City",
-                                    Value = "Shanghai"
-                                }
-                            }
-                        }
-                    },
                     new ODataProperty 
                     {
                         Name = "Descriptions", 
@@ -199,6 +177,41 @@ namespace Microsoft.Test.OData.Tests.Client.TypeDefinitionTests
                     }
                 };
 
+            var entryWrapper = new ODataResourceWrapper()
+            {
+                Resource = entry,
+                NestedResourceInfoWrappers = new List<ODataNestedResourceInfoWrapper>()
+                {
+                    new ODataNestedResourceInfoWrapper()
+                    {
+                        NestedResourceInfo = new ODataNestedResourceInfo()
+                        {
+                            Name = "Address",
+                            IsCollection = false
+                        },
+                        NestedResourceOrResourceSet = new ODataResourceWrapper()
+                        {
+                            Resource = new ODataResource()
+                            {
+                                TypeName = NameSpacePrefix + "Address",
+                                Properties = new[]
+                                {
+                                    new ODataProperty
+                                    {
+                                        Name = "Road",
+                                        Value = "Road one"
+                                    },
+                                    new ODataProperty
+                                    {
+                                        Name = "City",
+                                        Value = "Shanghai"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                }
+            };
             var settings = new ODataMessageWriterSettings();
             settings.BaseUri = ServiceBaseUri;
 
@@ -212,8 +225,7 @@ namespace Microsoft.Test.OData.Tests.Client.TypeDefinitionTests
             using (var messageWriter = new ODataMessageWriter(requestMessage, settings, Model))
             {
                 var odataWriter = messageWriter.CreateODataResourceWriter(peopleSet, personType);
-                odataWriter.WriteStart(entry);
-                odataWriter.WriteEnd();
+                ODataWriterHelper.WriteResource(odataWriter, entryWrapper);
             }
 
             var responseMessage = requestMessage.GetResponse();
@@ -284,14 +296,13 @@ namespace Microsoft.Test.OData.Tests.Client.TypeDefinitionTests
         {
             foreach (var mimeType in mimeTypes)
             {
-                var comboProperty = this.QueryProperty("Products(11)/TheCombo", mimeType);
+                var combo = this.QueryComplexProperty("Products(11)/TheCombo", mimeType);
 
                 if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
                 {
-                    ODataComplexValue complexValue = comboProperty.Value as ODataComplexValue;
-                    Assert.AreEqual((UInt16)80, complexValue.Properties.Single(p => p.Name == "Small").Value);
-                    Assert.AreEqual((UInt32)196, complexValue.Properties.Single(p => p.Name == "Middle").Value);
-                    Assert.AreEqual((UInt64)3, complexValue.Properties.Single(p => p.Name == "Large").Value);
+                    Assert.AreEqual((UInt16)80, combo.Properties.Single(p => p.Name == "Small").Value);
+                    Assert.AreEqual((UInt32)196, combo.Properties.Single(p => p.Name == "Middle").Value);
+                    Assert.AreEqual((UInt64)3, combo.Properties.Single(p => p.Name == "Large").Value);
                 }
             }
         }
@@ -335,32 +346,6 @@ namespace Microsoft.Test.OData.Tests.Client.TypeDefinitionTests
                     new ODataProperty { Name = "Quantity", Value = 19u },
                     new ODataProperty { Name = "LifeTimeInSeconds", Value = 86ul },
                     new ODataProperty { Name = "NullableUInt32", Value = 37u },
-                    new ODataProperty
-                    {
-                        Name = "TheCombo",
-                        Value = new ODataComplexValue
-                        {
-                            TypeName = NameSpacePrefix + "NumberCombo",
-                            Properties = new[]
-                            {
-                                new ODataProperty
-                                {
-                                    Name = "Small",
-                                    Value = (UInt16)10
-                                },
-                                new ODataProperty
-                                {
-                                    Name = "Middle",
-                                    Value = 33u
-                                },
-                                new ODataProperty
-                                {
-                                    Name = "Large",
-                                    Value = 101ul
-                                }
-                            }
-                        }
-                    },
                     new ODataProperty 
                     {
                         Name = "LargeNumbers", 
@@ -373,6 +358,46 @@ namespace Microsoft.Test.OData.Tests.Client.TypeDefinitionTests
 
                 };
 
+            var entryWrapper = new ODataResourceWrapper()
+            {
+                Resource = entry,
+                NestedResourceInfoWrappers = new List<ODataNestedResourceInfoWrapper>()
+                {
+                    new ODataNestedResourceInfoWrapper()
+                    {
+                        NestedResourceInfo = new ODataNestedResourceInfo()
+                        {
+                            Name = "TheCombo",
+                            IsCollection = false
+                        },
+                        NestedResourceOrResourceSet = new ODataResourceWrapper()
+                        {
+                            Resource = new ODataResource()
+                            {
+                                TypeName = NameSpacePrefix + "NumberCombo",
+                                Properties = new[]
+                                {
+                                    new ODataProperty
+                                    {
+                                        Name = "Small",
+                                        Value = (UInt16)10
+                                    },
+                                    new ODataProperty
+                                    {
+                                        Name = "Middle",
+                                        Value = 33u
+                                    },
+                                    new ODataProperty
+                                    {
+                                        Name = "Large",
+                                        Value = 101ul
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            };
             var settings = new ODataMessageWriterSettings();
             settings.BaseUri = ServiceBaseUri;
 
@@ -386,8 +411,7 @@ namespace Microsoft.Test.OData.Tests.Client.TypeDefinitionTests
             using (var messageWriter = new ODataMessageWriter(requestMessage, settings, Model))
             {
                 var odataWriter = messageWriter.CreateODataResourceWriter(productsSet, productType);
-                odataWriter.WriteStart(entry);
-                odataWriter.WriteEnd();
+                ODataWriterHelper.WriteResource(odataWriter, entryWrapper);
             }
 
             var responseMessage = requestMessage.GetResponse();
@@ -595,7 +619,36 @@ namespace Microsoft.Test.OData.Tests.Client.TypeDefinitionTests
             }
 
             return property;
-            
+        }
+
+        private ODataResource QueryComplexProperty(string uri, string mimeType)
+        {
+            ODataResource complex = null;
+            ODataMessageReaderSettings readerSettings = new ODataMessageReaderSettings() { BaseUri = ServiceBaseUri };
+
+            var requestMessage = new HttpWebRequestMessage(new Uri(ServiceBaseUri.AbsoluteUri + uri, UriKind.Absolute));
+            requestMessage.SetHeader("Accept", mimeType);
+            var responseMessage = requestMessage.GetResponse();
+            Assert.AreEqual(200, responseMessage.StatusCode);
+
+            if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
+            {
+                using (var messageReader = new ODataMessageReader(responseMessage, readerSettings, Model))
+                {
+                    var odataReader = messageReader.CreateODataResourceReader();
+                    while (odataReader.Read())
+                    {
+                        if (odataReader.State == ODataReaderState.ResourceEnd)
+                        {
+                            complex = odataReader.Item as ODataResource;
+                        }
+                    }
+
+                    Assert.IsNotNull(complex);
+                }
+            }
+
+            return complex;
         }
 
         #endregion

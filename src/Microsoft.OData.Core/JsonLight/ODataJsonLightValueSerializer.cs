@@ -29,11 +29,6 @@ namespace Microsoft.OData.JsonLight
         private int recursionDepth;
 
         /// <summary>
-        /// Property serializer.
-        /// </summary>
-        private ODataJsonLightPropertySerializer propertySerializer;
-
-        /// <summary>
         /// Initializes a new instance of the <see cref="ODataJsonLightValueSerializer"/> class.
         /// </summary>
         /// <param name="propertySerializer">The property serializer to use when writing complex values.</param>
@@ -41,7 +36,6 @@ namespace Microsoft.OData.JsonLight
         internal ODataJsonLightValueSerializer(ODataJsonLightPropertySerializer propertySerializer, bool initContextUriBuilder = false)
             : base(propertySerializer.JsonLightOutputContext, initContextUriBuilder)
         {
-            this.propertySerializer = propertySerializer;
         }
 
         /// <summary>
@@ -55,109 +49,11 @@ namespace Microsoft.OData.JsonLight
         }
 
         /// <summary>
-        /// Gets the property serializer.
-        /// </summary>
-        private ODataJsonLightPropertySerializer PropertySerializer
-        {
-            get
-            {
-                if (this.propertySerializer == null)
-                {
-                    this.propertySerializer = new ODataJsonLightPropertySerializer(this.JsonLightOutputContext);
-                }
-
-                return this.propertySerializer;
-            }
-        }
-
-        /// <summary>
         /// Writes a null value to the wire.
         /// </summary>
         public virtual void WriteNullValue()
         {
             this.JsonWriter.WriteValue((string)null);
-        }
-
-        /// <summary>
-        /// Writes out the value of a complex property.
-        /// </summary>
-        /// <param name="complexValue">The complex value to write.</param>
-        /// <param name="metadataTypeReference">The metadata type for the complex value.</param>
-        /// <param name="isTopLevel">true when writing a top-level property; false for nested properties.</param>
-        /// <param name="isOpenPropertyType">true if the type name belongs to an open property.</param>
-        /// <param name="duplicatePropertyNameChecker">The DuplicatePropertyNameChecker to use.</param>
-        /// <remarks>The current recursion depth should be a value, measured by the number of complex and collection values between
-        /// this complex value and the top-level payload, not including this one.</remarks>
-        [SuppressMessage("Microsoft.Naming", "CA2204:LiteralsShouldBeSpelledCorrectly", Justification = "Names are correct. String can't be localized after string freeze.")]
-        public virtual void WriteComplexValue(
-            ODataComplexValue complexValue,
-            IEdmTypeReference metadataTypeReference,
-            bool isTopLevel,
-            bool isOpenPropertyType,
-            IDuplicatePropertyNameChecker duplicatePropertyNameChecker)
-        {
-            Debug.Assert(complexValue != null, "complexValue != null");
-
-            this.IncreaseRecursionDepth();
-
-            // Start the object scope which will represent the entire complex instance;
-            // for top-level complex properties we already wrote the object scope (and the context URI when needed).
-            if (!isTopLevel)
-            {
-                this.JsonWriter.StartObjectScope();
-            }
-
-            string typeName = complexValue.TypeName;
-
-            if (isTopLevel)
-            {
-                Debug.Assert(metadataTypeReference == null, "Never expect a metadata type for top-level properties.");
-                if (typeName == null)
-                {
-                    throw new ODataException(ODataErrorStrings.ODataJsonLightValueSerializer_MissingTypeNameOnComplex);
-                }
-            }
-            else
-            {
-                // In requests, we allow the property type reference to be null if the type name is specified in the OM
-                if (metadataTypeReference == null && !this.WritingResponse && typeName == null && this.Model.IsUserModel())
-                {
-                    throw new ODataException(ODataErrorStrings.ODataJsonLightPropertyAndValueSerializer_NoExpectedTypeOrTypeNameSpecifiedForComplexValueRequest);
-                }
-            }
-
-            // Resolve the type name to the type; if no type name is specified we will use the
-            // type inferred from metadata.
-            IEdmComplexTypeReference complexValueTypeReference = (IEdmComplexTypeReference)TypeNameOracle.ResolveAndValidateTypeForComplexValue(this.Model, metadataTypeReference, complexValue, isOpenPropertyType, this.WriterValidator);
-            Debug.Assert(
-                metadataTypeReference == null || complexValueTypeReference == null || EdmLibraryExtensions.IsAssignableFrom(metadataTypeReference, complexValueTypeReference),
-                "Complex property types must be the same as or inherit from the ones from metadata (unless open).");
-
-            typeName = this.JsonLightOutputContext.TypeNameOracle.GetValueTypeNameForWriting(complexValue, metadataTypeReference, complexValueTypeReference, isOpenPropertyType);
-            if (typeName != null)
-            {
-                this.ODataAnnotationWriter.WriteODataTypeInstanceAnnotation(typeName);
-            }
-
-            // Write custom instance annotations
-            this.InstanceAnnotationWriter.WriteInstanceAnnotations(complexValue.InstanceAnnotations);
-
-            // Write the properties of the complex value as usual. Note we do not allow complex types to contain named stream properties.
-            this.PropertySerializer.WriteProperties(
-                complexValueTypeReference == null ? null : complexValueTypeReference.ComplexDefinition(),
-                complexValue.Properties,
-                true /* isComplexValue */,
-                duplicatePropertyNameChecker,
-                null /*projectedProperties */);
-
-            // End the object scope which represents the complex instance;
-            // for top-level complex properties we already wrote the end object scope.
-            if (!isTopLevel)
-            {
-                this.JsonWriter.EndObjectScope();
-            }
-
-            this.DecreaseRecursionDepth();
         }
 
         /// <summary>
@@ -250,55 +146,34 @@ namespace Microsoft.OData.JsonLight
             {
                 IEdmTypeReference expectedItemTypeReference = valueTypeReference == null ? null : ((IEdmCollectionTypeReference)valueTypeReference).ElementType();
 
-                IDuplicatePropertyNameChecker duplicatePropertyNameChecker = null;
                 foreach (object item in items)
                 {
                     ValidationUtils.ValidateCollectionItem(item, expectedItemTypeReference.IsNullable());
 
-                    ODataComplexValue itemAsComplexValue = item as ODataComplexValue;
-                    if (itemAsComplexValue != null)
+                    Debug.Assert(!(item is ODataCollectionValue), "!(item is ODataCollectionValue)");
+                    Debug.Assert(!(item is ODataStreamReferenceValue), "!(item is ODataStreamReferenceValue)");
+
+                    // by design: collection element's type name is not written for enum or non-spatial primitive value even in case of full metadata.
+                    // because enum and non-spatial primitive types don't have inheritance, the type of each element is the same as the item type of the collection, whose type name for spatial types in full metadata mode.
+                    ODataEnumValue enumValue = item as ODataEnumValue;
+                    if (enumValue != null)
                     {
-                        if (duplicatePropertyNameChecker == null)
-                        {
-                            duplicatePropertyNameChecker = this.CreateDuplicatePropertyNameChecker();
-                        }
-
-                        this.WriteComplexValue(
-                            itemAsComplexValue,
-                            expectedItemTypeReference,
-                            false /*isTopLevel*/,
-                            false /*isOpenPropertyType*/,
-                            duplicatePropertyNameChecker);
-
-                        duplicatePropertyNameChecker.Reset();
+                        this.WriteEnumValue(enumValue, expectedItemTypeReference);
                     }
                     else
                     {
-                        Debug.Assert(!(item is ODataCollectionValue), "!(item is ODataCollectionValue)");
-                        Debug.Assert(!(item is ODataStreamReferenceValue), "!(item is ODataStreamReferenceValue)");
-
-                        // by design: collection element's type name is not written for enum or non-spatial primitive value even in case of full metadata.
-                        // because enum and non-spatial primitive types don't have inheritance, the type of each element is the same as the item type of the collection, whose type name for spatial types in full metadata mode.
-                        ODataEnumValue enumValue = item as ODataEnumValue;
-                        if (enumValue != null)
+                        ODataUntypedValue untypedValue = item as ODataUntypedValue;
+                        if (untypedValue != null)
                         {
-                            this.WriteEnumValue(enumValue, expectedItemTypeReference);
+                            this.WriteUntypedValue(untypedValue);
+                        }
+                        else if (item != null)
+                        {
+                            this.WritePrimitiveValue(item, expectedItemTypeReference);
                         }
                         else
                         {
-                            ODataUntypedValue untypedValue = item as ODataUntypedValue;
-                            if (untypedValue != null)
-                            {
-                                this.WriteUntypedValue(untypedValue);
-                            }
-                            else if (item != null)
-                            {
-                                this.WritePrimitiveValue(item, expectedItemTypeReference);
-                            }
-                            else
-                            {
-                                this.WriteNullValue();
-                            }
+                            this.WriteNullValue();
                         }
                     }
                 }

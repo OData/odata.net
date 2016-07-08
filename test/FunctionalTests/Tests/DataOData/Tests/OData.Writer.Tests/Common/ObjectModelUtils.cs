@@ -301,7 +301,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Common
             };
         }
 
-        public static ODataProperty[] CreateDefaultComplexProperties(EdmModel model = null)
+        public static ODataItem[][] CreateDefaultComplexProperties(EdmModel model = null)
         {
             if (model != null)
             {
@@ -320,13 +320,12 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Common
                     .Property("NestedComplex", new EdmComplexTypeReference(nestedAddressType, true));
             }
 
-            return new ODataProperty[]
+            return new ODataItem[][]
             {
-                new ODataProperty()
+                new ODataItem[]
                 {
-                    Name = "ComplexAddress",
-                    Value = new ODataComplexValue()
-                    {
+                    new ODataResource()
+                     {
                         TypeName = "My.AddressType",
                         Properties = new []
                         {
@@ -335,31 +334,32 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Common
                         }
                     }
                 },
-                new ODataProperty()
+
+                new ODataItem[]
                 {
-                    Name = "NestedComplex",
-                    Value = new ODataComplexValue()
+                    new ODataResource()
                     {
                         TypeName = "My.NestedAddressType",
                         Properties = new []
                         {
-                            new ODataProperty()
-                            {
-                                Name = "Street",
-                                Value = new ODataComplexValue()
-                                {
-                                    TypeName = "My.StreetType",
-                                    Properties = new []
-                                    {
-                                        new ODataProperty { Name = "StreetName", Value = "One Redmond Way" },
-                                        new ODataProperty { Name = "Number", Value = 1234 },
-                                    }
-                                }
-                            },
-                            new ODataProperty() { Name = "City", Value = "Redmond " },
+                            new ODataProperty() { Name = "City", Value = "Redmond " }
+                        }
+                    },
+                    new ODataNestedResourceInfo()
+                    {
+                        Name = "Street",
+                        IsCollection = false
+                    },
+                    new ODataResource
+                    {
+                        TypeName = "My.StreetType",
+                        Properties = new []
+                        {
+                            new ODataProperty { Name = "StreetName", Value = "One Redmond Way" },
+                            new ODataProperty { Name = "Number", Value = 1234 },
                         }
                     }
-                },
+                }
             };
         }
 
@@ -376,8 +376,8 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Common
                     .Property("PrimitiveCollection", new EdmCollectionTypeReference(new EdmCollectionType(EdmCoreModel.Instance.GetInt32(false))))
                     .Property("IntCollectionNoTypeName", new EdmCollectionTypeReference(new EdmCollectionType(EdmCoreModel.Instance.GetInt32(false))))
                     .Property("StringCollectionNoTypeName", new EdmCollectionTypeReference(new EdmCollectionType(EdmCoreModel.Instance.GetString(false))))
-                    .Property("GeographyCollectionNoTypeName", new EdmCollectionTypeReference(new EdmCollectionType(EdmCoreModel.Instance.GetSpatial(EdmPrimitiveTypeKind.Geography, false))))
-                    .Property("ComplexCollection", new EdmCollectionTypeReference(new EdmCollectionType(new EdmComplexTypeReference(addressType, true))));
+                    .Property("GeographyCollectionNoTypeName", new EdmCollectionTypeReference(new EdmCollectionType(EdmCoreModel.Instance.GetSpatial(EdmPrimitiveTypeKind.Geography, false))));
+                    //.Property("ComplexCollection", new EdmCollectionTypeReference(new EdmCollectionType(new EdmComplexTypeReference(addressType, true))));
             }
 
             return new ODataProperty[]
@@ -437,35 +437,35 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Common
                         }
                     }
                 },
-                new ODataProperty
-                {
-                    Name = "ComplexCollection",
-                    Value = new ODataCollectionValue()
-                    {
-                        TypeName = EntityModelUtils.GetCollectionTypeName("My.AddressType"),
-                        Items = new []
-                        {
-                            new ODataComplexValue()
-                            {
-                                TypeName = "My.AddressType",
-                                Properties = new []
-                                {
-                                    new ODataProperty() { Name = "Street", Value = "One Redmond Way" },
-                                    new ODataProperty() { Name = "City", Value = " Redmond" },
-                                }
-                            },
-                            new ODataComplexValue()
-                            {
-                                TypeName = null,
-                                Properties = new []
-                                {
-                                    new ODataProperty() { Name = "Street", Value = "Am Euro Platz 3" },
-                                    new ODataProperty() { Name = "City", Value = "Vienna " },
-                                }
-                            }
-                        }
-                    }
-                },
+                //new ODataProperty
+                //{
+                //    Name = "ComplexCollection",
+                //    Value = new ODataCollectionValue()
+                //    {
+                //        TypeName = EntityModelUtils.GetCollectionTypeName("My.AddressType"),
+                //        Items = new []
+                //        {
+                //            new ODataComplexValue()
+                //            {
+                //                TypeName = "My.AddressType",
+                //                Properties = new []
+                //                {
+                //                    new ODataProperty() { Name = "Street", Value = "One Redmond Way" },
+                //                    new ODataProperty() { Name = "City", Value = " Redmond" },
+                //                }
+                //            },
+                //            new ODataComplexValue()
+                //            {
+                //                TypeName = null,
+                //                Properties = new []
+                //                {
+                //                    new ODataProperty() { Name = "Street", Value = "Am Euro Platz 3" },
+                //                    new ODataProperty() { Name = "City", Value = "Vienna " },
+                //                }
+                //            }
+                //        }
+                //    }
+                //},
             };
         }
 

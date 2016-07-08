@@ -152,27 +152,28 @@ namespace AstoriaUnitTests.TDD.Tests.Client
         [TestMethod]
         public void ComplexPropertyNotDefinedOnTheServerShouldHaveTypeAnnotation()
         {
-            var value = this.ConvertSinglePropertyValue("OpenAddress");
-            value.Should().BeComplex().And.HaveSerializationTypeName(this.serverComplexTypeName);
+            var complex = this.ConvertSingleComplexProperty("OpenAddress");
+            complex.Item.Should().BeResource().And.HaveSerializationTypeName(this.serverComplexTypeName);
         }
 
         [TestMethod]
         public void ComplexPropertyDefinedOnTheServerShouldHaveTypeAnnotation()
         {
-            var value = this.ConvertSinglePropertyValue("Address");
-            value.Should().BeComplex().And.HaveSerializationTypeName(this.serverComplexTypeName);
+            var complex = this.ConvertSingleComplexProperty("Address");
+            complex.Item.Should().BeResource().And.HaveSerializationTypeName(this.serverComplexTypeName);
         }
 
         [TestMethod]
         public void DerivedComplexPropertyDefinedOnTheServerShouldHaveDerivedTypeAnnotation()
         {
             var property = this.clientTypeAnnotation.GetProperty("Address", UndeclaredPropertyBehavior.ThrowException);
-            var results = this.testSubject.PopulateProperties(this.entityWithDerivedComplexProperty, this.serverEntityTypeName, new[] { property });
+            var results = this.testSubject.PopulateNestedComplexProperties(this.entityWithDerivedComplexProperty, this.serverEntityTypeName, new[] { property }, null);
             results.Should().HaveCount(1);
 
-            var odataProperty = results.Single();
-            odataProperty.Name.Should().Be("Address");
-            odataProperty.ODataValue.Should().BeComplex().And.HaveSerializationTypeName(this.serverDerivedComplexTypeName);
+            var nestedResourceInfo = results.Single().NestedResourceInfo;
+            var nestedResource = results.Single().NestedResourceOrResourceSet.Item;
+            nestedResource.Should().BeResource().And.HaveSerializationTypeName(this.serverDerivedComplexTypeName);
+            nestedResourceInfo.Name.Should().Be("Address");
         }
 
         [TestMethod]
@@ -192,22 +193,21 @@ namespace AstoriaUnitTests.TDD.Tests.Client
         [TestMethod]
         public void ComplexInsideCollectionPropertyShouldHaveTypeAnnotation()
         {
-            var value = this.ConvertSinglePropertyValue("OtherAddresses");
-            value.Should().BeCollection();
-            var collection = (ODataCollectionValue)value;
-            collection.Items.Should().HaveCount(1);
-            collection.Items.Cast<ODataValue>().Single().Should().BeComplex().And.HaveSerializationTypeName("Server.NS.HomeAddress");
+            var collection = this.ConvertSingleComplexProperty("OtherAddresses");
+            collection.Item.Should().BeResourceSet();
+            var resourceSet = (ODataResourceSetWrapper)collection;
+            resourceSet.Resources.Should().HaveCount(1);
+            resourceSet.Resources.Cast<ODataResourceWrapper>().Single().Item.Should().BeResource().And.HaveSerializationTypeName("Server.NS.HomeAddress");
         }
 
         [TestMethod]
         public void DerivedComplexInsideCollectionPropertyShouldNotThrow()
         {
             var property = this.clientTypeAnnotation.GetProperty("OtherAddresses", UndeclaredPropertyBehavior.ThrowException);
-            var results = this.testSubject.PopulateProperties(this.entityWithDerivedComplexInCollection, this.serverEntityTypeName, new[] { property });
-            var value = results.Single().ODataValue;
-            value.Should().BeCollection();
-            var collection = (ODataCollectionValue)value;
-            collection.Items.Should().HaveCount(2);
+            var results = this.testSubject.PopulateNestedComplexProperties(this.entityWithDerivedComplexInCollection, this.serverEntityTypeName, new[] { property }, null);
+            var nested = results.Single().NestedResourceOrResourceSet as ODataResourceSetWrapper;
+            nested.Item.Should().BeResourceSet();
+            nested.Resources.Should().HaveCount(2);
         }
 
         private ODataValue ConvertSinglePropertyValue(string propertyName)
@@ -218,6 +218,16 @@ namespace AstoriaUnitTests.TDD.Tests.Client
             var odataProperty = results.Single();
             odataProperty.Name.Should().Be(propertyName);
             return odataProperty.ODataValue;
+        }
+
+        private ODataItemWrapper ConvertSingleComplexProperty(string propertyName)
+        {
+            var property = this.clientTypeAnnotation.GetProperty(propertyName, UndeclaredPropertyBehavior.ThrowException);
+            var results = this.testSubject.PopulateNestedComplexProperties(this.entity, this.serverEntityTypeName, new[] { property }, null);
+            results.Should().HaveCount(1);
+            var odataProperty = results.Single();
+            odataProperty.NestedResourceInfo.Name.Should().Be(propertyName);
+            return odataProperty.NestedResourceOrResourceSet;
         }
 
         [Key("Id")]

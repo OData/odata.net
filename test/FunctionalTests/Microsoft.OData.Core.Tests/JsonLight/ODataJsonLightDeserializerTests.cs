@@ -843,18 +843,19 @@ namespace Microsoft.OData.Tests.JsonLight
             model.AddElement(complexType);
             var complexTypeRef = new EdmComplexTypeReference(complexType, false);
             this.messageReaderSettings = new ODataMessageReaderSettings { ShouldIncludeAnnotation = ODataUtils.CreateAnnotationFilter("*") };
-            ODataJsonLightPropertyAndValueDeserializer deserializer = new ODataJsonLightPropertyAndValueDeserializer(this.CreateJsonLightInputContext("{\"CountryRegion@odata.count\":123,\"CountryRegion\":\"China\"}", model));
-            deserializer.JsonReader.Read();
-            Action action = () => deserializer.ReadNonEntityValue(
-                /*payloadTypeName*/ null,
-                complexTypeRef,
-                /*propertyAndAnnotationCollector*/ null,
-                /*collectionValidator*/ null,
-                /*validateNullValue*/ true,
-                /*isTopLevelPropertyValue*/ false,
-                /*insideComplexValue*/ false,
-                /*propertyName*/ null);
-            action.ShouldThrow<ODataException>().WithMessage(ErrorStrings.ODataJsonLightPropertyAndValueDeserializer_UnexpectedAnnotationProperties("odata.count"));
+            var odataReader = this.CreateJsonLightInputContext("{\"CountryRegion@odata.count\":123,\"CountryRegion\":\"China\"}", model, false)
+                .CreateResourceReader(null, complexType);
+            Action action = () =>
+            {
+                while (odataReader.Read())
+                {
+                    if (odataReader.State == ODataReaderState.ResourceEnd)
+                    {
+                        var resource = odataReader.Item as ODataResource;
+                        Assert.Equal(0, resource.Properties.First().InstanceAnnotations.Count);
+                    }
+                }
+            };
         }
 
         [Fact]
@@ -866,19 +867,17 @@ namespace Microsoft.OData.Tests.JsonLight
             model.AddElement(complexType);
             var complexTypeRef = new EdmComplexTypeReference(complexType, false);
             this.messageReaderSettings = new ODataMessageReaderSettings { ShouldIncludeAnnotation = ODataUtils.CreateAnnotationFilter("*") };
-            ODataJsonLightPropertyAndValueDeserializer deserializer = new ODataJsonLightPropertyAndValueDeserializer(this.CreateJsonLightInputContext("{\"CountryRegion@Is.ReadOnly\":true,\"CountryRegion\":\"China\"}", model));
-            deserializer.JsonReader.Read();
-            ODataComplexValue complexValue = (ODataComplexValue)deserializer.ReadNonEntityValue(
-                /*payloadTypeName*/ null,
-                complexTypeRef,
-                /*propertyAndAnnotationCollector*/ null,
-                /*collectionValidator*/ null,
-                /*validateNullValue*/ true,
-                /*isTopLevelPropertyValue*/ false,
-                /*insideComplexValue*/ false,
-                /*propertyName*/ null);
-            complexValue.Properties.First().InstanceAnnotations.Count.Should().Be(1);
-            TestUtils.AssertODataValueAreEqual(new ODataPrimitiveValue(true), complexValue.Properties.First().InstanceAnnotations.Single(ia => ia.Name == "Is.ReadOnly").Value);
+            var odataReader = this.CreateJsonLightInputContext("{\"CountryRegion@Is.ReadOnly\":true,\"CountryRegion\":\"China\"}", model, false)
+                .CreateResourceReader(null, complexType);
+            while(odataReader.Read())
+            {
+                if (odataReader.State == ODataReaderState.ResourceEnd)
+                {
+                    var complex = odataReader.Item as ODataResource;
+                    complex.Properties.First().InstanceAnnotations.Count.Should().Be(1);
+                    TestUtils.AssertODataValueAreEqual(new ODataPrimitiveValue(true), complex.Properties.First().InstanceAnnotations.Single(ia => ia.Name == "Is.ReadOnly").Value);
+                }
+            }
         }
 
         [Fact]
@@ -890,21 +889,19 @@ namespace Microsoft.OData.Tests.JsonLight
             model.AddElement(complexType);
             var complexTypeRef = new EdmComplexTypeReference(complexType, false);
             this.messageReaderSettings = new ODataMessageReaderSettings { ShouldIncludeAnnotation = ODataUtils.CreateAnnotationFilter("*") };
-            ODataJsonLightPropertyAndValueDeserializer deserializer = new ODataJsonLightPropertyAndValueDeserializer(this.CreateJsonLightInputContext("{\"CountryRegion@Annotation.1\":true,\"CountryRegion@Annotation.2\":123,\"CountryRegion@Annotation.3\":\"annotation\",\"CountryRegion\":\"China\"}", model));
-            deserializer.JsonReader.Read();
-            ODataComplexValue complexValue = (ODataComplexValue)deserializer.ReadNonEntityValue(
-                /*payloadTypeName*/ null,
-                complexTypeRef,
-                /*propertyAndAnnotationCollector*/ null,
-                /*collectionValidator*/ null,
-                /*validateNullValue*/ true,
-                /*isTopLevelPropertyValue*/ false,
-                /*insideComplexValue*/ false,
-                /*propertyName*/ null);
-            complexValue.Properties.First().InstanceAnnotations.Count.Should().Be(3);
-            TestUtils.AssertODataValueAreEqual(new ODataPrimitiveValue(true), complexValue.Properties.First().InstanceAnnotations.Single(ia => ia.Name == "Annotation.1").Value);
-            TestUtils.AssertODataValueAreEqual(new ODataPrimitiveValue(123), complexValue.Properties.First().InstanceAnnotations.Single(ia => ia.Name == "Annotation.2").Value);
-            TestUtils.AssertODataValueAreEqual(new ODataPrimitiveValue("annotation"), complexValue.Properties.First().InstanceAnnotations.Single(ia => ia.Name == "Annotation.3").Value);
+            var odataReader = this.CreateJsonLightInputContext("{\"CountryRegion@Annotation.1\":true,\"CountryRegion@Annotation.2\":123,\"CountryRegion@Annotation.3\":\"annotation\",\"CountryRegion\":\"China\"}", model, false)
+                .CreateResourceReader(null, complexType);
+            while (odataReader.Read())
+            {
+                if (odataReader.State == ODataReaderState.ResourceEnd)
+                {
+                    var complex = odataReader.Item as ODataResource;
+                    complex.Properties.First().InstanceAnnotations.Count.Should().Be(3);
+                    TestUtils.AssertODataValueAreEqual(new ODataPrimitiveValue(true), complex.Properties.First().InstanceAnnotations.Single(ia => ia.Name == "Annotation.1").Value);
+                    TestUtils.AssertODataValueAreEqual(new ODataPrimitiveValue(123), complex.Properties.First().InstanceAnnotations.Single(ia => ia.Name == "Annotation.2").Value);
+                    TestUtils.AssertODataValueAreEqual(new ODataPrimitiveValue("annotation"), complex.Properties.First().InstanceAnnotations.Single(ia => ia.Name == "Annotation.3").Value);
+                }
+            }
         }
 
         [Fact]
@@ -915,18 +912,18 @@ namespace Microsoft.OData.Tests.JsonLight
             complexType.AddStructuralProperty("CountryRegion", EdmPrimitiveTypeKind.String);
             model.AddElement(complexType);
             var complexTypeRef = new EdmComplexTypeReference(complexType, false);
-            ODataJsonLightPropertyAndValueDeserializer deserializer = new ODataJsonLightPropertyAndValueDeserializer(this.CreateJsonLightInputContext("{\"CountryRegion@Is.ReadOnly\":true,\"CountryRegion\":\"China\"}", model));
-            deserializer.JsonReader.Read();
-            ODataComplexValue complexValue = (ODataComplexValue)deserializer.ReadNonEntityValue(
-                /*payloadTypeName*/ null,
-                complexTypeRef,
-                /*propertyAndAnnotationCollector*/ null,
-                /*collectionValidator*/ null,
-                /*validateNullValue*/ true,
-                /*isTopLevelPropertyValue*/ false,
-                /*insideComplexValue*/ false,
-                /*propertyName*/ null);
-            complexValue.Properties.First().InstanceAnnotations.Count.Should().Be(0);
+            var odataReader = this.CreateJsonLightInputContext("{\"CountryRegion@Is.ReadOnly\":true,\"CountryRegion\":\"China\"}", model, false)
+                .CreateResourceReader(null, complexType);
+
+            while (odataReader.Read())
+            {
+                if (odataReader.State == ODataReaderState.ResourceEnd)
+                {
+                    var complex = odataReader.Item as ODataResource;
+                    complex.Properties.First().InstanceAnnotations.Count.Should().Be(0);
+                }
+            }
+
         }
 
         #endregion
@@ -941,17 +938,13 @@ namespace Microsoft.OData.Tests.JsonLight
             model.AddElement(complexType);
             var complexTypeRef = new EdmComplexTypeReference(complexType, false);
             this.messageReaderSettings = new ODataMessageReaderSettings { ShouldIncludeAnnotation = ODataUtils.CreateAnnotationFilter("*") };
-            ODataJsonLightPropertyAndValueDeserializer deserializer = new ODataJsonLightPropertyAndValueDeserializer(this.CreateJsonLightInputContext("{\"@odata.count\":\"123\"}", model));
-            deserializer.JsonReader.Read();
-            Action action = () => deserializer.ReadNonEntityValue(
-                /*payloadTypeName*/ null,
-                complexTypeRef,
-                /*propertyAndAnnotationCollector*/ null,
-                /*collectionValidator*/ null,
-                /*validateNullValue*/ true,
-                /*isTopLevelPropertyValue*/ false,
-                /*insideComplexValue*/ false,
-                /*propertyName*/ null);
+            var odataReader = this.CreateJsonLightInputContext("{\"@odata.count\":\"123\"}", model, false)
+                .CreateResourceReader(null, complexType);
+            Action action = () =>
+            {
+                while (odataReader.Read()) ;
+            };
+
             action.ShouldThrow<ODataException>().WithMessage(ErrorStrings.ODataJsonLightPropertyAndValueDeserializer_UnexpectedAnnotationProperties("odata.count"));
         }
 
@@ -963,19 +956,17 @@ namespace Microsoft.OData.Tests.JsonLight
             model.AddElement(complexType);
             var complexTypeRef = new EdmComplexTypeReference(complexType, false);
             this.messageReaderSettings = new ODataMessageReaderSettings { ShouldIncludeAnnotation = ODataUtils.CreateAnnotationFilter("*") };
-            ODataJsonLightPropertyAndValueDeserializer deserializer = new ODataJsonLightPropertyAndValueDeserializer(this.CreateJsonLightInputContext("{\"@Is.ReadOnly\":true}", model));
-            deserializer.JsonReader.Read();
-            ODataComplexValue complexValue = (ODataComplexValue)deserializer.ReadNonEntityValue(
-                /*payloadTypeName*/ null,
-                complexTypeRef,
-                /*propertyAndAnnotationCollector*/ null,
-                /*collectionValidator*/ null,
-                /*validateNullValue*/ true,
-                /*isTopLevelPropertyValue*/ false,
-                /*insideComplexValue*/ false,
-                /*propertyName*/ null);
-            complexValue.InstanceAnnotations.Count.Should().Be(1);
-            TestUtils.AssertODataValueAreEqual(new ODataPrimitiveValue(true), complexValue.InstanceAnnotations.Single(ia => ia.Name == "Is.ReadOnly").Value);
+
+            var odataReader = this.CreateJsonLightInputContext("{\"@Is.ReadOnly\":true}", model, false)
+                .CreateResourceReader(null, complexType);
+            while (odataReader.Read())
+            {
+                if (odataReader.State == ODataReaderState.ResourceEnd)
+                {
+                    var complex = odataReader.Item as ODataResource;
+                    complex.InstanceAnnotations.Count.Should().Be(1);
+                }
+            }
         }
 
         [Fact]
@@ -986,21 +977,19 @@ namespace Microsoft.OData.Tests.JsonLight
             model.AddElement(complexType);
             var complexTypeRef = new EdmComplexTypeReference(complexType, false);
             this.messageReaderSettings = new ODataMessageReaderSettings { ShouldIncludeAnnotation = ODataUtils.CreateAnnotationFilter("*") };
-            ODataJsonLightPropertyAndValueDeserializer deserializer = new ODataJsonLightPropertyAndValueDeserializer(this.CreateJsonLightInputContext("{\"@Annotation.1\":true,\"@Annotation.2\":123,\"Annotation.3\":\"annotation\"}", model));
-            deserializer.JsonReader.Read();
-            ODataComplexValue complexValue = (ODataComplexValue)deserializer.ReadNonEntityValue(
-                /*payloadTypeName*/ null,
-                complexTypeRef,
-                /*propertyAndAnnotationCollector*/ null,
-                /*collectionValidator*/ null,
-                /*validateNullValue*/ true,
-                /*isTopLevelPropertyValue*/ false,
-                /*insideComplexValue*/ false,
-                /*propertyName*/ null);
-            complexValue.InstanceAnnotations.Count.Should().Be(3);
-            TestUtils.AssertODataValueAreEqual(new ODataPrimitiveValue(true), complexValue.InstanceAnnotations.Single(ia => ia.Name == "Annotation.1").Value);
-            TestUtils.AssertODataValueAreEqual(new ODataPrimitiveValue(123), complexValue.InstanceAnnotations.Single(ia => ia.Name == "Annotation.2").Value);
-            TestUtils.AssertODataValueAreEqual(new ODataPrimitiveValue("annotation"), complexValue.InstanceAnnotations.Single(ia => ia.Name == "Annotation.3").Value);
+            var odataReader = this.CreateJsonLightInputContext("{\"@Annotation.1\":true,\"@Annotation.2\":123,\"Annotation.3\":\"annotation\"}", model, false)
+                .CreateResourceReader(null, complexType);
+            while (odataReader.Read())
+            {
+                if (odataReader.State == ODataReaderState.ResourceEnd)
+                {
+                    var complex = odataReader.Item as ODataResource;
+                    complex.InstanceAnnotations.Count.Should().Be(3);
+                    TestUtils.AssertODataValueAreEqual(new ODataPrimitiveValue(true), complex.InstanceAnnotations.Single(ia => ia.Name == "Annotation.1").Value);
+                    TestUtils.AssertODataValueAreEqual(new ODataPrimitiveValue(123), complex.InstanceAnnotations.Single(ia => ia.Name == "Annotation.2").Value);
+                    TestUtils.AssertODataValueAreEqual(new ODataPrimitiveValue("annotation"), complex.InstanceAnnotations.Single(ia => ia.Name == "Annotation.3").Value);
+                }
+            }
         }
 
         [Fact]
@@ -1012,17 +1001,12 @@ namespace Microsoft.OData.Tests.JsonLight
             model.AddElement(complexType);
             var complexTypeRef = new EdmComplexTypeReference(complexType, false);
             this.messageReaderSettings = new ODataMessageReaderSettings { ShouldIncludeAnnotation = ODataUtils.CreateAnnotationFilter("*") };
-            ODataJsonLightPropertyAndValueDeserializer deserializer = new ODataJsonLightPropertyAndValueDeserializer(this.CreateJsonLightInputContext("{\"@Annotation.1\":true,\"@Annotation.2\":123,\"CountryRegion\":\"China\",\"@Annotation.3\":\"annotation\"}", model));
-            deserializer.JsonReader.Read();
-            Action action = () => deserializer.ReadNonEntityValue(
-                /*payloadTypeName*/ null,
-                complexTypeRef,
-                /*propertyAndAnnotationCollector*/ null,
-                /*collectionValidator*/ null,
-                /*validateNullValue*/ true,
-                /*isTopLevelPropertyValue*/ false,
-                /*insideComplexValue*/ false,
-                /*propertyName*/ null);
+            var odataReader = this.CreateJsonLightInputContext("{\"@Annotation.1\":true,\"@Annotation.2\":123,\"CountryRegion\":\"China\",\"@Annotation.3\":\"annotation\"}", model, false)
+                            .CreateResourceReader(null, complexType);
+            Action action = () =>
+            {
+                while (odataReader.Read()) ;
+            };
             action.ShouldNotThrow();
         }
 
@@ -1034,18 +1018,16 @@ namespace Microsoft.OData.Tests.JsonLight
             model.AddElement(complexType);
             var complexTypeRef = new EdmComplexTypeReference(complexType, false);
             this.messageReaderSettings = new ODataMessageReaderSettings();
-            ODataJsonLightPropertyAndValueDeserializer deserializer = new ODataJsonLightPropertyAndValueDeserializer(this.CreateJsonLightInputContext("{\"@Annotation.1\":true,\"@Annotation.2\":123,\"Annotation.3\":\"annotation\"}", model));
-            deserializer.JsonReader.Read();
-            ODataComplexValue complexValue = (ODataComplexValue)deserializer.ReadNonEntityValue(
-                /*payloadTypeName*/ null,
-                complexTypeRef,
-                /*propertyAndAnnotationCollector*/ null,
-                /*collectionValidator*/ null,
-                /*validateNullValue*/ true,
-                /*isTopLevelPropertyValue*/ false,
-                /*insideComplexValue*/ false,
-                /*propertyName*/ null);
-            complexValue.InstanceAnnotations.Count.Should().Be(0);
+            var odataReader = this.CreateJsonLightInputContext("{\"@Annotation.1\":true,\"@Annotation.2\":123,\"Annotation.3\":\"annotation\"}", model, false)
+                .CreateResourceReader(null, complexType);
+            while (odataReader.Read())
+            {
+                if (odataReader.State == ODataReaderState.ResourceEnd)
+                {
+                    var complex = odataReader.Item as ODataResource;
+                    complex.InstanceAnnotations.Count.Should().Be(0);
+                }
+            }
         }
 
         #endregion
@@ -1057,21 +1039,21 @@ namespace Microsoft.OData.Tests.JsonLight
             var complexType = new EdmComplexType("TestNamespace", "Address");
             model.AddElement(complexType);
             var complexTypeRef = new EdmComplexTypeReference(complexType, false);
-            ODataJsonLightPropertyAndValueDeserializer deserializer = new ODataJsonLightPropertyAndValueDeserializer(this.CreateJsonLightInputContext("\"CountryRegion\":\"China\"", model));
-            deserializer.JsonReader.Read();
-            Action action = () => deserializer.ReadNonEntityValue(
-                 /*payloadTypeName*/ null,
-                 complexTypeRef,
-                 /*propertyAndAnnotationCollector*/ null,
-                 /*collectionValidator*/ null,
-                 /*validateNullValue*/ true,
-                 /*isTopLevelPropertyValue*/ false,
-                 /*insideComplexValue*/ false,
-                 /*propertyName*/ "Home");
-            action.ShouldThrow<ODataException>().WithMessage(
-                string.Format(CultureInfo.InvariantCulture,
-                "The property with name '{0}' was found with a value node of type '{1}'; however, a complex value of type '{2}' was expected.",
-                "Home", "PrimitiveValue", "TestNamespace.Address"));
+            var odataReader = this.CreateJsonLightInputContext("\"CountryRegion\":\"China\"", model, false)
+                .CreateResourceReader(null, complexType);
+            Action action = () => 
+            {
+                while (odataReader.Read())
+                {
+                    if (odataReader.State == ODataReaderState.ResourceEnd)
+                    {
+                        var complex = odataReader.Item as ODataResource;
+                        complex.InstanceAnnotations.Count.Should().Be(0);
+                    }
+                }
+            };
+
+            action.ShouldThrow<ODataException>().WithMessage(ErrorStrings.JsonReaderExtensions_UnexpectedNodeDetected("StartObject", "PrimitiveValue"));
         }
 
         private ODataJsonLightInputContext CreateJsonLightInputContext(string payload)
@@ -1079,11 +1061,11 @@ namespace Microsoft.OData.Tests.JsonLight
             return this.CreateJsonLightInputContext(payload, this.edmModel);
         }
 
-        private ODataJsonLightInputContext CreateJsonLightInputContext(string payload, IEdmModel model)
+        private ODataJsonLightInputContext CreateJsonLightInputContext(string payload, IEdmModel model, bool isResponse = true)
         {
             var messageInfo = new ODataMessageInfo
             {
-                IsResponse = true,
+                IsResponse = isResponse,
                 MediaType = JsonLightUtils.JsonLightStreamingMediaType,
                 IsAsync = false,
                 Model = model,

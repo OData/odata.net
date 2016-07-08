@@ -30,11 +30,24 @@ namespace Microsoft.Test.OData.Tests.Client.PropertyTrackingTests
             this.TestClientContext.MergeOption = MergeOption.OverwriteChanges;
 
             int expectedPropertyCount = 0;
-            ODataResource entry = null;
+            ODataResource address = null;
+            ODataResource accountInfo = null;
             this.TestClientContext.Configurations.RequestPipeline.OnEntryEnding((arg) =>
             {
-                entry = arg.Entry;
-                Assert.AreEqual(expectedPropertyCount, entry.Properties.Count());
+                if (arg.Entry.TypeName.EndsWith("HomeAddressPlus"))
+                {
+                    address = arg.Entry;
+                }
+
+                if (arg.Entry.TypeName.EndsWith("AccountInfoPlus"))
+                {
+                    accountInfo = arg.Entry;
+                }
+
+                if (arg.Entry.TypeName.EndsWith("CustomerPlus"))
+                {
+                    Assert.AreEqual(expectedPropertyCount, arg.Entry.Properties.Count());
+                }
             });
 
             //Entity of Derived type
@@ -59,11 +72,11 @@ namespace Microsoft.Test.OData.Tests.Client.PropertyTrackingTests
             };
 
             //Post entity into an entity set
-            expectedPropertyCount = 8;
+            expectedPropertyCount = 7;
             this.TestClientContext.SaveChanges(SaveChangesOptions.PostOnlySetProperties);
 
             //Validate that entire complex type was sent to server side.
-            Assert.AreEqual(4, (entry.Properties.Where(p => p.Name == "HomeAddress").First().Value as ODataComplexValue).Properties.Count());
+            Assert.AreEqual(4, address.Properties.Count());
 
             //Post Navigation property to an entitySet
             var people1 = new DataServiceCollection<CustomerPlus>(this.TestClientContext.CustomersPlus.Where(p => p.PersonIDPlus == 10001));
@@ -104,7 +117,7 @@ namespace Microsoft.Test.OData.Tests.Client.PropertyTrackingTests
             expectedPropertyCount = 3;
             this.TestClientContext.SaveChanges(SaveChangesOptions.PostOnlySetProperties);
             //Validate entire open complex type was sent to server side.
-            Assert.AreEqual(4, (entry.Properties.Where(a => a.Name == "AccountInfo").First().Value as ODataComplexValue).Properties.Count());
+            Assert.AreEqual(4, accountInfo.Properties.Count());
 
             //Post Contained Navigation property
             PaymentInstrumentPlus pi = new PaymentInstrumentPlus();
@@ -248,8 +261,8 @@ namespace Microsoft.Test.OData.Tests.Client.PropertyTrackingTests
                 //Post entity into an entity set
                 this.TestClientContext.SaveChanges(SaveChangesOptions.PostOnlySetProperties | batchFlag);
 
-                Assert.AreEqual(8, entries.Where(e => e.TypeName.Contains("CustomerPlus")).First().Properties.Count());
-                Assert.AreEqual(3, entries.Where(e => e.TypeName.Contains("AccountPlus")).First().Properties.Count());
+                Assert.AreEqual(7, entries.Where(e => e.TypeName.Contains("CustomerPlus")).First().Properties.Count());
+                Assert.AreEqual(2, entries.Where(e => e.TypeName.Contains("AccountPlus")).First().Properties.Count());
                 Assert.AreEqual(7, entries.Where(e => e.TypeName.Contains("ProductPlus")).First().Properties.Count());
             }
         }
@@ -261,8 +274,12 @@ namespace Microsoft.Test.OData.Tests.Client.PropertyTrackingTests
             ODataResource entry = null;
             this.TestClientContext.Configurations.RequestPipeline.OnEntryEnding((arg) =>
             {
-                entry = arg.Entry;
-                Assert.AreEqual(expectedPropertyCount, entry.Properties.Count());
+                if (arg.Entry.TypeName.EndsWith("CustomerPlus")
+                    || arg.Entry.TypeName.EndsWith("OrderPlus"))
+                {
+                    entry = arg.Entry;
+                    Assert.AreEqual(expectedPropertyCount, entry.Properties.Count());
+                }
             });
 
             //Entity of Derived type
@@ -287,7 +304,7 @@ namespace Microsoft.Test.OData.Tests.Client.PropertyTrackingTests
             };
 
             //Post entity into an entity set
-            expectedPropertyCount = 11;
+            expectedPropertyCount = 10;
             this.TestClientContext.SaveChanges();
 
             //Post Navigation property to an entitySet
@@ -355,8 +372,8 @@ namespace Microsoft.Test.OData.Tests.Client.PropertyTrackingTests
                 //Post entity into an entity set
                 this.TestClientContext.SaveChanges(batchFlag);
 
-                Assert.AreEqual(11, entries.Where(e => e.TypeName.Contains("CustomerPlus")).First().Properties.Count());
-                Assert.AreEqual(3, entries.Where(e => e.TypeName.Contains("AccountPlus")).First().Properties.Count());
+                Assert.AreEqual(10, entries.Where(e => e.TypeName.Contains("CustomerPlus")).First().Properties.Count());
+                Assert.AreEqual(2, entries.Where(e => e.TypeName.Contains("AccountPlus")).First().Properties.Count());
                 Assert.AreEqual(9, entries.Where(e => e.TypeName.Contains("ProductPlus")).First().Properties.Count());
             }
         }

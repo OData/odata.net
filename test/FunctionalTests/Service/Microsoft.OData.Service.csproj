@@ -118,6 +118,21 @@
     <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Core\InternalErrorCodesCommon.cs">
       <Link>Microsoft\OData\Service\InternalErrorCodesCommon.cs</Link>
     </Compile>
+    <Compile Include="..\..\..\src\Microsoft.OData.Client\Wrappers\ODataItemWrapper.cs">
+      <Link>Microsoft\OData\Service\Wrappers\ODataItemWrapper.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\Microsoft.OData.Client\Wrappers\ODataNestedResourceInfoWrapper.cs">
+      <Link>Microsoft\OData\Service\Wrappers\ODataNestedResourceInfoWrapper.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\Microsoft.OData.Client\Wrappers\ODataResourceSetWrapper.cs">
+      <Link>Microsoft\OData\Service\Wrappers\ODataResourceSetWrapper.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\Microsoft.OData.Client\Wrappers\ODataResourceWrapper.cs">
+      <Link>Microsoft\OData\Service\Wrappers\ODataResourceWrapper.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\Microsoft.OData.Client\Wrappers\ODataWriterHelper.cs">
+      <Link>Microsoft\OData\Service\Wrappers\ODataWriterHelper.cs</Link>
+    </Compile>
     <Compile Include="Microsoft\OData\Service\DataServiceStaticConfiguration.cs" />
     <Compile Include="Microsoft\OData\Service\ODataPathToSegmentInfoConverter.cs" />
     <Compile Include="Microsoft\OData\Service\OpenTypeMethodCallDetector.cs" />

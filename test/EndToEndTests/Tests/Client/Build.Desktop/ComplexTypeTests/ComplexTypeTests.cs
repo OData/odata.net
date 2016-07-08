@@ -251,31 +251,42 @@ namespace Microsoft.Test.OData.Tests.Client.ComplexTypeTests
                 Assert.AreEqual(familyNames[i], homeAddress.Properties.Single(p => p.Name == "FamilyName").Value);
 
                 //update
-                entry = new ODataResource() { TypeName = NameSpacePrefix + "Person" };
-                entry.Properties = new[]
+                var entryWrapper = new ODataResourceWrapper()
                 {
-                    new ODataProperty
+                    Resource = new ODataResource() { TypeName = NameSpacePrefix + "Person" },
+                    NestedResourceInfoWrappers = new List<ODataNestedResourceInfoWrapper>()
                     {
-                        Name = "HomeAddress",
-                        Value = new ODataComplexValue
+                        new ODataNestedResourceInfoWrapper()
                         {
-                            TypeName = NameSpacePrefix + "HomeAddress",
-                            Properties = new[]
+                            NestedResourceInfo = new ODataNestedResourceInfo()
                             {
-                                new ODataProperty
+                                Name = "HomeAddress",
+                                IsCollection = false
+                            },
+                            NestedResourceOrResourceSet = new ODataResourceWrapper()
+                            {
+                                Resource = new ODataResource()
                                 {
-                                    Name = "City",
-                                    Value = "Chengdu"
-                                },
-                                new ODataProperty
-                                {
-                                    Name = "FamilyName",
-                                    Value = familyNames[i+1]
+                                    TypeName = NameSpacePrefix + "HomeAddress",
+                                    Properties = new[]
+                                    {
+                                        new ODataProperty
+                                        {
+                                            Name = "City",
+                                            Value = "Chengdu"
+                                        },
+                                        new ODataProperty
+                                        {
+                                            Name = "FamilyName",
+                                            Value = familyNames[i+1]
+                                        }
+                                    }
                                 }
                             }
                         }
                     }
                 };
+
                 var settings = new ODataMessageWriterSettings();
                 settings.BaseUri = ServiceBaseUri;
                 settings.AutoComputePayloadMetadata = true;
@@ -291,8 +302,7 @@ namespace Microsoft.Test.OData.Tests.Client.ComplexTypeTests
                 using (var messageWriter = new ODataMessageWriter(requestMessage, settings, Model))
                 {
                     var odataWriter = messageWriter.CreateODataResourceWriter(personSet, personType);
-                    odataWriter.WriteStart(entry);
-                    odataWriter.WriteEnd();
+                    ODataWriterHelper.WriteResource(odataWriter, entryWrapper);
                 }
 
                 var responseMessage = requestMessage.GetResponse();
@@ -320,64 +330,80 @@ namespace Microsoft.Test.OData.Tests.Client.ComplexTypeTests
             for (int i = 0; i < types.Length; i++)
             {
                 // insert
-                var entry = new ODataResource() { TypeName = NameSpacePrefix + "Person" };
-                entry.Properties = new[]
+                var entryWrapper = new ODataResourceWrapper()
                 {
-                    new ODataProperty { Name = "PersonID", Value = 101 },
-                    new ODataProperty { Name = "FirstName", Value = "Peter" },
-                    new ODataProperty { Name = "LastName", Value = "Zhang" },
-                    new ODataProperty
+                    Resource = new ODataResource()
                     {
-                        Name = "HomeAddress",
-                        Value = new ODataComplexValue
+                        TypeName = NameSpacePrefix + "Person",
+                        Properties = new[]
                         {
-                            TypeName = NameSpacePrefix + "HomeAddress",
-                            Properties = new[]
+                            new ODataProperty { Name = "PersonID", Value = 101 },
+                            new ODataProperty { Name = "FirstName", Value = "Peter" },
+                            new ODataProperty { Name = "LastName", Value = "Zhang" },
+                            new ODataProperty
                             {
-                                new ODataProperty
+                                Name = "Home",
+                                Value = GeographyPoint.Create(32.1, 23.1)
+                            },
+                            new ODataProperty
+                            {
+                                Name = "Numbers",
+                                Value = new ODataCollectionValue
                                 {
-                                    Name = "Street",
-                                    Value = "ZiXing Road"
-                                },
-                                new ODataProperty
+                                    TypeName = "Collection(Edm.String)",
+                                    Items = new string[] { "12345" }
+                                }
+                            },
+                            new ODataProperty
+                            {
+                                Name = "Emails",
+                                Value = new ODataCollectionValue
                                 {
-                                    Name = "City",
-                                    Value = "Chengdu"
-                                },
-                                new ODataProperty
-                                {
-                                    Name = "PostalCode",
-                                    Value = "200241"
-                                },
-                                new ODataProperty
-                                {
-                                    Name = "FamilyName",
-                                    Value = "Tigers"
+                                    TypeName = "Collection(Edm.String)",
+                                    Items = new string[] { "a@b.cc" }
                                 }
                             }
                         }
                     },
-                    new ODataProperty
+                    NestedResourceInfoWrappers = new List<ODataNestedResourceInfoWrapper>()
                     {
-                        Name = "Home",
-                        Value = GeographyPoint.Create(32.1, 23.1)
-                    },
-                    new ODataProperty
-                    {
-                        Name = "Numbers",
-                        Value = new ODataCollectionValue
+                        new ODataNestedResourceInfoWrapper()
                         {
-                            TypeName = "Collection(Edm.String)",
-                            Items = new string[] { "12345" }
-                        }
-                    },
-                    new ODataProperty
-                    {
-                        Name = "Emails",
-                        Value = new ODataCollectionValue
-                        {
-                            TypeName = "Collection(Edm.String)",
-                            Items = new string[] { "a@b.cc" }
+                            NestedResourceInfo = new ODataNestedResourceInfo()
+                            {
+                                Name = "HomeAddress",
+                                IsCollection = false
+                            },
+                            NestedResourceOrResourceSet = new ODataResourceWrapper()
+                            {
+                                Resource = new ODataResource()
+                                {
+                                    TypeName = NameSpacePrefix + "HomeAddress",
+                                    Properties = new[]
+                                    {
+                                        new ODataProperty
+                                        {
+                                            Name = "Street",
+                                            Value = "ZiXing Road"
+                                        },
+                                        new ODataProperty
+                                        {
+                                            Name = "City",
+                                            Value = "Chengdu"
+                                        },
+                                        new ODataProperty
+                                        {
+                                            Name = "PostalCode",
+                                            Value = "200241"
+                                        },
+                                        new ODataProperty
+                                        {
+                                            Name = "FamilyName",
+                                            Value = "Tigers"
+                                        }
+                                    }
+                                }
+                            }
                         }
                     }
                 };
@@ -395,8 +421,7 @@ namespace Microsoft.Test.OData.Tests.Client.ComplexTypeTests
                 using (var messageWriter = new ODataMessageWriter(requestMessage, settings, Model))
                 {
                     var odataWriter = messageWriter.CreateODataResourceWriter(peopleSet, personType);
-                    odataWriter.WriteStart(entry);
-                    odataWriter.WriteEnd();
+                    ODataWriterHelper.WriteResource(odataWriter, entryWrapper);
                 }
 
                 var responseMessage = requestMessage.GetResponse();
@@ -404,7 +429,7 @@ namespace Microsoft.Test.OData.Tests.Client.ComplexTypeTests
                 // verify the insert
                 Assert.AreEqual(201, responseMessage.StatusCode);
                 List<ODataResource> complexTypeResources = null;
-                entry = this.QueryEntry("People(101)", out complexTypeResources);
+                var entry = this.QueryEntry("People(101)", out complexTypeResources);
                 Assert.AreEqual(101, entry.Properties.Single(p => p.Name == "PersonID").Value);
 
                 var homeAddress = complexTypeResources.Single(r => r.TypeName.EndsWith("Address"));
@@ -447,11 +472,17 @@ namespace Microsoft.Test.OData.Tests.Client.ComplexTypeTests
                 {
                     using (var messageReader = new ODataMessageReader(responseMessage, readerSettings, Model))
                     {
-                        ODataProperty property = messageReader.ReadProperty();
-                        ODataComplexValue homeAddress = property.Value as ODataComplexValue;
-                        Assert.IsNotNull(homeAddress);
-                        Assert.AreEqual("Tokyo", homeAddress.Properties.Single(p => p.Name == "City").Value);
-                        Assert.AreEqual("Cats", homeAddress.Properties.Single(p => p.Name == "FamilyName").Value);
+                        var odataReader = messageReader.CreateODataResourceReader();
+                        while (odataReader.Read())
+                        {
+                            if (odataReader.State == ODataReaderState.ResourceEnd)
+                            {
+                                var homeAddress = odataReader.Item as ODataResource;
+                                Assert.IsNotNull(homeAddress);
+                                Assert.AreEqual("Tokyo", homeAddress.Properties.Single(p => p.Name == "City").Value);
+                                Assert.AreEqual("Cats", homeAddress.Properties.Single(p => p.Name == "FamilyName").Value);
+                            }
+                        }
                     }
                 }
 
@@ -465,11 +496,17 @@ namespace Microsoft.Test.OData.Tests.Client.ComplexTypeTests
                 {
                     using (var messageReader = new ODataMessageReader(responseMessage, readerSettings, Model))
                     {
-                        ODataProperty property = messageReader.ReadProperty();
-                        ODataComplexValue homeAddress = property.Value as ODataComplexValue;
-                        Assert.IsNotNull(homeAddress);
-                        Assert.AreEqual("Sydney", homeAddress.Properties.Single(p => p.Name == "City").Value);
-                        Assert.AreEqual("Zips", homeAddress.Properties.Single(p => p.Name == "FamilyName").Value);
+                        var odataReader = messageReader.CreateODataResourceReader();
+                        while (odataReader.Read())
+                        {
+                            if (odataReader.State == ODataReaderState.ResourceEnd)
+                            {
+                                var homeAddress = odataReader.Item as ODataResource;
+                                Assert.IsNotNull(homeAddress);
+                                Assert.AreEqual("Sydney", homeAddress.Properties.Single(p => p.Name == "City").Value);
+                                Assert.AreEqual("Zips", homeAddress.Properties.Single(p => p.Name == "FamilyName").Value);
+                            }
+                        }
                     }
                 }
             }
@@ -930,8 +967,15 @@ namespace Microsoft.Test.OData.Tests.Client.ComplexTypeTests
                 {
                     using (var messageReader = new ODataMessageReader(responseMessage, readerSettings, Model))
                     {
-                        ODataProperty property = messageReader.ReadProperty();
-                        ODataComplexValue accountInfo = property.Value as ODataComplexValue;
+                        var odataReader = messageReader.CreateODataResourceReader();
+                        ODataResource accountInfo = null;
+                        while (odataReader.Read())
+                        {
+                            if (odataReader.State == ODataReaderState.ResourceEnd)
+                            {
+                                accountInfo = odataReader.Item as ODataResource;
+                            }
+                        }
                         Assert.IsNotNull(accountInfo);
                         Assert.AreEqual("Alex", accountInfo.Properties.Single(p => p.Name == "FirstName").Value);
                         Assert.AreEqual("\"Hood\"", (accountInfo.Properties.Single(p => p.Name == "MiddleName").Value as ODataUntypedValue).RawValue);
@@ -948,10 +992,16 @@ namespace Microsoft.Test.OData.Tests.Client.ComplexTypeTests
                 {
                     using (var messageReader = new ODataMessageReader(responseMessage, readerSettings, Model))
                     {
-                        ODataProperty property = messageReader.ReadProperty();
-                        ODataComplexValue accountInfo = property.Value as ODataComplexValue;
-                        Assert.IsNotNull(accountInfo);
-                        Assert.AreEqual("Adam", accountInfo.Properties.Single(p => p.Name == "FirstName").Value);
+                        var odataReader = messageReader.CreateODataResourceReader();
+                        while (odataReader.Read())
+                        {
+                            if (odataReader.State == ODataReaderState.ResourceEnd)
+                            {
+                                var accountInfo = odataReader.Item as ODataResource;
+                                Assert.IsNotNull(accountInfo);
+                                Assert.AreEqual("Adam", accountInfo.Properties.Single(p => p.Name == "FirstName").Value);
+                            }
+                        }
                     }
                 }
             }
@@ -1153,27 +1203,23 @@ namespace Microsoft.Test.OData.Tests.Client.ComplexTypeTests
             var mimeType = MimeTypes.ApplicationJson + MimeTypes.ODataParameterFullMetadata;
 
             // update
-            var accountInfo = new ODataProperty
+            var accountInfo = new ODataResource
             {
-                Name = "AccountInfo",
-                Value = new ODataComplexValue
+                TypeName = NameSpacePrefix + "AccountInfo",
+                Properties = new[]
                 {
-                    TypeName = NameSpacePrefix + "AccountInfo",
-                    Properties = new[]
+                    new ODataProperty
                     {
-                        new ODataProperty
+                        Name = "FirstName",
+                        Value = "FN"
+                    },
+                    new ODataProperty
+                    {
+                        Name = "FavoriteFood",
+                        Value = new ODataCollectionValue()
                         {
-                            Name = "FirstName",
-                            Value = "FN"
-                        },
-                        new ODataProperty
-                        {
-                            Name = "FavoriteFood",
-                            Value = new ODataCollectionValue()
-                            {
-                                TypeName = "Collection(Edm.String)",
-                                Items = new[] {"meat", "sea food", "apple"}
-                            }
+                            TypeName = "Collection(Edm.String)",
+                            Items = new[] {"meat", "sea food", "apple"}
                         }
                     }
                 }
@@ -1190,7 +1236,9 @@ namespace Microsoft.Test.OData.Tests.Client.ComplexTypeTests
 
             using (var messageWriter = new ODataMessageWriter(requestMessage, settings, Model))
             {
-                messageWriter.WriteProperty(accountInfo);
+                var odataWriter = messageWriter.CreateODataResourceWriter(null, null);
+                odataWriter.WriteStart(accountInfo);
+                odataWriter.WriteEnd();
             }
 
             var responseMessage = requestMessage.GetResponse();
@@ -1275,22 +1323,12 @@ namespace Microsoft.Test.OData.Tests.Client.ComplexTypeTests
 
         private void EntryStarting(Microsoft.OData.Client.WritingEntryArgs ea, InMemoryEntities context)
         {
-            var entityState = context.Entities.First(e => e.Entity == ea.Entity).State;
-
-            // Send up an undeclared property on an Open Type.
-            if (entityState == ODataClient.EntityStates.Modified || entityState == ODataClient.EntityStates.Added)
+            if (ea.Entity.GetType() == typeof(AccountInfo))
             {
-
-                // Send up an undeclared property on an Open Type.
-                if (ea.Entity.GetType() == typeof(Account))
-                {
-                    var accountInfoProperty = ea.Entry.Properties.FirstOrDefault(e => e.Name == "AccountInfo");
-                    var accountInfoComplexValueProperties = ((ODataComplexValue)accountInfoProperty.Value).Properties as List<ODataProperty>;
-
-                    // In practice, the data from this undeclared property would probably be stored in a transient property of the partial companion class to the client proxy.
-                    var undeclaredOdataProperty = new ODataProperty() { Name = "dynamicPropertyKey", Value = "dynamicPropertyValue" };
-                    accountInfoComplexValueProperties.Add(undeclaredOdataProperty);
-                }
+                var properties = ea.Entry.Properties as List<ODataProperty>;
+                var undeclaredOdataProperty = new ODataProperty() { Name = "dynamicPropertyKey", Value = "dynamicPropertyValue" };
+                properties.Add(undeclaredOdataProperty);
+                ea.Entry.Properties = properties;
             }
         }
 

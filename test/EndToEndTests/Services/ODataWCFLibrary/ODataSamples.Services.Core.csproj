@@ -62,19 +62,19 @@
     </When>
   </Choose>
   <ItemGroup>
-    <Compile Include="..\..\Framework\Core\Common\Wrapper\ODataItemWrapper.cs">
+    <Compile Include="..\..\..\..\src\Microsoft.OData.Client\Wrappers\ODataItemWrapper.cs">
       <Link>Wrappers\ODataItemWrapper.cs</Link>
     </Compile>
-    <Compile Include="..\..\Framework\Core\Common\Wrapper\ODataNestedResourceInfoWrapper.cs">
+    <Compile Include="..\..\..\..\src\Microsoft.OData.Client\Wrappers\ODataNestedResourceInfoWrapper.cs">
       <Link>Wrappers\ODataNestedResourceInfoWrapper.cs</Link>
     </Compile>
-    <Compile Include="..\..\Framework\Core\Common\Wrapper\ODataResourceSetWrapper.cs">
+    <Compile Include="..\..\..\..\src\Microsoft.OData.Client\Wrappers\ODataResourceSetWrapper.cs">
       <Link>Wrappers\ODataResourceSetWrapper.cs</Link>
     </Compile>
-    <Compile Include="..\..\Framework\Core\Common\Wrapper\ODataResourceWrapper.cs">
+    <Compile Include="..\..\..\..\src\Microsoft.OData.Client\Wrappers\ODataResourceWrapper.cs">
       <Link>Wrappers\ODataResourceWrapper.cs</Link>
     </Compile>
-    <Compile Include="..\..\Framework\Core\Common\Wrapper\ODataWriterHelper.cs">
+    <Compile Include="..\..\..\..\src\Microsoft.OData.Client\Wrappers\ODataWriterHelper.cs">
       <Link>Wrappers\ODataWriterHelper.cs</Link>
     </Compile>
     <Compile Include="AsyncTask.cs" />

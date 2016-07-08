@@ -726,6 +726,26 @@ namespace Microsoft.OData.Service.Serializers
             throw DataServiceException.CreateBadRequestError(Microsoft.OData.Service.Strings.OpenNavigationPropertiesNotSupportedOnOpenTypes(propertyName));
         }
 
+        protected ODataItemWrapper GetPropertyResourceOrResourceSet(string propertyName, ResourceType propertyResourceType, object propertyValue, bool openProperty)
+        {
+            Debug.Assert(propertyName != null, "propertyName != null");
+            Debug.Assert(propertyResourceType != null, "propertyResourceType != null");
+
+            if (propertyResourceType.ResourceTypeKind == ResourceTypeKind.ComplexType)
+            {
+                // no need to handle null here as the property setter on ODataProperty will handle it.
+                return this.GetComplexResource(propertyName, propertyValue);
+            }
+
+            if (propertyResourceType.ResourceTypeKind == ResourceTypeKind.Collection)
+            {
+                return this.GetComplexResourceSet(propertyName, (CollectionResourceType)propertyResourceType, propertyValue);
+            }
+
+            // Open navigation properties are not supported on OpenTypes
+            throw DataServiceException.CreateBadRequestError(Microsoft.OData.Service.Strings.OpenNavigationPropertiesNotSupportedOnOpenTypes(propertyName));
+        }
+
         /// <summary>
         /// Returns the ODataComplexValue instance for the given property value.
         /// </summary>
@@ -759,6 +779,42 @@ namespace Microsoft.OData.Service.Serializers
             complexValue.Properties = this.GetPropertiesOfComplexType(propertyValue, valueResourceType, propertyName);
             
             return complexValue;
+        }
+
+        /// <summary>
+        /// Returns the ODataResourceWrapper instance for the given property value.
+        /// </summary>
+        /// <param name="propertyName">Name of the property.</param>
+        /// <param name="propertyValue">Value of the property.</param>
+        /// <returns>Returns the ODataResourceWrapper instance for the given property value.</returns>
+        protected ODataResourceWrapper GetComplexResource(string propertyName, object propertyValue)
+        {
+            Debug.Assert(!String.IsNullOrEmpty(propertyName), "!String.IsNullOrEmpty(propertyName)");
+
+            if (WebUtil.IsNullValue(propertyValue))
+            {
+                return new ODataResourceWrapper()
+                {
+                    Resource = null
+                };
+            }
+
+            ODataResource complexResource = new ODataResource();
+
+            // Resolve the complex type instance - no need to check the resource type for the right type
+            // since ODataLib will do this validation.
+            ResourceType valueResourceType = WebUtil.GetNonPrimitiveResourceType(this.service.Provider, propertyValue);
+            complexResource.TypeName = valueResourceType.FullName;
+
+            this.PayloadMetadataPropertyManager.SetTypeName(complexResource, null, valueResourceType.FullName);
+
+            complexResource.Properties = this.GetPropertiesOfComplexType(propertyValue, valueResourceType, propertyName);
+
+            return new ODataResourceWrapper()
+            {
+                Resource = complexResource,
+                NestedResourceInfoWrappers = GetAllNestedComplexProperties(propertyValue, valueResourceType)
+            };
         }
 
         /// <summary>
@@ -797,6 +853,41 @@ namespace Microsoft.OData.Service.Serializers
             this.RecurseLeave();
 
             return collection;
+        }
+
+        /// <summary>
+        /// Returns the ODataResourceSetWrapper instance for the given property value.
+        /// </summary>
+        /// <param name="propertyName">Name of the property.</param>
+        /// <param name="propertyResourceType">Type of the property.</param>
+        /// <param name="propertyValue">Value of the property.</param>
+        /// <returns>Returns the ODataResourceSetWrapper instance for the given property value.</returns>
+        protected ODataResourceSetWrapper GetComplexResourceSet(string propertyName, CollectionResourceType propertyResourceType, object propertyValue)
+        {
+            Debug.Assert(!String.IsNullOrEmpty(propertyName), "!String.IsNullOrEmpty(propertyName)");
+            Debug.Assert(
+                propertyResourceType.ItemType.ResourceTypeKind == ResourceTypeKind.ComplexType || propertyResourceType.ItemType.ResourceTypeKind == ResourceTypeKind.Primitive,
+                "Collection items must be either primitive or complex type.");
+
+            this.RecurseEnter();
+
+            IEnumerable enumerable = GetCollectionEnumerable(propertyValue, propertyName);
+
+            ODataResourceSet collection = new ODataResourceSet { TypeName = propertyResourceType.FullName };
+            this.PayloadMetadataPropertyManager.SetTypeName(collection, null, propertyResourceType.FullName);
+
+            ODataResourceSetWrapper resourceSetWrapper = new ODataResourceSetWrapper()
+            {
+                ResourceSet = collection,
+            };
+
+            resourceSetWrapper.Resources = GetEnumerable(
+                    enumerable,
+                    value => this.GetComplexResource(propertyName, value));
+
+            this.RecurseLeave();
+
+            return resourceSetWrapper;
         }
 
         /// <summary>Finds the <see cref="ExpandedProjectionNode"/> node which describes the current segment.</summary>
@@ -868,6 +959,11 @@ namespace Microsoft.OData.Service.Serializers
 
             foreach (ResourceProperty resourceProperty in resourceType.Properties)
             {
+                if (resourceProperty.TypeKind == ResourceTypeKind.ComplexType
+                    || resourceProperty.TypeKind == ResourceTypeKind.Collection && resourceProperty.ResourceType.ElementType().ResourceTypeKind == ResourceTypeKind.ComplexType)
+                {
+                    continue;
+                }
                 object propertyValue = WebUtil.GetPropertyValue(this.Service.Provider, resource, resourceType, resourceProperty, null);
                 ODataValue odataValue = this.GetPropertyValue(resourceProperty.Name, resourceProperty.ResourceType, propertyValue, false /*openProperty*/);
                 ODataProperty odataProperty = new ODataProperty { Name = resourceProperty.Name, Value = odataValue };
@@ -880,6 +976,63 @@ namespace Microsoft.OData.Service.Serializers
             this.RecurseLeave();
 
             return propertiesList;
+        }
+
+        private IEnumerable<ODataNestedResourceInfoWrapper> GetAllNestedComplexProperties(object resource, ResourceType resourceType)
+        {
+            Debug.Assert(resource != null, "resource != null");
+
+            List<ODataNestedResourceInfoWrapper> properties = new List<ODataNestedResourceInfoWrapper>(resourceType.Properties.Count);
+            foreach (ResourceProperty property in resourceType.Properties)
+            {
+                if (property.TypeKind == ResourceTypeKind.ComplexType
+                    || property.TypeKind == ResourceTypeKind.Collection && property.ResourceType.ElementType().ResourceTypeKind == ResourceTypeKind.ComplexType)
+                {
+                    properties.Add(this.GetODataNestedResourceForEntityProperty(resource, resourceType, property));
+                }
+            }
+
+            //if (entityToSerialize.ResourceType.IsOpenType)
+            //{
+            //    foreach (KeyValuePair<string, object> property in this.Provider.GetOpenPropertyValues(entityToSerialize.Entity))
+            //    {
+            //        string propertyName = property.Key;
+            //        if (string.IsNullOrEmpty(propertyName))
+            //        {
+            //            throw new DataServiceException(500, Microsoft.OData.Service.Strings.Syndication_InvalidOpenPropertyName(entityToSerialize.ResourceType.FullName));
+            //        }
+
+            //        properties.Add(this.GetODataPropertyForOpenProperty(propertyName, property.Value));
+            //    }
+            //}
+
+            return properties;
+        }
+
+        /// <summary>Gets ODataProperty for the given <paramref name="property"/>.</summary>
+        /// <param name="entityToSerialize">Entity that is currently being serialized.</param>
+        /// <param name="property">ResourceProperty instance in question.</param>
+        /// <returns>A instance of ODataProperty for the given <paramref name="property"/>.</returns>
+        private ODataNestedResourceInfoWrapper GetODataNestedResourceForEntityProperty(object resource, ResourceType resourceType, ResourceProperty property)
+        {
+            Debug.Assert(resource != null, "resource != null");
+            Debug.Assert(property != null && resourceType.Properties.Contains(property), "property != null && currentResourceType.Properties.Contains(property)");
+
+            ODataItemWrapper odataPropertyResourceWrapper;
+            object propertyValue = WebUtil.GetPropertyValue(this.Service.Provider, resource, resourceType, property, null);
+            odataPropertyResourceWrapper = this.GetPropertyResourceOrResourceSet(property.Name, property.ResourceType, propertyValue, false /*openProperty*/);
+
+            ODataNestedResourceInfo odataNestedInfo = new ODataNestedResourceInfo()
+            {
+                Name = property.Name,
+                IsCollection = property.TypeKind == ResourceTypeKind.Collection
+            };
+
+            return new ODataNestedResourceInfoWrapper()
+            {
+                NestedResourceInfo = odataNestedInfo,
+                NestedResourceOrResourceSet = odataPropertyResourceWrapper
+            };
         }
 
         /// <summary>

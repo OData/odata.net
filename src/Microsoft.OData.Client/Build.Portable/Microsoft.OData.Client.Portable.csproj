@@ -852,6 +852,21 @@
     <Compile Include="..\WeakDictionary.cs">
       <Link>WeakDictionary.cs</Link>
     </Compile>
+    <Compile Include="..\Wrappers\ODataItemWrapper.cs">
+      <Link>Wrappers\ODataItemWrapper.cs</Link>
+    </Compile>
+    <Compile Include="..\Wrappers\ODataNestedResourceInfoWrapper.cs">
+      <Link>Wrappers\ODataNestedResourceInfoWrapper.cs</Link>
+    </Compile>
+    <Compile Include="..\Wrappers\ODataResourceSetWrapper.cs">
+      <Link>Wrappers\ODataResourceSetWrapper.cs</Link>
+    </Compile>
+    <Compile Include="..\Wrappers\ODataResourceWrapper.cs">
+      <Link>Wrappers\ODataResourceWrapper.cs</Link>
+    </Compile>
+    <Compile Include="..\Wrappers\ODataWriterHelper.cs">
+      <Link>Wrappers\ODataWriterHelper.cs</Link>
+    </Compile>
     <Compile Include="Microsoft.OData.Client.Portable.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

@@ -116,7 +116,7 @@ namespace Microsoft.Test.OData.Tests.Client.AsyncRequestTests
                             new ODataProperty { Name = "CountryRegion", Value = "CN" }
                         }
                     },
-                    NestedResourceInfos = new List<ODataNestedResourceInfoWrapper>()
+                    NestedResourceInfoWrappers = new List<ODataNestedResourceInfoWrapper>()
                     {
                         new ODataNestedResourceInfoWrapper()
                         {

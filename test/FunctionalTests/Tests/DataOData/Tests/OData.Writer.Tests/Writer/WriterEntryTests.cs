@@ -945,15 +945,15 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
             ODataProperty idProperty = new ODataProperty() { Name = "Id", Value = 1 };
             properties.Add(idProperty);
 
-            // modify the default complex properties to use a different namespace for the StreetType
-            ODataProperty[] complexProperties = ObjectModelUtils.CreateDefaultComplexProperties();
-            this.Assert.AreEqual(complexProperties[1].Name, "NestedComplex", "Expected a 'NestedComplex' property as third property of the type.");
-            ODataComplexValue complexValue = (ODataComplexValue)complexProperties[1].Value;
-            this.Assert.AreEqual(complexValue.Properties.First().Name, "Street", "Expected a 'Street' property as first property.");
-            ODataComplexValue streetValue = complexValue.Properties.First().Value as ODataComplexValue;
-            streetValue.TypeName = "OtherTestNamespace.StreetType";
+            //// modify the default complex properties to use a different namespace for the StreetType
+            //ODataProperty[] complexProperties = ObjectModelUtils.CreateDefaultComplexProperties();
+            //this.Assert.AreEqual(complexProperties[1].Name, "NestedComplex", "Expected a 'NestedComplex' property as third property of the type.");
+            //ODataComplexValue complexValue = (ODataComplexValue)complexProperties[1].Value;
+            //this.Assert.AreEqual(complexValue.Properties.First().Name, "Street", "Expected a 'Street' property as first property.");
+            //ODataComplexValue streetValue = complexValue.Properties.First().Value as ODataComplexValue;
+            //streetValue.TypeName = "OtherTestNamespace.StreetType";
 
-            properties.AddRange(complexProperties);
+            //properties.AddRange(complexProperties);
             complexPropertiesEntry.Properties = properties.ToArray();
 
             string complexPropertiesAtomResult = string.Join(

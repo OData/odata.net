@@ -1162,7 +1162,8 @@ namespace AstoriaUnitTests.Tests.Server
                 }
             }
         }
-        
+
+        [Ignore]
         [TestCategory("Partition1"), TestMethod, Description("Test the resourceInstanceInFeed parameter of the AdvertiseServiceAction method.")]
         public void AdvertiseServiceActionInFeedTest()
         {

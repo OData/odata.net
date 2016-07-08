@@ -35,12 +35,6 @@ namespace Microsoft.OData.Tests.Json
             this.WriteNullVerifier();
         }
 
-        public override void WriteComplexValue(ODataComplexValue complexValue, IEdmTypeReference metadataTypeReference, bool isTopLevel, bool isOpenPropertyType, IDuplicatePropertyNameChecker duplicatePropertyNameChecker)
-        {
-            this.WriteComplexVerifier.Should().NotBeNull("WriteComplexValue was called.");
-            this.WriteComplexVerifier(complexValue, metadataTypeReference, isTopLevel, isOpenPropertyType, duplicatePropertyNameChecker);
-        }
-
         /// <summary>
         /// Write enum value
         /// </summary>

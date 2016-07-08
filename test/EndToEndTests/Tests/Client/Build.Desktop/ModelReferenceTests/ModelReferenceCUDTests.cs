@@ -7,6 +7,7 @@
 namespace Microsoft.Test.OData.Tests.Client.ModelReferenceTests
 {
     using System;
+    using System.Collections.Generic;
     using System.Linq;
     using Microsoft.OData;
     using Microsoft.OData.Edm;
@@ -30,149 +31,7 @@ namespace Microsoft.Test.OData.Tests.Client.ModelReferenceTests
         [TestMethod]
         public void PostDeleteTypeInReferencdModel()
         {
-            #region New Entry
-            ODataResource newVehicleGPS = new ODataResource { TypeName = TestModelNameSpace + ".GPS.VehicleGPSType" };
-
-            newVehicleGPS.Properties = new[]
-            {
-                new ODataProperty
-                {
-                    Name = "Key", 
-                    Value = "000"
-                },
-                new ODataProperty
-                {
-                    Name = "VehicleSpeed",
-                    Value = 999.9
-                },
-                new ODataProperty
-                {
-                     Name = "StartLocation",
-                     Value = new ODataComplexValue
-                     {
-                         TypeName = TestModelNameSpace + ".Location.GeoLocation",
-                         Properties = new[]
-                         {
-                             new ODataProperty
-                             {
-                                 Name = "Lat",
-                                 Value = 99.9
-                             },
-                             new ODataProperty
-                             {
-                                 Name = "Long",
-                                 Value = 88.8
-                             }
-                         }
-                     }
-                },
-                new ODataProperty
-                {
-                    Name = "EndLocation",
-                    Value = new ODataComplexValue
-                    {
-                        TypeName = TestModelNameSpace + ".Location.GeoLocation",
-                        Properties = new[]
-                        {
-                            new ODataProperty
-                            {
-                                Name = "Lat",
-                                Value = 77.7
-                            },
-                            new ODataProperty
-                            {
-                                Name = "Long",
-                                Value = 88.8
-                            }
-                        }
-                    }
-                },
-                new ODataProperty
-                {
-                    Name = "CurrentLocation",
-                    Value = new ODataComplexValue
-                    {
-                        TypeName = TestModelNameSpace + ".Location.GeoLocation",
-                        Properties = new[]
-                        {
-                            new ODataProperty
-                            {
-                                Name = "Lat",
-                                Value = 88.8
-                            },
-                            new ODataProperty
-                            {
-                                Name = "Long",
-                                Value = 88.8
-                            }
-                        }
-                    }
-                },
-                new ODataProperty
-                {
-                    Name = "Map",
-                    Value = new ODataComplexValue
-                    {
-                        TypeName = TestModelNameSpace + ".Map.MapType",
-                        Properties = new[]
-                        {
-                            new ODataProperty
-                            {
-                                Name = "ProviderName",
-                                Value = "ProviderNew"
-                            },
-                            new ODataProperty
-                            {
-                                Name = "Uri",
-                                Value = "NewUri"
-                            },
-                            new ODataProperty
-                            {
-                                Name = "MBytesDownloaded",
-                                Value = 12.3
-                            }
-                        }
-                    }
-                },
-                new ODataProperty
-                {
-                    Name = "LostSignalAlarm",
-                    Value = new ODataComplexValue
-                    {
-                        TypeName = TestModelNameSpace + ".GPS.GPSLostSignalAlarmType",
-                        Properties = new[]
-                        {
-                            new ODataProperty
-                            {
-                                Name = "Severity",
-                                Value = 1
-                            },
-                            new ODataProperty
-                            {
-                                Name = "LastKnownLocation",
-                                Value = new ODataComplexValue
-                                {
-                                    TypeName = TestModelNameSpace + ".Location.GeoLocation",
-                                    Properties = new[]
-                                    {
-                                        new ODataProperty
-                                        {
-                                            Name = "Lat",
-                                            Value = 88.8
-                                        },
-                                        new ODataProperty
-                                        {
-                                            Name = "Long",
-                                            Value = 88.8
-                                        }
-                                    }
-                                }
-                            }, 
-                        }
-                    }
-                }
-            };
-            #endregion
+            var entryWrapper = CreateVehicleGPS(false);
 
             #region Create and Delete
             var settings = new ODataMessageWriterSettings();
@@ -191,8 +50,7 @@ namespace Microsoft.Test.OData.Tests.Client.ModelReferenceTests
                 using (var messageWriter = new ODataMessageWriter(requestMessage, settings, Model))
                 {
                     var odataWriter = messageWriter.CreateODataResourceWriter(vehicleGPSSet, vehicleGPSType);
-                    odataWriter.WriteStart(newVehicleGPS);
-                    odataWriter.WriteEnd();
+                    ODataWriterHelper.WriteResource(odataWriter, entryWrapper);
                 }
 
                 // send the http request
@@ -219,154 +77,7 @@ namespace Microsoft.Test.OData.Tests.Client.ModelReferenceTests
         [TestMethod]
         public void PostDeleteTypeInReferencingModel()
         {
-            #region New Entry
-            ODataResource newVehicleGPS = new ODataResource { TypeName = TestModelNameSpace + ".TruckDemo.DerivedVehicleGPSType" };
-
-            newVehicleGPS.Properties = new[]
-            {
-                new ODataProperty
-                {
-                    Name = "Key", 
-                    Value = "000"
-                },
-                new ODataProperty
-                {
-                    Name = "VehicleSpeed",
-                    Value = 999.9
-                },
-                new ODataProperty
-                {
-                     Name = "StartLocation",
-                     Value = new ODataComplexValue
-                     {
-                         TypeName = TestModelNameSpace + ".Location.GeoLocation",
-                         Properties = new[]
-                         {
-                             new ODataProperty
-                             {
-                                 Name = "Lat",
-                                 Value = 99.9
-                             },
-                             new ODataProperty
-                             {
-                                 Name = "Long",
-                                 Value = 88.8
-                             }
-                         }
-                     }
-                },
-                new ODataProperty
-                {
-                    Name = "EndLocation",
-                    Value = new ODataComplexValue
-                    {
-                        TypeName = TestModelNameSpace + ".Location.GeoLocation",
-                        Properties = new[]
-                        {
-                            new ODataProperty
-                            {
-                                Name = "Lat",
-                                Value = 77.7
-                            },
-                            new ODataProperty
-                            {
-                                Name = "Long",
-                                Value = 88.8
-                            }
-                        }
-                    }
-                },
-                new ODataProperty
-                {
-                    Name = "CurrentLocation",
-                    Value = new ODataComplexValue
-                    {
-                        TypeName = TestModelNameSpace + ".Location.GeoLocation",
-                        Properties = new[]
-                        {
-                            new ODataProperty
-                            {
-                                Name = "Lat",
-                                Value = 88.8
-                            },
-                            new ODataProperty
-                            {
-                                Name = "Long",
-                                Value = 88.8
-                            }
-                        }
-                    }
-                },
-                new ODataProperty
-                {
-                    Name = "Map",
-                    Value = new ODataComplexValue
-                    {
-                        TypeName = TestModelNameSpace + ".Map.MapType",
-                        Properties = new[]
-                        {
-                            new ODataProperty
-                            {
-                                Name = "ProviderName",
-                                Value = "ProviderNew"
-                            },
-                            new ODataProperty
-                            {
-                                Name = "Uri",
-                                Value = "NewUri"
-                            },
-                            new ODataProperty
-                            {
-                                Name = "MBytesDownloaded",
-                                Value = 12.3
-                            }
-                        }
-                    }
-                },
-                new ODataProperty
-                {
-                    Name = "LostSignalAlarm",
-                    Value = new ODataComplexValue
-                    {
-                        TypeName = TestModelNameSpace + ".GPS.GPSLostSignalAlarmType",
-                        Properties = new[]
-                        {
-                            new ODataProperty
-                            {
-                                Name = "Severity",
-                                Value = 1
-                            },
-                            new ODataProperty
-                            {
-                                Name = "LastKnownLocation",
-                                Value = new ODataComplexValue
-                                {
-                                    TypeName = TestModelNameSpace + ".Location.GeoLocation",
-                                    Properties = new[]
-                                    {
-                                        new ODataProperty
-                                        {
-                                            Name = "Lat",
-                                            Value = 88.8
-                                        },
-                                        new ODataProperty
-                                        {
-                                            Name = "Long",
-                                            Value = 88.8
-                                        }
-                                    }
-                                }
-                            }, 
-                        }
-                    }
-                },
-                new ODataProperty
-                {
-                    Name = "DisplayName",
-                    Value = "NewDisplayName"
-                }
-            };
-            #endregion
+            var entryWrapper = CreateVehicleGPS(true);
 
             #region Create and Delete
             var settings = new ODataMessageWriterSettings();
@@ -386,8 +97,7 @@ namespace Microsoft.Test.OData.Tests.Client.ModelReferenceTests
                 using (var messageWriter = new ODataMessageWriter(requestMessage, settings, Model))
                 {
                     var odataWriter = messageWriter.CreateODataResourceWriter(vehicleGPSSet, vehicleGPSType);
-                    odataWriter.WriteStart(newVehicleGPS);
-                    odataWriter.WriteEnd();
+                    ODataWriterHelper.WriteResource(odataWriter, entryWrapper);
                 }
 
                 // send the http request
@@ -419,6 +129,218 @@ namespace Microsoft.Test.OData.Tests.Client.ModelReferenceTests
         }
 
         #endregion
+
+        private ODataResourceWrapper CreateVehicleGPS(bool postDeleteTypeInReferencingModel)
+        {
+            ODataResource newVehicleGPS = new ODataResource
+            {
+                TypeName = TestModelNameSpace + (postDeleteTypeInReferencingModel ? ".TruckDemo.DerivedVehicleGPSType" : ".GPS.VehicleGPSType")
+            };
+
+            var properties = new List<ODataProperty>
+            {
+                new ODataProperty
+                {
+                    Name = "Key", 
+                    Value = "000"
+                },
+                new ODataProperty
+                {
+                    Name = "VehicleSpeed",
+                    Value = 999.9
+                },
+            };
+
+            if (postDeleteTypeInReferencingModel)
+            {
+                properties.Add(new ODataProperty
+                {
+                    Name = "DisplayName",
+                    Value = "NewDisplayName"
+                });
+            }
+            newVehicleGPS.Properties = properties;
+
+            var newVehicleGPSWrapper = new ODataResourceWrapper()
+            {
+                Resource = newVehicleGPS,
+                NestedResourceInfoWrappers = new List<ODataNestedResourceInfoWrapper>()
+                {
+                    new ODataNestedResourceInfoWrapper()
+                    {
+                        NestedResourceInfo = new ODataNestedResourceInfo()
+                        {
+                            Name = "StartLocation",
+                            IsCollection = false
+                        },
+                        NestedResourceOrResourceSet = new ODataResourceWrapper()
+                        {
+                            Resource = new ODataResource()
+                            {
+                                TypeName = TestModelNameSpace + ".Location.GeoLocation",
+                                Properties = new[]
+                                {
+                                    new ODataProperty
+                                    {
+                                        Name = "Lat",
+                                        Value = 99.9
+                                    },
+                                    new ODataProperty
+                                    {
+                                        Name = "Long",
+                                        Value = 88.8
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    new ODataNestedResourceInfoWrapper()
+                    {
+                        NestedResourceInfo = new ODataNestedResourceInfo()
+                        {
+                            Name = "EndLocation",
+                            IsCollection = false
+                        },
+                        NestedResourceOrResourceSet = new ODataResourceWrapper()
+                        {
+                            Resource = new ODataResource()
+                            {
+                                TypeName = TestModelNameSpace + ".Location.GeoLocation",
+                                Properties = new[]
+                                {
+                                    new ODataProperty
+                                    {
+                                        Name = "Lat",
+                                        Value = 77.7
+                                    },
+                                    new ODataProperty
+                                    {
+                                        Name = "Long",
+                                        Value = 88.8
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    new ODataNestedResourceInfoWrapper()
+                    {
+                        NestedResourceInfo = new ODataNestedResourceInfo()
+                        {
+                            Name = "CurrentLocation",
+                            IsCollection = false
+                        },
+                        NestedResourceOrResourceSet = new ODataResourceWrapper()
+                        {
+                            Resource = new ODataResource()
+                            {
+                                TypeName = TestModelNameSpace + ".Location.GeoLocation",
+                                Properties = new[]
+                                {
+                                    new ODataProperty
+                                    {
+                                        Name = "Lat",
+                                        Value = 88.8
+                                    },
+                                    new ODataProperty
+                                    {
+                                        Name = "Long",
+                                        Value = 88.8
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    new ODataNestedResourceInfoWrapper()
+                    {
+                        NestedResourceInfo = new ODataNestedResourceInfo()
+                        {
+                            Name = "Map",
+                            IsCollection = false
+                        },
+                        NestedResourceOrResourceSet = new ODataResourceWrapper()
+                        {
+                            Resource = new ODataResource()
+                            {
+                                TypeName = TestModelNameSpace + ".Map.MapType",
+                                Properties = new[]
+                                {
+                                    new ODataProperty
+                                    {
+                                        Name = "ProviderName",
+                                        Value = "ProviderNew"
+                                    },
+                                    new ODataProperty
+                                    {
+                                        Name = "Uri",
+                                        Value = "NewUri"
+                                    },
+                                    new ODataProperty
+                                    {
+                                        Name = "MBytesDownloaded",
+                                        Value = 12.3
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    new ODataNestedResourceInfoWrapper()
+                    {
+                        NestedResourceInfo = new ODataNestedResourceInfo()
+                        {
+                            Name = "LostSignalAlarm",
+                            IsCollection = false
+                        },
+                        NestedResourceOrResourceSet = new ODataResourceWrapper()
+                        {
+                            Resource = new ODataResource()
+                            {
+                                TypeName = TestModelNameSpace + ".GPS.GPSLostSignalAlarmType",
+                                Properties = new[]
+                                {
+                                    new ODataProperty
+                                    {
+                                        Name = "Severity",
+                                        Value = 1
+                                    }
+                                }
+                            },
+                            NestedResourceInfoWrappers = new List<ODataNestedResourceInfoWrapper>()
+                            {
+                                new ODataNestedResourceInfoWrapper()
+                                {
+                                    NestedResourceInfo = new ODataNestedResourceInfo()
+                                    {
+                                        Name = "LastKnownLocation",
+                                        IsCollection = false,
+                                    },
+                                    NestedResourceOrResourceSet = new ODataResourceWrapper()
+                                    {
+                                        Resource = new ODataResource()
+                                        {
+                                            TypeName = TestModelNameSpace + ".Location.GeoLocation",
+                                            Properties = new[]
+                                            {
+                                                new ODataProperty
+                                                {
+                                                    Name = "Lat",
+                                                    Value = 88.8
+                                                },
+                                                new ODataProperty
+                                                {
+                                                    Name = "Long",
+                                                    Value = 88.8
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            };
+            return newVehicleGPSWrapper;
+        }
 
         #region Private Method
         private ODataItem QueryEntityItem(string uri, int expectedStatusCode = 200)

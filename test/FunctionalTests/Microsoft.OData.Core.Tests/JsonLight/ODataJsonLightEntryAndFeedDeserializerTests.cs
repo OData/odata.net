@@ -164,16 +164,16 @@ namespace Microsoft.OData.Tests.JsonLight
             testSubject.ShouldThrow<ODataException>().WithMessage(ErrorStrings.ValidationUtils_IncompatibleType("Edm.String", "Edm.DateTimeOffset"));
         }
 
-        [Fact]
-        public void ReadInstanceAnnotationValueWhenODataTypeAnnotationIsMissingForComplexValue()
-        {
-            var deserializer = this.CreateJsonLightEntryAndFeedDeserializer("{\"@odata.ComplexAnnotation\":{}}");
-            AdvanceReaderToFirstPropertyValue(deserializer.JsonReader);
-            var propertyAndAnnotationCollector = new PropertyAndAnnotationCollector(true);
-            object resultTmp = deserializer.ReadCustomInstanceAnnotationValue(propertyAndAnnotationCollector, "odata.ComplexAnnotation");
-            resultTmp.As<ODataComplexValue>().Properties.Count().Should().Be(0);
-            resultTmp.As<ODataComplexValue>().TypeName.Should().BeNull();
-        }
+        //[Fact(Skip="Complex instance annotation is not supported")]
+        //public void ReadInstanceAnnotationValueWhenODataTypeAnnotationIsMissingForComplexValue()
+        //{
+        //    var deserializer = this.CreateJsonLightEntryAndFeedDeserializer("{\"@odata.ComplexAnnotation\":{}}");
+        //    AdvanceReaderToFirstPropertyValue(deserializer.JsonReader);
+        //    var propertyAndAnnotationCollector = new PropertyAndAnnotationCollector(true);
+        //    object resultTmp = deserializer.ReadCustomInstanceAnnotationValue(propertyAndAnnotationCollector, "odata.ComplexAnnotation");
+        //    resultTmp.As<ODataComplexValue>().Properties.Count().Should().Be(0);
+        //    resultTmp.As<ODataComplexValue>().TypeName.Should().BeNull();
+        //}
 
         [Fact]
         public void ReadInstanceAnnotationValueWhenODataTypeAnnotationIsMissingForCollectionValue()
@@ -187,53 +187,53 @@ namespace Microsoft.OData.Tests.JsonLight
         }
 
 
-        [Fact]
-        public void ReadInstanceAnnotationValueWithODataTypePropertyAnnotationShouldThrow()
-        {
-            var deserializer = this.CreateJsonLightEntryAndFeedDeserializer("{\"@odata.ComplexAnnotation\":{\"StringProperty\":\"StringValue\"}}");
-            AdvanceReaderToFirstPropertyValue(deserializer.JsonReader);
-            var propertyAndAnnotationCollector = new PropertyAndAnnotationCollector(true);
-            propertyAndAnnotationCollector.AddODataPropertyAnnotation("odata.ComplexAnnotation", "odata.type", "TestNamespace.TestComplexType");
-            Action action = () => deserializer.ReadCustomInstanceAnnotationValue(propertyAndAnnotationCollector, "odata.ComplexAnnotation");
-            action.ShouldThrow<ODataException>().WithMessage(ErrorStrings.ODataJsonLightPropertyAndValueDeserializer_ComplexValueWithPropertyTypeAnnotation("odata.type"));
-        }
+        ////[Fact(Skip="complex instance annotation is not supported")]
+        //public void ReadInstanceAnnotationValueWithODataTypePropertyAnnotationShouldThrow()
+        //{
+        //    var deserializer = this.CreateJsonLightEntryAndFeedDeserializer("{\"@odata.ComplexAnnotation\":{\"StringProperty\":\"StringValue\"}}");
+        //    AdvanceReaderToFirstPropertyValue(deserializer.JsonReader);
+        //    var propertyAndAnnotationCollector = new PropertyAndAnnotationCollector(true);
+        //    propertyAndAnnotationCollector.AddODataPropertyAnnotation("odata.ComplexAnnotation", "odata.type", "TestNamespace.TestComplexType");
+        //    Action action = () => deserializer.ReadCustomInstanceAnnotationValue(propertyAndAnnotationCollector, "odata.ComplexAnnotation");
+        //    action.ShouldThrow<ODataException>().WithMessage(ErrorStrings.ODataJsonLightPropertyAndValueDeserializer_ComplexValueWithPropertyTypeAnnotation("odata.type"));
+        //}
 
-        [Fact]
-        public void ReadInstanceAnnotationValueShouldReadComplexValueWithODataTypeInstanceAnnotation()
-        {
-            var deserializer = this.CreateJsonLightEntryAndFeedDeserializer("{\"@odata.ComplexAnnotation\":{\"@odata.type\":\"#TestNamespace.TestComplexType\",\"StringProperty\":\"StringValue\"}}");
-            AdvanceReaderToFirstPropertyValue(deserializer.JsonReader);
-            var propertyAndAnnotationCollector = new PropertyAndAnnotationCollector(true);
-            ODataComplexValue value = (ODataComplexValue)deserializer.ReadCustomInstanceAnnotationValue(propertyAndAnnotationCollector, "odata.ComplexAnnotation");
-            var odataComplexValue = new ODataComplexValue { TypeName = "TestNamespace.TestComplexType", Properties = new[] { new ODataProperty { Name = "StringProperty", Value = "StringValue" } } };
-            TestUtils.AssertODataValueAreEqual(value, odataComplexValue);
-        }
+        //[Fact(Skip="complex instance annotation is not supported")]
+        //public void ReadInstanceAnnotationValueShouldReadComplexValueWithODataTypeInstanceAnnotation()
+        //{
+        //    var deserializer = this.CreateJsonLightEntryAndFeedDeserializer("{\"@odata.ComplexAnnotation\":{\"@odata.type\":\"#TestNamespace.TestComplexType\",\"StringProperty\":\"StringValue\"}}");
+        //    AdvanceReaderToFirstPropertyValue(deserializer.JsonReader);
+        //    var propertyAndAnnotationCollector = new PropertyAndAnnotationCollector(true);
+        //    ODataComplexValue value = (ODataComplexValue)deserializer.ReadCustomInstanceAnnotationValue(propertyAndAnnotationCollector, "odata.ComplexAnnotation");
+        //    var odataComplexValue = new ODataComplexValue { TypeName = "TestNamespace.TestComplexType", Properties = new[] { new ODataProperty { Name = "StringProperty", Value = "StringValue" } } };
+        //    TestUtils.AssertODataValueAreEqual(value, odataComplexValue);
+        //}
 
-        [Fact]
-        public void ReadInstanceAnnotationValueShouldReadCollectionOfComplexValuesWithODataTypeInstanceAnnotation()
-        {
-            var deserializer = this.CreateJsonLightEntryAndFeedDeserializer("{\"@custom.complexCollectionAnnotation\":[{\"@odata.type\":\"#TestNamespace.TestComplexType\",\"StringProperty\":\"StringValue\"}]}");
-            AdvanceReaderToFirstPropertyValue(deserializer.JsonReader);
-            var propertyAndAnnotationCollector = new PropertyAndAnnotationCollector(true);
-            propertyAndAnnotationCollector.AddODataPropertyAnnotation("custom.complexCollectionAnnotation", "odata.type", "Collection(TestNamespace.TestComplexType)");
-            ODataCollectionValue value = (ODataCollectionValue)deserializer.ReadCustomInstanceAnnotationValue(propertyAndAnnotationCollector, "custom.complexCollectionAnnotation");
-            var odataComplexValue = new ODataComplexValue { TypeName = "TestNamespace.TestComplexType", Properties = new[] { new ODataProperty { Name = "StringProperty", Value = "StringValue" } } };
-            var odataCollectionValue = new ODataCollectionValue { TypeName = "Collection(TestNamespace.TestComplexType)", Items = new[] { odataComplexValue } };
-            TestUtils.AssertODataValueAreEqual(value, odataCollectionValue);
-        }
+        //[Fact(Skip = "complex collection instance annotation is not supported")]
+        //public void ReadInstanceAnnotationValueShouldReadCollectionOfComplexValuesWithODataTypeInstanceAnnotation()
+        //{
+        //    var deserializer = this.CreateJsonLightEntryAndFeedDeserializer("{\"@custom.complexCollectionAnnotation\":[{\"@odata.type\":\"#TestNamespace.TestComplexType\",\"StringProperty\":\"StringValue\"}]}");
+        //    AdvanceReaderToFirstPropertyValue(deserializer.JsonReader);
+        //    var propertyAndAnnotationCollector = new PropertyAndAnnotationCollector(true);
+        //    propertyAndAnnotationCollector.AddODataPropertyAnnotation("custom.complexCollectionAnnotation", "odata.type", "Collection(TestNamespace.TestComplexType)");
+        //    ODataCollectionValue value = (ODataCollectionValue)deserializer.ReadCustomInstanceAnnotationValue(propertyAndAnnotationCollector, "custom.complexCollectionAnnotation");
+        //    var odataComplexValue = new ODataComplexValue { TypeName = "TestNamespace.TestComplexType", Properties = new[] { new ODataProperty { Name = "StringProperty", Value = "StringValue" } } };
+        //    var odataCollectionValue = new ODataCollectionValue { TypeName = "Collection(TestNamespace.TestComplexType)", Items = new[] { odataComplexValue } };
+        //    TestUtils.AssertODataValueAreEqual(value, odataCollectionValue);
+        //}
 
-        [Fact]
-        public void ReadInstanceAnnotationValueShouldReadCollectionOfComplexValues()
-        {
-            var deserializer = this.CreateJsonLightEntryAndFeedDeserializer("{\"@custom.complexCollectionAnnotation\":[{\"StringProperty\":\"StringValue\"}]}");
-            AdvanceReaderToFirstPropertyValue(deserializer.JsonReader);
-            var propertyAndAnnotationCollector = new PropertyAndAnnotationCollector(true);
-            propertyAndAnnotationCollector.AddODataPropertyAnnotation("custom.complexCollectionAnnotation", "odata.type", "Collection(TestNamespace.TestComplexType)");
-            ODataCollectionValue value = (ODataCollectionValue)deserializer.ReadCustomInstanceAnnotationValue(propertyAndAnnotationCollector, "custom.complexCollectionAnnotation");
-            var odataComplexValue = new ODataComplexValue { TypeName = "TestNamespace.TestComplexType", Properties = new[] { new ODataProperty { Name = "StringProperty", Value = "StringValue" } } };
-            var odataCollectionValue = new ODataCollectionValue { TypeName = "Collection(TestNamespace.TestComplexType)", Items = new[] { odataComplexValue } };
-            TestUtils.AssertODataValueAreEqual(value, odataCollectionValue);
-        }
+        //[Fact(Skip="complex collection instance annotation is not supported")]
+        //public void ReadInstanceAnnotationValueShouldReadCollectionOfComplexValues()
+        //{
+        //    var deserializer = this.CreateJsonLightEntryAndFeedDeserializer("{\"@custom.complexCollectionAnnotation\":[{\"StringProperty\":\"StringValue\"}]}");
+        //    AdvanceReaderToFirstPropertyValue(deserializer.JsonReader);
+        //    var propertyAndAnnotationCollector = new PropertyAndAnnotationCollector(true);
+        //    propertyAndAnnotationCollector.AddODataPropertyAnnotation("custom.complexCollectionAnnotation", "odata.type", "Collection(TestNamespace.TestComplexType)");
+        //    ODataCollectionValue value = (ODataCollectionValue)deserializer.ReadCustomInstanceAnnotationValue(propertyAndAnnotationCollector, "custom.complexCollectionAnnotation");
+        //    var odataComplexValue = new ODataComplexValue { TypeName = "TestNamespace.TestComplexType", Properties = new[] { new ODataProperty { Name = "StringProperty", Value = "StringValue" } } };
+        //    var odataCollectionValue = new ODataCollectionValue { TypeName = "Collection(TestNamespace.TestComplexType)", Items = new[] { odataComplexValue } };
+        //    TestUtils.AssertODataValueAreEqual(value, odataCollectionValue);
+        //}
 
         [Fact]
         public void ReadInstanceAnnotationValueShouldReadCollectionOfPrimitiveValues()

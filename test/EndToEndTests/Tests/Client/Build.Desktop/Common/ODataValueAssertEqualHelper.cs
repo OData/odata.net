@@ -26,26 +26,17 @@ namespace Microsoft.Test.OData.Tests.Client.Common
             }
             else
             {
-                ODataComplexValue expectedComplexValue = expected as ODataComplexValue;
-                ODataComplexValue actualComplexValue = actual as ODataComplexValue;
-                if (expectedComplexValue != null && actualComplexValue != null)
+                ODataEnumValue expectedEnumValue = expected as ODataEnumValue;
+                ODataEnumValue actualEnumValue = actual as ODataEnumValue;
+                if (expectedEnumValue != null && actualEnumValue != null)
                 {
-                    AssertODataResourceAreEqual(expectedComplexValue, actualComplexValue);
+                    AssertODataEnumValueAreEqual(expectedEnumValue, actualEnumValue);
                 }
                 else
                 {
-                    ODataEnumValue expectedEnumValue = expected as ODataEnumValue;
-                    ODataEnumValue actualEnumValue = actual as ODataEnumValue;
-                    if (expectedEnumValue != null && actualEnumValue != null)
-                    {
-                        AssertODataEnumValueAreEqual(expectedEnumValue, actualEnumValue);
-                    }
-                    else
-                    {
-                        ODataCollectionValue expectedCollectionValue = (ODataCollectionValue)expected;
-                        ODataCollectionValue actualCollectionValue = (ODataCollectionValue)actual;
-                        AssertODataCollectionValueAreEqual(expectedCollectionValue, actualCollectionValue);
-                    }
+                    ODataCollectionValue expectedCollectionValue = (ODataCollectionValue)expected;
+                    ODataCollectionValue actualCollectionValue = (ODataCollectionValue)actual;
+                    AssertODataCollectionValueAreEqual(expectedCollectionValue, actualCollectionValue);
                 }
             }
         }
@@ -72,14 +63,6 @@ namespace Microsoft.Test.OData.Tests.Client.Common
                     Assert.AreEqual(expectedItemsArray[i], actualItemsArray[i]);
                 }
             }
-        }
-
-        public static void AssertODataResourceAreEqual(ODataComplexValue expectedResource, ODataComplexValue actualResource)
-        {
-            Assert.IsNotNull(expectedResource);
-            Assert.IsNotNull(actualResource);
-            Assert.AreEqual(expectedResource.TypeName, actualResource.TypeName);
-            AssertODataPropertiesAreEqual(expectedResource.Properties, actualResource.Properties);
         }
 
         public static void AssertODataPropertiesAreEqual(IEnumerable<ODataProperty> expectedProperties, IEnumerable<ODataProperty> actualProperties)

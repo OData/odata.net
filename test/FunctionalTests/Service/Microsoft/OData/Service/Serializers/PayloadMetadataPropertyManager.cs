@@ -75,6 +75,32 @@ namespace Microsoft.OData.Service.Serializers
         }
 
         /// <summary>
+        /// Sets the entry's TypeName property if it should be included according to the current query option.
+        /// </summary>
+        /// <param name="entry">The entry to modify.</param>
+        /// <param name="entitySetBaseTypeName">Name of the entity set's base type.</param>
+        /// <param name="entryTypeName">Name of the entry's type.</param>
+        [SuppressMessage("DataWeb.Usage", "AC0019:ShouldNotDireclyAccessPayloadMetadataProperties", Justification = "This component is allowed to set these properties.")]
+        internal void SetTypeName(ODataResourceSet resourceSet, string entitySetBaseTypeName, string resourceTypeName)
+        {
+            Debug.Assert(resourceSet != null, "resourceSet != null");
+
+            // We should always write this since for derived types, ODL needs to know the typename.
+            resourceSet.TypeName = resourceTypeName;
+
+            if (this.interpreter.ShouldIncludeEntryTypeName(entitySetBaseTypeName, resourceTypeName))
+            {
+                resourceSet.SetAnnotation(new SerializationTypeNameAnnotation() { TypeName = resourceSet.TypeName });
+            }
+            else
+            {
+                // When we should not write the typename, setting the serialization type name to null
+                // so that ODL does not write the type on the wire.
+                resourceSet.SetAnnotation(new SerializationTypeNameAnnotation() { TypeName = null });
+            }
+        }
+
+        /// <summary>
         /// Sets the entry's Id property if it should be included according to the current query option.
         /// </summary>
         /// <param name="entry">The entry to modify.</param>

@@ -77,6 +77,12 @@ namespace Microsoft.OData.Client.Metadata
         /// <summary>cached value for IsPrimitiveOrEnumOrComplexCollection property</summary>
         private bool? isPrimitiveOrEnumOrComplexCollection;
 
+        /// <summary>cached value for IsComplex property</summary>
+        private bool? isComplex;
+
+        /// <summary>cached value for IsComplex property</summary>
+        private bool? isComplexCollection;
+
         /// <summary>cached value for IsCollection property</summary>
         private bool? isResourceSet;
 
@@ -279,6 +285,44 @@ namespace Microsoft.OData.Client.Metadata
         internal bool IsEnumType
         {
             get { return this.PropertyType.IsEnum(); }
+        }
+
+        /// <summary>Returns if this property is complex type.</summary>
+        internal bool IsComplex
+        {
+            get
+            {
+                if (!this.isComplex.HasValue)
+                {
+                    this.isComplex = this.EdmProperty.Type.TypeKind() == EdmTypeKind.Complex;
+                }
+
+                return this.isComplex.Value;
+            }
+        }
+
+        /// <summary>Returns if this property is complex type.</summary>
+        internal bool IsComplexCollection
+        {
+            get
+            {
+                if (!this.isComplexCollection.HasValue)
+                {
+                    if (this.collectionGenericType == null)
+                    {
+                        this.isComplexCollection = false;
+                    }
+                    else
+                    {
+                        var type = this.EdmProperty.Type;
+                        this.isComplexCollection = this.EdmProperty.PropertyKind == EdmPropertyKind.Structural
+                                                   && type.IsCollection()
+                                                   && (type as IEdmCollectionTypeReference).ElementType().IsComplex();
+                    }
+                }
+
+                return this.isComplexCollection.Value;
+            }
         }
 
         /// <summary>Is this property a collection of primitive or enum or complex types?</summary>

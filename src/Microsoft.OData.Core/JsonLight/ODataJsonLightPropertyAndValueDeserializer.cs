@@ -132,7 +132,6 @@ namespace Microsoft.OData.JsonLight
         /// Returns the value of the property read, which can be one of:
         /// - null
         /// - primitive value
-        /// - <see cref="ODataComplexValue"/>
         /// - <see cref="ODataCollectionValue"/>
         /// </remarks>
         internal object ReadNonEntityValue(
@@ -1424,200 +1423,6 @@ namespace Microsoft.OData.JsonLight
         }
 
         /// <summary>
-        /// Reads a complex value.
-        /// </summary>
-        /// <param name="insideJsonObjectValue">true if the reader is positioned on the first property of the value which is a JSON Object
-        ///     (or the second property if the first one was odata.type).</param>
-        /// <param name="insideComplexValue">true if we are reading a complex value and the reader is already positioned inside the complex value; otherwise false.</param>
-        /// <param name="propertyName">The name of the property whose value is being read, if applicable (used for error reporting).</param>
-        /// <param name="complexValueTypeReference">The expected type reference of the value.</param>
-        /// <param name="payloadTypeName">The type name read from the payload.</param>
-        /// <param name="serializationTypeNameAnnotation">The serialization type name for the collection value (possibly null).</param>
-        /// <param name="propertyAndAnnotationCollector">The duplicate property names checker to use - this is always initialized as necessary, do not clear.</param>
-        /// <returns>The value of the complex value.</returns>
-        /// <remarks>
-        /// Pre-Condition:  JsonNodeType.Property - the first property of the complex value object, or the second one if the first one was odata.type.
-        ///                 JsonNodeType.EndObject - the end object of the complex value object.
-        /// Post-Condition: almost anything - the node after the complex value (after the EndObject)
-        /// </remarks>
-        private ODataComplexValue ReadComplexValue(
-            bool insideJsonObjectValue,
-            bool insideComplexValue,
-            string propertyName,
-            IEdmComplexTypeReference complexValueTypeReference,
-            string payloadTypeName,
-            SerializationTypeNameAnnotation serializationTypeNameAnnotation,
-            PropertyAndAnnotationCollector propertyAndAnnotationCollector)
-        {
-            if (!insideJsonObjectValue && !insideComplexValue)
-            {
-                if (this.JsonReader.NodeType != JsonNodeType.StartObject)
-                {
-                    string typeName = complexValueTypeReference != null ? complexValueTypeReference.FullName() : payloadTypeName;
-                    throw new ODataException(
-                        string.Format(CultureInfo.InvariantCulture,
-                        "The property with name '{0}' was found with a value node of type '{1}'; however, a complex value of type '{2}' was expected.",
-                        propertyName, this.JsonReader.NodeType, typeName));
-                }
-
-                this.JsonReader.Read();
-            }
-
-            return this.ReadComplexValue(complexValueTypeReference, payloadTypeName,
-                serializationTypeNameAnnotation, propertyAndAnnotationCollector);
-        }
-
-        /// <summary>
-        /// Reads a complex value.
-        /// </summary>
-        /// <param name="complexValueTypeReference">The expected type reference of the value.</param>
-        /// <param name="payloadTypeName">The type name read from the payload.</param>
-        /// <param name="serializationTypeNameAnnotation">The serialization type name for the collection value (possibly null).</param>
-        /// <param name="propertyAndAnnotationCollector">The duplicate property names checker to use - this is always initialized as necessary, do not clear.</param>
-        /// <returns>The value of the complex value.</returns>
-        /// <remarks>
-        /// Pre-Condition:  JsonNodeType.Property - the first property of the complex value object, or the second one if the first one was odata.type.
-        ///                 JsonNodeType.EndObject - the end object of the complex value object.
-        /// Post-Condition: almost anything - the node after the complex value (after the EndObject)
-        /// </remarks>
-        private ODataComplexValue ReadComplexValue(
-            IEdmComplexTypeReference complexValueTypeReference,
-            string payloadTypeName,
-            SerializationTypeNameAnnotation serializationTypeNameAnnotation,
-            PropertyAndAnnotationCollector propertyAndAnnotationCollector)
-        {
-            this.AssertJsonCondition(JsonNodeType.Property, JsonNodeType.EndObject);
-            Debug.Assert(propertyAndAnnotationCollector != null, "propertyAndAnnotationCollector != null");
-
-            this.IncreaseRecursionDepth();
-
-            ODataComplexValue complexValue = new ODataComplexValue();
-            complexValue.TypeName = complexValueTypeReference != null ? complexValueTypeReference.FullName() : payloadTypeName;
-            if (serializationTypeNameAnnotation != null)
-            {
-                complexValue.SetAnnotation(serializationTypeNameAnnotation);
-            }
-
-            if (complexValueTypeReference != null)
-            {
-                complexValue.SetAnnotation(new ODataTypeAnnotation(complexValueTypeReference));
-            }
-
-            List<ODataProperty> properties = new List<ODataProperty>();
-            while (this.JsonReader.NodeType == JsonNodeType.Property)
-            {
-                this.ReadPropertyCustomAnnotationValue = this.ReadCustomInstanceAnnotationValue;
-                this.ProcessProperty(
-                    propertyAndAnnotationCollector,
-                    this.ReadTypePropertyAnnotationValue,
-                    (propertyParsingResult, propertyName) =>
-                    {
-                        switch (propertyParsingResult)
-                        {
-                            case PropertyParsingResult.ODataInstanceAnnotation:
-                                if (string.CompareOrdinal(ODataAnnotationNames.ODataType, propertyName) == 0)
-                                {
-                                    throw new ODataException(ODataErrorStrings.ODataJsonLightPropertyAndValueDeserializer_ComplexTypeAnnotationNotFirst);
-                                }
-                                else
-                                {
-                                    throw new ODataException(ODataErrorStrings.ODataJsonLightPropertyAndValueDeserializer_UnexpectedAnnotationProperties(propertyName));
-                                }
-
-                            case PropertyParsingResult.CustomInstanceAnnotation:
-                                ODataAnnotationNames.ValidateIsCustomAnnotationName(propertyName);
-                                Debug.Assert(
-                                    !this.MessageReaderSettings.ShouldSkipAnnotation(propertyName),
-                                    "!this.MessageReaderSettings.ShouldReadAndValidateAnnotation(annotationName) -- otherwise we should have already skipped the custom annotation and won't see it here.");
-                                var customInstanceAnnotationValue = this.ReadCustomInstanceAnnotationValue(propertyAndAnnotationCollector, propertyName);
-                                complexValue.InstanceAnnotations.Add(new ODataInstanceAnnotation(propertyName, customInstanceAnnotationValue.ToODataValue()));
-                                break;
-
-                            case PropertyParsingResult.PropertyWithoutValue:
-                                throw new ODataException(ODataErrorStrings.ODataJsonLightPropertyAndValueDeserializer_ComplexValuePropertyAnnotationWithoutProperty(propertyName));
-
-                            case PropertyParsingResult.PropertyWithValue:
-                                this.ReadPropertyWithValueInComplex(complexValueTypeReference, propertyAndAnnotationCollector, properties, propertyName);
-                                break;
-
-                            case PropertyParsingResult.EndOfObject:
-                                break;
-
-                            case PropertyParsingResult.MetadataReferenceProperty:
-                                throw new ODataException(ODataErrorStrings.ODataJsonLightPropertyAndValueDeserializer_UnexpectedMetadataReferenceProperty(propertyName));
-                        }
-                    });
-            }
-
-            Debug.Assert(this.JsonReader.NodeType == JsonNodeType.EndObject, "After all the properties of a complex value are read the EndObject node is expected.");
-            this.JsonReader.ReadEndObject();
-
-            complexValue.Properties = new ReadOnlyEnumerable<ODataProperty>(properties);
-
-            this.DecreaseRecursionDepth();
-
-            return complexValue;
-        }
-
-        private void ReadPropertyWithValueInComplex(IEdmComplexTypeReference complexValueTypeReference, PropertyAndAnnotationCollector propertyAndAnnotationCollector, List<ODataProperty> properties, string propertyName)
-        {
-            // Any other property is data
-            ODataProperty property = new ODataProperty();
-            property.Name = propertyName;
-
-            // Lookup the property in metadata
-            IEdmProperty edmProperty = null;
-            if (complexValueTypeReference != null)
-            {
-                edmProperty = this.ReaderValidator.ValidatePropertyDefined(propertyName, complexValueTypeReference.ComplexDefinition());
-            }
-
-            // EdmLib bridge marks all key properties as non-nullable, but Astoria allows them to be nullable.
-            // If the property has an annotation to ignore null values, we need to omit the property in requests.
-            ODataNullValueBehaviorKind nullValueReadBehaviorKind = this.ReadingResponse || edmProperty == null
-                ? ODataNullValueBehaviorKind.Default
-                : this.Model.NullValueReadBehaviorKind(edmProperty);
-            object propertyValue = null;
-            if (edmProperty == null)
-            {
-                bool isTopLevelPropertyValue = false;
-                propertyValue = this.InnerReadNonOpenUndeclaredPropertyInComplex(
-                    propertyAndAnnotationCollector, propertyName, isTopLevelPropertyValue);
-            }
-            else
-            {
-                // Read the property value
-                propertyValue = this.ReadNonEntityValueImplementation(
-                    ValidateDataPropertyTypeNameAnnotation(propertyAndAnnotationCollector, propertyName),
-                    edmProperty == null ? null : edmProperty.Type,
-                    /*propertyAndAnnotationCollector*/ null,
-                    /*collectionValidator*/ null,
-                    nullValueReadBehaviorKind == ODataNullValueBehaviorKind.Default,
-                    /*isTopLevelPropertyValue*/ false,
-                    /*insideComplexValue*/ false,
-                    propertyName,
-                    edmProperty == null);
-            }
-
-            if (nullValueReadBehaviorKind != ODataNullValueBehaviorKind.IgnoreValue || propertyValue != null)
-            {
-                propertyAndAnnotationCollector.CheckForDuplicatePropertyNames(property);
-                property.Value = propertyValue;
-                foreach (var annotation
-                         in propertyAndAnnotationCollector.GetCustomPropertyAnnotations(propertyName))
-                {
-                    if (annotation.Value != null)
-                    {
-                        // annotation.Value == null indicates that this annotation should be skipped.
-                        property.InstanceAnnotations.Add(new ODataInstanceAnnotation(annotation.Key, annotation.Value.ToODataValue()));
-                    }
-                }
-
-                properties.Add(property);
-            }
-        }
-
-        /// <summary>
         ///  Reads a primitive, complex or collection value.
         /// </summary>
         ///  <param name="payloadTypeName">The type name read from the payload as a property annotation, or null if none is available.</param>
@@ -1632,14 +1437,12 @@ namespace Microsoft.OData.JsonLight
         ///  <returns>The value of the property read.</returns>
         ///  <remarks>
         ///  Pre-Condition:  JsonNodeType.PrimitiveValue   - the value of the property is a primitive value
-        ///                  JsonNodeType.StartObject      - the value of the property is an object
         ///                  JsonNodeType.StartArray       - the value of the property is an array
         ///  Post-Condition: almost anything - the node after the property value.
         ///
         ///  Returns the value of the property read, which can be one of:
         ///  - null
         ///  - primitive value
-        ///  - <see cref="ODataComplexValue"/>
         ///  - <see cref="ODataCollectionValue"/>
         /// </remarks>
         [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity", Justification = "No easy way to refactor.")]
@@ -1666,7 +1469,6 @@ namespace Microsoft.OData.JsonLight
                 "If an expected value type reference is specified, no collection validator must be provided.");
 
             bool valueIsJsonObject = this.JsonReader.NodeType == JsonNodeType.StartObject;
-            bool payloadTypeNameFromPropertyAnnotation = !insideComplexValue && payloadTypeName != null;
 
             bool typeNameFoundInPayload = false;
             if (valueIsJsonObject || insideComplexValue)
@@ -1764,26 +1566,6 @@ namespace Microsoft.OData.JsonLight
                             enumTargetTypeReference,
                             validateNullValue,
                             propertyName);
-                        break;
-
-                    case EdmTypeKind.Complex:
-                        Debug.Assert(targetTypeReference == null || targetTypeReference.IsComplex(), "Expected null or a complex type.");
-
-                        if (payloadTypeNameFromPropertyAnnotation)
-                        {
-                            // We already have type name specified as annotation on the parent property.
-                            // OData type property annotation on a complex value - fail.
-                            throw new ODataException(ODataErrorStrings.ODataJsonLightPropertyAndValueDeserializer_ComplexValueWithPropertyTypeAnnotation(ODataAnnotationNames.ODataType));
-                        }
-
-                        result = this.ReadComplexValue(
-                            valueIsJsonObject,
-                            insideComplexValue,
-                            propertyName,
-                            targetTypeReference == null ? null : targetTypeReference.AsComplex(),
-                            payloadTypeName,
-                            serializationTypeNameAnnotation,
-                            propertyAndAnnotationCollector);
                         break;
 
                     case EdmTypeKind.Collection:

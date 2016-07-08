@@ -118,7 +118,6 @@
     <Compile Include="Tests\Server\PipelineTests.cs" />
     <Compile Include="Tests\Server\ResourceTypeTests.cs" />
     <Compile Include="Tests\Server\Simulators\DataServiceHost2Simulator.cs" />
-    <Compile Include="Tests\Server\HostScenarioTests.cs" />
     <Compile Include="Tests\Server\Util\TestService.cs" />
     <Compile Include="Tests\Server\UpdatableWrapperTests.cs" />
     <Compile Include="Tests\Server\DataServiceExecutionProviderWrapperTests.cs" />

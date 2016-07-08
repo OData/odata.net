@@ -391,18 +391,12 @@ namespace Microsoft.Test.OData.Tests.Client.PipelineEventsTests
             {
                 return args =>
                 {
+                    var propertyValue = "UpdatedODataEntryPropertyValue";
                     if (args.Entry.TypeName.EndsWith("Customer"))
                     {
-                        var propertyValue = "UpdatedODataEntryPropertyValue";
                         List<ODataProperty> properties = args.Entry.Properties.ToList();
                         ODataProperty propertyName = properties.Where(p => p.Name == "Name").Single();
                         propertyName.Value = ((string)propertyName.Value) + propertyValue;
-                        ODataProperty propertyPrimaryContactInfo = properties.Where(p => p.Name == "PrimaryContactInfo").Single();
-                        var propertyEmailBag = ((ODataComplexValue)propertyPrimaryContactInfo.Value).Properties.Single(p => p.Name == "EmailBag");
-                        (propertyEmailBag.Value as ODataCollectionValue).Items = new string[] { propertyValue };
-
-                        ODataProperty propertyAuditing = properties.Where(p => p.Name == "Auditing").Single();
-                        (propertyAuditing.Value as ODataComplexValue).Properties.Single(p => p.Name == "ModifiedBy").Value = propertyValue;
 
                         args.Entry.Properties = properties.AsEnumerable();
 
@@ -412,6 +406,17 @@ namespace Microsoft.Test.OData.Tests.Client.PipelineEventsTests
                         customer.PrimaryContactInfo.EmailBag.Add(notUsedValue);
                         customer.Auditing = new AuditInfo() { ModifiedDate = new DateTimeOffset(), ModifiedBy = notUsedValue, };
                         customer.Name += notUsedValue;
+                    }
+
+                    if (args.Entry.TypeName.EndsWith("ContactDetails"))
+                    {
+                        var propertyEmailBag = args.Entry.Properties.Single(p => p.Name == "EmailBag");
+                        (propertyEmailBag.Value as ODataCollectionValue).Items = new string[] { propertyValue };
+                    }
+
+                    if (args.Entry.TypeName.EndsWith("AuditInfo"))
+                    {
+                        args.Entry.Properties.Single(p => p.Name == "ModifiedBy").Value = propertyValue;
                     }
                 };
             }

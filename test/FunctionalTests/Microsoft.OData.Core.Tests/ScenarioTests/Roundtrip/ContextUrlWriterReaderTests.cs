@@ -70,6 +70,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip
         private EdmEntityType productType;
         private EdmEntityType productBookType;
         private EdmEntityType productCdType;
+        private EdmComplexType addressType;
 
         private EdmEntitySet employeeSet;
         private EdmEntitySet companySet;
@@ -106,7 +107,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip
             productCdType.AddProperty(new EdmStructuralProperty(productCdType, "Artist", EdmCoreModel.Instance.GetString(false)));
             this.model.AddElement(productCdType);
 
-            var addressType = new EdmComplexType(TestNameSpace, "Address");
+            addressType = new EdmComplexType(TestNameSpace, "Address");
             addressType.AddProperty(new EdmStructuralProperty(addressType, "Street", EdmCoreModel.Instance.GetString(false)));
             addressType.AddProperty(new EdmStructuralProperty(addressType, "City", EdmCoreModel.Instance.GetString(false)));
             this.model.AddElement(addressType);
@@ -790,18 +791,32 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip
                             ServiceRoot = this.testServiceRootUri,
                             Path = odataUriParser.ParsePath()
                         };
-                        omWriter.WriteProperty(this.CreateODataProperty(address, "HomeAddress"));
+                        var odataWriter = omWriter.CreateODataResourceWriter();
+                        var complexResource = this.CreateComplexResource(address, "HomeAddress");
+                        odataWriter.WriteStart(complexResource);
+                        odataWriter.WriteEnd();
                     },
                     string.Format("\"{0}$metadata#People(1)/HomeAddress\"", TestBaseUri), out payload, out contentType);
 
-                this.ReadPayload(payload, contentType, model, omReader => omReader.ReadProperty());
+                this.ReadPayload(payload, contentType, model,
+                omReader =>
+                    {
+                        var odatareader = omReader.CreateODataResourceReader();
+                        while(odatareader.Read())
+                        {
+                            if(odatareader.State == ODataReaderState.ResourceEnd)
+                            {
+                                Assert.NotNull(odatareader.Item as ODataResource);
+                            }
+                        }
+                    });
             }
         }
 
         // V4 Protocol Spec Chapter 10.13: Collection of individual property with complex type
         // Sample Request: http://host/service/People(1)/Addresses
         // Context Url in Response: http://host/service/$metadata#People(1)/Addresses
-        [Fact(Skip = "Enable after writer is implementated")]
+        [Fact]
         public void CollectionOfComplexTypeIndividualProperty()
         {
             var address = new Address() { Street = "TestStreet", City = "TestCity" };
@@ -819,11 +834,31 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip
                             ServiceRoot = this.testServiceRootUri,
                             Path = odataUriParser.ParsePath()
                         };
-                        omWriter.WriteProperty(this.CreateODataProperty(addresses, "Name"));
+                        var odataWriter = omWriter.CreateODataResourceSetWriter(null, addressType);
+                        var complexResource = this.CreateComplexResource(address, "HomeAddress");
+                        odataWriter.WriteStart(new ODataResourceSet());
+                        odataWriter.WriteStart(complexResource);
+                        odataWriter.WriteEnd();
+                        odataWriter.WriteEnd();
                     },
                     string.Format("\"{0}$metadata#People(1)/Addresses\"", TestBaseUri), out payload, out contentType);
 
-                this.ReadPayload(payload, contentType, model, omReader => omReader.ReadProperty());
+                this.ReadPayload(payload, contentType, model,
+                    omReader =>
+                    {
+                        var odatareader = omReader.CreateODataResourceSetReader();
+                        while (odatareader.Read())
+                        {
+                            if (odatareader.State == ODataReaderState.ResourceSetEnd)
+                            {
+                                Assert.NotNull(odatareader.Item as ODataResourceSet);
+                            }
+                            if (odatareader.State == ODataReaderState.ResourceEnd)
+                            {
+                                Assert.NotNull(odatareader.Item as ODataResource);
+                            }
+                        }
+                    });
             }
         }
 
@@ -882,7 +917,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip
 
         // V4 Protocol Spec Chapter 10.14: Collection of Value with Complex Type
         // Response: http://host/service/$metadata#Collection(Model.Address)
-        [Fact(Skip="Enable after writer is implementated")]
+        [Fact]
         public void CollectionOfComplexType()
         {
             var address = new Address() { Street = "TestStreet", City = "TestCity" };
@@ -891,11 +926,33 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip
             {
                 string payload, contentType;
                 this.WriteAndValidateContextUri(mimeType, model,
-                    omWriter => omWriter.WriteProperty(this.CreateODataProperty(addresses, "HomeAddress")),
+                    omWriter =>
+                    {
+                        var odataWriter = omWriter.CreateODataResourceSetWriter(null, addressType);
+                        var complexResource = this.CreateComplexResource(address, "HomeAddress");
+                        odataWriter.WriteStart(new ODataResourceSet());
+                        odataWriter.WriteStart(complexResource);
+                        odataWriter.WriteEnd();
+                        odataWriter.WriteEnd();
+                    },
                     string.Format("\"{0}$metadata#Collection({1}.Address)\"", TestBaseUri, TestNameSpace),
                     out payload, out contentType);
 
-                this.ReadPayload(payload, contentType, model, omReader => omReader.ReadProperty());
+                this.ReadPayload(payload, contentType, model, omReader =>
+                {
+                    var odatareader = omReader.CreateODataResourceSetReader();
+                    while (odatareader.Read())
+                    {
+                        if (odatareader.State == ODataReaderState.ResourceSetEnd)
+                        {
+                            Assert.NotNull(odatareader.Item as ODataResourceSet);
+                        }
+                        if (odatareader.State == ODataReaderState.ResourceEnd)
+                        {
+                            Assert.NotNull(odatareader.Item as ODataResource);
+                        }
+                    }
+                });
             }
         }
 
@@ -944,10 +1001,26 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip
             {
                 string payload, contentType;
                 this.WriteAndValidateContextUri(mimeType, model,
-                    omWriter => omWriter.WriteProperty(this.CreateODataProperty(address, "HomeAddress")),
+                    omWriter => 
+                    {
+                        var odataWriter = omWriter.CreateODataResourceWriter();
+                        var complexResource = this.CreateComplexResource(address, "HomeAddress");
+                        odataWriter.WriteStart(complexResource);
+                        odataWriter.WriteEnd();
+                    },
                     string.Format("\"{0}$metadata#{1}.Address\"", TestBaseUri, TestNameSpace), out payload, out contentType);
 
-                this.ReadPayload(payload, contentType, model, omReader => omReader.ReadProperty());
+                this.ReadPayload(payload, contentType, model, omReader =>
+                    {
+                        var odatareader = omReader.CreateODataResourceReader();
+                        while (odatareader.Read())
+                        {
+                            if (odatareader.State == ODataReaderState.ResourceEnd)
+                            {
+                                Assert.NotNull(odatareader.Item as ODataResource);
+                            }
+                        }
+                    });
             }
         }
 
@@ -1055,11 +1128,26 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip
                             Path = odataUriParser.ParsePath()
                         };
 
-                        omWriter.WriteProperty(this.CreateODataProperty(factoryAddress, "ManufactoryAddress"));
+                        var odataWriter = omWriter.CreateODataResourceWriter();
+                        var complexResource = this.CreateComplexResource(factoryAddress, "ManufactoryAddress");
+                        odataWriter.WriteStart(complexResource);
+                        odataWriter.WriteEnd();
                     },
                     string.Format("\"{0}$metadata#Companys(1)/Division/Manufactory/ManufactoryAddress/{1}.FactoryAddress\"", TestBaseUri, TestNameSpace), out payload, out contentType);
 
-                this.ReadPayload(payload, contentType, model, omReader => omReader.ReadProperty());
+                this.ReadPayload(payload, contentType, model, omReader =>
+                {
+                    var odatareader = omReader.CreateODataResourceReader();
+                    while (odatareader.Read())
+                    {
+                        if (odatareader.State == ODataReaderState.ResourceEnd)
+                        {
+                            var resource = odatareader.Item as ODataResource;
+                            Assert.NotNull(resource);
+                            Assert.Equal(4, resource.Properties.Count());
+                        }
+                    }
+                });
             }
         }
 
@@ -1291,6 +1379,18 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip
             }
         }
 
+        private ODataResource CreateComplexResource(object value, string propertyName)
+        {
+            Type t = value.GetType();
+            List<ODataProperty> properties = new List<ODataProperty>();
+            foreach (var p in t.GetProperties())
+            {
+                properties.Add(CreateODataProperty(t.GetProperty(p.Name).GetValue(value, new object[] { }), p.Name));
+            }
+
+            return new ODataResource() { TypeName = t.FullName, Properties = properties, };
+        }
+
         private ODataProperty CreateODataProperty(object value, string propertyName)
         {
             if (value != null)
@@ -1324,19 +1424,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip
                     {
                         return new ODataProperty { Name = propertyName, Value = new ODataEnumValue(value.ToString(), t.FullName) };
                     }
-                    else
-                    {
-                        // Build a complex type property. We consider type t to be primitive if t.Namespace is  "System" or if t is spatial type.
-                        List<ODataProperty> properties = new List<ODataProperty>();
-                        foreach (var p in t.GetProperties())
-                        {
-                            properties.Add(CreateODataProperty(t.GetProperty(p.Name).GetValue(value, new object[] { }), p.Name));
-                        }
-
-                        return new ODataProperty { Name = propertyName, Value = new ODataComplexValue() { TypeName = t.FullName, Properties = properties, } };
-                    }
                 }
-
             }
 
             return new ODataProperty { Name = propertyName, Value = value };

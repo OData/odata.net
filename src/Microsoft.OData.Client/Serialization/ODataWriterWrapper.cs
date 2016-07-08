@@ -62,12 +62,38 @@ namespace Microsoft.OData.Client
         /// <summary>
         /// Writes the start.
         /// </summary>
-        /// <param name="entry">The entry.</param>
-        /// <param name="entity">The entity.</param>
-        internal void WriteStart(ODataResource entry, object entity)
+        /// <param name="resourceSet">The resource set.</param>
+        internal void WriteStart(ODataResourceSet resourceSet)
         {
-            this.requestPipeline.ExecuteOnEntryStartActions(entry, entity);
-            this.odataWriter.WriteStart(entry);
+            this.odataWriter.WriteStart(resourceSet);
+        }
+
+        /// <summary>
+        /// Writes the end.
+        /// </summary>
+        internal void WriteEnd()
+        {
+            this.odataWriter.WriteEnd();
+        }
+
+        /// <summary>
+        /// Writes the start.
+        /// </summary>
+        /// <param name="resource">The resource.</param>
+        internal void WriteStartResource(ODataResource resource)
+        {
+            this.odataWriter.WriteStart(resource);
+        }
+
+        /// <summary>
+        /// Writes the start for the resource.
+        /// </summary>
+        /// <param name="resource">The resource.</param>
+        /// <param name="entity">The entity.</param>
+        internal void WriteStart(ODataResource resource, object entity)
+        {
+            this.requestPipeline.ExecuteOnEntryStartActions(resource, entity);
+            this.odataWriter.WriteStart(resource);
         }
 
         /// <summary>
@@ -107,7 +133,7 @@ namespace Microsoft.OData.Client
         /// <summary>
         /// Writes the navigation link end.
         /// </summary>
-        internal void WriteNestedResourceInfosEnd()
+        internal void WriteNestedResourceInfoEnd()
         {
             this.odataWriter.WriteEnd();
         }
@@ -139,7 +165,7 @@ namespace Microsoft.OData.Client
         /// Writes the start for a collection of navigation links.
         /// </summary>
         /// <param name="navigationLink">The navigation link.</param>
-        internal void WriteNestedResourceInfosStart(ODataNestedResourceInfo navigationLink)
+        internal void WriteNestedResourceInfoStart(ODataNestedResourceInfo navigationLink)
         {
             this.odataWriter.WriteStart(navigationLink);
         }

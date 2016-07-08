@@ -48,7 +48,8 @@ namespace Microsoft.OData.Client
         {
             Debug.Assert(properties != null, "properties != null");
             List<ODataProperty> odataProperties = new List<ODataProperty>();
-            foreach (ClientPropertyAnnotation property in properties)
+            var populatedProperties = properties.Where(p => !p.IsComplex && !p.IsComplexCollection);
+            foreach (ClientPropertyAnnotation property in populatedProperties)
             {
                 object propertyValue = property.GetValue(resource);
                 ODataValue odataValue;
@@ -126,6 +127,99 @@ namespace Microsoft.OData.Client
         }
 
         /// <summary>
+        /// Creates and returns an ODataResourceWrapper from the given value.
+        /// </summary>
+        /// <param name="complexType">The value type.</param>
+        /// <param name="instance">The complex instance.</param>
+        /// <param name="propertyName">If the value is a property, then it represents the name of the property. Can be null, for non-property.</param>
+        /// <param name="visitedComplexTypeObjects">Set of instances of complex types encountered in the hierarchy. Used to detect cycles.</param>
+        /// <returns>An ODataResourceWrapper representing the given value.</returns>
+        internal ODataResourceWrapper CreateODataResourceWrapperForComplex(Type complexType, object instance, string propertyName, HashSet<object> visitedComplexTypeObjects)
+        {
+            Debug.Assert(complexType != null, "complexType != null");
+
+            ClientEdmModel model = this.requestInfo.Model;
+            ClientTypeAnnotation complexTypeAnnotation = model.GetClientTypeAnnotation(complexType);
+            Debug.Assert(complexTypeAnnotation != null, "complexTypeAnnotation != null");
+            Debug.Assert(!complexTypeAnnotation.IsEntityType, "Unexpected entity");
+
+            if (instance == null)
+            {
+                return new ODataResourceWrapper() { Resource = null };
+            }
+
+            if (visitedComplexTypeObjects == null)
+            {
+                visitedComplexTypeObjects = new HashSet<object>(ReferenceEqualityComparer<object>.Instance);
+            }
+            else if (visitedComplexTypeObjects.Contains(instance))
+            {
+                if (propertyName != null)
+                {
+                    throw Error.InvalidOperation(Strings.Serializer_LoopsNotAllowedInComplexTypes(propertyName));
+                }
+                else
+                {
+                    Debug.Assert(complexTypeAnnotation.ElementTypeName != null, "complexTypeAnnotation.ElementTypeName != null");
+                    throw Error.InvalidOperation(Strings.Serializer_LoopsNotAllowedInNonPropertyComplexTypes(complexTypeAnnotation.ElementTypeName));
+                }
+            }
+
+            visitedComplexTypeObjects.Add(instance);
+
+            ODataResource resource = new ODataResource() { TypeName = complexTypeAnnotation.ElementTypeName };
+
+            string serverTypeName = this.requestInfo.GetServerTypeName(complexTypeAnnotation);
+            resource.SetAnnotation(new SerializationTypeNameAnnotation { TypeName = serverTypeName });
+
+            resource.Properties = this.PopulateProperties(instance, serverTypeName, complexTypeAnnotation.PropertiesToSerialize(), visitedComplexTypeObjects);
+
+            var wrapper = new ODataResourceWrapper() { Resource = resource, Instance = instance };
+
+            wrapper.NestedResourceInfoWrappers = this.PopulateNestedComplexProperties(instance, serverTypeName, complexTypeAnnotation.PropertiesToSerialize(), visitedComplexTypeObjects);
+
+            visitedComplexTypeObjects.Remove(instance);
+
+            return wrapper;
+        }
+
+        /// <summary>
+        /// Creates a list of ODataNestedResourceInfoWrapper instances for the given set of properties.
+        /// </summary>
+        /// <param name="resource">Instance of the resource which is getting serialized.</param>
+        /// <param name="serverTypeName">The server type name of the entity whose properties are being populated.</param>
+        /// <param name="properties">The properties to populate into instance of ODataProperty.</param>
+        /// <param name="visitedComplexTypeObjects">Set of instances of complex types encountered in the hierarchy. Used to detect cycles.</param>
+        /// <returns>Populated ODataNestedResourceInfoWrapper instances for the given properties.</returns>
+        internal IEnumerable<ODataNestedResourceInfoWrapper> PopulateNestedComplexProperties(object resource, string serverTypeName, IEnumerable<ClientPropertyAnnotation> properties, HashSet<object> visitedComplexTypeObjects)
+        {
+            Debug.Assert(properties != null, "properties != null");
+
+            List<ODataNestedResourceInfoWrapper> odataNestedResourceInfoWrappers = new List<ODataNestedResourceInfoWrapper>();
+            var populatedProperties = properties.Where(p => p.IsComplex || p.IsComplexCollection);
+
+            foreach (ClientPropertyAnnotation property in populatedProperties)
+            {
+                object propertyValue = property.GetValue(resource);
+                ODataItemWrapper odataItem;
+                if (this.TryConvertPropertyToResourceOrResourceSet(property, propertyValue, serverTypeName, visitedComplexTypeObjects, out odataItem))
+                {
+                    odataNestedResourceInfoWrappers.Add(new ODataNestedResourceInfoWrapper
+                    {
+                        NestedResourceInfo = new ODataNestedResourceInfo()
+                        {
+                            Name = property.PropertyName,
+                            IsCollection = property.IsComplexCollection
+                        },
+                        NestedResourceOrResourceSet = odataItem
+                    });
+                }
+            }
+
+            return odataNestedResourceInfoWrappers;
+        }
+
+        /// <summary>
         /// Creates and returns an ODataResource from the given value.
         /// </summary>
         /// <param name="entityType">The value type.</param>
@@ -157,6 +251,43 @@ namespace Microsoft.OData.Client
             odataEntityValue.Properties = this.PopulateProperties(value, serverTypeName, properties.Any() ? properties : entityTypeAnnotation.PropertiesToSerialize(), null);
 
             return odataEntityValue;
+        }
+
+        /// <summary>
+        /// Creates and returns an ODataResourceWrapper from the given value.
+        /// </summary>
+        /// <param name="entityType">The value type.</param>
+        /// <param name="value">The resource value.</param>
+        /// <param name="properties">The given properties to serialize.</param>
+        /// <returns>An ODataResourceWrapper representing the given value.</returns>
+        internal ODataResourceWrapper CreateODataResourceWrapper(Type entityType, object value, params ClientPropertyAnnotation[] properties)
+        {
+            Debug.Assert(entityType != null, "entityType != null");
+
+            if (value == null)
+            {
+                return null;
+            }
+
+            ClientEdmModel model = this.requestInfo.Model;
+            ClientTypeAnnotation entityTypeAnnotation = model.GetClientTypeAnnotation(value.GetType());
+            Debug.Assert(entityTypeAnnotation != null, "entityTypeAnnotation != null");
+            Debug.Assert(entityTypeAnnotation.IsStructuredType, "Unexpected type");
+
+            ODataResource odataEntityValue = new ODataResource()
+            {
+                TypeName = entityTypeAnnotation.ElementTypeName,
+            };
+
+            string serverTypeName = this.requestInfo.GetServerTypeName(entityTypeAnnotation);
+            odataEntityValue.SetAnnotation(new SerializationTypeNameAnnotation { TypeName = serverTypeName });
+
+            odataEntityValue.Properties = this.PopulateProperties(value, serverTypeName, properties.Any() ? properties : entityTypeAnnotation.PropertiesToSerialize(), null);
+
+            var wrapper = new ODataResourceWrapper() { Resource = odataEntityValue };
+            wrapper.NestedResourceInfoWrappers = PopulateNestedComplexProperties(value, serverTypeName, properties.Any() ? properties : entityTypeAnnotation.PropertiesToSerialize(), null);
+
+            return wrapper;
         }
 
         /// <summary>
@@ -309,6 +440,60 @@ namespace Microsoft.OData.Client
         }
 
         /// <summary>
+        /// Creates and returns an ODataResourceSetWrapper from the given value.
+        /// </summary>
+        /// <param name="collectionItemType">The type of the value.</param>
+        /// <param name="propertyName">If the value is a property, then it represents the name of the property. Can be null, for non-property.</param>
+        /// <param name="value">The value.</param>
+        /// <param name="visitedComplexTypeObjects">Set of instances of complex types encountered in the hierarchy. Used to detect cycles.</param>
+        /// <param name="isDynamicProperty">Whether this collection property is a dynamic property</param>
+        /// <param name="setTypeAnnotation">If true, set the type annotation on ODataValue.</param>
+        /// <returns>An ODataResourceSetWrapper representing the given value.</returns>
+        internal ODataResourceSetWrapper CreateODataResourceSetWrapperForComplexCollection(Type collectionItemType, string propertyName, object value, HashSet<object> visitedComplexTypeObjects, bool isDynamicProperty, bool setTypeAnnotation = true)
+        {
+            Debug.Assert(collectionItemType != null, "collectionItemType != null");
+
+            WebUtil.ValidateCollection(collectionItemType, value, propertyName, isDynamicProperty);
+
+            ODataResourceSet resourceSet = new ODataResourceSet();
+            ODataResourceSetWrapper wrapper = new ODataResourceSetWrapper()
+            {
+                ResourceSet = resourceSet
+            };
+
+            // Note that the collectionItemTypeName will be null if the context does not have the ResolveName func.
+            string collectionItemTypeName = this.requestInfo.ResolveNameFromType(collectionItemType);
+
+            IEnumerable enumerablePropertyValue = (IEnumerable)value;
+            if (enumerablePropertyValue != null)
+            {
+                wrapper.Resources = Util.GetEnumerable(
+                    enumerablePropertyValue,
+                    (val) =>
+                    {
+                        if (val == null)
+                        {
+                            return null;
+                        }
+
+                        WebUtil.ValidateComplexCollectionItem(val, propertyName, collectionItemType);
+                        var complexResource = this.CreateODataResourceWrapperForComplex(val.GetType(), val, propertyName, visitedComplexTypeObjects);
+                        return complexResource;
+                    });
+            }
+
+            // Ideally, we should not set type annotation on collection value.
+            // To keep backward compatibility, we'll keep it in request body, but do not include it in url.
+            if (setTypeAnnotation)
+            {
+                string wireTypeName = GetCollectionName(collectionItemTypeName);
+                resourceSet.SetAnnotation(new SerializationTypeNameAnnotation { TypeName = wireTypeName });
+            }
+
+            return wrapper;
+        }
+
+        /// <summary>
         /// Returns the primitive property value.
         /// </summary>
         /// <param name="propertyValue">Value of the property.</param>
@@ -405,7 +590,8 @@ namespace Microsoft.OData.Client
         {
             Debug.Assert(properties != null, "properties != null");
             List<ODataProperty> odataProperties = new List<ODataProperty>();
-            foreach (ClientPropertyAnnotation property in properties)
+            var populatedProperties = properties.Where(p => !p.IsComplex && !p.IsComplexCollection);
+            foreach (ClientPropertyAnnotation property in populatedProperties)
             {
                 object propertyValue = property.GetValue(resource);
                 ODataValue odataValue;
@@ -494,6 +680,52 @@ namespace Microsoft.OData.Client
         }
 
         /// <summary>
+        /// Tries to convert the given value into an instance of <see cref="ODataItemWrapper"/>.
+        /// </summary>
+        /// <param name="property">The property being converted.</param>
+        /// <param name="propertyValue">The property value to convert..</param>
+        /// <param name="serverTypeName">The server type name of the entity whose properties are being populated.</param>
+        /// <param name="visitedComplexTypeObjects">Set of instances of complex types encountered in the hierarchy. Used to detect cycles.</param>
+        /// <param name="odataItem">The odata resource or resource set if one was created.</param>
+        /// <returns>Whether or not the value was converted.</returns>
+        private bool TryConvertPropertyToResourceOrResourceSet(ClientPropertyAnnotation property, object propertyValue, string serverTypeName, HashSet<object> visitedComplexTypeObjects, out ODataItemWrapper odataItem)
+        {
+            if (property.IsComplexCollection)
+            {
+                odataItem = this.CreateODataComplexCollectionPropertyResourceSet(property, propertyValue, serverTypeName, visitedComplexTypeObjects);
+                return true;
+            }
+
+            if (property.IsComplex)
+            {
+                odataItem = this.CreateODataComplexPropertyResource(property, propertyValue, visitedComplexTypeObjects);
+                return true;
+            }
+
+            odataItem = null;
+            return false;
+        }
+
+        /// <summary>
+        /// Returns the resource of the complex property.
+        /// </summary>
+        /// <param name="property">Property which contains name, type, is key (if false and null value, will throw).</param>
+        /// <param name="propertyValue">property value</param>
+        /// <param name="visitedComplexTypeObjects">List of instances of complex types encountered in the hierarchy. Used to detect cycles.</param>
+        /// <returns>An instance of ODataResourceWrapper containing the resource of the properties of the given complex type.</returns>
+        private ODataResourceWrapper CreateODataComplexPropertyResource(ClientPropertyAnnotation property, object propertyValue, HashSet<object> visitedComplexTypeObjects)
+        {
+            Type propertyType = property.IsComplexCollection ? property.PrimitiveOrComplexCollectionItemType : property.PropertyType;
+            if (propertyValue != null && propertyType != propertyValue.GetType())
+            {
+                Debug.Assert(propertyType.IsAssignableFrom(propertyValue.GetType()), "Type from value should equals to or derived from property type from model.");
+                propertyType = propertyValue.GetType();
+            }
+
+            return this.CreateODataResourceWrapperForComplex(propertyType, propertyValue, property.PropertyName, visitedComplexTypeObjects);
+        }
+
+        /// <summary>
         /// Returns the value of the collection property.
         /// </summary>
         /// <param name="property">Collection property details. Must not be null.</param>
@@ -508,6 +740,23 @@ namespace Microsoft.OData.Client
             Debug.Assert(property.PropertyName != null, "property.PropertyName != null");
             bool isDynamic = this.requestInfo.TypeResolver.ShouldWriteClientTypeForOpenServerProperty(property.EdmProperty, serverTypeName);
             return this.CreateODataCollection(property.PrimitiveOrComplexCollectionItemType, property.PropertyName, propertyValue, visitedComplexTypeObjects, isDynamic);
+        }
+
+        /// <summary>
+        /// Returns the resource set of the collection property.
+        /// </summary>
+        /// <param name="property">Collection property details. Must not be null.</param>
+        /// <param name="propertyValue">Collection instance.</param>
+        /// <param name="serverTypeName">The server type name of the entity whose properties are being populated.</param>
+        /// <param name="visitedComplexTypeObjects">List of instances of complex types encountered in the hierarchy. Used to detect cycles.</param>
+        /// <returns>An instance of ODataResourceSetWrapper representing the value of the property.</returns>
+        private ODataResourceSetWrapper CreateODataComplexCollectionPropertyResourceSet(ClientPropertyAnnotation property, object propertyValue, string serverTypeName, HashSet<object> visitedComplexTypeObjects)
+        {
+            Debug.Assert(property != null, "property != null");
+            Debug.Assert(property.IsComplexCollection, "This method is supposed to be used only for writing collections");
+            Debug.Assert(property.PropertyName != null, "property.PropertyName != null");
+            bool isDynamic = this.requestInfo.TypeResolver.ShouldWriteClientTypeForOpenServerProperty(property.EdmProperty, serverTypeName);
+            return this.CreateODataResourceSetWrapperForComplexCollection(property.PrimitiveOrComplexCollectionItemType, property.PropertyName, propertyValue, visitedComplexTypeObjects, isDynamic);
         }
 
         /// <summary>

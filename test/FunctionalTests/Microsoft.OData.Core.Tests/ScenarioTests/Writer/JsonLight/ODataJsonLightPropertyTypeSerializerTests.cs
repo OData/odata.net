@@ -149,22 +149,6 @@ namespace Microsoft.OData.Tests.ScenarioTests.Writer.JsonLight
         }
 
         [Fact]
-        public void ShouldWriteODataTypeForComplexType()
-        {
-            ODataProperty property = new ODataProperty() { Name = "TestProperty", Value = new ODataComplexValue { Properties = new[] { new ODataProperty { Name = "StringProperty", Value = "StringValue1" } }, TypeName = "TestNamespace.TestComplexType" } };
-            string result = this.SerializeProperty(property);
-            result.Should().Contain("@odata.type\":\"#TestNamespace.TestComplexType");
-        }
-
-        [Fact]
-        public void ShouldWriteODataTypeForDerivedComplexType()
-        {
-            ODataProperty property = new ODataProperty() { Name = "TestProperty", Value = new ODataComplexValue { Properties = new[] { new ODataProperty { Name = "StringProperty", Value = "StringValue1" }, new ODataProperty { Name = "DerivedStringProperty", Value = "DerivedStringValue1" } }, TypeName = "TestNamespace.TestDerivedComplexType" } };
-            string result = this.SerializeProperty(property);
-            result.Should().Contain("@odata.type\":\"#TestNamespace.TestDerivedComplexType");
-        }
-
-        [Fact]
         public void ShouldWriteODataTypeForPrimitiveTypeGeometry()
         {
             var testCases = new[]
@@ -309,34 +293,37 @@ namespace Microsoft.OData.Tests.ScenarioTests.Writer.JsonLight
                     InstanceName = "NS.DecimalCollectionProperty",
                     CollectionValue = new ODataCollectionValue { TypeName = "Collection(Edm.Int32)", Items = new[] { 1, 2, 3, 5 } }
                 },
-                new
-                {
-                    Expect = "@odata.type\":\"#Collection(TestNamespace.TestComplexType)\"",
-                    InstanceName = "NS.CustomComplexCollectionProperty",
-                    CollectionValue = new ODataCollectionValue
-                    {
-                        Items = new[]
-                        {
-                            new ODataComplexValue { Properties = new[] { new ODataProperty { Name = "StringProperty", Value = "StringValue1" } }, TypeName = "TestNamespace.TestComplexType" }, 
-                            new ODataComplexValue { Properties = new[] { new ODataProperty { Name = "StringProperty", Value = "StringValue2" } }, TypeName = "TestNamespace.TestComplexType" }
-                        }, 
-                        TypeName = "Collection(TestNamespace.TestComplexType)"
-                    }
-                },
-                new
-                {
-                    Expect = "@odata.type\":\"#Collection(TestNamespace.TestComplexType)\"",
-                    InstanceName = "NS.CustomComplexCollectionProperty",
-                    CollectionValue = new ODataCollectionValue
-                    {
-                        Items = new[]
-                        {
-                            new ODataComplexValue { Properties = new[] { new ODataProperty { Name = "StringProperty", Value = "StringValue1" } }, TypeName = "TestNamespace.TestComplexType" }, 
-                            new ODataComplexValue { Properties = new[] { new ODataProperty { Name = "StringProperty", Value = "StringValue2" }, new ODataProperty { Name = "DerivedStringProperty", Value = "DerivedStringProperty2" } }, TypeName = "TestNamespace.TestDerivedComplexType" }
-                        }, 
-                        TypeName = "Collection(TestNamespace.TestComplexType)"
-                    }
-                }
+
+                // #625
+
+                //new
+                //{
+                //    Expect = "@odata.type\":\"#Collection(TestNamespace.TestComplexType)\"",
+                //    InstanceName = "NS.CustomComplexCollectionProperty",
+                //    CollectionValue = new ODataCollectionValue
+                //    {
+                //        Items = new[]
+                //        {
+                //            new ODataComplexValue { Properties = new[] { new ODataProperty { Name = "StringProperty", Value = "StringValue1" } }, TypeName = "TestNamespace.TestComplexType" }, 
+                //            new ODataComplexValue { Properties = new[] { new ODataProperty { Name = "StringProperty", Value = "StringValue2" } }, TypeName = "TestNamespace.TestComplexType" }
+                //        }, 
+                //        TypeName = "Collection(TestNamespace.TestComplexType)"
+                //    }
+                //},
+                //new
+                //{
+                //    Expect = "@odata.type\":\"#Collection(TestNamespace.TestComplexType)\"",
+                //    InstanceName = "NS.CustomComplexCollectionProperty",
+                //    CollectionValue = new ODataCollectionValue
+                //    {
+                //        Items = new[]
+                //        {
+                //            new ODataComplexValue { Properties = new[] { new ODataProperty { Name = "StringProperty", Value = "StringValue1" } }, TypeName = "TestNamespace.TestComplexType" }, 
+                //            new ODataComplexValue { Properties = new[] { new ODataProperty { Name = "StringProperty", Value = "StringValue2" }, new ODataProperty { Name = "DerivedStringProperty", Value = "DerivedStringProperty2" } }, TypeName = "TestNamespace.TestDerivedComplexType" }
+                //        }, 
+                //        TypeName = "Collection(TestNamespace.TestComplexType)"
+                //    }
+                //}
             };
 
             foreach (var testCase in testCases)

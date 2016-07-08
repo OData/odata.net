@@ -277,18 +277,19 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests
         /// <param name="testConfiguration">The configuration of the test.</param>
         /// <param name="alwaysSpecifyOwningContainer">If true the owning container (type, ...) will be used always if specified by the test,
         /// otherwise it will only be used in formats which require it.</param>
-        internal static void RunTopLevelPropertyPayload(
-            this PayloadWriterTestDescriptor<ODataProperty> testDescriptor,
+        internal static void RunTopLevelPropertyPayload<T>(
+            this PayloadWriterTestDescriptor<T> testDescriptor,
             WriterTestConfiguration testConfiguration,
             bool alwaysSpecifyOwningContainer = false,
-            BaselineLogger baselineLogger = null)
+            BaselineLogger baselineLogger = null, 
+            Action<ODataMessageWriterTestWrapper> writeAction = null)
         {
-            ODataProperty property = testDescriptor.PayloadItems.Single();
+            T property = testDescriptor.PayloadItems.Single();
 
             WriteAndVerifyTopLevelContent(
                 testDescriptor,
                 testConfiguration,
-                (messageWriter) => messageWriter.WriteProperty(property),
+                writeAction ?? ((messageWriter) => messageWriter.WriteProperty(property as ODataProperty)),
                 testDescriptor.TestDescriptorSettings.Assert,
                 testConfiguration.MessageWriterSettings,
                 baselineLogger: baselineLogger);

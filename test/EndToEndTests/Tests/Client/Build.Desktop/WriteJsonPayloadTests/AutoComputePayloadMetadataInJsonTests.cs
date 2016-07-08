@@ -31,7 +31,7 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
             MimeTypes.ApplicationJson + MimeTypes.ODataParameterNoMetadata,
         };
 
-        private readonly bool[] hasModelFlagBools = new bool[] {true, false};
+        private readonly bool[] hasModelFlagBools = new bool[] { true, false };
 
         public AutoComputePayloadMetadataInJsonTests()
             : base(ServiceDescriptors.AstoriaDefaultService)
@@ -104,7 +104,8 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
             var orderEntry2 = orderEntry2Wrapper.Resource;
             Dictionary<string, object> expectedOrderObject2 = WritePayloadHelper.ComputeExpectedFullMetadataEntryObject(WritePayloadHelper.OrderType, "Order(-9)", orderEntry2, hasModel);
             var orderEntry2Navigation = WritePayloadHelper.AddOrderEntryCustomNavigation(orderEntry2, expectedOrderObject2, hasModel);
-            orderEntry2Wrapper.NestedResourceInfos.Add(new ODataNestedResourceInfoWrapper() { NestedResourceInfo = orderEntry2Navigation });
+            orderEntry2Wrapper.NestedResourceInfoWrappers = orderEntry2Wrapper.NestedResourceInfoWrappers.Concat(
+                new[] { new ODataNestedResourceInfoWrapper() { NestedResourceInfo = orderEntry2Navigation } });
 
             // write the response message and read using ODL reader
             var responseMessage = new StreamResponseMessage(new MemoryStream());
@@ -213,26 +214,29 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
             var loginEntry = WritePayloadHelper.CreateLoginEntryNoMetadata(hasModel);
 
 
-            customerEntryWrapper.NestedResourceInfos.Add(new ODataNestedResourceInfoWrapper()
-            {
-                NestedResourceInfo = orderNavigation
-            });
-
-            customerEntryWrapper.NestedResourceInfos.Add(new ODataNestedResourceInfoWrapper()
-            {
-                NestedResourceInfo = expandedLoginsNavigation,
-                NestedResourceOrResourceSet = new ODataResourceSetWrapper()
+            customerEntryWrapper.NestedResourceInfoWrappers = customerEntryWrapper.NestedResourceInfoWrappers.Concat(
+                new[]
                 {
-                    ResourceSet = loginFeed,
-                    Resources = new List<ODataResourceWrapper>()
+                    new ODataNestedResourceInfoWrapper()
                     {
-                        new ODataResourceWrapper()
+                        NestedResourceInfo = orderNavigation
+                    },
+                    new ODataNestedResourceInfoWrapper()
+                    {
+                        NestedResourceInfo = expandedLoginsNavigation,
+                        NestedResourceOrResourceSet = new ODataResourceSetWrapper()
                         {
-                            Resource = loginEntry
+                            ResourceSet = loginFeed,
+                            Resources = new List<ODataResourceWrapper>()
+                            {
+                                new ODataResourceWrapper()
+                                {
+                                    Resource = loginEntry
+                                }
+                            }
                         }
                     }
-                }
-            });
+                });
 
             Dictionary<string, object> expectedLoginObject = WritePayloadHelper.ComputeExpectedFullMetadataEntryObject(WritePayloadHelper.LoginType, "Login('2')", loginEntry, hasModel);
 
@@ -607,7 +611,9 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
             if (!hasModel)
             {
                 employeeFeed.SetSerializationInfo(
-                    new ODataResourceSerializationInfo() { NavigationSourceName = "Person",
+                    new ODataResourceSerializationInfo()
+                    {
+                        NavigationSourceName = "Person",
                         NavigationSourceEntityTypeName = NameSpace + "Person",
                         ExpectedTypeName = NameSpace + "Employee",
                         NavigationSourceKind = EdmNavigationSourceKind.EntitySet

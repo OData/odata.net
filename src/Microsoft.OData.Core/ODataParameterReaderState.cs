@@ -15,7 +15,7 @@ namespace Microsoft.OData
 
         /// <summary>The reader read a primitive or a complex parameter.</summary>
         /// <remarks>In this state the Name property of the <see cref="ODataParameterReader"/> returns the name of the parameter
-        /// and the Value property of the <see cref="ODataParameterReader"/> returns the value read (e.g. a primitive value, an ODataComplexValue or null).</remarks>
+        /// and the Value property of the <see cref="ODataParameterReader"/> returns the value read (e.g. a primitive value, or null).</remarks>
         Value,
 
         /// <summary>The reader is reading a collection parameter.</summary>

@@ -153,14 +153,19 @@ namespace Microsoft.Test.OData.Tests.Client.AnnotationTests
                 {
                     using (var messageReader = new ODataMessageReader(responseMessage, readerSettings, Model))
                     {
-                        var property = messageReader.ReadProperty();
-
-                        // Get Value of Complex Type Property HomeAddress
-                        var complexValue = property.Value as ODataComplexValue;
+                        var odataReader = messageReader.CreateODataResourceReader();
+                        ODataResource resource = null;
+                        while (odataReader.Read())
+                        {
+                            if (odataReader.State == ODataReaderState.ResourceEnd)
+                            {
+                                resource = odataReader.Item as ODataResource;
+                            }
+                        }
 
                         // Verify Annotation on Complex Type
-                        ODataInstanceAnnotation annotationOnHomeAddress = complexValue.InstanceAnnotations.SingleOrDefault();
-                        Assert.AreEqual(string.Format("{0}.AddressType", TestModelNameSpace), annotationOnHomeAddress.Name);
+                        ODataInstanceAnnotation annotationOnHomeAddress = resource.InstanceAnnotations
+                            .SingleOrDefault(annotation=>annotation.Name.Equals(string.Format("{0}.AddressType", TestModelNameSpace)));
                         Assert.AreEqual("Home", (annotationOnHomeAddress.Value as ODataPrimitiveValue).Value);
 
                         // TODO : Fix #625

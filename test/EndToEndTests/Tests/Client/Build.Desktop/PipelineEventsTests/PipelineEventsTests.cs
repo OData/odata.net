@@ -349,7 +349,7 @@ namespace Microsoft.Test.OData.Tests.Client.PipelineEventsTests
         {
             this.Invoke(
                 this.AddObjectTestAction,
-                CreateData(/*ODataFormat.Atom,*/ ODataFormat.Json),
+                CreateData(ODataFormat.Json),
                 CreateData(MergeOption.AppendOnly, MergeOption.OverwriteChanges, MergeOption.PreserveChanges),
                 CreateData(SaveChangesOptions.None, SaveChangesOptions.BatchWithSingleChangeset, SaveChangesOptions.ContinueOnError, SaveChangesOptions.ReplaceOnUpdate),
                 new Constraint[] { });

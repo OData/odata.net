@@ -180,6 +180,9 @@
     <Content Include="CollectionWriter\CollectionWriterTests.HomogeneousCollectionWriterWithoutMetadataTest.approved.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="JsonLight\JsonLightEntryWriterTests.OpenPropertiesInEntryTest.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="JsonLight\JsonLightPropertyWriterTests.WriteFloatingPointValue.approved.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -219,7 +222,7 @@
     <Content Include="JsonLight\JsonLightEntryWriterTests.ActionAndFunctionPayloadOrderTest.approved.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="JsonLight\JsonLightEntryWriterTests.OpenPropertiesInEntryTest.approved.txt">
+    <Content Include="JsonLight\JsonLightEntryWriterTests.TopLevelOpenComplexProperties.approved.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="JsonLight\JsonLightEntryWriterTests.PayloadOrderTest.approved.txt">
@@ -393,6 +396,9 @@
     <Content Include="Writer\WriterPropertyTests.CollectionValueSerializationTypeNameAnnotationTest.approved.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Writer\WriterPropertyTests.ComplexPropertyTests.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Writer\WriterPropertyTests.ComplexValueSerializationTypeNameAnnotationTest.approved.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -409,6 +415,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Writer\WriterPropertyTests.PrimitiveValueSerializationTypeNameAnnotationTest.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Writer\WriterPropertyTests.ComplexCollectionPropertyTests.approved.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Writer\WriterPropertyTests.PropertyTests.approved.txt">

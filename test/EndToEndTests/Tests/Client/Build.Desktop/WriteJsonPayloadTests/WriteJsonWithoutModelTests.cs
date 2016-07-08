@@ -421,7 +421,6 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
                 IsCollection = false,
                 Url = new Uri(this.ServiceUri + "Order(-9)/Customer")
             };
-            orderEntry2Wrapper.NestedResourceInfos.Add(new ODataNestedResourceInfoWrapper(){ NestedResourceInfo = orderEntry1Navigation1});
 
             var orderEntry2Navigation2 = new ODataNestedResourceInfo()
             {
@@ -429,7 +428,12 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
                 IsCollection = false,
                 Url = new Uri(this.ServiceUri + "Order(-9)/Login")
             };
-            orderEntry2Wrapper.NestedResourceInfos.Add(new ODataNestedResourceInfoWrapper(){ NestedResourceInfo = orderEntry2Navigation2});
+            orderEntry2Wrapper.NestedResourceInfoWrappers = orderEntry2Wrapper.NestedResourceInfoWrappers.Concat(
+                new[]
+                {
+                    new ODataNestedResourceInfoWrapper() { NestedResourceInfo = orderEntry1Navigation1 },
+                    new ODataNestedResourceInfoWrapper() { NestedResourceInfo = orderEntry2Navigation2 }
+                });
 
             ODataWriterHelper.WriteResource(odataWriter, orderEntry2Wrapper);
 
@@ -490,8 +494,8 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
             var loginEntry = WritePayloadHelper.CreateLoginEntry(hasModel);
 
 
-            customerEntry.NestedResourceInfos.AddRange(WritePayloadHelper.CreateCustomerNavigationLinks());
-            customerEntry.NestedResourceInfos.Add(new ODataNestedResourceInfoWrapper()
+            customerEntry.NestedResourceInfoWrappers = customerEntry.NestedResourceInfoWrappers.Concat(WritePayloadHelper.CreateCustomerNavigationLinks());
+            customerEntry.NestedResourceInfoWrappers = customerEntry.NestedResourceInfoWrappers.Concat(new[]{  new ODataNestedResourceInfoWrapper()
             {
                 NestedResourceInfo = new ODataNestedResourceInfo()
                 {
@@ -507,11 +511,11 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
                         new ODataResourceWrapper()
                         {
                             Resource = loginEntry,
-                            NestedResourceInfos = WritePayloadHelper.CreateLoginNavigationLinksWrapper().ToList()
+                            NestedResourceInfoWrappers = WritePayloadHelper.CreateLoginNavigationLinksWrapper().ToList()
                         }
                     }
                 }
-            });
+            }});
 
             ODataWriterHelper.WriteResource(odataWriter, customerEntry);
 

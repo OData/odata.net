@@ -15,6 +15,7 @@ namespace Microsoft.OData.Service.Serializers
     using System.Linq;
     using Microsoft.OData;
     using Microsoft.OData.Edm;
+    using Microsoft.OData.Service;
     using Microsoft.OData.Service.Providers;
     #endregion Namespaces
 
@@ -261,6 +262,8 @@ namespace Microsoft.OData.Service.Serializers
             var args = new DataServiceODataWriterEntryArgs(entry, element, this.Service.OperationContext);
             this.dataServicesODataWriter.WriteStart(args);
 
+            this.WriteAllNestedComplexProperties(entityToSerialize, projectionNodes);
+
             // Now write all the navigation properties
             this.WriteNavigationProperties(expanded, entityToSerialize, resourceInstanceInFeed, projectionNodes);
 
@@ -491,7 +494,9 @@ namespace Microsoft.OData.Service.Serializers
             List<ODataProperty> properties = new List<ODataProperty>(entityToSerialize.ResourceType.Properties.Count);
             foreach (ResourceProperty property in this.Provider.GetResourceSerializableProperties(this.CurrentContainer, entityToSerialize.ResourceType))
             {
-                if (property.TypeKind != ResourceTypeKind.EntityType)
+                if (property.TypeKind != ResourceTypeKind.EntityType
+                    && property.TypeKind != ResourceTypeKind.ComplexType
+                    && !(property.TypeKind == ResourceTypeKind.Collection && property.ResourceType.ElementType().ResourceTypeKind == ResourceTypeKind.ComplexType))
                 {
                     properties.Add(this.GetODataPropertyForEntityProperty(entityToSerialize, property));
                 }
@@ -535,7 +540,8 @@ namespace Microsoft.OData.Service.Serializers
                 var resourceProperty = projectionNode.Property;
                 if (resourceProperty != null)
                 {
-                    if (resourceProperty.TypeKind != ResourceTypeKind.EntityType)
+                    if (resourceProperty.TypeKind != ResourceTypeKind.EntityType && resourceProperty.TypeKind != ResourceTypeKind.ComplexType
+                        && !(resourceProperty.TypeKind == ResourceTypeKind.Collection && resourceProperty.ResourceType.ElementType().ResourceTypeKind == ResourceTypeKind.ComplexType))
                     {
                         properties.Add(this.GetODataPropertyForEntityProperty(entityToSerialize, resourceProperty));
                     }
@@ -549,6 +555,24 @@ namespace Microsoft.OData.Service.Serializers
             }
 
             return properties;
+        }
+
+        private void WriteAllNestedComplexProperties(EntityToSerialize entityToSerialize, IEnumerable<ProjectionNode> projectionNodesForCurrentResourceType)
+        {
+            Debug.Assert(entityToSerialize != null, "entityToSerialize != null");
+
+            var properties = projectionNodesForCurrentResourceType == null
+                ? this.Provider.GetResourceSerializableProperties(this.CurrentContainer, entityToSerialize.ResourceType)
+                : projectionNodesForCurrentResourceType.Select(p=>p.Property);
+
+            foreach (ResourceProperty property in properties)
+            {
+                if (property != null && (property.TypeKind == ResourceTypeKind.ComplexType
+                    || (property.TypeKind == ResourceTypeKind.Collection && property.ResourceType.ElementType().ResourceTypeKind == ResourceTypeKind.ComplexType)))
+                {
+                    ODataWriterHelper.WriteNestedResourceInfo(this.dataServicesODataWriter.InnerWriter, this.GetODataNestedResourceForEntityProperty(entityToSerialize, property));
+                }
+            }
         }
 
         /// <summary>Writes all the navigation properties of the specified entity type.</summary>
@@ -706,6 +730,32 @@ namespace Microsoft.OData.Service.Serializers
             }
 
             return odataProperty;
+        }
+
+        /// <summary>Gets ODataProperty for the given <paramref name="property"/>.</summary>
+        /// <param name="entityToSerialize">Entity that is currently being serialized.</param>
+        /// <param name="property">ResourceProperty instance in question.</param>
+        /// <returns>A instance of ODataProperty for the given <paramref name="property"/>.</returns>
+        private ODataNestedResourceInfoWrapper GetODataNestedResourceForEntityProperty(EntityToSerialize entityToSerialize, ResourceProperty property)
+        {
+            Debug.Assert(entityToSerialize != null, "entityToSerialize != null");
+            Debug.Assert(property != null && entityToSerialize.ResourceType.Properties.Contains(property), "property != null && currentResourceType.Properties.Contains(property)");
+
+            ODataItemWrapper odataPropertyResourceWrapper;
+            object propertyValue = WebUtil.GetPropertyValue(this.Provider, entityToSerialize.Entity, entityToSerialize.ResourceType, property, null);
+            odataPropertyResourceWrapper = this.GetPropertyResourceOrResourceSet(property.Name, property.ResourceType, propertyValue, false /*openProperty*/);
+
+            ODataNestedResourceInfo odataNestedInfo = new ODataNestedResourceInfo()
+            {
+                Name = property.Name,
+                IsCollection = property.Kind == ResourcePropertyKind.Collection
+            };
+
+            return new ODataNestedResourceInfoWrapper()
+            {
+                NestedResourceInfo = odataNestedInfo,
+                NestedResourceOrResourceSet = odataPropertyResourceWrapper
+            };
         }
 
         /// <summary>

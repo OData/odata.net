@@ -76,7 +76,7 @@ namespace Microsoft.Test.OData.Services.ODataWCFService
         public override void Handle(WildcardSelectItem item)
         {
             this.ProjectedEntryWrapper.Resource.Properties = this.OriginalEntryWrapper.Resource.Properties;
-            this.ProjectedEntryWrapper.NestedResourceInfos = this.OriginalEntryWrapper.NestedResourceInfos;
+            this.ProjectedEntryWrapper.NestedResourceInfoWrappers = this.OriginalEntryWrapper.NestedResourceInfoWrappers;
         }
 
         /// <summary>
@@ -92,7 +92,7 @@ namespace Microsoft.Test.OData.Services.ODataWCFService
             if (propertySegment != null || openPropertySegment != null)
             {
                 List<ODataProperty> properties = this.ProjectedEntryWrapper.Resource.Properties == null ? new List<ODataProperty>() : this.ProjectedEntryWrapper.Resource.Properties.ToList();
-                List<ODataNestedResourceInfoWrapper> nestedResourceInfos = this.ProjectedEntryWrapper.NestedResourceInfos == null ? new List<ODataNestedResourceInfoWrapper>() : this.ProjectedEntryWrapper.NestedResourceInfos.ToList();
+                List<ODataNestedResourceInfoWrapper> nestedResourceInfos = this.ProjectedEntryWrapper.NestedResourceInfoWrappers == null ? new List<ODataNestedResourceInfoWrapper>() : this.ProjectedEntryWrapper.NestedResourceInfoWrappers.ToList();
 
                 string propertyName = (propertySegment != null) ? propertySegment.Property.Name : openPropertySegment.Identifier;
                 var property = this.OriginalEntryWrapper.Resource.Properties.SingleOrDefault(p => p.Name == propertyName);
@@ -102,7 +102,7 @@ namespace Microsoft.Test.OData.Services.ODataWCFService
                 }
                 else
                 {
-                    var nestedInfo = this.OriginalEntryWrapper.NestedResourceInfos.SingleOrDefault(n => n.NestedResourceInfo.Name == propertyName);
+                    var nestedInfo = this.OriginalEntryWrapper.NestedResourceInfoWrappers.SingleOrDefault(n => n.NestedResourceInfo.Name == propertyName);
                     if (nestedInfo != null)
                     {
                         nestedResourceInfos.Add(nestedInfo);
@@ -110,7 +110,7 @@ namespace Microsoft.Test.OData.Services.ODataWCFService
                 }
 
                 this.ProjectedEntryWrapper.Resource.Properties = properties.AsEnumerable();
-                this.ProjectedEntryWrapper.NestedResourceInfos = nestedResourceInfos.ToList();
+                this.ProjectedEntryWrapper.NestedResourceInfoWrappers = nestedResourceInfos.ToList();
             }
         }
 

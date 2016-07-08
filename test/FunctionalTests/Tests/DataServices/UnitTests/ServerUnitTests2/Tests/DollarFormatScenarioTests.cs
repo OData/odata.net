@@ -28,6 +28,7 @@ namespace AstoriaUnitTests.Tests
         private const string applicationAtomXml = "application/atom+xml;type=feed;charset=utf-8";
         private const string applicationJsonLight = "application/json;odata.metadata=minimal;odata.streaming=true;IEEE754Compatible=false;charset=utf-8";
 
+        [Ignore]
         [TestCategory("Partition2"), TestMethod]
         public void DollarFormatSmokeTest()
         {

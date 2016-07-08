@@ -2131,19 +2131,6 @@ namespace AstoriaUnitTests.Tests
                 }
             }
 
-            [TestMethod, Variation("making sure that we detect new types when loading service operation metadata")]
-            public void ShouldDetectNewTypesWhenLoadingServiceOperationMetadata()
-            {
-                using (TestWebRequest request = TestWebRequest.CreateForInProcess())
-                {
-                    request.RequestUriString = "/MyServiceOperation";
-                    request.Accept = UnitTestsUtil.JsonMimeType;
-                    request.ServiceType = typeof(TestDataService8);
-                    request.HttpMethod = "GET";
-                    request.SendRequest();
-                }
-            }
-
             public class TestDataService8 : DataService<CustomDataContext>
             {
                 public static void InitializeService(DataServiceConfiguration configuration)

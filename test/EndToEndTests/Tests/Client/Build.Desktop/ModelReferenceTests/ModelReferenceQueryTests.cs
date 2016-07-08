@@ -279,7 +279,14 @@ namespace Microsoft.Test.OData.Tests.Client.ModelReferenceTests
 
             using (var messageReader = new ODataMessageReader(responseMessage, readerSettings, Model))
             {
-                messageReader.ReadProperty();
+                var odatareader = messageReader.CreateODataResourceReader();
+                while (odatareader.Read())
+                {
+                    if (odatareader.State == ODataReaderState.ResourceEnd)
+                    {
+                        Assert.IsNotNull(odatareader.Item as ODataResource);
+                    }
+                }
             }
         }
 
@@ -614,11 +621,19 @@ namespace Microsoft.Test.OData.Tests.Client.ModelReferenceTests
             var responseMessage = requestMessage.GetResponse();
             Assert.AreEqual(200, responseMessage.StatusCode);
 
-            ODataProperty perp;
+            ODataResource perp = null;
             using (var messageReader = new ODataMessageReader(responseMessage, readerSettings, Model))
             {
-                perp = messageReader.ReadProperty();
-                Assert.AreEqual(1, (perp.Value as ODataComplexValue).Properties.Single(p => p.Name == "Severity").Value);
+                var odataReader = messageReader.CreateODataResourceReader();
+                while (odataReader.Read())
+                {
+                    if (odataReader.State == ODataReaderState.ResourceEnd)
+                    {
+                        perp = odataReader.Item as ODataResource;
+                    }
+                }
+
+                Assert.AreEqual(1, perp.Properties.Single(p => p.Name == "Severity").Value);
             }
         }
 

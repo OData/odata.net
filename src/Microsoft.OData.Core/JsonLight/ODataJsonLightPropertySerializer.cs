@@ -242,13 +242,6 @@ namespace Microsoft.OData.JsonLight
                 return;
             }
 
-            ODataComplexValue complexValue = value as ODataComplexValue;
-            if (complexValue != null)
-            {
-                this.WriteComplexProperty(complexValue, isOpenPropertyType);
-                return;
-            }
-
             ODataEnumValue enumValue = value as ODataEnumValue;
             if (enumValue != null)
             {
@@ -360,23 +353,6 @@ namespace Microsoft.OData.JsonLight
                 this.JsonWriter.WriteName(property.Name);
                 this.JsonLightValueSerializer.WriteNullValue();
             }
-        }
-
-        /// <summary>
-        /// Writes a complex property.
-        /// </summary>
-        /// <param name="complexValue">The complex value to be written</param>
-        /// <param name="isOpenPropertyType">If the property is open.</param>
-        private void WriteComplexProperty(
-            ODataComplexValue complexValue,
-            bool isOpenPropertyType)
-        {
-            if (!this.currentPropertyInfo.IsTopLevel)
-            {
-                this.JsonWriter.WriteName(this.currentPropertyInfo.PropertyName);
-            }
-
-            this.JsonLightValueSerializer.WriteComplexValue(complexValue, this.currentPropertyInfo.MetadataType.TypeReference, this.currentPropertyInfo.IsTopLevel, isOpenPropertyType, this.CreateDuplicatePropertyNameChecker());
         }
 
         /// <summary>

@@ -19,6 +19,7 @@ namespace Microsoft.OData.Service
         /// </summary>
         private readonly ODataWriter innerWriter;
 
+        internal ODataWriter InnerWriter { get { return innerWriter; } }
         /// <summary>
         /// Creates a new instance of DataServiceODataWriter.
         /// </summary>

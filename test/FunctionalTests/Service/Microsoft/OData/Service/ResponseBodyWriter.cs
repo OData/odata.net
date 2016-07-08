@@ -243,6 +243,15 @@ namespace Microsoft.OData.Service
                         Debug.Assert(this.requestDescription.TargetKind != RequestTargetKind.Resource || this.requestDescription.LinkUri, "this.requestDescription.TargetKind != RequestTargetKind.Resource || this.requestDescription.LinkUri");
                         NonEntitySerializer nonEntitySerializer = new NonEntitySerializer(this.requestDescription, this.AbsoluteServiceUri, this.service, this.messageWriter);
                         responseSerializer = nonEntitySerializer;
+                        if (this.requestDescription.TargetKind == RequestTargetKind.ComplexObject)
+                        {
+                            ODataUtils.SetHeadersForPayload(this.messageWriter, ODataPayloadKind.Resource);
+                        }
+                        if (this.requestDescription.TargetKind == RequestTargetKind.Collection
+                            && this.requestDescription.TargetResourceType.ElementType().ResourceTypeKind == ResourceTypeKind.ComplexType)
+                        {
+                            ODataUtils.SetHeadersForPayload(this.messageWriter, ODataPayloadKind.ResourceSet);
+                        }
                         nonEntitySerializer.WriteRequest(this.queryResults);
                         break;
 

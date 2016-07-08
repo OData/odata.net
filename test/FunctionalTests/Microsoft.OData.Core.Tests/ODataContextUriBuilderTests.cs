@@ -28,6 +28,7 @@ namespace Microsoft.OData.Tests
         private EdmModel edmModel;
         private EdmEntitySet citySet;
         private EdmSingleton singletonCity;
+        private EdmComplexType addressType;
         private EdmEntityType cityType;
         private EdmEntityType capitolCityType;
         private ODataContextUriBuilder responseContextUriBuilder;
@@ -383,11 +384,13 @@ namespace Microsoft.OData.Tests
         }
 
         [Fact]
-        public void BuildPropertyContextUriForComplexPropertyValue()
+        public void BuildResourceContextUriForComplexResource()
         {
-            ODataComplexValue value = new ODataComplexValue { TypeName = "FQNS.FakeType" };
-            var contextUri = this.CreatePropertyContextUri(value);
-            contextUri.OriginalString.Should().Be(BuildExpectedContextUri("#FQNS.FakeType"));
+            var typeContext = ODataResourceTypeContext.Create( /*serializationInfo*/null,
+                null, null, this.addressType, this.edmModel, throwIfMissingTypeInfo: false);
+            ODataResource value = new ODataResource { TypeName = "TestModel.Address" };
+            var contextUri = this.CreateEntryContextUri(typeContext, true);
+            contextUri.OriginalString.Should().Be(BuildExpectedContextUri("#TestModel.Address"));
         }
 
         [Fact]
@@ -399,12 +402,14 @@ namespace Microsoft.OData.Tests
         }
 
         [Fact]
-        public void BuildPropertyContextUriForComplexPropertyValueWithNullAnnotation()
+        public void BuildResourceContextUriForComplexWithNullAnnotation()
         {
-            ODataComplexValue value = new ODataComplexValue { TypeName = "FQNS.FakeType" };
+            var typeContext = ODataResourceTypeContext.Create( /*serializationInfo*/null,
+                null, null, this.addressType, this.edmModel, throwIfMissingTypeInfo: true);
+            ODataResource value = new ODataResource { TypeName = "TestModel.Address" };
             value.SetAnnotation(new SerializationTypeNameAnnotation { TypeName = null });
-            var contextUri = this.CreatePropertyContextUri(value);
-            contextUri.OriginalString.Should().Be(BuildExpectedContextUri("#FQNS.FakeType"));
+            var contextUri = this.CreateEntryContextUri(typeContext, true);
+            contextUri.OriginalString.Should().Be(BuildExpectedContextUri("#TestModel.Address"));
         }
 
         [Fact]
@@ -426,15 +431,6 @@ namespace Microsoft.OData.Tests
         }
 
         [Fact]
-        public void BuildPropertyContextUriForComplexPropertyValueWithNonNullAnnotation()
-        {
-            ODataComplexValue value = new ODataComplexValue { TypeName = "FQNS.FromObject" };
-            value.SetAnnotation(new SerializationTypeNameAnnotation { TypeName = "FQNS.FromAnnotation" });
-            var contextUri = this.CreatePropertyContextUri(value);
-            contextUri.OriginalString.Should().Be(BuildExpectedContextUri("#FQNS.FromAnnotation"));
-        }
-
-        [Fact]
         public void BuildPropertyContextUriForCollectionPropertyValueWithNonNullAnnotation()
         {
             ODataCollectionValue value = new ODataCollectionValue { TypeName = "FQNS.FromObject" };
@@ -453,19 +449,11 @@ namespace Microsoft.OData.Tests
         }
 
         [Fact]
-        public void BuildPropertyContextUriForComplexPropertyValueWithNoNameShouldFail()
-        {
-            Action withStream = () => this.CreatePropertyContextUri(new ODataComplexValue());
-            withStream.ShouldThrow<ODataException>().WithMessage(Strings.ODataContextUriBuilder_TypeNameMissingForProperty);
-        }
-
-        [Fact]
         public void BuildPropertyContextUriForCollectionPropertyValueWithNoNameShouldFail()
         {
             Action withStream = () => this.CreatePropertyContextUri(new ODataCollectionValue());
             withStream.ShouldThrow<ODataException>().WithMessage(Strings.ODataContextUriBuilder_TypeNameMissingForProperty);
         }
-
 
         [Fact]
         public void BuildPropertyContextUriForStreamValueShouldFail()
@@ -624,7 +612,7 @@ namespace Microsoft.OData.Tests
             EdmEntityContainer defaultContainer = new EdmEntityContainer("TestModel", "DefaultContainer");
             this.edmModel.AddElement(defaultContainer);
 
-            EdmComplexType addressType = new EdmComplexType("TestModel", "Address");
+            addressType = new EdmComplexType("TestModel", "Address");
             addressType.AddStructuralProperty("Street", EdmCoreModel.Instance.GetString(/*isNullable*/false));
             addressType.AddStructuralProperty("Zip", EdmCoreModel.Instance.GetString(/*isNullable*/false));
 

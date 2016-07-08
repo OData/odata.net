@@ -760,7 +760,7 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
                                 },
                         }
                 },
-                NestedResourceInfos = new List<ODataNestedResourceInfoWrapper>()
+                NestedResourceInfoWrappers = new List<ODataNestedResourceInfoWrapper>()
                 {
                     new ODataNestedResourceInfoWrapper()
                     {
@@ -960,7 +960,7 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
                     }
                 },
 
-                NestedResourceInfos = new List<ODataNestedResourceInfoWrapper>()
+                NestedResourceInfoWrappers = new List<ODataNestedResourceInfoWrapper>()
                 {
                     new ODataNestedResourceInfoWrapper()
                     {
@@ -1044,7 +1044,7 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
                             }
                     }
                 },
-                NestedResourceInfos = new List<ODataNestedResourceInfoWrapper>()
+                NestedResourceInfoWrappers = new List<ODataNestedResourceInfoWrapper>()
                 {
                     new ODataNestedResourceInfoWrapper()
                     {
@@ -1347,7 +1347,7 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
             return new ODataResourceWrapper()
             {
                 Resource = orderEntry2,
-                NestedResourceInfos = new List<ODataNestedResourceInfoWrapper>() { Concurrency_nestedInfo}
+                NestedResourceInfoWrappers = new List<ODataNestedResourceInfoWrapper>() { Concurrency_nestedInfo }
             };
         }
 
@@ -1458,7 +1458,7 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
             return new ODataResourceWrapper()
             {
                 Resource = customerEntry,
-                NestedResourceInfos = new List<ODataNestedResourceInfoWrapper>()
+                NestedResourceInfoWrappers = new List<ODataNestedResourceInfoWrapper>()
                 {
                     primaryContactInfo_nestedInfoWrapper,
                     BackupContactInfo_nestedInfoWrapper,

@@ -231,10 +231,10 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
         #endregion Primitive properties
 
         #region Complex properties
-        private IEnumerable<PayloadWriterTestDescriptor<ODataProperty>> CreateComplexPropertyDescriptors()
+        private IEnumerable<PayloadWriterTestDescriptor<ODataItem[]>> CreateComplexPropertyDescriptors()
         {
             EdmModel model = new EdmModel();
-            ODataProperty[] properties = ObjectModelUtils.CreateDefaultComplexProperties(model);
+            ODataItem[][] properties = ObjectModelUtils.CreateDefaultComplexProperties(model);
             model.Fixup();
 
             var owningType = MetadataUtils.EntityTypes(model).Single(et => et.Name == "EntryWithComplexProperties");
@@ -263,26 +263,17 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
 
             for (int i = 0; i < properties.Length; ++i)
             {
-                ODataProperty property = properties[i];
+                ODataItem[] property = properties[i];
                 string[] jsonLightRequestResult = propertiesJsonLightRequestResults[i];
                 string[] jsonLightResponseResult = propertiesJsonLightResponseResults[i];
 
-                yield return new PayloadWriterTestDescriptor<ODataProperty>(
+                yield return new PayloadWriterTestDescriptor<ODataItem[]>(
                     this.Settings,
                     property,
                     (testConfiguration) =>
                     {
                         if (testConfiguration.Format == ODataFormat.Json)
                         {
-                            if (((ODataComplexValue)property.Value).TypeName == null)
-                            {
-                                return new JsonWriterTestExpectedResults(this.Settings.ExpectedResultSettings)
-                                {
-                                    // TODO: Need to localize error messages that missed string freeze deadline.
-                                    ExpectedException = new ODataException("A type name was not provided for an instance of ODataComplexValue.")
-                                };
-                            }
-
                             return new JsonWriterTestExpectedResults(this.Settings.ExpectedResultSettings)
                             {
                                 Json = JsonLightWriterUtils.CombineLines(testConfiguration.IsRequest ? jsonLightRequestResult : jsonLightResponseResult),
@@ -368,19 +359,6 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                     "$(Indent)]",
                     "}"
                 ),
-                StringUtils.Flatten(
-                    "{",
-                    "$(Indent)" +
-                        "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataContextAnnotationName + "\":\"" + JsonLightConstants.DefaultMetadataDocumentUri + "#Collection(My.AddressType)\"," +
-                        "\"" + JsonLightConstants.ODataValuePropertyName + "\":[",
-                    "$(Indent)$(Indent){",
-                    "$(Indent)$(Indent)$(Indent)\"Street\":\"One Redmond Way\",\"City\":\" Redmond\"",
-                    "$(Indent)$(Indent)},{",
-                    "$(Indent)$(Indent)$(Indent)\"Street\":\"Am Euro Platz 3\",\"City\":\"Vienna \"",
-                    "$(Indent)$(Indent)}",
-                    "$(Indent)]",
-                    "}"
-                ),
                 new string[0],
                 new string[0],
             };
@@ -430,13 +408,101 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 };
             }
         }
+
+        private PayloadWriterTestDescriptor<ODataItem[]> CreateComplexCollectionPropertyDescriptors()
+        {
+            EdmModel model = new EdmModel();
+            var property = CreateDefaultComplexCollectionProperties(model);
+            model.Fixup();
+
+            var owningType = MetadataUtils.EntityTypes(model).Single(et => et.Name == "EntryWithCollectionProperties");
+
+            Func<bool, string[]> propertiesJsonLightResultsFunc = isRequest => new string[]
+            {
+                "{",
+                "$(Indent)" +
+                    "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataContextAnnotationName + "\":\"" + JsonLightConstants.DefaultMetadataDocumentUri + "#Collection(My.AddressType)\"," +
+                    "\"" + JsonLightConstants.ODataValuePropertyName + "\":[",
+                "$(Indent)$(Indent){",
+                "$(Indent)$(Indent)$(Indent)\"Street\":\"One Redmond Way\",\"City\":\" Redmond\"",
+                "$(Indent)$(Indent)},{",
+                "$(Indent)$(Indent)$(Indent)\"Street\":\"Am Euro Platz 3\",\"City\":\"Vienna \"",
+                "$(Indent)$(Indent)}",
+                "$(Indent)]",
+                "}"
+            };
+
+            string[] jsonLightRequestResultLines = propertiesJsonLightResultsFunc(true);
+            string[] jsonLightResponseResultLines = propertiesJsonLightResultsFunc(false);
+
+            return new PayloadWriterTestDescriptor<ODataItem[]>(
+                this.Settings,
+                property,
+                (testConfiguration) =>
+                {
+                    if (testConfiguration.Format == ODataFormat.Json)
+                    {
+                        return new JsonWriterTestExpectedResults(this.Settings.ExpectedResultSettings)
+                        {
+                            Json = JsonLightWriterUtils.CombineLines(testConfiguration.IsRequest ? jsonLightRequestResultLines : jsonLightResponseResultLines),
+                            FragmentExtractor = testConfiguration.IsRequest
+                                ? (Func<JsonValue, JsonValue>)null
+                                : (result) => result
+                        };
+                    }
+                    else
+                    {
+                        string formatName = testConfiguration.Format == null ? "null" : testConfiguration.Format.GetType().Name;
+                        throw new NotSupportedException("Format " + formatName + " + is not supported.");
+                    }
+                })
+            {
+                Model = model,
+                PayloadEdmElementContainer = owningType
+            };
+        }
+
+        public static ODataItem[] CreateDefaultComplexCollectionProperties(EdmModel model = null)
+        {
+            if (model != null)
+            {
+                var addressType = model.ComplexType("AddressType", "My")
+                    .Property("Street", EdmPrimitiveTypeKind.String)
+                    .Property("City", EdmPrimitiveTypeKind.String);
+
+                model.EntityType("EntryWithCollectionProperties", "TestModel")
+                .Property("ComplexCollection", new EdmCollectionTypeReference(new EdmCollectionType(new EdmComplexTypeReference(addressType, true))));
+            }
+
+            return new ODataItem[]
+            {
+                new ODataResourceSet(){TypeName = EntityModelUtils.GetCollectionTypeName("My.AddressType")},
+                new ODataResource()
+                {
+                    TypeName = "My.AddressType",
+                    Properties = new []
+                    {
+                        new ODataProperty() { Name = "Street", Value = "One Redmond Way" },
+                        new ODataProperty() { Name = "City", Value = " Redmond" },
+                    }
+                },
+                new ODataResource()
+                {
+                    TypeName = null,
+                    Properties = new []
+                    {
+                        new ODataProperty() { Name = "Street", Value = "Am Euro Platz 3" },
+                        new ODataProperty() { Name = "City", Value = "Vienna " },
+                    }
+                }
+            };
+        }
         #endregion Collection properties
 
         [TestMethod, Variation(Description = "Test property writing.")]
         public void PropertyTests()
         {
             var testDescriptors = this.CreatePrimitiveTopLevelPropertyDescriptors()
-                .Concat(this.CreateComplexPropertyDescriptors())
                 .Concat(this.CreateCollectionPropertyDescriptors());
 
             this.CombinatorialEngineProvider.RunCombinations(
@@ -447,6 +513,93 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                     testConfiguration = testConfiguration.Clone();
                     testConfiguration.MessageWriterSettings.SetServiceDocumentUri(ServiceDocumentUri);
                     testDescriptor.RunTopLevelPropertyPayload(testConfiguration, baselineLogger: this.Logger);
+                });
+        }
+
+        [TestMethod, Variation(Description = "Test property writing.")]
+        public void ComplexPropertyTests()
+        {
+            var testDescriptors = this.CreateComplexPropertyDescriptors();
+
+            this.CombinatorialEngineProvider.RunCombinations(
+                testDescriptors,
+                this.WriterTestConfigurationProvider.ExplicitFormatConfigurationsWithIndent,
+                (testDescriptor, testConfiguration) =>
+                {
+                    testConfiguration = testConfiguration.Clone();
+                    testConfiguration.MessageWriterSettings.SetServiceDocumentUri(ServiceDocumentUri);
+                    testDescriptor.RunTopLevelPropertyPayload(testConfiguration, baselineLogger: this.Logger,
+                        writeAction:
+
+                        (messageWriter) =>
+                        {
+                            var resourceWriter = messageWriter.CreateODataResourceWriter();
+                            foreach(var item in testDescriptor.PayloadItems.Single())
+                            {
+                                var resource = item as ODataResource;
+                                if (resource != null)
+                                {
+                                    resourceWriter.WriteStart(resource);
+                                }
+                                else
+                                {
+                                    var nestedInfo = item as ODataNestedResourceInfo;
+                                    if (nestedInfo != null)
+                                    {
+                                        resourceWriter.WriteStart(nestedInfo);
+                                    }
+                                }
+                            }
+
+                            foreach (var item in testDescriptor.PayloadItems.Single())
+                            {
+                                resourceWriter.WriteEnd();
+                            }
+                        });
+                });
+        }
+
+        [TestMethod, Variation(Description = "Test property writing.")]
+        public void ComplexCollectionPropertyTests()
+        {
+            var testDescriptors = new[] { this.CreateComplexCollectionPropertyDescriptors() };
+
+            this.CombinatorialEngineProvider.RunCombinations(
+                testDescriptors,
+                this.WriterTestConfigurationProvider.ExplicitFormatConfigurationsWithIndent,
+                (testDescriptor, testConfiguration) =>
+                {
+                    testConfiguration = testConfiguration.Clone();
+                    testConfiguration.MessageWriterSettings.SetServiceDocumentUri(ServiceDocumentUri);
+                    testDescriptor.RunTopLevelPropertyPayload(testConfiguration, baselineLogger: this.Logger,
+                        writeAction:
+
+                        (messageWriter) =>
+                        {
+                            var resourceWriter = messageWriter.CreateODataResourceSetWriter();
+                            foreach (var item in testDescriptor.PayloadItems.Single())
+                            {
+                                var resource = item as ODataResource;
+                                if (resource != null)
+                                {
+                                    resourceWriter.WriteStart(resource);
+                                    resourceWriter.WriteEnd();
+                                }
+                                else
+                                {
+                                    var set = item as ODataResourceSet;
+                                    if (set != null)
+                                    {
+                                        resourceWriter.WriteStart(set);
+                                    }
+                                }
+                            }
+
+                            foreach (var item in testDescriptor.PayloadItems.Single().OfType<ODataResourceSet>())
+                            {
+                                resourceWriter.WriteEnd();
+                            }
+                        });
                 });
         }
 

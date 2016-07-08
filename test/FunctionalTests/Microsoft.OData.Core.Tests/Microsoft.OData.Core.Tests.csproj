@@ -73,6 +73,7 @@
     <Compile Include="AnnotationFilterTests.cs" />
     <Compile Include="ArgumentValidationUtils.cs" />
     <Compile Include="IntegrationTests\Reader\JsonLight\UriParameterReaderIntegrationTests.cs" />
+    <Compile Include="IntegrationTests\Writer\JsonLight\ODataJsonLightWriterComplexIntegrationTests.cs" />
     <Compile Include="IntegrationTests\Writer\JsonLight\UriParameterWriterIntegrationTests.cs" />
     <Compile Include="JsonLight\ODataJsonLightEntryAndFeedDeserializerUndeclaredAnnotationTests.cs" />
     <Compile Include="Json\MockJsonWriterFactory.cs" />

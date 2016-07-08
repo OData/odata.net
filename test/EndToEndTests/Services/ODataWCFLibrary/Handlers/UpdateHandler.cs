@@ -215,8 +215,9 @@ namespace Microsoft.Test.OData.Services.ODataWCFService.Handlers
 
         private void ProcessUpdateRequestBody(IODataRequestMessage requestMessage, IODataResponseMessage responseMessage, object targetObject, bool isUpsert)
         {
-            if (this.QueryContext.Target.NavigationSource != null
+            if ((this.QueryContext.Target.NavigationSource != null
                 && (this.QueryContext.Target.TypeKind == EdmTypeKind.Entity || this.QueryContext.Target.TypeKind == EdmTypeKind.Complex))
+                || (this.QueryContext.Target.Property != null && this.QueryContext.Target.TypeKind == EdmTypeKind.Complex))
             {
                 using (var messageReader = new ODataMessageReader(requestMessage, this.GetReaderSettings()))
                 {
@@ -417,20 +418,6 @@ namespace Microsoft.Test.OData.Services.ODataWCFService.Handlers
                                     break;
                                 }
                         }
-                    }
-                }
-            }
-            else if (this.QueryContext.Target.Property != null && this.QueryContext.Target.TypeKind == EdmTypeKind.Complex)
-            {
-                using (var messageReader = new ODataMessageReader(requestMessage, this.GetReaderSettings()))
-                {
-                    var property = messageReader.ReadProperty(this.QueryContext.Target.Property);
-                    ODataComplexValue complexValue = property.Value as ODataComplexValue;
-
-                    foreach (var p in complexValue.Properties)
-                    {
-                        if (Utility.IsETagProperty(targetObject, property.Name)) continue;
-                        this.DataSource.UpdateProvider.Update(targetObject, p.Name, p.Value);
                     }
                 }
             }

@@ -6,9 +6,21 @@
 
 using Microsoft.OData;
 
+#if ODATA_SERVICE
+namespace Microsoft.OData.Service
+#elif ODATA_CLIENT
+namespace Microsoft.OData.Client
+#else
 namespace Microsoft.Test.OData
+#endif
 {
+#if ODATA_SERVICE
+    internal static class ODataWriterHelper
+#elif ODATA_CLIENT
+    internal static class ODataWriterHelper
+#else
     public static class ODataWriterHelper
+#endif
     {
         public static void WriteResourceSet(ODataWriter writer, ODataResourceSetWrapper resourceSetWrapper)
         {
@@ -29,9 +41,9 @@ namespace Microsoft.Test.OData
         {
             writer.WriteStart(resourceWrapper.Resource);
 
-            if (resourceWrapper.NestedResourceInfos != null)
+            if (resourceWrapper.NestedResourceInfoWrappers != null)
             {
-                foreach (var nestedResourceInfoWrapper in resourceWrapper.NestedResourceInfos)
+                foreach (var nestedResourceInfoWrapper in resourceWrapper.NestedResourceInfoWrappers)
                 {
                     WriteNestedResourceInfo(writer, nestedResourceInfoWrapper);
                 }
@@ -46,7 +58,6 @@ namespace Microsoft.Test.OData
 
             if (nestedResourceInfo.NestedResourceOrResourceSet != null)
             {
-                var nestedResourceOrResourceSet = nestedResourceInfo.NestedResourceOrResourceSet;
                 WriteItem(writer, nestedResourceInfo.NestedResourceOrResourceSet);
             }
 

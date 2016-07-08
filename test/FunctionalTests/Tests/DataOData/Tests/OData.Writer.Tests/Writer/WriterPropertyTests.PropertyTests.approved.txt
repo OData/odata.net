@@ -752,129 +752,81 @@ Model Present: true
 
 Combination: 189; TestConfiguration = Format: JsonLight, Request: True, Synchronous: True
 Model Present: true
-{"@odata.context":"http://odata.org/$metadata#My.AddressType","@odata.type":"#My.AddressType","Street":"One Redmond Way","City":" Redmond"}
+{"@odata.context":"http://odata.org/$metadata#Collection(Edm.String)","@odata.type":"#Collection(String)","value":[]}
 
 Combination: 190; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
 Model Present: true
-{"@odata.context":"http://odata.org/$metadata#My.AddressType","Street":"One Redmond Way","City":" Redmond"}
+{"@odata.context":"http://odata.org/$metadata#Collection(Edm.String)","value":[]}
 
 Combination: 191; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
 Model Present: true
-{"@odata.context":"http://odata.org/$metadata#My.AddressType","@odata.type":"#My.AddressType","Street":"One Redmond Way","City":" Redmond"}
+{"@odata.context":"http://odata.org/$metadata#Collection(Edm.String)","@odata.type":"#Collection(String)","value":[]}
 
 Combination: 192; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
 Model Present: true
-{"@odata.context":"http://odata.org/$metadata#My.AddressType","Street":"One Redmond Way","City":" Redmond"}
+{"@odata.context":"http://odata.org/$metadata#Collection(Edm.String)","value":[]}
 
 Combination: 193; TestConfiguration = Format: JsonLight, Request: True, Synchronous: True
 Model Present: true
-{"@odata.context":"http://odata.org/$metadata#My.NestedAddressType","@odata.type":"#My.NestedAddressType","Street":{"StreetName":"One Redmond Way","Number":1234},"City":"Redmond "}
+{"@odata.context":"http://odata.org/$metadata#Collection(Edm.Int32)","@odata.type":"#Collection(Int32)","value":[0,1,2,3,4,5,6,7,8,9]}
 
 Combination: 194; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
 Model Present: true
-{"@odata.context":"http://odata.org/$metadata#My.NestedAddressType","Street":{"StreetName":"One Redmond Way","Number":1234},"City":"Redmond "}
+{"@odata.context":"http://odata.org/$metadata#Collection(Edm.Int32)","value":[0,1,2,3,4,5,6,7,8,9]}
 
 Combination: 195; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
 Model Present: true
-{"@odata.context":"http://odata.org/$metadata#My.NestedAddressType","@odata.type":"#My.NestedAddressType","Street":{"StreetName":"One Redmond Way","Number":1234},"City":"Redmond "}
+{"@odata.context":"http://odata.org/$metadata#Collection(Edm.Int32)","@odata.type":"#Collection(Int32)","value":[0,1,2,3,4,5,6,7,8,9]}
 
 Combination: 196; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
 Model Present: true
-{"@odata.context":"http://odata.org/$metadata#My.NestedAddressType","Street":{"StreetName":"One Redmond Way","Number":1234},"City":"Redmond "}
+{"@odata.context":"http://odata.org/$metadata#Collection(Edm.Int32)","value":[0,1,2,3,4,5,6,7,8,9]}
 
 Combination: 197; TestConfiguration = Format: JsonLight, Request: True, Synchronous: True
 Model Present: true
-{"@odata.context":"http://odata.org/$metadata#Collection(Edm.String)","@odata.type":"#Collection(String)","value":[]}
+{"@odata.context":"http://odata.org/$metadata#Collection(Edm.Int32)","@odata.type":"#Collection(Int32)","value":[0,1,2]}
 
 Combination: 198; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
 Model Present: true
-{"@odata.context":"http://odata.org/$metadata#Collection(Edm.String)","value":[]}
+{"@odata.context":"http://odata.org/$metadata#Collection(Edm.Int32)","value":[0,1,2]}
 
 Combination: 199; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
 Model Present: true
-{"@odata.context":"http://odata.org/$metadata#Collection(Edm.String)","@odata.type":"#Collection(String)","value":[]}
+{"@odata.context":"http://odata.org/$metadata#Collection(Edm.Int32)","@odata.type":"#Collection(Int32)","value":[0,1,2]}
 
 Combination: 200; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
 Model Present: true
-{"@odata.context":"http://odata.org/$metadata#Collection(Edm.String)","value":[]}
+{"@odata.context":"http://odata.org/$metadata#Collection(Edm.Int32)","value":[0,1,2]}
 
 Combination: 201; TestConfiguration = Format: JsonLight, Request: True, Synchronous: True
 Model Present: true
-{"@odata.context":"http://odata.org/$metadata#Collection(Edm.Int32)","@odata.type":"#Collection(Int32)","value":[0,1,2,3,4,5,6,7,8,9]}
+{"@odata.context":"http://odata.org/$metadata#Collection(Edm.String)","@odata.type":"#Collection(String)","value":["One","Two","Three"]}
 
 Combination: 202; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
 Model Present: true
-{"@odata.context":"http://odata.org/$metadata#Collection(Edm.Int32)","value":[0,1,2,3,4,5,6,7,8,9]}
+{"@odata.context":"http://odata.org/$metadata#Collection(Edm.String)","value":["One","Two","Three"]}
 
 Combination: 203; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
 Model Present: true
-{"@odata.context":"http://odata.org/$metadata#Collection(Edm.Int32)","@odata.type":"#Collection(Int32)","value":[0,1,2,3,4,5,6,7,8,9]}
+{"@odata.context":"http://odata.org/$metadata#Collection(Edm.String)","@odata.type":"#Collection(String)","value":["One","Two","Three"]}
 
 Combination: 204; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
 Model Present: true
-{"@odata.context":"http://odata.org/$metadata#Collection(Edm.Int32)","value":[0,1,2,3,4,5,6,7,8,9]}
+{"@odata.context":"http://odata.org/$metadata#Collection(Edm.String)","value":["One","Two","Three"]}
 
 Combination: 205; TestConfiguration = Format: JsonLight, Request: True, Synchronous: True
 Model Present: true
-{"@odata.context":"http://odata.org/$metadata#Collection(Edm.Int32)","@odata.type":"#Collection(Int32)","value":[0,1,2]}
+{"@odata.context":"http://odata.org/$metadata#Collection(Edm.Geography)","@odata.type":"#Collection(Geography)","value":[{"type":"GeometryCollection","geometries":[{"type":"Point","coordinates":[-12.0,-19.99]}],"crs":{"type":"name","properties":{"name":"EPSG:4326"}}},{"type":"LineString","coordinates":[[-110.0,33.1],[-110.0,35.97]],"crs":{"type":"name","properties":{"name":"EPSG:4326"}}},{"type":"MultiLineString","coordinates":[[[11.2,10.2],[11.6,11.9]],[[17.2,16.2],[19.6,18.9]]],"crs":{"type":"name","properties":{"name":"EPSG:4326"}}},{"type":"MultiPoint","coordinates":[[11.2,10.2],[11.6,11.9]],"crs":{"type":"name","properties":{"name":"EPSG:4326"}}},{"type":"MultiPolygon","coordinates":[[[[11.2,10.2],[11.6,11.9],[87.75,11.45],[11.2,10.2]],[[17.2,16.2],[19.6,18.9],[87.75,11.45],[17.2,16.2]]]],"crs":{"type":"name","properties":{"name":"EPSG:4326"}}},{"type":"Point","coordinates":[-110.0,33.1],"crs":{"type":"name","properties":{"name":"EPSG:4326"}}},{"type":"Polygon","coordinates":[[[-110.0,33.1],[-110.15,35.97],[87.75,11.45],[-110.0,33.1]],[[-110.0,35.97],[-110.15,36.97],[23.18,45.23],[-110.0,35.97]]],"crs":{"type":"name","properties":{"name":"EPSG:4326"}}},{"type":"Point","coordinates":[-100.0,32.0],"crs":{"type":"name","properties":{"name":"EPSG:4326"}}}]}
 
 Combination: 206; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
 Model Present: true
-{"@odata.context":"http://odata.org/$metadata#Collection(Edm.Int32)","value":[0,1,2]}
+{"@odata.context":"http://odata.org/$metadata#Collection(Edm.Geography)","value":[{"type":"GeometryCollection","geometries":[{"type":"Point","coordinates":[-12.0,-19.99]}],"crs":{"type":"name","properties":{"name":"EPSG:4326"}}},{"type":"LineString","coordinates":[[-110.0,33.1],[-110.0,35.97]],"crs":{"type":"name","properties":{"name":"EPSG:4326"}}},{"type":"MultiLineString","coordinates":[[[11.2,10.2],[11.6,11.9]],[[17.2,16.2],[19.6,18.9]]],"crs":{"type":"name","properties":{"name":"EPSG:4326"}}},{"type":"MultiPoint","coordinates":[[11.2,10.2],[11.6,11.9]],"crs":{"type":"name","properties":{"name":"EPSG:4326"}}},{"type":"MultiPolygon","coordinates":[[[[11.2,10.2],[11.6,11.9],[87.75,11.45],[11.2,10.2]],[[17.2,16.2],[19.6,18.9],[87.75,11.45],[17.2,16.2]]]],"crs":{"type":"name","properties":{"name":"EPSG:4326"}}},{"type":"Point","coordinates":[-110.0,33.1],"crs":{"type":"name","properties":{"name":"EPSG:4326"}}},{"type":"Polygon","coordinates":[[[-110.0,33.1],[-110.15,35.97],[87.75,11.45],[-110.0,33.1]],[[-110.0,35.97],[-110.15,36.97],[23.18,45.23],[-110.0,35.97]]],"crs":{"type":"name","properties":{"name":"EPSG:4326"}}},{"type":"Point","coordinates":[-100.0,32.0],"crs":{"type":"name","properties":{"name":"EPSG:4326"}}}]}
 
 Combination: 207; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
 Model Present: true
-{"@odata.context":"http://odata.org/$metadata#Collection(Edm.Int32)","@odata.type":"#Collection(Int32)","value":[0,1,2]}
+{"@odata.context":"http://odata.org/$metadata#Collection(Edm.Geography)","@odata.type":"#Collection(Geography)","value":[{"type":"GeometryCollection","geometries":[{"type":"Point","coordinates":[-12.0,-19.99]}],"crs":{"type":"name","properties":{"name":"EPSG:4326"}}},{"type":"LineString","coordinates":[[-110.0,33.1],[-110.0,35.97]],"crs":{"type":"name","properties":{"name":"EPSG:4326"}}},{"type":"MultiLineString","coordinates":[[[11.2,10.2],[11.6,11.9]],[[17.2,16.2],[19.6,18.9]]],"crs":{"type":"name","properties":{"name":"EPSG:4326"}}},{"type":"MultiPoint","coordinates":[[11.2,10.2],[11.6,11.9]],"crs":{"type":"name","properties":{"name":"EPSG:4326"}}},{"type":"MultiPolygon","coordinates":[[[[11.2,10.2],[11.6,11.9],[87.75,11.45],[11.2,10.2]],[[17.2,16.2],[19.6,18.9],[87.75,11.45],[17.2,16.2]]]],"crs":{"type":"name","properties":{"name":"EPSG:4326"}}},{"type":"Point","coordinates":[-110.0,33.1],"crs":{"type":"name","properties":{"name":"EPSG:4326"}}},{"type":"Polygon","coordinates":[[[-110.0,33.1],[-110.15,35.97],[87.75,11.45],[-110.0,33.1]],[[-110.0,35.97],[-110.15,36.97],[23.18,45.23],[-110.0,35.97]]],"crs":{"type":"name","properties":{"name":"EPSG:4326"}}},{"type":"Point","coordinates":[-100.0,32.0],"crs":{"type":"name","properties":{"name":"EPSG:4326"}}}]}
 
 Combination: 208; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
 Model Present: true
-{"@odata.context":"http://odata.org/$metadata#Collection(Edm.Int32)","value":[0,1,2]}
-
-Combination: 209; TestConfiguration = Format: JsonLight, Request: True, Synchronous: True
-Model Present: true
-{"@odata.context":"http://odata.org/$metadata#Collection(Edm.String)","@odata.type":"#Collection(String)","value":["One","Two","Three"]}
-
-Combination: 210; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
-Model Present: true
-{"@odata.context":"http://odata.org/$metadata#Collection(Edm.String)","value":["One","Two","Three"]}
-
-Combination: 211; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
-Model Present: true
-{"@odata.context":"http://odata.org/$metadata#Collection(Edm.String)","@odata.type":"#Collection(String)","value":["One","Two","Three"]}
-
-Combination: 212; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
-Model Present: true
-{"@odata.context":"http://odata.org/$metadata#Collection(Edm.String)","value":["One","Two","Three"]}
-
-Combination: 213; TestConfiguration = Format: JsonLight, Request: True, Synchronous: True
-Model Present: true
-{"@odata.context":"http://odata.org/$metadata#Collection(Edm.Geography)","@odata.type":"#Collection(Geography)","value":[{"type":"GeometryCollection","geometries":[{"type":"Point","coordinates":[-12.0,-19.99]}],"crs":{"type":"name","properties":{"name":"EPSG:4326"}}},{"type":"LineString","coordinates":[[-110.0,33.1],[-110.0,35.97]],"crs":{"type":"name","properties":{"name":"EPSG:4326"}}},{"type":"MultiLineString","coordinates":[[[11.2,10.2],[11.6,11.9]],[[17.2,16.2],[19.6,18.9]]],"crs":{"type":"name","properties":{"name":"EPSG:4326"}}},{"type":"MultiPoint","coordinates":[[11.2,10.2],[11.6,11.9]],"crs":{"type":"name","properties":{"name":"EPSG:4326"}}},{"type":"MultiPolygon","coordinates":[[[[11.2,10.2],[11.6,11.9],[87.75,11.45],[11.2,10.2]],[[17.2,16.2],[19.6,18.9],[87.75,11.45],[17.2,16.2]]]],"crs":{"type":"name","properties":{"name":"EPSG:4326"}}},{"type":"Point","coordinates":[-110.0,33.1],"crs":{"type":"name","properties":{"name":"EPSG:4326"}}},{"type":"Polygon","coordinates":[[[-110.0,33.1],[-110.15,35.97],[87.75,11.45],[-110.0,33.1]],[[-110.0,35.97],[-110.15,36.97],[23.18,45.23],[-110.0,35.97]]],"crs":{"type":"name","properties":{"name":"EPSG:4326"}}},{"type":"Point","coordinates":[-100.0,32.0],"crs":{"type":"name","properties":{"name":"EPSG:4326"}}}]}
-
-Combination: 214; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
-Model Present: true
 {"@odata.context":"http://odata.org/$metadata#Collection(Edm.Geography)","value":[{"type":"GeometryCollection","geometries":[{"type":"Point","coordinates":[-12.0,-19.99]}],"crs":{"type":"name","properties":{"name":"EPSG:4326"}}},{"type":"LineString","coordinates":[[-110.0,33.1],[-110.0,35.97]],"crs":{"type":"name","properties":{"name":"EPSG:4326"}}},{"type":"MultiLineString","coordinates":[[[11.2,10.2],[11.6,11.9]],[[17.2,16.2],[19.6,18.9]]],"crs":{"type":"name","properties":{"name":"EPSG:4326"}}},{"type":"MultiPoint","coordinates":[[11.2,10.2],[11.6,11.9]],"crs":{"type":"name","properties":{"name":"EPSG:4326"}}},{"type":"MultiPolygon","coordinates":[[[[11.2,10.2],[11.6,11.9],[87.75,11.45],[11.2,10.2]],[[17.2,16.2],[19.6,18.9],[87.75,11.45],[17.2,16.2]]]],"crs":{"type":"name","properties":{"name":"EPSG:4326"}}},{"type":"Point","coordinates":[-110.0,33.1],"crs":{"type":"name","properties":{"name":"EPSG:4326"}}},{"type":"Polygon","coordinates":[[[-110.0,33.1],[-110.15,35.97],[87.75,11.45],[-110.0,33.1]],[[-110.0,35.97],[-110.15,36.97],[23.18,45.23],[-110.0,35.97]]],"crs":{"type":"name","properties":{"name":"EPSG:4326"}}},{"type":"Point","coordinates":[-100.0,32.0],"crs":{"type":"name","properties":{"name":"EPSG:4326"}}}]}
-
-Combination: 215; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
-Model Present: true
-{"@odata.context":"http://odata.org/$metadata#Collection(Edm.Geography)","@odata.type":"#Collection(Geography)","value":[{"type":"GeometryCollection","geometries":[{"type":"Point","coordinates":[-12.0,-19.99]}],"crs":{"type":"name","properties":{"name":"EPSG:4326"}}},{"type":"LineString","coordinates":[[-110.0,33.1],[-110.0,35.97]],"crs":{"type":"name","properties":{"name":"EPSG:4326"}}},{"type":"MultiLineString","coordinates":[[[11.2,10.2],[11.6,11.9]],[[17.2,16.2],[19.6,18.9]]],"crs":{"type":"name","properties":{"name":"EPSG:4326"}}},{"type":"MultiPoint","coordinates":[[11.2,10.2],[11.6,11.9]],"crs":{"type":"name","properties":{"name":"EPSG:4326"}}},{"type":"MultiPolygon","coordinates":[[[[11.2,10.2],[11.6,11.9],[87.75,11.45],[11.2,10.2]],[[17.2,16.2],[19.6,18.9],[87.75,11.45],[17.2,16.2]]]],"crs":{"type":"name","properties":{"name":"EPSG:4326"}}},{"type":"Point","coordinates":[-110.0,33.1],"crs":{"type":"name","properties":{"name":"EPSG:4326"}}},{"type":"Polygon","coordinates":[[[-110.0,33.1],[-110.15,35.97],[87.75,11.45],[-110.0,33.1]],[[-110.0,35.97],[-110.15,36.97],[23.18,45.23],[-110.0,35.97]]],"crs":{"type":"name","properties":{"name":"EPSG:4326"}}},{"type":"Point","coordinates":[-100.0,32.0],"crs":{"type":"name","properties":{"name":"EPSG:4326"}}}]}
-
-Combination: 216; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
-Model Present: true
-{"@odata.context":"http://odata.org/$metadata#Collection(Edm.Geography)","value":[{"type":"GeometryCollection","geometries":[{"type":"Point","coordinates":[-12.0,-19.99]}],"crs":{"type":"name","properties":{"name":"EPSG:4326"}}},{"type":"LineString","coordinates":[[-110.0,33.1],[-110.0,35.97]],"crs":{"type":"name","properties":{"name":"EPSG:4326"}}},{"type":"MultiLineString","coordinates":[[[11.2,10.2],[11.6,11.9]],[[17.2,16.2],[19.6,18.9]]],"crs":{"type":"name","properties":{"name":"EPSG:4326"}}},{"type":"MultiPoint","coordinates":[[11.2,10.2],[11.6,11.9]],"crs":{"type":"name","properties":{"name":"EPSG:4326"}}},{"type":"MultiPolygon","coordinates":[[[[11.2,10.2],[11.6,11.9],[87.75,11.45],[11.2,10.2]],[[17.2,16.2],[19.6,18.9],[87.75,11.45],[17.2,16.2]]]],"crs":{"type":"name","properties":{"name":"EPSG:4326"}}},{"type":"Point","coordinates":[-110.0,33.1],"crs":{"type":"name","properties":{"name":"EPSG:4326"}}},{"type":"Polygon","coordinates":[[[-110.0,33.1],[-110.15,35.97],[87.75,11.45],[-110.0,33.1]],[[-110.0,35.97],[-110.15,36.97],[23.18,45.23],[-110.0,35.97]]],"crs":{"type":"name","properties":{"name":"EPSG:4326"}}},{"type":"Point","coordinates":[-100.0,32.0],"crs":{"type":"name","properties":{"name":"EPSG:4326"}}}]}
-
-Combination: 217; TestConfiguration = Format: JsonLight, Request: True, Synchronous: True
-Model Present: true
-{"@odata.context":"http://odata.org/$metadata#Collection(My.AddressType)","@odata.type":"#Collection(My.AddressType)","value":[{"Street":"One Redmond Way","City":" Redmond"},{"Street":"Am Euro Platz 3","City":"Vienna "}]}
-
-Combination: 218; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
-Model Present: true
-{"@odata.context":"http://odata.org/$metadata#Collection(My.AddressType)","value":[{"Street":"One Redmond Way","City":" Redmond"},{"Street":"Am Euro Platz 3","City":"Vienna "}]}
-
-Combination: 219; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
-Model Present: true
-{"@odata.context":"http://odata.org/$metadata#Collection(My.AddressType)","@odata.type":"#Collection(My.AddressType)","value":[{"Street":"One Redmond Way","City":" Redmond"},{"Street":"Am Euro Platz 3","City":"Vienna "}]}
-
-Combination: 220; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
-Model Present: true
-{"@odata.context":"http://odata.org/$metadata#Collection(My.AddressType)","value":[{"Street":"One Redmond Way","City":" Redmond"},{"Street":"Am Euro Platz 3","City":"Vienna "}]}
 

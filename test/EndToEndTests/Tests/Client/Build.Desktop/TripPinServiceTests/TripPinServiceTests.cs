@@ -2943,7 +2943,7 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
                     }
                 },
 
-                NestedResourceInfos = new List<ODataNestedResourceInfoWrapper>()
+                NestedResourceInfoWrappers = new List<ODataNestedResourceInfoWrapper>()
                 {
                     new ODataNestedResourceInfoWrapper()
                     {
@@ -3029,7 +3029,7 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
                         }
                     }
                 },
-                NestedResourceInfos = new List<ODataNestedResourceInfoWrapper>()
+                NestedResourceInfoWrappers = new List<ODataNestedResourceInfoWrapper>()
                 {
                     new ODataNestedResourceInfoWrapper()
                     {
