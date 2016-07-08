@@ -1933,7 +1933,6 @@ namespace Microsoft.OData.JsonLight
         /// <remarks>If the method detects the odata.null annotation, it will read it; otherwise the reader does not move.</remarks>
         private bool IsTopLevelNullValue()
         {
-            bool edmNullInMetadata = this.ContextUriParseResult != null && this.ContextUriParseResult.IsNullProperty;
             bool odataNullAnnotationInPayload = this.JsonReader.NodeType == JsonNodeType.Property && string.CompareOrdinal(JsonLightConstants.ODataPropertyAnnotationSeparatorChar + ODataAnnotationNames.ODataNull, JsonReader.GetPropertyName()) == 0;
             if (odataNullAnnotationInPayload)
             {
@@ -1948,16 +1947,11 @@ namespace Microsoft.OData.JsonLight
                 }
             }
 
-            if (!edmNullInMetadata && !odataNullAnnotationInPayload)
-            {
-                return false;
-            }
-
-            return true;
+            return odataNullAnnotationInPayload;
         }
 
         /// <summary>
-        /// Make sure that we don't find any other odata.* annotations or properties after reading a payload with the odata.null annotation or the odata.context annotation with value ending #Edm.Null
+        /// Make sure that we don't find any other odata.* annotations or properties after reading a payload with the odata.null annotation.
         /// </summary>
         /// <param name="propertyAndAnnotationCollector">The duplicate property names checker to use.</param>
         private void ValidateNoPropertyInNullPayload(PropertyAndAnnotationCollector propertyAndAnnotationCollector)

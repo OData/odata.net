@@ -704,18 +704,6 @@ namespace AstoriaUnitTests.Tests
             }
 
             [TestCategory("Partition1"), TestMethod, Variation]
-            public void UpdateDeletePropertyValue()
-            {
-                string uri = "/Customers(1)/Name/$value";
-                var jsonUriAndXPaths = new KeyValuePair<string, string[]>[]
-                {
-                    new KeyValuePair<string, string[]>("/Customers(1)/Name", new string[] { String.Format("/{0}[odata.null='true']", JsonValidator.ObjectString) })
-                };
-
-                DoUpdatesForVariousProviders("DELETE", uri, UnitTestsUtil.JsonLightMimeType, (string)null, jsonUriAndXPaths, true, verifyResponsePreference: false);
-            }
-
-            [TestCategory("Partition1"), TestMethod, Variation]
             public void UpdateDeleteSystem()
             {
                 string[] urls = new string[] { "/", "/$metadata", "/$batch" };

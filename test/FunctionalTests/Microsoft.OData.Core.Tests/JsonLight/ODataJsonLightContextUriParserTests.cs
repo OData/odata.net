@@ -16,37 +16,6 @@ namespace Microsoft.OData.Tests.JsonLight
 {
     public class ODataJsonLightContextUriParserTests
     {
-        private const string ContextUriForNullProperty = "http://service/$metadata#Edm.Null";
-
-        [Fact]
-        public void ParseNullPropertyContextUriShouldThrowForPayloadKindsExceptPropertyAndUnsupported()
-        {
-            foreach (ODataPayloadKind payloadKind in Enum.GetValues(typeof(ODataPayloadKind)))
-            {
-                if (payloadKind != ODataPayloadKind.Property && payloadKind != ODataPayloadKind.Unsupported)
-                {
-                    Action parseContextUri = () => ODataJsonLightContextUriParser.Parse(new EdmModel(), ContextUriForNullProperty, payloadKind, null, true);
-                    parseContextUri.ShouldThrow<ODataException>().WithMessage(ErrorStrings.ODataJsonLightContextUriParser_ContextUriDoesNotMatchExpectedPayloadKind(ContextUriForNullProperty, payloadKind.ToString()));
-                }
-            }
-        }
-
-        [Fact]
-        public void ParseNullPropertyContextUriShouldReturnPropertyWhenExpectedPayloadKindIsProperty()
-        {
-            var parseResult = ODataJsonLightContextUriParser.Parse(new EdmModel(), ContextUriForNullProperty, ODataPayloadKind.Property, null, true);
-            parseResult.DetectedPayloadKinds.Single().Should().Be(ODataPayloadKind.Property);
-            parseResult.IsNullProperty.Should().BeTrue();
-        }
-
-        [Fact]
-        public void ParseNullPropertyContextUriShouldReturnPropertyWhenExpectedPayloadKindIsUnsupported()
-        {
-            var parseResult = ODataJsonLightContextUriParser.Parse(new EdmModel(), ContextUriForNullProperty, ODataPayloadKind.Unsupported, null, true);
-            parseResult.DetectedPayloadKinds.Single().Should().Be(ODataPayloadKind.Property);
-            parseResult.IsNullProperty.Should().BeTrue();
-        }
-
         // TODO: Support relative context uri and resolving other relative uris
         [Fact]
         public void ParseRelativeContextUrlShouldThrowException()

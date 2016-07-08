@@ -367,12 +367,6 @@ namespace Microsoft.OData.Tests
         #endregion links context uri
 
         #region value context uri
-        [Fact]
-        public void BuildPropertyContextUriForNullPropertyValue()
-        {
-            var contextUri = this.CreatePropertyContextUri();
-            contextUri.OriginalString.Should().Be(BuildExpectedContextUri("#Edm.Null"));
-        }
 
         [Fact]
         public void BuildPropertyContextUriForIntegerPropertyValue()

@@ -299,11 +299,6 @@ namespace Microsoft.OData.JsonLight
                 {
                     detectedPayloadKind = ODataPayloadKind.ServiceDocument;
                 }
-                else if (fragment.Equals(ODataConstants.ContextUriFragmentNull, StringComparison.OrdinalIgnoreCase))
-                {
-                    detectedPayloadKind = ODataPayloadKind.Property;
-                    this.parseResult.IsNullProperty = true;
-                }
                 else if (fragment.Equals(ODataConstants.EntityReferenceCollectionSegmentName + "(" + ODataConstants.EntityReferenceSegmentName + ")"))
                 {
                     detectedPayloadKind = ODataPayloadKind.EntityReferenceLinks;

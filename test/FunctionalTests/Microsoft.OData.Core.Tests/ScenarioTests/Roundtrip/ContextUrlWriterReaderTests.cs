@@ -1011,7 +1011,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip
         [Fact]
         public void IndividualPropertyInDerivedEntityType()
         {
-            var property = new ODataProperty { Name = "DateHired", Value = null };
+            var property = new ODataProperty { Name = "DateHired", Value = new DateTimeOffset() };
             foreach (ODataFormat mimeType in mimeTypes)
             {
                 string payload, contentType;
@@ -1163,7 +1163,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip
         [Fact]
         public void DerivedEntityWithOpenType()
         {
-            var property = new ODataProperty { Name = "OpenType", Value = null };
+            var property = new ODataProperty { Name = "OpenType", Value = 123 };
             foreach (ODataFormat mimeType in mimeTypes)
             {
                 string payload, contentType;
@@ -1188,7 +1188,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip
         [Fact]
         public void EntityTypeWithOpenType()
         {
-            var property = new ODataProperty { Name = "OpenType", Value = null };
+            var property = new ODataProperty { Name = "OpenType", Value = 123 };
             foreach (ODataFormat mimeType in mimeTypes)
             {
                 string payload, contentType;

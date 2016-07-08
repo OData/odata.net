@@ -34,29 +34,6 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.JsonLight
         [InjectDependency(IsRequired = true)]
         public PayloadWriterTestExpectedResults.Settings ExpectedResultSettings { get; set; }
 
-        [TestMethod, Variation(Description = "Error case for writing properties in JSON Lite without owning type.")]
-        public void WritePropertyWithoutOwningType()
-        {
-            var model = new EdmModel();
-            var container = new EdmEntityContainer("DefaultNamespace", "DefaultContainer");
-            model.AddElement(container);
-
-            var testDescriptor = new PayloadWriterTestDescriptor<ODataProperty>(
-                this.Settings,
-                new ODataProperty() { Name = "PropertyName", Value = null },
-                tc => new JsonWriterTestExpectedResults(this.ExpectedResultSettings) { })
-            {
-                Model = model
-            };
-
-            this.CombinatorialEngineProvider.RunCombinations(
-                this.WriterTestConfigurationProvider.JsonLightFormatConfigurations,
-                (testConfiguration) =>
-                {
-                    testDescriptor.RunTopLevelPropertyPayload(testConfiguration, baselineLogger: this.Logger);
-                });
-        }
-
         [TestMethod, Variation(Description = "Test correct serialization format when writing top-level open properties in JSON Lite.")]
         public void TopLevelOpenPropertiesTest()
         {

@@ -424,7 +424,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Common
             {
                 get
                 {
-                    return this.JsonLightConfigurations.Concat(this.AtomConfigurations);
+                    return this.JsonLightConfigurations;
                 }
             }
 

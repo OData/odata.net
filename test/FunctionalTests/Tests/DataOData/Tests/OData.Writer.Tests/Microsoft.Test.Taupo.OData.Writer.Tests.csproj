@@ -189,9 +189,6 @@
     <Content Include="JsonLight\JsonLightPropertyWriterTests.TopLevelSpatialPropertiesTest.approved.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="JsonLight\JsonLightPropertyWriterTests.WritePropertyWithoutOwningType.approved.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <Content Include="JsonLight\JsonLightPropertyWriterTests.WriteUntypedValueTest.approved.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

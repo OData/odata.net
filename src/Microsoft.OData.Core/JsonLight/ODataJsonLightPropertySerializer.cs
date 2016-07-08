@@ -65,6 +65,11 @@ namespace Microsoft.OData.JsonLight
             Debug.Assert(property != null, "property != null");
             Debug.Assert(!(property.Value is ODataStreamReferenceValue), "!(property.Value is ODataStreamReferenceValue)");
 
+            if (property.ODataValue != null && property.ODataValue.IsNullValue)
+            {
+                return;
+            }
+
             this.WriteTopLevelPayload(
                 () =>
                 {

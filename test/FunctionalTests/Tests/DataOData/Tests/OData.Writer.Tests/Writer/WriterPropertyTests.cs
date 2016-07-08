@@ -121,109 +121,12 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
         private IEnumerable<PayloadWriterTestDescriptor<ODataProperty>> CreatePrimitiveTopLevelPropertyDescriptors()
         {
             var model = new EdmModel();
-            ODataProperty[] properties = ObjectModelUtils.CreateDefaultPrimitiveProperties(model);
+            ODataProperty[] properties = ObjectModelUtils.CreateDefaultPrimitiveProperties(model).Where(p => p.Value != null).ToArray();
             model.Fixup();
             var owningType = MetadataUtils.EntityTypes(model).Single(et => et.Name == "EntryWithPrimitiveProperties");
 
-            string[] propertiesAtomResults = new string[]
-            {
-                @"<{5} xmlns=""{1}"" xmlns:{0}=""{1}"" {0}:null=""true""/>",
-                @"<{5} xmlns=""{1}"" xmlns:{0}=""{1}"" {0}:{4}=""Double"" >1</{5}>",
-                @"<{5} xmlns=""{1}"" xmlns:{0}=""{1}"" {0}:{4}=""Binary"">AAEAAQ==</{5}>",
-                @"<{5} xmlns=""{1}"" xmlns:{0}=""{1}"" {0}:{4}=""Single"">1</{5}>",
-                @"<{5} xmlns=""{1}"" xmlns:{0}=""{1}"" {0}:{4}=""Boolean"">true</{5}>",
-                @"<{5} xmlns=""{1}"" xmlns:{0}=""{1}"" {0}:{4}=""Byte"">1</{5}>",
-                @"<{5} xmlns=""{1}"" xmlns:{0}=""{1}"" {0}:{4}=""DateTimeOffset"">2010-10-10T10:10:10Z</{5}>",
-                @"<{5} xmlns=""{1}"" xmlns:{0}=""{1}"" {0}:{4}=""DateTimeOffset"">2010-10-10T10:10:10+01:00</{5}>",
-                @"<{5} xmlns=""{1}"" xmlns:{0}=""{1}"" {0}:{4}=""DateTimeOffset"">2010-10-10T10:10:10-08:00</{5}>",
-                @"<{5} xmlns=""{1}"" xmlns:{0}=""{1}"" {0}:{4}=""Decimal"">1</{5}>",
-                @"<{5} xmlns=""{1}"" xmlns:{0}=""{1}"" {0}:{4}=""Guid"">11111111-2222-3333-4444-555555555555</{5}>",
-                @"<{5} xmlns=""{1}"" xmlns:{0}=""{1}"" {0}:{4}=""SByte"">1</{5}>",
-                @"<{5} xmlns=""{1}"" xmlns:{0}=""{1}"" {0}:{4}=""Int16"">1</{5}>",
-                @"<{5} xmlns=""{1}"" xmlns:{0}=""{1}"" {0}:{4}=""Int32"">1</{5}>",
-                @"<{5} xmlns=""{1}"" xmlns:{0}=""{1}"" {0}:{4}=""Int64"">1</{5}>",
-                @"<{5} xmlns=""{1}"" xmlns:{0}=""{1}"">1</{5}>",
-                @"<{5} xmlns=""{1}"" xmlns:{0}=""{1}"" {0}:{4}=""Duration"">PT12M20.4S</{5}>",
-                @"<{5} xmlns=""{1}"" xmlns:{0}=""{1}"" {0}:{4}=""GeographyPoint"">" + GmlFormatter.Create().Write(ObjectModelUtils.GeographyValue) + "</{5}>",
-                @"<{5} xmlns=""{1}"" xmlns:{0}=""{1}"" {0}:{4}=""GeographyPoint"">" + GmlFormatter.Create().Write(ObjectModelUtils.GeographyPointValue) + "</{5}>",
-                @"<{5} xmlns=""{1}"" xmlns:{0}=""{1}"" {0}:{4}=""GeographyLineString"">" + GmlFormatter.Create().Write(ObjectModelUtils.GeographyLineStringValue) + "</{5}>",
-                @"<{5} xmlns=""{1}"" xmlns:{0}=""{1}"" {0}:{4}=""GeographyPolygon"">" + GmlFormatter.Create().Write(ObjectModelUtils.GeographyPolygonValue) + "</{5}>",
-                @"<{5} xmlns=""{1}"" xmlns:{0}=""{1}"" {0}:{4}=""GeographyCollection"">" + GmlFormatter.Create().Write(ObjectModelUtils.GeographyCollectionValue) + "</{5}>",
-                @"<{5} xmlns=""{1}"" xmlns:{0}=""{1}"" {0}:{4}=""GeographyMultiPoint"">" + GmlFormatter.Create().Write(ObjectModelUtils.GeographyMultiPointValue) + "</{5}>",
-                @"<{5} xmlns=""{1}"" xmlns:{0}=""{1}"" {0}:{4}=""GeographyMultiLineString"">" + GmlFormatter.Create().Write(ObjectModelUtils.GeographyMultiLineStringValue) + "</{5}>",
-                @"<{5} xmlns=""{1}"" xmlns:{0}=""{1}"" {0}:{4}=""GeographyMultiPolygon"">" + GmlFormatter.Create().Write(ObjectModelUtils.GeographyMultiPolygonValue) + "</{5}>",
-                @"<{5} xmlns=""{1}"" xmlns:{0}=""{1}"" {0}:{4}=""GeometryPoint"">" + GmlFormatter.Create().Write(ObjectModelUtils.GeometryValue) + "</{5}>",
-                @"<{5} xmlns=""{1}"" xmlns:{0}=""{1}"" {0}:{4}=""GeometryPoint"">" + GmlFormatter.Create().Write(ObjectModelUtils.GeometryPointValue) + "</{5}>",
-                @"<{5} xmlns=""{1}"" xmlns:{0}=""{1}"" {0}:{4}=""GeometryLineString"">" + GmlFormatter.Create().Write(ObjectModelUtils.GeometryLineStringValue) + "</{5}>",
-                @"<{5} xmlns=""{1}"" xmlns:{0}=""{1}"" {0}:{4}=""GeometryPolygon"">" + GmlFormatter.Create().Write(ObjectModelUtils.GeometryPolygonValue) + "</{5}>",
-                @"<{5} xmlns=""{1}"" xmlns:{0}=""{1}"" {0}:{4}=""GeometryCollection"">" + GmlFormatter.Create().Write(ObjectModelUtils.GeometryCollectionValue) + "</{5}>",
-                @"<{5} xmlns=""{1}"" xmlns:{0}=""{1}"" {0}:{4}=""GeometryMultiPoint"">" + GmlFormatter.Create().Write(ObjectModelUtils.GeometryMultiPointValue) + "</{5}>",
-                @"<{5} xmlns=""{1}"" xmlns:{0}=""{1}"" {0}:{4}=""GeometryMultiLineString"">" + GmlFormatter.Create().Write(ObjectModelUtils.GeometryMultiLineStringValue) + "</{5}>",
-                @"<{5} xmlns=""{1}"" xmlns:{0}=""{1}"" {0}:{4}=""GeometryMultiPolygon"">" + GmlFormatter.Create().Write(ObjectModelUtils.GeometryMultiPolygonValue) + "</{5}>",
-
-                @"<{5} xmlns=""{1}"" xmlns:{0}=""{1}"" {0}:{4}=""Double"" >1</{5}>",
-                @"<{5} xmlns=""{1}"" xmlns:{0}=""{1}"" {0}:{4}=""Single"">1</{5}>",
-                @"<{5} xmlns=""{1}"" xmlns:{0}=""{1}"" {0}:{4}=""Boolean"">true</{5}>",
-                @"<{5} xmlns=""{1}"" xmlns:{0}=""{1}"" {0}:{4}=""Byte"">1</{5}>",
-                @"<{5} xmlns=""{1}"" xmlns:{0}=""{1}"" {0}:{4}=""DateTimeOffset"">2010-10-10T10:10:10Z</{5}>",
-                @"<{5} xmlns=""{1}"" xmlns:{0}=""{1}"" {0}:{4}=""DateTimeOffset"">2010-10-10T10:10:10+01:00</{5}>",
-                @"<{5} xmlns=""{1}"" xmlns:{0}=""{1}"" {0}:{4}=""DateTimeOffset"">2010-10-10T10:10:10-08:00</{5}>",
-                @"<{5} xmlns=""{1}"" xmlns:{0}=""{1}"" {0}:{4}=""Decimal"">1</{5}>",
-                @"<{5} xmlns=""{1}"" xmlns:{0}=""{1}"" {0}:{4}=""Guid"">11111111-2222-3333-4444-555555555555</{5}>",
-                @"<{5} xmlns=""{1}"" xmlns:{0}=""{1}"" {0}:{4}=""SByte"">1</{5}>",
-                @"<{5} xmlns=""{1}"" xmlns:{0}=""{1}"" {0}:{4}=""Int16"">1</{5}>",
-                @"<{5} xmlns=""{1}"" xmlns:{0}=""{1}"" {0}:{4}=""Int32"">1</{5}>",
-                @"<{5} xmlns=""{1}"" xmlns:{0}=""{1}"" {0}:{4}=""Int64"">1</{5}>",
-                @"<{5} xmlns=""{1}"" xmlns:{0}=""{1}"">1</{5}>",
-                @"<{5} xmlns=""{1}"" xmlns:{0}=""{1}"" {0}:{4}=""Duration"">PT12M20.4S</{5}>",
-
-                @"<{5} xmlns=""{1}"" xmlns:{0}=""{1}"" {0}:null=""true"" />",
-                @"<{5} xmlns=""{1}"" xmlns:{0}=""{1}"" {0}:null=""true"" />",
-                @"<{5} xmlns=""{1}"" xmlns:{0}=""{1}"" {0}:null=""true"" />",
-                @"<{5} xmlns=""{1}"" xmlns:{0}=""{1}"" {0}:null=""true"" />",
-                @"<{5} xmlns=""{1}"" xmlns:{0}=""{1}"" {0}:null=""true"" />",
-                @"<{5} xmlns=""{1}"" xmlns:{0}=""{1}"" {0}:null=""true"" />",
-                @"<{5} xmlns=""{1}"" xmlns:{0}=""{1}"" {0}:null=""true"" />",
-                @"<{5} xmlns=""{1}"" xmlns:{0}=""{1}"" {0}:null=""true"" />",
-                @"<{5} xmlns=""{1}"" xmlns:{0}=""{1}"" {0}:null=""true"" />",
-                @"<{5} xmlns=""{1}"" xmlns:{0}=""{1}"" {0}:null=""true"" />",
-                @"<{5} xmlns=""{1}"" xmlns:{0}=""{1}"" {0}:null=""true"" />",
-                @"<{5} xmlns=""{1}"" xmlns:{0}=""{1}"" {0}:null=""true"" />",
-                @"<{5} xmlns=""{1}"" xmlns:{0}=""{1}"" {0}:null=""true"" />",
-                @"<{5} xmlns=""{1}"" xmlns:{0}=""{1}"" {0}:null=""true"" />",
-                @"<{5} xmlns=""{1}"" xmlns:{0}=""{1}"" {0}:null=""true"" />",
-                @"<{5} xmlns=""{1}"" xmlns:{0}=""{1}"" {0}:null=""true"" />",
-                @"<{5} xmlns=""{1}"" xmlns:{0}=""{1}"" {0}:null=""true"" />",
-                @"<{5} xmlns=""{1}"" xmlns:{0}=""{1}"" {0}:null=""true"" />",
-                @"<{5} xmlns=""{1}"" xmlns:{0}=""{1}"" {0}:null=""true"" />",
-                @"<{5} xmlns=""{1}"" xmlns:{0}=""{1}"" {0}:null=""true"" />",
-                @"<{5} xmlns=""{1}"" xmlns:{0}=""{1}"" {0}:null=""true"" />",
-                @"<{5} xmlns=""{1}"" xmlns:{0}=""{1}"" {0}:null=""true"" />",
-                @"<{5} xmlns=""{1}"" xmlns:{0}=""{1}"" {0}:null=""true"" />",
-                @"<{5} xmlns=""{1}"" xmlns:{0}=""{1}"" {0}:null=""true"" />",
-                @"<{5} xmlns=""{1}"" xmlns:{0}=""{1}"" {0}:null=""true"" />",
-                @"<{5} xmlns=""{1}"" xmlns:{0}=""{1}"" {0}:null=""true"" />",
-                @"<{5} xmlns=""{1}"" xmlns:{0}=""{1}"" {0}:null=""true"" />",
-                @"<{5} xmlns=""{1}"" xmlns:{0}=""{1}"" {0}:null=""true"" />",
-                @"<{5} xmlns=""{1}"" xmlns:{0}=""{1}"" {0}:null=""true"" />",
-                @"<{5} xmlns=""{1}"" xmlns:{0}=""{1}"" {0}:null=""true"" />",
-                @"<{5} xmlns=""{1}"" xmlns:{0}=""{1}"" {0}:null=""true"" />",
-                @"<{5} xmlns=""{1}"" xmlns:{0}=""{1}"" {0}:null=""true"" />",
-            };
-            propertiesAtomResults = propertiesAtomResults
-                .Select(r =>
-                    string.Format(r,
-                        TestAtomConstants.ODataMetadataNamespacePrefix,
-                        TestAtomConstants.ODataMetadataNamespace,
-                        TestAtomConstants.ODataNamespacePrefix,
-                        TestAtomConstants.ODataNamespace,
-                        TestAtomConstants.AtomTypeAttributeName,
-                        TestAtomConstants.ODataValueElementName))
-                .ToArray();
-
             string[] propertiesJsonLightResults = new string[]
             {
-                "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataNullAnnotationName + "\":true",
                 "\"" + JsonLightConstants.ODataValuePropertyName + "\":1.0",
                 "\"" + JsonLightConstants.ODataValuePropertyName + "\":\"AAEAAQ==\"",
                 "\"" + JsonLightConstants.ODataValuePropertyName + "\":1",
@@ -272,39 +175,6 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 "\"" + JsonLightConstants.ODataValuePropertyName + "\":\"1\"",
                 "\"" + JsonLightConstants.ODataValuePropertyName + "\":\"1\"",
                 "\"" + JsonLightConstants.ODataValuePropertyName + "\":\"PT12M20.4S\"",
-
-                "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataNullAnnotationName + "\":true",
-                "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataNullAnnotationName + "\":true",
-                "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataNullAnnotationName + "\":true",
-                "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataNullAnnotationName + "\":true",
-                "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataNullAnnotationName + "\":true",
-                "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataNullAnnotationName + "\":true",
-                "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataNullAnnotationName + "\":true",
-                "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataNullAnnotationName + "\":true",
-                "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataNullAnnotationName + "\":true",
-                "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataNullAnnotationName + "\":true",
-                "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataNullAnnotationName + "\":true",
-                "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataNullAnnotationName + "\":true",
-                "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataNullAnnotationName + "\":true",
-                "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataNullAnnotationName + "\":true",
-                "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataNullAnnotationName + "\":true",
-                "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataNullAnnotationName + "\":true",
-                "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataNullAnnotationName + "\":true",
-                "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataNullAnnotationName + "\":true",
-                "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataNullAnnotationName + "\":true",
-                "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataNullAnnotationName + "\":true",
-                "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataNullAnnotationName + "\":true",
-                "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataNullAnnotationName + "\":true",
-                "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataNullAnnotationName + "\":true",
-                "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataNullAnnotationName + "\":true",
-                "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataNullAnnotationName + "\":true",
-                "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataNullAnnotationName + "\":true",
-                "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataNullAnnotationName + "\":true",
-                "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataNullAnnotationName + "\":true",
-                "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataNullAnnotationName + "\":true",
-                "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataNullAnnotationName + "\":true",
-                "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataNullAnnotationName + "\":true",
-                "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataNullAnnotationName + "\":true",
             };
 
             string[][] propertiesJsonLightRequestResultLines = new string[propertiesJsonLightResults.Length][];
@@ -315,11 +185,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
 
                 var property = owningType.FindProperty(properties[i].Name);
                 var typeName = property.Type.TestFullName();
-                if (properties[i].Value == null)
-                {
-                    typeName = "Edm.Null";
-                }
-                else if (properties[i].Value is ISpatial)
+                if (properties[i].Value is ISpatial)
                 {
                     typeName = "Edm." + properties[i].Value.GetType().BaseType.Name;
                 }
@@ -334,7 +200,6 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
             for (int i = 0; i < properties.Length; ++i)
             {
                 ODataProperty property = properties[i];
-                string atomResult = propertiesAtomResults[i];
                 string[] jsonLightRequestResult = propertiesJsonLightRequestResultLines[i];
                 string[] jsonLightResponseResult = propertiesJsonLightResponseResultLines[i];
 
@@ -374,34 +239,6 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
 
             var owningType = MetadataUtils.EntityTypes(model).Single(et => et.Name == "EntryWithComplexProperties");
 
-            string[] propertiesAtomResults = new string[]
-            {
-                string.Join("$(NL)",
-                @"<{5} xmlns=""{1}"" xmlns:{0}=""{1}"" {0}:{4}=""My.AddressType"" xmlns:{2}=""{3}"">",
-                @"$(Indent)<{2}:Street>One Redmond Way</{2}:Street>",
-                @"$(Indent)<{2}:City xml:space=""preserve""> Redmond</{2}:City>",
-                @"</{5}>"),
-                string.Join("$(NL)",
-                @"<{5} xmlns=""{1}"" xmlns:{0}=""{1}"" {0}:{4}=""My.NestedAddressType"">",
-                @"$(Indent)<Street {0}:{4}=""My.StreetType"" xmlns=""{3}"">",
-                @"$(Indent)$(Indent)<StreetName>One Redmond Way</StreetName>",
-                @"$(Indent)$(Indent)<Number {0}:{4}=""Int32"">1234</Number>",
-                @"$(Indent)</Street>",
-                @"$(Indent)<{2}:City xml:space=""preserve"" xmlns:{2}=""{3}"">Redmond </{2}:City>",
-                @"</{5}>")
-            };
-            propertiesAtomResults = propertiesAtomResults
-                .Select(r =>
-                    string.Format(r,
-                        TestAtomConstants.ODataMetadataNamespacePrefix,
-                        TestAtomConstants.ODataMetadataNamespace,
-                        TestAtomConstants.ODataNamespacePrefix,
-                        TestAtomConstants.ODataNamespace,
-                        TestAtomConstants.AtomTypeAttributeName,
-                        TestAtomConstants.ODataValueElementName))
-                .ToArray();
-
-
             Func<bool, string[][]> propertiesJsonLightResultsFunc = isRequest => new string[][]
             {
                 StringUtils.Flatten(
@@ -427,7 +264,6 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
             for (int i = 0; i < properties.Length; ++i)
             {
                 ODataProperty property = properties[i];
-                string atomResult = propertiesAtomResults[i];
                 string[] jsonLightRequestResult = propertiesJsonLightRequestResults[i];
                 string[] jsonLightResponseResult = propertiesJsonLightResponseResults[i];
 
@@ -596,7 +432,6 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
         }
         #endregion Collection properties
 
-        [Ignore] // Remove Atom
         [TestMethod, Variation(Description = "Test property writing.")]
         public void PropertyTests()
         {

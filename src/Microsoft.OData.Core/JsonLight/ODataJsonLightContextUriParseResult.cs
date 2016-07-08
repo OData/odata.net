@@ -73,11 +73,6 @@ namespace Microsoft.OData.JsonLight
         internal IEnumerable<ODataPayloadKind> DetectedPayloadKinds { get; set; }
 
         /// <summary>
-        /// true if we just parsed the context Uri for null properties, i.e. ~/$metadata#Edm.Null; false otherwise.
-        /// </summary>
-        internal bool IsNullProperty { get; set; }
-
-        /// <summary>
         /// ODataPath parsed from context Url
         /// </summary>
         internal ODataPath Path { get; set; }
