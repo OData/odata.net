@@ -5,6 +5,8 @@
 //---------------------------------------------------------------------
 
 using System;
+using System.IO;
+using System.Text;
 using System.Threading.Tasks;
 using FluentAssertions;
 using Microsoft.OData.Edm;
@@ -18,6 +20,103 @@ namespace Microsoft.OData.Tests
     /// </summary>
     public class ODataWriterCoreTests
     {
+        [Fact]
+        public void ValidateWriteMethodGroup()
+        {
+            // setup model
+            var model = new EdmModel();
+            var complexType = new EdmComplexType("NS", "ComplexType");
+            complexType.AddStructuralProperty("PrimitiveProperty1", EdmPrimitiveTypeKind.Int64);
+            complexType.AddStructuralProperty("PrimitiveProperty2", EdmPrimitiveTypeKind.Int64);
+            var entityType = new EdmEntityType("NS", "EntityType", null, false, true);
+            entityType.AddKeys(
+                entityType.AddStructuralProperty("PrimitiveProperty", EdmPrimitiveTypeKind.Int64));
+            var container = new EdmEntityContainer("NS", "Container");
+            var entitySet = container.AddEntitySet("EntitySet", entityType);
+            model.AddElements(new IEdmSchemaElement[] { complexType, entityType, container });
+
+            // write payload using new API
+            string str1;
+            {
+                // setup
+                var stream = new MemoryStream();
+                var message = new InMemoryMessage { Stream = stream };
+                message.SetHeader("Content-Type", "application/json;odata.metadata=full");
+                var settings = new ODataMessageWriterSettings
+                {
+                    ODataUri = new ODataUri
+                    {
+                        ServiceRoot = new Uri("http://svc/")
+                    },
+                    AutoComputePayloadMetadata = true
+                };
+                var writer = new ODataMessageWriter((IODataResponseMessage)message, settings, model);
+
+                var entitySetWriter = writer.CreateODataResourceSetWriter(entitySet);
+                entitySetWriter.Write(new ODataResourceSet(), () => entitySetWriter
+                    .Write(new ODataResource
+                    {
+                        Properties = new[] { new ODataProperty { Name = "PrimitiveProperty", Value = 1L } }
+                    })
+                    .Write(new ODataResource
+                    {
+                        Properties = new[] { new ODataProperty { Name = "PrimitiveProperty", Value = 2L } }
+                    }, () => entitySetWriter
+                        .Write(new ODataNestedResourceInfo { Name = "DynamicNavProperty" })
+                        .Write(new ODataNestedResourceInfo
+                        {
+                            Name = "DynamicCollectionProperty",
+                            IsCollection = true
+                        }, () => entitySetWriter
+                            .Write(new ODataResourceSet { TypeName = "Collection(NS.ComplexType)" })))
+                );
+                str1 = Encoding.UTF8.GetString(stream.ToArray());
+            }
+            // write payload using old API
+            string str2;
+            {
+                // setup
+                var stream = new MemoryStream();
+                var message = new InMemoryMessage { Stream = stream };
+                message.SetHeader("Content-Type", "application/json;odata.metadata=full");
+                var settings = new ODataMessageWriterSettings
+                {
+                    ODataUri = new ODataUri
+                    {
+                        ServiceRoot = new Uri("http://svc/")
+                    },
+                    AutoComputePayloadMetadata = true
+                };
+                var writer = new ODataMessageWriter((IODataResponseMessage)message, settings, model);
+
+                var entitySetWriter = writer.CreateODataResourceSetWriter(entitySet);
+                entitySetWriter.WriteStart(new ODataResourceSet());
+                    entitySetWriter.WriteStart(new ODataResource
+                    {
+                        Properties = new[] { new ODataProperty { Name = "PrimitiveProperty", Value = 1L } }
+                    });
+                    entitySetWriter.WriteEnd();
+                    entitySetWriter.WriteStart(new ODataResource
+                    {
+                        Properties = new[] { new ODataProperty { Name = "PrimitiveProperty", Value = 2L } }
+                    });
+                    entitySetWriter.WriteStart(new ODataNestedResourceInfo { Name = "DynamicNavProperty" });
+                    entitySetWriter.WriteEnd();
+                    entitySetWriter.WriteStart(new ODataNestedResourceInfo
+                    {
+                        Name = "DynamicCollectionProperty",
+                        IsCollection = true
+                    });
+                        entitySetWriter.WriteStart(new ODataResourceSet { TypeName = "Collection(NS.ComplexType)" });
+                        entitySetWriter.WriteEnd();
+                    entitySetWriter.WriteEnd();    
+                    entitySetWriter.WriteEnd();
+                entitySetWriter.WriteEnd();
+                str2 = Encoding.UTF8.GetString(stream.ToArray());
+            }
+            str1.Should().Be(str2);
+        }
+
         [Fact]
         public void ValidateEntityTypeShouldAlwaysReturnSpecifiedTypeName()
         {

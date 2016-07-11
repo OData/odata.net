@@ -4147,6 +4147,12 @@ public abstract class Microsoft.OData.ODataWriter {
 
 	public abstract void Flush ()
 	public abstract System.Threading.Tasks.Task FlushAsync ()
+	public Microsoft.OData.ODataWriter Write (Microsoft.OData.ODataNestedResourceInfo nestedResourceInfo)
+	public Microsoft.OData.ODataWriter Write (Microsoft.OData.ODataResource resource)
+	public Microsoft.OData.ODataWriter Write (Microsoft.OData.ODataResourceSet resourceSet)
+	public Microsoft.OData.ODataWriter Write (Microsoft.OData.ODataNestedResourceInfo nestedResourceInfo, System.Action nestedAction)
+	public Microsoft.OData.ODataWriter Write (Microsoft.OData.ODataResource resource, System.Action nestedAction)
+	public Microsoft.OData.ODataWriter Write (Microsoft.OData.ODataResourceSet resourceSet, System.Action nestedAction)
 	public abstract void WriteEnd ()
 	public abstract System.Threading.Tasks.Task WriteEndAsync ()
 	public abstract void WriteEntityReferenceLink (Microsoft.OData.ODataEntityReferenceLink entityReferenceLink)

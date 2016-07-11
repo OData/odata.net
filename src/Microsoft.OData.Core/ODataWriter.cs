@@ -8,9 +8,10 @@ namespace Microsoft.OData
 {
     #region Namespaces
 
+    using System;
     #if PORTABLELIB
     using System.Threading.Tasks;
-#endif
+    #endif
 
     #endregion Namespaces
 
@@ -23,6 +24,28 @@ namespace Microsoft.OData
         /// <param name="resourceSet">The resource set or collection to write.</param>
         public abstract void WriteStart(ODataResourceSet resourceSet);
 
+        /// <summary>Writes a resource set.</summary>
+        /// <param name="resourceSet">The resource set or collection to write.</param>
+        /// <returns>This ODataWriter, allowing for chaining operations.</returns>
+        public ODataWriter Write(ODataResourceSet resourceSet)
+        {
+            WriteStart(resourceSet);
+            WriteEnd();
+            return this;
+        }
+
+        /// <summary>Writes a resource set and performs an action in-between.</summary>
+        /// <param name="resourceSet">The resource set or collection to write.</param>
+        /// <param name="nestedAction">The action to perform in-between writing the resource set.</param>
+        /// <returns>This ODataWriter, allowing for chaining operations.</returns>
+        public ODataWriter Write(ODataResourceSet resourceSet, Action nestedAction)
+        {
+            WriteStart(resourceSet);
+            nestedAction();
+            WriteEnd();
+            return this;
+        }
+
 #if PORTABLELIB
         /// <summary> Asynchronously start writing a resource set. </summary>
         /// <returns>A task instance that represents the asynchronous write operation.</returns>
@@ -34,6 +57,28 @@ namespace Microsoft.OData
         /// <param name="resource">The resource or item to write.</param>
         public abstract void WriteStart(ODataResource resource);
 
+        /// <summary>Writes a resource.</summary>
+        /// <param name="resource">The resource or item to write.</param>
+        /// <returns>This ODataWriter, allowing for chaining operations.</returns>
+        public ODataWriter Write(ODataResource resource)
+        {
+            WriteStart(resource);
+            WriteEnd();
+            return this;
+        }
+
+        /// <summary>Writes a resource and performs an action in-between.</summary>
+        /// <param name="resource">The resource or item to write.</param>
+        /// <param name="nestedAction">The action to perform in-between the writing.</param>
+        /// <returns>This ODataWriter, allowing for chaining operations.</returns>
+        public ODataWriter Write(ODataResource resource, Action nestedAction)
+        {
+            WriteStart(resource);
+            nestedAction();
+            WriteEnd();
+            return this;
+        }
+
 #if PORTABLELIB
         /// <summary> Asynchronously start writing a resource. </summary>
         /// <returns>A task instance that represents the asynchronous write operation.</returns>
@@ -44,6 +89,28 @@ namespace Microsoft.OData
         /// <summary>Starts the writing of a nested resource info.</summary>
         /// <param name="nestedResourceInfo">The nested resource info to write.</param>
         public abstract void WriteStart(ODataNestedResourceInfo nestedResourceInfo);
+
+        /// <summary>Writes a nested resource info.</summary>
+        /// <param name="nestedResourceInfo">The nested resource info to write.</param>
+        /// <returns>This ODataWriter, allowing for chaining operations.</returns>
+        public ODataWriter Write(ODataNestedResourceInfo nestedResourceInfo)
+        {
+            WriteStart(nestedResourceInfo);
+            WriteEnd();
+            return this;
+        }
+
+        /// <summary>Writes a nested resource info and performs an action in-between.</summary>
+        /// <param name="nestedResourceInfo">The nested resource info to write.</param>
+        /// <param name="nestedAction">The action to perform in-between the writing.</param>
+        /// <returns>This ODataWriter, allowing for chaining operations.</returns>
+        public ODataWriter Write(ODataNestedResourceInfo nestedResourceInfo, Action nestedAction)
+        {
+            WriteStart(nestedResourceInfo);
+            nestedAction();
+            WriteEnd();
+            return this;
+        }
 
 #if PORTABLELIB
         /// <summary> Asynchronously start writing a nested resource info. </summary>
