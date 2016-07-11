@@ -80,7 +80,7 @@
     <Compile Include="Tests\HttpWebRequestUnitTests.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Tests\Materialization\ComplexValueMaterializationPolicyTests.cs" />
+    <Compile Include="Tests\Materialization\EntryMaterializationPolicyForComplexResourceTests.cs" />
     <Compile Include="Tests\Materialization\CollectionValueMaterializationPolicyTests.cs" />
     <Compile Include="Tests\Materialization\EntryValueMaterializationPolicyUnitTests.cs" />
     <Compile Include="Tests\Materialization\ODataMaterializerTests.cs" />

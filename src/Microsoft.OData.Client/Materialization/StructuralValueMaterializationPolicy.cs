@@ -32,7 +32,7 @@ namespace Microsoft.OData.Client.Materialization
         private DSClient.SimpleLazy<PrimitivePropertyConverter> lazyPrimitivePropertyConverter;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ComplexValueMaterializationPolicy" /> class.
+        /// Initializes a new instance of the <see cref="StructuralValueMaterializationPolicy" /> class.
         /// </summary>
         /// <param name="materializerContext">The materializer context.</param>
         /// <param name="lazyPrimitivePropertyConverter">The lazy primitive property converter.</param>
@@ -179,11 +179,6 @@ namespace Microsoft.OData.Client.Materialization
                     throw DSClient.Error.InvalidOperation(DSClient.Strings.Deserialize_MixedTextWithComment);
                 }
 
-                if (property.Value is ODataComplexValue)
-                {
-                    throw DSClient.Error.InvalidOperation(DSClient.Strings.AtomMaterializer_InvalidCollectionItem(property.Name));
-                }
-
                 // ODataLib already parsed the data and materialized all the primitive types. There is nothing more to materialize
                 // anymore. Only complex type instance and collection instances need to be materialized, but those will be
                 // materialized later on.
@@ -222,57 +217,8 @@ namespace Microsoft.OData.Client.Materialization
             }
             else
             {
-                object propertyValue = property.Value;
-                ODataComplexValue complexValue = propertyValue as ODataComplexValue;
-                if (propertyValue != null && complexValue != null)
-                {
-                    if (!prop.EdmProperty.Type.IsComplex())
-                    {
-                        // The error message is a bit odd, but it's compatible with V1.
-                        throw DSClient.Error.InvalidOperation(DSClient.Strings.Deserialize_ExpectingSimpleValue);
-                    }
-
-                    // Complex type.
-                    bool needToSet = false;
-
-                    ClientEdmModel edmModel = this.MaterializerContext.Model;
-                    ClientTypeAnnotation complexType = edmModel.GetClientTypeAnnotation(edmModel.GetOrCreateEdmType(prop.PropertyType));
-                    object complexInstance = prop.GetValue(instance);
-
-                    // Validating property inheritance in complexvalue and instance
-                    if (prop.PropertyType.Name != property.Name)
-                    {
-                        complexType = this.MaterializerContext.ResolveTypeForMaterialization(prop.PropertyType, complexValue.TypeName);
-
-                        // recreate complexInstance with derived type
-                        complexInstance = null;
-                    }
-
-                    if (complexValue.Properties.Any() || complexInstance == null)
-                    {
-                        complexInstance = this.CreateNewInstance(complexType.EdmTypeReference, complexType.ElementType);
-                        needToSet = true;
-                    }
-
-                    this.MaterializeDataValues(complexType, complexValue.Properties, this.MaterializerContext.UndeclaredPropertyBehavior);
-                    this.ApplyDataValues(complexType, complexValue.Properties, complexInstance);
-
-                    if (needToSet)
-                    {
-                        prop.SetValue(instance, complexInstance, property.Name, true /* allowAdd? */);
-                    }
-
-                    if (!this.MaterializerContext.Context.DisableInstanceAnnotationMaterialization)
-                    {
-                        // Set instance annotation for this complex instance
-                        this.InstanceAnnotationMaterializationPolicy.SetInstanceAnnotations(property, complexInstance);
-                    }
-                }
-                else
-                {
-                    this.MaterializePrimitiveDataValue(prop.NullablePropertyType, property);
-                    prop.SetValue(instance, property.GetMaterializedValue(), property.Name, true /* allowAdd? */);
-                }
+                this.MaterializePrimitiveDataValue(prop.NullablePropertyType, property);
+                prop.SetValue(instance, property.GetMaterializedValue(), property.Name, true /* allowAdd? */);
             }
 
             if (!this.MaterializerContext.Context.DisableInstanceAnnotationMaterialization)

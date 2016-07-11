@@ -50,36 +50,6 @@ namespace Microsoft.OData.Client.Materialization
         /// <summary>
         /// Gets the materialized value.
         /// </summary>
-        /// <param name="complexValue">The complex value.</param>
-        /// <returns>The materialized value.</returns>
-        public static object GetMaterializedValue(this ODataComplexValue complexValue)
-        {
-            return GetMaterializedValueCore(complexValue);
-        }
-
-        /// <summary>
-        /// Determines whether a value has been materialized.
-        /// </summary>
-        /// <param name="complexValue">The complex value.</param>
-        /// <returns><c>true</c> if the value has been materialized; otherwise, <c>false</c>.</returns>
-        public static bool HasMaterializedValue(this ODataComplexValue complexValue)
-        {
-            return HasMaterializedValueCore(complexValue);
-        }
-
-        /// <summary>
-        /// Sets the materialized value.
-        /// </summary>
-        /// <param name="complexValue">The complex value.</param>
-        /// <param name="materializedValue">The materialized value.</param>
-        public static void SetMaterializedValue(this ODataComplexValue complexValue, object materializedValue)
-        {
-            SetMaterializedValueCore(complexValue, materializedValue);
-        }
-
-        /// <summary>
-        /// Gets the materialized value.
-        /// </summary>
         /// <param name="annotatableObject">The annotatable object.</param>
         /// <returns>The materialized value</returns>
         private static object GetMaterializedValueCore(ODataAnnotatable annotatableObject)

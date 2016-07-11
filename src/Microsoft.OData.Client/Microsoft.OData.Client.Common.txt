@@ -122,7 +122,7 @@ Deserialize_MissingIdElement=Error processing response stream. Missing id elemen
 Collection_NullCollectionNotSupported=The value of the property '{0}' is null. Properties that are a collection type of primitive or complex types cannot be null.
 Collection_NullNonPropertyCollectionNotSupported=The value of the collection of item type '{0}' is null. A collection cannot have a null value.
 Collection_NullCollectionItemsNotSupported=An item in the collection property has a null value. Collection properties that contain items with null values are not supported.
-Collection_ComplexTypesInCollectionOfPrimitiveTypesNotAllowed=A collection property of primitive types cannot contain an item of a complex type.
+Collection_CollectionTypesInCollectionOfPrimitiveTypesNotAllowed=A collection property of primitive types cannot contain an item of a collection type.
 Collection_PrimitiveTypesInCollectionOfComplexTypesNotAllowed=A collection property of complex types cannot contain an item of a primitive type.
 
 EntityDescriptor_MissingSelfEditLink=The entity with identity '{0}' does not have a self-link or an edit-link associated with it. Please make sure that the entity has either a self-link or an edit-link associated with it.

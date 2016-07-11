@@ -443,20 +443,6 @@ namespace Microsoft.Test.OData.Services.ODataWCFService
                 return collectionList;
             }
 
-            //if (propertyValue is ODataComplexValue)
-            //{
-            //    ODataComplexValue complexValue = (ODataComplexValue)propertyValue;
-            //    var type = EdmClrTypeUtils.GetInstanceType(complexValue.TypeName);
-            //    var newInstance = Utility.QuickCreateInstance(type);
-            //    foreach (var p in complexValue.Properties)
-            //    {
-            //        PropertyInfo targetProperty = type.GetProperty(p.Name);
-            //        targetProperty.SetValue(newInstance, ConvertPropertyValue(p.Value, targetProperty.PropertyType), new object[] { });
-            //    }
-
-            //    return newInstance;
-            //}
-
             if (propertyValue is ODataResource)
             {
                 ODataResource entry = (ODataResource)propertyValue;

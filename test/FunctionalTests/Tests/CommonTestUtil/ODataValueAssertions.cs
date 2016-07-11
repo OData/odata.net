@@ -34,12 +34,6 @@ namespace AstoriaUnitTests.TDD.Common
             return new AndConstraint<ODataValueAssertions>(this);
         }
 
-        public AndConstraint<ODataValueAssertions> BeComplex()
-        {
-            this.Subject.Should().BeAssignableTo<ODataComplexValue>();
-            return new AndConstraint<ODataValueAssertions>(this);
-        }
-
         public AndConstraint<ODataValueAssertions> BeCollection()
         {
             this.Subject.Should().BeAssignableTo<ODataCollectionValue>();

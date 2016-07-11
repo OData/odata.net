@@ -228,7 +228,6 @@
     <Compile Include="MessageWriterSettingsArgs.cs" />
     <Compile Include="DataServiceClientConfigurations.cs" />
     <Compile Include="Materialization\CollectionValueMaterializationPolicy.cs" />
-    <Compile Include="Materialization\ComplexValueMaterializationPolicy.cs" />
     <Compile Include="Materialization\EntityTrackingAdapter.cs" />
     <Compile Include="Materialization\EntryValueMaterializationPolicy.cs" />
     <Compile Include="Materialization\MaterializationPolicy.cs" />

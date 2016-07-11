@@ -26,11 +26,6 @@ namespace Microsoft.OData.Client.Materialization
         private CollectionValueMaterializationPolicy collectionValueMaterializationPolicy;
 
         /// <summary>
-        /// The complex value materialization policy.
-        /// </summary>
-        private ComplexValueMaterializationPolicy complexValueMaterializerPolicy;
-
-        /// <summary>
         /// The enum value materialization policy
         /// </summary>
         private EnumValueMaterializationPolicy enumValueMaterializationPolicy;
@@ -59,23 +54,6 @@ namespace Microsoft.OData.Client.Materialization
             set
             {
                 this.collectionValueMaterializationPolicy = value;
-            }
-        }
-
-        /// <summary>
-        /// The complex value materialization policy.
-        /// </summary>
-        internal ComplexValueMaterializationPolicy ComplexValueMaterializationPolicy
-        {
-            get
-            {
-                Debug.Assert(this.complexValueMaterializerPolicy != null, "complexValueMaterializerPolicy != null");
-                return this.complexValueMaterializerPolicy;
-            }
-
-            set
-            {
-                this.complexValueMaterializerPolicy = value;
             }
         }
 
@@ -126,20 +104,6 @@ namespace Microsoft.OData.Client.Materialization
             {
                 IDictionary<string, object> instanceAnnotations = this.GetClrInstanceAnnotationsFromODataProperty(property);
                 SetInstanceAnnotations(instance, instanceAnnotations);
-            }
-        }
-
-        /// <summary>
-        /// Materialize instance annotation for an OData complex value
-        /// </summary>
-        /// <param name="complexValue">OData complex value</param>
-        /// <param name="complexInstance">Client clr object for the complex value</param>
-        internal void SetInstanceAnnotations(ODataComplexValue complexValue, object complexInstance)
-        {
-            if (complexValue != null)
-            {
-                IDictionary<string, object> instanceAnnotations = this.ConvertToClrInstanceAnnotations(complexValue.InstanceAnnotations);
-                SetInstanceAnnotations(complexInstance, instanceAnnotations);
             }
         }
 
@@ -245,13 +209,6 @@ namespace Microsoft.OData.Client.Materialization
         {
             IDictionary<string, object> clientInstanceAnnotationValue = null;
 
-            // If the property is a complex type property, instance annotations are stored in the complex value.
-            var odataComplexPropertyValue = property.Value as ODataComplexValue;
-            if (odataComplexPropertyValue != null)
-            {
-                clientInstanceAnnotationValue = ConvertToClrInstanceAnnotations(odataComplexPropertyValue.InstanceAnnotations);
-            }
-
             if (clientInstanceAnnotationValue == null)
             {
                 clientInstanceAnnotationValue = new Dictionary<string, object>(StringComparer.Ordinal);
@@ -296,26 +253,6 @@ namespace Microsoft.OData.Client.Materialization
                 if (type != null)
                 {
                     clrInstanceAnnotation = EnumValueMaterializationPolicy.MaterializeODataEnumValue(type, enumValue);
-                    return true;
-                }
-
-                return false;
-            }
-
-            var complexValue = instanceAnnotation.Value as ODataComplexValue;
-            if (complexValue != null)
-            {
-                var type = this.MaterializerContext.Context.ResolveTypeFromName(complexValue.TypeName);
-                if (type != null)
-                {
-                    ClientEdmModel edmModel = this.MaterializerContext.Model;
-                    ClientTypeAnnotation complexType = edmModel.GetClientTypeAnnotation(edmModel.GetOrCreateEdmType(type));
-
-                    // TODO: check if ComplexType inheritance will cause any issue
-                    var complexInstance = this.ComplexValueMaterializationPolicy.CreateNewInstance(complexType.EdmTypeReference, complexType.ElementType);
-                    this.ComplexValueMaterializationPolicy.MaterializeDataValues(complexType, complexValue.Properties, this.MaterializerContext.UndeclaredPropertyBehavior);
-                    this.ComplexValueMaterializationPolicy.ApplyDataValues(complexType, complexValue.Properties, complexInstance);
-                    clrInstanceAnnotation = complexInstance;
                     return true;
                 }
 

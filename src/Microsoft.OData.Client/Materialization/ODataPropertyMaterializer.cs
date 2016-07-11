@@ -52,7 +52,6 @@ namespace Microsoft.OData.Client.Materialization
             ODataProperty property = this.messageReader.ReadProperty(expectedReaderType);
             Type underlyingExpectedType = Nullable.GetUnderlyingType(this.ExpectedType) ?? this.ExpectedType;
 
-            object propertyValue = property.Value;
             if (expectedClientType.IsCollection())
             {
                 Debug.Assert(WebUtil.IsCLRTypeCollection(underlyingExpectedType, this.MaterializerContext.Model) || (SingleResult.HasValue && !SingleResult.Value), "expected type must be collection or single result must be false");
@@ -86,14 +85,6 @@ namespace Microsoft.OData.Client.Materialization
                     isElementNullable);
 
                 this.currentValue = collectionInstance;
-            }
-            else if (expectedClientType.IsComplex())
-            {
-                ODataComplexValue complexValue = propertyValue as ODataComplexValue;
-                Debug.Assert(this.MaterializerContext.Model.GetOrCreateEdmType(underlyingExpectedType).ToEdmTypeReference(false).IsComplex(), "expectedType must be complex type");
-
-                this.ComplexValueMaterializationPolicy.MaterializeComplexTypeProperty(underlyingExpectedType, complexValue);
-                this.currentValue = complexValue.GetMaterializedValue();
             }
             else if (expectedClientType.IsEnum())
             {

@@ -34,9 +34,6 @@ namespace Microsoft.OData.Client.Materialization
         /// <summary>The collection value materialization policy. </summary>
         private readonly CollectionValueMaterializationPolicy collectionValueMaterializationPolicy;
 
-        /// <summary>The complex value materializer policy. </summary>
-        private readonly ComplexValueMaterializationPolicy complexValueMaterializerPolicy;
-
         /// <summary>The enum value materialization policy. </summary>
         private readonly EnumValueMaterializationPolicy enumValueMaterializationPolicy;
 
@@ -64,13 +61,8 @@ namespace Microsoft.OData.Client.Materialization
             this.lazyPrimitivePropertyConverter = new DSClient.SimpleLazy<PrimitivePropertyConverter>(() => new PrimitivePropertyConverter());
             this.primitiveValueMaterializationPolicy = new PrimitiveValueMaterializationPolicy(this.MaterializerContext, this.lazyPrimitivePropertyConverter);
             this.collectionValueMaterializationPolicy = new CollectionValueMaterializationPolicy(this.MaterializerContext, this.primitiveValueMaterializationPolicy);
-            this.complexValueMaterializerPolicy = new ComplexValueMaterializationPolicy(this.MaterializerContext, this.lazyPrimitivePropertyConverter);
             this.instanceAnnotationMaterializationPolicy = new InstanceAnnotationMaterializationPolicy(this.MaterializerContext);
-            this.collectionValueMaterializationPolicy.ComplexValueMaterializationPolicy = this.complexValueMaterializerPolicy;
             this.collectionValueMaterializationPolicy.InstanceAnnotationMaterializationPolicy = this.instanceAnnotationMaterializationPolicy;
-            this.complexValueMaterializerPolicy.CollectionValueMaterializationPolicy = this.collectionValueMaterializationPolicy;
-            this.complexValueMaterializerPolicy.InstanceAnnotationMaterializationPolicy = this.instanceAnnotationMaterializationPolicy;
-            this.instanceAnnotationMaterializationPolicy.ComplexValueMaterializationPolicy = this.complexValueMaterializerPolicy;
             this.instanceAnnotationMaterializationPolicy.CollectionValueMaterializationPolicy = this.collectionValueMaterializationPolicy;
             this.instanceAnnotationMaterializationPolicy.EnumValueMaterializationPolicy = this.enumValueMaterializationPolicy;
         }
@@ -144,14 +136,6 @@ namespace Microsoft.OData.Client.Materialization
         protected CollectionValueMaterializationPolicy CollectionValueMaterializationPolicy
         {
             get { return this.collectionValueMaterializationPolicy; }
-        }
-
-        /// <summary>
-        /// Gets the complex value materialization policy.
-        /// </summary>
-        protected ComplexValueMaterializationPolicy ComplexValueMaterializationPolicy
-        {
-            get { return this.complexValueMaterializerPolicy; }
         }
 
         /// <summary>

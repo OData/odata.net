@@ -260,7 +260,7 @@ namespace Microsoft.OData.Client
 
             if (!PrimitiveType.IsKnownNullableType(itemValueType))
             {
-                throw Error.InvalidOperation(Strings.Collection_ComplexTypesInCollectionOfPrimitiveTypesNotAllowed);
+                throw Error.InvalidOperation(Strings.Collection_CollectionTypesInCollectionOfPrimitiveTypesNotAllowed);
             }
 
             if (!collectionItemType.IsAssignableFrom(itemValueType))

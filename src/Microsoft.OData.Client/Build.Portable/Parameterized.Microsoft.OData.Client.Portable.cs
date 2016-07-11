@@ -529,7 +529,7 @@ namespace Microsoft.OData.Client {
         }
 
         /// <summary>
-        /// A string like "An implementation of ODataResourceMetadataBuilder is required, but a null value was returned from GetEntityMetadataBuilder."
+        /// A string like "An implementation of ODataEntityMetadataBuilder is required, but a null value was returned from GetEntityMetadataBuilder."
         /// </summary>
         internal static string Context_EntityMetadataBuilderIsRequired {
             get {
@@ -857,11 +857,11 @@ namespace Microsoft.OData.Client {
         }
 
         /// <summary>
-        /// A string like "A collection property of primitive types cannot contain an item of a complex type."
+        /// A string like "A collection property of primitive types cannot contain an item of a collection type."
         /// </summary>
-        internal static string Collection_ComplexTypesInCollectionOfPrimitiveTypesNotAllowed {
+        internal static string Collection_CollectionTypesInCollectionOfPrimitiveTypesNotAllowed {
             get {
-                return Microsoft.OData.Client.TextRes.GetString(Microsoft.OData.Client.TextRes.Collection_ComplexTypesInCollectionOfPrimitiveTypesNotAllowed);
+                return Microsoft.OData.Client.TextRes.GetString(Microsoft.OData.Client.TextRes.Collection_CollectionTypesInCollectionOfPrimitiveTypesNotAllowed);
             }
         }
 

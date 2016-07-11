@@ -24,9 +24,6 @@ namespace Microsoft.OData.Client.Materialization
         /// <summary> The materializer context. </summary>
         private readonly IODataMaterializerContext materializerContext;
 
-        /// <summary> The complex value materialization policy. </summary>
-        private ComplexValueMaterializationPolicy complexValueMaterializationPolicy;
-
         /// <summary> The primitive value materialization policy. </summary>
         private PrimitiveValueMaterializationPolicy primitiveValueMaterializationPolicy;
 
@@ -42,26 +39,6 @@ namespace Microsoft.OData.Client.Materialization
         {
             this.materializerContext = context;
             this.primitiveValueMaterializationPolicy = primitivePolicy;
-        }
-
-        /// <summary>
-        /// Gets the complex value materialization policy.
-        /// </summary>
-        /// <value>
-        /// The complex value materialization policy.
-        /// </value>
-        internal ComplexValueMaterializationPolicy ComplexValueMaterializationPolicy
-        {
-            get
-            {
-                Debug.Assert(this.complexValueMaterializationPolicy != null, "complexValueMaterializationPolicy!= null");
-                return this.complexValueMaterializationPolicy;
-            }
-
-            set
-            {
-                this.complexValueMaterializationPolicy = value;
-            }
         }
 
         /// <summary>
@@ -196,16 +173,14 @@ namespace Microsoft.OData.Client.Materialization
                         throw DSClient.Error.InvalidOperation(DSClient.Strings.Collection_NullCollectionItemsNotSupported);
                     }
 
-                    ODataComplexValue complexValue = item as ODataComplexValue;
                     ODataEnumValue enumVal = null;
 
                     // Is it a Collection of primitive types?
                     if (isCollectionItemTypePrimitive)
                     {
-                        // verify that the Collection does not contain complex type items
-                        if (complexValue != null || item is ODataCollectionValue)
+                        if (item is ODataCollectionValue)
                         {
-                            throw DSClient.Error.InvalidOperation(DSClient.Strings.Collection_ComplexTypesInCollectionOfPrimitiveTypesNotAllowed);
+                            throw DSClient.Error.InvalidOperation(DSClient.Strings.Collection_CollectionTypesInCollectionOfPrimitiveTypesNotAllowed);
                         }
 
                         object materializedValue = this.primitiveValueMaterializationPolicy.MaterializePrimitiveDataValueCollectionElement(collectionItemType, wireTypeName, item);
@@ -220,33 +195,12 @@ namespace Microsoft.OData.Client.Materialization
                     }
                     else
                     {
-                        // verify that the Collection does not contain primitive values
-                        if (item != null && complexValue == null)
+                        if (item != null)
                         {
                             throw DSClient.Error.InvalidOperation(DSClient.Strings.Collection_PrimitiveTypesInCollectionOfComplexTypesNotAllowed);
                         }
 
-                        if (item != null)
-                        {
-                            ClientTypeAnnotation complexType = this.materializerContext.ResolveTypeForMaterialization(collectionItemType, complexValue.TypeName);
-                            object complexInstance = this.CreateNewInstance(complexType.EdmTypeReference, complexType.ElementType);
-
-                            // set properties with metarialized data values if there are any (note that for a payload that looks as follows <element xmlns="http://docs.oasis-open.org/odata/ns/data"/>
-                            // and represents an item that is a complex type there are no properties to be set)
-                            this.ComplexValueMaterializationPolicy.ApplyDataValues(complexType, complexValue.Properties, complexInstance);
-
-                            addValueToBackingICollectionInstance(collectionInstance, complexInstance);
-
-                            // Apply instance annotation for complex type item
-                            if (!this.materializerContext.Context.DisableInstanceAnnotationMaterialization)
-                            {
-                                this.InstanceAnnotationMaterializationPolicy.SetInstanceAnnotations(complexValue, complexInstance);
-                            }
-                        }
-                        else
-                        {
-                            addValueToBackingICollectionInstance(collectionInstance, null);
-                        }
+                        addValueToBackingICollectionInstance(collectionInstance, null);
                     }
                 }
             }

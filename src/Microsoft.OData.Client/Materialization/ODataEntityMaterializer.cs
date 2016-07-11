@@ -31,7 +31,7 @@ namespace Microsoft.OData.Client.Materialization
         private readonly ProjectionPlan materializeEntryPlan;
 
         /// <summary> The entry value materializer policy. </summary>
-        private readonly EntryValueMaterializationPolicy entryValueMaterializerPolicy;
+        private readonly EntryValueMaterializationPolicy entryValueMaterializationPolicy;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ODataEntityMaterializer" /> class.
@@ -53,9 +53,9 @@ namespace Microsoft.OData.Client.Materialization
             this.EntityTrackingAdapter = entityTrackingAdapter;
             DSClient.SimpleLazy<PrimitivePropertyConverter> converter = new DSClient.SimpleLazy<PrimitivePropertyConverter>(() => new PrimitivePropertyConverter());
 
-            this.entryValueMaterializerPolicy = new EntryValueMaterializationPolicy(this.MaterializerContext, this.EntityTrackingAdapter, converter, nextLinkTable);
-            this.entryValueMaterializerPolicy.CollectionValueMaterializationPolicy = this.CollectionValueMaterializationPolicy;
-            this.entryValueMaterializerPolicy.InstanceAnnotationMaterializationPolicy = this.InstanceAnnotationMaterializationPolicy;
+            this.entryValueMaterializationPolicy = new EntryValueMaterializationPolicy(this.MaterializerContext, this.EntityTrackingAdapter, converter, nextLinkTable);
+            this.entryValueMaterializationPolicy.CollectionValueMaterializationPolicy = this.CollectionValueMaterializationPolicy;
+            this.entryValueMaterializationPolicy.InstanceAnnotationMaterializationPolicy = this.InstanceAnnotationMaterializationPolicy;
         }
 
         /// <summary>
@@ -104,7 +104,7 @@ namespace Microsoft.OData.Client.Materialization
         /// </value>
         protected EntryValueMaterializationPolicy EntryValueMaterializationPolicy
         {
-            get { return this.entryValueMaterializerPolicy; }
+            get { return this.entryValueMaterializationPolicy; }
         }
 
         #region Projection support.
@@ -552,7 +552,7 @@ namespace Microsoft.OData.Client.Materialization
         /// <returns>The materialized instance.</returns>
         internal static object DirectMaterializePlan(ODataEntityMaterializer materializer, MaterializerEntry entry, Type expectedEntryType)
         {
-            materializer.entryValueMaterializerPolicy.Materialize(entry, expectedEntryType, true);
+            materializer.entryValueMaterializationPolicy.Materialize(entry, expectedEntryType, true);
             return entry.ResolvedObject;
         }
 
@@ -563,7 +563,7 @@ namespace Microsoft.OData.Client.Materialization
         /// <returns>The materialized instance.</returns>
         internal static object ShallowMaterializePlan(ODataEntityMaterializer materializer, MaterializerEntry entry, Type expectedEntryType)
         {
-            materializer.entryValueMaterializerPolicy.Materialize(entry, expectedEntryType, false);
+            materializer.entryValueMaterializationPolicy.Materialize(entry, expectedEntryType, false);
             return entry.ResolvedObject;
         }
 
@@ -762,17 +762,10 @@ namespace Microsoft.OData.Client.Materialization
                         if (property.IsPrimitiveOrEnumOrComplexCollection)
                         {
                             object instance = result ?? entry.ResolvedObject ?? this.CollectionValueMaterializationPolicy.CreateNewInstance(property.EdmProperty.Type.Definition.ToEdmTypeReference(true), expectedType);
-                            this.ComplexValueMaterializationPolicy.ApplyDataValue(edmModel.GetClientTypeAnnotation(edmModel.GetOrCreateEdmType(instance.GetType())), odataProperty, instance);
+                            this.entryValueMaterializationPolicy.ApplyDataValue(edmModel.GetClientTypeAnnotation(edmModel.GetOrCreateEdmType(instance.GetType())), odataProperty, instance);
 
                             links = ODataMaterializer.EmptyLinks;
                             properties = ODataMaterializer.EmptyProperties;
-                        }
-                        else if (odataProperty.Value is ODataComplexValue)
-                        {
-                            ODataComplexValue complexValue = odataProperty.Value as ODataComplexValue;
-                            this.ComplexValueMaterializationPolicy.MaterializeComplexTypeProperty(property.PropertyType, complexValue);
-                            properties = complexValue.Properties;
-                            links = ODataMaterializer.EmptyLinks;
                         }
                         else if (odataProperty.Value is ODataEnumValue)
                         {
@@ -787,7 +780,7 @@ namespace Microsoft.OData.Client.Materialization
                                 throw new InvalidOperationException(DSClient.Strings.AtomMaterializer_CannotAssignNull(odataProperty.Name, property.NullablePropertyType));
                             }
 
-                            this.ComplexValueMaterializationPolicy.MaterializePrimitiveDataValue(property.NullablePropertyType, odataProperty);
+                            this.entryValueMaterializationPolicy.MaterializePrimitiveDataValue(property.NullablePropertyType, odataProperty);
 
                             links = ODataMaterializer.EmptyLinks;
                             properties = ODataMaterializer.EmptyProperties;
@@ -852,7 +845,7 @@ namespace Microsoft.OData.Client.Materialization
             bool setFeedInstanceAnnotation = this.CurrentFeed == null;
             if (this.ReadNextFeedOrEntry())
             {
-                if (this.CurrentEntry == null && this.CurrentFeed != null)
+                if (this.CurrentEntry == null)
                 {
                     this.currentValue = null;
                     return true;

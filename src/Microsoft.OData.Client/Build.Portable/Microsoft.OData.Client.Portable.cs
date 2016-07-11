@@ -127,7 +127,7 @@ namespace Microsoft.OData.Client {
         internal const string Collection_NullCollectionNotSupported = "Collection_NullCollectionNotSupported";
         internal const string Collection_NullNonPropertyCollectionNotSupported = "Collection_NullNonPropertyCollectionNotSupported";
         internal const string Collection_NullCollectionItemsNotSupported = "Collection_NullCollectionItemsNotSupported";
-        internal const string Collection_ComplexTypesInCollectionOfPrimitiveTypesNotAllowed = "Collection_ComplexTypesInCollectionOfPrimitiveTypesNotAllowed";
+        internal const string Collection_CollectionTypesInCollectionOfPrimitiveTypesNotAllowed = "Collection_CollectionTypesInCollectionOfPrimitiveTypesNotAllowed";
         internal const string Collection_PrimitiveTypesInCollectionOfComplexTypesNotAllowed = "Collection_PrimitiveTypesInCollectionOfComplexTypesNotAllowed";
         internal const string EntityDescriptor_MissingSelfEditLink = "EntityDescriptor_MissingSelfEditLink";
         internal const string HttpProcessUtility_ContentTypeMissing = "HttpProcessUtility_ContentTypeMissing";

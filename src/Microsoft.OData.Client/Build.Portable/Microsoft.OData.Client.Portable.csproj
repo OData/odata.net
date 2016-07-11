@@ -295,9 +295,6 @@
     <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Client\Materialization\CollectionValueMaterializationPolicy.cs">
       <Link>Materialization\CollectionValueMaterializationPolicy.cs</Link>
     </Compile>
-    <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Client\Materialization\ComplexValueMaterializationPolicy.cs">
-      <Link>Materialization\ComplexValueMaterializationPolicy.cs</Link>
-    </Compile>
     <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Client\Materialization\EntityTrackingAdapter.cs">
       <Link>Materialization\EntityTrackingAdapter.cs</Link>
     </Compile>
