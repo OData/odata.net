@@ -6,6 +6,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Microsoft.OData.Edm
 {
@@ -14,7 +15,7 @@ namespace Microsoft.OData.Edm
     /// </summary>
     public abstract class EdmNavigationSource : EdmNamedElement, IEdmNavigationSource
     {
-        private readonly Dictionary<IEdmNavigationProperty, IEdmNavigationSource> navigationPropertyMappings = new Dictionary<IEdmNavigationProperty, IEdmNavigationSource>();
+        private readonly Dictionary<IEdmNavigationProperty, Dictionary<string, IEdmNavigationSource>> navigationPropertyMappings = new Dictionary<IEdmNavigationProperty, Dictionary<string, IEdmNavigationSource>>();
 
         private readonly Dictionary<IEdmNavigationProperty, IEdmContainedEntitySet> containedNavigationPropertyCache = new Dictionary<IEdmNavigationProperty, IEdmContainedEntitySet>();
 
@@ -57,7 +58,41 @@ namespace Microsoft.OData.Edm
         /// <param name="target">The destination navigation source of the specified navigation property.</param>
         public void AddNavigationTarget(IEdmNavigationProperty property, IEdmNavigationSource target)
         {
-            this.navigationPropertyMappings[property] = target;
+            string path = property.Name;
+
+            if (!this.Type.AsElementType().IsOrInheritsFrom(property.DeclaringType))
+            {
+                path = property.DeclaringType.FullTypeName() + '/' + path;
+            }
+
+            if (!this.navigationPropertyMappings.ContainsKey(property))
+            {
+                this.navigationPropertyMappings[property] = new Dictionary<string, IEdmNavigationSource>();
+            }
+
+            this.navigationPropertyMappings[property][path] = target;
+            this.navigationTargetsCache.Clear(null);
+        }
+
+        /// <summary>
+        /// Adds a navigation target, specifying the destination entity set of a navigation property of an entity in this navigation source.
+        /// </summary>
+        /// <param name="property">The navigation property the target is being set for.</param>
+        /// <param name="target">The destination navigation source of the specified navigation property.</param>
+        /// <param name="path">Sets the path that the navigation property targets.</param>
+        public void AddNavigationTarget(IEdmNavigationProperty property, IEdmNavigationSource target, string path)
+        {
+            if (property.Name != path.Split('/').Last())
+            {
+                throw new ArgumentException(Strings.NavigationPropertyBinding_PathIsNotValid);
+            }
+
+            if (!this.navigationPropertyMappings.ContainsKey(property))
+            {
+                this.navigationPropertyMappings[property] = new Dictionary<string, IEdmNavigationSource>();
+            }
+
+            this.navigationPropertyMappings[property][path] = target;
             this.navigationTargetsCache.Clear(null);
         }
 
@@ -72,10 +107,10 @@ namespace Microsoft.OData.Edm
 
             if (!property.ContainsTarget)
             {
-                IEdmNavigationSource result;
+                Dictionary<string, IEdmNavigationSource> result;
                 if (this.navigationPropertyMappings.TryGetValue(property, out result))
                 {
-                    return result;
+                    return result.Values.FirstOrDefault();
                 }
             }
             else
@@ -95,9 +130,12 @@ namespace Microsoft.OData.Edm
         private IEnumerable<IEdmNavigationPropertyBinding> ComputeNavigationTargets()
         {
             List<IEdmNavigationPropertyBinding> result = new List<IEdmNavigationPropertyBinding>();
-            foreach (KeyValuePair<IEdmNavigationProperty, IEdmNavigationSource> mapping in this.navigationPropertyMappings)
+            foreach (KeyValuePair<IEdmNavigationProperty, Dictionary<string, IEdmNavigationSource>> mapping in this.navigationPropertyMappings)
             {
-                result.Add(new EdmNavigationPropertyBinding(mapping.Key, mapping.Value));
+                foreach (KeyValuePair<string, IEdmNavigationSource> kv in mapping.Value)
+                {
+                    result.Add(new EdmNavigationPropertyBinding(mapping.Key, kv.Value, kv.Key));
+                }
             }
 
             return result;

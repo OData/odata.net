@@ -521,7 +521,7 @@ namespace Microsoft.Test.OData.Utils.ODataLibTest
             // create NavigationPropertyBinding
             foreach (EdmNavigationProperty property in model.SchemaElements.OfType<IEdmEntityType>().SelectMany(entityType => entityType.DeclaredNavigationProperties()))
             {
-                var sourceEntitySet = findEntitySet(property.DeclaringEntityType) as EdmEntitySet;
+                var sourceEntitySet = findEntitySet(property.DeclaringType as IEdmEntityType) as EdmEntitySet;
                 ExceptionUtilities.CheckArgumentNotNull(sourceEntitySet, "SourceEntitySet");
 
                 var targetEntityType = (property.Type.Definition.TypeKind == EdmTypeKind.Collection)

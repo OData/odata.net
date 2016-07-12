@@ -46,6 +46,175 @@ namespace Microsoft.OData.Edm.Tests.Csdl
             Assert.Equal(@"<?xml version=""1.0"" encoding=""utf-16""?><edmx:Edmx Version=""4.0"" xmlns:edmx=""http://docs.oasis-open.org/odata/ns/edmx""><edmx:DataServices><Schema Namespace=""NS1"" xmlns=""http://docs.oasis-open.org/odata/ns/edm""><EntityType Name=""Product""><Key><PropertyRef Name=""Id"" /></Key><Property Name=""Id"" Type=""Edm.Int32"" Nullable=""false""><Annotation Term=""Org.OData.Core.V1.Computed"" Bool=""true"" /></Property><Property Name=""Name"" Type=""Edm.String"" Nullable=""false"" /><Property Name=""UpdatedTime"" Type=""Edm.Date"" Nullable=""false""><Annotation Term=""Org.OData.Core.V1.Computed"" Bool=""true"" /></Property></EntityType><EntityContainer Name=""Container""><EntitySet Name=""Products"" EntityType=""NS1.Product""><Annotation Term=""Org.OData.Core.V1.OptimisticConcurrency""><Collection><PropertyPath>Id</PropertyPath><PropertyPath>UpdatedTime</PropertyPath></Collection></Annotation></EntitySet></EntityContainer></Schema></edmx:DataServices></edmx:Edmx>", csdlStr);
         }
 
+        [Fact]
+        public void WriteNavigationPropertyInComplexType()
+        {
+            var model = new EdmModel();
+
+            var person = new EdmEntityType("DefaultNs", "Person");
+            var entityId = person.AddStructuralProperty("UserName", EdmCoreModel.Instance.GetString(false));
+            person.AddKeys(entityId);
+
+            var city = new EdmEntityType("DefaultNs", "City");
+            var cityId = city.AddStructuralProperty("Name", EdmCoreModel.Instance.GetString(false));
+            city.AddKeys(cityId);
+
+            var country = new EdmEntityType("DefaultNs", "Country");
+            var countryId = country.AddStructuralProperty("Name", EdmCoreModel.Instance.GetString(false));
+            country.AddKeys(countryId);
+
+            var complex = new EdmComplexType("DefaultNs", "Address");
+            complex.AddStructuralProperty("Id", EdmCoreModel.Instance.GetInt32(false));
+            var navP = complex.AddUnidirectionalNavigation(
+                new EdmNavigationPropertyInfo()
+                {
+                    Name = "City",
+                    Target = city,
+                    TargetMultiplicity = EdmMultiplicity.One,
+                });
+
+            var derivedComplex = new EdmComplexType("DefaultNs", "WorkAddress", complex);
+            var navP2 = derivedComplex.AddUnidirectionalNavigation(
+                new EdmNavigationPropertyInfo()
+                {
+                    Name = "Country",
+                    Target = country,
+                    TargetMultiplicity = EdmMultiplicity.One,
+                });
+
+            person.AddStructuralProperty("HomeAddress", new EdmComplexTypeReference(complex, false));
+            person.AddStructuralProperty("WorkAddress", new EdmComplexTypeReference(complex, false));
+            person.AddStructuralProperty("Addresses", new EdmCollectionTypeReference(new EdmCollectionType(new EdmComplexTypeReference(complex, false))));
+
+            model.AddElement(person);
+            model.AddElement(city);
+            model.AddElement(country);
+            model.AddElement(complex);
+            model.AddElement(derivedComplex);
+
+            var entityContainer = new EdmEntityContainer("DefaultNs", "Container");
+            model.AddElement(entityContainer);
+            EdmEntitySet people = new EdmEntitySet(entityContainer, "People", person);
+            EdmEntitySet cities = new EdmEntitySet(entityContainer, "City", city);
+            EdmEntitySet countries = new EdmEntitySet(entityContainer, "Country", country);
+            people.AddNavigationTarget(navP, cities, "HomeAddress/City");
+            people.AddNavigationTarget(navP, cities, "Addresses/City");
+            people.AddNavigationTarget(navP2, countries, "WorkAddress/DefaultNs.WorkAddress/Country");
+            entityContainer.AddElement(people);
+            entityContainer.AddElement(cities);
+            entityContainer.AddElement(countries);
+
+            string actual = GetEdmx(model, EdmxTarget.OData);
+
+            string expected =
+                "<?xml version=\"1.0\" encoding=\"utf-16\"?><edmx:Edmx Version=\"4.0\" xmlns:edmx=\"http://docs.oasis-open.org/odata/ns/edmx\">" +
+                "<edmx:DataServices>" +
+                "<Schema Namespace=\"DefaultNs\" xmlns=\"http://docs.oasis-open.org/odata/ns/edm\">" +
+                "<EntityType Name=\"Person\">" +
+                    "<Key><PropertyRef Name=\"UserName\" /></Key>" +
+                    "<Property Name=\"UserName\" Type=\"Edm.String\" Nullable=\"false\" />" +
+                    "<Property Name=\"HomeAddress\" Type=\"DefaultNs.Address\" Nullable=\"false\" />" +
+                    "<Property Name=\"WorkAddress\" Type=\"DefaultNs.Address\" Nullable=\"false\" />" +
+                    "<Property Name=\"Addresses\" Type=\"Collection(DefaultNs.Address)\" Nullable=\"false\" />" +
+                "</EntityType>" +
+                "<EntityType Name=\"City\">" +
+                    "<Key><PropertyRef Name=\"Name\" /></Key>" +
+                    "<Property Name=\"Name\" Type=\"Edm.String\" Nullable=\"false\" />" +
+                "</EntityType>" +
+                "<EntityType Name=\"Country\">" +
+                    "<Key><PropertyRef Name=\"Name\" /></Key>" +
+                    "<Property Name=\"Name\" Type=\"Edm.String\" Nullable=\"false\" />" +
+                "</EntityType>" +
+                "<ComplexType Name=\"Address\">" +
+                    "<Property Name=\"Id\" Type=\"Edm.Int32\" Nullable=\"false\" />" +
+                    "<NavigationProperty Name=\"City\" Type=\"DefaultNs.City\" Nullable=\"false\" />" +
+                "</ComplexType>" +
+                "<ComplexType Name=\"WorkAddress\" BaseType=\"DefaultNs.Address\">" +
+                    "<NavigationProperty Name=\"Country\" Type=\"DefaultNs.Country\" Nullable=\"false\" /><" +
+                "/ComplexType>" +
+                "<EntityContainer Name=\"Container\">" +
+                "<EntitySet Name=\"People\" EntityType=\"DefaultNs.Person\">" +
+                    "<NavigationPropertyBinding Path=\"HomeAddress/City\" Target=\"City\" />" +
+                    "<NavigationPropertyBinding Path=\"Addresses/City\" Target=\"City\" />" +
+                    "<NavigationPropertyBinding Path=\"WorkAddress/DefaultNs.WorkAddress/Country\" Target=\"Country\" />" +
+                "</EntitySet>" +
+                "<EntitySet Name=\"City\" EntityType=\"DefaultNs.City\" />" +
+                "<EntitySet Name=\"Country\" EntityType=\"DefaultNs.Country\" />" +
+                "</EntityContainer></Schema>" +
+                "</edmx:DataServices>" +
+                "</edmx:Edmx>";
+
+            Assert.Equal(expected, actual);
+        }
+
+        [Fact]
+        public void WriteCollectionOfNavigationOnComplex()
+        {
+            var model = new EdmModel();
+
+            var entity = new EdmEntityType("DefaultNs", "EntityType");
+            var entityId = entity.AddStructuralProperty("ID", EdmCoreModel.Instance.GetString(false));
+            entity.AddKeys(entityId);
+
+            var navEntity = new EdmEntityType("DefaultNs", "NavEntityType");
+            var navEntityId = navEntity.AddStructuralProperty("ID", EdmCoreModel.Instance.GetString(false));
+            navEntity.AddKeys(navEntityId);
+
+            var complex = new EdmComplexType("DefaultNs", "ComplexType");
+            complex.AddStructuralProperty("Prop1", EdmCoreModel.Instance.GetInt32(false));
+
+            var navP = complex.AddUnidirectionalNavigation(
+                new EdmNavigationPropertyInfo()
+                {
+                    Name = "CollectionOfNav",
+                    Target = navEntity,
+                    TargetMultiplicity = EdmMultiplicity.Many,
+                });
+
+            entity.AddStructuralProperty("Complex", new EdmComplexTypeReference(complex, false));
+
+            model.AddElement(entity);
+            model.AddElement(navEntity);
+            model.AddElement(complex);
+
+            var entityContainer = new EdmEntityContainer("DefaultNs", "Container");
+            model.AddElement(entityContainer);
+            EdmEntitySet entites = new EdmEntitySet(entityContainer, "Entities", entity);
+            EdmEntitySet navEntities = new EdmEntitySet(entityContainer, "NavEntities", navEntity);
+            entites.AddNavigationTarget(navP, navEntities, "Complex/CollectionOfNav");
+            entityContainer.AddElement(entites);
+            entityContainer.AddElement(navEntities);
+
+            string actual = GetEdmx(model, EdmxTarget.OData);
+
+            string expected = "<?xml version=\"1.0\" encoding=\"utf-16\"?><edmx:Edmx Version=\"4.0\" xmlns:edmx=\"http://docs.oasis-open.org/odata/ns/edmx\">" +
+                              "<edmx:DataServices><Schema Namespace=\"DefaultNs\" xmlns=\"http://docs.oasis-open.org/odata/ns/edm\">" +
+                              "<EntityType Name=\"EntityType\">" +
+                                  "<Key><PropertyRef Name=\"ID\" /></Key>" +
+                                  "<Property Name=\"ID\" Type=\"Edm.String\" Nullable=\"false\" />" +
+                                  "<Property Name=\"Complex\" Type=\"DefaultNs.ComplexType\" Nullable=\"false\" />" +
+                              "</EntityType>" +
+                              "<EntityType Name=\"NavEntityType\">" +
+                                  "<Key><PropertyRef Name=\"ID\" /></Key>" +
+                                  "<Property Name=\"ID\" Type=\"Edm.String\" Nullable=\"false\" />" +
+                              "</EntityType>" +
+                              "<ComplexType Name=\"ComplexType\">" +
+                                  "<Property Name=\"Prop1\" Type=\"Edm.Int32\" Nullable=\"false\" />" +
+                                  "<NavigationProperty Name=\"CollectionOfNav\" Type=\"Collection(DefaultNs.NavEntityType)\" />" +
+                              "</ComplexType>" +
+                              "<EntityContainer Name=\"Container\">" +
+                              "<EntitySet Name=\"Entities\" EntityType=\"DefaultNs.EntityType\">" +
+                                "<NavigationPropertyBinding Path=\"Complex/CollectionOfNav\" Target=\"NavEntities\" />" +
+                              "</EntitySet>" +
+                              "<EntitySet Name=\"NavEntities\" EntityType=\"DefaultNs.NavEntityType\" />" +
+                              "</EntityContainer>" +
+                              "</Schema>" +
+                              "</edmx:DataServices>" +
+                              "</edmx:Edmx>";
+
+            Assert.Equal(expected, actual);
+        }
+
         public static void SetComputedAnnotation(EdmModel model, IEdmProperty target)
         {
             EdmUtil.CheckArgumentNull(model, "model");

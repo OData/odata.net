@@ -58,6 +58,15 @@ namespace Microsoft.OData.Tests.UriParser
             return new AndConstraint<TypeSegment>(typeSegment);
         }
 
+        public static AndConstraint<TypeSegment> ShouldBeTypeSegment(this ODataPathSegment segment, IEdmType actualType, IEdmType expectType)
+        {
+            segment.Should().BeOfType<TypeSegment>();
+            TypeSegment typeSegment = segment.As<TypeSegment>();
+            typeSegment.EdmType.ShouldBeEquivalentTo(actualType);
+            typeSegment.TargetEdmType.ShouldBeEquivalentTo(expectType);
+            return new AndConstraint<TypeSegment>(typeSegment);
+        }
+
         public static AndConstraint<PropertySegment> ShouldBePropertySegment(this ODataPathSegment segment, IEdmProperty expectedProperty)
         {
             segment.Should().BeOfType<PropertySegment>();

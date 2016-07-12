@@ -65,6 +65,13 @@ namespace Microsoft.OData.UriParser
                         throw new ODataException(ODataErrorStrings.ODataExpandPath_OnlyLastSegmentMustBeNavigationProperty);
                     }
                 }
+                else if (segment is PropertySegment)
+                {
+                    if (index == this.Count - 1)
+                    {
+                        throw new ODataException(ODataErrorStrings.ODataExpandPath_OnlyLastSegmentMustBeNavigationProperty);
+                    }
+                }
                 else if (segment is NavigationPropertySegment)
                 {
                     if (index < this.Count - 1 || foundNavProp)

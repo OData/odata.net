@@ -149,6 +149,21 @@ namespace Microsoft.OData.Edm
         }
 
         /// <summary>
+        /// Creates and adds a unidirectional navigation property to this type.
+        /// </summary>
+        /// <param name="propertyInfo">Information to create the navigation property.</param>
+        /// <returns>Created navigation property.</returns>
+        public EdmNavigationProperty AddUnidirectionalNavigation(EdmNavigationPropertyInfo propertyInfo)
+        {
+            EdmUtil.CheckArgumentNull(propertyInfo, "propertyInfo");
+
+            EdmNavigationProperty property = EdmNavigationProperty.CreateNavigationProperty(this, propertyInfo);
+
+            this.AddProperty(property);
+            return property;
+        }
+
+        /// <summary>
         /// Searches for a structural or navigation property with the given name in this type and all base types and returns null if no such property exists.
         /// </summary>
         /// <param name="name">The name of the property being found.</param>

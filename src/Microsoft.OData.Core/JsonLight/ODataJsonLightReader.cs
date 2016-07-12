@@ -1292,8 +1292,20 @@ namespace Microsoft.OData.JsonLight
             Debug.Assert(this.CurrentNavigationSource != null || this.readingParameter || this.CurrentNavigationSource == null && this.CurrentScope.ResourceType.IsODataComplexTypeKind(), "Json requires an navigation source when not reading parameter.");
 
             IEdmNavigationProperty navigationProperty = readerNestedResourceInfo.NavigationProperty;
-            IEdmNavigationSource navigationSource = this.CurrentNavigationSource == null || navigationProperty == null
-                ? null : this.CurrentNavigationSource.FindNavigationTarget(navigationProperty);
+
+            IEdmNavigationSource navigationSource;
+
+            if (navigationProperty == null)
+            {
+                navigationSource = this.CurrentNavigationSource;
+            }
+            else
+            {
+                navigationSource = this.CurrentNavigationSource == null
+                    ? null
+                    : this.CurrentNavigationSource.FindNavigationTarget(navigationProperty);
+            }
+
             ODataUri odataUri = null;
             if (readerNestedResourceInfo.NestedResourceInfo.ContextUrl != null)
             {

@@ -34,22 +34,34 @@ namespace Microsoft.OData.UriParser
         /// <param name="edmType">The target type of this segment, which may be collection type.</param>
         /// <param name="navigationSource">The navigation source containing the entities that we are casting. This can be null.</param>
         /// <exception cref="System.ArgumentNullException">Throws if the input edmType is null.</exception>
-        /// <exception cref="ODataException">Throws if the input edmType is not relaed to the type of elements in the input entitySet.</exception>
+        /// <exception cref="ODataException">Throws if the input edmType is not related to the type of elements in the input entitySet.</exception>
         [SuppressMessage("DataWeb.Usage", "AC0003:MethodCallNotAllowed", Justification = "Rule only applies to ODataLib Serialization code.")]
         public TypeSegment(IEdmType edmType, IEdmNavigationSource navigationSource)
+            : this(edmType, navigationSource == null ? edmType : navigationSource.EntityType(), navigationSource)
         {
-            ExceptionUtils.CheckArgumentNotNull(edmType, "type");
+        }
 
-            this.edmType = edmType;
+        /// <summary>
+        /// Build the type segment based on the giving <paramref name="actualType"/> and <paramref name="expectedType"/>
+        /// </summary>
+        /// <param name="actualType">The real type passed from uri</param>
+        /// <param name="expectedType">The type defined in the model</param>
+        /// <param name="navigationSource">The navigation source containing the resource that we are casting. This can be null.</param>
+        public TypeSegment(IEdmType actualType, IEdmType expectedType, IEdmNavigationSource navigationSource)
+        {
+            ExceptionUtils.CheckArgumentNotNull(actualType, "actualType");
+            ExceptionUtils.CheckArgumentNotNull(expectedType, "expectedType");
+
+            this.edmType = actualType;
             this.navigationSource = navigationSource;
 
-            this.TargetEdmType = edmType;
+            this.TargetEdmType = expectedType;
             this.TargetEdmNavigationSource = navigationSource;
 
             // Check that the type they gave us is related to the type of the set
             if (navigationSource != null)
             {
-                ExceptionUtil.ThrowIfTypesUnrelated(edmType, navigationSource.EntityType(), "TypeSegments");
+                ExceptionUtil.ThrowIfTypesUnrelated(actualType, expectedType, "TypeSegments");
             }
         }
 

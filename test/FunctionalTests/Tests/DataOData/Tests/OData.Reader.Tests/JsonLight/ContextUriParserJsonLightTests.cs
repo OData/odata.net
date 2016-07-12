@@ -43,6 +43,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
         private IEdmContainedEntitySet containedMetropolitanCitySet;
         private IEdmContainedEntitySet containedOfficeSet;
         private IEdmSingleton boss;
+        private IEdmEntitySet officeSet;
 
         public override void Init()
         {
@@ -69,6 +70,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
             this.containedOfficeSet = (IEdmContainedEntitySet)metropolitanCitySet.FindNavigationTarget(this.containedOfficeNavigationProperty);
             this.containedMetropolitanCityNavigationProperty = (IEdmNavigationProperty)this.officeType.FindProperty("ContainedCity");
             this.containedMetropolitanCitySet = (IEdmContainedEntitySet)containedOfficeSet.FindNavigationTarget(this.containedMetropolitanCityNavigationProperty);
+            this.officeSet = this.defaultContainer.FindEntitySet("Offices");
         }
         #endregion private and init
 
@@ -331,7 +333,8 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                     ExpectedResult = new ODataJsonLightContextUriParseResult(null)
                     {
                         MetadataDocumentUri = new Uri(MetadataDocumentUri),
-                        EdmType = addressType
+                        EdmType = addressType,
+                        NavigationSource = this.officeSet
                     }
                 },
                 new ContextUriParserTestCase

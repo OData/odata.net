@@ -46,6 +46,12 @@ namespace Microsoft.OData.UriParser
         private void ValidatePath()
         {
             int index = 0;
+
+            if (this.Count == 1 && this.FirstSegment is TypeSegment)
+            {
+                throw new ODataException(ODataErrorStrings.ODataSelectPath_CannotOnlyHaveTypeSegment);
+            }
+
             foreach (ODataPathSegment segment in this)
             {
                 if (segment is NavigationPropertySegment)
@@ -62,20 +68,15 @@ namespace Microsoft.OData.UriParser
                         throw new ODataException(ODataErrorStrings.ODataSelectPath_OperationSegmentCanOnlyBeLastSegment);
                     }
                 }
-                else if (segment is TypeSegment)
+                else if (segment is DynamicPathSegment || segment is PropertySegment || segment is TypeSegment)
                 {
-                    if (index == this.Count - 1)
-                    {
-                        throw new ODataException(ODataErrorStrings.ODataSelectPath_CannotEndInTypeSegment);
-                    }
-                }
-                else if (segment is DynamicPathSegment || segment is PropertySegment)
-                {
+                    index++;
                     continue;
                 }
                 else
                 {
-                    throw new ODataException(ODataErrorStrings.ODataSelectPath_InvalidSelectPathSegmentType(segment.GetType().Name));
+                    throw new ODataException(
+                        ODataErrorStrings.ODataSelectPath_InvalidSelectPathSegmentType(segment.GetType().Name));
                 }
 
                 index++;

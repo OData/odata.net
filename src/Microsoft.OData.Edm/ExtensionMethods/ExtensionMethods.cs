@@ -1529,6 +1529,42 @@ namespace Microsoft.OData.Edm
             EdmUtil.CheckArgumentNull(name, "name");
             return type.StructuredDefinition().FindProperty(name);
         }
+
+        /// <summary>
+        /// Gets the navigation properties declared in the definition of this reference and its base types.
+        /// </summary>
+        /// <param name="type">Reference to the calling object.</param>
+        /// <returns>The navigation properties declared in the definition of this reference and its base types.</returns>
+        public static IEnumerable<IEdmNavigationProperty> NavigationProperties(this IEdmStructuredTypeReference type)
+        {
+            EdmUtil.CheckArgumentNull(type, "type");
+            return type.StructuredDefinition().NavigationProperties();
+        }
+
+        /// <summary>
+        /// Gets the navigation properties declared in the definition of this reference.
+        /// </summary>
+        /// <param name="type">Reference to the calling object.</param>
+        /// <returns>The navigation properties declared in the definition of this reference.</returns>
+        public static IEnumerable<IEdmNavigationProperty> DeclaredNavigationProperties(this IEdmStructuredTypeReference type)
+        {
+            EdmUtil.CheckArgumentNull(type, "type");
+            return type.StructuredDefinition().DeclaredNavigationProperties();
+        }
+
+        /// <summary>
+        /// Finds a navigation property declared in the definition of this reference by name.
+        /// </summary>
+        /// <param name="type">Reference to the calling object.</param>
+        /// <param name="name">Name of the navigation property to find.</param>
+        /// <returns>The requested navigation property if it exists. Otherwise, null.</returns>
+        public static IEdmNavigationProperty FindNavigationProperty(this IEdmStructuredTypeReference type, string name)
+        {
+            EdmUtil.CheckArgumentNull(type, "type");
+            EdmUtil.CheckArgumentNull(name, "name");
+            return type.StructuredDefinition().FindProperty(name) as IEdmNavigationProperty;
+        }
+
         #endregion
 
         #region IEdmEntityTypeDefinition
@@ -1555,22 +1591,22 @@ namespace Microsoft.OData.Edm
         }
 
         /// <summary>
-        /// Gets the navigation properties declared in this entity definition.
+        /// Gets the navigation properties declared in this structured type definition.
         /// </summary>
         /// <param name="type">Reference to the calling object.</param>
-        /// <returns>The navigation properties declared in this entity definition.</returns>
-        public static IEnumerable<IEdmNavigationProperty> DeclaredNavigationProperties(this IEdmEntityType type)
+        /// <returns>The navigation properties declared in this structured type definition.</returns>
+        public static IEnumerable<IEdmNavigationProperty> DeclaredNavigationProperties(this IEdmStructuredType type)
         {
             EdmUtil.CheckArgumentNull(type, "type");
             return type.DeclaredProperties.OfType<IEdmNavigationProperty>();
         }
 
         /// <summary>
-        /// Get the navigation properties declared in this entity type and all base types.
+        /// Get the navigation properties declared in this structured type and all base types.
         /// </summary>
         /// <param name="type">Reference to the calling object.</param>
-        /// <returns>The navigation properties declared in this entity type and all base types.</returns>
-        public static IEnumerable<IEdmNavigationProperty> NavigationProperties(this IEdmEntityType type)
+        /// <returns>The navigation properties declared in this structured type and all base types.</returns>
+        public static IEnumerable<IEdmNavigationProperty> NavigationProperties(this IEdmStructuredType type)
         {
             EdmUtil.CheckArgumentNull(type, "type");
             return type.Properties().OfType<IEdmNavigationProperty>();
@@ -1729,41 +1765,6 @@ namespace Microsoft.OData.Edm
         {
             EdmUtil.CheckArgumentNull(type, "type");
             return type.EntityDefinition().Key();
-        }
-
-        /// <summary>
-        /// Gets the navigation properties declared in the definition of this reference and its base types.
-        /// </summary>
-        /// <param name="type">Reference to the calling object.</param>
-        /// <returns>The navigation properties declared in the definition of this reference and its base types.</returns>
-        public static IEnumerable<IEdmNavigationProperty> NavigationProperties(this IEdmEntityTypeReference type)
-        {
-            EdmUtil.CheckArgumentNull(type, "type");
-            return type.EntityDefinition().NavigationProperties();
-        }
-
-        /// <summary>
-        /// Gets the navigation properties declared in the definition of this reference.
-        /// </summary>
-        /// <param name="type">Reference to the calling object.</param>
-        /// <returns>The navigation properties declared in the definition of this reference.</returns>
-        public static IEnumerable<IEdmNavigationProperty> DeclaredNavigationProperties(this IEdmEntityTypeReference type)
-        {
-            EdmUtil.CheckArgumentNull(type, "type");
-            return type.EntityDefinition().DeclaredNavigationProperties();
-        }
-
-        /// <summary>
-        /// Finds a navigation property declared in the definition of this reference by name.
-        /// </summary>
-        /// <param name="type">Reference to the calling object.</param>
-        /// <param name="name">Name of the navigation property to find.</param>
-        /// <returns>The requested navigation property if it exists. Otherwise, null.</returns>
-        public static IEdmNavigationProperty FindNavigationProperty(this IEdmEntityTypeReference type, string name)
-        {
-            EdmUtil.CheckArgumentNull(type, "type");
-            EdmUtil.CheckArgumentNull(name, "name");
-            return type.EntityDefinition().FindProperty(name) as IEdmNavigationProperty;
         }
         #endregion
 
@@ -2697,6 +2698,12 @@ namespace Microsoft.OData.Edm
             // If there is any segment left, the path must represent a contained entity set.
             entitySet = segmentIterator.MoveNext() ? null : resolvedEntitySet;
             return entitySet != null;
+        }
+
+        internal static IEdmType AsElementType(this IEdmType type)
+        {
+            IEdmCollectionType collectionType = type as IEdmCollectionType;
+            return (collectionType != null) ? collectionType.ElementType.Definition : type;
         }
 
         /// <summary>

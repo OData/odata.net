@@ -13,6 +13,7 @@ namespace Microsoft.OData.Edm
     {
         private IEdmNavigationProperty navigationProperty;
         private IEdmNavigationSource target;
+        private string path;
 
         /// <summary>
         /// Creates a new navigation property binding.
@@ -23,6 +24,20 @@ namespace Microsoft.OData.Edm
         {
             this.navigationProperty = navigationProperty;
             this.target = target;
+            this.path = navigationProperty == null ? string.Empty : navigationProperty.Name;
+        }
+
+        /// <summary>
+        /// Creates a new navigation property binding.
+        /// </summary>
+        /// <param name="navigationProperty">The navigation property.</param>
+        /// <param name="target">The navigation source that the navigation property targets.</param>
+        /// <param name="path">The path of current binding</param>
+        public EdmNavigationPropertyBinding(IEdmNavigationProperty navigationProperty, IEdmNavigationSource target, string path)
+        {
+            this.navigationProperty = navigationProperty;
+            this.target = target;
+            this.path = path;
         }
 
         /// <summary>
@@ -39,6 +54,14 @@ namespace Microsoft.OData.Edm
         public IEdmNavigationSource Target
         {
             get { return this.target; }
+        }
+
+        /// <summary>
+        /// The path of current binding.
+        /// </summary>
+        public string Path
+        {
+            get { return this.path; }
         }
     }
 }

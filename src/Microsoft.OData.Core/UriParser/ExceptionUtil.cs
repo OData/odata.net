@@ -57,7 +57,7 @@ namespace Microsoft.OData.UriParser
         /// <param name="segmentName">The segment that is checking this.</param>
         internal static void ThrowIfTypesUnrelated(IEdmType type, IEdmType secondType, string segmentName)
         {
-            if (!UriEdmHelpers.IsRelatedTo(type.AsElementType(), secondType))
+            if (!UriEdmHelpers.IsRelatedTo(type.AsElementType(), secondType.AsElementType()))
             {
                 throw new ODataException(Strings.PathParser_TypeMustBeRelatedToSet(type, secondType, segmentName));
             }

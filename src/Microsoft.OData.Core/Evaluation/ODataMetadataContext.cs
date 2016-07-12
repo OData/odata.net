@@ -247,22 +247,22 @@ namespace Microsoft.OData.Evaluation
                     ODataTypeAnnotation typeAnnotation = resource.GetAnnotation<ODataTypeAnnotation>();
 
                     Debug.Assert(typeAnnotation != null, "The JSON light reader should have already set the ODataTypeAnnotation.");
-                    IEdmNavigationSource navigationSource = typeAnnotation.NavigationSource;
 
-                    IEdmEntityType navigationSourceElementType = this.edmTypeResolver.GetElementType(navigationSource);
-                    IODataResourceTypeContext typeContext = ODataResourceTypeContext.Create(/*serializationInfo*/ null, navigationSource, navigationSourceElementType, resourceState.ResourceType, this.model, /*throwIfMissingTypeInfo*/ true);
-                    IODataResourceMetadataContext resourceMetadataContext = ODataResourceMetadataContext.Create(resource, typeContext, /*serializationInfo*/null, (IEdmStructuredType)resource.GetEdmType().Definition, this, resourceState.SelectedProperties);
-
-                    ODataConventionalUriBuilder uriBuilder = new ODataConventionalUriBuilder(this.ServiceBaseUri,
-                        useKeyAsSegment ? ODataUrlKeyDelimiter.Slash : ODataUrlKeyDelimiter.Parentheses);
-
-                    // For complex type or collection of complex, we don't need compute odata.Id etc. So just use the NoOpResourceMetadataBuilder now.
                     if (typeAnnotation.Type.IsEntity())
                     {
+                        IEdmNavigationSource navigationSource = typeAnnotation.NavigationSource;
+                        IEdmEntityType navigationSourceElementType = this.edmTypeResolver.GetElementType(navigationSource);
+                        IODataResourceTypeContext typeContext = ODataResourceTypeContext.Create(/*serializationInfo*/ null, navigationSource, navigationSourceElementType, resourceState.ResourceType, this.model, /*throwIfMissingTypeInfo*/ true);
+                        IODataResourceMetadataContext resourceMetadataContext = ODataResourceMetadataContext.Create(resource, typeContext, /*serializationInfo*/null, (IEdmStructuredType)resource.GetEdmType().Definition, this, resourceState.SelectedProperties);
+
+                        ODataConventionalUriBuilder uriBuilder = new ODataConventionalUriBuilder(this.ServiceBaseUri,
+                            useKeyAsSegment ? ODataUrlKeyDelimiter.Slash : ODataUrlKeyDelimiter.Parentheses);
+
                         resourceState.MetadataBuilder = new ODataConventionalResourceMetadataBuilder(resourceMetadataContext, this, uriBuilder);
                     }
                     else
                     {
+                        // For complex type or collection of complex, we don't need compute odata.Id etc. So just use the NoOpResourceMetadataBuilder now.
                         resourceState.MetadataBuilder = new NoOpResourceMetadataBuilder(resource);
                     }
                 }

@@ -121,20 +121,20 @@ namespace Microsoft.OData
         /// The entity type can be null if no metadata is available.
         /// </summary>
         /// <param name="propertyName">The name of the property to validate.</param>
-        /// <param name="owningEntityType">The owning entity type or null if no metadata is available.</param>
+        /// <param name="owningType">The owning entity type/complex type or null if no metadata is available.</param>
         /// <param name="throwOnUndeclaredProperty">Flag indicating whether undeclared property on non open type should be prohibited.</param>
         /// <returns>The <see cref="IEdmProperty"/> instance representing the navigation property with name <paramref name="propertyName"/>
         /// or null if no metadata is available.</returns>
-        internal static IEdmNavigationProperty ValidateNavigationPropertyDefined(string propertyName, IEdmEntityType owningEntityType, bool throwOnUndeclaredProperty)
+        internal static IEdmNavigationProperty ValidateNavigationPropertyDefined(string propertyName, IEdmStructuredType owningType, bool throwOnUndeclaredProperty)
         {
             Debug.Assert(!string.IsNullOrEmpty(propertyName), "!string.IsNullOrEmpty(propertyName)");
 
-            if (owningEntityType == null)
+            if (owningType == null)
             {
                 return null;
             }
 
-            IEdmProperty property = ValidatePropertyDefined(propertyName, owningEntityType, throwOnUndeclaredProperty);
+            IEdmProperty property = ValidatePropertyDefined(propertyName, owningType, throwOnUndeclaredProperty);
             if (property == null)
             {
                 return null;
@@ -143,7 +143,7 @@ namespace Microsoft.OData
             if (property.PropertyKind != EdmPropertyKind.Navigation)
             {
                 // The property must be a navigation property
-                throw new ODataException(Strings.ValidationUtils_NavigationPropertyExpected(propertyName, owningEntityType.FullTypeName(), property.PropertyKind.ToString()));
+                throw new ODataException(Strings.ValidationUtils_NavigationPropertyExpected(propertyName, owningType.FullTypeName(), property.PropertyKind.ToString()));
             }
 
             return (IEdmNavigationProperty)property;
@@ -375,7 +375,7 @@ namespace Microsoft.OData
             IEdmNavigationProperty navigationProperty = null;
             if (errorTemplate == null && declaringStructuredType != null)
             {
-                navigationProperty = ValidateNavigationPropertyDefined(nestedResourceInfo.Name, declaringStructuredType as IEdmEntityType, throwOnUndeclaredProperty);
+                navigationProperty = ValidateNavigationPropertyDefined(nestedResourceInfo.Name, declaringStructuredType, throwOnUndeclaredProperty);
                 if (navigationProperty != null)
                 {
                     bool isCollectionType = navigationProperty.Type.TypeKind() == EdmTypeKind.Collection;

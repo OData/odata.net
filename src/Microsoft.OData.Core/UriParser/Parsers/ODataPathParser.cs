@@ -997,7 +997,7 @@ namespace Microsoft.OData.UriParser
         {
             ODataPathSegment previous = this.parsedSegments[this.parsedSegments.Count - 1];
             Debug.Assert(previous.TargetEdmType != null, "Previous wasn't open, so it should have a resource type");
-            Debug.Assert(previous.TargetEdmNavigationSource == null || previous.TargetEdmType.IsEntityOrEntityCollectionType(), "if the previous segment has a target resource set, then its target resource type must be an entity");
+            Debug.Assert(previous.TargetEdmNavigationSource == null || previous.TargetEdmType.IsStructuredOrStructuredCollectionType(), "if the previous segment has a target resource set, then its target resource type must be an entity or a complex");
 
             // Note that we try resolve the property on the root entity type for the set. Properties/Name streams defined on derived types
             // are not supported. This is a general problem with properties as we don't have the entity instance here to validate
@@ -1078,7 +1078,7 @@ namespace Microsoft.OData.UriParser
                 }
             }
 
-            var typeNameSegment = (ODataPathSegment)new TypeSegment(actualTypeOfTheTypeSegment, previous.TargetEdmNavigationSource)
+            var typeNameSegment = (ODataPathSegment)new TypeSegment(actualTypeOfTheTypeSegment, previous.EdmType, previous.TargetEdmNavigationSource)
             {
                 Identifier = identifier,
                 TargetKind = previous.TargetKind,
@@ -1148,11 +1148,13 @@ namespace Microsoft.OData.UriParser
                 {
                     case EdmTypeKind.Complex:
                         segment.TargetKind = RequestTargetKind.Resource;
+                        segment.TargetEdmNavigationSource = previous.TargetEdmNavigationSource;
                         break;
                     case EdmTypeKind.Collection:
                         if (property.Type.IsStructuredCollectionType())
                         {
-                            segment.TargetKind = RequestTargetKind.Resource;
+                             segment.TargetKind = RequestTargetKind.Resource;
+                             segment.TargetEdmNavigationSource = previous.TargetEdmNavigationSource;
                         }
 
                         segment.TargetKind = RequestTargetKind.Collection;

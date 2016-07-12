@@ -63,7 +63,7 @@ namespace Microsoft.OData.Edm
         /// Finds the navigation source that a navigation property targets.
         /// </summary>
         /// <param name="navigationProperty">The navigation property.</param>
-        /// <returns>The navigation source that the navigation propertion targets</returns>
+        /// <returns>The navigation source that the navigation property targets</returns>
         IEdmNavigationSource FindNavigationTarget(IEdmNavigationProperty navigationProperty);
     }
 }

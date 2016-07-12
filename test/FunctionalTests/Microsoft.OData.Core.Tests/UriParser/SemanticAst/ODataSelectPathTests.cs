@@ -41,7 +41,7 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
         {
             List<ODataPathSegment> typeSegments = new List<ODataPathSegment>() { new TypeSegment(HardCodedTestModel.GetPersonType(), null) };
             Action createWithTypeAsLastSegment = () => new ODataSelectPath(typeSegments);
-            createWithTypeAsLastSegment.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.ODataSelectPath_CannotEndInTypeSegment);
+            createWithTypeAsLastSegment.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.ODataSelectPath_CannotOnlyHaveTypeSegment);
         }
 
         [Fact]

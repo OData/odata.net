@@ -309,7 +309,7 @@ namespace Microsoft.OData.Metadata
         /// <returns>Whether or not the type is an entity or entity collection type.</returns>
         internal static bool IsEntityOrEntityCollectionType(this IEdmType edmType, out IEdmEntityType entityType)
         {
-            Debug.Assert(edmType != null, "targetEdmType != null");
+            Debug.Assert(edmType != null, "edmType != null");
             if (edmType.TypeKind == EdmTypeKind.Entity)
             {
                 entityType = (IEdmEntityType)edmType;
@@ -324,6 +324,42 @@ namespace Microsoft.OData.Metadata
 
             entityType = ((IEdmCollectionType)edmType).ElementType.Definition as IEdmEntityType;
             return entityType != null;
+        }
+
+        /// <summary>
+        /// Returns whether or not the type is a structured or structured collection type.
+        /// </summary>
+        /// <param name="edmType">The type to check.</param>
+        /// <returns>Whether or not the type is a structured or structured collection type.</returns>
+        internal static bool IsStructuredOrStructuredCollectionType(this IEdmType edmType)
+        {
+            IEdmStructuredType structuredType;
+            return edmType.IsStructuredOrStructuredCollectionType(out structuredType);
+        }
+
+        /// <summary>
+        /// Returns whether or not the type is a structured or structured collection type.
+        /// </summary>
+        /// <param name="edmType">The type to check.</param>
+        /// <param name="structuredType">The structured type. If the given type was a collection, this will be the element type.</param>
+        /// <returns>Whether or not the type is an entity or entity collection type.</returns>
+        internal static bool IsStructuredOrStructuredCollectionType(this IEdmType edmType, out IEdmStructuredType structuredType)
+        {
+            Debug.Assert(edmType != null, "edmType != null");
+            if (edmType.TypeKind.IsStructured())
+            {
+                structuredType = (IEdmStructuredType)edmType;
+                return true;
+            }
+
+            if (edmType.TypeKind != EdmTypeKind.Collection)
+            {
+                structuredType = null;
+                return false;
+            }
+
+            structuredType = ((IEdmCollectionType)edmType).ElementType.Definition as IEdmStructuredType;
+            return structuredType != null;
         }
 
         /// <summary>

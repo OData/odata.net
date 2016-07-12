@@ -69,5 +69,13 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
             typeSegment1.Equals(typeSegment2).Should().BeFalse();
             typeSegment1.Equals(batchSegment).Should().BeFalse();
         }
+
+        [Fact]
+        public void CreateTypeSegmentWithExpectType()
+        {
+            TypeSegment typeSegment = new TypeSegment(HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetEmployeeType(), null);
+            typeSegment.EdmType.Should().BeSameAs(HardCodedTestModel.GetPersonType());
+            typeSegment.TargetEdmType.Should().BeSameAs(HardCodedTestModel.GetEmployeeType());
+        }
     }
 }

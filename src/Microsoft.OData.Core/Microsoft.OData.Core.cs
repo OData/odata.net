@@ -742,6 +742,7 @@ namespace Microsoft.OData {
         internal const string ExpandItemBinder_PathTooDeep = "ExpandItemBinder_PathTooDeep";
         internal const string ExpandItemBinder_TraversingMultipleNavPropsInTheSamePath = "ExpandItemBinder_TraversingMultipleNavPropsInTheSamePath";
         internal const string ExpandItemBinder_LevelsNotAllowedOnIncompatibleRelatedType = "ExpandItemBinder_LevelsNotAllowedOnIncompatibleRelatedType";
+        internal const string ExpandItemBinder_InvaidSegmentInExpand = "ExpandItemBinder_InvaidSegmentInExpand";
         internal const string Nodes_CollectionNavigationNode_MustHaveSingleMultiplicity = "Nodes_CollectionNavigationNode_MustHaveSingleMultiplicity";
         internal const string Nodes_NonentityParameterQueryNodeWithEntityType = "Nodes_NonentityParameterQueryNodeWithEntityType";
         internal const string Nodes_CollectionNavigationNode_MustHaveManyMultiplicity = "Nodes_CollectionNavigationNode_MustHaveManyMultiplicity";
@@ -784,7 +785,7 @@ namespace Microsoft.OData {
         internal const string ODataFeed_MustNotContainBothNextPageLinkAndDeltaLink = "ODataFeed_MustNotContainBothNextPageLinkAndDeltaLink";
         internal const string ODataExpandPath_OnlyLastSegmentMustBeNavigationProperty = "ODataExpandPath_OnlyLastSegmentMustBeNavigationProperty";
         internal const string ODataExpandPath_InvalidExpandPathSegment = "ODataExpandPath_InvalidExpandPathSegment";
-        internal const string ODataSelectPath_CannotEndInTypeSegment = "ODataSelectPath_CannotEndInTypeSegment";
+        internal const string ODataSelectPath_CannotOnlyHaveTypeSegment = "ODataSelectPath_CannotOnlyHaveTypeSegment";
         internal const string ODataSelectPath_InvalidSelectPathSegmentType = "ODataSelectPath_InvalidSelectPathSegmentType";
         internal const string ODataSelectPath_OperationSegmentCanOnlyBeLastSegment = "ODataSelectPath_OperationSegmentCanOnlyBeLastSegment";
         internal const string ODataSelectPath_NavPropSegmentCanOnlyBeLastSegment = "ODataSelectPath_NavPropSegmentCanOnlyBeLastSegment";

@@ -244,7 +244,7 @@ namespace Microsoft.Test.Taupo.OData.Contracts.JsonLight
                     {
                         IEdmEntitySet entitySet = expectedTypeAnnotation.EdmEntitySet;
                         EdmNavigationProperty navigationProperty = expectedTypeAnnotation.EdmNavigationProperty as EdmNavigationProperty;
-                        IEdmEntityType entityType = navigationProperty.DeclaringEntityType;
+                        IEdmEntityType entityType = navigationProperty.DeclaringType as IEdmEntityType;
 
                         ExceptionUtilities.Assert(entitySet != null, "entitySet is required for entity reference link payloads.");
                         ExceptionUtilities.Assert(navigationProperty != null, "Navigation property is required for entity reference link payloads.");

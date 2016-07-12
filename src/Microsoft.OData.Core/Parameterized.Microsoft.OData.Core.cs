@@ -3562,7 +3562,7 @@ namespace Microsoft.OData {
         }
 
         /// <summary>
-        /// A string like "The navigationSource for resource or resourc set is unknown or the Type is null. When writing a response, the navigation source or the type must be passed to the ODataMessageWriter.CreateODataResourceWriter/ODataMessageWriter.CreateODataResourceSetWriter method or the ODataResourceSerializationInfo must be set on the resource/resource set."
+        /// A string like "The navigationSource for resource or resource set is unknown or the Type is null. When writing a response, the navigation source or the type must be passed to the ODataMessageWriter.CreateODataResourceWriter/ODataMessageWriter.CreateODataResourceSetWriter method or the ODataResourceSerializationInfo must be set on the resource/resource set."
         /// </summary>
         internal static string ODataContextUriBuilder_NavigationSourceOrTypeNameMissingForResourceOrResourceSet {
             get {
@@ -5169,6 +5169,13 @@ namespace Microsoft.OData {
         }
 
         /// <summary>
+        /// A string like "Segment '{0}' is not a valid in expand path. Before navigation property, only type segment or entity or complex property can exist."
+        /// </summary>
+        internal static string ExpandItemBinder_InvaidSegmentInExpand(object p0) {
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ExpandItemBinder_InvaidSegmentInExpand, p0);
+        }
+
+        /// <summary>
         /// A string like "The navigation property must have a target multiplicity of 'One' or 'ZeroOrOne' to create a SingleNavigationNode."
         /// </summary>
         internal static string Nodes_CollectionNavigationNode_MustHaveSingleMultiplicity {
@@ -5489,11 +5496,11 @@ namespace Microsoft.OData {
         }
 
         /// <summary>
-        /// A string like "The last segment in a $select cannot be a TypeSegment."
+        /// A string like "TypeSegment cannot be the only segment in a $select."
         /// </summary>
-        internal static string ODataSelectPath_CannotEndInTypeSegment {
+        internal static string ODataSelectPath_CannotOnlyHaveTypeSegment {
             get {
-                return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataSelectPath_CannotEndInTypeSegment);
+                return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataSelectPath_CannotOnlyHaveTypeSegment);
             }
         }
 

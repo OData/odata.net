@@ -818,6 +818,7 @@ ExpandItemBinder_TypeSegmentNotFollowedByPath=Found a path within a select or ex
 ExpandItemBinder_PathTooDeep=Trying to parse a type segment path that is too long.
 ExpandItemBinder_TraversingMultipleNavPropsInTheSamePath=Found a path traversing multiple navigation properties. Please rephrase the query such that each expand path contains only type segments and navigation properties.
 ExpandItemBinder_LevelsNotAllowedOnIncompatibleRelatedType=The $level option on navigation property '{0}' is not allowed, because the related entity type '{1}' could not be cast to source entity type '{2}'.
+ExpandItemBinder_InvaidSegmentInExpand=Segment '{0}' is not valid in expand path. Before navigation property, only type segment or entity or complex property can exist.
 
 Nodes_CollectionNavigationNode_MustHaveSingleMultiplicity=The navigation property must have a target multiplicity of 'One' or 'ZeroOrOne' to create a SingleNavigationNode.
 Nodes_NonentityParameterQueryNodeWithEntityType=An entity type '{0}' was given to NonEntityParameterQueryNode. Use EntityParameterQueryNode instead.
@@ -867,7 +868,7 @@ ODataFeed_MustNotContainBothNextPageLinkAndDeltaLink=A feed may contain a next p
 ODataExpandPath_OnlyLastSegmentMustBeNavigationProperty=The last segment, and only the last segment, must be a navigation property in $expand.
 ODataExpandPath_InvalidExpandPathSegment=Found a segment of type '{0} in an expand path, but only NavigationProperty and Type segments are allowed.
 
-ODataSelectPath_CannotEndInTypeSegment=The last segment in a $select cannot be a TypeSegment.
+ODataSelectPath_CannotOnlyHaveTypeSegment=TypeSegment cannot be the only segment in a $select.
 ODataSelectPath_InvalidSelectPathSegmentType=Found a segment of type '{0} in a select path, but only TypeSegment, NavigationPropertySegment, PropertySegment, OperationSegment or OpenPropertySegments are allowed.
 ODataSelectPath_OperationSegmentCanOnlyBeLastSegment=An operation can only be the last segment in $select.
 ODataSelectPath_NavPropSegmentCanOnlyBeLastSegment=A navigation property can only be the last segment in $select.

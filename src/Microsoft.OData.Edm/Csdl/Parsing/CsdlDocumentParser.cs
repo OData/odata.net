@@ -282,6 +282,16 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
                     documentationParser,
                     //// <Property />
                     nominalTypePropertyElementParser,
+                    //// <NavigationProperty>
+                    CsdlElement<CsdlNamedElement>(CsdlConstants.Element_NavigationProperty, this.OnNavigationPropertyElement, documentationParser,
+                        //// <ReferentialConstraint/>
+                        CsdlElement<CsdlReferentialConstraint>(CsdlConstants.Element_ReferentialConstraint, this.OnReferentialConstraintElement, documentationParser),
+                        //// <OnDelete/>
+                        CsdlElement<CsdlOnDelete>(CsdlConstants.Element_OnDelete, this.OnDeleteActionElement, documentationParser),
+                        //// <Annotation/>
+                        annotationParser),
+                    //// </NavigationProperty>
+                    
                     //// <Annotation/>
                     annotationParser),
                 //// </ComplexType>
@@ -494,7 +504,7 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
             bool isOpen = OptionalBoolean(CsdlConstants.Attribute_OpenType) ?? CsdlConstants.Default_OpenType;
             bool isAbstract = OptionalBoolean(CsdlConstants.Attribute_Abstract) ?? CsdlConstants.Default_Abstract;
 
-            return new CsdlComplexType(name, baseType, isAbstract, isOpen, childValues.ValuesOfType<CsdlProperty>(), Documentation(childValues), element.Location);
+            return new CsdlComplexType(name, baseType, isAbstract, isOpen, childValues.ValuesOfType<CsdlProperty>(), childValues.ValuesOfType<CsdlNavigationProperty>(), Documentation(childValues), element.Location);
         }
 
         private CsdlEntityType OnEntityTypeElement(XmlElementInfo element, XmlElementValueCollection childValues)

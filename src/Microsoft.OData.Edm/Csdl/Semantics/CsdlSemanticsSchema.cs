@@ -432,7 +432,7 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
             foreach (CsdlStructuredType schemaType in this.schema.StructuredTypes)
             {
                 AddLabeledExpressions(schemaType.VocabularyAnnotations, result);
-                foreach (CsdlProperty property in schemaType.Properties)
+                foreach (CsdlProperty property in schemaType.StructuralProperties)
                 {
                     AddLabeledExpressions(property.VocabularyAnnotations, result);
                 }

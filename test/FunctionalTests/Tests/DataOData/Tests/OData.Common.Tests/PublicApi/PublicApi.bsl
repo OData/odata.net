@@ -810,6 +810,7 @@ public interface Microsoft.OData.Edm.IEdmNavigationProperty : IEdmElement, IEdmN
 
 public interface Microsoft.OData.Edm.IEdmNavigationPropertyBinding {
 	Microsoft.OData.Edm.IEdmNavigationProperty NavigationProperty  { public abstract get; }
+	string Path  { public abstract get; }
 	Microsoft.OData.Edm.IEdmNavigationSource Target  { public abstract get; }
 }
 
@@ -998,6 +999,7 @@ public abstract class Microsoft.OData.Edm.EdmNavigationSource : Microsoft.OData.
 	Microsoft.OData.Edm.IEdmType Type  { public abstract get; }
 
 	public void AddNavigationTarget (Microsoft.OData.Edm.IEdmNavigationProperty property, Microsoft.OData.Edm.IEdmNavigationSource target)
+	public void AddNavigationTarget (Microsoft.OData.Edm.IEdmNavigationProperty property, Microsoft.OData.Edm.IEdmNavigationSource target, string path)
 	public virtual Microsoft.OData.Edm.IEdmNavigationSource FindNavigationTarget (Microsoft.OData.Edm.IEdmNavigationProperty property)
 }
 
@@ -1050,6 +1052,7 @@ public abstract class Microsoft.OData.Edm.EdmStructuredType : Microsoft.OData.Ed
 	public Microsoft.OData.Edm.EdmStructuralProperty AddStructuralProperty (string name, Microsoft.OData.Edm.IEdmTypeReference type)
 	public Microsoft.OData.Edm.EdmStructuralProperty AddStructuralProperty (string name, Microsoft.OData.Edm.EdmPrimitiveTypeKind type, bool isNullable)
 	public Microsoft.OData.Edm.EdmStructuralProperty AddStructuralProperty (string name, Microsoft.OData.Edm.IEdmTypeReference type, string defaultValue)
+	public Microsoft.OData.Edm.EdmNavigationProperty AddUnidirectionalNavigation (Microsoft.OData.Edm.EdmNavigationPropertyInfo propertyInfo)
 	public virtual Microsoft.OData.Edm.IEdmProperty FindProperty (string name)
 }
 
@@ -1497,12 +1500,12 @@ public sealed class Microsoft.OData.Edm.ExtensionMethods {
 	[
 	ExtensionAttribute(),
 	]
-	public static System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.IEdmNavigationProperty]] DeclaredNavigationProperties (Microsoft.OData.Edm.IEdmEntityType type)
+	public static System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.IEdmNavigationProperty]] DeclaredNavigationProperties (Microsoft.OData.Edm.IEdmStructuredType type)
 
 	[
 	ExtensionAttribute(),
 	]
-	public static System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.IEdmNavigationProperty]] DeclaredNavigationProperties (Microsoft.OData.Edm.IEdmEntityTypeReference type)
+	public static System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.IEdmNavigationProperty]] DeclaredNavigationProperties (Microsoft.OData.Edm.IEdmStructuredTypeReference type)
 
 	[
 	ExtensionAttribute(),
@@ -1617,7 +1620,7 @@ public sealed class Microsoft.OData.Edm.ExtensionMethods {
 	[
 	ExtensionAttribute(),
 	]
-	public static Microsoft.OData.Edm.IEdmNavigationProperty FindNavigationProperty (Microsoft.OData.Edm.IEdmEntityTypeReference type, string name)
+	public static Microsoft.OData.Edm.IEdmNavigationProperty FindNavigationProperty (Microsoft.OData.Edm.IEdmStructuredTypeReference type, string name)
 
 	[
 	ExtensionAttribute(),
@@ -1897,12 +1900,12 @@ public sealed class Microsoft.OData.Edm.ExtensionMethods {
 	[
 	ExtensionAttribute(),
 	]
-	public static System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.IEdmNavigationProperty]] NavigationProperties (Microsoft.OData.Edm.IEdmEntityType type)
+	public static System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.IEdmNavigationProperty]] NavigationProperties (Microsoft.OData.Edm.IEdmStructuredType type)
 
 	[
 	ExtensionAttribute(),
 	]
-	public static System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.IEdmNavigationProperty]] NavigationProperties (Microsoft.OData.Edm.IEdmEntityTypeReference type)
+	public static System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.IEdmNavigationProperty]] NavigationProperties (Microsoft.OData.Edm.IEdmStructuredTypeReference type)
 
 	[
 	ExtensionAttribute(),
@@ -2292,7 +2295,6 @@ public class Microsoft.OData.Edm.EdmEntityType : Microsoft.OData.Edm.EdmStructur
 	public Microsoft.OData.Edm.EdmNavigationProperty AddBidirectionalNavigation (Microsoft.OData.Edm.EdmNavigationPropertyInfo propertyInfo, Microsoft.OData.Edm.EdmNavigationPropertyInfo partnerInfo)
 	public void AddKeys (Microsoft.OData.Edm.IEdmStructuralProperty[] keyProperties)
 	public void AddKeys (System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.IEdmStructuralProperty]] keyProperties)
-	public Microsoft.OData.Edm.EdmNavigationProperty AddUnidirectionalNavigation (Microsoft.OData.Edm.EdmNavigationPropertyInfo propertyInfo)
 }
 
 public class Microsoft.OData.Edm.EdmEntityTypeReference : Microsoft.OData.Edm.EdmTypeReference, IEdmElement, IEdmEntityTypeReference, IEdmStructuredTypeReference, IEdmTypeReference {
@@ -2386,8 +2388,10 @@ public class Microsoft.OData.Edm.EdmModel : Microsoft.OData.Edm.EdmModelBase, IE
 
 public class Microsoft.OData.Edm.EdmNavigationPropertyBinding : IEdmNavigationPropertyBinding {
 	public EdmNavigationPropertyBinding (Microsoft.OData.Edm.IEdmNavigationProperty navigationProperty, Microsoft.OData.Edm.IEdmNavigationSource target)
+	public EdmNavigationPropertyBinding (Microsoft.OData.Edm.IEdmNavigationProperty navigationProperty, Microsoft.OData.Edm.IEdmNavigationSource target, string path)
 
 	Microsoft.OData.Edm.IEdmNavigationProperty NavigationProperty  { public virtual get; }
+	string Path  { public virtual get; }
 	Microsoft.OData.Edm.IEdmNavigationSource Target  { public virtual get; }
 }
 
@@ -2506,13 +2510,12 @@ public class Microsoft.OData.Edm.EdmUntypedTypeReference : Microsoft.OData.Edm.E
 
 public sealed class Microsoft.OData.Edm.EdmNavigationProperty : Microsoft.OData.Edm.EdmProperty, IEdmElement, IEdmNamedElement, IEdmNavigationProperty, IEdmProperty, IEdmVocabularyAnnotatable {
 	bool ContainsTarget  { public virtual get; }
-	Microsoft.OData.Edm.IEdmEntityType DeclaringEntityType  { public get; }
 	Microsoft.OData.Edm.EdmOnDeleteAction OnDelete  { public virtual get; }
 	Microsoft.OData.Edm.IEdmNavigationProperty Partner  { public virtual get; }
 	Microsoft.OData.Edm.EdmPropertyKind PropertyKind  { public virtual get; }
 	Microsoft.OData.Edm.IEdmReferentialConstraint ReferentialConstraint  { public virtual get; }
 
-	public static Microsoft.OData.Edm.EdmNavigationProperty CreateNavigationProperty (Microsoft.OData.Edm.IEdmEntityType declaringType, Microsoft.OData.Edm.EdmNavigationPropertyInfo propertyInfo)
+	public static Microsoft.OData.Edm.EdmNavigationProperty CreateNavigationProperty (Microsoft.OData.Edm.IEdmStructuredType declaringType, Microsoft.OData.Edm.EdmNavigationPropertyInfo propertyInfo)
 	public static Microsoft.OData.Edm.EdmNavigationProperty CreateNavigationPropertyWithPartner (Microsoft.OData.Edm.EdmNavigationPropertyInfo propertyInfo, Microsoft.OData.Edm.EdmNavigationPropertyInfo partnerInfo)
 	public static Microsoft.OData.Edm.EdmNavigationProperty CreateNavigationPropertyWithPartner (string propertyName, Microsoft.OData.Edm.IEdmTypeReference propertyType, System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.IEdmStructuralProperty]] dependentProperties, System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.IEdmStructuralProperty]] principalProperties, bool containsTarget, Microsoft.OData.Edm.EdmOnDeleteAction onDelete, string partnerPropertyName, Microsoft.OData.Edm.IEdmTypeReference partnerPropertyType, System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.IEdmStructuralProperty]] partnerDependentProperties, System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.IEdmStructuralProperty]] partnerPrincipalProperties, bool partnerContainsTarget, Microsoft.OData.Edm.EdmOnDeleteAction partnerOnDelete)
 }
@@ -5999,6 +6002,7 @@ public sealed class Microsoft.OData.UriParser.StringAsEnumResolver : Microsoft.O
 
 public sealed class Microsoft.OData.UriParser.TypeSegment : Microsoft.OData.UriParser.ODataPathSegment {
 	public TypeSegment (Microsoft.OData.Edm.IEdmType edmType, Microsoft.OData.Edm.IEdmNavigationSource navigationSource)
+	public TypeSegment (Microsoft.OData.Edm.IEdmType actualType, Microsoft.OData.Edm.IEdmType expectedType, Microsoft.OData.Edm.IEdmNavigationSource navigationSource)
 
 	Microsoft.OData.Edm.IEdmType EdmType  { public virtual get; }
 	Microsoft.OData.Edm.IEdmNavigationSource NavigationSource  { public get; }

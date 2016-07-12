@@ -20,7 +20,7 @@ namespace Microsoft.OData.Edm
         private EdmNavigationProperty partner;
 
         private EdmNavigationProperty(
-            IEdmEntityType declaringType,
+            IEdmStructuredType declaringType,
             string name,
             IEdmTypeReference type,
             IEnumerable<IEdmStructuralProperty> dependentProperties,
@@ -63,14 +63,6 @@ namespace Microsoft.OData.Edm
         }
 
         /// <summary>
-        /// Gets the entity type that this navigation property belongs to.
-        /// </summary>
-        public IEdmEntityType DeclaringEntityType
-        {
-            get { return (IEdmEntityType)this.DeclaringType; }
-        }
-
-        /// <summary>
         /// Gets the action to take when an instance of the declaring type is deleted.
         /// </summary>
         public EdmOnDeleteAction OnDelete
@@ -92,7 +84,7 @@ namespace Microsoft.OData.Edm
         /// <param name="declaringType">The type that declares this property.</param>
         /// <param name="propertyInfo">Information to create the navigation property.</param>
         /// <returns>Created navigation property.</returns>
-        public static EdmNavigationProperty CreateNavigationProperty(IEdmEntityType declaringType, EdmNavigationPropertyInfo propertyInfo)
+        public static EdmNavigationProperty CreateNavigationProperty(IEdmStructuredType declaringType, EdmNavigationPropertyInfo propertyInfo)
         {
             EdmUtil.CheckArgumentNull(propertyInfo, "propertyInfo");
             EdmUtil.CheckArgumentNull(propertyInfo.Name, "propertyInfo.Name");

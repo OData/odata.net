@@ -20,5 +20,10 @@ namespace Microsoft.OData.Edm
         /// Gets the target navigation source.
         /// </summary>
         IEdmNavigationSource Target { get; }
+
+        /// <summary>
+        /// Get the path that a navigation property targets.
+        /// </summary>
+        string Path { get; }
     }
 }

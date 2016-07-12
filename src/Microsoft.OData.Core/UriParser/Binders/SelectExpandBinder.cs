@@ -181,15 +181,6 @@ namespace Microsoft.OData.UriParser
         {
             ExceptionUtils.CheckArgumentNotNull(tokenIn, "tokenIn");
 
-            // ensure that we're always dealing with proper V4 syntax
-            if (tokenIn.PathToNavProp.NextToken != null && !tokenIn.PathToNavProp.IsNamespaceOrContainerQualified())
-            {
-                if (tokenIn.PathToNavProp.NextToken.Identifier != UriQueryConstants.RefSegment || tokenIn.PathToNavProp.NextToken.NextToken != null)
-                {
-                    throw new ODataException(ODataErrorStrings.ExpandItemBinder_TraversingMultipleNavPropsInTheSamePath);
-                }
-            }
-
             PathSegmentToken currentToken = tokenIn.PathToNavProp;
 
             IEdmStructuredType currentLevelEntityType = this.EdmType;
@@ -208,9 +199,21 @@ namespace Microsoft.OData.UriParser
             }
 
             IEdmNavigationProperty currentNavProp = edmProperty as IEdmNavigationProperty;
-            if (currentNavProp == null)
+            IEdmStructuralProperty currentComplexProp = edmProperty as IEdmStructuralProperty;
+            if (currentNavProp == null && currentComplexProp == null)
             {
                 throw new ODataException(ODataErrorStrings.ExpandItemBinder_PropertyIsNotANavigationProperty(currentToken.Identifier, currentLevelEntityType.FullTypeName()));
+            }
+
+            if (currentComplexProp != null)
+            {
+                currentNavProp = ParseComplexTypesBeforeNavigation(currentComplexProp, ref firstNonTypeToken, pathSoFar);
+            }
+
+            // ensure that we're always dealing with proper V4 syntax
+            if (firstNonTypeToken.NextToken != null && firstNonTypeToken.NextToken.NextToken != null)
+            {
+                throw new ODataException(ODataErrorStrings.ExpandItemBinder_TraversingMultipleNavPropsInTheSamePath);
             }
 
             bool isRef = false;
@@ -281,6 +284,59 @@ namespace Microsoft.OData.UriParser
 
             LevelsClause levelsOption = this.ParseLevels(tokenIn.LevelsOption, currentLevelEntityType, currentNavProp);
             return new ExpandedNavigationSelectItem(pathToNavProp, targetNavigationSource, subSelectExpand, filterOption, orderbyOption, tokenIn.TopOption, tokenIn.SkipOption, tokenIn.CountQueryOption, searchOption, levelsOption);
+        }
+
+        private IEdmNavigationProperty ParseComplexTypesBeforeNavigation(IEdmStructuralProperty edmProperty, ref PathSegmentToken currentToken, List<ODataPathSegment> pathSoFar)
+        {
+            pathSoFar.Add(new PropertySegment(edmProperty));
+
+            if (currentToken.NextToken == null)
+            {
+                throw new ODataException(ODataErrorStrings.ExpandItemBinder_PropertyIsNotANavigationProperty(currentToken.Identifier, edmProperty.DeclaringType.FullTypeName()));
+            }
+
+            currentToken = currentToken.NextToken;
+
+            IEdmType complexType = edmProperty.Type.Definition;
+
+            IEdmCollectionType collectionType = complexType as IEdmCollectionType;
+            if (collectionType != null)
+            {
+                complexType = collectionType.ElementType.Definition;
+            }
+
+            IEdmStructuredType currentType = complexType as IEdmStructuredType;
+            if (currentType == null)
+            {
+                throw new ODataException(ODataErrorStrings.ExpandItemBinder_InvaidSegmentInExpand(currentToken.Identifier));
+            }
+
+            if (currentToken.IsNamespaceOrContainerQualified())
+            {
+                pathSoFar.AddRange(SelectExpandPathBinder.FollowTypeSegments(currentToken, this.Model, this.Settings.SelectExpandLimit, this.configuration.Resolver, ref currentType, out currentToken));
+            }
+
+            IEdmProperty property = this.configuration.Resolver.ResolveProperty(currentType, currentToken.Identifier);
+            if (edmProperty == null)
+            {
+                throw new ODataException(ODataErrorStrings.MetadataBinder_PropertyNotDeclared(currentType.FullTypeName(), currentToken.Identifier));
+            }
+
+            IEdmStructuralProperty complexProp = property as IEdmStructuralProperty;
+            if (complexProp != null)
+            {
+                property = ParseComplexTypesBeforeNavigation(complexProp, ref currentToken, pathSoFar);
+            }
+
+            IEdmNavigationProperty navProp = property as IEdmNavigationProperty;
+            if (navProp != null)
+            {
+                return navProp;
+            }
+            else
+            {
+                throw new ODataException(ODataErrorStrings.ExpandItemBinder_PropertyIsNotANavigationProperty(currentToken.Identifier, currentType.FullTypeName()));
+            }
         }
 
         /// <summary>

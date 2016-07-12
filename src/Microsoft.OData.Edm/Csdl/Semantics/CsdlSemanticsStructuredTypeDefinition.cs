@@ -87,12 +87,17 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
             return result;
         }
 
-        protected virtual List<IEdmProperty> ComputeDeclaredProperties()
+        protected List<IEdmProperty> ComputeDeclaredProperties()
         {
             List<IEdmProperty> properties = new List<IEdmProperty>();
-            foreach (CsdlProperty property in this.MyStructured.Properties)
+            foreach (CsdlProperty property in this.MyStructured.StructuralProperties)
             {
                 properties.Add(new CsdlSemanticsProperty(this, property));
+            }
+
+            foreach (CsdlNavigationProperty navigationProperty in this.MyStructured.NavigationProperties)
+            {
+                properties.Add(new CsdlSemanticsNavigationProperty(this, navigationProperty));
             }
 
             return properties;

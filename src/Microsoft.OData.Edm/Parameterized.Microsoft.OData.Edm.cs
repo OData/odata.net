@@ -139,6 +139,15 @@ namespace Microsoft.OData.Edm {
         }
 
         /// <summary>
+        /// A string like "The navigation property binding path is not valid."
+        /// </summary>
+        internal static string NavigationPropertyBinding_PathIsNotValid {
+            get {
+                return Microsoft.OData.Edm.EntityRes.GetString(Microsoft.OData.Edm.EntityRes.NavigationPropertyBinding_PathIsNotValid);
+            }
+        }
+
+        /// <summary>
         /// A string like "Type '{0}' must have a single type annotation with term type '{1}'."
         /// </summary>
         internal static string Edm_Evaluator_NoTermTypeAnnotationOnType(object p0, object p1) {

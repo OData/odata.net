@@ -1409,8 +1409,7 @@ namespace Microsoft.OData
                         }
                         else
                         {
-                            IEdmEntityType currentEntityType = currentScope.ResourceType as IEdmEntityType;
-                            IEdmNavigationProperty navigationProperty = this.WriterValidator.ValidateNestedResourceInfo(nestedResourceInfo, currentEntityType, /*payloadKind*/null);
+                            IEdmNavigationProperty navigationProperty = this.WriterValidator.ValidateNestedResourceInfo(nestedResourceInfo, currentResourceType, /*payloadKind*/null);
                             if (navigationProperty != null)
                             {
                                 resourceType = navigationProperty.ToEntityType();
@@ -1439,6 +1438,7 @@ namespace Microsoft.OData
                                         odataPath = odataUri.Path;
                                         if (ShouldAppendKey(currentNavigationSource))
                                         {
+                                            IEdmEntityType currentEntityType = currentScope.ResourceType as IEdmEntityType;
                                             ODataItem odataItem = this.CurrentScope.Item;
                                             Debug.Assert(odataItem is ODataResource, "If the current state is Resource the current item must be an ODataResource as well (and not null either).");
                                             ODataResource resource = (ODataResource)odataItem;
