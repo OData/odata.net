@@ -872,7 +872,7 @@ namespace Microsoft.Test.OData.Tests.Client.ComplexTypeTests
                     new ODataProperty { Name = "CountryRegion", Value = "CN" },
                 };
 
-                var accountInfo_NestedInfo = new ODataNestedResourceInfo(){Name = "AccountInfo", IsCollection = false};
+                var accountInfo_NestedInfo = new ODataNestedResourceInfo() { Name = "AccountInfo", IsCollection = false };
                 var accountInfoResource = new ODataResource
                 {
                     TypeName = NameSpacePrefix + "AccountInfo",
@@ -1081,6 +1081,54 @@ namespace Microsoft.Test.OData.Tests.Client.ComplexTypeTests
             TestClientContext.UpdateObject(account);
             TestClientContext.SaveChanges();
             // No more check, this case is to make sure that client doesn't throw exception.
+        }
+
+        [TestMethod]
+        public void UpdateAndReadOpenComplexTypeWithUndeclaredPropertiesClientTest()
+        {
+            TestClientContext.Format.UseJson(Model);
+            TestClientContext.MergeOption = ODataClient.MergeOption.OverwriteChanges;
+            TestClientContext.Configurations.RequestPipeline.OnMessageWriterSettingsCreated(wsa =>
+            {
+                // writer supports ODataUntypedValue
+                wsa.Settings.Validations &= ~ValidationKinds.ThrowOnUndeclaredPropertyForNonOpenType;
+            });
+            TestClientContext.Configurations.RequestPipeline.OnEntryStarting(ea =>
+            {
+                if (ea.Entity.GetType() == typeof(AccountInfo))
+                {
+                    var undeclaredOdataProperty = new ODataProperty()
+                    {
+                        Name = "UndecalredOpenProperty1",
+                        Value = new ODataUntypedValue() { RawValue = "{ \"sender\": \"RSS\", \"senderImage\": \"https://exchangelabs.live-int.com/connectors/content/images/feed-icon-128px.png?upn=admin%40tenant-EXHR-3837dom.EXTEST.MICROSOFT.COM\", \"summary\": \"RSS is now connected to your mailbox\", \"title\": null }" }
+                    };
+                    var accountInfoComplexValueProperties = ea.Entry.Properties as List<ODataProperty>;
+                    accountInfoComplexValueProperties.Add(undeclaredOdataProperty);
+                }
+            });
+            var account = TestClientContext.Accounts.Where(a => a.AccountID == 101).First();
+            TestClientContext.UpdateObject(account);
+            TestClientContext.SaveChanges();
+
+            TestClientContext.Configurations.ResponsePipeline.OnMessageReaderSettingsCreated(rsa =>
+            {
+                // reader supports undeclared property
+                rsa.Settings.Validations ^= ~ValidationKinds.ThrowOnUndeclaredPropertyForNonOpenType;
+            });
+            ODataUntypedValue undeclaredOdataPropertyValue = null;
+            TestClientContext.Configurations.ResponsePipeline.OnEntityMaterialized(rea =>
+            {
+                if (rea.Entity.GetType() == typeof(AccountInfo))
+                {
+                    var undeclaredOdataProperty = rea.Entry.Properties.FirstOrDefault(s => s.Name == "UndecalredOpenProperty1");
+                    undeclaredOdataPropertyValue = (ODataUntypedValue)undeclaredOdataProperty.Value;
+                }
+            });
+
+            var accountReturned = TestClientContext.Accounts.Where(a => a.AccountID == 101).First();
+            Assert.AreEqual<string>(
+                "{\"sender\":\"RSS\",\"senderImage\":\"https://exchangelabs.live-int.com/connectors/content/images/feed-icon-128px.png?upn=admin%40tenant-EXHR-3837dom.EXTEST.MICROSOFT.COM\",\"summary\":\"RSS is now connected to your mailbox\",\"title\":null}",
+                undeclaredOdataPropertyValue.RawValue);
         }
 
         [TestMethod]

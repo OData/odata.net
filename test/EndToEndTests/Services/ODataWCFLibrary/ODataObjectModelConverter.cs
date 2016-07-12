@@ -224,13 +224,16 @@ namespace Microsoft.Test.OData.Services.ODataWCFService
                         object primitiveVal = p.Value;
                         if (p.Value is ODataUntypedValue)
                         {
-                            primitiveVal = ParseJsonToPrimitiveValue(((ODataUntypedValue)p.Value).RawValue);
+                            openProperties.Add(new ODataProperty { Name = p.Key, Value = p.Value });
                         }
-
-                        openProperties.Add(CreateODataPropertyOrNestedResourceInfo(primitiveVal, p.Key));
+                        else
+                        {
+                            openProperties.Add(CreateODataPropertyOrNestedResourceInfo(primitiveVal, p.Key));
+                        }
                     }
                 }
             }
+
             return openProperties;
         }
 
