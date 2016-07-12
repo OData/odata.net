@@ -63,14 +63,14 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                     DebugDescription = "Binding link with invalid value - array",
                     Json = "\"" + JsonLightUtils.GetPropertyAnnotationName("PoliceStation", JsonLightConstants.ODataBindAnnotationName) + "\":[]",
                     ExpectedEntity = PayloadBuilder.Entity().NavigationProperty("PoliceStation", "http://odata.org/referencelink1"),
-                    ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightEntryAndFeedDeserializer_EmptyBindArray", JsonLightConstants.ODataBindAnnotationName),
+                    ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightResourceDeserializer_EmptyBindArray", JsonLightConstants.ODataBindAnnotationName),
                 },
                 new NavigationLinkTestCase
                 {
                     DebugDescription = "Binding link with invalid value - array of strings",
                     Json = "\"" + JsonLightUtils.GetPropertyAnnotationName("PoliceStation", JsonLightConstants.ODataBindAnnotationName) + "\":[\"http://odata.org/referencelink1\"]",
                     ExpectedEntity = PayloadBuilder.Entity().NavigationProperty("PoliceStation", "http://odata.org/referencelink1"),
-                    ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightEntryAndFeedDeserializer_ArrayValueForSingletonBindPropertyAnnotation", "PoliceStation", JsonLightConstants.ODataBindAnnotationName),
+                    ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightResourceDeserializer_ArrayValueForSingletonBindPropertyAnnotation", "PoliceStation", JsonLightConstants.ODataBindAnnotationName),
                 },
                 new NavigationLinkTestCase
                 {
@@ -104,7 +104,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                         "\"" + JsonLightUtils.GetPropertyAnnotationName("PoliceStation", "custom.annotation") + "\":\"value\"",
                     ExpectedEntity = PayloadBuilder.Entity().NavigationProperty("PoliceStation", "http://odata.org/referencelink1"),
                     ExpectedException = ODataExpectedExceptions.ODataException(
-                        "ODataJsonLightEntryAndFeedDeserializer_NavigationPropertyWithoutValueAndEntityReferenceLink",
+                        "ODataJsonLightResourceDeserializer_NavigationPropertyWithoutValueAndEntityReferenceLink",
                         "PoliceStation",
                         JsonLightConstants.ODataBindAnnotationName),
                 },
@@ -115,7 +115,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                         "\"" + JsonLightUtils.GetPropertyAnnotationName("PoliceStation", JsonLightConstants.ODataTypeAnnotationName) + "\":\"TestModel.OfficeType\"",
                     ExpectedEntity = PayloadBuilder.Entity().NavigationProperty("PoliceStation", "http://odata.org/referencelink1"),
                     ExpectedException = ODataExpectedExceptions.ODataException(
-                        "ODataJsonLightEntryAndFeedDeserializer_UnexpectedNavigationLinkInRequestPropertyAnnotation",
+                        "ODataJsonLightResourceDeserializer_UnexpectedNavigationLinkInRequestPropertyAnnotation",
                         "PoliceStation",
                         JsonLightConstants.ODataTypeAnnotationName,
                         JsonLightConstants.ODataBindAnnotationName),
@@ -139,14 +139,14 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                     DebugDescription = "Expanded singleton link with array value - invalid",
                     Json = "\"PoliceStation\":[]",
                     ExpectedEntity = PayloadBuilder.Entity(),
-                    ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightEntryAndFeedDeserializer_CannotReadSingletonNavigationPropertyValue", "StartArray", "PoliceStation"),
+                    ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightResourceDeserializer_CannotReadSingletonNestedResource", "StartArray", "PoliceStation"),
                 },
                 new NavigationLinkTestCase
                 {
                     DebugDescription = "Expanded singleton link with number value - invalid",
                     Json = "\"PoliceStation\":42",
                     ExpectedEntity = PayloadBuilder.Entity(),
-                    ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightEntryAndFeedDeserializer_CannotReadNavigationPropertyValue", "PoliceStation"),
+                    ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightResourceDeserializer_CannotReadNestedResource", "PoliceStation"),
                 },
                 new NavigationLinkTestCase
                 {
@@ -156,7 +156,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                         "\"PoliceStation\":{\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataTypeAnnotationName + "\":\"TestModel.OfficeType\", \"Id\":1}",
                     ExpectedEntity = PayloadBuilder.Entity().Property(new NavigationPropertyInstance("PoliceStation", new ExpandedLink() { ExpandedElement = PayloadBuilder.Entity("TestModel.OfficeType").PrimitiveProperty("Id", 1) }, null)),
                     ExpectedException = ODataExpectedExceptions.ODataException(
-                        "ODataJsonLightEntryAndFeedDeserializer_SingletonNavigationPropertyWithBindingAndValue",
+                        "ODataJsonLightResourceDeserializer_SingletonNavigationPropertyWithBindingAndValue",
                         "PoliceStation",
                         JsonLightConstants.ODataBindAnnotationName),
                 },
@@ -168,7 +168,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                         "\"PoliceStation\":{\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataTypeAnnotationName + "\":\"TestModel.OfficeType\", \"Id\":1}",
                     ExpectedEntity = PayloadBuilder.Entity().Property(new NavigationPropertyInstance("PoliceStation", new ExpandedLink() { ExpandedElement = PayloadBuilder.Entity("TestModel.OfficeType").PrimitiveProperty("Id", 1) }, null)),
                     ExpectedException = ODataExpectedExceptions.ODataException(
-                        "ODataJsonLightEntryAndFeedDeserializer_UnexpectedNavigationLinkInRequestPropertyAnnotation",
+                        "ODataJsonLightResourceDeserializer_UnexpectedNavigationLinkInRequestPropertyAnnotation",
                         "PoliceStation",
                         JsonLightConstants.ODataTypeAnnotationName,
                         JsonLightConstants.ODataBindAnnotationName),
@@ -239,7 +239,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                     DebugDescription = "Empty binding array - invalid",
                     Json = "\"" + JsonLightUtils.GetPropertyAnnotationName("CityHall", JsonLightConstants.ODataBindAnnotationName) + "\":[]",
                     ExpectedEntity = PayloadBuilder.Entity(),
-                    ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightEntryAndFeedDeserializer_EmptyBindArray", JsonLightConstants.ODataBindAnnotationName),
+                    ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightResourceDeserializer_EmptyBindArray", JsonLightConstants.ODataBindAnnotationName),
                 },
                 new NavigationLinkTestCase
                 {
@@ -267,7 +267,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                     DebugDescription = "Invalid binding annotation value - string - we need array for collection nav. prop.",
                     Json = "\"" + JsonLightUtils.GetPropertyAnnotationName("CityHall", JsonLightConstants.ODataBindAnnotationName) + "\":\"http://odata.org/referencelink1\"",
                     ExpectedEntity = PayloadBuilder.Entity(),
-                    ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightEntryAndFeedDeserializer_StringValueForCollectionBindPropertyAnnotation", "CityHall", JsonLightConstants.ODataBindAnnotationName),
+                    ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightResourceDeserializer_StringValueForCollectionBindPropertyAnnotation", "CityHall", JsonLightConstants.ODataBindAnnotationName),
                 },
                 new NavigationLinkTestCase
                 {
@@ -322,7 +322,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                         "\"" + JsonLightUtils.GetPropertyAnnotationName("CityHall", "custom.annotation") + "\":null",
                     ExpectedEntity = PayloadBuilder.Entity(),
                     ExpectedException = ODataExpectedExceptions.ODataException(
-                        "ODataJsonLightEntryAndFeedDeserializer_NavigationPropertyWithoutValueAndEntityReferenceLink",
+                        "ODataJsonLightResourceDeserializer_NavigationPropertyWithoutValueAndEntityReferenceLink",
                         "CityHall",
                         JsonLightConstants.ODataBindAnnotationName),
                 },
@@ -374,7 +374,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                         "\"CityHall\":[{\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataTypeAnnotationName + "\":\"TestModel.OfficeType\", \"Id\":1}]",
                     ExpectedEntity = PayloadBuilder.Entity(),
                     ExpectedException = ODataExpectedExceptions.ODataException(
-                        "ODataJsonLightEntryAndFeedDeserializer_UnexpectedNavigationLinkInRequestPropertyAnnotation",
+                        "ODataJsonLightResourceDeserializer_UnexpectedNavigationLinkInRequestPropertyAnnotation",
                         "CityHall",
                         JsonLightConstants.ODataNextLinkAnnotationName,
                         JsonLightConstants.ODataBindAnnotationName),

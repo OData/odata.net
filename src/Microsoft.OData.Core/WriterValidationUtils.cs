@@ -154,7 +154,7 @@ namespace Microsoft.OData
         /// </summary>
         /// <param name="resourceType">The <see cref="IEdmEntityType"/> of the resource.</param>
         /// <param name="parentNavigationPropertyType">The type of the parent navigation property.</param>
-        internal static void ValidateResourceInExpandedLink(IEdmStructuredType resourceType, IEdmStructuredType parentNavigationPropertyType)
+        internal static void ValidateNestedResource(IEdmStructuredType resourceType, IEdmStructuredType parentNavigationPropertyType)
         {
             if (parentNavigationPropertyType == null)
             {
@@ -166,7 +166,7 @@ namespace Microsoft.OData
             // Make sure the entity types are compatible
             if (!parentNavigationPropertyType.IsAssignableFrom(resourceType))
             {
-                throw new ODataException(Strings.WriterValidationUtils_EntryTypeInExpandedLinkNotCompatibleWithNavigationPropertyType(resourceType.FullTypeName(), parentNavigationPropertyType.FullTypeName()));
+                throw new ODataException(Strings.WriterValidationUtils_NestedResourceTypeNotCompatibleWithParentPropertyType(resourceType.FullTypeName(), parentNavigationPropertyType.FullTypeName()));
             }
         }
 
@@ -367,8 +367,8 @@ namespace Microsoft.OData
                 if (isResourceSetPayload != nestedResourceInfo.IsCollection.Value)
                 {
                     errorTemplate = expandedPayloadKind.Value == ODataPayloadKind.ResourceSet
-                        ? (Func<object, string>)Strings.WriterValidationUtils_ExpandedLinkIsCollectionFalseWithFeedContent
-                        : Strings.WriterValidationUtils_ExpandedLinkIsCollectionTrueWithEntryContent;
+                        ? (Func<object, string>)Strings.WriterValidationUtils_ExpandedLinkIsCollectionFalseWithResourceSetContent
+                        : Strings.WriterValidationUtils_ExpandedLinkIsCollectionTrueWithResourceContent;
                 }
             }
 
@@ -388,8 +388,8 @@ namespace Microsoft.OData
                         if (!(nestedResourceInfo.IsCollection == false && isEntityReferenceLinkPayload))
                         {
                             errorTemplate = isCollectionType
-                                ? (Func<object, string>)Strings.WriterValidationUtils_ExpandedLinkIsCollectionFalseWithFeedMetadata
-                                : Strings.WriterValidationUtils_ExpandedLinkIsCollectionTrueWithEntryMetadata;
+                                ? (Func<object, string>)Strings.WriterValidationUtils_ExpandedLinkIsCollectionFalseWithResourceSetMetadata
+                                : Strings.WriterValidationUtils_ExpandedLinkIsCollectionTrueWithResourceMetadata;
                         }
                     }
 
@@ -398,8 +398,8 @@ namespace Microsoft.OData
                     if (!isEntityReferenceLinkPayload && expandedPayloadKind.HasValue && isCollectionType != isResourceSetPayload)
                     {
                         errorTemplate = isCollectionType
-                            ? (Func<object, string>)Strings.WriterValidationUtils_ExpandedLinkWithEntryPayloadAndFeedMetadata
-                            : Strings.WriterValidationUtils_ExpandedLinkWithFeedPayloadAndEntryMetadata;
+                            ? (Func<object, string>)Strings.WriterValidationUtils_ExpandedLinkWithResourcePayloadAndResourceSetMetadata
+                            : Strings.WriterValidationUtils_ExpandedLinkWithResourceSetPayloadAndResourceMetadata;
                     }
                 }
             }

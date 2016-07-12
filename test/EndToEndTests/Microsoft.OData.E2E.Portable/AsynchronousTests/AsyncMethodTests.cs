@@ -33,10 +33,14 @@ namespace Microsoft.OData.E2E.Profile111.AsynchronousTests
         {
             var context = this.CreateWrappedContext<DefaultContainer>().Context;
             context.MergeOption = MergeOption.OverwriteChanges;
+            bool checkEntry = true;
             int expectedPropertyCount = 1;
             Action<WritingEntryArgs> onEntryEnding = args =>
             {
-                Assert.Equal(expectedPropertyCount, args.Entry.Properties.Count());
+                if (checkEntry)
+                {
+                    Assert.Equal(expectedPropertyCount, args.Entry.Properties.Count());
+                }
             };
             context.Configurations.RequestPipeline.OnEntryEnding(onEntryEnding);
             DataServiceCollection<Customer> customers = new DataServiceCollection<Customer>(context, "Customer", null, null);
@@ -55,7 +59,7 @@ namespace Microsoft.OData.E2E.Profile111.AsynchronousTests
             context.AddLink(c1, "Orders", o1);
 
             //Post with batch
-            expectedPropertyCount = 3;
+            expectedPropertyCount = 2;
             await context.SaveChangesAsync(SaveChangesOptions.BatchWithSingleChangeset);
 
             List<Order> orders = new List<Order>();
@@ -82,6 +86,16 @@ namespace Microsoft.OData.E2E.Profile111.AsynchronousTests
             //Partial Update an Entity
             expectedPropertyCount = 1;
             c1.Orders[0].Concurrency.Token = "UpdatedToken";
+            checkEntry = false;
+            Action<WritingEntryArgs> onEntryEnding1 = (args) =>
+            {
+                if (args.Entry.TypeName.EndsWith("ConcurrencyInfo"))
+                {
+                    Assert.Equal("UpdatedToken", args.Entry.Properties.Single(p => p.Name == "Token").Value);
+                }
+            };
+            context.Configurations.RequestPipeline.OnEntryEnding(onEntryEnding1);
+
             await context.SaveChangesAsync(SaveChangesOptions.None);
 
             this.EnqueueTestComplete();

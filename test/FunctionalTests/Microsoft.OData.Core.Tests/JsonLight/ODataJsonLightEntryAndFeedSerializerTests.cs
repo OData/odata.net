@@ -125,7 +125,7 @@ namespace Microsoft.OData.Tests.JsonLight
         {
             var operations = new ODataOperation[] { new ODataAction { Metadata = new Uri("#foo", UriKind.Relative) }, new ODataAction { Metadata = new Uri("#foo", UriKind.Relative), Target = new Uri("http://www.example.com/foo") } };
             Action test = () => this.WriteOperationsAndValidatePayload(operations, null);
-            test.ShouldThrow<ODataException>().WithMessage(ErrorStrings.ODataJsonLightEntryAndFeedSerializer_ActionsAndFunctionsGroupMustSpecifyTarget("#foo"));
+            test.ShouldThrow<ODataException>().WithMessage(ErrorStrings.ODataJsonLightResourceSerializer_ActionsAndFunctionsGroupMustSpecifyTarget("#foo"));
         }
 
         [Fact]
@@ -133,7 +133,7 @@ namespace Microsoft.OData.Tests.JsonLight
         {
             var operations = new ODataOperation[] { new ODataAction { Metadata = new Uri("#foo", UriKind.Relative) }, new ODataAction { Metadata = new Uri("#foo", UriKind.Relative) } };
             Action test = () => this.WriteOperationsAndValidatePayload(operations, null);
-            test.ShouldThrow<ODataException>().WithMessage(ErrorStrings.ODataJsonLightEntryAndFeedSerializer_ActionsAndFunctionsGroupMustSpecifyTarget("#foo"));
+            test.ShouldThrow<ODataException>().WithMessage(ErrorStrings.ODataJsonLightResourceSerializer_ActionsAndFunctionsGroupMustSpecifyTarget("#foo"));
         }
 
         [Fact]
@@ -141,7 +141,7 @@ namespace Microsoft.OData.Tests.JsonLight
         {
             var operations = new ODataOperation[] { new ODataAction { Metadata = new Uri("#foo", UriKind.Relative), Target = new Uri("http://www.example.com/foo") }, new ODataAction { Metadata = new Uri("#foo", UriKind.Relative), Target = new Uri("http://www.example.com/foo") } };
             Action test = () => this.WriteOperationsAndValidatePayload(operations, null);
-            test.ShouldThrow<ODataException>().WithMessage(ErrorStrings.ODataJsonLightEntryAndFeedSerializer_ActionsAndFunctionsGroupMustNotHaveDuplicateTarget("#foo", "http://www.example.com/foo"));
+            test.ShouldThrow<ODataException>().WithMessage(ErrorStrings.ODataJsonLightResourceSerializer_ActionsAndFunctionsGroupMustNotHaveDuplicateTarget("#foo", "http://www.example.com/foo"));
         }
 
         [Fact]

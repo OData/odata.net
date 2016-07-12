@@ -119,7 +119,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Writer.JsonLight
         {
             Action sync = () => WriteAndValidateSync(/*itemTypeReference*/ null, this.collectionStartWithoutSerializationInfo, items, "", writingResponse: true);
             Action async = () => WriteAndValidateAsync(/*itemTypeReference*/ null, this.collectionStartWithoutSerializationInfo, items, "", writingResponse: true);
-            sync.ShouldThrow<ODataException>().WithMessage(Strings.ODataFeedAndEntryTypeContext_MetadataOrSerializationInfoMissing);
+            sync.ShouldThrow<ODataException>().WithMessage(Strings.ODataResourceTypeContext_MetadataOrSerializationInfoMissing);
             async.ShouldThrow<AggregateException>();
         }
 
@@ -188,7 +188,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Writer.JsonLight
         {
             Action sync = () => WriteAndValidateSync(/*itemTypeReference*/ null, this.collectionStartWithoutSerializationInfo, derivedItems, "", writingResponse: true);
             Action async = () => WriteAndValidateAsync(/*itemTypeReference*/ null, this.collectionStartWithoutSerializationInfo, derivedItems, "", writingResponse: true);
-            sync.ShouldThrow<ODataException>().WithMessage(Strings.ODataFeedAndEntryTypeContext_MetadataOrSerializationInfoMissing);
+            sync.ShouldThrow<ODataException>().WithMessage(Strings.ODataResourceTypeContext_MetadataOrSerializationInfoMissing);
             async.ShouldThrow<AggregateException>();
         }
 

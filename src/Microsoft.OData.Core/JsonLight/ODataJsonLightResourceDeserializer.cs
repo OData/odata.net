@@ -49,14 +49,14 @@ namespace Microsoft.OData.JsonLight
 
             if (this.JsonReader.NodeType != JsonNodeType.StartArray)
             {
-                throw new ODataException(ODataErrorStrings.ODataJsonLightEntryAndFeedDeserializer_CannotReadFeedContentStart(this.JsonReader.NodeType));
+                throw new ODataException(ODataErrorStrings.ODataJsonLightResourceDeserializer_CannotReadResourceSetContentStart(this.JsonReader.NodeType));
             }
 
             this.JsonReader.ReadStartArray();
 
             if (this.JsonReader.NodeType != JsonNodeType.EndArray && this.JsonReader.NodeType != JsonNodeType.StartObject)
             {
-                throw new ODataException(ODataErrorStrings.ODataJsonLightEntryAndFeedDeserializer_InvalidNodeTypeForItemsInFeed(this.JsonReader.NodeType));
+                throw new ODataException(ODataErrorStrings.ODataJsonLightResourceDeserializer_InvalidNodeTypeForItemsInResourceSet(this.JsonReader.NodeType));
             }
 
             this.JsonReader.AssertNotBuffering();
@@ -329,14 +329,14 @@ namespace Microsoft.OData.JsonLight
                                     }
                                     else
                                     {
-                                        throw new ODataException(ODataErrorStrings.ODataJsonLightEntryAndFeedDeserializer_InvalidPropertyInTopLevelFeed(propertyName, JsonLightConstants.ODataValuePropertyName));
+                                        throw new ODataException(ODataErrorStrings.ODataJsonLightResourceDeserializer_InvalidPropertyInTopLevelResourceSet(propertyName, JsonLightConstants.ODataValuePropertyName));
                                     }
 
                                     break;
                                 case PropertyParsingResult.PropertyWithoutValue:
                                     // If we find a property without a value it means that we did not find the resource set property (yet)
                                     // but an invalid property annotation
-                                    throw new ODataException(ODataErrorStrings.ODataJsonLightEntryAndFeedDeserializer_InvalidPropertyAnnotationInTopLevelFeed(propertyName));
+                                    throw new ODataException(ODataErrorStrings.ODataJsonLightResourceDeserializer_InvalidPropertyAnnotationInTopLevelResourceSet(propertyName));
 
                                 case PropertyParsingResult.EndOfObject:
                                     break;
@@ -351,7 +351,7 @@ namespace Microsoft.OData.JsonLight
                                     break;
 
                                 default:
-                                    throw new ODataException(ODataErrorStrings.General_InternalError(InternalErrorCodes.ODataJsonLightEntryAndFeedDeserializer_ReadTopLevelFeedAnnotations));
+                                    throw new ODataException(ODataErrorStrings.General_InternalError(InternalErrorCodes.ODataJsonLightResourceDeserializer_ReadTopLevelResourceSetAnnotations));
                             }
                         });
 
@@ -373,7 +373,7 @@ namespace Microsoft.OData.JsonLight
             if (forResourceSetStart && !readAllResourceSetProperties)
             {
                 // We did not find any properties or only instance annotations.
-                throw new ODataException(ODataErrorStrings.ODataJsonLightEntryAndFeedDeserializer_ExpectedFeedPropertyNotFound(JsonLightConstants.ODataValuePropertyName));
+                throw new ODataException(ODataErrorStrings.ODataJsonLightResourceDeserializer_ExpectedResourceSetPropertyNotFound(JsonLightConstants.ODataValuePropertyName));
             }
         }
 
@@ -490,7 +490,7 @@ namespace Microsoft.OData.JsonLight
                     this.JsonReader.Read();
                     if (entityReferenceLinks.Count == 0)
                     {
-                        throw new ODataException(ODataErrorStrings.ODataJsonLightEntryAndFeedDeserializer_EmptyBindArray(ODataAnnotationNames.ODataBind));
+                        throw new ODataException(ODataErrorStrings.ODataJsonLightResourceDeserializer_EmptyBindArray(ODataAnnotationNames.ODataBind));
                     }
 
                     return entityReferenceLinks;
@@ -529,14 +529,14 @@ namespace Microsoft.OData.JsonLight
                         return this.ReadODataTypeAnnotationValue();
                     }
 
-                    // We already read the odata.type if it was the first property in ReadEntryStart, so any other occurrence means
+                    // We already read the odata.type if it was the first property in ReadResourceStart, so any other occurrence means
                     // that it was not the first property.
-                    throw new ODataException(ODataErrorStrings.ODataJsonLightEntryAndFeedDeserializer_EntryTypeAnnotationNotFirst);
+                    throw new ODataException(ODataErrorStrings.ODataJsonLightResourceDeserializer_ResourceTypeAnnotationNotFirst);
 
                 case ODataAnnotationNames.ODataId:   // 'odata.id'
                     if (anyPropertyFound)
                     {
-                        throw new ODataException(ODataErrorStrings.ODataJsonLightEntryAndFeedDeserializer_EntryInstanceAnnotationPrecededByProperty(annotationName));
+                        throw new ODataException(ODataErrorStrings.ODataJsonLightResourceDeserializer_ResourceInstanceAnnotationPrecededByProperty(annotationName));
                     }
 
                     return this.ReadAnnotationStringValueAsUri(annotationName);
@@ -544,7 +544,7 @@ namespace Microsoft.OData.JsonLight
                 case ODataAnnotationNames.ODataETag:   // 'odata.etag'
                     if (anyPropertyFound)
                     {
-                        throw new ODataException(ODataErrorStrings.ODataJsonLightEntryAndFeedDeserializer_EntryInstanceAnnotationPrecededByProperty(annotationName));
+                        throw new ODataException(ODataErrorStrings.ODataJsonLightResourceDeserializer_ResourceInstanceAnnotationPrecededByProperty(annotationName));
                     }
 
                     return this.ReadAndValidateAnnotationStringValue(annotationName);
@@ -740,7 +740,7 @@ namespace Microsoft.OData.JsonLight
 
                         if (!readerNestedResourceInfo.HasEntityReferenceLink)
                         {
-                            throw new ODataException(ODataErrorStrings.ODataJsonLightEntryAndFeedDeserializer_NavigationPropertyWithoutValueAndEntityReferenceLink(propertyName, ODataAnnotationNames.ODataBind));
+                            throw new ODataException(ODataErrorStrings.ODataJsonLightResourceDeserializer_NavigationPropertyWithoutValueAndEntityReferenceLink(propertyName, ODataAnnotationNames.ODataBind));
                         }
                     }
 
@@ -757,7 +757,7 @@ namespace Microsoft.OData.JsonLight
                     }
                     else
                     {
-                        throw new ODataException(ODataErrorStrings.ODataJsonLightEntryAndFeedDeserializer_PropertyWithoutValueWithWrongType(propertyName, propertyTypeReference.FullName()));
+                        throw new ODataException(ODataErrorStrings.ODataJsonLightResourceDeserializer_PropertyWithoutValueWithWrongType(propertyName, propertyTypeReference.FullName()));
                     }
                 }
             }
@@ -838,7 +838,7 @@ namespace Microsoft.OData.JsonLight
                         break;
 
                     default:
-                        throw new ODataException(ODataErrorStrings.ODataJsonLightEntryAndFeedDeserializer_UnexpectedDeferredLinkPropertyAnnotation(nestedResourceInfo.Name, propertyAnnotation.Key));
+                        throw new ODataException(ODataErrorStrings.ODataJsonLightResourceDeserializer_UnexpectedDeferredLinkPropertyAnnotation(nestedResourceInfo.Name, propertyAnnotation.Key));
                 }
             }
 
@@ -874,7 +874,7 @@ namespace Microsoft.OData.JsonLight
                     case ODataAnnotationNames.ODataNextLink:
                         if (resourceSet.NextPageLink != null)
                         {
-                            throw new ODataException(ODataErrorStrings.ODataJsonLightEntryAndFeedDeserializer_DuplicateExpandedFeedAnnotation(ODataAnnotationNames.ODataNextLink, expandedNestedResourceInfo.NestedResourceInfo.Name));
+                            throw new ODataException(ODataErrorStrings.ODataJsonLightResourceDeserializer_DuplicateExpandedResourceSetAnnotation(ODataAnnotationNames.ODataNextLink, expandedNestedResourceInfo.NestedResourceInfo.Name));
                         }
 
                         // Read the property value.
@@ -884,7 +884,7 @@ namespace Microsoft.OData.JsonLight
                     case ODataAnnotationNames.ODataCount:
                         if (resourceSet.Count != null)
                         {
-                            throw new ODataException(ODataErrorStrings.ODataJsonLightEntryAndFeedDeserializer_DuplicateExpandedFeedAnnotation(ODataAnnotationNames.ODataCount, expandedNestedResourceInfo.NestedResourceInfo.Name));
+                            throw new ODataException(ODataErrorStrings.ODataJsonLightResourceDeserializer_DuplicateExpandedResourceSetAnnotation(ODataAnnotationNames.ODataCount, expandedNestedResourceInfo.NestedResourceInfo.Name));
                         }
 
                         // Read the property value.
@@ -893,7 +893,7 @@ namespace Microsoft.OData.JsonLight
 
                     case ODataAnnotationNames.ODataDeltaLink:   // Delta links are not supported on expanded resource sets.
                     default:
-                        throw new ODataException(ODataErrorStrings.ODataJsonLightEntryAndFeedDeserializer_UnexpectedPropertyAnnotationAfterExpandedFeed(annotationName, expandedNestedResourceInfo.NestedResourceInfo.Name));
+                        throw new ODataException(ODataErrorStrings.ODataJsonLightResourceDeserializer_UnexpectedPropertyAnnotationAfterExpandedResourceSet(annotationName, expandedNestedResourceInfo.NestedResourceInfo.Name));
                 }
             }
         }
@@ -990,7 +990,7 @@ namespace Microsoft.OData.JsonLight
                     IEdmTypeReference propertyTypeReference = edmProperty.Type;
                     if (propertyTypeReference.IsStream())
                     {
-                        throw new ODataException(ODataErrorStrings.ODataJsonLightEntryAndFeedDeserializer_StreamPropertyWithValue(propertyName));
+                        throw new ODataException(ODataErrorStrings.ODataJsonLightResourceDeserializer_StreamPropertyWithValue(propertyName));
                     }
 
                     // NOTE: we currently do not check whether the property should be skipped
@@ -1076,7 +1076,7 @@ namespace Microsoft.OData.JsonLight
             // Property without a value can't be ignored if we don't know what it is.
             if (!propertyWithValue)
             {
-                throw new ODataException(ODataErrorStrings.ODataJsonLightEntryAndFeedDeserializer_OpenPropertyWithoutValue(propertyName));
+                throw new ODataException(ODataErrorStrings.ODataJsonLightResourceDeserializer_OpenPropertyWithoutValue(propertyName));
             }
 
             object propertyValue = null;
@@ -1228,7 +1228,7 @@ namespace Microsoft.OData.JsonLight
                 // Stream properties can't have a value
                 if (propertyWithValue)
                 {
-                    throw new ODataException(ODataErrorStrings.ODataJsonLightEntryAndFeedDeserializer_StreamPropertyWithValue(propertyName));
+                    throw new ODataException(ODataErrorStrings.ODataJsonLightResourceDeserializer_StreamPropertyWithValue(propertyName));
                 }
 
                 ODataStreamReferenceValue streamPropertyValue = this.ReadStreamPropertyValue(resourceState, propertyName);
@@ -1247,7 +1247,7 @@ namespace Microsoft.OData.JsonLight
             // Property without a value can't be ignored if we don't know what it is.
             if (!propertyWithValue)
             {
-                throw new ODataException(ODataErrorStrings.ODataJsonLightEntryAndFeedDeserializer_PropertyWithoutValueWithUnknownType(propertyName));
+                throw new ODataException(ODataErrorStrings.ODataJsonLightResourceDeserializer_PropertyWithoutValueWithUnknownType(propertyName));
             }
 
             // Validate that the property doesn't have unrecognized annotations
@@ -1285,7 +1285,7 @@ namespace Microsoft.OData.JsonLight
             // Fail on stream properties in requests as they cannot appear there.
             if (!this.ReadingResponse)
             {
-                throw new ODataException(ODataErrorStrings.ODataJsonLightEntryAndFeedDeserializer_StreamPropertyInRequest);
+                throw new ODataException(ODataErrorStrings.ODataJsonLightResourceDeserializer_StreamPropertyInRequest);
             }
 
             ODataStreamReferenceValue streamReferenceValue = new ODataStreamReferenceValue();
@@ -1316,7 +1316,7 @@ namespace Microsoft.OData.JsonLight
                         break;
 
                     default:
-                        throw new ODataException(ODataErrorStrings.ODataJsonLightEntryAndFeedDeserializer_UnexpectedStreamPropertyAnnotation(streamPropertyName, propertyAnnotation.Key));
+                        throw new ODataException(ODataErrorStrings.ODataJsonLightResourceDeserializer_UnexpectedStreamPropertyAnnotation(streamPropertyName, propertyAnnotation.Key));
                 }
             }
 
@@ -1383,7 +1383,7 @@ namespace Microsoft.OData.JsonLight
                     case JsonConstants.ODataOperationTitleName:
                         if (operation.Title != null)
                         {
-                            throw new ODataException(ODataErrorStrings.ODataJsonLightEntryAndFeedDeserializer_MultipleOptionalPropertiesInOperation(operationPropertyName, metadataReferencePropertyName));
+                            throw new ODataException(ODataErrorStrings.ODataJsonLightResourceDeserializer_MultipleOptionalPropertiesInOperation(operationPropertyName, metadataReferencePropertyName));
                         }
 
                         string titleString = readerContext.JsonReader.ReadStringValue(JsonConstants.ODataOperationTitleName);
@@ -1394,7 +1394,7 @@ namespace Microsoft.OData.JsonLight
                     case JsonConstants.ODataOperationTargetName:
                         if (operation.Target != null)
                         {
-                            throw new ODataException(ODataErrorStrings.ODataJsonLightEntryAndFeedDeserializer_MultipleOptionalPropertiesInOperation(operationPropertyName, metadataReferencePropertyName));
+                            throw new ODataException(ODataErrorStrings.ODataJsonLightResourceDeserializer_MultipleOptionalPropertiesInOperation(operationPropertyName, metadataReferencePropertyName));
                         }
 
                         string targetString = readerContext.JsonReader.ReadStringValue(JsonConstants.ODataOperationTargetName);
@@ -1412,7 +1412,7 @@ namespace Microsoft.OData.JsonLight
 
             if (operation.Target == null && insideArray)
             {
-                throw new ODataException(ODataErrorStrings.ODataJsonLightEntryAndFeedDeserializer_OperationMissingTargetProperty(metadataReferencePropertyName));
+                throw new ODataException(ODataErrorStrings.ODataJsonLightResourceDeserializer_OperationMissingTargetProperty(metadataReferencePropertyName));
             }
 
             // read the end-object node of the target / title pair
@@ -1469,7 +1469,7 @@ namespace Microsoft.OData.JsonLight
                     case JsonConstants.ODataOperationTitleName:
                         if (operation.Title != null)
                         {
-                            throw new ODataException(ODataErrorStrings.ODataJsonLightEntryAndFeedDeserializer_MultipleOptionalPropertiesInOperation(operationPropertyName, metadataReferencePropertyName));
+                            throw new ODataException(ODataErrorStrings.ODataJsonLightResourceDeserializer_MultipleOptionalPropertiesInOperation(operationPropertyName, metadataReferencePropertyName));
                         }
 
                         string titleString = this.JsonReader.ReadStringValue(JsonConstants.ODataOperationTitleName);
@@ -1480,7 +1480,7 @@ namespace Microsoft.OData.JsonLight
                     case JsonConstants.ODataOperationTargetName:
                         if (operation.Target != null)
                         {
-                            throw new ODataException(ODataErrorStrings.ODataJsonLightEntryAndFeedDeserializer_MultipleOptionalPropertiesInOperation(operationPropertyName, metadataReferencePropertyName));
+                            throw new ODataException(ODataErrorStrings.ODataJsonLightResourceDeserializer_MultipleOptionalPropertiesInOperation(operationPropertyName, metadataReferencePropertyName));
                         }
 
                         string targetString = this.JsonReader.ReadStringValue(JsonConstants.ODataOperationTargetName);
@@ -1498,7 +1498,7 @@ namespace Microsoft.OData.JsonLight
 
             if (operation.Target == null && insideArray)
             {
-                throw new ODataException(ODataErrorStrings.ODataJsonLightEntryAndFeedDeserializer_OperationMissingTargetProperty(metadataReferencePropertyName));
+                throw new ODataException(ODataErrorStrings.ODataJsonLightResourceDeserializer_OperationMissingTargetProperty(metadataReferencePropertyName));
             }
 
             // read the end-object node of the target / title pair
@@ -1679,7 +1679,7 @@ namespace Microsoft.OData.JsonLight
         {
             if (!this.ReadingResponse)
             {
-                throw new ODataException(ODataErrorStrings.ODataJsonLightEntryAndFeedDeserializer_MetadataReferencePropertyInRequest);
+                throw new ODataException(ODataErrorStrings.ODataJsonLightResourceDeserializer_MetadataReferencePropertyInRequest);
             }
         }
 

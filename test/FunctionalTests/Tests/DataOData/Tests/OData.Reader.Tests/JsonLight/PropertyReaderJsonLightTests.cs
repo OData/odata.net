@@ -690,7 +690,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                         string firstPropertyName = isEmpty ? null : complexValue.Properties.First().Name;
 
                         // An open property without expected and payload type cannot be read; expect an exception.
-                        expectedException = ODataExpectedExceptions.ODataException("ReaderValidationUtils_EntryWithoutType");
+                        expectedException = ODataExpectedExceptions.ODataException("ReaderValidationUtils_ResourceWithoutType");
                     }
 
                     PayloadReaderTestDescriptor testDescriptor = new PayloadReaderTestDescriptor(this.Settings)

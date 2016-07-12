@@ -1309,7 +1309,7 @@ Content-Type: APPLicATiON/json;odata.metadata=minimal
 
                     HttpStatusCode statusCode = ((HttpWebResponse)e.Response).StatusCode;
                     string errorPayload = new StreamReader(e.Response.GetResponseStream()).ReadToEnd();
-                    string expectedErrorMsg = ODataLibResourceUtil.GetString("ODataJsonLightEntryAndFeedDeserializer_StreamPropertyWithValue", "Stream1");
+                    string expectedErrorMsg = ODataLibResourceUtil.GetString("ODataJsonLightResourceDeserializer_StreamPropertyWithValue", "Stream1");
                     Assert.AreEqual(HttpStatusCode.BadRequest, statusCode, "Should generate a 400 error since stream properties are not allowed in requests.");
                     Assert.IsTrue(errorPayload.Contains(expectedErrorMsg), "Error messages don't match.");
                 }

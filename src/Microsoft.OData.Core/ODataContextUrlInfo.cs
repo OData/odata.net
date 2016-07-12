@@ -343,7 +343,7 @@ namespace Microsoft.OData
             if (primitive == null)
             {
                 Debug.Assert(value is ODataStreamReferenceValue, "value is ODataStreamReferenceValue");
-                throw new ODataException(Strings.ODataContextUriBuilder_StreamValueMustBePropertiesOfODataEntry);
+                throw new ODataException(Strings.ODataContextUriBuilder_StreamValueMustBePropertiesOfODataResource);
             }
 
             // Try convert to underlying type if the primitive value is unsigned int.

@@ -202,7 +202,7 @@ namespace Microsoft.OData.UriParser
             IEdmStructuralProperty currentComplexProp = edmProperty as IEdmStructuralProperty;
             if (currentNavProp == null && currentComplexProp == null)
             {
-                throw new ODataException(ODataErrorStrings.ExpandItemBinder_PropertyIsNotANavigationProperty(currentToken.Identifier, currentLevelEntityType.FullTypeName()));
+                throw new ODataException(ODataErrorStrings.ExpandItemBinder_PropertyIsNotANavigationPropertyOrComplexProperty(currentToken.Identifier, currentLevelEntityType.FullTypeName()));
             }
 
             if (currentComplexProp != null)
@@ -292,7 +292,7 @@ namespace Microsoft.OData.UriParser
 
             if (currentToken.NextToken == null)
             {
-                throw new ODataException(ODataErrorStrings.ExpandItemBinder_PropertyIsNotANavigationProperty(currentToken.Identifier, edmProperty.DeclaringType.FullTypeName()));
+                throw new ODataException(ODataErrorStrings.ExpandItemBinder_PropertyIsNotANavigationPropertyOrComplexProperty(currentToken.Identifier, edmProperty.DeclaringType.FullTypeName()));
             }
 
             currentToken = currentToken.NextToken;
@@ -335,7 +335,7 @@ namespace Microsoft.OData.UriParser
             }
             else
             {
-                throw new ODataException(ODataErrorStrings.ExpandItemBinder_PropertyIsNotANavigationProperty(currentToken.Identifier, currentType.FullTypeName()));
+                throw new ODataException(ODataErrorStrings.ExpandItemBinder_PropertyIsNotANavigationPropertyOrComplexProperty(currentToken.Identifier, currentType.FullTypeName()));
             }
         }
 

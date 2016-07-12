@@ -828,7 +828,7 @@ namespace Microsoft.OData
 
             if (resourceSet.DeltaLink != null)
             {
-                throw new ODataException(Strings.ODataWriterCore_DeltaLinkNotSupportedOnExpandedFeed);
+                throw new ODataException(Strings.ODataWriterCore_DeltaLinkNotSupportedOnExpandedResourceSet);
             }
         }
 
@@ -1556,12 +1556,12 @@ namespace Microsoft.OData
 
                     if (newState == WriterState.ResourceSet && !this.writingResourceSet)
                     {
-                        throw new ODataException(Strings.ODataWriterCore_CannotWriteTopLevelFeedWithEntryWriter);
+                        throw new ODataException(Strings.ODataWriterCore_CannotWriteTopLevelResourceSetWithResourceWriter);
                     }
 
                     if (newState == WriterState.Resource && this.writingResourceSet)
                     {
-                        throw new ODataException(Strings.ODataWriterCore_CannotWriteTopLevelEntryWithFeedWriter);
+                        throw new ODataException(Strings.ODataWriterCore_CannotWriteTopLevelResourceWithResourceSetWriter);
                     }
 
                     break;
@@ -1569,12 +1569,12 @@ namespace Microsoft.OData
                     {
                         if (this.CurrentScope.Item == null)
                         {
-                            throw new ODataException(Strings.ODataWriterCore_InvalidTransitionFromNullEntry(this.State.ToString(), newState.ToString()));
+                            throw new ODataException(Strings.ODataWriterCore_InvalidTransitionFromNullResource(this.State.ToString(), newState.ToString()));
                         }
 
                         if (newState != WriterState.NestedResourceInfo)
                         {
-                            throw new ODataException(Strings.ODataWriterCore_InvalidTransitionFromEntry(this.State.ToString(), newState.ToString()));
+                            throw new ODataException(Strings.ODataWriterCore_InvalidTransitionFromResource(this.State.ToString(), newState.ToString()));
                         }
                     }
 
@@ -1582,7 +1582,7 @@ namespace Microsoft.OData
                 case WriterState.ResourceSet:
                     if (newState != WriterState.Resource)
                     {
-                        throw new ODataException(Strings.ODataWriterCore_InvalidTransitionFromFeed(this.State.ToString(), newState.ToString()));
+                        throw new ODataException(Strings.ODataWriterCore_InvalidTransitionFromResourceSet(this.State.ToString(), newState.ToString()));
                     }
 
                     break;
@@ -1948,7 +1948,7 @@ namespace Microsoft.OData
         }
 
         /// <summary>
-        /// A scope for an resourceSet.
+        /// A scope for a resourceSet.
         /// </summary>
         internal abstract class ResourceSetScope : Scope
         {

@@ -797,7 +797,7 @@ namespace Microsoft.OData.JsonLight
                     this.ReadResourceSetEnd();
                     break;
                 default:
-                    throw new ODataException(ODataErrorStrings.ODataJsonReader_CannotReadEntriesOfFeed(this.jsonLightResourceDeserializer.JsonReader.NodeType));
+                    throw new ODataException(ODataErrorStrings.ODataJsonReader_CannotReadResourcesOfResourceSet(this.jsonLightResourceDeserializer.JsonReader.NodeType));
             }
 
             return true;

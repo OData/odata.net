@@ -64,7 +64,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.JsonLight
                         null,
                         new ODataEntityReferenceLink() { Url = new Uri("http://odata.org/singleton") },
                     },
-                    ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightWriter_EntityReferenceLinkAfterFeedInRequest")
+                    ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightWriter_EntityReferenceLinkAfterResourceSetInRequest")
                 },
                 // Entity reference link after non-empty feed in collection navigation link
                 new WriterNavigationLinkTests.NavigationLinkTestCase
@@ -77,7 +77,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.JsonLight
                         null,
                         new ODataEntityReferenceLink() { Url = new Uri("http://odata.org/singleton") },
                     },
-                    ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightWriter_EntityReferenceLinkAfterFeedInRequest")
+                    ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightWriter_EntityReferenceLinkAfterResourceSetInRequest")
                 },
                 // Entity reference link before and after empty feed in collection navigation link
                 new WriterNavigationLinkTests.NavigationLinkTestCase
@@ -89,7 +89,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.JsonLight
                         null,
                         new ODataEntityReferenceLink() { Url = new Uri("http://odata.org/singleton") },
                     },
-                    ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightWriter_EntityReferenceLinkAfterFeedInRequest")
+                    ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightWriter_EntityReferenceLinkAfterResourceSetInRequest")
                 },
                 // Entity reference link after two empty feeds in collection navigation link
                 new WriterNavigationLinkTests.NavigationLinkTestCase
@@ -103,7 +103,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.JsonLight
                         null,
                         new ODataEntityReferenceLink() { Url = new Uri("http://odata.org/singleton") },
                     },
-                    ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightWriter_EntityReferenceLinkAfterFeedInRequest")
+                    ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightWriter_EntityReferenceLinkAfterResourceSetInRequest")
                 },
             };
 

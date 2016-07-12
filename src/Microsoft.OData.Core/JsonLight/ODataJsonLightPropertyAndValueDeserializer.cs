@@ -443,7 +443,7 @@ namespace Microsoft.OData.JsonLight
             {
                 if (isCollection == false)
                 {
-                    throw new ODataException(ODataErrorStrings.ODataJsonLightEntryAndFeedDeserializer_CannotReadSingletonNavigationPropertyValue(nodeType, propertyName));
+                    throw new ODataException(ODataErrorStrings.ODataJsonLightResourceDeserializer_CannotReadSingletonNestedResource(nodeType, propertyName));
                 }
             }
             else if ((nodeType == JsonNodeType.PrimitiveValue && jsonReader.Value == null) || nodeType == JsonNodeType.StartObject)
@@ -451,13 +451,13 @@ namespace Microsoft.OData.JsonLight
                 // Expanded resource (null or non-null)
                 if (isCollection == true)
                 {
-                    throw new ODataException(ODataErrorStrings.ODataJsonLightEntryAndFeedDeserializer_CannotReadCollectionNavigationPropertyValue(nodeType, propertyName));
+                    throw new ODataException(ODataErrorStrings.ODataJsonLightResourceDeserializer_CannotReadCollectionNestedResource(nodeType, propertyName));
                 }
             }
             else
             {
                 Debug.Assert(nodeType == JsonNodeType.PrimitiveValue, "nodeType == JsonNodeType.PrimitiveValue");
-                throw new ODataException(ODataErrorStrings.ODataJsonLightEntryAndFeedDeserializer_CannotReadNavigationPropertyValue(propertyName));
+                throw new ODataException(ODataErrorStrings.ODataJsonLightResourceDeserializer_CannotReadNestedResource(propertyName));
             }
         }
 
@@ -507,7 +507,7 @@ namespace Microsoft.OData.JsonLight
                         break;
 
                     default:
-                        throw new ODataException(ODataErrorStrings.ODataJsonLightEntryAndFeedDeserializer_UnexpectedExpandedCollectionNavigationLinkPropertyAnnotation(nestedResourceInfo.Name, propertyAnnotation.Key));
+                        throw new ODataException(ODataErrorStrings.ODataJsonLightResourceDeserializer_UnexpectedComplexCollectionPropertyAnnotation(nestedResourceInfo.Name, propertyAnnotation.Key));
                 }
             }
 
@@ -604,7 +604,7 @@ namespace Microsoft.OData.JsonLight
                     default:
                         if (messageReaderSettings.ThrowOnUndeclaredPropertyForNonOpenType)
                         {
-                            throw new ODataException(ODataErrorStrings.ODataJsonLightEntryAndFeedDeserializer_UnexpectedExpandedSingletonNavigationLinkPropertyAnnotation(nestedResourceInfo.Name, propertyAnnotation.Key));
+                            throw new ODataException(ODataErrorStrings.ODataJsonLightResourceDeserializer_UnexpectedExpandedSingletonNavigationLinkPropertyAnnotation(nestedResourceInfo.Name, propertyAnnotation.Key));
                         }
 
                         break;
@@ -673,7 +673,7 @@ namespace Microsoft.OData.JsonLight
 
                     case ODataAnnotationNames.ODataDeltaLink:   // Delta links are not supported on expanded resource sets.
                     default:
-                        throw new ODataException(ODataErrorStrings.ODataJsonLightEntryAndFeedDeserializer_UnexpectedExpandedCollectionNavigationLinkPropertyAnnotation(nestedResourceInfo.Name, propertyAnnotation.Key));
+                        throw new ODataException(ODataErrorStrings.ODataJsonLightResourceDeserializer_UnexpectedExpandedCollectionNavigationLinkPropertyAnnotation(nestedResourceInfo.Name, propertyAnnotation.Key));
                 }
             }
 
@@ -716,12 +716,12 @@ namespace Microsoft.OData.JsonLight
                         LinkedList<ODataEntityReferenceLink> entityReferenceLinksList = propertyAnnotation.Value as LinkedList<ODataEntityReferenceLink>;
                         if (entityReferenceLinksList != null)
                         {
-                            throw new ODataException(ODataErrorStrings.ODataJsonLightEntryAndFeedDeserializer_ArrayValueForSingletonBindPropertyAnnotation(nestedResourceInfo.Name, ODataAnnotationNames.ODataBind));
+                            throw new ODataException(ODataErrorStrings.ODataJsonLightResourceDeserializer_ArrayValueForSingletonBindPropertyAnnotation(nestedResourceInfo.Name, ODataAnnotationNames.ODataBind));
                         }
 
                         if (isExpanded)
                         {
-                            throw new ODataException(ODataErrorStrings.ODataJsonLightEntryAndFeedDeserializer_SingletonNavigationPropertyWithBindingAndValue(nestedResourceInfo.Name, ODataAnnotationNames.ODataBind));
+                            throw new ODataException(ODataErrorStrings.ODataJsonLightResourceDeserializer_SingletonNavigationPropertyWithBindingAndValue(nestedResourceInfo.Name, ODataAnnotationNames.ODataBind));
                         }
 
                         Debug.Assert(
@@ -731,7 +731,7 @@ namespace Microsoft.OData.JsonLight
                         break;
 
                     default:
-                        throw new ODataException(ODataErrorStrings.ODataJsonLightEntryAndFeedDeserializer_UnexpectedNavigationLinkInRequestPropertyAnnotation(
+                        throw new ODataException(ODataErrorStrings.ODataJsonLightResourceDeserializer_UnexpectedNavigationLinkInRequestPropertyAnnotation(
                             nestedResourceInfo.Name,
                             propertyAnnotation.Key,
                             ODataAnnotationNames.ODataBind));
@@ -777,7 +777,7 @@ namespace Microsoft.OData.JsonLight
                         ODataEntityReferenceLink entityReferenceLink = propertyAnnotation.Value as ODataEntityReferenceLink;
                         if (entityReferenceLink != null)
                         {
-                            throw new ODataException(ODataErrorStrings.ODataJsonLightEntryAndFeedDeserializer_StringValueForCollectionBindPropertyAnnotation(nestedResourceInfo.Name, ODataAnnotationNames.ODataBind));
+                            throw new ODataException(ODataErrorStrings.ODataJsonLightResourceDeserializer_StringValueForCollectionBindPropertyAnnotation(nestedResourceInfo.Name, ODataAnnotationNames.ODataBind));
                         }
 
                         Debug.Assert(
@@ -787,7 +787,7 @@ namespace Microsoft.OData.JsonLight
                         break;
 
                     default:
-                        throw new ODataException(ODataErrorStrings.ODataJsonLightEntryAndFeedDeserializer_UnexpectedNavigationLinkInRequestPropertyAnnotation(
+                        throw new ODataException(ODataErrorStrings.ODataJsonLightResourceDeserializer_UnexpectedNavigationLinkInRequestPropertyAnnotation(
                             nestedResourceInfo.Name,
                             propertyAnnotation.Key,
                             ODataAnnotationNames.ODataBind));

@@ -164,7 +164,7 @@ namespace Microsoft.OData.Evaluation
             {
                 if (String.IsNullOrEmpty(resource.TypeName))
                 {
-                    throw new ODataException(Strings.ODataFeedAndEntryTypeContext_ODataEntryTypeNameMissing);
+                    throw new ODataException(Strings.ODataResourceTypeContext_ODataResourceTypeNameMissing);
                 }
 
                 actualEntityTypeName = resource.TypeName;
@@ -218,12 +218,12 @@ namespace Microsoft.OData.Evaluation
             object propertyValue = property.Value;
             if (propertyValue == null && isKeyProperty)
             {
-                throw new ODataException(Strings.ODataEntryMetadataContext_NullKeyValue(property.Name, entityTypeName));
+                throw new ODataException(Strings.ODataResourceMetadataContext_NullKeyValue(property.Name, entityTypeName));
             }
 
             if (propertyValue is ODataValue)
             {
-                throw new ODataException(Strings.ODataEntryMetadataContext_KeyOrETagValuesMustBePrimitiveValues(property.Name, entityTypeName));
+                throw new ODataException(Strings.ODataResourceMetadataContext_KeyOrETagValuesMustBePrimitiveValues(property.Name, entityTypeName));
             }
 
             return propertyValue;
@@ -239,7 +239,7 @@ namespace Microsoft.OData.Evaluation
             Debug.Assert(keyProperties != null, "keyProperties != null");
             if (keyProperties == null || keyProperties.Length == 0)
             {
-                throw new ODataException(Strings.ODataEntryMetadataContext_EntityTypeWithNoKeyProperties(actualEntityTypeName));
+                throw new ODataException(Strings.ODataResourceMetadataContext_EntityTypeWithNoKeyProperties(actualEntityTypeName));
             }
         }
 
@@ -336,7 +336,7 @@ namespace Microsoft.OData.Evaluation
                 {
                     if (String.IsNullOrEmpty(this.Resource.TypeName))
                     {
-                        throw new ODataException(Strings.ODataFeedAndEntryTypeContext_ODataEntryTypeNameMissing);
+                        throw new ODataException(Strings.ODataResourceTypeContext_ODataResourceTypeNameMissing);
                     }
 
                     return this.Resource.TypeName;

@@ -131,7 +131,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
         {
             ExpandToken expandToken = new ExpandToken(new ExpandTermToken[] { new ExpandTermToken(new NonSystemToken("Shoe", null, null)) });
             Action bind = () => this.binderForPerson.Bind(BuildUnifiedSelectExpandToken(expandToken));
-            bind.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.ExpandItemBinder_PropertyIsNotANavigationProperty("Shoe", HardCodedTestModel.GetPersonType().FullName()));
+            bind.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.ExpandItemBinder_PropertyIsNotANavigationPropertyOrComplexProperty("Shoe", HardCodedTestModel.GetPersonType().FullName()));
         }
 
         // $select=<foo>&$expand=MyDog

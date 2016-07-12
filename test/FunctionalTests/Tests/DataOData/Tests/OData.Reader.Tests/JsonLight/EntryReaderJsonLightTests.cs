@@ -68,7 +68,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                     ExpectedResultCallback = tc => new PayloadReaderTestExpectedResult(this.Settings.ExpectedResultSettings)
                         {
                             ExpectedException = tc.IsRequest
-                                ? ODataExpectedExceptions.ODataException("ReaderValidationUtils_EntryWithoutType")
+                                ? ODataExpectedExceptions.ODataException("ReaderValidationUtils_ResourceWithoutType")
                                 : ODataExpectedExceptions.ODataException("ODataJsonLightDeserializer_ContextLinkNotFoundAsFirstProperty")
                         }
                 },
@@ -117,7 +117,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                             "}"),
                     PayloadEdmModel = model,
                     // For requests the context URI is ignored and thus there's no type information in this case the reading should fail.
-                    ExpectedException = ODataExpectedExceptions.ODataException("ReaderValidationUtils_EntryWithoutType"),
+                    ExpectedException = ODataExpectedExceptions.ODataException("ReaderValidationUtils_ResourceWithoutType"),
                     SkipTestConfiguration = tc => !tc.IsRequest
                 },
                 new PayloadReaderTestDescriptor(this.Settings)
@@ -197,7 +197,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                             "}")
                         .ExpectedEntityType(cityType, citiesEntitySet),
                     PayloadEdmModel = model,
-                    ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightEntryAndFeedDeserializer_EntryTypeAnnotationNotFirst")
+                    ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightResourceDeserializer_ResourceTypeAnnotationNotFirst")
                 },
                 new PayloadReaderTestDescriptor(this.Settings)
                 {
@@ -212,7 +212,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                         .AddAnnotation(new SerializationTypeNameTestAnnotation() { TypeName = null })
                         .ExpectedEntityType(cityType, citiesEntitySet),
                     PayloadEdmModel = model,
-                    ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightEntryAndFeedDeserializer_EntryInstanceAnnotationPrecededByProperty", JsonLightConstants.ODataIdAnnotationName)
+                    ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightResourceDeserializer_ResourceInstanceAnnotationPrecededByProperty", JsonLightConstants.ODataIdAnnotationName)
                 },
                 new PayloadReaderTestDescriptor(this.Settings)
                 {
@@ -227,7 +227,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                             "}")
                         .ExpectedEntityType(cityType, citiesEntitySet),
                     PayloadEdmModel = model,
-                    ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightEntryAndFeedDeserializer_EntryInstanceAnnotationPrecededByProperty", JsonLightConstants.ODataETagAnnotationName)
+                    ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightResourceDeserializer_ResourceInstanceAnnotationPrecededByProperty", JsonLightConstants.ODataETagAnnotationName)
                 },
                 new PayloadReaderTestDescriptor(this.Settings)
                 {
@@ -443,7 +443,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                                 "\"Name\": \"Value\"" +
                             "}",
                         ExpectedPayload = PayloadBuilder.Entity("TestModel.CityType"),
-                        ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightEntryAndFeedDeserializer_EntryTypeAnnotationNotFirst")
+                        ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightResourceDeserializer_ResourceTypeAnnotationNotFirst")
                     },
                     new
                     {
@@ -728,7 +728,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                     Json =
                         "\"" + JsonLightUtils.GetPropertyAnnotationName("OpenProperty", JsonLightConstants.ODataTypeAnnotationName) + "\":\"TestModel.Address\"," +
                         "\"OpenProperty\":\"value\"",
-                    ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightEntryAndFeedDeserializer_CannotReadNavigationPropertyValue","OpenProperty")
+                    ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightResourceDeserializer_CannotReadNestedResource","OpenProperty")
                 },
                 new OpenPropertyTestCase
                 {

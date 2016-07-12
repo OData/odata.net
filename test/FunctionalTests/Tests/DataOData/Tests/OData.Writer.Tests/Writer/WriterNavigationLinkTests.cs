@@ -143,7 +143,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                         null,
                         null
                     },
-                    EdmExpectedExceptionCallback = (tc, m) => ODataExpectedExceptions.ODataException("WriterValidationUtils_ExpandedLinkIsCollectionTrueWithEntryContent", "http://odata.org/nav")
+                    EdmExpectedExceptionCallback = (tc, m) => ODataExpectedExceptions.ODataException("WriterValidationUtils_ExpandedLinkIsCollectionTrueWithResourceContent", "http://odata.org/nav")
                 },
                 // Two expanded entries in a singleton
                 new NavigationLinkTestCase
@@ -187,7 +187,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                         null,
                         null
                     },
-                    EdmExpectedExceptionCallback = (tc, m) => ODataExpectedExceptions.ODataException("WriterValidationUtils_ExpandedLinkIsCollectionFalseWithFeedContent", "http://odata.org/nav")
+                    EdmExpectedExceptionCallback = (tc, m) => ODataExpectedExceptions.ODataException("WriterValidationUtils_ExpandedLinkIsCollectionFalseWithResourceSetContent", "http://odata.org/nav")
                 },
                 // Two expanded feeds in a singleton
                 new NavigationLinkTestCase
@@ -327,7 +327,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                         null,
                         null
                     },
-                    ExpectedException = ODataExpectedExceptions.ODataException("WriterValidationUtils_ExpandedLinkIsCollectionFalseWithFeedContent", "http://odata.org/nav")
+                    ExpectedException = ODataExpectedExceptions.ODataException("WriterValidationUtils_ExpandedLinkIsCollectionFalseWithResourceSetContent", "http://odata.org/nav")
                 },
                 // Multiple expanded entries in a singleton
                 new NavigationLinkTestCase
@@ -670,7 +670,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                         null,
                         null
                     },
-                    ExpectedException = ODataExpectedExceptions.ODataException("WriterValidationUtils_ExpandedLinkIsCollectionTrueWithEntryContent", "http://odata.org/nav")
+                    ExpectedException = ODataExpectedExceptions.ODataException("WriterValidationUtils_ExpandedLinkIsCollectionTrueWithResourceContent", "http://odata.org/nav")
                 },
                 // Expanded entry after an entity reference link in a collection - should fail
                 new NavigationLinkTestCase
@@ -682,7 +682,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                         null,
                         null
                     },
-                    ExpectedException = ODataExpectedExceptions.ODataException("WriterValidationUtils_ExpandedLinkIsCollectionTrueWithEntryContent", "http://odata.org/nav")
+                    ExpectedException = ODataExpectedExceptions.ODataException("WriterValidationUtils_ExpandedLinkIsCollectionTrueWithResourceContent", "http://odata.org/nav")
                 },
             };
 
@@ -849,8 +849,8 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
             ODataNestedResourceInfo policeStationLinkIsCollectionTrue = ObjectModelUtils.CreateDefaultCollectionLink("PoliceStation", /*isCollection*/ true);
             ODataNestedResourceInfo policeStationLinkIsCollectionFalse = ObjectModelUtils.CreateDefaultCollectionLink("PoliceStation", /*isCollection*/ false);
 
-            ExpectedException expandedFeedLinkWithEntryMetadataError = ODataExpectedExceptions.ODataException("WriterValidationUtils_ExpandedLinkIsCollectionTrueWithEntryMetadata", "http://odata.org/link");
-            ExpectedException expandedEntryLinkWithFeedMetadataError = ODataExpectedExceptions.ODataException("WriterValidationUtils_ExpandedLinkIsCollectionFalseWithFeedMetadata", "http://odata.org/link");
+            ExpectedException expandedFeedLinkWithEntryMetadataError = ODataExpectedExceptions.ODataException("WriterValidationUtils_ExpandedLinkIsCollectionTrueWithResourceMetadata", "http://odata.org/link");
+            ExpectedException expandedEntryLinkWithFeedMetadataError = ODataExpectedExceptions.ODataException("WriterValidationUtils_ExpandedLinkIsCollectionFalseWithResourceSetMetadata", "http://odata.org/link");
             ExpectedException deferredLinkInRequestError = ODataExpectedExceptions.ODataException("ODataWriterCore_DeferredLinkInRequest");
 
             IEdmModel model = Microsoft.Test.OData.Utils.Metadata.TestModels.BuildTestModel();

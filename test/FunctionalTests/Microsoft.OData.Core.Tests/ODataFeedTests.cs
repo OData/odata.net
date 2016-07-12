@@ -70,7 +70,7 @@ namespace Microsoft.OData.Tests
         {
             this.odataFeed.NextPageLink = new Uri("http://www.example.com/nextPageLink");
             Action test = () => this.odataFeed.DeltaLink = new Uri("http://www.example.com/deltaLink");
-            test.ShouldThrow<ODataException>().WithMessage(Strings.ODataFeed_MustNotContainBothNextPageLinkAndDeltaLink);
+            test.ShouldThrow<ODataException>().WithMessage(Strings.ODataResourceSet_MustNotContainBothNextPageLinkAndDeltaLink);
         }
 
         [Fact]
@@ -78,7 +78,7 @@ namespace Microsoft.OData.Tests
         {
             this.odataFeed.DeltaLink = new Uri("http://www.example.com/deltaLink");
             Action test = () => this.odataFeed.NextPageLink = new Uri("http://www.example.com/nextPageLink");
-            test.ShouldThrow<ODataException>().WithMessage(Strings.ODataFeed_MustNotContainBothNextPageLinkAndDeltaLink);
+            test.ShouldThrow<ODataException>().WithMessage(Strings.ODataResourceSet_MustNotContainBothNextPageLinkAndDeltaLink);
         }
 
         [Fact]

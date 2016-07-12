@@ -117,7 +117,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
                                 .PrimitiveProperty("Id", 1).WithTypeAnnotation(personType))
                             .Append(PayloadBuilder.Entity("TestModel.CityType")
                                 .PrimitiveProperty("Id", 2).WithTypeAnnotation(cityType)),
-                        ExpectedException = ODataExpectedExceptions.ODataException("FeedWithoutExpectedTypeValidator_IncompatibleTypes", "TestModel.CityType", "TestModel.Person"),
+                        ExpectedException = ODataExpectedExceptions.ODataException("ResourceSetWithoutExpectedTypeValidator_IncompatibleTypes", "TestModel.CityType", "TestModel.Person"),
                         Model = model
                     },
                     new

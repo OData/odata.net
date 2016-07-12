@@ -343,7 +343,7 @@ namespace Microsoft.OData.Tests.Json
 
             string term = "My.Namespace.NotNullable";
             Action action = () => this.jsonLightInstanceAnnotationWriter.WriteInstanceAnnotation(new ODataInstanceAnnotation(term, new ODataNullValue()));
-            action.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.ODataAtomPropertyAndValueSerializer_NullValueNotAllowedForInstanceAnnotation(term, "Edm.Int32"));
+            action.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.JsonLightInstanceAnnotationWriter_NullValueNotAllowedForInstanceAnnotation(term, "Edm.Int32"));
         }
 
         [Fact]

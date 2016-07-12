@@ -499,7 +499,7 @@ namespace Microsoft.OData.Tests.JsonLight
             AdvanceReaderToFirstProperty(deserializer.JsonReader);
             var entryState = new TestJsonLightReaderEntryState();
             Action action = () => deserializer.ReadResourceContent(entryState);
-            action.ShouldThrow<ODataException>(ErrorStrings.ODataJsonLightEntryAndFeedDeserializer_PropertyWithoutValueWithWrongType("ID", "Edm.Int32"));
+            action.ShouldThrow<ODataException>(ErrorStrings.ODataJsonLightResourceDeserializer_PropertyWithoutValueWithWrongType("ID", "Edm.Int32"));
         }
 
         [Fact]

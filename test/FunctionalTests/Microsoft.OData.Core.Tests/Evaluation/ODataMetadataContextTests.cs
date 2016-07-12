@@ -36,7 +36,7 @@ namespace Microsoft.OData.Tests.Evaluation
             IEdmEntitySet set = this.edmModel.EntityContainer.FindEntitySet("Products");
             ODataResource entry = TestUtils.CreateODataEntry(set, new EdmStructuredValue(new EdmEntityTypeReference(set.EntityType(), true), new IEdmPropertyValue[0]), set.EntityType());
             Action action = () => context.GetResourceMetadataBuilderForReader(new TestJsonLightReaderEntryState { Resource = entry, SelectedProperties = SelectedPropertiesNode.EntireSubtree }, false);
-            action.ShouldThrow<ODataException>().WithMessage(Strings.ODataJsonLightEntryMetadataContext_MetadataAnnotationMustBeInPayload("odata.context"));
+            action.ShouldThrow<ODataException>().WithMessage(Strings.ODataJsonLightResourceMetadataContext_MetadataAnnotationMustBeInPayload("odata.context"));
         }
 
         [Fact]

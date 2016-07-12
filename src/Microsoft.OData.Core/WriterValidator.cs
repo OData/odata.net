@@ -52,7 +52,7 @@ namespace Microsoft.OData
         {
             if (settings.ThrowIfTypeConflictsWithMetadata)
             {
-                WriterValidationUtils.ValidateResourceInExpandedLink(
+                WriterValidationUtils.ValidateNestedResource(
                     resourceType, parentNavigationPropertyType);
             }
         }

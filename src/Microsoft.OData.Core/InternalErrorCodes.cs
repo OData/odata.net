@@ -137,15 +137,6 @@ namespace Microsoft.OData
         /// <summary>Unreachable codepath in ODataReaderCoreAsync.ReadAsynchronously.</summary>
         ODataReaderCoreAsync_ReadAsynchronously,
 
-        /// <summary>Unreachable codepath in ODataVerboseJsonEntryAndFeedDeserializer.ReadFeedProperty.</summary>
-        ODataVerboseJsonEntryAndFeedDeserializer_ReadFeedProperty,
-
-        /// <summary>Unreachable codepath in ODataVerboseJsonReader.ReadEntryStart.</summary>
-        ODataVerboseJsonReader_ReadEntryStart,
-
-        /// <summary>Unreachable codepath in ODataVerboseJsonPropertyAndValueDeserializer.ReadPropertyValue.</summary>
-        ODataVerboseJsonPropertyAndValueDeserializer_ReadPropertyValue,
-
         /// <summary>Unreachable codepath in ODataCollectionReader.CreateReader.</summary>
         ODataCollectionReader_CreateReader_UnreachableCodePath,
 
@@ -191,17 +182,11 @@ namespace Microsoft.OData
         /// <summary>Unreachable codepath in ODataJsonLightPropertyAndValueDeserializer.GetNonEntityValueKind.</summary>
         ODataJsonLightPropertyAndValueDeserializer_GetNonEntityValueKind,
 
-        /// <summary>Unreachable codepath in ODataJsonLightEntryAndFeedDeserializer.ReadFeedProperty.</summary>
-        ODataJsonLightEntryAndFeedDeserializer_ReadFeedProperty,
+        /// <summary>Unreachable codepath in ODataJsonLightReader.ReadResourceStart.</summary>
+        ODataJsonLightReader_ReadResourceStart,
 
-        /// <summary>Unreachable codepath in ODataJsonLightReader.ReadEntryStart.</summary>
-        ODataJsonLightReader_ReadEntryStart,
-
-        /// <summary>Unreachable codepath in ODataJsonLightEntryAndFeedDeserializer_ReadTopLevelFeedAnnotations.ReadTopLevelFeedAnnotations.</summary>
-        ODataJsonLightEntryAndFeedDeserializer_ReadTopLevelFeedAnnotations,
-
-        /// <summary>Unreachable codepath in ODataJsonLightReader.ReadFeedEnd.</summary>
-        ODataJsonLightReader_ReadFeedEnd,
+        /// <summary>Unreachable codepath in ODataJsonLightResourceDeserializer.ReadTopLevelResourceSetAnnotations.</summary>
+        ODataJsonLightResourceDeserializer_ReadTopLevelResourceSetAnnotations,
 
         /// <summary>Unreachable codepath in ODataJsonLightCollectionDeserializer.ReadCollectionStart.</summary>
         ODataJsonLightCollectionDeserializer_ReadCollectionStart,

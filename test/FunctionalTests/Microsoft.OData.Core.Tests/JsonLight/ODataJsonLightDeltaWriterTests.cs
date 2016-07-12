@@ -805,7 +805,7 @@ namespace Microsoft.OData.Tests.JsonLight
                 writer.WriteStart(ordersFeed);
             };
 
-            writeAction.ShouldThrow<ODataException>().WithMessage(Strings.ODataJsonLightDeltaWriter_WriteStartExpandedFeedCalledInInvalidState("DeltaResource"));
+            writeAction.ShouldThrow<ODataException>().WithMessage(Strings.ODataJsonLightDeltaWriter_WriteStartExpandedResourceSetCalledInInvalidState("DeltaResource"));
         }
 
         [Fact]
@@ -820,7 +820,7 @@ namespace Microsoft.OData.Tests.JsonLight
                 writer.WriteStart(ordersFeed);
             };
 
-            writeAction.ShouldThrow<ODataException>().WithMessage(Strings.ODataJsonLightDeltaWriter_WriteStartExpandedFeedCalledInInvalidState("DeltaResourceSet"));
+            writeAction.ShouldThrow<ODataException>().WithMessage(Strings.ODataJsonLightDeltaWriter_WriteStartExpandedResourceSetCalledInInvalidState("DeltaResourceSet"));
         }
 
         [Fact]

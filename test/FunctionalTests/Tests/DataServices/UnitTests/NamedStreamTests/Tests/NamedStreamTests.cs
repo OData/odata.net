@@ -1985,7 +1985,7 @@ namespace AstoriaUnitTests.Tests
                     WebException e = (WebException)TestUtil.RunCatching(request.SendRequest);
                     Assert.IsNotNull(e, "exception expected but received none.");
                     Assert.AreEqual(400, request.ResponseStatusCode);
-                    TestUtil.AssertContains(request.GetResponseStreamAsText(), ODataLibResourceUtil.GetString("ExpandItemBinder_PropertyIsNotANavigationProperty", "Stream1", "NamedStreamTests.EntityType1"));
+                    TestUtil.AssertContains(request.GetResponseStreamAsText(), ODataLibResourceUtil.GetString("ExpandItemBinder_PropertyIsNotANavigationPropertyOrComplexProperty", "Stream1", "NamedStreamTests.EntityType1"));
                 }
             }
 

@@ -187,7 +187,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                                "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataTypeAnnotationName + "\": \"TestModel.ComplexType\"," +
                                "\"Name\": \"Value\"",
                         ExpectedPayload = PayloadBuilder.Entity("TestModel.ComplexType"),
-                        ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightEntryAndFeedDeserializer_EntryTypeAnnotationNotFirst")
+                        ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightResourceDeserializer_ResourceTypeAnnotationNotFirst")
                     },
                     new
                     {

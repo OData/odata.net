@@ -154,14 +154,14 @@ namespace Microsoft.OData.Tests
         public void BaseTypeContextThatThrowsShouldThrowForEntitySetName()
         {
             Action test = () => BaseTypeContextThatThrows.NavigationSourceName.Should().BeNull();
-            test.ShouldThrow<ODataException>(Strings.ODataFeedAndEntryTypeContext_MetadataOrSerializationInfoMissing);
+            test.ShouldThrow<ODataException>(Strings.ODataResourceTypeContext_MetadataOrSerializationInfoMissing);
         }
 
         [Fact]
         public void BaseTypeContextThatThrowsShouldThrowForEntitySetElementTypeName()
         {
             Action test = () => BaseTypeContextThatThrows.NavigationSourceEntityTypeName.Should().BeNull();
-            test.ShouldThrow<ODataException>(Strings.ODataFeedAndEntryTypeContext_MetadataOrSerializationInfoMissing);
+            test.ShouldThrow<ODataException>(Strings.ODataResourceTypeContext_MetadataOrSerializationInfoMissing);
         }
 
         [Fact]

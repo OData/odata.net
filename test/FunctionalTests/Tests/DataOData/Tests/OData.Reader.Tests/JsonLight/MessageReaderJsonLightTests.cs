@@ -54,7 +54,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                         PayloadElement = PayloadBuilder.EntitySet(),
                         PayloadEdmModel = model,
                         SkipTestConfiguration = tc => !tc.IsRequest,
-                        //ExpectedException = ODataExpectedExceptions.ODataException("ReaderValidationUtils_EntryWithoutType"),
+                        //ExpectedException = ODataExpectedExceptions.ODataException("ReaderValidationUtils_ResourceWithoutType"),
                     },
                     new PayloadReaderTestDescriptor(this.Settings)
                     {
@@ -73,7 +73,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                         PayloadElement = PayloadBuilder.Entity(),
                         PayloadEdmModel = model,
                         SkipTestConfiguration = tc => !tc.IsRequest,
-                        ExpectedException = ODataExpectedExceptions.ODataException("ReaderValidationUtils_EntryWithoutType"),
+                        ExpectedException = ODataExpectedExceptions.ODataException("ReaderValidationUtils_ResourceWithoutType"),
                     },
                     new PayloadReaderTestDescriptor(this.Settings)
                     {

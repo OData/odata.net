@@ -572,7 +572,7 @@ namespace Microsoft.OData.JsonLight
                     this.ReadResourceSetEnd();
                     break;
                 default:
-                    throw new ODataException(ODataErrorStrings.ODataJsonReader_CannotReadEntriesOfFeed(this.jsonLightResourceDeserializer.JsonReader.NodeType));
+                    throw new ODataException(ODataErrorStrings.ODataJsonReader_CannotReadResourcesOfResourceSet(this.jsonLightResourceDeserializer.JsonReader.NodeType));
             }
 
             return true;
@@ -820,7 +820,7 @@ namespace Microsoft.OData.JsonLight
                         this.EnterScope(new JsonLightResourceScope(ODataReaderState.ResourceStart, /*resource*/ null, this.CurrentNavigationSource, this.CurrentResourceType, /*propertyAndAnnotationCollector*/null, /*projectedProperties*/null, this.CurrentScope.ODataUri));
                         break;
                     default:
-                        throw new ODataException(ODataErrorStrings.ODataJsonReader_CannotReadEntriesOfFeed(this.jsonLightResourceDeserializer.JsonReader.NodeType));
+                        throw new ODataException(ODataErrorStrings.ODataJsonReader_CannotReadResourcesOfResourceSet(this.jsonLightResourceDeserializer.JsonReader.NodeType));
                 }
             }
 

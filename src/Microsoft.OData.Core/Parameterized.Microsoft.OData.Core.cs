@@ -136,8 +136,8 @@ namespace Microsoft.OData {
         /// <summary>
         /// A string like "The property '{0}' is a stream property, but it is not a property of an ODataResource instance. In OData, stream properties must be properties of ODataResource instances."
         /// </summary>
-        internal static string ODataWriter_StreamPropertiesMustBePropertiesOfODataEntry(object p0) {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataWriter_StreamPropertiesMustBePropertiesOfODataEntry, p0);
+        internal static string ODataWriter_StreamPropertiesMustBePropertiesOfODataResource(object p0) {
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataWriter_StreamPropertiesMustBePropertiesOfODataResource, p0);
         }
 
         /// <summary>
@@ -148,7 +148,7 @@ namespace Microsoft.OData {
         }
 
         /// <summary>
-        /// A string like "Cannot transition from state '{0}' to state '{1}'. The only valid actions in state '{0}' are to write a resource or a feed."
+        /// A string like "Cannot transition from state '{0}' to state '{1}'. The only valid actions in state '{0}' are to write a resource or a resource set."
         /// </summary>
         internal static string ODataWriterCore_InvalidTransitionFromStart(object p0, object p1) {
             return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataWriterCore_InvalidTransitionFromStart, p0, p1);
@@ -157,26 +157,26 @@ namespace Microsoft.OData {
         /// <summary>
         /// A string like "Cannot transition from state '{0}' to state '{1}'. The only valid action in state '{0}' is to write a navigation link."
         /// </summary>
-        internal static string ODataWriterCore_InvalidTransitionFromEntry(object p0, object p1) {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataWriterCore_InvalidTransitionFromEntry, p0, p1);
+        internal static string ODataWriterCore_InvalidTransitionFromResource(object p0, object p1) {
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataWriterCore_InvalidTransitionFromResource, p0, p1);
         }
 
         /// <summary>
         /// A string like "Cannot transition from state '{0}' to state '{1}'. You must first call ODataWriter.WriteEnd to finish writing a null ODataResource."
         /// </summary>
-        internal static string ODataWriterCore_InvalidTransitionFromNullEntry(object p0, object p1) {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataWriterCore_InvalidTransitionFromNullEntry, p0, p1);
+        internal static string ODataWriterCore_InvalidTransitionFromNullResource(object p0, object p1) {
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataWriterCore_InvalidTransitionFromNullResource, p0, p1);
         }
 
         /// <summary>
         /// A string like "Cannot transition from state '{0}' to state '{1}'. The only valid action in state '{0}' is to write a resource."
         /// </summary>
-        internal static string ODataWriterCore_InvalidTransitionFromFeed(object p0, object p1) {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataWriterCore_InvalidTransitionFromFeed, p0, p1);
+        internal static string ODataWriterCore_InvalidTransitionFromResourceSet(object p0, object p1) {
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataWriterCore_InvalidTransitionFromResourceSet, p0, p1);
         }
 
         /// <summary>
-        /// A string like "Cannot transition from state '{0}' to state '{1}'. The only valid actions in state '{0}' are to write a resource or a feed."
+        /// A string like "Cannot transition from state '{0}' to state '{1}'. The only valid actions in state '{0}' are to write a resource or a resource set."
         /// </summary>
         internal static string ODataWriterCore_InvalidTransitionFromExpandedLink(object p0, object p1) {
             return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataWriterCore_InvalidTransitionFromExpandedLink, p0, p1);
@@ -211,26 +211,17 @@ namespace Microsoft.OData {
         }
 
         /// <summary>
-        /// A string like "WriteStart(expandedFeed) was called in an invalid state ('{0}'); WriteStart(expandedFeed) is only supported in state 'ExpandedNavigationProperty'."
+        /// A string like "WriteStart(expandedResourceSet) was called in an invalid state ('{0}'); WriteStart(expandedResourceSet) is only supported in state 'ExpandedNavigationProperty'."
         /// </summary>
-        internal static string ODataJsonLightDeltaWriter_WriteStartExpandedFeedCalledInInvalidState(object p0) {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightDeltaWriter_WriteStartExpandedFeedCalledInInvalidState, p0);
+        internal static string ODataJsonLightDeltaWriter_WriteStartExpandedResourceSetCalledInInvalidState(object p0) {
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightDeltaWriter_WriteStartExpandedResourceSetCalledInInvalidState, p0);
         }
 
         /// <summary>
-        /// A string like "ODataWriter.WriteEnd was called in an invalid state ('{0}'); WriteEnd is only supported in states 'Resource', 'Feed', 'NavigationLink', and 'NavigationLinkWithContent'."
+        /// A string like "ODataWriter.WriteEnd was called in an invalid state ('{0}'); WriteEnd is only supported in states 'Resource', 'ResourceSet', 'NavigationLink', and 'NavigationLinkWithContent'."
         /// </summary>
         internal static string ODataWriterCore_WriteEndCalledInInvalidState(object p0) {
             return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataWriterCore_WriteEndCalledInInvalidState, p0);
-        }
-
-        /// <summary>
-        /// A string like "Only a top-level feed can have the 'ODataResourceSet.Count' property value specified. Expanded links do not support counts."
-        /// </summary>
-        internal static string ODataWriterCore_OnlyTopLevelFeedsSupportCount {
-            get {
-                return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataWriterCore_OnlyTopLevelFeedsSupportCount);
-            }
         }
 
         /// <summary>
@@ -243,20 +234,20 @@ namespace Microsoft.OData {
         }
 
         /// <summary>
-        /// A string like "Cannot write a top-level feed with a writer that was created to write a top-level resource."
+        /// A string like "Cannot write a top-level resource set with a writer that was created to write a top-level resource."
         /// </summary>
-        internal static string ODataWriterCore_CannotWriteTopLevelFeedWithEntryWriter {
+        internal static string ODataWriterCore_CannotWriteTopLevelResourceSetWithResourceWriter {
             get {
-                return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataWriterCore_CannotWriteTopLevelFeedWithEntryWriter);
+                return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataWriterCore_CannotWriteTopLevelResourceSetWithResourceWriter);
             }
         }
 
         /// <summary>
-        /// A string like "Cannot write a top-level resource with a writer that was created to write a top-level feed."
+        /// A string like "Cannot write a top-level resource with a writer that was created to write a top-level resource set."
         /// </summary>
-        internal static string ODataWriterCore_CannotWriteTopLevelEntryWithFeedWriter {
+        internal static string ODataWriterCore_CannotWriteTopLevelResourceWithResourceSetWriter {
             get {
-                return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataWriterCore_CannotWriteTopLevelEntryWithFeedWriter);
+                return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataWriterCore_CannotWriteTopLevelResourceWithResourceSetWriter);
             }
         }
 
@@ -297,7 +288,7 @@ namespace Microsoft.OData {
         }
 
         /// <summary>
-        /// A string like "A deferred link was written into a request. In requests, each navigation link must have a feed, resource, or entity reference link written into it."
+        /// A string like "A deferred link was written into a request. In requests, each navigation link must have a resource set, resource, or entity reference link written into it."
         /// </summary>
         internal static string ODataWriterCore_DeferredLinkInRequest {
             get {
@@ -315,11 +306,11 @@ namespace Microsoft.OData {
         }
 
         /// <summary>
-        /// A string like "The ODataResourceSet.DeltaLink property must be null for expanded feeds. Delta link is not supported on expanded feeds."
+        /// A string like "The ODataResourceSet.DeltaLink property must be null for expanded resource sets. Delta link is not supported on expanded resource sets."
         /// </summary>
-        internal static string ODataWriterCore_DeltaLinkNotSupportedOnExpandedFeed {
+        internal static string ODataWriterCore_DeltaLinkNotSupportedOnExpandedResourceSet {
             get {
-                return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataWriterCore_DeltaLinkNotSupportedOnExpandedFeed);
+                return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataWriterCore_DeltaLinkNotSupportedOnExpandedResourceSet);
             }
         }
 
@@ -413,120 +404,6 @@ namespace Microsoft.OData {
             get {
                 return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataUriParserException_GeneralError);
             }
-        }
-
-        /// <summary>
-        /// A string like "An ODataCollectionStart with a 'null' name was passed to the ATOM collection writer. In ATOM, an ODataCollectionStart cannot have a 'null' name."
-        /// </summary>
-        internal static string ODataAtomCollectionWriter_CollectionNameMustNotBeNull {
-            get {
-                return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataAtomCollectionWriter_CollectionNameMustNotBeNull);
-            }
-        }
-
-        /// <summary>
-        /// A string like "A null value was detected in the 'AtomEntryMetadata.Authors' enumerable; the author metadata does not support null values."
-        /// </summary>
-        internal static string ODataAtomWriterMetadataUtils_AuthorMetadataMustNotContainNull {
-            get {
-                return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataAtomWriterMetadataUtils_AuthorMetadataMustNotContainNull);
-            }
-        }
-
-        /// <summary>
-        /// A string like "A null value was detected in the 'AtomEntryMetadata.Categories' enumerable; the category metadata does not support null values."
-        /// </summary>
-        internal static string ODataAtomWriterMetadataUtils_CategoryMetadataMustNotContainNull {
-            get {
-                return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataAtomWriterMetadataUtils_CategoryMetadataMustNotContainNull);
-            }
-        }
-
-        /// <summary>
-        /// A string like "A null value was detected in the 'AtomEntryMetadata.Contributors' enumerable; the contributor metadata does not support null values."
-        /// </summary>
-        internal static string ODataAtomWriterMetadataUtils_ContributorMetadataMustNotContainNull {
-            get {
-                return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataAtomWriterMetadataUtils_ContributorMetadataMustNotContainNull);
-            }
-        }
-
-        /// <summary>
-        /// A string like "A null value was detected in the 'AtomEntryMetadata.Links' enumerable; the link metadata does not support null values."
-        /// </summary>
-        internal static string ODataAtomWriterMetadataUtils_LinkMetadataMustNotContainNull {
-            get {
-                return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataAtomWriterMetadataUtils_LinkMetadataMustNotContainNull);
-            }
-        }
-
-        /// <summary>
-        /// A string like "The 'AtomLinkMetadata.Href' property is required and cannot be null."
-        /// </summary>
-        internal static string ODataAtomWriterMetadataUtils_LinkMustSpecifyHref {
-            get {
-                return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataAtomWriterMetadataUtils_LinkMustSpecifyHref);
-            }
-        }
-
-        /// <summary>
-        /// A string like "The 'AtomCategoryMetadata.Term' property is required and cannot be null."
-        /// </summary>
-        internal static string ODataAtomWriterMetadataUtils_CategoryMustSpecifyTerm {
-            get {
-                return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataAtomWriterMetadataUtils_CategoryMustSpecifyTerm);
-            }
-        }
-
-        /// <summary>
-        /// A string like "The '{0}' value for the href of a link, which was either specified or computed, does not match the '{1}' value specified in the metadata of the link. When an href is specified in metadata, the href values must match."
-        /// </summary>
-        internal static string ODataAtomWriterMetadataUtils_LinkHrefsMustMatch(object p0, object p1) {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataAtomWriterMetadataUtils_LinkHrefsMustMatch, p0, p1);
-        }
-
-        /// <summary>
-        /// A string like "The '{0}' value for the title of a link, which was either specified or computed, does not match the '{1}' value specified in the metadata of the link. When a title is specified in metadata, the titles must match."
-        /// </summary>
-        internal static string ODataAtomWriterMetadataUtils_LinkTitlesMustMatch(object p0, object p1) {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataAtomWriterMetadataUtils_LinkTitlesMustMatch, p0, p1);
-        }
-
-        /// <summary>
-        /// A string like "The '{0}' value for the relation of a link, which was either specified or computed, does not match the '{1}' value specified in the metadata of the link. When a relation is specified in metadata, the relations must match."
-        /// </summary>
-        internal static string ODataAtomWriterMetadataUtils_LinkRelationsMustMatch(object p0, object p1) {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataAtomWriterMetadataUtils_LinkRelationsMustMatch, p0, p1);
-        }
-
-        /// <summary>
-        /// A string like "The '{0}' value for the media type of a link, which was either specified or computed, does not match the '{1}' value specified in the metadata of the link. If a media type is specified in metadata, the media types must match."
-        /// </summary>
-        internal static string ODataAtomWriterMetadataUtils_LinkMediaTypesMustMatch(object p0, object p1) {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataAtomWriterMetadataUtils_LinkMediaTypesMustMatch, p0, p1);
-        }
-
-        /// <summary>
-        /// A string like "The 'AtomCategoriesMetadata.Href' property can only be set when no other property is set. When the 'Href' property is not null, the categories cannot have any 'Fixed' or 'Scheme' values, and the 'Categories' collection must be null or empty."
-        /// </summary>
-        internal static string ODataAtomWriterMetadataUtils_CategoriesHrefWithOtherValues {
-            get {
-                return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataAtomWriterMetadataUtils_CategoriesHrefWithOtherValues);
-            }
-        }
-
-        /// <summary>
-        /// A string like "The '{0}' value for the term of a category, which was either specified or computed, does not match the value '{1}' specified in the ATOM metadata of the category. When a term is specified in Atom metadata, the terms must match."
-        /// </summary>
-        internal static string ODataAtomWriterMetadataUtils_CategoryTermsMustMatch(object p0, object p1) {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataAtomWriterMetadataUtils_CategoryTermsMustMatch, p0, p1);
-        }
-
-        /// <summary>
-        /// A string like "The '{0}' value for the scheme of a category, which was either specified or computed, does not match the value '{1}' specified in the ATOM metadata of the category. When a scheme is specified in Atom metadata, the schemes must match."
-        /// </summary>
-        internal static string ODataAtomWriterMetadataUtils_CategorySchemesMustMatch(object p0, object p1) {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataAtomWriterMetadataUtils_CategorySchemesMustMatch, p0, p1);
         }
 
         /// <summary>
@@ -673,7 +550,7 @@ namespace Microsoft.OData {
         }
 
         /// <summary>
-        /// A string like "Both startEntryXmlCustomizationCallback and endEntryXmlCustomizationCallback must be either null or non-null."
+        /// A string like "Both startResourceXmlCustomizationCallback and endResourceXmlCustomizationCallback must be either null or non-null."
         /// </summary>
         internal static string ODataMessageWriterSettings_MessageWriterSettingsXmlCustomizationCallbacksMustBeSpecifiedBoth {
             get {
@@ -1294,7 +1171,7 @@ namespace Microsoft.OData {
         }
 
         /// <summary>
-        /// A string like "Too many white spaces after a boundary delimiter and before the terminating line feed. For security reasons, the total number of characters for a boundary including white spaces must not exceed {0}."
+        /// A string like "Too many white spaces after a boundary delimiter and before the terminating line resource set. For security reasons, the total number of characters for a boundary including white spaces must not exceed {0}."
         /// </summary>
         internal static string ODataBatchReaderStreamBuffer_BoundaryLineSecurityLimitReached(object p0) {
             return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataBatchReaderStreamBuffer_BoundaryLineSecurityLimitReached, p0);
@@ -1696,13 +1573,6 @@ namespace Microsoft.OData {
         }
 
         /// <summary>
-        /// A string like "The URI '{0}' is an invalid URI for resource id or feed id."
-        /// </summary>
-        internal static string ODataUriUtils_InvalidUriFormatForEntryIdOrFeedId(object p0) {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataUriUtils_InvalidUriFormatForEntryIdOrFeedId, p0);
-        }
-
-        /// <summary>
         /// A string like "The value of type '{0}' could not be converted to a raw string."
         /// </summary>
         internal static string ODataUtils_CannotConvertValueToRawString(object p0) {
@@ -1783,9 +1653,9 @@ namespace Microsoft.OData {
         /// <summary>
         /// A string like "An resource without a type name was found, but no expected type was specified. To allow entries without type information, the expected type must also be specified when the model is specified."
         /// </summary>
-        internal static string ReaderValidationUtils_EntryWithoutType {
+        internal static string ReaderValidationUtils_ResourceWithoutType {
             get {
-                return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ReaderValidationUtils_EntryWithoutType);
+                return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ReaderValidationUtils_ResourceWithoutType);
             }
         }
 
@@ -2094,10 +1964,10 @@ namespace Microsoft.OData {
         }
 
         /// <summary>
-        /// A string like "A node of type '{0}' was read from the JSON reader when trying to read the entries of a feed. A 'StartObject' or 'EndArray' node was expected."
+        /// A string like "A node of type '{0}' was read from the JSON reader when trying to read the resources of a resource set. A 'StartObject' or 'EndArray' node was expected."
         /// </summary>
-        internal static string ODataJsonReader_CannotReadEntriesOfFeed(object p0) {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonReader_CannotReadEntriesOfFeed, p0);
+        internal static string ODataJsonReader_CannotReadResourcesOfResourceSet(object p0) {
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonReader_CannotReadResourcesOfResourceSet, p0);
         }
 
         /// <summary>
@@ -2159,15 +2029,15 @@ namespace Microsoft.OData {
         /// <summary>
         /// A string like "Multiple operations have the same 'Metadata' property value of '{0}'. The 'Target' property value of these operations must be set to a non-null value."
         /// </summary>
-        internal static string ODataJsonLightEntryAndFeedSerializer_ActionsAndFunctionsGroupMustSpecifyTarget(object p0) {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightEntryAndFeedSerializer_ActionsAndFunctionsGroupMustSpecifyTarget, p0);
+        internal static string ODataJsonLightResourceSerializer_ActionsAndFunctionsGroupMustSpecifyTarget(object p0) {
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightResourceSerializer_ActionsAndFunctionsGroupMustSpecifyTarget, p0);
         }
 
         /// <summary>
         /// A string like "Multiple operations have the same 'Metadata' property value of '{0}' and the same 'Target' property value of '{1}'. When multiple operations have the same 'Metadata' property value, their 'Target' property values must be unique."
         /// </summary>
-        internal static string ODataJsonLightEntryAndFeedSerializer_ActionsAndFunctionsGroupMustNotHaveDuplicateTarget(object p0, object p1) {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightEntryAndFeedSerializer_ActionsAndFunctionsGroupMustNotHaveDuplicateTarget, p0, p1);
+        internal static string ODataJsonLightResourceSerializer_ActionsAndFunctionsGroupMustNotHaveDuplicateTarget(object p0, object p1) {
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightResourceSerializer_ActionsAndFunctionsGroupMustNotHaveDuplicateTarget, p0, p1);
         }
 
         /// <summary>
@@ -2263,7 +2133,7 @@ namespace Microsoft.OData {
         }
 
         /// <summary>
-        /// A string like "The '{0}' method has already been called for the parameter '{1}'. Only one create reader method call is allowed for each resource, feed, or collection parameter."
+        /// A string like "The '{0}' method has already been called for the parameter '{1}'. Only one create reader method call is allowed for each resource, resource set, or collection parameter."
         /// </summary>
         internal static string ODataParameterReaderCore_CreateReaderAlreadyCalled(object p0, object p1) {
             return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataParameterReaderCore_CreateReaderAlreadyCalled, p0, p1);
@@ -2500,22 +2370,22 @@ namespace Microsoft.OData {
         /// <summary>
         /// A string like "An resource with type '{0}' was found with a media resource, but this entity type is not a media link resource (MLE). When the type is not an MLE entity, the resource cannot have a media resource."
         /// </summary>
-        internal static string ValidationUtils_EntryWithMediaResourceAndNonMLEType(object p0) {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ValidationUtils_EntryWithMediaResourceAndNonMLEType, p0);
+        internal static string ValidationUtils_ResourceWithMediaResourceAndNonMLEType(object p0) {
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ValidationUtils_ResourceWithMediaResourceAndNonMLEType, p0);
         }
 
         /// <summary>
         /// A string like "An resource with type '{0}' was found without a media resource, but this entity type is a media link resource (MLE). When the type is an MLE entity, the resource must have a media resource."
         /// </summary>
-        internal static string ValidationUtils_EntryWithoutMediaResourceAndMLEType(object p0) {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ValidationUtils_EntryWithoutMediaResourceAndMLEType, p0);
+        internal static string ValidationUtils_ResourceWithoutMediaResourceAndMLEType(object p0) {
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ValidationUtils_ResourceWithoutMediaResourceAndMLEType, p0);
         }
 
         /// <summary>
         /// A string like "An resource with type '{0}' was found, but it is not assignable to the expected type '{1}'. The type specified in the resource must be equal to either the expected type or a derived type."
         /// </summary>
-        internal static string ValidationUtils_EntryTypeNotAssignableToExpectedType(object p0, object p1) {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ValidationUtils_EntryTypeNotAssignableToExpectedType, p0, p1);
+        internal static string ValidationUtils_ResourceTypeNotAssignableToExpectedType(object p0, object p1) {
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ValidationUtils_ResourceTypeNotAssignableToExpectedType, p0, p1);
         }
 
         /// <summary>
@@ -2574,15 +2444,6 @@ namespace Microsoft.OData {
         /// </summary>
         internal static string ValidationUtils_InvalidMetadataReferenceProperty(object p0) {
             return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ValidationUtils_InvalidMetadataReferenceProperty, p0);
-        }
-
-        /// <summary>
-        /// A string like "An ODataResourceSet without an ID was detected; in OData, a Feed must have a non-null, non-empty ID value."
-        /// </summary>
-        internal static string ODataAtomWriter_FeedsMustHaveNonEmptyId {
-            get {
-                return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataAtomWriter_FeedsMustHaveNonEmptyId);
-            }
         }
 
         /// <summary>
@@ -2703,50 +2564,50 @@ namespace Microsoft.OData {
         /// <summary>
         /// A string like "The type '{0}' of a resource in an expanded link is not compatible with the element type '{1}' of the expanded link. Entries in an expanded link must have entity types that are assignable to the element type of the expanded link."
         /// </summary>
-        internal static string WriterValidationUtils_EntryTypeInExpandedLinkNotCompatibleWithNavigationPropertyType(object p0, object p1) {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.WriterValidationUtils_EntryTypeInExpandedLinkNotCompatibleWithNavigationPropertyType, p0, p1);
+        internal static string WriterValidationUtils_NestedResourceTypeNotCompatibleWithParentPropertyType(object p0, object p1) {
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.WriterValidationUtils_NestedResourceTypeNotCompatibleWithParentPropertyType, p0, p1);
         }
 
         /// <summary>
-        /// A string like "The ODataNestedResourceInfo with the URL value '{0}' specifies in its 'IsCollection' property that its payload is a feed, but the actual payload is a resource."
+        /// A string like "The ODataNestedResourceInfo with the URL value '{0}' specifies in its 'IsCollection' property that its payload is a resource set, but the actual payload is a resource."
         /// </summary>
-        internal static string WriterValidationUtils_ExpandedLinkIsCollectionTrueWithEntryContent(object p0) {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.WriterValidationUtils_ExpandedLinkIsCollectionTrueWithEntryContent, p0);
+        internal static string WriterValidationUtils_ExpandedLinkIsCollectionTrueWithResourceContent(object p0) {
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.WriterValidationUtils_ExpandedLinkIsCollectionTrueWithResourceContent, p0);
         }
 
         /// <summary>
-        /// A string like "The ODataNestedResourceInfo with the URL value '{0}' specifies in its 'IsCollection' property that its payload is a resource, but the actual payload is a feed."
+        /// A string like "The ODataNestedResourceInfo with the URL value '{0}' specifies in its 'IsCollection' property that its payload is a resource, but the actual payload is a resource set."
         /// </summary>
-        internal static string WriterValidationUtils_ExpandedLinkIsCollectionFalseWithFeedContent(object p0) {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.WriterValidationUtils_ExpandedLinkIsCollectionFalseWithFeedContent, p0);
+        internal static string WriterValidationUtils_ExpandedLinkIsCollectionFalseWithResourceSetContent(object p0) {
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.WriterValidationUtils_ExpandedLinkIsCollectionFalseWithResourceSetContent, p0);
         }
 
         /// <summary>
-        /// A string like "The ODataNestedResourceInfo with the URL value '{0}' specifies in its 'IsCollection' property that its payload is a feed, but the metadata declares it as a resource."
+        /// A string like "The ODataNestedResourceInfo with the URL value '{0}' specifies in its 'IsCollection' property that its payload is a resource set, but the metadata declares it as a resource."
         /// </summary>
-        internal static string WriterValidationUtils_ExpandedLinkIsCollectionTrueWithEntryMetadata(object p0) {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.WriterValidationUtils_ExpandedLinkIsCollectionTrueWithEntryMetadata, p0);
+        internal static string WriterValidationUtils_ExpandedLinkIsCollectionTrueWithResourceMetadata(object p0) {
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.WriterValidationUtils_ExpandedLinkIsCollectionTrueWithResourceMetadata, p0);
         }
 
         /// <summary>
-        /// A string like "The ODataNestedResourceInfo with the URL value '{0}' specifies in its 'IsCollection' property that its payload is a resource, but the metadata declares it as feed."
+        /// A string like "The ODataNestedResourceInfo with the URL value '{0}' specifies in its 'IsCollection' property that its payload is a resource, but the metadata declares it as resource set."
         /// </summary>
-        internal static string WriterValidationUtils_ExpandedLinkIsCollectionFalseWithFeedMetadata(object p0) {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.WriterValidationUtils_ExpandedLinkIsCollectionFalseWithFeedMetadata, p0);
+        internal static string WriterValidationUtils_ExpandedLinkIsCollectionFalseWithResourceSetMetadata(object p0) {
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.WriterValidationUtils_ExpandedLinkIsCollectionFalseWithResourceSetMetadata, p0);
         }
 
         /// <summary>
-        /// A string like "The content of the ODataNestedResourceInfo with the URL value '{0}' is a feed, but the metadata declares it as a resource."
+        /// A string like "The content of the ODataNestedResourceInfo with the URL value '{0}' is a resource set, but the metadata declares it as a resource."
         /// </summary>
-        internal static string WriterValidationUtils_ExpandedLinkWithFeedPayloadAndEntryMetadata(object p0) {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.WriterValidationUtils_ExpandedLinkWithFeedPayloadAndEntryMetadata, p0);
+        internal static string WriterValidationUtils_ExpandedLinkWithResourceSetPayloadAndResourceMetadata(object p0) {
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.WriterValidationUtils_ExpandedLinkWithResourceSetPayloadAndResourceMetadata, p0);
         }
 
         /// <summary>
-        /// A string like "The content of the ODataNestedResourceInfo with the URL value '{0}' is a resource, but the metadata declares it as feed."
+        /// A string like "The content of the ODataNestedResourceInfo with the URL value '{0}' is a resource, but the metadata declares it as resource set."
         /// </summary>
-        internal static string WriterValidationUtils_ExpandedLinkWithEntryPayloadAndFeedMetadata(object p0) {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.WriterValidationUtils_ExpandedLinkWithEntryPayloadAndFeedMetadata, p0);
+        internal static string WriterValidationUtils_ExpandedLinkWithResourcePayloadAndResourceSetMetadata(object p0) {
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.WriterValidationUtils_ExpandedLinkWithResourcePayloadAndResourceSetMetadata, p0);
         }
 
         /// <summary>
@@ -2850,83 +2711,10 @@ namespace Microsoft.OData {
         }
 
         /// <summary>
-        /// A string like "An Atom resource can be either a regular resource or a media link resource (MLE). This means that there cannot be data in both the {http://www.w3.org/2005/Atom}:content element, which indicates a regular resource, and the {http://docs.oasis-open.org/odata/ns/metadata}:properties element, which indicates an MLE."
-        /// </summary>
-        internal static string ODataAtomReader_MediaLinkEntryMismatch {
-            get {
-                return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataAtomReader_MediaLinkEntryMismatch);
-            }
-        }
-
-        /// <summary>
-        /// A string like "A navigation link '{0}' was found with type 'feed', but its matching navigation property is of kind EntityReference. A navigation link with type 'feed' must match a navigation property of kind EntitySetReference."
-        /// </summary>
-        internal static string ODataAtomReader_FeedNavigationLinkForResourceReferenceProperty(object p0) {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataAtomReader_FeedNavigationLinkForResourceReferenceProperty, p0);
-        }
-
-        /// <summary>
-        /// A string like "An expanded feed was found in a navigation link of type resource; however, only an expanded resource can occur in a navigation link of type resource."
-        /// </summary>
-        internal static string ODataAtomReader_ExpandedFeedInEntryNavigationLink {
-            get {
-                return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataAtomReader_ExpandedFeedInEntryNavigationLink);
-            }
-        }
-
-        /// <summary>
-        /// A string like "An expanded resource was found in a navigation link of type feed; however, only an expanded feed can occur in a navigation link of type feed."
-        /// </summary>
-        internal static string ODataAtomReader_ExpandedEntryInFeedNavigationLink {
-            get {
-                return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataAtomReader_ExpandedEntryInFeedNavigationLink);
-            }
-        }
-
-        /// <summary>
-        /// A string like "A deferred resource was found in a navigation link of type feed; however, only a deferred feed can occur in a navigation link of type feed."
-        /// </summary>
-        internal static string ODataAtomReader_DeferredEntryInFeedNavigationLink {
-            get {
-                return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataAtomReader_DeferredEntryInFeedNavigationLink);
-            }
-        }
-
-        /// <summary>
         /// A string like "A relative URI value '{0}' was specified in the payload, but no base URI for it was found. When the payload contains a relative URI, there must be an xml:base in the payload or else a base URI must specified in the reader settings."
         /// </summary>
         internal static string ODataAtomDeserializer_RelativeUriUsedWithoutBaseUriSpecified(object p0) {
             return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataAtomDeserializer_RelativeUriUsedWithoutBaseUriSpecified, p0);
-        }
-
-        /// <summary>
-        /// A string like "The root element of the collection cannot contain the {http://docs.oasis-open.org/odata/ns/metadata}:type attribute or the {http://docs.oasis-open.org/odata/ns/metadata}:null attribute."
-        /// </summary>
-        internal static string ODataAtomCollectionDeserializer_TypeOrNullAttributeNotAllowed {
-            get {
-                return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataAtomCollectionDeserializer_TypeOrNullAttributeNotAllowed);
-            }
-        }
-
-        /// <summary>
-        /// A string like "A child element of the collection was named '{0}'. Each child element representing the value of the collection must be named 'element', and each must belong to the '{1}' namespace."
-        /// </summary>
-        internal static string ODataAtomCollectionDeserializer_WrongCollectionItemElementName(object p0, object p1) {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataAtomCollectionDeserializer_WrongCollectionItemElementName, p0, p1);
-        }
-
-        /// <summary>
-        /// A string like "A root element in namespace '{0}' was found. A top-level collection must have the root element in the '{1}' namespace."
-        /// </summary>
-        internal static string ODataAtomCollectionDeserializer_TopLevelCollectionElementWrongNamespace(object p0, object p1) {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataAtomCollectionDeserializer_TopLevelCollectionElementWrongNamespace, p0, p1);
-        }
-
-        /// <summary>
-        /// A string like "A root element in namespace '{0}' was found. A top-level property payload must have the root element in the '{1}' namespace."
-        /// </summary>
-        internal static string ODataAtomPropertyAndValueDeserializer_TopLevelPropertyElementWrongNamespace(object p0, object p1) {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataAtomPropertyAndValueDeserializer_TopLevelPropertyElementWrongNamespace, p0, p1);
         }
 
         /// <summary>
@@ -2946,8 +2734,8 @@ namespace Microsoft.OData {
         /// <summary>
         /// A string like "Writing null value for the instance annotation '{0}' is not allowed. The instance annotation '{0}' has the expected type '{1}[Nullable=False]'."
         /// </summary>
-        internal static string ODataAtomPropertyAndValueSerializer_NullValueNotAllowedForInstanceAnnotation(object p0, object p1) {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataAtomPropertyAndValueSerializer_NullValueNotAllowedForInstanceAnnotation, p0, p1);
+        internal static string JsonLightInstanceAnnotationWriter_NullValueNotAllowedForInstanceAnnotation(object p0, object p1) {
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.JsonLightInstanceAnnotationWriter_NullValueNotAllowedForInstanceAnnotation, p0, p1);
         }
 
         /// <summary>
@@ -2979,255 +2767,10 @@ namespace Microsoft.OData {
         }
 
         /// <summary>
-        /// A string like "A node of type '{0}' was found where a node of type 'Element' was expected. An resource must be represented as an XML element."
-        /// </summary>
-        internal static string ODataAtomEntryAndFeedDeserializer_ElementExpected(object p0) {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataAtomEntryAndFeedDeserializer_ElementExpected, p0);
-        }
-
-        /// <summary>
-        /// A string like "An element with name '{0}' in namespace '{1}' was found; however, a resource was expected. An resource must be represented as an {{http://www.w3.org/2005/Atom}}:resource element."
-        /// </summary>
-        internal static string ODataAtomEntryAndFeedDeserializer_EntryElementWrongName(object p0, object p1) {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataAtomEntryAndFeedDeserializer_EntryElementWrongName, p0, p1);
-        }
-
-        /// <summary>
-        /// A string like "The element {http://www.w3.org/2005/Atom}:content has non-empty content, and it has an attribute with name 'src'. When the {http://www.w3.org/2005/Atom}:content element has the 'src' attribute, it cannot also have content."
-        /// </summary>
-        internal static string ODataAtomEntryAndFeedDeserializer_ContentWithSourceLinkIsNotEmpty {
-            get {
-                return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataAtomEntryAndFeedDeserializer_ContentWithSourceLinkIsNotEmpty);
-            }
-        }
-
-        /// <summary>
         /// A string like "The 'type' attribute on element {{http://www.w3.org/2005/Atom}}:content is either missing or has an invalid value '{0}'. Only 'application/xml' and 'application/atom+xml' are supported as the value of the 'type' attribute on the {{http://www.w3.org/2005/Atom}}:content element."
         /// </summary>
-        internal static string ODataAtomEntryAndFeedDeserializer_ContentWithWrongType(object p0) {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataAtomEntryAndFeedDeserializer_ContentWithWrongType, p0);
-        }
-
-        /// <summary>
-        /// A string like "An XML node '{0}' was found in the {{http://www.w3.org/2005/Atom}}:content element. The only valid child nodes of the {{http://www.w3.org/2005/Atom}}:content element are insignificant nodes and the {{http://docs.oasis-open.org/odata/ns/metadata}}:properties element."
-        /// </summary>
-        internal static string ODataAtomEntryAndFeedDeserializer_ContentWithInvalidNode(object p0) {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataAtomEntryAndFeedDeserializer_ContentWithInvalidNode, p0);
-        }
-
-        /// <summary>
-        /// A string like "An element with name '{0}' in namespace '{1}' was found; however, a feed was expected. A feed must be represented as a {{http://www.w3.org/2005/Atom}}:feed element."
-        /// </summary>
-        internal static string ODataAtomEntryAndFeedDeserializer_FeedElementWrongName(object p0, object p1) {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataAtomEntryAndFeedDeserializer_FeedElementWrongName, p0, p1);
-        }
-
-        /// <summary>
-        /// A string like "An element with name '{0}' in namespace 'http://www.w3.org/2005/Atom' was found inside the {{http://docs.oasis-open.org/odata/ns/metadata}}:inline element. Only 'resource' and 'feed' elements from the 'http://www.w3.org/2005/Atom' namespace, or elements from other namespaces are allowed inside the {{http://docs.oasis-open.org/odata/ns/metadata}}:inline element."
-        /// </summary>
-        internal static string ODataAtomEntryAndFeedDeserializer_UnknownElementInInline(object p0) {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataAtomEntryAndFeedDeserializer_UnknownElementInInline, p0);
-        }
-
-        /// <summary>
-        /// A string like "Another expanded '{0}' was found in {{http://docs.oasis-open.org/odata/ns/metadata}}:inline, but it already contains an expanded feed or resource. Only one expanded feed or expanded resource is allowed in the {{http://docs.oasis-open.org/odata/ns/metadata}}:inline element."
-        /// </summary>
-        internal static string ODataAtomEntryAndFeedDeserializer_MultipleExpansionsInInline(object p0) {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataAtomEntryAndFeedDeserializer_MultipleExpansionsInInline, p0);
-        }
-
-        /// <summary>
-        /// A string like "Multiple {http://docs.oasis-open.org/odata/ns/metadata}:inline elements were found in a {http://www.w3.org/2005/Atom}:link element. Each {http://www.w3.org/2005/Atom}:link element can contain no more than one {http://docs.oasis-open.org/odata/ns/metadata}:inline child element."
-        /// </summary>
-        internal static string ODataAtomEntryAndFeedDeserializer_MultipleInlineElementsInLink {
-            get {
-                return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataAtomEntryAndFeedDeserializer_MultipleInlineElementsInLink);
-            }
-        }
-
-        /// <summary>
-        /// A string like "Multiple edit links were found for the stream property '{0}'. Only one edit link is allowed for a given stream property."
-        /// </summary>
-        internal static string ODataAtomEntryAndFeedDeserializer_StreamPropertyWithMultipleEditLinks(object p0) {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataAtomEntryAndFeedDeserializer_StreamPropertyWithMultipleEditLinks, p0);
-        }
-
-        /// <summary>
-        /// A string like "Multiple read links were found for the stream property '{0}'. Only one read link is allowed for a given stream property."
-        /// </summary>
-        internal static string ODataAtomEntryAndFeedDeserializer_StreamPropertyWithMultipleReadLinks(object p0) {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataAtomEntryAndFeedDeserializer_StreamPropertyWithMultipleReadLinks, p0);
-        }
-
-        /// <summary>
-        /// A string like "Multiple content type values were found for the stream property '{0}'. When a stream property is represented as two {{http://www.w3.org/2005/Atom}}:link elements that both have the 'type' attribute, then both values must be the same."
-        /// </summary>
-        internal static string ODataAtomEntryAndFeedDeserializer_StreamPropertyWithMultipleContentTypes(object p0) {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataAtomEntryAndFeedDeserializer_StreamPropertyWithMultipleContentTypes, p0);
-        }
-
-        /// <summary>
-        /// A string like "Found a stream property '{0}', but there is already another property with the same name on the entity. The stream property name cannot conflict with the name of another property."
-        /// </summary>
-        internal static string ODataAtomEntryAndFeedDeserializer_StreamPropertyDuplicatePropertyName(object p0) {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataAtomEntryAndFeedDeserializer_StreamPropertyDuplicatePropertyName, p0);
-        }
-
-        /// <summary>
-        /// A string like "Found a stream property link with empty name. In OData, a stream property must have a non-empty name."
-        /// </summary>
-        internal static string ODataAtomEntryAndFeedDeserializer_StreamPropertyWithEmptyName {
-            get {
-                return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataAtomEntryAndFeedDeserializer_StreamPropertyWithEmptyName);
-            }
-        }
-
-        /// <summary>
-        /// A string like "The 'metadata' attribute on the {{http://docs.oasis-open.org/odata/ns/metadata}}:{0} element is missing."
-        /// </summary>
-        internal static string ODataAtomEntryAndFeedDeserializer_OperationMissingMetadataAttribute(object p0) {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataAtomEntryAndFeedDeserializer_OperationMissingMetadataAttribute, p0);
-        }
-
-        /// <summary>
-        /// A string like "The 'target' attribute on the {{http://docs.oasis-open.org/odata/ns/metadata}}:{0} element is missing."
-        /// </summary>
-        internal static string ODataAtomEntryAndFeedDeserializer_OperationMissingTargetAttribute(object p0) {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataAtomEntryAndFeedDeserializer_OperationMissingTargetAttribute, p0);
-        }
-
-        /// <summary>
-        /// A string like "Multiple 'link' elements with a relation of '{0}' were found on a resource. In OData, at most one link element with a '{0}' relation is allowed."
-        /// </summary>
-        internal static string ODataAtomEntryAndFeedDeserializer_MultipleLinksInEntry(object p0) {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataAtomEntryAndFeedDeserializer_MultipleLinksInEntry, p0);
-        }
-
-        /// <summary>
-        /// A string like "Multiple 'link' elements with a relation of '{0}' were found on a feed. In OData, at most one link element with a '{0}' relation is allowed."
-        /// </summary>
-        internal static string ODataAtomEntryAndFeedDeserializer_MultipleLinksInFeed(object p0) {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataAtomEntryAndFeedDeserializer_MultipleLinksInFeed, p0);
-        }
-
-        /// <summary>
-        /// A string like "Duplicate '{{{0}}}:{1}' elements were found. In OData, at most one '{{{0}}}:{1}' element is allowed."
-        /// </summary>
-        internal static string ODataAtomEntryAndFeedDeserializer_DuplicateElements(object p0, object p1) {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataAtomEntryAndFeedDeserializer_DuplicateElements, p0, p1);
-        }
-
-        /// <summary>
-        /// A string like "The value of the 'type' attribute on the association link for the navigation property '{0}' is invalid. The value of the 'type' attribute on an association link must be 'application/xml'."
-        /// </summary>
-        internal static string ODataAtomEntryAndFeedDeserializer_InvalidTypeAttributeOnAssociationLink(object p0) {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataAtomEntryAndFeedDeserializer_InvalidTypeAttributeOnAssociationLink, p0);
-        }
-
-        /// <summary>
-        /// A string like "Encountered an 'annotation' element inside a nested feed. Annotations are not currently supported for nested feeds."
-        /// </summary>
-        internal static string ODataAtomEntryAndFeedDeserializer_EncounteredAnnotationInNestedFeed {
-            get {
-                return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataAtomEntryAndFeedDeserializer_EncounteredAnnotationInNestedFeed);
-            }
-        }
-
-        /// <summary>
-        /// A string like "Encountered a 'Delta Link' element inside a nested feed. Delta Links are not supported for nested feeds."
-        /// </summary>
-        internal static string ODataAtomEntryAndFeedDeserializer_EncounteredDeltaLinkInNestedFeed {
-            get {
-                return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataAtomEntryAndFeedDeserializer_EncounteredDeltaLinkInNestedFeed);
-            }
-        }
-
-        /// <summary>
-        /// A string like "Encountered an 'annotation' element with a 'target' attribute value of '{0}' and a term name of '{1}'. When an 'annotation' element occurs as a direct child of an 'resource' or 'feed' element, it must have either no 'target' attribute or a 'target' attribute with a value of '.'."
-        /// </summary>
-        internal static string ODataAtomEntryAndFeedDeserializer_AnnotationWithNonDotTarget(object p0, object p1) {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataAtomEntryAndFeedDeserializer_AnnotationWithNonDotTarget, p0, p1);
-        }
-
-        /// <summary>
-        /// A string like "A root element with name '{0}' was found in namespace '{1}'. The root element of a service document must be named 'service' and it must belong to the 'http://www.w3.org/2007/app' namespace."
-        /// </summary>
-        internal static string ODataAtomServiceDocumentDeserializer_ServiceDocumentRootElementWrongNameOrNamespace(object p0, object p1) {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataAtomServiceDocumentDeserializer_ServiceDocumentRootElementWrongNameOrNamespace, p0, p1);
-        }
-
-        /// <summary>
-        /// A string like "The service document is missing the 'workspace' element. A service document must contain a single {http://www.w3.org/2007/app}:workspace element."
-        /// </summary>
-        internal static string ODataAtomServiceDocumentDeserializer_MissingWorkspaceElement {
-            get {
-                return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataAtomServiceDocumentDeserializer_MissingWorkspaceElement);
-            }
-        }
-
-        /// <summary>
-        /// A string like "Multiple 'workspace' elements were found inside the service document. A service document must contain a single {http://www.w3.org/2007/app}:workspace element."
-        /// </summary>
-        internal static string ODataAtomServiceDocumentDeserializer_MultipleWorkspaceElementsFound {
-            get {
-                return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataAtomServiceDocumentDeserializer_MultipleWorkspaceElementsFound);
-            }
-        }
-
-        /// <summary>
-        /// A string like "An element with name '{0}' was found in namespace 'http://www.w3.org/2007/app'. With the exception of extension elements, a service document can contain only a single {{http://www.w3.org/2007/app}}:workspace element."
-        /// </summary>
-        internal static string ODataAtomServiceDocumentDeserializer_UnexpectedElementInServiceDocument(object p0) {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataAtomServiceDocumentDeserializer_UnexpectedElementInServiceDocument, p0);
-        }
-
-        /// <summary>
-        /// A string like "An element with name '{0}' was found in namespace 'http://www.w3.org/2007/app'. A workspace element can only contain the {{http://www.w3.org/2005/Atom}}:title element, extension elements, and the {{http://www.w3.org/2007/app}}:collection element."
-        /// </summary>
-        internal static string ODataAtomServiceDocumentDeserializer_UnexpectedElementInWorkspace(object p0) {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataAtomServiceDocumentDeserializer_UnexpectedElementInWorkspace, p0);
-        }
-
-        /// <summary>
-        /// A string like "An element with name '{0}' was found in namespace 'http://docs.oasis-open.org/odata/ns/metadata'. A singleton or function-import element can only contain the {{http://www.w3.org/2005/Atom}}:title element, extension elements, and the {{http://www.w3.org/2007/app}}:accept or {{http://www.w3.org/2007/app}}:categories element."
-        /// </summary>
-        internal static string ODataAtomServiceDocumentDeserializer_UnexpectedODataElementInWorkspace(object p0) {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataAtomServiceDocumentDeserializer_UnexpectedODataElementInWorkspace, p0);
-        }
-
-        /// <summary>
-        /// A string like "An element with name '{0}' was fond in namespace 'http://www.w3.org/2007/app'. A {{http://www.w3.org/2007/app}}:collection element can only contain the {{http://www.w3.org/2005/Atom}}:title element, extension elements, and the {{http://www.w3.org/2007/app}}:accept or {{http://www.w3.org/2007/app}}:categories element."
-        /// </summary>
-        internal static string ODataAtomServiceDocumentDeserializer_UnexpectedElementInResourceCollection(object p0) {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataAtomServiceDocumentDeserializer_UnexpectedElementInResourceCollection, p0);
-        }
-
-        /// <summary>
-        /// A string like "The type attribute with value '{0}' was fond on an Atom text construct element with local name '{1}'. The type attribute must be missing or else it must have a value 'text', 'html' or 'xhtml'."
-        /// </summary>
-        internal static string ODataAtomEntryMetadataDeserializer_InvalidTextConstructKind(object p0, object p1) {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataAtomEntryMetadataDeserializer_InvalidTextConstructKind, p0, p1);
-        }
-
-        /// <summary>
-        /// A string like "'{0}' is not a valid value for 'atom:link/@length' attribute."
-        /// </summary>
-        internal static string ODataAtomEntryMetadataDeserializer_InvalidLinkLengthValue(object p0) {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataAtomEntryMetadataDeserializer_InvalidLinkLengthValue, p0);
-        }
-
-        /// <summary>
-        /// A string like "Multiple '{0}' elements were found inside a '{1}' element. A '{1}' element cannot contain more than one '{0}' element."
-        /// </summary>
-        internal static string ODataAtomMetadataDeserializer_MultipleSingletonMetadataElements(object p0, object p1) {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataAtomMetadataDeserializer_MultipleSingletonMetadataElements, p0, p1);
-        }
-
-        /// <summary>
-        /// A string like "The element with name '{0}' in namespace '{1}' is not a valid root element for an error. The root element of an error must be 'error' and must belong to the 'http://docs.oasis-open.org/odata/ns/metadata' namespace."
-        /// </summary>
-        internal static string ODataAtomErrorDeserializer_InvalidRootElement(object p0, object p1) {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataAtomErrorDeserializer_InvalidRootElement, p0, p1);
+        internal static string ODataAtomResourceDeserializer_ContentWithWrongType(object p0) {
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataAtomResourceDeserializer_ContentWithWrongType, p0);
         }
 
         /// <summary>
@@ -3242,50 +2785,6 @@ namespace Microsoft.OData {
         /// </summary>
         internal static string ODataAtomErrorDeserializer_MultipleInnerErrorElementsWithSameName(object p0) {
             return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataAtomErrorDeserializer_MultipleInnerErrorElementsWithSameName, p0);
-        }
-
-        /// <summary>
-        /// A string like "The element with name '{0}' in namespace '{1}' is not a valid start element for an entity reference link. The start element of an entity reference link must be 'ref' and it must belong to the 'http://docs.oasis-open.org/odata/ns/metadata' namespace."
-        /// </summary>
-        internal static string ODataAtomEntityReferenceLinkDeserializer_InvalidEntityReferenceLinkStartElement(object p0, object p1) {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataAtomEntityReferenceLinkDeserializer_InvalidEntityReferenceLinkStartElement, p0, p1);
-        }
-
-        /// <summary>
-        /// A string like "The element with name '{0}' in namespace '{1}' is not a valid start element for entity reference links. The start element of entity reference links must be 'feed' and it must belong to the 'http://www.w3.org/2005/Atom' namespace."
-        /// </summary>
-        internal static string ODataAtomEntityReferenceLinkDeserializer_InvalidEntityReferenceLinksStartElement(object p0, object p1) {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataAtomEntityReferenceLinkDeserializer_InvalidEntityReferenceLinksStartElement, p0, p1);
-        }
-
-        /// <summary>
-        /// A string like "Multiple '{{{0}}}:{1}' elements were found in an entity reference links element. In OData, the value of an entity reference links element must have at most one '{{{0}}}:{1}' element."
-        /// </summary>
-        internal static string ODataAtomEntityReferenceLinkDeserializer_MultipleEntityReferenceLinksElementsWithSameName(object p0, object p1) {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataAtomEntityReferenceLinkDeserializer_MultipleEntityReferenceLinksElementsWithSameName, p0, p1);
-        }
-
-        /// <summary>
-        /// A string like "A 'fixed' attribute with the value '{0}' was found on a 'categories' element.  When the 'fixed' attribute is not missing, it must have a value of either 'yes' or 'no'."
-        /// </summary>
-        internal static string ODataAtomServiceDocumentMetadataDeserializer_InvalidFixedAttributeValue(object p0) {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataAtomServiceDocumentMetadataDeserializer_InvalidFixedAttributeValue, p0);
-        }
-
-        /// <summary>
-        /// A string like "Multiple 'title' elements were found inside a '{0}' element. A '{0}' element can only contain a single {{http://www.w3.org/2005/Atom}}:title element."
-        /// </summary>
-        internal static string ODataAtomServiceDocumentMetadataDeserializer_MultipleTitleElementsFound(object p0) {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataAtomServiceDocumentMetadataDeserializer_MultipleTitleElementsFound, p0);
-        }
-
-        /// <summary>
-        /// A string like "Multiple 'accept' elements were found inside a 'collection' element. A 'collection' element can only contain a single {http://www.w3.org/2007/app}:accept element."
-        /// </summary>
-        internal static string ODataAtomServiceDocumentMetadataDeserializer_MultipleAcceptElementsFoundInCollection {
-            get {
-                return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataAtomServiceDocumentMetadataDeserializer_MultipleAcceptElementsFoundInCollection);
-            }
         }
 
         /// <summary>
@@ -3310,10 +2809,10 @@ namespace Microsoft.OData {
         }
 
         /// <summary>
-        /// A string like "An resource of type '{0}' was found in a feed that otherwise has entries of type '{1}'. In OData, all entries in a feed must have a common base type."
+        /// A string like "An resource of type '{0}' was found in a resource set that otherwise has entries of type '{1}'. In OData, all entries in a resource set must have a common base type."
         /// </summary>
-        internal static string FeedWithoutExpectedTypeValidator_IncompatibleTypes(object p0, object p1) {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.FeedWithoutExpectedTypeValidator_IncompatibleTypes, p0, p1);
+        internal static string ResourceSetWithoutExpectedTypeValidator_IncompatibleTypes(object p0, object p1) {
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ResourceSetWithoutExpectedTypeValidator_IncompatibleTypes, p0, p1);
         }
 
         /// <summary>
@@ -3403,7 +2902,7 @@ namespace Microsoft.OData {
         }
 
         /// <summary>
-        /// A string like "The entity type '{0}' is not compatible with the base type '{1}' of the provided entity set '{2}'. When an entity type is specified for an OData feed or resource reader, it has to be the same or a subtype of the base type of the specified entity set."
+        /// A string like "The entity type '{0}' is not compatible with the base type '{1}' of the provided entity set '{2}'. When an entity type is specified for an OData resource set or resource reader, it has to be the same or a subtype of the base type of the specified entity set."
         /// </summary>
         internal static string ODataJsonLightInputContext_EntityTypeMustBeCompatibleWithEntitySetBaseType(object p0, object p1, object p2) {
             return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightInputContext_EntityTypeMustBeCompatibleWithEntitySetBaseType, p0, p1, p2);
@@ -3426,7 +2925,7 @@ namespace Microsoft.OData {
         }
 
         /// <summary>
-        /// A string like "Parsing JSON Light feeds or entries in requests without entity set is not supported. Pass in the entity set as a parameter to ODataMessageReader.CreateODataResourceReader or ODataMessageReader.CreateODataResourceSetReader method."
+        /// A string like "Parsing JSON Light resource sets or entries in requests without entity set is not supported. Pass in the entity set as a parameter to ODataMessageReader.CreateODataResourceReader or ODataMessageReader.CreateODataResourceSetReader method."
         /// </summary>
         internal static string ODataJsonLightInputContext_NoEntitySetForRequest {
             get {
@@ -3476,20 +2975,20 @@ namespace Microsoft.OData {
         }
 
         /// <summary>
-        /// A string like "An attempt to write an entity reference link inside a navigation link after a feed has been written inside the same navigation link in a request was detected. In JSON Light requests, all entity reference links inside a navigation link have to be written before all feeds inside the same navigation link."
+        /// A string like "An attempt to write an entity reference link inside a navigation link after a resource set has been written inside the same navigation link in a request was detected. In JSON Light requests, all entity reference links inside a navigation link have to be written before all resource sets inside the same navigation link."
         /// </summary>
-        internal static string ODataJsonLightWriter_EntityReferenceLinkAfterFeedInRequest {
+        internal static string ODataJsonLightWriter_EntityReferenceLinkAfterResourceSetInRequest {
             get {
-                return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightWriter_EntityReferenceLinkAfterFeedInRequest);
+                return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightWriter_EntityReferenceLinkAfterResourceSetInRequest);
             }
         }
 
         /// <summary>
-        /// A string like "The ODataResourceSet.InstanceAnnotations collection must be empty for expanded feeds. Custom instance annotations are not supported on expanded feeds."
+        /// A string like "The ODataResourceSet.InstanceAnnotations collection must be empty for expanded resource sets. Custom instance annotations are not supported on expanded resource sets."
         /// </summary>
-        internal static string ODataJsonLightWriter_InstanceAnnotationNotSupportedOnExpandedFeed {
+        internal static string ODataJsonLightWriter_InstanceAnnotationNotSupportedOnExpandedResourceSet {
             get {
-                return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightWriter_InstanceAnnotationNotSupportedOnExpandedFeed);
+                return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightWriter_InstanceAnnotationNotSupportedOnExpandedResourceSet);
             }
         }
 
@@ -3514,18 +3013,18 @@ namespace Microsoft.OData {
         /// <summary>
         /// A string like "When writing a JSON response, a user model must be specified and the entity set and entity type must be passed to the ODataMessageWriter.CreateODataResourceWriter method or the ODataResourceSerializationInfo must be set on the ODataResource or ODataResourceSet that is being written."
         /// </summary>
-        internal static string ODataFeedAndEntryTypeContext_MetadataOrSerializationInfoMissing {
+        internal static string ODataResourceTypeContext_MetadataOrSerializationInfoMissing {
             get {
-                return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataFeedAndEntryTypeContext_MetadataOrSerializationInfoMissing);
+                return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataResourceTypeContext_MetadataOrSerializationInfoMissing);
             }
         }
 
         /// <summary>
         /// A string like "When writing a JSON response in full metadata mode with ODataMessageWriterSettings.AutoComputePayloadMetadata set to true, a user model must be specified and the entity set and entity type must be passed to the ODataMessageWriter.CreateODataResourceWriter method or the ODataResource.TypeName must be set."
         /// </summary>
-        internal static string ODataFeedAndEntryTypeContext_ODataEntryTypeNameMissing {
+        internal static string ODataResourceTypeContext_ODataResourceTypeNameMissing {
             get {
-                return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataFeedAndEntryTypeContext_ODataEntryTypeNameMissing);
+                return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataResourceTypeContext_ODataResourceTypeNameMissing);
             }
         }
 
@@ -3555,9 +3054,9 @@ namespace Microsoft.OData {
         /// <summary>
         /// A string like "The stream value must be a property of an ODataResource instance."
         /// </summary>
-        internal static string ODataContextUriBuilder_StreamValueMustBePropertiesOfODataEntry {
+        internal static string ODataContextUriBuilder_StreamValueMustBePropertiesOfODataResource {
             get {
-                return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataContextUriBuilder_StreamValueMustBePropertiesOfODataEntry);
+                return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataContextUriBuilder_StreamValueMustBePropertiesOfODataResource);
             }
         }
 
@@ -3781,7 +3280,7 @@ namespace Microsoft.OData {
         }
 
         /// <summary>
-        /// A string like "A '$select' query option was found for the payload kind '{0}'. In OData, a '$select' query option is only supported for payload kinds 'Resource' and 'Feed'."
+        /// A string like "A '$select' query option was found for the payload kind '{0}'. In OData, a '$select' query option is only supported for payload kinds 'Resource' and 'ResourceSet'."
         /// </summary>
         internal static string ODataJsonLightContextUriParser_InvalidPayloadKindWithSelectQueryOption(object p0) {
             return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightContextUriParser_InvalidPayloadKindWithSelectQueryOption, p0);
@@ -3820,223 +3319,230 @@ namespace Microsoft.OData {
         /// <summary>
         /// A string like "The 'odata.type' instance annotation in a resource object is preceded by an invalid property. In OData, the 'odata.type' instance annotation must be either the first property in the JSON object or the second if the 'odata.context' instance annotation is present."
         /// </summary>
-        internal static string ODataJsonLightEntryAndFeedDeserializer_EntryTypeAnnotationNotFirst {
+        internal static string ODataJsonLightResourceDeserializer_ResourceTypeAnnotationNotFirst {
             get {
-                return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightEntryAndFeedDeserializer_EntryTypeAnnotationNotFirst);
+                return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightResourceDeserializer_ResourceTypeAnnotationNotFirst);
             }
         }
 
         /// <summary>
         /// A string like "The '{0}' instance annotation in a resource object is preceded by a property or property annotation. In OData, the '{0}' instance annotation must be before any property or property annotation in a resource object."
         /// </summary>
-        internal static string ODataJsonLightEntryAndFeedDeserializer_EntryInstanceAnnotationPrecededByProperty(object p0) {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightEntryAndFeedDeserializer_EntryInstanceAnnotationPrecededByProperty, p0);
+        internal static string ODataJsonLightResourceDeserializer_ResourceInstanceAnnotationPrecededByProperty(object p0) {
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightResourceDeserializer_ResourceInstanceAnnotationPrecededByProperty, p0);
         }
 
         /// <summary>
-        /// A string like "A node of type '{0}' was read from the JSON reader when trying to read the start of the content of a feed; however, a node of type 'StartArray' was expected."
+        /// A string like "A node of type '{0}' was read from the JSON reader when trying to read the start of the content of a resource set; however, a node of type 'StartArray' was expected."
         /// </summary>
-        internal static string ODataJsonLightEntryAndFeedDeserializer_CannotReadFeedContentStart(object p0) {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightEntryAndFeedDeserializer_CannotReadFeedContentStart, p0);
+        internal static string ODataJsonLightResourceDeserializer_CannotReadResourceSetContentStart(object p0) {
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightResourceDeserializer_CannotReadResourceSetContentStart, p0);
         }
 
         /// <summary>
-        /// A string like "Did not find the required '{0}' property for the expected feed."
+        /// A string like "Did not find the required '{0}' property for the expected resource set."
         /// </summary>
-        internal static string ODataJsonLightEntryAndFeedDeserializer_ExpectedFeedPropertyNotFound(object p0) {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightEntryAndFeedDeserializer_ExpectedFeedPropertyNotFound, p0);
+        internal static string ODataJsonLightResourceDeserializer_ExpectedResourceSetPropertyNotFound(object p0) {
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightResourceDeserializer_ExpectedResourceSetPropertyNotFound, p0);
         }
 
         /// <summary>
-        /// A string like "A node of type '{0}' was read from the JSON reader when trying to read the entries of a feed; however, a node of type 'StartObject' or 'EndArray' was expected."
+        /// A string like "A node of type '{0}' was read from the JSON reader when trying to read the entries of a resource set; however, a node of type 'StartObject' or 'EndArray' was expected."
         /// </summary>
-        internal static string ODataJsonLightEntryAndFeedDeserializer_InvalidNodeTypeForItemsInFeed(object p0) {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightEntryAndFeedDeserializer_InvalidNodeTypeForItemsInFeed, p0);
+        internal static string ODataJsonLightResourceDeserializer_InvalidNodeTypeForItemsInResourceSet(object p0) {
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightResourceDeserializer_InvalidNodeTypeForItemsInResourceSet, p0);
         }
 
         /// <summary>
-        /// A string like "A property annotation for a property with name '{0}' was found when reading a top-level feed. No property annotations, only instance annotations are allowed when reading top-level feeds."
+        /// A string like "A property annotation for a property with name '{0}' was found when reading a top-level resource set. No property annotations, only instance annotations are allowed when reading top-level resource sets."
         /// </summary>
-        internal static string ODataJsonLightEntryAndFeedDeserializer_InvalidPropertyAnnotationInTopLevelFeed(object p0) {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightEntryAndFeedDeserializer_InvalidPropertyAnnotationInTopLevelFeed, p0);
+        internal static string ODataJsonLightResourceDeserializer_InvalidPropertyAnnotationInTopLevelResourceSet(object p0) {
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightResourceDeserializer_InvalidPropertyAnnotationInTopLevelResourceSet, p0);
         }
 
         /// <summary>
-        /// A string like "A property with name '{0}' was found when reading a top-level feed. No properties other than the feed property with name '{1}' are allowed."
+        /// A string like "A property with name '{0}' was found when reading a top-level resource set. No properties other than the resource set property with name '{1}' are allowed."
         /// </summary>
-        internal static string ODataJsonLightEntryAndFeedDeserializer_InvalidPropertyInTopLevelFeed(object p0, object p1) {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightEntryAndFeedDeserializer_InvalidPropertyInTopLevelFeed, p0, p1);
+        internal static string ODataJsonLightResourceDeserializer_InvalidPropertyInTopLevelResourceSet(object p0, object p1) {
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightResourceDeserializer_InvalidPropertyInTopLevelResourceSet, p0, p1);
         }
 
         /// <summary>
         /// A string like "A property '{0}' which only has property annotations in the payload but no property value is declared to be of type '{1}'. In OData, only navigation properties and named streams can be represented as properties without values."
         /// </summary>
-        internal static string ODataJsonLightEntryAndFeedDeserializer_PropertyWithoutValueWithWrongType(object p0, object p1) {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightEntryAndFeedDeserializer_PropertyWithoutValueWithWrongType, p0, p1);
+        internal static string ODataJsonLightResourceDeserializer_PropertyWithoutValueWithWrongType(object p0, object p1) {
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightResourceDeserializer_PropertyWithoutValueWithWrongType, p0, p1);
         }
 
         /// <summary>
         /// A string like "A property '{0}' which only has property annotations in the payload but no property value is an open property. In OData, open property must be represented as a property with value."
         /// </summary>
-        internal static string ODataJsonLightEntryAndFeedDeserializer_OpenPropertyWithoutValue(object p0) {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightEntryAndFeedDeserializer_OpenPropertyWithoutValue, p0);
+        internal static string ODataJsonLightResourceDeserializer_OpenPropertyWithoutValue(object p0) {
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightResourceDeserializer_OpenPropertyWithoutValue, p0);
         }
 
         /// <summary>
         /// A string like "A stream property was found in a JSON Light request payload. Stream properties are only supported in responses."
         /// </summary>
-        internal static string ODataJsonLightEntryAndFeedDeserializer_StreamPropertyInRequest {
+        internal static string ODataJsonLightResourceDeserializer_StreamPropertyInRequest {
             get {
-                return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightEntryAndFeedDeserializer_StreamPropertyInRequest);
+                return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightResourceDeserializer_StreamPropertyInRequest);
             }
         }
 
         /// <summary>
         /// A string like "The stream property '{0}' has a property annotation '{1}'. Stream property can only have the 'odata.mediaEditLink', 'odata.mediaReadLink', 'odata.mediaEtag' and 'odata.mediaContentType' property annotations."
         /// </summary>
-        internal static string ODataJsonLightEntryAndFeedDeserializer_UnexpectedStreamPropertyAnnotation(object p0, object p1) {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightEntryAndFeedDeserializer_UnexpectedStreamPropertyAnnotation, p0, p1);
+        internal static string ODataJsonLightResourceDeserializer_UnexpectedStreamPropertyAnnotation(object p0, object p1) {
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightResourceDeserializer_UnexpectedStreamPropertyAnnotation, p0, p1);
         }
 
         /// <summary>
         /// A string like "A stream property '{0}' has a value in the payload. In OData, stream property must not have a value, it must only use property annotations."
         /// </summary>
-        internal static string ODataJsonLightEntryAndFeedDeserializer_StreamPropertyWithValue(object p0) {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightEntryAndFeedDeserializer_StreamPropertyWithValue, p0);
+        internal static string ODataJsonLightResourceDeserializer_StreamPropertyWithValue(object p0) {
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightResourceDeserializer_StreamPropertyWithValue, p0);
         }
 
         /// <summary>
         /// A string like "The navigation property '{0}' has a property annotation '{1}'. Deferred navigation links can only have the 'odata.navigationLink' and 'odata.associationLink' property annotations."
         /// </summary>
-        internal static string ODataJsonLightEntryAndFeedDeserializer_UnexpectedDeferredLinkPropertyAnnotation(object p0, object p1) {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightEntryAndFeedDeserializer_UnexpectedDeferredLinkPropertyAnnotation, p0, p1);
+        internal static string ODataJsonLightResourceDeserializer_UnexpectedDeferredLinkPropertyAnnotation(object p0, object p1) {
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightResourceDeserializer_UnexpectedDeferredLinkPropertyAnnotation, p0, p1);
         }
 
         /// <summary>
-        /// A string like "A node of type '{0}' was read from the JSON reader when trying to read the contents of the navigation property '{1}'; however, a 'StartObject' node or 'PrimitiveValue' node with null value was expected."
+        /// A string like "A node of type '{0}' was read from the JSON reader when trying to read the contents of the property '{1}'; however, a 'StartObject' node or 'PrimitiveValue' node with null value was expected."
         /// </summary>
-        internal static string ODataJsonLightEntryAndFeedDeserializer_CannotReadSingletonNavigationPropertyValue(object p0, object p1) {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightEntryAndFeedDeserializer_CannotReadSingletonNavigationPropertyValue, p0, p1);
+        internal static string ODataJsonLightResourceDeserializer_CannotReadSingletonNestedResource(object p0, object p1) {
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightResourceDeserializer_CannotReadSingletonNestedResource, p0, p1);
         }
 
         /// <summary>
-        /// A string like "A node of type '{0}' was read from the JSON reader when trying to read the contents of the navigation property '{1}'; however, a 'StartArray' node was expected."
+        /// A string like "A node of type '{0}' was read from the JSON reader when trying to read the contents of the property '{1}'; however, a 'StartArray' node was expected."
         /// </summary>
-        internal static string ODataJsonLightEntryAndFeedDeserializer_CannotReadCollectionNavigationPropertyValue(object p0, object p1) {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightEntryAndFeedDeserializer_CannotReadCollectionNavigationPropertyValue, p0, p1);
+        internal static string ODataJsonLightResourceDeserializer_CannotReadCollectionNestedResource(object p0, object p1) {
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightResourceDeserializer_CannotReadCollectionNestedResource, p0, p1);
         }
 
         /// <summary>
-        /// A string like "A 'PrimitiveValue' node with non-null value was found when trying to read the value of the navigation property '{0}'; however, a 'StartArray' node, a 'StartObject' node, or a 'PrimitiveValue' node with null value was expected."
+        /// A string like "A 'PrimitiveValue' node with non-null value was found when trying to read the value of the property '{0}'; however, a 'StartArray' node, a 'StartObject' node, or a 'PrimitiveValue' node with null value was expected."
         /// </summary>
-        internal static string ODataJsonLightEntryAndFeedDeserializer_CannotReadNavigationPropertyValue(object p0) {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightEntryAndFeedDeserializer_CannotReadNavigationPropertyValue, p0);
+        internal static string ODataJsonLightResourceDeserializer_CannotReadNestedResource(object p0) {
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightResourceDeserializer_CannotReadNestedResource, p0);
         }
 
         /// <summary>
         /// A string like "The navigation property '{0}' has a property annotation '{1}'. Expanded resource navigation links can only have the 'odata.context', 'odata.navigationLink' and 'odata.associationLink' property annotations."
         /// </summary>
-        internal static string ODataJsonLightEntryAndFeedDeserializer_UnexpectedExpandedSingletonNavigationLinkPropertyAnnotation(object p0, object p1) {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightEntryAndFeedDeserializer_UnexpectedExpandedSingletonNavigationLinkPropertyAnnotation, p0, p1);
+        internal static string ODataJsonLightResourceDeserializer_UnexpectedExpandedSingletonNavigationLinkPropertyAnnotation(object p0, object p1) {
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightResourceDeserializer_UnexpectedExpandedSingletonNavigationLinkPropertyAnnotation, p0, p1);
         }
 
         /// <summary>
-        /// A string like "The navigation property '{0}' has a property annotation '{1}'. Expanded feed navigation links can only have the 'odata.context', 'odata.navigationLink', 'odata.associationLink' and 'odata.nextLink' property annotations."
+        /// A string like "The navigation property '{0}' has a property annotation '{1}'. Expanded resource set navigation links can only have the 'odata.context', 'odata.navigationLink', 'odata.associationLink' and 'odata.nextLink' property annotations"
         /// </summary>
-        internal static string ODataJsonLightEntryAndFeedDeserializer_UnexpectedExpandedCollectionNavigationLinkPropertyAnnotation(object p0, object p1) {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightEntryAndFeedDeserializer_UnexpectedExpandedCollectionNavigationLinkPropertyAnnotation, p0, p1);
+        internal static string ODataJsonLightResourceDeserializer_UnexpectedExpandedCollectionNavigationLinkPropertyAnnotation(object p0, object p1) {
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightResourceDeserializer_UnexpectedExpandedCollectionNavigationLinkPropertyAnnotation, p0, p1);
+        }
+
+        /// <summary>
+        /// A string like "The property '{0}' has a property annotation '{1}'. The complex collection property can only have the 'odata.count', 'odata.type' and 'odata.nextLink' property annotations."
+        /// </summary>
+        internal static string ODataJsonLightResourceDeserializer_UnexpectedComplexCollectionPropertyAnnotation(object p0, object p1) {
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightResourceDeserializer_UnexpectedComplexCollectionPropertyAnnotation, p0, p1);
         }
 
         /// <summary>
         /// A string like "Multiple property annotations '{0}' were found when reading the expanded navigation link '{1}'. Only a single property annotation '{0}' can be specified for an expanded navigation link."
         /// </summary>
-        internal static string ODataJsonLightEntryAndFeedDeserializer_DuplicateExpandedFeedAnnotation(object p0, object p1) {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightEntryAndFeedDeserializer_DuplicateExpandedFeedAnnotation, p0, p1);
+        internal static string ODataJsonLightResourceDeserializer_DuplicateExpandedResourceSetAnnotation(object p0, object p1) {
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightResourceDeserializer_DuplicateExpandedResourceSetAnnotation, p0, p1);
         }
 
         /// <summary>
         /// A string like "A property annotation '{0}' was found after the property '{1}' it is annotating. Only the 'odata.nextLink' property annotation can be used after the property it is annotating."
         /// </summary>
-        internal static string ODataJsonLightEntryAndFeedDeserializer_UnexpectedPropertyAnnotationAfterExpandedFeed(object p0, object p1) {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightEntryAndFeedDeserializer_UnexpectedPropertyAnnotationAfterExpandedFeed, p0, p1);
+        internal static string ODataJsonLightResourceDeserializer_UnexpectedPropertyAnnotationAfterExpandedResourceSet(object p0, object p1) {
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightResourceDeserializer_UnexpectedPropertyAnnotationAfterExpandedResourceSet, p0, p1);
         }
 
         /// <summary>
         /// A string like "The navigation property '{0}' has a property annotation '{1}'. Navigation links in request payloads can only have the '{2}' property annotation."
         /// </summary>
-        internal static string ODataJsonLightEntryAndFeedDeserializer_UnexpectedNavigationLinkInRequestPropertyAnnotation(object p0, object p1, object p2) {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightEntryAndFeedDeserializer_UnexpectedNavigationLinkInRequestPropertyAnnotation, p0, p1, p2);
+        internal static string ODataJsonLightResourceDeserializer_UnexpectedNavigationLinkInRequestPropertyAnnotation(object p0, object p1, object p2) {
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightResourceDeserializer_UnexpectedNavigationLinkInRequestPropertyAnnotation, p0, p1, p2);
         }
 
         /// <summary>
         /// A string like "The resource reference navigation property '{0}' has a property annotation '{1}' with an array value. Resource reference navigation properties can only have a property annotation '{1}' with a string value."
         /// </summary>
-        internal static string ODataJsonLightEntryAndFeedDeserializer_ArrayValueForSingletonBindPropertyAnnotation(object p0, object p1) {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightEntryAndFeedDeserializer_ArrayValueForSingletonBindPropertyAnnotation, p0, p1);
+        internal static string ODataJsonLightResourceDeserializer_ArrayValueForSingletonBindPropertyAnnotation(object p0, object p1) {
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightResourceDeserializer_ArrayValueForSingletonBindPropertyAnnotation, p0, p1);
         }
 
         /// <summary>
         /// A string like "The resource set reference navigation property '{0}' has a property annotation '{1}' with a string value. Resource set reference navigation properties can only have a property annotation '{1}' with an array value."
         /// </summary>
-        internal static string ODataJsonLightEntryAndFeedDeserializer_StringValueForCollectionBindPropertyAnnotation(object p0, object p1) {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightEntryAndFeedDeserializer_StringValueForCollectionBindPropertyAnnotation, p0, p1);
+        internal static string ODataJsonLightResourceDeserializer_StringValueForCollectionBindPropertyAnnotation(object p0, object p1) {
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightResourceDeserializer_StringValueForCollectionBindPropertyAnnotation, p0, p1);
         }
 
         /// <summary>
         /// A string like "The value of '{0}' property annotation is an empty array. The '{0}' property annotation must have a non-empty array as its value."
         /// </summary>
-        internal static string ODataJsonLightEntryAndFeedDeserializer_EmptyBindArray(object p0) {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightEntryAndFeedDeserializer_EmptyBindArray, p0);
+        internal static string ODataJsonLightResourceDeserializer_EmptyBindArray(object p0) {
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightResourceDeserializer_EmptyBindArray, p0);
         }
 
         /// <summary>
         /// A string like "The navigation property '{0}' has no expanded value and no '{1}' property annotation. Navigation property in request without expanded value must have the '{1}' property annotation."
         /// </summary>
-        internal static string ODataJsonLightEntryAndFeedDeserializer_NavigationPropertyWithoutValueAndEntityReferenceLink(object p0, object p1) {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightEntryAndFeedDeserializer_NavigationPropertyWithoutValueAndEntityReferenceLink, p0, p1);
+        internal static string ODataJsonLightResourceDeserializer_NavigationPropertyWithoutValueAndEntityReferenceLink(object p0, object p1) {
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightResourceDeserializer_NavigationPropertyWithoutValueAndEntityReferenceLink, p0, p1);
         }
 
         /// <summary>
         /// A string like "The resource reference navigation property '{0}' has both the '{1}' property annotation as well as a value. Resource reference navigation properties can have either '{1}' property annotations or values, but not both."
         /// </summary>
-        internal static string ODataJsonLightEntryAndFeedDeserializer_SingletonNavigationPropertyWithBindingAndValue(object p0, object p1) {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightEntryAndFeedDeserializer_SingletonNavigationPropertyWithBindingAndValue, p0, p1);
+        internal static string ODataJsonLightResourceDeserializer_SingletonNavigationPropertyWithBindingAndValue(object p0, object p1) {
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightResourceDeserializer_SingletonNavigationPropertyWithBindingAndValue, p0, p1);
         }
 
         /// <summary>
         /// A string like "An undeclared property '{0}' which only has property annotations in the payload but no property value was found in the payload. In OData, only declared navigation properties and declared named streams can be represented as properties without values."
         /// </summary>
-        internal static string ODataJsonLightEntryAndFeedDeserializer_PropertyWithoutValueWithUnknownType(object p0) {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightEntryAndFeedDeserializer_PropertyWithoutValueWithUnknownType, p0);
+        internal static string ODataJsonLightResourceDeserializer_PropertyWithoutValueWithUnknownType(object p0) {
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightResourceDeserializer_PropertyWithoutValueWithUnknownType, p0);
         }
 
         /// <summary>
         /// A string like "Encountered the operation '{0}' which can not be resolved to an ODataAction or ODataFunction."
         /// </summary>
-        internal static string ODataJsonLightEntryAndFeedDeserializer_OperationIsNotActionOrFunction(object p0) {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightEntryAndFeedDeserializer_OperationIsNotActionOrFunction, p0);
+        internal static string ODataJsonLightResourceDeserializer_OperationIsNotActionOrFunction(object p0) {
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightResourceDeserializer_OperationIsNotActionOrFunction, p0);
         }
 
         /// <summary>
         /// A string like "Multiple '{0}' properties were found for an operation '{1}'. In OData, an operation can have at most one '{0}' property."
         /// </summary>
-        internal static string ODataJsonLightEntryAndFeedDeserializer_MultipleOptionalPropertiesInOperation(object p0, object p1) {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightEntryAndFeedDeserializer_MultipleOptionalPropertiesInOperation, p0, p1);
+        internal static string ODataJsonLightResourceDeserializer_MultipleOptionalPropertiesInOperation(object p0, object p1) {
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightResourceDeserializer_MultipleOptionalPropertiesInOperation, p0, p1);
         }
 
         /// <summary>
         /// A string like "Multiple target bindings encountered for the operation '{0}' but the 'target' property was not found in an operation value. To differentiate between multiple target bindings, each operation value must have exactly one 'target' property."
         /// </summary>
-        internal static string ODataJsonLightEntryAndFeedDeserializer_OperationMissingTargetProperty(object p0) {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightEntryAndFeedDeserializer_OperationMissingTargetProperty, p0);
+        internal static string ODataJsonLightResourceDeserializer_OperationMissingTargetProperty(object p0) {
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightResourceDeserializer_OperationMissingTargetProperty, p0);
         }
 
         /// <summary>
         /// A string like "A metadata reference property was found in a JSON Light request payload. Metadata reference properties are only supported in responses."
         /// </summary>
-        internal static string ODataJsonLightEntryAndFeedDeserializer_MetadataReferencePropertyInRequest {
+        internal static string ODataJsonLightResourceDeserializer_MetadataReferencePropertyInRequest {
             get {
-                return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightEntryAndFeedDeserializer_MetadataReferencePropertyInRequest);
+                return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightResourceDeserializer_MetadataReferencePropertyInRequest);
             }
         }
 
@@ -4064,8 +3570,8 @@ namespace Microsoft.OData {
         /// <summary>
         /// A string like "The {0} annotation is missing from the payload."
         /// </summary>
-        internal static string ODataJsonLightEntryMetadataContext_MetadataAnnotationMustBeInPayload(object p0) {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightEntryMetadataContext_MetadataAnnotationMustBeInPayload, p0);
+        internal static string ODataJsonLightResourceMetadataContext_MetadataAnnotationMustBeInPayload(object p0) {
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightResourceMetadataContext_MetadataAnnotationMustBeInPayload, p0);
         }
 
         /// <summary>
@@ -4366,22 +3872,22 @@ namespace Microsoft.OData {
         /// <summary>
         /// A string like "An ODataResource of type '{0}' is found without key properties. When writing without a user model, each resource must contain at least one property whose 'ODataProperty.SerializationInfo.PropertyKind' set to 'ODataPropertyKind.Key'. When writing with a user model, the entity type '{0}' defined in the model must define at least one key property."
         /// </summary>
-        internal static string ODataEntryMetadataContext_EntityTypeWithNoKeyProperties(object p0) {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataEntryMetadataContext_EntityTypeWithNoKeyProperties, p0);
+        internal static string ODataResourceMetadataContext_EntityTypeWithNoKeyProperties(object p0) {
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataResourceMetadataContext_EntityTypeWithNoKeyProperties, p0);
         }
 
         /// <summary>
         /// A string like "The key property '{0}' on type '{1}' has a null value. Key properties must not have null values."
         /// </summary>
-        internal static string ODataEntryMetadataContext_NullKeyValue(object p0, object p1) {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataEntryMetadataContext_NullKeyValue, p0, p1);
+        internal static string ODataResourceMetadataContext_NullKeyValue(object p0, object p1) {
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataResourceMetadataContext_NullKeyValue, p0, p1);
         }
 
         /// <summary>
         /// A string like "The property '{0}' on type '{1}' is a non-primitive value. All key and etag properties must be of primitive types."
         /// </summary>
-        internal static string ODataEntryMetadataContext_KeyOrETagValuesMustBePrimitiveValues(object p0, object p1) {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataEntryMetadataContext_KeyOrETagValuesMustBePrimitiveValues, p0, p1);
+        internal static string ODataResourceMetadataContext_KeyOrETagValuesMustBePrimitiveValues(object p0, object p1) {
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataResourceMetadataContext_KeyOrETagValuesMustBePrimitiveValues, p0, p1);
         }
 
         /// <summary>
@@ -5128,10 +4634,10 @@ namespace Microsoft.OData {
         }
 
         /// <summary>
-        /// A string like "Property '{0}' on type '{1}' is not a navigation property. Only navigation properties can be expanded."
+        /// A string like "Property '{0}' on type '{1}' is not a navigation property or complex property. Only navigation properties can be expanded."
         /// </summary>
-        internal static string ExpandItemBinder_PropertyIsNotANavigationProperty(object p0, object p1) {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ExpandItemBinder_PropertyIsNotANavigationProperty, p0, p1);
+        internal static string ExpandItemBinder_PropertyIsNotANavigationPropertyOrComplexProperty(object p0, object p1) {
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ExpandItemBinder_PropertyIsNotANavigationPropertyOrComplexProperty, p0, p1);
         }
 
         /// <summary>
@@ -5169,7 +4675,7 @@ namespace Microsoft.OData {
         }
 
         /// <summary>
-        /// A string like "Segment '{0}' is not a valid in expand path. Before navigation property, only type segment or entity or complex property can exist."
+        /// A string like "Segment '{0}' is not valid in expand path. Before navigation property, only type segment or entity or complex property can exist."
         /// </summary>
         internal static string ExpandItemBinder_InvaidSegmentInExpand(object p0) {
             return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ExpandItemBinder_InvaidSegmentInExpand, p0);
@@ -5471,11 +4977,11 @@ namespace Microsoft.OData {
         }
 
         /// <summary>
-        /// A string like "A feed may contain a next page link, a delta link or neither, but must not contain both."
+        /// A string like "A resource set may contain a next page link, a delta link or neither, but must not contain both."
         /// </summary>
-        internal static string ODataFeed_MustNotContainBothNextPageLinkAndDeltaLink {
+        internal static string ODataResourceSet_MustNotContainBothNextPageLinkAndDeltaLink {
             get {
-                return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataFeed_MustNotContainBothNextPageLinkAndDeltaLink);
+                return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataResourceSet_MustNotContainBothNextPageLinkAndDeltaLink);
             }
         }
 
@@ -5489,7 +4995,7 @@ namespace Microsoft.OData {
         }
 
         /// <summary>
-        /// A string like "Found a segment of type '{0} in an expand path, but only NavigationProperty and Type segments are allowed."
+        /// A string like "Found a segment of type '{0} in an expand path, but only NavigationProperty, Property and Type segments are allowed."
         /// </summary>
         internal static string ODataExpandPath_InvalidExpandPathSegment(object p0) {
             return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataExpandPath_InvalidExpandPathSegment, p0);

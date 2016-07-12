@@ -382,17 +382,6 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
 
             List<PayloadWriterTestDescriptor<ODataPayloadElement>> testDescriptors = new List<PayloadWriterTestDescriptor<ODataPayloadElement>>()
             {
-                // Skipping json because there is a fixup in the PayloadWriterTestDescriptor that will add the ID.
-                // Write feed without ID.
-                new PayloadWriterTestDescriptor<ODataPayloadElement>(this.Settings, (ODataPayloadElement)null)
-                {
-                    PayloadElement = new EntitySetInstance(),
-                    SkipTestConfiguration = (tc) => tc.Format == ODataFormat.Json,
-                    ExpectedResultCallback = (tc) => new PayloadWriterTestExpectedResults(this.ExpectedResultSettings)
-                    {
-                        ExpectedException2 = ODataExpectedExceptions.ODataException("ODataAtomWriter_FeedsMustHaveNonEmptyId")
-                    }
-                },
                 // Write feed with inline count on a request.
                 new PayloadWriterTestDescriptor<ODataPayloadElement>(this.Settings, (ODataPayloadElement)null)
                 {
@@ -739,7 +728,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                                 .PrimitiveProperty("Id", 1).WithTypeAnnotation(personType))
                             .Append(PayloadBuilder.Entity("TestModel.CityType")
                                 .PrimitiveProperty("Id", 2).WithTypeAnnotation(cityType)),
-                        ExpectedException = ODataExpectedExceptions.ODataException("FeedWithoutExpectedTypeValidator_IncompatibleTypes", "TestModel.CityType", "TestModel.Person"),
+                        ExpectedException = ODataExpectedExceptions.ODataException("ResourceSetWithoutExpectedTypeValidator_IncompatibleTypes", "TestModel.CityType", "TestModel.Person"),
                         Model = model
                     },
                     new

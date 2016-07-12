@@ -149,7 +149,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Writer.JsonLight
         public void ShouldThrowWhenWritingFeedResponseWithoutUserModelAndWithoutSetName()
         {
             Action action = () => this.WriteNestedItemsAndValidatePayload(entitySetFullName: null, derivedEntityTypeFullName: "NS.MyDerivedEntityType", nestedItemToWrite: new[] { new ODataResourceSet() }, expectedPayload: "{\"@odata.context\":\"http://odata.org/test/$metadata#MySet/NS.MyDerivedEntityType\",\"value\":[]}", writingResponse: true);
-            action.ShouldThrow<ODataException>().WithMessage(Strings.ODataFeedAndEntryTypeContext_MetadataOrSerializationInfoMissing);
+            action.ShouldThrow<ODataException>().WithMessage(Strings.ODataResourceTypeContext_MetadataOrSerializationInfoMissing);
         }
 
         [Fact]
@@ -174,7 +174,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Writer.JsonLight
         public void ShouldThrowWhenWritingEntryResponseWithoutUserModelAndWithoutSetName()
         {
             Action action = () => this.WriteNestedItemsAndValidatePayload(entitySetFullName: null, derivedEntityTypeFullName: "NS.MyDerivedEntityType", nestedItemToWrite: new[] { new ODataResource() }, expectedPayload: "{\"@odata.context\":\"http://odata.org/test/$metadata#MySet/NS.MyDerivedEntityType/$entity\"}", writingResponse: true);
-            action.ShouldThrow<ODataException>().WithMessage(Strings.ODataFeedAndEntryTypeContext_MetadataOrSerializationInfoMissing);
+            action.ShouldThrow<ODataException>().WithMessage(Strings.ODataResourceTypeContext_MetadataOrSerializationInfoMissing);
         }
 
         [Fact]
@@ -199,7 +199,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Writer.JsonLight
         public void ShouldThrowWhenWritingFeedResponseWithUserModelAndWithoutSet()
         {
             Action action = () => this.WriteNestedItemsAndValidatePayload(/*entitySet*/ null, this.derivedEntityType, nestedItemToWrite: new[] { new ODataResourceSet() }, expectedPayload: "{\"@odata.context\":\"http://odata.org/test/$metadata#MySet/NS.MyDerivedEntityType\",\"value\":[]}", writingResponse: true);
-            action.ShouldThrow<ODataException>().WithMessage(Strings.ODataFeedAndEntryTypeContext_MetadataOrSerializationInfoMissing);
+            action.ShouldThrow<ODataException>().WithMessage(Strings.ODataResourceTypeContext_MetadataOrSerializationInfoMissing);
         }
 
         [Fact]
@@ -218,7 +218,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Writer.JsonLight
         public void ShouldThrowWhenWritingEntryResponseWithUserModelAndWithoutSet()
         {
             Action action = () => this.WriteNestedItemsAndValidatePayload(/*entitySet*/ null, this.derivedEntityType, nestedItemToWrite: new[] { new ODataResource() }, expectedPayload: "{\"@odata.context\":\"http://odata.org/test/$metadata#MySet/NS.MyDerivedEntityType/$entity\"}", writingResponse: true);
-            action.ShouldThrow<ODataException>().WithMessage(Strings.ODataFeedAndEntryTypeContext_MetadataOrSerializationInfoMissing);
+            action.ShouldThrow<ODataException>().WithMessage(Strings.ODataResourceTypeContext_MetadataOrSerializationInfoMissing);
         }
         #endregion Context Uri tests
 

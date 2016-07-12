@@ -712,7 +712,7 @@ namespace Microsoft.OData.JsonLight
                 case WriterState.DeltaDeletedLink:
                     if (this.CurrentScope.Item == null)
                     {
-                        throw new ODataException(Strings.ODataWriterCore_InvalidTransitionFromNullEntry(this.State.ToString(), newState.ToString()));
+                        throw new ODataException(Strings.ODataWriterCore_InvalidTransitionFromNullResource(this.State.ToString(), newState.ToString()));
                     }
 
                     break;
@@ -720,7 +720,7 @@ namespace Microsoft.OData.JsonLight
                     if (newState != WriterState.DeltaResource && newState != WriterState.DeltaDeletedEntry &&
                         newState != WriterState.DeltaLink && newState != WriterState.DeltaDeletedLink)
                     {
-                        throw new ODataException(Strings.ODataWriterCore_InvalidTransitionFromFeed(this.State.ToString(), newState.ToString()));
+                        throw new ODataException(Strings.ODataWriterCore_InvalidTransitionFromResourceSet(this.State.ToString(), newState.ToString()));
                     }
 
                     break;
@@ -795,7 +795,7 @@ namespace Microsoft.OData.JsonLight
         {
             if (!IsExpandedNavigationPropertyState(this.State))
             {
-                throw new ODataException(Strings.ODataJsonLightDeltaWriter_WriteStartExpandedFeedCalledInInvalidState(this.State.ToString()));
+                throw new ODataException(Strings.ODataJsonLightDeltaWriter_WriteStartExpandedResourceSetCalledInInvalidState(this.State.ToString()));
             }
 
             this.InterceptException(() => this.CurrentExpandedNavigationPropertyScope

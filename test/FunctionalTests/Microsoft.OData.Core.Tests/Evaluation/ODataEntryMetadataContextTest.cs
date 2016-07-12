@@ -117,7 +117,7 @@ namespace Microsoft.OData.Tests.Evaluation
         {
             this.entry.TypeName = null;
             Action test = () => this.entryMetadataContextWithoutModel.ActualResourceTypeName.Should().BeNull();
-            test.ShouldThrow<ODataException>(Strings.ODataFeedAndEntryTypeContext_ODataEntryTypeNameMissing);
+            test.ShouldThrow<ODataException>(Strings.ODataResourceTypeContext_ODataResourceTypeNameMissing);
         }
         #endregion ActualEntityTypeName
 
@@ -126,14 +126,14 @@ namespace Microsoft.OData.Tests.Evaluation
         public void KeyPropertiesShouldThrowWhenEntryHasNoKeyPropertiesWithSerializationInfo()
         {
             Action test = () => this.entryMetadataContextWithoutModel.KeyProperties.Should().NotBeNull();
-            test.ShouldThrow<ODataException>(Strings.ODataEntryMetadataContext_EntityTypeWithNoKeyProperties(ActualEntityType.FullName()));
+            test.ShouldThrow<ODataException>(Strings.ODataResourceMetadataContext_EntityTypeWithNoKeyProperties(ActualEntityType.FullName()));
         }
 
         [Fact]
         public void KeyPropertiesShouldThrowWhenEntryHasNoKeyPropertiesAsSpecifiedInTheMetadata()
         {
             Action test = () => this.entryMetadataContextWithModel.KeyProperties.Should().NotBeNull();
-            test.ShouldThrow<ODataException>(Strings.ODataEntryMetadataContext_EntityTypeWithNoKeyProperties(ActualEntityType.FullName()));
+            test.ShouldThrow<ODataException>(Strings.ODataResourceMetadataContext_EntityTypeWithNoKeyProperties(ActualEntityType.FullName()));
         }
 
         [Fact]
@@ -141,7 +141,7 @@ namespace Microsoft.OData.Tests.Evaluation
         {
             this.entry.Properties = new[] {new ODataProperty {Name = "ID", Value = new ODataComplexValue(), SerializationInfo = new ODataPropertySerializationInfo {PropertyKind = ODataPropertyKind.Key}}};
             Action test = () => this.entryMetadataContextWithoutModel.KeyProperties.Should().NotBeNull();
-            test.ShouldThrow<ODataException>(Strings.ODataEntryMetadataContext_KeyOrETagValuesMustBePrimitiveValues("ID", "ns.TypeName"));
+            test.ShouldThrow<ODataException>(Strings.ODataResourceMetadataContext_KeyOrETagValuesMustBePrimitiveValues("ID", "ns.TypeName"));
         }
 
         [Fact]
@@ -149,7 +149,7 @@ namespace Microsoft.OData.Tests.Evaluation
         {
             this.entry.Properties = new[] {new ODataProperty {Name = "ID", Value = null, SerializationInfo = new ODataPropertySerializationInfo {PropertyKind = ODataPropertyKind.Key}}};
             Action test = () => this.entryMetadataContextWithoutModel.KeyProperties.Should().NotBeNull();
-            test.ShouldThrow<ODataException>(Strings.ODataEntryMetadataContext_NullKeyValue("ID", "ns.TypeName"));
+            test.ShouldThrow<ODataException>(Strings.ODataResourceMetadataContext_NullKeyValue("ID", "ns.TypeName"));
         }
 
         [Fact]
@@ -157,7 +157,7 @@ namespace Microsoft.OData.Tests.Evaluation
         {
             this.entry.Properties = new[] {new ODataProperty {Name = "ID2", Value = new ODataComplexValue()}};
             Action test = () => this.entryMetadataContextWithModel.KeyProperties.Should().NotBeNull();
-            test.ShouldThrow<ODataException>(Strings.ODataEntryMetadataContext_KeyOrETagValuesMustBePrimitiveValues("ID2", "ns.TypeName"));
+            test.ShouldThrow<ODataException>(Strings.ODataResourceMetadataContext_KeyOrETagValuesMustBePrimitiveValues("ID2", "ns.TypeName"));
         }
 
         [Fact]
@@ -165,7 +165,7 @@ namespace Microsoft.OData.Tests.Evaluation
         {
             this.entry.Properties = new[] {new ODataProperty {Name = "ID2", Value = null}};
             Action test = () => this.entryMetadataContextWithModel.KeyProperties.Should().NotBeNull();
-            test.ShouldThrow<ODataException>(Strings.ODataEntryMetadataContext_NullKeyValue("ID2", "ns.TypeName"));
+            test.ShouldThrow<ODataException>(Strings.ODataResourceMetadataContext_NullKeyValue("ID2", "ns.TypeName"));
         }
 
         [Fact]
@@ -222,7 +222,7 @@ namespace Microsoft.OData.Tests.Evaluation
         {
             this.entry.Properties = new[] { new ODataProperty { Name = "Name", Value = new ODataComplexValue(), SerializationInfo = new ODataPropertySerializationInfo { PropertyKind = ODataPropertyKind.ETag }}};
             Action test = () => this.entryMetadataContextWithoutModel.ETagProperties.Should().NotBeNull();
-            test.ShouldThrow<ODataException>(Strings.ODataEntryMetadataContext_KeyOrETagValuesMustBePrimitiveValues("Name", "ns.TypeName"));
+            test.ShouldThrow<ODataException>(Strings.ODataResourceMetadataContext_KeyOrETagValuesMustBePrimitiveValues("Name", "ns.TypeName"));
         }
 
         [Fact]
@@ -237,7 +237,7 @@ namespace Microsoft.OData.Tests.Evaluation
         {
             this.entry.Properties = new[] { new ODataProperty { Name = "Name2", Value = new ODataComplexValue() } };
             Action test = () => this.entryMetadataContextWithModel.ETagProperties.Should().NotBeNull();
-            test.ShouldThrow<ODataException>(Strings.ODataEntryMetadataContext_KeyOrETagValuesMustBePrimitiveValues("Name2", "ns.TypeName"));
+            test.ShouldThrow<ODataException>(Strings.ODataResourceMetadataContext_KeyOrETagValuesMustBePrimitiveValues("Name2", "ns.TypeName"));
         }
 
         [Fact(Skip = "we should remove this case because we need model to calc ETag")]

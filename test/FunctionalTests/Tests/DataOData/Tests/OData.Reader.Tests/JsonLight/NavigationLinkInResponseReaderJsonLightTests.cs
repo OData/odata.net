@@ -62,7 +62,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                     DebugDescription = "Invalid annotation on navigation link - just that annotation",
                     Json = "\"" + JsonLightUtils.GetPropertyAnnotationName("CityHall", JsonLightConstants.ODataTypeAnnotationName) + "\":\"TestModel.OfficeType\"",
                     ExpectedEntity = PayloadBuilder.Entity(),
-                    ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightEntryAndFeedDeserializer_UnexpectedDeferredLinkPropertyAnnotation", "CityHall", JsonLightConstants.ODataTypeAnnotationName)
+                    ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightResourceDeserializer_UnexpectedDeferredLinkPropertyAnnotation", "CityHall", JsonLightConstants.ODataTypeAnnotationName)
                 },
                 new NavigationLinkTestCase
                 {
@@ -71,7 +71,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                         "\"" + JsonLightUtils.GetPropertyAnnotationName("CityHall", JsonLightConstants.ODataNavigationLinkUrlAnnotationName) + "\":\"http://odata.org/deferredlink1\"," +
                         "\"" + JsonLightUtils.GetPropertyAnnotationName("CityHall", JsonLightConstants.ODataTypeAnnotationName) + "\":\"TestModel.OfficeType\"",
                     ExpectedEntity = PayloadBuilder.Entity(),
-                    ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightEntryAndFeedDeserializer_UnexpectedDeferredLinkPropertyAnnotation", "CityHall", JsonLightConstants.ODataTypeAnnotationName)
+                    ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightResourceDeserializer_UnexpectedDeferredLinkPropertyAnnotation", "CityHall", JsonLightConstants.ODataTypeAnnotationName)
                 },
                 new NavigationLinkTestCase
                 {
@@ -80,7 +80,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                         "\"" + JsonLightUtils.GetPropertyAnnotationName("CityHall", JsonLightConstants.ODataAssociationLinkUrlAnnotationName) + "\":\"http://odata.org/deferredlink1\"," +
                         "\"" + JsonLightUtils.GetPropertyAnnotationName("CityHall", JsonLightConstants.ODataTypeAnnotationName) + "\":\"TestModel.OfficeType\"",
                     ExpectedEntity = PayloadBuilder.Entity(),
-                    ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightEntryAndFeedDeserializer_UnexpectedDeferredLinkPropertyAnnotation", "CityHall", JsonLightConstants.ODataTypeAnnotationName)
+                    ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightResourceDeserializer_UnexpectedDeferredLinkPropertyAnnotation", "CityHall", JsonLightConstants.ODataTypeAnnotationName)
                 },
                 new NavigationLinkTestCase
                 {
@@ -245,7 +245,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                 //        "\"" + JsonLightUtils.GetPropertyAnnotationName("PoliceStation", JsonLightConstants.ODataTypeAnnotationName) + "\":\"TestModel.OfficeType\"," +
                 //        "\"PoliceStation\": null",
                 //    ExpectedEntity = PayloadBuilder.Entity(),
-                //    ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightEntryAndFeedDeserializer_UnexpectedExpandedSingletonNavigationLinkPropertyAnnotation", "PoliceStation", JsonLightConstants.ODataTypeAnnotationName)
+                //    ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightResourceDeserializer_UnexpectedExpandedSingletonNavigationLinkPropertyAnnotation", "PoliceStation", JsonLightConstants.ODataTypeAnnotationName)
                 //},
                 new NavigationLinkTestCase
                 {
@@ -368,7 +368,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                         "\"CityHall\": []," +
                         "\"" + JsonLightUtils.GetPropertyAnnotationName("CityHall", JsonLightConstants.ODataNavigationLinkUrlAnnotationName) + "\":\"http://odata.org/navlink\"",
                     ExpectedEntity = PayloadBuilder.Entity(),
-                    ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightEntryAndFeedDeserializer_UnexpectedPropertyAnnotationAfterExpandedFeed", JsonLightConstants.ODataNavigationLinkUrlAnnotationName, "CityHall")
+                    ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightResourceDeserializer_UnexpectedPropertyAnnotationAfterExpandedResourceSet", JsonLightConstants.ODataNavigationLinkUrlAnnotationName, "CityHall")
                 },
                 new NavigationLinkTestCase
                 {
@@ -378,7 +378,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                         "\"CityHall\": []," +
                         "\"" + JsonLightUtils.GetPropertyAnnotationName("CityHall", JsonLightConstants.ODataNextLinkAnnotationName) + "\":\"http://odata.org/nextlink2\"",
                     ExpectedEntity = PayloadBuilder.Entity(),
-                    ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightEntryAndFeedDeserializer_DuplicateExpandedFeedAnnotation", JsonLightConstants.ODataNextLinkAnnotationName, "CityHall")
+                    ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightResourceDeserializer_DuplicateExpandedResourceSetAnnotation", JsonLightConstants.ODataNextLinkAnnotationName, "CityHall")
                 },
                 new NavigationLinkTestCase
                 {
@@ -512,7 +512,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                     DebugDescription = "Relative next link - deferred link",
                     Json = "\"" + JsonLightUtils.GetPropertyAnnotationName("CityHall", JsonLightConstants.ODataNextLinkAnnotationName) + "\":\"yyy\"",
                     ExpectedEntity = PayloadBuilder.Entity(),
-                    ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightEntryAndFeedDeserializer_UnexpectedDeferredLinkPropertyAnnotation", "CityHall", "odata.nextLink"),
+                    ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightResourceDeserializer_UnexpectedDeferredLinkPropertyAnnotation", "CityHall", "odata.nextLink"),
                 },
             };
 
@@ -680,35 +680,35 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                     DebugDescription = "Expanded entry with array value",
                     Json = "\"PoliceStation\": []",
                     ExpectedEntity = PayloadBuilder.Entity(),
-                    ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightEntryAndFeedDeserializer_CannotReadSingletonNavigationPropertyValue", "StartArray", "PoliceStation")
+                    ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightResourceDeserializer_CannotReadSingletonNestedResource", "StartArray", "PoliceStation")
                 },
                 new NavigationLinkTestCase
                 {
                     DebugDescription = "Expanded entry with number value",
                     Json = "\"PoliceStation\": 42",
                     ExpectedEntity = PayloadBuilder.Entity(),
-                    ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightEntryAndFeedDeserializer_CannotReadNavigationPropertyValue", "PoliceStation")
+                    ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightResourceDeserializer_CannotReadNestedResource", "PoliceStation")
                 },
                 new NavigationLinkTestCase
                 {
                     DebugDescription = "Expanded feed with object value",
                     Json = "\"CityHall\": {}",
                     ExpectedEntity = PayloadBuilder.Entity(),
-                    ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightEntryAndFeedDeserializer_CannotReadCollectionNavigationPropertyValue", "StartObject", "CityHall")
+                    ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightResourceDeserializer_CannotReadCollectionNestedResource", "StartObject", "CityHall")
                 },
                 new NavigationLinkTestCase
                 {
                     DebugDescription = "Expanded feed with null value",
                     Json = "\"CityHall\": null",
                     ExpectedEntity = PayloadBuilder.Entity(),
-                    ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightEntryAndFeedDeserializer_CannotReadCollectionNavigationPropertyValue", "PrimitiveValue", "CityHall")
+                    ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightResourceDeserializer_CannotReadCollectionNestedResource", "PrimitiveValue", "CityHall")
                 },
                 new NavigationLinkTestCase
                 {
                     DebugDescription = "Expanded feed with boolean value",
                     Json = "\"CityHall\": true",
                     ExpectedEntity = PayloadBuilder.Entity(),
-                    ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightEntryAndFeedDeserializer_CannotReadNavigationPropertyValue", "CityHall")
+                    ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightResourceDeserializer_CannotReadNestedResource", "CityHall")
                 },
             };
 

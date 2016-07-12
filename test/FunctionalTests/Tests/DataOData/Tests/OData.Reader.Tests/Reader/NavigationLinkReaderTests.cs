@@ -201,7 +201,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
                     PayloadElement = PayloadBuilder.Entity("TestModel.CityType")
                         .PrimitiveProperty("Id", 1)
                         .ExpandedNavigationProperty("PoliceStation", PayloadBuilder.Entity("TestModel.CityType")),
-                    ExpectedException = ODataExpectedExceptions.ODataException("ValidationUtils_EntryTypeNotAssignableToExpectedType", "TestModel.CityType", "TestModel.OfficeType"),
+                    ExpectedException = ODataExpectedExceptions.ODataException("ValidationUtils_ResourceTypeNotAssignableToExpectedType", "TestModel.CityType", "TestModel.OfficeType"),
                 },
                 // Nested entry of depth 4 should fail because we set MaxNestingDepth = 3 below
                 new PayloadReaderTestDescriptor(this.Settings)

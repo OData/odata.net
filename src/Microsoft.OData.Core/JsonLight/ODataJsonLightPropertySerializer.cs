@@ -217,7 +217,7 @@ namespace Microsoft.OData.JsonLight
             {
                 if (!allowStreamProperty)
                 {
-                    throw new ODataException(ODataErrorStrings.ODataWriter_StreamPropertiesMustBePropertiesOfODataEntry(propertyName));
+                    throw new ODataException(ODataErrorStrings.ODataWriter_StreamPropertiesMustBePropertiesOfODataResource(propertyName));
                 }
 
                 Debug.Assert(owningType == null || owningType.IsODataEntityTypeKind(), "The metadata should not allow named stream properties to be defined on a non-entity type.");

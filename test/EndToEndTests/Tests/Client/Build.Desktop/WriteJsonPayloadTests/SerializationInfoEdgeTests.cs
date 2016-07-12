@@ -47,7 +47,7 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
                     var entry = this.CreatePersonEntryWithoutSerializationInfo();
                     var expectedError = mimeType.Contains(MimeTypes.ODataParameterNoMetadata)
                                                ? null
-                                               : "ODataFeedAndEntryTypeContext_MetadataOrSerializationInfoMissing";
+                                               : "ODataResourceTypeContext_MetadataOrSerializationInfoMissing";
                     AssertThrows<ODataException>(() => odataWriter.WriteStart(entry), expectedError);
                 }
                 
@@ -62,7 +62,7 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
                     entry.SetSerializationInfo(new ODataResourceSerializationInfo() { NavigationSourceName = "Person", NavigationSourceEntityTypeName = NameSpace + "Person" });
                     var expectedError = mimeType.Contains(MimeTypes.ODataParameterNoMetadata)
                                                ? null
-                                               : "ODataFeedAndEntryTypeContext_MetadataOrSerializationInfoMissing";
+                                               : "ODataResourceTypeContext_MetadataOrSerializationInfoMissing";
                     AssertThrows<ODataException>(() => odataWriter.WriteStart(feed), expectedError);
                 }
 
@@ -421,7 +421,7 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
                     string expectedError = null;
                     if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
                     {
-                        expectedError = "ODataFeedAndEntryTypeContext_MetadataOrSerializationInfoMissing";
+                        expectedError = "ODataResourceTypeContext_MetadataOrSerializationInfoMissing";
                     }
 
                     AssertThrows<ODataException>(

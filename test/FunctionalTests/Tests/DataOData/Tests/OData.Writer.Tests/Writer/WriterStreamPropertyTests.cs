@@ -280,8 +280,8 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                             }
                         }
                     },
-                    ExpectedExceptionWithoutModel = ODataExpectedExceptions.ODataException("ODataWriter_StreamPropertiesMustBePropertiesOfODataEntry"),
-                    ExpectedExceptionWithModel = ODataExpectedExceptions.ODataException("ODataWriter_StreamPropertiesMustBePropertiesOfODataEntry"),
+                    ExpectedExceptionWithoutModel = ODataExpectedExceptions.ODataException("ODataWriter_StreamPropertiesMustBePropertiesOfODataResource"),
+                    ExpectedExceptionWithModel = ODataExpectedExceptions.ODataException("ODataWriter_StreamPropertiesMustBePropertiesOfODataResource"),
                 },
                 new { // named stream properties are not allowed on complex collection types
                     NamedStreamProperty = new ODataProperty()
@@ -310,8 +310,8 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                             }
                         }
                     },
-                    ExpectedExceptionWithoutModel = ODataExpectedExceptions.ODataException("ODataWriter_StreamPropertiesMustBePropertiesOfODataEntry"),
-                    ExpectedExceptionWithModel = ODataExpectedExceptions.ODataException("ODataWriter_StreamPropertiesMustBePropertiesOfODataEntry"),
+                    ExpectedExceptionWithoutModel = ODataExpectedExceptions.ODataException("ODataWriter_StreamPropertiesMustBePropertiesOfODataResource"),
+                    ExpectedExceptionWithModel = ODataExpectedExceptions.ODataException("ODataWriter_StreamPropertiesMustBePropertiesOfODataResource"),
                 },
                 // TODO: Add the following case for the top-level collection writer as well.
                 new { // named stream collection properties are not allowed.

@@ -104,7 +104,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
                                 {
                                     ExpectedException = 
                                         (tc.Format == ODataFormat.Json)
-                                        ? ODataExpectedExceptions.ODataException("ODataJsonLightEntryAndFeedDeserializer_PropertyWithoutValueWithWrongType", "Name", "Edm.String")
+                                        ? ODataExpectedExceptions.ODataException("ODataJsonLightResourceDeserializer_PropertyWithoutValueWithWrongType", "Name", "Edm.String")
                                         : ODataExpectedExceptions.ODataException("ValidationUtils_NavigationPropertyExpected", "Name", "TestModel.CityType", "Structural"),
                                 },
                 },

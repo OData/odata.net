@@ -115,10 +115,10 @@ namespace Microsoft.OData.Tests.IntegrationTests.Writer.JsonLight
             };
 
             Action requestTest = () => WriteAnnotationsAndValidatePayload(deltaLinkAtWriteStart, ODataFormat.Json, string.Empty, request: true, createFeedWriter: false);
-            requestTest.ShouldThrow<ODataException>().WithMessage(Strings.ODataWriterCore_DeltaLinkNotSupportedOnExpandedFeed);
+            requestTest.ShouldThrow<ODataException>().WithMessage(Strings.ODataWriterCore_DeltaLinkNotSupportedOnExpandedResourceSet);
 
             Action responseTest = () => WriteAnnotationsAndValidatePayload(deltaLinkAtWriteStart, ODataFormat.Json, string.Empty, request: false, createFeedWriter: false);
-            responseTest.ShouldThrow<ODataException>().WithMessage(Strings.ODataWriterCore_DeltaLinkNotSupportedOnExpandedFeed);
+            responseTest.ShouldThrow<ODataException>().WithMessage(Strings.ODataWriterCore_DeltaLinkNotSupportedOnExpandedResourceSet);
         }
 
         [Fact]
@@ -139,10 +139,10 @@ namespace Microsoft.OData.Tests.IntegrationTests.Writer.JsonLight
             };
 
             Action requestTest = () => WriteAnnotationsAndValidatePayload(deltaLinkAtWriteEnd, ODataFormat.Json, string.Empty, request: true, createFeedWriter: false);
-            requestTest.ShouldThrow<ODataException>().WithMessage(Strings.ODataWriterCore_DeltaLinkNotSupportedOnExpandedFeed);
+            requestTest.ShouldThrow<ODataException>().WithMessage(Strings.ODataWriterCore_DeltaLinkNotSupportedOnExpandedResourceSet);
 
             Action responseTest = () => WriteAnnotationsAndValidatePayload(deltaLinkAtWriteEnd, ODataFormat.Json, string.Empty, request: false, createFeedWriter: false);
-            responseTest.ShouldThrow<ODataException>().WithMessage(Strings.ODataWriterCore_DeltaLinkNotSupportedOnExpandedFeed);
+            responseTest.ShouldThrow<ODataException>().WithMessage(Strings.ODataWriterCore_DeltaLinkNotSupportedOnExpandedResourceSet);
         }
 
         #endregion Writing delta link on expanded feeds

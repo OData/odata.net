@@ -266,7 +266,7 @@ namespace Microsoft.OData.Tests
         public void ShouldThrowIfEntitySetIsMissingWithoutSerializationInfoOnFeedResponse()
         {
             Action test = () => this.CreateFeedContextUri(ResponseTypeContextWithoutTypeInfo);
-            test.ShouldThrow<ODataException>().WithMessage(Strings.ODataFeedAndEntryTypeContext_MetadataOrSerializationInfoMissing);
+            test.ShouldThrow<ODataException>().WithMessage(Strings.ODataResourceTypeContext_MetadataOrSerializationInfoMissing);
         }
 
         [Fact]
@@ -313,7 +313,7 @@ namespace Microsoft.OData.Tests
         public void ShouldThrowIfEntitySetIsMissingOnEntryResponse()
         {
             Action test = () => this.CreateEntryContextUri(ResponseTypeContextWithoutTypeInfo);
-            test.ShouldThrow<ODataException>().WithMessage(Strings.ODataFeedAndEntryTypeContext_MetadataOrSerializationInfoMissing);
+            test.ShouldThrow<ODataException>().WithMessage(Strings.ODataResourceTypeContext_MetadataOrSerializationInfoMissing);
         }
 
         [Fact]
@@ -459,7 +459,7 @@ namespace Microsoft.OData.Tests
         public void BuildPropertyContextUriForStreamValueShouldFail()
         {
             Action withStream = () => this.CreatePropertyContextUri(new ODataStreamReferenceValue());
-            withStream.ShouldThrow<ODataException>().WithMessage(Strings.ODataContextUriBuilder_StreamValueMustBePropertiesOfODataEntry);
+            withStream.ShouldThrow<ODataException>().WithMessage(Strings.ODataContextUriBuilder_StreamValueMustBePropertiesOfODataResource);
         }
         #endregion value context uri
 

@@ -89,7 +89,7 @@ namespace Microsoft.OData
             // Entity types must be assignable
             if (!EdmLibraryExtensions.IsAssignableFrom(expectedEntityTypeReference.EntityDefinition(), payloadEntityTypeReference.EntityDefinition()))
             {
-                throw new ODataException(Strings.ValidationUtils_EntryTypeNotAssignableToExpectedType(payloadEntityTypeReference.FullName(), expectedEntityTypeReference.FullName()));
+                throw new ODataException(Strings.ValidationUtils_ResourceTypeNotAssignableToExpectedType(payloadEntityTypeReference.FullName(), expectedEntityTypeReference.FullName()));
             }
         }
 
@@ -256,14 +256,14 @@ namespace Microsoft.OData
                 {
                     if (resourceType.HasStream)
                     {
-                        throw new ODataException(Strings.ValidationUtils_EntryWithoutMediaResourceAndMLEType(resourceType.FullTypeName()));
+                        throw new ODataException(Strings.ValidationUtils_ResourceWithoutMediaResourceAndMLEType(resourceType.FullTypeName()));
                     }
                 }
                 else
                 {
                     if (!resourceType.HasStream)
                     {
-                        throw new ODataException(Strings.ValidationUtils_EntryWithMediaResourceAndNonMLEType(resourceType.FullTypeName()));
+                        throw new ODataException(Strings.ValidationUtils_ResourceWithMediaResourceAndNonMLEType(resourceType.FullTypeName()));
                     }
                 }
             }

@@ -89,7 +89,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                         "\"" + JsonLightUtils.GetPropertyAnnotationName("UndeclaredProperty", JsonLightConstants.ODataNavigationLinkUrlAnnotationName) + "\":\"http://odata.org/navigationlink\"",
                     IsLink = true,
                     ExpectedEntity = PayloadBuilder.Entity(),
-                    ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightEntryAndFeedDeserializer_UnexpectedDeferredLinkPropertyAnnotation", "UndeclaredProperty", JsonLightConstants.ODataTypeAnnotationName)
+                    ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightResourceDeserializer_UnexpectedDeferredLinkPropertyAnnotation", "UndeclaredProperty", JsonLightConstants.ODataTypeAnnotationName)
                 },
                 new UndeclaredPropertyTestCase
                 {
@@ -99,7 +99,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                         "\"" + JsonLightUtils.GetPropertyAnnotationName("UndeclaredProperty", JsonLightConstants.ODataAssociationLinkUrlAnnotationName) + "\":\"http://odata.org/associationlink\"",
                     IsLink = true,
                     ExpectedEntity = PayloadBuilder.Entity(),
-                    ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightEntryAndFeedDeserializer_UnexpectedDeferredLinkPropertyAnnotation", "UndeclaredProperty", JsonLightConstants.ODataMediaEditLinkAnnotationName)
+                    ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightResourceDeserializer_UnexpectedDeferredLinkPropertyAnnotation", "UndeclaredProperty", JsonLightConstants.ODataMediaEditLinkAnnotationName)
                 },
                 new UndeclaredPropertyTestCase
                 {
@@ -141,7 +141,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                     IsLink = true,
                     IsValue = true,
                     ExpectedEntity = PayloadBuilder.Entity(),
-                    ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightEntryAndFeedDeserializer_CannotReadNavigationPropertyValue", "UndeclaredProperty")
+                    ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightResourceDeserializer_CannotReadNestedResource", "UndeclaredProperty")
                 },
             };
 
@@ -233,7 +233,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                         "\"" + JsonLightUtils.GetPropertyAnnotationName("UndeclaredProperty", JsonLightConstants.ODataTypeAnnotationName) + "\":\"Edm.Stream\"",
                     IsLink = true,
                     ExpectedEntity = PayloadBuilder.Entity(),
-                    ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightEntryAndFeedDeserializer_UnexpectedStreamPropertyAnnotation", "UndeclaredProperty", JsonLightConstants.ODataTypeAnnotationName)
+                    ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightResourceDeserializer_UnexpectedStreamPropertyAnnotation", "UndeclaredProperty", JsonLightConstants.ODataTypeAnnotationName)
                 },
                 new UndeclaredPropertyTestCase
                 {
@@ -243,7 +243,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                         "\"UndeclaredProperty\":null",
                     IsLink = true,
                     ExpectedEntity = PayloadBuilder.Entity(),
-                    ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightEntryAndFeedDeserializer_StreamPropertyWithValue", "UndeclaredProperty")
+                    ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightResourceDeserializer_StreamPropertyWithValue", "UndeclaredProperty")
                 },
             };
 
@@ -342,7 +342,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                     Json =
                         "\"" + JsonLightUtils.GetPropertyAnnotationName("UndeclaredProperty", "custom.annotation") + "\":\"value\"",
                     ExpectedEntity = PayloadBuilder.Entity(),
-                    ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightEntryAndFeedDeserializer_PropertyWithoutValueWithUnknownType", "UndeclaredProperty")
+                    ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightResourceDeserializer_PropertyWithoutValueWithUnknownType", "UndeclaredProperty")
                 },
                 new UndeclaredPropertyTestCase
                 {
@@ -350,7 +350,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                     Json =
                         "\"" + JsonLightUtils.GetPropertyAnnotationName("UndeclaredProperty", JsonLightConstants.ODataBindAnnotationName) + "\":\"http://odata.org/reference\"",
                     ExpectedEntity = PayloadBuilder.Entity(),
-                    ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightEntryAndFeedDeserializer_PropertyWithoutValueWithUnknownType", "UndeclaredProperty")
+                    ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightResourceDeserializer_PropertyWithoutValueWithUnknownType", "UndeclaredProperty")
                 },
             };
 

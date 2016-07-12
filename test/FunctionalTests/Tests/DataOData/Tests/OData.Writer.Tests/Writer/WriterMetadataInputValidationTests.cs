@@ -697,10 +697,10 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 NonMLEDefaultStreamValues.Select(mr => this.CreateDefaultStreamMetadataTestDescriptor(model, cityType.FullName(), mr))
                 // non-MLE payload and MLE type
                 .Concat(NonMLEDefaultStreamValues.Select(mr => this.CreateDefaultStreamMetadataTestDescriptor(model, cityWithMapType.FullName(), mr,
-                    ODataExpectedExceptions.ODataException("ValidationUtils_EntryWithoutMediaResourceAndMLEType", "TestModel.CityWithMapType"))))
+                    ODataExpectedExceptions.ODataException("ValidationUtils_ResourceWithoutMediaResourceAndMLEType", "TestModel.CityWithMapType"))))
                 // MLE payload and non-MLE type
                 .Concat(MLEDefaultStreamValues.Select(mr => this.CreateDefaultStreamMetadataTestDescriptor(model, cityType.FullName(), mr,
-                    ODataExpectedExceptions.ODataException("ValidationUtils_EntryWithMediaResourceAndNonMLEType", "TestModel.CityType"))))
+                    ODataExpectedExceptions.ODataException("ValidationUtils_ResourceWithMediaResourceAndNonMLEType", "TestModel.CityType"))))
                 // MLE payload and MLE type
                 .Concat(MLEDefaultStreamValues.Select(mr => this.CreateDefaultStreamMetadataTestDescriptor(model, cityWithMapType.FullName(), mr)));
 
@@ -737,10 +737,10 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 NonMLEDefaultStreamValues.Select(mr => this.CreateDefaultStreamMetadataTestDescriptor(model, cityType.FullName(), mr))
                 // non-MLE payload and MLE type
                 .Concat(NonMLEDefaultStreamValues.Select(mr => this.CreateDefaultStreamMetadataTestDescriptor(model, cityWithMapType.FullName(), mr,
-                    ODataExpectedExceptions.ODataException("ValidationUtils_EntryWithoutMediaResourceAndMLEType", "TestModel.CityWithMapType"))))
+                    ODataExpectedExceptions.ODataException("ValidationUtils_ResourceWithoutMediaResourceAndMLEType", "TestModel.CityWithMapType"))))
                 // MLE payload and non-MLE type
                 .Concat(MLEDefaultStreamValues.Select(mr => this.CreateDefaultStreamMetadataTestDescriptor(model, cityType.FullName(), mr,
-                    ODataExpectedExceptions.ODataException("ValidationUtils_EntryWithMediaResourceAndNonMLEType", "TestModel.CityType"))))
+                    ODataExpectedExceptions.ODataException("ValidationUtils_ResourceWithMediaResourceAndNonMLEType", "TestModel.CityType"))))
                 // MLE payload and MLE type
                 .Concat(MLEDefaultStreamValues.Select(mr => this.CreateDefaultStreamMetadataTestDescriptor(model, cityWithMapType.FullName(), mr)));
 

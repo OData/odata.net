@@ -155,7 +155,7 @@ namespace Microsoft.OData
                 if (expectedType != null && !expectedType.IsNullable)
                 {
                     throw new ODataException(
-                        ODataErrorStrings.ODataAtomPropertyAndValueSerializer_NullValueNotAllowedForInstanceAnnotation(
+                        ODataErrorStrings.JsonLightInstanceAnnotationWriter_NullValueNotAllowedForInstanceAnnotation(
                             instanceAnnotation.Name, expectedType.FullName()));
                 }
 

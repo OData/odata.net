@@ -228,7 +228,7 @@ namespace Microsoft.OData.JsonLight
                 return resource.TypeName;
             }
 
-            throw new ODataException(ODataErrorStrings.General_InternalError(InternalErrorCodes.ODataJsonLightReader_ReadEntryStart));
+            throw new ODataException(ODataErrorStrings.General_InternalError(InternalErrorCodes.ODataJsonLightReader_ReadResourceStart));
         }
     }
 }

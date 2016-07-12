@@ -514,10 +514,10 @@ namespace Microsoft.OData.Tests.IntegrationTests.Writer
             };
 
             Action testResponse = () => this.WriteAnnotationsAndValidatePayload(action, EntitySet, format, null, request: false, createFeedWriter: false);
-            testResponse.ShouldThrow<ODataException>().WithMessage(Strings.ODataJsonLightWriter_InstanceAnnotationNotSupportedOnExpandedFeed);
+            testResponse.ShouldThrow<ODataException>().WithMessage(Strings.ODataJsonLightWriter_InstanceAnnotationNotSupportedOnExpandedResourceSet);
 
             Action testRequest = () => this.WriteAnnotationsAndValidatePayload(action, EntitySet, format, null, request: true, createFeedWriter: false);
-            testRequest.ShouldThrow<ODataException>().WithMessage(Strings.ODataJsonLightWriter_InstanceAnnotationNotSupportedOnExpandedFeed);
+            testRequest.ShouldThrow<ODataException>().WithMessage(Strings.ODataJsonLightWriter_InstanceAnnotationNotSupportedOnExpandedResourceSet);
         }
 
         [Fact]
@@ -544,16 +544,16 @@ namespace Microsoft.OData.Tests.IntegrationTests.Writer
             };
 
             Action testResponse = () => this.WriteAnnotationsAndValidatePayload(action, EntitySet, format, null, request: false, createFeedWriter: false);
-            testResponse.ShouldThrow<ODataException>().WithMessage(Strings.ODataJsonLightWriter_InstanceAnnotationNotSupportedOnExpandedFeed);
+            testResponse.ShouldThrow<ODataException>().WithMessage(Strings.ODataJsonLightWriter_InstanceAnnotationNotSupportedOnExpandedResourceSet);
 
             Action testResponseOfSingleton = () => this.WriteAnnotationsAndValidatePayload(action, Singleton, format, null, request: false, createFeedWriter: false);
-            testResponseOfSingleton.ShouldThrow<ODataException>().WithMessage(Strings.ODataJsonLightWriter_InstanceAnnotationNotSupportedOnExpandedFeed);
+            testResponseOfSingleton.ShouldThrow<ODataException>().WithMessage(Strings.ODataJsonLightWriter_InstanceAnnotationNotSupportedOnExpandedResourceSet);
 
             Action testRequest = () => this.WriteAnnotationsAndValidatePayload(action, EntitySet, format, null, request: true, createFeedWriter: false);
-            testRequest.ShouldThrow<ODataException>().WithMessage(Strings.ODataJsonLightWriter_InstanceAnnotationNotSupportedOnExpandedFeed);
+            testRequest.ShouldThrow<ODataException>().WithMessage(Strings.ODataJsonLightWriter_InstanceAnnotationNotSupportedOnExpandedResourceSet);
 
             Action testRequestOfSingleton = () => this.WriteAnnotationsAndValidatePayload(action, Singleton, format, null, request: true, createFeedWriter: false);
-            testRequestOfSingleton.ShouldThrow<ODataException>().WithMessage(Strings.ODataJsonLightWriter_InstanceAnnotationNotSupportedOnExpandedFeed);
+            testRequestOfSingleton.ShouldThrow<ODataException>().WithMessage(Strings.ODataJsonLightWriter_InstanceAnnotationNotSupportedOnExpandedResourceSet);
         }
 
         #endregion Writing instance annotations on expanded feeds

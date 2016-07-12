@@ -60,15 +60,15 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
             ODataNestedResourceInfo policeStationLinkIsCollectionTrue = ObjectModelUtils.CreateDefaultCollectionLink("PoliceStation", /*isCollection*/ true);
             ODataNestedResourceInfo policeStationLinkIsCollectionFalse = ObjectModelUtils.CreateDefaultCollectionLink("PoliceStation", /*isCollection*/ false);
 
-            ExpectedException expandedEntryLinkWithFeedContentError = ODataExpectedExceptions.ODataException("WriterValidationUtils_ExpandedLinkIsCollectionFalseWithFeedContent", "http://odata.org/link");
-            ExpectedException expandedFeedLinkWithEntryContentError = ODataExpectedExceptions.ODataException("WriterValidationUtils_ExpandedLinkIsCollectionTrueWithEntryContent", "http://odata.org/link");
-            ExpectedException expandedFeedLinkWithEntryMetadataError = ODataExpectedExceptions.ODataException("WriterValidationUtils_ExpandedLinkIsCollectionTrueWithEntryMetadata", "http://odata.org/link");
+            ExpectedException expandedEntryLinkWithFeedContentError = ODataExpectedExceptions.ODataException("WriterValidationUtils_ExpandedLinkIsCollectionFalseWithResourceSetContent", "http://odata.org/link");
+            ExpectedException expandedFeedLinkWithEntryContentError = ODataExpectedExceptions.ODataException("WriterValidationUtils_ExpandedLinkIsCollectionTrueWithResourceContent", "http://odata.org/link");
+            ExpectedException expandedFeedLinkWithEntryMetadataError = ODataExpectedExceptions.ODataException("WriterValidationUtils_ExpandedLinkIsCollectionTrueWithResourceMetadata", "http://odata.org/link");
 
-            ExpectedException expandedEntryLinkWithFeedMetadataErrorResponse = ODataExpectedExceptions.ODataException("WriterValidationUtils_ExpandedLinkIsCollectionFalseWithFeedMetadata", "http://odata.org/link");
-            ExpectedException expandedFeedLinkPayloadWithEntryMetadataErrorRequest = ODataExpectedExceptions.ODataException("WriterValidationUtils_ExpandedLinkWithFeedPayloadAndEntryMetadata", "http://odata.org/link");
-            ExpectedException expandedFeedLinkPayloadWithEntryMetadataErrorResponse = ODataExpectedExceptions.ODataException("WriterValidationUtils_ExpandedLinkIsCollectionTrueWithEntryMetadata", "http://odata.org/link");
-            ExpectedException expandedEntryLinkPayloadWithFeedMetadataErrorResponse = ODataExpectedExceptions.ODataException("WriterValidationUtils_ExpandedLinkIsCollectionFalseWithFeedMetadata", "http://odata.org/link");
-            ExpectedException expandedEntryLinkPayloadWithFeedMetadataError = ODataExpectedExceptions.ODataException("WriterValidationUtils_ExpandedLinkWithEntryPayloadAndFeedMetadata", "http://odata.org/link");
+            ExpectedException expandedEntryLinkWithFeedMetadataErrorResponse = ODataExpectedExceptions.ODataException("WriterValidationUtils_ExpandedLinkIsCollectionFalseWithResourceSetMetadata", "http://odata.org/link");
+            ExpectedException expandedFeedLinkPayloadWithEntryMetadataErrorRequest = ODataExpectedExceptions.ODataException("WriterValidationUtils_ExpandedLinkWithResourceSetPayloadAndResourceMetadata", "http://odata.org/link");
+            ExpectedException expandedFeedLinkPayloadWithEntryMetadataErrorResponse = ODataExpectedExceptions.ODataException("WriterValidationUtils_ExpandedLinkIsCollectionTrueWithResourceMetadata", "http://odata.org/link");
+            ExpectedException expandedEntryLinkPayloadWithFeedMetadataErrorResponse = ODataExpectedExceptions.ODataException("WriterValidationUtils_ExpandedLinkIsCollectionFalseWithResourceSetMetadata", "http://odata.org/link");
+            ExpectedException expandedEntryLinkPayloadWithFeedMetadataError = ODataExpectedExceptions.ODataException("WriterValidationUtils_ExpandedLinkWithResourcePayloadAndResourceSetMetadata", "http://odata.org/link");
             ExpectedException multipleItemsInExpandedLinkError = ODataExpectedExceptions.ODataException("ODataWriterCore_MultipleItemsInNavigationLinkContent", "http://odata.org/link");
             ExpectedException entityReferenceLinkInResponseError = ODataExpectedExceptions.ODataException("ODataWriterCore_EntityReferenceLinkInResponse");
 
@@ -96,7 +96,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                         // Expanded link of singleton type without IsCollection value and an entry of a non-matching entity type;
                         Items = new ODataItem[] { cityEntry, policeStationLinkIsCollectionNull, cityEntry },
                         ExpectedError = tc => !tc.IsRequest
-                            ? ODataExpectedExceptions.ODataException("WriterValidationUtils_EntryTypeInExpandedLinkNotCompatibleWithNavigationPropertyType", "TestModel.CityType", "TestModel.OfficeType")
+                            ? ODataExpectedExceptions.ODataException("WriterValidationUtils_NestedResourceTypeNotCompatibleWithParentPropertyType", "TestModel.CityType", "TestModel.OfficeType")
                             : ODataExpectedExceptions.ODataException("WriterValidationUtils_NavigationLinkMustSpecifyIsCollection", "PoliceStation"),
                         Model = model,
                     },
@@ -119,7 +119,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                         // Expanded link of collection type without IsCollection value and an entry of a non-matching entity type;
                         Items = new ODataItem[] { cityEntry, cityHallLinkIsCollectionNull, defaultFeed, cityEntry },
                         ExpectedError = tc => tc.Format == ODataFormat.Json && !tc.IsRequest
-                            ? ODataExpectedExceptions.ODataException("WriterValidationUtils_EntryTypeInExpandedLinkNotCompatibleWithNavigationPropertyType", "TestModel.CityType", "TestModel.OfficeType")
+                            ? ODataExpectedExceptions.ODataException("WriterValidationUtils_NestedResourceTypeNotCompatibleWithParentPropertyType", "TestModel.CityType", "TestModel.OfficeType")
                             : ODataExpectedExceptions.ODataException("WriterValidationUtils_NavigationLinkMustSpecifyIsCollection", "CityHall"),
                         Model = model,
                     },

@@ -55,7 +55,7 @@ namespace Microsoft.OData
             IEdmType commonBaseType = EdmLibraryExtensions.GetCommonBaseType(this.itemType, resourceType);
             if (commonBaseType == null)
             {
-                throw new ODataException(Strings.FeedWithoutExpectedTypeValidator_IncompatibleTypes(resourceType.FullTypeName(), this.itemType.FullTypeName()));
+                throw new ODataException(Strings.ResourceSetWithoutExpectedTypeValidator_IncompatibleTypes(resourceType.FullTypeName(), this.itemType.FullTypeName()));
             }
 
             this.itemType = (IEdmStructuredType)commonBaseType;

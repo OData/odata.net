@@ -554,7 +554,7 @@ namespace Microsoft.OData.JsonLight
             JsonLightNestedResourceInfoScope navigationLinkScope = (JsonLightNestedResourceInfoScope)this.CurrentScope;
             if (navigationLinkScope.ResourceSetWritten)
             {
-                throw new ODataException(Strings.ODataJsonLightWriter_EntityReferenceLinkAfterFeedInRequest);
+                throw new ODataException(Strings.ODataJsonLightWriter_EntityReferenceLinkAfterResourceSetInRequest);
             }
 
             if (!navigationLinkScope.EntityReferenceLinkWritten)
@@ -746,7 +746,7 @@ namespace Microsoft.OData.JsonLight
 
             if (resourceSet.InstanceAnnotations.Count > 0)
             {
-                throw new ODataException(Strings.ODataJsonLightWriter_InstanceAnnotationNotSupportedOnExpandedFeed);
+                throw new ODataException(Strings.ODataJsonLightWriter_InstanceAnnotationNotSupportedOnExpandedResourceSet);
             }
         }
 

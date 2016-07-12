@@ -709,7 +709,7 @@ namespace Microsoft.OData
             {
                 if (expectedTypeKind == EdmTypeKind.Entity)
                 {
-                    throw new ODataException(Strings.ReaderValidationUtils_EntryWithoutType);
+                    throw new ODataException(Strings.ReaderValidationUtils_ResourceWithoutType);
                 }
 
                 return null; // supports undeclared property

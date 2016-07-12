@@ -349,7 +349,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
                         {
                             ExpectedException = (tc.Format == ODataFormat.Json && testCase is NavigationPropertyInstance)
                                 ? tc.IsRequest
-                                    ? ODataExpectedExceptions.ODataException("ODataJsonLightEntryAndFeedDeserializer_PropertyWithoutValueWithUnknownType", propertyName)
+                                    ? ODataExpectedExceptions.ODataException("ODataJsonLightResourceDeserializer_PropertyWithoutValueWithUnknownType", propertyName)
                                     : ODataExpectedExceptions.ODataException("ValidationUtils_PropertyDoesNotExistOnType", propertyName, "TestModel.ClosedEntityType")
                                 : ODataExpectedExceptions.ODataException("ValidationUtils_PropertyDoesNotExistOnType", propertyName, "TestModel.ClosedEntityType"),
                         },
@@ -621,7 +621,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
                                 {
                                     ExpectedException = (tc.Format == ODataFormat.Json)
                                         ? tc.IsRequest
-                                            ? ODataExpectedExceptions.ODataException("ODataJsonLightEntryAndFeedDeserializer_SingletonNavigationPropertyWithBindingAndValue", "PoliceStation", JsonLightConstants.ODataBindAnnotationName)
+                                            ? ODataExpectedExceptions.ODataException("ODataJsonLightResourceDeserializer_SingletonNavigationPropertyWithBindingAndValue", "PoliceStation", JsonLightConstants.ODataBindAnnotationName)
                                             : null
                                         : tc.IsRequest
                                             ? ODataExpectedExceptions.ODataException("MultipleLinksForSingleton", "PoliceStation")
@@ -643,7 +643,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
                                 {
                                     ExpectedException = (tc.Format == ODataFormat.Json)
                                         ? tc.IsRequest
-                                            ? ODataExpectedExceptions.ODataException("ODataJsonLightEntryAndFeedDeserializer_SingletonNavigationPropertyWithBindingAndValue", "PoliceStation", JsonLightConstants.ODataBindAnnotationName)
+                                            ? ODataExpectedExceptions.ODataException("ODataJsonLightResourceDeserializer_SingletonNavigationPropertyWithBindingAndValue", "PoliceStation", JsonLightConstants.ODataBindAnnotationName)
                                             : null
                                         : tc.IsRequest
                                             ? ODataExpectedExceptions.ODataException("MultipleLinksForSingleton", "PoliceStation")
@@ -710,7 +710,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
                         (tc) => new PayloadReaderTestExpectedResult(this.Settings.ExpectedResultSettings)
                                 {
                                     ExpectedException = (tc.Format == ODataFormat.Json)
-                                            ? ODataExpectedExceptions.ODataException("ODataJsonLightEntryAndFeedDeserializer_StringValueForCollectionBindPropertyAnnotation", "CityHall", JsonLightConstants.ODataBindAnnotationName)
+                                            ? ODataExpectedExceptions.ODataException("ODataJsonLightResourceDeserializer_StringValueForCollectionBindPropertyAnnotation", "CityHall", JsonLightConstants.ODataBindAnnotationName)
                                             : null,
                                 },
                 },
@@ -730,7 +730,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
                                 {
                                     ExpectedException = (tc.Format == ODataFormat.Json)
                                         ? tc.IsRequest
-                                            ? ODataExpectedExceptions.ODataException("ODataJsonLightEntryAndFeedDeserializer_StringValueForCollectionBindPropertyAnnotation", "CityHall", JsonLightConstants.ODataBindAnnotationName)
+                                            ? ODataExpectedExceptions.ODataException("ODataJsonLightResourceDeserializer_StringValueForCollectionBindPropertyAnnotation", "CityHall", JsonLightConstants.ODataBindAnnotationName)
                                             : null
                                         : tc.IsRequest
                                             ? null
@@ -1124,7 +1124,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
                     PayloadElement = PayloadBuilder.Entity(cityWithMapType.FullName()).PrimitiveProperty("Id", 1).AsMediaLinkEntry().StreamContentType("mime/type")
                         .ExpectedEntityType(cityWithMapType, citiesEntitySet),
                     PayloadEdmModel = model,
-                    ExpectedException = ODataExpectedExceptions.ODataException("ODataAtomEntryAndFeedDeserializer_ContentWithWrongType", "mime/type"),
+                    ExpectedException = ODataExpectedExceptions.ODataException("ODataAtomResourceDeserializer_ContentWithWrongType", "mime/type"),
                     SkipTestConfiguration = (tc) => true
                 },
                 // MR read link and content type

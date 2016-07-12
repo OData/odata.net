@@ -246,7 +246,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.JsonLight
             entryReader.State.Should().Be(ODataReaderState.ResourceSetStart);
             entryReader.Item.As<ODataResourceSet>().Count.Should().Be(0);
             Action read = () => entryReader.Read();
-            read.ShouldThrow<ODataException>().WithMessage(ErrorStrings.ODataJsonLightEntryAndFeedDeserializer_DuplicateExpandedFeedAnnotation("odata.count", "NavProp"));
+            read.ShouldThrow<ODataException>().WithMessage(ErrorStrings.ODataJsonLightResourceDeserializer_DuplicateExpandedResourceSetAnnotation("odata.count", "NavProp"));
         }
 
         [Fact]
@@ -355,7 +355,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.JsonLight
             entryReader.State.Should().Be(ODataReaderState.ResourceSetStart);
             entryReader.Item.As<ODataResourceSet>().Count.Should().Be(2);
             Action read = () => entryReader.Read();
-            read.ShouldThrow<ODataException>().WithMessage(ErrorStrings.ODataJsonLightEntryAndFeedDeserializer_DuplicateExpandedFeedAnnotation("odata.count", "NavProp"));
+            read.ShouldThrow<ODataException>().WithMessage(ErrorStrings.ODataJsonLightResourceDeserializer_DuplicateExpandedResourceSetAnnotation("odata.count", "NavProp"));
         }
 
         [Fact]
@@ -410,7 +410,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.JsonLight
 
             var entryReader = GetEntryReader(entryText, isResponse: false);
             Action test = () => entryReader.Read();
-            test.ShouldThrow<ODataException>().WithMessage(ErrorStrings.ODataJsonLightEntryAndFeedDeserializer_UnexpectedNavigationLinkInRequestPropertyAnnotation("NavProp", "odata.nextLink", "odata.bind"));
+            test.ShouldThrow<ODataException>().WithMessage(ErrorStrings.ODataJsonLightResourceDeserializer_UnexpectedNavigationLinkInRequestPropertyAnnotation("NavProp", "odata.nextLink", "odata.bind"));
         }
 
         [Fact]
@@ -446,7 +446,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.JsonLight
             entryReader.State.Should().Be(ODataReaderState.ResourceSetStart);
             entryReader.Item.As<ODataResourceSet>().NextPageLink.Should().Be(new Uri("http://nextLink"));
             Action read = () => entryReader.Read();
-            read.ShouldThrow<ODataException>().WithMessage(ErrorStrings.ODataJsonLightEntryAndFeedDeserializer_DuplicateExpandedFeedAnnotation("odata.nextLink", "NavProp"));
+            read.ShouldThrow<ODataException>().WithMessage(ErrorStrings.ODataJsonLightResourceDeserializer_DuplicateExpandedResourceSetAnnotation("odata.nextLink", "NavProp"));
         }
 
         [Fact]
@@ -506,7 +506,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.JsonLight
                 entryReader.State.Should().Be(ODataReaderState.ResourceSetStart);
                 entryReader.Item.As<ODataResourceSet>().NextPageLink.Should().Be(null);
                 Action test = () => entryReader.Read();
-                string expectedErrorMsg = isResponse ? ErrorStrings.ODataJsonLightEntryAndFeedDeserializer_UnexpectedPropertyAnnotationAfterExpandedFeed("odata.deltaLink", "NavProp") : ErrorStrings.ODataJsonLightPropertyAndValueDeserializer_UnexpectedPropertyAnnotation("NavProp", "odata.deltaLink");
+                string expectedErrorMsg = isResponse ? ErrorStrings.ODataJsonLightResourceDeserializer_UnexpectedPropertyAnnotationAfterExpandedResourceSet("odata.deltaLink", "NavProp") : ErrorStrings.ODataJsonLightPropertyAndValueDeserializer_UnexpectedPropertyAnnotation("NavProp", "odata.deltaLink");
                 test.ShouldThrow<ODataException>().WithMessage(expectedErrorMsg);
             }
         }

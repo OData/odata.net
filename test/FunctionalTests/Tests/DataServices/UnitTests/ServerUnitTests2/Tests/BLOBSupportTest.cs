@@ -5294,11 +5294,11 @@ namespace AstoriaUnitTests.Tests
                             string expectedMsg = String.Empty;
                             if (OpenWebDataServiceHelper.EnableBlobServer && clientType == typeof(MyCustomer))
                             {
-                                expectedMsg = String.Format(ODataLibResourceUtil.GetString("ValidationUtils_EntryWithoutMediaResourceAndMLEType"), CustomRowBasedContext.CustomerFullName);
+                                expectedMsg = String.Format(ODataLibResourceUtil.GetString("ValidationUtils_ResourceWithoutMediaResourceAndMLEType"), CustomRowBasedContext.CustomerFullName);
                             }
                             else if (!OpenWebDataServiceHelper.EnableBlobServer && clientType == typeof(MyMLECustomer))
                             {
-                                expectedMsg = String.Format(ODataLibResourceUtil.GetString("ValidationUtils_EntryWithMediaResourceAndNonMLEType"), CustomRowBasedContext.CustomerFullName);
+                                expectedMsg = String.Format(ODataLibResourceUtil.GetString("ValidationUtils_ResourceWithMediaResourceAndNonMLEType"), CustomRowBasedContext.CustomerFullName);
                             }
                             else
                             {

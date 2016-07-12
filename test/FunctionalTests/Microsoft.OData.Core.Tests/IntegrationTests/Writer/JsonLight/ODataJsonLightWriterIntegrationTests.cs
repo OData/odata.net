@@ -43,7 +43,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Writer.JsonLight
             IEdmEntityType entityType = GetEntityType();
             IEdmEntitySet entitySet = GetEntitySet(entityType);
             Action writeEmptyEntry = () => WriteJsonLightEntry(false, new Uri("http://temp.org/"), false, new ODataResource(), entitySet, entityType);
-            writeEmptyEntry.ShouldThrow<ODataException>().WithMessage(ErrorStrings.ODataFeedAndEntryTypeContext_MetadataOrSerializationInfoMissing);
+            writeEmptyEntry.ShouldThrow<ODataException>().WithMessage(ErrorStrings.ODataResourceTypeContext_MetadataOrSerializationInfoMissing);
         }
 
         [Fact]

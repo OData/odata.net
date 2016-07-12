@@ -53,7 +53,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                     Json = "\"#operationMetadata\":{}",
                     SkipForRequest = false,
                     SkipForResponse = true,
-                    ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightEntryAndFeedDeserializer_MetadataReferencePropertyInRequest"),
+                    ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightResourceDeserializer_MetadataReferencePropertyInRequest"),
                 },
                 new
                 {
@@ -77,7 +77,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                     Json = "\"#TestModel.PrimitiveResultOperation\":{\"title\":\"PrimitiveResultOperation\",\"title\":\"PrimitiveResultOperation\"}",
                     SkipForRequest = true,
                     SkipForResponse = false,
-                    ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightEntryAndFeedDeserializer_MultipleOptionalPropertiesInOperation", "title", "#TestModel.PrimitiveResultOperation"),
+                    ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightResourceDeserializer_MultipleOptionalPropertiesInOperation", "title", "#TestModel.PrimitiveResultOperation"),
                 },
                 new
                 {
@@ -85,7 +85,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                     Json = "\"#TestModel.PrimitiveResultOperation\":{\"target\":\"http://www.example.com/foo\",\"target\":\"http://www.example.com/foo\"}",
                     SkipForRequest = true,
                     SkipForResponse = false,
-                    ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightEntryAndFeedDeserializer_MultipleOptionalPropertiesInOperation", "target", "#TestModel.PrimitiveResultOperation"),
+                    ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightResourceDeserializer_MultipleOptionalPropertiesInOperation", "target", "#TestModel.PrimitiveResultOperation"),
                 },
                 new
                 {
@@ -93,7 +93,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                     Json = "\"#TestModel.PrimitiveResultOperation\":[{},{}]",
                     SkipForRequest = true,
                     SkipForResponse = false,
-                    ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightEntryAndFeedDeserializer_OperationMissingTargetProperty", "#TestModel.PrimitiveResultOperation"),
+                    ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightResourceDeserializer_OperationMissingTargetProperty", "#TestModel.PrimitiveResultOperation"),
                 },
             };
 

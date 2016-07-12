@@ -1001,7 +1001,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Evaluation
         }
 
         [Fact]
-        public void WritingInFullMetadataModeForNavigationPropertyWithoutBindingShouldThrowODataFeedAndEntryTypeContext_MetadataOrSerializationInfoMissingException()
+        public void WritingInFullMetadataModeForNavigationPropertyWithoutBindingShouldThrowODataResourceTypeContext_MetadataOrSerializationInfoMissingException()
         {
             ODataItem[] itemsToWrite = new ODataItem[]
             {
@@ -1013,7 +1013,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Evaluation
             const string expandClause = "ExpandedNavLink($expand=UnknownCollectionNavProp)";
 
             Action test = () => this.GetWriterOutputForContentTypeAndKnobValue("application/json;odata.metadata=full", true, itemsToWrite, Model, EntitySet, EntityType, selectClause, expandClause);
-            test.ShouldThrow<ODataException>().WithMessage(Strings.ODataFeedAndEntryTypeContext_MetadataOrSerializationInfoMissing);
+            test.ShouldThrow<ODataException>().WithMessage(Strings.ODataResourceTypeContext_MetadataOrSerializationInfoMissing);
         }
 
         [Fact]

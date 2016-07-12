@@ -57,7 +57,7 @@ namespace Microsoft.OData
             {
                 if (this.DeltaLink != null && value != null)
                 {
-                    throw new ODataException(ODataErrorStrings.ODataFeed_MustNotContainBothNextPageLinkAndDeltaLink);
+                    throw new ODataException(ODataErrorStrings.ODataResourceSet_MustNotContainBothNextPageLinkAndDeltaLink);
                 }
 
                 this.nextPageLink = value;
@@ -78,7 +78,7 @@ namespace Microsoft.OData
             {
                 if (this.NextPageLink != null && value != null)
                 {
-                    throw new ODataException(ODataErrorStrings.ODataFeed_MustNotContainBothNextPageLinkAndDeltaLink);
+                    throw new ODataException(ODataErrorStrings.ODataResourceSet_MustNotContainBothNextPageLinkAndDeltaLink);
                 }
 
                 this.deltaLink = value;

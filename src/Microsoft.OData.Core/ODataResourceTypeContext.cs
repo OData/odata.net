@@ -167,7 +167,7 @@ namespace Microsoft.OData
         {
             if (this.throwIfMissingTypeInfo && value == null)
             {
-                throw new ODataException(Strings.ODataFeedAndEntryTypeContext_MetadataOrSerializationInfoMissing);
+                throw new ODataException(Strings.ODataResourceTypeContext_MetadataOrSerializationInfoMissing);
             }
 
             return value;
