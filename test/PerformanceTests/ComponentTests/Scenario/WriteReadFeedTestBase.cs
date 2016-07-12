@@ -19,10 +19,10 @@ namespace Microsoft.OData.Performance
         /// <param name="writeStream"></param>
         /// <param name="edmModel"></param>
         /// <param name="numberOfEntries"></param>
-        /// <param name="entry"></param>
+        /// <param name="innerWrite"></param>
         /// <param name="entitySet"></param>
         /// <returns>The payload size</returns>
-        protected Int64 WriteFeed(Stream writeStream, IEdmModel edmModel, long numberOfEntries, ODataResource entry, IEdmEntitySetBase entitySet)
+        protected Int64 WriteFeed(Stream writeStream, IEdmModel edmModel, long numberOfEntries, Action<ODataWriter> innerWrite, IEdmEntitySetBase entitySet)
         {
             using (var messageWriter = ODataMessageHelper.CreateMessageWriter(writeStream, edmModel))
             {
@@ -30,8 +30,7 @@ namespace Microsoft.OData.Performance
                 writer.WriteStart(new ODataResourceSet { Id = new Uri("http://www.odata.org/Perf.svc") });
                 for (long i = 0; i < numberOfEntries; ++i)
                 {
-                    writer.WriteStart(entry);
-                    writer.WriteEnd();
+                    innerWrite(writer);
                 }
                 writer.WriteEnd();
                 writer.Flush();
