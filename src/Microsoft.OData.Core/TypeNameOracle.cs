@@ -164,10 +164,9 @@ namespace Microsoft.OData
         /// <returns>True if there is type name annotation.</returns>
         internal static bool TryGetTypeNameFromAnnotation(ODataValue value, out string propertyName)
         {
-            SerializationTypeNameAnnotation typeNameAnnotation = value.GetAnnotation<SerializationTypeNameAnnotation>();
-            if (typeNameAnnotation != null)
+            if (value.TypeAnnotation != null)
             {
-                propertyName = typeNameAnnotation.TypeName;
+                propertyName = value.TypeAnnotation.TypeName;
                 return true;
             }
 

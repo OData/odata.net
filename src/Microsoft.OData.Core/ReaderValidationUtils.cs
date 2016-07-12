@@ -220,7 +220,7 @@ namespace Microsoft.OData
         /// <param name="enablePrimitiveTypeConversion">Whether primitive type conversion is enabled.</param>
         /// <param name="typeKindFromPayloadFunc">A func to compute the type kind from the payload shape if it could not be determined from the expected type or the payload type.</param>
         /// <param name="targetTypeKind">The target type kind to be used to read the payload.</param>
-        /// <param name="serializationTypeNameAnnotation">Potentially non-null instance of an annotation to put on the value reported from the reader.</param>
+        /// <param name="typeAnnotation">Potentially non-null instance of an annotation to put on the value reported from the reader.</param>
         /// <returns>
         /// The target type reference to use for parsing the value.
         /// If there is no user specified model, this will return null.
@@ -240,11 +240,11 @@ namespace Microsoft.OData
             bool enablePrimitiveTypeConversion,
             Func<EdmTypeKind> typeKindFromPayloadFunc,
             out EdmTypeKind targetTypeKind,
-            out SerializationTypeNameAnnotation serializationTypeNameAnnotation)
+            out ODataTypeAnnotation typeAnnotation)
         {
             Debug.Assert(typeKindFromPayloadFunc != null, "typeKindFromPayloadFunc != null");
 
-            serializationTypeNameAnnotation = null;
+            typeAnnotation = null;
 
             // What is the right behavior if both expected and actual types are specified for complex value?
             //             We decided that they have to match exactly.
@@ -306,7 +306,7 @@ namespace Microsoft.OData
 
                 if (targetTypeReference != null)
                 {
-                    serializationTypeNameAnnotation = CreateSerializationTypeNameAnnotation(payloadTypeName, targetTypeReference);
+                    typeAnnotation = CreateODataTypeAnnotation(payloadTypeName, targetTypeReference);
                 }
             }
 
@@ -937,20 +937,20 @@ namespace Microsoft.OData
         /// <param name="payloadTypeName">The payload type name.</param>
         /// <param name="targetTypeReference">The type reference into which we're going to parse.</param>
         /// <returns>The annotation to report to the reader for adding on the read value.</returns>
-        private static SerializationTypeNameAnnotation CreateSerializationTypeNameAnnotation(string payloadTypeName, IEdmTypeReference targetTypeReference)
+        private static ODataTypeAnnotation CreateODataTypeAnnotation(string payloadTypeName, IEdmTypeReference targetTypeReference)
         {
             Debug.Assert(targetTypeReference != null, "targetTypeReference != null");
 
             if (payloadTypeName != null && string.CompareOrdinal(payloadTypeName, targetTypeReference.FullName()) != 0)
             {
-                return new SerializationTypeNameAnnotation { TypeName = payloadTypeName };
+                return new ODataTypeAnnotation(payloadTypeName);
             }
 
             // Add the annotation with a null type name so that we know when the payload type is inferred from the expected type.
             // This is useful when validating a payload that inserts a derived entity (that does not specify a payload type) into the entity set.
             if (payloadTypeName == null)
             {
-                return new SerializationTypeNameAnnotation { TypeName = null };
+                return new ODataTypeAnnotation();
             }
 
             return null;

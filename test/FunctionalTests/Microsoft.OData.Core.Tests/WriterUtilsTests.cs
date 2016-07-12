@@ -109,9 +109,8 @@ namespace Microsoft.OData.Tests
         [Fact]
         public void TypeNameShouldComeFromSerializationTypeNameAnnotationForPrimitiveValue()
         {
-            var stna = new SerializationTypeNameAnnotation() {TypeName = "FromSTNA"};
             var value = new ODataPrimitiveValue(42);
-            value.SetAnnotation(stna);
+            value.TypeAnnotation = new ODataTypeAnnotation("FromSTNA");
             this.typeNameOracle.GetValueTypeNameForWriting(value,
                 EdmCoreModel.Instance.GetInt32(true),
                 EdmCoreModel.Instance.GetInt32(false),
@@ -121,9 +120,8 @@ namespace Microsoft.OData.Tests
         [Fact]
         public void TypeNameShouldComeFromSerializationTypeNameAnnotationForComplexValue()
         {
-            var stna = new SerializationTypeNameAnnotation() {TypeName = "FromSTNA"};
             var value = new ODataComplexValue() {TypeName = "Model.Bla"};
-            value.SetAnnotation(stna);
+            value.TypeAnnotation = new ODataTypeAnnotation("FromSTNA");
             this.typeNameOracle.GetValueTypeNameForWriting(value,
                 new EdmComplexTypeReference(new EdmComplexType("Model", "Bla"), true),
                 new EdmComplexTypeReference(new EdmComplexType("Model", "Bla"), false),
@@ -133,9 +131,8 @@ namespace Microsoft.OData.Tests
         [Fact]
         public void TypeNameShouldComeFromSerializationTypeNameAnnotationForCollectionValue()
         {
-            var stna = new SerializationTypeNameAnnotation() {TypeName = "FromSTNA"};
             var value = new ODataCollectionValue() {TypeName = "Collection(Edm.String)"};
-            value.SetAnnotation(stna);
+            value.TypeAnnotation = new ODataTypeAnnotation("FromSTNA");
             this.typeNameOracle.GetValueTypeNameForWriting(value,
                 EdmCoreModel.GetCollection(EdmCoreModel.Instance.GetString(true)),
                 EdmCoreModel.GetCollection(EdmCoreModel.Instance.GetString(false)),

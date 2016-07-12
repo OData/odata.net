@@ -397,7 +397,7 @@ namespace AstoriaUnitTests.TDD.Tests.Server
             const string entryTypeName = "baseType";
             var entry = new ODataResource();
             this.defaultManager.SetTypeName(entry, entitySetBaseTypeName, entryTypeName);
-            entry.GetAnnotation<SerializationTypeNameAnnotation>().TypeName.Should().BeNull();
+            entry.TypeAnnotation.TypeName.Should().BeNull();
             entry.TypeName.Should().Be(entryTypeName);
         }
 
@@ -415,7 +415,7 @@ namespace AstoriaUnitTests.TDD.Tests.Server
             const string entryTypeName = "derivedType";
             var entry = new ODataResource();
             this.defaultManager.SetTypeName(entry, entitySetBaseTypeName, entryTypeName);
-            entry.GetAnnotation<SerializationTypeNameAnnotation>().TypeName.Should().Be(entryTypeName);
+            entry.TypeAnnotation.TypeName.Should().Be(entryTypeName);
             entry.TypeName.Should().Be(entryTypeName);
         }
 
@@ -451,7 +451,7 @@ namespace AstoriaUnitTests.TDD.Tests.Server
             const string entryTypeName = "baseType";
             var entry = new ODataResource();
             this.allManager.SetTypeName(entry, entitySetBaseTypeName, entryTypeName);
-            entry.GetAnnotation<SerializationTypeNameAnnotation>().TypeName.Should().Be(entryTypeName);
+            entry.TypeAnnotation.TypeName.Should().Be(entryTypeName);
             entry.TypeName.Should().Be(entryTypeName);
         }
 
@@ -469,7 +469,7 @@ namespace AstoriaUnitTests.TDD.Tests.Server
             const string entryTypeName = "derivedType";
             var entry = new ODataResource();
             this.allManager.SetTypeName(entry, entitySetBaseTypeName, entryTypeName);
-            entry.GetAnnotation<SerializationTypeNameAnnotation>().TypeName.Should().Be(entryTypeName);
+            entry.TypeAnnotation.TypeName.Should().Be(entryTypeName);
             entry.TypeName.Should().Be(entryTypeName);
         }
 
@@ -496,7 +496,7 @@ namespace AstoriaUnitTests.TDD.Tests.Server
         {
             var entry = new ODataResource();
             this.noneManager.SetTypeName(entry, "baseType", "baseType");
-            entry.GetAnnotation<SerializationTypeNameAnnotation>().TypeName.Should().BeNull(); // annotation must be set with null type name
+            entry.TypeAnnotation.TypeName.Should().BeNull(); // annotation must be set with null type name
             entry.TypeName.Should().Be("baseType");
         }
 
@@ -505,7 +505,7 @@ namespace AstoriaUnitTests.TDD.Tests.Server
         {
             var entry = new ODataResource();
             this.noneManager.SetTypeName(entry, "baseType", "derivedType");
-            entry.GetAnnotation<SerializationTypeNameAnnotation>().TypeName.Should().BeNull(); // annotation must be set with null type name
+            entry.TypeAnnotation.TypeName.Should().BeNull(); // annotation must be set with null type name
             entry.TypeName.Should().Be("derivedType");
         }
 
@@ -703,14 +703,14 @@ namespace AstoriaUnitTests.TDD.Tests.Server
         [TestMethod]
         public void PrimitiveValueTypeNameShouldNotBeWrittenForNoneOption()
         {
-            TestPrimitive("stringValue", (p, t) => this.noneManager.SetTypeName(p, t), new SerializationTypeNameAnnotation() { TypeName = null });
-            TestPrimitive(42, (p, t) => this.noneManager.SetTypeName(p, t), new SerializationTypeNameAnnotation() { TypeName = null });
-            TestPrimitive(true, (p, t) => this.noneManager.SetTypeName(p, t), new SerializationTypeNameAnnotation() { TypeName = null });
-            TestPrimitive(1.2, (p, t) => this.noneManager.SetTypeName(p, t), new SerializationTypeNameAnnotation() { TypeName = null });
-            TestPrimitive(Double.NaN, (p, t) => this.noneManager.SetTypeName(p, t), new SerializationTypeNameAnnotation() { TypeName = null });
-            TestPrimitive(Double.NegativeInfinity, (p, t) => this.noneManager.SetTypeName(p, t), new SerializationTypeNameAnnotation() { TypeName = null });
-            TestPrimitive(Double.PositiveInfinity, (p, t) => this.noneManager.SetTypeName(p, t), new SerializationTypeNameAnnotation() { TypeName = null });
-            TestPrimitive(Guid.NewGuid(), (p, t) => this.noneManager.SetTypeName(p, t), new SerializationTypeNameAnnotation() { TypeName = null });
+            TestPrimitive("stringValue", (p, t) => this.noneManager.SetTypeName(p, t), new ODataTypeAnnotation());
+            TestPrimitive(42, (p, t) => this.noneManager.SetTypeName(p, t), new ODataTypeAnnotation());
+            TestPrimitive(true, (p, t) => this.noneManager.SetTypeName(p, t), new ODataTypeAnnotation());
+            TestPrimitive(1.2, (p, t) => this.noneManager.SetTypeName(p, t), new ODataTypeAnnotation());
+            TestPrimitive(Double.NaN, (p, t) => this.noneManager.SetTypeName(p, t), new ODataTypeAnnotation());
+            TestPrimitive(Double.NegativeInfinity, (p, t) => this.noneManager.SetTypeName(p, t), new ODataTypeAnnotation());
+            TestPrimitive(Double.PositiveInfinity, (p, t) => this.noneManager.SetTypeName(p, t), new ODataTypeAnnotation());
+            TestPrimitive(Guid.NewGuid(), (p, t) => this.noneManager.SetTypeName(p, t), new ODataTypeAnnotation());
         }
 
         [TestMethod]
@@ -718,11 +718,11 @@ namespace AstoriaUnitTests.TDD.Tests.Server
         {
             ODataNullValue nullValue = new ODataNullValue();
             this.noneManager.SetTypeName(nullValue, StringResourceType);
-            CompareSerializationTypeNameAnnotation(nullValue, new SerializationTypeNameAnnotation { TypeName = null });
+            CompareSerializationTypeNameAnnotation(nullValue, new ODataTypeAnnotation());
 
             nullValue = new ODataNullValue();
             this.noneManager.SetTypeName(nullValue, ComplexResourceType);
-            CompareSerializationTypeNameAnnotation(nullValue, new SerializationTypeNameAnnotation { TypeName = null });
+            CompareSerializationTypeNameAnnotation(nullValue, new ODataTypeAnnotation());
         }
 
         [TestMethod]
@@ -737,15 +737,15 @@ namespace AstoriaUnitTests.TDD.Tests.Server
         [TestMethod]
         public void PrimitiveValueTypeNameShouldBeWrittenForAllOptionForSpecialDoubleValues()
         {
-            TestPrimitive(Double.NaN, (p, t) => this.allManager.SetTypeName(p, t), new SerializationTypeNameAnnotation() { TypeName = "Edm.Double" });
-            TestPrimitive(Double.NegativeInfinity, (p, t) => this.allManager.SetTypeName(p, t), new SerializationTypeNameAnnotation() { TypeName = "Edm.Double" });
-            TestPrimitive(Double.PositiveInfinity, (p, t) => this.allManager.SetTypeName(p, t), new SerializationTypeNameAnnotation() { TypeName = "Edm.Double" });
+            TestPrimitive(Double.NaN, (p, t) => this.allManager.SetTypeName(p, t), new ODataTypeAnnotation("Edm.Double"));
+            TestPrimitive(Double.NegativeInfinity, (p, t) => this.allManager.SetTypeName(p, t), new ODataTypeAnnotation("Edm.Double"));
+            TestPrimitive(Double.PositiveInfinity, (p, t) => this.allManager.SetTypeName(p, t), new ODataTypeAnnotation("Edm.Double"));
         }
 
         [TestMethod]
         public void PrimitiveValueTypeNameShouldBeWrittenForAllOptionForNonBasicJsonTypes()
         {
-            TestPrimitive(Guid.NewGuid(), (p, t) => this.allManager.SetTypeName(p, t), new SerializationTypeNameAnnotation() { TypeName = "Edm.Guid" });
+            TestPrimitive(Guid.NewGuid(), (p, t) => this.allManager.SetTypeName(p, t), new ODataTypeAnnotation("Edm.Guid"));
         }
 
         [TestMethod]
@@ -753,11 +753,11 @@ namespace AstoriaUnitTests.TDD.Tests.Server
         {
             ODataNullValue nullValue = new ODataNullValue();
             this.allManager.SetTypeName(nullValue, StringResourceType);
-            CompareSerializationTypeNameAnnotation(nullValue, new SerializationTypeNameAnnotation { TypeName = "Edm.String" });
+            CompareSerializationTypeNameAnnotation(nullValue, new ODataTypeAnnotation("Edm.String"));
 
             nullValue = new ODataNullValue();
             this.allManager.SetTypeName(nullValue, ComplexResourceType);
-            CompareSerializationTypeNameAnnotation(nullValue, new SerializationTypeNameAnnotation { TypeName = "namespace.complex" });
+            CompareSerializationTypeNameAnnotation(nullValue, new ODataTypeAnnotation("namespace.complex"));
         }
         #endregion primitive value object model integration tests
 
@@ -772,13 +772,13 @@ namespace AstoriaUnitTests.TDD.Tests.Server
         [TestMethod]
         public void ComplexTypeNameShouldBeWrittenForAllOption()
         {
-            TestComplex((c, t) => this.allManager.SetTypeName(c, t), new SerializationTypeNameAnnotation { TypeName = "namespace.complex" });
+            TestComplex((c, t) => this.allManager.SetTypeName(c, t), new ODataTypeAnnotation("namespace.complex"));
         }
 
         [TestMethod]
         public void ComplexTypeNameShouldNotBeWrittenForTheNoneOption()
         {
-            TestComplex((c, t) => this.noneManager.SetTypeName(c, t), new SerializationTypeNameAnnotation { TypeName = null });
+            TestComplex((c, t) => this.noneManager.SetTypeName(c, t), new ODataTypeAnnotation());
         }
 
         [TestMethod]
@@ -790,14 +790,14 @@ namespace AstoriaUnitTests.TDD.Tests.Server
         [TestMethod]
         public void DynamicComplexTypeNameShouldBeWrittenForAllOption()
         {
-            TestComplex((c, t) => this.allManager.SetTypeName(c, t), new SerializationTypeNameAnnotation { TypeName = "namespace.complex" });
+            TestComplex((c, t) => this.allManager.SetTypeName(c, t), new ODataTypeAnnotation("namespace.complex"));
         }
 
         [TestMethod]
         public void DynamicComplexTypeNameShouldNotBeWrittenForTheNoneOption()
         {
             // note that ODL requires the property to be set, even if the annotation prevents it from actually being written
-            TestComplex((c, t) => this.noneManager.SetTypeName(c, t), new SerializationTypeNameAnnotation { TypeName = null });
+            TestComplex((c, t) => this.noneManager.SetTypeName(c, t), new ODataTypeAnnotation());
         }
         #endregion
 
@@ -812,13 +812,13 @@ namespace AstoriaUnitTests.TDD.Tests.Server
         [TestMethod]
         public void CollectionTypeNameShouldBeWrittenForAllOption()
         {
-            TestCollection((c, t) => this.allManager.SetTypeName(c, t), new SerializationTypeNameAnnotation { TypeName = "Collection(Edm.String)" });
+            TestCollection((c, t) => this.allManager.SetTypeName(c, t), new ODataTypeAnnotation("Collection(Edm.String)"));
         }
 
         [TestMethod]
         public void CollectionTypeNameShouldNotBeWrittenForTheNoneOption()
         {
-            TestCollection((c, t) => this.noneManager.SetTypeName(c, t), new SerializationTypeNameAnnotation { TypeName = null });
+            TestCollection((c, t) => this.noneManager.SetTypeName(c, t), new ODataTypeAnnotation());
         }
 
         [TestMethod]
@@ -830,7 +830,7 @@ namespace AstoriaUnitTests.TDD.Tests.Server
         [TestMethod]
         public void DynamicCollectionTypeNameShouldBeWrittenForAllOption()
         {
-            TestCollection((c, t) => this.allManager.SetTypeName(c, t), new SerializationTypeNameAnnotation { TypeName = "Collection(Edm.String)" });
+            TestCollection((c, t) => this.allManager.SetTypeName(c, t), new ODataTypeAnnotation("Collection(Edm.String)"));
         }
         #endregion
 
@@ -1135,7 +1135,7 @@ namespace AstoriaUnitTests.TDD.Tests.Server
 
                 // ODL requires type name on dynamic complex values, but we can still omit it from the payload using an annotation
                 ODataResource dynamicComplex = new ODataResource { TypeName = "Fake.Complex", };
-                dynamicComplex.SetAnnotation(new SerializationTypeNameAnnotation { TypeName = null });
+                dynamicComplex.TypeAnnotation = new ODataTypeAnnotation();
 
                 var entry = new ODataResource
                 {
@@ -1318,7 +1318,7 @@ namespace AstoriaUnitTests.TDD.Tests.Server
             getValue(action).Should().Be(expectedValue);
         }
 
-        private static void TestComplex(Action<ODataComplexValue, ResourceType> setValue, SerializationTypeNameAnnotation expectedTypeNameAnnotation)
+        private static void TestComplex(Action<ODataComplexValue, ResourceType> setValue, ODataTypeAnnotation expectedTypeNameAnnotation)
         {
             var complex = new ODataComplexValue { TypeName = ComplexResourceType.FullName };
 
@@ -1326,7 +1326,7 @@ namespace AstoriaUnitTests.TDD.Tests.Server
             CompareSerializationTypeNameAnnotation(complex, expectedTypeNameAnnotation);
         }
 
-        private static void TestCollection(Action<ODataCollectionValue, ResourceType> setValue, SerializationTypeNameAnnotation expectedTypeNameAnnotation)
+        private static void TestCollection(Action<ODataCollectionValue, ResourceType> setValue, ODataTypeAnnotation expectedTypeNameAnnotation)
         {
             var collection = new ODataCollectionValue();
             collection.TypeName = "Collection(Edm.String)";
@@ -1335,7 +1335,7 @@ namespace AstoriaUnitTests.TDD.Tests.Server
             CompareSerializationTypeNameAnnotation(collection, expectedTypeNameAnnotation);
         }
 
-        private static void TestPrimitive(object value, Action<ODataPrimitiveValue, ResourceType> setValue, SerializationTypeNameAnnotation expectedTypeNameAnnotation)
+        private static void TestPrimitive(object value, Action<ODataPrimitiveValue, ResourceType> setValue, ODataTypeAnnotation expectedTypeNameAnnotation)
         {
             ODataPrimitiveValue primitive = new ODataPrimitiveValue(value);
             setValue(primitive, ResourceType.GetPrimitiveResourceType(value.GetType()));
@@ -1359,15 +1359,15 @@ namespace AstoriaUnitTests.TDD.Tests.Server
             return interpreter.ShouldSpecifyTypeNameAnnotation(odataValue, resourceType, out typeNameToWrite);
         }
 
-        private static void CompareSerializationTypeNameAnnotation(ODataValue value, SerializationTypeNameAnnotation expectedTypeNameAnnotation)
+        private static void CompareSerializationTypeNameAnnotation(ODataValue value, ODataTypeAnnotation expectedTypeNameAnnotation)
         {
             if (expectedTypeNameAnnotation == null)
             {
-                value.GetAnnotation<SerializationTypeNameAnnotation>().Should().BeNull();
+                value.TypeAnnotation.Should().BeNull();
             }
             else
             {
-                value.GetAnnotation<SerializationTypeNameAnnotation>().TypeName.Should().Be(expectedTypeNameAnnotation.TypeName);
+                value.TypeAnnotation.TypeName.Should().Be(expectedTypeNameAnnotation.TypeName);
             }
         }
 

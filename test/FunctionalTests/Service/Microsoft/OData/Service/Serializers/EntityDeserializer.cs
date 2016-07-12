@@ -384,10 +384,9 @@ namespace Microsoft.OData.Service.Serializers
             // So we have to implement the validation logic here on top of ODataLib.
             // We also can't use the type name reported by the entry property always, as that is the resolved type name.
             // It's safer to use the actual type name from the payload if it's available.
-            SerializationTypeNameAnnotation serializationTypeNameAnnotation = entry.GetAnnotation<SerializationTypeNameAnnotation>();
-            if (serializationTypeNameAnnotation != null)
+            if (entry.TypeAnnotation != null)
             {
-                payloadTypeName = serializationTypeNameAnnotation.TypeName;
+                payloadTypeName = entry.TypeAnnotation.TypeName;
             }
 
             // If the type is not specified in the payload, we assume the type to be the expected type.

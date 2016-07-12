@@ -30,8 +30,8 @@ namespace Microsoft.OData.Tests.JsonLight
 
         public JsonMinimalMetadataTypeNameOracleTests()
         {
-            entryWithTypeAnnotationAndTypeName.SetAnnotation(new SerializationTypeNameAnnotation { TypeName = "TypeNameFromSTNA" });
-            entryWithTypeAnnotationWithoutTypeName.SetAnnotation(new SerializationTypeNameAnnotation { TypeName = "TypeNameFromSTNA" });
+            entryWithTypeAnnotationAndTypeName.TypeAnnotation = new ODataTypeAnnotation("TypeNameFromSTNA");
+            entryWithTypeAnnotationWithoutTypeName.TypeAnnotation = new ODataTypeAnnotation("TypeNameFromSTNA");
         }
 
         #region Minimal metadata entry type name tests
@@ -170,7 +170,7 @@ namespace Microsoft.OData.Tests.JsonLight
         public void ValueWithTypeNameAnnotationShouldReturnTypeNameFromAnnotation()
         {
             var complexValue = new ODataResource() { TypeName = ComplexTypeName };
-            complexValue.SetAnnotation(new SerializationTypeNameAnnotation { TypeName = "TypeNameFromSTNA" });
+            complexValue.TypeAnnotation = new ODataTypeAnnotation("TypeNameFromSTNA");
 
             this.testSubject.GetResourceTypeNameForWriting(
                 this.complexTypeReference.FullName(),

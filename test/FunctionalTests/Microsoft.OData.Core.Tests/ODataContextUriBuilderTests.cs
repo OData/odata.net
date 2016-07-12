@@ -407,7 +407,7 @@ namespace Microsoft.OData.Tests
             var typeContext = ODataResourceTypeContext.Create( /*serializationInfo*/null,
                 null, null, this.addressType, this.edmModel, throwIfMissingTypeInfo: true);
             ODataResource value = new ODataResource { TypeName = "TestModel.Address" };
-            value.SetAnnotation(new SerializationTypeNameAnnotation { TypeName = null });
+            value.TypeAnnotation = new ODataTypeAnnotation();
             var contextUri = this.CreateEntryContextUri(typeContext, true);
             contextUri.OriginalString.Should().Be(BuildExpectedContextUri("#TestModel.Address"));
         }
@@ -416,7 +416,7 @@ namespace Microsoft.OData.Tests
         public void BuildPropertyContextUriForCollectionPropertyValueWithNullAnnotation()
         {
             ODataCollectionValue value = new ODataCollectionValue { TypeName = "FQNS.FakeType" };
-            value.SetAnnotation(new SerializationTypeNameAnnotation { TypeName = null });
+            value.TypeAnnotation = new ODataTypeAnnotation();
             var contextUri = this.CreatePropertyContextUri(value);
             contextUri.OriginalString.Should().Be(BuildExpectedContextUri("#FQNS.FakeType"));
         }
@@ -425,7 +425,7 @@ namespace Microsoft.OData.Tests
         public void BuildPropertyContextUriForIntegerPropertyValueWithNullAnnotation()
         {
             ODataValue value = new ODataPrimitiveValue(1);
-            value.SetAnnotation(new SerializationTypeNameAnnotation { TypeName = null });
+            value.TypeAnnotation = new ODataTypeAnnotation();
             var contextUri = this.CreatePropertyContextUri(value);
             contextUri.OriginalString.Should().Be(BuildExpectedContextUri("#Edm.Int32"));
         }
@@ -434,7 +434,7 @@ namespace Microsoft.OData.Tests
         public void BuildPropertyContextUriForCollectionPropertyValueWithNonNullAnnotation()
         {
             ODataCollectionValue value = new ODataCollectionValue { TypeName = "FQNS.FromObject" };
-            value.SetAnnotation(new SerializationTypeNameAnnotation { TypeName = "FQNS.FromAnnotation" });
+            value.TypeAnnotation = new ODataTypeAnnotation("FQNS.FromAnnotation");
             var contextUri = this.CreatePropertyContextUri(value);
             contextUri.OriginalString.Should().Be(BuildExpectedContextUri("#FQNS.FromAnnotation"));
         }
@@ -443,7 +443,7 @@ namespace Microsoft.OData.Tests
         public void BuildPropertyContextUriForIntegerPropertyValueWithNonNullAnnotation()
         {
             ODataValue value = new ODataPrimitiveValue(1);
-            value.SetAnnotation(new SerializationTypeNameAnnotation { TypeName = "FQNS.FromAnnotation" });
+            value.TypeAnnotation = new ODataTypeAnnotation("FQNS.FromAnnotation");
             var contextUri = this.CreatePropertyContextUri(value);
             contextUri.OriginalString.Should().Be(BuildExpectedContextUri("#FQNS.FromAnnotation"));
         }

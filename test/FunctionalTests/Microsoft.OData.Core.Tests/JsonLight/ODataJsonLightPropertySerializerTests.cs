@@ -167,28 +167,28 @@ namespace Microsoft.OData.Tests.JsonLight
         [Fact]
         public void DeclaredPrimitivePropertyWithSerializationTypeNameAnnotationShouldWriteTypeNameFromAnnotation()
         {
-            this.declaredProperty.ODataValue.SetAnnotation(new SerializationTypeNameAnnotation { TypeName = "MyArbitraryTypeName" });
+            this.declaredProperty.ODataValue.TypeAnnotation = new ODataTypeAnnotation("MyArbitraryTypeName" );
             this.SerializeProperty(this.entityType, this.declaredProperty).Should().Contain("@odata.type\":\"#MyArbitraryTypeName\"");
         }
 
         [Fact]
         public void DeclaredPrimitivePropertyWithNullSerializationTypeNameAnnotationShouldNotWriteTypeName()
         {
-            this.declaredProperty.ODataValue.SetAnnotation(new SerializationTypeNameAnnotation { TypeName = null });
+            this.declaredProperty.ODataValue.TypeAnnotation = new ODataTypeAnnotation();
             this.SerializeProperty(this.entityType, this.declaredProperty).Should().NotContain("@odata.type");
         }
 
         [Fact]
         public void UndeclaredPrimitivePropertyWithSerializationTypeNameAnnotationShouldWriteTypeNameFromAnnotation()
         {
-            this.undeclaredProperty.ODataValue.SetAnnotation(new SerializationTypeNameAnnotation { TypeName = "MyArbitraryTypeName" });
+            this.undeclaredProperty.ODataValue.TypeAnnotation = new ODataTypeAnnotation("MyArbitraryTypeName");
             this.SerializeProperty(this.entityType, this.undeclaredProperty).Should().Contain("@odata.type\":\"#MyArbitraryTypeName\"");
         }
 
         [Fact]
         public void UndeclaredPrimitivePropertyWithNullSerializationTypeNameAnnotationShouldNotWriteTypeName()
         {
-            this.undeclaredProperty.ODataValue.SetAnnotation(new SerializationTypeNameAnnotation { TypeName = null });
+            this.undeclaredProperty.ODataValue.TypeAnnotation = new ODataTypeAnnotation();
             this.SerializeProperty(this.entityType, this.undeclaredProperty).Should().NotContain("@odata.type");
         }
         #endregion SerializationTypeNameAnnotation on primitive values

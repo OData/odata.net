@@ -112,7 +112,7 @@ namespace Microsoft.OData.JsonLight
                                         }
 
                                         EdmTypeKind targetTypeKind;
-                                        SerializationTypeNameAnnotation serializationTypeNameAnnotation;
+                                        ODataTypeAnnotation typeAnnotation;
                                         Func<EdmTypeKind> typeKindFromPayloadFunc = () => { throw new ODataException(ODataErrorStrings.General_InternalError(InternalErrorCodes.ODataJsonLightCollectionDeserializer_ReadCollectionStart_TypeKindFromPayloadFunc)); };
                                         actualItemTypeRef = this.ReaderValidator.ResolvePayloadTypeNameAndComputeTargetType(
                                             EdmTypeKind.None,
@@ -122,7 +122,7 @@ namespace Microsoft.OData.JsonLight
                                             this.Model,
                                             typeKindFromPayloadFunc,
                                             out targetTypeKind,
-                                            out serializationTypeNameAnnotation);
+                                            out typeAnnotation);
                                     }
 
                                     collectionStart = new ODataCollectionStart

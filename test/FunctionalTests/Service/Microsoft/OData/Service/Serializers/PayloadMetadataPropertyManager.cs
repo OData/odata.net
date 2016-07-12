@@ -64,13 +64,13 @@ namespace Microsoft.OData.Service.Serializers
 
             if (this.interpreter.ShouldIncludeEntryTypeName(entitySetBaseTypeName, entryTypeName))
             {
-                entry.SetAnnotation(new SerializationTypeNameAnnotation() { TypeName = entry.TypeName });
+                entry.TypeAnnotation = new ODataTypeAnnotation(entry.TypeName);
             }
             else
             {
                 // When we should not write the typename, setting the serialization type name to null
                 // so that ODL does not write the type on the wire.
-                entry.SetAnnotation(new SerializationTypeNameAnnotation() { TypeName = null });
+                entry.TypeAnnotation = new ODataTypeAnnotation();
             }
         }
 
@@ -90,13 +90,13 @@ namespace Microsoft.OData.Service.Serializers
 
             if (this.interpreter.ShouldIncludeEntryTypeName(entitySetBaseTypeName, resourceTypeName))
             {
-                resourceSet.SetAnnotation(new SerializationTypeNameAnnotation() { TypeName = resourceSet.TypeName });
+                resourceSet.TypeAnnotation = new ODataTypeAnnotation(resourceSet.TypeName);
             }
             else
             {
                 // When we should not write the typename, setting the serialization type name to null
                 // so that ODL does not write the type on the wire.
-                resourceSet.SetAnnotation(new SerializationTypeNameAnnotation() { TypeName = null });
+                resourceSet.TypeAnnotation = new ODataTypeAnnotation();
             }
         }
 
@@ -285,7 +285,7 @@ namespace Microsoft.OData.Service.Serializers
             string typeNameToWrite;
             if (this.interpreter.ShouldSpecifyTypeNameAnnotation(value, actualType, out typeNameToWrite))
             {
-                value.SetAnnotation(new SerializationTypeNameAnnotation { TypeName = typeNameToWrite });
+                value.TypeAnnotation = new ODataTypeAnnotation(typeNameToWrite);
             }
         }
 

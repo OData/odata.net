@@ -260,7 +260,7 @@ namespace Microsoft.OData.Tests.Json
         public void WriteInstanceAnnotation_ForCollectionShouldUseCollectionCodePath()
         {
             var collectionValue = new ODataCollectionValue() { TypeName = "Collection(String)" };
-            collectionValue.SetAnnotation(new SerializationTypeNameAnnotation() { TypeName = null });
+            collectionValue.TypeAnnotation = new ODataTypeAnnotation();
             const string term = "some.term";
             var verifierCalls = 0;
 

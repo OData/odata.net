@@ -176,7 +176,7 @@ namespace Microsoft.OData.Client
             // which tells ODataLib to write the type name in the annotation in the payload.
             if (entityType.ElementTypeName != serverTypeName)
             {
-                entry.SetAnnotation(new SerializationTypeNameAnnotation { TypeName = serverTypeName });
+                entry.TypeAnnotation = new ODataTypeAnnotation(serverTypeName);
             }
 
             // We always need to write the client type name, since this is the type name used by ODataLib
@@ -909,10 +909,8 @@ namespace Microsoft.OData.Client
                 valueInODataFormat = this.propertyConverter.CreateODataEntry(elementType, value);
 
                 ODataResource entry = (ODataResource)valueInODataFormat;
-                SerializationTypeNameAnnotation serializedTypeNameAnnotation =
-                    entry.GetAnnotation<SerializationTypeNameAnnotation>();
-                if (serializedTypeNameAnnotation == null ||
-                    string.IsNullOrEmpty(serializedTypeNameAnnotation.TypeName))
+                if (entry.TypeAnnotation == null ||
+                    string.IsNullOrEmpty(entry.TypeAnnotation.TypeName))
                 {
                     throw Error.InvalidOperation(Strings.DataServiceException_GeneralError);
                 }

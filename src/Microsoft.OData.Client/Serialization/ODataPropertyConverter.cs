@@ -113,7 +113,7 @@ namespace Microsoft.OData.Client
             ODataResource resource = new ODataResource() { TypeName = complexTypeAnnotation.ElementTypeName };
 
             string serverTypeName = this.requestInfo.GetServerTypeName(complexTypeAnnotation);
-            resource.SetAnnotation(new SerializationTypeNameAnnotation { TypeName = serverTypeName });
+            resource.TypeAnnotation = new ODataTypeAnnotation(serverTypeName);
 
             resource.Properties = this.PopulateProperties(instance, serverTypeName, complexTypeAnnotation.PropertiesToSerialize(), visitedComplexTypeObjects);
 
@@ -189,7 +189,7 @@ namespace Microsoft.OData.Client
             };
 
             string serverTypeName = this.requestInfo.GetServerTypeName(entityTypeAnnotation);
-            odataEntityValue.SetAnnotation(new SerializationTypeNameAnnotation { TypeName = serverTypeName });
+            odataEntityValue.TypeAnnotation = new ODataTypeAnnotation(serverTypeName);
 
             odataEntityValue.Properties = this.PopulateProperties(value, serverTypeName, properties.Any() ? properties : entityTypeAnnotation.PropertiesToSerialize(), null);
 
@@ -223,7 +223,7 @@ namespace Microsoft.OData.Client
             };
 
             string serverTypeName = this.requestInfo.GetServerTypeName(entityTypeAnnotation);
-            odataEntityValue.SetAnnotation(new SerializationTypeNameAnnotation { TypeName = serverTypeName });
+            odataEntityValue.TypeAnnotation = new ODataTypeAnnotation(serverTypeName);
 
             odataEntityValue.Properties = this.PopulateProperties(value, serverTypeName, properties.Any() ? properties : entityTypeAnnotation.PropertiesToSerialize(), null);
 
@@ -361,7 +361,7 @@ namespace Microsoft.OData.Client
             if (setTypeAnnotation)
             {
                 string wireTypeName = GetCollectionName(collectionItemTypeName);
-                collection.SetAnnotation(new SerializationTypeNameAnnotation { TypeName = wireTypeName });
+                collection.TypeAnnotation = new ODataTypeAnnotation(wireTypeName);
             }
 
             return collection;
@@ -415,7 +415,7 @@ namespace Microsoft.OData.Client
             if (setTypeAnnotation)
             {
                 string wireTypeName = GetCollectionName(collectionItemTypeName);
-                resourceSet.SetAnnotation(new SerializationTypeNameAnnotation { TypeName = wireTypeName });
+                resourceSet.TypeAnnotation = new ODataTypeAnnotation(wireTypeName);
             }
 
             return wrapper;
@@ -681,7 +681,7 @@ namespace Microsoft.OData.Client
             {
                 // DEVNOTE: it is safe to use the property type name for primitive types because they do not generally support inheritance,
                 // and spatial values always contain their specific type inside the GeoJSON/GML representation.
-                primitiveValue.SetAnnotation(new SerializationTypeNameAnnotation { TypeName = property.EdmProperty.Type.FullName() });
+                primitiveValue.TypeAnnotation = new ODataTypeAnnotation(property.EdmProperty.Type.FullName());
             }
         }
     }

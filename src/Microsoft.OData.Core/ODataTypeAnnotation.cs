@@ -18,7 +18,7 @@ namespace Microsoft.OData
     /// <remarks>
     /// This annotation will be used on ODataResource and ODataCollectionValue.
     /// </remarks>
-    internal sealed class ODataTypeAnnotation
+    public sealed class ODataTypeAnnotation
     {
         /// <summary>The EDM type of the value this annotation is on.</summary>
         private readonly IEdmTypeReference type;
@@ -57,6 +57,33 @@ namespace Microsoft.OData
             ExceptionUtils.CheckArgumentNotNull(collectionType, "collectionType");
             this.type = collectionType;
         }
+
+        /// <summary>
+        /// Creates a new instance of the type annotation without a type name.
+        /// </summary>
+        public ODataTypeAnnotation()
+        {
+        }
+
+        /// <summary>
+        /// Creates a new instance of the type annotation with a type name.
+        /// </summary>
+        /// <param name="typeName">The type name read from the input.</param>
+        public ODataTypeAnnotation(string typeName)
+        {
+            this.TypeName = typeName;
+        }
+
+        /// <summary> Gets or sets the type name to serialize, for the annotated item. </summary>
+        /// <returns>The type name to serialize, for the annotated item.</returns>
+        /// <remarks>
+        /// If this property is null, no type name will be written.
+        /// If this property is non-null, the property value will be used as the type name written to the payload.
+        /// If <see cref="ODataTypeAnnotation"/> is present, it always overrides the type name specified on the annotated item.
+        /// If <see cref="ODataTypeAnnotation"/> is not present, the value of the TypeName property on the ODataResource, ODataCollectionValue
+        /// is used as the type name in the payload.
+        /// </remarks>
+        public string TypeName { get; set; }
 
         /// <summary>
         /// The EDM type of the value.

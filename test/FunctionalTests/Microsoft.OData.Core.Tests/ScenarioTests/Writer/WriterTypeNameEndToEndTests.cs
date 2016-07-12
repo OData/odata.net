@@ -59,7 +59,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Writer
             var entryWriter = new Lazy<ODataWriter>(() => this.messageWriter.Value.CreateODataResourceWriter(set, type));
 
             var valueWithAnnotation = new ODataPrimitiveValue(45);
-            valueWithAnnotation.SetAnnotation(new SerializationTypeNameAnnotation { TypeName = "TypeNameFromSTNA" });
+            valueWithAnnotation.TypeAnnotation = new ODataTypeAnnotation("TypeNameFromSTNA");
 
             var propertiesToWrite = new List<ODataProperty>
             {

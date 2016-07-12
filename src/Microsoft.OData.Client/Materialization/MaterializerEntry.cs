@@ -57,14 +57,13 @@ namespace Microsoft.OData.Client.Materialization
             this.isTracking = isTracking;
 
             string serverTypeName = this.Entry.TypeName;
-            SerializationTypeNameAnnotation serializationTypeNameAnnotation = entry.GetAnnotation<SerializationTypeNameAnnotation>();
-            if (serializationTypeNameAnnotation != null)
+            if (entry.TypeAnnotation != null)
             {
                 // If the annotation has a value use it. Otherwise, in JSON-Light, the types can be inferred from the
                 // context URI even if they are not present on the wire, so just use the type name from the entry.
-                if (serializationTypeNameAnnotation.TypeName != null || this.Format != ODataFormat.Json)
+                if (entry.TypeAnnotation.TypeName != null || this.Format != ODataFormat.Json)
                 {
-                    serverTypeName = serializationTypeNameAnnotation.TypeName;
+                    serverTypeName = entry.TypeAnnotation.TypeName;
                 }
             }
 

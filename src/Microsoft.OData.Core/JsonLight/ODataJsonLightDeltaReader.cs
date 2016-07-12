@@ -1554,7 +1554,7 @@ namespace Microsoft.OData.JsonLight
                 this.scopes.Count > 0 && this.scopes.Peek().Item is ODataResource,
                 "Entity type can be applied only when in delta resource scope.");
 
-            SerializationTypeNameAnnotation serializationTypeNameAnnotation;
+            ODataTypeAnnotation typeAnnotation;
             EdmTypeKind targetTypeKind;
             IEdmEntityTypeReference targetEntityTypeReference =
                 (IEdmEntityTypeReference)this.jsonLightInputContext.MessageReaderSettings.Validator.ResolvePayloadTypeNameAndComputeTargetType(
@@ -1565,7 +1565,7 @@ namespace Microsoft.OData.JsonLight
                     this.jsonLightInputContext.Model,
                     () => EdmTypeKind.Entity,
                     out targetTypeKind,
-                    out serializationTypeNameAnnotation);
+                    out typeAnnotation);
 
             IEdmEntityType targetEntityType = null;
             ODataResource resource = this.CurrentDeltaResource;
@@ -1574,9 +1574,9 @@ namespace Microsoft.OData.JsonLight
                 targetEntityType = targetEntityTypeReference.EntityDefinition();
                 resource.TypeName = targetEntityType.FullTypeName();
 
-                if (serializationTypeNameAnnotation != null)
+                if (typeAnnotation != null)
                 {
-                    resource.SetAnnotation(serializationTypeNameAnnotation);
+                    resource.TypeAnnotation = typeAnnotation;
                 }
             }
             else if (entityTypeNameFromPayload != null)

@@ -35,6 +35,11 @@ namespace Microsoft.OData
 #endif
         private ICollection<ODataInstanceAnnotation> instanceAnnotations = new Collection<ODataInstanceAnnotation>();
 
+        /// <summary>
+        /// The annotation for storing @odata.type.
+        /// </summary>
+        public ODataTypeAnnotation TypeAnnotation { get; set; }
+
         /// <summary>Gets or sets the annotation by type.</summary>
         /// <returns>The annotation of type T or null if not present.</returns>
         /// <typeparam name="T">The type of the annotation.</typeparam>

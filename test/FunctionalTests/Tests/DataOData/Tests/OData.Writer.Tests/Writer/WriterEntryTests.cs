@@ -368,7 +368,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
         private sealed class EntrySerializationTypeNameAnnotationTestCase
         {
             public string TypeName { get; set; }
-            public SerializationTypeNameAnnotation SerializationTypeNameAnnotation { get; set; }
+            public ODataTypeAnnotation TypeAnnotation { get; set; }
             public string ExpectedXml { get; set; }
             public string ExpectedJsonLight { get; set; }
             public IEdmModel Model { get; set; }
@@ -396,7 +396,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 new EntrySerializationTypeNameAnnotationTestCase
                 {
                     TypeName = null,
-                    SerializationTypeNameAnnotation = null,
+                    TypeAnnotation = null,
                     ExpectedXml = "<categoryMissing/>",
                     Model = null
                 },
@@ -404,14 +404,14 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 new EntrySerializationTypeNameAnnotationTestCase
                 {
                     TypeName = "TestModel.MyType",
-                    SerializationTypeNameAnnotation = null,
+                    TypeAnnotation = null,
                     ExpectedXml = "<category term='TestModel.MyType' scheme='" + TestAtomConstants.ODataSchemeNamespace +"' xmlns='" + TestAtomConstants.AtomNamespace + "' />",
                     Model = null
                 },
                 new EntrySerializationTypeNameAnnotationTestCase
                 {
                     TypeName = "TestModel.MyType",
-                    SerializationTypeNameAnnotation = null,
+                    TypeAnnotation = null,
                     ExpectedXml = "<category term='TestModel.MyType' scheme='" + TestAtomConstants.ODataSchemeNamespace +"' xmlns='" + TestAtomConstants.AtomNamespace + "' />",
                     ExpectedJsonLight = "\"typeMissing\":null",
                     Model = model
@@ -419,7 +419,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 new EntrySerializationTypeNameAnnotationTestCase
                 {
                     TypeName = "TestModel.DerivedType",
-                    SerializationTypeNameAnnotation = null,
+                    TypeAnnotation = null,
                     ExpectedXml = "<category term='TestModel.DerivedType' scheme='" + TestAtomConstants.ODataSchemeNamespace +"' xmlns='" + TestAtomConstants.AtomNamespace + "' />",
                     ExpectedJsonLight = "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataTypeAnnotationName + "\":\"TestModel.DerivedType\"",
                     Model = model
@@ -427,21 +427,21 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 new EntrySerializationTypeNameAnnotationTestCase
                 {
                     TypeName = null,
-                    SerializationTypeNameAnnotation = new SerializationTypeNameAnnotation { TypeName = null },
+                    TypeAnnotation = new ODataTypeAnnotation(),
                     ExpectedXml = "<categoryMissing/>",
                     Model = null
                 },
                 new EntrySerializationTypeNameAnnotationTestCase
                 {
                     TypeName = null,
-                    SerializationTypeNameAnnotation = new SerializationTypeNameAnnotation { TypeName = "DifferentType" },
+                    TypeAnnotation = new ODataTypeAnnotation("DifferentType"),
                     ExpectedXml = "<category term='DifferentType' scheme='" + TestAtomConstants.ODataSchemeNamespace +"' xmlns='" + TestAtomConstants.AtomNamespace + "' />",
                     Model = null
                 },
                 new EntrySerializationTypeNameAnnotationTestCase
                 {
                     TypeName = null,
-                    SerializationTypeNameAnnotation = new SerializationTypeNameAnnotation { TypeName = string.Empty },
+                    TypeAnnotation = new ODataTypeAnnotation(string.Empty),
                     ExpectedXml = "<category term='' scheme='" + TestAtomConstants.ODataSchemeNamespace +"' xmlns='" + TestAtomConstants.AtomNamespace + "' />",
                     ExpectedJsonLight = "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataTypeAnnotationName + "\":\"\"",
                     Model = null
@@ -449,14 +449,14 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 new EntrySerializationTypeNameAnnotationTestCase
                 {
                     TypeName = "TestNS.MyType",
-                    SerializationTypeNameAnnotation = new SerializationTypeNameAnnotation { TypeName = "DifferentType" },
+                    TypeAnnotation = new ODataTypeAnnotation("DifferentType"),
                     ExpectedXml = "<category term='DifferentType' scheme='" + TestAtomConstants.ODataSchemeNamespace +"' xmlns='" + TestAtomConstants.AtomNamespace + "' />",
                     Model = null
                 },
                 new EntrySerializationTypeNameAnnotationTestCase
                 {
                     TypeName = "TestModel.MyType",
-                    SerializationTypeNameAnnotation = new SerializationTypeNameAnnotation { TypeName = "DifferentType" },
+                    TypeAnnotation = new ODataTypeAnnotation("DifferentType"),
                     ExpectedXml = "<category term='DifferentType' scheme='" + TestAtomConstants.ODataSchemeNamespace +"' xmlns='" + TestAtomConstants.AtomNamespace + "' />",
                     ExpectedJsonLight = "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataTypeAnnotationName + "\":\"DifferentType\"",
                     Model = model
@@ -467,9 +467,9 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
             {
                 ODataResource entry = ObjectModelUtils.CreateDefaultEntry();
                 entry.TypeName = tc.TypeName;
-                if (tc.SerializationTypeNameAnnotation != null)
+                if (tc.TypeAnnotation != null)
                 {
-                    entry.SetAnnotation(tc.SerializationTypeNameAnnotation);
+                    entry.SetAnnotation(tc.TypeAnnotation);
                 }
 
                 return new PayloadWriterTestDescriptor<ODataItem>(

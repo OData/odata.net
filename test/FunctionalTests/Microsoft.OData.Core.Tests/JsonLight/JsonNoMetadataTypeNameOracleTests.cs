@@ -30,8 +30,8 @@ namespace Microsoft.OData.Tests.JsonLight
 
         public JsonNoMetadataTypeNameOracleTests()
         {
-            entryWithTypeAnnotationAndTypeName.SetAnnotation(new SerializationTypeNameAnnotation{TypeName="TypeNameFromSTNA"});
-            entryWithTypeAnnotationWithoutTypeName.SetAnnotation(new SerializationTypeNameAnnotation{TypeName="TypeNameFromSTNA"});
+            entryWithTypeAnnotationAndTypeName.TypeAnnotation = new ODataTypeAnnotation("TypeNameFromSTNA");
+            entryWithTypeAnnotationWithoutTypeName.TypeAnnotation = new ODataTypeAnnotation("TypeNameFromSTNA");
         }
 
         // Note: Type names should never be written in no-metadata mode. These tests ensure the type name is null for every possible combination of inputs.
@@ -156,7 +156,7 @@ namespace Microsoft.OData.Tests.JsonLight
         public void ValueWithTypeNameAnnotationShouldReturnNull()
         {
             var complexValue = new ODataResource() {TypeName = ComplexTypeName};
-            complexValue.SetAnnotation(new SerializationTypeNameAnnotation{TypeName = "TypeNameFromSTNA"});
+            complexValue.TypeAnnotation = new ODataTypeAnnotation("TypeNameFromSTNA");
 
             this.testSubject.GetResourceTypeNameForWriting(
                 complexTypeReference.FullName(),

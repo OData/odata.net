@@ -49,7 +49,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client
         public void ClientShouldAddTypeAnnotationIfServerNameIsDifferent()
         {
             var testSubject = CreateODataEntry(serverTypeName: "Foo", clientTypeName: "Fake.Type");
-            var annotation = testSubject.GetAnnotation<SerializationTypeNameAnnotation>();
+            var annotation = testSubject.TypeAnnotation;
             annotation.Should().NotBeNull();
             annotation.TypeName.Should().Be("Foo");
         }
@@ -58,7 +58,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client
         public void ClientShouldNotAddTypeAnnotationIfServerNameIsTheSame()
         {
             var testSubject = CreateODataEntry(serverTypeName: "Fake.Type", clientTypeName: "Fake.Type");
-            testSubject.GetAnnotation<SerializationTypeNameAnnotation>().Should().BeNull();
+            testSubject.TypeAnnotation.Should().BeNull();
         }
 
         [TestMethod]

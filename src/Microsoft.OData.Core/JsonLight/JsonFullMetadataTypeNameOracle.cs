@@ -28,10 +28,9 @@ namespace Microsoft.OData.JsonLight
         {
             Debug.Assert(resourceSet != null, "resourceSet != null");
 
-            SerializationTypeNameAnnotation typeNameAnnotation = resourceSet.GetAnnotation<SerializationTypeNameAnnotation>();
-            if (typeNameAnnotation != null)
+            if (resourceSet.TypeAnnotation != null)
             {
-                return typeNameAnnotation.TypeName;
+                return resourceSet.TypeAnnotation.TypeName;
             }
 
             if (isUndeclared)
@@ -53,10 +52,9 @@ namespace Microsoft.OData.JsonLight
         {
             Debug.Assert(resource != null, "resource != null");
 
-            SerializationTypeNameAnnotation typeNameAnnotation = resource.GetAnnotation<SerializationTypeNameAnnotation>();
-            if (typeNameAnnotation != null)
+            if (resource.TypeAnnotation != null)
             {
-                return typeNameAnnotation.TypeName;
+                return resource.TypeAnnotation.TypeName;
             }
 
             return resource.TypeName;

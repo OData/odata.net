@@ -853,9 +853,6 @@
     <Compile Include="$(ODataCrossTargettingSourcePath)\SelectedPropertiesNode.cs">
       <Link>Microsoft\OData\Core\SelectedPropertiesNode.cs</Link>
     </Compile>
-    <Compile Include="$(ODataCrossTargettingSourcePath)\SerializationTypeNameAnnotation.cs">
-      <Link>Microsoft\OData\Core\SerializationTypeNameAnnotation.cs</Link>
-    </Compile>
     <Compile Include="$(ODataCrossTargettingSourcePath)\SimpleLazy.cs">
       <Link>Microsoft\OData\Core\SimpleLazy.cs</Link>
     </Compile>

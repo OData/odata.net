@@ -315,10 +315,9 @@ namespace Microsoft.OData
                 return null;
             }
 
-            var typeAnnotation = value.GetAnnotation<SerializationTypeNameAnnotation>();
-            if (typeAnnotation != null && !string.IsNullOrEmpty(typeAnnotation.TypeName))
+            if (value.TypeAnnotation != null && !string.IsNullOrEmpty(value.TypeAnnotation.TypeName))
             {
-                return typeAnnotation.TypeName;
+                return value.TypeAnnotation.TypeName;
             }
 
             var collectionValue = value as ODataCollectionValue;

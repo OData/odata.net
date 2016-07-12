@@ -295,7 +295,7 @@ namespace Microsoft.OData.JsonLight
             if (!string.IsNullOrEmpty(payloadTypeName) && payloadType != null)
             {
                 // only try resolving for known type (the below will throw on unknown type name) :
-                SerializationTypeNameAnnotation serializationTypeNameAnnotation;
+                ODataTypeAnnotation typeAnnotation;
                 EdmTypeKind targetTypeKind;
                 payloadTypeReference = this.ReaderValidator.ResolvePayloadTypeNameAndComputeTargetType(
                     EdmTypeKind.None,
@@ -305,7 +305,7 @@ namespace Microsoft.OData.JsonLight
                     this.Model,
                     this.GetNonEntityValueKind,
                     out targetTypeKind,
-                    out serializationTypeNameAnnotation);
+                    out typeAnnotation);
             }
 
             object propertyValue = null;
@@ -360,7 +360,7 @@ namespace Microsoft.OData.JsonLight
             if (!string.IsNullOrEmpty(payloadTypeName) && payloadType != null)
             {
                 // only try resolving for known type (the below will throw on unknown type name) :
-                SerializationTypeNameAnnotation serializationTypeNameAnnotation;
+                ODataTypeAnnotation typeAnnotation;
                 EdmTypeKind targetTypeKind;
                 payloadTypeReference = this.ReaderValidator.ResolvePayloadTypeNameAndComputeTargetType(
                     EdmTypeKind.None,
@@ -370,7 +370,7 @@ namespace Microsoft.OData.JsonLight
                     this.Model,
                     this.GetNonEntityValueKind,
                     out targetTypeKind,
-                    out serializationTypeNameAnnotation);
+                    out typeAnnotation);
             }
 
             object propertyValue = null;
@@ -1228,7 +1228,7 @@ namespace Microsoft.OData.JsonLight
         /// </summary>
         /// <param name="collectionValueTypeReference">The collection type reference of the value.</param>
         /// <param name="payloadTypeName">The type name read from the payload.</param>
-        /// <param name="serializationTypeNameAnnotation">The serialization type name for the collection value (possibly null).</param>
+        /// <param name="typeAnnotation">The serialization type name for the collection value (possibly null).</param>
         /// <returns>The value of the collection.</returns>
         /// <remarks>
         /// Pre-Condition:  Fails if the current node is not a JsonNodeType.StartArray
@@ -1237,7 +1237,7 @@ namespace Microsoft.OData.JsonLight
         private ODataCollectionValue ReadCollectionValue(
             IEdmCollectionTypeReference collectionValueTypeReference,
             string payloadTypeName,
-            SerializationTypeNameAnnotation serializationTypeNameAnnotation)
+            ODataTypeAnnotation typeAnnotation)
         {
             Debug.Assert(
                 collectionValueTypeReference == null || collectionValueTypeReference.IsNonEntityCollectionType(),
@@ -1250,9 +1250,9 @@ namespace Microsoft.OData.JsonLight
 
             ODataCollectionValue collectionValue = new ODataCollectionValue();
             collectionValue.TypeName = collectionValueTypeReference != null ? collectionValueTypeReference.FullName() : payloadTypeName;
-            if (serializationTypeNameAnnotation != null)
+            if (typeAnnotation != null)
             {
-                collectionValue.SetAnnotation(serializationTypeNameAnnotation);
+                collectionValue.TypeAnnotation = typeAnnotation;
             }
 
             if (collectionValueTypeReference != null)
@@ -1498,7 +1498,7 @@ namespace Microsoft.OData.JsonLight
                 }
             }
 
-            SerializationTypeNameAnnotation serializationTypeNameAnnotation;
+            ODataTypeAnnotation typeAnnotation;
             EdmTypeKind targetTypeKind;
             IEdmTypeReference targetTypeReference = this.ReaderValidator.ResolvePayloadTypeNameAndComputeTargetType(
                 EdmTypeKind.None,
@@ -1508,7 +1508,7 @@ namespace Microsoft.OData.JsonLight
                 this.Model,
                 this.GetNonEntityValueKind,
                 out targetTypeKind,
-                out serializationTypeNameAnnotation);
+                out typeAnnotation);
 
             object result;
 
@@ -1580,7 +1580,7 @@ namespace Microsoft.OData.JsonLight
                         result = this.ReadCollectionValue(
                             collectionTypeReference,
                             payloadTypeName,
-                            serializationTypeNameAnnotation);
+                            typeAnnotation);
                         break;
 
                     case EdmTypeKind.TypeDefinition:

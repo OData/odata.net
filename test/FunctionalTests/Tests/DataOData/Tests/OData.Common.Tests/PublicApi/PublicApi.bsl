@@ -3893,6 +3893,8 @@ public interface Microsoft.OData.IODataResponseMessageAsync : IODataResponseMess
 public abstract class Microsoft.OData.ODataAnnotatable {
 	protected ODataAnnotatable ()
 
+	Microsoft.OData.ODataTypeAnnotation TypeAnnotation  { public get; public set; }
+
 	public T GetAnnotation ()
 	public void SetAnnotation (T annotation)
 }
@@ -4933,6 +4935,18 @@ public sealed class Microsoft.OData.ODataStreamReferenceValue : Microsoft.OData.
 	System.Uri ReadLink  { public get; public set; }
 }
 
+public sealed class Microsoft.OData.ODataTypeAnnotation {
+	public ODataTypeAnnotation ()
+	public ODataTypeAnnotation (Microsoft.OData.Edm.IEdmCollectionTypeReference collectionType)
+	public ODataTypeAnnotation (Microsoft.OData.Edm.IEdmComplexTypeReference complexType)
+	public ODataTypeAnnotation (string typeName)
+	public ODataTypeAnnotation (Microsoft.OData.Edm.IEdmNavigationSource navigationSource, Microsoft.OData.Edm.IEdmStructuredType structuredType)
+
+	Microsoft.OData.Edm.IEdmNavigationSource NavigationSource  { public get; }
+	Microsoft.OData.Edm.IEdmTypeReference Type  { public get; }
+	string TypeName  { public get; public set; }
+}
+
 public sealed class Microsoft.OData.ODataUntypedValue : Microsoft.OData.ODataValue {
 	public ODataUntypedValue ()
 
@@ -4968,12 +4982,6 @@ public sealed class Microsoft.OData.ODataUrlKeyDelimiter {
 
 public sealed class Microsoft.OData.ProjectedPropertiesAnnotation {
 	public ProjectedPropertiesAnnotation (System.Collections.Generic.IEnumerable`1[[System.String]] projectedPropertyNames)
-}
-
-public sealed class Microsoft.OData.SerializationTypeNameAnnotation {
-	public SerializationTypeNameAnnotation ()
-
-	string TypeName  { public get; public set; }
 }
 
 public enum Microsoft.OData.Json.JsonNodeType : int {

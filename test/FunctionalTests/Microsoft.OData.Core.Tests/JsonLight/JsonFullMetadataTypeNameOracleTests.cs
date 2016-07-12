@@ -30,8 +30,8 @@ namespace Microsoft.OData.Tests.JsonLight
 
         public JsonFullMetadataTypeNameOracleTests()
         {
-            entryWithTypeAnnotationAndTypeName.SetAnnotation(new SerializationTypeNameAnnotation { TypeName = "TypeNameFromSTNA" });
-            entryWithTypeAnnotationWithoutTypeName.SetAnnotation(new SerializationTypeNameAnnotation { TypeName = "TypeNameFromSTNA" });
+            entryWithTypeAnnotationAndTypeName.TypeAnnotation = new ODataTypeAnnotation("TypeNameFromSTNA");
+            entryWithTypeAnnotationWithoutTypeName.TypeAnnotation = new ODataTypeAnnotation("TypeNameFromSTNA");
         }
 
         #region Full metadata entry type name tests
@@ -156,7 +156,7 @@ namespace Microsoft.OData.Tests.JsonLight
         public void ValueWithTypeNameAnnotationShouldReturnTypeNameFromAnnotation()
         {
             var complexValue = new ODataResource() { TypeName = ComplexTypeName };
-            complexValue.SetAnnotation(new SerializationTypeNameAnnotation { TypeName = "TypeNameFromSTNA" });
+            complexValue.TypeAnnotation = new ODataTypeAnnotation("TypeNameFromSTNA");
 
             this.testSubject.GetResourceTypeNameForWriting(
                 complexTypeReference.FullName(),

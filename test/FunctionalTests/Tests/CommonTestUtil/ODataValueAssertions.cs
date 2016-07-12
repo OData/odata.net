@@ -55,7 +55,7 @@ namespace AstoriaUnitTests.TDD.Common
 
         public AndConstraint<ODataValueAssertions> HaveSerializationTypeName(string value)
         {
-            var annotation = this.Subject.As<ODataValue>().GetAnnotation<SerializationTypeNameAnnotation>();
+            var annotation = this.Subject.As<ODataValue>().TypeAnnotation;
             annotation.Should().NotBeNull();
             annotation.TypeName.Should().Be(value);
             return new AndConstraint<ODataValueAssertions>(this);
@@ -63,7 +63,7 @@ namespace AstoriaUnitTests.TDD.Common
 
         public AndConstraint<ODataValueAssertions> NotHaveSerializationTypeName()
         {
-            var annotation = this.Subject.As<ODataValue>().GetAnnotation<SerializationTypeNameAnnotation>();
+            var annotation = this.Subject.As<ODataValue>().TypeAnnotation;
             annotation.Should().BeNull();
             return new AndConstraint<ODataValueAssertions>(this);
         }
@@ -100,7 +100,7 @@ namespace AstoriaUnitTests.TDD.Common
 
         public AndConstraint<ODataItemAssertions> HaveSerializationTypeName(string value)
         {
-            var annotation = this.Subject.As<ODataItem>().GetAnnotation<SerializationTypeNameAnnotation>();
+            var annotation = this.Subject.As<ODataItem>().TypeAnnotation;
             annotation.Should().NotBeNull();
             annotation.TypeName.Should().Be(value);
             return new AndConstraint<ODataItemAssertions>(this);

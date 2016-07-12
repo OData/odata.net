@@ -380,7 +380,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                         if (testConfiguration.Format == ODataFormat.Json)
                         {
                             ODataCollectionValue collectionValue = ((ODataCollectionValue)property.Value);
-                            if (string.IsNullOrEmpty(collectionValue.TypeName) && (collectionValue.GetAnnotation<SerializationTypeNameAnnotation>() == null || string.IsNullOrEmpty(collectionValue.GetAnnotation<SerializationTypeNameAnnotation>().TypeName)))
+                            if (string.IsNullOrEmpty(collectionValue.TypeName) && (collectionValue.TypeAnnotation == null || string.IsNullOrEmpty(collectionValue.TypeAnnotation.TypeName)))
                             {
                                 return new JsonWriterTestExpectedResults(this.Settings.ExpectedResultSettings)
                                 {
@@ -1129,8 +1129,8 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
         }
 
         [Ignore] // Remove Atom
-        [TestMethod, Variation(Description = "Verify that TypeName property and SerializationTypeNameAnnotation behave as expected on a complex value.")]
-        public void ComplexValueSerializationTypeNameAnnotationTest()
+        [TestMethod, Variation(Description = "Verify that TypeName property and ODataTypeAnnotation behave as expected on a complex value.")]
+        public void ComplexValueODataTypeAnnotationTest()
         {
             // TODO: Move this string to resources and localize it
             const string ODataJsonLightValueSerializer_MissingTypeNameOnComplex = "A type name was not provided for an instance of ODataComplexValue.";
@@ -1140,7 +1140,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 new
                 {
                     TypeName = (string)null,
-                    SerializationTypeNameAnnotation = (SerializationTypeNameAnnotation)null,
+                    ODataTypeAnnotation = (ODataTypeAnnotation)null,
                     XmlTypeName = MissingTypeNameSentinelTextAtom,
                     JsonLightTypeName = (string)null,
                     ExpectedExceptionInJsonLight = (object)ODataExpectedExceptions.ODataException("ODataJsonLightValueSerializer_MissingTypeNameOnComplex"),
@@ -1151,7 +1151,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 new
                 {
                     TypeName = "TestNS.MyType",
-                    SerializationTypeNameAnnotation = (SerializationTypeNameAnnotation)null,
+                    ODataTypeAnnotation = (ODataTypeAnnotation)null,
                     XmlTypeName = "<typeName>TestNS.MyType</typeName>",
                     JsonLightTypeName = MissingTypeNameSentinelTextJson,
                     ExpectedExceptionInJsonLight = (object) null,
@@ -1162,7 +1162,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 new
                 {
                     TypeName = "TestNS.MyType",
-                    SerializationTypeNameAnnotation = new SerializationTypeNameAnnotation() { TypeName = null },
+                    ODataTypeAnnotation = new ODataTypeAnnotation(),
                     XmlTypeName = MissingTypeNameSentinelTextAtom,
                     JsonLightTypeName = MissingTypeNameSentinelTextJson,
                     ExpectedExceptionInJsonLight = (object) null,
@@ -1173,7 +1173,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 new
                 {
                     TypeName = (string)null,
-                    SerializationTypeNameAnnotation = new SerializationTypeNameAnnotation() { TypeName = "DifferentType" },
+                    ODataTypeAnnotation = new ODataTypeAnnotation() { TypeName = "DifferentType" },
                     XmlTypeName = "<typeName>DifferentType</typeName>",
                     JsonLightTypeName = (string) null,
                     ExpectedExceptionInJsonLight = (object) new ODataException(ODataJsonLightValueSerializer_MissingTypeNameOnComplex),
@@ -1184,7 +1184,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 new
                 {
                     TypeName = (string)null,
-                    SerializationTypeNameAnnotation = new SerializationTypeNameAnnotation() { TypeName = string.Empty },
+                    ODataTypeAnnotation = new ODataTypeAnnotation() { TypeName = string.Empty },
                     XmlTypeName = "<typeName></typeName>",
                     JsonLightTypeName = (string) null,
                     ExpectedExceptionInJsonLight = (object)ODataExpectedExceptions.ODataException("ODataJsonLightValueSerializer_MissingTypeNameOnComplex"),
@@ -1195,7 +1195,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 new
                 {
                     TypeName = "TestNS.MyType",
-                    SerializationTypeNameAnnotation = new SerializationTypeNameAnnotation() { TypeName = "DifferentType" },
+                    ODataTypeAnnotation = new ODataTypeAnnotation() { TypeName = "DifferentType" },
                     XmlTypeName = "<typeName>DifferentType</typeName>",
                     JsonLightTypeName = "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataTypeAnnotationName + "\":\"DifferentType\"",
                     ExpectedExceptionInJsonLight = (object) null,
@@ -1223,9 +1223,9 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 ODataComplexValue complexValue = new ODataComplexValue();
                 complexValue.TypeName = tc.TypeName;
                 complexValue.Properties = new[] { new ODataProperty() { Name = "TestProperty", Value = "TestValue" } };
-                if (tc.SerializationTypeNameAnnotation != null)
+                if (tc.ODataTypeAnnotation != null)
                 {
-                    complexValue.SetAnnotation(tc.SerializationTypeNameAnnotation);
+                    complexValue.SetAnnotation(tc.ODataTypeAnnotation);
                 }
 
                 return new PayloadWriterTestDescriptor<ODataProperty>(
@@ -1291,8 +1291,8 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
         }
 
         [Ignore] // Remove Atom
-        [TestMethod, Variation(Description = "Verify that TypeName property and SerializationTypeNameAnnotation behave as expected on a collection.")]
-        public void CollectionValueSerializationTypeNameAnnotationTest()
+        [TestMethod, Variation(Description = "Verify that TypeName property and ODataTypeAnnotation behave as expected on a collection.")]
+        public void CollectionValueODataTypeAnnotationTest()
         {
             #region test cases
 
@@ -1301,7 +1301,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 new
                 {
                     TypeName = (string)null,
-                    SerializationTypeNameAnnotation = (SerializationTypeNameAnnotation)null,
+                    ODataTypeAnnotation = (ODataTypeAnnotation)null,
                     XmlTypeName = MissingTypeNameSentinelTextAtom,
                     JsonTypeName = MissingTypeNameSentinelTextJson,
                     JsonLightTypeName = MissingTypeNameSentinelTextJson,
@@ -1313,7 +1313,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 new
                 {
                     TypeName = EntityModelUtils.GetCollectionTypeName("Edm.Int32"),
-                    SerializationTypeNameAnnotation = (SerializationTypeNameAnnotation)null,
+                    ODataTypeAnnotation = (ODataTypeAnnotation)null,
                     XmlTypeName = "<typeName>" + EntityModelUtils.GetCollectionTypeName("Edm.Int32") + "</typeName>",
                     JsonTypeName = "\"type\":\"" + EntityModelUtils.GetCollectionTypeName("Edm.Int32") + "\"",
                     JsonLightTypeName = MissingTypeNameSentinelTextJson,
@@ -1325,7 +1325,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 new
                 {
                     TypeName = EntityModelUtils.GetCollectionTypeName("Edm.Int32"),
-                    SerializationTypeNameAnnotation = new SerializationTypeNameAnnotation() { TypeName = null },
+                    ODataTypeAnnotation = new ODataTypeAnnotation(),
                     XmlTypeName = MissingTypeNameSentinelTextAtom,
                     JsonTypeName = MissingTypeNameSentinelTextJson,
                     JsonLightTypeName = MissingTypeNameSentinelTextJson,
@@ -1337,7 +1337,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 new
                 {
                     TypeName = (string)null,
-                    SerializationTypeNameAnnotation = new SerializationTypeNameAnnotation() { TypeName = EntityModelUtils.GetCollectionTypeName("Edm.String") },
+                    ODataTypeAnnotation = new ODataTypeAnnotation() { TypeName = EntityModelUtils.GetCollectionTypeName("Edm.String") },
                     XmlTypeName = "<typeName>" + EntityModelUtils.GetCollectionTypeName("Edm.String") + "</typeName>",
                     JsonTypeName = "\"type\":\"" + EntityModelUtils.GetCollectionTypeName("Edm.String") + "\"",
                     JsonLightTypeName = "\"@odata.type\":\"#" + EntityModelUtils.GetCollectionTypeName("Edm.String") + "\"",
@@ -1349,7 +1349,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 new
                 {
                     TypeName = (string)null,
-                    SerializationTypeNameAnnotation = new SerializationTypeNameAnnotation() { TypeName = string.Empty },
+                    ODataTypeAnnotation = new ODataTypeAnnotation() { TypeName = string.Empty },
                     XmlTypeName = "<typeName></typeName>",
                     JsonTypeName = "\"type\":\"\"",
                     JsonLightTypeName = "\"@odata.type\":\"\"",
@@ -1361,7 +1361,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 new
                 {
                     TypeName = (string)null,
-                    SerializationTypeNameAnnotation = new SerializationTypeNameAnnotation() { TypeName = "NonCollectionTypeName" },
+                    ODataTypeAnnotation = new ODataTypeAnnotation() { TypeName = "NonCollectionTypeName" },
                     XmlTypeName = "<typeName>NonCollectionTypeName</typeName>",
                     JsonTypeName = "\"type\":\"NonCollectionTypeName\"",
                     JsonLightTypeName = "\"@odata.type\":\"#NonCollectionTypeName\"",
@@ -1373,7 +1373,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 new
                 {
                     TypeName = EntityModelUtils.GetCollectionTypeName("Edm.Int32"),
-                    SerializationTypeNameAnnotation = new SerializationTypeNameAnnotation() { TypeName = EntityModelUtils.GetCollectionTypeName("Edm.String") },
+                    ODataTypeAnnotation = new ODataTypeAnnotation() { TypeName = EntityModelUtils.GetCollectionTypeName("Edm.String") },
                     XmlTypeName = "<typeName>" + EntityModelUtils.GetCollectionTypeName("Edm.String") + "</typeName>",
                     JsonTypeName = "\"type\":\"" + EntityModelUtils.GetCollectionTypeName("Edm.String") + "\"",
                     JsonLightTypeName = "\"@odata.type\":\"#" + EntityModelUtils.GetCollectionTypeName("Edm.String") + "\"",
@@ -1399,16 +1399,16 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 ODataComplexValue complexValue = new ODataComplexValue();
                 complexValue.TypeName = tc.TypeName;
                 complexValue.Properties = new[] { new ODataProperty() { Name = "TestProperty", Value = "TestValue" } };
-                if (tc.SerializationTypeNameAnnotation != null)
+                if (tc.ODataTypeAnnotation != null)
                 {
-                    complexValue.SetAnnotation(tc.SerializationTypeNameAnnotation);
+                    complexValue.SetAnnotation(tc.ODataTypeAnnotation);
                 }
 
                 ODataCollectionValue collection = new ODataCollectionValue();
                 collection.TypeName = tc.TypeName;
-                if (tc.SerializationTypeNameAnnotation != null)
+                if (tc.ODataTypeAnnotation != null)
                 {
-                    collection.SetAnnotation(tc.SerializationTypeNameAnnotation);
+                    collection.SetAnnotation(tc.ODataTypeAnnotation);
                 }
 
                 return new PayloadWriterTestDescriptor<ODataProperty>(
@@ -1476,37 +1476,37 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
         }
 
         [Ignore] // Remove Atom
-        [TestMethod, Variation(Description = "Verify that SerializationTypeNameAnnotation behave as expected on a collection.")]
-        public void PrimitiveValueSerializationTypeNameAnnotationTest()
+        [TestMethod, Variation(Description = "Verify that ODataTypeAnnotation behave as expected on a collection.")]
+        public void PrimitiveValueODataTypeAnnotationTest()
         {
             #region test case
             var testCases = new[]
             {
                 new
                 {
-                    DebugDescription = "A null SerializationTypeNameAnnotation should invoke default primitive type name writing behavior.",
-                    SerializationTypeNameAnnotation = (SerializationTypeNameAnnotation)null,
+                    DebugDescription = "A null ODataTypeAnnotation should invoke default primitive type name writing behavior.",
+                    ODataTypeAnnotation = (ODataTypeAnnotation)null,
                     XmlTypeName = "<typeName>Edm.Int64</typeName>",
                     JsonLightTypeName = MissingTypeNameSentinelTextJson,   // Since this is a declared property, its type name isn't written by default in JSON light.
                 },
                 new
                 {
-                    DebugDescription = "A SerializationTypeNameAnnotation with a null TypeName should force primitive type names to not be written, regardless of format.",
-                    SerializationTypeNameAnnotation = new SerializationTypeNameAnnotation() { TypeName = null },
+                    DebugDescription = "A ODataTypeAnnotation with a null TypeName should force primitive type names to not be written, regardless of format.",
+                    ODataTypeAnnotation = new ODataTypeAnnotation(),
                     XmlTypeName = MissingTypeNameSentinelTextAtom,
                     JsonLightTypeName = MissingTypeNameSentinelTextJson,
                 },
                 new
                 {
-                    DebugDescription = "A SerializationTypeNameAnnotation with a TypeName of \"DifferentType\" should cause that type name to be written for primitive values, except in JSON verbose, where the format doesn't allow explicit type names for primitives.",
-                    SerializationTypeNameAnnotation = new SerializationTypeNameAnnotation() { TypeName = "DifferentType" },
+                    DebugDescription = "A ODataTypeAnnotation with a TypeName of \"DifferentType\" should cause that type name to be written for primitive values, except in JSON verbose, where the format doesn't allow explicit type names for primitives.",
+                    ODataTypeAnnotation = new ODataTypeAnnotation() { TypeName = "DifferentType" },
                     XmlTypeName = "<typeName>DifferentType</typeName>",
                     JsonLightTypeName = "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataTypeAnnotationName + "\":\"DifferentType\"",
                 },
                 new
                 {
-                    DebugDescription = "A SerializationTypeNameAnnotation with an empty string TypeName should cause an empty type name to be written for primitive values, except in JSON verbose, where the format doesn't allow explicit type names for primitives.",
-                    SerializationTypeNameAnnotation = new SerializationTypeNameAnnotation() { TypeName = string.Empty },
+                    DebugDescription = "A ODataTypeAnnotation with an empty string TypeName should cause an empty type name to be written for primitive values, except in JSON verbose, where the format doesn't allow explicit type names for primitives.",
+                    ODataTypeAnnotation = new ODataTypeAnnotation() { TypeName = string.Empty },
                     XmlTypeName = "<typeName></typeName>",
                     JsonLightTypeName = "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataTypeAnnotationName + "\":\"\"",
                 }
@@ -1525,9 +1525,9 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 model.AddElement(container);
 
                 ODataPrimitiveValue primitiveValue = new ODataPrimitiveValue((Int64)42);
-                if (tc.SerializationTypeNameAnnotation != null)
+                if (tc.ODataTypeAnnotation != null)
                 {
-                    primitiveValue.SetAnnotation(tc.SerializationTypeNameAnnotation);
+                    primitiveValue.SetAnnotation(tc.ODataTypeAnnotation);
                 }
 
                 return new PayloadWriterTestDescriptor<ODataProperty>(

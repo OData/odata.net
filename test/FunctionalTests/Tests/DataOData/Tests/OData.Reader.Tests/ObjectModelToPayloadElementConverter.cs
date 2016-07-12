@@ -857,10 +857,9 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
             /// <param name="payloadElement">The payload element to add the converted annotation to.</param>
             private void ConvertSerializationTypeNameAnnotation(ODataAnnotatable odataAnnotatable, ODataPayloadElement payloadElement)
             {
-                SerializationTypeNameAnnotation serializationTypeNameAnnotation = odataAnnotatable.GetAnnotation<SerializationTypeNameAnnotation>();
-                if (serializationTypeNameAnnotation != null)
+                if (odataAnnotatable.TypeAnnotation != null)
                 {
-                    payloadElement.AddAnnotation(new SerializationTypeNameTestAnnotation { TypeName = serializationTypeNameAnnotation.TypeName });
+                    payloadElement.AddAnnotation(new SerializationTypeNameTestAnnotation { TypeName = odataAnnotatable.TypeAnnotation.TypeName });
                 }
             }
         }

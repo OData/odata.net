@@ -484,7 +484,7 @@ namespace Microsoft.OData
                 this.scopes.Count > 0 && this.scopes.Peek().Item is ODataResource,
                 "Resource type can be applied only when in resource scope.");
 
-            SerializationTypeNameAnnotation serializationTypeNameAnnotation;
+            ODataTypeAnnotation typeAnnotation;
             EdmTypeKind targetTypeKind;
             IEdmStructuredTypeReference targetResourceTypeReference =
                 (IEdmStructuredTypeReference)this.inputContext.MessageReaderSettings.Validator.ResolvePayloadTypeNameAndComputeTargetType(
@@ -495,7 +495,7 @@ namespace Microsoft.OData
                     this.inputContext.Model,
                     () => EdmTypeKind.Entity,
                     out targetTypeKind,
-                    out serializationTypeNameAnnotation);
+                    out typeAnnotation);
 
             IEdmStructuredType targetResourceType = null;
             ODataResource resource = this.CurrentResource;
@@ -504,9 +504,9 @@ namespace Microsoft.OData
                 targetResourceType = targetResourceTypeReference.StructuredDefinition();
                 resource.TypeName = targetResourceType.FullTypeName();
 
-                if (serializationTypeNameAnnotation != null)
+                if (typeAnnotation != null)
                 {
-                    resource.SetAnnotation(serializationTypeNameAnnotation);
+                    resource.TypeAnnotation = typeAnnotation;
                 }
             }
             else if (resourceTypeNameFromPayload != null)

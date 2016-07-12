@@ -1095,7 +1095,7 @@ namespace Microsoft.OData.JsonLight
             if (!string.IsNullOrEmpty(payloadTypeName) && payloadType != null)
             {
                 // only try resolving for known type (the below will throw on unknown type name) :
-                SerializationTypeNameAnnotation serializationTypeNameAnnotation;
+                ODataTypeAnnotation typeAnnotation;
                 EdmTypeKind targetTypeKind;
                 payloadTypeReference = this.ReaderValidator.ResolvePayloadTypeNameAndComputeTargetType(
                     EdmTypeKind.None,
@@ -1105,7 +1105,7 @@ namespace Microsoft.OData.JsonLight
                     this.Model,
                     this.GetNonEntityValueKind,
                     out targetTypeKind,
-                    out serializationTypeNameAnnotation);
+                    out typeAnnotation);
             }
 
             bool isKnownValueType = IsKnownValueTypeForEntityOrComplex(this.JsonReader.NodeType, this.JsonReader.Value, payloadTypeName, payloadTypeReference);

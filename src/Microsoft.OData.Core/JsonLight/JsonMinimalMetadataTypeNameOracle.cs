@@ -30,10 +30,9 @@ namespace Microsoft.OData.JsonLight
         {
             Debug.Assert(resourceSet != null, "resourceSet != null");
 
-            SerializationTypeNameAnnotation typeNameAnnotation = resourceSet.GetAnnotation<SerializationTypeNameAnnotation>();
-            if (typeNameAnnotation != null)
+            if (resourceSet.TypeAnnotation != null)
             {
-                return typeNameAnnotation.TypeName;
+                return resourceSet.TypeAnnotation.TypeName;
             }
 
             var expectedResourceSetTypeName = expectedResourceTypeName == null ? null : EdmLibraryExtensions.GetCollectionTypeName(expectedResourceTypeName);
@@ -57,10 +56,9 @@ namespace Microsoft.OData.JsonLight
         {
             Debug.Assert(resource != null, "resource != null");
 
-            SerializationTypeNameAnnotation typeNameAnnotation = resource.GetAnnotation<SerializationTypeNameAnnotation>();
-            if (typeNameAnnotation != null)
+            if (resource.TypeAnnotation != null)
             {
-                return typeNameAnnotation.TypeName;
+                return resource.TypeAnnotation.TypeName;
             }
 
             // We only write entity type names in Json Light if it's more derived (different) from the expected type name.

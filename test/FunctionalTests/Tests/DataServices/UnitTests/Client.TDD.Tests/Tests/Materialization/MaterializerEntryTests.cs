@@ -38,7 +38,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client.Materialization
                e =>
                {
                    e.TypeName = ExpectedTypeName;
-                   e.SetAnnotation(new SerializationTypeNameAnnotation { TypeName = null });
+                   e.TypeAnnotation = new ODataTypeAnnotation();
                });
             testSubject.EntityDescriptor.ServerTypeName.Should().Be(ExpectedTypeName);
         }
@@ -51,7 +51,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client.Materialization
                e =>
                {
                    e.TypeName = "foo";
-                   e.SetAnnotation(new SerializationTypeNameAnnotation { TypeName = ExpectedTypeName });
+                   e.TypeAnnotation = new ODataTypeAnnotation(ExpectedTypeName);
                });
             testSubject.EntityDescriptor.ServerTypeName.Should().Be(ExpectedTypeName);
         }

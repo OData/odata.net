@@ -80,7 +80,7 @@ namespace Microsoft.OData
         /// <param name="model">The model to use.</param>
         /// <param name="typeKindFromPayloadFunc">A func to compute the type kind from the payload shape if it could not be determined from the expected type or the payload type.</param>
         /// <param name="targetTypeKind">The target type kind to be used to read the payload.</param>
-        /// <param name="serializationTypeNameAnnotation">Potentially non-null instance of an annotation to put on the value reported from the reader.</param>
+        /// <param name="typeAnnotation">Potentially non-null instance of an annotation to put on the value reported from the reader.</param>
         /// <returns>
         /// The target type reference to use for parsing the value.
         /// If there is no user specified model, this will return null.
@@ -97,13 +97,13 @@ namespace Microsoft.OData
             IEdmModel model,
             Func<EdmTypeKind> typeKindFromPayloadFunc,
             out EdmTypeKind targetTypeKind,
-            out SerializationTypeNameAnnotation serializationTypeNameAnnotation)
+            out ODataTypeAnnotation typeAnnotation)
         {
             return ReaderValidationUtils.ResolvePayloadTypeNameAndComputeTargetType(
                 expectedTypeKind, defaultPrimitivePayloadType, expectedTypeReference, payloadTypeName, model,
                 settings.ClientCustomTypeResolver, settings.ThrowIfTypeConflictsWithMetadata,
                 settings.EnablePrimitiveTypeConversion,
-                typeKindFromPayloadFunc, out targetTypeKind, out serializationTypeNameAnnotation);
+                typeKindFromPayloadFunc, out targetTypeKind, out typeAnnotation);
         }
 
         /// <summary>

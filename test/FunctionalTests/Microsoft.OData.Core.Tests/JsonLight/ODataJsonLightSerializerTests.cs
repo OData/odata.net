@@ -182,7 +182,7 @@ namespace Microsoft.OData.Tests.JsonLight
                 ODataError error = new ODataError();
                 var instanceAnnotations = new Collection<ODataInstanceAnnotation>();
                 var primitiveValue = new ODataPrimitiveValue("stringValue");
-                primitiveValue.SetAnnotation(new SerializationTypeNameAnnotation() { TypeName = "Custom.Type" });
+                primitiveValue.TypeAnnotation = new ODataTypeAnnotation("Custom.Type");
                 ODataInstanceAnnotation annotation = new ODataInstanceAnnotation("sample.primitive", primitiveValue);
                 instanceAnnotations.Add(annotation);
                 error.InstanceAnnotations = instanceAnnotations;
