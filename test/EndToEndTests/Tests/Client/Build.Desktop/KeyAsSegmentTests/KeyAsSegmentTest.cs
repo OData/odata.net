@@ -16,7 +16,7 @@ namespace Microsoft.Test.OData.Tests.Client.KeyAsSegmentTests
 
     public class KeyAsSegmentTest : EndToEndTestBase
     {
-        public KeyAsSegmentTest() 
+        public KeyAsSegmentTest()
             : base(ServiceDescriptors.KeyAsSegmentService)
         {
         }
@@ -30,7 +30,7 @@ namespace Microsoft.Test.OData.Tests.Client.KeyAsSegmentTests
         protected DataServiceContextWrapper<DefaultContainer> CreateWrappedContext()
         {
             var wrappedContext = base.CreateWrappedContext<DefaultContainer>();
-            wrappedContext.UrlConventions = DataServiceUrlConventions.KeyAsSegment;
+            wrappedContext.UrlKeyDelimiter = DataServiceUrlKeyDelimiter.Slash;
             return wrappedContext;
         }
     }

@@ -34,9 +34,9 @@ namespace Microsoft.OData.Client
         /// <param name="baseUri">The base URI of the service.</param>
         /// <param name="entitySetName">Name of the entity set the entity belongs to.</param>
         /// <param name="entityInstance">The entity instance to build metadata for.</param>
-        /// <param name="conventions">The user-specified conventions to use.</param>
-        internal ConventionalODataEntityMetadataBuilder(Uri baseUri, string entitySetName, IEdmStructuredValue entityInstance, DataServiceUrlConventions conventions)
-            : this(UriResolver.CreateFromBaseUri(baseUri, "baseUri"), entitySetName, entityInstance, conventions)
+        /// <param name="keyDelimiter">The user-specified delimiter to use.</param>
+        internal ConventionalODataEntityMetadataBuilder(Uri baseUri, string entitySetName, IEdmStructuredValue entityInstance, DataServiceUrlKeyDelimiter keyDelimiter)
+            : this(UriResolver.CreateFromBaseUri(baseUri, "baseUri"), entitySetName, entityInstance, keyDelimiter)
         {
         }
 
@@ -46,16 +46,16 @@ namespace Microsoft.OData.Client
         /// <param name="resolver">The URI resolver to use.</param>
         /// <param name="entitySetName">Name of the entity set the entity belongs to.</param>
         /// <param name="entityInstance">The entity instance to build metadata for.</param>
-        /// <param name="conventions">The user-specified conventions to use.</param>
-        internal ConventionalODataEntityMetadataBuilder(UriResolver resolver, string entitySetName, IEdmStructuredValue entityInstance, DataServiceUrlConventions conventions)
+        /// <param name="keyDelimiter">The user-specified conventions to use.</param>
+        internal ConventionalODataEntityMetadataBuilder(UriResolver resolver, string entitySetName, IEdmStructuredValue entityInstance, DataServiceUrlKeyDelimiter keyDelimiter)
         {
             Util.CheckArgumentNullAndEmpty(entitySetName, "entitySetName");
             Util.CheckArgumentNull(entityInstance, "entityInstance");
-            Util.CheckArgumentNull(conventions, "conventions");
+            Util.CheckArgumentNull(keyDelimiter, "keyDelimiter");
             this.entitySetName = entitySetName;
             this.entityInstance = entityInstance;
 
-            this.uriBuilder = new ConventionalODataUriBuilder(resolver, conventions);
+            this.uriBuilder = new ConventionalODataUriBuilder(resolver, keyDelimiter);
             this.baseUri = resolver.BaseUriOrNull;
         }
 
@@ -131,19 +131,19 @@ namespace Microsoft.OData.Client
             /// <summary>The uri resolver to use for entity sets.</summary>
             private readonly UriResolver resolver;
 
-            /// <summary>The user specified conventions.</summary>
-            private readonly DataServiceUrlConventions conventions;
+            /// <summary>The key delimiter user specified.</summary>
+            private readonly DataServiceUrlKeyDelimiter urlKeyDelimiter;
 
             /// <summary>
             /// Initializes a new instance of the <see cref="ConventionalODataUriBuilder"/> class.
             /// </summary>
             /// <param name="resolver">The uri resolver to use.</param>
-            /// <param name="conventions">The user specified conventions to use.</param>
-            internal ConventionalODataUriBuilder(UriResolver resolver, DataServiceUrlConventions conventions)
+            /// <param name="urlKeyDelimiter">The key delimiter user specified.</param>
+            internal ConventionalODataUriBuilder(UriResolver resolver, DataServiceUrlKeyDelimiter urlKeyDelimiter)
             {
                 Debug.Assert(resolver != null, "resolver != null");
                 this.resolver = resolver;
-                this.conventions = conventions;
+                this.urlKeyDelimiter = urlKeyDelimiter;
             }
 
             /// <summary>
@@ -175,7 +175,7 @@ namespace Microsoft.OData.Client
                     builder.Append(UriUtil.UriToString(baseUri));
                 }
 
-                this.conventions.AppendKeyExpression(entityInstance, builder);
+                this.urlKeyDelimiter.AppendKeyExpression(entityInstance, builder);
                 return UriUtil.CreateUri(builder.ToString(), UriKind.RelativeOrAbsolute);
             }
         }

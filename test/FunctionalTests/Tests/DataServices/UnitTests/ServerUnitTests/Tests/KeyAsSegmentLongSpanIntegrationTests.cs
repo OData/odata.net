@@ -251,7 +251,11 @@ namespace AstoriaUnitTests.Tests
 
                 request.StartService();
 
-                DataServiceContext ctx = new DataServiceContext(request.ServiceRoot, ODataProtocolVersion.V4) { UrlConventions = DataServiceUrlConventions.KeyAsSegment };
+                DataServiceContext ctx = new DataServiceContext(request.ServiceRoot, ODataProtocolVersion.V4)
+                {
+                    UrlKeyDelimiter = DataServiceUrlKeyDelimiter.Slash
+                };
+
                 if (customize != null)
                 {
                     customize(ctx);
@@ -281,7 +285,7 @@ namespace AstoriaUnitTests.Tests
                 config.SetServiceActionAccessRule("*", ServiceActionRights.Invoke);
                 config.UseVerboseErrors = true;
 
-                config.DataServiceBehavior.UrlConventions = DataServiceUrlConventions.KeyAsSegment;
+                config.DataServiceBehavior.UrlKeyDelimiter = DataServiceUrlKeyDelimiter.Slash;
 
                 config.DataServiceBehavior.MaxProtocolVersion = ODataProtocolVersion.V4;
                 config.DataServiceBehavior.IncludeAssociationLinksInResponse = true;

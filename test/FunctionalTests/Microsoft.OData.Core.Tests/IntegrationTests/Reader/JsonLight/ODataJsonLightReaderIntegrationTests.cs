@@ -6,8 +6,8 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.IO;
+using System.Linq;
 using System.Text;
 using FluentAssertions;
 using Microsoft.OData.Edm;
@@ -44,9 +44,9 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.JsonLight
 
         #region ShouldBeAbleToReadEntryWithIdOnly
 
-        private void ShouldBeAbleToReadEntryWithIdOnlyImplementation(string payload, bool odataSimplified)
+        private void ShouldBeAbleToReadEntryWithIdOnlyImplementation(string payload, bool enableReadingODataAnnotationWithoutPrefix)
         {
-            var actual = ReadJsonLightEntry(payload, FullMetadata, readingResponse: true, odataSimplified: odataSimplified);
+            var actual = ReadJsonLightEntry(payload, FullMetadata, readingResponse: true, enableReadingODataAnnotationWithoutPrefix: enableReadingODataAnnotationWithoutPrefix);
             actual.Id.Should().Be("http://www.example.com/defaultService.svc/entryId");
         }
 
@@ -95,7 +95,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.JsonLight
 
         private void LinkReadingRequestShouldBeTheSameForJsonEntryImplementation(string payload, bool odataSimplified)
         {
-            var actual = this.ReadJsonLightEntry(payload, FullMetadata, readingResponse: false, odataSimplified: odataSimplified);
+            var actual = this.ReadJsonLightEntry(payload, FullMetadata, readingResponse: false, enableReadingODataAnnotationWithoutPrefix: odataSimplified);
             actual.Id.Should().Be(CreateUri("entryId"));
             actual.EditLink.Should().Be(CreateUri("http://www.example.com/defaultService.svc/edit"));
         }
@@ -144,9 +144,9 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.JsonLight
 
         #region EditLinkShouldBeNullIfItsReadonlyEntry
 
-        private void EditLinkShouldBeNullIfItsReadonlyEntryImplmentation(string payload, bool odataSimplified)
+        private void EditLinkShouldBeNullIfItsReadonlyEntryImplmentation(string payload, bool enableReadingODataAnnotationWithoutPrefix)
         {
-            var actual = this.ReadJsonLightEntry(payload, FullMetadata, readingResponse: true, odataSimplified: odataSimplified);
+            var actual = this.ReadJsonLightEntry(payload, FullMetadata, readingResponse: true, enableReadingODataAnnotationWithoutPrefix: enableReadingODataAnnotationWithoutPrefix);
             actual.Id.Should().Be(CreateUri("http://www.example.com/defaultService.svc/entryId"));
             actual.EditLink.Should().BeNull();
             actual.ReadLink.Should().Be(CreateUri("http://www.example.com/defaultService.svc/readonlyEntity"));
@@ -158,7 +158,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.JsonLight
             const string payload = "{" + ContextUrl + ", " +
                 "\"@odata.readLink\": \"http://www.example.com/defaultService.svc/readonlyEntity\", " +
                 "\"@odata.id\":\"entryId\"}";
-            EditLinkShouldBeNullIfItsReadonlyEntryImplmentation(payload, odataSimplified: false);
+            EditLinkShouldBeNullIfItsReadonlyEntryImplmentation(payload, enableReadingODataAnnotationWithoutPrefix: false);
         }
 
         [Fact]
@@ -168,7 +168,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.JsonLight
             const string payload = "{" + ContextUrl + ", " +
                 "\"@readLink\": \"http://www.example.com/defaultService.svc/readonlyEntity\", " +
                 "\"@id\":\"entryId\"}";
-            EditLinkShouldBeNullIfItsReadonlyEntryImplmentation(payload, odataSimplified: true);
+            EditLinkShouldBeNullIfItsReadonlyEntryImplmentation(payload, enableReadingODataAnnotationWithoutPrefix: true);
         }
 
         [Fact]
@@ -178,7 +178,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.JsonLight
             const string payload = "{" + ContextUrl + ", " +
                 "\"@odata.readLink\": \"http://www.example.com/defaultService.svc/readonlyEntity\", " +
                 "\"@odata.id\":\"entryId\"}";
-            EditLinkShouldBeNullIfItsReadonlyEntryImplmentation(payload, odataSimplified: true);
+            EditLinkShouldBeNullIfItsReadonlyEntryImplmentation(payload, enableReadingODataAnnotationWithoutPrefix: true);
         }
 
         #endregion
@@ -352,7 +352,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.JsonLight
                 "\"ComplexCollectionProperty\":[{\"@odata.type\":\"#NS.MyDerivedComplexType\",\"CLongId\":\"1\",\"CFloatId\":1},{\"CLongId\":\"1\"},{\"CLongId\":\"1\",\"CFloatId\":1,\"@odata.type\":\"#NS.MyDerivedComplexType\"}]" +
                 "}";
 
-            ReadingComplexInheritInCollection(payload); 
+            ReadingComplexInheritInCollection(payload);
         }
 
         [Fact]
@@ -727,7 +727,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.JsonLight
             nestedResourceInfos.First().Name.ShouldBeEquivalentTo("City", "nestedResouce should have correct name");
         }
 
-        [Fact(Skip="Dynmaic property in context uri")]
+        [Fact(Skip = "Dynmaic property in context uri")]
         public void ReadingTopLevelComplexCollection_OpenPropertyContextUri()
         {
             const string payload =
@@ -977,7 +977,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.JsonLight
                 "\"OpenProperty\":\"0\"" +
                 "}";
 
-            Action readEntry = () => this.ReadEntryPayloadForUndeclared(payload, reader => {}, false, true);
+            Action readEntry = () => this.ReadEntryPayloadForUndeclared(payload, reader => { }, false, true);
 
             readEntry.ShouldThrow<ODataException>().WithMessage(Strings.ValidationUtils_PropertyDoesNotExistOnType("OpenProperty", "NS.Person"));
 
@@ -1060,7 +1060,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.JsonLight
         }
 
         private void ReadTopLevleCollectionPayload(IEdmModel userModel, string payload, IEdmStructuredType complexType, Action<ODataReader> action, bool isRequest = false, bool isIeee754Compatible = true)
-{
+        {
             var message = new InMemoryMessage() { Stream = new MemoryStream(Encoding.UTF8.GetBytes(payload)) };
             string contentType = isIeee754Compatible
                 ? "application/json;odata.metadata=minimal;IEEE754Compatible=true"
@@ -1079,11 +1079,11 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.JsonLight
             }
         }
 
-        private ODataResource ReadJsonLightEntry(string payload, string contentType, bool readingResponse, bool odataSimplified = false)
+        private ODataResource ReadJsonLightEntry(string payload, string contentType, bool readingResponse, bool enableReadingODataAnnotationWithoutPrefix = false)
         {
             var container = ContainerBuilderHelper.BuildContainer(null);
             container.GetRequiredService<ODataSimplifiedOptions>().EnableReadingODataAnnotationWithoutPrefix =
-                odataSimplified;
+                enableReadingODataAnnotationWithoutPrefix;
 
             InMemoryMessage message = new InMemoryMessage() { Container = container };
             message.SetHeader("Content-Type", contentType);

@@ -550,7 +550,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriBuilder
         public void TranslateSelectExpandClauseForExpandItemShouldWork()
         {
             string expandClause = "MyDog($filter=Color eq 'Brown';$orderby=Color;$expand=MyPeople/$ref)";
-            var topLeveItem = new ODataQueryOptionParser(HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet(), new Dictionary<string, string> { { "$expand", expandClause }, { "$select","" } }).ParseSelectAndExpand();
+            var topLeveItem = new ODataQueryOptionParser(HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet(), new Dictionary<string, string> { { "$expand", expandClause }, { "$select", "" } }).ParseSelectAndExpand();
             SelectExpandClauseToStringBuilder translater = new SelectExpandClauseToStringBuilder();
             string result = translater.TranslateSelectExpandClause(topLeveItem, false);
             Assert.Equal("$expand=" + expandClause, result);
@@ -663,13 +663,13 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriBuilder
         }
         #endregion
 
-        public static Uri UriBuilder(Uri queryUri, ODataUrlKeyDelimiter urlConventions, ODataUriParserSettings settings)
+        public static Uri UriBuilder(Uri queryUri, ODataUrlKeyDelimiter urlKeyDelimiter, ODataUriParserSettings settings)
         {
             ODataUriParser odataUriParser = new ODataUriParser(HardCodedTestModel.TestModel, ServiceRoot, queryUri);
-            odataUriParser.UrlKeyDelimiter = urlConventions;
+            odataUriParser.UrlKeyDelimiter = urlKeyDelimiter;
             ODataUri odataUri = odataUriParser.ParseUri();
 
-            return odataUri.BuildUri(urlConventions);
+            return odataUri.BuildUri(urlKeyDelimiter);
         }
     }
 }

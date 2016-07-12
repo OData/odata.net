@@ -6,7 +6,6 @@
 
 using System;
 using System.IO;
-using System.Text.RegularExpressions;
 using FluentAssertions;
 using Microsoft.OData.Edm;
 using Microsoft.Test.OData.DependencyInjection;
@@ -102,7 +101,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Writer
             WriteAnnotationAtStartOnTopLevelFeed(expectedPayload, ODataFormat.Json, null, null, request: true);
         }
 
-        private void WriteAnnotationAtStartOnTopLevelFeed(string expectedPayload, ODataFormat format, long? count, Uri nextLink, bool request, Uri deltaLink = null, bool odataSimplified = false)
+        private void WriteAnnotationAtStartOnTopLevelFeed(string expectedPayload, ODataFormat format, long? count, Uri nextLink, bool request, Uri deltaLink = null, bool enableWritingODataAnnotationWithoutPrefix = false)
         {
             Action<ODataWriter> action = (odataWriter) =>
             {
@@ -115,7 +114,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Writer
                 odataWriter.WriteEnd();
             };
 
-            WriteAnnotationsAndValidatePayload(action, EntitySet, format, expectedPayload, request, createFeedWriter: true, odataSimplified: odataSimplified);
+            WriteAnnotationsAndValidatePayload(action, EntitySet, format, expectedPayload, request, createFeedWriter: true, enableWritingODataAnnotationWithoutPrefix: enableWritingODataAnnotationWithoutPrefix);
         }
 
         [Fact]
@@ -638,7 +637,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Writer
                  "]" +
             "}";
 
-            WriteAnnotationAtStartOnTopLevelFeed(expectedPayload, ODataFormat.Json, 2, tempUri, request: false, odataSimplified: true);
+            WriteAnnotationAtStartOnTopLevelFeed(expectedPayload, ODataFormat.Json, 2, tempUri, request: false, enableWritingODataAnnotationWithoutPrefix: true);
         }
 
         [Fact]
@@ -654,7 +653,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Writer
                  "]" +
             "}";
 
-            WriteAnnotationAtStartOnTopLevelFeed(expectedPayload, ODataFormat.Json, 2, null, false, tempUri, odataSimplified: true);
+            WriteAnnotationAtStartOnTopLevelFeed(expectedPayload, ODataFormat.Json, 2, null, false, tempUri, enableWritingODataAnnotationWithoutPrefix: true);
         }
 
         #endregion
@@ -666,8 +665,8 @@ namespace Microsoft.OData.Tests.IntegrationTests.Writer
         {
             Action<ODataWriter> action = (odataWriter) =>
             {
-                var complexResource = new ODataResource { TypeName = "TestNamespace.Address"};
-                complexResource.InstanceAnnotations.Add(new ODataInstanceAnnotation("Is.ReadOnly", new ODataPrimitiveValue(true)) );
+                var complexResource = new ODataResource { TypeName = "TestNamespace.Address" };
+                complexResource.InstanceAnnotations.Add(new ODataInstanceAnnotation("Is.ReadOnly", new ODataPrimitiveValue(true)));
                 odataWriter.WriteStart(complexResource);
                 odataWriter.WriteEnd();
             };
@@ -699,7 +698,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Writer
 
         #endregion
 
-        private void WriteAnnotationsAndValidatePayload(Action<ODataWriter> action, IEdmNavigationSource navigationSource, ODataFormat format, string expectedPayload, bool request, bool createFeedWriter, bool odataSimplified = false, IEdmStructuredType resourceType = null)
+        private void WriteAnnotationsAndValidatePayload(Action<ODataWriter> action, IEdmNavigationSource navigationSource, ODataFormat format, string expectedPayload, bool request, bool createFeedWriter, bool enableWritingODataAnnotationWithoutPrefix = false, IEdmStructuredType resourceType = null)
         {
             var writerSettings = new ODataMessageWriterSettings { EnableMessageStreamDisposal = false };
             writerSettings.SetContentType(format);
@@ -707,7 +706,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Writer
 
             var container = ContainerBuilderHelper.BuildContainer(null);
             container.GetRequiredService<ODataSimplifiedOptions>().EnableWritingODataAnnotationWithoutPrefix =
-                odataSimplified;
+                enableWritingODataAnnotationWithoutPrefix;
 
             MemoryStream stream = new MemoryStream();
             if (request)

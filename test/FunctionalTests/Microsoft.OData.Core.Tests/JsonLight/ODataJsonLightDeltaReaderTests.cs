@@ -9,8 +9,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using FluentAssertions;
-using Microsoft.OData.JsonLight;
 using Microsoft.OData.Edm;
+using Microsoft.OData.JsonLight;
 using Microsoft.Test.OData.DependencyInjection;
 using Xunit;
 
@@ -94,7 +94,7 @@ namespace Microsoft.OData.Tests.JsonLight
         public void ReadExample30FromV4SpecWithFullODataAnnotationsODataSimplified()
         {
             // cover "@odata.deltaLink"
-            var tuples = this.ReadItem(payloadWithNavigationLinks, this.GetModel(), customers, customer, odataSimplified: true);
+            var tuples = this.ReadItem(payloadWithNavigationLinks, this.GetModel(), customers, customer, enableReadingODataAnnotationWithoutPrefix: true);
             this.ValidateTuples(tuples);
         }
 
@@ -102,7 +102,7 @@ namespace Microsoft.OData.Tests.JsonLight
         public void ReadExample30FromV4SpecWithSimplifiedODataAnnotationsODataSimplified()
         {
             // cover "@deltaLink"
-            var tuples = this.ReadItem(payloadWithSimplifiedAnnotations, this.GetModel(), customers, customer, odataSimplified: true);
+            var tuples = this.ReadItem(payloadWithSimplifiedAnnotations, this.GetModel(), customers, customer, enableReadingODataAnnotationWithoutPrefix: true);
             this.ValidateTuples(tuples);
         }
 
@@ -550,7 +550,7 @@ namespace Microsoft.OData.Tests.JsonLight
             return myModel;
         }
 
-        private IEnumerable<Tuple<ODataItem, ODataDeltaReaderState, ODataReaderState>> ReadItem(string payload, IEdmModel model = null, IEdmNavigationSource navigationSource = null, IEdmEntityType entityType = null, bool odataSimplified = false)
+        private IEnumerable<Tuple<ODataItem, ODataDeltaReaderState, ODataReaderState>> ReadItem(string payload, IEdmModel model = null, IEdmNavigationSource navigationSource = null, IEdmEntityType entityType = null, bool enableReadingODataAnnotationWithoutPrefix = false)
         {
             var settings = new ODataMessageReaderSettings
             {
@@ -570,7 +570,7 @@ namespace Microsoft.OData.Tests.JsonLight
                 new StringReader(payload), messageInfo, settings))
             {
                 inputContext.Container.GetRequiredService<ODataSimplifiedOptions>()
-                    .EnableReadingODataAnnotationWithoutPrefix = odataSimplified;
+                    .EnableReadingODataAnnotationWithoutPrefix = enableReadingODataAnnotationWithoutPrefix;
                 var jsonLightReader = new ODataJsonLightDeltaReader(inputContext, navigationSource, entityType);
                 while (jsonLightReader.Read())
                 {

@@ -84,7 +84,7 @@ namespace Microsoft.OData.E2E.Profile111
 
             var contextWrapper = new DataServiceContextWrapper<TContext>(context)
             {
-                UrlConventions = DataServiceUrlConventions.Default
+                UrlKeyDelimiter = DataServiceUrlKeyDelimiter.Parentheses
             };
 
             return contextWrapper;

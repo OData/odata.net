@@ -1,5 +1,5 @@
 //---------------------------------------------------------------------
-// <copyright file="DataServiceUrlConventions.cs" company="Microsoft">
+// <copyright file="DataServiceUrlKeyDelimiter.cs" company="Microsoft">
 //      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 // </copyright>
 //---------------------------------------------------------------------
@@ -18,40 +18,40 @@ namespace Microsoft.OData.Client
     /// <summary>
     /// Component for controlling what convention set is used for generating URLs.
     /// </summary>
-    public sealed class DataServiceUrlConventions
+    public sealed class DataServiceUrlKeyDelimiter
     {
-        /// <summary>Singleton instance of the default conventions.</summary>
-        private static readonly DataServiceUrlConventions DefaultInstance = new DataServiceUrlConventions(enableKeyAsSegment: false);
+        /// <summary>Singleton instance of the parentheses delimiter.</summary>
+        private static readonly DataServiceUrlKeyDelimiter parenthesesDelimiter = new DataServiceUrlKeyDelimiter(enableKeyAsSegment: false);
 
-        /// <summary>Singleton instance of the key-as-segment conventions.</summary>
-        private static readonly DataServiceUrlConventions KeyAsSegmentInstance = new DataServiceUrlConventions(enableKeyAsSegment: true);
+        /// <summary>Singleton instance of the slash delimiter.</summary>
+        private static readonly DataServiceUrlKeyDelimiter slashDelimiter = new DataServiceUrlKeyDelimiter(enableKeyAsSegment: true);
 
         /// <summary>The key serializer to use.</summary>
         private readonly KeySerializer keySerializer;
 
         /// <summary>
-        /// Prevents a default instance of the <see cref="DataServiceUrlConventions"/> class from being created.
+        /// Prevents a default instance of the <see cref="DataServiceUrlKeyDelimiter"/> class from being created.
         /// </summary>
         /// <param name="enableKeyAsSegment">Whether enable key as segment</param>
-        private DataServiceUrlConventions(bool enableKeyAsSegment)
+        private DataServiceUrlKeyDelimiter(bool enableKeyAsSegment)
         {
             this.keySerializer = KeySerializer.Create(enableKeyAsSegment);
         }
 
         /// <summary>
-        /// An instance of <see cref="DataServiceUrlConventions"/> which uses default URL conventions. Specifically, this instance will produce keys that use parentheses like "Customers('ALFKI')".
+        /// An instance of <see cref="DataServiceUrlKeyDelimiter"/> which uses arentheses delimiter. Specifically, this instance will produce keys that use parentheses like "Customers('ALFKI')".
         /// </summary>
-        public static DataServiceUrlConventions Default
+        public static DataServiceUrlKeyDelimiter Parentheses
         {
-            get { return DefaultInstance; }
+            get { return parenthesesDelimiter; }
         }
 
         /// <summary>
-        /// An instance of <see cref="DataServiceUrlConventions"/> which uses key-as-segment URL conventions. Specifically, this instance will produce keys that use segments like "Customers/ALFKI".
+        /// An instance of <see cref="DataServiceUrlKeyDelimiter"/> which uses slash delimiter. Specifically, this instance will produce keys that use segments like "Customers/ALFKI".
         /// </summary>
-        public static DataServiceUrlConventions KeyAsSegment
+        public static DataServiceUrlKeyDelimiter Slash
         {
-            get { return KeyAsSegmentInstance; }
+            get { return slashDelimiter; }
         }
 
         /// <summary>

@@ -898,7 +898,7 @@ namespace Microsoft.OData.UriParser
         private void CreateNextSegment(string text)
         {
             // before treating this as a property, try to handle it as a key property value, unless it was preceeded by an escape-marker segment ('$').
-            // But when use ODataSimplified convention, only do this if the segment should not be interpreted as a type.
+            // But when enable key as segment, only do this if the segment should not be interpreted as a type.
             if ((!this.configuration.UrlKeyDelimiter.EnableKeyAsSegment || this.configuration.EnableUriTemplateParsing) && this.TryHandleAsKeySegment(text))
             {
                 return;

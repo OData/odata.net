@@ -32,7 +32,7 @@ namespace Microsoft.Test.OData.Tests.Client.KeyAsSegmentTests
             {
                 var contextWrapper = this.CreateWrappedContext<InMemoryEntities>();
 
-                contextWrapper.UrlConventions = DataServiceUrlConventions.KeyAsSegment;
+                contextWrapper.UrlKeyDelimiter = DataServiceUrlKeyDelimiter.Slash;
 
                 contextWrapper.Context.Orders.Where(c => c.OrderID == 0).ToArray();
                 Assert.Fail("Expected DataServiceException was not thrown.");

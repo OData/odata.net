@@ -126,8 +126,8 @@ namespace Microsoft.OData.Client
         /// <summary>Options that can overwrite ignoreMissingProperties.</summary>
         private UndeclaredPropertyBehavior undeclaredPropertyBehavior = UndeclaredPropertyBehavior.Support;
 
-        /// <summary>The URL conventions to use.</summary>
-        private DataServiceUrlConventions urlConventions;
+        /// <summary>The URL key delimiter to use.</summary>
+        private DataServiceUrlKeyDelimiter urlKeyDelimiter;
 
         /// <summary>The HTTP stack to use for requests.</summary>
         private HttpStack httpStack;
@@ -238,7 +238,7 @@ namespace Microsoft.OData.Client
             this.entityTracker = new EntityTracker(model);
             this.MaxProtocolVersionAsVersion = Util.GetVersionFromMaxProtocolVersion(maxProtocolVersion);
             this.formatTracker = new DataServiceClientFormat(this);
-            this.urlConventions = DataServiceUrlConventions.Default;
+            this.urlKeyDelimiter = DataServiceUrlKeyDelimiter.Parentheses;
             this.Configurations = new DataServiceClientConfigurations(this);
             this.httpStack = HttpStack.Auto;
             this.UsingDataServiceCollection = false;
@@ -581,19 +581,19 @@ namespace Microsoft.OData.Client
         }
 
         /// <summary>
-        /// Gets or sets the URL conventions the client should use.
+        /// Gets or sets the URL key delimiter the client should use.
         /// </summary>
-        public DataServiceUrlConventions UrlConventions
+        public DataServiceUrlKeyDelimiter UrlKeyDelimiter
         {
             get
             {
-                return this.urlConventions;
+                return this.urlKeyDelimiter;
             }
 
             set
             {
                 Util.CheckArgumentNull(value, "value");
-                this.urlConventions = value;
+                this.urlKeyDelimiter = value;
             }
         }
 
@@ -619,9 +619,9 @@ namespace Microsoft.OData.Client
         public bool DisableInstanceAnnotationMaterialization { get; set; }
 
         /// <summary>
-        /// Whether OData Simplified is enabled.
+        /// Whether enable writing odata annotation without prefix.
         /// </summary>
-        public bool ODataSimplified { get; set; }
+        public bool EnableWritingODataAnnotationWithoutPrefix { get; set; }
 
         /// <summary>Gets or sets whether to support undeclared properties.</summary>
         /// <returns>UndeclaredPropertyBehavior.</returns>
@@ -2720,7 +2720,7 @@ namespace Microsoft.OData.Client
         /// </remarks>
         internal virtual ODataResourceMetadataBuilder GetEntityMetadataBuilder(string entitySetName, IEdmStructuredValue entityInstance)
         {
-            return new ConventionalODataEntityMetadataBuilder(this.baseUriResolver, entitySetName, entityInstance, this.UrlConventions);
+            return new ConventionalODataEntityMetadataBuilder(this.baseUriResolver, entitySetName, entityInstance, this.UrlKeyDelimiter);
         }
 
         /// <summary>

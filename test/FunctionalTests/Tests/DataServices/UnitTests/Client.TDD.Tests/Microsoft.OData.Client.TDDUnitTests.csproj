@@ -52,9 +52,6 @@
     <Compile Include="..\..\..\..\Microsoft.OData.Core.Tests\InMemoryMessage.cs">
       <Link>InMemoryMessage.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\..\Microsoft.OData.Core.Tests\UrlConventionsConstants.cs">
-      <Link>Tests\Server\Util\UrlConventionsConstants.cs</Link>
-    </Compile>
     <Compile Include="..\..\..\..\Microsoft.OData.Core.Tests\Evaluation\EdmStructuredValueSimulator.cs">
       <Link>Tests\Client\Common\EdmStructuredValueSimulator.cs</Link>
     </Compile>
@@ -132,6 +129,9 @@
     <Compile Include="Tests\MaterializerUnitTests.cs" />
     <Compile Include="Tests\PlatformHelperTests.cs" />
     <Compile Include="Tests\WeakKeyDictioaryTests.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Tests\Server\Util\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

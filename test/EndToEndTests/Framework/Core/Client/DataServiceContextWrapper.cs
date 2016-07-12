@@ -126,12 +126,12 @@ namespace Microsoft.Test.OData.Framework.Client
         }
 
         /// <summary>
-        /// Gets or sets the DataServiceContext.UrlConventions property.
+        /// Gets or sets the DataServiceContext.UrlKeyDelimiter property.
         /// </summary>
-        public DataServiceUrlConventions UrlConventions
+        public DataServiceUrlKeyDelimiter UrlKeyDelimiter
         {
-            get { return this.wrappedInstance.UrlConventions; }
-            set { this.wrappedInstance.UrlConventions = value; }
+            get { return this.wrappedInstance.UrlKeyDelimiter; }
+            set { this.wrappedInstance.UrlKeyDelimiter = value; }
         }
 
         /// <summary>

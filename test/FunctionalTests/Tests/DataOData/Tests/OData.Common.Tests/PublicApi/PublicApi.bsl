@@ -6366,6 +6366,7 @@ public class Microsoft.OData.Client.DataServiceContext {
 	Microsoft.OData.Client.DataServiceClientConfigurations Configurations  { public get; }
 	System.Net.ICredentials Credentials  { public get; public set; }
 	bool DisableInstanceAnnotationMaterialization  { public get; public set; }
+	bool EnableWritingODataAnnotationWithoutPrefix  { public get; public set; }
 	System.Collections.ObjectModel.ReadOnlyCollection`1[[Microsoft.OData.Client.EntityDescriptor]] Entities  { public get; }
 	Microsoft.OData.Client.EntityParameterSendOption EntityParameterSendOption  { public get; public set; }
 	Microsoft.OData.Client.EntityTracker EntityTracker  { public get; public set; }
@@ -6374,13 +6375,12 @@ public class Microsoft.OData.Client.DataServiceContext {
 	System.Collections.ObjectModel.ReadOnlyCollection`1[[Microsoft.OData.Client.LinkDescriptor]] Links  { public get; }
 	Microsoft.OData.Client.ODataProtocolVersion MaxProtocolVersion  { public get; }
 	Microsoft.OData.Client.MergeOption MergeOption  { public get; public set; }
-	bool ODataSimplified  { public get; public set; }
 	System.Func`2[[System.String],[System.Uri]] ResolveEntitySet  { public get; public set; }
 	System.Func`2[[System.Type],[System.String]] ResolveName  { public get; public set; }
 	System.Func`2[[System.String],[System.Type]] ResolveType  { public get; public set; }
 	Microsoft.OData.Client.SaveChangesOptions SaveChangesDefaultOptions  { public get; public set; }
 	int Timeout  { public get; public set; }
-	Microsoft.OData.Client.DataServiceUrlConventions UrlConventions  { public get; public set; }
+	Microsoft.OData.Client.DataServiceUrlKeyDelimiter UrlKeyDelimiter  { public get; public set; }
 	bool UsePostTunneling  { public get; public set; }
 
 	System.EventHandler`1[[Microsoft.OData.Client.BuildingRequestEventArgs]] BuildingRequest {public add;public remove; }
@@ -6791,9 +6791,9 @@ public sealed class Microsoft.OData.Client.DataServiceStreamResponse : IDisposab
 	public virtual void Dispose ()
 }
 
-public sealed class Microsoft.OData.Client.DataServiceUrlConventions {
-	Microsoft.OData.Client.DataServiceUrlConventions Default  { public static get; }
-	Microsoft.OData.Client.DataServiceUrlConventions KeyAsSegment  { public static get; }
+public sealed class Microsoft.OData.Client.DataServiceUrlKeyDelimiter {
+	Microsoft.OData.Client.DataServiceUrlKeyDelimiter Parentheses  { public static get; }
+	Microsoft.OData.Client.DataServiceUrlKeyDelimiter Slash  { public static get; }
 }
 
 public sealed class Microsoft.OData.Client.EntityChangedParams {

@@ -36,7 +36,6 @@ namespace Microsoft.OData.Tests
 
             EdmEntityContainer defaultContainer = new EdmEntityContainer("ns", "DefaultContainer");
             Model.AddElement(defaultContainer);
-            Model.AddVocabularyAnnotation(new EdmVocabularyAnnotation(defaultContainer, UrlConventionsConstants.ConventionTerm, UrlConventionsConstants.KeyAsSegmentAnnotationValue));
 
             EntitySet = new EdmEntitySet(defaultContainer, "Customers", EntitySetElementType);
             Model.AddElement(EntitySetElementType);

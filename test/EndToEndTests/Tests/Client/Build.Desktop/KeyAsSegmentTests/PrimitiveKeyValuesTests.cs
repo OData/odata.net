@@ -149,7 +149,7 @@ namespace Microsoft.Test.OData.Tests.Client.KeyAsSegmentTests
             var entitySetName = "EdmStringSet";
 
             var context = this.CreateWrappedContext();
-            context.UrlConventions = DataServiceUrlConventions.KeyAsSegment;
+            context.UrlKeyDelimiter = DataServiceUrlKeyDelimiter.Slash;
             var query = context.CreateQuery<EdmString>(entitySetName).Where(e => e.Id == "'Hello'");
             Assert.AreEqual(this.ServiceUri.AbsoluteUri + entitySetName + "/''Hello''", query.ToString());
         }
@@ -168,7 +168,7 @@ namespace Microsoft.Test.OData.Tests.Client.KeyAsSegmentTests
         private DataServiceContextWrapper<Services.TestServices.PrimitiveKeysServiceReference.TestContext> CreateWrappedContext()
         {
             var contextWrapper = base.CreateWrappedContext<Services.TestServices.PrimitiveKeysServiceReference.TestContext>();
-            contextWrapper.UrlConventions = DataServiceUrlConventions.KeyAsSegment;
+            contextWrapper.UrlKeyDelimiter = DataServiceUrlKeyDelimiter.Slash;
             return contextWrapper;
         }
 

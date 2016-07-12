@@ -8,8 +8,8 @@ using System;
 using System.IO;
 using System.Linq;
 using FluentAssertions;
-using Microsoft.OData.JsonLight;
 using Microsoft.OData.Edm;
+using Microsoft.OData.JsonLight;
 using Microsoft.Test.OData.DependencyInjection;
 using Xunit;
 
@@ -226,9 +226,9 @@ namespace Microsoft.OData.Tests.ScenarioTests.Reader.JsonLight
 
         #region ReadSingletonWhichHasEtag
 
-        private void ReadSingletonWhichHasEtagImplementation(string payload, bool odataSimplified)
+        private void ReadSingletonWhichHasEtagImplementation(string payload, bool enableReadingODataAnnotationWithoutPrefix)
         {
-            ODataResource entry = this.ReadSingleton(payload, odataSimplified);
+            ODataResource entry = this.ReadSingleton(payload, enableReadingODataAnnotationWithoutPrefix);
 
             entry.ETag.Should().Be("Bla");
         }
@@ -239,7 +239,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Reader.JsonLight
             const string payload = "{" +
                 "\"@odata.context\":\"http://odata.org/test/$metadata#MySingleton\"," +
                 "\"@odata.etag\":\"Bla\"}";
-            ReadSingletonWhichHasEtagImplementation(payload, odataSimplified: false);
+            ReadSingletonWhichHasEtagImplementation(payload, enableReadingODataAnnotationWithoutPrefix: false);
         }
 
         [Fact]
@@ -249,7 +249,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Reader.JsonLight
             const string payload = "{" +
                 "\"@context\":\"http://odata.org/test/$metadata#MySingleton\"," +
                 "\"@etag\":\"Bla\"}";
-            ReadSingletonWhichHasEtagImplementation(payload, odataSimplified: true);
+            ReadSingletonWhichHasEtagImplementation(payload, enableReadingODataAnnotationWithoutPrefix: true);
         }
 
         [Fact]
@@ -259,17 +259,17 @@ namespace Microsoft.OData.Tests.ScenarioTests.Reader.JsonLight
             const string payload = "{" +
                 "\"@odata.context\":\"http://odata.org/test/$metadata#MySingleton\"," +
                 "\"@odata.etag\":\"Bla\"}";
-            ReadSingletonWhichHasEtagImplementation(payload, odataSimplified: true);
+            ReadSingletonWhichHasEtagImplementation(payload, enableReadingODataAnnotationWithoutPrefix: true);
         }
 
         #endregion
 
         #region ReadSingletonWhichHasStreamPropertyTest
 
-        private void ReadSingletonWhichHasStreamPropertyTestImplementation(string payload, bool odataSimplified)
+        private void ReadSingletonWhichHasStreamPropertyTestImplementation(string payload, bool enableReadingODataAnnotationWithoutPrefix)
         {
             this.StreamTestSetting();
-            ODataResource entry = this.ReadSingleton(payload, odataSimplified);
+            ODataResource entry = this.ReadSingleton(payload, enableReadingODataAnnotationWithoutPrefix);
 
             ODataStreamReferenceValue logo = (ODataStreamReferenceValue)entry.Properties.Single().Value;
             logo.ContentType.Should().Be("image/jpeg");
@@ -285,7 +285,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Reader.JsonLight
                 "\"Logo@odata.mediaReadLink\":\"http://example.com/stream/read\"," +
                 "\"Logo@odata.mediaContentType\":\"image/jpeg\"," +
                 "\"Logo@odata.mediaEtag\":\"stream etag\"}";
-            ReadSingletonWhichHasStreamPropertyTestImplementation(payload, odataSimplified: false);
+            ReadSingletonWhichHasStreamPropertyTestImplementation(payload, enableReadingODataAnnotationWithoutPrefix: false);
         }
 
         [Fact]
@@ -298,7 +298,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Reader.JsonLight
                 "\"Logo@odata.mediaReadLink\":\"http://example.com/stream/read\"," +
                 "\"Logo@odata.mediaContentType\":\"image/jpeg\"," +
                 "\"Logo@odata.mediaEtag\":\"stream etag\"}";
-            ReadSingletonWhichHasStreamPropertyTestImplementation(payload, odataSimplified: true);
+            ReadSingletonWhichHasStreamPropertyTestImplementation(payload, enableReadingODataAnnotationWithoutPrefix: true);
         }
 
         [Fact]
@@ -311,7 +311,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Reader.JsonLight
                 "\"Logo@mediaReadLink\":\"http://example.com/stream/read\"," +
                 "\"Logo@mediaContentType\":\"image/jpeg\"," +
                 "\"Logo@mediaEtag\":\"stream etag\"}";
-            ReadSingletonWhichHasStreamPropertyTestImplementation(payload, odataSimplified: true);
+            ReadSingletonWhichHasStreamPropertyTestImplementation(payload, enableReadingODataAnnotationWithoutPrefix: true);
         }
 
         #endregion

@@ -28,7 +28,7 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
         [TestMethod]
         public void TestODataSimplifiedServiceQueryEntities()
         {
-            TestClientContext.ODataSimplified = true;
+            TestClientContext.EnableWritingODataAnnotationWithoutPrefix = true;
             TestClientContext.SendingRequest2 += (sender, eventArgs) => ((Microsoft.OData.Client.HttpWebRequestMessage)eventArgs.RequestMessage).SetHeader("Accept", "application/json;odata.metadata=full");
 
             Assert.IsTrue(TestClientContext.People.ToList().Count >= 5);
@@ -38,7 +38,7 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
         [TestMethod]
         public void TestODataSimplifiedServiceQueryNavigationProperty()
         {
-            TestClientContext.ODataSimplified = true;
+            TestClientContext.EnableWritingODataAnnotationWithoutPrefix = true;
             TestClientContext.SendingRequest2 += (sender, eventArgs) => ((Microsoft.OData.Client.HttpWebRequestMessage)eventArgs.RequestMessage).SetHeader("Accept", "application/json;odata.metadata=full");
 
             Assert.AreEqual(2, TestClientContext.People.ByKey(new Dictionary<string, object> { { "PersonId", 1 } }).Products.ToList().Count);
@@ -47,7 +47,7 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
         [TestMethod]
         public void TestODataSimplifiedServiceQueryExpandedEntities()
         {
-            TestClientContext.ODataSimplified = true;
+            TestClientContext.EnableWritingODataAnnotationWithoutPrefix = true;
             TestClientContext.SendingRequest2 += (sender, eventArgs) => ((Microsoft.OData.Client.HttpWebRequestMessage)eventArgs.RequestMessage).SetHeader("Accept", "application/json;odata.metadata=full");
 
             var person = TestClientContext.People.Expand("Products").Where(p => p.PersonId == 1).ToList();
@@ -57,7 +57,7 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
         [TestMethod]
         public void TestODataSimplifiedServiceCreateEntity()
         {
-            TestClientContext.ODataSimplified = true;
+            TestClientContext.EnableWritingODataAnnotationWithoutPrefix = true;
             TestClientContext.SendingRequest2 += (sender, eventArgs) => ((Microsoft.OData.Client.HttpWebRequestMessage)eventArgs.RequestMessage).SetHeader("Accept", "application/json;odata.metadata=full");
 
             var person = new Person

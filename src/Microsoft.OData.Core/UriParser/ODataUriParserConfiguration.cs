@@ -90,7 +90,7 @@ namespace Microsoft.OData.UriParser
 
             set
             {
-                ExceptionUtils.CheckArgumentNotNull(value, "UrlConventions");
+                ExceptionUtils.CheckArgumentNotNull(value, "UrlKeyDelimiter");
                 this.urlKeyDelimiter = value;
             }
         }

@@ -8,7 +8,6 @@ using System;
 using System.IO;
 using FluentAssertions;
 using Microsoft.OData.Edm;
-using Microsoft.OData.Edm.Vocabularies;
 using Microsoft.Test.OData.DependencyInjection;
 using Xunit;
 
@@ -52,7 +51,6 @@ namespace Microsoft.OData.Tests.ScenarioTests.Writer.JsonLight
         [Fact]
         public void IfKeyAsSegmentSettingIsTrueAndModelHasKeyAsSegmentAnnotationThenLinkShouldHaveKeyAsSegment()
         {
-            this.SetKeyAsSegmentAnnotationOnModel();
             this.SerializeEntryInFullMetadataJson(true, this.model, this.personType, this.peopleSet)
                 .Should().Contain("People/KeyValue")
                 .And.NotContain("People('KeyValue')");
@@ -77,22 +75,9 @@ namespace Microsoft.OData.Tests.ScenarioTests.Writer.JsonLight
         [Fact]
         public void IfKeyAsSegmentSettingIsFalseAndModelHasKeyAsSegmentAnnotationThenLinkShouldNotHaveKeyAsSegment()
         {
-            this.SetKeyAsSegmentAnnotationOnModel();
             this.SerializeEntryInFullMetadataJson(false, this.model, this.personType, this.peopleSet)
                 .Should().Contain("People('KeyValue')")
                 .And.NotContain("People/KeyValue");
-        }
-
-        private void SetKeyAsSegmentAnnotationOnModel()
-        {
-            this.model.AddVocabularyAnnotation(
-                new EdmVocabularyAnnotation(
-                    this.entityContainer,
-                    new EdmTerm(
-                        "Com.Microsoft.OData.Service.Conventions.V1",
-                        "UrlConventions",
-                        EdmPrimitiveTypeKind.String),
-                        new EdmStringConstant("KeyAsSegment")));
         }
 
         private string SerializeEntryInFullMetadataJson(

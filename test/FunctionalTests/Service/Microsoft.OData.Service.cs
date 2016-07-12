@@ -367,7 +367,6 @@ namespace Microsoft.OData.Service {
         internal const string UpdatableWrapper_MissingIUpdatableForV1Provider = "UpdatableWrapper_MissingIUpdatableForV1Provider";
         internal const string UpdatableWrapper_MissingUpdateProviderInterface = "UpdatableWrapper_MissingUpdateProviderInterface";
         internal const string UpdatableWrapper_MustImplementDataServiceUpdateProvider2ToSupportServiceActions = "UpdatableWrapper_MustImplementDataServiceUpdateProvider2ToSupportServiceActions";
-        internal const string UrlConvention_BadRequestIfUnknown = "UrlConvention_BadRequestIfUnknown";
         internal const string InvalidUri_OpenPropertiesCannotBeCollection = "InvalidUri_OpenPropertiesCannotBeCollection";
         internal const string PropertyRequiresNonNegativeNumber = "PropertyRequiresNonNegativeNumber";
         internal const string DataServiceStreamProviderWrapper_MustImplementIDataServiceStreamProviderToSupportStreaming = "DataServiceStreamProviderWrapper_MustImplementIDataServiceStreamProviderToSupportStreaming";

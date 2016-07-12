@@ -8,10 +8,9 @@ namespace AstoriaUnitTests.Tests.TDD.Client
 {
     using System;
     using System.Collections.Generic;
-    using Microsoft.OData.Client;
-    using Microsoft.OData.Tests;
     using System.Linq;
     using FluentAssertions;
+    using Microsoft.OData.Client;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     [TestClass]
@@ -24,7 +23,7 @@ namespace AstoriaUnitTests.Tests.TDD.Client
         {
             this.contextWithKeyAsSegment = new DataServiceContext(new Uri("http://myservice/", UriKind.Absolute), ODataProtocolVersion.V4)
             {
-                UrlConventions = DataServiceUrlConventions.KeyAsSegment,
+                UrlKeyDelimiter = DataServiceUrlKeyDelimiter.Slash
             };
         }
 

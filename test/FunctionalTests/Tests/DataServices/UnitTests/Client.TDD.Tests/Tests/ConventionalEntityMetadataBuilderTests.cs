@@ -35,7 +35,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client
             this.entitySet = this.entitySet = new EdmEntitySet(entityContainer, "EntitySet", entityType);
             this.structure = new EdmStructuredValueSimulator(entityType, new Dictionary<string, IEdmValue> { { "Id", EdmValueUtils.ConvertPrimitiveValue(1, null).Value } });
 
-            this.metadataBuilder = new ConventionalODataEntityMetadataBuilder(new Uri("http://test/"), ((IEdmEntitySet)this.entitySet).Name, this.structure, DataServiceUrlConventions.Default);
+            this.metadataBuilder = new ConventionalODataEntityMetadataBuilder(new Uri("http://test/"), ((IEdmEntitySet)this.entitySet).Name, this.structure, DataServiceUrlKeyDelimiter.Parentheses);
         }
 
         [TestMethod]

@@ -66,11 +66,11 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.JsonLight
 
         #region NextLinkComesAfterTopLevelFeed
 
-        private void NextLinkComesAfterTopLevelFeedImplementation(string feedText, bool odataSimplified)
+        private void NextLinkComesAfterTopLevelFeedImplementation(string feedText, bool enableReadingODataAnnotationWithoutPrefix)
         {
             foreach (bool isResponse in new[] { true, false })
             {
-                var feedReader = GetFeedReader(feedText, isResponse, odataSimplified);
+                var feedReader = GetFeedReader(feedText, isResponse, enableReadingODataAnnotationWithoutPrefix);
                 feedReader.Read();
                 feedReader.State.Should().Be(ODataReaderState.ResourceSetStart);
                 feedReader.Item.As<ODataResourceSet>().NextPageLink.Should().Be(null);
@@ -87,7 +87,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.JsonLight
             const string feedText = @"
                 ""value"":[],
                 ""@odata.nextLink"":""http://nextLink""";
-            NextLinkComesAfterTopLevelFeedImplementation(feedText, odataSimplified: false);
+            NextLinkComesAfterTopLevelFeedImplementation(feedText, enableReadingODataAnnotationWithoutPrefix: false);
         }
 
         [Fact]
@@ -97,7 +97,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.JsonLight
             const string feedText = @"
                 ""value"":[],
                 ""@nextLink"":""http://nextLink""";
-            NextLinkComesAfterTopLevelFeedImplementation(feedText, odataSimplified: true);
+            NextLinkComesAfterTopLevelFeedImplementation(feedText, enableReadingODataAnnotationWithoutPrefix: true);
         }
 
         [Fact]
@@ -107,7 +107,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.JsonLight
             const string feedText = @"
                 ""value"":[],
                 ""@odata.nextLink"":""http://nextLink""";
-            NextLinkComesAfterTopLevelFeedImplementation(feedText, odataSimplified: true);
+            NextLinkComesAfterTopLevelFeedImplementation(feedText, enableReadingODataAnnotationWithoutPrefix: true);
         }
 
         #endregion
@@ -288,9 +288,9 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.JsonLight
 
         #region NonZeroCountAndNextLinkComesAfterInnerFeedOnResponse
 
-        private void NonZeroCountAndNextLinkComesAfterInnerFeedOnResponseImplementation(string entryText, bool odataSimplified)
+        private void NonZeroCountAndNextLinkComesAfterInnerFeedOnResponseImplementation(string entryText, bool enableReadingODataAnnotationWithoutPrefix)
         {
-            var entryReader = GetEntryReader(entryText, isResponse: true, odataSimplified: odataSimplified);
+            var entryReader = GetEntryReader(entryText, isResponse: true, enableReadingODataAnnotationWithoutPrefix: enableReadingODataAnnotationWithoutPrefix);
             entryReader.Read();
             entryReader.State.Should().Be(ODataReaderState.ResourceStart);
             entryReader.Read();
@@ -311,7 +311,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.JsonLight
                 ""NavProp"" : [],
                 ""NavProp@odata.count"" : 2,
                 ""NavProp@odata.nextLink"" : ""http://nextLink""";
-            NonZeroCountAndNextLinkComesAfterInnerFeedOnResponseImplementation(entryText, odataSimplified: false);
+            NonZeroCountAndNextLinkComesAfterInnerFeedOnResponseImplementation(entryText, enableReadingODataAnnotationWithoutPrefix: false);
         }
 
         [Fact]
@@ -322,7 +322,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.JsonLight
                 ""NavProp"" : [],
                 ""NavProp@count"" : 2,
                 ""NavProp@nextLink"" : ""http://nextLink""";
-            NonZeroCountAndNextLinkComesAfterInnerFeedOnResponseImplementation(entryText, odataSimplified: true);
+            NonZeroCountAndNextLinkComesAfterInnerFeedOnResponseImplementation(entryText, enableReadingODataAnnotationWithoutPrefix: true);
         }
 
         [Fact]
@@ -333,7 +333,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.JsonLight
                 ""NavProp"" : [],
                 ""NavProp@odata.count"" : 2,
                 ""NavProp@odata.nextLink"" : ""http://nextLink""";
-            NonZeroCountAndNextLinkComesAfterInnerFeedOnResponseImplementation(entryText, odataSimplified: true);
+            NonZeroCountAndNextLinkComesAfterInnerFeedOnResponseImplementation(entryText, enableReadingODataAnnotationWithoutPrefix: true);
         }
 
         #endregion
@@ -513,18 +513,18 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.JsonLight
 
         #endregion expanded feeds
 
-        private ODataReader GetEntryReader(string entryText, bool isResponse, bool odataSimplified = false)
+        private ODataReader GetEntryReader(string entryText, bool isResponse, bool enableReadingODataAnnotationWithoutPrefix = false)
         {
-            this.CreateMessageReader(entryText, /*forEntry*/ true, isResponse, odataSimplified);
+            this.CreateMessageReader(entryText, /*forEntry*/ true, isResponse, enableReadingODataAnnotationWithoutPrefix);
             return this.messageReader.CreateODataResourceReader(this.entitySet, this.type);
         }
-        private ODataReader GetFeedReader(string feedText, bool isResponse, bool odataSimplified = false)
+        private ODataReader GetFeedReader(string feedText, bool isResponse, bool enableReadingODataAnnotationWithoutPrefix = false)
         {
-            this.CreateMessageReader(feedText, /*forEntry*/ false, isResponse, odataSimplified);
+            this.CreateMessageReader(feedText, /*forEntry*/ false, isResponse, enableReadingODataAnnotationWithoutPrefix);
             return this.messageReader.CreateODataResourceSetReader(this.entitySet, this.type);
         }
 
-        private void CreateMessageReader(string payloadBody, bool forEntry, bool isResponse, bool odataSimplified)
+        private void CreateMessageReader(string payloadBody, bool forEntry, bool isResponse, bool enableReadingODataAnnotationWithoutPrefix)
         {
             string payloadPrefix = @"{
   ""@odata.context"":""http://example.com/$metadata#EntitySet" + (forEntry ? "/$entity" : string.Empty) + "\",";
@@ -532,7 +532,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.JsonLight
             string payload = payloadPrefix + payloadBody + payloadSuffix;
 
             var container = ContainerBuilderHelper.BuildContainer(null);
-            container.GetRequiredService<ODataSimplifiedOptions>().EnableReadingODataAnnotationWithoutPrefix = odataSimplified;
+            container.GetRequiredService<ODataSimplifiedOptions>().EnableReadingODataAnnotationWithoutPrefix = enableReadingODataAnnotationWithoutPrefix;
 
             var message = new InMemoryMessage() { Container = container };
             message.Stream = new MemoryStream(Encoding.UTF8.GetBytes(payload));

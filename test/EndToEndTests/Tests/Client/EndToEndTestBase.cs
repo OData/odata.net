@@ -40,7 +40,7 @@ namespace Microsoft.Test.OData.Tests.Client
     [DeploymentItem(@"Microsoft.VisualStudio.QualityTools.Common.dll")]
     [DeploymentItem(@"Microsoft.VisualStudio.TeamSystem.Licensing.dll")]
 #endif
-    public class EndToEndTestBase 
+    public class EndToEndTestBase
 #if SILVERLIGHT
         : SilverlightTest
 #else
@@ -112,8 +112,8 @@ namespace Microsoft.Test.OData.Tests.Client
 
                 var context = this.serviceDescriptor.CreateDataServiceContext(this.ServiceUri);
 #if !SILVERLIGHT
-                    var ar = context.BeginExecute(new Uri("ResetDataSource/", UriKind.Relative), null, null, "POST");
-                    ar.AsyncWaitHandle.WaitOne();
+                var ar = context.BeginExecute(new Uri("ResetDataSource/", UriKind.Relative), null, null, "POST");
+                ar.AsyncWaitHandle.WaitOne();
 #else 
                     context.BeginExecute(new Uri("ResetDataSource/", UriKind.Relative), (ar) =>
                     { 
@@ -124,7 +124,7 @@ namespace Microsoft.Test.OData.Tests.Client
 #endif
             }
             catch (Exception)
-            {  
+            {
                 //the reason why this is an empty catch is because the reset call may return a 404 page not found and in that case the we need to
                 // catch it instead of having the test fail. If it does return 404 its fine this is just a reset call which makes the Datasource remak itself 
             }
@@ -134,7 +134,7 @@ namespace Microsoft.Test.OData.Tests.Client
         /// Custom test initialization for derived classes.
         /// </summary>
         public virtual void CustomTestInitialize()
-        { 
+        {
         }
 
         /// <summary>
@@ -142,7 +142,7 @@ namespace Microsoft.Test.OData.Tests.Client
         /// </summary>
         [TestCleanup]
         public void TestCleanup()
-        {  
+        {
             this.serviceWrapper.StopService();
         }
 
@@ -158,12 +158,12 @@ namespace Microsoft.Test.OData.Tests.Client
         /// This assumes that no constraints are being applied to the parameters.
         /// </remarks>
         public void InvokeDataDrivenTest<T>(Action<T> action, ParameterData<T> parameterData)
-        { 
+        {
             this.Invoke(action, parameterData, new Constraint<T>[0]);
         }
 #endif
 
-       
+
 
         /// <summary>
         /// Creates a wrapped DataServiceContext for the OData Service.
@@ -174,7 +174,7 @@ namespace Microsoft.Test.OData.Tests.Client
         {
             var context = this.serviceDescriptor.CreateDataServiceContext(this.serviceWrapper.ServiceUri) as TContext;
             Assert.IsNotNull(context, "Failed to cast DataServiceContext to specified type '{0}'", typeof(TContext).Name);
-     
+
             var contextWrapper = new DataServiceContextWrapper<TContext>(context);
 #if SILVERLIGHT
             const string testClassName = "UnknownTestClass";
@@ -184,8 +184,8 @@ namespace Microsoft.Test.OData.Tests.Client
             contextWrapper.BuildingRequest += (s, e) => e.Headers.Add("TestName", string.Format("{0}.{1}", testClassName, this.TestContext.TestName));
 
             // Override any url conventions that may be baked into the context by codegen
-            contextWrapper.UrlConventions = DataServiceUrlConventions.Default;
-            
+            contextWrapper.UrlKeyDelimiter = DataServiceUrlKeyDelimiter.Parentheses;
+
             return contextWrapper;
         }
 

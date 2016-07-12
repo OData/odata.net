@@ -3169,7 +3169,7 @@ namespace <#= fullNamespace #>
     internal override void WriteKeyAsSegmentUrlConvention()
     {
 #>
-            this.UrlConventions = global::Microsoft.OData.Client.DataServiceUrlConventions.KeyAsSegment;
+            this.UrlKeyDelimiter = global::Microsoft.OData.Client.DataServiceUrlKeyDelimiter.Slash;
 <#+
     }
 
@@ -4219,7 +4219,7 @@ Namespace <#= fullNamespace #>
     internal override void WriteKeyAsSegmentUrlConvention()
     {
 #>
-            Me.UrlConventions = Global.Microsoft.OData.Client.DataServiceUrlConventions.KeyAsSegment
+            Me.UrlKeyDelimiter = Global.Microsoft.OData.Client.DataServiceUrlKeyDelimiter.Slash
 <#+
     }
 

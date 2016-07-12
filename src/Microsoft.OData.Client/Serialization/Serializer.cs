@@ -156,7 +156,7 @@ namespace Microsoft.OData.Client
         /// <returns>An instance of ODataMessageWriter.</returns>
         internal static ODataMessageWriter CreateMessageWriter(ODataRequestMessageWrapper requestMessage, RequestInfo requestInfo, bool isParameterPayload)
         {
-            var writerSettings = requestInfo.WriteHelper.CreateSettings(requestMessage.IsBatchPartRequest, requestInfo.Context.ODataSimplified);
+            var writerSettings = requestInfo.WriteHelper.CreateSettings(requestMessage.IsBatchPartRequest, requestInfo.Context.EnableWritingODataAnnotationWithoutPrefix);
             return requestMessage.CreateWriter(writerSettings, isParameterPayload);
         }
 

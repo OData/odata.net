@@ -235,16 +235,16 @@ namespace Microsoft.OData.Tests.UriParser
 
         #region Default value tests
         [Fact]
-        public void DefaultUrlConventionsShouldBeDefault()
+        public void DefaultKeyDelimiterShouldBeSlash()
         {
             new ODataUriParser(HardCodedTestModel.TestModel, ServiceRoot, FullUri).UrlKeyDelimiter.Should().BeSameAs(ODataUrlKeyDelimiter.Slash);
         }
 
         [Fact]
-        public void UrlConventionsCannotBeSetToNull()
+        public void ODataUrlKeyDelimiterCannotBeSetToNull()
         {
             Action setToNull = () => new ODataUriParser(HardCodedTestModel.TestModel, ServiceRoot, FullUri).UrlKeyDelimiter = null;
-            setToNull.ShouldThrow<ArgumentNullException>().WithMessage("UrlConventions", ComparisonMode.EquivalentSubstring);
+            setToNull.ShouldThrow<ArgumentNullException>().WithMessage("UrlKeyDelimiter", ComparisonMode.EquivalentSubstring);
         }
 
         [Fact]
@@ -421,21 +421,21 @@ namespace Microsoft.OData.Tests.UriParser
 
         #region Composite key parse test
 
-        public enum TestUrlConvention
+        public enum TestODataUrlKeyDelimiter
         {
-            Default,
-            KeyAsSegment,
+            Parentheses,
+            Slash,
         }
 
         [Theory]
-        [InlineData(TestUrlConvention.Default, "http://host/customers('customerId')/orders(customerId='customerId',orderId='orderId')/Test.DetailedOrder/details(customerId='customerId',orderId='orderId',id=1)")]
-        [InlineData(TestUrlConvention.Default, "http://host/customers('customerId')/orders('orderId')/Test.DetailedOrder/details(1)")]
-        [InlineData(TestUrlConvention.KeyAsSegment, "http://host/customers/customerId/orders/orderId/Test.DetailedOrder/details/1")]
-        [InlineData(TestUrlConvention.Default, "http://host/customers('customerId')/orders(customerId='customerId',orderId='orderId')")]
-        [InlineData(TestUrlConvention.Default, "http://host/customers('customerId')/orders('orderId')")]
-        [InlineData(TestUrlConvention.KeyAsSegment, "http://host/customers('customerId')/orders('orderId')")]
-        [InlineData(TestUrlConvention.KeyAsSegment, "http://host/customers/customerId/orders/orderId")]
-        public void ParseCompositeKeyReference(TestUrlConvention testUrlConvention, string fullUrl)
+        [InlineData(TestODataUrlKeyDelimiter.Parentheses, "http://host/customers('customerId')/orders(customerId='customerId',orderId='orderId')/Test.DetailedOrder/details(customerId='customerId',orderId='orderId',id=1)")]
+        [InlineData(TestODataUrlKeyDelimiter.Parentheses, "http://host/customers('customerId')/orders('orderId')/Test.DetailedOrder/details(1)")]
+        [InlineData(TestODataUrlKeyDelimiter.Slash, "http://host/customers/customerId/orders/orderId/Test.DetailedOrder/details/1")]
+        [InlineData(TestODataUrlKeyDelimiter.Parentheses, "http://host/customers('customerId')/orders(customerId='customerId',orderId='orderId')")]
+        [InlineData(TestODataUrlKeyDelimiter.Parentheses, "http://host/customers('customerId')/orders('orderId')")]
+        [InlineData(TestODataUrlKeyDelimiter.Slash, "http://host/customers('customerId')/orders('orderId')")]
+        [InlineData(TestODataUrlKeyDelimiter.Slash, "http://host/customers/customerId/orders/orderId")]
+        public void ParseCompositeKeyReference(TestODataUrlKeyDelimiter testODataUrlKeyDelimiter, string fullUrl)
         {
             var model = new EdmModel();
 
@@ -485,12 +485,12 @@ namespace Microsoft.OData.Tests.UriParser
             model.AddElement(container);
 
             var parser = new ODataUriParser(model, new Uri("http://host"), new Uri(fullUrl));
-            switch (testUrlConvention)
+            switch (testODataUrlKeyDelimiter)
             {
-                case TestUrlConvention.Default:
+                case TestODataUrlKeyDelimiter.Parentheses:
                     parser.UrlKeyDelimiter = ODataUrlKeyDelimiter.Parentheses;
                     break;
-                case TestUrlConvention.KeyAsSegment:
+                case TestODataUrlKeyDelimiter.Slash:
                     parser.UrlKeyDelimiter = ODataUrlKeyDelimiter.Slash;
                     break;
                 default:

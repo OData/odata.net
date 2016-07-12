@@ -192,14 +192,6 @@ namespace Microsoft.OData.Client
         }
 
         /// <summary>
-        /// Gets the URL conventions the user set on the context.
-        /// </summary>
-        internal DataServiceUrlConventions UrlConventions
-        {
-            get { return this.Context.UrlConventions; }
-        }
-
-        /// <summary>
         /// The HTTP stack to use in Silverlight.
         /// </summary>
         internal HttpStack HttpStack

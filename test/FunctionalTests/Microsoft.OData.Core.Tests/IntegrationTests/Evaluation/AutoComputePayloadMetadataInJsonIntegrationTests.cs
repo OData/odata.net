@@ -449,7 +449,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Evaluation
                 new ODataNestedResourceInfo
                 {
                     Name = "DynamicComplexProperty",
-                    SerializationInfo = new ODataNestedResourceInfoSerializationInfo() { IsUndeclared = true}
+                    SerializationInfo = new ODataNestedResourceInfoSerializationInfo() { IsUndeclared = true }
                 }
             );
             var complexValue = new ODataResource
@@ -518,7 +518,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Evaluation
         [Fact]
         public void WritingSimplifiedODataAnnotationsInFullMetadataMode()
         {
-            GetWriterOutputForEntryWithPayloadMetadata("application/json;odata.metadata=full", false, odataSimplified: true)
+            GetWriterOutputForEntryWithPayloadMetadata("application/json;odata.metadata=full", false, enableWritingODataAnnotationWithoutPrefix: true)
                 .Should().Be(PayloadWithAllMetadataODataSimplified);
         }
 
@@ -1898,7 +1898,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Evaluation
             var entryList = ReadPayload(payload, EntitySet, EntityType);
 
             ODataResource entry = entryList[0];
-            Action getId = ()=> entry.Id.Should().Be(new Uri(""));
+            Action getId = () => entry.Id.Should().Be(new Uri(""));
             getId.ShouldThrow<ODataException>().WithMessage(Strings.ODataMetadataBuilder_MissingParentIdOrContextUrl);
 
             entry = entryList[1];
@@ -2123,10 +2123,10 @@ namespace Microsoft.OData.Tests.IntegrationTests.Evaluation
             string contentType,
             bool autoComputePayloadMetadata,
             string selectClause = null,
-            bool odataSimplified = false)
+            bool enableWritingODataAnnotationWithoutPrefix = false)
         {
             ODataItem[] itemsToWrite = new ODataItem[] { this.entryWithPayloadMetadata, this.navLinkWithPayloadMetadata, this.expandedNavLinkWithPayloadMetadata, new ODataResourceSet() };
-            return this.GetWriterOutputForContentTypeAndKnobValue(contentType, autoComputePayloadMetadata, itemsToWrite, Model, EntitySet, EntityType, selectClause, odataSimplified: odataSimplified);
+            return this.GetWriterOutputForContentTypeAndKnobValue(contentType, autoComputePayloadMetadata, itemsToWrite, Model, EntitySet, EntityType, selectClause, enableWritingODataAnnotationWithoutPrefix: enableWritingODataAnnotationWithoutPrefix);
         }
 
         private string GetWriterOutputForEntryWithOnlyData(
@@ -2138,11 +2138,11 @@ namespace Microsoft.OData.Tests.IntegrationTests.Evaluation
             return this.GetWriterOutputForContentTypeAndKnobValue(contentType, autoComputePayloadMetadata, itemsToWrite, Model, EntitySet, EntityType, selectClause);
         }
 
-        private string GetWriterOutputForContentTypeAndKnobValue(string contentType, bool autoComputePayloadMetadata, ODataItem[] itemsToWrite, EdmModel edmModel, IEdmEntitySetBase edmEntitySet, EdmEntityType edmEntityType, string selectClause = null, string expandClause = null, string resourcePath = null, bool odataSimplified = false)
+        private string GetWriterOutputForContentTypeAndKnobValue(string contentType, bool autoComputePayloadMetadata, ODataItem[] itemsToWrite, EdmModel edmModel, IEdmEntitySetBase edmEntitySet, EdmEntityType edmEntityType, string selectClause = null, string expandClause = null, string resourcePath = null, bool enableWritingODataAnnotationWithoutPrefix = false)
         {
             MemoryStream outputStream = new MemoryStream();
             var container = ContainerBuilderHelper.BuildContainer(null);
-            container.GetRequiredService<ODataSimplifiedOptions>().EnableWritingODataAnnotationWithoutPrefix = odataSimplified;
+            container.GetRequiredService<ODataSimplifiedOptions>().EnableWritingODataAnnotationWithoutPrefix = enableWritingODataAnnotationWithoutPrefix;
             IODataResponseMessage message = new InMemoryMessage() { Stream = outputStream, Container = container };
 
             message.SetHeader("Content-Type", contentType);

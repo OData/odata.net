@@ -390,7 +390,7 @@ namespace Microsoft.Test.OData.Tests.Client.PrimitiveTypesTests
         private DataServiceContextWrapper<Services.TestServices.PrimitiveKeysServiceReference.TestContext> CreateWrappedContext()
         {
             var contextWrapper = base.CreateWrappedContext<Services.TestServices.PrimitiveKeysServiceReference.TestContext>();
-            contextWrapper.UrlConventions = DataServiceUrlConventions.KeyAsSegment;
+            contextWrapper.UrlKeyDelimiter = DataServiceUrlKeyDelimiter.Slash;
             return contextWrapper;
         }
     }

@@ -58,7 +58,6 @@ OData .NET library is open source at http://github.com/OData/odata.net</descript
     <file src="$SourcesRoot$\src\Microsoft.OData.Core\Evaluation\LiteralFormatter.cs" target="src\Microsoft.OData.Core\Evaluation\LiteralFormatter.cs" />
     <file src="$SourcesRoot$\src\Microsoft.OData.Core\Evaluation\ODataResourceMetadataBuilder.cs" target="src\Microsoft.OData.Core\Evaluation\ODataResourceMetadataBuilder.cs" />
     <file src="$SourcesRoot$\src\Microsoft.OData.Core\Evaluation\ODataUriBuilder.cs" target="src\Microsoft.OData.Core\Evaluation\ODataUriBuilder.cs" />
-    <file src="$SourcesRoot$\src\Microsoft.OData.Core\Evaluation\UrlConvention.cs" target="src\Microsoft.OData.Core\Evaluation\UrlConvention.cs" />
     <file src="$SourcesRoot$\src\Microsoft.OData.Core\Json\JsonSharedUtils.cs" target="src\Microsoft.OData.Core\Json\JsonSharedUtils.cs" />
     <file src="$SourcesRoot$\src\Microsoft.OData.Core\SimpleLazy.cs" target="src\Microsoft.OData.Core\SimpleLazy.cs" />
     <file src="$SourcesRoot$\src\Microsoft.OData.Core\Metadata\EdmLibraryExtensions.cs" target="src\Microsoft.OData.Core\Metadata\EdmLibraryExtensions.cs" />

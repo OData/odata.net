@@ -65,9 +65,6 @@
     <Compile Include="..\..\..\..\Microsoft.Spatial.Tests\TestData.cs">
       <Link>Tests\Server\Util\TestData.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\..\Microsoft.OData.Core.Tests\UrlConventionsConstants.cs">
-      <Link>Tests\Server\Util\UrlConventionsConstants.cs</Link>
-    </Compile>
     <Compile Include="..\..\..\..\Microsoft.OData.Core.Tests\UriParser\ModelBuildingHelpers.cs">
       <Link>Tests\Server\Util\ModelBuildingHelpers.cs</Link>
     </Compile>

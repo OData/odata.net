@@ -143,7 +143,7 @@ namespace Microsoft.OData.Client
         public string GetKeyPath(string keyString)
         {
             string resourcePath = UriUtil.UriToString(this.RequestUri).Substring(UriUtil.UriToString(this.Context.BaseUri).Length);
-            if (this.Context.UrlConventions == DataServiceUrlConventions.KeyAsSegment)
+            if (this.Context.UrlKeyDelimiter == DataServiceUrlKeyDelimiter.Slash)
             {
                 return resourcePath + UriHelper.FORWARDSLASH + keyString;
             }

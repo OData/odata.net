@@ -408,7 +408,7 @@
     <Compile Include="UriOperationParameter.cs" />
     <Compile Include="UriResolver.cs" />
     <Compile Include="UriUtil.cs" />
-    <Compile Include="DataServiceUrlConventions.cs" />
+    <Compile Include="DataServiceUrlKeyDelimiter.cs" />
     <Compile Include="Util.cs" />
     <Compile Include="DataServiceContext.cs" />
     <Compile Include="DataServiceQueryOfT.cs" />

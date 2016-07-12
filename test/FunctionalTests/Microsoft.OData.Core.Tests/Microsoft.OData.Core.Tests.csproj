@@ -402,7 +402,6 @@
     <Compile Include="UriParser\SegmentAssertions.cs" />
     <Compile Include="UriParser\Visitors\QueryNodeVisitorTests.cs" />
     <Compile Include="UriParser\Visitors\SyntacticTreeVisitorTests.cs" />
-    <Compile Include="UrlConventionsConstants.cs" />
     <Compile Include="ValidationUtilsTests.cs" />
     <Compile Include="WriterUtilsTests.cs" />
   </ItemGroup>

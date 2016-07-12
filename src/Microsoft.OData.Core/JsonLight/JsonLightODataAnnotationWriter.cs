@@ -29,21 +29,21 @@ namespace Microsoft.OData.JsonLight
         private readonly IJsonWriter jsonWriter;
 
         /// <summary>
-        /// Whether OData Simplified is enabled.
+        /// Whether write odata annotation without "odata." prefix in name.
         /// </summary>
-        private readonly bool odataSimplified;
+        private readonly bool enableWritingODataAnnotationWithoutPrefix;
 
         /// <summary>
         /// Constructor.
         /// </summary>
         /// <param name="jsonWriter">The underlying JSON writer.</param>
-        /// <param name="odataSimplified">Whether OData Simplified is enabled.</param>
-        public JsonLightODataAnnotationWriter(IJsonWriter jsonWriter, bool odataSimplified)
+        /// <param name="enableWritingODataAnnotationWithoutPrefix">Whether write odata annotation without "odata." prefix in name.</param>
+        public JsonLightODataAnnotationWriter(IJsonWriter jsonWriter, bool enableWritingODataAnnotationWithoutPrefix)
         {
             Debug.Assert(jsonWriter != null, "jsonWriter != null");
 
             this.jsonWriter = jsonWriter;
-            this.odataSimplified = odataSimplified;
+            this.enableWritingODataAnnotationWithoutPrefix = enableWritingODataAnnotationWithoutPrefix;
         }
 
         /// <summary>
@@ -132,7 +132,7 @@ namespace Microsoft.OData.JsonLight
         /// <returns>The simplified annotation name.</returns>
         private string SimplifyODataAnnotationName(string annotationName)
         {
-            return odataSimplified ? annotationName.Substring(ODataAnnotationPrefixLength) : annotationName;
+            return enableWritingODataAnnotationWithoutPrefix ? annotationName.Substring(ODataAnnotationPrefixLength) : annotationName;
         }
     }
 }
