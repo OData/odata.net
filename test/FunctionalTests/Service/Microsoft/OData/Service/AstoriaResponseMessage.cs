@@ -170,10 +170,6 @@ namespace Microsoft.OData.Service
         /// <param name="headerValue">Value for the header to be set.</param>
         public void SetHeader(string headerName, string headerValue)
         {
-#if DEBUG
-            Debug.Assert(!this.headersAlreadyFlushed, "!this.headersAlreadyFlushed");
-#endif
-
             // In astoria, IDataServiceHost2.ResponseHeaders is never called to set the value of these headers.
             // It will be breaking change to call it now. Hence trying to call the right property depending on the 
             // header name to keep it backward-compatible.

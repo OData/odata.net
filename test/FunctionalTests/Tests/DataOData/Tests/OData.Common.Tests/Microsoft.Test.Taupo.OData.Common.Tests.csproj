@@ -69,7 +69,6 @@
   <ItemGroup>
     <Compile Include="InfrastructureTests\BufferingReadStreamTests.cs" />
     <Compile Include="InfrastructureTests\ODataUtilsTests.cs" />
-    <Compile Include="ObjectModelTests\ODataEdmValueUtils.cs" />
     <Compile Include="ObjectModelTests\ODataActionsAndFunctionsTests.cs" />
     <Compile Include="ObjectModelTests\ODataInnerErrorTests.cs" />
     <Compile Include="ObjectModelTests\ODataServiceOperationCollectionResultTests.cs" />
@@ -94,7 +93,6 @@
     <Compile Include="ObjectModelTests\AnnotationTests.cs" />
     <Compile Include="ObjectModelTests\ODataNavigationLinkTests.cs" />
     <Compile Include="ObjectModelTests\ODataPropertyTests.cs" />
-    <Compile Include="ObjectModelTests\ODataEdmStructuredValueTests.cs" />
     <Compile Include="InfrastructureTests\AsyncBufferedStreamTests.cs" />
     <Compile Include="TestCodeTests\AnnotatedPayloadElementToJsonLightConverterTests.cs" />
   </ItemGroup>

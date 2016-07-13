@@ -91,18 +91,6 @@
     <Compile Include="$(ODataCrossTargettingSourcePath)\Evaluation\ODataConventionalUriBuilder.cs">
       <Link>Microsoft\OData\Core\Evaluation\ODataConventionalUriBuilder.cs</Link>
     </Compile>
-    <Compile Include="$(ODataCrossTargettingSourcePath)\Evaluation\ODataEdmCollectionValue.cs">
-      <Link>Microsoft\OData\Core\Evaluation\ODataEdmCollectionValue.cs</Link>
-    </Compile>
-    <Compile Include="$(ODataCrossTargettingSourcePath)\Evaluation\ODataEdmNullValue.cs">
-      <Link>Microsoft\OData\Core\Evaluation\ODataEdmNullValue.cs</Link>
-    </Compile>
-    <Compile Include="$(ODataCrossTargettingSourcePath)\Evaluation\ODataEdmStructuredValue.cs">
-      <Link>Microsoft\OData\Core\Evaluation\ODataEdmStructuredValue.cs</Link>
-    </Compile>
-    <Compile Include="$(ODataCrossTargettingSourcePath)\Evaluation\ODataEdmValueUtils.cs">
-      <Link>Microsoft\OData\Core\Evaluation\ODataEdmValueUtils.cs</Link>
-    </Compile>
     <Compile Include="$(ODataCrossTargettingSourcePath)\Evaluation\ODataResourceMetadataBuilder.cs">
       <Link>Microsoft\OData\Core\Evaluation\ODataResourceMetadataBuilder.cs</Link>
     </Compile>

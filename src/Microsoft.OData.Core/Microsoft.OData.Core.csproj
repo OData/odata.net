@@ -89,10 +89,6 @@
     <Compile Include="Evaluation\NoOpResourceMetadataBuilder.cs" />
     <Compile Include="Evaluation\ODataConventionalResourceMetadataBuilder.cs" />
     <Compile Include="Evaluation\ODataConventionalUriBuilder.cs" />
-    <Compile Include="Evaluation\ODataEdmCollectionValue.cs" />
-    <Compile Include="Evaluation\ODataEdmNullValue.cs" />
-    <Compile Include="Evaluation\ODataEdmStructuredValue.cs" />
-    <Compile Include="Evaluation\ODataEdmValueUtils.cs" />
     <Compile Include="Evaluation\ODataResourceMetadataBuilder.cs" />
     <Compile Include="Evaluation\ODataResourceMetadataContext.cs" />
     <Compile Include="Evaluation\ODataMetadataContext.cs" />
