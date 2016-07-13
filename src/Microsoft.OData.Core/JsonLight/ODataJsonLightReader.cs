@@ -1159,7 +1159,7 @@ namespace Microsoft.OData.JsonLight
             if (this.CurrentResourceType != null)
             {
                 // NOTE: once we do this for all formats we can do this in ApplyEntityTypeNameFromPayload.
-                this.CurrentResource.SetAnnotation(new ODataTypeAnnotation(this.CurrentNavigationSource, this.CurrentResourceType));
+                this.CurrentResource.SetAnnotation(new ODataTypeAnnotation(this.CurrentResourceType));
             }
 
             this.CurrentResourceState.FirstNestedResourceInfo = this.jsonLightResourceDeserializer.ReadResourceContent(this.CurrentResourceState);
@@ -1520,6 +1520,14 @@ namespace Microsoft.OData.JsonLight
                         "The IODataJsonLightReaderResourceState is only supported on ResourceStart or ResourceEnd scope.");
                     return this.ResourceType;
                 }
+            }
+
+            /// <summary>
+            /// The navigation source for the resource (if available)
+            /// </summary>
+            IEdmNavigationSource IODataJsonLightReaderResourceState.NavigationSource
+            {
+                get { return this.NavigationSource; }
             }
         }
 

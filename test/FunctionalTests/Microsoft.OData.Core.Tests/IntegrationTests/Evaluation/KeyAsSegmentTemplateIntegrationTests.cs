@@ -61,8 +61,8 @@ namespace Microsoft.OData.Tests.IntegrationTests.Evaluation
                 null /*requestUri*/);
 
             var thing = new ODataResource { Properties = new[] { new ODataProperty { Name = "Id", Value = 1 } } };
-            thing.SetAnnotation(new ODataTypeAnnotation(entitySet, entityType));
-            thing.MetadataBuilder = metadataContext.GetResourceMetadataBuilderForReader(new TestJsonLightReaderEntryState { Resource = thing, SelectedProperties = new SelectedPropertiesNode("*") }, useKeyAsSegment);
+            thing.SetAnnotation(new ODataTypeAnnotation(entityType));
+            thing.MetadataBuilder = metadataContext.GetResourceMetadataBuilderForReader(new TestJsonLightReaderEntryState { Resource = thing, SelectedProperties = new SelectedPropertiesNode("*"), NavigationSource = entitySet}, useKeyAsSegment);
             return thing;
         }
     }

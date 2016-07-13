@@ -865,7 +865,7 @@ namespace Microsoft.OData.JsonLight
             if (this.CurrentEntityType != null)
             {
                 // NOTE: once we do this for all formats we can do this in ApplyEntityTypeNameFromPayload.
-                this.CurrentDeltaResource.SetAnnotation(new ODataTypeAnnotation(this.CurrentNavigationSource, this.CurrentEntityType));
+                this.CurrentDeltaResource.SetAnnotation(new ODataTypeAnnotation(this.CurrentEntityType));
             }
 
             // Read other annotations and properties for this resource.

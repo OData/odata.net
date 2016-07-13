@@ -28,6 +28,11 @@ namespace Microsoft.OData.JsonLight
         IEdmStructuredType ResourceType { get; }
 
         /// <summary>
+        /// The navigation source for the resource (if available)
+        /// </summary>
+        IEdmNavigationSource NavigationSource { get; }
+
+        /// <summary>
         /// The metadata builder instance for the resource.
         /// </summary>
         ODataResourceMetadataBuilder MetadataBuilder { get; set; }

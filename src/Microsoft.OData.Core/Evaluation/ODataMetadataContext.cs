@@ -250,7 +250,7 @@ namespace Microsoft.OData.Evaluation
 
                     if (typeAnnotation.Type.IsEntity())
                     {
-                        IEdmNavigationSource navigationSource = typeAnnotation.NavigationSource;
+                        IEdmNavigationSource navigationSource = resourceState.NavigationSource;
                         IEdmEntityType navigationSourceElementType = this.edmTypeResolver.GetElementType(navigationSource);
                         IODataResourceTypeContext typeContext =
                             ODataResourceTypeContext.Create( /*serializationInfo*/

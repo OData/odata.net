@@ -43,6 +43,8 @@ namespace Microsoft.OData.Tests
             }
         }
 
+        public IEdmNavigationSource NavigationSource { get; set; }
+
         public ODataResourceMetadataBuilder MetadataBuilder { get; set; }
 
         public bool AnyPropertyFound { get; set; }

@@ -4939,10 +4939,9 @@ public sealed class Microsoft.OData.ODataTypeAnnotation {
 	public ODataTypeAnnotation ()
 	public ODataTypeAnnotation (Microsoft.OData.Edm.IEdmCollectionTypeReference collectionType)
 	public ODataTypeAnnotation (Microsoft.OData.Edm.IEdmComplexTypeReference complexType)
+	public ODataTypeAnnotation (Microsoft.OData.Edm.IEdmStructuredType structuredType)
 	public ODataTypeAnnotation (string typeName)
-	public ODataTypeAnnotation (Microsoft.OData.Edm.IEdmNavigationSource navigationSource, Microsoft.OData.Edm.IEdmStructuredType structuredType)
 
-	Microsoft.OData.Edm.IEdmNavigationSource NavigationSource  { public get; }
 	Microsoft.OData.Edm.IEdmTypeReference Type  { public get; }
 	string TypeName  { public get; public set; }
 }

@@ -23,18 +23,13 @@ namespace Microsoft.OData
         /// <summary>The EDM type of the value this annotation is on.</summary>
         private readonly IEdmTypeReference type;
 
-        /// <summary>The navigation source of the value this annotation is on. Only applies to entity values.</summary>
-        private readonly IEdmNavigationSource navigationSource;
-
         /// <summary>
         /// Creates a new instance of the type annotation for an entity value.
         /// </summary>
-        /// <param name="navigationSource">The navigation source the entity belongs to (required).</param>
         /// <param name="structuredType">The structured type of the entity value if not the base type of the entity set (optional).</param>
-        public ODataTypeAnnotation(IEdmNavigationSource navigationSource, IEdmStructuredType structuredType)
+        public ODataTypeAnnotation(IEdmStructuredType structuredType)
         {
             ExceptionUtils.CheckArgumentNotNull(structuredType, "structuredType");
-            this.navigationSource = navigationSource;
             this.type = structuredType.ToTypeReference(/*isNullable*/ true);
         }
 
@@ -93,17 +88,6 @@ namespace Microsoft.OData
             get
             {
                 return this.type;
-            }
-        }
-
-        /// <summary>
-        /// The navigation source the value belongs to (only applies to entity values).
-        /// </summary>
-        public IEdmNavigationSource NavigationSource
-        {
-            get
-            {
-                return this.navigationSource;
             }
         }
     }
