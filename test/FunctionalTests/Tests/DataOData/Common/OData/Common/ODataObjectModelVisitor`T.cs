@@ -48,12 +48,6 @@ namespace Microsoft.Test.Taupo.OData.Common
                 return this.VisitNavigationLink(navigationLink);
             }
 
-            ODataComplexValue complexValue = objectModelItem as ODataComplexValue;
-            if (complexValue != null)
-            {
-                return this.VisitComplexValue(complexValue);
-            }
-
             ODataCollectionValue collection = objectModelItem as ODataCollectionValue;
             if (collection != null)
             {
@@ -171,12 +165,6 @@ namespace Microsoft.Test.Taupo.OData.Common
         /// </summary>
         /// <param name="navigationLink">The navigation link to visit.</param>
         protected abstract T VisitNavigationLink(ODataNestedResourceInfo navigationLink);
-
-        /// <summary>
-        /// Visits a complex value item.
-        /// </summary>
-        /// <param name="complexValue">The complex value to visit.</param>
-        protected abstract T VisitComplexValue(ODataComplexValue complexValue);
 
         /// <summary>
         /// Visits a collection item.

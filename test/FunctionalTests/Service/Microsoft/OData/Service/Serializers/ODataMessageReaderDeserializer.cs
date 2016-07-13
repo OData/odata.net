@@ -222,12 +222,6 @@ namespace Microsoft.OData.Service.Serializers
                 return null;
             }
 
-            ODataComplexValue complexValue = odataValue as ODataComplexValue;
-            if (complexValue != null)
-            {
-                return this.ConvertComplexValue(complexValue, ref resourceType);
-            }
-
             ODataCollectionValue collection = odataValue as ODataCollectionValue;
             if (collection != null)
             {
@@ -335,44 +329,6 @@ namespace Microsoft.OData.Service.Serializers
         protected IEdmEntitySet GetEntitySet(ResourceSetWrapper resourceSet)
         {
             return this.Service.Provider.GetMetadataProviderEdmModel().EnsureEntitySet(resourceSet);
-        }
-
-        /// <summary>
-        /// Converts the complex value reported by OData reader into WCF DS complex resource.
-        /// </summary>
-        /// <param name="complexValue">The complex value reported by the reader.</param>
-        /// <param name="complexResourceType">The expected resource type of the complex value. null if it's an open value.</param>
-        /// <returns>The newly created WCF DS complex resource.</returns>
-        private object ConvertComplexValue(ODataComplexValue complexValue, ref ResourceType complexResourceType)
-        {
-            Debug.Assert(complexValue != null, "complexValue != null");
-
-            if ((complexResourceType == null) || (complexValue.TypeName != complexResourceType.FullName))
-            {
-                // Open complex value & Derived complex value - read the type from the value
-                // Note: 6.11 supports undeclared complex value, here it will cause exception (as expected) to be verified in test case.
-                Debug.Assert(!string.IsNullOrEmpty(complexValue.TypeName), "ODataLib should have verified that open complex value has a type name since we provided metadata.");
-                complexResourceType = this.Service.Provider.TryResolveResourceType(complexValue.TypeName);
-                Debug.Assert(complexResourceType.ResourceTypeKind == ResourceTypeKind.ComplexType, "ODataLib should have verified that complex value has a complex resource type.");
-            }
-
-            this.CheckAndIncrementObjectCount();
-
-            this.RecurseEnter();
-
-            // Create a new complex resource (complex values are atomic, so we never update existing ones, we already start from scratch)
-            object complexResource = this.Updatable.CreateResource(null, complexResourceType.FullName);
-
-            // Go through properties and apply them
-            Debug.Assert(complexValue.Properties != null, "The ODataLib reader should always populate the ODataComplexValue.Properties collection.");
-            foreach (ODataProperty complexProperty in complexValue.Properties)
-            {
-                this.ApplyProperty(complexProperty, complexResourceType, complexResource);
-            }
-
-            this.RecurseLeave();
-
-            return complexResource;
         }
 
         /// <summary>

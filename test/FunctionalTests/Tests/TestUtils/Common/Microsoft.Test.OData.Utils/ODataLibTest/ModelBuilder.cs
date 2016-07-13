@@ -163,12 +163,6 @@ namespace Microsoft.Test.OData.Utils.ODataLibTest
                 entityType.AddStructuralProperty(propertyName, MetadataUtils.GetPrimitiveTypeReference(primitiveValue.Value.GetType()));
             }
 
-            var complexValue = propertyValue as ODataComplexValue;
-            if (complexValue != null)
-            {
-                entityType.AddStructuralProperty(propertyName, model.FindDeclaredType(complexValue.TypeName).ToTypeReference());
-            }
-
             var collectionValue = propertyValue as ODataCollectionValue;
             if (collectionValue != null)
             {

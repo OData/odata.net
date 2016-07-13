@@ -198,26 +198,6 @@ namespace Microsoft.Test.OData.Utils.Metadata
         }
 
         /// <summary>
-        /// Creates metadata for an entity derived from the data.
-        /// </summary>
-        /// <param name="model">The created model.</param>
-        /// <param name="namespaceName">The namespace name for the new type(s).</param>
-        /// <param name="entry">The entry to create the metadata for.</param>
-        /// <returns>The entity type of the created entity.</returns>
-        public static IEdmEntityType CreateEntityMetadata(string namespaceName, ODataResource entry, out IEdmModel model)
-        {
-            var metadata = new ConstructableMetadata("DefaultContainer", namespaceName);
-            
-            ExceptionUtilities.Assert(entry.TypeName.StartsWith(namespaceName + "."), "The type name must start with Namespace.");
-            
-            EdmEntityType entityType = metadata.AddEntityType(entry.TypeName, null, null, false) as EdmEntityType;
-            
-            CreateMetadataProperties(metadata, entityType, entry.Properties);
-            model = metadata;
-            return entityType;
-        }
-
-        /// <summary>
         /// Returns the EDMX version for a given EDM version.
         /// </summary>
         /// <param name="edmVersion">The EDM version to get the EDMX version for.</param>
@@ -999,57 +979,51 @@ namespace Microsoft.Test.OData.Utils.Metadata
                         propertyValue = propertyMetadataAnnotation.PropertyValueForTypeInference;
                     }
                 }
-                ODataComplexValue complexValue = propertyValue as ODataComplexValue;
-                if (complexValue != null)
+
+                bool isKeyProperty = false;
+                if (propertyMetadataAnnotation != null)
                 {
-                    ProcessComplexProperty(model, owningType, complexValue, isOpenProperty);
+                    isKeyProperty = (propertyMetadataAnnotation.Kind & ODataPropertyKind.Key) == ODataPropertyKind.Key;
+                    bool isETagProperty = (propertyMetadataAnnotation.Kind & ODataPropertyKind.ETag) == ODataPropertyKind.ETag;
+
+                    ExceptionUtilities.Assert(
+                        !isKeyProperty || owningType is EdmEntityType,
+                        "Can't declare a key property on non-entity type.");
+                    ExceptionUtilities.Assert(
+                        !isETagProperty || owningType is EdmEntityType,
+                        "Can't declare an etag property on non-entity type.");
+                    ExceptionUtilities.Assert(
+                        !isOpenProperty || !(isKeyProperty || isETagProperty),
+                        "Key or etag property can't be open.");
+                }
+
+                if (owningEntityType != null && isOpenProperty)
+                {
+                    //TODO: figure out how to set entity type to open after creation.
                 }
                 else
                 {
-                    bool isKeyProperty = false;
-                    if (propertyMetadataAnnotation != null)
+                    if (owningEntityType != null && isKeyProperty)
                     {
-                        isKeyProperty = (propertyMetadataAnnotation.Kind & ODataPropertyKind.Key) == ODataPropertyKind.Key;
-                        bool isETagProperty = (propertyMetadataAnnotation.Kind & ODataPropertyKind.ETag) == ODataPropertyKind.ETag;
-
-                        ExceptionUtilities.Assert(
-                            !isKeyProperty || owningType is EdmEntityType,
-                            "Can't declare a key property on non-entity type.");
-                        ExceptionUtilities.Assert(
-                            !isETagProperty || owningType is EdmEntityType,
-                            "Can't declare an etag property on non-entity type.");
-                        ExceptionUtilities.Assert(
-                            !isOpenProperty || !(isKeyProperty || isETagProperty),
-                            "Key or etag property can't be open.");
-                    }
-
-                    if (owningEntityType != null && isOpenProperty)
-                    {
-                        //TODO: figure out how to set entity type to open after creation.
+                        ExceptionUtilities.Assert(propertyValue != null,
+                            "Found a key property with null value, can't infer type from value in that case and it's invalid anyway.");
+                        var keyPropertyType = GetPrimitiveTypeReference(propertyValue.GetType());
+                        var keyProperty = owningEntityType.AddStructuralProperty(property.Name, keyPropertyType);
+                        owningEntityType.AddKeys(keyProperty);
                     }
                     else
                     {
-                        if (owningEntityType != null && isKeyProperty)
+                        if (propertyValue is ODataCollectionValue)
                         {
-                            ExceptionUtilities.Assert(propertyValue != null, 
-                                "Found a key property with null value, can't infer type from value in that case and it's invalid anyway.");
-                            var keyPropertyType = GetPrimitiveTypeReference(propertyValue.GetType());
-                            var keyProperty = owningEntityType.AddStructuralProperty(property.Name, keyPropertyType);
-                            owningEntityType.AddKeys(keyProperty);
+                            ProcessCollectionProperty(model, owningType, propertyValue, owningEntityType, property);
                         }
                         else
                         {
-                            if (propertyValue is ODataCollectionValue)
-                            {
-                                ProcessCollectionProperty(model, owningType, propertyValue, owningEntityType, property);
-                            }
-                            else
-                            {
-                                Type propertyType = propertyValue == null ? typeof(string) : propertyValue.GetType();
-                                owningType.AddProperty(new EdmStructuralProperty(owningType, property.Name, GetPrimitiveTypeReference(propertyType)));
-                            }
+                            Type propertyType = propertyValue == null ? typeof(string) : propertyValue.GetType();
+                            owningType.AddProperty(new EdmStructuralProperty(owningType, property.Name, GetPrimitiveTypeReference(propertyType)));
                         }
                     }
+
                 }
             }
         }
@@ -1079,36 +1053,6 @@ namespace Microsoft.Test.OData.Utils.Metadata
             }
 
             return null;
-        }
-
-        private static void ProcessComplexProperty(ConstructableMetadata model, EdmStructuredType owningType, ODataComplexValue complexValue, bool isOpenProperty)
-        {
-            string namespaceName = "";
-            var schematype = owningType as IEdmSchemaType;
-            if (schematype != null)
-            {
-                namespaceName = schematype.Namespace;
-            }
-
-            ExceptionUtilities.Assert(complexValue.TypeName.StartsWith(namespaceName + "."), "The type name must start with the same namespace as its owning type.");
-
-            EdmComplexType complexType = model.FindType(complexValue.TypeName) as EdmComplexType;
-            if (complexType == null)
-            {
-                string complexTypeLocalName = complexValue.GetUnqualifiedTypeName(namespaceName);
-                complexType = model.AddComplexType(complexTypeLocalName, null, null, false) as EdmComplexType;
-                CreateMetadataProperties(model, complexType, complexValue.Properties);
-            }
-
-            if (isOpenProperty)
-            {
-                //TODO: Find way to set parent type to open.
-            }
-            else
-            {
-                ExceptionUtilities.CheckObjectNotNull(complexType, "Complex type cannot be null");
-                owningType.AddProperty(new EdmStructuralProperty(owningType, complexType.Name, complexType.ToTypeReference()));
-            }
         }
 
         /// <summary>
@@ -1174,17 +1118,5 @@ namespace Microsoft.Test.OData.Utils.Metadata
         {
             return entry.TypeName.Substring(namespaceName.Length + 1);
         }
-
-        /// <summary>
-        /// Returns the typename without the preceding namespace.
-        /// </summary>
-        /// <param name="complex">ComplexValue whose typename to get.</param>
-        /// <param name="namespaceName">Namespace prefix to remove.</param>
-        /// <returns>The unqualified type name.</returns>
-        private static string GetUnqualifiedTypeName(this ODataComplexValue complex, string namespaceName)
-        {
-            return complex.TypeName.Substring(namespaceName.Length + 1);
-        }
-
     }
 }

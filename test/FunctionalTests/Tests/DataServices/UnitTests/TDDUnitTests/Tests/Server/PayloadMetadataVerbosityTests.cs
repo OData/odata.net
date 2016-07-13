@@ -275,9 +275,6 @@ namespace AstoriaUnitTests.TDD.Tests.Server
             string typeNameToWrite;
             CallShouldSpecifyTypeNameAnnotation(this.allInterpreter, new ODataPrimitiveValue(Guid.NewGuid()), out typeNameToWrite).Should().BeTrue();
             typeNameToWrite.Should().Be("Edm.Guid");
-
-            CallShouldSpecifyTypeNameAnnotation(this.allInterpreter, new ODataComplexValue(), out typeNameToWrite).Should().BeTrue();
-            typeNameToWrite.Should().Be("Namespace.MyComplexType");
         }
 
         [TestMethod]
@@ -306,9 +303,6 @@ namespace AstoriaUnitTests.TDD.Tests.Server
             typeNameToWrite.Should().BeNull();
 
             CallShouldSpecifyTypeNameAnnotation(this.noneInterpreter, new ODataPrimitiveValue(Guid.NewGuid()), out typeNameToWrite).Should().BeTrue();
-            typeNameToWrite.Should().BeNull();
-
-            CallShouldSpecifyTypeNameAnnotation(this.noneInterpreter, new ODataComplexValue(), out typeNameToWrite).Should().BeTrue();
             typeNameToWrite.Should().BeNull();
 
             this.noneInterpreter.ShouldSpecifyTypeNameAnnotation(new ODataNullValue(), StringResourceType, out typeNameToWrite).Should().BeTrue();
@@ -344,9 +338,6 @@ namespace AstoriaUnitTests.TDD.Tests.Server
             typeNameToWrite.Should().BeNull();
 
             CallShouldSpecifyTypeNameAnnotation(this.defaultInterpreter, new ODataPrimitiveValue(Guid.NewGuid()), out typeNameToWrite).Should().BeFalse();
-            typeNameToWrite.Should().BeNull();
-
-            CallShouldSpecifyTypeNameAnnotation(this.defaultInterpreter, new ODataComplexValue(), out typeNameToWrite).Should().BeFalse();
             typeNameToWrite.Should().BeNull();
 
             this.defaultInterpreter.ShouldSpecifyTypeNameAnnotation(new ODataNullValue(), StringResourceType, out typeNameToWrite).Should().BeFalse();
@@ -760,46 +751,6 @@ namespace AstoriaUnitTests.TDD.Tests.Server
             CompareSerializationTypeNameAnnotation(nullValue, new ODataTypeAnnotation("namespace.complex"));
         }
         #endregion primitive value object model integration tests
-
-        #region complex value object model integration tests
-        [TestMethod]
-        public void ComplexTypeNameShouldNotBeWrittenByDefault()
-        {
-            // We leave it up to ODataLib to decide whether or not to write the type name in default case.
-            TestComplex((c, t) => this.defaultManager.SetTypeName(c, t), null);
-        }
-
-        [TestMethod]
-        public void ComplexTypeNameShouldBeWrittenForAllOption()
-        {
-            TestComplex((c, t) => this.allManager.SetTypeName(c, t), new ODataTypeAnnotation("namespace.complex"));
-        }
-
-        [TestMethod]
-        public void ComplexTypeNameShouldNotBeWrittenForTheNoneOption()
-        {
-            TestComplex((c, t) => this.noneManager.SetTypeName(c, t), new ODataTypeAnnotation());
-        }
-
-        [TestMethod]
-        public void DynamicComplexTypeNameShouldBeWrittenByDefault()
-        {
-            TestComplex((c, t) => this.defaultManager.SetTypeName(c, t), null);
-        }
-
-        [TestMethod]
-        public void DynamicComplexTypeNameShouldBeWrittenForAllOption()
-        {
-            TestComplex((c, t) => this.allManager.SetTypeName(c, t), new ODataTypeAnnotation("namespace.complex"));
-        }
-
-        [TestMethod]
-        public void DynamicComplexTypeNameShouldNotBeWrittenForTheNoneOption()
-        {
-            // note that ODL requires the property to be set, even if the annotation prevents it from actually being written
-            TestComplex((c, t) => this.noneManager.SetTypeName(c, t), new ODataTypeAnnotation());
-        }
-        #endregion
 
         #region collection value object model integration tests
         [TestMethod]
@@ -1318,14 +1269,6 @@ namespace AstoriaUnitTests.TDD.Tests.Server
             getValue(action).Should().Be(expectedValue);
         }
 
-        private static void TestComplex(Action<ODataComplexValue, ResourceType> setValue, ODataTypeAnnotation expectedTypeNameAnnotation)
-        {
-            var complex = new ODataComplexValue { TypeName = ComplexResourceType.FullName };
-
-            setValue(complex, ComplexResourceType);
-            CompareSerializationTypeNameAnnotation(complex, expectedTypeNameAnnotation);
-        }
-
         private static void TestCollection(Action<ODataCollectionValue, ResourceType> setValue, ODataTypeAnnotation expectedTypeNameAnnotation)
         {
             var collection = new ODataCollectionValue();
@@ -1346,15 +1289,7 @@ namespace AstoriaUnitTests.TDD.Tests.Server
         {
             ResourceType resourceType;
 
-            ODataComplexValue complexValue = odataValue as ODataComplexValue;
-            if (complexValue != null)
-            {
-                resourceType = new ResourceType(typeof(object), ResourceTypeKind.ComplexType, null, "Namespace", "MyComplexType", false);
-            }
-            else
-            {
-                resourceType = ResourceType.GetPrimitiveResourceType(((ODataPrimitiveValue)odataValue).Value.GetType());
-            }
+            resourceType = ResourceType.GetPrimitiveResourceType(((ODataPrimitiveValue)odataValue).Value.GetType());
 
             return interpreter.ShouldSpecifyTypeNameAnnotation(odataValue, resourceType, out typeNameToWrite);
         }

@@ -694,13 +694,13 @@ namespace Microsoft.OData.Service.Serializers
         }
 
         /// <summary>
-        /// Returns the property value in terms of OData object model (ODataPrimitiveValue, ODataNullValue, ODataComplexValue or ODataCollectionValue instance) for the given property value.
+        /// Returns the property value in terms of OData object model (ODataPrimitiveValue, ODataNullValue or ODataCollectionValue instance) for the given property value.
         /// </summary>
         /// <param name="propertyName">Name of the property.</param>
         /// <param name="propertyResourceType">Type of the property.</param>
         /// <param name="propertyValue">Value of the property.</param>
         /// <param name="openProperty">True if the property is an open property, otherwise false.</param>
-        /// <returns>Returns the property value in terms of OData object model (CLR type, ODataComplexValue or ODataCollectionValue instance) for the given property value.</returns>
+        /// <returns>Returns the property value in terms of OData object model (CLR type, ODataCollectionValue instance) for the given property value.</returns>
         protected ODataValue GetPropertyValue(string propertyName, ResourceType propertyResourceType, object propertyValue, bool openProperty)
         {
             Debug.Assert(propertyName != null, "propertyName != null");
@@ -709,12 +709,6 @@ namespace Microsoft.OData.Service.Serializers
             if (propertyResourceType.ResourceTypeKind == ResourceTypeKind.Primitive)
             {
                 return this.GetPrimitiveValueAsODataValue(propertyResourceType, propertyValue);
-            }
-
-            if (propertyResourceType.ResourceTypeKind == ResourceTypeKind.ComplexType)
-            {
-                // no need to handle null here as the property setter on ODataProperty will handle it.
-                return this.GetComplexValue(propertyName, propertyValue);
             }
 
             if (propertyResourceType.ResourceTypeKind == ResourceTypeKind.Collection)
@@ -744,41 +738,6 @@ namespace Microsoft.OData.Service.Serializers
 
             // Open navigation properties are not supported on OpenTypes
             throw DataServiceException.CreateBadRequestError(Microsoft.OData.Service.Strings.OpenNavigationPropertiesNotSupportedOnOpenTypes(propertyName));
-        }
-
-        /// <summary>
-        /// Returns the ODataComplexValue instance for the given property value.
-        /// </summary>
-        /// <param name="propertyName">Name of the property.</param>
-        /// <param name="propertyValue">Value of the property.</param>
-        /// <returns>Returns the ODataComplexValue instance for the given property value.</returns>
-        protected ODataComplexValue GetComplexValue(string propertyName, object propertyValue)
-        {
-            Debug.Assert(!String.IsNullOrEmpty(propertyName), "!String.IsNullOrEmpty(propertyName)");
-
-            if (WebUtil.IsNullValue(propertyValue))
-            {
-                return null;
-            }
-
-            ODataComplexValue complexValue = new ODataComplexValue();
-            
-            // Resolve the complex type instance - no need to check the resource type for the right type
-            // since ODataLib will do this validation.
-            ResourceType valueResourceType = WebUtil.GetNonPrimitiveResourceType(this.Provider, propertyValue);
-            complexValue.TypeName = valueResourceType.FullName;
-
-            // If this is not a complex type, return early. This validation error will be caught by ODataLib later.
-            if (valueResourceType.ResourceTypeKind != ResourceTypeKind.ComplexType)
-            {
-                return complexValue;
-            }
-
-            this.PayloadMetadataPropertyManager.SetTypeName(complexValue, valueResourceType);
-
-            complexValue.Properties = this.GetPropertiesOfComplexType(propertyValue, valueResourceType, propertyName);
-            
-            return complexValue;
         }
 
         /// <summary>
@@ -837,18 +796,9 @@ namespace Microsoft.OData.Service.Serializers
 
             ODataCollectionValue collection = new ODataCollectionValue { TypeName = propertyResourceType.FullName };
             this.PayloadMetadataPropertyManager.SetTypeName(collection, propertyResourceType);
-            if (propertyResourceType.ItemType.ResourceTypeKind == ResourceTypeKind.Primitive)
-            {
-                collection.Items = GetEnumerable(
-                    enumerable,
-                    GetPrimitiveValue);
-            }
-            else
-            {
-                collection.Items = GetEnumerable(
-                    enumerable,
-                    value => this.GetComplexValue(propertyName, value));
-            }
+            collection.Items = GetEnumerable(
+                enumerable,
+                GetPrimitiveValue);
 
             this.RecurseLeave();
 

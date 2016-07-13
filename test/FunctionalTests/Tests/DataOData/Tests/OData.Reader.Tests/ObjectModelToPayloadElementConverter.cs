@@ -243,40 +243,32 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
                 }
                 else
                 {
-                    ODataComplexValue complexValue = value as ODataComplexValue;
-                    if (complexValue != null)
+                    ODataCollectionValue collectionValue = value as ODataCollectionValue;
+                    if (collectionValue != null)
                     {
-                        return new ComplexProperty(property.Name, (ComplexInstance)this.Visit(complexValue));
-                    }
-                    else
-                    {
-                        ODataCollectionValue collectionValue = value as ODataCollectionValue;
-                        if (collectionValue != null)
+                        ODataPayloadElementCollection collection = (ODataPayloadElementCollection)this.Visit(collectionValue);
+                        ComplexMultiValue complexCollection = collection as ComplexMultiValue;
+                        if (complexCollection != null)
                         {
-                            ODataPayloadElementCollection collection = (ODataPayloadElementCollection)this.Visit(collectionValue);
-                            ComplexMultiValue complexCollection = collection as ComplexMultiValue;
-                            if (complexCollection != null)
-                            {
-                                return new ComplexMultiValueProperty(property.Name, complexCollection);
-                            }
-                            else
-                            {
-                                return new PrimitiveMultiValueProperty(property.Name, (PrimitiveMultiValue)collection);
-                            }
+                            return new ComplexMultiValueProperty(property.Name, complexCollection);
                         }
                         else
                         {
-                            ODataStreamReferenceValue streamReferenceValue = value as ODataStreamReferenceValue;
-                            if (streamReferenceValue != null)
-                            {
-                                NamedStreamInstance namedStream = (NamedStreamInstance)this.Visit(streamReferenceValue);
-                                namedStream.Name = property.Name;
-                                return namedStream;
-                            }
-                            else
-                            {
-                                return new PrimitiveProperty() { Name = property.Name, Value = (PrimitiveValue)this.Visit(value) };
-                            }
+                            return new PrimitiveMultiValueProperty(property.Name, (PrimitiveMultiValue)collection);
+                        }
+                    }
+                    else
+                    {
+                        ODataStreamReferenceValue streamReferenceValue = value as ODataStreamReferenceValue;
+                        if (streamReferenceValue != null)
+                        {
+                            NamedStreamInstance namedStream = (NamedStreamInstance)this.Visit(streamReferenceValue);
+                            namedStream.Name = property.Name;
+                            return namedStream;
+                        }
+                        else
+                        {
+                            return new PrimitiveProperty() { Name = property.Name, Value = (PrimitiveValue)this.Visit(value) };
                         }
                     }
                 }
@@ -361,30 +353,6 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
             }
 
             /// <summary>
-            /// Visits a complex value item.
-            /// </summary>
-            /// <param name="complexValue">The complex value to visit.</param>
-            protected override ODataPayloadElement VisitComplexValue(ODataComplexValue complexValue)
-            {
-                if (complexValue == null)
-                {
-                    return new ComplexInstance(null, true);
-                }
-                else
-                {
-                    ComplexInstance complexElement = new ComplexInstance(complexValue.TypeName, false);
-                    foreach (ODataProperty childProperty in complexValue.Properties)
-                    {
-                        complexElement.Add((PropertyInstance)this.Visit(childProperty));
-                    }
-
-                    this.ConvertSerializationTypeNameAnnotation(complexValue, complexElement);
-
-                    return complexElement;
-                }
-            }
-
-            /// <summary>
             /// Visits a collection item.
             /// </summary>
             /// <param name="collectionValue">The collection to visit.</param>
@@ -395,73 +363,24 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
                     return new PrimitiveMultiValue(null, true);
                 }
 
-                bool? isPrimitiveCollection = null;
-
                 // Try to parse the type name and if the item type name is a primitive EDM type, then this is a primitive collection.
                 string typeName = collectionValue.TypeName;
-                if (typeName != null)
-                {
-                    string itemTypeName = EntityModelUtils.GetCollectionItemTypeName(typeName);
-                    isPrimitiveCollection = itemTypeName != null && EntityModelUtils.GetPrimitiveEdmType(itemTypeName) != null;
-                }
 
                 List<object> items = new List<object>();
                 foreach (object item in collectionValue.Items)
                 {
-                    if (!isPrimitiveCollection.HasValue)
-                    {
-                        ODataComplexValue complexItemValue = item as ODataComplexValue;
-
-                        // If the first item is a complex value, then the collection is of complex kind.
-                        // Note that if the first item is null, we assume primitive collection, since we can't really decide (and it's an invalid thing anyway)
-                        isPrimitiveCollection = complexItemValue == null;
-                    }
-
-                    if (isPrimitiveCollection.Value)
-                    {
-                        items.Add((PrimitiveValue)this.Visit(item));
-                    }
-                    else
-                    {
-                        ODataComplexValue complexItemValue = item as ODataComplexValue;
-                        ExceptionUtilities.Assert(
-                            item == null || complexItemValue != null,
-                            "The collection was determined to be of complex values but one of its items is not an ODataComplexValue.");
-                        items.Add((ComplexInstance)this.Visit(complexItemValue));
-                    }
+                    items.Add((PrimitiveValue)this.Visit(item));
                 }
 
-                if (!isPrimitiveCollection.HasValue)
+                PrimitiveMultiValue primitiveCollection = new PrimitiveMultiValue(typeName, false);
+                foreach (object item in items)
                 {
-                    // If we could not tell until now (possible only if there was no type name and no items)
-                    // assume primitive collection.
-                    isPrimitiveCollection = true;
+                    primitiveCollection.Add((PrimitiveValue)item);
                 }
 
-                if (isPrimitiveCollection == true)
-                {
-                    PrimitiveMultiValue primitiveCollection = new PrimitiveMultiValue(typeName, false);
-                    foreach (object item in items)
-                    {
-                        primitiveCollection.Add((PrimitiveValue)item);
-                    }
+                this.ConvertSerializationTypeNameAnnotation(collectionValue, primitiveCollection);
 
-                    this.ConvertSerializationTypeNameAnnotation(collectionValue, primitiveCollection);
-
-                    return primitiveCollection;
-                }
-                else
-                {
-                    ComplexMultiValue complexCollection = new ComplexMultiValue(typeName, false);
-                    foreach (object item in items)
-                    {
-                        complexCollection.Add((ComplexInstance)item);
-                    }
-
-                    this.ConvertSerializationTypeNameAnnotation(collectionValue, complexCollection);
-
-                    return complexCollection;
-                }
+                return primitiveCollection;
             }
 
             /// <summary>
@@ -477,44 +396,15 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
                 ODataCollectionItemsObjectModelAnnotation itemsAnnotation = collection.GetAnnotation<ODataCollectionItemsObjectModelAnnotation>();
                 ExceptionUtilities.Assert(itemsAnnotation != null, "itemsAnnotation != null");
 
-                // NOTE we assume that it is a primitive collection; if we find a collection of only null items we treat it as primitive
-                bool isComplexCollection = false;
+                PrimitiveCollection primitiveCollection = PayloadBuilder.PrimitiveCollection(collection.Name);
 
                 foreach (object item in itemsAnnotation)
                 {
-                    if (item != null)
-                    {
-                        isComplexCollection = item is ODataComplexValue;
-                        break;
-                    }
+                    PrimitiveValue primitiveValue = (PrimitiveValue)this.Visit(item);
+                    primitiveCollection.Add(primitiveValue);
                 }
 
-                if (isComplexCollection)
-                {
-                    ComplexInstanceCollection complexCollection = PayloadBuilder.ComplexCollection(collection.Name);
-
-                    foreach (object item in itemsAnnotation)
-                    {
-                        ComplexInstance complexInstance = item == null
-                            ? new ComplexInstance(null, /*isNull*/ true)
-                            : (ComplexInstance)this.Visit((ODataComplexValue)item);
-                        complexCollection.Add(complexInstance);
-                    }
-
-                    return complexCollection;
-                }
-                else
-                {
-                    PrimitiveCollection primitiveCollection = PayloadBuilder.PrimitiveCollection(collection.Name);
-
-                    foreach (object item in itemsAnnotation)
-                    {
-                        PrimitiveValue primitiveValue = (PrimitiveValue)this.Visit(item);
-                        primitiveCollection.Add(primitiveValue);
-                    }
-
-                    return primitiveCollection;
-                }
+                return primitiveCollection;
             }
 
             /// <summary>
@@ -534,45 +424,20 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
                         continue;
                     }
 
-                    ODataComplexValue odataComplexValue = parameter.Value as ODataComplexValue;
                     ODataCollectionStart odataCollectionStart = parameter.Value as ODataCollectionStart;
 
                     if (odataCollectionStart != null)
                     {
                         ODataCollectionItemsObjectModelAnnotation annotation = odataCollectionStart.GetAnnotation<ODataCollectionItemsObjectModelAnnotation>();
-                        if (annotation.OfType<ODataComplexValue>().FirstOrDefault() != null)
-                        {
-                            ComplexMultiValue complexCollection = PayloadBuilder.ComplexMultiValue();
-                            foreach (var value in annotation)
-                            {
-                                complexCollection.Item(this.VisitComplexValue(value as ODataComplexValue) as ComplexInstance);
-                            }
 
-                            ComplexMultiValueProperty complexCollectionProperty = new ComplexMultiValueProperty(parameter.Key, complexCollection);
-                            result.Add(complexCollectionProperty);
-                        }
-                        else
+                        PrimitiveMultiValue primitiveCollection = PayloadBuilder.PrimitiveMultiValue();
+                        foreach (var value in annotation)
                         {
-                            PrimitiveMultiValue primitiveCollection = PayloadBuilder.PrimitiveMultiValue();
-                            foreach (var value in annotation)
-                            {
-                                primitiveCollection.Item(value);
-                            }
-
-                            PrimitiveMultiValueProperty primitiveCollectionProperty = new PrimitiveMultiValueProperty(parameter.Key, primitiveCollection);
-                            result.Add(primitiveCollectionProperty);
-                        }
-                    }
-                    else if (odataComplexValue != null)
-                    {
-                        ComplexInstance complexInstance = PayloadBuilder.ComplexValue(odataComplexValue.TypeName);
-                        complexInstance.IsNull = false;
-                        foreach(ODataProperty odataProperty in odataComplexValue.Properties)
-                        {
-                            complexInstance.Property(odataProperty.Name, this.Visit(odataProperty.Value));
+                            primitiveCollection.Item(value);
                         }
 
-                        result.Add(new ComplexProperty(parameter.Key, complexInstance));
+                        PrimitiveMultiValueProperty primitiveCollectionProperty = new PrimitiveMultiValueProperty(parameter.Key, primitiveCollection);
+                        result.Add(primitiveCollectionProperty);
                     }
                     else
                     {

@@ -72,16 +72,6 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
             }
 
             /// <summary>
-            /// Visits a complex value item.
-            /// </summary>
-            /// <param name="complexValue">The complex value to visit.</param>
-            protected override void VisitComplexValue(ODataComplexValue complexValue)
-            {
-                this.ValidateEnumerable<ODataProperty>(complexValue.Properties, "ODataComplexValue.Properties");
-                base.VisitComplexValue(complexValue);
-            }
-
-            /// <summary>
             /// Visits a collection item.
             /// </summary>
             /// <param name="collection">The collection to visit.</param>

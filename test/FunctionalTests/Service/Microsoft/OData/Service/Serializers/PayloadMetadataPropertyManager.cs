@@ -271,16 +271,8 @@ namespace Microsoft.OData.Service.Serializers
             Debug.Assert(value != null, "value != null");
 
 #if DEBUG
-            var complexValue = value as ODataComplexValue;
-            if (complexValue != null)
-            {
-                Debug.Assert(!String.IsNullOrEmpty(complexValue.TypeName), "Type name must be specified in ODataComplexValue since ODL needs it for validation.");
-            }
-            else
-            {
-                var collectionValue = value as ODataCollectionValue;
-                Debug.Assert(collectionValue == null || !String.IsNullOrEmpty(collectionValue.TypeName), "Type name must be specified in ODataCollectionValue since ODL needs it for validation.");
-            }
+            var collectionValue = value as ODataCollectionValue;
+            Debug.Assert(collectionValue == null || !String.IsNullOrEmpty(collectionValue.TypeName), "Type name must be specified in ODataCollectionValue since ODL needs it for validation.");
 #endif
             string typeNameToWrite;
             if (this.interpreter.ShouldSpecifyTypeNameAnnotation(value, actualType, out typeNameToWrite))

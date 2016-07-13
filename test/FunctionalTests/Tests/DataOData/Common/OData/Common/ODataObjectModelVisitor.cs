@@ -67,13 +67,6 @@ namespace Microsoft.Test.Taupo.OData.Common
                 return;
             }
 
-            ODataComplexValue complexValue = objectModelItem as ODataComplexValue;
-            if (complexValue != null)
-            {
-                this.VisitComplexValue(complexValue);
-                return;
-            }
-
             ODataCollectionValue collectionValue = objectModelItem as ODataCollectionValue;
             if (collectionValue != null)
             {
@@ -289,22 +282,6 @@ namespace Microsoft.Test.Taupo.OData.Common
         /// <param name="operation">The operation to visit.</param>
         protected virtual void VisitODataOperation(ODataOperation operation)
         {
-        }
-
-        /// <summary>
-        /// Visits a complex value item.
-        /// </summary>
-        /// <param name="complexValue">The complex value to visit.</param>
-        protected virtual void VisitComplexValue(ODataComplexValue complexValue)
-        {
-            var properties = complexValue.Properties;
-            if (properties != null)
-            {
-                foreach (var property in properties)
-                {
-                    this.Visit(property);
-                }
-            }
         }
 
         /// <summary>

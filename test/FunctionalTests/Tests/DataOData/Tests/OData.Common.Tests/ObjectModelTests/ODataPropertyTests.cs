@@ -42,25 +42,6 @@ namespace Microsoft.Test.Taupo.OData.Common.Tests.ObjectModelTests
             this.Assert.AreEqual(name1, primitiveProperty.Name, "Expected equal name values.");
             this.Assert.AreSame(value1, primitiveProperty.Value, "Expected reference equal values for property 'Value'.");
 
-            string name2 = "ODataComplexProperty";
-            ODataComplexValue value2 = new ODataComplexValue()
-            {
-                Properties = new[]
-                {
-                    new ODataProperty() { Name = "One", Value = 1 },
-                    new ODataProperty() { Name = "Two", Value = 2 },
-                }
-            };
-
-            ODataProperty complexProperty = new ODataProperty()
-            {
-                Name = name2,
-                Value = value2,
-            };
-
-            this.Assert.AreEqual(name2, complexProperty.Name, "Expected equal name values.");
-            this.Assert.AreSame(value2, complexProperty.Value, "Expected reference equal values for property 'Value'.");
-
             string name3 = "ODataCollectionProperty";
             ODataCollectionValue value3 = new ODataCollectionValue()
             {

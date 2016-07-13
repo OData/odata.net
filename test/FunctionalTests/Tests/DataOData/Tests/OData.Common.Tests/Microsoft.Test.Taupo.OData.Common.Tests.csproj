@@ -87,7 +87,6 @@
     <Compile Include="ObjectModelTests\ODataStreamReferenceValueTests.cs" />
     <Compile Include="InfrastructureTests\MediaTypeTests.cs" />
     <Compile Include="ObjectModelTests\ODataErrorTests.cs" />
-    <Compile Include="ObjectModelTests\ODataComplexValueTests.cs" />
     <Compile Include="ObjectModelTests\ODataEntryTests.cs" />
     <Compile Include="ObjectModelTests\ODataFeedTests.cs" />
     <Compile Include="ObjectModelTests\AnnotationTests.cs" />

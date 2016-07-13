@@ -82,21 +82,6 @@ namespace AstoriaUnitTests.TDD.Tests.Client.Materialization
         }
 
         [TestMethod]
-        public void NullComplexValueShouldFail()
-        {
-            var primitiveValues = new List<ODataComplexValue>(new ODataComplexValue[] { null });
-
-            var outputCollection = new List<Point>();
-            var addToDelegate = ClientTypeUtil.GetAddToCollectionDelegate(outputCollection.GetType());
-
-            Action test =
-                () =>
-                this.CreateCollectionValueMaterializationPolicy().ApplyCollectionDataValues(
-                    primitiveValues, "Point", outputCollection, typeof(Point), addToDelegate, false);
-            test.ShouldThrow<InvalidOperationException>().WithMessage(DSClient.Strings.Collection_NullCollectionItemsNotSupported);
-        }
-
-        [TestMethod]
         public void AddingPrimitiveValueToComplexCollectionShouldFail()
         {
             var primitiveValues = new List<object>(new object[] { 1 });

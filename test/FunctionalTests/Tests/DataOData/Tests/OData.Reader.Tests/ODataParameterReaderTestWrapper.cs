@@ -75,7 +75,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
         /// The value of the current parameter that is being read.
         /// </summary>
         /// <remarks>
-        /// This property returns a primitive value, an ODataComplexValue or null when State is ODataParameterReaderState.Value.
+        /// This property returns a primitive value or null when State is ODataParameterReaderState.Value.
         /// This property returns null when State is ODataParameterReaderState.Entry, ODataParameterReaderState.ResourceSet or ODataParameterReaderState.Collection.
         /// </remarks>
         public override object Value

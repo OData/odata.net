@@ -1377,7 +1377,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.ParameterWriter
                     ParameterPayload = new ODataParameters()
                     {
                         new KeyValuePair<string, object>("p1", "foo"),
-                        new KeyValuePair<string, object>("p1", new ODataComplexValue())
+                        new KeyValuePair<string, object>("p1", new ODataResource())
                     },
                     FunctionImport = edmF1,
                     ExpectedException = ODataExpectedExceptions.ODataException("ODataParameterWriterCore_DuplicatedParameterNameNotAllowed", "p1"),

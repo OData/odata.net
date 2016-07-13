@@ -119,42 +119,11 @@ namespace Microsoft.Test.OData.Services.ODataWCFService.DataSource
 
         private static void UpdateCore(object target, string propertyName, object propertyValue)
         {
-            var odataComplexValue = propertyValue as ODataComplexValue;
             var odataCollectionValue = propertyValue as ODataCollectionValue;
             var odataEnumValue = propertyValue as ODataEnumValue;
             var odataPrimitiveValue = propertyValue as ODataPrimitiveValue;
 
-            if (odataComplexValue != null)
-            {
-                var property = target.GetType().GetProperty(propertyName);
-                if (property != null)
-                {
-                    var value = property.GetValue(target, null);
-                    if (value == null)
-                    {
-                        var valueType = EdmClrTypeUtils.GetInstanceType(odataComplexValue.TypeName);
-                        var propertyType = property.PropertyType;
-                        if (valueType.IsSubclassOf(propertyType) || valueType == propertyType)
-                        {
-                            value = Utility.QuickCreateInstance(valueType);
-                        }
-                        else
-                        {
-                            throw new InvalidOperationException(string.Format("{0} is not equal or derived from {1}", valueType, propertyType));
-                        }
-
-                        property.SetValue(target, value, null);
-                    }
-
-                    foreach (var p in odataComplexValue.Properties)
-                    {
-                        UpdateCore(value, p.Name, p.Value);
-                    }
-
-                    return;
-                }
-            }
-            else if (odataCollectionValue != null)
+            if (odataCollectionValue != null)
             {
                 var property = target.GetType().GetProperty(propertyName);
                 if (property != null)
@@ -164,19 +133,9 @@ namespace Microsoft.Test.OData.Services.ODataWCFService.DataSource
                     foreach (var item in odataCollectionValue.Items)
                     {
                         var itemType = property.PropertyType.GetGenericArguments().Single();
-                        odataComplexValue = item as ODataComplexValue;
                         odataCollectionValue = item as ODataCollectionValue;
                         object collectionItem = null;
-                        if (odataComplexValue != null)
-                        {
-                            // TODO: call Create method to new instance instead
-                            collectionItem = Utility.QuickCreateInstance(itemType);
-                            foreach (var p in odataComplexValue.Properties)
-                            {
-                                UpdateCore(collectionItem, p.Name, p.Value);
-                            }
-                        }
-                        else if (odataCollectionValue != null)
+                        if (odataCollectionValue != null)
                         {
                             // TODO, check should support this type or not
                             throw new NotImplementedException();
@@ -229,16 +188,6 @@ namespace Microsoft.Test.OData.Services.ODataWCFService.DataSource
                             // TODO: handle other types.
                             throw new NotImplementedException();
                         }
-                    }
-                    else if (odataComplexValue != null)
-                    {
-                        var type = EdmClrTypeUtils.GetInstanceType(odataComplexValue.TypeName);
-                        var value = Utility.QuickCreateInstance(type);
-                        foreach (var property in odataComplexValue.Properties)
-                        {
-                            UpdateCore(value, property.Name, property.Value);
-                        }
-                        openClrObject.OpenProperties[propertyName] = value;
                     }
                     else if (odataEnumValue != null)
                     {

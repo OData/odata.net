@@ -120,12 +120,9 @@ namespace Microsoft.OData.Tests
         [Fact]
         public void TypeNameShouldComeFromSerializationTypeNameAnnotationForComplexValue()
         {
-            var value = new ODataComplexValue() {TypeName = "Model.Bla"};
+            var value = new ODataResource() {TypeName = "Model.Bla"};
             value.TypeAnnotation = new ODataTypeAnnotation("FromSTNA");
-            this.typeNameOracle.GetValueTypeNameForWriting(value,
-                new EdmComplexTypeReference(new EdmComplexType("Model", "Bla"), true),
-                new EdmComplexTypeReference(new EdmComplexType("Model", "Bla"), false),
-                /* isOpenProperty*/ false).Should().Be("FromSTNA");
+            this.typeNameOracle.GetResourceTypeNameForWriting("Model.Bla", value, /* isUndeclared */ false).Should().Be("FromSTNA");
         }
 
         [Fact]
