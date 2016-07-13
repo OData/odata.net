@@ -190,7 +190,7 @@ namespace Microsoft.OData.Edm.Tests.ScenarioTests
             using (var writer = XmlWriter.Create(builder))
             {
                 IEnumerable<EdmError> errors;
-                EdmxWriter.TryWriteEdmx(this.representativeModel, writer, CsdlTarget.OData, out errors).Should().BeTrue();
+                CsdlWriter.TryWriteCsdl(this.representativeModel, writer, CsdlTarget.OData, out errors).Should().BeTrue();
                 errors.Should().BeEmpty();
                 writer.Flush();
             }

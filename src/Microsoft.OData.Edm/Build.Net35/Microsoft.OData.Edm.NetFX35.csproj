@@ -301,9 +301,6 @@
     <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Parsing\Ast\CsdlOperationReturnType.cs">
       <Link>Microsoft\OData\Edm\Csdl\Parsing\Ast\CsdlOperationReturnType.cs</Link>
     </Compile>
-    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\EdmxWriter.cs">
-      <Link>Microsoft\OData\Edm\Csdl\EdmxWriter.cs</Link>
-    </Compile>
     <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Semantics\CsdlSemanticsEntityReferenceTypeExpression.cs">
       <Link>Microsoft\OData\Edm\Csdl\Semantics\CsdlSemanticsEntityReferenceTypeExpression.cs</Link>
     </Compile>
@@ -682,6 +679,9 @@
     </Compile>
     <Compile Include="..\Csdl\CsdlTarget.cs">
       <Link>Microsoft\OData\Edm\Csdl\CsdlTarget.cs</Link>
+    </Compile>
+    <Compile Include="..\Csdl\CsdlWriter.cs">
+      <Link>Microsoft\OData\Edm\Csdl\CsdlWriter.cs</Link>
     </Compile>
     <Compile Include="..\Csdl\SchemaReader.cs">
       <Link>Microsoft\OData\Edm\Csdl\SchemaReader.cs</Link>

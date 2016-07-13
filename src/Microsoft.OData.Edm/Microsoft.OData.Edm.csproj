@@ -134,7 +134,7 @@
     <Compile Include="Csdl\SerializationExtensionMethods.cs" />
     <Compile Include="Csdl\Parsing\Ast\CsdlOperationReturnType.cs" />
     <Compile Include="Csdl\CsdlReader.cs" />
-    <Compile Include="Csdl\EdmxWriter.cs" />
+    <Compile Include="Csdl\CsdlWriter.cs" />
     <Compile Include="Csdl\Semantics\CsdlSemanticsEntityReferenceTypeExpression.cs" />
     <Compile Include="Csdl\Semantics\CsdlSemanticsOperationImport.cs" />
     <Compile Include="Csdl\Serialization\EdmModelSchemaSeparationSerializationVisitor.cs" />

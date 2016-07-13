@@ -2666,6 +2666,10 @@ public class Microsoft.OData.Edm.Csdl.CsdlReader {
 	public static bool TryParse (System.Xml.XmlReader reader, System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.IEdmModel]] references, Microsoft.OData.Edm.Csdl.CsdlReaderSettings settings, out Microsoft.OData.Edm.IEdmModel& model, out System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.Validation.EdmError]]& errors)
 }
 
+public class Microsoft.OData.Edm.Csdl.CsdlWriter {
+	public static bool TryWriteCsdl (Microsoft.OData.Edm.IEdmModel model, System.Xml.XmlWriter writer, Microsoft.OData.Edm.Csdl.CsdlTarget target, out System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.Validation.EdmError]]& errors)
+}
+
 [
 DebuggerDisplayAttribute(),
 ]
@@ -2673,10 +2677,6 @@ public class Microsoft.OData.Edm.Csdl.EdmParseException : System.Exception, _Exc
 	public EdmParseException (System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.Validation.EdmError]] parseErrors)
 
 	System.Collections.ObjectModel.ReadOnlyCollection`1[[Microsoft.OData.Edm.Validation.EdmError]] Errors  { public get; }
-}
-
-public class Microsoft.OData.Edm.Csdl.EdmxWriter {
-	public static bool TryWriteEdmx (Microsoft.OData.Edm.IEdmModel model, System.Xml.XmlWriter writer, Microsoft.OData.Edm.Csdl.CsdlTarget target, out System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.Validation.EdmError]]& errors)
 }
 
 public sealed class Microsoft.OData.Edm.Csdl.CsdlReaderSettings {

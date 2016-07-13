@@ -2828,7 +2828,7 @@ namespace EdmLibTests.FunctionalTests
 
             using (var xw = XmlWriter.Create(stream, new XmlWriterSettings() { Indent = true }))
             {
-                Assert.IsTrue(EdmxWriter.TryWriteEdmx(edmModel, xw, CsdlTarget.OData, out errors));
+                Assert.IsTrue(CsdlWriter.TryWriteCsdl(edmModel, xw, CsdlTarget.OData, out errors));
             }
 
             stream.Seek(0, SeekOrigin.Begin);

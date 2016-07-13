@@ -1,5 +1,5 @@
 ﻿//---------------------------------------------------------------------
-// <copyright file="EdmxWriter.cs" company="Microsoft">
+// <copyright file="CsdlWriter.cs" company="Microsoft">
 //      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 // </copyright>
 //---------------------------------------------------------------------
@@ -15,9 +15,9 @@ using Microsoft.OData.Edm.Validation;
 namespace Microsoft.OData.Edm.Csdl
 {
     /// <summary>
-    /// Provides EDMX serialization services for EDM models.
+    /// Provides CSDL serialization services for EDM models.
     /// </summary>
-    public class EdmxWriter
+    public class CsdlWriter
     {
         private readonly IEdmModel model;
         private readonly IEnumerable<EdmSchema> schemas;
@@ -26,7 +26,7 @@ namespace Microsoft.OData.Edm.Csdl
         private readonly string edmxNamespace;
         private readonly CsdlTarget target;
 
-        private EdmxWriter(IEdmModel model, IEnumerable<EdmSchema> schemas, XmlWriter writer, Version edmxVersion, CsdlTarget target)
+        private CsdlWriter(IEdmModel model, IEnumerable<EdmSchema> schemas, XmlWriter writer, Version edmxVersion, CsdlTarget target)
         {
             this.model = model;
             this.schemas = schemas;
@@ -39,14 +39,14 @@ namespace Microsoft.OData.Edm.Csdl
         }
 
         /// <summary>
-        /// Outputs an EDMX artifact to the provided XmlWriter.
+        /// Outputs a CSDL artifact to the provided XmlWriter.
         /// </summary>
         /// <param name="model">Model to be written.</param>
-        /// <param name="writer">XmlWriter the generated EDMX will be written to.</param>
-        /// <param name="target">Target implementation of the EDMX being generated.</param>
+        /// <param name="writer">XmlWriter the generated CSDL will be written to.</param>
+        /// <param name="target">Target implementation of the CSDL being generated.</param>
         /// <param name="errors">Errors that prevented successful serialization, or no errors if serialization was successful. </param>
         /// <returns>A value indicating whether serialization was successful.</returns>
-        public static bool TryWriteEdmx(IEdmModel model, XmlWriter writer, CsdlTarget target, out IEnumerable<EdmError> errors)
+        public static bool TryWriteCsdl(IEdmModel model, XmlWriter writer, CsdlTarget target, out IEnumerable<EdmError> errors)
         {
             EdmUtil.CheckArgumentNull(model, "model");
             EdmUtil.CheckArgumentNull(writer, "writer");
@@ -75,29 +75,29 @@ namespace Microsoft.OData.Edm.Csdl
 
             IEnumerable<EdmSchema> schemas = new EdmModelSchemaSeparationSerializationVisitor(model).GetSchemas();
 
-            EdmxWriter edmxWriter = new EdmxWriter(model, schemas, writer, edmxVersion, target);
-            edmxWriter.WriteEdmx();
+            CsdlWriter edmxWriter = new CsdlWriter(model, schemas, writer, edmxVersion, target);
+            edmxWriter.WriteCsdl();
 
             errors = Enumerable.Empty<EdmError>();
             return true;
         }
 
-        private void WriteEdmx()
+        private void WriteCsdl()
         {
             switch (this.target)
             {
                 case CsdlTarget.EntityFramework:
-                    this.WriteEFEdmx();
+                    this.WriteEFCsdl();
                     break;
                 case CsdlTarget.OData:
-                    this.WriteODataEdmx();
+                    this.WriteODataCsdl();
                     break;
                 default:
                     throw new InvalidOperationException(Edm.Strings.UnknownEnumVal_CsdlTarget(this.target.ToString()));
             }
         }
 
-        private void WriteODataEdmx()
+        private void WriteODataCsdl()
         {
             this.WriteEdmxElement();
             this.WriteReferenceElements();
@@ -107,7 +107,7 @@ namespace Microsoft.OData.Edm.Csdl
             this.EndElement(); // </Edmx>
         }
 
-        private void WriteEFEdmx()
+        private void WriteEFCsdl()
         {
             this.WriteEdmxElement();
             this.WriteRuntimeElement();
@@ -147,7 +147,7 @@ namespace Microsoft.OData.Edm.Csdl
 
         private void WriteSchemas()
         {
-            // TODO: for referenced mnodel - write alias as is, instead of writing its namespace.
+            // TODO: for referenced model - write alias as is, instead of writing its namespace.
             EdmModelCsdlSerializationVisitor visitor;
             Version edmVersion = this.model.GetEdmVersion() ?? EdmConstants.EdmVersionLatest;
             foreach (EdmSchema schema in this.schemas)

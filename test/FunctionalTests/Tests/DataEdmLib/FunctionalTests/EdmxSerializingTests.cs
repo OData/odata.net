@@ -306,7 +306,7 @@ namespace EdmLibTests.FunctionalTests
 
             try
             {
-                EdmxWriter.TryWriteEdmx(null, XmlWriter.Create(new StringWriter()), CsdlTarget.EntityFramework, out errors);
+                CsdlWriter.TryWriteCsdl(null, XmlWriter.Create(new StringWriter()), CsdlTarget.EntityFramework, out errors);
             }
             catch (Exception e)
             {
@@ -314,7 +314,7 @@ namespace EdmLibTests.FunctionalTests
             }
             try
             {
-                EdmxWriter.TryWriteEdmx(model, null, CsdlTarget.EntityFramework, out errors);
+                CsdlWriter.TryWriteCsdl(model, null, CsdlTarget.EntityFramework, out errors);
             }
             catch (Exception e)
             {
@@ -335,7 +335,7 @@ namespace EdmLibTests.FunctionalTests
             settings.Indent = true;
             settings.Encoding = System.Text.Encoding.UTF8;
             XmlWriter xw = XmlWriter.Create(sw, settings);
-            EdmxWriter.TryWriteEdmx(model, xw, target, out errors);
+            CsdlWriter.TryWriteCsdl(model, xw, target, out errors);
             xw.Flush();
             xw.Close();
             string outputText = sw.ToString();
@@ -370,7 +370,7 @@ namespace EdmLibTests.FunctionalTests
             settings.Indent = true;
             settings.Encoding = System.Text.Encoding.UTF8;
             XmlWriter xw = XmlWriter.Create(sw, settings);
-            EdmxWriter.TryWriteEdmx(model, xw, target, out errors);
+            CsdlWriter.TryWriteCsdl(model, xw, target, out errors);
             xw.Flush();
             xw.Close();
             string outputText = sw.ToString();

@@ -123,7 +123,7 @@ namespace EdmLibTests.FunctionalTests
                 using (var xw = XmlWriter.Create(tw))
                 {
                     IEnumerable<EdmError> errors;
-                    EdmxWriter.TryWriteEdmx(BaseModel, xw, CsdlTarget.OData, out errors);
+                    CsdlWriter.TryWriteCsdl(BaseModel, xw, CsdlTarget.OData, out errors);
                 }
             }
             catch (Exception)
@@ -283,7 +283,7 @@ namespace EdmLibTests.FunctionalTests
                 var xw = XmlWriter.Create(ms, new XmlWriterSettings { Indent = true });
 
                 IEnumerable<EdmError> errors;
-                var res = EdmxWriter.TryWriteEdmx(edmModel, xw, CsdlTarget.OData, out errors);
+                var res = CsdlWriter.TryWriteCsdl(edmModel, xw, CsdlTarget.OData, out errors);
                 xw.Flush();
                 ms.Flush();
                 ms.Seek(0, SeekOrigin.Begin);

@@ -69,7 +69,7 @@
     <Compile Include="Csdl\EdmValueParserTests.cs" />
     <Compile Include="Csdl\EdmValueWriterTests.cs" />
     <Compile Include="Csdl\CsdlReaderTests.cs" />
-    <Compile Include="Csdl\EdmxWriterTests.cs" />
+    <Compile Include="Csdl\CsdlWriterTests.cs" />
     <Compile Include="Csdl\Parsing\Ast\CsdlTypeDefinitionTests.cs" />
     <Compile Include="Csdl\Semantics\CsdlSemanticsEntityContainerTests.cs" />
     <Compile Include="Csdl\Semantics\CsdlSemanticsEntitySetTests.cs" />
