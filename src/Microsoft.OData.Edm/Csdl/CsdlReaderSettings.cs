@@ -1,5 +1,5 @@
 ﻿//---------------------------------------------------------------------
-// <copyright file="EdmxReaderSettings.cs" company="Microsoft">
+// <copyright file="CsdlReaderSettings.cs" company="Microsoft">
 //      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 // </copyright>
 //---------------------------------------------------------------------
@@ -10,14 +10,14 @@ namespace Microsoft.OData.Edm.Csdl
     using System.Xml;
 
     /// <summary>
-    /// Settings used when parsing Edmx document.
+    /// Settings used when parsing CSDL document.
     /// </summary>
-    public sealed class EdmxReaderSettings
+    public sealed class CsdlReaderSettings
     {
         /// <summary>
-        /// Default constructor for EdmxReaderSettings
+        /// Default constructor.
         /// </summary>
-        public EdmxReaderSettings()
+        public CsdlReaderSettings()
         {
             this.IgnoreUnexpectedAttributesAndElements = false;
         }

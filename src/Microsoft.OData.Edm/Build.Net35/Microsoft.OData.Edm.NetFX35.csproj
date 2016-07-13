@@ -52,9 +52,6 @@
     <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\EdmParseException.cs">
       <Link>Microsoft\OData\Edm\Csdl\EdmParseException.cs</Link>
     </Compile>
-    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\EdmxReaderSettings.cs">
-      <Link>Microsoft\OData\Edm\Csdl\EdmxReaderSettings.cs</Link>
-    </Compile>
     <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\EdmValueParser.cs">
       <Link>Microsoft\OData\Edm\Csdl\EdmValueParser.cs</Link>
     </Compile>
@@ -679,6 +676,9 @@
     </Compile>
     <Compile Include="$(EdmLibCrossTargettingSourcePath)\..\PlatformHelper.cs">
       <Link>Microsoft\OData\Edm\PlatformHelper.cs</Link>
+    </Compile>
+    <Compile Include="..\Csdl\CsdlReaderSettings.cs">
+      <Link>Microsoft\OData\Edm\Csdl\CsdlReaderSettings.cs</Link>
     </Compile>
     <Compile Include="..\Csdl\CsdlTarget.cs">
       <Link>Microsoft\OData\Edm\Csdl\CsdlTarget.cs</Link>

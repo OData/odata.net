@@ -243,7 +243,7 @@ namespace Microsoft.OData.Edm.Csdl
         /// <remarks>
         /// User should handle the disposal of XmlReader created by getReferencedModelReaderFunc.
         /// </remarks>
-        public static bool TryParse(XmlReader reader, IEnumerable<IEdmModel> references, EdmxReaderSettings settings, out IEdmModel model, out IEnumerable<EdmError> errors)
+        public static bool TryParse(XmlReader reader, IEnumerable<IEdmModel> references, CsdlReaderSettings settings, out IEdmModel model, out IEnumerable<EdmError> errors)
         {
             EdmUtil.CheckArgumentNull(references, "references");
             if (settings == null)

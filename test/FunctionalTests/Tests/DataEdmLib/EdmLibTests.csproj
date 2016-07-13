@@ -70,11 +70,11 @@
     <Compile Include="FunctionalTests\ConstructibleModelTestsUsingConverter.cs" />
     <Compile Include="FunctionalTests\ConstructibleModelTests.cs" />
     <Compile Include="FunctionalTests\CsdlLocationTests.cs" />
-    <Compile Include="FunctionalTests\CsdlParsingTests.cs" />
+    <Compile Include="FunctionalTests\SchemaParsingTests.cs" />
     <Compile Include="FunctionalTests\ParsingValidation.cs" />
     <Compile Include="FunctionalTests\CsdlSerializingTests.cs" />
     <Compile Include="FunctionalTests\ExtensionMethodsTests.cs" />
-    <Compile Include="FunctionalTests\EdmxParsingTests.cs" />
+    <Compile Include="FunctionalTests\CsdlParsingTests.cs" />
     <Compile Include="FunctionalTests\EdmxSerializingTests.cs" />
     <Compile Include="FunctionalTests\FindMethodTests.cs" />
     <Compile Include="FunctionalTests\OperationModelTests.cs" />

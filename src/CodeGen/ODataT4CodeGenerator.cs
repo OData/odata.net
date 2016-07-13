@@ -580,7 +580,7 @@ public class CodeGenerationContext
                 Debug.Assert(this.edmx != null, "this.edmx != null");
 
                 IEnumerable<Microsoft.OData.Edm.Validation.EdmError> errors;
-                EdmxReaderSettings edmxReaderSettings = new EdmxReaderSettings()
+                CsdlReaderSettings edmxReaderSettings = new CsdlReaderSettings()
                 {
                     GetReferencedModelReaderFunc = this.GetReferencedModelReaderFuncWrapper,
                     IgnoreUnexpectedAttributesAndElements = this.IgnoreUnexpectedElementsAndAttributes
