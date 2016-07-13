@@ -4,22 +4,21 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+using System.Linq;
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
+#if PORTABLELIB
+using System.Threading.Tasks;
+#endif
+using Microsoft.OData.Evaluation;
+using Microsoft.OData.UriParser;
+using Microsoft.OData.Edm;
+using Microsoft.OData.Metadata;
+
 namespace Microsoft.OData
 {
-    #region Namespaces
-    using System;
-    using System.Collections.Generic;
-    using System.Diagnostics;
-    using System.Diagnostics.CodeAnalysis;
-#if PORTABLELIB
-    using System.Threading.Tasks;
-#endif
-    using Microsoft.OData.Evaluation;
-    using Microsoft.OData.UriParser;
-    using Microsoft.OData.Edm;
-    using Microsoft.OData.Metadata;
-    #endregion Namespaces
-
     /// <summary>
     /// Base class for OData writers that verifies a proper sequence of write calls on the writer.
     /// </summary>
@@ -41,7 +40,7 @@ namespace Microsoft.OData
         private readonly IODataReaderWriterListener listener;
 
         /// <summary>Stack of writer scopes to keep track of the current context of the writer.</summary>
-        private readonly ScopeStack scopes = new ScopeStack();
+        private readonly ScopeStack scopeStack = new ScopeStack();
 
         /// <summary>
         /// The <see cref="ResourceSetWithoutExpectedTypeValidator"/> to use for entries in this resourceSet.
@@ -98,7 +97,7 @@ namespace Microsoft.OData
 
             this.listener = listener;
 
-            this.scopes.Push(new Scope(WriterState.Start, /*item*/null, navigationSource, resourceType, /*skipWriting*/false, outputContext.MessageWriterSettings.SelectedProperties, odataUri));
+            this.scopeStack.Push(new Scope(WriterState.Start, /*item*/null, navigationSource, resourceType, /*skipWriting*/false, outputContext.MessageWriterSettings.SelectedProperties, odataUri));
         }
 
         /// <summary>
@@ -141,8 +140,8 @@ namespace Microsoft.OData
         {
             get
             {
-                Debug.Assert(this.scopes.Count > 0, "We should have at least one active scope all the time.");
-                return this.scopes.Peek();
+                Debug.Assert(this.scopeStack.Count > 0, "We should have at least one active scope all the time.");
+                return this.scopeStack.Peek();
             }
         }
 
@@ -179,7 +178,7 @@ namespace Microsoft.OData
 
                 // there is the root scope at the top (when the writer has not started or has completed)
                 // and then the top-level scope (the top-level resource/resourceSet item) as the second scope on the stack
-                return this.scopes.Count == 2;
+                return this.scopeStack.Count == 2;
             }
         }
 
@@ -188,7 +187,7 @@ namespace Microsoft.OData
         /// </summary>
         protected int ScopeLevel
         {
-            get { return this.scopes.Count; }
+            get { return this.scopeStack.Count; }
         }
 
         /// <summary>
@@ -200,7 +199,7 @@ namespace Microsoft.OData
             {
                 Debug.Assert(this.State == WriterState.Resource || this.State == WriterState.ResourceSet, "ParentNestedResourceInfo should only be called while writing a resource or a resourceSet.");
 
-                Scope linkScope = this.scopes.ParentOrNull;
+                Scope linkScope = this.scopeStack.ParentOrNull;
                 return linkScope == null ? null : (linkScope.Item as ODataNestedResourceInfo);
             }
         }
@@ -215,7 +214,7 @@ namespace Microsoft.OData
                 Debug.Assert(
                     this.State == WriterState.NestedResourceInfo || this.State == WriterState.NestedResourceInfoWithContent,
                     "ParentResourceType should only be called while writing a nested resource info (with or without content).");
-                Scope resourceScope = this.scopes.Parent;
+                Scope resourceScope = this.scopeStack.Parent;
                 return resourceScope.ResourceType;
             }
         }
@@ -230,7 +229,7 @@ namespace Microsoft.OData
                 Debug.Assert(
                     this.State == WriterState.NestedResourceInfo || this.State == WriterState.NestedResourceInfoWithContent,
                     "ParentResourceEntityType should only be called while writing a nested resource info (with or without content).");
-                Scope resourceScope = this.scopes.Parent;
+                Scope resourceScope = this.scopeStack.Parent;
                 return resourceScope.NavigationSource;
             }
         }
@@ -247,6 +246,7 @@ namespace Microsoft.OData
                 return ((ResourceSetScope)this.CurrentScope).ResourceCount;
             }
         }
+
 
         /// <summary>
         /// Checker to detect duplicate property names.
@@ -267,7 +267,7 @@ namespace Microsoft.OData
                         break;
                     case WriterState.NestedResourceInfo:
                     case WriterState.NestedResourceInfoWithContent:
-                        resourceScope = (ResourceScope)this.scopes.Parent;
+                        resourceScope = (ResourceScope)this.scopeStack.Parent;
                         break;
                     default:
                         throw new ODataException(Strings.General_InternalError(InternalErrorCodes.ODataWriterCore_PropertyAndAnnotationCollector));
@@ -298,9 +298,9 @@ namespace Microsoft.OData
             get
             {
                 Debug.Assert(this.State == WriterState.Resource || this.State == WriterState.ResourceSet, "ParentNestedResourceInfoScope should only be called while writing a resource or a resourceSet.");
-                Debug.Assert(this.scopes.Count >= 2, "We should have at least the resource scope and the start scope on the stack.");
+                Debug.Assert(this.scopeStack.Count >= 2, "We should have at least the resource scope and the start scope on the stack.");
 
-                Scope parentScope = this.scopes.Parent;
+                Scope parentScope = this.scopeStack.Parent;
                 if (parentScope.State == WriterState.Start)
                 {
                     // Top-level resource.
@@ -309,10 +309,10 @@ namespace Microsoft.OData
 
                 if (parentScope.State == WriterState.ResourceSet)
                 {
-                    Debug.Assert(this.scopes.Count >= 3, "We should have at least the resource scope, the resourceSet scope and the start scope on the stack.");
+                    Debug.Assert(this.scopeStack.Count >= 3, "We should have at least the resource scope, the resourceSet scope and the start scope on the stack.");
 
                     // Get the resourceSet's parent (if any)
-                    parentScope = this.scopes.ParentOfParent;
+                    parentScope = this.scopeStack.ParentOfParent;
                     if (parentScope.State == WriterState.Start)
                     {
                         // Top-level resourceSet.
@@ -341,7 +341,7 @@ namespace Microsoft.OData
                 Debug.Assert(this.State == WriterState.Resource, "CurrentCollectionValidator should only be called while writing a resource.");
 
                 // Only return the collection validator for entries in top-level resource sets
-                return this.scopes.Count == 3 ? this.resourceSetValidator : null;
+                return this.scopeStack.Count == 3 ? this.resourceSetValidator : null;
             }
         }
 
@@ -555,15 +555,15 @@ namespace Microsoft.OData
             ScopeStack scopeStack = new ScopeStack();
             Scope parentResourceScope = null;
 
-            if (this.scopes.Count > 0)
+            if (this.scopeStack.Count > 0)
             {
                 // pop current scope and push into scope stack
-                scopeStack.Push(this.scopes.Pop());
+                scopeStack.Push(this.scopeStack.Pop());
             }
 
-            while (this.scopes.Count > 0)
+            while (this.scopeStack.Count > 0)
             {
-                Scope scope = this.scopes.Pop();
+                Scope scope = this.scopeStack.Pop();
                 scopeStack.Push(scope);
 
                 if (scope is ResourceScope)
@@ -576,12 +576,11 @@ namespace Microsoft.OData
             while (scopeStack.Count > 0)
             {
                 Scope scope = scopeStack.Pop();
-                this.scopes.Push(scope);
+                this.scopeStack.Push(scope);
             }
 
             return parentResourceScope as ResourceScope;
         }
-
 
         /// <summary>
         /// Determines whether a given writer state is considered an error state.
@@ -959,9 +958,9 @@ namespace Microsoft.OData
             this.EnterScope(WriterState.NestedResourceInfo, nestedResourceInfo);
 
             // If the parent resource has a metadata builder, use that metadatabuilder on the nested resource info as well.
-            Debug.Assert(this.scopes.Parent != null, "Navigation link scopes must have a parent scope.");
-            Debug.Assert(this.scopes.Parent.Item is ODataResource, "The parent of a nested resource info scope should always be a resource");
-            ODataResource parentResource = (ODataResource)this.scopes.Parent.Item;
+            Debug.Assert(this.scopeStack.Parent != null, "Navigation link scopes must have a parent scope.");
+            Debug.Assert(this.scopeStack.Parent.Item is ODataResource, "The parent of a nested resource info scope should always be a resource");
+            ODataResource parentResource = (ODataResource)this.scopeStack.Parent.Item;
             if (parentResource.MetadataBuilder != null)
             {
                 nestedResourceInfo.MetadataBuilder = parentResource.MetadataBuilder;
@@ -1058,7 +1057,7 @@ namespace Microsoft.OData
                 this.CurrentScope.State == WriterState.NestedResourceInfo || this.CurrentScope.State == WriterState.NestedResourceInfoWithContent,
                 "This method should only be called when we're writing a nested resource info.");
 
-            ODataResource parent = (ODataResource)this.scopes.Parent.Item;
+            ODataResource parent = (ODataResource)this.scopeStack.Parent.Item;
             Debug.Assert(parent.MetadataBuilder != null, "parent.MetadataBuilder != null");
             parent.MetadataBuilder.MarkNestedResourceInfoProcessed(link.Name);
         }
@@ -1201,7 +1200,10 @@ namespace Microsoft.OData
                                 this.CurrentScope.ResourceType = navigationProperty.ToEntityType();
                                 IEdmNavigationSource parentNavigationSource = this.ParentResourceNavigationSource;
 
-                                this.CurrentScope.NavigationSource = parentNavigationSource == null ? null : parentNavigationSource.FindNavigationTarget(navigationProperty);
+                                if (this.CurrentScope.NavigationSource == null)
+                                {
+                                    this.CurrentScope.NavigationSource = parentNavigationSource == null ? null : parentNavigationSource.FindNavigationTarget(navigationProperty, MatchBindingPath);
+                                }
                             }
                         }
                     }
@@ -1400,7 +1402,9 @@ namespace Microsoft.OData
                                 resourceType = navigationProperty.ToEntityType();
                                 IEdmNavigationSource currentNavigationSource = currentScope.NavigationSource;
 
-                                navigationSource = currentNavigationSource == null ? null : currentNavigationSource.FindNavigationTarget(navigationProperty);
+                                navigationSource = currentNavigationSource == null
+                                    ? null
+                                    : currentNavigationSource.FindNavigationTarget(navigationProperty, MatchBindingPath);
 
                                 SelectExpandClause clause = odataUri.SelectAndExpand;
                                 TypeSegment typeCastFromExpand = null;
@@ -1477,12 +1481,12 @@ namespace Microsoft.OData
         {
             Debug.Assert(this.State != WriterState.Error, "this.State != WriterState.Error");
 
-            this.scopes.Pop();
+            this.scopeStack.Pop();
 
             // if we are back at the root replace the 'Start' state with the 'Completed' state
-            if (this.scopes.Count == 1)
+            if (this.scopeStack.Count == 1)
             {
-                Scope startScope = this.scopes.Pop();
+                Scope startScope = this.scopeStack.Pop();
                 Debug.Assert(startScope.State == WriterState.Start, "startScope.State == WriterState.Start");
                 this.PushScope(WriterState.Completed, /*item*/null, startScope.NavigationSource, startScope.ResourceType, /*skipWriting*/false, startScope.SelectedProperties, startScope.ODataUri);
                 this.InterceptException(this.EndPayload);
@@ -1506,9 +1510,9 @@ namespace Microsoft.OData
             Debug.Assert(content == null || content is ODataResource || content is ODataResourceSet);
 
             this.ValidateTransition(WriterState.NestedResourceInfoWithContent);
-            NestedResourceInfoScope previousScope = (NestedResourceInfoScope)this.scopes.Pop();
+            NestedResourceInfoScope previousScope = (NestedResourceInfoScope)this.scopeStack.Pop();
             NestedResourceInfoScope newScope = previousScope.Clone(WriterState.NestedResourceInfoWithContent);
-            this.scopes.Push(newScope);
+            this.scopeStack.Push(newScope);
             if (newScope.ResourceType == null && content != null && !SkipWriting)
             {
                 var resource = content as ODataResource;
@@ -1655,7 +1659,7 @@ namespace Microsoft.OData
                     throw new ODataException(errorMessage);
             }
 
-            this.scopes.Push(scope);
+            this.scopeStack.Push(scope);
         }
 
         /// <summary>
@@ -1696,6 +1700,69 @@ namespace Microsoft.OData
             }
 
             return false;
+        }
+
+        /// <summary>
+        /// Determine the path of current navigation property is matching the binding path.
+        /// The function used in FindNavigationTarget to resolve the navigation target for multi binding.
+        /// </summary>
+        /// <param name="bindingPath">The binding path.</param>
+        /// <returns>True if the path of navigation property in current scope is matching the <paramref name="bindingPath"/>.</returns>
+        private bool MatchBindingPath(IEdmPathExpression bindingPath)
+        {
+            Debug.Assert(this.CurrentScope is ResourceScope || this.CurrentScope is NestedResourceInfoScope,
+                "Only need find navigation property in ResourceScope and NestedResourceInfoScope");
+
+            List<string> paths = bindingPath.Path.ToList();
+
+            // If binding path only includes navigation property name, it matches.
+            if (paths.Count == 1)
+            {
+                return true;
+            }
+
+            List<Scope> scopes = this.scopeStack.Scopes.ToList();
+
+            Debug.Assert(scopes.Count > 1);
+
+            int pathIndex = paths.Count - 2; // Skip the last segment which is navigation property name.
+
+            // Match from tail to head.
+            for (int i = 0; i < scopes.Count - 1; i++)
+            {
+                Scope scope = scopes[i];
+                if (scope is NestedResourceInfoScope)
+                {
+                    if (pathIndex < 0 || string.CompareOrdinal(((ODataNestedResourceInfo)scope.Item).Name, paths[pathIndex]) != 0)
+                    {
+                        return false;
+                    }
+
+                    pathIndex--;
+                }
+                else if (scope is ResourceScope)
+                {
+                    // If the binding path includes type cast, try to match the type.
+                    if (pathIndex >= 0 && paths[pathIndex].Contains("."))
+                    {
+                        if (string.CompareOrdinal(paths[pathIndex], scope.ResourceType.FullTypeName()) != 0)
+                        {
+                            return false;
+                        }
+
+                        pathIndex--;
+                    }
+
+                    // Break the match since non-contained entity should not be in binding path.
+                    if (scope.ResourceType is IEdmEntityType && !(scope.NavigationSource is IEdmContainedEntitySet))
+                    {
+                        break;
+                    }
+                }
+            }
+
+            // Return true if all the segments in binding path have been matched.
+            return pathIndex == -1 ? true : false;
         }
 
         /// <summary>
@@ -1767,6 +1834,11 @@ namespace Microsoft.OData
                 {
                     return this.Count == 0 ? null : this.Parent;
                 }
+            }
+
+            internal Stack<Scope> Scopes
+            {
+                get { return this.scopes; }
             }
 
             /// <summary>

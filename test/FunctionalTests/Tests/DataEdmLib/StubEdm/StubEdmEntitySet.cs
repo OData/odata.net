@@ -105,5 +105,15 @@ namespace EdmLibTests.StubEdm
                 return null;
             }
         }
+
+        public IEdmNavigationSource FindNavigationTarget(IEdmNavigationProperty navigationProperty, IEdmPathExpression bindingPath)
+        {
+            return FindNavigationTarget(navigationProperty);
+        }
+
+        public IEnumerable<IEdmNavigationPropertyBinding> FindNavigationPropertyBindings(IEdmNavigationProperty navigationProperty)
+        {
+            return null;
+        }
     }
 }

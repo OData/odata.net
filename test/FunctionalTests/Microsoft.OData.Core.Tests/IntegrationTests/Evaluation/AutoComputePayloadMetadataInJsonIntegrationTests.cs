@@ -1013,7 +1013,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Evaluation
             const string expandClause = "ExpandedNavLink($expand=UnknownCollectionNavProp)";
 
             Action test = () => this.GetWriterOutputForContentTypeAndKnobValue("application/json;odata.metadata=full", true, itemsToWrite, Model, EntitySet, EntityType, selectClause, expandClause);
-            test.ShouldThrow<ODataException>().WithMessage(Strings.ODataResourceTypeContext_MetadataOrSerializationInfoMissing);
+            test.ShouldThrow<ODataException>().WithMessage(Strings.ODataMetadataBuilder_UnknownEntitySet("UnknownCollectionNavProp"));
         }
 
         [Fact]

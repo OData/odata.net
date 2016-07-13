@@ -804,9 +804,9 @@ namespace Microsoft.Test.OData.Services.ODataWCFService
             var defaultStoredPI = new EdmSingleton(defaultContainer, "DefaultStoredPI", storedPIType);
             defaultContainer.AddElement(defaultStoredPI);
 
-            ((EdmEntitySet)accountSet).AddNavigationTarget(piStoredNavigation, storedPISet);
+            ((EdmEntitySet)accountSet).AddNavigationTarget(piStoredNavigation, storedPISet, new EdmPathExpression("MyPaymentInstruments/TheStoredPI"));
             ((EdmEntitySet)accountSet).AddNavigationTarget(accountAvailableSubsTemplatesNavigation, subscriptionTemplatesSet);
-            ((EdmEntitySet)accountSet).AddNavigationTarget(piBackupStoredPINavigation, defaultStoredPI);
+            ((EdmEntitySet)accountSet).AddNavigationTarget(piBackupStoredPINavigation, defaultStoredPI, new EdmPathExpression("MyPaymentInstruments/BackupStoredPI"));
 
             #endregion
 

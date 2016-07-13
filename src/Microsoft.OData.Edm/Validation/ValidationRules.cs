@@ -426,7 +426,7 @@ namespace Microsoft.OData.Edm.Validation
                             continue;
                         }
 
-                        IEdmNavigationSource opposingNavigationSource = binding.Target.FindNavigationTarget(property.Partner);
+                        IEdmNavigationSource opposingNavigationSource = binding.Target.FindNavigationTarget(property.Partner, new EdmPathExpression(property.Partner.Name));
 
                         if (opposingNavigationSource == null || opposingNavigationSource is IEdmUnknownEntitySet || opposingNavigationSource is IEdmContainedEntitySet)
                         {

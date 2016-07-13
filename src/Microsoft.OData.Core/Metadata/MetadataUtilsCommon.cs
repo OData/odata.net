@@ -342,7 +342,7 @@ namespace Microsoft.OData.Metadata
         /// </summary>
         /// <param name="edmType">The type to check.</param>
         /// <param name="structuredType">The structured type. If the given type was a collection, this will be the element type.</param>
-        /// <returns>Whether or not the type is an entity or entity collection type.</returns>
+        /// <returns>Whether or not the type is a structured or structured collection type.</returns>
         internal static bool IsStructuredOrStructuredCollectionType(this IEdmType edmType, out IEdmStructuredType structuredType)
         {
             Debug.Assert(edmType != null, "edmType != null");

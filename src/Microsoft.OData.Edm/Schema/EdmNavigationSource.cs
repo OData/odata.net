@@ -15,7 +15,7 @@ namespace Microsoft.OData.Edm
     /// </summary>
     public abstract class EdmNavigationSource : EdmNamedElement, IEdmNavigationSource
     {
-        private readonly Dictionary<IEdmNavigationProperty, Dictionary<string, IEdmNavigationSource>> navigationPropertyMappings = new Dictionary<IEdmNavigationProperty, Dictionary<string, IEdmNavigationSource>>();
+        private readonly Dictionary<IEdmNavigationProperty, Dictionary<string, IEdmNavigationPropertyBinding>> navigationPropertyMappings = new Dictionary<IEdmNavigationProperty, Dictionary<string, IEdmNavigationPropertyBinding>>();
 
         private readonly Dictionary<IEdmNavigationProperty, IEdmContainedEntitySet> containedNavigationPropertyCache = new Dictionary<IEdmNavigationProperty, IEdmContainedEntitySet>();
 
@@ -54,87 +54,133 @@ namespace Microsoft.OData.Edm
         /// <summary>
         /// Adds a navigation target, specifying the destination entity set of a navigation property of an entity in this navigation source.
         /// </summary>
-        /// <param name="property">The navigation property the target is being set for.</param>
+        /// <param name="navigationProperty">The navigation property the target is being set for.</param>
         /// <param name="target">The destination navigation source of the specified navigation property.</param>
-        public void AddNavigationTarget(IEdmNavigationProperty property, IEdmNavigationSource target)
+        public void AddNavigationTarget(IEdmNavigationProperty navigationProperty, IEdmNavigationSource target)
         {
-            string path = property.Name;
+            EdmUtil.CheckArgumentNull(navigationProperty, "navigationProperty");
+            EdmUtil.CheckArgumentNull(target, "navigation target");
 
-            if (!this.Type.AsElementType().IsOrInheritsFrom(property.DeclaringType))
+            string path = navigationProperty.Name;
+
+            if (!this.Type.AsElementType().IsOrInheritsFrom(navigationProperty.DeclaringType))
             {
-                path = property.DeclaringType.FullTypeName() + '/' + path;
+                path = navigationProperty.DeclaringType.FullTypeName() + '/' + path;
             }
 
-            if (!this.navigationPropertyMappings.ContainsKey(property))
+            if (!this.navigationPropertyMappings.ContainsKey(navigationProperty))
             {
-                this.navigationPropertyMappings[property] = new Dictionary<string, IEdmNavigationSource>();
+                this.navigationPropertyMappings[navigationProperty] = new Dictionary<string, IEdmNavigationPropertyBinding>();
             }
 
-            this.navigationPropertyMappings[property][path] = target;
+            this.navigationPropertyMappings[navigationProperty][path] = new EdmNavigationPropertyBinding(navigationProperty, target, new EdmPathExpression(path));
             this.navigationTargetsCache.Clear(null);
         }
 
         /// <summary>
         /// Adds a navigation target, specifying the destination entity set of a navigation property of an entity in this navigation source.
         /// </summary>
-        /// <param name="property">The navigation property the target is being set for.</param>
+        /// <param name="navigationProperty">The navigation property the target is being set for.</param>
         /// <param name="target">The destination navigation source of the specified navigation property.</param>
-        /// <param name="path">Sets the path that the navigation property targets.</param>
-        public void AddNavigationTarget(IEdmNavigationProperty property, IEdmNavigationSource target, string path)
+        /// <param name="bindingPath">Sets the path that the navigation property targets.</param>
+        public void AddNavigationTarget(IEdmNavigationProperty navigationProperty, IEdmNavigationSource target, IEdmPathExpression bindingPath)
         {
-            if (property.Name != path.Split('/').Last())
+            EdmUtil.CheckArgumentNull(navigationProperty, "navigationProperty");
+            EdmUtil.CheckArgumentNull(target, "navigation target");
+            EdmUtil.CheckArgumentNull(bindingPath, "binding path");
+
+            if (navigationProperty.Name != bindingPath.Path.Last())
             {
                 throw new ArgumentException(Strings.NavigationPropertyBinding_PathIsNotValid);
             }
 
-            if (!this.navigationPropertyMappings.ContainsKey(property))
+            if (!this.navigationPropertyMappings.ContainsKey(navigationProperty))
             {
-                this.navigationPropertyMappings[property] = new Dictionary<string, IEdmNavigationSource>();
+                this.navigationPropertyMappings[navigationProperty] = new Dictionary<string, IEdmNavigationPropertyBinding>();
             }
 
-            this.navigationPropertyMappings[property][path] = target;
+            this.navigationPropertyMappings[navigationProperty][bindingPath.FullPath] = new EdmNavigationPropertyBinding(navigationProperty, target, bindingPath);
             this.navigationTargetsCache.Clear(null);
+        }
+
+        /// <summary>
+        /// Finds the bindings of the navigation property.
+        /// </summary>
+        /// <param name="navigationProperty">The navigation property.</param>
+        /// <returns>The list of bindings for current navigation property.</returns>
+        public virtual IEnumerable<IEdmNavigationPropertyBinding> FindNavigationPropertyBindings(IEdmNavigationProperty navigationProperty)
+        {
+            EdmUtil.CheckArgumentNull(navigationProperty, "navigationProperty");
+
+            Dictionary<string, IEdmNavigationPropertyBinding> result;
+            if (this.navigationPropertyMappings.TryGetValue(navigationProperty, out result))
+            {
+                return result.Select(item => item.Value);
+            }
+
+            return null;
         }
 
         /// <summary>
         /// Finds the navigation source that a navigation property targets.
         /// </summary>
-        /// <param name="property">The navigation property.</param>
-        /// <returns>The navigation source that the navigation propertion targets, or null if no such navigation source exists.</returns>
-        public virtual IEdmNavigationSource FindNavigationTarget(IEdmNavigationProperty property)
+        /// <param name="navigationProperty">The navigation property.</param>
+        /// <returns>The navigation source that the navigation proportion targets, or null if no such navigation source exists.</returns>
+        public virtual IEdmNavigationSource FindNavigationTarget(IEdmNavigationProperty navigationProperty)
         {
-            EdmUtil.CheckArgumentNull(property, "property");
+            EdmUtil.CheckArgumentNull(navigationProperty, "property");
 
-            if (!property.ContainsTarget)
+            bool isDerived = !this.Type.AsElementType().IsOrInheritsFrom(navigationProperty.DeclaringType);
+
+            IEdmPathExpression bindingPath = isDerived
+                ? new EdmPathExpression(navigationProperty.DeclaringType.FullTypeName(), navigationProperty.Name)
+                : new EdmPathExpression(navigationProperty.Name);
+
+            return FindNavigationTarget(navigationProperty, bindingPath);
+        }
+
+        /// <summary>
+        /// Finds the navigation source that a navigation property targets.
+        /// </summary>
+        /// <param name="navigationProperty">The navigation property.</param>
+        /// <param name="bindingPath">The binding path of the navigation property.</param>
+        /// <returns>The navigation source that the navigation property targets</returns>
+        public virtual IEdmNavigationSource FindNavigationTarget(IEdmNavigationProperty navigationProperty, IEdmPathExpression bindingPath)
+        {
+            EdmUtil.CheckArgumentNull(navigationProperty, "navigationProperty");
+            EdmUtil.CheckArgumentNull(bindingPath, "bindingPath");
+
+            if (!navigationProperty.ContainsTarget)
             {
-                Dictionary<string, IEdmNavigationSource> result;
-                if (this.navigationPropertyMappings.TryGetValue(property, out result))
+                Dictionary<string, IEdmNavigationPropertyBinding> result;
+                IEdmNavigationPropertyBinding binding;
+                if (this.navigationPropertyMappings.TryGetValue(navigationProperty, out result) && result.TryGetValue(bindingPath.FullPath, out binding))
                 {
-                    return result.Values.FirstOrDefault();
+                    return binding.Target;
                 }
             }
             else
             {
                 return EdmUtil.DictionaryGetOrUpdate(
                     this.containedNavigationPropertyCache,
-                    property,
+                    navigationProperty,
                     navProperty => new EdmContainedEntitySet(this, navProperty));
             }
 
             return EdmUtil.DictionaryGetOrUpdate(
                 this.unknownNavigationPropertyCache,
-                property,
+                navigationProperty,
                 navProperty => new EdmUnknownEntitySet(this, navProperty));
         }
 
         private IEnumerable<IEdmNavigationPropertyBinding> ComputeNavigationTargets()
         {
             List<IEdmNavigationPropertyBinding> result = new List<IEdmNavigationPropertyBinding>();
-            foreach (KeyValuePair<IEdmNavigationProperty, Dictionary<string, IEdmNavigationSource>> mapping in this.navigationPropertyMappings)
+            foreach (KeyValuePair<IEdmNavigationProperty, Dictionary<string, IEdmNavigationPropertyBinding>> mapping in this.navigationPropertyMappings)
             {
-                foreach (KeyValuePair<string, IEdmNavigationSource> kv in mapping.Value)
+                foreach (KeyValuePair<string, IEdmNavigationPropertyBinding> kv in mapping.Value)
                 {
-                    result.Add(new EdmNavigationPropertyBinding(mapping.Key, kv.Value, kv.Key));
+                    result.Add(kv.Value);
                 }
             }
 

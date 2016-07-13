@@ -726,7 +726,17 @@ namespace EdmLibTests.FunctionalUtilities
 
             public IEdmNavigationSource FindNavigationTarget(IEdmNavigationProperty navigationProperty)
             {
-                throw new System.NotImplementedException();
+                return null;
+            }
+
+            public IEdmNavigationSource FindNavigationTarget(IEdmNavigationProperty navigationProperty, IEdmPathExpression bindingPath)
+            {
+                return null;
+            }
+
+            public IEnumerable<IEdmNavigationPropertyBinding> FindNavigationPropertyBindings(IEdmNavigationProperty navigationProperty)
+            {
+                return null;
             }
 
             public EdmContainerElementKind ContainerElementKind

@@ -382,7 +382,7 @@ namespace EdmLibTests.FunctionalTests
             IEdmEntityType petEntityType = (IEdmEntityType)model.FindType("Hot.Pet");
             IEdmNavigationProperty masterNavigationProperty = petEntityType.FindProperty("Master") as IEdmNavigationProperty;
             Assert.IsNotNull(masterNavigationProperty);
-            IEdmNavigationSource navigationSource = peopleEntitySet.FindNavigationTarget(masterNavigationProperty);
+            IEdmNavigationSource navigationSource = peopleEntitySet.FindNavigationTarget(masterNavigationProperty, new EdmPathExpression("Pet/Master"));
             Assert.AreEqual(navigationSource, peopleEntitySet);
             IEdmEntityType peopleEntityType = (IEdmEntityType)model.FindType("Hot.Person");
             IEdmNavigationProperty petNavigationProperty = peopleEntityType.FindProperty("Pet") as IEdmNavigationProperty;
@@ -480,7 +480,7 @@ namespace EdmLibTests.FunctionalTests
             IEdmEntityType dogEntityType = (IEdmEntityType)model.FindType("Hot.Dog");
             IEdmNavigationProperty masterNavigationProperty = dogEntityType.FindProperty("Master") as IEdmNavigationProperty;
             Assert.IsNotNull(masterNavigationProperty);
-            IEdmNavigationSource navigationSource = peopleEntitySet.FindNavigationTarget(masterNavigationProperty);
+            IEdmNavigationSource navigationSource = peopleEntitySet.FindNavigationTarget(masterNavigationProperty, new EdmPathExpression("Pet/Hot.Dog/Master"));
             Assert.AreEqual(navigationSource, peopleEntitySet);
         }
 

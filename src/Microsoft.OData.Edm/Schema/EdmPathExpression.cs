@@ -6,6 +6,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Microsoft.OData.Edm
 {
@@ -14,15 +15,17 @@ namespace Microsoft.OData.Edm
     /// </summary>
     public class EdmPathExpression : EdmElement, IEdmPathExpression
     {
-        private readonly IEnumerable<string> path;
+        private IEnumerable<string> path;
+        private string fullPath;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="EdmPathExpression"/> class.
         /// </summary>
-        /// <param name="path">Path string containing segments seperated by '/'. For example: "A.B/C/D.E/Func1(NS.T,NS.T2)/P1".</param>
+        /// <param name="path">Path string containing segments separated by '/'. For example: "A.B/C/D.E/Func1(NS.T,NS.T2)/P1".</param>
         public EdmPathExpression(string path)
-            : this(EdmUtil.CheckArgumentNull(path, "path").Split('/'))
         {
+            EdmUtil.CheckArgumentNull(path, "path");
+            this.fullPath = path;
         }
 
         /// <summary>
@@ -42,12 +45,9 @@ namespace Microsoft.OData.Edm
         {
             EdmUtil.CheckArgumentNull(path, "path");
 
-            foreach (string segment in path)
+            if (path.Any(segment => segment.Contains("/")))
             {
-                if (segment.Contains("/"))
-                {
-                    throw new ArgumentException(Strings.PathSegmentMustNotContainSlash);
-                }
+                throw new ArgumentException(Strings.PathSegmentMustNotContainSlash);
             }
 
             this.path = path;
@@ -58,7 +58,15 @@ namespace Microsoft.OData.Edm
         /// </summary>
         public IEnumerable<string> Path
         {
-            get { return this.path; }
+            get { return this.path ?? (this.path = this.fullPath.Split('/')); }
+        }
+
+        /// <summary>
+        /// Gets the full path string, like "A.B/C/D.E".
+        /// </summary>
+        public string FullPath
+        {
+            get { return this.fullPath ?? (this.fullPath = string.Join("/", this.path.ToArray())); }
         }
 
         /// <summary>

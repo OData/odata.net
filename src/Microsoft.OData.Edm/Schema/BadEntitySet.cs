@@ -60,5 +60,15 @@ namespace Microsoft.OData.Edm
         {
             return null;
         }
+
+        public IEdmNavigationSource FindNavigationTarget(IEdmNavigationProperty navigationProperty, IEdmPathExpression bindingPath)
+        {
+            return null;
+        }
+
+        public IEnumerable<IEdmNavigationPropertyBinding> FindNavigationPropertyBindings(IEdmNavigationProperty navigationProperty)
+        {
+            return null;
+        }
     }
 }

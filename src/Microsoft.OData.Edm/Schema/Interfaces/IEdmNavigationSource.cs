@@ -65,5 +65,20 @@ namespace Microsoft.OData.Edm
         /// <param name="navigationProperty">The navigation property.</param>
         /// <returns>The navigation source that the navigation property targets</returns>
         IEdmNavigationSource FindNavigationTarget(IEdmNavigationProperty navigationProperty);
+
+        /// <summary>
+        /// Finds the navigation source that a navigation property targets.
+        /// </summary>
+        /// <param name="navigationProperty">The navigation property.</param>
+        /// <param name="bindingPath">The binding path of the navigation property.</param>
+        /// <returns>The navigation source that the navigation property targets</returns>
+        IEdmNavigationSource FindNavigationTarget(IEdmNavigationProperty navigationProperty, IEdmPathExpression bindingPath);
+
+        /// <summary>
+        /// Finds the bindings of the navigation property.
+        /// </summary>
+        /// <param name="navigationProperty">The navigation property.</param>
+        /// <returns>The list of bindings for current navigation property.</returns>
+        IEnumerable<IEdmNavigationPropertyBinding> FindNavigationPropertyBindings(IEdmNavigationProperty navigationProperty);
     }
 }

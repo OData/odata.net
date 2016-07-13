@@ -810,7 +810,7 @@ public interface Microsoft.OData.Edm.IEdmNavigationProperty : IEdmElement, IEdmN
 
 public interface Microsoft.OData.Edm.IEdmNavigationPropertyBinding {
 	Microsoft.OData.Edm.IEdmNavigationProperty NavigationProperty  { public abstract get; }
-	string Path  { public abstract get; }
+	Microsoft.OData.Edm.IEdmPathExpression Path  { public abstract get; }
 	Microsoft.OData.Edm.IEdmNavigationSource Target  { public abstract get; }
 }
 
@@ -819,7 +819,9 @@ public interface Microsoft.OData.Edm.IEdmNavigationSource : IEdmElement, IEdmNam
 	Microsoft.OData.Edm.IEdmPathExpression Path  { public abstract get; }
 	Microsoft.OData.Edm.IEdmType Type  { public abstract get; }
 
+	System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.IEdmNavigationPropertyBinding]] FindNavigationPropertyBindings (Microsoft.OData.Edm.IEdmNavigationProperty navigationProperty)
 	Microsoft.OData.Edm.IEdmNavigationSource FindNavigationTarget (Microsoft.OData.Edm.IEdmNavigationProperty navigationProperty)
+	Microsoft.OData.Edm.IEdmNavigationSource FindNavigationTarget (Microsoft.OData.Edm.IEdmNavigationProperty navigationProperty, Microsoft.OData.Edm.IEdmPathExpression bindingPath)
 }
 
 public interface Microsoft.OData.Edm.IEdmOperation : IEdmElement, IEdmNamedElement, IEdmSchemaElement, IEdmVocabularyAnnotatable {
@@ -842,6 +844,7 @@ public interface Microsoft.OData.Edm.IEdmOperationParameter : IEdmElement, IEdmN
 }
 
 public interface Microsoft.OData.Edm.IEdmPathExpression : IEdmElement, IEdmExpression {
+	string FullPath  { public abstract get; }
 	System.Collections.Generic.IEnumerable`1[[System.String]] Path  { public abstract get; }
 }
 
@@ -998,9 +1001,11 @@ public abstract class Microsoft.OData.Edm.EdmNavigationSource : Microsoft.OData.
 	Microsoft.OData.Edm.IEdmPathExpression Path  { public abstract get; }
 	Microsoft.OData.Edm.IEdmType Type  { public abstract get; }
 
-	public void AddNavigationTarget (Microsoft.OData.Edm.IEdmNavigationProperty property, Microsoft.OData.Edm.IEdmNavigationSource target)
-	public void AddNavigationTarget (Microsoft.OData.Edm.IEdmNavigationProperty property, Microsoft.OData.Edm.IEdmNavigationSource target, string path)
-	public virtual Microsoft.OData.Edm.IEdmNavigationSource FindNavigationTarget (Microsoft.OData.Edm.IEdmNavigationProperty property)
+	public void AddNavigationTarget (Microsoft.OData.Edm.IEdmNavigationProperty navigationProperty, Microsoft.OData.Edm.IEdmNavigationSource target)
+	public void AddNavigationTarget (Microsoft.OData.Edm.IEdmNavigationProperty navigationProperty, Microsoft.OData.Edm.IEdmNavigationSource target, Microsoft.OData.Edm.IEdmPathExpression bindingPath)
+	public virtual System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.IEdmNavigationPropertyBinding]] FindNavigationPropertyBindings (Microsoft.OData.Edm.IEdmNavigationProperty navigationProperty)
+	public virtual Microsoft.OData.Edm.IEdmNavigationSource FindNavigationTarget (Microsoft.OData.Edm.IEdmNavigationProperty navigationProperty)
+	public virtual Microsoft.OData.Edm.IEdmNavigationSource FindNavigationTarget (Microsoft.OData.Edm.IEdmNavigationProperty navigationProperty, Microsoft.OData.Edm.IEdmPathExpression bindingPath)
 }
 
 public abstract class Microsoft.OData.Edm.EdmOperation : Microsoft.OData.Edm.EdmNamedElement, IEdmElement, IEdmNamedElement, IEdmOperation, IEdmSchemaElement, IEdmVocabularyAnnotatable {
@@ -2388,10 +2393,10 @@ public class Microsoft.OData.Edm.EdmModel : Microsoft.OData.Edm.EdmModelBase, IE
 
 public class Microsoft.OData.Edm.EdmNavigationPropertyBinding : IEdmNavigationPropertyBinding {
 	public EdmNavigationPropertyBinding (Microsoft.OData.Edm.IEdmNavigationProperty navigationProperty, Microsoft.OData.Edm.IEdmNavigationSource target)
-	public EdmNavigationPropertyBinding (Microsoft.OData.Edm.IEdmNavigationProperty navigationProperty, Microsoft.OData.Edm.IEdmNavigationSource target, string path)
+	public EdmNavigationPropertyBinding (Microsoft.OData.Edm.IEdmNavigationProperty navigationProperty, Microsoft.OData.Edm.IEdmNavigationSource target, Microsoft.OData.Edm.IEdmPathExpression bindingPath)
 
 	Microsoft.OData.Edm.IEdmNavigationProperty NavigationProperty  { public virtual get; }
-	string Path  { public virtual get; }
+	Microsoft.OData.Edm.IEdmPathExpression Path  { public virtual get; }
 	Microsoft.OData.Edm.IEdmNavigationSource Target  { public virtual get; }
 }
 
@@ -2408,6 +2413,7 @@ public class Microsoft.OData.Edm.EdmPathExpression : Microsoft.OData.Edm.EdmElem
 	public EdmPathExpression (string[] path)
 
 	Microsoft.OData.Edm.EdmExpressionKind ExpressionKind  { public virtual get; }
+	string FullPath  { public virtual get; }
 	System.Collections.Generic.IEnumerable`1[[System.String]] Path  { public virtual get; }
 }
 

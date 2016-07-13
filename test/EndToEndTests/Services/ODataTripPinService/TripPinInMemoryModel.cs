@@ -193,20 +193,24 @@ namespace Microsoft.OData.SampleService.Models.TripPin
             personSet.AddNavigationTarget(friendsnNavigation, personSet);
             me.AddNavigationTarget(friendsnNavigation, personSet);
 
-            personSet.AddNavigationTarget(flightAirlineNavigation, airlineSet);
-            me.AddNavigationTarget(flightAirlineNavigation, airlineSet);
+            var path = new EdmPathExpression("Trips/PlanItems/Microsoft.OData.SampleService.Models.TripPin.Flight/Airline");
+            personSet.AddNavigationTarget(flightAirlineNavigation, airlineSet, path);
+            me.AddNavigationTarget(flightAirlineNavigation, airlineSet, path);
 
-            personSet.AddNavigationTarget(flightFromAirportNavigation, airportSet);
-            me.AddNavigationTarget(flightFromAirportNavigation, airportSet);
+            path = new EdmPathExpression("Trips/PlanItems/Microsoft.OData.SampleService.Models.TripPin.Flight/From");
+            personSet.AddNavigationTarget(flightFromAirportNavigation, airportSet, path);
+            me.AddNavigationTarget(flightFromAirportNavigation, airportSet, path);
 
-            personSet.AddNavigationTarget(flightToAirportNavigation, airportSet);
-            me.AddNavigationTarget(flightToAirportNavigation, airportSet);
+            path = new EdmPathExpression("Trips/PlanItems/Microsoft.OData.SampleService.Models.TripPin.Flight/To");
+            personSet.AddNavigationTarget(flightToAirportNavigation, airportSet, path);
+            me.AddNavigationTarget(flightToAirportNavigation, airportSet, path);
 
             personSet.AddNavigationTarget(personPhotoNavigation, photoSet);
             me.AddNavigationTarget(personPhotoNavigation, photoSet);
 
-            personSet.AddNavigationTarget(tripPhotosNavigation, photoSet);
-            me.AddNavigationTarget(tripPhotosNavigation, photoSet);
+            path = new EdmPathExpression("Trips/Photos");
+            personSet.AddNavigationTarget(tripPhotosNavigation, photoSet, path);
+            me.AddNavigationTarget(tripPhotosNavigation, photoSet, path);
 
             var getFavoriteAirlineFunction = new EdmFunction(ns, "GetFavoriteAirline",
                 new EdmEntityTypeReference(airlineType, false), true,

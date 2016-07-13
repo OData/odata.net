@@ -55,16 +55,43 @@ namespace Microsoft.OData.Edm
         }
 
         /// <summary>
+        /// Finds the bindings of the navigation property.
+        /// </summary>
+        /// <param name="navigationProperty">The navigation property.</param>
+        /// <returns>The list of bindings for current navigation property.</returns>
+        public override IEnumerable<IEdmNavigationPropertyBinding> FindNavigationPropertyBindings(IEdmNavigationProperty navigationProperty)
+        {
+            return this.parentNavigationSource.FindNavigationPropertyBindings(navigationProperty);
+        }
+
+        /// <summary>
+        /// Finds the entity set that a navigation property targets.
+        /// </summary>
+        /// <param name="navigationProperty">The navigation property.</param>
+        /// <returns>The entity set that the navigation property targets</returns>
+        public override IEdmNavigationSource FindNavigationTarget(IEdmNavigationProperty navigationProperty)
+        {
+            bool isDerived = !this.Type.AsElementType().IsOrInheritsFrom(navigationProperty.DeclaringType);
+
+            IEdmPathExpression bindingPath = isDerived
+                ? new EdmPathExpression(this.Name, navigationProperty.DeclaringType.FullTypeName(), navigationProperty.Name)
+                : new EdmPathExpression(this.Name, navigationProperty.Name);
+
+            return this.FindNavigationTarget(navigationProperty, bindingPath);
+        }
+
+        /// <summary>
         /// Finds the entity set that a navigation property targets.
         /// </summary>
         /// <param name="property">The navigation property.</param>
+        /// <param name="bindingPath">The binding path of the navigation property</param>
         /// <returns>The entity set that the navigation property targets</returns>
-        public override IEdmNavigationSource FindNavigationTarget(IEdmNavigationProperty property)
+        public override IEdmNavigationSource FindNavigationTarget(IEdmNavigationProperty property, IEdmPathExpression bindingPath)
         {
-            IEdmNavigationSource navigationTarget = base.FindNavigationTarget(property);
+            IEdmNavigationSource navigationTarget = base.FindNavigationTarget(property, bindingPath);
             if (navigationTarget is IEdmUnknownEntitySet)
             {
-                return this.parentNavigationSource.FindNavigationTarget(property);
+                return this.parentNavigationSource.FindNavigationTarget(property, bindingPath);
             }
 
             return navigationTarget;

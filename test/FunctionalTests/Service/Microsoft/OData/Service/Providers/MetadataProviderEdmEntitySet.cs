@@ -177,6 +177,29 @@ namespace Microsoft.OData.Service.Providers
             return targetEntitySet;
         }
 
+        public IEdmNavigationSource FindNavigationTarget(IEdmNavigationProperty navigationProperty, IEdmPathExpression bindingPath)
+        {
+            return FindNavigationTarget(navigationProperty);
+        }
+
+        public IEnumerable<IEdmNavigationPropertyBinding> FindNavigationPropertyBindings(IEdmNavigationProperty navigationProperty)
+        {
+            if (this.navigationTargetMapping != null)
+            {
+                foreach (var mapping in this.navigationTargetMapping)
+                {
+                    if (mapping.Key == navigationProperty)
+                    {
+                        yield return new EdmNavigationPropertyBinding(mapping.Key, mapping.Value);
+                    }
+                }
+            }
+            else
+            {
+                yield break;
+            }
+        }
+
         /// <summary>
         /// Cache the entity set that the given navigation property refers to.
         /// </summary>

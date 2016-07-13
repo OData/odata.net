@@ -2170,6 +2170,120 @@ namespace EdmLibTests.FunctionalUtilities
             return NavigationPrincipalEndAndDependentPropertyModelBuilder(true, true, true, true, true, false);
         }
 
+        public static IEdmModel MultiNavigationBindingModel()
+        {
+            var model = new EdmModel();
+
+            var entityType = new EdmEntityType("NS", "EntityType");
+            var id = entityType.AddStructuralProperty("ID", EdmCoreModel.Instance.GetInt32(false));
+            entityType.AddKeys(id);
+
+            var containedEntityType = new EdmEntityType("NS", "ContainedEntityType");
+            var containedId = containedEntityType.AddStructuralProperty("ID", EdmCoreModel.Instance.GetInt32(false));
+            containedEntityType.AddKeys(containedId);
+
+            var containedNav1 = entityType.AddUnidirectionalNavigation(new EdmNavigationPropertyInfo()
+            {
+                Name = "ContainedNav1",
+                Target = containedEntityType,
+                TargetMultiplicity = EdmMultiplicity.One,
+                ContainsTarget = true
+            });
+
+            var containedNav2 = entityType.AddUnidirectionalNavigation(new EdmNavigationPropertyInfo()
+            {
+                Name = "ContainedNav2",
+                Target = containedEntityType,
+                TargetMultiplicity = EdmMultiplicity.One,
+                ContainsTarget = true
+            });
+
+            var navEntityType = new EdmEntityType("NS", "NavEntityType");
+            var navEntityId = navEntityType.AddStructuralProperty("ID", EdmCoreModel.Instance.GetInt32(false));
+            navEntityType.AddKeys(navEntityId);
+
+            var complex = new EdmComplexType("NS", "ComplexType");
+            complex.AddStructuralProperty("Prop1", EdmCoreModel.Instance.GetInt32(false));
+
+            var complxNavP = complex.AddUnidirectionalNavigation(
+                new EdmNavigationPropertyInfo()
+                {
+                    Name = "CollectionOfNavOnComplex",
+                    Target = navEntityType,
+                    TargetMultiplicity = EdmMultiplicity.Many,
+                });
+
+            entityType.AddStructuralProperty("complexProp1", new EdmComplexTypeReference(complex, false));
+            entityType.AddStructuralProperty("complexProp2", new EdmComplexTypeReference(complex, false));
+
+            var navOnContained = containedEntityType.AddUnidirectionalNavigation(
+                new EdmNavigationPropertyInfo()
+                {
+                    Name = "NavOnContained",
+                    Target = navEntityType,
+                    TargetMultiplicity = EdmMultiplicity.One,
+                });
+
+            model.AddElement(entityType);
+            model.AddElement(containedEntityType);
+            model.AddElement(navEntityType);
+            model.AddElement(complex);
+
+            var entityContainer = new EdmEntityContainer("NS", "Container");
+            model.AddElement(entityContainer);
+            var entitySet = new EdmEntitySet(entityContainer, "EntitySet", entityType);
+            var navEntitySet1 = new EdmEntitySet(entityContainer, "NavEntitySet1", navEntityType);
+            var navEntitySet2 = new EdmEntitySet(entityContainer, "NavEntitySet2", navEntityType);
+            entitySet.AddNavigationTarget(complxNavP, navEntitySet1, new EdmPathExpression("complexProp1/CollectionOfNavOnComplex"));
+            entitySet.AddNavigationTarget(complxNavP, navEntitySet2, new EdmPathExpression("complexProp2/CollectionOfNavOnComplex"));
+            entitySet.AddNavigationTarget(navOnContained, navEntitySet1, new EdmPathExpression("ContainedNav1/NavOnContained"));
+            entitySet.AddNavigationTarget(navOnContained, navEntitySet2, new EdmPathExpression("ContainedNav2/NavOnContained"));
+            entityContainer.AddElement(entitySet);
+            entityContainer.AddElement(navEntitySet1);
+            entityContainer.AddElement(navEntitySet2);
+
+            return model;
+        }
+
+        public static IEnumerable<XElement> MultiNavigationBindingModelCsdl()
+        {
+            const string csdl = "<Schema Namespace=\"NS\" xmlns=\"http://docs.oasis-open.org/odata/ns/edm\">" +
+                                "<EntityType Name=\"EntityType\">" +
+                                    "<Key><PropertyRef Name=\"ID\" /></Key>" +
+                                    "<Property Name=\"ID\" Type=\"Edm.Int32\" Nullable=\"false\" />" +
+                                    "<Property Name=\"complexProp1\" Type=\"NS.ComplexType\" Nullable=\"false\" />" +
+                                    "<Property Name=\"complexProp2\" Type=\"NS.ComplexType\" Nullable=\"false\" />" +
+                                    "<NavigationProperty Name=\"ContainedNav1\" Type=\"NS.ContainedEntityType\" Nullable=\"false\" ContainsTarget=\"true\" />" +
+                                    "<NavigationProperty Name=\"ContainedNav2\" Type=\"NS.ContainedEntityType\" Nullable=\"false\" ContainsTarget=\"true\" />" +
+                                "</EntityType>" +
+                                "<EntityType Name=\"ContainedEntityType\">" +
+                                    "<Key><PropertyRef Name=\"ID\" /></Key>" +
+                                    "<Property Name=\"ID\" Type=\"Edm.Int32\" Nullable=\"false\" />" +
+                                    "<NavigationProperty Name=\"NavOnContained\" Type=\"NS.NavEntityType\" Nullable=\"false\" />" +
+                                "</EntityType>" +
+                                "<EntityType Name=\"NavEntityType\">" +
+                                    "<Key><PropertyRef Name=\"ID\" /></Key>" +
+                                    "<Property Name=\"ID\" Type=\"Edm.Int32\" Nullable=\"false\" />" +
+                                "</EntityType>" +
+                                "<ComplexType Name=\"ComplexType\">" +
+                                    "<Property Name=\"Prop1\" Type=\"Edm.Int32\" Nullable=\"false\" />" +
+                                    "<NavigationProperty Name=\"CollectionOfNavOnComplex\" Type=\"Collection(NS.NavEntityType)\" />" +
+                                "</ComplexType>" +
+                                "<EntityContainer Name=\"Container\">" +
+                                "<EntitySet Name=\"EntitySet\" EntityType=\"NS.EntityType\">" +
+                                    "<NavigationPropertyBinding Path=\"complexProp1/CollectionOfNavOnComplex\" Target=\"NavEntitySet1\" />" +
+                                    "<NavigationPropertyBinding Path=\"complexProp2/CollectionOfNavOnComplex\" Target=\"NavEntitySet2\" />" +
+                                    "<NavigationPropertyBinding Path=\"ContainedNav1/NavOnContained\" Target=\"NavEntitySet1\" />" +
+                                    "<NavigationPropertyBinding Path=\"ContainedNav2/NavOnContained\" Target=\"NavEntitySet2\" />" +
+                                "</EntitySet>" +
+                                "<EntitySet Name=\"NavEntitySet1\" EntityType=\"NS.NavEntityType\" />" +
+                                "<EntitySet Name=\"NavEntitySet2\" EntityType=\"NS.NavEntityType\" />" +
+                                "</EntityContainer>" +
+                                "</Schema>";
+
+            return ConvertCsdlsToXElements(csdl);
+        }
+
         private static IEdmModel NavigationPrincipalEndAndDependentPropertyModelBuilder(bool isPersonIdKey, bool isPersonNameKey, bool isPersonIdNullable, bool isPersonNameNullable, bool isPrincipalEndNullable, bool isPrincipalEndCollection)
         {
             var model = new EdmModel();

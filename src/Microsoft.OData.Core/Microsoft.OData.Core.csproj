@@ -45,6 +45,8 @@
     <Compile Include="AnnotationFilterPattern.cs" />
     <Compile Include="AsyncBufferedStream.cs" />
     <Compile Include="ContainerBuilderExtensions.cs" />
+    <Compile Include="EdmExtensionMethods.cs" />
+    <Compile Include="UnknownEntitySet.cs" />
     <Compile Include="IContainerProvider.cs" />
     <Compile Include="IDuplicatePropertyNameChecker.cs" />
     <Compile Include="IReaderValidator.cs" />

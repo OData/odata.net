@@ -4,23 +4,22 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+using System.Linq;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
+#if PORTABLELIB
+using System.Threading.Tasks;
+#endif
+using Microsoft.OData.Evaluation;
+using Microsoft.OData.Json;
+using Microsoft.OData.Metadata;
+using Microsoft.OData.UriParser;
+using Microsoft.OData.Edm;
+using ODataErrorStrings = Microsoft.OData.Strings;
+
 namespace Microsoft.OData.JsonLight
 {
-    #region Namespaces
-    using System.Collections.Generic;
-    using System.Diagnostics;
-    using System.Diagnostics.CodeAnalysis;
-#if PORTABLELIB
-    using System.Threading.Tasks;
-#endif
-    using Microsoft.OData.Evaluation;
-    using Microsoft.OData.Json;
-    using Microsoft.OData.Metadata;
-    using Microsoft.OData.UriParser;
-    using Microsoft.OData.Edm;
-    using ODataErrorStrings = Microsoft.OData.Strings;
-    #endregion Namespaces
-
     /// <summary>
     /// OData reader for the JsonLight format.
     /// </summary>
@@ -1297,7 +1296,7 @@ namespace Microsoft.OData.JsonLight
             {
                 navigationSource = this.CurrentNavigationSource == null
                     ? null
-                    : this.CurrentNavigationSource.FindNavigationTarget(navigationProperty);
+                    : this.CurrentNavigationSource.FindNavigationTarget(navigationProperty, MatchBindingPath);
             }
 
             ODataUri odataUri = null;
@@ -1316,6 +1315,67 @@ namespace Microsoft.OData.JsonLight
             }
 
             this.EnterScope(new JsonLightNestedResourceInfoScope(readerNestedResourceInfo, navigationSource, targetResourceType, odataUri));
+        }
+
+        /// <summary>
+        /// Determine the path of current navigation property is matching the binding path.
+        /// The function used in FindNavigationTarget to resolve the navigation target for multi binding.
+        /// </summary>
+        /// <param name="bindingPath">The binding path.</param>
+        /// <returns>True if the path of navigation property in current scope is matching the <paramref name="bindingPath"/>.</returns>
+        private bool MatchBindingPath(IEdmPathExpression bindingPath)
+        {
+            Debug.Assert(this.CurrentScope is JsonLightResourceScope);
+
+            List<string> paths = bindingPath.Path.ToList();
+
+            // If binding path only includes navigation property name, it matches.
+            if (paths.Count == 1)
+            {
+                return true;
+            }
+
+            List<Scope> scopes = this.Scopes.ToList();
+
+            Debug.Assert(scopes.Count > 1);
+
+            int pathIndex = paths.Count - 2; // Skip the last segment which is navigation property name.
+
+            // Match from tail to head.
+            for (int i = 0; i < scopes.Count - 1; i++)
+            {
+                Scope scope = scopes[i];
+                if (scope is JsonLightNestedResourceInfoScope)
+                {
+                    if (pathIndex < 0 || string.CompareOrdinal(((ODataNestedResourceInfo)scope.Item).Name, paths[pathIndex]) != 0)
+                    {
+                        return false;
+                    }
+
+                    pathIndex--;
+                }
+                else if (scope is JsonLightResourceScope)
+                {
+                    if (pathIndex >= 0 && paths[pathIndex].Contains("."))
+                    {
+                        if (string.CompareOrdinal(paths[pathIndex], scope.ResourceType.FullTypeName()) != 0)
+                        {
+                            return false;
+                        }
+
+                        pathIndex--;
+                    }
+
+                    // Break the match since non-contained entity should not be in binding path.
+                    if (scope.ResourceType is IEdmEntityType && !(scope.NavigationSource is IEdmContainedEntitySet))
+                    {
+                        break;
+                    }
+                }
+            }
+
+            // Return true if all the segments in binding path have been matched.
+            return pathIndex == -1 ? true : false;
         }
 
         /// <summary>

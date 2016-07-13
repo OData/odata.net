@@ -206,6 +206,11 @@ namespace Microsoft.OData
             }
         }
 
+        protected Stack<Scope> Scopes
+        {
+            get { return this.scopes; }
+        }
+
         /// <summary>
         /// Returns the scope of the entity owning the current link.
         /// </summary>

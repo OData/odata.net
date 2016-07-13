@@ -702,7 +702,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         {
             this.xmlWriter.WriteStartElement(CsdlConstants.Element_NavigationPropertyBinding);
 
-            this.WriteRequiredAttribute(CsdlConstants.Attribute_Path, binding.Path, EdmValueWriter.StringAsXml);
+            this.WriteRequiredAttribute(CsdlConstants.Attribute_Path, binding.Path.FullPath, EdmValueWriter.StringAsXml);
 
             // TODO: handle container names, etc.
             this.WriteRequiredAttribute(CsdlConstants.Attribute_Target, binding.Target.Name, EdmValueWriter.StringAsXml);

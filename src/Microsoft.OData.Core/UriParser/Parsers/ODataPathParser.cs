@@ -500,7 +500,7 @@ namespace Microsoft.OData.UriParser
             this.parsedSegments.Remove(previous);
 
             // If this is a navigation property, find target navigation source
-            var targetNavigationSource = this.parsedSegments[parsedSegments.Count - 1].TargetEdmNavigationSource.FindNavigationTarget(navPropSegment.NavigationProperty);
+            var targetNavigationSource = this.parsedSegments[parsedSegments.Count - 1].TargetEdmNavigationSource.FindNavigationTarget(navPropSegment.NavigationProperty, MatchBindingPath);
 
             // If we can't compute the target navigation source, then pretend the navigation property does not exist
             if (targetNavigationSource == null)
@@ -1122,7 +1122,7 @@ namespace Microsoft.OData.UriParser
             if (property.PropertyKind == EdmPropertyKind.Navigation)
             {
                 var navigationProperty = (IEdmNavigationProperty)property;
-                IEdmNavigationSource navigationSource = previous.TargetEdmNavigationSource.FindNavigationTarget(navigationProperty);
+                IEdmNavigationSource navigationSource = previous.TargetEdmNavigationSource.FindNavigationTarget(navigationProperty, MatchBindingPath);
 
                 // Relationship between TargetMultiplicity and navigation property:
                 //  1) EdmMultiplicity.Many <=> collection navigation property
@@ -1177,6 +1177,66 @@ namespace Microsoft.OData.UriParser
             }
 
             this.TryBindKeyFromParentheses(queryPortion);
+        }
+
+        /// <summary>
+        /// Determine if the path of current navigation property is matching the binding path.
+        /// The function used in FindNavigationTarget to resolve the navigation target for multi binding.
+        /// </summary>
+        /// <param name="bindingPath">The binding path.</param>
+        /// <returns>True if the path of navigation property in current scope is matching the <paramref name="bindingPath"/>.</returns>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1800:DoNotCastUnnecessarily")]
+        private bool MatchBindingPath(IEdmPathExpression bindingPath)
+        {
+            List<string> paths = bindingPath.Path.ToList();
+
+            // If binding path only includes navigation property name, it matches.
+            if (paths.Count == 1)
+            {
+                return true;
+            }
+
+            int pathIndex = paths.Count - 2; // Skip the last segment which is navigation property name.
+
+            // Match from tail to head.
+            for (int segmentIndex = this.parsedSegments.Count - 1; segmentIndex >= 0; segmentIndex--)
+            {
+                ODataPathSegment segment = parsedSegments[segmentIndex];
+
+                // Containment navigation property or complex property in binding path.
+                if (segment is PropertySegment || (segment is NavigationPropertySegment && segment.TargetEdmNavigationSource is IEdmContainedEntitySet))
+                {
+                    if (pathIndex < 0 || string.CompareOrdinal(paths[pathIndex], segment.Identifier) != 0)
+                    {
+                        return false;
+                    }
+
+                    pathIndex--;
+                }
+                else if (segment is TypeSegment)
+                {
+                    // May need match type if the binding path contains type cast.
+                    if (pathIndex >= 0 && paths[pathIndex].Contains("."))
+                    {
+                        if (string.CompareOrdinal(paths[pathIndex], segment.EdmType.FullTypeName()) != 0)
+                        {
+                            return false;
+                        }
+
+                        pathIndex--;
+                    }
+                }
+                else if (segment is EntitySetSegment
+                    || segment is SingletonSegment
+                    || (segment is NavigationPropertySegment))
+                {
+                    // Containment navigation property in first if statement for NavigationPropertySegment.
+                    break;
+                }
+            }
+
+            // Return true if all the segments in binding path have been matched.
+            return pathIndex == -1 ? true : false;
         }
 
         /// <summary>

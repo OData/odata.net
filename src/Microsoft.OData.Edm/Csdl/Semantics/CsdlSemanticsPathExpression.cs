@@ -45,6 +45,11 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
             get { return this.PathCache.GetValue(this, ComputePathFunc, null); }
         }
 
+        public string FullPath
+        {
+            get { return this.Expression.Path; }
+        }
+
         private IEnumerable<string> ComputePath()
         {
             return this.Expression.Path.Split(new char[] { '/' }, StringSplitOptions.None);

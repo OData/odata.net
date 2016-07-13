@@ -24,6 +24,6 @@ namespace Microsoft.OData.Edm
         /// <summary>
         /// Get the path that a navigation property targets.
         /// </summary>
-        string Path { get; }
+        IEdmPathExpression Path { get; }
     }
 }

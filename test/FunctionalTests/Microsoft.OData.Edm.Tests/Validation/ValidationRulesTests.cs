@@ -988,6 +988,16 @@ namespace Microsoft.OData.Edm.Tests.Validation
                 throw new System.NotImplementedException();
             }
 
+            public IEdmNavigationSource FindNavigationTarget(IEdmNavigationProperty navigationProperty, IEdmPathExpression bindingPath)
+            {
+                throw new NotImplementedException();
+            }
+
+            public IEnumerable<IEdmNavigationPropertyBinding> FindNavigationPropertyBindings(IEdmNavigationProperty navigationProperty)
+            {
+                throw new NotImplementedException();
+            }
+
             public EdmContainerElementKind ContainerElementKind
             {
                 get { return EdmContainerElementKind.EntitySet; }
@@ -1036,6 +1046,16 @@ namespace Microsoft.OData.Edm.Tests.Validation
             public IEdmNavigationSource FindNavigationTarget(IEdmNavigationProperty navigationProperty)
             {
                 throw new System.NotImplementedException();
+            }
+
+            public IEdmNavigationSource FindNavigationTarget(IEdmNavigationProperty navigationProperty, IEdmPathExpression bindingPath)
+            {
+                throw new NotImplementedException();
+            }
+
+            public IEnumerable<IEdmNavigationPropertyBinding> FindNavigationPropertyBindings(IEdmNavigationProperty navigationProperty)
+            {
+                throw new NotImplementedException();
             }
 
             public EdmContainerElementKind ContainerElementKind

@@ -725,6 +725,8 @@ namespace EdmLibTests.FunctionalTests
                 set;
             }
 
+            public string FullPath { get; set; }
+
             public EdmExpressionKind ExpressionKind
             {
                 get { return EdmExpressionKind.Path; }

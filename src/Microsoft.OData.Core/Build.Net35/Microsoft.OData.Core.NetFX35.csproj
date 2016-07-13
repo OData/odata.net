@@ -1509,6 +1509,9 @@
     <Compile Include="..\DuplicatePropertyNameChecker.cs">
       <Link>Microsoft\OData\Core\DuplicatePropertyNameChecker.cs</Link>
     </Compile>
+    <Compile Include="..\EdmExtensionMethods.cs">
+      <Link>Microsoft\OData\Core\EdmExtensionMethods.cs</Link>
+    </Compile>
     <Compile Include="..\IContainerProvider.cs">
       <Link>Microsoft\OData\Core\IContainerProvider.cs</Link>
     </Compile>
@@ -1568,6 +1571,9 @@
     </Compile>
     <Compile Include="..\ServiceProviderExtensions.cs">
       <Link>Microsoft\OData\Core\ServiceProviderExtensions.cs</Link>
+    </Compile>
+    <Compile Include="..\UnknownEntitySet.cs">
+      <Link>Microsoft\OData\Core\UnknownEntitySet.cs</Link>
     </Compile>
     <Compile Include="..\UriParser\BuiltInUriFunctions.cs">
       <Link>Microsoft\OData\Core\UriParser\BuiltInUriFunctions.cs</Link>

@@ -546,7 +546,7 @@ namespace Microsoft.OData.Evaluation
                     uri = this.ComputeIdForContainment();
                     break;
                 case EdmNavigationSourceKind.UnknownEntitySet:
-                    throw new ODataException(Strings.ODataResourceTypeContext_MetadataOrSerializationInfoMissing);
+                    throw new ODataException(Strings.ODataMetadataBuilder_UnknownEntitySet(this.resourceMetadataContext.TypeContext.NavigationSourceName));
                 default:
                     uri = this.ComputeId();
                     break;

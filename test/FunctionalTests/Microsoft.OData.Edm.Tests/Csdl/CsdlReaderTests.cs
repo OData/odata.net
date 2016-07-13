@@ -92,10 +92,17 @@ namespace Microsoft.OData.Edm.Tests.Csdl
             var model = CsdlReader.Parse(XElement.Parse(complexWithNav).CreateReader());
             var people = model.EntityContainer.FindEntitySet("People");
             var address = model.FindType("DefaultNs.Address") as IEdmStructuredType;
+            var workAddress = model.FindType("DefaultNs.WorkAddress") as IEdmStructuredType;
             var city = address.FindProperty("City") as IEdmNavigationProperty;
+            var country = workAddress.FindProperty("Country") as IEdmNavigationProperty;
             var cities = model.EntityContainer.FindEntitySet("Cities");
-            var navigationTarget = people.FindNavigationTarget(city);
+            var countries = model.EntityContainer.FindEntitySet("Countries");
+            var navigationTarget = people.FindNavigationTarget(city, new EdmPathExpression("HomeAddress/City"));
             Assert.Equal(navigationTarget, cities);
+            navigationTarget = people.FindNavigationTarget(city, new EdmPathExpression("Addresses/City"));
+            Assert.Equal(navigationTarget, cities);
+            navigationTarget = people.FindNavigationTarget(country, new EdmPathExpression("WorkAddress/DefaultNs.WorkAddress/Country"));
+            Assert.Equal(navigationTarget, countries);
         }
 
         [Fact]
@@ -131,7 +138,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl
             var address = model.FindType("DefaultNs.ComplexType") as IEdmStructuredType;
             var city = address.FindProperty("CollectionOfNav") as IEdmNavigationProperty;
             var cities = model.EntityContainer.FindEntitySet("NavEntities");
-            var navigationTarget = people.FindNavigationTarget(city);
+            var navigationTarget = people.FindNavigationTarget(city, new EdmPathExpression("Complex/CollectionOfNav"));
             Assert.Equal(navigationTarget, cities);
         }
 

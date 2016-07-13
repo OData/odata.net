@@ -97,9 +97,9 @@ namespace Microsoft.OData.Edm.Tests.Csdl
             EdmEntitySet people = new EdmEntitySet(entityContainer, "People", person);
             EdmEntitySet cities = new EdmEntitySet(entityContainer, "City", city);
             EdmEntitySet countries = new EdmEntitySet(entityContainer, "Country", country);
-            people.AddNavigationTarget(navP, cities, "HomeAddress/City");
-            people.AddNavigationTarget(navP, cities, "Addresses/City");
-            people.AddNavigationTarget(navP2, countries, "WorkAddress/DefaultNs.WorkAddress/Country");
+            people.AddNavigationTarget(navP, cities, new EdmPathExpression("HomeAddress/City"));
+            people.AddNavigationTarget(navP, cities, new EdmPathExpression("Addresses/City"));
+            people.AddNavigationTarget(navP2, countries, new EdmPathExpression("WorkAddress/DefaultNs.WorkAddress/Country"));
             entityContainer.AddElement(people);
             entityContainer.AddElement(cities);
             entityContainer.AddElement(countries);
@@ -181,7 +181,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl
             model.AddElement(entityContainer);
             EdmEntitySet entites = new EdmEntitySet(entityContainer, "Entities", entity);
             EdmEntitySet navEntities = new EdmEntitySet(entityContainer, "NavEntities", navEntity);
-            entites.AddNavigationTarget(navP, navEntities, "Complex/CollectionOfNav");
+            entites.AddNavigationTarget(navP, navEntities, new EdmPathExpression("Complex/CollectionOfNav"));
             entityContainer.AddElement(entites);
             entityContainer.AddElement(navEntities);
 

@@ -82,15 +82,16 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
             get { return this.navigationTargetsCache.GetValue(this, ComputeNavigationTargetsFunc, null); }
         }
 
-        public IEdmNavigationSource FindNavigationTarget(IEdmNavigationProperty property)
+        public IEdmNavigationSource FindNavigationTarget(IEdmNavigationProperty property, IEdmPathExpression bindingPath)
         {
             EdmUtil.CheckArgumentNull(property, "property");
+            EdmUtil.CheckArgumentNull(bindingPath, "bindingPath");
 
             if (!property.ContainsTarget)
             {
                 foreach (IEdmNavigationPropertyBinding targetMapping in this.NavigationPropertyBindings)
                 {
-                    if (targetMapping.NavigationProperty == property)
+                    if (targetMapping.NavigationProperty == property && targetMapping.Path.FullPath == bindingPath.FullPath)
                     {
                         return targetMapping.Target;
                     }
@@ -108,6 +109,27 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
                     this.unknownNavigationPropertyCache,
                     property,
                     navProperty => new EdmUnknownEntitySet(this, navProperty));
+        }
+
+        public IEdmNavigationSource FindNavigationTarget(IEdmNavigationProperty navigationProperty)
+        {
+            bool isDerived = !this.Type.AsElementType().IsOrInheritsFrom(navigationProperty.DeclaringType);
+
+            IEdmPathExpression bindingPath = isDerived
+                ? new EdmPathExpression(navigationProperty.DeclaringType.FullTypeName(), navigationProperty.Name)
+                : new EdmPathExpression(navigationProperty.Name);
+
+            return FindNavigationTarget(navigationProperty, bindingPath);
+        }
+
+        public IEnumerable<IEdmNavigationPropertyBinding> FindNavigationPropertyBindings(IEdmNavigationProperty navigationProperty)
+        {
+            if (!navigationProperty.ContainsTarget)
+            {
+                return this.NavigationPropertyBindings.Where(targetMapping => targetMapping.NavigationProperty == navigationProperty).ToList();
+            }
+
+            return null;
         }
 
         protected override IEnumerable<IEdmVocabularyAnnotation> ComputeInlineVocabularyAnnotations()
@@ -136,7 +158,7 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
                 }
             }
 
-            return new EdmNavigationPropertyBinding(navigationProperty, targetNavigationSource, binding.Path);
+            return new EdmNavigationPropertyBinding(navigationProperty, targetNavigationSource, new EdmPathExpression(binding.Path));
         }
 
         private IEdmNavigationProperty ResolveNavigationPropertyPathForBinding(CsdlNavigationPropertyBinding binding)

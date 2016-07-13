@@ -17,5 +17,10 @@ namespace Microsoft.OData.Edm
         /// Gets the path as a decomposed qualified name. "A.B/C/D.E" is { "A.B", "C", "D.E" }.
         /// </summary>
         IEnumerable<string> Path { get; }
+
+        /// <summary>
+        /// Gets the full path string, like "A.B/C/D.E".
+        /// </summary>
+        string FullPath { get; }
     }
 }

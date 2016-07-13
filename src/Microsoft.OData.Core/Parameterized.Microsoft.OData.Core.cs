@@ -2902,6 +2902,13 @@ namespace Microsoft.OData {
         }
 
         /// <summary>
+        /// A string like "The Id cannot be computed, since the navigation source '{0}' cannot be resolved to a known entity set from model."
+        /// </summary>
+        internal static string ODataMetadataBuilder_UnknownEntitySet(object p0) {
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataMetadataBuilder_UnknownEntitySet, p0);
+        }
+
+        /// <summary>
         /// A string like "The entity type '{0}' is not compatible with the base type '{1}' of the provided entity set '{2}'. When an entity type is specified for an OData resource set or resource reader, it has to be the same or a subtype of the base type of the specified entity set."
         /// </summary>
         internal static string ODataJsonLightInputContext_EntityTypeMustBeCompatibleWithEntitySetBaseType(object p0, object p1, object p2) {

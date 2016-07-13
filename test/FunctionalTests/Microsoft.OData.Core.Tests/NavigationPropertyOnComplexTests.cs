@@ -53,12 +53,6 @@ namespace Microsoft.OData.Tests
             paths[4].ShouldBeTypeSegment(workAddressType, addressType);
             paths[5].ShouldBeNavigationPropertySegment(city);
 
-            uri = new Uri(@"http://host/People('abc')/Address/WorkAddress/City");
-            paths = new ODataUriParser(Model, ServiceRoot, uri).ParsePath().ToList();
-            paths[2].ShouldBePropertySegment(addressProperty);
-            paths[3].ShouldBePropertySegment(workAddressProperty);
-            paths[4].ShouldBeNavigationPropertySegment(city);
-
             uri = new Uri(@"http://host/People('abc')/Address/WorkAddress/DefaultNs.WorkAddress/City2");
             paths = new ODataUriParser(Model, ServiceRoot, uri).ParsePath().ToList();
             paths[2].ShouldBePropertySegment(addressProperty);
@@ -301,15 +295,16 @@ namespace Microsoft.OData.Tests
                 "\"Address\":{" +
                     "\"Road\":\"Zixing\"," +
                     "\"WorkAddress\":{" +
+                        "\"@odata.type\":\"#DefaultNs.WorkAddress\"," +
                         "\"Road\":\"workplace\"," +
-                        "\"City\":{\"ZipCode\":111}" +
+                        "\"City2\":{\"ZipCode\":111}" +
                     "}" +
                 "}}";
 
             var entryLists = ReadPayload(payload, Model, EntitySet, EntityType);
 
             entryLists[0].Id.Should().Be("http://host/City(111)");
-            entryLists[1].TypeName.Should().Be("DefaultNs.Address");
+            entryLists[1].TypeName.Should().Be("DefaultNs.WorkAddress");
             entryLists[1].Properties.FirstOrDefault(s => s.Name == "Road").Value.Should().Be("workplace");
             entryLists[2].Properties.FirstOrDefault(s => s.Name == "Road").Value.Should().Be("Zixing");
             entryLists[3].Id.Should().Be("http://host/People('abc')");
@@ -339,6 +334,53 @@ namespace Microsoft.OData.Tests
             });
 
             string expected = "{\"@odata.context\":\"http://host/$metadata#People/$entity\",\"UserName\":\"abc\",\"Address\":{\"Road\":\"Zixing\",\"City\":{\"ZipCode\":111}}}";
+
+            Assert.Equal(actual, expected);
+        }
+
+        [Fact]
+        public void WriteNavigationPropertyOnDeepComplex()
+        {
+            ODataResource res = new ODataResource() { Properties = new[] { new ODataProperty { Name = "UserName", Value = "abc" } } };
+            ODataNestedResourceInfo addressInfo = new ODataNestedResourceInfo() { Name = "Address" };
+            ODataResource address = new ODataResource() { Properties = new[] { new ODataProperty { Name = "Road", Value = "Zixing" } } };
+            ODataNestedResourceInfo workAddressInfo = new ODataNestedResourceInfo() { Name = "WorkAddress" };
+            ODataResource workAddress = new ODataResource() { TypeName="DefaultNs.WorkAddress", Properties = new[] { new ODataProperty { Name = "Road", Value = "Ziyue" } } };
+            ODataNestedResourceInfo nestedResInfo = new ODataNestedResourceInfo() { Name = "City2", IsCollection = false };
+            ODataResource nestednav = new ODataResource() { Properties = new[] { new ODataProperty { Name = "ZipCode", Value = 222 } } };
+
+            string actual = WriteJsonLightEntry(Model, EntitySet, (writer) =>
+            {
+                writer.WriteStart(res);
+                writer.WriteStart(addressInfo);
+                writer.WriteStart(address);
+                writer.WriteStart(workAddressInfo);
+                writer.WriteStart(workAddress);
+                writer.WriteStart(nestedResInfo);
+                writer.WriteStart(nestednav);
+                writer.WriteEnd();
+                writer.WriteEnd();
+                writer.WriteEnd();
+                writer.WriteEnd();
+                writer.WriteEnd();
+                writer.WriteEnd();
+                writer.WriteEnd();
+            });
+
+            string expected = "{" +
+                              "\"@odata.context\":\"http://host/$metadata#People/$entity\"," +
+                                  "\"UserName\":\"abc\"," +
+                                  "\"Address\":{" +
+                                      "\"Road\":\"Zixing\"," +
+                                      "\"WorkAddress\":{" +
+                                          "\"@odata.type\":\"#DefaultNs.WorkAddress\"," +
+                                          "\"Road\":\"Ziyue\"," +
+                                          "\"City2\":{" +
+                                              "\"ZipCode\":222" +
+                                            "}" +
+                                        "}" +
+                                "}" +
+                              "}";
 
             Assert.Equal(actual, expected);
         }
@@ -544,8 +586,9 @@ namespace Microsoft.OData.Tests
             model.AddElement(entityContainer);
             EdmEntitySet people = new EdmEntitySet(entityContainer, "People", person);
             EdmEntitySet cities = new EdmEntitySet(entityContainer, "City", city);
-            people.AddNavigationTarget(navP, cities, "Address/City");
-            people.AddNavigationTarget(navP2, cities, "Address/WorkAddress/DefaultNs.WorkAddress/City2");
+            people.AddNavigationTarget(navP, cities, new EdmPathExpression("Address/City"));
+            people.AddNavigationTarget(navP, cities, new EdmPathExpression("Addresses/City"));
+            people.AddNavigationTarget(navP2, cities, new EdmPathExpression("Address/WorkAddress/DefaultNs.WorkAddress/City2"));
             entityContainer.AddElement(people);
             entityContainer.AddElement(cities);
 
@@ -585,7 +628,7 @@ namespace Microsoft.OData.Tests
             model.AddElement(entityContainer);
             EdmEntitySet entites = new EdmEntitySet(entityContainer, "Entities", entity);
             EdmEntitySet navEntities = new EdmEntitySet(entityContainer, "NavEntities", navEntity);
-            entites.AddNavigationTarget(navP, navEntities, "Complex/CollectionOfNav");
+            entites.AddNavigationTarget(navP, navEntities, new EdmPathExpression("Complex/CollectionOfNav"));
             entityContainer.AddElement(entites);
             entityContainer.AddElement(navEntities);
 
