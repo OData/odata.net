@@ -70,9 +70,9 @@ namespace EdmLibTests
         {
             IEdmModel edmModel;
             IEnumerable<EdmError> errors;
-            var isParsed = CsdlReader.TryParse(csdlElements.Select(e => e.CreateReader()), referencedModels, out edmModel, out errors);
-            Assert.IsTrue(isParsed, "CsdlReader.TryParse failed");
-            Assert.IsTrue(!errors.Any(), "CsdlReader.TryParse returned errors");
+            var isParsed = SchemaReader.TryParse(csdlElements.Select(e => e.CreateReader()), referencedModels, out edmModel, out errors);
+            Assert.IsTrue(isParsed, "SchemaReader.TryParse failed");
+            Assert.IsTrue(!errors.Any(), "SchemaReader.TryParse returned errors");
             return edmModel;
         }
 
@@ -609,7 +609,7 @@ namespace EdmLibTests
                 // if the original test model is valid, the round-tripped model should be well-formed and valid. 
                 IEnumerable<EdmError> parserErrors = null;
                 IEdmModel roundtrippedModel = null;
-                var isWellformed = CsdlReader.TryParse(serializedCsdls.Select(e => e.CreateReader()), out roundtrippedModel, out parserErrors);
+                var isWellformed = SchemaReader.TryParse(serializedCsdls.Select(e => e.CreateReader()), out roundtrippedModel, out parserErrors);
                 Assert.IsTrue(isWellformed && !parserErrors.Any(), "The model from valid CSDLs should be generated back to well-formed CSDLs.");
 
                 IEnumerable<EdmError> validationErrors = null;
@@ -621,7 +621,7 @@ namespace EdmLibTests
                 // if the originl test model is not valid, the serializer should still generate CSDLs that parser can handle, but the round trip-ability is not guarantted. 
                 IEnumerable<EdmError> parserErrors = null;
                 IEdmModel roundtrippedModel = null;
-                var isWellformed = CsdlReader.TryParse(serializedCsdls.Select(e => e.CreateReader()), out roundtrippedModel, out parserErrors);
+                var isWellformed = SchemaReader.TryParse(serializedCsdls.Select(e => e.CreateReader()), out roundtrippedModel, out parserErrors);
                 Assert.IsTrue(isWellformed, "The parser cannot handle the CSDL that the serializer generated:" + Environment.NewLine + String.Join(Environment.NewLine, parserErrors));
             }
         }

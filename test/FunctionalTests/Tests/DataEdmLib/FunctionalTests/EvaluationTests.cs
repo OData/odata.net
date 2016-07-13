@@ -153,8 +153,8 @@ namespace EdmLibTests.FunctionalTests
 </Schema>";
 
             IEnumerable<EdmError> errors;
-            CsdlReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(baseModelCsdl)) }, out this.baseModel, out errors);
-            CsdlReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(builtinFunctionsCsdl)) }, out this.builtInFunctionsModel, out errors);
+            SchemaReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(baseModelCsdl)) }, out this.baseModel, out errors);
+            SchemaReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(builtinFunctionsCsdl)) }, out this.builtInFunctionsModel, out errors);
 
             IEdmEntityType person = (IEdmEntityType)this.baseModel.FindType("foo.Person");
             IEdmEntityType address = (IEdmEntityType)this.baseModel.FindType("foo.Address");
@@ -197,7 +197,7 @@ namespace EdmLibTests.FunctionalTests
 
             IEnumerable<EdmError> errors;
             IEdmModel annotatingModel;
-            bool parsed = CsdlReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(annotatingModelCsdl)) }, new IEdmModel[] { this.baseModel }, out annotatingModel, out errors);
+            bool parsed = SchemaReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(annotatingModelCsdl)) }, new IEdmModel[] { this.baseModel }, out annotatingModel, out errors);
             Assert.IsTrue(parsed, "parsed");
             Assert.IsTrue(errors.Count() == 0, "No errors");
 
@@ -323,7 +323,7 @@ namespace EdmLibTests.FunctionalTests
 
             IEnumerable<EdmError> errors;
             IEdmModel annotatingModel;
-            bool parsed = CsdlReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(annotatingModelCsdl)) }, new IEdmModel[] { this.baseModel }, out annotatingModel, out errors);
+            bool parsed = SchemaReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(annotatingModelCsdl)) }, new IEdmModel[] { this.baseModel }, out annotatingModel, out errors);
             Assert.IsTrue(parsed, "parsed");
             Assert.IsTrue(errors.Count() == 0, "No errors");
 
@@ -431,7 +431,7 @@ namespace EdmLibTests.FunctionalTests
 
             IEnumerable<EdmError> errors;
             IEdmModel annotatingModel;
-            bool parsed = CsdlReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(annotatingModelCsdl)) }, new IEdmModel[] { this.baseModel }, out annotatingModel, out errors);
+            bool parsed = SchemaReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(annotatingModelCsdl)) }, new IEdmModel[] { this.baseModel }, out annotatingModel, out errors);
             Assert.IsTrue(parsed, "parsed");
             Assert.IsTrue(errors.Count() == 0, "No errors");
 
@@ -494,7 +494,7 @@ namespace EdmLibTests.FunctionalTests
 
             IEnumerable<EdmError> errors;
             IEdmModel annotatingModel;
-            bool parsed = CsdlReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(annotatingModelCsdl)) }, new IEdmModel[] { this.baseModel, this.builtInFunctionsModel }, out annotatingModel, out errors);
+            bool parsed = SchemaReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(annotatingModelCsdl)) }, new IEdmModel[] { this.baseModel, this.builtInFunctionsModel }, out annotatingModel, out errors);
             Assert.IsTrue(parsed, "parsed");
             Assert.IsTrue(errors.Count() == 0, "No errors");
 
@@ -569,7 +569,7 @@ namespace EdmLibTests.FunctionalTests
 
             IEnumerable<EdmError> errors;
             IEdmModel annotatingModel;
-            bool parsed = CsdlReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(annotatingModelCsdl)) }, new IEdmModel[] { this.baseModel, this.builtInFunctionsModel }, out annotatingModel, out errors);
+            bool parsed = SchemaReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(annotatingModelCsdl)) }, new IEdmModel[] { this.baseModel, this.builtInFunctionsModel }, out annotatingModel, out errors);
             Assert.IsTrue(parsed, "parsed");
             Assert.IsTrue(errors.Count() == 0, "No errors");
 
@@ -612,7 +612,7 @@ namespace EdmLibTests.FunctionalTests
 
             IEnumerable<EdmError> errors;
             IEdmModel annotatingModel;
-            bool parsed = CsdlReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(annotatingModelCsdl)) }, new IEdmModel[] {  this.baseModel }, out annotatingModel, out errors);
+            bool parsed = SchemaReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(annotatingModelCsdl)) }, new IEdmModel[] {  this.baseModel }, out annotatingModel, out errors);
             Assert.IsTrue(parsed, "parsed");
             Assert.IsTrue(errors.Count() == 0, "No errors");
 
@@ -1301,7 +1301,7 @@ namespace EdmLibTests.FunctionalTests
 
             IEnumerable<EdmError> errors;
             IEdmModel annotatingModel;
-            bool parsed = CsdlReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(annotatingModelCsdl)) }, new IEdmModel[] { this.baseModel }, out annotatingModel, out errors);
+            bool parsed = SchemaReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(annotatingModelCsdl)) }, new IEdmModel[] { this.baseModel }, out annotatingModel, out errors);
             Assert.IsTrue(parsed, "parsed");
             Assert.IsTrue(errors.Count() == 0, "No errors");
 
@@ -1364,7 +1364,7 @@ namespace EdmLibTests.FunctionalTests
 
             IEnumerable<EdmError> errors;
             IEdmModel annotatingModel;
-            bool parsed = CsdlReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(annotatingModelCsdl)) }, new IEdmModel[] { this.baseModel }, out annotatingModel, out errors);
+            bool parsed = SchemaReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(annotatingModelCsdl)) }, new IEdmModel[] { this.baseModel }, out annotatingModel, out errors);
             Assert.IsTrue(parsed, "parsed");
             Assert.IsTrue(errors.Count() == 0, "No errors");
 
@@ -1451,7 +1451,7 @@ namespace EdmLibTests.FunctionalTests
 
             IEnumerable<EdmError> errors;
             IEdmModel annotatingModel;
-            bool parsed = CsdlReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(annotatingModelCsdl)) }, new IEdmModel[] { this.baseModel }, out annotatingModel, out errors);
+            bool parsed = SchemaReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(annotatingModelCsdl)) }, new IEdmModel[] { this.baseModel }, out annotatingModel, out errors);
             Assert.IsTrue(parsed, "parsed");
             Assert.IsTrue(errors.Count() == 0, "No errors");
 
@@ -1583,7 +1583,7 @@ namespace EdmLibTests.FunctionalTests
 
             IEnumerable<EdmError> errors;
             IEdmModel annotatingModel;
-            bool parsed = CsdlReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(annotatingModelCsdl)) }, new IEdmModel[] { this.baseModel }, out annotatingModel, out errors);
+            bool parsed = SchemaReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(annotatingModelCsdl)) }, new IEdmModel[] { this.baseModel }, out annotatingModel, out errors);
             Assert.IsTrue(parsed, "parsed");
             Assert.IsTrue(errors.Count() == 0, "No errors");
 
@@ -1696,7 +1696,7 @@ namespace EdmLibTests.FunctionalTests
 
             IEnumerable<EdmError> errors;
             IEdmModel annotatingModel;
-            bool parsed = CsdlReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(annotatingModelCsdl)) }, new IEdmModel[] { this.baseModel }, out annotatingModel, out errors);
+            bool parsed = SchemaReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(annotatingModelCsdl)) }, new IEdmModel[] { this.baseModel }, out annotatingModel, out errors);
             Assert.IsTrue(parsed, "parsed");
             Assert.IsTrue(errors.Count() == 0, "No errors");
 
@@ -1786,7 +1786,7 @@ namespace EdmLibTests.FunctionalTests
 
             IEnumerable<EdmError> errors;
             IEdmModel annotatingModel;
-            bool parsed = CsdlReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(annotatingModelCsdl)) }, new IEdmModel[] { this.baseModel }, out annotatingModel, out errors);
+            bool parsed = SchemaReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(annotatingModelCsdl)) }, new IEdmModel[] { this.baseModel }, out annotatingModel, out errors);
             Assert.IsTrue(parsed, "parsed");
             Assert.IsTrue(errors.Count() == 0, "No errors");
 

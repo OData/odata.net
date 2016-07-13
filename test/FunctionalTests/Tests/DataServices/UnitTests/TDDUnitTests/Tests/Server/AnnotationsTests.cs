@@ -114,17 +114,17 @@ namespace AstoriaUnitTests.TDD.Tests.Server
 
                 IEdmModel vocabularyModel;
                 xmlReaders = new XmlReader[] { XmlReader.Create(new StringReader(vocabulary)) };
-                parsed = CsdlReader.TryParse(xmlReaders, out vocabularyModel, out errors);
+                parsed = SchemaReader.TryParse(xmlReaders, out vocabularyModel, out errors);
                 Assert.IsTrue(parsed);
 
                 IEdmModel annotationsModel1;
                 xmlReaders = new XmlReader[] { XmlReader.Create(new StringReader(annotations1)) };
-                parsed = CsdlReader.TryParse(xmlReaders, new IEdmModel[] { model, vocabularyModel }, out annotationsModel1, out errors);
+                parsed = SchemaReader.TryParse(xmlReaders, new IEdmModel[] { model, vocabularyModel }, out annotationsModel1, out errors);
                 Assert.IsTrue(parsed);
 
                 IEdmModel annotationsModel2;
                 xmlReaders = new XmlReader[] { XmlReader.Create(new StringReader(annotations2)) };
-                parsed = CsdlReader.TryParse(xmlReaders, new IEdmModel[] { model, vocabularyModel }, out annotationsModel2, out errors);
+                parsed = SchemaReader.TryParse(xmlReaders, new IEdmModel[] { model, vocabularyModel }, out annotationsModel2, out errors);
                 Assert.IsTrue(parsed);
 
                 // Annotations are intentionally duplicated to test duplicate filtering

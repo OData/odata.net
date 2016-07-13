@@ -117,7 +117,7 @@ namespace EdmLibTests.FunctionalTests
         {
             IEdmModel model;
             IEnumerable<EdmError> errors;
-            var isParsed = CsdlReader.TryParse(csdls.Select(e => e.CreateReader()), out model, out errors);
+            var isParsed = SchemaReader.TryParse(csdls.Select(e => e.CreateReader()), out model, out errors);
             Assert.IsTrue(isParsed, "Error occurs while deserializing csdl to model");
             return model;
         }

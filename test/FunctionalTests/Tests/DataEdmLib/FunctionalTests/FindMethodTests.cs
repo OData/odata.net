@@ -65,12 +65,12 @@ namespace EdmLibTests.FunctionalTests
 
             IEdmModel testModel;
             IEnumerable<EdmError> errors;
-            bool parsed = CsdlReader.TryParse(
+            bool parsed = SchemaReader.TryParse(
                 from xElement in testData select xElement.CreateReader(),
                 out testModel,
                 out errors);
-            Assert.IsTrue(parsed, "CsdlReader.TryParse failed");
-            Assert.IsTrue(!errors.Any(), "CsdlReader.TryParse returned errors");
+            Assert.IsTrue(parsed, "SchemaReader.TryParse failed");
+            Assert.IsTrue(!errors.Any(), "SchemaReader.TryParse returned errors");
             Assert.IsNull(testModel.FindType("NonExistSchema"), "FindSchemaTypeForNoContentModel failed");
         }
 
@@ -81,12 +81,12 @@ namespace EdmLibTests.FunctionalTests
 
             IEdmModel testModel;
             IEnumerable<EdmError> errors;
-            bool parsed = CsdlReader.TryParse(
+            bool parsed = SchemaReader.TryParse(
                 from xElement in testData select xElement.CreateReader(),
                 out testModel,
                 out errors);
-            Assert.IsTrue(parsed, "CsdlReader.TryParse failed");
-            Assert.IsTrue(!errors.Any(), "CsdlReader.TryParse returned errors");
+            Assert.IsTrue(parsed, "SchemaReader.TryParse failed");
+            Assert.IsTrue(!errors.Any(), "SchemaReader.TryParse returned errors");
             Assert.IsNull(testModel.FindDeclaredType("Edm.Int32"), "FindSchemaType should not return primitive types");
             //Assert.IsNull(testModel.FindType("Int32"), "FindSchemaType should not return primitive types");
             Assert.IsNotNull(testModel.FindType("Edm.Int32"), "FindSchemaType should not return primitive types");

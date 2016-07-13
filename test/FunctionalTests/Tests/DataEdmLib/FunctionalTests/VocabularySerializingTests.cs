@@ -96,9 +96,9 @@ namespace EdmLibTests.FunctionalTests
         {
             IEdmModel edmModel;
             IEnumerable<EdmError> errors;
-            var isParsed = CsdlReader.TryParse(VocabularyTestModelBuilder.AnnotationTermsWithNoNamespace().Select(e => e.CreateReader()), out edmModel, out errors);
-            Assert.IsFalse(isParsed, "CsdlReader.TryParse failed");
-            Assert.IsFalse(errors.Count() == 0, "CsdlReader.TryParse returned errors");
+            var isParsed = SchemaReader.TryParse(VocabularyTestModelBuilder.AnnotationTermsWithNoNamespace().Select(e => e.CreateReader()), out edmModel, out errors);
+            Assert.IsFalse(isParsed, "SchemaReader.TryParse failed");
+            Assert.IsFalse(errors.Count() == 0, "SchemaReader.TryParse returned errors");
         }
 
         [TestMethod]

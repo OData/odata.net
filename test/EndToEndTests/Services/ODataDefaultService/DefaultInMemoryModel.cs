@@ -839,7 +839,7 @@ namespace Microsoft.Test.OData.Services.ODataWCFService
             using (Stream stream = ReadResourceFromAssembly(fileName))
             {
                 IEnumerable<EdmError> errors;
-                CsdlReader.TryParse(new[] { XmlReader.Create(stream) }, out instance, out errors);
+                SchemaReader.TryParse(new[] { XmlReader.Create(stream) }, out instance, out errors);
             }
             return instance;
         }

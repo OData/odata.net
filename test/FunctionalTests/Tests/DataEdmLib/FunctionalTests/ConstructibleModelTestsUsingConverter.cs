@@ -94,7 +94,7 @@ namespace EdmLibTests.FunctionalTests
         }
 
         [TestMethod]
-        // [EdmLib] CsdlReader.TryParse uses wrong default values for the string type's facets such as unicode - Fixed
+        // [EdmLib] SchemaReader.TryParse uses wrong default values for the string type's facets such as unicode - Fixed
         // [EdmLib] Precision facet should not be required for the temporal and decimal types - Fixed
         public void ConstructibleModelUsingConverterOneComplexWithAllPrimitivePropertyTest()
         {
@@ -114,7 +114,7 @@ namespace EdmLibTests.FunctionalTests
         }
 
         [TestMethod]
-        // [EdmLib] CsdlReader.TryParse uses wrong default values for the string type's facets such as unicode - Fixed
+        // [EdmLib] SchemaReader.TryParse uses wrong default values for the string type's facets such as unicode - Fixed
         // [EdmLib] Precision facet should not be required for the temporal and decimal types - Fixed
         public void ConstructibleModelUsingConverterOneEntityWithAllPrimitivePropertyTest()
         {

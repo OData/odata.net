@@ -270,7 +270,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
             IEnumerable<EdmError> errors;
             using (XmlReader reader = XmlReader.Create(new StringReader(csdl)))
             {
-                if (!CsdlReader.TryParse(new[] { reader }, out model, out errors))
+                if (!SchemaReader.TryParse(new[] { reader }, out model, out errors))
                 {
                     string errorStrings = string.Join(", ", errors.Select(e => e.ToString()).ToArray());
                     this.Assert.Fail("Could not parse CSDL: " + System.Environment.NewLine + errorStrings);

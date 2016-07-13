@@ -57,7 +57,7 @@ namespace Microsoft.Test.OData.Services.ODataWCFService.Vocabularies
             using (var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream("ODataSamples.Services.Core.Vocabularies.CapabilitiesVocabularies.xml"))
             {
                 IEnumerable<EdmError> errors;
-                CsdlReader.TryParse(new[] { XmlReader.Create(stream) }, out Instance, out errors);
+                SchemaReader.TryParse(new[] { XmlReader.Create(stream) }, out Instance, out errors);
             }
 
             ConformanceLevelTerm = Instance.FindDeclaredTerm(CapabilitiesConformanceLevel);

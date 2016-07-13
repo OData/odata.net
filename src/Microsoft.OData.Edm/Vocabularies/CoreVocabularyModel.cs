@@ -131,7 +131,7 @@ namespace Microsoft.OData.Edm.Vocabularies.V1
             {
                 IEnumerable<EdmError> errors;
                 Debug.Assert(stream != null, "CoreVocabularies.xml: stream!=null");
-                CsdlReader.TryParse(new[] { XmlReader.Create(stream) }, out Instance, out errors);
+                SchemaReader.TryParse(new[] { XmlReader.Create(stream) }, out Instance, out errors);
                 IsInitializing = false;
             }
 

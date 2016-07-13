@@ -911,8 +911,8 @@ namespace EdmLibTests.FunctionalTests
             List<string> csdls = new List<string>() { csdl };
             IEdmModel edmModel;
             IEnumerable<EdmError> errors;
-            var isParsed = CsdlReader.TryParse(csdls.Select(n => XElement.Parse(n).CreateReader()), out edmModel, out errors);
-            Assert.IsFalse(isParsed, "CsdlReader.TryParse failed");
+            var isParsed = SchemaReader.TryParse(csdls.Select(n => XElement.Parse(n).CreateReader()), out edmModel, out errors);
+            Assert.IsFalse(isParsed, "SchemaReader.TryParse failed");
             Assert.AreEqual(2, errors.Count(), "Invalid error count.");
             Assert.AreEqual(EdmErrorCode.MissingAttribute, errors.ElementAt(0).ErrorCode, "Invalid error code.");
             Assert.AreEqual(EdmErrorCode.MissingAttribute, errors.ElementAt(1).ErrorCode, "Invalid error code.");
@@ -1195,7 +1195,7 @@ namespace EdmLibTests.FunctionalTests
 
             IEdmModel parsedModel;
             IEnumerable<EdmError> errs;
-            bool parsed = CsdlReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(expected)) }, out parsedModel, out errs);
+            bool parsed = SchemaReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(expected)) }, out parsedModel, out errs);
             Assert.IsTrue(parsed, "parsed");
             Assert.IsTrue(!errors.Any(), "No errors");
 
@@ -1364,7 +1364,7 @@ namespace EdmLibTests.FunctionalTests
 
             IEdmModel parsedModel;
             IEnumerable<EdmError> errors;
-            bool parsed = CsdlReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(csdl)) }, out parsedModel, out errors);
+            bool parsed = SchemaReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(csdl)) }, out parsedModel, out errors);
             Assert.IsTrue(parsed, "parsed");
             Assert.IsTrue(!errors.Any(), "No errors");
 
@@ -1516,7 +1516,7 @@ namespace EdmLibTests.FunctionalTests
 
             IEdmModel parsedModel;
             IEnumerable<EdmError> errors;
-            bool parsed = CsdlReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(csdl)) }, out parsedModel, out errors);
+            bool parsed = SchemaReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(csdl)) }, out parsedModel, out errors);
             Assert.IsTrue(parsed, "parsed");
             Assert.IsTrue(!errors.Any(), "No errors");
 
@@ -1652,7 +1652,7 @@ namespace EdmLibTests.FunctionalTests
 
             IEdmModel parsedModel;
             IEnumerable<EdmError> errors;
-            bool parsed = CsdlReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(csdl)) }, out parsedModel, out errors);
+            bool parsed = SchemaReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(csdl)) }, out parsedModel, out errors);
             Assert.IsTrue(parsed, "parsed");
             Assert.IsTrue(!errors.Any(), "No errors");
 
@@ -1852,7 +1852,7 @@ namespace EdmLibTests.FunctionalTests
 
             IEdmModel parsedModel;
             IEnumerable<EdmError> errs;
-            bool parsed = CsdlReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(edmx)) }, out parsedModel, out errs);
+            bool parsed = SchemaReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(edmx)) }, out parsedModel, out errs);
             Assert.IsTrue(parsed, "parsed");
 
             var parsedPersonType = parsedModel.FindType("Ns.Person") as IEdmEntityType;
@@ -1932,7 +1932,7 @@ namespace EdmLibTests.FunctionalTests
 
             IEdmModel parsedModel;
             IEnumerable<EdmError> errs;
-            bool parsed = CsdlReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(edmx)) }, out parsedModel, out errs);
+            bool parsed = SchemaReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(edmx)) }, out parsedModel, out errs);
             Assert.IsTrue(parsed, "parsed");
 
             var parsedPersonType = parsedModel.FindType("Ns.Person") as IEdmEntityType;
@@ -1991,7 +1991,7 @@ namespace EdmLibTests.FunctionalTests
 
             IEdmModel parsedModel;
             IEnumerable<EdmError> errs;
-            bool parsed = CsdlReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(edmx)) }, out parsedModel, out errs);
+            bool parsed = SchemaReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(edmx)) }, out parsedModel, out errs);
             Assert.IsFalse(parsed, "parsed");
             Assert.AreEqual(2, errs.Count());
             Assert.AreEqual("'Ns.Permissions/Read Ns.Color/Write' is not a valid enum member path.", errs.First().ErrorMessage);
@@ -2123,7 +2123,7 @@ namespace EdmLibTests.FunctionalTests
 
             IEdmModel parsedModel;
             IEnumerable<EdmError> errs;
-            bool parsed = CsdlReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(edmx)) }, out parsedModel, out errs);
+            bool parsed = SchemaReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(edmx)) }, out parsedModel, out errs);
             Assert.IsFalse(parsed, "parsed");
             Assert.AreEqual(2, errs.Count());
             Assert.AreEqual("The schema element 'EnumMemberReference' was not expected in the given context.", errs.First().ErrorMessage);
@@ -2209,7 +2209,7 @@ namespace EdmLibTests.FunctionalTests
 
             IEdmModel parsedModel;
             IEnumerable<EdmError> errs;
-            bool parsed = CsdlReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(expected)) }, out parsedModel, out errs);
+            bool parsed = SchemaReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(expected)) }, out parsedModel, out errs);
             Assert.IsTrue(parsed, "parsed");
             Assert.IsTrue(!errors.Any(), "No errors");
 
@@ -2685,7 +2685,7 @@ namespace EdmLibTests.FunctionalTests
             var csdls = new List<string>() { csdl };
             IEdmModel edmModel;
             IEnumerable<EdmError> errors;
-            bool isParsed = CsdlReader.TryParse(csdls.Select(n => XElement.Parse(n).CreateReader()), out edmModel, out errors);
+            bool isParsed = SchemaReader.TryParse(csdls.Select(n => XElement.Parse(n).CreateReader()), out edmModel, out errors);
 
             Assert.IsTrue(isParsed, "Expected the CSDL to be successfully parsed.");
             Assert.AreEqual(1, edmModel.VocabularyAnnotations.Count(), "Expected CSDL to have exactly one vocabulary annotation.");
@@ -2719,7 +2719,7 @@ namespace EdmLibTests.FunctionalTests
             var csdls = new List<string>() { csdl };
             IEdmModel edmModel;
             IEnumerable<EdmError> errors;
-            bool isParsed = CsdlReader.TryParse(csdls.Select(n => XElement.Parse(n).CreateReader()), out edmModel, out errors);
+            bool isParsed = SchemaReader.TryParse(csdls.Select(n => XElement.Parse(n).CreateReader()), out edmModel, out errors);
 
             Assert.IsTrue(isParsed, "Expected the CSDL to be successfully parsed.");
             Assert.AreEqual(1, edmModel.VocabularyAnnotations.Count(), "Expected CSDL to have exactly one vocabulary annotation.");
@@ -2754,7 +2754,7 @@ namespace EdmLibTests.FunctionalTests
             var csdls = new List<string>() { csdl };
             IEdmModel edmModel;
             IEnumerable<EdmError> errors;
-            bool isParsed = CsdlReader.TryParse(csdls.Select(n => XElement.Parse(n).CreateReader()), out edmModel, out errors);
+            bool isParsed = SchemaReader.TryParse(csdls.Select(n => XElement.Parse(n).CreateReader()), out edmModel, out errors);
 
             Assert.IsTrue(isParsed, "Expected the CSDL to be successfully parsed.");
             Assert.AreEqual(1, edmModel.VocabularyAnnotations.Count(), "Expected CSDL to have exactly one vocabulary annotation.");

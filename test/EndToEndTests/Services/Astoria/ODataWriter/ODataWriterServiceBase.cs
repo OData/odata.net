@@ -55,7 +55,7 @@ namespace Microsoft.Test.OData.Services.ODataWriterService
 
                     IEdmModel annotationsModel;
                     IEnumerable<EdmError> errors;
-                    bool parsed = CsdlReader.TryParse(xmlReaders, model, out annotationsModel, out errors);
+                    bool parsed = SchemaReader.TryParse(xmlReaders, model, out annotationsModel, out errors);
                     if (!parsed)
                     {
                         throw new EdmParseException(errors);

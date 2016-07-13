@@ -1598,7 +1598,7 @@ namespace EdmLibTests.FunctionalTests
 
             IEdmModel parsedModel;
             IEnumerable<EdmError> errors;
-            bool parsed = CsdlReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(outputText)) }, out parsedModel, out errors);
+            bool parsed = SchemaReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(outputText)) }, out parsedModel, out errors);
             Assert.IsTrue(parsed, "Parsing serialized model");
             Assert.IsTrue(errors.Count() == 0, "No errors");
 

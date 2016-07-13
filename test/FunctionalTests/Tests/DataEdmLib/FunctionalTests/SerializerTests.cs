@@ -214,7 +214,7 @@ namespace EdmLibTests.FunctionalTests
             var csdls = ModelBuilder.OperationReturnTypeWithDuplicateFacets();
             IEdmModel edmModel;
             IEnumerable<EdmError> errors;
-            var isParsed = CsdlReader.TryParse(csdls.Select(e => e.CreateReader()), out edmModel, out errors);
+            var isParsed = SchemaReader.TryParse(csdls.Select(e => e.CreateReader()), out edmModel, out errors);
 
             Assert.AreEqual(2, errors.Count(), "Expecting errors.");
             Assert.AreEqual(EdmErrorCode.UnexpectedXmlAttribute, errors.ElementAt(0).ErrorCode, "Invalid error code.");
@@ -227,7 +227,7 @@ namespace EdmLibTests.FunctionalTests
             var csdls = ModelBuilder.FunctionDuplicateReturnType();
             IEdmModel edmModel;
             IEnumerable<EdmError> errors;
-            var isParsed = CsdlReader.TryParse(csdls.Select(e => e.CreateReader()), out edmModel, out errors);
+            var isParsed = SchemaReader.TryParse(csdls.Select(e => e.CreateReader()), out edmModel, out errors);
 
             Assert.AreEqual(1, errors.Count(), "Expecting errors.");
             Assert.AreEqual(EdmErrorCode.UnexpectedXmlElement, errors.ElementAt(0).ErrorCode, "Invalid error code.");

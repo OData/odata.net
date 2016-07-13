@@ -326,7 +326,7 @@ namespace EdmLibTests.FunctionalTests
         {
             IEdmModel model;
             IEnumerable<EdmError> errors;
-            bool parsed = CsdlReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(inputText)) }, out model, out errors);
+            bool parsed = SchemaReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(inputText)) }, out model, out errors);
             Assert.IsTrue(parsed, "Model Parsed");
             Assert.IsTrue(errors.Count() == 0, "No Errors");
 
@@ -356,7 +356,7 @@ namespace EdmLibTests.FunctionalTests
             {
                 readers.Add(XmlReader.Create(new StringReader(s)));
             }
-            bool parsed = CsdlReader.TryParse(readers, out model, out errors);
+            bool parsed = SchemaReader.TryParse(readers, out model, out errors);
             Assert.IsTrue(parsed, "Model Parsed");
             Assert.IsTrue(errors.Count() == 0, "No Errors");
 

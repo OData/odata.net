@@ -491,7 +491,7 @@ namespace EdmLibTests.FunctionalTests
             IEnumerable<EdmError> parserErrors;
             var csdlsEdmVersionUpdated = csdls.Select(n => XElement.Parse(n.ToString().Replace(n.Name.NamespaceName, EdmLibCsdlContentGenerator.GetCsdlFullNamespace(edmVersion).NamespaceName)));
 
-            var isParsed = CsdlReader.TryParse(csdlsEdmVersionUpdated.Select(e => e.CreateReader()), out edmModel, out parserErrors);
+            var isParsed = SchemaReader.TryParse(csdlsEdmVersionUpdated.Select(e => e.CreateReader()), out edmModel, out parserErrors);
             if (!isParsed)
             {
                 // XSD verification is a sufficent condition, but not a necessary condition of EDMLib parser. 
