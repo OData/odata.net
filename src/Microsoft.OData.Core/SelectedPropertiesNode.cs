@@ -47,6 +47,9 @@ namespace Microsoft.OData
         /// <summary>The separator character used to separate paths from each other.</summary>
         private const char ItemSeparator = ',';
 
+        /// <summary>The special '*' segment indicating that all properties are selected.</summary>
+        private const string StarSegment = "*";
+
         /// <summary>The list of selected properties at the current level.</summary>
         private HashSet<string> selectedProperties;
 
@@ -460,7 +463,7 @@ namespace Microsoft.OData
 
             // last, try matching wildcards and specific names, but qualified with the namespace-qualified name.
             string qualifiedContainerName = operation.Namespace + ".";
-            yield return qualifiedContainerName + ProjectedPropertiesAnnotation.StarSegment;
+            yield return qualifiedContainerName + StarSegment;
             yield return qualifiedContainerName + operationName;
             yield return qualifiedContainerName + operationNameWithParameters;
         }
@@ -508,7 +511,7 @@ namespace Microsoft.OData
                 this.selectedProperties = CreateSelectedPropertiesHashSet();
             }
 
-            bool isStar = string.CompareOrdinal(ProjectedPropertiesAnnotation.StarSegment, currentSegment) == 0;
+            bool isStar = string.CompareOrdinal(StarSegment, currentSegment) == 0;
             bool isLastSegment = index == segments.Length - 1;
             if (!isLastSegment)
             {
@@ -618,7 +621,7 @@ namespace Microsoft.OData
 
             foreach (string selectItem in rawSelect)
             {
-                if (ProjectedPropertiesAnnotation.StarSegment == selectItem)
+                if (StarSegment == selectItem)
                 {
                     node.hasWildcard = true;
                 }

@@ -814,9 +814,6 @@
     <Compile Include="$(ODataCrossTargettingSourcePath)\PrimitiveConverter.cs">
       <Link>Microsoft\OData\Core\PrimitiveConverter.cs</Link>
     </Compile>
-    <Compile Include="$(ODataCrossTargettingSourcePath)\ProjectedPropertiesAnnotation.cs">
-      <Link>Microsoft\OData\Core\ProjectedPropertiesAnnotation.cs</Link>
-    </Compile>
     <Compile Include="$(ODataCrossTargettingSourcePath)\RawValueWriter.cs">
       <Link>Microsoft\OData\Core\RawValueWriter.cs</Link>
     </Compile>

@@ -240,9 +240,6 @@ namespace Microsoft.OData.Service.Serializers
 
                 // Because we are going to enumerate through these multiple times, create a list.
                 projectionNodes = projectionNodes.ToList();
-
-                // And add the annotation to tell ODataLib which properties to write into content (the projections)
-                entry.SetAnnotation(new ProjectedPropertiesAnnotation(projectionNodes.Select(p => p.PropertyName)));
             }
 
             // Populate the advertised actions

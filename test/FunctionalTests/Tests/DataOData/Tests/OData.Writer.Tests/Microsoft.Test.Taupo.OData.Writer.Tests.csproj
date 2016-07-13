@@ -140,7 +140,6 @@
     <Compile Include="Common\ODataPayloadKindUtils.cs" />
     <Compile Include="Json\JsonUtils.cs" />
     <Compile Include="ODataWriterTestsTestModule.cs" />
-    <Compile Include="Writer\WriterProjectedPropertyTests.cs" />
     <Compile Include="Writer\MessageWriterTests.cs" />
     <Compile Include="Writer\UriHandlingTests.cs" />
     <Compile Include="Writer\WriterActionAndFunctionTests.cs" />
@@ -454,9 +453,6 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Writer\WriterNavigationLinkTests.NavigationLinksInResponse.approved.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Writer\WriterProjectedPropertyTests.ProjectedPropertiesTest.approved.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Writer\WriterPropertyTests.NonNullablePropertyOnEntryTest.approved.txt">

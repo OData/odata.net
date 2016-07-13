@@ -321,7 +321,6 @@
     <Compile Include="ODataWriter.cs" />
     <Compile Include="ODataWriterCore.cs" />
     <Compile Include="PrimitiveConverter.cs" />
-    <Compile Include="ProjectedPropertiesAnnotation.cs" />
     <Compile Include="RawValueWriter.cs" />
     <Compile Include="ReadOnlyEnumerable.cs" />
     <Compile Include="ReadOnlyEnumerableExtensions.cs" />

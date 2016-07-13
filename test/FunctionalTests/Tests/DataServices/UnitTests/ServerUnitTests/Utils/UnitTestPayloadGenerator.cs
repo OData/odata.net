@@ -90,11 +90,6 @@ namespace AstoriaUnitTests.Tests
                 SerializationInfo = MySerializationInfo
             };
 
-            if (projectedProperties != null)
-            {
-                entry.SetAnnotation<ProjectedPropertiesAnnotation>(new ProjectedPropertiesAnnotation(projectedProperties));
-            }
-            
             entry.Properties = entity.GetType().GetProperties().Select(p => new ODataProperty() { Name = p.Name, Value = p.GetValue(entity, null) });
 
             writer.WriteStart(entry);

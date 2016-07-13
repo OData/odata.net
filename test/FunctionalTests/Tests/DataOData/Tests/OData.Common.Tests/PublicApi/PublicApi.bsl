@@ -4979,10 +4979,6 @@ public sealed class Microsoft.OData.ODataUrlKeyDelimiter {
 	Microsoft.OData.ODataUrlKeyDelimiter Slash  { public static get; }
 }
 
-public sealed class Microsoft.OData.ProjectedPropertiesAnnotation {
-	public ProjectedPropertiesAnnotation (System.Collections.Generic.IEnumerable`1[[System.String]] projectedPropertyNames)
-}
-
 public enum Microsoft.OData.Json.JsonNodeType : int {
 	EndArray = 4
 	EndObject = 2

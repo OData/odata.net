@@ -244,9 +244,6 @@ namespace Microsoft.OData.JsonLight
             // Write custom instance annotations
             this.jsonLightResourceSerializer.InstanceAnnotationWriter.WriteInstanceAnnotations(resource.InstanceAnnotations, resourceScope.InstanceAnnotationWriteTracker);
 
-            // Write the properties
-            ProjectedPropertiesAnnotation projectedProperties = GetProjectedPropertiesAnnotation(resourceScope);
-
             this.jsonLightOutputContext.PropertyCacheHandler.SetCurrentResourceScopeLevel(this.ScopeLevel);
 
             this.jsonLightResourceSerializer.JsonLightValueSerializer.AssertRecursionDepthIsZero();
@@ -254,8 +251,7 @@ namespace Microsoft.OData.JsonLight
                 this.ResourceType,
                 resource.Properties,
                 false /* isComplexValue */,
-                this.DuplicatePropertyNameChecker,
-                projectedProperties);
+                this.DuplicatePropertyNameChecker);
             this.jsonLightResourceSerializer.JsonLightValueSerializer.AssertRecursionDepthIsZero();
 
             // COMPAT 48: Position of navigation properties/links in JSON differs.

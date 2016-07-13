@@ -19,30 +19,6 @@ namespace Microsoft.OData
     internal static class WriterUtils
     {
         /// <summary>
-        /// Determines if a property should be written or skipped.
-        /// </summary>
-        /// <param name="projectedProperties">The projected properties annotation to use (can be null).</param>
-        /// <param name="propertyName">The name of the property to check.</param>
-        /// <returns>true if the property should be skipped, false to write the property.</returns>
-        internal static bool ShouldSkipProperty(this ProjectedPropertiesAnnotation projectedProperties, string propertyName)
-        {
-            if (projectedProperties == null)
-            {
-                return false;
-            }
-            else if (object.ReferenceEquals(ProjectedPropertiesAnnotation.EmptyProjectedPropertiesInstance, projectedProperties))
-            {
-                return true;
-            }
-            else if (object.ReferenceEquals(ProjectedPropertiesAnnotation.AllProjectedPropertiesInstance, projectedProperties))
-            {
-                return false;
-            }
-
-            return !projectedProperties.IsPropertyProjected(propertyName);
-        }
-
-        /// <summary>
         /// Remove the Edm. prefix from the type name if it is primitive type.
         /// </summary>
         /// <param name="typeName">The type name to remove the Edm. prefix</param>

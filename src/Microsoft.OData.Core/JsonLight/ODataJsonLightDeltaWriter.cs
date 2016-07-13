@@ -1202,15 +1202,12 @@ namespace Microsoft.OData.JsonLight
         /// <param name="resource">The resource to write properties for.</param>
         private void WriteDeltaResourceProperties(ODataResource resource)
         {
-            ProjectedPropertiesAnnotation projectedProperties = GetProjectedPropertiesAnnotation(this.CurrentDeltaResourceScope);
-
             this.jsonLightResourceSerializer.JsonLightValueSerializer.AssertRecursionDepthIsZero();
             this.jsonLightResourceSerializer.WriteProperties(
                 this.DeltaResourceType,
                 resource.Properties,
                 false /* isComplexValue */,
-                this.DuplicatePropertyNameChecker,
-                projectedProperties);
+                this.DuplicatePropertyNameChecker);
             this.jsonLightResourceSerializer.JsonLightValueSerializer.AssertRecursionDepthIsZero();
         }
 
@@ -1801,19 +1798,6 @@ namespace Microsoft.OData.JsonLight
         private static bool IsExpandedNavigationPropertyState(WriterState state)
         {
             return state == WriterState.ExpandedNavigationProperty;
-        }
-
-        /// <summary>
-        /// Gets the projected properties annotation for the specified scope.
-        /// </summary>
-        /// <param name="currentScope">The scope to get the projected properties annotation for.</param>
-        /// <returns>The projected properties annotation for <paramref name="currentScope"/>.</returns>
-        private static ProjectedPropertiesAnnotation GetProjectedPropertiesAnnotation(Scope currentScope)
-        {
-            ExceptionUtils.CheckArgumentNotNull(currentScope, "currentScope");
-
-            ODataItem currentItem = currentScope.Item;
-            return currentItem == null ? null : currentItem.GetAnnotation<ProjectedPropertiesAnnotation>();
         }
 
         #endregion

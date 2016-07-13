@@ -86,8 +86,7 @@ namespace Microsoft.OData.JsonLight
                         null /*owningType*/,
                         true /* isTopLevel */,
                         false /* allowStreamProperty */,
-                        this.CreateDuplicatePropertyNameChecker(),
-                        null /* projectedProperties */);
+                        this.CreateDuplicatePropertyNameChecker());
                     this.JsonLightValueSerializer.AssertRecursionDepthIsZero();
 
                     this.JsonWriter.EndObjectScope();
@@ -104,13 +103,11 @@ namespace Microsoft.OData.JsonLight
         /// are allowed as named stream properties should only be defined on ODataResource instances
         /// </param>
         /// <param name="duplicatePropertyNameChecker">The DuplicatePropertyNameChecker to use.</param>
-        /// <param name="projectedProperties">Set of projected properties, or null if all properties should be written.</param>
         internal void WriteProperties(
             IEdmStructuredType owningType,
             IEnumerable<ODataProperty> properties,
             bool isComplexValue,
-            IDuplicatePropertyNameChecker duplicatePropertyNameChecker,
-            ProjectedPropertiesAnnotation projectedProperties)
+            IDuplicatePropertyNameChecker duplicatePropertyNameChecker)
         {
             if (properties == null)
             {
@@ -124,8 +121,7 @@ namespace Microsoft.OData.JsonLight
                     owningType,
                     false /* isTopLevel */,
                     !isComplexValue,
-                    duplicatePropertyNameChecker,
-                    projectedProperties);
+                    duplicatePropertyNameChecker);
             }
         }
 
@@ -167,15 +163,13 @@ namespace Microsoft.OData.JsonLight
         /// <param name="allowStreamProperty">Should pass in true if we are writing a property of an ODataResource instance, false otherwise.
         /// Named stream properties should only be defined on ODataResource instances.</param>
         /// <param name="duplicatePropertyNameChecker">The DuplicatePropertyNameChecker to use.</param>
-        /// <param name="projectedProperties">Set of projected properties, or null if all properties should be written.</param>
         [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling", Justification = "Splitting the code would make the logic harder to understand; class coupling is only slightly above threshold.")]
         private void WriteProperty(
             ODataProperty property,
             IEdmStructuredType owningType,
             bool isTopLevel,
             bool allowStreamProperty,
-            IDuplicatePropertyNameChecker duplicatePropertyNameChecker,
-            ProjectedPropertiesAnnotation projectedProperties)
+            IDuplicatePropertyNameChecker duplicatePropertyNameChecker)
         {
             WriterValidationUtils.ValidatePropertyNotNull(property);
 
@@ -192,11 +186,6 @@ namespace Microsoft.OData.JsonLight
             }
 
             WriterValidationUtils.ValidatePropertyDefined(this.currentPropertyInfo, this.MessageWriterSettings.ThrowOnUndeclaredPropertyForNonOpenType);
-
-            if (projectedProperties.ShouldSkipProperty(propertyName))
-            {
-                return;
-            }
 
             duplicatePropertyNameChecker.ValidatePropertyUniqueness(property);
 

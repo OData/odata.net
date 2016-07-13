@@ -594,19 +594,6 @@ namespace Microsoft.OData
         }
 
         /// <summary>
-        /// Gets the projected properties annotation for the specified scope.
-        /// </summary>
-        /// <param name="currentScope">The scope to get the projected properties annotation for.</param>
-        /// <returns>The projected properties annotation for <paramref name="currentScope"/>.</returns>
-        protected static ProjectedPropertiesAnnotation GetProjectedPropertiesAnnotation(Scope currentScope)
-        {
-            ExceptionUtils.CheckArgumentNotNull(currentScope, "currentScope");
-
-            ODataItem currentItem = currentScope.Item;
-            return currentItem == null ? null : currentItem.GetAnnotation<ProjectedPropertiesAnnotation>();
-        }
-
-        /// <summary>
         /// Check if the object has been disposed; called from all public API methods. Throws an ObjectDisposedException if the object
         /// has already been disposed.
         /// </summary>
@@ -1390,8 +1377,6 @@ namespace Microsoft.OData
 
                 if (!skipWriting)
                 {
-                    ProjectedPropertiesAnnotation projectedProperties = GetProjectedPropertiesAnnotation(currentScope);
-                    skipWriting = projectedProperties.ShouldSkipProperty(nestedResourceInfo.Name);
                     selectedProperties = currentScope.SelectedProperties.GetSelectedPropertiesForNavigationProperty(currentScope.ResourceType, nestedResourceInfo.Name);
 
                     if (this.outputContext.WritingResponse)
