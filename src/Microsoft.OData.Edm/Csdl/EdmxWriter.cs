@@ -24,9 +24,9 @@ namespace Microsoft.OData.Edm.Csdl
         private readonly XmlWriter writer;
         private readonly Version edmxVersion;
         private readonly string edmxNamespace;
-        private readonly EdmxTarget target;
+        private readonly CsdlTarget target;
 
-        private EdmxWriter(IEdmModel model, IEnumerable<EdmSchema> schemas, XmlWriter writer, Version edmxVersion, EdmxTarget target)
+        private EdmxWriter(IEdmModel model, IEnumerable<EdmSchema> schemas, XmlWriter writer, Version edmxVersion, CsdlTarget target)
         {
             this.model = model;
             this.schemas = schemas;
@@ -46,7 +46,7 @@ namespace Microsoft.OData.Edm.Csdl
         /// <param name="target">Target implementation of the EDMX being generated.</param>
         /// <param name="errors">Errors that prevented successful serialization, or no errors if serialization was successful. </param>
         /// <returns>A value indicating whether serialization was successful.</returns>
-        public static bool TryWriteEdmx(IEdmModel model, XmlWriter writer, EdmxTarget target, out IEnumerable<EdmError> errors)
+        public static bool TryWriteEdmx(IEdmModel model, XmlWriter writer, CsdlTarget target, out IEnumerable<EdmError> errors)
         {
             EdmUtil.CheckArgumentNull(model, "model");
             EdmUtil.CheckArgumentNull(writer, "writer");
@@ -86,14 +86,14 @@ namespace Microsoft.OData.Edm.Csdl
         {
             switch (this.target)
             {
-                case EdmxTarget.EntityFramework:
+                case CsdlTarget.EntityFramework:
                     this.WriteEFEdmx();
                     break;
-                case EdmxTarget.OData:
+                case CsdlTarget.OData:
                     this.WriteODataEdmx();
                     break;
                 default:
-                    throw new InvalidOperationException(Edm.Strings.UnknownEnumVal_EdmxTarget(this.target.ToString()));
+                    throw new InvalidOperationException(Edm.Strings.UnknownEnumVal_CsdlTarget(this.target.ToString()));
             }
         }
 

@@ -735,7 +735,7 @@ namespace Microsoft.OData.Tests.UriParser
                 IEnumerable<EdmError> errors;
                 using (var writer = document.CreateWriter())
                 {
-                    EdmxWriter.TryWriteEdmx(model, writer, EdmxTarget.OData, out errors).Should().BeTrue();
+                    EdmxWriter.TryWriteEdmx(model, writer, CsdlTarget.OData, out errors).Should().BeTrue();
                 }
 
                 string doc = document.ToString();

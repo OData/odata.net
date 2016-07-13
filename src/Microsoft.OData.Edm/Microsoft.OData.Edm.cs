@@ -301,7 +301,7 @@ namespace Microsoft.OData.Edm {
         internal const string UnknownEnumVal_TypeKind = "UnknownEnumVal_TypeKind";
         internal const string UnknownEnumVal_PrimitiveKind = "UnknownEnumVal_PrimitiveKind";
         internal const string UnknownEnumVal_ContainerElementKind = "UnknownEnumVal_ContainerElementKind";
-        internal const string UnknownEnumVal_EdmxTarget = "UnknownEnumVal_EdmxTarget";
+        internal const string UnknownEnumVal_CsdlTarget = "UnknownEnumVal_CsdlTarget";
         internal const string UnknownEnumVal_PropertyKind = "UnknownEnumVal_PropertyKind";
         internal const string UnknownEnumVal_ExpressionKind = "UnknownEnumVal_ExpressionKind";
         internal const string Bad_AmbiguousElementBinding = "Bad_AmbiguousElementBinding";

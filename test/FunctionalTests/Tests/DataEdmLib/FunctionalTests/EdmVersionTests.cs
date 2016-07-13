@@ -205,7 +205,7 @@ namespace EdmLibTests.FunctionalTests
 
             using (XmlWriter xw = XmlWriter.Create(sw, settings))
             {
-                EdmxWriter.TryWriteEdmx(model, xw, EdmxTarget.OData, out errors);
+                EdmxWriter.TryWriteEdmx(model, xw, CsdlTarget.OData, out errors);
                 xw.Close();
 
                 parsed = EdmxReader.TryParse(XmlReader.Create(new StringReader(sw.ToString())), out model, out errors);
@@ -255,7 +255,7 @@ namespace EdmLibTests.FunctionalTests
             using (XmlWriter xw = XmlWriter.Create(sw, settings))
             {
                 model.SetEdmxVersion(CsdlConstants.EdmxVersionLatest);
-                EdmxWriter.TryWriteEdmx(model, xw, EdmxTarget.OData, out errors);
+                EdmxWriter.TryWriteEdmx(model, xw, CsdlTarget.OData, out errors);
                 xw.Close();
 
                 parsed = EdmxReader.TryParse(XmlReader.Create(new StringReader(sw.ToString())), out model, out errors);
@@ -305,7 +305,7 @@ namespace EdmLibTests.FunctionalTests
             using (XmlWriter xw = XmlWriter.Create(sw, settings))
             {
                 model.SetEdmxVersion(CsdlConstants.EdmxVersionLatest);
-                EdmxWriter.TryWriteEdmx(model, xw, EdmxTarget.OData, out errors);
+                EdmxWriter.TryWriteEdmx(model, xw, CsdlTarget.OData, out errors);
                 xw.Close();
 
                 parsed = EdmxReader.TryParse(XmlReader.Create(new StringReader(sw.ToString())), out model, out errors);
@@ -389,7 +389,7 @@ namespace EdmLibTests.FunctionalTests
                 model.SetEdmxVersion(new Version(1, 123));
                 try
                 {
-                    EdmxWriter.TryWriteEdmx(model, xw, EdmxTarget.OData, out errors);
+                    EdmxWriter.TryWriteEdmx(model, xw, CsdlTarget.OData, out errors);
                 }
                 catch (Exception e)
                 {

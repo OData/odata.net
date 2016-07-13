@@ -2534,14 +2534,14 @@ public sealed class Microsoft.OData.Edm.EdmNavigationPropertyInfo {
 	public Microsoft.OData.Edm.EdmNavigationPropertyInfo Clone ()
 }
 
+public enum Microsoft.OData.Edm.Csdl.CsdlTarget : int {
+	EntityFramework = 0
+	OData = 1
+}
+
 public enum Microsoft.OData.Edm.Csdl.EdmVocabularyAnnotationSerializationLocation : int {
 	Inline = 0
 	OutOfLine = 1
-}
-
-public enum Microsoft.OData.Edm.Csdl.EdmxTarget : int {
-	EntityFramework = 0
-	OData = 1
 }
 
 public sealed class Microsoft.OData.Edm.Csdl.CsdlConstants {
@@ -2676,7 +2676,7 @@ public class Microsoft.OData.Edm.Csdl.EdmxReader {
 }
 
 public class Microsoft.OData.Edm.Csdl.EdmxWriter {
-	public static bool TryWriteEdmx (Microsoft.OData.Edm.IEdmModel model, System.Xml.XmlWriter writer, Microsoft.OData.Edm.Csdl.EdmxTarget target, out System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.Validation.EdmError]]& errors)
+	public static bool TryWriteEdmx (Microsoft.OData.Edm.IEdmModel model, System.Xml.XmlWriter writer, Microsoft.OData.Edm.Csdl.CsdlTarget target, out System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.Validation.EdmError]]& errors)
 }
 
 public sealed class Microsoft.OData.Edm.Csdl.EdmxReaderSettings {

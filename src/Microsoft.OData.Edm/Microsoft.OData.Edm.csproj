@@ -48,7 +48,7 @@
     <Compile Include="Csdl\CsdlLocation.cs" />
     <Compile Include="Csdl\EdmParseException.cs" />
     <Compile Include="Csdl\EdmxReaderSettings.cs" />
-    <Compile Include="Csdl\EdmxTarget.cs" />
+    <Compile Include="Csdl\CsdlTarget.cs" />
     <Compile Include="Csdl\EdmValueParser.cs" />
     <Compile Include="Csdl\EdmValueWriter.cs" />
     <Compile Include="Csdl\Parsing\Ast\CsdlNavigationPropertyPathExpression.cs" />

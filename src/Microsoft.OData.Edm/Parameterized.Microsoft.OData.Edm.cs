@@ -1752,10 +1752,10 @@ namespace Microsoft.OData.Edm {
         }
 
         /// <summary>
-        /// A string like "Invalid edmx target: '{0}'"
+        /// A string like "Invalid CSDL target: '{0}'"
         /// </summary>
-        internal static string UnknownEnumVal_EdmxTarget(object p0) {
-            return Microsoft.OData.Edm.EntityRes.GetString(Microsoft.OData.Edm.EntityRes.UnknownEnumVal_EdmxTarget, p0);
+        internal static string UnknownEnumVal_CsdlTarget(object p0) {
+            return Microsoft.OData.Edm.EntityRes.GetString(Microsoft.OData.Edm.EntityRes.UnknownEnumVal_CsdlTarget, p0);
         }
 
         /// <summary>

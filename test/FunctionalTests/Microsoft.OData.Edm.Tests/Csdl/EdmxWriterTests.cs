@@ -42,7 +42,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl
             model.SetOptimisticConcurrencyAnnotation(set1, new IEdmStructuralProperty[] { entityId, timeVer });
             entityContainer.AddElement(set1);
 
-            string csdlStr = GetEdmx(model, EdmxTarget.OData);
+            string csdlStr = GetEdmx(model, CsdlTarget.OData);
             Assert.Equal(@"<?xml version=""1.0"" encoding=""utf-16""?><edmx:Edmx Version=""4.0"" xmlns:edmx=""http://docs.oasis-open.org/odata/ns/edmx""><edmx:DataServices><Schema Namespace=""NS1"" xmlns=""http://docs.oasis-open.org/odata/ns/edm""><EntityType Name=""Product""><Key><PropertyRef Name=""Id"" /></Key><Property Name=""Id"" Type=""Edm.Int32"" Nullable=""false""><Annotation Term=""Org.OData.Core.V1.Computed"" Bool=""true"" /></Property><Property Name=""Name"" Type=""Edm.String"" Nullable=""false"" /><Property Name=""UpdatedTime"" Type=""Edm.Date"" Nullable=""false""><Annotation Term=""Org.OData.Core.V1.Computed"" Bool=""true"" /></Property></EntityType><EntityContainer Name=""Container""><EntitySet Name=""Products"" EntityType=""NS1.Product""><Annotation Term=""Org.OData.Core.V1.OptimisticConcurrency""><Collection><PropertyPath>Id</PropertyPath><PropertyPath>UpdatedTime</PropertyPath></Collection></Annotation></EntitySet></EntityContainer></Schema></edmx:DataServices></edmx:Edmx>", csdlStr);
         }
 
@@ -104,7 +104,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl
             entityContainer.AddElement(cities);
             entityContainer.AddElement(countries);
 
-            string actual = GetEdmx(model, EdmxTarget.OData);
+            string actual = GetEdmx(model, CsdlTarget.OData);
 
             string expected =
                 "<?xml version=\"1.0\" encoding=\"utf-16\"?><edmx:Edmx Version=\"4.0\" xmlns:edmx=\"http://docs.oasis-open.org/odata/ns/edmx\">" +
@@ -185,7 +185,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl
             entityContainer.AddElement(entites);
             entityContainer.AddElement(navEntities);
 
-            string actual = GetEdmx(model, EdmxTarget.OData);
+            string actual = GetEdmx(model, CsdlTarget.OData);
 
             string expected = "<?xml version=\"1.0\" encoding=\"utf-16\"?><edmx:Edmx Version=\"4.0\" xmlns:edmx=\"http://docs.oasis-open.org/odata/ns/edmx\">" +
                               "<edmx:DataServices><Schema Namespace=\"DefaultNs\" xmlns=\"http://docs.oasis-open.org/odata/ns/edm\">" +
@@ -231,7 +231,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl
 
         #endregion
 
-        private string GetEdmx(IEdmModel model, EdmxTarget target)
+        private string GetEdmx(IEdmModel model, CsdlTarget target)
         {
             string edmx = string.Empty;
 

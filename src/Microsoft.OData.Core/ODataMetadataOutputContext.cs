@@ -103,7 +103,7 @@ namespace Microsoft.OData
             this.AssertSynchronous();
 
             IEnumerable<EdmError> errors;
-            if (!EdmxWriter.TryWriteEdmx(this.Model, this.xmlWriter, EdmxTarget.OData, out errors))
+            if (!EdmxWriter.TryWriteEdmx(this.Model, this.xmlWriter, CsdlTarget.OData, out errors))
             {
                 Debug.Assert(errors != null, "errors != null");
 

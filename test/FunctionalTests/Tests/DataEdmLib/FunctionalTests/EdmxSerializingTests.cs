@@ -59,7 +59,7 @@ namespace EdmLibTests.FunctionalTests
   </edmx:Runtime>
 </edmx:Edmx>";
 
-            VerifyResult(inputText, expectedResult, EdmxTarget.EntityFramework);
+            VerifyResult(inputText, expectedResult, CsdlTarget.EntityFramework);
         }
 
         [TestMethod]
@@ -101,7 +101,7 @@ namespace EdmLibTests.FunctionalTests
   </edmx:Runtime>
 </edmx:Edmx>";
 
-            VerifyResult(new string[] { inputText1, inputText2 }, expectedResult, EdmxTarget.EntityFramework);
+            VerifyResult(new string[] { inputText1, inputText2 }, expectedResult, CsdlTarget.EntityFramework);
         }
 
         [TestMethod]
@@ -139,7 +139,7 @@ namespace EdmLibTests.FunctionalTests
   </edmx:DataServices>
 </edmx:Edmx>";
 
-            VerifyResult(inputText, expectedResult, EdmxTarget.OData);
+            VerifyResult(inputText, expectedResult, CsdlTarget.OData);
         }
 
         [TestMethod]
@@ -179,7 +179,7 @@ namespace EdmLibTests.FunctionalTests
   </edmx:DataServices>
 </edmx:Edmx>";
 
-            VerifyResult(new string[] { inputText1, inputText2 }, expectedResult, EdmxTarget.OData);
+            VerifyResult(new string[] { inputText1, inputText2 }, expectedResult, CsdlTarget.OData);
         }
 
         [TestMethod]
@@ -240,7 +240,7 @@ namespace EdmLibTests.FunctionalTests
   </edmx:Runtime>
 </edmx:Edmx>";
 
-            VerifyResult(new string[] { inputText1, inputText2 }, expectedResult, EdmxTarget.EntityFramework,
+            VerifyResult(new string[] { inputText1, inputText2 }, expectedResult, CsdlTarget.EntityFramework,
                 model =>
                 {
                     Assert.AreEqual("Mumble", model.EntityContainer.Namespace, "GetEntityContainerSchemaNamespace check");
@@ -272,7 +272,7 @@ namespace EdmLibTests.FunctionalTests
   </edmx:Runtime>
 </edmx:Edmx>";
 
-            VerifyResult(new string[] { inputText1 }, expectedResult, EdmxTarget.EntityFramework,
+            VerifyResult(new string[] { inputText1 }, expectedResult, CsdlTarget.EntityFramework,
                 model =>
                 {
                     Assert.AreEqual("Grumble", model.EntityContainer.Namespace, "GetEntityContainerSchemaNamespace check");
@@ -306,7 +306,7 @@ namespace EdmLibTests.FunctionalTests
 
             try
             {
-                EdmxWriter.TryWriteEdmx(null, XmlWriter.Create(new StringWriter()), EdmxTarget.EntityFramework, out errors);
+                EdmxWriter.TryWriteEdmx(null, XmlWriter.Create(new StringWriter()), CsdlTarget.EntityFramework, out errors);
             }
             catch (Exception e)
             {
@@ -314,7 +314,7 @@ namespace EdmLibTests.FunctionalTests
             }
             try
             {
-                EdmxWriter.TryWriteEdmx(model, null, EdmxTarget.EntityFramework, out errors);
+                EdmxWriter.TryWriteEdmx(model, null, CsdlTarget.EntityFramework, out errors);
             }
             catch (Exception e)
             {
@@ -322,7 +322,7 @@ namespace EdmLibTests.FunctionalTests
             }
         }
 
-        void VerifyResult(string inputText, string expectedResult, EdmxTarget target)
+        void VerifyResult(string inputText, string expectedResult, CsdlTarget target)
         {
             IEdmModel model;
             IEnumerable<EdmError> errors;
@@ -342,12 +342,12 @@ namespace EdmLibTests.FunctionalTests
             Assert.AreEqual(expectedResult, outputText, "Expected Result = Output");
         }
 
-        void VerifyResult(string[] inputText, string expectedResult, EdmxTarget target)
+        void VerifyResult(string[] inputText, string expectedResult, CsdlTarget target)
         {
             VerifyResult(inputText, expectedResult, target, null);
         }
 
-        void VerifyResult(string[] inputText, string expectedResult, EdmxTarget target, Action<IEdmModel> visitModel)
+        void VerifyResult(string[] inputText, string expectedResult, CsdlTarget target, Action<IEdmModel> visitModel)
         {
             IEdmModel model;
             IEnumerable<EdmError> errors;
