@@ -168,7 +168,7 @@ namespace EdmLibTests.FunctionalUtilities
             List<StringBuilder> stringBuilders = new List<StringBuilder>();
             List<XmlWriter> xmlWriters = new List<XmlWriter>();
             edmModel.SetEdmVersion(this.toProductVersionlookup[edmVersion]);
-            edmModel.TryWriteCsdl(
+            edmModel.TryWriteSchema(
                 s =>
                 {
                     stringBuilders.Add(new StringBuilder());

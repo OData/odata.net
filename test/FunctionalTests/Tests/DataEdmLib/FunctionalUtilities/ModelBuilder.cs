@@ -982,7 +982,7 @@ namespace EdmLibTests.FunctionalUtilities
             var stringBuilder = new StringBuilder();
             var xmlWriter = XmlWriter.Create(stringBuilder);
             IEnumerable<EdmError> errors;
-            if (!model.TryWriteCsdl((s) => xmlWriter, out errors) || errors.Any())
+            if (!model.TryWriteSchema((s) => xmlWriter, out errors) || errors.Any())
             {
                 ExceptionUtilities.Assert(false, "Failed to write CSDL: " + string.Join(",", errors.Select(e => e.ErrorMessage)));
             }

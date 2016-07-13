@@ -1068,7 +1068,7 @@ namespace EdmLibTests.FunctionalTests
             settings.Indent = true;
             settings.Encoding = System.Text.Encoding.UTF8;
             XmlWriter xw = XmlWriter.Create(sw, settings);
-            model.TryWriteCsdl(xw, out errors);
+            model.TryWriteSchema(xw, out errors);
             xw.Flush();
             xw.Close();
             var actual = sw.ToString();
@@ -1186,7 +1186,7 @@ namespace EdmLibTests.FunctionalTests
             settings.Indent = true;
             settings.Encoding = System.Text.Encoding.UTF8;
             XmlWriter xw = XmlWriter.Create(sw, settings);
-            model.TryWriteCsdl(xw, out errors);
+            model.TryWriteSchema(xw, out errors);
             xw.Flush();
             xw.Close();
             var actual = sw.ToString();
@@ -1251,7 +1251,7 @@ namespace EdmLibTests.FunctionalTests
             settings.Indent = true;
             settings.Encoding = System.Text.Encoding.UTF8;
             XmlWriter xw = XmlWriter.Create(sw, settings);
-            model.TryWriteCsdl(xw, out errors);
+            model.TryWriteSchema(xw, out errors);
             xw.Flush();
             xw.Close();
             var actual = sw.ToString();
@@ -1433,7 +1433,7 @@ namespace EdmLibTests.FunctionalTests
             settings.Indent = true;
             settings.Encoding = System.Text.Encoding.UTF8;
             XmlWriter xw = XmlWriter.Create(sw, settings);
-            model.TryWriteCsdl(xw, out errors);
+            model.TryWriteSchema(xw, out errors);
             xw.Flush();
             xw.Close();
             var actual = sw.ToString();
@@ -1557,7 +1557,7 @@ namespace EdmLibTests.FunctionalTests
             settings.Indent = true;
             settings.Encoding = System.Text.Encoding.UTF8;
             XmlWriter xw = XmlWriter.Create(sw, settings);
-            model.TryWriteCsdl(xw, out errors);
+            model.TryWriteSchema(xw, out errors);
             xw.Flush();
             xw.Close();
             var actual = sw.ToString();
@@ -1790,7 +1790,7 @@ namespace EdmLibTests.FunctionalTests
             settings.Indent = true;
             settings.Encoding = System.Text.Encoding.UTF8;
             XmlWriter xw = XmlWriter.Create(sw, settings);
-            model.TryWriteCsdl(xw, out errors);
+            model.TryWriteSchema(xw, out errors);
             xw.Flush();
             xw.Close();
             var actual = sw.ToString();
@@ -2081,7 +2081,7 @@ namespace EdmLibTests.FunctionalTests
             settings.Indent = true;
             settings.Encoding = System.Text.Encoding.UTF8;
             XmlWriter xw = XmlWriter.Create(sw, settings);
-            model.TryWriteCsdl(xw, out errors);
+            model.TryWriteSchema(xw, out errors);
             xw.Flush();
             xw.Close();
             var actual = sw.ToString();
@@ -2200,7 +2200,7 @@ namespace EdmLibTests.FunctionalTests
             settings.Indent = true;
             settings.Encoding = System.Text.Encoding.UTF8;
             XmlWriter xw = XmlWriter.Create(sw, settings);
-            model.TryWriteCsdl(xw, out errors);
+            model.TryWriteSchema(xw, out errors);
             xw.Flush();
             xw.Close();
             var actual = sw.ToString();

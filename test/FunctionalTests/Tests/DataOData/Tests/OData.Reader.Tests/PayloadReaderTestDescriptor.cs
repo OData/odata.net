@@ -754,7 +754,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
                 List<XmlWriter> xmlWriters = new List<XmlWriter>();
                 IEnumerable<EdmError> errors;
                 this.PayloadEdmModel.SetEdmVersion(Microsoft.OData.Edm.EdmConstants.EdmVersionLatest);
-                this.PayloadEdmModel.TryWriteCsdl(
+                this.PayloadEdmModel.TryWriteSchema(
                     s =>
                     {
                         stringBuilders.Add(new StringBuilder());

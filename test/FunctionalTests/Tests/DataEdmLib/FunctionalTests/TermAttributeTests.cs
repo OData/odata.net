@@ -94,7 +94,7 @@ namespace EdmLibTests.FunctionalTests
             List<XmlWriter> xmlWriters = new List<XmlWriter>();
             IEnumerable<EdmError> errors;
 
-            model.TryWriteCsdl(
+            model.TryWriteSchema(
                 s =>
                 {
                     stringBuilders.Add(new StringBuilder());

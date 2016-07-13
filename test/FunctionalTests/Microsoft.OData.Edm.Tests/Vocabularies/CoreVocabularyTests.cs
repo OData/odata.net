@@ -125,7 +125,7 @@ namespace Microsoft.OData.Edm.Tests.Vocabularies
 
             IEnumerable<EdmError> errors;
             XmlWriter xw = XmlWriter.Create(sw, settings);
-            coreVocModel.TryWriteCsdl(xw, out errors);
+            coreVocModel.TryWriteSchema(xw, out errors);
             xw.Flush();
             xw.Close();
             string output = sw.ToString();

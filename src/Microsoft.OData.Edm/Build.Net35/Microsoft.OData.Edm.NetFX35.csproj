@@ -605,9 +605,6 @@
     <Compile Include="$(EdmLibCrossTargettingSourcePath)\ExtensionMethods\ExtensionMethods.cs">
       <Link>Microsoft\OData\Edm\ExtensionMethods\ExtensionMethods.cs</Link>
     </Compile>
-    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\CsdlWriter.cs">
-      <Link>Microsoft\OData\Edm\Csdl\CsdlWriter.cs</Link>
-    </Compile>
     <Compile Include="$(EdmLibCrossTargettingSourcePath)\Cache.cs">
       <Link>Microsoft\OData\Edm\Cache.cs</Link>
     </Compile>
@@ -688,6 +685,9 @@
     </Compile>
     <Compile Include="..\Csdl\SchemaReader.cs">
       <Link>Microsoft\OData\Edm\Csdl\SchemaReader.cs</Link>
+    </Compile>
+    <Compile Include="..\Csdl\SchemaWriter.cs">
+      <Link>Microsoft\OData\Edm\Csdl\SchemaWriter.cs</Link>
     </Compile>
     <Compile Include="..\Csdl\Semantics\CsdlSemanticsTerm.cs">
       <Link>Microsoft\OData\Edm\Csdl\Semantics\CsdlSemanticsTerm.cs</Link>

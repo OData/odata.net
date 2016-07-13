@@ -548,7 +548,7 @@ namespace EdmLibTests.FunctionalTests
                     {0, 0, EdmErrorCode.SingleFileExpected},
                 };
                 IEnumerable<EdmError> actualSerializationErrors;
-                model.TryWriteCsdl(xw, out actualSerializationErrors);
+                model.TryWriteSchema(xw, out actualSerializationErrors);
                 CompareErrors(actualSerializationErrors, expectedSerializationErrors);
             }
         }
@@ -1153,7 +1153,7 @@ namespace EdmLibTests.FunctionalTests
 
             try
             {
-                model.TryWriteCsdl((XmlWriter)null, out errors);
+                model.TryWriteSchema((XmlWriter)null, out errors);
             }
             catch (Exception e)
             {
@@ -1161,7 +1161,7 @@ namespace EdmLibTests.FunctionalTests
             }
             try
             {
-                model.TryWriteCsdl((Func<string, XmlWriter>)null, out errors);
+                model.TryWriteSchema((Func<string, XmlWriter>)null, out errors);
             }
             catch (Exception e)
             {
@@ -1169,7 +1169,7 @@ namespace EdmLibTests.FunctionalTests
             }
             try
             {
-                model.TryWriteCsdl(s => null, out errors);
+                model.TryWriteSchema(s => null, out errors);
             }
             catch (Exception e)
             {
@@ -1533,7 +1533,7 @@ namespace EdmLibTests.FunctionalTests
             settings.Indent = true;
             settings.Encoding = System.Text.Encoding.UTF8;
             XmlWriter xw = XmlWriter.Create(sw, settings);
-            model.TryWriteCsdl(xw, out errors);
+            model.TryWriteSchema(xw, out errors);
             xw.Flush();
             xw.Close();
             string outputText = sw.ToString();
@@ -1569,7 +1569,7 @@ namespace EdmLibTests.FunctionalTests
             Assert.IsTrue(errors.Count() == 0, "No errors");
 
             IEnumerator<XmlWriter> writerEnumerator = writers.GetEnumerator();
-            model.TryWriteCsdl(s => { writerEnumerator.MoveNext(); return writerEnumerator.Current; }, out errors);
+            model.TryWriteSchema(s => { writerEnumerator.MoveNext(); return writerEnumerator.Current; }, out errors);
 
             foreach (XmlWriter xw in writers)
             {

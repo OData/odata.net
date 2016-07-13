@@ -109,7 +109,7 @@ namespace EdmLibTests.FunctionalTests
             StringWriter actualResult = new StringWriter();
             XmlWriter xw = XmlWriter.Create(actualResult);
             IEnumerable<EdmError> errors;
-            expectedModel.TryWriteCsdl(xw, out errors);
+            expectedModel.TryWriteSchema(xw, out errors);
             xw.Flush();
             xw.Close();
 
@@ -127,7 +127,7 @@ namespace EdmLibTests.FunctionalTests
             StringWriter actualResult = new StringWriter();
             XmlWriter xw = XmlWriter.Create(actualResult);
             IEnumerable<EdmError> errors;
-            expectedModel.TryWriteCsdl(xw, out errors);
+            expectedModel.TryWriteSchema(xw, out errors);
             xw.Flush();
             xw.Close();
 

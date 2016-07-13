@@ -62,7 +62,7 @@ namespace EdmLibTests.FunctionalTests
 
             var sw = new StringWriter();
             var w = XmlWriter.Create(sw, new XmlWriterSettings() { Indent = true });
-            model.TryWriteCsdl(w, out errors);
+            model.TryWriteSchema(w, out errors);
             w.Close();
             Assert.AreEqual(
 @"<?xml version=""1.0"" encoding=""utf-16""?>
@@ -93,7 +93,7 @@ namespace EdmLibTests.FunctionalTests
             Assert.IsTrue(model.Validate(out errors), "validate2");
             sw = new StringWriter();
             w = XmlWriter.Create(sw, new XmlWriterSettings() { Indent = true });
-            model.TryWriteCsdl(w, out errors);
+            model.TryWriteSchema(w, out errors);
             w.Close();
             Assert.AreEqual(
 @"<?xml version=""1.0"" encoding=""utf-16""?>
@@ -164,7 +164,7 @@ namespace EdmLibTests.FunctionalTests
 
             var sw = new StringWriter();
             var w = XmlWriter.Create(sw, new XmlWriterSettings() { Indent = true });
-            model.TryWriteCsdl(w, out errors);
+            model.TryWriteSchema(w, out errors);
             w.Close();
             Assert.AreEqual(
 @"<?xml version=""1.0"" encoding=""utf-16""?>
@@ -199,7 +199,7 @@ namespace EdmLibTests.FunctionalTests
             Assert.IsTrue(model.Validate(out errors), "validate2");
             sw = new StringWriter();
             w = XmlWriter.Create(sw, new XmlWriterSettings() { Indent = true });
-            model.TryWriteCsdl(w, out errors);
+            model.TryWriteSchema(w, out errors);
             w.Close();
             Assert.AreEqual(
 @"<?xml version=""1.0"" encoding=""utf-16""?>
@@ -257,7 +257,7 @@ namespace EdmLibTests.FunctionalTests
 
             var sw = new StringWriter();
             var w = XmlWriter.Create(sw, new XmlWriterSettings() { Indent = true });
-            model.TryWriteCsdl(w, out errors);
+            model.TryWriteSchema(w, out errors);
             w.Close();
             Assert.AreEqual(
 @"<?xml version=""1.0"" encoding=""utf-16""?>
@@ -313,7 +313,7 @@ namespace EdmLibTests.FunctionalTests
 
             var sw = new StringWriter();
             var w = XmlWriter.Create(sw, new XmlWriterSettings() { Indent = true });
-            model.TryWriteCsdl(w, out errors);
+            model.TryWriteSchema(w, out errors);
             w.Close();
             Assert.AreEqual(
 @"<?xml version=""1.0"" encoding=""utf-16""?>
@@ -331,7 +331,7 @@ namespace EdmLibTests.FunctionalTests
 
             sw = new StringWriter();
             w = XmlWriter.Create(sw, new XmlWriterSettings() { Indent = true });
-            vocabulary.TryWriteCsdl(w, out errors);
+            vocabulary.TryWriteSchema(w, out errors);
             w.Close();
             Assert.AreEqual(
 @"<?xml version=""1.0"" encoding=""utf-16""?>

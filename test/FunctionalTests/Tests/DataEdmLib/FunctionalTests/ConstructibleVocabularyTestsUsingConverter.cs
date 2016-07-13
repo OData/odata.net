@@ -70,7 +70,7 @@ namespace EdmLibTests.FunctionalTests
             var stringWriter = new StringWriter();
             var xmlWriter = XmlWriter.Create(stringWriter, new XmlWriterSettings() { Indent = true });
             IEnumerable<EdmError> serializationErrors;
-            stockModel.TryWriteCsdl(xmlWriter, out serializationErrors);
+            stockModel.TryWriteSchema(xmlWriter, out serializationErrors);
             xmlWriter.Close();
 
             Assert.AreEqual(1, serializationErrors.Count(), "Error on serialization");

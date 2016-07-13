@@ -74,7 +74,7 @@ namespace EdmLibTests.FunctionalTests
             Assert.AreEqual(EdmConstants.EdmVersion4, model.GetEdmVersion(), "Version check");
 
             IEnumerator<XmlWriter> writerEnumerator = writers.GetEnumerator();
-            model.TryWriteCsdl(s => { writerEnumerator.MoveNext(); return writerEnumerator.Current; }, out errors);
+            model.TryWriteSchema(s => { writerEnumerator.MoveNext(); return writerEnumerator.Current; }, out errors);
 
             foreach (XmlWriter xw in writers)
             {
@@ -119,7 +119,7 @@ namespace EdmLibTests.FunctionalTests
             model.SetEdmVersion(null);
             Assert.IsNull(model.GetEdmVersion(), "Version is null");
 
-            model.TryWriteCsdl(xw, out errors);
+            model.TryWriteSchema(xw, out errors);
             xw.Flush();
             xw.Close();
             string outputText = sw.ToString();
@@ -155,7 +155,7 @@ namespace EdmLibTests.FunctionalTests
             settings.Encoding = System.Text.Encoding.UTF8;
             XmlWriter xw = XmlWriter.Create(sw, settings);
             IEnumerable<EdmError> errors;
-            model.TryWriteCsdl(xw, out errors);
+            model.TryWriteSchema(xw, out errors);
             xw.Flush();
             xw.Close();
             string outputText = sw.ToString();
@@ -412,7 +412,7 @@ namespace EdmLibTests.FunctionalTests
             settings.Indent = true;
             settings.Encoding = System.Text.Encoding.UTF8;
             XmlWriter xw = XmlWriter.Create(sw, settings);
-            model.TryWriteCsdl(xw, out errors);
+            model.TryWriteSchema(xw, out errors);
             xw.Flush();
             xw.Close();
             string outputText = sw.ToString();

@@ -378,7 +378,7 @@
     <Compile Include="Csdl\Serialization\EdmSchema.cs" />
     <Compile Include="EdmModelVisitor.cs" />
     <Compile Include="ExtensionMethods\ExtensionMethods.cs" />
-    <Compile Include="Csdl\CsdlWriter.cs" />
+    <Compile Include="Csdl\SchemaWriter.cs" />
     <Compile Include="Csdl\SchemaReader.cs" />
     <Compile Include="Schema\Interfaces\IEdmBinaryTypeReference.cs" />
     <Compile Include="Schema\Interfaces\IEdmDecimalTypeReference.cs" />

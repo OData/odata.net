@@ -54,7 +54,7 @@ namespace Microsoft.OData.Edm.Tests.Vocabularies
             IEnumerable<EdmError> errors;
             using (var xw = XmlWriter.Create(sw, new XmlWriterSettings { Indent = true, Encoding = Encoding.UTF8 }))
             {
-                Assert.True(model.TryWriteCsdl(xw, out errors));
+                Assert.True(model.TryWriteSchema(xw, out errors));
             }
 
             string output = sw.ToString();

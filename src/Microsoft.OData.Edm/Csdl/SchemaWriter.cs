@@ -1,5 +1,5 @@
 //---------------------------------------------------------------------
-// <copyright file="CsdlWriter.cs" company="Microsoft">
+// <copyright file="SchemaWriter.cs" company="Microsoft">
 //      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 // </copyright>
 //---------------------------------------------------------------------
@@ -14,35 +14,35 @@ using Microsoft.OData.Edm.Validation;
 namespace Microsoft.OData.Edm.Csdl
 {
     /// <summary>
-    /// Provides CSDL serialization services for EDM models.
+    /// Provides Schema serialization services for EDM models.
     /// </summary>
-    public static class CsdlWriter
+    public static class SchemaWriter
     {
         /// <summary>
-        /// Outputs a CSDL artifact to the provided writer.
+        /// Outputs a Schema artifact to the provided writer.
         /// </summary>
         /// <param name="model">Model to be written.</param>
-        /// <param name="writer">XmlWriter the generated CSDL will be written to.</param>
+        /// <param name="writer">XmlWriter the generated Schema will be written to.</param>
         /// <param name="errors">Errors that prevented successful serialization, or no errors if serialization was successful. </param>
         /// <returns>A value indicating whether serialization was successful.</returns>
-        public static bool TryWriteCsdl(this IEdmModel model, XmlWriter writer, out IEnumerable<EdmError> errors)
+        public static bool TryWriteSchema(this IEdmModel model, XmlWriter writer, out IEnumerable<EdmError> errors)
         {
-            return TryWriteCsdl(model, x => writer, true, out errors);
+            return TryWriteSchema(model, x => writer, true, out errors);
         }
 
         /// <summary>
-        /// Outputs a CSDL artifact to the provided writers.
+        /// Outputs Schema artifacts to the provided writers.
         /// </summary>
         /// <param name="model">Model to be written.</param>
-        /// <param name="writerProvider">A delegate that takes in a schema namespace name and returns an XmlWriter to write the schema to.</param>
+        /// <param name="writerProvider">A delegate that takes in a Schema namespace name and returns an XmlWriter to write the Schema to.</param>
         /// <param name="errors">Errors that prevented successful serialization, or no errors if serialization was successful. </param>
         /// <returns>A value indicating whether serialization was successful.</returns>
-        public static bool TryWriteCsdl(this IEdmModel model, Func<string, XmlWriter> writerProvider, out IEnumerable<EdmError> errors)
+        public static bool TryWriteSchema(this IEdmModel model, Func<string, XmlWriter> writerProvider, out IEnumerable<EdmError> errors)
         {
-            return TryWriteCsdl(model, writerProvider, false, out errors);
+            return TryWriteSchema(model, writerProvider, false, out errors);
         }
 
-        internal static bool TryWriteCsdl(IEdmModel model, Func<string, XmlWriter> writerProvider, bool singleFileExpected, out IEnumerable<EdmError> errors)
+        internal static bool TryWriteSchema(IEdmModel model, Func<string, XmlWriter> writerProvider, bool singleFileExpected, out IEnumerable<EdmError> errors)
         {
             EdmUtil.CheckArgumentNull(model, "model");
             EdmUtil.CheckArgumentNull(writerProvider, "writerProvider");

@@ -242,7 +242,7 @@ namespace EdmLibTests.FunctionalTests
 
             StringBuilder sb = new StringBuilder();
             IEnumerable<EdmError> errors;
-            bool written = model.TryWriteCsdl(XmlWriter.Create(sb), out errors);
+            bool written = model.TryWriteSchema(XmlWriter.Create(sb), out errors);
             var expectedErrors = new EdmLibTestErrors()
             {
                 { "([. Nullable=False])", EdmErrorCode.ReferencedTypeMustHaveValidName },

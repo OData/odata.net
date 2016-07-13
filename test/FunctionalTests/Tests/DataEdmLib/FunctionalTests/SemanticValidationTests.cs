@@ -2242,7 +2242,7 @@ namespace EdmLibTests.FunctionalTests
 
 #if !SILVERLIGHT
         [TestMethod]
-        public void CsdlWriterShouldFailWithGoodMessageWhenWritingInvalidXml()
+        public void SchemaWriterShouldFailWithGoodMessageWhenWritingInvalidXml()
         {
             var model = new EdmModel();
             model.SetEdmVersion(Microsoft.OData.Edm.EdmConstants.EdmVersion4);
@@ -2261,7 +2261,7 @@ namespace EdmLibTests.FunctionalTests
             try
             {
                 IEnumerable<EdmError> errors;
-                model.TryWriteCsdl(xmlWriter, out errors);
+                model.TryWriteSchema(xmlWriter, out errors);
                 Assert.Fail("Excepted an exception when trying to serialize a direct annotation which does not match the xml naming spec.");
             }
             catch (ArgumentException e)
