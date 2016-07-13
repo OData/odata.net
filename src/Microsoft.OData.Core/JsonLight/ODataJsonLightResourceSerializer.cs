@@ -84,7 +84,7 @@ namespace Microsoft.OData.JsonLight
 
             // Write the "@odata.type": "typename"
             string typeName = this.JsonLightOutputContext.TypeNameOracle.GetResourceTypeNameForWriting(
-                resourceState.GetOrCreateTypeContext(this.Model, this.WritingResponse).ExpectedResourceTypeName,
+                resourceState.GetOrCreateTypeContext(this.WritingResponse).ExpectedResourceTypeName,
                 resource, resourceState.IsUndeclared);
             if (typeName != null)
             {

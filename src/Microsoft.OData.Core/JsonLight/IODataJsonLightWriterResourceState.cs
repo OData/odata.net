@@ -73,9 +73,8 @@ namespace Microsoft.OData.JsonLight
         /// <summary>
         /// Gets or creates the type context to answer basic questions regarding the type info of the resource.
         /// </summary>
-        /// <param name="model">The Edm model to use.</param>
         /// <param name="writingResponse">True if writing a response payload, false otherwise.</param>
         /// <returns>The type context to answer basic questions regarding the type info of the resource.</returns>
-        ODataResourceTypeContext GetOrCreateTypeContext(IEdmModel model, bool writingResponse);
+        ODataResourceTypeContext GetOrCreateTypeContext(bool writingResponse);
     }
 }

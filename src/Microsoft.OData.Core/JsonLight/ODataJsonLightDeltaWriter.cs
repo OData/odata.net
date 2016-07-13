@@ -925,7 +925,7 @@ namespace Microsoft.OData.JsonLight
 
                 ODataResourceMetadataBuilder builder = this.jsonLightOutputContext.MetadataLevel.CreateResourceMetadataBuilder(
                     resource,
-                    resourceScope.GetOrCreateTypeContext(this.jsonLightOutputContext.Model),
+                    resourceScope.GetOrCreateTypeContext(),
                     resourceScope.SerializationInfo,
                     resourceScope.ResourceType,
                     resourceScope.SelectedProperties,
@@ -1088,7 +1088,7 @@ namespace Microsoft.OData.JsonLight
         private void WriteDeltaResourceSetContextUri()
         {
             this.CurrentDeltaResourceSetScope.ContextUriInfo = this.jsonLightResourceSerializer.WriteDeltaContextUri(
-                this.CurrentDeltaResourceSetScope.GetOrCreateTypeContext(this.jsonLightOutputContext.Model),
+                this.CurrentDeltaResourceSetScope.GetOrCreateTypeContext(),
                 ODataDeltaKind.ResourceSet);
         }
 
@@ -1165,7 +1165,7 @@ namespace Microsoft.OData.JsonLight
         {
             Debug.Assert(kind == ODataDeltaKind.Resource || kind == ODataDeltaKind.DeletedEntry, "kind must be either DeltaResource or DeltaDeletedEntry.");
             this.jsonLightResourceSerializer.WriteDeltaContextUri(
-                this.CurrentDeltaResourceScope.GetOrCreateTypeContext(this.jsonLightOutputContext.Model),
+                this.CurrentDeltaResourceScope.GetOrCreateTypeContext(),
                 kind,
                 this.GetParentDeltaResourceSetScope().ContextUriInfo);
         }
@@ -1225,7 +1225,7 @@ namespace Microsoft.OData.JsonLight
         private void WriteDeltaLinkContextUri(ODataDeltaKind kind)
         {
             Debug.Assert(kind == ODataDeltaKind.Link || kind == ODataDeltaKind.DeletedLink, "kind must be either DeltaLink or DeltaDeletedLink.");
-            this.jsonLightResourceSerializer.WriteDeltaContextUri(this.CurrentDeltaLinkScope.GetOrCreateTypeContext(this.jsonLightOutputContext.Model), kind);
+            this.jsonLightResourceSerializer.WriteDeltaContextUri(this.CurrentDeltaLinkScope.GetOrCreateTypeContext(), kind);
         }
 
         /// <summary>
@@ -2000,10 +2000,9 @@ namespace Microsoft.OData.JsonLight
             /// <summary>
             /// Gets or creates the type context to answer basic questions regarding the type info of the resource.
             /// </summary>
-            /// <param name="model">The Edm model to use.</param>
             /// <param name="writingResponse">Whether writing Json payload. Should always be true.</param>
             /// <returns>The type context to answer basic questions regarding the type info of the resource.</returns>
-            public ODataResourceTypeContext GetOrCreateTypeContext(IEdmModel model, bool writingResponse = true)
+            public ODataResourceTypeContext GetOrCreateTypeContext(bool writingResponse = true)
             {
                 if (this.typeContext == null)
                 {
@@ -2012,7 +2011,6 @@ namespace Microsoft.OData.JsonLight
                         this.NavigationSource,
                         EdmTypeWriterResolver.Instance.GetElementType(this.NavigationSource),
                         this.ResourceTypeFromMetadata ?? this.ResourceType,
-                        model,
                         writingResponse);
                 }
 
@@ -2077,10 +2075,9 @@ namespace Microsoft.OData.JsonLight
             /// <summary>
             /// Gets or creates the type context to answer basic questions regarding the type info of the resource.
             /// </summary>
-            /// <param name="model">The Edm model to use.</param>
             /// <param name="writingResponse">Whether writing Json payload. Should always be true.</param>
             /// <returns>The type context to answer basic questions regarding the type info of the resource.</returns>
-            public ODataResourceTypeContext GetOrCreateTypeContext(IEdmModel model, bool writingResponse = true)
+            public ODataResourceTypeContext GetOrCreateTypeContext(bool writingResponse = true)
             {
                 if (this.typeContext == null)
                 {
@@ -2089,7 +2086,6 @@ namespace Microsoft.OData.JsonLight
                         this.NavigationSource,
                         EdmTypeWriterResolver.Instance.GetElementType(this.NavigationSource),
                         this.ResourceType,
-                        model,
                         writingResponse);
                 }
 
@@ -2138,10 +2134,9 @@ namespace Microsoft.OData.JsonLight
             /// <summary>
             /// Gets or creates the type context to answer basic questions regarding the type info of the resource.
             /// </summary>
-            /// <param name="model">The Edm model to use.</param>
             /// <param name="writingResponse">Whether writing Json payload. Should always be true.</param>
             /// <returns>The type context to answer basic questions regarding the type info of the resource.</returns>
-            public ODataResourceTypeContext GetOrCreateTypeContext(IEdmModel model, bool writingResponse = true)
+            public ODataResourceTypeContext GetOrCreateTypeContext(bool writingResponse = true)
             {
                 if (this.typeContext == null)
                 {
@@ -2150,7 +2145,6 @@ namespace Microsoft.OData.JsonLight
                         this.NavigationSource,
                         EdmTypeWriterResolver.Instance.GetElementType(this.NavigationSource),
                         this.fakeEntityType,
-                        model,
                         writingResponse);
                 }
 

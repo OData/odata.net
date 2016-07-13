@@ -8,13 +8,11 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
 {
     using System;
     using System.Collections.Generic;
-    using System.Globalization;
     using System.Linq;
     using System.Runtime.CompilerServices;
     using System.Xml.Linq;
     using Microsoft.OData;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Csdl;
     using Microsoft.Spatial;
     using Microsoft.Test.OData.Utils.CombinatorialEngine;
     using Microsoft.Test.OData.Utils.ODataLibTest;
@@ -22,7 +20,6 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
     using Microsoft.Test.Taupo.Astoria.Contracts.OData;
     using Microsoft.Test.Taupo.Common;
     using Microsoft.Test.Taupo.Contracts;
-    using Microsoft.Test.Taupo.Contracts.Types;
     using Microsoft.Test.Taupo.Execution;
     using Microsoft.Test.Taupo.OData.Atom;
     using Microsoft.Test.Taupo.OData.Common;
@@ -30,12 +27,10 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
     using Microsoft.Test.Taupo.OData.Json;
     using Microsoft.Test.Taupo.OData.Json.TextAnnotations;
     using Microsoft.Test.Taupo.OData.JsonLight;
-    using Microsoft.Test.Taupo.OData.Writer.Tests.Atom;
     using Microsoft.Test.Taupo.OData.Writer.Tests.Common;
     using Microsoft.Test.Taupo.OData.Writer.Tests.Json;
     using Microsoft.Test.Taupo.OData.Writer.Tests.JsonLight;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
-    using ODataPropertyKind = Microsoft.OData.ODataPropertyKind;
 
     /// <summary>
     /// Tests for writing properties with the OData writer.
@@ -534,7 +529,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                         (messageWriter) =>
                         {
                             var resourceWriter = messageWriter.CreateODataResourceWriter();
-                            foreach(var item in testDescriptor.PayloadItems.Single())
+                            foreach (var item in testDescriptor.PayloadItems.Single())
                             {
                                 var resource = item as ODataResource;
                                 if (resource != null)

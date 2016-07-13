@@ -228,7 +228,7 @@ namespace Microsoft.OData.JsonLight
             if (this.IsTopLevel)
             {
                 var contextUriInfo = this.jsonLightResourceSerializer.WriteResourceContextUri(
-                        resourceScope.GetOrCreateTypeContext(this.jsonLightOutputContext.Model, this.jsonLightOutputContext.WritingResponse));
+                        resourceScope.GetOrCreateTypeContext(this.jsonLightOutputContext.WritingResponse));
 
                 // Is writing an undeclared resource.
                 if (contextUriInfo != null)
@@ -306,7 +306,7 @@ namespace Microsoft.OData.JsonLight
                 this.jsonWriter.StartObjectScope();
 
                 // @odata.context
-                this.jsonLightResourceSerializer.WriteResourceSetContextUri(this.CurrentResourceSetScope.GetOrCreateTypeContext(this.jsonLightOutputContext.Model, this.jsonLightOutputContext.WritingResponse));
+                this.jsonLightResourceSerializer.WriteResourceSetContextUri(this.CurrentResourceSetScope.GetOrCreateTypeContext(this.jsonLightOutputContext.WritingResponse));
 
                 if (this.jsonLightOutputContext.WritingResponse)
                 {
@@ -356,7 +356,7 @@ namespace Microsoft.OData.JsonLight
                 string propertyName = this.ParentNestedResourceInfo.Name;
                 bool isUndeclared = (this.CurrentScope as JsonLightResourceSetScope).IsUndeclared;
                 var expectedResourceTypeName =
-                    this.CurrentResourceSetScope.GetOrCreateTypeContext(this.jsonLightOutputContext.Model, this.jsonLightOutputContext.WritingResponse)
+                    this.CurrentResourceSetScope.GetOrCreateTypeContext(this.jsonLightOutputContext.WritingResponse)
                     .ExpectedResourceTypeName;
 
                 if (this.jsonLightOutputContext.WritingResponse)

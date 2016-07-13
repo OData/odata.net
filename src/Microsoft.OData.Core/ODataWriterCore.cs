@@ -931,7 +931,7 @@ namespace Microsoft.OData
                         var entityType = resourceType as IEdmEntityType;
                         if (resourceType == null || entityType != null)
                         {
-                            var typeContext = resourceScope.GetOrCreateTypeContext(this.outputContext.Model, this.outputContext.WritingResponse);
+                            var typeContext = resourceScope.GetOrCreateTypeContext(this.outputContext.WritingResponse);
 
                             if (!(resourceType == null && typeContext.NavigationSourceKind == EdmNavigationSourceKind.None))
                             {
@@ -2014,10 +2014,9 @@ namespace Microsoft.OData
             /// <summary>
             /// Gets or creates the type context to answer basic questions regarding the type info of the resource.
             /// </summary>
-            /// <param name="model">The Edm model to use.</param>
             /// <param name="writingResponse">True if writing a response payload, false otherwise.</param>
             /// <returns>The type context to answer basic questions regarding the type info of the resource.</returns>
-            internal ODataResourceTypeContext GetOrCreateTypeContext(IEdmModel model, bool writingResponse)
+            internal ODataResourceTypeContext GetOrCreateTypeContext(bool writingResponse)
             {
                 if (this.typeContext == null)
                 {
@@ -2031,7 +2030,6 @@ namespace Microsoft.OData
                         this.NavigationSource,
                         EdmTypeWriterResolver.Instance.GetElementType(this.NavigationSource),
                         this.ResourceType,
-                        model,
                         throwIfMissingTypeInfo);
                 }
 
@@ -2138,10 +2136,9 @@ namespace Microsoft.OData
             /// <summary>
             /// Gets or creates the type context to answer basic questions regarding the type info of the resource.
             /// </summary>
-            /// <param name="model">The Edm model to use.</param>
             /// <param name="writingResponse">True if writing a response payload, false otherwise.</param>
             /// <returns>The type context to answer basic questions regarding the type info of the resource.</returns>
-            public ODataResourceTypeContext GetOrCreateTypeContext(IEdmModel model, bool writingResponse)
+            public ODataResourceTypeContext GetOrCreateTypeContext(bool writingResponse)
             {
                 if (this.typeContext == null)
                 {
@@ -2155,7 +2152,6 @@ namespace Microsoft.OData
                         this.NavigationSource,
                         EdmTypeWriterResolver.Instance.GetElementType(this.NavigationSource),
                         expectedResourceType,
-                        model,
                         throwIfMissingTypeInfo);
                 }
 

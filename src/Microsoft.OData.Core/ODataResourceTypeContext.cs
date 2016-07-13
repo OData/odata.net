@@ -133,12 +133,10 @@ namespace Microsoft.OData
         /// <param name="navigationSource">The navigation source of the resource set or resource.</param>
         /// <param name="navigationSourceEntityType">The entity type of the navigation source.</param>
         /// <param name="expectedResourceType">The expected structured type of the resource set or resource.</param>
-        /// <param name="model">The Edm model instance to use.</param>
         /// <param name="throwIfMissingTypeInfo">If true, throw if any of the set or type name cannot be determined; if false, return null when any of the set or type name cannot determined.</param>
         /// <returns>A new instance of <see cref="ODataResourceTypeContext"/>.</returns>
-        internal static ODataResourceTypeContext Create(ODataResourceSerializationInfo serializationInfo, IEdmNavigationSource navigationSource, IEdmEntityType navigationSourceEntityType, IEdmStructuredType expectedResourceType, IEdmModel model, bool throwIfMissingTypeInfo)
+        internal static ODataResourceTypeContext Create(ODataResourceSerializationInfo serializationInfo, IEdmNavigationSource navigationSource, IEdmEntityType navigationSourceEntityType, IEdmStructuredType expectedResourceType, bool throwIfMissingTypeInfo)
         {
-            Debug.Assert(model != null, "model != null");
             if (serializationInfo != null)
             {
                 return new ODataResourceTypeContextWithoutModel(serializationInfo);
@@ -146,12 +144,11 @@ namespace Microsoft.OData
 
             // If we are creating an ODataResourceTypeContext for an item in Navigation Source(e.g. an entity set)
             // or we are creating it for a complex item, we will create an ODataResourceTypeContextWithModel.
-            if (((navigationSource != null || expectedResourceType != null && expectedResourceType.IsODataComplexTypeKind()) && model.IsUserModel()))
+            if ((navigationSource != null && expectedResourceType != null) ||
+                (expectedResourceType != null && expectedResourceType.IsODataComplexTypeKind()))
             {
-                Debug.Assert(navigationSource == null || navigationSourceEntityType != null, "navigationSource == null || navigationSourceEntityType != null");
-                Debug.Assert(expectedResourceType != null, "expectedResourceType != null");
-
-                return new ODataResourceTypeContextWithModel(navigationSource, navigationSourceEntityType, expectedResourceType);
+                return new ODataResourceTypeContextWithModel(navigationSource, navigationSourceEntityType,
+                    expectedResourceType);
             }
 
             return new ODataResourceTypeContext(expectedResourceType, throwIfMissingTypeInfo);
@@ -329,11 +326,11 @@ namespace Microsoft.OData
             internal ODataResourceTypeContextWithModel(IEdmNavigationSource navigationSource, IEdmEntityType navigationSourceEntityType, IEdmStructuredType expectedResourceType)
                 : base(expectedResourceType, /*throwIfMissingTypeInfo*/false)
             {
-                Debug.Assert(navigationSource != null
-                    && navigationSourceEntityType != null
-                    || expectedResourceType.IsODataComplexTypeKind(),
-                    "navigationSource != null && navigationSourceEntityType != null || expectedResourceType.IsODataComplexTypeKind()");
                 Debug.Assert(expectedResourceType != null, "expectedResourceType != null");
+                Debug.Assert(navigationSource != null
+                             && navigationSourceEntityType != null
+                             || expectedResourceType.IsODataComplexTypeKind(),
+                    "navigationSource != null && navigationSourceEntityType != null || expectedResourceType.IsODataComplexTypeKind()");
 
                 this.navigationSource = navigationSource;
                 this.navigationSourceEntityType = navigationSourceEntityType;

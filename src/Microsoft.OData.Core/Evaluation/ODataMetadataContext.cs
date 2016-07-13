@@ -252,7 +252,10 @@ namespace Microsoft.OData.Evaluation
                     {
                         IEdmNavigationSource navigationSource = typeAnnotation.NavigationSource;
                         IEdmEntityType navigationSourceElementType = this.edmTypeResolver.GetElementType(navigationSource);
-                        IODataResourceTypeContext typeContext = ODataResourceTypeContext.Create(/*serializationInfo*/ null, navigationSource, navigationSourceElementType, resourceState.ResourceType, this.model, /*throwIfMissingTypeInfo*/ true);
+                        IODataResourceTypeContext typeContext =
+                            ODataResourceTypeContext.Create( /*serializationInfo*/
+                                null, navigationSource, navigationSourceElementType, resourceState.ResourceType,
+                                /*throwIfMissingTypeInfo*/ true);
                         IODataResourceMetadataContext resourceMetadataContext = ODataResourceMetadataContext.Create(resource, typeContext, /*serializationInfo*/null, (IEdmStructuredType)resource.GetEdmType().Definition, this, resourceState.SelectedProperties);
 
                         ODataConventionalUriBuilder uriBuilder = new ODataConventionalUriBuilder(this.ServiceBaseUri,

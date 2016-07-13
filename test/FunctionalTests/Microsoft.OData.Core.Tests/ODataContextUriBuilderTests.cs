@@ -21,8 +21,8 @@ namespace Microsoft.OData.Tests
     {
         private const string ServiceDocumentUriString = "http://odata.org/service/";
         private const string MetadataDocumentUriString = "http://odata.org/service/$metadata";
-        private static readonly ODataResourceTypeContext ResponseTypeContextWithoutTypeInfo = ODataResourceTypeContext.Create(serializationInfo: null, navigationSource: null, navigationSourceEntityType: null, expectedResourceType: null, model: EdmCoreModel.Instance, throwIfMissingTypeInfo: true);
-        private static readonly ODataResourceTypeContext RequestTypeContextWithoutTypeInfo = ODataResourceTypeContext.Create(serializationInfo: null, navigationSource: null, navigationSourceEntityType: null, expectedResourceType: null, model: EdmCoreModel.Instance, throwIfMissingTypeInfo: false);
+        private static readonly ODataResourceTypeContext ResponseTypeContextWithoutTypeInfo = ODataResourceTypeContext.Create(serializationInfo: null, navigationSource: null, navigationSourceEntityType: null, expectedResourceType: null, throwIfMissingTypeInfo: true);
+        private static readonly ODataResourceTypeContext RequestTypeContextWithoutTypeInfo = ODataResourceTypeContext.Create(serializationInfo: null, navigationSource: null, navigationSourceEntityType: null, expectedResourceType: null, throwIfMissingTypeInfo: false);
 
         private Uri metadataDocumentBaseUri;
         private EdmModel edmModel;
@@ -290,7 +290,6 @@ namespace Microsoft.OData.Tests
                 navigationSource: null,
                 navigationSourceEntityType: null,
                 expectedResourceType: null,
-                model: EdmCoreModel.Instance,
                 throwIfMissingTypeInfo: true),
                 isResponse: true);
         }
@@ -325,7 +324,7 @@ namespace Microsoft.OData.Tests
         [Fact]
         public void ShouldNotIncludeFragmentItemSelectorOnSingleton()
         {
-            var singletonTypeContextWithModel = ODataResourceTypeContext.Create( /*serializationInfo*/null, this.singletonCity, this.cityType, this.cityType, this.edmModel, throwIfMissingTypeInfo: true);
+            var singletonTypeContextWithModel = ODataResourceTypeContext.Create( /*serializationInfo*/null, this.singletonCity, this.cityType, this.cityType, throwIfMissingTypeInfo: true);
             this.CreateEntryContextUri(singletonTypeContextWithModel).OriginalString.Should().Be(BuildExpectedContextUri("#SingletonCity", false));
         }
 
@@ -333,7 +332,7 @@ namespace Microsoft.OData.Tests
         public void ShouldNotIncludeEntityOnSingletonWithoutModel()
         {
             ODataResourceSerializationInfo serializationInfo = new ODataResourceSerializationInfo() { ExpectedTypeName = "People", NavigationSourceEntityTypeName = "People", NavigationSourceName = "Boss", NavigationSourceKind = EdmNavigationSourceKind.Singleton, };
-            var requestSingletonTypeContextWithoutModel = ODataResourceTypeContext.Create(serializationInfo, /*navigationSource*/null, /*navigationSourceEntityType*/null, /*expectedEntityType*/null, EdmCoreModel.Instance, true);
+            var requestSingletonTypeContextWithoutModel = ODataResourceTypeContext.Create(serializationInfo, /*navigationSource*/null, /*navigationSourceEntityType*/null, /*expectedEntityType*/null, true);
             this.CreateEntryContextUri(requestSingletonTypeContextWithoutModel).OriginalString.Should().Be(BuildExpectedContextUri("#Boss", false));
         }
 
@@ -387,7 +386,7 @@ namespace Microsoft.OData.Tests
         public void BuildResourceContextUriForComplexResource()
         {
             var typeContext = ODataResourceTypeContext.Create( /*serializationInfo*/null,
-                null, null, this.addressType, this.edmModel, throwIfMissingTypeInfo: false);
+                null, null, this.addressType, throwIfMissingTypeInfo: false);
             ODataResource value = new ODataResource { TypeName = "TestModel.Address" };
             var contextUri = this.CreateEntryContextUri(typeContext, true);
             contextUri.OriginalString.Should().Be(BuildExpectedContextUri("#TestModel.Address"));
@@ -405,7 +404,7 @@ namespace Microsoft.OData.Tests
         public void BuildResourceContextUriForComplexWithNullAnnotation()
         {
             var typeContext = ODataResourceTypeContext.Create( /*serializationInfo*/null,
-                null, null, this.addressType, this.edmModel, throwIfMissingTypeInfo: true);
+                null, null, this.addressType, throwIfMissingTypeInfo: true);
             ODataResource value = new ODataResource { TypeName = "TestModel.Address" };
             value.TypeAnnotation = new ODataTypeAnnotation();
             var contextUri = this.CreateEntryContextUri(typeContext, true);
@@ -551,7 +550,7 @@ namespace Microsoft.OData.Tests
         public void FeedContextUriShouldNotBeWrittenIfNotProvided()
         {
             var serializationInfo = new ODataResourceSerializationInfo { NavigationSourceName = "MyContainer.MyCities", NavigationSourceEntityTypeName = "TestModel.MyCity", ExpectedTypeName = "TestModel.MyCity" };
-            var typeContext = ODataResourceTypeContext.Create(serializationInfo, null, null, null, EdmCoreModel.Instance, true);
+            var typeContext = ODataResourceTypeContext.Create(serializationInfo, null, null, null, true);
             this.builderWithNoMetadataDocumentUri.BuildContextUri(ODataPayloadKind.ResourceSet, ODataContextUrlInfo.Create(typeContext, false)).Should().BeNull();
         }
 
@@ -559,7 +558,7 @@ namespace Microsoft.OData.Tests
         public void EntryContextUriShouldNotBeWrittenIfNotProvided()
         {
             var serializationInfo = new ODataResourceSerializationInfo { NavigationSourceName = "MyContainer.MyCities", NavigationSourceEntityTypeName = "TestModel.MyCity", ExpectedTypeName = "TestModel.MyCity" };
-            var typeContext = ODataResourceTypeContext.Create(serializationInfo, null, null, null, EdmCoreModel.Instance, true);
+            var typeContext = ODataResourceTypeContext.Create(serializationInfo, null, null, null, true);
             this.builderWithNoMetadataDocumentUri.BuildContextUri(ODataPayloadKind.Resource, ODataContextUrlInfo.Create(typeContext, true)).Should().BeNull();
         }
 
@@ -652,8 +651,8 @@ namespace Microsoft.OData.Tests
 
         private void InitializeTypeContext()
         {
-            this.responseCityTypeContextWithoutSerializationInfo = ODataResourceTypeContext.Create( /*serializationInfo*/null, this.citySet, this.cityType, this.cityType, this.edmModel, throwIfMissingTypeInfo: true);
-            this.responseCapitolCityTypeContextWithoutSerializationInfo = ODataResourceTypeContext.Create( /*serializationInfo*/null, this.citySet, this.cityType, this.capitolCityType, this.edmModel, throwIfMissingTypeInfo: true);
+            this.responseCityTypeContextWithoutSerializationInfo = ODataResourceTypeContext.Create( /*serializationInfo*/null, this.citySet, this.cityType, this.cityType, throwIfMissingTypeInfo: true);
+            this.responseCapitolCityTypeContextWithoutSerializationInfo = ODataResourceTypeContext.Create( /*serializationInfo*/null, this.citySet, this.cityType, this.capitolCityType, throwIfMissingTypeInfo: true);
         }
 
         private Uri CreateCollectionContextUri(ODataCollectionStartSerializationInfo serializationInfo, IEdmTypeReference itemTypeReference)
@@ -684,7 +683,7 @@ namespace Microsoft.OData.Tests
         private Uri CreateFeedContextUri(string selectClause, string expandClause)
         {
             SelectExpandClause selectExpandClause = new ODataQueryOptionParser(edmModel, this.cityType, this.citySet, new Dictionary<string, string> { { "$expand", expandClause }, { "$select", selectClause } }).ParseSelectAndExpand();
-            ODataResourceTypeContext typeContext = ODataResourceTypeContext.Create( /*serializationInfo*/null, this.citySet, this.cityType, this.cityType, this.edmModel, true);
+            ODataResourceTypeContext typeContext = ODataResourceTypeContext.Create( /*serializationInfo*/null, this.citySet, this.cityType, this.cityType, true);
             ODataContextUrlInfo info = ODataContextUrlInfo.Create(typeContext, false, new ODataUri() { SelectAndExpand = selectExpandClause });
             Uri contextUrl = this.responseContextUriBuilder.BuildContextUri(ODataPayloadKind.ResourceSet, info);
             return contextUrl;
@@ -692,7 +691,7 @@ namespace Microsoft.OData.Tests
         private Uri CreateFeedContextUri(string applyClauseString)
         {
             ApplyClause applyClause = new ODataQueryOptionParser(edmModel, this.cityType, this.citySet, new Dictionary<string, string> { { "$apply", applyClauseString } }).ParseApply();
-            ODataResourceTypeContext typeContext = ODataResourceTypeContext.Create( /*serializationInfo*/null, this.citySet, this.cityType, this.cityType, this.edmModel, true);
+            ODataResourceTypeContext typeContext = ODataResourceTypeContext.Create( /*serializationInfo*/null, this.citySet, this.cityType, this.cityType, true);
             ODataContextUrlInfo info = ODataContextUrlInfo.Create(typeContext, false, new ODataUri() { Apply = applyClause });
             Uri contextUrl = this.responseContextUriBuilder.BuildContextUri(ODataPayloadKind.ResourceSet, info);
             return contextUrl;
@@ -701,7 +700,7 @@ namespace Microsoft.OData.Tests
         private Uri CreateEntryContextUri(string selectClause, string expandClause)
         {
             SelectExpandClause selectExpandClause = new ODataQueryOptionParser(edmModel, this.cityType, this.citySet, new Dictionary<string, string> { { "$expand", expandClause }, { "$select", selectClause } }).ParseSelectAndExpand();
-            ODataResourceTypeContext typeContext = ODataResourceTypeContext.Create( /*serializationInfo*/null, this.citySet, this.cityType, this.cityType, this.edmModel, true);
+            ODataResourceTypeContext typeContext = ODataResourceTypeContext.Create( /*serializationInfo*/null, this.citySet, this.cityType, this.cityType, true);
             ODataContextUrlInfo info = ODataContextUrlInfo.Create(typeContext, true, new ODataUri() { SelectAndExpand = selectExpandClause });
             Uri contextUrl = this.responseContextUriBuilder.BuildContextUri(ODataPayloadKind.ResourceSet, info);
             return contextUrl;

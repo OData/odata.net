@@ -35,7 +35,7 @@ namespace Microsoft.OData.Tests
                 }
             };
             var serializationInfo = new ODataResourceSerializationInfo { NavigationSourceName = "Set", NavigationSourceEntityTypeName = "ns.BaseType", ExpectedTypeName = "ns.BaseType" };
-            var typeContext = ODataResourceTypeContext.Create(serializationInfo, null, null, null, EdmCoreModel.Instance, true);
+            var typeContext = ODataResourceTypeContext.Create(serializationInfo, null, null, null, true);
             var metadataContext = new TestMetadataContext();
             var entryMetadataContext = ODataResourceMetadataContext.Create(this.odataEntryWithFullBuilder, typeContext, serializationInfo, null, metadataContext, SelectedPropertiesNode.EntireSubtree);
             this.odataEntryWithFullBuilder.MetadataBuilder =
