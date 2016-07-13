@@ -225,7 +225,7 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests.Annotation.UserDefinedClient
             : base(serviceRoot)
         {
             XmlReader reader = XmlReader.Create(new StringReader(edmModelString));
-            edmModel = EdmxReader.Parse(reader);
+            edmModel = CsdlReader.Parse(reader);
             this.Format.LoadServiceModel = () => edmModel;
             this.Format.UseJson();
         }

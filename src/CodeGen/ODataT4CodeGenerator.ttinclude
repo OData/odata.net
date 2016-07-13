@@ -481,7 +481,7 @@ public class CodeGenerationContext
                     GetReferencedModelReaderFunc = this.GetReferencedModelReaderFuncWrapper,
                     IgnoreUnexpectedAttributesAndElements = this.IgnoreUnexpectedElementsAndAttributes
                 };
-                if (!EdmxReader.TryParse(this.edmx.CreateReader(ReaderOptions.None), Enumerable.Empty<IEdmModel>(), edmxReaderSettings, out this.edmModel, out errors))
+                if (!CsdlReader.TryParse(this.edmx.CreateReader(ReaderOptions.None), Enumerable.Empty<IEdmModel>(), edmxReaderSettings, out this.edmModel, out errors))
                 {
                     Debug.Assert(errors != null, "errors != null");
                     throw new InvalidOperationException(errors.FirstOrDefault().ErrorMessage);
@@ -3471,7 +3471,7 @@ namespace <#= fullNamespace #>
                 global::System.Xml.XmlReader reader = CreateXmlReader(Edmx);
                 try
                 {
-                    return global::Microsoft.OData.Edm.Csdl.EdmxReader.Parse(reader, getReferencedModelFromMap);
+                    return global::Microsoft.OData.Edm.Csdl.CsdlReader.Parse(reader, getReferencedModelFromMap);
                 }
                 finally
                 {
@@ -3489,7 +3489,7 @@ namespace <#= fullNamespace #>
                 global::System.Xml.XmlReader reader = CreateXmlReader(Edmx);
                 try
                 {
-                    return global::Microsoft.OData.Edm.Csdl.EdmxReader.Parse(reader);
+                    return global::Microsoft.OData.Edm.Csdl.CsdlReader.Parse(reader);
                 }
                 finally
                 {
@@ -4520,7 +4520,7 @@ Namespace <#= fullNamespace #>
             Private Shared Function LoadModelFromString() As Global.Microsoft.OData.Edm.IEdmModel
                 Dim reader As Global.System.Xml.XmlReader = CreateXmlReader(Edmx)
                 Try
-                    Return Global.Microsoft.OData.Edm.Csdl.EdmxReader.Parse(reader, AddressOf getReferencedModelFromMap)
+                    Return Global.Microsoft.OData.Edm.Csdl.CsdlReader.Parse(reader, AddressOf getReferencedModelFromMap)
                 Finally
                     CType(reader,Global.System.IDisposable).Dispose
                 End Try
@@ -4534,7 +4534,7 @@ Namespace <#= fullNamespace #>
             Private Shared Function LoadModelFromString() As Global.Microsoft.OData.Edm.IEdmModel
                 Dim reader As Global.System.Xml.XmlReader = CreateXmlReader(Edmx)
                 Try
-                    Return Global.Microsoft.OData.Edm.Csdl.EdmxReader.Parse(reader)
+                    Return Global.Microsoft.OData.Edm.Csdl.CsdlReader.Parse(reader)
                 Finally
                     CType(reader,Global.System.IDisposable).Dispose
                 End Try

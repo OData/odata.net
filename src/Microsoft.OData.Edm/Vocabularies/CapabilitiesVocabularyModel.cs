@@ -40,7 +40,7 @@ namespace Microsoft.OData.Edm.Vocabularies.V1
             {
                 IEnumerable<EdmError> errors;
                 Debug.Assert(stream != null, "CapabilitiesVocabularies.xml: stream!=null");
-                EdmxReader.TryParse(XmlReader.Create(stream), out Instance, out errors);
+                CsdlReader.TryParse(XmlReader.Create(stream), out Instance, out errors);
             }
 
             ChangeTrackingTerm = Instance.FindDeclaredTerm(CapabilitiesVocabularyConstants.ChangeTracking);

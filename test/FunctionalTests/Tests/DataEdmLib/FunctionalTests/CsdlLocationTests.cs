@@ -240,7 +240,7 @@ namespace EdmLibTests.FunctionalTests
 
             IEdmModel model;
             IEnumerable<EdmError> errors;
-            bool parsed = EdmxReader.TryParse(XmlReader.Create(new StringReader(edmx), new XmlReaderSettings(), edmxUri), getReferencedSchemaFunc, out model, out errors);
+            bool parsed = CsdlReader.TryParse(XmlReader.Create(new StringReader(edmx), new XmlReaderSettings(), edmxUri), getReferencedSchemaFunc, out model, out errors);
             Assert.IsFalse(parsed, "parsed");
 
             var errorList = errors.ToArray();

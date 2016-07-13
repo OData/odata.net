@@ -75,7 +75,7 @@ namespace Microsoft.OData.Edm.Tests.ScenarioTests
 
         public OasisRelationshipChangesAcceptanceTests()
         {
-            this.representativeModel = EdmxReader.Parse(XElement.Parse(RepresentativeEdmxDocument).CreateReader());
+            this.representativeModel = CsdlReader.Parse(XElement.Parse(RepresentativeEdmxDocument).CreateReader());
             var container = this.representativeModel.EntityContainer;
             this.entitySet1 = container.FindEntitySet("EntitySet1");
             this.entitySet2 = container.FindEntitySet("EntitySet2");
@@ -485,7 +485,7 @@ namespace Microsoft.OData.Edm.Tests.ScenarioTests
 
             IEdmModel model;
             IEnumerable<EdmError> errors;
-            EdmxReader.TryParse(XElement.Parse(modelText).CreateReader(), out model, out errors).Should().BeTrue();
+            CsdlReader.TryParse(XElement.Parse(modelText).CreateReader(), out model, out errors).Should().BeTrue();
             
             model.Validate(out errors).Should().BeFalse();
             errors.Should().HaveCount(messages.Length);
@@ -520,7 +520,7 @@ namespace Microsoft.OData.Edm.Tests.ScenarioTests
 
             IEdmModel model;
             IEnumerable<EdmError> errors;
-            EdmxReader.TryParse(XElement.Parse(modelText).CreateReader(), out model, out errors).Should().BeTrue();
+            CsdlReader.TryParse(XElement.Parse(modelText).CreateReader(), out model, out errors).Should().BeTrue();
             
             model.Validate(out errors).Should().BeFalse();
             errors.Should().HaveCount(messages.Length);
@@ -561,7 +561,7 @@ namespace Microsoft.OData.Edm.Tests.ScenarioTests
 
             IEdmModel model;
             IEnumerable<EdmError> errors;
-            EdmxReader.TryParse(XElement.Parse(modelText).CreateReader(), out model, out errors).Should().BeTrue();
+            CsdlReader.TryParse(XElement.Parse(modelText).CreateReader(), out model, out errors).Should().BeTrue();
 
             bool result = model.Validate(out errors);
 
@@ -599,7 +599,7 @@ namespace Microsoft.OData.Edm.Tests.ScenarioTests
 
             IEdmModel model;
             IEnumerable<EdmError> errors;
-            EdmxReader.TryParse(XElement.Parse(modelText).CreateReader(), out model, out errors).Should().BeFalse();
+            CsdlReader.TryParse(XElement.Parse(modelText).CreateReader(), out model, out errors).Should().BeFalse();
             
             errors.Should().HaveCount(messages.Length);
             foreach (var message in messages)
@@ -633,7 +633,7 @@ namespace Microsoft.OData.Edm.Tests.ScenarioTests
 
             IEdmModel model;
             IEnumerable<EdmError> errors;
-            EdmxReader.TryParse(XElement.Parse(modelText).CreateReader(), out model, out errors).Should().BeFalse();
+            CsdlReader.TryParse(XElement.Parse(modelText).CreateReader(), out model, out errors).Should().BeFalse();
             
             errors.Should().HaveCount(messages.Length);
             foreach (var message in messages)
@@ -663,7 +663,7 @@ namespace Microsoft.OData.Edm.Tests.ScenarioTests
             IEdmModel model;
             IEnumerable<EdmError> errors;
            
-            bool result = EdmxReader.TryParse(XElement.Parse(modelText).CreateReader(), out model, out errors);
+            bool result = CsdlReader.TryParse(XElement.Parse(modelText).CreateReader(), out model, out errors);
             if (errorCodes.Length > 0)
             {
                 result.Should().BeFalse();

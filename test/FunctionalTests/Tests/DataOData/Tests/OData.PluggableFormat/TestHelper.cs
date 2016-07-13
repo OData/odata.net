@@ -69,7 +69,7 @@ namespace Microsoft.Test.OData.PluggableFormat
                 {
                     edmxStream = null;
                     IEnumerable<EdmError> errors;
-                    bool valid = EdmxReader.TryParse(xmlReader, out model, out errors);
+                    bool valid = CsdlReader.TryParse(xmlReader, out model, out errors);
                     if (!valid)
                     {
                         ShowErrors(errors);

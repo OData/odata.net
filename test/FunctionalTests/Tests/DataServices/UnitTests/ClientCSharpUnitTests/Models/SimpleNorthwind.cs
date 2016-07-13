@@ -94,7 +94,7 @@ namespace AstoriaUnitTests
 
         public static IEdmModel BuildSimplifiedNorthwindModel()
         {
-            return EdmxReader.Parse(XmlTextReader.Create(new StringReader(SimpleNorthwindModel)));
+            return CsdlReader.Parse(XmlTextReader.Create(new StringReader(SimpleNorthwindModel)));
         }
 
         public class Product

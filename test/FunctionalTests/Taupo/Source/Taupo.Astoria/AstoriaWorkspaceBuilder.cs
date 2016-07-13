@@ -329,7 +329,7 @@ namespace Microsoft.Test.Taupo.Astoria
             using(var xmlTextReader = XmlReader.Create(s))
             {
 #endif
-                ExceptionUtilities.Assert(EdmxReader.TryParse(xmlTextReader, out model, out errors), "Cannot read csdl model");
+                ExceptionUtilities.Assert(CsdlReader.TryParse(xmlTextReader, out model, out errors), "Cannot read csdl model");
                 ExceptionUtilities.Assert(!errors.Any(), "Errors on parsing csdl");
             }
 

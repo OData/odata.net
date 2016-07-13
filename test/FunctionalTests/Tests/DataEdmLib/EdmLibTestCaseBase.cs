@@ -80,7 +80,7 @@ namespace EdmLibTests
         {
             IEdmModel model;
             IEnumerable<EdmError> errors;
-            bool parsed = EdmxReader.TryParse(XmlReader.Create(new StringReader(edmx)), out model, out errors);
+            bool parsed = CsdlReader.TryParse(XmlReader.Create(new StringReader(edmx)), out model, out errors);
 
             Assert.IsTrue(parsed, "Invalid edmx parsing.");
             Assert.AreEqual(0, errors.Count(), "Invalid error count.");

@@ -93,7 +93,7 @@ namespace AstoriaUnitTests.Tests
                 request.RequestMaxVersion = "4.0";
                 request.SendRequest();
                 var results = request.GetResponseStreamAsText();
-                var returnedModel = EdmxReader.Parse(XmlTextReader.Create(new StringReader(results)));
+                var returnedModel = CsdlReader.Parse(XmlTextReader.Create(new StringReader(results)));
                 Assert.IsNotNull(returnedModel);
 
                 Assert.AreEqual(1, NumAnnotationBuilderCalls);

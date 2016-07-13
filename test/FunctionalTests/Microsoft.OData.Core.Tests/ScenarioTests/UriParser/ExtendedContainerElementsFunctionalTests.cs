@@ -73,10 +73,10 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
 
             IEnumerable<EdmError> errors;
             IEdmModel model1;
-            bool parsed = EdmxReader.TryParse(XmlReader.Create(new StringReader(model1xml)), out model1, out errors);
+            bool parsed = CsdlReader.TryParse(XmlReader.Create(new StringReader(model1xml)), out model1, out errors);
             Assert.True(parsed);
 
-            parsed = EdmxReader.TryParse(XmlReader.Create(new StringReader(mainModelxml)), new IEdmModel[] { model1 }, out model, out errors);
+            parsed = CsdlReader.TryParse(XmlReader.Create(new StringReader(mainModelxml)), new IEdmModel[] { model1 }, out model, out errors);
             Assert.True(parsed);
         }
 

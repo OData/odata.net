@@ -301,9 +301,6 @@
     <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\Parsing\Ast\CsdlOperationReturnType.cs">
       <Link>Microsoft\OData\Edm\Csdl\Parsing\Ast\CsdlOperationReturnType.cs</Link>
     </Compile>
-    <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\EdmxReader.cs">
-      <Link>Microsoft\OData\Edm\Csdl\EdmxReader.cs</Link>
-    </Compile>
     <Compile Include="$(EdmLibCrossTargettingSourcePath)\Csdl\EdmxWriter.cs">
       <Link>Microsoft\OData\Edm\Csdl\EdmxWriter.cs</Link>
     </Compile>
@@ -676,6 +673,9 @@
     </Compile>
     <Compile Include="$(EdmLibCrossTargettingSourcePath)\..\PlatformHelper.cs">
       <Link>Microsoft\OData\Edm\PlatformHelper.cs</Link>
+    </Compile>
+    <Compile Include="..\Csdl\CsdlReader.cs">
+      <Link>Microsoft\OData\Edm\Csdl\CsdlReader.cs</Link>
     </Compile>
     <Compile Include="..\Csdl\CsdlReaderSettings.cs">
       <Link>Microsoft\OData\Edm\Csdl\CsdlReaderSettings.cs</Link>

@@ -140,7 +140,7 @@ namespace EdmLibTests.FunctionalTests
                 tr = new StringReader(builder.ToString());
                 using (var xr = XmlReader.Create(tr))
                 {
-                    Model = EdmxReader.Parse(xr);
+                    Model = CsdlReader.Parse(xr);
                 }
             }
             catch (Exception)
@@ -290,7 +290,7 @@ namespace EdmLibTests.FunctionalTests
                 using (var sr = new StreamReader(ms))
                 {
                     var metadata = sr.ReadToEnd();
-                    loadedEdmModel = EdmxReader.Parse(XmlReader.Create(new MemoryStream(Encoding.UTF8.GetBytes(metadata))));
+                    loadedEdmModel = CsdlReader.Parse(XmlReader.Create(new MemoryStream(Encoding.UTF8.GetBytes(metadata))));
                 }
             }
             container = loadedEdmModel.EntityContainer;

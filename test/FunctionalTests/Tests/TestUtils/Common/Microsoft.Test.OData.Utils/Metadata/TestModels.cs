@@ -355,7 +355,7 @@ namespace Microsoft.Test.OData.Utils.Metadata
             {
                 IEdmModel model;
                 IEnumerable<EdmError> errors;
-                if (!EdmxReader.TryParse(reader, out model, out errors))
+                if (!CsdlReader.TryParse(reader, out model, out errors))
                 {
                     throw new Exception("Model loading failed: " + string.Join("\r\n", errors.Select(e => e.ErrorLocation.ToString() + ": " + e.ErrorMessage)));
                 }

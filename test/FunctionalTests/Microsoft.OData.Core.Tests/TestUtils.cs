@@ -73,7 +73,7 @@ namespace Microsoft.OData.Tests
 </edmx:Edmx>";
             IEdmModel ret;
             IEnumerable<EdmError> errors;
-            if (EdmxReader.TryParse(XmlReader.Create(new StringReader(mainModelxml)), new List<IEdmModel>(referencedModels), out ret, out errors))
+            if (CsdlReader.TryParse(XmlReader.Create(new StringReader(mainModelxml)), new List<IEdmModel>(referencedModels), out ret, out errors))
             {
                 return ret;
             }
@@ -107,7 +107,7 @@ namespace Microsoft.OData.Tests
             mainModelxml = string.Format(mainModelxml, namespaceOfContainerToExtend, nameOfContainerToExtend);
             IEdmModel ret;
             IEnumerable<EdmError> errors;
-            if (EdmxReader.TryParse(XmlReader.Create(new StringReader(mainModelxml)), new List<IEdmModel>(referencedModels), out ret, out errors))
+            if (CsdlReader.TryParse(XmlReader.Create(new StringReader(mainModelxml)), new List<IEdmModel>(referencedModels), out ret, out errors))
             {
                 return ret;
             }

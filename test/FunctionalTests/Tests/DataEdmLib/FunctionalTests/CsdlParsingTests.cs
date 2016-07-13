@@ -50,9 +50,9 @@ namespace EdmLibTests.FunctionalTests
             IEdmModel model;
             IEnumerable<EdmError> errors;
             IEnumerable<IEdmModel> refs = null;
-            Action action = () => EdmxReader.TryParse(XmlReader.Create(new StringReader(edmx)), refs, out model, out errors);
+            Action action = () => CsdlReader.TryParse(XmlReader.Create(new StringReader(edmx)), refs, out model, out errors);
             action.ShouldThrow<ArgumentNullException>().WithMessage("Value cannot be null.\r\nParameter name: references");
-            action = () => EdmxReader.TryParse(XmlReader.Create(new StringReader(edmx)), refs, new CsdlReaderSettings(), out model, out errors);
+            action = () => CsdlReader.TryParse(XmlReader.Create(new StringReader(edmx)), refs, new CsdlReaderSettings(), out model, out errors);
             action.ShouldThrow<ArgumentNullException>().WithMessage("Value cannot be null.\r\nParameter name: references");
         }
 
@@ -81,7 +81,7 @@ namespace EdmLibTests.FunctionalTests
 
             IEnumerable<EdmError> errors;
             IEdmModel model;
-            bool parsed = EdmxReader.TryParse(XmlReader.Create(new StringReader(edmx)), out model, out errors);
+            bool parsed = CsdlReader.TryParse(XmlReader.Create(new StringReader(edmx)), out model, out errors);
             Assert.IsTrue(parsed, "parsed");
             Assert.IsTrue(errors.Count() == 0, "No errors");
 
@@ -157,7 +157,7 @@ namespace EdmLibTests.FunctionalTests
 
             IEdmModel model;
             IEnumerable<EdmError> errors;
-            bool parsed = EdmxReader.TryParse(XmlReader.Create(new StringReader(edmx)), getReferencedModelReaderFunc, out model, out errors);
+            bool parsed = CsdlReader.TryParse(XmlReader.Create(new StringReader(edmx)), getReferencedModelReaderFunc, out model, out errors);
             Assert.IsNotNull(model.FindType("NS.Ref1.VipCustomer"), "referenced type should be found");
             IEdmEntitySet entitySet = model.EntityContainer.EntitySets().First<IEdmEntitySet>(s => s.Name == "VipCustomers");
             Assert.IsNotNull(entitySet, "should not be null");
@@ -290,7 +290,7 @@ namespace EdmLibTests.FunctionalTests
 
             IEdmModel model;
             IEnumerable<EdmError> errors;
-            bool parsed = EdmxReader.TryParse(XmlReader.Create(new StringReader(edmx)), getReferencedSchemaFunc, out model, out errors);
+            bool parsed = CsdlReader.TryParse(XmlReader.Create(new StringReader(edmx)), getReferencedSchemaFunc, out model, out errors);
             Assert.IsNotNull(model.FindType("NS.Ref1.VipCustomer"), "referenced type should be found");
             IEdmEntitySet entitySet = model.EntityContainer.EntitySets().First<IEdmEntitySet>(s => s.Name == "VipCustomers");
             Assert.IsNotNull(entitySet, "should not be null");
@@ -427,17 +427,17 @@ namespace EdmLibTests.FunctionalTests
 
             IEdmModel ref2Model;
             IEnumerable<EdmError> errors;
-            bool parsed = EdmxReader.TryParse(XmlReader.Create(new StringReader(edmxRef2)), (Func<Uri, XmlReader>)null, out ref2Model, out errors);
+            bool parsed = CsdlReader.TryParse(XmlReader.Create(new StringReader(edmxRef2)), (Func<Uri, XmlReader>)null, out ref2Model, out errors);
             Assert.IsTrue(parsed);
-            parsed = EdmxReader.TryParse(XmlReader.Create(new StringReader(edmxRef2)), out ref2Model, out errors);
+            parsed = CsdlReader.TryParse(XmlReader.Create(new StringReader(edmxRef2)), out ref2Model, out errors);
             Assert.IsTrue(parsed);
 
             IEdmModel ref1Model;
-            parsed = EdmxReader.TryParse(XmlReader.Create(new StringReader(edmxRef1)), (IEdmModel)ref2Model, out ref1Model, out errors);
+            parsed = CsdlReader.TryParse(XmlReader.Create(new StringReader(edmxRef1)), (IEdmModel)ref2Model, out ref1Model, out errors);
             Assert.IsTrue(parsed);
 
             IEdmModel model;
-            parsed = EdmxReader.TryParse(XmlReader.Create(new StringReader(edmx)), new IEdmModel[] { ref1Model, ref2Model }, out model, out errors);
+            parsed = CsdlReader.TryParse(XmlReader.Create(new StringReader(edmx)), new IEdmModel[] { ref1Model, ref2Model }, out model, out errors);
             Assert.IsTrue(parsed);
 
             Assert.IsNotNull(model.FindType("NS.Ref1.VipCustomer"), "referenced type should be found");
@@ -542,10 +542,10 @@ namespace EdmLibTests.FunctionalTests
             IEdmModel model;
             IEdmModel refModel;
             IEnumerable<EdmError> errors;
-            bool parsed = EdmxReader.TryParse(XmlReader.Create(new StringReader(edmxRef1)), out refModel, out errors);
+            bool parsed = CsdlReader.TryParse(XmlReader.Create(new StringReader(edmxRef1)), out refModel, out errors);
             Assert.IsTrue(parsed, "parsed");
             Assert.IsTrue(errors.Count() == 0, "no errors");
-            parsed = EdmxReader.TryParse(XmlReader.Create(new StringReader(edmx)), new[] { refModel }, out model, out errors);
+            parsed = CsdlReader.TryParse(XmlReader.Create(new StringReader(edmx)), new[] { refModel }, out model, out errors);
             Assert.IsTrue(parsed, "parsed");
             Assert.IsTrue(errors.Count() == 0, "no errors");
 
@@ -597,7 +597,7 @@ namespace EdmLibTests.FunctionalTests
 
             IEdmModel model;
             IEnumerable<EdmError> errors;
-            bool parsed = EdmxReader.TryParse(XmlReader.Create(new StringReader(edmx)), getReferencedSchemaFunc, out model, out errors);
+            bool parsed = CsdlReader.TryParse(XmlReader.Create(new StringReader(edmx)), getReferencedSchemaFunc, out model, out errors);
             Assert.IsFalse(parsed, "parsed");
             var error = errors.Single();
             Assert.AreEqual("edmx:Reference must contain at least one edmx:Includes or edmx:IncludeAnnotations.", error.ErrorMessage);
@@ -626,7 +626,7 @@ namespace EdmLibTests.FunctionalTests
 
             IEdmModel model;
             IEnumerable<EdmError> errors;
-            bool parsed = EdmxReader.TryParse(XmlReader.Create(new StringReader(edmx)), getReferencedSchemaFunc, out model, out errors);
+            bool parsed = CsdlReader.TryParse(XmlReader.Create(new StringReader(edmx)), getReferencedSchemaFunc, out model, out errors);
             Assert.IsFalse(parsed, "parsed");
             var error = errors.Single();
             Assert.AreEqual("edmx:Reference must contain at least one edmx:Includes or edmx:IncludeAnnotations.", error.ErrorMessage);
@@ -670,7 +670,7 @@ namespace EdmLibTests.FunctionalTests
 
             IEdmModel model;
             IEnumerable<EdmError> errors;
-            bool parsed = EdmxReader.TryParse(XmlReader.Create(new StringReader(edmx)), out model, out errors);
+            bool parsed = CsdlReader.TryParse(XmlReader.Create(new StringReader(edmx)), out model, out errors);
             Assert.IsFalse(parsed, "parsed");
             Assert.AreEqual(1, errors.Count(), "1 error");
         }
@@ -778,7 +778,7 @@ namespace EdmLibTests.FunctionalTests
 
             IEdmModel model;
             IEnumerable<EdmError> errors;
-            bool parsed = EdmxReader.TryParse(XmlReader.Create(new StringReader(edmx)), out model, out errors);
+            bool parsed = CsdlReader.TryParse(XmlReader.Create(new StringReader(edmx)), out model, out errors);
             Assert.IsTrue(parsed, "parsed");
             Assert.IsTrue(errors.Count() == 0, "no errors");
 
@@ -794,7 +794,7 @@ namespace EdmLibTests.FunctionalTests
             var edmx = @"<?xml version=""1.0"" encoding=""utf-16""?>";
             IEdmModel model;
             IEnumerable<EdmError> errors;
-            bool success = EdmxReader.TryParse(XmlReader.Create(new StringReader(edmx)), out model, out errors);
+            bool success = CsdlReader.TryParse(XmlReader.Create(new StringReader(edmx)), out model, out errors);
             Assert.IsFalse(success, "Parse failed.");
             Assert.AreEqual(1, errors.Count(), "Correct number of errors");
             Assert.AreEqual(EdmErrorCode.XmlError, errors.First().ErrorCode, "Correct error.");
@@ -824,7 +824,7 @@ namespace EdmLibTests.FunctionalTests
 </edmx:Edmx>";
             IEdmModel model;
             IEnumerable<EdmError> errors;
-            bool success = EdmxReader.TryParse(XmlReader.Create(new StringReader(edmx)), out model, out errors);
+            bool success = CsdlReader.TryParse(XmlReader.Create(new StringReader(edmx)), out model, out errors);
             Assert.IsFalse(success, "Parse failed.");
             Assert.AreEqual(1, errors.Count(), "Correct number of errors");
             Assert.AreEqual(EdmErrorCode.InvalidVersionNumber, errors.First().ErrorCode, "Correct error.");
@@ -854,7 +854,7 @@ namespace EdmLibTests.FunctionalTests
 </edmx:Edmx>";
             IEdmModel model;
             IEnumerable<EdmError> errors;
-            bool success = EdmxReader.TryParse(XmlReader.Create(new StringReader(edmx)), out model, out errors);
+            bool success = CsdlReader.TryParse(XmlReader.Create(new StringReader(edmx)), out model, out errors);
             Assert.IsFalse(success, "Parse failed.");
             Assert.AreEqual(1, errors.Count(), "Correct number of errors");
             Assert.AreEqual(EdmErrorCode.InvalidVersionNumber, errors.First().ErrorCode, "Correct error.");
@@ -884,7 +884,7 @@ namespace EdmLibTests.FunctionalTests
 </edmx:Edmx>";
             IEdmModel model;
             IEnumerable<EdmError> errors;
-            bool success = EdmxReader.TryParse(XmlReader.Create(new StringReader(edmx)), out model, out errors);
+            bool success = CsdlReader.TryParse(XmlReader.Create(new StringReader(edmx)), out model, out errors);
             Assert.IsFalse(success, "Parse failed.");
             Assert.AreEqual(1, errors.Count(), "Correct number of errors");
             Assert.AreEqual(EdmErrorCode.InvalidVersionNumber, errors.First().ErrorCode, "Correct error.");
@@ -914,7 +914,7 @@ namespace EdmLibTests.FunctionalTests
 </edmx:Edmx>";
             IEdmModel model;
             IEnumerable<EdmError> errors;
-            bool success = EdmxReader.TryParse(XmlReader.Create(new StringReader(edmx)), out model, out errors);
+            bool success = CsdlReader.TryParse(XmlReader.Create(new StringReader(edmx)), out model, out errors);
             Assert.IsTrue(success, "Parse failed.");
             Assert.AreEqual(0, errors.Count(), "Correct number of errors");
         }
@@ -936,7 +936,7 @@ namespace EdmLibTests.FunctionalTests
 </edmx:Edmx>";
             IEnumerable<EdmError> errors;
             IEdmModel model;
-            bool parsed = EdmxReader.TryParse(XmlReader.Create(new StringReader(edmx)), out model, out errors);
+            bool parsed = CsdlReader.TryParse(XmlReader.Create(new StringReader(edmx)), out model, out errors);
             Assert.IsFalse(parsed, "parsed");
 
             foreach (var error in errors)
@@ -973,7 +973,7 @@ namespace EdmLibTests.FunctionalTests
                 "</edmx:Edmx>";
             IEnumerable<EdmError> errors;
             IEdmModel model;
-            bool parsed = EdmxReader.TryParse(XmlReader.Create(new StringReader(edmx)), out model, out errors);
+            bool parsed = CsdlReader.TryParse(XmlReader.Create(new StringReader(edmx)), out model, out errors);
             Assert.IsFalse(parsed, "parsed");
 
             foreach (var error in errors)
@@ -1021,7 +1021,7 @@ namespace EdmLibTests.FunctionalTests
 
             IEdmModel model;
             IEnumerable<EdmError> errors;
-            bool parsed = EdmxReader.TryParse(XmlReader.Create(new StringReader(edmx)), out model, out errors);
+            bool parsed = CsdlReader.TryParse(XmlReader.Create(new StringReader(edmx)), out model, out errors);
 
             Assert.IsTrue(parsed, "parsed");
             Assert.IsFalse(errors.Any(), "No errors");
@@ -1066,7 +1066,7 @@ namespace EdmLibTests.FunctionalTests
             IEdmModel model;
             IEnumerable<EdmError> errors;
 
-            bool parsed = EdmxReader.TryParse(XmlReader.Create(new StringReader(edmx)), true, out model, out errors);
+            bool parsed = CsdlReader.TryParse(XmlReader.Create(new StringReader(edmx)), true, out model, out errors);
 
             Assert.IsTrue(parsed, "parsed");
             Assert.AreEqual(4, errors.Count());
@@ -1139,7 +1139,7 @@ namespace EdmLibTests.FunctionalTests
                 GetReferencedModelReaderFunc = getReferencedModelReaderFunc,
                 IgnoreUnexpectedAttributesAndElements = true
             };
-            bool parsed = EdmxReader.TryParse(XmlReader.Create(new StringReader(edmx)), Enumerable.Empty<IEdmModel>(), settings, out model, out errors);
+            bool parsed = CsdlReader.TryParse(XmlReader.Create(new StringReader(edmx)), Enumerable.Empty<IEdmModel>(), settings, out model, out errors);
             Assert.AreEqual(true, parsed);
             Assert.AreEqual(2, errors.Count());
             Assert.IsNotNull(model.FindType("NS.Ref1.VipCustomer"), "referenced type should be found");
@@ -1176,7 +1176,7 @@ namespace EdmLibTests.FunctionalTests
                 GetReferencedModelReaderFunc = (uri) => null,
                 IgnoreUnexpectedAttributesAndElements = false
             };
-            bool parsed = EdmxReader.TryParse(XmlReader.Create(new StringReader(edmx)), Enumerable.Empty<IEdmModel>(), settings, out model, out errors);
+            bool parsed = CsdlReader.TryParse(XmlReader.Create(new StringReader(edmx)), Enumerable.Empty<IEdmModel>(), settings, out model, out errors);
             Assert.AreEqual(false, parsed);
             Assert.AreEqual(1, errors.Count());
             var error = errors.Single();
@@ -1214,7 +1214,7 @@ namespace EdmLibTests.FunctionalTests
                 GetReferencedModelReaderFunc = (uri) => null,
                 IgnoreUnexpectedAttributesAndElements = false
             };
-            bool parsed = EdmxReader.TryParse(XmlReader.Create(new StringReader(edmx)), Enumerable.Empty<IEdmModel>(), settings, out model, out errors);
+            bool parsed = CsdlReader.TryParse(XmlReader.Create(new StringReader(edmx)), Enumerable.Empty<IEdmModel>(), settings, out model, out errors);
             Assert.AreEqual(true, parsed);
             Assert.AreEqual(0, errors.Count());
             Assert.AreEqual(4, model.ReferencedModels.Count());
@@ -1278,7 +1278,7 @@ namespace EdmLibTests.FunctionalTests
             var c2Type = new EdmComplexType("NS.Ref2", "C2");
             ref2.AddElement(c2Type);
 
-            bool parsed = EdmxReader.TryParse(XmlReader.Create(new StringReader(edmx)), new[] { ref2 }, settings, out model, out errors);
+            bool parsed = CsdlReader.TryParse(XmlReader.Create(new StringReader(edmx)), new[] { ref2 }, settings, out model, out errors);
             Assert.AreEqual(true, parsed);
             Assert.AreEqual(0, errors.Count());
             var customerType = model.FindType("NS1.Customer") as IEdmEntityType;
@@ -1294,7 +1294,7 @@ namespace EdmLibTests.FunctionalTests
         }
 
         [TestMethod]
-        public void EdmxReaderEntitysEnumKeyTest()
+        public void CsdlReaderEntitysEnumKeyTest()
         {
             var edmx =
 @"<?xml version=""1.0"" encoding=""utf-16""?>
@@ -1329,7 +1329,7 @@ namespace EdmLibTests.FunctionalTests
                 IgnoreUnexpectedAttributesAndElements = true
             };
 
-            bool parsed = EdmxReader.TryParse(XmlReader.Create(new StringReader(edmx)), new IEdmModel[0], settings, out model, out errors);
+            bool parsed = CsdlReader.TryParse(XmlReader.Create(new StringReader(edmx)), new IEdmModel[0], settings, out model, out errors);
             Assert.AreEqual(true, parsed);
             Assert.AreEqual(0, errors.Count());
             IEnumerable<EdmError> validationResults;
@@ -1406,7 +1406,7 @@ namespace EdmLibTests.FunctionalTests
                 GetReferencedModelReaderFunc = getReferencedModelReaderFunc,
                 IgnoreUnexpectedAttributesAndElements = true
             };
-            bool parsed = EdmxReader.TryParse(XmlReader.Create(new StringReader(edmx)), Enumerable.Empty<IEdmModel>(), settings, out model, out errors);
+            bool parsed = CsdlReader.TryParse(XmlReader.Create(new StringReader(edmx)), Enumerable.Empty<IEdmModel>(), settings, out model, out errors);
             Assert.AreEqual(true, parsed);
             Assert.AreEqual(3, errors.Count());
             Assert.IsNotNull(model.FindType("NS.Ref1.VipCustomer"), "referenced type should be found");
@@ -1419,7 +1419,7 @@ namespace EdmLibTests.FunctionalTests
                 GetReferencedModelReaderFunc = getReferencedModelReaderFunc,
                 IgnoreUnexpectedAttributesAndElements = false
             };
-            parsed = EdmxReader.TryParse(XmlReader.Create(new StringReader(edmx)), Enumerable.Empty<IEdmModel>(), settings, out model, out errors);
+            parsed = CsdlReader.TryParse(XmlReader.Create(new StringReader(edmx)), Enumerable.Empty<IEdmModel>(), settings, out model, out errors);
             Assert.AreEqual(false, parsed);
             Assert.AreEqual(3, errors.Count());
         }
@@ -1445,7 +1445,7 @@ namespace EdmLibTests.FunctionalTests
             IEdmModel model;
             IEnumerable<EdmError> errors;
 
-            bool parsed = EdmxReader.TryParse(XmlReader.Create(new StringReader(edmx)), out model, out errors);
+            bool parsed = CsdlReader.TryParse(XmlReader.Create(new StringReader(edmx)), out model, out errors);
             Assert.AreEqual(true, parsed);
             Assert.AreEqual(0, errors.Count());
             IEnumerable<EdmError> validationResults;
@@ -1457,7 +1457,7 @@ namespace EdmLibTests.FunctionalTests
         #region Edm.Untyped
 
         [TestMethod]
-        public void EdmxReaderEdmUntypedTest()
+        public void CsdlReaderEdmUntypedTest()
         {
             var edmx =
 @"<?xml version=""1.0"" encoding=""utf-16""?>
@@ -1492,7 +1492,7 @@ namespace EdmLibTests.FunctionalTests
                 IgnoreUnexpectedAttributesAndElements = true
             };
 
-            bool parsed = EdmxReader.TryParse(XmlReader.Create(new StringReader(edmx)), new IEdmModel[0], settings, out model, out errors);
+            bool parsed = CsdlReader.TryParse(XmlReader.Create(new StringReader(edmx)), new IEdmModel[0], settings, out model, out errors);
             Assert.AreEqual(true, parsed);
             Assert.AreEqual(0, errors.Count());
             IEnumerable<EdmError> validationResults;

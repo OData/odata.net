@@ -743,7 +743,7 @@ namespace Microsoft.OData.Tests.UriParser
                 // deserialize edm xml
                 // TODO: remove the above model building codes.
                 IEdmModel parsedModel;
-                if (EdmxReader.TryParse(XmlReader.Create(new StringReader(HardCodedTestModelXml.MainModelXml)), (Uri uri) =>
+                if (CsdlReader.TryParse(XmlReader.Create(new StringReader(HardCodedTestModelXml.MainModelXml)), (Uri uri) =>
                 {
                     if (string.Equals(uri.AbsoluteUri, "http://submodel1/"))
                     {

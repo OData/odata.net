@@ -3263,7 +3263,7 @@ namespace AstoriaUnitTests.Tests.DerivedProperty
 	</edmx:DataServices>
 </edmx:Edmx>";
             System.Xml.XmlReader reader = System.Xml.XmlReader.Create(new StringReader(metadata));
-            IEdmModel model = Microsoft.OData.Edm.Csdl.EdmxReader.Parse(reader);
+            IEdmModel model = Microsoft.OData.Edm.Csdl.CsdlReader.Parse(reader);
             return model;
         }
     }

@@ -286,7 +286,7 @@ namespace EdmLibTests.FunctionalTests
         {
             IEnumerable<EdmError> actualErrors;
             IEdmModel model;
-            bool parsed = EdmxReader.TryParse(XmlReader.Create(new StringReader(edmx)), out model, out actualErrors);
+            bool parsed = CsdlReader.TryParse(XmlReader.Create(new StringReader(edmx)), out model, out actualErrors);
 
             Assert.IsFalse(parsed, "Invalid edmx parsing.");
             ValidationVerificationHelper.Verify(expectedErrors, actualErrors);

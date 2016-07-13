@@ -302,7 +302,7 @@ namespace EdmLibTests.FunctionalTests
 
             IEdmModel model;
             IEnumerable<EdmError> errors;
-            EdmxReader.TryParse(XmlReader.Create(new StringReader(inputText)), out model, out errors);
+            CsdlReader.TryParse(XmlReader.Create(new StringReader(inputText)), out model, out errors);
 
             try
             {

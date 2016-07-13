@@ -38,7 +38,7 @@ namespace AstoriaUnitTests.Tests
                                            {
                                                ctx.ResolveName = t => t.FullName;
                                                ctx.ResolveType = n => n.Contains("Customer") ? typeof(Customer) : null;
-                                               ctx.Format.UseJson(EdmxReader.Parse(XmlReader.Create(ctx.GetMetadataUri().AbsoluteUri)));
+                                               ctx.Format.UseJson(CsdlReader.Parse(XmlReader.Create(ctx.GetMetadataUri().AbsoluteUri)));
                                            });
         }
         [Ignore] // Remove Atom

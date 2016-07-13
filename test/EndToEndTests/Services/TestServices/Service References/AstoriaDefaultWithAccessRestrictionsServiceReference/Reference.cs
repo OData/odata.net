@@ -726,7 +726,7 @@ namespace Microsoft.Test.OData.Services.TestServices.AstoriaDefaultWithAccessRes
                 global::System.Xml.XmlReader reader = CreateXmlReader(edmxToParse);
                 try
                 {
-                    return global::Microsoft.OData.Edm.Csdl.EdmxReader.Parse(reader);
+                    return global::Microsoft.OData.Edm.Csdl.CsdlReader.Parse(reader);
                 }
                 finally
                 {

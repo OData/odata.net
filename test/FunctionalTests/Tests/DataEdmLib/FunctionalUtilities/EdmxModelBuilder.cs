@@ -314,7 +314,7 @@ namespace EdmLibTests.FunctionalUtilities
             };
 
             IEnumerable<EdmError> errors;
-            bool parsed = EdmxReader.TryParse(XmlReader.Create(new StringReader(mainEdmx)), getReferencedModelReaderFunc, out model, out errors);
+            bool parsed = CsdlReader.TryParse(XmlReader.Create(new StringReader(mainEdmx)), getReferencedModelReaderFunc, out model, out errors);
             Assert.IsTrue(parsed);
             return parsed;
         }

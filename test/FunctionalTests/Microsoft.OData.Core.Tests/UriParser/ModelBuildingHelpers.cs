@@ -290,7 +290,7 @@ namespace Microsoft.OData.Tests.UriParser
             {
                 using (XmlReader xmlReader = XmlReader.Create(stringReader))
                 {
-                    bool parsed = EdmxReader.TryParse(xmlReader, out model, out errors);
+                    bool parsed = CsdlReader.TryParse(xmlReader, out model, out errors);
                     if (!parsed)
                     {
                         throw new Exception(errors.First().ErrorMessage);

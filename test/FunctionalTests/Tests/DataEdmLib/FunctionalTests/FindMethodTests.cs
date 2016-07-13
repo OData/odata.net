@@ -885,7 +885,7 @@ namespace EdmLibTests.FunctionalTests
 
             IEdmModel model;
             IEnumerable<EdmError> errors;
-            bool parsed = EdmxReader.TryParse(XmlReader.Create(new StringReader(edmx)), new IEdmModel[] { referencedEntityContainerModel }, out model, out errors);
+            bool parsed = CsdlReader.TryParse(XmlReader.Create(new StringReader(edmx)), new IEdmModel[] { referencedEntityContainerModel }, out model, out errors);
             Assert.IsTrue(parsed, "parsed");
             Assert.IsTrue(errors.Count() == 0, "no errors");
 

@@ -2653,16 +2653,7 @@ public class Microsoft.OData.Edm.Csdl.CsdlLocation : Microsoft.OData.Edm.EdmLoca
 	public virtual string ToString ()
 }
 
-[
-DebuggerDisplayAttribute(),
-]
-public class Microsoft.OData.Edm.Csdl.EdmParseException : System.Exception, _Exception, ISerializable {
-	public EdmParseException (System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.Validation.EdmError]] parseErrors)
-
-	System.Collections.ObjectModel.ReadOnlyCollection`1[[Microsoft.OData.Edm.Validation.EdmError]] Errors  { public get; }
-}
-
-public class Microsoft.OData.Edm.Csdl.EdmxReader {
+public class Microsoft.OData.Edm.Csdl.CsdlReader {
 	public static Microsoft.OData.Edm.IEdmModel Parse (System.Xml.XmlReader reader)
 	public static Microsoft.OData.Edm.IEdmModel Parse (System.Xml.XmlReader reader, Microsoft.OData.Edm.IEdmModel referencedModel)
 	public static Microsoft.OData.Edm.IEdmModel Parse (System.Xml.XmlReader reader, System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.IEdmModel]] referencedModels)
@@ -2673,6 +2664,15 @@ public class Microsoft.OData.Edm.Csdl.EdmxReader {
 	public static bool TryParse (System.Xml.XmlReader reader, System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.IEdmModel]] references, out Microsoft.OData.Edm.IEdmModel& model, out System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.Validation.EdmError]]& errors)
 	public static bool TryParse (System.Xml.XmlReader reader, System.Func`2[[System.Uri],[System.Xml.XmlReader]] getReferencedModelReaderFunc, out Microsoft.OData.Edm.IEdmModel& model, out System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.Validation.EdmError]]& errors)
 	public static bool TryParse (System.Xml.XmlReader reader, System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.IEdmModel]] references, Microsoft.OData.Edm.Csdl.CsdlReaderSettings settings, out Microsoft.OData.Edm.IEdmModel& model, out System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.Validation.EdmError]]& errors)
+}
+
+[
+DebuggerDisplayAttribute(),
+]
+public class Microsoft.OData.Edm.Csdl.EdmParseException : System.Exception, _Exception, ISerializable {
+	public EdmParseException (System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.Validation.EdmError]] parseErrors)
+
+	System.Collections.ObjectModel.ReadOnlyCollection`1[[Microsoft.OData.Edm.Validation.EdmError]] Errors  { public get; }
 }
 
 public class Microsoft.OData.Edm.Csdl.EdmxWriter {

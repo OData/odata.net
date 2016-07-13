@@ -1,5 +1,5 @@
 ﻿//---------------------------------------------------------------------
-// <copyright file="EdmxReaderTests.cs" company="Microsoft">
+// <copyright file="CsdlReaderTests.cs" company="Microsoft">
 //      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 // </copyright>
 //---------------------------------------------------------------------
@@ -15,7 +15,7 @@ using ErrorStrings = Microsoft.OData.Edm.Strings;
 
 namespace Microsoft.OData.Edm.Tests.Csdl
 {
-    public class EdmxReaderTests
+    public class CsdlReaderTests
     {
         private const string ValidEdmx = @"<edmx:Edmx Version=""4.0"" xmlns:edmx=""http://docs.oasis-open.org/odata/ns/edmx"">
   <edmx:DataServices>
@@ -30,7 +30,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl
         private XmlReader validReader;
         private XmlReader invalidReader;
 
-        public EdmxReaderTests()
+        public CsdlReaderTests()
         {
             this.validReader = XElement.Parse(ValidEdmx).CreateReader();
             this.invalidReader = XElement.Parse(InvalidXml).CreateReader();
@@ -39,13 +39,13 @@ namespace Microsoft.OData.Edm.Tests.Csdl
         [Fact]
         public void ParsingValidXmlWithNoReferencesShouldSucceed()
         {
-            this.RunValidTest(EdmxReader.Parse);
+            this.RunValidTest(CsdlReader.Parse);
         }
 
         [Fact]
         public void ParsingInvalidXmlWithNoReferencesShouldThrow()
         {
-            this.RunInvalidTest(EdmxReader.Parse);
+            this.RunInvalidTest(CsdlReader.Parse);
         }
 
         [Fact]
@@ -89,7 +89,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl
                 "</edmx:DataServices>" +
                 "</edmx:Edmx>";
 
-            var model = EdmxReader.Parse(XElement.Parse(complexWithNav).CreateReader());
+            var model = CsdlReader.Parse(XElement.Parse(complexWithNav).CreateReader());
             var people = model.EntityContainer.FindEntitySet("People");
             var address = model.FindType("DefaultNs.Address") as IEdmStructuredType;
             var city = address.FindProperty("City") as IEdmNavigationProperty;
@@ -126,7 +126,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl
                               "</edmx:DataServices>" +
                               "</edmx:Edmx>";
 
-            var model = EdmxReader.Parse(XElement.Parse(complexWithNav).CreateReader());
+            var model = CsdlReader.Parse(XElement.Parse(complexWithNav).CreateReader());
             var people = model.EntityContainer.FindEntitySet("Entities");
             var address = model.FindType("DefaultNs.ComplexType") as IEdmStructuredType;
             var city = address.FindProperty("CollectionOfNav") as IEdmNavigationProperty;
@@ -138,25 +138,25 @@ namespace Microsoft.OData.Edm.Tests.Csdl
         [Fact]
         public void ParsingValidXmlWithOneReferencesShouldSucceed()
         {
-            this.RunValidTest(r => EdmxReader.Parse(r, EdmCoreModel.Instance));
+            this.RunValidTest(r => CsdlReader.Parse(r, EdmCoreModel.Instance));
         }
 
         [Fact]
         public void ParsingInvalidXmlWithOneReferencesShouldThrow()
         {
-            this.RunInvalidTest(r => EdmxReader.Parse(r, EdmCoreModel.Instance));
+            this.RunInvalidTest(r => CsdlReader.Parse(r, EdmCoreModel.Instance));
         }
 
         [Fact]
         public void ParsingValidXmlWithManyReferencesShouldSucceed()
         {
-            this.RunValidTest(r => EdmxReader.Parse(r, new IEdmModel[] { EdmCoreModel.Instance }));
+            this.RunValidTest(r => CsdlReader.Parse(r, new IEdmModel[] { EdmCoreModel.Instance }));
         }
 
         [Fact]
         public void ParsingInvalidXmlWithManyReferencesShouldThrow()
         {
-            this.RunInvalidTest(r => EdmxReader.Parse(r, new IEdmModel[] { EdmCoreModel.Instance }));
+            this.RunInvalidTest(r => CsdlReader.Parse(r, new IEdmModel[] { EdmCoreModel.Instance }));
         }
 
         [Fact]
@@ -170,7 +170,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl
     </Schema>
   </edmx:DataServices>
 </edmx:Edmx>";
-            Action parseAction = () => EdmxReader.Parse(XElement.Parse(EdmxwithMultipleEntityContainers).CreateReader());
+            Action parseAction = () => CsdlReader.Parse(XElement.Parse(EdmxwithMultipleEntityContainers).CreateReader());
             parseAction.ShouldThrow<EdmParseException>().WithMessage(
                 Strings.CsdlParser_MetadataDocumentCannotHaveMoreThanOneEntityContainer, ComparisonMode.Substring).And.Errors.Should().HaveCount(1);
         }

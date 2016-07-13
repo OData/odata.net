@@ -1932,7 +1932,7 @@ namespace AstoriaUnitTests
         {
             IEdmModel serviceModel;
             IEnumerable<EdmError> errors;
-            if (!EdmxReader.TryParse(XmlReader.Create(metadataDocumentUri.OriginalString), out serviceModel, out errors))
+            if (!CsdlReader.TryParse(XmlReader.Create(metadataDocumentUri.OriginalString), out serviceModel, out errors))
             {
                 Assert.Fail(string.Join(Environment.NewLine, errors.Select(e => e.ToString())));
             }

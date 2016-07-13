@@ -134,7 +134,7 @@ namespace Microsoft.OData.Tests.UriParser
 
         #endregion
 
-        IEdmModel oneDriveModel = EdmxReader.Parse(XmlReader.Create(new StringReader(oneDriveModelString)));
+        IEdmModel oneDriveModel = CsdlReader.Parse(XmlReader.Create(new StringReader(oneDriveModelString)));
         IEdmComplexType folderType;
         IEdmEntityType itemType;
         IEdmEntityType specialItemType;

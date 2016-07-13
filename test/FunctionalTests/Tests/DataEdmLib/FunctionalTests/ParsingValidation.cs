@@ -516,7 +516,7 @@ namespace EdmLibTests.FunctionalTests
 </edmx:Edmx>";
             IEdmModel model;
             IEnumerable<EdmError> errors;
-            bool parsed = EdmxReader.TryParse(XmlReader.Create(new StringReader(edmx)), out model, out errors);
+            bool parsed = CsdlReader.TryParse(XmlReader.Create(new StringReader(edmx)), out model, out errors);
 
             Assert.IsFalse(parsed, "parsed");
             ExpectedEdmErrors expectedErrors = new ExpectedEdmErrors
@@ -626,7 +626,7 @@ namespace EdmLibTests.FunctionalTests
             XmlReader foo = XmlReader.Create(new StringReader(edmx), settings);
             IEdmModel model;
             IEnumerable<EdmError> errors;
-            bool parsed = EdmxReader.TryParse(foo, out model, out errors);
+            bool parsed = CsdlReader.TryParse(foo, out model, out errors);
 
             Assert.IsFalse(parsed, "parsed");
             ExpectedEdmErrors expectedErrors = new ExpectedEdmErrors
@@ -645,7 +645,7 @@ namespace EdmLibTests.FunctionalTests
             XmlReader foo = XmlReader.Create(new StringReader(edmx), settings);
             IEdmModel model;
             IEnumerable<EdmError> errors;
-            bool parsed = EdmxReader.TryParse(foo, out model, out errors);
+            bool parsed = CsdlReader.TryParse(foo, out model, out errors);
 
             Assert.IsFalse(parsed, "parsed");
             ExpectedEdmErrors expectedErrors = new ExpectedEdmErrors
@@ -664,7 +664,7 @@ namespace EdmLibTests.FunctionalTests
             XmlReader foo = XmlReader.Create(new StringReader(edmx), settings);
             IEdmModel model;
             IEnumerable<EdmError> errors;
-            bool parsed = EdmxReader.TryParse(foo, out model, out errors);
+            bool parsed = CsdlReader.TryParse(foo, out model, out errors);
 
             Assert.IsFalse(parsed, "parsed");
             ExpectedEdmErrors expectedErrors = new ExpectedEdmErrors

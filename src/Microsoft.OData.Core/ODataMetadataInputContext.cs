@@ -111,7 +111,7 @@ namespace Microsoft.OData
         {
             IEdmModel model;
             IEnumerable<EdmError> errors;
-            if (!EdmxReader.TryParse(this.xmlReader, getReferencedModelReaderFunc, out model, out errors))
+            if (!CsdlReader.TryParse(this.xmlReader, getReferencedModelReaderFunc, out model, out errors))
             {
                 Debug.Assert(errors != null, "errors != null");
 

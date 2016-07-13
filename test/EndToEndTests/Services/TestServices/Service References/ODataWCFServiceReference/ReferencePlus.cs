@@ -1036,7 +1036,7 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
                 global::System.Xml.XmlReader reader = CreateXmlReader(Edmx);
                 try
                 {
-                    return global::Microsoft.OData.Edm.Csdl.EdmxReader.Parse(reader);
+                    return global::Microsoft.OData.Edm.Csdl.CsdlReader.Parse(reader);
                 }
                 finally
                 {

@@ -2839,7 +2839,7 @@ namespace EdmLibTests.FunctionalTests
             #endregion
 
 
-            Assert.IsTrue(EdmxReader.TryParse(XmlReader.Create(new StringReader(csdl)), out model, out errors), "parsed");
+            Assert.IsTrue(CsdlReader.TryParse(XmlReader.Create(new StringReader(csdl)), out model, out errors), "parsed");
             Assert.IsFalse(model.Validate(out validationErrors));
 
             TestEnumMember(model);
@@ -2887,7 +2887,7 @@ namespace EdmLibTests.FunctionalTests
             IEnumerable<EdmError> validationErrors;
 
             Assert.IsTrue(
-                EdmxReader.TryParse(
+                CsdlReader.TryParse(
                     XmlReader.Create(new StringReader(csdl)),
                     uri => XmlReader.Create(new StringReader(csdl2)),
                     out model,
