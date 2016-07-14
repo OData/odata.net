@@ -1150,7 +1150,7 @@ namespace Microsoft.OData.JsonLight
             }
 
             ValidationUtils.ValidateOpenPropertyValue(propertyName, propertyValue);
-            AddResourceProperty(resourceState, propertyName, propertyValue, isUndeclaredProperty: true);
+            AddResourceProperty(resourceState, propertyName, propertyValue);
             this.JsonReader.AssertNotBuffering();
             Debug.Assert(
                         this.JsonReader.NodeType == JsonNodeType.Property || this.JsonReader.NodeType == JsonNodeType.EndObject,

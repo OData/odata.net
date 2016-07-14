@@ -264,10 +264,11 @@
                 .First(s => string.Equals("UndeclaredBool", s.Name));
             val.ODataValue.FromODataValue().Should().Be(false);
 
-            val.InstanceAnnotations.Count().Should().Be(2);
-            val.InstanceAnnotations.First().Value.As<ODataPrimitiveValue>().Value.Should().Be("unknown odata.xxx value1");
-            val.InstanceAnnotations.Last().Value.As<ODataPrimitiveValue>().Value.Should().Be("unknown abcdefghijk value2");
-
+            // uncomment the below if decide to expose OData information via .InstanceAnnotations
+            // val.InstanceAnnotations.Count().Should().Be(1);
+            // val.InstanceAnnotations.First().Value.As<ODataPrimitiveValue>().Value.Should().Be("unknown odata.xxx value1");
+            // val.InstanceAnnotations.Last().Value.As<ODataPrimitiveValue>().Value.Should().Be("unknown abcdefghijk value2");
+            val.InstanceAnnotations.Single().Name.Should().Be("NS1.abcdefg");
             entry.MetadataBuilder = new Microsoft.OData.Evaluation.NoOpResourceMetadataBuilder(entry);
             string result = this.WriteEntryPayload(this.serverEntitySet, this.serverEntityType, writer =>
             {
@@ -279,7 +280,7 @@
                 writer.WriteEnd();
             });
 
-            result.Should().Be(payload);
+            result.Should().Be("{\"@odata.context\":\"http://www.sampletest.com/$metadata#serverEntitySet/$entity\",\"Id\":61880128,\"UndeclaredFloatId\":12.3,\"Address\":{\"Street\":\"No.999,Zixing Rd Minhang\",\"UndeclaredBool@NS1.abcdefg\":\"unknown abcdefghijk value2\",\"UndeclaredBool\":false}}");
         }
 
         [Fact]
@@ -310,9 +311,11 @@
                 .First(s => string.Equals("UndeclaredStreet", s.Name));
             val.ODataValue.FromODataValue().Should().Be("No.10000000999,Zixing Rd Minhang");
 
-            val.InstanceAnnotations.Count().Should().Be(3);
-            val.InstanceAnnotations.First().Value.As<ODataPrimitiveValue>().Value.Should().Be("Edm.String");
-            val.InstanceAnnotations.Last().Value.As<ODataPrimitiveValue>().Value.Should().Be("unknown abcdefghijk value2");
+            // uncomment the below if decide to expose OData information via .InstanceAnnotations
+            // val.InstanceAnnotations.Count().Should().Be(3);
+            // val.InstanceAnnotations.First().Value.As<ODataPrimitiveValue>().Value.Should().Be("Edm.String");
+            // val.InstanceAnnotations.Last().Value.As<ODataPrimitiveValue>().Value.Should().Be("unknown abcdefghijk value2");
+            val.InstanceAnnotations.Single().Name.Should().Be("NS1.abcdefg");
 
             entry.MetadataBuilder = new Microsoft.OData.Evaluation.NoOpResourceMetadataBuilder(entry);
             string result = this.WriteEntryPayload(this.serverEntitySet, this.serverEntityType, writer =>
@@ -325,7 +328,7 @@
                 writer.WriteEnd();
             });
 
-            result.Should().Be("{\"@odata.context\":\"http://www.sampletest.com/$metadata#serverEntitySet/$entity\",\"Id\":61880128,\"UndeclaredFloatId\":12.3,\"Address\":{\"Street\":\"No.999,Zixing Rd Minhang\",\"UndeclaredStreet@odata.type\":\"Edm.String\",\"UndeclaredStreet@odata.unknownName1\":\"unknown odata.xxx value1\",\"UndeclaredStreet@NS1.abcdefg\":\"unknown abcdefghijk value2\",\"UndeclaredStreet\":\"No.10000000999,Zixing Rd Minhang\"}}");
+            result.Should().Be("{\"@odata.context\":\"http://www.sampletest.com/$metadata#serverEntitySet/$entity\",\"Id\":61880128,\"UndeclaredFloatId\":12.3,\"Address\":{\"Street\":\"No.999,Zixing Rd Minhang\",\"UndeclaredStreet@NS1.abcdefg\":\"unknown abcdefghijk value2\",\"UndeclaredStreet\":\"No.10000000999,Zixing Rd Minhang\"}}");
         }
 
         [Fact]
@@ -356,9 +359,11 @@
                 .First(s => string.Equals("UndeclaredStreetNo", s.Name));
             val.ODataValue.FromODataValue().Should().Be(12d);
 
-            val.InstanceAnnotations.Count().Should().Be(3);
-            val.InstanceAnnotations.First().Value.As<ODataPrimitiveValue>().Value.Should().Be("Edm.Double");
-            val.InstanceAnnotations.Last().Value.As<ODataPrimitiveValue>().Value.Should().Be("unknown abcdefghijk value2");
+            // uncomment the below if decide to expose OData information via .InstanceAnnotations
+            // val.InstanceAnnotations.Count().Should().Be(3);
+            // val.InstanceAnnotations.First().Value.As<ODataPrimitiveValue>().Value.Should().Be("Edm.Double");
+            // val.InstanceAnnotations.Last().Value.As<ODataPrimitiveValue>().Value.Should().Be("unknown abcdefghijk value2");
+            val.InstanceAnnotations.Single().Name.Should().Be("NS1.abcdefg");
 
             entry.MetadataBuilder = new Microsoft.OData.Evaluation.NoOpResourceMetadataBuilder(entry);
             string result = this.WriteEntryPayload(this.serverEntitySet, this.serverEntityType, writer =>
@@ -371,7 +376,7 @@
                 writer.WriteEnd();
             });
 
-            result.Should().Be("{\"@odata.context\":\"http://www.sampletest.com/$metadata#serverEntitySet/$entity\",\"Id\":61880128,\"UndeclaredFloatId\":12.3,\"Address\":{\"Street\":\"No.999,Zixing Rd Minhang\",\"UndeclaredStreetNo@odata.type\":\"Edm.Double\",\"UndeclaredStreetNo@odata.unknownName1\":\"unknown odata.xxx value1\",\"UndeclaredStreetNo@NS1.abcdefg\":\"unknown abcdefghijk value2\",\"UndeclaredStreetNo\":12.0}}");
+            result.Should().Be("{\"@odata.context\":\"http://www.sampletest.com/$metadata#serverEntitySet/$entity\",\"Id\":61880128,\"UndeclaredFloatId\":12.3,\"Address\":{\"Street\":\"No.999,Zixing Rd Minhang\",\"UndeclaredStreetNo@NS1.abcdefg\":\"unknown abcdefghijk value2\",\"UndeclaredStreetNo\":12.0}}");
         }
 
         [Fact]
@@ -445,10 +450,12 @@
             entry.Properties.Count().Should().Be(3);
             ODataProperty val = entry.Properties.Single(s => string.Equals(s.Name, "UndeclaredCollection1"));
             val.ODataValue.As<ODataCollectionValue>().Items.Cast<string>().Count().Should().Be(3);
-            val.InstanceAnnotations.Count().Should().Be(3);
-            val.InstanceAnnotations.First().Value.As<ODataPrimitiveValue>().Value.Should().Be("Collection(Edm.String)");
-            val.InstanceAnnotations.Last().Value.As<ODataPrimitiveValue>().Value.Should().Be("unknown abcdefghijk value2");
 
+            // uncomment the below if decide to expose OData information via .InstanceAnnotations
+            // val.InstanceAnnotations.Count().Should().Be(3);
+            // val.InstanceAnnotations.First().Value.As<ODataPrimitiveValue>().Value.Should().Be("Collection(Edm.String)");
+            // val.InstanceAnnotations.Last().Value.As<ODataPrimitiveValue>().Value.Should().Be("unknown abcdefghijk value2");
+            val.InstanceAnnotations.Single().Name.Should().Be("NS1.abcdefg");
             complex1.Properties.Count().Should().Be(2);
 
             entry.MetadataBuilder = new Microsoft.OData.Evaluation.NoOpResourceMetadataBuilder(entry);
@@ -462,7 +469,7 @@
                 writer.WriteEnd();
             });
 
-            result.Should().Be("{\"@odata.context\":\"http://www.sampletest.com/$metadata#serverEntitySet/$entity\",\"Id\":61880128,\"UndeclaredFloatId\":12.3,\"UndeclaredCollection1@odata.type\":\"Collection(Edm.String)\",\"UndeclaredCollection1@odata.unknownName1\":\"unknown odata.xxx value1\",\"UndeclaredCollection1@NS1.abcdefg\":\"unknown abcdefghijk value2\",\"UndeclaredCollection1\":[\"email1@163.com\",\"email2@gmail.com\",\"email3@gmail2.com\"],\"Address\":{\"Street\":\"No.999,Zixing Rd Minhang\",\"UndeclaredStreet\":\"No.10000000999,Zixing Rd Minhang\"}}");
+            result.Should().Be("{\"@odata.context\":\"http://www.sampletest.com/$metadata#serverEntitySet/$entity\",\"Id\":61880128,\"UndeclaredFloatId\":12.3,\"UndeclaredCollection1@NS1.abcdefg\":\"unknown abcdefghijk value2\",\"UndeclaredCollection1\":[\"email1@163.com\",\"email2@gmail.com\",\"email3@gmail2.com\"],\"Address\":{\"Street\":\"No.999,Zixing Rd Minhang\",\"UndeclaredStreet\":\"No.10000000999,Zixing Rd Minhang\"}}");
         }
         #endregion
 

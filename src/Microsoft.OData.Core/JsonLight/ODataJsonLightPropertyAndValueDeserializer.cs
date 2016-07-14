@@ -423,7 +423,7 @@ namespace Microsoft.OData.JsonLight
             Debug.Assert(
                 this.JsonReader.NodeType == JsonNodeType.Property || this.JsonReader.NodeType == JsonNodeType.EndObject,
                 "Post-Condition: expected JsonNodeType.Property or JsonNodeType.EndObject");
-            AddResourceProperty(resourceState, propertyName, propertyValue, isUndeclaredProperty: true);
+            AddResourceProperty(resourceState, propertyName, propertyValue);
             return null;
         }
 
@@ -832,15 +832,14 @@ namespace Microsoft.OData.JsonLight
         /// <param name="resourceState">The resource state for the resource to add the property to.</param>
         /// <param name="propertyName">The name of the property to add.</param>
         /// <param name="propertyValue">The value of the property to add.</param>
-        /// <param name="isUndeclaredProperty">if it is an undeclared property.</param>
         /// <returns>The added ODataProperty.</returns>
-        protected static ODataProperty AddResourceProperty(IODataJsonLightReaderResourceState resourceState, string propertyName, object propertyValue, bool isUndeclaredProperty = false)
+        protected static ODataProperty AddResourceProperty(IODataJsonLightReaderResourceState resourceState, string propertyName, object propertyValue)
         {
             Debug.Assert(resourceState != null, "resourceState != null");
             Debug.Assert(!string.IsNullOrEmpty(propertyName), "!string.IsNullOrEmpty(propertyName)");
 
             ODataProperty property = new ODataProperty { Name = propertyName, Value = propertyValue };
-            if (isUndeclaredProperty)
+            if (propertyValue != null && (propertyValue is ODataUntypedValue))
             {
                 AttachODataAnnotations(resourceState, propertyName, property);
             }
