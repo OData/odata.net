@@ -72,6 +72,8 @@
     <Compile Include="InMemoryMessage.cs" />
     <Compile Include="ShippingAssemblyAttributes.cs" />
     <Compile Include="TestHelper.cs" />
+    <Compile Include="VCard\ODataVCardReader.cs" />
+    <Compile Include="VCard\ODataVCardWriter.cs" />
     <Compile Include="VCard\VCardConstant.cs" />
     <Compile Include="VCard\VCardFormat.cs" />
     <Compile Include="VCard\VCardInputContext.cs" />

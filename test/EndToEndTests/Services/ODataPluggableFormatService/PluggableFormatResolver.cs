@@ -25,7 +25,8 @@ namespace Microsoft.Test.OData.Services.PluggableFormat
         {
             var payloadFormats = base.GetMediaTypeFormats(payloadKind);
 
-            if (payloadKind == ODataPayloadKind.Property)
+            if (payloadKind == ODataPayloadKind.Property
+                || payloadKind == ODataPayloadKind.Resource)
             {
                 payloadFormats = payloadFormats.Concat(vcardFormats);
             }

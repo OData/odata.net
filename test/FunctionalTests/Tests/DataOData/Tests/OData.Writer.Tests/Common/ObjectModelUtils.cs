@@ -702,40 +702,50 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Common
         /// <returns>The created <see cref="ODataParameters"/> instance.</returns>
         public static ODataParameters CreateDefaultParameter()
         {
-            var complexValue = new ODataComplexValue()
+            var complex = new ODataResource()
             {
                 TypeName = "My.NestedAddressType",
                 Properties = new[]
                 {
-                    new ODataProperty()
-                    {
-                        Name = "Street",
-                        Value = new ODataComplexValue()
-                        {
-                            TypeName = "My.StreetType",
-                            Properties = new []
-                            {
-                                new ODataProperty { Name = "StreetName", Value = "One Redmond Way" },
-                                new ODataProperty { Name = "Number", Value = 1234 },
-                            }
-                        }
-                    },
                     new ODataProperty() { Name = "City", Value = "Redmond " },
                 }
             };
 
-            var primitiveCollectionValue = new ODataCollectionStart();
-            primitiveCollectionValue.SetAnnotation(new ODataCollectionItemsObjectModelAnnotation() { "Value1", "Value2", "Value3" });
+            var nestedInfo = new ODataNestedResourceInfo()
+            {
+                Name = "Street",
+                IsCollection = false
+            };
 
-            var complexCollectionValue = new ODataCollectionStart();
-            complexCollectionValue.SetAnnotation(new ODataCollectionItemsObjectModelAnnotation() { complexValue });
+            var nestedStreet = new ODataResource()
+            {
+                TypeName = "My.StreetType",
+                Properties = new[]
+                {
+                    new ODataProperty { Name = "StreetName", Value = "One Redmond Way" },
+                    new ODataProperty { Name = "Number", Value = 1234 },
+                }
+            };
+
+            nestedInfo.SetAnnotation(new ODataNavigationLinkExpandedItemObjectModelAnnotation() { ExpandedItem = nestedStreet });
+
+            var navigationAnnotation = new ODataEntryNavigationLinksObjectModelAnnotation();
+            navigationAnnotation.Add(nestedInfo, 0);
+
+            complex.SetAnnotation(navigationAnnotation);
+
+            var primitiveCollection = new ODataCollectionStart();
+            primitiveCollection.SetAnnotation(new ODataCollectionItemsObjectModelAnnotation() { "Value1", "Value2", "Value3" });
+
+            var complexCollection = new ODataResourceSet();
+            complexCollection.SetAnnotation(new ODataFeedEntriesObjectModelAnnotation() { complex });
 
             return new ODataParameters()
             {
                 new KeyValuePair<string, object>("primitiveParameter", "StringValue"),
-                new KeyValuePair<string, object>("complexParameter", complexValue),
-                new KeyValuePair<string, object>("primitiveCollectionParameter", primitiveCollectionValue),
-                new KeyValuePair<string, object>("complexCollectionParameter", complexCollectionValue),
+                new KeyValuePair<string, object>("complexParameter", complex),
+                new KeyValuePair<string, object>("primitiveCollectionParameter", primitiveCollection),
+                new KeyValuePair<string, object>("complexCollectionParameter", complexCollection),
             };
         }
     }

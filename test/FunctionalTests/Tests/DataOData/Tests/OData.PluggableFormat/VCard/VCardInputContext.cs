@@ -34,6 +34,16 @@ namespace Microsoft.Test.OData.PluggableFormat.VCard
             this.throwExceptionOnDuplicatedPropertyNames = false;
         }
 
+        public bool ThrowExceptionOnDuplicatedPropertyNames
+        {
+            get { return throwExceptionOnDuplicatedPropertyNames; }
+        }
+
+        public VCardReader VCardReader
+        {
+            get { return this.reader; }
+        }
+
         protected override void Dispose(bool disposing)
         {
             if (disposing)
@@ -54,112 +64,14 @@ namespace Microsoft.Test.OData.PluggableFormat.VCard
             base.Dispose(disposing);
         }
 
-        private ODataProperty ReadPropertyImplementation()
+        public override ODataReader CreateResourceReader(IEdmNavigationSource navigationSource, IEdmStructuredType expectedResourceType)
         {
-            List<VCardItem> items = new List<VCardItem>();
-            this.reader.Read();
-            this.reader.Read();
-            while (this.reader.State == VCardReaderState.Item)
-            {
-                VCardItem item = new VCardItem()
-                {
-                    Name = this.reader.Name,
-                    Value = this.reader.Value,
-                    Groups = this.reader.Groups,
-                };
-
-                if (this.reader.Params != null)
-                {
-                    item.Params = new Dictionary<string, string>();
-                    foreach (string param in this.reader.Params.Split(';'))
-                    {
-                        int idx = param.IndexOf('=');
-                        if (idx >= 0)
-                        {
-                            // need to care about when = appear in last.
-                            item.Params.Add(param.Substring(0, idx), param.Substring(idx + 1));
-                        }
-                        else
-                        {
-                            if (item.Params.ContainsKey("TYPE"))
-                            {
-                                item.Params["TYPE"] = item.Params["TYPE"] + ";" + param;
-                            }
-                            else
-                            {
-                                item.Params.Add("TYPE", param);
-                            }
-                        }
-                    }
-                }
-
-                items.Add(item);
-                this.reader.Read();
-            }
-
-            Debug.Assert(this.reader.State == VCardReaderState.End);
-
-            return new ODataProperty() { Name = "fake", Value = GetEntryFromItems(items) };
+            return new ODataVCardReader(this);
         }
 
-        public override ODataProperty ReadProperty(IEdmStructuralProperty property, IEdmTypeReference expectedPropertyTypeReference)
+        public override Task<ODataReader> CreateResourceReaderAsync(IEdmNavigationSource navigationSource, IEdmStructuredType expectedResourceType)
         {
-            return this.ReadPropertyImplementation();
-        }
-
-        public override Task<ODataProperty> ReadPropertyAsync(IEdmStructuralProperty property, IEdmTypeReference expectedPropertyTypeReference)
-        {
-            return Task<ODataProperty>.Factory.StartNew(this.ReadPropertyImplementation);
-        }
-
-        private ODataComplexValue GetEntryFromItems(IEnumerable<VCardItem> items)
-        {
-            Dictionary<string, ODataProperty> dic = new Dictionary<string, ODataProperty>();
-            foreach (var item in items)
-            {
-                string propertyName = item.Name;
-
-                List<ODataInstanceAnnotation> annotations = null;
-
-                if (item.Params != null)
-                {
-                    if (item.Params.ContainsKey("TYPE"))
-                    {
-                        propertyName += "_" + string.Join("_", item.Params["TYPE"].Split(';'));
-                    }
-
-                    annotations = item.Params.Where(_ => _.Key != "TYPE")
-                        .Select(param => new ODataInstanceAnnotation("VCARD." + param.Key, new ODataPrimitiveValue(param.Value)))
-                        .ToList();
-                }
-
-                if (!dic.ContainsKey(propertyName))
-                {
-                    ODataProperty property = new ODataProperty() { Name = propertyName, Value = item.Value };
-
-                    if (annotations != null)
-                    {
-                        property.InstanceAnnotations = annotations;
-                    }
-
-                    dic.Add(propertyName, property);
-                }
-                else
-                {
-                    if (this.throwExceptionOnDuplicatedPropertyNames)
-                    {
-                        throw new ODataException(string.Format("Duplicate property found:{0}", propertyName));
-                    }
-                }
-            }
-
-            ODataComplexValue val = new ODataComplexValue
-            {
-                Properties = dic.Values,
-                TypeName = "VCard21.VCard"
-            };
-
-            return val;
+            return Task<ODataReader>.Factory.StartNew(() => new ODataVCardReader(this));
         }
     }
 }

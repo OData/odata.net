@@ -37,13 +37,6 @@ namespace Microsoft.Test.OData.PluggableFormat.Avro
             return rs;
         }
 
-        public static RecordSchema GetSchema(ODataComplexValue value)
-        {
-            RecordSchema rs = Schema.CreateRecord(value.TypeName, null);
-            Schema.SetFields(rs, value.Properties.Select(property => Schema.CreateField(property.Name, GetSchema(property.Value))));
-            return rs;
-        }
-
         public static ArraySchema GetSchema(ODataCollectionValue colValue)
         {
             var enumerator = colValue.Items.GetEnumerator();
@@ -69,12 +62,6 @@ namespace Microsoft.Test.OData.PluggableFormat.Avro
             if (collectionValue != null)
             {
                 return GetSchema(collectionValue);
-            }
-
-            ODataComplexValue complexValue = value as ODataComplexValue;
-            if (complexValue != null)
-            {
-                return GetSchema(complexValue);
             }
 
             ODataError error = value as ODataError;

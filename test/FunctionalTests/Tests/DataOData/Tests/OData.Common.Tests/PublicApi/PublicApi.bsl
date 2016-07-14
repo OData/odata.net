@@ -4469,14 +4469,6 @@ public sealed class Microsoft.OData.ODataCollectionValue : Microsoft.OData.OData
 	string TypeName  { public get; public set; }
 }
 
-public sealed class Microsoft.OData.ODataComplexValue : Microsoft.OData.ODataValue {
-	public ODataComplexValue ()
-
-	System.Collections.Generic.ICollection`1[[Microsoft.OData.ODataInstanceAnnotation]] InstanceAnnotations  { public get; public set; }
-	System.Collections.Generic.IEnumerable`1[[Microsoft.OData.ODataProperty]] Properties  { public get; public set; }
-	string TypeName  { public get; public set; }
-}
-
 public sealed class Microsoft.OData.ODataDeltaDeletedEntry : Microsoft.OData.ODataItem {
 	public ODataDeltaDeletedEntry (string id, Microsoft.OData.DeltaDeletedEntryReason reason)
 

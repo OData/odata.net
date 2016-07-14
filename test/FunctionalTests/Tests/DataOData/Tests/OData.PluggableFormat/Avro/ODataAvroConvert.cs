@@ -18,38 +18,6 @@ namespace Microsoft.Test.OData.PluggableFormat.Avro
     {
         public static object FromODataObject(object value, Schema schema)
         {
-            var complexValue = value as ODataComplexValue;
-            if (complexValue != null)
-            {
-                RecordSchema recordSchema = schema as RecordSchema;
-
-                if (recordSchema == null)
-                {
-                    var unionSchema = schema as UnionSchema;
-                    if (unionSchema != null)
-                    {
-                        recordSchema = unionSchema.Schemas.OfType<RecordSchema>().Single();
-                    }
-                    else
-                    {
-                        throw new ApplicationException("not supported schema found.");
-                    }
-                }
-
-                var record = new AvroRecord(recordSchema);
-                foreach (var prop in complexValue.Properties)
-                {
-                    if (prop.Value is ODataComplexValue)
-                    {
-                        continue;
-                    }
-
-                    record[prop.Name] = prop.Value;
-                }
-
-                return record;
-            }
-
             var entry = value as ODataResource;
             if (entry != null)
             {
@@ -130,15 +98,6 @@ namespace Microsoft.Test.OData.PluggableFormat.Avro
         {
             var subRecord = parentRecord[fieldName] as AvroRecord;
             return ToODataEntry(subRecord);
-        }
-
-        public static ODataComplexValue ToODataComplexValue(AvroRecord record)
-        {
-            return new ODataComplexValue
-            {
-                TypeName = record.Schema.FullName,
-                Properties = GetProperties(record)
-            };
         }
 
         public static ODataValue ToODataValue(object obj)

@@ -66,7 +66,6 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
         }
 
 #if ENABLE_AVRO
-        [Ignore] // Update to use ResourceReader and Writer
         [TestMethod]
         public void QueryVCardEntityProperty()
         {
@@ -81,15 +80,21 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
             var responseMessage = requestMessage.GetResponse();
             Assert.AreEqual(200, responseMessage.StatusCode);
 
-            ODataProperty property = null;
+            ODataResource resource = null;
             using (var messageReader = new ODataMessageReader(responseMessage, readerSettings, Model))
             {
-                property = messageReader.ReadProperty();
+                var odataReader = messageReader.CreateODataResourceReader();
+                while (odataReader.Read())
+                {
+                    if (odataReader.State == ODataReaderState.ResourceEnd)
+                    {
+                        resource = odataReader.Item as ODataResource;
+                    }
+                }
             }
 
-            var cpx = property.Value as ODataComplexValue;
-            Assert.IsNotNull(cpx);
-            Assert.AreEqual("Name1", cpx.Properties.Single(p => p.Name == "N").Value);
+            Assert.IsNotNull(resource);
+            Assert.AreEqual("Name1", resource.Properties.Single(p => p.Name == "N").Value);
         }
 
         [TestMethod]

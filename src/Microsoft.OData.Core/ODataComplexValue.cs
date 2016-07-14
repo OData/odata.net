@@ -15,7 +15,7 @@ namespace Microsoft.OData
     /// <summary>
     /// OData representation of a complex value.
     /// </summary>
-    public sealed class ODataComplexValue : ODataValue
+    internal sealed class ODataComplexValue : ODataValue
     {
         /// <summary>Gets or sets the properties and values of the complex value.</summary>
         /// <returns>The properties and values of the complex value.</returns>

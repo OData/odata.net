@@ -68,17 +68,7 @@ namespace Microsoft.Test.OData.PluggableFormat.Avro.Test
                     },
             };
 
-        private static ODataComplexValue complexValue0 = new ODataComplexValue()
-            {
-                TypeName = "Microsoft.Test.OData.PluggableFormat.Avro.Test.Address",
-                Properties = new[]
-                {
-                    new ODataProperty{Name = "Road", Value = "Road1"},
-                    new ODataProperty{Name = "ZipCode", Value = "Zip1"},
-                }
-            };
-
-        private static ODataResource complexValue1 = new ODataResource()
+        private static ODataResource complexResource = new ODataResource()
         {
             TypeName = "Microsoft.Test.OData.PluggableFormat.Avro.Test.Address",
             Properties = new[]
@@ -335,18 +325,16 @@ namespace Microsoft.Test.OData.PluggableFormat.Avro.Test
         }
 
         [TestMethod]
-        public void TestWriteProperty()
+        public void TestWriteComplexResource()
         {
-            ODataProperty prop = new ODataProperty()
-            {
-                Name = "prop1",
-                Value = complexValue0
-            };
-
             MemoryStream ms = new MemoryStream();
+
             using (var omw = TestHelper.CreateMessageWriter(ms, container, "avro/binary"))
             {
-                omw.WriteProperty(prop);
+                var entryWriter = omw.CreateODataResourceWriter(null, ComplexType);
+                entryWriter.WriteStart(complexResource);
+                entryWriter.WriteEnd();
+                entryWriter.Flush();
             }
 
             ms.Seek(0, SeekOrigin.Begin);
@@ -372,6 +360,39 @@ namespace Microsoft.Test.OData.PluggableFormat.Avro.Test
         }
 
         [TestMethod]
+        public void TestWriteProperty()
+        {
+            ODataProperty prop = new ODataProperty{Name = "Road", Value = "Road1"};
+
+            MemoryStream ms = new MemoryStream();
+            using (var omw = TestHelper.CreateMessageWriter(ms, container, "avro/binary"))
+            {
+                omw.WriteProperty(prop);
+            }
+
+            ms.Seek(0, SeekOrigin.Begin);
+
+            string road;
+            IAvroReader<string> reader = null;
+            try
+            {
+                reader = AvroContainer.CreateReader<string>(ms);
+
+                using (var seqReader = new SequentialReader<string>(reader))
+                {
+                    reader = null;
+                    road = seqReader.Objects.First();
+                }
+            }
+            finally
+            {
+                if (reader != null) reader.Dispose();
+            }
+
+            Assert.AreEqual("Road1", road);
+        }
+
+        [TestMethod]
         public void TestWriteParameter()
         {
             MemoryStream ms = new MemoryStream();
@@ -383,14 +404,13 @@ namespace Microsoft.Test.OData.PluggableFormat.Avro.Test
                 ew.WriteEnd();
                 ew.Flush();
 
-                opw.WriteValue("Location", complexValue0);
+                var ew1 = opw.CreateResourceWriter("Location");
+                ew1.WriteStart(complexResource);
+                ew1.WriteEnd();
+                ew1.Flush();
+
                 opw.WriteEnd();
                 opw.Flush();
-
-                //var ew1 = opw.CreateResourceWriter("Location");
-                //ew1.WriteStart(complexValue1);
-                //ew1.WriteEnd();
-                //ew1.Flush();
             }
 
             ms.Seek(0, SeekOrigin.Begin);
@@ -502,7 +522,7 @@ namespace Microsoft.Test.OData.PluggableFormat.Avro.Test
             }
 
             Assert.AreEqual(2, result.Count);
-            Assert.IsTrue(TestHelper.ComplexValueEqual(complexValue0, (ODataComplexValue)result["Location"]));
+            Assert.IsTrue(TestHelper.EntryEqual(complexResource, (ODataResource)result["Location"]));
             Assert.IsTrue(TestHelper.EntryEqual(entry0, (ODataResource)result["Product"]));
         }
 

@@ -113,12 +113,7 @@ namespace Microsoft.Test.OData.PluggableFormat.Avro
             this.value = this.avroRecord[this.enumerator.Current.Position];
             if (this.value is AvroRecord)
             {
-                if (parameter.Type.Definition is IEdmComplexType)
-                {
-                    this.value = ODataAvroConvert.ToODataComplexValue((AvroRecord)this.value);
-                    this.state = ODataParameterReaderState.Value;
-                }
-                else if (parameter.Type.Definition is IEdmEntityType)
+                if (parameter.Type.Definition is IEdmStructuredType)
                 {
                     this.state = ODataParameterReaderState.Resource;
                 }

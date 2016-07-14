@@ -36,7 +36,6 @@ namespace Microsoft.Test.OData.PluggableFormat.VCard.Test
                 builder.AddService<ODataMediaTypeResolver, VCardMediaTypeResolver>(ServiceLifetime.Singleton));
         }
 
-        [Ignore] // Update to use ResourceReader and Writer
         [TestMethod]
         public void TestReadSimpleSampleVCard()
         {
@@ -54,7 +53,7 @@ namespace Microsoft.Test.OData.PluggableFormat.VCard.Test
             }
         }
 
-        private ODataComplexValue GetTopLevelProperty(string res, string contentType, IEdmModel model = null, bool async = false)
+        private ODataResource GetTopLevelProperty(string res, string contentType, IEdmModel model = null, bool async = false)
         {
             Stream stream = null;
 
@@ -62,25 +61,55 @@ namespace Microsoft.Test.OData.PluggableFormat.VCard.Test
             try
             {
                 stream = TestHelper.GetResourceStream(res);
-                ODataComplexValue val = null;
-                object value = null;
+                ODataResource val = null;
 
                 using (var reader = TestHelper.CreateMessageReader(stream, container, contentType, model))
                 {
                     stream = null;
                     if (async)
                     {
-                        var task = reader.ReadPropertyAsync();
+                        var task = reader.CreateODataResourceReaderAsync();
                         task.Wait();
-                        value = task.Result.Value;
+                        var odataReader = task.Result;
+                        while (true)
+                        {
+                            var readTask = odataReader.ReadAsync();
+                            readTask.Wait();
+                            if (!readTask.Result)
+                            {
+                                break;
+                            }
+
+                            if (odataReader.State == ODataReaderState.ResourceEnd)
+                            {
+                                val = odataReader.Item as ODataResource;
+                                break;
+                            }
+                        }
                     }
                     else
                     {
-                        value = reader.ReadProperty().Value;
+                        var task = reader.CreateODataResourceReaderAsync();
+                        task.Wait();
+                        var odataReader = task.Result;
+                        while (true)
+                        {
+                            var readTask = odataReader.ReadAsync();
+                            readTask.Wait();
+                            if (!readTask.Result)
+                            {
+                                break;
+                            }
+
+                            if (odataReader.State == ODataReaderState.ResourceEnd)
+                            {
+                                val = odataReader.Item as ODataResource;
+                                break;
+                            }
+                        }
                     }
                 }
 
-                val = value as ODataComplexValue;
                 Assert.IsNotNull(val);
                 return val;
             }
@@ -90,7 +119,7 @@ namespace Microsoft.Test.OData.PluggableFormat.VCard.Test
             }
         }
 
-        private void TestBaseLine(ODataComplexValue val, string resVcf, string resJson)
+        private void TestBaseLine(ODataResource val, string resVcf, string resJson)
         {
             // Write json, compare with baseline
             Assert.AreEqual(

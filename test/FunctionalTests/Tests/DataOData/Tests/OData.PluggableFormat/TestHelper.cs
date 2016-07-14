@@ -162,7 +162,9 @@ namespace Microsoft.Test.OData.PluggableFormat
                 stream = new MemoryStream();
                 using (var omw = CreateMessageWriter(stream, container, contenttype, null, false))
                 {
-                    omw.WriteProperty(new ODataProperty { Name = "fa", Value = value });
+                    var odataWriter = omw.CreateODataResourceWriter();
+                    odataWriter.WriteStart((ODataResource)value);
+                    odataWriter.WriteEnd();
                 }
 
                 stream.Seek(0, SeekOrigin.Begin);
@@ -193,17 +195,6 @@ namespace Microsoft.Test.OData.PluggableFormat
             return PropertiesEqual(a.Properties, b.Properties);
         }
 
-
-        public static bool ComplexValueEqual(ODataComplexValue a, ODataComplexValue b)
-        {
-            if (a == null || b == null)
-            {
-                return false;
-            }
-
-            return PropertiesEqual(a.Properties, b.Properties);
-        }
-
         private static bool PropertiesEqual(IEnumerable<ODataProperty> a, IEnumerable<ODataProperty> b)
         {
             if (a == null || b == null)
@@ -224,12 +215,6 @@ namespace Microsoft.Test.OData.PluggableFormat
                 {
                     if (!(bProp.Value is float)
                         || !FloatEqual((float)aProp.Value, (float)bProp.Value))
-                        return false;
-                }
-                else if (aProp.Value is ODataComplexValue)
-                {
-                    if (!(bProp.Value is ODataComplexValue)
-                        || !ComplexValueEqual((ODataComplexValue)aProp.Value, (ODataComplexValue)bProp.Value))
                         return false;
                 }
                 else if (aProp.Value is byte[])

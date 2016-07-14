@@ -19,7 +19,8 @@ namespace Microsoft.Test.OData.PluggableFormat.VCard
 
         public override IEnumerable<ODataMediaTypeFormat> GetMediaTypeFormats(ODataPayloadKind payloadKind)
         {
-            if (payloadKind == ODataPayloadKind.Property)
+            if (payloadKind == ODataPayloadKind.Resource
+                || payloadKind == ODataPayloadKind.Property)
             {
                 return mediaTypeFormats.Concat(base.GetMediaTypeFormats(payloadKind));
             }
