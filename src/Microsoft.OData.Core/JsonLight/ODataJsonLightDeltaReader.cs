@@ -862,12 +862,6 @@ namespace Microsoft.OData.JsonLight
                 "We must always have an expected navigation source for each resource (since we can't deduce that from the type name).");
             this.ApplyEntityTypeNameFromPayload(this.CurrentDeltaResource.TypeName);
 
-            if (this.CurrentEntityType != null)
-            {
-                // NOTE: once we do this for all formats we can do this in ApplyEntityTypeNameFromPayload.
-                this.CurrentDeltaResource.SetAnnotation(new ODataTypeAnnotation(this.CurrentEntityType));
-            }
-
             // Read other annotations and properties for this resource.
             while (true)
             {

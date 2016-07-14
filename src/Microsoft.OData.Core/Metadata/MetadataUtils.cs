@@ -40,22 +40,6 @@ namespace Microsoft.OData.Metadata
         }
 
         /// <summary>
-        /// Gets the EDM type of an OData instance from the <see cref="ODataTypeAnnotation"/> of the instance (if available).
-        /// </summary>
-        /// <param name="annotatable">The OData instance to get the EDM type for.</param>
-        /// <returns>The EDM type of the <paramref name="annotatable"/> if available in the <see cref="ODataTypeAnnotation"/> annotation.</returns>
-        internal static IEdmTypeReference GetEdmType(this ODataAnnotatable annotatable)
-        {
-            if (annotatable == null)
-            {
-                return null;
-            }
-
-            ODataTypeAnnotation typeAnnotation = annotatable.GetAnnotation<ODataTypeAnnotation>();
-            return typeAnnotation == null ? null : typeAnnotation.Type;
-        }
-
-        /// <summary>
         /// Resolves the name of a primitive, complex, entity or collection type to the respective type. Uses the semantics used by writers.
         /// Thus it implements the strict speced behavior.
         /// </summary>

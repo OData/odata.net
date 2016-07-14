@@ -20,7 +20,7 @@ namespace Microsoft.OData.UriParser
     /// A representation of the path portion of an OData URI which is made up of <see cref="ODataPathSegment"/>s.
     /// </summary>
     [SuppressMessage("Microsoft.Naming", "CA1710:IdentifiersShouldHaveCorrectSuffix", Justification = "ODataPathCollection just doesn't sound right")]
-    public class ODataPath : ODataAnnotatable, IEnumerable<ODataPathSegment>
+    public class ODataPath : IEnumerable<ODataPathSegment>
     {
         /// <summary>
         /// The segments that make up this path.

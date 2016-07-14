@@ -29,7 +29,7 @@ namespace Microsoft.OData.Tests
         internal static ODataResource CreateODataEntry(IEdmEntitySet entitySet, IEdmStructuredValue value, IEdmEntityType entityType)
         {
             var entry = new ODataResource();
-            entry.SetAnnotation(new ODataTypeAnnotation(entityType));
+            entry.TypeAnnotation = new ODataTypeAnnotation(entityType.FullTypeName());
             entry.Properties = value.PropertyValues.Select(p =>
             {
                 object propertyValue;

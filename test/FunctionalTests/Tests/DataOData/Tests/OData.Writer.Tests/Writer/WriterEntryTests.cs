@@ -469,7 +469,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 entry.TypeName = tc.TypeName;
                 if (tc.TypeAnnotation != null)
                 {
-                    entry.SetAnnotation(tc.TypeAnnotation);
+                    entry.TypeAnnotation = tc.TypeAnnotation;
                 }
 
                 return new PayloadWriterTestDescriptor<ODataItem>(

@@ -306,7 +306,7 @@ namespace Microsoft.OData
 
                 if (targetTypeReference != null)
                 {
-                    typeAnnotation = CreateODataTypeAnnotation(payloadTypeName, targetTypeReference);
+                    typeAnnotation = CreateODataTypeAnnotation(payloadTypeName, payloadType, targetTypeReference);
                 }
             }
 
@@ -935,20 +935,21 @@ namespace Microsoft.OData
         /// Conditionally creates the annotation to put on the read value in order to retain the type name from the payload.
         /// </summary>
         /// <param name="payloadTypeName">The payload type name.</param>
+        /// <param name="payloadType">The payload type.</param>
         /// <param name="targetTypeReference">The type reference into which we're going to parse.</param>
         /// <returns>The annotation to report to the reader for adding on the read value.</returns>
-        private static ODataTypeAnnotation CreateODataTypeAnnotation(string payloadTypeName, IEdmTypeReference targetTypeReference)
+        private static ODataTypeAnnotation CreateODataTypeAnnotation(string payloadTypeName, IEdmType payloadType, IEdmTypeReference targetTypeReference)
         {
             Debug.Assert(targetTypeReference != null, "targetTypeReference != null");
 
-            if (payloadTypeName != null && string.CompareOrdinal(payloadTypeName, targetTypeReference.FullName()) != 0)
+            if (payloadType != null && !payloadType.IsEquivalentTo(targetTypeReference.Definition))
             {
-                return new ODataTypeAnnotation(payloadTypeName);
+                return new ODataTypeAnnotation(payloadTypeName, payloadType);
             }
 
             // Add the annotation with a null type name so that we know when the payload type is inferred from the expected type.
             // This is useful when validating a payload that inserts a derived entity (that does not specify a payload type) into the entity set.
-            if (payloadTypeName == null)
+            if (payloadType == null)
             {
                 return new ODataTypeAnnotation();
             }

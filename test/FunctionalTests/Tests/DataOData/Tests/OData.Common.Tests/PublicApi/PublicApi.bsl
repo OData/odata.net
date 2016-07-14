@@ -4929,13 +4929,9 @@ public sealed class Microsoft.OData.ODataStreamReferenceValue : Microsoft.OData.
 
 public sealed class Microsoft.OData.ODataTypeAnnotation {
 	public ODataTypeAnnotation ()
-	public ODataTypeAnnotation (Microsoft.OData.Edm.IEdmCollectionTypeReference collectionType)
-	public ODataTypeAnnotation (Microsoft.OData.Edm.IEdmComplexTypeReference complexType)
-	public ODataTypeAnnotation (Microsoft.OData.Edm.IEdmStructuredType structuredType)
 	public ODataTypeAnnotation (string typeName)
 
-	Microsoft.OData.Edm.IEdmTypeReference Type  { public get; }
-	string TypeName  { public get; public set; }
+	string TypeName  { public get; }
 }
 
 public sealed class Microsoft.OData.ODataUntypedValue : Microsoft.OData.ODataValue {
@@ -5310,7 +5306,7 @@ public class Microsoft.OData.UriParser.ODataExpandPath : Microsoft.OData.UriPars
 	public ODataExpandPath (System.Collections.Generic.IEnumerable`1[[Microsoft.OData.UriParser.ODataPathSegment]] segments)
 }
 
-public class Microsoft.OData.UriParser.ODataPath : Microsoft.OData.ODataAnnotatable, IEnumerable, IEnumerable`1 {
+public class Microsoft.OData.UriParser.ODataPath : IEnumerable, IEnumerable`1 {
 	public ODataPath (Microsoft.OData.UriParser.ODataPathSegment[] segments)
 	public ODataPath (System.Collections.Generic.IEnumerable`1[[Microsoft.OData.UriParser.ODataPathSegment]] segments)
 

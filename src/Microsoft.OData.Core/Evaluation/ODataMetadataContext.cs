@@ -244,11 +244,30 @@ namespace Microsoft.OData.Evaluation
                 ODataResource resource = resourceState.Resource;
                 if (this.isResponse)
                 {
-                    ODataTypeAnnotation typeAnnotation = resource.GetAnnotation<ODataTypeAnnotation>();
+                    ODataTypeAnnotation typeAnnotation = resource.TypeAnnotation;
 
-                    Debug.Assert(typeAnnotation != null, "The JSON light reader should have already set the ODataTypeAnnotation.");
+                    IEdmStructuredType structuredType = null;
+                    if (typeAnnotation != null)
+                    {
+                        if (typeAnnotation.Type != null)
+                        {
+                            // First try ODataTypeAnnotation.Type (for perf improvement)
+                            structuredType = typeAnnotation.Type as IEdmStructuredType;
+                        }
+                        else if (typeAnnotation.TypeName != null)
+                        {
+                            // Then try ODataTypeAnnotation.TypeName
+                            structuredType = this.model.FindType(typeAnnotation.TypeName) as IEdmStructuredType;
+                        }
+                    }
 
-                    if (typeAnnotation.Type.IsEntity())
+                    if (structuredType == null)
+                    {
+                        // No type name read from the payload. Use resource type from model.
+                        structuredType = resourceState.ResourceType;
+                    }
+
+                    if (structuredType.IsODataEntityTypeKind())
                     {
                         IEdmNavigationSource navigationSource = resourceState.NavigationSource;
                         IEdmEntityType navigationSourceElementType = this.edmTypeResolver.GetElementType(navigationSource);
@@ -256,7 +275,7 @@ namespace Microsoft.OData.Evaluation
                             ODataResourceTypeContext.Create( /*serializationInfo*/
                                 null, navigationSource, navigationSourceElementType, resourceState.ResourceType,
                                 /*throwIfMissingTypeInfo*/ true);
-                        IODataResourceMetadataContext resourceMetadataContext = ODataResourceMetadataContext.Create(resource, typeContext, /*serializationInfo*/null, (IEdmStructuredType)resource.GetEdmType().Definition, this, resourceState.SelectedProperties);
+                        IODataResourceMetadataContext resourceMetadataContext = ODataResourceMetadataContext.Create(resource, typeContext, /*serializationInfo*/null, structuredType, this, resourceState.SelectedProperties);
 
                         ODataConventionalUriBuilder uriBuilder = new ODataConventionalUriBuilder(this.ServiceBaseUri,
                             useKeyAsSegment ? ODataUrlKeyDelimiter.Slash : ODataUrlKeyDelimiter.Parentheses);

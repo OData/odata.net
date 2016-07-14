@@ -1254,11 +1254,6 @@ namespace Microsoft.OData.JsonLight
                 collectionValue.TypeAnnotation = typeAnnotation;
             }
 
-            if (collectionValueTypeReference != null)
-            {
-                collectionValue.SetAnnotation(new ODataTypeAnnotation(collectionValueTypeReference));
-            }
-
             List<object> items = new List<object>();
             PropertyAndAnnotationCollector propertyAndAnnotationCollector = this.CreatePropertyAndAnnotationCollector();
             IEdmTypeReference itemType = null;

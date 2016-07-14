@@ -8,7 +8,6 @@ namespace Microsoft.OData
 {
     using System;
     using System.Xml;
-    using System.Diagnostics;
     using Microsoft.OData.JsonLight;
 
     /// <summary>

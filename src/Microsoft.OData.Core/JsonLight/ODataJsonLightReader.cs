@@ -1156,12 +1156,6 @@ namespace Microsoft.OData.JsonLight
                 this.CurrentResourceSetValidator.ValidateResource(this.CurrentResourceType);
             }
 
-            if (this.CurrentResourceType != null)
-            {
-                // NOTE: once we do this for all formats we can do this in ApplyEntityTypeNameFromPayload.
-                this.CurrentResource.SetAnnotation(new ODataTypeAnnotation(this.CurrentResourceType));
-            }
-
             this.CurrentResourceState.FirstNestedResourceInfo = this.jsonLightResourceDeserializer.ReadResourceContent(this.CurrentResourceState);
             this.jsonLightResourceDeserializer.AssertJsonCondition(
                 JsonNodeType.Property,

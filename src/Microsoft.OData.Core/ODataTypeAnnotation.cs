@@ -20,39 +20,6 @@ namespace Microsoft.OData
     /// </remarks>
     public sealed class ODataTypeAnnotation
     {
-        /// <summary>The EDM type of the value this annotation is on.</summary>
-        private readonly IEdmTypeReference type;
-
-        /// <summary>
-        /// Creates a new instance of the type annotation for an entity value.
-        /// </summary>
-        /// <param name="structuredType">The structured type of the entity value if not the base type of the entity set (optional).</param>
-        public ODataTypeAnnotation(IEdmStructuredType structuredType)
-        {
-            ExceptionUtils.CheckArgumentNotNull(structuredType, "structuredType");
-            this.type = structuredType.ToTypeReference(/*isNullable*/ true);
-        }
-
-        /// <summary>
-        /// Creates a new instance of the type annotation for a complex value.
-        /// </summary>
-        /// <param name="complexType">The type of the complex value (required).</param>
-        public ODataTypeAnnotation(IEdmComplexTypeReference complexType)
-        {
-            ExceptionUtils.CheckArgumentNotNull(complexType, "complexType");
-            this.type = complexType;
-        }
-
-        /// <summary>
-        /// Creates a new instance of the type annotation for a collection value.
-        /// </summary>
-        /// <param name="collectionType">The type of the collection value (required).</param>
-        public ODataTypeAnnotation(IEdmCollectionTypeReference collectionType)
-        {
-            ExceptionUtils.CheckArgumentNotNull(collectionType, "collectionType");
-            this.type = collectionType;
-        }
-
         /// <summary>
         /// Creates a new instance of the type annotation without a type name.
         /// </summary>
@@ -69,7 +36,20 @@ namespace Microsoft.OData
             this.TypeName = typeName;
         }
 
-        /// <summary> Gets or sets the type name to serialize, for the annotated item. </summary>
+        /// <summary>
+        /// Creates a new instance of the type annotation with a type.
+        /// </summary>
+        /// <param name="typeName">The type name read from the input.</param>
+        /// <param name="type">The type read from the input.</param>
+        internal ODataTypeAnnotation(string typeName, IEdmType type)
+            : this(typeName)
+        {
+            ExceptionUtils.CheckArgumentNotNull(type, "type");
+
+            this.Type = type;
+        }
+
+        /// <summary>Gets the type name to serialize, for the annotated item. </summary>
         /// <returns>The type name to serialize, for the annotated item.</returns>
         /// <remarks>
         /// If this property is null, no type name will be written.
@@ -78,17 +58,11 @@ namespace Microsoft.OData
         /// If <see cref="ODataTypeAnnotation"/> is not present, the value of the TypeName property on the ODataResource, ODataCollectionValue
         /// is used as the type name in the payload.
         /// </remarks>
-        public string TypeName { get; set; }
+        public string TypeName { get; private set; }
 
         /// <summary>
-        /// The EDM type of the value.
+        /// This property is redundant info about TypeName but to improve reader performance.
         /// </summary>
-        public IEdmTypeReference Type
-        {
-            get
-            {
-                return this.type;
-            }
-        }
+        internal IEdmType Type { get; private set; }
     }
 }
