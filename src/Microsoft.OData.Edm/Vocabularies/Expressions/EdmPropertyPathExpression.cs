@@ -25,18 +25,18 @@ namespace Microsoft.OData.Edm.Vocabularies
         /// <summary>
         /// Initializes a new instance of the <see cref="EdmPropertyPathExpression"/> class.
         /// </summary>
-        /// <param name="path">Path segments.</param>
-        public EdmPropertyPathExpression(params string[] path)
-            : base(path)
+        /// <param name="pathSegments">Path segments.</param>
+        public EdmPropertyPathExpression(params string[] pathSegments)
+            : base(pathSegments)
         {
         }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="EdmPropertyPathExpression"/> class.
         /// </summary>
-        /// <param name="path">Path segments.</param>
-        public EdmPropertyPathExpression(IEnumerable<string> path)
-            : base(path)
+        /// <param name="pathSegments">Path segments.</param>
+        public EdmPropertyPathExpression(IEnumerable<string> pathSegments)
+            : base(pathSegments)
         {
         }
 

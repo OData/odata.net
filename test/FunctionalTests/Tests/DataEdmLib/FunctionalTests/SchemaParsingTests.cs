@@ -3256,12 +3256,12 @@ namespace EdmLibTests.FunctionalTests
             IEdmVocabularyAnnotation first = annotations[0];
             Assert.AreEqual(first.Term.Name, "Mage", "Term name");
             IEdmPathExpression value = (IEdmPathExpression)first.Value;
-            Assert.AreEqual(value.Path.First(), "Age", "Bound path name");
+            Assert.AreEqual(value.PathSegments.First(), "Age", "Bound path name");
 
             IEdmVocabularyAnnotation second = annotations[1];
             Assert.AreEqual(second.Term.Name, "Age", "Term name");
             value = (IEdmPathExpression)second.Value;
-            Assert.AreEqual(value.Path.First(), "Age", "Bound path name");
+            Assert.AreEqual(value.PathSegments.First(), "Age", "Bound path name");
         }
 
         [TestMethod]

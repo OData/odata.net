@@ -1379,10 +1379,10 @@ namespace EdmLibTests.FunctionalTests
             Assert.IsTrue(supported.Value);
             IEdmCollectionExpression filterable = record.FindProperty("FilterableProperties").Value as IEdmCollectionExpression;
             Assert.IsNotNull(filterable);
-            Assert.AreEqual(((IEdmPathExpression)filterable.Elements.Single()).Path.Single(), "Age");
+            Assert.AreEqual(((IEdmPathExpression)filterable.Elements.Single()).PathSegments.Single(), "Age");
             IEdmCollectionExpression expandable = record.FindProperty("ExpandableProperties").Value as IEdmCollectionExpression;
             Assert.IsNotNull(expandable);
-            Assert.AreEqual(((IEdmPathExpression)expandable.Elements.Single()).Path.Single(), "MyDept");
+            Assert.AreEqual(((IEdmPathExpression)expandable.Elements.Single()).PathSegments.Single(), "MyDept");
 
             // EntitySet: Depts
             var deptsSet = parsedModel.FindDeclaredEntitySet("Depts");
@@ -1677,7 +1677,7 @@ namespace EdmLibTests.FunctionalTests
             Assert.AreEqual("s2", alias.Value);
             IEdmPathExpression name = element.FindProperty("Name").Value as IEdmPathExpression;
             Assert.IsNotNull(name);
-            Assert.AreEqual("prop2", name.Path.Single());
+            Assert.AreEqual("prop2", name.PathSegments.Single());
 
             // #2
             record = collect.Elements.Last() as IEdmRecordExpression;
@@ -1694,7 +1694,7 @@ namespace EdmLibTests.FunctionalTests
             Assert.AreEqual("s3", alias.Value);
             name = element.FindProperty("Name").Value as IEdmPathExpression;
             Assert.IsNotNull(name);
-            Assert.AreEqual("prop3", name.Path.Single());
+            Assert.AreEqual("prop3", name.PathSegments.Single());
 
             // #2.2
             element = keyCollection.Elements.Last() as IEdmRecordExpression;
@@ -1704,7 +1704,7 @@ namespace EdmLibTests.FunctionalTests
             Assert.AreEqual("s4", alias.Value);
             name = element.FindProperty("Name").Value as IEdmPathExpression;
             Assert.IsNotNull(name);
-            Assert.AreEqual("prop4", name.Path.Single());
+            Assert.AreEqual("prop4", name.PathSegments.Single());
         }
 
         [TestMethod]

@@ -40,7 +40,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl.Semantics
             semanticActionImport.Action.Should().NotBeNull();
             semanticActionImport.Action.Name.Should().Be("Checkout");
             var pathExpression = (IEdmPathExpression)semanticActionImport.EntitySet;
-            var items = pathExpression.Path.ToList();
+            var items = pathExpression.PathSegments.ToList();
             items[0].Should().Be("Nav1");
             items[1].Should().Be("Nav2");
         }

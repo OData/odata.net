@@ -14,13 +14,13 @@ namespace Microsoft.OData.Edm
     public interface IEdmPathExpression : IEdmExpression
     {
         /// <summary>
-        /// Gets the path as a decomposed qualified name. "A.B/C/D.E" is { "A.B", "C", "D.E" }.
+        /// Gets the path segments as a decomposed qualified name. "A.B/C/D.E" is { "A.B", "C", "D.E" }.
         /// </summary>
-        IEnumerable<string> Path { get; }
+        IEnumerable<string> PathSegments { get; }
 
         /// <summary>
-        /// Gets the full path string, like "A.B/C/D.E".
+        /// Gets the path string, like "A.B/C/D.E".
         /// </summary>
-        string FullPath { get; }
+        string Path { get; }
     }
 }

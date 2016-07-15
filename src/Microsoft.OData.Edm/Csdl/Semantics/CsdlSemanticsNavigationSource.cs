@@ -91,7 +91,7 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
             {
                 foreach (IEdmNavigationPropertyBinding targetMapping in this.NavigationPropertyBindings)
                 {
-                    if (targetMapping.NavigationProperty == property && targetMapping.Path.FullPath == bindingPath.FullPath)
+                    if (targetMapping.NavigationProperty == property && targetMapping.Path.Path == bindingPath.Path)
                     {
                         return targetMapping.Target;
                     }

@@ -187,7 +187,7 @@ namespace Microsoft.OData.Edm.Validation
                 IEdmType result = context;
 
                 // [EdmLib] Need to handle paths that bind to things other than properties.
-                foreach (string segment in expression.Path)
+                foreach (string segment in expression.PathSegments)
                 {
                     IEdmStructuredType structuredResult = result as IEdmStructuredType;
                     if (structuredResult == null)

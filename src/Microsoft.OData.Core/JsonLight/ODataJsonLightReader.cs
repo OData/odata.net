@@ -1327,7 +1327,7 @@ namespace Microsoft.OData.JsonLight
         {
             Debug.Assert(this.CurrentScope is JsonLightResourceScope);
 
-            List<string> paths = bindingPath.Path.ToList();
+            List<string> paths = bindingPath.PathSegments.ToList();
 
             // If binding path only includes navigation property name, it matches.
             if (paths.Count == 1)

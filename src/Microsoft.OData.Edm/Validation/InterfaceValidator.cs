@@ -1395,7 +1395,7 @@ namespace Microsoft.OData.Edm.Validation
                 List<EdmError> errors = null;
 
                 List<string> segments = new List<string>();
-                ProcessEnumerable(expression, expression.Path, "Path", segments, ref errors);
+                ProcessEnumerable(expression, expression.PathSegments, "Path", segments, ref errors);
 
                 return errors;
             }

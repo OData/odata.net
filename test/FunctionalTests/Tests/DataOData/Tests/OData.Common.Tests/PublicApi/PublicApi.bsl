@@ -844,8 +844,8 @@ public interface Microsoft.OData.Edm.IEdmOperationParameter : IEdmElement, IEdmN
 }
 
 public interface Microsoft.OData.Edm.IEdmPathExpression : IEdmElement, IEdmExpression {
-	string FullPath  { public abstract get; }
-	System.Collections.Generic.IEnumerable`1[[System.String]] Path  { public abstract get; }
+	string Path  { public abstract get; }
+	System.Collections.Generic.IEnumerable`1[[System.String]] PathSegments  { public abstract get; }
 }
 
 public interface Microsoft.OData.Edm.IEdmPrimitiveType : IEdmElement, IEdmNamedElement, IEdmSchemaElement, IEdmSchemaType, IEdmType, IEdmVocabularyAnnotatable {
@@ -2408,13 +2408,13 @@ public class Microsoft.OData.Edm.EdmOperationParameter : Microsoft.OData.Edm.Edm
 }
 
 public class Microsoft.OData.Edm.EdmPathExpression : Microsoft.OData.Edm.EdmElement, IEdmElement, IEdmExpression, IEdmPathExpression {
-	public EdmPathExpression (System.Collections.Generic.IEnumerable`1[[System.String]] path)
+	public EdmPathExpression (System.Collections.Generic.IEnumerable`1[[System.String]] pathSegments)
 	public EdmPathExpression (string path)
-	public EdmPathExpression (string[] path)
+	public EdmPathExpression (string[] pathSegments)
 
 	Microsoft.OData.Edm.EdmExpressionKind ExpressionKind  { public virtual get; }
-	string FullPath  { public virtual get; }
-	System.Collections.Generic.IEnumerable`1[[System.String]] Path  { public virtual get; }
+	string Path  { public virtual get; }
+	System.Collections.Generic.IEnumerable`1[[System.String]] PathSegments  { public virtual get; }
 }
 
 public class Microsoft.OData.Edm.EdmPrimitiveTypeReference : Microsoft.OData.Edm.EdmTypeReference, IEdmElement, IEdmPrimitiveTypeReference, IEdmTypeReference {
@@ -3522,9 +3522,9 @@ public class Microsoft.OData.Edm.Vocabularies.EdmLabeledExpressionReferenceExpre
 }
 
 public class Microsoft.OData.Edm.Vocabularies.EdmNavigationPropertyPathExpression : Microsoft.OData.Edm.EdmPathExpression, IEdmElement, IEdmExpression, IEdmPathExpression {
-	public EdmNavigationPropertyPathExpression (System.Collections.Generic.IEnumerable`1[[System.String]] path)
+	public EdmNavigationPropertyPathExpression (System.Collections.Generic.IEnumerable`1[[System.String]] pathSegments)
 	public EdmNavigationPropertyPathExpression (string path)
-	public EdmNavigationPropertyPathExpression (string[] path)
+	public EdmNavigationPropertyPathExpression (string[] pathSegments)
 
 	Microsoft.OData.Edm.EdmExpressionKind ExpressionKind  { public virtual get; }
 }
@@ -3544,9 +3544,9 @@ public class Microsoft.OData.Edm.Vocabularies.EdmPropertyConstructor : Microsoft
 }
 
 public class Microsoft.OData.Edm.Vocabularies.EdmPropertyPathExpression : Microsoft.OData.Edm.EdmPathExpression, IEdmElement, IEdmExpression, IEdmPathExpression {
-	public EdmPropertyPathExpression (System.Collections.Generic.IEnumerable`1[[System.String]] path)
+	public EdmPropertyPathExpression (System.Collections.Generic.IEnumerable`1[[System.String]] pathSegments)
 	public EdmPropertyPathExpression (string path)
-	public EdmPropertyPathExpression (string[] path)
+	public EdmPropertyPathExpression (string[] pathSegments)
 
 	Microsoft.OData.Edm.EdmExpressionKind ExpressionKind  { public virtual get; }
 }

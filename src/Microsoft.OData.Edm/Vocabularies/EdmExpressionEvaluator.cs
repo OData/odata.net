@@ -415,7 +415,7 @@ namespace Microsoft.OData.Edm.Vocabularies
                         IEdmValue result = context;
 #if ORCAS
                         // [EdmLib] Need to handle paths that bind to things other than properties.
-                        foreach (string hop in pathExpression.Path)
+                        foreach (string hop in pathExpression.PathSegments)
                         {
                             result = FindProperty(hop, result);
 
@@ -427,7 +427,7 @@ namespace Microsoft.OData.Edm.Vocabularies
 #else
                         // Only Support Annotation in EntityType or ComplexType or Property or NavigationProperty.
                         // Empty Path is not supported.
-                        foreach (string hop in pathExpression.Path)
+                        foreach (string hop in pathExpression.PathSegments)
                         {
                             if (hop.Contains("@"))
                             {
@@ -539,7 +539,7 @@ namespace Microsoft.OData.Edm.Vocabularies
                         IEdmValue result = context;
 
                         // [EdmLib] Need to handle paths that bind to things other than properties.
-                        foreach (string hop in pathExpression.Path)
+                        foreach (string hop in pathExpression.PathSegments)
                         {
                             result = FindProperty(hop, result);
 

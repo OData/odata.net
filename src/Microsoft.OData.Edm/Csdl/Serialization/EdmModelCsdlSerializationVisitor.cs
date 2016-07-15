@@ -521,7 +521,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
                 var pathExpression = operationImport.EntitySet as IEdmPathExpression;
                 if (pathExpression != null)
                 {
-                    return EdmModelCsdlSchemaWriter.PathAsXml(pathExpression.Path);
+                    return EdmModelCsdlSchemaWriter.PathAsXml(pathExpression.PathSegments);
                 }
             }
 

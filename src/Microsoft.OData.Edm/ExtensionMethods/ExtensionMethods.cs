@@ -2409,7 +2409,7 @@ namespace Microsoft.OData.Edm
             relativePath = null;
             lastEntityType = null;
 
-            var pathItems = pathExpression.Path.ToList();
+            var pathItems = pathExpression.PathSegments.ToList();
             if (pathItems.Count < 1)
             {
                 foundErrors.Add(new EdmError(element.Location(), EdmErrorCode.OperationWithInvalidEntitySetPathMissingCompletePath, Strings.EdmModel_Validator_Semantic_InvalidEntitySetPathMissingBindingParameterName(CsdlConstants.Attribute_EntitySetPath)));
@@ -2433,7 +2433,7 @@ namespace Microsoft.OData.Edm
                     new EdmError(
                         element.Location(),
                         EdmErrorCode.InvalidPathFirstPathParameterNotMatchingFirstParameterName,
-                        Strings.EdmModel_Validator_Semantic_InvalidEntitySetPathWithFirstPathParameterNotMatchingFirstParameterName(CsdlConstants.Attribute_EntitySetPath, EdmModelCsdlSchemaWriter.PathAsXml(pathExpression.Path), bindingParameterName, parameter.Name)));
+                        Strings.EdmModel_Validator_Semantic_InvalidEntitySetPathWithFirstPathParameterNotMatchingFirstParameterName(CsdlConstants.Attribute_EntitySetPath, EdmModelCsdlSchemaWriter.PathAsXml(pathExpression.PathSegments), bindingParameterName, parameter.Name)));
 
                 foundRelativePath = false;
             }
@@ -2452,7 +2452,7 @@ namespace Microsoft.OData.Edm
                         new EdmError(
                             element.Location(),
                             EdmErrorCode.InvalidPathWithNonEntityBindingParameter,
-                            Strings.EdmModel_Validator_Semantic_InvalidEntitySetPathWithNonEntityBindingParameter(CsdlConstants.Attribute_EntitySetPath, EdmModelCsdlSchemaWriter.PathAsXml(pathExpression.Path), bindingParameterName)));
+                            Strings.EdmModel_Validator_Semantic_InvalidEntitySetPathWithNonEntityBindingParameter(CsdlConstants.Attribute_EntitySetPath, EdmModelCsdlSchemaWriter.PathAsXml(pathExpression.PathSegments), bindingParameterName)));
 
                     return false;
                 }
@@ -2472,7 +2472,7 @@ namespace Microsoft.OData.Edm
                             new EdmError(
                                 element.Location(),
                                 EdmErrorCode.InvalidPathUnknownTypeCastSegment,
-                                Strings.EdmModel_Validator_Semantic_InvalidEntitySetPathUnknownTypeCastSegment(CsdlConstants.Attribute_EntitySetPath, EdmModelCsdlSchemaWriter.PathAsXml(pathExpression.Path), pathSegment)));
+                                Strings.EdmModel_Validator_Semantic_InvalidEntitySetPathUnknownTypeCastSegment(CsdlConstants.Attribute_EntitySetPath, EdmModelCsdlSchemaWriter.PathAsXml(pathExpression.PathSegments), pathSegment)));
 
                         foundRelativePath = false;
                         break;
@@ -2486,7 +2486,7 @@ namespace Microsoft.OData.Edm
                             new EdmError(
                                 element.Location(),
                                 EdmErrorCode.InvalidPathTypeCastSegmentMustBeEntityType,
-                                Strings.EdmModel_Validator_Semantic_InvalidEntitySetPathTypeCastSegmentMustBeEntityType(CsdlConstants.Attribute_EntitySetPath, EdmModelCsdlSchemaWriter.PathAsXml(pathExpression.Path), foundType.FullName())));
+                                Strings.EdmModel_Validator_Semantic_InvalidEntitySetPathTypeCastSegmentMustBeEntityType(CsdlConstants.Attribute_EntitySetPath, EdmModelCsdlSchemaWriter.PathAsXml(pathExpression.PathSegments), foundType.FullName())));
 
                         foundRelativePath = false;
                         break;
@@ -2498,7 +2498,7 @@ namespace Microsoft.OData.Edm
                             new EdmError(
                                 element.Location(),
                                 EdmErrorCode.InvalidPathInvalidTypeCastSegment,
-                                Strings.EdmModel_Validator_Semantic_InvalidEntitySetPathInvalidTypeCastSegment(CsdlConstants.Attribute_EntitySetPath, EdmModelCsdlSchemaWriter.PathAsXml(pathExpression.Path), lastEntityType.FullName(), foundEntityTypeCast.FullName())));
+                                Strings.EdmModel_Validator_Semantic_InvalidEntitySetPathInvalidTypeCastSegment(CsdlConstants.Attribute_EntitySetPath, EdmModelCsdlSchemaWriter.PathAsXml(pathExpression.PathSegments), lastEntityType.FullName(), foundEntityTypeCast.FullName())));
 
                         foundRelativePath = false;
                         break;
@@ -2515,7 +2515,7 @@ namespace Microsoft.OData.Edm
                             new EdmError(
                                 element.Location(),
                                 EdmErrorCode.InvalidPathUnknownNavigationProperty,
-                                Strings.EdmModel_Validator_Semantic_InvalidEntitySetPathUnknownNavigationProperty(CsdlConstants.Attribute_EntitySetPath, EdmModelCsdlSchemaWriter.PathAsXml(pathExpression.Path), pathSegment)));
+                                Strings.EdmModel_Validator_Semantic_InvalidEntitySetPathUnknownNavigationProperty(CsdlConstants.Attribute_EntitySetPath, EdmModelCsdlSchemaWriter.PathAsXml(pathExpression.PathSegments), pathSegment)));
 
                         foundRelativePath = false;
                         break;
@@ -2655,7 +2655,7 @@ namespace Microsoft.OData.Edm
 
         internal static bool TryGetStaticEntitySet(this IEdmPathExpression pathExpression, IEdmModel model, out IEdmEntitySetBase entitySet)
         {
-            var segmentIterator = pathExpression.Path.GetEnumerator();
+            var segmentIterator = pathExpression.PathSegments.GetEnumerator();
             if (!segmentIterator.MoveNext())
             {
                 entitySet = null;
@@ -2740,7 +2740,7 @@ namespace Microsoft.OData.Edm
 
                             var nameProp = propertyRef.Properties.FirstOrDefault(e => e.Name == AlternateKeysVocabularyConstants.PropertyRefTypeNamePropertyName);
                             Debug.Assert(nameProp != null, "expected non null Name Property");
-                            string propertyName = ((IEdmPathExpression)nameProp.Value).Path.FirstOrDefault();
+                            string propertyName = ((IEdmPathExpression)nameProp.Value).PathSegments.FirstOrDefault();
 
                             alternateKey[alias] = type.FindProperty(propertyName);
                         }

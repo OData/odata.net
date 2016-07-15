@@ -15,8 +15,8 @@ namespace Microsoft.OData.Edm
     /// </summary>
     public class EdmPathExpression : EdmElement, IEdmPathExpression
     {
-        private IEnumerable<string> path;
-        private string fullPath;
+        private IEnumerable<string> pathSegments;
+        private string path;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="EdmPathExpression"/> class.
@@ -25,48 +25,48 @@ namespace Microsoft.OData.Edm
         public EdmPathExpression(string path)
         {
             EdmUtil.CheckArgumentNull(path, "path");
-            this.fullPath = path;
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="EdmPathExpression"/> class.
-        /// </summary>
-        /// <param name="path">Path segments.</param>
-        public EdmPathExpression(params string[] path)
-            : this((IEnumerable<string>)path)
-        {
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="EdmPathExpression"/> class.
-        /// </summary>
-        /// <param name="path">Path segments.</param>
-        public EdmPathExpression(IEnumerable<string> path)
-        {
-            EdmUtil.CheckArgumentNull(path, "path");
-
-            if (path.Any(segment => segment.Contains("/")))
-            {
-                throw new ArgumentException(Strings.PathSegmentMustNotContainSlash);
-            }
-
             this.path = path;
         }
 
         /// <summary>
-        /// Gets the path as a decomposed qualified name. "A.B/C/D.E/Func1(NS.T,NS.T2)/P1" is { "A.B", "C", "D.E", "Func1(NS.T,NS.T2)", "P1" }.
+        /// Initializes a new instance of the <see cref="EdmPathExpression"/> class.
         /// </summary>
-        public IEnumerable<string> Path
+        /// <param name="pathSegments">Path segments.</param>
+        public EdmPathExpression(params string[] pathSegments)
+            : this((IEnumerable<string>)pathSegments)
         {
-            get { return this.path ?? (this.path = this.fullPath.Split('/')); }
         }
 
         /// <summary>
-        /// Gets the full path string, like "A.B/C/D.E".
+        /// Initializes a new instance of the <see cref="EdmPathExpression"/> class.
         /// </summary>
-        public string FullPath
+        /// <param name="pathSegments">Path segments.</param>
+        public EdmPathExpression(IEnumerable<string> pathSegments)
         {
-            get { return this.fullPath ?? (this.fullPath = string.Join("/", this.path.ToArray())); }
+            EdmUtil.CheckArgumentNull(pathSegments, "pathSegments");
+
+            if (pathSegments.Any(segment => segment.Contains("/")))
+            {
+                throw new ArgumentException(Strings.PathSegmentMustNotContainSlash);
+            }
+
+            this.pathSegments = pathSegments;
+        }
+
+        /// <summary>
+        /// Gets the path segments as a decomposed qualified name. "A.B/C/D.E/Func1(NS.T,NS.T2)/P1" is { "A.B", "C", "D.E", "Func1(NS.T,NS.T2)", "P1" }.
+        /// </summary>
+        public IEnumerable<string> PathSegments
+        {
+            get { return this.pathSegments ?? (this.pathSegments = this.path.Split('/')); }
+        }
+
+        /// <summary>
+        /// Gets the path string, like "A.B/C/D.E".
+        /// </summary>
+        public string Path
+        {
+            get { return this.path ?? (this.path = string.Join("/", this.pathSegments.ToArray())); }
         }
 
         /// <summary>

@@ -1188,7 +1188,7 @@ namespace Microsoft.OData.UriParser
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1800:DoNotCastUnnecessarily")]
         private bool MatchBindingPath(IEdmPathExpression bindingPath)
         {
-            List<string> paths = bindingPath.Path.ToList();
+            List<string> paths = bindingPath.PathSegments.ToList();
 
             // If binding path only includes navigation property name, it matches.
             if (paths.Count == 1)

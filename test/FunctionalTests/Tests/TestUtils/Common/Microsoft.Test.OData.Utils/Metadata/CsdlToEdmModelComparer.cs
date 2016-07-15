@@ -685,7 +685,7 @@ namespace Microsoft.Test.OData.Utils.Metadata
         {
             var modelPath = entitySetExpression as EdmPathExpression;
             ExceptionUtilities.CheckObjectNotNull(modelPath, "Expected a Path expression");
-            ExceptionUtilities.Assert(entitySetPathValue == string.Join("/", modelPath.Path), "Unexpected value for path expression");
+            ExceptionUtilities.Assert(entitySetPathValue == string.Join("/", modelPath.PathSegments), "Unexpected value for path expression");
         }
 
         private static Dictionary<string, XElement> BuildNamedElementIndex(IEnumerable<XElement> csdlElements, string elementName)

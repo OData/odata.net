@@ -333,7 +333,7 @@ namespace Microsoft.OData.Edm.Tests.ScenarioTests
         [Fact]
         public void EntitySetPathReturnsCorrectly()
         {
-            var paths = this.TestModel.RemoveBadCarAction.EntitySetPath.Path.ToList();
+            var paths = this.TestModel.RemoveBadCarAction.EntitySetPath.PathSegments.ToList();
             paths[0].Should().Be("People");
             paths[1].Should().Be("Cars");
         }

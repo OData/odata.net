@@ -144,7 +144,7 @@ namespace Microsoft.OData.Metadata
         {
             Debug.Assert(navigationSource != null, "navigationSource != null");
 
-            return string.Join(".", navigationSource.Path.Path.ToArray());
+            return string.Join(".", navigationSource.Path.PathSegments.ToArray());
         }
 
         /// <summary>

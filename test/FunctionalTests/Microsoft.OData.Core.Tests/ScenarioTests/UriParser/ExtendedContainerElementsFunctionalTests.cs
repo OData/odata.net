@@ -110,7 +110,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             path.LastSegment.ShouldBeOperationImportSegment(operationImports);
             IEdmOperationImport operationImport = operationImports.Single();
             var expression = operationImport.EntitySet as IEdmPathExpression;
-            expression.Path.Single().Should().Be("EntitySet1");
+            expression.PathSegments.Single().Should().Be("EntitySet1");
         }
 
         [Fact]

@@ -533,10 +533,10 @@ namespace Microsoft.OData.Evaluation
                                 // TODO:
                                 //  1. Add support for Complex type
                                 //  2. Add new exception when collectionExpression is not IEdmCollectionExpression: CoreOptimisticConcurrency must be followed by collection expression
-                                IEdmStructuralProperty property = this.actualResourceType.StructuralProperties().FirstOrDefault(p => p.Name == pathExpression.Path.LastOrDefault());
+                                IEdmStructuralProperty property = this.actualResourceType.StructuralProperties().FirstOrDefault(p => p.Name == pathExpression.PathSegments.LastOrDefault());
                                 if (property == null)
                                 {
-                                    throw new ODataException(Strings.EdmValueUtils_PropertyDoesntExist(this.ActualResourceTypeName, pathExpression.Path.LastOrDefault()));
+                                    throw new ODataException(Strings.EdmValueUtils_PropertyDoesntExist(this.ActualResourceTypeName, pathExpression.PathSegments.LastOrDefault()));
                                 }
 
                                 yield return property;

@@ -99,7 +99,7 @@ namespace Microsoft.OData.Edm
 
         private IEdmPathExpression ComputePath()
         {
-            List<string> newPath = new List<string>(this.parentNavigationSource.Path.Path);
+            List<string> newPath = new List<string>(this.parentNavigationSource.Path.PathSegments);
             newPath.Add(this.navigationProperty.Name);
             return new EdmPathExpression(newPath.ToArray());
         }

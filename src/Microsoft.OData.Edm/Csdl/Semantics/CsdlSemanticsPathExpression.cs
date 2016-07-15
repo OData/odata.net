@@ -40,12 +40,12 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
             get { return EdmExpressionKind.Path; }
         }
 
-        public IEnumerable<string> Path
+        public IEnumerable<string> PathSegments
         {
             get { return this.PathCache.GetValue(this, ComputePathFunc, null); }
         }
 
-        public string FullPath
+        public string Path
         {
             get { return this.Expression.Path; }
         }

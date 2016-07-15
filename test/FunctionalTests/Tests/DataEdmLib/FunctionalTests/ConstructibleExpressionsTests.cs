@@ -697,10 +697,10 @@ namespace EdmLibTests.FunctionalTests
             var e = new EdmPathExpression("x", "y");
             Assert.IsFalse(e.IsBad(), "e good");
             Assert.AreEqual(EdmExpressionKind.Path, e.ExpressionKind, "e.ExpressionKind");
-            Assert.AreEqual(2, e.Path.Count(), "e.Path.Count()");
-            var s1 = e.Path.First();
+            Assert.AreEqual(2, e.PathSegments.Count(), "e.Path.Count()");
+            var s1 = e.PathSegments.First();
             Assert.AreEqual("x", s1, "s1");
-            Assert.AreEqual("y", e.Path.Last(), "e.Path.Last()");
+            Assert.AreEqual("y", e.PathSegments.Last(), "e.Path.Last()");
 
             try
             {
@@ -712,20 +712,20 @@ namespace EdmLibTests.FunctionalTests
             }
 
             var ee = new MutablePathExpression();
-            Assert.IsNull(ee.Path, "ee.Path");
+            Assert.IsNull(ee.PathSegments, "ee.Path");
             Assert.IsTrue(ee.IsBad(), "Expression is bad.");
             Assert.AreEqual(1, ee.Errors().Count(), "Expression has no errors");
         }
 
         private sealed class MutablePathExpression : IEdmPathExpression
         {
-            public IEnumerable<string> Path
+            public IEnumerable<string> PathSegments
             {
                 get;
                 set;
             }
 
-            public string FullPath { get; set; }
+            public string Path { get; set; }
 
             public EdmExpressionKind ExpressionKind
             {

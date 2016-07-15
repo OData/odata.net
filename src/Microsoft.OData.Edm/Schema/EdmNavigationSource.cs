@@ -89,7 +89,7 @@ namespace Microsoft.OData.Edm
             EdmUtil.CheckArgumentNull(target, "navigation target");
             EdmUtil.CheckArgumentNull(bindingPath, "binding path");
 
-            if (navigationProperty.Name != bindingPath.Path.Last())
+            if (navigationProperty.Name != bindingPath.PathSegments.Last())
             {
                 throw new ArgumentException(Strings.NavigationPropertyBinding_PathIsNotValid);
             }
@@ -99,7 +99,7 @@ namespace Microsoft.OData.Edm
                 this.navigationPropertyMappings[navigationProperty] = new Dictionary<string, IEdmNavigationPropertyBinding>();
             }
 
-            this.navigationPropertyMappings[navigationProperty][bindingPath.FullPath] = new EdmNavigationPropertyBinding(navigationProperty, target, bindingPath);
+            this.navigationPropertyMappings[navigationProperty][bindingPath.Path] = new EdmNavigationPropertyBinding(navigationProperty, target, bindingPath);
             this.navigationTargetsCache.Clear(null);
         }
 
@@ -154,7 +154,7 @@ namespace Microsoft.OData.Edm
             {
                 Dictionary<string, IEdmNavigationPropertyBinding> result;
                 IEdmNavigationPropertyBinding binding;
-                if (this.navigationPropertyMappings.TryGetValue(navigationProperty, out result) && result.TryGetValue(bindingPath.FullPath, out binding))
+                if (this.navigationPropertyMappings.TryGetValue(navigationProperty, out result) && result.TryGetValue(bindingPath.Path, out binding))
                 {
                     return binding.Target;
                 }
