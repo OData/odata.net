@@ -5186,6 +5186,7 @@ public sealed class Microsoft.OData.Core.UriParser.ODataUriParser {
 	public ODataUriParser (Microsoft.OData.Edm.IEdmModel model, System.Uri serviceRoot, System.Uri fullUri)
 
 	System.Func`2[[System.String],[Microsoft.OData.Core.UriParser.Semantic.BatchReferenceSegment]] BatchReferenceCallback  { public get; public set; }
+	bool EnableNoDollarQueryOptions  { public get; public set; }
 	bool EnableUriTemplateParsing  { public get; public set; }
 	Microsoft.OData.Edm.IEdmModel Model  { public get; }
 	System.Collections.Generic.IDictionary`2[[System.String],[Microsoft.OData.Core.UriParser.Semantic.SingleValueNode]] ParameterAliasNodes  { public get; }
