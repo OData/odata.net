@@ -8,6 +8,7 @@ namespace Microsoft.OData.UriParser
 {
     using System;
     using System.Collections.Generic;
+    using System.Globalization;
     using System.Linq;
     using Microsoft.OData.Edm;
     using Microsoft.OData.UriParser.Aggregation;
@@ -167,6 +168,17 @@ namespace Microsoft.OData.UriParser
         {
             get { return this.configuration.BatchReferenceCallback; }
             set { this.configuration.BatchReferenceCallback = value; }
+        }
+
+        /// <summary>
+        /// Whether no dollar query options is enabled.
+        /// If it is enabled, the '$' prefix of system query options becomes optional.
+        /// For example, "select" and "$select" are equivalent in this case.
+        /// </summary>
+        public bool EnableNoDollarQueryOptions
+        {
+            get { return this.configuration.EnableNoDollarQueryOptions; }
+            set { this.configuration.EnableNoDollarQueryOptions = value; }
         }
 
         /// <summary>
@@ -514,23 +526,32 @@ namespace Microsoft.OData.UriParser
             {
                 foreach (var queryOption in queryOptions)
                 {
-                    if (queryOption.Name == null)
+                    string queryOptionName = queryOption.Name;
+                    if (queryOptionName == null)
                     {
                         continue;
                     }
 
-                    if (IsODataQueryOption(queryOption.Name))
+                    // If EnableNoDollarQueryOptions is true, we will treat all reserved OData query options without "$" prefix as odata query options.
+                    // Or, they will be treated as custom query options which could be duplicated.
+                    bool shouldAddDollarPrefix = this.EnableNoDollarQueryOptions && !queryOption.Name.StartsWith("$", StringComparison.Ordinal);
+                    string fixedQueryOptionName = shouldAddDollarPrefix ? UriQueryConstants.DollarSign + queryOptionName : queryOptionName;
+
+                    if (IsODataQueryOption(fixedQueryOptionName))
                     {
-                        if (queryOptionDic.ContainsKey(queryOption.Name))
+                        if (queryOptionDic.ContainsKey(fixedQueryOptionName))
                         {
-                            throw new ODataException(Strings.QueryOptionUtils_QueryParameterMustBeSpecifiedOnce(queryOption.Name));
+                            throw new ODataException(Strings.QueryOptionUtils_QueryParameterMustBeSpecifiedOnce(
+                                this.EnableNoDollarQueryOptions
+                                ? string.Format(CultureInfo.InvariantCulture, "${0}/{0}", fixedQueryOptionName.TrimStart('$'))
+                                : fixedQueryOptionName));
                         }
 
-                        queryOptionDic.Add(queryOption.Name, queryOption.Value);
+                        queryOptionDic.Add(fixedQueryOptionName, queryOption.Value);
                     }
                     else
                     {
-                        customQueryOptions.Add(new KeyValuePair<string, string>(queryOption.Name, queryOption.Value));
+                        customQueryOptions.Add(new KeyValuePair<string, string>(queryOptionName, queryOption.Value));
                     }
                 }
             }
@@ -541,9 +562,9 @@ namespace Microsoft.OData.UriParser
         /// </summary>
         /// <param name="optionName">The name of a query option.</param>
         /// <returns>True if optionName is OData query option, vise versa.</returns>
-        private static bool IsODataQueryOption(string optionName)
+        private bool IsODataQueryOption(string optionName)
         {
-            switch (optionName.ToLowerInvariant())
+            switch (this.Resolver.EnableCaseInsensitive ? optionName.ToLowerInvariant() : optionName)
             {
                 case UriQueryConstants.FilterQueryOption:
                 case UriQueryConstants.ApplyQueryOption:

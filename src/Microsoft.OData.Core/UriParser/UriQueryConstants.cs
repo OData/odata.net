@@ -76,5 +76,8 @@ namespace Microsoft.OData.UriParser
 
         /// <summary>A search query option name.</summary>
         internal const string SearchQueryOption = "$search";
+
+        /// <summary>Dollar sign.</summary>
+        internal const string DollarSign = "$";
     }
 }

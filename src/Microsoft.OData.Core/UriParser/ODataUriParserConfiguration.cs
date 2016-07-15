@@ -122,6 +122,13 @@ namespace Microsoft.OData.UriParser
         }
 
         /// <summary>
+        /// Whether no dollar query options is enabled.
+        /// If it is enabled, the '$' prefix of system query options becomes optional.
+        /// For example, "select" and "$select" are equivalent in this case.
+        /// </summary>
+        internal bool EnableNoDollarQueryOptions { get; set; }
+
+        /// <summary>
         /// Whether Uri template parsing is enabled. See <see cref="UriTemplateExpression"/> class for detail.
         /// </summary>
         internal bool EnableUriTemplateParsing { get; set; }

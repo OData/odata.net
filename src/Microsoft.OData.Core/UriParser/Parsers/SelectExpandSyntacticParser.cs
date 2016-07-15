@@ -36,7 +36,13 @@ namespace Microsoft.OData.UriParser
             };
             selectTree = selectParser.ParseSelect();
 
-            SelectExpandParser expandParser = new SelectExpandParser(configuration.Resolver, expandClause, parentEntityType, configuration.Settings.SelectExpandLimit, configuration.EnableCaseInsensitiveUriFunctionIdentifier)
+            SelectExpandParser expandParser = new SelectExpandParser(
+                configuration.Resolver,
+                expandClause,
+                parentEntityType,
+                configuration.Settings.SelectExpandLimit,
+                configuration.EnableCaseInsensitiveUriFunctionIdentifier,
+                configuration.EnableNoDollarQueryOptions)
             {
                 MaxPathDepth = configuration.Settings.PathLimit,
                 MaxFilterDepth = configuration.Settings.FilterLimit,

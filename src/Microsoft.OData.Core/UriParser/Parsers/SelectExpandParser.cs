@@ -33,6 +33,16 @@ namespace Microsoft.OData.UriParser
         private readonly int maxRecursiveDepth;
 
         /// <summary>
+        /// Whether to enable no dollar query options.
+        /// </summary>
+        private readonly bool enableNoDollarQueryOptions;
+
+        /// <summary>
+        /// Whether to allow case insensitive for builtin identifier.
+        /// </summary>
+        private readonly bool enableCaseInsensitiveBuiltinIdentifier;
+
+        /// <summary>
         /// Object to handle the parsing of any nested expand options that we discover.
         /// </summary>
         private ExpandOptionParser expandOptionParser;
@@ -48,18 +58,18 @@ namespace Microsoft.OData.UriParser
         private bool isSelect;
 
         /// <summary>
-        /// Whether to allow case insensitive for builtin identifier.
-        /// </summary>
-        private bool enableCaseInsensitiveBuiltinIdentifier;
-
-        /// <summary>
         /// Build the SelectOption strategy.
         /// TODO: Really should not take the clauseToParse here. Instead it should be provided with a call to ParseSelect() or ParseExpand().
         /// </summary>
         /// <param name="clauseToParse">the clause to parse</param>
         /// <param name="maxRecursiveDepth">max recursive depth</param>
         /// <param name="enableCaseInsensitiveBuiltinIdentifier">Whether to allow case insensitive for builtin identifier.</param>
-        public SelectExpandParser(string clauseToParse, int maxRecursiveDepth, bool enableCaseInsensitiveBuiltinIdentifier = false)
+        /// <param name="enableNoDollarQueryOptions">Whether to enable no dollar query options.</param>
+        public SelectExpandParser(
+            string clauseToParse,
+            int maxRecursiveDepth,
+            bool enableCaseInsensitiveBuiltinIdentifier = false,
+            bool enableNoDollarQueryOptions = false)
         {
             this.maxRecursiveDepth = maxRecursiveDepth;
 
@@ -74,6 +84,8 @@ namespace Microsoft.OData.UriParser
             this.lexer = clauseToParse != null ? new ExpressionLexer(clauseToParse, false /*moveToFirstToken*/, false /*useSemicolonDelimiter*/) : null;
 
             this.enableCaseInsensitiveBuiltinIdentifier = enableCaseInsensitiveBuiltinIdentifier;
+
+            this.enableNoDollarQueryOptions = enableNoDollarQueryOptions;
         }
 
         /// <summary>
@@ -84,8 +96,15 @@ namespace Microsoft.OData.UriParser
         /// <param name="parentEntityType">the parent entity type for expand option</param>
         /// <param name="maxRecursiveDepth">max recursive depth</param>
         /// <param name="enableCaseInsensitiveBuiltinIdentifier">Whether to allow case insensitive for builtin identifier.</param>
-        public SelectExpandParser(ODataUriResolver resolver, string clauseToParse, IEdmStructuredType parentEntityType, int maxRecursiveDepth, bool enableCaseInsensitiveBuiltinIdentifier = false)
-            : this(clauseToParse, maxRecursiveDepth, enableCaseInsensitiveBuiltinIdentifier)
+        /// <param name="enableNoDollarQueryOptions">Whether to enable no dollar query options.</param>
+        public SelectExpandParser(
+            ODataUriResolver resolver,
+            string clauseToParse,
+            IEdmStructuredType parentEntityType,
+            int maxRecursiveDepth,
+            bool enableCaseInsensitiveBuiltinIdentifier = false,
+            bool enableNoDollarQueryOptions = false)
+            : this(clauseToParse, maxRecursiveDepth, enableCaseInsensitiveBuiltinIdentifier, enableNoDollarQueryOptions)
         {
             this.resolver = resolver;
             this.parentEntityType = parentEntityType;
@@ -165,7 +184,12 @@ namespace Microsoft.OData.UriParser
 
             if (expandOptionParser == null)
             {
-                expandOptionParser = new ExpandOptionParser(this.resolver, this.parentEntityType, this.maxRecursiveDepth, enableCaseInsensitiveBuiltinIdentifier)
+                expandOptionParser = new ExpandOptionParser(
+                    this.resolver,
+                    this.parentEntityType,
+                    this.maxRecursiveDepth,
+                    this.enableCaseInsensitiveBuiltinIdentifier,
+                    this.enableNoDollarQueryOptions)
                 {
                     MaxFilterDepth = MaxFilterDepth,
                     MaxOrderByDepth = MaxOrderByDepth,
