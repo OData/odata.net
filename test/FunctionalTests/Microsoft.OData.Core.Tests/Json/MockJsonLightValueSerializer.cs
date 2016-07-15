@@ -19,7 +19,7 @@ namespace Microsoft.OData.Tests.Json
         public const string ComplexOutput = "FAKE_COMPLEX_VALUE";
         public const string CollectionOutput = "FAKE_COLLECTION_VALUE_";
 
-        public Action<ODataComplexValue, IEdmTypeReference, bool, bool, IDuplicatePropertyNameChecker> WriteComplexVerifier { get; set; }
+        public Action<ODataResource, IEdmTypeReference, bool, bool, IDuplicatePropertyNameChecker> WriteComplexVerifier { get; set; }
         public Action<ODataCollectionValue, IEdmTypeReference, IEdmTypeReference, bool, bool, bool> WriteCollectionVerifier { get; set; }
         public Action<object, IEdmTypeReference> WritePrimitiveVerifier { get; set; }
         public Action WriteNullVerifier { get; set; }

@@ -152,34 +152,25 @@ namespace Microsoft.OData.Tests
             }
             else
             {
-                ODataComplexValue complexValue1 = value1 as ODataComplexValue;
-                ODataComplexValue complexValue2 = value2 as ODataComplexValue;
-                if (complexValue1 != null && complexValue2 != null)
+                ODataEnumValue enumValue1 = value1 as ODataEnumValue;
+                ODataEnumValue enumValue2 = value2 as ODataEnumValue;
+                if (enumValue1 != null && enumValue2 != null)
                 {
-                    AssertODataComplexValueAreEqual(complexValue1, complexValue2);
+                    AssertODataEnumValueAreEqual(enumValue1, enumValue2);
                 }
                 else
                 {
-                    ODataEnumValue enumValue1 = value1 as ODataEnumValue;
-                    ODataEnumValue enumValue2 = value2 as ODataEnumValue;
-                    if (enumValue1 != null && enumValue2 != null)
+                    ODataCollectionValue collectionValue1 = value1 as ODataCollectionValue;
+                    ODataCollectionValue collectionValue2 = value2 as ODataCollectionValue;
+                    if (collectionValue1 != null && collectionValue2 != null)
                     {
-                        AssertODataEnumValueAreEqual(enumValue1, enumValue2);
+                        AssertODataCollectionValueAreEqual(collectionValue1, collectionValue2);
                     }
                     else
                     {
-                        ODataCollectionValue collectionValue1 = value1 as ODataCollectionValue;
-                        ODataCollectionValue collectionValue2 = value2 as ODataCollectionValue;
-                        if (collectionValue1 != null && collectionValue2 != null)
-                        {
-                            AssertODataCollectionValueAreEqual(collectionValue1, collectionValue2);
-                        }
-                        else
-                        {
-                            ODataUntypedValue untyped1 = value1 as ODataUntypedValue;
-                            ODataUntypedValue untyped2 = value2 as ODataUntypedValue;
-                            Assert.Equal(untyped1.RawValue, untyped2.RawValue);
-                        }
+                        ODataUntypedValue untyped1 = value1 as ODataUntypedValue;
+                        ODataUntypedValue untyped2 = value2 as ODataUntypedValue;
+                        Assert.Equal(untyped1.RawValue, untyped2.RawValue);
                     }
                 }
             }
@@ -207,14 +198,6 @@ namespace Microsoft.OData.Tests
                     Assert.Equal(itemsArray1[i], itemsArray2[i]);
                 }
             }
-        }
-
-        private static void AssertODataComplexValueAreEqual(ODataComplexValue complexValue1, ODataComplexValue complexValue2)
-        {
-            Assert.NotNull(complexValue1);
-            Assert.NotNull(complexValue2);
-            Assert.Equal(complexValue1.TypeName, complexValue2.TypeName);
-            AssertODataPropertiesAreEqual(complexValue1.Properties, complexValue2.Properties);
         }
 
         public static void AssertODataPropertiesAreEqual(IEnumerable<ODataProperty> properties1, IEnumerable<ODataProperty> properties2)

@@ -49,14 +49,6 @@ namespace Microsoft.OData.Tests
         }
 
         [Fact]
-        public void IfValueIsComplexThenODataValueShouldBeReferenceEqual()
-        {
-            ODataComplexValue complexValue = new ODataComplexValue();
-            this.property.Value = complexValue;
-            this.property.ODataValue.Should().BeSameAs(complexValue);
-        }
-
-        [Fact]
         public void IfValueIsODataPrimitiveValueThenODataValueShouldBeReferenceEqual()
         {
             ODataPrimitiveValue primitiveValue = new ODataPrimitiveValue(42);

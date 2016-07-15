@@ -139,7 +139,7 @@ namespace Microsoft.OData.Tests.Evaluation
         [Fact]
         public void KeyPropertiesShouldThrowWhenSerializationInfoIsSetAndPropertyValueIsNonPrimitive()
         {
-            this.entry.Properties = new[] {new ODataProperty {Name = "ID", Value = new ODataComplexValue(), SerializationInfo = new ODataPropertySerializationInfo {PropertyKind = ODataPropertyKind.Key}}};
+            this.entry.Properties = new[] { new ODataProperty { Name = "ID", Value = new ODataCollectionValue(), SerializationInfo = new ODataPropertySerializationInfo { PropertyKind = ODataPropertyKind.Key } } };
             Action test = () => this.entryMetadataContextWithoutModel.KeyProperties.Should().NotBeNull();
             test.ShouldThrow<ODataException>(Strings.ODataResourceMetadataContext_KeyOrETagValuesMustBePrimitiveValues("ID", "ns.TypeName"));
         }
@@ -155,7 +155,7 @@ namespace Microsoft.OData.Tests.Evaluation
         [Fact]
         public void KeyPropertiesShouldThrowWhenMetadataIsPresentAndPropertyValueIsNonPrimitive()
         {
-            this.entry.Properties = new[] {new ODataProperty {Name = "ID2", Value = new ODataComplexValue()}};
+            this.entry.Properties = new[] {new ODataProperty {Name = "ID2", Value = new ODataCollectionValue()}};
             Action test = () => this.entryMetadataContextWithModel.KeyProperties.Should().NotBeNull();
             test.ShouldThrow<ODataException>(Strings.ODataResourceMetadataContext_KeyOrETagValuesMustBePrimitiveValues("ID2", "ns.TypeName"));
         }
@@ -220,7 +220,7 @@ namespace Microsoft.OData.Tests.Evaluation
         [Fact]
         public void ETagPropertiesShouldThrowWhenSerializationInfoIsSetAndPropertyValueIsNonPrimitive()
         {
-            this.entry.Properties = new[] { new ODataProperty { Name = "Name", Value = new ODataComplexValue(), SerializationInfo = new ODataPropertySerializationInfo { PropertyKind = ODataPropertyKind.ETag }}};
+            this.entry.Properties = new[] { new ODataProperty { Name = "Name", Value = new ODataCollectionValue(), SerializationInfo = new ODataPropertySerializationInfo { PropertyKind = ODataPropertyKind.ETag } } };
             Action test = () => this.entryMetadataContextWithoutModel.ETagProperties.Should().NotBeNull();
             test.ShouldThrow<ODataException>(Strings.ODataResourceMetadataContext_KeyOrETagValuesMustBePrimitiveValues("Name", "ns.TypeName"));
         }
@@ -235,7 +235,7 @@ namespace Microsoft.OData.Tests.Evaluation
         [Fact(Skip = "we should remove this case because we need model to calc ETag")]
         public void ETagPropertiesShouldThrowWhenMetadataIsPresentAndPropertyValueIsNonPrimitive()
         {
-            this.entry.Properties = new[] { new ODataProperty { Name = "Name2", Value = new ODataComplexValue() } };
+            this.entry.Properties = new[] { new ODataProperty { Name = "Name2", Value = new ODataCollectionValue() } };
             Action test = () => this.entryMetadataContextWithModel.ETagProperties.Should().NotBeNull();
             test.ShouldThrow<ODataException>(Strings.ODataResourceMetadataContext_KeyOrETagValuesMustBePrimitiveValues("Name2", "ns.TypeName"));
         }

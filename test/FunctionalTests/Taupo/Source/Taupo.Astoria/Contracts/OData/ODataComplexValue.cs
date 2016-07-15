@@ -4,18 +4,19 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData
+namespace Microsoft.Test.Taupo.Astoria.Contracts.OData
 {
     #region Namespaces
     using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
+    using Microsoft.OData;
 
     #endregion Namespaces
 
     /// <summary>
     /// OData representation of a complex value.
     /// </summary>
-    internal sealed class ODataComplexValue : ODataValue
+    public sealed class ODataComplexValue : ODataValue
     {
         /// <summary>Gets or sets the properties and values of the complex value.</summary>
         /// <returns>The properties and values of the complex value.</returns>
@@ -31,16 +32,6 @@ namespace Microsoft.OData
         {
             get;
             set;
-        }
-
-        /// <summary>
-        /// Collection of custom instance annotations.
-        /// </summary>
-        [SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly", Justification = "We want to allow the same instance annotation collection instance to be shared across ODataLib OM instances.")]
-        public ICollection<ODataInstanceAnnotation> InstanceAnnotations
-        {
-            get { return this.GetInstanceAnnotations(); }
-            set { this.SetInstanceAnnotations(value); }
         }
     }
 }

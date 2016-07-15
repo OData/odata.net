@@ -230,7 +230,6 @@
     <Compile Include="ODataCollectionValue.cs" />
     <Compile Include="ODataCollectionWriter.cs" />
     <Compile Include="ODataCollectionWriterCore.cs" />
-    <Compile Include="ODataComplexValue.cs" />
     <Compile Include="ODataConstants.cs" />
     <Compile Include="ODataContentTypeException.cs" />
     <Compile Include="ODataContextUriBuilder.cs" />

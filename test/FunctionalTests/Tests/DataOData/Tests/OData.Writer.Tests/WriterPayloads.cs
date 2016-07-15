@@ -17,6 +17,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests
     using Microsoft.Test.OData.Utils.Metadata;
     using Microsoft.Test.OData.Utils.ODataLibTest;
     using Microsoft.Test.Taupo.Astoria.Contracts.Json;
+    using Microsoft.Test.Taupo.Astoria.Contracts.OData;
     using Microsoft.Test.Taupo.OData.Atom;
     using Microsoft.Test.Taupo.OData.Common;
     using Microsoft.Test.Taupo.OData.Json;

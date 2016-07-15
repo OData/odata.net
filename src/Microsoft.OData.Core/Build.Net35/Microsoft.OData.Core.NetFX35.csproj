@@ -526,9 +526,6 @@
     <Compile Include="$(ODataCrossTargettingSourcePath)\ODataCollectionWriterCore.cs">
       <Link>Microsoft\OData\Core\ODataCollectionWriterCore.cs</Link>
     </Compile>
-    <Compile Include="$(ODataCrossTargettingSourcePath)\ODataComplexValue.cs">
-      <Link>Microsoft\OData\Core\ODataComplexValue.cs</Link>
-    </Compile>
     <Compile Include="$(ODataCrossTargettingSourcePath)\ODataConstants.cs">
       <Link>Microsoft\OData\Core\ODataConstants.cs</Link>
     </Compile>

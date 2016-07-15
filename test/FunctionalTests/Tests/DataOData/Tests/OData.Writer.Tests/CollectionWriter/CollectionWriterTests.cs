@@ -12,6 +12,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.CollectionWriter
     using Microsoft.OData;
     using Microsoft.OData.Edm;
     using Microsoft.Test.OData.Utils.CombinatorialEngine;
+    using Microsoft.Test.Taupo.Astoria.Contracts.OData;
     using Microsoft.Test.Taupo.Common;
     using Microsoft.Test.Taupo.Execution;
     using Microsoft.Test.Taupo.OData.Common;

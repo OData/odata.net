@@ -438,53 +438,6 @@ namespace AstoriaUnitTests.Tests
 
         [Ignore] // Remove Atom
         [TestMethod]
-        public void WritingExpandedValue()
-        {
-            using (OpenWebDataServiceHelper.CreateODataWriterDelegate.Restore())
-            using (MyODataWriter.WriteEntryStart.Restore())
-            using (MyODataWriter.WriteLinkStart.Restore())
-            using (var request = TestWebRequest.CreateForInProcess())
-            {
-                MyODataWriter testODataWriter = null;
-                request.HttpMethod = "GET";
-                request.DataServiceType = typeof(CustomDataContext);
-                OpenWebDataServiceHelper.CreateODataWriterDelegate.Value = (odataWriter) =>
-                {
-                    testODataWriter = new MyODataWriter(odataWriter);
-                    return testODataWriter;
-                };
-
-                object mostRecentEntry = null;
-                MyODataWriter.WriteEntryStart.Value = (args) =>
-                {
-                    mostRecentEntry = args.Instance;
-                    return false;
-                };
-
-                MyODataWriter.WriteLinkStart.Value = (args) =>
-                    {
-                        if (args.NavigationLink.Name == "BestFriend")
-                        {
-                            testODataWriter.CallBaseWriteStart(args.NavigationLink);
-                            var entry = CreateEntry(((Customer)mostRecentEntry).BestFriend, args.OperationContext);
-                            testODataWriter.CallBaseWriteStart(entry);
-                            testODataWriter.WriteEnd();
-                            return true;
-                        }
-
-                        return false;
-                    };
-
-                request.RequestUriString = "/Customers?$format=atom";
-                request.SendRequest();
-                var response = request.GetResponseStreamAsXDocument();
-
-                UnitTestsUtil.VerifyXPathResultCount(response, 2, new string[] { "/atom:feed/atom:entry/atom:link[@title='BestFriend']/adsm:inline/atom:entry" });
-            }
-        }
-
-        [Ignore] // Remove Atom
-        [TestMethod]
         public void DataServiceOdataWriterWriteEndForEntryTest()
         {
             using (OpenWebDataServiceHelper.CreateODataWriterDelegate.Restore())
@@ -674,57 +627,6 @@ namespace AstoriaUnitTests.Tests
                 UnitTestsUtil.VerifyXPathResultCount(response, customersCount, "/atom:feed/atom:entry");
                 UnitTestsUtil.VerifyXPathResultCount(response, linksCount, "/atom:feed/atom:entry/atom:link[@title='BestFriend' or @title='Orders']");
             }
-        }
-
-        private ODataResource CreateEntry(Customer customer, DataServiceOperationContext operationContext)
-        {
-            if (customer == null) return null;
-
-            var entry = new ODataResource();
-            entry.EditLink = new Uri(operationContext.AbsoluteServiceUri, "Customers(" + customer.ID + ")");
-            entry.Id = entry.EditLink;
-
-            var metadataProvider = (IDataServiceMetadataProvider)operationContext.GetService(typeof(IDataServiceMetadataProvider));
-            ResourceType rt;
-            metadataProvider.TryResolveResourceType(customer.GetType().FullName, out rt);
-            entry.Properties = GetProperties(customer, rt);
-            entry.TypeName = rt.FullName;
-            return entry;
-        }
-
-        private IEnumerable<ODataProperty> GetProperties(object instance, ResourceType resourceType)
-        {
-            List<ODataProperty> properties = new List<ODataProperty>();
-            foreach (var property in resourceType.Properties)
-            {
-                object value = instance.GetType().GetProperty(property.Name, BindingFlags.Public | BindingFlags.Instance).GetValue(instance, null);
-                
-                if (property.ResourceType.ResourceTypeKind == ResourceTypeKind.Primitive)
-                {
-                    if (value.GetType() == typeof(DateTime))
-                    {
-                        DateTime dt = (DateTime)value;
-                        if (dt.Kind == DateTimeKind.Unspecified)
-                        {
-                            value = new DateTimeOffset(new DateTime(dt.Ticks, DateTimeKind.Utc));
-                        }
-                        else
-                        {
-                            value = new DateTimeOffset(dt);
-                        }
-                    }
-                    var odataProperty = new ODataProperty() { Name = property.Name, Value = value };
-                    properties.Add(odataProperty);
-                }
-                else if (property.ResourceType.ResourceTypeKind == ResourceTypeKind.ComplexType)
-                {
-                    var odataProperty = new ODataProperty() { Name = property.Name };
-                    odataProperty.Value = new ODataComplexValue() { TypeName = property.ResourceType.FullName, Properties = GetProperties(value, property.ResourceType) };
-                    properties.Add(odataProperty);
-                }
-            }
-
-            return properties;
         }
 
         private class MyODataWriter : DataServiceODataWriter

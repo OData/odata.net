@@ -20,10 +20,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Reader
     {
         private static readonly ODataPrimitiveValue PrimitiveValue1 = new ODataPrimitiveValue(123);
         private static readonly ODataPrimitiveValue PrimitiveValue2 = new ODataPrimitiveValue(Guid.Empty);
-        private static readonly ODataComplexValue ComplexValue1 = new ODataComplexValue { Properties = new[] { new ODataProperty { Name = "StringProperty", Value = "StringValue1" } }, TypeName = "TestNamespace.TestComplexType" };
-        private static readonly ODataComplexValue ComplexValue2 = new ODataComplexValue { Properties = new[] { new ODataProperty { Name = "StringProperty", Value = "StringValue2" } }, TypeName = "TestNamespace.TestComplexType" };
         private static readonly ODataCollectionValue PrimitiveCollectionValue = new ODataCollectionValue { Items = new[] { "StringValue1", "StringValue2" }, TypeName = "Collection(String)" };
-        private static readonly ODataCollectionValue ComplexCollectionValue = new ODataCollectionValue { Items = new[] { ComplexValue1, ComplexValue2 }, TypeName = "Collection(TestNamespace.TestComplexType)" };
 
         private static readonly EdmModel Model;
         private static readonly EdmEntitySet EntitySet;
@@ -90,93 +87,6 @@ namespace Microsoft.OData.Tests.ScenarioTests.Reader
             "]," +
             "\"@Custom.FeedEndAnnotation\":1" +
         "}";
-
-        const string AtomFeedAndEntryPayloadWithCustomInstanceAnnotations =
-@"<?xml version=""1.0"" encoding=""utf-8""?>
-<feed xml:base=""http://localhost:34402/WcfDataService1.svc/"" xmlns=""http://www.w3.org/2005/Atom"" xmlns:d=""http://docs.oasis-open.org/odata/ns/data"" xmlns:m=""http://docs.oasis-open.org/odata/ns/metadata"">
-  <m:annotation term=""Custom.ResourceSetStartAnnotation"" int=""1"" />
-  <id>http://localhost:34402/WcfDataService1.svc/Folders</id>
-  <title type=""text"">Folders</title>
-  <updated>2013-03-12T00:24:18Z</updated>
-  <link rel=""self"" title=""Folders"" href=""Folders"" />
-  <entry>
-    <m:annotation term=""Custom.EntryStartAnnotation"" int=""2"" />
-    <id>http://localhost:34402/WcfDataService1.svc/Folders(1)</id>
-    <category term=""#TestNamespace.TestEntityType"" scheme=""http://docs.oasis-open.org/odata/ns/scheme"" />
-    <link rel=""edit"" title=""TestEntityType"" href=""Folders(1)"" />
-    <link rel=""http://docs.oasis-open.org/odata/ns/related/ResourceNavigationProperty"" type=""application/atom+xml;type=entry"" title=""ResourceNavigationProperty"" href=""Folders(1)/ResourceNavigationProperty"">
-      <m:inline>
-        <entry>
-          <m:annotation term=""Custom.EntryStartAnnotation"" int=""3"" />
-          <id>http://localhost:34402/WcfDataService1.svc/Folders(2)</id>
-          <category term=""#TestNamespace.TestEntityType"" scheme=""http://docs.oasis-open.org/odata/ns/scheme"" />
-          <link rel=""edit"" title=""TestEntityType"" href=""Folders(2)"" />
-          <link rel=""http://docs.oasis-open.org/odata/ns/related/ResourceNavigationProperty"" type=""application/atom+xml;type=entry"" title=""ResourceNavigationProperty"" href=""Folders(2)/ResourceNavigationProperty"" />
-          <m:annotation term=""Custom.EntryMiddleAnnotation"" int=""3"" />
-          <link rel=""http://docs.oasis-open.org/odata/ns/related/ResourceSetNavigationProperty"" type=""application/atom+xml;type=feed"" title=""ResourceSetNavigationProperty"" href=""Folders(2)/ResourceSetNavigationProperty"" />
-          <title />
-          <updated>2013-03-12T00:24:18Z</updated>
-          <author>
-            <name />
-          </author>
-          <content type=""application/xml"">
-            <m:properties>
-              <d:ID m:type=""Edm.Int32"">2</d:ID>
-            </m:properties>
-          </content>
-          <m:annotation term=""Custom.EntryEndAnnotation"" int=""3"" />
-        </entry>
-      </m:inline>
-    </link>
-    <m:annotation term=""Custom.EntryMiddleAnnotation"" int=""2"" />
-    <link rel=""http://docs.oasis-open.org/odata/ns/related/ResourceSetNavigationProperty"" type=""application/atom+xml;type=feed"" title=""ResourceSetNavigationProperty"" href=""Folders(1)/ResourceSetNavigationProperty"">
-      <m:inline>
-        <feed>
-          <id>http://localhost:34402/WcfDataService1.svc/Folders(1)/ResourceSetNavigationProperty</id>
-          <title type=""text"">ResourceSetNavigationProperty</title>
-          <updated>2013-03-12T00:24:18Z</updated>
-          <link rel=""self"" title=""ResourceSetNavigationProperty"" href=""Folders(1)/ResourceSetNavigationProperty"" />
-          <entry>
-            <m:annotation term=""Custom.EntryStartAnnotation"" int=""4"" />
-            <id>http://localhost:34402/WcfDataService1.svc/Folders(3)</id>
-            <category term=""#TestNamespace.TestEntityType"" scheme=""http://docs.oasis-open.org/odata/ns/scheme"" />
-            <link rel=""edit"" title=""TestEntityType"" href=""Folders(3)"" />
-            <link rel=""http://docs.oasis-open.org/odata/ns/related/ResourceNavigationProperty"" type=""application/atom+xml;type=entry"" title=""ResourceNavigationProperty"" href=""Folders(3)/ResourceNavigationProperty"" />
-            <m:annotation term=""Custom.EntryMiddleAnnotation"" int=""4"" />
-            <link rel=""http://docs.oasis-open.org/odata/ns/related/ResourceSetNavigationProperty"" type=""application/atom+xml;type=feed"" title=""ResourceSetNavigationProperty"" href=""Folders(3)/ResourceSetNavigationProperty"" />
-            <title />
-            <updated>2013-03-12T00:24:18Z</updated>
-            <author>
-              <name />
-            </author>
-            <content type=""application/xml"">
-              <m:properties>
-                <d:ID m:type=""Edm.Int32"">3</d:ID>
-              </m:properties>
-            </content>
-            <m:annotation term=""Custom.EntryEndAnnotation"" int=""4"" />
-          </entry>
-        </feed>
-      </m:inline>
-    </link>
-    <title />
-    <updated>2013-03-12T00:24:18Z</updated>
-    <author>
-      <name />
-    </author>
-    <content type=""application/xml"">
-      <m:properties>
-        <d:ID m:type=""Edm.Int32"">1</d:ID>
-      </m:properties>
-    </content>
-    <m:annotation term=""Custom.EntryEndAnnotation"" int=""2"" />
-    <m:annotation term=""ShouldSkip.EntryEndAnnotation2"" m:type=""#TestNamespace.TestComplexType"">
-      <d:StringProperty>Testing structured annotation</d:StringProperty>
-    </m:annotation>
-  </entry>
-  <m:annotation term=""Custom.FeedEndAnnotation"" int=""1"" />
-  <m:annotation term=""ShouldSkip.FeedEndAnnotation"" int=""0"" />
-</feed>";
 
         [Fact]
         public void CustomInstanceAnnotationFromFeedAndEntryInJsonLightShouldBeSkippedByTheReaderByDefault()

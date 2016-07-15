@@ -731,11 +731,6 @@ namespace Microsoft.OData.Tests.JsonLight
                     return false;
                 }
 
-                if (i.Current.Value is ODataComplexValue && j.Current.Value is ODataComplexValue)
-                {
-                    return this.PropertiesEqual(((ODataComplexValue)i.Current.Value).Properties, ((ODataComplexValue)j.Current.Value).Properties);
-                }
-
                 if (!i.Current.Value.Equals(j.Current.Value))
                 {
                     return false;

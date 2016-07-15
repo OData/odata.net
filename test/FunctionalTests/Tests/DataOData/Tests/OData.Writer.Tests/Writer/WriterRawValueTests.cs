@@ -78,11 +78,6 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
             {
                 new
                 {   // invalid value (non-primitive)
-                    Value = (object)new ODataComplexValue(),
-                    ExpectedErrorMessage = "The value of type 'Microsoft.OData.ODataComplexValue' could not be converted to a raw string.",
-                },
-                new
-                {   // invalid value (non-primitive)
                     Value = (object)new ODataCollectionValue(),
                     ExpectedErrorMessage = "The value of type 'Microsoft.OData.ODataCollectionValue' could not be converted to a raw string."
                 },

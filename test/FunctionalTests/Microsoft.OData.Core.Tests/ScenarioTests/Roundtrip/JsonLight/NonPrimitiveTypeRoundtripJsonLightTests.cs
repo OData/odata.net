@@ -81,7 +81,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip.JsonLight
             this.studentSet = new EdmEntitySet(defaultContainer, "MySet", this.studentInfo);
         }
 
-        [Fact(Skip = "Enable after writer is implementated")]
+        [Fact]
         public void ComplexTypeRoundtripJsonLightTest()
         {
             var age = new ODataProperty() { Name = "Age", Value = (Int16)18 };
@@ -89,11 +89,11 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip.JsonLight
             var tel = new ODataProperty() { Name = "Tel", Value = "0123456789" };
             var id = new ODataProperty() { Name = "ID", Value = Guid.Empty };
 
-            ODataResource complexValue = new ODataResource() { TypeName = "NS.PersonalInfo", Properties = new[] { age, email, tel, id } };
-            this.VerifyComplexRoundtrip("Info", complexValue);
+            ODataResource complex = new ODataResource() { TypeName = "NS.PersonalInfo", Properties = new[] { age, email, tel, id } };
+            this.VerifyComplexRoundtrip("Info", null, complex);
         }
 
-        [Fact(Skip = "Enable after writer is implementated")]
+        [Fact]
         public void InheritComplexTypeRoundtripJsonLightTest()
         {
             var age = new ODataProperty() { Name = "Age", Value = (Int16)18 };
@@ -103,11 +103,11 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip.JsonLight
             var hobby = new ODataProperty() { Name = "Hobby", Value = "none" };
             var edu = new ODataProperty() { Name = "Education", Value = "MIT" };
 
-            ODataResource complexValue = new ODataResource() { TypeName = "NS.DerivedDerivedPersonalInfo", Properties = new[] { age, email, tel, id, hobby, edu } };
-            this.VerifyComplexRoundtrip("Info", complexValue);
+            ODataResource complex = new ODataResource() { TypeName = "NS.DerivedDerivedPersonalInfo", Properties = new[] { age, email, tel, id, hobby, edu } };
+            this.VerifyComplexRoundtrip("Info", null, complex);
         }
 
-        [Fact(Skip = "Enable after writer is implementated")]
+        [Fact]
         public void OpenInheritComplexTypeAndComplexTypeCollectionRoundtripJsonLightTest()
         {
             EdmComplexType baseComplexType = new EdmComplexType(MyNameSpace, "BaseComplex", null, false, true);
@@ -126,14 +126,14 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip.JsonLight
             var id2 = new ODataProperty() { Name = "ID2", Value = (Int16)18 };
             var id3 = new ODataProperty() { Name = "ID3", Value = (Int16)18 };
 
-            ODataResource complexValue1 = new ODataResource() { TypeName = "NS.BaseComplex", Properties = new[] { id1, id2, id3 } };
-            this.VerifyComplexRoundtrip("TestInheritComplex", complexValue1);
+            ODataResource complex1 = new ODataResource() { TypeName = "NS.BaseComplex", Properties = new[] { id1, id2, id3 } };
+            this.VerifyComplexRoundtrip("TestInheritComplex", null, complex1);
 
-            ODataResource complexValue2 = new ODataResource() { TypeName = "NS.DerivedComplex", Properties = new[] { id1, id2, id3 } };
-            this.VerifyComplexRoundtrip("TestInheritComplex", complexValue2);
+            ODataResource complex2 = new ODataResource() { TypeName = "NS.DerivedComplex", Properties = new[] { id1, id2, id3 } };
+            this.VerifyComplexRoundtrip("TestInheritComplex", null, complex2);
 
-            ODataCollectionValue complexCollectionValue = new ODataCollectionValue { TypeName = "Collection(NS.BaseComplex)", Items = new[] { complexValue1, complexValue2 } };
-            this.VerifyNonPrimitiveTypeRoundtrip(complexCollectionValue, "TestCollection");
+            ODataResourceSet complexCollectionResourceSet = new ODataResourceSet { TypeName = "Collection(NS.BaseComplex)" };
+            this.VerifyComplexRoundtrip("TestCollection", complexCollectionResourceSet, complex1, complex2);
         }
 
         #region enum
@@ -148,24 +148,24 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip.JsonLight
         }
         #endregion
 
-        [Fact(Skip = "Enable after writer is implementated")]
+        [Fact]
         public void ComplexTypeCollectionRoundtripJsonLightTest()
         {
-            ODataComplexValue subject0 = new ODataComplexValue() { TypeName = "NS.Subject", Properties = new[] { new ODataProperty() { Name = "Name", Value = "English" }, new ODataProperty() { Name = "Score", Value = (Int16)98 } } };
-            ODataComplexValue subject1 = new ODataComplexValue() { TypeName = "NS.Subject", Properties = new[] { new ODataProperty() { Name = "Name", Value = "Math" }, new ODataProperty() { Name = "Score", Value = (Int16)90 } } };
-            ODataCollectionValue complexCollectionValue = new ODataCollectionValue { TypeName = "Collection(NS.Subject)", Items = new[] { subject0, subject1 } };
+            ODataResource subject0 = new ODataResource() { TypeName = "NS.Subject", Properties = new[] { new ODataProperty() { Name = "Name", Value = "English" }, new ODataProperty() { Name = "Score", Value = (Int16)98 } } };
+            ODataResource subject1 = new ODataResource() { TypeName = "NS.Subject", Properties = new[] { new ODataProperty() { Name = "Name", Value = "Math" }, new ODataProperty() { Name = "Score", Value = (Int16)90 } } };
+            ODataResourceSet complexCollection = new ODataResourceSet { TypeName = "Collection(NS.Subject)" };
 
-            this.VerifyNonPrimitiveTypeRoundtrip(complexCollectionValue, "Subjects");
+            this.VerifyComplexRoundtrip("Subjects", complexCollection, subject0, subject1);
         }
 
-        [Fact(Skip = "Enable after writer is implementated")]
+        [Fact]
         public void InheritComplexTypeCollectionRoundtripJsonLightTest()
         {
-            ODataComplexValue subject0 = new ODataComplexValue() { TypeName = "NS.DerivedDerivedSubject", Properties = new[] { new ODataProperty() { Name = "Name", Value = "English" }, new ODataProperty() { Name = "Score", Value = (Int16)98 }, new ODataProperty() { Name = "Teacher", Value = "Mr Li" }, new ODataProperty() { Name = "Classroom", Value = "Room101" } } };
-            ODataComplexValue subject1 = new ODataComplexValue() { TypeName = "NS.DerivedSubject", Properties = new[] { new ODataProperty() { Name = "Name", Value = "Math" }, new ODataProperty() { Name = "Score", Value = (Int16)90 }, new ODataProperty() { Name = "Teacher", Value = "Mr Liu" } } };
-            ODataCollectionValue complexCollectionValue = new ODataCollectionValue { TypeName = "Collection(NS.Subject)", Items = new[] { subject0, subject1 } };
+            ODataResource subject0 = new ODataResource() { TypeName = "NS.DerivedDerivedSubject", Properties = new[] { new ODataProperty() { Name = "Name", Value = "English" }, new ODataProperty() { Name = "Score", Value = (Int16)98 }, new ODataProperty() { Name = "Teacher", Value = "Mr Li" }, new ODataProperty() { Name = "Classroom", Value = "Room101" } } };
+            ODataResource subject1 = new ODataResource() { TypeName = "NS.DerivedSubject", Properties = new[] { new ODataProperty() { Name = "Name", Value = "Math" }, new ODataProperty() { Name = "Score", Value = (Int16)90 }, new ODataProperty() { Name = "Teacher", Value = "Mr Liu" } } };
+            ODataResourceSet complexCollection = new ODataResourceSet { TypeName = "Collection(NS.Subject)" };
 
-            this.VerifyNonPrimitiveTypeRoundtrip(complexCollectionValue, "Subjects");
+            this.VerifyComplexRoundtrip("Subjects", complexCollection, subject0, subject1);
         }
 
         [Fact]
@@ -234,9 +234,9 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip.JsonLight
             TestUtils.AssertODataValueAreEqual(actualValue as ODataValue, value as ODataValue);
         }
 
-        private void VerifyComplexRoundtrip(string propertyName, params ODataResource[] values)
+        private void VerifyComplexRoundtrip(string propertyName, ODataResourceSet resourceSet, params ODataResource[] resources)
         {
-            var nestedResourceInfo = new ODataNestedResourceInfo() { Name = propertyName, IsCollection = false};
+            var nestedResourceInfo = new ODataNestedResourceInfo() { Name = propertyName, IsCollection = resourceSet != null };
             var entry = new ODataResource() { TypeName = "NS.Student" };
 
             ODataMessageWriterSettings settings = new ODataMessageWriterSettings { Version = ODataVersion.V4 };
@@ -256,25 +256,29 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip.JsonLight
             {
                 var jsonLightWriter = new ODataJsonLightWriter(outputContext, this.studentSet, this.studentInfo, /*writingFeed*/ false);
                 jsonLightWriter.WriteStart(entry);
-                jsonLightWriter.WriteEnd();
-            }
-
-            using (var outputContext = new ODataJsonLightOutputContext(messageInfoForWriter, settings))
-            {
-                var jsonLightWriter = new ODataJsonLightWriter(outputContext, this.studentSet, this.studentInfo, /*writingFeed*/ false);
-                jsonLightWriter.WriteStart(entry);
                 jsonLightWriter.WriteStart(nestedResourceInfo);
-                foreach (var value in values)
+                if (resourceSet != null)
+                {
+                    jsonLightWriter.WriteStart(resourceSet);
+                }
+
+                foreach (var value in resources)
                 {
                     jsonLightWriter.WriteStart(value);
+                    jsonLightWriter.WriteEnd();
                 }
-                jsonLightWriter.WriteEnd();
+
+                if (resourceSet != null)
+                {
+                    jsonLightWriter.WriteEnd();
+                }
+
                 jsonLightWriter.WriteEnd();
                 jsonLightWriter.WriteEnd();
             }
 
             stream.Position = 0;
-            List<ODataResource> actualValues = new List<ODataResource>();
+            List<ODataResource> actualResources = new List<ODataResource>();
 
             var messageInfoForReader = new ODataMessageInfo
             {
@@ -293,13 +297,17 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip.JsonLight
                 {
                     if (jsonLightReader.State == ODataReaderState.ResourceEnd)
                     {
-                        actualValues.Add(jsonLightReader.Item as ODataResource);
-
+                        actualResources.Add(jsonLightReader.Item as ODataResource);
                     }
                 }
             }
 
-            TestUtils.AssertODataResourceSetAreEqual(actualValues.Skip(1).ToList(), values.ToList());
+            var count = actualResources.Count;
+            actualResources.RemoveAt(count - 1);
+            TestUtils.AssertODataResourceSetAreEqual(actualResources, resources.ToList());
         }
+
+
+
     }
 }

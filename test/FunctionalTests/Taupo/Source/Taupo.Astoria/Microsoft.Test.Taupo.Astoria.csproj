@@ -423,6 +423,7 @@
     <Compile Include="Contracts\OData\NavigationSegment.cs" />
     <Compile Include="Contracts\OData\NullPropertyInstance.cs" />
     <Compile Include="Contracts\OData\ODataAnnotations.cs" />
+    <Compile Include="Contracts\OData\ODataComplexValue.cs" />
     <Compile Include="Contracts\OData\ODataConstants.cs" />
     <Compile Include="Contracts\OData\ODataErrorPayload.cs" />
     <Compile Include="Contracts\OData\ODataExtensions.cs" />

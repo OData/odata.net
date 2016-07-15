@@ -77,12 +77,11 @@ namespace Microsoft.OData.Tests.Evaluation
                 {
                     new ODataProperty {Name = "PrimitiveProperty", Value = 42.2m},
                     new ODataProperty {Name = "StreamProperty", Value = new ODataStreamReferenceValue()},
-                    new ODataProperty {Name = "ComplexProperty", Value = new ODataComplexValue()},
                     new ODataProperty {Name = "CollectionProperty", Value = new ODataCollectionValue()}
                 };
 
             new NoOpResourceMetadataBuilder(new ODataResource {Properties = properties}).GetProperties(properties)
-                .Should().HaveCount(4);
+                .Should().HaveCount(3);
         }
 
         [Fact]

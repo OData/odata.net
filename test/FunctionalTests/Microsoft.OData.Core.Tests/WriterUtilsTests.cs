@@ -45,20 +45,18 @@ namespace Microsoft.OData.Tests
         {
             var typeFromMetadata = new EdmComplexTypeReference(new EdmComplexType("Test", "ComplexType"), true);
             var typeFromValue = new EdmComplexTypeReference(new EdmComplexType("Test", "ComplexType"), false);
-            this.typeNameOracle.GetValueTypeNameForWriting(new ODataComplexValue {TypeName = "Test.ComplexType"},
-                typeFromMetadata,
-                typeFromValue,
-                /* isOpenProperty*/ false).Should().BeNull();
+            this.typeNameOracle.GetResourceTypeNameForWriting(typeFromMetadata.FullName(),
+                new ODataResource { TypeName = "Test.ComplexType" },
+                /* isUndeclared*/ false).Should().BeNull();
         }
 
         [Fact]
         public void TypeNameShouldBeWrittenForUndeclaredComplexProperty()
         {
             var typeFromValue = new EdmComplexTypeReference(new EdmComplexType("Test", "ComplexType"), false);
-            this.typeNameOracle.GetValueTypeNameForWriting(new ODataComplexValue {TypeName = "Test.ComplexType"},
-                null,
-                typeFromValue,
-                /* isOpenProperty*/ true).Should().Be("Test.ComplexType");
+            this.typeNameOracle.GetResourceTypeNameForWriting(null, 
+                new ODataResource { TypeName = "Test.ComplexType" },
+                /* isUndeclared*/ true).Should().Be("Test.ComplexType");
         }
 
         [Fact]
