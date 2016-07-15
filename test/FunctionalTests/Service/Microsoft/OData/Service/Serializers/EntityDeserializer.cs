@@ -20,6 +20,9 @@ namespace Microsoft.OData.Service.Serializers
     /// </summary>
     internal sealed class EntityDeserializer : ODataMessageReaderDeserializer
     {
+        private readonly IDictionary<ODataResource, ODataEntryAnnotation> entryAnnotations =
+            new Dictionary<ODataResource, ODataEntryAnnotation>();
+
         /// <summary>
         /// Initializes a new instance of <see cref="EntityDeserializer"/>.
         /// </summary>
@@ -60,7 +63,7 @@ namespace Microsoft.OData.Service.Serializers
             // and then apply all navigation properties, we must cache the entire tree.
             ODataResource topLevelEntry = this.ReadEntry(odataReader, segmentInfo);
 
-            ODataEntryAnnotation topLevelEntryAnnotation = topLevelEntry.GetAnnotation<ODataEntryAnnotation>();
+            ODataEntryAnnotation topLevelEntryAnnotation = this.entryAnnotations[topLevelEntry];
             Debug.Assert(topLevelEntryAnnotation != null, "Each entry we read must have the entry annotation.");
             this.RecurseEnter();
             this.ApplyEntityProperties(segmentInfo, topLevelEntry, topLevelEntryAnnotation);
@@ -99,7 +102,7 @@ namespace Microsoft.OData.Service.Serializers
                         if (entry != null)
                         {
                             entryAnnotation = new ODataEntryAnnotation();
-                            entry.SetAnnotation(entryAnnotation);
+                            this.entryAnnotations[entry] = entryAnnotation;
                         }
 
                         if (itemsStack.Count == 0)
@@ -151,7 +154,7 @@ namespace Microsoft.OData.Service.Serializers
                         Debug.Assert(itemsStack.Count > 0, "Navigation link can't appear as top-level item.");
                         {
                             ODataResource parentEntry = (ODataResource)itemsStack.Peek();
-                            ODataEntryAnnotation parentEntryAnnotation = parentEntry.GetAnnotation<ODataEntryAnnotation>();
+                            ODataEntryAnnotation parentEntryAnnotation = this.entryAnnotations[parentEntry];
                             Debug.Assert(parentEntryAnnotation != null, "Every entry we added to the stack should have the navigation link annotation on it.");
                             parentEntryAnnotation.Add(navigationLink);
                         }
@@ -346,7 +349,7 @@ namespace Microsoft.OData.Service.Serializers
             Debug.Assert(segmentInfo != null, "segmentInfo != null");
             Debug.Assert(entry != null, "entry != null");
 
-            ODataEntryAnnotation entryAnnotation = entry.GetAnnotation<ODataEntryAnnotation>();
+            ODataEntryAnnotation entryAnnotation = this.entryAnnotations[entry];
             Debug.Assert(entryAnnotation != null, "Each entry we read must have our entry annotation.");
 
             this.RecurseEnter();
