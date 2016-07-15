@@ -57,9 +57,10 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 this.WriterTestConfigurationProvider.AtomFormatConfigurationsWithIndent,
                 (testCase, testConfiguration) =>
                 {
-                    testConfiguration.MessageWriterSettings.SetServiceDocumentUri(ServiceDocumentUri);
+                    WriterTestConfiguration newConfiguration = testConfiguration.Clone();
+                    newConfiguration.MessageWriterSettings.SetServiceDocumentUri(ServiceDocumentUri);
 
-                    this.WriteAndVerifyODataPayloadElement(testCase, testConfiguration);
+                    this.WriteAndVerifyODataPayloadElement(testCase, newConfiguration);
                 });
 
             // The ID annotation is added for JSON as even though JSON has no way to represent the ID ODataLib requires it.

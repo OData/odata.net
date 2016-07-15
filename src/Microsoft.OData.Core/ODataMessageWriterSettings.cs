@@ -406,7 +406,7 @@ namespace Microsoft.OData
             this.format = other.format;
             this.JsonPCallback = other.JsonPCallback;
             this.messageQuotas = new ODataMessageQuotas(other.MessageQuotas);
-            this.ODataUri = other.ODataUri;
+            this.ODataUri = other.ODataUri.Clone();
             this.shouldIncludeAnnotation = other.shouldIncludeAnnotation;
             this.useFormat = other.useFormat;
             this.Version = other.Version;
