@@ -12,12 +12,9 @@ namespace Microsoft.Test.OData.Utils.Metadata
     using System.IO;
     using System.Linq;
     using System.Xml.Linq;
-    using Microsoft.OData;
     using Microsoft.OData.Edm;
     using Microsoft.Spatial;
     using Microsoft.Test.OData.Utils.Common;
-    using Microsoft.Test.OData.Utils.ODataLibOM;
-    using Microsoft.OData.Edm.Vocabularies;
 
     /// <summary>
     /// Helper methods for testing metadata and their OM
@@ -31,8 +28,6 @@ namespace Microsoft.Test.OData.Utils.Metadata
 
         /// The namespace for Oasis verion of Edm
         private const string EdmOasisNamespace = "http://docs.oasis-open.org/odata/ns/edm";
-
-        private static readonly XName EdmxVersionAttributeName = XName.Get("Version");
 
         /// <summary>
         /// Indicates whether the member property in Primitive
@@ -290,7 +285,6 @@ namespace Microsoft.Test.OData.Utils.Metadata
                     return new EdmEntityReferenceTypeReference((IEdmEntityReferenceType)type, nullable);
                 case EdmTypeKind.Enum:
                     return new EdmEnumTypeReference((IEdmEnumType)type, nullable);
-                case EdmTypeKind.None:
                 default:
                     throw new NotSupportedException("Unsupported type kind: " + type.TypeKind.ToString());
             }
@@ -490,7 +484,6 @@ namespace Microsoft.Test.OData.Utils.Metadata
                     if (typeof(Geometry).IsAssignableFrom(targetType))
                     {
                         primitiveType = EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.Geometry);
-                        break;
                     }
 
                     break;
@@ -715,7 +708,6 @@ namespace Microsoft.Test.OData.Utils.Metadata
                 case EdmTypeKind.Enum:
                     return new EdmEnumTypeReference((IEdmEnumType)typeReference.Definition, nullable);
 
-                case EdmTypeKind.None:  // fall through
                 default:
                     throw new NotSupportedException("Invalid type kind: " + typeKind.ToString());
             }
@@ -949,113 +941,6 @@ namespace Microsoft.Test.OData.Utils.Metadata
         }
 
         /// <summary>
-        /// Creates metadata properties for the specified enumeration of OData OM properties.
-        /// </summary>
-        /// <param name="model">The model to use.</param>
-        /// <param name="owningType">The owning type to which to add the properties.</param>
-        /// <param name="properties">Enumeration of the properties to add.</param>
-        private static void CreateMetadataProperties(ConstructableMetadata model, EdmStructuredType owningType, IEnumerable<ODataProperty> properties)
-        {
-            if (properties == null)
-            {
-                return;
-            }
-
-            EdmEntityType owningEntityType = owningType as EdmEntityType;
-            foreach (ODataProperty property in properties)
-            {
-                ODataPropertyMetadataAnnotation propertyMetadataAnnotation = property.GetInheritedAnnotation<ODataPropertyMetadataAnnotation>();
-
-                object propertyValue = property.Value;
-                bool isOpenProperty = false;
-                if (propertyMetadataAnnotation != null)
-                {
-                    isOpenProperty = propertyMetadataAnnotation.IsOpenProperty;
-                    ExceptionUtilities.Assert(
-                        !isOpenProperty || owningType is EdmEntityType,
-                        "Can't declare an open property on non-entity type.");
-                    if (propertyMetadataAnnotation.PropertyValueForTypeInference != null)
-                    {
-                        propertyValue = propertyMetadataAnnotation.PropertyValueForTypeInference;
-                    }
-                }
-
-                bool isKeyProperty = false;
-                if (propertyMetadataAnnotation != null)
-                {
-                    isKeyProperty = (propertyMetadataAnnotation.Kind & ODataPropertyKind.Key) == ODataPropertyKind.Key;
-                    bool isETagProperty = (propertyMetadataAnnotation.Kind & ODataPropertyKind.ETag) == ODataPropertyKind.ETag;
-
-                    ExceptionUtilities.Assert(
-                        !isKeyProperty || owningType is EdmEntityType,
-                        "Can't declare a key property on non-entity type.");
-                    ExceptionUtilities.Assert(
-                        !isETagProperty || owningType is EdmEntityType,
-                        "Can't declare an etag property on non-entity type.");
-                    ExceptionUtilities.Assert(
-                        !isOpenProperty || !(isKeyProperty || isETagProperty),
-                        "Key or etag property can't be open.");
-                }
-
-                if (owningEntityType != null && isOpenProperty)
-                {
-                    //TODO: figure out how to set entity type to open after creation.
-                }
-                else
-                {
-                    if (owningEntityType != null && isKeyProperty)
-                    {
-                        ExceptionUtilities.Assert(propertyValue != null,
-                            "Found a key property with null value, can't infer type from value in that case and it's invalid anyway.");
-                        var keyPropertyType = GetPrimitiveTypeReference(propertyValue.GetType());
-                        var keyProperty = owningEntityType.AddStructuralProperty(property.Name, keyPropertyType);
-                        owningEntityType.AddKeys(keyProperty);
-                    }
-                    else
-                    {
-                        if (propertyValue is ODataCollectionValue)
-                        {
-                            ProcessCollectionProperty(model, owningType, propertyValue, owningEntityType, property);
-                        }
-                        else
-                        {
-                            Type propertyType = propertyValue == null ? typeof(string) : propertyValue.GetType();
-                            owningType.AddProperty(new EdmStructuralProperty(owningType, property.Name, GetPrimitiveTypeReference(propertyType)));
-                        }
-                    }
-
-                }
-            }
-        }
-
-        private static void ProcessCollectionProperty(ConstructableMetadata model, EdmStructuredType owningType, object propertyValue, EdmEntityType owningEntityType, ODataProperty property)
-        {
-            string itemTypeName = EdmModelUtils.GetCollectionItemTypeName(((ODataCollectionValue)propertyValue).TypeName);
-            IEdmPrimitiveTypeReference primitiveItemType = MetadataUtils.GetPrimitiveTypeReference(itemTypeName);
-            IEdmCollectionType collectionType = GetCollectionType(model, primitiveItemType, itemTypeName);
-
-            ExceptionUtilities.Assert(collectionType != null, "Could not resolve item type.");
-            owningType.AddProperty(new EdmStructuralProperty(owningType, property.Name, collectionType.ToTypeReference()));
-        }
-
-        private static IEdmCollectionType GetCollectionType(ConstructableMetadata model, IEdmPrimitiveTypeReference primitiveItemType, string itemTypeName)
-        {
-            if (primitiveItemType != null)
-            {
-                return new EdmCollectionType(primitiveItemType);
-            }
-            
-            IEdmType itemType = model.FindDeclaredType(itemTypeName);
-            IEdmComplexType complexItemType = itemType as IEdmComplexType;
-            if (complexItemType != null)
-            {
-                return new EdmCollectionType(complexItemType.ToTypeReference());
-            }
-
-            return null;
-        }
-
-        /// <summary>
         /// Gets a reference to a primitive kind definition of the appropriate kind.
         /// </summary>
         /// <param name="primitiveType">Primitive type to create a reference for.</param>
@@ -1106,17 +991,6 @@ namespace Microsoft.Test.OData.Utils.Metadata
                 default:
                     throw new NotSupportedException("Invalid primitive type kind: " + kind.ToString());
             }
-        }
-
-        /// <summary>
-        /// Returns the typename without the preceding namespace.
-        /// </summary>
-        /// <param name="entry">Entry whose typename to get.</param>
-        /// <param name="namespaceName">Namespace prefix to remove.</param>
-        /// <returns>The unqualified type name.</returns>
-        private static string GetUnqualifiedTypeName(this ODataResource entry, string namespaceName)
-        {
-            return entry.TypeName.Substring(namespaceName.Length + 1);
         }
     }
 }

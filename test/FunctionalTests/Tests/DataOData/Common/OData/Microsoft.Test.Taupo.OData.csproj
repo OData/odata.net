@@ -200,7 +200,6 @@
     <Compile Include="DependencyImplementationAssemblies.cs" />
     <Compile Include="Common\EmptyErrorResultComparer.cs" />
     <Compile Include="Contracts\IDataServiceProviderFactory.cs" />
-    <Compile Include="Common\InheritODataAnnotationsUtils.cs" />
     <Compile Include="Contracts\IODataLibPayloadElementComparer.cs" />
     <Compile Include="Contracts\IODataPayloadElementPropertyWriter.cs" />
     <Compile Include="Contracts\IODataQueryProvider.cs" />

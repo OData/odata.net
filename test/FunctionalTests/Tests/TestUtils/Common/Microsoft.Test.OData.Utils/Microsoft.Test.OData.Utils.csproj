@@ -74,8 +74,6 @@
     <Compile Include="Metadata\MetadataUtils.cs" />
     <Compile Include="Metadata\PayloadGenerator.cs" />
     <Compile Include="Metadata\TestModels.cs" />
-    <Compile Include="ODataLibOM\InheritODataAnnotationsUtils.cs" />
-    <Compile Include="ODataLibOM\ODataFeedEntriesObjectModelAnnotation.cs" />
     <Compile Include="ODataLibOM\ODataPropertyMetadataAnnotation.cs" />
     <Compile Include="Common\ExceptionUtilities.cs" />
     <Compile Include="Common\TestAtomConstants.cs" />

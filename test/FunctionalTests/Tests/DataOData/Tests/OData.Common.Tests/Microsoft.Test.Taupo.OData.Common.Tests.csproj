@@ -89,7 +89,6 @@
     <Compile Include="ObjectModelTests\ODataErrorTests.cs" />
     <Compile Include="ObjectModelTests\ODataEntryTests.cs" />
     <Compile Include="ObjectModelTests\ODataFeedTests.cs" />
-    <Compile Include="ObjectModelTests\AnnotationTests.cs" />
     <Compile Include="ObjectModelTests\ODataNavigationLinkTests.cs" />
     <Compile Include="ObjectModelTests\ODataPropertyTests.cs" />
     <Compile Include="InfrastructureTests\AsyncBufferedStreamTests.cs" />

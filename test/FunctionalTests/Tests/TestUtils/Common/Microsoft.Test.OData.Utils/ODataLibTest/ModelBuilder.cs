@@ -405,19 +405,6 @@ namespace Microsoft.Test.OData.Utils.ODataLibTest
                 payloadElement is ODataResource || payloadElement is ODataResourceSet,
                 "Can only determine entity type for entry or feed payloads.");
 
-            ODataResourceSet feed = payloadElement as ODataResourceSet;
-            if (feed != null)
-            {
-                // A feed doesn't know it's type. If it doesn't have any entries we can't determine the type.
-                var feedentry = feed.GetAnnotation<ODataFeedEntriesObjectModelAnnotation>().FirstOrDefault();
-                if (feedentry != null)
-                {
-                    return model.FindDeclaredType(feedentry.TypeName) as IEdmEntityType;
-                }
-
-                return null;
-            }
-
             ODataResource entry = payloadElement as ODataResource;
             if (entry != null)
             {

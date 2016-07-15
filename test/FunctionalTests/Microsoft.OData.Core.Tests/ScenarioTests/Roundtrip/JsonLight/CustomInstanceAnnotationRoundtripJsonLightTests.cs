@@ -38,7 +38,6 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip.JsonLight
         {
             ODataError error = this.WriteThenReadErrorWithInstanceAnnotation(new KeyValuePair<string, ODataValue>[] { });
             error.Should().NotBeNull();
-            ((ODataAnnotatable)error).GetAnnotation<object>().Should().BeNull();
         }
 
         [Fact]
