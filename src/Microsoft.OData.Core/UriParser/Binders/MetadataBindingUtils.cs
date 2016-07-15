@@ -69,22 +69,6 @@ namespace Microsoft.OData.UriParser
                     }
 
                     object originalPrimitiveValue;
-                    if (MetadataUtilsCommon.TryGetConstantNodePrimitiveDate(source, out originalPrimitiveValue) && (originalPrimitiveValue != null))
-                    {
-                        // DateTimeOffset -> Date when (target is Date) and (originalValue match Date format) and (ConstantNode)
-                        object targetPrimitiveValue = ODataUriConversionUtils.CoerceTemporalType(originalPrimitiveValue, targetTypeReference.AsPrimitive().Definition as IEdmPrimitiveType);
-
-                        if (targetPrimitiveValue != null)
-                        {
-                            if (string.IsNullOrEmpty(constantNode.LiteralText))
-                            {
-                                return new ConstantNode(targetPrimitiveValue);
-                            }
-
-                            return new ConstantNode(targetPrimitiveValue, constantNode.LiteralText, targetTypeReference);
-                        }
-                    }
-
                     if (MetadataUtilsCommon.TryGetConstantNodePrimitiveLDMF(source, out originalPrimitiveValue) && (originalPrimitiveValue != null))
                     {
                         // L F D M types : directly create a ConvertNode.

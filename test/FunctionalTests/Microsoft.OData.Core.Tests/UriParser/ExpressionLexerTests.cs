@@ -244,11 +244,21 @@ namespace Microsoft.OData.Tests.UriParser
         }
 
         [Fact]
-        public void ShouldReturnDateTimeLiteralWhenNoSuffixDateLiteralToken()
+        public void ShouldReturnDateTimeOffSetLiteralWhenNoSuffixDateLiteralToken()
+        {
+            ExpressionLexer lexer = new ExpressionLexer("2014-09-19T12:13:14+00:00", false, false);
+            object result = lexer.ReadLiteralToken();
+            result.Should()
+                .BeOfType<DateTimeOffset>()
+                .And.Be(new DateTimeOffset(2014, 9, 19, 12, 13, 14, new TimeSpan(0, 0, 0)));
+        }
+
+        [Fact]
+        public void ShouldReturnDateLiteralWhenNoSuffixDateLiteralToken()
         {
             ExpressionLexer lexer = new ExpressionLexer("2014-09-19", false, false);
             object result = lexer.ReadLiteralToken();
-            result.Should().BeOfType<DateTimeOffset>().And.Be(new DateTimeOffset(new DateTime(2014, 9, 19)));
+            result.Should().BeOfType<Date>().And.Be(new Date(2014, 9, 19));
         }
 
         [Fact]
@@ -418,7 +428,7 @@ namespace Microsoft.OData.Tests.UriParser
         [Fact]
         public void SpatialGeographyLiteralTests()
         {
-            string[] testCases = 
+            string[] testCases =
             {
                 "geography'\0fo\0o\0'",
                 "geography'foo'",
@@ -437,8 +447,8 @@ namespace Microsoft.OData.Tests.UriParser
         [Fact]
         public void SpatialGeometryLiteralTests()
         {
-            string[] testCases = 
-            { 
+            string[] testCases =
+            {
                 "geometry'foo'",
                 "geometry''",
                 "gEomETRy'SRID=5; POINT(1 2)'",
@@ -614,9 +624,9 @@ namespace Microsoft.OData.Tests.UriParser
             var startingCharSupportedCategories = new UnicodeCategory[] {
                 UnicodeCategory.LowercaseLetter,
                 UnicodeCategory.UppercaseLetter,
-                UnicodeCategory.TitlecaseLetter, 
-                UnicodeCategory.OtherLetter, 
-                UnicodeCategory.ModifierLetter, 
+                UnicodeCategory.TitlecaseLetter,
+                UnicodeCategory.OtherLetter,
+                UnicodeCategory.ModifierLetter,
                 UnicodeCategory.LetterNumber
             };
 
@@ -624,12 +634,12 @@ namespace Microsoft.OData.Tests.UriParser
             var nonStartingCharSupportedCategories = new UnicodeCategory[] {
                 UnicodeCategory.LowercaseLetter,
                 UnicodeCategory.UppercaseLetter,
-                UnicodeCategory.TitlecaseLetter, 
-                UnicodeCategory.OtherLetter, 
-                UnicodeCategory.ModifierLetter, 
-                UnicodeCategory.LetterNumber, 
+                UnicodeCategory.TitlecaseLetter,
+                UnicodeCategory.OtherLetter,
+                UnicodeCategory.ModifierLetter,
+                UnicodeCategory.LetterNumber,
                 UnicodeCategory.NonSpacingMark,
-                UnicodeCategory.SpacingCombiningMark, 
+                UnicodeCategory.SpacingCombiningMark,
                 UnicodeCategory.DecimalDigitNumber,
                 UnicodeCategory.ConnectorPunctuation,
                 UnicodeCategory.Format

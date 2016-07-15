@@ -519,56 +519,18 @@ namespace Microsoft.OData.Metadata
                     }
 
                     break;
-                case EdmPrimitiveTypeKind.DateTimeOffset:
+                case EdmPrimitiveTypeKind.Date:
                     switch (targetPrimitiveKind)
                     {
+                        case EdmPrimitiveTypeKind.Date:
                         case EdmPrimitiveTypeKind.DateTimeOffset:
                             return true;
-                        case EdmPrimitiveTypeKind.Date:
-                            object tmp;
-                            return TryGetConstantNodePrimitiveDate(sourceNodeOrNull, out tmp);
                     }
 
                     break;
 
                 default:
                     return sourcePrimitiveKind == targetPrimitiveKind || targetPrimitiveType.IsAssignableFrom(sourcePrimitiveType);
-            }
-
-            return false;
-        }
-
-        /// <summary>
-        /// Try getting the constant DateTimeOffset node value
-        /// </summary>
-        /// <param name="sourceNodeOrNull">The Node</param>
-        /// <param name="primitiveValue">The out parameter if succeeds</param>
-        /// <returns>true if the constant node is for date type</returns>
-        internal static bool TryGetConstantNodePrimitiveDate(SingleValueNode sourceNodeOrNull, out object primitiveValue)
-        {
-            primitiveValue = null;
-
-            ConstantNode constantNode = sourceNodeOrNull as ConstantNode;
-            if (constantNode != null)
-            {
-                IEdmPrimitiveType primitiveType = constantNode.TypeReference.AsPrimitiveOrNull().Definition as IEdmPrimitiveType;
-                if (primitiveType != null)
-                {
-                    switch (primitiveType.PrimitiveKind)
-                    {
-                        case EdmPrimitiveTypeKind.DateTimeOffset:
-                            Date result;
-                            if (UriUtils.TryUriStringToDate(constantNode.LiteralText, out result))
-                            {
-                                primitiveValue = constantNode.LiteralText;
-                                return true;
-                            }
-
-                            break;
-                        default:
-                            return false;
-                    }
-                }
             }
 
             return false;

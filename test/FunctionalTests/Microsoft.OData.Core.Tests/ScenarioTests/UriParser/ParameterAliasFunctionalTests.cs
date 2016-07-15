@@ -26,9 +26,56 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
                 new Uri("http://gobbledygook/GetPet4(id=@p1)?@p1=1.01M"),
                 (oDataPath, filterClause, orderByClause, selectExpandClause, aliasNodes) =>
                 {
-                    oDataPath.LastSegment.ShouldBeOperationImportSegment(HardCodedTestModel.GetFunctionImportForGetPet4()).And.Parameters.First().ShouldHaveParameterAliasNode("id", "@p1", EdmCoreModel.Instance.GetDecimal(false));
+                    oDataPath.LastSegment.ShouldBeOperationImportSegment(
+                        HardCodedTestModel.GetFunctionImportForGetPet4())
+                        .And.Parameters.First()
+                        .ShouldHaveParameterAliasNode("id", "@p1", EdmCoreModel.Instance.GetDecimal(false));
                     aliasNodes["@p1"].ShouldBeConstantQueryNode(1.01M);
                 });
+        }
+
+        [Fact]
+        public void ParsePath_AliasInFunctionImport_Date()
+        {
+            ParseUriAndVerify(
+                new Uri("http://gobbledygook/GetPersonByDate(date=@p1)?@p1=1997-12-12"),
+                (oDataPath, filterClause, orderByClause, selectExpandClause, aliasNodes) =>
+                {
+                    oDataPath.LastSegment.ShouldBeOperationImportSegment(
+                        HardCodedTestModel.GetFunctionImportForGetPersonByDate())
+                        .And.Parameters.First()
+                        .ShouldHaveParameterAliasNode("date", "@p1", EdmCoreModel.Instance.GetDate(false));
+                    aliasNodes["@p1"].ShouldBeConstantQueryNode(new Date(1997, 12, 12));
+                });
+        }
+
+        [Fact]
+        public void ParsePath_AliasInFunctionImport_DateTimeOffsetPromote()
+        {
+            ParseUriAndVerify(
+                new Uri("http://gobbledygook/GetPersonByDTO(dto=@p1)?@p1=1997-12-12"),
+                (oDataPath, filterClause, orderByClause, selectExpandClause, aliasNodes) =>
+                {
+                    oDataPath.LastSegment.ShouldBeOperationImportSegment(
+                        HardCodedTestModel.GetFunctionImportForGetPersonByDTO())
+                        .And.Parameters.First()
+                        .ShouldHaveConvertNode("dto", EdmCoreModel.Instance.GetDateTimeOffset(false))
+                        .And.Source.ShouldBeParameterAliasNode("@p1", EdmCoreModel.Instance.GetDate(false));
+                    aliasNodes["@p1"].ShouldBeConstantQueryNode(new Date(1997, 12, 12));
+                });
+        }
+
+        [Fact]
+        public void ParsePath_AliasInFunctionImport_DateTimeOffset()
+        {
+            ParseUriAndVerify(
+               new Uri("http://gobbledygook/GetPersonByDTO(dto=@p1)?@p1=2014-09-19T07:13:14Z"),
+               (oDataPath, filterClause, orderByClause, selectExpandClause, aliasNodes) =>
+               {
+                   oDataPath.LastSegment.ShouldBeOperationImportSegment(HardCodedTestModel.GetFunctionImportForGetPersonByDTO()).And.Parameters.First().ShouldHaveParameterAliasNode("dto", "@p1", EdmCoreModel.Instance.GetDateTimeOffset(false));
+                   aliasNodes["@p1"].ShouldBeConstantQueryNode(new DateTimeOffset(2014, 9, 19, 7, 13, 14, new TimeSpan(0)));
+
+               });
         }
 
         [Fact]

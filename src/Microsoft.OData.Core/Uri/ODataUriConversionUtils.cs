@@ -451,7 +451,8 @@ namespace Microsoft.OData
         /// <param name="primitiveValue">Primitive value to coerce.</param>
         /// <param name="targetEdmType">Edm primitive type to check against.</param>
         /// <returns><paramref name="primitiveValue"/> as the corresponding CLR type indicated by <paramref name="targetEdmType"/>, or null if unable to coerce.</returns>
-        [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity", Justification = "Centralized method for coercing temporal types in easiest to understand.")]
+        [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity",
+            Justification = "Centralized method for coercing temporal types in easiest to understand.")]
         internal static object CoerceTemporalType(object primitiveValue, IEdmPrimitiveType targetEdmType)
         {
             // This is implemented to match TypePromotionUtils and MetadataUtilsCommon.CanConvertPrimitiveTypeTo()
@@ -460,21 +461,26 @@ namespace Microsoft.OData
 
             EdmPrimitiveTypeKind targetPrimitiveKind = targetEdmType.PrimitiveKind;
 
-            if (targetPrimitiveKind == EdmPrimitiveTypeKind.Date)
+            switch (targetPrimitiveKind)
             {
-                if (primitiveValue is DateTimeOffset)
-                {
-                    // Coerce to Date Type from DateTimeOffset.
-                    var dtoValue = (DateTimeOffset)primitiveValue;
-                    return new Date(dtoValue.Year, dtoValue.Month, dtoValue.Day);
-                }
+                case EdmPrimitiveTypeKind.DateTimeOffset:
+                    if (primitiveValue is Date)
+                    {
+                        var dateValue = (Date)primitiveValue;
+                        return new DateTimeOffset(dateValue.Year, dateValue.Month, dateValue.Day, 0, 0, 0, new TimeSpan(0));
+                    }
 
-                var stringValue = primitiveValue as String;
-                if (stringValue != null)
-                {
-                    // Coerce to Date Type from String.
-                    return PlatformHelper.ConvertStringToDate(stringValue);
-                }
+                    break;
+
+                case EdmPrimitiveTypeKind.Date:
+                    var stringValue = primitiveValue as string;
+                    if (stringValue != null)
+                    {
+                        // Coerce to Date Type from String.
+                        return PlatformHelper.ConvertStringToDate(stringValue);
+                    }
+
+                    break;
             }
 
             return null;

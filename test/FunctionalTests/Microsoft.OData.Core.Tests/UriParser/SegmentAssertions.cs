@@ -250,5 +250,22 @@ namespace Microsoft.OData.Tests.UriParser
             token.Alias.Should().Be(alias);
             return new AndConstraint<ParameterAliasNode>(token);
         }
+
+        public static AndConstraint<ConvertNode> ShouldHaveConvertNode(this OperationSegmentParameter parameter,
+            string name, IEdmTypeReference typeReference = null)
+        {
+            parameter.Name.Should().Be(name);
+            var node = parameter.Value.As<ConvertNode>();
+            if (typeReference == null)
+            {
+                node.TypeReference.Should().BeNull();
+            }
+            else
+            {
+                node.TypeReference.FullName().Should().Be(typeReference.FullName());
+            }
+
+            return new AndConstraint<ConvertNode>(node);
+        }
     }
 }

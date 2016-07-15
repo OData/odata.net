@@ -871,7 +871,11 @@ namespace Microsoft.OData.UriParser
                 // DateTimeOffset, Date and Guids will have '-' in them
                 if (this.ch == '-')
                 {
-                    if (this.TryParseDateTimeoffset(tokenPos))
+                    if (this.TryParseDate(tokenPos))
+                    {
+                        return ExpressionTokenKind.DateLiteral;
+                    }
+                    else if (this.TryParseDateTimeoffset(tokenPos))
                     {
                         return ExpressionTokenKind.DateTimeOffsetLiteral;
                     }
@@ -999,6 +1003,23 @@ namespace Microsoft.OData.UriParser
 
             DateTimeOffset tmpdatetimeOffsetValue;
             if (UriUtils.ConvertUriStringToDateTimeOffset(datetimeOffsetStr, out tmpdatetimeOffsetValue))
+            {
+                return true;
+            }
+            else
+            {
+                this.textPos = initialIndex;
+                this.ch = this.Text[initialIndex];
+                return false;
+            }
+        }
+
+        private bool TryParseDate(int tokenPos)
+        {
+            int initialIndex = this.textPos;
+            string dateStr = ParseLiteral(tokenPos);
+            Date tmpDateValue;
+            if (UriUtils.TryUriStringToDate(dateStr, out tmpDateValue))
             {
                 return true;
             }

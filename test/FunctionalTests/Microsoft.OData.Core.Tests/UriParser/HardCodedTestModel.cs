@@ -255,7 +255,7 @@ namespace Microsoft.OData.Tests.UriParser
                     TargetMultiplicity = EdmMultiplicity.One,
                     Target = FullyQualifiedNamespaceDog,
                     DependentProperties = new List<IEdmStructuralProperty>()
-                    { 
+                    {
                         FullyQualifiedNamespaceLion_ID1
                     },
                     PrincipalProperties = new List<IEdmStructuralProperty>()
@@ -276,7 +276,7 @@ namespace Microsoft.OData.Tests.UriParser
                     TargetMultiplicity = EdmMultiplicity.Many,
                     Target = FullyQualifiedNamespaceDog,
                     DependentProperties = new List<IEdmStructuralProperty>()
-                    { 
+                    {
                         FullyQualifiedNamespaceLion_ID1
                     },
                     PrincipalProperties = new List<IEdmStructuralProperty>()
@@ -291,7 +291,7 @@ namespace Microsoft.OData.Tests.UriParser
                     TargetMultiplicity = EdmMultiplicity.Many,
                     Target = FullyQualifiedNamespaceLion,
                     DependentProperties = new List<IEdmStructuralProperty>()
-                    { 
+                    {
                         FullyQualifiedNamespaceLion_ID2
                     },
                     PrincipalProperties = new List<IEdmStructuralProperty>()
@@ -372,6 +372,14 @@ namespace Microsoft.OData.Tests.UriParser
             #endregion
 
             #region Operations
+
+            var FullyQualifiedNamespaceGetPersonByDTOFunction = new EdmFunction("Fully.Qualified.Namespace", "GetPersonByDTO", FullyQualifiedNamespacePersonTypeReference, false, null, true);
+            FullyQualifiedNamespaceGetPersonByDTOFunction.AddParameter("dto", EdmCoreModel.Instance.GetDateTimeOffset(false));
+            model.AddElement(FullyQualifiedNamespaceGetPersonByDTOFunction);
+
+            var FullyQualifiedNamespaceGetPersonByDateFunction = new EdmFunction("Fully.Qualified.Namespace", "GetPersonByDate", FullyQualifiedNamespacePersonTypeReference, false, null, true);
+            FullyQualifiedNamespaceGetPersonByDateFunction.AddParameter("date", EdmCoreModel.Instance.GetDate(false));
+            model.AddElement(FullyQualifiedNamespaceGetPersonByDateFunction);
 
             var FullyQualifiedNamespaceGetPet1Function = new EdmFunction("Fully.Qualified.Namespace", "GetPet1", FullyQualifiedNamespacePet1TypeReference, false, null, true);
             FullyQualifiedNamespaceGetPet1Function.AddParameter("id", EdmCoreModel.Instance.GetInt64(false));
@@ -688,6 +696,8 @@ namespace Microsoft.OData.Tests.UriParser
             var FullQualifiedNamespaceSingletonBoss = FullyQualifiedNamespaceContext.AddSingleton("Boss", FullyQualifiedNamespacePerson);
             FullQualifiedNamespaceSingletonBoss.AddNavigationTarget(FullyQualifiedNamespacePerson_MyDog, FullyQualifiedNamespaceContextDogs);
             FullQualifiedNamespaceSingletonBoss.AddNavigationTarget(FullyQualifiedNamespacePerson_MyPaintings, FullyQualifiedNamespaceContextPaintings);
+            FullyQualifiedNamespaceContext.AddFunctionImport("GetPersonByDate", FullyQualifiedNamespaceGetPersonByDateFunction, new EdmPathExpression("People"));
+            FullyQualifiedNamespaceContext.AddFunctionImport("GetPersonByDTO", FullyQualifiedNamespaceGetPersonByDTOFunction, new EdmPathExpression("People"));
             FullyQualifiedNamespaceContext.AddFunctionImport("GetPet1", FullyQualifiedNamespaceGetPet1Function, new EdmPathExpression("Pet1Set"));
             FullyQualifiedNamespaceContext.AddFunctionImport("GetPet2", FullyQualifiedNamespaceGetPet2Function, new EdmPathExpression("Pet2Set"));
             FullyQualifiedNamespaceContext.AddFunctionImport("GetPet3", FullyQualifiedNamespaceGetPet3Function, new EdmPathExpression("Pet3Set"));
@@ -765,7 +775,7 @@ namespace Microsoft.OData.Tests.UriParser
                     throw new Exception("edmx:refernece must have a valid url." + uri.AbsoluteUri);
                 }, out parsedModel, out errors))
                 {
-                   return parsedModel;
+                    return parsedModel;
                 }
             }
             catch (Exception e)
@@ -836,6 +846,8 @@ namespace Microsoft.OData.Tests.UriParser
           <NavigationPropertyBinding Path=""MyDog"" Target=""Dogs"" />
           <NavigationPropertyBinding Path=""MyPaintings"" Target=""Paintings"" />
         </Singleton>
+        <FunctionImport Name=""GetPersonByDate"" Function=""Fully.Qualified.Namespace.GetPersonByDate"" EntitySet=""People"" />
+        <FunctionImport Name=""GetPersonByDTO"" Function=""Fully.Qualified.Namespace.GetPersonByDTO"" EntitySet=""People"" />
         <FunctionImport Name=""GetPet1"" Function=""Fully.Qualified.Namespace.GetPet1"" EntitySet=""Pet1Set"" />
         <FunctionImport Name=""GetPet2"" Function=""Fully.Qualified.Namespace.GetPet2"" EntitySet=""Pet2Set"" />
         <FunctionImport Name=""GetPet3"" Function=""Fully.Qualified.Namespace.GetPet3"" EntitySet=""Pet3Set"" />
@@ -1126,6 +1138,14 @@ namespace Microsoft.OData.Tests.UriParser
         <Property Name=""Name"" Type=""Edm.String"" />
         <Property Name=""PetCategorysColorPattern"" Type=""Fully.Qualified.Namespace.ColorPattern"" Nullable=""false"" />
       </EntityType>
+      <Function Name=""GetPersonByDate"" IsComposable=""true"">
+        <Parameter Name=""date"" Type=""Edm.Date"" Nullable=""false"" />
+        <ReturnType Type=""Fully.Qualified.Namespace.Person"" />
+      </Function>
+      <Function Name=""GetPersonByDTO"" IsComposable=""true"">
+        <Parameter Name=""dto"" Type=""Edm.DateTimeOffset"" Nullable=""false"" />
+        <ReturnType Type=""Fully.Qualified.Namespace.Person"" />
+      </Function>
       <Function Name=""GetPet1"" IsComposable=""true"">
         <Parameter Name=""id"" Type=""Edm.Int64"" Nullable=""false"" />
         <ReturnType Type=""Fully.Qualified.Namespace.Pet1"" />
@@ -1877,6 +1897,16 @@ namespace Microsoft.OData.Tests.UriParser
         public static IEdmOperation GetHasDogOverloadForPeopleWithThreeParameters()
         {
             return TestModel.FindOperations("Fully.Qualified.Namespace.HasDog").Single(f => f.Parameters.Count() == 3 && f.Parameters.First().Type.FullName() == "Fully.Qualified.Namespace.Person");
+        }
+
+        public static IEdmOperationImport GetFunctionImportForGetPersonByDate()
+        {
+            return TestModel.EntityContainer.FindOperationImports("GetPersonByDate").Single();
+        }
+
+        public static IEdmOperationImport GetFunctionImportForGetPersonByDTO()
+        {
+            return TestModel.EntityContainer.FindOperationImports("GetPersonByDTO").Single();
         }
 
         public static IEdmOperationImport GetFunctionImportForGetPet1()
