@@ -319,6 +319,9 @@
     <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Client\MaterializedEntityArgs.cs">
       <Link>MaterializedEntityArgs.cs</Link>
     </Compile>
+    <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Client\ODataAnnotatableExtensions.cs">
+      <Link>ODataAnnotatableExtensions.cs</Link>
+    </Compile>
     <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Client\Serialization\DataServiceClientRequestMessage.cs">
       <Link>Serialization\DataServiceClientRequestMessage.cs</Link>
     </Compile>

@@ -4,13 +4,12 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+using Microsoft.OData;
+using Microsoft.Test.Taupo.Common;
+using Microsoft.Test.Taupo.OData.Common;
+
 namespace Microsoft.Test.Taupo.OData.Writer.Tests.Common
 {
-    #region Namespaces
-    using Microsoft.OData;
-    using Microsoft.Test.Taupo.Common;
-    #endregion Namespaces
-
     /// <summary>
     /// Extension methods for OData OM.
     /// </summary>

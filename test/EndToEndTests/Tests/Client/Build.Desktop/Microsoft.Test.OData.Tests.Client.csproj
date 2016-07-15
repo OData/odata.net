@@ -116,6 +116,7 @@
     <Compile Include="ClientWithoutTypeResolverTests\JsonWithoutTypeResolverTests.cs" />
     <Compile Include="CodeGenerationTests\CustomizeNamingTest.cs" />
     <Compile Include="CodeGenerationTests\T4DelayQueryTest.cs" />
+    <Compile Include="Common\ODataAnnotatableExtensions.cs" />
     <Compile Include="EdmDateAndTimeOfDay\DateAndTimeOfDayCRUDTestings.cs" />
     <Compile Include="ODataSimplifiedServiceTests\ODataSimplifiedServiceTests.cs" />
     <Compile Include="QueryOptionTests\EntityReferenceLinkTests.cs" />

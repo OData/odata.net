@@ -236,6 +236,7 @@
     <Compile Include="Materialization\PrimitiveValueMaterializationPolicy.cs" />
     <Compile Include="Materialization\StructuralValueMaterializationPolicy.cs" />
     <Compile Include="MaterializedEntityArgs.cs" />
+    <Compile Include="ODataAnnotatableExtensions.cs" />
     <Compile Include="Serialization\DataServiceClientRequestMessage.cs" />
     <Compile Include="UriEntityOperationParameter.cs" />
     <Compile Include="Utility.cs" />

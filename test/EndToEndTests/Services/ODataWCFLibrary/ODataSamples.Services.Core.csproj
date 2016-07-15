@@ -109,6 +109,7 @@
     <Compile Include="Handlers\UpdateHandler.cs" />
     <Compile Include="HttpMethod.cs" />
     <Compile Include="InMemoryMessage.cs" />
+    <Compile Include="ODataAnnotatableExtensions.cs" />
     <Compile Include="ReadOnlyFieldAttribute.cs" />
     <Compile Include="DataSource\IODataDataSource.cs" />
     <Compile Include="DataSource\IODataOperationProvider.cs" />

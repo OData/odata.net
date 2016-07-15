@@ -31,6 +31,14 @@
       <Project>{989A83CC-B864-4A75-8BF3-5EDA99203A86}</Project>
       <Name>Microsoft.OData.Core</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\..\..\Taupo\Source\Taupo.Astoria\Microsoft.Test.Taupo.Astoria.csproj">
+      <Project>{854af4e9-b78f-4994-b9c5-82b846604cbe}</Project>
+      <Name>Microsoft.Test.Taupo.Astoria</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\Taupo\Source\Taupo\Microsoft.Test.Taupo.csproj">
+      <Project>{34010f3a-20cc-479c-83cf-ec99b1c90cd1}</Project>
+      <Name>Microsoft.Test.Taupo</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\..\TestUtils\Common\Microsoft.Test.OData.Utils\Microsoft.Test.OData.Utils.csproj">
       <Project>{efa72cf8-a73a-4eb4-88d4-ae6d4ce1b270}</Project>
       <Name>Microsoft.Test.OData.Utils</Name>

@@ -4,14 +4,13 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+using System;
+using Microsoft.OData;
+using Microsoft.Test.Taupo.Astoria.Contracts.OData;
+using Microsoft.Test.Taupo.OData.Common;
+
 namespace Microsoft.Test.Taupo.OData.Reader.Tests
 {
-    #region Namespaces
-    using System;
-    using Microsoft.OData;
-    using Microsoft.Test.Taupo.Astoria.Contracts.OData;
-    #endregion Namespaces
-
     /// <summary>
     /// Converts OData object model to ODataPayloadElement model.
     /// </summary>

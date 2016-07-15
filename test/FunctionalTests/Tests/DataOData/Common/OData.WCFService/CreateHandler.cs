@@ -4,15 +4,16 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using Microsoft.OData.Edm;
+using Microsoft.OData;
+using Microsoft.Test.Taupo.OData.Common;
+
 namespace Microsoft.Test.Taupo.OData.WCFService
 {
-    using System;
-    using System.Collections.Generic;
-    using System.IO;
-    using System.Linq;
-    using Microsoft.OData.Edm;
-    using Microsoft.OData;
-
     /// <summary>
     /// This class is responsible for handling requests to insert new entities.
     /// </summary>

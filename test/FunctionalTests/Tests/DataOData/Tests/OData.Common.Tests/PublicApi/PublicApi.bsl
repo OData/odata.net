@@ -3900,9 +3900,6 @@ public abstract class Microsoft.OData.ODataAnnotatable {
 	protected ODataAnnotatable ()
 
 	Microsoft.OData.ODataTypeAnnotation TypeAnnotation  { public get; public set; }
-
-	public T GetAnnotation ()
-	public void SetAnnotation (T annotation)
 }
 
 public abstract class Microsoft.OData.ODataCollectionReader {
