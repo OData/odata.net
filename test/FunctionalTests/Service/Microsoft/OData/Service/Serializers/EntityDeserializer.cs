@@ -22,6 +22,8 @@ namespace Microsoft.OData.Service.Serializers
     {
         private readonly IDictionary<ODataResource, ODataEntryAnnotation> entryAnnotations =
             new Dictionary<ODataResource, ODataEntryAnnotation>();
+        private readonly IDictionary<ODataResourceSet, ODataFeedAnnotation> feedAnnotations =
+            new Dictionary<ODataResourceSet, ODataFeedAnnotation>();
 
         /// <summary>
         /// Initializes a new instance of <see cref="EntityDeserializer"/>.
@@ -122,7 +124,7 @@ namespace Microsoft.OData.Service.Serializers
                             ODataResourceSet parentFeed = parentItem as ODataResourceSet;
                             if (parentFeed != null)
                             {
-                                ODataFeedAnnotation parentFeedAnnotation = parentFeed.GetAnnotation<ODataFeedAnnotation>();
+                                ODataFeedAnnotation parentFeedAnnotation = this.feedAnnotations[parentFeed];
                                 Debug.Assert(parentFeedAnnotation != null, "Every feed we added to the stack should have the feed annotation on it.");
                                 parentFeedAnnotation.Add(entry);
                             }
@@ -171,7 +173,7 @@ namespace Microsoft.OData.Service.Serializers
                         ODataResourceSet feed = (ODataResourceSet)odataReader.Item;
                         Debug.Assert(feed != null, "Feed should never be null.");
 
-                        feed.SetAnnotation(new ODataFeedAnnotation());
+                        this.feedAnnotations[feed] = new ODataFeedAnnotation();
                         Debug.Assert(itemsStack.Count > 0, "Since we always start reading entry, we should never get a feed as the top-level item.");
                         {
                             ODataNestedResourceInfo parentNavigationLink = (ODataNestedResourceInfo)itemsStack.Peek();
@@ -674,7 +676,7 @@ namespace Microsoft.OData.Service.Serializers
             Debug.Assert(entityResource != null, "entityResource != null");
             Debug.Assert(feed != null, "feed != null");
 
-            ODataFeedAnnotation feedAnnotation = feed.GetAnnotation<ODataFeedAnnotation>();
+            ODataFeedAnnotation feedAnnotation = this.feedAnnotations[feed];
             Debug.Assert(feedAnnotation != null, "Each feed we create should gave annotation on it.");
 
             // Deep insert is not allowed in updates.
@@ -725,7 +727,7 @@ namespace Microsoft.OData.Service.Serializers
             Debug.Assert(entityResource != null, "entityResource != null");
             Debug.Assert(feed != null, "feed != null");
 
-            ODataFeedAnnotation feedAnnotation = feed.GetAnnotation<ODataFeedAnnotation>();
+            ODataFeedAnnotation feedAnnotation = this.feedAnnotations[feed];
             Debug.Assert(feedAnnotation != null, "Each feed we create should gave annotation on it.");
 
             // Deep insert is not allowed in updates.
