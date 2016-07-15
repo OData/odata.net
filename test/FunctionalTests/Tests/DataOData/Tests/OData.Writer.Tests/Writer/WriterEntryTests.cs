@@ -64,9 +64,10 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 this.WriterTestConfigurationProvider.AtomFormatConfigurationsWithIndent,
                 (testCase, testConfiguration) =>
                 {
-                    testConfiguration.MessageWriterSettings.SetServiceDocumentUri(ServiceDocumentUri);
+                    WriterTestConfiguration newConfiguration = testConfiguration.Clone();
+                    newConfiguration.MessageWriterSettings.SetServiceDocumentUri(ServiceDocumentUri);
 
-                    this.WriteAndVerifyODataPayloadElement(testCase, testConfiguration);
+                    this.WriteAndVerifyODataPayloadElement(testCase, newConfiguration);
                 });
 
             // TODO: Fix places where we've lost JsonVerbose coverage to add JsonLight
@@ -1980,8 +1981,9 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 this.WriterTestConfigurationProvider.ExplicitFormatConfigurationsWithIndent.Where(tc => tc.Format == ODataFormat.Atom),
                 (testDescriptor, testConfig) =>
                 {
-                    testConfig.MessageWriterSettings.SetServiceDocumentUri(ServiceDocumentUri);
-                    TestWriterUtils.WriteAndVerifyODataPayload(testDescriptor, testConfig, this.Assert, this.Logger);
+                    WriterTestConfiguration newConfiguration = testConfig.Clone();
+                    newConfiguration.MessageWriterSettings.SetServiceDocumentUri(ServiceDocumentUri);
+                    TestWriterUtils.WriteAndVerifyODataPayload(testDescriptor, newConfiguration, this.Assert, this.Logger);
                 });
         }
 
@@ -3012,9 +3014,10 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 this.WriterTestConfigurationProvider.AtomFormatConfigurationsWithIndent,
                 (testDescriptor, allowDuplicates, testConfiguration) =>
                 {
+                    testConfiguration = testConfiguration.Clone();
+
                     if (allowDuplicates)
                     {
-                        testConfiguration = testConfiguration.Clone();
                         testConfiguration.MessageWriterSettings.EnableODataServerBehavior(false);
                     }
 

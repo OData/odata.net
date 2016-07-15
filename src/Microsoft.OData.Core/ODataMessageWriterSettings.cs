@@ -106,7 +106,7 @@ namespace Microsoft.OData.Core
             this.AutoComputePayloadMetadataInJson = other.AutoComputePayloadMetadataInJson;
             this.UseKeyAsSegment = other.UseKeyAsSegment;
             this.alwaysUseDefaultXmlNamespaceForRootElement = other.alwaysUseDefaultXmlNamespaceForRootElement;
-            this.ODataUri = other.ODataUri;
+            this.ODataUri = other.ODataUri.Clone();
 
             // NOTE: writer behavior is immutable; copy by reference is ok.
             this.writerBehavior = other.writerBehavior;
