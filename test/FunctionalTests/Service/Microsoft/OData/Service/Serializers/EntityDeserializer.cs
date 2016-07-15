@@ -24,6 +24,8 @@ namespace Microsoft.OData.Service.Serializers
             new Dictionary<ODataResource, ODataEntryAnnotation>();
         private readonly IDictionary<ODataResourceSet, ODataFeedAnnotation> feedAnnotations =
             new Dictionary<ODataResourceSet, ODataFeedAnnotation>();
+        private readonly IDictionary<ODataNestedResourceInfo, ODataNavigationLinkAnnotation> navigationLinkAnnotations =
+            new Dictionary<ODataNestedResourceInfo, ODataNavigationLinkAnnotation>();
 
         /// <summary>
         /// Initializes a new instance of <see cref="EntityDeserializer"/>.
@@ -131,7 +133,7 @@ namespace Microsoft.OData.Service.Serializers
                             else
                             {
                                 ODataNestedResourceInfo parentNavigationLink = (ODataNestedResourceInfo)parentItem;
-                                ODataNavigationLinkAnnotation parentNavigationLinkAnnotation = parentNavigationLink.GetAnnotation<ODataNavigationLinkAnnotation>();
+                                ODataNavigationLinkAnnotation parentNavigationLinkAnnotation = this.navigationLinkAnnotations[parentNavigationLink];
                                 Debug.Assert(parentNavigationLinkAnnotation != null, "Every navigation link we added to the stack should have the navigation link annotation on it.");
 
                                 Debug.Assert(parentNavigationLink.IsCollection == false, "Only singleton navigation properties can contain entry as their child.");
@@ -152,7 +154,7 @@ namespace Microsoft.OData.Service.Serializers
                         ODataNestedResourceInfo navigationLink = (ODataNestedResourceInfo)odataReader.Item;
                         Debug.Assert(navigationLink != null, "Navigation link should never be null.");
 
-                        navigationLink.SetAnnotation(new ODataNavigationLinkAnnotation());
+                        this.navigationLinkAnnotations[navigationLink] = new ODataNavigationLinkAnnotation();
                         Debug.Assert(itemsStack.Count > 0, "Navigation link can't appear as top-level item.");
                         {
                             ODataResource parentEntry = (ODataResource)itemsStack.Peek();
@@ -177,7 +179,7 @@ namespace Microsoft.OData.Service.Serializers
                         Debug.Assert(itemsStack.Count > 0, "Since we always start reading entry, we should never get a feed as the top-level item.");
                         {
                             ODataNestedResourceInfo parentNavigationLink = (ODataNestedResourceInfo)itemsStack.Peek();
-                            ODataNavigationLinkAnnotation parentNavigationLinkAnnotation = parentNavigationLink.GetAnnotation<ODataNavigationLinkAnnotation>();
+                            ODataNavigationLinkAnnotation parentNavigationLinkAnnotation = this.navigationLinkAnnotations[parentNavigationLink];
                             Debug.Assert(parentNavigationLinkAnnotation != null, "Every navigation link we added to the stack should have the navigation link annotation on it.");
 
                             Debug.Assert(parentNavigationLink.IsCollection == true, "Only collection navigation properties can contain feed as their child.");
@@ -199,7 +201,7 @@ namespace Microsoft.OData.Service.Serializers
                         Debug.Assert(itemsStack.Count > 0, "Entity reference link should never be reported as top-level item.");
                         {
                             ODataNestedResourceInfo parentNavigationLink = (ODataNestedResourceInfo)itemsStack.Peek();
-                            ODataNavigationLinkAnnotation parentNavigationLinkAnnotation = parentNavigationLink.GetAnnotation<ODataNavigationLinkAnnotation>();
+                            ODataNavigationLinkAnnotation parentNavigationLinkAnnotation = this.navigationLinkAnnotations[parentNavigationLink];
                             Debug.Assert(parentNavigationLinkAnnotation != null, "Every navigation link we added to the stack should have the navigation link annotation on it.");
 
                             parentNavigationLinkAnnotation.Add(entityReferenceLink);
@@ -530,7 +532,7 @@ namespace Microsoft.OData.Service.Serializers
             Debug.Assert(navigationLink.Name == navigationProperty.Name, "The navigationProperty must have the same name as the navigationLink to apply.");
             Debug.Assert(entityResource != null, "entityResource != null");
 
-            ODataNavigationLinkAnnotation navigationLinkAnnotation = navigationLink.GetAnnotation<ODataNavigationLinkAnnotation>();
+            ODataNavigationLinkAnnotation navigationLinkAnnotation = this.navigationLinkAnnotations[navigationLink];
             Debug.Assert(navigationLinkAnnotation != null, "navigationLinkAnnotation != null");
             Debug.Assert(navigationLinkAnnotation.Count > 0, "Each navigation link must have at least one child in request.");
             Debug.Assert(navigationLink.IsCollection.HasValue, "We should know the cardinality of the navigation link by now.");
@@ -591,7 +593,7 @@ namespace Microsoft.OData.Service.Serializers
             Debug.Assert(navigationProperty == null || navigationLink.Name == navigationProperty.Name, "The navigationProperty must have the same name as the navigationLink to apply.");
             Debug.Assert(entityResource != null, "entityResource != null");
 
-            ODataNavigationLinkAnnotation navigationLinkAnnotation = navigationLink.GetAnnotation<ODataNavigationLinkAnnotation>();
+            ODataNavigationLinkAnnotation navigationLinkAnnotation = this.navigationLinkAnnotations[navigationLink];
             Debug.Assert(navigationLinkAnnotation != null, "navigationLinkAnnotation != null");
             Debug.Assert(navigationLinkAnnotation.Count > 0, "Each navigation link must have at least one child in request.");
             Debug.Assert(navigationLink.IsCollection.HasValue, "We should know the cardinality of the navigation link by now.");
