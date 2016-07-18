@@ -695,32 +695,32 @@ namespace AstoriaUnitTests.DataWebClientCSharp
                 ValuesToInitializeCollection = (IEnumerable)new ComplexType[] { new ComplexType() { Description = "TestDescription", Number = 123}, new ComplexType{ Number = 987}, new ComplexType() },
                 PropertyName = "Collection"
             },
-        };
-
-        private static MaterializationTestCase[] testCasesWithExceptions = new MaterializationTestCase[] {
-            // negative test cases
-            new MaterializationTestCase() { // Materializing a collection that contains null values - should fail
+            new MaterializationTestCase() { // Materializing a collection that contains null values - should not fail
                 CollectionItemType = typeof(string),
                 CollectionPropertyPayload = @"<m:value m:type=""Collection(Edm.String)"" xmlns:d=""http://docs.oasis-open.org/odata/ns/data"" xmlns:m=""http://docs.oasis-open.org/odata/ns/metadata"">
                         <m:element>abc</m:element>
                         <m:element m:null=""true"" />
                         <m:element>abc</m:element>
                     </m:value>",
-                ExpectedException = (Exception)new InvalidOperationException(ODataLibResourceUtil.GetString("ReaderValidationUtils_NullValueForNonNullableType", "Edm.String")),
-                ValuesToInitializeCollection = (IEnumerable)null,
+                ExpectedException = (Exception)null,
+                ValuesToInitializeCollection = (IEnumerable)new[] { "a", "b", "c" },
                 PropertyName = "Collection"
             },
-            new MaterializationTestCase() { // Materializing a collection that contains null values and is backed by a collection of nullables  - should fail
+            new MaterializationTestCase() { // Materializing a collection that contains null values and is backed by a collection of nullables  - should not fail
                 CollectionItemType = typeof(int?),
-                 CollectionPropertyPayload = @"<m:value m:type=""Collection(Edm.Int32)"" xmlns:d=""http://docs.oasis-open.org/odata/ns/data"" xmlns:m=""http://docs.oasis-open.org/odata/ns/metadata"">
+                CollectionPropertyPayload = @"<m:value m:type=""Collection(Edm.Int32)"" xmlns:d=""http://docs.oasis-open.org/odata/ns/data"" xmlns:m=""http://docs.oasis-open.org/odata/ns/metadata"">
                         <m:element>1</m:element>
                         <m:element m:null=""true"" />
                         <m:element>2</m:element>
                     </m:value>",
-               ExpectedException = (Exception)new InvalidOperationException(ODataLibResourceUtil.GetString("ReaderValidationUtils_NullValueForNonNullableType", "Edm.Int32")),
-                ValuesToInitializeCollection = (IEnumerable)null,
+                ExpectedException = (Exception)null,
+                ValuesToInitializeCollection = (IEnumerable)new int?[] { 1, 2, 3 },
                 PropertyName = "Collection"
             },
+        };
+
+        private static MaterializationTestCase[] testCasesWithExceptions = new MaterializationTestCase[] {
+            // negative test cases
             new MaterializationTestCase() { // Materializing a collection whose value is null - should fail
                 CollectionItemType = typeof(string),
                  CollectionPropertyPayload = @"<m:value m:type=""Collection(Edm.String)"" m:null=""true"" xmlns:d=""http://docs.oasis-open.org/odata/ns/data"" xmlns:m=""http://docs.oasis-open.org/odata/ns/metadata"" />",
@@ -728,7 +728,7 @@ namespace AstoriaUnitTests.DataWebClientCSharp
                 ComplexExpectedException = (Exception)new InvalidOperationException(ODataLibResourceUtil.GetString("ReaderValidationUtils_NullNamedValueForNonNullableType", "Collection", "Collection(Edm.String)")),
                 ValuesToInitializeCollection = (IEnumerable)null,
                 PropertyName = "Collection"
-           },
+            },
             new MaterializationTestCase() { // Materializing a collection that contains values incompatible with the declared collection item type - should fail
                 CollectionItemType = typeof(int),
                  CollectionPropertyPayload = @"<m:value m:type=""Collection(Edm.Int32)"" xmlns:d=""http://docs.oasis-open.org/odata/ns/data"" xmlns:m=""http://docs.oasis-open.org/odata/ns/metadata"">

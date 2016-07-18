@@ -243,7 +243,8 @@ namespace Microsoft.OData.Client
 
                                 foreach (var collectionItem in (IEnumerable)child)
                                 {
-                                    Debug.Assert(property.PrimitiveOrComplexCollectionItemType.IsAssignableFrom(collectionItem.GetType()), "Type of materialized collection items have to be compatible with the type of collection items in the actual collection property.");
+                                    Debug.Assert(collectionItem == null
+                                                 || property.PrimitiveOrComplexCollectionItemType.IsAssignableFrom(collectionItem.GetType()), "Type of materialized collection items have to be compatible with the type of collection items in the actual collection property.");
                                     property.AddValueToBackingICollectionInstance(collectionInstance, collectionItem);
                                 }
 

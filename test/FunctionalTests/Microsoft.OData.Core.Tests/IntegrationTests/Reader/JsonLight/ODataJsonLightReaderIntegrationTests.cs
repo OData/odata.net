@@ -7,6 +7,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 using FluentAssertions;
 using Microsoft.OData.Edm;
@@ -73,6 +74,61 @@ namespace Microsoft.OData.Core.Tests.IntegrationTests.Reader.JsonLight
         }
 
         #endregion
+
+        [Fact]
+        public void ShouldReadDynamicNullableCollectionValuedProperty()
+        {
+            // setup model
+            var model = new EdmModel();
+            var entityType = new EdmEntityType("NS", "EntityType", null, false, true);
+            entityType.AddStructuralProperty("ID", EdmPrimitiveTypeKind.Int32);
+            var container = new EdmEntityContainer("NS", "Container");
+            var entitySet = container.AddEntitySet("EntitySet", entityType);
+            var complexType = new EdmComplexType("NS", "ComplexType");
+            complexType.AddStructuralProperty("Prop1", EdmPrimitiveTypeKind.Int32);
+            complexType.AddStructuralProperty("Prop2", EdmPrimitiveTypeKind.Int32);
+            model.AddElements(new IEdmSchemaElement[] { entityType, complexType, container });
+
+            const string payload
+                = "{" +
+                      "\"@odata.context\":\"http://svc/$metadata#EntitySet/$entity\"," +
+                      "\"ID\":1," +
+                      "\"DynamicPrimitive@odata.type\":\"#Collection(Int64)\"," +
+                      "\"DynamicPrimitive\":[1,2,null]," +
+                      "\"DynamicPrimitive2@odata.type\":\"#Collection(String)\"," +
+                      "\"DynamicPrimitive2\":[\"a\",\"b\",null]" +
+                  "}";
+
+            // setup reader
+            var message = new InMemoryMessage { Stream = new MemoryStream(Encoding.UTF8.GetBytes(payload)) };
+            var reader = new ODataMessageReader((IODataResponseMessage)message, new ODataMessageReaderSettings(), model)
+                         .CreateODataEntryReader(entitySet, entityType);
+
+            // read payload
+            while (reader.Read())
+            {
+                if (reader.State == ODataReaderState.EntryEnd)
+                {
+                    var enumerator = ((ODataCollectionValue)((ODataEntry)reader.Item).Properties.Skip(1).Take(1).Single().Value)
+                                     .Items.GetEnumerator();
+                    enumerator.MoveNext();
+                    enumerator.Current.Should().Be(1L);
+                    enumerator.MoveNext();
+                    enumerator.Current.Should().Be(2L);
+                    enumerator.MoveNext();
+                    enumerator.Current.Should().Be(null);
+
+                    enumerator = ((ODataCollectionValue)((ODataEntry)reader.Item).Properties.Skip(2).Take(1).Single().Value)
+                                 .Items.GetEnumerator();
+                    enumerator.MoveNext();
+                    enumerator.Current.Should().Be("a");
+                    enumerator.MoveNext();
+                    enumerator.Current.Should().Be("b");
+                    enumerator.MoveNext();
+                    enumerator.Current.Should().Be(null);
+                }
+            }
+        }
 
         [Fact]
         public void ShouldBeAbleToReadTransientEntryInFullMetadataLevel()

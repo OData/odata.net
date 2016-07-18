@@ -118,6 +118,72 @@ namespace Microsoft.OData.Core.Tests.JsonLight
         #endregion Writing odata.context
 
         [Fact]
+        public void ShouldWriteDynamicNullableCollectionValuedProperty()
+        {
+            // setup model
+            var model = new EdmModel();
+            var entityType = new EdmEntityType("NS", "EntityType", null, false, true);
+            entityType.AddStructuralProperty("ID", EdmPrimitiveTypeKind.Int32);
+            var container = new EdmEntityContainer("NS", "Container");
+            var entitySet = container.AddEntitySet("EntitySet", entityType);
+            var complexType = new EdmComplexType("NS", "ComplexType");
+            complexType.AddStructuralProperty("Prop1", EdmPrimitiveTypeKind.Int32);
+            complexType.AddStructuralProperty("Prop2", EdmPrimitiveTypeKind.Int32);
+            model.AddElements(new IEdmSchemaElement[] { entityType, complexType, container });
+
+            // setup writer
+            var stream = new MemoryStream();
+            var message = new InMemoryMessage { Stream = stream };
+            var settings = new ODataMessageWriterSettings
+            {
+                ODataUri = new ODataUri
+                {
+                    ServiceRoot = new Uri("http://svc/")
+                }
+            };
+            var writer = new ODataMessageWriter((IODataResponseMessage)message, settings, model)
+                         .CreateODataEntryWriter(entitySet, entityType);
+           
+            // write payload
+            writer.WriteStart(new ODataEntry
+            {
+                Properties = new[]
+                {
+                    new ODataProperty { Name = "ID", Value = 1 },
+                    new ODataProperty
+                    {
+                        Name = "DynamicPrimitive",
+                        Value = new ODataCollectionValue
+                        {
+                            TypeName = "Collection(Edm.Int64)",
+                            Items = new Int64?[] { 1, 2, null }
+                        }
+                    },
+                    new ODataProperty
+                    {
+                        Name = "DynamicPrimitive2",
+                        Value = new ODataCollectionValue
+                        {
+                            TypeName = "Collection(Edm.String)",
+                            Items = new[] { "a", "b", null }
+                        }
+                    }
+                }
+            });
+            writer.WriteEnd();
+            var str = Encoding.UTF8.GetString(stream.ToArray());
+            str.Should().Be(
+                "{" +
+                    "\"@odata.context\":\"http://svc/$metadata#EntitySet/$entity\"," +
+                    "\"ID\":1," +
+                    "\"DynamicPrimitive@odata.type\":\"#Collection(Int64)\"," +
+                    "\"DynamicPrimitive\":[1,2,null]," +
+                    "\"DynamicPrimitive2@odata.type\":\"#Collection(String)\"," +
+                    "\"DynamicPrimitive2\":[\"a\",\"b\",null]" +
+                "}");
+        }
+
+        [Fact]
         public void ShouldWriteCollectionOfTypeDefinitionItemType()
         {
             ODataCollectionStart collectionStart = new ODataCollectionStart();

@@ -407,10 +407,6 @@ namespace AstoriaUnitTests.Tests
                         ExpectedExceptionMessage = AstoriaUnitTests.DataServicesResourceUtil.GetString("Serializer_CollectionCanNotBeNull", "CollectionProperty")
                     },
                     new {
-                        CollectionPropertyValue = (object)new List<string>() { null },
-                        ExpectedExceptionMessage = AstoriaUnitTests.ODataLibResourceUtil.GetString("ValidationUtils_NonNullableCollectionElementsMustNotBeNull")
-                    },
-                    new {
                         // Something which definitely doesn't implement IEnumerable
                         CollectionPropertyValue = (object)new object(),
                         ExpectedExceptionMessage = AstoriaUnitTests.DataServicesResourceUtil.GetString("Serializer_CollectionPropertyValueMustImplementIEnumerable", "CollectionProperty")
@@ -2294,7 +2290,7 @@ namespace AstoriaUnitTests.Tests
                         };
                         using (TestWebRequest request = service.CreateForInProcess())
                         {
-                            TestUtil.RunCombinations(new string[] { "entity", "projection" , "complex", "collection" }, UnitTestsUtil.ResponseFormats, (accessType, format) =>
+                            TestUtil.RunCombinations(new string[] { "entity", "projection", "complex", "collection" }, UnitTestsUtil.ResponseFormats, (accessType, format) =>
                             {
                                 // Reset the instances cause the CustomEnumerable only allows single enumeration ever.
                                 // This will recreated everything by calling CreateDataSource.
@@ -2319,16 +2315,12 @@ namespace AstoriaUnitTests.Tests
                                 }
                                 request.Accept = format;
                                 Exception e = TestUtil.RunCatching(request.SendRequest);
-                                Assert.IsNotNull(e, "The request should have failed.");
-                                e = e.InnerException;
-                                Assert.AreEqual(500, request.ResponseStatusCode, "Expected InternalServerError for null items in collectionProperty");
                                 if (dbnullCollectionPropertyValue)
                                 {
+                                    Assert.IsNotNull(e, "The request should have failed.");
+                                    e = e.InnerException;
+                                    Assert.AreEqual(500, request.ResponseStatusCode, "Expected InternalServerError for null items in collectionProperty");
                                     Assert.AreEqual(DataServicesResourceUtil.GetString("Serializer_CollectionCanNotBeNull", "CollectionProperty"), e.Message);
-                                }
-                                else
-                                {
-                                    Assert.AreEqual(ODataLibResourceUtil.GetString("ValidationUtils_NonNullableCollectionElementsMustNotBeNull"), e.Message, "The error string was not as expected");
                                 }
                             });
                         }
