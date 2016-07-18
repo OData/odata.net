@@ -378,7 +378,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                         "\"CityHall\": []," +
                         "\"" + JsonLightUtils.GetPropertyAnnotationName("CityHall", JsonLightConstants.ODataNextLinkAnnotationName) + "\":\"http://odata.org/nextlink2\"",
                     ExpectedEntity = PayloadBuilder.Entity(),
-                    ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightResourceDeserializer_DuplicateExpandedResourceSetAnnotation", JsonLightConstants.ODataNextLinkAnnotationName, "CityHall")
+                    ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightResourceDeserializer_DuplicateNestedResourceSetAnnotation", JsonLightConstants.ODataNextLinkAnnotationName, "CityHall")
                 },
                 new NavigationLinkTestCase
                 {

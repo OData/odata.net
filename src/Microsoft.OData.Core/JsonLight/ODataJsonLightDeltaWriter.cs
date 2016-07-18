@@ -116,8 +116,8 @@ namespace Microsoft.OData.JsonLight
             /// <summary>The writer is currently writing a delta deleted link.</summary>
             DeltaDeletedLink,
 
-            /// <summary>The writer is currently writing an expanded navigation property.</summary>
-            ExpandedNavigationProperty,
+            /// <summary>The writer is currently writing an expanded navigation property, complex property or complex collection property.</summary>
+            NestedResource,
 
             /// <summary>The writer has completed; nothing can be written anymore.</summary>
             Completed,
@@ -692,9 +692,9 @@ namespace Microsoft.OData.JsonLight
                 return;
             }
 
-            if (this.State != WriterState.DeltaResource && newState == WriterState.ExpandedNavigationProperty)
+            if (this.State != WriterState.DeltaResource && newState == WriterState.NestedResource)
             {
-                throw new ODataException(Strings.ODataJsonLightDeltaWriter_InvalidTransitionToExpandedNavigationProperty(this.State.ToString(), newState.ToString()));
+                throw new ODataException(Strings.ODataJsonLightDeltaWriter_InvalidTransitionToNestedResource(this.State.ToString(), newState.ToString()));
             }
 
             switch (this.State)
@@ -724,8 +724,8 @@ namespace Microsoft.OData.JsonLight
                     }
 
                     break;
-                case WriterState.ExpandedNavigationProperty:
-                    throw new ODataException(Strings.ODataJsonLightDeltaWriter_InvalidTransitionFromExpandedNavigationProperty(this.State.ToString(), newState.ToString()));
+                case WriterState.NestedResource:
+                    throw new ODataException(Strings.ODataJsonLightDeltaWriter_InvalidTransitionFromNestedResource(this.State.ToString(), newState.ToString()));
                 case WriterState.Completed:
                     // we should never see a state transition when in state 'Completed'
                     throw new ODataException(Strings.ODataWriterCore_InvalidTransitionFromCompleted(this.State.ToString(), newState.ToString()));
@@ -778,9 +778,9 @@ namespace Microsoft.OData.JsonLight
         /// <param name="nestedResourceInfo">Navigation link to write.</param>
         private void WriteStartNestedResourceInfoImplementation(ODataNestedResourceInfo nestedResourceInfo)
         {
-            if (!IsExpandedNavigationPropertyState(this.State))
+            if (!IsNestedResourceState(this.State))
             {
-                this.EnterScope(WriterState.ExpandedNavigationProperty, nestedResourceInfo);
+                this.EnterScope(WriterState.NestedResource, nestedResourceInfo);
             }
 
             this.InterceptException(() => this.CurrentExpandedNavigationPropertyScope
@@ -793,7 +793,7 @@ namespace Microsoft.OData.JsonLight
         /// <param name="expandedResourceSet">Expanded resource set to write.</param>
         private void WriteStartExpandedResourceSetImplementation(ODataResourceSet expandedResourceSet)
         {
-            if (!IsExpandedNavigationPropertyState(this.State))
+            if (!IsNestedResourceState(this.State))
             {
                 throw new ODataException(Strings.ODataJsonLightDeltaWriter_WriteStartExpandedResourceSetCalledInInvalidState(this.State.ToString()));
             }
@@ -810,7 +810,7 @@ namespace Microsoft.OData.JsonLight
         {
             Debug.Assert(resource != null, "resource != null");
 
-            if (IsExpandedNavigationPropertyState(this.State))
+            if (IsNestedResourceState(this.State))
             {
                 this.InterceptException(() => this.CurrentExpandedNavigationPropertyScope
                     .JsonLightExpandedNavigationPropertyWriter.WriteStart(resource));
@@ -966,7 +966,7 @@ namespace Microsoft.OData.JsonLight
         /// </summary>
         private void WriteEndImplementation()
         {
-            if (this.State == WriterState.ExpandedNavigationProperty)
+            if (this.State == WriterState.NestedResource)
             {
                 if (this.CurrentExpandedNavigationPropertyScope.JsonLightExpandedNavigationPropertyWriter.WriteEnd())
                 {
@@ -1422,7 +1422,7 @@ namespace Microsoft.OData.JsonLight
 
             if (newState == WriterState.DeltaResource || newState == WriterState.DeltaDeletedEntry ||
                 newState == WriterState.DeltaLink || newState == WriterState.DeltaDeletedLink ||
-                newState == WriterState.DeltaResourceSet || newState == WriterState.ExpandedNavigationProperty)
+                newState == WriterState.DeltaResourceSet || newState == WriterState.NestedResource)
             {
                 navigationSource = currentScope.NavigationSource;
 
@@ -1474,7 +1474,7 @@ namespace Microsoft.OData.JsonLight
                 state == WriterState.DeltaResourceSet && item is ODataDeltaResourceSet ||
                 state == WriterState.DeltaLink && item is ODataDeltaLink ||
                 state == WriterState.DeltaDeletedLink && item is ODataDeltaDeletedLink ||
-                state == WriterState.ExpandedNavigationProperty && item is ODataNestedResourceInfo ||
+                state == WriterState.NestedResource && item is ODataNestedResourceInfo ||
                 state == WriterState.Start && item == null ||
                 state == WriterState.Completed && item == null,
                 "Writer state and associated item do not match.");
@@ -1498,8 +1498,8 @@ namespace Microsoft.OData.JsonLight
                 case WriterState.DeltaDeletedLink:
                     scope = this.CreateDeltaLinkScope(WriterState.DeltaDeletedLink, item, navigationSource, entityType, selectedProperties, odataUri);
                     break;
-                case WriterState.ExpandedNavigationProperty:
-                    scope = this.CreateExpandedNavigationPropertyScope(item, navigationSource, resourceType, selectedProperties, odataUri);
+                case WriterState.NestedResource:
+                    scope = this.CreateNestedResourceScope(item, navigationSource, resourceType, selectedProperties, odataUri);
                     break;
                 case WriterState.Start:                     // fall through
                 case WriterState.Completed:                 // fall through
@@ -1628,7 +1628,7 @@ namespace Microsoft.OData.JsonLight
         /// <param name="selectedProperties">The selected properties of this scope.</param>
         /// <param name="odataUri">The ODataUri info of this scope.</param>
         /// <returns>The newly created scope.</returns>
-        private NestedResourceInfoScope CreateExpandedNavigationPropertyScope(ODataItem nestedResourceInfo, IEdmNavigationSource navigationSource, IEdmStructuredType entityType, SelectedPropertiesNode selectedProperties, ODataUri odataUri)
+        private NestedResourceInfoScope CreateNestedResourceScope(ODataItem nestedResourceInfo, IEdmNavigationSource navigationSource, IEdmStructuredType entityType, SelectedPropertiesNode selectedProperties, ODataUri odataUri)
         {
             return new JsonLightNestedResourceInfoScope(
                 nestedResourceInfo,
@@ -1791,13 +1791,13 @@ namespace Microsoft.OData.JsonLight
         }
 
         /// <summary>
-        /// Determines whether a given writer is writing expanded navigation property.
+        /// Determines whether a given writer is writing expanded navigation property, complex property or complex collection property.
         /// </summary>
         /// <param name="state">The writer state to check.</param>
-        /// <returns>True if the writer is writing expanded navigation property; otherwise false.</returns>
-        private static bool IsExpandedNavigationPropertyState(WriterState state)
+        /// <returns>True if the writer is writing expanded navigation property, complex property or complex collection property; otherwise false.</returns>
+        private static bool IsNestedResourceState(WriterState state)
         {
-            return state == WriterState.ExpandedNavigationProperty;
+            return state == WriterState.NestedResource;
         }
 
         #endregion
@@ -2151,7 +2151,7 @@ namespace Microsoft.OData.JsonLight
             /// <param name="odataUri">The ODataUri info of this scope.</param>
             protected NestedResourceInfoScope(ODataItem nestedResourceInfo, IEdmNavigationSource navigationSource,
                 IEdmStructuredType resourceType, SelectedPropertiesNode selectedProperties, ODataUri odataUri)
-                : base(WriterState.ExpandedNavigationProperty, nestedResourceInfo, navigationSource, resourceType, selectedProperties, odataUri)
+                : base(WriterState.NestedResource, nestedResourceInfo, navigationSource, resourceType, selectedProperties, odataUri)
             {
             }
         }

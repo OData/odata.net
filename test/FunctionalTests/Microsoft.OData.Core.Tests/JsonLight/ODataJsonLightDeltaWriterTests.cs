@@ -771,7 +771,7 @@ namespace Microsoft.OData.Tests.JsonLight
                 writer.WriteStart(ordersNavigationLink);
             };
 
-            writeAction.ShouldThrow<ODataException>().WithMessage(Strings.ODataJsonLightDeltaWriter_InvalidTransitionToExpandedNavigationProperty("DeltaResourceSet", "ExpandedNavigationProperty"));
+            writeAction.ShouldThrow<ODataException>().WithMessage(Strings.ODataJsonLightDeltaWriter_InvalidTransitionToNestedResource("DeltaResourceSet", "NestedResource"));
         }
 
         [Fact]
@@ -789,7 +789,7 @@ namespace Microsoft.OData.Tests.JsonLight
                 writer.WriteDeltaDeletedEntry(customerDeleted);
             };
 
-            writeAction.ShouldThrow<ODataException>().WithMessage(Strings.ODataJsonLightDeltaWriter_InvalidTransitionFromExpandedNavigationProperty("ExpandedNavigationProperty", "DeltaDeletedEntry"));
+            writeAction.ShouldThrow<ODataException>().WithMessage(Strings.ODataJsonLightDeltaWriter_InvalidTransitionFromNestedResource("NestedResource", "DeltaDeletedEntry"));
         }
 
         [Fact]

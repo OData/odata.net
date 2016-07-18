@@ -1215,7 +1215,7 @@ namespace Microsoft.OData
                     // into the nested resource info content. This is only allowed for collection navigation property in request.
                     if (this.outputContext.WritingResponse || currentNestedResourceInfo.IsCollection != true)
                     {
-                        this.ThrowODataException(Strings.ODataWriterCore_MultipleItemsInNavigationLinkContent, currentNestedResourceInfo);
+                        this.ThrowODataException(Strings.ODataWriterCore_MultipleItemsInNestedResourceInfoWithContent, currentNestedResourceInfo);
                     }
 
                     // Note that we don't invoke duplicate property checker in this case as it's not necessary.

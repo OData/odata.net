@@ -874,7 +874,7 @@ namespace Microsoft.OData.JsonLight
                     case ODataAnnotationNames.ODataNextLink:
                         if (resourceSet.NextPageLink != null)
                         {
-                            throw new ODataException(ODataErrorStrings.ODataJsonLightResourceDeserializer_DuplicateExpandedResourceSetAnnotation(ODataAnnotationNames.ODataNextLink, expandedNestedResourceInfo.NestedResourceInfo.Name));
+                            throw new ODataException(ODataErrorStrings.ODataJsonLightResourceDeserializer_DuplicateNestedResourceSetAnnotation(ODataAnnotationNames.ODataNextLink, expandedNestedResourceInfo.NestedResourceInfo.Name));
                         }
 
                         // Read the property value.
@@ -884,7 +884,7 @@ namespace Microsoft.OData.JsonLight
                     case ODataAnnotationNames.ODataCount:
                         if (resourceSet.Count != null)
                         {
-                            throw new ODataException(ODataErrorStrings.ODataJsonLightResourceDeserializer_DuplicateExpandedResourceSetAnnotation(ODataAnnotationNames.ODataCount, expandedNestedResourceInfo.NestedResourceInfo.Name));
+                            throw new ODataException(ODataErrorStrings.ODataJsonLightResourceDeserializer_DuplicateNestedResourceSetAnnotation(ODataAnnotationNames.ODataCount, expandedNestedResourceInfo.NestedResourceInfo.Name));
                         }
 
                         // Read the property value.

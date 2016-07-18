@@ -423,7 +423,7 @@ namespace Microsoft.OData
 
             if (!nestedResourceInfo.IsCollection.HasValue)
             {
-                throw new ODataException(Strings.WriterValidationUtils_NavigationLinkMustSpecifyIsCollection(nestedResourceInfo.Name));
+                throw new ODataException(Strings.WriterValidationUtils_NestedResourceInfoMustSpecifyIsCollection(nestedResourceInfo.Name));
             }
         }
 

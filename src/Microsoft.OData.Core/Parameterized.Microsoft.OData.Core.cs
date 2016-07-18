@@ -155,7 +155,7 @@ namespace Microsoft.OData {
         }
 
         /// <summary>
-        /// A string like "Cannot transition from state '{0}' to state '{1}'. The only valid action in state '{0}' is to write a navigation link."
+        /// A string like "Cannot transition from state '{0}' to state '{1}'. The only valid action in state '{0}' is to write a nested resource."
         /// </summary>
         internal static string ODataWriterCore_InvalidTransitionFromResource(object p0, object p1) {
             return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataWriterCore_InvalidTransitionFromResource, p0, p1);
@@ -197,17 +197,17 @@ namespace Microsoft.OData {
         }
 
         /// <summary>
-        /// A string like "Cannot transition from state '{0}' to state '{1}'. State transition is not allowed while writing an expanded navigation property."
+        /// A string like "Cannot transition from state '{0}' to state '{1}'. State transition is not allowed while writing an expanded navigation property, complex property or complex collection property."
         /// </summary>
-        internal static string ODataJsonLightDeltaWriter_InvalidTransitionFromExpandedNavigationProperty(object p0, object p1) {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightDeltaWriter_InvalidTransitionFromExpandedNavigationProperty, p0, p1);
+        internal static string ODataJsonLightDeltaWriter_InvalidTransitionFromNestedResource(object p0, object p1) {
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightDeltaWriter_InvalidTransitionFromNestedResource, p0, p1);
         }
 
         /// <summary>
-        /// A string like "Cannot transition from state '{0}' to state '{1}'. Expanded navigation property can only be written within a delta resource."
+        /// A string like "Cannot transition from state '{0}' to state '{1}'. Nested resource can only be written within a delta resource."
         /// </summary>
-        internal static string ODataJsonLightDeltaWriter_InvalidTransitionToExpandedNavigationProperty(object p0, object p1) {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightDeltaWriter_InvalidTransitionToExpandedNavigationProperty, p0, p1);
+        internal static string ODataJsonLightDeltaWriter_InvalidTransitionToNestedResource(object p0, object p1) {
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightDeltaWriter_InvalidTransitionToNestedResource, p0, p1);
         }
 
         /// <summary>
@@ -288,7 +288,7 @@ namespace Microsoft.OData {
         }
 
         /// <summary>
-        /// A string like "A deferred link was written into a request. In requests, each navigation link must have a resource set, resource, or entity reference link written into it."
+        /// A string like "A deferred link was written into a request. In requests, each nested resource info must have a resource set, resource, or entity reference link written into it."
         /// </summary>
         internal static string ODataWriterCore_DeferredLinkInRequest {
             get {
@@ -297,11 +297,11 @@ namespace Microsoft.OData {
         }
 
         /// <summary>
-        /// A string like "More than one item was written into the content of a navigation link. In OData, a navigation link can only contain more than one item in its content when it is a navigation link, ODataNestedResourceInfo.IsCollection set to true, and the writer is writing a request."
+        /// A string like "More than one item was written into the content of a nested resource. In OData, a nested resource can only contain more than one item in its content when ODataNestedResourceInfo.IsCollection set to true, and the writer is writing a request."
         /// </summary>
-        internal static string ODataWriterCore_MultipleItemsInNavigationLinkContent {
+        internal static string ODataWriterCore_MultipleItemsInNestedResourceInfoWithContent {
             get {
-                return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataWriterCore_MultipleItemsInNavigationLinkContent);
+                return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataWriterCore_MultipleItemsInNestedResourceInfoWithContent);
             }
         }
 
@@ -328,13 +328,6 @@ namespace Microsoft.OData {
         /// </summary>
         internal static string DuplicatePropertyNamesNotAllowed(object p0) {
             return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.DuplicatePropertyNamesNotAllowed, p0);
-        }
-
-        /// <summary>
-        /// A string like "Multiple navigation links with the same name '{0}' for a singleton navigation property were detected on a resource. In OData, a singleton navigation property can have only one navigation link."
-        /// </summary>
-        internal static string MultipleLinksForSingleton(object p0) {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.MultipleLinksForSingleton, p0);
         }
 
         /// <summary>
@@ -2667,10 +2660,10 @@ namespace Microsoft.OData {
         }
 
         /// <summary>
-        /// A string like "The ODataNestedResourceInfo.IsCollection property on a navigation link '{0}' is null. The ODataNestedResourceInfo.IsCollection property must be specified when writing a link into a request."
+        /// A string like "The ODataNestedResourceInfo.IsCollection property on a nested resource info '{0}' is null. The ODataNestedResourceInfo.IsCollection property must be specified when writing a nested resource into a request."
         /// </summary>
-        internal static string WriterValidationUtils_NavigationLinkMustSpecifyIsCollection(object p0) {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.WriterValidationUtils_NavigationLinkMustSpecifyIsCollection, p0);
+        internal static string WriterValidationUtils_NestedResourceInfoMustSpecifyIsCollection(object p0) {
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.WriterValidationUtils_NestedResourceInfoMustSpecifyIsCollection, p0);
         }
 
         /// <summary>
@@ -3461,10 +3454,10 @@ namespace Microsoft.OData {
         }
 
         /// <summary>
-        /// A string like "Multiple property annotations '{0}' were found when reading the expanded navigation link '{1}'. Only a single property annotation '{0}' can be specified for an expanded navigation link."
+        /// A string like "Multiple property annotations '{0}' were found when reading the nested resource '{1}'. Only a single property annotation '{0}' can be specified for a nested resource."
         /// </summary>
-        internal static string ODataJsonLightResourceDeserializer_DuplicateExpandedResourceSetAnnotation(object p0, object p1) {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightResourceDeserializer_DuplicateExpandedResourceSetAnnotation, p0, p1);
+        internal static string ODataJsonLightResourceDeserializer_DuplicateNestedResourceSetAnnotation(object p0, object p1) {
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightResourceDeserializer_DuplicateNestedResourceSetAnnotation, p0, p1);
         }
 
         /// <summary>

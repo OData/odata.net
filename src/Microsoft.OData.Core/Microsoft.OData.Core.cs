@@ -92,8 +92,8 @@ namespace Microsoft.OData {
         internal const string ODataWriterCore_InvalidTransitionFromExpandedLink = "ODataWriterCore_InvalidTransitionFromExpandedLink";
         internal const string ODataWriterCore_InvalidTransitionFromCompleted = "ODataWriterCore_InvalidTransitionFromCompleted";
         internal const string ODataWriterCore_InvalidTransitionFromError = "ODataWriterCore_InvalidTransitionFromError";
-        internal const string ODataJsonLightDeltaWriter_InvalidTransitionFromExpandedNavigationProperty = "ODataJsonLightDeltaWriter_InvalidTransitionFromExpandedNavigationProperty";
-        internal const string ODataJsonLightDeltaWriter_InvalidTransitionToExpandedNavigationProperty = "ODataJsonLightDeltaWriter_InvalidTransitionToExpandedNavigationProperty";
+        internal const string ODataJsonLightDeltaWriter_InvalidTransitionFromNestedResource = "ODataJsonLightDeltaWriter_InvalidTransitionFromNestedResource";
+        internal const string ODataJsonLightDeltaWriter_InvalidTransitionToNestedResource = "ODataJsonLightDeltaWriter_InvalidTransitionToNestedResource";
         internal const string ODataJsonLightDeltaWriter_WriteStartExpandedResourceSetCalledInInvalidState = "ODataJsonLightDeltaWriter_WriteStartExpandedResourceSetCalledInInvalidState";
         internal const string ODataWriterCore_WriteEndCalledInInvalidState = "ODataWriterCore_WriteEndCalledInInvalidState";
         internal const string ODataWriterCore_QueryCountInRequest = "ODataWriterCore_QueryCountInRequest";
@@ -104,11 +104,10 @@ namespace Microsoft.OData {
         internal const string ODataWriterCore_EntityReferenceLinkWithoutNavigationLink = "ODataWriterCore_EntityReferenceLinkWithoutNavigationLink";
         internal const string ODataWriterCore_EntityReferenceLinkInResponse = "ODataWriterCore_EntityReferenceLinkInResponse";
         internal const string ODataWriterCore_DeferredLinkInRequest = "ODataWriterCore_DeferredLinkInRequest";
-        internal const string ODataWriterCore_MultipleItemsInNavigationLinkContent = "ODataWriterCore_MultipleItemsInNavigationLinkContent";
+        internal const string ODataWriterCore_MultipleItemsInNestedResourceInfoWithContent = "ODataWriterCore_MultipleItemsInNestedResourceInfoWithContent";
         internal const string ODataWriterCore_DeltaLinkNotSupportedOnExpandedResourceSet = "ODataWriterCore_DeltaLinkNotSupportedOnExpandedResourceSet";
         internal const string ODataWriterCore_PathInODataUriMustBeSetWhenWritingContainedElement = "ODataWriterCore_PathInODataUriMustBeSetWhenWritingContainedElement";
         internal const string DuplicatePropertyNamesNotAllowed = "DuplicatePropertyNamesNotAllowed";
-        internal const string MultipleLinksForSingleton = "MultipleLinksForSingleton";
         internal const string DuplicateAnnotationNotAllowed = "DuplicateAnnotationNotAllowed";
         internal const string DuplicateAnnotationForPropertyNotAllowed = "DuplicateAnnotationForPropertyNotAllowed";
         internal const string DuplicateAnnotationForInstanceAnnotationNotAllowed = "DuplicateAnnotationForInstanceAnnotationNotAllowed";
@@ -408,7 +407,7 @@ namespace Microsoft.OData {
         internal const string WriterValidationUtils_StreamPropertyInRequest = "WriterValidationUtils_StreamPropertyInRequest";
         internal const string WriterValidationUtils_MessageWriterSettingsServiceDocumentUriMustBeNullOrAbsolute = "WriterValidationUtils_MessageWriterSettingsServiceDocumentUriMustBeNullOrAbsolute";
         internal const string WriterValidationUtils_NavigationLinkMustSpecifyUrl = "WriterValidationUtils_NavigationLinkMustSpecifyUrl";
-        internal const string WriterValidationUtils_NavigationLinkMustSpecifyIsCollection = "WriterValidationUtils_NavigationLinkMustSpecifyIsCollection";
+        internal const string WriterValidationUtils_NestedResourceInfoMustSpecifyIsCollection = "WriterValidationUtils_NestedResourceInfoMustSpecifyIsCollection";
         internal const string WriterValidationUtils_MessageWriterSettingsJsonPaddingOnRequestMessage = "WriterValidationUtils_MessageWriterSettingsJsonPaddingOnRequestMessage";
         internal const string XmlReaderExtension_InvalidNodeInStringValue = "XmlReaderExtension_InvalidNodeInStringValue";
         internal const string XmlReaderExtension_InvalidRootNode = "XmlReaderExtension_InvalidRootNode";
@@ -514,7 +513,7 @@ namespace Microsoft.OData {
         internal const string ODataJsonLightResourceDeserializer_UnexpectedExpandedSingletonNavigationLinkPropertyAnnotation = "ODataJsonLightResourceDeserializer_UnexpectedExpandedSingletonNavigationLinkPropertyAnnotation";
         internal const string ODataJsonLightResourceDeserializer_UnexpectedExpandedCollectionNavigationLinkPropertyAnnotation = "ODataJsonLightResourceDeserializer_UnexpectedExpandedCollectionNavigationLinkPropertyAnnotation";
         internal const string ODataJsonLightResourceDeserializer_UnexpectedComplexCollectionPropertyAnnotation = "ODataJsonLightResourceDeserializer_UnexpectedComplexCollectionPropertyAnnotation";
-        internal const string ODataJsonLightResourceDeserializer_DuplicateExpandedResourceSetAnnotation = "ODataJsonLightResourceDeserializer_DuplicateExpandedResourceSetAnnotation";
+        internal const string ODataJsonLightResourceDeserializer_DuplicateNestedResourceSetAnnotation = "ODataJsonLightResourceDeserializer_DuplicateNestedResourceSetAnnotation";
         internal const string ODataJsonLightResourceDeserializer_UnexpectedPropertyAnnotationAfterExpandedResourceSet = "ODataJsonLightResourceDeserializer_UnexpectedPropertyAnnotationAfterExpandedResourceSet";
         internal const string ODataJsonLightResourceDeserializer_UnexpectedNavigationLinkInRequestPropertyAnnotation = "ODataJsonLightResourceDeserializer_UnexpectedNavigationLinkInRequestPropertyAnnotation";
         internal const string ODataJsonLightResourceDeserializer_ArrayValueForSingletonBindPropertyAnnotation = "ODataJsonLightResourceDeserializer_ArrayValueForSingletonBindPropertyAnnotation";

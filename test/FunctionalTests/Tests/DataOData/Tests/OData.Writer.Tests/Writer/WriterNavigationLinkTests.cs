@@ -156,7 +156,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                         null,
                         null
                     },
-                    ExpectedException = ODataExpectedExceptions.ODataException("ODataWriterCore_MultipleItemsInNavigationLinkContent")
+                    ExpectedException = ODataExpectedExceptions.ODataException("ODataWriterCore_MultipleItemsInNestedResourceInfoWithContent")
                 },
                 // Expanded feed in a collection
                 new NavigationLinkTestCase
@@ -200,7 +200,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                         null,
                         null
                     },
-                    ExpectedException = ODataExpectedExceptions.ODataException("ODataWriterCore_MultipleItemsInNavigationLinkContent")
+                    ExpectedException = ODataExpectedExceptions.ODataException("ODataWriterCore_MultipleItemsInNestedResourceInfoWithContent")
                 },
             };
 
@@ -287,7 +287,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                         new ODataEntityReferenceLink() { Url = new Uri("http://odata.org/singleton") },
                         null
                     },
-                    ExpectedException = ODataExpectedExceptions.ODataException("WriterValidationUtils_NavigationLinkMustSpecifyIsCollection", "BestFriend")
+                    ExpectedException = ODataExpectedExceptions.ODataException("WriterValidationUtils_NestedResourceInfoMustSpecifyIsCollection", "BestFriend")
                 },
                 // Single entity reference link in a singleton
                 new NavigationLinkTestCase
@@ -340,7 +340,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                         null,
                         null
                     },
-                    ExpectedException = ODataExpectedExceptions.ODataException("ODataWriterCore_MultipleItemsInNavigationLinkContent")
+                    ExpectedException = ODataExpectedExceptions.ODataException("ODataWriterCore_MultipleItemsInNestedResourceInfoWithContent")
                 },
                 // Expanded entry and entity reference link in a singleton
                 new NavigationLinkTestCase
@@ -352,7 +352,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                         new ODataEntityReferenceLink() { Url = new Uri("http://odata.org/singleton") },
                         null
                     },
-                    ExpectedException = ODataExpectedExceptions.ODataException("ODataWriterCore_MultipleItemsInNavigationLinkContent")
+                    ExpectedException = ODataExpectedExceptions.ODataException("ODataWriterCore_MultipleItemsInNestedResourceInfoWithContent")
                 },
                 // Expanded entry and entity reference link in a singleton
                 new NavigationLinkTestCase
@@ -364,7 +364,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                         null,
                         null
                     },
-                    ExpectedException = ODataExpectedExceptions.ODataException("ODataWriterCore_MultipleItemsInNavigationLinkContent")
+                    ExpectedException = ODataExpectedExceptions.ODataException("ODataWriterCore_MultipleItemsInNestedResourceInfoWithContent")
                 },
                 // Multiple entity reference links in a singleton
                 new NavigationLinkTestCase
@@ -375,7 +375,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                         new ODataEntityReferenceLink() { Url = new Uri("http://odata.org/singleton") },
                         null
                     },
-                    ExpectedException = ODataExpectedExceptions.ODataException("ODataWriterCore_MultipleItemsInNavigationLinkContent")
+                    ExpectedException = ODataExpectedExceptions.ODataException("ODataWriterCore_MultipleItemsInNestedResourceInfoWithContent")
                 },
 
                 // Single entity reference link in a collection
