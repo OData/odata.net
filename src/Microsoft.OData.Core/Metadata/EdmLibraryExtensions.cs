@@ -1062,7 +1062,7 @@ namespace Microsoft.OData.Metadata
         }
 
         /// <summary>
-        /// Returns the IEdmCollectionType implementation with the given IEdmType as element type.
+        /// Returns the IEdmCollectionType implementation with the given IEdmType as nullable element type.
         /// </summary>
         /// <param name="itemType">IEdmType instance which is the element type.</param>
         /// <returns>An <see cref="IEdmCollectionType"/> instance using the <paramref name="itemType"/> as Collection item type.</returns>
@@ -1070,7 +1070,7 @@ namespace Microsoft.OData.Metadata
         {
             Debug.Assert(itemType != null, "itemType != null");
 
-            IEdmTypeReference itemTypeReference = itemType.ToTypeReference();
+            IEdmTypeReference itemTypeReference = EdmLibraryExtensions.ToTypeReference(itemType, true);
             return GetCollectionType(itemTypeReference);
         }
 

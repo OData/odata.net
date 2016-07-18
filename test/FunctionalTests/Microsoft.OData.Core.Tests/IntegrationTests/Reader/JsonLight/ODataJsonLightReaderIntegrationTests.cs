@@ -76,6 +76,62 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.JsonLight
         #endregion
 
         [Fact]
+        public void ShouldReadDynamicNullableCollectionValuedProperty()
+        {
+            // setup model
+            var model = new EdmModel();
+            var entityType = new EdmEntityType("NS", "EntityType", null, false, true);
+            entityType.AddStructuralProperty("ID", EdmPrimitiveTypeKind.Int32);
+            var container = new EdmEntityContainer("NS", "Container");
+            var entitySet = container.AddEntitySet("EntitySet", entityType);
+            var complexType = new EdmComplexType("NS", "ComplexType");
+            complexType.AddStructuralProperty("Prop1", EdmPrimitiveTypeKind.Int32);
+            complexType.AddStructuralProperty("Prop2", EdmPrimitiveTypeKind.Int32);
+            model.AddElements(new IEdmSchemaElement[] { entityType, complexType, container });
+
+            const string payload
+                = "{" +
+                      "\"@odata.context\":\"http://svc/$metadata#EntitySet/$entity\"," +
+                      "\"ID\":1," +
+                      "\"DynamicPrimitive@odata.type\":\"#Collection(Int64)\"," +
+                      "\"DynamicPrimitive\":[1,2,null]," +
+                      "\"DynamicComplex@odata.type\":\"#Collection(NS.ComplexType)\"," +
+                      "\"DynamicComplex\":[{\"Prop1\":1,\"Prop2\":2},null]" +
+                  "}";
+
+            // setup reader
+            var message = new InMemoryMessage { Stream = new MemoryStream(Encoding.UTF8.GetBytes(payload)) };
+            var reader = new ODataMessageReader((IODataResponseMessage)message, new ODataMessageReaderSettings(), model)
+                         .CreateODataResourceReader(entitySet, entityType);
+
+            // read payload
+            ODataResource resource;
+            var count = 0;
+            while (reader.Read())
+            {
+                if (reader.State == ODataReaderState.ResourceEnd)
+                {
+                    resource = (ODataResource)reader.Item;
+                    switch (++count)
+                    {
+                        case 2:
+                            resource.Should().Be(null);
+                            break;
+                        case 3:
+                            var enumerator = ((ODataCollectionValue)(resource.Properties.Skip(1).Single().Value)).Items.GetEnumerator();
+                            enumerator.MoveNext();
+                            enumerator.Current.Should().Be(1L);
+                            enumerator.MoveNext();
+                            enumerator.Current.Should().Be(2L);
+                            enumerator.MoveNext();
+                            enumerator.Current.Should().Be(null);
+                            break;
+                    }
+                }
+            }
+        }
+
+        [Fact]
         public void ShouldBeAbleToReadTransientEntryInFullMetadataLevel()
         {
             const string payload = "{" + ContextUrl + ",\"@odata.id\":null}";
