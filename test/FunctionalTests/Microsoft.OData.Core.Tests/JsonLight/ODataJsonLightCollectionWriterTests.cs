@@ -143,7 +143,7 @@ namespace Microsoft.OData.Core.Tests.JsonLight
             };
             var writer = new ODataMessageWriter((IODataResponseMessage)message, settings, model)
                          .CreateODataEntryWriter(entitySet, entityType);
-           
+
             // write payload
             writer.WriteStart(new ODataEntry
             {
