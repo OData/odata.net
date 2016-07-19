@@ -421,16 +421,6 @@ namespace Microsoft.OData.Core
         }
 
         /// <summary>
-        /// Adds quotes around the given text value.
-        /// </summary>
-        /// <param name="text">text to quote.</param>
-        /// <returns>Returns the quoted text.</returns>
-        private static string AddQuotes(string text)
-        {
-            return "\"" + text + "\"";
-        }
-
-        /// <summary>
         /// Clears the <paramref name="preference"/> from the "Prefer" header on the underlying IODataRequestMessage or
         /// the "Preference-Applied" header on the underlying IODataResponseMessage.
         /// </summary>
@@ -476,6 +466,16 @@ namespace Microsoft.OData.Core
             }
 
             return value;
+        }
+
+        /// <summary>
+        /// Adds quotes around the given text value.
+        /// </summary>
+        /// <param name="text">text to quote.</param>
+        /// <returns>Returns the quoted text.</returns>
+        private static string AddQuotes(string text)
+        {
+            return "\"" + text + "\"";
         }
 
         /// <summary>
