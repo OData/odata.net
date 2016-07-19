@@ -96,7 +96,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.JsonLight
                       "\"DynamicPrimitive@odata.type\":\"#Collection(Int64)\"," +
                       "\"DynamicPrimitive\":[1,2,null]," +
                       "\"DynamicComplex@odata.type\":\"#Collection(NS.ComplexType)\"," +
-                      "\"DynamicComplex\":[{\"Prop1\":1,\"Prop2\":2},null]" +
+                      "\"DynamicComplex\":[null,{\"Prop1\":1,\"Prop2\":2}]" +
                   "}";
 
             // setup reader
@@ -114,7 +114,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.JsonLight
                     resource = (ODataResource)reader.Item;
                     switch (++count)
                     {
-                        case 2:
+                        case 1:
                             resource.Should().Be(null);
                             break;
                         case 3:

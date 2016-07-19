@@ -54,8 +54,10 @@ namespace Microsoft.OData.JsonLight
 
             this.JsonReader.ReadStartArray();
 
-            if (this.JsonReader.NodeType != JsonNodeType.EndArray && this.JsonReader.NodeType != JsonNodeType.StartObject)
+            if (this.JsonReader.NodeType != JsonNodeType.EndArray && this.JsonReader.NodeType != JsonNodeType.StartObject
+                && !(this.JsonReader.NodeType == JsonNodeType.PrimitiveValue && this.JsonReader.Value == null))
             {
+                // TODO: Update error message after 7.0
                 throw new ODataException(ODataErrorStrings.ODataJsonLightResourceDeserializer_InvalidNodeTypeForItemsInResourceSet(this.JsonReader.NodeType));
             }
 

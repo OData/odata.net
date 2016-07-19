@@ -563,6 +563,7 @@ namespace Microsoft.OData.JsonLight
                 // we are at the beginning of a resource
                 // The expected type for a resource in the resource set is the same as for the resource set itself.
                 case JsonNodeType.StartObject:
+                case JsonNodeType.PrimitiveValue:
                     // First resource in the resource set
                     this.ReadResourceStart(/*propertyAndAnnotationCollector*/ null, this.CurrentJsonLightResourceSetScope.SelectedProperties);
                     break;
@@ -1003,7 +1004,7 @@ namespace Microsoft.OData.JsonLight
             this.jsonLightResourceDeserializer.ReadResourceSetContentStart();
             this.EnterScope(new JsonLightResourceSetScope(resourceSet, this.CurrentNavigationSource, this.CurrentResourceType, selectedProperties, this.CurrentScope.ODataUri));
 
-            this.jsonLightResourceDeserializer.AssertJsonCondition(JsonNodeType.EndArray, JsonNodeType.StartObject);
+            this.jsonLightResourceDeserializer.AssertJsonCondition(JsonNodeType.EndArray, JsonNodeType.StartObject, JsonNodeType.PrimitiveValue);
         }
 
         /// <summary>
