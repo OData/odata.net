@@ -1218,7 +1218,7 @@ namespace Microsoft.OData.UriParser
                     // May need match type if the binding path contains type cast.
                     if (pathIndex >= 0 && paths[pathIndex].Contains("."))
                     {
-                        if (string.CompareOrdinal(paths[pathIndex], segment.EdmType.FullTypeName()) != 0)
+                        if (string.CompareOrdinal(paths[pathIndex], segment.EdmType.AsElementType().FullTypeName()) != 0)
                         {
                             return false;
                         }

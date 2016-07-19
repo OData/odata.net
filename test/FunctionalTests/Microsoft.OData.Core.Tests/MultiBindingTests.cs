@@ -289,6 +289,22 @@ namespace Microsoft.OData.Tests
         }
         #endregion
 
+        #region Uri parser
+
+        [Fact]
+        public void ParseDerivedBinding()
+        {
+            Uri uri = new Uri(@"http://host/EntitySet/NS.DerivedEntityType('abc')/Nav");
+            var path = new ODataUriParser(GetDerivedModel(), ServiceRoot, uri).ParsePath().ToList();
+            path[3].TargetEdmNavigationSource.Name.Should().Be("NavEntitySet");
+
+            uri = new Uri(@"http://host/EntitySet('abc')/NS.DerivedEntityType/Nav");
+            path = new ODataUriParser(GetDerivedModel(), ServiceRoot, uri).ParsePath().ToList();
+            path[3].TargetEdmNavigationSource.Name.Should().Be("NavEntitySet");
+        }
+
+        #endregion
+
         #region Help Method
         private static string WriteJsonLightEntry(IEdmModel model, IEdmEntitySet entitySet, Action<ODataWriter> writeAction, bool isFullMetadata = false)
         {
@@ -445,6 +461,44 @@ namespace Microsoft.OData.Tests
             entityContainer.AddElement(entitySet);
             entityContainer.AddElement(navEntitySet1);
             entityContainer.AddElement(navEntitySet2);
+
+            return model;
+        }
+
+        private static IEdmModel GetDerivedModel()
+        {
+            var model = new EdmModel();
+
+            var entityType = new EdmEntityType("NS", "EntityType");
+            var id = entityType.AddStructuralProperty("ID", EdmCoreModel.Instance.GetString(false));
+            entityType.AddKeys(id);
+
+            var derivedEntityType = new EdmEntityType("NS", "DerivedEntityType", entityType);
+
+            var navEntityType = new EdmEntityType("NS", "NavEntityType");
+            var navEntityId = navEntityType.AddStructuralProperty("ID", EdmCoreModel.Instance.GetString(false));
+            navEntityType.AddKeys(navEntityId);
+
+            var nav = derivedEntityType.AddUnidirectionalNavigation(new EdmNavigationPropertyInfo()
+            {
+                Name = "Nav",
+                Target = navEntityType,
+                TargetMultiplicity = EdmMultiplicity.Many,
+            });
+
+            model.AddElement(entityType);
+            model.AddElement(derivedEntityType);
+            model.AddElement(navEntityType);
+
+            var entityContainer = new EdmEntityContainer("NS", "Container");
+            model.AddElement(entityContainer);
+            var entitySet = new EdmEntitySet(entityContainer, "EntitySet", entityType);
+            var navEntitySet = new EdmEntitySet(entityContainer, "NavEntitySet", navEntityType);
+
+            entitySet.AddNavigationTarget(nav, navEntitySet);
+
+            entityContainer.AddElement(entitySet);
+            entityContainer.AddElement(navEntitySet);
 
             return model;
         }
