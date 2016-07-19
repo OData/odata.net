@@ -195,7 +195,7 @@ namespace Microsoft.OData.Tests.Query
             dateValue.Should().Be(new Date(1997, 7, 1));
 
             DateTimeOffset dtoValue1 = (DateTimeOffset)ODataUriUtils.ConvertFromUriLiteral("1997-07-01", ODataVersion.V4, HardCodedTestModel.TestModel, EdmCoreModel.Instance.GetDateTimeOffset(false));
-            dtoValue1.Should().Be(new DateTimeOffset(new DateTime(1997, 7, 1)));
+            dtoValue1.Should().Be(new DateTimeOffset(1997, 7, 1, 0, 0, 0, new TimeSpan(0)));
 
             var dtoValue2 = ODataUriUtils.ConvertFromUriLiteral("1997-07-01", ODataVersion.V4);
             dtoValue2.Should().Be(new Date(1997, 7, 1));

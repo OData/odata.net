@@ -549,6 +549,7 @@ namespace Microsoft.OData.UriParser
             }
 
             int result = applicableSignatures.Count;
+
             if (result == 1)
             {
                 FunctionSignature signature = applicableSignatures[0];
@@ -557,32 +558,25 @@ namespace Microsoft.OData.UriParser
                     argumentTypes[i] = signature.ArgumentTypes[i];
                 }
 
-                result = 1;
+                return result;
             }
-            else if (result > 1)
+
+            if (result == 2)
             {
                 // We may have the case for operators (which C# doesn't) in which we have a nullable operand
                 // and a non-nullable operand. We choose to convert the one non-null operand to nullable in that
                 // case (the binary expression will lift to null).
-                if (argumentTypes.Length == 2 && result == 2)
+                if (argumentTypes.Length == 2 &&
+                    applicableSignatures[0].ArgumentTypes[0].Definition.IsEquivalentTo(applicableSignatures[1].ArgumentTypes[0].Definition) &&
+                    applicableSignatures[0].ArgumentTypes[1].Definition.IsEquivalentTo(applicableSignatures[1].ArgumentTypes[1].Definition))
                 {
-                    if (applicableSignatures[0].ArgumentTypes[0].Definition.IsEquivalentTo(applicableSignatures[1].ArgumentTypes[0].Definition))
-                    {
-                        FunctionSignature nullableMethod =
-                            applicableSignatures[0].ArgumentTypes[0].IsNullable ?
-                            applicableSignatures[0] :
-                            applicableSignatures[1];
-                        argumentTypes[0] = nullableMethod.ArgumentTypes[0];
-                        argumentTypes[1] = nullableMethod.ArgumentTypes[1];
+                    FunctionSignature nullableMethod = applicableSignatures[0].ArgumentTypes[0].IsNullable
+                        ? applicableSignatures[0]
+                        : applicableSignatures[1];
+                    argumentTypes[0] = nullableMethod.ArgumentTypes[0];
+                    argumentTypes[1] = nullableMethod.ArgumentTypes[1];
 
-                        // TODO: why is this necessary? We keep it here for now since the product has it but assert
-                        //       that nothing new was found.
-                        int signatureCount = FindBestSignature(signatures, argumentNodes, argumentTypes);
-                        Debug.Assert(signatureCount == 1, "signatureCount == 1");
-                        Debug.Assert(argumentTypes[0] == nullableMethod.ArgumentTypes[0], "argumentTypes[0] == nullableMethod.ArgumentTypes[0]");
-                        Debug.Assert(argumentTypes[1] == nullableMethod.ArgumentTypes[1], "argumentTypes[1] == nullableMethod.ArgumentTypes[1]");
-                        return signatureCount;
-                    }
+                    return 1;
                 }
             }
 
