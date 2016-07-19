@@ -554,7 +554,7 @@ namespace Microsoft.OData.Core.UriParser
             }
 
             throw new ODataException(Strings.QueryOptionUtils_QueryParameterMustBeSpecifiedOnce(
-                isNoDollarQueryOptionsEnabled ? string.Format(CultureInfo.InvariantCulture, "${0}/{0}", noDollarQueryOptionName ?? string.Empty) : trimmedQueryOptionName));
+                isNoDollarQueryOptionsEnabled ? string.Format(CultureInfo.InvariantCulture, "${0}/{0}", noDollarQueryOptionName ?? trimmedQueryOptionName) : trimmedQueryOptionName));
         }
         #endregion private methods
     }

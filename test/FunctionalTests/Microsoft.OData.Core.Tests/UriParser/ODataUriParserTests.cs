@@ -437,7 +437,7 @@ namespace Microsoft.OData.Core.Tests.UriParser
             if (shouldThrow)
             {
                 action.ShouldThrow<ODataException>().WithMessage(Strings.QueryOptionUtils_QueryParameterMustBeSpecifiedOnce(
-                    enableNoDollarQueryOptions ? string.Format(CultureInfo.InvariantCulture, "${0}/{0}", queryOptionName ?? string.Empty) : queryOptionName));
+                    enableNoDollarQueryOptions ? string.Format(CultureInfo.InvariantCulture, "${0}/{0}", queryOptionName) : queryOptionName));
             }
             else
             {
