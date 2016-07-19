@@ -46,7 +46,7 @@ namespace Microsoft.OData.Tests.UriParser.Visitors
         public void CollectionNavigationNotImplemented()
         {
             FakeVisitor visitor = new FakeVisitor();
-            Action visitCollectionNavigationNode = () => visitor.Visit(new CollectionNavigationNode(ModelBuildingHelpers.BuildCollectionNavigationProperty(), HardCodedTestModel.GetPeopleSet()));
+            Action visitCollectionNavigationNode = () => visitor.Visit(new CollectionNavigationNode(HardCodedTestModel.GetPeopleSet(), ModelBuildingHelpers.BuildCollectionNavigationProperty(), new EdmPathExpression("Reference")));
             visitCollectionNavigationNode.ShouldThrow<NotImplementedException>();
         }
 
@@ -113,7 +113,7 @@ namespace Microsoft.OData.Tests.UriParser.Visitors
         public void SingleNavigationNodeNotImplemented()
         {
             FakeVisitor visitor = new FakeVisitor();
-            Action visitSingleNavigationNode = () => visitor.Visit(new SingleNavigationNode(ModelBuildingHelpers.BuildValidNavigationProperty(), HardCodedTestModel.GetPeopleSet()));
+            Action visitSingleNavigationNode = () => visitor.Visit(new SingleNavigationNode(HardCodedTestModel.GetPeopleSet(), ModelBuildingHelpers.BuildValidNavigationProperty(), new EdmPathExpression("Reference")));
             visitSingleNavigationNode.ShouldThrow<NotImplementedException>();
         }
 

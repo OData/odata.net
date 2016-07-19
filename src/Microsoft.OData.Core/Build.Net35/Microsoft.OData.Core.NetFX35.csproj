@@ -1572,6 +1572,9 @@
     <Compile Include="..\UnknownEntitySet.cs">
       <Link>Microsoft\OData\Core\UnknownEntitySet.cs</Link>
     </Compile>
+    <Compile Include="..\UriParser\BindingPathHelper.cs">
+      <Link>Microsoft\OData\Core\UriParser\BindingPathHelper.cs</Link>
+    </Compile>
     <Compile Include="..\UriParser\BuiltInUriFunctions.cs">
       <Link>Microsoft\OData\Core\UriParser\BuiltInUriFunctions.cs</Link>
     </Compile>
@@ -1580,6 +1583,9 @@
     </Compile>
     <Compile Include="..\UriParser\FunctionSignatureWithReturnType.cs">
       <Link>Microsoft\OData\Core\UriParser\FunctionSignatureWithReturnType.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\ODataPathInfo.cs">
+      <Link>Microsoft\OData\Core\UriParser\ODataPathInfo.cs</Link>
     </Compile>
     <Compile Include="..\UriParser\ParseDynamicPathSegment.cs">
       <Link>Microsoft\OData\Core\UriParser\ParseDynamicPathSegment.cs</Link>

@@ -184,20 +184,23 @@ namespace Microsoft.OData.Service.Providers
 
         public IEnumerable<IEdmNavigationPropertyBinding> FindNavigationPropertyBindings(IEdmNavigationProperty navigationProperty)
         {
+            FindNavigationTarget(navigationProperty);
             if (this.navigationTargetMapping != null)
             {
+                List<IEdmNavigationPropertyBinding> bindings = new List<IEdmNavigationPropertyBinding>();
+
                 foreach (var mapping in this.navigationTargetMapping)
                 {
                     if (mapping.Key == navigationProperty)
                     {
-                        yield return new EdmNavigationPropertyBinding(mapping.Key, mapping.Value);
+                        bindings.Add(new EdmNavigationPropertyBinding(mapping.Key, mapping.Value));
                     }
                 }
+
+                return bindings;
             }
-            else
-            {
-                yield break;
-            }
+
+            return null;
         }
 
         /// <summary>

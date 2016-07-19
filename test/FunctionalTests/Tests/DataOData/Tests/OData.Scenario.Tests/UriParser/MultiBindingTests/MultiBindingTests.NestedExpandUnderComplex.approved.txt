@@ -1,0 +1,17 @@
+$select = 
+$expand = complexProp1/CollectionOfNavOnComplex($expand=NavNested)
+
+
+SelectExpandQueryOption
+	AllSelected = True
+	SelectedItems
+		Expanded Navigation Property
+			Path[(Property: complexProp1)/(NavigationProperty: CollectionOfNavOnComplex)]
+			SelectExpandQueryOption
+				AllSelected = True
+				SelectedItems
+					Expanded Navigation Property
+						Path[(NavigationProperty: NavNested)]
+						SelectExpandQueryOption
+							AllSelected = True
+							SelectedItems(Empty List)

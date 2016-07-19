@@ -42,12 +42,6 @@ namespace Microsoft.OData.UriParser
         /// <summary>Parser for query option.</summary>
         private ODataQueryOptionParser queryOptionParser;
 
-        /// <summary>Target Edm type. </summary>
-        private IEdmType targetEdmType;
-
-        /// <summary>Target Edm navigation source. </summary>
-        private IEdmNavigationSource targetNavigationSource;
-
         /// <summary>OData Path.</summary>
         private ODataPath odataPath;
 
@@ -478,7 +472,7 @@ namespace Microsoft.OData.UriParser
         }
 
         /// <summary>
-        /// Initialize a UriParser. We have to initialize UriParser seperately for parsing path, because we may set BatchReferenceCallback before ParsePath.
+        /// Initialize a UriParser. We have to initialize UriParser separately for parsing path, because we may set BatchReferenceCallback before ParsePath.
         /// </summary>
         private void Initialize()
         {
@@ -494,38 +488,10 @@ namespace Microsoft.OData.UriParser
             }
 
             this.odataPath = this.ParsePathImplementation();
-            ODataPathSegment lastSegment = this.odataPath.LastSegment;
-            ODataPathSegment previous = null;
-            var segs = odataPath.GetEnumerator();
-            int count = 0;
-            while (++count < odataPath.Count && segs.MoveNext())
-            {
-            }
-
-            previous = segs.Current;
-            if (lastSegment != null)
-            {
-                // use previous segment if the last one is Key or Count Segment
-                if (lastSegment is KeySegment || lastSegment is CountSegment)
-                {
-                    lastSegment = previous;
-                }
-
-                this.targetNavigationSource = lastSegment.TargetEdmNavigationSource;
-                this.targetEdmType = lastSegment.TargetEdmType;
-                if (this.targetEdmType != null)
-                {
-                    IEdmCollectionType collectionType = this.targetEdmType as IEdmCollectionType;
-                    if (collectionType != null)
-                    {
-                        this.targetEdmType = collectionType.ElementType.Definition;
-                    }
-                }
-            }
 
             InitQueryOptionDic();
 
-            this.queryOptionParser = new ODataQueryOptionParser(this.Model, this.targetEdmType, this.targetNavigationSource, queryOptionDic)
+            this.queryOptionParser = new ODataQueryOptionParser(this.Model, this.odataPath, queryOptionDic)
             {
                 Configuration = this.configuration
             };

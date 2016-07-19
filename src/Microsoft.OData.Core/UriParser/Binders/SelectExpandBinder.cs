@@ -37,19 +37,19 @@ namespace Microsoft.OData.UriParser
         private readonly IEdmStructuredType edmType;
 
         /// <summary>
-        /// Build the ExpandOption variant of an SelectExpandBinder
+        /// The segments parsed in path and query option.
         /// </summary>
-        /// <param name="configuration">The configuration used for binding.</param>
-        /// <param name="edmType">The type of the top level expand item.</param>
-        /// <param name="navigationSource">The navigation source of the top level expand item.</param>
-        public SelectExpandBinder(ODataUriParserConfiguration configuration, IEdmStructuredType edmType, IEdmNavigationSource navigationSource)
+        private List<ODataPathSegment> parsedSegments = new List<ODataPathSegment>();
+
+        public SelectExpandBinder(ODataUriParserConfiguration configuration, ODataPathInfo odataPathInfo)
         {
             ExceptionUtils.CheckArgumentNotNull(configuration, "configuration");
-            ExceptionUtils.CheckArgumentNotNull(edmType, "edmType");
+            ExceptionUtils.CheckArgumentNotNull(odataPathInfo.TargetStructuredType, "edmType");
 
             this.configuration = configuration;
-            this.edmType = edmType;
-            this.navigationSource = navigationSource;
+            this.edmType = odataPathInfo.TargetStructuredType;
+            this.navigationSource = odataPathInfo.TargetNavigationSource;
+            this.parsedSegments = odataPathInfo.Segments.ToList();
         }
 
         /// <summary>
@@ -141,12 +141,11 @@ namespace Microsoft.OData.UriParser
         /// <summary>
         /// Generate a SubExpand based on the current nav property and the curren token
         /// </summary>
-        /// <param name="currentNavProp">the current navigation property</param>
         /// <param name="tokenIn">the current token</param>
         /// <returns>a new SelectExpand clause bound to the current token and nav prop</returns>
-        private SelectExpandClause GenerateSubExpand(IEdmNavigationProperty currentNavProp, ExpandTermToken tokenIn)
+        private SelectExpandClause GenerateSubExpand(ExpandTermToken tokenIn)
         {
-            SelectExpandBinder nextLevelBinder = new SelectExpandBinder(this.Configuration, currentNavProp.ToEntityType(), this.NavigationSource != null ? this.NavigationSource.FindNavigationTarget(currentNavProp) : null);
+            SelectExpandBinder nextLevelBinder = new SelectExpandBinder(this.Configuration, new ODataPathInfo(new ODataPath(this.parsedSegments)));
             return nextLevelBinder.BindSubLevel(tokenIn.ExpandOption);
         }
 
@@ -230,14 +229,19 @@ namespace Microsoft.OData.UriParser
                 }
             }
 
-            pathSoFar.Add(new NavigationPropertySegment(currentNavProp, /*entitySet*/null));
-            ODataExpandPath pathToNavProp = new ODataExpandPath(pathSoFar);
+            // Add the segments in select and expand to parsed segments
+            this.parsedSegments.AddRange(pathSoFar);
 
             IEdmNavigationSource targetNavigationSource = null;
             if (this.NavigationSource != null)
             {
-                targetNavigationSource = this.NavigationSource.FindNavigationTarget(currentNavProp);
+                targetNavigationSource = this.NavigationSource.FindNavigationTarget(currentNavProp, BindingPathHelper.MatchBindingPath, this.parsedSegments);
             }
+
+            NavigationPropertySegment navSegment = new NavigationPropertySegment(currentNavProp, targetNavigationSource);
+            pathSoFar.Add(navSegment);
+            this.parsedSegments.Add(navSegment);   // Add the navigation property segment to parsed segments for future usage.
+            ODataExpandPath pathToNavProp = new ODataExpandPath(pathSoFar);
 
             // call MetadataBinder to build the filter clause
             FilterClause filterOption = null;
@@ -273,7 +277,7 @@ namespace Microsoft.OData.UriParser
             SelectExpandClause subSelectExpand;
             if (tokenIn.ExpandOption != null)
             {
-                subSelectExpand = this.GenerateSubExpand(currentNavProp, tokenIn);
+                subSelectExpand = this.GenerateSubExpand(tokenIn);
             }
             else
             {

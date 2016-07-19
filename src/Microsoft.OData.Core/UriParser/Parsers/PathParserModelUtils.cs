@@ -42,16 +42,17 @@ namespace Microsoft.OData.UriParser
             if (operationImport.Operation.IsBound && operationImport.Operation.Parameters.Any())
             {
                 IEdmOperationParameter parameter;
-                IEnumerable<IEdmNavigationProperty> path;
+                Dictionary<IEdmNavigationProperty, IEdmPathExpression> path;
                 IEnumerable<EdmError> errors;
 
                 if (operationImport.TryGetRelativeEntitySetPath(model, out parameter, out path, out errors))
                 {
                     IEdmEntitySetBase currentEntitySet = sourceEntitySet;
+
                     foreach (var navigation in path)
                     {
-                        currentEntitySet = currentEntitySet.FindNavigationTarget(navigation) as IEdmEntitySetBase;
-                        if (currentEntitySet == null || currentEntitySet is IEdmUnknownEntitySet)
+                        currentEntitySet = currentEntitySet.FindNavigationTarget(navigation.Key, navigation.Value) as IEdmEntitySetBase;
+                        if (currentEntitySet is IEdmUnknownEntitySet)
                         {
                             return currentEntitySet;
                         }
@@ -89,20 +90,17 @@ namespace Microsoft.OData.UriParser
             if (operation.IsBound && operation.Parameters.Any())
             {
                 IEdmOperationParameter parameter;
-                IEnumerable<IEdmNavigationProperty> path;
+                Dictionary<IEdmNavigationProperty, IEdmPathExpression> path;
                 IEdmEntityType lastEntityType;
                 IEnumerable<EdmError> errors;
 
                 if (operation.TryGetRelativeEntitySetPath(model, out parameter, out path, out lastEntityType, out errors))
                 {
                     IEdmNavigationSource target = source;
+
                     foreach (var navigation in path)
                     {
-                        target = target.FindNavigationTarget(navigation);
-                        if (target == null)
-                        {
-                            return null;
-                        }
+                        target = target.FindNavigationTarget(navigation.Key, navigation.Value);
                     }
 
                     return target as IEdmEntitySetBase;

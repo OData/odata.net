@@ -82,8 +82,9 @@ namespace Microsoft.OData.UriParser
         /// <param name="namedValues">Named values (key values) that were included in the node we are binding, if any.</param>
         /// <param name="state">State of binding.</param>
         /// <param name="keyBinder">Object to perform binding on any key values that are present.</param>
+        /// <param name="navigationSource">The navigation source of the navigation node.</param>
         /// <returns>A new CollectionNavigationNode or SingleNavigationNode to capture the navigation propety access.</returns>
-        internal static QueryNode GetNavigationNode(IEdmNavigationProperty property, SingleEntityNode parent, IEnumerable<NamedValue> namedValues, BindingState state, KeyBinder keyBinder)
+        internal static QueryNode GetNavigationNode(IEdmNavigationProperty property, SingleEntityNode parent, IEnumerable<NamedValue> namedValues, BindingState state, KeyBinder keyBinder, out IEdmNavigationSource navigationSource)
         {
             ExceptionUtils.CheckArgumentNotNull(property, "property");
             ExceptionUtils.CheckArgumentNotNull(parent, "parent");
@@ -93,7 +94,8 @@ namespace Microsoft.OData.UriParser
             // Handle collection navigation property
             if (property.TargetMultiplicity() == EdmMultiplicity.Many)
             {
-                CollectionNavigationNode collectionNavigationNode = new CollectionNavigationNode(property, parent);
+                CollectionNavigationNode collectionNavigationNode = new CollectionNavigationNode(parent, property, state.ParsedSegments);
+                navigationSource = collectionNavigationNode.NavigationSource;
 
                 // Doing key lookup on the collection navigation property
                 if (namedValues != null)
@@ -105,10 +107,12 @@ namespace Microsoft.OData.UriParser
                 return collectionNavigationNode;
             }
 
-            Debug.Assert(namedValues == null || !namedValues.Any(), "namedValues should not exist if it isn't a colleciton");
+            Debug.Assert(namedValues == null || !namedValues.Any(), "namedValues should not exist if it isn't a collection");
 
             // Otherwise it's a single navigation property
-            return new SingleNavigationNode(property, parent);
+            SingleNavigationNode singleNavigationNode = new SingleNavigationNode(parent, property, state.ParsedSegments);
+            navigationSource = singleNavigationNode.NavigationSource;
+            return singleNavigationNode;
         }
 
         /// <summary>
@@ -158,14 +162,23 @@ namespace Microsoft.OData.UriParser
                 return new SingleValueOpenPropertyAccessNode(singleValueParent, segmentToken.Identifier);
             }
 
+            IEdmStructuralProperty structuralProperty = property as IEdmStructuralProperty;
             if (property.Type.IsODataComplexTypeKind())
             {
+                // Generate a segment to parsed segments for the parsed token
+                state.ParsedSegments.Add(new PropertySegment(structuralProperty));
                 return new SingleValuePropertyAccessNode(singleValueParent, property);
             }
 
             // Note - this means nonentity collection (primitive or complex)
             if (property.Type.IsNonEntityCollectionType())
             {
+                if (property.Type.IsStructuredCollectionType())
+                {
+                    // Generate a segment to parsed segments for the parsed token
+                    state.ParsedSegments.Add(new PropertySegment(structuralProperty));
+                }
+
                 return new CollectionPropertyAccessNode(singleValueParent, property);
             }
 
@@ -177,7 +190,12 @@ namespace Microsoft.OData.UriParser
 
             SingleEntityNode parentEntity = EnsureParentIsEntityForNavProp(singleValueParent);
 
-            return GetNavigationNode(navigationProperty, parentEntity, segmentToken.NamedValues, state, new KeyBinder(this.bindMethod));
+            IEdmNavigationSource navigationSource;
+            QueryNode node = GetNavigationNode(navigationProperty, parentEntity, segmentToken.NamedValues, state, new KeyBinder(this.bindMethod), out navigationSource);
+
+            // Generate a segment to parsed segments for the parsed token
+            state.ParsedSegments.Add(new NavigationPropertySegment(navigationProperty, navigationSource));
+            return node;
         }
 
         /// <summary>

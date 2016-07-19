@@ -12,7 +12,7 @@ namespace Microsoft.OData.UriParser
     using ODataErrorStrings = Microsoft.OData.Strings;
 
     /// <summary>
-    /// A specific type of <see cref="ODataPath"/> which can only contain instances of <see cref="TypeSegment"/> or <see cref="NavigationPropertySegment"/>.
+    /// A specific type of <see cref="ODataPath"/> which can only contain instances of <see cref="TypeSegment"/> or <see cref="NavigationPropertySegment"/> or <see cref="PropertySegment"/> of complex.
     /// </summary>
     [SuppressMessage("Microsoft.Naming", "CA1710:IdentifiersShouldHaveCorrectSuffix", Justification = "ODataExpandPathCollection just doesn't sound right")]
     public class ODataExpandPath : ODataPath

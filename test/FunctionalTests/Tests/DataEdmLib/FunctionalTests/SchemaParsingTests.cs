@@ -1619,7 +1619,7 @@ namespace EdmLibTests.FunctionalTests
             Assert.AreEqual(EdmTypeKind.Entity, operationImports[0].Operation.Parameters.Single().Type.AsCollection().ElementType().TypeKind(), "operationImports[0] parameter type");
             IEdmEntitySetBase eset;
             IEdmOperationParameter p;
-            IEnumerable<IEdmNavigationProperty> np;
+            Dictionary<IEdmNavigationProperty, IEdmPathExpression> np;
             IEnumerable<EdmError> entitySetPathErrors;
             Assert.IsTrue(operationImports[0].TryGetStaticEntitySet(model, out eset), "operationImports[0].TryGetStaticEntitySet");
             Assert.IsFalse(operationImports[0].TryGetRelativeEntitySetPath(model, out p, out np, out entitySetPathErrors), "operationImports[0].TryGetRelativeEntitySetPath");

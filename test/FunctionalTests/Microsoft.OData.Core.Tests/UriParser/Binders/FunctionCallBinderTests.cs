@@ -265,7 +265,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
             List<QueryNode> argumentNodes =
                 new List<QueryNode>()
                 {
-                    new CollectionNavigationNode(HardCodedTestModel.GetDogMyPeopleNavProp(), HardCodedTestModel.GetDogsSet())
+                    new CollectionNavigationNode(HardCodedTestModel.GetDogsSet(), HardCodedTestModel.GetDogMyPeopleNavProp(), new EdmPathExpression("MyDog"))
                 };
 
             Action bind = () => FunctionCallBinder.ValidateArgumentsAreSingleValue("year", argumentNodes);

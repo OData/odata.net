@@ -50,7 +50,7 @@ namespace Microsoft.OData.Edm
                 throw new ArgumentException(Strings.PathSegmentMustNotContainSlash);
             }
 
-            this.pathSegments = pathSegments;
+            this.pathSegments = pathSegments.ToList();
         }
 
         /// <summary>

@@ -1377,7 +1377,7 @@ namespace Microsoft.OData.Edm.Validation
 
                             IEdmEntitySetBase entitySet;
                             IEdmOperationParameter parameter;
-                            IEnumerable<IEdmNavigationProperty> path;
+                            Dictionary<IEdmNavigationProperty, IEdmPathExpression> path;
                             IEnumerable<EdmError> errors;
                             if (operationImport.TryGetStaticEntitySet(context.Model, out entitySet))
                             {
@@ -1397,8 +1397,8 @@ namespace Microsoft.OData.Edm.Validation
                             }
                             else if (operationImport.TryGetRelativeEntitySetPath(context.Model, out parameter, out path, out errors))
                             {
-                                List<IEdmNavigationProperty> pathList = path.ToList();
-                                IEdmTypeReference relativePathType = pathList.Count == 0 ? parameter.Type : path.Last().Type;
+                                List<IEdmNavigationProperty> pathList = path.Select(s => s.Key).ToList();
+                                IEdmTypeReference relativePathType = pathList.Count == 0 ? parameter.Type : path.Last().Key.Type;
                                 IEdmTypeReference relativePathElementType = relativePathType.IsCollection() ? relativePathType.AsCollection().ElementType() : relativePathType;
                                 if (!returnedEntityType.IsOrInheritsFrom(relativePathElementType.Definition) && !context.IsBad(returnedEntityType) && !context.IsBad(relativePathElementType.Definition))
                                 {
@@ -1533,7 +1533,7 @@ namespace Microsoft.OData.Edm.Validation
             new ValidationRule<IEdmOperation>((context, operation) =>
             {
                 IEdmOperationParameter bindingParameter = null;
-                IEnumerable<IEdmNavigationProperty> navProps = null;
+                Dictionary<IEdmNavigationProperty, IEdmPathExpression> navProps = null;
                 IEdmEntityType lastEntityType = null;
                 IEnumerable<EdmError> errors = null;
 
@@ -1552,7 +1552,7 @@ namespace Microsoft.OData.Edm.Validation
            new ValidationRule<IEdmOperation>((context, operation) =>
            {
                IEdmOperationParameter bindingParameter = null;
-               IEnumerable<IEdmNavigationProperty> navProps = null;
+               Dictionary<IEdmNavigationProperty, IEdmPathExpression> navProps = null;
                IEdmEntityType lastEntityType = null;
                IEnumerable<EdmError> errors = null;
 
@@ -1585,7 +1585,7 @@ namespace Microsoft.OData.Edm.Validation
                    IEdmNavigationProperty navProp = null;
                    if (navProps != null)
                    {
-                       navProp = navProps.LastOrDefault();
+                       navProp = navProps.LastOrDefault().Key;
                    }
 
                    if (navProp != null && navProp.TargetMultiplicity() == EdmMultiplicity.Many)

@@ -458,15 +458,5 @@ namespace Microsoft.Test.Taupo.OData.Scenario.Tests.UriParser.Filter
                 "NOW() le maxdatetime() AND now() gT mindatetime()",
                 "now() le maxdatetime() and now() gt mindatetime()");
         }
-
-        private void TestAllInOneExtensionFilter(Uri baseUri, string filter, string origFilter)
-        {
-            this.TestExtension(
-                this.CreateFilterUriParser(baseUri, filter),
-                new AllInOneResolver() { EnableCaseInsensitive = true },
-                parser => parser.ParseFilter(),
-                clause => QueryNodeToStringVisitor.GetTestCaseAndResultString(clause, origFilter),
-                this.ApprovalVerify);
-        }
     }
 }

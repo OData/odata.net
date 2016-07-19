@@ -753,7 +753,7 @@ namespace Microsoft.OData.Service.Parsing
 
             ResourceType currentResourceType = MetadataProviderUtils.GetResourceType(edmProperty.DeclaringType);
             ResourceProperty property = ((IResourcePropertyBasedEdmProperty)edmProperty).ResourceProperty;
-            ResourceSetWrapper container = navigationSource != null ? ((IResourceSetBasedEdmEntitySet)navigationSource).ResourceSet : null;
+            ResourceSetWrapper container = (navigationSource != null && !(navigationSource is IEdmUnknownEntitySet)) ? ((IResourceSetBasedEdmEntitySet)navigationSource).ResourceSet : null;
 
             Debug.Assert(currentResourceType != null, "currentResourceType != null");
             Debug.Assert(property != null, "property != null");

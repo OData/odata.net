@@ -556,11 +556,11 @@ namespace AstoriaUnitTests.TDD.Tests.Server.Parsing
             QueryNode node;
             if (navigation.Type.IsCollection())
             {
-                node = new CollectionNavigationNode(navigation, source);
+                node = new CollectionNavigationNode(source, navigation, new EdmPathExpression(navigation.Name));
             }
             else
             {
-                node = new SingleNavigationNode(navigation, source);
+                node = new SingleNavigationNode(source, navigation, new EdmPathExpression(navigation.Name));
             }
 
             var result = this.testSubject.TranslateNode(node);
@@ -693,7 +693,7 @@ namespace AstoriaUnitTests.TDD.Tests.Server.Parsing
 
         private EntityCollectionNode CollectionNavigationFromParameter(string name)
         {
-            return new CollectionNavigationNode(this.otherFriendsNavigation, this.EntityParameter<Customer>(name));
+            return new CollectionNavigationNode(this.EntityParameter<Customer>(name), this.otherFriendsNavigation, new EdmPathExpression(this.otherFriendsNavigation.Name));
         }
 
         private CollectionOpenPropertyAccessNode OpenCollectionNavigationFromParameter(string parameterName, string openPropertyName)

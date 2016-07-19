@@ -16,15 +16,13 @@ namespace Microsoft.OData.UriParser
         /// <summary>
         /// Add semantic meaning to a Select or Expand Token
         /// </summary>
-        /// <param name="elementType">the top level entity type.</param>
-        /// <param name="navigationSource">the top level navigation source</param>
+        /// <param name="odataPathInfo">The path info from Uri path.</param>
         /// <param name="expandToken">the syntactically parsed expand token</param>
         /// <param name="selectToken">the syntactically parsed select token</param>
         /// <param name="configuration">The configuration to use for parsing.</param>
         /// <returns>A select expand clause bound to metadata.</returns>
         public SelectExpandClause Bind(
-            IEdmStructuredType elementType,
-            IEdmNavigationSource navigationSource,
+            ODataPathInfo odataPathInfo,
             ExpandToken expandToken,
             SelectToken selectToken,
             ODataUriParserConfiguration configuration)
@@ -34,7 +32,7 @@ namespace Microsoft.OData.UriParser
             ExpandTreeNormalizer expandTreeNormalizer = new ExpandTreeNormalizer();
             ExpandToken normalizedSelectExpandToken = expandTreeNormalizer.NormalizeExpandTree(unifiedSelectExpandToken);
 
-            SelectExpandBinder selectExpandBinder = new SelectExpandBinder(configuration, elementType, navigationSource);
+            SelectExpandBinder selectExpandBinder = new SelectExpandBinder(configuration, odataPathInfo);
             SelectExpandClause clause = selectExpandBinder.Bind(normalizedSelectExpandToken);
 
             SelectExpandClauseFinisher.AddExplicitNavPropLinksWhereNecessary(clause);

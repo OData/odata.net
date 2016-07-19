@@ -1,0 +1,31 @@
+$filter = NavOnContained/ID eq 'abc'
+
+
+FilterQueryOption
+	ItemType = [NS.ContainedEntityType Nullable=False]
+	Parameter = 
+	EntityRangeVariable
+		Name = $it
+		NavigationSource = ContainedNav1
+		TypeReference = [NS.ContainedEntityType Nullable=False]
+	Expression = 
+		ConvertNode
+			TypeReference = [Edm.String Nullable=True Unicode=True]
+			Source = 
+			SingleValuePropertyAccessNode
+				Property = ID
+				TypeReference = [Edm.String Nullable=False Unicode=True]
+				Source = 
+				SingleNavigationNode
+					NavigationSource = NavEntitySet1
+					Type Reference = [NS.NavEntityType Nullable=False]
+					Property = NavOnContained
+					Multiplicity = One
+					Source = 
+					EntityRangeVariableReferenceNode
+						Name = $it
+						NavigationSource = ContainedNav1
+						TypeReference = [NS.ContainedEntityType Nullable=False]
+						Range Variable = Microsoft.OData.UriParser.EntityRangeVariable
+	Equal
+		abc(Type: [Edm.String Nullable=True Unicode=True])

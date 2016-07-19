@@ -2003,15 +2003,15 @@ namespace Microsoft.OData.Edm
         /// <param name="operation">The operation to resolve the entitySet path.</param>
         /// <param name="model">The model.</param>
         /// <param name="parameter">The parameter.</param>
-        /// <param name="relativePath">The relative path.</param>
+        /// <param name="relativeNavigations">The relative navigations and its path.</param>
         /// <param name="lastEntityType">Last type of the entity.</param>
         /// <param name="errors">The errors.</param>
         /// <returns>True if a Entity set path is found, false otherwise.</returns>
-        public static bool TryGetRelativeEntitySetPath(this IEdmOperation operation, IEdmModel model, out IEdmOperationParameter parameter, out IEnumerable<IEdmNavigationProperty> relativePath, out IEdmEntityType lastEntityType, out IEnumerable<EdmError> errors)
+        public static bool TryGetRelativeEntitySetPath(this IEdmOperation operation, IEdmModel model, out IEdmOperationParameter parameter, out Dictionary<IEdmNavigationProperty, IEdmPathExpression> relativeNavigations, out IEdmEntityType lastEntityType, out IEnumerable<EdmError> errors)
         {
             errors = Enumerable.Empty<EdmError>();
             parameter = null;
-            relativePath = null;
+            relativeNavigations = null;
             lastEntityType = null;
 
             Debug.Assert(operation != null, "expected non null operation");
@@ -2033,7 +2033,7 @@ namespace Microsoft.OData.Edm
                         Strings.EdmModel_Validator_Semantic_OperationCannotHaveEntitySetPathWithUnBoundOperation(operation.Name)));
             }
 
-            return TryGetRelativeEntitySetPath(operation, foundErrors, operation.EntitySetPath, model, operation.Parameters, out parameter, out relativePath, out lastEntityType);
+            return TryGetRelativeEntitySetPath(operation, foundErrors, operation.EntitySetPath, model, operation.Parameters, out parameter, out relativeNavigations, out lastEntityType);
         }
 
 
@@ -2088,16 +2088,16 @@ namespace Microsoft.OData.Edm
         /// <param name="operationImport">The operation import containing the entity set expression.</param>
         /// <param name="model">The model containing the operation import.</param>
         /// <param name="parameter">The operation import parameter from which the relative entity set path starts.</param>
-        /// <param name="relativePath">The optional sequence of navigation properties.</param>
+        /// <param name="relativeNavigations">The optional sequence of navigation properties and their path</param>
         /// <param name="edmErrors">The errors that were found when attempting to get the relative path.</param>
         /// <returns>True if the entity set expression of the <paramref name="operationImport"/> contains a relative path an <see cref="IEdmEntitySet"/>, otherwise false.</returns>
-        public static bool TryGetRelativeEntitySetPath(this IEdmOperationImport operationImport, IEdmModel model, out IEdmOperationParameter parameter, out IEnumerable<IEdmNavigationProperty> relativePath, out IEnumerable<EdmError> edmErrors)
+        public static bool TryGetRelativeEntitySetPath(this IEdmOperationImport operationImport, IEdmModel model, out IEdmOperationParameter parameter, out Dictionary<IEdmNavigationProperty, IEdmPathExpression> relativeNavigations, out IEnumerable<EdmError> edmErrors)
         {
             EdmUtil.CheckArgumentNull(operationImport, "operationImport");
             EdmUtil.CheckArgumentNull(model, "model");
 
             parameter = null;
-            relativePath = null;
+            relativeNavigations = null;
             edmErrors = new ReadOnlyCollection<EdmError>(new List<EdmError>());
 
             IEdmPathExpression pathExpression = operationImport.EntitySet as IEdmPathExpression;
@@ -2105,7 +2105,7 @@ namespace Microsoft.OData.Edm
             {
                 IEdmEntityType entityType = null;
                 Collection<EdmError> foundErrors = new Collection<EdmError>();
-                bool result = TryGetRelativeEntitySetPath(operationImport, foundErrors, pathExpression, model, operationImport.Operation.Parameters, out parameter, out relativePath, out entityType);
+                bool result = TryGetRelativeEntitySetPath(operationImport, foundErrors, pathExpression, model, operationImport.Operation.Parameters, out parameter, out relativeNavigations, out entityType);
                 edmErrors = new ReadOnlyCollection<EdmError>(foundErrors);
 
                 return result;
@@ -2403,10 +2403,10 @@ namespace Microsoft.OData.Edm
         }
         #endregion
 
-        internal static bool TryGetRelativeEntitySetPath(IEdmElement element, Collection<EdmError> foundErrors, IEdmPathExpression pathExpression, IEdmModel model, IEnumerable<IEdmOperationParameter> parameters, out IEdmOperationParameter parameter, out IEnumerable<IEdmNavigationProperty> relativePath, out IEdmEntityType lastEntityType)
+        internal static bool TryGetRelativeEntitySetPath(IEdmElement element, Collection<EdmError> foundErrors, IEdmPathExpression pathExpression, IEdmModel model, IEnumerable<IEdmOperationParameter> parameters, out IEdmOperationParameter parameter, out Dictionary<IEdmNavigationProperty, IEdmPathExpression> relativeNavigations, out IEdmEntityType lastEntityType)
         {
             parameter = null;
-            relativePath = null;
+            relativeNavigations = null;
             lastEntityType = null;
 
             var pathItems = pathExpression.PathSegments.ToList();
@@ -2458,11 +2458,14 @@ namespace Microsoft.OData.Edm
                 }
             }
 
-            List<IEdmNavigationProperty> navigationProperties = new List<IEdmNavigationProperty>();
+            Dictionary<IEdmNavigationProperty, IEdmPathExpression> navigationProperties = new Dictionary<IEdmNavigationProperty, IEdmPathExpression>();
+            List<string> paths = new List<string>();
 
             // Now check that the next paths are valid parameters.
             foreach (string pathSegment in pathItems.Skip(1))
             {
+                paths.Add(pathSegment);
+
                 if (EdmUtil.IsQualifiedName(pathSegment))
                 {
                     IEdmSchemaType foundType = model.FindDeclaredType(pathSegment);
@@ -2521,12 +2524,18 @@ namespace Microsoft.OData.Edm
                         break;
                     }
 
-                    navigationProperties.Add(navigationProperty);
+                    navigationProperties[navigationProperty] = new EdmPathExpression(paths);
+
+                    if (!navigationProperty.ContainsTarget)
+                    {
+                        paths.Clear();
+                    }
+
                     lastEntityType = navigationProperty.ToEntityType();
                 }
             }
 
-            relativePath = navigationProperties;
+            relativeNavigations = navigationProperties;
             return foundRelativePath;
         }
 

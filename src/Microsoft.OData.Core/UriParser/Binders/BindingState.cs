@@ -45,6 +45,11 @@ namespace Microsoft.OData.UriParser
         private List<CustomQueryOptionToken> queryOptions;
 
         /// <summary>
+        /// The parsed segments in path and query option.
+        /// </summary>
+        private List<ODataPathSegment> parsedSegments = new List<ODataPathSegment>();
+
+        /// <summary>
         /// Constructs a <see cref="BindingState"/> with the given <paramref name="configuration"/>.
         /// </summary>
         /// <param name="configuration">The configuration used for binding.</param>
@@ -53,6 +58,14 @@ namespace Microsoft.OData.UriParser
             ExceptionUtils.CheckArgumentNotNull(configuration, "configuration");
             this.configuration = configuration;
             this.BindingRecursionDepth = 0;
+        }
+
+        internal BindingState(ODataUriParserConfiguration configuration, List<ODataPathSegment> parsedSegments)
+        {
+            ExceptionUtils.CheckArgumentNotNull(configuration, "configuration");
+            this.configuration = configuration;
+            this.BindingRecursionDepth = 0;
+            this.parsedSegments = parsedSegments;
         }
 
         /// <summary>
@@ -127,6 +140,14 @@ namespace Microsoft.OData.UriParser
         /// Collection of aggregated property names after applying an aggregate transformation.
         /// </summary>
         internal List<string> AggregatedPropertyNames { get; set; }
+
+        /// <summary>
+        /// The parsed segments in path and query option.
+        /// </summary>
+        internal List<ODataPathSegment> ParsedSegments
+        {
+            get { return parsedSegments; }
+        }
 
         /// <summary>
         /// Marks the fact that a recursive method was entered, and checks that the depth is allowed.

@@ -204,15 +204,5 @@ namespace Microsoft.Test.Taupo.OData.Scenario.Tests.UriParser.OrderBy
                 "nOw() sub id sub mindatetime() SUB duration'PT130S'",
                 "now() sub Id sub mindatetime() sub duration'PT130S'");
         }
-
-        private void TestAllInOneExtensionOrderBy(Uri baseUri, string orderby, string origOrderby)
-        {
-            this.TestExtension(
-                this.CreateOrderByUriParser(baseUri, orderby),
-                new AllInOneResolver() { EnableCaseInsensitive = true },
-                parser => parser.ParseOrderBy(),
-                clause => QueryNodeToStringVisitor.GetTestCaseAndResultString(clause, origOrderby),
-                this.ApprovalVerify);
-        }
     }
 }

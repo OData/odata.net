@@ -4,16 +4,14 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+using System;
+using System.Collections.Generic;
+using Microsoft.OData.Edm;
+using Microsoft.OData.Metadata;
+using ODataErrorStrings = Microsoft.OData.Strings;
+
 namespace Microsoft.OData.UriParser
 {
-    #region Namespaces
-    using System;
-    using Microsoft.OData.Edm;
-    using Microsoft.OData.Metadata;
-    using ODataErrorStrings = Microsoft.OData.Strings;
-
-    #endregion Namespaces
-
     /// <summary>
     /// Query node representing a collection navigation property.
     /// </summary>
@@ -25,7 +23,7 @@ namespace Microsoft.OData.UriParser
         private readonly IEdmNavigationProperty navigationProperty;
 
         /// <summary>
-        /// The resouce type of a single entity item from the collection represented by this node.
+        /// The resource type of a single entity item from the collection represented by this node.
         /// </summary>
         private readonly IEdmEntityTypeReference edmEntityTypeReference;
 
@@ -45,34 +43,58 @@ namespace Microsoft.OData.UriParser
         private readonly IEdmNavigationSource navigationSource;
 
         /// <summary>
+        /// The parsed segments in the path.
+        /// </summary>
+        private readonly List<ODataPathSegment> parsedSegments;
+
+        /// <summary>
         /// Creates a CollectionNavigationNode.
         /// </summary>
-        /// <param name="navigationProperty">The navigation property that defines the collection node.</param>
         /// <param name="source">The parent of this collection navigation node.</param>
+        /// <param name="navigationProperty">The navigation property that defines the collection node.</param>
+        /// <param name="bindingPath">The binding path of navigation property</param>
         /// <returns>The collection node.</returns>
         /// <exception cref="System.ArgumentNullException">Throws if the input source or navigation property is null.</exception>
         /// <exception cref="ArgumentException">Throws if the input navigation doesn't target a collection.</exception>
-        public CollectionNavigationNode(IEdmNavigationProperty navigationProperty, SingleEntityNode source)
+        public CollectionNavigationNode(SingleEntityNode source, IEdmNavigationProperty navigationProperty, IEdmPathExpression bindingPath)
             : this(navigationProperty)
         {
             ExceptionUtils.CheckArgumentNotNull(source, "source");
             this.source = source;
 
-            this.navigationSource = source.NavigationSource != null ? source.NavigationSource.FindNavigationTarget(navigationProperty) : null;
+            this.navigationSource = source.NavigationSource != null ? source.NavigationSource.FindNavigationTarget(navigationProperty, bindingPath) : null;
         }
 
         /// <summary>
         /// Creates a CollectionNavigationNode.
         /// </summary>
-        /// <param name="navigationProperty">The navigation property that defines the collection node.</param>
         /// <param name="source">The navigation source.</param>
+        /// <param name="navigationProperty">The navigation property that defines the collection node.</param>
+        /// <param name="bindingPath">The binding path of navigation property</param>
         /// <returns>The collection node.</returns>
         /// <exception cref="System.ArgumentNullException">Throws if the input navigation property is null.</exception>
         /// <exception cref="ArgumentException">Throws if the input navigation doesn't target a collection.</exception>
-        public CollectionNavigationNode(IEdmNavigationProperty navigationProperty, IEdmNavigationSource source)
+        internal CollectionNavigationNode(IEdmNavigationSource source, IEdmNavigationProperty navigationProperty, IEdmPathExpression bindingPath)
             : this(navigationProperty)
         {
-            this.navigationSource = source != null ? source.FindNavigationTarget(navigationProperty) : null;
+            this.navigationSource = source != null ? source.FindNavigationTarget(navigationProperty, bindingPath) : null;
+        }
+
+        /// <summary>
+        /// Constructs a CollectionNavigationNode.
+        /// </summary>
+        /// <param name="source">he previous node in the path.</param>
+        /// <param name="navigationProperty">The navigation property this node represents.</param>
+        /// <param name="parsedSegments">The path segments parsed in path and query option.</param>
+        internal CollectionNavigationNode(SingleEntityNode source, IEdmNavigationProperty navigationProperty,
+            List<ODataPathSegment> parsedSegments)
+            : this(navigationProperty)
+        {
+            ExceptionUtils.CheckArgumentNotNull(source, "source");
+            this.source = source;
+            this.parsedSegments = parsedSegments;
+
+            this.navigationSource = source.NavigationSource != null ? source.NavigationSource.FindNavigationTarget(navigationProperty, BindingPathHelper.MatchBindingPath, this.parsedSegments) : null;
         }
 
         /// <summary>

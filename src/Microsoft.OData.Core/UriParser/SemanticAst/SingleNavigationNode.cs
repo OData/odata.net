@@ -4,15 +4,13 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+using System;
+using System.Collections.Generic;
+using Microsoft.OData.Edm;
+using ODataErrorStrings = Microsoft.OData.Strings;
+
 namespace Microsoft.OData.UriParser
 {
-    #region Namespaces
-    using System;
-    using Microsoft.OData.Edm;
-    using ODataErrorStrings = Microsoft.OData.Strings;
-
-    #endregion Namespaces
-
     /// <summary>
     /// Node representing a single navigation property.
     /// </summary>
@@ -38,14 +36,67 @@ namespace Microsoft.OData.UriParser
         /// </summary>
         private readonly IEdmEntityTypeReference entityTypeReference;
 
+        private readonly List<ODataPathSegment> parsedSegments;
+
         /// <summary>
         /// Constructs a SingleNavigationNode.
         /// </summary>
-        /// <param name="navigationProperty">The navigation property this node represents.</param>
         /// <param name="source">The previous node in the path.</param>
+        /// <param name="navigationProperty">The navigation property this node represents.</param>
+        /// <param name="bindingPath">The binding path of navigation property</param>
         /// <exception cref="System.ArgumentNullException">Throws if the input navigationProperty or source is null.</exception>
         /// <exception cref="ArgumentException">Throws if the input navigationProperty targets more than one entity.</exception>
-        public SingleNavigationNode(IEdmNavigationProperty navigationProperty, SingleEntityNode source)
+        public SingleNavigationNode(SingleEntityNode source, IEdmNavigationProperty navigationProperty, IEdmPathExpression bindingPath)
+        {
+            ExceptionUtils.CheckArgumentNotNull(navigationProperty, "navigationProperty");
+            ExceptionUtils.CheckArgumentNotNull(bindingPath, "bindingPath");
+            ExceptionUtils.CheckArgumentNotNull(source, "source");
+
+            EdmMultiplicity multiplicity = navigationProperty.TargetMultiplicity();
+            if (multiplicity != EdmMultiplicity.One && multiplicity != EdmMultiplicity.ZeroOrOne)
+            {
+                throw new ArgumentException(ODataErrorStrings.Nodes_CollectionNavigationNode_MustHaveSingleMultiplicity);
+            }
+
+            this.source = source;
+            this.navigationProperty = navigationProperty;
+            this.entityTypeReference = (IEdmEntityTypeReference)this.NavigationProperty.Type;
+
+            this.navigationSource = source.NavigationSource != null ? source.NavigationSource.FindNavigationTarget(navigationProperty, bindingPath) : null;
+        }
+
+        /// <summary>
+        /// Constructs a SingleNavigationNode.
+        /// </summary>
+        /// <param name="sourceNavigationSource">The navigation source that this of the previous segment.</param>
+        /// <param name="navigationProperty">The navigation property this node represents.</param>
+        /// <param name="bindingPath">The binding path of navigation property</param>
+        /// <exception cref="System.ArgumentNullException">Throws if the input navigationProperty or source is null.</exception>
+        /// <exception cref="ArgumentException">Throws if the input navigationProperty targets more than one entity.</exception>
+        internal SingleNavigationNode(IEdmNavigationSource sourceNavigationSource, IEdmNavigationProperty navigationProperty, IEdmPathExpression bindingPath)
+        {
+            ExceptionUtils.CheckArgumentNotNull(bindingPath, "bindingPath");
+            ExceptionUtils.CheckArgumentNotNull(navigationProperty, "navigationProperty");
+
+            EdmMultiplicity multiplicity = navigationProperty.TargetMultiplicity();
+            if (multiplicity != EdmMultiplicity.One && multiplicity != EdmMultiplicity.ZeroOrOne)
+            {
+                throw new ArgumentException(ODataErrorStrings.Nodes_CollectionNavigationNode_MustHaveSingleMultiplicity);
+            }
+
+            this.navigationProperty = navigationProperty;
+            this.entityTypeReference = (IEdmEntityTypeReference)this.NavigationProperty.Type;
+
+            this.navigationSource = sourceNavigationSource != null ? sourceNavigationSource.FindNavigationTarget(navigationProperty, bindingPath) : null;
+        }
+
+        /// <summary>
+        /// Constructs a SingleNavigationNode.
+        /// </summary>
+        /// <param name="source">he previous node in the path.</param>
+        /// <param name="navigationProperty">The navigation property this node represents.</param>
+        /// <param name="segments">The path segments parsed in path and query option.</param>
+        internal SingleNavigationNode(SingleEntityNode source, IEdmNavigationProperty navigationProperty, List<ODataPathSegment> segments)
         {
             ExceptionUtils.CheckArgumentNotNull(navigationProperty, "navigationProperty");
             ExceptionUtils.CheckArgumentNotNull(source, "source");
@@ -59,31 +110,9 @@ namespace Microsoft.OData.UriParser
             this.source = source;
             this.navigationProperty = navigationProperty;
             this.entityTypeReference = (IEdmEntityTypeReference)this.NavigationProperty.Type;
+            this.parsedSegments = segments;
 
-            this.navigationSource = source.NavigationSource != null ? source.NavigationSource.FindNavigationTarget(navigationProperty) : null;
-        }
-
-        /// <summary>
-        /// Constructs a SingleNavigationNode.
-        /// </summary>
-        /// <param name="navigationProperty">The navigation property this node represents.</param>
-        /// <param name="sourceNavigationSource">The navigation source that this of the previous segment.</param>
-        /// <exception cref="System.ArgumentNullException">Throws if the input navigationProperty or source is null.</exception>
-        /// <exception cref="ArgumentException">Throws if the input navigationProperty targets more than one entity.</exception>
-        public SingleNavigationNode(IEdmNavigationProperty navigationProperty, IEdmNavigationSource sourceNavigationSource)
-        {
-            ExceptionUtils.CheckArgumentNotNull(navigationProperty, "navigationProperty");
-
-            EdmMultiplicity multiplicity = navigationProperty.TargetMultiplicity();
-            if (multiplicity != EdmMultiplicity.One && multiplicity != EdmMultiplicity.ZeroOrOne)
-            {
-                throw new ArgumentException(ODataErrorStrings.Nodes_CollectionNavigationNode_MustHaveSingleMultiplicity);
-            }
-
-            this.navigationProperty = navigationProperty;
-            this.entityTypeReference = (IEdmEntityTypeReference)this.NavigationProperty.Type;
-
-            this.navigationSource = sourceNavigationSource != null ? sourceNavigationSource.FindNavigationTarget(navigationProperty) : null;
+            this.navigationSource = source.NavigationSource != null ? source.NavigationSource.FindNavigationTarget(navigationProperty, BindingPathHelper.MatchBindingPath, this.parsedSegments) : null;
         }
 
         /// <summary>

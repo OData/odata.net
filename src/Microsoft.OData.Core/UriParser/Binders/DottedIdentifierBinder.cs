@@ -94,6 +94,8 @@ namespace Microsoft.OData.UriParser
             // Check whether childType is a derived type of the type of its parent node
             UriEdmHelpers.CheckRelatedTo(parentType, childType);
 
+            this.state.ParsedSegments.Add(new TypeSegment(childType, parentType, null));
+
             IEdmEntityType childEntityType = childStructuredType as IEdmEntityType;
             if (childEntityType != null)
             {

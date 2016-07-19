@@ -39,8 +39,9 @@ namespace Microsoft.OData.UriParser
         /// </summary>
         /// <param name="parentNode">The semantically bound source node of this end path token</param>
         /// <param name="property">The <see cref="IEdmProperty"/> that will be bound to this node. Must not be primitive collection</param>
+        /// <param name="state">The state of binding.</param>
         /// <returns>QueryNode bound to this property.</returns>
-        internal static QueryNode GeneratePropertyAccessQueryNode(SingleValueNode parentNode, IEdmProperty property)
+        internal static QueryNode GeneratePropertyAccessQueryNode(SingleValueNode parentNode, IEdmProperty property, BindingState state)
         {
             ExceptionUtils.CheckArgumentNotNull(parentNode, "parent");
             ExceptionUtils.CheckArgumentNotNull(property, "property");
@@ -63,10 +64,10 @@ namespace Microsoft.OData.UriParser
                 var singleEntityParentNode = (SingleEntityNode)parentNode;
                 if (edmNavigationProperty.TargetMultiplicity() == EdmMultiplicity.Many)
                 {
-                    return new CollectionNavigationNode(edmNavigationProperty, singleEntityParentNode);
+                    return new CollectionNavigationNode(singleEntityParentNode, edmNavigationProperty, state.ParsedSegments);
                 }
 
-                return new SingleNavigationNode(edmNavigationProperty, singleEntityParentNode);
+                return new SingleNavigationNode(singleEntityParentNode, edmNavigationProperty, state.ParsedSegments);
             }
 
             return new SingleValuePropertyAccessNode(parentNode, property);
@@ -157,7 +158,7 @@ namespace Microsoft.OData.UriParser
 
             if (property != null)
             {
-                return GeneratePropertyAccessQueryNode(singleValueParent, property);
+                return GeneratePropertyAccessQueryNode(singleValueParent, property, state);
             }
 
             if (functionCallBinder.TryBindEndPathAsFunctionCall(endPathToken, singleValueParent, state, out boundFunction))

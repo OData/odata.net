@@ -83,6 +83,8 @@ namespace Microsoft.OData.Tests
             IEdmNavigationProperty city = addressType.FindProperty("City") as IEdmNavigationProperty;
             IEdmNavigationProperty city2 = workAddressType.FindProperty("City2") as IEdmNavigationProperty;
 
+            IEdmEntitySet cities = Model.EntityContainer.FindEntitySet("City");
+
             // test
             Uri uri = new Uri(@"http://host/People('abc')/Address?$expand=City&$select=City");
             var selectAndExpandClause = new ODataUriParser(Model, ServiceRoot, uri).ParseSelectAndExpand();
@@ -95,7 +97,7 @@ namespace Microsoft.OData.Tests
 
             var expandItem = items[0] as ExpandedNavigationSelectItem;
             expandItem.PathToNavigationProperty.First().ShouldBeNavigationPropertySegment(city);
-            expandItem.NavigationSource.Name.Should().Be("City");
+            expandItem.NavigationSource.Should().Be(cities);
 
             var selectItem = items[1] as PathSelectItem;
             selectItem.SelectedPath.FirstOrDefault().ShouldBeNavigationPropertySegment(city);
@@ -112,7 +114,7 @@ namespace Microsoft.OData.Tests
 
             expandItem = items[0] as ExpandedNavigationSelectItem;
             expandItem.PathToNavigationProperty.First().ShouldBeNavigationPropertySegment(city);
-            expandItem.NavigationSource.Name.Should().Be("City");
+            expandItem.NavigationSource.Should().Be(cities);
 
             selectItem = items[1] as PathSelectItem;
             selectItem.SelectedPath.FirstOrDefault().ShouldBeNavigationPropertySegment(city);
@@ -236,6 +238,7 @@ namespace Microsoft.OData.Tests
             segments[0].ShouldBePropertySegment(complexProperty);
             segments[1].ShouldBeNavigationPropertySegment(navProperty);
         }
+
         #endregion
 
         #region Reader and Writer
@@ -552,6 +555,17 @@ namespace Microsoft.OData.Tests
             var cityId = city.AddStructuralProperty("ZipCode", EdmCoreModel.Instance.GetInt32(false));
             city.AddKeys(cityId);
 
+            var country = new EdmEntityType("DefaultNs", "Country");
+            var countryId = city.AddStructuralProperty("Name", EdmCoreModel.Instance.GetString(false));
+            country.AddKeys(countryId);
+
+            var cityCountry = city.AddUnidirectionalNavigation(new EdmNavigationPropertyInfo()
+            {
+                Name = "Country",
+                Target = country,
+                TargetMultiplicity = EdmMultiplicity.One,
+            });
+
             var complex = new EdmComplexType("DefaultNs", "Address");
             complex.AddStructuralProperty("Road", EdmCoreModel.Instance.GetString(false));
             var navP = complex.AddUnidirectionalNavigation(
@@ -586,9 +600,11 @@ namespace Microsoft.OData.Tests
             model.AddElement(entityContainer);
             EdmEntitySet people = new EdmEntitySet(entityContainer, "People", person);
             EdmEntitySet cities = new EdmEntitySet(entityContainer, "City", city);
+            EdmEntitySet countries = new EdmEntitySet(entityContainer, "Countries", country);
             people.AddNavigationTarget(navP, cities, new EdmPathExpression("Address/City"));
             people.AddNavigationTarget(navP, cities, new EdmPathExpression("Addresses/City"));
             people.AddNavigationTarget(navP2, cities, new EdmPathExpression("Address/WorkAddress/DefaultNs.WorkAddress/City2"));
+            cities.AddNavigationTarget(cityCountry, countries);
             entityContainer.AddElement(people);
             entityContainer.AddElement(cities);
 

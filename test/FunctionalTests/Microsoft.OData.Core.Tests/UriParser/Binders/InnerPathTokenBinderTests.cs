@@ -194,7 +194,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
         [Fact]
         public void EnsureParentIsEntityForNavPropReturnsSameObjectAsPassedOnOnSuccess()
         {
-            var parent = new SingleNavigationNode(HardCodedTestModel.GetPersonMyDogNavProp(), (IEdmEntitySet)null);
+            var parent = new SingleNavigationNode((IEdmEntitySet)null, HardCodedTestModel.GetPersonMyDogNavProp(), new EdmPathExpression("MyDog"));
             var result = InnerPathTokenBinder.EnsureParentIsEntityForNavProp(parent);
             result.Should().BeSameAs(parent);
         }
@@ -211,23 +211,25 @@ namespace Microsoft.OData.Tests.UriParser.Binders
         public void GetNavigationNodeCreatesSingleNavigationNodeForSingleMultiplicityProperty()
         {
             IEdmNavigationProperty property = HardCodedTestModel.GetPersonMyDogNavProp();
+            IEdmNavigationSource navigationSource;
             SingleEntityNode parent = new SingleEntityCastNode(null, HardCodedTestModel.GetDogType());
             BindingState state = new BindingState(Configuration);
             KeyBinder keyBinder = new KeyBinder(FakeBindMethods.BindMethodReturningASingleDog);
 
-            var result = InnerPathTokenBinder.GetNavigationNode(property, parent, null, state, keyBinder);
+            var result = InnerPathTokenBinder.GetNavigationNode(property, parent, null, state, keyBinder, out navigationSource);
             result.ShouldBeSingleNavigationNode(property);
         }
 
         [Fact]
         public void GetNavigationNodeCreatesCollectionNavigationNodeForManyMultiplicityProperty()
         {
+            IEdmNavigationSource navigationSource;
             IEdmNavigationProperty property = HardCodedTestModel.GetDogMyPeopleNavProp();
             SingleEntityNode parent = new SingleEntityCastNode(null, HardCodedTestModel.GetDogType());
             BindingState state = new BindingState(Configuration);
             KeyBinder keyBinder = new KeyBinder(FakeBindMethods.BindMethodReturningASingleDog);
 
-            var result = InnerPathTokenBinder.GetNavigationNode(property, parent, null, state, keyBinder);
+            var result = InnerPathTokenBinder.GetNavigationNode(property, parent, null, state, keyBinder, out navigationSource);
             result.ShouldBeCollectionNavigationNode(property);
         }
 

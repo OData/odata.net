@@ -2070,12 +2070,12 @@ public sealed class Microsoft.OData.Edm.ExtensionMethods {
 	[
 	ExtensionAttribute(),
 	]
-	public static bool TryGetRelativeEntitySetPath (Microsoft.OData.Edm.IEdmOperationImport operationImport, Microsoft.OData.Edm.IEdmModel model, out Microsoft.OData.Edm.IEdmOperationParameter& parameter, out System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.IEdmNavigationProperty]]& relativePath, out System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.Validation.EdmError]]& edmErrors)
+	public static bool TryGetRelativeEntitySetPath (Microsoft.OData.Edm.IEdmOperationImport operationImport, Microsoft.OData.Edm.IEdmModel model, out Microsoft.OData.Edm.IEdmOperationParameter& parameter, out System.Collections.Generic.Dictionary`2[[Microsoft.OData.Edm.IEdmNavigationProperty],[Microsoft.OData.Edm.IEdmPathExpression]]& relativeNavigations, out System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.Validation.EdmError]]& edmErrors)
 
 	[
 	ExtensionAttribute(),
 	]
-	public static bool TryGetRelativeEntitySetPath (Microsoft.OData.Edm.IEdmOperation operation, Microsoft.OData.Edm.IEdmModel model, out Microsoft.OData.Edm.IEdmOperationParameter& parameter, out System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.IEdmNavigationProperty]]& relativePath, out Microsoft.OData.Edm.IEdmEntityType& lastEntityType, out System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.Validation.EdmError]]& errors)
+	public static bool TryGetRelativeEntitySetPath (Microsoft.OData.Edm.IEdmOperation operation, Microsoft.OData.Edm.IEdmModel model, out Microsoft.OData.Edm.IEdmOperationParameter& parameter, out System.Collections.Generic.Dictionary`2[[Microsoft.OData.Edm.IEdmNavigationProperty],[Microsoft.OData.Edm.IEdmPathExpression]]& relativeNavigations, out Microsoft.OData.Edm.IEdmEntityType& lastEntityType, out System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.Validation.EdmError]]& errors)
 
 	[
 	ExtensionAttribute(),
@@ -5339,7 +5339,9 @@ public class Microsoft.OData.UriParser.ODataPath : IEnumerable, IEnumerable`1 {
 }
 
 public class Microsoft.OData.UriParser.ODataQueryOptionParser {
+	public ODataQueryOptionParser (Microsoft.OData.Edm.IEdmModel model, Microsoft.OData.UriParser.ODataPath odataPath, System.Collections.Generic.IDictionary`2[[System.String],[System.String]] queryOptions)
 	public ODataQueryOptionParser (Microsoft.OData.Edm.IEdmModel model, Microsoft.OData.Edm.IEdmType targetEdmType, Microsoft.OData.Edm.IEdmNavigationSource targetNavigationSource, System.Collections.Generic.IDictionary`2[[System.String],[System.String]] queryOptions)
+	public ODataQueryOptionParser (Microsoft.OData.Edm.IEdmModel model, Microsoft.OData.UriParser.ODataPath odataPath, System.Collections.Generic.IDictionary`2[[System.String],[System.String]] queryOptions, System.IServiceProvider container)
 	public ODataQueryOptionParser (Microsoft.OData.Edm.IEdmModel model, Microsoft.OData.Edm.IEdmType targetEdmType, Microsoft.OData.Edm.IEdmNavigationSource targetNavigationSource, System.Collections.Generic.IDictionary`2[[System.String],[System.String]] queryOptions, System.IServiceProvider container)
 
 	System.Collections.Generic.IDictionary`2[[System.String],[Microsoft.OData.UriParser.SingleValueNode]] ParameterAliasNodes  { public get; }
@@ -5478,8 +5480,7 @@ public sealed class Microsoft.OData.UriParser.CollectionFunctionCallNode : Micro
 }
 
 public sealed class Microsoft.OData.UriParser.CollectionNavigationNode : Microsoft.OData.UriParser.EntityCollectionNode {
-	public CollectionNavigationNode (Microsoft.OData.Edm.IEdmNavigationProperty navigationProperty, Microsoft.OData.Edm.IEdmNavigationSource source)
-	public CollectionNavigationNode (Microsoft.OData.Edm.IEdmNavigationProperty navigationProperty, Microsoft.OData.UriParser.SingleEntityNode source)
+	public CollectionNavigationNode (Microsoft.OData.UriParser.SingleEntityNode source, Microsoft.OData.Edm.IEdmNavigationProperty navigationProperty, Microsoft.OData.Edm.IEdmPathExpression bindingPath)
 
 	Microsoft.OData.Edm.IEdmCollectionTypeReference CollectionType  { public virtual get; }
 	Microsoft.OData.Edm.IEdmEntityTypeReference EntityItemType  { public virtual get; }
@@ -5935,8 +5936,7 @@ public sealed class Microsoft.OData.UriParser.SingleEntityFunctionCallNode : Mic
 }
 
 public sealed class Microsoft.OData.UriParser.SingleNavigationNode : Microsoft.OData.UriParser.SingleEntityNode {
-	public SingleNavigationNode (Microsoft.OData.Edm.IEdmNavigationProperty navigationProperty, Microsoft.OData.Edm.IEdmNavigationSource sourceNavigationSource)
-	public SingleNavigationNode (Microsoft.OData.Edm.IEdmNavigationProperty navigationProperty, Microsoft.OData.UriParser.SingleEntityNode source)
+	public SingleNavigationNode (Microsoft.OData.UriParser.SingleEntityNode source, Microsoft.OData.Edm.IEdmNavigationProperty navigationProperty, Microsoft.OData.Edm.IEdmPathExpression bindingPath)
 
 	Microsoft.OData.Edm.IEdmEntityTypeReference EntityTypeReference  { public virtual get; }
 	Microsoft.OData.Edm.IEdmNavigationProperty NavigationProperty  { public get; }

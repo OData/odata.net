@@ -64,6 +64,8 @@
     <Compile Include="PropertySerializationInfo.cs" />
     <Compile Include="DuplicatePropertyNameChecker.cs" />
     <Compile Include="PropertyValueTypeInfo.cs" />
+    <Compile Include="UriParser\BindingPathHelper.cs" />
+    <Compile Include="UriParser\ODataPathInfo.cs" />
     <Compile Include="ValidationKinds.cs" />
     <Compile Include="ReaderValidator.cs" />
     <Compile Include="ServiceLifetime.cs" />

@@ -4,6 +4,7 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+using Microsoft.OData.Edm;
 using Microsoft.OData.UriParser;
 
 namespace Microsoft.OData.Tests.UriParser.Binders
@@ -53,7 +54,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
 
         public static readonly SingleValuePropertyAccessNode FakePersonDogNameNode =
             new SingleValuePropertyAccessNode(
-                new SingleNavigationNode(HardCodedTestModel.GetPersonMyDogNavProp(),FakePersonNode),HardCodedTestModel.GetAddressCityProperty());
+                new SingleNavigationNode(FakePersonNode, HardCodedTestModel.GetPersonMyDogNavProp(), new EdmPathExpression("MyDog")),HardCodedTestModel.GetAddressCityProperty());
 
 
         public static readonly CollectionPropertyAccessNode FakeCollectionValueProperty =
