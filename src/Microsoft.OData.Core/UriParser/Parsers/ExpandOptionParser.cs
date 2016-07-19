@@ -152,7 +152,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
                         : this.lexer.CurrentToken.Text;
 
                     // Prepend '$' prefix if needed.
-                    if (this.enableNoDollarQueryOptions && !text.StartsWith(UriQueryConstants.DollarSign))
+                    if (this.enableNoDollarQueryOptions && !text.StartsWith(UriQueryConstants.DollarSign, StringComparison.Ordinal))
                     {
                         text = string.Format(CultureInfo.InvariantCulture, "{0}{1}", UriQueryConstants.DollarSign, text);
                     }
