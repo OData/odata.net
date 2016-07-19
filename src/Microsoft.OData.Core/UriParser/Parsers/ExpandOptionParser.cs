@@ -32,7 +32,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         /// The parent entity type for expand option in case expand option is star, get all parent navigation properties
         /// </summary>
         private readonly IEdmStructuredType parentEntityType;
-        
+
         /// <summary>
         /// Max recursion depth. As we recurse, each new instance of this class will have this lowered by 1.
         /// </summary>
@@ -50,14 +50,24 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         private bool enableCaseInsensitiveBuiltinIdentifier;
 
         /// <summary>
+        /// Whether to enable no dollar query options.
+        /// </summary>
+        private bool enableNoDollarQueryOptions;
+
+        /// <summary>
         /// Creates an instance of this class to parse options.
         /// </summary>
         /// <param name="maxRecursionDepth">Max recursion depth left.</param>
         /// <param name="enableCaseInsensitiveBuiltinIdentifier">Whether to allow case insensitive for builtin identifier.</param>
-        internal ExpandOptionParser(int maxRecursionDepth, bool enableCaseInsensitiveBuiltinIdentifier = false)
+        /// <param name="enableNoDollarQueryOptions">Whether to enable no dollar query options.</param>
+        internal ExpandOptionParser(
+            int maxRecursionDepth,
+            bool enableCaseInsensitiveBuiltinIdentifier = false,
+            bool enableNoDollarQueryOptions = false)
         {
             this.maxRecursionDepth = maxRecursionDepth;
             this.enableCaseInsensitiveBuiltinIdentifier = enableCaseInsensitiveBuiltinIdentifier;
+            this.enableNoDollarQueryOptions = enableNoDollarQueryOptions;
         }
 
         /// <summary>
@@ -67,8 +77,14 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         /// <param name="parentEntityType">The parent entity type for expand option</param>
         /// <param name="maxRecursionDepth">Max recursion depth left.</param>
         /// <param name="enableCaseInsensitiveBuiltinIdentifier">Whether to allow case insensitive for builtin identifier.</param>
-        internal ExpandOptionParser(ODataUriResolver resolver, IEdmStructuredType parentEntityType, int maxRecursionDepth, bool enableCaseInsensitiveBuiltinIdentifier = false)
-            : this(maxRecursionDepth, enableCaseInsensitiveBuiltinIdentifier)
+        /// <param name="enableNoDollarQueryOptions">Whether to enable no dollar query options.</param>
+        internal ExpandOptionParser(
+            ODataUriResolver resolver,
+            IEdmStructuredType parentEntityType,
+            int maxRecursionDepth,
+            bool enableCaseInsensitiveBuiltinIdentifier = false,
+            bool enableNoDollarQueryOptions = false)
+            : this(maxRecursionDepth, enableCaseInsensitiveBuiltinIdentifier, enableNoDollarQueryOptions)
         {
             this.resolver = resolver;
             this.parentEntityType = parentEntityType;
@@ -134,6 +150,13 @@ namespace Microsoft.OData.Core.UriParser.Parsers
                     string text = this.enableCaseInsensitiveBuiltinIdentifier
                         ? this.lexer.CurrentToken.Text.ToLowerInvariant()
                         : this.lexer.CurrentToken.Text;
+
+                    // Prepend '$' prefix if needed.
+                    if (this.enableNoDollarQueryOptions && !text.StartsWith(UriQueryConstants.DollarSign, StringComparison.Ordinal))
+                    {
+                        text = string.Format(CultureInfo.InvariantCulture, "{0}{1}", UriQueryConstants.DollarSign, text);
+                    }
+
                     switch (text)
                     {
                         case ExpressionConstants.QueryOptionFilter:
@@ -261,14 +284,22 @@ namespace Microsoft.OData.Core.UriParser.Parsers
                                 {
                                     var parentProperty = this.resolver.ResolveProperty(parentEntityType, pathToken.Identifier) as IEdmNavigationProperty;
 
-                                    // it is a navigation property, need to find the type. Like $expand=Friends($expand=Trips($expand=*)), when expandText becomes "Trips($expand=*)", find navigation property Trips of Friends, then get Entity type of Trips.
+                                    // it is a navigation property, need to find the type. 
+                                    // Like $expand=Friends($expand=Trips($expand=*)), when expandText becomes "Trips($expand=*)", 
+                                    // find navigation property Trips of Friends, then get Entity type of Trips.
                                     if (parentProperty != null)
-                                    { 
+                                    {
                                         targetEntityType = parentProperty.ToEntityType();
                                     }
                                 }
 
-                                SelectExpandParser innerExpandParser = new SelectExpandParser(resolver, expandText, targetEntityType, this.maxRecursionDepth - 1, enableCaseInsensitiveBuiltinIdentifier);
+                                SelectExpandParser innerExpandParser = new SelectExpandParser(
+                                    resolver,
+                                    expandText,
+                                    targetEntityType,
+                                    this.maxRecursionDepth - 1,
+                                    this.enableCaseInsensitiveBuiltinIdentifier,
+                                    this.enableNoDollarQueryOptions);
                                 expandOption = innerExpandParser.ParseExpand();
                                 break;
                             }
@@ -347,8 +378,8 @@ namespace Microsoft.OData.Core.UriParser.Parsers
                     {
                         case ExpressionConstants.QueryOptionLevels:
                             {
-                                if (!isRefExpand) 
-                                { 
+                                if (!isRefExpand)
+                                {
                                     levelsOption = ResolveLevelOption();
                                 }
                                 else

@@ -9,6 +9,7 @@ namespace Microsoft.OData.Core.UriParser
     #region namespaces
     using System;
     using System.Collections.Generic;
+    using System.Globalization;
     using System.Linq;
     using Microsoft.OData.Core.Metadata;
     using Microsoft.OData.Core.UriParser.Aggregation;
@@ -506,21 +507,40 @@ namespace Microsoft.OData.Core.UriParser
         }
 
         /// <summary>
-        /// Get query options according to case insensitive.
+        /// Gets query options according to case sensitivity and 
+        /// whether no dollar query options is enabled.
         /// </summary>
-        /// <param name="queryOptionName">The query option's name.</param>
-        /// <param name="value">The value for that query option.</param>
+        /// <param name="name">The query option name.</param>
+        /// <param name="value">The value of the query option.</param>
         /// <returns>Whether value successfully retrived.</returns>
-        private bool TryGetQueryOption(string queryOptionName, out string value)
+        private bool TryGetQueryOption(string name, out string value)
         {
-            if (!this.Resolver.EnableCaseInsensitive)
+            value = null;
+            if (name == null)
             {
-                return this.queryOptions.TryGetValue(queryOptionName, out value);
+                return false;
             }
 
-            value = null;
+            // Trim name to prevent caller from passing in untrimmed name for comparison with 
+            // already trimmed keys in queryOptions dictionary.
+            string trimmedName = name.Trim();
+
+            bool isCaseInsensitiveEnabled = this.Resolver.EnableCaseInsensitive;
+            bool isNoDollarQueryOptionsEnabled = this.Configuration.EnableNoDollarQueryOptions;
+
+            if (!isCaseInsensitiveEnabled && !isNoDollarQueryOptionsEnabled)
+            {
+                return this.queryOptions.TryGetValue(trimmedName, out value);
+            }
+
+            StringComparison stringComparison = isCaseInsensitiveEnabled ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal;
+
+            string nameWithoutDollarPrefix = (isNoDollarQueryOptionsEnabled && trimmedName.StartsWith(UriQueryConstants.DollarSign, StringComparison.Ordinal)) ?
+                trimmedName.Substring(1) : null;
+
             var list = this.queryOptions
-                .Where(pair => string.Equals(queryOptionName, pair.Key, StringComparison.OrdinalIgnoreCase))
+                .Where(pair => string.Equals(trimmedName, pair.Key, stringComparison)
+                || (nameWithoutDollarPrefix != null && string.Equals(nameWithoutDollarPrefix, pair.Key, stringComparison)))
                 .ToList();
 
             if (list.Count == 0)
@@ -533,7 +553,8 @@ namespace Microsoft.OData.Core.UriParser
                 return true;
             }
 
-            throw new ODataException(Strings.QueryOptionUtils_QueryParameterMustBeSpecifiedOnce(queryOptionName));
+            throw new ODataException(Strings.QueryOptionUtils_QueryParameterMustBeSpecifiedOnce(
+                isNoDollarQueryOptionsEnabled ? string.Format(CultureInfo.InvariantCulture, "${0}/{0}", nameWithoutDollarPrefix ?? trimmedName) : trimmedName));
         }
         #endregion private methods
     }
