@@ -9,12 +9,10 @@ using System.Diagnostics;
 using System.IO;
 using System.Xml;
 using Microsoft.OData.Edm.Csdl;
-using Microsoft.OData.Edm;
 using Microsoft.OData.Edm.Validation;
 using Microsoft.OData.Edm.Vocabularies;
 using Microsoft.OData.Edm.Vocabularies.V1;
 using Xunit;
-using ErrorStrings = Microsoft.OData.Edm.Strings;
 
 namespace Microsoft.OData.Edm.Tests.Csdl
 {
@@ -59,9 +57,9 @@ namespace Microsoft.OData.Edm.Tests.Csdl
             var cityId = city.AddStructuralProperty("Name", EdmCoreModel.Instance.GetString(false));
             city.AddKeys(cityId);
 
-            var country = new EdmEntityType("DefaultNs", "Country");
-            var countryId = country.AddStructuralProperty("Name", EdmCoreModel.Instance.GetString(false));
-            country.AddKeys(countryId);
+            var countryOrRegion = new EdmEntityType("DefaultNs", "CountryOrRegion");
+            var countryId = countryOrRegion.AddStructuralProperty("Name", EdmCoreModel.Instance.GetString(false));
+            countryOrRegion.AddKeys(countryId);
 
             var complex = new EdmComplexType("DefaultNs", "Address");
             complex.AddStructuralProperty("Id", EdmCoreModel.Instance.GetInt32(false));
@@ -77,8 +75,8 @@ namespace Microsoft.OData.Edm.Tests.Csdl
             var navP2 = derivedComplex.AddUnidirectionalNavigation(
                 new EdmNavigationPropertyInfo()
                 {
-                    Name = "Country",
-                    Target = country,
+                    Name = "CountryOrRegion",
+                    Target = countryOrRegion,
                     TargetMultiplicity = EdmMultiplicity.One,
                 });
 
@@ -88,7 +86,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl
 
             model.AddElement(person);
             model.AddElement(city);
-            model.AddElement(country);
+            model.AddElement(countryOrRegion);
             model.AddElement(complex);
             model.AddElement(derivedComplex);
 
@@ -96,13 +94,13 @@ namespace Microsoft.OData.Edm.Tests.Csdl
             model.AddElement(entityContainer);
             EdmEntitySet people = new EdmEntitySet(entityContainer, "People", person);
             EdmEntitySet cities = new EdmEntitySet(entityContainer, "City", city);
-            EdmEntitySet countries = new EdmEntitySet(entityContainer, "Country", country);
+            EdmEntitySet countriesOrRegions = new EdmEntitySet(entityContainer, "CountryOrRegion", countryOrRegion);
             people.AddNavigationTarget(navP, cities, new EdmPathExpression("HomeAddress/City"));
             people.AddNavigationTarget(navP, cities, new EdmPathExpression("Addresses/City"));
-            people.AddNavigationTarget(navP2, countries, new EdmPathExpression("WorkAddress/DefaultNs.WorkAddress/Country"));
+            people.AddNavigationTarget(navP2, countriesOrRegions, new EdmPathExpression("WorkAddress/DefaultNs.WorkAddress/CountryOrRegion"));
             entityContainer.AddElement(people);
             entityContainer.AddElement(cities);
-            entityContainer.AddElement(countries);
+            entityContainer.AddElement(countriesOrRegions);
 
             string actual = GetCsdl(model, CsdlTarget.OData);
 
@@ -121,7 +119,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl
                     "<Key><PropertyRef Name=\"Name\" /></Key>" +
                     "<Property Name=\"Name\" Type=\"Edm.String\" Nullable=\"false\" />" +
                 "</EntityType>" +
-                "<EntityType Name=\"Country\">" +
+                "<EntityType Name=\"CountryOrRegion\">" +
                     "<Key><PropertyRef Name=\"Name\" /></Key>" +
                     "<Property Name=\"Name\" Type=\"Edm.String\" Nullable=\"false\" />" +
                 "</EntityType>" +
@@ -130,16 +128,16 @@ namespace Microsoft.OData.Edm.Tests.Csdl
                     "<NavigationProperty Name=\"City\" Type=\"DefaultNs.City\" Nullable=\"false\" />" +
                 "</ComplexType>" +
                 "<ComplexType Name=\"WorkAddress\" BaseType=\"DefaultNs.Address\">" +
-                    "<NavigationProperty Name=\"Country\" Type=\"DefaultNs.Country\" Nullable=\"false\" /><" +
+                    "<NavigationProperty Name=\"CountryOrRegion\" Type=\"DefaultNs.CountryOrRegion\" Nullable=\"false\" /><" +
                 "/ComplexType>" +
                 "<EntityContainer Name=\"Container\">" +
                 "<EntitySet Name=\"People\" EntityType=\"DefaultNs.Person\">" +
                     "<NavigationPropertyBinding Path=\"HomeAddress/City\" Target=\"City\" />" +
                     "<NavigationPropertyBinding Path=\"Addresses/City\" Target=\"City\" />" +
-                    "<NavigationPropertyBinding Path=\"WorkAddress/DefaultNs.WorkAddress/Country\" Target=\"Country\" />" +
+                    "<NavigationPropertyBinding Path=\"WorkAddress/DefaultNs.WorkAddress/CountryOrRegion\" Target=\"CountryOrRegion\" />" +
                 "</EntitySet>" +
                 "<EntitySet Name=\"City\" EntityType=\"DefaultNs.City\" />" +
-                "<EntitySet Name=\"Country\" EntityType=\"DefaultNs.Country\" />" +
+                "<EntitySet Name=\"CountryOrRegion\" EntityType=\"DefaultNs.CountryOrRegion\" />" +
                 "</EntityContainer></Schema>" +
                 "</edmx:DataServices>" +
                 "</edmx:Edmx>";

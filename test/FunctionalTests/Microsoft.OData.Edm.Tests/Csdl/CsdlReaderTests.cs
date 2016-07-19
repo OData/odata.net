@@ -9,7 +9,6 @@ using System.Xml;
 using System.Xml.Linq;
 using FluentAssertions;
 using Microsoft.OData.Edm.Csdl;
-using Microsoft.OData.Edm;
 using Xunit;
 using ErrorStrings = Microsoft.OData.Edm.Strings;
 
@@ -26,7 +25,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl
 </edmx:Edmx>";
         private const string InvalidXml = "<fake/>";
         private const string ErrorMessage = "UnexpectedXmlElement : The element 'fake' was unexpected for the root element. The root element should be Edmx. : (0, 0)";
-        
+
         private XmlReader validReader;
         private XmlReader invalidReader;
 
@@ -66,7 +65,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl
                     "<Key><PropertyRef Name=\"Name\" /></Key>" +
                     "<Property Name=\"Name\" Type=\"Edm.String\" Nullable=\"false\" />" +
                 "</EntityType>" +
-                "<EntityType Name=\"Country\">" +
+                "<EntityType Name=\"CountryOrRegion\">" +
                     "<Key><PropertyRef Name=\"Name\" /></Key>" +
                     "<Property Name=\"Name\" Type=\"Edm.String\" Nullable=\"false\" />" +
                 "</EntityType>" +
@@ -75,16 +74,16 @@ namespace Microsoft.OData.Edm.Tests.Csdl
                     "<NavigationProperty Name=\"City\" Type=\"DefaultNs.City\" Nullable=\"false\" />" +
                 "</ComplexType>" +
                 "<ComplexType Name=\"WorkAddress\" BaseType=\"DefaultNs.Address\">" +
-                    "<NavigationProperty Name=\"Country\" Type=\"DefaultNs.Country\" Nullable=\"false\" /><" +
+                    "<NavigationProperty Name=\"CountryOrRegion\" Type=\"DefaultNs.CountryOrRegion\" Nullable=\"false\" /><" +
                 "/ComplexType>" +
                 "<EntityContainer Name=\"Container\">" +
                 "<EntitySet Name=\"People\" EntityType=\"DefaultNs.Person\">" +
                     "<NavigationPropertyBinding Path=\"HomeAddress/City\" Target=\"Cities\" />" +
                     "<NavigationPropertyBinding Path=\"Addresses/City\" Target=\"Cities\" />" +
-                    "<NavigationPropertyBinding Path=\"WorkAddress/DefaultNs.WorkAddress/Country\" Target=\"Countries\" />" +
+                    "<NavigationPropertyBinding Path=\"WorkAddress/DefaultNs.WorkAddress/CountryOrRegion\" Target=\"CountriesOrRegions\" />" +
                 "</EntitySet>" +
                 "<EntitySet Name=\"Cities\" EntityType=\"DefaultNs.City\" />" +
-                "<EntitySet Name=\"Countries\" EntityType=\"DefaultNs.Country\" />" +
+                "<EntitySet Name=\"CountriesOrRegions\" EntityType=\"DefaultNs.CountryOrRegion\" />" +
                 "</EntityContainer></Schema>" +
                 "</edmx:DataServices>" +
                 "</edmx:Edmx>";
@@ -94,15 +93,15 @@ namespace Microsoft.OData.Edm.Tests.Csdl
             var address = model.FindType("DefaultNs.Address") as IEdmStructuredType;
             var workAddress = model.FindType("DefaultNs.WorkAddress") as IEdmStructuredType;
             var city = address.FindProperty("City") as IEdmNavigationProperty;
-            var country = workAddress.FindProperty("Country") as IEdmNavigationProperty;
+            var countryOrRegion = workAddress.FindProperty("CountryOrRegion") as IEdmNavigationProperty;
             var cities = model.EntityContainer.FindEntitySet("Cities");
-            var countries = model.EntityContainer.FindEntitySet("Countries");
+            var countriesOrRegions = model.EntityContainer.FindEntitySet("CountriesOrRegions");
             var navigationTarget = people.FindNavigationTarget(city, new EdmPathExpression("HomeAddress/City"));
             Assert.Equal(navigationTarget, cities);
             navigationTarget = people.FindNavigationTarget(city, new EdmPathExpression("Addresses/City"));
             Assert.Equal(navigationTarget, cities);
-            navigationTarget = people.FindNavigationTarget(country, new EdmPathExpression("WorkAddress/DefaultNs.WorkAddress/Country"));
-            Assert.Equal(navigationTarget, countries);
+            navigationTarget = people.FindNavigationTarget(countryOrRegion, new EdmPathExpression("WorkAddress/DefaultNs.WorkAddress/CountryOrRegion"));
+            Assert.Equal(navigationTarget, countriesOrRegions);
         }
 
         [Fact]
