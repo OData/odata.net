@@ -877,12 +877,12 @@ namespace Microsoft.OData.Client
                 ContentStream contentStream = pereq.RequestContentStream;
                 Util.NullCheck(contentStream, InternalError.InvalidEndWriteStream);
                 Util.NullCheck(contentStream.Stream, InternalError.InvalidEndWriteStream);
-                Stream httpRequestStream = Util.NullCheck(pereq.RequestStream, InternalError.InvalidEndWriteStream);
                 Util.DebugInjectFault("SaveAsyncResult::AsyncEndWrite_BeforeEndWrite");
 #if DNXCORE50
                 // Ensure we surface any errors that may have occurred during the write operation
                 task.Wait();
 #else
+                Stream httpRequestStream = Util.NullCheck(pereq.RequestStream, InternalError.InvalidEndWriteStream);
                 httpRequestStream.EndWrite(asyncResult);
 #endif
                 // If the write completed synchronously just return. The caller (AsyncRequestContentEndRead)

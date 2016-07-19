@@ -27,7 +27,7 @@ namespace Microsoft.OData.Client
 
 #if PORTABLELIB
         /// <summary> Running on silverlight </summary>
-        internal static bool IsRunningOnSilverlight = false;
+        internal static bool IsRunningOnSilverlight;
 
         /// <summary>Cached method info that will be used to call to set the userAgent property if its not null. </summary>
         private static MethodInfo UserAgentMethodSetter;

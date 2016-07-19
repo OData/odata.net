@@ -60,6 +60,13 @@
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1702:CompoundWordsShouldBeCasedCorrectly", MessageId = "MultiPoint", Scope = "member", Target = "Microsoft.OData.Edm.EdmPrimitiveTypeKind.#GeographyMultiPoint")]
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1702:CompoundWordsShouldBeCasedCorrectly", MessageId = "MultiLine", Scope = "member", Target = "Microsoft.OData.Edm.EdmPrimitiveTypeKind.#GeometryMultiLineString")]
 
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Multi", Scope = "member", Target = "Microsoft.OData.Edm.EdmPrimitiveTypeKind.#GeographyMultiPolygon")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Multi", Scope = "member", Target = "Microsoft.OData.Edm.EdmPrimitiveTypeKind.#GeographyMultiLineString")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Multi", Scope = "member", Target = "Microsoft.OData.Edm.EdmPrimitiveTypeKind.#GeographyMultiPoint")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Multi", Scope = "member", Target = "Microsoft.OData.Edm.EdmPrimitiveTypeKind.#GeometryMultiPolygon")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Multi", Scope = "member", Target = "Microsoft.OData.Edm.EdmPrimitiveTypeKind.#GeometryMultiLineString")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Multi", Scope = "member", Target = "Microsoft.OData.Edm.EdmPrimitiveTypeKind.#GeometryMultiPoint")]
+
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1716:IdentifiersShouldNotMatchKeywords", MessageId = "Namespace", Scope = "member", Target = "Microsoft.OData.Edm.IEdmAnnotation.#Namespace")]
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1716:IdentifiersShouldNotMatchKeywords", MessageId = "To", Scope = "member", Target = "Microsoft.OData.Edm.IEdmNavigationProperty.#To")]
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1716:IdentifiersShouldNotMatchKeywords", MessageId = "Property", Scope = "member", Target = "Microsoft.OData.Edm.Values.IEdmPropertyValue.#Property")]

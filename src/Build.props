@@ -20,16 +20,11 @@
     <SigningScenario Condition="'$(SigningScenario)' == '' and '$(TargetFrameworkIdentifier)' != 'Silverlight'">Delay</SigningScenario>
     <SigningType Condition="'$(SigningType)' == ''">Product</SigningType>
     <ShouldGenerateAssemblyAttributeFile Condition="'$(ShouldGenerateAssemblyAttributeFile)' == '' and '$(MSBuildProjectExtension)' != '.nuproj' and '$(MSBuildProjectExtension)' != '.wixproj'">true</ShouldGenerateAssemblyAttributeFile>
-    <CodeAnalysisUseAdditionalODataRules Condition="'$(CodeAnalysisUseAdditionalODataRules)' == ''">true</CodeAnalysisUseAdditionalODataRules>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(CodeAnalysisUseAdditionalODataRules)' == 'true'">
-    <!-- The DataWebRules ruleset also pulls in the SDL 6.0 rules, so we remain in SDL compliance -->
-    <CodeAnalysisRuleSet>DataWebRules.ruleset</CodeAnalysisRuleSet>
+    <RunCodeAnalysis Condition="'$(RunCodeAnalysis)' == '' and '$(TargetFrameworkVersion)' != 'v3.5'">true</RunCodeAnalysis>
   </PropertyGroup>
 
   <ItemGroup>
-    <CodeAnalysisDictionary Include="$(MSBuildThisFileDirectory)CommonCustomDictionary.xml"/>
+    <CodeAnalysisDictionary Include="$(MSBuildThisFileDirectory)CustomDictionary.xml"/>
   </ItemGroup>
   
   <Import Project="..\Build.props" />
