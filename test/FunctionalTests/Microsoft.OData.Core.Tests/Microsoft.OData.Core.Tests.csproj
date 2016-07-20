@@ -79,6 +79,7 @@
     <Compile Include="Json\MockJsonWriterFactory.cs" />
     <Compile Include="MultiBindingTests.cs" />
     <Compile Include="NavigationPropertyOnComplexTests.cs" />
+    <Compile Include="ODataValueUtilsTests.cs" />
     <Compile Include="ScenarioTests\Roundtrip\JsonReaderWriterInjectionTests.cs" />
     <Compile Include="ServiceProviderExtensionsTests.cs" />
     <Compile Include="ContainerBuilderExtensionsTests.cs" />

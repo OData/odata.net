@@ -40,6 +40,11 @@ namespace Microsoft.OData
                 return odataValue;
             }
 
+            if (objectToConvert.GetType().IsEnum())
+            {
+                return new ODataEnumValue(objectToConvert.ToString().Replace(", ", ","));
+            }
+
             // Otherwise treat it as a primitive and wrap in an ODataPrimitiveValue. This includes spatial types.
             return new ODataPrimitiveValue(objectToConvert);
         }
