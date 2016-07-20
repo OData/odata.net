@@ -59,7 +59,7 @@ namespace Microsoft.OData.UriParser
         {
             get
             {
-                return InternalQueryNodeKind.CollectionCount;
+                return InternalQueryNodeKind.Count;
             }
         }
 

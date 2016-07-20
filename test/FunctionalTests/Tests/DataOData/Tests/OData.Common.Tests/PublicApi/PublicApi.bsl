@@ -5065,6 +5065,7 @@ public enum Microsoft.OData.UriParser.QueryNodeKind : int {
 	CollectionPropertyCast = 26
 	Constant = 1
 	Convert = 2
+	Count = 28
 	EntityCollectionCast = 15
 	EntityCollectionFunctionCall = 19
 	EntityRangeVariableReference = 16

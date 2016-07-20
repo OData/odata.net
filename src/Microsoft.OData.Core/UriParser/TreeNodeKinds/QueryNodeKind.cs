@@ -153,6 +153,11 @@ namespace Microsoft.OData.UriParser
         /// Cast on a single value property.
         /// </summary>
         SingleValueCast = InternalQueryNodeKind.SingleValueCast,
+
+        /// <summary>
+        /// Count of a collection contains primitive or enum or complex or entity type.
+        /// </summary>
+        Count = InternalQueryNodeKind.Count,
     }
 
     /// <summary>
@@ -303,6 +308,6 @@ namespace Microsoft.OData.UriParser
         /// <summary>
         /// Node describing count of a collection contains primitive or enum or complex or entity type.
         /// </summary>
-        CollectionCount = 28,
+        Count = 28,
     }
 }
