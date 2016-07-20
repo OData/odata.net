@@ -8,8 +8,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using FluentAssertions;
-using Microsoft.OData.UriParser;
 using Microsoft.OData.Edm;
+using Microsoft.OData.UriParser;
 using Xunit;
 using ODataErrorStrings = Microsoft.OData.Strings;
 
@@ -513,6 +513,55 @@ namespace Microsoft.OData.Tests.UriParser
                 new KeyValuePair<string, object>("orderId", "orderId"),
                 new KeyValuePair<string, object>("id", 1));
             }
+        }
+        #endregion
+
+        #region Null EntitySetPath
+
+        [Fact]
+        public void ParsePathFunctionWithNullEntitySetPath()
+        {
+            var model = new EdmModel();
+
+            var customer = new EdmEntityType("Test", "Customer", null, false, false);
+            var customerId = customer.AddStructuralProperty("id", EdmPrimitiveTypeKind.String, false);
+            customer.AddKeys(customerId);
+            model.AddElement(customer);
+
+            var detail = new EdmEntityType("Test", "Detail", null, false, true);
+            detail.AddStructuralProperty("address", EdmPrimitiveTypeKind.String, true);
+            model.AddElement(detail);
+
+            var customerDetail = customer.AddUnidirectionalNavigation(
+                new EdmNavigationPropertyInfo()
+                {
+                    Name = "detail",
+                    Target = detail,
+                    TargetMultiplicity = EdmMultiplicity.One,
+                    ContainsTarget = true
+                });
+
+            // The test is to make sure the ODataUriParser works even though
+            // the entitySetPathExpression is null.
+            var getCurrentCustomer = new EdmFunction(
+                "Test",
+                "getCurrentCustomer",
+                new EdmEntityTypeReference(customer, false),
+                isBound: false,
+                entitySetPathExpression: null,
+                isComposable: true);
+            model.AddElement(getCurrentCustomer);
+
+            var container = new EdmEntityContainer("Test", "Container");
+            var getCurrentCustomerImport = container.AddFunctionImport(getCurrentCustomer);
+            model.AddElement(container);
+
+            var parser = new ODataUriParser(model, new Uri("http://host"), new Uri("http://host/getCurrentCustomer()/detail"));
+            var path = parser.ParsePath();
+            var pathSegmentList = path.ToList();
+            pathSegmentList.Count.Should().Be(2);
+            pathSegmentList[0].ShouldBeOperationImportSegment(getCurrentCustomerImport);
+            pathSegmentList[1].ShouldBeNavigationPropertySegment(customerDetail);
         }
 
         #endregion

@@ -12,7 +12,6 @@ namespace Microsoft.OData.UriParser
 
     using System.Diagnostics;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Metadata;
 
     #endregion Namespaces
 
@@ -46,7 +45,7 @@ namespace Microsoft.OData.UriParser
         /// <summary>Returns the identifier for this segment i.e. string part without the keys.</summary>
         public string Identifier { get; set; }
 
-#region Temporary Internal Properties
+        #region Temporary Internal Properties
         /// <summary>Whether the segment targets a single result or not.</summary>
         internal bool SingleResult { get; set; }
 
@@ -58,7 +57,7 @@ namespace Microsoft.OData.UriParser
 
         /// <summary>The kind of resource targeted by this segment.</summary>
         internal RequestTargetKind TargetKind { get; set; }
-#endregion
+        #endregion
 
         /// <summary>
         /// Translate a <see cref="ODataPathSegment"/> using an implementation of<see cref="PathSegmentTranslator{T}"/>.
@@ -92,6 +91,7 @@ namespace Microsoft.OData.UriParser
             Debug.Assert(
                 this.TargetKind != RequestTargetKind.Resource ||
                 this.TargetEdmNavigationSource != null ||
+                this.TargetEdmType != null ||
                 this.EdmType != null ||
                 this.TargetKind == RequestTargetKind.Dynamic ||
                 this is OperationSegment ||

@@ -1104,6 +1104,8 @@ namespace Microsoft.OData.UriParser
         [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "IEdmModel", Justification = "The spelling is correct.")]
         private void CreatePropertySegment(ODataPathSegment previous, IEdmProperty property, string queryPortion)
         {
+            Debug.Assert(previous != null, "previous != null");
+
             if (property.Type.IsStream())
             {
                 // The server used to allow arbitrary key expressions after named streams because this check was missing.
@@ -1122,7 +1124,12 @@ namespace Microsoft.OData.UriParser
             if (property.PropertyKind == EdmPropertyKind.Navigation)
             {
                 var navigationProperty = (IEdmNavigationProperty)property;
-                IEdmNavigationSource navigationSource = previous.TargetEdmNavigationSource.FindNavigationTarget(navigationProperty, BindingPathHelper.MatchBindingPath, this.parsedSegments);
+
+                IEdmNavigationSource navigationSource = null;
+                if (previous.TargetEdmNavigationSource != null)
+                {
+                    navigationSource = previous.TargetEdmNavigationSource.FindNavigationTarget(navigationProperty, BindingPathHelper.MatchBindingPath, this.parsedSegments);
+                }
 
                 // Relationship between TargetMultiplicity and navigation property:
                 //  1) EdmMultiplicity.Many <=> collection navigation property
@@ -1153,8 +1160,8 @@ namespace Microsoft.OData.UriParser
                     case EdmTypeKind.Collection:
                         if (property.Type.IsStructuredCollectionType())
                         {
-                             segment.TargetKind = RequestTargetKind.Resource;
-                             segment.TargetEdmNavigationSource = previous.TargetEdmNavigationSource;
+                            segment.TargetKind = RequestTargetKind.Resource;
+                            segment.TargetEdmNavigationSource = previous.TargetEdmNavigationSource;
                         }
 
                         segment.TargetKind = RequestTargetKind.Collection;
