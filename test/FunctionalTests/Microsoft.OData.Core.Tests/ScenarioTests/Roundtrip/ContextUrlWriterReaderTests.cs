@@ -71,6 +71,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip
         private EdmEntityType productBookType;
         private EdmEntityType productCdType;
         private EdmComplexType addressType;
+        private EdmEnumType accessLevelType;
 
         private EdmEntitySet employeeSet;
         private EdmEntitySet companySet;
@@ -128,7 +129,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip
             companyDivisionType.AddProperty(new EdmStructuralProperty(companyDivisionType, "Manufactory", new EdmComplexTypeReference(manufactoryType, true)));
             this.model.AddElement(companyDivisionType);
 
-            var accessLevelType = new EdmEnumType(TestNameSpace, "AccessLevel", isFlags: true);
+            accessLevelType = new EdmEnumType(TestNameSpace, "AccessLevel", isFlags: true);
             accessLevelType.AddMember("None", new EdmEnumMemberValue(0));
             accessLevelType.AddMember("Read", new EdmEnumMemberValue(1));
             accessLevelType.AddMember("Write", new EdmEnumMemberValue(2));
@@ -988,6 +989,37 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip
                     out payload, out contentType);
 
                 this.ReadPayload(payload, contentType, model, omReader => omReader.ReadProperty());
+            }
+        }
+
+        // V4 Protocol Spec Chapter 10.14: Collection of Value with Enum Type
+        // Response: http://host/service/$metadata#Collection(Model.AccessLevel)
+        [Fact]
+        public void CollectionOfEnumTypeUsingODataCollectionReader()
+        {
+            foreach (ODataFormat mimeType in mimeTypes)
+            {
+                string payload, contentType;
+                this.WriteAndValidateContextUri(mimeType, model,
+                    omWriter => omWriter.WriteProperty(this.CreateODataProperty(new Collection<AccessLevel> { AccessLevel.Read, AccessLevel.Write }, "AccessLevel")),
+                    string.Format("\"{0}$metadata#Collection({1}.AccessLevel)\"", TestBaseUri, TestNameSpace),
+                    out payload, out contentType);
+
+                this.ReadPayload(payload, contentType, model, omReader =>
+                {
+                    IEdmTypeReference typeReference = new EdmEnumTypeReference(accessLevelType, true);
+                    var reader = omReader.CreateODataCollectionReader(typeReference);
+                    IList items = new ArrayList();
+                    while (reader.Read())
+                    {
+                        if (ODataCollectionReaderState.Value == reader.State)
+                        {
+                            items.Add(reader.Item);
+                        }
+                    }
+
+                    Assert.Equal(2, items.Count);
+                });
             }
         }
 

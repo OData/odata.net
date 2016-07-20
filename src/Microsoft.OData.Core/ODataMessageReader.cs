@@ -1061,7 +1061,9 @@ namespace Microsoft.OData
                     throw new ArgumentException(Strings.ODataMessageReader_ExpectedTypeSpecifiedWithoutMetadata("expectedItemTypeReference"), "expectedItemTypeReference");
                 }
 
-                if (!expectedItemTypeReference.IsODataPrimitiveTypeKind() && expectedItemTypeReference.TypeKind() != EdmTypeKind.Complex)
+                if (!expectedItemTypeReference.IsODataPrimitiveTypeKind()
+                    && expectedItemTypeReference.TypeKind() != EdmTypeKind.Complex
+                    && expectedItemTypeReference.TypeKind() != EdmTypeKind.Enum)
                 {
                     throw new ArgumentException(
                         Strings.ODataMessageReader_ExpectedCollectionTypeWrongKind(expectedItemTypeReference.TypeKind().ToString()),

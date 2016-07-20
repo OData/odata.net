@@ -721,6 +721,9 @@ namespace Microsoft.OData.Metadata
                     // NOTE: we do allow inheritance (or co-/contra-variance) in collection types.
                     return ((IEdmCollectionType)baseType).ElementType.Definition.IsAssignableFrom(((IEdmCollectionType)subtype).ElementType.Definition);
 
+                case EdmTypeKind.Enum:
+                    return baseType.IsEquivalentTo(subtype);
+
                 default:
                     throw new ODataException(ErrorStrings.General_InternalError(InternalErrorCodesCommon.EdmLibraryExtensions_IsAssignableFrom_Type));
             }
