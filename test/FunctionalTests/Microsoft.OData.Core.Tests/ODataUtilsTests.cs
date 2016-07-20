@@ -159,23 +159,23 @@ namespace Microsoft.OData.Tests
         {
             var serviceDocument = this.CreateTestModel().GenerateServiceDocument();
             var entitySets = serviceDocument.EntitySets.ToList();
-            Assert.Equal(entitySets.Count, 2);
-            Assert.Equal(entitySets[0].Name, "Products");
-            Assert.Equal(entitySets[0].Url.ToString(), "Products");
-            Assert.Equal(entitySets[1].Name, "Customers");
-            Assert.Equal(entitySets[1].Url.ToString(), "Customers");
+            Assert.Equal(2, entitySets.Count);
+            Assert.Equal("Products", entitySets[0].Name);
+            Assert.Equal("Products", entitySets[0].Url.ToString());
+            Assert.Equal("Customers", entitySets[1].Name);
+            Assert.Equal("Customers", entitySets[1].Url.ToString());
 
             var singletons = serviceDocument.Singletons.ToList();
-            Assert.Equal(singletons.Count, 2);
-            Assert.Equal(singletons[0].Name, "SingleProduct");
-            Assert.Equal(singletons[0].Url.ToString(), "SingleProduct");
-            Assert.Equal(singletons[1].Name, "SingleCustomer");
-            Assert.Equal(singletons[1].Url.ToString(), "SingleCustomer");
+            Assert.Equal(2, singletons.Count);
+            Assert.Equal("SingleProduct", singletons[0].Name);
+            Assert.Equal("SingleProduct", singletons[0].Url.ToString());
+            Assert.Equal("SingleCustomer", singletons[1].Name);
+            Assert.Equal("SingleCustomer", singletons[1].Url.ToString());
 
             var functionImports = serviceDocument.FunctionImports.ToList();
-            Assert.Equal(functionImports.Count, 1);
-            Assert.Equal(functionImports[0].Name, "SimpleFunctionImport2");
-            Assert.Equal(functionImports[0].Url.ToString(), "SimpleFunctionImport2");
+            Assert.Equal(1, functionImports.Count);
+            Assert.Equal("SimpleFunctionImport3", functionImports[0].Name);
+            Assert.Equal("SimpleFunctionImport3", functionImports[0].Url.ToString());
         }
 
         [Fact]
@@ -220,7 +220,11 @@ namespace Microsoft.OData.Tests
 
             EdmFunction function2 = new EdmFunction("TestModel", "SimpleFunction2", EdmCoreModel.Instance.GetInt32(false), false /*isbound*/, null, true);
             function2.AddParameter("p1", EdmCoreModel.Instance.GetInt32(false));
-            defaultContainer.AddFunctionImport("SimpleFunctionImport2", function1, null, true /*IncludeInServiceDocument*/);
+            defaultContainer.AddFunctionImport("SimpleFunctionImport2", function2, null, true /*IncludeInServiceDocument*/);
+
+            // Parameterless unbound function.
+            EdmFunction function3 = new EdmFunction("TestModel", "SimpleFunction3", EdmCoreModel.Instance.GetInt32(false), false /*isbound*/, null, true);
+            defaultContainer.AddFunctionImport("SimpleFunctionImport3", function3, null, true /*IncludeInServiceDocument*/);
 
             return model;
         }

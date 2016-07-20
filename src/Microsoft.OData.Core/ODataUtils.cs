@@ -11,7 +11,6 @@ namespace Microsoft.OData
     using System.Collections.Generic;
     using System.Linq;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Metadata;
     #endregion Namespaces
 
     /// <summary>
@@ -201,7 +200,7 @@ namespace Microsoft.OData
                 .Select(entitySet => new ODataEntitySetInfo() { Name = entitySet.Name, Title = entitySet.Name, Url = new Uri(entitySet.Name, UriKind.RelativeOrAbsolute) }).ToList();
             serviceDocument.Singletons = model.EntityContainer.Singletons()
                 .Select(singleton => new ODataSingletonInfo() { Name = singleton.Name, Title = singleton.Name, Url = new Uri(singleton.Name, UriKind.RelativeOrAbsolute) }).ToList();
-            serviceDocument.FunctionImports = model.EntityContainer.OperationImports().OfType<IEdmFunctionImport>().Where(functionImport => functionImport.IncludeInServiceDocument)
+            serviceDocument.FunctionImports = model.EntityContainer.OperationImports().OfType<IEdmFunctionImport>().Where(functionImport => functionImport.IncludeInServiceDocument && !functionImport.Function.Parameters.Any())
                 .Select(functionImport => new ODataFunctionImportInfo() { Name = functionImport.Name, Title = functionImport.Name, Url = new Uri(functionImport.Name, UriKind.RelativeOrAbsolute) }).ToList();
 
             return serviceDocument;
