@@ -4,7 +4,7 @@ $filter = geo.intersects(geometry'Point(10 30)', geometry'Polygon((5 16, 5 30, 2
 FilterQueryOption
 	ItemType = [Microsoft.Test.Taupo.OData.WCFService.Employee Nullable=False]
 	Parameter = 
-	EntityRangeVariable
+	ResourceRangeVariable
 		Name = $it
 		NavigationSource = Boss
 		TypeReference = [Microsoft.Test.Taupo.OData.WCFService.Employee Nullable=False]

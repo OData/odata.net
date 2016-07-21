@@ -23,7 +23,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
         {
             IEdmEntitySet set = HardCodedTestModel.GetPeopleSet();
             CollectionResourceNode entityCollectionNode = new EntitySetNode(set);
-            var implicitParameter = new EntityRangeVariable(ExpressionConstants.It, HardCodedTestModel.GetPersonTypeReference(), entityCollectionNode);
+            var implicitParameter = new ResourceRangeVariable(ExpressionConstants.It, HardCodedTestModel.GetPersonTypeReference(), entityCollectionNode);
             this.bindingState = new BindingState(this.configuration) { ImplicitRangeVariable = implicitParameter };
             this.bindingState.RangeVariables.Push(new BindingState(this.configuration) { ImplicitRangeVariable = implicitParameter }.ImplicitRangeVariable);
             this.dottedIdentifierBinder = new DottedIdentifierBinder(FakeBindMethods.BindMethodReturningASinglePerson, this.bindingState);

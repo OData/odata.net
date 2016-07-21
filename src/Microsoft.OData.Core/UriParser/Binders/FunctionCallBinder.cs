@@ -714,7 +714,7 @@ namespace Microsoft.OData.UriParser
                     {
                         new ResourceRangeVariableReferenceNode(
                                                              state.ImplicitRangeVariable.Name,
-                                                             state.ImplicitRangeVariable as EntityRangeVariable),
+                                                             state.ImplicitRangeVariable as ResourceRangeVariable),
                         args[0]
                     };
             }

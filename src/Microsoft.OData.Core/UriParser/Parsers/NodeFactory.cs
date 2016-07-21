@@ -41,10 +41,10 @@ namespace Microsoft.OData.UriParser
             if (elementType.IsEntity())
             {
                 IEdmEntityTypeReference entityTypeReference = elementType as IEdmEntityTypeReference;
-                return new EntityRangeVariable(ExpressionConstants.It, entityTypeReference, path.NavigationSource());
+                return new ResourceRangeVariable(ExpressionConstants.It, entityTypeReference, path.NavigationSource());
             }
 
-            return new NonentityRangeVariable(ExpressionConstants.It, elementType, null);
+            return new NonResourceRangeVariable(ExpressionConstants.It, elementType, null);
         }
 
         /// <summary>
@@ -57,11 +57,11 @@ namespace Microsoft.OData.UriParser
         {
             if (elementType.IsEntity())
             {
-                return new EntityRangeVariable(ExpressionConstants.It, elementType as IEdmEntityTypeReference, navigationSource);
+                return new ResourceRangeVariable(ExpressionConstants.It, elementType as IEdmEntityTypeReference, navigationSource);
             }
 
             Debug.Assert(navigationSource == null, "if the type wasn't an entity then there should be no navigation source");
-            return new NonentityRangeVariable(ExpressionConstants.It, elementType, null);
+            return new NonResourceRangeVariable(ExpressionConstants.It, elementType, null);
         }
 
         /// <summary>
@@ -71,13 +71,13 @@ namespace Microsoft.OData.UriParser
         /// <returns>A new SingleValueNode (either an Resource or NonResource RangeVariableReferenceNode.</returns>
         internal static SingleValueNode CreateRangeVariableReferenceNode(RangeVariable rangeVariable)
         {
-            if (rangeVariable.Kind == RangeVariableKind.Nonentity)
+            if (rangeVariable.Kind == RangeVariableKind.NonResource)
             {
-                return new NonResourceRangeVariableReferenceNode(rangeVariable.Name, (NonentityRangeVariable)rangeVariable);
+                return new NonResourceRangeVariableReferenceNode(rangeVariable.Name, (NonResourceRangeVariable)rangeVariable);
             }
             else
             {
-                EntityRangeVariable entityRangeVariable = (EntityRangeVariable)rangeVariable;
+                ResourceRangeVariable entityRangeVariable = (ResourceRangeVariable)rangeVariable;
                 return new ResourceRangeVariableReferenceNode(entityRangeVariable.Name, entityRangeVariable);
             }
         }
@@ -96,10 +96,10 @@ namespace Microsoft.OData.UriParser
             {
                 var entityCollectionNode = nodeToIterateOver as CollectionResourceNode;
                 Debug.Assert(entityCollectionNode != null, "IF the element type was entity, the node type should be an entity collection");
-                return new EntityRangeVariable(parameter, elementType as IEdmEntityTypeReference, entityCollectionNode);
+                return new ResourceRangeVariable(parameter, elementType as IEdmEntityTypeReference, entityCollectionNode);
             }
 
-            return new NonentityRangeVariable(parameter, elementType, null);
+            return new NonResourceRangeVariable(parameter, elementType, null);
         }
 
         /// <summary>

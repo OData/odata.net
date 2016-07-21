@@ -144,7 +144,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
         {
             type.Should().NotBeNull();
             CollectionResourceNode entityCollectionNode = new EntitySetNode(type);
-            var implicitParameter = new EntityRangeVariable(ExpressionConstants.It, typeReference, entityCollectionNode);
+            var implicitParameter = new ResourceRangeVariable(ExpressionConstants.It, typeReference, entityCollectionNode);
             var state = new BindingState(this.configuration) { ImplicitRangeVariable = implicitParameter };
             state.RangeVariables.Push(state.ImplicitRangeVariable);
             return state;

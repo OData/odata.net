@@ -5,7 +5,7 @@ OrderByClause
 	Item Type = [Microsoft.Test.Taupo.OData.WCFService.Customer Nullable=False]
 	Direction = Descending
 	Range Variable = 
-	EntityRangeVariable
+	ResourceRangeVariable
 		Name = $it
 		NavigationSource = Customers
 		TypeReference = [Microsoft.Test.Taupo.OData.WCFService.Customer Nullable=False]
@@ -18,13 +18,13 @@ OrderByClause
 			Name = $it
 			NavigationSource = Customers
 			TypeReference = [Microsoft.Test.Taupo.OData.WCFService.Customer Nullable=False]
-			Range Variable = Microsoft.OData.UriParser.EntityRangeVariable
+			Range Variable = Microsoft.OData.UriParser.ResourceRangeVariable
 	Then By = 
 	OrderByClause
 		Item Type = [Microsoft.Test.Taupo.OData.WCFService.Customer Nullable=False]
 		Direction = Ascending
 		Range Variable = 
-		EntityRangeVariable
+		ResourceRangeVariable
 			Name = $it
 			NavigationSource = Customers
 			TypeReference = [Microsoft.Test.Taupo.OData.WCFService.Customer Nullable=False]
@@ -37,13 +37,13 @@ OrderByClause
 				Name = $it
 				NavigationSource = Customers
 				TypeReference = [Microsoft.Test.Taupo.OData.WCFService.Customer Nullable=False]
-				Range Variable = Microsoft.OData.UriParser.EntityRangeVariable
+				Range Variable = Microsoft.OData.UriParser.ResourceRangeVariable
 		Then By = 
 		OrderByClause
 			Item Type = [Microsoft.Test.Taupo.OData.WCFService.Customer Nullable=False]
 			Direction = Ascending
 			Range Variable = 
-			EntityRangeVariable
+			ResourceRangeVariable
 				Name = $it
 				NavigationSource = Customers
 				TypeReference = [Microsoft.Test.Taupo.OData.WCFService.Customer Nullable=False]
@@ -56,13 +56,13 @@ OrderByClause
 					Name = $it
 					NavigationSource = Customers
 					TypeReference = [Microsoft.Test.Taupo.OData.WCFService.Customer Nullable=False]
-					Range Variable = Microsoft.OData.UriParser.EntityRangeVariable
+					Range Variable = Microsoft.OData.UriParser.ResourceRangeVariable
 			Then By = 
 			OrderByClause
 				Item Type = [Microsoft.Test.Taupo.OData.WCFService.Customer Nullable=False]
 				Direction = Descending
 				Range Variable = 
-				EntityRangeVariable
+				ResourceRangeVariable
 					Name = $it
 					NavigationSource = Customers
 					TypeReference = [Microsoft.Test.Taupo.OData.WCFService.Customer Nullable=False]
@@ -75,5 +75,5 @@ OrderByClause
 						Name = $it
 						NavigationSource = Customers
 						TypeReference = [Microsoft.Test.Taupo.OData.WCFService.Customer Nullable=False]
-						Range Variable = Microsoft.OData.UriParser.EntityRangeVariable
+						Range Variable = Microsoft.OData.UriParser.ResourceRangeVariable
 				Then By = 

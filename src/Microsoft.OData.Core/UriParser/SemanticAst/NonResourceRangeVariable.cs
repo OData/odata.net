@@ -1,5 +1,5 @@
 ﻿//---------------------------------------------------------------------
-// <copyright file="NonentityRangeVariable.cs" company="Microsoft">
+// <copyright file="NonResourceRangeVariable.cs" company="Microsoft">
 //      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 // </copyright>
 //---------------------------------------------------------------------
@@ -13,9 +13,9 @@ namespace Microsoft.OData.UriParser
     #endregion Namespaces
 
     /// <summary>
-    /// A rangeVariable from an Any or All that doesn't refer to an entity set
+    /// A rangeVariable from an Any or All that doesn't refer to an entity set or complex collection.
     /// </summary>
-    public sealed class NonentityRangeVariable : RangeVariable
+    public sealed class NonResourceRangeVariable : RangeVariable
     {
         /// <summary>
         ///  The name of the associated rangeVariable
@@ -34,14 +34,14 @@ namespace Microsoft.OData.UriParser
         private readonly IEdmTypeReference typeReference;
 
         /// <summary>
-        /// Creates a <see cref="NonentityRangeVariable"/>.
+        /// Creates a <see cref="NonResourceRangeVariable"/>.
         /// </summary>
         /// <param name="name"> The name of the associated range variable.</param>
         /// <param name="typeReference">The type of the value the range variable represents.</param>
         /// <param name="collectionNode">The collection that this rangeVariable node iterates over, can be null in the case of single value nodes.</param>
         /// <exception cref="System.ArgumentNullException">Throws if the input name is null.</exception>
         /// <exception cref="ArgumentException">Throws if the input type reference is an entity type.</exception>
-        public NonentityRangeVariable(string name, IEdmTypeReference typeReference, CollectionNode collectionNode)
+        public NonResourceRangeVariable(string name, IEdmTypeReference typeReference, CollectionNode collectionNode)
         {
             ExceptionUtils.CheckArgumentNotNull(name, "name");
             this.name = name;
@@ -59,7 +59,7 @@ namespace Microsoft.OData.UriParser
         }
 
         /// <summary>
-        /// Gets the name of the associated rangevariable.
+        /// Gets the name of the associated range variable.
         /// </summary>
         public override string Name
         {
@@ -75,7 +75,7 @@ namespace Microsoft.OData.UriParser
         }
 
         /// <summary>
-        /// Gets the collection that this rangeVariable node iterates over, can be null in the case of single value nodes.
+        /// Gets the collection that this range variable node iterates over, can be null in the case of single value nodes.
         /// </summary>
         public CollectionNode CollectionNode
         {
@@ -87,7 +87,7 @@ namespace Microsoft.OData.UriParser
         /// </summary>
         public override int Kind
         {
-            get { return RangeVariableKind.Nonentity; }
+            get { return RangeVariableKind.NonResource; }
         }
     }
 }

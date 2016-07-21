@@ -92,7 +92,7 @@ namespace Microsoft.Test.Taupo.OData.Scenario.Tests.UriParser
         /// <param name="left">Left side of comparison</param>
         /// <param name="right">Right side of comparison</param>
         /// <returns>True if equal, otherwise false</returns>
-        private bool Compare(EntityRangeVariable left, EntityRangeVariable right)
+        private bool Compare(ResourceRangeVariable left, ResourceRangeVariable right)
         {
             if (left.Name != right.Name) return false;
             if (left.TypeReference != right.TypeReference) return false;
@@ -120,7 +120,7 @@ namespace Microsoft.Test.Taupo.OData.Scenario.Tests.UriParser
         /// <param name="left">Left side of comparison</param>
         /// <param name="right">Right side of comparison</param>
         /// <returns>True if equal, otherwise false</returns>
-        private bool Compare(NonentityRangeVariable left, NonentityRangeVariable right)
+        private bool Compare(NonResourceRangeVariable left, NonResourceRangeVariable right)
         {
             if (left.Name != right.Name) return false;
             if (left.TypeReference != right.TypeReference) return false;
@@ -453,10 +453,10 @@ namespace Microsoft.Test.Taupo.OData.Scenario.Tests.UriParser
         /// <returns>True if equal, otherwise false</returns>
         private bool CompareParameters(RangeVariable left, RangeVariable right)
         {
-            if (left is EntityRangeVariable && right is EntityRangeVariable)
-                return this.Compare((EntityRangeVariable)left, (EntityRangeVariable)right);
-            if (left is NonentityRangeVariable && right is NonentityRangeVariable)
-                return this.Compare((NonentityRangeVariable)left, (NonentityRangeVariable)right);
+            if (left is ResourceRangeVariable && right is ResourceRangeVariable)
+                return this.Compare((ResourceRangeVariable)left, (ResourceRangeVariable)right);
+            if (left is NonResourceRangeVariable && right is NonResourceRangeVariable)
+                return this.Compare((NonResourceRangeVariable)left, (NonResourceRangeVariable)right);
             return false;
         }
     }

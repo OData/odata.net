@@ -24,7 +24,7 @@ namespace Microsoft.OData.Tests.UriParser.Extensions.Binders
 
         public ApplyBinderTests()
         {
-            var implicitRangeVariable = new EntityRangeVariable(ExpressionConstants.It,
+            var implicitRangeVariable = new ResourceRangeVariable(ExpressionConstants.It,
                 HardCodedTestModel.GetPersonTypeReference(), HardCodedTestModel.GetPeopleSet());
             this._bindingState = new BindingState(_configuration) { ImplicitRangeVariable = implicitRangeVariable };
             this._bindingState.RangeVariables.Push(

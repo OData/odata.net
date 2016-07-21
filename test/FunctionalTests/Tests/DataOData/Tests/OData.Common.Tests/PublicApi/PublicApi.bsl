@@ -5298,8 +5298,8 @@ public sealed class Microsoft.OData.UriParser.CustomUriLiteralPrefixes {
 }
 
 public sealed class Microsoft.OData.UriParser.RangeVariableKind {
-	public static int Entity = 0
-	public static int Nonentity = 1
+	public static int NonResource = 1
+	public static int Resource = 0
 }
 
 public class Microsoft.OData.UriParser.CollectionComplexNode : Microsoft.OData.UriParser.CollectionResourceNode {
@@ -5648,18 +5648,6 @@ public sealed class Microsoft.OData.UriParser.EntityIdSegment {
 	System.Uri Id  { public get; }
 }
 
-public sealed class Microsoft.OData.UriParser.EntityRangeVariable : Microsoft.OData.UriParser.RangeVariable {
-	public EntityRangeVariable (string name, Microsoft.OData.Edm.IEdmEntityTypeReference entityType, Microsoft.OData.Edm.IEdmNavigationSource navigationSource)
-	public EntityRangeVariable (string name, Microsoft.OData.Edm.IEdmEntityTypeReference entityType, Microsoft.OData.UriParser.CollectionResourceNode entityCollectionNode)
-
-	Microsoft.OData.UriParser.CollectionResourceNode EntityCollectionNode  { public get; }
-	Microsoft.OData.Edm.IEdmEntityTypeReference EntityTypeReference  { public get; }
-	int Kind  { public virtual get; }
-	string Name  { public virtual get; }
-	Microsoft.OData.Edm.IEdmNavigationSource NavigationSource  { public get; }
-	Microsoft.OData.Edm.IEdmTypeReference TypeReference  { public virtual get; }
-}
-
 public sealed class Microsoft.OData.UriParser.EntitySetSegment : Microsoft.OData.UriParser.ODataPathSegment {
 	public EntitySetSegment (Microsoft.OData.Edm.IEdmEntitySet entitySet)
 
@@ -5755,8 +5743,8 @@ public sealed class Microsoft.OData.UriParser.NavigationPropertySegment : Micros
 	public virtual T TranslateWith (PathSegmentTranslator`1 translator)
 }
 
-public sealed class Microsoft.OData.UriParser.NonentityRangeVariable : Microsoft.OData.UriParser.RangeVariable {
-	public NonentityRangeVariable (string name, Microsoft.OData.Edm.IEdmTypeReference typeReference, Microsoft.OData.UriParser.CollectionNode collectionNode)
+public sealed class Microsoft.OData.UriParser.NonResourceRangeVariable : Microsoft.OData.UriParser.RangeVariable {
+	public NonResourceRangeVariable (string name, Microsoft.OData.Edm.IEdmTypeReference typeReference, Microsoft.OData.UriParser.CollectionNode collectionNode)
 
 	Microsoft.OData.UriParser.CollectionNode CollectionNode  { public get; }
 	int Kind  { public virtual get; }
@@ -5765,10 +5753,10 @@ public sealed class Microsoft.OData.UriParser.NonentityRangeVariable : Microsoft
 }
 
 public sealed class Microsoft.OData.UriParser.NonResourceRangeVariableReferenceNode : Microsoft.OData.UriParser.SingleValueNode {
-	public NonResourceRangeVariableReferenceNode (string name, Microsoft.OData.UriParser.NonentityRangeVariable rangeVariable)
+	public NonResourceRangeVariableReferenceNode (string name, Microsoft.OData.UriParser.NonResourceRangeVariable rangeVariable)
 
 	string Name  { public get; }
-	Microsoft.OData.UriParser.NonentityRangeVariable RangeVariable  { public get; }
+	Microsoft.OData.UriParser.NonResourceRangeVariable RangeVariable  { public get; }
 	Microsoft.OData.Edm.IEdmTypeReference TypeReference  { public virtual get; }
 
 	public virtual T Accept (QueryNodeVisitor`1 visitor)
@@ -5911,12 +5899,24 @@ public sealed class Microsoft.OData.UriParser.PropertySegment : Microsoft.OData.
 	public virtual T TranslateWith (PathSegmentTranslator`1 translator)
 }
 
+public sealed class Microsoft.OData.UriParser.ResourceRangeVariable : Microsoft.OData.UriParser.RangeVariable {
+	public ResourceRangeVariable (string name, Microsoft.OData.Edm.IEdmEntityTypeReference entityType, Microsoft.OData.Edm.IEdmNavigationSource navigationSource)
+	public ResourceRangeVariable (string name, Microsoft.OData.Edm.IEdmEntityTypeReference entityType, Microsoft.OData.UriParser.CollectionResourceNode entityCollectionNode)
+
+	Microsoft.OData.UriParser.CollectionResourceNode EntityCollectionNode  { public get; }
+	Microsoft.OData.Edm.IEdmEntityTypeReference EntityTypeReference  { public get; }
+	int Kind  { public virtual get; }
+	string Name  { public virtual get; }
+	Microsoft.OData.Edm.IEdmNavigationSource NavigationSource  { public get; }
+	Microsoft.OData.Edm.IEdmTypeReference TypeReference  { public virtual get; }
+}
+
 public sealed class Microsoft.OData.UriParser.ResourceRangeVariableReferenceNode : Microsoft.OData.UriParser.SingleResourceNode {
-	public ResourceRangeVariableReferenceNode (string name, Microsoft.OData.UriParser.EntityRangeVariable rangeVariable)
+	public ResourceRangeVariableReferenceNode (string name, Microsoft.OData.UriParser.ResourceRangeVariable rangeVariable)
 
 	string Name  { public get; }
 	Microsoft.OData.Edm.IEdmNavigationSource NavigationSource  { public virtual get; }
-	Microsoft.OData.UriParser.EntityRangeVariable RangeVariable  { public get; }
+	Microsoft.OData.UriParser.ResourceRangeVariable RangeVariable  { public get; }
 	Microsoft.OData.Edm.IEdmStructuredTypeReference StructuredTypeReference  { public virtual get; }
 	Microsoft.OData.Edm.IEdmTypeReference TypeReference  { public virtual get; }
 

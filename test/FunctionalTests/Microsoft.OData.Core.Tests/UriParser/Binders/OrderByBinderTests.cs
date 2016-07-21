@@ -24,7 +24,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
         {
             this.orderbyBinder = new OrderByBinder(FakeBindMethods.BindMethodReturningASinglePrimitive);
 
-            var implicitRangeVariable = new EntityRangeVariable(ExpressionConstants.It, HardCodedTestModel.GetPersonTypeReference(), HardCodedTestModel.GetPeopleSet());
+            var implicitRangeVariable = new ResourceRangeVariable(ExpressionConstants.It, HardCodedTestModel.GetPersonTypeReference(), HardCodedTestModel.GetPeopleSet());
             this.bindingState = new BindingState(configuration) { ImplicitRangeVariable = implicitRangeVariable };
             this.bindingState.RangeVariables.Push(new BindingState(configuration) { ImplicitRangeVariable = implicitRangeVariable }.ImplicitRangeVariable);
         }

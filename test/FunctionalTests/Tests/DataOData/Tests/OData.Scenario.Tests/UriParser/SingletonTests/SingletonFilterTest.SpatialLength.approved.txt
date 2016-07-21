@@ -4,7 +4,7 @@ $filter = geo.length(geometry'LineString(10 30, 7 28, 6 6)') lt 0.5
 FilterQueryOption
 	ItemType = [Microsoft.Test.Taupo.OData.WCFService.Employee Nullable=False]
 	Parameter = 
-	EntityRangeVariable
+	ResourceRangeVariable
 		Name = $it
 		NavigationSource = Boss
 		TypeReference = [Microsoft.Test.Taupo.OData.WCFService.Employee Nullable=False]

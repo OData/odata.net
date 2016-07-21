@@ -5,7 +5,7 @@ OrderByClause
 	Item Type = [Microsoft.Test.Taupo.OData.WCFService.Person Nullable=False]
 	Direction = Ascending
 	Range Variable = 
-	EntityRangeVariable
+	ResourceRangeVariable
 		Name = $it
 		NavigationSource = People
 		TypeReference = [Microsoft.Test.Taupo.OData.WCFService.Person Nullable=False]
@@ -29,5 +29,5 @@ OrderByClause
 					Name = $it
 					NavigationSource = People
 					TypeReference = [Microsoft.Test.Taupo.OData.WCFService.Person Nullable=False]
-					Range Variable = Microsoft.OData.UriParser.EntityRangeVariable
+					Range Variable = Microsoft.OData.UriParser.ResourceRangeVariable
 	Then By = 

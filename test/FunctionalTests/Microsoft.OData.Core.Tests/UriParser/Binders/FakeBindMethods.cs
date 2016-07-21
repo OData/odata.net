@@ -14,10 +14,10 @@ namespace Microsoft.OData.Tests.UriParser.Binders
     /// </summary>
     internal class FakeBindMethods
     {
-        private static readonly EntityRangeVariable DogsEntityRangeVariable = new EntityRangeVariable("A_DOG", HardCodedTestModel.GetDogTypeReference(), HardCodedTestModel.GetDogsSet());
-        private static readonly EntityRangeVariable PeopleEntityRangeVariable = new EntityRangeVariable("A_PERSON", HardCodedTestModel.GetPersonTypeReference(), HardCodedTestModel.GetPeopleSet());
-        private static readonly EntityRangeVariable PaintingEntityRangeVariable = new EntityRangeVariable("A_PAINTING", HardCodedTestModel.GetPaintingTypeReference(), HardCodedTestModel.GetPaintingsSet());
-        private static readonly EntityRangeVariable LionsEntityRangeVariable = new EntityRangeVariable("A_LION", HardCodedTestModel.GetLionTypeReference(), HardCodedTestModel.GetLionSet());
+        private static readonly ResourceRangeVariable DogsEntityRangeVariable = new ResourceRangeVariable("A_DOG", HardCodedTestModel.GetDogTypeReference(), HardCodedTestModel.GetDogsSet());
+        private static readonly ResourceRangeVariable PeopleEntityRangeVariable = new ResourceRangeVariable("A_PERSON", HardCodedTestModel.GetPersonTypeReference(), HardCodedTestModel.GetPeopleSet());
+        private static readonly ResourceRangeVariable PaintingEntityRangeVariable = new ResourceRangeVariable("A_PAINTING", HardCodedTestModel.GetPaintingTypeReference(), HardCodedTestModel.GetPaintingsSet());
+        private static readonly ResourceRangeVariable LionsEntityRangeVariable = new ResourceRangeVariable("A_LION", HardCodedTestModel.GetLionTypeReference(), HardCodedTestModel.GetLionSet());
         private const int KeyBinderConstantValue = 0xBAD;
         
         public static readonly ConstantNode KeyBinderConstantToken = new ConstantNode(KeyBinderConstantValue);

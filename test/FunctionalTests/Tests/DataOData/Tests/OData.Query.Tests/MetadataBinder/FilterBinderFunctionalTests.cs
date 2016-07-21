@@ -280,7 +280,7 @@ namespace Microsoft.Test.Taupo.OData.Query.Tests.MetadataBinder
         public static IEnumerable<FilterTestCase> PropertyAccessTestCases(IEdmModel model)
         {
             // Accessing a primitive property on the entity type
-            EntityRangeVariable customersEntityRangeVariable = new EntityRangeVariable("dummy", model.ResolveTypeReference("TestNS.Customer", false).AsEntity(), model.FindEntityContainer("BinderTestMetadata").FindEntitySet("Customers"));
+            ResourceRangeVariable customersEntityRangeVariable = new ResourceRangeVariable("dummy", model.ResolveTypeReference("TestNS.Customer", false).AsEntity(), model.FindEntityContainer("BinderTestMetadata").FindEntitySet("Customers"));
             SingleValuePropertyAccessNode propertyAccessNode = new SingleValuePropertyAccessNode(new ResourceRangeVariableReferenceNode(customersEntityRangeVariable.Name, customersEntityRangeVariable),
                         model.ResolveProperty("TestNS.Customer.Name"));
             yield return new FilterTestCase()
@@ -306,7 +306,7 @@ namespace Microsoft.Test.Taupo.OData.Query.Tests.MetadataBinder
 
         public static IEnumerable<FilterTestCase> TopFilterExpressionTestCases(IEdmModel model)
         {
-            EntityRangeVariable entityRangeVariable = new EntityRangeVariable("dummy", model.ResolveTypeReference("TestNS.TypeWithPrimitiveProperties", false).AsEntity(), model.FindEntityContainer("BinderTestMetadata").FindEntitySet("TypesWithPrimitiveProperties"));
+            ResourceRangeVariable entityRangeVariable = new ResourceRangeVariable("dummy", model.ResolveTypeReference("TestNS.TypeWithPrimitiveProperties", false).AsEntity(), model.FindEntityContainer("BinderTestMetadata").FindEntitySet("TypesWithPrimitiveProperties"));
             yield return new FilterTestCase()
             {
                 EntitySetName = "TypesWithPrimitiveProperties",
@@ -528,7 +528,7 @@ namespace Microsoft.Test.Taupo.OData.Query.Tests.MetadataBinder
                     CollectionResourceNode entityCollectionNode = new EntitySetNode(entitySet);
                     var expectedFilter = new FilterClause(
                         testCase.ExpectedFilterCondition,
-                        new EntityRangeVariable(ExpressionConstants.It, entitySet.EntityType().ToTypeReference(false).AsEntity(), entityCollectionNode)
+                        new ResourceRangeVariable(ExpressionConstants.It, entitySet.EntityType().ToTypeReference(false).AsEntity(), entityCollectionNode)
                         );
 
                     QueryNodeUtils.VerifyFilterClausesAreEqual(

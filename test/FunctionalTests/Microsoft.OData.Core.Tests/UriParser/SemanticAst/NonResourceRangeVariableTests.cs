@@ -13,21 +13,21 @@ using Xunit;
 namespace Microsoft.OData.Tests.UriParser.SemanticAst
 {
     /// <summary>
-    /// Unit tests for the NonentityRangeVariable class
+    /// Unit tests for the NonResourceRangeVariable class
     /// </summary>
-    public class NonentityRangeVariableTests
+    public class NonResourceRangeVariableTests
     {
         [Fact]
         public void NameCannotBeNull()
         {
-            Action createWithNullName = () => new NonentityRangeVariable(null, EdmCoreModel.Instance.GetPrimitive(EdmPrimitiveTypeKind.Double, true), null);
+            Action createWithNullName = () => new NonResourceRangeVariable(null, EdmCoreModel.Instance.GetPrimitive(EdmPrimitiveTypeKind.Double, true), null);
             createWithNullName.ShouldThrow<Exception>(Error.ArgumentNull("name").ToString());
         }
 
         [Fact]
         public void NameIsSetCorrectly()
         {
-            NonentityRangeVariable nonentityRangeVariable = new NonentityRangeVariable("stuff", EdmCoreModel.Instance.GetPrimitive(EdmPrimitiveTypeKind.Double, true), null);
+            NonResourceRangeVariable nonentityRangeVariable = new NonResourceRangeVariable("stuff", EdmCoreModel.Instance.GetPrimitive(EdmPrimitiveTypeKind.Double, true), null);
             nonentityRangeVariable.Name.Should().Be("stuff");
         }
 
@@ -35,7 +35,7 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
         public void TypeReferenceIsSetCorrectly()
         {
             var typeReference = EdmCoreModel.Instance.GetPrimitive(EdmPrimitiveTypeKind.Double, true);
-            NonentityRangeVariable nonentityRangeVariable = new NonentityRangeVariable("stuff", typeReference, null);
+            NonResourceRangeVariable nonentityRangeVariable = new NonResourceRangeVariable("stuff", typeReference, null);
             nonentityRangeVariable.TypeReference.Should().BeSameAs(typeReference);
         }
 
@@ -43,15 +43,15 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
         public void DissallowEntityType()
         {
             var entityTypeRef = HardCodedTestModel.GetPersonTypeReference();
-            Action ctor = () => new NonentityRangeVariable("abc", entityTypeRef, null);
+            Action ctor = () => new NonResourceRangeVariable("abc", entityTypeRef, null);
             ctor.ShouldThrow<ArgumentException>().WithMessage(Strings.Nodes_NonentityParameterQueryNodeWithEntityType(entityTypeRef.FullName()));
         }
 
         [Fact]
         public void KindIsNonEntityRangeVariable()
         {
-            NonentityRangeVariable nonentityRangeVariable = new NonentityRangeVariable("stuff", EdmCoreModel.Instance.GetPrimitive(EdmPrimitiveTypeKind.Double, true), null);
-            nonentityRangeVariable.Kind.Should().Be(RangeVariableKind.Nonentity);
+            NonResourceRangeVariable nonentityRangeVariable = new NonResourceRangeVariable("stuff", EdmCoreModel.Instance.GetPrimitive(EdmPrimitiveTypeKind.Double, true), null);
+            nonentityRangeVariable.Kind.Should().Be(RangeVariableKind.NonResource);
         }
     }
 }

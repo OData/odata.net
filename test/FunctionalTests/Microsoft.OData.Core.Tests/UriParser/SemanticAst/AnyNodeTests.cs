@@ -20,7 +20,7 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
         [Fact]
         public void RangeVariablesShouldBeSetCorrectly()
         {
-            EntityRangeVariable rangeVariable = (EntityRangeVariable)NodeFactory.CreateImplicitRangeVariable(HardCodedTestModel.GetDogTypeReference(), HardCodedTestModel.GetDogsSet());
+            ResourceRangeVariable rangeVariable = (ResourceRangeVariable)NodeFactory.CreateImplicitRangeVariable(HardCodedTestModel.GetDogTypeReference(), HardCodedTestModel.GetDogsSet());
             Collection<RangeVariable> rangeVariables = new Collection<RangeVariable>
                 {
                     rangeVariable
@@ -28,17 +28,17 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
             AnyNode anyNode = new AnyNode(rangeVariables, rangeVariable);
             anyNode.RangeVariables.Count.Should().Be(1);
             anyNode.RangeVariables[0].Name.Should().Be(ExpressionConstants.It);
-            anyNode.RangeVariables[0].Kind.Should().Be(RangeVariableKind.Entity);
+            anyNode.RangeVariables[0].Kind.Should().Be(RangeVariableKind.Resource);
             anyNode.RangeVariables[0].TypeReference.FullName().Should().Be(HardCodedTestModel.GetDogTypeReference().FullName());
-            EntityRangeVariable returnedRangeVariable = (EntityRangeVariable)anyNode.RangeVariables[0];
+            ResourceRangeVariable returnedRangeVariable = (ResourceRangeVariable)anyNode.RangeVariables[0];
             returnedRangeVariable.NavigationSource.Should().Be(HardCodedTestModel.GetDogsSet());
         }
 
         [Fact]
         public void RangeVariableShouldBeSetCorrectly()
         {
-            EntityRangeVariable rangeVariable =
-                (EntityRangeVariable)
+            ResourceRangeVariable rangeVariable =
+                (ResourceRangeVariable)
                 NodeFactory.CreateImplicitRangeVariable(HardCodedTestModel.GetDogTypeReference(), HardCodedTestModel.GetDogsSet());
             Collection<RangeVariable> rangeVariables = new Collection<RangeVariable>
                 {
@@ -46,14 +46,14 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
                 };
             AnyNode anyNode = new AnyNode(rangeVariables, rangeVariable);
             anyNode.CurrentRangeVariable.Name.Should().Be(ExpressionConstants.It);
-            anyNode.CurrentRangeVariable.Kind.Should().Be(RangeVariableKind.Entity);
+            anyNode.CurrentRangeVariable.Kind.Should().Be(RangeVariableKind.Resource);
             anyNode.CurrentRangeVariable.TypeReference.FullName().Should().Be(HardCodedTestModel.GetDogTypeReference().FullName());
         }
 
         [Fact]
         public void TypeReferenceShouldBeBoolean()
         {
-            EntityRangeVariable rangeVariable = (EntityRangeVariable)NodeFactory.CreateImplicitRangeVariable(HardCodedTestModel.GetDogTypeReference(), HardCodedTestModel.GetDogsSet());
+            ResourceRangeVariable rangeVariable = (ResourceRangeVariable)NodeFactory.CreateImplicitRangeVariable(HardCodedTestModel.GetDogTypeReference(), HardCodedTestModel.GetDogsSet());
             Collection<RangeVariable> rangeVariables = new Collection<RangeVariable>
                 {
                     rangeVariable
@@ -65,7 +65,7 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
         [Fact]
         public void KindShouldBeAnyNode()
         {
-            EntityRangeVariable rangeVariable = (EntityRangeVariable)NodeFactory.CreateImplicitRangeVariable(HardCodedTestModel.GetDogTypeReference(), HardCodedTestModel.GetDogsSet());
+            ResourceRangeVariable rangeVariable = (ResourceRangeVariable)NodeFactory.CreateImplicitRangeVariable(HardCodedTestModel.GetDogTypeReference(), HardCodedTestModel.GetDogsSet());
             Collection<RangeVariable> rangeVariables = new Collection<RangeVariable>
                 {
                     rangeVariable

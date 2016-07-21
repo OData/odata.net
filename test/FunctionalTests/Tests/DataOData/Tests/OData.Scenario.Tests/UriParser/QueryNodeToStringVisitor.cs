@@ -113,9 +113,9 @@ namespace Microsoft.Test.Taupo.OData.Scenario.Tests.UriParser
         /// </summary>
         /// <param name="node">Node to write to string</param>
         /// <returns>String representation of node.</returns>
-        private static string ToString(EntityRangeVariable node)
+        private static string ToString(ResourceRangeVariable node)
         {
-            return tabHelper.Prefix + "EntityRangeVariable" +
+            return tabHelper.Prefix + "ResourceRangeVariable" +
                 tabHelper.Indent(() =>
                     tabHelper.Prefix + "Name = " + node.Name +
                     tabHelper.Prefix + "NavigationSource = " + node.NavigationSource.Name +
@@ -143,9 +143,9 @@ namespace Microsoft.Test.Taupo.OData.Scenario.Tests.UriParser
         /// </summary>
         /// <param name="node">Node to write to string</param>
         /// <returns>String representation of node.</returns>
-        private static string ToString(NonentityRangeVariable node)
+        private static string ToString(NonResourceRangeVariable node)
         {
-            return tabHelper.Prefix + "NonentityRangeVariable" +
+            return tabHelper.Prefix + "NonResourceRangeVariable" +
                 tabHelper.Indent(() =>
                     tabHelper.Prefix + "Name = " + node.Name +
                     tabHelper.Prefix + "TypeReference = " + node.TypeReference
@@ -537,10 +537,10 @@ namespace Microsoft.Test.Taupo.OData.Scenario.Tests.UriParser
         /// <returns>String representation of node.</returns>
         private static string ToStringParameter(RangeVariable node)
         {
-            if (node is EntityRangeVariable)
-                return ToString((EntityRangeVariable)node);
-            if (node is NonentityRangeVariable)
-                return ToString((NonentityRangeVariable)node);
+            if (node is ResourceRangeVariable)
+                return ToString((ResourceRangeVariable)node);
+            if (node is NonResourceRangeVariable)
+                return ToString((NonResourceRangeVariable)node);
             return String.Empty;
         }
         #endregion

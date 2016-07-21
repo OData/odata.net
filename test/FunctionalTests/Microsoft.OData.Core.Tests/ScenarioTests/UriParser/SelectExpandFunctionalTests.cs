@@ -1073,7 +1073,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
                 HardCodedTestModel.GetPeopleSet());
             var filterClause = results.SelectedItems.Single(x => x is ExpandedNavigationSelectItem).ShouldBeExpansionFor(HardCodedTestModel.GetPersonMyPaintingsNavProp()).And.FilterOption;
             filterClause.ItemType.FullName().Should().Be(HardCodedTestModel.GetPaintingType().FullName());
-            filterClause.RangeVariable.Kind.Should().Be(RangeVariableKind.Entity);
+            filterClause.RangeVariable.Kind.Should().Be(RangeVariableKind.Resource);
             filterClause.RangeVariable.Name.Should().Be("$it");
             filterClause.Expression.ShouldBeConstantQueryNode(true);
         }
@@ -1094,7 +1094,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
                 HardCodedTestModel.GetPeopleSet());
             var orderbyClause = results.SelectedItems.Single(x => x is ExpandedNavigationSelectItem).ShouldBeExpansionFor(HardCodedTestModel.GetPersonMyPaintingsNavProp()).And.OrderByOption;
             orderbyClause.ItemType.FullName().Should().Be(HardCodedTestModel.GetPaintingType().FullName());
-            orderbyClause.RangeVariable.Kind.Should().Be(RangeVariableKind.Entity);
+            orderbyClause.RangeVariable.Kind.Should().Be(RangeVariableKind.Resource);
             orderbyClause.RangeVariable.Name.Should().Be("$it");
             orderbyClause.Expression.ShouldBeSingleValuePropertyAccessQueryNode(HardCodedTestModel.GetPaintingValueProperty());
         }

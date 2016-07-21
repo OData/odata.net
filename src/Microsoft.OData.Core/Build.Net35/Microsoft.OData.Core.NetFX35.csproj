@@ -1111,9 +1111,6 @@
     <Compile Include="$(ODataCrossTargettingSourcePath)\UriParser\SemanticAst\EntityIdSegment.cs">
       <Link>Microsoft\OData\Core\UriParser\SemanticAst\EntityIdSegment.cs</Link>
     </Compile>
-    <Compile Include="$(ODataCrossTargettingSourcePath)\UriParser\SemanticAst\EntityRangeVariable.cs">
-      <Link>Microsoft\OData\Core\UriParser\SemanticAst\EntityRangeVariable.cs</Link>
-    </Compile>
     <Compile Include="$(ODataCrossTargettingSourcePath)\UriParser\SemanticAst\EntitySetSegment.cs">
       <Link>Microsoft\OData\Core\UriParser\SemanticAst\EntitySetSegment.cs</Link>
     </Compile>
@@ -1152,9 +1149,6 @@
     </Compile>
     <Compile Include="$(ODataCrossTargettingSourcePath)\UriParser\SemanticAst\NavigationPropertySegment.cs">
       <Link>Microsoft\OData\Core\UriParser\SemanticAst\NavigationPropertySegment.cs</Link>
-    </Compile>
-    <Compile Include="$(ODataCrossTargettingSourcePath)\UriParser\SemanticAst\NonentityRangeVariable.cs">
-      <Link>Microsoft\OData\Core\UriParser\SemanticAst\NonentityRangeVariable.cs</Link>
     </Compile>
     <Compile Include="$(ODataCrossTargettingSourcePath)\UriParser\SemanticAst\ODataExpandPath.cs">
       <Link>Microsoft\OData\Core\UriParser\SemanticAst\ODataExpandPath.cs</Link>
@@ -1611,8 +1605,14 @@
     <Compile Include="..\UriParser\SemanticAst\CollectionResourceNode.cs">
       <Link>Microsoft\OData\Core\UriParser\SemanticAst\CollectionResourceNode.cs</Link>
     </Compile>
+    <Compile Include="..\UriParser\SemanticAst\NonResourceRangeVariable.cs">
+      <Link>Microsoft\OData\Core\UriParser\SemanticAst\NonResourceRangeVariable.cs</Link>
+    </Compile>
     <Compile Include="..\UriParser\SemanticAst\NonResourceRangeVariableReferenceNode.cs">
       <Link>Microsoft\OData\Core\UriParser\SemanticAst\NonResourceRangeVariableReferenceNode.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\SemanticAst\ResourceRangeVariable.cs">
+      <Link>Microsoft\OData\Core\UriParser\SemanticAst\ResourceRangeVariable.cs</Link>
     </Compile>
     <Compile Include="..\UriParser\SemanticAst\ResourceRangeVariableReferenceNode.cs">
       <Link>Microsoft\OData\Core\UriParser\SemanticAst\ResourceRangeVariableReferenceNode.cs</Link>

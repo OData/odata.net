@@ -4,7 +4,7 @@ $filter = NavOnContained/ID eq 'abc'
 FilterQueryOption
 	ItemType = [NS.ContainedEntityType Nullable=False]
 	Parameter = 
-	EntityRangeVariable
+	ResourceRangeVariable
 		Name = $it
 		NavigationSource = ContainedNav1
 		TypeReference = [NS.ContainedEntityType Nullable=False]
@@ -26,6 +26,6 @@ FilterQueryOption
 						Name = $it
 						NavigationSource = ContainedNav1
 						TypeReference = [NS.ContainedEntityType Nullable=False]
-						Range Variable = Microsoft.OData.UriParser.EntityRangeVariable
+						Range Variable = Microsoft.OData.UriParser.ResourceRangeVariable
 	Equal
 		abc(Type: [Edm.String Nullable=True Unicode=True])

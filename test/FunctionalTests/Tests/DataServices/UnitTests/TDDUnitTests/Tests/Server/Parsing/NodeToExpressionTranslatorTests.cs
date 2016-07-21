@@ -642,10 +642,10 @@ namespace AstoriaUnitTests.TDD.Tests.Server.Parsing
         private void TestLambda<TLambda, TParam, TReturn>(CollectionNode source, string parameterName, SingleValueNode body, Expression<Func<TParam, TReturn>> expectedExpression)
             where TLambda : LambdaNode
         {
-            EntityRangeVariable currentRangeVariable = null;
+            ResourceRangeVariable currentRangeVariable = null;
             if (parameterName != null)
             {
-                currentRangeVariable = new EntityRangeVariable(parameterName, new EdmEntityTypeReference(this.customerEdmType, false), this.entitySet);
+                currentRangeVariable = new ResourceRangeVariable(parameterName, new EdmEntityTypeReference(this.customerEdmType, false), this.entitySet);
                 this.testSubject.ParameterExpressions[currentRangeVariable] = Expression.Parameter(typeof(TParam), parameterName);
             }
 
@@ -679,14 +679,14 @@ namespace AstoriaUnitTests.TDD.Tests.Server.Parsing
 
         private SingleValueNode Parameter<T>(string name)
         {
-            var nonentityRangeVariable = new NonentityRangeVariable(name, null, null);
+            var nonentityRangeVariable = new NonResourceRangeVariable(name, null, null);
             this.testSubject.ParameterExpressions[nonentityRangeVariable] = Expression.Parameter(typeof(T), name);
             return new NonResourceRangeVariableReferenceNode(name, nonentityRangeVariable);
         }
 
         private SingleResourceNode EntityParameter<T>(string name)
         {
-            var entityRangeVariable = new EntityRangeVariable(name, new EdmEntityTypeReference(this.entitySet.EntityType(), false), this.entitySet);
+            var entityRangeVariable = new ResourceRangeVariable(name, new EdmEntityTypeReference(this.entitySet.EntityType(), false), this.entitySet);
             this.testSubject.ParameterExpressions[entityRangeVariable] = Expression.Parameter(typeof(T), name);
             return new ResourceRangeVariableReferenceNode(name, entityRangeVariable);
         }

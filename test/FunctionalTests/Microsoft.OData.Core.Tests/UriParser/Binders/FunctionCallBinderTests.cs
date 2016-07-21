@@ -1337,7 +1337,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
             return this.functionCallBinder.TryBindEndPathAsFunctionCall(boundFunctionCallToken,
                                                                  new ResourceRangeVariableReferenceNode(
                                                                      ExpressionConstants.It,
-                                                                     (EntityRangeVariable)
+                                                                     (ResourceRangeVariable)
                                                                      this.binder.BindingState.ImplicitRangeVariable),
                                                                  this.binder.BindingState, out functionCallNode);
         }
@@ -1348,7 +1348,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
             return this.functionCallBinder.TryBindDottedIdentifierAsFunctionCall(dottedIdentifierToken,
                                                                           new ResourceRangeVariableReferenceNode(
                                                                               ExpressionConstants.It,
-                                                                              (EntityRangeVariable)
+                                                                              (ResourceRangeVariable)
                                                                               this.binder.BindingState
                                                                                   .ImplicitRangeVariable),
                                                                           out functionCallNode);
@@ -1356,7 +1356,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
 
         private void TestUnaryCanonicalFunctionBinding(string functionName, IEdmTypeReference typeReference, IEdmTypeReference returnTypeReference = null)
         {
-            this.binder.BindingState.RangeVariables.Push(new NonentityRangeVariable("a", typeReference, null));
+            this.binder.BindingState.RangeVariables.Push(new NonResourceRangeVariable("a", typeReference, null));
             this.functionCallBinder.BindFunctionCall(
                 new FunctionCallToken(functionName, new[] { new RangeVariableToken("a") }))
                 .ShouldBeSingleValueFunctionCallQueryNode(functionName, returnTypeReference);

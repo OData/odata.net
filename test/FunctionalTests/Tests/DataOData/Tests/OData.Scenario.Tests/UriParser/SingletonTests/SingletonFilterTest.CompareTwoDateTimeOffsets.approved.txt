@@ -4,7 +4,7 @@ $filter = OrderDetails/any(a: a/ProductID ge 3.2 and a/OrderPlaced eq a/OrderPla
 FilterQueryOption
 	ItemType = [Microsoft.Test.Taupo.OData.WCFService.Order Nullable=False]
 	Parameter = 
-	EntityRangeVariable
+	ResourceRangeVariable
 		Name = $it
 		NavigationSource = SpecialOrder
 		TypeReference = [Microsoft.Test.Taupo.OData.WCFService.Order Nullable=False]
@@ -23,7 +23,7 @@ FilterQueryOption
 							Name = a
 							NavigationSource = OrderDetails
 							TypeReference = [Microsoft.Test.Taupo.OData.WCFService.OrderDetail Nullable=True]
-							Range Variable = Microsoft.OData.UriParser.EntityRangeVariable
+							Range Variable = Microsoft.OData.UriParser.ResourceRangeVariable
 			GreaterThanOrEqual
 				3.2(Type: [Edm.Single Nullable=False])
 		And
@@ -35,7 +35,7 @@ FilterQueryOption
 						Name = a
 						NavigationSource = OrderDetails
 						TypeReference = [Microsoft.Test.Taupo.OData.WCFService.OrderDetail Nullable=True]
-						Range Variable = Microsoft.OData.UriParser.EntityRangeVariable
+						Range Variable = Microsoft.OData.UriParser.ResourceRangeVariable
 			Equal
 				SingleValuePropertyAccessNode
 					Property = OrderPlaced
@@ -45,7 +45,7 @@ FilterQueryOption
 						Name = a
 						NavigationSource = OrderDetails
 						TypeReference = [Microsoft.Test.Taupo.OData.WCFService.OrderDetail Nullable=True]
-						Range Variable = Microsoft.OData.UriParser.EntityRangeVariable
+						Range Variable = Microsoft.OData.UriParser.ResourceRangeVariable
 		Source = 
 		CollectionNavigationNode
 			ItemType = [Microsoft.Test.Taupo.OData.WCFService.OrderDetail Nullable=True]
@@ -58,13 +58,13 @@ FilterQueryOption
 				Name = $it
 				NavigationSource = SpecialOrder
 				TypeReference = [Microsoft.Test.Taupo.OData.WCFService.Order Nullable=False]
-				Range Variable = Microsoft.OData.UriParser.EntityRangeVariable
+				Range Variable = Microsoft.OData.UriParser.ResourceRangeVariable
 		Parameters = 
-		EntityRangeVariable
+		ResourceRangeVariable
 			Name = a
 			NavigationSource = OrderDetails
 			TypeReference = [Microsoft.Test.Taupo.OData.WCFService.OrderDetail Nullable=True]
-		EntityRangeVariable
+		ResourceRangeVariable
 			Name = $it
 			NavigationSource = SpecialOrder
 			TypeReference = [Microsoft.Test.Taupo.OData.WCFService.Order Nullable=False]

@@ -30,7 +30,7 @@ namespace Microsoft.OData.UriParser
         /// <summary>
         /// The range variable that the node represents.
         /// </summary>
-        private readonly EntityRangeVariable rangeVariable;
+        private readonly ResourceRangeVariable rangeVariable;
 
         /// <summary>
         /// The navigation source containing the collection that this range variable iterates over.
@@ -43,7 +43,7 @@ namespace Microsoft.OData.UriParser
         /// <param name="name"> The name of the associated range variable (null if none)</param>
         /// <param name="rangeVariable">The actual range variable on the bind stack that this refers to</param>
         /// <exception cref="System.ArgumentNullException">Throws if the input name or rangeVariable is null.</exception>
-        public ResourceRangeVariableReferenceNode(string name, EntityRangeVariable rangeVariable)
+        public ResourceRangeVariableReferenceNode(string name, ResourceRangeVariable rangeVariable)
         {
             ExceptionUtils.CheckArgumentNotNull(name, "name");
             ExceptionUtils.CheckArgumentNotNull(rangeVariable, "rangeVariable");
@@ -72,7 +72,7 @@ namespace Microsoft.OData.UriParser
         /// <summary>
         /// Gets a reference to the range variable that this node represents.
         /// </summary>
-        public EntityRangeVariable RangeVariable
+        public ResourceRangeVariable RangeVariable
         {
             get { return this.rangeVariable; }
         }

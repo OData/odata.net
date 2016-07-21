@@ -47,7 +47,7 @@ namespace Microsoft.Test.Taupo.OData.Query.Tests.MetadataBinder
 
             // TODO: add an error test where the input collection to the order-by is a singleton
 
-            EntityRangeVariable entityRangeVariable = new EntityRangeVariable("dummy", model.ResolveTypeReference("TestNS.Customer", false).AsEntity(), model.FindEntityContainer("BinderTestMetadata").FindEntitySet("Customers"));
+            ResourceRangeVariable entityRangeVariable = new ResourceRangeVariable("dummy", model.ResolveTypeReference("TestNS.Customer", false).AsEntity(), model.FindEntityContainer("BinderTestMetadata").FindEntitySet("Customers"));
 
             OrderByTestCase[] testCases = new OrderByTestCase[]
             {
@@ -182,7 +182,7 @@ namespace Microsoft.Test.Taupo.OData.Query.Tests.MetadataBinder
                                     orderByNode,
                                     testCase.ExpectedOrderByExpressions[i],
                                     direction ?? OrderByDirection.Ascending,
-                                    new EntityRangeVariable(ExpressionConstants.It, model.ResolveTypeReference("TestNS.Customer", false).AsEntity(), model.FindEntityContainer("BinderTestMetadata").FindEntitySet("Customers"))
+                                    new ResourceRangeVariable(ExpressionConstants.It, model.ResolveTypeReference("TestNS.Customer", false).AsEntity(), model.FindEntityContainer("BinderTestMetadata").FindEntitySet("Customers"))
                                 );
                             }
 

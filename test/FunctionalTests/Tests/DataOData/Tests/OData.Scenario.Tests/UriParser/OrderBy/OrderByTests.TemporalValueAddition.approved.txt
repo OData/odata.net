@@ -5,7 +5,7 @@ OrderByClause
 	Item Type = [Microsoft.Test.Taupo.OData.WCFService.DurationInKey Nullable=False]
 	Direction = Ascending
 	Range Variable = 
-	EntityRangeVariable
+	ResourceRangeVariable
 		Name = $it
 		NavigationSource = DurationInKeys
 		TypeReference = [Microsoft.Test.Taupo.OData.WCFService.DurationInKey Nullable=False]
@@ -24,7 +24,7 @@ OrderByClause
 					Name = $it
 					NavigationSource = DurationInKeys
 					TypeReference = [Microsoft.Test.Taupo.OData.WCFService.DurationInKey Nullable=False]
-					Range Variable = Microsoft.OData.UriParser.EntityRangeVariable
+					Range Variable = Microsoft.OData.UriParser.ResourceRangeVariable
 		Add
 			00:02:10(Type: [Edm.Duration Nullable=False Precision=0])
 	Then By = 

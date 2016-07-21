@@ -20,7 +20,7 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
         [Fact]
         public void NameCannotBeNull()
         {
-            NonentityRangeVariable rangeVariable = new NonentityRangeVariable("stuff", EdmCoreModel.Instance.GetPrimitive(EdmPrimitiveTypeKind.Double, true), null);
+            NonResourceRangeVariable rangeVariable = new NonResourceRangeVariable("stuff", EdmCoreModel.Instance.GetPrimitive(EdmPrimitiveTypeKind.Double, true), null);
             Action createWithNullName = () => new NonResourceRangeVariableReferenceNode(null, rangeVariable);
             createWithNullName.ShouldThrow<Exception>(Error.ArgumentNull("name").ToString());
         }
@@ -35,7 +35,7 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
         [Fact]
         public void NameIsSetCorrectly()
         {
-            NonentityRangeVariable rangeVariable = new NonentityRangeVariable("stuff", EdmCoreModel.Instance.GetPrimitive(EdmPrimitiveTypeKind.Double, true), null);
+            NonResourceRangeVariable rangeVariable = new NonResourceRangeVariable("stuff", EdmCoreModel.Instance.GetPrimitive(EdmPrimitiveTypeKind.Double, true), null);
             NonResourceRangeVariableReferenceNode nonentityRangeVariableReferenceNode = new NonResourceRangeVariableReferenceNode("stuff", rangeVariable);
             nonentityRangeVariableReferenceNode.Name.Should().Be("stuff");
         }
@@ -43,7 +43,7 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
         [Fact]
         public void TypeReferenceIsSetCorrectly()
         {
-            NonentityRangeVariable rangeVariable = new NonentityRangeVariable("stuff", EdmCoreModel.Instance.GetPrimitive(EdmPrimitiveTypeKind.Double, true), null);
+            NonResourceRangeVariable rangeVariable = new NonResourceRangeVariable("stuff", EdmCoreModel.Instance.GetPrimitive(EdmPrimitiveTypeKind.Double, true), null);
             NonResourceRangeVariableReferenceNode nonentityRangeVariableReferenceNode = new NonResourceRangeVariableReferenceNode("stuff", rangeVariable);
             nonentityRangeVariableReferenceNode.TypeReference.FullName().Should().Be(EdmCoreModel.Instance.GetPrimitive(EdmPrimitiveTypeKind.Double, true).FullName());
         }
@@ -51,7 +51,7 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
         [Fact]
         public void RangeVariableIsSetCorrectly()
         {
-            NonentityRangeVariable rangeVariable = new NonentityRangeVariable("stuff", EdmCoreModel.Instance.GetPrimitive(EdmPrimitiveTypeKind.Double, true), null);
+            NonResourceRangeVariable rangeVariable = new NonResourceRangeVariable("stuff", EdmCoreModel.Instance.GetPrimitive(EdmPrimitiveTypeKind.Double, true), null);
             NonResourceRangeVariableReferenceNode nonentityRangeVariableReferenceNode = new NonResourceRangeVariableReferenceNode("stuff", rangeVariable);
             nonentityRangeVariableReferenceNode.RangeVariable.ShouldBeNonentityRangeVariable("stuff");
         }
@@ -59,7 +59,7 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
         [Fact]
         public void KindIsNonEntityRangeVariableReferenceNode()
         {
-            NonentityRangeVariable rangeVariable = new NonentityRangeVariable("stuff", EdmCoreModel.Instance.GetPrimitive(EdmPrimitiveTypeKind.Double, true), null);
+            NonResourceRangeVariable rangeVariable = new NonResourceRangeVariable("stuff", EdmCoreModel.Instance.GetPrimitive(EdmPrimitiveTypeKind.Double, true), null);
             NonResourceRangeVariableReferenceNode nonentityRangeVariableReferenceNode = new NonResourceRangeVariableReferenceNode("stuff", rangeVariable);
             nonentityRangeVariableReferenceNode.InternalKind.Should().Be(InternalQueryNodeKind.NonResourceRangeVariableReference);
         }

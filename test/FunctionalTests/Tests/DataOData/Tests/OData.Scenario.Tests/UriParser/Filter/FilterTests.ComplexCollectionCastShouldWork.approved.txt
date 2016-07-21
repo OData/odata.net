@@ -4,7 +4,7 @@ $filter = ManufactureAddresss/Microsoft.Test.Taupo.OData.WCFService.HomeAddress/
 FilterQueryOption
 	ItemType = [Microsoft.Test.Taupo.OData.WCFService.Product Nullable=False]
 	Parameter = 
-	EntityRangeVariable
+	ResourceRangeVariable
 		Name = $it
 		NavigationSource = Products
 		TypeReference = [Microsoft.Test.Taupo.OData.WCFService.Product Nullable=False]
@@ -19,7 +19,7 @@ FilterQueryOption
 				NonentityRangeVariableReferenceNode
 					Name = d
 					Range Variable = 
-					NonentityRangeVariable
+					NonResourceRangeVariable
 						Name = d
 						TypeReference = [Microsoft.Test.Taupo.OData.WCFService.HomeAddress Nullable=False]
 					TypeReference = [Microsoft.Test.Taupo.OData.WCFService.HomeAddress Nullable=False]
@@ -38,12 +38,12 @@ FilterQueryOption
 					Name = $it
 					NavigationSource = Products
 					TypeReference = [Microsoft.Test.Taupo.OData.WCFService.Product Nullable=False]
-					Range Variable = Microsoft.OData.UriParser.EntityRangeVariable
+					Range Variable = Microsoft.OData.UriParser.ResourceRangeVariable
 		Parameters = 
-		NonentityRangeVariable
+		NonResourceRangeVariable
 			Name = d
 			TypeReference = [Microsoft.Test.Taupo.OData.WCFService.HomeAddress Nullable=False]
-		EntityRangeVariable
+		ResourceRangeVariable
 			Name = $it
 			NavigationSource = Products
 			TypeReference = [Microsoft.Test.Taupo.OData.WCFService.Product Nullable=False]

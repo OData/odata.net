@@ -13,21 +13,21 @@ using Xunit;
 namespace Microsoft.OData.Tests.UriParser.SemanticAst
 {
     /// <summary>
-    /// Unit tests for the EntityRangeVariable class
+    /// Unit tests for the ResourceRangeVariable class
     /// </summary>
-    public class EntityRangeVariableTests
+    public class ResourceRangeVariableTests
     {
         [Fact]
         public void NameCannotBeNull()
         {
-            Action createWithNullName = () => new EntityRangeVariable(null, HardCodedTestModel.GetDogTypeReference(), HardCodedTestModel.GetDogsSet());
+            Action createWithNullName = () => new ResourceRangeVariable(null, HardCodedTestModel.GetDogTypeReference(), HardCodedTestModel.GetDogsSet());
             createWithNullName.ShouldThrow<Exception>(Error.ArgumentNull("name").ToString());
         }
 
         [Fact]
         public void EntityTypeCannotBeNull()
         {
-            Action createWithNullEntityType = () => new EntityRangeVariable("dogs", null, HardCodedTestModel.GetDogsSet());
+            Action createWithNullEntityType = () => new ResourceRangeVariable("dogs", null, HardCodedTestModel.GetDogsSet());
             createWithNullEntityType.ShouldThrow<Exception>(Error.ArgumentNull("entityType").ToString());
         }
 
@@ -35,8 +35,8 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
         public void CanCreateFromEntitySetOrEntityCollectionNode()
         {
             EntitySetNode entitySetNode = new EntitySetNode(HardCodedTestModel.GetDogsSet());
-            Action createWithEntityset = () => new EntityRangeVariable("dogs", HardCodedTestModel.GetDogTypeReference(), HardCodedTestModel.GetDogsSet());
-            Action createWithCollectionNode = () => new EntityRangeVariable("dogs", HardCodedTestModel.GetDogTypeReference(), entitySetNode);
+            Action createWithEntityset = () => new ResourceRangeVariable("dogs", HardCodedTestModel.GetDogTypeReference(), HardCodedTestModel.GetDogsSet());
+            Action createWithCollectionNode = () => new ResourceRangeVariable("dogs", HardCodedTestModel.GetDogTypeReference(), entitySetNode);
             createWithEntityset.ShouldNotThrow();
             createWithCollectionNode.ShouldNotThrow();
         }
@@ -45,7 +45,7 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
         public void EntityCollectionNodeIsSetCorrectly()
         {
             EntitySetNode entitySetNode = new EntitySetNode(HardCodedTestModel.GetDogsSet());
-            EntityRangeVariable entityRangeVariable = new EntityRangeVariable("dogs", HardCodedTestModel.GetDogTypeReference(), entitySetNode);
+            ResourceRangeVariable entityRangeVariable = new ResourceRangeVariable("dogs", HardCodedTestModel.GetDogTypeReference(), entitySetNode);
             entityRangeVariable.EntityCollectionNode.ShouldBeEntitySetQueryNode(HardCodedTestModel.GetDogsSet());
         }
 
@@ -53,7 +53,7 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
         public void EntitySetIsSetCorrectly()
         {
             EntitySetNode entitySetNode = new EntitySetNode(HardCodedTestModel.GetDogsSet());
-            EntityRangeVariable entityRangeVariable = new EntityRangeVariable("dogs", HardCodedTestModel.GetDogTypeReference(), entitySetNode);
+            ResourceRangeVariable entityRangeVariable = new ResourceRangeVariable("dogs", HardCodedTestModel.GetDogTypeReference(), entitySetNode);
             entityRangeVariable.NavigationSource.Should().Be(HardCodedTestModel.GetDogsSet());
         }
 
@@ -61,7 +61,7 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
         public void TypeReferenceIsSetCorrectly()
         {
             EntitySetNode entitySetNode = new EntitySetNode(HardCodedTestModel.GetDogsSet());
-            EntityRangeVariable entityRangeVariable = new EntityRangeVariable("dogs", HardCodedTestModel.GetDogTypeReference(), entitySetNode);
+            ResourceRangeVariable entityRangeVariable = new ResourceRangeVariable("dogs", HardCodedTestModel.GetDogTypeReference(), entitySetNode);
             entityRangeVariable.TypeReference.FullName().Should().Be(HardCodedTestModel.GetDogTypeReference().FullName());
         }
 
@@ -69,7 +69,7 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
         public void TypeReferenceReturnsEdmEntityTypeReference()
         {
             EntitySetNode entitySetNode = new EntitySetNode(HardCodedTestModel.GetDogsSet());
-            EntityRangeVariable entityRangeVariable = new EntityRangeVariable("dogs", HardCodedTestModel.GetDogTypeReference(), entitySetNode);
+            ResourceRangeVariable entityRangeVariable = new ResourceRangeVariable("dogs", HardCodedTestModel.GetDogTypeReference(), entitySetNode);
             entityRangeVariable.TypeReference.Should().BeOfType<EdmEntityTypeReference>();
         }
 
@@ -77,7 +77,7 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
         public void EntityTypeReferenceReturnsEdmEntityTypeReference()
         {
             EntitySetNode entitySetNode = new EntitySetNode(HardCodedTestModel.GetDogsSet());
-            EntityRangeVariable entityRangeVariable = new EntityRangeVariable("dogs", HardCodedTestModel.GetDogTypeReference(), entitySetNode);
+            ResourceRangeVariable entityRangeVariable = new ResourceRangeVariable("dogs", HardCodedTestModel.GetDogTypeReference(), entitySetNode);
             entityRangeVariable.EntityTypeReference.Should().BeOfType<EdmEntityTypeReference>();
         }
 
@@ -85,8 +85,8 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
         public void KindShouldBeEntityRangeVariable()
         {
             EntitySetNode entitySetNode = new EntitySetNode(HardCodedTestModel.GetDogsSet());
-            EntityRangeVariable entityRangeVariable = new EntityRangeVariable("dogs", HardCodedTestModel.GetDogTypeReference(), entitySetNode);
-            entityRangeVariable.Kind.Should().Be(RangeVariableKind.Entity);
+            ResourceRangeVariable entityRangeVariable = new ResourceRangeVariable("dogs", HardCodedTestModel.GetDogTypeReference(), entitySetNode);
+            entityRangeVariable.Kind.Should().Be(RangeVariableKind.Resource);
         }
     }
 }

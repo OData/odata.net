@@ -11,7 +11,7 @@ SelectExpandQueryOption
 				Item Type = [Microsoft.Test.Taupo.OData.WCFService.Order Nullable=False]
 				Direction = Ascending
 				Range Variable = 
-				EntityRangeVariable
+				ResourceRangeVariable
 					Name = $it
 					NavigationSource = Orders
 					TypeReference = [Microsoft.Test.Taupo.OData.WCFService.Order Nullable=False]
@@ -40,7 +40,7 @@ SelectExpandQueryOption
 																				Name = a
 																				NavigationSource = OrderDetails
 																				TypeReference = [Microsoft.Test.Taupo.OData.WCFService.OrderDetail Nullable=True]
-																				Range Variable = Microsoft.OData.UriParser.EntityRangeVariable
+																				Range Variable = Microsoft.OData.UriParser.ResourceRangeVariable
 																GreaterThanOrEqual
 																	3.2(Type: [Edm.Single Nullable=False])
 															)
@@ -54,7 +54,7 @@ SelectExpandQueryOption
 																			Name = a
 																			NavigationSource = OrderDetails
 																			TypeReference = [Microsoft.Test.Taupo.OData.WCFService.OrderDetail Nullable=True]
-																			Range Variable = Microsoft.OData.UriParser.EntityRangeVariable
+																			Range Variable = Microsoft.OData.UriParser.ResourceRangeVariable
 																Equal
 																	SingleValuePropertyAccessNode
 																		Property = OrderPlaced
@@ -64,7 +64,7 @@ SelectExpandQueryOption
 																			Name = a
 																			NavigationSource = OrderDetails
 																			TypeReference = [Microsoft.Test.Taupo.OData.WCFService.OrderDetail Nullable=True]
-																			Range Variable = Microsoft.OData.UriParser.EntityRangeVariable
+																			Range Variable = Microsoft.OData.UriParser.ResourceRangeVariable
 															)
 													)
 												)
@@ -87,13 +87,13 @@ SelectExpandQueryOption
 							Name = $it
 							NavigationSource = Orders
 							TypeReference = [Microsoft.Test.Taupo.OData.WCFService.Order Nullable=False]
-							Range Variable = Microsoft.OData.UriParser.EntityRangeVariable
+							Range Variable = Microsoft.OData.UriParser.ResourceRangeVariable
 					Parameters = 
-					EntityRangeVariable
+					ResourceRangeVariable
 						Name = a
 						NavigationSource = OrderDetails
 						TypeReference = [Microsoft.Test.Taupo.OData.WCFService.OrderDetail Nullable=True]
-					EntityRangeVariable
+					ResourceRangeVariable
 						Name = $it
 						NavigationSource = Orders
 						TypeReference = [Microsoft.Test.Taupo.OData.WCFService.Order Nullable=False]

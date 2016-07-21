@@ -29,7 +29,7 @@ namespace Microsoft.OData.UriParser
         /// <summary>
         /// Reference to a rangeVariable on the binding stack.
         /// </summary>
-        private readonly NonentityRangeVariable rangeVariable;
+        private readonly NonResourceRangeVariable rangeVariable;
 
         /// <summary>
         /// Creates a <see cref="NonResourceRangeVariableReferenceNode"/>.
@@ -37,7 +37,7 @@ namespace Microsoft.OData.UriParser
         /// <param name="name"> The name of the associated rangeVariable</param>
         /// <param name="rangeVariable">Reference to a rangeVariable on the binding stack.</param>
         /// <exception cref="System.ArgumentNullException">Throws if input name or rangeVariable is null.</exception>
-        public NonResourceRangeVariableReferenceNode(string name, NonentityRangeVariable rangeVariable)
+        public NonResourceRangeVariableReferenceNode(string name, NonResourceRangeVariable rangeVariable)
         {
             ExceptionUtils.CheckArgumentNotNull(name, "name");
             ExceptionUtils.CheckArgumentNotNull(rangeVariable, "rangeVariable");
@@ -65,7 +65,7 @@ namespace Microsoft.OData.UriParser
         /// <summary>
         /// Gets the reference to a rangeVariable on the binding stack.
         /// </summary>
-        public NonentityRangeVariable RangeVariable
+        public NonResourceRangeVariable RangeVariable
         {
             get { return this.rangeVariable; }
         }

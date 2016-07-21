@@ -4,7 +4,7 @@ $filter = now() le maxdatetime() and now() gt mindatetime()
 FilterQueryOption
 	ItemType = [Microsoft.Test.Taupo.OData.WCFService.DurationInKey Nullable=False]
 	Parameter = 
-	EntityRangeVariable
+	ResourceRangeVariable
 		Name = $it
 		NavigationSource = DurationInKeys
 		TypeReference = [Microsoft.Test.Taupo.OData.WCFService.DurationInKey Nullable=False]

@@ -5,7 +5,7 @@ OrderByClause
 	Item Type = [NS.EntityType Nullable=False]
 	Direction = Ascending
 	Range Variable = 
-	EntityRangeVariable
+	ResourceRangeVariable
 		Name = $it
 		NavigationSource = EntitySet
 		TypeReference = [NS.EntityType Nullable=False]
@@ -30,5 +30,5 @@ OrderByClause
 					Name = $it
 					NavigationSource = EntitySet
 					TypeReference = [NS.EntityType Nullable=False]
-					Range Variable = Microsoft.OData.UriParser.EntityRangeVariable
+					Range Variable = Microsoft.OData.UriParser.ResourceRangeVariable
 	Then By = 

@@ -4,7 +4,7 @@ $filter = HomeAddress/Microsoft.Test.Taupo.OData.WCFService.HomeAddress/HomeNO n
 FilterQueryOption
 	ItemType = [Microsoft.Test.Taupo.OData.WCFService.Person Nullable=False]
 	Parameter = 
-	EntityRangeVariable
+	ResourceRangeVariable
 		Name = $it
 		NavigationSource = People
 		TypeReference = [Microsoft.Test.Taupo.OData.WCFService.Person Nullable=False]
@@ -24,6 +24,6 @@ FilterQueryOption
 						Name = $it
 						NavigationSource = People
 						TypeReference = [Microsoft.Test.Taupo.OData.WCFService.Person Nullable=False]
-						Range Variable = Microsoft.OData.UriParser.EntityRangeVariable
+						Range Variable = Microsoft.OData.UriParser.ResourceRangeVariable
 	NotEqual
 		999(Type: [Edm.String Nullable=True Unicode=True])

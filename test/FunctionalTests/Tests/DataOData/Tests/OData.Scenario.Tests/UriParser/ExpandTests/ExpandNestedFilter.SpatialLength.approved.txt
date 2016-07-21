@@ -10,7 +10,7 @@ SelectExpandQueryOption
 			FilterQueryOption
 				ItemType = [Microsoft.Test.Taupo.OData.WCFService.Employee Nullable=False]
 				Parameter = 
-				EntityRangeVariable
+				ResourceRangeVariable
 					Name = $it
 					NavigationSource = LoggedInEmployee
 					TypeReference = [Microsoft.Test.Taupo.OData.WCFService.Employee Nullable=False]

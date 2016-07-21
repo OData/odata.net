@@ -10,7 +10,7 @@ SelectExpandQueryOption
 			FilterQueryOption
 				ItemType = [Microsoft.Test.Taupo.OData.WCFService.Customer Nullable=False]
 				Parameter = 
-				EntityRangeVariable
+				ResourceRangeVariable
 					Name = $it
 					NavigationSource = CustomerForOrder
 					TypeReference = [Microsoft.Test.Taupo.OData.WCFService.Customer Nullable=False]
@@ -23,7 +23,7 @@ SelectExpandQueryOption
 							Name = $it
 							NavigationSource = CustomerForOrder
 							TypeReference = [Microsoft.Test.Taupo.OData.WCFService.Customer Nullable=False]
-							Range Variable = Microsoft.OData.UriParser.EntityRangeVariable
+							Range Variable = Microsoft.OData.UriParser.ResourceRangeVariable
 				LessThan
 					SingleValuePropertyAccessNode
 						Property = TimeBetweenLastTwoOrders
@@ -33,7 +33,7 @@ SelectExpandQueryOption
 							Name = $it
 							NavigationSource = CustomerForOrder
 							TypeReference = [Microsoft.Test.Taupo.OData.WCFService.Customer Nullable=False]
-							Range Variable = Microsoft.OData.UriParser.EntityRangeVariable
+							Range Variable = Microsoft.OData.UriParser.ResourceRangeVariable
 			SelectExpandQueryOption
 				AllSelected = True
 				SelectedItems(Empty List)

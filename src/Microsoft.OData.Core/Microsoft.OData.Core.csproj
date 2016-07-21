@@ -457,7 +457,7 @@
     <Compile Include="UriParser\SemanticAst\CollectionResourceFunctionCallNode.cs" />
     <Compile Include="UriParser\SemanticAst\CollectionResourceNode.cs" />
     <Compile Include="UriParser\SemanticAst\EntityIdSegment.cs" />
-    <Compile Include="UriParser\SemanticAst\EntityRangeVariable.cs" />
+    <Compile Include="UriParser\SemanticAst\ResourceRangeVariable.cs" />
     <Compile Include="UriParser\SemanticAst\ResourceRangeVariableReferenceNode.cs" />
     <Compile Include="UriParser\SemanticAst\EntitySetSegment.cs" />
     <Compile Include="UriParser\SemanticAst\ExpandedNavigationSelectItem.cs" />
@@ -472,7 +472,7 @@
     <Compile Include="UriParser\SemanticAst\NamespaceQualifiedWildcardSelectItem.cs" />
     <Compile Include="UriParser\SemanticAst\NavigationPropertyLinkSegment.cs" />
     <Compile Include="UriParser\SemanticAst\NavigationPropertySegment.cs" />
-    <Compile Include="UriParser\SemanticAst\NonentityRangeVariable.cs" />
+    <Compile Include="UriParser\SemanticAst\NonResourceRangeVariable.cs" />
     <Compile Include="UriParser\SemanticAst\NonResourceRangeVariableReferenceNode.cs" />
     <Compile Include="UriParser\SemanticAst\ODataExpandPath.cs" />
     <Compile Include="UriParser\SemanticAst\ODataPath.cs" />

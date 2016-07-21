@@ -86,7 +86,7 @@ namespace Microsoft.OData.Tests.UriParser.Visitors
         public void ResourceRangeVariableReferenceNodeNotImplemented()
         {
             FakeVisitor visitor = new FakeVisitor();
-            Action visitResourceRangeVariableReferenceNode = () => visitor.Visit(new ResourceRangeVariableReferenceNode("stuff", new EntityRangeVariable("stuff", HardCodedTestModel.GetPersonTypeReference(), HardCodedTestModel.GetPeopleSet())));
+            Action visitResourceRangeVariableReferenceNode = () => visitor.Visit(new ResourceRangeVariableReferenceNode("stuff", new ResourceRangeVariable("stuff", HardCodedTestModel.GetPersonTypeReference(), HardCodedTestModel.GetPeopleSet())));
             visitResourceRangeVariableReferenceNode.ShouldThrow<NotImplementedException>();
         }
 
@@ -95,7 +95,7 @@ namespace Microsoft.OData.Tests.UriParser.Visitors
         {
             FakeVisitor visitor = new FakeVisitor();
             ConstantNode constNode = new ConstantNode("stuff");
-            NonentityRangeVariable nonentityRangeVariable = new NonentityRangeVariable("dummy", constNode.TypeReference, null);
+            NonResourceRangeVariable nonentityRangeVariable = new NonResourceRangeVariable("dummy", constNode.TypeReference, null);
             NonResourceRangeVariableReferenceNode nonResourceRangeVariableReferenceNode = new NonResourceRangeVariableReferenceNode(nonentityRangeVariable.Name, nonentityRangeVariable);
             Action visitNonResourceRangeVariableReferenceNode = () => visitor.Visit(nonResourceRangeVariableReferenceNode);
             visitNonResourceRangeVariableReferenceNode.ShouldThrow<NotImplementedException>();

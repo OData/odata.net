@@ -11,7 +11,7 @@ SelectExpandQueryOption
 				Item Type = [Microsoft.Test.Taupo.OData.WCFService.Customer Nullable=False]
 				Direction = Ascending
 				Range Variable = 
-				EntityRangeVariable
+				ResourceRangeVariable
 					Name = $it
 					NavigationSource = CustomerForOrder
 					TypeReference = [Microsoft.Test.Taupo.OData.WCFService.Customer Nullable=False]
@@ -44,7 +44,7 @@ SelectExpandQueryOption
 															Name = $it
 															NavigationSource = CustomerForOrder
 															TypeReference = [Microsoft.Test.Taupo.OData.WCFService.Customer Nullable=False]
-															Range Variable = Microsoft.OData.UriParser.EntityRangeVariable
+															Range Variable = Microsoft.OData.UriParser.ResourceRangeVariable
 													SingleValuePropertyAccessNode
 														Property = LastName
 														TypeReference = [Edm.String Nullable=True Unicode=True]
@@ -53,7 +53,7 @@ SelectExpandQueryOption
 															Name = $it
 															NavigationSource = CustomerForOrder
 															TypeReference = [Microsoft.Test.Taupo.OData.WCFService.Customer Nullable=False]
-															Range Variable = Microsoft.OData.UriParser.EntityRangeVariable
+															Range Variable = Microsoft.OData.UriParser.ResourceRangeVariable
 									7(Type: [Edm.Int32 Nullable=False])
 							r(Type: [Edm.String Nullable=True Unicode=True])
 				And

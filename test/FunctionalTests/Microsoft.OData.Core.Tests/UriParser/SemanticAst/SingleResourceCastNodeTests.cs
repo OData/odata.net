@@ -17,7 +17,7 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
     /// </summary>
     public class SingleResourceCastNodeTests
     {
-        private readonly ResourceRangeVariableReferenceNode singleEntityNode = new ResourceRangeVariableReferenceNode("a", new EntityRangeVariable("a", new EdmEntityTypeReference(HardCodedTestModel.GetPersonType(), false), HardCodedTestModel.GetPeopleSet()));
+        private readonly ResourceRangeVariableReferenceNode singleEntityNode = new ResourceRangeVariableReferenceNode("a", new ResourceRangeVariable("a", new EdmEntityTypeReference(HardCodedTestModel.GetPersonType(), false), HardCodedTestModel.GetPeopleSet()));
 
         [Fact]
         public void EntityTypeCannotBeNull()

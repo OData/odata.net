@@ -10,7 +10,7 @@ SelectExpandQueryOption
 			FilterQueryOption
 				ItemType = [Microsoft.Test.Taupo.OData.WCFService.Product Nullable=False]
 				Parameter = 
-				EntityRangeVariable
+				ResourceRangeVariable
 					Name = $it
 					NavigationSource = Products
 					TypeReference = [Microsoft.Test.Taupo.OData.WCFService.Product Nullable=False]
@@ -31,7 +31,7 @@ SelectExpandQueryOption
 											Name = $it
 											NavigationSource = Products
 											TypeReference = [Microsoft.Test.Taupo.OData.WCFService.Product Nullable=False]
-											Range Variable = Microsoft.OData.UriParser.EntityRangeVariable
+											Range Variable = Microsoft.OData.UriParser.ResourceRangeVariable
 					Equal
 						SingleValueFunctionCallNode
 							Name = floor
@@ -49,7 +49,7 @@ SelectExpandQueryOption
 											Name = $it
 											NavigationSource = Products
 											TypeReference = [Microsoft.Test.Taupo.OData.WCFService.Product Nullable=False]
-											Range Variable = Microsoft.OData.UriParser.EntityRangeVariable
+											Range Variable = Microsoft.OData.UriParser.ResourceRangeVariable
 				And
 						SingleValueFunctionCallNode
 							Name = round
@@ -67,7 +67,7 @@ SelectExpandQueryOption
 											Name = $it
 											NavigationSource = Products
 											TypeReference = [Microsoft.Test.Taupo.OData.WCFService.Product Nullable=False]
-											Range Variable = Microsoft.OData.UriParser.EntityRangeVariable
+											Range Variable = Microsoft.OData.UriParser.ResourceRangeVariable
 					NotEqual
 						SingleValueFunctionCallNode
 							Name = ceiling
@@ -85,7 +85,7 @@ SelectExpandQueryOption
 											Name = $it
 											NavigationSource = Products
 											TypeReference = [Microsoft.Test.Taupo.OData.WCFService.Product Nullable=False]
-											Range Variable = Microsoft.OData.UriParser.EntityRangeVariable
+											Range Variable = Microsoft.OData.UriParser.ResourceRangeVariable
 			SelectExpandQueryOption
 				AllSelected = True
 				SelectedItems(Empty List)

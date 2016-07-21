@@ -1,5 +1,5 @@
 ﻿//---------------------------------------------------------------------
-// <copyright file="EntityRangeVariable.cs" company="Microsoft">
+// <copyright file="ResourceRangeVariable.cs" company="Microsoft">
 //      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 // </copyright>
 //---------------------------------------------------------------------
@@ -13,9 +13,9 @@ namespace Microsoft.OData.UriParser
     #endregion Namespaces
 
     /// <summary>
-    /// A RangeVariable inside an any or all expression that doesn't refer to an entity set
+    /// A RangeVariable inside an any or all expression that refers to an entity or a complex.
     /// </summary>
-    public sealed class EntityRangeVariable : RangeVariable
+    public sealed class ResourceRangeVariable : RangeVariable
     {
         /// <summary>
         ///  The name of the associated any/all parameter (null if none)
@@ -38,13 +38,13 @@ namespace Microsoft.OData.UriParser
         private readonly IEdmEntityTypeReference entityTypeReference;
 
         /// <summary>
-        /// Creates a <see cref="EntityRangeVariable"/>.
+        /// Creates a <see cref="ResourceRangeVariable"/>.
         /// </summary>
         /// <param name="name"> The name of the associated any/all parameter (null if none)</param>
         /// <param name="entityType">The entity type of each item in the collection that this range variable iterates over.</param>
         /// <param name="entityCollectionNode">The Entity collection that this rangeVariable node iterates over</param>
         /// <exception cref="System.ArgumentNullException">Throws if the input name or entityType is null.</exception>
-        public EntityRangeVariable(string name, IEdmEntityTypeReference entityType, CollectionResourceNode entityCollectionNode)
+        public ResourceRangeVariable(string name, IEdmEntityTypeReference entityType, CollectionResourceNode entityCollectionNode)
         {
             ExceptionUtils.CheckArgumentNotNull(name, "name");
             ExceptionUtils.CheckArgumentNotNull(entityType, "entityType");
@@ -55,13 +55,13 @@ namespace Microsoft.OData.UriParser
         }
 
         /// <summary>
-        /// Creates a <see cref="EntityRangeVariable"/>.
+        /// Creates a <see cref="ResourceRangeVariable"/>.
         /// </summary>
         /// <param name="name"> The name of the associated any/all parameter (null if none)</param>
         /// <param name="entityType">The entity type of each item in the collection that this range variable iterates over.</param>
         /// <param name="navigationSource">The navigation source of the collection this node iterates over.</param>
         /// <exception cref="System.ArgumentNullException">Throws if the input name or entityType is null.</exception>
-        public EntityRangeVariable(string name, IEdmEntityTypeReference entityType, IEdmNavigationSource navigationSource)
+        public ResourceRangeVariable(string name, IEdmEntityTypeReference entityType, IEdmNavigationSource navigationSource)
         {
             ExceptionUtils.CheckArgumentNotNull(name, "name");
             ExceptionUtils.CheckArgumentNotNull(entityType, "entityType");
@@ -116,7 +116,7 @@ namespace Microsoft.OData.UriParser
         /// </summary>
         public override int Kind
         {
-            get { return RangeVariableKind.Entity; }
+            get { return RangeVariableKind.Resource; }
         }
     }
 }

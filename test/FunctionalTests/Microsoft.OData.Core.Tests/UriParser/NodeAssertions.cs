@@ -74,28 +74,28 @@ namespace Microsoft.OData.Tests.UriParser
             return new AndConstraint<ConvertNode>(convertNode);
         }
 
-        public static AndConstraint<EntityRangeVariable> ShouldBeEntityRangeVariable(this RangeVariable variable, IEdmEntityTypeReference expectedTypeReference)
+        public static AndConstraint<ResourceRangeVariable> ShouldBeResourceRangeVariable(this RangeVariable variable, IEdmEntityTypeReference expectedTypeReference)
         {
-            variable.Should().BeOfType<EntityRangeVariable>();
-            var node = variable.As<EntityRangeVariable>();
+            variable.Should().BeOfType<ResourceRangeVariable>();
+            var node = variable.As<ResourceRangeVariable>();
             node.TypeReference.ShouldBeEquivalentTo(expectedTypeReference);
-            return new AndConstraint<EntityRangeVariable>(node);
+            return new AndConstraint<ResourceRangeVariable>(node);
         }
 
-        public static AndConstraint<EntityRangeVariable> ShouldBeEntityRangeVariable(this RangeVariable variable, string expectedName)
+        public static AndConstraint<ResourceRangeVariable> ShouldBeResourceRangeVariable(this RangeVariable variable, string expectedName)
         {
-            variable.Should().BeOfType<EntityRangeVariable>();
-            var rangeVariable = variable.As<EntityRangeVariable>();
+            variable.Should().BeOfType<ResourceRangeVariable>();
+            var rangeVariable = variable.As<ResourceRangeVariable>();
             rangeVariable.Name.Should().Be(expectedName);
-            return new AndConstraint<EntityRangeVariable>(rangeVariable);
+            return new AndConstraint<ResourceRangeVariable>(rangeVariable);
         }
 
-        public static AndConstraint<NonentityRangeVariable> ShouldBeNonentityRangeVariable(this RangeVariable token, string expectedName)
+        public static AndConstraint<NonResourceRangeVariable> ShouldBeNonentityRangeVariable(this RangeVariable token, string expectedName)
         {
-            token.Should().BeOfType<NonentityRangeVariable>();
-            var rangeVariable = token.As<NonentityRangeVariable>();
+            token.Should().BeOfType<NonResourceRangeVariable>();
+            var rangeVariable = token.As<NonResourceRangeVariable>();
             rangeVariable.Name.Should().Be(expectedName);
-            return new AndConstraint<NonentityRangeVariable>(rangeVariable);
+            return new AndConstraint<NonResourceRangeVariable>(rangeVariable);
         }
 
         public static AndConstraint<NonResourceRangeVariableReferenceNode> ShouldBeNonResourceRangeVariableReferenceNode(this QueryNode token, string expectedName)

@@ -338,7 +338,7 @@
     <Compile Include="UriParser\SemanticAst\CollectionResourceCastNodeTests.cs" />
     <Compile Include="UriParser\SemanticAst\CollectionResourceFunctionCallNodeTests.cs" />
     <Compile Include="UriParser\SemanticAst\ResourceRangeVariableReferenceNodeTests.cs" />
-    <Compile Include="UriParser\SemanticAst\EntityRangeVariableTests.cs" />
+    <Compile Include="UriParser\SemanticAst\ResourceRangeVariableTests.cs" />
     <Compile Include="UriParser\SemanticAst\EntitySetNodeTests.cs" />
     <Compile Include="UriParser\SemanticAst\EntitySetSegmentTests.cs" />
     <Compile Include="UriParser\SemanticAst\FakeSingleEntityNode.cs" />
@@ -349,7 +349,7 @@
     <Compile Include="UriParser\SemanticAst\NavigationPropertyLinkSegmentTests.cs" />
     <Compile Include="UriParser\SemanticAst\NavigationPropertySegmentTests.cs" />
     <Compile Include="UriParser\SemanticAst\NonResourceRangeVariableReferenceNodeTests.cs" />
-    <Compile Include="UriParser\SemanticAst\NonentityRangeVariableTests.cs" />
+    <Compile Include="UriParser\SemanticAst\NonResourceRangeVariableTests.cs" />
     <Compile Include="UriParser\SemanticAst\ODataExpandPathTests.cs" />
     <Compile Include="UriParser\SemanticAst\ODataPathExtensionsTests.cs" />
     <Compile Include="UriParser\SemanticAst\ODataPathTests.cs" />

@@ -627,8 +627,8 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriBuilder
         [Fact]
         public void ExpandWithNestedQueryOptionsShouldWork()
         {
-            var ervFilter = new EntityRangeVariable(ExpressionConstants.It, HardCodedTestModel.GetDogTypeReference(), HardCodedTestModel.GetDogsSet());
-            var ervOrderby = new EntityRangeVariable(ExpressionConstants.It, HardCodedTestModel.GetDogTypeReference(), HardCodedTestModel.GetDogsSet());
+            var ervFilter = new ResourceRangeVariable(ExpressionConstants.It, HardCodedTestModel.GetDogTypeReference(), HardCodedTestModel.GetDogsSet());
+            var ervOrderby = new ResourceRangeVariable(ExpressionConstants.It, HardCodedTestModel.GetDogTypeReference(), HardCodedTestModel.GetDogsSet());
             var expand =
                 new ExpandedNavigationSelectItem(
                     new ODataExpandPath(new NavigationPropertySegment(HardCodedTestModel.GetPersonMyDogNavProp(), null)),
