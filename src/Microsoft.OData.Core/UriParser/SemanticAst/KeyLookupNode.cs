@@ -19,7 +19,7 @@ namespace Microsoft.OData.UriParser
         /// <summary>
         /// The collection that this key is referring to.
         /// </summary>
-        private readonly EntityCollectionNode source;
+        private readonly CollectionResourceNode source;
 
         /// <summary>
         /// The navigation source containing the collection this key refers to.
@@ -42,19 +42,19 @@ namespace Microsoft.OData.UriParser
         /// <param name="source">The collection that this key is referring to.</param>
         /// <param name="keyPropertyValues">List of the properties and their values that we use to look up our return value.</param>
         /// <exception cref="System.ArgumentNullException">Throws if the input source is null.</exception>
-        public KeyLookupNode(EntityCollectionNode source, IEnumerable<KeyPropertyValue> keyPropertyValues)
+        public KeyLookupNode(CollectionResourceNode source, IEnumerable<KeyPropertyValue> keyPropertyValues)
         {
             ExceptionUtils.CheckArgumentNotNull(source, "source");
             this.source = source;
             this.navigationSource = source.NavigationSource;
-            this.entityTypeReference = source.EntityItemType;
+            this.entityTypeReference = source.ItemStructuredType as IEdmEntityTypeReference;
             this.keyPropertyValues = keyPropertyValues;
         }
 
         /// <summary>
         /// Gets the collection that this key is referring to.
         /// </summary>
-        public EntityCollectionNode Source
+        public CollectionResourceNode Source
         {
             get { return this.source; }
         }

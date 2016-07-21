@@ -43,7 +43,7 @@ namespace Microsoft.OData.UriParser
         /// Visits a DottedIdentifierToken
         /// </summary>
         /// <param name="tokenIn">The DottedIdentifierToken to visit</param>
-        /// <returns>Either a SingleResourceCastNode, or EntityCollectionCastNode bound to this DottedIdentifierToken</returns>
+        /// <returns>Either a SingleResourceCastNode, or CollectionResourceCastNode bound to this DottedIdentifierToken</returns>
         T Visit(DottedIdentifierToken tokenIn);
 
         /// <summary>

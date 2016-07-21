@@ -1,39 +1,34 @@
 ﻿//---------------------------------------------------------------------
-// <copyright file="CollectionPropertyAccessNode.cs" company="Microsoft">
+// <copyright file="CollectionComplexNode.cs" company="Microsoft">
 //      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 // </copyright>
 //---------------------------------------------------------------------
 
+using System;
+using Microsoft.OData.Edm;
+using ODataErrorStrings = Microsoft.OData.Strings;
+
 namespace Microsoft.OData.UriParser
 {
-    #region Namespaces
-
-    using System;
-    using Microsoft.OData.Edm;
-    using ODataErrorStrings = Microsoft.OData.Strings;
-
-    #endregion Namespaces
-
     /// <summary>
-    /// Node representing an access to a collection property value.
+    /// Node represents a collection complex property.
     /// </summary>
-    public sealed class CollectionPropertyAccessNode : CollectionNode
+    public class CollectionComplexNode : CollectionResourceNode
     {
         /// <summary>
         /// The value containing the property.
         /// </summary>
-        private readonly SingleValueNode source;
+        private readonly SingleResourceNode source;
 
         /// <summary>
         /// The EDM property which is to be accessed.
         /// </summary>
-        /// <remarks>Only non-entity, collection properties are supported by this node.</remarks>
         private readonly IEdmProperty property;
 
         /// <summary>
-        /// The resouce type of a single item from the collection represented by this node.
+        /// The complex type of a single item from the collection represented by this node.
         /// </summary>
-        private readonly IEdmTypeReference itemType;
+        private readonly IEdmComplexTypeReference itemType;
 
         /// <summary>
         /// The type of the collection represented by this node.
@@ -41,13 +36,18 @@ namespace Microsoft.OData.UriParser
         private readonly IEdmCollectionTypeReference collectionTypeReference;
 
         /// <summary>
-        /// Constructs a new <see cref="CollectionPropertyAccessNode"/>.
+        /// The navigation source that our collection comes from.
+        /// </summary>
+        private readonly IEdmNavigationSource navigationSource;
+
+        /// <summary>
+        /// Constructs a new <see cref="CollectionComplexNode"/>.
         /// </summary>
         /// <param name="source">The value containing the property.</param>
         /// <param name="property">The EDM property which is to be accessed.</param>
         /// <exception cref="System.ArgumentNullException">Throws if the input source or property is null.</exception>
         /// <exception cref="ArgumentException">Throws if the input property is not a collection of structural properties</exception>
-        public CollectionPropertyAccessNode(SingleValueNode source, IEdmProperty property)
+        public CollectionComplexNode(SingleResourceNode source, IEdmProperty property)
         {
             ExceptionUtils.CheckArgumentNotNull(source, "source");
             ExceptionUtils.CheckArgumentNotNull(property, "property");
@@ -65,13 +65,14 @@ namespace Microsoft.OData.UriParser
             this.source = source;
             this.property = property;
             this.collectionTypeReference = property.Type.AsCollection();
-            this.itemType = this.collectionTypeReference.ElementType();
+            this.itemType = this.collectionTypeReference.ElementType() as IEdmComplexTypeReference;
+            this.navigationSource = source.NavigationSource;
         }
 
         /// <summary>
         /// Gets the value containing the property.
         /// </summary>
-        public SingleValueNode Source
+        public SingleResourceNode Source
         {
             get { return this.source; }
         }
@@ -79,21 +80,17 @@ namespace Microsoft.OData.UriParser
         /// <summary>
         /// Gets the EDM property which is to be accessed.
         /// </summary>
-        /// <remarks>Only non-entity, collection properties are supported by this node.</remarks>
         public IEdmProperty Property
         {
             get { return this.property; }
         }
 
         /// <summary>
-        /// Gets the resource type of a single item from the collection represented by this node.
+        /// Gets the type of a single item from the collection represented by this node.
         /// </summary>
         public override IEdmTypeReference ItemType
         {
-            get
-            {
-                return this.itemType;
-            }
+            get { return this.itemType; }
         }
 
         /// <summary>
@@ -105,13 +102,29 @@ namespace Microsoft.OData.UriParser
         }
 
         /// <summary>
+        /// Gets the structured type of a single item from the collection represented by this node.
+        /// </summary>
+        public override IEdmStructuredTypeReference ItemStructuredType
+        {
+            get { return this.itemType; }
+        }
+
+        /// <summary>
+        /// Gets the navigation source that our collection comes from.
+        /// </summary>
+        public override IEdmNavigationSource NavigationSource
+        {
+            get { return this.navigationSource; }
+        }
+
+        /// <summary>
         /// Gets the kind of this node.
         /// </summary>
         internal override InternalQueryNodeKind InternalKind
         {
             get
             {
-                return InternalQueryNodeKind.CollectionPropertyAccess;
+                return InternalQueryNodeKind.CollectionComplexNode;
             }
         }
 

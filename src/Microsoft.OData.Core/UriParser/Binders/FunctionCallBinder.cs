@@ -378,7 +378,7 @@ namespace Microsoft.OData.UriParser
             else if (returnType.IsEntityCollection())
             {
                 IEdmCollectionTypeReference collectionTypeReference = (IEdmCollectionTypeReference)returnType;
-                boundFunction = new EntityCollectionFunctionCallNode(functionName, new[] { function }, boundArguments, collectionTypeReference, returnSet, parent);
+                boundFunction = new CollectionResourceFunctionCallNode(functionName, new[] { function }, boundArguments, collectionTypeReference, returnSet, parent);
             }
             else if (returnType.IsCollection())
             {

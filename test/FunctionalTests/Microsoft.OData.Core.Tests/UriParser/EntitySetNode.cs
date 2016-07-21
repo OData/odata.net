@@ -12,7 +12,7 @@ namespace Microsoft.OData.Tests.UriParser
     /// <summary>
     /// Node representing an entity set.
     /// </summary>
-    internal sealed class EntitySetNode : EntityCollectionNode
+    internal sealed class EntitySetNode : CollectionResourceNode
     {
         /// <summary>
         /// The entity set this node represents.
@@ -20,7 +20,7 @@ namespace Microsoft.OData.Tests.UriParser
         private readonly IEdmEntitySet entitySet;
 
         /// <summary>
-        /// The resouce type of a single entity in the entity set.
+        /// The resource type of a single entity in the entity set.
         /// </summary>
         private readonly IEdmEntityTypeReference entityType;
 
@@ -62,9 +62,14 @@ namespace Microsoft.OData.Tests.UriParser
         }
 
         /// <summary>
-        /// Gets the resouce type of a single entity in the entity set.
+        /// Gets the resource type of a single entity in the entity set.
         /// </summary>
-        public override IEdmEntityTypeReference EntityItemType
+        public IEdmEntityTypeReference EntityItemType
+        {
+            get { return this.entityType; }
+        }
+
+        public override IEdmStructuredTypeReference ItemStructuredType
         {
             get { return this.entityType; }
         }

@@ -179,12 +179,12 @@ namespace Microsoft.OData.Tests.UriParser
             return new AndConstraint<CollectionFunctionCallNode>(functionCallNode);
         }
 
-        public static AndConstraint<EntityCollectionFunctionCallNode> ShouldBeEntityCollectionFunctionCallNode(this QueryNode token, params IEdmFunction[] operationImports)
+        public static AndConstraint<CollectionResourceFunctionCallNode> ShouldBeCollectionResourceFunctionCallNode(this QueryNode token, params IEdmFunction[] operationImports)
         {
-            token.Should().BeOfType<EntityCollectionFunctionCallNode>();
-            var functionCallNode = token.As<EntityCollectionFunctionCallNode>();
+            token.Should().BeOfType<CollectionResourceFunctionCallNode>();
+            var functionCallNode = token.As<CollectionResourceFunctionCallNode>();
             functionCallNode.Functions.Should().ContainExactly(operationImports);
-            return new AndConstraint<EntityCollectionFunctionCallNode>(functionCallNode);
+            return new AndConstraint<CollectionResourceFunctionCallNode>(functionCallNode);
         }
 
         public static AndConstraint<SingleValuePropertyAccessNode> ShouldBeSingleValuePropertyAccessQueryNode(this QueryNode token, IEdmProperty expectedProperty)
@@ -260,12 +260,12 @@ namespace Microsoft.OData.Tests.UriParser
             return new AndConstraint<EntitySetNode>(entitySetQueryNode);
         }
 
-        public static AndConstraint<EntityCollectionCastNode> ShouldBeCollectionCastNode(this QueryNode node, IEdmTypeReference expectedTypeReference)
+        public static AndConstraint<CollectionResourceCastNode> ShouldBeCollectionCastNode(this QueryNode node, IEdmTypeReference expectedTypeReference)
         {
-            node.Should().BeOfType<EntityCollectionCastNode>();
-            var collectionCastNode = node.As<EntityCollectionCastNode>();
+            node.Should().BeOfType<CollectionResourceCastNode>();
+            var collectionCastNode = node.As<CollectionResourceCastNode>();
             collectionCastNode.ItemType.ShouldBeEquivalentTo(expectedTypeReference); // TODO
-            return new AndConstraint<EntityCollectionCastNode>(collectionCastNode);
+            return new AndConstraint<CollectionResourceCastNode>(collectionCastNode);
         }
 
         public static AndConstraint<SingleResourceCastNode> ShouldBeSingleCastNode(this QueryNode node, IEdmTypeReference expectedTypeReference)

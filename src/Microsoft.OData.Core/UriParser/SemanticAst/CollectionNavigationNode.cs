@@ -15,7 +15,7 @@ namespace Microsoft.OData.UriParser
     /// <summary>
     /// Query node representing a collection navigation property.
     /// </summary>
-    public sealed class CollectionNavigationNode : EntityCollectionNode
+    public sealed class CollectionNavigationNode : CollectionResourceNode
     {
         /// <summary>
         /// The navigation property of the single entity this node represents.
@@ -160,9 +160,17 @@ namespace Microsoft.OData.UriParser
         }
 
         /// <summary>
-        /// Gets the resouce type of a single entity from the collection.
+        /// Gets the resource type of a single entity from the collection.
         /// </summary>
-        public override IEdmEntityTypeReference EntityItemType
+        public IEdmEntityTypeReference EntityItemType
+        {
+            get { return this.edmEntityTypeReference; }
+        }
+
+        /// <summary>
+        /// Gets the resource type of a single entity from the collection.
+        /// </summary>
+        public override IEdmStructuredTypeReference ItemStructuredType
         {
             get { return this.edmEntityTypeReference; }
         }

@@ -105,11 +105,11 @@ namespace Microsoft.OData.UriParser
         }
 
         /// <summary>
-        /// Visit an EntityCollectionCastNode
+        /// Visit an CollectionResourceCastNode
         /// </summary>
         /// <param name="nodeIn">the node to visit</param>
         /// <returns>Defined by the implementer</returns>
-        public virtual T Visit(EntityCollectionCastNode nodeIn)
+        public virtual T Visit(CollectionResourceCastNode nodeIn)
         {
             throw new NotImplementedException();
         }
@@ -175,11 +175,11 @@ namespace Microsoft.OData.UriParser
         }
 
         /// <summary>
-        /// Visit a EntityCollectionFunctionCallNode
+        /// Visit a CollectionResourceFunctionCallNode
         /// </summary>
         /// <param name="nodeIn">the node to visit</param>
         /// <returns>Defined by the implementer</returns>
-        public virtual T Visit(EntityCollectionFunctionCallNode nodeIn)
+        public virtual T Visit(CollectionResourceFunctionCallNode nodeIn)
         {
             throw new NotImplementedException();
         }
@@ -280,6 +280,16 @@ namespace Microsoft.OData.UriParser
         /// <param name="nodeIn">the node to visit</param>
         /// <returns>Defined by the implementer</returns>
         public virtual T Visit(SingleComplexNode nodeIn)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Visit a CollectionComplexNode
+        /// </summary>
+        /// <param name="nodeIn">the node to visit</param>
+        /// <returns>Defined by the implementer</returns>
+        public virtual T Visit(CollectionComplexNode nodeIn)
         {
             throw new NotImplementedException();
         }

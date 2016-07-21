@@ -393,8 +393,8 @@ namespace AstoriaUnitTests.TDD.Tests.Server.Parsing
         [TestMethod]
         public void TranslatorShouldConvertWeaklyBackedEntityCollectionCast()
         {
-            EntityCollectionNode source = this.CollectionNavigationFromParameter("c");
-            QueryNode node = new EntityCollectionCastNode(source, this.weaklyBackedCustomerEdmType);
+            CollectionResourceNode source = this.CollectionNavigationFromParameter("c");
+            QueryNode node = new CollectionResourceCastNode(source, this.weaklyBackedCustomerEdmType);
             var result = this.testSubject.TranslateNode(node);
 
             var parameterExpression = Expression.Parameter(typeof(Customer), "c");
@@ -516,7 +516,7 @@ namespace AstoriaUnitTests.TDD.Tests.Server.Parsing
             ODataProtocolVersion validatedProtocolVersion = ODataProtocolVersion.V4;
             this.testSubject = this.CreateTestSubject(verifyProtocolVersion: v => { validatedProtocolVersion = v; }, verifyRequestVersion: v => { throw new Exception("Should not be called."); });
 
-            QueryNode node = new EntityCollectionCastNode(this.CollectionNavigationFromParameter("o"), this.customerEdmType);
+            QueryNode node = new CollectionResourceCastNode(this.CollectionNavigationFromParameter("o"), this.customerEdmType);
 
             this.testSubject.TranslateNode(node);
             validatedProtocolVersion.Should().Be(ODataProtocolVersion.V4);
@@ -613,9 +613,9 @@ namespace AstoriaUnitTests.TDD.Tests.Server.Parsing
             CompareExpressions(expectedExpression.Body, result);
         }
 
-        private void TestCast<TParam, TReturn>(EntityCollectionNode source, IEdmEntityType cast, Expression<Func<TParam, TReturn>> expectedExpression)
+        private void TestCast<TParam, TReturn>(CollectionResourceNode source, IEdmEntityType cast, Expression<Func<TParam, TReturn>> expectedExpression)
         {
-            var node = new EntityCollectionCastNode(source, cast);
+            var node = new CollectionResourceCastNode(source, cast);
             var result = this.testSubject.TranslateNode(node);
             CompareExpressions(expectedExpression.Body, result);
         }
@@ -691,7 +691,7 @@ namespace AstoriaUnitTests.TDD.Tests.Server.Parsing
             return new ResourceRangeVariableReferenceNode(name, entityRangeVariable);
         }
 
-        private EntityCollectionNode CollectionNavigationFromParameter(string name)
+        private CollectionResourceNode CollectionNavigationFromParameter(string name)
         {
             return new CollectionNavigationNode(this.EntityParameter<Customer>(name), this.otherFriendsNavigation, new EdmPathExpression(this.otherFriendsNavigation.Name));
         }

@@ -24,7 +24,7 @@ FilterQueryOption
 		NotEqual
 			Shanghai(Type: [Edm.String Nullable=True Unicode=True])
 		Source = 
-		EntityCollectionCastNode
+		CollectionResourceCastNode
 			Entity Item Type = [Microsoft.Test.Taupo.OData.WCFService.Customer Nullable=False]
 			NavigationSource = Brother
 			Item Type = [Microsoft.Test.Taupo.OData.WCFService.Customer Nullable=False]

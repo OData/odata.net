@@ -75,11 +75,11 @@ namespace Microsoft.OData.Tests.UriParser.Visitors
         }
 
         [Fact]
-        public void EntityCollectionCastNodeNotImplemented()
+        public void CollectionResourceCastNodeNotImplemented()
         {
             FakeVisitor visitor = new FakeVisitor();
-            Action visitEntityCollectionCastNode = () => visitor.Visit(new EntityCollectionCastNode(new EntitySetNode(HardCodedTestModel.GetPeopleSet()), HardCodedTestModel.GetPersonType()));
-            visitEntityCollectionCastNode.ShouldThrow<NotImplementedException>();
+            Action visitCollectionResourceCastNode = () => visitor.Visit(new CollectionResourceCastNode(new EntitySetNode(HardCodedTestModel.GetPeopleSet()), HardCodedTestModel.GetPersonType()));
+            visitCollectionResourceCastNode.ShouldThrow<NotImplementedException>();
         }
 
         [Fact]

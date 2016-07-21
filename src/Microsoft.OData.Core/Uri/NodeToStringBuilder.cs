@@ -143,14 +143,14 @@ namespace Microsoft.OData
         }
 
         /// <summary>
-        /// Translates a <see cref="EntityCollectionCastNode"/> into a corresponding <see cref="String"/>.
+        /// Translates a <see cref="CollectionResourceCastNode"/> into a corresponding <see cref="String"/>.
         /// </summary>
         /// <param name="node">The node to translate.</param>
-        /// <returns>The translated String of EntityCollectionCastNode.</returns>
-        public override String Visit(EntityCollectionCastNode node)
+        /// <returns>The translated String of CollectionResourceCastNode.</returns>
+        public override String Visit(CollectionResourceCastNode node)
         {
             ExceptionUtils.CheckArgumentNotNull(node, "node");
-            return this.TranslatePropertyAccess(node.Source, node.EntityItemType.Definition.ToString());
+            return this.TranslatePropertyAccess(node.Source, node.ItemStructuredType.Definition.ToString());
         }
 
         /// <summary>
@@ -278,11 +278,11 @@ namespace Microsoft.OData
         }
 
         /// <summary>
-        /// Translates a <see cref="EntityCollectionFunctionCallNode"/> into a corresponding <see cref="String"/>.
+        /// Translates a <see cref="CollectionResourceFunctionCallNode"/> into a corresponding <see cref="String"/>.
         /// </summary>
         /// <param name="node">The node to translate.</param>
-        /// <returns>The translated String of EntityCollectionFunctionCallNode.</returns>
-        public override String Visit(EntityCollectionFunctionCallNode node)
+        /// <returns>The translated String of CollectionResourceFunctionCallNode.</returns>
+        public override String Visit(CollectionResourceFunctionCallNode node)
         {
             ExceptionUtils.CheckArgumentNotNull(node, "node");
             String result = node.Name;

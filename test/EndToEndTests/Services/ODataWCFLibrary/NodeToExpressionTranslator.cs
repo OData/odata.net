@@ -336,11 +336,11 @@ namespace Microsoft.Test.OData.Services.ODataWCFService
         }
 
         /// <summary>
-        /// Visit an EntityCollectionCastNode
+        /// Visit an CollectionResourceCastNode
         /// </summary>
         /// <param name="nodeIn">The node to visit</param>
         /// <returns>The translated expression</returns>
-        public override Expression Visit(EntityCollectionCastNode nodeIn)
+        public override Expression Visit(CollectionResourceCastNode nodeIn)
         {
             throw new NotImplementedException();
         }
@@ -414,11 +414,11 @@ namespace Microsoft.Test.OData.Services.ODataWCFService
         }
 
         /// <summary>
-        /// Visit a EntityCollectionFunctionCallNode
+        /// Visit a CollectionResourceFunctionCallNode
         /// </summary>
         /// <param name="nodeIn">The node to visit</param>
         /// <returns>The translated expression</returns>
-        public override Expression Visit(EntityCollectionFunctionCallNode nodeIn)
+        public override Expression Visit(CollectionResourceFunctionCallNode nodeIn)
         {
             throw new NotImplementedException();
         }

@@ -525,7 +525,7 @@ namespace Microsoft.Test.Taupo.OData.Query.Tests.MetadataBinder
 
                     // construct the expected filter node
                     var entitySet = model.FindDeclaredEntitySet(testCase.EntitySetName);
-                    EntityCollectionNode entityCollectionNode = new EntitySetNode(entitySet);
+                    CollectionResourceNode entityCollectionNode = new EntitySetNode(entitySet);
                     var expectedFilter = new FilterClause(
                         testCase.ExpectedFilterCondition,
                         new EntityRangeVariable(ExpressionConstants.It, entitySet.EntityType().ToTypeReference(false).AsEntity(), entityCollectionNode)

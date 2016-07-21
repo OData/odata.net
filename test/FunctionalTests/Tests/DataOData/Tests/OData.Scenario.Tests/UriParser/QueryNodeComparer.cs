@@ -42,8 +42,8 @@ namespace Microsoft.Test.Taupo.OData.Scenario.Tests.UriParser
                     return this.Compare((CollectionPropertyAccessNode)left, (CollectionPropertyAccessNode)right);
                 case QueryNodeKind.SingleResourceCast:
                     return this.Compare((SingleResourceCastNode)left, (SingleResourceCastNode)right);
-                case QueryNodeKind.EntityCollectionCast:
-                    return this.Compare((EntityCollectionCastNode)left, (EntityCollectionCastNode)right);
+                case QueryNodeKind.CollectionResourceCast:
+                    return this.Compare((CollectionResourceCastNode)left, (CollectionResourceCastNode)right);
                 case QueryNodeKind.ResourceRangeVariableReference:
                     return this.Compare((ResourceRangeVariableReferenceNode)left, (ResourceRangeVariableReferenceNode)right);
                 case QueryNodeKind.Constant:
@@ -333,9 +333,9 @@ namespace Microsoft.Test.Taupo.OData.Scenario.Tests.UriParser
         /// <param name="left">Left side of comparison</param>
         /// <param name="right">Right side of comparison</param>
         /// <returns>True if equal, otherwise false</returns>
-        private bool Compare(EntityCollectionCastNode left, EntityCollectionCastNode right)
+        private bool Compare(CollectionResourceCastNode left, CollectionResourceCastNode right)
         {
-            if (left.EntityItemType != right.EntityItemType) return false;
+            if (left.ItemStructuredType != right.ItemStructuredType) return false;
             if (left.NavigationSource != right.NavigationSource) return false;
             if (left.ItemType != right.ItemType) return false;
             return this.Compare(left.Source, right.Source);

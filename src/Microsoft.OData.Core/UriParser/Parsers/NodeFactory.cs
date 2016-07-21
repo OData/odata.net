@@ -94,7 +94,7 @@ namespace Microsoft.OData.UriParser
 
             if (elementType != null && elementType.IsEntity())
             {
-                var entityCollectionNode = nodeToIterateOver as EntityCollectionNode;
+                var entityCollectionNode = nodeToIterateOver as CollectionResourceNode;
                 Debug.Assert(entityCollectionNode != null, "IF the element type was entity, the node type should be an entity collection");
                 return new EntityRangeVariable(parameter, elementType as IEdmEntityTypeReference, entityCollectionNode);
             }

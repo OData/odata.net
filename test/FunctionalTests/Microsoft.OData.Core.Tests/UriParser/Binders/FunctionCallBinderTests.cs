@@ -1138,7 +1138,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
         {
             QueryNode functionCallNode;
             RunBindEndPathAsFunctionCall("Fully.Qualified.Namespace.AllMyFriendsDogs", out functionCallNode).Should().BeTrue();
-            functionCallNode.ShouldBeEntityCollectionFunctionCallNode(HardCodedTestModel.GetFunctionForAllMyFriendsDogs())
+            functionCallNode.ShouldBeCollectionResourceFunctionCallNode(HardCodedTestModel.GetFunctionForAllMyFriendsDogs())
                 .And.NavigationSource.Should().Be(HardCodedTestModel.GetDogsSet());
         }
 
@@ -1147,7 +1147,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
         {
             QueryNode functionCallNode;
             RunBindEndPathAsFunctionCall("Fully.Qualified.Namespace.AllMyFriendsDogs_NoSet", out functionCallNode).Should().BeTrue();
-            functionCallNode.As<EntityCollectionFunctionCallNode>().NavigationSource.Should().BeNull();
+            functionCallNode.As<CollectionResourceFunctionCallNode>().NavigationSource.Should().BeNull();
         }
 
         [Fact]

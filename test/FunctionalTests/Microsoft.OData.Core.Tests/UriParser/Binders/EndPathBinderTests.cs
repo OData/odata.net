@@ -43,7 +43,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
         public void ExplicitPropertyAccessShouldCreatePropertyAccessQueryNode()
         {
             var token = new EndPathToken("Color", new RangeVariableToken("a"));
-            EntityCollectionNode entityCollectionNode = new EntitySetNode(HardCodedTestModel.GetDogsSet());
+            CollectionResourceNode entityCollectionNode = new EntitySetNode(HardCodedTestModel.GetDogsSet());
             this.bindingState.RangeVariables.Push(new EntityRangeVariable("a", HardCodedTestModel.GetDogTypeReference(), entityCollectionNode));
             var result = this.propertyBinder.BindEndPath(token);
 
@@ -65,8 +65,8 @@ namespace Microsoft.OData.Tests.UriParser.Binders
         {
             var token = new EndPathToken("Shoe", null);
 
-            EntityCollectionNode dogsEntityCollectionNode = new EntitySetNode(HardCodedTestModel.GetDogsSet());
-            EntityCollectionNode peopleEntityCollectionNode = new EntitySetNode(HardCodedTestModel.GetPeopleSet());
+            CollectionResourceNode dogsEntityCollectionNode = new EntitySetNode(HardCodedTestModel.GetDogsSet());
+            CollectionResourceNode peopleEntityCollectionNode = new EntitySetNode(HardCodedTestModel.GetPeopleSet());
 
             this.bindingState.RangeVariables.Push(new EntityRangeVariable("a", HardCodedTestModel.GetDogTypeReference(), dogsEntityCollectionNode));
             this.bindingState.RangeVariables.Push(new EntityRangeVariable("b", HardCodedTestModel.GetDogTypeReference(), dogsEntityCollectionNode));
@@ -197,7 +197,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
         public void GenerateQueryNodeShouldReturnQueryNode()
         {
             var property = HardCodedTestModel.GetDogColorProp();
-            EntityCollectionNode entityCollectionNode = new EntitySetNode(HardCodedTestModel.GetDogsSet());
+            CollectionResourceNode entityCollectionNode = new EntitySetNode(HardCodedTestModel.GetDogsSet());
             EntityRangeVariable rangeVariable = new EntityRangeVariable("Color", HardCodedTestModel.GetDogTypeReference(), entityCollectionNode);
             var result = EndPathBinder.GeneratePropertyAccessQueryNode(
                 new ResourceRangeVariableReferenceNode(rangeVariable.Name, rangeVariable),
@@ -213,7 +213,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
         {
             const string OpenPropertyName = "Style";
             var token = new EndPathToken(OpenPropertyName, new RangeVariableToken("a"));
-            EntityCollectionNode entityCollectionNode = new EntitySetNode(HardCodedTestModel.GetPaintingsSet());
+            CollectionResourceNode entityCollectionNode = new EntitySetNode(HardCodedTestModel.GetPaintingsSet());
             SingleValueNode parentNode = new ResourceRangeVariableReferenceNode("a", new EntityRangeVariable("a", HardCodedTestModel.GetPaintingTypeReference(), entityCollectionNode));
             
             var state = new BindingState(this.configuration);
@@ -229,7 +229,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
         public void ShouldThrowIfTypeNotOpen()
         {
             var token = new EndPathToken("Color", new RangeVariableToken("a"));
-            EntityCollectionNode entityCollectionNode = new EntitySetNode(HardCodedTestModel.GetDogsSet());
+            CollectionResourceNode entityCollectionNode = new EntitySetNode(HardCodedTestModel.GetDogsSet());
             SingleValueNode parentNode = new ResourceRangeVariableReferenceNode("a", new EntityRangeVariable("a", HardCodedTestModel.GetPersonTypeReference(), entityCollectionNode));
 
             var state = new BindingState(this.configuration);
@@ -247,7 +247,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
         public void ShouldNotThrowIfTypeNotOpenButAggregateApplied()
         {
             var token = new EndPathToken("Color", new RangeVariableToken("a"));
-            EntityCollectionNode entityCollectionNode = new EntitySetNode(HardCodedTestModel.GetDogsSet());
+            CollectionResourceNode entityCollectionNode = new EntitySetNode(HardCodedTestModel.GetDogsSet());
             SingleValueNode parentNode = new ResourceRangeVariableReferenceNode("a", new EntityRangeVariable("a", HardCodedTestModel.GetPersonTypeReference(), entityCollectionNode));
 
             var state = new BindingState(this.configuration);
@@ -278,7 +278,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
         private BindingState GetBindingStateForTest(IEdmEntityTypeReference typeReference, IEdmEntitySet type)
         {
             type.Should().NotBeNull();
-            EntityCollectionNode entityCollectionNode = new EntitySetNode(type);
+            CollectionResourceNode entityCollectionNode = new EntitySetNode(type);
             var implicitRangeVariable = new EntityRangeVariable(ExpressionConstants.It, typeReference, entityCollectionNode);
             var state = new BindingState(this.configuration) { ImplicitRangeVariable = implicitRangeVariable };
             state.RangeVariables.Push(state.ImplicitRangeVariable);

@@ -51,8 +51,8 @@ namespace Microsoft.Test.Taupo.OData.Scenario.Tests.UriParser
                     return ToString((CollectionOpenPropertyAccessNode)node);
                 case QueryNodeKind.SingleResourceCast:
                     return ToString((SingleResourceCastNode)node);
-                case QueryNodeKind.EntityCollectionCast:
-                    return ToString((EntityCollectionCastNode)node);
+                case QueryNodeKind.CollectionResourceCast:
+                    return ToString((CollectionResourceCastNode)node);
                 case QueryNodeKind.ResourceRangeVariableReference:
                     return ToString((ResourceRangeVariableReferenceNode)node);
                 case QueryNodeKind.Constant:
@@ -346,13 +346,13 @@ namespace Microsoft.Test.Taupo.OData.Scenario.Tests.UriParser
         /// </summary>
         /// <param name="node">Node to write to string</param>
         /// <returns>String representation of node.</returns>
-        private static string ToString(EntityCollectionCastNode node)
+        private static string ToString(CollectionResourceCastNode node)
         {
             if (node != null)
             {
-                return tabHelper.Prefix + "EntityCollectionCastNode" +
+                return tabHelper.Prefix + "CollectionResourceCastNode" +
                  tabHelper.Indent(() =>
-                    tabHelper.Prefix + "Entity Item Type = " + node.EntityItemType +
+                    tabHelper.Prefix + "Entity Item Type = " + node.ItemStructuredType +
                     tabHelper.Prefix + "NavigationSource = " + node.NavigationSource.Name +
                     tabHelper.Prefix + "Item Type = " + node.ItemType +
                     tabHelper.Prefix + "Source = " + ToString(node.Source)

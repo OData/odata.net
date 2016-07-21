@@ -143,7 +143,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
         private BindingState GetBindingStateForTest(IEdmEntityTypeReference typeReference, IEdmEntitySet type)
         {
             type.Should().NotBeNull();
-            EntityCollectionNode entityCollectionNode = new EntitySetNode(type);
+            CollectionResourceNode entityCollectionNode = new EntitySetNode(type);
             var implicitParameter = new EntityRangeVariable(ExpressionConstants.It, typeReference, entityCollectionNode);
             var state = new BindingState(this.configuration) { ImplicitRangeVariable = implicitParameter };
             state.RangeVariables.Push(state.ImplicitRangeVariable);

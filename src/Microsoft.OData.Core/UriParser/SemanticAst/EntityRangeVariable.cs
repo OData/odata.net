@@ -23,9 +23,9 @@ namespace Microsoft.OData.UriParser
         private readonly string name;
 
         /// <summary>
-        /// The Entity collection that this rangeVariable node iterates over
+        /// The resource collection that this rangeVariable node iterates over
         /// </summary>
-        private readonly EntityCollectionNode entityCollectionNode;
+        private readonly CollectionResourceNode entityCollectionNode;
 
         /// <summary>
         /// The navigation source of the collection this node iterates over.
@@ -44,7 +44,7 @@ namespace Microsoft.OData.UriParser
         /// <param name="entityType">The entity type of each item in the collection that this range variable iterates over.</param>
         /// <param name="entityCollectionNode">The Entity collection that this rangeVariable node iterates over</param>
         /// <exception cref="System.ArgumentNullException">Throws if the input name or entityType is null.</exception>
-        public EntityRangeVariable(string name, IEdmEntityTypeReference entityType, EntityCollectionNode entityCollectionNode)
+        public EntityRangeVariable(string name, IEdmEntityTypeReference entityType, CollectionResourceNode entityCollectionNode)
         {
             ExceptionUtils.CheckArgumentNotNull(name, "name");
             ExceptionUtils.CheckArgumentNotNull(entityType, "entityType");
@@ -82,7 +82,7 @@ namespace Microsoft.OData.UriParser
         /// <summary>
         /// Gets the Entity collection that this rangeVariable node iterates over
         /// </summary>
-        public EntityCollectionNode EntityCollectionNode
+        public CollectionResourceNode EntityCollectionNode
         {
             get { return this.entityCollectionNode; }
         }

@@ -42,13 +42,13 @@ namespace Microsoft.OData.UriParser
         /// <param name="namedValues">The named value tokens to bind.</param>
         /// <param name="model">The model to be used.</param>
         /// <returns>The bound key lookup.</returns>
-        internal QueryNode BindKeyValues(EntityCollectionNode collectionNode, IEnumerable<NamedValue> namedValues, IEdmModel model)
+        internal QueryNode BindKeyValues(CollectionResourceNode collectionNode, IEnumerable<NamedValue> namedValues, IEdmModel model)
         {
             Debug.Assert(namedValues != null, "namedValues != null");
             Debug.Assert(collectionNode != null, "CollectionNode != null");
             Debug.Assert(model != null, "model != null");
 
-            IEdmEntityTypeReference collectionItemType = collectionNode.EntityItemType;
+            IEdmEntityTypeReference collectionItemType = collectionNode.ItemStructuredType as IEdmEntityTypeReference;
 
             IEdmEntityType collectionItemEntityType = collectionItemType.EntityDefinition();
             QueryNode keyLookupNode;
@@ -63,7 +63,7 @@ namespace Microsoft.OData.UriParser
             }
             else
             {
-                throw new ODataException(ODataErrorStrings.MetadataBinder_NotAllKeyPropertiesSpecifiedInKeyValues(collectionNode.ItemType.FullName()));
+                throw new ODataException(ODataErrorStrings.MetadataBinder_NotAllKeyPropertiesSpecifiedInKeyValues(collectionNode.ItemStructuredType.FullName()));
             }
         }
 
@@ -76,7 +76,7 @@ namespace Microsoft.OData.UriParser
         /// <param name="collectionItemEntityType">The type of a single item in a collection to apply the key value to.</param>
         /// <param name="keyLookupNode">The bound key lookup.</param>
         /// <returns>Returns true if binding succeeded.</returns>
-        private bool TryBindToDeclaredAlternateKey(EntityCollectionNode collectionNode, IEnumerable<NamedValue> namedValues, IEdmModel model, IEdmEntityType collectionItemEntityType, out QueryNode keyLookupNode)
+        private bool TryBindToDeclaredAlternateKey(CollectionResourceNode collectionNode, IEnumerable<NamedValue> namedValues, IEdmModel model, IEdmEntityType collectionItemEntityType, out QueryNode keyLookupNode)
         {
             IEnumerable<IDictionary<string, IEdmProperty>> alternateKeys = model.GetAlternateKeysAnnotation(collectionItemEntityType);
             foreach (IDictionary<string, IEdmProperty> keys in alternateKeys)
@@ -100,7 +100,7 @@ namespace Microsoft.OData.UriParser
         /// <param name="collectionItemEntityType">The type of a single item in a collection to apply the key value to.</param>
         /// <param name="keyLookupNode">The bound key lookup.</param>
         /// <returns>Returns true if binding succeeded.</returns>
-        private bool TryBindToDeclaredKey(EntityCollectionNode collectionNode, IEnumerable<NamedValue> namedValues, IEdmModel model, IEdmEntityType collectionItemEntityType, out QueryNode keyLookupNode)
+        private bool TryBindToDeclaredKey(CollectionResourceNode collectionNode, IEnumerable<NamedValue> namedValues, IEdmModel model, IEdmEntityType collectionItemEntityType, out QueryNode keyLookupNode)
         {
             Dictionary<string, IEdmProperty> keys = new Dictionary<string, IEdmProperty>(StringComparer.Ordinal);
             foreach (IEdmStructuralProperty property in collectionItemEntityType.Key())
@@ -121,7 +121,7 @@ namespace Microsoft.OData.UriParser
         /// <param name="keys">Dictionary of aliases to structural property names for the key.</param>
         /// <param name="keyLookupNode">The bound key lookup.</param>
         /// <returns>Returns true if binding succeeded.</returns>
-        private bool TryBindToKeys(EntityCollectionNode collectionNode, IEnumerable<NamedValue> namedValues, IEdmModel model, IEdmEntityType collectionItemEntityType, IDictionary<string, IEdmProperty> keys, out QueryNode keyLookupNode)
+        private bool TryBindToKeys(CollectionResourceNode collectionNode, IEnumerable<NamedValue> namedValues, IEdmModel model, IEdmEntityType collectionItemEntityType, IDictionary<string, IEdmProperty> keys, out QueryNode keyLookupNode)
         {
             List<KeyPropertyValue> keyPropertyValues = new List<KeyPropertyValue>();
             HashSet<string> keyPropertyNames = new HashSet<string>(StringComparer.Ordinal);

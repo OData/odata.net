@@ -335,8 +335,8 @@
     <Compile Include="UriParser\SemanticAst\ConstantNodeTests.cs" />
     <Compile Include="UriParser\SemanticAst\ConvertNodeTests.cs" />
     <Compile Include="UriParser\SemanticAst\CountSegmentTests.cs" />
-    <Compile Include="UriParser\SemanticAst\EntityCollectionCastNodeTests.cs" />
-    <Compile Include="UriParser\SemanticAst\EntityCollectionFunctionCallNodeTests.cs" />
+    <Compile Include="UriParser\SemanticAst\CollectionResourceCastNodeTests.cs" />
+    <Compile Include="UriParser\SemanticAst\CollectionResourceFunctionCallNodeTests.cs" />
     <Compile Include="UriParser\SemanticAst\ResourceRangeVariableReferenceNodeTests.cs" />
     <Compile Include="UriParser\SemanticAst\EntityRangeVariableTests.cs" />
     <Compile Include="UriParser\SemanticAst\EntitySetNodeTests.cs" />

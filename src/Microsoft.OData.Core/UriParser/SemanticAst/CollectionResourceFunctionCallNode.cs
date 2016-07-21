@@ -1,5 +1,5 @@
 ﻿//---------------------------------------------------------------------
-// <copyright file="EntityCollectionFunctionCallNode.cs" company="Microsoft">
+// <copyright file="CollectionResourceFunctionCallNode.cs" company="Microsoft">
 //      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 // </copyright>
 //---------------------------------------------------------------------
@@ -17,7 +17,7 @@ namespace Microsoft.OData.UriParser
     /// <summary>
     /// Node to represent a function call that returns a collection of entities.
     /// </summary>
-    public sealed class EntityCollectionFunctionCallNode : EntityCollectionNode
+    public sealed class CollectionResourceFunctionCallNode : CollectionResourceNode
     {
         /// <summary>
         /// the name of this function.
@@ -35,9 +35,9 @@ namespace Microsoft.OData.UriParser
         private readonly ReadOnlyCollection<QueryNode> parameters;
 
         /// <summary>
-        /// the type a single entity returned by this function
+        /// the structured type of a resource returned by this function
         /// </summary>
-        private readonly IEdmEntityTypeReference entityTypeReference;
+        private readonly IEdmStructuredTypeReference structuredTypeReference;
 
         /// <summary>
         /// the type of the collection returned by this function
@@ -50,24 +50,24 @@ namespace Microsoft.OData.UriParser
         private readonly IEdmEntitySetBase navigationSource;
 
         /// <summary>
-        /// The semantically bound parent of this EntityCollectionFunctionCallNode.
+        /// The semantically bound parent of this CollectionResourceFunctionCallNode.
         /// </summary>
         private readonly QueryNode source;
 
         /// <summary>
-        /// Creates an EntityCollectionFunctionCallNode to represent a operation call that returns a collection of entities.
+        /// Creates an CollectionResourceFunctionCallNode to represent a operation call that returns a collection of entities.
         /// </summary>
         /// <param name="name">The name of this operation.</param>
         /// <param name="functions">the list of functions that this node should represent.</param>
         /// <param name="parameters">the list of parameters to this operation</param>
         /// <param name="returnedCollectionTypeReference">the type the entity collection returned by this operation. The element type must be an entity type.</param>
         /// <param name="navigationSource">the set containing entities returned by this operation</param>
-        /// <param name="source">the semantically bound parent of this EntityCollectionFunctionCallNode.</param>
+        /// <param name="source">the semantically bound parent of this CollectionResourceFunctionCallNode.</param>
         /// <exception cref="System.ArgumentNullException">Throws if the provided name is null.</exception>
         /// <exception cref="System.ArgumentNullException">Throws if the provided collection type reference is null.</exception>
         /// <exception cref="System.ArgumentException">Throws if the element type of the provided collection type reference is not an entity type.</exception>
         /// <exception cref="System.ArgumentNullException">Throws if the input operation imports is null</exception>
-        public EntityCollectionFunctionCallNode(string name, IEnumerable<IEdmFunction> functions, IEnumerable<QueryNode> parameters, IEdmCollectionTypeReference returnedCollectionTypeReference, IEdmEntitySetBase navigationSource, QueryNode source)
+        public CollectionResourceFunctionCallNode(string name, IEnumerable<IEdmFunction> functions, IEnumerable<QueryNode> parameters, IEdmCollectionTypeReference returnedCollectionTypeReference, IEdmEntitySetBase navigationSource, QueryNode source)
         {
             ExceptionUtils.CheckArgumentNotNull(name, "name");
             ExceptionUtils.CheckArgumentNotNull(returnedCollectionTypeReference, "returnedCollectionTypeReference");
@@ -77,8 +77,8 @@ namespace Microsoft.OData.UriParser
             this.returnedCollectionTypeReference = returnedCollectionTypeReference;
             this.navigationSource = navigationSource;
 
-            this.entityTypeReference = returnedCollectionTypeReference.ElementType().AsEntityOrNull();
-            if (this.entityTypeReference == null)
+            this.structuredTypeReference = returnedCollectionTypeReference.ElementType().AsEntityOrNull();
+            if (this.structuredTypeReference == null)
             {
                 throw new ArgumentException(ODataErrorStrings.Nodes_EntityCollectionFunctionCallNode_ItemTypeMustBeAnEntity);
             }
@@ -115,7 +115,7 @@ namespace Microsoft.OData.UriParser
         /// </summary>
         public override IEdmTypeReference ItemType
         {
-            get { return this.entityTypeReference; }
+            get { return this.structuredTypeReference; }
         }
 
         /// <summary>
@@ -127,11 +127,11 @@ namespace Microsoft.OData.UriParser
         }
 
         /// <summary>
-        /// Gets the individual entity type returned by this function.
+        /// Gets the individual structured type returned by this function.
         /// </summary>
-        public override IEdmEntityTypeReference EntityItemType
+        public override IEdmStructuredTypeReference ItemStructuredType
         {
-            get { return this.entityTypeReference; }
+            get { return this.structuredTypeReference; }
         }
 
         /// <summary>
@@ -157,7 +157,7 @@ namespace Microsoft.OData.UriParser
         {
             get
             {
-                return InternalQueryNodeKind.EntityCollectionFunctionCall;
+                return InternalQueryNodeKind.CollectionResourceFunctionCall;
             }
         }
 

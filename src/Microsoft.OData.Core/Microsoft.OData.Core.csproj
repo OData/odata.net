@@ -66,6 +66,7 @@
     <Compile Include="PropertyValueTypeInfo.cs" />
     <Compile Include="UriParser\BindingPathHelper.cs" />
     <Compile Include="UriParser\ODataPathInfo.cs" />
+    <Compile Include="UriParser\SemanticAst\CollectionComplexNode.cs" />
     <Compile Include="UriParser\SemanticAst\SingleComplexNode.cs" />
     <Compile Include="UriParser\SemanticAst\SingleResourceNode.cs" />
     <Compile Include="ValidationKinds.cs" />
@@ -452,9 +453,9 @@
     <Compile Include="UriParser\SemanticAst\CountNode.cs" />
     <Compile Include="UriParser\SemanticAst\CountSegment.cs" />
     <Compile Include="UriParser\SemanticAst\DetermineNavigationSourceTranslator.cs" />
-    <Compile Include="UriParser\SemanticAst\EntityCollectionCastNode.cs" />
-    <Compile Include="UriParser\SemanticAst\EntityCollectionFunctionCallNode.cs" />
-    <Compile Include="UriParser\SemanticAst\EntityCollectionNode.cs" />
+    <Compile Include="UriParser\SemanticAst\CollectionResourceCastNode.cs" />
+    <Compile Include="UriParser\SemanticAst\CollectionResourceFunctionCallNode.cs" />
+    <Compile Include="UriParser\SemanticAst\CollectionResourceNode.cs" />
     <Compile Include="UriParser\SemanticAst\EntityIdSegment.cs" />
     <Compile Include="UriParser\SemanticAst\EntityRangeVariable.cs" />
     <Compile Include="UriParser\SemanticAst\ResourceRangeVariableReferenceNode.cs" />

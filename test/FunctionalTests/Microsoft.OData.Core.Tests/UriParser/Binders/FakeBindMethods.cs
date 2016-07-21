@@ -43,7 +43,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
         public static readonly SingleValueNode FakeSingleOpenProperty =
             new SingleValueOpenPropertyAccessNode(new ConstantNode(null), "A_OPENPROPERTY");
 
-        public static readonly EntityCollectionNode FakeEntityCollectionNode =
+        public static readonly CollectionResourceNode FakeEntityCollectionNode =
             new EntitySetNode(HardCodedTestModel.GetPeopleSet());
 
         public static readonly ConstantNode FakeNullLiteralNode =
@@ -100,7 +100,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
             return FakeNullLiteralNode;
         }
 
-        public static EntityCollectionNode BindMethodThatReturnsEntitySetNode(QueryToken queryToken)
+        public static CollectionResourceNode BindMethodThatReturnsEntitySetNode(QueryToken queryToken)
         {
             return FakeEntityCollectionNode;
         }

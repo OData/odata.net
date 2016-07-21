@@ -1,5 +1,5 @@
 ﻿//---------------------------------------------------------------------
-// <copyright file="EntityCollectionCastNode.cs" company="Microsoft">
+// <copyright file="CollectionResourceCastNode.cs" company="Microsoft">
 //      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 // </copyright>
 //---------------------------------------------------------------------
@@ -9,14 +9,14 @@ using Microsoft.OData.Edm;
 namespace Microsoft.OData.UriParser
 {
     /// <summary>
-    /// Node representing a type segment that casts an entity collection node.
+    /// Node representing a type segment that casts an resource collection node.
     /// </summary>
-    public sealed class EntityCollectionCastNode : EntityCollectionNode
+    public sealed class CollectionResourceCastNode : CollectionResourceNode
     {
         /// <summary>
-        /// The entity collection node that we're casting.
+        /// The resource collection node that we're casting.
         /// </summary>
-        private readonly EntityCollectionNode source;
+        private readonly CollectionResourceNode source;
 
         /// <summary>
         /// The target type that we're casting our entity collection node to.
@@ -39,7 +39,7 @@ namespace Microsoft.OData.UriParser
         /// <param name="source">Parent <see cref="CollectionNode"/> that is being cast.</param>
         /// <param name="entityType">Type to cast to.</param>
         /// <exception cref="System.ArgumentNullException">Throws if the input source or entityType are null.</exception>
-        public EntityCollectionCastNode(EntityCollectionNode source, IEdmEntityType entityType)
+        public CollectionResourceCastNode(CollectionResourceNode source, IEdmEntityType entityType)
         {
             ExceptionUtils.CheckArgumentNotNull(source, "source");
             ExceptionUtils.CheckArgumentNotNull(entityType, "entityType");
@@ -54,7 +54,7 @@ namespace Microsoft.OData.UriParser
         /// <summary>
         /// Gets the entity collection node that we're casting.
         /// </summary>
-        public EntityCollectionNode Source
+        public CollectionResourceNode Source
         {
             get { return this.source; }
         }
@@ -76,9 +76,9 @@ namespace Microsoft.OData.UriParser
         }
 
         /// <summary>
-        /// Gets the entity type that we're casting all items in this collection to.
+        /// Gets the resource type that we're casting all items in this collection to.
         /// </summary>
-        public override IEdmEntityTypeReference EntityItemType
+        public override IEdmStructuredTypeReference ItemStructuredType
         {
             get { return this.edmTypeReference; }
         }
@@ -98,7 +98,7 @@ namespace Microsoft.OData.UriParser
         {
             get
             {
-                return InternalQueryNodeKind.EntityCollectionCast;
+                return InternalQueryNodeKind.CollectionResourceCast;
             }
         }
 

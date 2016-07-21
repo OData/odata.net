@@ -285,11 +285,11 @@ namespace Microsoft.OData.Service.Parsing
         }
 
         /// <summary>
-        /// Translates a <see cref="EntityCollectionCastNode"/> into a corresponding <see cref="Expression"/>.
+        /// Translates a <see cref="CollectionResourceCastNode"/> into a corresponding <see cref="Expression"/>.
         /// </summary>
         /// <param name="node">The node to translate.</param>
         /// <returns>The translated expression.</returns>
-        public override Expression Visit(EntityCollectionCastNode node)
+        public override Expression Visit(CollectionResourceCastNode node)
         {
             WebUtil.CheckArgumentNull(node, "node");
             Debug.Assert(node.Source != null, "sourceNode != null");
@@ -719,16 +719,16 @@ namespace Microsoft.OData.Service.Parsing
         }
 
         /// <summary>
-        /// Translates a <see cref="EntityCollectionCastNode"/> into a corresponding <see cref="Expression"/>.
+        /// Translates a <see cref="CollectionResourceCastNode"/> into a corresponding <see cref="Expression"/>.
         /// </summary>
         /// <param name="node">The node to translate.</param>
         /// <param name="source">The already-translated source of the type cast.</param>
         /// <returns>The translated expression.</returns>
-        private static Expression TranslateTypeCast(EntityCollectionCastNode node, Expression source)
+        private static Expression TranslateTypeCast(CollectionResourceCastNode node, Expression source)
         {
             Debug.Assert(node != null, "node != null");
             Debug.Assert(node.Source != null, "sourceNode != null");
-            Debug.Assert(node.ItemType != null, "entityTypeReference != null");
+            Debug.Assert(node.ItemType != null, "typeReference != null");
             Debug.Assert(source != null, "source != null");
 
             ResourceType resourceType = MetadataProviderUtils.GetResourceType(node.ItemType.Definition);
@@ -941,16 +941,16 @@ namespace Microsoft.OData.Service.Parsing
             // If it is, translate it's source and then add the null propagation before the type cast.
             // If it isn't, then just add the type cast before the lambda.
             QueryNode sourceNode = node.Source;
-            EntityCollectionCastNode castNode = null;
-            if (sourceNode.Kind == QueryNodeKind.EntityCollectionCast)
+            CollectionResourceCastNode castNode = null;
+            if (sourceNode.Kind == QueryNodeKind.CollectionResourceCast)
             {
-                castNode = ((EntityCollectionCastNode)sourceNode);
+                castNode = ((CollectionResourceCastNode)sourceNode);
                 sourceNode = castNode.Source;
 
-                if (sourceNode.Kind == QueryNodeKind.EntityCollectionCast)
+                if (sourceNode.Kind == QueryNodeKind.CollectionResourceCast)
                 {
                     // If 2 identifiers are specified back to back, then we need to check and throw in that scenario
-                    string message = Strings.RequestUriProcessor_TypeIdentifierCannotBeSpecifiedAfterTypeIdentifier(((EntityCollectionCastNode)sourceNode).ItemType.FullName(), castNode.ItemType.FullName());
+                    string message = Strings.RequestUriProcessor_TypeIdentifierCannotBeSpecifiedAfterTypeIdentifier(((CollectionResourceCastNode)sourceNode).ItemType.FullName(), castNode.ItemType.FullName());
                     throw DataServiceException.CreateBadRequestError(message);
                 }
             }

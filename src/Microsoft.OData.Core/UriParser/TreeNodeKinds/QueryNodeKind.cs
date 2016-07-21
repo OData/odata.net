@@ -90,9 +90,9 @@ namespace Microsoft.OData.UriParser
         All = InternalQueryNodeKind.All,
 
         /// <summary>
-        /// Cast on a collection of entities.
+        /// Cast on a collection of resources.
         /// </summary>
-        EntityCollectionCast = InternalQueryNodeKind.EntityCollectionCast,
+        CollectionResourceCast = InternalQueryNodeKind.CollectionResourceCast,
 
         /// <summary>
         /// Placeholder node referencing a rangeVariable on the binding stack that references an entity or a complex.
@@ -110,9 +110,9 @@ namespace Microsoft.OData.UriParser
         CollectionFunctionCall = InternalQueryNodeKind.CollectionFunctionCall,
 
         /// <summary>
-        /// Node that represents a function call that returns a collection of entities.
+        /// Node that represents a function call that returns a collection of resources.
         /// </summary>
-        EntityCollectionFunctionCall = InternalQueryNodeKind.EntityCollectionFunctionCall,
+        CollectionResourceFunctionCall = InternalQueryNodeKind.CollectionResourceFunctionCall,
 
         /// <summary>
         /// Node that represents a named function parameter.
@@ -163,6 +163,11 @@ namespace Microsoft.OData.UriParser
         /// Node represents a single complex property.
         /// </summary>
         SingleComplexNode = InternalQueryNodeKind.SingleComplexNode,
+
+        /// <summary>
+        /// Node represents a collection of complex property.
+        /// </summary>
+        CollectionComplexNode = InternalQueryNodeKind.CollectionComplexNode,
     }
 
     /// <summary>
@@ -246,9 +251,9 @@ namespace Microsoft.OData.UriParser
         All = 14,
 
         /// <summary>
-        /// Cast on a collection.
+        /// Cast on a resource collection.
         /// </summary>
-        EntityCollectionCast = 15,
+        CollectionResourceCast = 15,
 
         /// <summary>
         /// Resource node referencing a range variable.
@@ -266,9 +271,9 @@ namespace Microsoft.OData.UriParser
         CollectionFunctionCall = 18,
 
         /// <summary>
-        /// Node that represents a funciton call that returns a collection of entities.
+        /// Node that represents a function call that returns a collection of resources.
         /// </summary>
-        EntityCollectionFunctionCall = 19,
+        CollectionResourceFunctionCall = 19,
 
         /// <summary>
         /// Node that represents a named function parameter.
@@ -319,5 +324,10 @@ namespace Microsoft.OData.UriParser
         /// Node represents a single complex property.
         /// </summary>
         SingleComplexNode = 29,
+
+        /// <summary>
+        /// Node represents a collection of complex property.
+        /// </summary>
+        CollectionComplexNode = 30,
     }
 }

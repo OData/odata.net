@@ -99,10 +99,10 @@ namespace Microsoft.OData.UriParser
             IEdmEntityType childEntityType = childStructuredType as IEdmEntityType;
             if (childEntityType != null)
             {
-                EntityCollectionNode parentAsCollection = parent as EntityCollectionNode;
+                CollectionResourceNode parentAsCollection = parent as CollectionResourceNode;
                 if (parentAsCollection != null)
                 {
-                    return new EntityCollectionCastNode(parentAsCollection, childEntityType);
+                    return new CollectionResourceCastNode(parentAsCollection, childEntityType);
                 }
 
                 // parent can be null for casts on the implicit parameter; this is OK

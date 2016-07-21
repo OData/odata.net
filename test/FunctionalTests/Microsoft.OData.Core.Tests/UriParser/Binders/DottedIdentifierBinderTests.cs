@@ -22,7 +22,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
         public DottedIdentifierBinderTests()
         {
             IEdmEntitySet set = HardCodedTestModel.GetPeopleSet();
-            EntityCollectionNode entityCollectionNode = new EntitySetNode(set);
+            CollectionResourceNode entityCollectionNode = new EntitySetNode(set);
             var implicitParameter = new EntityRangeVariable(ExpressionConstants.It, HardCodedTestModel.GetPersonTypeReference(), entityCollectionNode);
             this.bindingState = new BindingState(this.configuration) { ImplicitRangeVariable = implicitParameter };
             this.bindingState.RangeVariables.Push(new BindingState(this.configuration) { ImplicitRangeVariable = implicitParameter }.ImplicitRangeVariable);

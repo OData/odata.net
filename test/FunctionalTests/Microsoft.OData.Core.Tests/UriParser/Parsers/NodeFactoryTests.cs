@@ -81,7 +81,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         public void CreateLambdaNodeForAnyTokenShouldCreateAnyNode()
         {
             BindingState bindingState = new BindingState(configuration);
-            EntityCollectionNode parent = new EntitySetNode(HardCodedTestModel.GetPeopleSet());
+            CollectionResourceNode parent = new EntitySetNode(HardCodedTestModel.GetPeopleSet());
             SingleValueNode expression = new ConstantNode(true);
             RangeVariable rangeVariable = new EntityRangeVariable("bob", HardCodedTestModel.GetPersonTypeReference(), parent);
             var resultNode = NodeFactory.CreateLambdaNode(bindingState, parent, expression, rangeVariable, QueryTokenKind.Any);
@@ -94,7 +94,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         public void CreateLambdaNodeForAllTokenShouldCreateAllNode()
         {
             BindingState bindingState = new BindingState(configuration);
-            EntityCollectionNode parent = new EntitySetNode(HardCodedTestModel.GetPeopleSet());
+            CollectionResourceNode parent = new EntitySetNode(HardCodedTestModel.GetPeopleSet());
             SingleValueNode expression = new ConstantNode(true);
             RangeVariable rangeVariable = new EntityRangeVariable("bob", HardCodedTestModel.GetPersonTypeReference(), parent);
             var resultNode = NodeFactory.CreateLambdaNode(bindingState, parent, expression, rangeVariable, QueryTokenKind.All);
