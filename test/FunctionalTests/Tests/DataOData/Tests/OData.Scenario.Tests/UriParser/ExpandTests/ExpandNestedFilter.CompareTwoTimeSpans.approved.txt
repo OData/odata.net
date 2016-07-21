@@ -19,7 +19,7 @@ SelectExpandQueryOption
 						Property = TimeBetweenLastTwoOrders
 						TypeReference = [Edm.Duration Nullable=False Precision=0]
 						Source = 
-						EntityRangeVariableReferenceNode
+						ResourceRangeVariableReferenceNode
 							Name = $it
 							NavigationSource = CustomerForOrder
 							TypeReference = [Microsoft.Test.Taupo.OData.WCFService.Customer Nullable=False]
@@ -29,7 +29,7 @@ SelectExpandQueryOption
 						Property = TimeBetweenLastTwoOrders
 						TypeReference = [Edm.Duration Nullable=False Precision=0]
 						Source = 
-						EntityRangeVariableReferenceNode
+						ResourceRangeVariableReferenceNode
 							Name = $it
 							NavigationSource = CustomerForOrder
 							TypeReference = [Microsoft.Test.Taupo.OData.WCFService.Customer Nullable=False]

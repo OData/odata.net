@@ -13,7 +13,7 @@ FilterQueryOption
 			Property = TimeBetweenLastTwoOrders
 			TypeReference = [Edm.Duration Nullable=False Precision=0]
 			Source = 
-			EntityRangeVariableReferenceNode
+			ResourceRangeVariableReferenceNode
 				Name = $it
 				NavigationSource = Customers
 				TypeReference = [Microsoft.Test.Taupo.OData.WCFService.Customer Nullable=False]
@@ -23,7 +23,7 @@ FilterQueryOption
 			Property = TimeBetweenLastTwoOrders
 			TypeReference = [Edm.Duration Nullable=False Precision=0]
 			Source = 
-			EntityRangeVariableReferenceNode
+			ResourceRangeVariableReferenceNode
 				Name = $it
 				NavigationSource = Customers
 				TypeReference = [Microsoft.Test.Taupo.OData.WCFService.Customer Nullable=False]

@@ -13,7 +13,7 @@ FilterQueryOption
 			Property = EmployeeID
 			TypeReference = [Edm.Int32 Nullable=True]
 			Source = 
-			EntityRangeVariableReferenceNode
+			ResourceRangeVariableReferenceNode
 				Name = $it
 				NavigationSource = SpecialOrder
 				TypeReference = [Microsoft.Test.Taupo.OData.WCFService.Order Nullable=False]

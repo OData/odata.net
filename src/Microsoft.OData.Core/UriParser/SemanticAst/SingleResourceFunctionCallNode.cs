@@ -1,5 +1,5 @@
 ﻿//---------------------------------------------------------------------
-// <copyright file="SingleEntityFunctionCallNode.cs" company="Microsoft">
+// <copyright file="SingleResourceFunctionCallNode.cs" company="Microsoft">
 //      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 // </copyright>
 //---------------------------------------------------------------------
@@ -16,9 +16,9 @@ namespace Microsoft.OData.UriParser
     #endregion Namespaces
 
     /// <summary>
-    /// Node representing a function call which returns a single entity.
+    /// Node representing a function call which returns a single entity or complex.
     /// </summary>
-    public sealed class SingleEntityFunctionCallNode : SingleResourceNode
+    public sealed class SingleResourceFunctionCallNode : SingleResourceNode
     {
         /// <summary>
         /// the name of this function
@@ -51,20 +51,20 @@ namespace Microsoft.OData.UriParser
         private readonly QueryNode source;
 
         /// <summary>
-        /// Create a SingleEntityFunctionCallNode
+        /// Create a SingleResourceFunctionCallNode
         /// </summary>
         /// <param name="name">The name of the function to call</param>
         /// <param name="parameters">List of arguments provided to the operation import. Can be null.</param>
         /// <param name="returnedEntityTypeReference">The return type of this function.</param>
         /// <param name="navigationSource">The entity set or singleton containing the single entity that this operation import returns.</param>
         /// <exception cref="System.ArgumentNullException">Throws if the input name, returnedEntityTypeReference, or navigationSource is null.</exception>
-        public SingleEntityFunctionCallNode(string name, IEnumerable<QueryNode> parameters, IEdmEntityTypeReference returnedEntityTypeReference, IEdmNavigationSource navigationSource)
+        public SingleResourceFunctionCallNode(string name, IEnumerable<QueryNode> parameters, IEdmEntityTypeReference returnedEntityTypeReference, IEdmNavigationSource navigationSource)
             : this(name, null, parameters, returnedEntityTypeReference, navigationSource, null)
         {
         }
 
         /// <summary>
-        /// Create a SingleEntityFunctionCallNode
+        /// Create a SingleResourceFunctionCallNode
         /// </summary>
         /// <param name="name">The name of the operation import to call</param>
         /// <param name="functions">the list of functions this node represents.</param>
@@ -73,7 +73,7 @@ namespace Microsoft.OData.UriParser
         /// <param name="navigationSource">The entity set or singleton containing the single entity that this operation import returns.</param>
         /// <param name="source">The semantically bound parent of this operation import.</param>
         /// <exception cref="System.ArgumentNullException">Throws if the input name, returnedEntityTypeReference, or navigationSource is null.</exception>
-        public SingleEntityFunctionCallNode(string name, IEnumerable<IEdmFunction> functions, IEnumerable<QueryNode> parameters, IEdmEntityTypeReference returnedEntityTypeReference, IEdmNavigationSource navigationSource, QueryNode source)
+        public SingleResourceFunctionCallNode(string name, IEnumerable<IEdmFunction> functions, IEnumerable<QueryNode> parameters, IEdmEntityTypeReference returnedEntityTypeReference, IEdmNavigationSource navigationSource, QueryNode source)
         {
             ExceptionUtils.CheckArgumentNotNull(name, "name");
             ExceptionUtils.CheckArgumentNotNull(returnedEntityTypeReference, "returnedEntityTypeReference");
@@ -149,7 +149,7 @@ namespace Microsoft.OData.UriParser
         {
             get
             {
-                return InternalQueryNodeKind.SingleEntityFunctionCall;
+                return InternalQueryNodeKind.SingleResourceFunctionCall;
             }
         }
 

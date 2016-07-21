@@ -21,7 +21,7 @@ namespace Microsoft.OData.UriParser
     /// 4. CollectionPropertyAccessNode (primitive | complex)
     /// 5. KeyLookupNode
     /// 6. SingleValueFunctionCallNode
-    /// 7. SingleEntityFunctionCallNode
+    /// 7. SingleResourceFunctionCallNode
     /// </summary>
     /// <remarks>
     /// TODO: The binder does support key lookup on collection navigation properties, however at this time

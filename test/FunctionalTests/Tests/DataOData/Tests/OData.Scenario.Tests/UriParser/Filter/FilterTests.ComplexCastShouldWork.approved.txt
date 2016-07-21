@@ -20,7 +20,7 @@ FilterQueryOption
 					Property = HomeAddress
 					TypeReference = [Microsoft.Test.Taupo.OData.WCFService.Address Nullable=True]
 					Source = 
-					EntityRangeVariableReferenceNode
+					ResourceRangeVariableReferenceNode
 						Name = $it
 						NavigationSource = People
 						TypeReference = [Microsoft.Test.Taupo.OData.WCFService.Person Nullable=False]

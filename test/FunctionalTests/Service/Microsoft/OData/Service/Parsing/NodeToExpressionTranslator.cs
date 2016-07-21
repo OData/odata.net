@@ -304,33 +304,33 @@ namespace Microsoft.OData.Service.Parsing
         }
 
         /// <summary>
-        /// Translates a <see cref="EntityRangeVariableReferenceNode"/> into a corresponding <see cref="Expression"/>.
+        /// Translates a <see cref="ResourceRangeVariableReferenceNode"/> into a corresponding <see cref="Expression"/>.
         /// </summary>
         /// <param name="node">The node to translate.</param>
         /// <returns>The translated expression.</returns>
-        public override Expression Visit(EntityRangeVariableReferenceNode node)
+        public override Expression Visit(ResourceRangeVariableReferenceNode node)
         {
             WebUtil.CheckArgumentNull(node, "node");
             return this.ParameterExpressions[node.RangeVariable];
         }
 
         /// <summary>
-        /// Translates a <see cref="NonentityRangeVariableReferenceNode"/> into a corresponding <see cref="Expression"/>.
+        /// Translates a <see cref="NonResourceRangeVariableReferenceNode"/> into a corresponding <see cref="Expression"/>.
         /// </summary>
         /// <param name="node">The node to translate.</param>
         /// <returns>The translated expression.</returns>
-        public override Expression Visit(NonentityRangeVariableReferenceNode node)
+        public override Expression Visit(NonResourceRangeVariableReferenceNode node)
         {
             WebUtil.CheckArgumentNull(node, "node");
             return this.ParameterExpressions[node.RangeVariable];
         }
 
         /// <summary>
-        /// Translates a <see cref="SingleEntityCastNode"/> into a corresponding <see cref="Expression"/>.
+        /// Translates a <see cref="SingleResourceCastNode"/> into a corresponding <see cref="Expression"/>.
         /// </summary>
         /// <param name="node">The node to translate.</param>
         /// <returns>The translated expression.</returns>
-        public override Expression Visit(SingleEntityCastNode node)
+        public override Expression Visit(SingleResourceCastNode node)
         {
             WebUtil.CheckArgumentNull(node, "node");
 
@@ -359,11 +359,11 @@ namespace Microsoft.OData.Service.Parsing
         }
 
         /// <summary>
-        /// Translates a <see cref="SingleEntityFunctionCallNode"/> into a corresponding <see cref="Expression"/>.
+        /// Translates a <see cref="SingleResourceFunctionCallNode"/> into a corresponding <see cref="Expression"/>.
         /// </summary>
         /// <param name="node">The node to translate.</param>
         /// <returns>The translated expression.</returns>
-        public override Expression Visit(SingleEntityFunctionCallNode node)
+        public override Expression Visit(SingleResourceFunctionCallNode node)
         {
             WebUtil.CheckArgumentNull(node, "node");
             return this.TranslateFunctionCall(node.Name, node.Parameters);

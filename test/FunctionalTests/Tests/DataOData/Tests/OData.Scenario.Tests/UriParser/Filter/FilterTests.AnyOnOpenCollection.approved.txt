@@ -28,7 +28,7 @@ FilterQueryOption
 		CollectionOpenPropertyAccessNode
 			Name = OpenNumbers
 			Source = 
-			EntityRangeVariableReferenceNode
+			ResourceRangeVariableReferenceNode
 				Name = $it
 				NavigationSource = Employees
 				TypeReference = [Microsoft.Test.Taupo.OData.WCFService.Employee Nullable=False]

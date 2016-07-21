@@ -36,7 +36,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
             var resultNode = this.dottedIdentifierBinder.BindDottedIdentifier(castToken);
 
             resultNode.ShouldBeSingleCastNode(HardCodedTestModel.GetEmployeeTypeReference())
-                .And.Source.ShouldBeEntityRangeVariableReferenceNode(ExpressionConstants.It);
+                .And.Source.ShouldBeResourceRangeVariableReferenceNode(ExpressionConstants.It);
         }
 
         [Fact]

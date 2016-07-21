@@ -34,7 +34,7 @@ OrderByClause
 											Property = FirstName
 											TypeReference = [Edm.String Nullable=True Unicode=True]
 											Source = 
-											EntityRangeVariableReferenceNode
+											ResourceRangeVariableReferenceNode
 												Name = $it
 												NavigationSource = VipCustomer
 												TypeReference = [Microsoft.Test.Taupo.OData.WCFService.Customer Nullable=False]
@@ -43,7 +43,7 @@ OrderByClause
 											Property = LastName
 											TypeReference = [Edm.String Nullable=True Unicode=True]
 											Source = 
-											EntityRangeVariableReferenceNode
+											ResourceRangeVariableReferenceNode
 												Name = $it
 												NavigationSource = VipCustomer
 												TypeReference = [Microsoft.Test.Taupo.OData.WCFService.Customer Nullable=False]

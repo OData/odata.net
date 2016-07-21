@@ -222,7 +222,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
                 new Uri("http://gobbledygook/People?$filter=null ne Fully.Qualified.Namespace.GetPetCount(colorPattern=@p1)&@p1=Fully.Qualified.Namespace.ColorPattern'BlueYellowStriped'"),
                 (oDataPath, filterClause, orderByClause, selectExpandClause, aliasNodes) =>
                 {
-                    NamedFunctionParameterNode p = filterClause.Expression.As<BinaryOperatorNode>().Right.As<SingleEntityFunctionCallNode>().Parameters.First().As<NamedFunctionParameterNode>();
+                    NamedFunctionParameterNode p = filterClause.Expression.As<BinaryOperatorNode>().Right.As<SingleResourceFunctionCallNode>().Parameters.First().As<NamedFunctionParameterNode>();
                     p.Value.As<ParameterAliasNode>().Alias.ShouldBeEquivalentTo("@p1");
                     p.Value.As<ParameterAliasNode>().TypeReference.IsEnum().Should().Be(true);
                     p.Value.As<ParameterAliasNode>().TypeReference.Definition.FullTypeName().ShouldBeEquivalentTo("Fully.Qualified.Namespace.ColorPattern");
@@ -239,7 +239,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
                 new Uri("http://gobbledygook/People?$filter=null ne Fully.Qualified.Namespace.GetPetCount(colorPattern=@p1)&@p1=Fully.Qualified.Namespace.ColorPattern'238563'"),
                 (oDataPath, filterClause, orderByClause, selectExpandClause, aliasNodes) =>
                 {
-                    NamedFunctionParameterNode p = filterClause.Expression.As<BinaryOperatorNode>().Right.As<SingleEntityFunctionCallNode>().Parameters.First().As<NamedFunctionParameterNode>();
+                    NamedFunctionParameterNode p = filterClause.Expression.As<BinaryOperatorNode>().Right.As<SingleResourceFunctionCallNode>().Parameters.First().As<NamedFunctionParameterNode>();
                     p.Value.As<ParameterAliasNode>().Alias.ShouldBeEquivalentTo("@p1");
                     p.Value.As<ParameterAliasNode>().TypeReference.IsEnum().Should().Be(true);
                     p.Value.As<ParameterAliasNode>().TypeReference.Definition.FullTypeName().ShouldBeEquivalentTo("Fully.Qualified.Namespace.ColorPattern");

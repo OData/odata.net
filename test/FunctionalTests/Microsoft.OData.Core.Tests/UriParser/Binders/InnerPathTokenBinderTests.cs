@@ -212,7 +212,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
         {
             IEdmNavigationProperty property = HardCodedTestModel.GetPersonMyDogNavProp();
             IEdmNavigationSource navigationSource;
-            SingleResourceNode parent = new SingleEntityCastNode(null, HardCodedTestModel.GetDogType());
+            SingleResourceNode parent = new SingleResourceCastNode(null, HardCodedTestModel.GetDogType());
             BindingState state = new BindingState(Configuration);
             KeyBinder keyBinder = new KeyBinder(FakeBindMethods.BindMethodReturningASingleDog);
 
@@ -225,7 +225,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
         {
             IEdmNavigationSource navigationSource;
             IEdmNavigationProperty property = HardCodedTestModel.GetDogMyPeopleNavProp();
-            SingleResourceNode parent = new SingleEntityCastNode(null, HardCodedTestModel.GetDogType());
+            SingleResourceNode parent = new SingleResourceCastNode(null, HardCodedTestModel.GetDogType());
             BindingState state = new BindingState(Configuration);
             KeyBinder keyBinder = new KeyBinder(FakeBindMethods.BindMethodReturningASingleDog);
 

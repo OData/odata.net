@@ -19,7 +19,7 @@ SelectExpandQueryOption
 						Property = OrderID
 						TypeReference = [Edm.Int32 Nullable=False]
 						Source = 
-						EntityRangeVariableReferenceNode
+						ResourceRangeVariableReferenceNode
 							Name = $it
 							NavigationSource = Orders
 							TypeReference = [Microsoft.Test.Taupo.OData.WCFService.Order Nullable=False]
@@ -56,7 +56,7 @@ SelectExpandQueryOption
 										Property = Numbers
 										ItemType = [Edm.String Nullable=True Unicode=True]
 										Source = 
-										EntityRangeVariableReferenceNode
+										ResourceRangeVariableReferenceNode
 											Name = $it
 											NavigationSource = LoggedInEmployee
 											TypeReference = [Microsoft.Test.Taupo.OData.WCFService.Employee Nullable=False]
@@ -82,7 +82,7 @@ SelectExpandQueryOption
 													Property = DateHired
 													TypeReference = [Edm.DateTimeOffset Nullable=False Precision=0]
 													Source = 
-													EntityRangeVariableReferenceNode
+													ResourceRangeVariableReferenceNode
 														Name = $it
 														NavigationSource = LoggedInEmployee
 														TypeReference = [Microsoft.Test.Taupo.OData.WCFService.Employee Nullable=False]

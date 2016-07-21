@@ -30,7 +30,7 @@ OrderByClause
 																Property = ProductID
 																TypeReference = [Edm.Int32 Nullable=False]
 																Source = 
-																EntityRangeVariableReferenceNode
+																ResourceRangeVariableReferenceNode
 																	Name = a
 																	NavigationSource = OrderDetails
 																	TypeReference = [Microsoft.Test.Taupo.OData.WCFService.OrderDetail Nullable=True]
@@ -44,7 +44,7 @@ OrderByClause
 															Property = OrderPlaced
 															TypeReference = [Edm.DateTimeOffset Nullable=False Precision=0]
 															Source = 
-															EntityRangeVariableReferenceNode
+															ResourceRangeVariableReferenceNode
 																Name = a
 																NavigationSource = OrderDetails
 																TypeReference = [Microsoft.Test.Taupo.OData.WCFService.OrderDetail Nullable=True]
@@ -54,7 +54,7 @@ OrderByClause
 															Property = OrderPlaced
 															TypeReference = [Edm.DateTimeOffset Nullable=False Precision=0]
 															Source = 
-															EntityRangeVariableReferenceNode
+															ResourceRangeVariableReferenceNode
 																Name = a
 																NavigationSource = OrderDetails
 																TypeReference = [Microsoft.Test.Taupo.OData.WCFService.OrderDetail Nullable=True]
@@ -77,7 +77,7 @@ OrderByClause
 			Multiplicity = Many
 			Navigation Property = OrderDetails
 			Source = 
-			EntityRangeVariableReferenceNode
+			ResourceRangeVariableReferenceNode
 				Name = $it
 				NavigationSource = Orders
 				TypeReference = [Microsoft.Test.Taupo.OData.WCFService.Order Nullable=False]

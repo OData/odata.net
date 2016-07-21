@@ -373,7 +373,7 @@ namespace Microsoft.OData.UriParser
 
             if (returnType.IsEntity())
             {
-                boundFunction = new SingleEntityFunctionCallNode(functionName, new[] { function }, boundArguments, (IEdmEntityTypeReference)returnType.Definition.ToTypeReference(), returnSet, parent);
+                boundFunction = new SingleResourceFunctionCallNode(functionName, new[] { function }, boundArguments, (IEdmEntityTypeReference)returnType.Definition.ToTypeReference(), returnSet, parent);
             }
             else if (returnType.IsEntityCollection())
             {
@@ -634,7 +634,7 @@ namespace Microsoft.OData.UriParser
                             SingleResourceNode entityNode = args.ElementAt(0) as SingleResourceNode;
                             if (entityNode != null)
                             {
-                                return new SingleEntityFunctionCallNode(functionCallTokenName, args, returnEntityType, entityNode.NavigationSource);
+                                return new SingleResourceFunctionCallNode(functionCallTokenName, args, returnEntityType, entityNode.NavigationSource);
                             }
                         }
 
@@ -712,7 +712,7 @@ namespace Microsoft.OData.UriParser
             {
                 args = new List<QueryNode>()
                     {
-                        new EntityRangeVariableReferenceNode(
+                        new ResourceRangeVariableReferenceNode(
                                                              state.ImplicitRangeVariable.Name,
                                                              state.ImplicitRangeVariable as EntityRangeVariable),
                         args[0]

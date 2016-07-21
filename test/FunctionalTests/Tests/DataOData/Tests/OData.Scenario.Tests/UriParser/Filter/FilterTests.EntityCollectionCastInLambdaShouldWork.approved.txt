@@ -16,12 +16,12 @@ FilterQueryOption
 				Property = City
 				TypeReference = [Edm.String Nullable=True Unicode=True]
 				Source = 
-				SingleEntityCastNode
+				SingleResourceCastNode
 					Type Reference = [Microsoft.Test.Taupo.OData.WCFService.Customer Nullable=False]
 					NavigationSource = Brother
 					Entity Type Reference = [Microsoft.Test.Taupo.OData.WCFService.Customer Nullable=False]
 					Source = 
-					EntityRangeVariableReferenceNode
+					ResourceRangeVariableReferenceNode
 						Name = d
 						NavigationSource = Brother
 						TypeReference = [Microsoft.Test.Taupo.OData.WCFService.Person Nullable=True]
@@ -36,7 +36,7 @@ FilterQueryOption
 			Multiplicity = Many
 			Navigation Property = Brother
 			Source = 
-			EntityRangeVariableReferenceNode
+			ResourceRangeVariableReferenceNode
 				Name = $it
 				NavigationSource = People
 				TypeReference = [Microsoft.Test.Taupo.OData.WCFService.Person Nullable=False]

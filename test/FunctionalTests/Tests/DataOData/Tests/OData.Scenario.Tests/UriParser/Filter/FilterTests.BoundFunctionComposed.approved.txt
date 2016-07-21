@@ -13,7 +13,7 @@ FilterQueryOption
 			Property = CustomerID
 			TypeReference = [Edm.Int32 Nullable=False]
 			Source = 
-			SingleEntityFunctionCallNode
+			SingleResourceFunctionCallNode
 				NavigationSource = Orders
 				Type Reference = [Microsoft.Test.Taupo.OData.WCFService.Order Nullable=False]
 				Name = Microsoft.Test.Taupo.OData.WCFService.GetNextOrder

@@ -20,7 +20,7 @@ OrderByClause
 			Property = CustomerForOrder
 			Multiplicity = ZeroOrOne
 			Source = 
-			EntityRangeVariableReferenceNode
+			ResourceRangeVariableReferenceNode
 				Name = $it
 				NavigationSource = SpecialOrder
 				TypeReference = [Microsoft.Test.Taupo.OData.WCFService.Order Nullable=False]

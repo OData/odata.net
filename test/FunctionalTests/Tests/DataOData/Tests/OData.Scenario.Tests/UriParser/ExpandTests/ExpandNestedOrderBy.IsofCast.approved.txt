@@ -21,7 +21,7 @@ SelectExpandQueryOption
 						Return Type = [Edm.Boolean Nullable=True]
 						Function = 
 						Arguments = 
-							EntityRangeVariableReferenceNode
+							ResourceRangeVariableReferenceNode
 								Name = $it
 								NavigationSource = CustomerForOrder
 								TypeReference = [Microsoft.Test.Taupo.OData.WCFService.Customer Nullable=False]
@@ -31,13 +31,13 @@ SelectExpandQueryOption
 					ConvertNode
 						TypeReference = [Edm.Boolean Nullable=True]
 						Source = 
-							SingleEntityFunctionCallNode
+							SingleResourceFunctionCallNode
 								NavigationSource = CustomerForOrder
 								Type Reference = [Microsoft.Test.Taupo.OData.WCFService.Customer Nullable=False]
 								Name = cast
 								Function = 
 								Arguments = 
-									EntityRangeVariableReferenceNode
+									ResourceRangeVariableReferenceNode
 										Name = $it
 										NavigationSource = CustomerForOrder
 										TypeReference = [Microsoft.Test.Taupo.OData.WCFService.Customer Nullable=False]

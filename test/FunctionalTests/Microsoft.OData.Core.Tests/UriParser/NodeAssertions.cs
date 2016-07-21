@@ -98,20 +98,20 @@ namespace Microsoft.OData.Tests.UriParser
             return new AndConstraint<NonentityRangeVariable>(rangeVariable);
         }
 
-        public static AndConstraint<NonentityRangeVariableReferenceNode> ShouldBeNonentityRangeVariableReferenceNode(this QueryNode token, string expectedName)
+        public static AndConstraint<NonResourceRangeVariableReferenceNode> ShouldBeNonResourceRangeVariableReferenceNode(this QueryNode token, string expectedName)
         {
-            token.Should().BeOfType<NonentityRangeVariableReferenceNode>();
-            var rangeVariableNode = token.As<NonentityRangeVariableReferenceNode>();
+            token.Should().BeOfType<NonResourceRangeVariableReferenceNode>();
+            var rangeVariableNode = token.As<NonResourceRangeVariableReferenceNode>();
             rangeVariableNode.Name.Should().Be(expectedName);
-            return new AndConstraint<NonentityRangeVariableReferenceNode>(rangeVariableNode);
+            return new AndConstraint<NonResourceRangeVariableReferenceNode>(rangeVariableNode);
         }
 
-        public static AndConstraint<EntityRangeVariableReferenceNode> ShouldBeEntityRangeVariableReferenceNode(this QueryNode token, string expectedName)
+        public static AndConstraint<ResourceRangeVariableReferenceNode> ShouldBeResourceRangeVariableReferenceNode(this QueryNode token, string expectedName)
         {
-            token.Should().BeOfType<EntityRangeVariableReferenceNode>();
-            var parameterNode = token.As<EntityRangeVariableReferenceNode>();
+            token.Should().BeOfType<ResourceRangeVariableReferenceNode>();
+            var parameterNode = token.As<ResourceRangeVariableReferenceNode>();
             parameterNode.Name.Should().Be(expectedName);
-            return new AndConstraint<EntityRangeVariableReferenceNode>(parameterNode);
+            return new AndConstraint<ResourceRangeVariableReferenceNode>(parameterNode);
         }
 
         public static AndConstraint<SingleValueFunctionCallNode> ShouldBeSingleValueFunctionCallQueryNode(this QueryNode token, params IEdmFunction[] operationImports)
@@ -155,20 +155,20 @@ namespace Microsoft.OData.Tests.UriParser
             return new AndConstraint<SingleValueFunctionCallNode>(functionCallNode);
         }
 
-        public static AndConstraint<SingleEntityFunctionCallNode> ShouldBeSingleEntityFunctionCallNode(this QueryNode token, params IEdmFunction[] operationImports)
+        public static AndConstraint<SingleResourceFunctionCallNode> ShouldBeSingleResourceFunctionCallNode(this QueryNode token, params IEdmFunction[] operationImports)
         {
-            token.Should().BeOfType<SingleEntityFunctionCallNode>();
-            var functionCallNode = token.As<SingleEntityFunctionCallNode>();
+            token.Should().BeOfType<SingleResourceFunctionCallNode>();
+            var functionCallNode = token.As<SingleResourceFunctionCallNode>();
             functionCallNode.Functions.Should().ContainExactly(operationImports);
-            return new AndConstraint<SingleEntityFunctionCallNode>(functionCallNode);
+            return new AndConstraint<SingleResourceFunctionCallNode>(functionCallNode);
         }
 
-        public static AndConstraint<SingleEntityFunctionCallNode> ShouldBeSingleEntityFunctionCallNode(this QueryNode token, string name)
+        public static AndConstraint<SingleResourceFunctionCallNode> ShouldBeSingleResourceFunctionCallNode(this QueryNode token, string name)
         {
-            token.Should().BeOfType<SingleEntityFunctionCallNode>();
-            var functionCallNode = token.As<SingleEntityFunctionCallNode>();
+            token.Should().BeOfType<SingleResourceFunctionCallNode>();
+            var functionCallNode = token.As<SingleResourceFunctionCallNode>();
             functionCallNode.Name.Should().Be(name);
-            return new AndConstraint<SingleEntityFunctionCallNode>(functionCallNode);
+            return new AndConstraint<SingleResourceFunctionCallNode>(functionCallNode);
         }
 
         public static AndConstraint<CollectionFunctionCallNode> ShouldBeCollectionFunctionCallNode(this QueryNode token, params IEdmFunction[] operationImports)
@@ -268,12 +268,12 @@ namespace Microsoft.OData.Tests.UriParser
             return new AndConstraint<EntityCollectionCastNode>(collectionCastNode);
         }
 
-        public static AndConstraint<SingleEntityCastNode> ShouldBeSingleCastNode(this QueryNode node, IEdmTypeReference expectedTypeReference)
+        public static AndConstraint<SingleResourceCastNode> ShouldBeSingleCastNode(this QueryNode node, IEdmTypeReference expectedTypeReference)
         {
-            node.Should().BeOfType<SingleEntityCastNode>();
-            var singleCastNode = node.As<SingleEntityCastNode>();
+            node.Should().BeOfType<SingleResourceCastNode>();
+            var singleCastNode = node.As<SingleResourceCastNode>();
             singleCastNode.TypeReference.ShouldBeEquivalentTo(expectedTypeReference);
-            return new AndConstraint<SingleEntityCastNode>(singleCastNode);
+            return new AndConstraint<SingleResourceCastNode>(singleCastNode);
         }
 
         public static AndConstraint<SingleValueCastNode> ShouldBeSingleValueCastNode(this QueryNode node, IEdmTypeReference expectedTypeReference)

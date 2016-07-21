@@ -22,17 +22,17 @@ namespace Microsoft.OData.Tests.UriParser.Binders
         
         public static readonly ConstantNode KeyBinderConstantToken = new ConstantNode(KeyBinderConstantValue);
         
-        public static readonly EntityRangeVariableReferenceNode FakeDogNode = 
-            new EntityRangeVariableReferenceNode(DogsEntityRangeVariable.Name, DogsEntityRangeVariable);
+        public static readonly ResourceRangeVariableReferenceNode FakeDogNode = 
+            new ResourceRangeVariableReferenceNode(DogsEntityRangeVariable.Name, DogsEntityRangeVariable);
 
-        public static readonly EntityRangeVariableReferenceNode FakePersonNode = 
-            new EntityRangeVariableReferenceNode(PeopleEntityRangeVariable.Name, PeopleEntityRangeVariable);
+        public static readonly ResourceRangeVariableReferenceNode FakePersonNode = 
+            new ResourceRangeVariableReferenceNode(PeopleEntityRangeVariable.Name, PeopleEntityRangeVariable);
 
-        public static readonly EntityRangeVariableReferenceNode FakePaintingNode =
-            new EntityRangeVariableReferenceNode(PaintingEntityRangeVariable.Name, PaintingEntityRangeVariable);
+        public static readonly ResourceRangeVariableReferenceNode FakePaintingNode =
+            new ResourceRangeVariableReferenceNode(PaintingEntityRangeVariable.Name, PaintingEntityRangeVariable);
 
         public static readonly SingleResourceNode FakeLionNode = 
-            new EntityRangeVariableReferenceNode(LionsEntityRangeVariable.Name, LionsEntityRangeVariable);        
+            new ResourceRangeVariableReferenceNode(LionsEntityRangeVariable.Name, LionsEntityRangeVariable);        
 
         public static readonly SingleValueNode FakeSinglePrimitive =
             new ConstantNode("A_STRING");

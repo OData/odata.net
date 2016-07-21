@@ -1,5 +1,5 @@
 ﻿//---------------------------------------------------------------------
-// <copyright file="EntityRangeVariableReferenceNode.cs" company="Microsoft">
+// <copyright file="ResourceRangeVariableReferenceNode.cs" company="Microsoft">
 //      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 // </copyright>
 //---------------------------------------------------------------------
@@ -13,9 +13,9 @@ namespace Microsoft.OData.UriParser
     #endregion Namespaces
 
     /// <summary>
-    /// Node to represent a range variable in an Any or All clause that referrs to an entity.
+    /// Node to represent a range variable in an Any or All clause that refers to an entity or a complex.
     /// </summary>
-    public sealed class EntityRangeVariableReferenceNode : SingleResourceNode
+    public sealed class ResourceRangeVariableReferenceNode : SingleResourceNode
     {
         /// <summary>
         ///  The name of the associated range variable (null if none)
@@ -38,12 +38,12 @@ namespace Microsoft.OData.UriParser
         private readonly IEdmNavigationSource navigationSource;
 
         /// <summary>
-        /// Creates an <see cref="EntityRangeVariableReferenceNode"/>.
+        /// Creates an <see cref="ResourceRangeVariableReferenceNode"/>.
         /// </summary>
         /// <param name="name"> The name of the associated range variable (null if none)</param>
         /// <param name="rangeVariable">The actual range variable on the bind stack that this refers to</param>
         /// <exception cref="System.ArgumentNullException">Throws if the input name or rangeVariable is null.</exception>
-        public EntityRangeVariableReferenceNode(string name, EntityRangeVariable rangeVariable)
+        public ResourceRangeVariableReferenceNode(string name, EntityRangeVariable rangeVariable)
         {
             ExceptionUtils.CheckArgumentNotNull(name, "name");
             ExceptionUtils.CheckArgumentNotNull(rangeVariable, "rangeVariable");
@@ -54,7 +54,7 @@ namespace Microsoft.OData.UriParser
         }
 
         /// <summary>
-        /// Gets the name of the associated rangevariable (null if none)
+        /// Gets the name of the associated range variable (null if none)
         /// </summary>
         public string Name
         {
@@ -100,7 +100,7 @@ namespace Microsoft.OData.UriParser
         {
             get
             {
-                return InternalQueryNodeKind.EntityRangeVariableReference;
+                return InternalQueryNodeKind.ResourceRangeVariableReference;
             }
         }
 

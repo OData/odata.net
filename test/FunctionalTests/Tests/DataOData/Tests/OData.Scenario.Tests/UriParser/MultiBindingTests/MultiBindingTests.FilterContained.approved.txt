@@ -22,7 +22,7 @@ FilterQueryOption
 					Property = NavOnContained
 					Multiplicity = One
 					Source = 
-					EntityRangeVariableReferenceNode
+					ResourceRangeVariableReferenceNode
 						Name = $it
 						NavigationSource = ContainedNav1
 						TypeReference = [NS.ContainedEntityType Nullable=False]

@@ -43,7 +43,7 @@ namespace Microsoft.OData.UriParser
         /// Visits a DottedIdentifierToken
         /// </summary>
         /// <param name="tokenIn">The DottedIdentifierToken to visit</param>
-        /// <returns>Either a SingleEntityCastNode, or EntityCollectionCastNode bound to this DottedIdentifierToken</returns>
+        /// <returns>Either a SingleResourceCastNode, or EntityCollectionCastNode bound to this DottedIdentifierToken</returns>
         T Visit(DottedIdentifierToken tokenIn);
 
         /// <summary>
@@ -113,7 +113,7 @@ namespace Microsoft.OData.UriParser
         /// Visits a RangeVariableToken
         /// </summary>
         /// <param name="tokenIn">The RangeVariableToken to bind</param>
-        /// <returns>An Entity or NonEntity RangeVariableReferenceNode bound to this RangeVariableToken</returns>
+        /// <returns>A Resource or NonResource RangeVariableReferenceNode bound to this RangeVariableToken</returns>
         T Visit(RangeVariableToken tokenIn);
 
         /// <summary>

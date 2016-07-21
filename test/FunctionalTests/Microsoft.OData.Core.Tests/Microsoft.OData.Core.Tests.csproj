@@ -337,7 +337,7 @@
     <Compile Include="UriParser\SemanticAst\CountSegmentTests.cs" />
     <Compile Include="UriParser\SemanticAst\EntityCollectionCastNodeTests.cs" />
     <Compile Include="UriParser\SemanticAst\EntityCollectionFunctionCallNodeTests.cs" />
-    <Compile Include="UriParser\SemanticAst\EntityRangeVariableReferenceNodeTests.cs" />
+    <Compile Include="UriParser\SemanticAst\ResourceRangeVariableReferenceNodeTests.cs" />
     <Compile Include="UriParser\SemanticAst\EntityRangeVariableTests.cs" />
     <Compile Include="UriParser\SemanticAst\EntitySetNodeTests.cs" />
     <Compile Include="UriParser\SemanticAst\EntitySetSegmentTests.cs" />
@@ -348,7 +348,7 @@
     <Compile Include="UriParser\SemanticAst\ExpandedNavigationSelectItemTests.cs" />
     <Compile Include="UriParser\SemanticAst\NavigationPropertyLinkSegmentTests.cs" />
     <Compile Include="UriParser\SemanticAst\NavigationPropertySegmentTests.cs" />
-    <Compile Include="UriParser\SemanticAst\NonentityRangeVariableReferenceNodeTests.cs" />
+    <Compile Include="UriParser\SemanticAst\NonResourceRangeVariableReferenceNodeTests.cs" />
     <Compile Include="UriParser\SemanticAst\NonentityRangeVariableTests.cs" />
     <Compile Include="UriParser\SemanticAst\ODataExpandPathTests.cs" />
     <Compile Include="UriParser\SemanticAst\ODataPathExtensionsTests.cs" />
@@ -360,8 +360,8 @@
     <Compile Include="UriParser\SemanticAst\PropertySegmentTests.cs" />
     <Compile Include="UriParser\SemanticAst\ODataPathSegmentTests.cs" />
     <Compile Include="UriParser\SemanticAst\SelectExpandClauseTests.cs" />
-    <Compile Include="UriParser\SemanticAst\SingleEntityCastNodeTests.cs" />
-    <Compile Include="UriParser\SemanticAst\SingleEntityFunctionCallNodeTests.cs" />
+    <Compile Include="UriParser\SemanticAst\SingleResourceCastNodeTests.cs" />
+    <Compile Include="UriParser\SemanticAst\SingleResourceFunctionCallNodeTests.cs" />
     <Compile Include="UriParser\SemanticAst\SingleNavigationNodeTests.cs" />
     <Compile Include="UriParser\SemanticAst\SingleValueFunctionCallNodeTests.cs" />
     <Compile Include="UriParser\SemanticAst\SingleValueOpenPropertyAccessNodeTests.cs" />

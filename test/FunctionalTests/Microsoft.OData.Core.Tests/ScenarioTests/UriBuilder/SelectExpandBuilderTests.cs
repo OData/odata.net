@@ -637,12 +637,12 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriBuilder
                     new FilterClause(
                         new BinaryOperatorNode(
                             BinaryOperatorKind.Equal,
-                            new SingleValuePropertyAccessNode(new EntityRangeVariableReferenceNode("$it", ervFilter), HardCodedTestModel.GetDogColorProp()),
+                            new SingleValuePropertyAccessNode(new ResourceRangeVariableReferenceNode("$it", ervFilter), HardCodedTestModel.GetDogColorProp()),
                             new ConstantNode("Brown", "'Brown'")),
                             ervFilter),
                     new OrderByClause(
                         null,
-                        new SingleValuePropertyAccessNode(new EntityRangeVariableReferenceNode("$it", ervOrderby), HardCodedTestModel.GetDogColorProp()),
+                        new SingleValuePropertyAccessNode(new ResourceRangeVariableReferenceNode("$it", ervOrderby), HardCodedTestModel.GetDogColorProp()),
                         OrderByDirection.Ascending,
                         ervOrderby),
                     1,

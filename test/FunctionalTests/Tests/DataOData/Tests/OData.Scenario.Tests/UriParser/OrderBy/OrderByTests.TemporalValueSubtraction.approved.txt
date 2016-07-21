@@ -20,7 +20,7 @@ OrderByClause
 					Property = Id
 					TypeReference = [Edm.Duration Nullable=False Precision=0]
 					Source = 
-					EntityRangeVariableReferenceNode
+					ResourceRangeVariableReferenceNode
 						Name = $it
 						NavigationSource = DurationInKeys
 						TypeReference = [Microsoft.Test.Taupo.OData.WCFService.DurationInKey Nullable=False]

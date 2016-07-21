@@ -19,7 +19,7 @@ SelectExpandQueryOption
 							Property = UnitPrice
 							TypeReference = [Edm.Single Nullable=False]
 							Source = 
-							EntityRangeVariableReferenceNode
+							ResourceRangeVariableReferenceNode
 								Name = $it
 								NavigationSource = OrderDetails
 								TypeReference = [Microsoft.Test.Taupo.OData.WCFService.OrderDetail Nullable=False]
@@ -31,7 +31,7 @@ SelectExpandQueryOption
 							Property = UnitPrice
 							TypeReference = [Edm.Single Nullable=False]
 							Source = 
-							EntityRangeVariableReferenceNode
+							ResourceRangeVariableReferenceNode
 								Name = $it
 								NavigationSource = OrderDetails
 								TypeReference = [Microsoft.Test.Taupo.OData.WCFService.OrderDetail Nullable=False]

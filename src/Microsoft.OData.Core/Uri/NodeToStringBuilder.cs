@@ -165,11 +165,11 @@ namespace Microsoft.OData
         }
 
         /// <summary>
-        /// Translates a <see cref="EntityRangeVariableReferenceNode"/> into a corresponding <see cref="String"/>.
+        /// Translates a <see cref="ResourceRangeVariableReferenceNode"/> into a corresponding <see cref="String"/>.
         /// </summary>
         /// <param name="node">The node to translate.</param>
         /// <returns>The translated String.</returns>
-        public override String Visit(EntityRangeVariableReferenceNode node)
+        public override String Visit(ResourceRangeVariableReferenceNode node)
         {
             ExceptionUtils.CheckArgumentNotNull(node, "node");
             if (node.Name == "$it")
@@ -183,22 +183,22 @@ namespace Microsoft.OData
         }
 
         /// <summary>
-        /// Translates a <see cref="NonentityRangeVariableReferenceNode"/> into a corresponding <see cref="String"/>.
+        /// Translates a <see cref="NonResourceRangeVariableReferenceNode"/> into a corresponding <see cref="String"/>.
         /// </summary>
         /// <param name="node">The node to translate.</param>
         /// <returns>The translated String.</returns>
-        public override String Visit(NonentityRangeVariableReferenceNode node)
+        public override String Visit(NonResourceRangeVariableReferenceNode node)
         {
             ExceptionUtils.CheckArgumentNotNull(node, "node");
             return node.Name;
         }
 
         /// <summary>
-        /// Translates a <see cref="SingleEntityCastNode"/> into a corresponding <see cref="String"/>.
+        /// Translates a <see cref="SingleResourceCastNode"/> into a corresponding <see cref="String"/>.
         /// </summary>
         /// <param name="node">The node to translate.</param>
         /// <returns>The translated String.</returns>
-        public override String Visit(SingleEntityCastNode node)
+        public override String Visit(SingleResourceCastNode node)
         {
             ExceptionUtils.CheckArgumentNotNull(node, "node");
             return this.TranslatePropertyAccess(node.Source, node.StructuredTypeReference.Definition.ToString());
@@ -227,11 +227,11 @@ namespace Microsoft.OData
         }
 
         /// <summary>
-        /// Translates a <see cref="SingleEntityFunctionCallNode"/> into a corresponding <see cref="String"/>.
+        /// Translates a <see cref="SingleResourceFunctionCallNode"/> into a corresponding <see cref="String"/>.
         /// </summary>
         /// <param name="node">The node to translate.</param>
         /// <returns>The translated String.</returns>
-        public override String Visit(SingleEntityFunctionCallNode node)
+        public override String Visit(SingleResourceFunctionCallNode node)
         {
             ExceptionUtils.CheckArgumentNotNull(node, "node");
             String result = node.Name;

@@ -161,7 +161,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriBuilder
             odataUriParser.UrlKeyDelimiter = ODataUrlKeyDelimiter.Parentheses;
             ODataUri odataUri = odataUriParser.ParseUri();
 
-            NamedFunctionParameterNode p = odataUri.Filter.Expression.As<BinaryOperatorNode>().Right.As<SingleEntityFunctionCallNode>().Parameters.First().As<NamedFunctionParameterNode>();
+            NamedFunctionParameterNode p = odataUri.Filter.Expression.As<BinaryOperatorNode>().Right.As<SingleResourceFunctionCallNode>().Parameters.First().As<NamedFunctionParameterNode>();
             p.Value.As<ParameterAliasNode>().Alias.ShouldBeEquivalentTo("@p1");
             p.Value.As<ParameterAliasNode>().TypeReference.IsEnum().Should().Be(true);
             p.Value.As<ParameterAliasNode>().TypeReference.Definition.FullTypeName().ShouldBeEquivalentTo("Fully.Qualified.Namespace.ColorPattern");
@@ -187,7 +187,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriBuilder
             odataUriParser.UrlKeyDelimiter = ODataUrlKeyDelimiter.Parentheses;
             ODataUri odataUri = odataUriParser.ParseUri();
 
-            NamedFunctionParameterNode p = odataUri.Filter.Expression.As<BinaryOperatorNode>().Right.As<SingleEntityFunctionCallNode>().Parameters.First().As<NamedFunctionParameterNode>();
+            NamedFunctionParameterNode p = odataUri.Filter.Expression.As<BinaryOperatorNode>().Right.As<SingleResourceFunctionCallNode>().Parameters.First().As<NamedFunctionParameterNode>();
             p.Value.As<ParameterAliasNode>().Alias.ShouldBeEquivalentTo("@p1");
             p.Value.As<ParameterAliasNode>().TypeReference.IsEnum().Should().Be(true);
             p.Value.As<ParameterAliasNode>().TypeReference.Definition.FullTypeName().ShouldBeEquivalentTo("Fully.Qualified.Namespace.ColorPattern");

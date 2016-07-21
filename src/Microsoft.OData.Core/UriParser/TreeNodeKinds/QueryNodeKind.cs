@@ -30,9 +30,9 @@ namespace Microsoft.OData.UriParser
         Convert = InternalQueryNodeKind.Convert,
 
         /// <summary>
-        /// Non-entity node referencing a range variable.
+        /// Non-resource node referencing a range variable.
         /// </summary>
-        NonentityRangeVariableReference = InternalQueryNodeKind.NonentityRangeVariableReference,
+        NonResourceRangeVariableReference = InternalQueryNodeKind.NonResourceRangeVariableReference,
 
         /// <summary>
         /// Node used to represent a binary operator.
@@ -80,9 +80,9 @@ namespace Microsoft.OData.UriParser
         SingleValueOpenPropertyAccess = InternalQueryNodeKind.SingleValueOpenPropertyAccess,
 
         /// <summary>
-        /// Cast on a single thing.
+        /// Cast on a single resource.
         /// </summary>
-        SingleEntityCast = InternalQueryNodeKind.SingleEntityCast,
+        SingleResourceCast = InternalQueryNodeKind.SingleResourceCast,
 
         /// <summary>
         /// All query.
@@ -95,14 +95,14 @@ namespace Microsoft.OData.UriParser
         EntityCollectionCast = InternalQueryNodeKind.EntityCollectionCast,
 
         /// <summary>
-        /// Placeholder node referencing a rangeVariable on the binding stack that references an entity.
+        /// Placeholder node referencing a rangeVariable on the binding stack that references an entity or a complex.
         /// </summary>
-        EntityRangeVariableReference = InternalQueryNodeKind.EntityRangeVariableReference,
+        ResourceRangeVariableReference = InternalQueryNodeKind.ResourceRangeVariableReference,
 
         /// <summary>
-        /// Node the represents a function call that returns a single entity.
+        /// Node the represents a function call that returns a single entity or complex.
         /// </summary>
-        SingleEntityFunctionCall = InternalQueryNodeKind.SingleEntityFunctionCall,
+        SingleResourceFunctionCall = InternalQueryNodeKind.SingleResourceFunctionCall,
 
         /// <summary>
         /// Node that represents a function call that returns a collection.
@@ -110,7 +110,7 @@ namespace Microsoft.OData.UriParser
         CollectionFunctionCall = InternalQueryNodeKind.CollectionFunctionCall,
 
         /// <summary>
-        /// Node that represents a funciton call that returns a collection of entities.
+        /// Node that represents a function call that returns a collection of entities.
         /// </summary>
         EntityCollectionFunctionCall = InternalQueryNodeKind.EntityCollectionFunctionCall,
 
@@ -186,9 +186,9 @@ namespace Microsoft.OData.UriParser
         Convert = 2,
 
         /// <summary>
-        /// Non-entity node referencing a range variable.
+        /// Non-resource node referencing a range variable.
         /// </summary>
-        NonentityRangeVariableReference = 3,
+        NonResourceRangeVariableReference = 3,
 
         /// <summary>
         /// Parameter node used to represent a binary operator.
@@ -236,9 +236,9 @@ namespace Microsoft.OData.UriParser
         SingleValueOpenPropertyAccess = 12,
 
         /// <summary>
-        /// Cast on a single thing.
+        /// Cast on a single resource.
         /// </summary>
-        SingleEntityCast = 13,
+        SingleResourceCast = 13,
 
         /// <summary>
         /// All query.
@@ -251,14 +251,14 @@ namespace Microsoft.OData.UriParser
         EntityCollectionCast = 15,
 
         /// <summary>
-        /// Entity  node referencing a range variable.
+        /// Resource node referencing a range variable.
         /// </summary>
-        EntityRangeVariableReference = 16,
+        ResourceRangeVariableReference = 16,
 
         /// <summary>
-        /// SingleEntityFunctionCall node.
+        /// SingleResourceFunctionCall node.
         /// </summary>
-        SingleEntityFunctionCall = 17,
+        SingleResourceFunctionCall = 17,
 
         /// <summary>
         /// Node that represents a function call that returns a collection.

@@ -15,20 +15,20 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
     /// <summary>
     /// Unit tests for the NonEntityRangeVariableReferenceNode class
     /// </summary>
-    public class NonentityRangeVariableReferenceNodeTests
+    public class NonResourceRangeVariableReferenceNodeTests
     {
         [Fact]
         public void NameCannotBeNull()
         {
             NonentityRangeVariable rangeVariable = new NonentityRangeVariable("stuff", EdmCoreModel.Instance.GetPrimitive(EdmPrimitiveTypeKind.Double, true), null);
-            Action createWithNullName = () => new NonentityRangeVariableReferenceNode(null, rangeVariable);
+            Action createWithNullName = () => new NonResourceRangeVariableReferenceNode(null, rangeVariable);
             createWithNullName.ShouldThrow<Exception>(Error.ArgumentNull("name").ToString());
         }
 
         [Fact]
         public void RangeVariableCannotBeNull()
         {
-            Action createWithNullRangeVariable = () => new NonentityRangeVariableReferenceNode("suff", null);
+            Action createWithNullRangeVariable = () => new NonResourceRangeVariableReferenceNode("suff", null);
             createWithNullRangeVariable.ShouldThrow<Exception>(Error.ArgumentNull("rangeVariable").ToString());
         }
 
@@ -36,7 +36,7 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
         public void NameIsSetCorrectly()
         {
             NonentityRangeVariable rangeVariable = new NonentityRangeVariable("stuff", EdmCoreModel.Instance.GetPrimitive(EdmPrimitiveTypeKind.Double, true), null);
-            NonentityRangeVariableReferenceNode nonentityRangeVariableReferenceNode = new NonentityRangeVariableReferenceNode("stuff", rangeVariable);
+            NonResourceRangeVariableReferenceNode nonentityRangeVariableReferenceNode = new NonResourceRangeVariableReferenceNode("stuff", rangeVariable);
             nonentityRangeVariableReferenceNode.Name.Should().Be("stuff");
         }
 
@@ -44,7 +44,7 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
         public void TypeReferenceIsSetCorrectly()
         {
             NonentityRangeVariable rangeVariable = new NonentityRangeVariable("stuff", EdmCoreModel.Instance.GetPrimitive(EdmPrimitiveTypeKind.Double, true), null);
-            NonentityRangeVariableReferenceNode nonentityRangeVariableReferenceNode = new NonentityRangeVariableReferenceNode("stuff", rangeVariable);
+            NonResourceRangeVariableReferenceNode nonentityRangeVariableReferenceNode = new NonResourceRangeVariableReferenceNode("stuff", rangeVariable);
             nonentityRangeVariableReferenceNode.TypeReference.FullName().Should().Be(EdmCoreModel.Instance.GetPrimitive(EdmPrimitiveTypeKind.Double, true).FullName());
         }
 
@@ -52,7 +52,7 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
         public void RangeVariableIsSetCorrectly()
         {
             NonentityRangeVariable rangeVariable = new NonentityRangeVariable("stuff", EdmCoreModel.Instance.GetPrimitive(EdmPrimitiveTypeKind.Double, true), null);
-            NonentityRangeVariableReferenceNode nonentityRangeVariableReferenceNode = new NonentityRangeVariableReferenceNode("stuff", rangeVariable);
+            NonResourceRangeVariableReferenceNode nonentityRangeVariableReferenceNode = new NonResourceRangeVariableReferenceNode("stuff", rangeVariable);
             nonentityRangeVariableReferenceNode.RangeVariable.ShouldBeNonentityRangeVariable("stuff");
         }
 
@@ -60,8 +60,8 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
         public void KindIsNonEntityRangeVariableReferenceNode()
         {
             NonentityRangeVariable rangeVariable = new NonentityRangeVariable("stuff", EdmCoreModel.Instance.GetPrimitive(EdmPrimitiveTypeKind.Double, true), null);
-            NonentityRangeVariableReferenceNode nonentityRangeVariableReferenceNode = new NonentityRangeVariableReferenceNode("stuff", rangeVariable);
-            nonentityRangeVariableReferenceNode.InternalKind.Should().Be(InternalQueryNodeKind.NonentityRangeVariableReference);
+            NonResourceRangeVariableReferenceNode nonentityRangeVariableReferenceNode = new NonResourceRangeVariableReferenceNode("stuff", rangeVariable);
+            nonentityRangeVariableReferenceNode.InternalKind.Should().Be(InternalQueryNodeKind.NonResourceRangeVariableReference);
         }
     }
 }

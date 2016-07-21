@@ -1,5 +1,5 @@
 ﻿//---------------------------------------------------------------------
-// <copyright file="SingleEntityCastNodeTests.cs" company="Microsoft">
+// <copyright file="SingleResourceCastNodeTests.cs" company="Microsoft">
 //      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 // </copyright>
 //---------------------------------------------------------------------
@@ -13,45 +13,45 @@ using Xunit;
 namespace Microsoft.OData.Tests.UriParser.SemanticAst
 {
     /// <summary>
-    /// Unit tests for the SingleEntityCastNode class
+    /// Unit tests for the SingleResourceCastNode class
     /// </summary>
-    public class SingleEntityCastNodeTests
+    public class SingleResourceCastNodeTests
     {
-        private readonly EntityRangeVariableReferenceNode singleEntityNode = new EntityRangeVariableReferenceNode("a", new EntityRangeVariable("a", new EdmEntityTypeReference(HardCodedTestModel.GetPersonType(), false), HardCodedTestModel.GetPeopleSet()));
+        private readonly ResourceRangeVariableReferenceNode singleEntityNode = new ResourceRangeVariableReferenceNode("a", new EntityRangeVariable("a", new EdmEntityTypeReference(HardCodedTestModel.GetPersonType(), false), HardCodedTestModel.GetPeopleSet()));
 
         [Fact]
         public void EntityTypeCannotBeNull()
         {
-            Action createWithNullEntityType = () => new SingleEntityCastNode(this.singleEntityNode, null);
+            Action createWithNullEntityType = () => new SingleResourceCastNode(this.singleEntityNode, null);
             createWithNullEntityType.ShouldThrow<Exception>(Error.ArgumentNull("name").ToString());
         }
 
         [Fact]
         public void SourceIsSetCorrectly()
         {
-            SingleEntityCastNode singleEntityCast = new SingleEntityCastNode(this.singleEntityNode, HardCodedTestModel.GetPersonType());
+            SingleResourceCastNode singleEntityCast = new SingleResourceCastNode(this.singleEntityNode, HardCodedTestModel.GetPersonType());
             singleEntityCast.Source.Should().Be(this.singleEntityNode);
         }
 
         [Fact]
         public void TypeReferenceIsSetCorrectly()
         {
-            SingleEntityCastNode singleEntityCast = new SingleEntityCastNode(this.singleEntityNode, HardCodedTestModel.GetPersonType());
+            SingleResourceCastNode singleEntityCast = new SingleResourceCastNode(this.singleEntityNode, HardCodedTestModel.GetPersonType());
             singleEntityCast.TypeReference.FullName().Should().Be(HardCodedTestModel.GetPersonType().FullName());
         }
 
         [Fact]
         public void EntityTypeReferenceIsSameAsTypeReference()
         {
-            SingleEntityCastNode singleEntityCast = new SingleEntityCastNode(this.singleEntityNode, HardCodedTestModel.GetPersonType());
+            SingleResourceCastNode singleEntityCast = new SingleResourceCastNode(this.singleEntityNode, HardCodedTestModel.GetPersonType());
             singleEntityCast.StructuredTypeReference.Should().BeSameAs(singleEntityCast.TypeReference);
         }
 
         [Fact]
-        public void KindIsSingleEntityCastNode()
+        public void KindIsSingleResourceCastNode()
         {
-            SingleEntityCastNode singleEntityCast = new SingleEntityCastNode(this.singleEntityNode, HardCodedTestModel.GetDogType());
-            singleEntityCast.InternalKind.Should().Be(InternalQueryNodeKind.SingleEntityCast);
+            SingleResourceCastNode singleEntityCast = new SingleResourceCastNode(this.singleEntityNode, HardCodedTestModel.GetDogType());
+            singleEntityCast.InternalKind.Should().Be(InternalQueryNodeKind.SingleResourceCast);
         }
     }
 }

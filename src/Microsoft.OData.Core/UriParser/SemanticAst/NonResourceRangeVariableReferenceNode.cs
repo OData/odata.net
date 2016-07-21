@@ -1,5 +1,5 @@
 ﻿//---------------------------------------------------------------------
-// <copyright file="NonentityRangeVariableReferenceNode.cs" company="Microsoft">
+// <copyright file="NonResourceRangeVariableReferenceNode.cs" company="Microsoft">
 //      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 // </copyright>
 //---------------------------------------------------------------------
@@ -12,9 +12,9 @@ namespace Microsoft.OData.UriParser
     #endregion Namespaces
 
     /// <summary>
-    /// A node that represents a rangeVariable that iterates over a non entity collection.
+    /// A node that represents a rangeVariable that iterates over a non resource collection.
     /// </summary>
-    public sealed class NonentityRangeVariableReferenceNode : SingleValueNode
+    public sealed class NonResourceRangeVariableReferenceNode : SingleValueNode
     {
         /// <summary>
         ///  The name of the associated rangeVariable
@@ -32,12 +32,12 @@ namespace Microsoft.OData.UriParser
         private readonly NonentityRangeVariable rangeVariable;
 
         /// <summary>
-        /// Creates a <see cref="NonentityRangeVariableReferenceNode"/>.
+        /// Creates a <see cref="NonResourceRangeVariableReferenceNode"/>.
         /// </summary>
         /// <param name="name"> The name of the associated rangeVariable</param>
         /// <param name="rangeVariable">Reference to a rangeVariable on the binding stack.</param>
         /// <exception cref="System.ArgumentNullException">Throws if input name or rangeVariable is null.</exception>
-        public NonentityRangeVariableReferenceNode(string name, NonentityRangeVariable rangeVariable)
+        public NonResourceRangeVariableReferenceNode(string name, NonentityRangeVariable rangeVariable)
         {
             ExceptionUtils.CheckArgumentNotNull(name, "name");
             ExceptionUtils.CheckArgumentNotNull(rangeVariable, "rangeVariable");
@@ -77,7 +77,7 @@ namespace Microsoft.OData.UriParser
         {
             get
             {
-                return InternalQueryNodeKind.NonentityRangeVariableReference;
+                return InternalQueryNodeKind.NonResourceRangeVariableReference;
             }
         }
 

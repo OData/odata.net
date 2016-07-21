@@ -18,7 +18,7 @@ FilterQueryOption
 					Property = Home
 					TypeReference = [Edm.GeographyPoint Nullable=True SRID=4326]
 					Source = 
-					EntityRangeVariableReferenceNode
+					ResourceRangeVariableReferenceNode
 						Name = $it
 						NavigationSource = Employees
 						TypeReference = [Microsoft.Test.Taupo.OData.WCFService.Employee Nullable=False]
@@ -27,7 +27,7 @@ FilterQueryOption
 					Property = Office
 					TypeReference = [Edm.GeographyPoint Nullable=True SRID=4326]
 					Source = 
-					EntityRangeVariableReferenceNode
+					ResourceRangeVariableReferenceNode
 						Name = $it
 						NavigationSource = Employees
 						TypeReference = [Microsoft.Test.Taupo.OData.WCFService.Employee Nullable=False]

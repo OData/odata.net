@@ -108,11 +108,11 @@ namespace Microsoft.OData.UriParser
                 // parent can be null for casts on the implicit parameter; this is OK
                 if (parent == null)
                 {
-                    return new SingleEntityCastNode(null, childEntityType);
+                    return new SingleResourceCastNode(null, childEntityType);
                 }
 
                 Debug.Assert(parentAsSingleValue != null, "If parent of the cast node was not collection, it should be a single value.");
-                return new SingleEntityCastNode(parentAsSingleValue, childEntityType);
+                return new SingleResourceCastNode(parentAsSingleValue, childEntityType);
             }
             else
             {

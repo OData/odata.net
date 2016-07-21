@@ -66,7 +66,7 @@ namespace Microsoft.Test.Taupo.OData.Query.Tests.MetadataBinder
                     ExpectedOrderByExpressions = new SingleValueNode[]
                     {
                         new SingleValuePropertyAccessNode(
-                            new EntityRangeVariableReferenceNode(entityRangeVariable.Name, entityRangeVariable),
+                            new ResourceRangeVariableReferenceNode(entityRangeVariable.Name, entityRangeVariable),
                             model.ResolveProperty("TestNS.Customer.Name")
                         )
                     }
@@ -115,11 +115,11 @@ namespace Microsoft.Test.Taupo.OData.Query.Tests.MetadataBinder
                     ExpectedOrderByExpressions = new SingleValueNode[]
                     {
                         new SingleValuePropertyAccessNode(
-                            new EntityRangeVariableReferenceNode(entityRangeVariable.Name, entityRangeVariable),
+                            new ResourceRangeVariableReferenceNode(entityRangeVariable.Name, entityRangeVariable),
                             model.ResolveProperty("TestNS.Customer.Name")
                         ),
                         new SingleValuePropertyAccessNode(
-                            new EntityRangeVariableReferenceNode(entityRangeVariable.Name, entityRangeVariable), 
+                            new ResourceRangeVariableReferenceNode(entityRangeVariable.Name, entityRangeVariable), 
                             model.ResolveProperty("TestNS.Customer.ID")
                         ),
                     }

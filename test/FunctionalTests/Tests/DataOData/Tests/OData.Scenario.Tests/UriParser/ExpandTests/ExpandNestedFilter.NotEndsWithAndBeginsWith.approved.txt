@@ -25,7 +25,7 @@ SelectExpandQueryOption
 										Property = Name
 										TypeReference = [Edm.String Nullable=True Unicode=True]
 										Source = 
-										EntityRangeVariableReferenceNode
+										ResourceRangeVariableReferenceNode
 											Name = $it
 											NavigationSource = Products
 											TypeReference = [Microsoft.Test.Taupo.OData.WCFService.Product Nullable=False]
@@ -42,7 +42,7 @@ SelectExpandQueryOption
 									Property = Name
 									TypeReference = [Edm.String Nullable=True Unicode=True]
 									Source = 
-									EntityRangeVariableReferenceNode
+									ResourceRangeVariableReferenceNode
 										Name = $it
 										NavigationSource = Products
 										TypeReference = [Microsoft.Test.Taupo.OData.WCFService.Product Nullable=False]
@@ -58,7 +58,7 @@ SelectExpandQueryOption
 									Property = QuantityPerUnit
 									TypeReference = [Edm.String Nullable=True Unicode=True]
 									Source = 
-									EntityRangeVariableReferenceNode
+									ResourceRangeVariableReferenceNode
 										Name = $it
 										NavigationSource = Products
 										TypeReference = [Microsoft.Test.Taupo.OData.WCFService.Product Nullable=False]

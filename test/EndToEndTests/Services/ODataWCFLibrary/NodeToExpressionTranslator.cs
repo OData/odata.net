@@ -346,13 +346,13 @@ namespace Microsoft.Test.OData.Services.ODataWCFService
         }
 
         /// <summary>
-        /// Visit an EntityRangeVariableReferenceNode
+        /// Visit an ResourceRangeVariableReferenceNode
         /// </summary>
         /// <param name="nodeIn">The node to visit</param>
         /// <returns>The translated expression</returns>
-        public override Expression Visit(EntityRangeVariableReferenceNode nodeIn)
+        public override Expression Visit(ResourceRangeVariableReferenceNode nodeIn)
         {
-            this.CheckArgumentNull(nodeIn, "EntityRangeVariableReferenceNode");
+            this.CheckArgumentNull(nodeIn, "ResourceRangeVariableReferenceNode");
 
             // when this is called for a filter like svc/Customers?$filter=PersonID eq 1, nodeIn.Name has value "$it".
             // when this is called by any/all option, nodeIn.Name is specified by client, it can be any value.
@@ -360,22 +360,22 @@ namespace Microsoft.Test.OData.Services.ODataWCFService
         }
 
         /// <summary>
-        /// Visit a NonentityRangeVariableReferenceNode
+        /// Visit a NonResourceRangeVariableReferenceNode
         /// </summary>
         /// <param name="nodeIn">The node to visit</param>
         /// <returns>The translated expression</returns>
-        public override Expression Visit(NonentityRangeVariableReferenceNode nodeIn)
+        public override Expression Visit(NonResourceRangeVariableReferenceNode nodeIn)
         {
-            this.CheckArgumentNull(nodeIn, "NonentityRangeVariableReferenceNode");
+            this.CheckArgumentNull(nodeIn, "NonResourceRangeVariableReferenceNode");
             return this.ImplicitVariableParameterExpression;
         }
 
         /// <summary>
-        /// Visit a SingleEntityCastNode
+        /// Visit a SingleResourceCastNode
         /// </summary>
         /// <param name="nodeIn">The node to visit</param>
         /// <returns>The translated expression</returns>
-        public override Expression Visit(SingleEntityCastNode nodeIn)
+        public override Expression Visit(SingleResourceCastNode nodeIn)
         {
             this.CheckArgumentNull(nodeIn, "node");
             return this.TranslateSingleValueCastAccess(nodeIn.Source, nodeIn.TypeReference);
@@ -393,11 +393,11 @@ namespace Microsoft.Test.OData.Services.ODataWCFService
         }
 
         /// <summary>
-        /// Visit a SingleEntityFunctionCallNode
+        /// Visit a SingleResourceFunctionCallNode
         /// </summary>
         /// <param name="nodeIn">The node to visit</param>
         /// <returns>The translated expression</returns>
-        public override Expression Visit(SingleEntityFunctionCallNode nodeIn)
+        public override Expression Visit(SingleResourceFunctionCallNode nodeIn)
         {
             throw new NotImplementedException();
         }

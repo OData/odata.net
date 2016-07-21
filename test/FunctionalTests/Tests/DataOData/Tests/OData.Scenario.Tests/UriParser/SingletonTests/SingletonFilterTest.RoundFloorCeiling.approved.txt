@@ -21,7 +21,7 @@ FilterQueryOption
 							Property = UnitPrice
 							TypeReference = [Edm.Single Nullable=False]
 							Source = 
-							EntityRangeVariableReferenceNode
+							ResourceRangeVariableReferenceNode
 								Name = $it
 								NavigationSource = SpecialProduct
 								TypeReference = [Microsoft.Test.Taupo.OData.WCFService.Product Nullable=False]
@@ -39,7 +39,7 @@ FilterQueryOption
 							Property = UnitPrice
 							TypeReference = [Edm.Single Nullable=False]
 							Source = 
-							EntityRangeVariableReferenceNode
+							ResourceRangeVariableReferenceNode
 								Name = $it
 								NavigationSource = SpecialProduct
 								TypeReference = [Microsoft.Test.Taupo.OData.WCFService.Product Nullable=False]
@@ -57,7 +57,7 @@ FilterQueryOption
 							Property = UnitPrice
 							TypeReference = [Edm.Single Nullable=False]
 							Source = 
-							EntityRangeVariableReferenceNode
+							ResourceRangeVariableReferenceNode
 								Name = $it
 								NavigationSource = SpecialProduct
 								TypeReference = [Microsoft.Test.Taupo.OData.WCFService.Product Nullable=False]
@@ -75,7 +75,7 @@ FilterQueryOption
 							Property = UnitPrice
 							TypeReference = [Edm.Single Nullable=False]
 							Source = 
-							EntityRangeVariableReferenceNode
+							ResourceRangeVariableReferenceNode
 								Name = $it
 								NavigationSource = SpecialProduct
 								TypeReference = [Microsoft.Test.Taupo.OData.WCFService.Product Nullable=False]

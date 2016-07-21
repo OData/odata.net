@@ -1,5 +1,5 @@
 ﻿//---------------------------------------------------------------------
-// <copyright file="EntityRangeVariableReferenceNodeTests.cs" company="Microsoft">
+// <copyright file="ResourceRangeVariableReferenceNodeTests.cs" company="Microsoft">
 //      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 // </copyright>
 //---------------------------------------------------------------------
@@ -13,15 +13,15 @@ using Xunit;
 namespace Microsoft.OData.Tests.UriParser.SemanticAst
 {
     /// <summary>
-    /// Unit tests for the EntityRangeVariableReferenceNode class
+    /// Unit tests for the ResourceRangeVariableReferenceNode class
     /// </summary>
-    public class EntityRangeVariableReferenceNodeTests
+    public class ResourceRangeVariableReferenceNodeTests
     {
         [Fact]
         public void NameCannotBeNull()
         {
             EntityRangeVariable rangeVariable = new EntityRangeVariable("dogs", HardCodedTestModel.GetDogTypeReference(), HardCodedTestModel.GetDogsSet());
-            Action createWithNullName = () => new EntityRangeVariableReferenceNode(null, rangeVariable);
+            Action createWithNullName = () => new ResourceRangeVariableReferenceNode(null, rangeVariable);
             createWithNullName.ShouldThrow<Exception>(Error.ArgumentNull("name").ToString());
         }
 
@@ -29,7 +29,7 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
         public void RangeVariableIsSetCorrectly()
         {
             EntityRangeVariable rangeVariable = new EntityRangeVariable("dogs", HardCodedTestModel.GetDogTypeReference(), HardCodedTestModel.GetDogsSet());
-            EntityRangeVariableReferenceNode referenceNode = new EntityRangeVariableReferenceNode(rangeVariable.Name, rangeVariable);
+            ResourceRangeVariableReferenceNode referenceNode = new ResourceRangeVariableReferenceNode(rangeVariable.Name, rangeVariable);
             referenceNode.RangeVariable.ShouldBeEntityRangeVariable(HardCodedTestModel.GetDogTypeReference()).And.NavigationSource.Should().Be(HardCodedTestModel.GetDogsSet());
         }
 
@@ -37,7 +37,7 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
         public void EntitySetComesFromRangeVariable()
         {
             EntityRangeVariable rangeVariable = new EntityRangeVariable("dogs", HardCodedTestModel.GetDogTypeReference(), HardCodedTestModel.GetDogsSet());
-            EntityRangeVariableReferenceNode referenceNode = new EntityRangeVariableReferenceNode(rangeVariable.Name, rangeVariable);
+            ResourceRangeVariableReferenceNode referenceNode = new ResourceRangeVariableReferenceNode(rangeVariable.Name, rangeVariable);
             referenceNode.NavigationSource.Should().Be(HardCodedTestModel.GetDogsSet());
         }
 
@@ -45,7 +45,7 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
         public void TypeReferenceComesFromRangeVariable()
         {
             EntityRangeVariable rangeVariable = new EntityRangeVariable("dogs", HardCodedTestModel.GetDogTypeReference(), HardCodedTestModel.GetDogsSet());
-            EntityRangeVariableReferenceNode referenceNode = new EntityRangeVariableReferenceNode(rangeVariable.Name, rangeVariable);
+            ResourceRangeVariableReferenceNode referenceNode = new ResourceRangeVariableReferenceNode(rangeVariable.Name, rangeVariable);
             referenceNode.TypeReference.FullName().Should().Be(HardCodedTestModel.GetDogTypeReference().FullName());
         }
 
@@ -53,7 +53,7 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
         public void TypeReferenceIsEdmEntityTypeReference()
         {
             EntityRangeVariable rangeVariable = new EntityRangeVariable("dogs", HardCodedTestModel.GetDogTypeReference(), HardCodedTestModel.GetDogsSet());
-            EntityRangeVariableReferenceNode referenceNode = new EntityRangeVariableReferenceNode(rangeVariable.Name, rangeVariable);
+            ResourceRangeVariableReferenceNode referenceNode = new ResourceRangeVariableReferenceNode(rangeVariable.Name, rangeVariable);
             referenceNode.TypeReference.Should().BeOfType<EdmEntityTypeReference>();
         }
 
@@ -61,16 +61,16 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
         public void EntityTypeReferenceIsSameAsTypeReference()
         {
             EntityRangeVariable rangeVariable = new EntityRangeVariable("dogs", HardCodedTestModel.GetDogTypeReference(), HardCodedTestModel.GetDogsSet());
-            EntityRangeVariableReferenceNode referenceNode = new EntityRangeVariableReferenceNode(rangeVariable.Name, rangeVariable);
+            ResourceRangeVariableReferenceNode referenceNode = new ResourceRangeVariableReferenceNode(rangeVariable.Name, rangeVariable);
             referenceNode.StructuredTypeReference.Should().BeSameAs(referenceNode.TypeReference);
         }
 
         [Fact]
-        public void KindIsEntityRangeVariableReferenceNode()
+        public void KindIsResourceRangeVariableReferenceNode()
         {
             EntityRangeVariable rangeVariable = new EntityRangeVariable("dogs", HardCodedTestModel.GetDogTypeReference(), HardCodedTestModel.GetDogsSet());
-            EntityRangeVariableReferenceNode referenceNode = new EntityRangeVariableReferenceNode(rangeVariable.Name, rangeVariable);
-            referenceNode.InternalKind.Should().Be(InternalQueryNodeKind.EntityRangeVariableReference);
+            ResourceRangeVariableReferenceNode referenceNode = new ResourceRangeVariableReferenceNode(rangeVariable.Name, rangeVariable);
+            referenceNode.InternalKind.Should().Be(InternalQueryNodeKind.ResourceRangeVariableReference);
         }
     }
 }

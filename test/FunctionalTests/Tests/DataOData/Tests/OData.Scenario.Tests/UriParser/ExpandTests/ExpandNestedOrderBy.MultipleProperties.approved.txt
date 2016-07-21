@@ -20,7 +20,7 @@ SelectExpandQueryOption
 					Property = FirstName
 					TypeReference = [Edm.String Nullable=True Unicode=True]
 					Source = 
-					EntityRangeVariableReferenceNode
+					ResourceRangeVariableReferenceNode
 						Name = $it
 						NavigationSource = CustomerForOrder
 						TypeReference = [Microsoft.Test.Taupo.OData.WCFService.Customer Nullable=False]
@@ -39,7 +39,7 @@ SelectExpandQueryOption
 						Property = LastName
 						TypeReference = [Edm.String Nullable=True Unicode=True]
 						Source = 
-						EntityRangeVariableReferenceNode
+						ResourceRangeVariableReferenceNode
 							Name = $it
 							NavigationSource = CustomerForOrder
 							TypeReference = [Microsoft.Test.Taupo.OData.WCFService.Customer Nullable=False]
@@ -58,7 +58,7 @@ SelectExpandQueryOption
 							Property = City
 							TypeReference = [Edm.String Nullable=True Unicode=True]
 							Source = 
-							EntityRangeVariableReferenceNode
+							ResourceRangeVariableReferenceNode
 								Name = $it
 								NavigationSource = CustomerForOrder
 								TypeReference = [Microsoft.Test.Taupo.OData.WCFService.Customer Nullable=False]
@@ -77,7 +77,7 @@ SelectExpandQueryOption
 								Property = Birthday
 								TypeReference = [Edm.DateTimeOffset Nullable=False Precision=0]
 								Source = 
-								EntityRangeVariableReferenceNode
+								ResourceRangeVariableReferenceNode
 									Name = $it
 									NavigationSource = CustomerForOrder
 									TypeReference = [Microsoft.Test.Taupo.OData.WCFService.Customer Nullable=False]

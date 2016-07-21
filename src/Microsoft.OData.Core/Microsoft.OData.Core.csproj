@@ -457,7 +457,7 @@
     <Compile Include="UriParser\SemanticAst\EntityCollectionNode.cs" />
     <Compile Include="UriParser\SemanticAst\EntityIdSegment.cs" />
     <Compile Include="UriParser\SemanticAst\EntityRangeVariable.cs" />
-    <Compile Include="UriParser\SemanticAst\EntityRangeVariableReferenceNode.cs" />
+    <Compile Include="UriParser\SemanticAst\ResourceRangeVariableReferenceNode.cs" />
     <Compile Include="UriParser\SemanticAst\EntitySetSegment.cs" />
     <Compile Include="UriParser\SemanticAst\ExpandedNavigationSelectItem.cs" />
     <Compile Include="UriParser\SemanticAst\ExpandedReferenceSelectItem.cs" />
@@ -472,7 +472,7 @@
     <Compile Include="UriParser\SemanticAst\NavigationPropertyLinkSegment.cs" />
     <Compile Include="UriParser\SemanticAst\NavigationPropertySegment.cs" />
     <Compile Include="UriParser\SemanticAst\NonentityRangeVariable.cs" />
-    <Compile Include="UriParser\SemanticAst\NonentityRangeVariableReferenceNode.cs" />
+    <Compile Include="UriParser\SemanticAst\NonResourceRangeVariableReferenceNode.cs" />
     <Compile Include="UriParser\SemanticAst\ODataExpandPath.cs" />
     <Compile Include="UriParser\SemanticAst\ODataPath.cs" />
     <Compile Include="UriParser\SemanticAst\ODataPathExtensions.cs" />
@@ -497,8 +497,8 @@
     <Compile Include="UriParser\SemanticAst\SelectExpandClause.cs" />
     <Compile Include="UriParser\SemanticAst\SelectExpandClauseExtensions.cs" />
     <Compile Include="UriParser\SemanticAst\SelectItem.cs" />
-    <Compile Include="UriParser\SemanticAst\SingleEntityCastNode.cs" />
-    <Compile Include="UriParser\SemanticAst\SingleEntityFunctionCallNode.cs" />
+    <Compile Include="UriParser\SemanticAst\SingleResourceCastNode.cs" />
+    <Compile Include="UriParser\SemanticAst\SingleResourceFunctionCallNode.cs" />
     <Compile Include="UriParser\SemanticAst\SingleEntityNode.cs" />
     <Compile Include="UriParser\SemanticAst\SingleNavigationNode.cs" />
     <Compile Include="UriParser\SemanticAst\SingleValueCastNode.cs" />

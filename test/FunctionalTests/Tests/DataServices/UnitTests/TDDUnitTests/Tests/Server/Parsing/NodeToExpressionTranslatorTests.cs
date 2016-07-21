@@ -382,7 +382,7 @@ namespace AstoriaUnitTests.TDD.Tests.Server.Parsing
         public void TranslatorShouldConvertWeaklyBackedSingleEntityCast()
         {
             SingleResourceNode source = EntityParameter<Customer>("c");
-            QueryNode node = new SingleEntityCastNode(source, this.weaklyBackedCustomerEdmType);
+            QueryNode node = new SingleResourceCastNode(source, this.weaklyBackedCustomerEdmType);
             var result = this.testSubject.TranslateNode(node);
 
             var parameterExpression = Expression.Parameter(typeof(Customer), "c");
@@ -528,7 +528,7 @@ namespace AstoriaUnitTests.TDD.Tests.Server.Parsing
             ODataProtocolVersion validatedProtocolVersion = ODataProtocolVersion.V4;
             this.testSubject = this.CreateTestSubject(verifyProtocolVersion: v => { validatedProtocolVersion = v; }, verifyRequestVersion: v => { throw new Exception("Should not be called."); });
 
-            QueryNode node = new SingleEntityCastNode(this.EntityParameter<Customer>("o"), this.customerEdmType);
+            QueryNode node = new SingleResourceCastNode(this.EntityParameter<Customer>("o"), this.customerEdmType);
 
             this.testSubject.TranslateNode(node);
             validatedProtocolVersion.Should().Be(ODataProtocolVersion.V4);
@@ -622,7 +622,7 @@ namespace AstoriaUnitTests.TDD.Tests.Server.Parsing
 
         private void TestCast<TParam, TReturn>(SingleResourceNode source, IEdmEntityType cast, Expression<Func<TParam, TReturn>> expectedExpression)
         {
-            var node = new SingleEntityCastNode(source, cast);
+            var node = new SingleResourceCastNode(source, cast);
             var result = this.testSubject.TranslateNode(node);
             CompareExpressions(expectedExpression.Body, result);
         }
@@ -681,14 +681,14 @@ namespace AstoriaUnitTests.TDD.Tests.Server.Parsing
         {
             var nonentityRangeVariable = new NonentityRangeVariable(name, null, null);
             this.testSubject.ParameterExpressions[nonentityRangeVariable] = Expression.Parameter(typeof(T), name);
-            return new NonentityRangeVariableReferenceNode(name, nonentityRangeVariable);
+            return new NonResourceRangeVariableReferenceNode(name, nonentityRangeVariable);
         }
 
         private SingleResourceNode EntityParameter<T>(string name)
         {
             var entityRangeVariable = new EntityRangeVariable(name, new EdmEntityTypeReference(this.entitySet.EntityType(), false), this.entitySet);
             this.testSubject.ParameterExpressions[entityRangeVariable] = Expression.Parameter(typeof(T), name);
-            return new EntityRangeVariableReferenceNode(name, entityRangeVariable);
+            return new ResourceRangeVariableReferenceNode(name, entityRangeVariable);
         }
 
         private EntityCollectionNode CollectionNavigationFromParameter(string name)

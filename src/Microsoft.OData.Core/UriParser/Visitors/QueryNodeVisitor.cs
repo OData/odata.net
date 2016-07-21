@@ -115,11 +115,11 @@ namespace Microsoft.OData.UriParser
         }
 
         /// <summary>
-        /// Visit an EntityRangeVariableReferenceNode
+        /// Visit an ResourceRangeVariableReferenceNode
         /// </summary>
         /// <param name="nodeIn">the node to visit</param>
         /// <returns>Defined by the implementer</returns>
-        public virtual T Visit(EntityRangeVariableReferenceNode nodeIn)
+        public virtual T Visit(ResourceRangeVariableReferenceNode nodeIn)
         {
             throw new NotImplementedException();
         }
@@ -129,17 +129,17 @@ namespace Microsoft.OData.UriParser
         /// </summary>
         /// <param name="nodeIn">the node to visit</param>
         /// <returns>Defined by the implementer</returns>
-        public virtual T Visit(NonentityRangeVariableReferenceNode nodeIn)
+        public virtual T Visit(NonResourceRangeVariableReferenceNode nodeIn)
         {
             throw new NotImplementedException();
         }
 
         /// <summary>
-        /// Visit a SingleEntityCastNode
+        /// Visit a SingleResourceCastNode
         /// </summary>
         /// <param name="nodeIn">the node to visit</param>
         /// <returns>Defined by the implementer</returns>
-        public virtual T Visit(SingleEntityCastNode nodeIn)
+        public virtual T Visit(SingleResourceCastNode nodeIn)
         {
             throw new NotImplementedException();
         }
@@ -155,11 +155,11 @@ namespace Microsoft.OData.UriParser
         }
 
         /// <summary>
-        /// Visit a SingleEntityFunctionCallNode
+        /// Visit a SingleResourceFunctionCallNode
         /// </summary>
         /// <param name="nodeIn">the node to visit</param>
         /// <returns>Defined by the implementer</returns>
-        public virtual T Visit(SingleEntityFunctionCallNode nodeIn)
+        public virtual T Visit(SingleResourceFunctionCallNode nodeIn)
         {
             throw new NotImplementedException();
         }

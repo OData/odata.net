@@ -26,7 +26,7 @@ FilterQueryOption
 			Property = Numbers
 			ItemType = [Edm.String Nullable=True Unicode=True]
 			Source = 
-			EntityRangeVariableReferenceNode
+			ResourceRangeVariableReferenceNode
 				Name = $it
 				NavigationSource = Boss
 				TypeReference = [Microsoft.Test.Taupo.OData.WCFService.Employee Nullable=False]

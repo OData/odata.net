@@ -16,7 +16,7 @@ FilterQueryOption
 				Property = CustomerID
 				TypeReference = [Edm.Int32 Nullable=False]
 				Source = 
-				EntityRangeVariableReferenceNode
+				ResourceRangeVariableReferenceNode
 					Name = $it
 					NavigationSource = SpecialOrder
 					TypeReference = [Microsoft.Test.Taupo.OData.WCFService.Order Nullable=False]

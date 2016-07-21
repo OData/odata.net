@@ -613,7 +613,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         {
             FilterClause filter = ParseFilter("$it gt 6", HardCodedTestModel.TestModel, EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.Int32));
             var binaryOp = filter.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.GreaterThan).And;
-            binaryOp.Left.ShouldBeNonentityRangeVariableReferenceNode("$it");
+            binaryOp.Left.ShouldBeNonResourceRangeVariableReferenceNode("$it");
             binaryOp.Right.ShouldBeConstantQueryNode(6);
         }
 
@@ -730,9 +730,9 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         public void CastFunctionProducesAnEntityType()
         {
             FilterClause filter = ParseFilter("cast(MyDog, 'Fully.Qualified.Namespace.Dog')/Color eq 'blue'", HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());
-            SingleEntityFunctionCallNode function = filter.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal)
+            SingleResourceFunctionCallNode function = filter.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal)
                 .And.Left.ShouldBeSingleValuePropertyAccessQueryNode(HardCodedTestModel.GetDogColorProp())
-                .And.Source.ShouldBeSingleEntityFunctionCallNode("cast").And;
+                .And.Source.ShouldBeSingleResourceFunctionCallNode("cast").And;
             function.Parameters.Should().HaveCount(2);
             function.Parameters.ElementAt(0).ShouldBeSingleNavigationNode(HardCodedTestModel.GetPersonMyDogNavProp());
             function.Parameters.ElementAt(1).ShouldBeConstantQueryNode("Fully.Qualified.Namespace.Dog");
@@ -753,7 +753,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         public void OrderByWithNonEntityType()
         {
             OrderByClause orderBy = ParseOrderBy("$it", HardCodedTestModel.TestModel, EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.Int32));
-            orderBy.Expression.ShouldBeNonentityRangeVariableReferenceNode("$it");
+            orderBy.Expression.ShouldBeNonResourceRangeVariableReferenceNode("$it");
         }
 
         [Fact]
@@ -876,7 +876,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         {
             var filterClause = ParseFilter("Fully.Qualified.Namespace.HasDog(inOffice=true)", HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());
             filterClause.Expression.ShouldBeSingleValueFunctionCallQueryNode(HardCodedTestModel.GetHasDogOverloadForPeopleWithTwoParameters())
-                .And.Source.ShouldBeEntityRangeVariableReferenceNode("$it");
+                .And.Source.ShouldBeResourceRangeVariableReferenceNode("$it");
         }
 
         [Fact]
@@ -885,7 +885,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             var filterClause = ParseOrderBy("MyPeople/any(a: a/Fully.Qualified.Namespace.HasDog(inOffice=true))", HardCodedTestModel.TestModel, HardCodedTestModel.GetDogType(), HardCodedTestModel.GetDogsSet());
             filterClause.Expression.ShouldBeAnyQueryNode()
                 .And.Body.ShouldBeSingleValueFunctionCallQueryNode(HardCodedTestModel.GetHasDogOverloadForPeopleWithTwoParameters())
-                .And.Source.ShouldBeEntityRangeVariableReferenceNode("a");
+                .And.Source.ShouldBeResourceRangeVariableReferenceNode("a");
         }
 
         [Fact]
@@ -961,7 +961,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             var filterClause = ParseFilter("Fully.Qualified.Namespace.GetMyDog/Color eq 'Blue'", HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());
             var binaryOperatorNode = filterClause.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal).And;
             binaryOperatorNode.Left.ShouldBeSingleValuePropertyAccessQueryNode(HardCodedTestModel.GetDogColorProp())
-                              .And.Source.ShouldBeSingleEntityFunctionCallNode(HardCodedTestModel.GetFunctionForGetMyDog());
+                              .And.Source.ShouldBeSingleResourceFunctionCallNode(HardCodedTestModel.GetFunctionForGetMyDog());
             binaryOperatorNode.Right.ShouldBeConstantQueryNode("Blue");
         }
 
@@ -1073,11 +1073,11 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             var filter = ParseFilter("Fully.Qualified.Namespace.GetMyDog/Fully.Qualified.Namespace.GetMyPerson/Fully.Qualified.Namespace.GetMyDog/Fully.Qualified.Namespace.GetMyPerson/Name eq 'Bob'", HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());
             var binaryOperatorNode = filter.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal).And;
             binaryOperatorNode.Left.ShouldBeSingleValuePropertyAccessQueryNode(HardCodedTestModel.GetPersonNameProp())
-                .And.Source.ShouldBeSingleEntityFunctionCallNode(HardCodedTestModel.GetFunctionForGetMyPerson())
-                .And.Source.ShouldBeSingleEntityFunctionCallNode(HardCodedTestModel.GetFunctionForGetMyDog())
-                .And.Source.ShouldBeSingleEntityFunctionCallNode(HardCodedTestModel.GetFunctionForGetMyPerson())
-                .And.Source.ShouldBeSingleEntityFunctionCallNode(HardCodedTestModel.GetFunctionForGetMyDog())
-                .And.Source.ShouldBeEntityRangeVariableReferenceNode(ExpressionConstants.It);
+                .And.Source.ShouldBeSingleResourceFunctionCallNode(HardCodedTestModel.GetFunctionForGetMyPerson())
+                .And.Source.ShouldBeSingleResourceFunctionCallNode(HardCodedTestModel.GetFunctionForGetMyDog())
+                .And.Source.ShouldBeSingleResourceFunctionCallNode(HardCodedTestModel.GetFunctionForGetMyPerson())
+                .And.Source.ShouldBeSingleResourceFunctionCallNode(HardCodedTestModel.GetFunctionForGetMyDog())
+                .And.Source.ShouldBeResourceRangeVariableReferenceNode(ExpressionConstants.It);
             binaryOperatorNode.Right.ShouldBeConstantQueryNode("Bob");
         }
 
@@ -1232,7 +1232,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             var filterClause = ParseFilter("Fully.Qualified.Namespace.FindMyOwner(dogsName='fido')/Name eq 'Bob'", HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());
             var binaryOperator = filterClause.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal).And;
             binaryOperator.Left.ShouldBeSingleValuePropertyAccessQueryNode(HardCodedTestModel.GetPersonNameProp())
-                .And.Source.ShouldBeSingleEntityFunctionCallNode(HardCodedTestModel.GetFunctionForFindMyOwner());
+                .And.Source.ShouldBeSingleResourceFunctionCallNode(HardCodedTestModel.GetFunctionForFindMyOwner());
             binaryOperator.Right.ShouldBeConstantQueryNode("Bob");
         }
 

@@ -1,5 +1,5 @@
 ﻿//---------------------------------------------------------------------
-// <copyright file="SingleEntityCastNode.cs" company="Microsoft">
+// <copyright file="SingleResourceCastNode.cs" company="Microsoft">
 //      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 // </copyright>
 //---------------------------------------------------------------------
@@ -11,7 +11,7 @@ namespace Microsoft.OData.UriParser
     /// <summary>
     /// Node representing a type segment that casts a single entity/complex parent node.
     /// </summary>
-    public sealed class SingleEntityCastNode : SingleResourceNode
+    public sealed class SingleResourceCastNode : SingleResourceNode
     {
         /// <summary>
         /// The resource that we're casting to a different type.
@@ -29,12 +29,12 @@ namespace Microsoft.OData.UriParser
         private readonly IEdmNavigationSource navigationSource;
 
         /// <summary>
-        /// Created a SingleEntityCastNode with the given source node and the given type to cast to.
+        /// Created a SingleResourceCastNode with the given source node and the given type to cast to.
         /// </summary>
         /// <param name="source"> Source <see cref="SingleValueNode"/> that is being cast.</param>
         /// <param name="entityType">Type to cast to.</param>
         /// <exception cref="System.ArgumentNullException">Throws if the input entityType is null.</exception>
-        public SingleEntityCastNode(SingleResourceNode source, IEdmEntityType entityType)
+        public SingleResourceCastNode(SingleResourceNode source, IEdmEntityType entityType)
         {
             ExceptionUtils.CheckArgumentNotNull(entityType, "entityType");
             this.source = source;
@@ -81,7 +81,7 @@ namespace Microsoft.OData.UriParser
         {
             get
             {
-                return InternalQueryNodeKind.SingleEntityCast;
+                return InternalQueryNodeKind.SingleResourceCast;
             }
         }
 
