@@ -18,7 +18,7 @@ namespace Microsoft.OData.UriParser
     /// <summary>
     /// Node representing a function call which returns a single entity.
     /// </summary>
-    public sealed class SingleEntityFunctionCallNode : SingleEntityNode
+    public sealed class SingleEntityFunctionCallNode : SingleResourceNode
     {
         /// <summary>
         /// the name of this function
@@ -38,7 +38,7 @@ namespace Microsoft.OData.UriParser
         /// <summary>
         /// The return type of this function.
         /// </summary>
-        private readonly IEdmEntityTypeReference returnedEntityTypeReference;
+        private readonly IEdmStructuredTypeReference returnedStructuredTypeReference;
 
         /// <summary>
         /// The entity set or singleton containing the single entity that this function returns.
@@ -81,7 +81,7 @@ namespace Microsoft.OData.UriParser
             this.name = name;
             this.functions = new ReadOnlyCollection<IEdmFunction>(functions != null ? functions.ToList() : new List<IEdmFunction>());
             this.parameters = new ReadOnlyCollection<QueryNode>(parameters == null ? new List<QueryNode>() : parameters.ToList());
-            this.returnedEntityTypeReference = returnedEntityTypeReference;
+            this.returnedStructuredTypeReference = returnedEntityTypeReference;
             this.navigationSource = navigationSource;
             this.source = source;
         }
@@ -115,7 +115,7 @@ namespace Microsoft.OData.UriParser
         /// </summary>
         public override IEdmTypeReference TypeReference
         {
-            get { return this.returnedEntityTypeReference; }
+            get { return this.returnedStructuredTypeReference; }
         }
 
         /// <summary>
@@ -129,9 +129,9 @@ namespace Microsoft.OData.UriParser
         /// <summary>
         /// Gets the return type of this function.
         /// </summary>
-        public override IEdmEntityTypeReference EntityTypeReference
+        public override IEdmStructuredTypeReference StructuredTypeReference
         {
-            get { return this.returnedEntityTypeReference; }
+            get { return this.returnedStructuredTypeReference; }
         }
 
         /// <summary>

@@ -304,7 +304,7 @@ namespace Microsoft.Test.Taupo.OData.Scenario.Tests.UriParser
                     tabHelper.Indent(() =>
                         tabHelper.Prefix + "Type Reference = " + node.TypeReference +
                         tabHelper.Prefix + "NavigationSource = " + node.NavigationSource.Name +
-                        tabHelper.Prefix + "Entity Type Reference = " + node.EntityTypeReference +
+                        tabHelper.Prefix + "Entity Type Reference = " + node.StructuredTypeReference +
                         tabHelper.Prefix + "Source = " + ToString(node.Source)
                 );
             }

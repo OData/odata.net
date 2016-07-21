@@ -53,7 +53,7 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
         public void EntityTypeReferenceSetCorrectly()
         {
             SingleEntityFunctionCallNode singleEntityFunctionCall = new SingleEntityFunctionCallNode("stuff", new QueryNode[] { new ConstantNode(1) }, HardCodedTestModel.GetPersonTypeReference(), HardCodedTestModel.GetPeopleSet());
-            singleEntityFunctionCall.EntityTypeReference.FullName().Should().Be(HardCodedTestModel.GetPersonTypeReference().FullName());
+            singleEntityFunctionCall.StructuredTypeReference.FullName().Should().Be(HardCodedTestModel.GetPersonTypeReference().FullName());
             singleEntityFunctionCall.TypeReference.FullName().Should().Be(HardCodedTestModel.GetPersonTypeReference().FullName());
         }
 

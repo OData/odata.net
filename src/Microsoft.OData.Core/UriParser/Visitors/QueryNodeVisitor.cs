@@ -75,7 +75,7 @@ namespace Microsoft.OData.UriParser
         }
 
         /// <summary>
-        /// Visit an CollectionOpenPropertyAccessNode
+        /// Visit a CollectionOpenPropertyAccessNode
         /// </summary>
         /// <param name="nodeIn">the node to visit</param>
         /// <returns>Defined by the implementer</returns>
@@ -255,7 +255,7 @@ namespace Microsoft.OData.UriParser
         }
 
         /// <summary>
-        /// Visit an CollectionPropertyCastNode
+        /// Visit a CollectionPropertyCastNode
         /// </summary>
         /// <param name="nodeIn">the node to visit</param>
         /// <returns>Defined by the implementer</returns>
@@ -265,11 +265,21 @@ namespace Microsoft.OData.UriParser
         }
 
         /// <summary>
-        /// Visit an SingleValueCastNode
+        /// Visit a SingleValueCastNode
         /// </summary>
         /// <param name="nodeIn">the node to visit</param>
         /// <returns>Defined by the implementer</returns>
         public virtual T Visit(SingleValueCastNode nodeIn)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Visit a SingleComplexNode
+        /// </summary>
+        /// <param name="nodeIn">the node to visit</param>
+        /// <returns>Defined by the implementer</returns>
+        public virtual T Visit(SingleComplexNode nodeIn)
         {
             throw new NotImplementedException();
         }

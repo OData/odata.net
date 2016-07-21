@@ -44,11 +44,11 @@ namespace Microsoft.OData.UriParser
         /// </summary>
         /// <param name="parent">Parent node to a navigation property.</param>
         /// <returns>The given parent node as a SingleEntityNode.</returns>
-        internal static SingleEntityNode EnsureParentIsEntityForNavProp(SingleValueNode parent)
+        internal static SingleResourceNode EnsureParentIsResourceForNavProp(SingleValueNode parent)
         {
             ExceptionUtils.CheckArgumentNotNull(parent, "parent");
 
-            SingleEntityNode parentEntity = parent as SingleEntityNode;
+            SingleResourceNode parentEntity = parent as SingleResourceNode;
             if (parentEntity == null)
             {
                 throw new ODataException(ODataErrorStrings.MetadataBinder_NavigationPropertyNotFollowingSingleEntityType);
@@ -84,7 +84,7 @@ namespace Microsoft.OData.UriParser
         /// <param name="keyBinder">Object to perform binding on any key values that are present.</param>
         /// <param name="navigationSource">The navigation source of the navigation node.</param>
         /// <returns>A new CollectionNavigationNode or SingleNavigationNode to capture the navigation propety access.</returns>
-        internal static QueryNode GetNavigationNode(IEdmNavigationProperty property, SingleEntityNode parent, IEnumerable<NamedValue> namedValues, BindingState state, KeyBinder keyBinder, out IEdmNavigationSource navigationSource)
+        internal static QueryNode GetNavigationNode(IEdmNavigationProperty property, SingleResourceNode parent, IEnumerable<NamedValue> namedValues, BindingState state, KeyBinder keyBinder, out IEdmNavigationSource navigationSource)
         {
             ExceptionUtils.CheckArgumentNotNull(property, "property");
             ExceptionUtils.CheckArgumentNotNull(parent, "parent");
@@ -188,7 +188,7 @@ namespace Microsoft.OData.UriParser
                 throw new ODataException(ODataErrorStrings.MetadataBinder_IllegalSegmentType(property.Name));
             }
 
-            SingleEntityNode parentEntity = EnsureParentIsEntityForNavProp(singleValueParent);
+            SingleResourceNode parentEntity = EnsureParentIsResourceForNavProp(singleValueParent);
 
             IEdmNavigationSource navigationSource;
             QueryNode node = GetNavigationNode(navigationProperty, parentEntity, segmentToken.NamedValues, state, new KeyBinder(this.bindMethod), out navigationSource);

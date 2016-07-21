@@ -1620,6 +1620,12 @@
     <Compile Include="..\UriParser\Resolver\UnqualifiedODataUriResolver.cs">
       <Link>Microsoft\OData\Core\UriParser\Resolver\UnqualifiedODataUriResolver.cs</Link>
     </Compile>
+    <Compile Include="..\UriParser\SemanticAst\SingleComplexNode.cs">
+      <Link>Microsoft\OData\Core\UriParser\SemanticAst\SingleComplexNode.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\SemanticAst\SingleResourceNode.cs">
+      <Link>Microsoft\OData\Core\UriParser\SemanticAst\SingleResourceNode.cs</Link>
+    </Compile>
     <Compile Include="..\UriParser\UriEdmHelpers.cs">
       <Link>Microsoft\OData\Core\UriParser\UriEdmHelpers.cs</Link>
     </Compile>

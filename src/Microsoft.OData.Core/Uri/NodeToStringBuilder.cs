@@ -201,7 +201,7 @@ namespace Microsoft.OData
         public override String Visit(SingleEntityCastNode node)
         {
             ExceptionUtils.CheckArgumentNotNull(node, "node");
-            return this.TranslatePropertyAccess(node.Source, node.EntityTypeReference.Definition.ToString());
+            return this.TranslatePropertyAccess(node.Source, node.StructuredTypeReference.Definition.ToString());
         }
 
         /// <summary>

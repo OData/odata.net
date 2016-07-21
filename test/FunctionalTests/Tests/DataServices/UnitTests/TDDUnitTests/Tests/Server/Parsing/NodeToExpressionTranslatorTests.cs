@@ -381,7 +381,7 @@ namespace AstoriaUnitTests.TDD.Tests.Server.Parsing
         [TestMethod]
         public void TranslatorShouldConvertWeaklyBackedSingleEntityCast()
         {
-            SingleEntityNode source = EntityParameter<Customer>("c");
+            SingleResourceNode source = EntityParameter<Customer>("c");
             QueryNode node = new SingleEntityCastNode(source, this.weaklyBackedCustomerEdmType);
             var result = this.testSubject.TranslateNode(node);
 
@@ -551,7 +551,7 @@ namespace AstoriaUnitTests.TDD.Tests.Server.Parsing
             verify(result.As<ConstantExpression>());
         }
 
-        private void TestNavigation<TParam, TReturn>(SingleEntityNode source, IEdmNavigationProperty navigation, Expression<Func<TParam, TReturn>> expectedExpression)
+        private void TestNavigation<TParam, TReturn>(SingleResourceNode source, IEdmNavigationProperty navigation, Expression<Func<TParam, TReturn>> expectedExpression)
         {
             QueryNode node;
             if (navigation.Type.IsCollection())
@@ -620,7 +620,7 @@ namespace AstoriaUnitTests.TDD.Tests.Server.Parsing
             CompareExpressions(expectedExpression.Body, result);
         }
 
-        private void TestCast<TParam, TReturn>(SingleEntityNode source, IEdmEntityType cast, Expression<Func<TParam, TReturn>> expectedExpression)
+        private void TestCast<TParam, TReturn>(SingleResourceNode source, IEdmEntityType cast, Expression<Func<TParam, TReturn>> expectedExpression)
         {
             var node = new SingleEntityCastNode(source, cast);
             var result = this.testSubject.TranslateNode(node);
@@ -684,7 +684,7 @@ namespace AstoriaUnitTests.TDD.Tests.Server.Parsing
             return new NonentityRangeVariableReferenceNode(name, nonentityRangeVariable);
         }
 
-        private SingleEntityNode EntityParameter<T>(string name)
+        private SingleResourceNode EntityParameter<T>(string name)
         {
             var entityRangeVariable = new EntityRangeVariable(name, new EdmEntityTypeReference(this.entitySet.EntityType(), false), this.entitySet);
             this.testSubject.ParameterExpressions[entityRangeVariable] = Expression.Parameter(typeof(T), name);

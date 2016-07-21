@@ -61,7 +61,7 @@ namespace Microsoft.OData.UriParser
             {
                 // These are error cases in practice, but we let ourselves throw later for better context-sensitive error messages
                 var edmNavigationProperty = (IEdmNavigationProperty)property;
-                var singleEntityParentNode = (SingleEntityNode)parentNode;
+                var singleEntityParentNode = (SingleResourceNode)parentNode;
                 if (edmNavigationProperty.TargetMultiplicity() == EdmMultiplicity.Many)
                 {
                     return new CollectionNavigationNode(singleEntityParentNode, edmNavigationProperty, state.ParsedSegments);

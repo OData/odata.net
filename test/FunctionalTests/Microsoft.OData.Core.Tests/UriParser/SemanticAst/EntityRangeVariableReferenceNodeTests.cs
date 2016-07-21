@@ -62,7 +62,7 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
         {
             EntityRangeVariable rangeVariable = new EntityRangeVariable("dogs", HardCodedTestModel.GetDogTypeReference(), HardCodedTestModel.GetDogsSet());
             EntityRangeVariableReferenceNode referenceNode = new EntityRangeVariableReferenceNode(rangeVariable.Name, rangeVariable);
-            referenceNode.EntityTypeReference.Should().BeSameAs(referenceNode.TypeReference);
+            referenceNode.StructuredTypeReference.Should().BeSameAs(referenceNode.TypeReference);
         }
 
         [Fact]

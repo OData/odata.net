@@ -35,7 +35,7 @@ namespace Microsoft.OData.UriParser
         /// <summary>
         /// The parent node.
         /// </summary>
-        private readonly SingleValueNode source;
+        private readonly SingleResourceNode source;
 
         /// <summary>
         /// The navigation source from which the collection of entities comes from.
@@ -56,7 +56,7 @@ namespace Microsoft.OData.UriParser
         /// <returns>The collection node.</returns>
         /// <exception cref="System.ArgumentNullException">Throws if the input source or navigation property is null.</exception>
         /// <exception cref="ArgumentException">Throws if the input navigation doesn't target a collection.</exception>
-        public CollectionNavigationNode(SingleEntityNode source, IEdmNavigationProperty navigationProperty, IEdmPathExpression bindingPath)
+        public CollectionNavigationNode(SingleResourceNode source, IEdmNavigationProperty navigationProperty, IEdmPathExpression bindingPath)
             : this(navigationProperty)
         {
             ExceptionUtils.CheckArgumentNotNull(source, "source");
@@ -86,7 +86,7 @@ namespace Microsoft.OData.UriParser
         /// <param name="source">he previous node in the path.</param>
         /// <param name="navigationProperty">The navigation property this node represents.</param>
         /// <param name="parsedSegments">The path segments parsed in path and query option.</param>
-        internal CollectionNavigationNode(SingleEntityNode source, IEdmNavigationProperty navigationProperty,
+        internal CollectionNavigationNode(SingleResourceNode source, IEdmNavigationProperty navigationProperty,
             List<ODataPathSegment> parsedSegments)
             : this(navigationProperty)
         {
@@ -121,7 +121,7 @@ namespace Microsoft.OData.UriParser
         /// <summary>
         /// Gets the parent node of this Collection Navigation Node.
         /// </summary>
-        public SingleValueNode Source
+        public SingleResourceNode Source
         {
             get { return this.source; }
         }

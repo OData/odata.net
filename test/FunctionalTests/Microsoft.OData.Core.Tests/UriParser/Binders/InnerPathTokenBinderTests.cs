@@ -195,7 +195,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
         public void EnsureParentIsEntityForNavPropReturnsSameObjectAsPassedOnOnSuccess()
         {
             var parent = new SingleNavigationNode((IEdmEntitySet)null, HardCodedTestModel.GetPersonMyDogNavProp(), new EdmPathExpression("MyDog"));
-            var result = InnerPathTokenBinder.EnsureParentIsEntityForNavProp(parent);
+            var result = InnerPathTokenBinder.EnsureParentIsResourceForNavProp(parent);
             result.Should().BeSameAs(parent);
         }
 
@@ -203,7 +203,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
         public void EnsureParentIsEntityForNavPropThrowsIfNotEntity()
         {
             var parent = new ConstantNode(null);
-            Action targetMethod = () => InnerPathTokenBinder.EnsureParentIsEntityForNavProp(parent);
+            Action targetMethod = () => InnerPathTokenBinder.EnsureParentIsResourceForNavProp(parent);
             targetMethod.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.MetadataBinder_NavigationPropertyNotFollowingSingleEntityType);
         }
 
@@ -212,7 +212,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
         {
             IEdmNavigationProperty property = HardCodedTestModel.GetPersonMyDogNavProp();
             IEdmNavigationSource navigationSource;
-            SingleEntityNode parent = new SingleEntityCastNode(null, HardCodedTestModel.GetDogType());
+            SingleResourceNode parent = new SingleEntityCastNode(null, HardCodedTestModel.GetDogType());
             BindingState state = new BindingState(Configuration);
             KeyBinder keyBinder = new KeyBinder(FakeBindMethods.BindMethodReturningASingleDog);
 
@@ -225,7 +225,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
         {
             IEdmNavigationSource navigationSource;
             IEdmNavigationProperty property = HardCodedTestModel.GetDogMyPeopleNavProp();
-            SingleEntityNode parent = new SingleEntityCastNode(null, HardCodedTestModel.GetDogType());
+            SingleResourceNode parent = new SingleEntityCastNode(null, HardCodedTestModel.GetDogType());
             BindingState state = new BindingState(Configuration);
             KeyBinder keyBinder = new KeyBinder(FakeBindMethods.BindMethodReturningASingleDog);
 

@@ -24,7 +24,7 @@ namespace Microsoft.OData.UriParser
         /// <summary>
         /// The previous node in the path.
         /// </summary>
-        private readonly SingleEntityNode source;
+        private readonly SingleResourceNode source;
 
         /// <summary>
         /// The navigation property this node represents.
@@ -36,6 +36,9 @@ namespace Microsoft.OData.UriParser
         /// </summary>
         private readonly IEdmEntityTypeReference entityTypeReference;
 
+        /// <summary>
+        /// The parsed segments in the path.
+        /// </summary>
         private readonly List<ODataPathSegment> parsedSegments;
 
         /// <summary>
@@ -46,7 +49,7 @@ namespace Microsoft.OData.UriParser
         /// <param name="bindingPath">The binding path of navigation property</param>
         /// <exception cref="System.ArgumentNullException">Throws if the input navigationProperty or source is null.</exception>
         /// <exception cref="ArgumentException">Throws if the input navigationProperty targets more than one entity.</exception>
-        public SingleNavigationNode(SingleEntityNode source, IEdmNavigationProperty navigationProperty, IEdmPathExpression bindingPath)
+        public SingleNavigationNode(SingleResourceNode source, IEdmNavigationProperty navigationProperty, IEdmPathExpression bindingPath)
         {
             ExceptionUtils.CheckArgumentNotNull(navigationProperty, "navigationProperty");
             ExceptionUtils.CheckArgumentNotNull(bindingPath, "bindingPath");
@@ -96,7 +99,7 @@ namespace Microsoft.OData.UriParser
         /// <param name="source">he previous node in the path.</param>
         /// <param name="navigationProperty">The navigation property this node represents.</param>
         /// <param name="segments">The path segments parsed in path and query option.</param>
-        internal SingleNavigationNode(SingleEntityNode source, IEdmNavigationProperty navigationProperty, List<ODataPathSegment> segments)
+        internal SingleNavigationNode(SingleResourceNode source, IEdmNavigationProperty navigationProperty, List<ODataPathSegment> segments)
         {
             ExceptionUtils.CheckArgumentNotNull(navigationProperty, "navigationProperty");
             ExceptionUtils.CheckArgumentNotNull(source, "source");
@@ -118,7 +121,7 @@ namespace Microsoft.OData.UriParser
         /// <summary>
         /// Gets the previous node in the path.
         /// </summary>
-        public SingleEntityNode Source
+        public SingleResourceNode Source
         {
             get { return this.source; }
         }
@@ -161,6 +164,14 @@ namespace Microsoft.OData.UriParser
         public override IEdmNavigationSource NavigationSource
         {
             get { return this.navigationSource; }
+        }
+
+        /// <summary>
+        /// Gets the structured type of entity that this NavigationProperty targets.
+        /// </summary>
+        public override IEdmStructuredTypeReference StructuredTypeReference
+        {
+            get { return this.entityTypeReference; }
         }
 
         /// <summary>

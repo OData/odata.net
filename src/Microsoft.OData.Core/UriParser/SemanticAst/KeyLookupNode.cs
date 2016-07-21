@@ -22,12 +22,12 @@ namespace Microsoft.OData.UriParser
         private readonly EntityCollectionNode source;
 
         /// <summary>
-        /// The navigation source containing the collection this key referrs to.
+        /// The navigation source containing the collection this key refers to.
         /// </summary>
         private readonly IEdmNavigationSource navigationSource;
 
         /// <summary>
-        /// The resouce type of the single value the key referrs to.
+        /// The resource type of the single value the key refers to.
         /// </summary>
         private readonly IEdmEntityTypeReference entityTypeReference;
 
@@ -68,7 +68,7 @@ namespace Microsoft.OData.UriParser
         }
 
         /// <summary>
-        /// Gets the resouce type of the single value that the key referrs to.
+        /// Gets the resource type of the single value that the key refers to.
         /// </summary>
         public override IEdmTypeReference TypeReference
         {
@@ -79,7 +79,7 @@ namespace Microsoft.OData.UriParser
         }
 
         /// <summary>
-        /// Gets the resouce type of the single value that the key referrs to.
+        /// Gets the resource type of the single value that the key refers to.
         /// </summary>
         public override IEdmEntityTypeReference EntityTypeReference
         {
@@ -87,11 +87,19 @@ namespace Microsoft.OData.UriParser
         }
 
         /// <summary>
-        /// Gets the navigation source that contains the collection this key referrs to.
+        /// Gets the navigation source that contains the collection this key refers to.
         /// </summary>
         public override IEdmNavigationSource NavigationSource
         {
             get { return this.navigationSource; }
+        }
+
+        /// <summary>
+        /// Gets the resource structured type of the single value that the key refers to.
+        /// </summary>
+        public override IEdmStructuredTypeReference StructuredTypeReference
+        {
+            get { return this.entityTypeReference; }
         }
 
         /// <summary>

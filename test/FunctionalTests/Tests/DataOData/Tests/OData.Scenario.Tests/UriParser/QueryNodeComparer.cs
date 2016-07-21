@@ -82,7 +82,7 @@ namespace Microsoft.Test.Taupo.OData.Scenario.Tests.UriParser
             if (left.Name != right.Name) return false;
             if (left.TypeReference != right.TypeReference) return false;
             if (left.NavigationSource != right.NavigationSource) return false;
-            if (left.EntityTypeReference != right.EntityTypeReference) return false;
+            if (left.StructuredTypeReference != right.StructuredTypeReference) return false;
             return true;
         }
 
@@ -302,7 +302,7 @@ namespace Microsoft.Test.Taupo.OData.Scenario.Tests.UriParser
         private bool Compare(SingleEntityCastNode left, SingleEntityCastNode right)
         {
             if (left.NavigationSource != right.NavigationSource) return false;
-            if (left.EntityTypeReference != right.EntityTypeReference) return false;
+            if (left.StructuredTypeReference != right.StructuredTypeReference) return false;
             if (left.TypeReference != right.TypeReference) return false;
             return this.Compare(left.Source, right.Source);
         }
@@ -433,7 +433,7 @@ namespace Microsoft.Test.Taupo.OData.Scenario.Tests.UriParser
         {
             if (left.Parameters.Count() != right.Parameters.Count()) return false;
             if (left.NavigationSource != right.NavigationSource) return false;
-            if (left.EntityTypeReference != right.EntityTypeReference) return false;
+            if (left.StructuredTypeReference != right.StructuredTypeReference) return false;
             if (left.Name != right.Name) return false;
             if (left.TypeReference != right.TypeReference) return false;
 

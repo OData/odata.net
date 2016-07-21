@@ -11,13 +11,8 @@ namespace Microsoft.OData.UriParser
     /// <summary>
     /// Base class for all semantic metadata bound nodes which represent a single composable entity value.
     /// </summary>
-    public abstract class SingleEntityNode : SingleValueNode
+    public abstract class SingleEntityNode : SingleResourceNode
     {
-        /// <summary>
-        /// Gets the navigation source containing this single entity.
-        /// </summary>
-        public abstract IEdmNavigationSource NavigationSource { get; }
-
         /// <summary>
         /// Gets the type of this single entity.
         /// </summary>

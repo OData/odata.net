@@ -341,7 +341,7 @@ namespace Microsoft.OData.Service.Parsing
             
             Expression source = this.TranslateNode(node.Source);
 
-            ResourceType resourceType = MetadataProviderUtils.GetResourceType(node.EntityTypeReference.Definition);
+            ResourceType resourceType = MetadataProviderUtils.GetResourceType(node.StructuredTypeReference.Definition);
             Debug.Assert(resourceType != null, "resourceType != null");
 
             return ExpressionGenerator.GenerateTypeAs(source, resourceType);

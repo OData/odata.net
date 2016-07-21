@@ -52,7 +52,7 @@ namespace Microsoft.OData.UriParser
                 }
             }
 
-            SingleEntityNode parentAsSingleValue = parent as SingleEntityNode;
+            SingleResourceNode parentAsSingleValue = parent as SingleResourceNode;
             IEdmSchemaType childType = UriEdmHelpers.FindTypeFromModel(state.Model, dottedIdentifierToken.Identifier, this.Resolver);
             IEdmStructuredType childStructuredType = childType as IEdmStructuredType;
             if (childStructuredType == null)

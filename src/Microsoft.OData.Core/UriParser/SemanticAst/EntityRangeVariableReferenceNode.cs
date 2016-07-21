@@ -15,7 +15,7 @@ namespace Microsoft.OData.UriParser
     /// <summary>
     /// Node to represent a range variable in an Any or All clause that referrs to an entity.
     /// </summary>
-    public sealed class EntityRangeVariableReferenceNode : SingleEntityNode
+    public sealed class EntityRangeVariableReferenceNode : SingleResourceNode
     {
         /// <summary>
         ///  The name of the associated range variable (null if none)
@@ -23,9 +23,9 @@ namespace Microsoft.OData.UriParser
         private readonly string name;
 
         /// <summary>
-        /// The entity type of the associated range variable.
+        /// The structured type of the associated range variable.
         /// </summary>
-        private readonly IEdmEntityTypeReference entityTypeReference;
+        private readonly IEdmStructuredTypeReference structuredTypeReference;
 
         /// <summary>
         /// The range variable that the node represents.
@@ -49,7 +49,7 @@ namespace Microsoft.OData.UriParser
             ExceptionUtils.CheckArgumentNotNull(rangeVariable, "rangeVariable");
             this.name = name;
             this.navigationSource = rangeVariable.NavigationSource;
-            this.entityTypeReference = rangeVariable.EntityTypeReference;
+            this.structuredTypeReference = rangeVariable.EntityTypeReference;
             this.rangeVariable = rangeVariable;
         }
 
@@ -66,15 +66,7 @@ namespace Microsoft.OData.UriParser
         /// </summary>
         public override IEdmTypeReference TypeReference
         {
-            get { return this.entityTypeReference; }
-        }
-
-        /// <summary>
-        /// Gets the entity type of the associated range variable.
-        /// </summary>
-        public override IEdmEntityTypeReference EntityTypeReference
-        {
-            get { return this.entityTypeReference; }
+            get { return this.structuredTypeReference; }
         }
 
         /// <summary>
@@ -91,6 +83,14 @@ namespace Microsoft.OData.UriParser
         public override IEdmNavigationSource NavigationSource
         {
             get { return this.navigationSource; }
+        }
+
+        /// <summary>
+        /// Gets the structured type of the associated range variable.
+        /// </summary>
+        public override IEdmStructuredTypeReference StructuredTypeReference
+        {
+            get { return this.structuredTypeReference; }
         }
 
         /// <summary>

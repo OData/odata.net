@@ -363,7 +363,7 @@ namespace Microsoft.OData.UriParser
             boundArguments = boundArguments.ToList(); // force enumerable to run : will immediately evaluate all this.bindMethod(p).
             IEdmTypeReference returnType = function.ReturnType;
             IEdmEntitySetBase returnSet = null;
-            var singleEntityNode = parent as SingleEntityNode;
+            var singleEntityNode = parent as SingleResourceNode;
             if (singleEntityNode != null)
             {
                 returnSet = function.GetTargetEntitySet(singleEntityNode.NavigationSource, state.Model);
@@ -631,7 +631,7 @@ namespace Microsoft.OData.UriParser
                         if (returnType.IsEntity())
                         {
                             IEdmEntityTypeReference returnEntityType = returnType.AsEntity();
-                            SingleEntityNode entityNode = args.ElementAt(0) as SingleEntityNode;
+                            SingleResourceNode entityNode = args.ElementAt(0) as SingleResourceNode;
                             if (entityNode != null)
                             {
                                 return new SingleEntityFunctionCallNode(functionCallTokenName, args, returnEntityType, entityNode.NavigationSource);

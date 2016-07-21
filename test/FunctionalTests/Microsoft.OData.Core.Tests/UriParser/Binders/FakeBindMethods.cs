@@ -31,7 +31,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
         public static readonly EntityRangeVariableReferenceNode FakePaintingNode =
             new EntityRangeVariableReferenceNode(PaintingEntityRangeVariable.Name, PaintingEntityRangeVariable);
 
-        public static readonly SingleEntityNode FakeLionNode = 
+        public static readonly SingleResourceNode FakeLionNode = 
             new EntityRangeVariableReferenceNode(LionsEntityRangeVariable.Name, LionsEntityRangeVariable);        
 
         public static readonly SingleValueNode FakeSinglePrimitive =
@@ -60,22 +60,22 @@ namespace Microsoft.OData.Tests.UriParser.Binders
         public static readonly CollectionPropertyAccessNode FakeCollectionValueProperty =
             new CollectionPropertyAccessNode(FakePersonNode, HardCodedTestModel.GetPersonPreviousAddressesProp());
 
-        public static SingleEntityNode BindMethodReturningASingleLion(QueryToken token)
+        public static SingleResourceNode BindMethodReturningASingleLion(QueryToken token)
         {
             return FakeLionNode;
         }
 
-        public static SingleEntityNode BindMethodReturningASingleDog(QueryToken token)
+        public static SingleResourceNode BindMethodReturningASingleDog(QueryToken token)
         {
             return FakeDogNode;
         }
 
-        public static SingleEntityNode BindMethodReturningASinglePerson(QueryToken token)
+        public static SingleResourceNode BindMethodReturningASinglePerson(QueryToken token)
         {
             return FakePersonNode;
         }
 
-        public static SingleEntityNode BindMethodReturningASinglePainting(QueryToken token)
+        public static SingleResourceNode BindMethodReturningASinglePainting(QueryToken token)
         {
             return FakePaintingNode;
         }

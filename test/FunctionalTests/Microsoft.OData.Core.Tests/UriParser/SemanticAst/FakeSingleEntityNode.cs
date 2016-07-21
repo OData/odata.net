@@ -48,6 +48,11 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
             get { return this.set; }
         }
 
+        public override IEdmStructuredTypeReference StructuredTypeReference
+        {
+            get { return this.typeReference; }
+        }
+
         public override IEdmEntityTypeReference EntityTypeReference
         {
             get { return this.typeReference; }

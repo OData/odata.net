@@ -66,6 +66,8 @@
     <Compile Include="PropertyValueTypeInfo.cs" />
     <Compile Include="UriParser\BindingPathHelper.cs" />
     <Compile Include="UriParser\ODataPathInfo.cs" />
+    <Compile Include="UriParser\SemanticAst\SingleComplexNode.cs" />
+    <Compile Include="UriParser\SemanticAst\SingleResourceNode.cs" />
     <Compile Include="ValidationKinds.cs" />
     <Compile Include="ReaderValidator.cs" />
     <Compile Include="ServiceLifetime.cs" />

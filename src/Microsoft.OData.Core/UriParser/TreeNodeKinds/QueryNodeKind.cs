@@ -158,6 +158,11 @@ namespace Microsoft.OData.UriParser
         /// Count of a collection contains primitive or enum or complex or entity type.
         /// </summary>
         Count = InternalQueryNodeKind.Count,
+
+        /// <summary>
+        /// Node represents a single complex property.
+        /// </summary>
+        SingleComplexNode = InternalQueryNodeKind.SingleComplexNode,
     }
 
     /// <summary>
@@ -309,5 +314,10 @@ namespace Microsoft.OData.UriParser
         /// Node describing count of a collection contains primitive or enum or complex or entity type.
         /// </summary>
         Count = 28,
+
+        /// <summary>
+        /// Node represents a single complex property.
+        /// </summary>
+        SingleComplexNode = 29,
     }
 }

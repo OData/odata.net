@@ -9,19 +9,19 @@ using Microsoft.OData.Edm;
 namespace Microsoft.OData.UriParser
 {
     /// <summary>
-    /// Node representing a type segment that casts a single entity parent node.
+    /// Node representing a type segment that casts a single entity/complex parent node.
     /// </summary>
-    public sealed class SingleEntityCastNode : SingleEntityNode
+    public sealed class SingleEntityCastNode : SingleResourceNode
     {
         /// <summary>
-        /// The entity that we're casting to a different type.
+        /// The resource that we're casting to a different type.
         /// </summary>
-        private readonly SingleEntityNode source;
+        private readonly SingleResourceNode source;
 
         /// <summary>
         /// The target type that the source is cast to.
         /// </summary>
-        private readonly IEdmEntityTypeReference entityTypeReference;
+        private readonly IEdmStructuredTypeReference structuredTypeReference;
 
         /// <summary>
         /// The navigation source containing the source entity.
@@ -34,18 +34,18 @@ namespace Microsoft.OData.UriParser
         /// <param name="source"> Source <see cref="SingleValueNode"/> that is being cast.</param>
         /// <param name="entityType">Type to cast to.</param>
         /// <exception cref="System.ArgumentNullException">Throws if the input entityType is null.</exception>
-        public SingleEntityCastNode(SingleEntityNode source, IEdmEntityType entityType)
+        public SingleEntityCastNode(SingleResourceNode source, IEdmEntityType entityType)
         {
             ExceptionUtils.CheckArgumentNotNull(entityType, "entityType");
             this.source = source;
             this.navigationSource = source != null ? source.NavigationSource : null;
-            this.entityTypeReference = new EdmEntityTypeReference(entityType, false);
+            this.structuredTypeReference = new EdmEntityTypeReference(entityType, false);
         }
 
         /// <summary>
-        /// Gets the entity that we're casting to a different type.
+        /// Gets the resource that we're casting to a different type.
         /// </summary>
-        public SingleEntityNode Source
+        public SingleResourceNode Source
         {
             get { return this.source; }
         }
@@ -55,15 +55,7 @@ namespace Microsoft.OData.UriParser
         /// </summary>
         public override IEdmTypeReference TypeReference
         {
-            get { return this.entityTypeReference; }
-        }
-
-        /// <summary>
-        /// Gets the target type that the source is cast to.
-        /// </summary>
-        public override IEdmEntityTypeReference EntityTypeReference
-        {
-            get { return this.entityTypeReference; }
+            get { return this.structuredTypeReference; }
         }
 
         /// <summary>
@@ -72,6 +64,14 @@ namespace Microsoft.OData.UriParser
         public override IEdmNavigationSource NavigationSource
         {
             get { return this.navigationSource; }
+        }
+
+        /// <summary>
+        /// Gets the target type that the source is cast to.
+        /// </summary>
+        public override IEdmStructuredTypeReference StructuredTypeReference
+        {
+            get { return this.structuredTypeReference; }
         }
 
         /// <summary>

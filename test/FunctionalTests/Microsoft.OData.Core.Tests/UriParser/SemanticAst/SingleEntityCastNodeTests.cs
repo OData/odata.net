@@ -44,7 +44,7 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
         public void EntityTypeReferenceIsSameAsTypeReference()
         {
             SingleEntityCastNode singleEntityCast = new SingleEntityCastNode(this.singleEntityNode, HardCodedTestModel.GetPersonType());
-            singleEntityCast.EntityTypeReference.Should().BeSameAs(singleEntityCast.TypeReference);
+            singleEntityCast.StructuredTypeReference.Should().BeSameAs(singleEntityCast.TypeReference);
         }
 
         [Fact]
