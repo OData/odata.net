@@ -1000,14 +1000,33 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip
             foreach (ODataFormat mimeType in mimeTypes)
             {
                 string payload, contentType;
+                IEdmTypeReference typeReference = new EdmEnumTypeReference(accessLevelType, true);
+
                 this.WriteAndValidateContextUri(mimeType, model,
-                    omWriter => omWriter.WriteProperty(this.CreateODataProperty(new Collection<AccessLevel> { AccessLevel.Read, AccessLevel.Write }, "AccessLevel")),
+                    omWriter =>
+                    {
+                        ODataCollectionStart collectionStart = new ODataCollectionStart();
+                        collectionStart.SetSerializationInfo(new ODataCollectionStartSerializationInfo { CollectionTypeName = string.Format("Collection({0}.AccessLevel)", TestNameSpace) });
+                        ODataEnumValue[] items =
+                        {
+                            new ODataEnumValue(AccessLevel.Read.ToString(), TestNameSpace),
+                            new ODataEnumValue(AccessLevel.Write.ToString(), TestNameSpace)
+                        };
+
+                        ODataCollectionWriter collectionWriter = omWriter.CreateODataCollectionWriter(typeReference);
+                        collectionWriter.WriteStart(collectionStart);
+                        foreach (object item in items)
+                        {
+                            collectionWriter.WriteItem(item);
+                        }
+
+                        collectionWriter.WriteEnd();
+                    },
                     string.Format("\"{0}$metadata#Collection({1}.AccessLevel)\"", TestBaseUri, TestNameSpace),
                     out payload, out contentType);
 
                 this.ReadPayload(payload, contentType, model, omReader =>
                 {
-                    IEdmTypeReference typeReference = new EdmEnumTypeReference(accessLevelType, true);
                     var reader = omReader.CreateODataCollectionReader(typeReference);
                     IList items = new ArrayList();
                     while (reader.Read())
