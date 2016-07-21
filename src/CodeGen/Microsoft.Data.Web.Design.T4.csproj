@@ -40,6 +40,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>ODataT4CodeGenerator.tt</DependentUpon>
     </Compile>
+    <Compile Include="GlobalSuppressions.cs" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="InternalsVisibleTo.cs" />

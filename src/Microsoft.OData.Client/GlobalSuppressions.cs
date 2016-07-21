@@ -69,3 +69,6 @@ using System.Diagnostics.CodeAnalysis;
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Scope = "member", Target = "Microsoft.OData.Client.ClientEdmModel.#FindOperationImportsByNameNonBindingParameterType(System.String,System.Collections.Generic.IEnumerable`1<System.String>)")]
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1800:DoNotCastUnnecessarily", Scope = "member", Target = "Microsoft.OData.Client.Annotation.AnnotationHelper.#TryGetMetadataAnnotation`1(Microsoft.OData.Client.DataServiceContext,System.Object,System.String,System.String,!!0&)")]
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1810:InitializeReferenceTypeStaticFieldsInline", Scope = "member", Target = "Microsoft.OData.Client.HttpWebRequestMessage.#.cctor()")]
+
+// APTCA
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.MSInternal", "CA900")]
