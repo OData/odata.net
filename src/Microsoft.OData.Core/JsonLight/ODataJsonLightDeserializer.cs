@@ -737,7 +737,7 @@ namespace Microsoft.OData.JsonLight
                 }
 
                 // If this is a unknown odata annotation, skip over it. See remark on the method SkippedOverUnknownODataAnnotation() for detailed explaination.
-                if (this.SkippedOverUnknownODataAnnotation(propertyNameFromReader, out annotationValue))
+                if (isInstanceAnnotation && this.SkippedOverUnknownODataAnnotation(propertyNameFromReader, out annotationValue))
                 {
                     // collect 'odata.<unknown>' annotation:
                     // here we know the original property name contains no '@', but '.' dot
