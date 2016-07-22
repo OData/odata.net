@@ -71,6 +71,7 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Roundtrip
         private EdmEntityType productType;
         private EdmEntityType productBookType;
         private EdmEntityType productCdType;
+        private EdmEnumType accessLevelType;
 
         private EdmEntitySet employeeSet;
         private EdmEntitySet companySet;
@@ -129,7 +130,7 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Roundtrip
             companyDivisionType.AddProperty(new EdmStructuralProperty(companyDivisionType, "Manufactory", new EdmComplexTypeReference(manufactoryType, true)));
             this.model.AddElement(companyDivisionType);
 
-            var accessLevelType = new EdmEnumType(TestNameSpace, "AccessLevel", isFlags: true);
+            accessLevelType = new EdmEnumType(TestNameSpace, "AccessLevel", isFlags: true);
             accessLevelType.AddMember("None", new EdmIntegerConstant(0));
             accessLevelType.AddMember("Read", new EdmIntegerConstant(1));
             accessLevelType.AddMember("Write", new EdmIntegerConstant(2));
@@ -934,6 +935,54 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Roundtrip
 
                 this.ReadPayload(payload, contentType, model, omReader => omReader.ReadProperty());
             }
+        }
+
+        // V4 Protocol Spec Chapter 10.14: Collection of Value with Enum Type
+        // Response: http://host/service/$metadata#Collection(Model.AccessLevel)
+        [Fact]
+        public void CollectionOfEnumTypeUsingODataCollectionReader()
+        {
+            string payload, contentType;
+            IEdmTypeReference typeReference = new EdmEnumTypeReference(accessLevelType, true);
+
+            // Only support Json format when reading collection of Enum type using ODataCollectionReader.
+            this.WriteAndValidateContextUri(ODataFormat.Json, model,
+                omWriter =>
+                {
+                    ODataCollectionStart collectionStart = new ODataCollectionStart();
+                    collectionStart.SetSerializationInfo(new ODataCollectionStartSerializationInfo { CollectionTypeName = string.Format("Collection({0}.AccessLevel)", TestNameSpace) });
+                    ODataEnumValue[] items =
+                    {
+                        new ODataEnumValue(AccessLevel.Read.ToString(), TestNameSpace),
+                        new ODataEnumValue(AccessLevel.Write.ToString(), TestNameSpace)
+                    };
+
+                    ODataCollectionWriter collectionWriter = omWriter.CreateODataCollectionWriter(typeReference);
+                    collectionWriter.WriteStart(collectionStart);
+                    foreach (object item in items)
+                    {
+                        collectionWriter.WriteItem(item);
+                    }
+
+                    collectionWriter.WriteEnd();
+                },
+                string.Format("\"{0}$metadata#Collection({1}.AccessLevel)\"", TestBaseUri, TestNameSpace),
+                out payload, out contentType);
+
+            this.ReadPayload(payload, contentType, model, omReader =>
+            {
+                var reader = omReader.CreateODataCollectionReader(typeReference);
+                IList items = new ArrayList();
+                while (reader.Read())
+                {
+                    if (ODataCollectionReaderState.Value == reader.State)
+                    {
+                        items.Add(reader.Item);
+                    }
+                }
+
+                Assert.Equal(2, items.Count);
+            });
         }
 
         // V4 Protocol Spec Chapter 10.15: Value with Complex Type
