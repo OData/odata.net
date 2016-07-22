@@ -140,6 +140,28 @@ namespace Microsoft.OData.UriParser
         }
 
         /// <summary>
+        /// Returns the type reference of the <paramref name="structuredType"/>
+        /// </summary>
+        /// <param name="structuredType">The structured type</param>
+        /// <returns>The type reference</returns>
+        public static IEdmStructuredTypeReference GetTypeReference(this IEdmStructuredType structuredType)
+        {
+            IEdmEntityType entityType = structuredType as IEdmEntityType;
+            IEdmStructuredTypeReference typeReference;
+
+            if (entityType != null)
+            {
+                typeReference = new EdmEntityTypeReference(entityType, false);
+            }
+            else
+            {
+                typeReference = new EdmComplexTypeReference(structuredType as IEdmComplexType, false);
+            }
+
+            return typeReference;
+        }
+
+        /// <summary>
         /// Is this a valid binding type. i.e. is this an entity, entity collection, or complex type.
         /// </summary>
         /// <param name="bindingType">the binding type</param>

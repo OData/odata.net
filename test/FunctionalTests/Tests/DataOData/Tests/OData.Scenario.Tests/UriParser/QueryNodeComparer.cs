@@ -97,7 +97,7 @@ namespace Microsoft.Test.Taupo.OData.Scenario.Tests.UriParser
             if (left.Name != right.Name) return false;
             if (left.TypeReference != right.TypeReference) return false;
             if (left.NavigationSource != right.NavigationSource) return false;
-            if (left.EntityTypeReference != right.EntityTypeReference) return false;
+            if (left.StructuredTypeReference != right.StructuredTypeReference) return false;
             return true;
         }
 

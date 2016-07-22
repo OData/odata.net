@@ -19,9 +19,9 @@ namespace Microsoft.OData.UriParser
         private readonly CollectionResourceNode source;
 
         /// <summary>
-        /// The target type that we're casting our entity collection node to.
+        /// The target type that we're casting our resource collection node to.
         /// </summary>
-        private readonly IEdmEntityTypeReference edmTypeReference;
+        private readonly IEdmStructuredTypeReference edmTypeReference;
 
         /// <summary>
         /// the type of the collection returned by this function
@@ -37,14 +37,14 @@ namespace Microsoft.OData.UriParser
         /// Create a CollectionCastNode with the given source node and the given target type.
         /// </summary>
         /// <param name="source">Parent <see cref="CollectionNode"/> that is being cast.</param>
-        /// <param name="entityType">Type to cast to.</param>
-        /// <exception cref="System.ArgumentNullException">Throws if the input source or entityType are null.</exception>
-        public CollectionResourceCastNode(CollectionResourceNode source, IEdmEntityType entityType)
+        /// <param name="structuredType">Type to cast to.</param>
+        /// <exception cref="System.ArgumentNullException">Throws if the input source or structuredType are null.</exception>
+        public CollectionResourceCastNode(CollectionResourceNode source, IEdmStructuredType structuredType)
         {
             ExceptionUtils.CheckArgumentNotNull(source, "source");
-            ExceptionUtils.CheckArgumentNotNull(entityType, "entityType");
+            ExceptionUtils.CheckArgumentNotNull(structuredType, "structuredType");
             this.source = source;
-            this.edmTypeReference = new EdmEntityTypeReference(entityType, false);
+            this.edmTypeReference = structuredType.GetTypeReference();
             this.navigationSource = source.NavigationSource;
 
             // creating a new collection type here because the type in the request is just the item type, there is no user-provided collection type.

@@ -22,7 +22,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             var nodeToIterationOver = new EntitySetNode(HardCodedTestModel.GetPeopleSet());
             var resultNode = NodeFactory.CreateParameterNode("a", nodeToIterationOver);
             resultNode.ShouldBeResourceRangeVariable(HardCodedTestModel.GetPersonTypeReference())
-                .And.EntityCollectionNode.NavigationSource.Should().Be(HardCodedTestModel.GetPeopleSet());
+                .And.CollectionResourceNode.NavigationSource.Should().Be(HardCodedTestModel.GetPeopleSet());
         }
 
         [Fact]

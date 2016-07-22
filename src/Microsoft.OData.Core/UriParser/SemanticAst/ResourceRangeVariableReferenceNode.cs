@@ -49,7 +49,7 @@ namespace Microsoft.OData.UriParser
             ExceptionUtils.CheckArgumentNotNull(rangeVariable, "rangeVariable");
             this.name = name;
             this.navigationSource = rangeVariable.NavigationSource;
-            this.structuredTypeReference = rangeVariable.EntityTypeReference;
+            this.structuredTypeReference = rangeVariable.StructuredTypeReference;
             this.rangeVariable = rangeVariable;
         }
 

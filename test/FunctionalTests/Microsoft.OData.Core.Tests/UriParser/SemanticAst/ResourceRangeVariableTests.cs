@@ -46,7 +46,7 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
         {
             EntitySetNode entitySetNode = new EntitySetNode(HardCodedTestModel.GetDogsSet());
             ResourceRangeVariable entityRangeVariable = new ResourceRangeVariable("dogs", HardCodedTestModel.GetDogTypeReference(), entitySetNode);
-            entityRangeVariable.EntityCollectionNode.ShouldBeEntitySetQueryNode(HardCodedTestModel.GetDogsSet());
+            entityRangeVariable.CollectionResourceNode.ShouldBeEntitySetQueryNode(HardCodedTestModel.GetDogsSet());
         }
 
         [Fact]
@@ -78,7 +78,7 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
         {
             EntitySetNode entitySetNode = new EntitySetNode(HardCodedTestModel.GetDogsSet());
             ResourceRangeVariable entityRangeVariable = new ResourceRangeVariable("dogs", HardCodedTestModel.GetDogTypeReference(), entitySetNode);
-            entityRangeVariable.EntityTypeReference.Should().BeOfType<EdmEntityTypeReference>();
+            entityRangeVariable.StructuredTypeReference.Should().BeOfType<EdmEntityTypeReference>();
         }
 
         [Fact]

@@ -77,9 +77,10 @@ namespace Microsoft.OData.UriParser
             this.returnedCollectionTypeReference = returnedCollectionTypeReference;
             this.navigationSource = navigationSource;
 
-            this.structuredTypeReference = returnedCollectionTypeReference.ElementType().AsEntityOrNull();
+            this.structuredTypeReference = returnedCollectionTypeReference.ElementType().AsStructuredOrNull();
             if (this.structuredTypeReference == null)
             {
+                // TODO: Update error message #644
                 throw new ArgumentException(ODataErrorStrings.Nodes_EntityCollectionFunctionCallNode_ItemTypeMustBeAnEntity);
             }
 

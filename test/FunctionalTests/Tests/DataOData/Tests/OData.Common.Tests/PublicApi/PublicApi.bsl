@@ -5562,7 +5562,7 @@ public sealed class Microsoft.OData.UriParser.CollectionPropertyCastNode : Micro
 }
 
 public sealed class Microsoft.OData.UriParser.CollectionResourceCastNode : Microsoft.OData.UriParser.CollectionResourceNode {
-	public CollectionResourceCastNode (Microsoft.OData.UriParser.CollectionResourceNode source, Microsoft.OData.Edm.IEdmEntityType entityType)
+	public CollectionResourceCastNode (Microsoft.OData.UriParser.CollectionResourceNode source, Microsoft.OData.Edm.IEdmStructuredType structuredType)
 
 	Microsoft.OData.Edm.IEdmCollectionTypeReference CollectionType  { public virtual get; }
 	Microsoft.OData.Edm.IEdmStructuredTypeReference ItemStructuredType  { public virtual get; }
@@ -5900,14 +5900,14 @@ public sealed class Microsoft.OData.UriParser.PropertySegment : Microsoft.OData.
 }
 
 public sealed class Microsoft.OData.UriParser.ResourceRangeVariable : Microsoft.OData.UriParser.RangeVariable {
-	public ResourceRangeVariable (string name, Microsoft.OData.Edm.IEdmEntityTypeReference entityType, Microsoft.OData.Edm.IEdmNavigationSource navigationSource)
-	public ResourceRangeVariable (string name, Microsoft.OData.Edm.IEdmEntityTypeReference entityType, Microsoft.OData.UriParser.CollectionResourceNode entityCollectionNode)
+	public ResourceRangeVariable (string name, Microsoft.OData.Edm.IEdmStructuredTypeReference structuredType, Microsoft.OData.Edm.IEdmNavigationSource navigationSource)
+	public ResourceRangeVariable (string name, Microsoft.OData.Edm.IEdmStructuredTypeReference structuredType, Microsoft.OData.UriParser.CollectionResourceNode collectionResourceNode)
 
-	Microsoft.OData.UriParser.CollectionResourceNode EntityCollectionNode  { public get; }
-	Microsoft.OData.Edm.IEdmEntityTypeReference EntityTypeReference  { public get; }
+	Microsoft.OData.UriParser.CollectionResourceNode CollectionResourceNode  { public get; }
 	int Kind  { public virtual get; }
 	string Name  { public virtual get; }
 	Microsoft.OData.Edm.IEdmNavigationSource NavigationSource  { public get; }
+	Microsoft.OData.Edm.IEdmStructuredTypeReference StructuredTypeReference  { public get; }
 	Microsoft.OData.Edm.IEdmTypeReference TypeReference  { public virtual get; }
 }
 
@@ -5960,7 +5960,7 @@ public sealed class Microsoft.OData.UriParser.SingleNavigationNode : Microsoft.O
 }
 
 public sealed class Microsoft.OData.UriParser.SingleResourceCastNode : Microsoft.OData.UriParser.SingleResourceNode {
-	public SingleResourceCastNode (Microsoft.OData.UriParser.SingleResourceNode source, Microsoft.OData.Edm.IEdmEntityType entityType)
+	public SingleResourceCastNode (Microsoft.OData.UriParser.SingleResourceNode source, Microsoft.OData.Edm.IEdmStructuredType structuredType)
 
 	Microsoft.OData.Edm.IEdmNavigationSource NavigationSource  { public virtual get; }
 	Microsoft.OData.UriParser.SingleResourceNode Source  { public get; }
@@ -5971,8 +5971,8 @@ public sealed class Microsoft.OData.UriParser.SingleResourceCastNode : Microsoft
 }
 
 public sealed class Microsoft.OData.UriParser.SingleResourceFunctionCallNode : Microsoft.OData.UriParser.SingleResourceNode {
-	public SingleResourceFunctionCallNode (string name, System.Collections.Generic.IEnumerable`1[[Microsoft.OData.UriParser.QueryNode]] parameters, Microsoft.OData.Edm.IEdmEntityTypeReference returnedEntityTypeReference, Microsoft.OData.Edm.IEdmNavigationSource navigationSource)
-	public SingleResourceFunctionCallNode (string name, System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.IEdmFunction]] functions, System.Collections.Generic.IEnumerable`1[[Microsoft.OData.UriParser.QueryNode]] parameters, Microsoft.OData.Edm.IEdmEntityTypeReference returnedEntityTypeReference, Microsoft.OData.Edm.IEdmNavigationSource navigationSource, Microsoft.OData.UriParser.QueryNode source)
+	public SingleResourceFunctionCallNode (string name, System.Collections.Generic.IEnumerable`1[[Microsoft.OData.UriParser.QueryNode]] parameters, Microsoft.OData.Edm.IEdmStructuredTypeReference returnedStructuredTypeReference, Microsoft.OData.Edm.IEdmNavigationSource navigationSource)
+	public SingleResourceFunctionCallNode (string name, System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.IEdmFunction]] functions, System.Collections.Generic.IEnumerable`1[[Microsoft.OData.UriParser.QueryNode]] parameters, Microsoft.OData.Edm.IEdmStructuredTypeReference returnedStructuredTypeReference, Microsoft.OData.Edm.IEdmNavigationSource navigationSource, Microsoft.OData.UriParser.QueryNode source)
 
 	System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.IEdmFunction]] Functions  { public get; }
 	string Name  { public get; }

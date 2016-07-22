@@ -55,11 +55,11 @@ namespace Microsoft.OData.UriParser
         /// </summary>
         /// <param name="name">The name of the function to call</param>
         /// <param name="parameters">List of arguments provided to the operation import. Can be null.</param>
-        /// <param name="returnedEntityTypeReference">The return type of this function.</param>
+        /// <param name="returnedStructuredTypeReference">The return type of this function.</param>
         /// <param name="navigationSource">The entity set or singleton containing the single entity that this operation import returns.</param>
         /// <exception cref="System.ArgumentNullException">Throws if the input name, returnedEntityTypeReference, or navigationSource is null.</exception>
-        public SingleResourceFunctionCallNode(string name, IEnumerable<QueryNode> parameters, IEdmEntityTypeReference returnedEntityTypeReference, IEdmNavigationSource navigationSource)
-            : this(name, null, parameters, returnedEntityTypeReference, navigationSource, null)
+        public SingleResourceFunctionCallNode(string name, IEnumerable<QueryNode> parameters, IEdmStructuredTypeReference returnedStructuredTypeReference, IEdmNavigationSource navigationSource)
+            : this(name, null, parameters, returnedStructuredTypeReference, navigationSource, null)
         {
         }
 
@@ -69,19 +69,19 @@ namespace Microsoft.OData.UriParser
         /// <param name="name">The name of the operation import to call</param>
         /// <param name="functions">the list of functions this node represents.</param>
         /// <param name="parameters">List of arguments provided to the function. Can be null.</param>
-        /// <param name="returnedEntityTypeReference">The return type of this operation import.</param>
+        /// <param name="returnedStructuredTypeReference">The return type of this operation import.</param>
         /// <param name="navigationSource">The entity set or singleton containing the single entity that this operation import returns.</param>
         /// <param name="source">The semantically bound parent of this operation import.</param>
         /// <exception cref="System.ArgumentNullException">Throws if the input name, returnedEntityTypeReference, or navigationSource is null.</exception>
-        public SingleResourceFunctionCallNode(string name, IEnumerable<IEdmFunction> functions, IEnumerable<QueryNode> parameters, IEdmEntityTypeReference returnedEntityTypeReference, IEdmNavigationSource navigationSource, QueryNode source)
+        public SingleResourceFunctionCallNode(string name, IEnumerable<IEdmFunction> functions, IEnumerable<QueryNode> parameters, IEdmStructuredTypeReference returnedStructuredTypeReference, IEdmNavigationSource navigationSource, QueryNode source)
         {
             ExceptionUtils.CheckArgumentNotNull(name, "name");
-            ExceptionUtils.CheckArgumentNotNull(returnedEntityTypeReference, "returnedEntityTypeReference");
+            ExceptionUtils.CheckArgumentNotNull(returnedStructuredTypeReference, "returnedStructuredTypeReference");
 
             this.name = name;
             this.functions = new ReadOnlyCollection<IEdmFunction>(functions != null ? functions.ToList() : new List<IEdmFunction>());
             this.parameters = new ReadOnlyCollection<QueryNode>(parameters == null ? new List<QueryNode>() : parameters.ToList());
-            this.returnedStructuredTypeReference = returnedEntityTypeReference;
+            this.returnedStructuredTypeReference = returnedStructuredTypeReference;
             this.navigationSource = navigationSource;
             this.source = source;
         }

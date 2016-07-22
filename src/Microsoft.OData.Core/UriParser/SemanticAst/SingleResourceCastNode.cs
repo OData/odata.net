@@ -32,14 +32,14 @@ namespace Microsoft.OData.UriParser
         /// Created a SingleResourceCastNode with the given source node and the given type to cast to.
         /// </summary>
         /// <param name="source"> Source <see cref="SingleValueNode"/> that is being cast.</param>
-        /// <param name="entityType">Type to cast to.</param>
+        /// <param name="structuredType">Type to cast to.</param>
         /// <exception cref="System.ArgumentNullException">Throws if the input entityType is null.</exception>
-        public SingleResourceCastNode(SingleResourceNode source, IEdmEntityType entityType)
+        public SingleResourceCastNode(SingleResourceNode source, IEdmStructuredType structuredType)
         {
-            ExceptionUtils.CheckArgumentNotNull(entityType, "entityType");
+            ExceptionUtils.CheckArgumentNotNull(structuredType, "structuredType");
             this.source = source;
             this.navigationSource = source != null ? source.NavigationSource : null;
-            this.structuredTypeReference = new EdmEntityTypeReference(entityType, false);
+            this.structuredTypeReference = structuredType.GetTypeReference();
         }
 
         /// <summary>

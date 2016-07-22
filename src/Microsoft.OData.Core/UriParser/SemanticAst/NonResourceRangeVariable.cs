@@ -49,6 +49,7 @@ namespace Microsoft.OData.UriParser
             {
                 if (typeReference.Definition.TypeKind == EdmTypeKind.Entity)
                 {
+                    // TODO: update message #644
                     throw new ArgumentException(
                         ODataErrorStrings.Nodes_NonentityParameterQueryNodeWithEntityType(typeReference.FullName()));
                 }
