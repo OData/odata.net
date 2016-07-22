@@ -1191,22 +1191,22 @@ namespace Microsoft.OData.JsonLight
         {
             Debug.Assert(this.CurrentScope.State == ODataReaderState.NestedResourceInfoStart, "Must be on 'NestedResourceInfoStart' scope.");
 
-            ODataJsonLightReaderNestedResourceInfo navigationLinkInfo = this.CurrentJsonLightNestedResourceInfoScope.ReaderNestedResourceInfo;
-            if (navigationLinkInfo.HasEntityReferenceLink)
+            ODataJsonLightReaderNestedResourceInfo nestedResourceInfo = this.CurrentJsonLightNestedResourceInfoScope.ReaderNestedResourceInfo;
+            if (nestedResourceInfo.HasEntityReferenceLink)
             {
-                this.EnterScope(new Scope(ODataReaderState.EntityReferenceLink, navigationLinkInfo.ReportEntityReferenceLink(), null, null, this.CurrentScope.ODataUri));
+                this.EnterScope(new Scope(ODataReaderState.EntityReferenceLink, nestedResourceInfo.ReportEntityReferenceLink(), null, null, this.CurrentScope.ODataUri));
             }
-            else if (navigationLinkInfo.HasValue)
+            else if (nestedResourceInfo.HasValue)
             {
-                if (navigationLinkInfo.NestedResourceInfo.IsCollection == true)
+                if (nestedResourceInfo.NestedResourceInfo.IsCollection == true)
                 {
                     // because this is a request, there is no $select query option.
                     SelectedPropertiesNode selectedProperties = SelectedPropertiesNode.EntireSubtree;
-                    this.ReadResourceSetStart(new ODataResourceSet(), selectedProperties);
+                    this.ReadResourceSetStart(nestedResourceInfo.NestedResourceSet ?? new ODataResourceSet(), selectedProperties);
                 }
                 else
                 {
-                    this.ReadExpandedNestedResourceInfoStart(navigationLinkInfo.NestedResourceInfo);
+                    this.ReadExpandedNestedResourceInfoStart(nestedResourceInfo.NestedResourceInfo);
                 }
             }
             else

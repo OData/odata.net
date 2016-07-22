@@ -99,36 +99,53 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.JsonLight
                       "\"DynamicComplex\":[null,{\"Prop1\":1,\"Prop2\":2}]" +
                   "}";
 
-            // setup reader
             var message = new InMemoryMessage { Stream = new MemoryStream(Encoding.UTF8.GetBytes(payload)) };
-            var reader = new ODataMessageReader((IODataResponseMessage)message, new ODataMessageReaderSettings(), model)
-                         .CreateODataResourceReader(entitySet, entityType);
 
-            // read payload
-            ODataResource resource;
-            var count = 0;
-            while (reader.Read())
+            Action<ODataReader> read = (reader) =>
             {
-                if (reader.State == ODataReaderState.ResourceEnd)
+                // read payload
+                ODataResource resource;
+                var count = 0;
+                while (reader.Read())
                 {
-                    resource = (ODataResource)reader.Item;
-                    switch (++count)
+                    if (reader.State == ODataReaderState.ResourceEnd)
                     {
-                        case 1:
-                            resource.Should().Be(null);
-                            break;
-                        case 3:
-                            var enumerator = ((ODataCollectionValue)(resource.Properties.Skip(1).Single().Value)).Items.GetEnumerator();
-                            enumerator.MoveNext();
-                            enumerator.Current.Should().Be(1L);
-                            enumerator.MoveNext();
-                            enumerator.Current.Should().Be(2L);
-                            enumerator.MoveNext();
-                            enumerator.Current.Should().Be(null);
-                            break;
+                        resource = (ODataResource)reader.Item;
+                        switch (++count)
+                        {
+                            case 1:
+                                resource.Should().Be(null);
+                                break;
+                            case 3:
+                                var enumerator = ((ODataCollectionValue)(resource.Properties.Skip(1).Single().Value)).Items.GetEnumerator();
+                                enumerator.MoveNext();
+                                enumerator.Current.Should().Be(1L);
+                                enumerator.MoveNext();
+                                enumerator.Current.Should().Be(2L);
+                                enumerator.MoveNext();
+                                enumerator.Current.Should().Be(null);
+                                break;
+                        }
+                    }
+                    else if (reader.State == ODataReaderState.ResourceSetEnd)
+                    {
+                        var resourceSet = reader.Item as ODataResourceSet;
+                        resourceSet.Should().NotBeNull();
+                        resourceSet.TypeName.Should().Be("Collection(NS.ComplexType)");
                     }
                 }
-            }
+            };
+
+            // setup reader for response message
+            var responseReader = new ODataMessageReader((IODataResponseMessage)message, new ODataMessageReaderSettings(), model)
+                         .CreateODataResourceReader(entitySet, entityType);
+            read(responseReader);
+
+            // setup reader for request message
+            message.Stream.Seek(0, SeekOrigin.Begin);
+            var requestReader = new ODataMessageReader((IODataRequestMessage)message, new ODataMessageReaderSettings(), model)
+                         .CreateODataResourceReader(entitySet, entityType);
+            read(requestReader);
         }
 
         [Fact]

@@ -462,7 +462,7 @@ namespace Microsoft.Test.OData.Tests.Client
         #region helpers
         internal bool VerifyCtxCount(DataServiceContext ctx, int expectedEntities, int expectedLinks)
         {
-#if WIN8
+#if WIN8 || WINDOWSPHONE
             return true;
 #else
             var navigationLinks = ctx.Links
