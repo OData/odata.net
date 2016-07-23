@@ -52,7 +52,7 @@ namespace Microsoft.Test.OData.Services.ODataWCFService.Handlers
                     var deltaFeed = new ODataDeltaResourceSet();
                     var deltaEntry = new ODataResource
                     {
-                        Id = new Uri(ServiceConstants.ServiceBaseUri, entitySet.Name + "(1)"), 
+                        Id = new Uri(ServiceConstants.ServiceBaseUri, entitySet.Name + "(1)"),
                         Properties = new[] {new ODataProperty {Name = "FirstName", Value = "GGGG"}}
                     };
                     var deletedLink = new ODataDeltaDeletedLink(
@@ -65,7 +65,7 @@ namespace Microsoft.Test.OData.Services.ODataWCFService.Handlers
                         TypeName = "Microsoft.Test.OData.Services.ODataWCFService.Order",
                         Properties = new[]
                         {
-                            new ODataProperty {Name = "OrderID", Value = 100}, 
+                            new ODataProperty {Name = "OrderID", Value = 100},
                             new ODataProperty {Name = "OrderDate", Value = new DateTimeOffset(DateTime.Now)}
                         }
                     };
@@ -107,12 +107,12 @@ namespace Microsoft.Test.OData.Services.ODataWCFService.Handlers
                     var deltaFeed = new ODataDeltaResourceSet();
                     var deltaEntry = new ODataResource
                     {
-                        Id = new Uri(ServiceConstants.ServiceBaseUri, "Accounts(103)/MyPaymentInstruments(103901)"), 
+                        Id = new Uri(ServiceConstants.ServiceBaseUri, "Accounts(103)/MyPaymentInstruments(103901)"),
                         Properties = new[] { new ODataProperty { Name = "FriendlyName", Value = "GGGG" } }
                     };
-                    
+
                     var deletedEntry = new ODataDeltaDeletedEntry(
-                        new Uri(ServiceConstants.ServiceBaseUri, "Accounts(103)/MyPaymentInstruments(103901)/BillingStatements(103901001)").AbsoluteUri, 
+                        new Uri(ServiceConstants.ServiceBaseUri, "Accounts(103)/MyPaymentInstruments(103901)/BillingStatements(103901001)").AbsoluteUri,
                         DeltaDeletedEntryReason.Deleted);
                     deletedEntry.SetSerializationInfo(new ODataDeltaSerializationInfo()
                     {
@@ -121,7 +121,7 @@ namespace Microsoft.Test.OData.Services.ODataWCFService.Handlers
 
                     var deletedLink = new ODataDeltaDeletedLink(
                         new Uri(ServiceConstants.ServiceBaseUri, "Accounts(103)/MyPaymentInstruments(103901)"),
-                        new Uri(ServiceConstants.ServiceBaseUri, "Accounts(103)/MyPaymentInstruments(103901)/BillingStatements(103901001)"), 
+                        new Uri(ServiceConstants.ServiceBaseUri, "Accounts(103)/MyPaymentInstruments(103901)/BillingStatements(103901001)"),
                         "BillingStatements");
 
                     var navigationEntry = new ODataResource
@@ -130,7 +130,7 @@ namespace Microsoft.Test.OData.Services.ODataWCFService.Handlers
                         TypeName = "Microsoft.Test.OData.Services.ODataWCFService.Statement",
                         Properties = new[]
                         {
-                            new ODataProperty { Name = "TransactionType", Value = "OnlinePurchase" }, 
+                            new ODataProperty { Name = "TransactionType", Value = "OnlinePurchase" },
                             new ODataProperty { Name = "TransactionDescription", Value = "unknown purchase" },
                             new ODataProperty { Name = "Amount", Value = 32.1 }
                         }
@@ -196,7 +196,7 @@ namespace Microsoft.Test.OData.Services.ODataWCFService.Handlers
                         TypeName = "Microsoft.Test.OData.Services.ODataWCFService.Order",
                         Properties = new[]
                         {
-                            new ODataProperty {Name = "OrderID", Value = 100}, 
+                            new ODataProperty {Name = "OrderID", Value = 100},
                             new ODataProperty {Name = "OrderDate", Value = new DateTimeOffset(DateTime.Now)}
                         }
                     };
@@ -281,7 +281,7 @@ namespace Microsoft.Test.OData.Services.ODataWCFService.Handlers
                         {
                             new ODataProperty { Name = "OrderDate", Value = new DateTimeOffset(2011, 3, 4, 16, 03, 57, TimeSpan.FromHours(-8)) },
                             new ODataProperty { Name = "OrderID", Value = 8 },
-                            new ODataProperty { Name = "OrderShelfLifes", Value = new ODataCollectionValue { Items = new[] { new TimeSpan(1) } } },
+                            new ODataProperty { Name = "OrderShelfLifes", Value = new ODataCollectionValue { Items = new object[] { new TimeSpan(1) } } },
                             new ODataProperty { Name = "ShelfLife", Value = new TimeSpan(1) },
                             new ODataProperty { Name = "ShipDate", Value = new Date(2014, 8, 12) },
                             new ODataProperty { Name = "ShipTime", Value = new TimeOfDay(6, 5, 30, 0) },
@@ -369,7 +369,7 @@ namespace Microsoft.Test.OData.Services.ODataWCFService.Handlers
                         TypeName = "Microsoft.Test.OData.Services.ODataWCFService.Order",
                         Properties = new[]
                         {
-                            new ODataProperty {Name = "OrderID", Value = 100}, 
+                            new ODataProperty {Name = "OrderID", Value = 100},
                             new ODataProperty {Name = "OrderDate", Value = new DateTimeOffset(DateTime.Now)}
                         }
                     };

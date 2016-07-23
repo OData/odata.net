@@ -57,7 +57,7 @@ namespace Microsoft.OData.Tests.JsonLight
                         Value = new ODataCollectionValue
                         {
                             TypeName = "Collection(Edm.Int64)",
-                            Items = new Int64?[] { 1, 2, null }
+                            Items = new object[] { 1L, 2L, null }
                         }
                     }
                 }

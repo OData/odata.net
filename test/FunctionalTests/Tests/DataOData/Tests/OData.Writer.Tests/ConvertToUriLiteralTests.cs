@@ -47,7 +47,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests
         {
             List<ConvertToUriLiteralTestCase> testCases = new List<ConvertToUriLiteralTestCase>();
             EdmModel edmModel = Test.OData.Utils.Metadata.TestModels.BuildTestModel() as EdmModel;
-            
+
             ODataPayloadElementToObjectModelConverter payloadToObjectModelConverter = new ODataPayloadElementToObjectModelConverter(false);
 
             IEnumerable<ComplexInstance> complexPayloadElements = TestValues.CreateComplexValues(edmModel, true);
@@ -470,13 +470,13 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests
             testCases.Add(
                 new ConvertToUriLiteralTestCase()
                 {
-                    Parameter = new ODataCollectionValue() { TypeName = EntityModelUtils.GetCollectionTypeName("Edm.Int64"), Items = new Int64[] { Int64.MinValue, Int64.MaxValue } },
+                    Parameter = new ODataCollectionValue() { TypeName = EntityModelUtils.GetCollectionTypeName("Edm.Int64"), Items = new object[] { Int64.MinValue, Int64.MaxValue } },
                     ExpectedValue = "[\"-9223372036854775808\",\"9223372036854775807\"]",
                 });
             testCases.Add(
                 new ConvertToUriLiteralTestCase()
                 {
-                    Parameter = new ODataCollectionValue() { Items = new Int64[] { Int64.MinValue, Int64.MaxValue } },
+                    Parameter = new ODataCollectionValue() { Items = new object[] { Int64.MinValue, Int64.MaxValue } },
                     ExpectedValue = "[\"-9223372036854775808\",\"9223372036854775807\"]",
                 });
             #endregion

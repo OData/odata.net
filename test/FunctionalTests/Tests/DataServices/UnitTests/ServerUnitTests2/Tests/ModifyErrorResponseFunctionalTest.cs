@@ -83,7 +83,7 @@ namespace AstoriaUnitTests.Tests
                     TypeName = "AstoriaUnitTests.Stubs.Address",
                     Properties = new[]
                     {
-                        new ODataProperty {Name="City", Value = "Troy"}, 
+                        new ODataProperty {Name="City", Value = "Troy"},
                         new ODataProperty {Name="State", Value = "New York"}
                     }
                 };
@@ -105,8 +105,8 @@ namespace AstoriaUnitTests.Tests
                 AnnotationValue = new ODataCollectionValue
                 {
                     TypeName = "Collection(Edm.Int32)",
-                    Items = new[]{1,2,3,4}
-                };     
+                    Items = new object[]{1,2,3,4}
+                };
                 TestUtil.RunCatching(webRequest.SendRequest);
 
                 webRequest.ErrorResponseContent.Should().Be("{\"error\":{\"code\":\"\",\"message\":\"Resource not found for the segment 'ThisDoesNotExist'.\",\"location.error@odata.type\":\"#Collection(Int32)\",\"@location.error\":[1,2,3,4]}}");
@@ -124,7 +124,7 @@ namespace AstoriaUnitTests.Tests
                 AnnotationValue = new ODataCollectionValue
                 {
                     TypeName = "Collection(Edm.Int32)",
-                    Items = new int[] { },
+                    Items = new object[] { },
                 };
                 TestUtil.RunCatching(webRequest.SendRequest);
 
@@ -156,7 +156,7 @@ namespace AstoriaUnitTests.Tests
             {
                 webRequest.HttpMethod = "POST";
                 webRequest.RequestUriString = "/$batch";
-                
+
                 webRequest.Accept = UnitTestsUtil.MimeMultipartMixed;
                 webRequest.RequestVersion = "4.0;";
                 webRequest.RequestMaxVersion = "4.0;";
@@ -401,7 +401,7 @@ namespace AstoriaUnitTests.Tests
                 {
                     throw new DataServiceException("InStreamErrorGetCustomers ThrowForCustomer2 error");
                 }
-                
+
                 return c.ID > 0;
             }
         }

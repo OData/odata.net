@@ -80,7 +80,7 @@ namespace Microsoft.OData.Tests.JsonLight
 
             var collectionValue = new ODataCollectionValue()
                 {
-                    Items = new int?[] { null },
+                    Items = new object[] { null },
                     TypeName = "Collection(Edm.Int32)"
                 };
 
@@ -95,7 +95,7 @@ namespace Microsoft.OData.Tests.JsonLight
 
             var collectionValue = new ODataCollectionValue()
             {
-                Items = new int?[] { null },
+                Items = new object[] { null },
                 TypeName = "Collection(Edm.Int32)"
             };
 
@@ -121,7 +121,7 @@ namespace Microsoft.OData.Tests.JsonLight
         public void WritingDateTimeOffsetWithCustomFormat()
         {
             var df = EdmCoreModel.Instance.GetDateTimeOffset(false);
-            
+
             var result = this.SetupSerializerAndRunTest(serializer =>
             {
                 var value = new DateTimeOffset(2012, 4, 13, 2, 43, 10, TimeSpan.FromHours(8));

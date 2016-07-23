@@ -439,7 +439,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Evaluation
                             Value = new ODataCollectionValue
                             {
                                 TypeName = "Collection(Edm.Int64)",
-                                Items = Enumerable.Range(0, 3).Select(x => (long)x)
+                                Items = Enumerable.Range(0, 3).Select(x => (object)(long)x)
                             }
                         }
                     }

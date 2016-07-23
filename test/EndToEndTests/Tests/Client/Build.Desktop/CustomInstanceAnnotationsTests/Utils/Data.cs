@@ -18,47 +18,47 @@ namespace Microsoft.Test.OData.Tests.Client.CustomInstanceAnnotationsTests.Utils
         private static readonly DateTimeOffset CachedUtcNow = DateTimeOffset.UtcNow;
         private static CoordinateSystem UnitSphereCoordinateSystem = CoordinateSystem.Geography(104001);
 
-        private static object[] rawValues = 
+        private static object[] rawValues =
         {
             // Binary
             new Byte[]{ 1, 2, 3, 4, 5, 6, 7, 8, 9 },
 
             // Boolean
-            true, 
+            true,
             false,
 
             // Byte
             Byte.MinValue,
             Byte.MaxValue,
-            (Byte)0, 
+            (Byte)0,
             (Byte)1,
 
             // DateTimeOffset
-            DateTimeOffset.MinValue, 
-            DateTimeOffset.MaxValue, 
-            CachedNow, 
+            DateTimeOffset.MinValue,
+            DateTimeOffset.MaxValue,
+            CachedNow,
             CachedUtcNow,
 
             // Decimal
-            Decimal.MaxValue, 
-            Decimal.MinusOne, 
-            Decimal.MinValue, 
-            Decimal.One, 
+            Decimal.MaxValue,
+            Decimal.MinusOne,
+            Decimal.MinValue,
+            Decimal.One,
             Decimal.Zero,
-        
+
             // Double
-            Double.Epsilon, 
-            Double.MaxValue, 
-            Double.MinValue, 
-            Double.NaN, 
-            Double.NegativeInfinity, 
-            Double.PositiveInfinity, 
-            -Double.Epsilon, 
-            (Double)0, 
-            
+            Double.Epsilon,
+            Double.MaxValue,
+            Double.MinValue,
+            Double.NaN,
+            Double.NegativeInfinity,
+            Double.PositiveInfinity,
+            -Double.Epsilon,
+            (Double)0,
+
             //Int16
-            (Int16)Byte.MinValue, 
-            (Int16)Byte.MaxValue, 
+            (Int16)Byte.MinValue,
+            (Int16)Byte.MaxValue,
             Int16.MaxValue,
             Int16.MinValue,
             (Int16)(-1),
@@ -66,8 +66,8 @@ namespace Microsoft.Test.OData.Tests.Client.CustomInstanceAnnotationsTests.Utils
             (Int16)1,
 
             // Int32
-            (Int32)Byte.MinValue, 
-            (Int32)Byte.MaxValue, 
+            (Int32)Byte.MinValue,
+            (Int32)Byte.MaxValue,
             (Int32)Int16.MaxValue,
             (Int32)Int16.MinValue,
             (Int32)Int32.MaxValue,
@@ -77,8 +77,8 @@ namespace Microsoft.Test.OData.Tests.Client.CustomInstanceAnnotationsTests.Utils
             (Int32)1,
 
             // Int64
-            (Int64)Byte.MinValue, 
-            (Int64)Byte.MaxValue, 
+            (Int64)Byte.MinValue,
+            (Int64)Byte.MaxValue,
             (Int64)Int16.MaxValue,
             (Int64)Int16.MinValue,
             (Int64)Int32.MaxValue,
@@ -154,6 +154,6 @@ namespace Microsoft.Test.OData.Tests.Client.CustomInstanceAnnotationsTests.Utils
 
         public static IEnumerable<ODataPrimitiveValue> PrimitiveValues = Values.Select(v => new ODataPrimitiveValue(v));
 
-        public static ODataCollectionValue CollectionValue = new ODataCollectionValue { TypeName = CollectionTypeNames[typeof(T)], Items = Values };
+        public static ODataCollectionValue CollectionValue = new ODataCollectionValue { TypeName = CollectionTypeNames[typeof(T)], Items = Values.Cast<object>() };
     }
 }

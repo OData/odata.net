@@ -45,7 +45,7 @@ namespace Microsoft.Test.Taupo.OData.WCFService
                 // we use the EditLink as the Id for this entity to maintain convention,
                 Id = entryUri,
 
-                // writes out the <category term='Customer'/> element 
+                // writes out the <category term='Customer'/> element
                 TypeName = element.GetType().Namespace + "." + entityType.Name,
 
                 Properties = entityType.StructuralProperties().Select(p => ConvertToODataProperty(element, p.Name)),
@@ -81,7 +81,7 @@ namespace Microsoft.Test.Taupo.OData.WCFService
                 string genericTypeName = t.GetGenericTypeDefinition().Name;
                 genericTypeName = genericTypeName.Substring(0, genericTypeName.IndexOf('`'));
                 genericTypeName += "(" + t.GetGenericArguments().Single().FullName.Replace("System.", "Edm.") + ")";
-                return new ODataProperty { Name = propertyName, Value = new ODataCollectionValue() { TypeName = genericTypeName, Items = value as IEnumerable } };
+                return new ODataProperty { Name = propertyName, Value = new ODataCollectionValue() { TypeName = genericTypeName, Items = (value as IEnumerable).Cast<object>() } };
             }
 
             return new ODataProperty { Name = propertyName, Value = value };

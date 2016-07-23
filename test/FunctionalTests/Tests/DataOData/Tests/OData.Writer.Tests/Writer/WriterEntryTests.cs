@@ -1400,7 +1400,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                         ExpectedResultCallback = (PayloadWriterTestDescriptor<ODataItem>.WriterTestExpectedResultCallback)(
                            (testConfiguration) =>
                            {
-                               // When AllowNullValuesForNonNullablePrimitiveTypes flag is set (happens only for the WCF DS server), primitive null value validation is disabled. 
+                               // When AllowNullValuesForNonNullablePrimitiveTypes flag is set (happens only for the WCF DS server), primitive null value validation is disabled.
                                if (behaviorKind == TestODataBehaviorKind.WcfDataServicesServer
                                    && new[] { "Collection", "Complex", "NamedStream" }.Where(v => v != propertyName).Count() > 0)
                                {
@@ -1805,7 +1805,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
             var feed = PayloadBuilder.EntitySet().WithTypeAnnotation(MetadataUtils.EntityTypes(model).First());
 
             var payloadDescriptors = new PayloadTestDescriptor[]
-            { 
+            {
                 // Multiple nesting of Complex Values and Collection Values.
                 new PayloadTestDescriptor()
                 {
@@ -1813,7 +1813,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                     PayloadEdmModel = model.Clone(),
                 }.InComplexValue().InCollection().InProperty("PropertyName").InComplexValue().InCollection().InProperty("PropertyName").InComplexValue()
                 .InCollection().InProperty("PropertyName").InComplexValue().InCollection().InProperty("PropertyName").InEntity(),
-                
+
                 // Multiple nesting of Complex Values.
                 new PayloadTestDescriptor()
                 {
@@ -1821,21 +1821,21 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                     PayloadEdmModel = model.Clone(),
                 }.InComplexValue().InProperty("PropertyName").InComplexValue().InProperty("PropertyName").InComplexValue().InProperty("PropertyName")
                 .InComplexValue().InProperty("PropertyName").InComplexValue().InProperty("PropertyName").InComplexValue().InProperty("PropertyName").InEntity(1,0),
-                
+
                 // Entry With an Expanded Link which is an entry containing a Complex collection.
                 new PayloadTestDescriptor()
                 {
                     PayloadElement = complexvalue,
                     PayloadEdmModel = model.Clone(),
                 }.InCollection(1,1).InProperty("PropertyName").InComplexValue().InCollection().InProperty("PropertyName").InEntity().InEntryWithExpandedLink(/*singletonRelationship*/ true),
-                
+
                 // Entry With an Expanded Link which is a Feed containing an Entry with Complex collection properties.
                 new PayloadTestDescriptor()
                 {
                     PayloadElement = complexvalue,
                     PayloadEdmModel = model.Clone(),
                 }.InCollection(1,2).InProperty("PropertyName").InComplexValue(1, 1).InCollection(1, 0).InProperty("PropertyName").InEntity(1,1).InFeed(2).InEntryWithExpandedLink(),
-                
+
                 // Entry With Nested Expanded Links which contain Entries.
                 new PayloadTestDescriptor()
                 {
@@ -2190,7 +2190,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                });
         }
 
-        // These tests and helpers are disabled on Silverlight and Phone because they  
+        // These tests and helpers are disabled on Silverlight and Phone because they
         // use private reflection not available on Silverlight and Phone
 #if !SILVERLIGHT && !WINDOWS_PHONE
         [Ignore] // Remove Atom
@@ -2202,7 +2202,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
 
             ODataProperty primitiveProperty = new ODataProperty { Name = "Foo", Value = 1 };
             ODataProperty complexProperty = new ODataProperty { Name = "Foo", Value = new ODataComplexValue { Properties = new[] { new ODataProperty() { Name = "StringProperty", Value = "xyz" } } } };
-            ODataProperty collectionProperty = new ODataProperty { Name = "Foo", Value = new ODataCollectionValue { Items = new int[] { 1, 2 } } };
+            ODataProperty collectionProperty = new ODataProperty { Name = "Foo", Value = new ODataCollectionValue { Items = new object[] { 1, 2 } } };
             ODataProperty streamProperty = new ODataProperty { Name = "Foo", Value = new ODataStreamReferenceValue { ReadLink = new Uri("http://odata.org/readlink") } };
 
             ODataNestedResourceInfo singletonLink = new ODataNestedResourceInfo { Name = "Foo", IsCollection = false, Url = new Uri("http://odata.org/link") };

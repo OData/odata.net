@@ -540,7 +540,7 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
                             {
                                 switch(reader.State)
                                 {
-                                    case ODataReaderState.ResourceSetStart: 
+                                    case ODataReaderState.ResourceSetStart:
                                     case ODataReaderState.ResourceStart:
                                     case ODataReaderState.NestedResourceInfoStart:
                                         depth++;
@@ -696,7 +696,7 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
             var orderp3 = new ODataProperty
             {
                 Name = "OrderShelfLifes",
-                Value = new ODataCollectionValue() { TypeName = "Collection(Edm.Duration)", Items = new Collection<TimeSpan> { new TimeSpan(1) } }
+                Value = new ODataCollectionValue() { TypeName = "Collection(Edm.Duration)", Items = new Collection<object> { new TimeSpan(1) } }
             };
             orderEntry.Properties = new[] { orderP1, orderp2, orderp3 };
 

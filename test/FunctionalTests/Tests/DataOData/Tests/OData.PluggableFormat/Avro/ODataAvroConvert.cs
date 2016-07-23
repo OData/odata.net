@@ -105,7 +105,7 @@ namespace Microsoft.Test.OData.PluggableFormat.Avro
             var array = obj as Array;
             if (array != null && !(array is byte[]))
             {
-                return new ODataCollectionValue { Items = array };
+                return new ODataCollectionValue { Items = array.Cast<object>() };
             }
 
             return new ODataPrimitiveValue(obj);

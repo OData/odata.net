@@ -427,7 +427,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.CollectionWriter
 
                 // Complex collection with type names on complex values
                 new CollectionWriterTestDescriptor.ItemDescription[] { complexItem("TestNS.AddressType"), complexItem("TestNS.AddressType") },
-                
+
                 // Complex collection with type names on complex values and null values
                 new CollectionWriterTestDescriptor.ItemDescription[] { complexItem("TestNS.AddressType"), nullItem, complexItem("TestNS.AddressType") },
 
@@ -729,7 +729,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.CollectionWriter
                 });
         }
 
-        // These tests and helpers are disabled on Silverlight and Phone because they  
+        // These tests and helpers are disabled on Silverlight and Phone because they
         // use private reflection not available on Silverlight and Phone
 #if !SILVERLIGHT && !WINDOWS_PHONE
         [Ignore] // Remove Atom
@@ -738,7 +738,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.CollectionWriter
         {
             ODataProperty primitiveProperty = new ODataProperty { Name = "Foo", Value = 1 };
             ODataProperty complexProperty = new ODataProperty { Name = "Foo", Value = new ODataComplexValue { Properties = new[] { new ODataProperty() { Name = "StringProperty", Value = "xyz" } } } };
-            ODataProperty collectionProperty = new ODataProperty { Name = "Foo", Value = new ODataCollectionValue { Items = new int[] { 1, 2 } } };
+            ODataProperty collectionProperty = new ODataProperty { Name = "Foo", Value = new ODataCollectionValue { Items = new object[] { 1, 2 } } };
 
             ExpectedException expectedException = ODataExpectedExceptions.ODataException("DuplicatePropertyNamesNotAllowed", "Foo");
             Func<WriterTestConfiguration, ExpectedException> expectedExceptionFunc = (tc) => tc.MessageWriterSettings.GetAllowDuplicatePropertyNames() ? null : expectedException;

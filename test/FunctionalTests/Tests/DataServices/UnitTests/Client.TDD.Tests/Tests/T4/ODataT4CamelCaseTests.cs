@@ -257,7 +257,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client
                     Value = new ODataCollectionValue
                     {
                         TypeName = "Edm.Int32",
-                        Items = new List<int> {1, 2, 3}
+                        Items = new List<object> {1, 2, 3}
                     }
                 },
                 new ODataProperty {
@@ -362,7 +362,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client
                         Value = new ODataCollectionValue
                         {
                             TypeName = "Edm.Int32",
-                            Items = new List<int> {1, 2, 3}
+                            Items = new List<object> {1, 2, 3}
                         }
                     },
                     new ODataProperty

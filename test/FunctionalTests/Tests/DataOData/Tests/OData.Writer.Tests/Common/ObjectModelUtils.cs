@@ -397,7 +397,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Common
                     Value = new ODataCollectionValue()
                     {
                         TypeName = EntityModelUtils.GetCollectionTypeName("Edm.Int32"),
-                        Items = new int[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 }
+                        Items = new object[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 }
                     }
                 },
                 new ODataProperty
@@ -406,7 +406,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Common
                     Value = new ODataCollectionValue()
                     {
                         TypeName = EntityModelUtils.GetCollectionTypeName("Edm.Int32"),
-                        Items = new int[] { 0, 1, 2 }
+                        Items = new object[] { 0, 1, 2 }
                     }
                 },
                 new ODataProperty
@@ -569,7 +569,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Common
         }
 
         /// <summary>
-        /// Creates a default <see cref="ODataEntityReferenceLinks"/> instance with a default 
+        /// Creates a default <see cref="ODataEntityReferenceLinks"/> instance with a default
         /// entity reference link inside (but no inline count or next link).
         /// </summary>
         /// <returns>The newly created <see cref="ODataEntityReferenceLinks"/> instance.</returns>

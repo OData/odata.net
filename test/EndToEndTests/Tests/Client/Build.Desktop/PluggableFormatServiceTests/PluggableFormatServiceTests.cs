@@ -126,7 +126,7 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
                 {
                     new ODataProperty{  Name = "Id"          , Value = 31                   },
                     new ODataProperty{  Name = "Numbers"     , Value =
-                    new ODataCollectionValue{ Items = new int[] { 3, 5, 7 } } },
+                    new ODataCollectionValue{ Items = new object[] { 3, 5, 7 } } },
                     new ODataProperty{  Name = "Picture"     , Value = new byte[] {5, 8}    },
                 },
             };
@@ -203,7 +203,7 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
             requestMessage.SetHeader("Accept", "avro/binary");
             var responseMessage = requestMessage.GetResponse();
 
-            // This is not an error case per standard, and no content should be returned. 
+            // This is not an error case per standard, and no content should be returned.
             Assert.AreEqual(204, responseMessage.StatusCode);
         }
 
@@ -222,7 +222,7 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
 
             ODataNestedResourceInfo info_nestedInfo = new ODataNestedResourceInfo()
             {
-                Name = "Info", 
+                Name = "Info",
                 IsCollection = false
             };
 

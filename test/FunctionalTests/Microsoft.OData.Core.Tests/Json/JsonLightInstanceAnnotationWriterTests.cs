@@ -24,7 +24,7 @@ namespace Microsoft.OData.Tests.Json
 {
     /// <summary>
     /// Unit tests for the JsonLightInstanceAnnotationWriter.
-    /// 
+    ///
     /// Uses mocks to test that the methods call the correct functions on JsonWriter and ODataJsonLightValueSerializer.
     /// </summary>
     public class JsonLightInstanceAnnotationWriterTests
@@ -675,7 +675,7 @@ namespace Microsoft.OData.Tests.Json
             edmModel.AddElement(new EdmTerm("custom.namespace", "CollectionValueTerm", new EdmCollectionTypeReference(new EdmCollectionType(EdmCoreModel.Instance.GetInt32(false)))));
 
             var result = WriteInstanceAnnotation(
-                new ODataInstanceAnnotation("custom.namespace.CollectionValueTerm", new ODataCollectionValue { Items = new[] { 42, 54 }, TypeName = "Collection(Int32)" }),
+                new ODataInstanceAnnotation("custom.namespace.CollectionValueTerm", new ODataCollectionValue { Items = new object[] { 42, 54 }, TypeName = "Collection(Int32)" }),
                 TestUtils.WrapReferencedModelsToMainModel(edmModel));
 
             result.Should().Contain("{\"@custom.namespace.CollectionValueTerm\":[42,54]}");
@@ -688,7 +688,7 @@ namespace Microsoft.OData.Tests.Json
             EdmModel edmModel = new EdmModel();
 
             var result = WriteInstanceAnnotation(
-                new ODataInstanceAnnotation("custom.namespace.CollectionValueTerm", new ODataCollectionValue { Items = new[] { 42, 54 }, TypeName = "Collection(Int32)" }),
+                new ODataInstanceAnnotation("custom.namespace.CollectionValueTerm", new ODataCollectionValue { Items = new object[] { 42, 54 }, TypeName = "Collection(Int32)" }),
                 TestUtils.WrapReferencedModelsToMainModel(edmModel));
 
             result.Should().Contain("\"custom.namespace.CollectionValueTerm@odata.type\":\"#Collection(Int32)\"");

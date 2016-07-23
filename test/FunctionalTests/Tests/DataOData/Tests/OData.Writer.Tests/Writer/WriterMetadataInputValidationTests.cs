@@ -335,7 +335,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                             Value = new ODataCollectionValue()
                             {
                                 TypeName = EntityModelUtils.GetCollectionTypeName("Int32"),
-                                Items = new int[0]
+                                Items = new object[0]
                             }
                         }),
                     MetadataCreate = entityTypeWithPrimitiveCollectionProperty,
@@ -350,7 +350,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                             Value = new ODataCollectionValue()
                             {
                                 TypeName = EntityModelUtils.GetCollectionTypeName("String"),
-                                Items = new int[] { 1 }
+                                Items = new object[] { 1 }
                             }
                         }),
                     MetadataCreate = entityTypeWithPrimitiveCollectionProperty,
@@ -877,7 +877,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
             var testCases = new[] {
                 new InconsistentTypeNamesTestCase {
                     CreateProperties = () => new ODataProperty[]
-                        { 
+                        {
                             // inconsistent primitive type
                             new ODataProperty() { Name = "Id", Value = 1 },
                             defaultProperties[1],
@@ -888,7 +888,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 },
                 new InconsistentTypeNamesTestCase {
                     CreateProperties = () => new ODataProperty[]
-                        { 
+                        {
                             // inconsistent primitive type
                             new ODataProperty() { Name = "Id", Value = new ODataComplexValue { } },
                             defaultProperties[1],
@@ -899,7 +899,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 },
                 new InconsistentTypeNamesTestCase {
                     CreateProperties = () => new ODataProperty[]
-                        { 
+                        {
                             // inconsistent primitive type
                             new ODataProperty() { Name = "Id", Value = new ODataCollectionValue { } },
                             defaultProperties[1],
@@ -910,7 +910,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 },
                 new InconsistentTypeNamesTestCase {
                     CreateProperties = () => new ODataProperty[]
-                        { 
+                        {
                             // inconsistent primitive type
                             new ODataProperty() { Name = "Id", Value = new ODataStreamReferenceValue { } },
                             defaultProperties[1],
@@ -1014,7 +1014,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                                 {
                                     TypeName = EntityModelUtils.GetCollectionTypeName("String"),
                                     // inconsistent collection item type (same kind)
-                                    Items = new int[] { 1, 2, 3 }
+                                    Items = new object[] { 1, 2, 3 }
                                 }
                             },
                             defaultProperties[3]

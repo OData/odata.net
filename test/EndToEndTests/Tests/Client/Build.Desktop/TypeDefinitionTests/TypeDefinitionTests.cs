@@ -34,7 +34,7 @@ namespace Microsoft.Test.OData.Tests.Client.TypeDefinitionTests
             foreach (var mimeType in mimeTypes)
             {
                 var entry = this.QueryEntry("People(1)", mimeType);
-                
+
                 if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
                 {
                     Assert.IsNotNull(entry);
@@ -166,12 +166,12 @@ namespace Microsoft.Test.OData.Tests.Client.TypeDefinitionTests
                     new ODataProperty { Name = "PersonId", Value = 101 },
                     new ODataProperty { Name = "FirstName", Value = "Peter" },
                     new ODataProperty { Name = "LastName", Value = "Zhang" },
-                    new ODataProperty 
+                    new ODataProperty
                     {
-                        Name = "Descriptions", 
-                        Value = new ODataCollectionValue() 
+                        Name = "Descriptions",
+                        Value = new ODataCollectionValue()
                         {
-                            TypeName = "Collection(Edm.String)", 
+                            TypeName = "Collection(Edm.String)",
                             Items = new[] { "Description1", "Description2" }
                         }
                     }
@@ -286,8 +286,8 @@ namespace Microsoft.Test.OData.Tests.Client.TypeDefinitionTests
                 {
                     Assert.AreEqual((UInt16)11, idProperty.Value);
                     Assert.AreEqual(100u, quantityProperty.Value);
-                    Assert.AreEqual(3600ul, lifeTimeProperty.Value);   
-                }                            
+                    Assert.AreEqual(3600ul, lifeTimeProperty.Value);
+                }
             }
         }
 
@@ -346,13 +346,13 @@ namespace Microsoft.Test.OData.Tests.Client.TypeDefinitionTests
                     new ODataProperty { Name = "Quantity", Value = 19u },
                     new ODataProperty { Name = "LifeTimeInSeconds", Value = 86ul },
                     new ODataProperty { Name = "NullableUInt32", Value = 37u },
-                    new ODataProperty 
+                    new ODataProperty
                     {
-                        Name = "LargeNumbers", 
-                        Value = new ODataCollectionValue() 
+                        Name = "LargeNumbers",
+                        Value = new ODataCollectionValue()
                         {
-                            TypeName = "Collection(" + NameSpacePrefix + "UInt64)", 
-                            Items = new[] { 32ul, 97ul }
+                            TypeName = "Collection(" + NameSpacePrefix + "UInt64)",
+                            Items = new object[] { 32ul, 97ul }
                         }
                     }
 
@@ -555,7 +555,7 @@ namespace Microsoft.Test.OData.Tests.Client.TypeDefinitionTests
                     Assert.AreEqual(ODataReaderState.Completed, reader.State);
                 }
             }
-            
+
             return entry;
         }
 
@@ -591,12 +591,12 @@ namespace Microsoft.Test.OData.Tests.Client.TypeDefinitionTests
                         }
                     }
                     Assert.AreEqual(ODataReaderState.Completed, reader.State);
-                    
+
                 }
             }
 
             return entries;
-            
+
         }
 
         private ODataProperty QueryProperty(string uri, string mimeType)
@@ -653,7 +653,7 @@ namespace Microsoft.Test.OData.Tests.Client.TypeDefinitionTests
 
         #endregion
 
-        
+
     }
 
     public class UInt32ValueConverter : IPrimitiveValueConverter

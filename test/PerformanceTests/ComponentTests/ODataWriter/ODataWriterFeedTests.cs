@@ -576,7 +576,7 @@ namespace Microsoft.OData.Performance
                     new ODataProperty {Name = "LuckyNumbers", Value = new ODataCollectionValue
                     {
                         TypeName = "Collection(Edm.Int64)",
-                        Items = Enumerable.Range(0, 10).Select(n => -1L)
+                        Items = Enumerable.Range(0, 10).Select(n => (object)-1L)
                     }},
                     new ODataProperty {Name = "OpenProperty0", Value = Byte.MinValue},
                     new ODataProperty {Name = "OpenProperty1", Value = 0L},
@@ -668,7 +668,7 @@ namespace Microsoft.OData.Performance
                     new ODataProperty {Name = "LuckyNumbers", Value = new ODataCollectionValue
                     {
                         TypeName = "Collection(Edm.Int64)",
-                        Items = Enumerable.Range(0, 10).Select(n => -1L)
+                        Items = Enumerable.Range(0, 10).Select(n => (object)-1L)
                     }},
                     new ODataProperty {Name = "OpenProperty0", Value = Byte.MinValue},
                     new ODataProperty {Name = "OpenProperty1", Value = 0L},

@@ -243,7 +243,7 @@ namespace Microsoft.OData.Tests.JsonLight
             var propertyAndAnnotationCollector = new PropertyAndAnnotationCollector(true);
             propertyAndAnnotationCollector.AddODataPropertyAnnotation("custom.primitiveCollectionAnnotation", "odata.type", "Collection(Edm.Int32)");
             ODataCollectionValue value = (ODataCollectionValue)deserializer.ReadCustomInstanceAnnotationValue(propertyAndAnnotationCollector, "custom.primitiveCollectionAnnotation");
-            TestUtils.AssertODataValueAreEqual(value, new ODataCollectionValue { TypeName = "Collection(Edm.Int32)", Items = new[] { 1, 2, 3 } });
+            TestUtils.AssertODataValueAreEqual(value, new ODataCollectionValue { TypeName = "Collection(Edm.Int32)", Items = new object[] { 1, 2, 3 } });
         }
 
         #endregion Test ReadInstanceAnnotationValue

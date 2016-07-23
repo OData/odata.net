@@ -126,7 +126,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Writer
                             new ODataProperty()
                             {
                                 Name = "Numbers",
-                                Value = new ODataCollectionValue() {Items = new[] { (UInt32)1, UInt32.MaxValue, UInt32.MinValue } }
+                                Value = new ODataCollectionValue() {Items = new object[] { (UInt32)1, UInt32.MaxValue, UInt32.MinValue } }
                             }
                         }
                     };

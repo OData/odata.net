@@ -1289,7 +1289,7 @@ namespace Microsoft.OData.JsonLight
             Debug.Assert(this.JsonReader.NodeType == JsonNodeType.EndArray, "The results value must end with an end array.");
             this.JsonReader.ReadEndArray();
 
-            collectionValue.Items = new ReadOnlyEnumerable(items);
+            collectionValue.Items = new ReadOnlyEnumerable<object>(items);
 
             this.DecreaseRecursionDepth();
 

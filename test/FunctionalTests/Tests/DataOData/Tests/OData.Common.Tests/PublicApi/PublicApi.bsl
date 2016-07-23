@@ -4492,7 +4492,7 @@ public sealed class Microsoft.OData.ODataCollectionStartSerializationInfo {
 public sealed class Microsoft.OData.ODataCollectionValue : Microsoft.OData.ODataValue {
 	public ODataCollectionValue ()
 
-	System.Collections.IEnumerable Items  { public get; public set; }
+	System.Collections.Generic.IEnumerable`1[[System.Object]] Items  { public get; public set; }
 	string TypeName  { public get; public set; }
 }
 

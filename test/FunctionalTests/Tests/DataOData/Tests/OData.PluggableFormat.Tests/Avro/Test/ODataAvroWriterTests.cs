@@ -27,7 +27,7 @@ namespace Microsoft.Test.OData.PluggableFormat.Avro.Test
         private static ODataResource entry0;
         private static ODataNestedResourceInfo nestedResource0;
         private static byte[] binary0;
-        private static long[] longCollection0;
+        private static object[] longCollection0;
 
         static ODataAvroWriterTests()
         {
@@ -52,7 +52,7 @@ namespace Microsoft.Test.OData.PluggableFormat.Avro.Test
                 TypeName = "NS.SimpleComplex"
             };
 
-            longCollection0 = new[] {7L, 9L};
+            longCollection0 = new object[] {7L, 9L};
             var collectionValue0 = new ODataCollectionValue { Items = longCollection0 };
 
             entry0 = new ODataResource
@@ -106,7 +106,7 @@ namespace Microsoft.Test.OData.PluggableFormat.Avro.Test
             Assert.AreEqual(32, record.TInt32);
             var col = record.TCollection as object[];
             Assert.IsNotNull(col);
-            Assert.IsTrue(longCollection0.SequenceEqual(col.Cast<long>()));
+            Assert.IsTrue(longCollection0.SequenceEqual(col));
             dynamic cpx = record.TComplex as AvroRecord;
             Assert.IsNotNull(cpx);
             Assert.IsTrue(binary0.SequenceEqual((byte[])cpx.TBinary));
@@ -236,7 +236,7 @@ namespace Microsoft.Test.OData.PluggableFormat.Avro.Test
         [TestMethod]
         public void WritePrimitiveCollectionPropertyAsAvroTest()
         {
-            var expected = new[] { 3, 4 };
+            var expected = new object[] { 3, 4 };
             var value = new ODataCollectionValue { Items = expected };
 
             ODataProperty prop = new ODataProperty
@@ -260,7 +260,7 @@ namespace Microsoft.Test.OData.PluggableFormat.Avro.Test
 
             var records = results.Cast<object[]>().ToList();
             Assert.AreEqual(1, records.Count());
-            Assert.IsTrue(expected.SequenceEqual(records[0].Cast<int>()));
+            Assert.IsTrue(expected.SequenceEqual(records[0]));
         }
 
         [TestMethod]
@@ -335,7 +335,7 @@ namespace Microsoft.Test.OData.PluggableFormat.Avro.Test
             Assert.AreEqual(32, p2.TInt32);
             var col = p2.TCollection as object[];
             Assert.IsNotNull(col);
-            Assert.IsTrue(longCollection0.SequenceEqual(col.Cast<long>()));
+            Assert.IsTrue(longCollection0.SequenceEqual(col));
             dynamic cpx = p2.TComplex as AvroRecord;
             Assert.IsNotNull(cpx);
             Assert.IsTrue(binary0.SequenceEqual((byte[])cpx.TBinary));

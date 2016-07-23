@@ -45,7 +45,7 @@ namespace Microsoft.Test.Taupo.OData.Common.Tests.ObjectModelTests
             string name3 = "ODataCollectionProperty";
             ODataCollectionValue value3 = new ODataCollectionValue()
             {
-                Items = new[] { 1, 2, 3 }
+                Items = new object[] { 1, 2, 3 }
             };
 
             ODataProperty multiValueProperty = new ODataProperty()

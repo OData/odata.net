@@ -265,33 +265,33 @@ namespace Microsoft.OData.Tests.ScenarioTests.Writer.JsonLight
             {
                 new
                 {
-                    Expect = "@odata.type\":\"#Collection(String)\"", 
+                    Expect = "@odata.type\":\"#Collection(String)\"",
                     InstanceName = "NS.StringCollectionProperty",
                     CollectionValue = new ODataCollectionValue { TypeName = "Collection(Edm.String)", Items = new[] { "StringValue1", "StringValue2" } }
                 },
                 new
                 {
-                    Expect = "@odata.type\":\"#Collection(Guid)\"", 
+                    Expect = "@odata.type\":\"#Collection(Guid)\"",
                     InstanceName = "NS.GuidCollectionProperty",
-                    CollectionValue = new ODataCollectionValue { TypeName = "Collection(Edm.Guid)", Items = new[] { Guid.Empty, Guid.Empty } }
+                    CollectionValue = new ODataCollectionValue { TypeName = "Collection(Edm.Guid)", Items = new object[] { Guid.Empty, Guid.Empty } }
                 },
                 new
                 {
-                    Expect = "@odata.type\":\"#Collection(Double)\"", 
+                    Expect = "@odata.type\":\"#Collection(Double)\"",
                     InstanceName = "NS.DoubleCollectionProperty",
-                    CollectionValue = new ODataCollectionValue { TypeName = "Collection(Edm.Double)", Items = new[] { 11.11, 22.22 } }
+                    CollectionValue = new ODataCollectionValue { TypeName = "Collection(Edm.Double)", Items = new object[] { 11.11, 22.22 } }
                 },
                 new
                 {
-                    Expect = "@odata.type\":\"#Collection(Decimal)\"", 
+                    Expect = "@odata.type\":\"#Collection(Decimal)\"",
                     InstanceName = "NS.DecimalCollectionProperty",
-                    CollectionValue = new ODataCollectionValue { TypeName = "Collection(Edm.Decimal)", Items = new[] { 11.11m, 22.22m } }
+                    CollectionValue = new ODataCollectionValue { TypeName = "Collection(Edm.Decimal)", Items = new object[] { 11.11m, 22.22m } }
                 },
                 new
                 {
-                    Expect = "@odata.type\":\"#Collection(Int32)\"", 
+                    Expect = "@odata.type\":\"#Collection(Int32)\"",
                     InstanceName = "NS.DecimalCollectionProperty",
-                    CollectionValue = new ODataCollectionValue { TypeName = "Collection(Edm.Int32)", Items = new[] { 1, 2, 3, 5 } }
+                    CollectionValue = new ODataCollectionValue { TypeName = "Collection(Edm.Int32)", Items = new object[] { 1, 2, 3, 5 } }
                 },
 
                 // #625
@@ -304,9 +304,9 @@ namespace Microsoft.OData.Tests.ScenarioTests.Writer.JsonLight
                 //    {
                 //        Items = new[]
                 //        {
-                //            new ODataComplexValue { Properties = new[] { new ODataProperty { Name = "StringProperty", Value = "StringValue1" } }, TypeName = "TestNamespace.TestComplexType" }, 
+                //            new ODataComplexValue { Properties = new[] { new ODataProperty { Name = "StringProperty", Value = "StringValue1" } }, TypeName = "TestNamespace.TestComplexType" },
                 //            new ODataComplexValue { Properties = new[] { new ODataProperty { Name = "StringProperty", Value = "StringValue2" } }, TypeName = "TestNamespace.TestComplexType" }
-                //        }, 
+                //        },
                 //        TypeName = "Collection(TestNamespace.TestComplexType)"
                 //    }
                 //},
@@ -318,9 +318,9 @@ namespace Microsoft.OData.Tests.ScenarioTests.Writer.JsonLight
                 //    {
                 //        Items = new[]
                 //        {
-                //            new ODataComplexValue { Properties = new[] { new ODataProperty { Name = "StringProperty", Value = "StringValue1" } }, TypeName = "TestNamespace.TestComplexType" }, 
+                //            new ODataComplexValue { Properties = new[] { new ODataProperty { Name = "StringProperty", Value = "StringValue1" } }, TypeName = "TestNamespace.TestComplexType" },
                 //            new ODataComplexValue { Properties = new[] { new ODataProperty { Name = "StringProperty", Value = "StringValue2" }, new ODataProperty { Name = "DerivedStringProperty", Value = "DerivedStringProperty2" } }, TypeName = "TestNamespace.TestDerivedComplexType" }
-                //        }, 
+                //        },
                 //        TypeName = "Collection(TestNamespace.TestComplexType)"
                 //    }
                 //}

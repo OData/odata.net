@@ -58,10 +58,10 @@ namespace Microsoft.OData.Tests.IntegrationTests.Writer.JsonLight
                     new ODataProperty {Name = "DecimalId", Value = 78.62m},
                     new ODataProperty {Name = "BoolValue1", Value = true},
                     new ODataProperty {Name = "BoolValue2", Value = false},
-                    new ODataProperty {Name = "LongNumbers", Value = new ODataCollectionValue {Items = new[] {0L, long.MinValue, long.MaxValue}, TypeName = "Collection(Int64)" }},
-                    new ODataProperty {Name = "FloatNumbers", Value = new ODataCollectionValue {Items = new[] {1F, float.MinValue, float.MaxValue, float.PositiveInfinity, float.NegativeInfinity, float.NaN}, TypeName = "Collection(Single)" }},
-                    new ODataProperty {Name = "DoubleNumbers", Value = new ODataCollectionValue {Items = new[] {-1D, double.MinValue, double.MaxValue, double.PositiveInfinity, double.NegativeInfinity, double.NaN}, TypeName = "Collection(Double)" }},
-                    new ODataProperty {Name = "DecimalNumbers", Value = new ODataCollectionValue {Items = new[] {0M, decimal.MinValue, decimal.MaxValue}, TypeName = "Collection(Decimal)" }},
+                    new ODataProperty {Name = "LongNumbers", Value = new ODataCollectionValue {Items = new object[] {0L, long.MinValue, long.MaxValue}, TypeName = "Collection(Int64)" }},
+                    new ODataProperty {Name = "FloatNumbers", Value = new ODataCollectionValue {Items = new object[] {1F, float.MinValue, float.MaxValue, float.PositiveInfinity, float.NegativeInfinity, float.NaN}, TypeName = "Collection(Single)" }},
+                    new ODataProperty {Name = "DoubleNumbers", Value = new ODataCollectionValue {Items = new object[] {-1D, double.MinValue, double.MaxValue, double.PositiveInfinity, double.NegativeInfinity, double.NaN}, TypeName = "Collection(Double)" }},
+                    new ODataProperty {Name = "DecimalNumbers", Value = new ODataCollectionValue {Items = new object[] {0M, decimal.MinValue, decimal.MaxValue}, TypeName = "Collection(Decimal)" }},
                 },
             };
 

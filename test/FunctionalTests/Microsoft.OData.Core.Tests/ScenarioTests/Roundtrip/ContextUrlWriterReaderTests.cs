@@ -277,7 +277,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip
         }
 
         // V4 Protocol Spec Chapters 10.3: Entity
-        // 
+        //
         [Fact(Skip = "TODO: Complete after Containment Feature Finished")]
         public void ContainedEntity()
         {
@@ -362,7 +362,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip
 
         // V4 Protocol Spec Chapters 10.7: Collection of Projected Entities (not on derived types)
         // Sample Request: http://host/service/People?$select=PersonId,Name
-        // Context Url in Response: http://host/service/$metadata#People(PersonId,Name)  
+        // Context Url in Response: http://host/service/$metadata#People(PersonId,Name)
         [Fact]
         public void CollectionOfProjectedNotDerivedEntities()
         {
@@ -397,7 +397,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip
 
         // V4 Protocol Spec Chapters 10.7: Collection of Projected Entities (on derived types)
         // Sample Request: http://host/service/People/Model.Employee?$select=PersonId,Name
-        // Context Url in Response: http://host/service/$metadata#People/Model.Employee(PersonId,Name)  
+        // Context Url in Response: http://host/service/$metadata#People/Model.Employee(PersonId,Name)
         [Fact]
         public void CollectionOfProjectedDerivedEntities()
         {
@@ -1052,7 +1052,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip
             {
                 string payload, contentType;
                 this.WriteAndValidateContextUri(mimeType, model,
-                    omWriter => 
+                    omWriter =>
                     {
                         var odataWriter = omWriter.CreateODataResourceWriter();
                         var complexResource = this.CreateComplexResource(address, "HomeAddress");
@@ -1466,7 +1466,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip
                     }
                     else
                     {
-                        return new ODataProperty { Name = propertyName, Value = new ODataCollectionValue() { TypeName = genericTypeName, Items = value as IEnumerable } };
+                        return new ODataProperty { Name = propertyName, Value = new ODataCollectionValue() { TypeName = genericTypeName, Items = (value as IEnumerable).Cast<object>() } };
                     }
                 }
                 else if (t.Namespace != "System" && !t.Namespace.StartsWith("Microsoft.Spatial"))

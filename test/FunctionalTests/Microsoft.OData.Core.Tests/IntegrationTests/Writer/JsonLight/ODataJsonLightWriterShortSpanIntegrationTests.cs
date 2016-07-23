@@ -36,7 +36,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Writer.JsonLight
 
             EdmComplexType derivedComplexType = new EdmComplexType("NS", "MyDerivedComplexType", complexType, false);
             derivedComplexType.AddProperty(new EdmStructuralProperty(derivedComplexType, "DerivedStringProperty", EdmCoreModel.Instance.GetString(isNullable: true)));
-            
+
             this.entityType = new EdmEntityType("NS", "MyEntityType", isAbstract: false, isOpen: true, baseType: null);
             this.entityType.AddProperty(new EdmStructuralProperty(this.entityType, "StreamProperty", EdmCoreModel.Instance.GetStream(isNullable: true)));
             this.entityType.AddProperty(new EdmStructuralProperty(this.entityType, "StringProperty", EdmCoreModel.Instance.GetString(isNullable: true)));
@@ -81,7 +81,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Writer.JsonLight
             action.AddParameter( "bindingParameter", entityTypeReference);
             tmpModel.AddElement(action);
             defaultContainer.AddActionImport("Action1", action);
-            
+
             EdmFunction function = new EdmFunction("NS", "Action1", EdmCoreModel.Instance.GetInt32(true) /*returnType*/, true /*isBound*/, null /*entitySetPath*/, false /*isComposable*/);
             function.AddParameter("bindingParameter", entityTypeReference);
             tmpModel.AddElement(function);
@@ -636,7 +636,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Writer.JsonLight
                     new ODataProperty
                     {
                         Name = "NullableIntCollectionProperty",
-                        Value = new ODataCollectionValue { Items = new int?[] { null, 1 } }
+                        Value = new ODataCollectionValue { Items = new object[] { null, 1 } }
                     }
                 }
             };
@@ -770,7 +770,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Writer.JsonLight
             };
 
             return topLeveResource;
- 
+
         }
         #endregion Complex Collection property tests
 
@@ -1157,9 +1157,9 @@ namespace Microsoft.OData.Tests.IntegrationTests.Writer.JsonLight
         {
             var property = new ODataProperty { Name = "GeographyProperty", Value = new ODataPrimitiveValue(GeographyFactory.MultiPoint().Point(1.5, 1.0).Point(2.5, 2.0).Build()) };
             var entry = new ODataResource { TypeName = "NS.MyDerivedEntityType", Properties = new[] { property } };
-            const string expectedPayload = "{\"@odata.context\":\"http://odata.org/test/$metadata#MySet/$entity\"," 
-                + "\"@odata.type\":\"#NS.MyDerivedEntityType\"," 
-                + "\"GeographyProperty@odata.type\":\"#GeographyMultiPoint\"," 
+            const string expectedPayload = "{\"@odata.context\":\"http://odata.org/test/$metadata#MySet/$entity\","
+                + "\"@odata.type\":\"#NS.MyDerivedEntityType\","
+                + "\"GeographyProperty@odata.type\":\"#GeographyMultiPoint\","
                 + "\"GeographyProperty\":{\"type\":\"MultiPoint\",\"coordinates\":[[1.0,1.5],[2.0,2.5]],\"crs\":{\"type\":\"name\",\"properties\":{\"name\":\"EPSG:4326\"}}}}";
             this.WriteNestedItemsAndValidatePayload(entitySet: this.entitySet, entityType: null, nestedItemToWrite: new[] { entry }, expectedPayload: expectedPayload, writingResponse: true);
         }
@@ -1169,9 +1169,9 @@ namespace Microsoft.OData.Tests.IntegrationTests.Writer.JsonLight
         {
             var property = new ODataProperty { Name = "GeometryProperty", Value = new ODataPrimitiveValue(GeometryFactory.Collection().Point(-19.99, -12.0).Build()) };
             var entry = new ODataResource { TypeName = "NS.MyDerivedEntityType", Properties = new[] { property } };
-            const string expectedPayload = "{\"@odata.context\":\"http://odata.org/test/$metadata#MySet/$entity\"," 
-                + "\"@odata.type\":\"#NS.MyDerivedEntityType\"," 
-                + "\"GeometryProperty@odata.type\":\"#GeometryCollection\"," 
+            const string expectedPayload = "{\"@odata.context\":\"http://odata.org/test/$metadata#MySet/$entity\","
+                + "\"@odata.type\":\"#NS.MyDerivedEntityType\","
+                + "\"GeometryProperty@odata.type\":\"#GeometryCollection\","
                 + "\"GeometryProperty\":{\"type\":\"GeometryCollection\",\"geometries\":[{\"type\":\"Point\",\"coordinates\":[-19.99,-12.0]}],\"crs\":{\"type\":\"name\",\"properties\":{\"name\":\"EPSG:0\"}}}}";
             this.WriteNestedItemsAndValidatePayload(entitySet: this.entitySet, entityType: null, nestedItemToWrite: new[] { entry }, expectedPayload: expectedPayload, writingResponse: true);
         }
