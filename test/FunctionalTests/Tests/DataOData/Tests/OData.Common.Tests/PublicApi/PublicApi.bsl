@@ -5513,6 +5513,7 @@ public sealed class Microsoft.OData.UriParser.CollectionNavigationNode : Microso
 	public CollectionNavigationNode (Microsoft.OData.UriParser.CollectionResourceNode source, Microsoft.OData.Edm.IEdmNavigationProperty navigationProperty, Microsoft.OData.Edm.IEdmPathExpression bindingPath)
 	public CollectionNavigationNode (Microsoft.OData.UriParser.SingleResourceNode source, Microsoft.OData.Edm.IEdmNavigationProperty navigationProperty, Microsoft.OData.Edm.IEdmPathExpression bindingPath)
 
+	Microsoft.OData.Edm.IEdmPathExpression BindingPath  { public get; }
 	Microsoft.OData.Edm.IEdmCollectionTypeReference CollectionType  { public virtual get; }
 	Microsoft.OData.Edm.IEdmEntityTypeReference EntityItemType  { public get; }
 	Microsoft.OData.Edm.IEdmStructuredTypeReference ItemStructuredType  { public virtual get; }
@@ -5935,6 +5936,7 @@ public sealed class Microsoft.OData.UriParser.SingleNavigationNode : Microsoft.O
 	public SingleNavigationNode (Microsoft.OData.UriParser.CollectionResourceNode source, Microsoft.OData.Edm.IEdmNavigationProperty navigationProperty, Microsoft.OData.Edm.IEdmPathExpression bindingPath)
 	public SingleNavigationNode (Microsoft.OData.UriParser.SingleResourceNode source, Microsoft.OData.Edm.IEdmNavigationProperty navigationProperty, Microsoft.OData.Edm.IEdmPathExpression bindingPath)
 
+	Microsoft.OData.Edm.IEdmPathExpression BindingPath  { public get; }
 	Microsoft.OData.Edm.IEdmEntityTypeReference EntityTypeReference  { public virtual get; }
 	Microsoft.OData.Edm.IEdmNavigationProperty NavigationProperty  { public get; }
 	Microsoft.OData.Edm.IEdmNavigationSource NavigationSource  { public virtual get; }

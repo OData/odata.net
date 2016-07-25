@@ -330,19 +330,28 @@ namespace Microsoft.OData.Tests
         [Fact]
         public void FilterAndOrderbyOnMultiBinding()
         {
+            SingleNavigationNode singleNavigationNode;
+            CollectionNavigationNode collectionNavigationNode;
+
             Uri uri = new Uri(@"http://host/EntitySet('abc')?$orderby=ContainedNav2/NavOnContained/ID");
             var orderBy = new ODataUriParser(Model, ServiceRoot, uri).ParseOrderBy();
-            ((orderBy.Expression as SingleValuePropertyAccessNode).Source as SingleNavigationNode).NavigationSource
-                .Should().BeSameAs(NavEntitySet2);
+            singleNavigationNode = (orderBy.Expression as SingleValuePropertyAccessNode).Source as SingleNavigationNode;
+            singleNavigationNode.NavigationSource.Should().BeSameAs(NavEntitySet2);
+            singleNavigationNode.BindingPath.Path.Should().Be("ContainedNav2/NavOnContained");
 
             uri = new Uri(@"http://host/EntitySet('abc')?$orderby=ContainedNav2/ManyNavOnContained/$count");
             orderBy = new ODataUriParser(Model, ServiceRoot, uri).ParseOrderBy();
-            ((orderBy.Expression as CountNode).Source as CollectionNavigationNode).NavigationSource
-                .Should().BeSameAs(NavEntitySet2);
+            collectionNavigationNode = (orderBy.Expression as CountNode).Source as CollectionNavigationNode;
+            collectionNavigationNode.NavigationSource.Should().BeSameAs(NavEntitySet2);
+            collectionNavigationNode.BindingPath.Path.Should().Be("ContainedNav2/ManyNavOnContained");
 
             uri = new Uri(@"http://host/EntitySet('abc')/ContainedNav2?$filter=NavOnContained/ID eq 'abc'");
             var filter = new ODataUriParser(Model, ServiceRoot, uri).ParseFilter();
-            ((((filter.Expression as BinaryOperatorNode).Left as ConvertNode).Source as SingleValuePropertyAccessNode).Source as SingleNavigationNode).NavigationSource.Should().BeSameAs(NavEntitySet2);
+            singleNavigationNode =
+                (((filter.Expression as BinaryOperatorNode).Left as ConvertNode).Source as SingleValuePropertyAccessNode)
+                    .Source as SingleNavigationNode;
+            singleNavigationNode.NavigationSource.Should().BeSameAs(NavEntitySet2);
+            singleNavigationNode.BindingPath.Path.Should().Be("ContainedNav2/NavOnContained");
 
             uri = new Uri(@"http://host/EntitySet('abc')/ContainedNav2?$filter=ManyNavOnContained/any(a: a/ID eq 'abc')");
             filter = new ODataUriParser(Model, ServiceRoot, uri).ParseFilter();
@@ -351,17 +360,22 @@ namespace Microsoft.OData.Tests
             // Navigation under complex
             uri = new Uri(@"http://host/EntitySet?$filter=complexProp2/CollectionOfNavOnComplex/any(t:t/ID eq 'abc')");
             filter = new ODataUriParser(Model, ServiceRoot, uri).ParseFilter();
-            ((filter.Expression as AnyNode).Source as CollectionNavigationNode).NavigationSource.Should().BeSameAs(NavEntitySet2);
+            collectionNavigationNode = (filter.Expression as AnyNode).Source as CollectionNavigationNode;
+            collectionNavigationNode.NavigationSource.Should().BeSameAs(NavEntitySet2);
+            collectionNavigationNode.BindingPath.Path.Should().Be("complexProp2/CollectionOfNavOnComplex");
 
             uri = new Uri(@"http://host/EntitySet('abc')/complexProp2?$filter=CollectionOfNavOnComplex/any(t:t/ID eq 'abc')");
             filter = new ODataUriParser(Model, ServiceRoot, uri).ParseFilter();
-            ((filter.Expression as AnyNode).Source as CollectionNavigationNode).NavigationSource.Should().BeSameAs(NavEntitySet2);
+            collectionNavigationNode = (filter.Expression as AnyNode).Source as CollectionNavigationNode;
+            collectionNavigationNode.NavigationSource.Should().BeSameAs(NavEntitySet2);
+            collectionNavigationNode.BindingPath.Path.Should().Be("complexProp2/CollectionOfNavOnComplex");
 
             uri = new Uri(@"http://host/EntitySet?$orderby=complexProp2/CollectionOfNavOnComplex/$count");
             orderBy = new ODataUriParser(Model, ServiceRoot, uri).ParseOrderBy();
-            ((orderBy.Expression as CountNode).Source as CollectionNavigationNode).NavigationSource
-                .Should().BeSameAs(NavEntitySet2);
-            ((orderBy.Expression as CountNode).Source as CollectionNavigationNode).Source.Should().BeOfType<SingleComplexNode>();
+            collectionNavigationNode = (orderBy.Expression as CountNode).Source as CollectionNavigationNode;
+            collectionNavigationNode.NavigationSource.Should().BeSameAs(NavEntitySet2);
+            collectionNavigationNode.Source.Should().BeOfType<SingleComplexNode>();
+            collectionNavigationNode.BindingPath.Path.Should().Be("complexProp2/CollectionOfNavOnComplex");
 
             uri = new Uri(@"http://host/EntitySet('abc')/complexProp2?$orderby=CollectionOfNavOnComplex/$count");
             orderBy = new ODataUriParser(Model, ServiceRoot, uri).ParseOrderBy();
@@ -371,7 +385,9 @@ namespace Microsoft.OData.Tests
             // Navigation under collection of complex
             uri = new Uri(@"http://host/EntitySet?$filter=collectionComplex/CollectionOfNavOnComplex/any(t:t/ID eq 'abc')");
             filter = new ODataUriParser(Model, ServiceRoot, uri).ParseFilter();
-            ((filter.Expression as AnyNode).Source as CollectionNavigationNode).NavigationSource.Should().BeSameAs(NavEntitySet2);
+            collectionNavigationNode = (filter.Expression as AnyNode).Source as CollectionNavigationNode;
+            collectionNavigationNode.NavigationSource.Should().BeSameAs(NavEntitySet2);
+            collectionNavigationNode.BindingPath.Path.Should().Be("collectionComplex/CollectionOfNavOnComplex");
 
             uri = new Uri(@"http://host/EntitySet('abc')/collectionComplex?$filter=CollectionOfNavOnComplex/any(t:t/ID eq 'abc')");
             filter = new ODataUriParser(Model, ServiceRoot, uri).ParseFilter();

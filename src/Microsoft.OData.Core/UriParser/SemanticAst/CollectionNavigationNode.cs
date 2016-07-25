@@ -48,6 +48,11 @@ namespace Microsoft.OData.UriParser
         private readonly List<ODataPathSegment> parsedSegments;
 
         /// <summary>
+        /// The binding path of current navigation property.
+        /// </summary>
+        private readonly IEdmPathExpression bindingPath;
+
+        /// <summary>
         /// Creates a CollectionNavigationNode.
         /// </summary>
         /// <param name="source">The parent of this collection navigation node.</param>
@@ -95,6 +100,7 @@ namespace Microsoft.OData.UriParser
         internal CollectionNavigationNode(IEdmNavigationSource navigationSource, IEdmNavigationProperty navigationProperty, IEdmPathExpression bindingPath)
             : this(navigationProperty)
         {
+            this.bindingPath = bindingPath;
             this.navigationSource = navigationSource != null ? navigationSource.FindNavigationTarget(navigationProperty, bindingPath) : null;
         }
 
@@ -139,7 +145,7 @@ namespace Microsoft.OData.UriParser
         {
             this.parsedSegments = parsedSegments;
 
-            this.navigationSource = navigationSource != null ? navigationSource.FindNavigationTarget(navigationProperty, BindingPathHelper.MatchBindingPath, this.parsedSegments) : null;
+            this.navigationSource = navigationSource != null ? navigationSource.FindNavigationTarget(navigationProperty, BindingPathHelper.MatchBindingPath, this.parsedSegments, out this.bindingPath) : null;
         }
 
         /// <summary>
@@ -226,6 +232,14 @@ namespace Microsoft.OData.UriParser
         public override IEdmNavigationSource NavigationSource
         {
             get { return this.navigationSource; }
+        }
+
+        /// <summary>
+        /// The binding path of current navigation property.
+        /// </summary>
+        public IEdmPathExpression BindingPath
+        {
+            get { return bindingPath; }
         }
 
         /// <summary>

@@ -56,13 +56,16 @@ namespace Microsoft.OData
         /// <param name="navigationProperty">The navigation property</param>
         /// <param name="matchBindingPath">The function used to determine if the binding path matches.</param>
         /// <param name="parsedSegments">The parsed segments in path, which is used to match binding path.</param>
+        /// <param name="bindingPath">The output binding path of the navigation property which matches the <paramref name="parsedSegments"/></param>
         /// <returns>The navigation target which matches the binding path.</returns>
-        public static IEdmNavigationSource FindNavigationTarget(this IEdmNavigationSource navigationSource, IEdmNavigationProperty navigationProperty, Func<IEdmPathExpression, List<ODataPathSegment>, bool> matchBindingPath, List<ODataPathSegment> parsedSegments)
+        public static IEdmNavigationSource FindNavigationTarget(this IEdmNavigationSource navigationSource, IEdmNavigationProperty navigationProperty, Func<IEdmPathExpression, List<ODataPathSegment>, bool> matchBindingPath, List<ODataPathSegment> parsedSegments, out IEdmPathExpression bindingPath)
         {
             Debug.Assert(navigationSource != null);
             Debug.Assert(navigationProperty != null);
             Debug.Assert(matchBindingPath != null);
             Debug.Assert(parsedSegments != null);
+
+            bindingPath = null;
 
             if (navigationProperty.ContainsTarget)
             {
@@ -77,6 +80,7 @@ namespace Microsoft.OData
                 {
                     if (matchBindingPath(binding.Path, parsedSegments))
                     {
+                        bindingPath = binding.Path;
                         return binding.Target;
                     }
                 }

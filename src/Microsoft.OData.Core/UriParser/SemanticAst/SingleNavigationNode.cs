@@ -42,6 +42,11 @@ namespace Microsoft.OData.UriParser
         private readonly List<ODataPathSegment> parsedSegments;
 
         /// <summary>
+        /// The binding path of current navigation property.
+        /// </summary>
+        private readonly IEdmPathExpression bindingPath;
+
+        /// <summary>
         /// Constructs a SingleNavigationNode.
         /// </summary>
         /// <param name="source">The previous node in the path.</param>
@@ -96,7 +101,7 @@ namespace Microsoft.OData.UriParser
 
             this.navigationProperty = navigationProperty;
             this.entityTypeReference = (IEdmEntityTypeReference)this.NavigationProperty.Type;
-
+            this.bindingPath = bindingPath;
             this.navigationSource = navigationSource != null ? navigationSource.FindNavigationTarget(navigationProperty, bindingPath) : null;
         }
 
@@ -150,8 +155,7 @@ namespace Microsoft.OData.UriParser
             this.navigationProperty = navigationProperty;
             this.entityTypeReference = (IEdmEntityTypeReference)this.NavigationProperty.Type;
             this.parsedSegments = segments;
-
-            this.navigationSource = navigationSource != null ? navigationSource.FindNavigationTarget(navigationProperty, BindingPathHelper.MatchBindingPath, this.parsedSegments) : null;
+            this.navigationSource = navigationSource != null ? navigationSource.FindNavigationTarget(navigationProperty, BindingPathHelper.MatchBindingPath, this.parsedSegments, out this.bindingPath) : null;
         }
 
         /// <summary>
@@ -208,6 +212,14 @@ namespace Microsoft.OData.UriParser
         public override IEdmStructuredTypeReference StructuredTypeReference
         {
             get { return this.entityTypeReference; }
+        }
+
+        /// <summary>
+        /// The binding path of current navigation property.
+        /// </summary>
+        public IEdmPathExpression BindingPath
+        {
+            get { return bindingPath; }
         }
 
         /// <summary>

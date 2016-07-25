@@ -235,7 +235,8 @@ namespace Microsoft.OData.UriParser
             IEdmNavigationSource targetNavigationSource = null;
             if (this.NavigationSource != null)
             {
-                targetNavigationSource = this.NavigationSource.FindNavigationTarget(currentNavProp, BindingPathHelper.MatchBindingPath, this.parsedSegments);
+                IEdmPathExpression bindingPath;
+                targetNavigationSource = this.NavigationSource.FindNavigationTarget(currentNavProp, BindingPathHelper.MatchBindingPath, this.parsedSegments, out bindingPath);
             }
 
             NavigationPropertySegment navSegment = new NavigationPropertySegment(currentNavProp, targetNavigationSource);

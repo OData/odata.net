@@ -500,7 +500,8 @@ namespace Microsoft.OData.UriParser
             this.parsedSegments.Remove(previous);
 
             // If this is a navigation property, find target navigation source
-            var targetNavigationSource = this.parsedSegments[parsedSegments.Count - 1].TargetEdmNavigationSource.FindNavigationTarget(navPropSegment.NavigationProperty, BindingPathHelper.MatchBindingPath, this.parsedSegments);
+            IEdmPathExpression bindingPath;
+            var targetNavigationSource = this.parsedSegments[parsedSegments.Count - 1].TargetEdmNavigationSource.FindNavigationTarget(navPropSegment.NavigationProperty, BindingPathHelper.MatchBindingPath, this.parsedSegments, out bindingPath);
 
             // If we can't compute the target navigation source, then pretend the navigation property does not exist
             if (targetNavigationSource == null)
@@ -1128,7 +1129,8 @@ namespace Microsoft.OData.UriParser
                 IEdmNavigationSource navigationSource = null;
                 if (previous.TargetEdmNavigationSource != null)
                 {
-                    navigationSource = previous.TargetEdmNavigationSource.FindNavigationTarget(navigationProperty, BindingPathHelper.MatchBindingPath, this.parsedSegments);
+                    IEdmPathExpression bindingPath;
+                    navigationSource = previous.TargetEdmNavigationSource.FindNavigationTarget(navigationProperty, BindingPathHelper.MatchBindingPath, this.parsedSegments, out bindingPath);
                 }
 
                 // Relationship between TargetMultiplicity and navigation property:
