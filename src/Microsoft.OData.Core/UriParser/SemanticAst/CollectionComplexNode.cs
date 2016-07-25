@@ -22,7 +22,7 @@ namespace Microsoft.OData.UriParser
 
         /// <summary>
         /// The EDM property which is to be accessed.
-        /// </summary> 
+        /// </summary>
         private readonly IEdmProperty property;
 
         /// <summary>
