@@ -24,11 +24,18 @@ namespace Microsoft.OData
         /// <param name="model">The model to use.</param>
         /// <param name="typeName">The type name to validate.</param>
         /// <param name="expectedTypeKind">The expected type kind for the given type name.</param>
+        /// <param name="expectStructuredType">This value indicates if a structured type is expected to be return.
+        /// True for structured type, false for non-structured type, null for indetermination.</param>
         /// <param name="writerValidator">The writer validator to use for validation.</param>
         /// <returns>The type with the given name and kind if a user model was available, otherwise null.</returns>
-        internal static IEdmType ResolveAndValidateTypeName(IEdmModel model, string typeName, EdmTypeKind expectedTypeKind, IWriterValidator writerValidator)
+        internal static IEdmType ResolveAndValidateTypeName(IEdmModel model, string typeName, EdmTypeKind expectedTypeKind, bool? expectStructuredType, IWriterValidator writerValidator)
         {
             Debug.Assert(model != null, "model != null");
+            Debug.Assert(
+                !expectStructuredType.HasValue
+                || !expectStructuredType.Value && !expectedTypeKind.IsStructured()
+                || expectStructuredType.Value && (expectedTypeKind.IsStructured() || expectedTypeKind == EdmTypeKind.None),
+                "!expectStructuredType.HasValue || !expectStructuredType.Value && !expectedTypeKind.IsStructured() || expectStructuredType.Value && (expectedTypeKind.IsStructured() || expectedTypeKind == EdmTypeKind.None)");
 
             if (typeName == null)
             {
@@ -58,7 +65,7 @@ namespace Microsoft.OData
                 throw new ODataException(Strings.ValidationUtils_UnrecognizedTypeName(typeName));
             }
 
-            writerValidator.ValidateTypeKind(resolvedType.TypeKind, expectedTypeKind, resolvedType);
+            writerValidator.ValidateTypeKind(resolvedType.TypeKind, expectedTypeKind, expectStructuredType, resolvedType);
 
             return resolvedType;
         }
@@ -79,7 +86,7 @@ namespace Microsoft.OData
             }
 
             // TODO: Clean up handling of expected types/sets during writing
-            var typeFromResource = (IEdmStructuredType)ResolveAndValidateTypeName(model, typeName, EdmTypeKind.Complex | EdmTypeKind.Entity, writerValidator);
+            var typeFromResource = (IEdmStructuredType)ResolveAndValidateTypeName(model, typeName, EdmTypeKind.None, /* expectStructuredType */ true, writerValidator);
             IEdmTypeReference typeReferenceFromValue = ResolveTypeFromMetadataAndValue(
                 expectedType.ToTypeReference(),
                 typeFromResource == null ? null : typeFromResource.ToTypeReference(),
@@ -134,10 +141,10 @@ namespace Microsoft.OData
 
             ValidateIfTypeNameMissing(typeName, model, isOpenPropertyType);
 
-            IEdmType typeFromValue = typeName == null ? null : ResolveAndValidateTypeName(model, typeName, EdmTypeKind.Collection, writerValidator);
+            IEdmType typeFromValue = typeName == null ? null : ResolveAndValidateTypeName(model, typeName, EdmTypeKind.Collection, false, writerValidator);
             if (typeReferenceFromMetadata != null)
             {
-                writerValidator.ValidateTypeKind(EdmTypeKind.Collection, typeReferenceFromMetadata.TypeKind(), typeFromValue);
+                writerValidator.ValidateTypeKind(EdmTypeKind.Collection, typeReferenceFromMetadata.TypeKind(), false, typeFromValue);
             }
 
             IEdmTypeReference typeReferenceFromValue = ResolveTypeFromMetadataAndValue(typeReferenceFromMetadata, typeFromValue == null ? null : typeFromValue.ToTypeReference(), writerValidator);

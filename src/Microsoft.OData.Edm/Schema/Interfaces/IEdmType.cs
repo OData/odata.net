@@ -11,53 +11,52 @@ namespace Microsoft.OData.Edm
     /// <summary>
     /// Defines EDM metatypes.
     /// </summary>
-    [Flags]
     public enum EdmTypeKind
     {
         /// <summary>
         /// Represents a type with an unknown or error kind.
         /// </summary>
-        None = 0,
+        None,
 
         /// <summary>
         /// Represents a type implementing <see cref="IEdmPrimitiveType"/>.
         /// </summary>
-        Primitive = 1,
+        Primitive,
 
         /// <summary>
         /// Represents a type implementing <see cref="IEdmEntityType"/>.
         /// </summary>
-        Entity = 2,
+        Entity,
 
         /// <summary>
         /// Represents a type implementing <see cref="IEdmComplexType"/>.
         /// </summary>
-        Complex = 4,
+        Complex,
 
         /// <summary>
         /// Represents a type implementing <see cref="IEdmCollectionType"/>.
         /// </summary>
-        Collection = 8,
+        Collection,
 
         /// <summary>
         /// Represents a type implementing <see cref="IEdmEntityReferenceType"/>.
         /// </summary>
-        EntityReference = 16,
+        EntityReference,
 
         /// <summary>
         /// Represents a type implementing <see cref="IEdmEnumType"/>.
         /// </summary>
-        Enum = 32,
+        Enum,
 
         /// <summary>
         /// Represents a type implementing <see cref="IEdmTypeDefinition"/>.
         /// </summary>
-        TypeDefinition = 64,
+        TypeDefinition,
 
         /// <summary>
         /// Represents a type implementing <see cref="IEdmUntypedType"/>.
         /// </summary>
-        Untyped = 128,
+        Untyped
     }
 
     /// <summary>

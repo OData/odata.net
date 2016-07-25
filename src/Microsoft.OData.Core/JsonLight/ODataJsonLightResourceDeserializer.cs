@@ -1101,6 +1101,7 @@ namespace Microsoft.OData.JsonLight
                 EdmTypeKind targetTypeKind;
                 payloadTypeReference = this.ReaderValidator.ResolvePayloadTypeNameAndComputeTargetType(
                     EdmTypeKind.None,
+                    /*expectStructuredType*/ null,
                     /*defaultPrimitivePayloadType*/ null,
                     null, // expectedTypeReference
                     payloadTypeName,

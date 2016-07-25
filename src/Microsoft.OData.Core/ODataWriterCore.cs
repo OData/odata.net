@@ -1351,7 +1351,13 @@ namespace Microsoft.OData
                     var resourceSet = item as ODataResourceSet;
                     if (resourceSet != null && resourceSet.TypeName != null && this.outputContext.Model.IsUserModel())
                     {
-                        var collectionType = TypeNameOracle.ResolveAndValidateTypeName(this.outputContext.Model, resourceSet.TypeName, EdmTypeKind.Collection, this.outputContext.WriterValidator) as IEdmCollectionType;
+                        var collectionType = TypeNameOracle.ResolveAndValidateTypeName(
+                            this.outputContext.Model,
+                            resourceSet.TypeName,
+                            EdmTypeKind.Collection,
+                            false,
+                            this.outputContext.WriterValidator) as IEdmCollectionType;
+
                         if (collectionType != null)
                         {
                             resourceType = collectionType.ElementType.Definition as IEdmStructuredType;

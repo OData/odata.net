@@ -873,7 +873,12 @@ namespace Microsoft.OData.JsonLight
             {
                 if (jsonLightOutputContext.Model != null && jsonLightOutputContext.Model != EdmCoreModel.Instance)
                 {
-                    entityTypeFromEntry = TypeNameOracle.ResolveAndValidateTypeName(this.jsonLightOutputContext.Model, resource.TypeName, EdmTypeKind.Entity, this.jsonLightOutputContext.WriterValidator) as IEdmEntityType;
+                    entityTypeFromEntry = TypeNameOracle.ResolveAndValidateTypeName(
+                        this.jsonLightOutputContext.Model,
+                        resource.TypeName,
+                        EdmTypeKind.Entity,
+                        /* expectStructuredType */ true,
+                        this.jsonLightOutputContext.WriterValidator) as IEdmEntityType;
                 }
             }
 

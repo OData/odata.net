@@ -158,7 +158,7 @@ namespace Microsoft.OData.JsonLight
 
                                             state = ODataParameterReaderState.Value;
                                         }
-                                        else if ((((IEdmCollectionType)parameterTypeReference.Definition).ElementType.TypeKind() & (EdmTypeKind.Entity | EdmTypeKind.Complex)) != 0)
+                                        else if (((IEdmCollectionType)parameterTypeReference.Definition).ElementType.IsStructured())
                                         {
                                             state = ODataParameterReaderState.ResourceSet;
                                         }

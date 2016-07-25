@@ -299,6 +299,7 @@ namespace Microsoft.OData.JsonLight
                 EdmTypeKind targetTypeKind;
                 payloadTypeReference = this.ReaderValidator.ResolvePayloadTypeNameAndComputeTargetType(
                     EdmTypeKind.None,
+                    /*expectStructuredType*/ null,
                     /*defaultPrimitivePayloadType*/ null,
                     null, // expectedTypeReference
                     payloadTypeName,
@@ -364,6 +365,7 @@ namespace Microsoft.OData.JsonLight
                 EdmTypeKind targetTypeKind;
                 payloadTypeReference = this.ReaderValidator.ResolvePayloadTypeNameAndComputeTargetType(
                     EdmTypeKind.None,
+                    /*expectStructuredType*/ null,
                     /*defaultPrimitivePayloadType*/ null,
                     null, // expectedTypeReference
                     payloadTypeName,
@@ -1496,6 +1498,7 @@ namespace Microsoft.OData.JsonLight
             EdmTypeKind targetTypeKind;
             IEdmTypeReference targetTypeReference = this.ReaderValidator.ResolvePayloadTypeNameAndComputeTargetType(
                 EdmTypeKind.None,
+                /*expectStructuredType*/ null,
                 /*defaultPrimitivePayloadType*/ null,
                 expectedTypeReference,
                 payloadTypeName,

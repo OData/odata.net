@@ -1553,7 +1553,8 @@ namespace Microsoft.OData.JsonLight
             IEdmEntityTypeReference targetEntityTypeReference =
                 (IEdmEntityTypeReference)this.jsonLightInputContext.MessageReaderSettings.Validator.ResolvePayloadTypeNameAndComputeTargetType(
                     EdmTypeKind.Entity,
-                /*defaultPrimitivePayloadType*/ null,
+                    /*expectStructuredType*/ true,
+                    /*defaultPrimitivePayloadType*/ null,
                     this.CurrentEntityType.ToTypeReference(),
                     entityTypeNameFromPayload,
                     this.jsonLightInputContext.Model,

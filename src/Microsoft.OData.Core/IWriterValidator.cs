@@ -70,9 +70,13 @@ namespace Microsoft.OData
         /// </summary>
         /// <param name="actualTypeKind">The actual type kind.</param>
         /// <param name="expectedTypeKind">The expected type kind.</param>
+        /// <param name="expectStructuredType">This value indicates if the <paramref name="actualTypeKind"/> is expected to be complex or entity.
+        /// True for complex or entity, false for non-structured type kind, null for indetermination.</param>
         /// <param name="edmType">The edm type to use in the error.</param>
-        void ValidateTypeKind(EdmTypeKind actualTypeKind, EdmTypeKind expectedTypeKind,
-                              IEdmType edmType);
+        void ValidateTypeKind(EdmTypeKind actualTypeKind,
+            EdmTypeKind expectedTypeKind,
+            bool? expectStructuredType,
+            IEdmType edmType);
 
         /// <summary>
         /// Validates that the specified <paramref name="resource"/> is a valid resource as per the

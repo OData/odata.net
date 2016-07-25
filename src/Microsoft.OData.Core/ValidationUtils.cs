@@ -52,7 +52,10 @@ namespace Microsoft.OData
         {
             Debug.Assert(typeName != null, "typeName != null");
 
-            if ((typeKind & (EdmTypeKind.Primitive | EdmTypeKind.Enum | EdmTypeKind.Collection | EdmTypeKind.Untyped)) <= 0)
+            if (typeKind != EdmTypeKind.Primitive
+                && typeKind != EdmTypeKind.Enum
+                && typeKind != EdmTypeKind.Collection
+                && typeKind != EdmTypeKind.Untyped)
             {
                 throw new ODataException(Strings.ValidationUtils_IncorrectValueTypeKind(typeName, typeKind.ToString()));
             }
@@ -394,10 +397,19 @@ namespace Microsoft.OData
         /// </summary>
         /// <param name="actualTypeKind">The actual type kind to compare.</param>
         /// <param name="expectedTypeKind">The expected type kind to compare against.</param>
+        /// <param name="expectStructuredType">This value indicates if the <paramref name="actualTypeKind"/> is expected to be complex or entity.
+        /// True for complex or entity, false for non-structured type kind, null for indetermination.</param>
         /// <param name="typeName">The name of the type to use in the error.</param>
-        internal static void ValidateTypeKind(EdmTypeKind actualTypeKind, EdmTypeKind expectedTypeKind, string typeName)
+        internal static void ValidateTypeKind(EdmTypeKind actualTypeKind, EdmTypeKind expectedTypeKind, bool? expectStructuredType, string typeName)
         {
-            if ((expectedTypeKind & actualTypeKind) <= 0)
+            if (expectStructuredType.HasValue && expectStructuredType.Value
+                && (expectedTypeKind.IsStructured() || expectedTypeKind == EdmTypeKind.None)
+                && actualTypeKind.IsStructured())
+            {
+                return;
+            }
+
+            if (expectedTypeKind != actualTypeKind)
             {
                 if (typeName == null)
                 {

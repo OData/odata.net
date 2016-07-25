@@ -493,7 +493,8 @@ namespace Microsoft.OData
             EdmTypeKind targetTypeKind;
             IEdmStructuredTypeReference targetResourceTypeReference =
                 (IEdmStructuredTypeReference)this.inputContext.MessageReaderSettings.Validator.ResolvePayloadTypeNameAndComputeTargetType(
-                    EdmTypeKind.Complex | EdmTypeKind.Entity,
+                    EdmTypeKind.None,
+                    /*expectStructuredType*/ true,
                     /*defaultPrimitivePayloadType*/ null,
                     this.CurrentResourceType.ToTypeReference(),
                     resourceTypeNameFromPayload,

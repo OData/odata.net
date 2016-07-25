@@ -210,6 +210,8 @@ namespace Microsoft.OData
         /// Resolves and validates the payload type against the expected type and returns the target type.
         /// </summary>
         /// <param name="expectedTypeKind">The expected type kind for the value.</param>
+        /// <param name="expectStructuredType">This value indicates if a structured type is expected to be return.
+        /// True for structured type, false for non-structured type, null for indetermination.</param>
         /// <param name="defaultPrimitivePayloadType">The default payload type if none is specified in the payload;
         /// for ATOM this is Edm.String, for JSON it is null since there is no payload type name for primitive types in the payload.</param>
         /// <param name="expectedTypeReference">The expected type reference, or null if no expected type is available.</param>
@@ -231,6 +233,7 @@ namespace Microsoft.OData
         /// </remarks>
         internal static IEdmTypeReference ResolvePayloadTypeNameAndComputeTargetType(
             EdmTypeKind expectedTypeKind,
+            bool? expectStructuredType,
             IEdmType defaultPrimitivePayloadType,
             IEdmTypeReference expectedTypeReference,
             string payloadTypeName,
@@ -243,6 +246,8 @@ namespace Microsoft.OData
             out ODataTypeAnnotation typeAnnotation)
         {
             Debug.Assert(typeKindFromPayloadFunc != null, "typeKindFromPayloadFunc != null");
+            Debug.Assert(expectedTypeKind.IsStructured() && expectStructuredType != false || !expectedTypeKind.IsStructured() && expectStructuredType != true,
+                "expectedTypeKind.IsStructured() && expectStructuredType != false || !expectedTypeKind.IsStructured() && expectStructuredType != true");
 
             typeAnnotation = null;
 
@@ -264,8 +269,8 @@ namespace Microsoft.OData
 
             // Compute the target type kind based on the expected type, the payload type kind
             // and a function to detect the target type kind from the shape of the payload.
-            EdmTypeKind typeKindToValidate = expectedTypeKind != EdmTypeKind.None ? expectedTypeKind : payloadTypeKind;
-            bool forResource = (typeKindToValidate & (EdmTypeKind.Complex | EdmTypeKind.Entity)) > 0;
+            bool forResource = expectStructuredType == true
+                               || !expectStructuredType.HasValue && payloadTypeKind.IsStructured();
 
             targetTypeKind = ComputeTargetTypeKind(
                 expectedTypeReference,
@@ -310,9 +315,9 @@ namespace Microsoft.OData
                 }
             }
 
-            if (expectedTypeKind != EdmTypeKind.None && targetTypeReference != null)
+            if ((expectedTypeKind != EdmTypeKind.None || expectStructuredType == true) && targetTypeReference != null)
             {
-                ValidationUtils.ValidateTypeKind(targetTypeKind, expectedTypeKind, payloadTypeName);
+                ValidationUtils.ValidateTypeKind(targetTypeKind, expectedTypeKind, forResource, payloadTypeName);
             }
 
             return targetTypeReference;
@@ -369,7 +374,7 @@ namespace Microsoft.OData
             if (payloadTypeKind != EdmTypeKind.None && (!enablePrimitiveTypeConversion || throwIfTypeConflictsWithMetadata))
             {
                 // Make sure that the type kinds match.
-                ValidationUtils.ValidateTypeKind(payloadTypeKind, EdmTypeKind.Primitive, payloadTypeName);
+                ValidationUtils.ValidateTypeKind(payloadTypeKind, EdmTypeKind.Primitive, null, payloadTypeName);
             }
 
             if (!model.IsUserModel())
@@ -482,7 +487,7 @@ namespace Microsoft.OData
             if (payloadTypeKind != EdmTypeKind.None && (throwIfTypeConflictsWithMetadata || expectedTypeReference == null))
             {
                 // Make sure that the type kinds match.
-                ValidationUtils.ValidateTypeKind(payloadTypeKind, expectedTypeKind, payloadTypeName);
+                ValidationUtils.ValidateTypeKind(payloadTypeKind, expectedTypeKind, null, payloadTypeName);
             }
 
             if (!model.IsUserModel())
@@ -962,7 +967,7 @@ namespace Microsoft.OData
         /// possibly the payload shape.
         /// </summary>
         /// <param name="expectedTypeReference">The expected type reference used to read the payload value.</param>
-        /// <param name="forResource">true when resolving a type name for a resource; false for a non-resource; none for indetermination</param>
+        /// <param name="forResource">true when resolving a type name for a resource; false for a non-resource.</param>
         /// <param name="payloadTypeName">The type name read from the payload.</param>
         /// <param name="payloadTypeKind">The type kind of the payload value.</param>
         /// <param name="clientCustomTypeResolver">Custom type resolver used by the client.</param>
@@ -1030,7 +1035,7 @@ namespace Microsoft.OData
                 enablePrimitiveTypeConversion,
                 expectedTypeReference, payloadTypeKind))
             {
-                ValidationUtils.ValidateTypeKind(targetTypeKind, expectedTypeReference.TypeKind(), payloadTypeName);
+                ValidationUtils.ValidateTypeKind(targetTypeKind, expectedTypeReference.TypeKind(), null, payloadTypeName);
             }
 
             return targetTypeKind;

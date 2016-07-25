@@ -47,6 +47,8 @@ namespace Microsoft.OData
         /// Resolves and validates the payload type against the expected type and returns the target type.
         /// </summary>
         /// <param name="expectedTypeKind">The expected type kind for the value.</param>
+        /// <param name="expectStructuredType">This value indicates if a structured type is expected to be return.
+        /// True for structured type, false for non-structured type, null for indetermination.</param>
         /// <param name="defaultPrimitivePayloadType">The default payload type if none is specified in the payload;
         /// for ATOM this is Edm.String, for JSON it is null since there is no payload type name for primitive types in the payload.</param>
         /// <param name="expectedTypeReference">The expected type reference, or null if no expected type is available.</param>
@@ -65,6 +67,7 @@ namespace Microsoft.OData
         /// </remarks>
         IEdmTypeReference ResolvePayloadTypeNameAndComputeTargetType(
             EdmTypeKind expectedTypeKind,
+            bool? expectStructuredType,
             IEdmType defaultPrimitivePayloadType,
             IEdmTypeReference expectedTypeReference,
             string payloadTypeName,

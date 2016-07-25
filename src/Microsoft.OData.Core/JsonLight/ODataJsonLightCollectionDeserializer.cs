@@ -116,6 +116,7 @@ namespace Microsoft.OData.JsonLight
                                         Func<EdmTypeKind> typeKindFromPayloadFunc = () => { throw new ODataException(ODataErrorStrings.General_InternalError(InternalErrorCodes.ODataJsonLightCollectionDeserializer_ReadCollectionStart_TypeKindFromPayloadFunc)); };
                                         actualItemTypeRef = this.ReaderValidator.ResolvePayloadTypeNameAndComputeTargetType(
                                             EdmTypeKind.None,
+                                            /*expectStructuredType*/ null,
                                             /*defaultPrimitivePayloadType*/ null,
                                             expectedItemTypeReference,
                                             itemTypeName,

@@ -586,19 +586,16 @@ public enum Microsoft.OData.Edm.EdmSchemaElementKind : int {
 	TypeDefinition = 1
 }
 
-[
-FlagsAttribute(),
-]
 public enum Microsoft.OData.Edm.EdmTypeKind : int {
-	Collection = 8
-	Complex = 4
+	Collection = 4
+	Complex = 3
 	Entity = 2
-	EntityReference = 16
-	Enum = 32
+	EntityReference = 5
+	Enum = 6
 	None = 0
 	Primitive = 1
-	TypeDefinition = 64
-	Untyped = 128
+	TypeDefinition = 7
+	Untyped = 8
 }
 
 public struct Microsoft.OData.Edm.Date : IComparable, IComparable`1, IEquatable`1 {

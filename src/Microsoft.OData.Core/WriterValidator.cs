@@ -160,14 +160,19 @@ namespace Microsoft.OData
         /// </summary>
         /// <param name="actualTypeKind">The actual type kind.</param>
         /// <param name="expectedTypeKind">The expected type kind.</param>
+        /// <param name="expectStructuredType">This value indicates if the <paramref name="actualTypeKind"/> is expected to be complex or entity.
+        /// True for complex or entity, false for non-structured type kind, null for indetermination.</param>
         /// <param name="edmType">The edm type to use in the error.</param>
+        /// <remarks>If expectedStructuredType is true, then expectedTypeKind could be </remarks>
         public virtual void ValidateTypeKind(EdmTypeKind actualTypeKind,
-                                             EdmTypeKind expectedTypeKind, IEdmType edmType)
+            EdmTypeKind expectedTypeKind,
+            bool? expectStructuredType,
+            IEdmType edmType)
         {
             if (settings.ThrowIfTypeConflictsWithMetadata)
             {
                 ValidationUtils.ValidateTypeKind(
-                    actualTypeKind, expectedTypeKind, edmType == null ? null : edmType.FullTypeName());
+                    actualTypeKind, expectedTypeKind, expectStructuredType, edmType == null ? null : edmType.FullTypeName());
             }
         }
 
