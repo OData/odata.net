@@ -116,6 +116,17 @@ namespace Microsoft.OData
         }
 
         /// <summary>
+        /// Translates a <see cref="CollectionComplexNode"/> into a corresponding <see cref="String"/>.
+        /// </summary>
+        /// <param name="node">The node to translate.</param>
+        /// <returns>The translated String.</returns>
+        public override String Visit(CollectionComplexNode node)
+        {
+            ExceptionUtils.CheckArgumentNotNull(node, "node");
+            return this.TranslatePropertyAccess(node.Source, node.Property.Name);
+        }
+
+        /// <summary>
         /// Translates a <see cref="CollectionPropertyAccessNode"/> into a corresponding <see cref="String"/>.
         /// </summary>
         /// <param name="node">The node to translate.</param>
@@ -151,17 +162,6 @@ namespace Microsoft.OData
         {
             ExceptionUtils.CheckArgumentNotNull(node, "node");
             return this.TranslatePropertyAccess(node.Source, node.ItemStructuredType.Definition.ToString());
-        }
-
-        /// <summary>
-        /// Visit an CollectionPropertyCastNode
-        /// </summary>
-        /// <param name="node">the node to visit</param>
-        /// <returns>The translated String of CollectionPropertyCastNode</returns>
-        public override String Visit(CollectionPropertyCastNode node)
-        {
-            ExceptionUtils.CheckArgumentNotNull(node, "node");
-            return this.TranslatePropertyAccess(node.Source, node.CollectionType.Definition.ToString());
         }
 
         /// <summary>
@@ -202,17 +202,6 @@ namespace Microsoft.OData
         {
             ExceptionUtils.CheckArgumentNotNull(node, "node");
             return this.TranslatePropertyAccess(node.Source, node.StructuredTypeReference.Definition.ToString());
-        }
-
-        /// <summary>
-        /// Translates a <see cref="SingleValueCastNode"/> into a corresponding <see cref="String"/>.
-        /// </summary>
-        /// <param name="node">The node to translate.</param>
-        /// <returns>The translated String of SingleValueCastNode.</returns>
-        public override String Visit(SingleValueCastNode node)
-        {
-            ExceptionUtils.CheckArgumentNotNull(node, "node");
-            return this.TranslatePropertyAccess(node.Source, node.TypeReference.Definition.ToString());
         }
 
         /// <summary>
@@ -322,6 +311,17 @@ namespace Microsoft.OData
         /// <param name="node">The node to translate.</param>
         /// <returns>The translated String.</returns>
         public override String Visit(SingleValuePropertyAccessNode node)
+        {
+            ExceptionUtils.CheckArgumentNotNull(node, "node");
+            return this.TranslatePropertyAccess(node.Source, node.Property.Name);
+        }
+
+        /// <summary>
+        /// Translates a <see cref="SingleComplexNode"/> into a corresponding <see cref="String"/>.
+        /// </summary>
+        /// <param name="node">The node to translate.</param>
+        /// <returns>The translated String.</returns>
+        public override String Visit(SingleComplexNode node)
         {
             ExceptionUtils.CheckArgumentNotNull(node, "node");
             return this.TranslatePropertyAccess(node.Source, node.Property.Name);

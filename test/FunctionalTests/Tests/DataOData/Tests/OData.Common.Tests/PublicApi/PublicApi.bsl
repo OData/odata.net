@@ -5069,12 +5069,11 @@ public enum Microsoft.OData.UriParser.QueryNodeKind : int {
 	All = 14
 	Any = 9
 	BinaryOperator = 4
-	CollectionComplexNode = 30
+	CollectionComplexNode = 26
 	CollectionFunctionCall = 18
 	CollectionNavigationNode = 10
 	CollectionOpenPropertyAccess = 25
 	CollectionPropertyAccess = 7
-	CollectionPropertyCast = 26
 	CollectionResourceCast = 15
 	CollectionResourceFunctionCall = 19
 	Constant = 1
@@ -5088,11 +5087,10 @@ public enum Microsoft.OData.UriParser.QueryNodeKind : int {
 	ParameterAlias = 21
 	ResourceRangeVariableReference = 16
 	SearchTerm = 24
-	SingleComplexNode = 29
+	SingleComplexNode = 27
 	SingleNavigationNode = 11
 	SingleResourceCast = 13
 	SingleResourceFunctionCall = 17
-	SingleValueCast = 27
 	SingleValueFunctionCall = 8
 	SingleValueOpenPropertyAccess = 12
 	SingleValuePropertyAccess = 6
@@ -5206,7 +5204,6 @@ public abstract class Microsoft.OData.UriParser.QueryNodeVisitor`1 {
 	public virtual T Visit (Microsoft.OData.UriParser.CollectionNavigationNode nodeIn)
 	public virtual T Visit (Microsoft.OData.UriParser.CollectionOpenPropertyAccessNode nodeIn)
 	public virtual T Visit (Microsoft.OData.UriParser.CollectionPropertyAccessNode nodeIn)
-	public virtual T Visit (Microsoft.OData.UriParser.CollectionPropertyCastNode nodeIn)
 	public virtual T Visit (Microsoft.OData.UriParser.CollectionResourceCastNode nodeIn)
 	public virtual T Visit (Microsoft.OData.UriParser.CollectionResourceFunctionCallNode nodeIn)
 	public virtual T Visit (Microsoft.OData.UriParser.ConstantNode nodeIn)
@@ -5221,7 +5218,6 @@ public abstract class Microsoft.OData.UriParser.QueryNodeVisitor`1 {
 	public virtual T Visit (Microsoft.OData.UriParser.SingleNavigationNode nodeIn)
 	public virtual T Visit (Microsoft.OData.UriParser.SingleResourceCastNode nodeIn)
 	public virtual T Visit (Microsoft.OData.UriParser.SingleResourceFunctionCallNode nodeIn)
-	public virtual T Visit (Microsoft.OData.UriParser.SingleValueCastNode nodeIn)
 	public virtual T Visit (Microsoft.OData.UriParser.SingleValueFunctionCallNode nodeIn)
 	public virtual T Visit (Microsoft.OData.UriParser.SingleValueOpenPropertyAccessNode nodeIn)
 	public virtual T Visit (Microsoft.OData.UriParser.SingleValuePropertyAccessNode nodeIn)
@@ -5300,6 +5296,7 @@ public sealed class Microsoft.OData.UriParser.RangeVariableKind {
 }
 
 public class Microsoft.OData.UriParser.CollectionComplexNode : Microsoft.OData.UriParser.CollectionResourceNode {
+	public CollectionComplexNode (Microsoft.OData.UriParser.CollectionResourceNode source, Microsoft.OData.Edm.IEdmProperty property)
 	public CollectionComplexNode (Microsoft.OData.UriParser.SingleResourceNode source, Microsoft.OData.Edm.IEdmProperty property)
 
 	Microsoft.OData.Edm.IEdmCollectionTypeReference CollectionType  { public virtual get; }
@@ -5307,7 +5304,7 @@ public class Microsoft.OData.UriParser.CollectionComplexNode : Microsoft.OData.U
 	Microsoft.OData.Edm.IEdmTypeReference ItemType  { public virtual get; }
 	Microsoft.OData.Edm.IEdmNavigationSource NavigationSource  { public virtual get; }
 	Microsoft.OData.Edm.IEdmProperty Property  { public get; }
-	Microsoft.OData.UriParser.SingleResourceNode Source  { public get; }
+	Microsoft.OData.UriParser.QueryNode Source  { public get; }
 
 	public virtual T Accept (QueryNodeVisitor`1 visitor)
 }
@@ -5419,11 +5416,12 @@ public class Microsoft.OData.UriParser.ParameterAliasNode : Microsoft.OData.UriP
 }
 
 public class Microsoft.OData.UriParser.SingleComplexNode : Microsoft.OData.UriParser.SingleResourceNode {
+	public SingleComplexNode (Microsoft.OData.UriParser.CollectionResourceNode source, Microsoft.OData.Edm.IEdmProperty property)
 	public SingleComplexNode (Microsoft.OData.UriParser.SingleResourceNode source, Microsoft.OData.Edm.IEdmProperty property)
 
 	Microsoft.OData.Edm.IEdmNavigationSource NavigationSource  { public virtual get; }
 	Microsoft.OData.Edm.IEdmProperty Property  { public get; }
-	Microsoft.OData.UriParser.SingleResourceNode Source  { public get; }
+	Microsoft.OData.UriParser.QueryNode Source  { public get; }
 	Microsoft.OData.Edm.IEdmStructuredTypeReference StructuredTypeReference  { public virtual get; }
 	Microsoft.OData.Edm.IEdmTypeReference TypeReference  { public virtual get; }
 
@@ -5512,6 +5510,7 @@ public sealed class Microsoft.OData.UriParser.CollectionFunctionCallNode : Micro
 }
 
 public sealed class Microsoft.OData.UriParser.CollectionNavigationNode : Microsoft.OData.UriParser.CollectionResourceNode {
+	public CollectionNavigationNode (Microsoft.OData.UriParser.CollectionResourceNode source, Microsoft.OData.Edm.IEdmNavigationProperty navigationProperty, Microsoft.OData.Edm.IEdmPathExpression bindingPath)
 	public CollectionNavigationNode (Microsoft.OData.UriParser.SingleResourceNode source, Microsoft.OData.Edm.IEdmNavigationProperty navigationProperty, Microsoft.OData.Edm.IEdmPathExpression bindingPath)
 
 	Microsoft.OData.Edm.IEdmCollectionTypeReference CollectionType  { public virtual get; }
@@ -5520,7 +5519,7 @@ public sealed class Microsoft.OData.UriParser.CollectionNavigationNode : Microso
 	Microsoft.OData.Edm.IEdmTypeReference ItemType  { public virtual get; }
 	Microsoft.OData.Edm.IEdmNavigationProperty NavigationProperty  { public get; }
 	Microsoft.OData.Edm.IEdmNavigationSource NavigationSource  { public virtual get; }
-	Microsoft.OData.UriParser.SingleResourceNode Source  { public get; }
+	Microsoft.OData.UriParser.QueryNode Source  { public get; }
 	Microsoft.OData.Edm.EdmMultiplicity TargetMultiplicity  { public get; }
 
 	public virtual T Accept (QueryNodeVisitor`1 visitor)
@@ -5544,16 +5543,6 @@ public sealed class Microsoft.OData.UriParser.CollectionPropertyAccessNode : Mic
 	Microsoft.OData.Edm.IEdmTypeReference ItemType  { public virtual get; }
 	Microsoft.OData.Edm.IEdmProperty Property  { public get; }
 	Microsoft.OData.UriParser.SingleValueNode Source  { public get; }
-
-	public virtual T Accept (QueryNodeVisitor`1 visitor)
-}
-
-public sealed class Microsoft.OData.UriParser.CollectionPropertyCastNode : Microsoft.OData.UriParser.CollectionNode {
-	public CollectionPropertyCastNode (Microsoft.OData.UriParser.CollectionPropertyAccessNode source, Microsoft.OData.Edm.IEdmComplexType complexType)
-
-	Microsoft.OData.Edm.IEdmCollectionTypeReference CollectionType  { public virtual get; }
-	Microsoft.OData.Edm.IEdmTypeReference ItemType  { public virtual get; }
-	Microsoft.OData.UriParser.CollectionPropertyAccessNode Source  { public get; }
 
 	public virtual T Accept (QueryNodeVisitor`1 visitor)
 }
@@ -5943,12 +5932,13 @@ public sealed class Microsoft.OData.UriParser.SelectExpandClause {
 }
 
 public sealed class Microsoft.OData.UriParser.SingleNavigationNode : Microsoft.OData.UriParser.SingleEntityNode {
+	public SingleNavigationNode (Microsoft.OData.UriParser.CollectionResourceNode source, Microsoft.OData.Edm.IEdmNavigationProperty navigationProperty, Microsoft.OData.Edm.IEdmPathExpression bindingPath)
 	public SingleNavigationNode (Microsoft.OData.UriParser.SingleResourceNode source, Microsoft.OData.Edm.IEdmNavigationProperty navigationProperty, Microsoft.OData.Edm.IEdmPathExpression bindingPath)
 
 	Microsoft.OData.Edm.IEdmEntityTypeReference EntityTypeReference  { public virtual get; }
 	Microsoft.OData.Edm.IEdmNavigationProperty NavigationProperty  { public get; }
 	Microsoft.OData.Edm.IEdmNavigationSource NavigationSource  { public virtual get; }
-	Microsoft.OData.UriParser.SingleResourceNode Source  { public get; }
+	Microsoft.OData.UriParser.QueryNode Source  { public get; }
 	Microsoft.OData.Edm.IEdmStructuredTypeReference StructuredTypeReference  { public virtual get; }
 	Microsoft.OData.Edm.EdmMultiplicity TargetMultiplicity  { public get; }
 	Microsoft.OData.Edm.IEdmTypeReference TypeReference  { public virtual get; }
@@ -5990,15 +5980,6 @@ public sealed class Microsoft.OData.UriParser.SingletonSegment : Microsoft.OData
 
 	public virtual void HandleWith (Microsoft.OData.UriParser.PathSegmentHandler handler)
 	public virtual T TranslateWith (PathSegmentTranslator`1 translator)
-}
-
-public sealed class Microsoft.OData.UriParser.SingleValueCastNode : Microsoft.OData.UriParser.SingleValueNode {
-	public SingleValueCastNode (Microsoft.OData.UriParser.SingleValueNode source, Microsoft.OData.Edm.IEdmComplexType complexType)
-
-	Microsoft.OData.UriParser.SingleValueNode Source  { public get; }
-	Microsoft.OData.Edm.IEdmTypeReference TypeReference  { public virtual get; }
-
-	public virtual T Accept (QueryNodeVisitor`1 visitor)
 }
 
 public sealed class Microsoft.OData.UriParser.SingleValueFunctionCallNode : Microsoft.OData.UriParser.SingleValueNode {

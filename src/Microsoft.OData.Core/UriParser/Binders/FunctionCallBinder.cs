@@ -170,10 +170,10 @@ namespace Microsoft.OData.UriParser
         }
 
         /// <summary>
-        /// Binds the token to a SingleValueFunctionCallNode
+        /// Binds the token to a SingleValueFunctionCallNode or a SingleResourceFunctionCallNode for complex
         /// </summary>
         /// <param name="functionCallToken">Token to bind</param>
-        /// <returns>The resulting SingleValueFunctionCallNode</returns>
+        /// <returns>The resulting SingleValueFunctionCallNode/SingleResourceFunctionCallNode</returns>
         internal QueryNode BindFunctionCall(FunctionCallToken functionCallToken)
         {
             ExceptionUtils.CheckArgumentNotNull(functionCallToken, "functionCallToken");
@@ -284,9 +284,12 @@ namespace Microsoft.OData.UriParser
                 TypePromoteArguments(signature, argumentNodes);
             }
 
-            IEdmTypeReference returnType = signature.ReturnType;
+            if (signature.ReturnType != null && signature.ReturnType.IsStructured())
+            {
+                return new SingleResourceFunctionCallNode(functionCallTokenName, new ReadOnlyCollection<QueryNode>(argumentNodes), signature.ReturnType.AsStructured(), null);
+            }
 
-            return new SingleValueFunctionCallNode(functionCallTokenName, new ReadOnlyCollection<QueryNode>(argumentNodes), returnType);
+            return new SingleValueFunctionCallNode(functionCallTokenName, new ReadOnlyCollection<QueryNode>(argumentNodes), signature.ReturnType);
         }
 
         /// <summary>
@@ -375,7 +378,7 @@ namespace Microsoft.OData.UriParser
             {
                 boundFunction = new SingleResourceFunctionCallNode(functionName, new[] { function }, boundArguments, (IEdmEntityTypeReference)returnType.Definition.ToTypeReference(), returnSet, parent);
             }
-            else if (returnType.IsEntityCollection())
+            else if (returnType.IsStructuredCollection())
             {
                 IEdmCollectionTypeReference collectionTypeReference = (IEdmCollectionTypeReference)returnType;
                 boundFunction = new CollectionResourceFunctionCallNode(functionName, new[] { function }, boundArguments, collectionTypeReference, returnSet, parent);
@@ -387,7 +390,8 @@ namespace Microsoft.OData.UriParser
             }
             else
             {
-                boundFunction = new SingleValueFunctionCallNode(functionName, new[] { function }, boundArguments, returnType, parent);
+                boundFunction = new SingleValueFunctionCallNode(functionName, new[] { function }, boundArguments,
+                    returnType, parent);
             }
 
             return true;
@@ -628,13 +632,12 @@ namespace Microsoft.OData.UriParser
                 case ExpressionConstants.UnboundFunctionCast:
                     {
                         returnType = ValidateAndBuildCastArgs(state, ref args);
-                        if (returnType.IsEntity())
+                        if (returnType.IsStructured())
                         {
-                            IEdmEntityTypeReference returnEntityType = returnType.AsEntity();
                             SingleResourceNode entityNode = args.ElementAt(0) as SingleResourceNode;
                             if (entityNode != null)
                             {
-                                return new SingleResourceFunctionCallNode(functionCallTokenName, args, returnEntityType, entityNode.NavigationSource);
+                                return new SingleResourceFunctionCallNode(functionCallTokenName, args, returnType.AsStructured(), entityNode.NavigationSource);
                             }
                         }
 

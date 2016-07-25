@@ -3,10 +3,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using FluentAssertions;
 using Microsoft.OData.Edm;
-using Microsoft.OData.Tests.UriParser;
 using Microsoft.OData.UriParser;
 using Xunit;
 
@@ -18,6 +16,7 @@ namespace Microsoft.OData.Tests
         private readonly static Uri ServiceRoot = new Uri("http://host");
         private readonly static IEdmEntitySet EntitySet = Model.EntityContainer.FindEntitySet("EntitySet");
         private static readonly IEdmEntitySet NavNestEntitySet = Model.EntityContainer.FindEntitySet("NestedEntitySet");
+        private static readonly IEdmEntitySet NavEntitySet1 = Model.EntityContainer.FindEntitySet("NavEntitySet1");
         private static readonly IEdmEntitySet NavEntitySet2 = Model.EntityContainer.FindEntitySet("NavEntitySet2");
         private static readonly IEdmStructuredType EntityType = Model.FindType("NS.EntityType") as IEdmStructuredType;
 
@@ -326,8 +325,12 @@ namespace Microsoft.OData.Tests
             uri = new Uri(@"http://host/EntitySet('abc')/ContainedNav2/NavOnContained");
             var path = new ODataUriParser(Model, ServiceRoot, uri).ParsePath();
             (path.LastSegment as NavigationPropertySegment).NavigationSource.Should().BeSameAs(NavEntitySet2);
+        }
 
-            uri = new Uri(@"http://host/EntitySet('abc')?$orderby=ContainedNav2/NavOnContained/ID");
+        [Fact]
+        public void FilterAndOrderbyOnMultiBinding()
+        {
+            Uri uri = new Uri(@"http://host/EntitySet('abc')?$orderby=ContainedNav2/NavOnContained/ID");
             var orderBy = new ODataUriParser(Model, ServiceRoot, uri).ParseOrderBy();
             ((orderBy.Expression as SingleValuePropertyAccessNode).Source as SingleNavigationNode).NavigationSource
                 .Should().BeSameAs(NavEntitySet2);
@@ -345,9 +348,54 @@ namespace Microsoft.OData.Tests
             filter = new ODataUriParser(Model, ServiceRoot, uri).ParseFilter();
             ((filter.Expression as AnyNode).Source as CollectionNavigationNode).NavigationSource.Should().BeSameAs(NavEntitySet2);
 
-            // TODO: Fix after naming complex property node in uri parser
-            //uri = new Uri(@"http://host/EntitySet?$filter=complexProp1/CollectionOfNavOnComplex/any(t:t/ID eq 'abc')");
-            //var filter = new ODataUriParser(Model, ServiceRoot, uri).ParseFilter();
+            // Navigation under complex
+            uri = new Uri(@"http://host/EntitySet?$filter=complexProp2/CollectionOfNavOnComplex/any(t:t/ID eq 'abc')");
+            filter = new ODataUriParser(Model, ServiceRoot, uri).ParseFilter();
+            ((filter.Expression as AnyNode).Source as CollectionNavigationNode).NavigationSource.Should().BeSameAs(NavEntitySet2);
+
+            uri = new Uri(@"http://host/EntitySet('abc')/complexProp2?$filter=CollectionOfNavOnComplex/any(t:t/ID eq 'abc')");
+            filter = new ODataUriParser(Model, ServiceRoot, uri).ParseFilter();
+            ((filter.Expression as AnyNode).Source as CollectionNavigationNode).NavigationSource.Should().BeSameAs(NavEntitySet2);
+
+            uri = new Uri(@"http://host/EntitySet?$orderby=complexProp2/CollectionOfNavOnComplex/$count");
+            orderBy = new ODataUriParser(Model, ServiceRoot, uri).ParseOrderBy();
+            ((orderBy.Expression as CountNode).Source as CollectionNavigationNode).NavigationSource
+                .Should().BeSameAs(NavEntitySet2);
+            ((orderBy.Expression as CountNode).Source as CollectionNavigationNode).Source.Should().BeOfType<SingleComplexNode>();
+
+            uri = new Uri(@"http://host/EntitySet('abc')/complexProp2?$orderby=CollectionOfNavOnComplex/$count");
+            orderBy = new ODataUriParser(Model, ServiceRoot, uri).ParseOrderBy();
+            ((orderBy.Expression as CountNode).Source as CollectionNavigationNode).NavigationSource
+                .Should().BeSameAs(NavEntitySet2);
+
+            // Navigation under collection of complex
+            uri = new Uri(@"http://host/EntitySet?$filter=collectionComplex/CollectionOfNavOnComplex/any(t:t/ID eq 'abc')");
+            filter = new ODataUriParser(Model, ServiceRoot, uri).ParseFilter();
+            ((filter.Expression as AnyNode).Source as CollectionNavigationNode).NavigationSource.Should().BeSameAs(NavEntitySet2);
+
+            uri = new Uri(@"http://host/EntitySet('abc')/collectionComplex?$filter=CollectionOfNavOnComplex/any(t:t/ID eq 'abc')");
+            filter = new ODataUriParser(Model, ServiceRoot, uri).ParseFilter();
+            ((filter.Expression as AnyNode).Source as CollectionNavigationNode).NavigationSource.Should().BeSameAs(NavEntitySet2);
+
+            uri = new Uri(@"http://host/EntitySet?$orderby=collectionComplex/CollectionOfNavOnComplex/$count");
+            orderBy = new ODataUriParser(Model, ServiceRoot, uri).ParseOrderBy();
+            ((orderBy.Expression as CountNode).Source as CollectionNavigationNode).NavigationSource
+                .Should().BeSameAs(NavEntitySet2);
+            ((orderBy.Expression as CountNode).Source as CollectionNavigationNode).Source.Should().BeOfType<CollectionComplexNode>();
+
+            uri = new Uri(@"http://host/EntitySet('abc')/collectionComplex?$orderby=CollectionOfNavOnComplex/$count");
+            orderBy = new ODataUriParser(Model, ServiceRoot, uri).ParseOrderBy();
+            ((orderBy.Expression as CountNode).Source as CollectionNavigationNode).NavigationSource
+                .Should().BeSameAs(NavEntitySet2);
+
+            // Collection of complex under collection of complex
+            uri = new Uri(@"http://host/EntitySet?$filter=collectionComplex/CollectionComplexProp/CollectionOfNavOnComplex/any(t:t/ID eq 'abc')");
+            filter = new ODataUriParser(Model, ServiceRoot, uri).ParseFilter();
+            ((filter.Expression as AnyNode).Source as CollectionNavigationNode).NavigationSource.Should().BeSameAs(NavEntitySet1);
+
+            uri = new Uri(@"http://host/EntitySet?$filter=collectionComplex/any(a1:a1/CollectionComplexProp/any(a2:a2/CollectionOfNavOnComplex/any(t:t/ID eq 'abc')))");
+            filter = new ODataUriParser(Model, ServiceRoot, uri).ParseFilter();
+            ((((((filter.Expression as AnyNode).Body) as AnyNode).Body) as AnyNode).Source as CollectionNavigationNode).NavigationSource.Should().BeSameAs(NavEntitySet1);
         }
 
         #endregion
@@ -468,6 +516,7 @@ namespace Microsoft.OData.Tests
 
             var complex = new EdmComplexType("NS", "ComplexType");
             complex.AddStructuralProperty("Prop1", EdmCoreModel.Instance.GetString(false));
+            complex.AddStructuralProperty("CollectionComplexProp", new EdmCollectionTypeReference(new EdmCollectionType(new EdmComplexTypeReference(complex, false))));
 
             var derivedComplex = new EdmComplexType("NS", "DerivedComplexType", complex);
             derivedComplex.AddStructuralProperty("DerivedProp", EdmCoreModel.Instance.GetString(false));
@@ -490,6 +539,7 @@ namespace Microsoft.OData.Tests
 
             entityType.AddStructuralProperty("complexProp1", new EdmComplexTypeReference(complex, false));
             entityType.AddStructuralProperty("complexProp2", new EdmComplexTypeReference(complex, false));
+            entityType.AddStructuralProperty("collectionComplex", new EdmCollectionTypeReference(new EdmCollectionType(new EdmComplexTypeReference(complex, false))));
 
             var navOnContained = containedEntityType.AddUnidirectionalNavigation(
                 new EdmNavigationPropertyInfo()
@@ -530,6 +580,8 @@ namespace Microsoft.OData.Tests
             entitySet.AddNavigationTarget(navOnContained, navEntitySet2, new EdmPathExpression("ContainedNav2/NavOnContained"));
             entitySet.AddNavigationTarget(manyNavOnContained, navEntitySet1, new EdmPathExpression("ContainedNav1/ManyNavOnContained"));
             entitySet.AddNavigationTarget(manyNavOnContained, navEntitySet2, new EdmPathExpression("ContainedNav2/ManyNavOnContained"));
+            entitySet.AddNavigationTarget(complxNavP, navEntitySet2, new EdmPathExpression("collectionComplex/CollectionOfNavOnComplex"));
+            entitySet.AddNavigationTarget(complxNavP, navEntitySet1, new EdmPathExpression("collectionComplex/CollectionComplexProp/CollectionOfNavOnComplex"));
             entityContainer.AddElement(entitySet);
             entityContainer.AddElement(navEntitySet1);
             entityContainer.AddElement(navEntitySet2);

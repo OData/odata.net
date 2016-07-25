@@ -1090,9 +1090,6 @@
     <Compile Include="$(ODataCrossTargettingSourcePath)\UriParser\SemanticAst\CollectionPropertyAccessNode.cs">
       <Link>Microsoft\OData\Core\UriParser\SemanticAst\CollectionPropertyAccessNode.cs</Link>
     </Compile>
-    <Compile Include="$(ODataCrossTargettingSourcePath)\UriParser\SemanticAst\CollectionPropertyCastNode.cs">
-      <Link>Microsoft\OData\Core\UriParser\SemanticAst\CollectionPropertyCastNode.cs</Link>
-    </Compile>
     <Compile Include="$(ODataCrossTargettingSourcePath)\UriParser\SemanticAst\ConstantNode.cs">
       <Link>Microsoft\OData\Core\UriParser\SemanticAst\ConstantNode.cs</Link>
     </Compile>
@@ -1227,9 +1224,6 @@
     </Compile>
     <Compile Include="$(ODataCrossTargettingSourcePath)\UriParser\SemanticAst\SingleNavigationNode.cs">
       <Link>Microsoft\OData\Core\UriParser\SemanticAst\SingleNavigationNode.cs</Link>
-    </Compile>
-    <Compile Include="$(ODataCrossTargettingSourcePath)\UriParser\SemanticAst\SingleValueCastNode.cs">
-      <Link>Microsoft\OData\Core\UriParser\SemanticAst\SingleValueCastNode.cs</Link>
     </Compile>
     <Compile Include="$(ODataCrossTargettingSourcePath)\UriParser\SemanticAst\SingleValueFunctionCallNode.cs">
       <Link>Microsoft\OData\Core\UriParser\SemanticAst\SingleValueFunctionCallNode.cs</Link>

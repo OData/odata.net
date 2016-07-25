@@ -24,7 +24,7 @@ namespace Microsoft.OData.UriParser
         /// <summary>
         /// The previous node in the path.
         /// </summary>
-        private readonly SingleResourceNode source;
+        private readonly QueryNode source;
 
         /// <summary>
         /// The navigation property this node represents.
@@ -50,33 +50,40 @@ namespace Microsoft.OData.UriParser
         /// <exception cref="System.ArgumentNullException">Throws if the input navigationProperty or source is null.</exception>
         /// <exception cref="ArgumentException">Throws if the input navigationProperty targets more than one entity.</exception>
         public SingleNavigationNode(SingleResourceNode source, IEdmNavigationProperty navigationProperty, IEdmPathExpression bindingPath)
+            : this(ExceptionUtils.CheckArgumentNotNull(source, "source").NavigationSource, navigationProperty, bindingPath)
         {
-            ExceptionUtils.CheckArgumentNotNull(navigationProperty, "navigationProperty");
-            ExceptionUtils.CheckArgumentNotNull(bindingPath, "bindingPath");
-            ExceptionUtils.CheckArgumentNotNull(source, "source");
-
-            EdmMultiplicity multiplicity = navigationProperty.TargetMultiplicity();
-            if (multiplicity != EdmMultiplicity.One && multiplicity != EdmMultiplicity.ZeroOrOne)
-            {
-                throw new ArgumentException(ODataErrorStrings.Nodes_CollectionNavigationNode_MustHaveSingleMultiplicity);
-            }
-
             this.source = source;
-            this.navigationProperty = navigationProperty;
-            this.entityTypeReference = (IEdmEntityTypeReference)this.NavigationProperty.Type;
-
-            this.navigationSource = source.NavigationSource != null ? source.NavigationSource.FindNavigationTarget(navigationProperty, bindingPath) : null;
         }
 
         /// <summary>
         /// Constructs a SingleNavigationNode.
         /// </summary>
-        /// <param name="sourceNavigationSource">The navigation source that this of the previous segment.</param>
+        /// <param name="source">The previous node in the path.</param>
         /// <param name="navigationProperty">The navigation property this node represents.</param>
         /// <param name="bindingPath">The binding path of navigation property</param>
         /// <exception cref="System.ArgumentNullException">Throws if the input navigationProperty or source is null.</exception>
         /// <exception cref="ArgumentException">Throws if the input navigationProperty targets more than one entity.</exception>
-        internal SingleNavigationNode(IEdmNavigationSource sourceNavigationSource, IEdmNavigationProperty navigationProperty, IEdmPathExpression bindingPath)
+        public SingleNavigationNode(CollectionResourceNode source, IEdmNavigationProperty navigationProperty, IEdmPathExpression bindingPath)
+            : this(ExceptionUtils.CheckArgumentNotNull(source, "source").NavigationSource, navigationProperty, bindingPath)
+        {
+            if (!(source.ItemStructuredType.IsComplex()))
+            {
+                // TODO: update error message
+                throw new ODataException("SingleNavigationNode only accepts SingleResourceNode or CollectionResourceNode which item type is complex as parent source.");
+            }
+
+            this.source = source;
+        }
+
+        /// <summary>
+        /// Constructs a SingleNavigationNode.
+        /// </summary>
+        /// <param name="navigationSource">The navigation source that this of the previous segment.</param>
+        /// <param name="navigationProperty">The navigation property this node represents.</param>
+        /// <param name="bindingPath">The binding path of navigation property</param>
+        /// <exception cref="System.ArgumentNullException">Throws if the input navigationProperty or source is null.</exception>
+        /// <exception cref="ArgumentException">Throws if the input navigationProperty targets more than one entity.</exception>
+        internal SingleNavigationNode(IEdmNavigationSource navigationSource, IEdmNavigationProperty navigationProperty, IEdmPathExpression bindingPath)
         {
             ExceptionUtils.CheckArgumentNotNull(bindingPath, "bindingPath");
             ExceptionUtils.CheckArgumentNotNull(navigationProperty, "navigationProperty");
@@ -90,7 +97,7 @@ namespace Microsoft.OData.UriParser
             this.navigationProperty = navigationProperty;
             this.entityTypeReference = (IEdmEntityTypeReference)this.NavigationProperty.Type;
 
-            this.navigationSource = sourceNavigationSource != null ? sourceNavigationSource.FindNavigationTarget(navigationProperty, bindingPath) : null;
+            this.navigationSource = navigationSource != null ? navigationSource.FindNavigationTarget(navigationProperty, bindingPath) : null;
         }
 
         /// <summary>
@@ -100,9 +107,39 @@ namespace Microsoft.OData.UriParser
         /// <param name="navigationProperty">The navigation property this node represents.</param>
         /// <param name="segments">The path segments parsed in path and query option.</param>
         internal SingleNavigationNode(SingleResourceNode source, IEdmNavigationProperty navigationProperty, List<ODataPathSegment> segments)
+            : this(ExceptionUtils.CheckArgumentNotNull(source, "source").NavigationSource, navigationProperty, segments)
+        {
+            this.source = source;
+        }
+
+        /// <summary>
+        /// Constructs a SingleNavigationNode.
+        /// </summary>
+        /// <param name="source">he previous node in the path.</param>
+        /// <param name="navigationProperty">The navigation property this node represents.</param>
+        /// <param name="segments">The path segments parsed in path and query option.</param>
+        internal SingleNavigationNode(CollectionResourceNode source, IEdmNavigationProperty navigationProperty, List<ODataPathSegment> segments)
+            : this(ExceptionUtils.CheckArgumentNotNull(source, "source").NavigationSource, navigationProperty, segments)
+        {
+            if (!(source.ItemStructuredType.IsComplex()))
+            {
+                // TODO: update error message
+                throw new ODataException("Only single entity or complex or collection of complex can have navigation property.");
+            }
+
+            this.source = source;
+        }
+
+        /// <summary>
+        /// Constructs a SingleNavigationNode.
+        /// </summary>
+        /// <param name="navigationSource">The navigation source that this of the previous segment.</param>
+        /// <param name="navigationProperty">The navigation property this node represents.</param>
+        /// <param name="segments">The path segments parsed in path and query option.</param>
+        private SingleNavigationNode(IEdmNavigationSource navigationSource,
+            IEdmNavigationProperty navigationProperty, List<ODataPathSegment> segments)
         {
             ExceptionUtils.CheckArgumentNotNull(navigationProperty, "navigationProperty");
-            ExceptionUtils.CheckArgumentNotNull(source, "source");
 
             EdmMultiplicity multiplicity = navigationProperty.TargetMultiplicity();
             if (multiplicity != EdmMultiplicity.One && multiplicity != EdmMultiplicity.ZeroOrOne)
@@ -110,18 +147,17 @@ namespace Microsoft.OData.UriParser
                 throw new ArgumentException(ODataErrorStrings.Nodes_CollectionNavigationNode_MustHaveSingleMultiplicity);
             }
 
-            this.source = source;
             this.navigationProperty = navigationProperty;
             this.entityTypeReference = (IEdmEntityTypeReference)this.NavigationProperty.Type;
             this.parsedSegments = segments;
 
-            this.navigationSource = source.NavigationSource != null ? source.NavigationSource.FindNavigationTarget(navigationProperty, BindingPathHelper.MatchBindingPath, this.parsedSegments) : null;
+            this.navigationSource = navigationSource != null ? navigationSource.FindNavigationTarget(navigationProperty, BindingPathHelper.MatchBindingPath, this.parsedSegments) : null;
         }
 
         /// <summary>
         /// Gets the previous node in the path.
         /// </summary>
-        public SingleResourceNode Source
+        public QueryNode Source
         {
             get { return this.source; }
         }

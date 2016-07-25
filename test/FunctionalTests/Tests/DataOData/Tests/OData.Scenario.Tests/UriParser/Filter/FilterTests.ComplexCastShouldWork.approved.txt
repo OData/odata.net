@@ -13,10 +13,12 @@ FilterQueryOption
 			Property = HomeNO
 			TypeReference = [Edm.String Nullable=True Unicode=True]
 			Source = 
-			SingleValueCastNode
-				TypeReference = [Microsoft.Test.Taupo.OData.WCFService.HomeAddress Nullable=False]
+			SingleResourceCastNode
+				Type Reference = [Microsoft.Test.Taupo.OData.WCFService.HomeAddress Nullable=False]
+				NavigationSource = People
+				Entity Type Reference = [Microsoft.Test.Taupo.OData.WCFService.HomeAddress Nullable=False]
 				Source = 
-				SingleValuePropertyAccessNode
+				SingleComplexNode
 					Property = HomeAddress
 					TypeReference = [Microsoft.Test.Taupo.OData.WCFService.Address Nullable=True]
 					Source = 

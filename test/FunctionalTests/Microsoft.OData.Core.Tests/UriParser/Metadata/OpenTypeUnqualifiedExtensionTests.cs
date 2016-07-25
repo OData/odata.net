@@ -136,7 +136,7 @@ namespace Microsoft.OData.Tests.UriParser.Metadata
                 "People?$orderby=Addr/TestNS.GetZip",
                 "People?$orderby=Addr/GetZip",
                 parser => parser.ParseOrderBy(),
-                clause => clause.Expression.ShouldBeSingleValueFunctionCallQueryNode("TestNS.GetZip").And.Source.ShouldBeSingleValuePropertyAccessQueryNode(AddrProperty),
+                clause => clause.Expression.ShouldBeSingleValueFunctionCallQueryNode("TestNS.GetZip").And.Source.ShouldBeSingleComplexNode(AddrProperty),
                 null);
         }
 
@@ -147,7 +147,7 @@ namespace Microsoft.OData.Tests.UriParser.Metadata
                 "People?$orderby=Addr/TestNS.GetZip()",
                 "People?$orderby=Addr/GetZip()",
                 parser => parser.ParseOrderBy(),
-                clause => clause.Expression.ShouldBeSingleValueFunctionCallQueryNode("TestNS.GetZip").And.Source.ShouldBeSingleValuePropertyAccessQueryNode(AddrProperty),
+                clause => clause.Expression.ShouldBeSingleValueFunctionCallQueryNode("TestNS.GetZip").And.Source.ShouldBeSingleComplexNode(AddrProperty),
                 Strings.FunctionCallBinder_UriFunctionMustHaveHaveNullParent("GetZip"));
         }
 

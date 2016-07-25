@@ -63,7 +63,8 @@ namespace Microsoft.OData
         /// <typeparam name="T">Type of the argument, used to force usage only for reference types.</typeparam>
         /// <param name="value">Argument whose value needs to be checked.</param>
         /// <param name="parameterName">Name of the argument, used for exception message.</param>
-        internal static void CheckArgumentNotNull<T>([ValidatedNotNull] T value, string parameterName) where T : class
+        /// <returns>The value</returns>
+        internal static T CheckArgumentNotNull<T>([ValidatedNotNull] T value, string parameterName) where T : class
         {
             Debug.Assert(!string.IsNullOrEmpty(parameterName), "!string.IsNullOrEmpty(parameterName)");
 
@@ -73,6 +74,8 @@ namespace Microsoft.OData
                 throw Error.ArgumentNull(parameterName);
 #endif
             }
+
+            return value;
         }
 
         /// <summary>

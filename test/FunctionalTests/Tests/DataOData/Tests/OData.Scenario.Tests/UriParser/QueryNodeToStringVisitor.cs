@@ -69,10 +69,12 @@ namespace Microsoft.Test.Taupo.OData.Scenario.Tests.UriParser
                     return ToString((ParameterAliasNode)node);
                 case QueryNodeKind.SearchTerm:
                     return ToString((SearchTermNode)node);
-                case QueryNodeKind.CollectionPropertyCast:
-                    return ToString((CollectionPropertyCastNode)node);
-                case QueryNodeKind.SingleValueCast:
-                    return ToString((SingleValueCastNode)node);
+                case QueryNodeKind.SingleComplexNode:
+                    return ToString((SingleComplexNode)node);
+                case QueryNodeKind.CollectionComplexNode:
+                    return ToString((CollectionComplexNode)node);
+                case QueryNodeKind.Count:
+                    return ToString((CountNode)node);
                 default:
                     throw new NotSupportedException(String.Format("Node kind not yet supported: {0}", node.Kind.ToString()));
             }
@@ -355,6 +357,24 @@ namespace Microsoft.Test.Taupo.OData.Scenario.Tests.UriParser
                     tabHelper.Prefix + "Entity Item Type = " + node.ItemStructuredType +
                     tabHelper.Prefix + "NavigationSource = " + node.NavigationSource.Name +
                     tabHelper.Prefix + "Item Type = " + node.ItemType +
+                    tabHelper.Prefix + "Source = " + ToString(node.Source)
+                );
+            }
+
+            return String.Empty;
+        }
+
+        /// <summary>
+        /// Writes CountNode.
+        /// </summary>
+        /// <param name="node">Node to write to string</param>
+        /// <returns>String representation of node.</returns>
+        private static string ToString(CountNode node)
+        {
+            if (node != null)
+            {
+                return tabHelper.Prefix + "CountNode" +
+                 tabHelper.Indent(() =>
                     tabHelper.Prefix + "Source = " + ToString(node.Source)
                 );
             }
@@ -779,30 +799,31 @@ namespace Microsoft.Test.Taupo.OData.Scenario.Tests.UriParser
         }
 
         /// <summary>
-        /// Writes single value property cast node to string.
+        /// Writes single complex property node to string.
         /// </summary>
         /// <param name="node">Node to write to string</param>
         /// <returns>String representation of node.</returns>
-        private static string ToString(SingleValueCastNode node)
+        private static string ToString(SingleComplexNode node)
         {
-            return tabHelper.Prefix + "SingleValueCastNode" +
+            return tabHelper.Prefix + "SingleComplexNode" +
                 tabHelper.Indent(() =>
+                    tabHelper.Prefix + "Property = " + node.Property.Name +
                     tabHelper.Prefix + "TypeReference = " + node.TypeReference +
                     tabHelper.Prefix + "Source = " + ToString(node.Source)
                 );
         }
 
         /// <summary>
-        /// Writes collection property cast node to string.
+        /// Writes collection complex property node to string.
         /// </summary>
         /// <param name="node">Node to write to string</param>
         /// <returns>String representation of node.</returns>
-        private static string ToString(CollectionPropertyCastNode node)
+        private static string ToString(CollectionComplexNode node)
         {
-            return tabHelper.Prefix + "CollectionPropertyCastNode" +
+            return tabHelper.Prefix + "CollectionComplexNode" +
                 tabHelper.Indent(() =>
-                    tabHelper.Prefix + "Property = " + node.Source.Property.Name +
-                    tabHelper.Prefix + "TypeReference = " + node.ItemType +
+                    tabHelper.Prefix + "Property = " + node.Property.Name +
+                    tabHelper.Prefix + "ItemType = " + node.ItemType +
                     tabHelper.Prefix + "Source = " + ToString(node.Source)
                 );
         }

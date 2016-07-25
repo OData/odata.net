@@ -122,6 +122,14 @@ namespace Microsoft.OData.Tests.UriParser
             return new AndConstraint<SingleValueFunctionCallNode>(functionCallNode);
         }
 
+        public static AndConstraint<SingleResourceFunctionCallNode> ShouldBeSingleResourceFunctionCallQueryNode(this QueryNode token, params IEdmFunction[] operationImports)
+        {
+            token.Should().BeOfType<SingleResourceFunctionCallNode>();
+            var functionCallNode = token.As<SingleResourceFunctionCallNode>();
+            functionCallNode.Functions.Should().ContainExactly(operationImports);
+            return new AndConstraint<SingleResourceFunctionCallNode>(functionCallNode);
+        }
+
         public static AndConstraint<SingleValueFunctionCallNode> ShouldHaveConstantParameter<TValue>(this SingleValueFunctionCallNode functionCallNode, string name, TValue value)
         {
             functionCallNode.Should().NotBeNull();
@@ -140,6 +148,16 @@ namespace Microsoft.OData.Tests.UriParser
             argument.Should().NotBeNull();
             argument.Value.ShouldBeConstantQueryNode(value);
             return new AndConstraint<CollectionFunctionCallNode>(functionCallNode);
+        }
+
+        public static AndConstraint<CollectionResourceFunctionCallNode> ShouldHaveConstantParameter<TValue>(this CollectionResourceFunctionCallNode functionCallNode, string name, TValue value)
+        {
+            functionCallNode.Should().NotBeNull();
+            functionCallNode.Parameters.Should().ContainItemsAssignableTo<NamedFunctionParameterNode>();
+            var argument = functionCallNode.Parameters.Cast<NamedFunctionParameterNode>().SingleOrDefault(p => p.Name == name);
+            argument.Should().NotBeNull();
+            argument.Value.ShouldBeConstantQueryNode(value);
+            return new AndConstraint<CollectionResourceFunctionCallNode>(functionCallNode);
         }
 
         public static AndConstraint<SingleValueFunctionCallNode> ShouldBeSingleValueFunctionCallQueryNode(this QueryNode token, string name, IEdmTypeReference returnType = null)
@@ -196,6 +214,15 @@ namespace Microsoft.OData.Tests.UriParser
             return new AndConstraint<SingleValuePropertyAccessNode>(propertyAccessNode);
         }
 
+        public static AndConstraint<SingleComplexNode> ShouldBeSingleComplexNode(this QueryNode token, IEdmProperty expectedProperty)
+        {
+            token.Should().BeOfType<SingleComplexNode>();
+            var propertyAccessNode = token.As<SingleComplexNode>();
+            propertyAccessNode.Property.Should().BeSameAs(expectedProperty);
+            propertyAccessNode.TypeReference.ShouldBeEquivalentTo(expectedProperty.Type.AsComplex());
+            return new AndConstraint<SingleComplexNode>(propertyAccessNode);
+        }
+
         public static AndConstraint<SingleValueOpenPropertyAccessNode> ShouldBeSingleValueOpenPropertyAccessQueryNode(this QueryNode token, string expectedPropertyName)
         {
             token.Should().BeOfType<SingleValueOpenPropertyAccessNode>();
@@ -226,6 +253,15 @@ namespace Microsoft.OData.Tests.UriParser
             propertyAccessNode.Property.Should().Be(expectedProperty);
             propertyAccessNode.ItemType.Should().BeSameAs(((IEdmCollectionType)expectedProperty.Type.Definition).ElementType);
             return new AndConstraint<CollectionPropertyAccessNode>(propertyAccessNode);
+        }
+
+        public static AndConstraint<CollectionComplexNode> ShouldBeCollectionComplexNode(this QueryNode token, IEdmProperty expectedProperty)
+        {
+            token.Should().BeOfType<CollectionComplexNode>();
+            var propertyAccessNode = token.As<CollectionComplexNode>();
+            propertyAccessNode.Property.Should().Be(expectedProperty);
+            propertyAccessNode.ItemType.ShouldBeEquivalentTo(((IEdmCollectionType)expectedProperty.Type.Definition).ElementType.AsComplex());
+            return new AndConstraint<CollectionComplexNode>(propertyAccessNode);
         }
 
         public static AndConstraint<SingleNavigationNode> ShouldBeSingleNavigationNode(this QueryNode token, IEdmNavigationProperty expectedProperty)
@@ -276,20 +312,20 @@ namespace Microsoft.OData.Tests.UriParser
             return new AndConstraint<SingleResourceCastNode>(singleCastNode);
         }
 
-        public static AndConstraint<SingleValueCastNode> ShouldBeSingleValueCastNode(this QueryNode node, IEdmTypeReference expectedTypeReference)
+        public static AndConstraint<SingleResourceCastNode> ShouldBeSingleResourceCastNode(this QueryNode node, IEdmTypeReference expectedTypeReference)
         {
-            node.Should().BeOfType<SingleValueCastNode>();
-            var singlePropertyCastNode = node.As<SingleValueCastNode>();
+            node.Should().BeOfType<SingleResourceCastNode>();
+            var singlePropertyCastNode = node.As<SingleResourceCastNode>();
             singlePropertyCastNode.TypeReference.ShouldBeEquivalentTo(expectedTypeReference);
-            return new AndConstraint<SingleValueCastNode>(singlePropertyCastNode);
+            return new AndConstraint<SingleResourceCastNode>(singlePropertyCastNode);
         }
 
-        public static AndConstraint<CollectionPropertyCastNode> ShouldBeCollectionPropertyCastNode(this QueryNode node, IEdmTypeReference expectedTypeReference)
+        public static AndConstraint<CollectionResourceCastNode> ShouldBeCollectionResourceCastNode(this QueryNode node, IEdmTypeReference expectedTypeReference)
         {
-            node.Should().BeOfType<CollectionPropertyCastNode>();
-            var collectionPropertyCastNode = node.As<CollectionPropertyCastNode>();
-            collectionPropertyCastNode.ItemType.ShouldBeEquivalentTo(expectedTypeReference);
-            return new AndConstraint<CollectionPropertyCastNode>(collectionPropertyCastNode);
+            node.Should().BeOfType<CollectionResourceCastNode>();
+            var collectionResourceCastNode = node.As<CollectionResourceCastNode>();
+            collectionResourceCastNode.ItemType.ShouldBeEquivalentTo(expectedTypeReference);
+            return new AndConstraint<CollectionResourceCastNode>(collectionResourceCastNode);
         }
 
         public static AndConstraint<AnyNode> ShouldBeAnyQueryNode(this QueryNode node)

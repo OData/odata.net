@@ -447,7 +447,6 @@
     <Compile Include="UriParser\SemanticAst\CollectionNode.cs" />
     <Compile Include="UriParser\SemanticAst\CollectionOpenPropertyAccessNode.cs" />
     <Compile Include="UriParser\SemanticAst\CollectionPropertyAccessNode.cs" />
-    <Compile Include="UriParser\SemanticAst\CollectionPropertyCastNode.cs" />
     <Compile Include="UriParser\SemanticAst\ConstantNode.cs" />
     <Compile Include="UriParser\SemanticAst\ConvertNode.cs" />
     <Compile Include="UriParser\SemanticAst\CountNode.cs" />
@@ -502,7 +501,6 @@
     <Compile Include="UriParser\SemanticAst\SingleResourceFunctionCallNode.cs" />
     <Compile Include="UriParser\SemanticAst\SingleEntityNode.cs" />
     <Compile Include="UriParser\SemanticAst\SingleNavigationNode.cs" />
-    <Compile Include="UriParser\SemanticAst\SingleValueCastNode.cs" />
     <Compile Include="UriParser\SemanticAst\SingleValueFunctionCallNode.cs" />
     <Compile Include="UriParser\SemanticAst\SingleValueNode.cs" />
     <Compile Include="UriParser\SemanticAst\SingleValueOpenPropertyAccessNode.cs" />

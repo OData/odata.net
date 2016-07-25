@@ -34,7 +34,7 @@ namespace Microsoft.OData.Tests.UriParser.Extensions.Binders
         [Fact]
         public void BindApplyWithNullShouldThrow()
         {
-            var binder = new ApplyBinder(FakeBindMethods.BindSingleValueProperty, _bindingState);
+            var binder = new ApplyBinder(FakeBindMethods.BindSingleComplexProperty, _bindingState);
             Action bind = () => binder.BindApply(null);
             bind.ShouldThrow<ArgumentNullException>();
         }
@@ -44,7 +44,7 @@ namespace Microsoft.OData.Tests.UriParser.Extensions.Binders
         {
             var tokens = _parser.ParseApply("aggregate(UnitPrice with sum as TotalPrice)");
 
-            var binder = new ApplyBinder(FakeBindMethods.BindSingleValueProperty, _bindingState);
+            var binder = new ApplyBinder(FakeBindMethods.BindSingleComplexProperty, _bindingState);
             var actual = binder.BindApply(tokens);
 
             actual.Should().NotBeNull();
@@ -98,7 +98,7 @@ namespace Microsoft.OData.Tests.UriParser.Extensions.Binders
         {
             var tokens = _parser.ParseApply("groupby((UnitPrice, SalePrice))");
 
-            var binder = new ApplyBinder(FakeBindMethods.BindSingleValueProperty, _bindingState);
+            var binder = new ApplyBinder(FakeBindMethods.BindSingleComplexProperty, _bindingState);
             var actual = binder.BindApply(tokens);
 
             actual.Should().NotBeNull();
@@ -158,7 +158,7 @@ namespace Microsoft.OData.Tests.UriParser.Extensions.Binders
         {
             var tokens = _parser.ParseApply("groupby((UnitPrice, SalePrice), aggregate(UnitPrice with sum as TotalPrice))");
 
-            var binder = new ApplyBinder(FakeBindMethods.BindSingleValueProperty, _bindingState);
+            var binder = new ApplyBinder(FakeBindMethods.BindSingleComplexProperty, _bindingState);
             var actual = binder.BindApply(tokens);
 
             actual.Should().NotBeNull();
@@ -228,7 +228,7 @@ namespace Microsoft.OData.Tests.UriParser.Extensions.Binders
         public static void VerifyIsFakeSingleValueNode(QueryNode node)
         {
             node.Should().NotBeNull();
-            node.Should().BeSameAs(FakeBindMethods.FakeSingleValueProperty);
+            node.Should().BeSameAs(FakeBindMethods.FakeSingleComplexProperty);
         }
     }
 }

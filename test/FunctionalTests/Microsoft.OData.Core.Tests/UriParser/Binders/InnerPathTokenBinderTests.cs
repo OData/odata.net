@@ -91,7 +91,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
             var token = new InnerPathToken("PreviousAddresses", new DummyToken(), null /*namedValues*/);
 
             var result = binder.BindInnerPathSegment(token);
-            result.ShouldBeCollectionPropertyAccessQueryNode(HardCodedTestModel.GetPersonPreviousAddressesProp());
+            result.ShouldBeCollectionComplexNode(HardCodedTestModel.GetPersonPreviousAddressesProp());
         }
 
         [Fact]
@@ -150,7 +150,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
             var token = new InnerPathToken("MyDog", new InnerPathToken("MyPeople", null, null), null);
 
             Action bind = () => binder.BindInnerPathSegment(token);
-            bind.ShouldThrow<ODataException>().WithMessage(Strings.MetadataBinder_PropertyAccessSourceNotSingleValue("MyDog"));
+            bind.ShouldThrow<ODataException>().WithMessage("Only single entity or complex or collection of complex can have navigation property.");
         }
         #endregion
 

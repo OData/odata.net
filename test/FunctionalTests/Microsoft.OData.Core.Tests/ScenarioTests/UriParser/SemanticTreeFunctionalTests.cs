@@ -465,7 +465,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
 
             var cmpAddress = this.edmModel.FindType("Fully.Qualified.Namespace.Address");
             semanticTree.Filter.Expression.As<BinaryOperatorNode>().
-                Left.As<SingleValuePropertyAccessNode>().Source.As<SingleValuePropertyAccessNode>().TypeReference.Definition.Should().Be(cmpAddress);
+                Left.As<SingleValuePropertyAccessNode>().Source.As<SingleComplexNode>().TypeReference.Definition.Should().Be(cmpAddress);
         }
 
         [Fact]
@@ -475,9 +475,9 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
 
             var cmpAddress = this.edmModel.FindType("Fully.Qualified.Namespace.Address");
             semanticTree.Filter.Expression.As<BinaryOperatorNode>().
-                Left.As<SingleValuePropertyAccessNode>().Source.As<SingleValuePropertyAccessNode>().TypeReference.Definition.Should().Be(cmpAddress);
+                Left.As<SingleValuePropertyAccessNode>().Source.As<SingleComplexNode>().TypeReference.Definition.Should().Be(cmpAddress);
             semanticTree.Filter.Expression.As<BinaryOperatorNode>().
-                Left.As<SingleValuePropertyAccessNode>().Source.As<SingleValuePropertyAccessNode>().Source.As<SingleValuePropertyAccessNode>().TypeReference.Definition.Should().Be(cmpAddress);
+                Left.As<SingleValuePropertyAccessNode>().Source.As<SingleComplexNode>().Source.As<SingleComplexNode>().TypeReference.Definition.Should().Be(cmpAddress);
         }
 
         [Fact]
@@ -487,7 +487,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
 
             var cmpAddress = this.edmModel.FindType("Fully.Qualified.Namespace.Address");
             semanticTree.Filter.Expression.As<AnyNode>().Body.As<BinaryOperatorNode>().
-                Left.As<SingleValuePropertyAccessNode>().Source.As<SingleValuePropertyAccessNode>().TypeReference.Definition.Should().Be(cmpAddress);
+                Left.As<SingleValuePropertyAccessNode>().Source.As<SingleComplexNode>().TypeReference.Definition.Should().Be(cmpAddress);
         }
 
         [Fact]

@@ -34,7 +34,6 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests
     /// </summary>
 #if !SILVERLIGHT
     [UseReporter(typeof(LoggingReporter))]
-    [DeploymentItem("Atom")]
     [DeploymentItem("CollectionWriter")]
     [DeploymentItem("JsonLight")]
     [DeploymentItem("ParameterWriter")]

@@ -197,19 +197,26 @@ namespace Microsoft.Test.OData.Services.ODataWCFService
             Expression propExpr = null;
 
             // Element of collection could be primitive type or enum or complex or entity type 
-            if (nodeIn.Source.ItemType.IsPrimitive() || nodeIn.Source.ItemType.IsEnum()
-                || (nodeIn.Source.ItemType.IsComplex() && nodeIn.Source.Kind.Equals(QueryNodeKind.CollectionPropertyAccess)))
+            if (nodeIn.Source.ItemType.IsPrimitive() || nodeIn.Source.ItemType.IsEnum())
             {
-                // This does not handle complex collection cast case, if it is a complex collection cast, the Kind will be CollectionPropertyCast and node.Source is CollectionPropertyCastNode
                 var collection = (CollectionPropertyAccessNode)nodeIn.Source;
                 propExpr = Visit(collection);
                 var def = collection.Property.Type.AsCollection();
                 propType = EdmClrTypeUtils.GetInstanceType(def.ElementType());
             }
-            else if (nodeIn.Source.ItemType.IsEntity() && nodeIn.Source.Kind.Equals(QueryNodeKind.CollectionNavigationNode))
+            else if ((nodeIn.Source.ItemType.IsComplex() && nodeIn.Source.Kind.Equals(QueryNodeKind.CollectionComplexNode)))
             {
-                // This does not handle entity collection cast case, if it is a entity collection cast, the Kind will be EntityCollectionCast and node.Source is EntityCollectionCastNode
-                var collection = (CollectionNavigationNode)nodeIn.Source;
+                // This does not handle complex collection cast case, if it is a complex collection cast, the Kind will be CollectionComplexCast and node.Source is CollectionComplexCastNode
+                var collection = (CollectionComplexNode)nodeIn.Source;
+                propExpr = Visit(collection);
+                var def = collection.Property.Type.AsCollection();
+                propType = EdmClrTypeUtils.GetInstanceType(def.ElementType());
+            }
+            else if (nodeIn.Source.ItemType.IsEntity() &&
+                     nodeIn.Source.Kind.Equals(QueryNodeKind.CollectionNavigationNode))
+            {
+                // This does not handle entity collection cast case, if it is a entity collection cast, the Kind will be CollectionResourceCast and node.Source is CollectionResourceCastNode
+                var collection = (CollectionNavigationNode) nodeIn.Source;
                 propExpr = Visit(collection);
                 var def = collection.NavigationProperty.Type.AsCollection();
                 propType = EdmClrTypeUtils.GetInstanceType(def.ElementType());
@@ -217,7 +224,10 @@ namespace Microsoft.Test.OData.Services.ODataWCFService
             else
             {
                 // Should no such case as collection item is either primitive or enum or complex or entity.
-                throw new NotSupportedException(string.Format("Filter based on count of collection with item of type {0} is not supported yet.", nodeIn.Source.ItemType));
+                throw new NotSupportedException(
+                    string.Format(
+                        "Filter based on count of collection with item of type {0} is not supported yet.",
+                        nodeIn.Source.ItemType));
             }
 
             // Per standard, collection can not be null, but could be an empty collection, so null is not considered here.
@@ -249,6 +259,17 @@ namespace Microsoft.Test.OData.Services.ODataWCFService
         public override Expression Visit(CollectionPropertyAccessNode nodeIn)
         {
             this.CheckArgumentNull(nodeIn, "CollectionPropertyAccessNode");
+            return this.TranslatePropertyAccess(nodeIn.Source, nodeIn.Property);
+        }
+
+        /// <summary>
+        /// Visit a CollectionComplexNode
+        /// </summary>
+        /// <param name="nodeIn">The node to visit</param>
+        /// <returns>The translated expression</returns>
+        public override Expression Visit(CollectionComplexNode nodeIn)
+        {
+            this.CheckArgumentNull(nodeIn, "CollectionComplexNode");
             return this.TranslatePropertyAccess(nodeIn.Source, nodeIn.Property);
         }
 
@@ -484,14 +505,14 @@ namespace Microsoft.Test.OData.Services.ODataWCFService
         }
 
         /// <summary>
-        /// Visit an SingleValueCastNode
+        /// Visit an SingleComplexNode
         /// </summary>
         /// <param name="nodeIn">the node to visit</param>
         /// <returns>The translated expression</returns>
-        public override Expression Visit(SingleValueCastNode nodeIn)
+        public override Expression Visit(SingleComplexNode nodeIn)
         {
             this.CheckArgumentNull(nodeIn, "node");
-            return this.TranslateSingleValueCastAccess(nodeIn.Source, nodeIn.TypeReference);
+            return this.TranslatePropertyAccess(nodeIn.Source, nodeIn.Property);
         }
 
         /// <summary>

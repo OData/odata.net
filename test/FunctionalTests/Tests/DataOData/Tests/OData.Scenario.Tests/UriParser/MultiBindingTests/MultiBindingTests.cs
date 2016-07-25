@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 using Microsoft.OData.Edm;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -61,6 +57,42 @@ namespace Microsoft.Test.Taupo.OData.Scenario.Tests.UriParser.MultiBindingTests
             // http://host/EntitySet('abc')/ContainedNav1?$filter=NavOnContained/ID eq 'abc'
             this.ApprovalVerifyFilterParser(containedNav1Base, "NavOnContained/ID eq 'abc'", bindigModel);
             this.TestAllInOneExtensionFilter(containedNav1Base, "navOnContained/ID eq 'abc'", "NavOnContained/ID eq 'abc'", bindigModel);
+        }
+
+        [TestMethod]
+        [MethodImpl(MethodImplOptions.NoOptimization)]
+        public void FilterOnNavigationUnderComplex()
+        {
+            // http://host/EntitySet?$filter=complexProp2/CollectionOfNavOnComplex/any(t:t/ID eq 'abc')
+            this.ApprovalVerifyFilterParser(entitySetBase, "complexProp1/CollectionOfNavOnComplex/any(t:t/ID eq 'abc')", bindigModel);
+            this.TestAllInOneExtensionFilter(entitySetBase, "complexProp1/collectionofnavOnComplex/any(t:t/ID eq 'abc')", "complexProp1/CollectionOfNavOnComplex/any(t:t/ID eq 'abc')", bindigModel);
+        }
+
+        [TestMethod]
+        [MethodImpl(MethodImplOptions.NoOptimization)]
+        public void FilterOnNavigationUnderComplexAndComplexIsInPath()
+        {
+            // http://host/EntitySet/complexProp1?$filter=CollectionOfNavOnComplex/any(t:t/ID eq 'abc')
+            this.ApprovalVerifyFilterParser(complexProp1Base, "CollectionOfNavOnComplex/any(t:t/ID eq 'abc')", bindigModel);
+            this.TestAllInOneExtensionFilter(complexProp1Base, "collectionofNavOnComplex/any(t:t/ID eq 'abc')", "CollectionOfNavOnComplex/any(t:t/ID eq 'abc')", bindigModel);
+        }
+
+        [TestMethod]
+        [MethodImpl(MethodImplOptions.NoOptimization)]
+        public void OrderByOnNavigationUnderComplex()
+        {
+            // http://host/EntitySet?$orderby=complexProp1/CollectionOfNavOnComplex/$count
+            this.ApprovalVerifyOrderByParser(entitySetBase, "complexProp1/CollectionOfNavOnComplex/$count", bindigModel);
+            this.TestAllInOneExtensionOrderBy(entitySetBase, "complexprop1/CollectionOfNavOnComplex/$count", "complexProp1/CollectionOfNavOnComplex/$count", bindigModel);
+        }
+
+        [TestMethod]
+        [MethodImpl(MethodImplOptions.NoOptimization)]
+        public void OrderByOnNavigationUnderComplexAndComplexIsInPath()
+        {
+            // http://host/EntitySet('abc')/complexProp1?$orderby=CollectionOfNavOnComplex/$count
+            this.ApprovalVerifyOrderByParser(complexProp1Base, "CollectionOfNavOnComplex/$count", bindigModel);
+            this.TestAllInOneExtensionOrderBy(complexProp1Base, "collectionOfnavOnComplex/$count", "CollectionOfNavOnComplex/$count", bindigModel);
         }
     }
 }

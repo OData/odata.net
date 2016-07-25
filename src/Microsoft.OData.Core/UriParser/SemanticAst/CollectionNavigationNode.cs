@@ -35,7 +35,7 @@ namespace Microsoft.OData.UriParser
         /// <summary>
         /// The parent node.
         /// </summary>
-        private readonly SingleResourceNode source;
+        private readonly QueryNode source;
 
         /// <summary>
         /// The navigation source from which the collection of entities comes from.
@@ -57,44 +57,89 @@ namespace Microsoft.OData.UriParser
         /// <exception cref="System.ArgumentNullException">Throws if the input source or navigation property is null.</exception>
         /// <exception cref="ArgumentException">Throws if the input navigation doesn't target a collection.</exception>
         public CollectionNavigationNode(SingleResourceNode source, IEdmNavigationProperty navigationProperty, IEdmPathExpression bindingPath)
-            : this(navigationProperty)
+            : this(ExceptionUtils.CheckArgumentNotNull(source, "source").NavigationSource, navigationProperty, bindingPath)
         {
-            ExceptionUtils.CheckArgumentNotNull(source, "source");
             this.source = source;
-
-            this.navigationSource = source.NavigationSource != null ? source.NavigationSource.FindNavigationTarget(navigationProperty, bindingPath) : null;
         }
 
         /// <summary>
         /// Creates a CollectionNavigationNode.
         /// </summary>
-        /// <param name="source">The navigation source.</param>
+        /// <param name="source">The parent of this collection navigation node.</param>
+        /// <param name="navigationProperty">The navigation property that defines the collection node.</param>
+        /// <param name="bindingPath">The binding path of navigation property</param>
+        /// <returns>The collection node.</returns>
+        /// <exception cref="System.ArgumentNullException">Throws if the input source or navigation property is null.</exception>
+        /// <exception cref="ArgumentException">Throws if the input navigation doesn't target a collection.</exception>
+        public CollectionNavigationNode(CollectionResourceNode source, IEdmNavigationProperty navigationProperty, IEdmPathExpression bindingPath)
+            : this(ExceptionUtils.CheckArgumentNotNull(source, "source").NavigationSource, navigationProperty, bindingPath)
+        {
+            if (!(source.ItemStructuredType.IsComplex()))
+            {
+                // TODO: update error message
+                throw new ODataException("CollectionNavigationNode only accepts SingleResourceNode or CollectionResourceNode which item type is complex as parent source.");
+            }
+
+            this.source = source;
+        }
+
+        /// <summary>
+        /// Creates a CollectionNavigationNode.
+        /// </summary>
+        /// <param name="navigationSource">The navigation source that this of the previous segment.</param>
         /// <param name="navigationProperty">The navigation property that defines the collection node.</param>
         /// <param name="bindingPath">The binding path of navigation property</param>
         /// <returns>The collection node.</returns>
         /// <exception cref="System.ArgumentNullException">Throws if the input navigation property is null.</exception>
         /// <exception cref="ArgumentException">Throws if the input navigation doesn't target a collection.</exception>
-        internal CollectionNavigationNode(IEdmNavigationSource source, IEdmNavigationProperty navigationProperty, IEdmPathExpression bindingPath)
+        internal CollectionNavigationNode(IEdmNavigationSource navigationSource, IEdmNavigationProperty navigationProperty, IEdmPathExpression bindingPath)
             : this(navigationProperty)
         {
-            this.navigationSource = source != null ? source.FindNavigationTarget(navigationProperty, bindingPath) : null;
+            this.navigationSource = navigationSource != null ? navigationSource.FindNavigationTarget(navigationProperty, bindingPath) : null;
         }
 
         /// <summary>
         /// Constructs a CollectionNavigationNode.
         /// </summary>
-        /// <param name="source">he previous node in the path.</param>
+        /// <param name="source">The previous node in the path.</param>
         /// <param name="navigationProperty">The navigation property this node represents.</param>
         /// <param name="parsedSegments">The path segments parsed in path and query option.</param>
-        internal CollectionNavigationNode(SingleResourceNode source, IEdmNavigationProperty navigationProperty,
-            List<ODataPathSegment> parsedSegments)
+        internal CollectionNavigationNode(SingleResourceNode source, IEdmNavigationProperty navigationProperty, List<ODataPathSegment> parsedSegments)
+            : this(ExceptionUtils.CheckArgumentNotNull(source, "source").NavigationSource, navigationProperty, parsedSegments)
+        {
+            this.source = source;
+        }
+
+        /// <summary>
+        /// Constructs a CollectionNavigationNode.
+        /// </summary>
+        /// <param name="source">The previous node in the path.</param>
+        /// <param name="navigationProperty">The navigation property this node represents.</param>
+        /// <param name="parsedSegments">The path segments parsed in path and query option.</param>
+        internal CollectionNavigationNode(CollectionResourceNode source, IEdmNavigationProperty navigationProperty, List<ODataPathSegment> parsedSegments)
+            : this(ExceptionUtils.CheckArgumentNotNull(source, "source").NavigationSource, navigationProperty, parsedSegments)
+        {
+            if (!(source.ItemStructuredType.IsComplex()))
+            {
+                // TODO: update error message
+                throw new ODataException("Only single entity or complex or collection of complex can have navigation property.");
+            }
+
+            this.source = source;
+        }
+
+        /// <summary>
+        /// Constructs a CollectionNavigationNode.
+        /// </summary>
+        /// <param name="navigationSource">The navigation source that this of the previous segment.</param>
+        /// <param name="navigationProperty">The navigation property this node represents.</param>
+        /// <param name="parsedSegments">The path segments parsed in path and query option.</param>
+        private CollectionNavigationNode(IEdmNavigationSource navigationSource, IEdmNavigationProperty navigationProperty, List<ODataPathSegment> parsedSegments)
             : this(navigationProperty)
         {
-            ExceptionUtils.CheckArgumentNotNull(source, "source");
-            this.source = source;
             this.parsedSegments = parsedSegments;
 
-            this.navigationSource = source.NavigationSource != null ? source.NavigationSource.FindNavigationTarget(navigationProperty, BindingPathHelper.MatchBindingPath, this.parsedSegments) : null;
+            this.navigationSource = navigationSource != null ? navigationSource.FindNavigationTarget(navigationProperty, BindingPathHelper.MatchBindingPath, this.parsedSegments) : null;
         }
 
         /// <summary>
@@ -121,7 +166,7 @@ namespace Microsoft.OData.UriParser
         /// <summary>
         /// Gets the parent node of this Collection Navigation Node.
         /// </summary>
-        public SingleResourceNode Source
+        public QueryNode Source
         {
             get { return this.source; }
         }

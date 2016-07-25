@@ -73,7 +73,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         public void CreateImplicitParameterNodeFromNonEntityCollectionShouldCreateNonResourceRangeVariableReferenceNode()
         {
             var resultNode = NodeFactory.CreateImplicitRangeVariable(new ODataPath(new[] {new PropertySegment(HardCodedTestModel.GetPersonPreviousAddressesProp())}));
-            resultNode.ShouldBeNonentityRangeVariable(ExpressionConstants.It).And.TypeReference.Definition.Should().Be(HardCodedTestModel.GetAddressType());
+            resultNode.ShouldBeResourceRangeVariable(ExpressionConstants.It).And.TypeReference.Definition.Should().Be(HardCodedTestModel.GetAddressType());
             resultNode.Name.Should().Be(ExpressionConstants.It);
         }
 

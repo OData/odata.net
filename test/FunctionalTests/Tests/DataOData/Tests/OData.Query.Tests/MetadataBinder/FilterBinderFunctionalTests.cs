@@ -291,7 +291,7 @@ namespace Microsoft.Test.Taupo.OData.Query.Tests.MetadataBinder
 
             // Accessing a complex on entity and primitive on complex
             SingleValuePropertyAccessNode propertyAccessNode2 = new SingleValuePropertyAccessNode(
-                new SingleValuePropertyAccessNode(
+                new SingleComplexNode(
                     new ResourceRangeVariableReferenceNode(customersEntityRangeVariable.Name, customersEntityRangeVariable),
                     model.ResolveProperty("TestNS.Customer.Address")
                     ),

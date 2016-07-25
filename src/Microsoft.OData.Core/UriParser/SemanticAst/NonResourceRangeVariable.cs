@@ -47,7 +47,7 @@ namespace Microsoft.OData.UriParser
             this.name = name;
             if (typeReference != null)
             {
-                if (typeReference.Definition.TypeKind == EdmTypeKind.Entity)
+                if (typeReference.Definition.TypeKind.IsStructured())
                 {
                     // TODO: update message #644
                     throw new ArgumentException(

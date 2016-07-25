@@ -18,11 +18,11 @@ namespace Microsoft.OData.UriParser
         /// <summary>
         /// The value containing the property.
         /// </summary>
-        private readonly SingleResourceNode source;
+        private readonly QueryNode source;
 
         /// <summary>
         /// The EDM property which is to be accessed.
-        /// </summary>
+        /// </summary> 
         private readonly IEdmProperty property;
 
         /// <summary>
@@ -48,8 +48,38 @@ namespace Microsoft.OData.UriParser
         /// <exception cref="System.ArgumentNullException">Throws if the input source or property is null.</exception>
         /// <exception cref="ArgumentException">Throws if the input property is not a collection of structural properties</exception>
         public CollectionComplexNode(SingleResourceNode source, IEdmProperty property)
+            : this(ExceptionUtils.CheckArgumentNotNull(source, "source").NavigationSource, property)
         {
-            ExceptionUtils.CheckArgumentNotNull(source, "source");
+            this.source = source;
+        }
+
+        /// <summary>
+        /// Constructs a new <see cref="CollectionComplexNode"/>.
+        /// </summary>
+        /// <param name="source">The value containing the property.</param>
+        /// <param name="property">The EDM property which is to be accessed.</param>
+        /// <exception cref="System.ArgumentNullException">Throws if the input source or property is null.</exception>
+        /// <exception cref="ArgumentException">Throws if the input property is not a collection of structural properties</exception>
+        public CollectionComplexNode(CollectionResourceNode source, IEdmProperty property)
+            : this(ExceptionUtils.CheckArgumentNotNull(source, "source").NavigationSource, property)
+        {
+            if (!(source.ItemStructuredType.IsComplex()))
+            {
+                throw new ODataException("CollectionComplexNode only accepts SingleResourceNode or CollectionResourceNode which item type is complex as parent source.");
+            }
+
+            this.source = source;
+        }
+
+        /// <summary>
+        /// Constructs a new <see cref="CollectionComplexNode"/>.
+        /// </summary>
+        /// <param name="navigationSource">The navigation source containing the property.</param>
+        /// <param name="property">The EDM property which is to be accessed.</param>
+        /// <exception cref="System.ArgumentNullException">Throws if the input source or property is null.</exception>
+        /// <exception cref="ArgumentException">Throws if the input property is not a collection of structural properties</exception>
+        private CollectionComplexNode(IEdmNavigationSource navigationSource, IEdmProperty property)
+        {
             ExceptionUtils.CheckArgumentNotNull(property, "property");
 
             if (property.PropertyKind != EdmPropertyKind.Structural)
@@ -57,22 +87,16 @@ namespace Microsoft.OData.UriParser
                 throw new ArgumentException(ODataErrorStrings.Nodes_PropertyAccessShouldBeNonEntityProperty(property.Name));
             }
 
-            if (!property.Type.IsCollection())
-            {
-                throw new ArgumentException(ODataErrorStrings.Nodes_PropertyAccessTypeMustBeCollection(property.Name));
-            }
-
-            this.source = source;
             this.property = property;
             this.collectionTypeReference = property.Type.AsCollection();
-            this.itemType = this.collectionTypeReference.ElementType() as IEdmComplexTypeReference;
-            this.navigationSource = source.NavigationSource;
+            this.itemType = this.collectionTypeReference.ElementType().AsComplex();
+            this.navigationSource = navigationSource;
         }
 
         /// <summary>
         /// Gets the value containing the property.
         /// </summary>
-        public SingleResourceNode Source
+        public QueryNode Source
         {
             get { return this.source; }
         }

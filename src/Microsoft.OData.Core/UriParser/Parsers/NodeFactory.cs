@@ -38,10 +38,10 @@ namespace Microsoft.OData.UriParser
                 elementType = elementType.AsCollection().ElementType();
             }
 
-            if (elementType.IsEntity())
+            if (elementType.IsStructured())
             {
-                IEdmEntityTypeReference entityTypeReference = elementType as IEdmEntityTypeReference;
-                return new ResourceRangeVariable(ExpressionConstants.It, entityTypeReference, path.NavigationSource());
+                IEdmStructuredTypeReference structuredTypeReference = elementType.AsStructured();
+                return new ResourceRangeVariable(ExpressionConstants.It, structuredTypeReference, path.NavigationSource());
             }
 
             return new NonResourceRangeVariable(ExpressionConstants.It, elementType, null);
@@ -51,16 +51,16 @@ namespace Microsoft.OData.UriParser
         /// Creates a ParameterQueryNode for an implicit parameter ($it).
         /// </summary>
         /// <param name="elementType">Element type the parameter represents.</param>
-        /// <param name="navigationSource">The navigation source. May be null and must be null for non entities.</param>
+        /// <param name="navigationSource">The navigation source. May be null and must be null for non structured types.</param>
         /// <returns>A new IParameterNode.</returns>
         internal static RangeVariable CreateImplicitRangeVariable(IEdmTypeReference elementType, IEdmNavigationSource navigationSource)
         {
-            if (elementType.IsEntity())
+            if (elementType.IsStructured())
             {
-                return new ResourceRangeVariable(ExpressionConstants.It, elementType as IEdmEntityTypeReference, navigationSource);
+                return new ResourceRangeVariable(ExpressionConstants.It, elementType as IEdmStructuredTypeReference, navigationSource);
             }
 
-            Debug.Assert(navigationSource == null, "if the type wasn't an entity then there should be no navigation source");
+            Debug.Assert(navigationSource == null, "if the type wasn't a structured type then there should be no navigation source");
             return new NonResourceRangeVariable(ExpressionConstants.It, elementType, null);
         }
 
@@ -77,8 +77,8 @@ namespace Microsoft.OData.UriParser
             }
             else
             {
-                ResourceRangeVariable entityRangeVariable = (ResourceRangeVariable)rangeVariable;
-                return new ResourceRangeVariableReferenceNode(entityRangeVariable.Name, entityRangeVariable);
+                ResourceRangeVariable resourceRangeVariable = (ResourceRangeVariable)rangeVariable;
+                return new ResourceRangeVariableReferenceNode(resourceRangeVariable.Name, resourceRangeVariable);
             }
         }
 
@@ -92,11 +92,11 @@ namespace Microsoft.OData.UriParser
         {
             IEdmTypeReference elementType = nodeToIterateOver.ItemType;
 
-            if (elementType != null && elementType.IsEntity())
+            if (elementType != null && elementType.IsStructured())
             {
-                var entityCollectionNode = nodeToIterateOver as CollectionResourceNode;
-                Debug.Assert(entityCollectionNode != null, "IF the element type was entity, the node type should be an entity collection");
-                return new ResourceRangeVariable(parameter, elementType as IEdmEntityTypeReference, entityCollectionNode);
+                var collectionResourceNode = nodeToIterateOver as CollectionResourceNode;
+                Debug.Assert(collectionResourceNode != null, "IF the element type was structured, the node type should be a resource collection");
+                return new ResourceRangeVariable(parameter, elementType as IEdmStructuredTypeReference, collectionResourceNode);
             }
 
             return new NonResourceRangeVariable(parameter, elementType, null);

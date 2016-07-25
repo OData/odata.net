@@ -140,10 +140,15 @@ namespace Microsoft.OData.UriParser.Aggregation
             {
                 var bindResult = this.bindMethod(propertyToken);
                 var property = bindResult as SingleValuePropertyAccessNode;
+                var complexProperty = bindResult as SingleComplexNode;
 
                 if (property != null)
                 {
                     RegisterProperty(properties, ReversePropertyPath(property));
+                }
+                else if (complexProperty != null)
+                {
+                    RegisterProperty(properties, ReversePropertyPath(complexProperty));
                 }
                 else
                 {
@@ -184,6 +189,7 @@ namespace Microsoft.OData.UriParser.Aggregation
         private static bool IsPropertyNode(SingleValueNode node)
         {
             return node.Kind == QueryNodeKind.SingleValuePropertyAccess ||
+                   node.Kind == QueryNodeKind.SingleComplexNode ||
                    node.Kind == QueryNodeKind.SingleNavigationNode;
         }
 
@@ -196,6 +202,10 @@ namespace Microsoft.OData.UriParser.Aggregation
                 if (node.Kind == QueryNodeKind.SingleValuePropertyAccess)
                 {
                     node = ((SingleValuePropertyAccessNode)node).Source;
+                }
+                else if (node.Kind == QueryNodeKind.SingleComplexNode)
+                {
+                    node = (SingleValueNode)((SingleComplexNode)node).Source;
                 }
                 else if (node.Kind == QueryNodeKind.SingleNavigationNode)
                 {
@@ -228,8 +238,7 @@ namespace Microsoft.OData.UriParser.Aggregation
             else
             {
                 // It's the leaf just add.
-                var accessNode = property as SingleValuePropertyAccessNode;
-                properties.Add(new GroupByPropertyNode(propertyName, property, accessNode.TypeReference));
+                properties.Add(new GroupByPropertyNode(propertyName, property, property.TypeReference));
             }
         }
 
@@ -238,6 +247,10 @@ namespace Microsoft.OData.UriParser.Aggregation
             if (property.Kind == QueryNodeKind.SingleValuePropertyAccess)
             {
                 return ((SingleValuePropertyAccessNode)property).Property.Name;
+            }
+            else if (property.Kind == QueryNodeKind.SingleComplexNode)
+            {
+                return ((SingleComplexNode)property).Property.Name;
             }
             else if (property.Kind == QueryNodeKind.SingleNavigationNode)
             {

@@ -18,7 +18,7 @@ namespace Microsoft.OData.UriParser
         /// <summary>
         /// The value containing this property.
         /// </summary>
-        private readonly SingleResourceNode source;
+        private readonly QueryNode source;
 
         /// <summary>
         /// The EDM property which is to be accessed.
@@ -28,7 +28,7 @@ namespace Microsoft.OData.UriParser
         /// <summary>
         /// The target type that the property represents.
         /// </summary>
-        private readonly IEdmComplexTypeReference complexTypeReference;
+        private readonly IEdmComplexTypeReference typeReference;
 
         /// <summary>
         /// The navigation source containing the source entity.
@@ -43,30 +43,54 @@ namespace Microsoft.OData.UriParser
         /// <exception cref="System.ArgumentNullException">Throws if input source or property is null.</exception>
         /// <exception cref="ArgumentException">Throws if input property is not structural, or is a collection.</exception>
         public SingleComplexNode(SingleResourceNode source, IEdmProperty property)
+            : this(ExceptionUtils.CheckArgumentNotNull(source, "source").NavigationSource, property)
         {
-            ExceptionUtils.CheckArgumentNotNull(source, "source");
+            this.source = source;
+        }
+
+        /// <summary>
+        /// Constructs a <see cref="SingleComplexNode"/>.
+        /// </summary>
+        /// <param name="source">The value containing this property.</param>
+        /// <param name="property">The EDM property which is to be accessed.</param>
+        /// <exception cref="System.ArgumentNullException">Throws if input source or property is null.</exception>
+        /// <exception cref="ArgumentException">Throws if input property is not structural, or is a collection.</exception>
+        public SingleComplexNode(CollectionResourceNode source, IEdmProperty property)
+            : this(ExceptionUtils.CheckArgumentNotNull(source, "source").NavigationSource, property)
+        {
+            if (!(source.ItemStructuredType.IsComplex()))
+            {
+                // TODO: update error message
+                throw new ODataException("SingleComplexNode only accepts SingleResourceNode or CollectionResourceNode which item type is complex as parent source.");
+            }
+
+            this.source = source;
+        }
+
+        /// <summary>
+        /// Constructs a <see cref="SingleComplexNode"/>.
+        /// </summary>
+        /// <param name="navigationSource">The navigation source containing the property.</param>
+        /// <param name="property">The EDM property which is to be accessed.</param>
+        private SingleComplexNode(IEdmNavigationSource navigationSource, IEdmProperty property)
+        {
             ExceptionUtils.CheckArgumentNotNull(property, "property");
 
             if (property.PropertyKind != EdmPropertyKind.Structural)
             {
+                // TODO: update error message #644
                 throw new ArgumentException(ODataErrorStrings.Nodes_PropertyAccessShouldBeNonEntityProperty(property.Name));
             }
 
-            if (property.Type.IsCollection())
-            {
-                throw new ArgumentException(ODataErrorStrings.Nodes_PropertyAccessTypeShouldNotBeCollection(property.Name));
-            }
-
-            this.source = source;
             this.property = property;
-            this.navigationSource = source.NavigationSource;
-            this.complexTypeReference = property.Type as IEdmComplexTypeReference;
+            this.navigationSource = navigationSource;
+            this.typeReference = property.Type.AsComplex();
         }
 
         /// <summary>
         /// Gets the value containing this property.
         /// </summary>
-        public SingleResourceNode Source
+        public QueryNode Source
         {
             get { return this.source; }
         }
@@ -84,7 +108,7 @@ namespace Microsoft.OData.UriParser
         /// </summary>
         public override IEdmTypeReference TypeReference
         {
-            get { return this.complexTypeReference; }
+            get { return this.typeReference; }
         }
 
         /// <summary>
@@ -100,7 +124,7 @@ namespace Microsoft.OData.UriParser
         /// </summary>
         public override IEdmStructuredTypeReference StructuredTypeReference
         {
-            get { return this.complexTypeReference; }
+            get { return this.typeReference; }
         }
 
         /// <summary>

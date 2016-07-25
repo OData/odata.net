@@ -102,6 +102,9 @@ namespace Microsoft.Test.Taupo.OData.Query.Tests.MetadataBinder
                     case InternalQueryNodeKind.SingleValuePropertyAccess:
                         VerifyPropertyAccessQueryNodesAreEqual((SingleValuePropertyAccessNode)expected, (SingleValuePropertyAccessNode)actual, assert);
                         break;
+                    case InternalQueryNodeKind.SingleComplexNode:
+                        VerifySingleComplexNodeAreEqual((SingleComplexNode)expected, (SingleComplexNode)actual, assert);
+                        break;
                     case InternalQueryNodeKind.SingleValueFunctionCall:
                         VerifySingleValueFunctionCallQueryNodesAreEqual((SingleValueFunctionCallNode)expected, (SingleValueFunctionCallNode)actual, assert);
                         break;
@@ -168,6 +171,12 @@ namespace Microsoft.Test.Taupo.OData.Query.Tests.MetadataBinder
             QueryTestUtils.VerifyPropertiesAreEqual(expected.Property, actual.Property, assert);
         }
 
+        private static void VerifySingleComplexNodeAreEqual(SingleComplexNode expected, SingleComplexNode actual, AssertionHandler assert)
+        {
+            VerifyQueryNodesAreEqual(expected.Source, actual.Source, assert);
+            QueryTestUtils.VerifyPropertiesAreEqual(expected.Property, actual.Property, assert);
+        }
+
         private static void VerifySingleValueFunctionCallQueryNodesAreEqual(SingleValueFunctionCallNode expected, SingleValueFunctionCallNode actual, AssertionHandler assert)
         {
             assert.AreEqual(expected.Name, actual.Name, "The names of the functions are different.");
@@ -217,7 +226,15 @@ namespace Microsoft.Test.Taupo.OData.Query.Tests.MetadataBinder
                     var singlePropertyAccess = (SingleValuePropertyAccessNode)node;
                     result = singlePropertyAccess.Source + "/" + singlePropertyAccess.Property.Name;
                     break;
+                case InternalQueryNodeKind.SingleComplexNode:
+                    var singleComplexProperty = (SingleComplexNode)node;
+                    result = singleComplexProperty.Source + "/" + singleComplexProperty.Property.Name;
+                    break;
                 case InternalQueryNodeKind.CollectionPropertyAccess:
+                    var collectionComplexProperty = (CollectionComplexNode)node;
+                    result = collectionComplexProperty.Source + "/" + collectionComplexProperty.Property.Name;
+                    break;
+                case InternalQueryNodeKind.CollectionComplexNode:
                     var collectionPropertyAccess = (CollectionPropertyAccessNode)node;
                     result = collectionPropertyAccess.Source + "/" + collectionPropertyAccess.Property.Name;
                     break;

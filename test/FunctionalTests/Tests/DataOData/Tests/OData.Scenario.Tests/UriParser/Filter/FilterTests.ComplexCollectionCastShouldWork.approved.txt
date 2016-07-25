@@ -16,21 +16,20 @@ FilterQueryOption
 				Property = HomeNO
 				TypeReference = [Edm.String Nullable=True Unicode=True]
 				Source = 
-				NonentityRangeVariableReferenceNode
+				ResourceRangeVariableReferenceNode
 					Name = d
-					Range Variable = 
-					NonResourceRangeVariable
-						Name = d
-						TypeReference = [Microsoft.Test.Taupo.OData.WCFService.HomeAddress Nullable=False]
+					NavigationSource = Products
 					TypeReference = [Microsoft.Test.Taupo.OData.WCFService.HomeAddress Nullable=False]
+					Range Variable = Microsoft.OData.UriParser.ResourceRangeVariable
 		NotEqual
 			999(Type: [Edm.String Nullable=True Unicode=True])
 		Source = 
-		CollectionPropertyCastNode
-			Property = ManufactureAddresss
-			TypeReference = [Microsoft.Test.Taupo.OData.WCFService.HomeAddress Nullable=False]
+		CollectionResourceCastNode
+			Entity Item Type = [Microsoft.Test.Taupo.OData.WCFService.HomeAddress Nullable=False]
+			NavigationSource = Products
+			Item Type = [Microsoft.Test.Taupo.OData.WCFService.HomeAddress Nullable=False]
 			Source = 
-			CollectionPropertyAccessNode
+			CollectionComplexNode
 				Property = ManufactureAddresss
 				ItemType = [Microsoft.Test.Taupo.OData.WCFService.Address Nullable=True]
 				Source = 
@@ -40,8 +39,9 @@ FilterQueryOption
 					TypeReference = [Microsoft.Test.Taupo.OData.WCFService.Product Nullable=False]
 					Range Variable = Microsoft.OData.UriParser.ResourceRangeVariable
 		Parameters = 
-		NonResourceRangeVariable
+		ResourceRangeVariable
 			Name = d
+			NavigationSource = Products
 			TypeReference = [Microsoft.Test.Taupo.OData.WCFService.HomeAddress Nullable=False]
 		ResourceRangeVariable
 			Name = $it

@@ -41,9 +41,9 @@ namespace Microsoft.OData.UriParser
         /// <param name="property">The <see cref="IEdmProperty"/> that will be bound to this node. Must not be primitive collection</param>
         /// <param name="state">The state of binding.</param>
         /// <returns>QueryNode bound to this property.</returns>
-        internal static QueryNode GeneratePropertyAccessQueryNode(SingleValueNode parentNode, IEdmProperty property, BindingState state)
+        internal static QueryNode GeneratePropertyAccessQueryNode(SingleResourceNode parentNode, IEdmProperty property, BindingState state)
         {
-            ExceptionUtils.CheckArgumentNotNull(parentNode, "parent");
+            ExceptionUtils.CheckArgumentNotNull(parentNode, "parentNode");
             ExceptionUtils.CheckArgumentNotNull(property, "property");
 
             // TODO: Remove this check.
@@ -54,20 +54,31 @@ namespace Microsoft.OData.UriParser
             {
                 // if this happens to be a top level node (i.e. $filter=MyCollection), then it will fail further up the chain, so
                 // don't need to worry about checking for that here.
-                return new CollectionPropertyAccessNode(parentNode, property);
+                if (property.Type.IsStructuredCollectionType())
+                {
+                    return new CollectionComplexNode(parentNode, property);
+                }
+                else
+                {
+                    return new CollectionPropertyAccessNode(parentNode, property);
+                }
             }
 
             if (property.PropertyKind == EdmPropertyKind.Navigation)
             {
                 // These are error cases in practice, but we let ourselves throw later for better context-sensitive error messages
                 var edmNavigationProperty = (IEdmNavigationProperty)property;
-                var singleEntityParentNode = (SingleResourceNode)parentNode;
                 if (edmNavigationProperty.TargetMultiplicity() == EdmMultiplicity.Many)
                 {
-                    return new CollectionNavigationNode(singleEntityParentNode, edmNavigationProperty, state.ParsedSegments);
+                    return new CollectionNavigationNode(parentNode, edmNavigationProperty, state.ParsedSegments);
                 }
 
-                return new SingleNavigationNode(singleEntityParentNode, edmNavigationProperty, state.ParsedSegments);
+                return new SingleNavigationNode(parentNode, edmNavigationProperty, state.ParsedSegments);
+            }
+
+            if (property.Type.IsComplex())
+            {
+                return new SingleComplexNode(parentNode, property);
             }
 
             return new SingleValuePropertyAccessNode(parentNode, property);
@@ -158,7 +169,7 @@ namespace Microsoft.OData.UriParser
 
             if (property != null)
             {
-                return GeneratePropertyAccessQueryNode(singleValueParent, property, state);
+                return GeneratePropertyAccessQueryNode(singleValueParent as SingleResourceNode, property, state);
             }
 
             if (functionCallBinder.TryBindEndPathAsFunctionCall(endPathToken, singleValueParent, state, out boundFunction))

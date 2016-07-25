@@ -86,21 +86,21 @@ namespace Microsoft.OData.Tests.UriParser.Binders
         [Fact]
         public void CastWithComplexTypeShouldWork()
         {
-            this.dottedIdentifierBinder = new DottedIdentifierBinder(FakeBindMethods.BindSingleValueProperty, this.bindingState);
+            this.dottedIdentifierBinder = new DottedIdentifierBinder(FakeBindMethods.BindSingleComplexProperty, this.bindingState);
             var castToken = new DottedIdentifierToken("Fully.Qualified.Namespace.HomeAddress", new DummyToken());
             var resultNode = this.dottedIdentifierBinder.BindDottedIdentifier(castToken);
 
-            resultNode.ShouldBeSingleValueCastNode(HardCodedTestModel.GetHomeAddressReference());
+            resultNode.ShouldBeSingleResourceCastNode(HardCodedTestModel.GetHomeAddressReference());
         }
 
         [Fact]
         public void CastWithCollectionComplexTypeShouldWork()
         {
-            this.dottedIdentifierBinder = new DottedIdentifierBinder(FakeBindMethods.BindCollectionProperty, this.bindingState);
+            this.dottedIdentifierBinder = new DottedIdentifierBinder(FakeBindMethods.BindCollectionComplex, this.bindingState);
             var castToken = new DottedIdentifierToken("Fully.Qualified.Namespace.HomeAddress", new DummyToken());
             var resultNode = this.dottedIdentifierBinder.BindDottedIdentifier(castToken);
 
-            resultNode.ShouldBeCollectionPropertyCastNode(HardCodedTestModel.GetHomeAddressReference());
+            resultNode.ShouldBeCollectionResourceCastNode(HardCodedTestModel.GetHomeAddressReference());
         }
 
         [Fact]

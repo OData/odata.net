@@ -145,19 +145,9 @@ namespace Microsoft.OData.UriParser
         CollectionOpenPropertyAccess = InternalQueryNodeKind.CollectionOpenPropertyAccess,
 
         /// <summary>
-        /// Cast on a collection property.
+        /// Node represents a collection of complex property.
         /// </summary>
-        CollectionPropertyCast = InternalQueryNodeKind.CollectionPropertyCast,
-
-        /// <summary>
-        /// Cast on a single value property.
-        /// </summary>
-        SingleValueCast = InternalQueryNodeKind.SingleValueCast,
-
-        /// <summary>
-        /// Count of a collection contains primitive or enum or complex or entity type.
-        /// </summary>
-        Count = InternalQueryNodeKind.Count,
+        CollectionComplexNode = InternalQueryNodeKind.CollectionComplexNode,
 
         /// <summary>
         /// Node represents a single complex property.
@@ -165,9 +155,9 @@ namespace Microsoft.OData.UriParser
         SingleComplexNode = InternalQueryNodeKind.SingleComplexNode,
 
         /// <summary>
-        /// Node represents a collection of complex property.
+        /// Count of a collection contains primitive or enum or complex or entity type.
         /// </summary>
-        CollectionComplexNode = InternalQueryNodeKind.CollectionComplexNode,
+        Count = InternalQueryNodeKind.Count,
     }
 
     /// <summary>
@@ -306,28 +296,18 @@ namespace Microsoft.OData.UriParser
         CollectionOpenPropertyAccess = 25,
 
         /// <summary>
-        /// Cast on a collection property.
+        /// Node represents a collection of complex property.
         /// </summary>
-        CollectionPropertyCast = 26,
+        CollectionComplexNode = 26,
 
         /// <summary>
-        /// Cast on a single value.
+        /// Node represents a single complex property.
         /// </summary>
-        SingleValueCast = 27,
+        SingleComplexNode = 27,
 
         /// <summary>
         /// Node describing count of a collection contains primitive or enum or complex or entity type.
         /// </summary>
         Count = 28,
-
-        /// <summary>
-        /// Node represents a single complex property.
-        /// </summary>
-        SingleComplexNode = 29,
-
-        /// <summary>
-        /// Node represents a collection of complex property.
-        /// </summary>
-        CollectionComplexNode = 30,
     }
 }

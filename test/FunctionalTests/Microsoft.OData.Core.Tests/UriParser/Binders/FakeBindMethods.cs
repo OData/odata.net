@@ -49,16 +49,16 @@ namespace Microsoft.OData.Tests.UriParser.Binders
         public static readonly ConstantNode FakeNullLiteralNode =
             new ConstantNode(null);
 
-        public static readonly SingleValuePropertyAccessNode FakeSingleValueProperty =
-            new SingleValuePropertyAccessNode(FakePersonNode, HardCodedTestModel.GetPersonAddressProp());
+        public static readonly SingleComplexNode FakeSingleComplexProperty =
+            new SingleComplexNode(FakePersonNode, HardCodedTestModel.GetPersonAddressProp());
 
         public static readonly SingleValuePropertyAccessNode FakePersonDogNameNode =
             new SingleValuePropertyAccessNode(
                 new SingleNavigationNode(FakePersonNode, HardCodedTestModel.GetPersonMyDogNavProp(), new EdmPathExpression("MyDog")),HardCodedTestModel.GetAddressCityProperty());
 
 
-        public static readonly CollectionPropertyAccessNode FakeCollectionValueProperty =
-            new CollectionPropertyAccessNode(FakePersonNode, HardCodedTestModel.GetPersonPreviousAddressesProp());
+        public static readonly CollectionComplexNode FakeCollectionComplexProperty =
+            new CollectionComplexNode(FakePersonNode, HardCodedTestModel.GetPersonPreviousAddressesProp());
 
         public static SingleResourceNode BindMethodReturningASingleLion(QueryToken token)
         {
@@ -115,9 +115,9 @@ namespace Microsoft.OData.Tests.UriParser.Binders
             return null;
         }
 
-        public static SingleValuePropertyAccessNode BindSingleValueProperty(QueryToken queryToken)
+        public static SingleComplexNode BindSingleComplexProperty(QueryToken queryToken)
         {
-            return FakeSingleValueProperty;
+            return FakeSingleComplexProperty;
         }
 
         public static SingleValuePropertyAccessNode BindMethodReturnsPersonDogNameNavigation(QueryToken queryToken)
@@ -125,9 +125,9 @@ namespace Microsoft.OData.Tests.UriParser.Binders
             return FakePersonDogNameNode;
         }
 
-        public static CollectionPropertyAccessNode BindCollectionProperty(QueryToken queryToken)
+        public static CollectionComplexNode BindCollectionComplex(QueryToken queryToken)
         {
-            return FakeCollectionValueProperty;
+            return FakeCollectionComplexProperty;
         }
     }
 }

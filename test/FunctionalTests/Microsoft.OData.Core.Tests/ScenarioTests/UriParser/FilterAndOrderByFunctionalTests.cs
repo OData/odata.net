@@ -372,7 +372,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
 
             filterQueryNode.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal).
                 And.Left.ShouldBeCountNode().
-                    And.Source.ShouldBeCollectionPropertyAccessQueryNode(HardCodedTestModel.GetPersonPreviousAddressesProp());
+                    And.Source.ShouldBeCollectionComplexNode(HardCodedTestModel.GetPersonPreviousAddressesProp());
         }
 
         [Fact]
@@ -401,7 +401,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             var filter = ParseFilter("MyAddress eq null", HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());
 
             var binary = filter.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal).And;
-            binary.Left.ShouldBeSingleValuePropertyAccessQueryNode(HardCodedTestModel.GetPersonAddressProp());
+            binary.Left.ShouldBeSingleComplexNode(HardCodedTestModel.GetPersonAddressProp());
             binary.Right.ShouldBeConvertQueryNode(HardCodedTestModel.GetPersonAddressProp().Type);
         }
 
@@ -1013,7 +1013,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             var model = ModelBuildingHelpers.GetModelFunctionsOnNonEntityTypes();
             var filterNode = ParseFilter("Color/Test.IsDark()", model, model.EntityTypes().Single(e => e.Name == "Vegetable"), null);
             filterNode.Expression.ShouldBeSingleValueFunctionCallQueryNode(model.FindDeclaredOperations("Test.IsDark").Single().As<IEdmFunction>());
-            filterNode.Expression.As<SingleValueFunctionCallNode>().Source.ShouldBeSingleValuePropertyAccessQueryNode(model.EntityTypes().Single().Properties().Single(p => p.Name == "Color"));
+            filterNode.Expression.As<SingleValueFunctionCallNode>().Source.ShouldBeSingleComplexNode(model.EntityTypes().Single().Properties().Single(p => p.Name == "Color"));
         }
 
         [Fact]
@@ -1023,7 +1023,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             var filterNode = ParseFilter("Color/Test.IsDarkerThan(other={\"Red\":64}) eq true", model, model.EntityTypes().Single(e => e.Name == "Vegetable"), null);
             var left = filterNode.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal).And.Left;
             left.ShouldBeSingleValueFunctionCallQueryNode(model.FindDeclaredOperations("Test.IsDarkerThan").Single().As<IEdmFunction>());
-            left.As<SingleValueFunctionCallNode>().Source.ShouldBeSingleValuePropertyAccessQueryNode(model.EntityTypes().Single().Properties().Single(p => p.Name == "Color"));
+            left.As<SingleValueFunctionCallNode>().Source.ShouldBeSingleComplexNode(model.EntityTypes().Single().Properties().Single(p => p.Name == "Color"));
 
         }
 
@@ -1206,7 +1206,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             var point = GeographyPoint.Create(1, 2);
             var filterClause = ParseFilter("Fully.Qualified.Namespace.GetNearbyPriorAddresses(currentLocation=geography'" + SpatialHelpers.WriteSpatial(point) + "',limit=null)/any()", HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());
             filterClause.Expression.ShouldBeAnyQueryNode()
-                .And.Source.ShouldBeCollectionFunctionCallNode(HardCodedTestModel.GetNearbyPriorAddressesFunction())
+                .And.Source.ShouldBeCollectionResourceFunctionCallNode(HardCodedTestModel.GetNearbyPriorAddressesFunction())
                     .And.ShouldHaveConstantParameter("currentLocation", point)
                     .And.ShouldHaveConstantParameter("limit", (object)null);
         }

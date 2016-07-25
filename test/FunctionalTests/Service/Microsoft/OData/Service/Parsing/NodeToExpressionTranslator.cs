@@ -432,6 +432,17 @@ namespace Microsoft.OData.Service.Parsing
         }
 
         /// <summary>
+        /// Translates a <see cref="SingleComplexNode"/> into a corresponding <see cref="Expression"/>.
+        /// </summary>
+        /// <param name="node">The node to translate.</param>
+        /// <returns>The translated expression.</returns>
+        public override Expression Visit(SingleComplexNode node)
+        {
+            WebUtil.CheckArgumentNull(node, "node");
+            return this.TranslatePropertyAccess(node.Source, node.Property);
+        }
+
+        /// <summary>
         /// Translates a <see cref="UnaryOperatorNode"/> into a corresponding <see cref="Expression"/>.
         /// </summary>
         /// <param name="node">The node to translate.</param>

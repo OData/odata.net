@@ -467,6 +467,12 @@
     <Content Include="UriParser\MultiBindingTests\MultiBindingTests.FilterContained.approved.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="UriParser\MultiBindingTests\MultiBindingTests.FilterOnNavigationUnderComplex.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="UriParser\MultiBindingTests\MultiBindingTests.FilterOnNavigationUnderComplexAndComplexIsInPath.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="UriParser\MultiBindingTests\MultiBindingTests.NestedExpandUnderComplex.approved.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -474,6 +480,12 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="UriParser\MultiBindingTests\MultiBindingTests.OrderByContained.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="UriParser\MultiBindingTests\MultiBindingTests.OrderByOnNavigationUnderComplex.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="UriParser\MultiBindingTests\MultiBindingTests.OrderByOnNavigationUnderComplexAndComplexIsInPath.approved.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="UriParser\OrderBy\OrderByTests.TemporalValueSubtraction.approved.txt">
