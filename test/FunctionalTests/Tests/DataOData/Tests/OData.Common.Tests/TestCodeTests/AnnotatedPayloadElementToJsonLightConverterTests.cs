@@ -239,13 +239,14 @@ namespace Microsoft.Test.Taupo.OData.Common.Tests.TestCodeTests
             var testCases = new JsonLightSerializerTestCase[]
             {
                 // Null property
+                // TODO: Change the payload of null top-level properties #645
                 new JsonLightSerializerTestCase
                 {
                     PayloadElement = PayloadBuilder.PrimitiveProperty("Prop", null).WithContextUri("http://odata.org/metadatauri"),
                     ExpectedJson = @"
                         {
                           """ + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataContextAnnotationName + @""":""http://odata.org/metadatauri"",
-                          """ + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataNullAnnotationName + @""":true
+                          ""value"":null
                         }"
                 },
                 // Primitive property

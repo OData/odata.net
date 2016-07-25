@@ -22,12 +22,6 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
         /// <summary>The OData Metadata annotation name.</summary>
         public const string ODataContextAnnotationName = "@odata.context";
 
-        /// <summary>The OData 'null' annotation name.</summary>
-        public const string ODataNullAnnotationName = "odata.null";
-
-        /// <summary>The value 'true' for the OData null annotation.</summary>
-        public const string ODataNullAnnotationTrueValue = "true";
-
         /// <summary>The OData Type annotation name.</summary>
         public const string ODataTypeAnnotationName = "@odata.type";
 

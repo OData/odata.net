@@ -116,10 +116,16 @@ namespace Microsoft.OData.Service.Serializers
                     return;
                 }
 
+                var odataValue = this.GetPropertyValue(propertyName, resourceType, element, this.RequestDescription.TargetKind == RequestTargetKind.OpenProperty /*openProperty*/);
+                if (odataValue == null || odataValue is ODataNullValue)
+                {
+                    return;
+                }
+
                 var odataProperty = new ODataProperty
                 {
                     Name = propertyName,
-                    Value = this.GetPropertyValue(propertyName, resourceType, element, this.RequestDescription.TargetKind == RequestTargetKind.OpenProperty /*openProperty*/)
+                    Value = odataValue
                 };
 
                 this.writer.WriteProperty(odataProperty);

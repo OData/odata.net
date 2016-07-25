@@ -695,11 +695,8 @@ namespace AstoriaUnitTests.Tests
                     }
                 }
 
-                if (property.Value == null)
-                {
-                    this.WriteKeyValuePair("@odata.null", "true");
-                }
-                else if (property.PropertyKind == PayloadBuilderPropertyKind.Primitive || property.Value == null)
+                // TODO: Change the payload of null top-level properties #645
+                if (property.PropertyKind == PayloadBuilderPropertyKind.Primitive || property.Value == null)
                 {
                     // Write primitive property value
                     this.WriteKeyValuePair("value", JsonPrimitiveTypesUtil.PrimitiveToString(property.Value, null));

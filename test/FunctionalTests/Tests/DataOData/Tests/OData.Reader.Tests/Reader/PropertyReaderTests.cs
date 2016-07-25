@@ -163,6 +163,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
         }
 
         [TestMethod, TestCategory("Reader.Properties"), Variation(Description = "Test reading of non-nullable property payloads with 'null' value and metadata.")]
+        // TODO: Change the payload of null top-level properties #645
         public void NonNullablePropertiesWithNullValuesTest()
         {
             IEnumerable<NonNullablePropertyTest> testCases = new NonNullablePropertyTest[]
@@ -201,7 +202,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
                     PayloadElement = PayloadBuilder.PrimitiveValue(testCase.Value).WithTypeAnnotation(testCase.DataType),
                     PayloadEdmModel = new EdmModel().Fixup(),
                     ExpectedException = testCase.Value == null
-                        ? ODataExpectedExceptions.ODataException("ReaderValidationUtils_NullValueForNonNullableType", testCase.TypeName)
+                        ? ODataExpectedExceptions.ODataException("ReaderValidationUtils_NullNamedValueForNonNullableType", "value", testCase.TypeName)
                         : null,
                 });
 
@@ -220,7 +221,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
                         testDescriptor.ExpectedException = ODataExpectedExceptions.ODataException(
                             "ReaderValidationUtils_NullNamedValueForNonNullableType",
                             "propertyName",
-                            testDescriptor.ExpectedException.ExpectedMessage.Arguments.ElementAt(0));
+                            testDescriptor.ExpectedException.ExpectedMessage.Arguments.ElementAt(1));
                     }
 
                     var property = testDescriptor.PayloadElement as PropertyInstance;

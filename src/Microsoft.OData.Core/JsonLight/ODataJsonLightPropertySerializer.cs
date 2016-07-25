@@ -65,9 +65,10 @@ namespace Microsoft.OData.JsonLight
             Debug.Assert(property != null, "property != null");
             Debug.Assert(!(property.Value is ODataStreamReferenceValue), "!(property.Value is ODataStreamReferenceValue)");
 
-            if (property.ODataValue != null && property.ODataValue.IsNullValue)
+            if (property.ODataValue == null || property.ODataValue.IsNullValue)
             {
-                return;
+                // TODO: Enable updating top-level properties to null #645
+                throw new ODataException("A null top-level property is not allowed to be serialized.");
             }
 
             this.WriteTopLevelPayload(
@@ -333,9 +334,8 @@ namespace Microsoft.OData.JsonLight
 
             if (this.currentPropertyInfo.IsTopLevel)
             {
-                // Write the special null marker for top-level null properties.
-                this.ODataAnnotationWriter.WriteInstanceAnnotationName(ODataAnnotationNames.ODataNull);
-                this.JsonWriter.WriteValue(true);
+                // TODO: Enable updating top-level properties to null #645
+                throw new ODataException("A null top-level property is not allowed to be serialized.");
             }
             else
             {

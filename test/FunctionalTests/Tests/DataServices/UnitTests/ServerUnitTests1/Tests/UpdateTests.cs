@@ -2025,24 +2025,8 @@ namespace AstoriaUnitTests.Tests
                 bool includeOpenTypesProvider = true,
                 bool verifyResponsePreference = true)
             {
-                TestUtil.RunCombinations(
-                        UnitTestsUtil.ProviderTypes.Where(providerType => includeOpenTypesProvider || providerType != typeof(CustomRowBasedOpenTypesContext)),
-                        (providerType) =>
-                        {
-                            using (UnitTestsUtil.AppendTypesForOpenProperties(providerType, payloadBuilder, responseFormat))
-                            {
-                                DoUpdatesForVariousProviders(
-                                    providerType,
-                                    method,
-                                    uri,
-                                    responseFormat,
-                                    PayloadGenerator.Generate(payloadBuilder, responseFormat),
-                                    uriAndXPathsToVerify,
-                                    verifyETag,
-                                    includeOpenTypesProvider,
-                                    verifyResponsePreference);
-                            }
-                        });
+                var providerTypes = UnitTestsUtil.ProviderTypes.Where(providerType => includeOpenTypesProvider || providerType != typeof (CustomRowBasedOpenTypesContext));
+                DoUpdatesForVariousProviders(providerTypes, method, uri, responseFormat, payloadBuilder, uriAndXPathsToVerify, verifyETag, includeOpenTypesProvider, verifyResponsePreference);
             }
 
             internal static void DoUpdatesForVariousProviders(
@@ -2069,6 +2053,37 @@ namespace AstoriaUnitTests.Tests
                                 verifyETag,
                                 includeOpenTypesProvider,
                                 verifyResponsePreference);
+                        });
+            }
+
+            internal static void DoUpdatesForVariousProviders(
+                IEnumerable<Type> providerTypes,
+                string method,
+                string uri,
+                string responseFormat,
+                PayloadBuilder payloadBuilder,
+                KeyValuePair<string, string[]>[] uriAndXPathsToVerify,
+                bool verifyETag,
+                bool includeOpenTypesProvider = true,
+                bool verifyResponsePreference = true)
+            {
+                TestUtil.RunCombinations(
+                        providerTypes,
+                        (providerType) =>
+                        {
+                            using (UnitTestsUtil.AppendTypesForOpenProperties(providerType, payloadBuilder, responseFormat))
+                            {
+                                DoUpdatesForVariousProviders(
+                                    providerType,
+                                    method,
+                                    uri,
+                                    responseFormat,
+                                    PayloadGenerator.Generate(payloadBuilder, responseFormat),
+                                    uriAndXPathsToVerify,
+                                    verifyETag,
+                                    includeOpenTypesProvider,
+                                    verifyResponsePreference);
+                            }
                         });
             }
 

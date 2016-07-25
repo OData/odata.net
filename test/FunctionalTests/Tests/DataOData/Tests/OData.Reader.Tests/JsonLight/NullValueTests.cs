@@ -29,6 +29,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
         public PayloadReaderTestDescriptor.Settings Settings { get; set; }
 
         [TestMethod, TestCategory("Reader.Json"), Variation(Description = "Verifies correct reading of null property values")]
+        // TODO: Change the payload of null top-level properties #645
         public void NullValuePropertyTests()
         {
             EdmModel model = new EdmModel();
@@ -37,12 +38,12 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
             {
                 new
                 {
-                    Payload = "{{\"@odata.context\":\"http://odata.org/test/$metadata#Edm.String\",\"@odata.null\":true{0}}}",
+                    Payload = "{{\"@odata.context\":\"http://odata.org/test/$metadata#Edm.String\",\"value\":null{0}}}",
                     SkipTestConfiguration = (Func<ReaderTestConfiguration, bool>)(tc => false)
                 },
                 new
                 {
-                    Payload = "{{\"@odata.null\":true{0}}}",
+                    Payload = "{{\"value\":null{0}}}",
                     SkipTestConfiguration = (Func<ReaderTestConfiguration, bool>)(tc => tc.IsRequest == false)
                 },
             };
@@ -64,39 +65,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                         PayloadElement = PayloadBuilder.PrimitiveProperty(null, null).JsonRepresentation(string.Format(testCase.Payload, ",\"@Custom.Annotation\":\"foo\"")),
                         SkipTestConfiguration = testCase.SkipTestConfiguration
                     },
-                    new PayloadReaderTestDescriptor(this.Settings)
-                    {
-                        DebugDescription = "null property value with sub-property - should fail.",
-                        PayloadEdmModel = model,
-                        PayloadElement = PayloadBuilder.PrimitiveProperty(null, null).JsonRepresentation(string.Format(testCase.Payload, ",\"p1\":1")),
-                        ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightPropertyAndValueDeserializer_NoPropertyAndAnnotationAllowedInNullPayload", "p1"),
-                        SkipTestConfiguration = testCase.SkipTestConfiguration
-                    },
-                    new PayloadReaderTestDescriptor(this.Settings)
-                    {
-                        DebugDescription = "null property value with custom annotation and sub-property - should fail.",
-                        PayloadEdmModel = model,
-                        PayloadElement = PayloadBuilder.PrimitiveProperty(null, null).JsonRepresentation(string.Format(testCase.Payload, ",\"@Custom.Annotation\":\"foo\",\"p1\":1")),
-                        ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightPropertyAndValueDeserializer_NoPropertyAndAnnotationAllowedInNullPayload", "p1"),
-                        SkipTestConfiguration = testCase.SkipTestConfiguration
-                    },
                 });
-
-            testDescriptors = testDescriptors.Concat(new[]
-            {
-                new PayloadReaderTestDescriptor(this.Settings)
-                {
-                    DebugDescription = "null property context URI on non-nullable type - should fail.",
-                    PayloadEdmModel = model,
-                    PayloadElement = PayloadBuilder.PrimitiveProperty(null, null).AddExpectedTypeAnnotation(new ExpectedTypeODataPayloadElementAnnotation { ExpectedType = EdmDataTypes.Int32})
-                        .JsonRepresentation(
-                            "{" + 
-                            "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataContextAnnotationName + "\":\"http://odata.org/test/$metadata#Edm.Int32\"," +
-                            "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataNullAnnotationName + "\":true" +
-                            "}"),
-                    ExpectedException = ODataExpectedExceptions.ODataException("ReaderValidationUtils_NullValueForNonNullableType", "Edm.Int32")
-                },
-            });
 
             this.CombinatorialEngineProvider.RunCombinations(
                 testDescriptors,

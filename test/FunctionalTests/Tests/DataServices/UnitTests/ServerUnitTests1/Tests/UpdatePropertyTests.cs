@@ -121,12 +121,6 @@ namespace AstoriaUnitTests.Tests
                         Payload = "{ @odata.type: 'Edm.String', value : 'Foo' }",
                         ContentType = UnitTestsUtil.JsonLightMimeType,
                     },
-                    //// Correct null annotation in JSON Light
-                    new UpdatePutPropertyTestCase
-                    {
-                        Payload = "{ @odata.null : true }",
-                        ContentType = UnitTestsUtil.JsonLightMimeType,
-                    },
                     // JSON Missing '
                     new UpdatePutPropertyTestCase
                     {
@@ -712,20 +706,26 @@ namespace AstoriaUnitTests.Tests
                         }
                     });
             }
-            [Ignore] // Remove Atom
+
+            [Ignore]
+            // TODO: Change the payload of null top-level properties #645
             [TestCategory("Partition2"), TestMethod, Variation]
             public void UpdateMergePrimitivePropertyToNull()
             {
-                var payloadBuilder = new PayloadBuilder() { IsComplex = true }
-                    .AddProperty("Name", null);
+                var payloadBuilder = new PayloadBuilder() { IsComplex = false }
+                    .AddProperty("value", null);
 
-                string[] atomXPath = new string[] { "/adsm:value[@adsm:null='true']" };
+                string[] jsonLiteXPath = new string[] { String.Format("{0}", JsonValidator.ValueString) };
 
-                string[] jsonLiteXPath = new string[] { String.Format("{0}[odata.null='true']", JsonValidator.ObjectString) };
-
-                // For open types, setting to null should produce null instead.
-                UpdateTests.DoUpdatesForVariousProvidersWithOpenMissing("PATCH", "/Customers(1)/Name", UnitTestsUtil.MimeApplicationXml, payloadBuilder, atomXPath, true);
-                UpdateTests.DoUpdatesForVariousProvidersWithOpenMissing("PATCH", "/Customers(1)/Name", UnitTestsUtil.JsonLightMimeType, payloadBuilder, jsonLiteXPath, true);
+                UpdateTests.DoUpdatesForVariousProviders(
+                    UnitTestsUtil.ProviderTypes.Where(providerType => providerType != typeof(EFFK.CustomObjectContextPOCO)
+                        && providerType != typeof(EFFK.CustomObjectContextPOCOProxy)),
+                    "PATCH",
+                    "/Customers(1)/Name",
+                    UnitTestsUtil.JsonLightMimeType,
+                    payloadBuilder,
+                    new KeyValuePair<string, string[]>[] { new KeyValuePair<string, string[]>("/Customers(1)/Name", jsonLiteXPath) },
+                    true);
             }
 
             #region PrimitiveDataTypesContext

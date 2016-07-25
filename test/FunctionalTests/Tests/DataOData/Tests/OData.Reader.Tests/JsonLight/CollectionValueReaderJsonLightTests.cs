@@ -34,6 +34,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
         public PayloadReaderTestDescriptor.Settings Settings { get; set; }
 
         [TestMethod, TestCategory("Reader.Json"), Variation(Description = "Verifies correct reading of collection values")]
+        // TODO: Change the payload of null top-level properties #645
         public void CollectionValueTest()
         {
             EdmModel model = new EdmModel();
@@ -55,10 +56,10 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                     PayloadEdmModel = model,
                     PayloadElement = PayloadBuilder.Property("PrimitiveCollection",
                         PayloadBuilder.PrimitiveMultiValue("Collection(Edm.Int32)"))
-                        .JsonRepresentation("{\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataNullAnnotationName + "\":true }")
+                        .JsonRepresentation("{\"value\":null }")
                         .ExpectedProperty(owningType, "PrimitiveCollection"),
                     SkipTestConfiguration = tc => !tc.IsRequest,
-                    ExpectedException = ODataExpectedExceptions.ODataException("ReaderValidationUtils_NullValueForNonNullableType", "Collection(Edm.Int32)")
+                    ExpectedException = ODataExpectedExceptions.ODataException("ReaderValidationUtils_NullNamedValueForNonNullableType", "value", "Collection(Edm.Int32)")
                 },
                 new PayloadReaderTestDescriptor(this.Settings)
                 {
@@ -69,11 +70,11 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                         .JsonRepresentation(
                             "{" + 
                             "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataContextAnnotationName + "\":\"http://odata.org/test/$metadata#Collection(Edm.Int32)\"," +
-                            "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataNullAnnotationName + "\":true" +
+                            "\"value\":null" +
                             "}")
                         .ExpectedProperty(owningType, "PrimitiveCollection"),
                     SkipTestConfiguration = tc => tc.IsRequest,
-                    ExpectedException = ODataExpectedExceptions.ODataException("ReaderValidationUtils_NullValueForNonNullableType", "Collection(Edm.Int32)")
+                    ExpectedException = ODataExpectedExceptions.ODataException("ReaderValidationUtils_NullNamedValueForNonNullableType", "value", "Collection(Edm.Int32)")
                 },
                 new PayloadReaderTestDescriptor(this.Settings)
                 {
@@ -122,6 +123,8 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                 });
         }
 
+        [Ignore]
+        [TestMethod, TestCategory("Reader.Json"), Variation(Description = "Verifies correct reading of collection values of complex type")]
         public void CollectionOfComplexInstanceTest()
         {
             EdmModel model = new EdmModel();

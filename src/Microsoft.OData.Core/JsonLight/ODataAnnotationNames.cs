@@ -26,7 +26,6 @@ namespace Microsoft.OData.JsonLight
                 new[]
                 {
                     ODataContext,
-                    ODataNull,
                     ODataType,
                     ODataId,
                     ODataETag,
@@ -47,9 +46,6 @@ namespace Microsoft.OData.JsonLight
 
         /// <summary>The OData Context annotation name.</summary>
         internal const string ODataContext = "odata.context";
-
-        /// <summary>The OData 'null' annotation name.</summary>
-        internal const string ODataNull = "odata.null";
 
         /// <summary>The OData Type annotation name.</summary>
         internal const string ODataType = "odata.type";
