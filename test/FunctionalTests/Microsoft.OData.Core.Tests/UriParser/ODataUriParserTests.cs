@@ -70,7 +70,7 @@ namespace Microsoft.OData.Tests.UriParser
         {
             Action action = () => new ODataUriParser(HardCodedTestModel.TestModel, ServiceRoot, new Uri(FullUri, "?$filter=UserName eq 'foo'&$filter=UserName eq 'bar'")).ParsePath();
             var uriParser = new ODataUriParser(HardCodedTestModel.TestModel, ServiceRoot, new Uri(FullUri, "?$filter=UserName eq 'Tom'&nonODataQuery=foo&$select=Emails&nonODataQuery=bar"));
-            var nonODataqueryOptions = uriParser.CustomODataQueryOptions;
+            var nonODataqueryOptions = uriParser.CustomQueryOptions;
 
             action.ShouldThrow<ODataException>().WithMessage(Strings.QueryOptionUtils_QueryParameterMustBeSpecifiedOnce("$filter"));
             Assert.Equal(nonODataqueryOptions.Count, 2);

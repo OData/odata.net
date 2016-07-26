@@ -1482,7 +1482,7 @@ public sealed class Microsoft.OData.Edm.ExtensionMethods {
 	[
 	ExtensionAttribute(),
 	]
-	public static Microsoft.OData.Edm.IEdmStructuredType BaseStructuredType (Microsoft.OData.Edm.IEdmStructuredType type)
+	public static Microsoft.OData.Edm.IEdmStructuredType BaseType (Microsoft.OData.Edm.IEdmStructuredType type)
 
 	[
 	ExtensionAttribute(),
@@ -5765,12 +5765,12 @@ public sealed class Microsoft.OData.UriParser.ODataUnrecognizedPathException : M
 public sealed class Microsoft.OData.UriParser.ODataUriParser {
 	public ODataUriParser (Microsoft.OData.Edm.IEdmModel model, System.Uri relativeUri)
 	public ODataUriParser (Microsoft.OData.Edm.IEdmModel model, System.Uri relativeUri, System.IServiceProvider container)
-	public ODataUriParser (Microsoft.OData.Edm.IEdmModel model, System.Uri serviceRoot, System.Uri fullUri)
-	public ODataUriParser (Microsoft.OData.Edm.IEdmModel model, System.Uri serviceRoot, System.Uri fullUri, System.IServiceProvider container)
+	public ODataUriParser (Microsoft.OData.Edm.IEdmModel model, System.Uri serviceRoot, System.Uri uri)
+	public ODataUriParser (Microsoft.OData.Edm.IEdmModel model, System.Uri serviceRoot, System.Uri uri, System.IServiceProvider container)
 
 	System.Func`2[[System.String],[Microsoft.OData.UriParser.BatchReferenceSegment]] BatchReferenceCallback  { public get; public set; }
 	System.IServiceProvider Container  { public get; }
-	System.Collections.Generic.IList`1[[System.Collections.Generic.KeyValuePair`2[[System.String],[System.String]]]] CustomODataQueryOptions  { public get; }
+	System.Collections.Generic.IList`1[[System.Collections.Generic.KeyValuePair`2[[System.String],[System.String]]]] CustomQueryOptions  { public get; }
 	bool EnableUriTemplateParsing  { public get; public set; }
 	Microsoft.OData.Edm.IEdmModel Model  { public get; }
 	System.Collections.Generic.IDictionary`2[[System.String],[Microsoft.OData.UriParser.SingleValueNode]] ParameterAliasNodes  { public get; }

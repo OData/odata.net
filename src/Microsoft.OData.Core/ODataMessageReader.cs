@@ -23,7 +23,7 @@ namespace Microsoft.OData
     #endregion Namespaces
 
     /// <summary>
-    /// Reader class used to read all OData payloads (entries, resource sets, metadata documents, service documents, etc.).
+    /// Reader class used to read all OData payloads (resources, resource sets, metadata documents, service documents, etc.).
     /// </summary>
     [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling", Justification = "Main resource point for reader functionality")]
     public sealed class ODataMessageReader : IDisposable

@@ -246,8 +246,11 @@ namespace Microsoft.OData
             out ODataTypeAnnotation typeAnnotation)
         {
             Debug.Assert(typeKindFromPayloadFunc != null, "typeKindFromPayloadFunc != null");
-            Debug.Assert(expectedTypeKind.IsStructured() && expectStructuredType != false || !expectedTypeKind.IsStructured() && expectStructuredType != true,
-                "expectedTypeKind.IsStructured() && expectStructuredType != false || !expectedTypeKind.IsStructured() && expectStructuredType != true");
+            Debug.Assert(
+                expectedTypeKind == EdmTypeKind.None
+                || expectedTypeKind.IsStructured() && expectStructuredType != false
+                || !expectedTypeKind.IsStructured() && expectStructuredType != true,
+                "expectedTypeKind == EdmTypeKind.None || expectedTypeKind.IsStructured() && expectStructuredType != false || !expectedTypeKind.IsStructured() && expectStructuredType != true");
 
             typeAnnotation = null;
 

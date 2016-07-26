@@ -407,7 +407,7 @@ namespace Microsoft.OData
         /// <returns>An enumerable containing the given type and all of its base/ancestor types.</returns>
         private static IEnumerable<IEdmStructuredType> GetBaseTypesAndSelf(IEdmStructuredType structuredType)
         {
-            for (IEdmStructuredType currentType = structuredType; currentType != null; currentType = currentType.BaseStructuredType())
+            for (IEdmStructuredType currentType = structuredType; currentType != null; currentType = currentType.BaseType())
             {
                 yield return currentType;
             }

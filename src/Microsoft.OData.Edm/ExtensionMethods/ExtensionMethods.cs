@@ -1584,7 +1584,7 @@ namespace Microsoft.OData.Edm
         /// </summary>
         /// <param name="type">Reference to the calling object.</param>
         /// <returns>The base type of this structured type definition.</returns>
-        public static IEdmStructuredType BaseStructuredType(this IEdmStructuredType type)
+        public static IEdmStructuredType BaseType(this IEdmStructuredType type)
         {
             EdmUtil.CheckArgumentNull(type, "type");
             return type.BaseType as IEdmStructuredType;
