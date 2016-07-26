@@ -202,13 +202,13 @@ namespace Microsoft.OData
                         writer.WriteLine("{0} {1} {2}", httpMethod, UriUtils.UriToString(uri), ODataConstants.HttpVersionInBatching);
                         break;
 
-                    case BatchPayloadUriOption.AbsoluteResourcePathAndHost:
+                    case BatchPayloadUriOption.AbsoluteUriUsingHostHeader:
                         string absoluteResourcePath = absoluteUriString.Substring(absoluteUriString.IndexOf('/', absoluteUriString.IndexOf("//", StringComparison.Ordinal) + 2));
                         writer.WriteLine("{0} {1} {2}", httpMethod, absoluteResourcePath, ODataConstants.HttpVersionInBatching);
                         writer.WriteLine("Host: {0}:{1}", uri.Host, uri.Port);
                         break;
 
-                    case BatchPayloadUriOption.RelativeResourcePath:
+                    case BatchPayloadUriOption.RelativeUri:
                         Debug.Assert(baseUri != null, "baseUri != null");
                         string baseUriString = UriUtils.UriToString(baseUri);
                         Debug.Assert(absoluteUriString.StartsWith(baseUriString, StringComparison.Ordinal), "absoluteUriString.StartsWith(baseUriString)");

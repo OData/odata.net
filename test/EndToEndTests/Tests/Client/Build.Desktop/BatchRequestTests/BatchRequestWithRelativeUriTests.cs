@@ -36,13 +36,13 @@ namespace Microsoft.Test.OData.Tests.Client.BatchRequestTests
         [TestMethod]
         public void BatchRequestWithAbsoluteResourcePathAndHostTest()
         {
-            BatchRequestWithPayloadUriWritingOption(BatchPayloadUriOption.AbsoluteResourcePathAndHost);
+            BatchRequestWithPayloadUriWritingOption(BatchPayloadUriOption.AbsoluteUriUsingHostHeader);
         }
 
         [TestMethod]
         public void BatchRequestWithRelativeResourcePathTest()
         {
-            BatchRequestWithPayloadUriWritingOption(BatchPayloadUriOption.RelativeResourcePath);
+            BatchRequestWithPayloadUriWritingOption(BatchPayloadUriOption.RelativeUri);
         }
 
         private void BatchRequestWithPayloadUriWritingOption(BatchPayloadUriOption option)

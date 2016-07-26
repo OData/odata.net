@@ -3733,9 +3733,9 @@ public sealed class Microsoft.OData.Edm.Vocabularies.Community.V1.AlternateKeysV
 }
 
 public enum Microsoft.OData.BatchPayloadUriOption : int {
-	AbsoluteResourcePathAndHost = 1
 	AbsoluteUri = 0
-	RelativeResourcePath = 2
+	AbsoluteUriUsingHostHeader = 1
+	RelativeUri = 2
 }
 
 public enum Microsoft.OData.DeltaDeletedEntryReason : int {

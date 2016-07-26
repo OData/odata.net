@@ -47,7 +47,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip.JsonLight
         [Fact]
         public void AsyncBatchJsonLightWrtingAbsoluteResourcePathAndHostTest()
         {
-            var requestPayload = this.ClientWriteAsyncBatchRequest(BatchPayloadUriOption.AbsoluteResourcePathAndHost);
+            var requestPayload = this.ClientWriteAsyncBatchRequest(BatchPayloadUriOption.AbsoluteUriUsingHostHeader);
 
             var payloadString = System.Text.Encoding.Default.GetString(requestPayload);
             Assert.True(payloadString.Contains("GET /Customers('ALFKI') HTTP/1.1") &&
@@ -62,7 +62,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip.JsonLight
         [Fact]
         public void AsyncBatchJsonLightWrtingRelativeResourcePathTest()
         {
-            var requestPayload = this.ClientWriteAsyncBatchRequest(BatchPayloadUriOption.RelativeResourcePath);
+            var requestPayload = this.ClientWriteAsyncBatchRequest(BatchPayloadUriOption.RelativeUri);
 
             var payloadString = System.Text.Encoding.Default.GetString(requestPayload);
             Assert.True(payloadString.Contains("GET Customers('ALFKI') HTTP/1.1") &&

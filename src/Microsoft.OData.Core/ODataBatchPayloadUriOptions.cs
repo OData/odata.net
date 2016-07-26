@@ -24,13 +24,13 @@ namespace Microsoft.OData
         /// Example:
         /// GET /path/service/People(1) HTTP/1.1
         /// Host: myserver.mydomain.org:1234
-        AbsoluteResourcePathAndHost,
+        AbsoluteUriUsingHostHeader,
 
         /// <summary>
         /// Resource path relative to the batch request URI.
         /// </summary>
         /// Example:
         /// GET People(1) HTTP/1.1
-        RelativeResourcePath
+        RelativeUri
     }
 }
