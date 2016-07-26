@@ -6027,7 +6027,7 @@ public sealed class Microsoft.OData.UriParser.StringAsEnumResolver : Microsoft.O
 }
 
 public sealed class Microsoft.OData.UriParser.TypeSegment : Microsoft.OData.UriParser.ODataPathSegment {
-	public TypeSegment (Microsoft.OData.Edm.IEdmType edmType, Microsoft.OData.Edm.IEdmNavigationSource navigationSource)
+	public TypeSegment (Microsoft.OData.Edm.IEdmType actualType, Microsoft.OData.Edm.IEdmNavigationSource navigationSource)
 	public TypeSegment (Microsoft.OData.Edm.IEdmType actualType, Microsoft.OData.Edm.IEdmType expectedType, Microsoft.OData.Edm.IEdmNavigationSource navigationSource)
 
 	Microsoft.OData.Edm.IEdmType EdmType  { public virtual get; }
