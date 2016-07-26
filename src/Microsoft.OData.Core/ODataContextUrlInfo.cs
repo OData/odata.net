@@ -19,19 +19,10 @@ namespace Microsoft.OData
     #endregion Namespaces
 
     /// <summary>
-    /// Class representing required infomation for context URL.
+    /// Class representing required information for context URL.
     /// </summary>
     internal sealed class ODataContextUrlInfo
     {
-        /// <summary>Whether target is contained</summary>
-        private bool isContained;
-
-        /// <summary>The navigation source for current target</summary>
-        private string navigationSource;
-
-        /// <summary>ODataUri information for context Url</summary>
-        private ODataUri odataUri;
-
         /// <summary>
         /// Default constructor for <see cref="ODataContextUrlInfo"/>
         /// </summary>
@@ -41,102 +32,32 @@ namespace Microsoft.OData
         }
 
         /// <summary>The delta kind used for building context Url</summary>
-        internal ODataDeltaKind DeltaKind { get; set; }
+        internal ODataDeltaKind DeltaKind { get; private set; }
 
         /// <summary>Whether target is unknown entity set</summary>
-        internal bool IsUnknownEntitySet { get; set; }
+        internal bool IsUnknownEntitySet { get; private set; }
 
         /// <summary>
         /// Whether the current target has a navigation source or has a meanful the navigation source kind
         /// e.g. When writing a Resource or Resource Set for Complex type.
         ///      EdmNavigationSourceKind.None means the target doesn't have a navigation source
         /// </summary>
-        internal bool HasNavigationSourceInfo { get; set; }
+        internal bool HasNavigationSourceInfo { get; private set; }
 
         /// <summary>Name of navigation path used for building context Url</summary>
-        internal string NavigationPath
-        {
-            get
-            {
-                if (this.IsUnknownEntitySet)
-                {
-                    // If the navigation target is not specified, i.e., UnknownEntitySet,
-                    // the navigation path should be null so that type name will be used
-                    // to build the context Url.
-                    return null;
-                }
-
-                string navigationPath = null;
-                if (this.isContained && this.odataUri != null && this.odataUri.Path != null)
-                {
-                    ODataPath odataPath = this.odataUri.Path.TrimEndingTypeSegment().TrimEndingKeySegment();
-                    if (!(odataPath.LastSegment is NavigationPropertySegment))
-                    {
-                        throw new ODataException(Strings.ODataContextUriBuilder_ODataPathInvalidForContainedElement(odataPath.ToContextUrlPathString()));
-                    }
-
-                    navigationPath = odataPath.ToContextUrlPathString();
-                }
-
-                return navigationPath ?? this.navigationSource;
-            }
-        }
+        internal string NavigationPath { get; private set; }
 
         /// <summary>Name of the navigation source used for building context Url</summary>
-        internal string NavigationSource
-        {
-            get { return this.navigationSource; }
-        }
+        internal string NavigationSource { get; private set; }
 
         /// <summary>ResourcePath used for building context Url</summary>
-        internal string ResourcePath
-        {
-            get
-            {
-                if (this.odataUri != null && this.odataUri.Path != null && this.odataUri.Path.IsIndividualProperty())
-                {
-                    return this.odataUri.Path.ToContextUrlPathString();
-                }
-
-                return string.Empty;
-            }
-        }
+        internal string ResourcePath { get; private set; }
 
         /// <summary>if the context url represents an undeclared property</summary>
-        internal bool? IsUndeclared
-        {
-            get
-            {
-                if (this.odataUri != null && this.odataUri.Path != null)
-                {
-                    return this.odataUri.Path.IsUndeclared();
-                }
-
-                return null;
-            }
-        }
+        internal bool? IsUndeclared { get; private set; }
 
         /// <summary>Query clause used for building context Url</summary>
-        internal string QueryClause
-        {
-            get
-            {
-                if (this.odataUri != null)
-                {
-                    // TODO: Figure out how to deal with $select after $apply
-                    if (this.odataUri.Apply != null)
-                    {
-                        return CreateApplyUriSegment(this.odataUri.Apply);
-                    }
-                    else
-                    {
-                        return CreateSelectExpandContextUriSegment(this.odataUri.SelectAndExpand);
-                    }
-                }
-
-                return null;
-            }
-        }
+        internal string QueryClause { get; private set; }
 
         /// <summary>Entity type name used for building context Url</summary>
         internal string TypeName { get; private set; }
@@ -159,7 +80,9 @@ namespace Microsoft.OData
             return new ODataContextUrlInfo()
             {
                 TypeName = GetTypeNameForValue(value, model),
-                odataUri = odataUri
+                ResourcePath = ComputeResourcePath(odataUri),
+                QueryClause = ComputeQueryClause(odataUri),
+                IsUndeclared = ComputeIfIsUndeclared(odataUri)
             };
         }
 
@@ -201,13 +124,15 @@ namespace Microsoft.OData
             string navigationSourceEntityType = navigationSource.EntityType().FullName();
             return new ODataContextUrlInfo()
             {
-                isContained = kind == EdmNavigationSourceKind.ContainedEntitySet,
                 IsUnknownEntitySet = kind == EdmNavigationSourceKind.UnknownEntitySet,
-                navigationSource = navigationSource.Name,
+                NavigationSource = navigationSource.Name,
                 TypeCast = navigationSourceEntityType == expectedEntityTypeName ? null : expectedEntityTypeName,
                 TypeName = navigationSourceEntityType,
                 IncludeFragmentItemSelector = isSingle && kind != EdmNavigationSourceKind.Singleton,
-                odataUri = odataUri
+                NavigationPath = ComputeNavigationPath(kind, odataUri, navigationSource.Name),
+                ResourcePath = ComputeResourcePath(odataUri),
+                QueryClause = ComputeQueryClause(odataUri),
+                IsUndeclared = ComputeIfIsUndeclared(odataUri)
             };
         }
 
@@ -236,16 +161,18 @@ namespace Microsoft.OData
             return new ODataContextUrlInfo()
             {
                 HasNavigationSourceInfo = hasNavigationSourceInfo,
-                isContained = typeContext.NavigationSourceKind == EdmNavigationSourceKind.ContainedEntitySet,
                 IsUnknownEntitySet = typeContext.NavigationSourceKind == EdmNavigationSourceKind.UnknownEntitySet,
-                navigationSource = typeContext.NavigationSourceName,
+                NavigationSource = typeContext.NavigationSourceName,
                 TypeCast = typeContext.NavigationSourceEntityTypeName == null
                            || typeContext.ExpectedResourceTypeName == null
                            || typeContext.NavigationSourceEntityTypeName == typeContext.ExpectedResourceTypeName
                            ? null : typeContext.ExpectedResourceTypeName,
                 TypeName = typeName,
                 IncludeFragmentItemSelector = isSingle && typeContext.NavigationSourceKind != EdmNavigationSourceKind.Singleton,
-                odataUri = odataUri
+                NavigationPath = ComputeNavigationPath(typeContext.NavigationSourceKind, odataUri, typeContext.NavigationSourceName),
+                ResourcePath = ComputeResourcePath(odataUri),
+                QueryClause = ComputeQueryClause(odataUri),
+                IsUndeclared = ComputeIfIsUndeclared(odataUri)
             };
         }
 
@@ -262,19 +189,23 @@ namespace Microsoft.OData
 
             ODataContextUrlInfo contextUriInfo = new ODataContextUrlInfo()
             {
-                isContained = typeContext.NavigationSourceKind == EdmNavigationSourceKind.ContainedEntitySet,
                 IsUnknownEntitySet = typeContext.NavigationSourceKind == EdmNavigationSourceKind.UnknownEntitySet,
-                navigationSource = typeContext.NavigationSourceName,
+                NavigationSource = typeContext.NavigationSourceName,
                 TypeCast = typeContext.NavigationSourceEntityTypeName == typeContext.ExpectedResourceTypeName ? null : typeContext.ExpectedResourceTypeName,
                 TypeName = typeContext.NavigationSourceEntityTypeName,
                 IncludeFragmentItemSelector = kind == ODataDeltaKind.Resource && typeContext.NavigationSourceKind != EdmNavigationSourceKind.Singleton,
                 DeltaKind = kind,
+                NavigationPath = ComputeNavigationPath(typeContext.NavigationSourceKind, null, typeContext.NavigationSourceName),
             };
 
             // Only use odata uri in with model case.
             if (typeContext is ODataResourceTypeContext.ODataResourceTypeContextWithModel)
             {
-                contextUriInfo.odataUri = odataUri;
+                contextUriInfo.NavigationPath = ComputeNavigationPath(typeContext.NavigationSourceKind, odataUri,
+                    typeContext.NavigationSourceName);
+                contextUriInfo.ResourcePath = ComputeResourcePath(odataUri);
+                contextUriInfo.QueryClause = ComputeQueryClause(odataUri);
+                contextUriInfo.IsUndeclared = ComputeIfIsUndeclared(odataUri);
             }
 
             return contextUriInfo;
@@ -300,6 +231,72 @@ namespace Microsoft.OData
             }
 
             return false;
+        }
+
+        private static string ComputeNavigationPath(EdmNavigationSourceKind kind, ODataUri odataUri, string navigationSource)
+        {
+            bool isContained = kind == EdmNavigationSourceKind.ContainedEntitySet;
+            bool isUnknownEntitySet = kind == EdmNavigationSourceKind.UnknownEntitySet;
+
+            if (isUnknownEntitySet)
+            {
+                // If the navigation target is not specified, i.e., UnknownEntitySet,
+                // the navigation path should be null so that type name will be used
+                // to build the context Url.
+                return null;
+            }
+
+            string navigationPath = null;
+            if (isContained && odataUri != null && odataUri.Path != null)
+            {
+                ODataPath odataPath = odataUri.Path.TrimEndingTypeSegment().TrimEndingKeySegment();
+                if (!(odataPath.LastSegment is NavigationPropertySegment))
+                {
+                    throw new ODataException(Strings.ODataContextUriBuilder_ODataPathInvalidForContainedElement(odataPath.ToContextUrlPathString()));
+                }
+
+                navigationPath = odataPath.ToContextUrlPathString();
+            }
+
+            return navigationPath ?? navigationSource;
+        }
+
+        private static string ComputeResourcePath(ODataUri odataUri)
+        {
+            if (odataUri != null && odataUri.Path != null && odataUri.Path.IsIndividualProperty())
+            {
+                return odataUri.Path.ToContextUrlPathString();
+            }
+
+            return string.Empty;
+        }
+
+        private static string ComputeQueryClause(ODataUri odataUri)
+        {
+            if (odataUri != null)
+            {
+                // TODO: Figure out how to deal with $select after $apply
+                if (odataUri.Apply != null)
+                {
+                    return CreateApplyUriSegment(odataUri.Apply);
+                }
+                else
+                {
+                    return CreateSelectExpandContextUriSegment(odataUri.SelectAndExpand);
+                }
+            }
+
+            return null;
+        }
+
+        private static bool? ComputeIfIsUndeclared(ODataUri odataUri)
+        {
+            if (odataUri != null && odataUri.Path != null)
+            {
+                return odataUri.Path.IsUndeclared();
+            }
+
+            return null;
         }
 
         /// <summary>
