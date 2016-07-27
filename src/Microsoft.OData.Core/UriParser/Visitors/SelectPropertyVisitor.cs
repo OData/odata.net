@@ -133,8 +133,6 @@ namespace Microsoft.OData.UriParser
             {
                 pathSoFar.Add(lastSegment);
 
-                bool hasCollectionInPath = false;
-
                 // try create a complex type property path.
                 while (true)
                 {
@@ -153,27 +151,24 @@ namespace Microsoft.OData.UriParser
                         break;
                     }
 
-                    lastSegment = null;
-
                     // This means last segment a collection of complex type,
-                    // current segment can only be type cast and cannot be proprty name.
+                    // current segment can only be type cast and cannot be property name.
                     if (currentLevelType == null)
                     {
                         currentLevelType = collectionType.ElementType.Definition as IEdmStructuredType;
-                        hasCollectionInPath = true;
                     }
-                    else if (!hasCollectionInPath)
-                    {
-                        // If there is no collection type in the path yet, will try to bind property for the next token
-                        // first try bind the segment as property.
-                        lastSegment = SelectPathSegmentTokenBinder.ConvertNonTypeTokenToSegment(nextToken, this.model,
-                            currentLevelType, resolver);
-                    }
+
+                    // If there is no collection type in the path yet, will try to bind property for the next token
+                    // first try bind the segment as property.
+                    lastSegment = SelectPathSegmentTokenBinder.ConvertNonTypeTokenToSegment(nextToken, this.model,
+                        currentLevelType, resolver);
 
                     // then try bind the segment as type cast.
                     if (lastSegment == null)
                     {
-                        IEdmStructuredType typeFromNextToken = UriEdmHelpers.FindTypeFromModel(this.model, nextToken.Identifier, this.resolver) as IEdmStructuredType;
+                        IEdmStructuredType typeFromNextToken =
+                            UriEdmHelpers.FindTypeFromModel(this.model, nextToken.Identifier, this.resolver) as
+                                IEdmStructuredType;
 
                         if (typeFromNextToken.IsOrInheritsFrom(currentLevelType))
                         {

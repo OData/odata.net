@@ -5296,7 +5296,6 @@ public sealed class Microsoft.OData.UriParser.RangeVariableKind {
 }
 
 public class Microsoft.OData.UriParser.CollectionComplexNode : Microsoft.OData.UriParser.CollectionResourceNode {
-	public CollectionComplexNode (Microsoft.OData.UriParser.CollectionResourceNode source, Microsoft.OData.Edm.IEdmProperty property)
 	public CollectionComplexNode (Microsoft.OData.UriParser.SingleResourceNode source, Microsoft.OData.Edm.IEdmProperty property)
 
 	Microsoft.OData.Edm.IEdmCollectionTypeReference CollectionType  { public virtual get; }
@@ -5304,7 +5303,7 @@ public class Microsoft.OData.UriParser.CollectionComplexNode : Microsoft.OData.U
 	Microsoft.OData.Edm.IEdmTypeReference ItemType  { public virtual get; }
 	Microsoft.OData.Edm.IEdmNavigationSource NavigationSource  { public virtual get; }
 	Microsoft.OData.Edm.IEdmProperty Property  { public get; }
-	Microsoft.OData.UriParser.QueryNode Source  { public get; }
+	Microsoft.OData.UriParser.SingleResourceNode Source  { public get; }
 
 	public virtual T Accept (QueryNodeVisitor`1 visitor)
 }
@@ -5416,12 +5415,11 @@ public class Microsoft.OData.UriParser.ParameterAliasNode : Microsoft.OData.UriP
 }
 
 public class Microsoft.OData.UriParser.SingleComplexNode : Microsoft.OData.UriParser.SingleResourceNode {
-	public SingleComplexNode (Microsoft.OData.UriParser.CollectionResourceNode source, Microsoft.OData.Edm.IEdmProperty property)
 	public SingleComplexNode (Microsoft.OData.UriParser.SingleResourceNode source, Microsoft.OData.Edm.IEdmProperty property)
 
 	Microsoft.OData.Edm.IEdmNavigationSource NavigationSource  { public virtual get; }
 	Microsoft.OData.Edm.IEdmProperty Property  { public get; }
-	Microsoft.OData.UriParser.QueryNode Source  { public get; }
+	Microsoft.OData.UriParser.SingleResourceNode Source  { public get; }
 	Microsoft.OData.Edm.IEdmStructuredTypeReference StructuredTypeReference  { public virtual get; }
 	Microsoft.OData.Edm.IEdmTypeReference TypeReference  { public virtual get; }
 
@@ -5510,7 +5508,6 @@ public sealed class Microsoft.OData.UriParser.CollectionFunctionCallNode : Micro
 }
 
 public sealed class Microsoft.OData.UriParser.CollectionNavigationNode : Microsoft.OData.UriParser.CollectionResourceNode {
-	public CollectionNavigationNode (Microsoft.OData.UriParser.CollectionResourceNode source, Microsoft.OData.Edm.IEdmNavigationProperty navigationProperty, Microsoft.OData.Edm.IEdmPathExpression bindingPath)
 	public CollectionNavigationNode (Microsoft.OData.UriParser.SingleResourceNode source, Microsoft.OData.Edm.IEdmNavigationProperty navigationProperty, Microsoft.OData.Edm.IEdmPathExpression bindingPath)
 
 	Microsoft.OData.Edm.IEdmPathExpression BindingPath  { public get; }
@@ -5520,7 +5517,7 @@ public sealed class Microsoft.OData.UriParser.CollectionNavigationNode : Microso
 	Microsoft.OData.Edm.IEdmTypeReference ItemType  { public virtual get; }
 	Microsoft.OData.Edm.IEdmNavigationProperty NavigationProperty  { public get; }
 	Microsoft.OData.Edm.IEdmNavigationSource NavigationSource  { public virtual get; }
-	Microsoft.OData.UriParser.QueryNode Source  { public get; }
+	Microsoft.OData.UriParser.SingleResourceNode Source  { public get; }
 	Microsoft.OData.Edm.EdmMultiplicity TargetMultiplicity  { public get; }
 
 	public virtual T Accept (QueryNodeVisitor`1 visitor)
@@ -5933,14 +5930,13 @@ public sealed class Microsoft.OData.UriParser.SelectExpandClause {
 }
 
 public sealed class Microsoft.OData.UriParser.SingleNavigationNode : Microsoft.OData.UriParser.SingleEntityNode {
-	public SingleNavigationNode (Microsoft.OData.UriParser.CollectionResourceNode source, Microsoft.OData.Edm.IEdmNavigationProperty navigationProperty, Microsoft.OData.Edm.IEdmPathExpression bindingPath)
 	public SingleNavigationNode (Microsoft.OData.UriParser.SingleResourceNode source, Microsoft.OData.Edm.IEdmNavigationProperty navigationProperty, Microsoft.OData.Edm.IEdmPathExpression bindingPath)
 
 	Microsoft.OData.Edm.IEdmPathExpression BindingPath  { public get; }
 	Microsoft.OData.Edm.IEdmEntityTypeReference EntityTypeReference  { public virtual get; }
 	Microsoft.OData.Edm.IEdmNavigationProperty NavigationProperty  { public get; }
 	Microsoft.OData.Edm.IEdmNavigationSource NavigationSource  { public virtual get; }
-	Microsoft.OData.UriParser.QueryNode Source  { public get; }
+	Microsoft.OData.UriParser.SingleResourceNode Source  { public get; }
 	Microsoft.OData.Edm.IEdmStructuredTypeReference StructuredTypeReference  { public virtual get; }
 	Microsoft.OData.Edm.EdmMultiplicity TargetMultiplicity  { public get; }
 	Microsoft.OData.Edm.IEdmTypeReference TypeReference  { public virtual get; }

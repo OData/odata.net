@@ -16,9 +16,9 @@ namespace Microsoft.OData.UriParser
     public class SingleComplexNode : SingleResourceNode
     {
         /// <summary>
-        /// The value containing this property.
+        /// The resource node containing this property.
         /// </summary>
-        private readonly QueryNode source;
+        private readonly SingleResourceNode source;
 
         /// <summary>
         /// The EDM property which is to be accessed.
@@ -51,25 +51,6 @@ namespace Microsoft.OData.UriParser
         /// <summary>
         /// Constructs a <see cref="SingleComplexNode"/>.
         /// </summary>
-        /// <param name="source">The value containing this property.</param>
-        /// <param name="property">The EDM property which is to be accessed.</param>
-        /// <exception cref="System.ArgumentNullException">Throws if input source or property is null.</exception>
-        /// <exception cref="ArgumentException">Throws if input property is not structural, or is a collection.</exception>
-        public SingleComplexNode(CollectionResourceNode source, IEdmProperty property)
-            : this(ExceptionUtils.CheckArgumentNotNull(source, "source").NavigationSource, property)
-        {
-            if (!(source.ItemStructuredType.IsComplex()))
-            {
-                // TODO: update error message
-                throw new ODataException("SingleComplexNode only accepts SingleResourceNode or CollectionResourceNode which item type is complex as parent source.");
-            }
-
-            this.source = source;
-        }
-
-        /// <summary>
-        /// Constructs a <see cref="SingleComplexNode"/>.
-        /// </summary>
         /// <param name="navigationSource">The navigation source containing the property.</param>
         /// <param name="property">The EDM property which is to be accessed.</param>
         private SingleComplexNode(IEdmNavigationSource navigationSource, IEdmProperty property)
@@ -88,9 +69,9 @@ namespace Microsoft.OData.UriParser
         }
 
         /// <summary>
-        /// Gets the value containing this property.
+        /// Gets the resource node containing this property.
         /// </summary>
-        public QueryNode Source
+        public SingleResourceNode Source
         {
             get { return this.source; }
         }

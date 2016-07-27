@@ -133,17 +133,10 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         }
 
         [Fact]
-        public void SelectComplexCollectionPropertySubProp()
-        {
-            Action parse = () => ParseSingleSelectForPerson("PreviousAddresses/Street");
-            parse.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.SelectBinder_MultiLevelPathInSelect);
-        }
-
-        [Fact]
         public void SelectComplexCollectionPropertyWrongSubProp()
         {
             Action parse = () => ParseSingleSelectForPerson("PreviousAddresses/WrongProp");
-            parse.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.SelectBinder_MultiLevelPathInSelect);
+            parse.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.MetadataBinder_PropertyNotDeclared("Fully.Qualified.Namespace.Address", "WrongProp"));
         }
 
         [Fact]
@@ -154,13 +147,6 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             segments[0] = new PropertySegment(HardCodedTestModel.GetPersonPreviousAddressesProp());
             segments[1] = new TypeSegment(HardCodedTestModel.GetHomeAddressType(), null);
             selectItem.ShouldBePathSelectionItem(new ODataPath(segments));
-        }
-
-        [Fact]
-        public void SelectComplexCollectionPropertyWithCastProp()
-        {
-            Action parse = () => ParseSingleSelectForPerson("PreviousAddresses/Fully.Qualified.Namespace.HomeAddress/Street");
-            parse.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.SelectBinder_MultiLevelPathInSelect);
         }
 
         [Fact]

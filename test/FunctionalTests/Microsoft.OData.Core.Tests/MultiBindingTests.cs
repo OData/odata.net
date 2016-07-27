@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using FluentAssertions;
 using Microsoft.OData.Edm;
+using Microsoft.OData.Tests.UriParser;
 using Microsoft.OData.UriParser;
 using Xunit;
 
@@ -328,6 +329,45 @@ namespace Microsoft.OData.Tests
         }
 
         [Fact]
+        public void ParseSelectAndExpandOnMultiBinding()
+        {
+            var entityType = Model.FindType("NS.EntityType") as IEdmEntityType;
+            var complexType = Model.FindType("NS.ComplexType") as IEdmComplexType;
+            var complexProperty = entityType.FindProperty("collectionComplex");
+            var complexPropertyUnderComplex = complexType.FindProperty("CollectionComplexProp");
+            var navProperty = complexType.FindProperty("CollectionOfNavOnComplex") as IEdmNavigationProperty;
+
+            // Collection navigation under collection of complex
+            Uri uri = new Uri(@"http://host/EntitySet('abc')?$expand=collectionComplex/CollectionComplexProp/CollectionOfNavOnComplex");
+            var selectAndExpand = new ODataUriParser(Model, ServiceRoot, uri).ParseSelectAndExpand();
+            (selectAndExpand.SelectedItems.ToList()[0] as ExpandedNavigationSelectItem).NavigationSource.Should()
+                .BeSameAs(NavEntitySet1);
+
+            uri = new Uri(@"http://host/EntitySet('abc')?$select=collectionComplex/CollectionComplexProp/CollectionOfNavOnComplex");
+            selectAndExpand = new ODataUriParser(Model, ServiceRoot, uri).ParseSelectAndExpand();
+            var items = selectAndExpand.SelectedItems.ToList();
+            var selectItem = items[0] as PathSelectItem;
+            var segments = selectItem.SelectedPath.ToList();
+            segments[0].ShouldBePropertySegment(complexProperty);
+            segments[1].ShouldBePropertySegment(complexPropertyUnderComplex);
+            segments[2].ShouldBeNavigationPropertySegment(navProperty);
+
+            uri = new Uri(@"http://host/EntitySet('abc')?$expand=collectionComplex/CollectionOfNavOnComplex");
+            selectAndExpand = new ODataUriParser(Model, ServiceRoot, uri).ParseSelectAndExpand();
+            (selectAndExpand.SelectedItems.ToList()[0] as ExpandedNavigationSelectItem).NavigationSource.Should()
+                .BeSameAs(NavEntitySet2);
+
+            uri = new Uri(@"http://host/EntitySet('abc')?$select=collectionComplex/CollectionOfNavOnComplex&$expand=collectionComplex/CollectionOfNavOnComplex");
+            selectAndExpand = new ODataUriParser(Model, ServiceRoot, uri).ParseSelectAndExpand();
+            items = selectAndExpand.SelectedItems.ToList();
+            (items[0] as ExpandedNavigationSelectItem).NavigationSource.Should().BeSameAs(NavEntitySet2);
+            selectItem = items[1] as PathSelectItem;
+            segments = selectItem.SelectedPath.ToList();
+            segments[0].ShouldBePropertySegment(complexProperty);
+            segments[1].ShouldBeNavigationPropertySegment(navProperty);
+        }
+
+        [Fact]
         public void FilterAndOrderbyOnMultiBinding()
         {
             SingleNavigationNode singleNavigationNode;
@@ -383,9 +423,9 @@ namespace Microsoft.OData.Tests
                 .Should().BeSameAs(NavEntitySet2);
 
             // Navigation under collection of complex
-            uri = new Uri(@"http://host/EntitySet?$filter=collectionComplex/CollectionOfNavOnComplex/any(t:t/ID eq 'abc')");
+            uri = new Uri(@"http://host/EntitySet?$filter=collectionComplex/any(a:a/CollectionOfNavOnComplex/any(t:t/ID eq 'abc'))");
             filter = new ODataUriParser(Model, ServiceRoot, uri).ParseFilter();
-            collectionNavigationNode = (filter.Expression as AnyNode).Source as CollectionNavigationNode;
+            collectionNavigationNode = ((filter.Expression as AnyNode).Body as AnyNode).Source as CollectionNavigationNode;
             collectionNavigationNode.NavigationSource.Should().BeSameAs(NavEntitySet2);
             collectionNavigationNode.BindingPath.Path.Should().Be("collectionComplex/CollectionOfNavOnComplex");
 
@@ -393,22 +433,12 @@ namespace Microsoft.OData.Tests
             filter = new ODataUriParser(Model, ServiceRoot, uri).ParseFilter();
             ((filter.Expression as AnyNode).Source as CollectionNavigationNode).NavigationSource.Should().BeSameAs(NavEntitySet2);
 
-            uri = new Uri(@"http://host/EntitySet?$orderby=collectionComplex/CollectionOfNavOnComplex/$count");
-            orderBy = new ODataUriParser(Model, ServiceRoot, uri).ParseOrderBy();
-            ((orderBy.Expression as CountNode).Source as CollectionNavigationNode).NavigationSource
-                .Should().BeSameAs(NavEntitySet2);
-            ((orderBy.Expression as CountNode).Source as CollectionNavigationNode).Source.Should().BeOfType<CollectionComplexNode>();
-
             uri = new Uri(@"http://host/EntitySet('abc')/collectionComplex?$orderby=CollectionOfNavOnComplex/$count");
             orderBy = new ODataUriParser(Model, ServiceRoot, uri).ParseOrderBy();
             ((orderBy.Expression as CountNode).Source as CollectionNavigationNode).NavigationSource
                 .Should().BeSameAs(NavEntitySet2);
 
             // Collection of complex under collection of complex
-            uri = new Uri(@"http://host/EntitySet?$filter=collectionComplex/CollectionComplexProp/CollectionOfNavOnComplex/any(t:t/ID eq 'abc')");
-            filter = new ODataUriParser(Model, ServiceRoot, uri).ParseFilter();
-            ((filter.Expression as AnyNode).Source as CollectionNavigationNode).NavigationSource.Should().BeSameAs(NavEntitySet1);
-
             uri = new Uri(@"http://host/EntitySet?$filter=collectionComplex/any(a1:a1/CollectionComplexProp/any(a2:a2/CollectionOfNavOnComplex/any(t:t/ID eq 'abc')))");
             filter = new ODataUriParser(Model, ServiceRoot, uri).ParseFilter();
             ((((((filter.Expression as AnyNode).Body) as AnyNode).Body) as AnyNode).Source as CollectionNavigationNode).NavigationSource.Should().BeSameAs(NavEntitySet1);

@@ -24,7 +24,7 @@ namespace Microsoft.OData.UriParser
         /// <summary>
         /// The previous node in the path.
         /// </summary>
-        private readonly QueryNode source;
+        private readonly SingleResourceNode source;
 
         /// <summary>
         /// The navigation property this node represents.
@@ -57,26 +57,6 @@ namespace Microsoft.OData.UriParser
         public SingleNavigationNode(SingleResourceNode source, IEdmNavigationProperty navigationProperty, IEdmPathExpression bindingPath)
             : this(ExceptionUtils.CheckArgumentNotNull(source, "source").NavigationSource, navigationProperty, bindingPath)
         {
-            this.source = source;
-        }
-
-        /// <summary>
-        /// Constructs a SingleNavigationNode.
-        /// </summary>
-        /// <param name="source">The previous node in the path.</param>
-        /// <param name="navigationProperty">The navigation property this node represents.</param>
-        /// <param name="bindingPath">The binding path of navigation property</param>
-        /// <exception cref="System.ArgumentNullException">Throws if the input navigationProperty or source is null.</exception>
-        /// <exception cref="ArgumentException">Throws if the input navigationProperty targets more than one entity.</exception>
-        public SingleNavigationNode(CollectionResourceNode source, IEdmNavigationProperty navigationProperty, IEdmPathExpression bindingPath)
-            : this(ExceptionUtils.CheckArgumentNotNull(source, "source").NavigationSource, navigationProperty, bindingPath)
-        {
-            if (!(source.ItemStructuredType.IsComplex()))
-            {
-                // TODO: update error message
-                throw new ODataException("SingleNavigationNode only accepts SingleResourceNode or CollectionResourceNode which item type is complex as parent source.");
-            }
-
             this.source = source;
         }
 
@@ -120,24 +100,6 @@ namespace Microsoft.OData.UriParser
         /// <summary>
         /// Constructs a SingleNavigationNode.
         /// </summary>
-        /// <param name="source">he previous node in the path.</param>
-        /// <param name="navigationProperty">The navigation property this node represents.</param>
-        /// <param name="segments">The path segments parsed in path and query option.</param>
-        internal SingleNavigationNode(CollectionResourceNode source, IEdmNavigationProperty navigationProperty, List<ODataPathSegment> segments)
-            : this(ExceptionUtils.CheckArgumentNotNull(source, "source").NavigationSource, navigationProperty, segments)
-        {
-            if (!(source.ItemStructuredType.IsComplex()))
-            {
-                // TODO: update error message
-                throw new ODataException("Only single entity or complex or collection of complex can have navigation property.");
-            }
-
-            this.source = source;
-        }
-
-        /// <summary>
-        /// Constructs a SingleNavigationNode.
-        /// </summary>
         /// <param name="navigationSource">The navigation source that this of the previous segment.</param>
         /// <param name="navigationProperty">The navigation property this node represents.</param>
         /// <param name="segments">The path segments parsed in path and query option.</param>
@@ -161,7 +123,7 @@ namespace Microsoft.OData.UriParser
         /// <summary>
         /// Gets the previous node in the path.
         /// </summary>
-        public QueryNode Source
+        public SingleResourceNode Source
         {
             get { return this.source; }
         }
