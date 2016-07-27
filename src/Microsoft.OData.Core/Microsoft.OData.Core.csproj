@@ -64,7 +64,7 @@
     <Compile Include="PropertySerializationInfo.cs" />
     <Compile Include="DuplicatePropertyNameChecker.cs" />
     <Compile Include="PropertyValueTypeInfo.cs" />
-    <Compile Include="UriParser\BindingPathHelper.cs" />
+    <Compile Include="BindingPathHelper.cs" />
     <Compile Include="UriParser\ODataPathInfo.cs" />
     <Compile Include="UriParser\SemanticAst\CollectionComplexNode.cs" />
     <Compile Include="UriParser\SemanticAst\SingleComplexNode.cs" />

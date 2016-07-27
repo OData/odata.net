@@ -128,6 +128,12 @@ namespace Microsoft.OData
             if (!string.IsNullOrEmpty(info.ResourcePath))
             {
                 builder.Append(info.ResourcePath);
+
+                // For navigation property under complex property
+                if (info.DeltaKind == ODataDeltaKind.None)
+                {
+                    AppendTypeCastAndQueryClause(builder, info);
+                }
             }
             else if (!string.IsNullOrEmpty(info.NavigationPath))
             {
@@ -136,18 +142,7 @@ namespace Microsoft.OData
 
                 if (info.DeltaKind == ODataDeltaKind.None || info.DeltaKind == ODataDeltaKind.ResourceSet || info.DeltaKind == ODataDeltaKind.Resource)
                 {
-                    // #ContainerName.NavigationSourceName  ==>  #ContainerName.NavigationSourceName/Namespace.DerivedTypeName
-                    if (!string.IsNullOrEmpty(info.TypeCast))
-                    {
-                        builder.Append(ODataConstants.UriSegmentSeparatorChar);
-                        builder.Append(info.TypeCast);
-                    }
-
-                    // #ContainerName.NavigationSourceName  ==>  #ContainerName.NavigationSourceName(selectedPropertyList)
-                    if (!string.IsNullOrEmpty(info.QueryClause))
-                    {
-                        builder.Append(info.QueryClause);
-                    }
+                    AppendTypeCastAndQueryClause(builder, info);
                 }
 
                 switch (info.DeltaKind)
@@ -186,6 +181,27 @@ namespace Microsoft.OData
             }
 
             return new Uri(this.baseContextUrl, builder.ToString());
+        }
+
+        /// <summary>
+        /// Append type cast and query clause info to string builder if any.
+        /// </summary>
+        /// <param name="builder">The string builder to append info.</param>
+        /// <param name="info">The ODataContextUrlInfo includes type cast and query clause info.</param>
+        private static void AppendTypeCastAndQueryClause(StringBuilder builder, ODataContextUrlInfo info)
+        {
+            // #ContainerName.NavigationSourceName  ==>  #ContainerName.NavigationSourceName/Namespace.DerivedTypeName
+            if (!string.IsNullOrEmpty(info.TypeCast))
+            {
+                builder.Append(ODataConstants.UriSegmentSeparatorChar);
+                builder.Append(info.TypeCast);
+            }
+
+            // #ContainerName.NavigationSourceName  ==>  #ContainerName.NavigationSourceName(selectedPropertyList)
+            if (!string.IsNullOrEmpty(info.QueryClause))
+            {
+                builder.Append(info.QueryClause);
+            }
         }
 
         /// <summary>

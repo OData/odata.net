@@ -4,6 +4,7 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+using System;
 using System.Linq;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -1298,6 +1299,23 @@ namespace Microsoft.OData.JsonLight
                 navigationSource = this.CurrentNavigationSource == null
                     ? null
                     : this.CurrentNavigationSource.FindNavigationTarget(navigationProperty, MatchBindingPath);
+
+                if (navigationSource is IEdmUnknownEntitySet)
+                {
+                    // Try to find navigation target from context Url
+                    // This is for the scenarios that the navigation source info is not in payload
+                    // For example: for request http://host/People('abc')/Address?$expand=Location/City2($select=ZipCode), we only have context url http://host/People('abc')/Address(Location/City2(ZipCode))
+                    if (this.jsonLightResourceDeserializer.ContextUriParseResult != null)
+                    {
+                        // Split context url with ['/', '(', ',', ')'] and use the result to match with binding path
+                        // TODO: make the binding path match more accurate
+                        List<string> segmentsInContextUrl =
+                            this.jsonLightResourceDeserializer.ContextUriParseResult.Fragment.Split(new[] { '/', '(', ',', ')' }, StringSplitOptions.RemoveEmptyEntries).ToList();
+
+                        IEdmPathExpression bindingPath;
+                        navigationSource = this.CurrentNavigationSource.FindNavigationTarget(navigationProperty, BindingPathHelper.MatchBindingPath, segmentsInContextUrl, out bindingPath);
+                    }
+                }
             }
 
             ODataUri odataUri = null;

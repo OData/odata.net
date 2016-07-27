@@ -7,8 +7,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.OData.Edm;
+using Microsoft.OData.UriParser;
 
-namespace Microsoft.OData.UriParser
+namespace Microsoft.OData
 {
     internal static class BindingPathHelper
     {
@@ -70,6 +71,38 @@ namespace Microsoft.OData.UriParser
 
             // Return true if all the segments in binding path have been matched.
             return pathIndex == -1 ? true : false;
+        }
+
+        /// <summary>
+        /// Match binding path with context Url for response payload.
+        /// </summary>
+        /// <param name="bindingPath">The binding path.</param>
+        /// <param name="contextUrlSegments">The segments of context url of current response.</param>
+        /// <returns>True if the context url segments matches the binding path.</returns>
+        public static bool MatchBindingPath(IEdmPathExpression bindingPath, List<string> contextUrlSegments)
+        {
+            List<string> paths = bindingPath.PathSegments.ToList();
+
+            int pathIndex = 0;
+
+            // Try to match segments in context url with binding path discontinuously.
+            // Since the segments of binding path may not appear continuously in context url.
+            // For example: the binding path is "Address/Location/City", while context url is "http://host/People('abc')/Address(Road,Location/City)".
+            // And the contextUrlSegments would be [People, 'abc', Address, Road, Location, City]
+            foreach (var segment in contextUrlSegments)
+            {
+                if (string.CompareOrdinal(segment, paths[pathIndex]) == 0)
+                {
+                    if (pathIndex == paths.Count - 1)
+                    {
+                        return true;
+                    }
+
+                    pathIndex++;
+                }
+            }
+
+            return false;
         }
     }
 }

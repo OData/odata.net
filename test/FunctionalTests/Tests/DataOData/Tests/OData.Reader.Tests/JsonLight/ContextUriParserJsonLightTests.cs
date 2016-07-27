@@ -323,7 +323,8 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                     ExpectedResult = new ODataJsonLightContextUriParseResult(null)
                     {
                         MetadataDocumentUri = new Uri(MetadataDocumentUri),
-                        EdmType = addressType
+                        EdmType = addressType,
+                        NavigationSource = this.officeSet
                     }
                 },
                 new ContextUriParserTestCase

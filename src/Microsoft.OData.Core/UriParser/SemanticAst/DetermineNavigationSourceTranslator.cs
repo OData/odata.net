@@ -94,6 +94,12 @@ namespace Microsoft.OData.UriParser
         public override IEdmNavigationSource Translate(PropertySegment segment)
         {
             ExceptionUtils.CheckArgumentNotNull(segment, "segment");
+
+            if (segment.EdmType.AsElementType() is IEdmComplexType)
+            {
+                return segment.TargetEdmNavigationSource;
+            }
+
             return null;
         }
 
