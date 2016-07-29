@@ -150,7 +150,7 @@ namespace Microsoft.OData.UriParser
         /// </remarks>
         public static bool TryParseKeysFromUri(string text, out SegmentArgumentParser instance, bool enableUriTemplateParsing)
         {
-            return TryParseFromUri(text, true /*allowNamedValues*/, false /*allowNull*/, out instance, enableUriTemplateParsing);
+            return TryParseFromUri(text, out instance, enableUriTemplateParsing);
         }
 
         /// <summary>
@@ -177,7 +177,7 @@ namespace Microsoft.OData.UriParser
         /// </remarks>
         public static bool TryParseNullableTokens(string text, out SegmentArgumentParser instance)
         {
-            return TryParseFromUri(text, false /*allowNamedValues*/, true /*allowNull*/, out instance, false);
+            return TryParseFromUri(text, out instance, false);
         }
 
         /// <summary>Tries to convert values to the keys of the specified type.</summary>
@@ -260,10 +260,6 @@ namespace Microsoft.OData.UriParser
 
         /// <summary>Attempts to parse key values from the specified text.</summary>
         /// <param name='text'>Text to parse (not null).</param>
-        /// <param name="allowNamedValues">Set to true if the parser should accept named values
-        ///     so syntax like Name='value'. If this is false, the parsing will fail on such constructs.</param>
-        /// <param name="allowNull">Set to true if the parser should accept null values.
-        ///     If set to false, the parser will fail on null values.</param>
         /// <param name='instance'>After invocation, the parsed key instance.</param>
         /// <param name="enableUriTemplateParsing">Whether Uri template parsing is enabled.</param>
         /// <returns>
@@ -274,7 +270,7 @@ namespace Microsoft.OData.UriParser
         /// The returned instance contains only string values. To get typed values, a call to
         /// TryConvertValues is necessary.
         /// </remarks>
-        private static bool TryParseFromUri(string text, bool allowNamedValues, bool allowNull, out SegmentArgumentParser instance, bool enableUriTemplateParsing)
+        private static bool TryParseFromUri(string text, out SegmentArgumentParser instance, bool enableUriTemplateParsing)
         {
             Debug.Assert(text != null, "text != null");
 
@@ -297,10 +293,9 @@ namespace Microsoft.OData.UriParser
                 return true;
             }
 
-            string valueText = null;
             foreach (FunctionParameterToken t in tmp)
             {
-                valueText = null;
+                string valueText = null;
                 LiteralToken literalToken = t.ValueToken as LiteralToken;
                 if (literalToken != null)
                 {

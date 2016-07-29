@@ -898,20 +898,14 @@ namespace Microsoft.OData.UriParser
         /// <param name="text">The text for the next segment.</param>
         private void CreateNextSegment(string text)
         {
-            // before treating this as a property, try to handle it as a key property value, unless it was preceeded by an escape-marker segment ('$').
-            // But when enable key as segment, only do this if the segment should not be interpreted as a type.
-            if ((!this.configuration.UrlKeyDelimiter.EnableKeyAsSegment || this.configuration.EnableUriTemplateParsing) && this.TryHandleAsKeySegment(text))
-            {
-                return;
-            }
-
-            // Parse as path template segment if EnableUriTemplateParsing is enabled.
-            if (this.configuration.EnableUriTemplateParsing && UriTemplateParser.IsValidTemplateLiteral(text))
-            {
-                this.parsedSegments.Add(new PathTemplateSegment(text));
-                return;
-            }
-
+            // For Non-KeyAsSegment, try to handle it as a key property value, unless it was preceeded by an excape-marker segmetn ('$').
+            // For KeyAsSegment, the following precedence rules should be supported [ODATA-799]:
+            // Try to match an OData segment (starting with “$”).
+            // Try to match an alias - qualified bound action name, bound function overload, or type name.
+            // Try to match a namespace-qualified bound action name, bound function overload, or type name.
+            // Try to match an unqualified bound action name, bound function overload, or type name in a default namespace.
+            // Treat as a key.
+            // $value
             if (this.TryCreateValueSegment(text))
             {
                 return;
@@ -924,11 +918,13 @@ namespace Microsoft.OData.UriParser
                 throw ExceptionUtil.ResourceNotFoundError(ODataErrorStrings.RequestUriProcessor_ValueSegmentAfterScalarPropertySegment(previous.Identifier, text));
             }
 
+            // $ref
             if (this.TryCreateEntityReferenceSegment(text))
             {
                 return;
             }
 
+            // $count
             if (this.TryCreateCountSegment(text))
             {
                 return;
@@ -938,6 +934,7 @@ namespace Microsoft.OData.UriParser
             string parenthesisExpression;
             ExtractSegmentIdentifierAndParenthesisExpression(text, out identifier, out parenthesisExpression);
 
+            // property if previous is single
             if (previous.SingleResult)
             {
                 // if its not one of the recognized special segments, then it must be a property, type-segment, or key value.
@@ -967,24 +964,32 @@ namespace Microsoft.OData.UriParser
                 }
             }
 
-            // If the property resolution failed, and the previous segment was targeting an entity, then we should
-            // try and resolve the identifier as type name.
+            // Type cast
             if (this.TryCreateTypeNameSegment(previous, identifier, parenthesisExpression))
             {
                 return;
             }
 
+            // Operation
             if (this.TryCreateSegmentForOperation(previous, identifier, parenthesisExpression))
             {
                 return;
             }
 
-            // OData simplified convention, try to handle it as a key property value after can't parse as type and operation
+            // For KeyAsSegment, try to handle as key segment
             if (this.configuration.UrlKeyDelimiter.EnableKeyAsSegment && this.TryHandleAsKeySegment(text))
             {
                 return;
             }
 
+            // Parse as path template segment if EnableUriTemplateParsing is enabled.
+            if (this.configuration.EnableUriTemplateParsing && UriTemplateParser.IsValidTemplateLiteral(text))
+            {
+                this.parsedSegments.Add(new PathTemplateSegment(text));
+                return;
+            }
+
+            // Dynamic property
             this.CreateDynamicPathSegment(previous, identifier, parenthesisExpression);
         }
 
