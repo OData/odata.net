@@ -12,7 +12,7 @@ Model Present: true
 
 Combination: 4; TestConfiguration = Format: JsonLight, Request: True, Synchronous: True
 Model Present: true
-{"complex":{"@odata.context":"http://odata.org/test/$metadata#TestModel.ComplexType","PrimitiveProperty":"foo","ComplexProperty":null}}
+{"complex":{"@odata.context":"http://odata.org/test/$metadata#TestModel.ComplexType","@odata.type":"#TestModel.ComplexType","PrimitiveProperty":"foo","ComplexProperty":null}}
 
 Combination: 5; TestConfiguration = Format: JsonLight, Request: True, Synchronous: True
 Model Present: true
@@ -20,7 +20,7 @@ Model Present: true
 
 Combination: 6; TestConfiguration = Format: JsonLight, Request: True, Synchronous: True
 Model Present: true
-{"complexCollection":[{"PrimitiveProperty":"foo","ComplexProperty":null}]}
+{"complexCollection":[{"@odata.type":"#TestModel.ComplexType","PrimitiveProperty":"foo","ComplexProperty":null}]}
 
 Combination: 7; TestConfiguration = Format: JsonLight, Request: True, Synchronous: True
 Model Present: true
@@ -36,7 +36,7 @@ Model Present: true
 
 Combination: 10; TestConfiguration = Format: JsonLight, Request: True, Synchronous: True
 Model Present: true
-{"complex":{"@odata.context":"http://odata.org/test/$metadata#TestModel.ComplexType","PrimitiveProperty":"foo","ComplexProperty":null}}
+{"complex":{"@odata.context":"http://odata.org/test/$metadata#TestModel.ComplexType","@odata.type":"#TestModel.ComplexType","PrimitiveProperty":"foo","ComplexProperty":null}}
 
 Combination: 11; TestConfiguration = Format: JsonLight, Request: True, Synchronous: True
 Model Present: true
@@ -44,7 +44,7 @@ Model Present: true
 
 Combination: 12; TestConfiguration = Format: JsonLight, Request: True, Synchronous: True
 Model Present: true
-{"complexCollection":[{"PrimitiveProperty":"foo","ComplexProperty":null}]}
+{"complexCollection":[{"@odata.type":"#TestModel.ComplexType","PrimitiveProperty":"foo","ComplexProperty":null}]}
 
 Combination: 13; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
 Model Present: true
@@ -60,7 +60,7 @@ Model Present: true
 
 Combination: 16; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
 Model Present: true
-{"complex":{"@odata.context":"http://odata.org/test/$metadata#TestModel.ComplexType","PrimitiveProperty":"foo","ComplexProperty":null}}
+{"complex":{"@odata.context":"http://odata.org/test/$metadata#TestModel.ComplexType","@odata.type":"#TestModel.ComplexType","PrimitiveProperty":"foo","ComplexProperty":null}}
 
 Combination: 17; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
 Model Present: true
@@ -68,7 +68,7 @@ Model Present: true
 
 Combination: 18; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
 Model Present: true
-{"complexCollection":[{"PrimitiveProperty":"foo","ComplexProperty":null}]}
+{"complexCollection":[{"@odata.type":"#TestModel.ComplexType","PrimitiveProperty":"foo","ComplexProperty":null}]}
 
 Combination: 19; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
 Model Present: true
@@ -84,7 +84,7 @@ Model Present: true
 
 Combination: 22; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
 Model Present: true
-{"complex":{"@odata.context":"http://odata.org/test/$metadata#TestModel.ComplexType","PrimitiveProperty":"foo","ComplexProperty":null}}
+{"complex":{"@odata.context":"http://odata.org/test/$metadata#TestModel.ComplexType","@odata.type":"#TestModel.ComplexType","PrimitiveProperty":"foo","ComplexProperty":null}}
 
 Combination: 23; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
 Model Present: true
@@ -92,5 +92,5 @@ Model Present: true
 
 Combination: 24; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
 Model Present: true
-{"complexCollection":[{"PrimitiveProperty":"foo","ComplexProperty":null}]}
+{"complexCollection":[{"@odata.type":"#TestModel.ComplexType","PrimitiveProperty":"foo","ComplexProperty":null}]}
 

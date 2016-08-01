@@ -66,7 +66,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Writer.JsonLight
         public void WriteComplexParameter_WithModel()
         {
             var resource = CreateAddress(1);
-            WriteParameter(resource, true, (actual) => actual.Should().Be("{\"City\":{\"CityName\":\"City1\",\"AreaCode\":\"AreaCode1\"}}"));
+            WriteParameter(resource, true, (actual) => actual.Should().Be("{\"@odata.type\":\"#NS.Address\",\"City\":{\"CityName\":\"City1\",\"AreaCode\":\"AreaCode1\"}}"));
         }
 
         [Fact]
@@ -85,7 +85,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Writer.JsonLight
         {
             WriteResourceSetParameter(true, false,
                 (actual) =>
-                    actual.Should().Be("[{\"City\":{\"CityName\":\"City0\",\"AreaCode\":\"AreaCode0\"}},{\"CompanyName\":\"MS\",\"City\":{\"CityName\":\"City1\",\"AreaCode\":\"AreaCode1\"}}]"));
+                    actual.Should().Be("[{\"@odata.type\":\"#NS.Address\",\"City\":{\"CityName\":\"City0\",\"AreaCode\":\"AreaCode0\"}},{\"@odata.type\":\"#NS.CompanyAddress\",\"CompanyName\":\"MS\",\"City\":{\"CityName\":\"City1\",\"AreaCode\":\"AreaCode1\"}}]"));
         }
 
         [Fact]
@@ -116,7 +116,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Writer.JsonLight
                     TypeName = "NS.OtherInfo"
                 }
             };
-            WriteParameter(resource, true, (actual) => actual.Should().Be("{}"));
+            WriteParameter(resource, true, (actual) => actual.Should().Be("{\"@odata.type\":\"#NS.OtherInfo\"}"));
             WriteParameter(resource, false, (actual) => actual.Should().Be("{\"@odata.type\":\"#NS.OtherInfo\"}"));
         }
 
@@ -159,7 +159,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Writer.JsonLight
                 }
             };
 
-            WriteParameter(resource, true, (actual) => actual.Should().Be("{\"Hight\":12,\"City\":{\"@odata.type\":\"#NS.City\",\"CityName\":\"City0\",\"AreaCode\":\"AreaCode0\"}}"));
+            WriteParameter(resource, true, (actual) => actual.Should().Be("{\"@odata.type\":\"#NS.OtherInfo\",\"Hight\":12,\"City\":{\"@odata.type\":\"#NS.City\",\"CityName\":\"City0\",\"AreaCode\":\"AreaCode0\"}}"));
         }
 
         [Fact]
@@ -186,7 +186,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Writer.JsonLight
         public void WriteComplexParameter_WithNull()
         {
             var resource = CreateCompanyAddress(0, true);
-            WriteParameter(resource, true, (actual) => actual.Should().Be("{\"City\":null,\"CompanyName\":null}"));
+            WriteParameter(resource, true, (actual) => actual.Should().Be("{\"@odata.type\":\"#NS.CompanyAddress\",\"City\":null,\"CompanyName\":null}"));
         }
 
         [Fact]
@@ -195,6 +195,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Writer.JsonLight
             var resource = CreatePerson(0);
             WriteParameter(resource, true, (actual) => actual.Should().Be(
                 "{" +
+                    "\"@odata.type\":\"#NS.Person\"," +
                     "\"Id\":0," +
                     "\"Address\":{\"City\":{\"CityName\":\"City0\",\"AreaCode\":\"AreaCode0\"}}," +
                     "\"CompanyAddress\":{\"CompanyName\":\"MS\",\"City\":{\"CityName\":\"City1\",\"AreaCode\":\"AreaCode1\"}}," +
@@ -245,6 +246,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Writer.JsonLight
                     actual.Should().Be(
                     "[" +
                         "{" +
+                            "\"@odata.type\":\"#NS.Person\"," +
                             "\"Id\":0," +
                             "\"Address\":{\"City\":{\"CityName\":\"City0\",\"AreaCode\":\"AreaCode0\"}}," +
                             "\"CompanyAddress\":{\"CompanyName\":\"MS\",\"City\":{\"CityName\":\"City1\",\"AreaCode\":\"AreaCode1\"}}," +
@@ -259,6 +261,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Writer.JsonLight
                             "]" +
                         "}," +
                         "{" +
+                            "\"@odata.type\":\"#NS.Person\"," +
                             "\"Id\":1," +
                             "\"Address\":{\"City\":{\"CityName\":\"City10\",\"AreaCode\":\"AreaCode10\"}}," +
                             "\"CompanyAddress\":{\"CompanyName\":\"MS\",\"City\":{\"CityName\":\"City11\",\"AreaCode\":\"AreaCode11\"}}," +
@@ -278,7 +281,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Writer.JsonLight
         [Fact]
         public void WriteEntityCollectionParameter_WithoutModel()
         {
-            WriteResourceSetParameter(false, true, 
+            WriteResourceSetParameter(false, true,
                 (actual) => actual.Should().Be(
                     "[" +
                         "{" +

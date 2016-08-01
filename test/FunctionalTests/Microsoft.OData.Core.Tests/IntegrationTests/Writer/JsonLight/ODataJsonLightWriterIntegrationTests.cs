@@ -403,6 +403,51 @@ namespace Microsoft.OData.Tests.IntegrationTests.Writer.JsonLight
             Assert.Equal(expected, actual);
         }
 
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        private void WriteTopLevelComplexPropertyInDerivedType(bool isRequest)
+        {
+            EdmModel model = new EdmModel();
+            EdmComplexType complexType = AddAndGetComplexType(model);
+            EdmComplexType derviedComplexType = new EdmComplexType(complexType.Namespace, "DerivedComplexType", complexType);
+            derviedComplexType.AddStructuralProperty("P2", EdmPrimitiveTypeKind.String);
+            model.AddElement(derviedComplexType);
+            EdmEntityType entityType = AddAndGetEntityType(model);
+            entityType.AddStructuralProperty("ComplexP", new EdmComplexTypeReference(complexType, false));
+            var entitySet = GetEntitySet(model, entityType);
+
+            var requestUri = new Uri("http://temp.org/FakeSet('parent')/ComplexP");
+            var odataUri = new ODataUri { RequestUri = requestUri };
+            odataUri.Path = new ODataUriParser(model, new Uri("http://temp.org/"), requestUri).ParsePath();
+
+            ODataResource nestedRes = new ODataResource()
+            {
+                TypeName = "Fake.DerivedComplexType",
+                Properties = new[] { new ODataProperty { Name = "P1", Value = "cv" } }
+            };
+
+            var actual = WriteJsonLightEntry(
+                isRequest: isRequest,
+                serviceDocumentUri: (isRequest ? null : new Uri("http://temp.org/")),
+                specifySet: false,
+                odataEntry: null,
+                entitySet: null,
+                resourceType: isRequest ? null : complexType,
+                odataUri: isRequest ? null : odataUri,
+                writeAction: (writer) =>
+                {
+                    writer.WriteStart(nestedRes);
+                    writer.WriteEnd();
+                },
+                model:model);
+
+            var expected = isRequest ? "{\"@odata.type\":\"#Fake.DerivedComplexType\",\"P1\":\"cv\"}"
+                : "{\"@odata.context\":\"http://temp.org/$metadata#FakeSet('parent')/ComplexP\",\"@odata.type\":\"#Fake.DerivedComplexType\",\"P1\":\"cv\"}";
+
+            Assert.Equal(expected, actual);
+        }
+
         [Fact]
         public void WriteTopLevelComplexCollectionProperty()
         {
@@ -525,7 +570,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Writer.JsonLight
             {
                 Id = new Uri("http://temp.org/Type"),
                 EditLink = new Uri("http://temp.org/Type"),
-                ReadLink = new Uri("http://temp.org/Type"), 
+                ReadLink = new Uri("http://temp.org/Type"),
                 ETag = "etag",
                 TypeName = "Fake.Type",
                 Properties = new[] { new ODataProperty { Name = "Key", Value = "son" } }
@@ -604,7 +649,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Writer.JsonLight
                     writer.WriteEnd();
                     writer.WriteEnd();
                     writer.WriteEnd();
-                }, 
+                },
                 throwOnUndeclaredProperty: false
                 );
 

@@ -82,10 +82,37 @@ namespace Microsoft.OData.JsonLight
 
             ODataResource resource = resourceState.Resource;
 
+            // expectedResourceTypeName : if expected is of base type. but the resource real type is derived,
+            // we need to set the resource type name.
+            //      Writing response: expected type info can be identical with context uri info.
+            //      Writing request: contextUri may not be provided, we always use the type from metadata info.
+            //                       From model: if the resource can be found in model.
+            //                       From serializationInfo: if user set the serializationInfo for the resource.
+            string expectedResourceTypeName = null;
+            if (this.WritingResponse)
+            {
+                expectedResourceTypeName = resourceState.GetOrCreateTypeContext(this.WritingResponse).ExpectedResourceTypeName;
+            }
+            else
+            {
+                if (resourceState.ResourceTypeFromMetadata == null)
+                {
+                    expectedResourceTypeName = resourceState.SerializationInfo == null
+                     ? null
+                     : resourceState.SerializationInfo.ExpectedTypeName;
+                }
+                else
+                {
+                    expectedResourceTypeName = resourceState.ResourceTypeFromMetadata.FullTypeName();
+                }
+            }
+
             // Write the "@odata.type": "typename"
             string typeName = this.JsonLightOutputContext.TypeNameOracle.GetResourceTypeNameForWriting(
-                resourceState.GetOrCreateTypeContext(this.WritingResponse).ExpectedResourceTypeName,
-                resource, resourceState.IsUndeclared);
+                expectedResourceTypeName,
+                resource,
+                resourceState.IsUndeclared);
+
             if (typeName != null)
             {
                 this.ODataAnnotationWriter.WriteODataTypeInstanceAnnotation(typeName);

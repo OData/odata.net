@@ -31,9 +31,9 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests
         /// <param name="model">The model used for writing the payloads.</param>
         /// <param name="functionImport">Function import whose parameters are to be written when the payload kind is Parameters.</param>
         public virtual void WriteMessage(
-            ODataMessageWriterTestWrapper messageWriter, 
-            ODataPayloadKind payloadKind, 
-            object payload, 
+            ODataMessageWriterTestWrapper messageWriter,
+            ODataPayloadKind payloadKind,
+            object payload,
             IEdmModel model = null,
             IEdmOperationImport functionImport = null)
         {
@@ -101,9 +101,9 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests
 
             var feedWriter = messageWriter.CreateODataResourceSetWriter();
             this.WriteFeed(feedWriter, feed);
-            
+
             feedWriter.Flush();
-            
+
         }
 
         private void WriteTopLevelEntry(ODataMessageWriterTestWrapper messageWriter, ODataResource entry)
@@ -112,9 +112,9 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests
             ODataWriter entryWriter = messageWriter.CreateODataResourceWriter();
 
             this.WriteEntry(entryWriter, entry);
-            
+
             entryWriter.Flush();
-            
+
         }
 
         public void WriteEntityReferenceLink(ODataMessageWriterTestWrapper messageWriter, ODataEntityReferenceLink referenceLink)
@@ -136,7 +136,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests
         {
             ODataCollectionWriter collectionWriter = messageWriter.CreateODataCollectionWriter();
             this.WriteCollection(collectionWriter, collection);
-            
+
             collectionWriter.Flush();
         }
 

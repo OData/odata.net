@@ -49,9 +49,9 @@ namespace Microsoft.OData.Tests.ScenarioTests.Writer.JsonLight
             {
                 Properties = new[]
                 {
-                    new ODataProperty { Name = "Street", Value = "1 Microsoft Way" }, 
-                    new ODataProperty { Name = "Zipcode", Value = 98052 }, 
-                    new ODataProperty { Name = "State", Value = new ODataEnumValue("WA", "ns.StateEnum") }, 
+                    new ODataProperty { Name = "Street", Value = "1 Microsoft Way" },
+                    new ODataProperty { Name = "Zipcode", Value = 98052 },
+                    new ODataProperty { Name = "State", Value = new ODataEnumValue("WA", "ns.StateEnum") },
                     new ODataProperty { Name = "City", Value = "Shanghai" }
                 },
                 TypeName = "ns.DerivedAddress"
@@ -66,7 +66,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Writer.JsonLight
             stateEnumType.AddMember("IL", new EdmEnumMemberValue(1));
             stateEnumType.AddMember("WA", new EdmEnumMemberValue(2));
             addressType.AddProperty(new EdmStructuralProperty(addressType, "State", new EdmEnumTypeReference(stateEnumType, true)));
-            
+
             EdmComplexType derivedAddressType = new EdmComplexType("ns", "DerivedAddress", addressType, false);
             derivedAddressType.AddProperty(new EdmStructuralProperty(derivedAddressType, "City", EdmCoreModel.Instance.GetString(isNullable: true)));
 
@@ -168,7 +168,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Writer.JsonLight
         {
             ODataResourceSet collectionStart = new ODataResourceSet();
             collectionStart.SetSerializationInfo(new ODataResourceSerializationInfo { ExpectedTypeName = "foo.bar" });
-            WriteAndValidate(collectionStart, this.derivedItems, "{\"@odata.context\":\"http://odata.org/test/$metadata#Collection(foo.bar)\",\"value\":[{\"@odata.type\":\"#ns.DerivedAddress\",\"Street\":\"1 Microsoft Way\",\"Zipcode\":98052,\"State\":\"WA\",\"City\":\"Shanghai\"}]}", writingResponse: false, itemTypeReference: this.derivedAddressTypeReference);
+            WriteAndValidate(collectionStart, this.derivedItems, "{\"@odata.context\":\"http://odata.org/test/$metadata#Collection(foo.bar)\",\"value\":[{\"Street\":\"1 Microsoft Way\",\"Zipcode\":98052,\"State\":\"WA\",\"City\":\"Shanghai\"}]}", writingResponse: false, itemTypeReference: this.derivedAddressTypeReference);
         }
 
         [Fact]

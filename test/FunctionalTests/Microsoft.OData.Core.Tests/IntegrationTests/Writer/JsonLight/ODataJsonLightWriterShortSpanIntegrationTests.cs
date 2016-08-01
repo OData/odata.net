@@ -267,7 +267,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Writer.JsonLight
         public void ShouldWriteDefaultStreamForRequestEntryPayloadWithUserModel()
         {
             var entry = new ODataResource { TypeName = "NS.MyMleEntityType", MediaResource = new ODataStreamReferenceValue { ReadLink = new Uri("http://odata.org/test/Blob") } };
-            const string payload = "{\"@odata.context\":\"http://odata.org/test/$metadata#NS.MyMleEntityType\",\"@odata.mediaReadLink\":\"http://odata.org/test/Blob\"}";
+            const string payload = "{\"@odata.context\":\"http://odata.org/test/$metadata#NS.MyMleEntityType\",\"@odata.type\":\"#NS.MyMleEntityType\",\"@odata.mediaReadLink\":\"http://odata.org/test/Blob\"}";
             this.WriteNestedItemsAndValidatePayload(entitySet: null, entityType: null, nestedItemToWrite: new[] { entry }, expectedPayload: payload, writingResponse: false);
         }
         #endregion Media Link Entry tests
@@ -335,7 +335,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Writer.JsonLight
         public void ShouldWriteNullPropertyValueForRequestEntryPayloadWithUserModel()
         {
             var entry = new ODataResource { TypeName = "NS.MyDerivedEntityType", Properties = new[] { new ODataProperty { Name = "StringProperty", Value = new ODataNullValue() } } };
-            const string expectedPayload = "{\"@odata.context\":\"http://odata.org/test/$metadata#NS.MyDerivedEntityType\",\"StringProperty\":null}";
+            const string expectedPayload = "{\"@odata.context\":\"http://odata.org/test/$metadata#NS.MyDerivedEntityType\",\"@odata.type\":\"#NS.MyDerivedEntityType\",\"StringProperty\":null}";
             this.WriteNestedItemsAndValidatePayload(entitySet: null, entityType: null, nestedItemToWrite: new[] { entry }, expectedPayload: expectedPayload, writingResponse: false);
         }
         #endregion Null Primitive Property Value tests
@@ -443,7 +443,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Writer.JsonLight
         public void ShouldWriteComplexPropertyForRequestEntryPayloadWithUserModel()
         {
             var items = CreateResourceWithComplexProperties();
-            const string expectedPayload = "{\"@odata.context\":\"http://odata.org/test/$metadata#NS.MyDerivedEntityType\",\"ComplexProperty\":{\"ComplexProperty\":{}}}";
+            const string expectedPayload = "{\"@odata.context\":\"http://odata.org/test/$metadata#NS.MyDerivedEntityType\",\"@odata.type\":\"#NS.MyDerivedEntityType\",\"ComplexProperty\":{\"ComplexProperty\":{}}}";
             this.WriteNestedItemsAndValidatePayload(entitySet: null, entityType: null, nestedItemToWrite: items, expectedPayload: expectedPayload, writingResponse: false);
         }
 
@@ -478,7 +478,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Writer.JsonLight
         public void ShouldWriteComplexPropertyInheritForRequestEntryPayloadWithUserModel()
         {
             var items = CreateResourceWithComplexProperties(true, true);
-            const string expectedPayload = "{\"@odata.context\":\"http://odata.org/test/$metadata#NS.MyDerivedEntityType\",\"ComplexProperty\":{\"@odata.type\":\"#NS.MyDerivedComplexType\",\"DerivedStringProperty\":\"deriveString\",\"ComplexProperty\":{}}}";
+            const string expectedPayload = "{\"@odata.context\":\"http://odata.org/test/$metadata#NS.MyDerivedEntityType\",\"@odata.type\":\"#NS.MyDerivedEntityType\",\"ComplexProperty\":{\"@odata.type\":\"#NS.MyDerivedComplexType\",\"DerivedStringProperty\":\"deriveString\",\"ComplexProperty\":{}}}";
             this.WriteNestedItemsAndValidatePayload(entitySet: null, entityType: null, nestedItemToWrite: items, expectedPayload: expectedPayload, writingResponse: false);
         }
         #endregion Complex Property Inheritance tests
@@ -552,7 +552,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Writer.JsonLight
         public void ShouldWriteOpenComplexPropertyForRequestEntryPayloadWithUserModel()
         {
             var items = CreateEntityWithOpenComplexProperties(true);
-            const string expectedPayload = "{\"@odata.context\":\"http://odata.org/test/$metadata#NS.MyDerivedEntityType\",\"OpenComplexProperty\":{\"@odata.type\":\"#NS.MyComplexType\",\"ComplexProperty\":{}}}";
+            const string expectedPayload = "{\"@odata.context\":\"http://odata.org/test/$metadata#NS.MyDerivedEntityType\",\"@odata.type\":\"#NS.MyDerivedEntityType\",\"OpenComplexProperty\":{\"@odata.type\":\"#NS.MyComplexType\",\"ComplexProperty\":{}}}";
             this.WriteNestedItemsAndValidatePayload(entitySet: null, entityType: null, nestedItemToWrite: items, expectedPayload: expectedPayload, writingResponse: false);
         }
 
@@ -602,7 +602,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Writer.JsonLight
         public void ShouldWritePrimitiveCollectionPropertyForRequestEntryPayloadWithUserModel()
         {
             var entry = new ODataResource { TypeName = "NS.MyDerivedEntityType", Properties = new[] { new ODataProperty { Name = "PrimitiveCollectionProperty", Value = new ODataCollectionValue { Items = new[] { "string1", "string2" } } } } };
-            const string expectedPayload = "{\"@odata.context\":\"http://odata.org/test/$metadata#NS.MyDerivedEntityType\",\"PrimitiveCollectionProperty\":[\"string1\",\"string2\"]}";
+            const string expectedPayload = "{\"@odata.context\":\"http://odata.org/test/$metadata#NS.MyDerivedEntityType\",\"@odata.type\":\"#NS.MyDerivedEntityType\",\"PrimitiveCollectionProperty\":[\"string1\",\"string2\"]}";
             this.WriteNestedItemsAndValidatePayload(entitySet: null, entityType: null, nestedItemToWrite: new[] { entry }, expectedPayload: expectedPayload, writingResponse: false);
         }
 
@@ -680,7 +680,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Writer.JsonLight
         {
             var primitiveCollectionValue = new ODataCollectionValue { TypeName = "Collection(String)", Items = new[] { "string1", "string2" } };
             var entry = new ODataResource { TypeName = "NS.MyDerivedEntityType", Properties = new[] { new ODataProperty { Name = "OpenPrimitiveCollectionProperty", Value = primitiveCollectionValue } } };
-            const string expectedPayload = "{\"@odata.context\":\"http://odata.org/test/$metadata#NS.MyDerivedEntityType\",\"OpenPrimitiveCollectionProperty@odata.type\":\"#Collection(String)\",\"OpenPrimitiveCollectionProperty\":[\"string1\",\"string2\"]}";
+            const string expectedPayload = "{\"@odata.context\":\"http://odata.org/test/$metadata#NS.MyDerivedEntityType\",\"@odata.type\":\"#NS.MyDerivedEntityType\",\"OpenPrimitiveCollectionProperty@odata.type\":\"#Collection(String)\",\"OpenPrimitiveCollectionProperty\":[\"string1\",\"string2\"]}";
             this.WriteNestedItemsAndValidatePayload(entitySet: null, entityType: null, nestedItemToWrite: new[] { entry }, expectedPayload: expectedPayload, writingResponse: false);
         }
         #endregion Open Primitive Collection property tests
@@ -723,7 +723,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Writer.JsonLight
             Action<ODataWriter> write;
             ODataResource resource = CreateResources(out write);
 
-            const string expectedPayload = "{\"@odata.context\":\"http://odata.org/test/$metadata#NS.MyDerivedEntityType\",\"ComplexCollectionProperty\":[{\"@odata.type\":\"#NS.MyDerivedComplexType\",\"DerivedStringProperty\":\"deriveString\",\"ComplexProperty\":{}},{\"ComplexProperty\":{}}]}";
+            const string expectedPayload = "{\"@odata.context\":\"http://odata.org/test/$metadata#NS.MyDerivedEntityType\",\"@odata.type\":\"#NS.MyDerivedEntityType\",\"ComplexCollectionProperty\":[{\"@odata.type\":\"#NS.MyDerivedComplexType\",\"DerivedStringProperty\":\"deriveString\",\"ComplexProperty\":{}},{\"ComplexProperty\":{}}]}";
             this.WriteNestedItemsAndValidatePayload(entitySet: null, entityType: null, topLevelItem: resource, writeItems:write, expectedPayload: expectedPayload, writingResponse: false);
         }
 
@@ -819,7 +819,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Writer.JsonLight
         public void ShouldWriteOpenComplexCollectionPropertyForRequestEntryPayloadWithUserModel()
         {
             var items = CreateResources(false, true);
-            const string expectedPayload = "{\"@odata.context\":\"http://odata.org/test/$metadata#NS.MyDerivedEntityType\",\"OpenComplexCollectionProperty@odata.type\":\"#Collection(NS.MyComplexType)\",\"OpenComplexCollectionProperty\":[{\"ComplexProperty\":{}}]}";
+            const string expectedPayload = "{\"@odata.context\":\"http://odata.org/test/$metadata#NS.MyDerivedEntityType\",\"@odata.type\":\"#NS.MyDerivedEntityType\",\"OpenComplexCollectionProperty@odata.type\":\"#Collection(NS.MyComplexType)\",\"OpenComplexCollectionProperty\":[{\"ComplexProperty\":{}}]}";
             this.WriteNestedItemsAndValidatePayload(
                 entitySet: null,
                 entityType: null,
