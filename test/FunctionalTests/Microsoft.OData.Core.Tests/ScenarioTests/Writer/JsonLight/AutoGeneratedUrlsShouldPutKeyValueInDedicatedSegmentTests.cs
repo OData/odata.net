@@ -86,13 +86,8 @@ namespace Microsoft.OData.Tests.ScenarioTests.Writer.JsonLight
             IEdmEntityType entityType = null,
             IEdmEntitySet entitySet = null)
         {
-            var settings = new ODataMessageWriterSettings
-            {
-                AutoComputePayloadMetadata = true,
-            };
-
+            var settings = new ODataMessageWriterSettings { };
             settings.SetServiceDocumentUri(new Uri("http://example.com/"));
-
             var outputStream = new MemoryStream();
             var container = ContainerBuilderHelper.BuildContainer(null);
             container.GetRequiredService<ODataSimplifiedOptions>().EnableWritingKeyAsSegment = useKeyAsSegment;

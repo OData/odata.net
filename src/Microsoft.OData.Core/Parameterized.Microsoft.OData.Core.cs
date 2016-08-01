@@ -3020,7 +3020,7 @@ namespace Microsoft.OData {
         }
 
         /// <summary>
-        /// A string like "When writing a JSON response in full metadata mode with ODataMessageWriterSettings.AutoComputePayloadMetadata set to true, a user model must be specified and the entity set and entity type must be passed to the ODataMessageWriter.CreateODataResourceWriter method or the ODataResource.TypeName must be set."
+        /// A string like "When writing a JSON response in full metadata mode, a user model must be specified and the entity set and entity type must be passed to the ODataMessageWriter.CreateODataResourceWriter method or the ODataResource.TypeName must be set."
         /// </summary>
         internal static string ODataResourceTypeContext_ODataResourceTypeNameMissing {
             get {

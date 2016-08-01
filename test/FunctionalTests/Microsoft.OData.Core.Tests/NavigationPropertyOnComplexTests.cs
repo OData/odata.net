@@ -39,7 +39,7 @@ namespace Microsoft.OData.Tests
             var paths = new ODataUriParser(Model, ServiceRoot, uri).ParsePath().ToList();
             Assert.Equal(paths.Count(), 4);
             paths[0].ShouldBeEntitySetSegment(EntitySet);
-            paths[1].ShouldBeKeySegment(new KeyValuePair<string, object>("UserName", "abc")) ;
+            paths[1].ShouldBeKeySegment(new KeyValuePair<string, object>("UserName", "abc"));
             paths[2].ShouldBePropertySegment(addressProperty);
             paths[3].ShouldBeNavigationPropertySegment(city);
 
@@ -197,7 +197,7 @@ namespace Microsoft.OData.Tests
             // test
             uri = new Uri(@"http://host/Entities('abc')?$expand=Complex/CollectionOfNav&$select=Complex/CollectionOfNav");
             var selectAndExpandClause = new ODataUriParser(CollectionModel, ServiceRoot, uri).ParseSelectAndExpand();
-            
+
             // verify
             selectAndExpandClause.SelectedItems.Count().Should().Be(2);
             var items = selectAndExpandClause.SelectedItems.ToList();
@@ -284,7 +284,7 @@ namespace Microsoft.OData.Tests
             entryLists[1].Properties.FirstOrDefault(s => s.Name == "Road").Value.Should().Be("Zixing");
             entryLists[2].Id.Should().Be("http://host/City(222)");
             entryLists[3].TypeName.Should().Be("DefaultNs.WorkAddress");
-            entryLists[3].Properties.FirstOrDefault(s=>s.Name == "Road").Value.Should().Be("Ziyue");
+            entryLists[3].Properties.FirstOrDefault(s => s.Name == "Road").Value.Should().Be("Ziyue");
             entryLists[4].Id.Should().Be("http://host/People('abc')");
         }
 
@@ -355,7 +355,7 @@ namespace Microsoft.OData.Tests
             ODataNestedResourceInfo addressInfo = new ODataNestedResourceInfo() { Name = "Address" };
             ODataResource address = new ODataResource() { Properties = new[] { new ODataProperty { Name = "Road", Value = "Zixing" } } };
             ODataNestedResourceInfo workAddressInfo = new ODataNestedResourceInfo() { Name = "WorkAddress" };
-            ODataResource workAddress = new ODataResource() { TypeName="DefaultNs.WorkAddress", Properties = new[] { new ODataProperty { Name = "Road", Value = "Ziyue" } } };
+            ODataResource workAddress = new ODataResource() { TypeName = "DefaultNs.WorkAddress", Properties = new[] { new ODataProperty { Name = "Road", Value = "Ziyue" } } };
             ODataNestedResourceInfo nestedResInfo = new ODataNestedResourceInfo() { Name = "City2", IsCollection = false };
             ODataResource nestednav = new ODataResource() { Properties = new[] { new ODataProperty { Name = "ZipCode", Value = 222 } } };
 
@@ -589,7 +589,7 @@ namespace Microsoft.OData.Tests
             ODataResource workAddress = new ODataResource() { TypeName = "DefaultNs.WorkAddress", Properties = new[] { new ODataProperty { Name = "Road", Value = "Ziyue" } } };
             ODataNestedResourceInfo nestedCityInfo = new ODataNestedResourceInfo() { Name = "City2", IsCollection = false };
             ODataResource city = new ODataResource() { Properties = new[] { new ODataProperty { Name = "ZipCode", Value = 222 } } };
-            ODataNestedResourceInfo nestedInfo = new ODataNestedResourceInfo() { Name = "Country", IsCollection = false};
+            ODataNestedResourceInfo nestedInfo = new ODataNestedResourceInfo() { Name = "Country", IsCollection = false };
             ODataResource country = new ODataResource() { Properties = new[] { new ODataProperty { Name = "Name", Value = "China" } } };
 
             string output = WriteJsonLightEntry(Model, null, complexType, odataUri, (writer) =>
@@ -649,18 +649,18 @@ namespace Microsoft.OData.Tests
             string output = WriteJsonLightEntry(Model, null, complexType, odataUri, (writer) =>
             {
                 writer.WriteStart(address);
-                    writer.WriteStart(workAddressInfo);
-                        writer.WriteStart(workAddress);
-                            writer.WriteStart(nestedCityInfo);
-                                writer.WriteStart(city);
-                                    writer.WriteStart(nestedInfo);
-                                        writer.WriteStart(country);
-                                        writer.WriteEnd();
-                                    writer.WriteEnd();
-                                writer.WriteEnd();
-                            writer.WriteEnd();
-                        writer.WriteEnd();
-                    writer.WriteEnd();
+                writer.WriteStart(workAddressInfo);
+                writer.WriteStart(workAddress);
+                writer.WriteStart(nestedCityInfo);
+                writer.WriteStart(city);
+                writer.WriteStart(nestedInfo);
+                writer.WriteStart(country);
+                writer.WriteEnd();
+                writer.WriteEnd();
+                writer.WriteEnd();
+                writer.WriteEnd();
+                writer.WriteEnd();
+                writer.WriteEnd();
                 writer.WriteEnd();
             });
 
@@ -743,7 +743,7 @@ namespace Microsoft.OData.Tests
             var stream = new MemoryStream();
             var message = new InMemoryMessage { Stream = stream };
 
-            var settings = new ODataMessageWriterSettings { Version = ODataVersion.V4, AutoComputePayloadMetadata = true };
+            var settings = new ODataMessageWriterSettings { Version = ODataVersion.V4 };
             settings.ODataUri = odataUri;
             settings.SetServiceDocumentUri(ServiceRoot);
 

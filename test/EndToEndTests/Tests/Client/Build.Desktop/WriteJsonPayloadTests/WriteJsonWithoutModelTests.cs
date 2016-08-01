@@ -73,9 +73,28 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
                                                                       mimeType);
                 }
 
-                var rex = new Regex("\"\\w*@odata.type\":\"#[\\w\\(\\)\\.]*\",");
-                outputWithoutModel = rex.Replace(outputWithoutModel, "");
-                WritePayloadHelper.VerifyPayloadString(outputWithModel, outputWithoutModel, mimeType);
+                //var rex = new Regex("\"\\w*@odata.type\":\"#[\\w\\(\\)\\.]*\",");
+                //outputWithoutModel = rex.Replace(outputWithoutModel, "");
+                //WritePayloadHelper.VerifyPayloadString(outputWithModel, outputWithoutModel, mimeType);
+                if (mimeType == MimeTypes.ApplicationJson + MimeTypes.ODataParameterFullMetadata)
+                {
+                    var rex = new Regex("\"\\w*@odata.associationLink\":\"[^\"]*\",");
+                    var outputWithModel2 = rex.Replace(outputWithModel, "");
+                    var outputWithoutModel2 = rex.Replace(outputWithoutModel, "");
+                    WritePayloadHelper.VerifyPayloadString(outputWithModel2, outputWithoutModel2, mimeType);
+                }
+                else if (mimeType == MimeTypes.ApplicationJson + MimeTypes.ODataParameterMinimalMetadata)
+                {
+                    var rex = new Regex("\"\\w*@odata.type\":\"#[\\w\\(\\)\\.]*\",");
+                    var outputWithoutModel2 = rex.Replace(outputWithoutModel, "");
+                    WritePayloadHelper.VerifyPayloadString(outputWithModel, outputWithoutModel2, mimeType);
+                }
+                else
+                {
+                    // withModel: has typeName -> ODataCoreWriter will do this.PrepareResourceForWriteStart(<NoMetadata>) -> <NoMetadata>
+                    // withoutModel: has no type name -> ODataCoreWriter will NOT do this.PrepareResourceForWriteStart()  -> <populated Metadata> so larger length
+                    Assert.IsTrue(outputWithModel.Length < outputWithoutModel.Length, "FullMetadata/NoMetadata should result in different output");
+                }
             }
         }
 
@@ -106,14 +125,25 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
                 {
                     var odataWriter = messageWriter.CreateODataResourceWriter(WritePayloadHelper.CustomerSet, WritePayloadHelper.CustomerType);
                     outputWithModel = this.WriteAndVerifyExpandedCustomerEntry(responseMessageWithModel, odataWriter,
-                                                                               true, mimeType);
+                                                                               false, mimeType);
                 }
 
-                if (mimeType != MimeTypes.ApplicationAtomXml)
+                if (mimeType == MimeTypes.ApplicationJson + MimeTypes.ODataParameterFullMetadata)
+                {
+                    var rex = new Regex("\"\\w*@odata.associationLink\":\"[^\"]*\",");
+                    var outputWithModel2 = rex.Replace(outputWithModel, "");
+                    var outputWithoutModel2 = rex.Replace(outputWithoutModel, "");
+                    WritePayloadHelper.VerifyPayloadString(outputWithModel2, outputWithoutModel2, mimeType);
+                }
+                else if (mimeType == MimeTypes.ApplicationJson + MimeTypes.ODataParameterMinimalMetadata)
                 {
                     var rex = new Regex("\"\\w*@odata.type\":\"#[\\w\\(\\)\\.]*\",");
-                    outputWithoutModel = rex.Replace(outputWithoutModel, "");
-                    WritePayloadHelper.VerifyPayloadString(outputWithModel, outputWithoutModel, mimeType);
+                    var outputWithoutModel2 = rex.Replace(outputWithoutModel, "");
+                    WritePayloadHelper.VerifyPayloadString(outputWithModel, outputWithoutModel2, mimeType);
+                }
+                else
+                {
+                    Assert.IsTrue(outputWithModel.Length < outputWithoutModel.Length, "FullMetadata/NoMetadata should result in different output");
                 }
             }
         }
@@ -162,6 +192,11 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
         {
             foreach (var mimeType in this.mimeTypes)
             {
+                if (mimeType == MimeTypes.ApplicationJson + MimeTypes.ODataParameterFullMetadata)
+                {
+                    continue;
+                }
+
                 var settings = new ODataMessageWriterSettings() { BaseUri = this.ServiceUri };
                 settings.ODataUri = new ODataUri() { ServiceRoot = this.ServiceUri };
 
@@ -173,7 +208,7 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
                 using (var messageWriter = new ODataMessageWriter(responseMessageWithModel, settings, WritePayloadHelper.Model))
                 {
                     var odataWriter = messageWriter.CreateODataResourceSetWriter(WritePayloadHelper.PersonSet, WritePayloadHelper.PersonType);
-                    outputWithModel = this.WriteAndVerifyPersonFeed(responseMessageWithModel, odataWriter, true,
+                    outputWithModel = this.WriteAndVerifyPersonFeed(responseMessageWithModel, odataWriter, false,
                                                                    mimeType);
                 }
 
@@ -186,7 +221,17 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
                                                                        mimeType);
                 }
 
-                WritePayloadHelper.VerifyPayloadString(outputWithModel, outputWithoutModel, mimeType);
+                if (mimeType == MimeTypes.ApplicationJson + MimeTypes.ODataParameterMinimalMetadata)
+                {
+                    WritePayloadHelper.VerifyPayloadString(outputWithModel, outputWithoutModel, mimeType);
+                }
+                else
+                {
+                    // when ODataParameterNoMetadata:
+                    // withModel: has typeName -> ODataCoreWriter will do this.PrepareResourceForWriteStart(<NoMetadata>) -> <NoMetadata>
+                    // withoutModel: has no type name -> ODataCoreWriter will NOT do this.PrepareResourceForWriteStart()  -> <populated Metadata> so larger length
+                    Assert.IsTrue(outputWithModel.Length < outputWithoutModel.Length, "FullMetadata/NoMetadata should result in different output");
+                }
 
                 if (mimeType.Contains(MimeTypes.ODataParameterMinimalMetadata) || mimeType.Contains(MimeTypes.ODataParameterFullMetadata))
                 {
@@ -413,7 +458,7 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
             odataWriter.WriteEnd();
 
             var orderEntry2Wrapper = WritePayloadHelper.CreateOrderEntry2(hasModel);
-            
+
 
             var orderEntry2Navigation1 = new ODataNestedResourceInfo()
             {
@@ -731,10 +776,10 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
 
             ODataResource employeeEntry = WritePayloadHelper.CreateEmployeeEntry(false);
             ODataResourceSerializationInfo serializationInfo = new ODataResourceSerializationInfo()
-                {
-                    NavigationSourceName = "Person",
-                    NavigationSourceEntityTypeName = NameSpace + "Person",
-                };
+            {
+                NavigationSourceName = "Person",
+                NavigationSourceEntityTypeName = NameSpace + "Person",
+            };
 
             if (hasExpectedType)
             {
@@ -897,10 +942,10 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
                                                     ODataWriter odataWriter, bool hasModel, string mimeType)
         {
             var order = new ODataResource()
-                {
-                    Id = new Uri(this.ServiceUri + "Order(-10)"),
-                    TypeName = NameSpace + "Order"
-                };
+            {
+                Id = new Uri(this.ServiceUri + "Order(-10)"),
+                TypeName = NameSpace + "Order"
+            };
 
             var orderP1 = new ODataProperty { Name = "OrderId", Value = -10 };
             var orderp2 = new ODataProperty { Name = "CustomerId", Value = 8212 };

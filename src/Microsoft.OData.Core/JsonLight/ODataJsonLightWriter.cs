@@ -160,28 +160,25 @@ namespace Microsoft.OData.JsonLight
         /// <param name="selectedProperties">The selected properties of this scope.</param>
         protected override void PrepareResourceForWriteStart(ODataResource resource, ODataResourceTypeContext typeContext, SelectedPropertiesNode selectedProperties)
         {
-            if (this.jsonLightOutputContext.MessageWriterSettings.AutoComputePayloadMetadata)
+            ResourceScope resourceScope = (ResourceScope)this.CurrentScope;
+            Debug.Assert(resourceScope != null, "resourceScope != null");
+
+            ODataResourceMetadataBuilder builder = this.jsonLightOutputContext.MetadataLevel.CreateResourceMetadataBuilder(
+                resource,
+                typeContext,
+                resourceScope.SerializationInfo,
+                resourceScope.ResourceType,
+                selectedProperties,
+                this.jsonLightOutputContext.WritingResponse,
+                this.jsonLightOutputContext.ODataSimplifiedOptions.EnableWritingKeyAsSegment,
+                this.jsonLightOutputContext.MessageWriterSettings.ODataUri);
+
+            if (builder is ODataConventionalResourceMetadataBuilder)
             {
-                ResourceScope resourceScope = (ResourceScope)this.CurrentScope;
-                Debug.Assert(resourceScope != null, "resourceScope != null");
-
-                ODataResourceMetadataBuilder builder = this.jsonLightOutputContext.MetadataLevel.CreateResourceMetadataBuilder(
-                    resource,
-                    typeContext,
-                    resourceScope.SerializationInfo,
-                    resourceScope.ResourceType,
-                    selectedProperties,
-                    this.jsonLightOutputContext.WritingResponse,
-                    this.jsonLightOutputContext.ODataSimplifiedOptions.EnableWritingKeyAsSegment,
-                    this.jsonLightOutputContext.MessageWriterSettings.ODataUri);
-
-                if (builder is ODataConventionalResourceMetadataBuilder)
-                {
-                    builder.ParentMetadataBuilder = this.FindParentResourceMetadataBuilder();
-                }
-
-                this.jsonLightOutputContext.MetadataLevel.InjectMetadataBuilder(resource, builder);
+                builder.ParentMetadataBuilder = this.FindParentResourceMetadataBuilder();
             }
+
+            this.jsonLightOutputContext.MetadataLevel.InjectMetadataBuilder(resource, builder);
         }
 
         /// <summary>
@@ -191,14 +188,7 @@ namespace Microsoft.OData.JsonLight
         /// <param name="entityType">The entity type of the resource.</param>
         protected override void ValidateMediaResource(ODataResource resource, IEdmEntityType entityType)
         {
-            if (this.jsonLightOutputContext.MessageWriterSettings.AutoComputePayloadMetadata)
-            {
-                // resource.MediaResource is always null for NoMetadata mode. Skip the media resource validation.
-            }
-            else
-            {
-                base.ValidateMediaResource(resource, entityType);
-            }
+            // Skip the media resource validation.
         }
 
         /// <summary>

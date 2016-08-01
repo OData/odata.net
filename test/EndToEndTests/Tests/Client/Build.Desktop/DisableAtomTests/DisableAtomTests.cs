@@ -123,8 +123,6 @@ namespace Microsoft.Test.OData.Tests.Client.DisableAtomTests
             
             var settings = new ODataMessageWriterSettings();
             settings.BaseUri = ServiceBaseUri;
-            settings.AutoComputePayloadMetadata = true;
-
             var personType = Model.FindDeclaredType(NameSpacePrefix + "Person") as IEdmEntityType;
             var personSet = Model.EntityContainer.FindEntitySet("People");
 

@@ -148,7 +148,7 @@ namespace Microsoft.OData.Tests.JsonLight
                 TypeName = "MyNS.ProductDetail",
                 Properties = new[]
                 {
-                    new ODataProperty {Name = "Id", Value = new ODataPrimitiveValue(1)}, 
+                    new ODataProperty {Name = "Id", Value = new ODataPrimitiveValue(1)},
                     new ODataProperty {Name = "Detail", Value = new ODataPrimitiveValue("made in china")},
                 },
             };
@@ -165,7 +165,7 @@ namespace Microsoft.OData.Tests.JsonLight
                 TypeName = "MyNS.ProductDetailItem",
                 Properties = new[]
                 {
-                    new ODataProperty {Name = "ItemId", Value = new ODataPrimitiveValue(1)}, 
+                    new ODataProperty {Name = "ItemId", Value = new ODataPrimitiveValue(1)},
                     new ODataProperty {Name = "Description", Value = new ODataPrimitiveValue("made by HCC")},
                 },
             };
@@ -201,7 +201,7 @@ namespace Microsoft.OData.Tests.JsonLight
                 TypeName = "MyNS.Product",
                 Properties = new[]
                 {
-                    new ODataProperty {Name = "Id", Value = new ODataPrimitiveValue(1)}, 
+                    new ODataProperty {Name = "Id", Value = new ODataPrimitiveValue(1)},
                     new ODataProperty {Name = "Name", Value = new ODataPrimitiveValue("Car")},
                 },
             };
@@ -211,7 +211,7 @@ namespace Microsoft.OData.Tests.JsonLight
                 TypeName = "MyNS.ProductDetail",
                 Properties = new[]
                 {
-                    new ODataProperty {Name = "Id", Value = new ODataPrimitiveValue(1)}, 
+                    new ODataProperty {Name = "Id", Value = new ODataPrimitiveValue(1)},
                     new ODataProperty {Name = "Detail", Value = new ODataPrimitiveValue("made in china")},
                 },
             };
@@ -310,7 +310,7 @@ namespace Microsoft.OData.Tests.JsonLight
                 TypeName = "MyNS.PhysicalProduct",
                 Properties = new[]
                 {
-                    new ODataProperty {Name = "Id", Value = new ODataPrimitiveValue(1)}, 
+                    new ODataProperty {Name = "Id", Value = new ODataPrimitiveValue(1)},
                     new ODataProperty {Name = "Name", Value = new ODataPrimitiveValue("car")},
                     new ODataProperty {Name = "Material", Value = new ODataPrimitiveValue("gold")},
                 },
@@ -337,7 +337,7 @@ namespace Microsoft.OData.Tests.JsonLight
                 TypeName = "MyNS.PhysicalProduct",
                 Properties = new[]
                 {
-                    new ODataProperty {Name = "Id", Value = new ODataPrimitiveValue(1)}, 
+                    new ODataProperty {Name = "Id", Value = new ODataPrimitiveValue(1)},
                     new ODataProperty {Name = "Name", Value = new ODataPrimitiveValue("car")},
                     new ODataProperty {Name = "Material", Value = new ODataPrimitiveValue("gold")},
                 },
@@ -448,7 +448,7 @@ namespace Microsoft.OData.Tests.JsonLight
             Id = new Uri("http://host/service/Product(1)"),
             Properties = new[]
                 {
-                    new ODataProperty { Name = "Id", Value = 1 }, 
+                    new ODataProperty { Name = "Id", Value = 1 },
                     new ODataProperty { Name = "Name", Value = "Car" },
                 },
             TypeName = "MyNS.Product",
@@ -473,7 +473,7 @@ namespace Microsoft.OData.Tests.JsonLight
         {
             Properties = new[]
                 {
-                    new ODataProperty {Name = "Id", Value = new ODataPrimitiveValue(1)}, 
+                    new ODataProperty {Name = "Id", Value = new ODataPrimitiveValue(1)},
                     new ODataProperty {Name = "Detail", Value = new ODataPrimitiveValue("made in china")},
                 },
             TypeName = "MyNS.ProductDetail",
@@ -1003,7 +1003,7 @@ namespace Microsoft.OData.Tests.JsonLight
 
         private static ODataJsonLightOutputContext CreateJsonLightOutputContext(MemoryStream stream, IEdmModel userModel, bool fullMetadata = false, ODataUri uri = null)
         {
-            var settings = new ODataMessageWriterSettings { Version = ODataVersion.V4, AutoComputePayloadMetadata = true, ShouldIncludeAnnotation = ODataUtils.CreateAnnotationFilter("*") };
+            var settings = new ODataMessageWriterSettings { Version = ODataVersion.V4, ShouldIncludeAnnotation = ODataUtils.CreateAnnotationFilter("*") };
             settings.SetServiceDocumentUri(new Uri("http://host/service"));
             if (uri != null)
             {

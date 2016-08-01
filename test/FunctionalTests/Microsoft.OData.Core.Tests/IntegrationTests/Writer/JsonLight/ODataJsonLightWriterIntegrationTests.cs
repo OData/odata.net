@@ -759,7 +759,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Writer.JsonLight
             var stream = new MemoryStream();
             var message = new InMemoryMessage { Stream = stream };
 
-            var settings = new ODataMessageWriterSettings { Version = ODataVersion.V4, AutoComputePayloadMetadata = true };
+            var settings = new ODataMessageWriterSettings { Version = ODataVersion.V4 };
             settings.ODataUri = odataUri;
             settings.SetServiceDocumentUri(serviceDocumentUri);
 
@@ -820,7 +820,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Writer.JsonLight
             var stream = new MemoryStream();
             var message = new InMemoryMessage { Stream = stream };
 
-            var settings = new ODataMessageWriterSettings { Version = ODataVersion.V4, AutoComputePayloadMetadata = true };
+            var settings = new ODataMessageWriterSettings { Version = ODataVersion.V4 };
             if (!throwOnUndeclaredProperty)
             {
                 settings.Validations &= ~ValidationKinds.ThrowOnUndeclaredPropertyForNonOpenType;

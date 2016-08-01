@@ -69,8 +69,6 @@ namespace Microsoft.Test.OData.Tests.Client.EnumerationTypeTests
 
             var settings = new ODataMessageWriterSettings();
             settings.BaseUri = ServiceBaseUri;
-            settings.AutoComputePayloadMetadata = true;
-
             var productType = Model.FindDeclaredType(NameSpacePrefix + "Product") as IEdmEntityType;
             var productSet = Model.EntityContainer.FindEntitySet("Products");
 
@@ -133,8 +131,6 @@ namespace Microsoft.Test.OData.Tests.Client.EnumerationTypeTests
 
             var settings = new ODataMessageWriterSettings();
             settings.BaseUri = ServiceBaseUri;
-            settings.AutoComputePayloadMetadata = true;
-
             var productType = Model.FindDeclaredType(NameSpacePrefix + "Product") as IEdmEntityType;
             var productSet = Model.EntityContainer.FindEntitySet("Products");
 

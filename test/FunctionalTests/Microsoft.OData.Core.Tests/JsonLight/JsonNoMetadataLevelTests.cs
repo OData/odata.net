@@ -19,15 +19,9 @@ namespace Microsoft.OData.Tests.JsonLight
         [Fact]
         public void NoMetadataLevelShouldReturnNoMetadataTypeOracleWhenKnobIsSet()
         {
-            testSubject.GetTypeNameOracle( /*autoComputePayloadMetadata*/ true).Should().BeOfType<JsonNoMetadataTypeNameOracle>();
+            testSubject.GetTypeNameOracle().Should().BeOfType<JsonNoMetadataTypeNameOracle>();
         }
 
-        [Fact]
-        public void NoMetadataLevelShouldReturnMinimalMetadataTypeOracleWhenKnobIsOff()
-        {
-            testSubject.GetTypeNameOracle( /*autoComputePayloadMetadata*/ false).Should().BeOfType<JsonMinimalMetadataTypeNameOracle>();
-        }
-        
         [Fact]
         public void NoMetadataLevelShouldHaveContextUrlLevelNone()
         {
@@ -38,11 +32,11 @@ namespace Microsoft.OData.Tests.JsonLight
         public void NoMetadataLevelShouldReturnNullMetadataBuilder()
         {
             testSubject.CreateResourceMetadataBuilder(
-                new ODataResource(), 
+                new ODataResource(),
                 /*typeContext*/ null,
                 /*serializationInfo*/ null,
                 /*actualEntityType*/ null,
-                SelectedPropertiesNode.EntireSubtree, 
+                SelectedPropertiesNode.EntireSubtree,
                 /*isResponse*/ true,
                 /*keyAsSegment*/ false,
                 /*requestUri*/ null).Should().Be(ODataResourceMetadataBuilder.Null);
@@ -107,7 +101,7 @@ namespace Microsoft.OData.Tests.JsonLight
             var builder = new TestEntityMetadataBuilder(entry);
             var function1 = new ODataFunction { Metadata = new Uri("http://service/$metadata#function1", UriKind.Absolute) };
             var function2 = new ODataFunction { Metadata = new Uri("http://service/$metadata#function2", UriKind.Absolute) };
-            
+
             entry.AddFunction(function1);
             entry.AddFunction(function2);
 

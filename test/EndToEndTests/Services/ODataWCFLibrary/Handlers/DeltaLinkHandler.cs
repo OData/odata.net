@@ -53,7 +53,7 @@ namespace Microsoft.Test.OData.Services.ODataWCFService.Handlers
                     var deltaEntry = new ODataResource
                     {
                         Id = new Uri(ServiceConstants.ServiceBaseUri, entitySet.Name + "(1)"),
-                        Properties = new[] {new ODataProperty {Name = "FirstName", Value = "GGGG"}}
+                        Properties = new[] { new ODataProperty { Name = "FirstName", Value = "GGGG" } }
                     };
                     var deletedLink = new ODataDeltaDeletedLink(
                         new Uri(ServiceConstants.ServiceBaseUri, entitySet.Name + "(1)"), new Uri(ServiceConstants.ServiceBaseUri, "Orders(8)"), "Orders");
@@ -417,7 +417,6 @@ namespace Microsoft.Test.OData.Services.ODataWCFService.Handlers
         {
             ODataMessageWriterSettings settings = new ODataMessageWriterSettings
             {
-                AutoComputePayloadMetadata = true,
                 BaseUri = this.ServiceRootUri
             };
 

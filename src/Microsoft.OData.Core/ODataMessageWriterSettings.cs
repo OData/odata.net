@@ -69,7 +69,6 @@ namespace Microsoft.OData
         /// <summary>Initializes a new instance of the <see cref="T:Microsoft.OData.ODataMessageWriterSettings" /> class with default settings. </summary>
         public ODataMessageWriterSettings()
         {
-            this.AutoComputePayloadMetadata = false;
             this.EnableMessageStreamDisposal = true;
             this.EnableCharactersCheck = false;
             this.Validations = ValidationKinds.All;
@@ -94,16 +93,6 @@ namespace Microsoft.OData
                 ThrowOnUndeclaredPropertyForNonOpenType = (validations & ValidationKinds.ThrowOnUndeclaredPropertyForNonOpenType) != 0;
             }
         }
-
-        /// <summary>
-        /// Gets or sets a value that indicates whether the writer should automatically generate or omit metadata based on the metadata level.
-        /// </summary>
-        /// <remarks>
-        /// Payload metadata includes the type names of entries and property values as well as any information that may be computed automatically, such as edit links.
-        /// If, for example, ODataResource.EditLink is not specified, then it will be automatically computed and written out in full metadata mode.
-        /// If ODataResource.EditLink is specified, then that value will be considered an "override" of the default computed edit link, and will be written out in full and minimal metadata modes. It will not be written in no metadata mode.
-        /// </remarks>
-        public bool AutoComputePayloadMetadata { get; set; }
 
         /// <summary>Gets or sets the document base URI which is used as base for all relative URIs. </summary>
         /// <returns>The document base URI which is used as base for all relative URIs.</returns>
@@ -399,7 +388,6 @@ namespace Microsoft.OData
 
             this.acceptCharSets = other.acceptCharSets;
             this.acceptMediaTypes = other.acceptMediaTypes;
-            this.AutoComputePayloadMetadata = other.AutoComputePayloadMetadata;
             this.BaseUri = other.BaseUri;
             this.EnableMessageStreamDisposal = other.EnableMessageStreamDisposal;
             this.EnableCharactersCheck = other.EnableCharactersCheck;

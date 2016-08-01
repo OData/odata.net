@@ -177,6 +177,96 @@ namespace Microsoft.OData.Tests.IntegrationTests.Evaluation
             "\"#Function\":{\"title\":\"FunctionTitle\",\"target\":\"http://example.com/DoFunction\"}" +
         "}";
 
+        const string expectedPayloadWithFullMetadata = "{" +
+                           "\"@odata.context\":\"http://example.com/$metadata#EntitySet/$entity\"," +
+                           "\"@odata.id\":\"http://example.com/id\"," +
+                           "\"@odata.etag\":\"etag\"," +
+                           "\"@odata.editLink\":\"http://example.com/edit\"," +
+                           "\"@odata.readLink\":\"http://example.com/read\"," +
+                           "\"@odata.mediaEditLink\":\"http://example.com/mr/edit\"," +
+                           "\"@odata.mediaReadLink\":\"http://example.com/mr/read\"," +
+                           "\"@odata.mediaContentType\":\"image/png\"," +
+                           "\"@odata.mediaEtag\":\"mr etag\"," +
+                           "\"ID\":123," +
+                           "\"StreamProp1@odata.mediaEditLink\":\"http://example.com/stream/edit\"," +
+                           "\"StreamProp1@odata.mediaReadLink\":\"http://example.com/stream/read\"," +
+                           "\"StreamProp1@odata.mediaContentType\":\"image/jpeg\"," +
+                           "\"StreamProp1@odata.mediaEtag\":\"stream etag\"," +
+                           "\"StreamProp2@odata.mediaEditLink\":\"http://example.com/edit/StreamProp2\"," +
+                           "\"StreamProp2@odata.mediaReadLink\":\"http://example.com/read/StreamProp2\"," +
+                           "\"DeferredNavLink@odata.associationLink\":\"http://example.com/association\"," +
+                           "\"DeferredNavLink@odata.navigationLink\":\"http://example.com/navigation\"," +
+                           "\"ExpandedNavLink@odata.associationLink\":\"http://example.com/expanded/association\"," +
+                           "\"ExpandedNavLink@odata.navigationLink\":\"http://example.com/expanded/navigation\"," +
+                           "\"ExpandedNavLink\":[]," +
+                           "\"NavLinkDeclaredOnlyInModel@odata.associationLink\":\"http://example.com/read/NavLinkDeclaredOnlyInModel/$ref\"," +
+                           "\"NavLinkDeclaredOnlyInModel@odata.navigationLink\":\"http://example.com/read/NavLinkDeclaredOnlyInModel\"," +
+                           "\"ContainedNavProp@odata.associationLink\":\"http://example.com/read/ContainedNavProp/$ref\"," +
+                           "\"ContainedNavProp@odata.navigationLink\":\"http://example.com/read/ContainedNavProp\"," +
+                           "\"ContainedNonCollectionNavProp@odata.associationLink\":\"http://example.com/read/ContainedNonCollectionNavProp/$ref\"," +
+                           "\"ContainedNonCollectionNavProp@odata.navigationLink\":\"http://example.com/read/ContainedNonCollectionNavProp\"," +
+                           "\"AnotherContainedNavProp@odata.associationLink\":\"http://example.com/read/AnotherContainedNavProp/$ref\"," +
+                           "\"AnotherContainedNavProp@odata.navigationLink\":\"http://example.com/read/AnotherContainedNavProp\"," +
+                           "\"AnotherContainedNonCollectionNavProp@odata.associationLink\":\"http://example.com/read/AnotherContainedNonCollectionNavProp/$ref\"," +
+                           "\"AnotherContainedNonCollectionNavProp@odata.navigationLink\":\"http://example.com/read/AnotherContainedNonCollectionNavProp\"," +
+                           "\"UnknownNonCollectionNavProp@odata.associationLink\":\"http://example.com/read/UnknownNonCollectionNavProp/$ref\"," +
+                           "\"UnknownNonCollectionNavProp@odata.navigationLink\":\"http://example.com/read/UnknownNonCollectionNavProp\"," +
+                           "\"UnknownCollectionNavProp@odata.associationLink\":\"http://example.com/read/UnknownCollectionNavProp/$ref\"," +
+                           "\"UnknownCollectionNavProp@odata.navigationLink\":\"http://example.com/read/UnknownCollectionNavProp\"," +
+                           "\"#Action\":{\"title\":\"ActionTitle\",\"target\":\"http://example.com/DoAction\"}," +
+                           "\"#Namespace.AlwaysBindableAction1\":{\"title\":\"Namespace.AlwaysBindableAction1\",\"target\":\"http://example.com/edit/Namespace.AlwaysBindableAction1\"}," +
+                           "\"#Namespace.AlwaysBindableAction2\":{\"title\":\"Namespace.AlwaysBindableAction2\",\"target\":\"http://example.com/edit/Namespace.AlwaysBindableAction2\"}," +
+                           "\"#Function\":{\"title\":\"FunctionTitle\",\"target\":\"http://example.com/DoFunction\"}," +
+                           "\"#Namespace.AlwaysBindableFunction1\":{\"title\":\"Namespace.AlwaysBindableFunction1\",\"target\":\"http://example.com/edit/Namespace.AlwaysBindableFunction1\"}," +
+                           "\"#Namespace.AlwaysBindableFunction2\":{\"title\":\"Namespace.AlwaysBindableFunction2\",\"target\":\"http://example.com/edit/Namespace.AlwaysBindableFunction2\"}," +
+                           "\"#Namespace.Function3\":{\"title\":\"Namespace.Function3\",\"target\":\"http://example.com/edit/Namespace.Function3\"}" +
+                           "}";
+
+        const string expectedPayloadWithFullMetadataODataSimplified = "{" +
+                           "\"@context\":\"http://example.com/$metadata#EntitySet/$entity\"," +
+                           "\"@id\":\"http://example.com/id\"," +
+                           "\"@etag\":\"etag\"," +
+                           "\"@editLink\":\"http://example.com/edit\"," +
+                           "\"@readLink\":\"http://example.com/read\"," +
+                           "\"@mediaEditLink\":\"http://example.com/mr/edit\"," +
+                           "\"@mediaReadLink\":\"http://example.com/mr/read\"," +
+                           "\"@mediaContentType\":\"image/png\"," +
+                           "\"@mediaEtag\":\"mr etag\"," +
+                           "\"ID\":123," +
+                           "\"StreamProp1@mediaEditLink\":\"http://example.com/stream/edit\"," +
+                           "\"StreamProp1@mediaReadLink\":\"http://example.com/stream/read\"," +
+                           "\"StreamProp1@mediaContentType\":\"image/jpeg\"," +
+                           "\"StreamProp1@mediaEtag\":\"stream etag\"," +
+                           "\"StreamProp2@mediaEditLink\":\"http://example.com/edit/StreamProp2\"," +
+                           "\"StreamProp2@mediaReadLink\":\"http://example.com/read/StreamProp2\"," +
+                           "\"DeferredNavLink@associationLink\":\"http://example.com/association\"," +
+                           "\"DeferredNavLink@navigationLink\":\"http://example.com/navigation\"," +
+                           "\"ExpandedNavLink@associationLink\":\"http://example.com/expanded/association\"," +
+                           "\"ExpandedNavLink@navigationLink\":\"http://example.com/expanded/navigation\"," +
+                           "\"ExpandedNavLink\":[]," +
+                           "\"NavLinkDeclaredOnlyInModel@associationLink\":\"http://example.com/read/NavLinkDeclaredOnlyInModel/$ref\"," +
+                           "\"NavLinkDeclaredOnlyInModel@navigationLink\":\"http://example.com/read/NavLinkDeclaredOnlyInModel\"," +
+                           "\"ContainedNavProp@associationLink\":\"http://example.com/read/ContainedNavProp/$ref\"," +
+                           "\"ContainedNavProp@navigationLink\":\"http://example.com/read/ContainedNavProp\"," +
+                           "\"ContainedNonCollectionNavProp@associationLink\":\"http://example.com/read/ContainedNonCollectionNavProp/$ref\"," +
+                           "\"ContainedNonCollectionNavProp@navigationLink\":\"http://example.com/read/ContainedNonCollectionNavProp\"," +
+                           "\"AnotherContainedNavProp@associationLink\":\"http://example.com/read/AnotherContainedNavProp/$ref\"," +
+                           "\"AnotherContainedNavProp@navigationLink\":\"http://example.com/read/AnotherContainedNavProp\"," +
+                           "\"AnotherContainedNonCollectionNavProp@associationLink\":\"http://example.com/read/AnotherContainedNonCollectionNavProp/$ref\"," +
+                           "\"AnotherContainedNonCollectionNavProp@navigationLink\":\"http://example.com/read/AnotherContainedNonCollectionNavProp\"," +
+                           "\"UnknownNonCollectionNavProp@associationLink\":\"http://example.com/read/UnknownNonCollectionNavProp/$ref\"," +
+                           "\"UnknownNonCollectionNavProp@navigationLink\":\"http://example.com/read/UnknownNonCollectionNavProp\"," +
+                           "\"UnknownCollectionNavProp@associationLink\":\"http://example.com/read/UnknownCollectionNavProp/$ref\"," +
+                           "\"UnknownCollectionNavProp@navigationLink\":\"http://example.com/read/UnknownCollectionNavProp\"," +
+                           "\"#Action\":{\"title\":\"ActionTitle\",\"target\":\"http://example.com/DoAction\"}," +
+                           "\"#Namespace.AlwaysBindableAction1\":{\"title\":\"Namespace.AlwaysBindableAction1\",\"target\":\"http://example.com/edit/Namespace.AlwaysBindableAction1\"}," +
+                           "\"#Namespace.AlwaysBindableAction2\":{\"title\":\"Namespace.AlwaysBindableAction2\",\"target\":\"http://example.com/edit/Namespace.AlwaysBindableAction2\"}," +
+                           "\"#Function\":{\"title\":\"FunctionTitle\",\"target\":\"http://example.com/DoFunction\"}," +
+                           "\"#Namespace.AlwaysBindableFunction1\":{\"title\":\"Namespace.AlwaysBindableFunction1\",\"target\":\"http://example.com/edit/Namespace.AlwaysBindableFunction1\"}," +
+                           "\"#Namespace.AlwaysBindableFunction2\":{\"title\":\"Namespace.AlwaysBindableFunction2\",\"target\":\"http://example.com/edit/Namespace.AlwaysBindableFunction2\"}," +
+                           "\"#Namespace.Function3\":{\"title\":\"Namespace.Function3\",\"target\":\"http://example.com/edit/Namespace.Function3\"}" +
+                           "}";
+
         private const string PayloadWithAllMetadataODataSimplified =
             "{" +
             "\"@context\":\"http://example.com/$metadata#EntitySet/$entity\"," +
@@ -420,7 +510,6 @@ namespace Microsoft.OData.Tests.IntegrationTests.Evaluation
                 {
                     ServiceRoot = new Uri("http://svc/")
                 },
-                AutoComputePayloadMetadata = true
             };
             var writer = new ODataMessageWriter((IODataResponseMessage)message, settings, model);
 
@@ -519,7 +608,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Evaluation
         public void WritingSimplifiedODataAnnotationsInFullMetadataMode()
         {
             GetWriterOutputForEntryWithPayloadMetadata("application/json;odata.metadata=full", false, enableWritingODataAnnotationWithoutPrefix: true)
-                .Should().Be(PayloadWithAllMetadataODataSimplified);
+                .Should().Be(expectedPayloadWithFullMetadataODataSimplified);
         }
 
         [Fact]
@@ -533,7 +622,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Evaluation
         public void WritingInNoMetadataModeShouldNotStripPayloadMetadataIfAutoComputePayloadMetadataInJsonIsFalse()
         {
             GetWriterOutputForEntryWithPayloadMetadata("application/json;odata.metadata=none", false)
-                .Should().Be(PayloadWithAllMetadataExceptODataDotContext);
+                .Should().Be(PayloadWithNoMetadata);
         }
 
         [Fact]
@@ -554,59 +643,14 @@ namespace Microsoft.OData.Tests.IntegrationTests.Evaluation
         public void WritingInFullMetadataModeShouldNotStripPayloadMetadataIfAutoComputePayloadMetadataInJsonIsFalse()
         {
             GetWriterOutputForEntryWithPayloadMetadata("application/json;odata.metadata=full", false)
-                .Should().Be(PayloadWithAllMetadata);
+                .Should().Be(expectedPayloadWithFullMetadata);
         }
 
         [Fact]
         public void WritingInFullMetadataModeShouldNotStripPayloadMetadataAndShouldWriteMissingMetadataIfAutoComputePayloadMetadataInJsonIsTrue()
         {
-            const string expectedPayload = "{" +
-                               "\"@odata.context\":\"http://example.com/$metadata#EntitySet/$entity\"," +
-                               "\"@odata.id\":\"http://example.com/id\"," +
-                               "\"@odata.etag\":\"etag\"," +
-                               "\"@odata.editLink\":\"http://example.com/edit\"," +
-                               "\"@odata.readLink\":\"http://example.com/read\"," +
-                               "\"@odata.mediaEditLink\":\"http://example.com/mr/edit\"," +
-                               "\"@odata.mediaReadLink\":\"http://example.com/mr/read\"," +
-                               "\"@odata.mediaContentType\":\"image/png\"," +
-                               "\"@odata.mediaEtag\":\"mr etag\"," +
-                               "\"ID\":123," +
-                               "\"StreamProp1@odata.mediaEditLink\":\"http://example.com/stream/edit\"," +
-                               "\"StreamProp1@odata.mediaReadLink\":\"http://example.com/stream/read\"," +
-                               "\"StreamProp1@odata.mediaContentType\":\"image/jpeg\"," +
-                               "\"StreamProp1@odata.mediaEtag\":\"stream etag\"," +
-                               "\"StreamProp2@odata.mediaEditLink\":\"http://example.com/edit/StreamProp2\"," +
-                               "\"StreamProp2@odata.mediaReadLink\":\"http://example.com/read/StreamProp2\"," +
-                               "\"DeferredNavLink@odata.associationLink\":\"http://example.com/association\"," +
-                               "\"DeferredNavLink@odata.navigationLink\":\"http://example.com/navigation\"," +
-                               "\"ExpandedNavLink@odata.associationLink\":\"http://example.com/expanded/association\"," +
-                               "\"ExpandedNavLink@odata.navigationLink\":\"http://example.com/expanded/navigation\"," +
-                               "\"ExpandedNavLink\":[]," +
-                               "\"NavLinkDeclaredOnlyInModel@odata.associationLink\":\"http://example.com/read/NavLinkDeclaredOnlyInModel/$ref\"," +
-                               "\"NavLinkDeclaredOnlyInModel@odata.navigationLink\":\"http://example.com/read/NavLinkDeclaredOnlyInModel\"," +
-                               "\"ContainedNavProp@odata.associationLink\":\"http://example.com/read/ContainedNavProp/$ref\"," +
-                               "\"ContainedNavProp@odata.navigationLink\":\"http://example.com/read/ContainedNavProp\"," +
-                               "\"ContainedNonCollectionNavProp@odata.associationLink\":\"http://example.com/read/ContainedNonCollectionNavProp/$ref\"," +
-                               "\"ContainedNonCollectionNavProp@odata.navigationLink\":\"http://example.com/read/ContainedNonCollectionNavProp\"," +
-                               "\"AnotherContainedNavProp@odata.associationLink\":\"http://example.com/read/AnotherContainedNavProp/$ref\"," +
-                               "\"AnotherContainedNavProp@odata.navigationLink\":\"http://example.com/read/AnotherContainedNavProp\"," +
-                               "\"AnotherContainedNonCollectionNavProp@odata.associationLink\":\"http://example.com/read/AnotherContainedNonCollectionNavProp/$ref\"," +
-                               "\"AnotherContainedNonCollectionNavProp@odata.navigationLink\":\"http://example.com/read/AnotherContainedNonCollectionNavProp\"," +
-                               "\"UnknownNonCollectionNavProp@odata.associationLink\":\"http://example.com/read/UnknownNonCollectionNavProp/$ref\"," +
-                               "\"UnknownNonCollectionNavProp@odata.navigationLink\":\"http://example.com/read/UnknownNonCollectionNavProp\"," +
-                               "\"UnknownCollectionNavProp@odata.associationLink\":\"http://example.com/read/UnknownCollectionNavProp/$ref\"," +
-                               "\"UnknownCollectionNavProp@odata.navigationLink\":\"http://example.com/read/UnknownCollectionNavProp\"," +
-                               "\"#Action\":{\"title\":\"ActionTitle\",\"target\":\"http://example.com/DoAction\"}," +
-                               "\"#Namespace.AlwaysBindableAction1\":{\"title\":\"Namespace.AlwaysBindableAction1\",\"target\":\"http://example.com/edit/Namespace.AlwaysBindableAction1\"}," +
-                               "\"#Namespace.AlwaysBindableAction2\":{\"title\":\"Namespace.AlwaysBindableAction2\",\"target\":\"http://example.com/edit/Namespace.AlwaysBindableAction2\"}," +
-                               "\"#Function\":{\"title\":\"FunctionTitle\",\"target\":\"http://example.com/DoFunction\"}," +
-                               "\"#Namespace.AlwaysBindableFunction1\":{\"title\":\"Namespace.AlwaysBindableFunction1\",\"target\":\"http://example.com/edit/Namespace.AlwaysBindableFunction1\"}," +
-                               "\"#Namespace.AlwaysBindableFunction2\":{\"title\":\"Namespace.AlwaysBindableFunction2\",\"target\":\"http://example.com/edit/Namespace.AlwaysBindableFunction2\"}," +
-                               "\"#Namespace.Function3\":{\"title\":\"Namespace.Function3\",\"target\":\"http://example.com/edit/Namespace.Function3\"}" +
-                               "}";
-
             var actualPayload = GetWriterOutputForEntryWithPayloadMetadata("application/json;odata.metadata=full", true);
-            actualPayload.Should().Be(expectedPayload);
+            actualPayload.Should().Be(expectedPayloadWithFullMetadata);
         }
 
         [Fact]
@@ -2146,11 +2190,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Evaluation
             IODataResponseMessage message = new InMemoryMessage() { Stream = outputStream, Container = container };
 
             message.SetHeader("Content-Type", contentType);
-            ODataMessageWriterSettings settings = new ODataMessageWriterSettings()
-            {
-                AutoComputePayloadMetadata = autoComputePayloadMetadata,
-            };
-
+            ODataMessageWriterSettings settings = new ODataMessageWriterSettings();
             var result = new ODataQueryOptionParser(edmModel, edmEntityType, edmEntitySet, new Dictionary<string, string> { { "$select", selectClause }, { "$expand", expandClause } }).ParseSelectAndExpand();
 
             ODataUri odataUri = new ODataUri()

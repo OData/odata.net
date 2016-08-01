@@ -149,12 +149,6 @@ namespace Microsoft.OData.Tests
         }
 
         [Fact]
-        public void AutoComputePayloadMetadataShouldBeFalseByDefault()
-        {
-            this.settings.AutoComputePayloadMetadata.Should().BeFalse();
-        }
-
-        [Fact]
         public void ODataUriShouldBeNotNullByDefault()
         {
             this.settings.ODataUri.Should().NotBeNull();
@@ -271,13 +265,6 @@ namespace Microsoft.OData.Tests
         }
 
         [Fact]
-        public void CopyConstructorShouldCopyAutoComputePayloadMetadata()
-        {
-            this.settings.AutoComputePayloadMetadata = true;
-            this.settings.Clone().AutoComputePayloadMetadata.Should().BeTrue();
-        }
-
-        [Fact]
         public void CopyConstructorShouldCopyServiceDocument()
         {
             this.settings.SetServiceDocumentUri(new Uri("http://test.org"));
@@ -331,8 +318,7 @@ namespace Microsoft.OData.Tests
 
             this.settings = new ODataMessageWriterSettings()
             {
-                Validations = ~ValidationKinds.ThrowOnDuplicatePropertyNames,               
-                AutoComputePayloadMetadata = true,
+                Validations = ~ValidationKinds.ThrowOnDuplicatePropertyNames,
                 BaseUri = baseUri,
                 EnableCharactersCheck = true,
                 EnableMessageStreamDisposal = false,
@@ -346,7 +332,6 @@ namespace Microsoft.OData.Tests
             };
 
             this.settings.ThrowOnDuplicatePropertyNames.Should().BeFalse();
-            this.settings.AutoComputePayloadMetadata.Should().BeTrue();
             this.settings.BaseUri.Should().BeSameAs(baseUri);
             this.settings.EnableCharactersCheck.Should().BeTrue();
             this.settings.EnableMessageStreamDisposal.Should().BeFalse();

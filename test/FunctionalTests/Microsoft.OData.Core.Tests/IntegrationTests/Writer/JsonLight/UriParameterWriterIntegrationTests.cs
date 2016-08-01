@@ -477,7 +477,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Writer.JsonLight
             using (MemoryStream stream = new MemoryStream())
             {
                 var message = new InMemoryMessage { Stream = stream };
-                var settings = new ODataMessageWriterSettings { Version = ODataVersion.V4, AutoComputePayloadMetadata = true};
+                var settings = new ODataMessageWriterSettings { Version = ODataVersion.V4 };
 
                 using (ODataMessageWriter messageWriter = new ODataMessageWriter((IODataRequestMessage)message, settings, withModel ? model : null))
                 {
@@ -521,7 +521,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Writer.JsonLight
         {
             odataWriter.WriteStart(nestedResourceInfo.NestedResourceInfo);
             var nestedResource = nestedResourceInfo.nestedResource;
-            if ( nestedResource!= null)
+            if (nestedResource != null)
             {
                 if (nestedResource is ResourceWrapper)
                 {
@@ -553,7 +553,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Writer.JsonLight
 
         public class ItemWrapper
         {
-            public virtual ODataItem CurrentItem {get;set;}
+            public virtual ODataItem CurrentItem { get; set; }
         }
 
         public class ResourceSetWrapper : ItemWrapper

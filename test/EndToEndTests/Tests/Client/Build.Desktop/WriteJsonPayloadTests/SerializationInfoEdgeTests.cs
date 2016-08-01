@@ -177,10 +177,14 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
                     odataWriter.WriteEnd();
                     Stream stream = responseMessageWithoutModel.GetStream();
                     string result = WritePayloadHelper.ReadStreamContent(stream);
-                    Assert.IsTrue(result.Contains(NameSpace + "Employee"));
                     if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
                     {
+                        Assert.IsTrue(result.Contains(NameSpace + "Employee"));
                         Assert.IsTrue(result.Contains("$metadata#Person"));
+                    }
+                    else
+                    {
+                        Assert.IsFalse(result.Contains(NameSpace + "Employee"));
                     }
                 }
             }
@@ -261,11 +265,17 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
                     });
                     ODataWriterHelper.WriteResourceSet(odataWriter, complexCollection);
                     var result = WritePayloadHelper.ReadStreamContent(responseMessageWithoutModel.GetStream());
-                    Assert.IsTrue(result.Contains("\"value\":[{\"@odata.type\":\"#Microsoft.Test.OData.Services.AstoriaDefaultService.ContactDetails\",\"EmailBag\":["));
                     if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
                     {
+                        // [{"@odata.type":"#Microsoft.Test.OData.Services.AstoriaDefaultService.ContactDetails","EmailBag@odata.type":"#Collection(String)"...
+                        Assert.IsTrue(result.Contains("\"value\":[{\"@odata.type\":\"#Microsoft.Test.OData.Services.AstoriaDefaultService.ContactDetails\",\"EmailBag"));
+
                         // no metadata does not write odata.metadata
                         Assert.IsTrue(result.Contains("$metadata#Collection(" + NameSpace + "ContactDETAIL)"));
+                    }
+                    else
+                    {
+                        Assert.IsFalse(result.Contains("\"@odata.type\":\"#Microsoft.Test.OData.Services.AstoriaDefaultService.ContactDetails\""));
                     }
                 }
 
@@ -326,7 +336,6 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
                 {
                     var settings = new ODataMessageWriterSettings();
                     settings.ODataUri = new ODataUri() { ServiceRoot = this.ServiceUri };
-                    settings.AutoComputePayloadMetadata = autoComputeMetadata;
 
                     var responseMessageWithoutModel = new StreamResponseMessage(new MemoryStream());
                     responseMessageWithoutModel.SetHeader("Content-Type", mimeType);

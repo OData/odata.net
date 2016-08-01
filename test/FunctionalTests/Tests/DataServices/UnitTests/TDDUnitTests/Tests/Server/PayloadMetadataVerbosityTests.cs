@@ -1069,11 +1069,13 @@ namespace AstoriaUnitTests.TDD.Tests.Server
                             "\"DynamicPrimitive\":3," +
                             "\"DynamicNull\":null," +
                             "\"Complex\":{}," +
-                            "\"DynamicComplex\":{}," +
-                            "\"#Action\":" +
+                            "\"DynamicComplex\":{}" +
+                            (noMetadata
+                            ? "" :
+                            ",\"#Action\":" +
                                 "{" +
                                     "\"target\":\"http://real.org/Action\"" +
-                                "}" +
+                                "}") +
                         "}" +
                     "]" +
                 "}";

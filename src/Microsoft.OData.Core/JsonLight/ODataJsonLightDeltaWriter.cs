@@ -749,7 +749,7 @@ namespace Microsoft.OData.JsonLight
         /// <param name="entityType">The entity type of the resource.</param>
         private void ValidateEntryMediaResource(ODataResource resource, IEdmEntityType entityType)
         {
-            if (this.jsonLightOutputContext.MessageWriterSettings.AutoComputePayloadMetadata && this.jsonLightOutputContext.MetadataLevel is JsonNoMetadataLevel)
+            if (this.jsonLightOutputContext.MetadataLevel is JsonNoMetadataLevel)
             {
                 return;
             }
@@ -923,23 +923,20 @@ namespace Microsoft.OData.JsonLight
         /// <param name="resource">Resource to write.</param>
         private void PrepareResourceForWriteStart(ODataResource resource)
         {
-            if (this.jsonLightOutputContext.MessageWriterSettings.AutoComputePayloadMetadata)
-            {
-                DeltaResourceScope resourceScope = this.CurrentDeltaResourceScope;
-                Debug.Assert(resourceScope != null, "resourceScope != null");
+            DeltaResourceScope resourceScope = this.CurrentDeltaResourceScope;
+            Debug.Assert(resourceScope != null, "resourceScope != null");
 
-                ODataResourceMetadataBuilder builder = this.jsonLightOutputContext.MetadataLevel.CreateResourceMetadataBuilder(
-                    resource,
-                    resourceScope.GetOrCreateTypeContext(),
-                    resourceScope.SerializationInfo,
-                    resourceScope.ResourceType,
-                    resourceScope.SelectedProperties,
-                    /*writingResponse*/ true,
-                    this.jsonLightOutputContext.ODataSimplifiedOptions.EnableWritingKeyAsSegment,
-                    this.jsonLightOutputContext.MessageWriterSettings.ODataUri);
+            ODataResourceMetadataBuilder builder = this.jsonLightOutputContext.MetadataLevel.CreateResourceMetadataBuilder(
+                resource,
+                resourceScope.GetOrCreateTypeContext(),
+                resourceScope.SerializationInfo,
+                resourceScope.ResourceType,
+                resourceScope.SelectedProperties,
+                /*writingResponse*/ true,
+                this.jsonLightOutputContext.ODataSimplifiedOptions.EnableWritingKeyAsSegment,
+                this.jsonLightOutputContext.MessageWriterSettings.ODataUri);
 
-                this.jsonLightOutputContext.MetadataLevel.InjectMetadataBuilder(resource, builder);
-            }
+            this.jsonLightOutputContext.MetadataLevel.InjectMetadataBuilder(resource, builder);
         }
 
         /// <summary>

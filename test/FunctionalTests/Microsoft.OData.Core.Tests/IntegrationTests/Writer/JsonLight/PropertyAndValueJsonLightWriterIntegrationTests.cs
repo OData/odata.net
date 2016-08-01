@@ -466,7 +466,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Writer.JsonLight
         {
             var message = new InMemoryMessage() { Stream = new MemoryStream() };
 
-            var writerSettings = new ODataMessageWriterSettings { EnableMessageStreamDisposal = false, AutoComputePayloadMetadata = true };
+            var writerSettings = new ODataMessageWriterSettings { EnableMessageStreamDisposal = false };
             writerSettings.SetContentType(ODataFormat.Json);
             writerSettings.SetServiceDocumentUri(new Uri("http://www.example.com"));
             writerSettings.SetContentType(fullMetadata ?

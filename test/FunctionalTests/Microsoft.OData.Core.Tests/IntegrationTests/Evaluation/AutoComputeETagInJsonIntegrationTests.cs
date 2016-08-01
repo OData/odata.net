@@ -49,9 +49,9 @@ namespace Microsoft.OData.Tests.IntegrationTests.Evaluation
             {
                 Properties = new[]
                 {
-                    new ODataProperty {Name = "ID", Value = 123}, 
-                    new ODataProperty {Name = "Name", Value = "lucy"}, 
-                    new ODataProperty {Name = "Class", Value = 12306}, 
+                    new ODataProperty {Name = "ID", Value = 123},
+                    new ODataProperty {Name = "Name", Value = "lucy"},
+                    new ODataProperty {Name = "Class", Value = 12306},
                     new ODataProperty {Name = "Alias", Value = "lily"},
                 }
             };
@@ -98,11 +98,11 @@ namespace Microsoft.OData.Tests.IntegrationTests.Evaluation
             {
                 Properties = new[]
                 {
-                    new ODataProperty {Name = "ID", Value = 123}, 
-                    new ODataProperty {Name = "Name", Value = "lucy"}, 
-                    new ODataProperty {Name = "Class", Value = 12306}, 
+                    new ODataProperty {Name = "ID", Value = 123},
+                    new ODataProperty {Name = "Name", Value = "lucy"},
+                    new ODataProperty {Name = "Class", Value = 12306},
                     new ODataProperty {Name = "Alias", Value = "lily"},
-                    new ODataProperty {Name = "TeamSize", Value = 10}, 
+                    new ODataProperty {Name = "TeamSize", Value = 10},
                 }
             };
 
@@ -140,9 +140,9 @@ namespace Microsoft.OData.Tests.IntegrationTests.Evaluation
             {
                 Properties = new[]
                 {
-                    new ODataProperty {Name = "ID", Value = 123}, 
-                    new ODataProperty {Name = "Name", Value = "lucy"}, 
-                    new ODataProperty {Name = "Class", Value = 12306}, 
+                    new ODataProperty {Name = "ID", Value = 123},
+                    new ODataProperty {Name = "Name", Value = "lucy"},
+                    new ODataProperty {Name = "Class", Value = 12306},
                     new ODataProperty {Name = "Alias", Value = "lily"},
                 }
             };
@@ -190,8 +190,8 @@ namespace Microsoft.OData.Tests.IntegrationTests.Evaluation
             {
                 Properties = new[]
                 {
-                    new ODataProperty {Name = "ID", Value = 123}, 
-                    new ODataProperty {Name = "Name", Value = "lucy"}, 
+                    new ODataProperty {Name = "ID", Value = 123},
+                    new ODataProperty {Name = "Name", Value = "lucy"},
                 }
             };
 
@@ -204,10 +204,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Evaluation
             MemoryStream outputStream = new MemoryStream();
             IODataResponseMessage message = new InMemoryMessage() { Stream = outputStream };
             message.SetHeader("Content-Type", "application/json;odata.metadata=full");
-            ODataMessageWriterSettings settings = new ODataMessageWriterSettings()
-            {
-                AutoComputePayloadMetadata = true,
-            };
+            ODataMessageWriterSettings settings = new ODataMessageWriterSettings();
             settings.SetServiceDocumentUri(new Uri("http://example.com"));
 
             string output;

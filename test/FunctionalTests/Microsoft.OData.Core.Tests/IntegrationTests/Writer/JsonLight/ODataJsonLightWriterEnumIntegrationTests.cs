@@ -235,7 +235,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Writer.JsonLight
                 TypeName = "NS.MyEntityType",
                 Properties = new[]
                 {
-                    new ODataProperty{Name = "FloatId", Value = new ODataPrimitiveValue(12.3D)},       
+                    new ODataProperty{Name = "FloatId", Value = new ODataPrimitiveValue(12.3D)},
                     new ODataProperty{Name = "Color", Value = new ODataEnumValue(Color.Green.ToString())},
                     new ODataProperty
                     {
@@ -270,7 +270,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Writer.JsonLight
                 TypeName = "NS.MyEntityType",
                 Properties = new[]
                 {
-                    new ODataProperty{Name = "FloatId", Value = new ODataPrimitiveValue(12.3D)},       
+                    new ODataProperty{Name = "FloatId", Value = new ODataPrimitiveValue(12.3D)},
                     new ODataProperty{Name = "Color", Value = new ODataEnumValue(Color.Green.ToString())},
                     new ODataProperty
                     {
@@ -307,7 +307,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Writer.JsonLight
                 TypeName = "NS.MyEntityType",
                 Properties = new[]
                 {
-                    new ODataProperty{Name = "FloatId", Value = new ODataPrimitiveValue(12.3D)},       
+                    new ODataProperty{Name = "FloatId", Value = new ODataPrimitiveValue(12.3D)},
                     new ODataProperty{Name = "Color", Value = new ODataEnumValue(Color.Green.ToString())},
                     new ODataProperty
                     {
@@ -342,7 +342,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Writer.JsonLight
                 TypeName = "NS.MyEntityType",
                 Properties = new[]
                 {
-                    new ODataProperty{Name = "FloatId", Value = new ODataPrimitiveValue(12.3D)},       
+                    new ODataProperty{Name = "FloatId", Value = new ODataPrimitiveValue(12.3D)},
                     new ODataProperty{Name = "Color", Value = new ODataEnumValue(Color.Green.ToString())},
                     new ODataProperty
                     {
@@ -872,7 +872,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Writer.JsonLight
         {
             ODataCollectionStart collectionStart = new ODataCollectionStart();
             collectionStart.SetSerializationInfo(new ODataCollectionStartSerializationInfo { CollectionTypeName = "Collection(NS.ColorFlags)" });
-            ODataEnumValue[] items = new ODataEnumValue[] 
+            ODataEnumValue[] items = new ODataEnumValue[]
             {
                 new ODataEnumValue(ColorFlags.Red.ToString(), "NS.ColorFlags"),
                 new ODataEnumValue(null, "NS.ColorFlags_Undefined"),
@@ -903,7 +903,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Writer.JsonLight
 
         public void WriteToMessageWriterAndVerifyPayload(string contentType, Action<ODataMessageWriter, bool> writerAction, string expectedPayload)
         {
-            ODataMessageWriterSettings settings = new ODataMessageWriterSettings() { Version = ODataVersion.V4, AutoComputePayloadMetadata = true, EnableMessageStreamDisposal = false };
+            ODataMessageWriterSettings settings = new ODataMessageWriterSettings() { Version = ODataVersion.V4, EnableMessageStreamDisposal = false };
             settings.SetContentType(contentType, "utf-8");
             settings.SetServiceDocumentUri(this.serviceDocumentUri);
             // with model
@@ -1024,7 +1024,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Writer.JsonLight
 
         private static ODataJsonLightOutputContext CreateJsonLightOutputContext(MemoryStream stream, ODataMediaType mediaType, bool writingResponse = true, IEdmModel userModel = null, Uri serviceDocumentUri = null)
         {
-            var settings = new ODataMessageWriterSettings { Version = ODataVersion.V4, AutoComputePayloadMetadata = true };
+            var settings = new ODataMessageWriterSettings { Version = ODataVersion.V4 };
             if (serviceDocumentUri != null)
             {
                 settings.SetServiceDocumentUri(serviceDocumentUri);

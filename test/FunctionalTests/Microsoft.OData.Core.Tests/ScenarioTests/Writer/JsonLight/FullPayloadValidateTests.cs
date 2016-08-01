@@ -997,7 +997,6 @@ namespace Microsoft.OData.Tests.ScenarioTests.Writer.JsonLight
             ODataMessageWriterSettings settings = new ODataMessageWriterSettings()
             {
                 Validations = (enableBasicValidation ? ValidationKinds.All : ValidationKinds.None),
-                AutoComputePayloadMetadata = autoComputePayloadMetadata,
             };
 
             var result = new ODataQueryOptionParser(edmModel, edmEntityType, edmEntitySet, new Dictionary<string, string> { { "$expand", expandClause }, { "$select", selectClause } }).ParseSelectAndExpand();

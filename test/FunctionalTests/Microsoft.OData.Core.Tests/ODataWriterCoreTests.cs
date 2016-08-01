@@ -48,7 +48,6 @@ namespace Microsoft.OData.Tests
                     {
                         ServiceRoot = new Uri("http://svc/")
                     },
-                    AutoComputePayloadMetadata = true
                 };
                 var writer = new ODataMessageWriter((IODataResponseMessage)message, settings, model);
 
@@ -85,7 +84,6 @@ namespace Microsoft.OData.Tests
                     {
                         ServiceRoot = new Uri("http://svc/")
                     },
-                    AutoComputePayloadMetadata = true
                 };
                 var writer = new ODataMessageWriter((IODataResponseMessage)message, settings, model);
 

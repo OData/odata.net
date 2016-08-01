@@ -758,7 +758,7 @@ namespace Microsoft.OData
         {
             // No-op Atom and Verbose JSON. The JSON Light writer will override this method and inject the appropriate metadata builder
             // into the resource before writing.
-            // When we support AutoComputePayloadMetadata for all formats in the future, we can inject the metadata builder in here and
+            // Actually we can inject the metadata builder in here and
             // remove virtual from this method.
         }
 

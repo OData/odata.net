@@ -40,13 +40,7 @@ namespace Microsoft.OData.Tests.JsonLight
         [Fact]
         public void FullMetadataLevelShouldReturnFullMetadataTypeOracleWhenKnobIsSet()
         {
-            testSubject.GetTypeNameOracle( /*autoComputePayloadMetadata*/ true).Should().BeOfType<JsonFullMetadataTypeNameOracle>();
-        }
-
-        [Fact]
-        public void FullMetadataLevelShouldReturnMinimalMetadataTypeOracleWhenKnobIsOff()
-        {
-            testSubject.GetTypeNameOracle( /*autoComputePayloadMetadata*/ false).Should().BeOfType<JsonMinimalMetadataTypeNameOracle>();
+            testSubject.GetTypeNameOracle().Should().BeOfType<JsonFullMetadataTypeNameOracle>();
         }
 
         [Fact]

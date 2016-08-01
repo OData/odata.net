@@ -51,7 +51,7 @@ namespace Microsoft.OData.Tests
             ODataNestedResourceInfo complex2Info = new ODataNestedResourceInfo() { Name = "complexProp2" };
             ODataResource complex2 = new ODataResource() { Properties = new[] { new ODataProperty { Name = "Prop1", Value = "complexProp2" } } };
 
-            ODataNestedResourceInfo navOnComplexInfo = new ODataNestedResourceInfo() { Name = "CollectionOfNavOnComplex" , IsCollection = true };
+            ODataNestedResourceInfo navOnComplexInfo = new ODataNestedResourceInfo() { Name = "CollectionOfNavOnComplex", IsCollection = true };
 
             ODataResourceSet resourceSet = new ODataResourceSet();
             ODataResource navEntity1 = new ODataResource() { Properties = new[] { new ODataProperty { Name = "ID", Value = "NavEntity1" } } };
@@ -116,11 +116,15 @@ namespace Microsoft.OData.Tests
             ODataResource topEntity = new ODataResource() { Properties = new[] { new ODataProperty { Name = "ID", Value = "TopEntity" } } };
 
             ODataNestedResourceInfo complex1Info = new ODataNestedResourceInfo() { Name = "complexProp1" };
-            ODataResource complex1 = new ODataResource() { TypeName = "NS.DerivedComplexType", Properties = new[]
+            ODataResource complex1 = new ODataResource()
             {
-                new ODataProperty { Name = "Prop1", Value = "complexProp1" }, 
+                TypeName = "NS.DerivedComplexType",
+                Properties = new[]
+            {
+                new ODataProperty { Name = "Prop1", Value = "complexProp1" },
                 new ODataProperty { Name = "DerivedProp", Value = "DerivedComplexProp" }
-            } };
+            }
+            };
 
             ODataNestedResourceInfo navOnComplexInfo = new ODataNestedResourceInfo() { Name = "CollectionOfNavOnComplex", IsCollection = true };
 
@@ -452,7 +456,7 @@ namespace Microsoft.OData.Tests
             var stream = new MemoryStream();
             var message = new InMemoryMessage { Stream = stream };
 
-            var settings = new ODataMessageWriterSettings { Version = ODataVersion.V4, AutoComputePayloadMetadata = true };
+            var settings = new ODataMessageWriterSettings { Version = ODataVersion.V4 };
             var odataUri = new ODataUri { ServiceRoot = ServiceRoot };
             odataUri.Path = new ODataUriParser(model, ServiceRoot, new Uri(ServiceRoot + "/EntitySet")).ParsePath();
             settings.ODataUri = odataUri;

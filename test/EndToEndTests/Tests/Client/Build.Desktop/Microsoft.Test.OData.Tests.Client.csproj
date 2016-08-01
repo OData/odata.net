@@ -201,7 +201,6 @@
     <Compile Include="TypeDefinitionTests\TypeDefinitionTests.cs" />
     <Compile Include="UriBuilderTests\UriBuilderTests.cs" />
     <Compile Include="UrlModifyingTests\UrlModifyingTests.cs" />
-    <Compile Include="WriteJsonPayloadTests\AutoComputePayloadMetadataInJsonTests.cs" />
     <Compile Include="WriteJsonPayloadTests\JsonLightConstants.cs" />
     <Compile Include="WriteJsonPayloadTests\VerifyPayloadHelper.cs" />
     <Compile Include="WriteJsonPayloadTests\SerializationInfoEdgeTests.cs" />

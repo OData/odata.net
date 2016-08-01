@@ -29,9 +29,8 @@ namespace Microsoft.OData.JsonLight
         /// <summary>
         /// Returns the oracle to use when determing the type name to write for entries and values.
         /// </summary>
-        /// <param name="autoComputePayloadMetadata">Not used in this implementation of the abstract method.</param>
         /// <returns>An oracle that can be queried to determine the type name to write.</returns>
-        internal override JsonLightTypeNameOracle GetTypeNameOracle(bool autoComputePayloadMetadata)
+        internal override JsonLightTypeNameOracle GetTypeNameOracle()
         {
             return new JsonMinimalMetadataTypeNameOracle();
         }

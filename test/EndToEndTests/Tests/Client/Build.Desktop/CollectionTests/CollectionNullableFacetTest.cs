@@ -75,8 +75,6 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
         {
             var settings = new ODataMessageWriterSettings();
             settings.BaseUri = ServiceBaseUri;
-            settings.AutoComputePayloadMetadata = true;
-
             var customerType = Model.FindDeclaredType(NameSpacePrefix + "Customer") as IEdmEntityType;
             var customerSet = Model.EntityContainer.FindEntitySet("Customers");
 

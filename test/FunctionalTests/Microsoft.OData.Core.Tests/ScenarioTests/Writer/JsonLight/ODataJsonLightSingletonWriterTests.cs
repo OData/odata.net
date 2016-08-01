@@ -49,7 +49,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Writer.JsonLight
             entry.Properties = new[]
             {
                 new ODataProperty {Name = "WebId", Value = 10},
-                new ODataProperty {Name = "Name", Value = "SingletonWeb" }, 
+                new ODataProperty {Name = "Name", Value = "SingletonWeb" },
             };
             const string expectedPayload = "{" +
                 "\"@odata.context\":\"http://odata.org/test/$metadata#MySingleton\"," +
@@ -183,15 +183,15 @@ namespace Microsoft.OData.Tests.ScenarioTests.Writer.JsonLight
             var entry = new ODataResource { TypeName = "NS.Web" };
             entry.Properties = new[]
             {
-                new ODataProperty { 
-                    Name = "Logo", 
+                new ODataProperty {
+                    Name = "Logo",
                     Value = new ODataStreamReferenceValue()
                     {
-                        ContentType = "image/jpeg", 
+                        ContentType = "image/jpeg",
                         EditLink = new Uri("http://example.com/stream/edit"),
                         ReadLink = new Uri("http://example.com/stream/read"),
                         ETag = "stream etag"
-                    } 
+                    }
                 }
             };
             const string expectedPayload = "{" +
@@ -333,7 +333,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Writer.JsonLight
                 Model = userModel ?? EdmCoreModel.Instance
             };
 
-            var settings = new ODataMessageWriterSettings { Version = ODataVersion.V4, AutoComputePayloadMetadata = true, ShouldIncludeAnnotation = ODataUtils.CreateAnnotationFilter("*") };
+            var settings = new ODataMessageWriterSettings { Version = ODataVersion.V4, ShouldIncludeAnnotation = ODataUtils.CreateAnnotationFilter("*") };
             if (serviceDocumentUri != null)
             {
                 settings.SetServiceDocumentUri(serviceDocumentUri);
