@@ -234,43 +234,44 @@ namespace System.Data.Services.Client
                 new string[] { XmlConstants.HttpRequestAccept } /*headersToReset*/,
                 null /*descriptor*/);
 
-            response = new QueryResult(this, Util.ExecuteMethodName, serviceRequest, request, new RequestInfo(context), null, null);
-
-            try
+            using (response = new QueryResult(this, Util.ExecuteMethodName, serviceRequest, request, new RequestInfo(context), null, null))
             {
-                response.ExecuteQuery();
-
-                if (HttpStatusCode.NoContent != response.StatusCode)
+                try
                 {
-                    StreamReader sr = new StreamReader(response.GetResponseStream());
-                    long r = -1;
-                    try
+                    response.ExecuteQuery();
+
+                    if (HttpStatusCode.NoContent != response.StatusCode)
                     {
-                        r = XmlConvert.ToInt64(sr.ReadToEnd());
+                        StreamReader sr = new StreamReader(response.GetResponseStream());
+                        long r = -1;
+                        try
+                        {
+                            r = XmlConvert.ToInt64(sr.ReadToEnd());
+                        }
+                        finally
+                        {
+                            sr.Close();
+                        }
+
+                        return r;
                     }
-                    finally
+                    else
                     {
-                        sr.Close();
+                        throw new DataServiceQueryException(Strings.DataServiceRequest_FailGetCount, response.Failure);
+                    }
+                }
+                catch (InvalidOperationException ex)
+                {
+                    QueryOperationResponse operationResponse = null;
+                    operationResponse = response.GetResponse<long>(MaterializeAtom.EmptyResults);
+                    if (null != operationResponse)
+                    {
+                        operationResponse.Error = ex;
+                        throw new DataServiceQueryException(Strings.DataServiceException_GeneralError, ex, operationResponse);
                     }
 
-                    return r;
+                    throw;
                 }
-                else
-                {
-                    throw new DataServiceQueryException(Strings.DataServiceRequest_FailGetCount, response.Failure);
-                }
-            }
-            catch (InvalidOperationException ex)
-            {
-                QueryOperationResponse operationResponse = null;
-                operationResponse = response.GetResponse<long>(MaterializeAtom.EmptyResults);
-                if (null != operationResponse)
-                {
-                    operationResponse.Error = ex;
-                    throw new DataServiceQueryException(Strings.DataServiceException_GeneralError, ex, operationResponse);
-                }
-
-                throw;
             }
         }
 #endif

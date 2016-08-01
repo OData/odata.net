@@ -36,7 +36,7 @@ namespace System.Data.Services.Client
     /// <summary>
     /// Wrapper HttpWebRequest &amp; HttWebResponse
     /// </summary>
-    internal class QueryResult : BaseAsyncResult
+    internal class QueryResult : BaseAsyncResult, IDisposable
     {
         /// <summary>Originating service request</summary>
         internal readonly DataServiceRequest ServiceRequest;
@@ -259,30 +259,10 @@ namespace System.Data.Services.Client
 
                 if (HttpStatusCode.NoContent != this.StatusCode)
                 {
-                    using (Stream stream = this.responseMessage.GetStream())
+                    Stream stream = this.responseMessage.GetStream();
+                    if (null != stream)
                     {
-                        if (null != stream)
-                        {
-                            Stream copy = this.GetAsyncResponseStreamCopy();
-                            this.outputResponseStream = copy;
-
-                            Byte[] buffer = this.GetAsyncResponseStreamCopyBuffer();
-
-                            long copied = WebUtil.CopyStream(stream, copy, ref buffer);
-                            if (this.responseStreamOwner)
-                            {
-                                if (0 == copied)
-                                {
-                                    this.outputResponseStream = null;
-                                }
-                                else if (copy.Position < copy.Length)
-                                {   // In Silverlight, generally 3 bytes less than advertised by ContentLength are read
-                                    ((MemoryStream)copy).SetLength(copy.Position);
-                                }
-                            }
-
-                            this.PutAsyncResponseStreamCopyBuffer(buffer);
-                        }
+                        this.outputResponseStream = stream;
                     }
                 }
             }
@@ -400,9 +380,6 @@ namespace System.Data.Services.Client
             Debug.Assert(null != this.responseMessage || null != this.Failure || this.IsAborted, "should have response or exception");
             if (null != this.responseMessage)
             {
-                // we've cached off what we need, headers still accessible after close
-                WebUtil.DisposeMessage(this.responseMessage);
-
                 Version responseVersion;
                 Exception ex = SaveResult.HandleResponse(
                     this.RequestInfo,
@@ -730,7 +707,8 @@ namespace System.Data.Services.Client
             var responseMessageWrapper = new HttpWebResponseMessage(
                 new HeaderCollection(this.responseMessage),
                 this.responseMessage.StatusCode,
-                this.GetResponseStream);
+                this.GetResponseStream,
+                this.responseMessage); // The responseMessage will now be disposed later when enumeration has finished.
 
             return DataServiceRequest.Materialize(
                 this.responseInfo,
@@ -739,6 +717,21 @@ namespace System.Data.Services.Client
                 this.ContentType,
                 responseMessageWrapper,
                 payloadKind);
+        }
+
+        // $count queries need a way to dispose responseMessage as no enummeration occurs.
+        public void Dispose()
+        {
+            this.Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing && this.responseMessage != null)
+            {
+                WebUtil.DisposeMessage(this.responseMessage);
+            }
         }
     }
 }

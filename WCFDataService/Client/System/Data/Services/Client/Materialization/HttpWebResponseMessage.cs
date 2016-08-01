@@ -47,6 +47,7 @@ namespace System.Data.Services.Client
         /// <summary>HttpWebResponse instance.</summary>
         private HttpWebResponse httpWebResponse;
 
+        private IODataResponseMessage underlyingResponseMessage;
 #if DEBUG
         /// <summary>set to true once the GetStream was called.</summary>
         private bool streamReturned;
@@ -87,7 +88,7 @@ namespace System.Data.Services.Client
         /// <param name="headers">The headers.</param>
         /// <param name="statusCode">The status code.</param>
         /// <param name="getResponseStream">A function returning the response stream.</param>
-        internal HttpWebResponseMessage(HeaderCollection headers, int statusCode, Func<Stream> getResponseStream)
+        internal HttpWebResponseMessage(HeaderCollection headers, int statusCode, Func<Stream> getResponseStream, IODataResponseMessage underlyingResponseMessage)
         {
             Debug.Assert(headers != null, "headers != null");
             Debug.Assert(getResponseStream != null, "getResponseStream != null");
@@ -95,6 +96,7 @@ namespace System.Data.Services.Client
             this.headers = headers;
             this.statusCode = statusCode;
             this.getResponseStream = getResponseStream;
+            this.underlyingResponseMessage = underlyingResponseMessage;
         }
 
         /// <summary>
@@ -203,6 +205,11 @@ namespace System.Data.Services.Client
             if (response != null)
             {
                 ((IDisposable)response).Dispose();
+            }
+            else if (underlyingResponseMessage != null)
+            {
+                // we've cached off what we need, headers still accessible after close
+                WebUtil.DisposeMessage(this.underlyingResponseMessage);
             }
         }
     }

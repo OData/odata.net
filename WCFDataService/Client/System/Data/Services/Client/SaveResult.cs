@@ -920,7 +920,8 @@ namespace System.Data.Services.Client
                         var responseMessageWrapper = new HttpWebResponseMessage(
                             headers,
                             responseMsg.StatusCode,
-                            () => responseStream);
+                            () => responseStream,
+                            null /*For now we only read directly from http response stream sync QueryReponse*/);
                         
                         entry = ODataReaderEntityMaterializer.ParseSingleEntityPayload(responseMessageWrapper, responseInfo, entityDescriptor.Entity.GetType());
                         entityDescriptor.TransientEntityDescriptor = entry.EntityDescriptor;

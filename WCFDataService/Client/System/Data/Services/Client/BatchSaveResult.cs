@@ -477,7 +477,7 @@ namespace System.Data.Services.Client
                 }
 
                 // Create the message and the message reader.
-                this.batchResponseMessage = new HttpWebResponseMessage(new HeaderCollection(this.batchResponseMessage), this.batchResponseMessage.StatusCode, getResponseStream);
+                this.batchResponseMessage = new HttpWebResponseMessage(new HeaderCollection(this.batchResponseMessage), this.batchResponseMessage.StatusCode, getResponseStream, null /*For now we only read directly from http response stream sync QueryReponse*/);
                 ODataMessageReaderSettings messageReaderSettings = this.RequestInfo.GetDeserializationInfo(/*mergeOption*/ null).ReadHelper.CreateSettings(null);
 
                 // No need to pass in any model to the batch reader.
@@ -997,7 +997,7 @@ namespace System.Data.Services.Client
             {
                 return this.HasEmptyContent
                     ? null
-                    : new HttpWebResponseMessage(this.headers, (int)this.statusCode, () => this.contentStream);
+                    : new HttpWebResponseMessage(this.headers, (int)this.statusCode, () => this.contentStream, null /*For now we only read directly from http response stream sync QueryReponse*/);
             }
         }
     }
