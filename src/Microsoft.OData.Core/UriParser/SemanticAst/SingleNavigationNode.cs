@@ -70,7 +70,6 @@ namespace Microsoft.OData.UriParser
         /// <exception cref="ArgumentException">Throws if the input navigationProperty targets more than one entity.</exception>
         internal SingleNavigationNode(IEdmNavigationSource navigationSource, IEdmNavigationProperty navigationProperty, IEdmPathExpression bindingPath)
         {
-            ExceptionUtils.CheckArgumentNotNull(bindingPath, "bindingPath");
             ExceptionUtils.CheckArgumentNotNull(navigationProperty, "navigationProperty");
 
             EdmMultiplicity multiplicity = navigationProperty.TargetMultiplicity();

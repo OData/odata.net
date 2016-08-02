@@ -635,10 +635,9 @@ namespace Microsoft.OData.UriParser
                         if (returnType.IsStructured())
                         {
                             SingleResourceNode entityNode = args.ElementAt(0) as SingleResourceNode;
-                            if (entityNode != null)
-                            {
-                                return new SingleResourceFunctionCallNode(functionCallTokenName, args, returnType.AsStructured(), entityNode.NavigationSource);
-                            }
+
+                            return new SingleResourceFunctionCallNode(functionCallTokenName, args,
+                                returnType.AsStructured(), entityNode != null ? entityNode.NavigationSource : null);
                         }
 
                         break;

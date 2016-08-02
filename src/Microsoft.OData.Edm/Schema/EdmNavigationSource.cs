@@ -148,9 +148,8 @@ namespace Microsoft.OData.Edm
         public virtual IEdmNavigationSource FindNavigationTarget(IEdmNavigationProperty navigationProperty, IEdmPathExpression bindingPath)
         {
             EdmUtil.CheckArgumentNull(navigationProperty, "navigationProperty");
-            EdmUtil.CheckArgumentNull(bindingPath, "bindingPath");
 
-            if (!navigationProperty.ContainsTarget)
+            if (!navigationProperty.ContainsTarget && bindingPath != null)
             {
                 Dictionary<string, IEdmNavigationPropertyBinding> result;
                 IEdmNavigationPropertyBinding binding;
@@ -159,7 +158,7 @@ namespace Microsoft.OData.Edm
                     return binding.Target;
                 }
             }
-            else
+            else if (navigationProperty.ContainsTarget)
             {
                 return EdmUtil.DictionaryGetOrUpdate(
                     this.containedNavigationPropertyCache,

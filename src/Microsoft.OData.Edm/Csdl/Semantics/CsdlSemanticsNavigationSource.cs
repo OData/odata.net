@@ -85,9 +85,8 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
         public IEdmNavigationSource FindNavigationTarget(IEdmNavigationProperty property, IEdmPathExpression bindingPath)
         {
             EdmUtil.CheckArgumentNull(property, "property");
-            EdmUtil.CheckArgumentNull(bindingPath, "bindingPath");
 
-            if (!property.ContainsTarget)
+            if (!property.ContainsTarget && bindingPath != null)
             {
                 foreach (IEdmNavigationPropertyBinding targetMapping in this.NavigationPropertyBindings)
                 {
@@ -97,7 +96,7 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
                     }
                 }
             }
-            else
+            else if (property.ContainsTarget)
             {
                 return EdmUtil.DictionaryGetOrUpdate(
                     this.containedNavigationPropertyCache,
