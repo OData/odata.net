@@ -19,8 +19,8 @@ namespace Microsoft.OData.Tests.JsonLight
 {
     /// <summary>
     /// Tests the use of ODataParameterReader class when the payload is JSON.
-    /// 
-    /// TODO: For error tests, see Microsoft.Test.Taupo.OData.Reader.Tests.Reader.ParameterReaderTests. 
+    ///
+    /// TODO: For error tests, see Microsoft.Test.Taupo.OData.Reader.Tests.Reader.ParameterReaderTests.
     /// These should eventually be migrated here.
     /// </summary>
     public class ODataJsonLightParameterReaderTests

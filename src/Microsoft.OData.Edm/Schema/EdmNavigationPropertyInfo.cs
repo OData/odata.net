@@ -19,7 +19,7 @@ namespace Microsoft.OData.Edm
         public string Name { get; set; }
 
         /// <summary>
-        /// Gets or sets the entity type that this navigation property belongs to.
+        /// Gets or sets the entity type that this navigation property leads to.
         /// </summary>
         public IEdmEntityType Target { get; set; }
 

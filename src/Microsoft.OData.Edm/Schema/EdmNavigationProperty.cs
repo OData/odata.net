@@ -6,6 +6,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace Microsoft.OData.Edm
 {
@@ -17,7 +18,7 @@ namespace Microsoft.OData.Edm
         private readonly IEdmReferentialConstraint referentialConstraint;
         private readonly bool containsTarget;
         private readonly EdmOnDeleteAction onDelete;
-        private EdmNavigationProperty partner;
+        private IEdmNavigationProperty partner;
 
         private EdmNavigationProperty(
             IEdmStructuredType declaringType,
@@ -79,6 +80,14 @@ namespace Microsoft.OData.Edm
         }
 
         /// <summary>
+        /// Gets the path to the partner in the related entity type.
+        /// </summary>
+        /// <remarks>
+        /// Is null if the containing type is a complex type.
+        /// </remarks>
+        public IEdmPathExpression PartnerPath { get; private set; }
+
+        /// <summary>
         /// Creates a navigation property from the given information.
         /// </summary>
         /// <param name="declaringType">The type that declares this property.</param>
@@ -133,8 +142,8 @@ namespace Microsoft.OData.Edm
                 partnerInfo.ContainsTarget,
                 partnerInfo.OnDelete);
 
-            end1.partner = end2;
-            end2.partner = end1;
+            end1.SetPartner(end2, new EdmPathExpression(end2.Name));
+            end2.SetPartner(end1, new EdmPathExpression(end1.Name));
             return end1;
         }
 
@@ -203,9 +212,23 @@ namespace Microsoft.OData.Edm
                 partnerContainsTarget,
                 partnerOnDelete);
 
-            end1.partner = end2;
-            end2.partner = end1;
+            end1.SetPartner(end2, new EdmPathExpression(end2.Name));
+            end2.SetPartner(end1, new EdmPathExpression(end1.Name));
             return end1;
+        }
+
+        /// <summary>
+        /// Sets the partner information.
+        /// </summary>
+        /// <param name="navigationProperty">The partner navigation property.</param>
+        /// <param name="navigationPropertyPath">Path to the partner navigation property in the related entity type.</param>
+        internal void SetPartner(IEdmNavigationProperty navigationProperty, IEdmPathExpression navigationPropertyPath)
+        {
+            Debug.Assert(
+                DeclaringType is IEdmEntityType,
+                "Partner info cannot be set for nav. property on a non-entity type.");
+            partner = navigationProperty;
+            PartnerPath = navigationPropertyPath;
         }
 
         private static IEdmEntityType GetEntityType(IEdmTypeReference type)
@@ -243,6 +266,25 @@ namespace Microsoft.OData.Edm
                 default:
                     throw new ArgumentOutOfRangeException(multiplicityParameterName, Strings.UnknownEnumVal_Multiplicity(multiplicity));
             }
+        }
+    }
+
+    /// <summary>
+    /// Extension methods for EdmNavigationProperty.
+    /// </summary>
+    public static class EdmNavigationPropertyExtensions
+    {
+        /// <summary>
+        /// Gets the partner path of a navigation property.
+        /// </summary>
+        /// <param name="navigationProperty">The navigation property.</param>
+        /// <returns>Path to the partner navigation property in the related entity type.</returns>
+        public static IEdmPathExpression GetPartnerPath(this IEdmNavigationProperty navigationProperty)
+        {
+            var property = navigationProperty as EdmNavigationProperty;
+            return property != null
+                   ? property.PartnerPath
+                   : new EdmPathExpression(navigationProperty.Partner.Name);
         }
     }
 }

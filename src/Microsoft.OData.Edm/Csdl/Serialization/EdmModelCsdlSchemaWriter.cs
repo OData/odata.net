@@ -167,7 +167,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
 
             if (member.Partner != null)
             {
-                this.WriteRequiredAttribute(CsdlConstants.Attribute_Partner, member.Partner.Name, EdmValueWriter.StringAsXml);
+                this.WriteRequiredAttribute(CsdlConstants.Attribute_Partner, member.GetPartnerPath().Path, EdmValueWriter.StringAsXml);
             }
 
             this.WriteOptionalAttribute(CsdlConstants.Attribute_ContainsTarget, member.ContainsTarget, CsdlConstants.Default_ContainsTarget, EdmValueWriter.BooleanAsXml);
