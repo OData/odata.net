@@ -10,11 +10,12 @@ namespace AstoriaUnitTests.Tests
 
     using System;
     using System.Collections.Generic;
-    using Microsoft.OData.Client;
     using System.Data.Test.Astoria;
+    using System.Globalization;
     using System.IO;
     using System.Net;
     using AstoriaUnitTests.Stubs;
+    using Microsoft.OData.Client;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     #endregion Namespaces
@@ -215,7 +216,7 @@ namespace AstoriaUnitTests.Tests
                 responseHeaders2.Add("Location", String.Format("{0}/Customers({1})", request.BaseUri, newCustomer2.ID));
 
                 string[] nonBatchHttpResponses = new string[]
-                { 
+                {
                     PlaybackService.ConvertToPlaybackServicePayload(responseHeaders1, null, HttpStatusCode.Created),
                     PlaybackService.ConvertToPlaybackServicePayload(responseHeaders2, null, HttpStatusCode.Created)
                 };
@@ -308,7 +309,8 @@ namespace AstoriaUnitTests.Tests
 
         private static void AddCommonRequestHeaders(Dictionary<string, string> headers)
         {
-            headers.Add("User-Agent", "Microsoft ADO.NET Data Services");
+            Version assemblyVersion = typeof(HeaderCollection).GetAssembly().GetName().Version;
+            headers.Add("User-Agent", string.Format(CultureInfo.InvariantCulture, "Microsoft.OData.Client/{0}.{1}.{2}", assemblyVersion.Major, assemblyVersion.Minor, assemblyVersion.Build));
             headers.Add("OData-Version", "4.0");
             headers.Add("OData-MaxVersion", "4.0");
             headers.Add("Accept-Charset", "UTF-8");
