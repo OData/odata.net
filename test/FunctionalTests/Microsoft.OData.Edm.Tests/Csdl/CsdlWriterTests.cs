@@ -220,31 +220,31 @@ namespace Microsoft.OData.Edm.Tests.Csdl
             var model = new EdmModel();
             var entityType1 = new EdmEntityType("NS", "EntityType1");
             var entityType2 = new EdmEntityType("NS", "EntityType2");
+            var entityType3 = new EdmEntityType("NS", "EntityType3", entityType2);
             var complexType1 = new EdmComplexType("NS", "ComplexType1");
             var complexType2 = new EdmComplexType("NS", "ComplexType2");
-            model.AddElements(new IEdmSchemaElement[] { entityType1, entityType2, complexType1, complexType2 });
+            model.AddElements(new IEdmSchemaElement[] { entityType1, entityType2, entityType3, complexType1, complexType2 });
             entityType1.AddKeys(entityType1.AddStructuralProperty("ID", EdmPrimitiveTypeKind.Int32));
             entityType2.AddKeys(entityType2.AddStructuralProperty("ID", EdmPrimitiveTypeKind.Int32));
-            var outterNav1 = entityType1.AddUnidirectionalNavigation(new EdmNavigationPropertyInfo
+            var outerNav1A = entityType1.AddUnidirectionalNavigation(new EdmNavigationPropertyInfo
             {
-                Name = "OutterNav",
+                Name = "OuterNavA",
                 Target = entityType2,
                 TargetMultiplicity = EdmMultiplicity.One
             });
-            var outterNav2 = entityType2.AddUnidirectionalNavigation(new EdmNavigationPropertyInfo
+            var outerNav2A = entityType2.AddUnidirectionalNavigation(new EdmNavigationPropertyInfo
             {
-                Name = "OutterNav",
+                Name = "OuterNavA",
                 Target = entityType1,
                 TargetMultiplicity = EdmMultiplicity.One
             });
-            var outterNav3 = entityType2.AddUnidirectionalNavigation(new EdmNavigationPropertyInfo
-            {
-                Name = "OutterNav2",
-                Target = entityType1,
-                TargetMultiplicity = EdmMultiplicity.One
-            });
-            entityType1.SetNavigationPropertyPartner(outterNav1, "OutterNav", outterNav2, "OutterNav");
-            entityType1.AddStructuralProperty("ComplexProp", new EdmComplexTypeReference(complexType1, false));
+            entityType1.SetNavigationPropertyPartner(
+                outerNav1A, new EdmPathExpression("OuterNavA"), outerNav2A, new EdmPathExpression("OuterNavA"));
+            entityType1.AddStructuralProperty(
+                "ComplexProp",
+                new EdmCollectionTypeReference(
+                    new EdmCollectionType(
+                        new EdmComplexTypeReference(complexType1, false))));
             entityType2.AddStructuralProperty("ComplexProp", new EdmComplexTypeReference(complexType2, false));
             var innerNav1 = complexType1.AddUnidirectionalNavigation(new EdmNavigationPropertyInfo
             {
@@ -258,10 +258,30 @@ namespace Microsoft.OData.Edm.Tests.Csdl
                 Target = entityType1,
                 TargetMultiplicity = EdmMultiplicity.One
             });
-            entityType2.SetNavigationPropertyPartner(outterNav3, "OutterNav2", innerNav1, "ComplexProp/InnerNav");
-
+            var outerNav2B = entityType2.AddUnidirectionalNavigation(new EdmNavigationPropertyInfo
+            {
+                Name = "OuterNavB",
+                Target = entityType1,
+                TargetMultiplicity = EdmMultiplicity.One
+            });
+            entityType2.SetNavigationPropertyPartner(
+                outerNav2B, new EdmPathExpression("OuterNavB"), innerNav1, new EdmPathExpression("ComplexProp/InnerNav"));
+            var outerNav2C = entityType3.AddUnidirectionalNavigation(new EdmNavigationPropertyInfo
+            {
+                Name = "OuterNavC",
+                Target = entityType1,
+                TargetMultiplicity = EdmMultiplicity.Many
+            });
+            var outerNav1B = entityType1.AddUnidirectionalNavigation(new EdmNavigationPropertyInfo
+            {
+                Name = "OuterNavB",
+                Target = entityType2,
+                TargetMultiplicity = EdmMultiplicity.Many
+            });
+            entityType1.SetNavigationPropertyPartner(
+                outerNav1B, new EdmPathExpression("OuterNavB"), outerNav2C, new EdmPathExpression("NS.EntityType3/OuterNavC"));
+            var str = GetCsdl(model, CsdlTarget.OData);
             Assert.Equal(
-                GetCsdl(model, CsdlTarget.OData),
                 "<?xml version=\"1.0\" encoding=\"utf-16\"?>" +
                     "<edmx:Edmx Version=\"4.0\" xmlns:edmx=\"http://docs.oasis-open.org/odata/ns/edmx\">" +
                         "<edmx:DataServices>" +
@@ -269,15 +289,19 @@ namespace Microsoft.OData.Edm.Tests.Csdl
                                 "<EntityType Name=\"EntityType1\">" +
                                     "<Key><PropertyRef Name=\"ID\" /></Key>" +
                                     "<Property Name=\"ID\" Type=\"Edm.Int32\" />" +
-                                    "<Property Name=\"ComplexProp\" Type=\"NS.ComplexType1\" Nullable=\"false\" />" +
-                                    "<NavigationProperty Name=\"OutterNav\" Type=\"NS.EntityType2\" Nullable=\"false\" Partner=\"OutterNav\" />" +
+                                    "<Property Name=\"ComplexProp\" Type=\"Collection(NS.ComplexType1)\" Nullable=\"false\" />" +
+                                    "<NavigationProperty Name=\"OuterNavA\" Type=\"NS.EntityType2\" Nullable=\"false\" Partner=\"OuterNavA\" />" +
+                                    "<NavigationProperty Name=\"OuterNavB\" Type=\"Collection(NS.EntityType2)\" Partner=\"NS.EntityType3/OuterNavC\" />" +
                                 "</EntityType>" +
                                 "<EntityType Name=\"EntityType2\">" +
                                     "<Key><PropertyRef Name=\"ID\" /></Key>" +
                                     "<Property Name=\"ID\" Type=\"Edm.Int32\" />" +
                                     "<Property Name=\"ComplexProp\" Type=\"NS.ComplexType2\" Nullable=\"false\" />" +
-                                    "<NavigationProperty Name=\"OutterNav\" Type=\"NS.EntityType1\" Nullable=\"false\" Partner=\"OutterNav\" />" +
-                                    "<NavigationProperty Name=\"OutterNav2\" Type=\"NS.EntityType1\" Nullable=\"false\" Partner=\"ComplexProp/InnerNav\" />" +
+                                    "<NavigationProperty Name=\"OuterNavA\" Type=\"NS.EntityType1\" Nullable=\"false\" Partner=\"OuterNavA\" />" +
+                                    "<NavigationProperty Name=\"OuterNavB\" Type=\"NS.EntityType1\" Nullable=\"false\" Partner=\"ComplexProp/InnerNav\" />" +
+                                "</EntityType>" +
+                                "<EntityType Name=\"EntityType3\" BaseType=\"NS.EntityType2\">" +
+                                    "<NavigationProperty Name=\"OuterNavC\" Type=\"Collection(NS.EntityType1)\" Partner=\"OuterNavB\" />" +
                                 "</EntityType>" +
                                 "<ComplexType Name=\"ComplexType1\">" +
                                     "<NavigationProperty Name=\"InnerNav\" Type=\"NS.EntityType2\" Nullable=\"false\" />" +
@@ -287,7 +311,8 @@ namespace Microsoft.OData.Edm.Tests.Csdl
                                 "</ComplexType>" +
                             "</Schema>" +
                         "</edmx:DataServices>" +
-                    "</edmx:Edmx>");
+                    "</edmx:Edmx>",
+                str);
         }
 
         public static void SetComputedAnnotation(EdmModel model, IEdmProperty target)

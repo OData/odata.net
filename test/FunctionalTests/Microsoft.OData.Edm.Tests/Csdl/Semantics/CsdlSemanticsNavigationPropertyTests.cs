@@ -46,7 +46,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl.Semantics
             csdlModel.AddSchema(csdlSchema);
 
             var semanticModel = new CsdlSemanticsModel(csdlModel, new EdmDirectValueAnnotationsManager(), Enumerable.Empty<IEdmModel>());
-           
+
             this.semanticEntityType = semanticModel.FindType("FQ.NS.EntityType") as CsdlSemanticsEntityTypeDefinition;
             this.semanticEntityType.Should().NotBeNull();
 
@@ -62,14 +62,14 @@ namespace Microsoft.OData.Edm.Tests.Csdl.Semantics
         [Fact]
         public void NavigationPartnerShouldWorkIfExplicitlySpecified()
         {
-            this.collectionProperty.Partner.Should().Be("Reference"); // ensure that the test configuration is unchanged.
+            this.collectionProperty.PartnerPath.Path.Should().Be("Reference"); // ensure that the test configuration is unchanged.
             this.semanticCollectionNavigation.Partner.Should().BeSameAs(this.semanticReferenceNavigation);
         }
 
         [Fact]
         public void NavigationPartnerShouldWorkIfAnotherPropertyOnTheTargetTypeHasThisPropertyExplicitlySpecified()
         {
-            this.referenceProperty.Partner.Should().BeNull(); // ensure that the test configuration is unchanged.
+            this.referenceProperty.PartnerPath.Should().BeNull(); // ensure that the test configuration is unchanged.
             this.semanticReferenceNavigation.Partner.Should().BeSameAs(this.semanticCollectionNavigation);
         }
 

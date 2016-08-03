@@ -85,7 +85,7 @@ namespace Microsoft.OData.Edm
         /// <remarks>
         /// Is null if the containing type is a complex type.
         /// </remarks>
-        public IEdmPathExpression PartnerPath { get; private set; }
+        internal IEdmPathExpression PartnerPath { get; private set; }
 
         /// <summary>
         /// Creates a navigation property from the given information.
@@ -266,25 +266,6 @@ namespace Microsoft.OData.Edm
                 default:
                     throw new ArgumentOutOfRangeException(multiplicityParameterName, Strings.UnknownEnumVal_Multiplicity(multiplicity));
             }
-        }
-    }
-
-    /// <summary>
-    /// Extension methods for EdmNavigationProperty.
-    /// </summary>
-    public static class EdmNavigationPropertyExtensions
-    {
-        /// <summary>
-        /// Gets the partner path of a navigation property.
-        /// </summary>
-        /// <param name="navigationProperty">The navigation property.</param>
-        /// <returns>Path to the partner navigation property in the related entity type.</returns>
-        public static IEdmPathExpression GetPartnerPath(this IEdmNavigationProperty navigationProperty)
-        {
-            var property = navigationProperty as EdmNavigationProperty;
-            return property != null
-                   ? property.PartnerPath
-                   : new EdmPathExpression(navigationProperty.Partner.Name);
         }
     }
 }

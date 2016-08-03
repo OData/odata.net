@@ -47,9 +47,9 @@ namespace EdmLibTests.StubEdm
         /// <summary>
         /// Gets the property kind
         /// </summary>
-        public EdmPropertyKind PropertyKind 
-        { 
-            get { return EdmPropertyKind.Navigation; } 
+        public EdmPropertyKind PropertyKind
+        {
+            get { return EdmPropertyKind.Navigation; }
         }
 
         /// <summary>

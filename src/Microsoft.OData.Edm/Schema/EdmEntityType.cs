@@ -188,31 +188,6 @@ namespace Microsoft.OData.Edm
         /// If partnerNavigationProperty is declared on an entity type, its partner will be set accordingly; there is no
         /// need to call this method twice, once on each side.
         /// </remarks>
-        public void SetNavigationPropertyPartner(
-            EdmNavigationProperty navigationProperty,
-            string navigationPropertyPath,
-            EdmNavigationProperty partnerNavigationProperty,
-            string partnerNavigationPropertyPath)
-        {
-            SetNavigationPropertyPartner(
-                navigationProperty,
-                new EdmPathExpression(navigationPropertyPath),
-                partnerNavigationProperty,
-                new EdmPathExpression(partnerNavigationPropertyPath));
-        }
-
-        /// <summary>
-        /// Sets partner information of a top-level navigation property.
-        /// </summary>
-        /// <param name="navigationProperty">Navigation property of the entity type.</param>
-        /// <param name="navigationPropertyPath">Path to the navigation property of the entity type.</param>
-        /// <param name="partnerNavigationProperty">Partner navigation property.</param>
-        /// <param name="partnerNavigationPropertyPath">Path to the partner navigation property
-        /// from the related entity type.</param>
-        /// <remarks>
-        /// If partnerNavigationProperty is declared on an entity type, its partner will be set accordingly; there is no
-        /// need to call this method twice, once on each side.
-        /// </remarks>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic")]
         public void SetNavigationPropertyPartner(
             EdmNavigationProperty navigationProperty,

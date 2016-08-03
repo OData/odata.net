@@ -1098,16 +1098,6 @@ public sealed class Microsoft.OData.Edm.EdmElementComparer {
 [
 ExtensionAttribute(),
 ]
-public sealed class Microsoft.OData.Edm.EdmNavigationPropertyExtensions {
-	[
-	ExtensionAttribute(),
-	]
-	public static Microsoft.OData.Edm.IEdmPathExpression GetPartnerPath (Microsoft.OData.Edm.IEdmNavigationProperty navigationProperty)
-}
-
-[
-ExtensionAttribute(),
-]
 public sealed class Microsoft.OData.Edm.EdmTypeSemantics {
 	[
 	ExtensionAttribute(),
@@ -1752,6 +1742,11 @@ public sealed class Microsoft.OData.Edm.ExtensionMethods {
 	[
 	ExtensionAttribute(),
 	]
+	public static Microsoft.OData.Edm.IEdmPathExpression GetPartnerPath (Microsoft.OData.Edm.IEdmNavigationProperty navigationProperty)
+
+	[
+	ExtensionAttribute(),
+	]
 	public static Microsoft.OData.Edm.IPrimitiveValueConverter GetPrimitiveValueConverter (Microsoft.OData.Edm.IEdmModel model, Microsoft.OData.Edm.IEdmTypeReference type)
 
 	[
@@ -2308,7 +2303,6 @@ public class Microsoft.OData.Edm.EdmEntityType : Microsoft.OData.Edm.EdmStructur
 	public void AddKeys (Microsoft.OData.Edm.IEdmStructuralProperty[] keyProperties)
 	public void AddKeys (System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.IEdmStructuralProperty]] keyProperties)
 	public void SetNavigationPropertyPartner (Microsoft.OData.Edm.EdmNavigationProperty navigationProperty, Microsoft.OData.Edm.IEdmPathExpression navigationPropertyPath, Microsoft.OData.Edm.EdmNavigationProperty partnerNavigationProperty, Microsoft.OData.Edm.IEdmPathExpression partnerNavigationPropertyPath)
-	public void SetNavigationPropertyPartner (Microsoft.OData.Edm.EdmNavigationProperty navigationProperty, string navigationPropertyPath, Microsoft.OData.Edm.EdmNavigationProperty partnerNavigationProperty, string partnerNavigationPropertyPath)
 }
 
 public class Microsoft.OData.Edm.EdmEntityTypeReference : Microsoft.OData.Edm.EdmTypeReference, IEdmElement, IEdmEntityTypeReference, IEdmStructuredTypeReference, IEdmTypeReference {
@@ -2527,7 +2521,6 @@ public sealed class Microsoft.OData.Edm.EdmNavigationProperty : Microsoft.OData.
 	bool ContainsTarget  { public virtual get; }
 	Microsoft.OData.Edm.EdmOnDeleteAction OnDelete  { public virtual get; }
 	Microsoft.OData.Edm.IEdmNavigationProperty Partner  { public virtual get; }
-	Microsoft.OData.Edm.IEdmPathExpression PartnerPath  { public get; }
 	Microsoft.OData.Edm.EdmPropertyKind PropertyKind  { public virtual get; }
 	Microsoft.OData.Edm.IEdmReferentialConstraint ReferentialConstraint  { public virtual get; }
 

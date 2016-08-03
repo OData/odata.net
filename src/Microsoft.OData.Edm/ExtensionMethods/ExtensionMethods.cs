@@ -12,6 +12,7 @@ using System.Globalization;
 using System.Linq;
 using Microsoft.OData.Edm.Csdl;
 using Microsoft.OData.Edm.Csdl.CsdlSemantics;
+using Microsoft.OData.Edm.Csdl.Parsing.Ast;
 using Microsoft.OData.Edm.Csdl.Serialization;
 using Microsoft.OData.Edm.Validation;
 using Microsoft.OData.Edm.Vocabularies;
@@ -2325,6 +2326,31 @@ namespace Microsoft.OData.Edm
         }
 
         #endregion
+
+        /// <summary>
+        /// Gets the partner path of a navigation property.
+        /// </summary>
+        /// <param name="navigationProperty">The navigation property.</param>
+        /// <returns>Path to the partner navigation property from the related entity type.</returns>
+        public static IEdmPathExpression GetPartnerPath(this IEdmNavigationProperty navigationProperty)
+        {
+            var edmNavigationProperty = navigationProperty as EdmNavigationProperty;
+            if (edmNavigationProperty != null)
+            {
+                return edmNavigationProperty.PartnerPath;
+            }
+
+            var csdlSemanticsNavigationProperty = navigationProperty as CsdlSemanticsNavigationProperty;
+            if (csdlSemanticsNavigationProperty != null)
+            {
+                return ((CsdlNavigationProperty)csdlSemanticsNavigationProperty.Element).PartnerPath;
+            }
+
+            // Default behavior where partner path corresponds to the name of the partner nav. property. In other words,
+            // the partner must be on an entity type. Will remove this limitation once we are OK to make breaking changes
+            // on IEdmNavigationProperty.
+            return new EdmPathExpression(navigationProperty.Partner.Name);
+        }
 
         #region methods for finding elements in CsdlSemanticsModel
 

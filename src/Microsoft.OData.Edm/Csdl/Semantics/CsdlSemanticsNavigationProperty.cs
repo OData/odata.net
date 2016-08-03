@@ -6,6 +6,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using Microsoft.OData.Edm.Csdl.Parsing.Ast;
 using Microsoft.OData.Edm.Validation;
@@ -124,19 +125,45 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
 
         private IEdmNavigationProperty ComputePartner()
         {
-            string partnerPropertyName = this.navigationProperty.Partner;
-
+            var partnerPropertyPath = this.navigationProperty.PartnerPath;
             IEdmEntityType targetEntityType = this.TargetEntityType;
-            if (partnerPropertyName != null)
+            if (partnerPropertyPath != null)
             {
-                var partner = targetEntityType.FindProperty(partnerPropertyName) as IEdmNavigationProperty;
-
-                if (partner == null)
+                IEdmStructuredType currentType = targetEntityType;
+                IEdmProperty property = null;
+                foreach (var segment in partnerPropertyPath.PathSegments)
                 {
-                    partner = new UnresolvedNavigationPropertyPath(targetEntityType, partnerPropertyName, this.Location);
+                    if (currentType == null)
+                    {
+                        return new UnresolvedNavigationPropertyPath(targetEntityType, partnerPropertyPath.Path, this.Location);
+                    }
+
+                    if (segment.IndexOf('.') < 0)
+                    {
+                        property = currentType.FindProperty(segment);
+                        if (property == null)
+                        {
+                            return new UnresolvedNavigationPropertyPath(targetEntityType, partnerPropertyPath.Path, this.Location);
+                        }
+
+                        currentType = property.Type.Definition.AsElementType() as IEdmStructuredType;
+                    }
+                    else
+                    {
+                        var derivedType = Model.FindDeclaredType(segment);
+                        Debug.Assert(derivedType.TypeKind != EdmTypeKind.Collection, " ");
+                        if (!derivedType.IsOrInheritsFrom(currentType))
+                        {
+                            return new UnresolvedNavigationPropertyPath(targetEntityType, partnerPropertyPath.Path, this.Location);
+                        }
+
+                        currentType = (IEdmStructuredType)derivedType;
+                    }
                 }
 
-                return partner;
+                Debug.Assert(property != null, " ");
+                return property as IEdmNavigationProperty
+                       ?? new UnresolvedNavigationPropertyPath(targetEntityType, partnerPropertyPath.Path, this.Location);
             }
 
             foreach (IEdmNavigationProperty potentialPartner in targetEntityType.NavigationProperties())

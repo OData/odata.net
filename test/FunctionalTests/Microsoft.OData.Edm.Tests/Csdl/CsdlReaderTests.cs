@@ -36,6 +36,60 @@ namespace Microsoft.OData.Edm.Tests.Csdl
         }
 
         [Fact]
+        public void ReadNavigationPropertyPartner()
+        {
+            var csdl =
+                "<?xml version=\"1.0\" encoding=\"utf-16\"?>" +
+                    "<edmx:Edmx Version=\"4.0\" xmlns:edmx=\"http://docs.oasis-open.org/odata/ns/edmx\">" +
+                        "<edmx:DataServices>" +
+                            "<Schema Namespace=\"NS\" xmlns=\"http://docs.oasis-open.org/odata/ns/edm\">" +
+                                "<EntityType Name=\"EntityType1\">" +
+                                    "<Key><PropertyRef Name=\"ID\" /></Key>" +
+                                    "<Property Name=\"ID\" Type=\"Edm.Int32\" />" +
+                                    "<Property Name=\"ComplexProp\" Type=\"Collection(NS.ComplexType1)\" Nullable=\"false\" />" +
+                                    "<NavigationProperty Name=\"OuterNavA\" Type=\"NS.EntityType2\" Nullable=\"false\" Partner=\"OuterNavA\" />" +
+                                    "<NavigationProperty Name=\"OuterNavB\" Type=\"Collection(NS.EntityType2)\" Partner=\"NS.EntityType3/OuterNavC\" />" +
+                                "</EntityType>" +
+                                "<EntityType Name=\"EntityType2\">" +
+                                    "<Key><PropertyRef Name=\"ID\" /></Key>" +
+                                    "<Property Name=\"ID\" Type=\"Edm.Int32\" />" +
+                                    "<Property Name=\"ComplexProp\" Type=\"NS.ComplexType2\" Nullable=\"false\" />" +
+                                    "<NavigationProperty Name=\"OuterNavA\" Type=\"NS.EntityType1\" Nullable=\"false\" Partner=\"OuterNavA\" />" +
+                                    "<NavigationProperty Name=\"OuterNavB\" Type=\"NS.EntityType1\" Nullable=\"false\" Partner=\"ComplexProp/InnerNav\" />" +
+                                "</EntityType>" +
+                                "<EntityType Name=\"EntityType3\" BaseType=\"NS.EntityType2\">" +
+                                    "<NavigationProperty Name=\"OuterNavC\" Type=\"Collection(NS.EntityType1)\" Partner=\"OuterNavB\" />" +
+                                "</EntityType>" +
+                                "<ComplexType Name=\"ComplexType1\">" +
+                                    "<NavigationProperty Name=\"InnerNav\" Type=\"NS.EntityType2\" Nullable=\"false\" />" +
+                                "</ComplexType>" +
+                                "<ComplexType Name=\"ComplexType2\">" +
+                                    "<NavigationProperty Name=\"InnerNav\" Type=\"NS.EntityType1\" Nullable=\"false\" />" +
+                                "</ComplexType>" +
+                            "</Schema>" +
+                        "</edmx:DataServices>" +
+                    "</edmx:Edmx>";
+            var model = CsdlReader.Parse(XElement.Parse(csdl).CreateReader());
+            var entityType1 = (IEdmEntityType)model.FindDeclaredType("NS.EntityType1");
+            var entityType2 = (IEdmEntityType)model.FindDeclaredType("NS.EntityType2");
+            var entityType3 = (IEdmEntityType)model.FindDeclaredType("NS.EntityType3");
+            var complexType1 = (IEdmComplexType)model.FindDeclaredType("NS.ComplexType1");
+            var complexType2 = (IEdmComplexType)model.FindDeclaredType("NS.ComplexType2");
+            Assert.Equal("OuterNavA", ((IEdmNavigationProperty)entityType1.FindProperty("OuterNavA")).GetPartnerPath().Path);
+            Assert.Equal(
+                entityType2.FindProperty("OuterNavA"),
+                ((IEdmNavigationProperty)entityType1.FindProperty("OuterNavA")).Partner);
+            Assert.Equal("ComplexProp/InnerNav", ((IEdmNavigationProperty)entityType2.FindProperty("OuterNavB")).GetPartnerPath().Path);
+            Assert.Equal(
+                complexType1.FindProperty("InnerNav"),
+                ((IEdmNavigationProperty)entityType2.FindProperty("OuterNavB")).Partner);
+            Assert.Equal("NS.EntityType3/OuterNavC", ((IEdmNavigationProperty)entityType1.FindProperty("OuterNavB")).GetPartnerPath().Path);
+            Assert.Equal(
+                entityType3.FindProperty("OuterNavC"),
+                ((IEdmNavigationProperty)entityType1.FindProperty("OuterNavB")).Partner);
+        }
+
+        [Fact]
         public void ParsingValidXmlWithNoReferencesShouldSucceed()
         {
             this.RunValidTest(CsdlReader.Parse);
