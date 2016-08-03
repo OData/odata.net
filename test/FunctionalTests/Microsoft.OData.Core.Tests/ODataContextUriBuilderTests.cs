@@ -201,7 +201,7 @@ namespace Microsoft.OData.Core.Tests
             // $select=A,B&$expand=B($select=C)
             selectClause = "Name,Districts";
             expandClause = "Districts($select=Name)";
-            expectedClause = "Name,Districts,Districts(Name)";
+            expectedClause = "Name,Districts(Name)";
             this.CreateFeedContextUri(selectClause, expandClause).OriginalString.Should().Be(BuildExpectedContextUri("#Cities", false, expectedClause));
         }
 
@@ -217,7 +217,7 @@ namespace Microsoft.OData.Core.Tests
             // With $select in same level, $select=A&$expand=A($select=B,C)
             selectClause = "Districts";
             expandClause = "Districts($select=Name,Zip)";
-            expectedClause = "Districts,Districts(Name,Zip)";
+            expectedClause = "Districts(Name,Zip)";
             this.CreateEntryContextUri(selectClause, expandClause).OriginalString.Should().Be(BuildExpectedContextUri("#Cities", true, expectedClause));
         }
 
@@ -236,7 +236,7 @@ namespace Microsoft.OData.Core.Tests
 
             // $expand=A($select=B;$expand=C($select=D)))
             expandClause = "Districts($select=Name;$expand=City($select=Districts))";
-            expectedClause = "Districts(Name,City,City(Districts))";
+            expectedClause = "Districts(Name,City(Districts))";
             this.CreateEntryContextUri(null, expandClause).OriginalString.Should().Be(BuildExpectedContextUri("#Cities", true, expectedClause));
         }
 
@@ -245,7 +245,7 @@ namespace Microsoft.OData.Core.Tests
         {
             const string selectClause = "Size,Name";
             const string expandClause = "Districts($select=Zip,City;$expand=City($expand=Districts;$select=Name))";
-            const string expectedClause = "Size,Name,Districts,Districts(Zip,City,City(Name,Districts))";
+            const string expectedClause = "Size,Name,Districts(Zip,City(Name,Districts))";
             this.CreateFeedContextUri(selectClause, expandClause).OriginalString.Should().Be(BuildExpectedContextUri("#Cities", false, expectedClause));
         }
         #endregion context uri with $select and $expand

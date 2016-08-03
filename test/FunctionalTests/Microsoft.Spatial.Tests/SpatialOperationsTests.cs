@@ -123,7 +123,7 @@ namespace Microsoft.Spatial.Tests
         [Fact]
         public void DistanceGeometryCallsRegisteredImplementation()
         {
-            
+
             this.implementation.callback = (methodName, arguments) =>
                                                {
                                                    Assert.Equal("Distance", methodName);
@@ -142,7 +142,7 @@ namespace Microsoft.Spatial.Tests
         [Fact]
         public void DistanceGeographyCallsRegisteredImplementation()
         {
-            
+
             this.implementation.callback = (methodName, arguments) =>
                                                {
                                                    Assert.Equal("Distance", methodName);
@@ -157,7 +157,7 @@ namespace Microsoft.Spatial.Tests
             var result = this.geogPoints[0].Distance(this.geogPoints[1]);
             Assert.Equal(TestSpatialOperations.DefaultDistanceReturn, result);
         }
-      
+
         #region test helper methods
 
         private object InvokeOperation(object instance, MethodInfo operation)

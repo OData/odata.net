@@ -317,7 +317,7 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Writer.JsonLight
             string result = this.GetWriterOutputForContentTypeAndKnobValue("application/json;odata.metadata=minimal", true, itemsToWrite, Model, EntitySet, EntityType, selectClause, expandClause, "EntitySet");
 
             const string expectedPayload = "{\"" +
-                                                "@odata.context\":\"http://example.org/odata.svc/$metadata#EntitySet(ContainedCollectionNavProp,ContainedCollectionNavProp(ContainedCollectionNavProp))\"," +
+                                                "@odata.context\":\"http://example.org/odata.svc/$metadata#EntitySet(ContainedCollectionNavProp(ContainedCollectionNavProp))\"," +
                                                 "\"value\":[" +
                                                     "{" +
                                                          "\"ID\":101,\"Name\":\"Alice\"," +
@@ -359,7 +359,7 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Writer.JsonLight
             const string expandClause = "ContainedNavProp($select=ContainedNavProp;$expand=ContainedNavProp)";
             string result = this.GetWriterOutputForContentTypeAndKnobValue("application/json;odata.metadata=minimal", true, itemsToWrite, Model, EntitySet, EntityType, selectClause, expandClause, "EntitySet");
 
-            string expectedPayload = "{\"@odata.context\":\"http://example.org/odata.svc/$metadata#EntitySet(ContainedNavProp,ContainedNavProp(ContainedNavProp))\"," +
+            string expectedPayload = "{\"@odata.context\":\"http://example.org/odata.svc/$metadata#EntitySet(ContainedNavProp(ContainedNavProp))\"," +
                                             "\"value\":[" +
                                                 "{" +
                                                     "\"ID\":101,\"Name\":\"Alice\"," +
@@ -396,7 +396,7 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Writer.JsonLight
             const string expandClause = "ContainedCollectionNavProp($select=ContainedNavProp;$expand=ContainedNavProp)";
             string result = this.GetWriterOutputForContentTypeAndKnobValue("application/json;odata.metadata=minimal", true, itemsToWrite, Model, EntitySet, EntityType, selectClause, expandClause, "EntitySet(101)");
 
-            string expectedPayload = "{\"@odata.context\":\"http://example.org/odata.svc/$metadata#EntitySet(ContainedCollectionNavProp,ContainedCollectionNavProp(ContainedNavProp))/$entity\"," +
+            string expectedPayload = "{\"@odata.context\":\"http://example.org/odata.svc/$metadata#EntitySet(ContainedCollectionNavProp(ContainedNavProp))/$entity\"," +
                                         "\"ID\":101,\"Name\":\"Alice\"," +
                                         "\"ContainedCollectionNavProp@odata.context\":\"http://example.org/odata.svc/$metadata#EntitySet(101)/ContainedCollectionNavProp(ContainedNavProp)\"," +
                                         "\"ContainedCollectionNavProp@odata.navigationLink\":\"http://example.org/odata.svc/navigation\"," +
@@ -433,7 +433,7 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Writer.JsonLight
             string result = this.GetWriterOutputForContentTypeAndKnobValue("application/json;odata.metadata=minimal", true, itemsToWrite, Model, EntitySet, EntityType, selectClause, expandClause, "EntitySet(101)");
 
             string expectedPayload = "{" +
-                                        "\"@odata.context\":\"http://example.org/odata.svc/$metadata#EntitySet(ExpandedCollectionNavProp,ExpandedCollectionNavProp(ContainedNavProp))/$entity\"," +
+                                        "\"@odata.context\":\"http://example.org/odata.svc/$metadata#EntitySet(ExpandedCollectionNavProp(ContainedNavProp))/$entity\"," +
                                         "\"ID\":101,\"Name\":\"Alice\"," +
                                         "\"ExpandedCollectionNavProp@odata.navigationLink\":\"http://example.org/odata.svc/navigation\"," +
                                         "\"ExpandedCollectionNavProp\":" +
@@ -470,7 +470,7 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Writer.JsonLight
             string result = this.GetWriterOutputForContentTypeAndKnobValue("application/json;odata.metadata=minimal", true, itemsToWrite, Model, EntitySet, EntityType, selectClause, expandClause, "EntitySet(101)");
 
             string expectedPayload = "{" +
-                                        "\"@odata.context\":\"http://example.org/odata.svc/$metadata#EntitySet(ContainedCollectionNavProp,ContainedCollectionNavProp(ExpandedNavProp))/$entity\"," +
+                                        "\"@odata.context\":\"http://example.org/odata.svc/$metadata#EntitySet(ContainedCollectionNavProp(ExpandedNavProp))/$entity\"," +
                                         "\"ID\":101,\"Name\":\"Alice\"," +
                                         "\"ContainedCollectionNavProp@odata.context\":\"http://example.org/odata.svc/$metadata#EntitySet(101)/ContainedCollectionNavProp(ExpandedNavProp)\"," +
                                         "\"ContainedCollectionNavProp@odata.navigationLink\":\"http://example.org/odata.svc/navigation\"," +
@@ -508,7 +508,7 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Writer.JsonLight
             string result = this.GetWriterOutputForContentTypeAndKnobValue("application/json;odata.metadata=minimal", true, itemsToWrite, Model, EntitySet, EntityType, selectClause, expandClause, "EntitySet");
 
             const string expectedPayload = "{\"" +
-                                                "@odata.context\":\"http://example.org/odata.svc/$metadata#EntitySet(Namespace.DerivedType/ContainedCollectionNavProp,Namespace.DerivedType/ContainedCollectionNavProp(Namespace.DerivedType/ContainedCollectionNavProp))\"," +
+                                                "@odata.context\":\"http://example.org/odata.svc/$metadata#EntitySet(Namespace.DerivedType/ContainedCollectionNavProp(Namespace.DerivedType/ContainedCollectionNavProp))\"," +
                                                 "\"value\":[" +
                                                     "{" +
                                                          "\"ID\":101,\"Name\":\"Alice\"," +
@@ -549,7 +549,7 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Writer.JsonLight
             const string expandClause = "ContainedNavProp($select=Namespace.DerivedType/ContainedNavProp;$expand=Namespace.DerivedType/ContainedNavProp)";
             string result = this.GetWriterOutputForContentTypeAndKnobValue("application/json;odata.metadata=minimal", true, itemsToWrite, Model, EntitySet, DerivedType, selectClause, expandClause, "EntitySet/Namespace.DerivedType");
 
-            string expectedPayload = "{\"@odata.context\":\"http://example.org/odata.svc/$metadata#EntitySet/Namespace.DerivedType(ContainedNavProp,ContainedNavProp(Namespace.DerivedType/ContainedNavProp))\"," +
+            string expectedPayload = "{\"@odata.context\":\"http://example.org/odata.svc/$metadata#EntitySet/Namespace.DerivedType(ContainedNavProp(Namespace.DerivedType/ContainedNavProp))\"," +
                                             "\"value\":[" +
                                                 "{" +
                                                     "\"ID\":101,\"Name\":\"Alice\"," +
@@ -586,7 +586,7 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Writer.JsonLight
             const string expandClause = "Namespace.DerivedType/ContainedCollectionNavProp($select=ContainedNavProp;$expand=ContainedNavProp)";
             string result = this.GetWriterOutputForContentTypeAndKnobValue("application/json;odata.metadata=minimal", true, itemsToWrite, Model, EntitySet, EntityType, selectClause, expandClause, "EntitySet(101)");
 
-            string expectedPayload = "{\"@odata.context\":\"http://example.org/odata.svc/$metadata#EntitySet(Namespace.DerivedType/ContainedCollectionNavProp,Namespace.DerivedType/ContainedCollectionNavProp(ContainedNavProp))/$entity\"," +
+            string expectedPayload = "{\"@odata.context\":\"http://example.org/odata.svc/$metadata#EntitySet(Namespace.DerivedType/ContainedCollectionNavProp(ContainedNavProp))/$entity\"," +
                                         "\"ID\":101,\"Name\":\"Alice\"," +
                                         "\"ContainedCollectionNavProp@odata.context\":\"http://example.org/odata.svc/$metadata#EntitySet(101)/Namespace.DerivedType/ContainedCollectionNavProp(ContainedNavProp)\"," +
                                         "\"ContainedCollectionNavProp@odata.navigationLink\":\"http://example.org/odata.svc/navigation\"," +
@@ -673,7 +673,7 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Writer.JsonLight
             const string expandClause = "ExpandedNavProp,ContainedCollectionNavProp($select=ID),ContainedNavProp($select=ID,Name)";
             string result = this.GetWriterOutputForContentTypeAndKnobValue("application/json;odata.metadata=minimal", true, itemsToWrite, Model, EntitySet, EntityType, selectClause, expandClause, "EntitySet(101)");
 
-            string expectedPayload = "{\"@odata.context\":\"http://example.org/odata.svc/$metadata#EntitySet(ID,Name,ExpandedNavProp,ContainedCollectionNavProp,ContainedNavProp,ContainedCollectionNavProp(ID),ContainedNavProp(ID,Name))/$entity\"," +
+            string expectedPayload = "{\"@odata.context\":\"http://example.org/odata.svc/$metadata#EntitySet(ID,Name,ExpandedNavProp,ContainedCollectionNavProp(ID),ContainedNavProp(ID,Name))/$entity\"," +
                                             "\"ID\":101,\"Name\":\"Alice\"," +
                                             "\"ExpandedNavProp\":{\"ID\":102,\"Name\":\"Bob\"}," +
                                             "\"ContainedCollectionNavProp@odata.context\":\"http://example.org/odata.svc/$metadata#EntitySet(101)/ContainedCollectionNavProp(ID)\"," +

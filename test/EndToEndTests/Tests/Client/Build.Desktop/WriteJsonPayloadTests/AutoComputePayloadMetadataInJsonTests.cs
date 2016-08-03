@@ -153,7 +153,7 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
                 {
                     const string selectClause = "CustomerId,Video,Orders";
                     const string expandClause = "Logins($select=Username;$expand=SentMessages)";
-                    const string expectedClause = "CustomerId,Video,Orders,Logins,Logins(Username,SentMessages)";
+                    const string expectedClause = "CustomerId,Video,Orders,Logins(Username,SentMessages)";
                     var uriParser = new ODataUriParser(WritePayloadHelper.Model, WritePayloadHelper.ServiceUri, new Uri(this.ServiceUri, "Customer?$select=" + selectClause + "&$expand=" + expandClause));
                     var result = uriParser.ParseSelectAndExpand();
                     var settings = new ODataMessageWriterSettings();

@@ -64,7 +64,7 @@ namespace Microsoft.OData.Core
         /// Constructor.
         /// TODO: Update SelectedPropertiesNode class to adapt to V4, get rid of old style constructor
         /// </summary>
-        /// <param name="selectClause">The string representation of the selected property hierarchy using 
+        /// <param name="selectClause">The string representation of the selected property hierarchy using
         /// the same format as in the $select query option.</param>
         internal SelectedPropertiesNode(string selectClause)
             : this(SelectionType.PartialSubtree)
@@ -609,7 +609,6 @@ namespace Microsoft.OData.Core
         private static SelectedPropertiesNode CombineSelectAndExpandResult(IList<string> selectList, IList<SelectedPropertiesNode> expandList)
         {
             List<string> rawSelect = selectList.ToList();
-            rawSelect.RemoveAll(expandList.Select(m => m.nodeName).Contains);
 
             SelectedPropertiesNode node = new SelectedPropertiesNode(SelectionType.PartialSubtree)
             {

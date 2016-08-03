@@ -158,7 +158,7 @@ namespace Microsoft.OData.Core.Tests.JsonLight
                 TypeName = "MyNS.ProductDetail",
                 Properties = new[]
                 {
-                    new ODataProperty {Name = "Id", Value = new ODataPrimitiveValue(1)}, 
+                    new ODataProperty {Name = "Id", Value = new ODataPrimitiveValue(1)},
                     new ODataProperty {Name = "Detail", Value = new ODataPrimitiveValue("made in china")},
                 },
             };
@@ -175,7 +175,7 @@ namespace Microsoft.OData.Core.Tests.JsonLight
                 TypeName = "MyNS.ProductDetailItem",
                 Properties = new[]
                 {
-                    new ODataProperty {Name = "ItemId", Value = new ODataPrimitiveValue(1)}, 
+                    new ODataProperty {Name = "ItemId", Value = new ODataPrimitiveValue(1)},
                     new ODataProperty {Name = "Description", Value = new ODataPrimitiveValue("made by HCC")},
                 },
             };
@@ -196,7 +196,7 @@ namespace Microsoft.OData.Core.Tests.JsonLight
             writer.WriteEnd();
             writer.Flush();
 
-            this.TestPayload().Should().Be("{\"@odata.context\":\"http://host/service/$metadata#Products/$delta\",\"value\":[{\"@odata.context\":\"http://host/service/$metadata#Products(1)/Details/$entity\",\"Id\":1,\"Detail\":\"made in china\"},{\"@odata.context\":\"http://host/service/$metadata#Products(1)/Details(1)/Items/$entity\",\"ItemId\":1,\"Description\":\"made by HCC\"}]}"); 
+            this.TestPayload().Should().Be("{\"@odata.context\":\"http://host/service/$metadata#Products/$delta\",\"value\":[{\"@odata.context\":\"http://host/service/$metadata#Products(1)/Details/$entity\",\"Id\":1,\"Detail\":\"made in china\"},{\"@odata.context\":\"http://host/service/$metadata#Products(1)/Details(1)/Items/$entity\",\"ItemId\":1,\"Description\":\"made by HCC\"}]}");
         }
 
         [Fact]
@@ -211,7 +211,7 @@ namespace Microsoft.OData.Core.Tests.JsonLight
                 TypeName = "MyNS.Product",
                 Properties = new[]
                 {
-                    new ODataProperty {Name = "Id", Value = new ODataPrimitiveValue(1)}, 
+                    new ODataProperty {Name = "Id", Value = new ODataPrimitiveValue(1)},
                     new ODataProperty {Name = "Name", Value = new ODataPrimitiveValue("Car")},
                 },
             };
@@ -221,7 +221,7 @@ namespace Microsoft.OData.Core.Tests.JsonLight
                 TypeName = "MyNS.ProductDetail",
                 Properties = new[]
                 {
-                    new ODataProperty {Name = "Id", Value = new ODataPrimitiveValue(1)}, 
+                    new ODataProperty {Name = "Id", Value = new ODataPrimitiveValue(1)},
                     new ODataProperty {Name = "Detail", Value = new ODataPrimitiveValue("made in china")},
                 },
             };
@@ -252,7 +252,7 @@ namespace Microsoft.OData.Core.Tests.JsonLight
             writer.WriteEnd();
             writer.Flush();
 
-            this.TestPayload().Should().Be("{\"@odata.context\":\"http://host/service/$metadata#Products(Name,Details,Details(Detail))/$delta\",\"value\":[{\"@odata.context\":\"http://host/service/$metadata#Products(1)/Details/$entity\",\"Id\":1,\"Detail\":\"made in china\"},{\"Id\":1,\"Name\":\"Car\"}]}");
+            this.TestPayload().Should().Be("{\"@odata.context\":\"http://host/service/$metadata#Products(Name,Details(Detail))/$delta\",\"value\":[{\"@odata.context\":\"http://host/service/$metadata#Products(1)/Details/$entity\",\"Id\":1,\"Detail\":\"made in china\"},{\"Id\":1,\"Name\":\"Car\"}]}");
         }
 
         [Fact]
@@ -303,7 +303,7 @@ namespace Microsoft.OData.Core.Tests.JsonLight
             writer.WriteEnd();
             writer.Flush();
 
-            this.TestPayload().Should().Be("{\"@odata.context\":\"http://host/service/$metadata#Products(ContactName,Orders,Orders(ShippingAddress))/$delta\",\"value\":[{\"@odata.context\":\"http://host/service/$metadata#Orders/$entity\",\"ShippingAddress\":{\"City\":\"Shanghai\"}}]}");
+            this.TestPayload().Should().Be("{\"@odata.context\":\"http://host/service/$metadata#Products(ContactName,Orders(ShippingAddress))/$delta\",\"value\":[{\"@odata.context\":\"http://host/service/$metadata#Orders/$entity\",\"ShippingAddress\":{\"City\":\"Shanghai\"}}]}");
         }
 
         [Fact]
@@ -317,7 +317,7 @@ namespace Microsoft.OData.Core.Tests.JsonLight
                 TypeName = "MyNS.PhysicalProduct",
                 Properties = new[]
                 {
-                    new ODataProperty {Name = "Id", Value = new ODataPrimitiveValue(1)}, 
+                    new ODataProperty {Name = "Id", Value = new ODataPrimitiveValue(1)},
                     new ODataProperty {Name = "Name", Value = new ODataPrimitiveValue("car")},
                     new ODataProperty {Name = "Material", Value = new ODataPrimitiveValue("gold")},
                 },
@@ -344,7 +344,7 @@ namespace Microsoft.OData.Core.Tests.JsonLight
                 TypeName = "MyNS.PhysicalProduct",
                 Properties = new[]
                 {
-                    new ODataProperty {Name = "Id", Value = new ODataPrimitiveValue(1)}, 
+                    new ODataProperty {Name = "Id", Value = new ODataPrimitiveValue(1)},
                     new ODataProperty {Name = "Name", Value = new ODataPrimitiveValue("car")},
                     new ODataProperty {Name = "Material", Value = new ODataPrimitiveValue("gold")},
                 },
@@ -466,7 +466,7 @@ namespace Microsoft.OData.Core.Tests.JsonLight
             Id = new Uri("http://host/service/Product(1)"),
             Properties = new[]
                 {
-                    new ODataProperty { Name = "Id", Value = 1 }, 
+                    new ODataProperty { Name = "Id", Value = 1 },
                     new ODataProperty { Name = "Name", Value = "Car" },
                 },
             TypeName = "MyNS.Product",
@@ -491,7 +491,7 @@ namespace Microsoft.OData.Core.Tests.JsonLight
         {
             Properties = new[]
                 {
-                    new ODataProperty {Name = "Id", Value = new ODataPrimitiveValue(1)}, 
+                    new ODataProperty {Name = "Id", Value = new ODataPrimitiveValue(1)},
                     new ODataProperty {Name = "Detail", Value = new ODataPrimitiveValue("made in china")},
                 },
             TypeName = "MyNS.ProductDetail",
