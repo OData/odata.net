@@ -64,6 +64,9 @@ namespace System.Data.Services.Client.Metadata
         internal readonly bool IsKnownType;
 
         /// <summary>property getter</summary>
+        private readonly Func<object, object> fieldGetter;
+
+        /// <summary>property getter</summary>
         private readonly Func<Object, Object> propertyGetter;
 
         /// <summary>property setter</summary>
@@ -102,7 +105,7 @@ namespace System.Data.Services.Client.Metadata
         /// <param name="edmProperty">Back reference to the EdmProperty this annotation is part of.</param>
         /// <param name="propertyInfo">propertyInfo instance.</param>
         /// <param name="model">The client model.</param>
-        internal ClientPropertyAnnotation(IEdmProperty edmProperty, PropertyInfo propertyInfo, ClientEdmModel model)
+        internal ClientPropertyAnnotation(IEdmProperty edmProperty, PropertyInfo propertyInfo, FieldInfo backingField, ClientEdmModel model)
         {
             Debug.Assert(edmProperty != null, "edmProperty != null");
             Debug.Assert(propertyInfo != null, "null propertyInfo");
@@ -117,7 +120,7 @@ namespace System.Data.Services.Client.Metadata
             this.DeclaringClrType = propertyInfo.DeclaringType;
 
             MethodInfo propertyGetMethod = propertyInfo.GetGetMethod();
-            MethodInfo propertySetMethod = propertyInfo.GetSetMethod(); 
+            MethodInfo propertySetMethod = propertyInfo.GetSetMethod();
 
             ParameterExpression instance = Expression.Parameter(typeof(Object), "instance");
             ParameterExpression value = Expression.Parameter(typeof(Object), "value");
@@ -139,6 +142,19 @@ namespace System.Data.Services.Client.Metadata
                     Expression.Convert(value, this.NullablePropertyType)),
                 instance,
                 value).Compile();
+
+            if (backingField == null)
+                this.fieldGetter = propertyGetter;
+            else
+            {
+                this.fieldGetter = (Func<object, object>)Expression.Lambda(
+                Expression.Convert(
+                    Expression.Field(
+                        Expression.Convert(instance, this.DeclaringClrType),
+                        backingField),
+                    typeof(Object)),
+                instance).Compile();
+            }
 
             this.Model = model;
 
@@ -318,6 +334,16 @@ namespace System.Data.Services.Client.Metadata
             Debug.Assert(null != instance, "null instance");
             Debug.Assert(null != this.propertyGetter, "null propertyGetter");
             return this.propertyGetter.Invoke(instance);
+        }
+
+        /// <summary>
+        /// get field or property value from an object
+        /// </summary>
+        /// <param name="instance">object to get the field or property value from</param>
+        /// <returns>Field or property value</returns>
+        internal object GetFieldOrPropertyValue(object instance)
+        {
+            return this.fieldGetter.Invoke(instance);
         }
 
         /// <summary>
