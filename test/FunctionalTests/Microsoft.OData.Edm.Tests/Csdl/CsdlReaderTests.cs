@@ -36,7 +36,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl
         }
 
         [Fact]
-        public void ReadNavigationPropertyPartner()
+        public void ReadNavigationPropertyPartnerTest()
         {
             var csdl =
                 "<?xml version=\"1.0\" encoding=\"utf-16\"?>" +
@@ -87,6 +87,47 @@ namespace Microsoft.OData.Edm.Tests.Csdl
             Assert.Equal(
                 entityType3.FindProperty("OuterNavC"),
                 ((IEdmNavigationProperty)entityType1.FindProperty("OuterNavB")).Partner);
+        }
+
+        [Fact]
+        public void ReadNavigationPropertyPartnerTypeHierarchyTest()
+        {
+            var csdl =
+                "<?xml version=\"1.0\" encoding=\"utf-16\"?>" +
+                "<edmx:Edmx Version=\"4.0\" xmlns:edmx=\"http://docs.oasis-open.org/odata/ns/edmx\">" +
+                    "<edmx:DataServices>" +
+                        "<Schema Namespace=\"NS\" xmlns=\"http://docs.oasis-open.org/odata/ns/edm\">" +
+                            "<EntityType Name=\"EntityTypeA1\">" +
+                                "<Key><PropertyRef Name=\"ID\" /></Key>" +
+                                "<Property Name=\"ID\" Type=\"Edm.Int32\" />" +
+                                "<NavigationProperty Name=\"A1Nav\" Type=\"NS.EntityTypeB\" Nullable=\"false\" Partner=\"BNav1\" />" +
+                            "</EntityType>" +
+                            "<EntityType Name=\"EntityTypeA2\" BaseType=\"NS.EntityTypeA1\" />" +
+                            "<EntityType Name=\"EntityTypeA3\" BaseType=\"NS.EntityTypeA2\">" +
+                                "<NavigationProperty Name=\"A3Nav\" Type=\"NS.EntityTypeB\" Nullable=\"false\" Partner=\"BNav2\" />" +
+                            "</EntityType>" +
+                            "<EntityType Name=\"EntityTypeB\">" +
+                                "<Key><PropertyRef Name=\"ID\" /></Key>" +
+                                "<Property Name=\"ID\" Type=\"Edm.Int32\" />" +
+                                "<NavigationProperty Name=\"BNav1\" Type=\"NS.EntityTypeA2\" Nullable=\"false\" Partner=\"A1Nav\" />" +
+                                "<NavigationProperty Name=\"BNav2\" Type=\"NS.EntityTypeA3\" Nullable=\"false\" Partner=\"NS.EntityTypeA3/A3Nav\" />" +
+                            "</EntityType>" +
+                        "</Schema>" +
+                    "</edmx:DataServices>" +
+                "</edmx:Edmx>";
+            var model = CsdlReader.Parse(XElement.Parse(csdl).CreateReader());
+            var entityTypeA1 = (IEdmEntityType)model.FindDeclaredType("NS.EntityTypeA1");
+            var entityTypeA2 = (IEdmEntityType)model.FindDeclaredType("NS.EntityTypeA2");
+            var entityTypeA3 = (IEdmEntityType)model.FindDeclaredType("NS.EntityTypeA3");
+            var entityTypeB = (IEdmEntityType)model.FindDeclaredType("NS.EntityTypeB");
+            Assert.Equal("BNav1", ((IEdmNavigationProperty)entityTypeA2.FindProperty("A1Nav")).GetPartnerPath().Path);
+            Assert.Equal(entityTypeB.FindProperty("BNav1"), ((IEdmNavigationProperty)entityTypeA2.FindProperty("A1Nav")).Partner);
+            Assert.Equal("BNav2", ((IEdmNavigationProperty)entityTypeA3.FindProperty("A3Nav")).GetPartnerPath().Path);
+            Assert.Equal(entityTypeB.FindProperty("BNav2"), ((IEdmNavigationProperty)entityTypeA3.FindProperty("A3Nav")).Partner);
+            Assert.Equal("A1Nav", ((IEdmNavigationProperty)entityTypeB.FindProperty("BNav1")).GetPartnerPath().Path);
+            Assert.Equal(entityTypeA2.FindProperty("A1Nav"), ((IEdmNavigationProperty)entityTypeB.FindProperty("BNav1")).Partner);
+            Assert.Equal("NS.EntityTypeA3/A3Nav", ((IEdmNavigationProperty)entityTypeB.FindProperty("BNav2")).GetPartnerPath().Path);
+            Assert.Equal(entityTypeA3.FindProperty("A3Nav"), ((IEdmNavigationProperty)entityTypeB.FindProperty("BNav2")).Partner);
         }
 
         [Fact]

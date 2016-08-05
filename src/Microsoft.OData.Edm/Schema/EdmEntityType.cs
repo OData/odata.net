@@ -196,8 +196,8 @@ namespace Microsoft.OData.Edm
             IEdmPathExpression partnerNavigationPropertyPath)
         {
             Debug.Assert(
-                navigationProperty.DeclaringType == this,
-                "Navigation property is not declared on this entity type.");
+                this.IsOnSameTypeHierarchyLineWith(navigationProperty.DeclaringType),
+                "Nav. property is not defined on this or a derived entity type.");
             navigationProperty.SetPartner(partnerNavigationProperty, partnerNavigationPropertyPath);
             if (partnerNavigationProperty.DeclaringType is IEdmEntityType)
             {

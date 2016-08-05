@@ -1167,6 +1167,18 @@ namespace Microsoft.OData.Edm
         }
 
         /// <summary>
+        /// Determines whether thisType is the same as otherType, or thisType derives from otherType, or
+        /// otherType derives from thisType.
+        /// </summary>
+        /// <param name="thisType">This EDM type.</param>
+        /// <param name="otherType">The other EDM type.</param>
+        /// <returns>true if thisType and otherType are along the same line in the type hierarchy; false otherwise.</returns>
+        public static bool IsOnSameTypeHierarchyLineWith(this IEdmType thisType, IEdmType otherType)
+        {
+            return thisType.IsOrInheritsFrom(otherType) || otherType.IsOrInheritsFrom(thisType);
+        }
+
+        /// <summary>
         /// Returns the actual type of the given type.
         /// If the given type is type definition, the actual type is its underlying type;
         /// otherwise, return the given type itself.

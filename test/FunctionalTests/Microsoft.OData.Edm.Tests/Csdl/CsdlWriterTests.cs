@@ -315,6 +315,70 @@ namespace Microsoft.OData.Edm.Tests.Csdl
                 str);
         }
 
+        [Fact]
+        public void SetNavigationPropertyPartnerTypeHierarchyTest()
+        {
+            var model = new EdmModel();
+            var entityTypeA1 = new EdmEntityType("NS", "EntityTypeA1");
+            var entityTypeA2 = new EdmEntityType("NS", "EntityTypeA2", entityTypeA1);
+            var entityTypeA3 = new EdmEntityType("NS", "EntityTypeA3", entityTypeA2);
+            var entityTypeB = new EdmEntityType("NS", "EntityTypeB");
+            model.AddElements(new IEdmSchemaElement[] { entityTypeA1, entityTypeA2, entityTypeA3, entityTypeB });
+            entityTypeA1.AddKeys(entityTypeA1.AddStructuralProperty("ID", EdmPrimitiveTypeKind.Int32));
+            var a1Nav = entityTypeA1.AddUnidirectionalNavigation(new EdmNavigationPropertyInfo
+            {
+                Name = "A1Nav",
+                Target = entityTypeB,
+                TargetMultiplicity = EdmMultiplicity.One
+            });
+            var a3Nav = entityTypeA3.AddUnidirectionalNavigation(new EdmNavigationPropertyInfo
+            {
+                Name = "A3Nav",
+                Target = entityTypeB,
+                TargetMultiplicity = EdmMultiplicity.One
+            });
+            entityTypeB.AddKeys(entityTypeB.AddStructuralProperty("ID", EdmPrimitiveTypeKind.Int32));
+            var bNav1 = entityTypeB.AddUnidirectionalNavigation(new EdmNavigationPropertyInfo
+            {
+                Name = "BNav1",
+                Target = entityTypeA2,
+                TargetMultiplicity = EdmMultiplicity.One
+            });
+            var bNav2 = entityTypeB.AddUnidirectionalNavigation(new EdmNavigationPropertyInfo
+            {
+                Name = "BNav2",
+                Target = entityTypeA3,
+                TargetMultiplicity = EdmMultiplicity.One
+            });
+            entityTypeA2.SetNavigationPropertyPartner(a1Nav, new EdmPathExpression("A1Nav"), bNav1, new EdmPathExpression("BNav1"));
+            entityTypeA2.SetNavigationPropertyPartner(a3Nav, new EdmPathExpression("NS.EntityTypeA3/A3Nav"), bNav2, new EdmPathExpression("BNav2"));
+            var str = GetCsdl(model, CsdlTarget.OData);
+            Assert.Equal(
+                "<?xml version=\"1.0\" encoding=\"utf-16\"?>" +
+                "<edmx:Edmx Version=\"4.0\" xmlns:edmx=\"http://docs.oasis-open.org/odata/ns/edmx\">" +
+                    "<edmx:DataServices>" +
+                        "<Schema Namespace=\"NS\" xmlns=\"http://docs.oasis-open.org/odata/ns/edm\">" +
+                            "<EntityType Name=\"EntityTypeA1\">" +
+                                "<Key><PropertyRef Name=\"ID\" /></Key>" +
+                                "<Property Name=\"ID\" Type=\"Edm.Int32\" />" +
+                                "<NavigationProperty Name=\"A1Nav\" Type=\"NS.EntityTypeB\" Nullable=\"false\" Partner=\"BNav1\" />" +
+                            "</EntityType>" +
+                            "<EntityType Name=\"EntityTypeA2\" BaseType=\"NS.EntityTypeA1\" />" +
+                            "<EntityType Name=\"EntityTypeA3\" BaseType=\"NS.EntityTypeA2\">" +
+                                "<NavigationProperty Name=\"A3Nav\" Type=\"NS.EntityTypeB\" Nullable=\"false\" Partner=\"BNav2\" />" +
+                            "</EntityType>" +
+                            "<EntityType Name=\"EntityTypeB\">" +
+                                "<Key><PropertyRef Name=\"ID\" /></Key>" +
+                                "<Property Name=\"ID\" Type=\"Edm.Int32\" />" +
+                                "<NavigationProperty Name=\"BNav1\" Type=\"NS.EntityTypeA2\" Nullable=\"false\" Partner=\"A1Nav\" />" +
+                                "<NavigationProperty Name=\"BNav2\" Type=\"NS.EntityTypeA3\" Nullable=\"false\" Partner=\"NS.EntityTypeA3/A3Nav\" />" +
+                            "</EntityType>" +
+                        "</Schema>" +
+                    "</edmx:DataServices>" +
+                "</edmx:Edmx>",
+                str);
+        }
+
         public static void SetComputedAnnotation(EdmModel model, IEdmProperty target)
         {
             EdmUtil.CheckArgumentNull(model, "model");

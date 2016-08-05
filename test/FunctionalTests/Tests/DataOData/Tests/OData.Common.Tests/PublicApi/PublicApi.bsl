@@ -1312,6 +1312,11 @@ public sealed class Microsoft.OData.Edm.EdmTypeSemantics {
 	[
 	ExtensionAttribute(),
 	]
+	public static bool IsOnSameTypeHierarchyLineWith (Microsoft.OData.Edm.IEdmType thisType, Microsoft.OData.Edm.IEdmType otherType)
+
+	[
+	ExtensionAttribute(),
+	]
 	public static bool IsOrInheritsFrom (Microsoft.OData.Edm.IEdmType thisType, Microsoft.OData.Edm.IEdmType otherType)
 
 	[
