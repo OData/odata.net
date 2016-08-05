@@ -126,6 +126,14 @@ namespace Microsoft.OData.Client
                 return primitiveType.TypeConverter.ToString(propertyValue);
             }
 
+            // If the type of a property is enum on server side, but it is System.String on client side,
+            // then propertyValue should be ODataEnumValue. We should return the enumValue.Value.
+            var enumValue = propertyValue as ODataEnumValue;
+            if (enumValue != null)
+            {
+                return enumValue.Value;
+            }
+
             Debug.Assert(false, "new StorageType without update to knownTypes");
             return propertyValue.ToString();
         }
