@@ -13,6 +13,7 @@ namespace Microsoft.OData.Client
     using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
     using System.Reflection;
+    using Microsoft.OData.Core;
 
     #endregion Namespaces
 
@@ -109,9 +110,9 @@ namespace Microsoft.OData.Client
                 }
             }
         }
-        
+
         /// <summary>
-        /// Convert from primitive value to an xml payload string. 
+        /// Convert from primitive value to an xml payload string.
         /// </summary>
         /// <param name="propertyValue">incoming object value</param>
         /// <returns>converted value</returns>
@@ -123,6 +124,14 @@ namespace Microsoft.OData.Client
             if (PrimitiveType.TryGetPrimitiveType(propertyValue.GetType(), out primitiveType) && primitiveType.TypeConverter != null)
             {
                 return primitiveType.TypeConverter.ToString(propertyValue);
+            }
+
+            // If the type of a property is enum on server side, but it is System.String on client side,
+            // then propertyValue should be ODataEnumValue. We should return the enumValue.Value.
+            var enumValue = propertyValue as ODataEnumValue;
+            if (enumValue != null)
+            {
+                return enumValue.Value;
             }
 
             Debug.Assert(false, "new StorageType without update to knownTypes");

@@ -26,35 +26,35 @@ namespace AstoriaUnitTests.TDD.Tests.Client.Materialization
         private readonly Dictionary<object, object> basicConversionsList = new Dictionary<object, object>
         {
             // from string to all types
-            {"true", true}, 
-            {"1", 1}, 
+            {"true", true},
+            {"1", 1},
             {"2", (byte)2},
             {"-1", (sbyte)-1},
             {"3", (short)3},
             {XmlConvert.ToString(long.MaxValue), long.MaxValue},
-            {XmlConvert.ToString(float.MaxValue), float.MaxValue}, 
-            {XmlConvert.ToString(double.MinValue), double.MinValue}, 
-            {XmlConvert.ToString(decimal.MaxValue), decimal.MaxValue}, 
-            {XmlConvert.ToString(DateTimeOffset.MinValue), DateTimeOffset.MinValue}, 
-            {XmlConvert.ToString(TimeSpan.MaxValue), TimeSpan.MaxValue}, 
-            {XmlConvert.ToString(Guid.Empty), Guid.Empty}, 
+            {XmlConvert.ToString(float.MaxValue), float.MaxValue},
+            {XmlConvert.ToString(double.MinValue), double.MinValue},
+            {XmlConvert.ToString(decimal.MaxValue), decimal.MaxValue},
+            {XmlConvert.ToString(DateTimeOffset.MinValue), DateTimeOffset.MinValue},
+            {XmlConvert.ToString(TimeSpan.MaxValue), TimeSpan.MaxValue},
+            {XmlConvert.ToString(Guid.Empty), Guid.Empty},
             {Convert.ToBase64String(new byte[] {0, 1, 2}), new byte[] {0, 1, 2}},
             {Date.MinValue.ToString(), Date.MinValue},
             {TimeOfDay.MinValue.ToString(), TimeOfDay.MinValue},
 
             // from all types to string
-            {true, "true"}, 
-            {1, "1"}, 
+            {true, "true"},
+            {1, "1"},
             {(byte)2, "2"},
             {(sbyte)-1, "-1"},
             {(short)3, "3"},
             {long.MaxValue, XmlConvert.ToString(long.MaxValue)},
-            {float.MaxValue, XmlConvert.ToString(float.MaxValue)}, 
-            {double.MinValue, XmlConvert.ToString(double.MinValue)}, 
-            {decimal.MaxValue, XmlConvert.ToString(decimal.MaxValue)}, 
-            {DateTimeOffset.MinValue, XmlConvert.ToString(DateTimeOffset.MinValue)}, 
-            {TimeSpan.MaxValue, XmlConvert.ToString(TimeSpan.MaxValue)}, 
-            {Guid.Empty, XmlConvert.ToString(Guid.Empty)}, 
+            {float.MaxValue, XmlConvert.ToString(float.MaxValue)},
+            {double.MinValue, XmlConvert.ToString(double.MinValue)},
+            {decimal.MaxValue, XmlConvert.ToString(decimal.MaxValue)},
+            {DateTimeOffset.MinValue, XmlConvert.ToString(DateTimeOffset.MinValue)},
+            {TimeSpan.MaxValue, XmlConvert.ToString(TimeSpan.MaxValue)},
+            {Guid.Empty, XmlConvert.ToString(Guid.Empty)},
             {new byte[] {0, 1, 2, }, Convert.ToBase64String(new byte[] {0, 1, 2})},
             {Date.MaxValue, Date.MaxValue.ToString()},
             {TimeOfDay.MaxValue, TimeOfDay.MaxValue.ToString()},
@@ -259,11 +259,9 @@ namespace AstoriaUnitTests.TDD.Tests.Client.Materialization
         }
 
         [TestMethod]
-        public void JsonConversionForDateTimeShouldThrow()
+        public void EnumCouldBeConvertedToString()
         {
-            Type dateTimeType = typeof(DateTime);
-            Action test = () => this.jsonConverter.ConvertPrimitiveValue(DateTimeOffset.UtcNow, dateTimeType);
-            test.ShouldThrow<InvalidOperationException>(Microsoft.OData.Client.Strings.ClientType_UnsupportedType(dateTimeType.FullName));
+            this.jsonConverter.ConvertPrimitiveValue(new ODataEnumValue("Yellow"), typeof(string)).Should().Be("Yellow");
         }
     }
 }
