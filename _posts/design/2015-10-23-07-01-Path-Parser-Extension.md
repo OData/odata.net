@@ -80,8 +80,7 @@ If this segment is the special escape-marker segment, then remember that the nex
 even if we are in key-as-segments mode. Essentially, it is an escape into 'metadata-space', so to speak. 
 DEVNOTE: We went back and forth several times on whether this should be allowed everywhere or only 
 where a key could appear. We landed on allowing it absolutely everywhere for several reasons: 
-  1) The WCF DS client naively adds the escape marker before all type segments, regardless of whether the  
-     prior segment is a collection. 
+  1) The WCF DS client naively adds the escape marker before all type segments, regardless of whether the prior segment is a collection. 
   2) The WCF DS server already allowed the escape marker almost everywhere in 5.3 
   3) It's better to be either extremely loose or extremely strict than allow it in some cases and not in others.
 Note that this is not publicly documented in OData V3 nor is it planned to be documented in OData V4, but it 
