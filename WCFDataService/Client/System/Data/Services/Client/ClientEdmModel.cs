@@ -408,7 +408,14 @@ namespace System.Data.Services.Client
                             List<IEdmStructuralProperty> loadedKeyProperties = new List<IEdmStructuralProperty>();
                             foreach (PropertyInfo property in ClientTypeUtil.GetPropertiesOnType(type, /*declaredOnly*/edmBaseType != null).OrderBy(p => p.Name))
                             {
-                                IEdmProperty edmProperty = this.CreateEdmProperty((EdmStructuredType)entityType, property);
+                                // A better approach for getting to the value of a property without triggering lazy construction
+                                // could be desired, but I don't control the auto proxy generation stuff, so for now...
+                                // we just favor convwention over configuration and expect to find a field with the same name
+                                // as the property, but prefixed with __ or _.
+                                FieldInfo backingField = type.GetField("__" + property.Name, BindingFlags.NonPublic | BindingFlags.Instance);
+                                if (backingField == null)
+                                    backingField = type.GetField("_" + property.Name, BindingFlags.NonPublic | BindingFlags.Instance);
+                                IEdmProperty edmProperty = this.CreateEdmProperty((EdmStructuredType)entityType, property, backingField);
                                 loadedProperties.Add(edmProperty);
 
                                 if (edmBaseType == null && keyProperties.Any(k => k.DeclaringType == type && k.Name == property.Name))
@@ -443,7 +450,14 @@ namespace System.Data.Services.Client
                             List<IEdmProperty> loadedProperties = new List<IEdmProperty>();
                             foreach (PropertyInfo property in ClientTypeUtil.GetPropertiesOnType(type, /*declaredOnly*/edmBaseType != null).OrderBy(p => p.Name))
                             {
-                                IEdmProperty edmProperty = this.CreateEdmProperty(complexType, property);
+                                // A better approach for getting to the value of a property without triggering lazy construction
+                                // could be desired, but I don't control the auto proxy generation stuff, so for now...
+                                // we just favor convwention over configuration and expect to find a field with the same name
+                                // as the property, but prefixed with __ or _.
+                                FieldInfo backingField = type.GetField("__" + property.Name, BindingFlags.NonPublic | BindingFlags.Instance);
+                                if (backingField == null)
+                                    backingField = type.GetField("_" + property.Name, BindingFlags.NonPublic | BindingFlags.Instance);
+                                IEdmProperty edmProperty = this.CreateEdmProperty(complexType, property, backingField);
                                 loadedProperties.Add(edmProperty);
                             }
 
@@ -500,7 +514,7 @@ namespace System.Data.Services.Client
         /// <param name="declaringType">Type declaring this property.</param>
         /// <param name="propertyInfo">PropertyInfo instance for this property.</param>
         /// <returns>Returns a new instance of Edm property.</returns>
-        private IEdmProperty CreateEdmProperty(IEdmStructuredType declaringType, PropertyInfo propertyInfo)
+        private IEdmProperty CreateEdmProperty(IEdmStructuredType declaringType, PropertyInfo propertyInfo, FieldInfo backingField)
         {
             IEdmType propertyEdmType = this.GetOrCreateEdmTypeInternal(propertyInfo.PropertyType).EdmType;
             Debug.Assert(
@@ -540,7 +554,7 @@ namespace System.Data.Services.Client
                 edmProperty = new EdmStructuralProperty(declaringType, propertyInfo.Name, propertyEdmType.ToEdmTypeReference(isPropertyNullable));
             }
 
-            edmProperty.SetClientPropertyAnnotation(new ClientPropertyAnnotation(edmProperty, propertyInfo, this));
+            edmProperty.SetClientPropertyAnnotation(new ClientPropertyAnnotation(edmProperty, propertyInfo, backingField, this));
             return edmProperty;
         }
 
