@@ -963,6 +963,7 @@ namespace Microsoft.OData.Edm.Validation
             new ValidationRule<IEdmNavigationProperty>(
                 (context, property) =>
                 {
+                    // Validates that target must be an entity type.
                     if (property.ToEntityType() == null)
                     {
                         context.AddError(
@@ -972,7 +973,9 @@ namespace Microsoft.OData.Edm.Validation
                         return;
                     }
 
-                    if (property.Partner == null || property.Partner is BadNavigationProperty)
+                    if (property.Partner == null
+                        || property.Partner is BadNavigationProperty
+                        || property.Partner.DeclaringType is IEdmComplexType)
                     {
                         return;
                     }

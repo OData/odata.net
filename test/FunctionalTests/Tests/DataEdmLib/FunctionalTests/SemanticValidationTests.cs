@@ -131,6 +131,35 @@ namespace EdmLibTests.FunctionalTests
 #endif
 
         [TestMethod]
+        public void ValidateNavigationPropertyOnComplex()
+        {
+            var model = new EdmModel();
+            var entityTypeA = new EdmEntityType("NS", "EntityA");
+            var entityTypeB = new EdmEntityType("NS", "EntityB");
+            var complexType = new EdmComplexType("NS", "Complex");
+            model.AddElements(new IEdmSchemaElement[] { entityTypeA, entityTypeB, complexType });
+            entityTypeA.AddKeys(entityTypeA.AddStructuralProperty("ID", EdmPrimitiveTypeKind.Int32, false));
+            entityTypeB.AddKeys(entityTypeB.AddStructuralProperty("ID", EdmPrimitiveTypeKind.Int32, false));
+            entityTypeA.AddStructuralProperty("Complex", new EdmComplexTypeReference(complexType, false));
+            var complexNavToEntityB = complexType.AddUnidirectionalNavigation(new EdmNavigationPropertyInfo
+            {
+                Name = "ComplexNavToEntityB",
+                Target = entityTypeB,
+                TargetMultiplicity = EdmMultiplicity.One
+            });
+            var entityBNavToEntityA = entityTypeB.AddUnidirectionalNavigation(new EdmNavigationPropertyInfo
+            {
+                Name = "EntityBNavToEntityA",
+                Target = entityTypeA,
+                TargetMultiplicity = EdmMultiplicity.One
+            });
+            entityTypeB.SetNavigationPropertyPartner(
+                entityBNavToEntityA, new EdmPathExpression(entityBNavToEntityA.Name),
+                complexNavToEntityB, new EdmPathExpression("Complex/ComplexNavToEntityB"));
+            VerifySemanticValidation(model, null);
+        }
+
+        [TestMethod]
         public void ValidateSystemNamespace()
         {
             var expectedErrors = new EdmLibTestErrors()
@@ -143,7 +172,7 @@ namespace EdmLibTests.FunctionalTests
         [TestMethod]
         public void ValidateInvalidEntitySetNameReference()
         {
-            var expectedErrors = new EdmLibTestErrors() 
+            var expectedErrors = new EdmLibTestErrors()
             {
                 {21, 8, EdmErrorCode.BadUnresolvedEntitySet},
                 {24, 8, EdmErrorCode.BadUnresolvedEntitySet},
@@ -181,7 +210,7 @@ namespace EdmLibTests.FunctionalTests
         [TestMethod]
         public void ValidateDuplicateEntityContainerMemberName()
         {
-            var expectedErrors = new EdmLibTestErrors() 
+            var expectedErrors = new EdmLibTestErrors()
             {
                 {18, 6, EdmErrorCode.DuplicateEntityContainerMemberName},
                 {19, 6, EdmErrorCode.DuplicateEntityContainerMemberName},
@@ -192,7 +221,7 @@ namespace EdmLibTests.FunctionalTests
         [TestMethod]
         public void ValidateEdmEntityTypeDuplicatePropertyNameSpecifiedInEntityKey()
         {
-            var expectedErrors = new EdmLibTestErrors() 
+            var expectedErrors = new EdmLibTestErrors()
             {
                 {8, 6, EdmErrorCode.DuplicatePropertySpecifiedInEntityKey},
             };
@@ -202,7 +231,7 @@ namespace EdmLibTests.FunctionalTests
         [TestMethod]
         public void ValidateInvalidKeyNullablePart()
         {
-            var expectedErrors = new EdmLibTestErrors() 
+            var expectedErrors = new EdmLibTestErrors()
             {
                 {7, 6, EdmErrorCode.InvalidKey},
             };
@@ -212,7 +241,7 @@ namespace EdmLibTests.FunctionalTests
         [TestMethod]
         public void ValidateEntityKeyMustBeScalar()
         {
-            var expectedErrors = new EdmLibTestErrors() 
+            var expectedErrors = new EdmLibTestErrors()
             {
                 {7, 6, EdmErrorCode.EntityKeyMustBeScalar},
             };
@@ -222,7 +251,7 @@ namespace EdmLibTests.FunctionalTests
         [TestMethod]
         public void InvalidKeyKeyDefinedInBaseClass()
         {
-            var expectedErrors = new EdmLibTestErrors() 
+            var expectedErrors = new EdmLibTestErrors()
             {
                 {9, 4, EdmErrorCode.InvalidKey},
             };
@@ -232,7 +261,7 @@ namespace EdmLibTests.FunctionalTests
         [TestMethod]
         public void ValidateKeyMissingOnEntityType()
         {
-            var expectedErrors = new EdmLibTestErrors() 
+            var expectedErrors = new EdmLibTestErrors()
             {
                 {3, 4, EdmErrorCode.KeyMissingOnEntityType},
             };
@@ -249,7 +278,7 @@ namespace EdmLibTests.FunctionalTests
         [TestMethod]
         public void ValidateInvalidMemberNameMatchesTypeName()
         {
-            var expectedErrors = new EdmLibTestErrors() 
+            var expectedErrors = new EdmLibTestErrors()
             {
                 {7, 6, EdmErrorCode.BadProperty},
             };
@@ -259,7 +288,7 @@ namespace EdmLibTests.FunctionalTests
         [TestMethod]
         public void ValidatePropertyNameAlreadyDefinedDuplicate()
         {
-            var expectedErrors = new EdmLibTestErrors() 
+            var expectedErrors = new EdmLibTestErrors()
             {
                 {9, 6, EdmErrorCode.AlreadyDefined},
                 {19, 6, EdmErrorCode.AlreadyDefined},
@@ -271,7 +300,7 @@ namespace EdmLibTests.FunctionalTests
         [TestMethod]
         public void ValidateIEdmInvalidOperationMultipleEndsInAssociatedNavigationProperties()
         {
-            var expectedErrors = new EdmLibTestErrors() 
+            var expectedErrors = new EdmLibTestErrors()
             {
                 {8, 6, EdmErrorCode.InvalidAction },
                 {18, 6, EdmErrorCode.InvalidAction },
@@ -283,7 +312,7 @@ namespace EdmLibTests.FunctionalTests
         [TestMethod]
         public void ValidateIEdmAssociationTypeEndWithManyMultiplicityCannotHaveOperationsSpecified()
         {
-            var expectedErrors = new EdmLibTestErrors() 
+            var expectedErrors = new EdmLibTestErrors()
             {
                 {17, 6, EdmErrorCode.EndWithManyMultiplicityCannotHaveOperationsSpecified},
                 {21, 6, EdmErrorCode.EndWithManyMultiplicityCannotHaveOperationsSpecified},
@@ -294,7 +323,7 @@ namespace EdmLibTests.FunctionalTests
         [TestMethod]
         public void ValidateIEdmReferentialConstraintInvalidMultiplicityFromRoleToPropertyNullable()
         {
-            var expectedErrors = new EdmLibTestErrors() 
+            var expectedErrors = new EdmLibTestErrors()
             {
                 {null, null, EdmErrorCode.InvalidMultiplicityOfPrincipalEnd},
             };
@@ -304,7 +333,7 @@ namespace EdmLibTests.FunctionalTests
         [TestMethod]
         public void ValidateIEdmReferentialConstraintInvalidMultiplicityFromRoleUpperBoundMustBeOne()
         {
-            var expectedErrors = new EdmLibTestErrors() 
+            var expectedErrors = new EdmLibTestErrors()
             {
                 {16, 6, EdmErrorCode.InvalidMultiplicityOfPrincipalEnd},
             };
@@ -314,7 +343,7 @@ namespace EdmLibTests.FunctionalTests
         [TestMethod]
         public void ValidateIEdmReferentialConstraintInvalidMultiplicityToRoleUpperBoundMustBeMany()
         {
-            var expectedErrors = new EdmLibTestErrors() 
+            var expectedErrors = new EdmLibTestErrors()
             {
                 {16, 6, EdmErrorCode.InvalidMultiplicityOfDependentEnd},
             };
@@ -324,7 +353,7 @@ namespace EdmLibTests.FunctionalTests
         [TestMethod]
         public void ValidateIEdmReferentialConstraintInvalidMultiplicityToRoleUpperBoundMustBeOne()
         {
-            var expectedErrors = new EdmLibTestErrors() 
+            var expectedErrors = new EdmLibTestErrors()
             {
                 {16, 6, EdmErrorCode.InvalidMultiplicityOfDependentEnd},
             };
@@ -334,7 +363,7 @@ namespace EdmLibTests.FunctionalTests
         [TestMethod]
         public void ValidateIEdmReferentialConstraintTypeMismatchRelationshipConstraint()
         {
-            var expectedErrors = new EdmLibTestErrors() 
+            var expectedErrors = new EdmLibTestErrors()
             {
                 {16, 6, EdmErrorCode.TypeMismatchRelationshipConstraint},
             };
@@ -356,7 +385,7 @@ namespace EdmLibTests.FunctionalTests
         [TestMethod]
         public void ValidateIEdmReferentialConstraintInvalidMultiplicityFromRoleToPropertyNonNullableV1()
         {
-            var expectedErrors = new EdmLibTestErrors() 
+            var expectedErrors = new EdmLibTestErrors()
             {
                 {null, null, EdmErrorCode.InvalidMultiplicityOfPrincipalEnd},
             };
@@ -384,7 +413,7 @@ namespace EdmLibTests.FunctionalTests
         [TestMethod]
         public void ValidateEdmPropertyInvalidPropertyType()
         {
-            var expectedErrors = new EdmLibTestErrors() 
+            var expectedErrors = new EdmLibTestErrors()
             {
                 {11, 6, EdmErrorCode.InvalidPropertyType},
             };
@@ -394,7 +423,7 @@ namespace EdmLibTests.FunctionalTests
         [TestMethod]
         public void ValidateIEdmOperationBaseParameterNameAlreadyDefinedDuplicate()
         {
-            var expectedErrors = new EdmLibTestErrors() 
+            var expectedErrors = new EdmLibTestErrors()
             {
                 {11, 8, EdmErrorCode.AlreadyDefined},
             };
@@ -404,7 +433,7 @@ namespace EdmLibTests.FunctionalTests
         [TestMethod]
         public void ValidateIEdmOperationImportOperationImportEntityTypeDoesNotMatchEntitySet()
         {
-            var expectedErrors = new EdmLibTestErrors() 
+            var expectedErrors = new EdmLibTestErrors()
             {
                 {19, 10, EdmErrorCode.OperationImportEntityTypeDoesNotMatchEntitySet},
             };
@@ -414,7 +443,7 @@ namespace EdmLibTests.FunctionalTests
         [TestMethod]
         public void ValidateIEdmOperationImportOperationImportSpecifiesEntitySetButDoesNotReturnEntityType()
         {
-            var expectedErrors = new EdmLibTestErrors() 
+            var expectedErrors = new EdmLibTestErrors()
             {
                 {12, 10, EdmErrorCode.OperationImportSpecifiesEntitySetButDoesNotReturnEntityType},
             };
@@ -424,7 +453,7 @@ namespace EdmLibTests.FunctionalTests
         [TestMethod]
         public void ValidateIEdmFunctionComposableOperationImportHasNoReturnType()
         {
-            var expectedErrors = new EdmLibTestErrors() 
+            var expectedErrors = new EdmLibTestErrors()
             {
                 {2, 6, EdmErrorCode.FunctionMustHaveReturnType},
             };
@@ -434,7 +463,7 @@ namespace EdmLibTests.FunctionalTests
         [TestMethod]
         public void ValidateIEdmEntityReferenceTypeEntityTypeNotBad()
         {
-            var expectedErrors = new EdmLibTestErrors() 
+            var expectedErrors = new EdmLibTestErrors()
             {
                 {8, 10, EdmErrorCode.BadUnresolvedType},
                 {10, 43, EdmErrorCode.BadUnresolvedEntityType},
@@ -445,7 +474,7 @@ namespace EdmLibTests.FunctionalTests
         [TestMethod]
         public void ValidateIEdmEntitySetElementTypeNotBad()
         {
-            var expectedErrors = new EdmLibTestErrors() 
+            var expectedErrors = new EdmLibTestErrors()
             {
                 {10, 10, EdmErrorCode.BadUnresolvedEntityType},
             };
@@ -456,7 +485,7 @@ namespace EdmLibTests.FunctionalTests
         [TestMethod]
         public void ValidateEdmModelNameMustNotBeWhiteSpace()
         {
-            var expectedErrors = new EdmLibTestErrors() 
+            var expectedErrors = new EdmLibTestErrors()
             {
                 {null, null, EdmErrorCode.InvalidName},
                 {null, null, EdmErrorCode.InvalidNamespaceName},
@@ -467,7 +496,7 @@ namespace EdmLibTests.FunctionalTests
         [TestMethod]
         public void ValidateEdmModelNameIsTooLong()
         {
-            var expectedErrors = new EdmLibTestErrors() 
+            var expectedErrors = new EdmLibTestErrors()
             {
                 {null, null, EdmErrorCode.NameTooLong},
             };
@@ -477,7 +506,7 @@ namespace EdmLibTests.FunctionalTests
         [TestMethod]
         public void ValidateIEdmNamedElementNameIsNotAllowed()
         {
-            var expectedErrors = new EdmLibTestErrors() 
+            var expectedErrors = new EdmLibTestErrors()
             {
                 {"(Foo1._!@#$%^&*())", EdmErrorCode.InvalidName},
                 {"(Foo2._!@#$%^&*())", EdmErrorCode.InvalidName},
@@ -490,7 +519,7 @@ namespace EdmLibTests.FunctionalTests
         [TestMethod]
         public void ValidateIEdmSchemaElementNameIsNotAllowed()
         {
-            var expectedErrors = new EdmLibTestErrors() 
+            var expectedErrors = new EdmLibTestErrors()
             {
                 {null, null, EdmErrorCode.InvalidNamespaceName},
             };
@@ -500,7 +529,7 @@ namespace EdmLibTests.FunctionalTests
         [TestMethod]
         public void ValidateIEdmModelTypeNameAlreadyDefinedDuplicate()
         {
-            var expectedErrors = new EdmLibTestErrors() 
+            var expectedErrors = new EdmLibTestErrors()
             {
                 {6, 4, EdmErrorCode.AlreadyDefined},
             };
@@ -563,7 +592,7 @@ namespace EdmLibTests.FunctionalTests
         [TestMethod]
         public void ValidateBaseTypeStructuralIntegrity()
         {
-            var expectedErrors = new EdmLibTestErrors() 
+            var expectedErrors = new EdmLibTestErrors()
             {
                 {3, 4, EdmErrorCode.BadUnresolvedEntityType},
             };
@@ -573,7 +602,7 @@ namespace EdmLibTests.FunctionalTests
         [TestMethod]
         public void ValidateCyclicEntityTypeBaseType()
         {
-            var expectedErrors = new EdmLibTestErrors() 
+            var expectedErrors = new EdmLibTestErrors()
             {
                 {3, 4, EdmErrorCode.BadCyclicEntity},
                 {9, 4, EdmErrorCode.BadCyclicEntity},
@@ -585,7 +614,7 @@ namespace EdmLibTests.FunctionalTests
         [TestMethod]
         public void ValidateDerivedEntityTypeKeyProperty()
         {
-            var expectedErrors = new EdmLibTestErrors() 
+            var expectedErrors = new EdmLibTestErrors()
             {
                 {9, 4, EdmErrorCode.InvalidKey}
             };
@@ -595,7 +624,7 @@ namespace EdmLibTests.FunctionalTests
         [TestMethod]
         public void ValidateSchemaElementShouldBeUnique()
         {
-            var expectedErrors = new EdmLibTestErrors() 
+            var expectedErrors = new EdmLibTestErrors()
             {
                 {6, 4, EdmErrorCode.AlreadyDefined},
                 {24, 4, EdmErrorCode.AlreadyDefined},
@@ -607,7 +636,7 @@ namespace EdmLibTests.FunctionalTests
         [TestMethod]
         public void ValidatePropertyTypeShouldBeEdmSimpleTypeOrComplexType()
         {
-            var expectedErrors = new EdmLibTestErrors() 
+            var expectedErrors = new EdmLibTestErrors()
             {
                 {4, 6, EdmErrorCode.InvalidPropertyType},
                 {11, 6, EdmErrorCode.InvalidPropertyType},
@@ -632,7 +661,7 @@ namespace EdmLibTests.FunctionalTests
         [TestMethod]
         public void ValidatePropertyRefShouldReferWithinDeclaringEntityType()
         {
-            var expectedErrors = new EdmLibTestErrors() 
+            var expectedErrors = new EdmLibTestErrors()
             {
                 {null, null, EdmErrorCode.KeyPropertyMustBelongToEntity},
             };
@@ -642,7 +671,7 @@ namespace EdmLibTests.FunctionalTests
         [TestMethod]
         public void ValidatePropertyRefInteigrity()
         {
-            var expectedErrors = new EdmLibTestErrors() 
+            var expectedErrors = new EdmLibTestErrors()
             {
                 {3, 4, EdmErrorCode.BadUnresolvedProperty},
             };
@@ -658,7 +687,7 @@ namespace EdmLibTests.FunctionalTests
         [TestMethod]
         public void ValidateCyclicComplexTypeBaseType()
         {
-            var expectedErrors = new EdmLibTestErrors() 
+            var expectedErrors = new EdmLibTestErrors()
             {
                 {3, 4, EdmErrorCode.BadCyclicComplex},
                 {6, 4, EdmErrorCode.BadCyclicComplex},
@@ -671,7 +700,7 @@ namespace EdmLibTests.FunctionalTests
         [TestMethod]
         public void ValidateComplexTypePropertyNameMustBeUnique()
         {
-            var expectedErrors = new EdmLibTestErrors() 
+            var expectedErrors = new EdmLibTestErrors()
             {
                 {4, 6, EdmErrorCode.AlreadyDefined},
                 {8, 6, EdmErrorCode.AlreadyDefined},
@@ -683,7 +712,7 @@ namespace EdmLibTests.FunctionalTests
         [TestMethod]
         public void ValidateComplexTypePropertyNameShouldBeDifferentFromDeclaringType()
         {
-            var expectedErrors = new EdmLibTestErrors() 
+            var expectedErrors = new EdmLibTestErrors()
             {
                 {4, 6, EdmErrorCode.BadProperty},
             };
@@ -715,7 +744,7 @@ namespace EdmLibTests.FunctionalTests
         [TestMethod]
         public void ValidateReferentialConstraintsCanExistBetweenKeyPropertyAndPrimtiveTypeInV40()
         {
-            var expectedErrors = new EdmLibTestErrors() 
+            var expectedErrors = new EdmLibTestErrors()
             {
                 {null, null, EdmErrorCode.EntityKeyMustBeScalar },
             };
@@ -732,7 +761,7 @@ namespace EdmLibTests.FunctionalTests
         [TestMethod]
         public void ValidatePrincipalPropertyRefShouldCorrespondToDependentPropertyRef()
         {
-            var expectedErrors = new EdmLibTestErrors() 
+            var expectedErrors = new EdmLibTestErrors()
             {
                 {22, 6, EdmErrorCode.TypeMismatchRelationshipConstraint},
                 {22, 6, EdmErrorCode.TypeMismatchRelationshipConstraint},
@@ -760,7 +789,7 @@ namespace EdmLibTests.FunctionalTests
         [TestMethod]
         public void ValidateOperationImportNameSimpleIdentifier()
         {
-            var expectedErrors = new EdmLibTestErrors() 
+            var expectedErrors = new EdmLibTestErrors()
             {
                 {null, null, EdmErrorCode.InvalidName },
                 {null, null, EdmErrorCode.InvalidName },
@@ -773,7 +802,7 @@ namespace EdmLibTests.FunctionalTests
         [TestMethod]
         public void ValidateOperationImportEntitySetMustNotBeSetWhenReturnTypeIsComplexOrSimple()
         {
-            var expectedErrors = new EdmLibTestErrors() 
+            var expectedErrors = new EdmLibTestErrors()
             {
                 {29, 6, EdmErrorCode.OperationImportSpecifiesEntitySetButDoesNotReturnEntityType},
                 {30, 6, EdmErrorCode.OperationImportSpecifiesEntitySetButDoesNotReturnEntityType},
@@ -786,7 +815,7 @@ namespace EdmLibTests.FunctionalTests
         [TestMethod]
         public void ValidateOperationImportParameterNameShouldBeUnique()
         {
-            var expectedErrors = new EdmLibTestErrors() 
+            var expectedErrors = new EdmLibTestErrors()
             {
                 {5, 9, EdmErrorCode.AlreadyDefined },
             };
@@ -803,7 +832,7 @@ namespace EdmLibTests.FunctionalTests
                 {null, null, EdmErrorCode.InvalidName},
                 {null, null, EdmErrorCode.InvalidName},
                 {null, null, EdmErrorCode.NameTooLong},
-                {null, null, EdmErrorCode.DuplicateEntityContainerMemberName}, 
+                {null, null, EdmErrorCode.DuplicateEntityContainerMemberName},
             };
             this.VerifySemanticValidation(ValidationTestModelBuilder.EntitySetNameSimpleIdentifier(), expectedErrors);
         }
@@ -828,7 +857,7 @@ namespace EdmLibTests.FunctionalTests
         [TestMethod]
         public void ValidateOperationParameterNameSimpleIdentifier()
         {
-            var expectedErrors = new EdmLibTestErrors() 
+            var expectedErrors = new EdmLibTestErrors()
             {
                 {null, null, EdmErrorCode.InvalidName},
                 {null, null, EdmErrorCode.InvalidName},
@@ -863,17 +892,17 @@ namespace EdmLibTests.FunctionalTests
         [TestMethod]
         public void ValidateTypeRefTypeIntegrity()
         {
-            var expectedErrors = new EdmLibTestErrors() 
+            var expectedErrors = new EdmLibTestErrors()
             {
                 {30, 18, EdmErrorCode.BadUnresolvedType },
             };
             this.VerifySemanticValidation(ValidationTestModelBuilder.TypeRefTypeIntegrity(this.EdmVersion), expectedErrors);
         }
-        
+
         [TestMethod]
         public void ValidateEntitySetInaccessibleEntityType()
         {
-            var expectedErrors = new EdmLibTestErrors() 
+            var expectedErrors = new EdmLibTestErrors()
             {
                 {null, null, EdmErrorCode.BadUnresolvedType }
             };
@@ -883,7 +912,7 @@ namespace EdmLibTests.FunctionalTests
         [TestMethod]
         public void ValidateSingletonInaccessibleEntityType()
         {
-            var expectedErrors = new EdmLibTestErrors() 
+            var expectedErrors = new EdmLibTestErrors()
             {
                 {null, null, EdmErrorCode.BadUnresolvedType }
             };
@@ -893,7 +922,7 @@ namespace EdmLibTests.FunctionalTests
         [TestMethod]
         public void ValidateEntityBaseTypeInaccessibleEntityType()
         {
-            var expectedErrors = new EdmLibTestErrors() 
+            var expectedErrors = new EdmLibTestErrors()
             {
                 {null, null, EdmErrorCode.BadUnresolvedType }
             };
@@ -903,7 +932,7 @@ namespace EdmLibTests.FunctionalTests
         [TestMethod]
         public void ValidateEntityReferenceInaccessibleEntityType()
         {
-            var expectedErrors = new EdmLibTestErrors() 
+            var expectedErrors = new EdmLibTestErrors()
             {
                 {null, null, EdmErrorCode.BadUnresolvedType }
             };
@@ -913,7 +942,7 @@ namespace EdmLibTests.FunctionalTests
         [TestMethod]
         public void ValidateTypeReferenceInaccessibleEntityType()
         {
-            var expectedErrors = new EdmLibTestErrors() 
+            var expectedErrors = new EdmLibTestErrors()
             {
                 {null, null, EdmErrorCode.BadUnresolvedType }
             };
@@ -1089,7 +1118,7 @@ namespace EdmLibTests.FunctionalTests
         {
             var expectedErrors = new EdmLibTestErrors()
             {
-                // TODO: Need to update after the attached bug is fixed. 
+                // TODO: Need to update after the attached bug is fixed.
             };
             var model = OperationTestModelBuilder.OperationStandAloneSchemasEdm();
             this.VerifySemanticValidation(model, expectedErrors);
@@ -1193,7 +1222,7 @@ namespace EdmLibTests.FunctionalTests
         [TestMethod]
         public void TestCreatingRulesetsWithRuleSubset()
         {
-            var expectedErrors = new EdmLibTestErrors() 
+            var expectedErrors = new EdmLibTestErrors()
             {
                 {"(Foo1._!@#$%^&*())", EdmErrorCode.InvalidName},
                 {"(Foo2._!@#$%^&*())", EdmErrorCode.InvalidName},
@@ -1204,7 +1233,7 @@ namespace EdmLibTests.FunctionalTests
             this.VerifySemanticValidation(ValidationTestModelBuilder.IEdmNamedElementNameIsNotAllowed(), ruleset, expectedErrors);
 
             ruleset = new ValidationRuleSet(ruleset.Except(new ValidationRule[] { ValidationRules.NamedElementNameIsNotAllowed }));
-            expectedErrors = new EdmLibTestErrors() 
+            expectedErrors = new EdmLibTestErrors()
             {
                 {null, null, EdmErrorCode.InvalidName},
                 {null, null, EdmErrorCode.InvalidNamespaceName},
@@ -1215,7 +1244,7 @@ namespace EdmLibTests.FunctionalTests
         [TestMethod]
         public void TestDeclaringTypeMustBeCorrect()
         {
-            var expectedErrors = new EdmLibTestErrors() 
+            var expectedErrors = new EdmLibTestErrors()
             {
                 {null, null, EdmErrorCode.KeyPropertyMustBelongToEntity},
                 {null, null, EdmErrorCode.DeclaringTypeMustBeCorrect},
@@ -1232,7 +1261,7 @@ namespace EdmLibTests.FunctionalTests
         [TestMethod]
         public void TestModelValidationWithComplexTypeWithEntityBaseTypeCsdl()
         {
-            var expectedErrors = new EdmLibTestErrors() 
+            var expectedErrors = new EdmLibTestErrors()
             {
                 {9, 4, EdmErrorCode.BadUnresolvedComplexType},
             };
@@ -1242,7 +1271,7 @@ namespace EdmLibTests.FunctionalTests
         [TestMethod]
         public void TestModelWithEntityTypeWithComplexBaseTypeCsdl()
         {
-            var expectedErrors = new EdmLibTestErrors() 
+            var expectedErrors = new EdmLibTestErrors()
             {
                 {3, 4, EdmErrorCode.BadUnresolvedEntityType}
             };
@@ -1252,7 +1281,7 @@ namespace EdmLibTests.FunctionalTests
         [TestMethod]
         public void TestEnumMemberTypeMustMatchEnumUnderlyingType()
         {
-            var expectedErrors = new EdmLibTestErrors() 
+            var expectedErrors = new EdmLibTestErrors()
             {
                 {"(Microsoft.OData.Edm.EdmEnumMember)", EdmErrorCode.EnumMemberValueOutOfRange },
                 {"(Microsoft.OData.Edm.EdmEnumMember)", EdmErrorCode.EnumMemberValueOutOfRange },
@@ -1263,7 +1292,7 @@ namespace EdmLibTests.FunctionalTests
         [TestMethod]
         public void TestModelInconsistentNavigationPropertyPartner()
         {
-            var expectedErrors = new EdmLibTestErrors() 
+            var expectedErrors = new EdmLibTestErrors()
             {
                 {null, null, EdmErrorCode.InvalidNavigationPropertyType},
             };
@@ -1273,7 +1302,7 @@ namespace EdmLibTests.FunctionalTests
         [TestMethod]
         public void TestModelWithInvalidDependentProperties()
         {
-            var expectedErrors = new EdmLibTestErrors() 
+            var expectedErrors = new EdmLibTestErrors()
             {
                 {null, null, EdmErrorCode.BadUnresolvedType},
                 {null, null, EdmErrorCode.DependentPropertiesMustBelongToDependentEntity}
@@ -1284,7 +1313,7 @@ namespace EdmLibTests.FunctionalTests
         [TestMethod]
         public void TestAssociationEndInaccessibleEntityType()
         {
-            var expectedErrors = new EdmLibTestErrors() 
+            var expectedErrors = new EdmLibTestErrors()
             {
                 {null, null, EdmErrorCode.BadUnresolvedType},
             };
@@ -1294,7 +1323,7 @@ namespace EdmLibTests.FunctionalTests
         [TestMethod]
         public void TestInvalidMultiplicityFromRoleUpperBoundMustBeOne()
         {
-            var expectedErrors = new EdmLibTestErrors() 
+            var expectedErrors = new EdmLibTestErrors()
             {
                 {16, 6, EdmErrorCode.InvalidMultiplicityOfPrincipalEnd},
             };
@@ -1304,7 +1333,7 @@ namespace EdmLibTests.FunctionalTests
         [TestMethod]
         public void TestComplexTypeMustHaveComplexBaseType()
         {
-            var expectedErrors = new EdmLibTestErrors() 
+            var expectedErrors = new EdmLibTestErrors()
             {
                 {null, null, EdmErrorCode.ComplexTypeMustHaveComplexBaseType},
             };
@@ -1314,7 +1343,7 @@ namespace EdmLibTests.FunctionalTests
         [TestMethod]
         public void TestEntityMustHaveEntityBaseType()
         {
-            var expectedErrors = new EdmLibTestErrors() 
+            var expectedErrors = new EdmLibTestErrors()
             {
                 {null, null, EdmErrorCode.EntityMustHaveEntityBaseType},
             };
@@ -1324,7 +1353,7 @@ namespace EdmLibTests.FunctionalTests
         [TestMethod]
         public void TestDependentPropertiesMustBelongToDependentEntity()
         {
-            var expectedErrors = new EdmLibTestErrors() 
+            var expectedErrors = new EdmLibTestErrors()
             {
                 {null, null, EdmErrorCode.DependentPropertiesMustBelongToDependentEntity},
             };
@@ -1335,7 +1364,7 @@ namespace EdmLibTests.FunctionalTests
         // [EdmLib] Constructible NavProps should not take types that are invalid for a nav prop
         public void TestNavigationPropertyCorrectType()
         {
-            var expectedErrors = new EdmLibTestErrors() 
+            var expectedErrors = new EdmLibTestErrors()
             {
                 {null, null, EdmErrorCode.InvalidNavigationPropertyType},
                 {null, null, EdmErrorCode.InvalidNavigationPropertyType},
@@ -1375,7 +1404,7 @@ namespace EdmLibTests.FunctionalTests
         [TestMethod]
         public void TestOperationImportWithBadReturnType()
         {
-            var expectedErrors = new EdmLibTestErrors() 
+            var expectedErrors = new EdmLibTestErrors()
             {
                 {null, null, EdmErrorCode.TypeMustNotHaveKindOfNone},
             };
@@ -1386,7 +1415,7 @@ namespace EdmLibTests.FunctionalTests
         [TestMethod]
         public void TestOperationImportEntitySetExpressionIsInvalid2()
         {
-            var expectedErrors = new EdmLibTestErrors() 
+            var expectedErrors = new EdmLibTestErrors()
             {
                 {null, null, EdmErrorCode.InvalidPathFirstPathParameterNotMatchingFirstParameterName},
                 {null, null, EdmErrorCode.InvalidPathFirstPathParameterNotMatchingFirstParameterName},
@@ -1409,7 +1438,7 @@ namespace EdmLibTests.FunctionalTests
         [TestMethod]
         public void ConstructElementAnnotations()
         {
-            var expectedErrors = new EdmLibTestErrors() 
+            var expectedErrors = new EdmLibTestErrors()
             {
                 {null, null, EdmErrorCode.InvalidElementAnnotation},
             };
@@ -1503,7 +1532,7 @@ namespace EdmLibTests.FunctionalTests
         [TestMethod]
         public void TestNavigationPropertyContainTargetMultiplicity()
         {
-            var expectedErrors = new EdmLibTestErrors() 
+            var expectedErrors = new EdmLibTestErrors()
             {
                 {null, null, EdmErrorCode.NavigationPropertyWithRecursiveContainmentSourceMustBeFromZeroOrOne},
                 {null, null, EdmErrorCode.NavigationPropertyWithRecursiveContainmentTargetMustBeOptional},
@@ -1516,7 +1545,7 @@ namespace EdmLibTests.FunctionalTests
         [TestMethod]
         public void TestNavigationPropertyRecursiveContainsEntitySets()
         {
-            var expectedErrors = new EdmLibTestErrors() 
+            var expectedErrors = new EdmLibTestErrors()
             {
                 {16, 10, EdmErrorCode.EntitySetRecursiveNavigationPropertyMappingsMustPointBackToSourceEntitySet},
                 {20, 10, EdmErrorCode.EntitySetRecursiveNavigationPropertyMappingsMustPointBackToSourceEntitySet},
@@ -1527,7 +1556,7 @@ namespace EdmLibTests.FunctionalTests
         [TestMethod]
         public void TestBidirectionalContainment()
         {
-            var expectedErrors = new EdmLibTestErrors() 
+            var expectedErrors = new EdmLibTestErrors()
             {
                 {"(Microsoft.OData.Edm.EdmNavigationProperty)", EdmErrorCode.NavigationPropertyEntityMustNotIndirectlyContainItself},
                 {"(Microsoft.OData.Edm.EdmNavigationProperty)", EdmErrorCode.NavigationPropertyEntityMustNotIndirectlyContainItself},
@@ -1578,7 +1607,7 @@ namespace EdmLibTests.FunctionalTests
   </ComplexType>
 </Schema>";
             var model = this.GetParserResult(new List<String>() { csdl });
-            var expectedErrors = new EdmLibTestErrors() 
+            var expectedErrors = new EdmLibTestErrors()
             {
                 {null, null, EdmErrorCode.BadUnresolvedComplexType},
             };
@@ -1662,8 +1691,8 @@ namespace EdmLibTests.FunctionalTests
 
             IEdmModel model = this.GetParserResult(new string[] { modelCsdl, fooCsdl, barCsdl });
 
-            var expectedError = new EdmLibTestErrors() 
-            { 
+            var expectedError = new EdmLibTestErrors()
+            {
                 {null, null, EdmErrorCode.DuplicateAlias},
             };
 
