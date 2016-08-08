@@ -892,7 +892,7 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
 
             var mobilePhoneBagWrapper = new ODataResourceSetWrapper()
             {
-                ResourceSet = new ODataResourceSet(){ TypeName = "Collection(" + NameSpace + "Phone)"},
+                ResourceSet = new ODataResourceSet() { TypeName = "Collection(" + NameSpace + "Phone)" },
                 Resources = new List<ODataResourceWrapper>()
                 {
                     new ODataResourceWrapper()
@@ -1018,7 +1018,7 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
                 Resources = new List<ODataResourceWrapper>()
                 {
                     CreatePrimaryContactODataWrapper(),
-                    contactDetailsWrapper 
+                    contactDetailsWrapper
                 }
             };
         }
@@ -1201,16 +1201,16 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
             var employeeEntry = CreateEmployeeEntryNoMetadata(hasModel);
             employeeEntry.Id = new Uri(ServiceUri + "Person(-3)");
 
-            employeeEntry.EditLink = new Uri("Person(-3)/" + NameSpace + "Employee", UriKind.Relative);
+            employeeEntry.EditLink = new Uri(ServiceUri + "Person(-3)/" + NameSpace + "Employee", UriKind.Absolute);
             employeeEntry.AddAction(
                     new ODataAction()
-                        {
-                            Metadata = new Uri(ServiceUri + "$metadata#" + NameSpace + "Sack"),
-                            Target =
+                    {
+                        Metadata = new Uri(ServiceUri + "$metadata#" + NameSpace + "Sack"),
+                        Target =
                                 new Uri(ServiceUri +
                                         "Person(-3)/" + NameSpace + "Employee" + "/Sack"),
-                            Title = "Sack"
-                        });
+                        Title = "Sack"
+                    });
             return employeeEntry;
         }
 
@@ -1222,13 +1222,13 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
             employeeEntry.EditLink = new Uri("Person(-10)/" + NameSpace + "SpecialEmployee", UriKind.Relative);
             employeeEntry.AddAction(
                     new ODataAction()
-                        {
-                            Metadata = new Uri(ServiceUri + "$metadata#" + NameSpace + "Sack"),
-                            Target =
+                    {
+                        Metadata = new Uri(ServiceUri + "$metadata#" + NameSpace + "Sack"),
+                        Target =
                                 new Uri(ServiceUri +
                                         "Person(-10)/" + NameSpace + "SpecialEmployee" + "/Sack"),
-                            Title = "Sack"
-                        });
+                        Title = "Sack"
+                    });
             return employeeEntry;
         }
 
@@ -1333,7 +1333,7 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
                 }
             };
 
-            orderEntry2.Properties = new[] { orderEntry2P1, orderEntry2P2};
+            orderEntry2.Properties = new[] { orderEntry2P1, orderEntry2P2 };
             if (!hasModel)
             {
                 orderEntry2P1.SetSerializationInfo(new ODataPropertySerializationInfo()
@@ -1396,7 +1396,7 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
             var customerEntryP1 = new ODataProperty { Name = "CustomerId", Value = -9 };
             var customerEntryP2 = new ODataProperty { Name = "Name", Value = "CustomerName" };
 
-            var primaryContactInfo_nestedInfoWrapper =new ODataNestedResourceInfoWrapper()
+            var primaryContactInfo_nestedInfoWrapper = new ODataNestedResourceInfoWrapper()
             {
                 NestedResourceInfo = new ODataNestedResourceInfo()
                 {

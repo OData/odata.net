@@ -91,9 +91,7 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
                 }
                 else
                 {
-                    // withModel: has typeName -> ODataCoreWriter will do this.PrepareResourceForWriteStart(<NoMetadata>) -> <NoMetadata>
-                    // withoutModel: has no type name -> ODataCoreWriter will NOT do this.PrepareResourceForWriteStart()  -> <populated Metadata> so larger length
-                    Assert.IsTrue(outputWithModel.Length < outputWithoutModel.Length, "FullMetadata/NoMetadata should result in different output");
+                    Assert.AreEqual(outputWithModel, outputWithoutModel, "NoMetadata with/out model should result in same output");
                 }
             }
         }
@@ -143,7 +141,7 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
                 }
                 else
                 {
-                    Assert.IsTrue(outputWithModel.Length < outputWithoutModel.Length, "FullMetadata/NoMetadata should result in different output");
+                    Assert.AreEqual(outputWithModel, outputWithoutModel, "NoMetadata with/out model should result in same output");
                 }
             }
         }
@@ -227,10 +225,7 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
                 }
                 else
                 {
-                    // when ODataParameterNoMetadata:
-                    // withModel: has typeName -> ODataCoreWriter will do this.PrepareResourceForWriteStart(<NoMetadata>) -> <NoMetadata>
-                    // withoutModel: has no type name -> ODataCoreWriter will NOT do this.PrepareResourceForWriteStart()  -> <populated Metadata> so larger length
-                    Assert.IsTrue(outputWithModel.Length < outputWithoutModel.Length, "FullMetadata/NoMetadata should result in different output");
+                    Assert.AreEqual(outputWithModel, outputWithoutModel, "NoMetadata with/out model should result in same output");
                 }
 
                 if (mimeType.Contains(MimeTypes.ODataParameterMinimalMetadata) || mimeType.Contains(MimeTypes.ODataParameterFullMetadata))
@@ -745,12 +740,12 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
                 verifyFeedCalled = true;
             };
             Action<ODataResource> verifyEntry = (entry) =>
-                {
-                    Assert.IsTrue(entry.EditLink.AbsoluteUri.EndsWith("Person(-5)") ||
-                                  entry.EditLink.AbsoluteUri.EndsWith("Person(-3)/" + NameSpace + "Employee") ||
-                                  entry.EditLink.AbsoluteUri.EndsWith("Person(-10)/" + NameSpace + "SpecialEmployee"));
-                    verifyEntryCalled = true;
-                };
+            {
+                Assert.IsTrue(entry.EditLink.AbsoluteUri.EndsWith("Person(-5)") ||
+                              entry.EditLink.AbsoluteUri.EndsWith("Person(-3)/" + NameSpace + "Employee") ||
+                              entry.EditLink.AbsoluteUri.EndsWith("Person(-10)/" + NameSpace + "SpecialEmployee"));
+                verifyEntryCalled = true;
+            };
             Action<ODataNestedResourceInfo> verifyNavigation = (navigation) =>
             {
                 Assert.IsTrue(navigation.Name == "PersonMetadata" || navigation.Name == "Manager" || navigation.Name == "Car");

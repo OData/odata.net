@@ -751,25 +751,16 @@ namespace Microsoft.OData
         /// <summary>
         /// Place where derived writers can perform custom steps before the resource is writen, at the begining of WriteStartEntryImplementation.
         /// </summary>
+        /// <param name="resourceScope">The ResourceScope.</param>
         /// <param name="resource">Resource to write.</param>
-        /// <param name="typeContext">The context object to answer basic questions regarding the type of the resource or resourceSet.</param>
+        /// <param name="writingResponse">True if writing response.</param>
         /// <param name="selectedProperties">The selected properties of this scope.</param>
-        protected virtual void PrepareResourceForWriteStart(ODataResource resource, ODataResourceTypeContext typeContext, SelectedPropertiesNode selectedProperties)
+        protected virtual void PrepareResourceForWriteStart(ResourceScope resourceScope, ODataResource resource, bool writingResponse, SelectedPropertiesNode selectedProperties)
         {
             // No-op Atom and Verbose JSON. The JSON Light writer will override this method and inject the appropriate metadata builder
             // into the resource before writing.
             // Actually we can inject the metadata builder in here and
             // remove virtual from this method.
-        }
-
-        /// <summary>
-        /// Validates the media resource on the resource.
-        /// </summary>
-        /// <param name="resource">The resource to validate.</param>
-        /// <param name="entityType">The entity type of the resource.</param>
-        protected virtual void ValidateMediaResource(ODataResource resource, IEdmEntityType entityType)
-        {
-            outputContext.WriterValidator.ValidateMetadataResource(resource, entityType);
         }
 
         /// <summary>
@@ -911,24 +902,11 @@ namespace Microsoft.OData
                         }
 
                         resourceScope.ResourceType = resourceType;
-
-                        // For Complex resource, we don't prepare the ODataResourceMetadataBuilder, then it will use NoOpResourceMetadataBuilder.
-                        // For the resource whose type is unknown, if NavigationSourceName is not provided, we will also use NoOpResourceMetadataBuilder.
-                        var entityType = resourceType as IEdmEntityType;
-                        if (resourceType == null || entityType != null)
-                        {
-                            var typeContext = resourceScope.GetOrCreateTypeContext(this.outputContext.WritingResponse);
-
-                            if (!(resourceType == null && typeContext.NavigationSourceKind == EdmNavigationSourceKind.None))
-                            {
-                                this.PrepareResourceForWriteStart(
-                                    resource,
-                                    typeContext,
-                                    resourceScope.SelectedProperties);
-
-                                this.ValidateMediaResource(resource, entityType);
-                            }
-                        }
+                        this.PrepareResourceForWriteStart(
+                            resourceScope,
+                            resource,
+                            this.outputContext.WritingResponse,
+                            resourceScope.SelectedProperties);
                     }
 
                     this.StartResource(resource);

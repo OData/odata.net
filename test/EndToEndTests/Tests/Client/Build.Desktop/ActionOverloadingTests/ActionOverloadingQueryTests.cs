@@ -187,7 +187,7 @@ namespace Microsoft.Test.OData.Tests.Client.ActionOverloadingTests
         private void VerifyOperationsInMetadata(Dictionary<string, string> expectedOperations, IEnumerable<IEdmOperationImport> actualActionImports)
         {
             Assert.AreEqual(expectedOperations.Count, actualActionImports.Count(), "Wrong number of ActionImport");
-            
+
             // Verify the binding type of the ActionImport in metadata.
             foreach (KeyValuePair<string, string> operation in expectedOperations)
             {
@@ -250,8 +250,9 @@ namespace Microsoft.Test.OData.Tests.Client.ActionOverloadingTests
             }
         }
 
-        private void VerifyActionInJsonLightPayload(string queryUri, List<string> expectedActionPayload, string acceptMimeType, bool verifyActionNotInPayload = false)
+        private void VerifyActionInJsonLightPayload(string queryUri, List<string> expectedActionPayload, string acceptMimeType)
         {
+            var verifyActionNotInPayload = (acceptMimeType == MimeTypes.ApplicationJson + MimeTypes.ODataParameterNoMetadata);
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(this.ServiceUri.AbsoluteUri + queryUri);
             request.Accept = acceptMimeType;
             string responseString = string.Empty;

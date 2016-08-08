@@ -155,40 +155,35 @@ namespace Microsoft.OData.JsonLight
         /// <summary>
         /// Place where derived writers can perform custom steps before the resource is writen, at the begining of WriteStartEntryImplementation.
         /// </summary>
+        /// <param name="resourceScope">The ResourceScope.</param>
         /// <param name="resource">Resource to write.</param>
-        /// <param name="typeContext">The context object to answer basic questions regarding the type of the resource or resource set.</param>
+        /// <param name="writingResponse">True if writing response.</param>
         /// <param name="selectedProperties">The selected properties of this scope.</param>
-        protected override void PrepareResourceForWriteStart(ODataResource resource, ODataResourceTypeContext typeContext, SelectedPropertiesNode selectedProperties)
+        protected override void PrepareResourceForWriteStart(ResourceScope resourceScope, ODataResource resource, bool writingResponse, SelectedPropertiesNode selectedProperties)
         {
-            ResourceScope resourceScope = (ResourceScope)this.CurrentScope;
-            Debug.Assert(resourceScope != null, "resourceScope != null");
-
-            ODataResourceMetadataBuilder builder = this.jsonLightOutputContext.MetadataLevel.CreateResourceMetadataBuilder(
-                resource,
-                typeContext,
-                resourceScope.SerializationInfo,
-                resourceScope.ResourceType,
-                selectedProperties,
-                this.jsonLightOutputContext.WritingResponse,
-                this.jsonLightOutputContext.ODataSimplifiedOptions.EnableWritingKeyAsSegment,
-                this.jsonLightOutputContext.MessageWriterSettings.ODataUri);
-
-            if (builder is ODataConventionalResourceMetadataBuilder)
+            var entityType = resourceScope.ResourceType as IEdmEntityType;
+            if (this.jsonLightOutputContext.MetadataLevel is JsonNoMetadataLevel)
             {
-                builder.ParentMetadataBuilder = this.FindParentResourceMetadataBuilder();
+                // 1. NoMetadata level: always enable its NullResourceMetadataBuilder
+                var typeContext = resourceScope.GetOrCreateTypeContext(writingResponse);
+                InnerPrepareResourceForWriteStart(resource, typeContext, selectedProperties);
             }
+            else
+            {
+                // 2. Minimal/Full Metadata level: may enable their NoOpResourceMetadataBuilder/ODataConventionalResourceMetadataBuilder
+                if (resourceScope.ResourceType == null || entityType != null)
+                {
+                    var typeContext = resourceScope.GetOrCreateTypeContext(writingResponse);
+                    if (!(resourceScope.ResourceType == null && typeContext.NavigationSourceKind == EdmNavigationSourceKind.None))
+                    {
+                        InnerPrepareResourceForWriteStart(resource, typeContext, selectedProperties);
+                    }
+                }
 
-            this.jsonLightOutputContext.MetadataLevel.InjectMetadataBuilder(resource, builder);
-        }
-
-        /// <summary>
-        /// Validates the media resource on the resource.
-        /// </summary>
-        /// <param name="resource">The resource to validate.</param>
-        /// <param name="entityType">The entity type of the resource.</param>
-        protected override void ValidateMediaResource(ODataResource resource, IEdmEntityType entityType)
-        {
-            // Skip the media resource validation.
+                // 3. Here fallback to the default NoOpResourceMetadataBuilder
+                // For Complex resource, we don't prepare the ODataResourceMetadataBuilder, then it will use NoOpResourceMetadataBuilder.
+                // For the resource whose type is unknown, if NavigationSourceName is not provided, we will also use NoOpResourceMetadataBuilder.
+            }
         }
 
         /// <summary>
@@ -622,6 +617,35 @@ namespace Microsoft.OData.JsonLight
         protected override NestedResourceInfoScope CreateNestedResourceInfoScope(WriterState writerState, ODataNestedResourceInfo navLink, IEdmNavigationSource navigationSource, IEdmStructuredType resourceType, bool skipWriting, SelectedPropertiesNode selectedProperties, ODataUri odataUri)
         {
             return new JsonLightNestedResourceInfoScope(writerState, navLink, navigationSource, resourceType, skipWriting, selectedProperties, odataUri);
+        }
+
+        /// <summary>
+        /// Sets resource's metadata builder based on current metadata level.
+        /// </summary>
+        /// <param name="resource">Resource to write.</param>
+        /// <param name="typeContext">The context object to answer basic questions regarding the type of the resource or resource set.</param>
+        /// <param name="selectedProperties">The selected properties of this scope.</param>
+        private void InnerPrepareResourceForWriteStart(ODataResource resource, ODataResourceTypeContext typeContext, SelectedPropertiesNode selectedProperties)
+        {
+            ResourceScope resourceScope = (ResourceScope)this.CurrentScope;
+            Debug.Assert(resourceScope != null, "resourceScope != null");
+
+            ODataResourceMetadataBuilder builder = this.jsonLightOutputContext.MetadataLevel.CreateResourceMetadataBuilder(
+                resource,
+                typeContext,
+                resourceScope.SerializationInfo,
+                resourceScope.ResourceType,
+                selectedProperties,
+                this.jsonLightOutputContext.WritingResponse,
+                this.jsonLightOutputContext.ODataSimplifiedOptions.EnableWritingKeyAsSegment,
+                this.jsonLightOutputContext.MessageWriterSettings.ODataUri);
+
+            if (builder is ODataConventionalResourceMetadataBuilder)
+            {
+                builder.ParentMetadataBuilder = this.FindParentResourceMetadataBuilder();
+            }
+
+            this.jsonLightOutputContext.MetadataLevel.InjectMetadataBuilder(resource, builder);
         }
 
         /// <summary>

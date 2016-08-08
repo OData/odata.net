@@ -213,11 +213,16 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
                     odataWriter.WriteStart(entry);
                     odataWriter.WriteEnd();
                     var result = WritePayloadHelper.ReadStreamContent(responseMessageWithoutModel.GetStream());
-                    Assert.IsTrue(result.Contains("Person(-5)\",\"PersonId\":-5"));
+                    Assert.IsTrue(result.Contains("\"PersonId\":-5"));
                     if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
                     {
                         // no metadata does not write odata.metadata
                         Assert.IsTrue(result.Contains("$metadata#Parsen/$entity"));
+                        Assert.IsTrue(result.Contains("Person(-5)\",\"PersonId\":-5"));
+                    }
+                    else
+                    {
+                        Assert.IsFalse(result.Contains("Person(-5)\",\"PersonId\":-5"));
                     }
                 }
 
@@ -236,11 +241,16 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
                     odataWriter.WriteEnd();
                     odataWriter.WriteEnd();
                     var result = WritePayloadHelper.ReadStreamContent(responseMessageWithoutModel.GetStream());
-                    Assert.IsTrue(result.Contains("Person(-5)\",\"PersonId\":-5"));
+                    Assert.IsTrue(result.Contains("\"PersonId\":-5"));
                     if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
                     {
                         // no metadata does not write odata.metadata
                         Assert.IsTrue(result.Contains("$metadata#Parsen\""));
+                        Assert.IsTrue(result.Contains("Person(-5)\",\"PersonId\":-5"));
+                    }
+                    else
+                    {
+                        Assert.IsFalse(result.Contains("Person(-5)\",\"PersonId\":-5"));
                     }
                 }
 
