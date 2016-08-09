@@ -750,10 +750,10 @@ namespace Microsoft.OData.Core.Tests.JsonLight
                                     "\"@odata.id\":\"http://host/service/Product(1)\"," +
                                     "\"Id\":1," +
                                     "\"Name\":\"Car\"," +
+                                    "\"Details@odata.context\":\"http://host/service/$metadata#Products(1)/Details\"," +
                                     "\"Details\":" +
                                     "[" +
                                         "{" +
-                                            "\"@odata.type\":\"#MyNS.ProductDetail\"," +
                                             "\"Id\":1," +
                                             "\"Detail\":\"made in china\"" +
                                         "}" +
@@ -864,10 +864,10 @@ namespace Microsoft.OData.Core.Tests.JsonLight
                                 "\"@odata.id\":\"http://host/service/Product(1)\"," +
                                 "\"Id\":1," +
                                 "\"Name\":\"Car\"," +
+                                "\"Details@odata.context\":\"http://host/service/$metadata#Products(1)/Details\"," +
                                 "\"Details\":" +
                                 "[" +
                                     "{" +
-                                        "\"@odata.type\":\"#MyNS.ProductDetail\"," +
                                         "\"Id\":1," +
                                         "\"Detail\":\"made in china\"" +
                                     "}" +
@@ -957,13 +957,13 @@ namespace Microsoft.OData.Core.Tests.JsonLight
                     ContainsTarget = true,
                 });
 
-                customer.AddUnidirectionalNavigation(new EdmNavigationPropertyInfo
+                EdmNavigationProperty favouriteProducts = customer.AddUnidirectionalNavigation(new EdmNavigationPropertyInfo
                 {
                     Name = "FavouriteProducts",
                     Target = productType,
                     TargetMultiplicity = EdmMultiplicity.Many,
                 });
-                customer.AddUnidirectionalNavigation(new EdmNavigationPropertyInfo
+                EdmNavigationProperty productBeingViewed = customer.AddUnidirectionalNavigation(new EdmNavigationPropertyInfo
                 {
                     Name = "ProductBeingViewed",
                     Target = productType,
@@ -971,11 +971,15 @@ namespace Microsoft.OData.Core.Tests.JsonLight
                 });
 
                 EdmEntityContainer container = new EdmEntityContainer("MyNS", "Example30");
-                container.AddEntitySet("Customers", customer);
+                EdmEntitySet customers = container.AddEntitySet("Customers", customer);
+                EdmEntitySet products = container.AddEntitySet("Products", productType);
                 container.AddEntitySet("Orders", orderType);
+
+                customers.AddNavigationTarget(favouriteProducts, products);
+                customers.AddNavigationTarget(productBeingViewed, products);
+
                 myModel.AddElement(container);
 
-                container.AddEntitySet("Products", productType);
             }
             return myModel;
         }

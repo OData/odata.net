@@ -314,7 +314,7 @@ namespace EdmLibTests.FunctionalTests
             Assert.AreEqual(EdmErrorCode.XmlError, errors.First().ErrorCode, "Correct error code.");
             Assert.IsTrue(errors.First().ErrorMessage.Contains("'ReferencedProperty' is a duplicate attribute name."), "Correct error message");
         }
-     
+
         [TestMethod]
         public void ParseUnexpectedText()
         {

@@ -4,12 +4,18 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Xml;
 using FluentAssertions;
 using Microsoft.OData.Core.UriParser;
 using Microsoft.OData.Core.UriParser.Semantic;
 using Microsoft.OData.Edm;
+using Microsoft.OData.Edm.Csdl;
 using Microsoft.OData.Edm.Library;
+using Microsoft.OData.Edm.Validation;
 using Xunit;
 using ODataErrorStrings = Microsoft.OData.Core.Strings;
 
@@ -81,6 +87,58 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.UriParser
             const string expectedExpandClause = "Navigation1,Navigation2($expand=Navigation1)";
             const string expectedSelectClause = "";
             this.ParseAndExtract(expandClauseText, expectedExpandClauseFromOM: expectedExpandClause, expectedSelectClauseFromOM: expectedSelectClause);
+        }
+
+        [Fact]
+        public void MultiLevelExpandOfEdmUnknownEntitySetWithFilterAndOrderby()
+        {
+            string csdl =
+@"<?xml version=""1.0"" encoding=""utf-8""?>
+<edmx:Edmx Version=""4.0"" xmlns:edmx=""http://docs.oasis-open.org/odata/ns/edmx"">
+  <edmx:DataServices>
+    <Schema Namespace=""InMemoryService.Models"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
+      <EntityType Name=""Product"">
+        <Key>
+          <PropertyRef Name=""Id"" />
+        </Key>
+        <Property Name=""Id"" Type=""Edm.Int64"" Nullable=""false"" />
+        <NavigationProperty Name=""Nav1"" Type=""InMemoryService.Models.Nav1"" />
+      </EntityType>
+      <EntityType Name=""Nav1"">
+        <Key>
+          <PropertyRef Name=""Id"" />
+        </Key>
+        <Property Name=""Id"" Type=""Edm.Int32"" Nullable=""false"" />
+        <NavigationProperty Name=""Nav2s"" Type=""Collection(InMemoryService.Models.Nav2)"" />
+      </EntityType>
+      <EntityType Name=""Nav2"">
+        <Key>
+          <PropertyRef Name=""Id"" />
+        </Key>
+        <Property Name=""Id"" Type=""Edm.Int32"" Nullable=""false"" />
+        <Property Name=""Name"" Type=""Edm.String""/>
+      </EntityType>
+    </Schema>
+    <Schema Namespace=""InMemoryService"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
+      <EntityContainer Name=""Container"">
+        <EntitySet Name=""Products"" EntityType=""InMemoryService.Models.Product""/>
+      </EntityContainer>
+    </Schema>
+  </edmx:DataServices>
+</edmx:Edmx>";
+            IEnumerable<EdmError> errors;
+            IEdmModel model;
+            EdmxReader.TryParse(XmlReader.Create(new StringReader(csdl)), out model, out errors);
+
+            foreach (var parser in new[] {
+                new ODataUriParser(model, new Uri("http://host"), new Uri("http://host/Products(1)?$expand=Nav1($expand=Nav2s($orderby=Name))")),
+                new ODataUriParser(model, new Uri("http://host"), new Uri("http://host/Products(1)?$expand=Nav1($expand=Nav2s($filter=Name ne 'Nav2-1'))"))
+            })
+            {
+                ExpandedNavigationSelectItem navigationItem = (ExpandedNavigationSelectItem)parser.ParseSelectAndExpand().SelectedItems.FirstOrDefault();
+                ExpandedNavigationSelectItem innerNavigationItem = (ExpandedNavigationSelectItem)navigationItem.SelectAndExpand.SelectedItems.FirstOrDefault();
+                Assert.True(innerNavigationItem.NavigationSource is EdmUnknownEntitySet);
+            }
         }
 
         [Fact]
