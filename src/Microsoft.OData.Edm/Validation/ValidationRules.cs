@@ -4,6 +4,7 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml;
@@ -325,18 +326,18 @@ namespace Microsoft.OData.Edm.Validation
                 });
 
         /// <summary>
-        /// Validates that no navigation property is mapped to two different entity sets or singletons.
+        /// Validates that no navigation property is mapped multiple times for a single path.
         /// </summary>
         public static readonly ValidationRule<IEdmNavigationSource> NavigationPropertyMappingsMustBeUnique =
             new ValidationRule<IEdmNavigationSource>(
                 (context, navigationSource) =>
                 {
-                    HashSetInternal<IEdmNavigationProperty> mappedPropertySet = new HashSetInternal<IEdmNavigationProperty>();
-
-                    foreach (IEdmNavigationPropertyBinding mapping in navigationSource.NavigationPropertyBindings)
+                    var set = new HashSetInternal<KeyValuePair<IEdmNavigationProperty, string>>();
+                    foreach (var mapping in navigationSource.NavigationPropertyBindings)
                     {
-                        if (!mappedPropertySet.Add(mapping.NavigationProperty))
+                        if (!set.Add(new KeyValuePair<IEdmNavigationProperty, string>(mapping.NavigationProperty, mapping.Path.Path)))
                         {
+                            // TODO: Update error message in V7.1 #644
                             context.AddError(
                                 navigationSource.Location(),
                                 EdmErrorCode.DuplicateNavigationPropertyMapping,

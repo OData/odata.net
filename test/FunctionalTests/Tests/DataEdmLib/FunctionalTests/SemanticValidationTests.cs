@@ -998,6 +998,40 @@ namespace EdmLibTests.FunctionalTests
         }
 
         [TestMethod]
+        public void NavigationPropertyShouldAllowMultipleBindingsForDifferentPaths()
+        {
+            var model = new EdmModel();
+            var entityType = new EdmEntityType("NS", "Entity");
+            var complexType = new EdmComplexType("NS", "Complex");
+            var container = new EdmEntityContainer("NS", "Container");
+            model.AddElements(new IEdmSchemaElement[] { entityType, complexType, container });
+            entityType.AddKeys(entityType.AddStructuralProperty("ID", EdmPrimitiveTypeKind.Int32, false));
+            entityType.AddStructuralProperty("Complex1", new EdmComplexTypeReference(complexType, false));
+            entityType.AddStructuralProperty("Complex2", new EdmComplexTypeReference(complexType, false));
+            var complexNav = complexType.AddUnidirectionalNavigation(new EdmNavigationPropertyInfo
+            {
+                Name = "ComplexNav",
+                Target = entityType,
+                TargetMultiplicity = EdmMultiplicity.One
+            });
+            var set1 = container.AddEntitySet("Set1", entityType);
+            var set2 = container.AddEntitySet("Set2", entityType);
+            var set3 = container.AddEntitySet("Set3", entityType);
+            set1.AddNavigationTarget(complexNav, set2, new EdmPathExpression("Complex1/ComplexNav"));
+            set1.AddNavigationTarget(complexNav, set3, new EdmPathExpression("Complex2/ComplexNav"));
+            var entityNav = entityType.AddUnidirectionalNavigation(new EdmNavigationPropertyInfo
+            {
+                Name = "EntityNav",
+                Target = entityType,
+                TargetMultiplicity = EdmMultiplicity.ZeroOrOne,
+                ContainsTarget = true
+            });
+            set1.AddNavigationTarget(complexNav, set2, new EdmPathExpression("EntityNav/Complex1/ComplexNav"));
+            set1.AddNavigationTarget(complexNav, set3, new EdmPathExpression("EntityNav/Complex2/ComplexNav"));
+            VerifySemanticValidation(model, null);
+        }
+
+        [TestMethod]
         public void ValidateBinaryKeyTypeWithNegativeMaxLength()
         {
             var expectedErrors = new EdmLibTestErrors()
