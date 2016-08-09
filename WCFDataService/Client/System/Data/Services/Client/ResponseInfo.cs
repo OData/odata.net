@@ -96,6 +96,11 @@ namespace System.Data.Services.Client
             get { return this.Context.IgnoreMissingProperties; }
         }
 
+        internal bool AutoNullPropagation
+        {
+            get { return this.Context.AutoNullPropagation; }
+        }
+
         /// <summary>Gets the value of UndeclaredPropertyBehaviorKinds.</summary>
         internal ODataUndeclaredPropertyBehaviorKinds UndeclaredPropertyBehaviorKinds
         {

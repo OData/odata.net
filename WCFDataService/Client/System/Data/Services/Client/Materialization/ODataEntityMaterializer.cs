@@ -63,7 +63,7 @@ namespace System.Data.Services.Client.Materialization
             ProjectionPlan materializeEntryPlan)
             : base(materializerContext, expectedType)
         {
-            this.materializeEntryPlan = materializeEntryPlan ?? CreatePlan(queryComponents);
+            this.materializeEntryPlan = materializeEntryPlan ?? CreatePlan(queryComponents, materializerContext.AutoNullPropagation);
             this.EntityTrackingAdapter = entityTrackingAdapter;
             DSClient.SimpleLazy<PrimitivePropertyConverter> converter = new DSClient.SimpleLazy<PrimitivePropertyConverter>(() => new PrimitivePropertyConverter(this.Format));
 
@@ -414,6 +414,22 @@ namespace System.Data.Services.Client.Materialization
             return result.Entry;
         }
 
+        /// <summary>Provides support for getting payload entries or null during projections.</summary>
+        /// <param name="entry">Entry to get sub-entry from.</param>
+        /// <param name="name">Name of sub-entry.</param>
+        /// <returns>The sub-entry or null.</returns>
+        internal static ODataEntry ProjectionGetEntryOrNull(MaterializerEntry entry, string name)
+        {
+            MaterializerNavigationLink property = ODataEntityMaterializer.GetPropertyOrThrow(entry.NavigationLinks, name);
+            MaterializerEntry result = property.Entry;
+            if (result == null)
+            {
+                throw new InvalidOperationException(DSClient.Strings.AtomMaterializer_PropertyNotExpectedEntry(name));
+            }
+
+            return result.Entry;
+        }
+
         /// <summary>Initializes a projection-driven entry (with a specific type and specific properties).</summary>
         /// <param name="materializer">Materializer under which projection is taking place.</param>
         /// <param name="entry">Root entry for paths.</param>
@@ -431,6 +447,8 @@ namespace System.Data.Services.Client.Materialization
             string[] properties,
             Func<object, object, Type, object>[] propertyValues)
         {
+            if (entry == null && materializer.MaterializerContext.AutoNullPropagation)
+                return null;
             if (entry.Entry == null)
             {
                 throw new NullReferenceException(DSClient.Strings.AtomMaterializer_EntryToInitializeIsNull(resultType.FullName));
@@ -885,7 +903,7 @@ namespace System.Data.Services.Client.Materialization
         /// <summary>Creates an entry materialization plan for a given projection.</summary>
         /// <param name="queryComponents">Query components for plan to materialize.</param>
         /// <returns>A materialization plan.</returns>
-        private static ProjectionPlan CreatePlan(QueryComponents queryComponents)
+        private static ProjectionPlan CreatePlan(QueryComponents queryComponents, bool autoNullPropagation)
         {
             // Can we have a primitive property as well?
             LambdaExpression projection = queryComponents.Projection;
@@ -896,7 +914,7 @@ namespace System.Data.Services.Client.Materialization
             }
             else
             {
-                result = ProjectionPlanCompiler.CompilePlan(projection, queryComponents.NormalizerRewrites);
+                result = ProjectionPlanCompiler.CompilePlan(projection, queryComponents.NormalizerRewrites, autoNullPropagation);
                 result.LastSegmentType = queryComponents.LastSegmentType;
             }
 

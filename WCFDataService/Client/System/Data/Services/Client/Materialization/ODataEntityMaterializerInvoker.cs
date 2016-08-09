@@ -113,6 +113,16 @@ namespace System.Data.Services.Client.Materialization
             return ODataEntityMaterializer.ProjectionGetEntry(MaterializerEntry.GetEntry((ODataEntry)entry), name);
         }
 
+        /// <summary>Provides support for getting payload entries or null during projections.</summary>
+        /// <param name="entry">Entry to get sub-entry from.</param>
+        /// <param name="name">Name of sub-entry.</param>
+        /// <returns>The sub-entry or null.</returns>
+        internal static object ProjectionGetEntryOrNull(object entry, string name)
+        {
+            Debug.Assert(entry.GetType() == typeof(ODataEntry), "entry.GetType() == typeof(ODataEntry)");
+            return ODataEntityMaterializer.ProjectionGetEntryOrNull(MaterializerEntry.GetEntry((ODataEntry)entry), name);
+        }
+
         /// <summary>Initializes a projection-driven entry (with a specific type and specific properties).</summary>
         /// <param name="materializer">Materializer under which projection is taking place.</param>
         /// <param name="entry">Root entry for paths.</param>
@@ -130,8 +140,10 @@ namespace System.Data.Services.Client.Materialization
             Func<object, object, Type, object>[] propertyValues)
         {
             Debug.Assert(typeof(ODataEntityMaterializer).IsAssignableFrom(materializer.GetType()), "typeof(ODataEntityMaterializer).IsAssignableFrom(materializer.GetType())");
-            Debug.Assert(entry.GetType() == typeof(ODataEntry), "entry.GetType() == typeof(ODataEntry)");
-            return ODataEntityMaterializer.ProjectionInitializeEntity((ODataEntityMaterializer)materializer, MaterializerEntry.GetEntry((ODataEntry)entry), expectedType, resultType, properties, propertyValues);
+            ODataEntityMaterializer entityMaterializer = (ODataEntityMaterializer)materializer;
+            if (!entityMaterializer.MaterializerContext.AutoNullPropagation)
+                Debug.Assert(entry.GetType() == typeof(ODataEntry), "entry.GetType() == typeof(ODataEntry)");
+            return ODataEntityMaterializer.ProjectionInitializeEntity(entityMaterializer, MaterializerEntry.GetEntry((ODataEntry)entry), expectedType, resultType, properties, propertyValues);
         }
 
         /// <summary>Projects a simple value from the specified <paramref name="path"/>.</summary>

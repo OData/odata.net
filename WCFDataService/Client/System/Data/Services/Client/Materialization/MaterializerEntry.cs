@@ -275,7 +275,7 @@ namespace System.Data.Services.Client.Materialization
         /// <returns>The materializer entry</returns>
         public static MaterializerEntry GetEntry(ODataEntry entry)
         {
-            return entry.GetAnnotation<MaterializerEntry>();
+            return entry == null ? null : entry.GetAnnotation<MaterializerEntry>();
         }
 
         /// <summary>
@@ -341,7 +341,7 @@ namespace System.Data.Services.Client.Materialization
                     {
                         throw DSClient.Error.InvalidOperation(DSClient.Strings.Deserialize_MissingIdElement);
                     }
-
+                    
                     this.EntityDescriptor.Identity = this.entry.Id;
                     this.EntityDescriptor.EditLink = this.entry.EditLink;
                     this.EntityDescriptor.SelfLink = this.entry.ReadLink;
