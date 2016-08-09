@@ -1902,6 +1902,11 @@ namespace Microsoft.OData.JsonLight
                     return this.EntityType;
                 }
             }
+
+            /// <summary>
+            /// The expected type defined in the model for the resource
+            /// </summary>
+            public IEdmStructuredType ResourceTypeFromMetadata { get; set; }
         }
 
         /// <summary>

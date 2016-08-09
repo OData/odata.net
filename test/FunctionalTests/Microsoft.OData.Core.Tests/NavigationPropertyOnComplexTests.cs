@@ -793,7 +793,7 @@ namespace Microsoft.OData.Tests
                 writer.WriteEnd();
                 writer.WriteEnd();
                 writer.WriteEnd();
-            }, false, isFullMetadata:true);
+            }, false, true);
 
             string expected = "{\"@odata.context\":\"http://host/$metadata#People/$entity\"," +
                               "\"@odata.id\":\"People('abc')\"," +
@@ -822,7 +822,7 @@ namespace Microsoft.OData.Tests
                               "}" +
                               "}";
 
-            Assert.Equal(expected, output);
+            Assert.Equal(output, expected);
         }
 
         [Fact]
@@ -841,16 +841,16 @@ namespace Microsoft.OData.Tests
             var output = WriteJsonLightEntry(Model, EntitySet, EntityType, odataUri, (writer) =>
             {
                 writer.WriteStart(res);
-                    writer.WriteStart(addressInfo);
-                        writer.WriteStart(resSet);
-                            writer.WriteStart(address);
-                                writer.WriteStart(nestedCityInfo);
-                                    writer.WriteStart(city);
-                                    writer.WriteEnd();
-                                writer.WriteEnd();
-                            writer.WriteEnd();
-                        writer.WriteEnd();
-                    writer.WriteEnd();
+                writer.WriteStart(addressInfo);
+                writer.WriteStart(resSet);
+                writer.WriteStart(address);
+                writer.WriteStart(nestedCityInfo);
+                writer.WriteStart(city);
+                writer.WriteEnd();
+                writer.WriteEnd();
+                writer.WriteEnd();
+                writer.WriteEnd();
+                writer.WriteEnd();
                 writer.WriteEnd();
             }, false, isFullMetadata: true);
 
@@ -874,7 +874,7 @@ namespace Microsoft.OData.Tests
             Assert.Equal(expected, output);
         }
 
-        [Fact (Skip = "TODO: auto compute navigation link in reader for complex")]
+        [Fact(Skip = "TODO: auto compute navigation link in reader for complex")]
         public void AutoComputeNavigationLinkForNavUnderSingleComplexInReader()
         {
             var entitySet = CollectionModel.EntityContainer.FindEntitySet("Entities");
@@ -903,6 +903,135 @@ namespace Microsoft.OData.Tests
             resource = itemsList[3] as ODataResource;
             resource.Id.Should().Be(new Uri("http://host/Entities('abc')"));
         }
+        #endregion
+
+        #region Containment under complex
+        [Fact]
+        public void WriteContainmentUnderComplex()
+        {
+            var model = ContainmentComplexModel();
+            var entityType = model.FindType("NS.EntityType") as IEdmEntityType;
+            var entitySet = model.EntityContainer.FindEntitySet("Entities1");
+            var uriParser = new ODataUriParser(model, ServiceRoot, new Uri("http://host/Entities1('abc')"), null);
+            var odataUri = uriParser.ParseUri();
+
+            ODataResource topEntity = new ODataResource() { Properties = new[] { new ODataProperty { Name = "ID", Value = "abc" } } };
+            ODataNestedResourceInfo complexInfo = new ODataNestedResourceInfo() { Name = "Complex" };
+            ODataResource complex = new ODataResource() { Properties = new[] { new ODataProperty { Name = "Prop1", Value = 123 } } };
+            ODataNestedResourceInfo containedInfo = new ODataNestedResourceInfo() { Name = "ContainedUnderComplex", IsCollection = true };
+            ODataResourceSet set = new ODataResourceSet();
+            ODataResource contained = new ODataResource() { Properties = new[] { new ODataProperty { Name = "ID", Value = "def" } } };
+            ODataNestedResourceInfo navInfo = new ODataNestedResourceInfo() { Name = "NavUnderContained", IsCollection = true };
+            ODataResource nav = new ODataResource() { Properties = new[] { new ODataProperty { Name = "ID", Value = "efg" } } };
+
+            string output = WriteJsonLightEntry(model, entitySet, entityType, odataUri, (writer) =>
+            {
+                writer.WriteStart(topEntity);
+                writer.WriteStart(complexInfo);
+                writer.WriteStart(complex);
+                writer.WriteStart(containedInfo);
+                writer.WriteStart(set);
+                writer.WriteStart(contained);
+                writer.WriteStart(navInfo);
+                writer.WriteStart(set);
+                writer.WriteStart(nav);
+                writer.WriteEnd();
+                writer.WriteEnd();
+                writer.WriteEnd();
+                writer.WriteEnd();
+                writer.WriteEnd();
+                writer.WriteEnd();
+                writer.WriteEnd();
+                writer.WriteEnd();
+                writer.WriteEnd();
+            }, false, isFullMetadata:true);
+
+            string expected = "{" +
+                "\"@odata.context\":\"http://host/$metadata#Entities1/$entity\"," +
+                "\"@odata.id\":\"Entities1('abc')\"," +
+                "\"@odata.editLink\":\"Entities1('abc')\"," +
+                "\"ID\":\"abc\"," +
+                "\"Complex\":{" +
+                    "\"Prop1\":123," +
+                    "\"ContainedUnderComplex@odata.context\":\"http://host/$metadata#Entities1/Complex/ContainedUnderComplex\"," +
+                    "\"ContainedUnderComplex@odata.associationLink\":\"http://host/Entities1('abc')/Complex/ContainedUnderComplex/$ref\"," +
+                    "\"ContainedUnderComplex@odata.navigationLink\":\"http://host/Entities1('abc')/Complex/ContainedUnderComplex\"," +
+                    "\"ContainedUnderComplex\":[{" +
+                        "\"@odata.id\":\"Entities1('abc')/Complex/ContainedUnderComplex('def')\"," +
+                        "\"@odata.editLink\":\"Entities1('abc')/Complex/ContainedUnderComplex('def')\"," +
+                        "\"ID\":\"def\"," +
+                        "\"NavUnderContained@odata.associationLink\":\"http://host/Entities1('abc')/Complex/ContainedUnderComplex('def')/NavUnderContained/$ref\"," +
+                        "\"NavUnderContained@odata.navigationLink\":\"http://host/Entities1('abc')/Complex/ContainedUnderComplex('def')/NavUnderContained\"," +
+                        "\"NavUnderContained\":[{\"@odata.id\":\"Entities2('efg')\",\"@odata.editLink\":\"Entities2('efg')\",\"ID\":\"efg\"}]}]}}";
+
+            Assert.Equal(expected, output);
+        }
+
+        [Fact]
+        public void WriteContainmentUnderComplexWithTypeCast()
+        {
+            var model = ContainmentComplexModel();
+            var entityType = model.FindType("NS.EntityType") as IEdmEntityType;
+            var entitySet = model.EntityContainer.FindEntitySet("Entities1");
+            var uriParser = new ODataUriParser(model, ServiceRoot, new Uri("http://host/Entities1('abc')"), null);
+            var odataUri = uriParser.ParseUri();
+
+            ODataResource topEntity = new ODataResource() { Properties = new[] { new ODataProperty { Name = "ID", Value = "abc" } } };
+            ODataNestedResourceInfo complexInfo = new ODataNestedResourceInfo() { Name = "Complex" };
+            ODataResource complex = new ODataResource() { TypeName = "NS.DerivedComplexType", Properties = new[] { new ODataProperty { Name = "Prop1", Value = 123 } } };
+            ODataNestedResourceInfo containedInfo = new ODataNestedResourceInfo() { Name = "ContainedUnderDerivedComplex", IsCollection = false };
+            ODataResource contained = new ODataResource() { Properties = new[] { new ODataProperty { Name = "ID", Value = "def" } } };
+
+            string output = WriteJsonLightEntry(model, entitySet, entityType, odataUri, (writer) =>
+            {
+                writer.WriteStart(topEntity);
+                writer.WriteStart(complexInfo);
+                writer.WriteStart(complex);
+                writer.WriteStart(containedInfo);
+                writer.WriteStart(contained);
+                writer.WriteEnd();
+                writer.WriteEnd();
+                writer.WriteEnd();
+                writer.WriteEnd();
+                writer.WriteEnd();
+            }, false, isFullMetadata: true);
+
+            // The context url of contained does not include type cast for now, but it will append type when computing id in reader.
+            Assert.True(output.Contains("\"ContainedUnderDerivedComplex@odata.context\":\"http://host/$metadata#Entities1/Complex/ContainedUnderDerivedComplex/$entity\""));
+            Assert.True(output.Contains("\"ContainedUnderDerivedComplex@odata.associationLink\":\"http://host/Entities1('abc')/Complex/NS.DerivedComplexType/ContainedUnderDerivedComplex/$ref\"," +
+                                        "\"ContainedUnderDerivedComplex@odata.navigationLink\":\"http://host/Entities1('abc')/Complex/NS.DerivedComplexType/ContainedUnderDerivedComplex\""));
+        }
+
+        [Fact]
+        public void WriteTopLevelComplexWithContainment()
+        {
+            var model = ContainmentComplexModel();
+            var complexType = model.FindType("NS.ComplexType") as IEdmStructuredType;
+            var uriParser = new ODataUriParser(model, ServiceRoot, new Uri("http://host/Entities1('abc')/Complex"), null);
+            var odataUri = uriParser.ParseUri();
+            var entitySet = model.EntityContainer.FindEntitySet("Entities1");
+
+            ODataResource complex = new ODataResource() { Properties = new[] { new ODataProperty { Name = "Prop1", Value = 123 } } };
+            ODataNestedResourceInfo containedInfo = new ODataNestedResourceInfo() { Name = "ContainedUnderComplex", IsCollection = true };
+            ODataResourceSet set = new ODataResourceSet();
+            ODataResource contained = new ODataResource() { Properties = new[] { new ODataProperty { Name = "ID", Value = "def" } } };
+
+            string output = WriteJsonLightEntry(model, entitySet, complexType, odataUri, (writer) =>
+            {
+                writer.WriteStart(complex);
+                writer.WriteStart(containedInfo);
+                writer.WriteStart(set);
+                writer.WriteStart(contained);
+                writer.WriteEnd();
+                writer.WriteEnd();
+                writer.WriteEnd();
+                writer.WriteEnd();
+            }, false, isFullMetadata: true);
+
+            // Verify the id of contained entity
+            Assert.True(output.Contains("\"@odata.id\":\"Entities1('abc')/Complex/ContainedUnderComplex('def')\""));
+        }
+
         #endregion
 
         #region Private help method
@@ -1110,6 +1239,68 @@ namespace Microsoft.OData.Tests
             entites.AddNavigationTarget(singleNav, navEntities, new EdmPathExpression("CollectionOfComplex/SingleOfNav"));
             entityContainer.AddElement(entites);
             entityContainer.AddElement(navEntities);
+
+            return model;
+        }
+
+
+        private static IEdmModel ContainmentComplexModel()
+        {
+            var model = new EdmModel();
+
+            var entity = new EdmEntityType("NS", "EntityType");
+            var entityId = entity.AddStructuralProperty("ID", EdmCoreModel.Instance.GetString(false));
+            entity.AddKeys(entityId);
+
+            var containedEntity = new EdmEntityType("NS", "ContainedEntityType");
+            var containedEntityId = containedEntity.AddStructuralProperty("ID", EdmCoreModel.Instance.GetString(false));
+            containedEntity.AddKeys(containedEntityId);
+
+            var complex = new EdmComplexType("NS", "ComplexType");
+            complex.AddStructuralProperty("Prop1", EdmCoreModel.Instance.GetInt32(false));
+
+            var derivedComplex = new EdmComplexType("NS", "DerivedComplexType", complex);
+
+            var containedUnderComplex = complex.AddUnidirectionalNavigation(
+                new EdmNavigationPropertyInfo()
+                {
+                    Name = "ContainedUnderComplex",
+                    Target = containedEntity,
+                    TargetMultiplicity = EdmMultiplicity.Many,
+                    ContainsTarget = true
+                });
+
+            var containedUnderDerivedComplex = derivedComplex.AddUnidirectionalNavigation(
+                new EdmNavigationPropertyInfo()
+                {
+                    Name = "ContainedUnderDerivedComplex",
+                    Target = containedEntity,
+                    TargetMultiplicity = EdmMultiplicity.ZeroOrOne,
+                    ContainsTarget = true
+                });
+
+            var navUnderContained = containedEntity.AddUnidirectionalNavigation(
+                new EdmNavigationPropertyInfo()
+                {
+                    Name = "NavUnderContained",
+                    Target = entity,
+                    TargetMultiplicity = EdmMultiplicity.Many
+                });
+
+            entity.AddStructuralProperty("Complex", new EdmComplexTypeReference(complex, false));
+
+            model.AddElement(entity);
+            model.AddElement(containedEntity);
+            model.AddElement(complex);
+            model.AddElement(derivedComplex);
+
+            var entityContainer = new EdmEntityContainer("NS", "Container");
+            model.AddElement(entityContainer);
+            EdmEntitySet entites1 = new EdmEntitySet(entityContainer, "Entities1", entity);
+            EdmEntitySet entites2 = new EdmEntitySet(entityContainer, "Entities2", entity);
+            entites1.AddNavigationTarget(navUnderContained, entites2, new EdmPathExpression("Complex/ContainedUnderComplex/NavUnderContained"));
+            entityContainer.AddElement(entites1);
+            entityContainer.AddElement(entites2);
 
             return model;
         }

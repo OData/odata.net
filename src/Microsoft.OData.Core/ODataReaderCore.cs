@@ -212,14 +212,13 @@ namespace Microsoft.OData
         }
 
         /// <summary>
-        /// Returns the scope of the entity owning the current link.
+        /// Returns the parent scope.
         /// </summary>
-        protected Scope LinkParentResourceScope
+        protected Scope ParentScope
         {
             get
             {
-                Debug.Assert(this.scopes != null && this.scopes.Count > 1, "We must have at least two scoped for LinkParentEntityScope to be called.");
-                Debug.Assert(this.scopes.Peek().State == ODataReaderState.NestedResourceInfoStart, "The LinkParentEntityScope can only be accessed when in NestedResourceInfoStart state.");
+                Debug.Assert(this.scopes != null && this.scopes.Count > 1, "We must have at least two scopes in the stack.");
                 return this.scopes.Skip(1).First();
             }
         }

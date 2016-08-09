@@ -629,7 +629,7 @@ namespace Microsoft.OData.JsonLight
                 selectedProperties,
                 this.jsonLightOutputContext.WritingResponse,
                 this.jsonLightOutputContext.ODataSimplifiedOptions.EnableWritingKeyAsSegment,
-                this.jsonLightOutputContext.MessageWriterSettings.ODataUri);
+                resourceScope.ODataUri);
 
             if (builder != null)
             {

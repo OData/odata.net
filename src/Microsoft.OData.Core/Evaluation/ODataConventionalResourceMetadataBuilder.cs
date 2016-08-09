@@ -21,11 +21,11 @@ namespace Microsoft.OData.Evaluation
     /// </summary>
     internal class ODataConventionalResourceMetadataBuilder : ODataResourceMetadataBuilder
     {
+        /// <summary>The context to answer basic metadata questions about the resource.</summary>
+        public readonly IODataResourceMetadataContext ResourceMetadataContext;
+
         /// <summary>The URI builder to use.</summary>
         protected readonly ODataUriBuilder UriBuilder;
-
-        /// <summary>The context to answer basic metadata questions about the resource.</summary>
-        protected readonly IODataResourceMetadataContext ResourceMetadataContext;
 
         /// <summary>The metadata context.</summary>
         protected readonly IODataMetadataContext MetadataContext;
@@ -36,13 +36,17 @@ namespace Microsoft.OData.Evaluation
         /// <summary>The enumerator for unprocessed navigation links.</summary>
         private IEnumerator<ODataJsonLightReaderNestedResourceInfo> unprocessedNavigationLinks;
 
-        /// <summary>The read link.</summary>
+        /// <summary>The read url.</summary>
         /// <remarks>This is lazily evaluated. It may be retrieved from the resource or computed.</remarks>
-        private Uri computedReadLink;
+        private Uri readUrl;
 
-        /// <summary>The edit link.</summary>
+        /// <summary>The edit url.</summary>
         /// <remarks>This is lazily evaluated. It may be retrieved from the resource or computed.</remarks>
-        private Uri computedEditLink;
+        private Uri editUrl;
+
+        /// <summary>The canonical url. </summary>
+        /// <remarks>This is lazily evaluated. It may be retrieved from the resource or computed.</remarks>
+        private Uri canonicalUrl;
 
         /// <summary>
         /// The resource whose payload metadata is being queried.
@@ -73,105 +77,159 @@ namespace Microsoft.OData.Evaluation
         /// </summary>
         internal ODataUri ODataUri { get; set; }
 
-
-
         /// <summary>
-        /// Compute edit link of current resource from:
+        /// Gets edit url of current resource.
+        /// Computes edit url of current resource from:
         /// 1. NonComputedEditLink
-        /// 2. Parent edit link
+        /// 2. Parent edit url
         /// </summary>
-        /// <returns>The computed edit link.</returns>
-        /// <remarks>The method is used when current resource edit link is not needed for writing, but its child resource may need. For example, to compute navigation link under complex.</remarks>
-        public virtual Uri GetComputedEditLink()
+        /// <returns>The edit url of current resource.</returns>
+        /// <remarks>The method is used to compute edit Url for current resource, including complex.</remarks>
+        public virtual Uri GetEditUrl()
         {
-            if (this.computedEditLink != null)
+            if (this.editUrl != null)
             {
-                return this.computedEditLink;
+                return this.editUrl;
             }
 
-            // computedEditLink = NonComputedEditLink
+            // editUrl = NonComputedEditLink
             if (this.resource.HasNonComputedEditLink)
             {
-                return this.computedEditLink = this.resource.NonComputedEditLink;
+                return this.editUrl = this.resource.NonComputedEditLink;
             }
 
-            // compute edit link from parent
+            // compute edit url from parent
             var parent = this.ParentMetadataBuilder as ODataConventionalResourceMetadataBuilder;
             if (this.NameAsProperty != null
                 && parent != null
-                && parent.GetComputedEditLink() != null)
+                && parent.GetEditUrl() != null)
             {
-                // If parent is collection of complex, the edit link for this resource should be null.
+                // If parent is collection of complex, the edit url for this resource should be null.
                 if (parent.IsFromCollection && !(parent is ODataConventionalEntityMetadataBuilder))
                 {
-                    return this.computedEditLink = null;
+                    return this.editUrl = null;
                 }
 
-                // computedEditLink = parentEditLink/propertyName
-                this.computedEditLink = new Uri(parent.GetComputedEditLink() + "/" + this.NameAsProperty, UriKind.RelativeOrAbsolute);
+                // editUrl = parentEditUrl/propertyName
+                this.editUrl = new Uri(parent.GetEditUrl() + "/" + this.NameAsProperty, UriKind.RelativeOrAbsolute);
 
                 // Append possible type cast
                 if (this.ResourceMetadataContext.ActualResourceTypeName != this.ResourceMetadataContext.TypeContext.ExpectedResourceTypeName)
                 {
-                    this.computedEditLink = this.UriBuilder.AppendTypeSegment(computedEditLink, this.ResourceMetadataContext.ActualResourceTypeName);
+                    this.editUrl = this.UriBuilder.AppendTypeSegment(editUrl, this.ResourceMetadataContext.ActualResourceTypeName);
                 }
             }
 
-            return this.computedEditLink;
+            return this.editUrl;
         }
 
         /// <summary>
-        /// Compute read link of current resource from:
+        /// Gets read url of current resource.
+        /// Computes read url of current resource from:
         /// 1. NonComputedReadLink
-        /// 2. Computed edit link
-        /// 3. Parent read link
+        /// 2. Computed edit url
+        /// 3. Parent read url
         /// </summary>
-        /// <returns>The computed read link.</returns>
-        /// <remarks>The method is used when current resource read link is not needed for writing, but its child resource may need. For example, to compute navigation link under complex.</remarks>
-        public virtual Uri GetComputedReadLink()
+        /// <returns>The read url of current resource.</returns>
+        /// <remarks>The method is used to compute edit url for resource, including complex.</remarks>
+        public virtual Uri GetReadUrl()
         {
-            if (this.computedReadLink != null)
+            if (this.readUrl != null)
             {
-                return this.computedReadLink;
+                return this.readUrl;
             }
 
-            // computedReadLink = NonComputedReadLink
+            // readUrl = NonComputedReadLink
             if (this.resource.HasNonComputedReadLink)
             {
-                return this.resource.NonComputedReadLink;
+                return this.readUrl = this.resource.NonComputedReadLink;
             }
 
-            // Compute readLink from editLink
-            var editLink = this.GetComputedEditLink();
+            // Compute readUrl from editUrl
+            var editLink = this.GetEditUrl();
             if (editLink != null)
             {
-                return this.computedReadLink = editLink;
+                return this.readUrl = editLink;
             }
 
-            // Compute readLink from parent readLink
+            // Compute readUrl from parent readUrl
             var parent = this.ParentMetadataBuilder as ODataConventionalResourceMetadataBuilder;
             if (this.NameAsProperty != null
                 && parent != null
-                && parent.GetComputedReadLink() != null)
+                && parent.GetReadUrl() != null)
             {
-                // If parent is collection of complex, the read link for this resource should be null.
+                // If parent is collection of complex, the read url for this resource should be null.
                 if (parent.IsFromCollection && !(parent is ODataConventionalEntityMetadataBuilder))
                 {
-                    return this.computedReadLink = null;
+                    return this.readUrl = null;
                 }
 
-                // computedReadLink = parentReadLink/propertyName
-                this.computedReadLink = new Uri(parent.GetComputedReadLink() + "/" + this.NameAsProperty, UriKind.RelativeOrAbsolute);
+                // readUrl = parentReadUrl/propertyName
+                this.readUrl = new Uri(parent.GetReadUrl() + "/" + this.NameAsProperty, UriKind.RelativeOrAbsolute);
 
                 // Append possible type cast
                 if (this.ResourceMetadataContext.ActualResourceTypeName !=
                     this.ResourceMetadataContext.TypeContext.ExpectedResourceTypeName)
                 {
-                    this.computedReadLink = this.UriBuilder.AppendTypeSegment(computedReadLink, this.ResourceMetadataContext.ActualResourceTypeName);
+                    this.readUrl = this.UriBuilder.AppendTypeSegment(readUrl, this.ResourceMetadataContext.ActualResourceTypeName);
                 }
             }
 
-            return this.computedReadLink;
+            return this.readUrl;
+        }
+
+        /// <summary>
+        /// Gets canonical url of current resource.
+        /// </summary>
+        /// <returns>The canonical url of current resource.</returns>
+        public virtual Uri GetCanonicalUrl()
+        {
+            if (this.canonicalUrl != null)
+            {
+                return this.canonicalUrl;
+            }
+
+            // canonicalUrl = HasNonComputedId
+            if (this.resource.HasNonComputedId)
+            {
+                return this.canonicalUrl = this.resource.NonComputedId;
+            }
+
+            // Compute canonicalUrl from parent canonicalUrl
+            var parent = this.ParentMetadataBuilder as ODataConventionalResourceMetadataBuilder;
+            if (this.NameAsProperty != null
+                && parent != null
+                && parent.GetCanonicalUrl() != null)
+            {
+                // If parent is collection of complex, the canonical url for this resource should be null.
+                if (parent.IsFromCollection && !(parent is ODataConventionalEntityMetadataBuilder))
+                {
+                    return this.canonicalUrl = null;
+                }
+
+                // canonicalUrl = parentCanonicalUrl[/typeCast]/propertyName
+                // Different from edit url and read url, canonical url only needs type cast when the property is defined on derived type.
+                this.canonicalUrl = parent.GetCanonicalUrl();
+
+                IODataResourceTypeContext typeContext = parent.ResourceMetadataContext.TypeContext;
+
+                if (parent.ResourceMetadataContext.ActualResourceTypeName != typeContext.ExpectedResourceTypeName)
+                {
+                    // Do not append type cast if we know that the navigation property is in base type, not in derived type.
+                    ODataResourceTypeContext.ODataResourceTypeContextWithModel typeContextWithModel =
+                        typeContext as ODataResourceTypeContext.ODataResourceTypeContextWithModel;
+                    if (typeContextWithModel == null ||
+                        typeContextWithModel.ExpectedResourceType.FindProperty(
+                            this.NameAsProperty) == null)
+                    {
+                        this.canonicalUrl = this.UriBuilder.AppendTypeSegment(canonicalUrl, parent.ResourceMetadataContext.ActualResourceTypeName);
+                    }
+                }
+
+                this.canonicalUrl = new Uri(this.canonicalUrl + "/" + this.NameAsProperty, UriKind.RelativeOrAbsolute);
+            }
+
+            return this.canonicalUrl;
         }
 
         /// <summary>
@@ -313,7 +371,7 @@ namespace Microsoft.OData.Evaluation
         {
             ExceptionUtils.CheckArgumentStringNotNullOrEmpty(navigationPropertyName, "navigationPropertyName");
 
-            var readLink = this.GetComputedReadLink();
+            var readLink = this.GetReadUrl();
 
             if (readLink == null || this.IsFromCollection)
             {
@@ -338,7 +396,7 @@ namespace Microsoft.OData.Evaluation
         {
             ExceptionUtils.CheckArgumentStringNotNullOrEmpty(navigationPropertyName, "navigationPropertyName");
 
-            var readLink = this.GetComputedReadLink();
+            var readLink = this.GetReadUrl();
 
             if (readLink == null || this.IsFromCollection)
             {

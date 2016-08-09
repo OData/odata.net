@@ -42,7 +42,7 @@ namespace Microsoft.OData.Evaluation
         /// Gets an entity metadata builder for the given resource.
         /// </summary>
         /// <param name="resourceState">Resource state to use as reference for information needed by the builder.</param>
-        /// <param name="useKeyAsSegment">true if keys should go in seperate segments in auto-generated URIs, false if they should go in parentheses.</param>
+        /// <param name="useKeyAsSegment">true if keys should go in separate segments in auto-generated URIs, false if they should go in parentheses.</param>
         /// <returns>An entity metadata builder.</returns>
         ODataResourceMetadataBuilder GetResourceMetadataBuilderForReader(IODataJsonLightReaderResourceState resourceState, bool useKeyAsSegment);
 
@@ -273,7 +273,7 @@ namespace Microsoft.OData.Evaluation
                         IEdmEntityType navigationSourceElementType = this.edmTypeResolver.GetElementType(navigationSource);
                         IODataResourceTypeContext typeContext =
                             ODataResourceTypeContext.Create( /*serializationInfo*/
-                                null, navigationSource, navigationSourceElementType, resourceState.ResourceType,
+                                null, navigationSource, navigationSourceElementType, resourceState.ResourceTypeFromMetadata ?? resourceState.ResourceType,
                                 /*throwIfMissingTypeInfo*/ true);
                         IODataResourceMetadataContext resourceMetadataContext = ODataResourceMetadataContext.Create(resource, typeContext, /*serializationInfo*/null, structuredType, this, resourceState.SelectedProperties);
 

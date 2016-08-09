@@ -59,13 +59,27 @@ namespace Microsoft.OData.UriParser
         /// </summary>
         /// <param name="path">Path to perform the computation on.</param>
         /// <param name="navigationProperty">The navigation property this segment represents.</param>
-        /// <param name="navigationSource">The navigation source of the entities targetted by this navigation property. This can be null.</param>
-        /// <returns>The ODataPath with navigation property appended in the end in the end</returns>
+        /// <param name="navigationSource">The navigation source of the entities targeted by this navigation property. This can be null.</param>
+        /// <returns>The ODataPath with navigation property segment appended in the end.</returns>
         public static ODataPath AppendNavigationPropertySegment(this ODataPath path, IEdmNavigationProperty navigationProperty, IEdmNavigationSource navigationSource)
         {
             var newPath = new ODataPath(path);
             NavigationPropertySegment np = new NavigationPropertySegment(navigationProperty, navigationSource);
             newPath.Add(np);
+            return newPath;
+        }
+
+        /// <summary>
+        /// Build a segment representing a property.
+        /// </summary>
+        /// <param name="path">Path to perform the computation on.</param>
+        /// <param name="property">The property this segment represents.</param>
+        /// <returns>>The ODataPath with property segment appended in the end.</returns>
+        public static ODataPath AppendPropertySegment(this ODataPath path, IEdmStructuralProperty property)
+        {
+            var newPath = new ODataPath(path);
+            PropertySegment propertySegment = new PropertySegment(property);
+            newPath.Add(propertySegment);
             return newPath;
         }
 

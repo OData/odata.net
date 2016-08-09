@@ -948,9 +948,9 @@ namespace Microsoft.OData.Tests.IntegrationTests.Evaluation
                 this.entryWithOnlyData
             };
 
-            string result = this.GetWriterOutputForContentTypeAndKnobValue("application/json;odata.metadata=full", true, itemsToWrite, Model, EntitySet, DerivedType, null, null, "EntitySet");
+            string result = this.GetWriterOutputForContentTypeAndKnobValue("application/json;odata.metadata=full", true, itemsToWrite, Model, EntitySet, EntityType, null, null, "EntitySet");
 
-            Uri containedId = new Uri("http://example.com/EntitySet(345)/Namespace.DerivedType/ContainedNonCollectionNavProp");
+            Uri containedId = new Uri("http://example.com/EntitySet(345)/ContainedNonCollectionNavProp");
             this.entryWithOnlyData.Id.Should().Be(containedId);
         }
 
@@ -1002,7 +1002,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Evaluation
                 this.entryWithOnlyData
             };
 
-            string result = this.GetWriterOutputForContentTypeAndKnobValue("application/json;odata.metadata=full", true, itemsToWrite, Model, EntitySet, DerivedType, null, null, "EntitySet");
+            string result = this.GetWriterOutputForContentTypeAndKnobValue("application/json;odata.metadata=full", true, itemsToWrite, Model, EntitySet, EntityType, null, null, "EntitySet");
 
             Uri containedId = new Uri("http://example.com/EntitySet(345)/Namespace.DerivedType/DerivedContainedNavProp(123)");
             this.entryWithOnlyData.Id.Should().Be(containedId);
@@ -1909,8 +1909,8 @@ namespace Microsoft.OData.Tests.IntegrationTests.Evaluation
                     "\"@odata.context\":\"http://example.com/$metadata#EntitySet/$entity\"," +
                     "\"@odata.type\":\"#Namespace.DerivedType\", " +
                     "\"ExpandedNavLink\":[{\"ID\":123,\"Name\":\"Bob\"}]," +
-                    "\"AnotherContainedNavProp\":[{\"ID\":123,\"Name\":\"Bob\"}]," +
-                    "\"AnotherContainedNonCollectionNavProp\":{\"ID\":123,\"Name\":\"Bob\"}," +
+                    "\"ContainedNavPropOnDerived\":[{\"ID\":123,\"Name\":\"Bob\"}]," +
+                    "\"ContainedNonCollectionNavPropOnDerived\":{\"ID\":123,\"Name\":\"Bob\"}," +
                     "\"ID\":1" +
                 "}";
 
@@ -1920,10 +1920,10 @@ namespace Microsoft.OData.Tests.IntegrationTests.Evaluation
             entry.Id.Should().Be(new Uri("http://example.com/EntitySet(123)"));
 
             entry = entryList[1];
-            entry.Id.Should().Be(new Uri("http://example.com/EntitySet(1)/Namespace.DerivedType/AnotherContainedNavProp(123)"));
+            entry.Id.Should().Be(new Uri("http://example.com/EntitySet(1)/Namespace.DerivedType/ContainedNavPropOnDerived(123)"));
 
             entry = entryList[2];
-            entry.Id.Should().Be(new Uri("http://example.com/EntitySet(1)/Namespace.DerivedType/AnotherContainedNonCollectionNavProp"));
+            entry.Id.Should().Be(new Uri("http://example.com/EntitySet(1)/Namespace.DerivedType/ContainedNonCollectionNavPropOnDerived"));
 
             entry = entryList[3];
             entry.Id.Should().Be(new Uri("http://example.com/EntitySet(1)"));
@@ -2095,7 +2095,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Evaluation
                         "\"@odata.type\":\"#Namespace.DerivedType\", " +
                         "\"ID\":123," +
                         "\"Name\":\"Bob\"," +
-                        "\"AnotherContainedNavProp\":[{\"ID\":123,\"Name\":\"Bob\"}]," +
+                        "\"ContainedNavPropOnDerived\":[{\"ID\":123,\"Name\":\"Bob\"}]," +
                         "\"AnotherContainedNonCollectionNavProp\":{\"ID\":123,\"Name\":\"Bob\"}" +
                     "}]," +
                     "\"ID\":1" +
@@ -2104,11 +2104,11 @@ namespace Microsoft.OData.Tests.IntegrationTests.Evaluation
             var entryList = ReadPayload(payload, EntitySet, EntityType);
 
             ODataResource entry = entryList[0];
-            entry.Id.Should().Be(new Uri("http://example.com/EntitySet(123)/Namespace.DerivedType/AnotherContainedNavProp(123)"));
+            entry.Id.Should().Be(new Uri("http://example.com/EntitySet(123)/Namespace.DerivedType/ContainedNavPropOnDerived(123)"));
             entry.TypeName.Should().Be("Namespace.AnotherEntityType");
 
             entry = entryList[1];
-            entry.Id.Should().Be(new Uri("http://example.com/EntitySet(123)/Namespace.DerivedType/AnotherContainedNonCollectionNavProp"));
+            entry.Id.Should().Be(new Uri("http://example.com/EntitySet(123)/AnotherContainedNonCollectionNavProp"));
 
             entry = entryList[2];
             entry.Id.Should().Be(new Uri("http://example.com/EntitySet(123)"));

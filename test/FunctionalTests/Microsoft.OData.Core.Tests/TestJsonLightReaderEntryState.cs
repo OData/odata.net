@@ -43,6 +43,8 @@ namespace Microsoft.OData.Tests
             }
         }
 
+        public IEdmStructuredType ResourceTypeFromMetadata { get; set; }
+
         public IEdmNavigationSource NavigationSource { get; set; }
 
         public ODataResourceMetadataBuilder MetadataBuilder { get; set; }

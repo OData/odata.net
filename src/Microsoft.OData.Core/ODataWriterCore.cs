@@ -264,6 +264,18 @@ namespace Microsoft.OData
         }
 
         /// <summary>
+        /// Returns the parent scope of current scope.
+        /// </summary>
+        protected Scope ParentScope
+        {
+            get
+            {
+                Debug.Assert(this.scopeStack.Count > 1);
+                return this.scopeStack.Scopes.Skip(1).First();
+            }
+        }
+
+        /// <summary>
         /// Returns the number of items seen so far on the current resource set scope.
         /// </summary>
         /// <remarks>Can only be accessed on a resource set scope.</remarks>
@@ -922,7 +934,7 @@ namespace Microsoft.OData
                         }
                         else
                         {
-                            resourceScope.ResourceTypeFromMetadata = resourceScope.ResourceType;
+                            resourceScope.ResourceTypeFromMetadata = this.ParentScope.ResourceType;
                             if (this.CurrentResourceSetValidator != null)
                             {
                                 // Validate the consistency of resource types in the top-level resource sets
@@ -1438,7 +1450,7 @@ namespace Microsoft.OData
                                         }
 
                                         odataPath = odataUri.Path;
-                                        if (ShouldAppendKey(currentNavigationSource))
+                                        if (ShouldAppendKey(currentNavigationSource, currentResourceType))
                                         {
                                             IEdmEntityType currentEntityType = currentScope.ResourceType as IEdmEntityType;
                                             ODataItem odataItem = this.CurrentScope.Item;
@@ -1446,6 +1458,14 @@ namespace Microsoft.OData
                                             ODataResource resource = (ODataResource)odataItem;
                                             KeyValuePair<string, object>[] keys = ODataResourceMetadataContext.GetKeyProperties(resource, this.GetResourceSerializationInfo(resource), currentEntityType);
                                             odataPath = odataPath.AppendKeySegment(keys, currentEntityType, currentNavigationSource);
+                                        }
+
+                                        // TODO: FindProperty from ParentResourceType of ParentNestedResourceInfo which is maybe entity type and complex type, in order to support complex/complex/containment.
+                                        if (currentResourceType is IEdmComplexType && currentNavigationSource != null && ParentNestedResourceInfo != null)
+                                        {
+                                            IEdmStructuralProperty complex = currentNavigationSource.EntityType().FindProperty(ParentNestedResourceInfo.Name) as IEdmStructuralProperty;
+
+                                            odataPath = odataPath.AppendPropertySegment(complex);
                                         }
 
                                         if (odataPath != null && typeCastFromExpand != null)
@@ -1698,9 +1718,15 @@ namespace Microsoft.OData
         /// Decide whether KeySegment should be appended to ODataPath for certain navigation source.
         /// </summary>
         /// <param name="currentNavigationSource">The navigation source to be evaluated.</param>
+        /// <param name="currentResourceType">The resource type to be evaluated.</param>
         /// <returns>Boolean value indicating whether KeySegment should be appended</returns>
-        private static bool ShouldAppendKey(IEdmNavigationSource currentNavigationSource)
+        private static bool ShouldAppendKey(IEdmNavigationSource currentNavigationSource, IEdmStructuredType currentResourceType)
         {
+            if (currentResourceType is IEdmComplexType)
+            {
+                return false;
+            }
+
             if (currentNavigationSource is IEdmEntitySet)
             {
                 return true;

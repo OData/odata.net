@@ -7,6 +7,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Xml;
 using Microsoft.OData.Edm.Csdl;
 using Microsoft.OData.Edm.Validation;
@@ -101,6 +102,10 @@ namespace Microsoft.OData.Edm.Tests.Csdl
             entityContainer.AddElement(people);
             entityContainer.AddElement(cities);
             entityContainer.AddElement(countriesOrRegions);
+
+            IEnumerable<EdmError> actualErrors = null;
+            model.Validate(out actualErrors);
+            Assert.Equal(actualErrors.Count(), 0);
 
             string actual = GetCsdl(model, CsdlTarget.OData);
 
@@ -211,6 +216,65 @@ namespace Microsoft.OData.Edm.Tests.Csdl
                               "</edmx:Edmx>";
 
             Assert.Equal(expected, actual);
+        }
+
+        [Fact]
+        public void ContainedUnderComplexTest()
+        {
+            var model = new EdmModel();
+
+            var entity = new EdmEntityType("NS", "EntityType");
+            var entityId = entity.AddStructuralProperty("ID", EdmCoreModel.Instance.GetString(false));
+            entity.AddKeys(entityId);
+
+            var containedEntity = new EdmEntityType("NS", "ContainedEntityType");
+            var containedEntityId = containedEntity.AddStructuralProperty("ID", EdmCoreModel.Instance.GetString(false));
+            containedEntity.AddKeys(containedEntityId);
+
+            var complex = new EdmComplexType("NS", "ComplexType");
+            complex.AddStructuralProperty("Prop1", EdmCoreModel.Instance.GetInt32(false));
+
+            var containedUnderComplex = complex.AddUnidirectionalNavigation(
+                new EdmNavigationPropertyInfo()
+                {
+                    Name = "ContainedUnderComplex",
+                    Target = containedEntity,
+                    TargetMultiplicity = EdmMultiplicity.Many,
+                    ContainsTarget = true
+                });
+
+            var navUnderContained = containedEntity.AddUnidirectionalNavigation(
+                new EdmNavigationPropertyInfo()
+                {
+                    Name = "NavUnderContained",
+                    Target = entity,
+                    TargetMultiplicity = EdmMultiplicity.Many
+                });
+
+            entity.AddStructuralProperty("Complex", new EdmComplexTypeReference(complex, false));
+
+            model.AddElement(entity);
+            model.AddElement(containedEntity);
+            model.AddElement(complex);
+
+            var entityContainer = new EdmEntityContainer("NS", "Container");
+            model.AddElement(entityContainer);
+            EdmEntitySet entites1 = new EdmEntitySet(entityContainer, "Entities1", entity);
+            EdmEntitySet entites2 = new EdmEntitySet(entityContainer, "Entities2", entity);
+            entites1.AddNavigationTarget(navUnderContained, entites2,
+                new EdmPathExpression("Complex/ContainedUnderComplex/NavUnderContained"));
+            entityContainer.AddElement(entites1);
+            entityContainer.AddElement(entites2);
+
+            string actual = GetCsdl(model, CsdlTarget.OData);
+
+            var entitySet1 = model.EntityContainer.FindEntitySet("Entities1");
+            var entitySet2 = model.EntityContainer.FindEntitySet("Entities2");
+            var containedEntitySet = entitySet1.FindNavigationTarget(containedUnderComplex);
+            Assert.Equal(containedEntitySet.Name, "ContainedUnderComplex");
+            var entitySetUnderContained = containedEntitySet.FindNavigationTarget(navUnderContained,
+                new EdmPathExpression("Complex/ContainedUnderComplex/NavUnderContained"));
+            Assert.Equal(entitySetUnderContained, entitySet2);
         }
 
         [Fact]

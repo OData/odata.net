@@ -685,6 +685,7 @@ namespace Microsoft.OData.JsonLight
         {
             if (this.CurrentResource != null && !this.IsReadingNestedPayload)
             {
+                this.CurrentResourceState.ResourceTypeFromMetadata = this.ParentScope.ResourceType;
                 ODataResourceMetadataBuilder builder =
                     this.jsonLightResourceDeserializer.MetadataContext.GetResourceMetadataBuilderForReader(
                         this.CurrentResourceState,
@@ -858,7 +859,7 @@ namespace Microsoft.OData.JsonLight
 
             ODataNestedResourceInfo currentLink = this.CurrentNestedResourceInfo;
 
-            IODataJsonLightReaderResourceState parentResourceState = (IODataJsonLightReaderResourceState)this.LinkParentResourceScope;
+            IODataJsonLightReaderResourceState parentResourceState = (IODataJsonLightReaderResourceState)this.ParentScope;
 
             if (this.jsonLightInputContext.ReadingResponse)
             {
@@ -897,7 +898,7 @@ namespace Microsoft.OData.JsonLight
                     ODataJsonLightReaderNestedResourceInfo nestedResourceInfo = this.CurrentJsonLightNestedResourceInfoScope.ReaderNestedResourceInfo;
                     Debug.Assert(nestedResourceInfo != null, "nestedResourceInfo != null");
                     Debug.Assert(nestedResourceInfo.NestedResourceSet != null, "We must have a precreated expanded resource set already.");
-                    JsonLightResourceScope parentScope = (JsonLightResourceScope)this.LinkParentResourceScope;
+                    JsonLightResourceScope parentScope = (JsonLightResourceScope)this.ParentScope;
                     SelectedPropertiesNode parentSelectedProperties = parentScope.SelectedProperties;
                     Debug.Assert(parentSelectedProperties != null, "parentProjectedProperties != null");
                     this.ReadResourceSetStart(nestedResourceInfo.NestedResourceSet, parentSelectedProperties.GetSelectedPropertiesForNavigationProperty(parentScope.ResourceType, currentLink.Name));
@@ -1077,7 +1078,7 @@ namespace Microsoft.OData.JsonLight
             {
                 // Expanded resource
                 // The expected type for an expanded resource is the same as for the nested resource info around it.
-                JsonLightResourceScope parentScope = (JsonLightResourceScope)this.LinkParentResourceScope;
+                JsonLightResourceScope parentScope = (JsonLightResourceScope)this.ParentScope;
                 SelectedPropertiesNode parentSelectedProperties = parentScope.SelectedProperties;
                 Debug.Assert(parentSelectedProperties != null, "parentProjectedProperties != null");
                 this.ReadResourceStart(/*propertyAndAnnotationCollector*/ null, parentSelectedProperties.GetSelectedPropertiesForNavigationProperty(parentScope.ResourceType, nestedResourceInfo.Name));
@@ -1178,7 +1179,7 @@ namespace Microsoft.OData.JsonLight
             this.CurrentNestedResourceInfo.IsCollection = isCollection;
 
             // Record that we read the link on the parent resource's scope.
-            IODataJsonLightReaderResourceState parentResourceState = (IODataJsonLightReaderResourceState)this.LinkParentResourceScope;
+            IODataJsonLightReaderResourceState parentResourceState = (IODataJsonLightReaderResourceState)this.ParentScope;
             parentResourceState.NavigationPropertiesRead.Add(this.CurrentNestedResourceInfo.Name);
 
             // replace the 'NestedResourceInfoStart' scope with the 'NestedResourceInfoEnd' scope
@@ -1277,6 +1278,7 @@ namespace Microsoft.OData.JsonLight
                 // Hookup the metadata builder to the nested resource info.
                 // Note that we set the metadata builder even when navigationProperty is null, which is the case when the link is undeclared.
                 // For undeclared links, we will apply conventional metadata evaluation just as declared links.
+                this.CurrentResourceState.ResourceTypeFromMetadata = this.ParentScope.ResourceType;
                 ODataResourceMetadataBuilder entityMetadataBuilder =
                     this.jsonLightResourceDeserializer.MetadataContext.GetResourceMetadataBuilderForReader(
                         this.CurrentResourceState,
@@ -1594,6 +1596,11 @@ namespace Microsoft.OData.JsonLight
                     return this.ResourceType;
                 }
             }
+
+            /// <summary>
+            /// The expected type defined in the model for the resource.
+            /// </summary>
+            public IEdmStructuredType ResourceTypeFromMetadata { get; set; }
 
             /// <summary>
             /// The navigation source for the resource (if available)

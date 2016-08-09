@@ -120,19 +120,28 @@ namespace Microsoft.OData.Evaluation
         }
 
         /// <summary>
-        /// Get the computed edit link of current entity.
+        /// Gets canonical url of current resource.
         /// </summary>
-        /// <returns>The edit link of current entity.</returns>
-        public override Uri GetComputedEditLink()
+        /// <returns>The canonical url of current resource.</returns>
+        public override Uri GetCanonicalUrl()
+        {
+            return this.GetId();
+        }
+
+        /// <summary>
+        /// Gets the edit url of current entity.
+        /// </summary>
+        /// <returns>The edit url of current entity.</returns>
+        public override Uri GetEditUrl()
         {
             return this.GetEditLink();
         }
 
         /// <summary>
-        /// Get the computed read link of current entity.
+        /// Gets the read url of current entity.
         /// </summary>
-        /// <returns>The read link of current entity.</returns>
-        public override Uri GetComputedReadLink()
+        /// <returns>The read url of current entity.</returns>
+        public override Uri GetReadUrl()
         {
             return this.GetReadLink();
         }
@@ -605,31 +614,34 @@ namespace Microsoft.OData.Evaluation
         {
             try
             {
-                ODataConventionalEntityMetadataBuilder parent = this.ParentMetadataBuilder as ODataConventionalEntityMetadataBuilder;
+                ODataConventionalResourceMetadataBuilder parent = this.ParentMetadataBuilder as ODataConventionalResourceMetadataBuilder;
                 if (parent != null && parent != this)
                 {
-                    // Get the parent id
-                    uri = parent.GetId();
+                    // Get the parent canonical url
+                    uri = parent.GetCanonicalUrl();
 
-                    // And append cast (if needed).
-                    // A cast segment if the navigation property is defined on a type derived from the entity
-                    // type declared for the entity set
-                    IODataResourceTypeContext typeContext = parent.ResourceMetadataContext.TypeContext;
-                    if (typeContext.NavigationSourceEntityTypeName != typeContext.ExpectedResourceTypeName)
+                    if (uri != null)
                     {
-                        // Do not append type cast if we know that the navigation property is in base type, not in derived type.
-                        ODataResourceTypeContext.ODataResourceTypeContextWithModel typeContextWithModel =
-                            typeContext as ODataResourceTypeContext.ODataResourceTypeContextWithModel;
-                        if (typeContextWithModel != null ||
-                            typeContextWithModel.NavigationSourceEntityType.FindProperty(
-                                this.ResourceMetadataContext.TypeContext.NavigationSourceName) == null)
-                        {
-                            uri = new Uri(UriUtils.EnsureTaillingSlash(uri),
-                                parent.ResourceMetadataContext.ActualResourceTypeName);
-                        }
-                    }
+                        // And append cast (if needed).
+                        // A cast segment if the navigation property is defined on a type derived from the type expected.
+                        IODataResourceTypeContext typeContext = parent.ResourceMetadataContext.TypeContext;
 
-                    return true;
+                        if (parent.ResourceMetadataContext.ActualResourceTypeName != typeContext.ExpectedResourceTypeName)
+                        {
+                            // Do not append type cast if we know that the navigation property is in base type, not in derived type.
+                            ODataResourceTypeContext.ODataResourceTypeContextWithModel typeContextWithModel =
+                                typeContext as ODataResourceTypeContext.ODataResourceTypeContextWithModel;
+                            if (typeContextWithModel == null ||
+                                typeContextWithModel.ExpectedResourceType.FindProperty(
+                                    this.ResourceMetadataContext.TypeContext.NavigationSourceName) == null)
+                            {
+                                uri = new Uri(UriUtils.EnsureTaillingSlash(uri),
+                                    parent.ResourceMetadataContext.ActualResourceTypeName);
+                            }
+                        }
+
+                        return true;
+                    }
                 }
             }
             catch (ODataException)
