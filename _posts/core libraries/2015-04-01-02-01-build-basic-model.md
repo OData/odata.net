@@ -140,7 +140,7 @@ namespace EdmLibSample
         public SampleModelBuilder BuildCustomerType()
         {
             _customerType = new EdmEntityType("Sample.NS", "Customer");
-            _customerType.AddKeys(_customerType.AddStructuralProperty("Id", EdmPrimitiveTypeKind.Int32));
+            _customerType.AddKeys(_customerType.AddStructuralProperty("Id", EdmPrimitiveTypeKind.Int32, isNullable: false));
             _customerType.AddStructuralProperty("Name", EdmPrimitiveTypeKind.String, isNullable: false);
             _customerType.AddStructuralProperty("Credits",
                 new EdmCollectionTypeReference(new EdmCollectionType(EdmCoreModel.Instance.GetInt64(isNullable: true))));
@@ -157,7 +157,7 @@ namespace EdmLibSample
 This code:
 
  - Defines an entity type `Customer` within the namespace `Sample.NS`;
- - Adds a property `Id` as the key of the entity type;
+ - Adds a **non-nullable** property `Id` as the key of the entity type;
  - Adds a **non-nullable** property `Name`;
  - Adds a property `Credits` of the type `Collection(Edm.Int64)`;
  - Adds a **nullable** property `Interests` of the type `Sample.NS.Category`;
