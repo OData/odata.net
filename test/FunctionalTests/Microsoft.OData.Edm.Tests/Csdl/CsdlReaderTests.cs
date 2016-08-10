@@ -5,10 +5,12 @@
 //---------------------------------------------------------------------
 
 using System;
+using System.Linq;
 using System.Xml;
 using System.Xml.Linq;
 using FluentAssertions;
 using Microsoft.OData.Edm.Csdl;
+using Microsoft.OData.Edm.Csdl.CsdlSemantics;
 using Xunit;
 using ErrorStrings = Microsoft.OData.Edm.Strings;
 
@@ -87,6 +89,75 @@ namespace Microsoft.OData.Edm.Tests.Csdl
             Assert.Equal(
                 entityType3.FindProperty("OuterNavC"),
                 ((IEdmNavigationProperty)entityType1.FindProperty("OuterNavB")).Partner);
+        }
+
+        [Fact]
+        public void ValidateNavigationPropertyBindingPathTypeCast()
+        {
+            var csdl
+                = "<?xml version=\"1.0\" encoding=\"utf-16\"?>" +
+                    "<edmx:Edmx Version=\"4.0\" xmlns:edmx=\"http://docs.oasis-open.org/odata/ns/edmx\">" +
+                      "<edmx:DataServices>" +
+                        "<Schema Namespace=\"NS\" xmlns=\"http://docs.oasis-open.org/odata/ns/edm\">" +
+                          "<EntityType Name=\"EntityA\">" +
+                            "<Key><PropertyRef Name=\"ID\" /></Key>" +
+                              "<Property Name=\"ID\" Type=\"Edm.Int32\" Nullable=\"false\" />" +
+                              "<Property Name=\"Complex\" Type=\"NS.ComplexA\" Nullable=\"false\" />" +
+                            "</EntityType>" +
+                          "<EntityType Name=\"EntityB\">" +
+                            "<Key><PropertyRef Name=\"ID\" /></Key>" +
+                            "<Property Name=\"ID\" Type=\"Edm.Int32\" Nullable=\"false\" />" +
+                          "</EntityType>" +
+                          "<ComplexType Name=\"ComplexA\" />" +
+                          "<ComplexType Name=\"ComplexB\">" +
+                            "<NavigationProperty Name=\"ComplexBNav\" Type=\"NS.EntityB\" Nullable=\"false\" />" +
+                          "</ComplexType>" +
+                          "<EntityContainer Name=\"Container\">" +
+                            "<EntitySet Name=\"Set1\" EntityType=\"NS.EntityA\">" +
+                              "<NavigationPropertyBinding Path=\"Complex/NS.ComplexB/ComplexBNav\" Target=\"Set2\" />" +
+                            "</EntitySet>" +
+                            "<EntitySet Name=\"Set2\" EntityType=\"NS.EntityB\" />" +
+                          "</EntityContainer>" +
+                        "</Schema>" +
+                      "</edmx:DataServices>" +
+                    "</edmx:Edmx>";
+            var model = CsdlReader.Parse(XElement.Parse(csdl).CreateReader());
+            var set1 = model.FindDeclaredNavigationSource("Set1");
+            Assert.True(set1.NavigationPropertyBindings.First().NavigationProperty is UnresolvedNavigationPropertyPath);
+        }
+
+        [Fact]
+        public void ValidateNavigationPropertyBindingPathTraversesNoNonContainmentNavigationProperties()
+        {
+            var csdl
+                = "<?xml version=\"1.0\" encoding=\"utf-16\"?>" +
+                    "<edmx:Edmx Version=\"4.0\" xmlns:edmx=\"http://docs.oasis-open.org/odata/ns/edmx\">" +
+                      "<edmx:DataServices>" +
+                        "<Schema Namespace=\"NS\" xmlns=\"http://docs.oasis-open.org/odata/ns/edm\">" +
+                          "<EntityType Name=\"EntityBase\">" +
+                            "<Key><PropertyRef Name=\"ID\" /></Key>" +
+                            "<Property Name=\"ID\" Type=\"Edm.Int32\" Nullable=\"false\" />" +
+                          "</EntityType>" +
+                          "<EntityType Name=\"EntityA\" BaseType=\"NS.EntityBase\">" +
+                            "<NavigationProperty Name=\"EntityAToB\" Type=\"NS.EntityB\" Nullable=\"false\" />" +
+                          "</EntityType>" +
+                          "<EntityType Name=\"EntityB\" BaseType=\"NS.EntityBase\">" +
+                            "<NavigationProperty Name=\"EntityBToC\" Type=\"NS.EntityC\" Nullable=\"false\" />" +
+                          "</EntityType>" +
+                          "<EntityType Name=\"EntityC\" BaseType=\"NS.EntityBase\" />" +
+                          "<EntityContainer Name=\"Container\">" +
+                            "<EntitySet Name=\"SetA\" EntityType=\"NS.EntityA\">" +
+                              "<NavigationPropertyBinding Path=\"EntityAToB/EntityBToC\" Target=\"SetC\" />" +
+                            "</EntitySet>" +
+                            "<EntitySet Name=\"SetB\" EntityType=\"NS.EntityB\" />" +
+                            "<EntitySet Name=\"SetC\" EntityType=\"NS.EntityC\" />" +
+                          "</EntityContainer>" +
+                        "</Schema>" +
+                      "</edmx:DataServices>" +
+                    "</edmx:Edmx>";
+            var model = CsdlReader.Parse(XElement.Parse(csdl).CreateReader());
+            var setA = model.FindDeclaredNavigationSource("SetA");
+            Assert.True(setA.NavigationPropertyBindings.First().NavigationProperty is UnresolvedNavigationPropertyPath);
         }
 
         [Fact]

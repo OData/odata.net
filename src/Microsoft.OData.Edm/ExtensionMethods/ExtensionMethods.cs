@@ -2040,18 +2040,7 @@ namespace Microsoft.OData.Edm
         /// <returns>The entity type targeted by this navigation property.</returns>
         public static IEdmEntityType ToEntityType(this IEdmNavigationProperty property)
         {
-            IEdmType target = property.Type.Definition;
-            if (target.TypeKind == EdmTypeKind.Collection)
-            {
-                target = ((IEdmCollectionType)target).ElementType.Definition;
-            }
-
-            if (target.TypeKind == EdmTypeKind.EntityReference)
-            {
-                target = ((IEdmEntityReferenceType)target).EntityType;
-            }
-
-            return target as IEdmEntityType;
+            return property.Type.Definition.AsElementType() as IEdmEntityType;
         }
 
         /// <summary>
