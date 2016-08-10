@@ -71,6 +71,7 @@ namespace Microsoft.OData.Edm.Validation
                 ValidationRules.NavigationPropertyDependentPropertiesMustBelongToDependentEntity,
                 ValidationRules.NavigationPropertyInvalidOperationMultipleEndsInAssociatedNavigationProperties,
                 ValidationRules.NavigationPropertyEndWithManyMultiplicityCannotHaveOperationsSpecified,
+                ValidationRules.NavigationPropertyPartnerPathShouldBeResolvable,
                 ValidationRules.NavigationPropertyTypeMismatchRelationshipConstraint,
                 ValidationRules.NavigationPropertyDuplicateDependentProperty,
                 ValidationRules.NavigationPropertyPrincipalEndMultiplicity,

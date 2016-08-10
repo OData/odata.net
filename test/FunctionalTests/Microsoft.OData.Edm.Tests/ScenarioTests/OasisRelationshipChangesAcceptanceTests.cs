@@ -285,7 +285,7 @@ namespace Microsoft.OData.Edm.Tests.ScenarioTests
 
             this.ParseBindingWithExpectedErrors(
                 invalidBinding,
-                EdmErrorCode.UnexpectedXmlElement, 
+                EdmErrorCode.UnexpectedXmlElement,
                 ErrorStrings.XmlParser_UnexpectedElement("Annotation"));
         }
 
@@ -328,10 +328,10 @@ namespace Microsoft.OData.Edm.Tests.ScenarioTests
 
             this.ParseReferentialConstraintWithExpectedErrors(
                 invalidConstraint,
-                EdmErrorCode.UnexpectedXmlElement, 
+                EdmErrorCode.UnexpectedXmlElement,
                 ErrorStrings.XmlParser_UnexpectedElement("Annotation"));
         }
-        
+
         [Fact]
         public void ValidationShouldFailIfAConstraintOnANonExistentPropertyIsFound()
         {
@@ -392,7 +392,7 @@ namespace Microsoft.OData.Edm.Tests.ScenarioTests
         [Fact]
         public void ParsingShouldFailIfNavigationTypeIsEmpty()
         {
-            this.ParseNavigationExpectedErrors(@"<NavigationProperty Name=""Navigation"" Type="""" />", 
+            this.ParseNavigationExpectedErrors(@"<NavigationProperty Name=""Navigation"" Type="""" />",
                 EdmErrorCode.InvalidTypeName,
                 ErrorStrings.CsdlParser_InvalidTypeName(""));
         }
@@ -408,7 +408,7 @@ namespace Microsoft.OData.Edm.Tests.ScenarioTests
         [Fact]
         public void ParsingShouldFailIfNavigationNullableIsNotTrueOrFalse()
         {
-            this.ParseNavigationExpectedErrors(@"<NavigationProperty Name=""Navigation"" Type=""Test.EntityType"" Nullable=""foo""/>", 
+            this.ParseNavigationExpectedErrors(@"<NavigationProperty Name=""Navigation"" Type=""Test.EntityType"" Nullable=""foo""/>",
                 EdmErrorCode.InvalidBoolean,
                 ErrorStrings.ValueParser_InvalidBoolean("foo"));
         }
@@ -416,7 +416,7 @@ namespace Microsoft.OData.Edm.Tests.ScenarioTests
         [Fact]
         public void ValidationShouldFailIfNavigationNullableIsSpecifiedOnCollection()
         {
-            this.ValidateNavigationWithExpectedErrors(@"<NavigationProperty Name=""Navigation"" Type=""Collection(Test.EntityType)"" Nullable=""false""/>", 
+            this.ValidateNavigationWithExpectedErrors(@"<NavigationProperty Name=""Navigation"" Type=""Collection(Test.EntityType)"" Nullable=""false""/>",
                 EdmErrorCode.NavigationPropertyWithCollectionTypeCannotHaveNullableAttribute,
                 ErrorStrings.CsdlParser_CannotSpecifyNullableAttributeForNavigationPropertyWithCollectionType);
         }
@@ -441,7 +441,7 @@ namespace Microsoft.OData.Edm.Tests.ScenarioTests
         public void ValidationShouldFailIfNavigationTypeDoesNotExist()
         {
             this.ValidateNavigationWithExpectedErrors(@"<NavigationProperty Name=""Navigation"" Type=""Fake.Nonexistent"" />",
-                EdmErrorCode.BadUnresolvedEntityType, 
+                EdmErrorCode.BadUnresolvedEntityType,
                 ErrorStrings.Bad_UnresolvedEntityType("Fake.Nonexistent"));
         }
 
@@ -456,9 +456,17 @@ namespace Microsoft.OData.Edm.Tests.ScenarioTests
         [Fact]
         public void ValidationShouldFailIfNavigationParterIsSpecifiedButCannotBeFound()
         {
-            this.ValidateNavigationWithExpectedErrors(@"<NavigationProperty Name=""Navigation"" Type=""Test.EntityType"" Partner=""Nonexistent"" />", 
-                EdmErrorCode.BadUnresolvedNavigationPropertyPath,
-                ErrorStrings.Bad_UnresolvedNavigationPropertyPath("Nonexistent", "Test.EntityType"));
+            this.ValidateNavigationWithExpectedErrors(@"<NavigationProperty Name=""Navigation"" Type=""Test.EntityType"" Partner=""Nonexistent"" />",
+                new[]
+                {
+                    EdmErrorCode.BadUnresolvedNavigationPropertyPath,
+                    EdmErrorCode.UnresolvedNavigationPropertyPartnerPath
+                },
+                new[]
+                {
+                    ErrorStrings.Bad_UnresolvedNavigationPropertyPath("Nonexistent", "Test.EntityType"),
+                    string.Format("Cannot resolve partner path for navigation property '{0}'.", "Navigation")
+                });
         }
 
         private void ValidateBindingWithExpectedErrors(string bindingText, EdmErrorCode errorCode, params string[] messages)
@@ -486,7 +494,7 @@ namespace Microsoft.OData.Edm.Tests.ScenarioTests
             IEdmModel model;
             IEnumerable<EdmError> errors;
             CsdlReader.TryParse(XElement.Parse(modelText).CreateReader(), out model, out errors).Should().BeTrue();
-            
+
             model.Validate(out errors).Should().BeFalse();
             errors.Should().HaveCount(messages.Length);
             foreach (var message in messages)
@@ -521,7 +529,7 @@ namespace Microsoft.OData.Edm.Tests.ScenarioTests
             IEdmModel model;
             IEnumerable<EdmError> errors;
             CsdlReader.TryParse(XElement.Parse(modelText).CreateReader(), out model, out errors).Should().BeTrue();
-            
+
             model.Validate(out errors).Should().BeFalse();
             errors.Should().HaveCount(messages.Length);
             foreach (var message in messages)
@@ -538,7 +546,7 @@ namespace Microsoft.OData.Edm.Tests.ScenarioTests
             }
             else
             {
-                ValidateNavigationWithExpectedErrors(navigationText, new EdmErrorCode[0], new string[0]); 
+                ValidateNavigationWithExpectedErrors(navigationText, new EdmErrorCode[0], new string[0]);
             }
         }
 
@@ -600,7 +608,7 @@ namespace Microsoft.OData.Edm.Tests.ScenarioTests
             IEdmModel model;
             IEnumerable<EdmError> errors;
             CsdlReader.TryParse(XElement.Parse(modelText).CreateReader(), out model, out errors).Should().BeFalse();
-            
+
             errors.Should().HaveCount(messages.Length);
             foreach (var message in messages)
             {
@@ -634,7 +642,7 @@ namespace Microsoft.OData.Edm.Tests.ScenarioTests
             IEdmModel model;
             IEnumerable<EdmError> errors;
             CsdlReader.TryParse(XElement.Parse(modelText).CreateReader(), out model, out errors).Should().BeFalse();
-            
+
             errors.Should().HaveCount(messages.Length);
             foreach (var message in messages)
             {
@@ -662,7 +670,7 @@ namespace Microsoft.OData.Edm.Tests.ScenarioTests
 
             IEdmModel model;
             IEnumerable<EdmError> errors;
-           
+
             bool result = CsdlReader.TryParse(XElement.Parse(modelText).CreateReader(), out model, out errors);
             if (errorCodes.Length > 0)
             {
@@ -685,11 +693,11 @@ namespace Microsoft.OData.Edm.Tests.ScenarioTests
         {
             if (errorCode != null)
             {
-                ParseNavigationExpectedErrors(navigationText, new[] { errorCode.Value }, new[] { message });   
+                ParseNavigationExpectedErrors(navigationText, new[] { errorCode.Value }, new[] { message });
             }
             else
             {
-                ParseNavigationExpectedErrors(navigationText, new EdmErrorCode[0], new string[0]);   
+                ParseNavigationExpectedErrors(navigationText, new EdmErrorCode[0], new string[0]);
             }
         }
     }

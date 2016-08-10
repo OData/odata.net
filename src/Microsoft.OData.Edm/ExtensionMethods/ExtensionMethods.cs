@@ -2349,7 +2349,7 @@ namespace Microsoft.OData.Edm
             // Default behavior where partner path corresponds to the name of the partner nav. property. In other words,
             // the partner must be on an entity type. Will remove this limitation once we are OK to make breaking changes
             // on IEdmNavigationProperty.
-            return new EdmPathExpression(navigationProperty.Partner.Name);
+            return navigationProperty.Partner == null ? null : new EdmPathExpression(navigationProperty.Partner.Name);
         }
 
         #region methods for finding elements in CsdlSemanticsModel

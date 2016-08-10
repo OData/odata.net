@@ -1168,6 +1168,27 @@ namespace Microsoft.OData.Edm.Validation
                });
 
         /// <summary>
+        /// Validates that the navigation property partner path, if exists, should be resolvable to a navigation property.
+        /// </summary>
+        public static readonly ValidationRule<IEdmNavigationProperty> NavigationPropertyPartnerPathShouldBeResolvable =
+            new ValidationRule<IEdmNavigationProperty>(
+                (context, property) =>
+                {
+                    var path = property.GetPartnerPath();
+                    if (path != null
+                        && property.Type.Definition.AsElementType() is IEdmEntityType
+                        && CsdlSemanticsNavigationProperty.ResolvePartnerPath(
+                               (IEdmEntityType)property.Type.Definition.AsElementType(), path, context.Model)
+                           == null)
+                    {
+                        context.AddError(
+                        property.Location(),
+                        EdmErrorCode.UnresolvedNavigationPropertyPartnerPath,
+                        string.Format("Cannot resolve partner path for navigation property '{0}'.", property.Name));
+                    }
+                });
+
+        /// <summary>
         /// Validates that if a navigation property has <see cref="IEdmNavigationProperty.ContainsTarget"/> = true and the target entity type is the same as
         /// the declaring type of the property, then the multiplicity of the target of navigation is 0..1 or Many.
         /// This depends on there being a targetting cycle. Because of the rule <see cref="NavigationMappingMustBeBidirectional" />, we know that either this is always true, or there will be an error

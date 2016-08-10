@@ -107,6 +107,49 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
             get { return this.targetEntityTypeCache.GetValue(this, ComputeTargetEntityTypeFunc, null); }
         }
 
+        internal static IEdmNavigationProperty ResolvePartnerPath(IEdmEntityType type, IEdmPathExpression path, IEdmModel model)
+        {
+            Debug.Assert(type != null);
+            Debug.Assert(path != null);
+            Debug.Assert(model != null);
+
+            IEdmStructuredType currentType = type;
+            IEdmProperty property = null;
+            foreach (var segment in path.PathSegments)
+            {
+                if (currentType == null)
+                {
+                    return null;
+                }
+
+                if (segment.IndexOf('.') < 0)
+                {
+                    property = currentType.FindProperty(segment);
+                    if (property == null)
+                    {
+                        return null;
+                    }
+
+                    currentType = property.Type.Definition.AsElementType() as IEdmStructuredType;
+                }
+                else
+                {
+                    var derivedType = model.FindDeclaredType(segment);
+                    if (derivedType == null || !derivedType.IsOrInheritsFrom(currentType))
+                    {
+                        return null;
+                    }
+
+                    currentType = derivedType as IEdmStructuredType;
+                    property = null;
+                }
+            }
+
+            return property != null
+                   ? property as IEdmNavigationProperty
+                   : null;
+        }
+
         protected override IEnumerable<IEdmVocabularyAnnotation> ComputeInlineVocabularyAnnotations()
         {
             return this.Model.WrapInlineVocabularyAnnotations(this, this.declaringType.Context);
@@ -127,43 +170,11 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
         {
             var partnerPropertyPath = this.navigationProperty.PartnerPath;
             IEdmEntityType targetEntityType = this.TargetEntityType;
+
             if (partnerPropertyPath != null)
             {
-                IEdmStructuredType currentType = targetEntityType;
-                IEdmProperty property = null;
-                foreach (var segment in partnerPropertyPath.PathSegments)
-                {
-                    if (currentType == null)
-                    {
-                        return new UnresolvedNavigationPropertyPath(targetEntityType, partnerPropertyPath.Path, this.Location);
-                    }
-
-                    if (segment.IndexOf('.') < 0)
-                    {
-                        property = currentType.FindProperty(segment);
-                        if (property == null)
-                        {
-                            return new UnresolvedNavigationPropertyPath(targetEntityType, partnerPropertyPath.Path, this.Location);
-                        }
-
-                        currentType = property.Type.Definition.AsElementType() as IEdmStructuredType;
-                    }
-                    else
-                    {
-                        var derivedType = Model.FindDeclaredType(segment);
-                        Debug.Assert(derivedType.TypeKind != EdmTypeKind.Collection, " ");
-                        if (!derivedType.IsOrInheritsFrom(currentType))
-                        {
-                            return new UnresolvedNavigationPropertyPath(targetEntityType, partnerPropertyPath.Path, this.Location);
-                        }
-
-                        currentType = (IEdmStructuredType)derivedType;
-                    }
-                }
-
-                Debug.Assert(property != null, " ");
-                return property as IEdmNavigationProperty
-                       ?? new UnresolvedNavigationPropertyPath(targetEntityType, partnerPropertyPath.Path, this.Location);
+                return ResolvePartnerPath(targetEntityType, partnerPropertyPath, Model)
+                       ?? new UnresolvedNavigationPropertyPath(targetEntityType, partnerPropertyPath.Path, Location);
             }
 
             foreach (IEdmNavigationProperty potentialPartner in targetEntityType.NavigationProperties())

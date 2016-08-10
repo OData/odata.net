@@ -1289,5 +1289,10 @@ namespace Microsoft.OData.Edm.Validation
         /// TimeOfDay value is invalid.
         /// </summary>
         InvalidTimeOfDay = 376,
+
+        /// <summary>
+        /// Navigation property partner path cannot be resolved.
+        /// </summary>
+        UnresolvedNavigationPropertyPartnerPath = 377
     }
 }

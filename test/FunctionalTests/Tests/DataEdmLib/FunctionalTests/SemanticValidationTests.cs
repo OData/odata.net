@@ -131,6 +131,53 @@ namespace EdmLibTests.FunctionalTests
 #endif
 
         [TestMethod]
+        public void ValidateNavigationPropertyPartnerPath()
+        {
+            var model = new EdmModel();
+            var entityTypeA = new EdmEntityType("NS", "EntityTypeA");
+            var entityTypeB = new EdmEntityType("NS", "EntityTypeB");
+            var complexTypeIrrelevant = new EdmComplexType("NS", "ComplexTypeIrrelevant");
+            var complexTypeBase = new EdmComplexType("NS", "ComplexTypeBase");
+            var complexTypeDerived = new EdmComplexType("NS", "ComplexTypeDerived", complexTypeBase);
+            model.AddElements(new IEdmSchemaElement[] { entityTypeA, entityTypeB, complexTypeBase, complexTypeDerived });
+            entityTypeA.AddKeys(entityTypeA.AddStructuralProperty("ID", EdmPrimitiveTypeKind.Int32, false));
+            entityTypeB.AddKeys(entityTypeB.AddStructuralProperty("ID", EdmPrimitiveTypeKind.Int32, false));
+            entityTypeA.AddStructuralProperty("ComplexProperty", new EdmComplexTypeReference(complexTypeBase, false));
+            var complexDerivedNavToEntityB = complexTypeDerived.AddUnidirectionalNavigation(new EdmNavigationPropertyInfo
+            {
+                Name = "ComplexDerivedNavToEntityB",
+                Target = entityTypeB,
+                TargetMultiplicity = EdmMultiplicity.One
+            });
+            var entityBNavToEntityA = entityTypeB.AddUnidirectionalNavigation(new EdmNavigationPropertyInfo
+            {
+                Name = "EntityBNavToEntityA",
+                Target = entityTypeA,
+                TargetMultiplicity = EdmMultiplicity.One
+            });
+
+            entityTypeB.SetNavigationPropertyPartner(
+                entityBNavToEntityA, new EdmPathExpression(entityBNavToEntityA.Name),
+                complexDerivedNavToEntityB, new EdmPathExpression("ComplexProperty/ComplexDerivedNavToEntityB"));
+            VerifySemanticValidation(model, new EdmLibTestErrors { { null, null, EdmErrorCode.UnresolvedNavigationPropertyPartnerPath } });
+
+            entityTypeB.SetNavigationPropertyPartner(
+                entityBNavToEntityA, new EdmPathExpression(entityBNavToEntityA.Name),
+                complexDerivedNavToEntityB, new EdmPathExpression("NS.ComplexTypeDerived/ComplexDerivedNavToEntityB"));
+            VerifySemanticValidation(model, new EdmLibTestErrors { { null, null, EdmErrorCode.UnresolvedNavigationPropertyPartnerPath } });
+
+            entityTypeB.SetNavigationPropertyPartner(
+                entityBNavToEntityA, new EdmPathExpression(entityBNavToEntityA.Name),
+                complexDerivedNavToEntityB, new EdmPathExpression("ComplexProperty/NS.ComplexTypeDerived/ComplexDerivedNavToEntityX"));
+            VerifySemanticValidation(model, new EdmLibTestErrors { { null, null, EdmErrorCode.UnresolvedNavigationPropertyPartnerPath } });
+
+            entityTypeB.SetNavigationPropertyPartner(
+                entityBNavToEntityA, new EdmPathExpression(entityBNavToEntityA.Name),
+                complexDerivedNavToEntityB, new EdmPathExpression("ComplexProperty/NS.ComplexTypeDerived/ComplexDerivedNavToEntityB"));
+            VerifySemanticValidation(model, null);
+        }
+
+        [TestMethod]
         public void ValidateNavigationPropertyOnComplex()
         {
             var model = new EdmModel();
@@ -1329,6 +1376,7 @@ namespace EdmLibTests.FunctionalTests
             var expectedErrors = new EdmLibTestErrors()
             {
                 {null, null, EdmErrorCode.InvalidNavigationPropertyType},
+                {null, null, EdmErrorCode.UnresolvedNavigationPropertyPartnerPath}
             };
             this.VerifySemanticValidation(ValidationTestModelBuilder.ModelWithInconsistentNavigationPropertyPartner(), expectedErrors);
         }
