@@ -1479,6 +1479,9 @@
     <Compile Include="..\EdmExtensionMethods.cs">
       <Link>Microsoft\OData\Core\EdmExtensionMethods.cs</Link>
     </Compile>
+    <Compile Include="..\Evaluation\ODataConventionalEntityMetadataBuilder.cs">
+      <Link>Microsoft\OData\Core\ODataConventionalEntityMetadataBuilder.cs</Link>
+    </Compile>
     <Compile Include="..\IContainerProvider.cs">
       <Link>Microsoft\OData\Core\IContainerProvider.cs</Link>
     </Compile>

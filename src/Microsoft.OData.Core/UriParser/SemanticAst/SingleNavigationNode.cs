@@ -66,7 +66,7 @@ namespace Microsoft.OData.UriParser
         /// <param name="navigationSource">The navigation source that this of the previous segment.</param>
         /// <param name="navigationProperty">The navigation property this node represents.</param>
         /// <param name="bindingPath">The binding path of navigation property</param>
-        /// <exception cref="System.ArgumentNullException">Throws if the input navigationProperty or source is null.</exception>
+        /// <exception cref="System.ArgumentNullException">Throws if the input navigationProperty.</exception>
         /// <exception cref="ArgumentException">Throws if the input navigationProperty targets more than one entity.</exception>
         internal SingleNavigationNode(IEdmNavigationSource navigationSource, IEdmNavigationProperty navigationProperty, IEdmPathExpression bindingPath)
         {

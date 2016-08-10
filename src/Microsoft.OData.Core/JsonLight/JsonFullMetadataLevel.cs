@@ -118,7 +118,17 @@ namespace Microsoft.OData.JsonLight
                 keyAsSegment ? ODataUrlKeyDelimiter.Slash : ODataUrlKeyDelimiter.Parentheses);
 
             IODataResourceMetadataContext resourceMetadataContext = ODataResourceMetadataContext.Create(resource, typeContext, serializationInfo, actualResourceType, metadataContext, selectedProperties);
-            return new ODataConventionalResourceMetadataBuilder(resourceMetadataContext, metadataContext, uriBuilder);
+
+            // Create ODataConventionalEntityMetadataBuilder if actualResourceType is entity type or typeContext.NavigationSourceKind is not none (complex type would be none) for no model scenario.
+            if (actualResourceType != null && actualResourceType.TypeKind == EdmTypeKind.Entity ||
+                actualResourceType == null && typeContext.NavigationSourceKind != EdmNavigationSourceKind.None)
+            {
+                return new ODataConventionalEntityMetadataBuilder(resourceMetadataContext, metadataContext, uriBuilder);
+            }
+            else
+            {
+                return new ODataConventionalResourceMetadataBuilder(resourceMetadataContext, metadataContext, uriBuilder);
+            }
         }
 
         /// <summary>

@@ -93,7 +93,7 @@ namespace Microsoft.OData.Service.Serializers
         {
             // Astoria-ODataLib-Integration: Astoria does not call flush before calling the IDataServiceHost.ProcessException method
             // If the request is for an entry/feed and the data source throws an error while these results are being enumerated and written,
-            // the server doesn't flush the writer's stream before it calls HandleException and starts writing out the error. 
+            // the server doesn't flush the writer's stream before it calls HandleException and starts writing out the error.
             // To handle this case, we'll make the EntitySerializer expose a method that calls Flush on the underlying ODL writer instance.
             if (this.dataServicesODataWriter != null)
             {
@@ -473,8 +473,8 @@ namespace Microsoft.OData.Service.Serializers
             }
             finally
             {
-                // The matching call to RecurseLeave is in a try/finally block not because it's necessary in the 
-                // presence of an exception (progress will halt anyway), but because it's easier to maintain in the 
+                // The matching call to RecurseLeave is in a try/finally block not because it's necessary in the
+                // presence of an exception (progress will halt anyway), but because it's easier to maintain in the
                 // code in the presence of multiple exit points (returns).
                 this.RecurseLeave();
             }
@@ -567,7 +567,7 @@ namespace Microsoft.OData.Service.Serializers
                 if (property != null && (property.TypeKind == ResourceTypeKind.ComplexType
                     || (property.TypeKind == ResourceTypeKind.Collection && property.ResourceType.ElementType().ResourceTypeKind == ResourceTypeKind.ComplexType)))
                 {
-                    ODataWriterHelper.WriteNestedResourceInfo(this.dataServicesODataWriter.InnerWriter, this.GetODataNestedResourceForEntityProperty(entityToSerialize, property));
+                    ODataWriterHelper.WriteNestedResourceInfo(this.dataServicesODataWriter.InnerWriter, this.GetODataNestedResourceForComplexProperty(entityToSerialize, property));
                 }
             }
         }
@@ -733,7 +733,7 @@ namespace Microsoft.OData.Service.Serializers
         /// <param name="entityToSerialize">Entity that is currently being serialized.</param>
         /// <param name="property">ResourceProperty instance in question.</param>
         /// <returns>A instance of ODataProperty for the given <paramref name="property"/>.</returns>
-        private ODataNestedResourceInfoWrapper GetODataNestedResourceForEntityProperty(EntityToSerialize entityToSerialize, ResourceProperty property)
+        private ODataNestedResourceInfoWrapper GetODataNestedResourceForComplexProperty(EntityToSerialize entityToSerialize, ResourceProperty property)
         {
             Debug.Assert(entityToSerialize != null, "entityToSerialize != null");
             Debug.Assert(property != null && entityToSerialize.ResourceType.Properties.Contains(property), "property != null && currentResourceType.Properties.Contains(property)");
@@ -745,8 +745,9 @@ namespace Microsoft.OData.Service.Serializers
             ODataNestedResourceInfo odataNestedInfo = new ODataNestedResourceInfo()
             {
                 Name = property.Name,
-                IsCollection = property.Kind == ResourcePropertyKind.Collection
+                IsCollection = property.Kind == ResourcePropertyKind.Collection,
             };
+            odataNestedInfo.SetSerializationInfo(new ODataNestedResourceInfoSerializationInfo() { IsComplex = true });
 
             return new ODataNestedResourceInfoWrapper()
             {
@@ -818,7 +819,7 @@ namespace Microsoft.OData.Service.Serializers
             List<OperationWrapper> serviceOperationWrapperList;
             if (expandedProjectionNode == null || expandedProjectionNode.ProjectAllOperations)
             {
-                // Note that if the service does not implement IDataServiceActionProvider and the MaxProtocolVersion < V3, 
+                // Note that if the service does not implement IDataServiceActionProvider and the MaxProtocolVersion < V3,
                 // GetServiceActionsByBindingParameterType() would simply return an empty ServiceOperationWrapper collection.
                 serviceOperationWrapperList = this.Service.ActionProvider.GetServiceActionsByBindingParameterType(entityToSerialize.ResourceType);
             }

@@ -2361,7 +2361,7 @@ Content-Type: APPLicATiON/json;odata.metadata=minimal
                     TypedCustomDataContext<AllTypes>.ValuesRequested += handler;
                 }
             }
-            #endregion 
+            #endregion
 
             #region SingleResult attribute shouldn't affect nav props
 
@@ -3159,7 +3159,7 @@ Accept: application/atom+xml
             /// Setting InstanceContextMode to Single on DataService results in cached query results being returned for subsequent queries
             /// This test sends multiple requests before getting first response.
             /// Please note that in this case the only the InstanceContextMode property was tested with "Single" value
-            /// There is ConcurrencyMode which by default is "Single" and got tested in this particular test. 
+            /// There is ConcurrencyMode which by default is "Single" and got tested in this particular test.
             /// For "Multiple" ConcurrencyMode, the code throws exception. That is by design.
             /// </summary>
             [Ignore] // Remove Atom

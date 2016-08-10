@@ -46,6 +46,7 @@
     <Compile Include="AsyncBufferedStream.cs" />
     <Compile Include="ContainerBuilderExtensions.cs" />
     <Compile Include="EdmExtensionMethods.cs" />
+    <Compile Include="Evaluation\ODataConventionalResourceMetadataBuilder.cs" />
     <Compile Include="UnknownEntitySet.cs" />
     <Compile Include="IContainerProvider.cs" />
     <Compile Include="IDuplicatePropertyNameChecker.cs" />
@@ -94,7 +95,7 @@
     <Compile Include="Evaluation\KeySerializer.cs" />
     <Compile Include="Evaluation\LiteralFormatter.cs" />
     <Compile Include="Evaluation\NoOpResourceMetadataBuilder.cs" />
-    <Compile Include="Evaluation\ODataConventionalResourceMetadataBuilder.cs" />
+    <Compile Include="Evaluation\ODataConventionalEntityMetadataBuilder.cs" />
     <Compile Include="Evaluation\ODataConventionalUriBuilder.cs" />
     <Compile Include="Evaluation\ODataResourceMetadataBuilder.cs" />
     <Compile Include="Evaluation\ODataResourceMetadataContext.cs" />

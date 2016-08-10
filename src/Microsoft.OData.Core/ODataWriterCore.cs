@@ -205,6 +205,35 @@ namespace Microsoft.OData
         }
 
         /// <summary>
+        /// Returns the nested info that current resource belongs to.
+        /// </summary>
+        protected ODataNestedResourceInfo BelongingNestedResourceInfo
+        {
+            get
+            {
+                Debug.Assert(this.State == WriterState.Resource || this.State == WriterState.ResourceSet, "BelongingNestedResourceInfo should only be called while writing a resource or a resourceSet.");
+
+                Scope linkScope = this.scopeStack.ParentOrNull;
+
+                // For single navigation
+                if (linkScope is NestedResourceInfoScope)
+                {
+                    return linkScope.Item as ODataNestedResourceInfo;
+                }
+                else if (linkScope is ResourceSetScope)
+                {
+                    // For resource under collection of navigation/complex, parent is ResourceSetScope, so we need find parent of parent.
+                    linkScope = this.scopeStack.ParentOfParent;
+                    return linkScope == null ? null : (linkScope.Item as ODataNestedResourceInfo);
+                }
+                else
+                {
+                    return null;
+                }
+            }
+        }
+
+        /// <summary>
         /// Returns the resource type of the immediate parent resource for which a nested resource info is being written.
         /// </summary>
         protected IEdmStructuredType ParentResourceType

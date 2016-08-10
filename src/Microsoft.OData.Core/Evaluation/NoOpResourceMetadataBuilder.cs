@@ -165,14 +165,7 @@ namespace Microsoft.OData.Evaluation
             else
             {
                 id = this.GetId();
-                if (id == null)
-                {
-                    return false;
-                }
-                else
-                {
-                    return true;
-                }
+                return id != null;
             }
         }
     }

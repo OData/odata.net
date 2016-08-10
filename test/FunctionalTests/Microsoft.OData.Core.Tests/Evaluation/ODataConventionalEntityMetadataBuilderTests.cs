@@ -26,13 +26,13 @@ namespace Microsoft.OData.Tests.Evaluation
         private ODataResource productEntry;
         private Dictionary<string, object> sinlgeKeyCollection;
         private Dictionary<string, object> multiKeysCollection;
-        private ODataConventionalResourceMetadataBuilder productConventionalEntityMetadataBuilder;
+        private ODataConventionalEntityMetadataBuilder productConventionalEntityMetadataBuilder;
         private ODataResource derivedMultiKeyMultiEtagMleEntry;
-        private ODataConventionalResourceMetadataBuilder derivedMultiKeyMultiEtagMleConventionalEntityMetadataBuilder;
+        private ODataConventionalEntityMetadataBuilder derivedMultiKeyMultiEtagMleConventionalEntityMetadataBuilder;
         private ODataResource containedCollectionProductEntry;
-        private ODataConventionalResourceMetadataBuilder containedCollectionProductConventionalEntityMetadataBuilder;
+        private ODataConventionalEntityMetadataBuilder containedCollectionProductConventionalEntityMetadataBuilder;
         private ODataResource containedProductEntry;
-        private ODataConventionalResourceMetadataBuilder containedProductConventionalEntityMetadataBuilder;
+        private ODataConventionalEntityMetadataBuilder containedProductConventionalEntityMetadataBuilder;
         private Dictionary<string, object> containedSinlgeKeyCollection;
         private Dictionary<string, object> containedMultiKeysCollection;
 
@@ -71,7 +71,7 @@ namespace Microsoft.OData.Tests.Evaluation
                 SelectedStreamProperties = new Dictionary<string, IEdmStructuralProperty>()
             };
 
-            this.productConventionalEntityMetadataBuilder = new ODataConventionalResourceMetadataBuilder(productEntryMetadataContext, this.metadataContext, this.uriBuilder);
+            this.productConventionalEntityMetadataBuilder = new ODataConventionalEntityMetadataBuilder(productEntryMetadataContext, this.metadataContext, this.uriBuilder);
             this.productEntry.MetadataBuilder = this.productConventionalEntityMetadataBuilder;
 
             #endregion Product Entry
@@ -111,7 +111,7 @@ namespace Microsoft.OData.Tests.Evaluation
                 },
             };
 
-            this.derivedMultiKeyMultiEtagMleConventionalEntityMetadataBuilder = new ODataConventionalResourceMetadataBuilder(derivedProductMleEntryMetadataContext, this.metadataContext, this.uriBuilder);
+            this.derivedMultiKeyMultiEtagMleConventionalEntityMetadataBuilder = new ODataConventionalEntityMetadataBuilder(derivedProductMleEntryMetadataContext, this.metadataContext, this.uriBuilder);
             this.derivedMultiKeyMultiEtagMleEntry.MetadataBuilder = this.derivedMultiKeyMultiEtagMleConventionalEntityMetadataBuilder;
 
             #endregion Derived, MultiKey, Multi ETag, MLE Entry
@@ -144,7 +144,7 @@ namespace Microsoft.OData.Tests.Evaluation
                 SelectedStreamProperties = new Dictionary<string, IEdmStructuralProperty>()
             };
 
-            this.containedCollectionProductConventionalEntityMetadataBuilder = new ODataConventionalResourceMetadataBuilder(containedCollectionProductEntryMetadataContext, this.metadataContext, this.uriBuilder);
+            this.containedCollectionProductConventionalEntityMetadataBuilder = new ODataConventionalEntityMetadataBuilder(containedCollectionProductEntryMetadataContext, this.metadataContext, this.uriBuilder);
             this.containedCollectionProductEntry.MetadataBuilder = this.containedCollectionProductConventionalEntityMetadataBuilder;
             this.containedCollectionProductEntry.MetadataBuilder.ParentMetadataBuilder = this.productConventionalEntityMetadataBuilder;
 
@@ -174,7 +174,7 @@ namespace Microsoft.OData.Tests.Evaluation
                 SelectedStreamProperties = new Dictionary<string, IEdmStructuralProperty>()
             };
 
-            this.containedProductConventionalEntityMetadataBuilder = new ODataConventionalResourceMetadataBuilder(containedProductEntryMetadataContext, this.metadataContext, this.uriBuilder);
+            this.containedProductConventionalEntityMetadataBuilder = new ODataConventionalEntityMetadataBuilder(containedProductEntryMetadataContext, this.metadataContext, this.uriBuilder);
             this.containedProductEntry.MetadataBuilder = this.containedProductConventionalEntityMetadataBuilder;
             this.containedProductEntry.MetadataBuilder.ParentMetadataBuilder = this.productConventionalEntityMetadataBuilder;
 
@@ -591,7 +591,7 @@ namespace Microsoft.OData.Tests.Evaluation
         [Fact]
         public void ETagShouldBeNullForTypeWithoutConcurrencyTokens()
         {
-            var testSubject = new ODataConventionalResourceMetadataBuilder(new TestEntryMetadataContext { Resource = new ODataResource(), ETagProperties = new KeyValuePair<string, object>[0] }, this.metadataContext, this.uriBuilder);
+            var testSubject = new ODataConventionalEntityMetadataBuilder(new TestEntryMetadataContext { Resource = new ODataResource(), ETagProperties = new KeyValuePair<string, object>[0] }, this.metadataContext, this.uriBuilder);
             testSubject.GetETag().Should().Be((string)null);
         }
 
@@ -599,27 +599,27 @@ namespace Microsoft.OData.Tests.Evaluation
         public void EtagShouldBeUriEscaped()
         {
             // if this fails System.Uri has changed its behavior and we may need to adjust how we encode our strings for JsonLight
-            // .net 45 changed this behavior initially to escape ' to a value, but was changed. below test 
-            // validates that important uri literal values that OData uses don't change, and that we escape characters when 
+            // .net 45 changed this behavior initially to escape ' to a value, but was changed. below test
+            // validates that important uri literal values that OData uses don't change, and that we escape characters when
             // producing the etag for JsonLight
             var escapedStrings = Uri.EscapeUriString(@".:''-");
             escapedStrings.Should().Be(@".:''-");
 
-            var testSubject = new ODataConventionalResourceMetadataBuilder(new TestEntryMetadataContext { Resource = new ODataResource(), ETagProperties = new[] { new KeyValuePair<string, object>("ETag", "Value ") } }, this.metadataContext, this.uriBuilder);
+            var testSubject = new ODataConventionalEntityMetadataBuilder(new TestEntryMetadataContext { Resource = new ODataResource(), ETagProperties = new[] { new KeyValuePair<string, object>("ETag", "Value ") } }, this.metadataContext, this.uriBuilder);
             testSubject.GetETag().Should().Be(@"W/""'Value%20'""");
         }
 
         [Fact]
         public void ETagShouldBeCorrectForTypeWithOneConcurrencyToken()
         {
-            var testSubject = new ODataConventionalResourceMetadataBuilder(new TestEntryMetadataContext { Resource = new ODataResource(), ETagProperties = new[] { new KeyValuePair<string, object>("ETag", "Value") } }, this.metadataContext, this.uriBuilder);
+            var testSubject = new ODataConventionalEntityMetadataBuilder(new TestEntryMetadataContext { Resource = new ODataResource(), ETagProperties = new[] { new KeyValuePair<string, object>("ETag", "Value") } }, this.metadataContext, this.uriBuilder);
             testSubject.GetETag().Should().Be(@"W/""'Value'""");
         }
 
         [Fact]
         public void ETagShouldBeCorrectForNullConcurrencyToken()
         {
-            var testSubject = new ODataConventionalResourceMetadataBuilder(new TestEntryMetadataContext { Resource = new ODataResource(), ETagProperties = new[] { new KeyValuePair<string, object>("ETag", default(string)) } }, this.metadataContext, this.uriBuilder);
+            var testSubject = new ODataConventionalEntityMetadataBuilder(new TestEntryMetadataContext { Resource = new ODataResource(), ETagProperties = new[] { new KeyValuePair<string, object>("ETag", default(string)) } }, this.metadataContext, this.uriBuilder);
             testSubject.GetETag().Should().Be(@"W/""null""");
         }
 
@@ -633,7 +633,7 @@ namespace Microsoft.OData.Tests.Evaluation
                 new KeyValuePair<string, object>("ETag3", 2.3M)
             };
 
-            var testSubject = new ODataConventionalResourceMetadataBuilder(new TestEntryMetadataContext { Resource = new ODataResource(), ETagProperties = values }, this.metadataContext, this.uriBuilder);
+            var testSubject = new ODataConventionalEntityMetadataBuilder(new TestEntryMetadataContext { Resource = new ODataResource(), ETagProperties = values }, this.metadataContext, this.uriBuilder);
             testSubject.GetETag().Should().Be(@"W/""1.2345E%2B45,binary'AQID',2.3""");
         }
 
@@ -648,7 +648,7 @@ namespace Microsoft.OData.Tests.Evaluation
                 new KeyValuePair<string, object>("ETagDecimal", 1.0M)
             };
 
-            var testSubject = new ODataConventionalResourceMetadataBuilder(new TestEntryMetadataContext { Resource = new ODataResource(), ETagProperties = values }, this.metadataContext, this.uriBuilder);
+            var testSubject = new ODataConventionalEntityMetadataBuilder(new TestEntryMetadataContext { Resource = new ODataResource(), ETagProperties = values }, this.metadataContext, this.uriBuilder);
             testSubject.GetETag().Should().Be(@"W/""1,1,1.0,1.0""");
         }
         #endregion Tests for GetETag()
@@ -1115,7 +1115,7 @@ namespace Microsoft.OData.Tests.Evaluation
                 SelectedStreamProperties = new Dictionary<string, IEdmStructuralProperty>(),
             };
 
-            var singletonEntityMetadataBuilder = new ODataConventionalResourceMetadataBuilder(singletonEntryMetadataContext, this.metadataContext, this.uriBuilder);
+            var singletonEntityMetadataBuilder = new ODataConventionalEntityMetadataBuilder(singletonEntryMetadataContext, this.metadataContext, this.uriBuilder);
             singletonEntityMetadataBuilder.GetId().Should().Be(new Uri("http://odata.org/base/Boss"));
             singletonEntityMetadataBuilder.GetEditLink().Should().Be(new Uri("http://odata.org/base/Boss"));
             singletonEntityMetadataBuilder.GetReadLink().Should().Be(new Uri("http://odata.org/base/Boss"));

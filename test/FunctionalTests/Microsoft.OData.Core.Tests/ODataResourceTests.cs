@@ -39,7 +39,7 @@ namespace Microsoft.OData.Tests
             var metadataContext = new TestMetadataContext();
             var entryMetadataContext = ODataResourceMetadataContext.Create(this.odataEntryWithFullBuilder, typeContext, serializationInfo, null, metadataContext, SelectedPropertiesNode.EntireSubtree);
             this.odataEntryWithFullBuilder.MetadataBuilder =
-                new ODataConventionalResourceMetadataBuilder(entryMetadataContext, metadataContext,
+                new ODataConventionalEntityMetadataBuilder(entryMetadataContext, metadataContext,
                     new ODataConventionalUriBuilder(new Uri("http://service/", UriKind.Absolute),
                         ODataUrlKeyDelimiter.Parentheses));
 

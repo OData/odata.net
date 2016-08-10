@@ -46,6 +46,16 @@ namespace Microsoft.OData.Evaluation
         internal ODataResourceMetadataBuilder ParentMetadataBuilder { get; set; }
 
         /// <summary>
+        /// Whether the resource is from collection.
+        /// </summary>
+        internal bool IsFromCollection { get; set; }
+
+        /// <summary>
+        /// The name of property that current resource represents.
+        /// </summary>
+        internal string NameAsProperty { get; set; }
+
+        /// <summary>
         /// Gets the edit link of the entity.
         /// </summary>
         /// <returns>

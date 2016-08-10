@@ -39,7 +39,7 @@ namespace Microsoft.OData.Tests
             var typeContext = ODataResourceTypeContext.Create(serializationInfo, null, null, null, true);
             var metadataContext = new TestMetadataContext();
             var entryMetadataContext = ODataResourceMetadataContext.Create(entry, typeContext, serializationInfo, null, metadataContext, SelectedPropertiesNode.EntireSubtree);
-            var metadataBuilder = new ODataConventionalResourceMetadataBuilder(entryMetadataContext, metadataContext,
+            var metadataBuilder = new ODataConventionalEntityMetadataBuilder(entryMetadataContext, metadataContext,
                 new ODataConventionalUriBuilder(ServiceUri, ODataUrlKeyDelimiter.Parentheses));
             this.navigationLinkWithFullBuilder = new ODataNestedResourceInfo { Name = "NavProp" };
             this.navigationLinkWithFullBuilder.MetadataBuilder = metadataBuilder;

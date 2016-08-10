@@ -4,18 +4,16 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
+using Microsoft.OData.Edm;
+using Microsoft.OData.Evaluation;
+using Microsoft.OData.Json;
+
 namespace Microsoft.OData.JsonLight
 {
-    #region Namespaces
-    using System;
-    using System.Collections.Generic;
-    using System.Diagnostics;
-    using System.Linq;
-    using Microsoft.OData.Edm;
-    using Microsoft.OData.Json;
-    using Microsoft.OData.Metadata;
-    #endregion Namespaces
-
     /// <summary>
     /// OData JsonLight serializer for entries and resource sets.
     /// </summary>

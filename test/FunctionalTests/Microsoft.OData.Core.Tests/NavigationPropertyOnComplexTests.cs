@@ -249,7 +249,7 @@ namespace Microsoft.OData.Tests
             const string payload =
                 "{\"@odata.context\":\"http://host/$metadata#People/$entity\",\"UserName\":\"abc\",\"Address\":{\"Road\":\"Zixing\",\"City\":{\"ZipCode\":111}}}";
 
-            var entryLists = ReadPayload(payload, Model, EntitySet, EntityType);
+            var entryLists = ReadPayload(payload, Model, EntitySet, EntityType).OfType<ODataResource>().ToList();
 
             entryLists[0].Id.Should().Be("http://host/City(111)");
             entryLists[1].TypeName.Should().Be("DefaultNs.Address");
@@ -277,7 +277,7 @@ namespace Microsoft.OData.Tests
                     "}]" +
                 "}";
 
-            var entryLists = ReadPayload(payload, Model, EntitySet, EntityType);
+            var entryLists = ReadPayload(payload, Model, EntitySet, EntityType).OfType<ODataResource>().ToList();
 
             entryLists[0].Id.Should().Be("http://host/City(111)");
             entryLists[1].TypeName.Should().Be("DefaultNs.Address");
@@ -304,7 +304,7 @@ namespace Microsoft.OData.Tests
                     "}" +
                 "}}";
 
-            var entryLists = ReadPayload(payload, Model, EntitySet, EntityType);
+            var entryLists = ReadPayload(payload, Model, EntitySet, EntityType).OfType<ODataResource>().ToList();
 
             entryLists[0].Id.Should().Be("http://host/City(111)");
             entryLists[1].TypeName.Should().Be("DefaultNs.WorkAddress");
@@ -316,7 +316,7 @@ namespace Microsoft.OData.Tests
         [Fact]
         public void WriteNavigationPropertyOnComplex()
         {
-            var uriParser = new ODataUriParser(Model, ServiceRoot, new Uri("http://host/People?$expand=Address/City($select=ZipCode)"), null);
+            var uriParser = new ODataUriParser(Model, ServiceRoot, new Uri("http://host/People('abc')?$expand=Address/City($select=ZipCode)"), null);
             var odataUri = uriParser.ParseUri();
 
             ODataResource res = new ODataResource() { Properties = new[] { new ODataProperty { Name = "UserName", Value = "abc" } } };
@@ -397,7 +397,7 @@ namespace Microsoft.OData.Tests
 
             Assert.Equal(actual, expected);
 
-            var entryList = ReadPayload(expected, Model, EntitySet, EntityType, true);
+            var entryList = ReadPayload(expected, Model, EntitySet, EntityType, true).OfType<ODataResource>().ToList();
             entryList[0].Id.Should().Be(new Uri("http://host/City(222)"));
             entryList[0].TypeName.Should().Be("DefaultNs.City");
 
@@ -416,6 +416,8 @@ namespace Microsoft.OData.Tests
                                                     "\"ID\":\"abc\"," +
                                                     "\"Complex\":{" +
                                                         "\"Prop1\":123," +
+                                                        "\"CollectionOfNav@odata.associationLink\":\"http://host/Entities('abc')/WrittenLinks/$ref\"," +
+                                                        "\"CollectionOfNav@odata.navigationLink\":\"http://host/Entities('abc')/WrittenLinks\"," +
                                                         "\"CollectionOfNav\":[" +
                                                             "{\"ID\":\"aaa\"}," +
                                                             "{\"ID\":\"bbb\"}" +
@@ -429,6 +431,8 @@ namespace Microsoft.OData.Tests
                                              "\"ID\":\"abc\"," +
                                              "\"Complex\":{" +
                                                  "\"Prop1\":123," +
+                                                 "\"CollectionOfNav@odata.associationLink\":\"http://host/Entities('abc')/WrittenLinks/$ref\"," +
+                                                 "\"CollectionOfNav@odata.navigationLink\":\"http://host/Entities('abc')/WrittenLinks\"," +
                                                  "\"CollectionOfNav\":[" +
                                                  "{" +
                                                      "\"@odata.id\":\"NavEntities('aaa')\"," +
@@ -458,7 +462,7 @@ namespace Microsoft.OData.Tests
             ODataResource res = new ODataResource() { Properties = new[] { new ODataProperty { Name = "ID", Value = "abc" } } };
             ODataNestedResourceInfo nestedComplexInfo = new ODataNestedResourceInfo() { Name = "Complex" };
             ODataResource nestedComplex = new ODataResource() { Properties = new[] { new ODataProperty { Name = "Prop1", Value = 123 } } };
-            ODataNestedResourceInfo nestedResInfo = new ODataNestedResourceInfo() { Name = "CollectionOfNav", IsCollection = true };
+            ODataNestedResourceInfo nestedResInfo = new ODataNestedResourceInfo() { Name = "CollectionOfNav", IsCollection = true, Url = new Uri("http://host/Entities('abc')/WrittenLinks"), AssociationLinkUrl = new Uri("http://host/Entities('abc')/WrittenLinks/$ref") };
             ODataResourceSet nestedResourceSet = new ODataResourceSet();
             ODataResource nestednav1 = new ODataResource() { Properties = new[] { new ODataProperty { Name = "ID", Value = "aaa" } } };
             ODataResource nestednav2 = new ODataResource() { Properties = new[] { new ODataProperty { Name = "ID", Value = "bbb" } } };
@@ -483,7 +487,7 @@ namespace Microsoft.OData.Tests
 
             Assert.Equal(expectedPayload, output);
 
-            var entryList = ReadPayload(output, CollectionModel, entitySet, entityType);
+            var entryList = ReadPayload(output, CollectionModel, entitySet, entityType).OfType<ODataResource>().ToList();
             entryList[0].Id.Should().Be(new Uri("http://host/NavEntities('aaa')"));
             entryList[0].TypeName.Should().Be("DefaultNs.NavEntityType");
 
@@ -530,7 +534,7 @@ namespace Microsoft.OData.Tests
 
             Assert.Equal(expectedPayload, output);
 
-            var entryList = ReadPayload(expectedPayload, CollectionModel, null, complexType);
+            var entryList = ReadPayload(expectedPayload, CollectionModel, null, complexType).OfType<ODataResource>().ToList();
             entryList[0].Id.Should().Be(new Uri("http://host/NavEntities('aaa')"));
             entryList[0].TypeName.Should().Be("DefaultNs.NavEntityType");
 
@@ -571,7 +575,7 @@ namespace Microsoft.OData.Tests
 
             Assert.Equal(expectedPayload, output);
 
-            var entryList = ReadPayload(expectedPayload, CollectionModel, null, complexType, true);
+            var entryList = ReadPayload(expectedPayload, CollectionModel, null, complexType, true).OfType<ODataResource>().ToList();
             entryList[0].Id.Should().Be(new Uri("http://host/NavEntities('aaa')"));
             entryList[0].TypeName.Should().Be("DefaultNs.NavEntityType");
 
@@ -620,7 +624,7 @@ namespace Microsoft.OData.Tests
 
             Assert.Equal(expectedPayload, output);
 
-            var entryList = ReadPayload(expectedPayload, Model, null, complexType);
+            var entryList = ReadPayload(expectedPayload, Model, null, complexType).OfType<ODataResource>().ToList();
             entryList[0].Id.Should().Be(new Uri("http://host/Countries('China')"));
             entryList[0].TypeName.Should().Be("DefaultNs.Country");
 
@@ -681,7 +685,7 @@ namespace Microsoft.OData.Tests
 
             Assert.Equal(expectedPayload, output);
 
-            var entryList = ReadPayload(expectedPayload, Model, null, complexType);
+            var entryList = ReadPayload(expectedPayload, Model, null, complexType).OfType<ODataResource>().ToList();
             entryList[0].Id.Should().Be(new Uri("http://host/Countries('China')"));
             entryList[0].TypeName.Should().Be("DefaultNs.Country");
 
@@ -696,8 +700,213 @@ namespace Microsoft.OData.Tests
         }
         #endregion
 
+        #region auto compute navigation link
+        [Fact]
+        public void AutoComputeNavigationLinkForNavUnderSingleComplexInWriter()
+        {
+            var entitySet = CollectionModel.EntityContainer.FindEntitySet("Entities");
+            var entityType = CollectionModel.FindType("DefaultNs.EntityType") as IEdmStructuredType;
+
+            var uriParser = new ODataUriParser(CollectionModel, ServiceRoot, new Uri("http://host/Entities('abc')"));
+            var odataUri = uriParser.ParseUri();
+
+            ODataResource res = new ODataResource() { Properties = new[] { new ODataProperty { Name = "ID", Value = "abc" } } };
+            ODataNestedResourceInfo nestedComplexInfo = new ODataNestedResourceInfo() { Name = "Complex" };
+            ODataResource nestedComplex = new ODataResource() { Properties = new[] { new ODataProperty { Name = "Prop1", Value = 123 } } };
+            ODataNestedResourceInfo nestedResInfo = new ODataNestedResourceInfo() { Name = "CollectionOfNav", IsCollection = true };
+
+            string output = WriteJsonLightEntry(CollectionModel, entitySet, entityType, odataUri, (writer) =>
+            {
+                writer.WriteStart(res);
+                writer.WriteStart(nestedComplexInfo);
+                writer.WriteStart(nestedComplex);
+                writer.WriteStart(nestedResInfo);
+                writer.WriteEnd();
+                writer.WriteEnd();
+                writer.WriteEnd();
+                writer.WriteEnd();
+            }, false, isFullMetadata: true);
+
+            string expected = "{\"@odata.context\":\"http://host/$metadata#Entities/$entity\"," +
+                              "\"@odata.id\":\"Entities('abc')\"," +
+                              "\"@odata.editLink\":\"Entities('abc')\"," +
+                              "\"ID\":\"abc\"," +
+                              "\"Complex\":{" +
+                                  "\"Prop1\":123," +
+                                  "\"CollectionOfNav@odata.associationLink\":\"http://host/Entities('abc')/Complex/CollectionOfNav/$ref\"," +
+                                  "\"CollectionOfNav@odata.navigationLink\":\"http://host/Entities('abc')/Complex/CollectionOfNav\"" +
+                                "}" +
+                              "}";
+
+            Assert.Equal(expected, output);
+
+            var itemsList = ReadPayload(expected, CollectionModel, entitySet, entityType).ToList();
+            var nestedInfo = itemsList[0] as ODataNestedResourceInfo;
+            nestedInfo.AssociationLinkUrl.Should().Be(new Uri("http://host/Entities('abc')/Complex/CollectionOfNav/$ref"));
+            nestedInfo.Url.Should().Be(new Uri("http://host/Entities('abc')/Complex/CollectionOfNav"));
+
+            var resource = itemsList[1] as ODataResource;
+            resource.TypeName.Should().Be("DefaultNs.ComplexType");
+
+            nestedInfo = itemsList[2] as ODataNestedResourceInfo;
+            nestedInfo.Name.Should().Be("Complex");
+            nestedInfo.AssociationLinkUrl.Should().Be(null);
+            nestedInfo.Url.Should().Be(null);
+
+            resource = itemsList[3] as ODataResource;
+            resource.Id.Should().Be(new Uri("http://host/Entities('abc')"));
+        }
+
+        [Fact]
+        public void AutoComputeNavigationLinkForDeepNavigationUnderSingleComplexInWriter()
+        {
+            var uriParser = new ODataUriParser(Model, ServiceRoot, new Uri("http://host/People('abc')"), null);
+            var odataUri = uriParser.ParseUri();
+
+            ODataResource res = new ODataResource() { Properties = new[] { new ODataProperty { Name = "UserName", Value = "abc" } } };
+            ODataNestedResourceInfo addressInfo = new ODataNestedResourceInfo() { Name = "Address" };
+            ODataResource address = new ODataResource() { Properties = new[] { new ODataProperty { Name = "Road", Value = "Zixing" } } };
+            ODataNestedResourceInfo workAddressInfo = new ODataNestedResourceInfo() { Name = "WorkAddress" };
+            ODataResource workAddress = new ODataResource() { TypeName = "DefaultNs.WorkAddress", Properties = new[] { new ODataProperty { Name = "Road", Value = "Ziyue" } } };
+            ODataNestedResourceInfo nestedCityInfo = new ODataNestedResourceInfo() { Name = "City2", IsCollection = false };
+            ODataResource city = new ODataResource() { Properties = new[] { new ODataProperty { Name = "ZipCode", Value = 222 } } };
+            ODataNestedResourceInfo nestedInfo = new ODataNestedResourceInfo() { Name = "Country", IsCollection = false };
+            ODataResource country = new ODataResource() { Properties = new[] { new ODataProperty { Name = "Name", Value = "China" } } };
+
+            string output = WriteJsonLightEntry(Model, EntitySet, EntityType, odataUri, (writer) =>
+            {
+                writer.WriteStart(res);
+                writer.WriteStart(addressInfo);
+                writer.WriteStart(address);
+                writer.WriteStart(workAddressInfo);
+                writer.WriteStart(workAddress);
+                writer.WriteStart(nestedCityInfo);
+                writer.WriteStart(city);
+                writer.WriteStart(nestedInfo);
+                writer.WriteStart(country);
+                writer.WriteEnd();
+                writer.WriteEnd();
+                writer.WriteEnd();
+                writer.WriteEnd();
+                writer.WriteEnd();
+                writer.WriteEnd();
+                writer.WriteEnd();
+                writer.WriteEnd();
+                writer.WriteEnd();
+            }, false, isFullMetadata:true);
+
+            string expected = "{\"@odata.context\":\"http://host/$metadata#People/$entity\"," +
+                              "\"@odata.id\":\"People('abc')\"," +
+                              "\"@odata.editLink\":\"People('abc')\"," +
+                              "\"UserName\":\"abc\"," +
+                              "\"Address\":{" +
+                                  "\"Road\":\"Zixing\"," +
+                                  "\"WorkAddress\":{" +
+                                      "\"@odata.type\":\"#DefaultNs.WorkAddress\"," +
+                                      "\"Road\":\"Ziyue\"," +
+                                      "\"City2@odata.associationLink\":\"http://host/People('abc')/Address/WorkAddress/DefaultNs.WorkAddress/City2/$ref\"," +
+                                      "\"City2@odata.navigationLink\":\"http://host/People('abc')/Address/WorkAddress/DefaultNs.WorkAddress/City2\"," +
+                                      "\"City2\":{" +
+                                          "\"@odata.id\":\"City(222)\"," +
+                                          "\"@odata.editLink\":\"City(222)\"," +
+                                          "\"ZipCode\":222," +
+                                          "\"Country@odata.associationLink\":\"http://host/City(222)/Country/$ref\"," +
+                                          "\"Country@odata.navigationLink\":\"http://host/City(222)/Country\"," +
+                                          "\"Country\":{" +
+                                              "\"@odata.id\":\"Countries('China')\"," +
+                                              "\"@odata.editLink\":\"Countries('China')\"," +
+                                              "\"Name\":\"China\"" +
+                                              "}" +
+                                      "}" +
+                                  "}" +
+                              "}" +
+                              "}";
+
+            Assert.Equal(expected, output);
+        }
+
+        [Fact]
+        public void NotAbleToComputeNavigationLinkUnderCollectionOfComplexInFullMetadata()
+        {
+            var uriParser = new ODataUriParser(Model, ServiceRoot, new Uri("http://host/People('abc')"), null);
+            var odataUri = uriParser.ParseUri();
+
+            ODataResource res = new ODataResource() { Properties = new[] { new ODataProperty { Name = "UserName", Value = "abc" } } };
+            ODataNestedResourceInfo addressInfo = new ODataNestedResourceInfo() { Name = "Addresses", IsCollection = true };
+            ODataResourceSet resSet = new ODataResourceSet();
+            ODataResource address = new ODataResource() { Properties = new[] { new ODataProperty { Name = "Road", Value = "Zixing" } } };
+            ODataNestedResourceInfo nestedCityInfo = new ODataNestedResourceInfo() { Name = "City", IsCollection = false };
+            ODataResource city = new ODataResource() { Properties = new[] { new ODataProperty { Name = "ZipCode", Value = 222 } } };
+
+            var output = WriteJsonLightEntry(Model, EntitySet, EntityType, odataUri, (writer) =>
+            {
+                writer.WriteStart(res);
+                    writer.WriteStart(addressInfo);
+                        writer.WriteStart(resSet);
+                            writer.WriteStart(address);
+                                writer.WriteStart(nestedCityInfo);
+                                    writer.WriteStart(city);
+                                    writer.WriteEnd();
+                                writer.WriteEnd();
+                            writer.WriteEnd();
+                        writer.WriteEnd();
+                    writer.WriteEnd();
+                writer.WriteEnd();
+            }, false, isFullMetadata: true);
+
+            string expected = "{" +
+                              "\"@odata.context\":\"http://host/$metadata#People/$entity\"," +
+                              "\"@odata.id\":\"People('abc')\"," +
+                              "\"@odata.editLink\":\"People('abc')\"," +
+                              "\"UserName\":\"abc\"," +
+                              "\"Addresses\":[" +
+                                  "{\"Road\":\"Zixing\"," +
+                                      "\"City\":{" +
+                                          "\"@odata.id\":\"City(222)\"," +
+                                          "\"@odata.editLink\":\"City(222)\"," +
+                                          "\"ZipCode\":222," +
+                                          "\"Country@odata.associationLink\":\"http://host/City(222)/Country/$ref\"," +
+                                          "\"Country@odata.navigationLink\":\"http://host/City(222)/Country\"}" +
+                                      "}" +
+                              "]" +
+                              "}";
+
+            Assert.Equal(expected, output);
+        }
+
+        [Fact (Skip = "TODO: auto compute navigation link in reader for complex")]
+        public void AutoComputeNavigationLinkForNavUnderSingleComplexInReader()
+        {
+            var entitySet = CollectionModel.EntityContainer.FindEntitySet("Entities");
+            var entityType = CollectionModel.FindType("DefaultNs.EntityType") as IEdmStructuredType;
+
+            string payload = "{\"@odata.context\":\"http://host/$metadata#Entities/$entity\"," +
+                              "\"ID\":\"abc\"," +
+                              "\"Complex\":{" +
+                                  "\"Prop1\":123" +
+                                "}" +
+                              "}";
+
+            var itemsList = ReadPayload(payload, CollectionModel, entitySet, entityType).ToList();
+            var nestedInfo = itemsList[0] as ODataNestedResourceInfo;
+            nestedInfo.AssociationLinkUrl.Should().Be(new Uri("http://host/Entities('abc')/Complex/CollectionOfNav/$ref"));
+            nestedInfo.Url.Should().Be(new Uri("http://host/Entities('abc')/Complex/CollectionOfNav"));
+
+            var resource = itemsList[1] as ODataResource;
+            resource.TypeName.Should().Be("DefaultNs.ComplexType");
+
+            nestedInfo = itemsList[2] as ODataNestedResourceInfo;
+            nestedInfo.Name.Should().Be("Complex");
+            nestedInfo.AssociationLinkUrl.Should().Be(null);
+            nestedInfo.Url.Should().Be(null);
+
+            resource = itemsList[3] as ODataResource;
+            resource.Id.Should().Be(new Uri("http://host/Entities('abc')"));
+        }
+        #endregion
+
         #region Private help method
-        private List<ODataResource> ReadPayload(string payload, IEdmModel model, IEdmEntitySet entitySet, IEdmStructuredType entityType, bool isResouceSet = false, bool isFullMetadata = false)
+        private List<ODataItem> ReadPayload(string payload, IEdmModel model, IEdmEntitySet entitySet, IEdmStructuredType entityType, bool isResouceSet = false, bool isFullMetadata = false)
         {
             InMemoryMessage message = new InMemoryMessage();
             if (isFullMetadata)
@@ -710,7 +919,7 @@ namespace Microsoft.OData.Tests
             }
             message.Stream = new MemoryStream(Encoding.UTF8.GetBytes(payload));
 
-            List<ODataResource> entryList = new List<ODataResource>();
+            List<ODataItem> itemsList = new List<ODataItem>();
 
             using (var messageReader = new ODataMessageReader((IODataResponseMessage)message, null, model))
             {
@@ -729,13 +938,16 @@ namespace Microsoft.OData.Tests
                     switch (reader.State)
                     {
                         case ODataReaderState.ResourceEnd:
-                            entryList.Add((ODataResource)reader.Item);
+                            itemsList.Add(reader.Item);
+                            break;
+                        case ODataReaderState.NestedResourceInfoEnd:
+                            itemsList.Add(reader.Item);
                             break;
                     }
                 }
             }
 
-            return entryList;
+            return itemsList;
         }
 
         private static string WriteJsonLightEntry(IEdmModel model, IEdmEntitySet entitySet, IEdmStructuredType resourceType, ODataUri odataUri, Action<ODataWriter> writeAction, bool isResourceSet = false, bool isFullMetadata = false)

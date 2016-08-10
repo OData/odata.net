@@ -34,8 +34,8 @@ namespace Microsoft.OData.Service.Serializers
         /// These query parameters can be copied for each next page link.
         /// Don't need to copy $skiptoken, $skip and $top because they are calculated every time.
         /// </summary>
-        private static readonly String[] NextPageQueryParametersToCopy = 
-        { 
+        private static readonly String[] NextPageQueryParametersToCopy =
+        {
             XmlConstants.HttpQueryStringFilter,
             XmlConstants.HttpQueryStringExpand,
             XmlConstants.HttpQueryStringOrderBy,
@@ -254,7 +254,7 @@ namespace Microsoft.OData.Service.Serializers
         /// </summary>
         /// <param name="queryResults">Query results to enumerate.</param>
         /// <remarks>
-        /// <paramref name="queryResults"/> should correspond to the RequestQuery of the 
+        /// <paramref name="queryResults"/> should correspond to the RequestQuery of the
         /// RequestDescription object passed while constructing this serializer
         /// We allow the results to be passed in
         /// to let the query be executed earlier than at result-writing time, which
@@ -308,7 +308,7 @@ namespace Microsoft.OData.Service.Serializers
             }
 
             // In ExpandedWrapper's decription property, we only append the type name if there is any ambiguity.
-            // If the navigation property already refers to the more derived type, which in turn has a 
+            // If the navigation property already refers to the more derived type, which in turn has a
             // navigation property, we do not need to append the type name while accessing the latter.
             string propertyName = property.Name;
             if (expandedNode != null && this.GetCurrentExpandedProjectionNode().ResourceType != expandedNode.TargetResourceType)
@@ -491,7 +491,7 @@ namespace Microsoft.OData.Service.Serializers
                         count++;
                     }
 
-                    // Throw error if the current count is greater than the maximum page size. The only 
+                    // Throw error if the current count is greater than the maximum page size. The only
                     // exception to this is service actions, because service actions discard paging and return the entire resultset.
                     if (count > max && !this.RequestDescription.IsServiceActionRequest)
                     {
@@ -529,7 +529,7 @@ namespace Microsoft.OData.Service.Serializers
 
             // expandedProjectionNode can be null in couple of scenarios. If you are using V1 IExpandProvider interface,
             // then providers can modify the ExpandSegments, which means that expandedProjectionNodes might not be present,
-            // but since ExpandPaths are present, we will expand that property. Look in ShouldExpandForSegment method to 
+            // but since ExpandPaths are present, we will expand that property. Look in ShouldExpandForSegment method to
             // find out more about how we figure out whether we should expand or not when using IExpandProvider.
             return this.PushSegment(current, expandedProjectionNode);
         }
@@ -658,7 +658,7 @@ namespace Microsoft.OData.Service.Serializers
         protected string GetETagValue(object resource, ResourceType resourceType)
         {
             // this.httpETagHeaderValue is the etag value which got computed for writing the etag in the response
-            // headers. The etag response header only gets written out in certain scenarios, whereas we always 
+            // headers. The etag response header only gets written out in certain scenarios, whereas we always
             // write etag in the response payload, if the type has etag properties. So just checking here is the
             // etag has already been computed, and if yes, returning that, otherwise computing the etag.
             if (!String.IsNullOrEmpty(this.httpETagHeaderValue))
@@ -715,7 +715,7 @@ namespace Microsoft.OData.Service.Serializers
             {
                 return this.GetCollection(propertyName, (CollectionResourceType)propertyResourceType, propertyValue);
             }
-           
+
             // Open navigation properties are not supported on OpenTypes
             throw DataServiceException.CreateBadRequestError(Microsoft.OData.Service.Strings.OpenNavigationPropertiesNotSupportedOnOpenTypes(propertyName));
         }
@@ -764,6 +764,8 @@ namespace Microsoft.OData.Service.Serializers
             // since ODataLib will do this validation.
             ResourceType valueResourceType = WebUtil.GetNonPrimitiveResourceType(this.service.Provider, propertyValue);
             complexResource.TypeName = valueResourceType.FullName;
+
+            complexResource.SetSerializationInfo(new ODataResourceSerializationInfo { ExpectedTypeName = valueResourceType.FullName });
 
             this.PayloadMetadataPropertyManager.SetTypeName(complexResource, null, valueResourceType.FullName);
 
@@ -849,7 +851,7 @@ namespace Microsoft.OData.Service.Serializers
         }
 
         /// <summary>
-        /// Converts the given IEnumerable into IEnumerable<typeparamref name="T"/> 
+        /// Converts the given IEnumerable into IEnumerable<typeparamref name="T"/>
         /// </summary>
         /// <typeparam name="T">Type parameter.</typeparam>
         /// <param name="enumerable">IEnumerable which contains the list of the objects that needs to be converted.</param>
@@ -920,7 +922,7 @@ namespace Microsoft.OData.Service.Serializers
                 propertiesList.Add(odataProperty);
             }
 
-            // Once all the properties of the complex type has been enumerated, then remove this resource 
+            // Once all the properties of the complex type has been enumerated, then remove this resource
             // from the hashset
             this.RemoveFromComplexTypeCollection(resource);
             this.RecurseLeave();
@@ -938,7 +940,7 @@ namespace Microsoft.OData.Service.Serializers
                 if (property.TypeKind == ResourceTypeKind.ComplexType
                     || property.TypeKind == ResourceTypeKind.Collection && property.ResourceType.ElementType().ResourceTypeKind == ResourceTypeKind.ComplexType)
                 {
-                    properties.Add(this.GetODataNestedResourceForEntityProperty(resource, resourceType, property));
+                    properties.Add(this.GetODataNestedResourceForComplexProperty(resource, resourceType, property));
                 }
             }
 
@@ -963,7 +965,7 @@ namespace Microsoft.OData.Service.Serializers
         /// <param name="entityToSerialize">Entity that is currently being serialized.</param>
         /// <param name="property">ResourceProperty instance in question.</param>
         /// <returns>A instance of ODataProperty for the given <paramref name="property"/>.</returns>
-        private ODataNestedResourceInfoWrapper GetODataNestedResourceForEntityProperty(object resource, ResourceType resourceType, ResourceProperty property)
+        private ODataNestedResourceInfoWrapper GetODataNestedResourceForComplexProperty(object resource, ResourceType resourceType, ResourceProperty property)
         {
             Debug.Assert(resource != null, "resource != null");
             Debug.Assert(property != null && resourceType.Properties.Contains(property), "property != null && currentResourceType.Properties.Contains(property)");
@@ -977,6 +979,7 @@ namespace Microsoft.OData.Service.Serializers
                 Name = property.Name,
                 IsCollection = property.TypeKind == ResourceTypeKind.Collection
             };
+            odataNestedInfo.SetSerializationInfo(new ODataNestedResourceInfoSerializationInfo() { IsComplex = true });
 
             return new ODataNestedResourceInfoWrapper()
             {

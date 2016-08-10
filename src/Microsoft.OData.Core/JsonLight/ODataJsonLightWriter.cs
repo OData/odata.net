@@ -4,23 +4,21 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
+using System.Linq;
+#if PORTABLELIB
+using System.Threading.Tasks;
+#endif
+using Microsoft.OData.Edm;
+using Microsoft.OData.Evaluation;
+using Microsoft.OData.Metadata;
+using Microsoft.OData.Json;
+
 namespace Microsoft.OData.JsonLight
 {
-    #region Namespaces
-    using System;
-    using System.Collections.Generic;
-    using System.Diagnostics;
-    using System.Diagnostics.CodeAnalysis;
-    using System.Linq;
-#if PORTABLELIB
-    using System.Threading.Tasks;
-#endif
-    using Microsoft.OData.Edm;
-    using Microsoft.OData.Evaluation;
-    using Microsoft.OData.Json;
-
-    #endregion Namespaces
-
     /// <summary>
     /// Implementation of the ODataWriter for the JsonLight format.
     /// </summary>
@@ -153,7 +151,7 @@ namespace Microsoft.OData.JsonLight
         }
 
         /// <summary>
-        /// Place where derived writers can perform custom steps before the resource is writen, at the begining of WriteStartEntryImplementation.
+        /// Place where derived writers can perform custom steps before the resource is written, at the beginning of WriteStartEntryImplementation.
         /// </summary>
         /// <param name="resourceScope">The ResourceScope.</param>
         /// <param name="resource">Resource to write.</param>
@@ -161,28 +159,21 @@ namespace Microsoft.OData.JsonLight
         /// <param name="selectedProperties">The selected properties of this scope.</param>
         protected override void PrepareResourceForWriteStart(ResourceScope resourceScope, ODataResource resource, bool writingResponse, SelectedPropertiesNode selectedProperties)
         {
-            var entityType = resourceScope.ResourceType as IEdmEntityType;
+            var typeContext = resourceScope.GetOrCreateTypeContext(writingResponse);
             if (this.jsonLightOutputContext.MetadataLevel is JsonNoMetadataLevel)
             {
                 // 1. NoMetadata level: always enable its NullResourceMetadataBuilder
-                var typeContext = resourceScope.GetOrCreateTypeContext(writingResponse);
                 InnerPrepareResourceForWriteStart(resource, typeContext, selectedProperties);
             }
             else
             {
-                // 2. Minimal/Full Metadata level: may enable their NoOpResourceMetadataBuilder/ODataConventionalResourceMetadataBuilder
-                if (resourceScope.ResourceType == null || entityType != null)
+                // 2. Minimal/Full Metadata level: Use ODataConventionalEntityMetadataBuilder for entity, ODataConventionalResourceMetadataBuilder for other cases.
+                if (this.jsonLightOutputContext.Model.IsUserModel() || resourceScope.SerializationInfo != null)
                 {
-                    var typeContext = resourceScope.GetOrCreateTypeContext(writingResponse);
-                    if (!(resourceScope.ResourceType == null && typeContext.NavigationSourceKind == EdmNavigationSourceKind.None))
-                    {
-                        InnerPrepareResourceForWriteStart(resource, typeContext, selectedProperties);
-                    }
+                    InnerPrepareResourceForWriteStart(resource, typeContext, selectedProperties);
                 }
 
-                // 3. Here fallback to the default NoOpResourceMetadataBuilder
-                // For Complex resource, we don't prepare the ODataResourceMetadataBuilder, then it will use NoOpResourceMetadataBuilder.
-                // For the resource whose type is unknown, if NavigationSourceName is not provided, we will also use NoOpResourceMetadataBuilder.
+                // 3. Here fallback to the default NoOpResourceMetadataBuilder, when model and serializationInfo are both null.
             }
         }
 
@@ -640,12 +631,18 @@ namespace Microsoft.OData.JsonLight
                 this.jsonLightOutputContext.ODataSimplifiedOptions.EnableWritingKeyAsSegment,
                 this.jsonLightOutputContext.MessageWriterSettings.ODataUri);
 
-            if (builder is ODataConventionalResourceMetadataBuilder)
+            if (builder != null)
             {
-                builder.ParentMetadataBuilder = this.FindParentResourceMetadataBuilder();
-            }
+                builder.NameAsProperty = this.BelongingNestedResourceInfo != null ? this.BelongingNestedResourceInfo.Name : null;
+                builder.IsFromCollection = this.BelongingNestedResourceInfo != null && this.BelongingNestedResourceInfo.IsCollection == true;
 
-            this.jsonLightOutputContext.MetadataLevel.InjectMetadataBuilder(resource, builder);
+                if (builder is ODataConventionalResourceMetadataBuilder)
+                {
+                    builder.ParentMetadataBuilder = this.FindParentResourceMetadataBuilder();
+                }
+
+                this.jsonLightOutputContext.MetadataLevel.InjectMetadataBuilder(resource, builder);
+            }
         }
 
         /// <summary>

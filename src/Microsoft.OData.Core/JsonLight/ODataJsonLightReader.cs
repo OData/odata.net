@@ -691,7 +691,7 @@ namespace Microsoft.OData.JsonLight
                         this.jsonLightInputContext.ODataSimplifiedOptions.EnableReadingKeyAsSegment);
                 if (builder != this.CurrentResource.MetadataBuilder)
                 {
-                    ODataConventionalResourceMetadataBuilder conventionalEntityMetadataBuilder = builder as ODataConventionalResourceMetadataBuilder;
+                    ODataConventionalEntityMetadataBuilder conventionalEntityMetadataBuilder = builder as ODataConventionalEntityMetadataBuilder;
 
                     // If it's ODataConventionalEntityMetadataBuilder, then it means we need to build nested relation ship for it in containment case
                     if (conventionalEntityMetadataBuilder != null)
@@ -1423,7 +1423,7 @@ namespace Microsoft.OData.JsonLight
                     this.CurrentResource.MetadataBuilder.MarkNestedResourceInfoProcessed(navigationPropertyName);
                 }
 
-                ODataConventionalResourceMetadataBuilder builder = this.CurrentResource.MetadataBuilder as ODataConventionalResourceMetadataBuilder;
+                ODataConventionalEntityMetadataBuilder builder = this.CurrentResource.MetadataBuilder as ODataConventionalEntityMetadataBuilder;
                 if (builder != null)
                 {
                     builder.EndResource();

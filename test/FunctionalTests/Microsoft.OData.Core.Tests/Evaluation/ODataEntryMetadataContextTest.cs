@@ -172,7 +172,7 @@ namespace Microsoft.OData.Tests.Evaluation
         public void KeyPropertiesShouldThrowWhenKeyPropertyInMetadataIsNotInEntry()
         {
             Action test = () => this.entryMetadataContextWithModel.KeyProperties.Should().NotBeNull();
-            test.ShouldThrow<ODataException>(Strings.EdmValueUtils_PropertyDoesntExist("ns.TypeName", "ID2"));            
+            test.ShouldThrow<ODataException>(Strings.EdmValueUtils_PropertyDoesntExist("ns.TypeName", "ID2"));
         }
 
         [Fact]
@@ -300,7 +300,7 @@ namespace Microsoft.OData.Tests.Evaluation
         [Fact]
         public void SelectedStreamPropertiesShouldReturnEmptyWithoutModel()
         {
-            this.entryMetadataContextWithoutModel.SelectedStreamProperties.Should().BeEmpty();            
+            this.entryMetadataContextWithoutModel.SelectedStreamProperties.Should().BeEmpty();
         }
 
         [Fact]

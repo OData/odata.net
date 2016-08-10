@@ -87,7 +87,7 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
                     var link = new ODataEntityReferenceLink() { Url = new Uri(this.ServiceUri + "Order(-10)") };
                     messageWriter.WriteEntityReferenceLink(link);
 
-                    // No exception is expected. Simply verify the writing succeeded. 
+                    // No exception is expected. Simply verify the writing succeeded.
                     if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
                     {
                         Stream stream = responseMessageWithoutModel.GetStream();
@@ -109,7 +109,7 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
                     };
                     messageWriter.WriteEntityReferenceLinks(links);
 
-                    // No exception is expected. Simply verify the writing succeeded. 
+                    // No exception is expected. Simply verify the writing succeeded.
                     if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
                     {
                         Stream stream = responseMessageWithoutModel.GetStream();

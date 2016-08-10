@@ -26,7 +26,6 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
 
         protected List<string> mimeTypes = new List<string>()
         {
-            //MimeTypes.ApplicationAtomXml,
             MimeTypes.ApplicationJson + MimeTypes.ODataParameterFullMetadata,
             MimeTypes.ApplicationJson + MimeTypes.ODataParameterMinimalMetadata,
             MimeTypes.ApplicationJson + MimeTypes.ODataParameterNoMetadata,
@@ -528,7 +527,7 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
             var loginFeed = new ODataResourceSet() { Id = new Uri(this.ServiceUri + "Customer(-9)/Logins") };
             if (!hasModel)
             {
-                loginFeed.SetSerializationInfo(new ODataResourceSerializationInfo() { NavigationSourceName = "Login", NavigationSourceEntityTypeName = NameSpace + "Login" });
+                loginFeed.SetSerializationInfo(new ODataResourceSerializationInfo() { NavigationSourceName = "Login", NavigationSourceEntityTypeName = NameSpace + "Login", NavigationSourceKind = Microsoft.OData.Edm.EdmNavigationSourceKind.EntitySet });
             }
 
             var loginEntry = WritePayloadHelper.CreateLoginEntry(hasModel);

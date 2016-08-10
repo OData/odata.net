@@ -217,7 +217,7 @@ namespace Microsoft.OData.Evaluation
         [Conditional("DEBUG")]
         private static void ValidateBaseUri(Uri baseUri)
         {
-            Debug.Assert(baseUri != null && baseUri.IsAbsoluteUri, "baseUri != null && baseUri.IsAbsoluteUri");
+            Debug.Assert(baseUri != null, "baseUri != null");
         }
 
         /// <summary>
@@ -239,7 +239,7 @@ namespace Microsoft.OData.Evaluation
 
             if (baseUriString[baseUriString.Length - 1] != ODataConstants.UriSegmentSeparatorChar)
             {
-                return new Uri(baseUriString + ODataConstants.UriSegmentSeparator + segment, UriKind.Absolute);
+                return new Uri(baseUriString + ODataConstants.UriSegmentSeparator + segment, UriKind.RelativeOrAbsolute);
             }
             else
             {
