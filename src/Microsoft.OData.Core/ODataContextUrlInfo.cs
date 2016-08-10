@@ -383,6 +383,12 @@ namespace Microsoft.OData.Core
             string currentExpandClause = string.Empty;
             if (selectList.Any())
             {
+                foreach (var item in expandList)
+                {
+                    string expandNode = item.Substring(0, item.IndexOf(ODataConstants.ContextUriProjectionStart));
+                    selectList.Remove(expandNode);
+                }
+
                 currentExpandClause += String.Join(ODataConstants.ContextUriProjectionPropertySeparator, selectList.ToArray());
             }
 

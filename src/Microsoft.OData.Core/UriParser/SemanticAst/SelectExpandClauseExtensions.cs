@@ -108,7 +108,6 @@ namespace Microsoft.OData.Core.UriParser.Semantic
                 T subResult = default(T);
                 if (expandSelectItem.SelectAndExpand.SelectedItems.Any())
                 {
-                    selectList.Remove(currentExpandClause);
                     Traverse(expandSelectItem.SelectAndExpand, processSubResult, combineSelectAndExpand, out subResult);
                 }
 

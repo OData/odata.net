@@ -609,6 +609,7 @@ namespace Microsoft.OData.Core
         private static SelectedPropertiesNode CombineSelectAndExpandResult(IList<string> selectList, IList<SelectedPropertiesNode> expandList)
         {
             List<string> rawSelect = selectList.ToList();
+            rawSelect.RemoveAll(expandList.Select(m => m.nodeName).Contains);
 
             SelectedPropertiesNode node = new SelectedPropertiesNode(SelectionType.PartialSubtree)
             {
