@@ -519,6 +519,8 @@ namespace System.Data.Services.Client.Materialization
                 }
             }
 
+            materializer.MaterializerContext.ResponsePipeline.FireEndEntryEvents(entry);
+
             return result;
         }
 
