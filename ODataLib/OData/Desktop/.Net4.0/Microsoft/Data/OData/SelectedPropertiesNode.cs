@@ -302,9 +302,9 @@ namespace Microsoft.Data.OData
                 return EmptyNavigationProperties;
             }
 
-            if (this.selectionType == SelectionType.EntireSubtree || this.hasWildcard)
+            if (this.selectionType == SelectionType.EntireSubtree)
             {
-                return entityType.NavigationProperties();
+                return EmptyNavigationProperties;
             }
 
             // Find all the selected navigation properties
