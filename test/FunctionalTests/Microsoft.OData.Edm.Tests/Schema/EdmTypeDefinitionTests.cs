@@ -13,6 +13,34 @@ namespace Microsoft.OData.Edm.Tests.Library
     public class EdmTypeDefinitionTests
     {
         [Fact]
+        public void EdmModelAddComplexTypeTest()
+        {
+            var model = new EdmModel();
+            var complexTypeA = model.AddComplexType("NS", "ComplexA");
+            var complexTypeB = model.AddComplexType("NS", "ComplexB", complexTypeA);
+            var complexTypeC = model.AddComplexType("NS", "ComplexC", complexTypeB, false);
+            var complexTypeD = model.AddComplexType("NS", "ComplexD", complexTypeC, false, true);
+            Assert.Equal(complexTypeA, model.FindDeclaredType("NS.ComplexA"));
+            Assert.Equal(complexTypeB, model.FindDeclaredType("NS.ComplexB"));
+            Assert.Equal(complexTypeC, model.FindDeclaredType("NS.ComplexC"));
+            Assert.Equal(complexTypeD, model.FindDeclaredType("NS.ComplexD"));
+        }
+
+        [Fact]
+        public void EdmModelAddEntityTypeTest()
+        {
+            var model = new EdmModel();
+            var entityTypeA = model.AddEntityType("NS", "EntityA");
+            var entityTypeB = model.AddEntityType("NS", "EntityB", entityTypeA);
+            var entityTypeC = model.AddEntityType("NS", "EntityC", entityTypeB, false, true);
+            var entityTypeD = model.AddEntityType("NS", "EntityD", entityTypeC, false, true, true);
+            Assert.Equal(entityTypeA, model.FindDeclaredType("NS.EntityA"));
+            Assert.Equal(entityTypeB, model.FindDeclaredType("NS.EntityB"));
+            Assert.Equal(entityTypeC, model.FindDeclaredType("NS.EntityC"));
+            Assert.Equal(entityTypeD, model.FindDeclaredType("NS.EntityD"));
+        }
+
+        [Fact]
         public void TestModelWithTypeDefinition()
         {
             var model = new EdmModel();

@@ -12,6 +12,15 @@ namespace Microsoft.OData.Edm.Tests.Library
 {
     public class EdmEntityContainerTests
     {
+        [Fact]
+        public void EdmModelAddEntityContainerTest()
+        {
+            var model = new EdmModel();
+            Assert.Equal(
+                model.AddEntityContainer("NS", "Container"),
+                model.FindEntityContainer("NS.Container"));
+        }
+
         #region AddActionImport Api tests.
         [Fact]
         public void EnsureActionImportIsAddedWithActionSuppliedName()

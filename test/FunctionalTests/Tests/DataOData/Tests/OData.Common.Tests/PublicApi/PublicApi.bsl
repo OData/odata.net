@@ -1467,6 +1467,51 @@ public sealed class Microsoft.OData.Edm.ExtensionMethods {
 	[
 	ExtensionAttribute(),
 	]
+	public static Microsoft.OData.Edm.EdmComplexType AddComplexType (Microsoft.OData.Edm.EdmModel model, string namespaceName, string name)
+
+	[
+	ExtensionAttribute(),
+	]
+	public static Microsoft.OData.Edm.EdmComplexType AddComplexType (Microsoft.OData.Edm.EdmModel model, string namespaceName, string name, Microsoft.OData.Edm.IEdmComplexType baseType)
+
+	[
+	ExtensionAttribute(),
+	]
+	public static Microsoft.OData.Edm.EdmComplexType AddComplexType (Microsoft.OData.Edm.EdmModel model, string namespaceName, string name, Microsoft.OData.Edm.IEdmComplexType baseType, bool isAbstract)
+
+	[
+	ExtensionAttribute(),
+	]
+	public static Microsoft.OData.Edm.EdmComplexType AddComplexType (Microsoft.OData.Edm.EdmModel model, string namespaceName, string name, Microsoft.OData.Edm.IEdmComplexType baseType, bool isAbstract, bool isOpen)
+
+	[
+	ExtensionAttribute(),
+	]
+	public static Microsoft.OData.Edm.EdmEntityContainer AddEntityContainer (Microsoft.OData.Edm.EdmModel model, string namespaceName, string name)
+
+	[
+	ExtensionAttribute(),
+	]
+	public static Microsoft.OData.Edm.EdmEntityType AddEntityType (Microsoft.OData.Edm.EdmModel model, string namespaceName, string name)
+
+	[
+	ExtensionAttribute(),
+	]
+	public static Microsoft.OData.Edm.EdmEntityType AddEntityType (Microsoft.OData.Edm.EdmModel model, string namespaceName, string name, Microsoft.OData.Edm.IEdmEntityType baseType)
+
+	[
+	ExtensionAttribute(),
+	]
+	public static Microsoft.OData.Edm.EdmEntityType AddEntityType (Microsoft.OData.Edm.EdmModel model, string namespaceName, string name, Microsoft.OData.Edm.IEdmEntityType baseType, bool isAbstract, bool isOpen)
+
+	[
+	ExtensionAttribute(),
+	]
+	public static Microsoft.OData.Edm.EdmEntityType AddEntityType (Microsoft.OData.Edm.EdmModel model, string namespaceName, string name, Microsoft.OData.Edm.IEdmEntityType baseType, bool isAbstract, bool isOpen, bool hasStream)
+
+	[
+	ExtensionAttribute(),
+	]
 	public static Microsoft.OData.Edm.IEdmComplexType BaseComplexType (Microsoft.OData.Edm.IEdmComplexType type)
 
 	[

@@ -51,7 +51,6 @@ namespace Microsoft.OData.Edm
 
         /// <summary>
         /// Initializes a new instance of the <see cref="EdmComplexType"/> class.
-        /// Note: Complex type inheritance is not supported in EDM version 3.0 and above.
         /// </summary>
         /// <param name="namespaceName">The namespace this type belongs to.</param>
         /// <param name="name">The name of this type within its namespace.</param>

@@ -1062,6 +1062,134 @@ namespace Microsoft.OData.Edm
         #region EdmModel
 
         /// <summary>
+        /// Creates and adds a complex type to the model.
+        /// </summary>
+        /// <param name="model">The EdmModel.</param>
+        /// <param name="namespaceName">The namespace this type belongs to.</param>
+        /// <param name="name">The name of this type within its namespace.</param>
+        /// <returns>The complex type created.</returns>
+        public static EdmComplexType AddComplexType(this EdmModel model, string namespaceName, string name)
+        {
+            return model.AddComplexType(namespaceName, name, null, false);
+        }
+
+        /// <summary>
+        /// Creates and adds a complex type to the model.
+        /// </summary>
+        /// <param name="model">The EdmModel.</param>
+        /// <param name="namespaceName">The namespace this type belongs to.</param>
+        /// <param name="name">The name of this type within its namespace.</param>
+        /// <param name="baseType">The base type of this complex type.</param>
+        /// <returns>The complex type created.</returns>
+        public static EdmComplexType AddComplexType(this EdmModel model, string namespaceName, string name, IEdmComplexType baseType)
+        {
+            return model.AddComplexType(namespaceName, name, baseType, false, false);
+        }
+
+        /// <summary>
+        /// Creates and adds a complex type to the model.
+        /// </summary>
+        /// <param name="model">The EdmModel.</param>
+        /// <param name="namespaceName">The namespace this type belongs to.</param>
+        /// <param name="name">The name of this type within its namespace.</param>
+        /// <param name="baseType">The base type of this complex type.</param>
+        /// <param name="isAbstract">Denotes whether this complex type is abstract.</param>
+        /// <returns>The complex type created.</returns>
+        public static EdmComplexType AddComplexType(this EdmModel model, string namespaceName, string name, IEdmComplexType baseType, bool isAbstract)
+        {
+            return model.AddComplexType(namespaceName, name, baseType, isAbstract, false);
+        }
+
+        /// <summary>
+        /// Creates and adds a complex type to the model.
+        /// </summary>
+        /// <param name="model">The EdmModel.</param>
+        /// <param name="namespaceName">The namespace this type belongs to.</param>
+        /// <param name="name">The name of this type within its namespace.</param>
+        /// <param name="baseType">The base type of this complex type.</param>
+        /// <param name="isAbstract">Denotes whether this complex type is abstract.</param>
+        /// <param name="isOpen">Denotes if the type is open.</param>
+        /// <returns>The complex type created.</returns>
+        public static EdmComplexType AddComplexType(this EdmModel model, string namespaceName, string name, IEdmComplexType baseType, bool isAbstract, bool isOpen)
+        {
+            var type = new EdmComplexType(namespaceName, name, baseType, isAbstract, isOpen);
+            model.AddElement(type);
+            return type;
+        }
+
+        /// <summary>
+        /// Creates and adds an entity type to the model.
+        /// </summary>
+        /// <param name="model">The EdmModel.</param>
+        /// <param name="namespaceName">Namespace the entity belongs to.</param>
+        /// <param name="name">Name of the entity.</param>
+        /// <returns>The entity type created.</returns>
+        public static EdmEntityType AddEntityType(this EdmModel model, string namespaceName, string name)
+        {
+            return model.AddEntityType(namespaceName, name, null, false, false);
+        }
+
+        /// <summary>
+        /// Creates and adds an entity type to the model.
+        /// </summary>
+        /// <param name="model">The EdmModel.</param>
+        /// <param name="namespaceName">Namespace the entity belongs to.</param>
+        /// <param name="name">Name of the entity.</param>
+        /// <param name="baseType">The base type of this entity type.</param>
+        /// <returns>The entity type created.</returns>
+        public static EdmEntityType AddEntityType(this EdmModel model, string namespaceName, string name, IEdmEntityType baseType)
+        {
+            return model.AddEntityType(namespaceName, name, baseType, false, false);
+        }
+
+        /// <summary>
+        /// Creates and adds an entity type to the model.
+        /// </summary>
+        /// <param name="model">The EdmModel.</param>
+        /// <param name="namespaceName">Namespace the entity belongs to.</param>
+        /// <param name="name">Name of the entity.</param>
+        /// <param name="baseType">The base type of this entity type.</param>
+        /// <param name="isAbstract">Denotes an entity that cannot be instantiated.</param>
+        /// <param name="isOpen">Denotes if the type is open.</param>
+        /// <returns>The entity type created.</returns>
+        public static EdmEntityType AddEntityType(this EdmModel model, string namespaceName, string name, IEdmEntityType baseType, bool isAbstract, bool isOpen)
+        {
+            return model.AddEntityType(namespaceName, name, baseType, isAbstract, isOpen, false);
+        }
+
+        /// <summary>
+        /// Creates and adds an entity type to the model.
+        /// </summary>
+        /// <param name="model">The EdmModel.</param>
+        /// <param name="namespaceName">Namespace the entity belongs to.</param>
+        /// <param name="name">Name of the entity.</param>
+        /// <param name="baseType">The base type of this entity type.</param>
+        /// <param name="isAbstract">Denotes an entity that cannot be instantiated.</param>
+        /// <param name="isOpen">Denotes if the type is open.</param>
+        /// <param name="hasStream">Denotes if the type is a media type.</param>
+        /// <returns>The entity type created.</returns>
+        public static EdmEntityType AddEntityType(this EdmModel model, string namespaceName, string name, IEdmEntityType baseType, bool isAbstract, bool isOpen, bool hasStream)
+        {
+            var type = new EdmEntityType(namespaceName, name, baseType, isAbstract, isOpen, hasStream);
+            model.AddElement(type);
+            return type;
+        }
+
+        /// <summary>
+        /// Creates and adds an entity container to the model.
+        /// </summary>
+        /// <param name="model">The EdmModel.</param>
+        /// <param name="namespaceName">Namespace of the entity container.</param>
+        /// <param name="name">Name of the entity container.</param>
+        /// <returns>The entity container created.</returns>
+        public static EdmEntityContainer AddEntityContainer(this EdmModel model, string namespaceName, string name)
+        {
+            var container = new EdmEntityContainer(namespaceName, name);
+            model.AddElement(container);
+            return container;
+        }
+
+        /// <summary>
         /// Set annotation Org.OData.Core.V1.OptimisticConcurrency to EntitySet
         /// </summary>
         /// <param name="model">The model to add annotation</param>
