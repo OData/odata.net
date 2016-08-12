@@ -974,7 +974,7 @@ namespace System.Data.Services.Client.Materialization
             // has null; we can simply assign the collection. No merge required.
             if (entry.ShouldUpdateFromPayload &&
                 property.NullablePropertyType == list.GetType() &&
-                property.GetValue(entry.ResolvedObject) == null)
+                property.GetFieldOrPropertyValue(entry.ResolvedObject) == null)
             {
                 property.SetValue(entry.ResolvedObject, list, property.PropertyName, false /* allowAdd */);
                 this.EntryValueMaterializationPolicy.FoundNextLinkForCollection(list, nextLink, plan);
