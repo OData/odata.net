@@ -483,7 +483,8 @@ namespace Microsoft.OData.JsonLight
             ODataNestedResourceInfo nestedResourceInfo = new ODataNestedResourceInfo()
             {
                 Name = propertyName,
-                IsCollection = true
+                IsCollection = true,
+                IsComplex = true
             };
 
             ODataResourceSet expandedResourceSet = new ODataResourceSet();
@@ -542,7 +543,8 @@ namespace Microsoft.OData.JsonLight
             ODataNestedResourceInfo nestedResourceInfo = new ODataNestedResourceInfo()
             {
                 Name = propertyName,
-                IsCollection = false
+                IsCollection = false,
+                IsComplex = true
             };
 
             // Check the odata.type annotation for the complex property, it should show inside the complex object.

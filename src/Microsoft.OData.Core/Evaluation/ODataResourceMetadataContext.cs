@@ -474,7 +474,7 @@ namespace Microsoft.OData.Evaluation
                 get
                 {
                     return this.selectedNavigationProperties
-                        ?? (this.selectedNavigationProperties = this.selectedProperties.GetSelectedNavigationProperties(this.actualResourceType as IEdmEntityType));
+                        ?? (this.selectedNavigationProperties = this.selectedProperties.GetSelectedNavigationProperties(this.actualResourceType));
                 }
             }
 

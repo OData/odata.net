@@ -267,25 +267,24 @@ namespace Microsoft.OData.Evaluation
                         structuredType = resourceState.ResourceType;
                     }
 
+                    IEdmNavigationSource navigationSource = resourceState.NavigationSource;
+                    IEdmEntityType navigationSourceElementType = this.edmTypeResolver.GetElementType(navigationSource);
+                    IODataResourceTypeContext typeContext =
+                        ODataResourceTypeContext.Create( /*serializationInfo*/
+                            null, navigationSource, navigationSourceElementType, resourceState.ResourceTypeFromMetadata ?? resourceState.ResourceType,
+                            /*throwIfMissingTypeInfo*/ true);
+                    IODataResourceMetadataContext resourceMetadataContext = ODataResourceMetadataContext.Create(resource, typeContext, /*serializationInfo*/null, structuredType, this, resourceState.SelectedProperties);
+
+                    ODataConventionalUriBuilder uriBuilder = new ODataConventionalUriBuilder(this.ServiceBaseUri,
+                        useKeyAsSegment ? ODataUrlKeyDelimiter.Slash : ODataUrlKeyDelimiter.Parentheses);
+
                     if (structuredType.IsODataEntityTypeKind())
                     {
-                        IEdmNavigationSource navigationSource = resourceState.NavigationSource;
-                        IEdmEntityType navigationSourceElementType = this.edmTypeResolver.GetElementType(navigationSource);
-                        IODataResourceTypeContext typeContext =
-                            ODataResourceTypeContext.Create( /*serializationInfo*/
-                                null, navigationSource, navigationSourceElementType, resourceState.ResourceTypeFromMetadata ?? resourceState.ResourceType,
-                                /*throwIfMissingTypeInfo*/ true);
-                        IODataResourceMetadataContext resourceMetadataContext = ODataResourceMetadataContext.Create(resource, typeContext, /*serializationInfo*/null, structuredType, this, resourceState.SelectedProperties);
-
-                        ODataConventionalUriBuilder uriBuilder = new ODataConventionalUriBuilder(this.ServiceBaseUri,
-                            useKeyAsSegment ? ODataUrlKeyDelimiter.Slash : ODataUrlKeyDelimiter.Parentheses);
-
                         resourceState.MetadataBuilder = new ODataConventionalEntityMetadataBuilder(resourceMetadataContext, this, uriBuilder);
                     }
                     else
                     {
-                        // For complex type or collection of complex, we don't need compute odata.Id etc. So just use the NoOpResourceMetadataBuilder now.
-                        resourceState.MetadataBuilder = new NoOpResourceMetadataBuilder(resource);
+                        resourceState.MetadataBuilder = new ODataConventionalResourceMetadataBuilder(resourceMetadataContext, this, uriBuilder);
                     }
                 }
                 else

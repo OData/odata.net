@@ -233,6 +233,20 @@ namespace Microsoft.OData.Evaluation
         }
 
         /// <summary>
+        /// Mark the resource is just started to process.
+        /// </summary>
+        internal virtual void StartResource()
+        {
+        }
+
+        /// <summary>
+        /// Mark the resource has finished the processing.
+        /// </summary>
+        internal virtual void EndResource()
+        {
+        }
+
+        /// <summary>
         /// Gets the edit link of the resource.
         /// </summary>
         /// <returns>The edit link of the resource.</returns>

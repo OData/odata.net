@@ -56,7 +56,7 @@ namespace Microsoft.OData
         {
             get
             {
-                if (this.metadataBuilder != null)
+                if (this.metadataBuilder != null && !this.IsComplex)
                 {
                     this.url = this.metadataBuilder.GetNavigationLinkUri(this.Name, this.url, this.hasNavigationLink);
                     this.hasNavigationLink = true;
@@ -77,7 +77,7 @@ namespace Microsoft.OData
         {
             get
             {
-                if (this.metadataBuilder != null)
+                if (this.metadataBuilder != null && !this.IsComplex)
                 {
                     this.associationLinkUrl = this.metadataBuilder.GetAssociationLinkUri(this.Name, this.associationLinkUrl, this.hasAssociationUrl);
                     this.hasAssociationUrl = true;
@@ -122,5 +122,10 @@ namespace Microsoft.OData
             get;
             set;
         }
+
+        /// <summary>
+        /// Whether this is a complex property.
+        /// </summary>
+        internal bool IsComplex { get; set; }
     }
 }

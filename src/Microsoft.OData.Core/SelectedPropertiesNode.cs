@@ -289,9 +289,9 @@ namespace Microsoft.OData
         /// <summary>
         /// Gets the selected navigation properties for the current node.
         /// </summary>
-        /// <param name="entityType">The current entity type.</param>
+        /// <param name="structuredType">The current structured type.</param>
         /// <returns>The set of selected navigation properties.</returns>
-        internal IEnumerable<IEdmNavigationProperty> GetSelectedNavigationProperties(IEdmEntityType entityType)
+        internal IEnumerable<IEdmNavigationProperty> GetSelectedNavigationProperties(IEdmStructuredType structuredType)
         {
             if (this.selectionType == SelectionType.Empty)
             {
@@ -300,14 +300,14 @@ namespace Microsoft.OData
 
             // We cannot determine the selected navigation properties without the user model. This means we won't be computing the missing navigation properties.
             // For reading we will report what's on the wire and for writing we just write what the user explicitely told us to write.
-            if (entityType == null)
+            if (structuredType == null)
             {
                 return EmptyNavigationProperties;
             }
 
             if (this.selectionType == SelectionType.EntireSubtree || this.hasWildcard)
             {
-                return entityType.NavigationProperties();
+                return structuredType.NavigationProperties();
             }
 
             // Find all the selected navigation properties
@@ -322,13 +322,13 @@ namespace Microsoft.OData
             }
 
             IEnumerable<IEdmNavigationProperty> selectedNavigationProperties = navigationPropertyNames
-                .Select(entityType.FindProperty)
+                .Select(structuredType.FindProperty)
                 .OfType<IEdmNavigationProperty>();
 
             // gather up the selected navigations from any child nodes that have type segments matching the current type and append them.
-            foreach (SelectedPropertiesNode typeSegmentChild in this.GetMatchingTypeSegments(entityType))
+            foreach (SelectedPropertiesNode typeSegmentChild in this.GetMatchingTypeSegments(structuredType))
             {
-                selectedNavigationProperties = selectedNavigationProperties.Concat(typeSegmentChild.GetSelectedNavigationProperties(entityType));
+                selectedNavigationProperties = selectedNavigationProperties.Concat(typeSegmentChild.GetSelectedNavigationProperties(structuredType));
             }
 
             // ensure no duplicates are returned.

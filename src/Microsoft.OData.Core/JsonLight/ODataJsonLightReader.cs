@@ -692,18 +692,20 @@ namespace Microsoft.OData.JsonLight
                         this.jsonLightInputContext.ODataSimplifiedOptions.EnableReadingKeyAsSegment);
                 if (builder != this.CurrentResource.MetadataBuilder)
                 {
-                    ODataConventionalEntityMetadataBuilder conventionalEntityMetadataBuilder = builder as ODataConventionalEntityMetadataBuilder;
+                    ODataNestedResourceInfo parentNestInfo = this.ParentNestedInfo;
+                    ODataConventionalResourceMetadataBuilder conventionalResourceMetadataBuilder = builder as ODataConventionalResourceMetadataBuilder;
 
-                    // If it's ODataConventionalEntityMetadataBuilder, then it means we need to build nested relation ship for it in containment case
-                    if (conventionalEntityMetadataBuilder != null)
+                    // If it's ODataConventionalResourceMetadataBuilder, then it means we need to build nested relation ship for it in containment case
+                    if (conventionalResourceMetadataBuilder != null)
                     {
-                        conventionalEntityMetadataBuilder.StartResource();
-                        conventionalEntityMetadataBuilder.ODataUri = this.CurrentScope.ODataUri;
+                        conventionalResourceMetadataBuilder.NameAsProperty = parentNestInfo != null ? parentNestInfo.Name : null;
+                        conventionalResourceMetadataBuilder.IsFromCollection = parentNestInfo != null && parentNestInfo.IsCollection == true;
+                        conventionalResourceMetadataBuilder.StartResource();
+                        conventionalResourceMetadataBuilder.ODataUri = this.CurrentScope.ODataUri;
                     }
 
                     // Set the metadata builder and parent metadata builder for the resource itself
                     this.CurrentResource.MetadataBuilder = builder;
-                    ODataNestedResourceInfo parentNestInfo = this.ParentNestedInfo;
                     if (parentNestInfo != null && parentNestInfo.MetadataBuilder != null)
                     {
                         this.CurrentResource.MetadataBuilder.ParentMetadataBuilder = parentNestInfo.MetadataBuilder;
@@ -1273,17 +1275,17 @@ namespace Microsoft.OData.JsonLight
             // as stated in ReadAtResourceSetEndImplementationSynchronously(), we cannot access it here which otherwise
             // would lead to an exception.
             if (this.jsonLightInputContext.ReadingResponse && !this.IsReadingNestedPayload
-                && (targetResourceType == null || targetResourceType.IsEntityOrEntityCollectionType()))
+                && (targetResourceType == null || targetResourceType.IsStructuredOrStructuredCollectionType()))
             {
                 // Hookup the metadata builder to the nested resource info.
                 // Note that we set the metadata builder even when navigationProperty is null, which is the case when the link is undeclared.
                 // For undeclared links, we will apply conventional metadata evaluation just as declared links.
                 this.CurrentResourceState.ResourceTypeFromMetadata = this.ParentScope.ResourceType;
-                ODataResourceMetadataBuilder entityMetadataBuilder =
+                ODataResourceMetadataBuilder resourceMetadataBuilder =
                     this.jsonLightResourceDeserializer.MetadataContext.GetResourceMetadataBuilderForReader(
                         this.CurrentResourceState,
                         this.jsonLightInputContext.ODataSimplifiedOptions.EnableReadingKeyAsSegment);
-                nestedResourceInfo.MetadataBuilder = entityMetadataBuilder;
+                nestedResourceInfo.MetadataBuilder = resourceMetadataBuilder;
             }
 
             Debug.Assert(this.CurrentNavigationSource != null || this.readingParameter || this.CurrentNavigationSource == null && this.CurrentScope.ResourceType.IsODataComplexTypeKind(), "Json requires an navigation source when not reading parameter.");

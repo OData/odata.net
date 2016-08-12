@@ -319,12 +319,18 @@ namespace Microsoft.OData.Evaluation
             }
         }
 
-        internal void StartResource()
+        /// <summary>
+        /// Mark the resource is just started to process.
+        /// </summary>
+        internal override void StartResource()
         {
             this.isResourceEnd = false;
         }
 
-        internal void EndResource()
+        /// <summary>
+        /// Mark the resource has finished the processing. So GetProperties() need append ComputedStreamProperties for entity.
+        /// </summary>
+        internal override void EndResource()
         {
             this.isResourceEnd = true;
         }

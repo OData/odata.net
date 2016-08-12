@@ -734,7 +734,9 @@ namespace Microsoft.OData.Tests
                               "\"Complex\":{" +
                                   "\"Prop1\":123," +
                                   "\"CollectionOfNav@odata.associationLink\":\"http://host/Entities('abc')/Complex/CollectionOfNav/$ref\"," +
-                                  "\"CollectionOfNav@odata.navigationLink\":\"http://host/Entities('abc')/Complex/CollectionOfNav\"" +
+                                  "\"CollectionOfNav@odata.navigationLink\":\"http://host/Entities('abc')/Complex/CollectionOfNav\"," +
+                                  "\"SingleOfNav@odata.associationLink\":\"http://host/Entities('abc')/Complex/SingleOfNav/$ref\"," +
+                                  "\"SingleOfNav@odata.navigationLink\":\"http://host/Entities('abc')/Complex/SingleOfNav\"" +
                                 "}" +
                               "}";
 
@@ -745,15 +747,17 @@ namespace Microsoft.OData.Tests
             nestedInfo.AssociationLinkUrl.Should().Be(new Uri("http://host/Entities('abc')/Complex/CollectionOfNav/$ref"));
             nestedInfo.Url.Should().Be(new Uri("http://host/Entities('abc')/Complex/CollectionOfNav"));
 
-            var resource = itemsList[1] as ODataResource;
+            // itemsList[1] is nested info of SingleOfNav, skip the validation.
+
+            var resource = itemsList[2] as ODataResource;
             resource.TypeName.Should().Be("DefaultNs.ComplexType");
 
-            nestedInfo = itemsList[2] as ODataNestedResourceInfo;
+            nestedInfo = itemsList[3] as ODataNestedResourceInfo;
             nestedInfo.Name.Should().Be("Complex");
             nestedInfo.AssociationLinkUrl.Should().Be(null);
             nestedInfo.Url.Should().Be(null);
 
-            resource = itemsList[3] as ODataResource;
+            resource = itemsList[4] as ODataResource;
             resource.Id.Should().Be(new Uri("http://host/Entities('abc')"));
         }
 
@@ -816,13 +820,16 @@ namespace Microsoft.OData.Tests
                                               "\"@odata.id\":\"Countries('China')\"," +
                                               "\"@odata.editLink\":\"Countries('China')\"," +
                                               "\"Name\":\"China\"" +
-                                              "}" +
-                                      "}" +
-                                  "}" +
+                                              "}}," +
+                                      "\"City@odata.associationLink\":\"http://host/People('abc')/Address/WorkAddress/DefaultNs.WorkAddress/City/$ref\"," +
+                                      "\"City@odata.navigationLink\":\"http://host/People('abc')/Address/WorkAddress/DefaultNs.WorkAddress/City\"" +
+                                      "}," +
+                                      "\"City@odata.associationLink\":\"http://host/People('abc')/Address/City/$ref\"," +
+                                      "\"City@odata.navigationLink\":\"http://host/People('abc')/Address/City\"" +
                               "}" +
                               "}";
 
-            Assert.Equal(output, expected);
+            Assert.Equal(expected, output);
         }
 
         [Fact]
@@ -874,7 +881,7 @@ namespace Microsoft.OData.Tests
             Assert.Equal(expected, output);
         }
 
-        [Fact(Skip = "TODO: auto compute navigation link in reader for complex")]
+        [Fact]
         public void AutoComputeNavigationLinkForNavUnderSingleComplexInReader()
         {
             var entitySet = CollectionModel.EntityContainer.FindEntitySet("Entities");
@@ -887,21 +894,55 @@ namespace Microsoft.OData.Tests
                                 "}" +
                               "}";
 
-            var itemsList = ReadPayload(payload, CollectionModel, entitySet, entityType).ToList();
-            var nestedInfo = itemsList[0] as ODataNestedResourceInfo;
+            var itemsList = ReadPayload(payload, CollectionModel, entitySet, entityType).OfType<ODataNestedResourceInfo>().ToList();
+            var nestedInfo = itemsList[0];
             nestedInfo.AssociationLinkUrl.Should().Be(new Uri("http://host/Entities('abc')/Complex/CollectionOfNav/$ref"));
             nestedInfo.Url.Should().Be(new Uri("http://host/Entities('abc')/Complex/CollectionOfNav"));
 
-            var resource = itemsList[1] as ODataResource;
-            resource.TypeName.Should().Be("DefaultNs.ComplexType");
+            nestedInfo = itemsList[1];
+            nestedInfo.AssociationLinkUrl.Should().Be(new Uri("http://host/Entities('abc')/Complex/SingleOfNav/$ref"));
+            nestedInfo.Url.Should().Be(new Uri("http://host/Entities('abc')/Complex/SingleOfNav"));
+        }
 
-            nestedInfo = itemsList[2] as ODataNestedResourceInfo;
-            nestedInfo.Name.Should().Be("Complex");
-            nestedInfo.AssociationLinkUrl.Should().Be(null);
-            nestedInfo.Url.Should().Be(null);
+        [Fact]
+        public void AutoComputeIdForNavUnderComplex()
+        {
+            string expected = "{\"@odata.context\":\"http://host/$metadata#People/$entity\"," +
+                              "\"UserName\":\"abc\"," +
+                              "\"Address\":{" +
+                                  "\"Road\":\"Zixing\"," +
+                                  "\"WorkAddress\":{" +
+                                      "\"@odata.type\":\"#DefaultNs.WorkAddress\"," +
+                                      "\"Road\":\"Ziyue\"," +
+                                      "\"City2\":{" +
+                                          "\"ZipCode\":222," +
+                                          "\"Country\":{" +
+                                              "\"Name\":\"China\"" +
+                                              "}" +
+                                      "}" +
+                                  "}" +
+                              "}" +
+                              "}";
 
-            resource = itemsList[3] as ODataResource;
-            resource.Id.Should().Be(new Uri("http://host/Entities('abc')"));
+            var itemsList = ReadPayload(expected, Model, EntitySet, EntityType).OfType<ODataNestedResourceInfo>().ToList();
+
+            // Country under City2
+            var nestInfo = itemsList[0];
+            nestInfo.Url.Should().Be(new Uri("http://host/City(222)/Country"));
+
+            // City2 under WorkAddress
+            nestInfo = itemsList[1];
+            nestInfo.Url.Should().Be(new Uri("http://host/People('abc')/Address/WorkAddress/DefaultNs.WorkAddress/City2"));
+
+            // City under WorkAddress
+            nestInfo = itemsList[2];
+            nestInfo.Url.Should().Be(new Uri("http://host/People('abc')/Address/WorkAddress/DefaultNs.WorkAddress/City"));
+
+            // itemsList[3] is the nested info for complex property WorkAddress, skip the validation.
+
+            // City under Address
+            nestInfo = itemsList[4];
+            nestInfo.Url.Should().Be(new Uri("http://host/People('abc')/Address/City"));
         }
         #endregion
 
