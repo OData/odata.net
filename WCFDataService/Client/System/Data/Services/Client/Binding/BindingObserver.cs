@@ -827,6 +827,12 @@ namespace System.Data.Services.Client
                 return;
             }
 
+            HashSet<string> propertiesToSerialize = this.Context.GetEntityDescriptor(entity).PropertiesToSerialize;
+            if (propertyName != null)
+            {
+                propertiesToSerialize.Add(propertyName);
+            }
+
             // First give the user code a chance to handle Update operation.
             if (this.EntityChanged != null)
             {

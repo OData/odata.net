@@ -48,6 +48,7 @@ namespace System.Data.Services.Client
 
         /// <summary>The property converter to use for creating ODataProperty instances.</summary>
         private readonly ODataPropertyConverter propertyConverter;
+        private SaveChangesOptions options;
 
         /// <summary>
         /// Creates a new instance of the Serializer.
@@ -60,6 +61,17 @@ namespace System.Data.Services.Client
             this.propertyConverter = new ODataPropertyConverter(this.requestInfo);
         }
 
+        /// <summary> 
+        /// Creates a new instance of the Serializer. 
+        /// </summary> 
+        /// <param name="requestInfo">the request info.</param> 
+        /// <param name="options">the save change options.</param> 
+        internal Serializer(RequestInfo requestInfo, SaveChangesOptions options)
+            : this(requestInfo)
+        {
+            this.options = options;
+        }
+
         /// <summary>
         /// Creates an instance of ODataMessageWriter.
         /// </summary>
@@ -70,10 +82,10 @@ namespace System.Data.Services.Client
         internal static ODataMessageWriter CreateMessageWriter(ODataRequestMessageWrapper requestMessage, RequestInfo requestInfo, bool isParameterPayload)
         {
             var writerSettings = requestInfo.WriteHelper.CreateSettings(
-                Serializer.StartEntryXmlCustomizer, 
-                Serializer.EndEntryXmlCustomizer, 
+                Serializer.StartEntryXmlCustomizer,
+                Serializer.EndEntryXmlCustomizer,
                 requestMessage.IsBatchPartRequest);
-            
+
             return requestMessage.CreateWriter(writerSettings, isParameterPayload);
         }
 
@@ -270,7 +282,21 @@ namespace System.Data.Services.Client
                     serverTypeName = this.requestInfo.InferServerTypeNameFromServerModel(entityDescriptor);
                 }
 
-                entry.Properties = this.propertyConverter.PopulateProperties(entityDescriptor.Entity, serverTypeName, entityType.PropertiesToSerialize());
+                IEnumerable<ClientPropertyAnnotation> properties;
+                if ((!Util.IsFlagSet(this.options, SaveChangesOptions.ReplaceOnUpdate) &&
+                    entityDescriptor.State == EntityStates.Modified &&
+                    entityDescriptor.PropertiesToSerialize.Any()) ||
+                    (Util.IsFlagSet(this.options, SaveChangesOptions.PostOnlySetProperties) &&
+                    entityDescriptor.State == EntityStates.Added))
+                {
+                    properties = entityType.PropertiesToSerialize().Where(prop => entityDescriptor.PropertiesToSerialize.Contains(prop.PropertyName));
+                }
+                else
+                {
+                    properties = entityType.PropertiesToSerialize();
+                }
+
+                entry.Properties = this.propertyConverter.PopulateProperties(entityDescriptor.Entity, serverTypeName, properties);
 
                 entryWriter.WriteStart(entry, entityDescriptor.Entity);
 
