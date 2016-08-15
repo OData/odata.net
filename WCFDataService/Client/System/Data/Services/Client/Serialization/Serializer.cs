@@ -270,7 +270,9 @@ namespace System.Data.Services.Client
                     serverTypeName = this.requestInfo.InferServerTypeNameFromServerModel(entityDescriptor);
                 }
 
-                entry.Properties = this.propertyConverter.PopulateProperties(entityDescriptor.Entity, serverTypeName, entityType.PropertiesToSerialize());
+                // Filter out EntityCollection properties - they are not being serialized together with this entry anyways.
+                // Leaving them in would lead to their properties getters being called - resulting in undesired lazy construction (if applicable)
+                entry.Properties = this.propertyConverter.PopulateProperties(entityDescriptor.Entity, serverTypeName, entityType.PropertiesToSerialize().Where(p => !p.IsEntityCollection));
 
                 entryWriter.WriteStart(entry, entityDescriptor.Entity);
 
