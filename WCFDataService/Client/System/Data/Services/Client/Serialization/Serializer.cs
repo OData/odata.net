@@ -289,7 +289,14 @@ namespace System.Data.Services.Client
                     (Util.IsFlagSet(this.options, SaveChangesOptions.PostOnlySetProperties) &&
                     entityDescriptor.State == EntityStates.Added))
                 {
-                    properties = entityType.PropertiesToSerialize().Where(prop => entityDescriptor.PropertiesToSerialize.Contains(prop.PropertyName));
+                    if (this.requestInfo.Format.ODataFormat != ODataFormat.Atom)
+                        properties = entityType.PropertiesToSerialize().Where(prop => entityDescriptor.PropertiesToSerialize.Contains(prop.PropertyName));
+                    else 
+                    {
+                        //ATOM requires the prescense of EPM properties
+                        entityType.EnsureEPMLoaded();
+                        properties = entityType.PropertiesToSerialize().Where(prop => entityDescriptor.PropertiesToSerialize.Contains(prop.PropertyName) || entityType.EpmTargetTree.SyndicationRoot.SubSegments.Any(i => i.EpmInfo.PropertyValuePath.Any(pvp => pvp == prop.PropertyName)));
+                    }
                 }
                 else
                 {
