@@ -95,6 +95,7 @@ namespace System.Data.Services.Client
             : base(EntityStates.Unchanged)
         {
             this.Model = model;
+            this.PropertiesToSerialize = new HashSet<string>(StringComparer.Ordinal);
 #if WINDOWS_PHONE
             this.deserializing = false;
 #endif
@@ -556,6 +557,11 @@ namespace System.Data.Services.Client
         /// </summary>
         internal string EntitySetName { get; set; }
         
+        /// <summary> 
+        ///  The hash set contains names of changed properties in this entity. 
+        /// </summary> 
+        internal HashSet<string> PropertiesToSerialize { get; set; } 
+
         #endregion
 
         #region Internal Methods

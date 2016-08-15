@@ -98,7 +98,7 @@ namespace System.Data.Services.Client
         {
             this.RequestInfo = new RequestInfo(context);
             this.Options = options;
-            this.SerializerInstance = new Serializer(this.RequestInfo);
+            this.SerializerInstance = new Serializer(this.RequestInfo, options);
 
             if (null == queries)
             {
@@ -1209,6 +1209,7 @@ namespace System.Data.Services.Client
                 {
                     entityDescriptor.ETag = etag;
                     entityDescriptor.State = EntityStates.Unchanged;
+                    entityDescriptor.PropertiesToSerialize.Clear();
                 }
 
                 if (entityDescriptor.StreamState != EntityStates.Added)
@@ -1280,6 +1281,7 @@ namespace System.Data.Services.Client
                         Debug.Assert(entityDescriptor.State == EntityStates.Modified, "descriptor.State == EntityStates.Modified");
                         entityDescriptor.ETag = etag;
                         entityDescriptor.State = EntityStates.Unchanged;
+                        entityDescriptor.PropertiesToSerialize.Clear();
                     }
                 }
             }

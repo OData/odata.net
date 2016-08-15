@@ -2744,7 +2744,8 @@ namespace System.Data.Services.Client
                 SaveChangesOptions.Batch |
                 SaveChangesOptions.BatchWithIndependentOperations |
                 SaveChangesOptions.ReplaceOnUpdate |
-                SaveChangesOptions.PatchOnUpdate;
+                SaveChangesOptions.PatchOnUpdate |
+                SaveChangesOptions.PostOnlySetProperties;
 
             // Make sure no higher order bits are set.
             if ((options | All) != All)
