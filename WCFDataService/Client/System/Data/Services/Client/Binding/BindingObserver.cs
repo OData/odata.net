@@ -560,6 +560,8 @@ namespace System.Data.Services.Client
                         // be added to the context. We need to call AddRelatedObject,
                         // which adds via the parent (for e.g. POST Customers(0)/Orders).
                         this.Context.AddRelatedObject(source, sourceProperty, target);
+                        if (this.Context.UsePartialPost)
+                            DetectChangedProperties(target);
                     }
                     else
                     if (targetDescriptor.State != EntityStates.Deleted && !this.IsContextTrackingLink(source, sourceProperty, target))
@@ -586,6 +588,55 @@ namespace System.Data.Services.Client
                 {
                     // Add the target entity.
                     this.Context.AddObject(targetEntitySet, target);
+                    if (this.Context.UsePartialPost)
+                        DetectChangedProperties(target);
+                }
+            }
+        }
+
+        private void DetectChangedProperties(object entity)
+        {
+            Debug.Assert(entity != null, "entity != null");
+
+            EntityDescriptor resource = this.Context.GetEntityDescriptor(entity);
+            ClientTypeAnnotation entityType = resource.Model.GetClientTypeAnnotation(resource.Model.GetOrCreateEdmType(resource.Entity.GetType()));
+            Type clrEntityType = entity.GetType();
+
+            resource.EnsurePropertiesToSerializeIsInitialized();
+ 
+            var properties = entityType.PropertiesToSerialize();
+            foreach (var prop in properties)
+            {
+                var pi = clrEntityType.GetProperty(prop.PropertyName);
+                if (pi != null)
+                {
+                    Type propertyType = pi.PropertyType;
+                    object value = pi.GetValue(entity, null);
+                    if (value != null && (!propertyType.IsValueType || !value.Equals(WebUtil.GetDefaultValue(propertyType))))
+                    {
+                        if (prop.IsKnownType) // Primitive types
+                            resource.AddPropertyToSerialize(prop.PropertyName);
+
+                        else if (prop.IsSpatialType) // Spatial types
+                            resource.AddPropertyToSerialize(prop.PropertyName);
+
+                        else if (prop.IsPrimitiveOrComplexCollection) // Collection
+                            resource.AddPropertyToSerialize(prop.PropertyName); // Assumption - if someone has given this a value we include it even if the IEnumerable might yield zero results.
+
+                        else if (!prop.IsEntityCollection && !ClientTypeUtil.TypeIsEntity(prop.PropertyType, resource.Model)) // Complex type
+                        {
+                            object defaultComplexTypeInstance = Activator.CreateInstance(propertyType);
+                            foreach (var cpi in propertyType.GetProperties())
+                            {
+                                object propValue = cpi.GetValue(value, null);
+                                if (propValue != null && !propValue.Equals(cpi.GetValue(defaultComplexTypeInstance, null)))
+                                {
+                                    resource.AddPropertyToSerialize(prop.PropertyName);
+                                    break;
+                                }
+                            }
+                        }
+                    }
                 }
             }
         }
@@ -756,8 +807,10 @@ namespace System.Data.Services.Client
                     else
                     {
                         this.Context.AddObject(targetEntitySet, target);
+                        if (this.Context.UsePartialPost)
+                            DetectChangedProperties(target);
                     }
-                    
+
                     targetDescriptor = this.Context.GetEntityDescriptor(target);
                 }
 
@@ -827,10 +880,9 @@ namespace System.Data.Services.Client
                 return;
             }
 
-            HashSet<string> propertiesToSerialize = this.Context.GetEntityDescriptor(entity).PropertiesToSerialize;
             if (propertyName != null)
             {
-                propertiesToSerialize.Add(propertyName);
+                this.Context.GetEntityDescriptor(entity).AddPropertyToSerialize(propertyName);
             }
 
             // First give the user code a chance to handle Update operation.

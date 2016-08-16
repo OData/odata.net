@@ -95,7 +95,6 @@ namespace System.Data.Services.Client
             : base(EntityStates.Unchanged)
         {
             this.Model = model;
-            this.PropertiesToSerialize = new HashSet<string>(StringComparer.Ordinal);
 #if WINDOWS_PHONE
             this.deserializing = false;
 #endif
@@ -556,15 +555,40 @@ namespace System.Data.Services.Client
         /// The entity set name provided in either AttachTo or AddObject.
         /// </summary>
         internal string EntitySetName { get; set; }
-        
+
         /// <summary> 
         ///  The hash set contains names of changed properties in this entity. 
         /// </summary> 
-        internal HashSet<string> PropertiesToSerialize { get; set; } 
+        /// <remarks>Can be null</remarks>
+        internal IEnumerable<string> PropertiesToSerialize
+        {
+            get
+            {
+                return propertiesToSerialize;
+            }
+        }
+
+        private HashSet<string> propertiesToSerialize;
 
         #endregion
 
         #region Internal Methods
+
+        internal void EnsurePropertiesToSerializeIsInitialized()
+        {
+            if (this.propertiesToSerialize == null)
+                this.propertiesToSerialize = new HashSet<string>(StringComparer.Ordinal);
+        }
+        internal void AddPropertyToSerialize(string propertyName)
+        {
+            EnsurePropertiesToSerializeIsInitialized();
+            this.propertiesToSerialize.Add(propertyName);
+        }
+
+        internal void ClearPropertiesToSerialize()
+        {
+            this.propertiesToSerialize = null;
+        }
 
         /// <summary>
         /// returns the most recent identity of the entity

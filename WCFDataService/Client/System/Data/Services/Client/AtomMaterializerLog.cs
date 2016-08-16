@@ -216,7 +216,7 @@ namespace System.Data.Services.Client
                     {
                         // we should always reset descriptor's state to Unchanged (old v1 behaviour)
                         descriptor.State = EntityStates.Unchanged;
-                        descriptor.PropertiesToSerialize.Clear();
+                        descriptor.ClearPropertiesToSerialize();
                     }
                 }
             }
