@@ -1512,6 +1512,11 @@ public sealed class Microsoft.OData.Edm.ExtensionMethods {
 	[
 	ExtensionAttribute(),
 	]
+	public static Microsoft.OData.Edm.IEdmType AsElementType (Microsoft.OData.Edm.IEdmType type)
+
+	[
+	ExtensionAttribute(),
+	]
 	public static Microsoft.OData.Edm.IEdmComplexType BaseComplexType (Microsoft.OData.Edm.IEdmComplexType type)
 
 	[
@@ -2950,6 +2955,7 @@ public enum Microsoft.OData.Edm.Validation.EdmErrorCode : int {
 	UnexpectedXmlNodeType = 8
 	UnknownEdmVersion = 325
 	UnknownEdmxVersion = 324
+	UnresolvedNavigationPropertyBindingPath = 378
 	UnresolvedNavigationPropertyPartnerPath = 377
 	UnresolvedReferenceUriInEdmxReference = 374
 	XmlError = 5
@@ -3054,6 +3060,7 @@ public sealed class Microsoft.OData.Edm.Validation.ValidationRules {
 	public static readonly Microsoft.OData.Edm.Validation.ValidationRule`1[[Microsoft.OData.Edm.IEdmNamedElement]] NamedElementNameIsTooLong = Microsoft.OData.Edm.Validation.ValidationRule`1[Microsoft.OData.Edm.IEdmNamedElement]
 	public static readonly Microsoft.OData.Edm.Validation.ValidationRule`1[[Microsoft.OData.Edm.IEdmNamedElement]] NamedElementNameMustNotBeEmptyOrWhiteSpace = Microsoft.OData.Edm.Validation.ValidationRule`1[Microsoft.OData.Edm.IEdmNamedElement]
 	public static readonly Microsoft.OData.Edm.Validation.ValidationRule`1[[Microsoft.OData.Edm.IEdmNavigationSource]] NavigationMappingMustBeBidirectional = Microsoft.OData.Edm.Validation.ValidationRule`1[Microsoft.OData.Edm.IEdmNavigationSource]
+	public static readonly Microsoft.OData.Edm.Validation.ValidationRule`1[[Microsoft.OData.Edm.IEdmNavigationSource]] NavigationPropertyBindingPathMustBeResolvable = Microsoft.OData.Edm.Validation.ValidationRule`1[Microsoft.OData.Edm.IEdmNavigationSource]
 	public static readonly Microsoft.OData.Edm.Validation.ValidationRule`1[[Microsoft.OData.Edm.IEdmNavigationProperty]] NavigationPropertyCorrectType = Microsoft.OData.Edm.Validation.ValidationRule`1[Microsoft.OData.Edm.IEdmNavigationProperty]
 	public static readonly Microsoft.OData.Edm.Validation.ValidationRule`1[[Microsoft.OData.Edm.IEdmNavigationProperty]] NavigationPropertyDependentEndMultiplicity = Microsoft.OData.Edm.Validation.ValidationRule`1[Microsoft.OData.Edm.IEdmNavigationProperty]
 	public static readonly Microsoft.OData.Edm.Validation.ValidationRule`1[[Microsoft.OData.Edm.IEdmNavigationProperty]] NavigationPropertyDependentPropertiesMustBelongToDependentEntity = Microsoft.OData.Edm.Validation.ValidationRule`1[Microsoft.OData.Edm.IEdmNavigationProperty]

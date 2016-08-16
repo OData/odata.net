@@ -1293,6 +1293,11 @@ namespace Microsoft.OData.Edm.Validation
         /// <summary>
         /// Navigation property partner path cannot be resolved.
         /// </summary>
-        UnresolvedNavigationPropertyPartnerPath = 377
+        UnresolvedNavigationPropertyPartnerPath = 377,
+
+        /// <summary>
+        /// Navigation property binding path cannot be resolved.
+        /// </summary>
+        UnresolvedNavigationPropertyBindingPath = 378
     }
 }

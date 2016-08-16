@@ -2351,6 +2351,155 @@ namespace EdmLibTests.FunctionalTests
             Assert.AreEqual(error.ErrorMessage, "The specified name is not allowed: '-content-version'.", "Unexpected error message");
         }
 
+        [TestMethod]
+        public void ValidationShouldFailOnInvalidNavigationBindingPath()
+        {
+            var model = new EdmModel();
+
+            var entity = new EdmEntityType("NS", "EntityType");
+            var entityId = entity.AddStructuralProperty("ID", EdmCoreModel.Instance.GetString(false));
+            entity.AddKeys(entityId);
+
+            var navEntity = new EdmEntityType("NS", "NavEntityType");
+            var navEntityId = navEntity.AddStructuralProperty("ID", EdmCoreModel.Instance.GetString(false));
+            navEntity.AddKeys(navEntityId);
+
+            var complex = new EdmComplexType("NS", "ComplexType");
+            complex.AddStructuralProperty("Prop1", EdmCoreModel.Instance.GetInt32(false));
+
+            var derivedComplex = new EdmComplexType("NS", "DerivedComplexType", complex);
+
+            var navUnderComplex = derivedComplex.AddUnidirectionalNavigation(
+                new EdmNavigationPropertyInfo()
+                {
+                    Name = "NavUnderComplex",
+                    Target = navEntity,
+                    TargetMultiplicity = EdmMultiplicity.Many,
+                });
+
+            var containmentUnderEntity = entity.AddUnidirectionalNavigation(
+                new EdmNavigationPropertyInfo()
+                {
+                    Name = "Containment",
+                    Target = entity,
+                    TargetMultiplicity = EdmMultiplicity.Many,
+                    ContainsTarget = true,
+                });
+
+            var navUnderEntity = entity.AddUnidirectionalNavigation(
+                new EdmNavigationPropertyInfo()
+                {
+                    Name = "NonContainment",
+                    Target = navEntity,
+                    TargetMultiplicity = EdmMultiplicity.One,
+                });
+
+            var navUnderNavEntity = navEntity.AddUnidirectionalNavigation(
+                new EdmNavigationPropertyInfo()
+                {
+                    Name = "NonContainmentUnderNav",
+                    Target = entity,
+                    TargetMultiplicity = EdmMultiplicity.Many,
+                });
+
+            entity.AddStructuralProperty("Complex", new EdmComplexTypeReference(complex, false));
+
+            model.AddElement(entity);
+            model.AddElement(navEntity);
+            model.AddElement(complex);
+            model.AddElement(derivedComplex);
+
+            var entityContainer = new EdmEntityContainer("NS", "Container");
+            model.AddElement(entityContainer);
+            EdmEntitySet entites = new EdmEntitySet(entityContainer, "Entities", entity);
+            EdmEntitySet entites1 = new EdmEntitySet(entityContainer, "Entities1", entity);
+            EdmEntitySet navEntities = new EdmEntitySet(entityContainer, "NavEntities", navEntity);
+
+            // Complex
+            entites.AddNavigationTarget(navUnderComplex, navEntities, new EdmPathExpression("Complex/NS.DerivedComplexType/NavUnderComplex"));   // Valid binding path
+            entites.AddNavigationTarget(navUnderComplex, navEntities, new EdmPathExpression("Complex/NavUnderComplex"));  // Invalid path
+            entites.AddNavigationTarget(navUnderComplex, navEntities, new EdmPathExpression("Complex/NS.ComplexType/NavUnderComplex")); // Invalid path
+            entites.AddNavigationTarget(navUnderComplex, navEntities, new EdmPathExpression("NS.ComplexType/NavUnderComplex"));  // Invalid path
+            // The binding path is invalid, but it will fail at AddNavigationTarget since the last segment is not same with navigation property name.
+            // entites.AddNavigationTarget(navP, navEntities, new EdmPathExpression("Complex/NS.DerivedComplexType/NavUnderComplex1"));
+
+            // Containment
+            entites.AddNavigationTarget(navUnderEntity, navEntities, new EdmPathExpression("Containment/Containment/NonContainment"));  // Valid path
+            entites.AddNavigationTarget(navUnderNavEntity, entites1, new EdmPathExpression("NonContainment/NonContainmentUnderNav"));  // Invalid path
+
+            entityContainer.AddElement(entites);
+            entityContainer.AddElement(entites1);
+            entityContainer.AddElement(navEntities);
+
+            IEnumerable<EdmError> errors;
+            model.Validate(out errors);
+            Assert.AreEqual(4, errors.Count(), "Model expected to be invalid.");
+
+            var expectedErrors = new EdmLibTestErrors()
+            {
+                { null, null, EdmErrorCode.UnresolvedNavigationPropertyBindingPath },
+                { null, null, EdmErrorCode.UnresolvedNavigationPropertyBindingPath },
+                { null, null, EdmErrorCode.UnresolvedNavigationPropertyBindingPath },
+                { null, null, EdmErrorCode.UnresolvedNavigationPropertyBindingPath },
+            };
+
+            this.CompareErrors(errors, expectedErrors);
+        }
+
+        [TestMethod]
+        public void NavigationPropertyBindingPathValidationFailOnReadingCsdl()
+        {
+            string csdl = "<?xml version=\"1.0\" encoding=\"utf-16\"?>" +
+                          "<Schema Namespace=\"NS\" xmlns=\"http://docs.oasis-open.org/odata/ns/edm\">" +
+                          "<EntityType Name=\"EntityType\">" +
+                              "<Key><PropertyRef Name=\"ID\" /></Key>" +
+                              "<Property Name=\"ID\" Type=\"Edm.String\" Nullable=\"false\" />" +
+                              "<Property Name=\"Complex\" Type=\"NS.ComplexType\" Nullable=\"false\" />" +
+                              "<NavigationProperty Name=\"Containment\" Type=\"Collection(NS.EntityType)\" ContainsTarget=\"true\" />" +
+                              "<NavigationProperty Name=\"NonContainment\" Type=\"NS.NavEntityType\" Nullable=\"false\" />" +
+                          "</EntityType>" +
+                          "<EntityType Name=\"NavEntityType\">" +
+                              "<Key><PropertyRef Name=\"ID\" /></Key>" +
+                              "<Property Name=\"ID\" Type=\"Edm.String\" Nullable=\"false\" />" +
+                              "<NavigationProperty Name=\"NonContainmentUnderNav\" Type=\"Collection(NS.EntityType)\" />" +
+                          "</EntityType>" +
+                          "<ComplexType Name=\"ComplexType\">" +
+                            "<Property Name=\"Prop1\" Type=\"Edm.Int32\" Nullable=\"false\" />" +
+                          "</ComplexType>" +
+                          "<ComplexType Name=\"DerivedComplexType\" BaseType=\"NS.ComplexType\">" +
+                            "<NavigationProperty Name=\"NavUnderComplex\" Type=\"Collection(NS.NavEntityType)\" />" +
+                          "</ComplexType>" +
+                          "<EntityContainer Name=\"Container\">" +
+                          "<EntitySet Name=\"Entities\" EntityType=\"NS.EntityType\">" +
+                              "<NavigationPropertyBinding Path=\"Complex/NS.DerivedComplexType/NavUnderComplex\" Target=\"NavEntities\" />" +
+                              "<NavigationPropertyBinding Path=\"Complex/NavUnderComplex\" Target=\"NavEntities\" />" +
+                              "<NavigationPropertyBinding Path=\"Complex/NS.ComplexType/NavUnderComplex\" Target=\"NavEntities\" />" +
+                              "<NavigationPropertyBinding Path=\"NS.ComplexType/NavUnderComplex\" Target=\"NavEntities\" />" +
+                              "<NavigationPropertyBinding Path=\"Complex/NS.DerivedComplexType/NavUnderComplex1\" Target=\"NavEntities\" />" +
+                              "<NavigationPropertyBinding Path=\"Containment/Containment/NonContainment\" Target=\"NavEntities\" />" +
+                              "<NavigationPropertyBinding Path=\"NonContainment/NonContainmentUnderNav\" Target=\"Entities1\" />" +
+                          "</EntitySet>" +
+                          "<EntitySet Name=\"Entities1\" EntityType=\"NS.EntityType\" />" +
+                          "<EntitySet Name=\"NavEntities\" EntityType=\"NS.NavEntityType\" />" +
+                          "</EntityContainer>" +
+                          "</Schema>";
+
+            var model = this.GetParserResult(new List<String>() { csdl });
+
+            // Bad binding path would result in bad navigation property in csdl parsing,
+            // So BadUnresolvedNavigationPropertyPath would be reported before binding path validating.
+            var expectedErrors = new EdmLibTestErrors()
+            {
+                { null, null, EdmErrorCode.BadUnresolvedNavigationPropertyPath },
+                { null, null, EdmErrorCode.BadUnresolvedNavigationPropertyPath },
+                { null, null, EdmErrorCode.BadUnresolvedNavigationPropertyPath },
+                { null, null, EdmErrorCode.BadUnresolvedNavigationPropertyPath },
+                { null, null, EdmErrorCode.BadUnresolvedNavigationPropertyPath },
+            };
+
+            this.VerifySemanticValidation(model, EdmVersion.V40, expectedErrors);
+        }
+
 #if !SILVERLIGHT
         [TestMethod]
         public void SchemaWriterShouldFailWithGoodMessageWhenWritingInvalidXml()

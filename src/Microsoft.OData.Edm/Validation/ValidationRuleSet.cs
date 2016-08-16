@@ -77,6 +77,7 @@ namespace Microsoft.OData.Edm.Validation
                 ValidationRules.NavigationPropertyPrincipalEndMultiplicity,
                 ValidationRules.NavigationPropertyDependentEndMultiplicity,
                 ValidationRules.NavigationPropertyCorrectType,
+                ValidationRules.NavigationPropertyBindingPathMustBeResolvable,
                 ValidationRules.ImmediateValueAnnotationElementAnnotationHasNameAndNamespace,
                 ValidationRules.OpenComplexTypeCannotHaveClosedDerivedComplexType,
                 ValidationRules.FunctionApplicationExpressionParametersMatchAppliedFunction,

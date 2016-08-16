@@ -1503,6 +1503,17 @@ namespace Microsoft.OData.Edm
             return namedDefinition != null ? string.Format(CultureInfo.InvariantCulture, CollectionTypeFormat, namedDefinition.FullName()) : null;
         }
 
+        /// <summary>
+        /// Gets the element type of a collection definition or itself of a non-collection definition referred to by the type reference.
+        /// </summary>
+        /// <param name="type">Reference to the calling object.</param>
+        /// <returns>The element type of this references definition.</returns>
+        public static IEdmType AsElementType(this IEdmType type)
+        {
+            IEdmCollectionType collectionType = type as IEdmCollectionType;
+            return (collectionType != null) ? collectionType.ElementType.Definition : type;
+        }
+
         #endregion
 
         #region IEdmPrimitiveTypeReference
@@ -2850,12 +2861,6 @@ namespace Microsoft.OData.Edm
             // If there is any segment left, the path must represent a contained entity set.
             entitySet = segmentIterator.MoveNext() ? null : resolvedEntitySet;
             return entitySet != null;
-        }
-
-        internal static IEdmType AsElementType(this IEdmType type)
-        {
-            IEdmCollectionType collectionType = type as IEdmCollectionType;
-            return (collectionType != null) ? collectionType.ElementType.Definition : type;
         }
 
         /// <summary>

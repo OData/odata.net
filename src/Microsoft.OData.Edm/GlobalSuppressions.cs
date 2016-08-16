@@ -211,6 +211,7 @@
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes", Scope = "member", Target = "Microsoft.OData.Edm.Validation.ValidationRules.#SingletonTypeMustBeEntityType")]
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes", Scope = "member", Target = "Microsoft.OData.Edm.EdmCoreModel.#Instance")]
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes", Scope = "member", Target = "Microsoft.OData.Edm.Validation.ValidationRules.#NavigationPropertyPartnerPathShouldBeResolvable")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes", Scope = "member", Target = "Microsoft.OData.Edm.Validation.ValidationRules.#NavigationPropertyBindingPathMustBeResolvable")]
 
 // By design and already public APIs thus cannot be changed.
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1716:IdentifiersShouldNotMatchKeywords", MessageId = "Date", Scope = "type", Target = "Microsoft.OData.Edm.Date")]

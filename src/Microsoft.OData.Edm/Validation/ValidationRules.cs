@@ -378,6 +378,32 @@ namespace Microsoft.OData.Edm.Validation
                     }
                 });
 
+        /// <summary>
+        /// Validates that the binding path of navigation property must be resolved to a valid path, that is:
+        /// Each segments in path must be defined, and inner path segments can only be complex or containment, and last path segment must be the navigation property name.
+        /// </summary>
+        public static readonly ValidationRule<IEdmNavigationSource> NavigationPropertyBindingPathMustBeResolvable =
+            new ValidationRule<IEdmNavigationSource>(
+                (context, navigationSource) =>
+                {
+                    foreach (IEdmNavigationPropertyBinding mapping in navigationSource.NavigationPropertyBindings)
+                    {
+                        if (mapping.NavigationProperty.IsBad() || mapping.Target.IsBad())
+                        {
+                            continue;
+                        }
+
+                        if (!TryResolveNavigationPropertyBindingPath(context.Model, navigationSource, mapping))
+                        {
+                            // TODO: Update error message in V7.1 #644
+                            context.AddError(
+                                navigationSource.Location(),
+                                EdmErrorCode.UnresolvedNavigationPropertyBindingPath,
+                                string.Format("The binding path {0} for navigation property {1} under navigation source {2} is not valid.", mapping.Path.Path, mapping.NavigationProperty.Name, navigationSource.Name));
+                        }
+                    }
+                });
+
         #endregion
 
         #region IEdmEntitySet
@@ -2369,6 +2395,49 @@ namespace Microsoft.OData.Edm.Validation
                     EdmErrorCode.BadUnresolvedType,
                     Strings.EdmModel_Validator_Semantic_InaccessibleType(type.FullName()));
             }
+        }
+
+        private static bool TryResolveNavigationPropertyBindingPath(IEdmModel model, IEdmNavigationSource navigationSource, IEdmNavigationPropertyBinding binding)
+        {
+            var pathSegments = binding.Path.PathSegments.ToArray();
+            var definingType = navigationSource.EntityType() as IEdmStructuredType;
+            for (int index = 0; index < pathSegments.Length - 1; index++)
+            {
+                string segment = pathSegments[index];
+                if (segment.IndexOf('.') < 0)
+                {
+                    var property = definingType.FindProperty(segment);
+                    if (property == null)
+                    {
+                        return false;
+                    }
+
+                    var navProperty = property as IEdmNavigationProperty;
+                    if (navProperty != null && !navProperty.ContainsTarget)
+                    {
+                        return false;
+                    }
+
+                    definingType = property.Type.Definition.AsElementType() as IEdmStructuredType;
+                    if (definingType == null)
+                    {
+                        return false;
+                    }
+                }
+                else
+                {
+                    var derivedType = model.FindType(segment) as IEdmStructuredType;
+                    if (derivedType == null || !derivedType.IsOrInheritsFrom(definingType))
+                    {
+                        return false;
+                    }
+
+                    definingType = derivedType;
+                }
+            }
+
+            var navigationProperty = definingType.FindProperty(pathSegments.Last()) as IEdmNavigationProperty;
+            return navigationProperty != null;
         }
 
         internal class EdmTypeReferenceComparer : IEqualityComparer<IEdmTypeReference>

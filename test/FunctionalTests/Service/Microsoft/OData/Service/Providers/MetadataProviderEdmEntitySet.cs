@@ -9,6 +9,7 @@ namespace Microsoft.OData.Service.Providers
     #region Namespaces
     using System.Collections.Generic;
     using System.Diagnostics;
+    using System.Linq;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Edm.Vocabularies;
     using Strings = Microsoft.OData.Service.Strings;
@@ -28,8 +29,8 @@ namespace Microsoft.OData.Service.Providers
         /// <summary>The resource set underlying this entity set.</summary>
         private readonly ResourceSetWrapper resourceSet;
 
-        /// <summary>Mapping of navigation property to entity set.</summary>
-        private Dictionary<IEdmNavigationProperty, MetadataProviderEdmEntitySet> navigationTargetMapping;
+        /// <summary>Mapping of navigation property to its bindings.</summary>
+        private Dictionary<IEdmNavigationProperty, Dictionary<string, IEdmNavigationPropertyBinding>> navigationBindingMappings = new Dictionary<IEdmNavigationProperty, Dictionary<string, IEdmNavigationPropertyBinding>>(EqualityComparer<IEdmNavigationProperty>.Default);
 
         /// <summary>
         /// Constructor.
@@ -89,17 +90,16 @@ namespace Microsoft.OData.Service.Providers
             {
                 // This should be called only in $metadata scenarios
                 this.model.AssertCacheState(MetadataProviderState.Full);
-                if (this.navigationTargetMapping != null)
+                List<IEdmNavigationPropertyBinding> result = new List<IEdmNavigationPropertyBinding>();
+                foreach (KeyValuePair<IEdmNavigationProperty, Dictionary<string, IEdmNavigationPropertyBinding>> mapping in this.navigationBindingMappings)
                 {
-                    foreach (var mapping in this.navigationTargetMapping)
+                    foreach (KeyValuePair<string, IEdmNavigationPropertyBinding> kv in mapping.Value)
                     {
-                        yield return new EdmNavigationPropertyBinding(mapping.Key, mapping.Value);
+                        result.Add(kv.Value);
                     }
                 }
-                else
-                {
-                    yield break;
-                }
+
+                return result;
             }
         }
 
@@ -128,8 +128,8 @@ namespace Microsoft.OData.Service.Providers
         public IEdmNavigationSource FindNavigationTarget(IEdmNavigationProperty navigationProperty)
         {
             WebUtil.CheckArgumentNull(navigationProperty, "navigationProperty");
-            MetadataProviderEdmEntitySet targetEntitySet = null;
-            if (this.navigationTargetMapping == null || !this.navigationTargetMapping.TryGetValue(navigationProperty, out targetEntitySet))
+            Dictionary<string, IEdmNavigationPropertyBinding> result = null;
+            if (this.navigationBindingMappings == null || !this.navigationBindingMappings.TryGetValue(navigationProperty, out result))
             {
                 string declaringTypeName = navigationProperty.DeclaringEntityType().FullName();
                 ResourceType declaringResourceType = this.model.MetadataProvider.TryResolveResourceType(declaringTypeName);
@@ -143,9 +143,9 @@ namespace Microsoft.OData.Service.Providers
 
                     // Since the entity set or target entity set might be hidden, the navigation target might not get added
                     // from the previous call
-                    if (this.navigationTargetMapping != null)
+                    if (this.navigationBindingMappings != null)
                     {
-                        this.navigationTargetMapping.TryGetValue(navigationProperty, out targetEntitySet);
+                        this.navigationBindingMappings.TryGetValue(navigationProperty, out result);
                     }
                 }
             }
@@ -155,7 +155,7 @@ namespace Microsoft.OData.Service.Providers
                 // When parsing $select/$expand, the URI parser has no way of knowing which sets are visible. So, if a navigation property is found
                 // that does not have a target entity set, then it means that the target set is hidden. To avoid disclosing the existence of the set, act
                 // as if the property does not exist.
-                if (targetEntitySet == null)
+                if (result == null)
                 {
                     // We're playing a dangerous game here. We are trying to throw the SAME ERROR MESSAGE that the Uri Parser would throw
                     // for some property that is not found. If it looks any different, a client could detect the difference and learn about
@@ -167,14 +167,14 @@ namespace Microsoft.OData.Service.Providers
             if (this.model.Mode == MetadataProviderEdmModelMode.UriPathParsing)
             {
                 // As with select and expand, when parsing the path, the URI parser has no way of knowing which sets are visible. See above.
-                if (targetEntitySet == null)
+                if (result == null)
                 {
                     // Same fragility as above.
                     throw DataServiceException.CreateResourceNotFound(navigationProperty.Name);
                 }
             }
 
-            return targetEntitySet;
+            return result == null ? null : result.Select(item => item.Value).SingleOrDefault().Target;
         }
 
         public IEdmNavigationSource FindNavigationTarget(IEdmNavigationProperty navigationProperty, IEdmPathExpression bindingPath)
@@ -185,19 +185,10 @@ namespace Microsoft.OData.Service.Providers
         public IEnumerable<IEdmNavigationPropertyBinding> FindNavigationPropertyBindings(IEdmNavigationProperty navigationProperty)
         {
             FindNavigationTarget(navigationProperty);
-            if (this.navigationTargetMapping != null)
+            Dictionary<string, IEdmNavigationPropertyBinding> result;
+            if (this.navigationBindingMappings.TryGetValue(navigationProperty, out result))
             {
-                List<IEdmNavigationPropertyBinding> bindings = new List<IEdmNavigationPropertyBinding>();
-
-                foreach (var mapping in this.navigationTargetMapping)
-                {
-                    if (mapping.Key == navigationProperty)
-                    {
-                        bindings.Add(new EdmNavigationPropertyBinding(mapping.Key, mapping.Value));
-                    }
-                }
-
-                return bindings;
+                return result.Select(item => item.Value);
             }
 
             return null;
@@ -213,22 +204,19 @@ namespace Microsoft.OData.Service.Providers
             Debug.Assert(navigationProperty != null, "navigationProperty != null");
             Debug.Assert(entitySet != null, "entitySet != null");
 
-            MetadataProviderEdmEntitySet targetEntitySet;
-            if (this.navigationTargetMapping == null)
+            string path = navigationProperty.Name;
+
+            if (!this.Type.AsElementType().IsOrInheritsFrom(navigationProperty.DeclaringType))
             {
-                this.navigationTargetMapping = new Dictionary<IEdmNavigationProperty, MetadataProviderEdmEntitySet>(EqualityComparer<IEdmNavigationProperty>.Default);
+                path = navigationProperty.DeclaringType.FullTypeName() + '/' + path;
             }
 
-            if (!this.navigationTargetMapping.TryGetValue(navigationProperty, out targetEntitySet))
+            if (!this.navigationBindingMappings.ContainsKey(navigationProperty))
             {
-                // Looks like this will get called multiple types for the same navigation property in MEST scenarios.
-                // Looking at the EdmEntitySet, the last one wins. So keeping the same behavior here.
-                this.navigationTargetMapping.Add(navigationProperty, entitySet);
+                this.navigationBindingMappings[navigationProperty] = new Dictionary<string, IEdmNavigationPropertyBinding>();
             }
-            else
-            {
-                Debug.Assert(targetEntitySet == entitySet, "targetEntitySet == entitySet");
-            }
+
+            this.navigationBindingMappings[navigationProperty][path] = new EdmNavigationPropertyBinding(navigationProperty, entitySet, new EdmPathExpression(path));
         }
     }
 }

@@ -118,17 +118,6 @@ namespace Microsoft.OData.UriParser
             return null;
         }
 
-        /// <summary>
-        /// Get element type if possible
-        /// </summary>
-        /// <param name="type">The type, can be a collection or not.</param>
-        /// <returns>Element type if <paramref name="type"/> is a collection type, <paramref name="type"/> itself if not.</returns>
-        internal static IEdmType AsElementType(this IEdmType type)
-        {
-            IEdmCollectionType collectionType = type as IEdmCollectionType;
-            return (collectionType != null) ? collectionType.ElementType.Definition : type;
-        }
-
         /// <summary>Determines a matching target kind from the specified type.</summary>
         /// <param name="type">ResourceType of element to get kind for.</param>
         /// <returns>An appropriate <see cref="RequestTargetKind"/> for the specified <paramref name="type"/>.</returns>
