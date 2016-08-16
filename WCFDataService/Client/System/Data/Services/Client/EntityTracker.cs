@@ -502,7 +502,7 @@ namespace System.Data.Services.Client
             trackedEntityDescriptor.Identity = entityDescriptorFromMaterializer.Identity; // always attach the identity
             AtomMaterializerLog.MergeEntityDescriptorInfo(trackedEntityDescriptor, entityDescriptorFromMaterializer, true /*mergeInfo*/, metadataMergeOption);
             trackedEntityDescriptor.State = EntityStates.Unchanged;
-            trackedEntityDescriptor.PropertiesToSerialize.Clear();
+            trackedEntityDescriptor.ClearPropertiesToSerialize();
 
             // scenario: sucessfully (1) delete an existing entity and (2) add a new entity where the new entity has the same identity as deleted entity
             // where the SaveChanges pass1 will now associate existing identity with new entity

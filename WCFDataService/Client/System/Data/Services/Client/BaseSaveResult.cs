@@ -1209,7 +1209,7 @@ namespace System.Data.Services.Client
                 {
                     entityDescriptor.ETag = etag;
                     entityDescriptor.State = EntityStates.Unchanged;
-                    entityDescriptor.PropertiesToSerialize.Clear();
+                    entityDescriptor.ClearPropertiesToSerialize();
                 }
 
                 if (entityDescriptor.StreamState != EntityStates.Added)
@@ -1281,7 +1281,7 @@ namespace System.Data.Services.Client
                         Debug.Assert(entityDescriptor.State == EntityStates.Modified, "descriptor.State == EntityStates.Modified");
                         entityDescriptor.ETag = etag;
                         entityDescriptor.State = EntityStates.Unchanged;
-                        entityDescriptor.PropertiesToSerialize.Clear();
+                        entityDescriptor.ClearPropertiesToSerialize();
                     }
                 }
             }

@@ -283,11 +283,11 @@ namespace System.Data.Services.Client
                 }
 
                 IEnumerable<ClientPropertyAnnotation> properties;
-                if ((!Util.IsFlagSet(this.options, SaveChangesOptions.ReplaceOnUpdate) &&
-                    entityDescriptor.State == EntityStates.Modified &&
-                    entityDescriptor.PropertiesToSerialize.Any()) ||
+                if (entityDescriptor.PropertiesToSerialize != null &&
+                    ((!Util.IsFlagSet(this.options, SaveChangesOptions.ReplaceOnUpdate) &&
+                    entityDescriptor.State == EntityStates.Modified) ||
                     (Util.IsFlagSet(this.options, SaveChangesOptions.PostOnlySetProperties) &&
-                    entityDescriptor.State == EntityStates.Added))
+                    entityDescriptor.State == EntityStates.Added)))
                 {
                     if (this.requestInfo.Format.ODataFormat != ODataFormat.Atom)
                         properties = entityType.PropertiesToSerialize().Where(prop => entityDescriptor.PropertiesToSerialize.Contains(prop.PropertyName));

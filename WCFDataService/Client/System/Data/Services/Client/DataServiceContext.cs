@@ -977,6 +977,11 @@ namespace System.Data.Services.Client
             get { return this.model; }
         }
 
+        /// <summary>
+        /// When set to true the DataServiceContext will detect properties with non default values for added entities and only POST the non default properties during SaveChanges.
+        /// </summary>
+        public bool UsePartialPost { get; set; }
+
         #region Entity and Link Tracking
 
         /// <summary>Gets the <see cref="T:System.Data.Services.Client.EntityDescriptor" /> for the supplied entity object.</summary>
@@ -1728,6 +1733,8 @@ namespace System.Data.Services.Client
         public IAsyncResult BeginSaveChanges(SaveChangesOptions options, AsyncCallback callback, object state)
         {
             this.ValidateSaveChangesOptions(options);
+            if (this.UsePartialPost)
+                options |= SaveChangesOptions.PostOnlySetProperties;
             BaseSaveResult result = BaseSaveResult.CreateSaveResult(this, Util.SaveChangesMethodName, null, options, callback, state);
             if (result.IsBatchRequest)
             {
@@ -1773,6 +1780,8 @@ namespace System.Data.Services.Client
         {
             DataServiceResponse errors = null;
             this.ValidateSaveChangesOptions(options);
+            if (this.UsePartialPost)
+                options |= SaveChangesOptions.PostOnlySetProperties;
 
             BaseSaveResult result = BaseSaveResult.CreateSaveResult(this, Util.SaveChangesMethodName, null, options, null, null);
             if (result.IsBatchRequest)
