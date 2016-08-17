@@ -587,14 +587,14 @@ namespace Microsoft.OData.Tests
         public void WriteAndReadNavUnderComplexWithTypeCast()
         {
             var complexType = Model.FindType("DefaultNs.Address") as IEdmStructuredType;
-            var uriParser = new ODataUriParser(Model, ServiceRoot, new Uri("http://host/People('abc')/Address/WorkAddress?$expand=DefaultNs.WorkAddress/City2($expand=Country;$select=ZipCode)"), null);
+            var uriParser = new ODataUriParser(Model, ServiceRoot, new Uri("http://host/People('abc')/Address/WorkAddress?$expand=DefaultNs.WorkAddress/City2($expand=Region;$select=ZipCode)"), null);
             var odataUri = uriParser.ParseUri();
 
             ODataResource workAddress = new ODataResource() { TypeName = "DefaultNs.WorkAddress", Properties = new[] { new ODataProperty { Name = "Road", Value = "Ziyue" } } };
             ODataNestedResourceInfo nestedCityInfo = new ODataNestedResourceInfo() { Name = "City2", IsCollection = false };
             ODataResource city = new ODataResource() { Properties = new[] { new ODataProperty { Name = "ZipCode", Value = 222 } } };
-            ODataNestedResourceInfo nestedInfo = new ODataNestedResourceInfo() { Name = "Country", IsCollection = false };
-            ODataResource country = new ODataResource() { Properties = new[] { new ODataProperty { Name = "Name", Value = "China" } } };
+            ODataNestedResourceInfo nestedInfo = new ODataNestedResourceInfo() { Name = "Region", IsCollection = false };
+            ODataResource region = new ODataResource() { Properties = new[] { new ODataProperty { Name = "Name", Value = "Land" } } };
 
             string output = WriteJsonLightEntry(Model, null, complexType, odataUri, (writer) =>
             {
@@ -602,7 +602,7 @@ namespace Microsoft.OData.Tests
                 writer.WriteStart(nestedCityInfo);
                 writer.WriteStart(city);
                 writer.WriteStart(nestedInfo);
-                writer.WriteStart(country);
+                writer.WriteStart(region);
                 writer.WriteEnd();
                 writer.WriteEnd();
                 writer.WriteEnd();
@@ -611,13 +611,13 @@ namespace Microsoft.OData.Tests
             });
 
             const string expectedPayload =
-                "{\"@odata.context\":\"http://host/$metadata#People('abc')/Address/WorkAddress(DefaultNs.WorkAddress/City2(ZipCode,Country))\"," +
+                "{\"@odata.context\":\"http://host/$metadata#People('abc')/Address/WorkAddress(DefaultNs.WorkAddress/City2(ZipCode,Region))\"," +
                 "\"@odata.type\":\"#DefaultNs.WorkAddress\"," +
                 "\"Road\":\"Ziyue\"," +
                 "\"City2\":{" +
                     "\"ZipCode\":222," +
-                    "\"Country\":{" +
-                        "\"Name\":\"China\"" +
+                    "\"Region\":{" +
+                        "\"Name\":\"Land\"" +
                     "}" +
                     "}" +
                 "}";
@@ -625,8 +625,8 @@ namespace Microsoft.OData.Tests
             Assert.Equal(expectedPayload, output);
 
             var entryList = ReadPayload(expectedPayload, Model, null, complexType).OfType<ODataResource>().ToList();
-            entryList[0].Id.Should().Be(new Uri("http://host/Countries('China')"));
-            entryList[0].TypeName.Should().Be("DefaultNs.Country");
+            entryList[0].Id.Should().Be(new Uri("http://host/Regions('Land')"));
+            entryList[0].TypeName.Should().Be("DefaultNs.Region");
 
             entryList[1].Id.Should().Be(new Uri("http://host/City(222)"));
             entryList[1].TypeName.Should().Be("DefaultNs.City");
@@ -639,7 +639,7 @@ namespace Microsoft.OData.Tests
         public void WriteAndReadNavUnderComplexWithSplitBindingPath()
         {
             var complexType = Model.FindType("DefaultNs.Address") as IEdmStructuredType;
-            var uriParser = new ODataUriParser(Model, ServiceRoot, new Uri("http://host/People('abc')/Address?$expand=WorkAddress/DefaultNs.WorkAddress/City2($expand=Country;$select=ZipCode)"), null);
+            var uriParser = new ODataUriParser(Model, ServiceRoot, new Uri("http://host/People('abc')/Address?$expand=WorkAddress/DefaultNs.WorkAddress/City2($expand=Region;$select=ZipCode)"), null);
             var odataUri = uriParser.ParseUri();
 
             ODataResource address = new ODataResource() { Properties = new[] { new ODataProperty { Name = "Road", Value = "Zixing" } } };
@@ -647,8 +647,8 @@ namespace Microsoft.OData.Tests
             ODataResource workAddress = new ODataResource() { TypeName = "DefaultNs.WorkAddress", Properties = new[] { new ODataProperty { Name = "Road", Value = "Ziyue" } } };
             ODataNestedResourceInfo nestedCityInfo = new ODataNestedResourceInfo() { Name = "City2", IsCollection = false };
             ODataResource city = new ODataResource() { Properties = new[] { new ODataProperty { Name = "ZipCode", Value = 222 } } };
-            ODataNestedResourceInfo nestedInfo = new ODataNestedResourceInfo() { Name = "Country", IsCollection = false };
-            ODataResource country = new ODataResource() { Properties = new[] { new ODataProperty { Name = "Name", Value = "China" } } };
+            ODataNestedResourceInfo nestedInfo = new ODataNestedResourceInfo() { Name = "Region", IsCollection = false };
+            ODataResource region = new ODataResource() { Properties = new[] { new ODataProperty { Name = "Name", Value = "Land" } } };
 
             string output = WriteJsonLightEntry(Model, null, complexType, odataUri, (writer) =>
             {
@@ -658,7 +658,7 @@ namespace Microsoft.OData.Tests
                 writer.WriteStart(nestedCityInfo);
                 writer.WriteStart(city);
                 writer.WriteStart(nestedInfo);
-                writer.WriteStart(country);
+                writer.WriteStart(region);
                 writer.WriteEnd();
                 writer.WriteEnd();
                 writer.WriteEnd();
@@ -669,15 +669,15 @@ namespace Microsoft.OData.Tests
             });
 
             const string expectedPayload =
-                "{\"@odata.context\":\"http://host/$metadata#People('abc')/Address(WorkAddress/DefaultNs.WorkAddress/City2(ZipCode,Country))\"," +
+                "{\"@odata.context\":\"http://host/$metadata#People('abc')/Address(WorkAddress/DefaultNs.WorkAddress/City2(ZipCode,Region))\"," +
                 "\"Road\":\"Zixing\"," +
                 "\"WorkAddress\":{" +
                     "\"@odata.type\":\"#DefaultNs.WorkAddress\"," +
                     "\"Road\":\"Ziyue\"," +
                     "\"City2\":{" +
                         "\"ZipCode\":222," +
-                        "\"Country\":{" +
-                            "\"Name\":\"China\"" +
+                        "\"Region\":{" +
+                            "\"Name\":\"Land\"" +
                             "}" +
                         "}" +
                     "}" +
@@ -686,8 +686,8 @@ namespace Microsoft.OData.Tests
             Assert.Equal(expectedPayload, output);
 
             var entryList = ReadPayload(expectedPayload, Model, null, complexType).OfType<ODataResource>().ToList();
-            entryList[0].Id.Should().Be(new Uri("http://host/Countries('China')"));
-            entryList[0].TypeName.Should().Be("DefaultNs.Country");
+            entryList[0].Id.Should().Be(new Uri("http://host/Regions('Land')"));
+            entryList[0].TypeName.Should().Be("DefaultNs.Region");
 
             entryList[1].Id.Should().Be(new Uri("http://host/City(222)"));
             entryList[1].TypeName.Should().Be("DefaultNs.City");
@@ -774,8 +774,8 @@ namespace Microsoft.OData.Tests
             ODataResource workAddress = new ODataResource() { TypeName = "DefaultNs.WorkAddress", Properties = new[] { new ODataProperty { Name = "Road", Value = "Ziyue" } } };
             ODataNestedResourceInfo nestedCityInfo = new ODataNestedResourceInfo() { Name = "City2", IsCollection = false };
             ODataResource city = new ODataResource() { Properties = new[] { new ODataProperty { Name = "ZipCode", Value = 222 } } };
-            ODataNestedResourceInfo nestedInfo = new ODataNestedResourceInfo() { Name = "Country", IsCollection = false };
-            ODataResource country = new ODataResource() { Properties = new[] { new ODataProperty { Name = "Name", Value = "China" } } };
+            ODataNestedResourceInfo nestedInfo = new ODataNestedResourceInfo() { Name = "Region", IsCollection = false };
+            ODataResource region = new ODataResource() { Properties = new[] { new ODataProperty { Name = "Name", Value = "Land" } } };
 
             string output = WriteJsonLightEntry(Model, EntitySet, EntityType, odataUri, (writer) =>
             {
@@ -787,7 +787,7 @@ namespace Microsoft.OData.Tests
                 writer.WriteStart(nestedCityInfo);
                 writer.WriteStart(city);
                 writer.WriteStart(nestedInfo);
-                writer.WriteStart(country);
+                writer.WriteStart(region);
                 writer.WriteEnd();
                 writer.WriteEnd();
                 writer.WriteEnd();
@@ -814,12 +814,12 @@ namespace Microsoft.OData.Tests
                                           "\"@odata.id\":\"City(222)\"," +
                                           "\"@odata.editLink\":\"City(222)\"," +
                                           "\"ZipCode\":222," +
-                                          "\"Country@odata.associationLink\":\"http://host/City(222)/Country/$ref\"," +
-                                          "\"Country@odata.navigationLink\":\"http://host/City(222)/Country\"," +
-                                          "\"Country\":{" +
-                                              "\"@odata.id\":\"Countries('China')\"," +
-                                              "\"@odata.editLink\":\"Countries('China')\"," +
-                                              "\"Name\":\"China\"" +
+                                          "\"Region@odata.associationLink\":\"http://host/City(222)/Region/$ref\"," +
+                                          "\"Region@odata.navigationLink\":\"http://host/City(222)/Region\"," +
+                                          "\"Region\":{" +
+                                              "\"@odata.id\":\"Regions('Land')\"," +
+                                              "\"@odata.editLink\":\"Regions('Land')\"," +
+                                              "\"Name\":\"Land\"" +
                                               "}}," +
                                       "\"City@odata.associationLink\":\"http://host/People('abc')/Address/WorkAddress/DefaultNs.WorkAddress/City/$ref\"," +
                                       "\"City@odata.navigationLink\":\"http://host/People('abc')/Address/WorkAddress/DefaultNs.WorkAddress/City\"" +
@@ -872,8 +872,8 @@ namespace Microsoft.OData.Tests
                                           "\"@odata.id\":\"City(222)\"," +
                                           "\"@odata.editLink\":\"City(222)\"," +
                                           "\"ZipCode\":222," +
-                                          "\"Country@odata.associationLink\":\"http://host/City(222)/Country/$ref\"," +
-                                          "\"Country@odata.navigationLink\":\"http://host/City(222)/Country\"}" +
+                                          "\"Region@odata.associationLink\":\"http://host/City(222)/Region/$ref\"," +
+                                          "\"Region@odata.navigationLink\":\"http://host/City(222)/Region\"}" +
                                       "}" +
                               "]" +
                               "}";
@@ -916,8 +916,8 @@ namespace Microsoft.OData.Tests
                                       "\"Road\":\"Ziyue\"," +
                                       "\"City2\":{" +
                                           "\"ZipCode\":222," +
-                                          "\"Country\":{" +
-                                              "\"Name\":\"China\"" +
+                                          "\"Region\":{" +
+                                              "\"Name\":\"Land\"" +
                                               "}" +
                                       "}" +
                                   "}" +
@@ -926,9 +926,9 @@ namespace Microsoft.OData.Tests
 
             var itemsList = ReadPayload(expected, Model, EntitySet, EntityType).OfType<ODataNestedResourceInfo>().ToList();
 
-            // Country under City2
+            // Region under City2
             var nestInfo = itemsList[0];
-            nestInfo.Url.Should().Be(new Uri("http://host/City(222)/Country"));
+            nestInfo.Url.Should().Be(new Uri("http://host/City(222)/Region"));
 
             // City2 under WorkAddress
             nestInfo = itemsList[1];
@@ -1175,14 +1175,14 @@ namespace Microsoft.OData.Tests
             var cityId = city.AddStructuralProperty("ZipCode", EdmCoreModel.Instance.GetInt32(false));
             city.AddKeys(cityId);
 
-            var country = new EdmEntityType("DefaultNs", "Country");
-            var countryId = country.AddStructuralProperty("Name", EdmCoreModel.Instance.GetString(false));
-            country.AddKeys(countryId);
+            var region = new EdmEntityType("DefaultNs", "Region");
+            var countryId = region.AddStructuralProperty("Name", EdmCoreModel.Instance.GetString(false));
+            region.AddKeys(countryId);
 
             var cityCountry = city.AddUnidirectionalNavigation(new EdmNavigationPropertyInfo()
             {
-                Name = "Country",
-                Target = country,
+                Name = "Region",
+                Target = region,
                 TargetMultiplicity = EdmMultiplicity.One,
             });
 
@@ -1213,7 +1213,7 @@ namespace Microsoft.OData.Tests
             model.AddElement(person);
             model.AddElement(employee);
             model.AddElement(city);
-            model.AddElement(country);
+            model.AddElement(region);
             model.AddElement(complex);
             model.AddElement(derivedComplex);
 
@@ -1221,11 +1221,11 @@ namespace Microsoft.OData.Tests
             model.AddElement(entityContainer);
             EdmEntitySet people = new EdmEntitySet(entityContainer, "People", person);
             EdmEntitySet cities = new EdmEntitySet(entityContainer, "City", city);
-            EdmEntitySet countries = new EdmEntitySet(entityContainer, "Countries", country);
+            EdmEntitySet regions = new EdmEntitySet(entityContainer, "Regions", region);
             people.AddNavigationTarget(navP, cities, new EdmPathExpression("Address/City"));
             people.AddNavigationTarget(navP, cities, new EdmPathExpression("Addresses/City"));
             people.AddNavigationTarget(navP2, cities, new EdmPathExpression("Address/WorkAddress/DefaultNs.WorkAddress/City2"));
-            cities.AddNavigationTarget(cityCountry, countries);
+            cities.AddNavigationTarget(cityCountry, regions);
             entityContainer.AddElement(people);
             entityContainer.AddElement(cities);
 
