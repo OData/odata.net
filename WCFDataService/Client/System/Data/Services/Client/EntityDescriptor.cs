@@ -587,7 +587,10 @@ namespace System.Data.Services.Client
 
         internal void ClearPropertiesToSerialize()
         {
-            this.propertiesToSerialize = null;
+            if (this.propertiesToSerialize != null)
+            {
+                this.propertiesToSerialize.Clear();
+            }
         }
 
         /// <summary>

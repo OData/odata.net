@@ -633,7 +633,16 @@ namespace System.Data.Services.Client
                         {
                             entityDescriptor.ETag = etag;
                         }
+                        if (entityDescriptor.PropertiesToSerialize != null && entityDescriptor.PropertiesToSerialize.Count() == 0)
+                        {
+                            // Just reset the streamRequestKind flag - that means that we will not try to PUT the MLE and instead skip over
+                            //   to the next change (if we are to ignore errors that is)
+                            this.streamRequestKind = StreamRequestKind.None;
 
+                            // And we also need to mark it such that we generated the save content (which we did before the POST request in fact)
+                            // to workaround the fact that we use the same descriptor object to track two requests.
+                            descriptor.ContentGeneratedForSave = true;
+                        }
                         // else is not interesting and we intentionally do nothing.
                     }
                 }
@@ -1235,7 +1244,10 @@ namespace System.Data.Services.Client
                     // The materializer will always set the entity state to Unchanged.  We just processed Post MR, we
                     // need to restore the entity state to Modified to process the Put MLE.
                     Debug.Assert(entityDescriptor.State == EntityStates.Unchanged, "The materializer should always set the entity state to Unchanged.");
-                    entityDescriptor.State = EntityStates.Modified;
+                    if (entityDescriptor.PropertiesToSerialize != null && entityDescriptor.PropertiesToSerialize.Count() == 0)
+                        entityDescriptor.State = EntityStates.Unchanged;
+                    else
+                        entityDescriptor.State = EntityStates.Modified;
 
                     // Need to clear the stream state so the next iteration we will always process the Put MLE operation.
                     entityDescriptor.StreamState = EntityStates.Unchanged;
