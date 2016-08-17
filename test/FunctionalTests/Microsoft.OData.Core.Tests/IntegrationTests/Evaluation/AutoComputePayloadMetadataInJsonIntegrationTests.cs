@@ -14,6 +14,7 @@ using Microsoft.OData.Core.UriParser;
 using Microsoft.OData.Edm;
 using Microsoft.OData.Edm.Library;
 using Microsoft.OData.Edm.Library.Expressions;
+using Microsoft.OData.Edm.Library.Values;
 using Xunit;
 
 namespace Microsoft.OData.Core.Tests.IntegrationTests.Evaluation
@@ -119,7 +120,9 @@ namespace Microsoft.OData.Core.Tests.IntegrationTests.Evaluation
         private static readonly EdmEntityType EntityType;
         private static readonly EdmEntityType DerivedType;
         private static readonly EdmEntityType AnotherEntityType;
+        private static readonly EdmEntityType EnumAsKeyEntityType;
         private static readonly EdmEntitySet EntitySet;
+        private static readonly EdmEnumType Gender;
         private static readonly EdmModel Model;
 
         private const string PayloadWithNoMetadata = "{\"ID\":123,\"ExpandedNavLink\":[]}";
@@ -204,15 +207,23 @@ namespace Microsoft.OData.Core.Tests.IntegrationTests.Evaluation
 
         static AutoComputePayloadMetadataInJsonIntegrationTests()
         {
+            Gender = new EdmEnumType("Namespace", "Gender");
+            Gender.AddMember("Male", new EdmIntegerConstant(0));
+            Gender.AddMember("Female", new EdmIntegerConstant(1));
+
             EntityType = new EdmEntityType("Namespace", "EntityType", null, false, false, true);
             EntityType.AddKeys(EntityType.AddStructuralProperty("ID", EdmPrimitiveTypeKind.Int32));
             EntityType.AddStructuralProperty("StreamProp1", EdmPrimitiveTypeKind.Stream);
             EntityType.AddStructuralProperty("StreamProp2", EdmPrimitiveTypeKind.Stream);
             EntityType.AddStructuralProperty("Name", EdmCoreModel.Instance.GetString(isNullable: true), null, EdmConcurrencyMode.Fixed);
             DerivedType = new EdmEntityType("Namespace", "DerivedType", EntityType, false, true);
+
             AnotherEntityType = new EdmEntityType("Namespace", "AnotherEntityType", null, false, false, true);
             AnotherEntityType.AddKeys(AnotherEntityType.AddStructuralProperty("ID", EdmPrimitiveTypeKind.Int32));
             AnotherEntityType.AddStructuralProperty("Name", EdmCoreModel.Instance.GetString(isNullable: true), null, EdmConcurrencyMode.Fixed);
+
+            EnumAsKeyEntityType = new EdmEntityType("Namespace", "EnumAsKeyEntityType");
+            EnumAsKeyEntityType.AddKeys(EnumAsKeyEntityType.AddStructuralProperty("GenderID", new EdmEnumTypeReference(Gender, false)));
 
             var deferredNavLinkProp = EntityType.AddUnidirectionalNavigation(new EdmNavigationPropertyInfo()
             {
@@ -291,6 +302,14 @@ namespace Microsoft.OData.Core.Tests.IntegrationTests.Evaluation
                 ContainsTarget = false
             });
 
+            EntityType.AddUnidirectionalNavigation(new EdmNavigationPropertyInfo()
+            {
+                Target = EnumAsKeyEntityType,
+                TargetMultiplicity = EdmMultiplicity.Many,
+                Name = "EnumAsKeyContainedNavProp",
+                ContainsTarget = true
+            });
+
             var container = new EdmEntityContainer("Namespace", "Container");
             EntitySet = container.AddEntitySet("EntitySet", EntityType);
 
@@ -299,9 +318,11 @@ namespace Microsoft.OData.Core.Tests.IntegrationTests.Evaluation
             EntitySet.AddNavigationTarget(navLinkDeclaredOnlyInModelProp, EntitySet);
 
             Model = new EdmModel();
+            Model.AddElement(Gender);
             Model.AddElement(EntityType);
             Model.AddElement(DerivedType);
             Model.AddElement(AnotherEntityType);
+            Model.AddElement(EnumAsKeyEntityType);
             Model.AddElement(container);
 
             var alwaysBindableAction1 = new EdmAction("Namespace", "AlwaysBindableAction1", null /*returnType*/, true /*isBound*/, null /*entitySetPath*/);
@@ -438,6 +459,8 @@ namespace Microsoft.OData.Core.Tests.IntegrationTests.Evaluation
                                "\"UnknownNonCollectionNavProp@odata.navigationLink\":\"http://example.com/read/UnknownNonCollectionNavProp\"," +
                                "\"UnknownCollectionNavProp@odata.associationLink\":\"http://example.com/read/UnknownCollectionNavProp/$ref\"," +
                                "\"UnknownCollectionNavProp@odata.navigationLink\":\"http://example.com/read/UnknownCollectionNavProp\"," +
+                               "\"EnumAsKeyContainedNavProp@odata.associationLink\":\"http://example.com/read/EnumAsKeyContainedNavProp/$ref\"," +
+                               "\"EnumAsKeyContainedNavProp@odata.navigationLink\":\"http://example.com/read/EnumAsKeyContainedNavProp\"," +
                                "\"#Action\":{\"title\":\"ActionTitle\",\"target\":\"http://example.com/DoAction\"}," +
                                "\"#Namespace.AlwaysBindableAction1\":{\"title\":\"Namespace.AlwaysBindableAction1\",\"target\":\"http://example.com/edit/Namespace.AlwaysBindableAction1\"}," +
                                "\"#Namespace.AlwaysBindableAction2\":{\"title\":\"Namespace.AlwaysBindableAction2\",\"target\":\"http://example.com/edit/Namespace.AlwaysBindableAction2\"}," +
@@ -485,6 +508,8 @@ namespace Microsoft.OData.Core.Tests.IntegrationTests.Evaluation
                                            "\"UnknownNonCollectionNavProp@odata.navigationLink\":\"http://example.com/EntitySet(123)/UnknownNonCollectionNavProp\"," +
                                            "\"UnknownCollectionNavProp@odata.associationLink\":\"http://example.com/EntitySet(123)/UnknownCollectionNavProp/$ref\"," +
                                            "\"UnknownCollectionNavProp@odata.navigationLink\":\"http://example.com/EntitySet(123)/UnknownCollectionNavProp\"," +
+                                           "\"EnumAsKeyContainedNavProp@odata.associationLink\":\"http://example.com/EntitySet(123)/EnumAsKeyContainedNavProp/$ref\"," +
+                                           "\"EnumAsKeyContainedNavProp@odata.navigationLink\":\"http://example.com/EntitySet(123)/EnumAsKeyContainedNavProp\"," +
                                            "\"#Namespace.AlwaysBindableAction1\":{\"title\":\"Namespace.AlwaysBindableAction1\",\"target\":\"http://example.com/EntitySet(123)/Namespace.AlwaysBindableAction1\"}," +
                                            "\"#Namespace.AlwaysBindableAction2\":{\"title\":\"Namespace.AlwaysBindableAction2\",\"target\":\"http://example.com/EntitySet(123)/Namespace.AlwaysBindableAction2\"}," +
                                            "\"#Namespace.AlwaysBindableFunction1\":{\"title\":\"Namespace.AlwaysBindableFunction1\",\"target\":\"http://example.com/EntitySet(123)/Namespace.AlwaysBindableFunction1\"}," +
@@ -639,6 +664,24 @@ namespace Microsoft.OData.Core.Tests.IntegrationTests.Evaluation
             this.entryWithOnlyData.Id.Should().Be(containedId);
 
             string expectedContextUriString = "$metadata#EntitySet(123)/ContainedNavProp/$entity";
+            result.Should().Contain(expectedContextUriString);
+        }
+
+        [Fact]
+        public void WritingInFullMetadataModeWithTopLevelContainedEntityWithEnumAsKey()
+        {
+            ODataEntry entry = new ODataEntry { Properties = new[] { new ODataProperty { Name = "GenderID", Value = new ODataEnumValue("Male", Gender.FullTypeName()) } } };
+            ODataItem[] itemsToWrite = { entry };
+
+            IEdmNavigationProperty containedNavProp = EntityType.FindProperty("EnumAsKeyContainedNavProp") as IEdmNavigationProperty;
+            IEdmEntitySetBase contianedEntitySet = EntitySet.FindNavigationTarget(containedNavProp) as IEdmEntitySetBase;
+            string resourcePath = "EntitySet(123)/EnumAsKeyContainedNavProp(Namespace.Gender'Male')";
+            string result = this.GetWriterOutputForContentTypeAndKnobValue("application/json;odata.metadata=full", true, itemsToWrite, Model, contianedEntitySet, EnumAsKeyEntityType, null, null, resourcePath);
+
+            Uri containedId = new Uri("http://example.com/EntitySet(123)/EnumAsKeyContainedNavProp(Namespace.Gender'Male')");
+            entry.Id.Should().Be(containedId);
+
+            string expectedContextUriString = "$metadata#EntitySet(123)/EnumAsKeyContainedNavProp/$entity";
             result.Should().Contain(expectedContextUriString);
         }
 

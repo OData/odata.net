@@ -460,6 +460,7 @@ namespace Microsoft.OData.Service {
         internal const string General_InternalError = "General_InternalError";
         internal const string ValueParser_InvalidDuration = "ValueParser_InvalidDuration";
         internal const string PlatformHelper_DateTimeOffsetMustContainTimeZone = "PlatformHelper_DateTimeOffsetMustContainTimeZone";
+        internal const string DefaultLiteralFormatter_EnumValueTypeNameShouldNotBeNullOrEmpty = "DefaultLiteralFormatter_EnumValueTypeNameShouldNotBeNullOrEmpty";
 
         static TextRes loader = null;
         ResourceManager resources;

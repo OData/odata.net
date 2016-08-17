@@ -1964,6 +1964,15 @@ namespace Microsoft.OData.Client {
         }
 
         /// <summary>
+        /// A string like "Type name should not be null or empty when serializing an Enum value for URI key."
+        /// </summary>
+        internal static string DefaultLiteralFormatter_EnumValueTypeNameShouldNotBeNullOrEmpty {
+            get {
+                return Microsoft.OData.Client.TextRes.GetString(Microsoft.OData.Client.TextRes.DefaultLiteralFormatter_EnumValueTypeNameShouldNotBeNullOrEmpty);
+            }
+        }
+
+        /// <summary>
         /// A string like "Failed to get the count value from the server."
         /// </summary>
         internal static string DataServiceRequest_FailGetCount {

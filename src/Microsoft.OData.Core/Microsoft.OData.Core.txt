@@ -435,7 +435,7 @@ ODataMetadataInputContext_ErrorReadingMetadata=The metadata document could not b
 
 ODataMetadataOutputContext_ErrorWritingMetadata=The metadata document could not be written as specified.\r\n{0}
 
-ODataAtomReader_MediaLinkEntryMismatch=An Atom entry can be either a regular entry or a media link entry (MLE). This means that there cannot be data in both the {http://www.w3.org/2005/Atom}:content element, which indicates a regular entry, and the {http://docs.oasis-open.org/odata/ns/metadata}:properties element, which indicates an MLE. 
+ODataAtomReader_MediaLinkEntryMismatch=An Atom entry can be either a regular entry or a media link entry (MLE). This means that there cannot be data in both the {http://www.w3.org/2005/Atom}:content element, which indicates a regular entry, and the {http://docs.oasis-open.org/odata/ns/metadata}:properties element, which indicates an MLE.
 ODataAtomReader_FeedNavigationLinkForResourceReferenceProperty=A navigation link '{0}' was found with type 'feed', but its matching navigation property is of kind EntityReference. A navigation link with type 'feed' must match a navigation property of kind EntitySetReference.
 ODataAtomReader_ExpandedFeedInEntryNavigationLink=An expanded feed was found in a navigation link of type entry; however, only an expanded entry can occur in a navigation link of type entry.
 ODataAtomReader_ExpandedEntryInFeedNavigationLink=An expanded entry was found in a navigation link of type feed; however, only an expanded feed can occur in a navigation link of type feed.
@@ -478,7 +478,7 @@ ODataAtomEntryAndFeedDeserializer_OperationMissingTargetAttribute=The 'target' a
 ODataAtomEntryAndFeedDeserializer_MultipleLinksInEntry=Multiple 'link' elements with a relation of '{0}' were found on an entry. In OData, at most one link element with a '{0}' relation is allowed.
 ODataAtomEntryAndFeedDeserializer_MultipleLinksInFeed=Multiple 'link' elements with a relation of '{0}' were found on a feed. In OData, at most one link element with a '{0}' relation is allowed.
 ODataAtomEntryAndFeedDeserializer_DuplicateElements=Duplicate '{{{0}}}:{1}' elements were found. In OData, at most one '{{{0}}}:{1}' element is allowed.
-ODataAtomEntryAndFeedDeserializer_InvalidTypeAttributeOnAssociationLink=The value of the 'type' attribute on the association link for the navigation property '{0}' is invalid. The value of the 'type' attribute on an association link must be 'application/xml'. 
+ODataAtomEntryAndFeedDeserializer_InvalidTypeAttributeOnAssociationLink=The value of the 'type' attribute on the association link for the navigation property '{0}' is invalid. The value of the 'type' attribute on an association link must be 'application/xml'.
 ODataAtomEntryAndFeedDeserializer_EncounteredAnnotationInNestedFeed=Encountered an 'annotation' element inside a nested feed. Annotations are not currently supported for nested feeds.
 ODataAtomEntryAndFeedDeserializer_EncounteredDeltaLinkInNestedFeed=Encountered a 'Delta Link' element inside a nested feed. Delta Links are not supported for nested feeds.
 ODataAtomEntryAndFeedDeserializer_AnnotationWithNonDotTarget=Encountered an 'annotation' element with a 'target' attribute value of '{0}' and a term name of '{1}'. When an 'annotation' element occurs as a direct child of an 'entry' or 'feed' element, it must have either no 'target' attribute or a 'target' attribute with a value of '.'.
@@ -655,7 +655,7 @@ ODataJsonLightEntityReferenceLinkDeserializer_InvalidPropertyAnnotationInEntityR
 ODataJsonLightEntityReferenceLinkDeserializer_ExpectedEntityReferenceLinksPropertyNotFound=Did not find the required '{0}' property for an entity reference links payload.
 
 ODataJsonOperationsDeserializerUtils_OperationPropertyCannotBeNull=The '{0}' property of an operation '{1}' in '{2}' cannot have a null value.
-ODataJsonOperationsDeserializerUtils_OperationsPropertyMustHaveObjectValue=Found a node of type '{1}' when starting to read the '{0}' operations value, however a node of type 'StartObject' was expected. The '{0}' operations value must have an object value. 
+ODataJsonOperationsDeserializerUtils_OperationsPropertyMustHaveObjectValue=Found a node of type '{1}' when starting to read the '{0}' operations value, however a node of type 'StartObject' was expected. The '{0}' operations value must have an object value.
 
 ODataJsonLightServiceDocumentDeserializer_DuplicatePropertiesInServiceDocument=Multiple '{0}' properties were found in a service document. In OData, a service document must have exactly one '{0}' property.
 ODataJsonLightServiceDocumentDeserializer_DuplicatePropertiesInServiceDocumentElement=Multiple '{0}' properties were found in a service document element. In OData, a service document element must have exactly one '{0}' property.
@@ -781,7 +781,7 @@ MetadataBinder_CastOrIsOfFunctionWithoutATypeArgument=Cast or IsOf Function must
 MetadataBinder_CastOrIsOfCollectionsNotSupported=The Cast and IsOf functions do not support collection arguments or types.
 MetadataBinder_CollectionOpenPropertiesNotSupportedInThisRelease=Collection open properties are not supported in this release.
 MetadataBinder_IllegalSegmentType=Can only bind segments that are Navigation, Structural, Complex, or Collections. We found a segment '{0}' that isn't any of those. Please revise the query.
-MetadataBinder_QueryOptionNotApplicable=The '{0}' option cannot be applied to the query path. '{0}' can only be applied to a collection of entities. 
+MetadataBinder_QueryOptionNotApplicable=The '{0}' option cannot be applied to the query path. '{0}' can only be applied to a collection of entities.
 
 ApplyBinder_AggregateExpressionIncompatibleTypeForMethod=$apply/aggregate expression '{0}' operation does not support value type '{1}'.
 ApplyBinder_UnsupportedAggregateMethod=$apply/aggregate does not support method '{0}'.
@@ -791,7 +791,7 @@ ApplyBinder_UnsupportedType=$apply clause does not support type '{0}'.
 ApplyBinder_UnsupportedGroupByChild=$apply/groupby not support '{0}' as child transformation
 
 FunctionCallBinder_CannotFindASuitableOverload=Cannot find a suitable overload for function '{0}' that takes '{1}' arguments.
-FunctionCallBinder_UriFunctionMustHaveHaveNullParent=Found a Uri function '{0}' with a parent token. Uri functions cannot have parent tokens. 
+FunctionCallBinder_UriFunctionMustHaveHaveNullParent=Found a Uri function '{0}' with a parent token. Uri functions cannot have parent tokens.
 FunctionCallBinder_CallingFunctionOnOpenProperty=Found a function '{0}' on an open property. Functions on open properties are not supported.
 FunctionCallParser_DuplicateParameterOrEntityKeyName=Parameter or entity key names must be unique. There is most likely an error in the model.
 
@@ -908,7 +908,7 @@ RequestUriProcessor_SegmentDoesNotSupportKeyPredicates=The request URI is not va
 RequestUriProcessor_ValueSegmentAfterScalarPropertySegment=The segment '{1}' in the request URI is not valid. The segment '{0}' refers to a primitive property, function, or service operation, so the only supported value from the next segment is '$value'.
 RequestUriProcessor_InvalidTypeIdentifier_UnrelatedType=The type '{0}' specified in the URI is neither a base type nor a sub-type of the previously-specified type '{1}'.
 OpenNavigationPropertiesNotSupportedOnOpenTypes=Open navigation properties are not supported on OpenTypes. Property name: '{0}'.
-BadRequest_ResourceCanBeCrossReferencedOnlyForBindOperation=Error processing request stream. In batch mode, a resource can be cross-referenced only for bind/unbind operations. 
+BadRequest_ResourceCanBeCrossReferencedOnlyForBindOperation=Error processing request stream. In batch mode, a resource can be cross-referenced only for bind/unbind operations.
 DataServiceConfiguration_ResponseVersionIsBiggerThanProtocolVersion=The response requires that version {0} of the protocol be used, but the MaxProtocolVersion of the data service is set to {1}.
 BadRequest_KeyCountMismatch=The number of keys specified in the URI does not match number of key properties for the resource '{0}'.
 RequestUriProcessor_KeysMustBeNamed=Segments with multiple key values must specify them in 'name=value' form.
@@ -981,3 +981,5 @@ JsonReaderExtensions_CannotReadValueAsString=Cannot read the value '{0}' as a qu
 JsonReaderExtensions_CannotReadValueAsDouble=Cannot read the value '{0}' as a double numeric value.
 JsonReaderExtensions_UnexpectedInstanceAnnotationName=An unexpected instance annotation name '{0}' was found when reading from the JSON reader, In OData, Instance annotation name must start with @.
 JsonReaderExtensions_ErrorContext={0} Error found near: {1} <---
+
+DefaultLiteralFormatter_EnumValueTypeNameShouldNotBeNullOrEmpty=Type name should not be null or empty when serializing an Enum value for URI key.

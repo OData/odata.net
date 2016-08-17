@@ -473,4 +473,6 @@ ValueParser_InvalidDuration=The value '{0}' is not a valid duration value.
 
 ; Note: The below list of error messages are common to the ODataLib, EdmLib, Spatial, Server and Client projects.
 PlatformHelper_DateTimeOffsetMustContainTimeZone=The time zone information is missing on the DateTimeOffset value '{0}'. A DateTimeOffset value must contain the time zone information.
+
+DefaultLiteralFormatter_EnumValueTypeNameShouldNotBeNullOrEmpty=Type name should not be null or empty when serializing an Enum value for URI key.
 ;END

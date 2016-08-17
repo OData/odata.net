@@ -206,7 +206,7 @@ ALinq_AnyAllNotSupportedInOrderBy=The method '{0}' is not supported by the 'orde
 ALinq_FormatQueryOptionNotSupported=The '$format' query option is not supported. Use the DataServiceContext.Format property to set the desired format.
 ALinq_IllegalSystemQueryOption=Found the following illegal system token while building a projection or expansion path: '{0}'
 ALinq_IllegalPathStructure=Found a projection as a non-leaf segment in an expand path. Please rephrase your query. The projected property was : '{0}'
-ALinq_TypeTokenWithNoTrailingNavProp=Found an illegal type token '{0}' without a trailing navigation property. 
+ALinq_TypeTokenWithNoTrailingNavProp=Found an illegal type token '{0}' without a trailing navigation property.
 
 DSKAttribute_MustSpecifyAtleastOnePropertyName=DataServiceKey attribute must specify at least one property name.
 
@@ -287,4 +287,5 @@ ValueParser_InvalidDuration=The value '{0}' is not a valid duration value.
 
 ; Note: The below list of error messages are common to the ODataLib, EdmLib, Spatial, Server and Client projects.
 PlatformHelper_DateTimeOffsetMustContainTimeZone=The time zone information is missing on the DateTimeOffset value '{0}'. A DateTimeOffset value must contain the time zone information.
+DefaultLiteralFormatter_EnumValueTypeNameShouldNotBeNullOrEmpty=Type name should not be null or empty when serializing an Enum value for URI key.
 ;END

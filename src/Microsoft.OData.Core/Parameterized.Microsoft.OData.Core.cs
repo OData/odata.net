@@ -6138,6 +6138,15 @@ namespace Microsoft.OData.Core {
             return Microsoft.OData.Core.TextRes.GetString(Microsoft.OData.Core.TextRes.JsonReaderExtensions_ErrorContext, p0, p1);
         }
 
+        /// <summary>
+        /// A string like "Type name should not be null or empty when serializing an Enum value for URI key."
+        /// </summary>
+        internal static string DefaultLiteralFormatter_EnumValueTypeNameShouldNotBeNullOrEmpty {
+            get {
+                return Microsoft.OData.Core.TextRes.GetString(Microsoft.OData.Core.TextRes.DefaultLiteralFormatter_EnumValueTypeNameShouldNotBeNullOrEmpty);
+            }
+        }
+
     }
 
     /// <summary>

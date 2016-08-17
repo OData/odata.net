@@ -268,6 +268,7 @@ namespace Microsoft.OData.Client {
         internal const string EdmValueUtils_CannotConvertTypeToClrValue = "EdmValueUtils_CannotConvertTypeToClrValue";
         internal const string ValueParser_InvalidDuration = "ValueParser_InvalidDuration";
         internal const string PlatformHelper_DateTimeOffsetMustContainTimeZone = "PlatformHelper_DateTimeOffsetMustContainTimeZone";
+        internal const string DefaultLiteralFormatter_EnumValueTypeNameShouldNotBeNullOrEmpty = "DefaultLiteralFormatter_EnumValueTypeNameShouldNotBeNullOrEmpty";
         internal const string DataServiceRequest_FailGetCount = "DataServiceRequest_FailGetCount";
         internal const string Context_ExecuteExpectedVoidResponse = "Context_ExecuteExpectedVoidResponse";
 

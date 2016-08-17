@@ -3020,6 +3020,15 @@ namespace Microsoft.OData.Service {
             return Microsoft.OData.Service.TextRes.GetString(Microsoft.OData.Service.TextRes.PlatformHelper_DateTimeOffsetMustContainTimeZone, p0);
         }
 
+        /// <summary>
+        /// A string like "Type name should not be null or empty when serializing an Enum value for URI key."
+        /// </summary>
+        internal static string DefaultLiteralFormatter_EnumValueTypeNameShouldNotBeNullOrEmpty {
+            get {
+                return Microsoft.OData.Service.TextRes.GetString(Microsoft.OData.Service.TextRes.DefaultLiteralFormatter_EnumValueTypeNameShouldNotBeNullOrEmpty);
+            }
+        }
+
     }
 
     /// <summary>
