@@ -600,7 +600,6 @@ namespace System.Data.Services.Client
 
             EntityDescriptor resource = this.Context.GetEntityDescriptor(entity);
             ClientTypeAnnotation entityType = resource.Model.GetClientTypeAnnotation(resource.Model.GetOrCreateEdmType(resource.Entity.GetType()));
-            Type clrEntityType = entity.GetType();
 
             resource.EnsurePropertiesToSerializeIsInitialized();
  
