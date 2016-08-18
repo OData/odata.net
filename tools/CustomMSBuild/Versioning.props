@@ -37,7 +37,7 @@
   
   <!-- For NuGet Packages -->
   <PropertyGroup>
-    <VersionPrereleaseExtension>beta</VersionPrereleaseExtension>
+    <VersionPrereleaseExtension></VersionPrereleaseExtension>
     <VersionNuGetSemantic>$(VersionFullSemantic)</VersionNuGetSemantic>
     <VersionNuGetSemantic Condition="'$(VersionPrereleaseExtension)'!=''">$(VersionFullSemantic)-$(VersionPrereleaseExtension)</VersionNuGetSemantic>
   </PropertyGroup>
