@@ -44,6 +44,12 @@ namespace System.Data.Services.Client
 
         /// <summary>save each change independently in a batch request.</summary>
         BatchWithIndependentOperations = 16,
-    }    
+
+        /// <summary> 
+        /// Use partial payload when doing post. 
+        /// Note it can only be used when using <see cref="T:Microsoft.OData.Client.DataServiceCollection`1" /> 
+        /// </summary> 
+        PostOnlySetProperties = 32,
+    }
 }
 
