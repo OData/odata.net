@@ -65,11 +65,12 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         /// <param name="binaryOperatorKind">the operator kind</param>
         /// <param name="left">the left operand</param>
         /// <param name="right">the right operand</param>
-        internal static void PromoteOperandTypes(BinaryOperatorKind binaryOperatorKind, ref SingleValueNode left, ref SingleValueNode right)
+        /// <param name="facetsPromotionRules">Promotion rules for type facets.</param>
+        internal static void PromoteOperandTypes(BinaryOperatorKind binaryOperatorKind, ref SingleValueNode left, ref SingleValueNode right, TypeFacetsPromotionRules facetsPromotionRules)
         {
             IEdmTypeReference leftType;
             IEdmTypeReference rightType;
-            if (!TypePromotionUtils.PromoteOperandTypes(binaryOperatorKind, left, right, out leftType, out rightType))
+            if (!TypePromotionUtils.PromoteOperandTypes(binaryOperatorKind, left, right, out leftType, out rightType, facetsPromotionRules))
             {
                 string leftTypeName = left.TypeReference == null ? "<null>" : left.TypeReference.FullName();
                 string rightTypeName = right.TypeReference == null ? "<null>" : right.TypeReference.FullName();

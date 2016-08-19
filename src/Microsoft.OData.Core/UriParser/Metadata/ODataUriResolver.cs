@@ -28,12 +28,33 @@ namespace Microsoft.OData.Core.UriParser.Metadata
         internal static readonly ODataUriResolver Default = new ODataUriResolver();
 
         /// <summary>
+        /// Promotion rules for type facets.
+        /// </summary>
+        private TypeFacetsPromotionRules typeFacetsPromotionRules = new TypeFacetsPromotionRules();
+
+        /// <summary>
         /// Whether to enable case insensitive for the resolver.
         /// </summary>
         /// <remarks>
-        /// All extensions should look at this property and keep case sensitive behaviour consistent.
+        /// All extensions should look at this property and keep case sensitive behavior consistent.
         /// </remarks>
         public virtual bool EnableCaseInsensitive { get; set; }
+
+        /// <summary>
+        /// Gets and sets promotion rules for type facets.
+        /// </summary>
+        public TypeFacetsPromotionRules TypeFacetsPromotionRules
+        {
+            get
+            {
+                return typeFacetsPromotionRules;
+            }
+
+            set
+            {
+                typeFacetsPromotionRules = value;
+            }
+        }
 
         /// <summary>
         /// Promote the left and right operand types
@@ -49,7 +70,7 @@ namespace Microsoft.OData.Core.UriParser.Metadata
                out IEdmTypeReference typeReference)
         {
             typeReference = null;
-            BinaryOperatorBinder.PromoteOperandTypes(binaryOperatorKind, ref leftNode, ref rightNode);
+            BinaryOperatorBinder.PromoteOperandTypes(binaryOperatorKind, ref leftNode, ref rightNode, typeFacetsPromotionRules);
         }
 
         /// <summary>

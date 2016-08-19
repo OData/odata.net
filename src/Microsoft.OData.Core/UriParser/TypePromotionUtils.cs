@@ -26,8 +26,8 @@ namespace Microsoft.OData.Core.UriParser
     /// Helper methods for promoting argument types of operators and function calls.
     /// </summary>
     /// <remarks>
-    /// Note that the lists of signatures are for matching primitive types to functions. 
-    /// Equality (eq and ne) operators are a bit special since they are also defined for 
+    /// Note that the lists of signatures are for matching primitive types to functions.
+    /// Equality (eq and ne) operators are a bit special since they are also defined for
     /// entity and complex types.
     /// </remarks>
     internal static class TypePromotionUtils
@@ -35,31 +35,41 @@ namespace Microsoft.OData.Core.UriParser
         /// <summary>Function signatures for logical operators (and, or).</summary>
         private static readonly FunctionSignature[] logicalSignatures = new FunctionSignature[]
         {
-            new FunctionSignature(EdmCoreModel.Instance.GetBoolean(false), EdmCoreModel.Instance.GetBoolean(false)),
-            new FunctionSignature(EdmCoreModel.Instance.GetBoolean(true), EdmCoreModel.Instance.GetBoolean(true)),
+            new FunctionSignature(new[] { EdmCoreModel.Instance.GetBoolean(false), EdmCoreModel.Instance.GetBoolean(false) }, null),
+            new FunctionSignature(new[] { EdmCoreModel.Instance.GetBoolean(true),  EdmCoreModel.Instance.GetBoolean(true)  }, null),
         };
 
         /// <summary>Function signatures for the 'not' operator.</summary>
         private static readonly FunctionSignature[] notSignatures = new FunctionSignature[]
         {
-            new FunctionSignature(EdmCoreModel.Instance.GetBoolean(false)),
-            new FunctionSignature(EdmCoreModel.Instance.GetBoolean(true)),
+            new FunctionSignature(new[] { EdmCoreModel.Instance.GetBoolean(false) }, null),
+            new FunctionSignature(new[] { EdmCoreModel.Instance.GetBoolean(true)  }, null),
         };
 
         /// <summary>Function signatures for arithmetic operators (add, sub, mul, div, mod).</summary>
         private static readonly FunctionSignature[] arithmeticSignatures = new FunctionSignature[]
         {
             // COMPAT 41: Type promotion in the product does not strictly follow the OIPI spec
-            new FunctionSignature(EdmCoreModel.Instance.GetInt32(false), EdmCoreModel.Instance.GetInt32(false)),
-            new FunctionSignature(EdmCoreModel.Instance.GetInt32(true), EdmCoreModel.Instance.GetInt32(true)),
-            new FunctionSignature(EdmCoreModel.Instance.GetInt64(false), EdmCoreModel.Instance.GetInt64(false)),
-            new FunctionSignature(EdmCoreModel.Instance.GetInt64(true), EdmCoreModel.Instance.GetInt64(true)),
-            new FunctionSignature(EdmCoreModel.Instance.GetSingle(false), EdmCoreModel.Instance.GetSingle(false)),
-            new FunctionSignature(EdmCoreModel.Instance.GetSingle(true), EdmCoreModel.Instance.GetSingle(true)),
-            new FunctionSignature(EdmCoreModel.Instance.GetDouble(false), EdmCoreModel.Instance.GetDouble(false)),
-            new FunctionSignature(EdmCoreModel.Instance.GetDouble(true), EdmCoreModel.Instance.GetDouble(true)),
-            new FunctionSignature(EdmCoreModel.Instance.GetDecimal(false), EdmCoreModel.Instance.GetDecimal(false)),
-            new FunctionSignature(EdmCoreModel.Instance.GetDecimal(true), EdmCoreModel.Instance.GetDecimal(true)),
+            new FunctionSignature(new[] { EdmCoreModel.Instance.GetInt32(false),   EdmCoreModel.Instance.GetInt32(false)   }, null),
+            new FunctionSignature(new[] { EdmCoreModel.Instance.GetInt32(true),    EdmCoreModel.Instance.GetInt32(true)    }, null),
+            new FunctionSignature(new[] { EdmCoreModel.Instance.GetInt64(false),   EdmCoreModel.Instance.GetInt64(false)   }, null),
+            new FunctionSignature(new[] { EdmCoreModel.Instance.GetInt64(true),    EdmCoreModel.Instance.GetInt64(true)    }, null),
+            new FunctionSignature(new[] { EdmCoreModel.Instance.GetSingle(false),  EdmCoreModel.Instance.GetSingle(false)  }, null),
+            new FunctionSignature(new[] { EdmCoreModel.Instance.GetSingle(true),   EdmCoreModel.Instance.GetSingle(true)   }, null),
+            new FunctionSignature(new[] { EdmCoreModel.Instance.GetDouble(false),  EdmCoreModel.Instance.GetDouble(false)  }, null),
+            new FunctionSignature(new[] { EdmCoreModel.Instance.GetDouble(true),   EdmCoreModel.Instance.GetDouble(true)   }, null),
+            new FunctionSignature(new[] { EdmCoreModel.Instance.GetDecimal(false), EdmCoreModel.Instance.GetDecimal(false) },
+                                  new FunctionSignature.CreateArgumentTypeWithFacets[]
+                                  {
+                                      (int? p, int? s) => { return EdmCoreModel.Instance.GetDecimal(p, s, false); },
+                                      (int? p, int? s) => { return EdmCoreModel.Instance.GetDecimal(p, s, false); }
+                                  }),
+            new FunctionSignature(new[] { EdmCoreModel.Instance.GetDecimal(true), EdmCoreModel.Instance.GetDecimal(true) },
+                                  new FunctionSignature.CreateArgumentTypeWithFacets[]
+                                  {
+                                      (int? p, int? s) => { return EdmCoreModel.Instance.GetDecimal(p, s, true); },
+                                      (int? p, int? s) => { return EdmCoreModel.Instance.GetDecimal(p, s, true); }
+                                  }),
         };
 
         /// <summary>
@@ -76,47 +86,103 @@ namespace Microsoft.OData.Core.UriParser
         private static readonly FunctionSignature[] relationalSignatures = new FunctionSignature[]
         {
             // COMPAT 41: Type promotion in the product does not strictly follow the OIPI spec
-            new FunctionSignature(EdmCoreModel.Instance.GetInt32(false), EdmCoreModel.Instance.GetInt32(false)),
-            new FunctionSignature(EdmCoreModel.Instance.GetInt32(true), EdmCoreModel.Instance.GetInt32(true)),
-            new FunctionSignature(EdmCoreModel.Instance.GetInt64(false), EdmCoreModel.Instance.GetInt64(false)),
-            new FunctionSignature(EdmCoreModel.Instance.GetInt64(true), EdmCoreModel.Instance.GetInt64(true)),
-            new FunctionSignature(EdmCoreModel.Instance.GetSingle(false), EdmCoreModel.Instance.GetSingle(false)),
-            new FunctionSignature(EdmCoreModel.Instance.GetSingle(true), EdmCoreModel.Instance.GetSingle(true)),
-            new FunctionSignature(EdmCoreModel.Instance.GetDouble(false), EdmCoreModel.Instance.GetDouble(false)),
-            new FunctionSignature(EdmCoreModel.Instance.GetDouble(true), EdmCoreModel.Instance.GetDouble(true)),
-            new FunctionSignature(EdmCoreModel.Instance.GetDecimal(false), EdmCoreModel.Instance.GetDecimal(false)),
-            new FunctionSignature(EdmCoreModel.Instance.GetDecimal(true), EdmCoreModel.Instance.GetDecimal(true)),
-            new FunctionSignature(EdmCoreModel.Instance.GetString(true), EdmCoreModel.Instance.GetString(true)),
-            new FunctionSignature(EdmCoreModel.Instance.GetBinary(true), EdmCoreModel.Instance.GetBinary(true)),
-            new FunctionSignature(EdmCoreModel.Instance.GetBoolean(false), EdmCoreModel.Instance.GetBoolean(false)),
-            new FunctionSignature(EdmCoreModel.Instance.GetBoolean(true), EdmCoreModel.Instance.GetBoolean(true)),
-            new FunctionSignature(EdmCoreModel.Instance.GetGuid(false), EdmCoreModel.Instance.GetGuid(false)),
-            new FunctionSignature(EdmCoreModel.Instance.GetGuid(true), EdmCoreModel.Instance.GetGuid(true)),
-            new FunctionSignature(EdmCoreModel.Instance.GetDate(false), EdmCoreModel.Instance.GetDate(false)),
-            new FunctionSignature(EdmCoreModel.Instance.GetDate(true), EdmCoreModel.Instance.GetDate(true)),
-            new FunctionSignature(EdmCoreModel.Instance.GetTemporal(EdmPrimitiveTypeKind.DateTimeOffset, false), EdmCoreModel.Instance.GetTemporal(EdmPrimitiveTypeKind.DateTimeOffset, false)),
-            new FunctionSignature(EdmCoreModel.Instance.GetTemporal(EdmPrimitiveTypeKind.DateTimeOffset, true), EdmCoreModel.Instance.GetTemporal(EdmPrimitiveTypeKind.DateTimeOffset, true)),
-            new FunctionSignature(EdmCoreModel.Instance.GetTemporal(EdmPrimitiveTypeKind.Duration, false), EdmCoreModel.Instance.GetTemporal(EdmPrimitiveTypeKind.Duration, false)),
-            new FunctionSignature(EdmCoreModel.Instance.GetTemporal(EdmPrimitiveTypeKind.Duration, true), EdmCoreModel.Instance.GetTemporal(EdmPrimitiveTypeKind.Duration, true)),
-            new FunctionSignature(EdmCoreModel.Instance.GetTemporal(EdmPrimitiveTypeKind.TimeOfDay, false), EdmCoreModel.Instance.GetTemporal(EdmPrimitiveTypeKind.TimeOfDay, false)),
-            new FunctionSignature(EdmCoreModel.Instance.GetTemporal(EdmPrimitiveTypeKind.TimeOfDay, true), EdmCoreModel.Instance.GetTemporal(EdmPrimitiveTypeKind.TimeOfDay, true)),
+            new FunctionSignature(new[] { EdmCoreModel.Instance.GetInt32(false),   EdmCoreModel.Instance.GetInt32(false)   }, null),
+            new FunctionSignature(new[] { EdmCoreModel.Instance.GetInt32(true),    EdmCoreModel.Instance.GetInt32(true)    }, null),
+            new FunctionSignature(new[] { EdmCoreModel.Instance.GetInt64(false),   EdmCoreModel.Instance.GetInt64(false)   }, null),
+            new FunctionSignature(new[] { EdmCoreModel.Instance.GetInt64(true),    EdmCoreModel.Instance.GetInt64(true)    }, null),
+            new FunctionSignature(new[] { EdmCoreModel.Instance.GetSingle(false),  EdmCoreModel.Instance.GetSingle(false)  }, null),
+            new FunctionSignature(new[] { EdmCoreModel.Instance.GetSingle(true),   EdmCoreModel.Instance.GetSingle(true)   }, null),
+            new FunctionSignature(new[] { EdmCoreModel.Instance.GetDouble(false),  EdmCoreModel.Instance.GetDouble(false)  }, null),
+            new FunctionSignature(new[] { EdmCoreModel.Instance.GetDouble(true),   EdmCoreModel.Instance.GetDouble(true)   }, null),
+            new FunctionSignature(new[] { EdmCoreModel.Instance.GetDecimal(false), EdmCoreModel.Instance.GetDecimal(false) },
+                                  new FunctionSignature.CreateArgumentTypeWithFacets[]
+                                  {
+                                      (int? p, int? s) => { return EdmCoreModel.Instance.GetDecimal(p, s, false); },
+                                      (int? p, int? s) => { return EdmCoreModel.Instance.GetDecimal(p, s, false); }
+                                  }),
+            new FunctionSignature(new[] { EdmCoreModel.Instance.GetDecimal(true), EdmCoreModel.Instance.GetDecimal(true) },
+                                  new FunctionSignature.CreateArgumentTypeWithFacets[]
+                                  {
+                                      (int? p, int? s) => { return EdmCoreModel.Instance.GetDecimal(p, s, true); },
+                                      (int? p, int? s) => { return EdmCoreModel.Instance.GetDecimal(p, s, true); }
+                                  }),
+            new FunctionSignature(new[] { EdmCoreModel.Instance.GetString(true),   EdmCoreModel.Instance.GetString(true)   }, null),
+            new FunctionSignature(new[] { EdmCoreModel.Instance.GetBinary(true),   EdmCoreModel.Instance.GetBinary(true)   }, null),
+            new FunctionSignature(new[] { EdmCoreModel.Instance.GetBoolean(false), EdmCoreModel.Instance.GetBoolean(false) }, null),
+            new FunctionSignature(new[] { EdmCoreModel.Instance.GetBoolean(true),  EdmCoreModel.Instance.GetBoolean(true)  }, null),
+            new FunctionSignature(new[] { EdmCoreModel.Instance.GetGuid(false),    EdmCoreModel.Instance.GetGuid(false)    }, null),
+            new FunctionSignature(new[] { EdmCoreModel.Instance.GetGuid(true),     EdmCoreModel.Instance.GetGuid(true)     }, null),
+            new FunctionSignature(new[] { EdmCoreModel.Instance.GetDate(false),    EdmCoreModel.Instance.GetDate(false)    }, null),
+            new FunctionSignature(new[] { EdmCoreModel.Instance.GetDate(true),     EdmCoreModel.Instance.GetDate(true)     }, null),
+            new FunctionSignature(new[] { EdmCoreModel.Instance.GetTemporal(EdmPrimitiveTypeKind.DateTimeOffset, false), EdmCoreModel.Instance.GetTemporal(EdmPrimitiveTypeKind.DateTimeOffset, false) },
+                                  new FunctionSignature.CreateArgumentTypeWithFacets[]
+                                  {
+                                      (int? p, int? s) => { return EdmCoreModel.Instance.GetTemporal(EdmPrimitiveTypeKind.DateTimeOffset, p, false); },
+                                      (int? p, int? s) => { return EdmCoreModel.Instance.GetTemporal(EdmPrimitiveTypeKind.DateTimeOffset, p, false); }
+                                  }),
+            new FunctionSignature(new[] { EdmCoreModel.Instance.GetTemporal(EdmPrimitiveTypeKind.DateTimeOffset, true), EdmCoreModel.Instance.GetTemporal(EdmPrimitiveTypeKind.DateTimeOffset, true) },
+                                  new FunctionSignature.CreateArgumentTypeWithFacets[]
+                                  {
+                                      (int? p, int? s) => { return EdmCoreModel.Instance.GetTemporal(EdmPrimitiveTypeKind.DateTimeOffset, p, true); },
+                                      (int? p, int? s) => { return EdmCoreModel.Instance.GetTemporal(EdmPrimitiveTypeKind.DateTimeOffset, p, true); }
+                                  }),
+            new FunctionSignature(new[] { EdmCoreModel.Instance.GetTemporal(EdmPrimitiveTypeKind.Duration, false), EdmCoreModel.Instance.GetTemporal(EdmPrimitiveTypeKind.Duration, false) },
+                                  new FunctionSignature.CreateArgumentTypeWithFacets[]
+                                  {
+                                      (int? p, int? s) => { return EdmCoreModel.Instance.GetTemporal(EdmPrimitiveTypeKind.Duration, p, false); },
+                                      (int? p, int? s) => { return EdmCoreModel.Instance.GetTemporal(EdmPrimitiveTypeKind.Duration, p, false); }
+                                  }),
+            new FunctionSignature(new[] { EdmCoreModel.Instance.GetTemporal(EdmPrimitiveTypeKind.Duration, true), EdmCoreModel.Instance.GetTemporal(EdmPrimitiveTypeKind.Duration, true) },
+                                  new FunctionSignature.CreateArgumentTypeWithFacets[]
+                                  {
+                                      (int? p, int? s) => { return EdmCoreModel.Instance.GetTemporal(EdmPrimitiveTypeKind.Duration, p, true); },
+                                      (int? p, int? s) => { return EdmCoreModel.Instance.GetTemporal(EdmPrimitiveTypeKind.Duration, p, true); }
+                                  }),
+            new FunctionSignature(new[] { EdmCoreModel.Instance.GetTemporal(EdmPrimitiveTypeKind.TimeOfDay, false), EdmCoreModel.Instance.GetTemporal(EdmPrimitiveTypeKind.TimeOfDay, false) },
+                                  new FunctionSignature.CreateArgumentTypeWithFacets[]
+                                  {
+                                      (int? p, int? s) => { return EdmCoreModel.Instance.GetTemporal(EdmPrimitiveTypeKind.TimeOfDay, p, false); },
+                                      (int? p, int? s) => { return EdmCoreModel.Instance.GetTemporal(EdmPrimitiveTypeKind.TimeOfDay, p, false); }
+                                  }),
+            new FunctionSignature(new[] { EdmCoreModel.Instance.GetTemporal(EdmPrimitiveTypeKind.TimeOfDay, true), EdmCoreModel.Instance.GetTemporal(EdmPrimitiveTypeKind.TimeOfDay, true) },
+                                  new FunctionSignature.CreateArgumentTypeWithFacets[]
+                                  {
+                                      (int? p, int? s) => { return EdmCoreModel.Instance.GetTemporal(EdmPrimitiveTypeKind.TimeOfDay, p, true); },
+                                      (int? p, int? s) => { return EdmCoreModel.Instance.GetTemporal(EdmPrimitiveTypeKind.TimeOfDay, p, true); }
+                                  }),
         };
 
         /// <summary>Function signatures for the 'negate' operator.</summary>
         private static readonly FunctionSignature[] negationSignatures = new FunctionSignature[]
         {
-            new FunctionSignature(EdmCoreModel.Instance.GetInt32(false)),
-            new FunctionSignature(EdmCoreModel.Instance.GetInt32(true)),
-            new FunctionSignature(EdmCoreModel.Instance.GetInt64(false)),
-            new FunctionSignature(EdmCoreModel.Instance.GetInt64(true)),
-            new FunctionSignature(EdmCoreModel.Instance.GetSingle(false)),
-            new FunctionSignature(EdmCoreModel.Instance.GetSingle(true)),
-            new FunctionSignature(EdmCoreModel.Instance.GetDouble(false)),
-            new FunctionSignature(EdmCoreModel.Instance.GetDouble(true)),
-            new FunctionSignature(EdmCoreModel.Instance.GetDecimal(false)),
-            new FunctionSignature(EdmCoreModel.Instance.GetDecimal(true)),
-            new FunctionSignature(EdmCoreModel.Instance.GetDuration(false)),
-            new FunctionSignature(EdmCoreModel.Instance.GetDuration(true)),
+            new FunctionSignature(new[] { EdmCoreModel.Instance.GetInt32(false)  }, null),
+            new FunctionSignature(new[] { EdmCoreModel.Instance.GetInt32(true)   }, null),
+            new FunctionSignature(new[] { EdmCoreModel.Instance.GetInt64(false)  }, null),
+            new FunctionSignature(new[] { EdmCoreModel.Instance.GetInt64(true)   }, null),
+            new FunctionSignature(new[] { EdmCoreModel.Instance.GetSingle(false) }, null),
+            new FunctionSignature(new[] { EdmCoreModel.Instance.GetSingle(true)  }, null),
+            new FunctionSignature(new[] { EdmCoreModel.Instance.GetDouble(false) }, null),
+            new FunctionSignature(new[] { EdmCoreModel.Instance.GetDouble(true)  }, null),
+            new FunctionSignature(new[] { EdmCoreModel.Instance.GetDecimal(false) },
+                                  new FunctionSignature.CreateArgumentTypeWithFacets[]
+                                  {
+                                      (int? p, int? s) => { return EdmCoreModel.Instance.GetDecimal(p, s, false); }
+                                  }),
+            new FunctionSignature(new[] { EdmCoreModel.Instance.GetDecimal(true) },
+                                  new FunctionSignature.CreateArgumentTypeWithFacets[]
+                                  {
+                                      (int? p, int? s) => { return EdmCoreModel.Instance.GetDecimal(p, s, true); }
+                                  }),
+            new FunctionSignature(new[] { EdmCoreModel.Instance.GetDuration(false) },
+                                  new FunctionSignature.CreateArgumentTypeWithFacets[]
+                                  {
+                                      (int? p, int? s) => { return EdmCoreModel.Instance.GetTemporal(EdmPrimitiveTypeKind.Duration, p, false); }
+                                  }),
+            new FunctionSignature(new[] { EdmCoreModel.Instance.GetDuration(true) },
+                                  new FunctionSignature.CreateArgumentTypeWithFacets[]
+                                  {
+                                      (int? p, int? s) => { return EdmCoreModel.Instance.GetTemporal(EdmPrimitiveTypeKind.Duration, p, true); }
+                                  }),
         };
 
         /// <summary>Numeric type kinds.</summary>
@@ -135,15 +201,49 @@ namespace Microsoft.OData.Core.UriParser
             UnsignedIntegral = 3,
         }
 
+        /// <summary>
+        /// Gets the facets of a type.
+        /// </summary>
+        /// <param name="type">The type in question.</param>
+        /// <param name="precision">The precision facet.</param>
+        /// <param name="scale">The scale facet.</param>
+        internal static void GetTypeFacets(IEdmTypeReference type, out int? precision, out int? scale)
+        {
+            precision = null;
+            scale = null;
+
+            var decimalType = type as IEdmDecimalTypeReference;
+            if (decimalType != null)
+            {
+                precision = decimalType.Precision;
+                scale = decimalType.Scale;
+                return;
+            }
+
+            var temporalType = type as IEdmTemporalTypeReference;
+            if (temporalType != null)
+            {
+                precision = temporalType.Precision;
+                return;
+            }
+        }
+
         /// <summary>Checks that the operands (possibly promoted) are valid for the specified operation.</summary>
         /// <param name="operatorKind">The operator kind to promote the operand types for.</param>
         /// <param name="leftNode">The left operand node.</param>
         /// <param name="rightNode">The right operand node.</param>
         /// <param name="left">The left operand type after promotion.</param>
         /// <param name="right">The right operand type after promotion.</param>
+        /// <param name="facetsPromotionRules">Promotion rules for type facets.</param>
         /// <returns>True if a valid function signature was found that matches the given types after any necessary promotions are made.
         /// False if there is no binary operators </returns>
-        internal static bool PromoteOperandTypes(BinaryOperatorKind operatorKind, SingleValueNode leftNode, SingleValueNode rightNode, out IEdmTypeReference left, out IEdmTypeReference right)
+        internal static bool PromoteOperandTypes(
+            BinaryOperatorKind operatorKind,
+            SingleValueNode leftNode,
+            SingleValueNode rightNode,
+            out IEdmTypeReference left,
+            out IEdmTypeReference right,
+            TypeFacetsPromotionRules facetsPromotionRules)
         {
             left = leftNode.TypeReference;
             right = rightNode.TypeReference;
@@ -202,25 +302,25 @@ namespace Microsoft.OData.Core.UriParser
             }
 
             // The following will match primitive argument types to build in function signatures, choosing the best one possible.
-            FunctionSignature[] signatures = GetFunctionSignatures(operatorKind);
-
-            SingleValueNode[] argumentNodes = new SingleValueNode[] { leftNode, rightNode };
-            IEdmTypeReference[] argumentTypes = new IEdmTypeReference[] { left, right };
-            bool success = FindBestSignature(signatures, argumentNodes, argumentTypes) == 1;
+            FunctionSignature bestMatch;
+            bool success = FindBestSignature(
+                GetFunctionSignatures(operatorKind),
+                new[] { leftNode, rightNode },
+                new[] { left, right },
+                out bestMatch)
+                == 1;
 
             if (success)
             {
-                left = argumentTypes[0];
-                right = argumentTypes[1];
+                int? leftPrecision, leftScale;
+                int? rightPrecision, rightScale;
+                GetTypeFacets(left, out leftPrecision, out leftScale);
+                GetTypeFacets(right, out rightPrecision, out rightScale);
+                var resultPrecision = facetsPromotionRules.GetPromotedPrecision(leftPrecision, rightPrecision);
+                var resultScale = facetsPromotionRules.GetPromotedScale(leftScale, rightScale);
 
-                if (left == null)
-                {
-                    left = right;
-                }
-                else if (right == null)
-                {
-                    right = left;
-                }
+                left = bestMatch.GetArgumentTypeWithFacets(0, resultPrecision, resultScale);
+                right = bestMatch.GetArgumentTypeWithFacets(1, resultPrecision, resultScale);
             }
 
             return success;
@@ -241,14 +341,19 @@ namespace Microsoft.OData.Core.UriParser
                 return true;
             }
 
-            FunctionSignature[] signatures = GetFunctionSignatures(operatorKind);
-
-            IEdmTypeReference[] argumentTypes = new IEdmTypeReference[] { typeReference };
-            bool success = FindBestSignature(signatures, new SingleValueNode[] { null }, argumentTypes) == 1;
+            FunctionSignature bestMatch;
+            bool success = FindBestSignature(
+                GetFunctionSignatures(operatorKind),
+                new SingleValueNode[] { null },
+                new[] { typeReference },
+                out bestMatch)
+                == 1;
 
             if (success)
             {
-                typeReference = argumentTypes[0];
+                int? precision, scale;
+                GetTypeFacets(typeReference, out precision, out scale);
+                typeReference = bestMatch.GetArgumentTypeWithFacets(0, precision, scale);
             }
 
             return success;
@@ -448,16 +553,66 @@ namespace Microsoft.OData.Core.UriParser
         /// <returns>temporal function signatures for temporal for add</returns>
         private static IEnumerable<FunctionSignature> GetAdditionTermporalSignatures()
         {
-            yield return new FunctionSignature(EdmCoreModel.Instance.GetDateTimeOffset(false), EdmCoreModel.Instance.GetDuration(false));
-            yield return new FunctionSignature(EdmCoreModel.Instance.GetDateTimeOffset(true), EdmCoreModel.Instance.GetDuration(true));
-            yield return new FunctionSignature(EdmCoreModel.Instance.GetDuration(false), EdmCoreModel.Instance.GetDateTimeOffset(false));
-            yield return new FunctionSignature(EdmCoreModel.Instance.GetDuration(true), EdmCoreModel.Instance.GetDateTimeOffset(true));
-            yield return new FunctionSignature(EdmCoreModel.Instance.GetDuration(false), EdmCoreModel.Instance.GetDuration(false));
-            yield return new FunctionSignature(EdmCoreModel.Instance.GetDuration(true), EdmCoreModel.Instance.GetDuration(true));
-            yield return new FunctionSignature(EdmCoreModel.Instance.GetDate(false), EdmCoreModel.Instance.GetDuration(false));
-            yield return new FunctionSignature(EdmCoreModel.Instance.GetDate(true), EdmCoreModel.Instance.GetDuration(true));
-            yield return new FunctionSignature(EdmCoreModel.Instance.GetDuration(false), EdmCoreModel.Instance.GetDate(false));
-            yield return new FunctionSignature(EdmCoreModel.Instance.GetDuration(true), EdmCoreModel.Instance.GetDate(true));
+            yield return new FunctionSignature(new[] { EdmCoreModel.Instance.GetDateTimeOffset(false), EdmCoreModel.Instance.GetDuration(false) },
+                                               new FunctionSignature.CreateArgumentTypeWithFacets[]
+                                               {
+                                                   (int? p, int? s) => { return EdmCoreModel.Instance.GetTemporal(EdmPrimitiveTypeKind.DateTimeOffset, p, false); },
+                                                   (int? p, int? s) => { return EdmCoreModel.Instance.GetTemporal(EdmPrimitiveTypeKind.Duration, p, false); }
+                                               });
+            yield return new FunctionSignature(new[] { EdmCoreModel.Instance.GetDateTimeOffset(true), EdmCoreModel.Instance.GetDuration(true) },
+                                               new FunctionSignature.CreateArgumentTypeWithFacets[]
+                                               {
+                                                   (int? p, int? s) => { return EdmCoreModel.Instance.GetTemporal(EdmPrimitiveTypeKind.DateTimeOffset, p, true); },
+                                                   (int? p, int? s) => { return EdmCoreModel.Instance.GetTemporal(EdmPrimitiveTypeKind.Duration, p, true); }
+                                               });
+            yield return new FunctionSignature(new[] { EdmCoreModel.Instance.GetDuration(false), EdmCoreModel.Instance.GetDateTimeOffset(false) },
+                                               new FunctionSignature.CreateArgumentTypeWithFacets[]
+                                               {
+                                                   (int? p, int? s) => { return EdmCoreModel.Instance.GetTemporal(EdmPrimitiveTypeKind.Duration, p, false); },
+                                                   (int? p, int? s) => { return EdmCoreModel.Instance.GetTemporal(EdmPrimitiveTypeKind.DateTimeOffset, p, false); }
+                                               });
+            yield return new FunctionSignature(new[] { EdmCoreModel.Instance.GetDuration(true), EdmCoreModel.Instance.GetDateTimeOffset(true) },
+                                               new FunctionSignature.CreateArgumentTypeWithFacets[]
+                                               {
+                                                   (int? p, int? s) => { return EdmCoreModel.Instance.GetTemporal(EdmPrimitiveTypeKind.Duration, p, true); },
+                                                   (int? p, int? s) => { return EdmCoreModel.Instance.GetTemporal(EdmPrimitiveTypeKind.DateTimeOffset, p, true); }
+                                               });
+            yield return new FunctionSignature(new[] { EdmCoreModel.Instance.GetDuration(false), EdmCoreModel.Instance.GetDuration(false) },
+                                               new FunctionSignature.CreateArgumentTypeWithFacets[]
+                                               {
+                                                   (int? p, int? s) => { return EdmCoreModel.Instance.GetTemporal(EdmPrimitiveTypeKind.Duration, p, false); },
+                                                   (int? p, int? s) => { return EdmCoreModel.Instance.GetTemporal(EdmPrimitiveTypeKind.Duration, p, false); }
+                                               });
+            yield return new FunctionSignature(new[] { EdmCoreModel.Instance.GetDuration(true), EdmCoreModel.Instance.GetDuration(true) },
+                                               new FunctionSignature.CreateArgumentTypeWithFacets[]
+                                               {
+                                                   (int? p, int? s) => { return EdmCoreModel.Instance.GetTemporal(EdmPrimitiveTypeKind.Duration, p, true); },
+                                                   (int? p, int? s) => { return EdmCoreModel.Instance.GetTemporal(EdmPrimitiveTypeKind.Duration, p, true); }
+                                               });
+            yield return new FunctionSignature(new[] { EdmCoreModel.Instance.GetDate(false), EdmCoreModel.Instance.GetDuration(false) },
+                                               new FunctionSignature.CreateArgumentTypeWithFacets[]
+                                               {
+                                                   null,
+                                                   (int? p, int? s) => { return EdmCoreModel.Instance.GetTemporal(EdmPrimitiveTypeKind.Duration, p, false); }
+                                               });
+            yield return new FunctionSignature(new[] { EdmCoreModel.Instance.GetDate(true), EdmCoreModel.Instance.GetDuration(true) },
+                                               new FunctionSignature.CreateArgumentTypeWithFacets[]
+                                               {
+                                                   null,
+                                                   (int? p, int? s) => { return EdmCoreModel.Instance.GetTemporal(EdmPrimitiveTypeKind.Duration, p, true); }
+                                               });
+            yield return new FunctionSignature(new[] { EdmCoreModel.Instance.GetDuration(false), EdmCoreModel.Instance.GetDate(false) },
+                                               new FunctionSignature.CreateArgumentTypeWithFacets[]
+                                               {
+                                                   (int? p, int? s) => { return EdmCoreModel.Instance.GetTemporal(EdmPrimitiveTypeKind.Duration, p, false); },
+                                                   null
+                                               });
+            yield return new FunctionSignature(new[] { EdmCoreModel.Instance.GetDuration(true), EdmCoreModel.Instance.GetDate(true) },
+                                               new FunctionSignature.CreateArgumentTypeWithFacets[]
+                                               {
+                                                   (int? p, int? s) => { return EdmCoreModel.Instance.GetTemporal(EdmPrimitiveTypeKind.Duration, p, true); },
+                                                   null
+                                               });
         }
 
         /// <summary>
@@ -466,16 +621,56 @@ namespace Microsoft.OData.Core.UriParser
         /// <returns>temporal function signatures for temporal for sub</returns>
         private static IEnumerable<FunctionSignature> GetSubtractionTermporalSignatures()
         {
-            yield return new FunctionSignature(EdmCoreModel.Instance.GetDateTimeOffset(false), EdmCoreModel.Instance.GetDuration(false));
-            yield return new FunctionSignature(EdmCoreModel.Instance.GetDateTimeOffset(true), EdmCoreModel.Instance.GetDuration(true));
-            yield return new FunctionSignature(EdmCoreModel.Instance.GetDuration(false), EdmCoreModel.Instance.GetDuration(false));
-            yield return new FunctionSignature(EdmCoreModel.Instance.GetDuration(true), EdmCoreModel.Instance.GetDuration(true));
-            yield return new FunctionSignature(EdmCoreModel.Instance.GetDateTimeOffset(false), EdmCoreModel.Instance.GetDateTimeOffset(false));
-            yield return new FunctionSignature(EdmCoreModel.Instance.GetDateTimeOffset(true), EdmCoreModel.Instance.GetDateTimeOffset(true));
-            yield return new FunctionSignature(EdmCoreModel.Instance.GetDate(false), EdmCoreModel.Instance.GetDuration(false));
-            yield return new FunctionSignature(EdmCoreModel.Instance.GetDate(true), EdmCoreModel.Instance.GetDuration(true));
-            yield return new FunctionSignature(EdmCoreModel.Instance.GetDate(false), EdmCoreModel.Instance.GetDate(false));
-            yield return new FunctionSignature(EdmCoreModel.Instance.GetDate(true), EdmCoreModel.Instance.GetDate(true));
+            yield return new FunctionSignature(new[] { EdmCoreModel.Instance.GetDateTimeOffset(false), EdmCoreModel.Instance.GetDuration(false) },
+                                               new FunctionSignature.CreateArgumentTypeWithFacets[]
+                                               {
+                                                   (int? p, int? s) => { return EdmCoreModel.Instance.GetTemporal(EdmPrimitiveTypeKind.DateTimeOffset, p, false); },
+                                                   (int? p, int? s) => { return EdmCoreModel.Instance.GetTemporal(EdmPrimitiveTypeKind.Duration, p, false); }
+                                               });
+            yield return new FunctionSignature(new[] { EdmCoreModel.Instance.GetDateTimeOffset(true), EdmCoreModel.Instance.GetDuration(true) },
+                                               new FunctionSignature.CreateArgumentTypeWithFacets[]
+                                               {
+                                                   (int? p, int? s) => { return EdmCoreModel.Instance.GetTemporal(EdmPrimitiveTypeKind.DateTimeOffset, p, true); },
+                                                   (int? p, int? s) => { return EdmCoreModel.Instance.GetTemporal(EdmPrimitiveTypeKind.Duration, p, true); }
+                                               });
+            yield return new FunctionSignature(new[] { EdmCoreModel.Instance.GetDuration(false), EdmCoreModel.Instance.GetDuration(false) },
+                                               new FunctionSignature.CreateArgumentTypeWithFacets[]
+                                               {
+                                                   (int? p, int? s) => { return EdmCoreModel.Instance.GetTemporal(EdmPrimitiveTypeKind.Duration, p, false); },
+                                                   (int? p, int? s) => { return EdmCoreModel.Instance.GetTemporal(EdmPrimitiveTypeKind.Duration, p, false); }
+                                               });
+            yield return new FunctionSignature(new[] { EdmCoreModel.Instance.GetDuration(true), EdmCoreModel.Instance.GetDuration(true) },
+                                               new FunctionSignature.CreateArgumentTypeWithFacets[]
+                                               {
+                                                   (int? p, int? s) => { return EdmCoreModel.Instance.GetTemporal(EdmPrimitiveTypeKind.Duration, p, true); },
+                                                   (int? p, int? s) => { return EdmCoreModel.Instance.GetTemporal(EdmPrimitiveTypeKind.Duration, p, true); }
+                                               });
+            yield return new FunctionSignature(new[] { EdmCoreModel.Instance.GetDateTimeOffset(false), EdmCoreModel.Instance.GetDateTimeOffset(false) },
+                                               new FunctionSignature.CreateArgumentTypeWithFacets[]
+                                               {
+                                                   (int? p, int? s) => { return EdmCoreModel.Instance.GetTemporal(EdmPrimitiveTypeKind.DateTimeOffset, p, false); },
+                                                   (int? p, int? s) => { return EdmCoreModel.Instance.GetTemporal(EdmPrimitiveTypeKind.DateTimeOffset, p, false); }
+                                               });
+            yield return new FunctionSignature(new[] { EdmCoreModel.Instance.GetDateTimeOffset(true), EdmCoreModel.Instance.GetDateTimeOffset(true) },
+                                               new FunctionSignature.CreateArgumentTypeWithFacets[]
+                                               {
+                                                   (int? p, int? s) => { return EdmCoreModel.Instance.GetTemporal(EdmPrimitiveTypeKind.DateTimeOffset, p, true); },
+                                                   (int? p, int? s) => { return EdmCoreModel.Instance.GetTemporal(EdmPrimitiveTypeKind.DateTimeOffset, p, true); }
+                                               });
+            yield return new FunctionSignature(new[] { EdmCoreModel.Instance.GetDate(false), EdmCoreModel.Instance.GetDuration(false) },
+                                               new FunctionSignature.CreateArgumentTypeWithFacets[]
+                                               {
+                                                   null,
+                                                   (int? p, int? s) => { return EdmCoreModel.Instance.GetTemporal(EdmPrimitiveTypeKind.Duration, p, false); }
+                                               });
+            yield return new FunctionSignature(new[] { EdmCoreModel.Instance.GetDate(true), EdmCoreModel.Instance.GetDuration(true) },
+                                               new FunctionSignature.CreateArgumentTypeWithFacets[]
+                                               {
+                                                   null,
+                                                   (int? p, int? s) => { return EdmCoreModel.Instance.GetTemporal(EdmPrimitiveTypeKind.Duration, p, true); }
+                                               });
+            yield return new FunctionSignature(new[] { EdmCoreModel.Instance.GetDate(false), EdmCoreModel.Instance.GetDate(false) }, null);
+            yield return new FunctionSignature(new[] { EdmCoreModel.Instance.GetDate(true),  EdmCoreModel.Instance.GetDate(true)  }, null);
         }
 
         /// <summary>
@@ -538,13 +733,15 @@ namespace Microsoft.OData.Core.UriParser
         /// <param name="signatures">The candidate function signatures.</param>
         /// <param name="argumentNodes">The argument nodes, can be new {null,null}.</param>
         /// <param name="argumentTypes">The argument type references to match.</param>
+        /// <param name="bestMatch">The best signature found or null.</param>
         /// <returns>The number of "best match" methods.</returns>
-        private static int FindBestSignature(FunctionSignature[] signatures, SingleValueNode[] argumentNodes, IEdmTypeReference[] argumentTypes)
+        private static int FindBestSignature(FunctionSignature[] signatures, SingleValueNode[] argumentNodes, IEdmTypeReference[] argumentTypes, out FunctionSignature bestMatch)
         {
             Debug.Assert(signatures != null, "signatures != null");
             Debug.Assert(argumentTypes != null, "argumentTypes != null");
             Debug.Assert(signatures.All(s => s.ArgumentTypes != null && s.ArgumentTypes.All(t => t.IsODataPrimitiveTypeKind())), "All signatures must have only primitive argument types.");
 
+            bestMatch = null;
             List<FunctionSignature> applicableSignatures = signatures.Where(signature => IsApplicable(signature, argumentNodes, argumentTypes)).ToList();
             if (applicableSignatures.Count > 1)
             {
@@ -554,10 +751,10 @@ namespace Microsoft.OData.Core.UriParser
             int result = applicableSignatures.Count;
             if (result == 1)
             {
-                FunctionSignature signature = applicableSignatures[0];
+                bestMatch = applicableSignatures[0];
                 for (int i = 0; i < argumentTypes.Length; i++)
                 {
-                    argumentTypes[i] = signature.ArgumentTypes[i];
+                    argumentTypes[i] = bestMatch.ArgumentTypes[i];
                 }
 
                 result = 1;
@@ -571,20 +768,13 @@ namespace Microsoft.OData.Core.UriParser
                 {
                     if (applicableSignatures[0].ArgumentTypes[0].Definition.IsEquivalentTo(applicableSignatures[1].ArgumentTypes[0].Definition))
                     {
-                        FunctionSignature nullableMethod =
+                        bestMatch =
                             applicableSignatures[0].ArgumentTypes[0].IsNullable ?
                             applicableSignatures[0] :
                             applicableSignatures[1];
-                        argumentTypes[0] = nullableMethod.ArgumentTypes[0];
-                        argumentTypes[1] = nullableMethod.ArgumentTypes[1];
-
-                        // TODO: why is this necessary? We keep it here for now since the product has it but assert
-                        //       that nothing new was found.
-                        int signatureCount = FindBestSignature(signatures, argumentNodes, argumentTypes);
-                        Debug.Assert(signatureCount == 1, "signatureCount == 1");
-                        Debug.Assert(argumentTypes[0] == nullableMethod.ArgumentTypes[0], "argumentTypes[0] == nullableMethod.ArgumentTypes[0]");
-                        Debug.Assert(argumentTypes[1] == nullableMethod.ArgumentTypes[1], "argumentTypes[1] == nullableMethod.ArgumentTypes[1]");
-                        return signatureCount;
+                        argumentTypes[0] = bestMatch.ArgumentTypes[0];
+                        argumentTypes[1] = bestMatch.ArgumentTypes[1];
+                        return 1;
                     }
                 }
             }

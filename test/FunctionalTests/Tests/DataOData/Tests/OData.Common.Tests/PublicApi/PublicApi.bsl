@@ -5154,6 +5154,13 @@ public class Microsoft.OData.Core.UriParser.ODataQueryOptionParser {
 	public System.Nullable`1[[System.Int64]] ParseTop ()
 }
 
+public class Microsoft.OData.Core.UriParser.TypeFacetsPromotionRules {
+	public TypeFacetsPromotionRules ()
+
+	public virtual System.Nullable`1[[System.Int32]] GetPromotedPrecision (System.Nullable`1[[System.Int32]] left, System.Nullable`1[[System.Int32]] right)
+	public virtual System.Nullable`1[[System.Int32]] GetPromotedScale (System.Nullable`1[[System.Int32]] left, System.Nullable`1[[System.Int32]] right)
+}
+
 public sealed class Microsoft.OData.Core.UriParser.FunctionSignatureWithReturnType {
 	public FunctionSignatureWithReturnType (Microsoft.OData.Edm.IEdmTypeReference returnType, Microsoft.OData.Edm.IEdmTypeReference[] argumentTypes)
 
@@ -5295,6 +5302,7 @@ public class Microsoft.OData.Core.UriParser.Metadata.ODataUriResolver {
 	public ODataUriResolver ()
 
 	bool EnableCaseInsensitive  { public virtual get; public virtual set; }
+	Microsoft.OData.Core.UriParser.TypeFacetsPromotionRules TypeFacetsPromotionRules  { public get; public set; }
 
 	public virtual void PromoteBinaryOperandTypes (Microsoft.OData.Core.UriParser.TreeNodeKinds.BinaryOperatorKind binaryOperatorKind, Microsoft.OData.Core.UriParser.Semantic.SingleValueNode& leftNode, Microsoft.OData.Core.UriParser.Semantic.SingleValueNode& rightNode, out Microsoft.OData.Edm.IEdmTypeReference& typeReference)
 	public virtual System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.IEdmOperation]] ResolveBoundOperations (Microsoft.OData.Edm.IEdmModel model, string identifier, Microsoft.OData.Edm.IEdmType bindingType)

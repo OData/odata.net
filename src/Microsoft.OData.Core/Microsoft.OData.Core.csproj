@@ -475,6 +475,7 @@
     <Compile Include="UriParser\Parsers\UriPathParser.cs" />
     <Compile Include="UriParser\Parsers\UriQueryExpressionParser.cs" />
     <Compile Include="UriParser\Parsers\UriTemplateParser.cs" />
+    <Compile Include="UriParser\TypeFacetsPromotionRules.cs" />
     <Compile Include="UriParser\QueryNodeUtils.cs" />
     <Compile Include="UriParser\QueryOptionUtils.cs" />
     <Compile Include="UriParser\ReadOnlyEnumerableForUriParser.cs" />

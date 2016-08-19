@@ -1791,6 +1791,9 @@
     <Compile Include="..\UriParser\FunctionSignatureWithReturnType.cs">
       <Link>Microsoft\OData\Core\UriParser\FunctionSignatureWithReturnType.cs</Link>
     </Compile>
+    <Compile Include="..\UriParser\TypeFacetsPromotionRules.cs">
+      <Link>Microsoft\OData\Core\UriParser\TypeFacetsPromotionRules.cs</Link>
+    </Compile>
     <Compile Include="..\ValidatorFactory.cs">
       <Link>ValidatorFactory.cs</Link>
     </Compile>

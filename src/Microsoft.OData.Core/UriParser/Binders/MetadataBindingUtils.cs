@@ -23,7 +23,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         /// If the source node is not of the specified type, then we check if type promotion is possible and inject a convert node.
         /// If the source node is the same type as the target type (or if the target type is null), we just return the source node as is.
         /// </summary>
-        /// <param name="source">The source node to apply the convertion to.</param>
+        /// <param name="source">The source node to apply the conversion to.</param>
         /// <param name="targetTypeReference">The target primitive type. May be null - this method will do nothing in that case.</param>
         /// <returns>The converted query node, or the original source node unchanged.</returns>
         internal static SingleValueNode ConvertToTypeIfNeeded(SingleValueNode source, IEdmTypeReference targetTypeReference)
@@ -92,7 +92,20 @@ namespace Microsoft.OData.Core.UriParser.Parsers
                             return new ConstantNode(targetPrimitiveValue);
                         }
 
-                        return new ConstantNode(targetPrimitiveValue, constantNode.LiteralText);
+                        var candidate = new ConstantNode(targetPrimitiveValue, constantNode.LiteralText);
+                        var decimalType = candidate.TypeReference as IEdmDecimalTypeReference;
+                        if (decimalType != null)
+                        {
+                            var targetDecimalType = (IEdmDecimalTypeReference)targetTypeReference;
+                            return decimalType.Precision == targetDecimalType.Precision &&
+                                   decimalType.Scale == targetDecimalType.Scale ?
+                                   (SingleValueNode)candidate :
+                                   (SingleValueNode)(new ConvertNode(candidate, targetTypeReference));
+                        }
+                        else
+                        {
+                            return candidate;
+                        }
                     }
                     else
                     {

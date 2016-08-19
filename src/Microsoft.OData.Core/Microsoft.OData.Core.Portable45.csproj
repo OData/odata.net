@@ -588,6 +588,7 @@
     <Compile Include="UriParser\TreeNodeKinds\QueryTokenKind.cs" />
     <Compile Include="UriParser\TreeNodeKinds\RequestTargetKind.cs" />
     <Compile Include="UriParser\TreeNodeKinds\UnaryOperatorKind.cs" />
+    <Compile Include="UriParser\TypeFacetsPromotionRules.cs" />
     <Compile Include="UriParser\TypePromotionUtils.cs" />
     <Compile Include="UriParser\UriFunctionsHelper.cs" />
     <Compile Include="UriParser\UriQueryConstants.cs" />

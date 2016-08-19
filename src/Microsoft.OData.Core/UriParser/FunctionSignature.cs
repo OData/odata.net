@@ -6,6 +6,7 @@
 
 namespace Microsoft.OData.Core.UriParser
 {
+    using System.Diagnostics;
     using Microsoft.OData.Edm;
 
     /// <summary>
@@ -13,27 +14,64 @@ namespace Microsoft.OData.Core.UriParser
     /// </summary>
     internal sealed class FunctionSignature
     {
-        /// <summary>The argument types for this function signature.</summary>
+        /// <summary>
+        /// The argument types for this function signature.
+        /// </summary>
         private readonly IEdmTypeReference[] argumentTypes;
 
         /// <summary>
-        /// Constructor taking all the argument types.
+        /// Factories for creating argument types with proper facets.
+        /// </summary>
+        private CreateArgumentTypeWithFacets[] createArgumentTypesWithFacets;
+
+        /// <summary>
+        /// Constructor taking all the argument types, and the factories for creating argument types with proper facets.
         /// </summary>
         /// <param name="argumentTypes">The argument types for this function signature.</param>
-        internal FunctionSignature(params IEdmTypeReference[] argumentTypes)
+        /// <param name="createArgumentTypesWithFacets">Factories for creating argument types with proper facets.</param>
+        internal FunctionSignature(
+            IEdmTypeReference[] argumentTypes,
+            CreateArgumentTypeWithFacets[] createArgumentTypesWithFacets)
         {
             this.argumentTypes = argumentTypes;
+            this.createArgumentTypesWithFacets = createArgumentTypesWithFacets;
         }
+
+        /// <summary>
+        /// Delegate for creating an argument type with specified facets.
+        /// </summary>
+        /// <param name="precision">The precision facet.</param>
+        /// <param name="scale">The scale facet.</param>
+        /// <returns>An argument type with specified facets.</returns>
+        internal delegate IEdmTypeReference CreateArgumentTypeWithFacets(int? precision, int? scale);
 
         /// <summary>
         /// The argument types for this function signature.
         /// </summary>
-        public IEdmTypeReference[] ArgumentTypes 
+        internal IEdmTypeReference[] ArgumentTypes
         {
             get
             {
                 return this.argumentTypes;
             }
+        }
+
+        /// <summary>
+        /// Gets the type with specified facets for the index-th argument.
+        /// </summary>
+        /// <param name="index">Index of the argument for which to get the type for.</param>
+        /// <param name="precision">The precision facet.</param>
+        /// <param name="scale">The scale facet.</param>
+        /// <returns>The type with specified facets for the index-th argument.</returns>
+        internal IEdmTypeReference GetArgumentTypeWithFacets(int index, int? precision, int? scale)
+        {
+            if (createArgumentTypesWithFacets == null)
+            {
+                return argumentTypes[index];
+            }
+
+            var create = createArgumentTypesWithFacets[index];
+            return create != null ? create(precision, scale) : argumentTypes[index];
         }
     }
 }
