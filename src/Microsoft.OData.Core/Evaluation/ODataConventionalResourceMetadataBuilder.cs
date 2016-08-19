@@ -81,7 +81,8 @@ namespace Microsoft.OData.Evaluation
         /// Gets edit url of current resource.
         /// Computes edit url of current resource from:
         /// 1. NonComputedEditLink
-        /// 2. Parent edit url
+        /// 2. CanonicalUrl
+        /// 3. Parent edit url
         /// </summary>
         /// <returns>The edit url of current resource.</returns>
         /// <remarks>The method is used to compute edit Url for current resource, including complex.</remarks>
@@ -98,26 +99,37 @@ namespace Microsoft.OData.Evaluation
                 return this.editUrl = this.resource.NonComputedEditLink;
             }
 
-            // compute edit url from parent
-            var parent = this.ParentMetadataBuilder as ODataConventionalResourceMetadataBuilder;
-            if (this.NameAsProperty != null
-                && parent != null
-                && parent.GetEditUrl() != null)
+            // Compute editUrl from canonicalUrl
+            var canonicalUrl = this.GetCanonicalUrl();
+            if (canonicalUrl != null)
             {
-                // If parent is collection of complex, the edit url for this resource should be null.
-                if (parent.IsFromCollection && !(parent is ODataConventionalEntityMetadataBuilder))
+                this.editUrl = canonicalUrl;
+            }
+            else
+            {
+                // compute edit url from parent
+                var parent = this.ParentMetadataBuilder as ODataConventionalResourceMetadataBuilder;
+                if (this.NameAsProperty != null
+                    && parent != null
+                    && parent.GetEditUrl() != null)
                 {
-                    return this.editUrl = null;
-                }
+                    // If parent is collection of complex, the edit url for this resource should be null.
+                    if (parent.IsFromCollection && !(parent is ODataConventionalEntityMetadataBuilder))
+                    {
+                        return this.editUrl = null;
+                    }
 
-                // editUrl = parentEditUrl/propertyName
-                this.editUrl = new Uri(parent.GetEditUrl() + "/" + this.NameAsProperty, UriKind.RelativeOrAbsolute);
-
-                // Append possible type cast
-                if (this.ResourceMetadataContext.ActualResourceTypeName != this.ResourceMetadataContext.TypeContext.ExpectedResourceTypeName)
-                {
-                    this.editUrl = this.UriBuilder.AppendTypeSegment(editUrl, this.ResourceMetadataContext.ActualResourceTypeName);
+                    // editUrl = parentEditUrl/propertyName
+                    this.editUrl = new Uri(parent.GetEditUrl() + "/" + this.NameAsProperty, UriKind.RelativeOrAbsolute);
                 }
+            }
+
+            // Append possible type cast
+            if (this.editUrl != null && this.ResourceMetadataContext.ActualResourceTypeName !=
+                this.ResourceMetadataContext.TypeContext.ExpectedResourceTypeName)
+            {
+                this.editUrl = this.UriBuilder.AppendTypeSegment(editUrl,
+                    this.ResourceMetadataContext.ActualResourceTypeName);
             }
 
             return this.editUrl;
@@ -171,7 +183,8 @@ namespace Microsoft.OData.Evaluation
                 if (this.ResourceMetadataContext.ActualResourceTypeName !=
                     this.ResourceMetadataContext.TypeContext.ExpectedResourceTypeName)
                 {
-                    this.readUrl = this.UriBuilder.AppendTypeSegment(readUrl, this.ResourceMetadataContext.ActualResourceTypeName);
+                    this.readUrl = this.UriBuilder.AppendTypeSegment(readUrl,
+                        this.ResourceMetadataContext.ActualResourceTypeName);
                 }
             }
 
@@ -222,11 +235,19 @@ namespace Microsoft.OData.Evaluation
                         typeContextWithModel.ExpectedResourceType.FindProperty(
                             this.NameAsProperty) == null)
                     {
-                        this.canonicalUrl = this.UriBuilder.AppendTypeSegment(canonicalUrl, parent.ResourceMetadataContext.ActualResourceTypeName);
+                        this.canonicalUrl = this.UriBuilder.AppendTypeSegment(canonicalUrl,
+                            parent.ResourceMetadataContext.ActualResourceTypeName);
                     }
                 }
 
                 this.canonicalUrl = new Uri(this.canonicalUrl + "/" + this.NameAsProperty, UriKind.RelativeOrAbsolute);
+            }
+            else
+            {
+                if (this.ODataUri != null && this.ODataUri.Path.Count != 0)
+                {
+                    this.canonicalUrl = this.ODataUri.BuildUri(ODataUrlKeyDelimiter.Parentheses);
+                }
             }
 
             return this.canonicalUrl;

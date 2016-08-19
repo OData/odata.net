@@ -212,5 +212,20 @@ namespace Microsoft.OData.UriParser
         {
             return new ODataExpandPath(path);
         }
+
+        /// <summary>
+        /// Gets the target navigation source to the ODataPath.
+        /// </summary>
+        /// <param name="path">Path to compute the set for.</param>
+        /// <returns>The target navigation source to the ODataPath.</returns>
+        internal static IEdmNavigationSource TargetNavigationSource(this ODataPath path)
+        {
+            if (path == null)
+            {
+                return null;
+            }
+
+            return new ODataPathInfo(path).TargetNavigationSource;
+        }
     }
 }

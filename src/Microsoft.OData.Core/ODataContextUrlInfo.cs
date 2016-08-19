@@ -165,6 +165,7 @@ namespace Microsoft.OData
                 NavigationSource = typeContext.NavigationSourceName,
                 TypeCast = typeContext.NavigationSourceEntityTypeName == null
                            || typeContext.ExpectedResourceTypeName == null
+                           || typeContext.ExpectedResourceType is IEdmComplexType
                            || typeContext.NavigationSourceEntityTypeName == typeContext.ExpectedResourceTypeName
                            ? null : typeContext.ExpectedResourceTypeName,
                 TypeName = typeName,

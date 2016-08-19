@@ -636,6 +636,61 @@ namespace Microsoft.OData.Tests
         }
 
         [Fact]
+        public void WriteAndReadNavUnderComplexWithTypeCastWithFullMetadata()
+        {
+            var complexType = Model.FindType("DefaultNs.Address") as IEdmStructuredType;
+            var uriParser = new ODataUriParser(Model, ServiceRoot, new Uri("http://host/People('abc')/Address/WorkAddress?$expand=DefaultNs.WorkAddress/City2($expand=Region)"), null);
+            var odataUri = uriParser.ParseUri();
+
+            ODataResource workAddress = new ODataResource() { TypeName = "DefaultNs.WorkAddress", Properties = new[] { new ODataProperty { Name = "Road", Value = "Ziyue" } } };
+            ODataNestedResourceInfo nestedCityInfo = new ODataNestedResourceInfo() { Name = "City2", IsCollection = false };
+            ODataResource city = new ODataResource() { Properties = new[] { new ODataProperty { Name = "ZipCode", Value = 222 } } };
+            ODataNestedResourceInfo nestedInfo = new ODataNestedResourceInfo() { Name = "Region", IsCollection = false };
+            ODataResource region = new ODataResource() { Properties = new[] { new ODataProperty { Name = "Name", Value = "China" } } };
+
+            string output = WriteJsonLightEntry(Model, null, complexType, odataUri, (writer) =>
+            {
+                writer.WriteStart(workAddress);
+                writer.WriteStart(nestedCityInfo);
+                writer.WriteStart(city);
+                writer.WriteStart(nestedInfo);
+                writer.WriteStart(region);
+                writer.WriteEnd();
+                writer.WriteEnd();
+                writer.WriteEnd();
+                writer.WriteEnd();
+                writer.WriteEnd();
+            }, false, true);
+
+            const string expectedPayload =
+                "{\"@odata.context\":\"http://host/$metadata#People('abc')/Address/WorkAddress\"," +
+                "\"@odata.type\":\"#DefaultNs.WorkAddress\"," +
+                "\"Road\":\"Ziyue\"," +
+                "\"City2\":{" +
+                    "\"@odata.id\":\"City(222)\"," +
+                    "\"@odata.editLink\":\"City(222)\"," +
+                    "\"ZipCode\":222," +
+                    "\"Region@odata.associationLink\":\"http://host/City(222)/Region/$ref\"," +
+                    "\"Region@odata.navigationLink\":\"http://host/City(222)/Region\"," +
+                    "\"Region\":{" +
+                        "\"@odata.id\":\"Regions('China')\"," +
+                        "\"@odata.editLink\":\"Regions('China')\"," +
+                        "\"Name\":\"China\"}}}";
+
+            Assert.Equal(expectedPayload, output);
+
+            var entryList = ReadPayload(expectedPayload, Model, null, complexType).OfType<ODataResource>().ToList();
+            entryList[0].Id.Should().Be(new Uri("http://host/Regions('China')"));
+            entryList[0].TypeName.Should().Be("DefaultNs.Region");
+
+            entryList[1].Id.Should().Be(new Uri("http://host/City(222)"));
+            entryList[1].TypeName.Should().Be("DefaultNs.City");
+
+            entryList[2].Id.Should().Be(null);
+            entryList[2].TypeName.Should().Be("DefaultNs.WorkAddress");
+        }
+
+        [Fact]
         public void WriteAndReadNavUnderComplexWithSplitBindingPath()
         {
             var complexType = Model.FindType("DefaultNs.Address") as IEdmStructuredType;
@@ -994,7 +1049,7 @@ namespace Microsoft.OData.Tests
                 "\"ID\":\"abc\"," +
                 "\"Complex\":{" +
                     "\"Prop1\":123," +
-                    "\"ContainedUnderComplex@odata.context\":\"http://host/$metadata#Entities1/Complex/ContainedUnderComplex\"," +
+                    "\"ContainedUnderComplex@odata.context\":\"http://host/$metadata#Entities1('abc')/Complex/ContainedUnderComplex\"," +
                     "\"ContainedUnderComplex@odata.associationLink\":\"http://host/Entities1('abc')/Complex/ContainedUnderComplex/$ref\"," +
                     "\"ContainedUnderComplex@odata.navigationLink\":\"http://host/Entities1('abc')/Complex/ContainedUnderComplex\"," +
                     "\"ContainedUnderComplex\":[{" +
@@ -1037,8 +1092,7 @@ namespace Microsoft.OData.Tests
                 writer.WriteEnd();
             }, false, isFullMetadata: true);
 
-            // The context url of contained does not include type cast for now, but it will append type when computing id in reader.
-            Assert.True(output.Contains("\"ContainedUnderDerivedComplex@odata.context\":\"http://host/$metadata#Entities1/Complex/ContainedUnderDerivedComplex/$entity\""));
+            Assert.True(output.Contains("\"ContainedUnderDerivedComplex@odata.context\":\"http://host/$metadata#Entities1('abc')/Complex/NS.DerivedComplexType/ContainedUnderDerivedComplex/$entity\""));
             Assert.True(output.Contains("\"ContainedUnderDerivedComplex@odata.associationLink\":\"http://host/Entities1('abc')/Complex/NS.DerivedComplexType/ContainedUnderDerivedComplex/$ref\"," +
                                         "\"ContainedUnderDerivedComplex@odata.navigationLink\":\"http://host/Entities1('abc')/Complex/NS.DerivedComplexType/ContainedUnderDerivedComplex\""));
         }
@@ -1057,7 +1111,7 @@ namespace Microsoft.OData.Tests
             ODataResourceSet set = new ODataResourceSet();
             ODataResource contained = new ODataResource() { Properties = new[] { new ODataProperty { Name = "ID", Value = "def" } } };
 
-            string output = WriteJsonLightEntry(model, entitySet, complexType, odataUri, (writer) =>
+            string output = WriteJsonLightEntry(model, null, complexType, odataUri, (writer) =>
             {
                 writer.WriteStart(complex);
                 writer.WriteStart(containedInfo);
@@ -1072,6 +1126,23 @@ namespace Microsoft.OData.Tests
             // Verify the id of contained entity
             Assert.True(output.Contains("\"@odata.id\":\"Entities1('abc')/Complex/ContainedUnderComplex('def')\""));
         }
+
+        [Fact]
+        public void ReadTopLevelComplexWithContainment()
+        {
+            var model = ContainmentComplexModel();
+            var complexType = model.FindType("NS.ComplexType") as IEdmComplexType;
+            string payload = "{" +
+               "\"@odata.context\":\"http://host/$metadata#Entities1('abc')/Complex\"," +
+                   "\"Prop1\":123," +
+                   "\"ContainedUnderComplex\":[{" +
+                       "\"ID\":\"def\"," +
+                       "\"NavUnderContained\":[{\"ID\":\"efg\"}]}]}";
+
+            var itemsList = ReadPayload(payload, model, null, complexType).OfType<ODataResource>().ToList();
+            itemsList[0].Id.Should().Be(new Uri("http://host/Entities2('efg')"));
+            itemsList[1].Id.Should().Be(new Uri("http://host/Entities1('abc')/Complex/ContainedUnderComplex('def')"));
+;        }
 
         #endregion
 
@@ -1176,10 +1247,10 @@ namespace Microsoft.OData.Tests
             city.AddKeys(cityId);
 
             var region = new EdmEntityType("DefaultNs", "Region");
-            var countryId = region.AddStructuralProperty("Name", EdmCoreModel.Instance.GetString(false));
-            region.AddKeys(countryId);
+            var regionId = region.AddStructuralProperty("Name", EdmCoreModel.Instance.GetString(false));
+            region.AddKeys(regionId);
 
-            var cityCountry = city.AddUnidirectionalNavigation(new EdmNavigationPropertyInfo()
+            var cityRegion = city.AddUnidirectionalNavigation(new EdmNavigationPropertyInfo()
             {
                 Name = "Region",
                 Target = region,
@@ -1225,7 +1296,7 @@ namespace Microsoft.OData.Tests
             people.AddNavigationTarget(navP, cities, new EdmPathExpression("Address/City"));
             people.AddNavigationTarget(navP, cities, new EdmPathExpression("Addresses/City"));
             people.AddNavigationTarget(navP2, cities, new EdmPathExpression("Address/WorkAddress/DefaultNs.WorkAddress/City2"));
-            cities.AddNavigationTarget(cityCountry, regions);
+            cities.AddNavigationTarget(cityRegion, regions);
             entityContainer.AddElement(people);
             entityContainer.AddElement(cities);
 
