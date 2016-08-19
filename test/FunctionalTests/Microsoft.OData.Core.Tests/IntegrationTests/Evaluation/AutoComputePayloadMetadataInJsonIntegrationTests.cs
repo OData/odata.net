@@ -727,7 +727,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Evaluation
         {
             const string expectedPayload =
                 "{" +
-                    "\"@odata.context\":\"http://example.com/$metadata#EntitySet(StreamProp1,Namespace.AlwaysBindableAction1,Namespace.AlwaysBindableFunction1,DeferredNavLink,ExpandedNavLink,ExpandedNavLink(StreamProp1,Namespace.AlwaysBindableAction1,ExpandedNavLink,ExpandedNavLink(StreamProp2,Namespace.AlwaysBindableAction1)))\"," +
+                    "\"@odata.context\":\"http://example.com/$metadata#EntitySet(StreamProp1,Namespace.AlwaysBindableAction1,Namespace.AlwaysBindableFunction1,DeferredNavLink,ExpandedNavLink(StreamProp1,Namespace.AlwaysBindableAction1,ExpandedNavLink(StreamProp2,Namespace.AlwaysBindableAction1)))\"," +
                     "\"value\":[" +
                     "{" +
                         "\"@odata.id\":\"EntitySet(123)\"," +
@@ -1605,7 +1605,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Evaluation
         {
             const string expectedPayload =
                 "{" +
-                    "\"@odata.context\":\"http://example.com/$metadata#EntitySet(StreamProp1,Namespace.AlwaysBindableAction1,Namespace.AlwaysBindableFunction1,DeferredNavLink,ExpandedNavLink,ExpandedNavLink(StreamProp1,Namespace.AlwaysBindableAction1,ExpandedNavLink,ExpandedNavLink(StreamProp2,Namespace.AlwaysBindableAction1)))\"," +
+                    "\"@odata.context\":\"http://example.com/$metadata#EntitySet(StreamProp1,Namespace.AlwaysBindableAction1,Namespace.AlwaysBindableFunction1,DeferredNavLink,ExpandedNavLink(StreamProp1,Namespace.AlwaysBindableAction1,ExpandedNavLink(StreamProp2,Namespace.AlwaysBindableAction1)))\"," +
                     "\"value\":[" +
                     "{" +
                         "\"@odata.type\":\"#Namespace.EntityType\"," +
@@ -1679,7 +1679,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Evaluation
         {
             const string expectedPayload =
                 "{" +
-                    "\"@odata.context\":\"http://example.com/$metadata#EntitySet(StreamProp1,Namespace.AlwaysBindableAction1,Namespace.AlwaysBindableFunction1,DeferredNavLink,ExpandedNavLink,ExpandedNavLink(StreamProp1,Namespace.AlwaysBindableAction1,ExpandedNavLink,ExpandedNavLink(StreamProp2,Namespace.AlwaysBindableAction1)))\"," +
+                    "\"@odata.context\":\"http://example.com/$metadata#EntitySet(StreamProp1,Namespace.AlwaysBindableAction1,Namespace.AlwaysBindableFunction1,DeferredNavLink,ExpandedNavLink(StreamProp1,Namespace.AlwaysBindableAction1,ExpandedNavLink(StreamProp2,Namespace.AlwaysBindableAction1)))\"," +
                     "\"value\":[" +
                     "{" +
                         "\"@odata.type\":\"#Namespace.EntityType\"," +
@@ -1791,7 +1791,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Evaluation
         {
             const string expectedPayload =
                 "{" +
-                    "\"@odata.context\":\"http://example.com/$metadata#EntitySet(StreamProp1,Namespace.AlwaysBindableAction1,Namespace.AlwaysBindableFunction1,DeferredNavLink,ExpandedNavLink,ExpandedNavLink(StreamProp1,Namespace.AlwaysBindableAction1,ExpandedNavLink,ExpandedNavLink(StreamProp2,Namespace.AlwaysBindableAction1)))\"," +
+                    "\"@odata.context\":\"http://example.com/$metadata#EntitySet(StreamProp1,Namespace.AlwaysBindableAction1,Namespace.AlwaysBindableFunction1,DeferredNavLink,ExpandedNavLink(StreamProp1,Namespace.AlwaysBindableAction1,ExpandedNavLink(StreamProp2,Namespace.AlwaysBindableAction1)))\"," +
                     "\"value\":[" +
                     "{" +
                         "\"ID\":123," +
