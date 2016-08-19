@@ -455,6 +455,18 @@ namespace Microsoft.OData.Evaluation
             {
                 Debug.Assert(value != null, "value != null. Null values need to be handled differently in some cases.");
 
+                var enumValue = value as ODataEnumValue;
+                if (enumValue != null)
+                {
+                    if (string.IsNullOrEmpty(enumValue.TypeName))
+                    {
+                        // TODO: [Sizhong Du] Replace with error string #647.
+                        throw new ODataException("Type name should not be null or empty when serializing an Enum value for URI key.");
+                    }
+
+                    return enumValue.TypeName + "'" + this.FormatAndEscapeLiteral(enumValue.Value) + "'";
+                }
+
                 string result = this.FormatAndEscapeLiteral(value);
 
                 if (value is byte[])

@@ -177,7 +177,7 @@ namespace Microsoft.OData.Evaluation
                 IEnumerable<IEdmStructuralProperty> edmKeyProperties = actualEntityType.Key();
                 if (edmKeyProperties != null)
                 {
-                    keyProperties = edmKeyProperties.Select(p => new KeyValuePair<string, object>(p.Name, GetPrimitivePropertyClrValue(resource, p.Name, actualEntityTypeName, /*isKeyProperty*/false))).ToArray();
+                    keyProperties = edmKeyProperties.Select(p => new KeyValuePair<string, object>(p.Name, GetPrimitiveOrEnumPropertyValue(resource, p.Name, actualEntityTypeName, /*isKeyProperty*/false))).ToArray();
                 }
             }
 
@@ -186,14 +186,14 @@ namespace Microsoft.OData.Evaluation
         }
 
         /// <summary>
-        /// Gets the the CLR value for a primitive property.
+        /// Gets the value for a primitive or enum property.
         /// </summary>
         /// <param name="resource">The resource to get the property value.</param>
         /// <param name="propertyName">Name of the property.</param>
         /// <param name="entityTypeName">The name of the entity type to get the property value.</param>
         /// <param name="isKeyProperty">true if the property is a key property, false otherwise.</param>
-        /// <returns>The clr value of the property.</returns>
-        private static object GetPrimitivePropertyClrValue(ODataResource resource, string propertyName, string entityTypeName, bool isKeyProperty)
+        /// <returns>The value of the property.</returns>
+        private static object GetPrimitiveOrEnumPropertyValue(ODataResource resource, string propertyName, string entityTypeName, bool isKeyProperty)
         {
             Debug.Assert(resource != null, "resource != null");
 
@@ -203,17 +203,17 @@ namespace Microsoft.OData.Evaluation
                 throw new ODataException(Strings.EdmValueUtils_PropertyDoesntExist(entityTypeName, propertyName));
             }
 
-            return GetPrimitivePropertyClrValue(entityTypeName, property, isKeyProperty);
+            return GetPrimitiveOrEnumPropertyValue(entityTypeName, property, isKeyProperty);
         }
 
         /// <summary>
-        /// Gets the CLR value for a primitive property.
+        /// Gets the value for a primitive or enum property. For primitive type, returns its CLR value; for enum type, returns OData enum value.
         /// </summary>
         /// <param name="entityTypeName">The name of the entity type to get the property value.</param>
         /// <param name="property">The ODataProperty to get the value from.</param>
         /// <param name="isKeyProperty">true if the property is a key property, false otherwise.</param>
-        /// <returns>The clr value of the property.</returns>
-        private static object GetPrimitivePropertyClrValue(string entityTypeName, ODataProperty property, bool isKeyProperty)
+        /// <returns>The value of the property.</returns>
+        private static object GetPrimitiveOrEnumPropertyValue(string entityTypeName, ODataProperty property, bool isKeyProperty)
         {
             object propertyValue = property.Value;
             if (propertyValue == null && isKeyProperty)
@@ -221,7 +221,7 @@ namespace Microsoft.OData.Evaluation
                 throw new ODataException(Strings.ODataResourceMetadataContext_NullKeyValue(property.Name, entityTypeName));
             }
 
-            if (propertyValue is ODataValue)
+            if (propertyValue is ODataValue && !(propertyValue is ODataEnumValue))
             {
                 throw new ODataException(Strings.ODataResourceMetadataContext_KeyOrETagValuesMustBePrimitiveValues(property.Name, entityTypeName));
             }
@@ -258,7 +258,7 @@ namespace Microsoft.OData.Evaluation
             KeyValuePair<string, object>[] properties = EmptyProperties;
             if (resource.NonComputedProperties != null)
             {
-                properties = resource.NonComputedProperties.Where(p => p.SerializationInfo != null && p.SerializationInfo.PropertyKind == propertyKind).Select(p => new KeyValuePair<string, object>(p.Name, GetPrimitivePropertyClrValue(actualEntityTypeName, p, propertyKind == ODataPropertyKind.Key))).ToArray();
+                properties = resource.NonComputedProperties.Where(p => p.SerializationInfo != null && p.SerializationInfo.PropertyKind == propertyKind).Select(p => new KeyValuePair<string, object>(p.Name, GetPrimitiveOrEnumPropertyValue(actualEntityTypeName, p, propertyKind == ODataPropertyKind.Key))).ToArray();
             }
 
             return properties;
@@ -423,7 +423,7 @@ namespace Microsoft.OData.Evaluation
                             IEnumerable<IEdmStructuralProperty> edmKeyProperties = entityType.Key();
                             if (edmKeyProperties != null)
                             {
-                                this.keyProperties = edmKeyProperties.Select(p => new KeyValuePair<string, object>(p.Name, GetPrimitivePropertyClrValue(this.resource, p.Name, this.ActualResourceTypeName, /*isKeyProperty*/true))).ToArray();
+                                this.keyProperties = edmKeyProperties.Select(p => new KeyValuePair<string, object>(p.Name, GetPrimitiveOrEnumPropertyValue(this.resource, p.Name, this.ActualResourceTypeName, /*isKeyProperty*/true))).ToArray();
                             }
 
                             ValidateEntityTypeHasKeyProperties(this.keyProperties, this.ActualResourceTypeName);
@@ -449,7 +449,7 @@ namespace Microsoft.OData.Evaluation
                     {
                         IEnumerable<IEdmStructuralProperty> properties = this.ComputeETagPropertiesFromAnnotation();
                         this.etagProperties = properties.Any()
-                            ? properties.Select(p => new KeyValuePair<string, object>(p.Name, GetPrimitivePropertyClrValue(this.resource, p.Name, this.ActualResourceTypeName, /*isKeyProperty*/false))).ToArray()
+                            ? properties.Select(p => new KeyValuePair<string, object>(p.Name, GetPrimitiveOrEnumPropertyValue(this.resource, p.Name, this.ActualResourceTypeName, /*isKeyProperty*/false))).ToArray()
                             : EmptyProperties;
                     }
 
