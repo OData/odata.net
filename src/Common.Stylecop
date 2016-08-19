@@ -135,6 +135,11 @@
     </Analyzer>
     <Analyzer AnalyzerId="Microsoft.StyleCop.CSharp.ReadabilityRules">
       <Rules>
+        <Rule Name="ParameterMustNotSpanMultipleLines">
+          <RuleSettings>
+            <BooleanProperty Name="Enabled">False</BooleanProperty>
+          </RuleSettings>
+        </Rule>         
         <Rule Name="UseBuiltInTypeAlias">
           <RuleSettings>
             <BooleanProperty Name="Enabled">False</BooleanProperty>
@@ -190,6 +195,11 @@
     </Analyzer>
     <Analyzer AnalyzerId="Microsoft.StyleCop.CSharp.SpacingRules">
       <Rules>
+        <Rule Name="CodeMustNotContainMultipleWhitespaceInARow">
+          <RuleSettings>
+            <BooleanProperty Name="Enabled">False</BooleanProperty>
+          </RuleSettings>
+        </Rule>           
         <Rule Name="MemberAccessSymbolsMustBeSpacedCorrectly">
           <RuleSettings>
             <BooleanProperty Name="Enabled">False</BooleanProperty>

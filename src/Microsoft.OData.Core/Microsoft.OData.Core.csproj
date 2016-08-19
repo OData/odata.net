@@ -70,6 +70,7 @@
     <Compile Include="UriParser\SemanticAst\CollectionComplexNode.cs" />
     <Compile Include="UriParser\SemanticAst\SingleComplexNode.cs" />
     <Compile Include="UriParser\SemanticAst\SingleResourceNode.cs" />
+    <Compile Include="UriParser\TypeFacetsPromotionRules.cs" />
     <Compile Include="ValidationKinds.cs" />
     <Compile Include="ReaderValidator.cs" />
     <Compile Include="ServiceLifetime.cs" />

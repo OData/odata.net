@@ -5456,6 +5456,7 @@ public class Microsoft.OData.UriParser.ODataUriResolver {
 	public ODataUriResolver ()
 
 	bool EnableCaseInsensitive  { public virtual get; public virtual set; }
+	Microsoft.OData.UriParser.TypeFacetsPromotionRules TypeFacetsPromotionRules  { public get; public set; }
 
 	public virtual void PromoteBinaryOperandTypes (Microsoft.OData.UriParser.BinaryOperatorKind binaryOperatorKind, Microsoft.OData.UriParser.SingleValueNode& leftNode, Microsoft.OData.UriParser.SingleValueNode& rightNode, out Microsoft.OData.Edm.IEdmTypeReference& typeReference)
 	public virtual System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.IEdmOperation]] ResolveBoundOperations (Microsoft.OData.Edm.IEdmModel model, string identifier, Microsoft.OData.Edm.IEdmType bindingType)
@@ -5488,6 +5489,13 @@ public class Microsoft.OData.UriParser.SingleComplexNode : Microsoft.OData.UriPa
 	Microsoft.OData.Edm.IEdmTypeReference TypeReference  { public virtual get; }
 
 	public virtual T Accept (QueryNodeVisitor`1 visitor)
+}
+
+public class Microsoft.OData.UriParser.TypeFacetsPromotionRules {
+	public TypeFacetsPromotionRules ()
+
+	public virtual System.Nullable`1[[System.Int32]] GetPromotedPrecision (System.Nullable`1[[System.Int32]] left, System.Nullable`1[[System.Int32]] right)
+	public virtual System.Nullable`1[[System.Int32]] GetPromotedScale (System.Nullable`1[[System.Int32]] left, System.Nullable`1[[System.Int32]] right)
 }
 
 public class Microsoft.OData.UriParser.UnqualifiedODataUriResolver : Microsoft.OData.UriParser.ODataUriResolver {

@@ -1626,6 +1626,9 @@
     <Compile Include="..\UriParser\SemanticAst\SingleResourceNode.cs">
       <Link>Microsoft\OData\Core\UriParser\SemanticAst\SingleResourceNode.cs</Link>
     </Compile>
+    <Compile Include="..\UriParser\TypeFacetsPromotionRules.cs">
+      <Link>Microsoft\OData\Core\UriParser\TypeFacetsPromotionRules.cs</Link>
+    </Compile>
     <Compile Include="..\UriParser\UriEdmHelpers.cs">
       <Link>Microsoft\OData\Core\UriParser\UriEdmHelpers.cs</Link>
     </Compile>
