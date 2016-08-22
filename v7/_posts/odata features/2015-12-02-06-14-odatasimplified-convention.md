@@ -2,7 +2,7 @@
 layout: post
 title: "Use ODataSimplified Convention In ODataUriParser"
 description: ""
-category: "6. OData Features"
+category: "5. OData Features"
 ---
 
 From ODataLib 6.14.0, we introduce ODataSimplified convention to make `key-as-segment` and `default` convention work side by side. 

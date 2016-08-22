@@ -2,7 +2,7 @@
 layout: post
 title: "Parsing URI path template"
 description: ""
-category: "6. OData Features"
+category: "5. OData Features"
 ---
 
 From ODataLib 6.11.0, it supports to parse Uri path template. A path template is any identifier string enclosed with curly brackets.

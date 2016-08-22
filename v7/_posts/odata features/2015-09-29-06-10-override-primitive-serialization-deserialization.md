@@ -2,7 +2,7 @@
 layout: post
 title: "Override primitive serialization and deserialization of payload"
 description: ""
-category: "6. OData Features"
+category: "5. OData Features"
 ---
 
 Since ODataLib 6.12.0, it supports to customize the payload value converter to override the primitive serialization and deserialization of payload.

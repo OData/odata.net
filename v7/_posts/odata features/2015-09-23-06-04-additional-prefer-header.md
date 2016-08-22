@@ -2,7 +2,7 @@
 layout: post
 title: "Add additional prefer header"
 description: ""
-category: "6. OData Features"
+category: "5. OData Features"
 ---
 
 <strong>[odata.track-changes](http://docs.oasis-open.org/odata/odata/v4.0/errata02/os/complete/part1-protocol/odata-v4.0-errata02-os-part1-protocol-complete.html#_Toc406398239)</strong>, <strong>[odata.maxpagesize](http://docs.oasis-open.org/odata/odata/v4.0/errata02/os/complete/part1-protocol/odata-v4.0-errata02-os-part1-protocol-complete.html#_Toc406398238)</strong>, <strong>[odata.maxpagesize](http://docs.oasis-open.org/odata/odata/v4.0/errata02/os/complete/part1-protocol/odata-v4.0-errata02-os-part1-protocol-complete.html#_Toc406398236)</strong> are supported to add in prefer header since ODataLib 6.11.0.

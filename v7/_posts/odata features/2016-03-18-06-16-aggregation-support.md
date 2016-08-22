@@ -2,7 +2,7 @@
 layout: post
 title: "Basic Uri parser support for aggregations"
 description: ""
-category: "6. OData Features"
+category: "5. OData Features"
 ---
 
 From ODataLib 6.15.0, we introduced the `basic` Uri parser support for aggregations, this is first step for us to support aggregations,  Issues and PR to make this support better is very welcome, details about aggregation in spec can be found [here](http://docs.oasis-open.org/odata/odata-data-aggregation-ext/v4.0/odata-data-aggregation-ext-v4.0.html).

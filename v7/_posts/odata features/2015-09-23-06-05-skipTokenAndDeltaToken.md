@@ -2,7 +2,7 @@
 layout: post
 title: "$skiptoken & $deltatoken"
 description: ""
-category: "6. OData Features"
+category: "5. OData Features"
 ---
 
 From ODataLib 6.12.0, it supports to parse $skiptoken & $deltatoken in query options.

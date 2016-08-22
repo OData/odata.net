@@ -2,7 +2,7 @@
 layout: post
 title: "Support untyped json in ODataLib and Client"
 description: ""
-category: "6. OData Features"
+category: "5. OData Features"
 ---
 
 Starting from ODataV3 5.7.0, undeclared property is better supported by ODataLib and OData Client. ODataMessageReader is extended to be capabale of reading arbitrary JSON as raw string from the payload.
