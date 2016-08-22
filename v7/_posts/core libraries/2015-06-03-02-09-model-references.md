@@ -18,7 +18,7 @@ var subModel1 = new EdmModel();
 var complex1 = new EdmComplexType("NS1", "Complex1");
 subModel1.AddElement(complex1);
 
-var reference1 = new EdmReference("http://model2");
+var reference1 = new EdmReference(new Uri("http://model2"));
 reference1.AddInclude(new EdmInclude("Alias2", "NS2"));
 
 var references1 = new List<IEdmReference> {reference1};
@@ -33,7 +33,7 @@ var subModel2 = new EdmModel();
 var complex2 = new EdmComplexType("NS2", "Complex2");
 subModel2.AddElement(complex2);
 
-var reference2 = new EdmReference("http://model1");
+var reference2 = new EdmReference(new Uri("http://model1"));
 reference2.AddInclude(new EdmInclude("Alias1", "NS1"));
 
 var references2 = new List<IEdmReference> {reference2};
