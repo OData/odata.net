@@ -14,7 +14,7 @@ Here is a full example which is trying to write an extra property `Prop1` in the
 EdmModel model = new EdmModel();
 var entityType = new EdmEntityType("Namespace", "EntityType", null, false, false, false);
 entityType.AddKeys(entityType.AddStructuralProperty("ID", EdmPrimitiveTypeKind.Int32));
-entityType.AddStructuralProperty("Name", EdmCoreModel.Instance.GetString(isNullable: true), null, EdmConcurrencyMode.Fixed);
+entityType.AddStructuralProperty("Name", EdmCoreModel.Instance.GetString(isNullable: true), null);
 
 model.AddElement(entityType);
 
