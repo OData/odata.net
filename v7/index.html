@@ -75,7 +75,7 @@ $(document).ready(function(){
             <ul class="nav nav-pills nav-stacked">
               {% for posts in category %}
               {% for post in posts reversed %}
-              {% if post.categories contains "v6" %}
+              {% if post.categories contains "v7" %}
               {% if post.title != null%}
               <li class="nav-item">
                 <a href="#{{ post.id | remove_first:'/'}}"><small>{{ post.title }}</small></a>
@@ -96,9 +96,9 @@ $(document).ready(function(){
       <div class="alert alert-success" role="alert">
         For a unified experience, please go to the <a href="https://github.com/odata/odata.net/issues" target="_blank">GitHub Issues</a> to ask question, report bugs, and ask for features.
         <br />
-        This document is for library version 6.
+        This document (still under construction) is for library version 7.
         <br />
-        For library version 7 document (still under construction), please refer <a href="http://odata.github.io/odata/v7" target="_blank">here</a>.
+        For library version 6 document, please refer <a href="http://odata.github.io/odata/v6" target="_blank">here</a>.
       </div>
       {% assign sortedCategories = site.categories | sort %}
       {% for category in sortedCategories %}
@@ -108,7 +108,7 @@ $(document).ready(function(){
       <ul class="post-list">
         {% for posts in category %}
         {% for post in posts reversed %}
-        {% if post.categories contains "v6" %}
+        {% if post.categories contains "v7" %}
         {% if post.title != null%}
         <li>
           <h2 class="post-title" id="{{ post.id | remove_first:'/'}}">{{ post.title }}</h2>
