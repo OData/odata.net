@@ -399,7 +399,12 @@ namespace Microsoft.OData.Edm.Validation
                             context.AddError(
                                 navigationSource.Location(),
                                 EdmErrorCode.UnresolvedNavigationPropertyBindingPath,
-                                string.Format("The binding path {0} for navigation property {1} under navigation source {2} is not valid.", mapping.Path.Path, mapping.NavigationProperty.Name, navigationSource.Name));
+                                string.Format(
+                                    CultureInfo.CurrentCulture,
+                                    "The binding path {0} for navigation property {1} under navigation source {2} is not valid.",
+                                    mapping.Path.Path,
+                                    mapping.NavigationProperty.Name,
+                                    navigationSource.Name));
                         }
                     }
                 });
@@ -1210,7 +1215,10 @@ namespace Microsoft.OData.Edm.Validation
                         context.AddError(
                         property.Location(),
                         EdmErrorCode.UnresolvedNavigationPropertyPartnerPath,
-                        string.Format("Cannot resolve partner path for navigation property '{0}'.", property.Name));
+                        string.Format(
+                            CultureInfo.CurrentCulture,
+                            "Cannot resolve partner path for navigation property '{0}'.",
+                            property.Name));
                     }
                 });
 
