@@ -116,7 +116,7 @@ const string edmx2 =
 
 IEdmModel model;
 IEnumerable<EdmError> errors;
-if (!EdmxReader.TryParse(XmlReader.Create(new StringReader(mainEdmx)), (uri) =>
+if (!CsdlReader.TryParse(XmlReader.Create(new StringReader(mainEdmx)), (uri) =>
 {
     if (string.Equals(uri.AbsoluteUri, "http://model1/"))
     {

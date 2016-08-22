@@ -107,9 +107,9 @@ namespace EdmLibSample
         public SampleModelBuilder BuildCategoryType()
         {
             _categoryType = new EdmEnumType("Sample.NS", "Category", EdmPrimitiveTypeKind.Int64, isFlags: true);
-            _categoryType.AddMember("Books", new EdmIntegerConstant(1L));
-            _categoryType.AddMember("Dresses", new EdmIntegerConstant(2L));
-            _categoryType.AddMember("Sports", new EdmIntegerConstant(4L));
+            _categoryType.AddMember("Books", new EdmEnumMemberValue(1L));
+            _categoryType.AddMember("Dresses", new EdmEnumMemberValue(2L));
+            _categoryType.AddMember("Sports", new EdmEnumMemberValue(4L));
             _model.AddElement(_categoryType);
             return this;
         }
@@ -256,7 +256,7 @@ namespace EdmLibSample
             using (var writer = XmlWriter.Create(fileName))
             {
                 IEnumerable<EdmError> errors;
-                model.TryWriteCsdl(writer, out errors);
+                CsdlWriter.TryWriteCsdl(model, writer, CsdlTarget.OData, out errors);
             }
         }
     }

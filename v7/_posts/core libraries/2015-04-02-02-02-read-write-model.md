@@ -23,70 +23,43 @@ namespace EdmLibSample
             using (var writer = XmlWriter.Create(fileName))
             {
                 IEnumerable<EdmError> errors;
-                model.TryWriteCsdl(writer, out errors);
+                CsdlWriter.TryWriteCsdl(model, writer, CsdlTarget.OData, out errors);
             }
         }
     }
 }
 {% endhighlight %}
 
-The `CsdlWriter.TryWriteCsdl()` method is defined as an extension method to `IEdmModel`:
+The `CsdlWriter.TryWriteCsdl()` method is prototyped as:
 
 {% highlight csharp %}
 namespace Microsoft.OData.Edm.Csdl
 {
-    public static class CsdlWriter
+    public class CsdlWriter
     {
         ...
-        public static bool TryWriteCsdl(this IEdmModel model, XmlWriter writer, out IEnumerable<EdmError> errors);
+        public static bool TryWriteCsdl(IEdmModel model, XmlWriter writer, CsdlTarget target, out IEnumerable<EdmError> errors);
         ...
     }
 }
 {% endhighlight %}
 
-The **second parameter** `writer` requires an `XmlWriter` which can be created through the overloaded `XmlWriter.Create` methods. Remember to either apply a `using` clause to an `XmlWriter` instance or explicitly call `XmlWriter.Flush()` (or `XmlWriter.Close()`) to **flush the buffer to its underlying stream**. The **third parameter** `errors` is used to pass out the errors found when writing the model. If the method **returns** `true` (indicating write success), the `errors` should be an empty `Enumerable`; otherwise it contains all the model errors.
-
-The other version of the `CsdlWriter.TryWriteCsdl()` method is:
-
-{% highlight csharp %}
-namespace Microsoft.OData.Edm.Csdl
-{
-    public static class CsdlWriter
-    {
-        ...
-        public static bool TryWriteCsdl(this IEdmModel model, Func<string, XmlWriter> writerProvider, out IEnumerable<EdmError> errors);
-        ...
-    }
-}
-{% endhighlight %}
-
-This overload is called when the model to write contains **referenced models**. The referenced models need to be written into separate files. So the **second parameter** `writerProvider` takes a callback to create a different `XmlWriter` for each referenced model where the `string` parameter is the schema namespace of that model. A simple `writerProvider` would be:
-
-{% highlight csharp %}
-public XmlWriter CreateXmlWriter(string namespace)
-{
-    return XmlWriter.Create(string.Format("{0}.xml", namespace));
-}
-{% endhighlight %}
+The **second parameter** `writer` requires an `XmlWriter` which can be created through the overloaded `XmlWriter.Create` methods. Remember to either apply a `using` clause to an `XmlWriter` instance or explicitly call `XmlWriter.Flush()` (or `XmlWriter.Close()`) to **flush the buffer to its underlying stream**. The **third parameter** `target` specifies the target implementation of the CSDL being generated, which can be either `CsdlTarget.EntityFramework` or `CsdlTarget.OData`. The **4th parameter** `errors` is used to pass out the errors found when writing the model. If the method **returns** `true` (indicating write success), the `errors` should be an empty `Enumerable`; otherwise it contains all the model errors.
 
 ### Using the CsdlReader APIs
-The `CsdlReader` APIs are defined as follows:
+The simplest `CsdlReader` API is prototyped as:
 
 {% highlight csharp %}
 namespace Microsoft.OData.Edm.Csdl
 {
-    public static class CsdlReader
+    public class CsdlReader
     {
-        public static bool TryParse(IEnumerable<XmlReader> readers, out IEdmModel model, out IEnumerable<EdmError> errors);
-        public static bool TryParse(IEnumerable<XmlReader> readers, IEdmModel reference, out IEdmModel model, out IEnumerable<EdmError> errors);
-        public static bool TryParse(IEnumerable<XmlReader> readers, IEnumerable<IEdmModel> references, out IEdmModel model, out IEnumerable<EdmError> errors);
+        public static bool TryParse(XmlReader reader, out IEdmModel model, out IEnumerable<EdmError> errors);
     }
 }
 {% endhighlight %}
 
-The **first overload** is mostly used. The **second and third overloads** are similar to the first one except that they also accept one or more referenced models.
-
-The **first parameter** `readers` takes a set of `XmlReader` each of which reads a CSDL document. The **second paramter** `model` passes out the parsed model. The **third parameter** `errors` passes out the errors when parsing the CSDL document. If the **return value** of this method is `true` (indicating parse success), the `errors` should be an empty otherwise it will contain all the model errors.
+The **first parameter** `reader` takes an `XmlReader` that reads a CSDL document. The **second paramter** `model` passes out the parsed model. The **third parameter** `errors` passes out the errors when parsing the CSDL document. If the **return value** of this method is `true` (indicating parse success), the `errors` should be an empty otherwise it will contain all the model errors.
 
 ### Roundtrip the Model
 In the **Program.cs** file, insert the following code to the `Program` class:
@@ -112,7 +85,7 @@ namespace EdmLibSample
             {
                 IEdmModel model;
                 IEnumerable<EdmError> errors;
-                if (CsdlReader.TryParse(new[] { reader }, out model, out errors))
+                if (CsdlReader.TryParse(reader, out model, out errors))
                 {
                     return model;
                 }
