@@ -11,7 +11,7 @@ namespace Microsoft.OData.Core
     using System.Globalization;
 
     /// <summary>
-    /// Class to set the "Prefer" header on an <see cref="IODataRequestMessage"/> or 
+    /// Class to set the "Prefer" header on an <see cref="IODataRequestMessage"/> or
     /// the "Preference-Applied" header on an <see cref="IODataResponseMessage"/>.
     /// </summary>
     public class ODataPreferenceHeader
@@ -152,7 +152,7 @@ namespace Microsoft.OData.Core
             get
             {
                 var returnContentPreference = this.Get(ReturnPreferenceTokenName);
-                if (returnContentPreference != null)
+                if (returnContentPreference != null && returnContentPreference.Value != null)
                 {
                     if (returnContentPreference.Value.ToLowerInvariant().Equals(ReturnRepresentationPreferenceTokenValue))
                     {
@@ -170,7 +170,7 @@ namespace Microsoft.OData.Core
 
             set
             {
-                // if the value is null, the "ReturnPreferenceTokenName" is cleared.   
+                // if the value is null, the "ReturnPreferenceTokenName" is cleared.
                 this.Clear(ReturnPreferenceTokenName);
 
                 if (value == true)
@@ -190,7 +190,7 @@ namespace Microsoft.OData.Core
         /// the "Preference-Applied" header on the underlying IODataResponseMessage.
         /// If the "odata-annotations" preference is already on the header, set replaces the existing instance.
         /// Returning null indicates that the "odata.include-annotations" preference is not on the header.
-        /// 
+        ///
         /// The filter string may be a comma delimited list of any of the following supported patterns:
         ///   "*"        -- Matches all annotation names.
         ///   "ns.*"     -- Matches all annotation names under the namespace "ns".
@@ -199,17 +199,17 @@ namespace Microsoft.OData.Core
         ///                 "-ns.*"    -- Excludes all annotation names under the namespace "ns".
         ///                 "-ns.name" -- Excludes only the annotation name "ns.name".
         /// Null or empty filter is equivalent to "-*".
-        /// 
+        ///
         /// The relative priority of the pattern is base on the relative specificity of the patterns being compared. If pattern1 is under the namespace pattern2,
         /// pattern1 is more specific than pattern2 because pattern1 matches a subset of what pattern2 matches. We give higher priority to the pattern that is more specific.
         /// For example:
         ///  "ns.*" has higher priority than "*"
         ///  "ns.name" has higher priority than "ns.*"
         ///  "ns1.name" has same priority as "ns2.*"
-        /// 
+        ///
         /// Patterns with the exclude operator takes higher precedence than the same pattern without.
         /// For example: "-ns.name" has higher priority than "ns.name".
-        /// 
+        ///
         /// Examples:
         ///   "ns1.*,ns.name"       -- Matches any annotation name under the "ns1" namespace and the "ns.name" annotation.
         ///   "*,-ns.*,ns.name"     -- Matches any annotation name outside of the "ns" namespace and only "ns.name" under the "ns" namespace.
@@ -220,7 +220,7 @@ namespace Microsoft.OData.Core
             {
                 var odataAnnotations = this.Get(ODataAnnotationPreferenceToken);
 
-                if (odataAnnotations != null)
+                if (odataAnnotations != null && odataAnnotations.Value != null)
                 {
                     return odataAnnotations.Value.Trim('"');
                 }
@@ -284,7 +284,7 @@ namespace Microsoft.OData.Core
             {
                 var wait = this.Get(WaitPreferenceTokenName);
 
-                if (wait != null)
+                if (wait != null && wait.Value != null)
                 {
                     int value;
                     if (int.TryParse(wait.Value, out value))
@@ -292,7 +292,7 @@ namespace Microsoft.OData.Core
                         return value;
                     }
 
-                    // TODO: Fix hard code string before Loc of 6.16 release 
+                    // TODO: Fix hard code string before Loc of 6.16 release
                     throw new ODataException(string.Format(CultureInfo.InvariantCulture,
                         "Invalid value '{0}' for {1} preference header found. The {1} preference header requires an integer value.",
                         wait.Value, ODataPreferenceHeader.WaitPreferenceTokenName));
@@ -355,7 +355,7 @@ namespace Microsoft.OData.Core
             {
                 var maxPageSizeHttpHeaderValueElement = this.Get(ODataMaxPageSizePreferenceToken);
 
-                if (maxPageSizeHttpHeaderValueElement != null)
+                if (maxPageSizeHttpHeaderValueElement != null && maxPageSizeHttpHeaderValueElement.Value != null)
                 {
                     int value;
                     if (int.TryParse(maxPageSizeHttpHeaderValueElement.Value, out value))
@@ -363,7 +363,7 @@ namespace Microsoft.OData.Core
                         return value;
                     }
 
-                    // TODO: Fix hard code string before Loc of 6.16 release 
+                    // TODO: Fix hard code string before Loc of 6.16 release
                     throw new ODataException(string.Format(CultureInfo.InvariantCulture,
                         "Invalid value '{0}' for {1} preference header found. The {1} preference header requires an integer value.",
                         maxPageSizeHttpHeaderValueElement.Value, ODataPreferenceHeader.ODataMaxPageSizePreferenceToken));

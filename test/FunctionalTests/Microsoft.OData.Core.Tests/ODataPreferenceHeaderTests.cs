@@ -153,6 +153,13 @@ namespace Microsoft.OData.Core.Tests
         }
 
         [Fact]
+        public void AnnotationFilterShouldReturnNullWhenODataAnnotationsPreferenceValueIsNotSet()
+        {
+            this.requestMessage.SetHeader(PreferHeaderName, ExistingPreference + "," + ODataAnnotationPreferenceToken);
+            this.preferHeader.AnnotationFilter.Should().BeNull();
+        }
+
+        [Fact]
         public void ReturnContentShouldReturnFalseWhenReturnRepresentationIsAfterReturnMinimalPreferencesAreInHeader()
         {
             this.requestMessage.SetHeader(PreferHeaderName, ReturnMinimalPreference + "," + ReturnRepresentationPreference + "," + ExistingPreference);
