@@ -152,7 +152,7 @@ namespace Microsoft.OData
             get
             {
                 var returnContentPreference = this.Get(ReturnPreferenceTokenName);
-                if (returnContentPreference != null)
+                if (returnContentPreference != null && returnContentPreference.Value != null)
                 {
                     if (returnContentPreference.Value.ToLowerInvariant().Equals(ReturnRepresentationPreferenceTokenValue))
                     {
@@ -220,7 +220,7 @@ namespace Microsoft.OData
             {
                 var odataAnnotations = this.Get(ODataAnnotationPreferenceToken);
 
-                if (odataAnnotations != null)
+                if (odataAnnotations != null && odataAnnotations.Value != null)
                 {
                     return odataAnnotations.Value.Trim('"');
                 }
@@ -284,7 +284,7 @@ namespace Microsoft.OData
             {
                 var wait = this.Get(WaitPreferenceTokenName);
 
-                if (wait != null)
+                if (wait != null && wait.Value != null)
                 {
                     int value;
                     if (int.TryParse(wait.Value, out value))
@@ -355,7 +355,7 @@ namespace Microsoft.OData
             {
                 var maxPageSizeHttpHeaderValueElement = this.Get(ODataMaxPageSizePreferenceToken);
 
-                if (maxPageSizeHttpHeaderValueElement != null)
+                if (maxPageSizeHttpHeaderValueElement != null && maxPageSizeHttpHeaderValueElement.Value != null)
                 {
                     int value;
                     if (int.TryParse(maxPageSizeHttpHeaderValueElement.Value, out value))
