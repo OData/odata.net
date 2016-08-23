@@ -218,6 +218,9 @@ namespace EdmLibSample
 
 This code directly adds a new entity set `Customers` to the default container.
 
+### Using Factory APIs for EdmModel
+In the above sections, to construct entity/complex types and entity containers, one has to first explicitly instantiate the corresponding CLR types, and then invoke `EdmModel.AddElement()` to add them to the model. In this version, 
+
 ### Write the Model to a CSDL Document
 Congratulations! You now have a working entity data model! In order to show the model in an intuitive way, we would write it to a CSDL document.
 
