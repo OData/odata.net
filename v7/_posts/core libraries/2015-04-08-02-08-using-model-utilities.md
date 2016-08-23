@@ -58,7 +58,7 @@ namespace EdmLibSample
             var mostValuableFunctionImport = model.FindDeclaredOperationImports("MostValuable").Single();
             Console.WriteLine("{0} '{1}' found.", mostValuableFunctionImport.ContainerElementKind, mostValuableFunctionImport.Name);
             // Find an annotation and get its value.
-            var maxCountAnnotation = (IEdmValueAnnotation)model.FindDeclaredVocabularyAnnotations(customerSet).Single();
+            var maxCountAnnotation = (IEdmVocabularyAnnotation)model.FindDeclaredVocabularyAnnotations(customerSet).Single();
             var maxCountValue = ((IEdmIntegerValue)maxCountAnnotation.Value).Value;
             Console.WriteLine("'{0}' = '{1}' on '{2}'", maxCountAnnotation.Term.Name, maxCountValue, ((IEdmEntitySet)maxCountAnnotation.Target).Name);
         }

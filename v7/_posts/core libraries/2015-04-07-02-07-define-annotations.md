@@ -14,8 +14,7 @@ In the **SampleModelBuilder.cs** file, add the following `using` clause:
 
 {% highlight csharp %}
 using Microsoft.OData.Edm.Csdl;
-using Microsoft.OData.Edm.Library.Annotations;
-using Microsoft.OData.Edm.Values;
+using Microsoft.OData.Edm.Vocabularies;
 {% endhighlight %}
 
 Then add the following code into the `SampleModelBuilder` class:
@@ -29,7 +28,7 @@ namespace EdmLibSample
         public SampleModelBuilder BuildAnnotations()
         {
             var term1 = new EdmTerm("Sample.NS", "MaxCount", EdmCoreModel.Instance.GetInt32(true));
-            var annotation1 = new EdmAnnotation(_customerSet, term1, new EdmIntegerConstant(10000000L));
+            var annotation1 = new EdmVocabularyAnnotation(_customerSet, term1, new EdmIntegerConstant(10000000L));
             _model.AddVocabularyAnnotation(annotation1);
             return this;
         }
@@ -78,7 +77,7 @@ namespace EdmLibSample
             _model.AddVocabularyAnnotation(annotation1);
 #region     !!!INSERT THE CODE BELOW!!!
             var term2 = new EdmTerm("Sample.NS", "KeyName", EdmCoreModel.Instance.GetString(true));
-            var annotation2 = new EdmAnnotation(_customerType, term2, new EdmStringConstant("Id"));
+            var annotation2 = new EdmVocabularyAnnotation(_customerType, term2, new EdmStringConstant("Id"));
             annotation2.SetSerializationLocation(_model, EdmVocabularyAnnotationSerializationLocation.Inline);
             _model.AddVocabularyAnnotation(annotation2);
 #endregion
@@ -106,7 +105,7 @@ namespace EdmLibSample
             _model.AddVocabularyAnnotation(annotation2);
 #region     !!!INSERT THE CODE BELOW!!!
             var term3 = new EdmTerm("Sample.NS", "Width", EdmCoreModel.Instance.GetInt32(true));
-            var annotation3 = new EdmAnnotation(_customerType.FindProperty("Name"), term3, new EdmIntegerConstant(10L));
+            var annotation3 = new EdmVocabularyAnnotation(_customerType.FindProperty("Name"), term3, new EdmIntegerConstant(10L));
             annotation3.SetSerializationLocation(_model, EdmVocabularyAnnotationSerializationLocation.Inline);
             _model.AddVocabularyAnnotation(annotation3);
 #endregion

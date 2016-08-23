@@ -43,13 +43,13 @@ IList<IEdmPropertyConstructor> properties = new List<IEdmPropertyConstructor>
     nonFilterableProperties.Select(p => new EdmPropertyPathExpression(p.Name)).ToArray()))
 }; 
 
-IEdmValueTerm term = model.FindValueTerm("Org.OData.Capabilities.V1.FilterRestrictions");  
+IEdmTerm term = model.FindTerm("Org.OData.Capabilities.V1.FilterRestrictions");
 if (term != null)  
 {  
   IEdmRecordExpression record = new EdmRecordExpression(properties);  
-  EdmAnnotation annotation = new EdmAnnotation(target, term, record);  
-  annotation.SetSerializationLocation(model, EdmVocabularyAnnotationSerializationLocation.Inline);  
-  model.SetVocabularyAnnotation(annotation);  
+  EdmVocabularyAnnotation annotation = new EdmVocabularyAnnotation(target, term, record);
+  annotation.SetSerializationLocation(model, EdmVocabularyAnnotationSerializationLocation.Inline);
+  model.SetVocabularyAnnotation(annotation);
 }  
 {% endhighlight %}
 

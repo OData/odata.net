@@ -30,7 +30,7 @@ colorType.AddMember(enumMember);
 EdmTerm stringTerm = new EdmTerm("DefaultNamespace", "StringTerm", EdmCoreModel.Instance.GetString(true));
 model.AddElement(stringTerm);
 
-var annotation = new EdmAnnotation(
+var annotation = new EdmVocabularyAnnotation(
     enumMember,
     stringTerm,
     "q1",
