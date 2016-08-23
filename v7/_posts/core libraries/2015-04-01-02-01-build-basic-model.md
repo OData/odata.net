@@ -219,7 +219,44 @@ namespace EdmLibSample
 This code directly adds a new entity set `Customers` to the default container.
 
 ### Using Factory APIs for EdmModel
-In the above sections, to construct entity/complex types and entity containers, one has to first explicitly instantiate the corresponding CLR types, and then invoke `EdmModel.AddElement()` to add them to the model. In this version, 
+In the above sections, to construct entity/complex types and entity containers, one has to first explicitly instantiate the corresponding CLR types, and then invoke `EdmModel.AddElement()` to add them to the model. In this version, a new set of factory APIs are introduced that combine the two steps into one, leading to more succinct and cleaner user code. These APIs are defined as extension methods to `EdmModel` as follows:
+
+{% highlight csharp %}
+namespace Microsoft.OData.Edm
+{
+    public static class ExtensionMethods
+    {
+        public static EdmComplexType AddComplexType(this EdmModel model, string namespaceName, string name);
+        public static EdmComplexType AddComplexType(this EdmModel model, string namespaceName, string name, IEdmComplexType baseType);
+        public static EdmComplexType AddComplexType(this EdmModel model, string namespaceName, string name, IEdmComplexType baseType, bool isAbstract);
+        public static EdmComplexType AddComplexType(this EdmModel model, string namespaceName, string name, IEdmComplexType baseType, bool isAbstract, bool isOpen);
+
+        public static EdmEntityType AddEntityType(this EdmModel model, string namespaceName, string name);
+        public static EdmEntityType AddEntityType(this EdmModel model, string namespaceName, string name, IEdmEntityType baseType);
+        public static EdmEntityType AddEntityType(this EdmModel model, string namespaceName, string name, IEdmEntityType baseType, bool isAbstract, bool isOpen);
+        public static EdmEntityType AddEntityType(this EdmModel model, string namespaceName, string name, IEdmEntityType baseType, bool isAbstract, bool isOpen, bool hasStream);
+
+        public static EdmEntityContainer AddEntityContainer(this EdmModel model, string namespaceName, string name);
+    }
+}
+{% endhighlight %}
+
+So, for example, instead of
+
+{% highlight csharp %}
+var entityType = new EdmEntityType("NS", "Entity");
+// Do something with entityType.
+model.AddElement(entityType);
+{% endhighlight %}
+
+you could simply
+
+{% highlight csharp %}
+var entityType = model.AddEntityType("NS", "Entity");
+// Do something with entityType.
+{% endhighlight %}
+
+Besides being more convenient, these factory APIs are potentially more efficient as advanced techniques may have been employed in their implementations for optimized object creation and handling.
 
 ### Write the Model to a CSDL Document
 Congratulations! You now have a working entity data model! In order to show the model in an intuitive way, we would write it to a CSDL document.
