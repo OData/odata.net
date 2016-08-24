@@ -274,7 +274,7 @@ namespace Microsoft.OData.Tests.UriParser.Metadata
         #endregion
 
         [Fact]
-        public void NonQualifiedTypeNameShouldNotBeTreatedAsTypeCast()
+        public void UnqualifiedTypeNameShouldNotBeTreatedAsTypeCast()
         {
             var model = new EdmModel();
             var entityType = new EdmEntityType("NS", "Entity");
