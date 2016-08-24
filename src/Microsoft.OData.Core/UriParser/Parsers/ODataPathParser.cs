@@ -67,7 +67,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         }
 
         /// <summary>
-        /// Extracts the segment identifier and, if there are parenthesis in the segment, the expression in the parenthesis.  
+        /// Extracts the segment identifier and, if there are parenthesis in the segment, the expression in the parenthesis.
         /// Will throw if identifier is not found or if the parenthesis expression is malformed.
         /// </summary>
         /// <remarks>Internal only so it can be called from tests. Should not be used outside <see cref="ODataPathParser"/>.</remarks>
@@ -375,10 +375,10 @@ namespace Microsoft.OData.Core.UriParser.Parsers
 
             // If this segment is the special escape-marker segment, then remember that the next segment cannot be a key,
             // even if we are in key-as-segments mode. Essentially, it is an escape into 'metadata-space', so to speak.
-            // 
+            //
             // DEVNOTE (mmeehan): We went back and forth several times on whether this should be allowed everywhere or only
             // where a key could appear. We landed on allowing it absolutely everywhere for several reasons:
-            //   1) The WCF DS client naively adds the escape marker before all type segments, regardless of whether the 
+            //   1) The WCF DS client naively adds the escape marker before all type segments, regardless of whether the
             //      prior segment is a collection.
             //   2) The WCF DS server already allowed the escape marker almost everywhere in 5.3
             //   3) It's better to be either extremely loose or extremely strict than allow it in some cases and not in others.
@@ -688,7 +688,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         {
             ODataPathSegment segment = new OpenPropertySegment(identifier);
 
-            // Handle an open type property. If the current leaf isn't an 
+            // Handle an open type property. If the current leaf isn't an
             // object (which implies it's already an open type), then
             // it should be marked as an open type.
             if (previous.TargetEdmType != null && !previous.TargetEdmType.IsOpenType())
@@ -1023,7 +1023,8 @@ namespace Microsoft.OData.Core.UriParser.Parsers
 
             // If the property resolution failed, and the previous segment was targeting an entity, then we should
             // try and resolve the identifier as type name.
-            if (this.TryCreateTypeNameSegment(previous, identifier, parenthesisExpression))
+            if (text.IndexOf('.') >= 0 && // type-cast should use qualified type names
+                this.TryCreateTypeNameSegment(previous, identifier, parenthesisExpression))
             {
                 return;
             }
