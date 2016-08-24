@@ -965,7 +965,8 @@ namespace Microsoft.OData.UriParser
             }
 
             // Type cast
-            if (this.TryCreateTypeNameSegment(previous, identifier, parenthesisExpression))
+            if (text.IndexOf('.') >= 0 && // type-cast should use qualified type names
+                this.TryCreateTypeNameSegment(previous, identifier, parenthesisExpression))
             {
                 return;
             }

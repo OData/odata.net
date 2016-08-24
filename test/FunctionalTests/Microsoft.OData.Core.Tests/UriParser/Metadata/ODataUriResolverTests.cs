@@ -273,6 +273,20 @@ namespace Microsoft.OData.Tests.UriParser.Metadata
         }
         #endregion
 
+        [Fact]
+        public void NonQualifiedTypeNameShouldNotBeTreatedAsTypeCast()
+        {
+            var model = new EdmModel();
+            var entityType = new EdmEntityType("NS", "Entity");
+            entityType.AddKeys(entityType.AddStructuralProperty("IdStr", EdmPrimitiveTypeKind.String, false));
+            var container = new EdmEntityContainer("NS", "Container");
+            var set = container.AddEntitySet("Set", entityType);
+            model.AddElements(new IEdmSchemaElement[] { entityType, container });
+
+            var svcRoot = new Uri("http://host", UriKind.Absolute);
+            var parseResult = new ODataUriParser(model, svcRoot, new Uri("http://host/Set/Date", UriKind.Absolute)).ParseUri();
+            Assert.True(parseResult.Path.LastSegment is KeySegment);
+        }
 
         [Fact]
         public void CaseInsensitiveEntitySetKeyNamePositional()
