@@ -5,17 +5,28 @@ description: ""
 category: "4. Release Notes"
 ---
 
-We used to have lots of validation related flags in `ODataMessageReaderSettings` and `ODataMessageWriterSettings`. In OData 7.0, we put all the flags together to keep them be considered in a consistent way.
+We used to have lots of validation related members/flags in `ODataMessageReaderSettings` and `ODataMessageWriterSettings`. In OData 7.0, we cleaned up the out-dated flags and put the remained flags together and keep them be considered in a consistent way.
 
-## Removed flags ##
+## Removed APIs ##
 
-| ODataMessageWriterSettings                    | ODataMessageReaderSettings      |
-|-----------------------------------------------|---------------------------------|
-| EnableFullValidation                          | EnableFullValidation            |
-| AllowDuplicatePropertyNames                   | AllowDuplicatePropertyNames     |
-| UndeclaredPropertyBehaviorKinds               | UndeclaredPropertyBehaviorKinds |
-| ThrowOnNullValuesForNonNullablePrimitiveTypes | DisablePrimitiveTypeConversion  |
-|                                               | EnableLaxMetadataValidation     |
+| ODataMessageWriterSettings            | ODataMessageReaderSettings            |
+|---------------------------------------|---------------------------------------|
+| EnableFullValidation                  | EnableFullValidation                  |
+| EnableDefaultBehavior()               | EnableDefaultBehavior()               |
+| EnableODataServerBehavior()           | EnableODataServerBehavior()           |
+| EnableWcfDataServicesClientBehavior() | EnableWcfDataServicesClientBehavior() |
+|                                       | UndeclaredPropertyBehaviorKinds       |
+|                                       | DisablePrimitiveTypeConversion        |
+|                                       | DisableStrictMetadataValidation       |
+
+The EnablexxxBehavior() in writer and reader settings actually wrapped few flags.
+
+| ODataWriterBehavior                         | ODataReaderBehavior         |
+|---------------------------------------------|-----------------------------|
+| AllowDuplicatePropertyNames                 | AllowDuplicatePropertyNames |
+| AllowNullValuesForNonNullablePrimitiveTypes |                             |
+
+Those flags are all removed, and an enum type would represent all the settings instead.
 
 ## New API ##
 
@@ -93,8 +104,8 @@ public ValidationKinds Validations { get; set; }
 Equal to:
 `writerSettings.EnableFullValidation = true`
 
-`writerSettings.Validations |= ValidationKinds.ThrowOnDuplicatePropertyNames`<br />
+`readerSettings.Validations |= ValidationKinds.ThrowIfTypeConflictsWithMetadata`<br />
 Equal to:
-`writerSettings.AllowDuplicatePropertyNames = false`
+`readerSettings.DisableStrictMetadataValidation = false`
 
 Same for reader.
