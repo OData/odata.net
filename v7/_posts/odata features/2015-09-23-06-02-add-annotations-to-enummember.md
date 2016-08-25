@@ -21,10 +21,10 @@ carType.AddKeys(carOwnerId);
 
 var colorType = new EdmEnumType("DefaultNamespace", "Color", true);
 model.AddElement(colorType);
-colorType.AddMember("Cyan", new EdmIntegerConstant(1));
-colorType.AddMember("Blue", new EdmIntegerConstant(2));
+colorType.AddMember("Cyan", new EdmEnumMemberValue(1));
+colorType.AddMember("Blue", new EdmEnumMemberValue(2));
 
-EdmEnumMember enumMember = new EdmEnumMember(colorType, "Red", new EdmIntegerConstant(3));
+EdmEnumMember enumMember = new EdmEnumMember(colorType, "Red", new EdmEnumMemberValue(3));
 colorType.AddMember(enumMember);
 
 EdmTerm stringTerm = new EdmTerm("DefaultNamespace", "StringTerm", EdmCoreModel.Instance.GetString(true));
