@@ -1147,26 +1147,29 @@ namespace Microsoft.Data.OData.JsonLight
 
             if (this.jsonLightInputContext.ReadingResponse)
             {
-                // We add the association link also to the collection
-                // due to the fact that the ODataNavigationLink.AssociationLinkUrl was not present in the V1 of ODL.
-                // Also to make the OM look more consistent across formats (Verbose JSON only uses the collection for example).
-                // We always create association link even if there's no association link URL in the payload
-                // since we have to allow templating to fill it in.
-                ODataAssociationLink associationLink = new ODataAssociationLink { Name = navigationLink.Name };
-                if (navigationLink.AssociationLinkUrl != null)
-                {
-                    // Only set the association link url if it's on the wire.
-                    associationLink.Url = navigationLink.AssociationLinkUrl;
-                }
-
-                this.CurrentEntry.AddAssociationLink(associationLink);
-
-                // Hookup the metadata builder to the navigation and association links.
+                // Hookup the metadata builder to the navigation (and association links if needed).
                 // Note that we set the metadata builder even when navigationProperty is null, which is the case when the link is undeclared.
                 // For undeclared links, we will apply conventional metadata evaluation just as declared links.
                 ODataEntityMetadataBuilder entityMetadataBuilder = this.jsonLightEntryAndFeedDeserializer.MetadataContext.GetEntityMetadataBuilderForReader(this.CurrentEntryState);
+
+                if (this.jsonLightInputContext.Version < ODataVersion.V2 || navigationLink.AssociationLinkUrl != null)
+                {
+                    // We add the association link also to the collection
+                    // due to the fact that the ODataNavigationLink.AssociationLinkUrl was not present in the V1 of ODL.
+                    // Performance: We don't do this anymore: "Also to make the OM look more consistent across formats (Verbose JSON only uses the collection for example)."
+                    // We always create association link even if there's no association link URL in the payload
+                    // since we have to allow templating to fill it in.
+                    ODataAssociationLink associationLink = new ODataAssociationLink { Name = navigationLink.Name };
+                    if (navigationLink.AssociationLinkUrl != null)
+                    {
+                        // Only set the association link url if it's on the wire.
+                        associationLink.Url = navigationLink.AssociationLinkUrl;
+                    }
+
+                    this.CurrentEntry.AddAssociationLink(associationLink);
+                    associationLink.SetMetadataBuilder(entityMetadataBuilder);
+                }
                 navigationLink.SetMetadataBuilder(entityMetadataBuilder);
-                associationLink.SetMetadataBuilder(entityMetadataBuilder);
             }
 
             Debug.Assert(this.CurrentEntitySet != null, "Json requires an entity set.");

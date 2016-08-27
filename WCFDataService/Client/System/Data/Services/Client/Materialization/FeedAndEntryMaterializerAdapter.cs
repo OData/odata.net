@@ -352,7 +352,9 @@ namespace System.Data.Services.Client.Materialization
                     {
                         case ODataReaderState.NavigationLinkStart:
                             // Cache the list of navigation links here but don't add them to the entry because all of the key properties may not be available yet.
-                            navigationLinks.Add(this.ReadNavigationLink());
+                            ODataNavigationLink link = this.ReadNavigationLink();
+                            if (link != null)
+                                navigationLinks.Add(link);
                             break;
                         case ODataReaderState.EntryEnd:
                             break;
@@ -405,7 +407,8 @@ namespace System.Data.Services.Client.Materialization
 
                 this.ReadAndExpectState(ODataReaderState.NavigationLinkEnd);
             }
-
+            else
+                link = null;
             this.ExpectState(ODataReaderState.NavigationLinkEnd);
 
             return link;
