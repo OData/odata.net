@@ -144,7 +144,7 @@ namespace Microsoft.Data.OData.JsonLight
             ODataConventionalUriBuilder uriBuilder = new ODataConventionalUriBuilder(metadataContext.ServiceBaseUri, urlConvention);
             
             IODataEntryMetadataContext entryMetadataContext = ODataEntryMetadataContext.Create(entry, typeContext, serializationInfo, actualEntityType, metadataContext, selectedProperties);
-            return new ODataConventionalEntityMetadataBuilder(entryMetadataContext, metadataContext, uriBuilder);
+            return new ODataConventionalEntityMetadataBuilderWriter(entryMetadataContext, metadataContext, uriBuilder);
         }
 
         /// <summary>
