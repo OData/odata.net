@@ -1,0 +1,23 @@
+﻿################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
+
+/ODataLib/EdmLib/Desktop/.Net4.0/bin
+/ODataLib/EdmLib/Desktop/.Net4.0/obj
+/ODataLib/EdmLib/Desktop/.Net4.0/Microsoft.Data.Edm.resources
+/ODataLib/OData/Desktop/.Net4.0/bin
+/ODataLib/OData/Desktop/.Net4.0/obj
+/ODataLib/Spatial/Desktop/.Net4.0/bin
+/ODataLib/Spatial/Desktop/.Net4.0/obj
+/ODataLib/Spatial/Desktop/.Net4.0/System.Spatial.resources
+/ODataLib/OData/Desktop/.Net4.0/Microsoft.Data.OData.resources
+/WCFDataService/AdHocTest
+/WCFDataService/Client/.vs/System.Data.Services.Client/v14
+/WCFDataService/Client/bin
+/WCFDataService/Client/obj
+/WCFDataService/Client/packages
+/WCFDataService/Client/System.Data.Services.Client.resources
+/WCFDataService/Service/.vs/System.Data.Services/v14
+/WCFDataService/Service/bin/Debug
+/WCFDataService/Service/obj/Debug
+/WCFDataService/Service/System.Data.Services.resources
