@@ -218,7 +218,7 @@ namespace Microsoft.Data.OData.Evaluation
 
                     UrlConvention urlConvention = UrlConvention.ForUserSettingAndTypeContext(/*keyAsSegment*/ null, typeContext);
                     ODataConventionalUriBuilder uriBuilder = new ODataConventionalUriBuilder(this.ServiceBaseUri, urlConvention);
-                    entryState.MetadataBuilder = new ODataConventionalEntityMetadataBuilder(entryMetadataContext, this, uriBuilder);
+                    entryState.MetadataBuilder = new ODataConventionalEntityMetadataBuilderReader(entryMetadataContext, this, uriBuilder);
                 }
                 else
                 {

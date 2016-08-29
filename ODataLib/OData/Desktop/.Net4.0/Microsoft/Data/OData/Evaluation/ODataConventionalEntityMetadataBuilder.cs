@@ -36,19 +36,16 @@ namespace Microsoft.Data.OData.Evaluation
     /// <summary>
     /// Implementation of OData entity metadata builder based on OData protocol conventions.
     /// </summary>
-    internal sealed class ODataConventionalEntityMetadataBuilder : ODataEntityMetadataBuilder
+    internal class ODataConventionalEntityMetadataBuilderReader : ODataEntityMetadataBuilder
     {
         /// <summary>The URI builder to use.</summary>
         private readonly ODataUriBuilder uriBuilder;
 
         /// <summary>The context to answer basic metadata questions about the entry.</summary>
-        private readonly IODataEntryMetadataContext entryMetadataContext;
+        protected readonly IODataEntryMetadataContext entryMetadataContext;
 
         /// <summary>The metadata context.</summary>
         private readonly IODataMetadataContext metadataContext;
-
-        /// <summary>The list of navigation links that have been processed.</summary>
-        private readonly HashSet<string> processedNavigationLinks;
 
         /// <summary>The edit link.</summary>
         /// <remarks>This is lazily evaluated. It may be retrieved from the entry or computed.</remarks>
@@ -79,9 +76,6 @@ namespace Microsoft.Data.OData.Evaluation
         /// <summary>The list of computed stream properties.</summary>
         private List<ODataProperty> computedStreamProperties;
 
-        /// <summary>The enumerator for unprocessed navigation links.</summary>
-        private IEnumerator<ODataJsonLightReaderNavigationLinkInfo> unprocessedNavigationLinks;
-
         /// <summary>The missing operation generator for the current entry.</summary>
         private ODataMissingOperationGenerator missingOperationGenerator;
 
@@ -91,7 +85,7 @@ namespace Microsoft.Data.OData.Evaluation
         /// <param name="entryMetadataContext">The context to answer basic metadata questions about the entry.</param>
         /// <param name="metadataContext">The metadata context.</param>
         /// <param name="uriBuilder">The uri builder to use.</param>
-        internal ODataConventionalEntityMetadataBuilder(IODataEntryMetadataContext entryMetadataContext, IODataMetadataContext metadataContext, ODataUriBuilder uriBuilder)
+        internal ODataConventionalEntityMetadataBuilderReader(IODataEntryMetadataContext entryMetadataContext, IODataMetadataContext metadataContext, ODataUriBuilder uriBuilder)
         {
             DebugUtils.CheckNoExternalCallers();
             Debug.Assert(entryMetadataContext != null, "entryMetadataContext != null");
@@ -101,7 +95,6 @@ namespace Microsoft.Data.OData.Evaluation
             this.entryMetadataContext = entryMetadataContext;
             this.uriBuilder = uriBuilder;
             this.metadataContext = metadataContext;
-            this.processedNavigationLinks = new HashSet<string>(StringComparer.Ordinal);
         }
 
         /// <summary>
@@ -311,44 +304,6 @@ namespace Microsoft.Data.OData.Evaluation
         }
 
         /// <summary>
-        /// Marks the given navigation link as processed.
-        /// </summary>
-        /// <param name="navigationPropertyName">The navigation link we've already processed.</param>
-        internal override void MarkNavigationLinkProcessed(string navigationPropertyName)
-        {
-            DebugUtils.CheckNoExternalCallers();
-            Debug.Assert(!string.IsNullOrEmpty(navigationPropertyName), "!string.IsNullOrEmpty(navigationPropertyName)");
-            Debug.Assert(this.processedNavigationLinks != null, "this.processedNavigationLinks != null");
-            this.processedNavigationLinks.Add(navigationPropertyName);
-        }
-
-        /// <summary>
-        /// Returns the next unprocessed navigation link or null if there's no more navigation links to process.
-        /// </summary>
-        /// <returns>Returns the next unprocessed navigation link or null if there's no more navigation links to process.</returns>
-        [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate", Justification = "A method for consistency with the rest of the API.")]
-        internal override ODataJsonLightReaderNavigationLinkInfo GetNextUnprocessedNavigationLink()
-        {
-            DebugUtils.CheckNoExternalCallers();
-
-            if (this.unprocessedNavigationLinks == null)
-            {
-                Debug.Assert(this.entryMetadataContext != null, "this.entryMetadataContext != null");
-                this.unprocessedNavigationLinks = this.entryMetadataContext.SelectedNavigationProperties
-                    .Where(p => !this.processedNavigationLinks.Contains(p.Name))
-                    .Select(ODataJsonLightReaderNavigationLinkInfo.CreateProjectedNavigationLinkInfo)
-                    .GetEnumerator();
-            }
-
-            if (this.unprocessedNavigationLinks.MoveNext())
-            {
-                return this.unprocessedNavigationLinks.Current;
-            }
-
-            return null;
-        }
-
-        /// <summary>
         /// Gets the edit link of a stream value.
         /// </summary>
         /// <param name="streamPropertyName">The name of the stream property the edit link is computed for; 
@@ -534,6 +489,59 @@ namespace Microsoft.Data.OData.Evaluation
             }
 
             return this.computedStreamProperties;
+        }
+    }
+
+    internal sealed class ODataConventionalEntityMetadataBuilderWriter : ODataConventionalEntityMetadataBuilderReader
+    {
+        /// <summary>The list of navigation links that have been processed.</summary>
+        private readonly HashSet<string> processedNavigationLinks;
+
+        /// <summary>The enumerator for unprocessed navigation links.</summary>
+        private IEnumerator<ODataJsonLightReaderNavigationLinkInfo> unprocessedNavigationLinks;
+
+        public ODataConventionalEntityMetadataBuilderWriter(IODataEntryMetadataContext entryMetadataContext, IODataMetadataContext metadataContext, ODataUriBuilder uriBuilder)
+            : base(entryMetadataContext, metadataContext, uriBuilder)
+        {
+            this.processedNavigationLinks = new HashSet<string>(StringComparer.Ordinal);
+        }
+
+        /// <summary>
+        /// Marks the given navigation link as processed.
+        /// </summary>
+        /// <param name="navigationPropertyName">The navigation link we've already processed.</param>
+        internal override void MarkNavigationLinkProcessed(string navigationPropertyName)
+        {
+            DebugUtils.CheckNoExternalCallers();
+            Debug.Assert(!string.IsNullOrEmpty(navigationPropertyName), "!string.IsNullOrEmpty(navigationPropertyName)");
+            Debug.Assert(this.processedNavigationLinks != null, "this.processedNavigationLinks != null");
+            this.processedNavigationLinks.Add(navigationPropertyName);
+        }
+
+        /// <summary>
+        /// Returns the next unprocessed navigation link or null if there's no more navigation links to process.
+        /// </summary>
+        /// <returns>Returns the next unprocessed navigation link or null if there's no more navigation links to process.</returns>
+        [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate", Justification = "A method for consistency with the rest of the API.")]
+        internal override ODataJsonLightReaderNavigationLinkInfo GetNextUnprocessedNavigationLink()
+        {
+            DebugUtils.CheckNoExternalCallers();
+
+            if (this.unprocessedNavigationLinks == null)
+            {
+                Debug.Assert(this.entryMetadataContext != null, "this.entryMetadataContext != null");
+                this.unprocessedNavigationLinks = this.entryMetadataContext.SelectedNavigationProperties
+                    .Where(p => !this.processedNavigationLinks.Contains(p.Name))
+                    .Select(ODataJsonLightReaderNavigationLinkInfo.CreateProjectedNavigationLinkInfo)
+                    .GetEnumerator();
+            }
+
+            if (this.unprocessedNavigationLinks.MoveNext())
+            {
+                return this.unprocessedNavigationLinks.Current;
+            }
+
+            return null;
         }
     }
 }
