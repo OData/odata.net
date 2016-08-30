@@ -62,4 +62,4 @@ ContainerBuilderHelper.BuildContainer(
 
 Please refer [here](http://odata.github.io/odata.net/v7/#01-04-di-support) about DI details.
 
-Then DateTimeOffset can be serialized to "Thu, 12 Apr 2012 18:43:10 GMT", and payload like "Thu, 12 Apr 2012 18:43:10 GMT" can be deserialized to DateTimeOffset.
+Then DateTimeOffset can be serialized to "Thu, 12 Apr 2012 18:43:10 GMT", and payload like "Thu, 12 Apr 2012 18:43:10 GMT" can be deserialized back to DateTimeOffset.
