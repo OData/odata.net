@@ -93,9 +93,11 @@ ContainerBuilderHelper.BuildContainer(
 	    builder => builder.AddService<ODataPayloadValueConverter, DateTimeOffsetCustomFormatPrimitivePayloadValueConverter>(ServiceLifetime.Singleton))
 {% endhighlight %}
 
-<strong>3. Deserialize</strong>
+<strong>3. Deserializer</strong>
 
-Deserializer will use the registered new `ConvertFromPayloadValue` to read `Birthday` which is defined as DateTimeOffset in model.
+Deserializer will automatically use the registered new `ConvertFromPayloadValue` to read `Birthday` which is defined as DateTimeOffset in model.
+
+For example, for the payload:
 
 {% highlight csharp %}
 const string payload =
@@ -105,11 +107,12 @@ const string payload =
 "\"Id\":0," +
 "\"Birthday\":\"Thu, 12 Apr 2012 18:43:10 GMT\"" +
 "}";
+{% endhighlight %}
 
-ODataEntry entry = null;
-this.ReadEntryPayload(model, payload, entitySet, entityType, reader => { entry = entry ?? reader.Item as ODataEntry; });
+The payload will be read as an `ODataResource`, and `Birthday` will be read as DateTimeOffset. 
 
-IList<ODataProperty> propertyList = entry.Properties.ToList();
+{% highlight csharp %}
+IList<ODataProperty> propertyList = odataResource.Properties.ToList();
 var birthday = propertyList[1].Value as DateTimeOffset?;
 birthday.Value.Should().Be(new DateTimeOffset(2012, 4, 12, 18, 43, 10, TimeSpan.Zero));
 {% endhighlight %}
