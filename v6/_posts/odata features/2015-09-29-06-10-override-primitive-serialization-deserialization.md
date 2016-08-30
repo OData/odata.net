@@ -20,20 +20,17 @@ public class Microsoft.OData.Core.ODataPayloadValueConverter {
 }
 {% endhighlight %}
 
-New helper functions in `ODataObjectModelExtensions` to set converter to model so the new converter can be applied:
+New helper functions to set converter to model so the new converter can be applied:
 
 {% highlight csharp %}
-public sealed class Microsoft.OData.Core.ODataObjectModelExtensions {
-  ...
-  public static Microsoft.OData.Core.ODataPayloadValueConverter GetPayloadValueConverter (Microsoft.OData.Edm.IEdmModel model)
   public static void SetPayloadValueConverter (Microsoft.OData.Edm.IEdmModel model, Microsoft.OData.Core.ODataPayloadValueConverter converter)
-  ...
+  public static Microsoft.OData.Core.ODataPayloadValueConverter GetPayloadValueConverter (Microsoft.OData.Edm.IEdmModel model)
 }
 {% endhighlight %}
 
 ### Sample
 
-Here we are trying to override the default converter to support the "R" format of date and time.   
+Here we are trying to override the default converter to support the "R" format of date and time. It is quite simple. 
 
 <strong>1. Define DataTimeOffset converter</strong>
 
@@ -68,39 +65,4 @@ internal class DateTimeOffsetCustomFormatPrimitivePayloadValueConverter : ODataP
 model.SetPayloadValueConverter(new DateTimeOffsetCustomFormatPrimitivePayloadValueConverter());
 {% endhighlight %}
 
-<strong>3. Serialize</strong>
-
-The new `ConvertToPayloadValue` would be used to write the DateTimeOffset type value.
-
-{% highlight csharp %}
-var df = EdmCoreModel.Instance.GetDateTimeOffset(false);
-
-var result = this.SetupSerializerAndRunTest(serializer =>
-{
-    var value = new DateTimeOffset(2012, 4, 13, 2, 43, 10, TimeSpan.FromHours(8));
-    serializer.WritePrimitiveValue(value, df);
-});
-
-result.Should().Be("\"Thu, 12 Apr 2012 18:43:10 GMT\"");
-{% endhighlight %}
-
-<strong>4. Deserialize</strong>
-
-The new `ConvertFromPayloadValue` would be used to read `Birthday` which is defined as DateTimeOffset in model.
-
-{% highlight csharp %}
-const string payload =
-"{" +
-"\"@odata.context\":\"http://www.example.com/$metadata#EntityNs.MyContainer.People/$entity\"," +
-"\"@odata.id\":\"http://mytest\"," +
-"\"Id\":0," +
-"\"Birthday\":\"Thu, 12 Apr 2012 18:43:10 GMT\"" +
-"}";
-
-ODataEntry entry = null;
-this.ReadEntryPayload(model, payload, entitySet, entityType, reader => { entry = entry ?? reader.Item as ODataEntry; });
-
-IList<ODataProperty> propertyList = entry.Properties.ToList();
-var birthday = propertyList[1].Value as DateTimeOffset?;
-birthday.Value.Should().Be(new DateTimeOffset(2012, 4, 12, 18, 43, 10, TimeSpan.Zero));
-{% endhighlight %}
+Then `DateTimeOffset` can be serialized to `Thu, 12 Apr 2012 18:43:10 GMT`, and payload like `Thu, 12 Apr 2012 18:43:10 GMT` can be deserialized back to DateTimeOffset.
