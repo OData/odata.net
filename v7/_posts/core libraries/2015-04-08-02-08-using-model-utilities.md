@@ -5,19 +5,24 @@ description: "Using model utility APIs"
 category: "2. EdmLib"
 ---
 
-The model utilities are made up of many useful **extension methods** to various EDM classes and interfaces (e.g., IEdmModel, IEdmType, ...). The extension methods are intended to implement some **commonly reusable** logic to simplify the code handling the entity data models. These methods can be roughly classified into five categories:
+The model utilities include many useful **extension methods** to various EDM classes and interfaces (e.g., IEdmModel, IEdmType, ...). The extension methods are intended to implement some **commonly reusable** logic to simplify model manipulations. These methods can be roughly classified into five categories:
 
- - **Searching**. The naming convention is `Find<ElementName>` (e.g., `IEdmModel.FindDeclaredType()`);
- - **Predicate**. The naming convention is `Is<ElementName>` (e.g., `IEdmOperation.IsFunction()`);
- - **Information**. The naming convention is `<InformationName>` (e.g., `IEdmNavigationSource.EntityType()`);
- - **Getter**. The naming convention is `Get<Name>` (e.g., `IEdmModel.GetTermValue<T>`);
- - **Setter**. The naming convention is `Set<Name>` (e.g., `IEdmModel.SetEdmVersion`).
- <br />
+- **Searching**. The naming convention is `Find<ElementName>` (e.g., `IEdmModel.FindDeclaredEntitySet()`);
+- **Predicate**. The naming convention is `Is<ElementName>` (e.g., `IEdmOperation.IsFunction()`);
+- **Information**. The naming convention is `<InformationName>` (e.g., `IEdmNavigationSource.EntityType()`);
+- **Getter**. The naming convention is `Get<Name>` (e.g., `IEdmModel.GetTermValue()`);
+- **Setter**. The naming convention is `Set<Name>` (e.g., `IEdmModel.SetEdmVersion()`).
 
-The mostly used parts are **Searching**, **Predicate** and **Information**. The extension methods of the latter two parts are trivial because they work literally as their names imply. So this section will mainly cover **Searching**. We will continue to use and extend the sample from the previous sections.
+The most widely used parts are **Searching**, **Predicate**, and **Information**. Extension methods in the latter two parts are trivial, because they work literally as their names suggest. This section focuses on **Searching**. We will use and extend the sample from the previous section.
 
-### Add the Sample Code
-In the **Program.cs** file, insert the following code into the `Program` class:
+### Exercise model utility APIs
+In the **Program.cs** file, add the `using` directive
+
+{% highlight csharp %}
+using System.Linq;
+{% endhighlight %}
+
+and insert the following code into the `Program` class:
 
 {% highlight csharp %}
 namespace EdmLibSample
@@ -66,11 +71,11 @@ namespace EdmLibSample
 }
 {% endhighlight %}
 
-### Run the Sample
+### Run the sample
 From the **DEBUG** menu, click **Start Without Debugging** to build and run the sample. The console window should **not** disappear after program exits.
 
 ![]({{site.baseurl}}/assets/2015-04-20-debug.png)
 
-The output of the console window should look like the following:
+The output on the console window should look like the following:
 
 ![]({{site.baseurl}}/assets/2015-04-20-output.png)

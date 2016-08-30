@@ -5,11 +5,11 @@ description: "Define operations and operation imports using EdmLib APIs"
 category: "2. EdmLib"
 ---
 
-EdmLib supports defining all types of operations (**actions** or **functions**) and operation imports (**action imports** or **function imports**). Besides the conceptual difference between actions and functions, the way to define them could actually be shared among actions and functions.
+EdmLib supports defining all types of operations (**actions** and **functions**) and operation imports (**action imports** or **function imports**). Putting aide the conceptual differences between actions and functions, the way to define them could actually be shared between actions and functions.
 
-This section shows how to define operations and operation imports using EdmLib APIs. We will continue to use and extend the sample from the previous sections.
+This section shows how to define operations and operation imports using EdmLib APIs. We will use and extend the sample from the previous section.
 
-### Add a Bound Action *Rate*
+### Add bound action *Rate*
 In the **SampleModelBuilder.cs** file, add the following code into the `SampleModelBuilder` class:
 
 {% highlight csharp %}
@@ -34,7 +34,7 @@ namespace EdmLibSample
 }
 {% endhighlight %}
 
-Then in the **Program.cs** file, insert the following code into the `Main` method:
+Then in the **Program.cs** file, insert the following code into the `Main()` method:
 
 {% highlight csharp %}
 namespace EdmLibSample
@@ -60,13 +60,12 @@ namespace EdmLibSample
 
 This code:
 
- - Defines a **bound action** `Rate` within the namespace `Sample.NS` with **no return type**;
- - Adds a **binding parameter** `customer` of type `Sample.NS.Customer`;
- - Adds a parameter `rating` of type `Edm.Int32`;
- - Adds the `Sample.NS.Rate` action to the model.
- <br />
+- Defines a **bound action** `Rate` within the namespace `Sample.NS`, which has **no return value**;
+- Adds a **binding parameter** `customer` of type `Sample.NS.Customer`;
+- Adds a parameter `rating` of type `Edm.Int32`;
+- Adds the bound action to the model.
 
-### Add an Unbound Function *MostExpensive*
+### Add an unbound function *MostExpensive*
 In the **SampleModelBuilder.cs** file, add the following code into the `SampleModelBuilder` class:
 
 {% highlight csharp %}
@@ -89,7 +88,7 @@ namespace EdmLibSample
 }
 {% endhighlight %}
 
-Then in the **Program.cs** file, insert the following code into the `Main` method:
+Then in the **Program.cs** file, insert the following code into the `Main()` method:
 
 {% highlight csharp %}
 namespace EdmLibSample
@@ -115,19 +114,11 @@ namespace EdmLibSample
 
 This code:
 
- - Defines an **unbound composable function** `MostExpensive` within the namespace `Sample.NS`;
- - Has **no parameter**;
- - Adds the `Sample.NS.MostExpensive` action to the model.
- <br />
+- Defines an **unbound parameterless composable function** `MostExpensive` within the namespace `Sample.NS`;
+- Adds the function to the model.
 
-### Add a Function Import *MostValuable*
-In the **SampleModelBuilder.cs** file, add the following `using` clause:
-
-{% highlight csharp %}
-using Microsoft.OData.Edm.Library.Expressions;
-{% endhighlight %}
-
-Then add the following code into the `SampleModelBuilder` class:
+### Add function import *MostValuable*
+In the **SampleModelBuilder.cs** file, add the following code into the `SampleModelBuilder` class:
 
 {% highlight csharp %}
 namespace EdmLibSample
@@ -139,7 +130,7 @@ namespace EdmLibSample
         ...
         public SampleModelBuilder BuildMostValuableFunctionImport()
         {
-            _mostValuableFunctionImport = _defaultContainer.AddFunctionImport("MostValuable", _mostExpensiveFunction, new EdmEntitySetReferenceExpression(_orderSet));
+            _mostValuableFunctionImport = _defaultContainer.AddFunctionImport("MostValuable", _mostExpensiveFunction, new EdmPathExpression("Orders"));
             return this;
         }
         ...
@@ -147,7 +138,7 @@ namespace EdmLibSample
 }
 {% endhighlight %}
 
-And in the **Program.cs** file, insert the following code into the `Main` method:
+And in the **Program.cs** file, insert the following code into the `Main()` method:
 
 {% highlight csharp %}
 namespace EdmLibSample
@@ -172,13 +163,12 @@ namespace EdmLibSample
 
 This code:
 
- - Directly adds a **function import** `MostValuable` into the default container;
- - Lets the function import return a `Sample.NS.Order` from and **limited to** the entity set `Orders`;
- <br />
+- Directly adds a **function import** `MostValuable` to the default container;
+- Have the function import return a `Sample.NS.Order` entity from and **only from** the entity set `Orders`.
  
-The `Sample.NS.MostValuable` function import is actually the `Sample.NS.MostExpensive` function exposed in the entity container with a **different name** (could be **arbitrary valid name**).
+The `Sample.NS.MostValuable` function import is actually the `Sample.NS.MostExpensive` function exposed in the entity container with a **different name** (could be **any valid name**).
 
-### Run the Sample
-Build and run the sample. Then open the **csdl.xml** file under the **output directory**. The content of **csdl.xml** should look like the following:
+### Run the sample
+Build and run the sample. Then open the file **csdl.xml** under the **output directory**. The content should look like the following:
 
 ![]({{site.baseurl}}/assets/2015-04-20-csdl.png)

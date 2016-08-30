@@ -5,12 +5,12 @@ description: "Define annotations using EdmLib APIs"
 category: "2. EdmLib"
 ---
 
-EdmLib supports adding annotations on various model elements, including entity sets, entity types, properties and so on. Annotations can be put under **the `Annotations` element** in the schema as well as **the targetted model elements** (**inline** annotations). Users can specify the **serialization location** using EdmLib API.
+EdmLib supports adding annotations on various model elements, including entity sets, entity types, properties, and so on. Annotations can be put under **the `Annotations` XML element**, or under **the annotated target model elements** (**inline** annotations). Users can specify the **serialization location** using the EdmLib API.
 
-This section shows how to define annotations using EdmLib APIs. We will continue to use and extend the sample from the previous sections.
+This section shows how to define annotations using EdmLib APIs. We will use and extend the sample from the previous section.
 
-### Add an Annotation to the Entity Set *Customers*
-In the **SampleModelBuilder.cs** file, add the following `using` clause:
+### Add an annotation to entity set *Customers*
+In the **SampleModelBuilder.cs** file, add the following `using` directive:
 
 {% highlight csharp %}
 using Microsoft.OData.Edm.Csdl;
@@ -37,7 +37,7 @@ namespace EdmLibSample
 }
 {% endhighlight %}
 
-And in the **Program.cs** file, insert the following code into the `Main` method:
+And in the **Program.cs** file, insert the following code into the `Main()` method:
 
 {% highlight csharp %}
 namespace EdmLibSample
@@ -60,9 +60,9 @@ namespace EdmLibSample
 }
 {% endhighlight %}
 
-This code adds an `Edm.Int32` annotation `Sample.NS.MaxCount` targetting the entity set `Customers` to the `Annotations` element.
+This code adds an `Edm.Int32` annotation `Sample.NS.MaxCount` to the entity set `Customers`, which is put under the `Annotations` element.
 
-### Add an Inline Annotation to the Entity Type *Customer*
+### Add an inline Annotation to the Entity Type *Customer*
 In the **SampleModelBuilder.cs** file, insert the following code into the `SampleModelBuilder.BuildAnnotations()` method:
 
 {% highlight csharp %}
@@ -90,7 +90,7 @@ namespace EdmLibSample
 
 This code adds an **inline** `Edm.String` annotation `Sample.NS.KeyName` targetting the entity type `Customer`.
 
-### Add an Inline Annotation to the Property *Customer.Name*
+### Add an inline annotation to the property *Customer.Name*
 In the **SampleModelBuilder.cs** file, insert the following code into the `SampleModelBuilder.BuildAnnotations()` method:
 
 {% highlight csharp %}
@@ -116,9 +116,9 @@ namespace EdmLibSample
 }
 {% endhighlight %}
 
-This code adds an **inline** `Edm.Int32` annotation `Sample.NS.Width` targetting the property `Customer.Name`.
+This code adds an **inline** `Edm.Int32` annotation `Sample.NS.Width` to the property `Customer.Name`.
 
-### Run the Sample
-Build and run the sample. Then open the **csdl.xml** file under the **output directory**. The content of **csdl.xml** should look like the following:
+### Run the sample
+Build and run the sample. Then open the file **csdl.xml** under the **output directory**. The content should look like the following:
 
 ![]({{site.baseurl}}/assets/2015-04-20-csdl1.png)

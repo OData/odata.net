@@ -1,15 +1,15 @@
 ---
 layout: post
-title: "2.4 Define singleton"
+title: "2.4 Define singletons"
 description: "Define singleton using EdmLib APIs"
 category: "2. EdmLib"
 ---
 
 Defining a singleton in the entity container shares the same simple way as defining an entity set.
 
-This section shows how to define singletons using EdmLib APIs. We will continue to use and extend the sample from the previous sections.
+This section shows how to define singletons using EdmLib APIs. We will use and extend the sample from the previous section.
 
-### Add a Singleton *VipCustomer*
+### Add a singleton *VipCustomer*
 In the **SampleModelBuilder.cs** file, add the following code into the `SampleModelBuilder` class:
 
 {% highlight csharp %}
@@ -32,7 +32,7 @@ namespace EdmLibSample
 
 This code directly adds a new singleton `VipCustomer` to the default container.
 
-In the **Program.cs** file, insert the following code into the `Main` method:
+In the **Program.cs** file, insert the following code into the `Main()` method:
 
 {% highlight csharp %}
 namespace EdmLibSample
@@ -56,7 +56,7 @@ namespace EdmLibSample
 {% endhighlight %}
 
 ### Run the Sample
-Build and run the sample. Then open the **csdl.xml** file under the **output directory**. The content of **csdl.xml** should look like the following:
+Build and run the sample. Then open the file **csdl.xml** under the **output directory**. The content should look like the following:
 
 ![]({{site.baseurl}}/assets/2015-04-18-csdl1.png)
 

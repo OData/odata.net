@@ -5,11 +5,11 @@ description: "Define entity relations using EdmLib APIs"
 category: "2. EdmLib"
 ---
 
-Entity relations are defined by **navigation properties** in entity data models. Adding a navigation property to an entity type using EdmLib APIs is as simple as adding a structural property shown in the previous sections. EdmLib APIs support adding navigation properties targetting some entity set in the entity container as well as **contained** entity set belonging to some specific navigation property.
+Entity relations are defined by **navigation properties** in entity data models. Adding a navigation property to an entity type using EdmLib APIs is as simple as adding a structural property shown in previous sections. EdmLib supports adding navigation properties targeting an entity set in the entity container or a **contained** entity set belonging to a navigation property.
 
-This section shows how to define navigation properties using EdmLib APIs. We will continue to use and extend the sample from the previous sections.
+This section shows how to define navigation properties using EdmLib APIs. We will use and extend the sample from the previous section.
 
-### Add a Navigation Property *Friends*
+### Add a navigation property *Friends*
 In the **SampleModelBuilder.cs** file, insert the following code into the `SampleModelBuilder` class:
 
 {% highlight csharp %}
@@ -53,12 +53,11 @@ namespace EdmLibSample
 
 This code:
 
- - Adds a navigation property `Friends` to the entity type `Customer`;
- - Sets the `ContainsTarget` property to `false` since this property has **no contained entities** and targets one or more `Customer` entites in the entity set `Customers`;
- - Sets the `TargetMultiplicity` property to `EdmMultiplicity.Many` indicating that one customer can have **many** orders. Other possible values are `ZeroOrOne` and `One`;
- <br />
+- Adds a navigation property `Friends` to the entity type `Customer`;
+- Sets the `ContainsTarget` property to `false` since this property has **no contained entities** but targets one or more `Customer` entities in the entity set `Customers`;
+- Sets the `TargetMultiplicity` property to `EdmMultiplicity.Many`, indicating that one customer can have **many** orders. Other possible values include `ZeroOrOne` and `One`.
  
-### Add an Entity Type *Order* and an Entity Set *Orders*
+### Add entity Type *Order* and entity set *Orders*
 Just as how we added the entity set `Customers`, we first add an entity type `Order` and then the entity set `Orders`.
 
 In the **SampleModelBuilder.cs** file, insert the following code into the `SampleModelBuilder` class:
@@ -76,7 +75,7 @@ namespace EdmLibSample
         public SampleModelBuilder BuildOrderType()
         {
             _orderType = new EdmEntityType("Sample.NS", "Order");
-            _orderType.AddKeys(_orderType.AddStructuralProperty("Id", EdmPrimitiveTypeKind.Int32));
+            _orderType.AddKeys(_orderType.AddStructuralProperty("Id", EdmPrimitiveTypeKind.Int32, isNullable: false));
             _orderType.AddStructuralProperty("Price", EdmPrimitiveTypeKind.Decimal);
             _model.AddElement(_orderType);
             return this;
@@ -92,7 +91,7 @@ namespace EdmLibSample
 }
 {% endhighlight %}
 
-In the **Program.cs** file, insert the following code into the `Main` method:
+In the **Program.cs** file, insert the following code into the `Main()` method:
 
 {% highlight csharp %}
 namespace EdmLibSample
@@ -121,7 +120,7 @@ namespace EdmLibSample
 }
 {% endhighlight %}
 
-### Add Navigation Properties *Purchases* and *Intentions*
+### Add navigation properties *Purchases* and *Intentions*
 In the **SampleModelBuilder.cs** file, insert the following code into the `SampleModelBuilder` class:
 
 {% highlight csharp %}
@@ -130,8 +129,10 @@ namespace EdmLibSample
     public class SampleModelBuilder
     {
         ...
+#region !!!INSERT THE CODE BELOW!!!
         private EdmNavigationProperty _purchasesProperty;
         private EdmNavigationProperty _intentionsProperty;
+#endregion
         ...
         public SampleModelBuilder BuildCustomerType()
         {
@@ -173,12 +174,11 @@ namespace EdmLibSample
 
 This code:
 
- - Adds a `Purchases` property targetting one or more **settled orders** in the entity set `Orders`;
- - Adds a `Intentions` property targetting a **contained entity set** of **unsettled orders** that should not be listed in the entity set `Orders`.
- <br />
+- Adds a `Purchases` navigation property targeting one or more **settled orders** in the entity set `Orders`;
+- Adds an `Intentions` navigation property targeting a **contained entity set** of **unsettled orders** that are not listed in the entity set `Orders`.
 
-### Run the Sample
-Build and run the sample. Then open the **csdl.xml** file under the **output directory**. The content of **csdl.xml** should look like the following:
+### Run the sample
+Build and run the sample. Then open the file **csdl.xml** under the **output directory**. The content of it should look like the following:
 
 ![]({{site.baseurl}}/assets/2015-04-18-csdl.png)
 
