@@ -1,11 +1,11 @@
 ---
 layout: post
-title: "Parsing URI path template"
+title: "Parsing uri path template"
 description: ""
 category: "5. OData Features"
 ---
 
-From ODataLib 6.11.0, it supports to parse Uri path template. A path template is any identifier string enclosed with curly brackets.
+From ODataLib 6.11.0, OData uri parser can parse uri path template. A path template is any identifier string enclosed with curly braces.
 For example: 
 {% highlight csharp %}
 {dynamicProperty}
@@ -13,7 +13,7 @@ For example:
 
 # Uri templates
 
-There are three kind of Uri template:
+There are three kinds of template:
 
 1. Key template:  ~/Customers({key})
 2. Function parameter template: ~/Customers/Default.MyFunction(name={name})
@@ -21,7 +21,7 @@ There are three kind of Uri template:
 
 Be caution:
 
-1. please EnableUriTemplateParsing = true for UriParser.
+1. In UriParser instance, please set EnableUriTemplateParsing = true.
 2. Path template can't be the first segment.
 
 # Example
