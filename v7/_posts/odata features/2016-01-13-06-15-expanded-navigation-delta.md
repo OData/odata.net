@@ -131,7 +131,7 @@ public enum Microsoft.OData.ODataDeltaReaderState
 public abstract class Microsoft.OData.ODataDeltaReader
 {
     ...
-    Microsoft.OData.Core.ODataReaderState SubState  { public abstract get; }
+    Microsoft.OData.ODataReaderState SubState  { public abstract get; }
     ...
 }
 {% endhighlight %}

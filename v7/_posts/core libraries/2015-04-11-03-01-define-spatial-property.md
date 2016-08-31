@@ -13,7 +13,7 @@ Using Spatial in OData services involves two parts of work:
 
 This section shows how to define spatial properties in entity data models using EdmLib APIs. We will continue to use and extend the sample from the **EdmLib sections**.
 
-### Add Properties *GeometryLoc* and *GeographyLoc*
+### Add properties *GeometryLoc* and *GeographyLoc*
 In the **SampleModelBuilder.cs** file, insert the following code into the `SampleModelBuilder.BuildAddressType()` method:
 
 {% highlight csharp %}
@@ -43,7 +43,7 @@ This code:
  - Adds an `Edm.GeographyPoint` property `GeographyLoc` with a **type facet** `Srid=1234` to the `Address` type.
  <br />
  
-### Run the Sample
+### Run the sample
 Build and run the sample. Then open the **csdl.xml** file under the **output directory**. The content of **csdl.xml** should look like the following:
 
 ![]({{site.baseurl}}/assets/2015-04-21-csdl.png)

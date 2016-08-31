@@ -7,7 +7,7 @@ category: "3. Spatial"
 
 This section shows how to create spatial instances using Spatial APIs and return them as property values of OData entries.
 
-### Create *GeometryPoint* and *GeographyPoint* Instances
+### Create *GeometryPoint* and *GeographyPoint* instances
 In order to use spatial types, please add the following `using` directive:
 
 {% highlight csharp %}
@@ -56,7 +56,7 @@ var addressValue = new ODataResource
 };
 {% endhighlight %}
 
-### Construct More Complex Spatial Intances
+### Construct more complex spatial instances
 Directly creating these instances using Spatial APIs would be a bit complicated. So we **highly** recommend that you download and add the [SpatialFactory.cs](https://github.com/OData/odata.net/blob/ODataV4-7.x/test/FunctionalTests/Microsoft.OData.TestCommon/SpatialFactory.cs) file to your project and use the `GeometryFactory` or the `GeographyFactory` class to construct more complex spatial instances.
 
 Here are some sample code of how to use the factory classes to create spatial instances:
