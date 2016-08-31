@@ -8,7 +8,7 @@ category: "3. Spatial"
 This section shows how to create spatial instances using Spatial APIs and return them as property values of OData entries.
 
 ### Create *GeometryPoint* and *GeographyPoint* Instances
-In order to use spatial types, please add the following `using` clause:
+In order to use spatial types, please add the following `using` directive:
 
 {% highlight csharp %}
 using Microsoft.Spatial;
@@ -40,10 +40,10 @@ Spatial instances can be directly put into `ODataPrimitiveValue` as property val
 
 ![]({{site.baseurl}}/assets/2015-04-21-csdl.png)
 
-An `ODataComplexValue` for the `Address` type could be constructed as follows:
+An `ODataResource` for the `Address` type could be constructed as follows:
 
 {% highlight csharp %}
-var addressValue = new ODataComplexValue
+var addressValue = new ODataResource
 {
     Properties = new ODataProperty[]
     {
@@ -57,7 +57,7 @@ var addressValue = new ODataComplexValue
 {% endhighlight %}
 
 ### Construct More Complex Spatial Intances
-Directly creating these instances using Spatial APIs would be a bit complicated. So we **highly** recommend that you download and add the [SpatialFactory.cs](https://github.com/OData/odata.net/blob/master/test/FunctionalTests/Tests/Microsoft.Spatial/Utils/SpatialFactory.cs) file to your project and use the `GeometryFactory` or the `GeographyFactory` class to construct more complex spatial instances.
+Directly creating these instances using Spatial APIs would be a bit complicated. So we **highly** recommend that you download and add the [SpatialFactory.cs](https://github.com/OData/odata.net/blob/ODataV4-7.x/test/FunctionalTests/Microsoft.OData.TestCommon/SpatialFactory.cs) file to your project and use the `GeometryFactory` or the `GeographyFactory` class to construct more complex spatial instances.
 
 Here are some sample code of how to use the factory classes to create spatial instances:
 
@@ -81,7 +81,4 @@ GeometryCollection collection = GeometryFactory.Collection()
         .Point(5, 5);
 {% endhighlight %}
 
-More samples could be found in the test cases of the `Microsoft.Spatial.TDDUnitTests` project. Please find the source code [here](https://github.com/OData/odata.net/tree/master/test/FunctionalTests/Tests/Microsoft.Spatial).
-
-### References
-[[Tutorial & Sample] Using Geospatial Data](http://blogs.msdn.com/b/odatateam/archive/2011/10/17/using-geospatial-data.aspx).
+More samples could be found in the test cases of the `Microsoft.Spatial.Tests` project. Please find the source code [here](https://github.com/OData/odata.net/tree/ODataV4-7.x/test/FunctionalTests/Microsoft.Spatial.Tests).

@@ -5,7 +5,7 @@ description: ""
 category: "5. OData Features"
 ---
 
-<strong>[odata.track-changes](http://docs.oasis-open.org/odata/odata/v4.0/errata02/os/complete/part1-protocol/odata-v4.0-errata02-os-part1-protocol-complete.html#_Toc406398239)</strong>, <strong>[odata.maxpagesize](http://docs.oasis-open.org/odata/odata/v4.0/errata02/os/complete/part1-protocol/odata-v4.0-errata02-os-part1-protocol-complete.html#_Toc406398238)</strong>, <strong>[odata.maxpagesize](http://docs.oasis-open.org/odata/odata/v4.0/errata02/os/complete/part1-protocol/odata-v4.0-errata02-os-part1-protocol-complete.html#_Toc406398236)</strong> are supported to add in prefer header since ODataLib 6.11.0.
+<strong>[odata.track-changes](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part1-protocol/odata-v4.0-errata03-os-part1-protocol-complete.html#_Preference_odata.track-changes)</strong>, <strong>[odata.maxpagesize](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part1-protocol/odata-v4.0-errata03-os-part1-protocol-complete.html#_The_odata.maxpagesize_Preference)</strong>, <strong>[odata.ContinueOnError](http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part1-protocol/odata-v4.0-errata03-os-part1-protocol-complete.html#_Preference_odata.continue-on-error)</strong> are supported to add in prefer header since ODataLib 6.11.0.
 
 # Create request message with prefer header
 

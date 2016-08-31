@@ -21,10 +21,10 @@ namespace EdmLibSample
 {
     public class SampleModelBuilder
     {
-        ...
         public SampleModelBuilder BuildAddressType()
         {
-            ...
+            _model = new EdmModel();
+            var _addressType = new EdmComplexType("test", "Address");
             _addressType.AddStructuralProperty("Postcode", EdmPrimitiveTypeKind.Int32);
 #region     !!!INSERT THE CODE BELOW!!!
             _addressType.AddStructuralProperty("GeometryLoc", EdmPrimitiveTypeKind.GeometryPoint);
@@ -33,7 +33,6 @@ namespace EdmLibSample
             _model.AddElement(_addressType);
             return this;
         }
-        ...
     }
 }
 {% endhighlight %}
