@@ -11,6 +11,8 @@ The `ODataMessageReaderSettings` & `ODataMessageWriterSettings` `Validations
 
 Given the following model.
 
+{% highlight csharp %}    
+
     EdmModel model = new EdmModel();
     var entityType = new EdmEntityType("Server.NS", "ServerEntityType", null, false, false, false);
     entityType.AddKeys(entityType.AddStructuralProperty("Id", EdmPrimitiveTypeKind.Int32));
@@ -19,6 +21,8 @@ Given the following model.
     var container = new EdmEntityContainer("Server.NS", "Container");
     var entitySet = container.AddEntitySet("EntitySet", entityType);
     model.AddElement(container);
+
+{% endhighlight %}
 
 The below `messageWriterSettings` will enable reading undeclared/untyped property. It reads an untype JSON as `ODataUntypedValue`. And `ODataUntypedValue.RawJson` has the raw JSON string.
 
@@ -60,13 +64,12 @@ The below `messageWriterSettings` will enable reading undeclared/untyped prope
     // @"{""@odata.type"":""Server.NS.AddressInValid"",""Street"":""No.999,Zixing Rd Minhang"",""UndeclaredStreet"":""No.10000000999,Zixing Rd Minhang""}"
     Console.WriteLine((entry.Properties.Last().Value as ODataUntypedValue).RawValue); 
     
-
-{% highlight csharp %}
+{% endhighlight %}
 
 And this is how to write undeclared & untyped property:
 
 {% highlight csharp %}
-
+![](57)
     MemoryStream outputStream = new MemoryStream();
     IODataResponseMessage message = new InMemoryMessage() { Stream = outputStream };
     message.SetHeader("Content-Type", "application/json;odata.metadata=minimal");
