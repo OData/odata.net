@@ -408,13 +408,7 @@ namespace System.Data.Services.Client
                             List<IEdmStructuralProperty> loadedKeyProperties = new List<IEdmStructuralProperty>();
                             foreach (PropertyInfo property in ClientTypeUtil.GetPropertiesOnType(type, /*declaredOnly*/edmBaseType != null).OrderBy(p => p.Name))
                             {
-                                // A better approach for getting to the value of a property without triggering lazy construction
-                                // could be desired, but I don't control the auto proxy generation stuff, so for now...
-                                // we just favor convwention over configuration and expect to find a field with the same name
-                                // as the property, but prefixed with __ or _.
-                                FieldInfo backingField = type.GetField("__" + property.Name, BindingFlags.NonPublic | BindingFlags.Instance);
-                                if (backingField == null)
-                                    backingField = type.GetField("_" + property.Name, BindingFlags.NonPublic | BindingFlags.Instance);
+                                FieldInfo backingField = FindBackingField(property);
                                 IEdmProperty edmProperty = this.CreateEdmProperty((EdmStructuredType)entityType, property, backingField);
                                 loadedProperties.Add(edmProperty);
 
@@ -450,13 +444,7 @@ namespace System.Data.Services.Client
                             List<IEdmProperty> loadedProperties = new List<IEdmProperty>();
                             foreach (PropertyInfo property in ClientTypeUtil.GetPropertiesOnType(type, /*declaredOnly*/edmBaseType != null).OrderBy(p => p.Name))
                             {
-                                // A better approach for getting to the value of a property without triggering lazy construction
-                                // could be desired, but I don't control the auto proxy generation stuff, so for now...
-                                // we just favor convwention over configuration and expect to find a field with the same name
-                                // as the property, but prefixed with __ or _.
-                                FieldInfo backingField = type.GetField("__" + property.Name, BindingFlags.NonPublic | BindingFlags.Instance);
-                                if (backingField == null)
-                                    backingField = type.GetField("_" + property.Name, BindingFlags.NonPublic | BindingFlags.Instance);
+                                FieldInfo backingField = FindBackingField(property);
                                 IEdmProperty edmProperty = this.CreateEdmProperty(complexType, property, backingField);
                                 loadedProperties.Add(edmProperty);
                             }
@@ -506,6 +494,19 @@ namespace System.Data.Services.Client
             }
 
             return cachedEdmType;
+        }
+
+        /// <summary>
+        /// Tries to find the backing field for property on type. It assumes the field would have a name identical to the property name, but prefixed with __ or _ by convention.
+        /// </summary>
+        /// <param name="property">The property to find the backing field for.</param>
+        /// <returns>The property backing field or null.</returns>
+        private static FieldInfo FindBackingField(PropertyInfo property)
+        {
+            FieldInfo backingField = property.DeclaringType.GetField("__" + property.Name, BindingFlags.NonPublic | BindingFlags.Instance);
+            if (backingField == null)
+                backingField = property.DeclaringType.GetField("_" + property.Name, BindingFlags.NonPublic | BindingFlags.Instance);
+            return backingField;
         }
 
         /// <summary>
