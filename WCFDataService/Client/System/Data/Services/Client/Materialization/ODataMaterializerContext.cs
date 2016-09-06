@@ -75,6 +75,14 @@ namespace System.Data.Services.Client.Materialization
         /// </summary>
         protected ResponseInfo ResponseInfo { get; private set; }
 
+        public bool AutoNullPropagation
+        {
+            get
+            {
+                return this.ResponseInfo.AutoNullPropagation;
+            }
+        }
+
         /// <summary>
         /// Resolved the given edm type to clr type.
         /// </summary>

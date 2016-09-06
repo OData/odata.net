@@ -598,6 +598,12 @@ namespace System.Data.Services.Client
             set { this.ignoreMissingProperties = value; }
         }
 
+        /// <summary>Gets or sets whether query projection will handle null propagation automatically. If set to true null propagation checks can be omitted from queries.</summary>
+        /// <remarks>
+        /// Default is false.
+        /// </remarks>
+        public bool AutoNullPropagation { get; set; }
+
         /// <summary>Gets or sets whether to respect IgnoreMissingProperties boolean, or directly ignore/support undeclared properties.</summary>
         /// <remarks>
         /// This also affects responses during SaveChanges.

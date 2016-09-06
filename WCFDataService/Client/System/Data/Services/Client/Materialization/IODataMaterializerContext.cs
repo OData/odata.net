@@ -61,5 +61,7 @@ namespace System.Data.Services.Client.Materialization
         /// <param name="clientClrType">The client side CLR type.</param>
         /// <returns>The resolved EDM type to provide to ODataLib.</returns>
         IEdmType ResolveExpectedTypeForReading(Type clientClrType);
+
+        bool AutoNullPropagation { get; }
     }
 }
