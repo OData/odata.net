@@ -403,12 +403,7 @@ namespace System.Data.Services.Client.Materialization
 
             // If we are projecting a property defined on a derived type and the entry is of the base type, get property would throw. The user need to check for null in the query.
             // e.g. Select(p => new MyEmployee { ID = p.ID, Manager = (p as Employee).Manager == null ? null : new MyManager { ID = (p as Employee).Manager.ID } })
-            MaterializerNavigationLink property = ODataEntityMaterializer.GetPropertyOrThrow(entry.NavigationLinks, name);
-            MaterializerEntry result = property.Entry;
-            if (result == null)
-            {
-                throw new InvalidOperationException(DSClient.Strings.AtomMaterializer_PropertyNotExpectedEntry(name));
-            }
+            MaterializerEntry result = ProjectionGetMaterializerEntry(entry, name);
 
             CheckEntryToAccessNotNull(result, name);
             return result.Entry;
@@ -420,14 +415,19 @@ namespace System.Data.Services.Client.Materialization
         /// <returns>The sub-entry or null.</returns>
         internal static ODataEntry ProjectionGetEntryOrNull(MaterializerEntry entry, string name)
         {
+            MaterializerEntry result = ProjectionGetMaterializerEntry(entry, name);
+            return result.Entry;
+        }
+
+        private static MaterializerEntry ProjectionGetMaterializerEntry(MaterializerEntry entry, string name)
+        {
             MaterializerNavigationLink property = ODataEntityMaterializer.GetPropertyOrThrow(entry.NavigationLinks, name);
             MaterializerEntry result = property.Entry;
             if (result == null)
             {
                 throw new InvalidOperationException(DSClient.Strings.AtomMaterializer_PropertyNotExpectedEntry(name));
             }
-
-            return result.Entry;
+            return result;
         }
 
         /// <summary>Initializes a projection-driven entry (with a specific type and specific properties).</summary>
@@ -902,6 +902,7 @@ namespace System.Data.Services.Client.Materialization
 
         /// <summary>Creates an entry materialization plan for a given projection.</summary>
         /// <param name="queryComponents">Query components for plan to materialize.</param>
+        /// <param name="autoNullPropagation">Allow nulls in expand paths.</param>
         /// <returns>A materialization plan.</returns>
         private static ProjectionPlan CreatePlan(QueryComponents queryComponents, bool autoNullPropagation)
         {
