@@ -36,7 +36,7 @@ namespace System.Data.Services.Client
     /// <summary>
     /// Wrapper HttpWebRequest &amp; HttWebResponse
     /// </summary>
-    internal class QueryResult : BaseAsyncResult, IDisposable
+    internal class QueryResult : BaseAsyncResult
     {
         /// <summary>Originating service request</summary>
         internal readonly DataServiceRequest ServiceRequest;
@@ -230,7 +230,8 @@ namespace System.Data.Services.Client
 
 #if !ASTORIA_LIGHT && !PORTABLELIB
         /// <summary>Synchronous web request</summary>
-        internal void ExecuteQuery()
+        /// <returns>The IODataResponseMessage for the Request.</returns>
+        internal IODataResponseMessage ExecuteQuery()
         {
             try
             {
@@ -253,8 +254,7 @@ namespace System.Data.Services.Client
                     }
                 }
 #endif
-                IODataResponseMessage response = null;
-                response = this.RequestInfo.GetSyncronousResponse(this.Request, true);
+                IODataResponseMessage response = this.RequestInfo.GetSyncronousResponse(this.Request, true);
                 this.SetHttpWebResponse(Util.NullCheck(response, InternalError.InvalidGetResponse));
 
                 if (HttpStatusCode.NoContent != this.StatusCode)
@@ -281,6 +281,7 @@ namespace System.Data.Services.Client
             {
                 throw this.Failure;
             }
+            return this.responseMessage;
         }
 #endif
 
@@ -717,21 +718,6 @@ namespace System.Data.Services.Client
                 this.ContentType,
                 responseMessageWrapper,
                 payloadKind);
-        }
-
-        // $count queries need a way to dispose responseMessage as no enummeration occurs.
-        public void Dispose()
-        {
-            this.Dispose(true);
-            GC.SuppressFinalize(this);
-        }
-
-        protected virtual void Dispose(bool disposing)
-        {
-            if (disposing && this.responseMessage != null)
-            {
-                WebUtil.DisposeMessage(this.responseMessage);
-            }
         }
     }
 }

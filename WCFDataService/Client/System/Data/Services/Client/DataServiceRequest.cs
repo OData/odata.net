@@ -234,44 +234,48 @@ namespace System.Data.Services.Client
                 new string[] { XmlConstants.HttpRequestAccept } /*headersToReset*/,
                 null /*descriptor*/);
 
-            using (response = new QueryResult(this, Util.ExecuteMethodName, serviceRequest, request, new RequestInfo(context), null, null))
+            response = new QueryResult(this, Util.ExecuteMethodName, serviceRequest, request, new RequestInfo(context), null, null);
+
+            IODataResponseMessage responseMessage = null;
+            try
             {
-                try
+                responseMessage = response.ExecuteQuery();
+
+                if (HttpStatusCode.NoContent != response.StatusCode)
                 {
-                    response.ExecuteQuery();
-
-                    if (HttpStatusCode.NoContent != response.StatusCode)
+                    StreamReader sr = new StreamReader(response.GetResponseStream());
+                    long r = -1;
+                    try
                     {
-                        StreamReader sr = new StreamReader(response.GetResponseStream());
-                        long r = -1;
-                        try
-                        {
-                            r = XmlConvert.ToInt64(sr.ReadToEnd());
-                        }
-                        finally
-                        {
-                            sr.Close();
-                        }
-
-                        return r;
+                        r = XmlConvert.ToInt64(sr.ReadToEnd());
                     }
-                    else
+                    finally
                     {
-                        throw new DataServiceQueryException(Strings.DataServiceRequest_FailGetCount, response.Failure);
+                        sr.Close();
                     }
+
+                    return r;
                 }
-                catch (InvalidOperationException ex)
+                else
                 {
-                    QueryOperationResponse operationResponse = null;
-                    operationResponse = response.GetResponse<long>(MaterializeAtom.EmptyResults);
-                    if (null != operationResponse)
-                    {
-                        operationResponse.Error = ex;
-                        throw new DataServiceQueryException(Strings.DataServiceException_GeneralError, ex, operationResponse);
-                    }
-
-                    throw;
+                    throw new DataServiceQueryException(Strings.DataServiceRequest_FailGetCount, response.Failure);
                 }
+            }
+            catch (InvalidOperationException ex)
+            {
+                QueryOperationResponse operationResponse = null;
+                operationResponse = response.GetResponse<long>(MaterializeAtom.EmptyResults);
+                if (null != operationResponse)
+                {
+                    operationResponse.Error = ex;
+                    throw new DataServiceQueryException(Strings.DataServiceException_GeneralError, ex, operationResponse);
+                }
+
+                throw;
+            }
+            finally
+            {
+                WebUtil.DisposeMessage(responseMessage);
             }
         }
 #endif
