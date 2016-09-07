@@ -522,7 +522,7 @@ namespace System.Data.Services.Client
                         backingField = null;
                     break;
                 case ProxyBackingFieldNamingConvention.CamelCasing:
-                    backingField = property.DeclaringType.GetField(char.ToUpper(property.Name[0]) + property.Name.Substring(1));
+                    backingField = property.DeclaringType.GetField(char.ToLower(property.Name[0]) + property.Name.Substring(1));
                     if (backingField != null && backingField.FieldType != property.PropertyType)
                         backingField = null;
                     break;
