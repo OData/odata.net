@@ -265,6 +265,11 @@ namespace System.Data.Services.Client
                         this.outputResponseStream = stream;
                     }
                 }
+                else
+                {
+                    WebUtil.DisposeMessage(this.responseMessage);
+                    this.responseMessage = null;
+                }
             }
             catch (Exception e)
             {
