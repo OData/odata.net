@@ -977,6 +977,15 @@ namespace System.Data.Services.Client
             get { return this.model; }
         }
 
+#if !ASTORIA_LIGHT && !PORTABLELIB// Synchronous methods not available
+        /// <summary>
+        /// If set to true data is read directly from the network stream. If set to false (default/old behaviour) the network stream is copied before reading.
+        /// </summary>
+        /// <remarks>
+        /// This setting only has effect for synchronous requests. Setting this to true will increase performance. 
+        /// </remarks>
+        public bool AllowDirectNetworkStreamReading { get; set; }
+#endif
         #region Entity and Link Tracking
 
         /// <summary>Gets the <see cref="T:System.Data.Services.Client.EntityDescriptor" /> for the supplied entity object.</summary>
@@ -1175,6 +1184,7 @@ namespace System.Data.Services.Client
         public QueryOperationResponse LoadProperty(object entity, string propertyName, Uri nextLinkUri)
         {
             LoadPropertyResult result = this.CreateLoadPropertyRequest(entity, propertyName, null /*callback*/, null /*state*/, nextLinkUri, null /*continuation*/);
+            result.AllowDirectNetworkStreamReading = this.AllowDirectNetworkStreamReading;
             result.ExecuteQuery();
             return result.LoadProperty();
         }
@@ -1198,6 +1208,7 @@ namespace System.Data.Services.Client
         public QueryOperationResponse LoadProperty(object entity, string propertyName, DataServiceQueryContinuation continuation)
         {
             LoadPropertyResult result = this.CreateLoadPropertyRequest(entity, propertyName, null /*callback*/, null /*state*/, null /*requestUri*/, continuation);
+            result.AllowDirectNetworkStreamReading = this.AllowDirectNetworkStreamReading;
             result.ExecuteQuery();
             return result.LoadProperty();
         }
@@ -1223,6 +1234,7 @@ namespace System.Data.Services.Client
         public QueryOperationResponse<T> LoadProperty<T>(object entity, string propertyName, DataServiceQueryContinuation<T> continuation)
         {
             LoadPropertyResult result = this.CreateLoadPropertyRequest(entity, propertyName, null /*callback*/, null /*state*/, null /*requestUri*/, continuation);
+            result.AllowDirectNetworkStreamReading = this.AllowDirectNetworkStreamReading;
             result.ExecuteQuery();
             return (QueryOperationResponse<T>)result.LoadProperty();
         }

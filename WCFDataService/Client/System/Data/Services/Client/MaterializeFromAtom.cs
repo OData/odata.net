@@ -69,6 +69,11 @@ namespace System.Data.Services.Client
         private bool moved;
 
         /// <summary>
+        /// The ODataResponseMessage to dispose when we are done.
+        /// </summary>
+        private IODataResponseMessage responseMessage;
+
+        /// <summary>
         /// output writer, set using reflection
         /// </summary>
 #if DEBUG && !ASTORIA_LIGHT
@@ -103,6 +108,7 @@ namespace System.Data.Services.Client
             this.expectingPrimitiveValue = PrimitiveType.IsKnownNullableType(elementType);
 
             Debug.Assert(responseMessage != null, "Response message is null! Did you mean to use Materializer.ResultsWrapper/EmptyResults?");
+            this.responseMessage = responseMessage;
 
             Type implementationType;
             Type materializerType = GetTypeForMaterializer(this.expectingPrimitiveValue, this.elementType, responseInfo.Model, out implementationType);
@@ -198,6 +204,11 @@ namespace System.Data.Services.Client
             if (null != this.writer)
             {
                 this.writer.Dispose();
+            }
+
+            if (null != this.responseMessage)
+            {
+                WebUtil.DisposeMessage(this.responseMessage);
             }
 
             GC.SuppressFinalize(this);
