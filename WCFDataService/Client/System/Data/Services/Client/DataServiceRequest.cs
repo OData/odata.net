@@ -172,6 +172,7 @@ namespace System.Data.Services.Client
                 Uri requestUri = queryComponents.Uri;
                 DataServiceRequest<TElement> serviceRequest = new DataServiceRequest<TElement>(requestUri, queryComponents, this.Plan);
                 result = serviceRequest.CreateExecuteResult(this, context, null, null, Util.ExecuteMethodName);
+                result.AllowDirectNetworkStreamReading = context.AllowDirectNetworkStreamReading;
                 result.ExecuteQuery();
                 return result.ProcessResult<TElement>(this.Plan);
             }

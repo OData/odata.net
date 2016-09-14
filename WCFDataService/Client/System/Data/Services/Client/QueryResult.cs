@@ -140,7 +140,11 @@ namespace System.Data.Services.Client
             get { return this.statusCode; }
         }
 
-        #endregion
+#if !ASTORIA_LIGHT && !PORTABLELIB// Synchronous methods not available
+        /// <summary>Allow reading directly from the network stream</summary>
+        internal bool AllowDirectNetworkStreamReading { get; set; }
+#endif
+#endregion
 
         /// <summary>
         /// Ends the asynchronous query request.
@@ -257,18 +261,53 @@ namespace System.Data.Services.Client
                 IODataResponseMessage response = this.RequestInfo.GetSyncronousResponse(this.Request, true);
                 this.SetHttpWebResponse(Util.NullCheck(response, InternalError.InvalidGetResponse));
 
-                if (HttpStatusCode.NoContent != this.StatusCode)
+                if (this.AllowDirectNetworkStreamReading)
                 {
-                    Stream stream = this.responseMessage.GetStream();
-                    if (null != stream)
+                    if (HttpStatusCode.NoContent != this.StatusCode)
                     {
-                        this.outputResponseStream = stream;
+                        Stream stream = this.responseMessage.GetStream();
+                        if (null != stream)
+                        {
+                            this.outputResponseStream = stream;
+                        }
+                    }
+                    else
+                    {
+                        WebUtil.DisposeMessage(this.responseMessage);
+                        this.responseMessage = null;
                     }
                 }
                 else
                 {
-                    WebUtil.DisposeMessage(this.responseMessage);
-                    this.responseMessage = null;
+                    if (HttpStatusCode.NoContent != this.StatusCode)
+                    {
+                        using (Stream stream = this.responseMessage.GetStream())
+                        {
+                            if (null != stream)
+                            {
+                                Stream copy = this.GetAsyncResponseStreamCopy();
+                                this.outputResponseStream = copy;
+
+                                Byte[] buffer = this.GetAsyncResponseStreamCopyBuffer();
+
+                                long copied = WebUtil.CopyStream(stream, copy, ref buffer);
+                                if (this.responseStreamOwner)
+                                {
+                                    if (0 == copied)
+                                    {
+                                        this.outputResponseStream = null;
+                                    }
+                                    else if (copy.Position < copy.Length)
+                                    {   // In Silverlight, generally 3 bytes less than advertised by ContentLength are read
+                                        ((MemoryStream)copy).SetLength(copy.Position);
+                                    }
+                                }
+
+                                this.PutAsyncResponseStreamCopyBuffer(buffer);
+                            }
+                        }
+                    }
+                    return null;
                 }
             }
             catch (Exception e)
@@ -710,11 +749,18 @@ namespace System.Data.Services.Client
                 this.RequestInfo.TypeResolver.IsProjectionRequest();
             }
 
-            var responseMessageWrapper = new HttpWebResponseMessage(
-                new HeaderCollection(this.responseMessage),
-                this.responseMessage.StatusCode,
-                this.GetResponseStream,
-                this.responseMessage); // The responseMessage will now be disposed later when enumeration has finished.
+            HttpWebResponseMessage responseMessageWrapper;
+            if (this.AllowDirectNetworkStreamReading)
+                responseMessageWrapper = new HttpWebResponseMessage(
+                    new HeaderCollection(this.responseMessage),
+                    this.responseMessage.StatusCode,
+                    this.GetResponseStream,
+                    this.responseMessage); // The responseMessage will now be disposed later when enumeration has finished.
+            else
+                responseMessageWrapper = new HttpWebResponseMessage(
+                    new HeaderCollection(this.responseMessage),
+                    this.responseMessage.StatusCode,
+                    this.GetResponseStream);
 
             return DataServiceRequest.Materialize(
                 this.responseInfo,
