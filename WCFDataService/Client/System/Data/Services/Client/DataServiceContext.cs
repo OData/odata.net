@@ -84,24 +84,24 @@ namespace System.Data.Services.Client
     public enum ProxyBackingFieldNamingConvention
     {
         /// <summary>
-        /// The default value, the DataServiceContext will first try ProxyBackingFieldNamingConvention.Underscores then ProxyBackingFieldNamingConvention.CamelCasing.
+        /// The default value, the DataServiceContext will not try to find backing fields but use the property getters. This is the "old" behaviour.
         /// </summary>
-        Auto = 0,
+        None = 0,
+
+        /// <summary>
+        /// The DataServiceContext will first try ProxyBackingFieldNamingConvention.Underscores then ProxyBackingFieldNamingConvention.CamelCasing.
+        /// </summary>
+        Auto = 1,
 
         /// <summary>
         /// The DataServiceContext will try to find the backing field by assuming it is named like the property but prefixed with two or one underscores. This is the naming convention used in proxies generated with DataSvcUtil.exe
         /// </summary>
-        Underscores = 1,
+        Underscores = 2,
 
         /// <summary>
         /// The DataServiceContext will try to find the backing field by assuming it is named with a camelCase format of the property name it is backing. This is an often used convention for many programmers in C#.
         /// </summary>
-        CamelCasing = 2,
-
-        /// <summary>
-        /// The DataServiceContext will not try to find backing fields but use the property getters. This is the "old" behaviour.
-        /// </summary>
-        None = 3,
+        CamelCasing = 3,
     }
 
     /// <summary>
