@@ -447,8 +447,7 @@ namespace System.Data.Services.Client
                             List<IEdmProperty> loadedProperties = new List<IEdmProperty>();
                             foreach (PropertyInfo property in ClientTypeUtil.GetPropertiesOnType(type, /*declaredOnly*/edmBaseType != null).OrderBy(p => p.Name))
                             {
-                                FieldInfo backingField = FindBackingField(property, this.ProxyBackingFieldNamingConvention);
-                                IEdmProperty edmProperty = this.CreateEdmProperty(complexType, property, backingField);
+                                IEdmProperty edmProperty = this.CreateEdmProperty(complexType, property, null);
                                 loadedProperties.Add(edmProperty);
                             }
 
@@ -507,25 +506,28 @@ namespace System.Data.Services.Client
         private static FieldInfo FindBackingField(PropertyInfo property, ProxyBackingFieldNamingConvention proxyBackingFieldNamingConvention)
         {
             FieldInfo backingField = null;
-            switch (proxyBackingFieldNamingConvention)
+            Type propertyType = property.PropertyType;
+            // We only do this for "generic collections of entities" OR "complex properties"
+            if (PlatformHelper.IsGenericType(propertyType) && ClientTypeUtil.TypeOrElementTypeIsEntity(propertyType) && TypeSystem.FindIEnumerable(propertyType) != null ||
+                !PrimitiveType.IsKnownType(propertyType) && !ClientTypeUtil.TypeOrElementTypeIsEntity(propertyType) && TypeSystem.FindIEnumerable(propertyType) == null)
             {
-                case ProxyBackingFieldNamingConvention.Auto:
-                    backingField = FindBackingField(property, ProxyBackingFieldNamingConvention.Underscores);
-                    if (backingField == null)
-                        backingField = FindBackingField(property, ProxyBackingFieldNamingConvention.CamelCasing);
-                    break;
-                case ProxyBackingFieldNamingConvention.Underscores:
-                    backingField = property.DeclaringType.GetField("__" + property.Name, BindingFlags.NonPublic | BindingFlags.Instance);
-                    if (backingField == null || backingField.FieldType != property.PropertyType)
-                        backingField = property.DeclaringType.GetField("_" + property.Name, BindingFlags.NonPublic | BindingFlags.Instance);
-                    if (backingField != null && backingField.FieldType != property.PropertyType)
-                        backingField = null;
-                    break;
-                case ProxyBackingFieldNamingConvention.CamelCasing:
-                    backingField = property.DeclaringType.GetField(char.ToLower(property.Name[0]) + property.Name.Substring(1));
-                    if (backingField != null && backingField.FieldType != property.PropertyType)
-                        backingField = null;
-                    break;
+                switch (proxyBackingFieldNamingConvention)
+                {
+                    case ProxyBackingFieldNamingConvention.None:
+                        break;
+                    case ProxyBackingFieldNamingConvention.Underscores:
+                        backingField = property.DeclaringType.GetField("__" + property.Name, BindingFlags.NonPublic | BindingFlags.Instance);
+                        if (backingField == null || backingField.FieldType != propertyType)
+                            backingField = property.DeclaringType.GetField("_" + property.Name, BindingFlags.NonPublic | BindingFlags.Instance);
+                        if (backingField != null && backingField.FieldType != propertyType)
+                            backingField = null;
+                        break;
+                    case ProxyBackingFieldNamingConvention.CamelCasing:
+                        backingField = property.DeclaringType.GetField(char.ToLower(property.Name[0]) + property.Name.Substring(1));
+                        if (backingField != null && backingField.FieldType != propertyType)
+                            backingField = null;
+                        break;
+                }
             }
             return backingField;
         }

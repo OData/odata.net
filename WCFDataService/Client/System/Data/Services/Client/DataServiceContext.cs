@@ -89,19 +89,14 @@ namespace System.Data.Services.Client
         None = 0,
 
         /// <summary>
-        /// The DataServiceContext will first try ProxyBackingFieldNamingConvention.Underscores then ProxyBackingFieldNamingConvention.CamelCasing.
-        /// </summary>
-        Auto = 1,
-
-        /// <summary>
         /// The DataServiceContext will try to find the backing field by assuming it is named like the property but prefixed with two or one underscores. This is the naming convention used in proxies generated with DataSvcUtil.exe
         /// </summary>
-        Underscores = 2,
+        Underscores = 1,
 
         /// <summary>
         /// The DataServiceContext will try to find the backing field by assuming it is named with a camelCase format of the property name it is backing. This is an often used convention for many programmers in C#.
         /// </summary>
-        CamelCasing = 3,
+        CamelCasing = 2,
     }
 
     /// <summary>
@@ -639,6 +634,15 @@ namespace System.Data.Services.Client
             set { this.undeclaredPropertyBehavior = value; }
         }
 
+        /// <summary>Gets or sets the naming convention of property backing fields used in the proxy.</summary>
+        /// <remarks>
+        /// This is used internally to check properties for null values without triggering lazy construction.
+        /// This is only relevant for entity collection properties and for complex properties.
+        /// For entities with large amount of entity collection properties and/or complex properties, using lazy construction in the proxy and setting ProxyBackingFieldNamingConvention can dramatically improve performance during GET operations.
+        /// </remarks>
+#if WINDOWS_PHONE
+        [DataMember]
+#endif
         public ProxyBackingFieldNamingConvention ProxyBackingFieldNamingConvention
         {
             get { return this.model.ProxyBackingFieldNamingConvention; }
