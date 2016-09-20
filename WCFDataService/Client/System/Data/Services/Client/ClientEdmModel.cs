@@ -411,8 +411,7 @@ namespace System.Data.Services.Client
                             List<IEdmStructuralProperty> loadedKeyProperties = new List<IEdmStructuralProperty>();
                             foreach (PropertyInfo property in ClientTypeUtil.GetPropertiesOnType(type, /*declaredOnly*/edmBaseType != null).OrderBy(p => p.Name))
                             {
-                                FieldInfo backingField = FindBackingField(property, this.ProxyBackingFieldNamingConvention);
-                                IEdmProperty edmProperty = this.CreateEdmProperty((EdmStructuredType)entityType, property, backingField);
+                                IEdmProperty edmProperty = this.CreateEdmProperty((EdmStructuredType)entityType, property);
                                 loadedProperties.Add(edmProperty);
 
                                 if (edmBaseType == null && keyProperties.Any(k => k.DeclaringType == type && k.Name == property.Name))
@@ -447,7 +446,7 @@ namespace System.Data.Services.Client
                             List<IEdmProperty> loadedProperties = new List<IEdmProperty>();
                             foreach (PropertyInfo property in ClientTypeUtil.GetPropertiesOnType(type, /*declaredOnly*/edmBaseType != null).OrderBy(p => p.Name))
                             {
-                                IEdmProperty edmProperty = this.CreateEdmProperty(complexType, property, null);
+                                IEdmProperty edmProperty = this.CreateEdmProperty(complexType, property);
                                 loadedProperties.Add(edmProperty);
                             }
 
@@ -507,28 +506,25 @@ namespace System.Data.Services.Client
         {
             FieldInfo backingField = null;
             Type propertyType = property.PropertyType;
-            // We only do this for "generic collections of entities" OR "complex properties"
-            if (PlatformHelper.IsGenericType(propertyType) && ClientTypeUtil.TypeOrElementTypeIsEntity(propertyType) && TypeSystem.FindIEnumerable(propertyType) != null ||
-                !PrimitiveType.IsKnownType(propertyType) && !ClientTypeUtil.TypeOrElementTypeIsEntity(propertyType) && TypeSystem.FindIEnumerable(propertyType) == null)
+
+            switch (proxyBackingFieldNamingConvention)
             {
-                switch (proxyBackingFieldNamingConvention)
-                {
-                    case ProxyBackingFieldNamingConvention.None:
-                        break;
-                    case ProxyBackingFieldNamingConvention.Underscores:
-                        backingField = property.DeclaringType.GetField("__" + property.Name, BindingFlags.NonPublic | BindingFlags.Instance);
-                        if (backingField == null || backingField.FieldType != propertyType)
-                            backingField = property.DeclaringType.GetField("_" + property.Name, BindingFlags.NonPublic | BindingFlags.Instance);
-                        if (backingField != null && backingField.FieldType != propertyType)
-                            backingField = null;
-                        break;
-                    case ProxyBackingFieldNamingConvention.CamelCasing:
-                        backingField = property.DeclaringType.GetField(char.ToLower(property.Name[0]) + property.Name.Substring(1));
-                        if (backingField != null && backingField.FieldType != propertyType)
-                            backingField = null;
-                        break;
-                }
+                case ProxyBackingFieldNamingConvention.None:
+                    break;
+                case ProxyBackingFieldNamingConvention.Underscores:
+                    backingField = property.DeclaringType.GetField("__" + property.Name, BindingFlags.NonPublic | BindingFlags.Instance);
+                    if (backingField == null || backingField.FieldType != propertyType)
+                        backingField = property.DeclaringType.GetField("_" + property.Name, BindingFlags.NonPublic | BindingFlags.Instance);
+                    if (backingField != null && backingField.FieldType != propertyType)
+                        backingField = null;
+                    break;
+                case ProxyBackingFieldNamingConvention.CamelCasing:
+                    backingField = property.DeclaringType.GetField(char.ToLower(property.Name[0]) + property.Name.Substring(1));
+                    if (backingField != null && backingField.FieldType != propertyType)
+                        backingField = null;
+                    break;
             }
+
             return backingField;
         }
 
@@ -538,7 +534,7 @@ namespace System.Data.Services.Client
         /// <param name="declaringType">Type declaring this property.</param>
         /// <param name="propertyInfo">PropertyInfo instance for this property.</param>
         /// <returns>Returns a new instance of Edm property.</returns>
-        private IEdmProperty CreateEdmProperty(IEdmStructuredType declaringType, PropertyInfo propertyInfo, FieldInfo backingField)
+        private IEdmProperty CreateEdmProperty(IEdmStructuredType declaringType, PropertyInfo propertyInfo)
         {
             IEdmType propertyEdmType = this.GetOrCreateEdmTypeInternal(propertyInfo.PropertyType).EdmType;
             Debug.Assert(
@@ -577,6 +573,13 @@ namespace System.Data.Services.Client
             {
                 edmProperty = new EdmStructuralProperty(declaringType, propertyInfo.Name, propertyEdmType.ToEdmTypeReference(isPropertyNullable));
             }
+
+
+            FieldInfo backingField = null;
+
+            // We only do this for "collections of entities" OR "complex properties"
+            if (propertyEdmType.TypeKind == EdmTypeKind.Collection || propertyEdmType.TypeKind == EdmTypeKind.Complex)
+                backingField = FindBackingField(propertyInfo, this.ProxyBackingFieldNamingConvention);
 
             edmProperty.SetClientPropertyAnnotation(new ClientPropertyAnnotation(edmProperty, propertyInfo, backingField, this));
             return edmProperty;
