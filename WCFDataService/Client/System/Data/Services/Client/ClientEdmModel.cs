@@ -511,6 +511,11 @@ namespace System.Data.Services.Client
             {
                 case ProxyBackingFieldNamingConvention.None:
                     break;
+                case ProxyBackingFieldNamingConvention.Auto:
+                    backingField = FindBackingField(property, ProxyBackingFieldNamingConvention.Underscores);
+                    if (backingField == null)
+                        backingField = FindBackingField(property, ProxyBackingFieldNamingConvention.CamelCasing);
+                    break;
                 case ProxyBackingFieldNamingConvention.Underscores:
                     backingField = property.DeclaringType.GetField("__" + property.Name, BindingFlags.NonPublic | BindingFlags.Instance);
                     if (backingField == null || backingField.FieldType != propertyType)
@@ -519,7 +524,7 @@ namespace System.Data.Services.Client
                         backingField = null;
                     break;
                 case ProxyBackingFieldNamingConvention.CamelCasing:
-                    backingField = property.DeclaringType.GetField(char.ToLower(property.Name[0]) + property.Name.Substring(1));
+                    backingField = property.DeclaringType.GetField(char.ToLower(property.Name[0]) + property.Name.Substring(1), BindingFlags.NonPublic | BindingFlags.Instance);
                     if (backingField != null && backingField.FieldType != propertyType)
                         backingField = null;
                     break;
@@ -577,8 +582,9 @@ namespace System.Data.Services.Client
 
             FieldInfo backingField = null;
 
-            // We only do this for "collections of entities" OR "complex properties"
-            if (propertyEdmType.TypeKind == EdmTypeKind.Collection || propertyEdmType.TypeKind == EdmTypeKind.Complex)
+            // We only do this for "collections of non primitive types" OR "complex properties"
+            if (propertyEdmType.TypeKind == EdmTypeKind.Collection && !edmProperty.Type.AsCollection().CollectionDefinition().ElementType.IsPrimitive() ||
+                propertyEdmType.TypeKind == EdmTypeKind.Complex)
                 backingField = FindBackingField(propertyInfo, this.ProxyBackingFieldNamingConvention);
 
             edmProperty.SetClientPropertyAnnotation(new ClientPropertyAnnotation(edmProperty, propertyInfo, backingField, this));
