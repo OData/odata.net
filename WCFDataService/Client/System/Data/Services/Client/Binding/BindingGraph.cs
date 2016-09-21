@@ -246,13 +246,12 @@ namespace System.Data.Services.Client
                     addedNewEntity = true;
                 }
 
-                // Add relationship. Connect the from end to the target.
-                // - This check is rather expensive, please avoid it !!!
-                /*if (this.graph.ExistsEdge(edgeSource, target, sourceVertex.IsDataServiceCollection ? null : sourceProperty))
-                {
-                    throw new InvalidOperationException(Strings.DataBinding_EntityAlreadyInCollection(target.GetType()));
-                }*/
+                // - This check is rather expensive, we only check in debug builds
+                Debug.Assert(
+                    !this.graph.ExistsEdge(edgeSource, target, sourceVertex.IsDataServiceCollection ? null : sourceProperty), 
+                    Strings.DataBinding_EntityAlreadyInCollection(target.GetType()));
 
+                // Add relationship. Connect the from end to the target.
                 this.graph.AddEdge(edgeSource, target, sourceVertex.IsDataServiceCollection ? null : sourceProperty);
             }
 
@@ -446,11 +445,20 @@ namespace System.Data.Services.Client
             this.graph.Reset(this.DetachNotifications);
         }
 
+        /// <summary>
+        /// Temporarily pauses notifications.
+        /// This is used during collection Load to defer notifications untill all elements have been loaded.
+        /// </summary>
+        /// <param name="collection">The collection to pause notifications for</param>
         public void Pause(object collection)
         {
             this.DetachCollectionNotifications(collection);
         }
 
+        /// <summary>
+        /// Resumes notifications.
+        /// </summary>
+        /// <param name="collection">The collection to resume notifications for</param>
         public void Resume(object collection)
         {
             this.AttachDataServiceCollectionNotification(collection);

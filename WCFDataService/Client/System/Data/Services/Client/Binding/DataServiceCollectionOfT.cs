@@ -758,9 +758,9 @@ namespace System.Data.Services.Client
             Debug.Assert(!(items is DataServiceQuery), "SL Client using DSQ as items...should have been caught by ValidateIteratorParameter.");
 #endif
 
-            if (this.IsTracking && this.observer != null)
+            if (this.IsTracking)
             {
-                // Performance optimazation - disable CallectionChanged notifications while enumerating items.
+                // Performance optimazation - disable CollectionChanged notifications while enumerating items.
                 // It will be enabled and observer will be notified with the entire bulk/page once we are done enumerating.
                 this.observer.PauseTracking(this);
             }
@@ -775,7 +775,7 @@ namespace System.Data.Services.Client
                     this.Add(item);
                 }
             }
-            if (this.IsTracking && this.observer != null)
+            if (this.IsTracking)
             {
                 if (this.Count > countBefore && this.observer.AttachBehavior)
                     this.observer.OnDataServiceCollectionBulkAdded(this, this.Items.Skip(countBefore));

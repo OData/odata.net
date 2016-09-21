@@ -61,6 +61,9 @@ namespace System.Data.Services.Client
         /// <summary>Referenced core model.</summary>
         private readonly IEnumerable<IEdmModel> coreModel = new IEdmModel[] { EdmCoreModel.Instance };
 
+        /// <summary>The naming convention used for backing fields on the proxy.</summary>
+        internal ProxyBackingFieldNamingConvention ProxyBackingFieldNamingConvention { get; set; }
+
         /// <summary>
         /// Constructor.
         /// </summary>
@@ -408,14 +411,7 @@ namespace System.Data.Services.Client
                             List<IEdmStructuralProperty> loadedKeyProperties = new List<IEdmStructuralProperty>();
                             foreach (PropertyInfo property in ClientTypeUtil.GetPropertiesOnType(type, /*declaredOnly*/edmBaseType != null).OrderBy(p => p.Name))
                             {
-                                // A better approach for getting to the value of a property without triggering lazy construction
-                                // could be desired, but I don't control the auto proxy generation stuff, so for now...
-                                // we just favor convwention over configuration and expect to find a field with the same name
-                                // as the property, but prefixed with __ or _.
-                                FieldInfo backingField = type.GetField("__" + property.Name, BindingFlags.NonPublic | BindingFlags.Instance);
-                                if (backingField == null)
-                                    backingField = type.GetField("_" + property.Name, BindingFlags.NonPublic | BindingFlags.Instance);
-                                IEdmProperty edmProperty = this.CreateEdmProperty((EdmStructuredType)entityType, property, backingField);
+                                IEdmProperty edmProperty = this.CreateEdmProperty((EdmStructuredType)entityType, property);
                                 loadedProperties.Add(edmProperty);
 
                                 if (edmBaseType == null && keyProperties.Any(k => k.DeclaringType == type && k.Name == property.Name))
@@ -450,14 +446,7 @@ namespace System.Data.Services.Client
                             List<IEdmProperty> loadedProperties = new List<IEdmProperty>();
                             foreach (PropertyInfo property in ClientTypeUtil.GetPropertiesOnType(type, /*declaredOnly*/edmBaseType != null).OrderBy(p => p.Name))
                             {
-                                // A better approach for getting to the value of a property without triggering lazy construction
-                                // could be desired, but I don't control the auto proxy generation stuff, so for now...
-                                // we just favor convwention over configuration and expect to find a field with the same name
-                                // as the property, but prefixed with __ or _.
-                                FieldInfo backingField = type.GetField("__" + property.Name, BindingFlags.NonPublic | BindingFlags.Instance);
-                                if (backingField == null)
-                                    backingField = type.GetField("_" + property.Name, BindingFlags.NonPublic | BindingFlags.Instance);
-                                IEdmProperty edmProperty = this.CreateEdmProperty(complexType, property, backingField);
+                                IEdmProperty edmProperty = this.CreateEdmProperty(complexType, property);
                                 loadedProperties.Add(edmProperty);
                             }
 
@@ -509,12 +498,48 @@ namespace System.Data.Services.Client
         }
 
         /// <summary>
+        /// Tries to find the backing field for property on type.
+        /// </summary>
+        /// <param name="property">The property to find the backing field for.</param>
+        /// <returns>The property backing field or null.</returns>
+        private static FieldInfo FindBackingField(PropertyInfo property, ProxyBackingFieldNamingConvention proxyBackingFieldNamingConvention)
+        {
+            FieldInfo backingField = null;
+            Type propertyType = property.PropertyType;
+
+            switch (proxyBackingFieldNamingConvention)
+            {
+                case ProxyBackingFieldNamingConvention.None:
+                    break;
+                case ProxyBackingFieldNamingConvention.Auto:
+                    backingField = FindBackingField(property, ProxyBackingFieldNamingConvention.Underscores);
+                    if (backingField == null)
+                        backingField = FindBackingField(property, ProxyBackingFieldNamingConvention.CamelCasing);
+                    break;
+                case ProxyBackingFieldNamingConvention.Underscores:
+                    backingField = property.DeclaringType.GetField("__" + property.Name, BindingFlags.NonPublic | BindingFlags.Instance);
+                    if (backingField == null || backingField.FieldType != propertyType)
+                        backingField = property.DeclaringType.GetField("_" + property.Name, BindingFlags.NonPublic | BindingFlags.Instance);
+                    if (backingField != null && backingField.FieldType != propertyType)
+                        backingField = null;
+                    break;
+                case ProxyBackingFieldNamingConvention.CamelCasing:
+                    backingField = property.DeclaringType.GetField(char.ToLower(property.Name[0]) + property.Name.Substring(1), BindingFlags.NonPublic | BindingFlags.Instance);
+                    if (backingField != null && backingField.FieldType != propertyType)
+                        backingField = null;
+                    break;
+            }
+
+            return backingField;
+        }
+
+        /// <summary>
         /// Creates an Edm property.
         /// </summary>
         /// <param name="declaringType">Type declaring this property.</param>
         /// <param name="propertyInfo">PropertyInfo instance for this property.</param>
         /// <returns>Returns a new instance of Edm property.</returns>
-        private IEdmProperty CreateEdmProperty(IEdmStructuredType declaringType, PropertyInfo propertyInfo, FieldInfo backingField)
+        private IEdmProperty CreateEdmProperty(IEdmStructuredType declaringType, PropertyInfo propertyInfo)
         {
             IEdmType propertyEdmType = this.GetOrCreateEdmTypeInternal(propertyInfo.PropertyType).EdmType;
             Debug.Assert(
@@ -553,6 +578,14 @@ namespace System.Data.Services.Client
             {
                 edmProperty = new EdmStructuralProperty(declaringType, propertyInfo.Name, propertyEdmType.ToEdmTypeReference(isPropertyNullable));
             }
+
+
+            FieldInfo backingField = null;
+
+            // We only do this for "collections of non primitive types" OR "complex properties"
+            if (propertyEdmType.TypeKind == EdmTypeKind.Collection && !edmProperty.Type.AsCollection().CollectionDefinition().ElementType.IsPrimitive() ||
+                propertyEdmType.TypeKind == EdmTypeKind.Complex)
+                backingField = FindBackingField(propertyInfo, this.ProxyBackingFieldNamingConvention);
 
             edmProperty.SetClientPropertyAnnotation(new ClientPropertyAnnotation(edmProperty, propertyInfo, backingField, this));
             return edmProperty;

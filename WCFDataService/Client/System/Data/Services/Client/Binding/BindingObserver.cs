@@ -122,10 +122,20 @@ namespace System.Data.Services.Client
 
         #region Methods
 
+        /// <summary>
+        /// Temporarily pauses notifications.
+        /// This is used during collection Load to defer notifications untill all elements have been loaded.
+        /// </summary>
+        /// <param name="collection">The collection to pause notifications for</param>
         internal void PauseTracking(object collection)
         {
             bindingGraph.Pause(collection);
         }
+
+        /// <summary>
+        /// Resumes notifications.
+        /// </summary>
+        /// <param name="collection">The collection to resume notifications for</param>
         internal void ResumeTracking(object collection)
         {
             bindingGraph.Resume(collection);
@@ -221,22 +231,18 @@ namespace System.Data.Services.Client
                             case BindingPropertyKind.BindingPropertyKindDataServiceCollection:
                                 // If collection is already being tracked by the graph we can not have > 1 links to it.
                                 if (sourcePropertyValue != null)
-                                {
-                                    // Make sure that there is no observer on the input collection property.
-                                    try
-                                    {
-                                        typeof(BindingUtils)
-                                            .GetMethod("VerifyObserverNotPresent", false /*isPublic*/, true /*isStatic*/)
-                                            .MakeGenericMethod(bpi.PropertyInfo.EntityCollectionItemType)
+                                {                                    
+                                    bool isBeingObserved = (bool)typeof(BindingUtils)
+                                        .GetMethod("IsBeingObserved", false /*isPublic*/, true /*isStatic*/)
+                                        .MakeGenericMethod(bpi.PropertyInfo.EntityCollectionItemType)
 #if DEBUG
 .Invoke(null, new object[] { sourcePropertyValue, sourceProperty, source.GetType(), this.Context.Model });
 #else
-                                        .Invoke(null, new object[] { sourcePropertyValue, sourceProperty, source.GetType() });
+                                    .Invoke(null, new object[] { sourcePropertyValue, sourceProperty, source.GetType() });
 #endif
-                                    }
-                                    catch (TargetInvocationException tie)
-                                    {
-                                        throw tie.InnerException;
+                                    if (isBeingObserved)
+                                    {   // If there already is an observer on the input collection property we do not need to setup another one.
+                                        return;
                                     }
 
                                     try
@@ -408,6 +414,10 @@ namespace System.Data.Services.Client
             }
         }
 
+        /// <summary>Handle multiple additions to tracked DataServiceCollection.</summary>
+        /// <remarks>This is an optimized version of <see cref="OnDataServiceCollectionChanged"/> for bulk adding of many entities.</remarks>
+        /// <param name="collection">The DataServiceCollection that newItems were added to.</param>
+        /// <param name="newItems">The entities that were added to the collection.</param>
         internal void OnDataServiceCollectionBulkAdded(object collection, IEnumerable newItems)
         {
             Util.CheckArgumentNull(collection, "collection");
@@ -924,11 +934,10 @@ namespace System.Data.Services.Client
                         throw new InvalidOperationException(Strings.DataBinding_BindingOperation_ArrayItemNull("Add"));
                     }
 
-                    // - This check is rather expensive, please avoid it !!!
-                    /*if (!BindingEntityInfo.IsEntityType(target.GetType(), this.Context.Model))
-                    {
-                        throw new InvalidOperationException(Strings.DataBinding_BindingOperation_ArrayItemNotEntity("Add"));
-                    }*/
+                    // - This check is rather expensive, we only check in debug builds
+                    Debug.Assert(
+                        BindingEntityInfo.IsEntityType(target.GetType(), this.Context.Model), 
+                        Strings.DataBinding_BindingOperation_ArrayItemNotEntity("Add"));
 
                     // Start tracking the target entity and synchronize the context with the Add operation.
                     this.bindingGraph.AddEntity(

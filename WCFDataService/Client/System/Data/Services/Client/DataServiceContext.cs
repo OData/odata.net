@@ -77,6 +77,34 @@ namespace System.Data.Services.Client
     }
 
     /// <summary>
+    /// Indicates how DataServiceContext will check for uninitialized properties on the proxy types.
+    /// Proxies with lazy initialized properties (initialized in the property getter) can specify the naming convention for the backing fields so the DataServiceContext does not trigger initialization when not desired.
+    /// If no backing fields can be found, the property getters are used falling back to the "old" behaviour.
+    /// </summary>
+    public enum ProxyBackingFieldNamingConvention
+    {
+        /// <summary>
+        /// The default value, the DataServiceContext will not try to find backing fields but use the property getters. This is the "old" behaviour.
+        /// </summary>
+        None = 0,
+
+        /// <summary>  
+        /// The DataServiceContext will first try ProxyBackingFieldNamingConvention.Underscores then ProxyBackingFieldNamingConvention.CamelCasing.  
+        /// </summary>  
+        Auto = 1,
+
+        /// <summary>
+        /// The DataServiceContext will try to find the backing field by assuming it is named like the property but prefixed with two or one underscores. This is the naming convention used in proxies generated with DataSvcUtil.exe
+        /// </summary>
+        Underscores = 2,
+
+        /// <summary>
+        /// The DataServiceContext will try to find the backing field by assuming it is named with a camelCase format of the property name it is backing. This is an often used convention for many programmers in C#.
+        /// </summary>
+        CamelCasing = 3,
+    }
+
+    /// <summary>
     /// The <see cref="T:System.Data.Services.Client.DataServiceContext" /> represents the runtime context of the data service.
     /// </summary>
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Maintainability", "CA1506", Justification = "Central class of the API, likely to have many cross-references")]
@@ -609,6 +637,21 @@ namespace System.Data.Services.Client
         {
             get { return this.undeclaredPropertyBehavior; }
             set { this.undeclaredPropertyBehavior = value; }
+        }
+
+        /// <summary>Gets or sets the naming convention of property backing fields used in the proxy.</summary>
+        /// <remarks>
+        /// This is used internally to check properties for null values without triggering lazy construction.
+        /// This is only relevant for entity collection properties and for complex properties.
+        /// For entities with large amount of entity collection properties and/or complex properties, using lazy construction in the proxy and setting ProxyBackingFieldNamingConvention can dramatically improve performance during GET operations.
+        /// </remarks>
+#if WINDOWS_PHONE
+        [DataMember]
+#endif
+        public ProxyBackingFieldNamingConvention ProxyBackingFieldNamingConvention
+        {
+            get { return this.model.ProxyBackingFieldNamingConvention; }
+            set { this.model.ProxyBackingFieldNamingConvention = value; }
         }
 
         /// <summary>Gets or sets the XML namespace for data items, not metadata items, of an Atom payload.</summary>
