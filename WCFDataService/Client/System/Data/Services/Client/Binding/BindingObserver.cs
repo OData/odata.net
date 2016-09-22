@@ -920,10 +920,11 @@ namespace System.Data.Services.Client
                         throw new InvalidOperationException(Strings.DataBinding_BindingOperation_ArrayItemNull("Add"));
                     }
 
-                    // - This check is rather expensive, we only check in debug builds
-                    Debug.Assert(
-                        BindingEntityInfo.IsEntityType(target.GetType(), this.Context.Model), 
-                        Strings.DataBinding_BindingOperation_ArrayItemNotEntity("Add"));
+                    // - This check is rather expensive, please avoid it !!!
+                    /*if (!BindingEntityInfo.IsEntityType(target.GetType(), this.Context.Model))
+                    {
+                        throw new InvalidOperationException(Strings.DataBinding_BindingOperation_ArrayItemNotEntity("Add"));
+                    }*/
 
                     // Start tracking the target entity and synchronize the context with the Add operation.
                     this.bindingGraph.AddEntity(

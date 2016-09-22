@@ -760,7 +760,7 @@ namespace System.Data.Services.Client
 
             if (this.IsTracking && this.observer != null)
             {
-                // Performance optimazation - disable CollectionChanged notifications while enumerating items.
+                // Performance optimazation - disable CallectionChanged notifications while enumerating items.
                 // It will be enabled and observer will be notified with the entire bulk/page once we are done enumerating.
                 this.observer.PauseTracking(this);
             }

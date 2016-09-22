@@ -61,9 +61,6 @@ namespace System.Data.Services.Client
         /// <summary>Referenced core model.</summary>
         private readonly IEnumerable<IEdmModel> coreModel = new IEdmModel[] { EdmCoreModel.Instance };
 
-        /// <summary>The naming convention used for backing fields on the proxy.</summary>
-        internal ProxyBackingFieldNamingConvention ProxyBackingFieldNamingConvention { get; set; }
-
         /// <summary>
         /// Constructor.
         /// </summary>
@@ -411,7 +408,7 @@ namespace System.Data.Services.Client
                             List<IEdmStructuralProperty> loadedKeyProperties = new List<IEdmStructuralProperty>();
                             foreach (PropertyInfo property in ClientTypeUtil.GetPropertiesOnType(type, /*declaredOnly*/edmBaseType != null).OrderBy(p => p.Name))
                             {
-                                FieldInfo backingField = FindBackingField(property, this.ProxyBackingFieldNamingConvention);
+                                FieldInfo backingField = FindBackingField(property);
                                 IEdmProperty edmProperty = this.CreateEdmProperty((EdmStructuredType)entityType, property, backingField);
                                 loadedProperties.Add(edmProperty);
 
@@ -447,7 +444,7 @@ namespace System.Data.Services.Client
                             List<IEdmProperty> loadedProperties = new List<IEdmProperty>();
                             foreach (PropertyInfo property in ClientTypeUtil.GetPropertiesOnType(type, /*declaredOnly*/edmBaseType != null).OrderBy(p => p.Name))
                             {
-                                FieldInfo backingField = FindBackingField(property, this.ProxyBackingFieldNamingConvention);
+                                FieldInfo backingField = FindBackingField(property);
                                 IEdmProperty edmProperty = this.CreateEdmProperty(complexType, property, backingField);
                                 loadedProperties.Add(edmProperty);
                             }
@@ -500,33 +497,15 @@ namespace System.Data.Services.Client
         }
 
         /// <summary>
-        /// Tries to find the backing field for property on type.
+        /// Tries to find the backing field for property on type. It assumes the field would have a name identical to the property name, but prefixed with __ or _ by convention.
         /// </summary>
         /// <param name="property">The property to find the backing field for.</param>
         /// <returns>The property backing field or null.</returns>
-        private static FieldInfo FindBackingField(PropertyInfo property, ProxyBackingFieldNamingConvention proxyBackingFieldNamingConvention)
+        private static FieldInfo FindBackingField(PropertyInfo property)
         {
-            FieldInfo backingField = null;
-            switch (proxyBackingFieldNamingConvention)
-            {
-                case ProxyBackingFieldNamingConvention.Auto:
-                    backingField = FindBackingField(property, ProxyBackingFieldNamingConvention.Underscores);
-                    if (backingField == null)
-                        backingField = FindBackingField(property, ProxyBackingFieldNamingConvention.CamelCasing);
-                    break;
-                case ProxyBackingFieldNamingConvention.Underscores:
-                    backingField = property.DeclaringType.GetField("__" + property.Name, BindingFlags.NonPublic | BindingFlags.Instance);
-                    if (backingField == null || backingField.FieldType != property.PropertyType)
-                        backingField = property.DeclaringType.GetField("_" + property.Name, BindingFlags.NonPublic | BindingFlags.Instance);
-                    if (backingField != null && backingField.FieldType != property.PropertyType)
-                        backingField = null;
-                    break;
-                case ProxyBackingFieldNamingConvention.CamelCasing:
-                    backingField = property.DeclaringType.GetField(char.ToUpper(property.Name[0]) + property.Name.Substring(1));
-                    if (backingField != null && backingField.FieldType != property.PropertyType)
-                        backingField = null;
-                    break;
-            }
+            FieldInfo backingField = property.DeclaringType.GetField("__" + property.Name, BindingFlags.NonPublic | BindingFlags.Instance);
+            if (backingField == null)
+                backingField = property.DeclaringType.GetField("_" + property.Name, BindingFlags.NonPublic | BindingFlags.Instance);
             return backingField;
         }
 

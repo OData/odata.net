@@ -246,12 +246,13 @@ namespace System.Data.Services.Client
                     addedNewEntity = true;
                 }
 
-                // - This check is rather expensive, we only check in debug builds
-                Debug.Assert(
-                    !this.graph.ExistsEdge(edgeSource, target, sourceVertex.IsDataServiceCollection ? null : sourceProperty), 
-                    Strings.DataBinding_EntityAlreadyInCollection(target.GetType()));
-
                 // Add relationship. Connect the from end to the target.
+                // - This check is rather expensive, please avoid it !!!
+                /*if (this.graph.ExistsEdge(edgeSource, target, sourceVertex.IsDataServiceCollection ? null : sourceProperty))
+                {
+                    throw new InvalidOperationException(Strings.DataBinding_EntityAlreadyInCollection(target.GetType()));
+                }*/
+
                 this.graph.AddEdge(edgeSource, target, sourceVertex.IsDataServiceCollection ? null : sourceProperty);
             }
 
