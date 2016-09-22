@@ -414,10 +414,6 @@ namespace System.Data.Services.Client
             }
         }
 
-        /// <summary>Handle multiple additions to tracked DataServiceCollection.</summary>
-        /// <remarks>This is an optimized version of <see cref="OnDataServiceCollectionChanged"/> for bulk adding of many entities.</remarks>
-        /// <param name="collection">The DataServiceCollection that newItems were added to.</param>
-        /// <param name="newItems">The entities that were added to the collection.</param>
         internal void OnDataServiceCollectionBulkAdded(object collection, IEnumerable newItems)
         {
             Util.CheckArgumentNull(collection, "collection");
