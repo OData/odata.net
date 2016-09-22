@@ -970,11 +970,9 @@ namespace System.Data.Services.Client.Materialization
             Debug.Assert(property != null, "property != null");
             Debug.Assert(plan != null || nextLink == null, "plan != null || nextLink == null");
 
-            // Simple case: the list is of the target type, and the resolved entity
-            // has null; we can simply assign the collection. No merge required.
+            // Simple case: the list is of the target type; we can simply assign the collection. No merge required.
             if (entry.ShouldUpdateFromPayload &&
-                property.NullablePropertyType == list.GetType() &&
-                property.GetValue(entry.ResolvedObject) == null)
+                property.NullablePropertyType == list.GetType())
             {
                 property.SetValue(entry.ResolvedObject, list, property.PropertyName, false /* allowAdd */);
                 this.EntryValueMaterializationPolicy.FoundNextLinkForCollection(list, nextLink, plan);
