@@ -122,20 +122,10 @@ namespace System.Data.Services.Client
 
         #region Methods
 
-        /// <summary>
-        /// Temporarily pauses notifications.
-        /// This is used during collection Load to defer notifications untill all elements have been loaded.
-        /// </summary>
-        /// <param name="collection">The collection to pause notifications for</param>
         internal void PauseTracking(object collection)
         {
             bindingGraph.Pause(collection);
         }
-
-        /// <summary>
-        /// Resumes notifications.
-        /// </summary>
-        /// <param name="collection">The collection to resume notifications for</param>
         internal void ResumeTracking(object collection)
         {
             bindingGraph.Resume(collection);

@@ -445,20 +445,11 @@ namespace System.Data.Services.Client
             this.graph.Reset(this.DetachNotifications);
         }
 
-        /// <summary>
-        /// Temporarily pauses notifications.
-        /// This is used during collection Load to defer notifications untill all elements have been loaded.
-        /// </summary>
-        /// <param name="collection">The collection to pause notifications for</param>
         public void Pause(object collection)
         {
             this.DetachCollectionNotifications(collection);
         }
 
-        /// <summary>
-        /// Resumes notifications.
-        /// </summary>
-        /// <param name="collection">The collection to resume notifications for</param>
         public void Resume(object collection)
         {
             this.AttachDataServiceCollectionNotification(collection);
