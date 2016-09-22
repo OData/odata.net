@@ -63,8 +63,8 @@ namespace System.Data.Services.Client.Metadata
         /// </summary>
         internal readonly bool IsKnownType;
 
-        /// <summary>If we have the backing field for a property we use that otherwise we use the property getter</summary>
-        private readonly Func<object, object> fieldOrPropertyGetter;
+        /// <summary>property getter</summary>
+        private readonly Func<object, object> fieldGetter;
 
         /// <summary>property getter</summary>
         private readonly Func<Object, Object> propertyGetter;
@@ -104,7 +104,6 @@ namespace System.Data.Services.Client.Metadata
         /// </summary>
         /// <param name="edmProperty">Back reference to the EdmProperty this annotation is part of.</param>
         /// <param name="propertyInfo">propertyInfo instance.</param>
-        /// <param name="backingField">FieldInfo instance for peeking initial property values.</param>
         /// <param name="model">The client model.</param>
         internal ClientPropertyAnnotation(IEdmProperty edmProperty, PropertyInfo propertyInfo, FieldInfo backingField, ClientEdmModel model)
         {
@@ -145,10 +144,10 @@ namespace System.Data.Services.Client.Metadata
                 value).Compile();
 
             if (backingField == null)
-                this.fieldOrPropertyGetter = propertyGetter;
+                this.fieldGetter = propertyGetter;
             else
             {
-                this.fieldOrPropertyGetter = (Func<object, object>)Expression.Lambda(
+                this.fieldGetter = (Func<object, object>)Expression.Lambda(
                 Expression.Convert(
                     Expression.Field(
                         Expression.Convert(instance, this.DeclaringClrType),
@@ -344,7 +343,7 @@ namespace System.Data.Services.Client.Metadata
         /// <returns>Field or property value</returns>
         internal object GetFieldOrPropertyValue(object instance)
         {
-            return this.fieldOrPropertyGetter.Invoke(instance);
+            return this.fieldGetter.Invoke(instance);
         }
 
         /// <summary>
