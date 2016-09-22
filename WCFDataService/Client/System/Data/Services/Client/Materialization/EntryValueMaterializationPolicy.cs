@@ -510,17 +510,9 @@ namespace System.Data.Services.Client.Materialization
                         collectionType = typeof(System.Collections.ObjectModel.Collection<>).MakeGenericType(property.EntityCollectionItemType);
                     }
 
+                    // Support proxies with uninitialized DataServiceCollection<> type properties.
                     if (BindingEntityInfo.IsDataServiceCollection(collectionType, this.MaterializerContext.Model))
-                    {
-                        Debug.Assert(WebUtil.GetDataServiceCollectionOfT(property.EntityCollectionItemType) != null, "DataServiceCollection<> must be available here.");
-
-                        // Support proxies with uninitialized DataServiceCollection<> type properties.
-                        // new DataServiceCollection<property.EntityCollectionItemType>(null, TrackingMode.None)
-                        result = Activator.CreateInstance(
-                            WebUtil.GetDataServiceCollectionOfT(property.EntityCollectionItemType),
-                            null,
-                            TrackingMode.None);
-                    }
+                        result = Util.ActivatorCreateInstance(collectionType, new object[] { null, TrackingMode.None });
                     else
                         result = this.CreateNewInstance(property.EdmProperty.Type, collectionType);
                 }
