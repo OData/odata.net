@@ -247,11 +247,10 @@ namespace System.Data.Services.Client
                 }
 
                 // Add relationship. Connect the from end to the target.
-                // - This check is rather expensive, please avoid it !!!
-                /*if (this.graph.ExistsEdge(edgeSource, target, sourceVertex.IsDataServiceCollection ? null : sourceProperty))
+                if (this.graph.ExistsEdge(edgeSource, target, sourceVertex.IsDataServiceCollection ? null : sourceProperty))
                 {
                     throw new InvalidOperationException(Strings.DataBinding_EntityAlreadyInCollection(target.GetType()));
-                }*/
+                }
 
                 this.graph.AddEdge(edgeSource, target, sourceVertex.IsDataServiceCollection ? null : sourceProperty);
             }
@@ -446,16 +445,6 @@ namespace System.Data.Services.Client
             this.graph.Reset(this.DetachNotifications);
         }
 
-        public void Pause(object collection)
-        {
-            this.DetachCollectionNotifications(collection);
-        }
-
-        public void Resume(object collection)
-        {
-            this.AttachDataServiceCollectionNotification(collection);
-        }
-
         /// <summary>Removes the un-reachable vertices from the graph and un-registers notification handlers</summary>
         public void RemoveUnreachableVertices()
         {
@@ -478,14 +467,14 @@ namespace System.Data.Services.Client
         {
             Debug.Assert(collection != null, "Argument 'collection' cannot be null.");
             Debug.Assert(this.graph.ExistsVertex(collection), "Vertex corresponding to 'collection' must exist in the graph.");
-
+            
             this.graph
-                    .LookupVertex(collection)
-                    .GetDataServiceCollectionInfo(
-                        out source,
-                        out sourceProperty,
-                        out sourceEntitySet,
-                        out targetEntitySet);
+                .LookupVertex(collection)
+                .GetDataServiceCollectionInfo(
+                    out source, 
+                    out sourceProperty, 
+                    out sourceEntitySet, 
+                    out targetEntitySet);
         }
 
         /// <summary>Get the binding information for a collection</summary>
@@ -600,7 +589,7 @@ namespace System.Data.Services.Client
             // and add related entities and collections to this entity. 
             foreach (BindingEntityInfo.BindingPropertyInfo bpi in BindingEntityInfo.GetObservableProperties(entity.GetType(), this.observer.Context.Model))
             {
-                object propertyValue = bpi.PropertyInfo.GetFieldOrPropertyValue(entity);
+                object propertyValue = bpi.PropertyInfo.GetValue(entity);
 
                 if (propertyValue != null)
                 {
@@ -612,7 +601,7 @@ namespace System.Data.Services.Client
                                     bpi.PropertyInfo.PropertyName,
                                     propertyValue,
                                     null);
-
+                            
                             break;
 
                         case BindingPropertyKind.BindingPropertyKindPrimitiveOrComplexCollection:
@@ -622,7 +611,7 @@ namespace System.Data.Services.Client
                                     propertyValue,
                                     bpi.PropertyInfo.PrimitiveOrComplexCollectionItemType);
                             break;
-
+                            
                         case BindingPropertyKind.BindingPropertyKindEntity:
                             this.AddEntity(
                                     entity,
@@ -630,14 +619,14 @@ namespace System.Data.Services.Client
                                     propertyValue,
                                     null,
                                     entity);
-
+                            
                             break;
-
+                            
                         default:
                             Debug.Assert(bpi.PropertyKind == BindingPropertyKind.BindingPropertyKindComplex, "Must be complex type if PropertyKind is not entity, DataServiceCollection, or collection.");
                             this.AddComplexObject(
-                                    entity,
-                                    bpi.PropertyInfo.PropertyName,
+                                    entity, 
+                                    bpi.PropertyInfo.PropertyName, 
                                     propertyValue);
                             break;
                     }

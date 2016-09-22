@@ -21,7 +21,7 @@
 
 namespace System.Data.Services.Client
 {
-    #region Namespaces
+#region Namespaces
     using System.Collections;
     using System.Collections.Generic;
     using System.Collections.Specialized;
@@ -30,7 +30,7 @@ namespace System.Data.Services.Client
     using System.Diagnostics;
     using System.Linq;
     using System.Reflection;
-    #endregion
+#endregion    
 
     /// <summary>The BindingObserver class</summary>
     internal sealed class BindingObserver
@@ -121,16 +121,7 @@ namespace System.Data.Services.Client
         #endregion
 
         #region Methods
-
-        internal void PauseTracking(object collection)
-        {
-            bindingGraph.Pause(collection);
-        }
-        internal void ResumeTracking(object collection)
-        {
-            bindingGraph.Resume(collection);
-        }
-
+        
         /// <summary>Start tracking the specified DataServiceCollection.</summary>
         /// <typeparam name="T">An entity type.</typeparam>
         /// <param name="collection">An DataServiceCollection.</param>
@@ -405,44 +396,6 @@ namespace System.Data.Services.Client
 
                 default:
                     throw new InvalidOperationException(Strings.DataBinding_DataServiceCollectionChangedUnknownActionCollection(eventArgs.Action));
-            }
-        }
-
-        internal void OnDataServiceCollectionBulkAdded(object collection, IEnumerable newItems)
-        {
-            Util.CheckArgumentNull(collection, "collection");
-            Util.CheckArgumentNull(newItems, "newItems");
-
-            Debug.Assert(BindingEntityInfo.IsDataServiceCollection(collection.GetType(), this.Context.Model), "We only register this event for DataServiceCollections.");
-#if DEBUG
-            Debug.Assert(this.bindingGraph.IsTracking(collection), "Collection must be part of the graph if it has the event notification registered.");
-#endif
-            object source;
-            string sourceProperty;
-            string sourceEntitySet;
-            string targetEntitySet;
-
-            this.bindingGraph.GetDataServiceCollectionInfo(
-                    collection,
-                    out source,
-                    out sourceProperty,
-                    out sourceEntitySet,
-                    out targetEntitySet);
-
-            foreach (object target in newItems)
-            {
-                if (target == null)
-                {
-                    throw new InvalidOperationException(Strings.DataBinding_BindingOperation_ArrayItemNull("Add"));
-                }
-
-                // Start tracking the target entity and synchronize the context with the Add operation.
-                this.bindingGraph.AddEntity(
-                        source,
-                        sourceProperty,
-                        target,
-                        targetEntitySet,
-                        collection);
             }
         }
 
@@ -924,11 +877,10 @@ namespace System.Data.Services.Client
                         throw new InvalidOperationException(Strings.DataBinding_BindingOperation_ArrayItemNull("Add"));
                     }
 
-                    // - This check is rather expensive, please avoid it !!!
-                    /*if (!BindingEntityInfo.IsEntityType(target.GetType(), this.Context.Model))
+                    if (!BindingEntityInfo.IsEntityType(target.GetType(), this.Context.Model))
                     {
                         throw new InvalidOperationException(Strings.DataBinding_BindingOperation_ArrayItemNotEntity("Add"));
-                    }*/
+                    }
 
                     // Start tracking the target entity and synchronize the context with the Add operation.
                     this.bindingGraph.AddEntity(

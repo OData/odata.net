@@ -261,8 +261,7 @@ namespace System.Data.Services.Client.Metadata
             return !property.IsDictionary
                 && property != type.MediaDataMember
                 && !property.IsStreamLinkProperty
-                && (type.MediaDataMember == null || type.MediaDataMember.MimeTypeProperty != property)
-                && !property.IsEntityCollection;
+                && (type.MediaDataMember == null || type.MediaDataMember.MimeTypeProperty != property);
         }
 
         /// <summary>
