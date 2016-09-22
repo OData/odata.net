@@ -69,14 +69,14 @@ namespace System.Data.Services.Client
         /// <param name="sourceProperty">Collection property of the source object which is being assigned to</param>
         /// <param name="sourceType">Type of the source object</param>
         /// <param name="model">The client model.</param>
-        internal static bool IsBeingObserved<T>(object oec, string sourceProperty, Type sourceType, ClientEdmModel model)
+        internal static void VerifyObserverNotPresent<T>(object oec, string sourceProperty, Type sourceType, ClientEdmModel model)
 #else
         /// <summary>Verifies the absence of observer for an DataServiceCollection</summary>
         /// <typeparam name="T">Type of DataServiceCollection</typeparam>
         /// <param name="oec">Non-typed collection object</param>
         /// <param name="sourceProperty">Collection property of the source object which is being assigned to</param>
         /// <param name="sourceType">Type of the source object</param>
-        internal static bool IsBeingObserved<T>(object oec, string sourceProperty, Type sourceType)
+        internal static void VerifyObserverNotPresent<T>(object oec, string sourceProperty, Type sourceType)
 #endif
         {
 #if DEBUG
@@ -86,9 +86,8 @@ namespace System.Data.Services.Client
 
             if (typedCollection.Observer != null)
             {
-                return true;
+                throw new InvalidOperationException(Strings.DataBinding_CollectionPropertySetterValueHasObserver(sourceProperty, sourceType));
             }
-            return false;
         }
     }
 }
