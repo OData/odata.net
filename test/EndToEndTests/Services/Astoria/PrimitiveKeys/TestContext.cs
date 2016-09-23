@@ -25,7 +25,7 @@ namespace Microsoft.Test.OData.Services.PrimitiveKeysService
         public IQueryable<EdmString> EdmStringSet { get { return EdmString.GetData().AsQueryable(); } }
         public IQueryable<EdmTime> EdmTimeSet { get { return EdmTime.GetData().AsQueryable(); } }
         public IQueryable<EdmDateTimeOffset> EdmDateTimeOffsetSet { get { return EdmDateTimeOffset.GetData().AsQueryable(); } }
-
+        public IQueryable<EdmDateTime> EdmDateTimeSet { get { return EdmDateTime.GetData().AsQueryable(); } }
         public IQueryable<Folder> Folders { get { return Folder.GetData().AsQueryable(); } }
 
         #endregion
