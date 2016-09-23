@@ -61,8 +61,8 @@ namespace System.Data.Services.Client
         /// <summary>Referenced core model.</summary>
         private readonly IEnumerable<IEdmModel> coreModel = new IEdmModel[] { EdmCoreModel.Instance };
 
-        /// <summary>The naming convention used for backing fields on the proxy.</summary>
-        internal ProxyBackingFieldNamingConvention ProxyBackingFieldNamingConvention { get; set; }
+        /// <summary>Callback for getting the backing field for a property.</summary>
+        internal Func<PropertyInfo, FieldInfo> ResolveBackingField { get; set; }
 
         /// <summary>
         /// Constructor.
@@ -498,42 +498,6 @@ namespace System.Data.Services.Client
         }
 
         /// <summary>
-        /// Tries to find the backing field for property on type.
-        /// </summary>
-        /// <param name="property">The property to find the backing field for.</param>
-        /// <returns>The property backing field or null.</returns>
-        private static FieldInfo FindBackingField(PropertyInfo property, ProxyBackingFieldNamingConvention proxyBackingFieldNamingConvention)
-        {
-            FieldInfo backingField = null;
-            Type propertyType = property.PropertyType;
-
-            switch (proxyBackingFieldNamingConvention)
-            {
-                case ProxyBackingFieldNamingConvention.None:
-                    break;
-                case ProxyBackingFieldNamingConvention.Auto:
-                    backingField = FindBackingField(property, ProxyBackingFieldNamingConvention.Underscores);
-                    if (backingField == null)
-                        backingField = FindBackingField(property, ProxyBackingFieldNamingConvention.CamelCasing);
-                    break;
-                case ProxyBackingFieldNamingConvention.Underscores:
-                    backingField = property.DeclaringType.GetField("__" + property.Name, BindingFlags.NonPublic | BindingFlags.Instance);
-                    if (backingField == null || backingField.FieldType != propertyType)
-                        backingField = property.DeclaringType.GetField("_" + property.Name, BindingFlags.NonPublic | BindingFlags.Instance);
-                    if (backingField != null && backingField.FieldType != propertyType)
-                        backingField = null;
-                    break;
-                case ProxyBackingFieldNamingConvention.CamelCasing:
-                    backingField = property.DeclaringType.GetField(char.ToLower(property.Name[0]) + property.Name.Substring(1), BindingFlags.NonPublic | BindingFlags.Instance);
-                    if (backingField != null && backingField.FieldType != propertyType)
-                        backingField = null;
-                    break;
-            }
-
-            return backingField;
-        }
-
-        /// <summary>
         /// Creates an Edm property.
         /// </summary>
         /// <param name="declaringType">Type declaring this property.</param>
@@ -583,9 +547,14 @@ namespace System.Data.Services.Client
             FieldInfo backingField = null;
 
             // We only do this for "collections of non primitive types" OR "complex properties"
-            if (propertyEdmType.TypeKind == EdmTypeKind.Collection && !edmProperty.Type.AsCollection().CollectionDefinition().ElementType.IsPrimitive() ||
-                propertyEdmType.TypeKind == EdmTypeKind.Complex)
-                backingField = FindBackingField(propertyInfo, this.ProxyBackingFieldNamingConvention);
+            if (ResolveBackingField != null &&
+                (propertyEdmType.TypeKind == EdmTypeKind.Collection && !edmProperty.Type.AsCollection().CollectionDefinition().ElementType.IsPrimitive() ||
+                propertyEdmType.TypeKind == EdmTypeKind.Complex))
+            {
+                backingField = ResolveBackingField(propertyInfo);
+                if (backingField != null && backingField.FieldType != propertyInfo.PropertyType)
+                    backingField = null; // We disregard returned FieldInfoes that have the wrong type.
+            }
 
             edmProperty.SetClientPropertyAnnotation(new ClientPropertyAnnotation(edmProperty, propertyInfo, backingField, this));
             return edmProperty;

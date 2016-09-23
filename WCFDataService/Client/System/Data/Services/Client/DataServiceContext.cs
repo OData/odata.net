@@ -639,19 +639,19 @@ namespace System.Data.Services.Client
             set { this.undeclaredPropertyBehavior = value; }
         }
 
-        /// <summary>Gets or sets the naming convention of property backing fields used in the proxy.</summary>
+        /// <summary>Gets or sets a function that is used to resolve the backing field for a property in an entity.
+        /// <returns>A delegate that takes a <see cref="T:System.Reflection.PropertyInfo" /> and returns a <see cref="T:System.Reflection.FieldInfo" /> value.</returns>
         /// <remarks>
         /// This is used internally to check properties for null values without triggering lazy construction.
-        /// This is only relevant for entity collection properties and for complex properties.
-        /// For entities with large amount of entity collection properties and/or complex properties, using lazy construction in the proxy and setting ProxyBackingFieldNamingConvention can dramatically improve performance during GET operations.
+        /// The supplied delegate should return the FieldInfo for the backing field for the PropertyInfo parameter. The method may return null.
+        /// The returned FieldInfo.FieldType should match the PropertyInfo.PropertyType or it will be disregarded.
+        /// This is only used for entity and complex collection properties and for single value complex properties.
+        /// For entities with a large amount of entity/complex collection properties and/or complex properties; using lazy construction in the proxy and setting ResolveBackingField can dramatically improve performance during GET operations.
         /// </remarks>
-#if WINDOWS_PHONE
-        [DataMember]
-#endif
-        public ProxyBackingFieldNamingConvention ProxyBackingFieldNamingConvention
+        public Func<PropertyInfo, FieldInfo> ResolveBackingField
         {
-            get { return this.model.ProxyBackingFieldNamingConvention; }
-            set { this.model.ProxyBackingFieldNamingConvention = value; }
+            get { return this.model.ResolveBackingField; }
+            set { this.model.ResolveBackingField = value; }
         }
 
         /// <summary>Gets or sets the XML namespace for data items, not metadata items, of an Atom payload.</summary>

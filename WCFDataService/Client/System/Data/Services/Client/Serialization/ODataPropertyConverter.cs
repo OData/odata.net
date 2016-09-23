@@ -64,7 +64,7 @@ namespace System.Data.Services.Client
             List<ODataProperty> odataProperties = new List<ODataProperty>();
             foreach (ClientPropertyAnnotation property in properties)
             {
-                object propertyValue = property.GetFieldOrPropertyValue(resource);
+                object propertyValue = property.GetValue(resource);
                 ODataValue odataValue;
                 if (this.TryConvertPropertyValue(property, propertyValue, null, out odataValue))
                 {

@@ -86,7 +86,7 @@ namespace System.Data.Services.Client
 
             if (typedCollection.Observer != null)
             {
-                if (typedCollection.Observer.Context.ProxyBackingFieldNamingConvention == ProxyBackingFieldNamingConvention.None)
+                if (typedCollection.Observer.Context.ResolveBackingField == null)
                     throw new InvalidOperationException(Strings.DataBinding_CollectionPropertySetterValueHasObserver(sourceProperty, sourceType));
                 return true;
             }
