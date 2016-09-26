@@ -340,6 +340,7 @@ namespace Microsoft.OData.Client
             RegisterKnownType(typeof(Byte), XmlConstants.EdmByteTypeName, EdmPrimitiveTypeKind.Byte, new ByteTypeConverter(), true);
             RegisterKnownType(typeof(Byte[]), XmlConstants.EdmBinaryTypeName, EdmPrimitiveTypeKind.Binary, new ByteArrayTypeConverter(), true);
             RegisterKnownType(typeof(DateTimeOffset), XmlConstants.EdmDateTimeOffsetTypeName, EdmPrimitiveTypeKind.DateTimeOffset, new DateTimeOffsetTypeConverter(), true);
+            RegisterKnownType(typeof(DateTime), XmlConstants.EdmDateTimeTypeName, EdmPrimitiveTypeKind.DateTimeOffset, new DateTimeTypeConverter(), true);
             RegisterKnownType(typeof(Decimal), XmlConstants.EdmDecimalTypeName, EdmPrimitiveTypeKind.Decimal, new DecimalTypeConverter(), true);
             RegisterKnownType(typeof(Double), XmlConstants.EdmDoubleTypeName, EdmPrimitiveTypeKind.Double, new DoubleTypeConverter(), true);
             RegisterKnownType(typeof(Guid), XmlConstants.EdmGuidTypeName, EdmPrimitiveTypeKind.Guid, new GuidTypeConverter(), true);

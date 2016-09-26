@@ -57,6 +57,20 @@ namespace Microsoft.Test.OData.Tests.Client.KeyAsSegmentTests
         }
 
         [TestMethod]
+        public void DateTimeTest()
+        {
+            var contextWrapper = this.CreateWrappedContext();
+            foreach (var entry in contextWrapper.Context.EdmDateTimeSet)
+            {
+                var queryResult = contextWrapper.CreateQuery<EdmDateTime>("EdmDateTimeSet").Where(e
+                    => 
+                e.Id.Equals(entry.Id)
+                    ).ToArray();
+                Assert.AreEqual(1, queryResult.Count(), "Expected a single result for key value {0}", entry.Id.ToString());
+            }
+        }
+
+        [TestMethod]
         public void DecimalTest()
         {
             var contextWrapper = this.CreateWrappedContext();

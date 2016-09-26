@@ -281,6 +281,25 @@ namespace Microsoft.Test.OData.Services.TestServices.PrimitiveKeysServiceReferen
         }
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.2.0")]
         private global::Microsoft.OData.Client.DataServiceQuery<EdmDateTimeOffset> _EdmDateTimeOffsetSet;
+
+        /// <summary>
+        /// There are no comments for EdmDateTimeSet in the schema.
+        /// </summary>
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.2.0")]
+        public global::Microsoft.OData.Client.DataServiceQuery<EdmDateTime> EdmDateTimeSet
+        {
+            get
+            {
+                if ((this._EdmDateTimeSet == null))
+                {
+                    this._EdmDateTimeSet = base.CreateQuery<EdmDateTime>("EdmDateTimeSet");
+                }
+                return this._EdmDateTimeSet;
+            }
+        }
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.2.0")]
+        private global::Microsoft.OData.Client.DataServiceQuery<EdmDateTime> _EdmDateTimeSet;
+
         /// <summary>
         /// There are no comments for Folders in the schema.
         /// </summary>
@@ -402,6 +421,16 @@ namespace Microsoft.Test.OData.Services.TestServices.PrimitiveKeysServiceReferen
         {
             base.AddObject("EdmDateTimeOffsetSet", edmDateTimeOffset);
         }
+        
+        /// <summary>
+        /// There are no comments for EdmDateTimeOffsetSet in the schema.
+        /// </summary>
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.2.0")]
+        public void AddToEdmDateTimeOffsetSet(EdmDateTime edmDateTime)
+        {
+            base.AddObject("EdmDateTimeSet", edmDateTime);
+        }
+        
         /// <summary>
         /// There are no comments for Folders in the schema.
         /// </summary>
@@ -497,6 +526,12 @@ namespace Microsoft.Test.OData.Services.TestServices.PrimitiveKeysServiceReferen
         </Key>
         <Property Name=""Id"" Type=""Edm.DateTimeOffset"" Nullable=""false"" />
       </EntityType>
+      <EntityType Name=""EdmDateTime"">
+        <Key>
+          <PropertyRef Name=""Id"" />
+        </Key>
+        <Property Name=""Id"" Type=""Edm.DateTimeOffset"" Nullable=""false"" />
+      </EntityType>
       <EntityType Name=""Folder"">
         <Key>
           <PropertyRef Name=""Id"" />
@@ -519,6 +554,7 @@ namespace Microsoft.Test.OData.Services.TestServices.PrimitiveKeysServiceReferen
         <EntitySet Name=""EdmStringSet"" EntityType=""Microsoft.Test.OData.Services.PrimitiveKeysService.EdmString"" />
         <EntitySet Name=""EdmTimeSet"" EntityType=""Microsoft.Test.OData.Services.PrimitiveKeysService.EdmTime"" />
         <EntitySet Name=""EdmDateTimeOffsetSet"" EntityType=""Microsoft.Test.OData.Services.PrimitiveKeysService.EdmDateTimeOffset"" />
+        <EntitySet Name=""EdmDateTimeSet"" EntityType=""Microsoft.Test.OData.Services.PrimitiveKeysService.EdmDateTime"" />
         <EntitySet Name=""Folders"" EntityType=""Microsoft.Test.OData.Services.PrimitiveKeysService.Folder"">
           <NavigationPropertyBinding Path=""Parent"" Target=""Folders"" />
         </EntitySet>
@@ -1659,6 +1695,97 @@ namespace Microsoft.Test.OData.Services.TestServices.PrimitiveKeysServiceReferen
             }
         }
     }
+
+    /// <summary>
+    /// There are no comments for EdmDateTimeOffsetSingle in the schema.
+    /// </summary>
+    public partial class EdmDateTimeSingle : global::Microsoft.OData.Client.DataServiceQuerySingle<EdmDateTime>
+    {
+        /// <summary>
+        /// Initialize a new EdmDateTimeSingle object.
+        /// </summary>
+        public EdmDateTimeSingle(global::Microsoft.OData.Client.DataServiceContext context, string path)
+            : base(context, path)
+        { }
+
+        /// <summary>
+        /// Initialize a new EdmDateTimeSingle object.
+        /// </summary>
+        public EdmDateTimeSingle(global::Microsoft.OData.Client.DataServiceContext context, string path, bool isComposable)
+            : base(context, path, isComposable)
+        { }
+
+        /// <summary>
+        /// Initialize a new EdmDateTimeSingle object.
+        /// </summary>
+        public EdmDateTimeSingle(global::Microsoft.OData.Client.DataServiceQuerySingle<EdmDateTime> query)
+            : base(query)
+        { }
+
+    }
+
+    /// <summary>
+    /// There are no comments for EdmDateTime in the schema.
+    /// </summary>
+    /// <KeyProperties>
+    /// Id
+    /// </KeyProperties>
+    [global::Microsoft.OData.Client.Key("Id")]
+    [global::Microsoft.OData.Client.EntitySet("EdmDateTimeSet")]
+    public partial class EdmDateTime : global::Microsoft.OData.Client.BaseEntityType, global::System.ComponentModel.INotifyPropertyChanged
+    {
+        /// <summary>
+        /// Create a new EdmDateTime object.
+        /// </summary>
+        /// <param name="ID">Initial value of Id.</param>
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.2.0")]
+        public static EdmDateTime CreateEdmDateTime(global::System.DateTime ID)
+        {
+            EdmDateTime edmDateTime = new EdmDateTime();
+            edmDateTime.Id = ID;
+            return edmDateTime;
+        }
+        /// <summary>
+        /// There are no comments for Property Id in the schema.
+        /// </summary>
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.2.0")]
+        public global::System.DateTime Id
+        {
+            get
+            {
+                return this._Id;
+            }
+            set
+            {
+                this.OnIdChanging(value);
+                this._Id = value;
+                this.OnIdChanged();
+                this.OnPropertyChanged("Id");
+            }
+        }
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.2.0")]
+        private global::System.DateTime _Id;
+        partial void OnIdChanging(global::System.DateTime value);
+        partial void OnIdChanged();
+        /// <summary>
+        /// This event is raised when the value of the property is changed
+        /// </summary>
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.2.0")]
+        public event global::System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        /// <summary>
+        /// The value of the property is changed
+        /// </summary>
+        /// <param name="property">property name</param>
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.2.0")]
+        protected virtual void OnPropertyChanged(string property)
+        {
+            if ((this.PropertyChanged != null))
+            {
+                this.PropertyChanged(this, new global::System.ComponentModel.PropertyChangedEventArgs(property));
+            }
+        }
+    }
+
     /// <summary>
     /// There are no comments for FolderSingle in the schema.
     /// </summary>

@@ -982,6 +982,9 @@ namespace Microsoft.OData.Service
         /// <summary>edm string primitive type name</summary>
         internal const string EdmDateTimeOffsetTypeName = "Edm.DateTimeOffset";
 
+        /// <summary>edm string primitive type name</summary>
+        internal const string EdmDateTimeTypeName = "Edm.DateTime";
+
         #endregion
 
         #region Astoria Constants
