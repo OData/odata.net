@@ -61,6 +61,9 @@ namespace System.Data.Services.Client
         /// <summary>Referenced core model.</summary>
         private readonly IEnumerable<IEdmModel> coreModel = new IEdmModel[] { EdmCoreModel.Instance };
 
+        /// <summary>Callback for getting the backing field for a property.</summary>
+        internal Func<PropertyInfo, FieldInfo> ResolveBackingField { get; set; }
+
         /// <summary>
         /// Constructor.
         /// </summary>
@@ -540,7 +543,20 @@ namespace System.Data.Services.Client
                 edmProperty = new EdmStructuralProperty(declaringType, propertyInfo.Name, propertyEdmType.ToEdmTypeReference(isPropertyNullable));
             }
 
-            edmProperty.SetClientPropertyAnnotation(new ClientPropertyAnnotation(edmProperty, propertyInfo, this));
+
+            FieldInfo backingField = null;
+
+            // We only do this for "collections of non primitive types" OR "complex properties"
+            if (ResolveBackingField != null &&
+                (propertyEdmType.TypeKind == EdmTypeKind.Collection && !edmProperty.Type.AsCollection().CollectionDefinition().ElementType.IsPrimitive() ||
+                propertyEdmType.TypeKind == EdmTypeKind.Complex))
+            {
+                backingField = ResolveBackingField(propertyInfo);
+                if (backingField != null && backingField.FieldType != propertyInfo.PropertyType)
+                    backingField = null; // We disregard returned FieldInfoes that have the wrong type.
+            }
+
+            edmProperty.SetClientPropertyAnnotation(new ClientPropertyAnnotation(edmProperty, propertyInfo, backingField, this));
             return edmProperty;
         }
 
