@@ -767,10 +767,9 @@ namespace System.Data.Services.Client
             int countBefore = this.Count;
             foreach (T item in items)
             {
-                // - The check for this.Contains(item) is very expensive - please avoid it. I see no way it can return anything else than false given how this code is used.
                 // if this is too slow, consider hashing the set
                 // or just use LoadProperties                    
-                //if (!this.Contains(item))
+                if (!this.Contains(item))
                 {
                     this.Add(item);
                 }

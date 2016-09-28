@@ -231,18 +231,22 @@ namespace System.Data.Services.Client
                             case BindingPropertyKind.BindingPropertyKindDataServiceCollection:
                                 // If collection is already being tracked by the graph we can not have > 1 links to it.
                                 if (sourcePropertyValue != null)
-                                {                                    
-                                    bool isBeingObserved = (bool)typeof(BindingUtils)
-                                        .GetMethod("IsBeingObserved", false /*isPublic*/, true /*isStatic*/)
-                                        .MakeGenericMethod(bpi.PropertyInfo.EntityCollectionItemType)
+                                {
+                                    // Make sure that there is no observer on the input collection property.
+                                    try
+                                    {
+                                        typeof(BindingUtils)
+                                            .GetMethod("VerifyObserverNotPresent", false /*isPublic*/, true /*isStatic*/)
+                                            .MakeGenericMethod(bpi.PropertyInfo.EntityCollectionItemType)
 #if DEBUG
 .Invoke(null, new object[] { sourcePropertyValue, sourceProperty, source.GetType(), this.Context.Model });
 #else
-                                    .Invoke(null, new object[] { sourcePropertyValue, sourceProperty, source.GetType() });
+                                        .Invoke(null, new object[] { sourcePropertyValue, sourceProperty, source.GetType() });
 #endif
-                                    if (isBeingObserved)
-                                    {   // If there already is an observer on the input collection property we do not need to setup another one.
-                                        return;
+                                    }
+                                    catch (TargetInvocationException tie)
+                                    {
+                                        throw tie.InnerException;
                                     }
 
                                     try
