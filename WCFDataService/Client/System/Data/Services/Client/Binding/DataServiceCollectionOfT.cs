@@ -48,7 +48,7 @@ namespace System.Data.Services.Client
     }
 
     /// <summary>Represents a dynamic entity collection that provides notifications when items get added, removed, or when the list is refreshed.</summary>
-        /// <typeparam name="T">An entity type.</typeparam>
+    /// <typeparam name="T">An entity type.</typeparam>
 #if WINDOWS_PHONE
     [CollectionDataContract(IsReference = true)]
     public class DataServiceCollection<T> : ObservableCollection<T>, ICollectionSerializationAppendix
@@ -113,6 +113,11 @@ namespace System.Data.Services.Client
         /// The async handle for the current LoadAsync Operation
         /// </summary>
         private IAsyncResult ongoingAsyncOperation;
+
+        /// <summary>
+        /// A hashed set of the entities in this DataServiceCollection. Optimization - used for faster detection of item prescense in the collection.
+        /// </summary>
+        private HashSet<T> hashedItems = new HashSet<T>(EqualityComparer<T>.Default);
 
         #endregion Private fields
 
@@ -534,10 +539,7 @@ namespace System.Data.Services.Client
             this.StartLoading();
             try
             {
-                if (!this.Contains(item))
-                {
-                    this.Add(item);
-                }
+                this.Add(item);
             }
             finally
             {
@@ -675,6 +677,8 @@ namespace System.Data.Services.Client
         /// </remarks>
         protected override void InsertItem(int index, T item)
         {
+            if (this.hashedItems.Contains(item))
+                return;
             if (this.trackingOnLoad)
             {
                 throw new InvalidOperationException(Strings.DataServiceCollection_InsertIntoTrackedButNotLoadedCollection);
@@ -690,6 +694,40 @@ namespace System.Data.Services.Client
             }
 
             base.InsertItem(index, item);
+            this.hashedItems.Add(item);
+        }
+
+        /// <summary>
+        /// Called from the ObservableCollection when the DataServiceCollection is cleared. Used to sync hasedItems with the  ObservableCollection.
+        /// </summary>
+        protected override void ClearItems()
+        {
+            this.hashedItems.Clear();
+            base.ClearItems();
+        }
+
+        /// <summary>
+        /// Called from the ObservableCollection when an item is removed from the DataServiceCollection. Used to sync hasedItems with the  ObservableCollection.
+        /// </summary>
+        /// <param name="index">The index of the item to be removed.</param>
+        protected override void RemoveItem(int index)
+        {
+            if (index < this.Count)
+                this.hashedItems.Remove(this[index]);
+            base.RemoveItem(index);
+        }
+
+        /// <summary>
+        /// Called from the ObservableCollection when an item at a given index is replaced with another. Used to sync hasedItems with the  ObservableCollection.
+        /// </summary>
+        /// <param name="index">Index at which to remove the old item and add the new item.</param>
+        /// <param name="item">The item to be added</param>
+        protected override void SetItem(int index, T item)
+        {
+            if (index < this.Count)
+                this.hashedItems.Remove(this[index]);
+            base.SetItem(index, item);
+            this.hashedItems.Add(item);
         }
 
         /// <summary>
@@ -760,12 +798,7 @@ namespace System.Data.Services.Client
 
             foreach (T item in items)
             {
-                // if this is too slow, consider hashing the set
-                // or just use LoadProperties                    
-                if (!this.Contains(item))
-                {
-                    this.Add(item);
-                }
+                this.Add(item);
             }
 
             QueryOperationResponse<T> response = items as QueryOperationResponse<T>;
