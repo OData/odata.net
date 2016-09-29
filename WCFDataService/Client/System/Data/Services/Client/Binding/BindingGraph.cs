@@ -39,10 +39,10 @@ namespace System.Data.Services.Client
     {
         /// <summary>White color means un-visited</summary>
         White,
-        
+
         /// <summary>Gray color means added to queue for DFS</summary>
         Gray,
-        
+
         /// <summary>Black color means already visited hence reachable from root</summary>
         Black
     }
@@ -76,14 +76,14 @@ namespace System.Data.Services.Client
         /// <returns>true if a new vertex had to be created, false if it already exists</returns>
         [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.NoInlining | System.Runtime.CompilerServices.MethodImplOptions.NoOptimization)]
         public bool AddDataServiceCollection(
-            object source, 
-            string sourceProperty, 
-            object collection, 
+            object source,
+            string sourceProperty,
+            object collection,
             string collectionEntitySet)
         {
             Debug.Assert(collection != null, "'collection' can not be null");
             Debug.Assert(
-                BindingEntityInfo.IsDataServiceCollection(collection.GetType(), this.observer.Context.Model), 
+                BindingEntityInfo.IsDataServiceCollection(collection.GetType(), this.observer.Context.Model),
                 "Argument 'collection' must be an DataServiceCollection<T> of entity type T");
 
             if (this.graph.ExistsVertex(collection))
@@ -102,7 +102,7 @@ namespace System.Data.Services.Client
                 collectionVertex.Parent = this.graph.LookupVertex(source);
                 collectionVertex.ParentProperty = sourceProperty;
                 this.graph.AddEdge(source, collection, sourceProperty);
-                
+
                 // Update the observer on the child collection
                 Type entityType = BindingUtils.GetCollectionEntityType(collection.GetType());
                 Debug.Assert(entityType != null, "Collection must at least be inherited from DataServiceCollection<T>");
@@ -112,7 +112,7 @@ namespace System.Data.Services.Client
                 {
                     throw new InvalidOperationException(Strings.DataBinding_NotifyPropertyChangedNotImpl(entityType));
                 }
-                
+
                 typeof(BindingGraph)
                     .GetMethod("SetObserver", false /*isPublic*/, false /*isStatic*/)
                     .MakeGenericMethod(entityType)
@@ -125,7 +125,7 @@ namespace System.Data.Services.Client
             }
 
             Debug.Assert(
-                    collectionVertex.Parent != null || collectionVertex.IsRootDataServiceCollection, 
+                    collectionVertex.Parent != null || collectionVertex.IsRootDataServiceCollection,
                     "If parent is null, then collectionVertex should be a root collection");
 
             // Register for collection notifications
@@ -135,10 +135,10 @@ namespace System.Data.Services.Client
             foreach (var item in collectionItf)
             {
                 this.AddEntity(
-                        source, 
-                        sourceProperty, 
+                        source,
+                        sourceProperty,
                         item,
-                        collectionEntitySet, 
+                        collectionEntitySet,
                         collection);
             }
 
@@ -151,8 +151,8 @@ namespace System.Data.Services.Client
         /// <param name="collection">Collection being added</param>
         /// <param name="collectionItemType">Type of item in the collection</param>
         public void AddPrimitiveOrComplexCollection(
-            object source, 
-            string sourceProperty, 
+            object source,
+            string sourceProperty,
             object collection,
             Type collectionItemType)
         {
@@ -179,7 +179,7 @@ namespace System.Data.Services.Client
                 {
                     throw new InvalidOperationException(Strings.DataBinding_NotifyCollectionChangedNotImpl(collection.GetType()));
                 }
-                
+
                 // If the collection contains complex objects, bind to all of the objects in the collection
                 if (!PrimitiveType.IsKnownNullableType(collectionItemType))
                 {
@@ -215,15 +215,15 @@ namespace System.Data.Services.Client
         /// or indirectly through a collection navigation property.
         /// </remarks>
         public bool AddEntity(
-            object source, 
-            string sourceProperty, 
-            object target, 
-            string targetEntitySet, 
+            object source,
+            string sourceProperty,
+            object target,
+            string targetEntitySet,
             object edgeSource)
         {
             Vertex sourceVertex = this.graph.LookupVertex(edgeSource);
             Debug.Assert(sourceVertex != null, "Must have a valid edge source");
-            
+
             Vertex entityVertex = null;
             bool addedNewEntity = false;
 
@@ -234,7 +234,7 @@ namespace System.Data.Services.Client
                 if (entityVertex == null)
                 {
                     entityVertex = this.graph.AddVertex(target);
-                    
+
                     entityVertex.EntitySet = BindingEntityInfo.GetEntitySet(target, targetEntitySet, this.observer.Context.Model);
 
                     // Register for entity notifications, fail if the entity does not implement INotifyPropertyChanged.
@@ -242,7 +242,7 @@ namespace System.Data.Services.Client
                     {
                         throw new InvalidOperationException(Strings.DataBinding_NotifyPropertyChangedNotImpl(target.GetType()));
                     }
-                    
+
                     addedNewEntity = true;
                 }
 
@@ -258,9 +258,9 @@ namespace System.Data.Services.Client
             if (!sourceVertex.IsDataServiceCollection)
             {
                 this.observer.HandleUpdateEntityReference(
-                        source, 
+                        source,
                         sourceProperty,
-                        sourceVertex.EntitySet, 
+                        sourceVertex.EntitySet,
                         target,
                         entityVertex == null ? null : entityVertex.EntitySet);
             }
@@ -268,10 +268,10 @@ namespace System.Data.Services.Client
             {
                 Debug.Assert(target != null, "Target must be non-null when adding to collections");
                 this.observer.HandleAddEntity(
-                        source, 
+                        source,
                         sourceProperty,
                         sourceVertex.Parent != null ? sourceVertex.Parent.EntitySet : null,
-                        edgeSource as ICollection, 
+                        edgeSource as ICollection,
                         target,
                         entityVertex.EntitySet);
             }
@@ -374,7 +374,7 @@ namespace System.Data.Services.Client
         {
             Vertex sourceVertex = this.graph.LookupVertex(source);
             Debug.Assert(sourceVertex != null, "Must be tracking the vertex for the collection");
-            
+
             foreach (Edge edge in sourceVertex.OutgoingEdges.ToList())
             {
                 this.graph.RemoveEdge(source, edge.Target.Item, null);
@@ -419,7 +419,7 @@ namespace System.Data.Services.Client
             {
                 this.graph.ClearEdgesForVertex(this.graph.LookupVertex(entity));
             }
-            
+
             this.RemoveUnreachableVertices();
         }
 
@@ -467,14 +467,14 @@ namespace System.Data.Services.Client
         {
             Debug.Assert(collection != null, "Argument 'collection' cannot be null.");
             Debug.Assert(this.graph.ExistsVertex(collection), "Vertex corresponding to 'collection' must exist in the graph.");
-            
+
             this.graph
-                .LookupVertex(collection)
-                .GetDataServiceCollectionInfo(
-                    out source, 
-                    out sourceProperty, 
-                    out sourceEntitySet, 
-                    out targetEntitySet);
+                    .LookupVertex(collection)
+                    .GetDataServiceCollectionInfo(
+                        out source,
+                        out sourceProperty,
+                        out sourceEntitySet,
+                        out targetEntitySet);
         }
 
         /// <summary>Get the binding information for a collection</summary>
@@ -506,14 +506,14 @@ namespace System.Data.Services.Client
         /// <param name="propertyName">On input this is a complex object's member property name, on output it is the name of corresponding property of the ancestor entity.</param>
         /// <param name="propertyValue">On input this is a complex object's member property value, on output it is the value of the corresponding property of the ancestor entity.</param>
         public void GetAncestorEntityForComplexProperty(
-            ref object entity, 
-            ref string propertyName, 
+            ref object entity,
+            ref string propertyName,
             ref object propertyValue)
         {
             Vertex childVertex = this.graph.LookupVertex(entity);
             Debug.Assert(childVertex != null, "Must have a vertex in the graph corresponding to the entity.");
             Debug.Assert(childVertex.IsComplex == true, "Vertex must correspond to a complex object.");
-            
+
             // The complex object that contains the property could be contained in another complex object or collection,
             // so continue to walk the graph until we find a parent that is neither of these types.
             while (childVertex.IsComplex || childVertex.IsPrimitiveOrComplexCollection)
@@ -564,7 +564,7 @@ namespace System.Data.Services.Client
                 throw new InvalidOperationException(Strings.DataBinding_ComplexObjectAssociatedWithMultipleEntities(target.GetType()));
             }
         }
-        
+
         /// <summary>
         /// Adds complex items to the graph from the specified collection.
         /// </summary>
@@ -601,7 +601,7 @@ namespace System.Data.Services.Client
                                     bpi.PropertyInfo.PropertyName,
                                     propertyValue,
                                     null);
-                            
+
                             break;
 
                         case BindingPropertyKind.BindingPropertyKindPrimitiveOrComplexCollection:
@@ -611,7 +611,7 @@ namespace System.Data.Services.Client
                                     propertyValue,
                                     bpi.PropertyInfo.PrimitiveOrComplexCollectionItemType);
                             break;
-                            
+
                         case BindingPropertyKind.BindingPropertyKindEntity:
                             this.AddEntity(
                                     entity,
@@ -619,14 +619,14 @@ namespace System.Data.Services.Client
                                     propertyValue,
                                     null,
                                     entity);
-                            
+
                             break;
-                            
+
                         default:
                             Debug.Assert(bpi.PropertyKind == BindingPropertyKind.BindingPropertyKindComplex, "Must be complex type if PropertyKind is not entity, DataServiceCollection, or collection.");
                             this.AddComplexObject(
-                                    entity, 
-                                    bpi.PropertyInfo.PropertyName, 
+                                    entity,
+                                    bpi.PropertyInfo.PropertyName,
                                     propertyValue);
                             break;
                     }
@@ -688,7 +688,7 @@ namespace System.Data.Services.Client
         private void DetachNotifications(object target)
         {
             Debug.Assert(target != null, "Argument 'target' cannot be null");
-            
+
             this.DetachCollectionNotifications(target);
 
             INotifyPropertyChanged notifyPropertyChanged = target as INotifyPropertyChanged;
@@ -731,7 +731,7 @@ namespace System.Data.Services.Client
 
             /// <summary>The root vertex for the graph, DFS traversals start from this vertex</summary>
             private Vertex root;
-            
+
             /// <summary>Constructor</summary>
             public Graph()
             {
@@ -746,10 +746,10 @@ namespace System.Data.Services.Client
                     Debug.Assert(this.root != null, "Must have a non-null root vertex when this call is made.");
                     return this.root;
                 }
-                
+
                 set
                 {
-                    Debug.Assert(this.root == null, "Must only initialize root vertex once.");   
+                    Debug.Assert(this.root == null, "Must only initialize root vertex once.");
                     Debug.Assert(this.ExistsVertex(value.Item), "Must already have the assigned vertex in the graph.");
                     this.root = value;
                 }
@@ -808,7 +808,7 @@ namespace System.Data.Services.Client
             {
                 Vertex s = this.vertices[source];
                 Vertex t = this.vertices[target];
-                Edge e = new Edge { Source = s, Target = t, Label = label };
+                Edge e = new Edge(s, t, label);
                 s.OutgoingEdges.Add(e);
                 t.IncomingEdges.Add(e);
                 return e;
@@ -825,7 +825,7 @@ namespace System.Data.Services.Client
             {
                 Vertex s = this.vertices[source];
                 Vertex t = this.vertices[target];
-                Edge e = new Edge { Source = s, Target = t, Label = label };
+                Edge e = new Edge(s, t, label);
                 s.OutgoingEdges.Remove(e);
                 t.IncomingEdges.Remove(e);
             }
@@ -840,8 +840,8 @@ namespace System.Data.Services.Client
             /// <returns>true if an edge exists between source and target with given label, false otherwise</returns>
             public bool ExistsEdge(object source, object target, string label)
             {
-                Edge e = new Edge { Source = this.vertices[source], Target = this.vertices[target], Label = label };
-                return this.vertices[source].OutgoingEdges.Any(r => r.Equals(e));
+                Edge e = new Edge(this.vertices[source], this.vertices[target], label);
+                return this.vertices[source].OutgoingEdges.Contains(e);
             }
 
             /// <summary>
@@ -890,7 +890,7 @@ namespace System.Data.Services.Client
                     }
                 }
             }
-            
+
             /// <summary>Collects all vertices unreachable from the root collection vertex</summary>
             /// <returns>Sequence of vertices that are unreachable from the root collection vertex</returns>
             /// <remarks>
@@ -901,14 +901,14 @@ namespace System.Data.Services.Client
             private IEnumerable<Vertex> UnreachableVertices()
             {
                 Queue<Vertex> q = new Queue<Vertex>();
-                
+
                 this.Root.Color = VertexColor.Gray;
                 q.Enqueue(this.Root);
-                
+
                 while (q.Count != 0)
                 {
                     Vertex current = q.Dequeue();
-                    
+
                     foreach (Edge e in current.OutgoingEdges)
                     {
                         if (e.Target.Color == VertexColor.White)
@@ -917,10 +917,10 @@ namespace System.Data.Services.Client
                             q.Enqueue(e.Target);
                         }
                     }
-                    
+
                     current.Color = VertexColor.Black;
                 }
-                
+
                 return this.vertices.Values.Where(v => v.Color == VertexColor.White).ToList();
             }
         }
@@ -930,9 +930,14 @@ namespace System.Data.Services.Client
         {
             /// <summary>Collection of incoming edges for the vertex</summary>
             private List<Edge> incomingEdges;
-            
-            /// <summary>Collection of outgoing edges for the vertex</summary>
-            private List<Edge> outgoingEdges;
+
+            /// <summary>Hashed collection of outgoing edges for the vertex</summary>
+            private HashSet<Edge> outgoingEdges;
+
+            /// <summary>
+            /// Comparer for compairing Edge's in the outgoingEdges hash set.
+            /// </summary>
+            private static EdgeComparer edgeComparer = new EdgeComparer();
 
             /// <summary>Constructor</summary>
             /// <param name="item">Item corresponding to vertex</param>
@@ -1030,13 +1035,13 @@ namespace System.Data.Services.Client
             }
 
             /// <summary>Edges going out of this vertex</summary>
-            public IList<Edge> OutgoingEdges
+            public HashSet<Edge> OutgoingEdges
             {
                 get
                 {
                     if (this.outgoingEdges == null)
                     {
-                        this.outgoingEdges = new List<Edge>();
+                        this.outgoingEdges = new HashSet<Edge>(edgeComparer);
                     }
 
                     return this.outgoingEdges;
@@ -1059,7 +1064,7 @@ namespace System.Data.Services.Client
                 if (!this.IsRootDataServiceCollection)
                 {
                     Debug.Assert(this.Parent != null, "Parent must be non-null for child collection");
-                    
+
                     source = this.Parent.Item;
                     Debug.Assert(source != null, "Source object must be present for child collection");
 
@@ -1091,7 +1096,7 @@ namespace System.Data.Services.Client
                 out object source,
                 out string sourceProperty,
                 out Type collectionItemType)
-            {                
+            {
                 Debug.Assert(this.Parent != null, "Parent must be non-null for collection");
 
                 source = this.Parent.Item;
@@ -1115,25 +1120,41 @@ namespace System.Data.Services.Client
         /// </summary>
         internal sealed class Edge : IEquatable<Edge>
         {
+            /// <summary>
+            /// Constructor.
+            /// </summary>
+            /// <remarks>
+            /// Introduced to ensure that Source, Target and Label is not changed after construction, as we want the HashCode to be immutable.
+            /// </remarks>
+            /// <param name="source">Source vertex</param>
+            /// <param name="target">Target vertex</param>
+            /// <param name="label">Label of the edge</param>
+            public Edge(Vertex source, Vertex target, string label)
+            {
+                this.Source = source;
+                this.Target = target;
+                this.Label = label;
+            }
+
             /// <summary>Source vertex</summary>
             public Vertex Source
             {
                 get;
-                set;
+                private set;
             }
 
             /// <summary>Target vertex</summary>
             public Vertex Target
             {
                 get;
-                set;
+                private set;
             }
 
             /// <summary>Label of the edge</summary>
             public string Label
             {
                 get;
-                set;
+                private set;
             }
 
             /// <summary>IEquatable override</summary>
@@ -1146,6 +1167,46 @@ namespace System.Data.Services.Client
                     Object.ReferenceEquals(this.Target, other.Target) &&
                     this.Label == other.Label;
             }
-        }    
+        }
+
+        /// <summary>
+        /// EqualityComparer for Edge's
+        /// </summary>
+        private class EdgeComparer : IEqualityComparer<Edge>
+        {
+            /// <summary>
+            /// Compares two edges for equality.
+            /// </summary>
+            /// <param name="x">Edge x</param>
+            /// <param name="y">Edge y</param>
+            /// <returns>true if they are equal, false otherwise</returns>
+            public bool Equals(Edge x, Edge y)
+            {
+                if (x == null)
+                    return y == null;
+
+                return x.Equals(y);
+            }
+
+            /// <summary>
+            /// Computes the HashCode for an Edge based on Source, Target and Label
+            /// </summary>
+            /// <param name="obj">The Edge to compute the HashCode for</param>
+            /// <returns>The computed HashCode</returns>
+            public int GetHashCode(Edge obj)
+            {
+                if (obj == null)
+                    return 0;
+
+                unchecked
+                {
+                    int hash = 17;
+                    hash = hash * 23 + (obj.Source == null ? 0 : obj.Source.GetHashCode());
+                    hash = hash * 23 + (obj.Target == null ? 0 : obj.Target.GetHashCode());
+                    hash = hash * 23 + (obj.Label == null ? 0 : obj.Label.GetHashCode());
+                    return hash;
+                }
+            }
+        }
     }
 }
