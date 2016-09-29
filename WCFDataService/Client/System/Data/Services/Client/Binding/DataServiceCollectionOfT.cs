@@ -539,7 +539,10 @@ namespace System.Data.Services.Client
             this.StartLoading();
             try
             {
-                this.Add(item);
+                if (!this.hashedItems.Contains(item))
+                {
+                    this.Add(item);
+                }
             }
             finally
             {
@@ -677,8 +680,6 @@ namespace System.Data.Services.Client
         /// </remarks>
         protected override void InsertItem(int index, T item)
         {
-            if (this.hashedItems.Contains(item))
-                return;
             if (this.trackingOnLoad)
             {
                 throw new InvalidOperationException(Strings.DataServiceCollection_InsertIntoTrackedButNotLoadedCollection);
@@ -798,7 +799,10 @@ namespace System.Data.Services.Client
 
             foreach (T item in items)
             {
-                this.Add(item);
+                if (!this.hashedItems.Contains(item))
+                {
+                    this.Add(item);
+                }
             }
 
             QueryOperationResponse<T> response = items as QueryOperationResponse<T>;
