@@ -172,6 +172,7 @@ namespace System.Data.Services.Client
                 Uri requestUri = queryComponents.Uri;
                 DataServiceRequest<TElement> serviceRequest = new DataServiceRequest<TElement>(requestUri, queryComponents, this.Plan);
                 result = serviceRequest.CreateExecuteResult(this, context, null, null, Util.ExecuteMethodName);
+                result.AllowDirectNetworkStreamReading = context.AllowDirectNetworkStreamReading;
                 result.ExecuteQuery();
                 return result.ProcessResult<TElement>(this.Plan);
             }
@@ -235,15 +236,17 @@ namespace System.Data.Services.Client
                 null /*descriptor*/);
 
             response = new QueryResult(this, Util.ExecuteMethodName, serviceRequest, request, new RequestInfo(context), null, null);
+            response.AllowDirectNetworkStreamReading = context.AllowDirectNetworkStreamReading;
 
+            IODataResponseMessage responseMessage = null;
             try
             {
-                response.ExecuteQuery();
-
+                responseMessage = response.ExecuteQuery();
                 if (HttpStatusCode.NoContent != response.StatusCode)
                 {
                     StreamReader sr = new StreamReader(response.GetResponseStream());
                     long r = -1;
+
                     try
                     {
                         r = XmlConvert.ToInt64(sr.ReadToEnd());
@@ -271,6 +274,10 @@ namespace System.Data.Services.Client
                 }
 
                 throw;
+            }
+            finally
+            { 
+                WebUtil.DisposeMessage(responseMessage);
             }
         }
 #endif

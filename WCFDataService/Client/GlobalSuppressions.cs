@@ -54,3 +54,4 @@ using System.Diagnostics.CodeAnalysis;
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("DataWeb.Performance", "AC0002:HashSetCtorRule", Scope = "member", Target = "System.Data.Services.Client.KnownTypeTable.#.ctor()")]
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("DataWeb.Performance", "AC0002:HashSetCtorRule", Scope = "member", Target = "System.Data.Services.Client.DataServiceSerializationAppendice.#.ctor(System.Data.Services.Client.DataServiceContext,System.Collections.Generic.IEnumerable`1<System.Object>)")]
 #endregion
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("DataWeb.Usage", "AC0018:SystemUriEscapeDataStringRule", Scope = "member", Target = "System.Data.Services.Client.BaseSaveResult.#CreateRequest(System.Data.Services.Client.LinkDescriptor)")]

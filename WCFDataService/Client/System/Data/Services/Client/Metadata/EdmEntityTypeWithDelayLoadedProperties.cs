@@ -37,9 +37,6 @@ namespace System.Data.Services.Providers
     /// </summary>
     internal class EdmEntityTypeWithDelayLoadedProperties : EdmEntityType, IEdmEntityType
     {
-        /// <summary>The lock object for the delayed property loading.</summary>
-        private readonly object lockObject = new object();
-
         /// <summary>An action that is used to create the properties for this type.</summary>
         private Action<EdmEntityTypeWithDelayLoadedProperties> propertyLoadAction;
 
@@ -53,10 +50,10 @@ namespace System.Data.Services.Providers
         /// <param name="isOpen">Denotes if the type is open.</param>
         /// <param name="propertyLoadAction">An action that is used to create the properties for this type.</param>
         internal EdmEntityTypeWithDelayLoadedProperties(
-            string namespaceName, 
+            string namespaceName,
             string name,
-            IEdmEntityType baseType, 
-            bool isAbstract, 
+            IEdmEntityType baseType,
+            bool isAbstract,
             bool isOpen,
             Action<EdmEntityTypeWithDelayLoadedProperties> propertyLoadAction)
             : base(namespaceName, name, baseType, isAbstract, isOpen)
@@ -94,7 +91,8 @@ namespace System.Data.Services.Providers
         /// </summary>
         private void EnsurePropertyLoaded()
         {
-            lock (this.lockObject)
+            // Use the lock from base type to avoid dead lock.
+            lock (this.LockObj)
             {
                 if (this.propertyLoadAction != null)
                 {

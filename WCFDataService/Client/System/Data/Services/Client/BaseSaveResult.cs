@@ -869,7 +869,7 @@ namespace System.Data.Services.Client
                 }
 
                 // get the convention-based relative uri for the association
-                Uri conventionalRelativeUri = UriUtil.CreateUri(XmlConstants.UriLinkSegment + UriHelper.FORWARDSLASH + binding.SourceProperty, UriKind.Relative);
+                Uri conventionalRelativeUri = UriUtil.CreateUri(XmlConstants.UriLinkSegment + UriHelper.FORWARDSLASH + Uri.EscapeDataString(binding.SourceProperty), UriKind.Relative);
 
                 // combine the association uri with the source entity uri
                 requestUri = UriUtil.CreateUri(sourceEntityUri, conventionalRelativeUri);

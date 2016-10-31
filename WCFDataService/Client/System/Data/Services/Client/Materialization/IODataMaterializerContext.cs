@@ -45,6 +45,11 @@ namespace System.Data.Services.Client.Materialization
         DataServiceClientResponsePipelineConfiguration ResponsePipeline { get; }
 
         /// <summary>
+        /// Gets the value which indicates whether auto nulls check in expand paths in enabled.
+        /// </summary>
+        bool AutoNullPropagation { get; }
+
+        /// <summary>
         /// Resolves the client type that should be used for materialization.
         /// </summary>
         /// <param name="expectedType">Expected client clr type based on the API called.</param>

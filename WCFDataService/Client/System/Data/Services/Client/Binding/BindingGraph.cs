@@ -246,12 +246,12 @@ namespace System.Data.Services.Client
                     addedNewEntity = true;
                 }
 
-                // Add relationship. Connect the from end to the target.
                 if (this.graph.ExistsEdge(edgeSource, target, sourceVertex.IsDataServiceCollection ? null : sourceProperty))
                 {
                     throw new InvalidOperationException(Strings.DataBinding_EntityAlreadyInCollection(target.GetType()));
                 }
 
+                // Add relationship. Connect the from end to the target.
                 this.graph.AddEdge(edgeSource, target, sourceVertex.IsDataServiceCollection ? null : sourceProperty);
             }
 
@@ -445,6 +445,25 @@ namespace System.Data.Services.Client
             this.graph.Reset(this.DetachNotifications);
         }
 
+        /// <summary>
+        /// Temporarily pauses notifications.
+        /// This could be used to defer notifications during collection load untill all elements have been loaded.
+        /// </summary>
+        /// <param name="collection">The collection to pause notifications for.</param>
+        public void Pause(object collection) 
+        { 
+            this.DetachCollectionNotifications(collection); 
+        }
+
+        /// <summary>
+        /// Resumes notifications.
+        /// </summary>
+        /// <param name="collection">The collection to resume notifications for.</param>
+        public void Resume(object collection) 
+        { 
+            this.AttachDataServiceCollectionNotification(collection); 
+        } 
+
         /// <summary>Removes the un-reachable vertices from the graph and un-registers notification handlers</summary>
         public void RemoveUnreachableVertices()
         {
@@ -589,7 +608,7 @@ namespace System.Data.Services.Client
             // and add related entities and collections to this entity. 
             foreach (BindingEntityInfo.BindingPropertyInfo bpi in BindingEntityInfo.GetObservableProperties(entity.GetType(), this.observer.Context.Model))
             {
-                object propertyValue = bpi.PropertyInfo.GetValue(entity);
+                object propertyValue = bpi.PropertyInfo.GetFieldOrPropertyValue(entity);
 
                 if (propertyValue != null)
                 {
@@ -601,7 +620,6 @@ namespace System.Data.Services.Client
                                     bpi.PropertyInfo.PropertyName,
                                     propertyValue,
                                     null);
-                            
                             break;
 
                         case BindingPropertyKind.BindingPropertyKindPrimitiveOrComplexCollection:
@@ -619,7 +637,6 @@ namespace System.Data.Services.Client
                                     propertyValue,
                                     null,
                                     entity);
-                            
                             break;
                             
                         default:
@@ -808,7 +825,7 @@ namespace System.Data.Services.Client
             {
                 Vertex s = this.vertices[source];
                 Vertex t = this.vertices[target];
-                Edge e = new Edge { Source = s, Target = t, Label = label };
+                Edge e = new Edge(s, t, label);
                 s.OutgoingEdges.Add(e);
                 t.IncomingEdges.Add(e);
                 return e;
@@ -825,7 +842,7 @@ namespace System.Data.Services.Client
             {
                 Vertex s = this.vertices[source];
                 Vertex t = this.vertices[target];
-                Edge e = new Edge { Source = s, Target = t, Label = label };
+                Edge e = new Edge(s, t, label);
                 s.OutgoingEdges.Remove(e);
                 t.IncomingEdges.Remove(e);
             }
@@ -840,8 +857,8 @@ namespace System.Data.Services.Client
             /// <returns>true if an edge exists between source and target with given label, false otherwise</returns>
             public bool ExistsEdge(object source, object target, string label)
             {
-                Edge e = new Edge { Source = this.vertices[source], Target = this.vertices[target], Label = label };
-                return this.vertices[source].OutgoingEdges.Any(r => r.Equals(e));
+                Edge e = new Edge(this.vertices[source], this.vertices[target], label);
+                return this.vertices[source].OutgoingEdges.Contains(e);
             }
 
             /// <summary>
@@ -930,9 +947,14 @@ namespace System.Data.Services.Client
         {
             /// <summary>Collection of incoming edges for the vertex</summary>
             private List<Edge> incomingEdges;
-            
-            /// <summary>Collection of outgoing edges for the vertex</summary>
-            private List<Edge> outgoingEdges;
+
+            /// <summary>Hashed collection of outgoing edges for the vertex</summary>
+            private HashSet<Edge> outgoingEdges;
+
+            /// <summary>
+            /// Comparer for compairing Edge's in the outgoingEdges hash set.
+            /// </summary>
+            private static EdgeComparer edgeComparer = new EdgeComparer();
 
             /// <summary>Constructor</summary>
             /// <param name="item">Item corresponding to vertex</param>
@@ -1030,13 +1052,13 @@ namespace System.Data.Services.Client
             }
 
             /// <summary>Edges going out of this vertex</summary>
-            public IList<Edge> OutgoingEdges
+            public HashSet<Edge> OutgoingEdges
             {
                 get
                 {
                     if (this.outgoingEdges == null)
                     {
-                        this.outgoingEdges = new List<Edge>();
+                        this.outgoingEdges = new HashSet<Edge>(edgeComparer);
                     }
 
                     return this.outgoingEdges;
@@ -1115,25 +1137,41 @@ namespace System.Data.Services.Client
         /// </summary>
         internal sealed class Edge : IEquatable<Edge>
         {
+            /// <summary>
+            /// Constructor.
+            /// </summary>
+            /// <remarks>
+            /// Introduced to ensure that Source, Target and Label is not changed after construction, as we want the HashCode to be immutable.
+            /// </remarks>
+            /// <param name="source">Source vertex</param>
+            /// <param name="target">Target vertex</param>
+            /// <param name="label">Label of the edge</param>
+            public Edge(Vertex source, Vertex target, string label)
+            {
+                this.Source = source;
+                this.Target = target;
+                this.Label = label;
+            }
+
             /// <summary>Source vertex</summary>
             public Vertex Source
             {
                 get;
-                set;
+                private set;
             }
 
             /// <summary>Target vertex</summary>
             public Vertex Target
             {
                 get;
-                set;
+                private set;
             }
 
             /// <summary>Label of the edge</summary>
             public string Label
             {
                 get;
-                set;
+                private set;
             }
 
             /// <summary>IEquatable override</summary>
@@ -1146,6 +1184,50 @@ namespace System.Data.Services.Client
                     Object.ReferenceEquals(this.Target, other.Target) &&
                     this.Label == other.Label;
             }
-        }    
+        }
+
+        /// <summary>
+        /// EqualityComparer for Edge's
+        /// </summary>
+        private class EdgeComparer : IEqualityComparer<Edge>
+        {
+            /// <summary>
+            /// Compares two edges for equality.
+            /// </summary>
+            /// <param name="x">Edge x</param>
+            /// <param name="y">Edge y</param>
+            /// <returns>true if they are equal, false otherwise</returns>
+            public bool Equals(Edge x, Edge y)
+            {
+                if (x == null)
+                {
+                    return y == null;
+                }
+
+                return x.Equals(y);
+            }
+
+            /// <summary>
+            /// Computes the HashCode for an Edge based on Source, Target and Label
+            /// </summary>
+            /// <param name="obj">The Edge to compute the HashCode for</param>
+            /// <returns>The computed HashCode</returns>
+            public int GetHashCode(Edge obj)
+            {
+                if (obj == null)
+                {
+                    return 0;
+                }
+
+                unchecked
+                {
+                    int hash = 17;
+                    hash = hash * 23 + (obj.Source == null ? 0 : obj.Source.GetHashCode());
+                    hash = hash * 23 + (obj.Target == null ? 0 : obj.Target.GetHashCode());
+                    hash = hash * 23 + (obj.Label == null ? 0 : obj.Label.GetHashCode());
+                    return hash;
+                }
+            }
+        }
     }
 }

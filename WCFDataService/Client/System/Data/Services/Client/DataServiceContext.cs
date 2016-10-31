@@ -598,6 +598,16 @@ namespace System.Data.Services.Client
             set { this.ignoreMissingProperties = value; }
         }
 
+        /// <summary>
+        /// Gets or sets whether query projection will handle null propagation automatically. 
+        /// If sets to true, null propagation checks can be omitted from queries.
+        /// </summary>
+#if WINDOWS_PHONE
+        [DataMember]
+#endif
+
+        public bool AutoNullPropagation { get; set; }
+
         /// <summary>Gets or sets whether to respect IgnoreMissingProperties boolean, or directly ignore/support undeclared properties.</summary>
         /// <remarks>
         /// This also affects responses during SaveChanges.
@@ -635,6 +645,23 @@ namespace System.Data.Services.Client
 
                 this.dataNamespace = value;
             }
+        }
+
+
+        /// <summary>Gets or sets a function that is used to resolve the backing field for a property in an entity.</summary>
+        /// <returns>A delegate that takes a <see cref="T:System.Reflection.PropertyInfo" /> and returns a <see cref="T:System.Reflection.FieldInfo" /> value.</returns>
+        /// <remarks>
+        /// This is used internally to check properties for null values without triggering lazy construction.
+        /// The supplied delegate should return the FieldInfo for the backing field for the PropertyInfo parameter. The method may return null.
+        /// The returned FieldInfo.FieldType should match the PropertyInfo.PropertyType or it will be disregarded.
+        /// This is only used for collection navigation properties, collection complex properties and single value complex properties.
+        /// For entities with a large amount of collection navigation/complex collection properties and/or complex properties, 
+        /// using lazy construction in the proxy and setting ResolveBackingField can dramatically improve performance during GET operations.
+        /// </remarks>
+        public Func<PropertyInfo, FieldInfo> ResolveBackingField
+        {
+            get { return this.model.ResolveBackingField; }
+            set { this.model.ResolveBackingField = value; }
         }
 
         /// <summary>Gets or sets a function to override the default type resolution strategy used by the client library when you send entities to a data service.</summary>
@@ -830,6 +857,14 @@ namespace System.Data.Services.Client
                 this.urlConventions = value;
             }
         }
+
+        /// <summary>
+        /// If set to true data is read directly from the network stream. If set to false (default/old behaviour) the network stream is copied before reading.
+        /// </summary>
+        /// <remarks>
+        /// This setting only has effect for synchronous requests. Setting this to true will increase performance. 
+        /// </remarks>
+        public bool AllowDirectNetworkStreamReading { get; set; }
 
         /// <summary>
         /// Gets or sets a System.Boolean value that controls whether default credentials are sent with requests.
@@ -1175,6 +1210,7 @@ namespace System.Data.Services.Client
         public QueryOperationResponse LoadProperty(object entity, string propertyName, Uri nextLinkUri)
         {
             LoadPropertyResult result = this.CreateLoadPropertyRequest(entity, propertyName, null /*callback*/, null /*state*/, nextLinkUri, null /*continuation*/);
+            result.AllowDirectNetworkStreamReading = this.AllowDirectNetworkStreamReading;
             result.ExecuteQuery();
             return result.LoadProperty();
         }
@@ -1198,6 +1234,7 @@ namespace System.Data.Services.Client
         public QueryOperationResponse LoadProperty(object entity, string propertyName, DataServiceQueryContinuation continuation)
         {
             LoadPropertyResult result = this.CreateLoadPropertyRequest(entity, propertyName, null /*callback*/, null /*state*/, null /*requestUri*/, continuation);
+            result.AllowDirectNetworkStreamReading = this.AllowDirectNetworkStreamReading;
             result.ExecuteQuery();
             return result.LoadProperty();
         }
@@ -1223,6 +1260,7 @@ namespace System.Data.Services.Client
         public QueryOperationResponse<T> LoadProperty<T>(object entity, string propertyName, DataServiceQueryContinuation<T> continuation)
         {
             LoadPropertyResult result = this.CreateLoadPropertyRequest(entity, propertyName, null /*callback*/, null /*state*/, null /*requestUri*/, continuation);
+            result.AllowDirectNetworkStreamReading = this.AllowDirectNetworkStreamReading;
             result.ExecuteQuery();
             return (QueryOperationResponse<T>)result.LoadProperty();
         }

@@ -63,6 +63,9 @@ namespace System.Data.Services.Client
         /// <summary>Whether the top level projection has been found.</summary>
         private bool topLevelProjectionFound;
 
+        /// <summary>Auto nulls check in expand paths.</summary>
+        private bool autoNullPropagation; 
+
         #endregion Private fields
 
         #region Constructors
@@ -71,12 +74,14 @@ namespace System.Data.Services.Client
         /// Initializes a new <see cref="ProjectionPlanCompiler"/> instance.
         /// </summary>
         /// <param name="normalizerRewrites">Rewrites introduces by normalizer.</param>
-        private ProjectionPlanCompiler(Dictionary<Expression, Expression> normalizerRewrites)
+        /// <param name="autoNullPropagation">Auto nulls check in expand paths.</param>
+        private ProjectionPlanCompiler(Dictionary<Expression, Expression> normalizerRewrites, bool autoNullPropagation)
         {
             this.annotations = new Dictionary<Expression, ExpressionAnnotation>(ReferenceEqualityComparer<Expression>.Instance);
             this.materializerExpression = Expression.Parameter(typeof(object), "mat");
             this.normalizerRewrites = normalizerRewrites;
             this.pathBuilder = new ProjectionPathBuilder();
+            this.autoNullPropagation = autoNullPropagation;
         }
 
         #endregion Constructors
@@ -86,8 +91,9 @@ namespace System.Data.Services.Client
         /// <summary>Creates a projection plan from the specified <paramref name="projection"/>.</summary>
         /// <param name="projection">Projection expression.</param>
         /// <param name="normalizerRewrites">Tracks rewrite-to-source rewrites introduced by expression normalizer.</param>
+        /// <param name="autoNullPropagation">Auto nulls check in expand paths.</param>
         /// <returns>A new <see cref="ProjectionPlan"/> instance.</returns>
-        internal static ProjectionPlan CompilePlan(LambdaExpression projection, Dictionary<Expression, Expression> normalizerRewrites)
+        internal static ProjectionPlan CompilePlan(LambdaExpression projection, Dictionary<Expression, Expression> normalizerRewrites, bool autoNullPropagation)
         {
             Debug.Assert(projection != null, "projection != null");
             Debug.Assert(projection.Parameters.Count == 1, "projection.Parameters.Count == 1");
@@ -100,7 +106,7 @@ namespace System.Data.Services.Client
                 projection.Body.NodeType == ExpressionType.New,
                 "projection.Body.NodeType == Constant, MemberInit, MemberAccess, Convert(Checked) New");
 
-            ProjectionPlanCompiler rewriter = new ProjectionPlanCompiler(normalizerRewrites);
+            ProjectionPlanCompiler rewriter = new ProjectionPlanCompiler(normalizerRewrites, autoNullPropagation);
 #if TRACE_CLIENT_PROJECTIONS
             Trace.WriteLine("Projection: " + projection);
 #endif
@@ -679,7 +685,7 @@ namespace System.Data.Services.Client
                      assignment.Expression.NodeType == ExpressionType.MemberInit))
                 {
                     Expression nestedEntry = CallMaterializer(
-                        "ProjectionGetEntry",
+                        this.autoNullPropagation ? "ProjectionGetEntryOrNull" : "ProjectionGetEntry",
                         entryParameterAtMemberInit,
                         Expression.Constant(assignment.Member.Name, typeof(string)));
                     ParameterExpression nestedEntryParameter = Expression.Parameter(
@@ -808,7 +814,7 @@ namespace System.Data.Services.Client
             do
             {
                 result = CallMaterializer(
-                    "ProjectionGetEntry",
+                    this.autoNullPropagation ? "ProjectionGetEntryOrNull" : "ProjectionGetEntry",
                     result ?? this.pathBuilder.ParameterEntryInScope,
                     Expression.Constant(((MemberExpression)path[pathIndex]).Member.Name, typeof(string)));
                 pathIndex++;

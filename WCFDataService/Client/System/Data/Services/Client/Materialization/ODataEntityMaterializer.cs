@@ -63,7 +63,7 @@ namespace System.Data.Services.Client.Materialization
             ProjectionPlan materializeEntryPlan)
             : base(materializerContext, expectedType)
         {
-            this.materializeEntryPlan = materializeEntryPlan ?? CreatePlan(queryComponents);
+            this.materializeEntryPlan = materializeEntryPlan ?? CreatePlan(queryComponents, materializerContext.AutoNullPropagation);
             this.EntityTrackingAdapter = entityTrackingAdapter;
             DSClient.SimpleLazy<PrimitivePropertyConverter> converter = new DSClient.SimpleLazy<PrimitivePropertyConverter>(() => new PrimitivePropertyConverter(this.Format));
 
@@ -403,14 +403,19 @@ namespace System.Data.Services.Client.Materialization
 
             // If we are projecting a property defined on a derived type and the entry is of the base type, get property would throw. The user need to check for null in the query.
             // e.g. Select(p => new MyEmployee { ID = p.ID, Manager = (p as Employee).Manager == null ? null : new MyManager { ID = (p as Employee).Manager.ID } })
-            MaterializerNavigationLink property = ODataEntityMaterializer.GetPropertyOrThrow(entry.NavigationLinks, name);
-            MaterializerEntry result = property.Entry;
-            if (result == null)
-            {
-                throw new InvalidOperationException(DSClient.Strings.AtomMaterializer_PropertyNotExpectedEntry(name));
-            }
+            MaterializerEntry result = ProjectionGetMaterializerEntry(entry, name);
 
             CheckEntryToAccessNotNull(result, name);
+            return result.Entry;
+        }
+
+        /// <summary>Provides support for getting payload entries or null during projections.</summary> 
+        /// <param name="entry">Entry to get sub-entry from.</param> 
+        /// <param name="name">Name of sub-entry.</param> 
+        /// <returns>The sub-entry or null.</returns> 
+        internal static ODataEntry ProjectionGetEntryOrNull(MaterializerEntry entry, string name)
+        {
+            MaterializerEntry result = ProjectionGetMaterializerEntry(entry, name); 
             return result.Entry;
         }
 
@@ -431,6 +436,11 @@ namespace System.Data.Services.Client.Materialization
             string[] properties,
             Func<object, object, Type, object>[] propertyValues)
         {
+            if (entry == null && materializer.MaterializerContext.AutoNullPropagation)
+            {
+                return null;
+            }
+
             if (entry.Entry == null)
             {
                 throw new NullReferenceException(DSClient.Strings.AtomMaterializer_EntryToInitializeIsNull(resultType.FullName));
@@ -518,6 +528,8 @@ namespace System.Data.Services.Client.Materialization
                     materializer.EntryValueMaterializationPolicy.FoundNextLinkForUnmodifiedCollection(property.GetValue(entry.ResolvedObject) as IEnumerable);
                 }
             }
+
+            materializer.MaterializerContext.ResponsePipeline.FireEndEntryEvents(entry);
 
             return result;
         }
@@ -884,8 +896,9 @@ namespace System.Data.Services.Client.Materialization
 
         /// <summary>Creates an entry materialization plan for a given projection.</summary>
         /// <param name="queryComponents">Query components for plan to materialize.</param>
+        /// <param name="autoNullPropagation">Auto nulls check in expand paths.</param>
         /// <returns>A materialization plan.</returns>
-        private static ProjectionPlan CreatePlan(QueryComponents queryComponents)
+        private static ProjectionPlan CreatePlan(QueryComponents queryComponents, bool autoNullPropagation)
         {
             // Can we have a primitive property as well?
             LambdaExpression projection = queryComponents.Projection;
@@ -896,7 +909,7 @@ namespace System.Data.Services.Client.Materialization
             }
             else
             {
-                result = ProjectionPlanCompiler.CompilePlan(projection, queryComponents.NormalizerRewrites);
+                result = ProjectionPlanCompiler.CompilePlan(projection, queryComponents.NormalizerRewrites, autoNullPropagation);
                 result.LastSegmentType = queryComponents.LastSegmentType;
             }
 
@@ -954,6 +967,25 @@ namespace System.Data.Services.Client.Materialization
             return MaterializerNavigationLink.GetLink(link);
         }
 
+        /// <summary>
+        /// Provides support for getting payload entries during projections.
+        /// </summary>
+        /// <param name="entry">Entry to get sub-entry from.</param>
+        /// <param name="name">Name of sub-entry.</param>
+        /// <returns>The sub-entry.</returns>
+        private static MaterializerEntry ProjectionGetMaterializerEntry(MaterializerEntry entry, string name) 
+        { 
+            MaterializerNavigationLink property = ODataEntityMaterializer.GetPropertyOrThrow(entry.NavigationLinks, name); 
+            MaterializerEntry result = property.Entry; 
+
+            if (result == null) 
+            { 
+                 throw new InvalidOperationException(DSClient.Strings.AtomMaterializer_PropertyNotExpectedEntry(name)); 
+            } 
+ 
+            return result;
+         } 
+
         /// <summary>Merges a list into the property of a given <paramref name="entry"/>.</summary>
         /// <param name="entry">Entry to merge into.</param>
         /// <param name="property">Property on entry to merge into.</param>
@@ -970,11 +1002,10 @@ namespace System.Data.Services.Client.Materialization
             Debug.Assert(property != null, "property != null");
             Debug.Assert(plan != null || nextLink == null, "plan != null || nextLink == null");
 
-            // Simple case: the list is of the target type, and the resolved entity
-            // has null; we can simply assign the collection. No merge required.
+            // Simple case: the list is of the target type, and we can simply assign the collection.
+            // No merge required.
             if (entry.ShouldUpdateFromPayload &&
-                property.NullablePropertyType == list.GetType() &&
-                property.GetValue(entry.ResolvedObject) == null)
+                property.NullablePropertyType == list.GetType())
             {
                 property.SetValue(entry.ResolvedObject, list, property.PropertyName, false /* allowAdd */);
                 this.EntryValueMaterializationPolicy.FoundNextLinkForCollection(list, nextLink, plan);

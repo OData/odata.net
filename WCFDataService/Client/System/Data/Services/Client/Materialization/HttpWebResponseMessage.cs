@@ -47,6 +47,9 @@ namespace System.Data.Services.Client
         /// <summary>HttpWebResponse instance.</summary>
         private HttpWebResponse httpWebResponse;
 
+        /// <summary>The IODataResponseMessage to be disposed together with this HttpWebResponseMessage.</summary>
+        private IODataResponseMessage underlyingResponseMessage;
+
 #if DEBUG
         /// <summary>set to true once the GetStream was called.</summary>
         private bool streamReturned;
@@ -95,6 +98,19 @@ namespace System.Data.Services.Client
             this.headers = headers;
             this.statusCode = statusCode;
             this.getResponseStream = getResponseStream;
+        }
+
+        /// <summary>
+        /// Constructor.
+        /// </summary>
+        /// <param name="headers">The headers.</param>
+        /// <param name="statusCode">The status code.</param>
+        /// <param name="getResponseStream">A function returning the response stream.</param>
+        /// <param name="underlyingResponseMessage">The underlying response message that should be disposed together with this instance.</param>
+        internal HttpWebResponseMessage(HeaderCollection headers, int statusCode, Func<Stream> getResponseStream, IODataResponseMessage underlyingResponseMessage)
+            : this(headers, statusCode, getResponseStream)
+        {
+            this.underlyingResponseMessage = underlyingResponseMessage;
         }
 
         /// <summary>
@@ -204,6 +220,9 @@ namespace System.Data.Services.Client
             {
                 ((IDisposable)response).Dispose();
             }
+
+            WebUtil.DisposeMessage(this.underlyingResponseMessage);
+            this.underlyingResponseMessage = null;
         }
     }
 }

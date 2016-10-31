@@ -30,6 +30,11 @@ namespace Microsoft.Data.Edm.Library
     /// </summary>
     public abstract class EdmStructuredType : EdmType, IEdmStructuredType
     {
+        /// <summary>
+        /// The lock used when accessing the internal cached properties.
+        /// </summary>
+        protected readonly object LockObj = new object();
+
         private readonly IEdmStructuredType baseStructuredType;
         private readonly List<IEdmProperty> declaredProperties = new List<IEdmProperty>();
         private readonly bool isAbstract;
@@ -89,7 +94,13 @@ namespace Microsoft.Data.Edm.Library
         /// </summary>
         protected IDictionary<string, IEdmProperty> PropertiesDictionary
         {
-            get { return this.propertiesDictionary.GetValue(this, ComputePropertiesDictionaryFunc, null); }
+            get
+            {
+                lock (LockObj)
+                {
+                    return this.propertiesDictionary.GetValue(this, ComputePropertiesDictionaryFunc, null);
+                }
+            }
         }
 
         /// <summary>
@@ -107,7 +118,11 @@ namespace Microsoft.Data.Edm.Library
             }
 
             this.declaredProperties.Add(property);
-            this.propertiesDictionary.Clear(null);
+
+            lock (LockObj)
+            {
+                this.propertiesDictionary.Clear(null);
+            }
         }
 
         /// <summary>

@@ -275,7 +275,7 @@ namespace System.Data.Services.Client.Materialization
         /// <returns>The materializer entry</returns>
         public static MaterializerEntry GetEntry(ODataEntry entry)
         {
-            return entry.GetAnnotation<MaterializerEntry>();
+            return entry == null ? null : entry.GetAnnotation<MaterializerEntry>();
         }
 
         /// <summary>

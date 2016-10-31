@@ -176,6 +176,19 @@ namespace System.Data.Services.Client.Metadata
         }
 
         /// <summary>
+        /// Determine whether the type is primitive or primitive collection.
+        /// </summary>
+        /// <param name="edmType">The type to be evaluated.</param>
+        /// <returns>True if the type is primitive or primitive collection.</returns>
+        internal static bool IsPrimitive(this IEdmType edmType)
+        {
+            IEdmCollectionType collectionType = edmType as IEdmCollectionType;
+            IEdmType type = (collectionType != null) ? collectionType.ElementType.Definition : edmType;
+
+            return type.TypeKind == EdmTypeKind.Primitive;
+        }
+
+        /// <summary>
         /// Returns MethodInfo instance for a generic type retrieved by using <paramref name="methodName"/> and gets 
         /// element type for the provided <paramref name="genericTypeDefinition"/>.
         /// </summary>

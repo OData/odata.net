@@ -71,6 +71,14 @@ namespace System.Data.Services.Client.Materialization
         }
 
         /// <summary>
+        /// Gets the value which indicates whether auto nulls check in expand path is enabled.
+        /// </summary>
+        public bool AutoNullPropagation
+        {
+            get { return this.ResponseInfo.AutoNullPropagation; }
+        }
+
+        /// <summary>
         /// Gets the Response information that backs the information on the context
         /// </summary>
         protected ResponseInfo ResponseInfo { get; private set; }

@@ -113,6 +113,9 @@ namespace System.Data.Services.Client
             get { return this.maxProtocolVersion; }
         }
 
+        /// <summary>Callback for getting the backing field for a property.</summary>
+        internal Func<PropertyInfo, FieldInfo> ResolveBackingField { get; set; }
+
         /// <summary>
         /// Return the entity container with the given name.
         /// </summary>
@@ -408,7 +411,7 @@ namespace System.Data.Services.Client
                             List<IEdmStructuralProperty> loadedKeyProperties = new List<IEdmStructuralProperty>();
                             foreach (PropertyInfo property in ClientTypeUtil.GetPropertiesOnType(type, /*declaredOnly*/edmBaseType != null).OrderBy(p => p.Name))
                             {
-                                IEdmProperty edmProperty = this.CreateEdmProperty((EdmStructuredType)entityType, property);
+                                IEdmProperty edmProperty = this.CreateEdmProperty((EdmStructuredType)entityType, property); 
                                 loadedProperties.Add(edmProperty);
 
                                 if (edmBaseType == null && keyProperties.Any(k => k.DeclaringType == type && k.Name == property.Name))
@@ -540,7 +543,23 @@ namespace System.Data.Services.Client
                 edmProperty = new EdmStructuralProperty(declaringType, propertyInfo.Name, propertyEdmType.ToEdmTypeReference(isPropertyNullable));
             }
 
-            edmProperty.SetClientPropertyAnnotation(new ClientPropertyAnnotation(edmProperty, propertyInfo, this));
+            FieldInfo backingField = null;
+
+            if (this.ResolveBackingField != null)
+            {
+                // We only do this for "collections of entities" OR "complex properties"
+                if (propertyEdmType.TypeKind == EdmTypeKind.Collection && !propertyEdmType.IsPrimitive() || propertyEdmType.TypeKind == EdmTypeKind.Complex)
+                {
+                    backingField = this.ResolveBackingField(propertyInfo);
+                }
+
+                if (backingField != null && backingField.FieldType != propertyInfo.PropertyType)
+                {
+                    backingField = null; // We disregard returned FieldInfo that has the wrong type.
+                }
+            }
+
+            edmProperty.SetClientPropertyAnnotation(new ClientPropertyAnnotation(edmProperty, propertyInfo, backingField, this));
             return edmProperty;
         }
 

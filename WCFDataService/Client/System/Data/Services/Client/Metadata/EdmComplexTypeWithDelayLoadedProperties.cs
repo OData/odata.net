@@ -37,9 +37,6 @@ namespace System.Data.Services.Providers
     /// </summary>
     internal class EdmComplexTypeWithDelayLoadedProperties : EdmComplexType, IEdmComplexType
     {
-        /// <summary>The lock object for the delayed property loading.</summary>
-        private readonly object lockObject = new object();
-
         /// <summary>An action that is used to create the properties for this type.</summary>
         private Action<EdmComplexTypeWithDelayLoadedProperties> propertyLoadAction;
 
@@ -80,7 +77,8 @@ namespace System.Data.Services.Providers
         /// </summary>
         private void EnsurePropertyLoaded()
         {
-            lock (this.lockObject)
+            // Use the lock from base type to avoid dead lock.
+            lock (this.LockObj)
             {
                 if (this.propertyLoadAction != null)
                 {
