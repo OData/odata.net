@@ -41,12 +41,8 @@ namespace Microsoft.Test.OData.Tests.Client
     [DeploymentItem(@"Microsoft.VisualStudio.TeamSystem.Licensing.dll")]
 #endif
     public class EndToEndTestBase
-#if SILVERLIGHT
-        : SilverlightTest
-#else
-#if !WIN8 && !SILVERLIGHT && !PORTABLELIB
+#if !WIN8 && !PORTABLELIB
  : DataDrivenTest
-#endif
 #endif
     {
         public bool TestCompleted { get; set; }
@@ -90,7 +86,7 @@ namespace Microsoft.Test.OData.Tests.Client
         [TestInitialize]
         public void TestInitialize()
         {
-#if SILVERLIGHT || WIN8 || PORTABLELIB
+#if WIN8 || PORTABLELIB
             this.serviceWrapper = new ExternalHostedServiceWrapper(this.serviceDescriptor);
 #else
             this.serviceWrapper = new DefaultServiceWrapper(this.serviceDescriptor);
@@ -98,9 +94,6 @@ namespace Microsoft.Test.OData.Tests.Client
             this.TestCompleted = false;
             this.serviceWrapper.StartService();
 
-#if SILVERLIGHT && PORTABLELIB
-            System.Net.WebRequest.RegisterPrefix("http://", System.Net.Browser.WebRequestCreator.ClientHttp);
-#endif
             this.ResetDataSource();
             this.CustomTestInitialize();
         }
@@ -111,17 +104,8 @@ namespace Microsoft.Test.OData.Tests.Client
             {
 
                 var context = this.serviceDescriptor.CreateDataServiceContext(this.ServiceUri);
-#if !SILVERLIGHT
                 var ar = context.BeginExecute(new Uri("ResetDataSource/", UriKind.Relative), null, null, "POST");
                 ar.AsyncWaitHandle.WaitOne();
-#else 
-                    context.BeginExecute(new Uri("ResetDataSource/", UriKind.Relative), (ar) =>
-                    { 
-                        context.EndExecute(ar);
-                    }, null, "POST");
-                    //this allows the test to reset in silverlight. it slows the thread just enough to let the reset take place.
-                    Thread.Sleep(1000);  
-#endif
             }
             catch (Exception)
             {
@@ -146,7 +130,7 @@ namespace Microsoft.Test.OData.Tests.Client
             this.serviceWrapper.StopService();
         }
 
-#if !WIN8 && !SILVERLIGHT && !PORTABLELIB
+#if !WIN8 && !PORTABLELIB
         /// <summary>
         /// Exposes the protected single parameter DataDrivenTest.Invoke method.
         /// </summary>
@@ -176,20 +160,18 @@ namespace Microsoft.Test.OData.Tests.Client
             Assert.IsNotNull(context, "Failed to cast DataServiceContext to specified type '{0}'", typeof(TContext).Name);
 
             var contextWrapper = new DataServiceContextWrapper<TContext>(context);
-#if SILVERLIGHT
-            const string testClassName = "UnknownTestClass";
-#else
+
+#if !WINDOWSPHONE
             var testClassName = this.TestContext.FullyQualifiedTestClassName;
-#endif
             contextWrapper.BuildingRequest += (s, e) => e.Headers.Add("TestName", string.Format("{0}.{1}", testClassName, this.TestContext.TestName));
 
             // Override any url conventions that may be baked into the context by codegen
             contextWrapper.UrlKeyDelimiter = DataServiceUrlKeyDelimiter.Parentheses;
-
+#endif
             return contextWrapper;
         }
 
-#if !WIN8 && !SILVERLIGHT && !PORTABLELIB && !WINDOWSPHONE
+#if !WIN8 && !PORTABLELIB && !WINDOWSPHONE
         /// <summary>
         /// Get the metadata document from the test service as an IEdmModel
         /// </summary>
