@@ -907,7 +907,6 @@ public class CodeGenerationContext
 /// </summary>
 public abstract class ODataClientTemplate : TemplateBase
 {
-    protected readonly string singleSuffix = "Single";
     protected const string T4Version  = "2.4.0";
 
     /// <summary>
@@ -927,6 +926,11 @@ public abstract class ODataClientTemplate : TemplateBase
     public ODataClientTemplate(CodeGenerationContext context)
     {
         this.context = context;
+    }
+
+    internal string SingleSuffix
+    {
+        get { return "Single"; }
     }
 
     #region Get Language specific keyword names.
@@ -1046,9 +1050,9 @@ public abstract class ODataClientTemplate : TemplateBase
     internal abstract void WriteEnumEnd();
     internal abstract void WritePropertyRootNamespace(string containerName, string fullNamespace);
     internal abstract void WriteFunctionImportReturnCollectionResult(string functionName, string originalFunctionName, string returnTypeName, string parameters, string parameterValues, bool isComposable, bool useEntityReference);
-    internal abstract void WriteFunctionImportReturnSingleResult(string functionName, string originalFunctionName, string returnTypeName, string parameters, string parameterValues, bool isComposable, bool isReturnEntity, bool useEntityReference);
+    internal abstract void WriteFunctionImportReturnSingleResult(string functionName, string originalFunctionName, string returnTypeName, string returnTypeNameWithSingleSuffix, string parameters, string parameterValues, bool isComposable, bool isReturnEntity, bool useEntityReference);
     internal abstract void WriteBoundFunctionInEntityTypeReturnCollectionResult(bool hideBaseMethod, string functionName, string originalFunctionName, string returnTypeName, string parameters, string fullNamespace, string parameterValues, bool isComposable, bool useEntityReference);
-    internal abstract void WriteBoundFunctionInEntityTypeReturnSingleResult(bool hideBaseMethod, string functionName, string originalFunctionName, string returnTypeName, string parameters, string fullNamespace, string parameterValues, bool isComposable, bool isReturnEntity, bool useEntityReference);
+    internal abstract void WriteBoundFunctionInEntityTypeReturnSingleResult(bool hideBaseMethod, string functionName, string originalFunctionName, string returnTypeName, string returnTypeNameWithSingleSuffix, string parameters, string fullNamespace, string parameterValues, bool isComposable, bool isReturnEntity, bool useEntityReference);
     internal abstract void WriteActionImport(string actionName, string originalActionName, string returnTypeName, string parameters, string parameterValues);
     internal abstract void WriteBoundActionInEntityType(bool hideBaseMethod, string actionName, string originalActionName, string returnTypeName, string parameters, string fullNamespace, string parameterValues);
     internal abstract void WriteConstructorForSingleType(string singleTypeName, string baseTypeName);
@@ -1056,7 +1060,7 @@ public abstract class ODataClientTemplate : TemplateBase
     internal abstract void WriteExtensionMethodsEnd();
     internal abstract void WriteByKeyMethods(string entityTypeName, string returnTypeName, IEnumerable<string> keys, string keyParameters, string keyDictionaryItems);
     internal abstract void WriteCastToMethods(string baseTypeName, string derivedTypeName, string derivedTypeFullName, string returnTypeName);
-    internal abstract void WriteBoundFunctionReturnSingleResultAsExtension(string functionName, string originalFunctionName, string boundTypeName, string returnTypeName, string parameters, string fullNamespace, string parameterValues, bool isComposable, bool isReturnEntity, bool useEntityReference);
+    internal abstract void WriteBoundFunctionReturnSingleResultAsExtension(string functionName, string originalFunctionName, string boundTypeName, string returnTypeName, string returnTypeNameWithSingleSuffix, string parameters, string fullNamespace, string parameterValues, bool isComposable, bool isReturnEntity, bool useEntityReference);
     internal abstract void WriteBoundFunctionReturnCollectionResultAsExtension(string functionName, string originalFunctionName, string boundTypeName, string returnTypeName, string parameters, string fullNamespace, string parameterValues, bool isComposable, bool useEntityReference);
     internal abstract void WriteBoundActionAsExtension(string actionName, string originalActionName, string boundSourceType, string returnTypeName, string parameters, string fullNamespace, string parameterValues);
     #endregion Language specific write methods.
@@ -1172,7 +1176,7 @@ public abstract class ODataClientTemplate : TemplateBase
                 string entityTypeName = type.Name;
                 entityTypeName = context.EnableNamingAlias ? Customization.CustomizeNaming(entityTypeName) : entityTypeName;
                 string entityTypeFullName = context.GetPrefixedFullName(type, GetFixedName(entityTypeName), this);
-                string returnTypeName = context.GetPrefixedFullName(type, GetFixedName(entityTypeName + this.singleSuffix), this);
+                string returnTypeName = context.GetPrefixedFullName(type, GetFixedName(entityTypeName + this.SingleSuffix), this);
 
                 var keyProperties = type.Key();
                 if(keyProperties != null && keyProperties.Any())
@@ -1218,6 +1222,7 @@ public abstract class ODataClientTemplate : TemplateBase
                     string sourceTypeName = GetSourceOrReturnTypeName(edmTypeReference);
                     sourceTypeName = string.Format(edmTypeReference.IsCollection() ? this.DataServiceQueryStructureTemplate : this.DataServiceQuerySingleStructureTemplate, sourceTypeName);
                     string returnTypeName = GetSourceOrReturnTypeName(function.ReturnType);
+                    string returnTypeNameWithSingleSuffix = GetSourceOrReturnTypeName(function.ReturnType, true);
                     string fixedFunctionName = GetFixedName(functionName);
                     string func = string.Format("{0}({1},{2})", fixedFunctionName, sourceTypeName, parameterTypes );
 
@@ -1231,7 +1236,7 @@ public abstract class ODataClientTemplate : TemplateBase
                         }
                         else
                         {
-                            this.WriteBoundFunctionReturnSingleResultAsExtension(fixedFunctionName, function.Name, sourceTypeName, returnTypeName, parameterString, function.Namespace, parameterValues, function.IsComposable, function.ReturnType.IsEntity(), useEntityReference);
+                            this.WriteBoundFunctionReturnSingleResultAsExtension(fixedFunctionName, function.Name, sourceTypeName, returnTypeName, returnTypeNameWithSingleSuffix, parameterString, function.Namespace, parameterValues, function.IsComposable, function.ReturnType.IsEntity(), useEntityReference);
                         }
                     }
 
@@ -1267,7 +1272,7 @@ public abstract class ODataClientTemplate : TemplateBase
                                 }
                                 else
                                 {
-                                    this.WriteBoundFunctionReturnSingleResultAsExtension(fixedFunctionName, function.Name, sourceTypeName, returnTypeName, parameterString, function.Namespace, parameterValues, function.IsComposable, function.ReturnType.IsEntity(), useEntityReference);
+                                    this.WriteBoundFunctionReturnSingleResultAsExtension(fixedFunctionName, function.Name, sourceTypeName, returnTypeName, returnTypeNameWithSingleSuffix, parameterString, function.Namespace, parameterValues, function.IsComposable, function.ReturnType.IsEntity(), useEntityReference);
                                 }
                             }
                         }
@@ -1450,6 +1455,7 @@ public abstract class ODataClientTemplate : TemplateBase
             bool useEntityReference;
             this.GetParameterStrings(false, false, functionImport.Function.Parameters.ToArray(), out parameterString, out parameterTypes, out parameterExpressionString, out parameterValues, out useEntityReference);
             string returnTypeName = GetSourceOrReturnTypeName(functionImport.Function.ReturnType);
+            string returnTypeNameWithSingleSuffix = GetSourceOrReturnTypeName(functionImport.Function.ReturnType, true);
             string fixedContainerName = this.GetFixedName(functionImport.Container.Name);
             bool isCollectionResult = functionImport.Function.ReturnType.IsCollection();
             string functionImportName = functionImport.Name;
@@ -1465,7 +1471,7 @@ public abstract class ODataClientTemplate : TemplateBase
             }
             else
             {
-                this.WriteFunctionImportReturnSingleResult(this.GetFixedName(functionImportName), functionImport.Name, returnTypeName, parameterString, parameterValues, functionImport.Function.IsComposable, functionImport.Function.ReturnType.IsEntity(), useEntityReference);
+                this.WriteFunctionImportReturnSingleResult(this.GetFixedName(functionImportName), functionImport.Name, returnTypeName, returnTypeNameWithSingleSuffix, parameterString, parameterValues, functionImport.Function.IsComposable, functionImport.Function.ReturnType.IsEntity(), useEntityReference);
             }
         }
         
@@ -1593,8 +1599,8 @@ public abstract class ODataClientTemplate : TemplateBase
             }
             else
             {
-                propertyType = Utils.GetClrTypeName(property.Type, true, this, this.context, true);
-                WriteContextSingletonProperty(propertyName, GetFixedName(propertyName), property.Name, propertyType + "Single", false);
+                propertyType = Utils.GetClrTypeName(property.Type, true, this, this.context, true, isEntitySingleType : true);
+                WriteContextSingletonProperty(propertyName, GetFixedName(propertyName), property.Name, propertyType, false);
             }
         }
     }
@@ -1603,12 +1609,12 @@ public abstract class ODataClientTemplate : TemplateBase
     {
         string entityTypeName = ((IEdmSchemaElement)entityType).Name;
         entityTypeName = this.context.EnableNamingAlias ? Customization.CustomizeNaming(entityTypeName) : entityTypeName;
-        this.WriteSummaryCommentForStructuredType(entityTypeName + this.singleSuffix);
+        this.WriteSummaryCommentForStructuredType(entityTypeName + this.SingleSuffix);
         this.WriteStructurdTypeDeclaration(entityType,
             this.ClassInheritMarker + string.Format(this.DataServiceQuerySingleStructureTemplate, GetFixedName(entityTypeName)),
-            this.singleSuffix);
+            this.SingleSuffix);
         string singleTypeName = (this.context.EnableNamingAlias ?
-            Customization.CustomizeNaming(((IEdmSchemaElement)entityType).Name) : ((IEdmSchemaElement)entityType).Name) + this.singleSuffix;
+            Customization.CustomizeNaming(((IEdmSchemaElement)entityType).Name) : ((IEdmSchemaElement)entityType).Name) + this.SingleSuffix;
         this.WriteConstructorForSingleType(GetFixedName(singleTypeName), string.Format(this.DataServiceQuerySingleStructureTemplate, GetFixedName(entityTypeName)));
         IEdmEntityType current = entityType;
         while (current != null)
@@ -1693,6 +1699,7 @@ public abstract class ODataClientTemplate : TemplateBase
                 bool hideBaseMethod = this.CheckMethodsInBaseClass(structuredType.BaseType, function, boundOperationsMap);
                 this.GetParameterStrings(function.IsBound, false, function.Parameters.ToArray(), out parameterString, out parameterTypes, out parameterExpressionString, out parameterValues, out useEntityReference);
                 string returnTypeName = GetSourceOrReturnTypeName(function.ReturnType);
+                string returnTypeNameWithSingleSuffix = GetSourceOrReturnTypeName(function.ReturnType, true);
                 string functionName = function.Name;
                 if (this.context.EnableNamingAlias)
                 {
@@ -1705,7 +1712,7 @@ public abstract class ODataClientTemplate : TemplateBase
                 }
                 else
                 {
-                    this.WriteBoundFunctionInEntityTypeReturnSingleResult(hideBaseMethod, GetFixedName(functionName), function.Name, returnTypeName, parameterString, function.Namespace, parameterValues, function.IsComposable, function.ReturnType.IsEntity(), useEntityReference);
+                    this.WriteBoundFunctionInEntityTypeReturnSingleResult(hideBaseMethod, GetFixedName(functionName), function.Name, returnTypeName, returnTypeNameWithSingleSuffix, parameterString, function.Namespace, parameterValues, function.IsComposable, function.ReturnType.IsEntity(), useEntityReference);
                 }
             }
 
@@ -1845,7 +1852,7 @@ public abstract class ODataClientTemplate : TemplateBase
         this.WriteClassStartForStructuredType(abstractModifier, GetFixedName(structuredTypeName + typeNameSuffix), ((IEdmSchemaElement)structuredType).Name + typeNameSuffix, baseTypeName);
     }
     
-    internal string GetSourceOrReturnTypeName(IEdmTypeReference typeReference)
+    internal string GetSourceOrReturnTypeName(IEdmTypeReference typeReference, bool isEntitySingleType = false)
     {
         IEdmCollectionType edmCollectionType = typeReference.Definition as IEdmCollectionType;
         bool addNullableTemplate = true;
@@ -1855,7 +1862,7 @@ public abstract class ODataClientTemplate : TemplateBase
             addNullableTemplate = false;
         }
 
-        return Utils.GetClrTypeName(typeReference, this.context.UseDataServiceCollection, this, this.context, addNullableTemplate);
+        return Utils.GetClrTypeName(typeReference, this.context.UseDataServiceCollection, this, this.context, addNullableTemplate, isEntitySingleType:isEntitySingleType);
     }
     
     internal void GetParameterStrings(bool isBound, bool isAction, IEdmOperationParameter[] parameters, out string parameterString, out string parameterTypes, out string parameterExpressionString, out string parameterValues,  out bool useEntityReference)
@@ -2637,7 +2644,7 @@ internal static class Utils
     /// <param name="needGlobalPrefix">The flag indicates whether the namespace need to be added by global prefix</param>
     /// <param name="isOperationParameter">This flag indicates whether the edmTypeReference is for an operation parameter</param>
     /// <returns>The clr type name of the type reference.</returns>
-    internal static string GetClrTypeName(IEdmTypeReference edmTypeReference, bool useDataServiceCollection, ODataClientTemplate clientTemplate, CodeGenerationContext context, bool addNullableTemplate = true, bool needGlobalPrefix = true, bool isOperationParameter = false)
+    internal static string GetClrTypeName(IEdmTypeReference edmTypeReference, bool useDataServiceCollection, ODataClientTemplate clientTemplate, CodeGenerationContext context, bool addNullableTemplate = true, bool needGlobalPrefix = true, bool isOperationParameter = false, bool isEntitySingleType = false)
     {
         string clrTypeName;
         IEdmType edmType = edmTypeReference.Definition;
@@ -2676,7 +2683,10 @@ internal static class Utils
                     if (edmEntityType != null)
                     {
                         clrTypeName = context.GetPrefixedFullName(edmEntityType,
-                            context.EnableNamingAlias ? clientTemplate.GetFixedName(Customization.CustomizeNaming(edmEntityType.Name)) : clientTemplate.GetFixedName(edmEntityType.Name), clientTemplate);
+                            context.EnableNamingAlias
+                                ? clientTemplate.GetFixedName(Customization.CustomizeNaming(edmEntityType.Name) + (isEntitySingleType ? clientTemplate.SingleSuffix : string.Empty))
+                                : clientTemplate.GetFixedName(edmEntityType.Name + (isEntitySingleType ? clientTemplate.SingleSuffix : string.Empty)),
+                        clientTemplate);
                     }
                     else
                     {
@@ -3771,7 +3781,7 @@ namespace <#= fullNamespace #>
 <#+
     }
 
-    internal override void WriteFunctionImportReturnSingleResult(string functionName, string originalFunctionName, string returnTypeName, string parameters, string parameterValues, bool isComposable, bool isReturnEntity, bool useEntityReference)
+    internal override void WriteFunctionImportReturnSingleResult(string functionName, string originalFunctionName, string returnTypeName, string returnTypeNameWithSingleSuffix, string parameters, string parameterValues, bool isComposable, bool isReturnEntity, bool useEntityReference)
     {
 #>
         /// <summary>
@@ -3785,9 +3795,9 @@ namespace <#= fullNamespace #>
 <#+
         }
 #>
-        public <#= isReturnEntity ? returnTypeName + this.singleSuffix : string.Format(this.DataServiceQuerySingleStructureTemplate, returnTypeName) #> <#= functionName #>(<#= parameters #><#= useEntityReference ? ", bool useEntityReference = false" : string.Empty #>)
+        public <#= isReturnEntity ? returnTypeNameWithSingleSuffix : string.Format(this.DataServiceQuerySingleStructureTemplate, returnTypeName) #> <#= functionName #>(<#= parameters #><#= useEntityReference ? ", bool useEntityReference = false" : string.Empty #>)
         {
-            return <#= isReturnEntity ? "new " + returnTypeName + this.singleSuffix + "(" : string.Empty #>this.CreateFunctionQuerySingle<<#= returnTypeName #>>("", "<#= originalFunctionName #>", <#= isComposable.ToString().ToLower() #><#= string.IsNullOrEmpty(parameterValues) ? string.Empty : ", " + parameterValues #>)<#= isReturnEntity ? ")" : string.Empty #>;
+            return <#= isReturnEntity ? "new " + returnTypeNameWithSingleSuffix + "(" : string.Empty #>this.CreateFunctionQuerySingle<<#= returnTypeName #>>("", "<#= originalFunctionName #>", <#= isComposable.ToString().ToLower() #><#= string.IsNullOrEmpty(parameterValues) ? string.Empty : ", " + parameterValues #>)<#= isReturnEntity ? ")" : string.Empty #>;
         }
 <#+
     }
@@ -3815,7 +3825,7 @@ namespace <#= fullNamespace #>
 <#+
         }
     
-    internal override void WriteBoundFunctionInEntityTypeReturnSingleResult(bool hideBaseMethod, string functionName, string originalFunctionName, string returnTypeName, string parameters, string fullNamespace, string parameterValues, bool isComposable, bool isReturnEntity, bool useEntityReference)
+    internal override void WriteBoundFunctionInEntityTypeReturnSingleResult(bool hideBaseMethod, string functionName, string originalFunctionName, string returnTypeName, string returnTypeNameWithSingleSuffix, string parameters, string fullNamespace, string parameterValues, bool isComposable, bool isReturnEntity, bool useEntityReference)
     {
 #>
         /// <summary>
@@ -3829,12 +3839,12 @@ namespace <#= fullNamespace #>
 <#+
         }
 #>
-        public <#= hideBaseMethod ? this.OverloadsModifier : string.Empty #> <#= isReturnEntity ? returnTypeName + this.singleSuffix : string.Format(this.DataServiceQuerySingleStructureTemplate, returnTypeName) #> <#= functionName #>(<#= parameters #><#= useEntityReference ? ", bool useEntityReference = false" : string.Empty #>)
+        public <#= hideBaseMethod ? this.OverloadsModifier : string.Empty #><#= isReturnEntity ? returnTypeNameWithSingleSuffix : string.Format(this.DataServiceQuerySingleStructureTemplate, returnTypeName) #> <#= functionName #>(<#= parameters #><#= useEntityReference ? ", bool useEntityReference = false" : string.Empty #>)
         {
             global::System.Uri requestUri;
             Context.TryGetUri(this, out requestUri);
 
-            return <#= isReturnEntity ? "new " + returnTypeName + this.singleSuffix + "(" : string.Empty #>this.Context.CreateFunctionQuerySingle<<#= returnTypeName #>>(string.Join("/", global::System.Linq.Enumerable.Select(global::System.Linq.Enumerable.Skip(requestUri.Segments, this.Context.BaseUri.Segments.Length), s => s.Trim('/'))), "<#= fullNamespace #>.<#= originalFunctionName #>", <#= isComposable.ToString().ToLower() #><#= string.IsNullOrEmpty(parameterValues) ? string.Empty : ", " + parameterValues #>)<#= isReturnEntity ? ")" : string.Empty #>;
+            return <#= isReturnEntity ? "new " + returnTypeNameWithSingleSuffix + "(" : string.Empty #>this.Context.CreateFunctionQuerySingle<<#= returnTypeName #>>(string.Join("/", global::System.Linq.Enumerable.Select(global::System.Linq.Enumerable.Skip(requestUri.Segments, this.Context.BaseUri.Segments.Length), s => s.Trim('/'))), "<#= fullNamespace #>.<#= originalFunctionName #>", <#= isComposable.ToString().ToLower() #><#= string.IsNullOrEmpty(parameterValues) ? string.Empty : ", " + parameterValues #>)<#= isReturnEntity ? ")" : string.Empty #>;
         }
 <#+
         }
@@ -3909,7 +3919,7 @@ namespace <#= fullNamespace #>
     {
 #>
         /// <summary>
-        /// Get an entity of type <#= entityTypeName #> as <#= entityTypeName + this.singleSuffix #> specified by key from an entity set
+        /// Get an entity of type <#= entityTypeName #> as <#= returnTypeName #> specified by key from an entity set
         /// </summary>
         /// <param name="source">source entity set</param>
         /// <param name="keys">dictionary with the names and values of keys</param>
@@ -3918,7 +3928,7 @@ namespace <#= fullNamespace #>
             return new <#= returnTypeName #>(source.Context, source.GetKeyPath(global::Microsoft.OData.Client.Serializer.GetKeyString(source.Context, keys)));
         }
         /// <summary>
-        /// Get an entity of type <#= entityTypeName #> as <#= entityTypeName + this.singleSuffix #> specified by key from an entity set
+        /// Get an entity of type <#= entityTypeName #> as <#= returnTypeName #> specified by key from an entity set
         /// </summary>
         /// <param name="source">source entity set</param>
 <#+
@@ -3956,7 +3966,7 @@ namespace <#= fullNamespace #>
 <#+
     }
 
-    internal override void WriteBoundFunctionReturnSingleResultAsExtension(string functionName, string originalFunctionName, string boundTypeName, string returnTypeName, string parameters, string fullNamespace, string parameterValues, bool isComposable, bool isReturnEntity, bool useEntityReference)
+    internal override void WriteBoundFunctionReturnSingleResultAsExtension(string functionName, string originalFunctionName, string boundTypeName, string returnTypeName, string returnTypeNameWithSingleSuffix, string parameters, string fullNamespace, string parameterValues, bool isComposable, bool isReturnEntity, bool useEntityReference)
     {
 #>
         /// <summary>
@@ -3970,14 +3980,14 @@ namespace <#= fullNamespace #>
 <#+
         }
 #>
-        public static <#= isReturnEntity ? returnTypeName + this.singleSuffix : string.Format(this.DataServiceQuerySingleStructureTemplate, returnTypeName) #> <#= functionName #>(this <#= boundTypeName #> source<#= string.IsNullOrEmpty(parameters) ? string.Empty : ", " + parameters #><#= useEntityReference ? ", bool useEntityReference = false" : string.Empty #>)
+        public static <#= isReturnEntity ? returnTypeNameWithSingleSuffix : string.Format(this.DataServiceQuerySingleStructureTemplate, returnTypeName) #> <#= functionName #>(this <#= boundTypeName #> source<#= string.IsNullOrEmpty(parameters) ? string.Empty : ", " + parameters #><#= useEntityReference ? ", bool useEntityReference = false" : string.Empty #>)
         {
             if (!source.IsComposable)
             {
                 throw new global::System.NotSupportedException("The previous function is not composable.");
             }
 
-            return <#= isReturnEntity ? "new " + returnTypeName + this.singleSuffix + "(" : string.Empty #>source.CreateFunctionQuerySingle<<#= returnTypeName #>>("<#= fullNamespace #>.<#= originalFunctionName #>", <#= isComposable.ToString().ToLower() #><#= string.IsNullOrEmpty(parameterValues) ? string.Empty : ", " + parameterValues #>)<#= isReturnEntity ? ")" : string.Empty #>;
+            return <#= isReturnEntity ? "new " + returnTypeNameWithSingleSuffix + "(" : string.Empty #>source.CreateFunctionQuerySingle<<#= returnTypeName #>>("<#= fullNamespace #>.<#= originalFunctionName #>", <#= isComposable.ToString().ToLower() #><#= string.IsNullOrEmpty(parameterValues) ? string.Empty : ", " + parameterValues #>)<#= isReturnEntity ? ")" : string.Empty #>;
         }
 <#+
     }
@@ -4813,7 +4823,7 @@ Namespace <#= fullNamespace #>
 <#+
     }
 
-    internal override void WriteFunctionImportReturnSingleResult(string functionName, string originalFunctionName, string returnTypeName, string parameters, string parameterValues, bool isComposable, bool isReturnEntity, bool useEntityReference)
+    internal override void WriteFunctionImportReturnSingleResult(string functionName, string originalFunctionName, string returnTypeName, string returnTypeNameWithSingleSuffix, string parameters, string parameterValues, bool isComposable, bool isReturnEntity, bool useEntityReference)
     {
 #>
         ''' <summary>
@@ -4827,8 +4837,8 @@ Namespace <#= fullNamespace #>
 <#+
         }
 #>
-        Public Function <#= functionName #>(<#= parameters #><#= useEntityReference ? ", Optional ByVal useEntityReference As Boolean = False" : string.Empty #>) As <#= isReturnEntity ? returnTypeName + this.singleSuffix : string.Format(this.DataServiceQuerySingleStructureTemplate, returnTypeName) #>
-            Return <#= isReturnEntity ? "New " + returnTypeName + this.singleSuffix + "(" : string.Empty #>Me.CreateFunctionQuerySingle(<#= "Of " + returnTypeName #>)("", "/<#= originalFunctionName #>", <#= isComposable #><#= string.IsNullOrEmpty(parameterValues) ? string.Empty : ", " + parameterValues #>)<#= isReturnEntity ? ")" : string.Empty #>
+        Public Function <#= functionName #>(<#= parameters #><#= useEntityReference ? ", Optional ByVal useEntityReference As Boolean = False" : string.Empty #>) As <#= isReturnEntity ? returnTypeNameWithSingleSuffix : string.Format(this.DataServiceQuerySingleStructureTemplate, returnTypeName) #>
+            Return <#= isReturnEntity ? "New " + returnTypeNameWithSingleSuffix + "(" : string.Empty #>Me.CreateFunctionQuerySingle(<#= "Of " + returnTypeName #>)("", "/<#= originalFunctionName #>", <#= isComposable #><#= string.IsNullOrEmpty(parameterValues) ? string.Empty : ", " + parameterValues #>)<#= isReturnEntity ? ")" : string.Empty #>
         End Function
 <#+
     }
@@ -4855,7 +4865,7 @@ Namespace <#= fullNamespace #>
 <#+
     }
 
-    internal override void WriteBoundFunctionInEntityTypeReturnSingleResult(bool hideBaseMethod, string functionName, string originalFunctionName, string returnTypeName, string parameters, string fullNamespace, string parameterValues, bool isComposable, bool isReturnEntity, bool useEntityReference)
+    internal override void WriteBoundFunctionInEntityTypeReturnSingleResult(bool hideBaseMethod, string functionName, string originalFunctionName, string returnTypeName, string returnTypeNameWithSingleSuffix, string parameters, string fullNamespace, string parameterValues, bool isComposable, bool isReturnEntity, bool useEntityReference)
     {
 #>
         ''' <summary>
@@ -4869,10 +4879,10 @@ Namespace <#= fullNamespace #>
 <#+
         }
 #>
-        Public <#= hideBaseMethod ? this.OverloadsModifier : string.Empty #>Function <#= functionName #>(<#= parameters #><#= useEntityReference ? ", Optional ByVal useEntityReference As Boolean = False" : string.Empty #>) As <#= isReturnEntity ? returnTypeName + this.singleSuffix : string.Format(this.DataServiceQuerySingleStructureTemplate, returnTypeName) #>
+        Public <#= hideBaseMethod ? this.OverloadsModifier : string.Empty #>Function <#= functionName #>(<#= parameters #><#= useEntityReference ? ", Optional ByVal useEntityReference As Boolean = False" : string.Empty #>) As <#= isReturnEntity ? returnTypeNameWithSingleSuffix : string.Format(this.DataServiceQuerySingleStructureTemplate, returnTypeName) #>
             Dim requestUri As Global.System.Uri = Nothing
             Context.TryGetUri(Me, requestUri)
-            Return <#= isReturnEntity ? "New " + returnTypeName + this.singleSuffix + "(" : string.Empty #>Me.Context.CreateFunctionQuerySingle(<#= "Of " + returnTypeName #>)(String.Join("/", Global.System.Linq.Enumerable.Select(Global.System.Linq.Enumerable.Skip(requestUri.Segments, Me.Context.BaseUri.Segments.Length), Function(s) s.Trim("/"C))), "/<#= fullNamespace #>.<#= originalFunctionName #>", <#= isComposable #><#= string.IsNullOrEmpty(parameterValues) ? string.Empty : ", " + parameterValues #>)<#= isReturnEntity ? ")" : string.Empty #>
+            Return <#= isReturnEntity ? "New " + returnTypeNameWithSingleSuffix + "(" : string.Empty #>Me.Context.CreateFunctionQuerySingle(<#= "Of " + returnTypeName #>)(String.Join("/", Global.System.Linq.Enumerable.Select(Global.System.Linq.Enumerable.Skip(requestUri.Segments, Me.Context.BaseUri.Segments.Length), Function(s) s.Trim("/"C))), "/<#= fullNamespace #>.<#= originalFunctionName #>", <#= isComposable #><#= string.IsNullOrEmpty(parameterValues) ? string.Empty : ", " + parameterValues #>)<#= isReturnEntity ? ")" : string.Empty #>
         End Function
 <#+
     }
@@ -4943,7 +4953,7 @@ Namespace <#= fullNamespace #>
     {
 #>
         ''' <summary>
-        ''' Get an entity of type <#= entityTypeName #> as <#= entityTypeName + this.singleSuffix #> specified by key from an entity set
+        ''' Get an entity of type <#= entityTypeName #> as <#= returnTypeName #> specified by key from an entity set
         ''' </summary>
         ''' <param name="source">source entity set</param>
         ''' <param name="keys">dictionary with the names and values of keys</param>
@@ -4952,7 +4962,7 @@ Namespace <#= fullNamespace #>
             Return New <#= returnTypeName #>(source.Context, source.GetKeyPath(Global.Microsoft.OData.Client.Serializer.GetKeyString(source.Context, keys)))
         End Function
         ''' <summary>
-        ''' Get an entity of type <#= entityTypeName #> as <#= entityTypeName + this.singleSuffix #> specified by key from an entity set
+        ''' Get an entity of type <#= entityTypeName #> as <#= returnTypeName #> specified by key from an entity set
         ''' </summary>
         ''' <param name="source">source entity set</param>
 <#+
@@ -4990,7 +5000,7 @@ Namespace <#= fullNamespace #>
 <#+
     }
 
-    internal override void WriteBoundFunctionReturnSingleResultAsExtension(string functionName, string originalFunctionName, string boundTypeName, string returnTypeName, string parameters, string fullNamespace, string parameterValues, bool isComposable, bool isReturnEntity, bool useEntityReference)
+    internal override void WriteBoundFunctionReturnSingleResultAsExtension(string functionName, string originalFunctionName, string boundTypeName, string returnTypeName, string returnTypeNameWithSingleSuffix, string parameters, string fullNamespace, string parameterValues, bool isComposable, bool isReturnEntity, bool useEntityReference)
     {
 #>
         ''' <summary>
@@ -5005,12 +5015,12 @@ Namespace <#= fullNamespace #>
 <#+
         }
 #>
-        Public Function <#= functionName #>(ByVal source As <#= boundTypeName #><#= string.IsNullOrEmpty(parameters) ? string.Empty : ", " + parameters #><#= useEntityReference ? ", Optional ByVal useEntityReference As Boolean = False" : string.Empty #>) As <#= isReturnEntity ? returnTypeName + this.singleSuffix : string.Format(this.DataServiceQuerySingleStructureTemplate, returnTypeName) #>
+        Public Function <#= functionName #>(ByVal source As <#= boundTypeName #><#= string.IsNullOrEmpty(parameters) ? string.Empty : ", " + parameters #><#= useEntityReference ? ", Optional ByVal useEntityReference As Boolean = False" : string.Empty #>) As <#= isReturnEntity ? returnTypeNameWithSingleSuffix : string.Format(this.DataServiceQuerySingleStructureTemplate, returnTypeName) #>
             If Not source.IsComposable Then
                 Throw New Global.System.NotSupportedException("The previous function is not composable.")
             End If
             
-            Return <#= isReturnEntity ? "New " + returnTypeName + this.singleSuffix + "(" : string.Empty #>source.CreateFunctionQuerySingle(<#= "Of " + returnTypeName #>)("<#= fullNamespace #>.<#= originalFunctionName #>", <#= isComposable #><#= string.IsNullOrEmpty(parameterValues) ? string.Empty : ", " + parameterValues #>)<#= isReturnEntity ? ")" : string.Empty #>
+            Return <#= isReturnEntity ? "New " + returnTypeNameWithSingleSuffix + "(" : string.Empty #>source.CreateFunctionQuerySingle(<#= "Of " + returnTypeName #>)("<#= fullNamespace #>.<#= originalFunctionName #>", <#= isComposable #><#= string.IsNullOrEmpty(parameterValues) ? string.Empty : ", " + parameterValues #>)<#= isReturnEntity ? ")" : string.Empty #>
         End Function
 <#+
     }

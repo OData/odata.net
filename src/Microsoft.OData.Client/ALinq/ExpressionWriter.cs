@@ -459,7 +459,18 @@ namespace Microsoft.OData.Client
                 this.builder.Append(UriHelper.FORWARDSLASH);
             }
 
-            this.builder.Append(ClientTypeUtil.GetServerDefinedName(m.Member));
+            // If the member is collection with count property, it will be parsed as $count segment
+            var parentType = m.Member.DeclaringType;
+            Type collectionType = ClientTypeUtil.GetImplementationType(parentType, typeof(ICollection<>));
+            if (!PrimitiveType.IsKnownNullableType(parentType) && collectionType != null &&
+                m.Member.Name.Equals(ReflectionUtil.COUNTPROPNAME))
+            {
+                this.builder.Append(UriHelper.DOLLARSIGN).Append(UriHelper.COUNT);
+            }
+            else
+            {
+                this.builder.Append(ClientTypeUtil.GetServerDefinedName(m.Member));
+            }
 
             return m;
         }

@@ -9,10 +9,7 @@ using System.Linq;
 using FluentAssertions;
 using Microsoft.OData.Core.Tests.UriParser.Binders;
 using Microsoft.OData.Core.UriParser;
-using Microsoft.OData.Core.UriParser.Extensions;
-using Microsoft.OData.Core.UriParser.Extensions.Parsers;
-using Microsoft.OData.Core.UriParser.Extensions.Semantic;
-using Microsoft.OData.Core.UriParser.Extensions.TreeNodeKinds;
+using Microsoft.OData.Core.UriParser.Aggregation;
 using Microsoft.OData.Core.UriParser.Parsers;
 using Microsoft.OData.Core.UriParser.Semantic;
 using Microsoft.OData.Core.UriParser.Syntactic;
@@ -61,14 +58,14 @@ namespace Microsoft.OData.Core.Tests.UriParser.Extensions.Binders
 
             aggregate.Should().NotBeNull();
             aggregate.Kind.Should().Be(TransformationNodeKind.Aggregate);
-            aggregate.Statements.Should().NotBeNull();
-            aggregate.Statements.Should().HaveCount(1);
+            aggregate.Expressions.Should().NotBeNull();
+            aggregate.Expressions.Should().HaveCount(1);
 
-            var statements = aggregate.Statements.ToList();
+            var statements = aggregate.Expressions.ToList();
             var statement = statements[0];
             VerifyIsFakeSingleValueNode(statement.Expression);
-            statement.WithVerb.Should().Be(AggregationVerb.Sum);
-            statement.AsAlias.Should().Be("TotalPrice");
+            statement.Method.Should().Be(AggregationMethod.Sum);
+            statement.Alias.Should().Be("TotalPrice");
         }
 
         [Fact]
@@ -119,10 +116,10 @@ namespace Microsoft.OData.Core.Tests.UriParser.Extensions.Binders
             groupBy.GroupingProperties.Should().HaveCount(2);
 
             var groupingProperties = groupBy.GroupingProperties.ToList();
-            VerifyIsFakeSingleValueNode(groupingProperties[0].Accessor);
-            VerifyIsFakeSingleValueNode(groupingProperties[1].Accessor);
+            VerifyIsFakeSingleValueNode(groupingProperties[0].Expression);
+            VerifyIsFakeSingleValueNode(groupingProperties[1].Expression);
 
-            groupBy.ChildTransformation.Should().BeNull();
+            groupBy.ChildTransformations.Should().BeNull();
         }
 
         [Fact]
@@ -146,17 +143,17 @@ namespace Microsoft.OData.Core.Tests.UriParser.Extensions.Binders
 
             var groupingProperties = groupBy.GroupingProperties.ToList();
             var dogNode = groupingProperties[0];
-            dogNode.Accessor.Should().BeNull();
+            dogNode.Expression.Should().BeNull();
             dogNode.Name.Should().Be("MyDog");
-            dogNode.Children.Should().HaveCount(1);
+            dogNode.ChildTransformations.Should().HaveCount(1);
 
-            var nameNode = dogNode.Children[0];
+            var nameNode = dogNode.ChildTransformations[0];
 
             dogNode.Name.Should().Be("MyDog");
 
-            nameNode.Accessor.Should().BeSameAs(FakeBindMethods.FakePersonDogNameNode);
+            nameNode.Expression.Should().BeSameAs(FakeBindMethods.FakePersonDogNameNode);
 
-            groupBy.ChildTransformation.Should().BeNull();
+            groupBy.ChildTransformations.Should().BeNull();
         }
 
         [Fact]
@@ -173,7 +170,7 @@ namespace Microsoft.OData.Core.Tests.UriParser.Extensions.Binders
             var transformations = actual.Transformations.ToList();
             var groupBy = transformations[0] as GroupByTransformationNode;
 
-            var aggregate = groupBy.ChildTransformation;
+            var aggregate = groupBy.ChildTransformations;
             aggregate.Should().NotBeNull();
         }
 

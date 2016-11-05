@@ -121,16 +121,16 @@
     <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Core\UriParser\SyntacticAst\ExpandToken.cs">
       <Link>ALinq\UriParser\SyntacticAst\ExpandToken.cs</Link>
     </Compile>
-    <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Core\UriParser\Extensions\SyntacticAst\AggregateStatementToken.cs">
-      <Link>ALinq\UriParser\SyntacticAst\AggregateStatementToken.cs</Link>
+    <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Core\UriParser\Aggregation\AggregateExpressionToken.cs">
+      <Link>ALinq\UriParser\SyntacticAst\AggregateExpressionToken.cs</Link>
     </Compile>
-    <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Core\UriParser\Extensions\SyntacticAst\AggregateToken.cs">
+    <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Core\UriParser\Aggregation\AggregateToken.cs">
       <Link>ALinq\UriParser\SyntacticAst\AggregateToken.cs</Link>
     </Compile>
-    <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Core\UriParser\Extensions\SyntacticAst\ApplyTransformationToken.cs">
+    <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Core\UriParser\Aggregation\ApplyTransformationToken.cs">
       <Link>ALinq\UriParser\SyntacticAst\ApplyTransformationToken.cs</Link>
     </Compile>
-    <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Core\UriParser\Extensions\SyntacticAst\GroupByToken.cs">
+    <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Core\UriParser\Aggregation\GroupByToken.cs">
       <Link>ALinq\UriParser\SyntacticAst\GroupByToken.cs</Link>
     </Compile>
     <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Core\UriParser\SyntacticAst\FunctionCallToken.cs">
@@ -872,7 +872,7 @@
     <Content Include="Microsoft.OData.Client.Portable.txt" />
   </ItemGroup>
   <Target Name="BuildTextFile">
-    <Exec Command="copy $(EnlistmentRoot)\src\Microsoft.OData.Client\Microsoft.OData.Client.Common.txt + Microsoft.OData.Client.Portable.txt Microsoft.OData.Client.txt /B" />
+    <Exec Command="copy &quot;$(EnlistmentRoot)\src\Microsoft.OData.Client\Microsoft.OData.Client.Common.txt&quot; + Microsoft.OData.Client.Portable.txt Microsoft.OData.Client.txt /B" />
   </Target>
   <ItemGroup>
     <None Include="Microsoft.OData.Client.Portable.tt">

@@ -40,36 +40,19 @@ namespace Microsoft.OData.Core.UriParser
         /// Add a custom uri function to extend uri functions.
         /// In case the function name already exists as a custom function, the signature will be added as an another overload.
         /// </summary>
-        /// <param name="customFunctionName">The new custom function name</param>
-        /// <param name="newCustomFunctionSignature">The new custom function signature</param>
+        /// <param name="functionName">The new custom function name</param>
+        /// <param name="functionSignature">The new custom function signature</param>
         /// <exception cref="ArgumentNullException">Arguments are null, or function signature return type is null</exception>
         /// <exception cref="ODataException">Throws if built-in function name already exists.</exception>
         /// <exception cref="ODataException">Throws if built-in function signature overload already exists.</exception>
         /// <exception cref="ODataException">Throws if custom function signature overload already exists</exception>
-        public static void AddCustomUriFunction(string customFunctionName, FunctionSignatureWithReturnType newCustomFunctionSignature)
-        {
-            AddCustomUriFunction(customFunctionName, newCustomFunctionSignature, false);
-        }
-
-        /// <summary>
-        /// Add a custom uri function to extend or override the built-in OData protocol of uri functions.
-        /// In case the function signature already exists as a built-in function, if requested (addAsOverloadToBuiltInFunction = true), the new function signature will be added as another overload.
-        /// In case the function name already exists as a custom function, the signature will be added as an another overload.
-        /// </summary>
-        /// <param name="customFunctionName">The new custom function name</param>
-        /// <param name="newCustomFunctionSignature">The new custom function signature</param>
-        /// <param name="addAsOverloadToBuiltInFunction">If 'True', add as another overload to the existing built-in function in case signature already exists</param>
-        /// <exception cref="ArgumentNullException">Arguments are null, or function signature return type is null</exception>
-        /// <exception cref="ODataException">Throws if built-in function name already exists, and parameter 'addAsOverloadToBuiltInFunction' is not 'True'</exception>
-        /// <exception cref="ODataException">Throws if built-in function signature overload already exists.</exception>
-        /// <exception cref="ODataException">Throws if custom function signature overload already exists</exception>
-        public static void AddCustomUriFunction(string customFunctionName, FunctionSignatureWithReturnType newCustomFunctionSignature, bool addAsOverloadToBuiltInFunction)
+        public static void AddCustomUriFunction(string functionName, FunctionSignatureWithReturnType functionSignature)
         {
             // Parameters validation
-            ExceptionUtils.CheckArgumentStringNotNullOrEmpty(customFunctionName, "customFunctionName");
-            ExceptionUtils.CheckArgumentNotNull(newCustomFunctionSignature, "newCustomFunctionSignature");
+            ExceptionUtils.CheckArgumentStringNotNullOrEmpty(functionName, "customFunctionName");
+            ExceptionUtils.CheckArgumentNotNull(functionSignature, "newCustomFunctionSignature");
 
-            ValidateFunctionWithReturnType(newCustomFunctionSignature);
+            ValidateFunctionWithReturnType(functionSignature);
 
             // Thread saftey - before using the custom functions dictionary
             lock (Locker)
@@ -78,51 +61,45 @@ namespace Microsoft.OData.Core.UriParser
                 // If 'addAsOverloadToBuiltInFunction' parameter is false - throw expection
                 // Else, add as a custom function
                 FunctionSignatureWithReturnType[] existingBuiltInFunctionOverload;
-                if (BuiltInUriFunctions.TryGetBuiltInFunction(customFunctionName, out existingBuiltInFunctionOverload))
+                if (BuiltInUriFunctions.TryGetBuiltInFunction(functionName, out existingBuiltInFunctionOverload))
                 {
-                    // Built-In function with the same signature already exists, and will not be added as an another overload by user request.
-                    if (!addAsOverloadToBuiltInFunction)
-                    {
-                        throw new ODataException(Strings.CustomUriFunctions_AddCustomUriFunction_BuiltInExistsNotAddingAsOverload(customFunctionName));
-                    }
-
-                    // Function name exists, check if full siganture exists among the overloads.
+                    // Function name exists, check if full signature exists among the overloads.
                     if (existingBuiltInFunctionOverload.Any(builtInFunction =>
-                            AreFunctionsSignatureEqual(newCustomFunctionSignature, builtInFunction)))
+                            AreFunctionsSignatureEqual(functionSignature, builtInFunction)))
                     {
-                        throw new ODataException(Strings.CustomUriFunctions_AddCustomUriFunction_BuiltInExistsFullSignature(customFunctionName));
+                        throw new ODataException(Strings.CustomUriFunctions_AddCustomUriFunction_BuiltInExistsFullSignature(functionName));
                     }
                 }
 
-                AddCustomFunction(customFunctionName, newCustomFunctionSignature);
+                AddCustomFunction(functionName, functionSignature);
             }
         }
 
         /// <summary>
         /// Removes the specific function overload from the custum uri functions.
         /// </summary>
-        /// <param name="customFunctionName">Custom function name to remove</param>
-        /// <param name="customFunctionSignature">The specific signature overload of the function to remove</param>
+        /// <param name="functionName">Custom function name to remove</param>
+        /// <param name="functionSignature">The specific signature overload of the function to remove</param>
         /// <returns>'False' if custom function signature doesn't exist. 'True' if function has been removed successfully</returns>
         /// <exception cref="ArgumentNullException">Arguments are null, or function signature return type is null</exception>
-        public static bool RemoveCustomUriFunction(string customFunctionName, FunctionSignatureWithReturnType customFunctionSignature)
+        public static bool RemoveCustomUriFunction(string functionName, FunctionSignatureWithReturnType functionSignature)
         {
-            ExceptionUtils.CheckArgumentStringNotNullOrEmpty(customFunctionName, "customFunctionName");
-            ExceptionUtils.CheckArgumentNotNull(customFunctionSignature, "customFunctionSignature");
+            ExceptionUtils.CheckArgumentStringNotNullOrEmpty(functionName, "customFunctionName");
+            ExceptionUtils.CheckArgumentNotNull(functionSignature, "customFunctionSignature");
 
-            ValidateFunctionWithReturnType(customFunctionSignature);
+            ValidateFunctionWithReturnType(functionSignature);
 
             lock (Locker)
             {
                 FunctionSignatureWithReturnType[] existingCustomFunctionOverloads;
-                if (!CustomFunctions.TryGetValue(customFunctionName, out existingCustomFunctionOverloads))
+                if (!CustomFunctions.TryGetValue(functionName, out existingCustomFunctionOverloads))
                 {
                     return false;
                 }
 
                 // Get all function sigature overloads without the overload which is requested to be removed
                 FunctionSignatureWithReturnType[] customFunctionOverloadsWithoutTheOneToRemove =
-                    existingCustomFunctionOverloads.SkipWhile(funcOverload => AreFunctionsSignatureEqual(funcOverload, customFunctionSignature)).ToArray();
+                    existingCustomFunctionOverloads.SkipWhile(funcOverload => AreFunctionsSignatureEqual(funcOverload, functionSignature)).ToArray();
 
                 // Nothing was removed - Requested overload doesn't exist
                 if (customFunctionOverloadsWithoutTheOneToRemove.Length == existingCustomFunctionOverloads.Length)
@@ -133,13 +110,13 @@ namespace Microsoft.OData.Core.UriParser
                 // No overloads have left in this function name. Delete the function name
                 if (customFunctionOverloadsWithoutTheOneToRemove.Length == 0)
                 {
-                    return CustomFunctions.Remove(customFunctionName);
+                    return CustomFunctions.Remove(functionName);
                 }
                 else
                 {
                     // Requested overload has been removed.
                     // Update the custom functions to the overloads wihtout that one requested to be removed
-                    CustomFunctions[customFunctionName] = customFunctionOverloadsWithoutTheOneToRemove;
+                    CustomFunctions[functionName] = customFunctionOverloadsWithoutTheOneToRemove;
                     return true;
                 }
             }
@@ -148,16 +125,16 @@ namespace Microsoft.OData.Core.UriParser
         /// <summary>
         /// Removes all the function overloads from the custom uri functions.
         /// </summary>
-        /// <param name="customFunctionName">The custom function name</param>
+        /// <param name="functionName">The custom function name</param>
         /// <returns>'False' if custom function signature doesn't exist. 'True' if function has been removed successfully</returns>
         /// <exception cref="ArgumentNullException">Arguments are null, or function signature return type is null</exception>
-        public static bool RemoveCustomUriFunction(string customFunctionName)
+        public static bool RemoveCustomUriFunction(string functionName)
         {
-            ExceptionUtils.CheckArgumentStringNotNullOrEmpty(customFunctionName, "customFunctionName");
+            ExceptionUtils.CheckArgumentStringNotNullOrEmpty(functionName, "customFunctionName");
 
             lock (Locker)
             {
-                return CustomFunctions.Remove(customFunctionName);
+                return CustomFunctions.Remove(functionName);
             }
         }
 
@@ -208,7 +185,7 @@ namespace Microsoft.OData.Core.UriParser
                 }
 
                 // Add the custom function as an overload to the same function name
-                CustomFunctions[customFunctionName] = 
+                CustomFunctions[customFunctionName] =
                     existingCustomFunctionOverloads.Concat(new FunctionSignatureWithReturnType[] { newCustomFunctionSignature }).ToArray();
             }
         }

@@ -24,54 +24,54 @@ namespace Microsoft.OData.Performance
         private static readonly Stream WriteStream = new MemoryStream(MaxStreamSize);
 
         [Benchmark]
-        public void WriteBasicEntry_1000()
+        public void WriteFeed()
         {
-            WriteFeedTestAndMeasure(expandNavigationLinks: false, excludeSpatial: false, entryCount: 1000, isFullValidation: true);
+            WriteFeedTestAndMeasure(expandNavigationLinks: false, includeSpatial: false, entryCount: 1000, isFullValidation: true);
         }
 
         [Benchmark]
-        public void WriteEntryExcludeSpatial_1000()
+        public void WriteFeedIncludeSpatial()
         {
-            WriteFeedTestAndMeasure(expandNavigationLinks: false, excludeSpatial: false, entryCount: 1000, isFullValidation: true);
+            WriteFeedTestAndMeasure(expandNavigationLinks: false, includeSpatial: true, entryCount: 1000, isFullValidation: true);
         }
 
         [Benchmark]
-        public void WriteEntryWithExpansions_100()
+        public void WriteFeedWithExpansions()
         {
-            WriteFeedTestAndMeasure(expandNavigationLinks: true, excludeSpatial: false, entryCount: 100, isFullValidation: true);
+            WriteFeedTestAndMeasure(expandNavigationLinks: true, includeSpatial: false, entryCount: 100, isFullValidation: true);
         }
 
         [Benchmark]
-        public void WriteEntryWithExpansionsExcludeSpatial_100()
+        public void WriteFeedIncludeSpatialWithExpansions()
         {
-            WriteFeedTestAndMeasure(expandNavigationLinks: true, excludeSpatial: true, entryCount: 100, isFullValidation: true);
+            WriteFeedTestAndMeasure(expandNavigationLinks: true, includeSpatial: true, entryCount: 100, isFullValidation: true);
         }
 
         [Benchmark]
-        public void WriteBasicEntryNoValidation_1000()
+        public void WriteFeed_NoValidation()
         {
-            WriteFeedTestAndMeasure(expandNavigationLinks: false, excludeSpatial: false, entryCount: 1000, isFullValidation: true);
+            WriteFeedTestAndMeasure(expandNavigationLinks: false, includeSpatial: false, entryCount: 1000, isFullValidation: false);
         }
 
         [Benchmark]
-        public void WriteEntryExcludeSpatialNoValidation_1000()
+        public void WriteFeedIncludeSpatial_NoValidation()
         {
-            WriteFeedTestAndMeasure(expandNavigationLinks: false, excludeSpatial: false, entryCount: 1000, isFullValidation: true);
+            WriteFeedTestAndMeasure(expandNavigationLinks: false, includeSpatial: true, entryCount: 1000, isFullValidation: false);
         }
 
         [Benchmark]
-        public void WriteEntryWithExpansionsNoValidation_100()
+        public void WriteFeedWithExpansions_NoValidation()
         {
-            WriteFeedTestAndMeasure(expandNavigationLinks: true, excludeSpatial: false, entryCount: 100, isFullValidation: true);
+            WriteFeedTestAndMeasure(expandNavigationLinks: true, includeSpatial: false, entryCount: 100, isFullValidation: false);
         }
 
         [Benchmark]
-        public void WriteEntryWithExpansionsExcludeSpatialNoValidation_100()
+        public void WriteFeedIncludeSpatialWithExpansions_NoValidation()
         {
-            WriteFeedTestAndMeasure(expandNavigationLinks: true, excludeSpatial: true, entryCount: 100, isFullValidation: true);
+            WriteFeedTestAndMeasure(expandNavigationLinks: true, includeSpatial: true, entryCount: 100, isFullValidation: false);
         }
 
-        private void WriteFeedTestAndMeasure(bool expandNavigationLinks, bool excludeSpatial, int entryCount, bool isFullValidation)
+        private void WriteFeedTestAndMeasure(bool expandNavigationLinks, bool includeSpatial, int entryCount, bool isFullValidation)
         {
             foreach (var iteration in Benchmark.Iterations)
             {
@@ -82,13 +82,13 @@ namespace Microsoft.OData.Performance
                 {
                     using (var messageWriter = ODataMessageHelper.CreateMessageWriter(WriteStream, Model, ODataMessageKind.Request, isFullValidation))
                     {
-                        WriterTestMetaProperties(messageWriter, expandNavigationLinks, excludeSpatial, entryCount);
+                        WriterTestMetaProperties(messageWriter, expandNavigationLinks, includeSpatial, entryCount);
                     }
                 }
             }
         }
 
-        private void WriterTestMetaProperties(ODataMessageWriter messageWriter, bool expandNavigationLinks, bool excludeSpatial, int entryCount)
+        private void WriterTestMetaProperties(ODataMessageWriter messageWriter, bool expandNavigationLinks, bool includeSpatial, int entryCount)
         {
             #region ODatalib Writer code
             var writer = messageWriter.CreateODataFeedWriter(TestEntitySet);
@@ -96,7 +96,7 @@ namespace Microsoft.OData.Performance
 
             for (int i0 = 0; i0 < entryCount; ++i0)
             {
-                var entry1 = excludeSpatial ? EntryWithoutSpatialData() : EntryWithSpatialData();
+                var entry1 = includeSpatial ? EntryWithSpatialData() : EntryWithoutSpatialData();
                 writer.WriteStart(entry1);
 
                 #region Nav Prop Group

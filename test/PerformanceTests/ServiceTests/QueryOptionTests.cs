@@ -23,23 +23,28 @@ namespace Microsoft.OData.Performance
         [Benchmark]
         public void QueryOptionsWithoutExpand()
         {
+            int RequestsPerIteration = 20;
+
             foreach (var iteration in Benchmark.Iterations)
             {
                 using (iteration.StartMeasurement())
                 {
-                    QueryAndVerify("LargePeopleSet?$filter=Age gt 20&$select=FirstName,Age&$orderby=Age", "odata.maxpagesize=1000");
+                    for (int i = 0; i < RequestsPerIteration; i++)
+                    {
+                        QueryAndVerify("CompanySet?$filter=Revenue gt 500&$select=Name&$orderby=Revenue", "odata.maxpagesize=100");
+                    }
                 }
             }
         }
 
         [Benchmark]
-        public void ExpandNavigationProperty()
+        public void QueryOptionsWithExpand()
         {
             foreach (var iteration in Benchmark.Iterations)
             {
                 using (iteration.StartMeasurement())
                 {
-                    QueryAndVerify("CompanySet?$expand=Employees", "odata.maxpagesize=100");
+                    QueryAndVerify("CompanySet?$filter=Revenue gt 500&$select=Name&$orderby=Revenue&$expand=Employees", "odata.maxpagesize=100");
                 }
             }
         }
@@ -55,6 +60,7 @@ namespace Microsoft.OData.Performance
                 }
             }
         }
+
         private void QueryAndVerify(string query, string preferHeader)
         {
             ODataMessageReaderSettings readerSettings = new ODataMessageReaderSettings() { BaseUri = serviceFixture.ServiceBaseUri };

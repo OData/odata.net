@@ -736,7 +736,7 @@ UriQueryExpressionParser_CloseParenOrOperatorExpected=')' or operator expected a
 UriQueryExpressionParser_CannotCreateStarTokenFromNonStar=Expecting a Star token but got: '{0}'.
 UriQueryExpressionParser_RangeVariableAlreadyDeclared=The range variable '{0}' has already been declared.
 UriQueryExpressionParser_AsExpected='as' expected at position {0} in '{1}'.
-UriQueryExpressionParser_WithExpected='as' expected at position {0} in '{1}'.
+UriQueryExpressionParser_WithExpected='with' expected at position {0} in '{1}'.
 UriQueryExpressionParser_UnrecognizedWithVerb=Unrecognized with '{0}' at '{1}' in '{2}'.
 UriQueryExpressionParser_PropertyPathExpected=Expression expected at position {0} in '{1}'.
 UriQueryExpressionParser_KeywordOrIdentifierExpected='{0}' expected at position {1} in '{2}'.
@@ -744,6 +744,8 @@ UriQueryExpressionParser_KeywordOrIdentifierExpected='{0}' expected at position 
 UriQueryPathParser_RequestUriDoesNotHaveTheCorrectBaseUri=The URI '{0}' is not valid because it is not based on '{1}'.
 UriQueryPathParser_SyntaxError=Bad Request: there was an error in the query syntax.
 UriQueryPathParser_TooManySegments=Too many segments in URI.
+
+UriUtils_DateTimeOffsetInvalidFormat=The DateTimeOffset text '{0}' should be in format 'yyyy-mm-ddThh:mm:ss('.'s+)?(zzzzzz)?' and each field value is within valid range.
 
 SelectionItemBinder_NonNavigationPathToken=Inner or start path segments must be navigation properties in $select.
 
@@ -781,9 +783,9 @@ MetadataBinder_CollectionOpenPropertiesNotSupportedInThisRelease=Collection open
 MetadataBinder_IllegalSegmentType=Can only bind segments that are Navigation, Structural, Complex, or Collections. We found a segment '{0}' that isn't any of those. Please revise the query.
 MetadataBinder_QueryOptionNotApplicable=The '{0}' option cannot be applied to the query path. '{0}' can only be applied to a collection of entities. 
 
-ApplyBinder_AggregateStatementIncompatibleTypeForVerb=$apply/aggregate expression '{0}' operation does not support value type '{1}'.
-ApplyBinder_UnsupportedAggregateVerb=$apply/aggregate does not support verb '{0}'.
-ApplyBinder_AggregateStatementNotSingleValue=$apply/aggregate expression '{0}' must evaluate to a single value.
+ApplyBinder_AggregateExpressionIncompatibleTypeForMethod=$apply/aggregate expression '{0}' operation does not support value type '{1}'.
+ApplyBinder_UnsupportedAggregateMethod=$apply/aggregate does not support method '{0}'.
+ApplyBinder_AggregateExpressionNotSingleValue=$apply/aggregate expression '{0}' must evaluate to a single value.
 ApplyBinder_GroupByPropertyNotPropertyAccessValue=$apply/groupby grouping expression '{0}' must evaluate to a property access value.
 ApplyBinder_UnsupportedType=$apply clause does not support type '{0}'.
 ApplyBinder_UnsupportedGroupByChild=$apply/groupby not support '{0}' as child transformation
@@ -860,7 +862,7 @@ UriParserMetadata_MultipleMatchingParametersFound=More than one parameters match
 PathParser_EntityReferenceNotSupported=The request URI is not valid. $ref cannot be applied to the segment '{0}' since $ref can only follow an entity segment or entity collection segment.
 PathParser_CannotUseValueOnCollection=$value cannot be applied to a collection.
 PathParser_TypeMustBeRelatedToSet=The type '{0}' does not inherit from and is not a base type of '{1}'. The type of '{2}' must be related to the Type of the EntitySet.
-PathParser_TypeCastOnlyAllowedAfterEntityCollection=Type cast segment '{0}' after a collection which is not of entity type is not allowed.
+PathParser_TypeCastOnlyAllowedAfterStructuralCollection=Type cast segment '{0}' after a collection which is not of entity or complex type is not allowed.
 
 ODataFeed_MustNotContainBothNextPageLinkAndDeltaLink=A feed may contain a next page link, a delta link or neither, but must not contain both.
 
@@ -941,8 +943,13 @@ ExpressionLexer_InvalidEscapeSequence=An unrecognized escape sequence '\\{0}' wa
 UriQueryExpressionParser_UnrecognizedLiteral=Unrecognized '{0}' literal '{1}' at '{2}' in '{3}'.
 UriQueryExpressionParser_UnrecognizedLiteralWithReason=Unrecognized '{0}' literal '{1}' at '{2}' in '{3}' with reason '{4}'.
 
+UriPrimitiveTypeParsers_FailedToParseTextToPrimitiveValue=Failed to parse '{0}' of Edm type '{1}' to primitive type.
+UriPrimitiveTypeParsers_FailedToParseStringToGeography=Failed to parse string to Geography.
+
 UriCustomTypeParsers_AddCustomUriTypeParserAlreadyExists=The given uri custom type parser already exists.
-UriCustomTypeParsers_AddCustomUriTypeParserEdmTypeExists=An existing custom UriTypePraser is already registered to the given EdmTypeReference '{0}'.
+UriCustomTypeParsers_AddCustomUriTypeParserEdmTypeExists=An existing custom UriTypeParser is already registered to the given EdmTypeReference '{0}'.
+
+UriParserHelper_InvalidPrefixLiteral=The given type prefix literal name '{0}' must contain letters or '.' only.
 
 CustomUriTypePrefixLiterals_AddCustomUriTypePrefixLiteralAlreadyExists=The given type literal prefix '{0}' already exists as a custom uri type literal prefix.
 

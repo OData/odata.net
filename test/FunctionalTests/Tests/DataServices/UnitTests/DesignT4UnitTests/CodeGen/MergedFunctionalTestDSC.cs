@@ -1421,7 +1421,7 @@ namespace MergedFunctionalTest.DSC
         /// <summary>
         /// There are no comments for foo2 in the schema.
         /// </summary>
-        public  global::Microsoft.OData.Client.DataServiceQuerySingle<string> foo2(int p2)
+        public global::Microsoft.OData.Client.DataServiceQuerySingle<string> foo2(int p2)
         {
             global::System.Uri requestUri;
             Context.TryGetUri(this, out requestUri);
@@ -1431,7 +1431,7 @@ namespace MergedFunctionalTest.DSC
         /// <summary>
         /// There are no comments for foo7 in the schema.
         /// </summary>
-        public  global::Microsoft.OData.Client.DataServiceQuerySingle<global::System.Nullable<int>> foo7(global::System.Collections.Generic.ICollection<int> p1, global::MergedFunctionalTest.DSC.Address p2)
+        public global::Microsoft.OData.Client.DataServiceQuerySingle<global::System.Nullable<int>> foo7(global::System.Collections.Generic.ICollection<int> p1, global::MergedFunctionalTest.DSC.Address p2)
         {
             global::System.Uri requestUri;
             Context.TryGetUri(this, out requestUri);
@@ -1442,7 +1442,7 @@ namespace MergedFunctionalTest.DSC
         /// <summary>
         /// There are no comments for foo7 in the schema.
         /// </summary>
-        public  global::MergedFunctionalTest.DSC.CustomerSingle foo7(global::MergedFunctionalTest.DSC.Address p1)
+        public global::MergedFunctionalTest.DSC.CustomerSingle foo7(global::MergedFunctionalTest.DSC.Address p1)
         {
             global::System.Uri requestUri;
             Context.TryGetUri(this, out requestUri);
@@ -2252,7 +2252,7 @@ namespace MergedFunctionalTest.DSC
         /// <summary>
         /// There are no comments for foo7 in the schema.
         /// </summary>
-        public  global::MergedFunctionalTest.DSC.CustomerSingle foo7(global::MergedFunctionalTest.DSC.Address p1)
+        public global::MergedFunctionalTest.DSC.CustomerSingle foo7(global::MergedFunctionalTest.DSC.Address p1)
         {
             global::System.Uri requestUri;
             Context.TryGetUri(this, out requestUri);

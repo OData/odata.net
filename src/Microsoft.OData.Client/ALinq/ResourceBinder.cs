@@ -2757,6 +2757,22 @@ namespace Microsoft.OData.Client
                     if (PlatformHelper.IsProperty(m.Member))
                     {
                         PropertyInfo pi = (PropertyInfo)m.Member;
+
+                        // For member like "c.Trips.Count", when Count is visited, no future visit if declare type is a Collection
+                        if (pi.Name.Equals(ReflectionUtil.COUNTPROPNAME))
+                        {
+                            MemberExpression me = StripTo<MemberExpression>(m.Expression);
+                            if (me != null && !PrimitiveType.IsKnownNullableType(me.Type))
+                            {
+                                Type collectionType = ClientTypeUtil.GetImplementationType(me.Type, typeof(ICollection<>));
+                                if (collectionType != null)
+                                {
+                                    return m;
+                                }
+                            }
+                        }
+
+                        // Continue the check if it is not a count segment
                         if (WebUtil.IsCLRTypeCollection(pi.PropertyType, this.model))
                         {
                             if (this.checkedMethod == SequenceMethod.Where)

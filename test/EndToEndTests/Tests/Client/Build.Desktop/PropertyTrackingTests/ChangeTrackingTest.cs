@@ -127,7 +127,7 @@ namespace Microsoft.Test.OData.Tests.Client.CodeGenerationTests
             // Update object by update object without change => redo the PATCH all
             this.TestClientContext.UpdateObject(people[0]);
 
-            expectedPropertyCount = 11;
+            expectedPropertyCount = 12;
             this.TestClientContext.SaveChanges();
         }
 

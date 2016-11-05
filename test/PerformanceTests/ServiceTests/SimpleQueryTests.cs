@@ -23,23 +23,16 @@ namespace Microsoft.OData.Performance
         [Benchmark]
         public void QuerySimpleEntitySet()
         {
-            foreach (var iteration in Benchmark.Iterations)
-            {
-                using (iteration.StartMeasurement())
-                {
-                    QueryAndVerify("SimplePeopleSet", "odata.maxpagesize=100");
-                }
-            }
-        }
+            int RequestsPerIteration = 100;
 
-        [Benchmark]
-        public void QuerySimpleEntitySetIncludedComplexType()
-        {
             foreach (var iteration in Benchmark.Iterations)
             {
                 using (iteration.StartMeasurement())
                 {
-                    QueryAndVerify("CompanySet", "odata.maxpagesize=100");
+                    for (int i = 0; i < RequestsPerIteration; i++)
+                    {
+                        QueryAndVerify("SimplePeopleSet", "odata.maxpagesize=10");                        
+                    }
                 }
             }
         }
@@ -59,11 +52,16 @@ namespace Microsoft.OData.Performance
         [Benchmark]
         public void QuerySingleEntity()
         {
+            int RequestsPerIteration = 100;
+
             foreach (var iteration in Benchmark.Iterations)
             {
                 using (iteration.StartMeasurement())
                 {
-                    QueryAndVerify("SimplePeopleSet(1)", null);
+                    for (int i = 0; i < RequestsPerIteration; i++)
+                    {
+                        QueryAndVerify("SimplePeopleSet(1)", null);
+                    }
                 }
             }
         }

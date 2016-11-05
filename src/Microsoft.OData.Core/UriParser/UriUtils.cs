@@ -11,6 +11,7 @@ namespace Microsoft.OData.Core.UriParser
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Globalization;
+    using System.Text.RegularExpressions;
     using System.Xml;
     using Microsoft.OData.Core.UriParser.Semantic;
     using Microsoft.OData.Core.UriParser.Syntactic;
@@ -173,7 +174,7 @@ namespace Microsoft.OData.Core.UriParser
         /// <param name="targetValue">After invocation, converted value.</param>
         /// <returns>true if the value was converted; false otherwise.</returns>
         /// <remarks>Copy of WebConvert.TryKeyStringToDateTimeOffset.</remarks>
-        internal static bool TryUriStringToDateTimeOffset(string text, out DateTimeOffset targetValue)
+        internal static bool ConvertUriStringToDateTimeOffset(string text, out DateTimeOffset targetValue)
         {
             targetValue = default(DateTimeOffset);
 
@@ -182,9 +183,22 @@ namespace Microsoft.OData.Core.UriParser
                 targetValue = PlatformHelper.ConvertStringToDateTimeOffset(text);
                 return true;
             }
-            catch (FormatException)
+            catch (FormatException exception)
             {
+                // This means it is a string similar to DateTimeOffset String, but cannot be parsed as DateTimeOffset and could not be a digit or GUID .etc. 
+                Match m = PlatformHelper.PotentialDateTimeOffsetValidator.Match(text);
+                if (m.Success)
+                {
+                    // The format should be exactly "yyyy-mm-ddThh:mm:ss('.'s+)?(zzzzzz)?" and each field value is within valid range
+                    throw new ODataException(Strings.UriUtils_DateTimeOffsetInvalidFormat(text), exception);
+                }
+
                 return false;
+            }
+            catch (ArgumentOutOfRangeException exception)
+            {
+                // This means the timezone number is bigger than 14:00, inclusive exception has detail exception.
+                throw new ODataException(Strings.UriUtils_DateTimeOffsetInvalidFormat(text), exception);
             }
         }
 

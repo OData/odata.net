@@ -9,25 +9,18 @@ namespace Microsoft.OData.Core.UriParser.Parsers.UriParsers
     #region Namespaces
 
     using System;
-    using System.Collections.Generic;
     using System.Diagnostics;
+    using System.Globalization;
     using System.Linq;
-    using System.Text;
     using Microsoft.OData.Core.UriParser.TreeNodeKinds;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Edm.Library;
+    using ODataErrorStrings = Microsoft.OData.Core.Strings;
 
     #endregion
 
     internal static class UriParserHelper
     {
-        #region Private Fields
-
-        /// <summary>Whitespace characters to trim around literals.</summary>
-        private static char[] WhitespaceChars = new char[] { ' ', '\t', '\n', '\r' };
-
-        #endregion
-
         #region Internal Methods
 
         /// <summary>Determines whether the specified character is a valid hexadecimal digit.</summary>
@@ -139,7 +132,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers.UriParsers
             Debug.Assert(text != null, "text != null");
             Debug.Assert(suffix != null, "suffix != null");
 
-            text = text.Trim(WhitespaceChars);
+            text = text.Trim();
             if (text.Length <= suffix.Length || IsValidNumericConstant(text) || !text.EndsWith(suffix, StringComparison.OrdinalIgnoreCase))
             {
                 return false;
@@ -180,11 +173,12 @@ namespace Microsoft.OData.Core.UriParser.Parsers.UriParsers
         /// <exception cref="ArgumentException">Literal is not valid</exception>
         internal static void ValidatePrefixLiteral(string typePrefixLiteralName)
         {
-            bool isLettersOnly = typePrefixLiteralName.Cast<char>().All(x => char.IsLetter(x) || x == '.');
+            bool isLettersOnly = typePrefixLiteralName.ToCharArray().All(x => char.IsLetter(x) || x == '.');
 
             if (!isLettersOnly)
             {
-                throw new ArgumentException(string.Format("the given type prefix literal name '{0}' must contain letters or '.' only", typePrefixLiteralName));
+                throw new ArgumentException(
+                    string.Format(CultureInfo.InvariantCulture, ODataErrorStrings.UriParserHelper_InvalidPrefixLiteral(typePrefixLiteralName)));
             }
         }
 
@@ -207,6 +201,8 @@ namespace Microsoft.OData.Core.UriParser.Parsers.UriParsers
                 int startIndex = 1;
                 while (startIndex < text.Length - 1)
                 {
+                    // Check whether the Uri contains a valid escaped single quote.
+                    // Example: 'aaa''bbb'.
                     int match = text.IndexOf('\'', startIndex, text.Length - startIndex - 1);
                     if (match == -1)
                     {

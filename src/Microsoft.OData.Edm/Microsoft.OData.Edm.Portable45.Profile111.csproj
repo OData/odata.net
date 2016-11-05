@@ -1,0 +1,595 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkIdentifier>.NETPortable</TargetFrameworkIdentifier>
+    <TargetFrameworkProfile>Profile111</TargetFrameworkProfile>
+    <GenerateTargetFrameworkAttribute>true</GenerateTargetFrameworkAttribute>
+    <AssemblyName>Microsoft.OData.Edm</AssemblyName>
+    <OutputType>Library</OutputType>
+    <TransparentAssembly>true</TransparentAssembly>
+    <SecurityMigration>false</SecurityMigration>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <RootNamespace>Microsoft.OData.Edm</RootNamespace>
+    <ProjectGuid>{0EA3792B-B967-44BB-8B7C-0625ED6231FA}</ProjectGuid>
+    <DocumentationFile>$(AssemblyName).xml</DocumentationFile>
+    <ProjectTypeGuids>{786C830F-07A1-408B-BD7F-6EE04809D6DB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <MinimumVisualStudioVersion>10.0</MinimumVisualStudioVersion>
+    <DefineConstants>$(DefineConstants);DNXCORE50;SUPPRESS_PORTABLELIB_TARGETFRAMEWORK_ATTRIBUTE</DefineConstants>
+    <HasIntellisenseFile>true</HasIntellisenseFile>
+    <EnableLocalization>true</EnableLocalization>
+    <!-- from Build.Props... but can't reference it at this level -->
+    <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <StyleCopOverrideSettingsFile Condition="'$(StyleCopOverrideSettingsFile)' == ''">$(MSBuildThisFileDirectory)Microsoft.OData.Edm.StyleCop</StyleCopOverrideSettingsFile>
+    <CodeAnalysisUseAdditionalODataRules Condition="'$(CodeAnalysisUseAdditionalODataRules)' == ''">false</CodeAnalysisUseAdditionalODataRules>
+  </PropertyGroup>
+  <Import Project="..\Build.props" />
+  <!-- Generated files -->
+  <ItemGroup>
+    <TextStringResource Include="Microsoft.OData.Edm.txt">
+      <ResFile>Microsoft.OData.Edm</ResFile>
+      <Sealed>true</Sealed>
+      <Parameterize>true</Parameterize>
+      <Visibility>internal</Visibility>
+      <GenerateResource>true</GenerateResource>
+      <FullClassName>Microsoft.OData.Edm.EntityRes</FullClassName>
+      <SupportsAssemblyReferences>false</SupportsAssemblyReferences>
+      <SkipSRAttributes>true</SkipSRAttributes>
+    </TextStringResource>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Csdl\EdmEnumValueParser.cs" />
+    <Compile Include="GlobalSuppressions.cs" />
+    <Compile Include="Csdl\Parsing\Ast\CsdlEnumMemberExpression.cs" />
+    <Compile Include="Csdl\Semantics\CsdlSemanticsEnumMemberExpression.cs" />
+    <Compile Include="Interfaces\Expressions\IEdmEnumMemberExpression.cs" />
+    <Compile Include="Library\Expressions\EdmEnumMemberExpression.cs" />
+    <Compile Include="Library\TimeOfDay.cs" />
+    <Compile Include="PrimitiveValueConverters\PassThroughPrimitiveValueConverter.cs" />
+    <Compile Include="Csdl\CsdlLocation.cs" />
+    <Compile Include="Csdl\EdmParseException.cs" />
+    <Compile Include="Csdl\EdmxReaderSettings.cs" />
+    <Compile Include="Csdl\EdmxTarget.cs" />
+    <Compile Include="Csdl\EdmValueParser.cs" />
+    <Compile Include="Csdl\EdmValueWriter.cs" />
+    <Compile Include="Csdl\Parsing\Ast\CsdlNavigationPropertyPathExpression.cs" />
+    <Compile Include="Csdl\Parsing\Ast\CsdlAbstractNavigationSource.cs" />
+    <Compile Include="Csdl\Parsing\Ast\CsdlAction.cs" />
+    <Compile Include="Csdl\Parsing\Ast\CsdlActionImport.cs" />
+    <Compile Include="Csdl\Parsing\Ast\CsdlApplyExpression.cs" />
+    <Compile Include="Csdl\Parsing\Ast\CsdlCastExpression.cs" />
+    <Compile Include="Csdl\Parsing\Ast\CsdlCollectionExpression.cs" />
+    <Compile Include="Csdl\Parsing\Ast\CsdlEnumMember.cs" />
+    <Compile Include="Csdl\Parsing\Ast\CsdlEnumMemberReferenceExpression.cs" />
+    <Compile Include="Csdl\Parsing\Ast\CsdlEnumType.cs" />
+    <Compile Include="Csdl\Parsing\Ast\CsdlFunction.cs" />
+    <Compile Include="Csdl\Parsing\Ast\CsdlFunctionImport.cs" />
+    <Compile Include="Csdl\Parsing\Ast\CsdlIfExpression.cs" />
+    <Compile Include="Csdl\Parsing\Ast\CsdlIsTypeExpression.cs" />
+    <Compile Include="Csdl\Parsing\Ast\CsdlLabeledExpression.cs" />
+    <Compile Include="Csdl\Parsing\Ast\CsdlLabeledExpressionReferenceExpression.cs" />
+    <Compile Include="Csdl\Parsing\Ast\CsdlParameterReferenceExpression.cs" />
+    <Compile Include="Csdl\Parsing\Ast\CsdlPathExpression.cs" />
+    <Compile Include="Csdl\Parsing\Ast\CsdlPropertyPathExpression.cs" />
+    <Compile Include="Csdl\Parsing\Ast\CsdlPropertyReferenceExpression.cs" />
+    <Compile Include="Csdl\Parsing\Ast\CsdlAnnotation.cs" />
+    <Compile Include="Csdl\Parsing\Ast\CsdlAnnotations.cs" />
+    <Compile Include="Csdl\Parsing\Ast\CsdlCollectionType.cs" />
+    <Compile Include="Csdl\Parsing\Ast\CsdlConstantExpression.cs" />
+    <Compile Include="Csdl\Parsing\Ast\CsdlExpressionBase.cs" />
+    <Compile Include="Csdl\Parsing\Ast\CsdlPropertyValue.cs" />
+    <Compile Include="Csdl\Parsing\Ast\CsdlRecordExpression.cs" />
+    <Compile Include="Csdl\Parsing\Ast\CsdlSingleton.cs" />
+    <Compile Include="Csdl\Parsing\Ast\CsdlSpatialTypeReference.cs" />
+    <Compile Include="Csdl\Parsing\Ast\CsdlEntitySetReferenceExpression.cs" />
+    <Compile Include="Csdl\Parsing\Ast\CsdlOperationReferenceExpression.cs" />
+    <Compile Include="Csdl\Parsing\Ast\CsdlTypeDefinition.cs" />
+    <Compile Include="Csdl\Parsing\Ast\ICsdlTypeExpression.cs" />
+    <Compile Include="Csdl\Semantics\BadElements\UnresolvedAction.cs" />
+    <Compile Include="Csdl\Semantics\BadElements\IUnresolvedElement.cs" />
+    <Compile Include="Csdl\Semantics\BadElements\UnresolvedEnumType.cs" />
+    <Compile Include="Csdl\Semantics\BadElements\UnresolvedFunction.cs" />
+    <Compile Include="Csdl\Semantics\BadElements\UnresolvedTypeTerm.cs" />
+    <Compile Include="Csdl\Semantics\BadElements\UnresolvedVocabularyTerm.cs" />
+    <Compile Include="Csdl\Semantics\CsdlSemanticsNavigationPropertyPathExpression.cs" />
+    <Compile Include="Csdl\Semantics\CsdlSemanticsTypeDefinitionDefinition.cs" />
+    <Compile Include="Csdl\Semantics\CsdlSemanticsAction.cs" />
+    <Compile Include="Csdl\Semantics\CsdlSemanticsActionImport.cs" />
+    <Compile Include="Csdl\Semantics\CsdlSemanticsApplyExpression.cs" />
+    <Compile Include="Csdl\Semantics\CsdlSemanticsCastExpression.cs" />
+    <Compile Include="Csdl\Semantics\CsdlSemanticsCollectionExpression.cs" />
+    <Compile Include="Csdl\Semantics\CsdlSemanticsDateConstantExpression.cs" />
+    <Compile Include="Csdl\Semantics\CsdlSemanticsDateTimeOffsetConstantExpression.cs" />
+    <Compile Include="Csdl\Semantics\CsdlSemanticsDirectValueAnnotationsManager.cs" />
+    <Compile Include="Csdl\Semantics\CsdlSemanticsEntitySetReferenceExpression.cs" />
+    <Compile Include="Csdl\Semantics\CsdlSemanticsExpression.cs" />
+    <Compile Include="Csdl\Semantics\CsdlSemanticsFunction.cs" />
+    <Compile Include="Csdl\Semantics\CsdlSemanticsFunctionImport.cs" />
+    <Compile Include="Csdl\Semantics\CsdlSemanticsNavigationSource.cs" />
+    <Compile Include="Csdl\Semantics\CsdlSemanticsOperationReferenceExpression.cs" />
+    <Compile Include="Csdl\Semantics\CsdlSemanticsGuidConstantExpression.cs" />
+    <Compile Include="Csdl\Semantics\CsdlSemanticsBinaryConstantExpression.cs" />
+    <Compile Include="Csdl\Semantics\CsdlSemanticsIfExpression.cs" />
+    <Compile Include="Csdl\Semantics\CsdlSemanticsIsTypeExpression.cs" />
+    <Compile Include="Csdl\Semantics\CsdlSemanticsLabeledExpression.cs" />
+    <Compile Include="Csdl\Semantics\CsdlSemanticsLabeledExpressionReferenceExpression.cs" />
+    <Compile Include="Csdl\Semantics\CsdlSemanticsDirectValueAnnotation.cs" />
+    <Compile Include="Csdl\Semantics\CsdlSemanticsEnumMember.cs" />
+    <Compile Include="Csdl\Semantics\CsdlSemanticsEnumTypeDefinition.cs" />
+    <Compile Include="Csdl\Parsing\Ast\CsdlTerm.cs" />
+    <Compile Include="Csdl\Semantics\CsdlSemanticsAnnotations.cs" />
+    <Compile Include="Csdl\Semantics\CsdlSemanticsBooleanConstantExpression.cs" />
+    <Compile Include="Csdl\Semantics\CsdlSemanticsCollectionTypeDefinition.cs" />
+    <Compile Include="Csdl\Semantics\CsdlSemanticsCollectionTypeExpression.cs" />
+    <Compile Include="Csdl\Semantics\CsdlSemanticsDecimalConstantExpression.cs" />
+    <Compile Include="Csdl\Semantics\CsdlSemanticsElement.cs" />
+    <Compile Include="Csdl\Semantics\CsdlSemanticsFloatingConstantExpression.cs" />
+    <Compile Include="Csdl\Semantics\CsdlSemanticsIntConstantExpression.cs" />
+    <Compile Include="Csdl\Semantics\CsdlSemanticsNamedTypeReference.cs" />
+    <Compile Include="Csdl\Semantics\CsdlSemanticsNullExpression.cs" />
+    <Compile Include="Csdl\Semantics\CsdlSemanticsParameterReferenceExpression.cs" />
+    <Compile Include="Csdl\Semantics\CsdlSemanticsPathExpression.cs" />
+    <Compile Include="Csdl\Semantics\CsdlSemanticsPropertyConstructor.cs" />
+    <Compile Include="Csdl\Semantics\CsdlSemanticsPropertyPathExpression.cs" />
+    <Compile Include="Csdl\Semantics\CsdlSemanticsPropertyReferenceExpression.cs" />
+    <Compile Include="Csdl\Semantics\CsdlSemanticsRecordExpression.cs" />
+    <Compile Include="Csdl\Semantics\CsdlSemanticsSingleton.cs" />
+    <Compile Include="Csdl\Semantics\CsdlSemanticsSpatialTypeReference.cs" />
+    <Compile Include="Csdl\Semantics\CsdlSemanticsStringConstantExpression.cs" />
+    <Compile Include="Csdl\Semantics\CsdlSemanticsTimeOfDayConstantExpression.cs" />
+    <Compile Include="Csdl\Semantics\CsdlSemanticsDurationConstantExpression.cs" />
+    <Compile Include="Csdl\Semantics\CsdlSemanticsVocabularyAnnotation.cs" />
+    <Compile Include="Csdl\Semantics\CsdlSemanticsValueAnnotation.cs" />
+    <Compile Include="Csdl\Semantics\CsdlSemanticsValueTerm.cs" />
+    <Compile Include="Csdl\Serialization\EdmModelReferenceElementsVisitor.cs" />
+    <Compile Include="Csdl\Serialization\SerializationValidator.cs" />
+    <Compile Include="Csdl\SerializationExtensionMethods.cs" />
+    <Compile Include="Csdl\Parsing\Ast\CsdlOperationReturnType.cs" />
+    <Compile Include="Csdl\EdmxReader.cs" />
+    <Compile Include="Csdl\EdmxWriter.cs" />
+    <Compile Include="Csdl\Semantics\CsdlSemanticsEntityReferenceTypeExpression.cs" />
+    <Compile Include="Csdl\Semantics\CsdlSemanticsOperationImport.cs" />
+    <Compile Include="Csdl\Serialization\EdmModelSchemaSeparationSerializationVisitor.cs" />
+    <Compile Include="PrimitiveValueConverters\DefaultPrimitiveValueConverter.cs" />
+    <Compile Include="EdmLocation.cs" />
+    <Compile Include="EdmToClrConversion\TryCreateObjectInstance.cs" />
+    <Compile Include="EdmToClrConversion\EdmToClrConverter.cs" />
+    <Compile Include="Evaluation\EdmToClrEvaluator.cs" />
+    <Compile Include="ExtensionMethods\EdmElementComparer.cs" />
+    <Compile Include="Interfaces\IEdmTypeDefinitionReference.cs" />
+    <Compile Include="Interfaces\IEdmTypeDefinition.cs" />
+    <Compile Include="Interfaces\IEdmActionImport.cs" />
+    <Compile Include="Interfaces\IEdmContainedEntitySet.cs" />
+    <Compile Include="Interfaces\IEdmEntitySetBase.cs" />
+    <Compile Include="Interfaces\IEdmFunctionImport.cs" />
+    <Compile Include="Interfaces\IEdmAction.cs" />
+    <Compile Include="Interfaces\IEdmFunction.cs" />
+    <Compile Include="Interfaces\Expressions\IEdmDurationConstantExpression.cs" />
+    <Compile Include="Interfaces\IEdmInclude.cs" />
+    <Compile Include="Interfaces\IEdmIncludeAnnotations.cs" />
+    <Compile Include="Interfaces\IEdmNavigationPropertyBinding.cs" />
+    <Compile Include="Interfaces\IEdmNavigationSource.cs" />
+    <Compile Include="Interfaces\IEdmReference.cs" />
+    <Compile Include="Interfaces\IEdmReferentialConstraint.cs" />
+    <Compile Include="Interfaces\IEdmSingleton.cs" />
+    <Compile Include="Interfaces\IEdmUnknownEntitySet.cs" />
+    <Compile Include="Interfaces\Values\IEdmDurationValue.cs" />
+    <Compile Include="Interfaces\Annotations\IEdmDirectValueAnnotationBinding.cs" />
+    <Compile Include="ExtensionMethods\EnumHelper.cs" />
+    <Compile Include="PrimitiveValueConverters\IPrimitiveValueConverter.cs" />
+    <Compile Include="Library\AmbiguousSingletonBinding.cs" />
+    <Compile Include="Library\BadTypeDefinition.cs" />
+    <Compile Include="Library\EdmTypeDefinition.cs" />
+    <Compile Include="Library\EdmTypeDefinitionReference.cs" />
+    <Compile Include="Library\EdmContainedEntitySet.cs" />
+    <Compile Include="Library\EdmEntitySetBase.cs" />
+    <Compile Include="Library\EdmInclude.cs" />
+    <Compile Include="Library\EdmIncludeAnnotations.cs" />
+    <Compile Include="Library\EdmNavigationSource.cs" />
+    <Compile Include="Library\EdmReference.cs" />
+    <Compile Include="Library\EdmSingleton.cs" />
+    <Compile Include="Library\EdmUnknownEntitySet.cs" />
+    <Compile Include="Library\Expressions\EdmNavigationPropertyPathExpression.cs" />
+    <Compile Include="Memoizer.cs" />
+    <Compile Include="Library\EdmFunctionImport.cs" />
+    <Compile Include="Library\EdmActionImport.cs" />
+    <Compile Include="Library\EdmFunction.cs" />
+    <Compile Include="Library\EdmAction.cs" />
+    <Compile Include="Library\EdmNavigationPropertyInfo.cs" />
+    <Compile Include="Library\EdmNavigationPropertyBinding.cs" />
+    <Compile Include="Library\EdmReferentialConstraint.cs" />
+    <Compile Include="Library\Values\EdmDurationConstant.cs" />
+    <Compile Include="Library\AmbiguousBinding.cs" />
+    <Compile Include="Library\AmbiguousEntityContainerBinding.cs" />
+    <Compile Include="Library\AmbiguousEntitySetBinding.cs" />
+    <Compile Include="Library\AmbiguousOperationBinding.cs" />
+    <Compile Include="Library\AmbiguousOperationImportBinding.cs" />
+    <Compile Include="Library\AmbiguousLabeledExpressionBinding.cs" />
+    <Compile Include="Library\AmbiguousPropertyBinding.cs" />
+    <Compile Include="Library\AmbiguousTypeBinding.cs" />
+    <Compile Include="Library\AmbiguousValueTermBinding.cs" />
+    <Compile Include="Library\BadBinaryTypeReference.cs" />
+    <Compile Include="Library\BadCollectionType.cs" />
+    <Compile Include="Library\BadComplexType.cs" />
+    <Compile Include="Library\BadComplexTypeReference.cs" />
+    <Compile Include="Library\BadDecimalTypeReference.cs" />
+    <Compile Include="Library\BadElement.cs" />
+    <Compile Include="Library\BadEntityContainer.cs" />
+    <Compile Include="Library\BadEntityReferenceType.cs" />
+    <Compile Include="Library\BadEntitySet.cs" />
+    <Compile Include="Library\BadEntityType.cs" />
+    <Compile Include="Library\BadEntityTypeReference.cs" />
+    <Compile Include="Library\BadEnumMember.cs" />
+    <Compile Include="Library\BadEnumType.cs" />
+    <Compile Include="Library\BadLabeledExpression.cs" />
+    <Compile Include="Library\BadNamedStructuredType.cs" />
+    <Compile Include="Library\BadPrimitiveType.cs" />
+    <Compile Include="Library\BadPrimitiveTypeReference.cs" />
+    <Compile Include="Library\BadPrimitiveValue.cs" />
+    <Compile Include="Library\BadProperty.cs" />
+    <Compile Include="Library\BadNavigationProperty.cs" />
+    <Compile Include="Library\BadSpatialTypeReference.cs" />
+    <Compile Include="Library\BadStringTypeReference.cs" />
+    <Compile Include="Library\BadStructuredType.cs" />
+    <Compile Include="Library\BadTemporalTypeReference.cs" />
+    <Compile Include="Library\BadType.cs" />
+    <Compile Include="Library\BadTypeReference.cs" />
+    <Compile Include="Library\CyclicComplexType.cs" />
+    <Compile Include="Library\CyclicEntityContainer.cs" />
+    <Compile Include="Library\CyclicEntityType.cs" />
+    <Compile Include="PrimitiveValueConverters\PrimitiveValueConverterConstants.cs" />
+    <Compile Include="Vocabularies\CapabilitiesVocabularyConstants.cs" />
+    <Compile Include="Vocabularies\CapabilitiesVocabularyModel.cs" />
+    <Compile Include="Vocabularies\AlternateKeysVocabularyConstants.cs" />
+    <Compile Include="Vocabularies\CoreVocabularyConstants.cs" />
+    <Compile Include="Vocabularies\CoreVocabularyModel.cs" />
+    <Compile Include="Vocabularies\AlternateKeysVocabularyModel.cs" />
+    <Compile Include="Vocabularis\CapabilitiesVocabularyConstants.cs" />
+    <Compile Include="Vocabularis\CoreVocabularyConstants.cs" />
+    <Compile Include="Validation\DuplicateOperationValidator.cs" />
+    <Compile Include="VersioningDictionary.cs" />
+    <Compile Include="VersioningList.cs" />
+    <Compile Include="VersioningTree.cs" />
+    <Compile Include="Library\Annotations\EdmDirectValueAnnotationBinding.cs" />
+    <Compile Include="Library\Annotations\EdmTypedDirectValueAnnotationBinding.cs" />
+    <Compile Include="Validation\ObjectLocation.cs" />
+    <Compile Include="Interfaces\Annotations\IEdmDirectValueAnnotationsManager.cs" />
+    <Compile Include="Validation\ExpressionTypeChecker.cs" />
+    <Compile Include="ExtensionMethods\ToTraceStringExtensionMethods.cs" />
+    <Compile Include="Interfaces\Expressions\IEdmEnumMemberReferenceExpression.cs" />
+    <Compile Include="Interfaces\Expressions\IEdmGuidConstantExpression.cs" />
+    <Compile Include="Interfaces\Expressions\IEdmDateConstantExpression.cs" />
+    <Compile Include="Interfaces\Expressions\IEdmDateTimeOffsetConstantExpression.cs" />
+    <Compile Include="Interfaces\Expressions\IEdmBinaryConstantExpression.cs" />
+    <Compile Include="Interfaces\Expressions\IEdmLabeledExpressionReferenceExpression.cs" />
+    <Compile Include="Interfaces\Expressions\IEdmNullExpression.cs" />
+    <Compile Include="Interfaces\Expressions\IEdmParameterReferenceExpression.cs" />
+    <Compile Include="Interfaces\IEdmVocabularyAnnotatable.cs" />
+    <Compile Include="Interfaces\Values\IEdmEnumValue.cs" />
+    <Compile Include="Interfaces\Values\IEdmBinaryValue.cs" />
+    <Compile Include="Interfaces\Values\IEdmBooleanValue.cs" />
+    <Compile Include="Interfaces\Values\IEdmDateValue.cs" />
+    <Compile Include="Interfaces\Values\IEdmDateTimeOffsetValue.cs" />
+    <Compile Include="Interfaces\Values\IEdmDecimalValue.cs" />
+    <Compile Include="Interfaces\IEdmEnumTypeReference.cs" />
+    <Compile Include="Interfaces\IEdmEnumMember.cs" />
+    <Compile Include="Interfaces\IEdmEnumType.cs" />
+    <Compile Include="Interfaces\Expressions\IEdmBooleanConstantExpression.cs" />
+    <Compile Include="Interfaces\Expressions\IEdmDecimalConstantExpression.cs" />
+    <Compile Include="Interfaces\Expressions\IEdmEntitySetReferenceExpression.cs" />
+    <Compile Include="Interfaces\Expressions\IEdmFloatingConstantExpression.cs" />
+    <Compile Include="Interfaces\Expressions\IEdmApplyExpression.cs" />
+    <Compile Include="Interfaces\Expressions\IEdmOperationReferenceExpression.cs" />
+    <Compile Include="Interfaces\Expressions\IEdmIfExpression.cs" />
+    <Compile Include="Interfaces\Expressions\IEdmIntegerConstantExpression.cs" />
+    <Compile Include="Interfaces\Expressions\IEdmIsTypeExpression.cs" />
+    <Compile Include="Interfaces\Expressions\IEdmLabeledExpression.cs" />
+    <Compile Include="Interfaces\Expressions\IEdmCollectionExpression.cs" />
+    <Compile Include="Interfaces\Expressions\IEdmPathExpression.cs" />
+    <Compile Include="Interfaces\Expressions\IEdmPropertyConstructor.cs" />
+    <Compile Include="Interfaces\Expressions\IEdmPropertyReferenceExpression.cs" />
+    <Compile Include="Interfaces\Expressions\IEdmRecordExpression.cs" />
+    <Compile Include="Interfaces\Expressions\IEdmTimeOfDayConstantExpression.cs" />
+    <Compile Include="Interfaces\Expressions\IEdmValueTermReferenceExpression.cs" />
+    <Compile Include="Interfaces\Values\IEdmDelayedValue.cs" />
+    <Compile Include="Interfaces\Values\IEdmFloatingValue.cs" />
+    <Compile Include="Interfaces\Values\IEdmGuidValue.cs" />
+    <Compile Include="Interfaces\Values\IEdmIntegerValue.cs" />
+    <Compile Include="Interfaces\Values\IEdmTimeOfDayValue.cs" />
+    <Compile Include="Interfaces\IEdmTerm.cs" />
+    <Compile Include="Interfaces\IEdmCheckable.cs" />
+    <Compile Include="Interfaces\IEdmCollectionType.cs" />
+    <Compile Include="Interfaces\IEdmCollectionTypeReference.cs" />
+    <Compile Include="Interfaces\Values\IEdmCollectionValue.cs" />
+    <Compile Include="Interfaces\Values\IEdmNullValue.cs" />
+    <Compile Include="Interfaces\Values\IEdmPropertyValue.cs" />
+    <Compile Include="Interfaces\Annotations\IEdmPropertyValueBinding.cs" />
+    <Compile Include="Interfaces\Annotations\IEdmDirectValueAnnotation.cs" />
+    <Compile Include="Interfaces\IEdmSpatialTypeReference.cs" />
+    <Compile Include="Interfaces\Values\IEdmStructuredValue.cs" />
+    <Compile Include="Interfaces\Values\IEdmStringValue.cs" />
+    <Compile Include="Interfaces\Values\IEdmPrimitiveValue.cs" />
+    <Compile Include="Interfaces\Values\IEdmValue.cs" />
+    <Compile Include="Interfaces\Expressions\IEdmExpression.cs" />
+    <Compile Include="Interfaces\Expressions\IEdmCastExpression.cs" />
+    <Compile Include="Interfaces\Expressions\IEdmStringConstantExpression.cs" />
+    <Compile Include="Csdl\CsdlConstants.cs" />
+    <Compile Include="Csdl\Parsing\Ast\CsdlDirectValueAnnotation.cs" />
+    <Compile Include="Csdl\Parsing\Ast\CsdlBinaryTypeReference.cs" />
+    <Compile Include="Csdl\Parsing\Ast\CsdlComplexType.cs" />
+    <Compile Include="Csdl\Parsing\Ast\CsdlDecimalTypeReference.cs" />
+    <Compile Include="Csdl\Parsing\Ast\CsdlDocumentation.cs" />
+    <Compile Include="Csdl\Parsing\Ast\CsdlElement.cs" />
+    <Compile Include="Csdl\Parsing\Ast\CsdlElementWithDocumentation.cs" />
+    <Compile Include="Csdl\Parsing\Ast\CsdlEntityContainer.cs" />
+    <Compile Include="Csdl\Parsing\Ast\CsdlEntityReferenceType.cs" />
+    <Compile Include="Csdl\Parsing\Ast\CsdlEntitySet.cs" />
+    <Compile Include="Csdl\Parsing\Ast\CsdlEntityType.cs" />
+    <Compile Include="Csdl\Parsing\Ast\CsdlExpressionTypeReference.cs" />
+    <Compile Include="Csdl\Parsing\Ast\CsdlOperation.cs" />
+    <Compile Include="Csdl\Parsing\Ast\CsdlFunctionBase.cs" />
+    <Compile Include="Csdl\Parsing\Ast\CsdlOperationImport.cs" />
+    <Compile Include="Csdl\Parsing\Ast\CsdlOperationParameter.cs" />
+    <Compile Include="Csdl\Parsing\Ast\CsdlKey.cs" />
+    <Compile Include="Csdl\Parsing\Ast\CsdlModel.cs" />
+    <Compile Include="Csdl\Parsing\Ast\CsdlNamedElement.cs" />
+    <Compile Include="Csdl\Parsing\Ast\CsdlNamedStructuredType.cs" />
+    <Compile Include="Csdl\Parsing\Ast\CsdlNamedTypeReference.cs" />
+    <Compile Include="Csdl\Parsing\Ast\CsdlNavigationProperty.cs" />
+    <Compile Include="Csdl\Parsing\Ast\CsdlNavigationPropertyBinding.cs" />
+    <Compile Include="Csdl\Parsing\Ast\CsdlOnDelete.cs" />
+    <Compile Include="Csdl\Parsing\Ast\CsdlPrimitiveTypeReference.cs" />
+    <Compile Include="Csdl\Parsing\Ast\CsdlProperty.cs" />
+    <Compile Include="Csdl\Parsing\Ast\CsdlPropertyReference.cs" />
+    <Compile Include="Csdl\Parsing\Ast\CsdlReferentialConstraint.cs" />
+    <Compile Include="Csdl\Parsing\Ast\CsdlReferentialConstraintRole.cs" />
+    <Compile Include="Csdl\Parsing\Ast\CsdlSchema.cs" />
+    <Compile Include="Csdl\Parsing\Ast\CsdlStringTypeReference.cs" />
+    <Compile Include="Csdl\Parsing\Ast\CsdlStructuredType.cs" />
+    <Compile Include="Csdl\Parsing\Ast\CsdlTemporalTypeReference.cs" />
+    <Compile Include="Csdl\Parsing\Ast\CsdlTypeReference.cs" />
+    <Compile Include="Csdl\Parsing\Common\EdmXmlDocumentParser.cs" />
+    <Compile Include="Csdl\Parsing\Common\XmlDocumentParser.cs" />
+    <Compile Include="Csdl\Parsing\Common\XmlElementInfo.cs" />
+    <Compile Include="Csdl\Parsing\Common\XmlElementParser.cs" />
+    <Compile Include="Csdl\Parsing\CsdlDocumentParser.cs">
+      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    </Compile>
+    <Compile Include="Csdl\Parsing\CsdlParser.cs" />
+    <Compile Include="Csdl\Semantics\CsdlSemanticsBinaryTypeReference.cs" />
+    <Compile Include="Csdl\Semantics\CsdlSemanticsComplexTypeDefinition.cs" />
+    <Compile Include="Csdl\Semantics\CsdlSemanticsDecimalTypeReference.cs" />
+    <Compile Include="Csdl\Semantics\CsdlSemanticsDocumentation.cs" />
+    <Compile Include="Csdl\Semantics\CsdlSemanticsEntityContainer.cs" />
+    <Compile Include="Csdl\Semantics\CsdlSemanticsEntityReferenceTypeDefinition.cs" />
+    <Compile Include="Csdl\Semantics\CsdlSemanticsEntitySet.cs" />
+    <Compile Include="Csdl\Semantics\CsdlSemanticsEntityTypeDefinition.cs" />
+    <Compile Include="Csdl\Semantics\CsdlSemanticsOperation.cs" />
+    <Compile Include="Csdl\Semantics\CsdlSemanticsOperationParameter.cs" />
+    <Compile Include="Csdl\Semantics\CsdlSemanticsModel.cs" />
+    <Compile Include="Csdl\Semantics\CsdlSemanticsNavigationProperty.cs" />
+    <Compile Include="Library\Annotations\EdmPropertyValueBinding.cs" />
+    <Compile Include="Library\Annotations\EdmAnnotation.cs" />
+    <Compile Include="Library\Annotations\EdmVocabularyAnnotation.cs" />
+    <Compile Include="Interfaces\Annotations\IEdmValueAnnotation.cs" />
+    <Compile Include="Interfaces\IEdmValueTerm.cs" />
+    <Compile Include="Interfaces\Annotations\IEdmVocabularyAnnotation.cs" />
+    <Compile Include="Library\EdmEnumMember.cs" />
+    <Compile Include="Library\EdmEnumType.cs" />
+    <Compile Include="Library\Expressions\EdmEnumMemberReferenceExpression.cs" />
+    <Compile Include="Library\Expressions\EdmLabeledExpressionReferenceExpression.cs" />
+    <Compile Include="Library\Expressions\EdmNullExpression.cs" />
+    <Compile Include="Library\Expressions\EdmParameterReferenceExpression.cs" />
+    <Compile Include="Csdl\Semantics\BadElements\UnresolvedOperation.cs" />
+    <Compile Include="Csdl\Semantics\BadElements\UnresolvedLabeledElement.cs" />
+    <Compile Include="Csdl\Semantics\BadElements\UnresolvedEnumMember.cs" />
+    <Compile Include="Csdl\Semantics\BadElements\UnresolvedParameter.cs" />
+    <Compile Include="Csdl\Semantics\BadElements\UnresolvedValueTerm.cs" />
+    <Compile Include="Library\Values\EdmEnumValue.cs" />
+    <Compile Include="Library\Values\EdmBinaryConstant.cs" />
+    <Compile Include="Library\Values\EdmBooleanConstant.cs" />
+    <Compile Include="Library\Values\EdmDateTimeOffsetConstant.cs" />
+    <Compile Include="Library\Values\EdmDecimalConstant.cs" />
+    <Compile Include="Library\EdmEnumTypeReference.cs" />
+    <Compile Include="Library\Expressions\EdmValueTermReferenceExpression.cs" />
+    <Compile Include="Library\Expressions\EdmRecordExpression.cs" />
+    <Compile Include="Library\Expressions\EdmPathExpression.cs" />
+    <Compile Include="Library\Expressions\EdmPropertyConstructor.cs" />
+    <Compile Include="Library\Expressions\EdmPropertyPathExpression.cs" />
+    <Compile Include="Library\Expressions\EdmPropertyReferenceExpression.cs" />
+    <Compile Include="Library\Expressions\EdmIsTypeExpression.cs" />
+    <Compile Include="Library\Expressions\EdmIfExpression.cs" />
+    <Compile Include="Library\Expressions\EdmOperationReferenceExpression.cs" />
+    <Compile Include="Library\Expressions\EdmApplyExpression.cs" />
+    <Compile Include="Library\Expressions\EdmEntitySetReferenceExpression.cs" />
+    <Compile Include="Library\Expressions\EdmLabeledExpression.cs" />
+    <Compile Include="Library\Expressions\EdmCollectionExpression.cs" />
+    <Compile Include="Library\Expressions\EdmCastExpression.cs" />
+    <Compile Include="Library\Values\EdmFloatingConstant.cs" />
+    <Compile Include="Library\Values\EdmGuidConstant.cs" />
+    <Compile Include="Csdl\Semantics\BadElements\UnresolvedPrimitiveType.cs" />
+    <Compile Include="Library\EdmTerm.cs" />
+    <Compile Include="Library\EdmCollectionType.cs" />
+    <Compile Include="Library\EdmCollectionTypeReference.cs" />
+    <Compile Include="Library\Values\EdmCollectionValue.cs" />
+    <Compile Include="Csdl\Semantics\CsdlSemanticsPrimitiveTypeReference.cs" />
+    <Compile Include="Csdl\Semantics\CsdlSemanticsProperty.cs" />
+    <Compile Include="Csdl\Semantics\CsdlSemanticsSchema.cs" />
+    <Compile Include="Csdl\Semantics\CsdlSemanticsStringTypeReference.cs" />
+    <Compile Include="Csdl\Semantics\CsdlSemanticsStructuredTypeDefinition.cs" />
+    <Compile Include="Csdl\Semantics\CsdlSemanticsTemporalTypeReference.cs" />
+    <Compile Include="Csdl\Semantics\CsdlSemanticsTypeDefinition.cs" />
+    <Compile Include="Csdl\Semantics\CsdlSemanticsTypeExpression.cs" />
+    <Compile Include="Csdl\Serialization\EdmModelCsdlSchemaWriter.cs" />
+    <Compile Include="Csdl\Serialization\EdmModelCsdlSerializationVisitor.cs" />
+    <Compile Include="Csdl\Serialization\EdmSchema.cs" />
+    <Compile Include="EdmModelVisitor.cs" />
+    <Compile Include="ExtensionMethods\ExtensionMethods.cs" />
+    <Compile Include="Csdl\CsdlWriter.cs" />
+    <Compile Include="Csdl\CsdlReader.cs" />
+    <Compile Include="Interfaces\IEdmBinaryTypeReference.cs" />
+    <Compile Include="Interfaces\IEdmDecimalTypeReference.cs" />
+    <Compile Include="Interfaces\IEdmOperation.cs" />
+    <Compile Include="Interfaces\IEdmPrimitiveType.cs" />
+    <Compile Include="Interfaces\IEdmEntityType.cs" />
+    <Compile Include="Interfaces\IEdmEntityReferenceType.cs" />
+    <Compile Include="Interfaces\IEdmEntityReferenceTypeReference.cs" />
+    <Compile Include="Interfaces\IEdmComplexType.cs" />
+    <Compile Include="Interfaces\IEdmSchemaType.cs" />
+    <Compile Include="Interfaces\IEdmStringTypeReference.cs" />
+    <Compile Include="Interfaces\IEdmStructuralProperty.cs" />
+    <Compile Include="Interfaces\IEdmTemporalTypeReference.cs" />
+    <Compile Include="Library\Annotations\EdmDirectValueAnnotationsManager.cs" />
+    <Compile Include="Cache.cs" />
+    <Compile Include="CacheHelper.cs" />
+    <Compile Include="EdmUtil.cs" />
+    <Compile Include="Interfaces\IEdmComplexTypeReference.cs" />
+    <Compile Include="Interfaces\IEdmDocumentation.cs" />
+    <Compile Include="Interfaces\IEdmElement.cs" />
+    <Compile Include="Interfaces\IEdmEntityContainer.cs" />
+    <Compile Include="Interfaces\IEdmEntityContainerElement.cs" />
+    <Compile Include="Interfaces\IEdmEntitySet.cs" />
+    <Compile Include="Interfaces\IEdmEntityTypeReference.cs" />
+    <Compile Include="Interfaces\IEdmOperationImport.cs" />
+    <Compile Include="Interfaces\IEdmOperationParameter.cs" />
+    <Compile Include="Interfaces\IEdmModel.cs" />
+    <Compile Include="Interfaces\IEdmNamedElement.cs" />
+    <Compile Include="Interfaces\IEdmNavigationProperty.cs" />
+    <Compile Include="Interfaces\IEdmPrimitiveTypeReference.cs" />
+    <Compile Include="Interfaces\IEdmProperty.cs" />
+    <Compile Include="Interfaces\IEdmSchemaElement.cs" />
+    <Compile Include="Interfaces\IEdmStructuredType.cs" />
+    <Compile Include="Interfaces\IEdmStructuredTypeReference.cs" />
+    <Compile Include="Interfaces\IEdmType.cs" />
+    <Compile Include="Interfaces\IEdmTypeReference.cs" />
+    <Compile Include="HashSetInternal.cs" />
+    <Compile Include="IDependencyTrigger.cs" />
+    <Compile Include="IDependent.cs" />
+    <Compile Include="IFlushCaches.cs" />
+    <Compile Include="TupleInternal.cs" />
+    <Compile Include="Library\Date.cs" />
+    <Compile Include="Library\EdmComplexType.cs" />
+    <Compile Include="Library\EdmDocumentation.cs" />
+    <Compile Include="Library\EdmEntityContainer.cs" />
+    <Compile Include="Library\EdmEntityReferenceType.cs" />
+    <Compile Include="Library\EdmEntitySet.cs" />
+    <Compile Include="Library\EdmEntityType.cs" />
+    <Compile Include="Library\EdmOperation.cs" />
+    <Compile Include="Library\EdmOperationImport.cs" />
+    <Compile Include="Library\EdmOperationParameter.cs" />
+    <Compile Include="Library\EdmModel.cs" />
+    <Compile Include="Library\EdmModelBase.cs" />
+    <Compile Include="Library\EdmNavigationProperty.cs" />
+    <Compile Include="Library\Values\EdmIntegerConstant.cs" />
+    <Compile Include="Library\Values\EdmPropertyValue.cs" />
+    <Compile Include="Library\EdmSpatialTypeReference.cs" />
+    <Compile Include="Library\EdmStructuralProperty.cs" />
+    <Compile Include="Library\EdmElement.cs" />
+    <Compile Include="Library\EdmNamedElement.cs" />
+    <Compile Include="Library\EdmProperty.cs" />
+    <Compile Include="Library\EdmType.cs" />
+    <Compile Include="Library\EdmStructuredType.cs" />
+    <Compile Include="Library\Values\EdmStringConstant.cs" />
+    <Compile Include="Library\Values\EdmStructuredValue.cs" />
+    <Compile Include="Library\Annotations\EdmDirectValueAnnotation.cs" />
+    <Compile Include="Library\EdmTypeReference.cs" />
+    <Compile Include="Library\Values\EdmValue.cs" />
+    <Compile Include="RegistrationHelper.cs" />
+    <Compile Include="Csdl\Semantics\BadElements\UnresolvedComplexType.cs" />
+    <Compile Include="Csdl\Semantics\BadElements\UnresolvedEntityContainer.cs" />
+    <Compile Include="Csdl\Semantics\BadElements\UnresolvedEntitySet.cs" />
+    <Compile Include="Csdl\Semantics\BadElements\UnresolvedEntityType.cs" />
+    <Compile Include="Csdl\Semantics\BadElements\UnresolvedProperty.cs" />
+    <Compile Include="Csdl\Semantics\BadElements\UnresolvedNavigationPropertyPath.cs" />
+    <Compile Include="Csdl\Semantics\BadElements\UnresolvedType.cs" />
+    <Compile Include="Library\EdmEntityReferenceTypeReference.cs" />
+    <Compile Include="Library\EdmBinaryTypeReference.cs" />
+    <Compile Include="Library\EdmComplexTypeReference.cs" />
+    <Compile Include="Library\EdmConstants.cs" />
+    <Compile Include="Library\Values\EdmDateConstant.cs" />
+    <Compile Include="Library\Values\EdmTimeOfDayConstant.cs" />
+    <Compile Include="Library\EdmDecimalTypeReference.cs" />
+    <Compile Include="Library\EdmEntityTypeReference.cs" />
+    <Compile Include="Library\EdmCoreModel.cs" />
+    <Compile Include="Library\EdmPrimitiveTypeReference.cs" />
+    <Compile Include="Library\EdmStringTypeReference.cs" />
+    <Compile Include="Library\EdmTemporalTypeReference.cs" />
+    <Compile Include="ExtensionMethods\EdmTypeSemantics.cs" />
+    <Compile Include="Validation\EdmError.cs" />
+    <Compile Include="Interfaces\IEdmLocatable.cs" />
+    <Compile Include="Validation\EdmValidator.cs" />
+    <Compile Include="Validation\Internal\InterfaceValidator.cs" />
+    <Compile Include="Validation\Internal\ValidationHelper.cs" />
+    <Compile Include="Validation\ValidationContext.cs" />
+    <Compile Include="Validation\ValidationExtensionMethods.cs" />
+    <Compile Include="Validation\ValidationRules.cs" />
+    <Compile Include="Validation\ValidationRule.cs" />
+    <Compile Include="Validation\ValidationRuleSet.cs" />
+    <Compile Include="Validation\EdmErrorCode.cs" />
+    <Compile Include="Evaluation\EdmExpressionEvaluator.cs" />
+    <Compile Include="..\PlatformHelper.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="ShippingAssemblyAttributes.cs">
+      <IncludeInOpenSource>false</IncludeInOpenSource>
+    </Compile>
+    <Compile Include="$(AssemblyKeysCSharpFilePath)">
+      <IncludeInOpenSource>false</IncludeInOpenSource>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Vocabularies\CapabilitiesVocabularies.xml">
+      <LogicalName>CapabilitiesVocabularies.xml</LogicalName>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Vocabularies\CoreVocabularies.xml">
+      <LogicalName>CoreVocabularies.xml</LogicalName>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Vocabularies\AlternateKeysVocabularies.xml">
+      <LogicalName>AlternateKeysVocabularies.xml</LogicalName>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Microsoft.OData.Edm.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Microsoft.OData.Edm.cs</LastGenOutput>
+    </None>
+    <Compile Include="Microsoft.OData.Edm.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Microsoft.OData.Edm.tt</DependentUpon>
+      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    </Compile>
+    <None Include="Parameterized.Microsoft.OData.Edm.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Parameterized.Microsoft.OData.Edm.cs</LastGenOutput>
+    </None>
+    <Compile Include="Parameterized.Microsoft.OData.Edm.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Parameterized.Microsoft.OData.Edm.tt</DependentUpon>
+      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <!-- Some of the test projects have a dependency on this ddl and just adding reference to this project from 
+          those test projects is not sufficient. We have to place the dll in the suitebin folder for those test
+          projects to be able to find the dll. (Note that we are not adding this dll to the GAC.)
+     -->
+    <SuiteBin Include="$(IntermediateOutputPath)$(AssemblyName).dll">
+      <Visible>false</Visible>
+    </SuiteBin>
+    <SuiteBin Include="$(IntermediateOutputPath)$(AssemblyName).pdb">
+      <Visible>false</Visible>
+    </SuiteBin>
+    <CopyFile Include="@(SuiteBin)">
+      <DestFolder>$(SuiteBinPath)</DestFolder>
+    </CopyFile>
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <Import Project="$(BuildExtensionsPath)\Portable.targets" />
+</Project>

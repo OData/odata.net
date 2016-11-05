@@ -49,7 +49,7 @@ namespace Microsoft.Test.OData.Services.PerfService
         {
             Random rnd = new Random();
 
-            List<Person> simplePeopleSet = Enumerable.Range(1, 10).Select(i =>
+            List<Person> simplePeopleSet = Enumerable.Range(1, 100).Select(i =>
                         new Person
                         {
                             PersonID = i,
@@ -71,13 +71,14 @@ namespace Microsoft.Test.OData.Services.PerfService
                         }).ToList();
             this.LargePeopleSet.AddRange(largePeopleSet);
 
-            List<Company> companySet = Enumerable.Range(1, 10).Select(i =>
+            List<Company> companySet = Enumerable.Range(1, 100).Select(i =>
                 new Company 
                 { 
                     CompanyID = i,
                     Name = GenerateRandomString(),
                     Address = new Address() { City = "City", Street = "Street", PostalCode = "0000"},
                     Employees = new EntityCollection<Person>(),
+                    Revenue = rnd.Next(100, 10000)
                 }).ToList();
 
             for (int i = 0; i < 10; i++)

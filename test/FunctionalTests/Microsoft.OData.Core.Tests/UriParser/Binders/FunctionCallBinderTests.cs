@@ -1268,9 +1268,8 @@ namespace Microsoft.OData.Core.Tests.UriParser.Binders
                                                         EdmCoreModel.Instance.GetBoolean(false));
 
                 // Add with 'addAsOverload' 'true'
-                CustomUriFunctions.AddCustomUriFunction(BUILT_IN_GEODISTANCE_FUNCTION_NAME, customFunctionSignature, true);
+                CustomUriFunctions.AddCustomUriFunction(BUILT_IN_GEODISTANCE_FUNCTION_NAME, customFunctionSignature);
 
-                
                 FunctionSignatureWithReturnType[] resultUriFunctionSignatures =
                     FunctionCallBinder.GetUriFunctionSignatures(BUILT_IN_GEODISTANCE_FUNCTION_NAME);
 

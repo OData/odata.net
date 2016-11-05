@@ -23,6 +23,9 @@ namespace Microsoft.OData.Client
     /// </summary>
     internal static class ReflectionUtil
     {
+        /// <summary>The Collection Count property name</summary>
+        internal const string COUNTPROPNAME = "Count";
+
         #region Static information on sequence methods
         private static readonly Dictionary<MethodInfo, SequenceMethod> s_methodMap;
         private static readonly Dictionary<SequenceMethod, MethodInfo> s_inverseMap;

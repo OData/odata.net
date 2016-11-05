@@ -25,42 +25,52 @@ namespace Microsoft.OData.Performance
         [Benchmark]
         public void PostEntity()
         {
-            int PersonIdBase = 100;
-
-            ResetDataSource();
+            int RequestsPerIteration = 100;
 
             foreach (var iteration in Benchmark.Iterations)
             {
+                int PersonIdBase = 100;
+
+                ResetDataSource();
+
                 using (iteration.StartMeasurement())
                 {
-                    ODataMessageWriterSettings writerSettings = new ODataMessageWriterSettings() { PayloadBaseUri = serviceFixture.ServiceBaseUri };
-                    writerSettings.ODataUri = new ODataUri() { ServiceRoot = serviceFixture.ServiceBaseUri };
-                    var requestMessage = new HttpWebRequestMessage(new Uri(serviceFixture.ServiceBaseUri.AbsoluteUri + "SimplePeopleSet", UriKind.Absolute));
-                    requestMessage.Method = "POST";
-
-                    var peopleEntry = new ODataEntry() 
+                    for (int i = 0; i < RequestsPerIteration; i++)
                     {
-                        EditLink = new Uri("/SimplePeopleSet(" + (PersonIdBase++) + ")", UriKind.Relative),
-                        Id = new Uri("/SimplePeopleSet(" + PersonIdBase + ")", UriKind.Relative),
-                        TypeName = NameSpacePrefix + "Person",
-                        Properties = new[] 
+                        ODataMessageWriterSettings writerSettings = new ODataMessageWriterSettings()
                         {
-                            new ODataProperty { Name = "PersonID", Value = PersonIdBase },
-                            new ODataProperty { Name = "FirstName", Value = "PostEntity" },
-                            new ODataProperty { Name = "LastName", Value = "PostEntity" },
-                            new ODataProperty { Name = "MiddleName", Value = "PostEntity" }
-                        },
-                    };
+                            PayloadBaseUri = serviceFixture.ServiceBaseUri
+                        };
+                        writerSettings.ODataUri = new ODataUri() {ServiceRoot = serviceFixture.ServiceBaseUri};
+                        var requestMessage =
+                            new HttpWebRequestMessage(
+                                new Uri(serviceFixture.ServiceBaseUri.AbsoluteUri + "SimplePeopleSet", UriKind.Absolute));
+                        requestMessage.Method = "POST";
 
-                    using (var messageWriter = new ODataMessageWriter(requestMessage, writerSettings))
-                    {
-                        var odataWriter = messageWriter.CreateODataEntryWriter();
-                        odataWriter.WriteStart(peopleEntry);
-                        odataWriter.WriteEnd();
+                        var peopleEntry = new ODataEntry()
+                        {
+                            EditLink = new Uri("/SimplePeopleSet(" + (PersonIdBase++) + ")", UriKind.Relative),
+                            Id = new Uri("/SimplePeopleSet(" + PersonIdBase + ")", UriKind.Relative),
+                            TypeName = NameSpacePrefix + "Person",
+                            Properties = new[]
+                            {
+                                new ODataProperty {Name = "PersonID", Value = PersonIdBase},
+                                new ODataProperty {Name = "FirstName", Value = "PostEntity"},
+                                new ODataProperty {Name = "LastName", Value = "PostEntity"},
+                                new ODataProperty {Name = "MiddleName", Value = "PostEntity"}
+                            },
+                        };
+
+                        using (var messageWriter = new ODataMessageWriter(requestMessage, writerSettings))
+                        {
+                            var odataWriter = messageWriter.CreateODataEntryWriter();
+                            odataWriter.WriteStart(peopleEntry);
+                            odataWriter.WriteEnd();
+                        }
+
+                        var responseMessage = requestMessage.GetResponse();
+                        Assert.Equal(201, responseMessage.StatusCode);
                     }
-
-                    var responseMessage = requestMessage.GetResponse();
-                    Assert.Equal(201, responseMessage.StatusCode);
                 }
             }
         }
@@ -68,20 +78,25 @@ namespace Microsoft.OData.Performance
         [Benchmark]
         public void DeleteEntity()
         {
-            int PersonIdBase = 1;
-
-            ResetDataSource();
+            int RequestsPerIteration = 100;
 
             foreach (var iteration in Benchmark.Iterations)
             {
+                int PersonIdBase = 1;
+
+                ResetDataSource();
+
                 using (iteration.StartMeasurement())
                 {
-                    ODataMessageWriterSettings writerSettings = new ODataMessageWriterSettings() { PayloadBaseUri = serviceFixture.ServiceBaseUri };
-                    writerSettings.ODataUri = new ODataUri() { ServiceRoot = serviceFixture.ServiceBaseUri };
-                    var requestMessage = new HttpWebRequestMessage(new Uri(serviceFixture.ServiceBaseUri.AbsoluteUri + "LargePeopleSet(" + (PersonIdBase++) + ")", UriKind.Absolute));
-                    requestMessage.Method = "DELETE";
-                    var responseMessage = requestMessage.GetResponse();
-                    Assert.Equal(204, responseMessage.StatusCode);
+                    for (int i = 0; i < RequestsPerIteration; i++)
+                    {
+                        ODataMessageWriterSettings writerSettings = new ODataMessageWriterSettings() { PayloadBaseUri = serviceFixture.ServiceBaseUri };
+                        writerSettings.ODataUri = new ODataUri() { ServiceRoot = serviceFixture.ServiceBaseUri };
+                        var requestMessage = new HttpWebRequestMessage(new Uri(serviceFixture.ServiceBaseUri.AbsoluteUri + "SimplePeopleSet(" + (PersonIdBase++) + ")", UriKind.Absolute));
+                        requestMessage.Method = "DELETE";
+                        var responseMessage = requestMessage.GetResponse();
+                        Assert.Equal(204, responseMessage.StatusCode);
+                    }
                 }
             }
         }
@@ -89,38 +104,43 @@ namespace Microsoft.OData.Performance
         [Benchmark]
         public void PutEntity()
         {
-            int PersonIdBase = 1;
-
-            ResetDataSource();
+            int RequestsPerIteration = 100;
 
             foreach (var iteration in Benchmark.Iterations)
             {
+                int PersonIdBase = 1;
+
+                ResetDataSource();
+
                 using (iteration.StartMeasurement())
                 {
-                    ODataMessageWriterSettings writerSettings = new ODataMessageWriterSettings() { PayloadBaseUri = serviceFixture.ServiceBaseUri };
-                    writerSettings.ODataUri = new ODataUri() { ServiceRoot = serviceFixture.ServiceBaseUri };
-                    var requestMessage = new HttpWebRequestMessage(new Uri(serviceFixture.ServiceBaseUri.AbsoluteUri + "LargePeopleSet(" + (PersonIdBase++) + ")", UriKind.Absolute));
-                    requestMessage.Method = "PUT";
-
-                    var peopleEntry = new ODataEntry()
+                    for (int i = 0; i < RequestsPerIteration; i++)
                     {
-                        Properties = new[] 
+                        ODataMessageWriterSettings writerSettings = new ODataMessageWriterSettings() { PayloadBaseUri = serviceFixture.ServiceBaseUri };
+                        writerSettings.ODataUri = new ODataUri() { ServiceRoot = serviceFixture.ServiceBaseUri };
+                        var requestMessage = new HttpWebRequestMessage(new Uri(serviceFixture.ServiceBaseUri.AbsoluteUri + "SimplePeopleSet(" + PersonIdBase + ")", UriKind.Absolute));
+                        requestMessage.Method = "PUT";
+
+                        var peopleEntry = new ODataEntry()
+                        {
+                            Properties = new[] 
                         {
                             new ODataProperty { Name = "PersonID", Value = PersonIdBase++ },
                             new ODataProperty { Name = "FirstName", Value = "PostEntity" },
                             new ODataProperty { Name = "LastName", Value = "PostEntity" },
                             new ODataProperty { Name = "MiddleName", Value = "NewMiddleName" }
                         },
-                    };
+                        };
 
-                    using (var messageWriter = new ODataMessageWriter(requestMessage, writerSettings))
-                    {
-                        var odataWriter = messageWriter.CreateODataEntryWriter();
-                        odataWriter.WriteStart(peopleEntry);
-                        odataWriter.WriteEnd();
+                        using (var messageWriter = new ODataMessageWriter(requestMessage, writerSettings))
+                        {
+                            var odataWriter = messageWriter.CreateODataEntryWriter();
+                            odataWriter.WriteStart(peopleEntry);
+                            odataWriter.WriteEnd();
+                        }
+                        var responseMessage = requestMessage.GetResponse();
+                        Assert.Equal(204, responseMessage.StatusCode);
                     }
-                    var responseMessage = requestMessage.GetResponse();
-                    Assert.Equal(204, responseMessage.StatusCode);
                 }
             }
         }
@@ -128,37 +148,42 @@ namespace Microsoft.OData.Performance
         [Benchmark]
         public void PatchEntity()
         {
-            int PersonIdBase = 1;
+            int RequestsPerIteration = 100;
 
             foreach (var iteration in Benchmark.Iterations)
             {
+                int PersonIdBase = 1;
+
+                ResetDataSource();
+
                 using (iteration.StartMeasurement())
                 {
-                    ODataMessageWriterSettings writerSettings = new ODataMessageWriterSettings() { PayloadBaseUri = serviceFixture.ServiceBaseUri };
-                    writerSettings.ODataUri = new ODataUri() { ServiceRoot = serviceFixture.ServiceBaseUri };
-                    var requestMessage = new HttpWebRequestMessage(new Uri(serviceFixture.ServiceBaseUri.AbsoluteUri + "LargePeopleSet(" + (PersonIdBase++) + ")", UriKind.Absolute));
-                    requestMessage.Method = "PATCH";
-
-                    var peopleEntry = new ODataEntry()
+                    for (int i = 0; i < RequestsPerIteration; i++)
                     {
-                        Properties = new[] 
+                        ODataMessageWriterSettings writerSettings = new ODataMessageWriterSettings() { PayloadBaseUri = serviceFixture.ServiceBaseUri };
+                        writerSettings.ODataUri = new ODataUri() { ServiceRoot = serviceFixture.ServiceBaseUri };
+                        var requestMessage = new HttpWebRequestMessage(new Uri(serviceFixture.ServiceBaseUri.AbsoluteUri + "SimplePeopleSet(" + (PersonIdBase++) + ")", UriKind.Absolute));
+                        requestMessage.Method = "PATCH";
+
+                        var peopleEntry = new ODataEntry()
+                        {
+                            Properties = new[] 
                         {
                             new ODataProperty { Name = "MiddleName", Value = "NewMiddleName" }
                         },
-                    };
+                        };
 
-                    using (var messageWriter = new ODataMessageWriter(requestMessage, writerSettings))
-                    {
-                        var odataWriter = messageWriter.CreateODataEntryWriter();
-                        odataWriter.WriteStart(peopleEntry);
-                        odataWriter.WriteEnd();
+                        using (var messageWriter = new ODataMessageWriter(requestMessage, writerSettings))
+                        {
+                            var odataWriter = messageWriter.CreateODataEntryWriter();
+                            odataWriter.WriteStart(peopleEntry);
+                            odataWriter.WriteEnd();
+                        }
+                        var responseMessage = requestMessage.GetResponse();
+                        Assert.Equal(204, responseMessage.StatusCode);
                     }
-                    var responseMessage = requestMessage.GetResponse();
-                    Assert.Equal(204, responseMessage.StatusCode);
                 }
             }
-
-            ResetDataSource();
         }
 
         private void ResetDataSource()

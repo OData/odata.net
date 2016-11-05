@@ -8,9 +8,6 @@ namespace Microsoft.Test.OData.Services.PerfService
 {
     using Microsoft.Test.OData.Services.ODataWCFService;
 
-    /// <summary>
-    /// The class represents the Person model type.
-    /// </summary>
     public class Person : ClrObject
     {
         public int PersonID { get; set; }
@@ -33,5 +30,6 @@ namespace Microsoft.Test.OData.Services.PerfService
         public string Name { get; set; }
         public Address Address { get; set; }
         public EntityCollection<Person> Employees { get; set; }
+        public int Revenue { get; set; }
     }
 }

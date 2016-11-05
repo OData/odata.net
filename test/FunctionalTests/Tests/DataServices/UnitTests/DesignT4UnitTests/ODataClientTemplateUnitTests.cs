@@ -611,9 +611,9 @@ namespace Microsoft.OData.Client.Design.T4.UnitTests
                 this.CalledActions.Add("WriteFunctionImportReturnCollectionResult(" + functionName + ", " + originalFunctionName + ", " + returnTypeName + ", " + parameters + ", " + parameterValues + ", " + isComposable + ", " + useEntityReference + ")");
             }
 
-            internal override void WriteFunctionImportReturnSingleResult(string functionName, string originalFunctionName, string returnTypeName, string parameters, string parameterValues, bool isComposable, bool isReturnEntity, bool useEntityReference)
+            internal override void WriteFunctionImportReturnSingleResult(string functionName, string originalFunctionName, string returnTypeName, string returnTypeNameWithSingleSuffix, string parameters, string parameterValues, bool isComposable, bool isReturnEntity, bool useEntityReference)
             {
-                this.CalledActions.Add("WriteFunctionImportReturnSingleResult(" + functionName + ", " + originalFunctionName + ", " + returnTypeName + ", " + parameters + ", " + parameterValues + ", " + isComposable + ", " + useEntityReference + ")");
+                this.CalledActions.Add("WriteFunctionImportReturnSingleResult(" + functionName + ", " + originalFunctionName + ", " + returnTypeName + ", " + returnTypeNameWithSingleSuffix + ", " + parameters + ", " + parameterValues + ", " + isComposable + ", " + useEntityReference + ")");
             }
 
             internal override void WriteBoundFunctionInEntityTypeReturnCollectionResult(bool hideBaseMethod, string functionName, string originalFunctionName, string returnTypeName, string parameters, string fullNamespace, string parameterValues, bool isComposable, bool useEntityReference)
@@ -621,9 +621,9 @@ namespace Microsoft.OData.Client.Design.T4.UnitTests
                 this.CalledActions.Add("WriteBoundFunctionInEntityTypeReturnCollectionResult(" + hideBaseMethod + ", " + functionName + ", " + originalFunctionName + ", " + returnTypeName + ", " + parameters + ", " + fullNamespace + ", " + parameterValues + ", " + isComposable + ", " + useEntityReference + ")");
             }
 
-            internal override void WriteBoundFunctionInEntityTypeReturnSingleResult(bool hideBaseMethod, string functionName, string originalFunctionName, string returnTypeName, string parameters, string fullNamespace, string parameterValues, bool isComposable, bool isReturnEntity, bool useEntityReference)
+            internal override void WriteBoundFunctionInEntityTypeReturnSingleResult(bool hideBaseMethod, string functionName, string originalFunctionName, string returnTypeName, string returnTypeNameWithSingleSuffix, string parameters, string fullNamespace, string parameterValues, bool isComposable, bool isReturnEntity, bool useEntityReference)
             {
-                this.CalledActions.Add("WriteBoundFunctionInEntityTypeReturnSingleResult(" + hideBaseMethod + ", " + functionName + ", " + originalFunctionName + ", " + returnTypeName + ", " + parameters + ", " + fullNamespace + ", " + parameterValues + ", " + isComposable + ", " + isReturnEntity + ", " + useEntityReference + ")");
+                this.CalledActions.Add("WriteBoundFunctionInEntityTypeReturnSingleResult(" + hideBaseMethod + ", " + functionName + ", " + originalFunctionName + ", " + returnTypeName + ", " + returnTypeNameWithSingleSuffix + ", " + parameters + ", " + fullNamespace + ", " + parameterValues + ", " + isComposable + ", " + isReturnEntity + ", " + useEntityReference + ")");
             }
 
             internal override void WriteActionImport(string actionName, string originalActionName, string returnTypeName, string parameters, string parameterValues)
@@ -662,10 +662,10 @@ namespace Microsoft.OData.Client.Design.T4.UnitTests
             }
 
             internal override void WriteBoundFunctionReturnSingleResultAsExtension(string functionName, string originalFunctionName,
-                string boundTypeName, string returnTypeName, string parameters, string fullNamespace, string parameterValues,
+                string boundTypeName, string returnTypeName, string returnTypeNameWithSingleSuffix, string parameters, string fullNamespace, string parameterValues,
                 bool isComposable, bool isReturnEntity, bool useEntityReference)
             {
-                this.CalledActions.Add("WriteBoundFunctionInSingleTypeReturnCollectionResult(" + functionName + ", " + originalFunctionName + ", " + boundTypeName + ", " + returnTypeName + ", " + parameters + ", " + fullNamespace + ", " + parameterValues + ", " + isComposable + ", " + isReturnEntity + ", " + useEntityReference + ")");
+                this.CalledActions.Add("WriteBoundFunctionInSingleTypeReturnCollectionResult(" + functionName + ", " + originalFunctionName + ", " + boundTypeName + ", " + returnTypeName + ", " + returnTypeNameWithSingleSuffix + ", " + parameters + ", " + fullNamespace + ", " + parameterValues + ", " + isComposable + ", " + isReturnEntity + ", " + useEntityReference + ")");
             }
 
             internal override void WriteBoundFunctionReturnCollectionResultAsExtension(string functionName, string originalFunctionName,

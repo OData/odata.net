@@ -2559,14 +2559,6 @@ X-Powered-By: ASP.NET
                 var queries = new object[]
                     {
                         from e in ctx.CreateQuery<CollectionEntityType>("Entities")
-                        where e.Names.Count == 0
-                        select e,
-
-                        from e in ctx.CreateQuery<CollectionEntityType>("Entities")
-                        where  0 == e.Names.Count
-                        select e,
-
-                        from e in ctx.CreateQuery<CollectionEntityType>("Entities")
                         where  "value" == e.NamesAsList[0]
                         select e,
 
@@ -2583,14 +2575,6 @@ X-Powered-By: ASP.NET
                         orderby e.Names
                         select e,
 
-                        from e in ctx.CreateQuery<CollectionEntityType>("Entities")
-                        orderby e.Names.Count
-                        select e,
-
-                        from e in ctx.CreateQuery<CollectionEntityType>("Entities")
-                        orderby e.ID, e.Names.Count
-                        select e,
-     
                         from e in ctx.CreateQuery<CollectionEntityType>("Entities")
                         orderby e.ComplexCollection[0].Description
                         select e,

@@ -45,6 +45,7 @@ namespace Microsoft.Test.OData.Services.PerfService
             companyType.AddKeys(companyId);
             companyType.AddProperty(new EdmStructuralProperty(companyType, "Name", EdmCoreModel.Instance.GetString(true)));
             companyType.AddProperty(new EdmStructuralProperty(companyType, "Address", new EdmComplexTypeReference(addressType, true)));
+            companyType.AddProperty(new EdmStructuralProperty(companyType, "Revenue", EdmCoreModel.Instance.GetInt32(false)));
 
             model.AddElement(companyType);
 

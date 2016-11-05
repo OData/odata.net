@@ -490,7 +490,7 @@ namespace Microsoft.OData.Core.JsonLight
             }
             else
             {
-                WriterValidationUtils.ValidateNavigationLinkHasCardinality(navigationLink);
+                this.WriterValidator.ValidateNavigationLinkHasCardinality(navigationLink);
             }
         }
 

@@ -84,8 +84,14 @@ namespace Microsoft.Test.OData.Services.ODataWCFService
         public string MiddleName { get; set; }
         public Collection<string> Numbers { get; set; }
         public Collection<string> Emails { get; set; }
+        public Collection<Address> Addresses { get; set; }
         public Address HomeAddress { get; set; }
         public GeographyPoint Home { get; set; }
+
+        public Person()
+        {
+            Addresses = new Collection<Address>();
+        }
 
         public Person Parent
         {

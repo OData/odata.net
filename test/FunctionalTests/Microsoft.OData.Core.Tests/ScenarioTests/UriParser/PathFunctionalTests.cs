@@ -649,11 +649,22 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.UriParser
         }
 
         [Fact]
-        public void CastShouldNotBeAllowedOnComplexValueCollection()
+        public void CastShouldBeAllowedOnComplexValueCollection()
         {
-            PathFunctionalTestsUtil.RunParseErrorPath(
-                "People(1)/PreviousAddresses/Fully.Qualified.Namespace.HomeAddress",
-                Strings.PathParser_TypeCastOnlyAllowedAfterEntityCollection("Fully.Qualified.Namespace.HomeAddress"));
+            var path = PathFunctionalTestsUtil.RunParsePath("People(1)/PreviousAddresses/Fully.Qualified.Namespace.HomeAddress");
+            path.LastSegment.ShouldBeTypeSegment(new EdmCollectionType(new EdmComplexTypeReference(HardCodedTestModel.GetHomeAddressType(), false)));
+        }
+
+        [Fact]
+        public void InvalidCastShouldNotBeAllowedOnSingleComplex()
+        {
+            PathFunctionalTestsUtil.RunParseErrorPath("People(1)/MyAddress/Fully.Qualified.Namespace.OpenAddress", ODataErrorStrings.RequestUriProcessor_InvalidTypeIdentifier_UnrelatedType("Fully.Qualified.Namespace.OpenAddress", HardCodedTestModel.GetAddressType().FullName()));
+        }
+
+        [Fact]
+        public void InvalidCastShouldNotBeAllowedOnComplexCollection()
+        {
+            PathFunctionalTestsUtil.RunParseErrorPath("People(1)/PreviousAddresses/Fully.Qualified.Namespace.OpenAddress", ODataErrorStrings.RequestUriProcessor_InvalidTypeIdentifier_UnrelatedType("Fully.Qualified.Namespace.OpenAddress", HardCodedTestModel.GetAddressType().FullName()));
         }
 
         [Fact]

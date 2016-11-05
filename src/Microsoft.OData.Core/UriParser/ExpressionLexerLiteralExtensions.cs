@@ -10,11 +10,10 @@ namespace Microsoft.OData.Core.UriParser
 
     using System;
     using System.Diagnostics;
-    using Microsoft.OData.Core.UriParser.Parsers.TypeParsers;
-    using Microsoft.OData.Core.UriParser.Parsers.TypeParsers.Common;
+    using Microsoft.OData.Core.UriParser.Parsers;
+    using Microsoft.OData.Core.UriParser.Parsers.Common;
     using Microsoft.OData.Core.UriParser.TreeNodeKinds;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Library;
     using ODataErrorStrings = Microsoft.OData.Core.Strings;
 
     #endregion Namespaces
@@ -95,13 +94,13 @@ namespace Microsoft.OData.Core.UriParser
         /// <returns>The literal token produced by building the given literal.</returns>
         private static object ParseTypedLiteral(this ExpressionLexer expressionLexer, IEdmTypeReference targetTypeReference)
         {
-            UriTypeParsingException typeParsingExcepetion;
-            object targetValue = DefaultUriTypeParser.Instance.ParseUriStringToType(expressionLexer.CurrentToken.Text, targetTypeReference, out typeParsingExcepetion);
+            UriLiteralParsingException typeParsingException;
+            object targetValue = DefaultUriLiteralParser.Instance.ParseUriStringToType(expressionLexer.CurrentToken.Text, targetTypeReference, out typeParsingException);
             if (targetValue == null)
             {
                 string message;
 
-                if (typeParsingExcepetion == null)
+                if (typeParsingException == null)
                 {
                     message = ODataErrorStrings.UriQueryExpressionParser_UnrecognizedLiteral(
                         targetTypeReference.FullName(),
@@ -118,9 +117,9 @@ namespace Microsoft.OData.Core.UriParser
                         expressionLexer.CurrentToken.Text,
                         expressionLexer.CurrentToken.Position,
                         expressionLexer.ExpressionText,
-                        typeParsingExcepetion.ParsingFailureReason);
+                        typeParsingException.Message);
 
-                    throw new ODataException(message, typeParsingExcepetion);
+                    throw new ODataException(message, typeParsingException);
                 }
             }
 

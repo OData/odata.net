@@ -7,7 +7,8 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core {
+namespace Microsoft.OData.Core
+{
     using System;
     using System.Globalization;
     using System.Reflection;
@@ -68,7 +69,8 @@ namespace Microsoft.OData.Core {
     ///
     ///        string s = TextRes.GetString(TextRes.MyIdenfitier);
     /// </summary>
-    internal sealed class TextRes {
+    internal sealed class TextRes
+    {
         internal const string ExceptionUtils_ArgumentStringEmpty = "ExceptionUtils_ArgumentStringEmpty";
         internal const string ODataRequestMessage_AsyncNotAvailable = "ODataRequestMessage_AsyncNotAvailable";
         internal const string ODataRequestMessage_StreamTaskIsNull = "ODataRequestMessage_StreamTaskIsNull";
@@ -546,7 +548,7 @@ namespace Microsoft.OData.Core {
         internal const string ODataJsonLightPropertyAndValueDeserializer_ODataTypeAnnotationInPrimitiveValue = "ODataJsonLightPropertyAndValueDeserializer_ODataTypeAnnotationInPrimitiveValue";
         internal const string ODataJsonLightPropertyAndValueDeserializer_TopLevelPropertyWithPrimitiveNullValue = "ODataJsonLightPropertyAndValueDeserializer_TopLevelPropertyWithPrimitiveNullValue";
         internal const string ODataJsonLightPropertyAndValueDeserializer_UnexpectedMetadataReferenceProperty = "ODataJsonLightPropertyAndValueDeserializer_UnexpectedMetadataReferenceProperty";
-        internal const string ODataJsonLightPropertyAndValueDeserializer_NoPropertyAndAnnotationAllowedInNullPayload = "ODataJsonLightPropertyAndValueDeserializer_NoPropertyAndAnnotationAllowedInNullPayload";
+        internal const string ODataJsonLightPropertyAndValueDeserializer_NoPropertyAndAnnotationAllowedInNullPayload = "ODataJsonLightPropertyAndValueDeserializer_NoPropertyAndAnnotationAllowedInNullPayload";        
         internal const string ODataJsonReaderCoreUtils_CannotReadSpatialPropertyValue = "ODataJsonReaderCoreUtils_CannotReadSpatialPropertyValue";
         internal const string ODataJsonLightReaderUtils_AnnotationWithNullValue = "ODataJsonLightReaderUtils_AnnotationWithNullValue";
         internal const string ODataJsonLightReaderUtils_InvalidValueForODataNullAnnotation = "ODataJsonLightReaderUtils_InvalidValueForODataNullAnnotation";
@@ -680,6 +682,7 @@ namespace Microsoft.OData.Core {
         internal const string UriQueryPathParser_RequestUriDoesNotHaveTheCorrectBaseUri = "UriQueryPathParser_RequestUriDoesNotHaveTheCorrectBaseUri";
         internal const string UriQueryPathParser_SyntaxError = "UriQueryPathParser_SyntaxError";
         internal const string UriQueryPathParser_TooManySegments = "UriQueryPathParser_TooManySegments";
+        internal const string UriUtils_DateTimeOffsetInvalidFormat = "UriUtils_DateTimeOffsetInvalidFormat";
         internal const string SelectionItemBinder_NonNavigationPathToken = "SelectionItemBinder_NonNavigationPathToken";
         internal const string MetadataBinder_UnsupportedQueryTokenKind = "MetadataBinder_UnsupportedQueryTokenKind";
         internal const string MetadataBinder_PropertyNotDeclared = "MetadataBinder_PropertyNotDeclared";
@@ -714,9 +717,9 @@ namespace Microsoft.OData.Core {
         internal const string MetadataBinder_CollectionOpenPropertiesNotSupportedInThisRelease = "MetadataBinder_CollectionOpenPropertiesNotSupportedInThisRelease";
         internal const string MetadataBinder_IllegalSegmentType = "MetadataBinder_IllegalSegmentType";
         internal const string MetadataBinder_QueryOptionNotApplicable = "MetadataBinder_QueryOptionNotApplicable";
-        internal const string ApplyBinder_AggregateStatementIncompatibleTypeForVerb = "ApplyBinder_AggregateStatementIncompatibleTypeForVerb";
-        internal const string ApplyBinder_UnsupportedAggregateVerb = "ApplyBinder_UnsupportedAggregateVerb";
-        internal const string ApplyBinder_AggregateStatementNotSingleValue = "ApplyBinder_AggregateStatementNotSingleValue";
+        internal const string ApplyBinder_AggregateExpressionIncompatibleTypeForMethod = "ApplyBinder_AggregateExpressionIncompatibleTypeForMethod";
+        internal const string ApplyBinder_UnsupportedAggregateMethod = "ApplyBinder_UnsupportedAggregateMethod";
+        internal const string ApplyBinder_AggregateExpressionNotSingleValue = "ApplyBinder_AggregateExpressionNotSingleValue";
         internal const string ApplyBinder_GroupByPropertyNotPropertyAccessValue = "ApplyBinder_GroupByPropertyNotPropertyAccessValue";
         internal const string ApplyBinder_UnsupportedType = "ApplyBinder_UnsupportedType";
         internal const string ApplyBinder_UnsupportedGroupByChild = "ApplyBinder_UnsupportedGroupByChild";
@@ -780,7 +783,7 @@ namespace Microsoft.OData.Core {
         internal const string PathParser_EntityReferenceNotSupported = "PathParser_EntityReferenceNotSupported";
         internal const string PathParser_CannotUseValueOnCollection = "PathParser_CannotUseValueOnCollection";
         internal const string PathParser_TypeMustBeRelatedToSet = "PathParser_TypeMustBeRelatedToSet";
-        internal const string PathParser_TypeCastOnlyAllowedAfterEntityCollection = "PathParser_TypeCastOnlyAllowedAfterEntityCollection";
+        internal const string PathParser_TypeCastOnlyAllowedAfterStructuralCollection = "PathParser_TypeCastOnlyAllowedAfterStructuralCollection";
         internal const string ODataFeed_MustNotContainBothNextPageLinkAndDeltaLink = "ODataFeed_MustNotContainBothNextPageLinkAndDeltaLink";
         internal const string ODataExpandPath_OnlyLastSegmentMustBeNavigationProperty = "ODataExpandPath_OnlyLastSegmentMustBeNavigationProperty";
         internal const string ODataExpandPath_InvalidExpandPathSegment = "ODataExpandPath_InvalidExpandPathSegment";
@@ -843,8 +846,11 @@ namespace Microsoft.OData.Core {
         internal const string ExpressionLexer_InvalidEscapeSequence = "ExpressionLexer_InvalidEscapeSequence";
         internal const string UriQueryExpressionParser_UnrecognizedLiteral = "UriQueryExpressionParser_UnrecognizedLiteral";
         internal const string UriQueryExpressionParser_UnrecognizedLiteralWithReason = "UriQueryExpressionParser_UnrecognizedLiteralWithReason";
+        internal const string UriPrimitiveTypeParsers_FailedToParseTextToPrimitiveValue = "UriPrimitiveTypeParsers_FailedToParseTextToPrimitiveValue";
+        internal const string UriPrimitiveTypeParsers_FailedToParseStringToGeography = "UriPrimitiveTypeParsers_FailedToParseStringToGeography";
         internal const string UriCustomTypeParsers_AddCustomUriTypeParserAlreadyExists = "UriCustomTypeParsers_AddCustomUriTypeParserAlreadyExists";
         internal const string UriCustomTypeParsers_AddCustomUriTypeParserEdmTypeExists = "UriCustomTypeParsers_AddCustomUriTypeParserEdmTypeExists";
+        internal const string UriParserHelper_InvalidPrefixLiteral = "UriParserHelper_InvalidPrefixLiteral";
         internal const string CustomUriTypePrefixLiterals_AddCustomUriTypePrefixLiteralAlreadyExists = "CustomUriTypePrefixLiterals_AddCustomUriTypePrefixLiteralAlreadyExists";
         internal const string ValueParser_InvalidDuration = "ValueParser_InvalidDuration";
         internal const string PlatformHelper_DateTimeOffsetMustContainTimeZone = "PlatformHelper_DateTimeOffsetMustContainTimeZone";
@@ -869,42 +875,52 @@ namespace Microsoft.OData.Core {
         static TextRes loader = null;
         ResourceManager resources;
 
-        internal TextRes() {
+        internal TextRes()
+        {
 #if !DNXCORE50
             resources = new System.Resources.ResourceManager("Microsoft.OData.Core", this.GetType().Assembly);
 #else
             resources = new System.Resources.ResourceManager("Microsoft.OData.Core", this.GetType().GetTypeInfo().Assembly);
 #endif
         }
-        
-        private static TextRes GetLoader() {
-            if (loader == null) {
+
+        private static TextRes GetLoader()
+        {
+            if (loader == null)
+            {
                 TextRes sr = new TextRes();
                 Interlocked.CompareExchange(ref loader, sr, null);
             }
             return loader;
         }
 
-        private static CultureInfo Culture {
+        private static CultureInfo Culture
+        {
             get { return null/*use ResourceManager default, CultureInfo.CurrentUICulture*/; }
         }
-        
-        public static ResourceManager Resources {
-            get {
+
+        public static ResourceManager Resources
+        {
+            get
+            {
                 return GetLoader().resources;
             }
         }
-        
-        public static string GetString(string name, params object[] args) {
+
+        public static string GetString(string name, params object[] args)
+        {
             TextRes sys = GetLoader();
             if (sys == null)
                 return null;
             string res = sys.resources.GetString(name, TextRes.Culture);
 
-            if (args != null && args.Length > 0) {
-                for (int i = 0; i < args.Length; i ++) {
+            if (args != null && args.Length > 0)
+            {
+                for (int i = 0; i < args.Length; i++)
+                {
                     String value = args[i] as String;
-                    if (value != null && value.Length > 1024) {
+                    if (value != null && value.Length > 1024)
+                    {
                         args[i] = value.Substring(0, 1024 - 3) + "...";
                     }
                 }
@@ -915,14 +931,16 @@ namespace Microsoft.OData.Core {
             }
         }
 
-        public static string GetString(string name) {
+        public static string GetString(string name)
+        {
             TextRes sys = GetLoader();
             if (sys == null)
                 return null;
             return sys.resources.GetString(name, TextRes.Culture);
         }
-        
-        public static string GetString(string name, out bool usedFallback) {
+
+        public static string GetString(string name, out bool usedFallback)
+        {
             // always false for this version of gensr
             usedFallback = false;
             return GetString(name);

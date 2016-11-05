@@ -264,10 +264,13 @@ namespace Microsoft.OData.Core.Tests.Json
                 name.Should().Be("@" + term);
                 verifierCalls++;
             };
-            this.valueWriter.WriteCollectionVerifier = (value, reference, isTopLevelProperty, isInUri, isOpenProperty) =>
+            this.valueWriter.WriteCollectionVerifier = (value, reference, valueTypeReference, isTopLevelProperty, isInUri, isOpenProperty) =>
             {
                 value.Should().Be(collectionValue);
                 reference.Should().BeNull();
+                valueTypeReference.Should().NotBeNull();
+                valueTypeReference.IsCollection().Should().BeTrue();
+                valueTypeReference.AsCollection().ElementType().IsString().Should().BeTrue();
                 isOpenProperty.Should().BeTrue();
                 isTopLevelProperty.Should().BeFalse();
                 isInUri.Should().BeFalse();
@@ -568,11 +571,14 @@ namespace Microsoft.OData.Core.Tests.Json
 
             bool calledWriteCollection = false;
 
-            this.valueWriter.WriteCollectionVerifier = (collectionValue, typeReference, isTopLevel, isOpenProperty, dupChecker) =>
+            this.valueWriter.WriteCollectionVerifier = (collectionValue, typeReference, valueTypeReference, isTopLevel, isOpenProperty, dupChecker) =>
             {
                 typeReference.Should().NotBeNull();
                 typeReference.IsCollection().Should().BeTrue();
                 typeReference.AsCollection().ElementType().IsString().Should().BeTrue();
+                valueTypeReference.Should().NotBeNull();
+                valueTypeReference.IsCollection().Should().BeTrue();
+                valueTypeReference.AsCollection().ElementType().IsString().Should().BeTrue();
                 calledWriteCollection = true;
             };
 

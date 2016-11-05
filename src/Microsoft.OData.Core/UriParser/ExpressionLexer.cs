@@ -733,14 +733,14 @@ namespace Microsoft.OData.Core.UriParser
             if (this.ch == '\'')
             {
                 // Get custom literal if exists.
-                IEdmTypeReference edmTypeOfCustomLiteral = CustomUriTypePrefixLiterals.GetCustomEdmTypeByLiteralPrefix(this.token.Text);
+                IEdmTypeReference edmTypeOfCustomLiteral = CustomUriLiteralPrefixes.GetEdmTypeByCustomLiteralPrefix(this.token.Text);
                 if (edmTypeOfCustomLiteral != null)
                 {
                     this.token.SetCustomEdmTypeLiteral(edmTypeOfCustomLiteral);
                 }
                 else
                 {
-                    // Get built in type literal prefix for quated values
+                    // Get built in type literal prefix for quoted values
                     this.token.Kind = this.GetBuiltInTypesLiteralPrefixWithQuotedValue(this.token.Text);
                 }
 
@@ -764,18 +764,22 @@ namespace Microsoft.OData.Core.UriParser
 
             do
             {
+                do
+                {
+                    this.NextChar();
+                }
+                while (this.ch.HasValue && this.ch != '\'');
+
+                if (this.ch == null)
+                {
+                    throw ParseError(ODataErrorStrings.ExpressionLexer_UnterminatedLiteral(this.textPos, this.Text));
+                }
+
                 this.NextChar();
             }
-            while (this.ch.HasValue && this.ch != '\'');
+            while (this.ch.HasValue && this.ch == '\'');
 
-            if (this.ch == null)
-            {
-                throw ParseError(ODataErrorStrings.ExpressionLexer_UnterminatedLiteral(this.textPos, this.Text));
-            }
-
-            this.NextChar();
-
-            // Update token.Text to include the literal + the quated value
+            // Update token.Text to include the literal + the quoted value
             this.token.Text = this.Text.Substring(startPosition, this.textPos - startPosition);
         }
 
@@ -784,7 +788,7 @@ namespace Microsoft.OData.Core.UriParser
         /// </summary>
         /// <param name="tokenText">Token texk</param>
         /// <returns>ExpressionTokenKind by the token text</returns>
-        private ExpressionTokenKind? GetBuiltInTypesLiteralPrefix(string tokenText)
+        private static ExpressionTokenKind? GetBuiltInTypesLiteralPrefix(string tokenText)
         {
             if (ExpressionLexerUtils.IsInfinityOrNaNDouble(tokenText))
             {
@@ -998,7 +1002,7 @@ namespace Microsoft.OData.Core.UriParser
             string datetimeOffsetStr = ParseLiteral(tokenPos);
 
             DateTimeOffset tmpdatetimeOffsetValue;
-            if (UriUtils.TryUriStringToDateTimeOffset(datetimeOffsetStr, out tmpdatetimeOffsetValue))
+            if (UriUtils.ConvertUriStringToDateTimeOffset(datetimeOffsetStr, out tmpdatetimeOffsetValue))
             {
                 return true;
             }

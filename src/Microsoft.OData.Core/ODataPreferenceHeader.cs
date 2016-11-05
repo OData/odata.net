@@ -55,7 +55,7 @@ namespace Microsoft.OData.Core
         /// The odata.maxpagesize=# preference token.
         /// </summary>
         private const string ODataMaxPageSizePreferenceToken = "odata.maxpagesize";
-        
+
         /// <summary>
         /// The odata.track-changes preference token.
         /// </summary>
@@ -238,7 +238,7 @@ namespace Microsoft.OData.Core
                 }
                 else
                 {
-                    this.Set(new HttpHeaderValueElement(ODataAnnotationPreferenceToken, AddQuotes(value), EmptyParameters));                    
+                    this.Set(new HttpHeaderValueElement(ODataAnnotationPreferenceToken, AddQuotes(value), EmptyParameters));
                 }
             }
         }
@@ -286,7 +286,16 @@ namespace Microsoft.OData.Core
 
                 if (wait != null)
                 {
-                    return int.Parse(wait.Value, CultureInfo.InvariantCulture);
+                    int value;
+                    if (int.TryParse(wait.Value, out value))
+                    {
+                        return value;
+                    }
+
+                    // TODO: Fix hard code string before Loc of 6.16 release 
+                    throw new ODataException(string.Format(CultureInfo.InvariantCulture,
+                        "Invalid value '{0}' for {1} preference header found. The {1} preference header requires an integer value.",
+                        wait.Value, ODataPreferenceHeader.WaitPreferenceTokenName));
                 }
 
                 return null;
@@ -346,12 +355,18 @@ namespace Microsoft.OData.Core
             {
                 var maxPageSizeHttpHeaderValueElement = this.Get(ODataMaxPageSizePreferenceToken);
 
-                // Should check maxPageSizeHttpHeaderValueElement.Value != null.
-                // Should do int.TryParse.
-                // If either of the above fail, should throw an ODataException for parsing, not a System.Exception (such as FormatException, etc.).
                 if (maxPageSizeHttpHeaderValueElement != null)
                 {
-                    return int.Parse(maxPageSizeHttpHeaderValueElement.Value, CultureInfo.InvariantCulture);
+                    int value;
+                    if (int.TryParse(maxPageSizeHttpHeaderValueElement.Value, out value))
+                    {
+                        return value;
+                    }
+
+                    // TODO: Fix hard code string before Loc of 6.16 release 
+                    throw new ODataException(string.Format(CultureInfo.InvariantCulture,
+                        "Invalid value '{0}' for {1} preference header found. The {1} preference header requires an integer value.",
+                        maxPageSizeHttpHeaderValueElement.Value, ODataPreferenceHeader.ODataMaxPageSizePreferenceToken));
                 }
 
                 return null;

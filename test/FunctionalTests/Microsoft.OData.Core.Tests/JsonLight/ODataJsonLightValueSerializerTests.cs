@@ -42,7 +42,7 @@ namespace Microsoft.OData.Core.Tests.JsonLight
 
             var collectionValue = new ODataCollectionValue() { Items = new List<string>() };
 
-            Action test = () => serializer.WriteCollectionValue(collectionValue, null, false, false, false);
+            Action test = () => serializer.WriteCollectionValue(collectionValue, null, null, false, false, false);
 
             test.ShouldThrow<ODataException>().WithMessage(Strings.ODataJsonLightPropertyAndValueSerializer_NoExpectedTypeOrTypeNameSpecifiedForCollectionValueInRequest);
         }
@@ -55,7 +55,7 @@ namespace Microsoft.OData.Core.Tests.JsonLight
             var collectionValue = new ODataCollectionValue() { Items = new List<string>(), TypeName = "Collection(Edm.Int32)" };
 
             var stringCollectionTypeRef = EdmCoreModel.GetCollection(EdmCoreModel.Instance.GetString(true));
-            Action test = () => serializer.WriteCollectionValue(collectionValue, stringCollectionTypeRef, false, false, false);
+            Action test = () => serializer.WriteCollectionValue(collectionValue, stringCollectionTypeRef, null, false, false, false);
 
             test.ShouldThrow<ODataException>().WithMessage(Strings.ValidationUtils_IncompatibleType("Collection(Edm.Int32)", "Collection(Edm.String)"));
         }
@@ -68,7 +68,7 @@ namespace Microsoft.OData.Core.Tests.JsonLight
             var collectionValue = new ODataCollectionValue() { Items = new List<string>(), TypeName = "Collection(Int32)" };
 
             var stringCollectionTypeRef = EdmCoreModel.GetCollection(EdmCoreModel.Instance.GetString(true));
-            Action test = () => serializer.WriteCollectionValue(collectionValue, stringCollectionTypeRef, false, false, false);
+            Action test = () => serializer.WriteCollectionValue(collectionValue, stringCollectionTypeRef, null, false, false, false);
 
             test.ShouldThrow<ODataException>().WithMessage(Strings.ValidationUtils_IncompatibleType("Collection(Edm.Int32)", "Collection(Edm.String)"));
         }
@@ -85,7 +85,7 @@ namespace Microsoft.OData.Core.Tests.JsonLight
                 };
 
             var stringCollectionTypeRef = EdmCoreModel.GetCollection(EdmCoreModel.Instance.GetInt32(true));
-            serializer.WriteCollectionValue(collectionValue, stringCollectionTypeRef, false, false, false);
+            serializer.WriteCollectionValue(collectionValue, stringCollectionTypeRef, null, false, false, false);
         }
 
         [Fact]
@@ -100,7 +100,7 @@ namespace Microsoft.OData.Core.Tests.JsonLight
             };
 
             var stringCollectionTypeRef = EdmCoreModel.GetCollection(EdmCoreModel.Instance.GetInt32(false));
-            Action test = () => serializer.WriteCollectionValue(collectionValue, stringCollectionTypeRef, false, false, false);
+            Action test = () => serializer.WriteCollectionValue(collectionValue, stringCollectionTypeRef, null, false, false, false);
 
             test.ShouldThrow<ODataException>().WithMessage(Strings.ValidationUtils_NonNullableCollectionElementsMustNotBeNull);
         }

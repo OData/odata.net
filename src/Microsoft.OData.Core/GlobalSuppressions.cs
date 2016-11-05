@@ -27,6 +27,10 @@ using System.Diagnostics.CodeAnalysis;
 [module: SuppressMessage("Microsoft.Naming", "CA1703:ResourceStringsShouldBeSpelledCorrectly", MessageId = "setexpression", Scope = "resource", Target = "Microsoft.OData.Core.resources")]
 [module: SuppressMessage("Microsoft.Naming", "CA1703:ResourceStringsShouldBeSpelledCorrectly", MessageId = "charset", Scope = "resource", Target = "Microsoft.OData.Core.resources")]
 [module: SuppressMessage("Microsoft.Naming", "CA1703:ResourceStringsShouldBeSpelledCorrectly", MessageId = "Multi", Scope = "resource", Target = "Microsoft.OData.Core.resources")]
+[assembly: SuppressMessage("Microsoft.Naming", "CA1703:ResourceStringsShouldBeSpelledCorrectly", MessageId = "yyyy-mm-dd", Scope = "resource", Target = "Microsoft.OData.Core.resources")]
+[assembly: SuppressMessage("Microsoft.Naming", "CA1703:ResourceStringsShouldBeSpelledCorrectly", MessageId = "Thh", Scope = "resource", Target = "Microsoft.OData.Core.resources")]
+[assembly: SuppressMessage("Microsoft.Naming", "CA1703:ResourceStringsShouldBeSpelledCorrectly", MessageId = "zzzzzz", Scope = "resource", Target = "Microsoft.OData.Core.resources")]
+[assembly: SuppressMessage("Microsoft.Naming", "CA1703:ResourceStringsShouldBeSpelledCorrectly", MessageId = "ss", Scope = "resource", Target = "Microsoft.OData.Core.resources")]
 
 // Violations in the generated Resource file; can't prevent these from being generated.
 [module: SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Scope = "member", Target = "Microsoft.OData.Core.Error.#ArgumentNull(System.String)")]
@@ -105,4 +109,5 @@ using System.Diagnostics.CodeAnalysis;
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Scope = "member", Target = "Microsoft.OData.Core.ODataAsynchronousReader.#ParseResponseLine(System.String)")]
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Scope = "member", Target = "Microsoft.OData.Core.JsonLight.ODataJsonLightDeltaReader.#IsTopLevel")]
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Scope = "member", Target = "Microsoft.OData.Core.JsonLight.ODataJsonLightDeltaWriter.#IsTopLevel")]
-[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays", Scope = "member", Target = "Microsoft.OData.Core.UriParser.FunctionSignature.#ArgumentTypes")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays", Scope = "member", Target = "Microsoft.OData.Core.UriParser.FunctionSignatureWithReturnType.#ArgumentTypes")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes", Scope = "member", Target = "Microsoft.OData.Core.UriParser.Parsers.UriPrimitiveTypeParser.#TryUriStringToPrimitive(System.String,Microsoft.OData.Edm.IEdmTypeReference,System.Object&,Microsoft.OData.Core.UriParser.Parsers.Common.UriLiteralParsingException&)")]

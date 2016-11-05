@@ -167,7 +167,11 @@ namespace Microsoft.OData.Edm
         /// </summary>
         internal static readonly Regex TimeOfDayValidator = CreateCompiled(@"^(0?\d|1\d|2[0-3]):(0?\d|[1-5]\d)(:(0?\d|[1-5]\d)(\.\d{1,7})?)?$", RegexOptions.Singleline);
 
-
+        /// <summary>
+        /// This pattern eliminates whether a text is potentially DateTimeOffset but not others like GUID, digit .etc
+        /// </summary>
+        internal static readonly Regex PotentialDateTimeOffsetValidator = CreateCompiled(@"^(\d{2,4})-(\d{1,2})-(\d{1,2})(T|(\s+))(\d{1,2}):(\d{1,2})", RegexOptions.Singleline);
+        
 #if PORTABLELIB
         /// <summary>
         /// Replacement for Uri.UriSchemeHttp, which does not exist on.
@@ -450,7 +454,7 @@ namespace Microsoft.OData.Edm
         /// </summary>
         /// <param name="text">String to be validated.</param>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Justification = "Code is shared among multiple assemblies and this method should be available as a helper in case it is needed in new code.")]
-        internal static void ValidateTimeZoneInformationInDateTimeOffsetString(string text)
+        private static void ValidateTimeZoneInformationInDateTimeOffsetString(string text)
         {
 
             // The XML DateTime pattern is described here: http://www.w3.org/TR/xmlschema-2/#dateTime
@@ -470,7 +474,7 @@ namespace Microsoft.OData.Edm
             }
 
             // No timezone specified, for example: "2012-12-21T15:01:23.1234567"
-            throw new InvalidOperationException(Strings.PlatformHelper_DateTimeOffsetMustContainTimeZone(text));
+            throw new FormatException(Strings.PlatformHelper_DateTimeOffsetMustContainTimeZone(text));
         }
 
         /// <summary>
@@ -518,6 +522,11 @@ namespace Microsoft.OData.Edm
             if (typeCodeMap == null)
             {
                 Interlocked.CompareExchange(ref typeCodeMap, new TypeCodeMap(), null);
+            }
+
+            if (type.IsEnum())
+            {
+                type = Enum.GetUnderlyingType(type);
             }
 
             return typeCodeMap.GetTypeCode(type);

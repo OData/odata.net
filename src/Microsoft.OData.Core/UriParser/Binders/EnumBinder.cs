@@ -6,18 +6,15 @@
 
 namespace Microsoft.OData.Core.UriParser.Parsers
 {
-    using System;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
-    using Microsoft.OData.Core.Metadata;
     using Microsoft.OData.Core.UriParser.Metadata;
     using Microsoft.OData.Core.UriParser.Parsers.UriParsers;
     using Microsoft.OData.Core.UriParser.Semantic;
     using Microsoft.OData.Core.UriParser.Syntactic;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Edm.Library;
-    using Microsoft.OData.Edm.Values;
 
     /// <summary>
     /// Enum binder

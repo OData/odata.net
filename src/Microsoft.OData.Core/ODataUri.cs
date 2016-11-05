@@ -11,7 +11,7 @@ namespace Microsoft.OData.Core
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.Linq;
-    using Microsoft.OData.Core.UriParser.Extensions.Semantic;
+    using Microsoft.OData.Core.UriParser.Aggregation;
     using Microsoft.OData.Core.UriParser.Semantic;
     #endregion Namespaces
 

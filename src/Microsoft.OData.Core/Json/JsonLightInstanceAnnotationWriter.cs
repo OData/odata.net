@@ -43,6 +43,11 @@ namespace Microsoft.OData.Core
         private readonly JsonLightODataAnnotationWriter odataAnnotationWriter;
 
         /// <summary>
+        /// The writer validator used during writing.
+        /// </summary>
+        private readonly IWriterValidator writerValidator;
+
+        /// <summary>
         /// Constructs a <see cref="JsonLightInstanceAnnotationWriter"/> that can write a collection of <see cref="ODataInstanceAnnotation"/>.
         /// </summary>
         /// <param name="valueSerializer">The <see cref="IODataJsonLightValueSerializer"/> to use for writing values of instance annotations.
@@ -55,6 +60,8 @@ namespace Microsoft.OData.Core
             this.typeNameOracle = typeNameOracle;
             this.jsonWriter = this.valueSerializer.JsonWriter;
             this.odataAnnotationWriter = new JsonLightODataAnnotationWriter(this.jsonWriter, valueSerializer.Settings.ODataSimplified);
+            this.writerValidator =
+                ValidatorFactory.CreateWriterValidator(this.valueSerializer.Settings.EnableFullValidation);
         }
 
         /// <summary>
@@ -154,25 +161,27 @@ namespace Microsoft.OData.Core
                 return;
             }
 
-            IEdmTypeReference typeFromValue = TypeNameOracle.ResolveAndValidateTypeNameForValue(this.valueSerializer.Model, expectedType, value, treatLikeOpenProperty);
             ODataCollectionValue collectionValue = value as ODataCollectionValue;
             if (collectionValue != null)
             {
-                string collectionTypeNameToWrite = this.typeNameOracle.GetValueTypeNameForWriting(collectionValue, expectedType, typeFromValue, treatLikeOpenProperty);
+                IEdmTypeReference typeFromCollectionValue = (IEdmCollectionTypeReference)TypeNameOracle.ResolveAndValidateTypeForCollectionValue(this.valueSerializer.Model, expectedType, collectionValue, treatLikeOpenProperty, this.writerValidator);
+                string collectionTypeNameToWrite = this.typeNameOracle.GetValueTypeNameForWriting(collectionValue, expectedType, typeFromCollectionValue, treatLikeOpenProperty);
                 if (collectionTypeNameToWrite != null)
                 {
                     this.odataAnnotationWriter.WriteODataTypePropertyAnnotation(name, collectionTypeNameToWrite);
                 }
 
                 this.WriteInstanceAnnotationName(propertyName, name);
-                this.valueSerializer.WriteCollectionValue(collectionValue, expectedType, false /*isTopLevelProperty*/, false /*isInUri*/, treatLikeOpenProperty);
+                this.valueSerializer.WriteCollectionValue(collectionValue, expectedType, typeFromCollectionValue, false /*isTopLevelProperty*/, false /*isInUri*/, treatLikeOpenProperty);
                 return;
             }
 
             ODataPrimitiveValue primitiveValue = value as ODataPrimitiveValue;
             Debug.Assert(primitiveValue != null, "Did we add a new subclass of ODataValue?");
 
-            string primitiveTypeNameToWrite = this.typeNameOracle.GetValueTypeNameForWriting(primitiveValue, expectedType, typeFromValue, treatLikeOpenProperty);
+            IEdmTypeReference typeFromPrimitiveValue = TypeNameOracle.ResolveAndValidateTypeForPrimitiveValue(primitiveValue);
+
+            string primitiveTypeNameToWrite = this.typeNameOracle.GetValueTypeNameForWriting(primitiveValue, expectedType, typeFromPrimitiveValue, treatLikeOpenProperty);
             if (primitiveTypeNameToWrite != null)
             {
                 this.odataAnnotationWriter.WriteODataTypePropertyAnnotation(name, primitiveTypeNameToWrite);

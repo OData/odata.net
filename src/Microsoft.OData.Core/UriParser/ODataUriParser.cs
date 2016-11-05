@@ -9,7 +9,7 @@ namespace Microsoft.OData.Core.UriParser
     using System;
     using System.Linq;
     using System.Collections.Generic;
-    using Microsoft.OData.Core.UriParser.Extensions.Semantic;
+    using Microsoft.OData.Core.UriParser.Aggregation;
     using Microsoft.OData.Core.UriParser.Metadata;
     using Microsoft.OData.Core.UriParser.Parsers;
     using Microsoft.OData.Core.UriParser.Semantic;

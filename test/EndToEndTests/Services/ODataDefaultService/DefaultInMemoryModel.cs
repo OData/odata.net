@@ -90,7 +90,8 @@ namespace Microsoft.Test.OData.Services.ODataWCFService
             personType.AddProperty(new EdmStructuralProperty(personType, "Home", EdmCoreModel.Instance.GetSpatial(EdmPrimitiveTypeKind.GeographyPoint, true)));
             personType.AddProperty(new EdmStructuralProperty(personType, "Numbers", new EdmCollectionTypeReference(new EdmCollectionType(EdmCoreModel.Instance.GetString(false)))));
             personType.AddProperty(new EdmStructuralProperty(personType, "Emails", new EdmCollectionTypeReference(new EdmCollectionType(EdmCoreModel.Instance.GetString(true)))));
-
+            personType.AddProperty(new EdmStructuralProperty(personType, "Addresses", new EdmCollectionTypeReference(new EdmCollectionType(new EdmComplexTypeReference(addressType, true)))));
+           
             model.AddElement(personType);
             var personSet = new EdmEntitySet(defaultContainer, "People", personType);
             defaultContainer.AddElement(personSet);

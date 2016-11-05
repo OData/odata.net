@@ -11,15 +11,13 @@ namespace Microsoft.OData.Core.UriParser.Parsers
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.Diagnostics;
-    using Microsoft.OData.Core.UriParser.Extensions;
+    using Microsoft.OData.Core.UriParser.Parsers;
+    using Microsoft.OData.Core.UriParser.Parsers.Common;
+    using Microsoft.OData.Core.UriParser.Syntactic;
+    using Microsoft.OData.Core.UriParser.Aggregation;
     using Microsoft.OData.Core.UriParser.TreeNodeKinds;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Edm.Library;
-    using Microsoft.OData.Core.UriParser.Extensions.Syntactic;
-    using Microsoft.OData.Core.UriParser.Parsers.TypeParsers;
-    using Microsoft.OData.Core.UriParser.Parsers.TypeParsers.Common;
-    using Microsoft.OData.Core.UriParser.Syntactic;
-
     using ODataErrorStrings = Microsoft.OData.Core.Strings;
 
     #endregion Namespaces
@@ -126,10 +124,13 @@ namespace Microsoft.OData.Core.UriParser.Parsers
                 case ExpressionTokenKind.GeographyLiteral:
                 case ExpressionTokenKind.GeometryLiteral:
                 case ExpressionTokenKind.QuotedLiteral:
+                case ExpressionTokenKind.DurationLiteral:
+                case ExpressionTokenKind.TimeOfDayLiteral:
+                case ExpressionTokenKind.DateTimeOffsetLiteral:
                 case ExpressionTokenKind.CustomTypeLiteral:
                     IEdmTypeReference literalEdmTypeReference = lexer.CurrentToken.GetLiteralEdmTypeReference();
 
-                    // Why not using EdmTypeReference.FullName? (literalEdmTypeReference.FullName)                  
+                    // Why not using EdmTypeReference.FullName? (literalEdmTypeReference.FullName)
                     string edmConstantName = GetEdmConstantNames(literalEdmTypeReference);
                     return ParseTypedLiteral(lexer, literalEdmTypeReference, edmConstantName);
 
@@ -140,14 +141,6 @@ namespace Microsoft.OData.Core.UriParser.Parsers
                         lexer.NextToken();
                         return result;
                     }
-                case ExpressionTokenKind.DurationLiteral:
-                case ExpressionTokenKind.TimeOfDayLiteral:
-                case ExpressionTokenKind.DateTimeOffsetLiteral:
-                    IEdmTypeReference literalEdmPrimitiveTypeReference = lexer.CurrentToken.GetLiteralEdmTypeReference();
-                    EdmPrimitiveTypeKind literalEdmPrimitiveTypeKind = literalEdmPrimitiveTypeReference.PrimitiveKind();
-
-                    string edmPrimitiveConstantName = GetEdmConstantNames(literalEdmPrimitiveTypeReference);
-                    return ParseTypedLiteral(lexer, EdmCoreModel.Instance.GetTemporal(literalEdmPrimitiveTypeKind, false), edmPrimitiveConstantName);
 
                 case ExpressionTokenKind.NullLiteral:
                     return ParseNullLiteral(lexer);
@@ -160,7 +153,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         internal static string GetEdmConstantNames(IEdmTypeReference edmTypeReference)
         {
             Debug.Assert(edmTypeReference != null, "Cannot be null");
-            
+
             switch (edmTypeReference.PrimitiveKind())
             {
                 case EdmPrimitiveTypeKind.Boolean:
@@ -268,10 +261,10 @@ namespace Microsoft.OData.Core.UriParser.Parsers
             this.lexer.NextToken();
 
             // series of statements separates by commas
-            var statements = new List<AggregateStatementToken>();
+            var statements = new List<AggregateExpressionToken>();
             while (true)
             {
-                statements.Add(this.ParseAggregateStatement());
+                statements.Add(this.ParseAggregateExpression());
 
                 if (this.lexer.CurrentToken.Kind != ExpressionTokenKind.Comma)
                 {
@@ -292,7 +285,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
             return new AggregateToken(statements);
         }
 
-        internal AggregateStatementToken ParseAggregateStatement()
+        internal AggregateExpressionToken ParseAggregateExpression()
         {
             // expression
             var expression = this.ParseExpression();
@@ -303,7 +296,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
             // "as" alias
             var alias = this.ParseAggregateAs();
 
-            return new AggregateStatementToken(expression, verb, alias.Text);
+            return new AggregateExpressionToken(expression, verb, alias.Text);
         }
 
         // parses $apply groupby tranformation (.e.g. groupby(ProductID, CategoryId, aggregate(UnitPrice with sum as TotalUnitPrice))
@@ -488,11 +481,11 @@ namespace Microsoft.OData.Core.UriParser.Parsers
 
         /// <summary>Creates an exception for a parse error.</summary>
         /// <param name="message">Message text.</param>
-        /// <param name="parseException">Type Parsing exception</param>
+        /// <param name="parsingException">Type Parsing exception</param>
         /// <returns>A new Exception.</returns>
-        private static Exception ParseError(string message, UriTypeParsingException parseException)
+        private static Exception ParseError(string message, UriLiteralParsingException parsingException)
         {
-            return new ODataException(message, parseException);
+            return new ODataException(message, parsingException);
         }
 
         /// <summary>
@@ -519,14 +512,14 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         {
             Debug.Assert(lexer != null, "lexer != null");
 
-            UriTypeParsingException typeParsingExcpetion;
-            object targetValue = DefaultUriTypeParser.Instance.ParseUriStringToType(lexer.CurrentToken.Text, targetTypeReference, out typeParsingExcpetion);
+            UriLiteralParsingException typeParsingException;
+            object targetValue = DefaultUriLiteralParser.Instance.ParseUriStringToType(lexer.CurrentToken.Text, targetTypeReference, out typeParsingException);
 
             if (targetValue == null)
             {
                 string message;
 
-                if (typeParsingExcpetion == null)
+                if (typeParsingException == null)
                 {
                     message = ODataErrorStrings.UriQueryExpressionParser_UnrecognizedLiteral(
                         targetTypeName,
@@ -543,9 +536,9 @@ namespace Microsoft.OData.Core.UriParser.Parsers
                         lexer.CurrentToken.Text,
                         lexer.CurrentToken.Position,
                         lexer.ExpressionText,
-                        typeParsingExcpetion.ParsingFailureReason);
+                        typeParsingException.Message);
 
-                    throw ParseError(message, typeParsingExcpetion);
+                    throw ParseError(message, typeParsingException);
                 }
             }
 
@@ -982,7 +975,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
             return new InnerPathToken(propertyName, parent, null);
         }
 
-        private AggregationVerb ParseAggregateWith()
+        private AggregationMethod ParseAggregateWith()
         {
             if (!TokenIdentifierIs(ExpressionConstants.KeywordWith))
             {
@@ -991,24 +984,24 @@ namespace Microsoft.OData.Core.UriParser.Parsers
 
             lexer.NextToken();
 
-            AggregationVerb verb;
+            AggregationMethod verb;
 
             switch (lexer.CurrentToken.GetIdentifier())
             {
                 case ExpressionConstants.KeywordAverage:
-                    verb = AggregationVerb.Average;
+                    verb = AggregationMethod.Average;
                     break;
                 case ExpressionConstants.KeywordCountDistinct:
-                    verb = AggregationVerb.CountDistinct;
+                    verb = AggregationMethod.CountDistinct;
                     break;
                 case ExpressionConstants.KeywordMax:
-                    verb = AggregationVerb.Max;
+                    verb = AggregationMethod.Max;
                     break;
                 case ExpressionConstants.KeywordMin:
-                    verb = AggregationVerb.Min;
+                    verb = AggregationMethod.Min;
                     break;
                 case ExpressionConstants.KeywordSum:
-                    verb = AggregationVerb.Sum;
+                    verb = AggregationMethod.Sum;
                     break;
                 default:
                     throw ParseError(ODataErrorStrings.UriQueryExpressionParser_UnrecognizedWithVerb(lexer.CurrentToken.GetIdentifier(), this.lexer.CurrentToken.Position, this.lexer.ExpressionText));

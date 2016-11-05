@@ -49,11 +49,11 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="xunit.performance.core, Version=1.0.0.27, Culture=neutral, PublicKeyToken=67066efe964d3b03, processorArchitecture=MSIL">
-      <HintPath>$(NugetPack)\Microsoft.DotNet.xunit.performance.1.0.0-alpha-build0027\lib\net46\xunit.performance.core.dll</HintPath>
+      <HintPath>..\..\..\sln\packages\Microsoft.DotNet.xunit.performance.1.0.0-alpha-build0029\lib\net46\xunit.performance.core.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="xunit.performance.execution.desktop, Version=1.0.0.27, Culture=neutral, PublicKeyToken=67066efe964d3b03, processorArchitecture=MSIL">
-      <HintPath>$(NugetPack)\Microsoft.DotNet.xunit.performance.1.0.0-alpha-build0027\lib\net46\xunit.performance.execution.desktop.dll</HintPath>
+      <HintPath>..\..\..\sln\packages\Microsoft.DotNet.xunit.performance.1.0.0-alpha-build0029\lib\net46\xunit.performance.execution.desktop.dll</HintPath>
       <Private>True</Private>
     </Reference>
   </ItemGroup>
@@ -71,6 +71,7 @@
     <Compile Include="Scenario\BinaryDataScaleTests.cs" />
     <Compile Include="Scenario\DataSizeScaleTests.cs" />
     <Compile Include="Scenario\WriteReadFeedTestBase.cs" />
+    <Compile Include="UriParser\UriParserTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Common\Models\AdventureWorksPlus.csdl">
@@ -78,10 +79,10 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Common\Models\EntityWithDifferentPropertyType.csdl" />
     <EmbeddedResource Include="Common\Models\ExchangeAttachment.csdl" />
-    <EmbeddedResource Include="ODataReader\PayloadTemplate\BasicEntry.json" />
+    <EmbeddedResource Include="ODataReader\PayloadTemplate\EntryIncludeSpatial.json" />
+    <EmbeddedResource Include="ODataReader\PayloadTemplate\EntryIncludeSpatialWithExpansions.json" />
     <EmbeddedResource Include="ODataReader\PayloadTemplate\EntryWithExpansions.json" />
-    <EmbeddedResource Include="ODataReader\PayloadTemplate\EntryWithExpansionsExcludeSpatial.json" />
-    <EmbeddedResource Include="ODataReader\PayloadTemplate\EntryExcludeSpatialData.json" />
+    <EmbeddedResource Include="ODataReader\PayloadTemplate\Entry.json" />
   </ItemGroup>
   <Choose>
     <When Condition=" '$(TestType)'=='Private' ">
@@ -121,9 +122,6 @@
     <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="ExecuteTests.ps1">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
     <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

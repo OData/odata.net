@@ -174,7 +174,7 @@ namespace namespacePrefix.Namespace.Foo
         /// There are no comments for Foo7 in the schema.
         /// </summary>
         [global::Microsoft.OData.Client.OriginalNameAttribute("foo7")]
-        public  global::Microsoft.OData.Client.DataServiceQuerySingle<string> Foo7(global::namespacePrefix.Namespace.Foo.Color p1, global::namespacePrefix.Namespace.Foo.Complex p2)
+        public global::Microsoft.OData.Client.DataServiceQuerySingle<string> Foo7(global::namespacePrefix.Namespace.Foo.Color p1, global::namespacePrefix.Namespace.Foo.Complex p2)
         {
             global::System.Uri requestUri;
             Context.TryGetUri(this, out requestUri);

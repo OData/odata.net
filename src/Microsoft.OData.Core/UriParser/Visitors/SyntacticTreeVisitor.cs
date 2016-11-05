@@ -7,7 +7,7 @@
 namespace Microsoft.OData.Core.UriParser.Visitors
 {
     using System;
-    using Microsoft.OData.Core.UriParser.Extensions.Syntactic;
+    using Microsoft.OData.Core.UriParser.Aggregation;
     using Microsoft.OData.Core.UriParser.Syntactic;
 
     /// <summary>
@@ -117,11 +117,11 @@ namespace Microsoft.OData.Core.UriParser.Visitors
         }
 
         /// <summary>
-        /// Visits an AggregateStatementToken
+        /// Visits an AggregateExpressionToken
         /// </summary>
-        /// <param name="tokenIn">The AggregateStatementToken to visit</param>
-        /// <returns>A T bound to this AggregateStatementToken</returns>
-        public virtual T Visit(AggregateStatementToken tokenIn)
+        /// <param name="tokenIn">The AggregateExpressionToken to visit</param>
+        /// <returns>A T bound to this AggregateExpressionToken</returns>
+        public virtual T Visit(AggregateExpressionToken tokenIn)
         {
             throw new NotImplementedException();
         }

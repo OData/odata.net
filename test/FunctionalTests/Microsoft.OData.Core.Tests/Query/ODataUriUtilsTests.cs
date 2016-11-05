@@ -193,11 +193,7 @@ namespace Microsoft.OData.Core.Tests.Query
         {
             Date dateValue = (Date)ODataUriUtils.ConvertFromUriLiteral("1997-07-01", ODataVersion.V4, HardCodedTestModel.TestModel, EdmCoreModel.Instance.GetDate(false));
             dateValue.Should().Be(new Date(1997, 7, 1));
-        }
 
-        [Fact]
-        public void TestDateTimeOffsetConvertFromUriLiteral()
-        {
             DateTimeOffset dtoValue1 = (DateTimeOffset)ODataUriUtils.ConvertFromUriLiteral("1997-07-01", ODataVersion.V4, HardCodedTestModel.TestModel, EdmCoreModel.Instance.GetDateTimeOffset(false));
             dtoValue1.Should().Be(new DateTimeOffset(new DateTime(1997, 7, 1)));
 
@@ -205,6 +201,44 @@ namespace Microsoft.OData.Core.Tests.Query
             dtoValue2.Should().Be(new DateTimeOffset(new DateTime(1997, 7, 1)));
         }
 
+        [Fact]
+        public void TestDateTimeOffsetConvertFromUriLiteral()
+        {
+            // Date is not in right format
+            Action action = () => ODataUriUtils.ConvertFromUriLiteral("1997-07-1T12:12:12-11:00", ODataVersion.V4);
+            action.ShouldThrow<ODataException>().WithMessage(Strings.UriUtils_DateTimeOffsetInvalidFormat("1997-07-1T12:12:12-11:00"));
+
+            // Time is not in right format
+            Action action2 = () => ODataUriUtils.ConvertFromUriLiteral("1997-07-01T12:12:2-11:00", ODataVersion.V4);
+            action2.ShouldThrow<ODataException>().WithMessage(Strings.UriUtils_DateTimeOffsetInvalidFormat("1997-07-01T12:12:2-11:00"));
+
+            // Date and Time separator is incorrect
+            // Call from DataUriUtils, it will parse till blank space which is a correct Date
+            DateTimeOffset dtoValue1 = (DateTimeOffset)ODataUriUtils.ConvertFromUriLiteral("1997-07-01 12:12:02-11:00", ODataVersion.V4);
+            dtoValue1.Should().Be(new DateTimeOffset(new DateTime(1997, 7, 1)));
+
+            // Date is not with limit
+            Action action4 = () => ODataUriUtils.ConvertFromUriLiteral("1997-13-01T12:12:12-11:00", ODataVersion.V4);
+            action4.ShouldThrow<ODataException>().WithMessage(Strings.UriUtils_DateTimeOffsetInvalidFormat("1997-13-01T12:12:12-11:00"));
+
+            // Time is not within limit
+            Action action5 = () => ODataUriUtils.ConvertFromUriLiteral("1997-07-01T12:12:62-11:00", ODataVersion.V4);
+            action5.ShouldThrow<ODataException>().WithMessage(Strings.UriUtils_DateTimeOffsetInvalidFormat("1997-07-01T12:12:62-11:00"));
+
+            // Timezone separator is incorrect
+            // Call from DataUriUtils, it will parse till blank space, so error message string is without timezone information.
+            Action action6 = () => ODataUriUtils.ConvertFromUriLiteral("1997-07-01T12:12:02 11:00", ODataVersion.V4);
+            action6.ShouldThrow<ODataException>().WithMessage(Strings.UriUtils_DateTimeOffsetInvalidFormat("1997-07-01T12:12:02"));
+
+            // Timezone is not within limit
+            Action action7 = () => ODataUriUtils.ConvertFromUriLiteral("1997-07-01T12:12:02-15:00", ODataVersion.V4);
+            action7.ShouldThrow<ODataException>().WithMessage(Strings.UriUtils_DateTimeOffsetInvalidFormat("1997-07-01T12:12:02-15:00"));
+
+            // Timezone is not specified
+            Action action8 = () => ODataUriUtils.ConvertFromUriLiteral("1997-07-01T12:12:02", ODataVersion.V4);
+            action8.ShouldThrow<ODataException>().WithMessage(Strings.UriUtils_DateTimeOffsetInvalidFormat("1997-07-01T12:12:02"));
+        }
+        
         [Fact]
         public void TesTimeOfDayConvertFromUriLiteral()
         {

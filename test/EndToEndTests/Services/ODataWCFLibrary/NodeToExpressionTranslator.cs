@@ -9,6 +9,7 @@ namespace Microsoft.Test.OData.Services.ODataWCFService
     using System;
     using System.Collections.Generic;
     using System.IO;
+    using System.Diagnostics;
     using System.Linq;
     using System.Linq.Expressions;
     using System.Reflection;
@@ -36,6 +37,31 @@ namespace Microsoft.Test.OData.Services.ODataWCFService
 
         public IODataDataSource DataSource { get; set; }
 
+        /// <summary>
+        /// MethodInfo for Queryable.AsQueryable
+        /// </summary>
+        private static MethodInfo _queryableAsQueryableMethod = GenericMethodOf(_ => Queryable.AsQueryable<int>(default(IEnumerable<int>)));
+
+        /// <summary>
+        /// MethodInfo for Queryable.LongCount
+        /// </summary>
+        private static MethodInfo _countMethod = GenericMethodOf(_ => Queryable.LongCount<int>(default(IQueryable<int>)));
+
+        /// <summary>
+        /// Helper method to get the MethodInfo from the body of the given lambda expression.
+        /// </summary>
+        /// <typeparam name="TReturn">The function type paramenter.</typeparam>
+        /// <param name="lambda">Lambda expression.</param>
+        /// <returns>Returns the MethodInfo from the body of the given lambda expression.</returns>
+        private static MethodInfo GenericMethodOf<TReturn>(Expression<Func<object, TReturn>> expression)
+        {
+            Debug.Assert(expression.NodeType == ExpressionType.Lambda, "cannot call GenericMethodOf with non LambdaExpression");
+            Debug.Assert(expression != null, "LambdaExpression can not be null");
+            Debug.Assert(expression.Body.NodeType == ExpressionType.Call, "LambdaExpression body node type should be call");
+
+            return (expression.Body as MethodCallExpression).Method.GetGenericMethodDefinition();
+        }
+        
         /// <summary>
         /// Visit an AllNode
         /// </summary>
@@ -160,6 +186,51 @@ namespace Microsoft.Test.OData.Services.ODataWCFService
             this.CheckArgumentNull(nodeIn, "SearchTermNode");
 
             return new SearchHelper(nodeIn.Text, this.ImplicitVariableParameterExpression).Build();
+        }
+
+        /// <summary>
+        /// Visit a CountNode
+        /// </summary>
+        /// <param name="nodeIn">The node to visit</param>
+        /// <returns>The translated expression</returns>
+        public override Expression Visit(CountNode nodeIn)
+        {
+            this.CheckArgumentNull(nodeIn, "CountNode");
+
+            Type propType = null;
+            Expression propExpr = null;
+            
+            // Element of collection could be primitive type or enum or complex or entity type 
+            if (nodeIn.Source.ItemType.IsPrimitive() || nodeIn.Source.ItemType.IsEnum()
+                || (nodeIn.Source.ItemType.IsComplex() && nodeIn.Source.Kind.Equals(QueryNodeKind.CollectionPropertyAccess)))
+            {
+                // This does not handle complex collection cast case, if it is a complex collection cast, the Kind will be CollectionPropertyCast and node.Source is CollectionPropertyCastNode
+                var collection = (CollectionPropertyAccessNode)nodeIn.Source;
+                propExpr = Visit(collection);
+                var def = collection.Property.Type.AsCollection();
+                propType = EdmClrTypeUtils.GetInstanceType(def.ElementType());
+            }
+            else if (nodeIn.Source.ItemType.IsEntity() && nodeIn.Source.Kind.Equals(QueryNodeKind.CollectionNavigationNode))
+            {
+                // This does not handle entity collection cast case, if it is a entity collection cast, the Kind will be EntityCollectionCast and node.Source is EntityCollectionCastNode
+                var collection = (CollectionNavigationNode)nodeIn.Source;
+                propExpr = Visit(collection);
+                var def = collection.NavigationProperty.Type.AsCollection();
+                propType = EdmClrTypeUtils.GetInstanceType(def.ElementType());
+            }
+            else
+            {
+                // Should no such case as collection item is either primitive or enum or complex or entity.
+                throw new NotSupportedException(string.Format("Filter based on count of collection with item of type {0} is not supported yet.", nodeIn.Source.ItemType));
+            }
+
+            // Per standard, collection can not be null, but could be an empty collection, so null is not considered here.
+            var asQuerableMethod = _queryableAsQueryableMethod.MakeGenericMethod(propType);
+            Expression asQuerableExpression = Expression.Call(null, asQuerableMethod, propExpr);
+
+            var countMethod = _countMethod.MakeGenericMethod(propType);
+            var countExpression = Expression.Call(null, countMethod, asQuerableExpression);
+            return countExpression;
         }
 
         /// <summary>

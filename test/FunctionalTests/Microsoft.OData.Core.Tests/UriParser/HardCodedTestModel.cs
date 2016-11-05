@@ -103,6 +103,8 @@ namespace Microsoft.OData.Core.Tests.UriParser
             var FullyQualifiedNamespaceOpenAddress = new EdmComplexType("Fully.Qualified.Namespace", "OpenAddress", null, false, true);
             var FullyQualifiedNamespaceHomeAddress = new EdmComplexType("Fully.Qualified.Namespace", "HomeAddress", FullyQualifiedNamespaceAddress);
 
+            var FullyQualifiedNamespaceHeartbeat = new EdmComplexType("Fully.Qualified.Namespace", "Heartbeat");
+
             var FullyQualifiedNamespacePersonTypeReference = new EdmEntityTypeReference(FullyQualifiedNamespacePerson, true);
             var FullyQualifiedNamespaceEmployeeTypeReference = new EdmEntityTypeReference(FullyQualifiedNamespaceEmployee, true);
             var FullyQualifiedNamespaceManagerTypeReference = new EdmEntityTypeReference(FullyQualifiedNamespaceManager, true);
@@ -123,6 +125,7 @@ namespace Microsoft.OData.Core.Tests.UriParser
             var FullyQualifiedNamespaceLion_ID2 = FullyQualifiedNamespaceLion.AddStructuralProperty("ID2", EdmCoreModel.Instance.GetInt32(false));
             FullyQualifiedNamespaceLion.AddStructuralProperty("AngerLevel", EdmCoreModel.Instance.GetDouble(true));
             FullyQualifiedNamespaceLion.AddStructuralProperty("AttackDates", new EdmCollectionTypeReference(new EdmCollectionType(EdmCoreModel.Instance.GetDateTimeOffset(true))));
+            FullyQualifiedNamespaceLion.AddStructuralProperty("LionHeartbeat", new EdmComplexTypeReference(FullyQualifiedNamespaceHeartbeat, true));
             FullyQualifiedNamespaceLion.AddKeys(new IEdmStructuralProperty[] { FullyQualifiedNamespaceLion_ID1, FullyQualifiedNamespaceLion_ID2, });
             model.AddElement(FullyQualifiedNamespaceLion);
 
@@ -334,6 +337,9 @@ namespace Microsoft.OData.Core.Tests.UriParser
             model.AddElement(FullyQualifiedNamespaceHomeAddress);
 
             model.AddElement(FullyQualifiedNamespaceOpenAddress);
+
+            FullyQualifiedNamespaceHeartbeat.AddStructuralProperty("Frequency", EdmCoreModel.Instance.GetDouble(true));
+            model.AddElement(FullyQualifiedNamespaceHeartbeat);
 
             FullyQualifiedNamespacePet1.AddKeys(FullyQualifiedNamespacePet1.AddStructuralProperty("ID", EdmPrimitiveTypeKind.Int64, false));
             FullyQualifiedNamespacePet1.AddStructuralProperty("SingleID", EdmPrimitiveTypeKind.Single, false);

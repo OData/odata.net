@@ -8,8 +8,7 @@ using System;
 using System.Linq;
 using System.Collections.Generic;
 using FluentAssertions;
-using Microsoft.OData.Core.UriParser.Extensions;
-using Microsoft.OData.Core.UriParser.Extensions.Syntactic;
+using Microsoft.OData.Core.UriParser.Aggregation;
 using Microsoft.OData.Core.UriParser.Parsers;
 using Microsoft.OData.Core.UriParser.Syntactic;
 using Microsoft.OData.Core.UriParser.TreeNodeKinds;
@@ -96,7 +95,7 @@ namespace Microsoft.OData.Core.Tests.UriParser.Parsers
             parse.ShouldThrow<ODataException>().Where(e => !e.Message.Contains("with reason"));
         }   
         
-        private static void VerifyAggregateStatementToken(string expectedEndPathIdentifier, AggregationVerb expectedVerb, string expectedAlias, AggregateStatementToken actual)
+        private static void VerifyAggregateExpressionToken(string expectedEndPathIdentifier, AggregationMethod expectedVerb, string expectedAlias, AggregateExpressionToken actual)
         {
             actual.Expression.Should().NotBeNull();
 
@@ -104,8 +103,8 @@ namespace Microsoft.OData.Core.Tests.UriParser.Parsers
             expression.Should().NotBeNull();
             expression.Identifier.Should().Be(expectedEndPathIdentifier);
 
-            actual.WithVerb.Should().Be(expectedVerb);
-            actual.AsAlias.Should().Be(expectedAlias);
+            actual.Method.Should().Be(expectedVerb);
+            actual.Alias.Should().Be(expectedAlias);
         }
 
         [Fact]
@@ -133,7 +132,7 @@ namespace Microsoft.OData.Core.Tests.UriParser.Parsers
         }
 
         [Fact]
-        public void ParseApplyWithSingleAggregateStatementShouldReturnAggregateToken()
+        public void ParseApplyWithSingleAggregateExpressionShouldReturnAggregateToken()
         {
             var apply = "aggregate(UnitPrice with sum as TotalPrice)";
 
@@ -143,13 +142,13 @@ namespace Microsoft.OData.Core.Tests.UriParser.Parsers
 
             var aggregate = actual.First() as AggregateToken;
             aggregate.Should().NotBeNull();
-            aggregate.Statements.Should().HaveCount(1);
+            aggregate.Expressions.Should().HaveCount(1);
 
-            VerifyAggregateStatementToken("UnitPrice", AggregationVerb.Sum, "TotalPrice", aggregate.Statements.First());
+            VerifyAggregateExpressionToken("UnitPrice", AggregationMethod.Sum, "TotalPrice", aggregate.Expressions.First());
         }
 
         [Fact]
-        public void ParseApplyWithMultipleAggregateStatementsShouldReturnAggregateTokens()
+        public void ParseApplyWithMultipleAggregateExpressionsShouldReturnAggregateTokens()
         {
             var apply = "aggregate(CustomerId with sum as Total, SharePrice with countdistinct as SharePriceDistinctCount)";
 
@@ -159,12 +158,12 @@ namespace Microsoft.OData.Core.Tests.UriParser.Parsers
 
             var aggregate = actual.First() as AggregateToken;
             aggregate.Should().NotBeNull();
-            aggregate.Statements.Should().HaveCount(2);
+            aggregate.Expressions.Should().HaveCount(2);
 
-            var statements = aggregate.Statements.ToList();
+            var statements = aggregate.Expressions.ToList();
             
-            VerifyAggregateStatementToken("CustomerId", AggregationVerb.Sum, "Total", statements[0]);
-            VerifyAggregateStatementToken("SharePrice", AggregationVerb.CountDistinct, "SharePriceDistinctCount", statements[1]);        
+            VerifyAggregateExpressionToken("CustomerId", AggregationMethod.Sum, "Total", statements[0]);
+            VerifyAggregateExpressionToken("SharePrice", AggregationMethod.CountDistinct, "SharePriceDistinctCount", statements[1]);        
         }
 
         [Fact]
@@ -200,7 +199,7 @@ namespace Microsoft.OData.Core.Tests.UriParser.Parsers
         }
 
         [Fact]
-        public void ParseApplyWithAggregateStatementMissingWithShouldThrow()
+        public void ParseApplyWithAggregateExpressionMissingWithShouldThrow()
         {
             var apply = "aggregate(UnitPrice sum as TotalPrice)";
             Action parse = () => this.testSubject.ParseApply(apply);
@@ -208,15 +207,15 @@ namespace Microsoft.OData.Core.Tests.UriParser.Parsers
         }
 
         [Fact]
-        public void ParseApplyWithAggregateStatementWithInvalidAggregateExpressionWithShouldThrow()
+        public void ParseApplyWithAggregateExpressionWithInvalidAggregateExpressionWithShouldThrow()
         {
             var apply = "aggregate(UnitPrice mul with sum as TotalPrice)";
             Action parse = () => this.testSubject.ParseApply(apply);
-            parse.ShouldThrow<ODataException>().Where(e => e.Message == ErrorStrings.UriQueryExpressionParser_AsExpected(29, apply));
+            parse.ShouldThrow<ODataException>().Where(e => e.Message == ErrorStrings.UriQueryExpressionParser_WithExpected(29, apply));
         }
 
         [Fact]
-        public void ParseApplyWithAggregateStatementWithInvalidVerbShouldThrow()
+        public void ParseApplyWithAggregateExpressionWithInvalidVerbShouldThrow()
         {
             var apply = "aggregate(UnitPrice with invalid as TotalPrice)";
             Action parse = () => this.testSubject.ParseApply(apply);
@@ -224,7 +223,7 @@ namespace Microsoft.OData.Core.Tests.UriParser.Parsers
         }
 
         [Fact]
-        public void ParseApplyWithAggregateStatementMissingAsShouldThrow()
+        public void ParseApplyWithAggregateExpressionMissingAsShouldThrow()
         {
             var apply = "aggregate(UnitPrice with sum TotalPrice)";
             Action parse = () => this.testSubject.ParseApply(apply);
@@ -232,7 +231,7 @@ namespace Microsoft.OData.Core.Tests.UriParser.Parsers
         }
 
         [Fact]
-        public void ParseApplyWithAggregateStatementMissingAliasShouldThrow()
+        public void ParseApplyWithAggregateExpressionMissingAliasShouldThrow()
         {
             var apply = "aggregate(UnitPrice with sum as)";
             Action parse = () => this.testSubject.ParseApply(apply);
@@ -311,9 +310,9 @@ namespace Microsoft.OData.Core.Tests.UriParser.Parsers
             groupBy.Child.Should().NotBeNull();
 
             var aggregate = groupBy.Child as AggregateToken;                        
-            aggregate.Statements.Should().HaveCount(1);
+            aggregate.Expressions.Should().HaveCount(1);
 
-            VerifyAggregateStatementToken("SalesPrice", AggregationVerb.Average, "RetailPrice", aggregate.Statements.First());      
+            VerifyAggregateExpressionToken("SalesPrice", AggregationMethod.Average, "RetailPrice", aggregate.Expressions.First());      
         }
 
         [Fact]
@@ -455,8 +454,8 @@ namespace Microsoft.OData.Core.Tests.UriParser.Parsers
             groupBy.Child.Should().NotBeNull();
 
             var groupByAggregate = groupBy.Child as AggregateToken;
-            groupByAggregate.Statements.Should().HaveCount(1);
-            VerifyAggregateStatementToken("SalesPrice", AggregationVerb.Average, "RetailPrice", groupByAggregate.Statements.First());      
+            groupByAggregate.Expressions.Should().HaveCount(1);
+            VerifyAggregateExpressionToken("SalesPrice", AggregationMethod.Average, "RetailPrice", groupByAggregate.Expressions.First());      
 
             // verify filter
             var filter = transformations[1] as BinaryOperatorToken;
@@ -466,12 +465,12 @@ namespace Microsoft.OData.Core.Tests.UriParser.Parsers
             // verify aggregate         
             var aggregate = transformations[2] as AggregateToken;
             aggregate.Should().NotBeNull();
-            aggregate.Statements.Should().HaveCount(2);
+            aggregate.Expressions.Should().HaveCount(2);
 
-            var aggregateStatements = aggregate.Statements.ToList();            
+            var aggregateExpressions = aggregate.Expressions.ToList();            
 
-            VerifyAggregateStatementToken("CustomerId", AggregationVerb.Sum, "Total", aggregateStatements[0]);
-            VerifyAggregateStatementToken("SharePrice", AggregationVerb.CountDistinct, "SharePriceDistinctCount", aggregateStatements[1]);
+            VerifyAggregateExpressionToken("CustomerId", AggregationMethod.Sum, "Total", aggregateExpressions[0]);
+            VerifyAggregateExpressionToken("SharePrice", AggregationMethod.CountDistinct, "SharePriceDistinctCount", aggregateExpressions[1]);
         }
     }
 }

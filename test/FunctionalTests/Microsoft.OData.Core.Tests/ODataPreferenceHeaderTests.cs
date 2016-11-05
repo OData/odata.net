@@ -5,6 +5,7 @@
 //---------------------------------------------------------------------
 
 using System;
+using System.Globalization;
 using FluentAssertions;
 using Xunit;
 
@@ -28,6 +29,7 @@ namespace Microsoft.OData.Core.Tests
         private const string RespondAyncPreference = "respond-async";
         private const string RespondAsyncAndWaitPreference = "respond-async,wait=10";
         private const string WaitPreference = "wait=10";
+        private const string WaitPreferenceTokenName = "wait";
         private const string MaxPageSizePreference = "odata.maxpagesize";
         private const string TrackChangesPreference = "odata.track-changes";
         private const string ContinueOnErrorPreference = "odata.continue-on-error";
@@ -97,7 +99,7 @@ namespace Microsoft.OData.Core.Tests
         {
             this.requestMessage.SetHeader(PreferHeaderName, ExistingPreference);
             this.preferHeader.AnnotationFilter = AnnotationFilter;
-            this.requestMessage.GetHeader(PreferHeaderName).Split(new[] {','})
+            this.requestMessage.GetHeader(PreferHeaderName).Split(new[] { ',' })
                 .Should().Contain(Preference1)
                 .And.Contain(Preference2)
                 .And.Contain(Preference3)
@@ -248,7 +250,10 @@ namespace Microsoft.OData.Core.Tests
             this.preferHeader = new ODataPreferenceHeader(this.requestMessage);
             int? wait;
             Action test = () => wait = this.preferHeader.Wait;
-            test.ShouldThrow<FormatException>().WithMessage("Input string was not in a correct format.");
+            test.ShouldThrow<ODataException>().WithMessage(
+                string.Format(CultureInfo.InvariantCulture,
+                "Invalid value '{0}' for {1} preference header found. The {1} preference header requires an integer value.",
+                "abc", WaitPreferenceTokenName));
         }
 
         [Fact]
@@ -291,7 +296,10 @@ namespace Microsoft.OData.Core.Tests
             this.preferHeader = new ODataPreferenceHeader(this.requestMessage);
             int? maxPageSize;
             Action test = () => maxPageSize = this.preferHeader.MaxPageSize;
-            test.ShouldThrow<FormatException>().WithMessage("Input string was not in a correct format.");
+            test.ShouldThrow<ODataException>().WithMessage(
+                string.Format(CultureInfo.InvariantCulture,
+                "Invalid value '{0}' for {1} preference header found. The {1} preference header requires an integer value.",
+                "abc", MaxPageSizePreference));
         }
 
         [Fact]

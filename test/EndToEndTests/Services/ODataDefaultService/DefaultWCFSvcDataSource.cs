@@ -360,6 +360,32 @@ namespace Microsoft.Test.OData.Services.ODataWCFService
                             new CityInfoAnnotation(this.GetType().Namespace, new CityInformation(){CountryRegion = "Japan", IsCapital = true}, "City"),
                         },
                     },
+                    Addresses = new Collection<Address>
+                    {
+                        new HomeAddress()
+                        {
+                            City = "Tokyo",
+                            PostalCode = "98052",
+                            Street = "1 Microsoft Way",
+                            FamilyName = "Cats",
+                            Annotations = new List<InstanceAnnotationType>()
+                            {
+                                new AddressTypeAnnotation(this.GetType().Namespace, "Home"),
+                                new CityInfoAnnotation(this.GetType().Namespace, new CityInformation(){CountryRegion = "Japan", IsCapital = true}, "City"),
+                            },
+                        },
+                        new Address()
+                        {
+                            City = "Shanghai",
+                            PostalCode = "200000",
+                            Street = "999 Zixing Road",
+                            Annotations = new List<InstanceAnnotationType>()
+                            {
+                                new AddressTypeAnnotation(this.GetType().Namespace, "Company"),
+                                new CityInfoAnnotation(this.GetType().Namespace, new CityInformation(){CountryRegion = "China", IsCapital = true}, "City"),
+                            },
+                        },
+                    },
                     Annotations = new List<InstanceAnnotationType>(){new DisplayNameAnnotation(this.GetType().Namespace, "EmailAddresses", "Emails")}
                 },
                 new Customer()
@@ -391,6 +417,20 @@ namespace Microsoft.Test.OData.Services.ODataWCFService
                         Street = "1 Microsoft Way",
                         FamilyName = "Zips",
                         Annotations = new List<InstanceAnnotationType>(){new AddressTypeAnnotation(this.GetType().Namespace, "Working")},
+                    },
+                    Addresses = new Collection<Address>
+                    {
+                        new Address()
+                        {
+                            City = "Shanghai2",
+                            PostalCode = "200000",
+                            Street = "B01, 999 Zixing Road",
+                            Annotations = new List<InstanceAnnotationType>()
+                            {
+                                new AddressTypeAnnotation(this.GetType().Namespace, "Company"),
+                                new CityInfoAnnotation(this.GetType().Namespace, new CityInformation(){CountryRegion = "China", IsCapital = true}, "City"),
+                            },
+                        }
                     }
                 },
                 new Employee()
@@ -398,11 +438,25 @@ namespace Microsoft.Test.OData.Services.ODataWCFService
                     FirstName = "Elmo",
                     LastName = "Rogers",
                     Numbers = new Collection<string> { "444-444-4444", "555-555-5555", "666-666-6666" },
-                    Emails = new Collection<string> { "def@def.org", "lmn@lmn.com" },
+                    Emails = new Collection<string> { "def@def.org", "lmn@lmn.com","max@max.com","test@test.com" },
                     PersonID = 4,
                     DateHired = new DateTimeOffset(new DateTime(2008, 3, 27)),
                     Home = GeographyPoint.Create(-15.0, -61.8),
-                    Office = GeographyPoint.Create(-15.0, -62)
+                    Office = GeographyPoint.Create(-15.0, -62),
+                    Addresses = new Collection<Address>
+                    {
+                        new Address()
+                        {
+                            City = "Shanghai2",
+                            PostalCode = "200000",
+                            Street = "B01, 999 Zixing Road",
+                            Annotations = new List<InstanceAnnotationType>()
+                            {
+                                new AddressTypeAnnotation(this.GetType().Namespace, "Company"),
+                                new CityInfoAnnotation(this.GetType().Namespace, new CityInformation(){CountryRegion = "China", IsCapital = true}, "City"),
+                            },
+                        }
+                    }
                 },
                 new Person()
                 {
@@ -412,7 +466,33 @@ namespace Microsoft.Test.OData.Services.ODataWCFService
                     Numbers = new Collection<string> { "555-555-5555" },
                     Emails = new Collection<string> { "def@test.msn" },
                     PersonID = 5,
-                    Home = GeographyPoint.Create(-16.0, -261.8)
+                    Home = GeographyPoint.Create(-16.0, -261.8),
+                    Addresses = new Collection<Address>
+                    {
+                        new HomeAddress()
+                        {
+                            City = "Tokyo",
+                            PostalCode = "98052",
+                            Street = "2 Microsoft Way",
+                            FamilyName = "Cats",
+                            Annotations = new List<InstanceAnnotationType>()
+                            {
+                                new AddressTypeAnnotation(this.GetType().Namespace, "Home"),
+                                new CityInfoAnnotation(this.GetType().Namespace, new CityInformation(){CountryRegion = "Japan", IsCapital = true}, "City"),
+                            },
+                        },
+                        new Address()
+                        {
+                            City = "Shanghai",
+                            PostalCode = "200000",
+                            Street = "999 Zixing Road",
+                            Annotations = new List<InstanceAnnotationType>()
+                            {
+                                new AddressTypeAnnotation(this.GetType().Namespace, "Company"),
+                                new CityInfoAnnotation(this.GetType().Namespace, new CityInformation(){CountryRegion = "China", IsCapital = true}, "City"),
+                            },
+                        },
+                    }
                 }
             });
 
@@ -480,7 +560,7 @@ namespace Microsoft.Test.OData.Services.ODataWCFService
                         UnitPrice = 1250f,
                         Discontinued = false,
                         SkinColor = Color.Green,
-                        CoverColors = new Collection<Color>(){ Color.Green },
+                        CoverColors = new Collection<Color>(){ Color.Green, Color.Blue },
                         UserAccess = AccessLevel.Read,
                 }
             });
@@ -624,11 +704,22 @@ namespace Microsoft.Test.OData.Services.ODataWCFService
                     OrderShelfLifes = new Collection<TimeSpan>(){new TimeSpan(1)},
                     ShipDate = new Date(2014, 8, 12),
                     ShipTime = new TimeOfDay(6, 5, 30, 0),
+                },
+                new Order()
+                {
+                    OrderID = 9,
+                    CustomerForOrder = this.People.OfType<Customer>().ElementAt(1),
+                    LoggedInEmployee = this.People.OfType<Employee>().ElementAt(1),
+                    OrderDate = new DateTimeOffset(2011, 1, 4, 18, 3, 57, TimeSpan.FromHours(-8)),
+                    ShelfLife = new TimeSpan(1),
+                    OrderShelfLifes = new Collection<TimeSpan>(){new TimeSpan(1)},
+                    ShipDate = new Date(2014, 6, 12),
+                    ShipTime = new TimeOfDay(4, 5, 30, 0),
                 }
             });
 
             (this.People[0] as Customer).Orders.Add(this.Orders[1]);
-            (this.People[1] as Customer).Orders.Add(this.Orders[0]);
+            (this.People[1] as Customer).Orders.AddRange(new List<Order> { this.Orders[0], this.Orders[2] });
             (this.VipCustomer as Customer).Orders.AddRange(new List<Order> { this.Orders[0], this.Orders[1] });
 
             this.OrderDetails.AddRange(new List<OrderDetail>()

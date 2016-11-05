@@ -11,8 +11,7 @@ namespace Microsoft.OData.Core.UriParser
     using System.Collections.Generic;
     using System.Linq;
     using Microsoft.OData.Core.Metadata;
-    using Microsoft.OData.Core.UriParser.Extensions.Parsers;
-    using Microsoft.OData.Core.UriParser.Extensions.Semantic;
+    using Microsoft.OData.Core.UriParser.Aggregation;
     using Microsoft.OData.Core.UriParser.Metadata;
     using Microsoft.OData.Core.UriParser.Parsers;
     using Microsoft.OData.Core.UriParser.Semantic;

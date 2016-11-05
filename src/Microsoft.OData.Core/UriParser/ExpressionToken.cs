@@ -7,6 +7,7 @@
 namespace Microsoft.OData.Core.UriParser
 {
     #region Namespaces
+
     using System;
     using System.Diagnostics;
     using Microsoft.OData.Core.UriParser.Parsers.UriParsers;
@@ -110,15 +111,14 @@ namespace Microsoft.OData.Core.UriParser
 
         internal IEdmTypeReference GetLiteralEdmTypeReference()
         {
-            switch (this.Kind)
+            Debug.Assert(this.Kind != ExpressionTokenKind.CustomTypeLiteral || this.LiteralEdmType != null, "ExpressionTokenKind is marked as CustomTypeLiteral but not EdmType was set");
+
+            if (this.LiteralEdmType == null && this.Kind != ExpressionTokenKind.CustomTypeLiteral)
             {
-                case ExpressionTokenKind.CustomTypeLiteral:
-                    Debug.Assert(this.LiteralEdmType == null, "ExpressionTokenKind is marked as CustomTypeLiteral but not EdmType was set");
-                    return this.LiteralEdmType;
-                default:
-                    IEdmTypeReference edmTypeReference = UriParserHelper.GetLiteralEdmTypeReference(this.Kind);
-                    return edmTypeReference;
+                this.LiteralEdmType = UriParserHelper.GetLiteralEdmTypeReference(this.Kind);
             }
+
+            return this.LiteralEdmType;
         }
     }
 }

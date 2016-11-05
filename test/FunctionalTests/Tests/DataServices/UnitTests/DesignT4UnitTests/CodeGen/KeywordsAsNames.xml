@@ -2,14 +2,35 @@
 <edmx:Edmx Version="4.0" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
   <edmx:DataServices>
     <Schema Namespace="Namespace1" xmlns="http://docs.oasis-open.org/odata/ns/edm">
-      <EntityType Name="Event">
+      <EntityType Name="event">
         <Key>
-          <PropertyRef Name="String" />
+          <PropertyRef Name="string" />
         </Key>
-        <Property Name="String" Type="Edm.String" Nullable="false" />
+        <Property Name="string" Type="Edm.String" Nullable="false" />
+        <NavigationProperty Name="event" Type="Namespace1.event" Nullable="false" />
       </EntityType>
+      <Function Name="const" IsBound="true">
+        <Parameter Name="p0" Type="Namespace1.event" />
+        <ReturnType Type="Namespace1.event" />
+      </Function>
+      <Function Name="short">
+        <Parameter Name="p0" Type="Namespace1.event" />
+        <ReturnType Type="Namespace1.event" />
+      </Function>
+      <Action Name="as" IsBound="true">
+        <Parameter Name="p0" Type="Namespace1.event" />
+        <ReturnType Type="Namespace1.event" />
+      </Action>
+      <Action Name="enum">
+        <Parameter Name="p0" Type="Namespace1.event" />
+        <ReturnType Type="Namespace1.event" />
+      </Action>
       <EntityContainer Name="New">
-        <EntitySet Name="Double" EntityType="Namespace1.Event" />
+        <EntitySet Name="double" EntityType="Namespace1.event" >
+          <NavigationPropertyBinding Path="event" Target="double" />
+        </EntitySet>
+        <FunctionImport Name="short" Function="Namespace1.short"/>
+        <ActionImport Name="enum" Action="Namespace1.enum" />
       </EntityContainer>
     </Schema>
   </edmx:DataServices>

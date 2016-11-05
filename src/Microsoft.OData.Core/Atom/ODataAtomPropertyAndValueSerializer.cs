@@ -305,7 +305,7 @@ namespace Microsoft.OData.Core.Atom
 
             // resolve the type name to the type; if no type name is specified we will use the 
             // type inferred from metadata
-            IEdmComplexTypeReference complexTypeReference = TypeNameOracle.ResolveAndValidateTypeNameForValue(this.Model, metadataTypeReference, complexValue, isOpenPropertyType).AsComplexOrNull();
+            IEdmComplexTypeReference complexTypeReference = TypeNameOracle.ResolveAndValidateTypeForComplexValue(this.Model, metadataTypeReference, complexValue, isOpenPropertyType, this.WriterValidator).AsComplexOrNull();
 
             string collectionItemTypeName;
             typeName = this.AtomOutputContext.TypeNameOracle.GetValueTypeNameForWriting(complexValue, complexTypeReference, complexValue.GetAnnotation<SerializationTypeNameAnnotation>(), collectionValidator, out collectionItemTypeName);
@@ -374,7 +374,7 @@ namespace Microsoft.OData.Core.Atom
 
             // resolve the type name to the type; if no type name is specified we will use the 
             // type inferred from metadata
-            IEdmCollectionTypeReference collectionTypeReference = (IEdmCollectionTypeReference)TypeNameOracle.ResolveAndValidateTypeNameForValue(this.Model, propertyTypeReference, collectionValue, isOpenPropertyType);
+            IEdmCollectionTypeReference collectionTypeReference = (IEdmCollectionTypeReference)TypeNameOracle.ResolveAndValidateTypeForCollectionValue(this.Model, propertyTypeReference, collectionValue, isOpenPropertyType, this.WriterValidator);
 
             string collectionItemTypeName;
             string typeName = this.AtomOutputContext.TypeNameOracle.GetValueTypeNameForWriting(collectionValue, collectionTypeReference, collectionValue.GetAnnotation<SerializationTypeNameAnnotation>(), /*collectionValidator*/ null, out collectionItemTypeName);

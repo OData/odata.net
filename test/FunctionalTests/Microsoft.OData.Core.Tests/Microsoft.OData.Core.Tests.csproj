@@ -253,7 +253,7 @@
     <Compile Include="UriParser\Binders\MetadataBindingUtilsTests.cs" />
     <Compile Include="UriParser\ExpressionLexerTests.cs" />
     <Compile Include="UriParser\Extensions\Binders\ApplyBinderTests.cs" />
-    <Compile Include="UriParser\Extensions\SyntacticAst\AggregateStatementTokenTests.cs" />
+    <Compile Include="UriParser\Extensions\SyntacticAst\AggregateExpressionTokenTests.cs" />
     <Compile Include="UriParser\Extensions\SyntacticAst\AggregateTokenTests.cs" />
     <Compile Include="UriParser\Extensions\SyntacticAst\GroupByTokenTests.cs" />
     <Compile Include="UriParser\LiteralUtilsTests.cs" />
@@ -322,8 +322,8 @@
     <Compile Include="UriParser\Parsers\SegmentKeyHandlerTests.cs" />
     <Compile Include="UriParser\Parsers\SelectExpandParserTests.cs" />
     <Compile Include="UriParser\Parsers\SelectExpandTermParserTests.cs" />
-    <Compile Include="UriParser\Parsers\UriCustomTypeParserTests.cs" />
-    <Compile Include="UriParser\Parsers\UriCustomTypePrefixLiteralTests.cs" />
+    <Compile Include="UriParser\Parsers\CustomUriLiteralParserTests.cs" />
+    <Compile Include="UriParser\Parsers\CustomUriLiteralPrefixesTests.cs" />
     <Compile Include="UriParser\Parsers\UriPathParserTests.cs" />
     <Compile Include="UriParser\Parsers\UriPrimitiveTypeParserTests.cs" />
     <Compile Include="UriParser\Parsers\UriQueryExpressionParserTests.cs" />

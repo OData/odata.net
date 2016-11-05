@@ -423,6 +423,8 @@ namespace Microsoft.OData.Core.Tests.UriParser
             {
                 "geography'\0fo\0o\0'",
                 "geography'foo'",
+                // Quoted string with single quote in it.
+                "geography'f''o''o'",
                 "geography''",
                 "GeOgRapHY'SRID=5; POINT(1 2)'",
             };

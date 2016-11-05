@@ -103,6 +103,75 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.UriParser
         }
 
         [Fact]
+        public void SelectComplexProperty()
+        {
+            var selectItem = ParseSingleSelectForPerson("MyAddress");
+            selectItem.ShouldBePathSelectionItem(new ODataPath(new PropertySegment(HardCodedTestModel.GetPersonAddressProp())));
+        }
+
+        [Fact]  
+        public void SelectComplexPropertyWithCast()
+        {
+            var selectItem = ParseSingleSelectForPerson("MyAddress/Fully.Qualified.Namespace.HomeAddress");
+            ODataPathSegment[] segments =new ODataPathSegment[2];
+            segments[0] = new PropertySegment(HardCodedTestModel.GetPersonAddressProp());
+            segments[1] = new TypeSegment(HardCodedTestModel.GetHomeAddressType(), null);
+            selectItem.ShouldBePathSelectionItem(new ODataPath(segments));
+        }
+
+        [Fact]
+        public void SelectComplexPropertyWithWrongCast()
+        {
+            Action parse = () => ParseSingleSelectForPerson("MyAddress/Fully.Qualified.Namespace.OpenAddress");
+            parse.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.SelectBinder_MultiLevelPathInSelect);
+        }
+
+        [Fact]
+        public void SelectComplexCollectionProperty()
+        {
+            var selectItem = ParseSingleSelectForPerson("PreviousAddresses");
+            selectItem.ShouldBePathSelectionItem(new ODataPath(new PropertySegment(HardCodedTestModel.GetPersonPreviousAddressesProp())));
+        }
+
+        [Fact]
+        public void SelectComplexCollectionPropertySubProp()
+        {
+            Action parse = () => ParseSingleSelectForPerson("PreviousAddresses/Street");
+            parse.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.SelectBinder_MultiLevelPathInSelect);
+        }
+
+        [Fact]
+        public void SelectComplexCollectionPropertyWrongSubProp()
+        {
+            Action parse = () => ParseSingleSelectForPerson("PreviousAddresses/WrongProp");
+            parse.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.SelectBinder_MultiLevelPathInSelect);
+        }
+
+        [Fact]
+        public void SelectComplexCollectionPropertyWithCast()
+        {
+            var selectItem = ParseSingleSelectForPerson("PreviousAddresses/Fully.Qualified.Namespace.HomeAddress");
+            ODataPathSegment[] segments = new ODataPathSegment[2];
+            segments[0] = new PropertySegment(HardCodedTestModel.GetPersonPreviousAddressesProp());
+            segments[1] = new TypeSegment(HardCodedTestModel.GetHomeAddressType(), null);
+            selectItem.ShouldBePathSelectionItem(new ODataPath(segments));
+        }
+
+        [Fact]
+        public void SelectComplexCollectionPropertyWithCastProp()
+        {
+            Action parse = () => ParseSingleSelectForPerson("PreviousAddresses/Fully.Qualified.Namespace.HomeAddress/Street");
+            parse.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.SelectBinder_MultiLevelPathInSelect);
+        }
+
+        [Fact]
+        public void SelectComplexCollectionPropertyWithWrongCast()
+        {
+            Action parse = () => ParseSingleSelectForPerson("PreviousAddresses/Fully.Qualified.Namespace.OpenAddress");
+            parse.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.SelectBinder_MultiLevelPathInSelect);
+        }
+
+        [Fact]
         public void SelectActionMeansOperation()
         {
             ParseSingleSelectForDog("Fully.Qualified.Namespace.Walk", "Fully.Qualified.Namespace.Walk").ShouldBePathSelectionItem(new ODataPath(new OperationSegment(new List<IEdmOperation>() { HardCodedTestModel.GetDogWalkAction() }, null)));
