@@ -12,14 +12,14 @@
     <iconUrl>http://static.tumblr.com/hgchgxz/9ualgdf98/icon.png</iconUrl>
     <requireLicenseAcceptance>true</requireLicenseAcceptance>
     <summary>Contains classes and methods that facilitate geography and geometry spatial operations. Supports OData v4 only.</summary>
-    <description>Contains classes and methods that facilitate geography and geometry spatial operations. Support OData v4 only. Targets .NET Portable Lib with support for .NET 4.5, Win Phone 8.1, and Win 8. Localized for CHS, CHT, DEU, ESN, FRA, ITA, JPN, KOR and RUS.
+    <description>Contains classes and methods that facilitate geography and geometry spatial operations. Support OData v4 only. Targets .NET Platform Standard 1.1. Localized for CHS, CHT, DEU, ESN, FRA, ITA, JPN, KOR and RUS.
 OData .NET library is open source at http://github.com/OData/odata.net</description>
   </metadata>
   <files>
-    <file src=".NETPortable\v4.5\Microsoft.Spatial\Microsoft.Spatial.dll" target="lib\portable-net45+win8+wpa81" />
-    <file src=".NETPortable\v4.5\Microsoft.Spatial\Microsoft.Spatial.pdb" target="lib\portable-net45+win8+wpa81" />
-    <file src=".NETPortable\v4.5\Microsoft.Spatial\Microsoft.Spatial.xml" target="lib\portable-net45+win8+wpa81" />
-    <file src=".NETPortable\v4.5\Microsoft.Spatial\1041\Microsoft.Spatial.resources.dll" target="lib\portable-net45+win8+wpa81\ja" />
+    <file src=".NETPortable\v4.5\Microsoft.Spatial\Microsoft.Spatial.dll" target="lib\netstandard1.1" />
+    <file src=".NETPortable\v4.5\Microsoft.Spatial\Microsoft.Spatial.pdb" target="lib\netstandard1.1" />
+    <file src=".NETPortable\v4.5\Microsoft.Spatial\Microsoft.Spatial.xml" target="lib\netstandard1.1" />
+    <file src=".NETPortable\v4.5\Microsoft.Spatial\1041\Microsoft.Spatial.resources.dll" target="lib\netstandard1.1\ja" />
     <file src="$SourcesRoot$\src\Microsoft.Spatial\**\*.cs" target="src\Microsoft.Spatial" />
     <file src="$SourcesRoot$\src\PlatformHelper.cs" target="src\PlatformHelper.cs" />
     <file src="$SourcesRoot$\src\AssemblyInfo\AssemblyMetadataAttribute.cs" target="src\AssemblyMetadataAttribute.cs" />
