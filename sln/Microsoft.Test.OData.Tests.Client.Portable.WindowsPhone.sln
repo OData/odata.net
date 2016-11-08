@@ -14,7 +14,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.OData.Edm", "..\s
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.Test.OData.Services.TestServices.Portable", "..\test\EndToEndTests\Services\TestServices\Build.PortableLibrary\Microsoft.Test.OData.Services.TestServices.Portable.csproj", "{4382D649-1A86-48D0-9156-AC37C3D568C0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.Test.OData.Tests.Client.Portable.WindowsPhone", "..\test\EndToEndTests\Tests\Client\Build.PortableLibrary.Phone\Microsoft.Test.OData.Tests.Client.Portable.WindowsPhone.csproj", "{B2DA4083-71ED-464A-946E-CC9A30C1075A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.Test.OData.Tests.Client.Portable.Phone", "..\test\EndToEndTests\Tests\Client\Build.PortableLibrary.Phone\Microsoft.Test.OData.Tests.Client.Portable.Phone.csproj", "{B2DA4083-71ED-464A-946E-CC9A30C1075A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -198,9 +198,7 @@ Global
 		{4382D649-1A86-48D0-9156-AC37C3D568C0}.Release|x86.ActiveCfg = Release|x86
 		{4382D649-1A86-48D0-9156-AC37C3D568C0}.Release|x86.Build.0 = Release|x86
 		{B2DA4083-71ED-464A-946E-CC9A30C1075A}.Cover|Any CPU.ActiveCfg = Release|x86
-		{B2DA4083-71ED-464A-946E-CC9A30C1075A}.Cover|ARM.ActiveCfg = Release|ARM
-		{B2DA4083-71ED-464A-946E-CC9A30C1075A}.Cover|ARM.Build.0 = Release|ARM
-		{B2DA4083-71ED-464A-946E-CC9A30C1075A}.Cover|ARM.Deploy.0 = Release|ARM
+		{B2DA4083-71ED-464A-946E-CC9A30C1075A}.Cover|ARM.ActiveCfg = Cover|Any CPU
 		{B2DA4083-71ED-464A-946E-CC9A30C1075A}.Cover|Mixed Platforms.ActiveCfg = Release|x86
 		{B2DA4083-71ED-464A-946E-CC9A30C1075A}.Cover|Mixed Platforms.Build.0 = Release|x86
 		{B2DA4083-71ED-464A-946E-CC9A30C1075A}.Cover|Mixed Platforms.Deploy.0 = Release|x86
@@ -208,21 +206,17 @@ Global
 		{B2DA4083-71ED-464A-946E-CC9A30C1075A}.Cover|x86.ActiveCfg = Release|x86
 		{B2DA4083-71ED-464A-946E-CC9A30C1075A}.Cover|x86.Build.0 = Release|x86
 		{B2DA4083-71ED-464A-946E-CC9A30C1075A}.Cover|x86.Deploy.0 = Release|x86
-		{B2DA4083-71ED-464A-946E-CC9A30C1075A}.Debug|Any CPU.ActiveCfg = Debug|x86
-		{B2DA4083-71ED-464A-946E-CC9A30C1075A}.Debug|ARM.ActiveCfg = Debug|ARM
-		{B2DA4083-71ED-464A-946E-CC9A30C1075A}.Debug|ARM.Build.0 = Debug|ARM
-		{B2DA4083-71ED-464A-946E-CC9A30C1075A}.Debug|ARM.Deploy.0 = Debug|ARM
-		{B2DA4083-71ED-464A-946E-CC9A30C1075A}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
-		{B2DA4083-71ED-464A-946E-CC9A30C1075A}.Debug|Mixed Platforms.Build.0 = Debug|x86
-		{B2DA4083-71ED-464A-946E-CC9A30C1075A}.Debug|Mixed Platforms.Deploy.0 = Debug|x86
+		{B2DA4083-71ED-464A-946E-CC9A30C1075A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B2DA4083-71ED-464A-946E-CC9A30C1075A}.Debug|ARM.ActiveCfg = Debug|Any CPU
+		{B2DA4083-71ED-464A-946E-CC9A30C1075A}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{B2DA4083-71ED-464A-946E-CC9A30C1075A}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{B2DA4083-71ED-464A-946E-CC9A30C1075A}.Debug|Mixed Platforms.Deploy.0 = Debug|Any CPU
 		{B2DA4083-71ED-464A-946E-CC9A30C1075A}.Debug|x64.ActiveCfg = Debug|x86
 		{B2DA4083-71ED-464A-946E-CC9A30C1075A}.Debug|x86.ActiveCfg = Debug|x86
 		{B2DA4083-71ED-464A-946E-CC9A30C1075A}.Debug|x86.Build.0 = Debug|x86
 		{B2DA4083-71ED-464A-946E-CC9A30C1075A}.Debug|x86.Deploy.0 = Debug|x86
 		{B2DA4083-71ED-464A-946E-CC9A30C1075A}.Release|Any CPU.ActiveCfg = Release|x86
-		{B2DA4083-71ED-464A-946E-CC9A30C1075A}.Release|ARM.ActiveCfg = Release|ARM
-		{B2DA4083-71ED-464A-946E-CC9A30C1075A}.Release|ARM.Build.0 = Release|ARM
-		{B2DA4083-71ED-464A-946E-CC9A30C1075A}.Release|ARM.Deploy.0 = Release|ARM
+		{B2DA4083-71ED-464A-946E-CC9A30C1075A}.Release|ARM.ActiveCfg = Release|Any CPU
 		{B2DA4083-71ED-464A-946E-CC9A30C1075A}.Release|Mixed Platforms.ActiveCfg = Release|x86
 		{B2DA4083-71ED-464A-946E-CC9A30C1075A}.Release|Mixed Platforms.Build.0 = Release|x86
 		{B2DA4083-71ED-464A-946E-CC9A30C1075A}.Release|Mixed Platforms.Deploy.0 = Release|x86
