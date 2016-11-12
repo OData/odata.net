@@ -30,7 +30,7 @@ namespace Microsoft.OData.Core.UriParser
         internal static readonly ExpressionToken LessThan = new ExpressionToken { Text = ExpressionConstants.KeywordLessThan, Kind = ExpressionTokenKind.Identifier, Position = 0 };
 
         /// <summary>InternalKind of token.</summary>
-        internal ExpressionTokenKind Kind;
+        internal ExpressionTokenKind _kind;
 
         /// <summary>Token text.</summary>
         internal string Text;
@@ -40,6 +40,24 @@ namespace Microsoft.OData.Core.UriParser
 
         /// <summary>The edm type of the expression token literal.</summary>
         private IEdmTypeReference LiteralEdmType;
+
+        /// <summary>InternalKind of token.</summary>
+        internal ExpressionTokenKind Kind
+        {
+            get
+            {
+                return _kind;
+            }
+            set
+            {
+                if (value != ExpressionTokenKind.CustomTypeLiteral)
+                {
+                    this.LiteralEdmType = null;
+                }
+
+                this._kind = value;
+            }
+        }
 
         /// <summary>Checks whether this token is a valid token for a key value.</summary>
         internal bool IsKeyValueToken

@@ -80,16 +80,6 @@ namespace Microsoft.OData.Core.UriParser.Aggregation
             return null;
         }
 
-        internal List<string> GetLastAggregatedPropertyNames()
-        {
-            if (lastAggregateStatements != null)
-            {
-                return lastAggregateStatements.Select(statement => statement.AsAlias).ToList();
-            }
-
-            return null;
-        }
-
         private string CreatePropertiesUriSegment(
             IEnumerable<GroupByPropertyNode> groupByPropertyNodes, 
             IEnumerable<AggregateExpression> aggregateExpressions)

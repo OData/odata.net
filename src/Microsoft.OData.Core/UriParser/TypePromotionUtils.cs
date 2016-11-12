@@ -626,7 +626,6 @@ namespace Microsoft.OData.Core.UriParser
         private static bool CanPromoteNodeTo(SingleValueNode sourceNodeOrNull, IEdmTypeReference sourceType, IEdmTypeReference targetType)
         {
             Debug.Assert(targetType != null, "targetType != null");
-            Debug.Assert(targetType.IsODataPrimitiveTypeKind(), "Type promotion only supported for primitive types.");
 
             if (sourceType == null)
             {

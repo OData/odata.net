@@ -447,9 +447,11 @@ namespace Microsoft.OData.Core.Metadata
             ConstantNode constantNode = sourceNodeOrNull as ConstantNode;
             if (constantNode != null)
             {
-                IEdmPrimitiveType primitiveType = constantNode.TypeReference.AsPrimitiveOrNull().Definition as IEdmPrimitiveType;
-                if (primitiveType != null)
+                IEdmPrimitiveTypeReference primitiveTypeReference = constantNode.TypeReference.AsPrimitiveOrNull();
+                if (primitiveTypeReference != null)
                 {
+                    IEdmPrimitiveType primitiveType = primitiveTypeReference.Definition as IEdmPrimitiveType;
+
                     switch (primitiveType.PrimitiveKind)
                     {
                         case EdmPrimitiveTypeKind.DateTimeOffset:
@@ -483,9 +485,11 @@ namespace Microsoft.OData.Core.Metadata
             ConstantNode tmp = sourceNodeOrNull as ConstantNode;
             if (tmp != null)
             {
-                IEdmPrimitiveType primitiveType = tmp.TypeReference.AsPrimitiveOrNull().Definition as IEdmPrimitiveType;
-                if (primitiveType != null)
+                IEdmPrimitiveTypeReference primitiveTypeReference = tmp.TypeReference.AsPrimitiveOrNull();
+                if (primitiveTypeReference != null)
                 {
+                    IEdmPrimitiveType primitiveType = primitiveTypeReference.Definition as IEdmPrimitiveType;
+
                     switch (primitiveType.PrimitiveKind)
                     {
                         case EdmPrimitiveTypeKind.Int32:
