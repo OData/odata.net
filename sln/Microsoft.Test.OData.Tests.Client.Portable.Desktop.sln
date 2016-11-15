@@ -6,7 +6,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.Test.OData.Tests.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.Test.OData.Services.TestServices.Portable", "..\test\EndToEndTests\Services\TestServices\Build.PortableLibrary\Microsoft.Test.OData.Services.TestServices.Portable.csproj", "{4382D649-1A86-48D0-9156-AC37C3D568C0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.Test.OData.Framework.Portable", "..\test\EndToEndTests\Framework\Core\Build.PortableLibrary\Microsoft.Test.OData.Framework.Portable.csproj", "{134D2AD7-3C82-45C9-AC43-75F482081F8D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.Test.OData.Framework.Portable", "..\test\EndToEndTests\Framework\Core\Build.PortableLibrary\Microsoft.Test.OData.Framework.Portable.csproj", "{74295872-F930-497B-A70E-ED4FAAB395C4}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.OData.Client.Portable", "..\src\Microsoft.OData.Client\Build.Portable\Microsoft.OData.Client.Portable.csproj", "{AED0DC9D-76E5-4145-AF5E-9E2F856F4D18}"
 EndProject
@@ -65,24 +65,24 @@ Global
 		{4382D649-1A86-48D0-9156-AC37C3D568C0}.Release|x64.Build.0 = Release|x64
 		{4382D649-1A86-48D0-9156-AC37C3D568C0}.Release|x86.ActiveCfg = Release|x86
 		{4382D649-1A86-48D0-9156-AC37C3D568C0}.Release|x86.Build.0 = Release|x86
-		{134D2AD7-3C82-45C9-AC43-75F482081F8D}.Cover|Any CPU.ActiveCfg = Cover|Any CPU
-		{134D2AD7-3C82-45C9-AC43-75F482081F8D}.Cover|Any CPU.Build.0 = Cover|Any CPU
-		{134D2AD7-3C82-45C9-AC43-75F482081F8D}.Cover|x64.ActiveCfg = Cover|x64
-		{134D2AD7-3C82-45C9-AC43-75F482081F8D}.Cover|x64.Build.0 = Cover|x64
-		{134D2AD7-3C82-45C9-AC43-75F482081F8D}.Cover|x86.ActiveCfg = Cover|x86
-		{134D2AD7-3C82-45C9-AC43-75F482081F8D}.Cover|x86.Build.0 = Cover|x86
-		{134D2AD7-3C82-45C9-AC43-75F482081F8D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{134D2AD7-3C82-45C9-AC43-75F482081F8D}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{134D2AD7-3C82-45C9-AC43-75F482081F8D}.Debug|x64.ActiveCfg = Debug|x64
-		{134D2AD7-3C82-45C9-AC43-75F482081F8D}.Debug|x64.Build.0 = Debug|x64
-		{134D2AD7-3C82-45C9-AC43-75F482081F8D}.Debug|x86.ActiveCfg = Debug|x86
-		{134D2AD7-3C82-45C9-AC43-75F482081F8D}.Debug|x86.Build.0 = Debug|x86
-		{134D2AD7-3C82-45C9-AC43-75F482081F8D}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{134D2AD7-3C82-45C9-AC43-75F482081F8D}.Release|Any CPU.Build.0 = Release|Any CPU
-		{134D2AD7-3C82-45C9-AC43-75F482081F8D}.Release|x64.ActiveCfg = Release|x64
-		{134D2AD7-3C82-45C9-AC43-75F482081F8D}.Release|x64.Build.0 = Release|x64
-		{134D2AD7-3C82-45C9-AC43-75F482081F8D}.Release|x86.ActiveCfg = Release|x86
-		{134D2AD7-3C82-45C9-AC43-75F482081F8D}.Release|x86.Build.0 = Release|x86
+		{74295872-F930-497B-A70E-ED4FAAB395C4}.Cover|Any CPU.ActiveCfg = Cover|Any CPU
+		{74295872-F930-497B-A70E-ED4FAAB395C4}.Cover|Any CPU.Build.0 = Cover|Any CPU
+		{74295872-F930-497B-A70E-ED4FAAB395C4}.Cover|x64.ActiveCfg = Cover|x64
+		{74295872-F930-497B-A70E-ED4FAAB395C4}.Cover|x64.Build.0 = Cover|x64
+		{74295872-F930-497B-A70E-ED4FAAB395C4}.Cover|x86.ActiveCfg = Cover|x86
+		{74295872-F930-497B-A70E-ED4FAAB395C4}.Cover|x86.Build.0 = Cover|x86
+		{74295872-F930-497B-A70E-ED4FAAB395C4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{74295872-F930-497B-A70E-ED4FAAB395C4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{74295872-F930-497B-A70E-ED4FAAB395C4}.Debug|x64.ActiveCfg = Debug|x64
+		{74295872-F930-497B-A70E-ED4FAAB395C4}.Debug|x64.Build.0 = Debug|x64
+		{74295872-F930-497B-A70E-ED4FAAB395C4}.Debug|x86.ActiveCfg = Debug|x86
+		{74295872-F930-497B-A70E-ED4FAAB395C4}.Debug|x86.Build.0 = Debug|x86
+		{74295872-F930-497B-A70E-ED4FAAB395C4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{74295872-F930-497B-A70E-ED4FAAB395C4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{74295872-F930-497B-A70E-ED4FAAB395C4}.Release|x64.ActiveCfg = Release|x64
+		{74295872-F930-497B-A70E-ED4FAAB395C4}.Release|x64.Build.0 = Release|x64
+		{74295872-F930-497B-A70E-ED4FAAB395C4}.Release|x86.ActiveCfg = Release|x86
+		{74295872-F930-497B-A70E-ED4FAAB395C4}.Release|x86.Build.0 = Release|x86
 		{AED0DC9D-76E5-4145-AF5E-9E2F856F4D18}.Cover|Any CPU.ActiveCfg = Cover|Any CPU
 		{AED0DC9D-76E5-4145-AF5E-9E2F856F4D18}.Cover|Any CPU.Build.0 = Cover|Any CPU
 		{AED0DC9D-76E5-4145-AF5E-9E2F856F4D18}.Cover|x64.ActiveCfg = Cover|x64

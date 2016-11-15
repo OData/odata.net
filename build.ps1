@@ -52,9 +52,10 @@ $SN = $PROGRAMFILESX86 + "\Microsoft SDKs\Windows\v8.1A\bin\NETFX 4.5.1 Tools\sn
 $SNx64 = $PROGRAMFILESX86 + "\Microsoft SDKs\Windows\v8.1A\bin\NETFX 4.5.1 Tools\x64\sn.exe"
 
 # Fall back to Visual Studio 2015.
+$VS14MSBUILD=$PROGRAMFILESX86 + "\MSBuild\14.0\Bin\MSBuild.exe"
 if (!(Test-Path $MSBUILD) -or !(Test-Path $VSTEST) -or !(Test-Path $FXCOPDIR))
 {
-    $MSBUILD = $PROGRAMFILESX86 + "\MSBuild\14.0\Bin\MSBuild.exe"
+    $MSBUILD = $VS14MSBUILD
     $VSTEST = $PROGRAMFILESX86 + "\Microsoft Visual Studio 14.0\Common7\IDE\CommonExtensions\Microsoft\TestWindow\vstest.console.exe"
     $FXCOPDIR = $PROGRAMFILESX86 + "\Microsoft Visual Studio 14.0\Team Tools\Static Analysis Tools\FxCop"
 }
@@ -256,11 +257,16 @@ Function CleanBeforeScorch
 }
 
 # Incremental build and rebuild
-Function RunBuild ($sln)
+Function RunBuild ($sln, $vsToolVersion)
 {
     Write-Host "*** Building $sln ***"
     $slnpath = $ENLISTMENT_ROOT + "\sln\$sln"
     $Conf = "/p:Configuration=" + "$Configuration"
+
+    if($vsToolVersion -eq '14.0')
+    {
+        $MSBUILD=$VS14MSBUILD
+    }
 
     & $MSBUILD $slnpath /t:$Build /m /nr:false /fl "/p:Platform=Any CPU" $Conf /p:Desktop=true `
         /flp:LogFile=$LOGDIR/msbuild.log /flp:Verbosity=Normal 1>$null 2>$null
@@ -454,7 +460,10 @@ Function BuildProcess
     RunBuild ('Microsoft.Test.OData.Tests.Client.Portable.WindowsStore.sln')
     RunBuild ('Microsoft.OData.CodeGen.sln')
     RunBuild ('Microsoft.OData.E2E.sln')
-    RunBuild ('Microsoft.OData.Performance.sln')
+    if(Test-Path $VS14MSBUILD)
+    {
+        RunBuild -sln 'Microsoft.Test.OData.DotNetCore.sln' -vsToolVersion '14.0'
+    }
     Write-Host "Build Done" -ForegroundColor $Success
     $script:BUILD_END_TIME = Get-Date
 }
