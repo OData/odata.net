@@ -57,8 +57,8 @@ namespace Microsoft.OData.Client.Materialization
             }
 
             Type underlyingExpectedType = Nullable.GetUnderlyingType(this.ExpectedType) ?? this.ExpectedType;
-            bool isClrCollection = WebUtil.IsCLRTypeCollection(underlyingExpectedType, this.MaterializerContext.Model);
-            Debug.Assert(isClrCollection || (SingleResult.HasValue && !SingleResult.Value), "expected type must be collection or single result must be false");
+            Debug.Assert(WebUtil.IsCLRTypeCollection(underlyingExpectedType, this.MaterializerContext.Model)
+                || (SingleResult.HasValue && !SingleResult.Value), "expected type must be collection or single result must be false");
 
             // We are here for two cases:
             // (1) Something like Execute<ICollection<T>>, in which case the underlyingExpectedType is ICollection<T>

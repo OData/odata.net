@@ -986,8 +986,7 @@ namespace Microsoft.OData.JsonLight
                 {
                     case WriterState.DeltaResource:
                         {
-                            ODataResource resource = (ODataResource)currentScope.Item;
-                            Debug.Assert(resource != null, "resource == null");
+                            Debug.Assert((ODataResource)currentScope.Item != null, "resource == null");
 
                             this.EndDeltaResource();
                         }
@@ -995,8 +994,7 @@ namespace Microsoft.OData.JsonLight
                         break;
                     case WriterState.DeltaDeletedEntry:
                         {
-                            ODataDeltaDeletedEntry resource = (ODataDeltaDeletedEntry)currentScope.Item;
-                            Debug.Assert(resource != null, "resource == null");
+                            Debug.Assert((ODataDeltaDeletedEntry)currentScope.Item != null, "resource == null");
 
                             this.EndDeltaResource();
                         }
