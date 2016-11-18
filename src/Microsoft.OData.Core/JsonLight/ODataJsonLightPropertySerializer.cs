@@ -337,11 +337,11 @@ namespace Microsoft.OData.JsonLight
                 // TODO: Enable updating top-level properties to null #645
                 throw new ODataException("A null top-level property is not allowed to be serialized.");
             }
-            else
-            {
-                this.JsonWriter.WriteName(property.Name);
-                this.JsonLightValueSerializer.WriteNullValue();
-            }
+            //else
+            //{
+            //    this.JsonWriter.WriteName(property.Name);
+            //    this.JsonLightValueSerializer.WriteNullValue();
+            //}
         }
 
         /// <summary>

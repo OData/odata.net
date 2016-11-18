@@ -19,8 +19,8 @@
 
   <PropertyGroup>
     <RelativeOutputPath>Test\$(RelativeOutputPath)</RelativeOutputPath>
-    <EnableStyleCop Condition="'$(EnableStyleCop)'==''">false</EnableStyleCop>
-    <RunCodeAnalysis Condition=" '$(RunCodeAnalysis)' == '' ">false</RunCodeAnalysis>
+    <EnableStyleCop>false</EnableStyleCop>
+    <RunCodeAnalysis>false</RunCodeAnalysis>
   </PropertyGroup>
 
   <Import Project="..\Build.props" />

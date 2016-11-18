@@ -20,7 +20,7 @@
     <SigningScenario Condition="'$(SigningScenario)' == '' and '$(TargetFrameworkIdentifier)' != 'Silverlight'">Delay</SigningScenario>
     <SigningType Condition="'$(SigningType)' == ''">Product</SigningType>
     <ShouldGenerateAssemblyAttributeFile Condition="'$(ShouldGenerateAssemblyAttributeFile)' == '' and '$(MSBuildProjectExtension)' != '.nuproj' and '$(MSBuildProjectExtension)' != '.wixproj'">true</ShouldGenerateAssemblyAttributeFile>
-    <RunCodeAnalysis Condition="'$(RunCodeAnalysis)' == '' and '$(TargetFrameworkVersion)' != 'v3.5'">true</RunCodeAnalysis>
+    <RunCodeAnalysis>false</RunCodeAnalysis>
   </PropertyGroup>
 
   <ItemGroup>
