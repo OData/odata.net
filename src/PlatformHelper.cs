@@ -450,6 +450,17 @@ namespace Microsoft.OData.Edm
         }
 
         /// <summary>
+        /// Converts a string to a DateTimeOffset.
+        /// </summary>
+        /// <param name="text">String to be converted.</param>
+        /// <returns>See documentation for method being accessed in the body of the method.</returns>
+        internal static DateTime ConvertStringToDateTime(string text)
+        {
+            var offset = ConvertStringToDateTimeOffset(text);
+            return offset.DateTime;
+        }
+
+        /// <summary>
         /// Validates that the DateTimeOffset string contains the time zone information.
         /// </summary>
         /// <param name="text">String to be validated.</param>

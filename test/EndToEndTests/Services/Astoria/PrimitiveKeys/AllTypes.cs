@@ -254,4 +254,21 @@ namespace Microsoft.Test.OData.Services.PrimitiveKeysService
             yield return new EdmDateTimeOffset { Id = CachedUtcNow };
         }
     }
+
+    [Key("Id")]
+    public class EdmDateTime
+    {
+        private static readonly DateTime CachedNow = DateTime.Now;
+        private static readonly DateTime CachedUtcNow = DateTime.UtcNow.AddDays(1);
+
+        public DateTime Id { get; set; }
+
+        public static IEnumerable<EdmDateTime> GetData()
+        {
+            yield return new EdmDateTime { Id = DateTime.MinValue };
+            yield return new EdmDateTime { Id = DateTime.MaxValue };
+            yield return new EdmDateTime { Id = CachedNow };
+            yield return new EdmDateTime { Id = CachedUtcNow };
+        }
+    }
 }
