@@ -4745,6 +4745,7 @@ public sealed class Microsoft.OData.Core.ODataMessageReaderSettings : Microsoft.
 	Microsoft.OData.Core.ODataMediaTypeResolver MediaTypeResolver  { public get; public set; }
 	bool ODataSimplified  { public get; public set; }
 	System.Uri PayloadBaseUri  { public get; public set; }
+	System.Uri RequestUri  { public get; public set; }
 	Microsoft.OData.Core.ODataUndeclaredPropertyBehaviorKinds UndeclaredPropertyBehaviorKinds  { public get; public set; }
 	System.Nullable`1[[System.Boolean]] UseKeyAsSegment  { public get; public set; }
 

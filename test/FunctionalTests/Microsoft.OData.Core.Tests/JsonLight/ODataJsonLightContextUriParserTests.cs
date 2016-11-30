@@ -47,9 +47,22 @@ namespace Microsoft.OData.Core.Tests.JsonLight
             parseResult.IsNullProperty.Should().BeTrue();
         }
 
-        // TODO: Support relative context uri and resolving other relative uris
         [Fact]
-        public void ParseRelativeContextUrlShouldThrowException()
+        public void ParseRelativeContextUrlWithBaseUrl()
+        {
+            var model = new EdmModel();
+            var entityType = new EdmEntityType("Sample", "R");
+            model.AddElement(entityType);
+            string relativeUrl1 = "$metadata#Sample.R";
+            string relativeUrl2 = "/SampleSerivce/$metadata#Sample.R";
+            var parseResult = ODataJsonLightContextUriParser.Parse(model, relativeUrl1, ODataPayloadKind.Unsupported, ODataReaderBehavior.DefaultBehavior, true, new Uri("http://service/SampleSerivce/EntitySet"));
+            parseResult.ContextUri.OriginalString.Should().Be("http://service/SampleSerivce/$metadata#Sample.R");
+            parseResult = ODataJsonLightContextUriParser.Parse(model, relativeUrl2, ODataPayloadKind.Unsupported, ODataReaderBehavior.DefaultBehavior, true, new Uri("http://service/SampleSerivce/EntitySet"));
+            parseResult.ContextUri.OriginalString.Should().Be("http://service/SampleSerivce/$metadata#Sample.R");
+        }
+
+        [Fact]
+        public void ParseRelativeContextUrlWithoutBaseUriShouldThrowException()
         {
             string relativeUrl = "$metadata#R";
             Action parseContextUri = () => ODataJsonLightContextUriParser.Parse(new EdmModel(), relativeUrl, ODataPayloadKind.Unsupported, ODataReaderBehavior.DefaultBehavior, true);

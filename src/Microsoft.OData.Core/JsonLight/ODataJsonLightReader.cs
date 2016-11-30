@@ -1055,7 +1055,8 @@ namespace Microsoft.OData.Core.JsonLight
                             contextUriStr,
                             ODataPayloadKind.Entry,
                             this.jsonLightEntryAndFeedDeserializer.MessageReaderSettings.ReaderBehavior,
-                            this.jsonLightInputContext.ReadingResponse);
+                            this.jsonLightInputContext.ReadingResponse,
+                            null);
                     if (this.jsonLightInputContext.ReadingResponse && parseResult != null)
                     {
                         ReaderValidationUtils.ValidateFeedOrEntryContextUri(parseResult, this.CurrentScope, false);
@@ -1234,7 +1235,9 @@ namespace Microsoft.OData.Core.JsonLight
                         UriUtils.UriToString(navigationLinkInfo.NavigationLink.ContextUrl),
                         navigationLinkInfo.NavigationLink.IsCollection.GetValueOrDefault() ? ODataPayloadKind.Feed : ODataPayloadKind.Entry,
                         this.jsonLightEntryAndFeedDeserializer.MessageReaderSettings.ReaderBehavior,
-                        this.jsonLightEntryAndFeedDeserializer.JsonLightInputContext.ReadingResponse).Path;
+                        this.jsonLightEntryAndFeedDeserializer.JsonLightInputContext.ReadingResponse,
+                        null).Path;
+
                 odataUri = new ODataUri()
                 {
                     Path = odataPath

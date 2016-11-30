@@ -65,6 +65,7 @@ namespace Microsoft.OData.Core
             this.UseKeyAsSegment = other.UseKeyAsSegment;
             this.mediaTypeResolver = other.mediaTypeResolver;
             this.ODataSimplified = other.ODataSimplified;
+            this.RequestUri = other.RequestUri;
         }
 
         /// <summary>
@@ -107,6 +108,11 @@ namespace Microsoft.OData.Core
                 this.payloadBaseUri = UriUtils.EnsureTaillingSlash(value);
             }
         }
+
+        /// <summary>
+        /// Gets or sets the Url for the current request.
+        /// </summary>
+        public Uri RequestUri { get; set; }
 
         /// <summary>Gets or sets a value that indicates whether not to convert all primitive values to the type specified in the model or provided as an expected type. Note that values will still be converted to the type specified in the payload itself.</summary>
         /// <returns>true if primitive values and report values are not converted; false if all primitive values are converted to the type specified in the model or provided as an expected type. The default value is false.</returns>

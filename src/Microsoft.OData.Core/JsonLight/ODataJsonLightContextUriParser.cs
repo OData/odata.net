@@ -65,13 +65,15 @@ namespace Microsoft.OData.Core.JsonLight
         /// <param name="payloadKind">The payload kind we expect the context URI to conform to.</param>
         /// <param name="readerBehavior">Reader behavior if the caller is a reader, null if no reader behavior is available.</param>
         /// <param name="needParseFragment">Whether the fragment after $metadata should be parsed, if set to false, only MetadataDocumentUri is parsed.</param>
+        /// <param name="baseUri">Base Uri used for resolving the context url. It should be a request url when resolving a top-level relative context Uri.</param>
         /// <returns>The result from parsing the context URI.</returns>
         internal static ODataJsonLightContextUriParseResult Parse(
             IEdmModel model,
             string contextUriFromPayload,
             ODataPayloadKind payloadKind,
             ODataReaderBehavior readerBehavior,
-            bool needParseFragment)
+            bool needParseFragment,
+            Uri baseUri = null)
         {
             if (contextUriFromPayload == null)
             {
@@ -79,9 +81,8 @@ namespace Microsoft.OData.Core.JsonLight
             }
 
             // Create an absolute URI from the payload string
-            // TODO: Support relative context uri and resolving other relative uris
             Uri contextUri;
-            if (!Uri.TryCreate(contextUriFromPayload, UriKind.Absolute, out contextUri))
+            if (!Uri.TryCreate(baseUri, contextUriFromPayload, out contextUri))
             {
                 throw new ODataException(ODataErrorStrings.ODataJsonLightContextUriParser_TopLevelContextUrlShouldBeAbsolute(contextUriFromPayload));
             }

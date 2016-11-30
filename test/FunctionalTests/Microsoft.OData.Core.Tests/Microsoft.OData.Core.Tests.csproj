@@ -200,6 +200,7 @@
     <Compile Include="IntegrationTests\Reader\JsonLight\InstanceAnnotationsReaderIntegrationTests.cs" />
     <Compile Include="IntegrationTests\Reader\JsonLight\PropertyAndValueJsonLightReaderIntegrationTests.cs" />
     <Compile Include="ScenarioTests\Reader\JsonLight\ODataJsonLightSingletonReaderTests.cs" />
+    <Compile Include="ScenarioTests\Reader\JsonLight\RelativeUriReaderTests.cs" />
     <Compile Include="ScenarioTests\Reader\JsonLight\TimeOfDayReaderJsonLightTests.cs" />
     <Compile Include="ScenarioTests\Roundtrip\Atom\NonPrimitiveTypeRoundtripAtomTests.cs" />
     <Compile Include="ScenarioTests\Roundtrip\Atom\PrimitiveValuesRoundtripAtomTests.cs" />
