@@ -253,7 +253,8 @@ namespace Microsoft.OData.Core.JsonLight
                     contextUriAnnotationValue,
                     payloadKind,
                     this.MessageReaderSettings.ReaderBehavior,
-                    this.JsonLightInputContext.ReadingResponse);
+                    this.JsonLightInputContext.ReadingResponse,
+                    this.MessageReaderSettings.RequestUri);
             }
 
             this.contextUriParseResult = parseResult;
@@ -304,7 +305,8 @@ namespace Microsoft.OData.Core.JsonLight
                             contextUriAnnotationValue,
                             payloadKind,
                             this.MessageReaderSettings.ReaderBehavior,
-                            this.JsonLightInputContext.ReadingResponse);
+                            this.JsonLightInputContext.ReadingResponse,
+                            this.MessageReaderSettings.RequestUri);
                     }
 
 #if DEBUG
