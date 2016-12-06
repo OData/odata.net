@@ -294,7 +294,7 @@ namespace EdmLibTests.FunctionalUtilities
             var badTypeRef = new EdmCollectionTypeReference(badType);
             var valueTerm = new EdmTerm("NS", "Note", badTypeRef);
             model.AddElement(valueTerm);
-            
+
             return model;
         }
 
@@ -307,7 +307,7 @@ namespace EdmLibTests.FunctionalUtilities
 
             var badSet = new CustomEntitySet(entityContainer, "Set", null);
             entityContainer.AddElement(badSet);
-            
+
             return model;
         }
 
@@ -345,7 +345,7 @@ namespace EdmLibTests.FunctionalUtilities
 
             var entityContainer = new EdmEntityContainer("NS", "Container");
             model.AddElement(entityContainer);
-            
+
             var badSet = new CustomEntitySet(entityContainer, "BadSet", entity);
             badSet.AddNavigationTarget(nav, null);
             entityContainer.AddElement(badSet);
@@ -386,7 +386,7 @@ namespace EdmLibTests.FunctionalUtilities
 
             return model;
         }
-        
+
         public static IEdmModel AllInterfaceCriticalModel()
         {
             var model = new EdmModel();
@@ -407,7 +407,7 @@ namespace EdmLibTests.FunctionalUtilities
             };
 
             model.AddVocabularyAnnotation(mutableValueAnnotationueAnnotation);
-            
+
             var customEntity = new CustomEntityType(new List<IEdmProperty>() { null });
             model.AddElement(customEntity);
 
@@ -477,7 +477,8 @@ namespace EdmLibTests.FunctionalUtilities
 
             public EdmExpressionKind ExpressionKind { get; set; }
 
-            public override EdmValueKind ValueKind { 
+            public override EdmValueKind ValueKind
+            {
                 get { return this.valueKind; }
             }
         }
@@ -487,12 +488,12 @@ namespace EdmLibTests.FunctionalUtilities
             private EdmTypeKind typeKind;
             private List<IEdmProperty> declaredProperties;
 
-            public CustomEntityType(EdmTypeKind typeKind) : base("", "") 
+            public CustomEntityType(EdmTypeKind typeKind) : base("", "")
             {
                 this.typeKind = typeKind;
                 this.declaredProperties = new List<IEdmProperty>();
             }
-            
+
             public CustomEntityType(IEnumerable<IEdmProperty> properties) : base("", "")
             {
                 this.typeKind = EdmTypeKind.Entity;
@@ -705,6 +706,11 @@ namespace EdmLibTests.FunctionalUtilities
             private readonly List<IEdmNavigationPropertyBinding> navigationPropertyBindings = new List<IEdmNavigationPropertyBinding>();
 
             public CustomEntitySet(IEdmEntityContainer container, string name, IEdmEntityType elementType)
+                 : this(container, name, elementType, false)
+            {
+            }
+
+            public CustomEntitySet(IEdmEntityContainer container, string name, IEdmEntityType elementType, bool includeInServiceDocument)
                 : base(name)
             {
                 this.container = container;
@@ -712,6 +718,7 @@ namespace EdmLibTests.FunctionalUtilities
                 {
                     this.type = new EdmCollectionType(new EdmEntityTypeReference(elementType, false));
                 }
+                this.IncludeInServiceDocument = includeInServiceDocument;
             }
 
             public IEnumerable<IEdmNavigationPropertyBinding> NavigationPropertyBindings
@@ -757,6 +764,11 @@ namespace EdmLibTests.FunctionalUtilities
             public IEdmType Type
             {
                 get { return type; }
+            }
+
+            public bool IncludeInServiceDocument
+            {
+                get; internal set;
             }
         }
 

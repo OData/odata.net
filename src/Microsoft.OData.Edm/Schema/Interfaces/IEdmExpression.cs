@@ -136,7 +136,12 @@ namespace Microsoft.OData.Edm
         /// <summary>
         /// Represents an expression implementing <see cref="IEdmEnumMemberExpression"/>.
         /// </summary>
-        EnumMember
+        EnumMember,
+
+        /// <summary>
+        /// Represents an expression implementing <see cref="IEdmPathExpression"/>.
+        /// </summary>
+        AnnotationPath
     }
 
     /// <summary>

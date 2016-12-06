@@ -41,6 +41,11 @@ namespace Microsoft.OData.Edm
             get { return new EdmCollectionType(new EdmEntityTypeReference(new BadEntityType(String.Empty, this.Errors), false)); }
         }
 
+        public bool IncludeInServiceDocument
+        {
+            get { return true; }
+        }
+
         public IEnumerable<IEdmNavigationPropertyBinding> NavigationPropertyBindings
         {
             get { return Enumerable.Empty<IEdmNavigationPropertyBinding>(); }

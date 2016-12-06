@@ -11,5 +11,9 @@ namespace Microsoft.OData.Edm
     /// </summary>
     public interface IEdmEntitySet : IEdmEntitySetBase, IEdmEntityContainerElement
     {
+        /// <summary>
+        /// Gets a value indicating whether the entity set is included in the service document.
+        /// </summary>
+        bool IncludeInServiceDocument { get; }
     }
 }

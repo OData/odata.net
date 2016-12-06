@@ -120,6 +120,11 @@ namespace Microsoft.OData.Service.Providers
             get { return null; }
         }
 
+        public bool IncludeInServiceDocument
+        {
+            get; internal set;
+        }
+
         /// <summary>
         /// Finds the entity set that this navigation property refers to.
         /// </summary>

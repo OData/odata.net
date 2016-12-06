@@ -74,6 +74,14 @@ namespace EdmLibTests.StubEdm
         public IEdmType Type { get; set; }
 
         /// <summary>
+        /// Gets or sets whether to include in service doucment
+        /// </summary>
+        public bool IncludeInServiceDocument
+        {
+            get; set;
+        }
+
+        /// <summary>
         /// Sets the navigation target for a particular navigation property.
         /// </summary>
         /// <param name="navigationProperty">The navigation property.</param>

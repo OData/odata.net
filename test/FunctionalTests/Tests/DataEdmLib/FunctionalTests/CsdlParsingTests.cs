@@ -1454,6 +1454,65 @@ namespace EdmLibTests.FunctionalTests
             Assert.AreEqual(0, validationResults.Count());
         }
 
+        [TestMethod]
+        public void ParseEdmxWithAttributesAnnotationPathAndIncludeInServiceDocument()
+        {
+            var edmx =
+@"<?xml version=""1.0"" encoding=""utf-16""?>
+<edmx:Edmx Version=""4.0"" xmlns:edmx=""http://docs.oasis-open.org/odata/ns/edmx"">
+  <edmx:DataServices>
+      <Schema Namespace=""com.test.gateway.default.iwbep.v4_gw_sample_basic.v0001"" Alias=""Test__self"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
+        <EntityType Name=""BusinessPartner"" HasStream=""false"">
+            <Key>
+              <PropertyRef Name=""BusinessPartnerID""/>
+            </Key>
+            <Property Name=""BusinessPartnerID"" Type=""Edm.String"" Nullable=""false"" MaxLength=""10""/>
+            <Property Name=""BusinessPartnerRole"" Type=""Edm.String"" Nullable=""false"" MaxLength=""3""/>
+        </EntityType>
+        <EntityContainer Name=""DefaultContainer"">
+            <EntitySet Name=""BusinessPartnerList1"" EntityType=""com.test.gateway.default.iwbep.v4_gw_sample_basic.v0001.BusinessPartner"" IncludeInServiceDocument=""false"">
+            </EntitySet>
+            <EntitySet Name=""BusinessPartnerList2"" EntityType=""com.test.gateway.default.iwbep.v4_gw_sample_basic.v0001.BusinessPartner"" IncludeInServiceDocument=""true"">
+            </EntitySet>
+            <EntitySet Name=""BusinessPartnerList3"" EntityType=""com.test.gateway.default.iwbep.v4_gw_sample_basic.v0001.BusinessPartner"">
+            </EntitySet>
+        </EntityContainer>
+        <Annotations Target=""Test__self.BusinessPartner"">
+            <Annotation Term=""com.test.vocabularies.UI.v1.Facets"">
+              <Collection>
+                <Record Type=""com.test.vocabularies.UI.v1.ReferenceFacet"">
+                  <PropertyValue Property=""Label"" String=""Contacts""/>
+                  <PropertyValue Property=""Target"" AnnotationPath=""BP_2_CONTACT/@com.sap.vocabularies.UI.v1.Badge""/>
+                </Record>
+              </Collection>
+            </Annotation>
+      </Annotations>
+      </Schema>
+  </edmx:DataServices>
+</edmx:Edmx>";
+
+            IEdmModel model;
+            IEnumerable<EdmError> errors;
+            bool success = CsdlReader.TryParse(XmlReader.Create(new StringReader(edmx)), out model, out errors);
+            Assert.IsTrue(success, "Parsing metadata failed");
+
+            var entitiySets = model.EntityContainer.Elements.Where(e => e.ContainerElementKind == EdmContainerElementKind.EntitySet).Select(e => e as IEdmEntitySet);
+            var bp1 = entitiySets.Where(e => e.Name == "BusinessPartnerList1").FirstOrDefault();
+            Assert.IsFalse(bp1.IncludeInServiceDocument, "IncludeInServiceDocument should be false.");
+            var bp2 = entitiySets.Where(e => e.Name == "BusinessPartnerList2").FirstOrDefault();
+            Assert.IsTrue(bp2.IncludeInServiceDocument, "IncludeInServiceDocument should be true.");
+            var bp3 = entitiySets.Where(e => e.Name == "BusinessPartnerList3").FirstOrDefault();
+            Assert.IsTrue(bp3.IncludeInServiceDocument, "IncludeInServiceDocument should be true.");
+
+            var annotation = model.VocabularyAnnotations.FirstOrDefault();
+            var collection = annotation?.Value as IEdmCollectionExpression;
+            var record = collection?.Elements.FirstOrDefault() as IEdmRecordExpression;
+            var propertyValue = record?.Properties.Where(e => e.Name == "Target").FirstOrDefault();
+            var expression = propertyValue?.Value as IEdmExpression;
+            Assert.IsTrue(expression.ExpressionKind == EdmExpressionKind.AnnotationPath, "Expression should be AnnotationPath.");
+            var pathExpression = expression as IEdmPathExpression;
+            Assert.IsTrue(string.Join("/", pathExpression.Path) == "BP_2_CONTACT/@com.sap.vocabularies.UI.v1.Badge", "Wrong annotation path value.");
+        }
         #region Edm.Untyped
 
         [TestMethod]
