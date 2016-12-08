@@ -158,16 +158,27 @@ namespace Microsoft.OData.Core.Evaluation
                 return XmlConvert.ToString((byte)value);
             }
 
-#if ASTORIA_SERVER
+#if ASTORIA_SERVER || ASTORIA_CLIENT
             if (value is DateTime)
             {
                 // Since the server/client supports DateTime values, convert the DateTime value
                 // to DateTimeOffset and use XmlCOnvert to convert to String.
-                DateTimeOffset dto = WebUtil.ConvertDateTimeToDateTimeOffset((DateTime)value);
+                // if datetime kind is unspecified, then treat it as UTC
+                var dt = (DateTime)value;
+                DateTimeOffset dto;
+
+                if (dt.Kind == DateTimeKind.Unspecified)
+                {
+                     dto = new DateTimeOffset(new DateTime(dt.Ticks, DateTimeKind.Utc));
+                }
+                else
+                {
+                     dto = (DateTimeOffset)dt;
+                }
+
                 return XmlConvert.ToString(dto);
             }
 #endif
-
             if (value is decimal)
             {
                 return XmlConvert.ToString((decimal)value);

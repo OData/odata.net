@@ -344,6 +344,13 @@ namespace Microsoft.OData.Client
             {
                 return primitiveType.TypeConverter.ToString(propertyValue);
             }
+            else if (propertyType == typeof(DateTime))
+            {
+                var dt = (DateTime)propertyValue;
+
+                return new DateTimeOffset(new DateTime(dt.Ticks, DateTimeKind.Utc));
+            }
+
 #if !PORTABLELIB
             else if (propertyType.FullName == "System.Data.Linq.Binary")
             {

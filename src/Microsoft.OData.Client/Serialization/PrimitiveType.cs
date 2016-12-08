@@ -382,6 +382,7 @@ namespace Microsoft.OData.Client
             RegisterKnownType(typeof(UInt16), null, EdmPrimitiveTypeKind.String, new UInt16TypeConverter(), false);
             RegisterKnownType(typeof(UInt32), null, EdmPrimitiveTypeKind.String, new UInt32TypeConverter(), false);
             RegisterKnownType(typeof(UInt64), null, EdmPrimitiveTypeKind.String, new UInt64TypeConverter(), false);
+            RegisterKnownType(typeof(DateTime), null, EdmPrimitiveTypeKind.DateTimeOffset, new DateTimeTypeConverter(), false);
 
 #if !PORTABLELIB
             // There is no static dependency on System.Data.Linq so we use a substitute type for the Binary type
