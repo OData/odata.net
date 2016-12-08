@@ -728,7 +728,17 @@ namespace Microsoft.OData.Client
                 switch (edmType.TypeKind)
                 {
                     case EdmTypeKind.Primitive:
-                        valueInODataFormat = value;
+
+                        // Client lib internal conversion to support DateTime
+                        if (value is DateTime)
+                        {
+                            valueInODataFormat = PlatformHelper.ConvertDateTimeToDateTimeOffset((DateTime)value);
+                        }
+                        else
+                        {
+                            valueInODataFormat = value;
+                        }
+
                         needsSpecialEscaping = true;
                         break;
 

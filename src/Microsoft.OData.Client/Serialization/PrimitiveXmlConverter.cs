@@ -643,6 +643,22 @@ namespace Microsoft.OData.Client
     /// <summary>
     /// Convert between primitive types to string and xml representation
     /// </summary>
+    internal sealed class DateTimeTypeConverter : PrimitiveTypeConverter
+    {
+        /// <summary>
+        /// Create an instance of primitive type from a string representation
+        /// </summary>
+        /// <param name="text">The string representation</param>
+        /// <returns>An instance of primitive type</returns>
+        internal override object Parse(String text)
+        {
+            return PlatformHelper.ConvertStringToDateTime(text);
+        }
+    }
+
+    /// <summary>
+    /// Convert between primitive types to string and xml representation
+    /// </summary>
     internal sealed class TimeSpanTypeConverter : PrimitiveTypeConverter
     {
         /// <summary>
