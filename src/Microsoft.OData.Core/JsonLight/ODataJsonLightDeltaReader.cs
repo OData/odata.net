@@ -1134,12 +1134,14 @@ namespace Microsoft.OData.Core.JsonLight
             string contextUri = this.jsonLightEntryAndFeedDeserializer.ReadContextUriAnnotation(ODataPayloadKind.Delta, duplicatePropertyNamesChecker, false);
             if (!string.IsNullOrEmpty(contextUri))
             {
+                contextUri = UriUtils.UriToString(this.jsonLightEntryAndFeedDeserializer.ProcessUriFromPayload(contextUri));
                 ODataJsonLightContextUriParseResult contextUriParseResult = ODataJsonLightContextUriParser.Parse(
                         this.jsonLightInputContext.Model,
                         contextUri,
                         ODataPayloadKind.Delta,
                         ODataReaderBehavior.DefaultBehavior,
-                        /*needParseFragment*/true);
+                        /*needParseFragment*/true,
+                        null);
                 deltaKind = contextUriParseResult.DeltaKind;
                 entityTypeFromContextUri = contextUriParseResult.EdmType as IEdmEntityType;
             }
