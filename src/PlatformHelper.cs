@@ -449,6 +449,18 @@ namespace Microsoft.OData.Edm
             return dateTimeOffset;
         }
 
+#if ASTORIA_CLIENT
+        /// <summary>
+        /// Converts a string to a DateTime. This is only built in client library
+        /// </summary>
+        /// <param name="text">A DateTime value to be converted.</param>
+        /// <returns>See documentation for method being accessed in the body of the method.</returns>
+        internal static DateTime ConvertStringToDateTime(string text)
+        {
+            var offset = ConvertStringToDateTimeOffset(text);
+            return offset.UtcDateTime;
+        }
+#endif
         /// <summary>
         /// Validates that the DateTimeOffset string contains the time zone information.
         /// </summary>

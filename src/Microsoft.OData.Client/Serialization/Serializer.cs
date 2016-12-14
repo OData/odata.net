@@ -728,6 +728,22 @@ namespace Microsoft.OData.Client
                 switch (edmType.TypeKind)
                 {
                     case EdmTypeKind.Primitive:
+
+                        // Client lib internal conversion to support DateTime
+                        if (value is DateTime)
+                        {
+                            var dt = (DateTime)value;
+
+                            if (dt.Kind == DateTimeKind.Unspecified)
+                            {
+                                value = new DateTimeOffset(new DateTime(dt.Ticks, DateTimeKind.Utc));
+                            }
+                            else
+                            {
+                                value = (DateTimeOffset)dt;
+                            }
+                        }
+
                         valueInODataFormat = value;
                         needsSpecialEscaping = true;
                         break;

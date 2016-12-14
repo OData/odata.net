@@ -39,7 +39,9 @@
   </ItemGroup>
   <ItemGroup>
     <Reference Include="$(NugetPack)\FluentAssertions.2.0.0.1\lib\net40\FluentAssertions.dll" />
-    <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
+    <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <Private>False</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Configuration" />
@@ -61,6 +63,7 @@
     <Compile Include="..\ClientExtensions\TestDataServiceClientRequestMessage.cs">
       <Link>TestDataServiceClientRequestMessage.cs</Link>
     </Compile>
+    <Compile Include="DateTimePrimitiveTypeReference.cs" />
     <Compile Include="Tests\Annotation\AnnotationTargetingOperationTestsProxy.cs" />
     <Compile Include="Tests\Annotation\ClientAnnotationTests.cs" />
     <Compile Include="Tests\CustomizedHttpWebRequestMessage.cs" />
@@ -74,6 +77,7 @@
     <Compile Include="Tests\ClientPropertyTrackingTests.cs" />
     <Compile Include="Tests\ClientSingletonTest.cs" />
     <Compile Include="Tests\DataServiceRequestTests.cs" />
+    <Compile Include="Tests\DateTimeClientSupportTest.cs" />
     <Compile Include="Tests\EntityParameter\EntityParameterProxy.cs" />
     <Compile Include="Tests\EntityParameter\EntityParameterTests.cs" />
     <Compile Include="Tests\EntityParameter\EntityParameterRequestMessage.cs" />
