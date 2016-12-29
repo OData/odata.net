@@ -176,6 +176,14 @@ namespace Microsoft.OData.JsonLight
 
             string propertyName = property.Name;
 
+            ODataValue value = property.ODataValue;
+
+            if (value is ODataNullValue || value == null)
+            {
+                this.WriteNullProperty(property);
+                return;
+            }
+
             if (!this.JsonLightOutputContext.PropertyCacheHandler.InResourceSetScope())
             {
                 WriterValidationUtils.ValidatePropertyName(propertyName);
@@ -191,8 +199,6 @@ namespace Microsoft.OData.JsonLight
             duplicatePropertyNameChecker.ValidatePropertyUniqueness(property);
 
             WriteInstanceAnnotation(property, isTopLevel, currentPropertyInfo.MetadataType.IsUndeclaredProperty);
-
-            ODataValue value = property.ODataValue;
 
             // handle ODataUntypedValue
             ODataUntypedValue untypedValue = value as ODataUntypedValue;
@@ -214,12 +220,6 @@ namespace Microsoft.OData.JsonLight
                 Debug.Assert(!isTopLevel, "Stream properties are not allowed at the top level.");
                 WriterValidationUtils.ValidateStreamReferenceProperty(property, currentPropertyInfo.MetadataType.EdmProperty, this.WritingResponse);
                 this.WriteStreamReferenceProperty(propertyName, streamReferenceValue);
-                return;
-            }
-
-            if (value is ODataNullValue || value == null)
-            {
-                this.WriteNullProperty(property);
                 return;
             }
 
