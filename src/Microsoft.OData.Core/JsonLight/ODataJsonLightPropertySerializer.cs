@@ -178,10 +178,14 @@ namespace Microsoft.OData.JsonLight
 
             ODataValue value = property.ODataValue;
 
-            if (value is ODataNullValue || value == null)
+            // If not validation is requried, we don't need property serialization info and could try to write null property right away
+            // TODO: Add logic to check that null skipping is allowed here
+            if (!this.MessageWriterSettings.ThrowIfTypeConflictsWithMetadata)
             {
-                this.WriteNullProperty(property);
-                return;
+                if (value is ODataNullValue || value == null)
+                {
+                    return;
+                }
             }
 
             if (!this.JsonLightOutputContext.PropertyCacheHandler.InResourceSetScope())
@@ -220,6 +224,12 @@ namespace Microsoft.OData.JsonLight
                 Debug.Assert(!isTopLevel, "Stream properties are not allowed at the top level.");
                 WriterValidationUtils.ValidateStreamReferenceProperty(property, currentPropertyInfo.MetadataType.EdmProperty, this.WritingResponse);
                 this.WriteStreamReferenceProperty(propertyName, streamReferenceValue);
+                return;
+            }
+
+            if (value is ODataNullValue || value == null)
+            {
+                this.WriteNullProperty(property);
                 return;
             }
 
