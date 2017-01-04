@@ -178,7 +178,7 @@ namespace Microsoft.OData.JsonLight
 
             ODataValue value = property.ODataValue;
 
-            // If not validation is requried, we don't need property serialization info and could try to write null property right away
+            // If no validation is required, we don't need property serialization info and could try to write null property right away
             // TODO: Add logic to check that null skipping is allowed here
             if (!this.MessageWriterSettings.ThrowIfTypeConflictsWithMetadata)
             {
