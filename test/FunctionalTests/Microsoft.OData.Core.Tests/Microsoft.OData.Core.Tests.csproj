@@ -80,6 +80,7 @@
     <Compile Include="MultiBindingTests.cs" />
     <Compile Include="NavigationPropertyOnComplexTests.cs" />
     <Compile Include="ODataValueUtilsTests.cs" />
+    <Compile Include="PropertyCacheHandlerTests.cs" />
     <Compile Include="ScenarioTests\Roundtrip\JsonReaderWriterInjectionTests.cs" />
     <Compile Include="ServiceProviderExtensionsTests.cs" />
     <Compile Include="ContainerBuilderExtensionsTests.cs" />

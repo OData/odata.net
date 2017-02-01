@@ -6,6 +6,7 @@
 
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Text;
 using Microsoft.OData.Edm;
 
 namespace Microsoft.OData
@@ -31,18 +32,21 @@ namespace Microsoft.OData
 
         public PropertySerializationInfo GetProperty(string name, IEdmStructuredType owningType)
         {
-            string uniqueName;
-            if (this.currentResourceScopeLevel == this.resourceSetScopeLevel + 1)
+            StringBuilder uniqueName = new StringBuilder();
+            if (owningType != null)
             {
-                uniqueName = name;
-            }
-            else
-            {
-                // To avoid the property name conflicts of single navigation property and navigation source
-                uniqueName = name + (this.currentResourceScopeLevel - this.resourceSetScopeLevel);
+                uniqueName.Append(owningType.FullTypeName());
+                uniqueName.Append("-");
             }
 
-            return this.currentPropertyCache.GetProperty(name, uniqueName, owningType);
+            uniqueName.Append(name);
+            if (this.currentResourceScopeLevel != this.resourceSetScopeLevel + 1)
+            {
+                // To avoid the property name conflicts of single navigation property and navigation source
+                uniqueName.Append(this.currentResourceScopeLevel - this.resourceSetScopeLevel);
+            }
+
+            return this.currentPropertyCache.GetProperty(name, uniqueName.ToString(), owningType);
         }
 
         public void SetCurrentResourceScopeLevel(int level)
