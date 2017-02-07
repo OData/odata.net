@@ -284,9 +284,19 @@ namespace Microsoft.OData.UriParser
         {
             // expression
             var expression = this.ParseExpression();
+            var endPathExpression = expression as EndPathToken;
+            AggregationMethod verb;
 
-            // "with" verb
-            var verb = this.ParseAggregateWith();
+            if (endPathExpression != null && endPathExpression.Identifier == ExpressionConstants.QueryOptionCount)
+            {
+                expression = new EndPathToken("$count", endPathExpression.NextToken);
+                verb = AggregationMethod.VirtualPropertyCount; 
+            }
+            else
+            {
+                // "with" verb
+                verb = this.ParseAggregateWith();
+            }
 
             // "as" alias
             var alias = this.ParseAggregateAs();

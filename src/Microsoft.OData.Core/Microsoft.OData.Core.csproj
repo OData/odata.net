@@ -68,6 +68,7 @@
     <Compile Include="BindingPathHelper.cs" />
     <Compile Include="UriParser\ODataPathInfo.cs" />
     <Compile Include="UriParser\SemanticAst\CollectionComplexNode.cs" />
+    <Compile Include="UriParser\SemanticAst\CountVirtualPropertyNode.cs" />
     <Compile Include="UriParser\SemanticAst\SingleComplexNode.cs" />
     <Compile Include="UriParser\SemanticAst\SingleResourceNode.cs" />
     <Compile Include="UriParser\TypeFacetsPromotionRules.cs" />

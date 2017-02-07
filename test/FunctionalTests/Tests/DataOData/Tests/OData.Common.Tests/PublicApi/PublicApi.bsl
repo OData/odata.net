@@ -5683,6 +5683,13 @@ public sealed class Microsoft.OData.UriParser.CountSegment : Microsoft.OData.Uri
 	public virtual T TranslateWith (PathSegmentTranslator`1 translator)
 }
 
+public sealed class Microsoft.OData.UriParser.CountVirtualPropertyNode : Microsoft.OData.UriParser.SingleValueNode {
+	public CountVirtualPropertyNode ()
+
+	Microsoft.OData.UriParser.QueryNodeKind Kind  { public virtual get; }
+	Microsoft.OData.Edm.IEdmTypeReference TypeReference  { public virtual get; }
+}
+
 public sealed class Microsoft.OData.UriParser.CustomUriLiteralParsers : IUriLiteralParser {
 	public static void AddCustomUriLiteralParser (Microsoft.OData.UriParser.IUriLiteralParser customUriLiteralParser)
 	public static void AddCustomUriLiteralParser (Microsoft.OData.Edm.IEdmTypeReference edmTypeReference, Microsoft.OData.UriParser.IUriLiteralParser customUriLiteralParser)
@@ -6154,6 +6161,7 @@ public enum Microsoft.OData.UriParser.Aggregation.AggregationMethod : int {
 	Max = 2
 	Min = 1
 	Sum = 0
+	VirtualPropertyCount = 5
 }
 
 public enum Microsoft.OData.UriParser.Aggregation.TransformationNodeKind : int {

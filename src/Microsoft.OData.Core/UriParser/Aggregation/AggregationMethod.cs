@@ -34,6 +34,12 @@ namespace Microsoft.OData.UriParser.Aggregation
         /// <summary>
         /// The aggregation method CountDistinct.
         /// </summary>
-        CountDistinct
+        CountDistinct,
+
+        /// <summary>
+        /// The aggregation method Count.
+        /// Used only internally to represent the virtual property $count.
+        /// </summary>
+        VirtualPropertyCount,
     }
 }
