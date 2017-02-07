@@ -176,6 +176,18 @@ namespace Microsoft.OData.JsonLight
 
             string propertyName = property.Name;
 
+            ODataValue value = property.ODataValue;
+
+            // If no validation is required, we don't need property serialization info and could try to write null property right away
+            // TODO: Add logic to check that null skipping is allowed here
+            if (!this.MessageWriterSettings.ThrowIfTypeConflictsWithMetadata)
+            {
+                if (value is ODataNullValue || value == null)
+                {
+                    return;
+                }
+            }
+
             if (!this.JsonLightOutputContext.PropertyCacheHandler.InResourceSetScope())
             {
                 WriterValidationUtils.ValidatePropertyName(propertyName);
@@ -191,8 +203,6 @@ namespace Microsoft.OData.JsonLight
             duplicatePropertyNameChecker.ValidatePropertyUniqueness(property);
 
             WriteInstanceAnnotation(property, isTopLevel, currentPropertyInfo.MetadataType.IsUndeclaredProperty);
-
-            ODataValue value = property.ODataValue;
 
             // handle ODataUntypedValue
             ODataUntypedValue untypedValue = value as ODataUntypedValue;
@@ -337,11 +347,11 @@ namespace Microsoft.OData.JsonLight
                 // TODO: Enable updating top-level properties to null #645
                 throw new ODataException("A null top-level property is not allowed to be serialized.");
             }
-            else
-            {
-                this.JsonWriter.WriteName(property.Name);
-                this.JsonLightValueSerializer.WriteNullValue();
-            }
+            //else
+            //{
+            //    this.JsonWriter.WriteName(property.Name);
+            //    this.JsonLightValueSerializer.WriteNullValue();
+            //}
         }
 
         /// <summary>
