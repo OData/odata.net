@@ -347,13 +347,17 @@ namespace Microsoft.OData.JsonLight
         {
             Debug.Assert(this.scopes.Count > 1, "Stack must have more than 1 items in order to pop an item.");
 
+#if DEBUG
             Scope scope = this.scopes.Pop();
             Debug.Assert(scope.State == state, "scope.State == state");
+#else
+            this.scopes.Pop();
+#endif
         }
 
-        #endregion
+#endregion
 
-        #region Verify Methods
+#region Verify Methods
 
         /// <summary>
         /// Verifies that calling Read is valid.
@@ -396,9 +400,9 @@ namespace Microsoft.OData.JsonLight
             }
         }
 
-        #endregion
+#endregion
 
-        #region Exception Methods
+#region Exception Methods
 
         /// <summary>
         /// Catch any exception thrown by the action passed in; in the exception case move the reader into
@@ -425,9 +429,9 @@ namespace Microsoft.OData.JsonLight
             }
         }
 
-        #endregion
+#endregion
 
-        #region Read<...>Value Methods
+#region Read<...>Value Methods
 
         /// <summary>
         /// Read value as Uri in Json reader.
@@ -447,9 +451,9 @@ namespace Microsoft.OData.JsonLight
             return this.jsonLightResourceDeserializer.JsonReader.ReadStringValue();
         }
 
-        #endregion
+#endregion
 
-        #region Read Sync/Async Methods
+#region Read Sync/Async Methods
 
         /// <summary>
         /// Reads the next <see cref="ODataItem"/> from the message payload.
@@ -572,9 +576,9 @@ namespace Microsoft.OData.JsonLight
         }
 #endif
 
-        #endregion
+#endregion
 
-        #region ReadAt<...>Implementation Methods
+#region ReadAt<...>Implementation Methods
 
         /// <summary>
         /// Handle some thing before reading at Start.
@@ -652,9 +656,9 @@ namespace Microsoft.OData.JsonLight
             return this.ReadAtNestedResourceInfoImplementationSynchronously();
         }
 
-        #endregion
+#endregion
 
-        #region ReadAt<...>ImplementationAsync Methods
+#region ReadAt<...>ImplementationAsync Methods
 
 #if PORTABLELIB
         /// <summary>
@@ -720,9 +724,9 @@ namespace Microsoft.OData.JsonLight
         }
 #endif
 
-        #endregion
+#endregion
 
-        #region ReadAt<...>ImplementationSynchronously Methods
+#region ReadAt<...>ImplementationSynchronously Methods
 
         /// <summary>
         /// Implementation of the reader logic when in state 'Start'.
@@ -1055,9 +1059,9 @@ namespace Microsoft.OData.JsonLight
             this.jsonLightResourceDeserializer.JsonReader.Read();
         }
 
-        #endregion
+#endregion
 
-        #region ReadDeltaResourceSet<...> Methods
+#region ReadDeltaResourceSet<...> Methods
 
         /// <summary>
         /// Reads the start of the JSON array for the content of the resource set and sets up the reader state correctly.
@@ -1092,9 +1096,9 @@ namespace Microsoft.OData.JsonLight
             this.ReplaceScope(ODataDeltaReaderState.DeltaResourceSetEnd);
         }
 
-        #endregion
+#endregion
 
-        #region ReadDeltaResource<...> Methods
+#region ReadDeltaResource<...> Methods
 
         /// <summary>
         /// Reads the start of a delta item and sets up the reader state correctly
@@ -1204,9 +1208,9 @@ namespace Microsoft.OData.JsonLight
             this.jsonLightResourceDeserializer.AssertJsonCondition(JsonNodeType.Property, JsonNodeType.EndObject);
         }
 
-        #endregion
+#endregion
 
-        #region ReadDeltaDeletedEntry<...> Methods
+#region ReadDeltaDeletedEntry<...> Methods
 
         /// <summary>
         /// Reads the delta deleted resource id.
@@ -1283,9 +1287,9 @@ namespace Microsoft.OData.JsonLight
             this.jsonLightResourceDeserializer.AssertJsonCondition(JsonNodeType.Property, JsonNodeType.EndObject);
         }
 
-        #endregion
+#endregion
 
-        #region ReadDeltaLink<...> Methods
+#region ReadDeltaLink<...> Methods
 
         /// <summary>
         /// Reads the delta link source.
@@ -1383,9 +1387,9 @@ namespace Microsoft.OData.JsonLight
             this.jsonLightResourceDeserializer.AssertJsonCondition(JsonNodeType.Property, JsonNodeType.EndObject);
         }
 
-        #endregion
+#endregion
 
-        #region ReadDeltaDeletedLink<...> Methods
+#region ReadDeltaDeletedLink<...> Methods
 
         /// <summary>
         /// Reads the delta deleted link source.
@@ -1483,9 +1487,9 @@ namespace Microsoft.OData.JsonLight
             this.jsonLightResourceDeserializer.AssertJsonCondition(JsonNodeType.Property, JsonNodeType.EndObject);
         }
 
-        #endregion
+#endregion
 
-        #region Start<...> Methods
+#region Start<...> Methods
 
         /// <summary>
         /// Starts the resource, initializing the scopes and such. This method starts a non-null resource only.
@@ -1532,9 +1536,9 @@ namespace Microsoft.OData.JsonLight
                 this.CurrentScope.ODataUri));
         }
 
-        #endregion
+#endregion
 
-        #region Others
+#region Others
 
         /// <summary>
         /// If an entity type name is found in the payload this method is called to apply it to the current scope.
@@ -1584,11 +1588,11 @@ namespace Microsoft.OData.JsonLight
             this.CurrentEntityType = targetEntityType;
         }
 
-        #endregion
+#endregion
 
-        #endregion
+#endregion
 
-        #region Private Static Methods
+#region Private Static Methods
 
         /// <summary>
         /// Creates a new delta (deleted) resource to return to the user.
@@ -1644,9 +1648,9 @@ namespace Microsoft.OData.JsonLight
             return new Scope(ODataDeltaReaderState.Exception, null, null, null, null);
         }
 
-        #endregion
+#endregion
 
-        #region Scope Classes
+#region Scope Classes
 
         /// <summary>
         /// A reader scope; keeping track of the current reader state and an item associated with this state.
@@ -2002,6 +2006,6 @@ namespace Microsoft.OData.JsonLight
             public PropertyAndAnnotationCollector PropertyAndAnnotationCollector { get; set; }
         }
 
-        #endregion
+#endregion
     }
 }

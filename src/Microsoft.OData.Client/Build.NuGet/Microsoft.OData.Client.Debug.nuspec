@@ -7,12 +7,12 @@
     <version>$VersionNuGetSemantic$</version>
     <authors>Microsoft Corporation</authors>
     <owners>Microsoft Corporation</owners>
-    <licenseUrl>http://go.microsoft.com/?linkid=9809688</licenseUrl>
+    <licenseUrl>http://go.microsoft.com/fwlink/?linkid=833178</licenseUrl>
     <projectUrl>http://odata.github.io/</projectUrl>
     <iconUrl>http://static.tumblr.com/hgchgxz/9ualgdf98/icon.png</iconUrl>
     <requireLicenseAcceptance>true</requireLicenseAcceptance>
     <summary>LINQ-enabled client API for issuing OData queries and consuming OData JSON payloads. Supports OData v4 only. </summary>
-    <description>LINQ-enabled client API for issuing OData queries and consuming OData JSON payloads. Supports OData v4 only. Targets .NET 4.0, and .NET Portable Lib with support for .NET 4.5, Win Phone 8, Win Phone 8.1, and Win 8. Localized for CHS, CHT, DEU, ESN, FRA, ITA, JPN, KOR and RUS.
+    <description>LINQ-enabled client API for issuing OData queries and consuming OData JSON payloads. Supports OData v4 only. Targets .NET 4.5 and .NET Platform Standard 1.1. Localized for CHS, CHT, DEU, ESN, FRA, ITA, JPN, KOR and RUS.
 OData .NET library is open source at http://github.com/OData/odata.net</description>
     <dependencies>
       <dependency id="Microsoft.OData.Core" version="[$VersionNuGetSemantic$]" />
@@ -27,10 +27,10 @@ OData .NET library is open source at http://github.com/OData/odata.net</descript
     <file src="Desktop\Microsoft.OData.Client.pdb" target="lib\net45" />
     <file src="Desktop\Microsoft.OData.Client.xml" target="lib\net45" />
     <file src="Desktop\1041\Microsoft.OData.Client.resources.dll" target="lib\net45\ja" />
-	<file src=".NETPortable\v4.5\Microsoft.OData.Client.Portable\Microsoft.OData.Client.dll" target="lib\portable-net45+win8+wpa81" />
-    <file src=".NETPortable\v4.5\Microsoft.OData.Client.Portable\Microsoft.OData.Client.pdb" target="lib\portable-net45+win8+wpa81" />
-    <file src=".NETPortable\v4.5\Microsoft.OData.Client.Portable\Microsoft.OData.Client.xml" target="lib\portable-net45+win8+wpa81" />    
-    <file src=".NETPortable\v4.5\Microsoft.OData.Client.Portable\1041\Microsoft.OData.Client.resources.dll" target="lib\portable-net45+win8+wpa81\ja" />
+	<file src=".NETPortable\v4.5\Microsoft.OData.Client.Portable\Microsoft.OData.Client.dll" target="lib\netstandard1.1" />
+    <file src=".NETPortable\v4.5\Microsoft.OData.Client.Portable\Microsoft.OData.Client.pdb" target="lib\netstandard1.1" />
+    <file src=".NETPortable\v4.5\Microsoft.OData.Client.Portable\Microsoft.OData.Client.xml" target="lib\netstandard1.1" />
+    <file src=".NETPortable\v4.5\Microsoft.OData.Client.Portable\1041\Microsoft.OData.Client.resources.dll" target="lib\netstandard1.1\ja" />
     <file src="$SourcesRoot$\src\Microsoft.OData.Client\**\*.cs" target="src\Microsoft.OData.Client" />
     <!-- files imported from EdmLib -->
     <file src="$SourcesRoot$\src\Microsoft.OData.Edm\Csdl\EdmValueParser.cs" target="src\Microsoft.OData.Edm\Csdl\EdmValueParser.cs" />

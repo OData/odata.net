@@ -1602,6 +1602,9 @@
     <Compile Include="..\UriParser\SemanticAst\CollectionResourceNode.cs">
       <Link>Microsoft\OData\Core\UriParser\SemanticAst\CollectionResourceNode.cs</Link>
     </Compile>
+    <Compile Include="..\UriParser\SemanticAst\CountVirtualPropertyNode.cs">
+      <Link>Microsoft\OData\Core\UriParser\SemanticAst\CountVirtualPropertyNode.cs</Link>
+    </Compile>
     <Compile Include="..\UriParser\SemanticAst\NonResourceRangeVariable.cs">
       <Link>Microsoft\OData\Core\UriParser\SemanticAst\NonResourceRangeVariable.cs</Link>
     </Compile>

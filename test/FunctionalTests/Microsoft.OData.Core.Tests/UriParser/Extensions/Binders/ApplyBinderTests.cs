@@ -66,6 +66,32 @@ namespace Microsoft.OData.Tests.UriParser.Extensions.Binders
         }
 
         [Fact]
+        public void BindApplyWithCountInAggregateShouldReturnApplyClause()
+        {
+            var tokens = _parser.ParseApply("aggregate($count as TotalCount)");
+
+            var binder = new ApplyBinder(FakeBindMethods.BindSingleComplexProperty, _bindingState);
+            var actual = binder.BindApply(tokens);
+
+            actual.Should().NotBeNull();
+            actual.Transformations.Should().HaveCount(1);
+
+            var transformations = actual.Transformations.ToList();
+            var aggregate = transformations[0] as AggregateTransformationNode;
+
+            aggregate.Should().NotBeNull();
+            aggregate.Kind.Should().Be(TransformationNodeKind.Aggregate);
+            aggregate.Expressions.Should().NotBeNull();
+            aggregate.Expressions.Should().HaveCount(1);
+
+            var statements = aggregate.Expressions.ToList();
+            var statement = statements[0];
+
+            statement.Method.Should().Be(AggregationMethod.VirtualPropertyCount);
+            statement.Alias.Should().Be("TotalCount");
+        }
+
+        [Fact]
         public void BindApplyWithAggregateAndFilterShouldReturnApplyClause()
         {
             var tokens = _parser.ParseApply("aggregate(StockQuantity with sum as TotalPrice)/filter(TotalPrice eq 100)");

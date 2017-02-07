@@ -7,15 +7,14 @@
     <AssemblyName>Microsoft.Test.OData.Framework.Portable</AssemblyName>
     <OutputType>Library</OutputType>
     <RootNamespace>Microsoft.Test.OData.Framework</RootNamespace>
-    <ProjectGuid>{134D2AD7-3C82-45C9-AC43-75F482081F8D}</ProjectGuid>
-    <ProjectTypeGuids>{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <ProjectGuid>{74295872-F930-497B-A70E-ED4FAAB395C4}</ProjectGuid>
+    <ProjectTypeGuids>{786C830F-07A1-408B-BD7F-6EE04809D6DB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <AssemblyAttributeClsCompliant>false</AssemblyAttributeClsCompliant>
     <DefineConstants>$(DefineConstants);PORTABLELIB;SUPPRESS_PORTABLELIB_TARGETFRAMEWORK_ATTRIBUTE;DNXCORE50;</DefineConstants>
     <NoStdLib>true</NoStdLib>
   </PropertyGroup>
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), Build.props))\Build.props" />
-  <!-- <Import Project="$(NugetPack)\Microsoft.Portable.$(TargetFrameworkProfile).SQLIS.8.1.0.0\Portable.props" Condition="'$(BuildInOSS)' != 'true'" /> -->
-  <ItemGroup>
+    <ItemGroup>
     <ProjectReference Include="$(EnlistmentRoot)\src\Microsoft.OData.Client\Build.Portable\Microsoft.OData.Client.Portable.csproj">
       <Project>{aed0dc9d-76e5-4145-af5e-9e2f856f4d18}</Project>
       <Name>Microsoft.OData.Client.Portable</Name>
