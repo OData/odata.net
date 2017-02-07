@@ -172,6 +172,11 @@ namespace Microsoft.OData.UriParser
                 return GeneratePropertyAccessQueryNode(singleValueParent as SingleResourceNode, property, state);
             }
 
+            if (endPathToken.Identifier == ExpressionConstants.QueryOptionCount)
+            {
+                return new CountVirtualPropertyNode();
+            }
+
             if (functionCallBinder.TryBindEndPathAsFunctionCall(endPathToken, singleValueParent, state, out boundFunction))
             {
                 return boundFunction;

@@ -116,6 +116,7 @@ namespace Microsoft.OData.UriParser.Aggregation
                                     expressionPrimitiveKind));
                     }
 
+                case AggregationMethod.VirtualPropertyCount:
                 case AggregationMethod.CountDistinct:
                     return EdmCoreModel.Instance.GetPrimitive(EdmPrimitiveTypeKind.Int64, false);
                 case AggregationMethod.Max:

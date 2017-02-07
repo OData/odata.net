@@ -165,6 +165,41 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         }
 
         [Fact]
+        public void ParseApplyWithSingleCountExpressionShouldReturnAggregateToken()
+        {
+            var apply = "aggregate($count as Count)";
+
+            var actual = this.testSubject.ParseApply(apply);
+            actual.Should().NotBeNull();
+            actual.Should().HaveCount(1);
+
+            var aggregate = actual.First() as AggregateToken;
+            aggregate.Should().NotBeNull();
+            aggregate.Expressions.Should().HaveCount(1);
+
+            VerifyAggregateExpressionToken("$count", AggregationMethod.VirtualPropertyCount, "Count", aggregate.Expressions.First());
+        }
+
+        [Fact]
+        public void ParseApplyWithCountAndOtherAggregationExpressionShouldReturnAggregateToken()
+        {
+            var apply = "aggregate($count as Count, SharePrice with countdistinct as SharePriceDistinctCount)";
+
+            var actual = this.testSubject.ParseApply(apply);
+            actual.Should().NotBeNull();
+            actual.Should().HaveCount(1);
+
+            var aggregate = actual.First() as AggregateToken;
+            aggregate.Should().NotBeNull();
+            aggregate.Expressions.Should().HaveCount(2);
+
+            var statements = aggregate.Expressions.ToList();
+            
+            VerifyAggregateExpressionToken("$count", AggregationMethod.VirtualPropertyCount, "Count", aggregate.Expressions.First());
+            VerifyAggregateExpressionToken("SharePrice", AggregationMethod.CountDistinct, "SharePriceDistinctCount", statements[1]);        
+        }
+
+        [Fact]
         public void ParseApplyWithAggregateMissingOpenParenShouldThrow()
         {
             var apply = "aggregate UnitPrice with sum as TotalPrice)";
