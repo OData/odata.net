@@ -118,6 +118,7 @@ namespace Microsoft.OData.UriParser.Aggregation
 
                 case AggregationMethod.VirtualPropertyCount:
                 case AggregationMethod.CountDistinct:
+                    // Issue #758: CountDistinct and $Count should return type Edm.Decimal with Scale="0" and sufficient Precision.
                     return EdmCoreModel.Instance.GetPrimitive(EdmPrimitiveTypeKind.Int64, false);
                 case AggregationMethod.Max:
                 case AggregationMethod.Min:

@@ -181,6 +181,15 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         }
 
         [Fact]
+        public void ParseApplyWithSingleCountExpressionCannotHaveWithKeyWord()
+        {
+            var apply = "aggregate($count with sum as Count)";
+
+            Action parse = () => this.testSubject.ParseApply(apply);
+            parse.ShouldThrow<ODataException>().Where(e => e.Message == ErrorStrings.UriQueryExpressionParser_AsExpected(17, apply));
+        }
+
+        [Fact]
         public void ParseApplyWithCountAndOtherAggregationExpressionShouldReturnAggregateToken()
         {
             var apply = "aggregate($count as Count, SharePrice with countdistinct as SharePriceDistinctCount)";
