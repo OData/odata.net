@@ -287,14 +287,15 @@ namespace Microsoft.OData.UriParser
             var endPathExpression = expression as EndPathToken;
             AggregationMethod verb;
 
+            // "with" verb
             if (endPathExpression != null && endPathExpression.Identifier == ExpressionConstants.QueryOptionCount)
             {
-                expression = new EndPathToken("$count", endPathExpression.NextToken);
-                verb = AggregationMethod.VirtualPropertyCount; 
+                // e.g. aggregate($count as Count)
+                verb = AggregationMethod.VirtualPropertyCount;
             }
             else
             {
-                // "with" verb
+                // e.g. aggregate(UnitPrice with sum as Total)
                 verb = this.ParseAggregateWith();
             }
 
