@@ -6158,6 +6158,7 @@ public sealed class Microsoft.OData.UriParser.WildcardSelectItem : Microsoft.ODa
 public enum Microsoft.OData.UriParser.Aggregation.AggregationMethod : int {
 	Average = 3
 	CountDistinct = 4
+	Custom = 6
 	Max = 2
 	Min = 1
 	Sum = 0
@@ -6178,10 +6179,12 @@ public abstract class Microsoft.OData.UriParser.Aggregation.TransformationNode {
 
 public sealed class Microsoft.OData.UriParser.Aggregation.AggregateExpression {
 	public AggregateExpression (Microsoft.OData.UriParser.SingleValueNode expression, Microsoft.OData.UriParser.Aggregation.AggregationMethod method, string alias, Microsoft.OData.Edm.IEdmTypeReference typeReference)
+	public AggregateExpression (Microsoft.OData.UriParser.SingleValueNode expression, Microsoft.OData.UriParser.Aggregation.AggregationMethodDefinition methodDefinition, string alias, Microsoft.OData.Edm.IEdmTypeReference typeReference)
 
 	string Alias  { public get; }
 	Microsoft.OData.UriParser.SingleValueNode Expression  { public get; }
 	Microsoft.OData.UriParser.Aggregation.AggregationMethod Method  { public get; }
+	Microsoft.OData.UriParser.Aggregation.AggregationMethodDefinition MethodDefinition  { public get; }
 	Microsoft.OData.Edm.IEdmTypeReference TypeReference  { public get; }
 }
 
@@ -6190,6 +6193,20 @@ public sealed class Microsoft.OData.UriParser.Aggregation.AggregateTransformatio
 
 	System.Collections.Generic.IEnumerable`1[[Microsoft.OData.UriParser.Aggregation.AggregateExpression]] Expressions  { public get; }
 	Microsoft.OData.UriParser.Aggregation.TransformationNodeKind Kind  { public virtual get; }
+}
+
+public sealed class Microsoft.OData.UriParser.Aggregation.AggregationMethodDefinition {
+	public static Microsoft.OData.UriParser.Aggregation.AggregationMethodDefinition Average = Microsoft.OData.UriParser.Aggregation.AggregationMethodDefinition
+	public static Microsoft.OData.UriParser.Aggregation.AggregationMethodDefinition CountDistinct = Microsoft.OData.UriParser.Aggregation.AggregationMethodDefinition
+	public static Microsoft.OData.UriParser.Aggregation.AggregationMethodDefinition Max = Microsoft.OData.UriParser.Aggregation.AggregationMethodDefinition
+	public static Microsoft.OData.UriParser.Aggregation.AggregationMethodDefinition Min = Microsoft.OData.UriParser.Aggregation.AggregationMethodDefinition
+	public static Microsoft.OData.UriParser.Aggregation.AggregationMethodDefinition Sum = Microsoft.OData.UriParser.Aggregation.AggregationMethodDefinition
+	public static Microsoft.OData.UriParser.Aggregation.AggregationMethodDefinition VirtualPropertyCount = Microsoft.OData.UriParser.Aggregation.AggregationMethodDefinition
+
+	Microsoft.OData.UriParser.Aggregation.AggregationMethod MethodKind  { public get; }
+	string MethodLabel  { public get; }
+
+	public static Microsoft.OData.UriParser.Aggregation.AggregationMethodDefinition Custom (string customMethodLabel)
 }
 
 public sealed class Microsoft.OData.UriParser.Aggregation.ApplyClause {

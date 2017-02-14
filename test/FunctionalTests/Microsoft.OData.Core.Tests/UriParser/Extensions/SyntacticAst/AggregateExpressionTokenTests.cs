@@ -38,7 +38,7 @@ namespace Microsoft.OData.Tests.UriParser.Extensions.SyntacticAst
         }
 
         [Fact]
-        public void WithVerbSetCorrectly()
+        public void WithMethodSetCorrectly()
         {
             var token = new AggregateExpressionToken(expressionToken, AggregationMethod.CountDistinct, "Alias");
             token.Method.Should().Be(AggregationMethod.CountDistinct);

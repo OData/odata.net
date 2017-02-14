@@ -285,13 +285,13 @@ namespace Microsoft.OData.UriParser
             // expression
             var expression = this.ParseExpression();
             var endPathExpression = expression as EndPathToken;
-            AggregationMethod verb;
+            AggregationMethodDefinition verb;
 
             // "with" verb
             if (endPathExpression != null && endPathExpression.Identifier == ExpressionConstants.QueryOptionCount)
             {
                 // e.g. aggregate($count as Count)
-                verb = AggregationMethod.VirtualPropertyCount;
+                verb = AggregationMethodDefinition.VirtualPropertyCount;
             }
             else
             {
@@ -981,7 +981,7 @@ namespace Microsoft.OData.UriParser
             return new InnerPathToken(propertyName, parent, null);
         }
 
-        private AggregationMethod ParseAggregateWith()
+        private AggregationMethodDefinition ParseAggregateWith()
         {
             if (!TokenIdentifierIs(ExpressionConstants.KeywordWith))
             {
@@ -990,30 +990,40 @@ namespace Microsoft.OData.UriParser
 
             lexer.NextToken();
 
-            AggregationMethod verb;
+            AggregationMethodDefinition verb;
+            int identifierStartPosition = lexer.CurrentToken.Position;
+            string methodLabel = lexer.ReadDottedIdentifier(false /* acceptStar */);
 
-            switch (lexer.CurrentToken.GetIdentifier())
+            switch (methodLabel)
             {
                 case ExpressionConstants.KeywordAverage:
-                    verb = AggregationMethod.Average;
+                    verb = AggregationMethodDefinition.Average;
                     break;
                 case ExpressionConstants.KeywordCountDistinct:
-                    verb = AggregationMethod.CountDistinct;
+                    verb = AggregationMethodDefinition.CountDistinct;
                     break;
                 case ExpressionConstants.KeywordMax:
-                    verb = AggregationMethod.Max;
+                    verb = AggregationMethodDefinition.Max;
                     break;
                 case ExpressionConstants.KeywordMin:
-                    verb = AggregationMethod.Min;
+                    verb = AggregationMethodDefinition.Min;
                     break;
                 case ExpressionConstants.KeywordSum:
-                    verb = AggregationMethod.Sum;
+                    verb = AggregationMethodDefinition.Sum;
                     break;
                 default:
-                    throw ParseError(ODataErrorStrings.UriQueryExpressionParser_UnrecognizedWithVerb(lexer.CurrentToken.GetIdentifier(), this.lexer.CurrentToken.Position, this.lexer.ExpressionText));
-            }
+                    if (!methodLabel.Contains(OData.ExpressionConstants.SymbolDot))
+                    {
+                        throw ParseError(
+                            ODataErrorStrings.UriQueryExpressionParser_UnrecognizedWithMethod(
+                                methodLabel,
+                                identifierStartPosition,
+                                this.lexer.ExpressionText));
+                    }
 
-            lexer.NextToken();
+                    verb = AggregationMethodDefinition.Custom(methodLabel);
+                    break;
+            }
 
             return verb;
         }

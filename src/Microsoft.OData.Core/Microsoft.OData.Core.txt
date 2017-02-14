@@ -661,7 +661,7 @@ UriQueryExpressionParser_CannotCreateStarTokenFromNonStar=Expecting a Star token
 UriQueryExpressionParser_RangeVariableAlreadyDeclared=The range variable '{0}' has already been declared.
 UriQueryExpressionParser_AsExpected='as' expected at position {0} in '{1}'.
 UriQueryExpressionParser_WithExpected='with' expected at position {0} in '{1}'.
-UriQueryExpressionParser_UnrecognizedWithVerb=Unrecognized with '{0}' at '{1}' in '{2}'.
+UriQueryExpressionParser_UnrecognizedWithMethod=Unrecognized with '{0}' at '{1}' in '{2}'.
 UriQueryExpressionParser_PropertyPathExpected=Expression expected at position {0} in '{1}'.
 UriQueryExpressionParser_KeywordOrIdentifierExpected='{0}' expected at position {1} in '{2}'.
 

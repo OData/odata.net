@@ -4154,8 +4154,8 @@ namespace Microsoft.OData {
         /// <summary>
         /// A string like "Unrecognized with '{0}' at '{1}' in '{2}'."
         /// </summary>
-        internal static string UriQueryExpressionParser_UnrecognizedWithVerb(object p0, object p1, object p2) {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.UriQueryExpressionParser_UnrecognizedWithVerb, p0, p1, p2);
+        internal static string UriQueryExpressionParser_UnrecognizedWithMethod(object p0, object p1, object p2) {
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.UriQueryExpressionParser_UnrecognizedWithMethod, p0, p1, p2);
         }
 
         /// <summary>
