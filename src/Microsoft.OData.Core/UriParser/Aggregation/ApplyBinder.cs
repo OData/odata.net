@@ -80,13 +80,13 @@ namespace Microsoft.OData.UriParser.Aggregation
                 throw new ODataException(ODataErrorStrings.ApplyBinder_AggregateExpressionNotSingleValue(token.Expression));
             }
 
-            var typeReference = CreateAggregateExpressionTypeReference(expression, token.Method);
+            var typeReference = CreateAggregateExpressionTypeReference(expression, token.MethodDefinition);
 
             // TODO: Determine source
-            return new AggregateExpression(expression, token.Method, token.Alias, typeReference);
+            return new AggregateExpression(expression, token.MethodDefinition, token.Alias, typeReference);
         }
 
-        private IEdmTypeReference CreateAggregateExpressionTypeReference(SingleValueNode expression, AggregationMethod withVerb)
+        private IEdmTypeReference CreateAggregateExpressionTypeReference(SingleValueNode expression, AggregationMethodDefinition method)
         {
             var expressionType = expression.TypeReference;
             if (expressionType == null && aggregateExpressionsCache != null)
@@ -98,7 +98,7 @@ namespace Microsoft.OData.UriParser.Aggregation
                 }
             }
 
-            switch (withVerb)
+            switch (method.MethodKind)
             {
                 case AggregationMethod.Average:
                     var expressionPrimitiveKind = expressionType.PrimitiveKind();
@@ -125,7 +125,10 @@ namespace Microsoft.OData.UriParser.Aggregation
                 case AggregationMethod.Sum:
                     return expressionType;
                 default:
-                    throw new ODataException(ODataErrorStrings.ApplyBinder_UnsupportedAggregateMethod(withVerb));
+                    // Only the EdmModel knows which type the custom aggregation methods returns.
+                    // Since we do not have a reference for it, right now we are assuming that all custom aggregation methods returns Doubles
+                    // TODO: find a appropriate way of getting the return type.
+                    return EdmCoreModel.Instance.GetPrimitive(EdmPrimitiveTypeKind.Double, expressionType.IsNullable);
             }
         }
 

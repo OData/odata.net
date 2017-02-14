@@ -20,16 +20,24 @@ namespace Microsoft.OData.UriParser.Aggregation
 
         private readonly AggregationMethod method;
 
+        private readonly AggregationMethodDefinition methodDefinition;
+
         private readonly string alias;
 
-        public AggregateExpressionToken(QueryToken expression, AggregationMethod withVerb, string alias)
+        public AggregateExpressionToken(QueryToken expression, AggregationMethod method, string alias)
         {
             ExceptionUtils.CheckArgumentNotNull(expression, "expression");
             ExceptionUtils.CheckArgumentNotNull(alias, "alias");
 
             this.expression = expression;
-            this.method = withVerb;
+            this.method = method;
             this.alias = alias;
+        }
+
+        public AggregateExpressionToken(QueryToken expression, AggregationMethodDefinition methodDefinition, string alias)
+            : this(expression, methodDefinition.MethodKind, alias)
+        {
+            this.methodDefinition = methodDefinition;
         }
 
         public override QueryTokenKind Kind
@@ -40,6 +48,11 @@ namespace Microsoft.OData.UriParser.Aggregation
         public AggregationMethod Method
         {
             get { return this.method; }
+        }
+
+        public AggregationMethodDefinition MethodDefinition
+        {
+            get { return this.methodDefinition; }
         }
 
         public QueryToken Expression
