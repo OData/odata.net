@@ -198,6 +198,8 @@
     <Compile Include="JsonLight\ODataJsonLightValidationUtils.cs" />
     <Compile Include="JsonLight\ODataJsonLightValueSerializer.cs" />
     <Compile Include="JsonLight\ODataJsonLightWriter.cs" />
+    <Compile Include="JsonLight\ODataJsonLightBatchBodyWriter.cs" />
+    <Compile Include="JsonLight\ODataJsonLightWriterCore.cs" />
     <Compile Include="JsonLight\ODataJsonLightWriterUtils.cs" />
     <Compile Include="JsonLight\ReorderingJsonReader.cs" />
     <Compile Include="Json\BufferingJsonReader.cs" />
@@ -220,6 +222,8 @@
     <Compile Include="Json\ODataJsonReaderCoreUtils.cs" />
     <Compile Include="Json\ODataJsonWriterUtils.cs" />
     <Compile Include="Json\TextWriterWrapper.cs" />
+    <Compile Include="ODataBatchJsonWriter.cs" />
+    <Compile Include="ODataBatchMimeWriter.cs" />
     <Compile Include="ODataErrorDetail.cs" />
     <Compile Include="ODataUntypedValue.cs" />
     <Compile Include="ODataMediaType.cs" />

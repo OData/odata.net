@@ -253,6 +253,12 @@ namespace Microsoft.OData.Core.JsonLight
         }
 #endif
 
+        internal override ODataBatchReader CreateBatchReader(string batchBoundary)
+        {
+            Debug.Assert(batchBoundary == null);
+            return this.CreateBatchReaderImplementation();
+        }
+
         /// <summary>
         /// This method creates an reads the property from the input and 
         /// returns an <see cref="ODataProperty"/> representing the read property.
@@ -698,6 +704,18 @@ namespace Microsoft.OData.Core.JsonLight
         private ODataParameterReader CreateParameterReaderImplementation(IEdmOperation operation)
         {
             return new ODataJsonLightParameterReader(this, operation);
+        }
+
+        private ODataBatchReader CreateBatchReaderImplementation()
+        {
+            
+            // TODO: biaol
+            // return new ODataJsonLightCollectionReader();
+            if (this.jsonReader != null)   //TODO: biaol -- just to make compiler happy.
+            {
+                return null;
+            }
+            return null;
         }
     }
 }

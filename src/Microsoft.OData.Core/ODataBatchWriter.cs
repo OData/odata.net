@@ -18,18 +18,18 @@ namespace Microsoft.OData.Core
     #endregion Namespaces
 
     /// <summary>
-    /// Class for writing OData batch messages; also verifies the proper sequence of write calls on the writer.
+    /// Abstract class for writing OData batch messages; also verifies the proper sequence of write calls on the writer.
     /// </summary>
-    public sealed class ODataBatchWriter : IODataBatchOperationListener, IODataOutputInStreamErrorListener
+    public abstract class ODataBatchWriter : IODataBatchOperationListener, IODataOutputInStreamErrorListener
     {
         /// <summary>The output context to write to.</summary>
-        private readonly ODataRawOutputContext rawOutputContext;
+        internal readonly ODataRawOutputContext rawOutputContext;
 
         /// <summary>The boundary string for the batch structure itself.</summary>
-        private readonly string batchBoundary;
+        internal readonly string batchBoundary;
 
         /// <summary>The batch-specific URL resolver that stores the content IDs found in a changeset and supports resolving cross-referencing URLs.</summary>
-        private readonly ODataBatchUrlResolver urlResolver;
+        internal readonly ODataBatchUrlResolver urlResolver;
 
         /// <summary>The state the writer currently is in.</summary>
         private BatchWriterState state;
@@ -39,19 +39,19 @@ namespace Microsoft.OData.Core
         /// e.g., after WriteStartChangeSet has been called and before WriteEndChangeSet is called).
         /// </summary>
         /// <remarks>When not writing a changeset this field is null.</remarks>
-        private string changeSetBoundary;
+        internal string changeSetBoundary;
 
         /// <summary>
         /// A flag to indicate whether the batch start boundary has been written or not; important to support writing of empty batches.
         /// </summary>
-        private bool batchStartBoundaryWritten;
+        internal bool batchStartBoundaryWritten;
 
         /// <summary>
         /// A flags to indicate whether the current changeset start boundary has been written or not.
-        /// This is false if a changeset has been started by no changeset boundary was written, and true once the first changeset
+        /// This is false if a changeset has been started but no changeset boundary was written, and true once the first changeset
         /// boundary for the current changeset has been written.
         /// </summary>
-        private bool changesetStartBoundaryWritten;
+        internal bool changesetStartBoundaryWritten;
 
         /// <summary>The request message for the operation that is currently written if it's a request; 
         /// or null if no part is written right now or it's a response part.</summary>
@@ -68,7 +68,7 @@ namespace Microsoft.OData.Core
         /// Note that the current Content-ID header is not included immediately in the content ID cache
         /// since the current content ID will only be visible to subsequent operations.
         /// </remarks>
-        private string currentOperationContentId;
+        internal string currentOperationContentId;
 
         /// <summary>The current size of the batch message, i.e., how many query operations and changesets have been written.</summary>
         private uint currentBatchSize;
@@ -99,7 +99,7 @@ namespace Microsoft.OData.Core
         /// <summary>
         /// An enumeration representing the current state of the writer.
         /// </summary>
-        private enum BatchWriterState
+        internal enum BatchWriterState
         {
             /// <summary>The writer is in initial state; nothing has been written yet.</summary>
             Start,
@@ -133,7 +133,7 @@ namespace Microsoft.OData.Core
         }
 
         /// <summary>The request message for the operation that is currently written if it's a request; or null if no operation is written right now or it's a response operation.</summary>
-        private ODataBatchOperationRequestMessage CurrentOperationRequestMessage
+        internal ODataBatchOperationRequestMessage CurrentOperationRequestMessage
         {
             get
             {
@@ -152,7 +152,7 @@ namespace Microsoft.OData.Core
 
         /// <summary>The response message for the operation that is currently written if it's a response; 
         /// or null if no operation is written right now or it's a request operation.</summary>
-        private ODataBatchOperationResponseMessage CurrentOperationResponseMessage
+        internal ODataBatchOperationResponseMessage CurrentOperationResponseMessage
         {
             get
             {
@@ -170,7 +170,7 @@ namespace Microsoft.OData.Core
         }
 
         /// <summary>The message for the operation that is currently written; or null if no operation is written right now.</summary>
-        private ODataBatchOperationMessage CurrentOperationMessage
+        internal ODataBatchOperationMessage CurrentOperationMessage
         {
             get
             {
@@ -429,12 +429,9 @@ namespace Microsoft.OData.Core
         }
 
         /// <summary>
-        /// Starts a new batch - implementation of the actual functionality.
+        /// Starts a new batch.
         /// </summary>
-        private void WriteStartBatchImplementation()
-        {
-            this.SetState(BatchWriterState.BatchStarted);
-        }
+        internal abstract void WriteStartBatchImplementation();
 
         /// <summary>
         /// Verifies that calling WriteEndBatch is valid.
@@ -447,26 +444,9 @@ namespace Microsoft.OData.Core
         }
 
         /// <summary>
-        /// Ends a batch - implementation of the actual functionality.
+        /// Ends a batch.
         /// </summary>
-        private void WriteEndBatchImplementation()
-        {
-            Debug.Assert(
-                this.batchStartBoundaryWritten || this.CurrentOperationMessage == null,
-                "If not batch boundary was written we must not have an active message.");
-
-            // write pending message data (headers, response line) for a previously unclosed message/request
-            this.WritePendingMessageData(true);
-
-            this.SetState(BatchWriterState.BatchCompleted);
-
-            // write the end boundary for the batch
-            ODataBatchWriterUtils.WriteEndBoundary(this.rawOutputContext.TextWriter, this.batchBoundary, !this.batchStartBoundaryWritten);
-
-            // For compatibility with WCF DS we write a newline after the end batch boundary.
-            // Technically it's not needed, but it doesn't violate anything either.
-            this.rawOutputContext.TextWriter.WriteLine();
-        }
+        internal abstract void WriteEndBatchImplementation();
 
         /// <summary>
         /// Verifies that calling WriteStartChangeset is valid.
@@ -479,29 +459,9 @@ namespace Microsoft.OData.Core
         }
 
         /// <summary>
-        /// Starts a new changeset - implementation of the actual functionality.
+        /// Starts a new changeset.
         /// </summary>
-        private void WriteStartChangesetImplementation()
-        {
-            // write pending message data (headers, response line) for a previously unclosed message/request
-            this.WritePendingMessageData(true);
-
-            // important to do this first since it will set up the change set boundary.
-            this.SetState(BatchWriterState.ChangeSetStarted);
-            Debug.Assert(this.changeSetBoundary != null, "this.changeSetBoundary != null");
-
-            // reset the size of the current changeset and increase the size of the batch
-            this.ResetChangeSetSize();
-            this.InterceptException(this.IncreaseBatchSize);
-
-            // write the boundary string
-            ODataBatchWriterUtils.WriteStartBoundary(this.rawOutputContext.TextWriter, this.batchBoundary, !this.batchStartBoundaryWritten);
-            this.batchStartBoundaryWritten = true;
-
-            // write the change set headers
-            ODataBatchWriterUtils.WriteChangeSetPreamble(this.rawOutputContext.TextWriter, this.changeSetBoundary);
-            this.changesetStartBoundaryWritten = false;
-        }
+        internal abstract void WriteStartChangesetImplementation();
 
         /// <summary>
         /// Verifies that calling WriteEndChangeset is valid.
@@ -514,34 +474,12 @@ namespace Microsoft.OData.Core
         }
 
         /// <summary>
-        /// Ends an active changeset - implementation of the actual functionality.
+        /// Ends an active changeset.
         /// </summary>
-        private void WriteEndChangesetImplementation()
-        {
-            // write pending message data (headers, response line) for a previously unclosed message/request
-            this.WritePendingMessageData(true);
-
-            string currentChangeSetBoundary = this.changeSetBoundary;
-
-            // change the state first so we validate the change set boundary before attempting to write it.
-            this.SetState(BatchWriterState.ChangeSetCompleted);
-
-            // In the case of an empty changeset the start changeset boundary has not been written yet
-            // we will leave it like that, since we want the empty changeset to be represented only as
-            // the end changeset boundary.
-            // Due to WCF DS V2 compatiblity we must not write the start boundary in this case
-            // otherwise WCF DS V2 won't be able to read it (it fails on the start-end boundary empty changeset).
-
-            // write the end boundary for the change set
-            ODataBatchWriterUtils.WriteEndBoundary(this.rawOutputContext.TextWriter, currentChangeSetBoundary, !this.changesetStartBoundaryWritten);
-
-            // Reset the cache of content IDs here. As per spec, content IDs are only unique inside a change set.
-            this.urlResolver.Reset();
-            this.currentOperationContentId = null;
-        }
+        internal abstract void WriteEndChangesetImplementation();
 
         /// <summary>
-        /// Verifies that calling CreateOperationRequestMessage if valid.
+        /// Verifies that calling CreateOperationRequestMessage is valid.
         /// </summary>
         /// <param name="synchronousCall">true if the call is to be synchronous; false otherwise.</param>
         /// <param name="method">The Http method to be used for this request operation.</param>
@@ -647,32 +585,12 @@ namespace Microsoft.OData.Core
         }
 
         /// <summary>
-        /// Creates an <see cref="ODataBatchOperationResponseMessage"/> for writing an operation of a batch response - implementation of the actual functionality.
+        /// Creates an <see cref="ODataBatchOperationResponseMessage"/> for writing an operation of a batch response.
         /// </summary>
         /// <param name="contentId">The Content-ID value to write in ChangeSet head.</param>
         /// <returns>The message that can be used to write the response operation.</returns>
-        private ODataBatchOperationResponseMessage CreateOperationResponseMessageImplementation(string contentId)
-        {
-            this.WritePendingMessageData(true);
-
-            // In responses we don't need to use our batch URL resolver, since there are no cross referencing URLs
-            // so use the URL resolver from the batch message instead.
-            this.CurrentOperationResponseMessage = ODataBatchOperationResponseMessage.CreateWriteMessage(
-                this.rawOutputContext.OutputStream,
-                /*operationListener*/ this,
-                this.urlResolver.BatchMessageUrlResolver);
-            this.SetState(BatchWriterState.OperationCreated);
-
-            Debug.Assert(this.currentOperationContentId == null, "The Content-ID header is only supported in request messages.");
-
-            // write the operation's start boundary string
-            this.WriteStartBoundaryForOperation();
-
-            // write the headers and request separator line
-            ODataBatchWriterUtils.WriteResponsePreamble(this.rawOutputContext.TextWriter, changeSetBoundary != null, contentId);
-
-            return this.CurrentOperationResponseMessage;
-        }
+        internal abstract ODataBatchOperationResponseMessage CreateOperationResponseMessageImplementation(
+            string contentId);
 
         /// <summary>
         /// Writes all the pending headers and prepares the writer to write a content of the operation.
@@ -775,7 +693,7 @@ namespace Microsoft.OData.Core
         /// state ExceptionThrown and then rethrow the exception.
         /// </summary>
         /// <param name="action">The action to execute.</param>
-        private void InterceptException(Action action)
+        internal void InterceptException(Action action)
         {
             try
             {
@@ -796,7 +714,7 @@ namespace Microsoft.OData.Core
         /// Sets a new writer state; verifies that the transition from the current state into new state is valid.
         /// </summary>
         /// <param name="newState">The writer state to transition into.</param>
-        private void SetState(BatchWriterState newState)
+        internal void SetState(BatchWriterState newState)
         {
             this.InterceptException(() => this.ValidateTransition(newState));
 
@@ -956,59 +874,12 @@ namespace Microsoft.OData.Core
         /// <param name="reportMessageCompleted">
         /// A flag to control whether after writing the pending data we report writing the message to be completed or not.
         /// </param>
-        private void WritePendingMessageData(bool reportMessageCompleted)
-        {
-            if (this.CurrentOperationMessage != null)
-            {
-                Debug.Assert(this.rawOutputContext.TextWriter != null, "Must have a batch writer if pending data exists.");
-
-                if (this.CurrentOperationResponseMessage != null)
-                {
-                    Debug.Assert(this.rawOutputContext.WritingResponse, "If the response message is available we must be writing response.");
-                    int statusCode = this.CurrentOperationResponseMessage.StatusCode;
-                    string statusMessage = HttpUtils.GetStatusMessage(statusCode);
-                    this.rawOutputContext.TextWriter.WriteLine("{0} {1} {2}", ODataConstants.HttpVersionInBatching, statusCode, statusMessage);
-                }
-
-                IEnumerable<KeyValuePair<string, string>> headers = this.CurrentOperationMessage.Headers;
-                if (headers != null)
-                {
-                    foreach (KeyValuePair<string, string> headerPair in headers)
-                    {
-                        string headerName = headerPair.Key;
-                        string headerValue = headerPair.Value;
-                        this.rawOutputContext.TextWriter.WriteLine(string.Format(CultureInfo.InvariantCulture, "{0}: {1}", headerName, headerValue));
-                    }
-                }
-
-                // write CRLF after the headers (or request/response line if there are no headers)
-                this.rawOutputContext.TextWriter.WriteLine();
-
-                if (reportMessageCompleted)
-                {
-                    this.CurrentOperationMessage.PartHeaderProcessingCompleted();
-                    this.CurrentOperationRequestMessage = null;
-                    this.CurrentOperationResponseMessage = null;
-                }
-            }
-        }
+        internal abstract void WritePendingMessageData(bool reportMessageCompleted);
 
         /// <summary>
         /// Writes the start boundary for an operation. This is either the batch or the changeset boundary.
         /// </summary>
-        private void WriteStartBoundaryForOperation()
-        {
-            if (this.changeSetBoundary == null)
-            {
-                ODataBatchWriterUtils.WriteStartBoundary(this.rawOutputContext.TextWriter, this.batchBoundary, !this.batchStartBoundaryWritten);
-                this.batchStartBoundaryWritten = true;
-            }
-            else
-            {
-                ODataBatchWriterUtils.WriteStartBoundary(this.rawOutputContext.TextWriter, this.changeSetBoundary, !this.changesetStartBoundaryWritten);
-                this.changesetStartBoundaryWritten = true;
-            }
-        }
+        internal abstract void WriteStartBoundaryForOperation();
 
         /// <summary>
         /// Sets the 'Error' state and then throws an ODataException with the specified error message.
@@ -1023,7 +894,7 @@ namespace Microsoft.OData.Core
         /// <summary>
         /// Increases the size of the current batch message; throws if the allowed limit is exceeded.
         /// </summary>
-        private void IncreaseBatchSize()
+        internal void IncreaseBatchSize()
         {
             this.currentBatchSize++;
 
@@ -1049,7 +920,7 @@ namespace Microsoft.OData.Core
         /// <summary>
         /// Resets the size of the current change set to 0.
         /// </summary>
-        private void ResetChangeSetSize()
+        internal void ResetChangeSetSize()
         {
             this.currentChangeSetSize = 0;
         }

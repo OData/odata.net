@@ -22,9 +22,9 @@ namespace Microsoft.OData.Core.JsonLight
     #endregion Namespaces
 
     /// <summary>
-    /// Implementation of the ODataWriter for the JsonLight format.
+    /// Implementation of the ODataWriter for the JsonLight format with body attribute name for batch response.
     /// </summary>
-    internal sealed class ODataJsonLightWriter : ODataJsonLightWriterCore
+    internal sealed class ODataJsonLightBatchBodyWriter : ODataJsonLightWriterCore
     {
         /// <summary>
         /// Constructor.
@@ -36,7 +36,7 @@ namespace Microsoft.OData.Core.JsonLight
         /// <param name="writingParameter">true if the writer is created for writing a parameter; false otherwise.</param>
         /// <param name="writingDelta">True if the writer is created for writing delta response; false otherwise.</param>
         /// <param name="listener">If not null, the writer will notify the implementer of the interface of relevant state changes in the writer.</param>
-        internal ODataJsonLightWriter(
+        internal ODataJsonLightBatchBodyWriter(
             ODataJsonLightOutputContext jsonLightOutputContext,
             IEdmNavigationSource navigationSource,
             IEdmEntityType entityType,
@@ -44,7 +44,7 @@ namespace Microsoft.OData.Core.JsonLight
             bool writingParameter = false,
             bool writingDelta = false,
             IODataReaderWriterListener listener = null)
-            : base(jsonLightOutputContext, navigationSource, entityType, writingFeed, writingDelta, writingParameter, listener)
+            : base(jsonLightOutputContext, navigationSource, entityType, writingFeed, writingParameter, writingDelta, listener)
         {
         }
 
@@ -53,6 +53,7 @@ namespace Microsoft.OData.Core.JsonLight
         /// </summary>
         protected override void StartPayload()
         {
+            this.jsonWriter.WriteRawValue("\"body\" : ");
             this.jsonLightEntryAndFeedSerializer.WritePayloadStart();
         }
     }
