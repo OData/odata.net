@@ -226,7 +226,12 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="AfterBuild">
-    <CreateItem Include="$(NugetPack)\EntityFramework.5.0.0\EntityFramework.5.0.0.nuspec" AdditionalMetadata="TargetPath=">
+    <CreateItem Condition="Exists('$(NugetPack)\EntityFramework.5.0.0\EntityFramework.5.0.0.nuspec')"
+         Include="$(NugetPack)\EntityFramework.5.0.0\EntityFramework.5.0.0.nuspec" AdditionalMetadata="TargetPath=">
+      <Output TaskParameter="Include" ItemName="EF5" />
+    </CreateItem>
+    <CreateItem Condition="Exists('$(NugetPack)\EntityFramework.5.0.0\EntityFramework.nuspec')"
+         Include="$(NugetPack)\EntityFramework.5.0.0\EntityFramework.nuspec" AdditionalMetadata="TargetPath=">
       <Output TaskParameter="Include" ItemName="EF5" />
     </CreateItem>
     <CreateItem Include="$(NugetPack)\EntityFramework.5.0.0\Content\App.config.transform" AdditionalMetadata="TargetPath=Content">
