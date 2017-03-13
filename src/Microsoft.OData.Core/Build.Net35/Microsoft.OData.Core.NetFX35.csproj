@@ -514,6 +514,9 @@
     <Compile Include="$(ODataCrossTargettingSourcePath)\JsonLight\ODataJsonLightWriter.cs">
       <Link>Microsoft\OData\Core\JsonLight\ODataJsonLightWriter.cs</Link>
     </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\JsonLight\ODataJsonLightWriterCore.cs">
+      <Link>Microsoft\OData\Core\JsonLight\ODataJsonLightWriterCore.cs</Link>
+    </Compile>
     <Compile Include="$(ODataCrossTargettingSourcePath)\JsonLight\ODataJsonLightWriterUtils.cs">
       <Link>Microsoft\OData\Core\JsonLight\ODataJsonLightWriterUtils.cs</Link>
     </Compile>
@@ -696,6 +699,12 @@
     </Compile>
     <Compile Include="$(ODataCrossTargettingSourcePath)\ODataBatchWriter.cs">
       <Link>Microsoft\OData\Core\ODataBatchWriter.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\ODataBatchJsonWriter.cs">
+      <Link>Microsoft\OData\Core\ODataBatchJsonWriter.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\ODataBatchMimeWriter.cs">
+      <Link>Microsoft\OData\Core\ODataBatchMimeWriter.cs</Link>
     </Compile>
     <Compile Include="$(ODataCrossTargettingSourcePath)\ODataBatchWriterUtils.cs">
       <Link>Microsoft\OData\Core\ODataBatchWriterUtils.cs</Link>
@@ -1827,10 +1836,6 @@
     <Compile Include="..\UriParser\UriFunctionsHelper.cs">
       <Link>Microsoft\OData\Core\UriParser\UriFunctionsHelper.cs</Link>
     </Compile>
-    <Compile Include="Microsoft\OData\Core\JsonLight\ODataJsonLightBatchBodyWriter.cs" />
-    <Compile Include="Microsoft\OData\Core\JsonLight\ODataJsonLightWriterCore.cs" />
-    <Compile Include="Microsoft\OData\Core\ODataBatchJsonWriter.cs" />
-    <Compile Include="Microsoft\OData\Core\ODataBatchMimeWriter.cs" />
     <Compile Include="ShippingAssemblyAttributes.cs" />
     <Compile Include="$(AssemblyKeysCSharpFilePath)">
       <IncludeInOpenSource>false</IncludeInOpenSource>

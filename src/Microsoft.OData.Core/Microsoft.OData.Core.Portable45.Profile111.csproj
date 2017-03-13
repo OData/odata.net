@@ -165,7 +165,6 @@
     <Compile Include="JsonLight\JsonNoMetadataLevel.cs" />
     <Compile Include="JsonLight\JsonNoMetadataTypeNameOracle.cs" />
     <Compile Include="JsonLight\ODataAnnotationNames.cs" />
-    <Compile Include="JsonLight\ODataJsonLightBatchBodyWriter.cs" />
     <Compile Include="JsonLight\ODataJsonLightCollectionDeserializer.cs" />
     <Compile Include="JsonLight\ODataJsonLightCollectionReader.cs" />
     <Compile Include="JsonLight\ODataJsonLightCollectionSerializer.cs" />

@@ -278,7 +278,16 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Writer.JsonLight
 
             using (var messageReader = new ODataMessageReader((IODataResponseMessage)message, null, ModelWithFunction))
             {
-                messageReader.DetectPayloadKind().Single().PayloadKind.Should().Be(ODataPayloadKind.Feed);
+                // ODataFormat.Batch always returns Batch payload kind for application/json content type, which is the only
+                // thing checked for its payload kind detection.
+                //TODO: update the ODataFormat.Batch.DetectionpayloadKind() to return empty in this case??
+                messageReader.DetectPayloadKind().Select(_ => _.PayloadKind)
+                    .Should()
+                    .Contain(new List<ODataPayloadKind>()
+                    {
+                        ODataPayloadKind.Feed,
+                        ODataPayloadKind.Batch
+                    });
 
                 var reader = messageReader.CreateODataFeedReader();
                 while (reader.Read())

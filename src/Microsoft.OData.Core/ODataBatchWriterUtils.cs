@@ -18,6 +18,8 @@ namespace Microsoft.OData.Core
     /// </summary>
     internal static class ODataBatchWriterUtils
     {
+        internal static int HTTP_STATUS_NO_CONTENT = 204;
+
         /// <summary>
         /// Creates a new batch boundary string based on a randomly created GUID.
         /// </summary>
@@ -89,7 +91,7 @@ namespace Microsoft.OData.Core
             writer.WriteLine("{");
         }
 
-        internal static void WriteSubBatchJsonStartBoundary(TextWriter writer, string subBatchId, int subBatchStatusCode, bool firstBoundary)
+        internal static void WriteSubBatchJsonStartBoundary(TextWriter writer, string subBatchId, bool firstBoundary)
         {
             Debug.Assert(writer != null, "writer != null");
 
@@ -101,8 +103,6 @@ namespace Microsoft.OData.Core
 
             writer.Write("\"{0}\": ", subBatchId);
             writer.WriteLine("{");        // have to write out the opening curly brace separated from the preceeding string.
-
-            writer.WriteLine("\"status\": \"{0}\",", subBatchStatusCode);
 
             writer.WriteLine("\"responses\": [");
         }
@@ -119,13 +119,6 @@ namespace Microsoft.OData.Core
             }
 
             writer.WriteLine("{");
-//            writer.WriteLine("\"requestId\": \"{0}\"", operationResponseMessage.ContentId);
-//            writer.WriteLine("\"status\": \"{0}\"", operationResponseMessage.StatusCode);
-//            // TODO: biaol --- populate headers
-//            writer.WriteLine("\"headers\": {0}", "{h1: v1\r\nh2: v2}");
-//            writer.Write("\"body\": ");
-//            // TODO: biaol --- populate response body
-//            writer.Write("a-fake-response-body");
         }
 
         internal static void WriteSubBatchJsonEndBoundary(TextWriter writer, bool missingStartBoundary)
@@ -245,6 +238,11 @@ namespace Microsoft.OData.Core
 
             // write separator line between headers and first change set operation
             writer.WriteLine();
+        }
+
+        internal static bool HasResponseBody(ODataBatchOperationResponseMessage responseMessage)
+        {
+            return responseMessage.StatusCode != HTTP_STATUS_NO_CONTENT;
         }
     }
 }

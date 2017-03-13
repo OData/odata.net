@@ -504,28 +504,33 @@ namespace Microsoft.OData.Core.JsonLight
         /// <returns>The created writer.</returns>
         private ODataWriter CreateODataFeedWriterImplementation(IEdmEntitySetBase entitySet, IEdmEntityType entityType)
         {
-            ODataJsonLightWriterCore odataJsonWriter;
-            if (IsJsonBatching())
-            {
-                odataJsonWriter = new ODataJsonLightBatchBodyWriter(this, entitySet, entityType, /*writingFeed*/true);
-            }
-            else
-            {
-                odataJsonWriter = new ODataJsonLightWriter(this, entitySet, entityType, /*writingFeed*/true);
-            }
+            ODataJsonLightWriterCore odataJsonWriter 
+                = new ODataJsonLightWriter(this, entitySet, entityType, /*writingFeed*/true);
+
             this.outputInStreamErrorListener = odataJsonWriter;
             return odataJsonWriter;
         }
 
-        private bool IsJsonBatching()
-        {
-            IList<KeyValuePair<ODataMediaType, string>> mediaTypeToCharsetList = HttpUtils.MediaTypesFromString(this.MessageWriterSettings.AcceptableMediaTypes);
-
-            return mediaTypeToCharsetList.Any(
-                _ =>
-                    _.Key.Type.Equals(MimeConstants.MimeApplicationType) &&
-                    _.Key.SubType.Equals(MimeConstants.MimeJsonSubType));
-        }
+        // TODO: biaol -- cleanup
+//        private bool IsJsonBatching()
+//        {
+//
+//            return false;
+//            Debug.Assert(this.Format != null, "this.Format cannot be null");
+//
+//            if (this.Format != ODataFormat.Batch ||
+//                this.MessageWriterSettings.AcceptableMediaTypes == null)
+//            {
+//                return false;
+//            }
+//
+//            IList<KeyValuePair<ODataMediaType, string>> mediaTypeToCharsetList = HttpUtils.MediaTypesFromString(this.MessageWriterSettings.AcceptableMediaTypes);
+//
+//            return mediaTypeToCharsetList.Any(
+//                _ =>
+//                    _.Key.Type.Equals(MimeConstants.MimeApplicationType) &&
+//                    _.Key.SubType.Equals(MimeConstants.MimeJsonSubType));
+//        }
 
         /// <summary>
         /// Creates an <see cref="ODataDeltaWriter" /> to write a delta response.
@@ -548,15 +553,9 @@ namespace Microsoft.OData.Core.JsonLight
         /// <returns>The created writer.</returns>
         private ODataWriter CreateODataEntryWriterImplementation(IEdmNavigationSource navigationSource, IEdmEntityType entityType)
         {
-            ODataJsonLightWriterCore odataJsonWriter;
-            if (IsJsonBatching())
-            {
-                odataJsonWriter = new ODataJsonLightBatchBodyWriter(this, navigationSource, entityType, /*writingFeed*/false);
-            }
-            else
-            {
-                odataJsonWriter = new ODataJsonLightWriter(this, navigationSource, entityType, /*writingFeed*/false);
-            }
+            ODataJsonLightWriterCore odataJsonWriter 
+                = new ODataJsonLightWriter(this, navigationSource, entityType, /*writingFeed*/false);
+
             this.outputInStreamErrorListener = odataJsonWriter;
             return odataJsonWriter;
         }

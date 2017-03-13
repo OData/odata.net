@@ -217,10 +217,12 @@ namespace Microsoft.OData.Core
 
             ODataFormat format = GetFormatFromContentType(contentTypeHeader, supportedPayloadKinds, mediaTypeResolver, out mediaType, out encoding, out selectedPayloadKind);
 
+            batchBoundary = null;
+
             // For batch payload of multipart/mixed type, read the required batch boundary parameter from the content type header.
             if (selectedPayloadKind == ODataPayloadKind.Batch && 
-                mediaType.Type.Equals(MimeConstants.MimeMultipartType) &&
-                mediaType.SubType.Equals(MimeConstants.MimeMixedSubType))
+                !(HttpUtils.CompareMediaTypeNames(MimeConstants.MimeApplicationType, mediaType.Type) &&
+                  HttpUtils.CompareMediaTypeNames(MimeConstants.MimeJsonSubType, mediaType.SubType)))
             {
                 KeyValuePair<string, string> boundaryPair = default(KeyValuePair<string, string>);
                 IEnumerable<KeyValuePair<string, string>> parameters = mediaType.Parameters;
@@ -233,12 +235,12 @@ namespace Microsoft.OData.Core
                         {
                             throw new ODataException(Strings.MediaTypeUtils_BoundaryMustBeSpecifiedForBatchPayloads(contentTypeHeader, ODataConstants.HttpMultipartBoundary));
                         }
-
+                
                         boundaryPair = pair;
                         boundaryPairFound = true;
                     }
                 }
-
+                
                 // Boundary parameter is required for multipart/mixed media type.
                 if (boundaryPair.Key == null)
                 {
@@ -246,13 +248,9 @@ namespace Microsoft.OData.Core
                         Strings.MediaTypeUtils_BoundaryMustBeSpecifiedForBatchPayloads(contentTypeHeader,
                             ODataConstants.HttpMultipartBoundary));
                 }
-
+                
                 batchBoundary = boundaryPair.Value;
                 ValidationUtils.ValidateBoundaryString(batchBoundary);
-            }
-            else
-            {
-                batchBoundary = null;
             }
 
             return format;

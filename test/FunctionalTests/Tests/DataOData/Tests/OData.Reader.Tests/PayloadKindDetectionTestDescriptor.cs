@@ -4,6 +4,8 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+using Microsoft.OData.Core;
+
 namespace Microsoft.Test.Taupo.OData.Reader.Tests
 {
     #region Namespaces
@@ -175,9 +177,25 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
             {
                 TestMessage = this.testMessage,
                 ReadDetectedPayloads = this.ReadDetectedPayloads,
-                ExpectedDetectionResults = this.ExpectedDetectionResults == null ? null : this.ExpectedDetectionResults(testConfiguration),
+                ExpectedDetectionResults = 
+                    this.ExpectedDetectionResults == null 
+                    ? null
+                    : BatchFormatDecoratorForApplicationJsonContentType(this.ExpectedDetectionResults(testConfiguration)),
                 ExpectedException = this.ExpectedException,
             };
+        }
+
+        private IEnumerable<PayloadKindDetectionResult> BatchFormatDecoratorForApplicationJsonContentType(
+            IEnumerable<PayloadKindDetectionResult> originalDetectionResults)
+        {
+            if (this.ContentType.StartsWith("application/json"))
+            {
+                // Application/json content type is valid for batch payload, add to original result.
+                List<PayloadKindDetectionResult> newList = originalDetectionResults.ToList();
+                newList.Add(new PayloadKindDetectionResult(ODataPayloadKind.Batch, ODataFormat.Batch));
+                return newList;
+            }
+            return originalDetectionResults;
         }
 
         /// <summary>

@@ -44,7 +44,7 @@ namespace Microsoft.OData.Core.JsonLight
             bool writingParameter = false,
             bool writingDelta = false,
             IODataReaderWriterListener listener = null)
-            : base(jsonLightOutputContext, navigationSource, entityType, writingFeed, writingDelta, writingParameter, listener)
+            : base(jsonLightOutputContext, navigationSource, entityType, writingFeed, writingParameter, writingDelta, listener)
         {
         }
 

@@ -45,7 +45,8 @@ namespace Microsoft.Test.Taupo.OData.Common.Tests.ObjectModelTests
         {
             Func<bool, IODataRequestMessage>[] requestMessageFuncs = new Func<bool, IODataRequestMessage>[]
                 {
-                    (writing) => CreateBatchOperationRequestMessage(writing),
+                    (writing) => CreateBatchOperationRequestMessage(writing, /*isMultipartMediaType*/ true),
+                    (writing) => CreateBatchOperationRequestMessage(writing, /*isMultipartMediaType*/ false),
                     (writing) => new ODataRequestMessageWrapper(new TestRequestMessage(new TestStream()), writing, false),
                 };
 
@@ -64,7 +65,8 @@ namespace Microsoft.Test.Taupo.OData.Common.Tests.ObjectModelTests
         {
             Func<bool, IODataResponseMessage>[] responseMessageFuncs = new Func<bool, IODataResponseMessage>[]
                 {
-                    (writing) => CreateBatchOperationResponseMessage(writing),
+                    (writing) => CreateBatchOperationResponseMessage(writing, /*isMultipartMediaType*/ true),
+                    (writing) => CreateBatchOperationResponseMessage(writing, /*isMultipartMediaType*/ false),
                     (writing) => new ODataResponseMessageWrapper(new TestResponseMessage(new TestStream()), writing, false)
                 };
 
@@ -145,7 +147,7 @@ namespace Microsoft.Test.Taupo.OData.Common.Tests.ObjectModelTests
                 exceptionVerifier);
         }
 
-        private static IODataRequestMessage CreateBatchOperationRequestMessage(bool writing)
+        private static IODataRequestMessage CreateBatchOperationRequestMessage(bool writing, bool isMultipartMediaType)
         {
             Stream stream = new TestStream();
             return (IODataRequestMessage)ReflectionUtils.CreateInstance(
@@ -155,23 +157,23 @@ namespace Microsoft.Test.Taupo.OData.Common.Tests.ObjectModelTests
                 ODataConstants.MethodGet,
                 new Uri("http://www.odata.org/"),
                 /*headers*/ null,
-                CreateListener(stream, false, writing),
+                CreateListener(stream, false, writing, isMultipartMediaType),
                 "1",
                 ReflectionUtils.CreateInstance(urlResolverType, new Type[] { typeof(IODataUrlResolver) }, new object[] { null }),
                 writing);
         }
 
-        private static IODataResponseMessage CreateBatchOperationResponseMessage(bool writing)
+        private static IODataResponseMessage CreateBatchOperationResponseMessage(bool writing, bool isMultipartMediaType)
         {
             Stream stream = new TestStream();
 
             return (IODataResponseMessage)ReflectionUtils.CreateInstance(
                 typeof(ODataBatchOperationResponseMessage),
                 new Type[] { typeof(Func<Stream>), batchOperationsHeadersType, batchOperationListenerType, typeof(string), typeof(IODataUrlResolver), typeof(bool) },
-                (object)(Func<Stream>)(() => stream), /*headers*/null, CreateListener(stream, true, writing), "1", /*urlResolver*/null, writing);
+                (object)(Func<Stream>)(() => stream), /*headers*/null, CreateListener(stream, true, writing, isMultipartMediaType), "1", /*urlResolver*/null, writing);
         }
 
-        private static object CreateListener(Stream stream, bool response, bool writing)
+        private static object CreateListener(Stream stream, bool response, bool writing, bool isMultipartMediaType)
         {
             ODataMessageWriterSettings settings = new ODataMessageWriterSettings();
             object message = response
@@ -199,7 +201,7 @@ namespace Microsoft.Test.Taupo.OData.Common.Tests.ObjectModelTests
                 /*model*/null,
                 /*urlResolver*/null);
             object listener = ReflectionUtils.CreateInstance(
-                typeof(ODataBatchWriter),
+                isMultipartMediaType? typeof(ODataBatchMimeWriter) : typeof(ODataBatchJsonWriter),
                 new Type[] { odataRawOutputContextType, typeof(string) },
                 rawOutputContext, "test-boundary");
             return listener;

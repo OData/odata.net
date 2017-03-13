@@ -37,7 +37,8 @@ namespace Microsoft.OData.Core
                     new KeyValuePair<string, string>(
                         MimeConstants.MimeMetadataParameterName,
                         MimeConstants.MimeMetadataParameterValueMinimal)
-                });
+                }
+                );
         #region Default media types per payload kind
         /// <summary>
         /// An array that maps stores the supported media types for all <see cref="ODataPayloadKind"/> .
@@ -373,7 +374,7 @@ namespace Microsoft.OData.Core
         /// </remarks>
         private void AddJsonMediaTypeForBatchPayloadKind()
         {
-            this.mediaTypesForPayloadKind[(int)ODataPayloadKind.Batch].Insert(0, new ODataMediaTypeFormat(ApplicationJsonLightMediaType, ODataFormat.Batch));
+            this.mediaTypesForPayloadKind[(int)ODataPayloadKind.Batch].Add(new ODataMediaTypeFormat(ApplicationJsonLightMediaType, ODataFormat.Batch));
         }
 
         /// <summary>

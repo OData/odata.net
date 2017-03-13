@@ -82,15 +82,11 @@ namespace Microsoft.OData.Core
             this.ResetChangeSetSize();
             this.InterceptException(this.IncreaseBatchSize);
 
-            // Fixed value 202 is seems to be more appropriate (ODataV4 spec says 200, but RDS seems to be more reasonable with 202).
-            int subBatchStatusCode = 202; // HttpStatusCode.Accepted
-           
             // TODO: biaol --- For top level property name of subBatch, need to use subBatchId, e.g. "batch1", from request.
             // Using changeSet boundary for now as the Id of the sub-batch.
             ODataBatchWriterUtils.WriteSubBatchJsonStartBoundary(
                 this.rawOutputContext.TextWriter,
                 this.changeSetBoundary,
-                subBatchStatusCode,
                 !this.batchStartBoundaryWritten);
             this.batchStartBoundaryWritten = true;
             this.changesetStartBoundaryWritten = false;
@@ -172,6 +168,7 @@ namespace Microsoft.OData.Core
                     this.rawOutputContext.TextWriter.WriteLine("\"status\": \"{0}\", ", this.CurrentOperationResponseMessage.StatusCode);
                 }
 
+                // headers attribute
                 IEnumerable<KeyValuePair<string, string>> headers = this.CurrentOperationMessage.Headers;
                 if (headers != null && !headers.IsEmptyReadOnlyEnumerable())
                 {
@@ -180,10 +177,16 @@ namespace Microsoft.OData.Core
                     {
                         string headerName = headerPair.Key;
                         string headerValue = headerPair.Value;
-                        //TODO: biaol --- this will convert primitive value such as 1 and true --> "1" and "true", might not be correct.
+                        // This will convert primitive value such as 1 and true --> "1" and "true".
                         this.rawOutputContext.TextWriter.WriteLine(string.Format(CultureInfo.InvariantCulture, "\"{0}\": \"{1}\", ", headerName, headerValue));
                     }
                     this.rawOutputContext.TextWriter.WriteLine("}, ");
+                }
+
+                // body attribute
+                if (ODataBatchWriterUtils.HasResponseBody(this.CurrentOperationResponseMessage))
+                {
+                    this.rawOutputContext.TextWriter.Write("\"body\":");
                 }
 
                 this.latestResponseJsonClosed = false;

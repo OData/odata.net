@@ -62,7 +62,19 @@ namespace Microsoft.OData.Core.Tests
             { 
                 // Note that as per spec the multipart/mixed must have a boundary parameter which is not specified here. We will add that parameter
                 // when using this mime type because we need to generate a new boundary every time.
-                new ODataMediaTypeFormat (new ODataMediaType(MimeConstants.MimeMultipartType, MimeConstants.MimeMixedSubType) ,ODataFormat.Batch),
+                new ODataMediaTypeFormat (new ODataMediaType(MimeConstants.MimeMultipartType,   MimeConstants.MimeMixedSubType), ODataFormat.Batch),
+                new ODataMediaTypeFormat (
+                    new ODataMediaType(
+                        MimeConstants.MimeApplicationType,
+                        MimeConstants.MimeJsonSubType,
+                        new List<KeyValuePair<string, string>>()
+                        {
+                            new KeyValuePair<string, string>(
+                                MimeConstants.MimeMetadataParameterName,
+                                MimeConstants.MimeMetadataParameterValueMinimal)
+                        }),
+                    ODataFormat.Batch
+                )
             },
             // parameter
             JsonMediaTypes,
