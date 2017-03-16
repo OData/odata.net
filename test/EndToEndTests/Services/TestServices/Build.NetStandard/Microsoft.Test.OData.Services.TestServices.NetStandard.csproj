@@ -1,0 +1,109 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <TargetFrameworkVersion>v5.0</TargetFrameworkVersion>
+    <TargetFrameworkIdentifier>.NETPortable</TargetFrameworkIdentifier>
+    <TargetFrameworkProfile>
+    </TargetFrameworkProfile>
+    <AssemblyName>Microsoft.Test.OData.Services.TestServices.NetStandard</AssemblyName>
+    <OutputType>Library</OutputType>
+    <RootNamespace>Microsoft.Test.OData.Services.TestServices</RootNamespace>
+    <ProjectGuid>{46117439-E803-47EF-B91C-7E697B986DD6}</ProjectGuid>
+    <ProjectTypeGuids>{786C830F-07A1-408B-BD7F-6EE04809D6DB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <MinimumVisualStudioVersion>14.0</MinimumVisualStudioVersion>
+    <AssemblyAttributeClsCompliant>false</AssemblyAttributeClsCompliant>
+    <DefineConstants>$(DefineConstants);PORTABLELIB;SUPPRESS_PORTABLELIB_TARGETFRAMEWORK_ATTRIBUTE</DefineConstants>
+    <NoStdLib>true</NoStdLib>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
+    <OutputPath>..\..\..\..\..\bin\AnyCPU\Debug\Test\.NETPortable\v5.0\Microsoft.Test.OData.Services.TestServices.NetStandard\</OutputPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|AnyCPU'">
+    <OutputPath>..\..\..\..\..\bin\AnyCPU\Release\Test\.NETPortable\v5.0\Microsoft.Test.OData.Services.TestServices.NetStandard\</OutputPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Cover|AnyCPU'">
+    <OutputPath>..\..\..\..\..\bin\AnyCPU\Cover\Test\.NETPortable\v5.0\Microsoft.Test.OData.Services.TestServices.NetStandard\</OutputPath>
+  </PropertyGroup>
+  <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), Build.props))\Build.props" />
+  <ItemGroup>
+    <ProjectReference Include="$(EnlistmentRoot)\src\Microsoft.OData.Core\Build.NetStandard\Microsoft.OData.Core.NetStandard.csproj">
+      <Project>{1A263F63-1859-4310-957B-4F8875019896}</Project>
+      <Name>Microsoft.OData.Core.NetStandard</Name>
+    </ProjectReference>
+    <ProjectReference Include="$(EnlistmentRoot)\src\Microsoft.OData.Client\Build.NetStandard\Microsoft.OData.Client.NetStandard.csproj">
+      <Project>{2B869CE6-ECFB-4B14-A5B3-E4169DEAC0EB}</Project>
+      <Name>Microsoft.OData.Client.NetStandard</Name>
+    </ProjectReference>
+    <ProjectReference Include="$(EnlistmentRoot)\src\Microsoft.OData.Edm\Build.NetStandard\Microsoft.OData.Edm.NetStandard.csproj">
+      <Project>{DB301FA8-1CFA-487D-BA1E-803016E2A85C}</Project>
+      <Name>Microsoft.OData.Edm.NetStandard</Name>
+    </ProjectReference>
+    <ProjectReference Include="$(EnlistmentRoot)\src\Microsoft.Spatial\Build.NetStandard\Microsoft.Spatial.NetStandard.csproj">
+      <Project>{48142D27-C862-4F4F-A781-1A9B72F6CDFA}</Project>
+      <Name>Microsoft.Spatial.NetStandard</Name>
+    </ProjectReference>
+    <ProjectReference Include="$(EnlistmentRoot)\test\EndToEndTests\Framework\Core\Build.NetStandard\Microsoft.Test.OData.Framework.NetStandard.csproj">
+      <Project>{3BD5AB16-2C06-4C28-ACB9-4965ADAD27C7}</Project>
+      <Name>Microsoft.Test.OData.Framework.NetStandard</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\IServiceUriGenerator.cs" />
+    <Compile Include="..\ODataWriterServiceUtil.cs" />
+    <Compile Include="..\OpenTypesServiceClientTypes.cs" />
+    <Compile Include="..\..\CSDSCReferences\Microsoft.Test.OData.Services.TestServices.ActionOverloadingServiceReference.cs">
+      <Link>Service References\ActionOverloadingServiceReference\Reference.cs</Link>
+    </Compile>
+    <Compile Include="..\Service References\AstoriaDefaultServiceReferenceModifiedClientTypes\Reference.cs">
+      <Link>Service References\AstoriaDefaultServiceReferenceModifiedClientTypes\Reference.cs</Link>
+    </Compile>
+    <Compile Include="..\..\CSDSCReferences\Microsoft.Test.OData.Services.TestServices.AstoriaDefaultServiceReference.cs">
+      <Link>Service References\AstoriaDefaultServiceReference\Reference.cs</Link>
+    </Compile>
+    <Compile Include="..\Service References\AstoriaDefaultWithAccessRestrictionsServiceReference\Reference.cs">
+      <Link>Service References\AstoriaDefaultWithAccessRestrictionsServiceReference\Reference.cs</Link>
+    </Compile>
+    <Compile Include="..\Service References\AstoriaDefaultClientTypeMismatchServiceReference\Reference.cs">
+      <Link>Service References\AstoriaDefaultClientTypeMismatchServiceReference\Reference.cs</Link>
+    </Compile>
+    <Compile Include="..\Service References\ODataWCFServiceReference\Reference.cs">
+      <Link>Service References\ODataWCFServiceReference\Reference.cs</Link>
+    </Compile>
+    <Compile Include="..\..\CSDSCReferences\Microsoft.Test.OData.Services.TestServices.KeyAsSegmentServiceReference.cs">
+      <Link>Service References\KeyAsSegmentServiceReference\Reference.cs</Link>
+    </Compile>
+    <Compile Include="..\Service References\ODataWCFServiceReference\ReferencePlus.cs">
+      <Link>Service References\ODataWCFServiceReference\ReferencePlus.cs</Link>
+    </Compile>
+    <Compile Include="..\Service References\OpenTypesServiceReference\Reference.cs">
+      <Link>Service References\OpenTypesServiceReference\Reference.cs</Link>
+    </Compile>
+    <Compile Include="..\..\CSDSCReferences\Microsoft.Test.OData.Services.TestServices.ODataWriterDefaultServiceReference.cs">
+      <Link>Service References\ODataWriterDefaultServiceReference\Reference.cs</Link>
+    </Compile>
+    <Compile Include="..\..\CSDSCReferences\Microsoft.Test.OData.Services.TestServices.PrimitiveKeysServiceReference.cs">
+      <Link>Service References\PrimitiveKeysServiceReference\Reference.cs</Link>
+    </Compile>
+    <Compile Include="..\Service References\PublicProviderEFServiceReference\Reference.cs">
+      <Link>Service References\PublicProviderEFServiceReference\Reference.cs</Link>
+    </Compile>
+    <Compile Include="..\Service References\ODataSimplifiedService\Reference.cs">
+      <Link>Service References\ODataSimplifiedService\Reference.cs</Link>
+    </Compile>
+    <Compile Include="..\Service References\PluggableformatService\Reference.cs">
+      <Link>Service References\PluggableformatService\Reference.cs</Link>
+    </Compile>
+    <Compile Include="..\Service References\PublicProviderHybridServiceReference\Reference.cs">
+      <Link>Service References\PublicProviderHybridServiceReference\Reference.cs</Link>
+    </Compile>
+    <Compile Include="..\Service References\PublicProviderReflectionServiceReference\Reference.cs">
+      <Link>Service References\PublicProviderReflectionServiceReference\Reference.cs</Link>
+    </Compile>
+    <Compile Include="..\ServiceDescriptors.cs" />
+    <Compile Include="..\TestServiceUtil.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="project.json" />
+  </ItemGroup>
+  <Import Project="$(BuildExtensionsPath)\Portable.targets" />
+</Project>
