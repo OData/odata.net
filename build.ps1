@@ -455,6 +455,7 @@ Function BuildProcess
     if(Test-Path $VS14MSBUILD)
     {
         RunBuild -sln 'Microsoft.Test.OData.DotNetCore.sln' -vsToolVersion '14.0'
+        RunBuild -sln 'Microsoft.Test.OData.DotNetStandard.sln' -vsToolVersion '14.0'
     }
     Write-Host "Build Done" -ForegroundColor $Success
     $script:BUILD_END_TIME = Get-Date
