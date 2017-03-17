@@ -21,7 +21,7 @@
     <EnableLocalization>true</EnableLocalization>
     <!-- from Build.Props... but can't reference it at this level -->
     <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
-    <StyleCopOverrideSettingsFile Condition="'$(StyleCopOverrideSettingsFile)' == ''">$(MSBuildThisFileDirectory)Microsoft.OData.Edm.StyleCop</StyleCopOverrideSettingsFile>
+    <StyleCopOverrideSettingsFile Condition="'$(StyleCopOverrideSettingsFile)' == ''">..\Microsoft.OData.Edm.StyleCop</StyleCopOverrideSettingsFile>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
     <OutputPath>..\..\..\bin\AnyCPU\Debug\Product\.NETPortable\v5.0\Microsoft.OData.Edm\</OutputPath>
@@ -289,6 +289,7 @@
     </Compile>
     <Compile Include="..\Csdl\Parsing\CsdlDocumentParser.cs">
       <Link>Csdl\Parsing\CsdlDocumentParser.cs</Link>
+      <ExcludeFromStyleCop>true</ExcludeFromStyleCop>
     </Compile>
     <Compile Include="..\Csdl\Parsing\CsdlParser.cs">
       <Link>Csdl\Parsing\CsdlParser.cs</Link>
