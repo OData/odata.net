@@ -255,11 +255,6 @@ Function RunBuild ($sln, $vsToolVersion)
     $slnpath = $ENLISTMENT_ROOT + "\sln\$sln"
     $Conf = "/p:Configuration=" + "$Configuration"
 
-    if($vsToolVersion -eq '14.0')
-    {
-        $MSBUILD=$VS14MSBUILD
-    }
-
     & $MSBUILD $slnpath /t:$Build /m /nr:false /fl "/p:Platform=Any CPU" $Conf /p:Desktop=true `
         /flp:LogFile=$LOGDIR/msbuild.log /flp:Verbosity=Normal 1>$null 2>$null
     if($LASTEXITCODE -eq 0)
@@ -452,11 +447,10 @@ Function BuildProcess
     RunBuild ('Microsoft.Test.OData.Tests.Client.Portable.WindowsStore.sln')
     RunBuild ('Microsoft.OData.CodeGen.sln')
     RunBuild ('Microsoft.OData.E2E.sln')
-    if(Test-Path $VS14MSBUILD)
-    {
-        RunBuild -sln 'Microsoft.Test.OData.DotNetCore.sln' -vsToolVersion '14.0'
-        RunBuild -sln 'Microsoft.Test.OData.DotNetStandard.sln' -vsToolVersion '14.0'
-    }
+    
+    # Requires VS2015 (14.0) ($MSBUILD = $VS14MSBUILD)
+    RunBuild -sln 'Microsoft.Test.OData.DotNetStandard.sln' -vsToolVersion '14.0'
+    
     Write-Host "Build Done" -ForegroundColor $Success
     $script:BUILD_END_TIME = Get-Date
 }

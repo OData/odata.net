@@ -29,7 +29,7 @@
     <OutputRootDir Condition=" '$(OutputRootDir)' == '' ">$(EnlistmentRoot)\bin\$(Platform)\$(Configuration)</OutputRootDir>
     <OutputRootDir>$(OutputRootDir.TrimEnd({'\\'}))</OutputRootDir>
 
-    <RelativeOutputPath Condition=" '$(SelfContainedBuildOutput)' == 'true' ">$([System.IO.Path]::Combine($(RelativeOutputPath), $(MSBuildProjectName)))</RelativeOutputPath>
+    <RelativeOutputPath Condition="'$(SelfContainedBuildOutput)' == 'true'">$([System.IO.Path]::Combine($(RelativeOutputPath), $(MSBuildProjectName)))</RelativeOutputPath>
 
     <!-- These variables are the ones that the standard MSBuild targets recognize.  We override them here.  -->
     <OutDir Condition=" '$(OutDir)' =='' ">$([System.IO.Path]::Combine($(OutputRootDir), $(RelativeOutputPath)))</OutDir>
