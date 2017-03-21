@@ -13,8 +13,7 @@ namespace Microsoft.OData.UriParser
     using System.Linq;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Metadata;
-
-
+    
     /// <summary>
     /// Extension methods for <see cref="ODataPath"/>. These method provide convenince functions.
     /// TODO: Implement this class and it's visitors. These are stubs.
@@ -180,10 +179,10 @@ namespace Microsoft.OData.UriParser
             ODataPathSegment priorSegment = null;
             foreach (ODataPathSegment segment in path)
             {
-                bool isBoundPath = false;
                 OperationSegment operationSegment = segment as OperationSegment;
                 if (operationSegment != null)
                 {
+                    bool isBoundPath = false;
                     // Check for entity set path of bound operation
                     if (priorSegment != null)
                     {
@@ -207,10 +206,17 @@ namespace Microsoft.OData.UriParser
                         }
                     }
 
-                    if (!isBoundPath && operationSegment.EntitySet != null)
+                    if (!isBoundPath)
                     {
-                        pathString.Clear();
-                        pathString.Append(operationSegment.EntitySet.Name);
+                        if (operationSegment.EntitySet != null)
+                        {
+                            pathString.Clear();
+                            pathString.Append(operationSegment.EntitySet.Name);
+                        }
+                        else
+                        {
+                            return null;
+                        }
                     }
                 }
                 else
