@@ -192,7 +192,7 @@ namespace Microsoft.OData.UriParser
                             {
                                 if (operation.EntitySetPath != null)
                                 {
-                                    foreach (string pathSegment in operationSegment.Operations.FirstOrDefault().EntitySetPath.PathSegments.Skip(1))
+                                    foreach (string pathSegment in operation.EntitySetPath.PathSegments.Skip(1))
                                     {
                                         pathString.Append('/');
                                         pathString.Append(pathSegment);
