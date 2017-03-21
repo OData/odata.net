@@ -210,7 +210,7 @@ namespace Microsoft.OData.UriParser
                     {
                         if (operationSegment.EntitySet != null)
                         {
-                            pathString.Clear();
+                            pathString = new StringBuilder();
                             pathString.Append(operationSegment.EntitySet.Name);
                         }
                         else
