@@ -183,7 +183,7 @@ namespace Microsoft.OData.UriParser
                 if (operationSegment != null)
                 {
                     bool isBoundPath = false;
-                    // Check for entity set path of bound operation
+
                     if (priorSegment != null)
                     {
                         foreach (IEdmOperation operation in operationSegment.Operations)
