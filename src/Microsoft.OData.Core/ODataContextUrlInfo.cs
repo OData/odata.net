@@ -251,7 +251,7 @@ namespace Microsoft.OData
             if (isContained && odataUri != null && odataUri.Path != null)
             {
                 ODataPath odataPath = odataUri.Path.TrimEndingTypeSegment().TrimEndingKeySegment();
-                if (!(odataPath.LastSegment is NavigationPropertySegment))
+                if (!(odataPath.LastSegment is NavigationPropertySegment) && !(odataPath.LastSegment is OperationSegment))
                 {
                     throw new ODataException(Strings.ODataContextUriBuilder_ODataPathInvalidForContainedElement(odataPath.ToContextUrlPathString()));
                 }

@@ -8,10 +8,12 @@ using System.Diagnostics;
 
 namespace Microsoft.OData.UriParser
 {
+    using System.Text;
     using System.Collections.Generic;
     using System.Linq;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Metadata;
+
 
     /// <summary>
     /// Extension methods for <see cref="ODataPath"/>. These method provide convenince functions.
@@ -130,7 +132,6 @@ namespace Microsoft.OData.UriParser
             return newPath;
         }
 
-
         /// <summary>
         /// Remove the type-cast segment in the end of ODataPath, the method does not modify current ODataPath instance,
         /// it returns a new ODataPath without ending type segment.
@@ -174,7 +175,53 @@ namespace Microsoft.OData.UriParser
         /// <returns>The string representation of the Context Url path.</returns>
         public static string ToContextUrlPathString(this ODataPath path)
         {
-            return string.Concat(path.WalkWith(PathSegmentToContextUrlPathTranslator.DefaultInstance).ToArray()).TrimStart('/');
+            StringBuilder pathString = new StringBuilder();
+            PathSegmentToContextUrlPathTranslator pathTranslator = PathSegmentToContextUrlPathTranslator.DefaultInstance;
+            ODataPathSegment priorSegment = null;
+            foreach (ODataPathSegment segment in path)
+            {
+                bool isBoundPath = false;
+                OperationSegment operationSegment = segment as OperationSegment;
+                if (operationSegment != null)
+                {
+                    // Check for entity set path of bound operation
+                    if (priorSegment != null)
+                    {
+                        foreach (IEdmOperation operation in operationSegment.Operations)
+                        {
+                            if (operation.IsBound && operation.Parameters.First().Type.Definition == priorSegment.EdmType)
+                            {
+                                if (operation.EntitySetPath != null)
+                                {
+                                    foreach (string pathSegment in operationSegment.Operations.FirstOrDefault().EntitySetPath.PathSegments.Skip(1))
+                                    {
+                                        pathString.Append('/');
+                                        pathString.Append(pathSegment);
+                                    }
+
+                                    isBoundPath = true;
+                                }
+
+                                break;
+                            }
+                        }
+                    }
+
+                    if (!isBoundPath && operationSegment.EntitySet != null)
+                    {
+                        pathString.Clear();
+                        pathString.Append(operationSegment.EntitySet.Name);
+                    }
+                }
+                else
+                {
+                    pathString.Append(segment.TranslateWith(pathTranslator));
+                }
+
+                priorSegment = segment;
+            }
+
+            return pathString.ToString().TrimStart('/');
         }
 
         /// <summary>
