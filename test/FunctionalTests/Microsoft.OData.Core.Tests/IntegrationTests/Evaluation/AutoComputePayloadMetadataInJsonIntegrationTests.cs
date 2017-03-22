@@ -223,7 +223,8 @@ namespace Microsoft.OData.Tests.IntegrationTests.Evaluation
                            "\"#Function\":{\"title\":\"FunctionTitle\",\"target\":\"http://example.com/DoFunction\"}," +
                            "\"#Namespace.AlwaysBindableFunction1\":{\"title\":\"Namespace.AlwaysBindableFunction1\",\"target\":\"http://example.com/edit/Namespace.AlwaysBindableFunction1\"}," +
                            "\"#Namespace.AlwaysBindableFunction2\":{\"title\":\"Namespace.AlwaysBindableFunction2\",\"target\":\"http://example.com/edit/Namespace.AlwaysBindableFunction2\"}," +
-                           "\"#Namespace.Function3\":{\"title\":\"Namespace.Function3\",\"target\":\"http://example.com/edit/Namespace.Function3\"}" +
+                           "\"#Namespace.Function3\":{\"title\":\"Namespace.Function3\",\"target\":\"http://example.com/edit/Namespace.Function3\"}," +
+                           "\"#Namespace.Function4\":{\"title\":\"Namespace.Function4\",\"target\":\"http://example.com/edit/Namespace.Function4\"}" +
                            "}";
 
         const string expectedPayloadWithFullMetadataODataSimplified = "{" +
@@ -270,7 +271,8 @@ namespace Microsoft.OData.Tests.IntegrationTests.Evaluation
                            "\"#Function\":{\"title\":\"FunctionTitle\",\"target\":\"http://example.com/DoFunction\"}," +
                            "\"#Namespace.AlwaysBindableFunction1\":{\"title\":\"Namespace.AlwaysBindableFunction1\",\"target\":\"http://example.com/edit/Namespace.AlwaysBindableFunction1\"}," +
                            "\"#Namespace.AlwaysBindableFunction2\":{\"title\":\"Namespace.AlwaysBindableFunction2\",\"target\":\"http://example.com/edit/Namespace.AlwaysBindableFunction2\"}," +
-                           "\"#Namespace.Function3\":{\"title\":\"Namespace.Function3\",\"target\":\"http://example.com/edit/Namespace.Function3\"}" +
+                           "\"#Namespace.Function3\":{\"title\":\"Namespace.Function3\",\"target\":\"http://example.com/edit/Namespace.Function3\"}," +
+                           "\"#Namespace.Function4\":{\"title\":\"Namespace.Function4\",\"target\":\"http://example.com/edit/Namespace.Function4\"}" +
                            "}";
 
         private const string PayloadWithAllMetadataODataSimplified =
@@ -497,15 +499,19 @@ namespace Microsoft.OData.Tests.IntegrationTests.Evaluation
             var functionImport1 = new EdmFunctionImport(container, "Function1", function1);
             container.AddElement(functionImport1);
 
-            var function2 = new EdmFunction("Namespace", "Function1", EdmCoreModel.Instance.GetString(isNullable: true), false /*isBound*/, null /*entitySetPath*/, false /*iscomposable*/);
+            var function2 = new EdmFunction("Namespace", "Function2", EdmCoreModel.Instance.GetString(isNullable: true), false /*isBound*/, null /*entitySetPath*/, false /*iscomposable*/);
             function2.AddParameter("p", new EdmEntityTypeReference(EntityType, isNullable: true));
             Model.AddElement(function2);
-            var functionImport2 = new EdmFunctionImport(container, "Function1", function2);
+            var functionImport2 = new EdmFunctionImport(container, "Function2", function2);
             container.AddElement(functionImport2);
 
             var function3 = new EdmFunction("Namespace", "Function3", new EdmEntityTypeReference(EntityType, false), true /*isBound*/, new EdmPathExpression("p/ContainedNonCollectionNavProp"), false /*iscomposable*/);
             function3.AddParameter("p", new EdmEntityTypeReference(EntityType, isNullable: true));
             Model.AddElement(function3);
+
+            var function4 = new EdmFunction("Namespace", "Function4", new EdmEntityTypeReference(EntityType, false), true /*isBound*/, new EdmPathExpression("p/ExpandedNavLink"), true /*iscomposable*/);
+            function4.AddParameter("p", new EdmEntityTypeReference(EntityType, isNullable: true));
+            Model.AddElement(function4);
         }
 
         [Fact]
@@ -716,7 +722,8 @@ namespace Microsoft.OData.Tests.IntegrationTests.Evaluation
                                            "\"#Namespace.AlwaysBindableAction2\":{\"title\":\"Namespace.AlwaysBindableAction2\",\"target\":\"http://example.com/EntitySet(123)/Namespace.AlwaysBindableAction2\"}," +
                                            "\"#Namespace.AlwaysBindableFunction1\":{\"title\":\"Namespace.AlwaysBindableFunction1\",\"target\":\"http://example.com/EntitySet(123)/Namespace.AlwaysBindableFunction1\"}," +
                                            "\"#Namespace.AlwaysBindableFunction2\":{\"title\":\"Namespace.AlwaysBindableFunction2\",\"target\":\"http://example.com/EntitySet(123)/Namespace.AlwaysBindableFunction2\"}," +
-                                           "\"#Namespace.Function3\":{\"title\":\"Namespace.Function3\",\"target\":\"http://example.com/EntitySet(123)/Namespace.Function3\"}" +
+                                           "\"#Namespace.Function3\":{\"title\":\"Namespace.Function3\",\"target\":\"http://example.com/EntitySet(123)/Namespace.Function3\"}," +
+                                           "\"#Namespace.Function4\":{\"title\":\"Namespace.Function4\",\"target\":\"http://example.com/EntitySet(123)/Namespace.Function4\"}" +
                                            "}";
             GetWriterOutputForEntryWithOnlyData("application/json;odata.metadata=full", true)
                 .Should().Be(expectedPayload);
@@ -898,9 +905,24 @@ namespace Microsoft.OData.Tests.IntegrationTests.Evaluation
             IEdmNavigationProperty containedNavProp = EntityType.FindProperty("ContainedNonCollectionNavProp") as IEdmNavigationProperty;
             IEdmEntitySetBase contianedEntitySet = EntitySet.FindNavigationTarget(containedNavProp) as IEdmEntitySetBase;
             string resourcePath = "EntitySet(123)/Namespace.Function3";
-            Action test = () => this.GetWriterOutputForContentTypeAndKnobValue("application/json;odata.metadata=full", true, itemsToWrite, Model, contianedEntitySet, EntityType, null, null, resourcePath);
+            string result = this.GetWriterOutputForContentTypeAndKnobValue("application/json;odata.metadata=full", true, itemsToWrite, Model, contianedEntitySet, EntityType, null, null, resourcePath);
 
-            test.ShouldThrow<ODataException>().WithMessage(Strings.ODataContextUriBuilder_ODataPathInvalidForContainedElement(resourcePath));
+            string expectedContextUriString = "$metadata#EntitySet(123)/ContainedNonCollectionNavProp";
+            result.Should().Contain(expectedContextUriString);
+        }
+
+        [Fact]
+        public void WritingInFullMetadataModeWithTopLevelNonContainedEntityWithFunctionUriPath()
+        {
+            ODataItem[] itemsToWrite = new ODataItem[]
+            {
+                this.entryWithOnlyData
+            };
+            string resourcePath = "EntitySet(123)/Namespace.Function4";
+            string result = this.GetWriterOutputForContentTypeAndKnobValue("application/json;odata.metadata=full", true, itemsToWrite, Model, EntitySet, EntityType, null, null, resourcePath);
+
+            string expectedContextUriString = "$metadata#EntitySet/$entity";
+            result.Should().Contain(expectedContextUriString);
         }
 
         [Fact]
