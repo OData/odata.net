@@ -223,7 +223,8 @@ namespace Microsoft.OData.Tests.IntegrationTests.Evaluation
                            "\"#Function\":{\"title\":\"FunctionTitle\",\"target\":\"http://example.com/DoFunction\"}," +
                            "\"#Namespace.AlwaysBindableFunction1\":{\"title\":\"Namespace.AlwaysBindableFunction1\",\"target\":\"http://example.com/edit/Namespace.AlwaysBindableFunction1\"}," +
                            "\"#Namespace.AlwaysBindableFunction2\":{\"title\":\"Namespace.AlwaysBindableFunction2\",\"target\":\"http://example.com/edit/Namespace.AlwaysBindableFunction2\"}," +
-                           "\"#Namespace.Function3\":{\"title\":\"Namespace.Function3\",\"target\":\"http://example.com/edit/Namespace.Function3\"}" +
+                           "\"#Namespace.Function3\":{\"title\":\"Namespace.Function3\",\"target\":\"http://example.com/edit/Namespace.Function3\"}," +
+                           "\"#Namespace.Function4\":{\"title\":\"Namespace.Function4\",\"target\":\"http://example.com/edit/Namespace.Function4\"}" +
                            "}";
 
         const string expectedPayloadWithFullMetadataODataSimplified = "{" +
@@ -270,7 +271,8 @@ namespace Microsoft.OData.Tests.IntegrationTests.Evaluation
                            "\"#Function\":{\"title\":\"FunctionTitle\",\"target\":\"http://example.com/DoFunction\"}," +
                            "\"#Namespace.AlwaysBindableFunction1\":{\"title\":\"Namespace.AlwaysBindableFunction1\",\"target\":\"http://example.com/edit/Namespace.AlwaysBindableFunction1\"}," +
                            "\"#Namespace.AlwaysBindableFunction2\":{\"title\":\"Namespace.AlwaysBindableFunction2\",\"target\":\"http://example.com/edit/Namespace.AlwaysBindableFunction2\"}," +
-                           "\"#Namespace.Function3\":{\"title\":\"Namespace.Function3\",\"target\":\"http://example.com/edit/Namespace.Function3\"}" +
+                           "\"#Namespace.Function3\":{\"title\":\"Namespace.Function3\",\"target\":\"http://example.com/edit/Namespace.Function3\"}," +
+                           "\"#Namespace.Function4\":{\"title\":\"Namespace.Function4\",\"target\":\"http://example.com/edit/Namespace.Function4\"}" +
                            "}";
 
         private const string PayloadWithAllMetadataODataSimplified =
@@ -720,7 +722,8 @@ namespace Microsoft.OData.Tests.IntegrationTests.Evaluation
                                            "\"#Namespace.AlwaysBindableAction2\":{\"title\":\"Namespace.AlwaysBindableAction2\",\"target\":\"http://example.com/EntitySet(123)/Namespace.AlwaysBindableAction2\"}," +
                                            "\"#Namespace.AlwaysBindableFunction1\":{\"title\":\"Namespace.AlwaysBindableFunction1\",\"target\":\"http://example.com/EntitySet(123)/Namespace.AlwaysBindableFunction1\"}," +
                                            "\"#Namespace.AlwaysBindableFunction2\":{\"title\":\"Namespace.AlwaysBindableFunction2\",\"target\":\"http://example.com/EntitySet(123)/Namespace.AlwaysBindableFunction2\"}," +
-                                           "\"#Namespace.Function3\":{\"title\":\"Namespace.Function3\",\"target\":\"http://example.com/EntitySet(123)/Namespace.Function3\"}" +
+                                           "\"#Namespace.Function3\":{\"title\":\"Namespace.Function3\",\"target\":\"http://example.com/EntitySet(123)/Namespace.Function3\"}," +
+                                           "\"#Namespace.Function4\":{\"title\":\"Namespace.Function4\",\"target\":\"http://example.com/EntitySet(123)/Namespace.Function4\"}" +
                                            "}";
             GetWriterOutputForEntryWithOnlyData("application/json;odata.metadata=full", true)
                 .Should().Be(expectedPayload);
