@@ -28,6 +28,10 @@ namespace Microsoft.OData.Core.Tests.ObjectModelTests
         // Make sure that it's the right thing if you're adding a type to this list.
         private static Type[] UnsealedPublicTypes = new Type[]
         {
+            /* TODO: biaol -- WIP, part of reader request parsing.*/
+            /* TODO: biaol -- ODataBatchReader will become abstract and its type must be removed from this list. */
+            typeof(ODataBatchReader),
+
             typeof(ODataException),
             typeof(ODataContentTypeException),
             typeof(ODataMediaTypeResolver),

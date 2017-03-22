@@ -220,6 +220,8 @@
     <Compile Include="Json\ODataJsonReaderCoreUtils.cs" />
     <Compile Include="Json\ODataJsonWriterUtils.cs" />
     <Compile Include="Json\TextWriterWrapper.cs" />
+    <Compile Include="ODataBatchJsonWriter.cs" />
+    <Compile Include="ODataBatchMimeWriter.cs" />
     <Compile Include="ODataErrorDetail.cs" />
     <Compile Include="ODataUntypedValue.cs" />
     <Compile Include="ODataMediaType.cs" />
@@ -253,6 +255,7 @@
     <Compile Include="ODataBatchOperationStream.cs" />
     <Compile Include="ODataBatchOperationWriteStream.cs" />
     <Compile Include="ODataBatchReader.cs" />
+    <Compile Include="ODataBatchJsonReader.cs" />
     <Compile Include="ODataBatchReaderState.cs" />
     <Compile Include="ODataBatchReaderStream.cs" />
     <Compile Include="ODataBatchReaderStreamBuffer.cs" />

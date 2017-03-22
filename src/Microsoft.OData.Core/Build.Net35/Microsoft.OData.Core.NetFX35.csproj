@@ -676,6 +676,9 @@
     <Compile Include="$(ODataCrossTargettingSourcePath)\ODataBatchReader.cs">
       <Link>Microsoft\OData\Core\ODataBatchReader.cs</Link>
     </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\ODataBatchJsonReader.cs">
+      <Link>Microsoft\OData\Core\ODataBatchJsonReader.cs</Link>
+    </Compile>
     <Compile Include="$(ODataCrossTargettingSourcePath)\ODataBatchReaderState.cs">
       <Link>Microsoft\OData\Core\ODataBatchReaderState.cs</Link>
     </Compile>
@@ -697,6 +700,12 @@
     <Compile Include="$(ODataCrossTargettingSourcePath)\ODataBatchWriter.cs">
       <Link>Microsoft\OData\Core\ODataBatchWriter.cs</Link>
     </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\ODataBatchJsonWriter.cs">
+      <Link>Microsoft\OData\Core\ODataBatchJsonWriter.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\ODataBatchMimeWriter.cs">
+      <Link>Microsoft\OData\Core\ODataBatchMimeWriter.cs</Link>
+    </Compile>    
     <Compile Include="$(ODataCrossTargettingSourcePath)\ODataBatchWriterUtils.cs">
       <Link>Microsoft\OData\Core\ODataBatchWriterUtils.cs</Link>
     </Compile>

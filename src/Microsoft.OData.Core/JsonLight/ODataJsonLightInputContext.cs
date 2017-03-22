@@ -374,6 +374,29 @@ namespace Microsoft.OData.Core.JsonLight
 #endif
 
         /// <summary>
+        /// Create a <see cref="ODataBatchReader"/>.
+        /// </summary>
+        /// <param name="batchBoundary">Ignored, since the boundary string is not applicable for the Json batch structure.</param>
+        /// <returns>The newly created <see cref="ODataCollectionReader"/>.</returns>
+        internal override ODataBatchReader CreateBatchReader(string batchBoundary)
+        {
+            return this.CreateBatchReaderImplementation(/*synchronous*/ true);
+        }
+
+#if ODATALIB_ASYNC
+        /// <summary>
+        /// Asynchronously create a <see cref="ODataBatchReader"/>.
+        /// </summary>
+        /// <param name="batchBoundary">The batch boundary to use.</param>
+        /// <returns>Task which when completed returns the newly created <see cref="ODataCollectionReader"/>.</returns>
+        internal override Task<ODataBatchReader> CreateBatchReaderAsync(string batchBoundary)
+        {
+            // Note that the reading is actually synchronous since we buffer the entire input when getting the stream from the message.
+            return TaskUtils.GetTaskForSynchronousOperation(() => this.CreateBatchReaderImplementation(/*synchronous*/ false));
+        }
+#endif
+
+        /// <summary>
         /// Read a service document. 
         /// This method reads the service document from the input and returns 
         /// an <see cref="ODataServiceDocument"/> that represents the read service document.
@@ -698,6 +721,20 @@ namespace Microsoft.OData.Core.JsonLight
         private ODataParameterReader CreateParameterReaderImplementation(IEdmOperation operation)
         {
             return new ODataJsonLightParameterReader(this, operation);
+        }
+
+        /// <summary>
+        /// Create a concrete <see cref="ODataBatchJsonReader"/> instance.
+        /// </summary>
+        private ODataBatchReader CreateBatchReaderImplementation(bool synchronous)
+        {
+            Debug.Assert(this.textReader != null);
+            Debug.Assert(this.textReader is StreamReader);
+
+            return new ODataBatchJsonReader(
+                this,
+                (this.textReader as StreamReader).CurrentEncoding,
+                synchronous);
         }
     }
 }

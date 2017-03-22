@@ -435,7 +435,7 @@ namespace Microsoft.OData.Core
         {
             // Batch writer needs the default encoding to not use the preamble.
             this.encoding = this.encoding ?? MediaTypeUtils.EncodingUtf8NoPreamble;
-            ODataBatchWriter batchWriter = new ODataBatchWriter(this, batchBoundary);
+            ODataBatchWriter batchWriter = new ODataBatchMimeWriter(this, batchBoundary);
             this.outputInStreamErrorListener = batchWriter;
             return batchWriter;
         }

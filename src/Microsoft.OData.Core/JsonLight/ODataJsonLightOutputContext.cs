@@ -233,6 +233,36 @@ namespace Microsoft.OData.Core.JsonLight
 #endif
 
         /// <summary>
+        /// Creates an <see cref="ODataBatchWriter" /> to write a batch of requests or responses in Json.
+        /// </summary>
+        /// <param name="batchBoundary">Ignored, since the boundary string is not applicable for the Json batch structure.</param>
+        /// <returns>The created batch writer.</returns>
+        /// <remarks>We don't plan to make this public!</remarks>
+        /// <remarks>The write must flush the output when it's finished (inside the last Write call).</remarks>
+        internal override ODataBatchWriter CreateODataBatchWriter(string batchBoundary)
+        {
+            this.AssertSynchronous();
+
+            return this.CreateODataBatchWriterImplementation();
+        }
+
+#if ODATALIB_ASYNC
+        /// <summary>
+        /// Asynchronously creates an <see cref="ODataBatchWriter" /> to write a batch of requests or responses.
+        /// </summary>
+        /// <param name="batchBoundary">Ignored, since the boundary string is not applicable for the Json batch structure.</param>
+        /// <returns>A running task for the created batch writer.</returns>
+        /// <remarks>We don't plan to make this public!</remarks>
+        /// <remarks>The write must flush the output when it's finished (inside the last Write call).</remarks>
+        internal override Task<ODataBatchWriter> CreateODataBatchWriterAsync(string batchBoundary)
+        {
+            this.AssertAsynchronous();
+
+            return TaskUtils.GetTaskForSynchronousOperation(() => this.CreateODataBatchWriterImplementation());
+        }
+#endif
+
+        /// <summary>
         /// Writes an <see cref="ODataProperty"/> as message payload.
         /// </summary>
         /// <param name="property">The property to write.</param>
@@ -554,6 +584,17 @@ namespace Microsoft.OData.Core.JsonLight
             ODataJsonLightParameterWriter jsonLightParameterWriter = new ODataJsonLightParameterWriter(this, operation);
             this.outputInStreamErrorListener = jsonLightParameterWriter;
             return jsonLightParameterWriter;
+        }
+
+        /// <summary>
+        /// Creates a concrete <see cref="ODataBatchJsonWriter" /> instance.
+        /// </summary>
+        /// <returns>The newly created batch writer.</returns>
+        private ODataBatchWriter CreateODataBatchWriterImplementation()
+        {
+            ODataBatchWriter batchWriter = new ODataBatchJsonWriter(this);
+            this.outputInStreamErrorListener = batchWriter;
+            return batchWriter;
         }
 
         /// <summary>

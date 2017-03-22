@@ -785,21 +785,34 @@ namespace Microsoft.OData.Core
 
                 if (this.writerPayloadKind == ODataPayloadKind.Batch)
                 {
-                    // Note that this serves as verification only for now, since we only support a single content type and format for $batch payloads.
-                    Debug.Assert(this.format == ODataFormat.Batch, "$batch should only support batch format since it's format independent.");
-                    Debug.Assert(this.mediaType.FullTypeName == MimeConstants.MimeMultipartMixed, "$batch content type is currently only supported to be multipart/mixed.");
+                    Debug.Assert(this.format == ODataFormat.Batch || this.format == ODataFormat.Json, 
+                        "$batch payload should only support batch or json format.");
+                    Debug.Assert(
+                        (this.format == ODataFormat.Batch && this.mediaType.FullTypeName == MimeConstants.MimeMultipartMixed)
+                     || (this.format == ODataFormat.Json && this.mediaType.FullTypeName == MimeConstants.MimeApplicationJson),
+                     "$batch content type is currently can only be multipart/mixed or application/json.");
 
                     //// TODO: What about the encoding - should we verify that it's 7bit US-ASCII only?
 
-                    this.batchBoundary = ODataBatchWriterUtils.CreateBatchBoundary(this.writingResponse);
+                    if (this.format == ODataFormat.Batch)
+                    {
+                        this.batchBoundary = ODataBatchWriterUtils.CreateBatchBoundary(this.writingResponse);
 
-                    // Set the content type header here since all headers have to be set before getting the stream
-                    // Note that the mediaType may have additional parameters, which we ignore here (intentional as per MIME spec).
-                    // Note that we always generate a new boundary string here, even if the accept header contained one.
-                    // We need the boundary to be as unique as possible to avoid possible collision with content of the batch operation payload.
-                    // Our boundary string are generated to fulfill this requirement, client specified ones might not which might lead to wrong responses
-                    // and at least in theory security issues.
-                    contentType = ODataBatchWriterUtils.CreateMultipartMixedContentType(this.batchBoundary);
+                        // Set the content type MIME header here since all headers have to be set before getting the stream
+                        // Note that the mediaType may have additional parameters, which we ignore here (intentional as per MIME spec).
+                        // Note that we always generate a new boundary string here, even if the accept header contained one.
+                        // We need the boundary to be as unique as possible to avoid possible collision with content of the batch operation payload.
+                        // Our boundary string are generated to fulfill this requirement, client specified ones might not which might lead to wrong responses
+                        // and at least in theory security issues.
+                        contentType = ODataBatchWriterUtils.CreateMultipartMixedContentType(this.batchBoundary);
+                    }
+                    else
+                    {
+                        Debug.Assert(this.format == ODataFormat.Json);
+
+                        // Build the application/json content type
+                        contentType = HttpUtils.BuildContentType(this.mediaType, this.encoding);
+                    }
                 }
                 else
                 {

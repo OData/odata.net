@@ -4,6 +4,8 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+
+
 namespace Microsoft.OData.Core
 {
     #region Namespaces
@@ -16,12 +18,15 @@ namespace Microsoft.OData.Core
 #if ODATALIB_ASYNC
     using System.Threading.Tasks;
 #endif
+
+    using Microsoft.OData.Core.JsonLight;
     #endregion Namespaces
 
+    // TODO: biaol -- make it abstract calss ( derived by mime / json).
     /// <summary>
     /// Class for reading OData batch messages; also verifies the proper sequence of read calls on the reader.
     /// </summary>
-    public sealed class ODataBatchReader : IODataBatchOperationListener
+    public class ODataBatchReader : IODataBatchOperationListener
     {
         /// <summary>The input context to read the content from.</summary>
         private readonly ODataRawInputContext inputContext;
@@ -75,6 +80,16 @@ namespace Microsoft.OData.Core
             this.synchronous = synchronous;
             this.urlResolver = new ODataBatchUrlResolver(inputContext.UrlResolver);
             this.batchStream = new ODataBatchReaderStream(inputContext, batchBoundary, batchEncoding);
+            this.allowLegacyContentIdBehaviour = true;
+        }
+
+        /* TODO: biaol -- WIP, part of reader request parsing. Current skeleton is for test passing purpose only. */
+        internal ODataBatchReader(ODataJsonLightInputContext inputContext, string batchBoundary, Encoding batchEncoding, bool synchronous)
+        {
+            this.inputContext = null;
+            this.synchronous = synchronous;
+            this.urlResolver = new ODataBatchUrlResolver(inputContext.UrlResolver);
+            this.batchStream = null;
             this.allowLegacyContentIdBehaviour = true;
         }
 
