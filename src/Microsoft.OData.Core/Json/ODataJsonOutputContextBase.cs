@@ -32,6 +32,9 @@ namespace Microsoft.OData.Core.Json
         /// <summary>The asynchronous output stream if we're writing asynchronously.</summary>
         private AsyncBufferedStream asynchronousOutputStream;
 
+        /// <summary>The output stream to write to (both sync and async cases).</summary>
+        private Stream outputStream;
+
         /// <summary>The text writer created for the output stream.</summary>
         private TextWriter textWriter;
 
@@ -90,19 +93,18 @@ namespace Microsoft.OData.Core.Json
             {
                 this.messageOutputStream = messageStream;
 
-                Stream outputStream;
                 if (synchronous)
                 {
-                    outputStream = messageStream;
+                    this.outputStream = messageStream;
                 }
                 else
                 {
                     this.asynchronousOutputStream = new AsyncBufferedStream(messageStream);
-                    outputStream = this.asynchronousOutputStream;
+                    this.outputStream = this.asynchronousOutputStream;
                 }
 
-                this.textWriter = new StreamWriter(outputStream, encoding);
-                
+                this.textWriter = new StreamWriter(this.outputStream, encoding);
+
                 // COMPAT 2: JSON indentation - WCFDS indents only partially, it inserts newlines but doesn't actually insert spaces for indentation
                 // in here we allow the user to specify if true indentation should be used or if the limited functionality is enough.
                 this.jsonWriter = new JsonWriter(this.textWriter, messageWriterSettings.Indent, format, isIeee754Compatible);
@@ -116,6 +118,17 @@ namespace Microsoft.OData.Core.Json
                 }
 
                 throw;
+            }
+        }
+
+        /// <summary>
+        /// The output stream to write the payload to.
+        /// </summary>
+        internal Stream OutputStream
+        {
+            get
+            {
+                return this.outputStream;
             }
         }
 
@@ -181,6 +194,36 @@ namespace Microsoft.OData.Core.Json
         }
 #endif
 
+
+        /// <summary>
+        /// Flushes all buffered data to the underlying stream synchronously.
+        /// </summary>
+        internal void FlushBuffers()
+        {
+            if (this.asynchronousOutputStream != null)
+            {
+                this.asynchronousOutputStream.FlushSync();
+            }
+        }
+
+#if ODATALIB_ASYNC
+        /// <summary>
+        /// Flushes all buffered data to the underlying stream asynchronously.
+        /// </summary>
+        /// <returns>Task which represents the pending operation.</returns>
+        internal Task FlushBuffersAsync()
+        {
+            if (this.asynchronousOutputStream != null)
+            {
+                return this.asynchronousOutputStream.FlushAsync();
+            }
+            else
+            {
+                return TaskUtils.CompletedTask;
+            }
+        }
+#endif
+
         /// <summary>
         /// Perform the actual cleanup work.
         /// </summary>
@@ -211,6 +254,7 @@ namespace Microsoft.OData.Core.Json
             {
                 this.messageOutputStream = null;
                 this.asynchronousOutputStream = null;
+                this.outputStream = null;
                 this.textWriter = null;
                 this.jsonWriter = null;
             }

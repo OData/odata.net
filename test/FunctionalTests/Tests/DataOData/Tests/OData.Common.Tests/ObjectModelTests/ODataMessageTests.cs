@@ -43,18 +43,30 @@ namespace Microsoft.Test.Taupo.OData.Common.Tests.ObjectModelTests
         [TestMethod, Variation(Description = "Test the proper behavior of the headers of a request message.")]
         public void RequestMessageHeaderTest()
         {
-            Func<bool, IODataRequestMessage>[] requestMessageFuncs = new Func<bool, IODataRequestMessage>[]
+            const bool useMimeWriterAsListener = true; 
+            Func<bool, bool, IODataRequestMessage>[] requestMessageFuncs = new Func<bool, bool, IODataRequestMessage>[]
                 {
-                    (writing) => CreateBatchOperationRequestMessage(writing),
-                    (writing) => new ODataRequestMessageWrapper(new TestRequestMessage(new TestStream()), writing, false),
+                    (writing, mimeWriterAsListener) => CreateBatchOperationRequestMessage(writing, mimeWriterAsListener),
+                    (writing, notUsed) => new ODataRequestMessageWrapper(new TestRequestMessage(new TestStream()), writing, false),
                 };
 
+            // ODataBatchMimeWriter as listener
             this.CombinatorialEngineProvider.RunCombinations(
                 new bool[] { true, false},
                 requestMessageFuncs,
                 (writing, func) =>
                 {
-                    IODataRequestMessage requestMessage = func(writing);
+                    IODataRequestMessage requestMessage = func(writing, useMimeWriterAsListener);
+                    RunHeaderTest(() => requestMessage.Headers, writing, requestMessage.GetHeader, requestMessage.SetHeader, this.Assert, this.ExceptionVerifier);
+                });
+
+            // ODataBatchJsonWriter as listner
+            this.CombinatorialEngineProvider.RunCombinations(
+                new bool[] { true, false },
+                requestMessageFuncs,
+                (writing, func) =>
+                {
+                    IODataRequestMessage requestMessage = func(writing, !useMimeWriterAsListener);
                     RunHeaderTest(() => requestMessage.Headers, writing, requestMessage.GetHeader, requestMessage.SetHeader, this.Assert, this.ExceptionVerifier);
                 });
         }
@@ -62,18 +74,30 @@ namespace Microsoft.Test.Taupo.OData.Common.Tests.ObjectModelTests
         [TestMethod, Variation(Description = "Test the proper behavior of the headers of a response message.")]
         public void ResponseMessageHeaderTest()
         {
-            Func<bool, IODataResponseMessage>[] responseMessageFuncs = new Func<bool, IODataResponseMessage>[]
+            const bool useMimeWriterAsListener = true; 
+            Func<bool, bool, IODataResponseMessage>[] responseMessageFuncs = new Func<bool, bool, IODataResponseMessage>[]
                 {
-                    (writing) => CreateBatchOperationResponseMessage(writing),
-                    (writing) => new ODataResponseMessageWrapper(new TestResponseMessage(new TestStream()), writing, false)
+                    (writing, mimeWriterAsListener) => CreateBatchOperationResponseMessage(writing, mimeWriterAsListener),
+                    (writing, notUsed) => new ODataResponseMessageWrapper(new TestResponseMessage(new TestStream()), writing, false)
                 };
 
+            // ODataBatchMimeWriter as listener
             this.CombinatorialEngineProvider.RunCombinations(
                 new bool[] { true, false },
                 responseMessageFuncs,
                 (writing, func) =>
                 {
-                    IODataResponseMessage responseMessage = func(writing);
+                    IODataResponseMessage responseMessage = func(writing, useMimeWriterAsListener);
+                    RunHeaderTest(() => responseMessage.Headers, writing, responseMessage.GetHeader, responseMessage.SetHeader, this.Assert, this.ExceptionVerifier);
+                });
+
+            // ODataBatchJsonWriter as listener
+            this.CombinatorialEngineProvider.RunCombinations(
+                new bool[] { true, false },
+                responseMessageFuncs,
+                (writing, func) =>
+                {
+                    IODataResponseMessage responseMessage = func(writing, !useMimeWriterAsListener);
                     RunHeaderTest(() => responseMessage.Headers, writing, responseMessage.GetHeader, responseMessage.SetHeader, this.Assert, this.ExceptionVerifier);
                 });
         }
@@ -145,7 +169,7 @@ namespace Microsoft.Test.Taupo.OData.Common.Tests.ObjectModelTests
                 exceptionVerifier);
         }
 
-        private static IODataRequestMessage CreateBatchOperationRequestMessage(bool writing)
+        private static IODataRequestMessage CreateBatchOperationRequestMessage(bool writing, bool mimeWriterAsListener)
         {
             Stream stream = new TestStream();
             return (IODataRequestMessage)ReflectionUtils.CreateInstance(
@@ -155,23 +179,32 @@ namespace Microsoft.Test.Taupo.OData.Common.Tests.ObjectModelTests
                 ODataConstants.MethodGet,
                 new Uri("http://www.odata.org/"),
                 /*headers*/ null,
-                CreateListener(stream, false, writing),
+                mimeWriterAsListener
+                ? CreateODataBatchMimeWriterListener(stream, false, writing)
+                : CreateODataBatchJsonWriterListener(stream, false, writing),
                 "1",
                 ReflectionUtils.CreateInstance(urlResolverType, new Type[] { typeof(IODataUrlResolver) }, new object[] { null }),
                 writing);
         }
 
-        private static IODataResponseMessage CreateBatchOperationResponseMessage(bool writing)
+        private static IODataResponseMessage CreateBatchOperationResponseMessage(bool writing, bool mimeWriterAsListener)
         {
             Stream stream = new TestStream();
 
             return (IODataResponseMessage)ReflectionUtils.CreateInstance(
                 typeof(ODataBatchOperationResponseMessage),
                 new Type[] { typeof(Func<Stream>), batchOperationsHeadersType, batchOperationListenerType, typeof(string), typeof(IODataUrlResolver), typeof(bool) },
-                (object)(Func<Stream>)(() => stream), /*headers*/null, CreateListener(stream, true, writing), "1", /*urlResolver*/null, writing);
+                (object)(Func<Stream>)(() => stream),
+                /*headers*/null, 
+                mimeWriterAsListener
+                ? CreateODataBatchMimeWriterListener(stream, true, writing)
+                : CreateODataBatchJsonWriterListener(stream, false, writing),
+                "1",
+                /*urlResolver*/null,
+                writing);
         }
 
-        private static object CreateListener(Stream stream, bool response, bool writing)
+        private static object CreateODataBatchMimeWriterListener(Stream stream, bool response, bool writing)
         {
             ODataMessageWriterSettings settings = new ODataMessageWriterSettings();
             object message = response
@@ -199,9 +232,45 @@ namespace Microsoft.Test.Taupo.OData.Common.Tests.ObjectModelTests
                 /*model*/null,
                 /*urlResolver*/null);
             object listener = ReflectionUtils.CreateInstance(
-                typeof(ODataBatchWriter),
+                typeof(ODataBatchMimeWriter),
                 new Type[] { odataRawOutputContextType, typeof(string) },
                 rawOutputContext, "test-boundary");
+            return listener;
+        }
+
+        private static object CreateODataBatchJsonWriterListener(Stream stream, bool response, bool writing)
+        {
+            ODataMessageWriterSettings settings = new ODataMessageWriterSettings();
+            object message = response
+                ? new ODataResponseMessageWrapper(new TestResponseMessage(stream), writing, settings.DisableMessageStreamDisposal).WrappedMessageObject
+                : new ODataRequestMessageWrapper(new TestRequestMessage(stream), writing, settings.DisableMessageStreamDisposal).WrappedMessageObject;
+            Type odataJsonLightOutputContextType = typeof(ODataBatchWriter).Assembly.GetType("Microsoft.OData.Core.JsonLight.ODataJsonLightOutputContext");
+            object jsonOutputContext = ReflectionUtils.CreateInstance(odataJsonLightOutputContextType,
+                new Type[]
+                {
+                    typeof(ODataFormat),
+                    typeof(Stream),
+                    typeof(ODataMediaType),
+                    typeof(Encoding),
+                    typeof(ODataMessageWriterSettings),
+                    typeof(bool),
+                    typeof(bool),
+                    typeof(Microsoft.OData.Edm.IEdmModel),
+                    typeof(IODataUrlResolver)
+                },
+                ODataFormat.Json,
+                (Stream)ReflectionUtils.InvokeMethod(message, "GetStream"),
+                new ODataMediaType("application", "json"),
+                Encoding.UTF8,
+                settings,
+                response,
+                /*synchronous*/true,
+                /*model*/null,
+                /*urlResolver*/null);
+            object listener = ReflectionUtils.CreateInstance(
+                typeof(ODataBatchJsonWriter),
+                new Type[] { odataJsonLightOutputContextType },
+                jsonOutputContext);
             return listener;
         }
 
