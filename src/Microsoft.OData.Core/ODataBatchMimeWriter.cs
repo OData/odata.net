@@ -19,7 +19,7 @@ namespace Microsoft.OData.Core
     /// <summary>
     /// Class for writing OData batch messages of MIME type.
     /// </summary>
-    public sealed class ODataBatchMimeWriter : ODataBatchWriter
+    internal sealed class ODataBatchMimeWriter : ODataBatchWriter
     {
 
         /// <summary>The boundary string for the batch structure itself.</summary>

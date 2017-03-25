@@ -256,6 +256,7 @@
     <Compile Include="ODataBatchOperationStream.cs" />
     <Compile Include="ODataBatchOperationWriteStream.cs" />
     <Compile Include="ODataBatchReader.cs" />
+    <Compile Include="ODataBatchMimeReader.cs" />
     <Compile Include="ODataBatchJsonReader.cs" />
     <Compile Include="ODataBatchReaderState.cs" />
     <Compile Include="ODataBatchReaderStream.cs" />

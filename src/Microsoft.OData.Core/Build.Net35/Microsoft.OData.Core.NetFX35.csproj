@@ -676,6 +676,9 @@
     <Compile Include="$(ODataCrossTargettingSourcePath)\ODataBatchReader.cs">
       <Link>Microsoft\OData\Core\ODataBatchReader.cs</Link>
     </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\ODataBatchMimeReader.cs">
+      <Link>Microsoft\OData\Core\ODataBatchMimeReader.cs</Link>
+    </Compile>
     <Compile Include="$(ODataCrossTargettingSourcePath)\ODataBatchJsonReader.cs">
       <Link>Microsoft\OData\Core\ODataBatchJsonReader.cs</Link>
     </Compile>

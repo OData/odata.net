@@ -391,7 +391,7 @@ namespace Microsoft.OData.Core
         /// <summary>
         /// Reads the headers of a part.
         /// </summary>
-        /// <param name="contentId">Content-ID read from changeset header, null if changeset part detected</param>
+        /// <param name="contentId">Content-ID read from operation part header, null if changeset part detected</param>
         /// <returns>true if the start of a changeset part was detected; otherwise false.</returns>
         internal bool ProcessPartHeader(out string contentId)
         {

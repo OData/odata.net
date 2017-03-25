@@ -4,6 +4,8 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+using System.Reflection;
+
 #if !SILVERLIGHT && !WINDOWS_PHONE
 namespace Microsoft.Test.Taupo.OData.Common.Tests.ObjectModelTests
 {
@@ -231,10 +233,23 @@ namespace Microsoft.Test.Taupo.OData.Common.Tests.ObjectModelTests
                 /*synchronous*/true,
                 /*model*/null,
                 /*urlResolver*/null);
-            object listener = ReflectionUtils.CreateInstance(
-                typeof(ODataBatchMimeWriter),
-                new Type[] { odataRawOutputContextType, typeof(string) },
-                rawOutputContext, "test-boundary");
+
+            Assembly assembly = Assembly.LoadFrom("Microsoft.OData.Core.dll");
+            object listener = assembly.CreateInstance(
+                "Microsoft.OData.Core.ODataBatchMimeWriter",
+                false, /*ignoreCase*/
+                BindingFlags.Instance|BindingFlags.NonPublic,
+                null, /*binder*/
+                new Object[] { rawOutputContext, "test-boundary" },
+                null, /*CultureInfo*/
+                null /*activationAttributes*/
+                );
+//            Type t = mc.GetType(); 
+
+//            object listener = ReflectionUtils.CreateInstance(
+//                t/*Type.GetType("Microsoft.OData.Core.ODataBatchMimeWriter")*/,
+//                new Type[] { odataRawOutputContextType, typeof(string) },
+//                rawOutputContext, "test-boundary");
             return listener;
         }
 
@@ -267,10 +282,17 @@ namespace Microsoft.Test.Taupo.OData.Common.Tests.ObjectModelTests
                 /*synchronous*/true,
                 /*model*/null,
                 /*urlResolver*/null);
-            object listener = ReflectionUtils.CreateInstance(
-                typeof(ODataBatchJsonWriter),
-                new Type[] { odataJsonLightOutputContextType },
-                jsonOutputContext);
+
+            Assembly assembly = Assembly.LoadFrom("Microsoft.OData.Core.dll");
+            object listener = assembly.CreateInstance(
+                "Microsoft.OData.Core.ODataBatchJsonWriter",
+                false, /*ignoreCase*/
+                BindingFlags.Instance | BindingFlags.NonPublic,
+                null, /*binder*/
+                new Object[] { jsonOutputContext},
+                null, /*CultureInfo*/
+                null /*activationAttributes*/
+                );
             return listener;
         }
 
