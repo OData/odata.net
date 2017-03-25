@@ -23,7 +23,7 @@ namespace Microsoft.OData.Core
     /// <summary>
     /// Class for writing OData batch messages of JSON type.
     /// </summary>
-    public sealed class ODataBatchJsonWriter : ODataBatchWriter
+    internal sealed class ODataBatchJsonWriter : ODataBatchWriter
     {
         /// <summary>
         /// The underlying JSON writer.

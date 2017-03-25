@@ -222,6 +222,7 @@
     <Compile Include="Json\TextWriterWrapper.cs" />
     <Compile Include="ODataBatchJsonReader.cs" />
     <Compile Include="ODataBatchJsonWriter.cs" />
+    <Compile Include="ODataBatchMimeReader.cs" />
     <Compile Include="ODataBatchMimeWriter.cs" />
     <Compile Include="ODataErrorDetail.cs" />
     <Compile Include="ODataUntypedValue.cs" />

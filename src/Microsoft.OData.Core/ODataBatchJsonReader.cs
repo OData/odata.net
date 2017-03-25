@@ -1,12 +1,11 @@
 ﻿//---------------------------------------------------------------------
-// <copyright file="ODataBatchJsonWriter.cs" company="Microsoft">
+// <copyright file="ODataBatchJsonReader.cs" company="Microsoft">
 //      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 // </copyright>
 //---------------------------------------------------------------------
 
 namespace Microsoft.OData.Core
 {
-
     #region Namespaces
     using System;
     using System.Collections.Generic;
@@ -21,12 +20,20 @@ namespace Microsoft.OData.Core
     using Microsoft.OData.Core.JsonLight;
     #endregion Namespaces
 
-    /* TODO: biaol -- WIP, part of reader request parsing. Current skeleton is for test passing purpose only. */
     /// <summary>
     /// Class for reading OData batch messages in json format; also verifies the proper sequence of read calls on the reader.
     /// </summary>
     internal sealed class ODataBatchJsonReader: ODataBatchReader
     {
+
+        internal ODataJsonLightInputContext JsonLightInputContext
+        {
+            get
+            {
+                return this.inputContext as ODataJsonLightInputContext;
+            }
+        }
+
         /// <summary>
         /// Constructor.
         /// </summary>
@@ -34,10 +41,40 @@ namespace Microsoft.OData.Core
         /// <param name="batchEncoding">The encoding to use to read from the batch stream.</param>
         /// <param name="synchronous">true if the reader is created for synchronous operation; false for asynchronous.</param>
         internal ODataBatchJsonReader(ODataJsonLightInputContext inputContext, Encoding batchEncoding, bool synchronous)
-            /* TODO: biaol --- revamp the base class for inputContext and boundary parameters) */
-            : base(inputContext, null, batchEncoding, synchronous)
+            : base(inputContext, batchEncoding, synchronous)
         {
 
+        }
+
+
+        /// <summary>
+        /// Returns the cached <see cref="ODataBatchOperationRequestMessage"/> for reading the content of an operation 
+        /// in a batch request.
+        /// </summary>
+        /// <returns>The message that can be used to read the content of the batch request operation from.</returns>
+        internal override ODataBatchOperationRequestMessage CreateOperationRequestMessageImplementation()
+        {
+            return null;
+        }
+
+        /// <summary>
+        /// Returns the cached <see cref="ODataBatchOperationRequestMessage"/> for reading the content of an operation 
+        /// in a batch request.
+        /// </summary>
+        /// <returns>The message that can be used to read the content of the batch request operation from.</returns>
+        internal override ODataBatchOperationResponseMessage CreateOperationResponseMessageImplementation()
+        {
+            // TODO: biaol --- consumed by client lib only, later.
+            return null;
+        }
+
+        /// <summary>
+        /// Continues reading from the batch message payload.
+        /// </summary>
+        /// <returns>true if more items were read; otherwise false.</returns>
+        internal override bool ReadImplementation()
+        {
+            return false;
         }
     }
 }
