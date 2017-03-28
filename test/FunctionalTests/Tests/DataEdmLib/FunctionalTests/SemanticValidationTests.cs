@@ -96,7 +96,8 @@ namespace EdmLibTests.FunctionalTests
                     skip != typeof(IEdmIntegerValue) &&
                     skip != typeof(IEdmDirectValueAnnotationBinding) &&
                     skip != typeof(IEdmTimeOfDayValue) &&
-                    skip != typeof(IEdmEnumMemberValue)
+                    skip != typeof(IEdmEnumMemberValue) &&
+                    skip != typeof(IEdmEntitySet) // IncludeInServiceDocument is optional
                     )
                 {
                     Assert.AreEqual(0, skip.GetProperties().Length, "It is not safe to skip interfaces with properties.");

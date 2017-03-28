@@ -487,6 +487,7 @@ public enum Microsoft.OData.Edm.EdmContainerElementKind : int {
 }
 
 public enum Microsoft.OData.Edm.EdmExpressionKind : int {
+	AnnotationPath = 25
 	BinaryConstant = 1
 	BooleanConstant = 2
 	Cast = 15
@@ -718,6 +719,7 @@ public interface Microsoft.OData.Edm.IEdmEntityReferenceTypeReference : IEdmElem
 }
 
 public interface Microsoft.OData.Edm.IEdmEntitySet : IEdmElement, IEdmEntityContainerElement, IEdmEntitySetBase, IEdmNamedElement, IEdmNavigationSource, IEdmVocabularyAnnotatable {
+	bool IncludeInServiceDocument  { public abstract get; }
 }
 
 public interface Microsoft.OData.Edm.IEdmEntitySetBase : IEdmElement, IEdmNamedElement, IEdmNavigationSource {
@@ -2309,6 +2311,7 @@ public class Microsoft.OData.Edm.EdmEntityContainer : Microsoft.OData.Edm.EdmEle
 	public virtual Microsoft.OData.Edm.EdmActionImport AddActionImport (string name, Microsoft.OData.Edm.IEdmAction action, Microsoft.OData.Edm.IEdmExpression entitySet)
 	public void AddElement (Microsoft.OData.Edm.IEdmEntityContainerElement element)
 	public virtual Microsoft.OData.Edm.EdmEntitySet AddEntitySet (string name, Microsoft.OData.Edm.IEdmEntityType elementType)
+	public virtual Microsoft.OData.Edm.EdmEntitySet AddEntitySet (string name, Microsoft.OData.Edm.IEdmEntityType elementType, bool includeInServiceDocument)
 	public virtual Microsoft.OData.Edm.EdmFunctionImport AddFunctionImport (Microsoft.OData.Edm.IEdmFunction function)
 	public virtual Microsoft.OData.Edm.EdmFunctionImport AddFunctionImport (string name, Microsoft.OData.Edm.IEdmFunction function)
 	public virtual Microsoft.OData.Edm.EdmFunctionImport AddFunctionImport (string name, Microsoft.OData.Edm.IEdmFunction function, Microsoft.OData.Edm.IEdmExpression entitySet)
@@ -2334,9 +2337,11 @@ public class Microsoft.OData.Edm.EdmEntityReferenceTypeReference : Microsoft.ODa
 
 public class Microsoft.OData.Edm.EdmEntitySet : Microsoft.OData.Edm.EdmEntitySetBase, IEdmElement, IEdmEntityContainerElement, IEdmEntitySet, IEdmEntitySetBase, IEdmNamedElement, IEdmNavigationSource, IEdmVocabularyAnnotatable {
 	public EdmEntitySet (Microsoft.OData.Edm.IEdmEntityContainer container, string name, Microsoft.OData.Edm.IEdmEntityType elementType)
+	public EdmEntitySet (Microsoft.OData.Edm.IEdmEntityContainer container, string name, Microsoft.OData.Edm.IEdmEntityType elementType, bool includeInServiceDocument)
 
 	Microsoft.OData.Edm.IEdmEntityContainer Container  { public virtual get; }
 	Microsoft.OData.Edm.EdmContainerElementKind ContainerElementKind  { public virtual get; }
+	bool IncludeInServiceDocument  { public virtual get; }
 	Microsoft.OData.Edm.IEdmPathExpression Path  { public virtual get; }
 	Microsoft.OData.Edm.IEdmType Type  { public virtual get; }
 }

@@ -1069,7 +1069,7 @@ namespace EdmLibTests.FunctionalTests
             bool parsed = CsdlReader.TryParse(XmlReader.Create(new StringReader(edmx)), true, out model, out errors);
 
             Assert.IsTrue(parsed, "parsed");
-            Assert.AreEqual(4, errors.Count());
+            Assert.AreEqual(3, errors.Count());
             Assert.AreEqual("C1", model.EntityContainer.Name, "model.EntityContainers.First().Name = C1");
             Assert.AreEqual("Customers", model.EntityContainer.Elements.Single().Name, "model.EntityContainers.Single().Elements.Single().Name = Customers");
             Assert.AreEqual("NS1.Customer", model.SchemaElements.Single(e => e.FullName() == "NS1.Customer").FullName(), "model.SchemaElements.Single().FullName() = NS1.Customer");
