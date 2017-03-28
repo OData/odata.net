@@ -275,6 +275,9 @@
     <Compile Include="..\Csdl\Parsing\Ast\ICsdlTypeExpression.cs">
       <Link>Csdl\Parsing\Ast\ICsdlTypeExpression.cs</Link>
     </Compile>
+    <Compile Include="..\Csdl\Parsing\Ast\CsdlAnnotationPathExpression.cs">
+      <Link>Csdl\Parsing\Ast\CsdlAnnotationPathExpression.cs</Link>
+    </Compile>
     <Compile Include="..\Csdl\Parsing\Common\EdmXmlDocumentParser.cs">
       <Link>Csdl\Parsing\Common\EdmXmlDocumentParser.cs</Link>
     </Compile>
@@ -557,6 +560,9 @@
     </Compile>
     <Compile Include="..\Csdl\Semantics\CsdlSemanticsVocabularyAnnotation.cs">
       <Link>Csdl\Semantics\CsdlSemanticsVocabularyAnnotation.cs</Link>
+    </Compile>
+    <Compile Include="..\Csdl\Semantics\CsdlSemanticsAnnotationPathExpression.cs">
+      <Link>Csdl\Semantics\CsdlSemanticsAnnotationPathExpression.cs</Link>
     </Compile>
     <Compile Include="..\Csdl\SerializationExtensionMethods.cs">
       <Link>Csdl\SerializationExtensionMethods.cs</Link>

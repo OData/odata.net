@@ -14,6 +14,7 @@ namespace Microsoft.OData.Edm
         private readonly IEdmEntityContainer container;
         private readonly IEdmCollectionType type;
         private IEdmPathExpression path;
+        private bool includeInServiceDocument;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="EdmEntitySet"/> class.
@@ -22,13 +23,26 @@ namespace Microsoft.OData.Edm
         /// <param name="name">Name of the entity set.</param>
         /// <param name="elementType">The entity type of the elements in this entity set.</param>
         public EdmEntitySet(IEdmEntityContainer container, string name, IEdmEntityType elementType)
-            : base(name, elementType)
+            : this(container, name, elementType, true)
         {
             EdmUtil.CheckArgumentNull(container, "container");
 
             this.container = container;
             this.type = new EdmCollectionType(new EdmEntityTypeReference(elementType, false));
             this.path = new EdmPathExpression(this.container.FullName() + "." + this.Name);
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="EdmEntitySet"/> class.
+        /// </summary>
+        /// <param name="container">An <see cref="IEdmEntityContainer"/> containing this entity set.</param>
+        /// <param name="name">Name of the entity set.</param>
+        /// <param name="elementType">The entity type of the elements in this entity set.</param>
+        /// <param name="includeInServiceDocument">Indicates whether the entity set is advertised in the service document.</param>
+        public EdmEntitySet(IEdmEntityContainer container, string name, IEdmEntityType elementType, bool includeInServiceDocument)
+            : base(name, elementType)
+        {
+            this.includeInServiceDocument = includeInServiceDocument;
         }
 
         /// <summary>
@@ -61,6 +75,14 @@ namespace Microsoft.OData.Edm
         public override IEdmPathExpression Path
         {
             get { return this.path; }
+        }
+
+        /// <summary>
+        /// Gets a value indicating whether the entity set is included in the service document.
+        /// </summary>
+        public bool IncludeInServiceDocument
+        {
+            get { return includeInServiceDocument; }
         }
     }
 }

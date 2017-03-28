@@ -16,14 +16,22 @@ namespace Microsoft.OData.Edm.Csdl.Parsing.Ast
         private readonly string elementType;
 
         public CsdlEntitySet(string name, string elementType, IEnumerable<CsdlNavigationPropertyBinding> navigationPropertyBindings, CsdlDocumentation documentation, CsdlLocation location)
+            : this(name, elementType, navigationPropertyBindings, documentation, location, true)
+        {
+        }
+
+        public CsdlEntitySet(string name, string elementType, IEnumerable<CsdlNavigationPropertyBinding> navigationPropertyBindings, CsdlDocumentation documentation, CsdlLocation location, bool includeInServiceDocument)
             : base(name, navigationPropertyBindings, documentation, location)
         {
             this.elementType = elementType;
+            this.IncludeInServiceDocument = includeInServiceDocument;
         }
 
         public string ElementType
         {
             get { return this.elementType; }
         }
+
+        public bool IncludeInServiceDocument { get; private set; }
     }
 }

@@ -393,6 +393,8 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
                         return new CsdlSemanticsDateConstantExpression((CsdlConstantExpression)expression, schema);
                     case EdmExpressionKind.TimeOfDayConstant:
                         return new CsdlSemanticsTimeOfDayConstantExpression((CsdlConstantExpression)expression, schema);
+                    case EdmExpressionKind.AnnotationPath:
+                        return new CsdlSemanticsAnnotationPathExpression((CsdlAnnotationPathExpression)expression, bindingContext, schema);
                 }
             }
 

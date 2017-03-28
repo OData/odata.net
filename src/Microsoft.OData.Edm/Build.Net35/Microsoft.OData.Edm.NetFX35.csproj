@@ -683,11 +683,17 @@
     <Compile Include="..\Csdl\CsdlWriter.cs">
       <Link>Microsoft\OData\Edm\Csdl\CsdlWriter.cs</Link>
     </Compile>
+    <Compile Include="..\Csdl\Parsing\Ast\CsdlAnnotationPathExpression.cs">
+      <Link>Microsoft\OData\Edm\Csdl\Parsing\Ast\CsdlAnnotationPathExpression.cs</Link>
+    </Compile>
     <Compile Include="..\Csdl\SchemaReader.cs">
       <Link>Microsoft\OData\Edm\Csdl\SchemaReader.cs</Link>
     </Compile>
     <Compile Include="..\Csdl\SchemaWriter.cs">
       <Link>Microsoft\OData\Edm\Csdl\SchemaWriter.cs</Link>
+    </Compile>
+    <Compile Include="..\Csdl\Semantics\CsdlSemanticsAnnotationPathExpression.cs">
+      <Link>Microsoft\OData\Edm\Csdl\Semantics\CsdlSemanticsAnnotationPathExpression.cs</Link>
     </Compile>
     <Compile Include="..\Csdl\Semantics\CsdlSemanticsTerm.cs">
       <Link>Microsoft\OData\Edm\Csdl\Semantics\CsdlSemanticsTerm.cs</Link>
