@@ -16,8 +16,6 @@ For more information about OData, please refer to the following resources:
 ## 2. Project structure
 The project currently has six branches: [ODataV4-6.x](https://github.com/OData/odata.net/tree/ODataV4-6.x), [ODataV4-7.x](https://github.com/OData/odata.net/tree/ODataV4-7.x), [master](https://github.com/OData/odata.net/tree/master), [gh-pages](https://github.com/OData/odata.net/tree/gh-pages), [ODATAV3](https://github.com/OData/odata.net/tree/ODATAV3), and [WCFDSV4](https://github.com/OData/odata.net/tree/WCFDSV4).
 
-
-
 **ODataV4-6.x branch**
 
 The ODataV4-6.x branch includes the .NET libraries for OData V4 only that are now most actively iterated and maintained by the OData team, it has newest OData lib 6.x release code base. It has the following libraries:
@@ -30,7 +28,9 @@ For these libraries, we accept bug reports and pull requests. The corresponding 
 
 **ODataV4-7.x branch**
 
-The ODataV4-7.x branch includes the .NET libraries for OData V4 only that are in development now. It is evolved from ODataV4-6.x with kinds of improvements, new features and so on. It is in-compatible with ODataV4-6.x release and will become the master branch after it is released. It has same libraries as ODataV4-6.x branch.
+The ODataV4-7.x builds upon the [ODataV4-6.x branch](https://github.com/OData/odata.net/tree/ODataV4-6.x) and produces both [PCL (Portable Class Libraries) Profile111](https://msdn.microsoft.com/library/gg597391.aspx) and [.NET Standard 1.1](https://docs.microsoft.com/en-us/dotnet/articles/standard/library) libraries. Following ODataV4-6.x, this branch implements new features with the same libraries and will become the master branch after release. 
+
+While Visual Studio 2017 has been released, this branch currently compiles against Visual Studio 2015 due to internal migrations to Visual Studio 2017--rest assured, the desire to move to the new product is highly visible. With that said, this branch utilizes `project.json` files for its `.csproj` files, there is a change in the build process for those who are unfamiliar. Please either 1) run `nuget restore Microsoft.Test.OData.DotNetStandard.sln` in the commandline of the `odata.net/sln` directory, or 2) enable automatic package restore via Visual Studio to build them (in VS2015, go to `Tools->NuGet Package Manager->Package Manager Settings`. Enable "Allow NuGet to download missing packages".). More info regarding the command can be found [here](https://docs.microsoft.com/en-us/nuget/consume-packages/package-restore).
 
 For these libraries, we accept feature requirements, but we do not accept bug reports and pull requests before first release is ready.
 

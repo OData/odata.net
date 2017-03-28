@@ -2,10 +2,8 @@
   "version": "1.0.0-*",
   "testRunner": "xunit",
   "dependencies": {
-    "Microsoft.OData.Client": "7.0.0-*",
-    "Microsoft.Test.OData.Framework.DotNetCore": "7.0.0-*",
-    "Microsoft.Test.OData.Services.TestServices.DotNetCore": "7.0.0-*",
-    "xunit": "2.2.0-beta4-build3444"
+    "System.ComponentModel.EventBasedAsync": "4.3.0",
+    "xunit": "2.2.0"
   },
 
   "frameworks": {
@@ -16,7 +14,15 @@
           "version": "1.0.0"
         },
         "dotnet-test-xunit": "2.2.0-preview2-build1029",
-        "System.ComponentModel.EventBasedAsync": "4.3.0-preview1-24530-04"
+        "Microsoft.OData.Client.NetStandard": {
+          "target": "project"
+        },
+        "Microsoft.Test.OData.Framework.NetStandard": {
+          "target": "project"
+        },
+        "Microsoft.Test.OData.Services.TestServices.NetStandard": {
+          "target": "project"
+        }
       }
     }
   }

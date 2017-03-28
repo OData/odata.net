@@ -38,6 +38,9 @@
 
     <!-- This ensures OutputPath always matches OutDir, especially when TFS overrides OutDir. -->
     <OutputPath>$(OutDir)</OutputPath>
+    
+    <!-- Setting this variable to false preserves the OutputPath set above. Without this variable, our OutputPath would eventually be overwritten with a different one in the Microsoft.Common.CurrentVersion.Target script. -->
+    <GenerateProjectSpecificOutputFolder>false</GenerateProjectSpecificOutputFolder>
   </PropertyGroup>
   
   <PropertyGroup Condition="'$(RedirectOutputToLocalBin)'=='' ">
