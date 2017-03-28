@@ -29,6 +29,11 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
             get { return EdmContainerElementKind.EntitySet; }
         }
 
+        public bool IncludeInServiceDocument
+        {
+            get { return ((CsdlEntitySet)this.navigationSource).IncludeInServiceDocument; }
+        }
+
         protected override IEdmEntityType ComputeElementType()
         {
             string type = ((CsdlEntitySet)this.navigationSource).ElementType;

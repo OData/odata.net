@@ -794,6 +794,12 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
                 return new CsdlEnumMemberExpression(this.ValidateEnumMembersPath(enumMemberValue), element.Location);
             }
 
+            string annotationPath = Optional(CsdlConstants.Attribute_AnnotationPath);
+            if (annotationPath != null)
+            {
+                return new CsdlAnnotationPathExpression(annotationPath, element.Location);
+            }
+
             EdmValueKind kind;
 
             string value = Optional(CsdlConstants.Attribute_String);
@@ -1210,8 +1216,16 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
         {
             string name = Required(CsdlConstants.Attribute_Name);
             string entityType = RequiredQualifiedName(CsdlConstants.Attribute_EntityType);
+            bool? includeInServiceDocument = OptionalBoolean(CsdlConstants.Attribute_IncludeInServiceDocument);
 
-            return new CsdlEntitySet(name, entityType, childValues.ValuesOfType<CsdlNavigationPropertyBinding>(), Documentation(childValues), element.Location);
+            if (includeInServiceDocument == null)
+            {
+                return new CsdlEntitySet(name, entityType, childValues.ValuesOfType<CsdlNavigationPropertyBinding>(), Documentation(childValues), element.Location);
+            }
+            else
+            {
+                return new CsdlEntitySet(name, entityType, childValues.ValuesOfType<CsdlNavigationPropertyBinding>(), Documentation(childValues), element.Location, (bool)includeInServiceDocument);
+            }
         }
 
         private CsdlSingleton OnSingletonElement(XmlElementInfo element, XmlElementValueCollection childValues)

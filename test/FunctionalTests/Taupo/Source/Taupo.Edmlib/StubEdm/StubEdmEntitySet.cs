@@ -73,12 +73,20 @@ namespace Microsoft.Test.Taupo.Edmlib.StubEdm
             get { return null; }
         }
 
-        /// <summary>
-        /// Sets the navigation target for a particular navigation property.
-        /// </summary>
-        /// <param name="navigationProperty">The navigation property.</param>
-        /// <param name="target">The target entity set.</param>
-        public void SetNavigationTarget(IEdmNavigationProperty navigationProperty, IEdmEntitySet target)
+		/// <summary>
+		/// Sets or gets whether to include in the service document
+		/// </summary>
+		public bool IncludeInServiceDocument
+		{
+			get; set;
+		}
+
+		/// <summary>
+		/// Sets the navigation target for a particular navigation property.
+		/// </summary>
+		/// <param name="navigationProperty">The navigation property.</param>
+		/// <param name="target">The target entity set.</param>
+		public void SetNavigationTarget(IEdmNavigationProperty navigationProperty, IEdmEntitySet target)
         {
             this.navigationTargets[navigationProperty] = target;
 
