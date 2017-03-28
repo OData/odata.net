@@ -1484,7 +1484,7 @@ namespace EdmLibTests.FunctionalTests
                   <PropertyValue Property=""Label"" String=""Contacts""/>
                   <PropertyValue Property=""Target"" AnnotationPath=""BP_2_CONTACT/@com.sap.vocabularies.UI.v1.Badge""/>
                 </Record>
-              </Collection>
+             </Collection>
             </Annotation>
       </Annotations>
       </Schema>
@@ -1505,10 +1505,10 @@ namespace EdmLibTests.FunctionalTests
             Assert.IsTrue(bp3.IncludeInServiceDocument, "IncludeInServiceDocument should be true.");
 
             var annotation = model.VocabularyAnnotations.FirstOrDefault();
-            var collection = annotation?.Value as IEdmCollectionExpression;
-            var record = collection?.Elements.FirstOrDefault() as IEdmRecordExpression;
-            var propertyValue = record?.Properties.Where(e => e.Name == "Target").FirstOrDefault();
-            var expression = propertyValue?.Value as IEdmExpression;
+            var collection = annotation.Value as IEdmCollectionExpression;
+            var record = collection.Elements.FirstOrDefault() as IEdmRecordExpression;
+            var propertyValue = record.Properties.Where(e => e.Name == "Target").FirstOrDefault();
+            var expression = propertyValue.Value as IEdmExpression;
             Assert.IsTrue(expression.ExpressionKind == EdmExpressionKind.AnnotationPath, "Expression should be AnnotationPath.");
             var pathExpression = expression as IEdmPathExpression;
             Assert.IsTrue(string.Join("/", pathExpression.Path) == "BP_2_CONTACT/@com.sap.vocabularies.UI.v1.Badge", "Wrong annotation path value.");
