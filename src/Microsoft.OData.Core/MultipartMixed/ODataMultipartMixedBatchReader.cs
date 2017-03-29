@@ -1,34 +1,33 @@
-﻿//---------------------------------------------------------------------
-// <copyright file="ODataBatchMimeReader.cs" company="Microsoft">
+//---------------------------------------------------------------------
+// <copyright file="ODataMultipartMixedBatchReader.cs" company="Microsoft">
 //      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core
+
+namespace Microsoft.OData.Core.MultipartMixed
 {
     #region Namespaces
     using System;
-    using System.Collections.Generic;
     using System.Diagnostics;
-    using System.Diagnostics.CodeAnalysis;
-    using System.Linq;
     using System.Text;
+
 #if ODATALIB_ASYNC
     using System.Threading.Tasks;
 #endif
     #endregion Namespaces
 
-    internal sealed class ODataBatchMimeReader: ODataBatchReader
+    internal sealed class ODataMultipartMixedBatchReader: ODataBatchReader
     {
 
         /// <summary>The batch stream used by the batch reader to devide a batch payload into parts.</summary>
-        private readonly ODataBatchReaderStream batchStream;
+        private readonly ODataMultipartMixedBatchReaderStream batchStream;
 
         internal ODataRawInputContext RawInputContext
         {
             get
             {
-                return this.inputContext as ODataRawInputContext;
+                return this.InputContext as ODataRawInputContext;
             }
         }
  
@@ -39,14 +38,14 @@ namespace Microsoft.OData.Core
         /// <param name="batchBoundary">The boundary string for the batch structure itself.</param>
         /// <param name="batchEncoding">The encoding to use to read from the batch stream.</param>
         /// <param name="synchronous">true if the reader is created for synchronous operation; false for asynchronous.</param>
-        internal ODataBatchMimeReader(ODataInputContext inputContext, string batchBoundary, Encoding batchEncoding, bool synchronous)
+        internal ODataMultipartMixedBatchReader(ODataInputContext inputContext, string batchBoundary, Encoding batchEncoding, bool synchronous)
             : base(inputContext, batchEncoding, synchronous)
         {
             Debug.Assert(inputContext != null, "inputContext != null");
             Debug.Assert(this.RawInputContext != null, "this.RawInputContext != null");
             Debug.Assert(!string.IsNullOrEmpty(batchBoundary), "!string.IsNullOrEmpty(batchBoundary)");
 
-            this.batchStream = new ODataBatchReaderStream(this.RawInputContext, batchBoundary, batchEncoding);
+            this.batchStream = new ODataMultipartMixedBatchReaderStream(this.RawInputContext, batchBoundary, batchEncoding);
         }
 
         /// <summary>
@@ -54,41 +53,42 @@ namespace Microsoft.OData.Core
         /// in a batch request.
         /// </summary>
         /// <returns>The message that can be used to read the content of the batch request operation from.</returns>
-        internal override ODataBatchOperationRequestMessage CreateOperationRequestMessageImplementation()
+        protected override ODataBatchOperationRequestMessage CreateOperationRequestMessageImplementation()
         {
-            this.operationState = OperationState.MessageCreated;
+            this.ReaderOperationState = OperationState.MessageCreated;
 
             string requestLine = this.batchStream.ReadFirstNonEmptyLine();
 
             string httpMethod;
             Uri requestUri;
-            this.ParseRequestLine(requestLine, out httpMethod, out requestUri);
-
-            // HTTP GET is not allowed in change set for MIME format batching.
-            ValidateQueryMethodNotAllowedInChangeSet(httpMethod);
+            this.ParseRequestLine(
+                requestLine,
+                ValidateQueryMethodNotAllowedInChangeSet, // HTTP GET is not allowed in change set for MIME format batching.
+                out httpMethod,
+                out requestUri);
 
             // Read all headers and create the request message
             ODataBatchOperationHeaders headers = this.batchStream.ReadHeaders();
 
             if (this.batchStream.ChangeSetBoundary != null)
             {
-                if (this.allowLegacyContentIdBehaviour)
+                if (this.AllowLegacyContentIdBehavior)
                 {
                     // Add a potential Content-ID header to the URL resolver so that it will be available
                     // to subsequent operations.
                     string contentId;
-                    if (this.contentIdToAddOnNextRead == null && headers.TryGetValue(ODataConstants.ContentIdHeader, out contentId))
+                    if (this.ContentIdToAddOnNextRead == null && headers.TryGetValue(ODataConstants.ContentIdHeader, out contentId))
                     {
                         if (contentId != null && this.urlResolver.ContainsContentId(contentId))
                         {
                             throw new ODataException(Strings.ODataBatchReader_DuplicateContentIDsNotAllowed(contentId));
                         }
 
-                        this.contentIdToAddOnNextRead = contentId;
+                        this.ContentIdToAddOnNextRead = contentId;
                     }
                 }
 
-                if (this.contentIdToAddOnNextRead == null)
+                if (this.ContentIdToAddOnNextRead == null)
                 {
                     throw new ODataException(Strings.ODataBatchOperationHeaderDictionary_KeyNotFound(ODataConstants.ContentIdHeader));
                 }
@@ -100,7 +100,7 @@ namespace Microsoft.OData.Core
                 requestUri,
                 headers,
                 /*operationListener*/ this,
-                this.contentIdToAddOnNextRead,
+                this.ContentIdToAddOnNextRead,
                 this.urlResolver);
 
             return requestMessage;
@@ -111,9 +111,9 @@ namespace Microsoft.OData.Core
         /// in a batch request.
         /// </summary>
         /// <returns>The message that can be used to read the content of the batch request operation from.</returns>
-        internal override ODataBatchOperationResponseMessage CreateOperationResponseMessageImplementation()
+        protected override ODataBatchOperationResponseMessage CreateOperationResponseMessageImplementation()
         {
-            this.operationState = OperationState.MessageCreated;
+            this.ReaderOperationState = OperationState.MessageCreated;
 
             string responseLine = this.batchStream.ReadFirstNonEmptyLine();
 
@@ -124,19 +124,19 @@ namespace Microsoft.OData.Core
 
             if (this.batchStream.ChangeSetBoundary != null)
             {
-                if (this.allowLegacyContentIdBehaviour)
+                if (this.AllowLegacyContentIdBehavior)
                 {
                     // Add a potential Content-ID header to the URL resolver so that it will be available
                     // to subsequent operations.
                     string contentId;
-                    if (this.contentIdToAddOnNextRead == null && headers.TryGetValue(ODataConstants.ContentIdHeader, out contentId))
+                    if (this.ContentIdToAddOnNextRead == null && headers.TryGetValue(ODataConstants.ContentIdHeader, out contentId))
                     {
                         if (contentId != null && this.urlResolver.ContainsContentId(contentId))
                         {
                             throw new ODataException(Strings.ODataBatchReader_DuplicateContentIDsNotAllowed(contentId));
                         }
 
-                        this.contentIdToAddOnNextRead = contentId;
+                        this.ContentIdToAddOnNextRead = contentId;
                     }
                 }
             }
@@ -147,7 +147,7 @@ namespace Microsoft.OData.Core
                 this.batchStream,
                 statusCode,
                 headers,
-                this.contentIdToAddOnNextRead,
+                this.ContentIdToAddOnNextRead,
                 /*operationListener*/ this,
                 this.urlResolver.BatchMessageUrlResolver);
 
@@ -174,16 +174,16 @@ namespace Microsoft.OData.Core
         /// Continues reading from the batch message payload.
         /// </summary>
         /// <returns>true if more items were read; otherwise false.</returns>
-        internal override bool ReadImplementation()
+        protected override bool ReadImplementation()
         {
-            Debug.Assert(this.operationState != OperationState.StreamRequested, "Should have verified that no operation stream is still active.");
+            Debug.Assert(this.ReaderOperationState != OperationState.StreamRequested, "Should have verified that no operation stream is still active.");
 
             switch (this.State)
             {
                 case ODataBatchReaderState.Initial:
                     // The stream should be positioned at the beginning of the batch content,
                     // that is before the first boundary (or the preamble if there is one).
-                    this.batchReaderState = this.SkipToNextPartAndReadHeaders();
+                    this.State = this.SkipToNextPartAndReadHeaders();
                     break;
 
                 case ODataBatchReaderState.Operation:
@@ -192,7 +192,7 @@ namespace Microsoft.OData.Core
                     // or CreateOperationResponseMessage to read at least the headers of the operation.
                     // This is important since we need to read the ContentId header (if present) and
                     // add it to the URL resolver.
-                    if (this.operationState == OperationState.None)
+                    if (this.ReaderOperationState == OperationState.None)
                     {
                         // No message was created; fail
                         throw new ODataException(Strings.ODataBatchReader_NoMessageWasCreatedForOperation);
@@ -200,29 +200,29 @@ namespace Microsoft.OData.Core
 
                     // Reset the operation state; the operation state only
                     // tracks the state of a batch operation while in state Operation.
-                    this.operationState = OperationState.None;
+                    this.ReaderOperationState = OperationState.None;
 
                     // Also add a pending ContentId header to the URL resolver now. We ensured above
                     // that a message has been created for this operation and thus the headers (incl. 
                     // a potential content ID header) have been read.
-                    if (this.contentIdToAddOnNextRead != null)
+                    if (this.ContentIdToAddOnNextRead != null)
                     {
-                        this.urlResolver.AddContentId(this.contentIdToAddOnNextRead);
-                        this.contentIdToAddOnNextRead = null;
+                        this.urlResolver.AddContentId(this.ContentIdToAddOnNextRead);
+                        this.ContentIdToAddOnNextRead = null;
                     }
 
                     // When we are done with an operation, we have to skip ahead to the next part
                     // when Read is called again. Note that if the operation stream was never requested
                     // and the content of the operation has not been read, we'll skip it here.
-                    Debug.Assert(this.operationState == OperationState.None, "Operation state must be 'None' at the end of the operation.");
-                    this.batchReaderState = this.SkipToNextPartAndReadHeaders();
+                    Debug.Assert(this.ReaderOperationState == OperationState.None, "Operation state must be 'None' at the end of the operation.");
+                    this.State = this.SkipToNextPartAndReadHeaders();
                     break;
 
                 case ODataBatchReaderState.ChangesetStart:
                     // When at the start of a changeset, skip ahead to the first operation in the 
                     // changeset (or the end boundary of the changeset).
                     Debug.Assert(this.batchStream.ChangeSetBoundary != null, "Changeset boundary must have been set by now.");
-                    this.batchReaderState = this.SkipToNextPartAndReadHeaders();
+                    this.State = this.SkipToNextPartAndReadHeaders();
                     break;
 
                 case ODataBatchReaderState.ChangesetEnd:
@@ -230,7 +230,7 @@ namespace Microsoft.OData.Core
                     // changeset size and then skip to the next part.
                     this.ResetChangeSetSize();
                     this.batchStream.ResetChangeSetBoundary();
-                    this.batchReaderState = this.SkipToNextPartAndReadHeaders();
+                    this.State = this.SkipToNextPartAndReadHeaders();
                     break;
 
                 case ODataBatchReaderState.Exception:    // fall through
@@ -243,7 +243,7 @@ namespace Microsoft.OData.Core
                     throw new ODataException(Strings.General_InternalError(InternalErrorCodes.ODataBatchReader_ReadImplementation));
             }
 
-            return this.batchReaderState != ODataBatchReaderState.Completed && this.batchReaderState != ODataBatchReaderState.Exception;
+            return this.State != ODataBatchReaderState.Completed && this.State != ODataBatchReaderState.Exception;
         }
 
         /// <summary>
@@ -311,14 +311,14 @@ namespace Microsoft.OData.Core
                 {
                     // Add a potential Content-ID header to the URL resolver so that it will be available
                     // to subsequent operations.
-                    Debug.Assert(this.contentIdToAddOnNextRead == null, "Must not have a content ID to be added to a part.");
+                    Debug.Assert(this.ContentIdToAddOnNextRead == null, "Must not have a content ID to be added to a part.");
 
                     if (contentId != null && this.urlResolver.ContainsContentId(contentId))
                     {
                         throw new ODataException(Strings.ODataBatchReader_DuplicateContentIDsNotAllowed(contentId));
                     }
 
-                    this.contentIdToAddOnNextRead = contentId;
+                    this.ContentIdToAddOnNextRead = contentId;
                 }
             }
 
@@ -332,7 +332,7 @@ namespace Microsoft.OData.Core
         /// <returns>The next state of the batch reader.</returns>
         private ODataBatchReaderState GetEndBoundaryState()
         {
-            switch (this.batchReaderState)
+            switch (this.State)
             {
                 case ODataBatchReaderState.Initial:
                     // If we find an end boundary when in state 'Initial' it means that we

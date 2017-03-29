@@ -12,6 +12,8 @@ namespace Microsoft.OData.Core
     using System.Diagnostics;
     using System.Globalization;
     using System.IO;
+
+    using Microsoft.OData.Core.MultipartMixed;
     #endregion Namespaces
 
     /// <summary>
@@ -71,16 +73,16 @@ namespace Microsoft.OData.Core
         /// <summary>
         /// Creates a batch operation stream from the specified batch stream.
         /// </summary>
-        /// <param name="batchReaderStream">The batch stream to create the operation read stream for.</param>
+        /// <param name="multipartMixedBatchReaderStream">The batch stream to create the operation read stream for.</param>
         /// <param name="headers">The headers of the current part; based on the header we create different, optimized stream implementations.</param>
         /// <param name="operationListener">The operation listener to be passed to the newly created read stream.</param>
         /// <returns>A new <see cref="ODataBatchOperationReadStream"/> instance.</returns>
         internal static ODataBatchOperationReadStream CreateBatchOperationReadStream(
-            ODataBatchReaderStream batchReaderStream,
+            ODataMultipartMixedBatchReaderStream multipartMixedBatchReaderStream,
             ODataBatchOperationHeaders headers,
             IODataBatchOperationListener operationListener)
         {
-            Debug.Assert(batchReaderStream != null, "batchReaderStream != null");
+            Debug.Assert(multipartMixedBatchReaderStream != null, "multipartMixedBatchReaderStream != null");
             Debug.Assert(operationListener != null, "operationListener != null");
 
             // See whether we have a Content-Length header
@@ -93,10 +95,10 @@ namespace Microsoft.OData.Core
                     throw new ODataException(Strings.ODataBatchReaderStream_InvalidContentLengthSpecified(contentLengthValue));
                 }
 
-                return ODataBatchOperationReadStream.Create(batchReaderStream, operationListener, length);
+                return ODataBatchOperationReadStream.Create(multipartMixedBatchReaderStream, operationListener, length);
             }
 
-            return ODataBatchOperationReadStream.Create(batchReaderStream, operationListener);
+            return ODataBatchOperationReadStream.Create(multipartMixedBatchReaderStream, operationListener);
         }
 
         /// <summary>

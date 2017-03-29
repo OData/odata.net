@@ -4,8 +4,6 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-
-
 namespace Microsoft.OData.Core
 {
     #region Namespaces
@@ -19,7 +17,6 @@ namespace Microsoft.OData.Core
     using System.Threading.Tasks;
 #endif
 
-    using Microsoft.OData.Core.JsonLight;
     #endregion Namespaces
 
     /// <summary>
@@ -28,7 +25,7 @@ namespace Microsoft.OData.Core
     public abstract class ODataBatchReader : IODataBatchOperationListener
     {
         /// <summary>The input context to read the content from.</summary>
-        internal readonly ODataInputContext inputContext;
+        private ODataInputContext inputContext;
 
         /// <summary>True if the writer was created for synchronous operation; false for asynchronous.</summary>
         private readonly bool synchronous;
@@ -37,7 +34,7 @@ namespace Microsoft.OData.Core
         internal readonly ODataBatchUrlResolver urlResolver;
 
         /// <summary>The current state of the batch reader.</summary>
-        internal ODataBatchReaderState batchReaderState;
+        private ODataBatchReaderState batchReaderState;
 
         /// <summary>The current size of the batch message, i.e., how many query operations and changesets have been read.</summary>
         private uint currentBatchSize;
@@ -46,19 +43,41 @@ namespace Microsoft.OData.Core
         private uint currentChangeSetSize;
 
         /// <summary>An enumeration tracking the state of the current batch operation.</summary>
-        internal OperationState operationState;
+        private OperationState operationState;
 
         /// <summary>The value of the content ID header of the current part.</summary>
         /// <remarks>
         /// The content ID header of the current part should only be visible to subsequent parts
         /// so we can only add it to the URL resolver once we are done with the current part.
         /// </remarks>
-        internal string contentIdToAddOnNextRead;
+        private string contentIdToAddOnNextRead;
 
         /// <summary>
         /// Internal switch for whether we support reading Content-ID header appear in HTTP head instead of ChangeSet head.
         /// </summary>
-        internal bool allowLegacyContentIdBehaviour;
+        private bool allowLegacyContentIdBehavior;
+
+        protected ODataInputContext InputContext 
+        {
+            get { return this.inputContext; }
+        }
+
+        protected string ContentIdToAddOnNextRead
+        {
+            get { return this.contentIdToAddOnNextRead; }
+            set { this.contentIdToAddOnNextRead = value; }
+        }
+
+        protected OperationState ReaderOperationState
+        {
+            get { return this.operationState; }
+            set { this.operationState = value; }
+        }
+
+        protected bool AllowLegacyContentIdBehavior
+        {
+            get { return this.allowLegacyContentIdBehavior;}
+        }
 
         /// <summary>
         /// Constructor.
@@ -75,13 +94,13 @@ namespace Microsoft.OData.Core
             this.synchronous = synchronous;
             this.urlResolver = new ODataBatchUrlResolver(inputContext.UrlResolver);
 
-            this.allowLegacyContentIdBehaviour = true;
+            this.allowLegacyContentIdBehavior = true;
         }
 
         /// <summary>
         /// An enumeration to track the state of a batch operation.
         /// </summary>
-        internal enum OperationState
+        protected enum OperationState
         {
             /// <summary>No action has been performed on the operation.</summary>
             None,
@@ -106,7 +125,7 @@ namespace Microsoft.OData.Core
                 return this.batchReaderState;
             }
 
-            internal set
+            set
             {
                 this.batchReaderState = value;
             }
@@ -206,21 +225,21 @@ namespace Microsoft.OData.Core
         /// Continues reading from the batch message payload.
         /// </summary>
         /// <returns>true if more items were read; otherwise false.</returns>
-        internal abstract bool ReadImplementation();
+        protected abstract bool ReadImplementation();
 
         /// <summary>
         /// Returns the cached <see cref="ODataBatchOperationRequestMessage"/> for reading the content of an operation 
         /// in a batch request.
         /// </summary>
         /// <returns>The message that can be used to read the content of the batch request operation from.</returns>
-        internal abstract ODataBatchOperationRequestMessage CreateOperationRequestMessageImplementation();
+        protected abstract ODataBatchOperationRequestMessage CreateOperationRequestMessageImplementation();
 
         /// <summary>
         /// Returns the cached <see cref="ODataBatchOperationRequestMessage"/> for reading the content of an operation 
         /// in a batch request.
         /// </summary>
         /// <returns>The message that can be used to read the content of the batch request operation from.</returns>
-        internal abstract ODataBatchOperationResponseMessage CreateOperationResponseMessageImplementation();
+        protected abstract ODataBatchOperationResponseMessage CreateOperationResponseMessageImplementation();
 
         /// <summary>
         /// Reads the next part from the batch message payload.
@@ -245,14 +264,25 @@ namespace Microsoft.OData.Core
             return TaskUtils.GetTaskForSynchronousOperation<bool>(this.ReadImplementation);
         }
 #endif
-
         /// <summary>
-        /// Parses the request line of a batch operation request.
+        /// Parses the request line of a batch operation request, without HTTP method validation.
         /// </summary>
         /// <param name="requestLine">The request line as a string.</param>
         /// <param name="httpMethod">The parsed HTTP method of the request.</param>
         /// <param name="requestUri">The parsed <see cref="Uri"/> of the request.</param>
         internal void ParseRequestLine(string requestLine, out string httpMethod, out Uri requestUri)
+        {
+            ParseRequestLine(requestLine, /*httpMethodValidation*/ null, out httpMethod, out requestUri);
+        }
+
+        /// <summary>
+        /// Parses the request line of a batch operation request.
+        /// </summary>
+        /// <param name="requestLine">The request line as a string.</param>
+        /// <param name="httpMethodValidation">The validation for the HTTP method in the request line.</param>
+        /// <param name="httpMethod">The parsed HTTP method of the request.</param>
+        /// <param name="requestUri">The parsed <see cref="Uri"/> of the request.</param>
+        internal void ParseRequestLine(string requestLine, Action<string> httpMethodValidation, out string httpMethod, out Uri requestUri)
         {
             Debug.Assert(!this.inputContext.ReadingResponse, "Must only be called for requests.");
 
@@ -290,6 +320,11 @@ namespace Microsoft.OData.Core
 
             // NOTE: this method will throw if the method is not recognized.
             HttpUtils.ValidateHttpMethod(httpMethod);
+
+            if (httpMethodValidation != null)
+            {
+                httpMethodValidation(httpMethod);
+            }
 
             requestUri = new Uri(uriSegment, UriKind.RelativeOrAbsolute);
             requestUri = ODataBatchUtils.CreateOperationRequestUri(requestUri, this.inputContext.MessageReaderSettings.BaseUri, this.urlResolver);
@@ -396,7 +431,7 @@ namespace Microsoft.OData.Core
         /// Verifies that calling Read is valid.
         /// </summary>
         /// <param name="synchronousCall">true if the call is to be synchronous; false otherwise.</param>
-        internal void VerifyCanRead(bool synchronousCall)
+        private void VerifyCanRead(bool synchronousCall)
         {
             this.VerifyReaderReady();
             this.VerifyCallAllowed(synchronousCall);
@@ -499,7 +534,7 @@ namespace Microsoft.OData.Core
         /// <param name="action">The action to execute.</param>
         /// <returns>The result of the <paramref name="action"/>.</returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("DataWeb.Usage", "AC0014", Justification = "Throws every time")]
-        internal T InterceptException<T>(Func<T> action)
+        private T InterceptException<T>(Func<T> action)
         {
             try
             {

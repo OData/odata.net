@@ -587,12 +587,12 @@ namespace Microsoft.OData.Core.JsonLight
         }
 
         /// <summary>
-        /// Creates a concrete <see cref="ODataBatchJsonWriter" /> instance.
+        /// Creates a concrete <see cref="ODataJsonLightBatchWriter" /> instance.
         /// </summary>
         /// <returns>The newly created batch writer.</returns>
         private ODataBatchWriter CreateODataBatchWriterImplementation()
         {
-            ODataBatchWriter batchWriter = new ODataBatchJsonWriter(this);
+            ODataBatchWriter batchWriter = new ODataJsonLightBatchWriter(this);
             this.outputInStreamErrorListener = batchWriter;
             return batchWriter;
         }

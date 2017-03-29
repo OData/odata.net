@@ -1,36 +1,28 @@
-﻿//---------------------------------------------------------------------
-// <copyright file="ODataBatchJsonReader.cs" company="Microsoft">
+//---------------------------------------------------------------------
+// <copyright file="ODataJsonLightBatchReader.cs" company="Microsoft">
 //      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core
+namespace Microsoft.OData.Core.JsonLight
 {
     #region Namespaces
-    using System;
-    using System.Collections.Generic;
-    using System.Diagnostics;
-    using System.Diagnostics.CodeAnalysis;
-    using System.Globalization;
-    using System.Text;
-#if ODATALIB_ASYNC
-    using System.Threading.Tasks;
-#endif
 
-    using Microsoft.OData.Core.JsonLight;
+    using System.Text;
+
     #endregion Namespaces
 
     /// <summary>
     /// Class for reading OData batch messages in json format; also verifies the proper sequence of read calls on the reader.
     /// </summary>
-    internal sealed class ODataBatchJsonReader: ODataBatchReader
+    internal sealed class ODataJsonLightBatchReader: ODataBatchReader
     {
 
         internal ODataJsonLightInputContext JsonLightInputContext
         {
             get
             {
-                return this.inputContext as ODataJsonLightInputContext;
+                return this.InputContext as ODataJsonLightInputContext;
             }
         }
 
@@ -40,7 +32,7 @@ namespace Microsoft.OData.Core
         /// <param name="inputContext">The input context to read the content from.</param>
         /// <param name="batchEncoding">The encoding to use to read from the batch stream.</param>
         /// <param name="synchronous">true if the reader is created for synchronous operation; false for asynchronous.</param>
-        internal ODataBatchJsonReader(ODataJsonLightInputContext inputContext, Encoding batchEncoding, bool synchronous)
+        internal ODataJsonLightBatchReader(ODataJsonLightInputContext inputContext, Encoding batchEncoding, bool synchronous)
             : base(inputContext, batchEncoding, synchronous)
         {
 
@@ -52,8 +44,9 @@ namespace Microsoft.OData.Core
         /// in a batch request.
         /// </summary>
         /// <returns>The message that can be used to read the content of the batch request operation from.</returns>
-        internal override ODataBatchOperationRequestMessage CreateOperationRequestMessageImplementation()
+        protected override ODataBatchOperationRequestMessage CreateOperationRequestMessageImplementation()
         {
+            // TODO: biaol
             return null;
         }
 
@@ -62,7 +55,7 @@ namespace Microsoft.OData.Core
         /// in a batch request.
         /// </summary>
         /// <returns>The message that can be used to read the content of the batch request operation from.</returns>
-        internal override ODataBatchOperationResponseMessage CreateOperationResponseMessageImplementation()
+        protected override ODataBatchOperationResponseMessage CreateOperationResponseMessageImplementation()
         {
             // TODO: biaol --- consumed by client lib only, later.
             return null;
@@ -72,8 +65,9 @@ namespace Microsoft.OData.Core
         /// Continues reading from the batch message payload.
         /// </summary>
         /// <returns>true if more items were read; otherwise false.</returns>
-        internal override bool ReadImplementation()
+        protected override bool ReadImplementation()
         {
+            // TODO: biaol
             return false;
         }
     }

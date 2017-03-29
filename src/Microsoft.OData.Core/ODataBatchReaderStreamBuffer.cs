@@ -11,10 +11,12 @@ namespace Microsoft.OData.Core
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.IO;
+
+    using Microsoft.OData.Core.MultipartMixed;
     #endregion Namespaces
 
     /// <summary>
-    /// This class represents the internal buffer of the <see cref="ODataBatchReaderStream"/>.
+    /// This class represents the internal buffer of the <see cref="ODataMultipartMixedBatchReaderStream"/>.
     /// </summary>
     internal sealed class ODataBatchReaderStreamBuffer
     {

@@ -724,14 +724,14 @@ namespace Microsoft.OData.Core.JsonLight
         }
 
         /// <summary>
-        /// Create a concrete <see cref="ODataBatchJsonReader"/> instance.
+        /// Create a concrete <see cref="ODataJsonLightBatchReader"/> instance.
         /// </summary>
         private ODataBatchReader CreateBatchReaderImplementation(bool synchronous)
         {
             Debug.Assert(this.textReader != null);
             Debug.Assert(this.textReader is StreamReader);
 
-            return new ODataBatchJsonReader(
+            return new ODataJsonLightBatchReader(
                 this,
                 (this.textReader as StreamReader).CurrentEncoding,
                 synchronous);

@@ -1,18 +1,18 @@
 //---------------------------------------------------------------------
-// <copyright file="ODataBatchReaderStream.cs" company="Microsoft">
+// <copyright file="ODataMultipartMixedBatchReaderStream.cs" company="Microsoft">
 //      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core
+namespace Microsoft.OData.Core.MultipartMixed
 {
     #region Namespaces
+
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
-    using System.Globalization;
-    using System.IO;
     using System.Text;
+
     #endregion Namespaces
 
     /// <summary>
@@ -22,7 +22,7 @@ namespace Microsoft.OData.Core
     /// This stream separates a batch payload into multiple parts by scanning ahead and matching
     /// a boundary string against the current payload.
     /// </remarks>
-    internal sealed class ODataBatchReaderStream
+    internal sealed class ODataMultipartMixedBatchReaderStream
     {
         /// <summary>
         /// The default length for the line buffer byte array used to read lines; expecting lines to normally be less than 2000 bytes.
@@ -65,7 +65,7 @@ namespace Microsoft.OData.Core
         /// <param name="inputContext">The input context to read the content from.</param>
         /// <param name="batchBoundary">The boundary string for the batch structure itself.</param>
         /// <param name="batchEncoding">The encoding to use to read from the batch stream.</param>
-        internal ODataBatchReaderStream(
+        internal ODataMultipartMixedBatchReaderStream(
             ODataRawInputContext inputContext,
             string batchBoundary,
             Encoding batchEncoding)

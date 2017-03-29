@@ -1,40 +1,38 @@
-﻿//---------------------------------------------------------------------
-// <copyright file="ODataBatchJsonWriter.cs" company="Microsoft">
+//---------------------------------------------------------------------
+// <copyright file="ODataJsonLightBatchWriter.cs" company="Microsoft">
 //      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core
+namespace Microsoft.OData.Core.JsonLight
 {
     #region Namespaces
+
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
-    using System.Globalization;
-
 #if ODATALIB_ASYNC
     using System.Threading.Tasks;
 #endif
-
     using Microsoft.OData.Core.Json;
-    using Microsoft.OData.Core.JsonLight;
+
     #endregion Namespaces
 
     /// <summary>
     /// Class for writing OData batch messages of JSON type.
     /// </summary>
-    internal sealed class ODataBatchJsonWriter : ODataBatchWriter
+    internal sealed class ODataJsonLightBatchWriter : ODataBatchWriter
     {
         /// <summary>
         /// The underlying JSON writer.
         /// </summary>
-        private IJsonWriter jsonWriter;
+        private readonly IJsonWriter jsonWriter;
 
         /// <summary>
         /// Constructor.
         /// </summary>
         /// <param name="jsonLightOutputContext">The output context to write to.</param>
-        internal ODataBatchJsonWriter(ODataJsonLightOutputContext jsonLightOutputContext)
+        internal ODataJsonLightBatchWriter(ODataJsonLightOutputContext jsonLightOutputContext)
             : base(jsonLightOutputContext)
         {
             this.jsonWriter = this.JsonLightOutputContext.JsonWriter;
@@ -69,20 +67,20 @@ namespace Microsoft.OData.Core
         }
 #endif
 
-        internal ODataJsonLightOutputContext JsonLightOutputContext
+        private ODataJsonLightOutputContext JsonLightOutputContext
         {
-            get { return this.outputContext as ODataJsonLightOutputContext;}
+            get { return this.OutputContext as ODataJsonLightOutputContext;}
         }
 
         /// <summary>
         /// Verifies that the writer is in correct state for the Flush operation.
         /// </summary>
         /// <param name="synchronousCall">true if the call is to be synchronous; false otherwise.</param>
-        internal override void VerifyCanFlush(bool synchronousCall)
+        protected override void VerifyCanFlush(bool synchronousCall)
         {
             this.JsonLightOutputContext.VerifyNotDisposed();
             this.VerifyCallAllowed(synchronousCall);
-            if (this.state == BatchWriterState.OperationStreamRequested)
+            if (this.State == BatchWriterState.OperationStreamRequested)
             {
                 this.ThrowODataException(Strings.ODataBatchWriter_FlushOrFlushAsyncCalledInStreamRequestedState);
             }
@@ -91,12 +89,12 @@ namespace Microsoft.OData.Core
         /// <summary>
         /// Validates that the batch writer is ready to process a new write request.
         /// </summary>
-        internal override void ValidateWriterReady()
+        protected override void ValidateWriterReady()
         {
             this.JsonLightOutputContext.VerifyNotDisposed();
 
             // If the operation stream was requested but not yet disposed, the writer can't be used to do anything.
-            if (this.state == BatchWriterState.OperationStreamRequested)
+            if (this.State == BatchWriterState.OperationStreamRequested)
             {
                 throw new ODataException(Strings.ODataBatchWriter_InvalidTransitionFromOperationContentStreamRequested);
             }
@@ -155,7 +153,7 @@ namespace Microsoft.OData.Core
         /// <summary>
         /// Starts a new batch - implementation of the actual functionality.
         /// </summary>
-        internal override void WriteStartBatchImplementation()
+        protected override void WriteStartBatchImplementation()
         {
             this.SetState(BatchWriterState.BatchStarted);
 
@@ -170,7 +168,7 @@ namespace Microsoft.OData.Core
         /// <summary>
         /// Ends a batch - implementation of the actual functionality.
         /// </summary>
-        internal override void WriteEndBatchImplementation()
+        protected override void WriteEndBatchImplementation()
         {
             // write pending message data (headers, response line) for a previously unclosed message/request
             this.WritePendingMessageData(true);
@@ -187,13 +185,13 @@ namespace Microsoft.OData.Core
         /// <summary>
         /// Starts a new changeset - implementation of the actual functionality.
         /// </summary>
-        internal override void WriteStartChangesetImplementation()
+        protected override void WriteStartChangesetImplementation()
         {
             // write pending message data (headers, response line) for a previously unclosed message/request
             this.WritePendingMessageData(true);
 
             // important to do this first since it will set up the change set boundary.
-            this.SetState(BatchWriterState.ChangeSetStarted);
+            this.SetState(BatchWriterState.ChangesetStarted);
 
             // reset the size of the current changeset and increase the size of the batch
             this.ResetChangeSetSize();
@@ -203,20 +201,20 @@ namespace Microsoft.OData.Core
         /// <summary>
         /// Ends an active changeset - implementation of the actual functionality.
         /// </summary>
-        internal override void WriteEndChangesetImplementation()
+        protected override void WriteEndChangesetImplementation()
         {
             // write pending message data (headers, response line) for a previously unclosed message/request
             this.WritePendingMessageData(true);
 
             // change the state first so we validate the change set boundary before attempting to write it.
-            this.SetState(BatchWriterState.ChangeSetCompleted);
+            this.SetState(BatchWriterState.ChangesetCompleted);
 
             // Reset the cache of content IDs here. As per spec, content IDs are only unique inside a change set.
             this.urlResolver.Reset();
-            this.currentOperationContentId = null;
+            this.CurrentOperationContentId = null;
         }
 
-        internal override ODataBatchOperationRequestMessage CreateOperationRequestMessageImplementation(string method,
+        protected override ODataBatchOperationRequestMessage CreateOperationRequestMessageImplementation(string method,
             Uri uri, string contentId)
         {
             // TODO: biaol --- this is only consumed by client lib, later.
@@ -227,11 +225,11 @@ namespace Microsoft.OData.Core
         /// Sets a new writer state; verifies that the transition from the current state into new state is valid.
         /// </summary>
         /// <param name="newState">The writer state to transition into.</param>
-        internal override void SetState(BatchWriterState newState)
+        protected override void SetState(BatchWriterState newState)
         {
             this.InterceptException(() => this.ValidateTransition(newState, /*customizedValidationAction*/null));
 
-            this.state = newState;
+            this.State = newState;
         }
 
         /// <summary>
@@ -241,7 +239,7 @@ namespace Microsoft.OData.Core
         /// <param name="method">The Http method to be used for this request operation.</param>
         /// <param name="uri">The Uri to be used for this request operation.</param>
         /// <param name="contentId">The Content-ID value to write in ChangeSet head.</param>
-        internal override void VerifyCanCreateOperationRequestMessage(bool synchronousCall, string method, Uri uri,
+        protected override void VerifyCanCreateOperationRequestMessage(bool synchronousCall, string method, Uri uri,
             string contentId)
         {
             this.CanCreateOperationRequestMessageVerifierCommon(synchronousCall, method, uri, contentId);
@@ -252,20 +250,20 @@ namespace Microsoft.OData.Core
         /// </summary>
         /// <param name="contentId">The Content-ID value to write in ChangeSet head.</param>
         /// <returns>The message that can be used to write the response operation.</returns>
-        internal override ODataBatchOperationResponseMessage CreateOperationResponseMessageImplementation(string contentId)
+        protected override ODataBatchOperationResponseMessage CreateOperationResponseMessageImplementation(string contentId)
         {
             this.WritePendingMessageData(true);
 
             // In responses we don't need to use our batch URL resolver, since there are no cross referencing URLs
             // so use the URL resolver from the batch message instead.
             this.CurrentOperationResponseMessage = ODataBatchOperationResponseMessage.CreateWriteMessage(
-                this.JsonLightOutputContext.OutputStream,
+                this.JsonLightOutputContext.GetOutputStream(),
                 /*operationListener*/ this,
                 this.urlResolver.BatchMessageUrlResolver,
                 contentId);
             this.SetState(BatchWriterState.OperationCreated);
 
-            Debug.Assert(this.currentOperationContentId == null, "The Content-ID header is only supported in request messages.");
+            Debug.Assert(this.CurrentOperationContentId == null, "The Content-ID header is only supported in request messages.");
 
             // Start the Json object for the response
             this.WriteStartBoundaryForOperation();
@@ -279,7 +277,7 @@ namespace Microsoft.OData.Core
         /// <param name="reportMessageCompleted">
         /// A flag to control whether after writing the pending data we report writing the message to be completed or not.
         /// </param>
-        internal override void WritePendingMessageData(bool reportMessageCompleted)
+        protected override void WritePendingMessageData(bool reportMessageCompleted)
         {
             if (this.CurrentOperationMessage != null)
             {
@@ -310,11 +308,12 @@ namespace Microsoft.OData.Core
                 }
                 this.jsonWriter.EndObjectScope();
 
-                
                 // body attribute
                 if (!ODataBatchWriterUtils.HasResponseBody(this.CurrentOperationResponseMessage))
                 {
                     // Close the individual response object now since there are no content.
+                    // If there is content, the response object will be closed when the content stream is disposed.
+                    // See <cref="ODataJsonLightBatchWriter.BatchOperationContentStreamDisposed"/>.
                     this.jsonWriter.EndObjectScope();
                 }
                 else
@@ -334,7 +333,7 @@ namespace Microsoft.OData.Core
         /// <summary>
         /// Writes the start boundary for an operation. This is either the batch or the changeset boundary.
         /// </summary>
-        internal override void WriteStartBoundaryForOperation()
+        protected override void WriteStartBoundaryForOperation()
         {
             // Start the individual response object
             this.jsonWriter.StartObjectScope();
@@ -362,7 +361,7 @@ namespace Microsoft.OData.Core
         /// <summary>
         /// Writes all the pending headers and prepares the writer to write a content of the operation.
         /// </summary>
-        internal override void StartBatchOperationContent()
+        protected override void StartBatchOperationContent()
         {
             Debug.Assert(this.CurrentOperationMessage != null, "Expected non-null operation message!");
             Debug.Assert(this.JsonLightOutputContext.JsonWriter != null, "Must have a Json writer!");
@@ -379,7 +378,7 @@ namespace Microsoft.OData.Core
         /// Disposes the batch writer and set the 'OperationStreamRequested' batch writer state;
         /// called after the flush operation(s) have completed.
         /// </summary>
-        internal override void DisposeBatchWriterAndSetContentStreamRequestedState()
+        protected override void DisposeBatchWriterAndSetContentStreamRequestedState()
         {
             this.SetState(BatchWriterState.OperationStreamRequested);
         }

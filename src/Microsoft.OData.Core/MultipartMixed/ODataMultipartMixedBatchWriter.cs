@@ -1,10 +1,10 @@
-﻿//---------------------------------------------------------------------
-// <copyright file="ODataBatchMimeWriter.cs" company="Microsoft">
+//---------------------------------------------------------------------
+// <copyright file="ODataMultipartMixedBatchWriter.cs" company="Microsoft">
 //      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core
+namespace Microsoft.OData.Core.MultipartMixed
 {
     #region Namespaces
     using System;
@@ -19,7 +19,7 @@ namespace Microsoft.OData.Core
     /// <summary>
     /// Class for writing OData batch messages of MIME type.
     /// </summary>
-    internal sealed class ODataBatchMimeWriter : ODataBatchWriter
+    internal sealed class ODataMultipartMixedBatchWriter : ODataBatchWriter
     {
 
         /// <summary>The boundary string for the batch structure itself.</summary>
@@ -49,7 +49,7 @@ namespace Microsoft.OData.Core
         /// </summary>
         /// <param name="rawOutputContext">The output context to write to.</param>
         /// <param name="batchBoundary">The boundary string for the batch structure itself.</param>
-        internal ODataBatchMimeWriter(ODataRawOutputContext rawOutputContext, string batchBoundary)
+        internal ODataMultipartMixedBatchWriter(ODataRawOutputContext rawOutputContext, string batchBoundary)
             : base(rawOutputContext)
         {
             Debug.Assert(this.RawOutputContext != null, "this.RawOutputContext != null");
@@ -62,13 +62,13 @@ namespace Microsoft.OData.Core
 
         internal ODataRawOutputContext RawOutputContext
         {
-            get { return this.outputContext as ODataRawOutputContext; }
+            get { return this.OutputContext as ODataRawOutputContext; }
         }
 
         /// <summary>
         /// Starts a new batch - implementation of the actual functionality.
         /// </summary>
-        internal override void WriteStartBatchImplementation()
+        protected override void WriteStartBatchImplementation()
         {
             this.SetState(BatchWriterState.BatchStarted);
         }
@@ -76,7 +76,7 @@ namespace Microsoft.OData.Core
         /// <summary>
         /// Ends a batch - implementation of the actual functionality.
         /// </summary>
-        internal override void WriteEndBatchImplementation()
+        protected override void WriteEndBatchImplementation()
         {
             Debug.Assert(
                 this.batchStartBoundaryWritten || this.CurrentOperationMessage == null,
@@ -98,13 +98,13 @@ namespace Microsoft.OData.Core
         /// <summary>
         /// Starts a new changeset - implementation of the actual functionality.
         /// </summary>
-        internal override void WriteStartChangesetImplementation()
+        protected override void WriteStartChangesetImplementation()
         {
             // write pending message data (headers, response line) for a previously unclosed message/request
             this.WritePendingMessageData(true);
 
             // important to do this first since it will set up the change set boundary.
-            this.SetState(BatchWriterState.ChangeSetStarted);
+            this.SetState(BatchWriterState.ChangesetStarted);
             Debug.Assert(this.changeSetBoundary != null, "this.changeSetBoundary != null");
 
             // reset the size of the current changeset and increase the size of the batch
@@ -123,7 +123,7 @@ namespace Microsoft.OData.Core
         /// <summary>
         /// Ends an active changeset - implementation of the actual functionality.
         /// </summary>
-        internal override void WriteEndChangesetImplementation()
+        protected override void WriteEndChangesetImplementation()
         {
             // write pending message data (headers, response line) for a previously unclosed message/request
             this.WritePendingMessageData(true);
@@ -131,7 +131,7 @@ namespace Microsoft.OData.Core
             string currentChangeSetBoundary = this.changeSetBoundary;
 
             // change the state first so we validate the change set boundary before attempting to write it.
-            this.SetState(BatchWriterState.ChangeSetCompleted);
+            this.SetState(BatchWriterState.ChangesetCompleted);
 
             // In the case of an empty changeset the start changeset boundary has not been written yet
             // we will leave it like that, since we want the empty changeset to be represented only as
@@ -144,7 +144,7 @@ namespace Microsoft.OData.Core
 
             // Reset the cache of content IDs here. As per spec, content IDs are only unique inside a change set.
             this.urlResolver.Reset();
-            this.currentOperationContentId = null;
+            this.CurrentOperationContentId = null;
         }
 
         /// <summary>
@@ -154,7 +154,7 @@ namespace Microsoft.OData.Core
         /// <param name="uri">The Uri to be used for this request operation.</param>
         /// <param name="contentId">The Content-ID value to write in ChangeSet head.</param>
         /// <returns>The message that can be used to write the request operation.</returns>
-        internal override ODataBatchOperationRequestMessage CreateOperationRequestMessageImplementation(string method, Uri uri, string contentId)
+        protected override ODataBatchOperationRequestMessage CreateOperationRequestMessageImplementation(string method, Uri uri, string contentId)
         {
             if (this.changeSetBoundary == null)
             {
@@ -173,9 +173,9 @@ namespace Microsoft.OData.Core
             // Note that what we add here is the Content-ID header of the previous operation (if any).
             // This also means that the Content-ID of the last operation in a changeset will never get
             // added to the cache which is fine since we cannot reference it anywhere.
-            if (this.currentOperationContentId != null)
+            if (this.CurrentOperationContentId != null)
             {
-                this.urlResolver.AddContentId(this.currentOperationContentId);
+                this.urlResolver.AddContentId(this.CurrentOperationContentId);
             }
 
             this.InterceptException(() => uri = ODataBatchUtils.CreateOperationRequestUri(uri, this.RawOutputContext.MessageWriterSettings.PayloadBaseUri, this.urlResolver));
@@ -208,7 +208,7 @@ namespace Microsoft.OData.Core
         /// Sets a new writer state; verifies that the transition from the current state into new state is valid.
         /// </summary>
         /// <param name="newState">The writer state to transition into.</param>
-        internal override void SetState(BatchWriterState newState)
+        protected override void SetState(BatchWriterState newState)
         {
             this.InterceptException(() => this.ValidateTransition(
                 newState, 
@@ -219,17 +219,17 @@ namespace Microsoft.OData.Core
                 case BatchWriterState.BatchStarted:
                     Debug.Assert(!this.batchStartBoundaryWritten, "The batch boundary must not be written before calling WriteStartBatch.");
                     break;
-                case BatchWriterState.ChangeSetStarted:
+                case BatchWriterState.ChangesetStarted:
                     Debug.Assert(this.changeSetBoundary == null, "this.changeSetBoundary == null");
-                    this.changeSetBoundary = ODataBatchWriterUtils.CreateChangeSetBoundary(this.outputContext.WritingResponse);
+                    this.changeSetBoundary = ODataBatchWriterUtils.CreateChangeSetBoundary(this.OutputContext.WritingResponse);
                     break;
-                case BatchWriterState.ChangeSetCompleted:
+                case BatchWriterState.ChangesetCompleted:
                     Debug.Assert(this.changeSetBoundary != null, "this.changeSetBoundary != null");
                     this.changeSetBoundary = null;
                     break;
             }
 
-            this.state = newState;
+            this.State = newState;
         }
       
         /// <summary>
@@ -245,12 +245,12 @@ namespace Microsoft.OData.Core
         private void RememberContentIdHeader(string contentId)
         {
             // The Content-ID header is only supported in request messages and inside of changesets.
-            Debug.Assert(this.currentOperationRequestMessage != null, "this.currentOperationRequestMessage != null");
+            Debug.Assert(this.CurrentOperationRequestMessage != null, "this.CurrentOperationRequestMessage != null");
             Debug.Assert(this.changeSetBoundary != null, "this.changeSetBoundary != null");
         
             // Set the current content ID. If no Content-ID header is found in the message,
             // the 'contentId' argument will be null and this will reset the current operation content ID field.
-            this.currentOperationContentId = contentId;
+            this.CurrentOperationContentId = contentId;
         
             // Check for duplicate content IDs; we have to do this here instead of in the cache itself
             // since the content ID of the last operation never gets added to the cache but we still
@@ -266,7 +266,7 @@ namespace Microsoft.OData.Core
         /// </summary>
         /// <param name="contentId">The Content-ID value to write in ChangeSet head.</param>
         /// <returns>The message that can be used to write the response operation.</returns>
-        internal override ODataBatchOperationResponseMessage CreateOperationResponseMessageImplementation(string contentId)
+        protected override ODataBatchOperationResponseMessage CreateOperationResponseMessageImplementation(string contentId)
         {
             this.WritePendingMessageData(true);
 
@@ -278,7 +278,7 @@ namespace Microsoft.OData.Core
                 this.urlResolver.BatchMessageUrlResolver);
             this.SetState(BatchWriterState.OperationCreated);
 
-            Debug.Assert(this.currentOperationContentId == null, "The Content-ID header is only supported in request messages.");
+            Debug.Assert(this.CurrentOperationContentId == null, "The Content-ID header is only supported in request messages.");
 
             // write the operation's start boundary string
             this.WriteStartBoundaryForOperation();
@@ -295,7 +295,7 @@ namespace Microsoft.OData.Core
         /// <param name="reportMessageCompleted">
         /// A flag to control whether after writing the pending data we report writing the message to be completed or not.
         /// </param>
-        internal override void WritePendingMessageData(bool reportMessageCompleted)
+        protected override void WritePendingMessageData(bool reportMessageCompleted)
         {
             if (this.CurrentOperationMessage != null)
             {
@@ -335,7 +335,7 @@ namespace Microsoft.OData.Core
         /// <summary>
         /// Writes the start boundary for an operation. This is either the batch or the changeset boundary.
         /// </summary>
-        internal override void WriteStartBoundaryForOperation()
+        protected override void WriteStartBoundaryForOperation()
         {
             if (this.changeSetBoundary == null)
             {
@@ -382,11 +382,11 @@ namespace Microsoft.OData.Core
         /// Verifies that the writer is in correct state for the Flush operation.
         /// </summary>
         /// <param name="synchronousCall">true if the call is to be synchronous; false otherwise.</param>
-        internal override void VerifyCanFlush(bool synchronousCall)
+        protected override void VerifyCanFlush(bool synchronousCall)
         {
             this.RawOutputContext.VerifyNotDisposed();
             this.VerifyCallAllowed(synchronousCall);
-            if (this.state == BatchWriterState.OperationStreamRequested)
+            if (this.State == BatchWriterState.OperationStreamRequested)
             {
                 this.ThrowODataException(Strings.ODataBatchWriter_FlushOrFlushAsyncCalledInStreamRequestedState);
             }
@@ -395,12 +395,12 @@ namespace Microsoft.OData.Core
         /// <summary>
         /// Validates that the batch writer is ready to process a new write request.
         /// </summary>
-        internal override void ValidateWriterReady()
+        protected override void ValidateWriterReady()
         {
             this.RawOutputContext.VerifyNotDisposed();
 
             // If the operation stream was requested but not yet disposed, the writer can't be used to do anything.
-            if (this.state == BatchWriterState.OperationStreamRequested)
+            if (this.State == BatchWriterState.OperationStreamRequested)
             {
                 throw new ODataException(Strings.ODataBatchWriter_InvalidTransitionFromOperationContentStreamRequested);
             }
@@ -476,7 +476,7 @@ namespace Microsoft.OData.Core
         /// <summary>
         /// Writes all the pending headers and prepares the writer to write a content of the operation.
         /// </summary>
-        internal override void StartBatchOperationContent()
+        protected override void StartBatchOperationContent()
         {
             Debug.Assert(this.CurrentOperationMessage != null, "Expected non-null operation message!");
             Debug.Assert(this.RawOutputContext.TextWriter != null, "Must have a batch writer!");
@@ -493,7 +493,7 @@ namespace Microsoft.OData.Core
         /// Disposes the batch writer and set the 'OperationStreamRequested' batch writer state;
         /// called after the flush operation(s) have completed.
         /// </summary>
-        internal override void DisposeBatchWriterAndSetContentStreamRequestedState()
+        protected override void DisposeBatchWriterAndSetContentStreamRequestedState()
         {
             this.RawOutputContext.CloseWriter();
 
@@ -507,7 +507,7 @@ namespace Microsoft.OData.Core
         /// <param name="method">The Http method to be used for this request operation.</param>
         /// <param name="uri">The Uri to be used for this request operation.</param>
         /// <param name="contentId">The Content-ID value to write in ChangeSet head.</param>
-        internal override void VerifyCanCreateOperationRequestMessage(bool synchronousCall, string method, Uri uri, string contentId)
+        protected override void VerifyCanCreateOperationRequestMessage(bool synchronousCall, string method, Uri uri, string contentId)
         {
             this.CanCreateOperationRequestMessageVerifierCommon(synchronousCall, method, uri, contentId);
             VerifyCanCreateOperationRequestMessageAgainstChangeSetBoundary(method, contentId);
@@ -533,7 +533,7 @@ namespace Microsoft.OData.Core
         private static void ValidateTransitionAgainstChangesetBoundary(BatchWriterState newState, string changeSetBoundary)
         {
             // make sure that we are not starting a changeset when one is already active
-            if (newState == BatchWriterState.ChangeSetStarted)
+            if (newState == BatchWriterState.ChangesetStarted)
             {
                 if (changeSetBoundary != null)
                 {
@@ -542,7 +542,7 @@ namespace Microsoft.OData.Core
             }
             
             // make sure that we are not completing a changeset without an active changeset
-            if (newState == BatchWriterState.ChangeSetCompleted)
+            if (newState == BatchWriterState.ChangesetCompleted)
             {
                 if (changeSetBoundary == null)
                 {
