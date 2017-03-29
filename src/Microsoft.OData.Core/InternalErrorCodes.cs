@@ -113,13 +113,13 @@ namespace Microsoft.OData.Core
         /// <summary>Unreachable codepath in ODataBatchReader.GetEndBoundary because of invalid enum value.</summary>
         ODataBatchReader_GetEndBoundary_UnknownValue,
 
-        /// <summary>Unreachable codepath in ODataBatchReaderStream.SkipToBoundary.</summary>
+        /// <summary>Unreachable codepath in ODataMultipartMixedBatchReaderStream.SkipToBoundary.</summary>
         ODataBatchReaderStream_SkipToBoundary,
 
-        /// <summary>Unreachable codepath in ODataBatchReaderStream.ReadLine.</summary>
+        /// <summary>Unreachable codepath in ODataMultipartMixedBatchReaderStream.ReadLine.</summary>
         ODataBatchReaderStream_ReadLine,
 
-        /// <summary>Unreachable codepath in ODataBatchReaderStream.ReadWithDelimiter.</summary>
+        /// <summary>Unreachable codepath in ODataMultipartMixedBatchReaderStream.ReadWithDelimiter.</summary>
         ODataBatchReaderStream_ReadWithDelimiter,
 
         /// <summary>Unreachable codepath in ODataBatchReaderStreamBuffer.ScanForBoundary.</summary>

@@ -4,8 +4,6 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-using Microsoft.OData.Core.JsonLight;
-
 namespace Microsoft.OData.Core
 {
     #region Namespaces
@@ -25,17 +23,17 @@ namespace Microsoft.OData.Core
     public abstract class ODataBatchWriter : IODataBatchOperationListener, IODataOutputInStreamErrorListener
     {
         /// <summary>The output context to write to.</summary>
-        internal readonly ODataOutputContext outputContext;
+        private ODataOutputContext outputContext;
 
         /// <summary>The batch-specific URL resolver that stores the content IDs found in a changeset and supports resolving cross-referencing URLs.</summary>
         internal readonly ODataBatchUrlResolver urlResolver;
 
         /// <summary>The state the writer currently is in.</summary>
-        internal BatchWriterState state;
+        private BatchWriterState state;
 
         /// <summary>The request message for the operation that is currently written if it's a request; 
         /// or null if no part is written right now or it's a response part.</summary>
-        internal ODataBatchOperationRequestMessage currentOperationRequestMessage;
+        private ODataBatchOperationRequestMessage currentOperationRequestMessage;
 
         /// <summary>The response message for the operation that is currently written if it's a response; 
         /// or null if no part is written right now or it's a request part.</summary>
@@ -48,13 +46,30 @@ namespace Microsoft.OData.Core
         /// Note that the current Content-ID header is not included immediately in the content ID cache
         /// since the current content ID will only be visible to subsequent operations.
         /// </remarks>
-        internal string currentOperationContentId;
+        private string currentOperationContentId;
 
         /// <summary>The current size of the batch message, i.e., how many query operations and changesets have been written.</summary>
         private uint currentBatchSize;
 
         /// <summary>The current size of the active changeset, i.e., how many request have been written for the changeset.</summary>
         private uint currentChangeSetSize;
+
+        protected string CurrentOperationContentId
+        {
+            get { return this.currentOperationContentId; }
+            set { this.currentOperationContentId = value; }
+        }
+
+        protected BatchWriterState State
+        {
+            get { return this.state; }
+            set { this.state = value; }
+        }
+
+        protected ODataOutputContext OutputContext
+        {
+            get { return this.outputContext; }
+        }
 
         /// <summary>
         /// Constructor.
@@ -75,7 +90,7 @@ namespace Microsoft.OData.Core
         /// <summary>
         /// An enumeration representing the current state of the writer.
         /// </summary>
-        internal enum BatchWriterState
+        protected internal enum BatchWriterState
         {
             /// <summary>The writer is in initial state; nothing has been written yet.</summary>
             Start,
@@ -84,7 +99,7 @@ namespace Microsoft.OData.Core
             BatchStarted,
 
             /// <summary>WriteStartChangeSet has been called.</summary>
-            ChangeSetStarted,
+            ChangesetStarted,
 
             /// <summary>CreateOperationRequestMessage/CreateOperationResponseMessage has been called.</summary>
             OperationCreated,
@@ -99,7 +114,7 @@ namespace Microsoft.OData.Core
             OperationStreamDisposed,
 
             /// <summary>WriteEndChangeSet has been called.</summary>
-            ChangeSetCompleted,
+            ChangesetCompleted,
 
             /// <summary>WriteEndBatch has been called.</summary>
             BatchCompleted,
@@ -109,7 +124,7 @@ namespace Microsoft.OData.Core
         }
 
         /// <summary>The request message for the operation that is currently written if it's a request; or null if no operation is written right now or it's a response operation.</summary>
-        internal ODataBatchOperationRequestMessage CurrentOperationRequestMessage
+        protected ODataBatchOperationRequestMessage CurrentOperationRequestMessage
         {
             get
             {
@@ -128,7 +143,7 @@ namespace Microsoft.OData.Core
 
         /// <summary>The response message for the operation that is currently written if it's a response; 
         /// or null if no operation is written right now or it's a request operation.</summary>
-        internal ODataBatchOperationResponseMessage CurrentOperationResponseMessage
+        protected ODataBatchOperationResponseMessage CurrentOperationResponseMessage
         {
             get
             {
@@ -350,7 +365,7 @@ namespace Microsoft.OData.Core
         /// <summary>
         /// Starts a new batch.
         /// </summary>
-        internal abstract void WriteStartBatchImplementation();
+        protected abstract void WriteStartBatchImplementation();
 
         /// <summary>
         /// Verifies that calling WriteEndBatch is valid.
@@ -365,7 +380,7 @@ namespace Microsoft.OData.Core
         /// <summary>
         /// Ends a batch.
         /// </summary>
-        internal abstract void WriteEndBatchImplementation();
+        protected abstract void WriteEndBatchImplementation();
 
         /// <summary>
         /// Verifies that calling WriteStartChangeset is valid.
@@ -380,7 +395,7 @@ namespace Microsoft.OData.Core
         /// <summary>
         /// Starts a new changeset - implementation of the actual functionality.
         /// </summary>
-        internal abstract void WriteStartChangesetImplementation();
+        protected abstract void WriteStartChangesetImplementation();
 
         /// <summary>
         /// Verifies that calling WriteEndChangeset is valid.
@@ -395,9 +410,9 @@ namespace Microsoft.OData.Core
         /// <summary>
         /// Ends an active changeset.
         /// </summary>
-        internal abstract void WriteEndChangesetImplementation();
+        protected abstract void WriteEndChangesetImplementation();
 
-        internal abstract void VerifyCanCreateOperationRequestMessage(bool synchronousCall, string method, Uri uri,
+        protected abstract void VerifyCanCreateOperationRequestMessage(bool synchronousCall, string method, Uri uri,
             string contentId);
 
         /// <summary>
@@ -429,7 +444,7 @@ namespace Microsoft.OData.Core
         /// <param name="uri">The Uri to be used for this request operation.</param>
         /// <param name="contentId">The Content-ID value to write in ChangeSet head.</param>
         /// <returns>The message that can be used to write the request operation.</returns>
-        internal abstract ODataBatchOperationRequestMessage CreateOperationRequestMessageImplementation(string method,
+        protected abstract ODataBatchOperationRequestMessage CreateOperationRequestMessageImplementation(string method,
             Uri uri, string contentId);
 
         /// <summary>
@@ -452,25 +467,25 @@ namespace Microsoft.OData.Core
         /// </summary>
         /// <param name="contentId">The Content-ID value to write in ChangeSet head.</param>
         /// <returns>The message that can be used to write the response operation.</returns>
-        internal abstract ODataBatchOperationResponseMessage CreateOperationResponseMessageImplementation(
+        protected abstract ODataBatchOperationResponseMessage CreateOperationResponseMessageImplementation(
             string contentId);
 
         /// <summary>
         /// Writes all the pending headers and prepares the writer to write a content of the operation.
         /// </summary>
-        internal abstract void StartBatchOperationContent();
+        protected abstract void StartBatchOperationContent();
 
         /// <summary>
         /// Disposes the batch writer and set the 'OperationStreamRequested' batch writer state;
         /// called after the flush operation(s) have completed.
         /// </summary>
-        internal abstract void DisposeBatchWriterAndSetContentStreamRequestedState();
+        protected abstract void DisposeBatchWriterAndSetContentStreamRequestedState();
 
         /// <summary>
         /// Verifies that the writer is in correct state for the Flush operation.
         /// </summary>
         /// <param name="synchronousCall">true if the call is to be synchronous; false otherwise.</param>
-        internal abstract void VerifyCanFlush(bool synchronousCall);
+        protected abstract void VerifyCanFlush(bool synchronousCall);
 
         /// <summary>
         /// Verifies that a call is allowed to the writer.
@@ -524,7 +539,7 @@ namespace Microsoft.OData.Core
         /// Sets a new writer state; verifies that the transition from the current state into new state is valid.
         /// </summary>
         /// <param name="newState">The writer state to transition into.</param>
-        internal abstract void SetState(BatchWriterState newState);
+        protected abstract void SetState(BatchWriterState newState);
 
         internal void ValidateTransition(BatchWriterState newState, Action customizedValidationAction)
         {
@@ -559,14 +574,14 @@ namespace Microsoft.OData.Core
 
                     break;
                 case BatchWriterState.BatchStarted:
-                    if (newState != BatchWriterState.ChangeSetStarted && newState != BatchWriterState.OperationCreated && newState != BatchWriterState.BatchCompleted)
+                    if (newState != BatchWriterState.ChangesetStarted && newState != BatchWriterState.OperationCreated && newState != BatchWriterState.BatchCompleted)
                     {
                         throw new ODataException(Strings.ODataBatchWriter_InvalidTransitionFromBatchStarted);
                     }
 
                     break;
-                case BatchWriterState.ChangeSetStarted:
-                    if (newState != BatchWriterState.OperationCreated && newState != BatchWriterState.ChangeSetCompleted)
+                case BatchWriterState.ChangesetStarted:
+                    if (newState != BatchWriterState.OperationCreated && newState != BatchWriterState.ChangesetCompleted)
                     {
                         throw new ODataException(Strings.ODataBatchWriter_InvalidTransitionFromChangeSetStarted);
                     }
@@ -575,8 +590,8 @@ namespace Microsoft.OData.Core
                 case BatchWriterState.OperationCreated:
                     if (newState != BatchWriterState.OperationCreated &&
                         newState != BatchWriterState.OperationStreamRequested &&
-                        newState != BatchWriterState.ChangeSetStarted &&
-                        newState != BatchWriterState.ChangeSetCompleted &&
+                        newState != BatchWriterState.ChangesetStarted &&
+                        newState != BatchWriterState.ChangesetCompleted &&
                         newState != BatchWriterState.BatchCompleted)
                     {
                         throw new ODataException(Strings.ODataBatchWriter_InvalidTransitionFromOperationCreated);
@@ -594,17 +609,17 @@ namespace Microsoft.OData.Core
                     break;
                 case BatchWriterState.OperationStreamDisposed:
                     if (newState != BatchWriterState.OperationCreated &&
-                        newState != BatchWriterState.ChangeSetStarted &&
-                        newState != BatchWriterState.ChangeSetCompleted &&
+                        newState != BatchWriterState.ChangesetStarted &&
+                        newState != BatchWriterState.ChangesetCompleted &&
                         newState != BatchWriterState.BatchCompleted)
                     {
                         throw new ODataException(Strings.ODataBatchWriter_InvalidTransitionFromOperationContentStreamDisposed);
                     }
 
                     break;
-                case BatchWriterState.ChangeSetCompleted:
+                case BatchWriterState.ChangesetCompleted:
                     if (newState != BatchWriterState.BatchCompleted &&
-                        newState != BatchWriterState.ChangeSetStarted &&
+                        newState != BatchWriterState.ChangesetStarted &&
                         newState != BatchWriterState.OperationCreated)
                     {
                         throw new ODataException(Strings.ODataBatchWriter_InvalidTransitionFromChangeSetCompleted);
@@ -630,7 +645,7 @@ namespace Microsoft.OData.Core
         /// <summary>
         /// Validates that the batch writer is ready to process a new write request.
         /// </summary>
-        internal abstract void ValidateWriterReady();
+        protected abstract void ValidateWriterReady();
 
         /// <summary>
         /// Write any pending headers for the current operation message (if any).
@@ -638,12 +653,12 @@ namespace Microsoft.OData.Core
         /// <param name="reportMessageCompleted">
         /// A flag to control whether after writing the pending data we report writing the message to be completed or not.
         /// </param>
-        internal abstract void WritePendingMessageData(bool reportMessageCompleted);
+        protected abstract void WritePendingMessageData(bool reportMessageCompleted);
 
         /// <summary>
         /// Writes the start boundary for an operation. This is either the batch or the changeset boundary.
         /// </summary>
-        internal abstract void WriteStartBoundaryForOperation();
+        protected abstract void WriteStartBoundaryForOperation();
 
         /// <summary>
         /// Sets the 'Error' state and then throws an ODataException with the specified error message.

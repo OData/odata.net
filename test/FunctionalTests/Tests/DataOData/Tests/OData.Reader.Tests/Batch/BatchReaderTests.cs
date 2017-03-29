@@ -78,7 +78,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Batch
                 });
         }
 
-        [TestMethod, TestCategory("Reader.Batch"), Variation(Description = "Testing the ODataBatchReaderStream.ProcessPartHeader method.")]
+        [TestMethod, TestCategory("Reader.Batch"), Variation(Description = "Testing the ODataMultipartMixedBatchReaderStream.ProcessPartHeader method.")]
         public void BatchReaderInvalidOperationHeadersTest()
         {
             IEnumerable<PayloadReaderTestDescriptor> testDescriptors = 

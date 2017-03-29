@@ -21,7 +21,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Batch
     #endregion Namespaces
 
     /// <summary>
-    /// Tests the buffer implementation used by the ODataBatchReaderStream.
+    /// Tests the buffer implementation used by the ODataMultipartMixedBatchReaderStream.
     /// </summary>
     [TestClass, TestCase]
     public class BatchReaderStreamBufferTests : ODataReaderTestCase

@@ -4,8 +4,6 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-using System.Reflection;
-
 #if !SILVERLIGHT && !WINDOWS_PHONE
 namespace Microsoft.Test.Taupo.OData.Common.Tests.ObjectModelTests
 {
@@ -14,6 +12,7 @@ namespace Microsoft.Test.Taupo.OData.Common.Tests.ObjectModelTests
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
+    using System.Reflection;
     using System.Text;
     using Microsoft.OData.Core;
     using Microsoft.Test.Taupo.Common;
@@ -182,8 +181,8 @@ namespace Microsoft.Test.Taupo.OData.Common.Tests.ObjectModelTests
                 new Uri("http://www.odata.org/"),
                 /*headers*/ null,
                 mimeWriterAsListener
-                ? CreateODataBatchMimeWriterListener(stream, false, writing)
-                : CreateODataBatchJsonWriterListener(stream, false, writing),
+                ? CreateODataMultipartMixedBatchWriterListener(stream, false, writing)
+                : CreateODataJsonLightBatchWriterListener(stream, false, writing),
                 "1",
                 ReflectionUtils.CreateInstance(urlResolverType, new Type[] { typeof(IODataUrlResolver) }, new object[] { null }),
                 writing);
@@ -199,14 +198,14 @@ namespace Microsoft.Test.Taupo.OData.Common.Tests.ObjectModelTests
                 (object)(Func<Stream>)(() => stream),
                 /*headers*/null, 
                 mimeWriterAsListener
-                ? CreateODataBatchMimeWriterListener(stream, true, writing)
-                : CreateODataBatchJsonWriterListener(stream, false, writing),
+                ? CreateODataMultipartMixedBatchWriterListener(stream, true, writing)
+                : CreateODataJsonLightBatchWriterListener(stream, false, writing),
                 "1",
                 /*urlResolver*/null,
                 writing);
         }
 
-        private static object CreateODataBatchMimeWriterListener(Stream stream, bool response, bool writing)
+        private static object CreateODataMultipartMixedBatchWriterListener(Stream stream, bool response, bool writing)
         {
             ODataMessageWriterSettings settings = new ODataMessageWriterSettings();
             object message = response
@@ -236,7 +235,7 @@ namespace Microsoft.Test.Taupo.OData.Common.Tests.ObjectModelTests
 
             Assembly assembly = Assembly.LoadFrom("Microsoft.OData.Core.dll");
             object listener = assembly.CreateInstance(
-                "Microsoft.OData.Core.ODataBatchMimeWriter",
+                "Microsoft.OData.Core.MultipartMixed.ODataMultipartMixedBatchWriter",
                 false, /*ignoreCase*/
                 BindingFlags.Instance|BindingFlags.NonPublic,
                 null, /*binder*/
@@ -244,16 +243,11 @@ namespace Microsoft.Test.Taupo.OData.Common.Tests.ObjectModelTests
                 null, /*CultureInfo*/
                 null /*activationAttributes*/
                 );
-//            Type t = mc.GetType(); 
 
-//            object listener = ReflectionUtils.CreateInstance(
-//                t/*Type.GetType("Microsoft.OData.Core.ODataBatchMimeWriter")*/,
-//                new Type[] { odataRawOutputContextType, typeof(string) },
-//                rawOutputContext, "test-boundary");
             return listener;
         }
 
-        private static object CreateODataBatchJsonWriterListener(Stream stream, bool response, bool writing)
+        private static object CreateODataJsonLightBatchWriterListener(Stream stream, bool response, bool writing)
         {
             ODataMessageWriterSettings settings = new ODataMessageWriterSettings();
             object message = response
@@ -285,7 +279,7 @@ namespace Microsoft.Test.Taupo.OData.Common.Tests.ObjectModelTests
 
             Assembly assembly = Assembly.LoadFrom("Microsoft.OData.Core.dll");
             object listener = assembly.CreateInstance(
-                "Microsoft.OData.Core.ODataBatchJsonWriter",
+                "Microsoft.OData.Core.JsonLight.ODataJsonLightBatchWriter",
                 false, /*ignoreCase*/
                 BindingFlags.Instance | BindingFlags.NonPublic,
                 null, /*binder*/

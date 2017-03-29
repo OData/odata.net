@@ -32,9 +32,6 @@ namespace Microsoft.OData.Core.Json
         /// <summary>The asynchronous output stream if we're writing asynchronously.</summary>
         private AsyncBufferedStream asynchronousOutputStream;
 
-        /// <summary>The output stream to write to (both sync and async cases).</summary>
-        private Stream outputStream;
-
         /// <summary>The text writer created for the output stream.</summary>
         private TextWriter textWriter;
 
@@ -93,17 +90,18 @@ namespace Microsoft.OData.Core.Json
             {
                 this.messageOutputStream = messageStream;
 
+                Stream outputStream;
                 if (synchronous)
                 {
-                    this.outputStream = messageStream;
+                    outputStream = messageStream;
                 }
                 else
                 {
                     this.asynchronousOutputStream = new AsyncBufferedStream(messageStream);
-                    this.outputStream = this.asynchronousOutputStream;
+                    outputStream = this.asynchronousOutputStream;
                 }
 
-                this.textWriter = new StreamWriter(this.outputStream, encoding);
+                this.textWriter = new StreamWriter(outputStream, encoding);
 
                 // COMPAT 2: JSON indentation - WCFDS indents only partially, it inserts newlines but doesn't actually insert spaces for indentation
                 // in here we allow the user to specify if true indentation should be used or if the limited functionality is enough.
@@ -118,17 +116,6 @@ namespace Microsoft.OData.Core.Json
                 }
 
                 throw;
-            }
-        }
-
-        /// <summary>
-        /// The output stream to write the payload to.
-        /// </summary>
-        internal Stream OutputStream
-        {
-            get
-            {
-                return this.outputStream;
             }
         }
 
@@ -225,6 +212,16 @@ namespace Microsoft.OData.Core.Json
 #endif
 
         /// <summary>
+        /// The output stream to write the payload to.
+        /// </summary>
+        internal Stream GetOutputStream()
+        {
+            return this.Synchronous
+                ? this.messageOutputStream
+                : this.asynchronousOutputStream;
+        }
+
+        /// <summary>
         /// Perform the actual cleanup work.
         /// </summary>
         /// <param name="disposing">If 'true' this method is called from user code; if 'false' it is called by the runtime.</param>
@@ -254,7 +251,6 @@ namespace Microsoft.OData.Core.Json
             {
                 this.messageOutputStream = null;
                 this.asynchronousOutputStream = null;
-                this.outputStream = null;
                 this.textWriter = null;
                 this.jsonWriter = null;
             }

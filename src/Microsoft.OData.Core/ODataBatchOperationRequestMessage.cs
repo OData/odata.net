@@ -14,6 +14,8 @@ namespace Microsoft.OData.Core
 #if ODATALIB_ASYNC
     using System.Threading.Tasks;
 #endif
+
+    using Microsoft.OData.Core.MultipartMixed;
     #endregion Namespaces
 
     /// <summary>
@@ -169,7 +171,7 @@ namespace Microsoft.OData.Core
         /// <summary>
         /// Creates an operation request message that can be used to read the operation content from.
         /// </summary>
-        /// <param name="batchReaderStream">The batch stream underyling the operation response message.</param>
+        /// <param name="multipartMixedBatchReaderStream">The batch stream underyling the operation response message.</param>
         /// <param name="method">The HTTP method to use for the message to create.</param>
         /// <param name="requestUrl">The request URL for the message to create.</param>
         /// <param name="headers">The headers to use for the operation request message.</param>
@@ -178,7 +180,7 @@ namespace Microsoft.OData.Core
         /// <param name="urlResolver">The (optional) URL resolver for the message to create.</param>
         /// <returns>An <see cref="ODataBatchOperationRequestMessage"/> to read the request content from.</returns>
         internal static ODataBatchOperationRequestMessage CreateReadMessage(
-            ODataBatchReaderStream batchReaderStream,
+            ODataMultipartMixedBatchReaderStream multipartMixedBatchReaderStream,
             string method,
             Uri requestUrl,
             ODataBatchOperationHeaders headers,
@@ -186,10 +188,10 @@ namespace Microsoft.OData.Core
             string contentId,
             IODataUrlResolver urlResolver)
         {
-            Debug.Assert(batchReaderStream != null, "batchReaderStream != null");
+            Debug.Assert(multipartMixedBatchReaderStream != null, "multipartMixedBatchReaderStream != null");
             Debug.Assert(operationListener != null, "operationListener != null");
 
-            Func<Stream> streamCreatorFunc = () => ODataBatchUtils.CreateBatchOperationReadStream(batchReaderStream, headers, operationListener);
+            Func<Stream> streamCreatorFunc = () => ODataBatchUtils.CreateBatchOperationReadStream(multipartMixedBatchReaderStream, headers, operationListener);
             return new ODataBatchOperationRequestMessage(streamCreatorFunc, method, requestUrl, headers, operationListener, contentId, urlResolver, /*writing*/ false);
         }
     }

@@ -16,8 +16,8 @@ namespace Microsoft.OData.Core
     using System.Threading.Tasks;
 #endif
     using Microsoft.OData.Core.Metadata;
+    using Microsoft.OData.Core.MultipartMixed;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Core.Json;
     #endregion Namespaces
 
     /// <summary>
@@ -435,7 +435,7 @@ namespace Microsoft.OData.Core
         {
             // Batch writer needs the default encoding to not use the preamble.
             this.encoding = this.encoding ?? MediaTypeUtils.EncodingUtf8NoPreamble;
-            ODataBatchWriter batchWriter = new ODataBatchMimeWriter(this, batchBoundary);
+            ODataBatchWriter batchWriter = new ODataMultipartMixedBatchWriter(this, batchBoundary);
             this.outputInStreamErrorListener = batchWriter;
             return batchWriter;
         }

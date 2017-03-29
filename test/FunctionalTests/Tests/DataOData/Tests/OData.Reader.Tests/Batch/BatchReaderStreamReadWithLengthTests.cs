@@ -22,7 +22,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Batch
     #endregion Namespaces
 
     /// <summary>
-    /// Tests the ODataBatchReaderStream.ReadWithLength implementation.
+    /// Tests the ODataMultipartMixedBatchReaderStream.ReadWithLength implementation.
     /// </summary>
     [TestClass, TestCase]
     public class BatchReaderStreamReadWithLengthTests : ODataReaderTestCase
@@ -35,7 +35,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Batch
 
 #if !SILVERLIGHT && !WINDOWS_PHONE
         // Batch stream buffer tests use private reflection and thus cannot run on Silverlight or the phone.
-        [TestMethod, TestCategory("Reader.Batch"), Variation(Description = "Testing the ODataBatchReaderStream.ReadWithLength method.")]
+        [TestMethod, TestCategory("Reader.Batch"), Variation(Description = "Testing the ODataMultipartMixedBatchReaderStream.ReadWithLength method.")]
         public void BatchReaderStreamReadWithLengthTest()
         {
             IEnumerable<char[]> lineFeeds = new char[][] { BatchReaderStreamTestUtils.DefaultLineFeedChars, new char[] { '\r' }, new char[] { '\n' } };
