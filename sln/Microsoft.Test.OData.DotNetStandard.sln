@@ -2,7 +2,7 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
 VisualStudioVersion = 14.0.25420.1
-MinimumVisualStudioVersion = 10.0.40219.1
+MinimumVisualStudioVersion = 14.0.25420.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.Spatial.NetStandard", "..\src\Microsoft.Spatial\Build.NetStandard\Microsoft.Spatial.NetStandard.csproj", "{48142D27-C862-4F4F-A781-1A9B72F6CDFA}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.OData.Edm.NetStandard", "..\src\Microsoft.OData.Edm\Build.NetStandard\Microsoft.OData.Edm.NetStandard.csproj", "{DB301FA8-1CFA-487D-BA1E-803016E2A85C}"
