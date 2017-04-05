@@ -8,14 +8,10 @@ namespace Microsoft.OData.JsonLight
 {
     #region Namespaces
     using System;
-    using System.Collections.Generic;
     using System.Diagnostics;
 #if PORTABLELIB
     using System.Threading.Tasks;
 #endif
-    using Microsoft.OData.Evaluation;
-    using Microsoft.OData.Json;
-    using Microsoft.OData.Metadata;
     using Microsoft.OData.Edm;
 
     #endregion Namespaces
@@ -38,19 +34,19 @@ namespace Microsoft.OData.JsonLight
         private readonly ODataJsonLightResourceSerializer jsonLightResourceSerializer;
 
         /// <summary>
-        /// Stack of writer scopes to keep track of the current context of the writer.
+        /// JsonLightWriter
         /// </summary>
-        private readonly ScopeStack scopes = new ScopeStack();
+        private readonly ODataJsonLightWriter resourceWriter;
 
         /// <summary>
-        /// OData annotation writer.
+        /// NavigationSource
         /// </summary>
-        private readonly JsonLightODataAnnotationWriter odataAnnotationWriter;
+        private IEdmNavigationSource navigationSource;
 
         /// <summary>
-        /// The underlying JSON writer.
+        /// EntityType
         /// </summary>
-        private readonly IJsonWriter jsonWriter;
+        private IEdmEntityType entityType;
 
         #endregion
 
@@ -69,86 +65,11 @@ namespace Microsoft.OData.JsonLight
             // TODO: Replace the assertion with ODataException.
             Debug.Assert(jsonLightOutputContext.WritingResponse, "jsonLightOutputContext.WritingResponse is true");
 
+            this.navigationSource = navigationSource;
+            this.entityType = entityType;
             this.jsonLightOutputContext = jsonLightOutputContext;
             this.jsonLightResourceSerializer = new ODataJsonLightResourceSerializer(this.jsonLightOutputContext);
-
-            this.NavigationSource = navigationSource;
-            this.EntityType = entityType;
-
-            if (navigationSource != null && entityType == null)
-            {
-                entityType = this.jsonLightOutputContext.EdmTypeResolver.GetElementType(navigationSource);
-            }
-
-            ODataUri odataUri = this.jsonLightOutputContext.MessageWriterSettings.ODataUri.Clone();
-
-            this.scopes.Push(new Scope(WriterState.Start, /*item*/null, navigationSource, entityType,
-                this.jsonLightOutputContext.MessageWriterSettings.SelectedProperties, odataUri));
-            this.jsonWriter = jsonLightOutputContext.JsonWriter;
-            this.odataAnnotationWriter = new JsonLightODataAnnotationWriter(this.jsonWriter,
-                this.jsonLightOutputContext.ODataSimplifiedOptions.EnableWritingODataAnnotationWithoutPrefix);
-        }
-
-        #endregion
-
-        #region Private Enums
-
-        /// <summary>
-        /// An enumeration representing the current state of the writer.
-        /// </summary>
-        private enum WriterState
-        {
-            /// <summary>The writer is at the start; nothing has been written yet.</summary>
-            Start,
-
-            /// <summary>The writer is currently writing a delta resource.</summary>
-            DeltaResource,
-
-            /// <summary>The writer is currently writing a delta deleted resource.</summary>
-            DeltaDeletedEntry,
-
-            /// <summary>The writer is currently writing a delta resource set.</summary>
-            DeltaResourceSet,
-
-            /// <summary>The writer is currently writing a delta link.</summary>
-            DeltaLink,
-
-            /// <summary>The writer is currently writing a delta deleted link.</summary>
-            DeltaDeletedLink,
-
-            /// <summary>The writer is currently writing an expanded navigation property, complex property or complex collection property.</summary>
-            NestedResource,
-
-            /// <summary>The writer has completed; nothing can be written anymore.</summary>
-            Completed,
-
-            /// <summary>The writer is in error state; nothing can be written anymore.</summary>
-            Error
-        }
-
-        /// <summary>
-        /// Enumeration of JSON Light metadata property flags, used to keep track of which properties were already written.
-        /// </summary>
-        [Flags]
-        private enum JsonLightEntryMetadataProperty
-        {
-            /// <summary>The odata.editLink property.</summary>
-            EditLink = 0x1,
-
-            /// <summary>The odata.readLink property.</summary>
-            ReadLink = 0x2,
-
-            /// <summary>The odata.mediaEditLink property.</summary>
-            MediaEditLink = 0x4,
-
-            /// <summary>The odata.mediaReadLink property.</summary>
-            MediaReadLink = 0x8,
-
-            /// <summary>The odata.mediaContentType property.</summary>
-            MediaContentType = 0x10,
-
-            /// <summary>The odata.mediaEtag property.</summary>
-            MediaETag = 0x20,
+            this.resourceWriter = new ODataJsonLightWriter(jsonLightOutputContext, navigationSource, entityType, true, writingDelta: true);
         }
 
         #endregion
@@ -158,137 +79,34 @@ namespace Microsoft.OData.JsonLight
         /// <summary>
         /// The navigation source we are going to write entities for.
         /// </summary>
-        public IEdmNavigationSource NavigationSource { get; set; }
+        public IEdmNavigationSource NavigationSource
+        {
+            get
+            {
+                return this.navigationSource;
+            }
+
+            set
+            {
+                Debug.Assert(true, "NavigationSource can be set but is never used");
+                this.navigationSource = value;
+            }
+        }
 
         /// <summary>
         /// The entity type we are going to write entities for.
         /// </summary>
-        public IEdmEntityType EntityType { get; set; }
-
-        #endregion
-
-        #region Private Properties
-
-        /// <summary>
-        /// The current scope for the writer.
-        /// </summary>
-        private Scope CurrentScope
+        public IEdmEntityType EntityType
         {
             get
             {
-                Debug.Assert(this.scopes.Count > 0, "We should have at least one active scope all the time.");
-                return this.scopes.Peek();
+                return this.entityType;
             }
-        }
 
-        /// <summary>
-        /// The current state of the writer.
-        /// </summary>
-        private WriterState State
-        {
-            get
+            set
             {
-                return this.CurrentScope.State;
-            }
-        }
-
-        /// <summary>
-        /// Returns the current JsonLightDeltaResourceSetScope.
-        /// </summary>
-        private JsonLightDeltaResourceSetScope CurrentDeltaResourceSetScope
-        {
-            get
-            {
-                JsonLightDeltaResourceSetScope jsonLightDeltaResourceSetScope = this.CurrentScope as JsonLightDeltaResourceSetScope;
-                Debug.Assert(jsonLightDeltaResourceSetScope != null, "Asking for JsonDeltaResourceSetScope when the current scope is not a JsonDeltaResourceSetScope.");
-                return jsonLightDeltaResourceSetScope;
-            }
-        }
-
-        /// <summary>
-        /// Returns the current JsonLightDeltaResourceScope.
-        /// </summary>
-        private JsonLightDeltaResourceScope CurrentDeltaResourceScope
-        {
-            get
-            {
-                JsonLightDeltaResourceScope jsonLightDeltaResourceScope = this.CurrentScope as JsonLightDeltaResourceScope;
-                Debug.Assert(jsonLightDeltaResourceScope != null, "Asking for JsonLightDeltaResourceScope when the current scope is not an JsonLightDeltaResourceScope.");
-                return jsonLightDeltaResourceScope;
-            }
-        }
-
-        /// <summary>
-        /// Returns the current JsonLightDeltaLinkScope.
-        /// </summary>
-        private JsonLightDeltaLinkScope CurrentDeltaLinkScope
-        {
-            get
-            {
-                JsonLightDeltaLinkScope jsonLightDeltaLinkScope = this.CurrentScope as JsonLightDeltaLinkScope;
-                Debug.Assert(jsonLightDeltaLinkScope != null, "Asking for JsonLightDeltaLinkScope when the current scope is not an JsonLightDeltaLinkScope.");
-                return jsonLightDeltaLinkScope;
-            }
-        }
-
-        /// <summary>
-        /// Returns the current JsonLightExpandedNavigationPropertyScope.
-        /// </summary>
-        private JsonLightNestedResourceInfoScope CurrentExpandedNavigationPropertyScope
-        {
-            get
-            {
-                JsonLightNestedResourceInfoScope jsonLightExpandedNavigationPropertyScope = this.CurrentScope as JsonLightNestedResourceInfoScope;
-                Debug.Assert(jsonLightExpandedNavigationPropertyScope != null, "Asking for JsonLightExpandedNavigationPropertyScope when the current scope is not an JsonLightExpandedNavigationPropertyScope.");
-                return jsonLightExpandedNavigationPropertyScope;
-            }
-        }
-
-        /// <summary>
-        /// A flag indicating whether the writer is at the top level.
-        /// </summary>
-        private bool IsTopLevel
-        {
-            get
-            {
-                Debug.Assert(this.State != WriterState.Start && this.State != WriterState.Completed, "IsTopLevel should only be called while writing the payload.");
-
-                // there is the root scope at the top (when the writer has not started or has completed)
-                // and then the top-level scope (the top-level resource/resource set item) as the second scope on the stack
-                return this.scopes.Count == 2;
-            }
-        }
-
-        /// <summary>
-        /// The structured type of the current delta resource.
-        /// </summary>
-        private IEdmStructuredType DeltaResourceType
-        {
-            get
-            {
-                return this.CurrentScope.ResourceType;
-            }
-        }
-
-        /// <summary>
-        /// Checker to detect duplicate property names.
-        /// </summary>
-        private IDuplicatePropertyNameChecker DuplicatePropertyNameChecker
-        {
-            get
-            {
-                Debug.Assert(
-                    this.State == WriterState.DeltaResource || this.State == WriterState.DeltaDeletedEntry,
-                    "PropertyAndAnnotationCollector should only be called while writing a delta (deleted) resource.");
-
-                switch (this.State)
-                {
-                    case WriterState.DeltaResource:
-                    case WriterState.DeltaDeletedEntry:
-                        return this.CurrentDeltaResourceScope.DuplicatePropertyNameChecker;
-                    default:
-                        throw new ODataException(Strings.General_InternalError(InternalErrorCodes.ODataWriterCore_PropertyAndAnnotationCollector));
-                }
+                Debug.Assert(true, "EntityType can be set but is never used");
+                this.entityType = value;
             }
         }
 
@@ -302,8 +120,7 @@ namespace Microsoft.OData.JsonLight
         /// <param name="deltaResourceSet">Delta resource set/collection to write.</param>
         public override void WriteStart(ODataDeltaResourceSet deltaResourceSet)
         {
-            this.VerifyCanWriteStartDeltaResourceSet(true, deltaResourceSet);
-            this.WriteStartDeltaResourceSetImplementation(deltaResourceSet);
+            this.resourceWriter.WriteStart(deltaResourceSet);
         }
 
 #if PORTABLELIB
@@ -314,8 +131,7 @@ namespace Microsoft.OData.JsonLight
         /// <returns>A task instance that represents the asynchronous write operation.</returns>
         public override Task WriteStartAsync(ODataDeltaResourceSet deltaResourceSet)
         {
-            this.VerifyCanWriteStartDeltaResourceSet(false, deltaResourceSet);
-            return TaskUtils.GetTaskForSynchronousOperation(() => this.WriteStartDeltaResourceSetImplementation(deltaResourceSet));
+            return TaskUtils.GetTaskForSynchronousOperation(() => this.resourceWriter.WriteStart(deltaResourceSet));
         }
 #endif
 
@@ -324,13 +140,7 @@ namespace Microsoft.OData.JsonLight
         /// </summary>
         public override void WriteEnd()
         {
-            this.VerifyCanWriteEnd(true);
-            this.WriteEndImplementation();
-            if (this.CurrentScope.State == WriterState.Completed)
-            {
-                // Note that we intentionally go through the public API so that if the Flush fails the writer moves to the Error state.
-                this.Flush();
-            }
+            this.resourceWriter.WriteEnd();
         }
 
 #if PORTABLELIB
@@ -340,19 +150,7 @@ namespace Microsoft.OData.JsonLight
         /// <returns>A task instance that represents the asynchronous write operation.</returns>
         public override Task WriteEndAsync()
         {
-            this.VerifyCanWriteEnd(false);
-            return TaskUtils.GetTaskForSynchronousOperation(this.WriteEndImplementation)
-                .FollowOnSuccessWithTask(
-                    task =>
-                    {
-                        if (this.CurrentScope.State == WriterState.Completed)
-                        {
-                            // Note that we intentionally go through the public API so that if the Flush fails the writer moves to the Error state.
-                            return this.FlushAsync();
-                        }
-
-                        return TaskUtils.CompletedTask;
-                    });
+            return TaskUtils.GetTaskForSynchronousOperation(() => this.resourceWriter.WriteEnd());
         }
 #endif
 
@@ -362,8 +160,7 @@ namespace Microsoft.OData.JsonLight
         /// <param name="nestedResourceInfo">The nested resource info to write.</param>
         public override void WriteStart(ODataNestedResourceInfo nestedResourceInfo)
         {
-            this.VerifyCanWriteNestedResourceInfo(true, nestedResourceInfo);
-            this.WriteStartNestedResourceInfoImplementation(nestedResourceInfo);
+            this.resourceWriter.WriteStart(nestedResourceInfo);
         }
 
 #if PORTABLELIB
@@ -374,8 +171,7 @@ namespace Microsoft.OData.JsonLight
         /// <returns>A task instance that represents the asynchronous write operation.</returns>
         public override Task WriteStartAsync(ODataNestedResourceInfo nestedResourceInfo)
         {
-            this.VerifyCanWriteNestedResourceInfo(false, nestedResourceInfo);
-            return TaskUtils.GetTaskForSynchronousOperation(() => this.WriteStartNestedResourceInfoImplementation(nestedResourceInfo));
+            return TaskUtils.GetTaskForSynchronousOperation(() => this.resourceWriter.WriteStart(nestedResourceInfo));
         }
 #endif
 
@@ -385,8 +181,7 @@ namespace Microsoft.OData.JsonLight
         /// <param name="expandedResourceSet">The expanded resource set to write.</param>
         public override void WriteStart(ODataResourceSet expandedResourceSet)
         {
-            this.VerifyCanWriteExpandedResourceSet(true, expandedResourceSet);
-            this.WriteStartExpandedResourceSetImplementation(expandedResourceSet);
+            this.resourceWriter.WriteStart(expandedResourceSet);
         }
 
 #if PORTABLELIB
@@ -397,8 +192,7 @@ namespace Microsoft.OData.JsonLight
         /// <returns>A task instance that represents the asynchronous write operation.</returns>
         public override Task WriteStartAsync(ODataResourceSet expandedResourceSet)
         {
-            this.VerifyCanWriteExpandedResourceSet(false, expandedResourceSet);
-            return TaskUtils.GetTaskForSynchronousOperation(() => this.WriteStartExpandedResourceSetImplementation(expandedResourceSet));
+            return TaskUtils.GetTaskForSynchronousOperation(() => this.resourceWriter.WriteStart(expandedResourceSet));
         }
 #endif
 
@@ -408,8 +202,7 @@ namespace Microsoft.OData.JsonLight
         /// <param name="deltaResource">The delta resource to write.</param>
         public override void WriteStart(ODataResource deltaResource)
         {
-            this.VerifyCanWriteResource(true, deltaResource);
-            this.WriteStartDeltaResourceImplementation(deltaResource);
+            this.resourceWriter.WriteStart(deltaResource);
         }
 
 #if PORTABLELIB
@@ -420,8 +213,7 @@ namespace Microsoft.OData.JsonLight
         /// <returns>A task instance that represents the asynchronous write operation.</returns>
         public override Task WriteStartAsync(ODataResource deltaResource)
         {
-            this.VerifyCanWriteResource(false, deltaResource);
-            return TaskUtils.GetTaskForSynchronousOperation(() => this.WriteStartDeltaResourceImplementation(deltaResource));
+            return TaskUtils.GetTaskForSynchronousOperation(() => this.resourceWriter.WriteStart(deltaResource));
         }
 #endif
 
@@ -431,9 +223,8 @@ namespace Microsoft.OData.JsonLight
         /// <param name="deltaDeletedEntry">The delta deleted resource to write.</param>
         public override void WriteDeltaDeletedEntry(ODataDeltaDeletedEntry deltaDeletedEntry)
         {
-            this.VerifyCanWriteResource(true, deltaDeletedEntry);
-            this.WriteStartDeltaResourceImplementation(deltaDeletedEntry);
-            this.WriteEnd();
+            this.resourceWriter.WriteStart(deltaDeletedEntry);
+            this.resourceWriter.WriteEnd();
         }
 
 #if PORTABLELIB
@@ -444,12 +235,7 @@ namespace Microsoft.OData.JsonLight
         /// <returns>A task instance that represents the asynchronous write operation.</returns>
         public override Task WriteDeltaDeletedEntryAsync(ODataDeltaDeletedEntry deltaDeletedEntry)
         {
-            this.VerifyCanWriteResource(false, deltaDeletedEntry);
-            return TaskUtils.GetTaskForSynchronousOperation(() =>
-            {
-                this.WriteStartDeltaResourceImplementation(deltaDeletedEntry);
-                this.WriteEnd();
-            });
+            return TaskUtils.GetTaskForSynchronousOperation(() => this.resourceWriter.WriteStart(deltaDeletedEntry));
         }
 #endif
 
@@ -459,9 +245,7 @@ namespace Microsoft.OData.JsonLight
         /// <param name="deltaLink">The delta link to write.</param>
         public override void WriteDeltaLink(ODataDeltaLink deltaLink)
         {
-            this.VerifyCanWriteLink(true, deltaLink);
-            this.WriteStartDeltaLinkImplementation(deltaLink);
-            this.WriteEnd();
+            this.resourceWriter.WriteDeltaLink(deltaLink);
         }
 
 #if PORTABLELIB
@@ -472,12 +256,7 @@ namespace Microsoft.OData.JsonLight
         /// <returns>A task instance that represents the asynchronous write operation.</returns>
         public override Task WriteDeltaLinkAsync(ODataDeltaLink deltaLink)
         {
-            this.VerifyCanWriteLink(false, deltaLink);
-            return TaskUtils.GetTaskForSynchronousOperation(() =>
-            {
-                this.WriteStartDeltaLinkImplementation(deltaLink);
-                this.WriteEnd();
-            });
+            return TaskUtils.GetTaskForSynchronousOperation(() => this.resourceWriter.WriteDeltaLink(deltaLink));
         }
 #endif
 
@@ -487,9 +266,7 @@ namespace Microsoft.OData.JsonLight
         /// <param name="deltaDeletedLink">The delta deleted link to write.</param>
         public override void WriteDeltaDeletedLink(ODataDeltaDeletedLink deltaDeletedLink)
         {
-            this.VerifyCanWriteLink(true, deltaDeletedLink);
-            this.WriteStartDeltaLinkImplementation(deltaDeletedLink);
-            this.WriteEnd();
+            this.resourceWriter.WriteDeltaDeletedLink(deltaDeletedLink);
         }
 
 #if PORTABLELIB
@@ -500,12 +277,7 @@ namespace Microsoft.OData.JsonLight
         /// <returns>A task instance that represents the asynchronous write operation.</returns>
         public override Task WriteDeltaDeletedLinkAsync(ODataDeltaDeletedLink deltaDeletedLink)
         {
-            this.VerifyCanWriteLink(false, deltaDeletedLink);
-            return TaskUtils.GetTaskForSynchronousOperation(() =>
-            {
-                this.WriteStartDeltaLinkImplementation(deltaDeletedLink);
-                this.WriteEnd();
-            });
+            return TaskUtils.GetTaskForSynchronousOperation(() => this.resourceWriter.WriteDeltaDeletedLink(deltaDeletedLink));
         }
 #endif
 
@@ -537,17 +309,18 @@ namespace Microsoft.OData.JsonLight
         /// </remarks>
         void IODataOutputInStreamErrorListener.OnInStreamError()
         {
-            this.VerifyNotDisposed();
+            //TODO: hook up to resourcewriter...
+            //this.VerifyNotDisposed();
 
-            // We're in a completed state trying to write an error (we can't write error after the payload was finished as it might
-            // introduce another top-level element in XML)
-            if (this.State == WriterState.Completed)
-            {
-                throw new ODataException(Strings.ODataWriterCore_InvalidTransitionFromCompleted(this.State.ToString(), WriterState.Error.ToString()));
-            }
+            //// We're in a completed state trying to write an error (we can't write error after the payload was finished as it might
+            //// introduce another top-level element in XML)
+            //if (this.State == WriterState.Completed)
+            //{
+            //    throw new ODataException(Strings.ODataWriterCore_InvalidTransitionFromCompleted(this.State.ToString(), WriterState.Error.ToString()));
+            //}
 
-            this.StartPayloadInStartState();
-            this.EnterScope(WriterState.Error, this.CurrentScope.Item);
+            //this.StartPayloadInStartState();
+            //this.EnterScope(WriterState.Error, this.CurrentScope.Item);
         }
 
         #endregion

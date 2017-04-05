@@ -4,6 +4,8 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+using Microsoft.OData.Metadata;
+
 namespace Microsoft.OData
 {
     /// <summary>
@@ -12,9 +14,34 @@ namespace Microsoft.OData
     public sealed class ODataDeltaResourceSet : ODataResourceSetBase
     {
         /// <summary>
+        /// The type name of the resource set.
+        /// </summary>
+        private string typeName;
+
+        /// <summary>
         /// Provides additional serialization information to the <see cref="ODataDeltaWriter"/> for this <see cref="ODataDeltaResourceSet"/>.
         /// </summary>
         private ODataDeltaResourceSetSerializationInfo serializationInfo;
+
+        /// <summary>Gets the resource set type name.</summary>
+        /// <returns>The resource set type name.</returns>
+        public string TypeName
+        {
+            get
+            {
+                if (typeName == null && this.SerializationInfo != null && this.SerializationInfo.ExpectedTypeName != null)
+                {
+                    typeName = EdmLibraryExtensions.GetCollectionTypeName(this.serializationInfo.ExpectedTypeName);
+                }
+
+                return typeName;
+            }
+
+            set
+            {
+                this.typeName = value;
+            }
+        }
 
         /// <summary>
         /// Provides additional serialization information to the <see cref="ODataDeltaWriter"/> for this <see cref="ODataDeltaResourceSet"/>.

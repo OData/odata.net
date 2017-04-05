@@ -177,16 +177,28 @@ namespace Microsoft.OData
         internal const string ContextUriFragmentUntyped = "Edm.Untyped";
 
         /// <summary>The $delta token indicates delta resource set.</summary>
-        internal const string ContextUriDeltaResourceSet = "/$delta";
+        internal const string DeltaResourceSet = "$delta";
+
+        /// <summary>The $delta token indicates delta resource set.</summary>
+        internal const string ContextUriDeltaResourceSet = UriSegmentSeparator + DeltaResourceSet;
 
         /// <summary>The $deletedEntity token indicates delta resource.</summary>
-        internal const string ContextUriDeletedEntry = "/$deletedEntity";
+        internal const string DeletedEntry = "$deletedEntity";
+
+        /// <summary>The $delta token indicates delta resource set.</summary>
+        internal const string ContextUriDeletedEntry = UriSegmentSeparator + DeletedEntry;
 
         /// <summary>The $delta token indicates delta link.</summary>
-        internal const string ContextUriDeltaLink = "/$link";
+        internal const string DeltaLink = "$link";
+
+        /// <summary>The $delta token indicates delta link.</summary>
+        internal const string ContextUriDeltaLink = UriSegmentSeparator + DeltaLink;
 
         /// <summary>The $deletedLink token indicates delta deleted link.</summary>
-        internal const string ContextUriDeletedLink = "/$deletedLink";
+        internal const string DeletedLink = "$deletedLink";
+
+        /// <summary>The $deletedLink token indicates delta deleted link.</summary>
+        internal const string ContextUriDeletedLink = UriSegmentSeparator + DeletedLink;
         #endregion Context URL
     }
 }

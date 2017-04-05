@@ -16,18 +16,39 @@ namespace Microsoft.OData
         /// <summary>
         /// Instance for <see cref="ODataSimplifiedOptions"/>.
         /// </summary>
-        private static readonly ODataSimplifiedOptions DefaultOptions = new ODataSimplifiedOptions();
+        private static readonly ODataSimplifiedOptions V4DefaultOptions = new ODataSimplifiedOptions();
+
+        /// <summary>
+        /// Instance for <see cref="ODataSimplifiedOptions"/>.
+        /// </summary>
+        private static readonly ODataSimplifiedOptions DefaultOptions = new ODataSimplifiedOptions(ODataVersion.V4_01);
 
         /// <summary>
         /// Constructor of ODataSimplifiedOptions
         /// </summary>
-        public ODataSimplifiedOptions()
+        public ODataSimplifiedOptions() : this(null /*version*/)
+        {
+        }
+
+        /// <summary>
+        /// Constructor of ODataSimplifiedOptions
+        /// </summary>
+        /// <param name="version">The ODataVersion to create Default Options for.</param>
+        public ODataSimplifiedOptions(ODataVersion? version)
         {
             this.EnableParsingKeyAsSegmentUrl = true;
-            this.EnableReadingKeyAsSegment = false;
-            this.EnableReadingODataAnnotationWithoutPrefix = false;
             this.EnableWritingKeyAsSegment = false;
-            this.EnableWritingODataAnnotationWithoutPrefix = false;
+
+            if (version == null || version < ODataVersion.V4_01)
+            {
+                this.EnableReadingODataAnnotationWithoutPrefix = false;
+                this.EnableWritingODataAnnotationWithoutPrefix = false;
+            }
+            else
+            {
+                this.EnableReadingODataAnnotationWithoutPrefix = true;
+                this.EnableWritingODataAnnotationWithoutPrefix = true;
+            }
         }
 
         /// <summary>
@@ -79,12 +100,20 @@ namespace Microsoft.OData
         /// Otherwise return the static instance of ODataSimplifiedOptions.
         /// </summary>
         /// <param name="container">Container</param>
+        /// <param name="version">OData Version</param>
         /// <returns>Instance of GetODataSimplifiedOptions</returns>
-        internal static ODataSimplifiedOptions GetODataSimplifiedOptions(IServiceProvider container)
+        internal static ODataSimplifiedOptions GetODataSimplifiedOptions(IServiceProvider container, ODataVersion? version = null)
         {
             if (container == null)
             {
-                return DefaultOptions;
+                if (version == null || version < ODataVersion.V4_01)
+                {
+                    return V4DefaultOptions;
+                }
+                else
+                {
+                    return DefaultOptions;
+                }
             }
 
             return container.GetRequiredService<ODataSimplifiedOptions>();
