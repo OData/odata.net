@@ -82,7 +82,7 @@ namespace Microsoft.OData
             this.edmTypeResolver = EdmTypeWriterResolver.Instance;
             this.payloadValueConverter = ODataPayloadValueConverter.GetPayloadValueConverter(this.container);
             this.writerValidator = messageWriterSettings.Validator;
-            this.odataSimplifiedOptions = ODataSimplifiedOptions.GetODataSimplifiedOptions(this.container);
+            this.odataSimplifiedOptions = ODataSimplifiedOptions.GetODataSimplifiedOptions(this.container, messageWriterSettings.Version);
         }
 
         /// <summary>

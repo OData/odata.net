@@ -171,7 +171,7 @@ namespace Microsoft.OData.JsonLight
                     this.ODataAnnotationWriter.WritePropertyAnnotationName(propertyName, ODataAnnotationNames.ODataContext);
                 }
 
-                this.JsonWriter.WritePrimitiveValue(contextUri.AbsoluteUri);
+                this.JsonWriter.WritePrimitiveValue(contextUri.IsAbsoluteUri ? contextUri.AbsoluteUri : contextUri.OriginalString);
                 this.allowRelativeUri = true;
                 return contextUrlInfo;
             }

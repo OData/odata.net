@@ -41,6 +41,12 @@ namespace Microsoft.OData.JsonLight
         /// <summary>The 'id' property name for the Json Light value property.</summary>
         internal const string ODataIdPropertyName = "id";
 
+        /// <summary>The 'delta' property name for the Json Light value property.</summary>
+        internal const string ODataDeltaPropertyName = "delta";
+
+        /// <summary>The 'removed' property name for the Json Light value property.</summary>
+        internal const string ODataRemovedPropertyName = "removed";
+
         /// <summary>The 'reason' property name for the Json Light value property.</summary>
         internal const string ODataReasonPropertyName = "reason";
 
