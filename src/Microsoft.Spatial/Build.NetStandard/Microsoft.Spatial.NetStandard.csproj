@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <AssemblyName>Microsoft.Spatial</AssemblyName>
     <OutputType>Library</OutputType>
@@ -14,6 +14,8 @@
     <ProjectGuid>{48142D27-C862-4F4F-A781-1A9B72F6CDFA}</ProjectGuid>
     <DocumentationFile>$(AssemblyName).xml</DocumentationFile>
     <ProjectTypeGuids>{786C830F-07A1-408B-BD7F-6EE04809D6DB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <UseDefaultVisualStudioVersion>false</UseDefaultVisualStudioVersion>
+    <VisualStudioVersion>14.0</VisualStudioVersion>
     <MinimumVisualStudioVersion>14.0</MinimumVisualStudioVersion>
     <DefineConstants>$(DefineConstants);SPATIAL;PORTABLELIB;SUPPRESS_PORTABLELIB_TARGETFRAMEWORK_ATTRIBUTE</DefineConstants>
     <EnableLocalization>true</EnableLocalization>

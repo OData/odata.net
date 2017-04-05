@@ -15,6 +15,8 @@
     <DocumentationFile>$(AssemblyName).xml</DocumentationFile>
     <ProjectGuid>{DB301FA8-1CFA-487D-BA1E-803016E2A85C}</ProjectGuid>
     <ProjectTypeGuids>{786C830F-07A1-408B-BD7F-6EE04809D6DB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <UseDefaultVisualStudioVersion>false</UseDefaultVisualStudioVersion>
+    <VisualStudioVersion>14.0</VisualStudioVersion>
     <MinimumVisualStudioVersion>14.0</MinimumVisualStudioVersion>
     <DefineConstants>$(DefineConstants);PORTABLELIB;SUPPRESS_PORTABLELIB_TARGETFRAMEWORK_ATTRIBUTE</DefineConstants>
     <HasIntellisenseFile>true</HasIntellisenseFile>
