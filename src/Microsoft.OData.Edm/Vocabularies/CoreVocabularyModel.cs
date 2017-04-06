@@ -122,6 +122,9 @@ namespace Microsoft.OData.Edm.Vocabularies.V1
         /// <summary>
         /// Parse Core Vocabulary Model from CoreVocabularies.xml
         /// </summary>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.FxCop.Rules.Security.Xml.SecurityXmlRules", "CA3053:UseXmlSecureResolver",
+            MessageId = "System.Xml.XmlReader.Create",
+            Justification = "The XmlResolver property no longer exists in .NET portable framework.")]
         static CoreVocabularyModel()
         {
             IsInitializing = true;
