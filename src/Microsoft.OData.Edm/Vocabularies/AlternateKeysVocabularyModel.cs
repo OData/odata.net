@@ -47,9 +47,7 @@ namespace Microsoft.OData.Edm.Vocabularies.Community.V1
         /// <summary>
         /// Parse Alternate Keys Vocabulary Model from AlternateKeysVocabularies.xml
         /// </summary>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.FxCop.Rules.Security.Xml.SecurityXmlRules", "CA3053:UseXmlSecureResolver",
-            MessageId = "System.Xml.XmlReader.Create",
-            Justification = "The XmlResolver property no longer exists in .NET portable framework.")]
+        [SuppressMessage("Microsoft.Security.Xml", "CA3053", Justification = "The XmlResolver property no longer exists in .NET portable framework.")]
         static AlternateKeysVocabularyModel()
         {
             Assembly assembly = typeof(AlternateKeysVocabularyModel).GetAssembly();
