@@ -173,16 +173,16 @@ namespace Microsoft.OData.JsonLight
             get { return propertyCacheHandler; }
         }
 
-        /// <summary>
-        /// The Context Url level used when writing.
-        /// </summary>
-        internal override ODataContextUrlLevel ContextUrlLevel
-        {
-            get
-            {
-                return metadataLevel.ContextUrlLevel;
-            }
-        }
+        ///// <summary>
+        ///// The Context Url level used when writing.
+        ///// </summary>
+        //internal override ODataContextUrlLevel ContextUrlLevel
+        //{
+        //    get
+        //    {
+        //        return metadataLevel.ContextUrlLevel;
+        //    }
+        //}
 
         /// <summary>
         /// Creates an <see cref="ODataWriter" /> to write a resource set.

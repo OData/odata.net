@@ -75,6 +75,10 @@ namespace Microsoft.OData.Tests.JsonLight
 
         private readonly ODataDeltaDeletedEntry customerDeleted = new ODataDeltaDeletedEntry("Customers('ANTON')", DeltaDeletedEntryReason.Deleted);
         private readonly ODataDeltaDeletedEntry orderDeleted = new ODataDeltaDeletedEntry("Orders(10643)", DeltaDeletedEntryReason.Deleted);
+        private readonly ODataDeltaDeletedEntry orderDeletedWithKeyProperties = new ODataDeltaDeletedEntry("Orders(10643)", DeltaDeletedEntryReason.Deleted)
+        {
+            Properties = new ODataProperty[] { new ODataProperty() { Name= "Id", Value = 10643 } }
+        };
 
         #endregion
 
@@ -595,7 +599,6 @@ namespace Microsoft.OData.Tests.JsonLight
                     "\"value\":" +
                     "[" +
                         "{" +
-                            "\"@odata.context\":\"http://host/service/$metadata#Customers/$entity\"," +
                             "\"@odata.type\":\"#MyNS.Customer\"," +
                             "\"@odata.id\":\"http://host/service/Customers('BOTTM')\"," +
                             "\"@odata.editLink\":\"Customers('BOTTM')\"," +
@@ -607,7 +610,7 @@ namespace Microsoft.OData.Tests.JsonLight
                                 "{" +
                                     "\"@odata.type\":\"#MyNS.Order\"," +
                                     "\"@odata.id\":\"http://host/service/Orders(10643)\"," +
-                                    "\"@odata.editLink\":\"http://host/service/Orders(10643)\"," +
+                                    "\"@odata.editLink\":\"Orders(10643)\"," +
                                     "\"Id\":10643," +
                                     "\"ShippingAddress\":" +
                                     "{" +
@@ -821,7 +824,6 @@ namespace Microsoft.OData.Tests.JsonLight
                                     "}" +
                                 "}," +
                                 "{" +
-                                    "\"@context\":\"#$deletedEntity\"," +
                                     "\"@removed\":" +
                                     "{" +
                                         "\"reason\":\"deleted\"" +
@@ -831,7 +833,6 @@ namespace Microsoft.OData.Tests.JsonLight
                             "]" +
                         "}" +
                     "]" +
-                    ",\"@odata.deltaLink\":\"Customers?$expand=Orders&$deltatoken=8015" +
                 "}"
                 );
         }
@@ -852,27 +853,24 @@ namespace Microsoft.OData.Tests.JsonLight
         }
 
         [Fact]
-        public void CanWriteDeltaItemWhileWritingExpandedNavigationPropertyV4_01()
+        public void CantWriteDeletedtemFromDifferentSetInNestedDelta()
         {
             this.TestInit(this.GetModel());
 
-            Action writeAction = () =>
-            {
-                ODataJsonLightDeltaWriter writer = new ODataJsonLightDeltaWriter(V401outputContext, this.GetCustomers(), this.GetCustomerType());
-                writer.WriteStart(deltaFeed);
-                writer.WriteStart(customerEntry);
-                writer.WriteStart(ordersNavigationLink);
-                writer.WriteStart(ordersFeed);
-                writer.WriteDeltaDeletedEntry(orderDeleted);
-                writer.WriteEnd(); //orderDeleted
-                writer.WriteEnd(); //ordersFeed
-                writer.WriteEnd(); //ordersNavigationLink
-                writer.WriteEnd(); //customerEntry
-                writer.WriteEnd(); //deltaFeed
-            };
+            var writeAction = new Action(() =>
+               { ODataJsonLightDeltaWriter writer = new ODataJsonLightDeltaWriter(V401outputContext, this.GetCustomers(), this.GetCustomerType());
+                   writer.WriteStart(deltaFeed);
+                   writer.WriteStart(customerEntry);
+                   writer.WriteStart(ordersNavigationLink);
+                   writer.WriteStart(ordersFeed);
+                   writer.WriteDeltaDeletedEntry(orderDeleted);
+               });
 
-            this.TestPayload().Should().Be(
-                "{" +
+            writeAction.ShouldThrow<ODataException>().WithMessage(Strings.ODataWriterCore_InvalidTransitionFromResourceSet("DeletedResource", "DeltaResourceSet"));
+        }
+
+        private static string V4_01DeltaResponse =                 
+            "{" +
                     "\"@context\":\"http://host/service/$metadata#Customers/$delta\"," +
                     "\"value\":" +
                     "[" +
@@ -882,7 +880,30 @@ namespace Microsoft.OData.Tests.JsonLight
                             "\"Orders@delta\":" +
                             "[" +
                                 "{" +
-                                    "\"Id\":10643," +
+                                    "\"@removed\":" +
+                                    "{" +
+                                        "\"reason\":\"deleted\"" +
+                                    "}," +
+                                    "\"Id\":10643" +
+                                "}" +
+                            "]" +
+                        "}" +
+                    "]" +
+                "}"
+        ;
+
+        private static string V4_01DeltaResponseWithNoKeys =
+            "{" +
+                    "\"@context\":\"http://host/service/$metadata#Customers/$delta\"," +
+                    "\"value\":" +
+                    "[" +
+                        "{" +
+                            "\"@id\":\"http://host/service/Customers('BOTTM')\"," +
+                            "\"ContactName\":\"Susan Halvenstern\"," +
+                            "\"Orders@delta\":" +
+                            "[" +
+                                "{" +
+                                    "\"@id\":\"Orders(10643)\"," +
                                     "\"@removed\":" +
                                     "{" +
                                         "\"reason\":\"deleted\"" +
@@ -892,7 +913,64 @@ namespace Microsoft.OData.Tests.JsonLight
                         "}" +
                     "]" +
                 "}"
-                );
+        ;
+
+        [Fact]
+        public void CanWriteDeletedEntryInNestedDeltaV4_01()
+        {
+            this.TestInit(this.GetModel());
+
+            ODataJsonLightDeltaWriter writer = new ODataJsonLightDeltaWriter(V401outputContext, this.GetCustomers(), this.GetCustomerType());
+            writer.WriteStart(deltaFeed);
+            writer.WriteStart(customerEntry);
+            writer.WriteStart(ordersNavigationLink);
+            writer.WriteStart(ordersDeltaFeed);
+            writer.WriteDeltaDeletedEntry(orderDeleted);
+            writer.WriteEnd(); //ordersFeed
+            writer.WriteEnd(); //ordersNavigationLink
+            writer.WriteEnd(); //customerEntry
+            writer.WriteEnd(); //deltaFeed
+
+            this.TestPayload().Should().Be(V4_01DeltaResponseWithNoKeys);
+        }
+
+        [Fact]
+        public void V4_01DoesntIncludeAtODataId()
+        {
+            this.TestInit(this.GetModel());
+
+            ODataJsonLightDeltaWriter writer = new ODataJsonLightDeltaWriter(V401outputContext, this.GetCustomers(), this.GetCustomerType());
+            writer.WriteStart(deltaFeed);
+            writer.WriteStart(customerEntry);
+            writer.WriteStart(ordersNavigationLink);
+            writer.WriteStart(ordersDeltaFeed);
+            writer.WriteDeltaDeletedEntry(orderDeletedWithKeyProperties);
+            writer.WriteEnd(); //ordersFeed
+            writer.WriteEnd(); //ordersNavigationLink
+            writer.WriteEnd(); //customerEntry
+            writer.WriteEnd(); //deltaFeed
+
+            this.TestPayload().Should().Be(V4_01DeltaResponse);
+        }
+
+        [Fact]
+        public void CanWriteStartEndDeletedResourceInNestedDeltaV4_01()
+        {
+            this.TestInit(this.GetModel());
+
+            ODataJsonLightWriter writer = new ODataJsonLightWriter(V401outputContext, this.GetCustomers(), this.GetCustomerType(), true);
+            writer.WriteStart(deltaFeed);
+            writer.WriteStart(customerEntry);
+            writer.WriteStart(ordersNavigationLink);
+            writer.WriteStart(ordersDeltaFeed);
+            writer.WriteStart(orderDeletedWithKeyProperties);
+            writer.WriteEnd(); //orderDeleted
+            writer.WriteEnd(); //ordersFeed
+            writer.WriteEnd(); //ordersNavigationLink
+            writer.WriteEnd(); //customerEntry
+            writer.WriteEnd(); //deltaFeed
+
+            this.TestPayload().Should().Be(V4_01DeltaResponse);
         }
 
         [Fact]

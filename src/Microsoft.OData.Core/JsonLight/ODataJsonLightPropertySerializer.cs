@@ -77,8 +77,11 @@ namespace Microsoft.OData.JsonLight
                     this.JsonWriter.StartObjectScope();
                     ODataPayloadKind kind = this.JsonLightOutputContext.MessageWriterSettings.IsIndividualProperty ? ODataPayloadKind.IndividualProperty : ODataPayloadKind.Property;
 
-                    ODataContextUrlInfo contextInfo = ODataContextUrlInfo.Create(property.ODataValue, this.JsonLightOutputContext.MessageWriterSettings.ODataUri, this.Model);
-                    this.WriteContextUriProperty(kind, () => contextInfo);
+                    if (!(this.JsonLightOutputContext.MetadataLevel is JsonNoMetadataLevel))
+                    {
+                        ODataContextUrlInfo contextInfo = ODataContextUrlInfo.Create(property.ODataValue, this.JsonLightOutputContext.MessageWriterSettings.ODataUri, this.Model);
+                        this.WriteContextUriProperty(kind, () => contextInfo);
+                    }
 
                     // Note we do not allow named stream properties to be written as top level property.
                     this.JsonLightValueSerializer.AssertRecursionDepthIsZero();
