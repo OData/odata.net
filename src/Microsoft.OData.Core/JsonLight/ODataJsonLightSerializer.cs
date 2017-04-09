@@ -138,11 +138,6 @@ namespace Microsoft.OData.JsonLight
         /// <returns>The contextUrlInfo, if the context URI was successfully written.</returns>
         internal ODataContextUrlInfo WriteContextUriProperty(ODataPayloadKind payloadKind, Func<ODataContextUrlInfo> contextUrlInfoGen = null, ODataContextUrlInfo parentContextUrlInfo = null, string propertyName = null)
         {
-            if (this.jsonLightOutputContext.ContextUrlLevel == ODataContextUrlLevel.None)
-            {
-                return null;
-            }
-
             Uri contextUri = null;
             ODataContextUrlInfo contextUrlInfo = null;
 
@@ -151,9 +146,7 @@ namespace Microsoft.OData.JsonLight
                 contextUrlInfo = contextUrlInfoGen();
             }
 
-            if (this.jsonLightOutputContext.ContextUrlLevel == ODataContextUrlLevel.OnDemand
-                && contextUrlInfo != null
-                && contextUrlInfo.IsHiddenBy(parentContextUrlInfo))
+            if (contextUrlInfo != null && contextUrlInfo.IsHiddenBy(parentContextUrlInfo))
             {
                 return null;
             }

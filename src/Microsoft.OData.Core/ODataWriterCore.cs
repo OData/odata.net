@@ -2182,7 +2182,7 @@ namespace Microsoft.OData
                     }
 
                     break;
-                case WriterState.DeletedResource: // TODO: prohibit if parent is not deltaresource
+                case WriterState.DeletedResource:
                 case WriterState.Resource:
                     {
                         if (this.CurrentScope.Item == null)
@@ -2195,7 +2195,7 @@ namespace Microsoft.OData
                             throw new ODataException(Strings.ODataWriterCore_InvalidTransitionFromResource(this.State.ToString(), newState.ToString()));
                         }
 
-                        if (this.State == WriterState.DeletedResource && this.ParentScope.State != WriterState.DeltaResourceSet)
+                        if (newState == WriterState.DeletedResource && this.ParentScope.State != WriterState.DeltaResourceSet)
                         {
                             throw new ODataException(Strings.ODataWriterCore_InvalidTransitionFromResourceSet(this.State.ToString(), newState.ToString()));
                         }
@@ -2215,10 +2215,10 @@ namespace Microsoft.OData
 
                     break;
                 case WriterState.DeltaResourceSet:
-                    if (newState != WriterState.Resource && newState != WriterState.DeletedResource && newState != WriterState.DeltaDeletedLink && newState != WriterState.DeltaLink)
+                    if (newState != WriterState.Resource && newState != WriterState.DeletedResource && !(this.ScopeLevel <3 && (newState == WriterState.DeltaDeletedLink || newState == WriterState.DeltaLink)))
                     {
                         // TODO: update error message
-                        throw new ODataException(Strings.ODataWriterCore_InvalidTransitionFromResourceSet(this.State.ToString(), newState.ToString()));
+                        throw new ODataException(Strings.ODataJsonLightDeltaWriter_InvalidTransitionToNestedResource(this.State.ToString(), newState.ToString()));
                     }
 
                     break;

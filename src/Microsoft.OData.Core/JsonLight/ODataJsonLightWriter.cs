@@ -257,8 +257,7 @@ namespace Microsoft.OData.JsonLight
 
             JsonLightResourceScope resourceScope = this.CurrentResourceScope;
 
-            // TODO: clean up this logic once enterscope sets the correct navigationsource and entitytype...
-            if (this.IsTopLevel || (this.ParentScope.State == WriterState.DeltaResourceSet && this.ScopeLevel == 3 && (resource.SerializationInfo != null && this.ParentResourceNavigationSource != null && resource.SerializationInfo.NavigationSourceName != this.ParentResourceNavigationSource.Name)))
+            if (this.IsTopLevel && !(this.jsonLightOutputContext.MetadataLevel is JsonNoMetadataLevel))
             {
                 var contextUriInfo = this.jsonLightResourceSerializer.WriteResourceContextUri(
                         resourceScope.GetOrCreateTypeContext(this.jsonLightOutputContext.WritingResponse));
@@ -267,6 +266,24 @@ namespace Microsoft.OData.JsonLight
                 if (contextUriInfo != null)
                 {
                     resourceScope.IsUndeclared = contextUriInfo.IsUndeclared.HasValue && contextUriInfo.IsUndeclared.Value;
+                }
+            }
+            else if (this.ParentScope.State == WriterState.DeltaResourceSet && this.ScopeLevel == 3)
+            {
+                DeltaResourceSetScope deltaResourceSetScope = this.ParentScope as DeltaResourceSetScope;
+                Debug.Assert(deltaResourceSetScope != null, "Writing child of delta set and parent scope is not DeltaResourceSetScope");
+
+                string expectedNavigationSource = 
+                    deltaResourceSetScope.NavigationSource == null ? null : deltaResourceSetScope.NavigationSource.Name;
+                string currentNavigationSource = 
+                    resource.SerializationInfo != null ? resource.SerializationInfo.NavigationSourceName : 
+                    resourceScope.NavigationSource == null ? null : resourceScope.NavigationSource.Name;
+
+                if (String.IsNullOrEmpty(currentNavigationSource) || currentNavigationSource != expectedNavigationSource)
+                {
+                    this.jsonLightResourceSerializer.WriteDeltaContextUri(
+                        this.CurrentResourceScope.GetOrCreateTypeContext(true), ODataDeltaKind.Resource,
+                        deltaResourceSetScope.ContextUriInfo);
                 }
             }
 
@@ -619,15 +636,20 @@ namespace Microsoft.OData.JsonLight
             Debug.Assert(resource != null, "resource != null");
             Debug.Assert(!this.IsTopLevel, "Delta resource cannot be on top level.");
 
+            // Write Start Entry
             this.jsonWriter.StartObjectScope();
+
+            DeltaResourceSetScope deltaResourceSetScope = this.ParentScope as DeltaResourceSetScope;
+            Debug.Assert(deltaResourceSetScope != null, "Writing child of delta set and parent scope is not DeltaResourceSetScope");
+            DeletedResourceScope resourceScope = this.CurrentDeletedResourceScope;
+            Debug.Assert(resourceScope != null, "Writing deleted entry and scope is not DeltaResourceScope");
 
             if (this.Version == null || this.Version < ODataVersion.V4_01)
             {
                 // Write ContextUrl
-                DeltaResourceSetScope parentScope = this.ParentScope as DeltaResourceSetScope;
-                ODataContextUrlInfo parentContextUrl = parentScope == null ? null : parentScope.ContextUriInfo;
                 this.jsonLightResourceSerializer.WriteDeltaContextUri(
-                        this.CurrentDeletedResourceScope.GetOrCreateTypeContext(this.jsonLightOutputContext.WritingResponse), ODataDeltaKind.DeletedEntry, parentContextUrl);
+                        this.CurrentDeletedResourceScope.GetOrCreateTypeContext(this.jsonLightOutputContext.WritingResponse), 
+                        ODataDeltaKind.DeletedEntry, deltaResourceSetScope.ContextUriInfo);
 
                 this.WriteDeltaResourceId(resource);
                 this.WriteDeltaResourceProperties(resource.Properties);
@@ -637,11 +659,26 @@ namespace Microsoft.OData.JsonLight
             else
             {
                 // Write ContextUrl
-                // TODO: only write if required
-                DeltaResourceSetScope parentScope = this.ParentScope as DeltaResourceSetScope;
-                ODataContextUrlInfo parentContextUrl = parentScope == null ? null : parentScope.ContextUriInfo;
-                this.jsonLightResourceSerializer.WriteDeltaContextUri(
-                        this.CurrentDeletedResourceScope.GetOrCreateTypeContext(this.jsonLightOutputContext.WritingResponse), ODataDeltaKind.DeletedEntry, parentContextUrl);
+                if (this.IsTopLevel && !(this.jsonLightOutputContext.MetadataLevel is JsonNoMetadataLevel))
+                {
+                    this.jsonLightResourceSerializer.WriteResourceContextUri(
+                            resourceScope.GetOrCreateTypeContext(this.jsonLightOutputContext.WritingResponse));
+                }
+                else if (this.ScopeLevel == 3)
+                {
+                    string expectedNavigationSource = 
+                        deltaResourceSetScope.NavigationSource == null ? null : deltaResourceSetScope.NavigationSource.Name;
+                    string currentNavigationSource =
+                        resource.SerializationInfo != null ? resource.SerializationInfo.NavigationSourceName :
+                        resourceScope.NavigationSource == null ? null : resourceScope.NavigationSource.Name;
+
+                    if (String.IsNullOrEmpty(currentNavigationSource) || currentNavigationSource != expectedNavigationSource)
+                    {
+                        this.jsonLightResourceSerializer.WriteDeltaContextUri(
+                                this.CurrentDeletedResourceScope.GetOrCreateTypeContext(this.jsonLightOutputContext.WritingResponse), 
+                                ODataDeltaKind.DeletedEntry, deltaResourceSetScope.ContextUriInfo);
+                    }
+                }
 
                 IEdmEntityType entityType = this.ResourceType as IEdmEntityType;
 
