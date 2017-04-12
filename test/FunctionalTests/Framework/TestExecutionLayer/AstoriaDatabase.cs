@@ -139,7 +139,7 @@ namespace System.Data.Test.Astoria.TestExecutionLayer
                             break;
 
                         case "Local":
-#if !VS2015
+#if !USELOCALDB
                             if (ServiceUtil.IsLocalSqlServerExpressRunning)
 #endif
                             {

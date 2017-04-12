@@ -17,9 +17,9 @@ function OpenResultSet(connection, queryText)
 
 // Opens an ADO SQL Server driver connection to the specified.
 function OpenSqlServerConnection(serverName, initialCatalog, useTrustedConnection,
-  username, password)
+  username, password, provider)
 {
-  var connectionString = "Provider='sqloledb';Data Source=" + serverName + ";";
+  var connectionString = "Provider='" + provider + "';Data Source=" + serverName + ";";
   if (initialCatalog != null && initialCatalog != "")
   {
     connectionString += "Initial Catalog='" + initialCatalog + "';";
@@ -38,12 +38,12 @@ function OpenSqlServerConnection(serverName, initialCatalog, useTrustedConnectio
   return result;
 }
 
-function DropDatabasesForServer(serverName, path)
+function DropDatabasesForServer(serverName, path, provider)
 {
   var connection;
   try
   {
-    connection = OpenSqlServerConnection(serverName, null, true, null, null);
+    connection = OpenSqlServerConnection(serverName, null, true, null, null, provider);
   } catch (e) {
     //WScript.Echo("Continuing after failing to connect to server '" + serverName + "' with error: " + e.message);
     return;
@@ -85,9 +85,17 @@ if (enlistmentRoot == null || enlistmentRoot == "")
   WScript.Quit(1);
 }
 
-var serverNames = ["(local)", ".\\SQLEXPRESS", "(localdb)\\MSSQLLocalDB"];
-for (var i in serverNames) {
-  DropDatabasesForServer(serverNames[i], enlistmentRoot);
+var oledbServerNames = ["(local)", ".\\SQLEXPRESS"];
+for (var i in oledbServerNames)
+{
+  DropDatabasesForServer(oledbServerNames[i], enlistmentRoot, "sqloledb");
+}
+
+var sqlncliServerNames = ["(localdb)\\MSSQLLocalDB"];
+for (var i in sqlncliServerNames)
+{
+  // Use Sql native client for localDB.
+  DropDatabasesForServer(sqlncliServerNames[i], enlistmentRoot, "sqlncli11");
 }
 
 WScript.Quit(0);
