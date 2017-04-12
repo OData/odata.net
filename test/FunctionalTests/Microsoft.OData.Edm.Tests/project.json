@@ -6,7 +6,7 @@
     "Microsoft.OData.TestCommon": "1.0.0-*",
     "System.ComponentModel": "4.3.0",
     "System.ComponentModel.TypeConverter": "4.3.0",
-    "xunit": "2.3.0-beta1-build3642"
+    "xunit": "2.2.0"
   },
   "buildOptions": {
     "keyFile": "..\\..\\..\\tools\\StrongNamePublicKeys\\testkey.snk"
@@ -24,7 +24,7 @@
         },
         "Microsoft.Spatial.NetStandard": {
           "target": "project"
-        }     }
+        }    }
     }
   }
 }

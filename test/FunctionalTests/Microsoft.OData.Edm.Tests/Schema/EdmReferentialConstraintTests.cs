@@ -91,21 +91,21 @@ namespace Microsoft.OData.Edm.Tests.Library
         public void CreateReferentialConstraintShouldFailIfPropertiesAreNull()
         {
             Action createWithNullProperties = () => EdmReferentialConstraint.Create(null, this.typeWithOneKey.Key());
-            createWithNullProperties.ShouldThrow<ArgumentNullException>().WithMessage("dependentProperties");
+            createWithNullProperties.ShouldThrow<ArgumentNullException>().Where(e => e.Message.Contains("dependentProperties"));
         }
 
         [Fact]
         public void CreateReferentialConstraintShouldFailIfPrincipalPropertiesAreNull()
         {
             Action createWithNullProperties = () => EdmReferentialConstraint.Create(Enumerable.Empty<IEdmStructuralProperty>(), null);
-            createWithNullProperties.ShouldThrow<ArgumentNullException>().WithMessage("principalProperties");
+            createWithNullProperties.ShouldThrow<ArgumentNullException>().Where(e => e.Message.Contains("principalProperties"));
         }
 
         [Fact]
         public void ReferentialConstraintConstructorShouldFailIfPairsAreNull()
         {
             Action constructWithNullPairs = () => new EdmReferentialConstraint(null);
-            constructWithNullPairs.ShouldThrow<ArgumentNullException>().WithMessage("propertyPairs");
+            constructWithNullPairs.ShouldThrow<ArgumentNullException>().Where(e => e.Message.Contains("propertyPairs"));
         }
 
     }

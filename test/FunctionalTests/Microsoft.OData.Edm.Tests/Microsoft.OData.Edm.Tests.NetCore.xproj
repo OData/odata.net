@@ -16,11 +16,11 @@
     <SchemaVersion>2.0</SchemaVersion>
   </PropertyGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\src\Microsoft.OData.Edm\Build.NetStandard\Microsoft.OData.Edm.NetStandard.csproj" />
-    <ProjectReference Include="..\..\..\src\Microsoft.Spatial\Build.NetStandard\Microsoft.Spatial.NetStandard.csproj" />
+    <Service Include="{82a7f48d-3b50-4b1e-b82e-3ada8210c358}" />
   </ItemGroup>
   <ItemGroup>
-    <Service Include="{82a7f48d-3b50-4b1e-b82e-3ada8210c358}" />
+    <ProjectReference Include="..\..\..\src\Microsoft.OData.Edm\Build.NetStandard\Microsoft.OData.Edm.NetStandard.csproj" />
+    <ProjectReference Include="..\..\..\src\Microsoft.Spatial\Build.NetStandard\Microsoft.Spatial.NetStandard.csproj" />
   </ItemGroup>
   <Import Project="$(VSToolsPath)\DotNet\Microsoft.DotNet.targets" Condition="'$(VSToolsPath)' != ''" />
 </Project>
