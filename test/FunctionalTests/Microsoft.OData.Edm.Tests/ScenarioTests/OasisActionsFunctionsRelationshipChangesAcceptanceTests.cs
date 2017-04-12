@@ -396,7 +396,7 @@ namespace Microsoft.OData.Edm.Tests.ScenarioTests
   </edmx:DataServices>
 </edmx:Edmx>";
             Action test = () => CsdlReader.Parse(XElement.Parse(errorDocument).CreateReader());
-            test.ShouldThrow<EdmParseException>().WithMessage(Strings.XmlParser_MissingAttribute("Action", "ActionImport"), ComparisonMode.Substring);
+            test.ShouldThrow<EdmParseException>().WithMessage(Strings.XmlParser_MissingAttribute("Action", "ActionImport"));
         }
 
         [Fact]
