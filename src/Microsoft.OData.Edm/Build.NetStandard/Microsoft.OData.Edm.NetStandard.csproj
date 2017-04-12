@@ -1483,15 +1483,15 @@
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="..\Vocabularies\AlternateKeysVocabularies.xml">
+    <EmbeddedResource Include="..\Vocabularies\AlternateKeysVocabularies.xml">
       <Link>Vocabularies\AlternateKeysVocabularies.xml</Link>
-    </Content>
-    <Content Include="..\Vocabularies\CapabilitiesVocabularies.xml">
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\Vocabularies\CapabilitiesVocabularies.xml">
       <Link>Vocabularies\CapabilitiesVocabularies.xml</Link>
-    </Content>
-    <Content Include="..\Vocabularies\CoreVocabularies.xml">
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\Vocabularies\CoreVocabularies.xml">
       <Link>Vocabularies\CoreVocabularies.xml</Link>
-    </Content>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(BuildExtensionsPath)\Portable.targets" />
 </Project>

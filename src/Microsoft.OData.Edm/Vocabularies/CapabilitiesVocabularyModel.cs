@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Xml;
 using Microsoft.OData.Edm.Csdl;
@@ -38,7 +39,12 @@ namespace Microsoft.OData.Edm.Vocabularies.V1
         {
             Assembly assembly = typeof(CapabilitiesVocabularyModel).GetAssembly();
 
-            using (Stream stream = assembly.GetManifestResourceStream("CapabilitiesVocabularies.xml"))
+            // Resource name has leading namespace and folder in .NetStandard dll.
+            string[] allResources = assembly.GetManifestResourceNames();
+            string capabilitiesVocabularies = allResources.Where(x => x.Contains("CapabilitiesVocabularies.xml")).FirstOrDefault();
+            Debug.Assert(capabilitiesVocabularies != null, "CapabilitiesVocabularies.xml: not found.");
+
+            using (Stream stream = assembly.GetManifestResourceStream(capabilitiesVocabularies))
             {
                 IEnumerable<EdmError> errors;
                 Debug.Assert(stream != null, "CapabilitiesVocabularies.xml: stream!=null");
