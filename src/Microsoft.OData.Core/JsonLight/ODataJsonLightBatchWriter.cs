@@ -248,7 +248,7 @@ namespace Microsoft.OData.Core.JsonLight
         /// <summary>
         /// Creates an <see cref="ODataBatchOperationResponseMessage"/> for writing an operation of a batch response - implementation of the actual functionality.
         /// </summary>
-        /// <param name="contentId">The Content-ID value to write in ChangeSet head.</param>
+        /// <param name="contentId">The Content-ID value to write in ChangeSet header.</param>
         /// <returns>The message that can be used to write the response operation.</returns>
         protected override ODataBatchOperationResponseMessage CreateOperationResponseMessageImplementation(string contentId)
         {

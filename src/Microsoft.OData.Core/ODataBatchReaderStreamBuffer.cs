@@ -12,11 +12,10 @@ namespace Microsoft.OData.Core
     using System.Diagnostics;
     using System.IO;
 
-    using Microsoft.OData.Core.MultipartMixed;
     #endregion Namespaces
 
     /// <summary>
-    /// This class represents the internal buffer of the <see cref="ODataMultipartMixedBatchReaderStream"/>.
+    /// This class represents the internal buffer of the <see cref="ODataBatchReaderStream"/>.
     /// </summary>
     internal sealed class ODataBatchReaderStreamBuffer
     {
@@ -44,9 +43,9 @@ namespace Microsoft.OData.Core
         /// </summary>
         internal byte[] Bytes
         {
-            get 
+            get
             {
-                return this.bytes; 
+                return this.bytes;
             }
         }
 
@@ -67,9 +66,9 @@ namespace Microsoft.OData.Core
         /// </summary>
         internal int NumberOfBytesInBuffer
         {
-            get 
+            get
             {
-                return this.numberOfBytesInBuffer; 
+                return this.numberOfBytesInBuffer;
             }
         }
 
@@ -87,7 +86,7 @@ namespace Microsoft.OData.Core
         }
 
         /// <summary>
-        /// Skip to the specified position in the buffer. 
+        /// Skip to the specified position in the buffer.
         /// Adjust the current position and the number of bytes in the buffer.
         /// </summary>
         /// <param name="newPosition">The position to skip to.</param>
@@ -105,7 +104,7 @@ namespace Microsoft.OData.Core
         /// Refills the buffer from the specified stream.
         /// </summary>
         /// <param name="stream">The stream to refill the buffer from.</param>
-        /// <param name="preserveFrom">The index in the current buffer starting from which the 
+        /// <param name="preserveFrom">The index in the current buffer starting from which the
         /// currently buffered data should be preserved.</param>
         /// <returns>true if the underlying stream got exhausted while refilling.</returns>
         /// <remarks>This method will first shift any data that is to be preserved to the beginning
@@ -116,7 +115,7 @@ namespace Microsoft.OData.Core
             Debug.Assert(preserveFrom >= this.currentReadPosition, "preserveFrom must be at least as big as the current position in the buffer.");
 
             this.ShiftToBeginning(preserveFrom);
-            int numberOfBytesToRead = ODataBatchReaderStreamBuffer.BufferLength - this.numberOfBytesInBuffer;
+            int numberOfBytesToRead = BufferLength - this.numberOfBytesInBuffer;
             int numberOfBytesRead = stream.Read(this.bytes, this.numberOfBytesInBuffer, numberOfBytesToRead);
             this.numberOfBytesInBuffer += numberOfBytesRead;
 
@@ -134,11 +133,11 @@ namespace Microsoft.OData.Core
         {
             bool endOfBufferReached;
             return this.ScanForLineEnd(
-                this.currentReadPosition, 
-                BufferLength, 
-                /*allowLeadingWhitespaceOnly*/ false, 
-                out lineEndStartPosition, 
-                out lineEndEndPosition, 
+                this.currentReadPosition,
+                BufferLength,
+                /*allowLeadingWhitespaceOnly*/ false,
+                out lineEndStartPosition,
+                out lineEndEndPosition,
                 out endOfBufferReached);
         }
 
@@ -157,9 +156,9 @@ namespace Microsoft.OData.Core
         /// <returns>An enumeration value indicating whether the boundary was completely, partially or not found in the buffer.</returns>
         internal ODataBatchReaderStreamScanResult ScanForBoundary(
             IEnumerable<string> boundaries,
-            int maxDataBytesToScan, 
-            out int boundaryStartPosition, 
-            out int boundaryEndPosition, 
+            int maxDataBytesToScan,
+            out int boundaryStartPosition,
+            out int boundaryEndPosition,
             out bool isEndBoundary,
             out bool isParentBoundary)
         {
@@ -180,7 +179,7 @@ namespace Microsoft.OData.Core
                 // NOTE: for WCF DS compatibility we do not require the leading line terminator.
                 int lineEndStartPosition, boundaryDelimiterStartPosition;
                 ODataBatchReaderStreamScanResult lineEndScanResult = this.ScanForBoundaryStart(
-                    lineScanStartIndex, 
+                    lineScanStartIndex,
                     maxDataBytesToScan,
                     out lineEndStartPosition,
                     out boundaryDelimiterStartPosition);
@@ -199,7 +198,7 @@ namespace Microsoft.OData.Core
                         return ODataBatchReaderStreamScanResult.PartialMatch;
 
                     case ODataBatchReaderStreamScanResult.Match:
-                        // Found a full line end or boundary delimiter start ('--') before reading maxDataBytesToScan or 
+                        // Found a full line end or boundary delimiter start ('--') before reading maxDataBytesToScan or
                         // hitting the end of the buffer. Start matching the boundary delimiters.
                         //
                         // Start with the expected boundary (the first one in the enumerable):
@@ -261,13 +260,13 @@ namespace Microsoft.OData.Core
         /// <param name="boundaryDelimiterStartPosition">The start position of the boundary delimiter or -1 if not found.</param>
         /// <returns>An enumeration value indicating whether the boundary start was completely, partially or not found in the buffer.</returns>
         private ODataBatchReaderStreamScanResult ScanForBoundaryStart(
-            int scanStartIx, 
+            int scanStartIx,
             int maxDataBytesToScan,
             out int lineEndStartPosition,
             out int boundaryDelimiterStartPosition)
         {
             int lastByteToCheck = this.currentReadPosition + Math.Min(maxDataBytesToScan, this.numberOfBytesInBuffer) - 1;
-        
+
             for (int i = scanStartIx; i <= lastByteToCheck; ++i)
             {
                 char ch = (char)this.bytes[i];
@@ -280,7 +279,7 @@ namespace Microsoft.OData.Core
                     // consists of a second character or not.
                     lineEndStartPosition = i;
 
-                    // We only want to report PartialMatch if we ran out of bytes in the buffer; 
+                    // We only want to report PartialMatch if we ran out of bytes in the buffer;
                     // so even if we found the start of a line end in the last byte to check (and
                     // have more bytes in the buffer) we still look ahead by one.
                     if (ch == '\r' && i == lastByteToCheck && maxDataBytesToScan >= this.numberOfBytesInBuffer)
@@ -333,17 +332,17 @@ namespace Microsoft.OData.Core
         /// <remarks>This method only returns <see cref="ODataBatchReaderStreamScanResult.PartialMatch"/> if we found the start
         /// of a line terminator at the last character in the buffer.</remarks>
         private ODataBatchReaderStreamScanResult ScanForLineEnd(
-            int scanStartIx, 
-            int maxDataBytesToScan, 
+            int scanStartIx,
+            int maxDataBytesToScan,
             bool allowLeadingWhitespaceOnly,
-            out int lineEndStartPosition, 
+            out int lineEndStartPosition,
             out int lineEndEndPosition,
             out bool endOfBufferReached)
         {
             endOfBufferReached = false;
 
             int lastByteToCheck = this.currentReadPosition + Math.Min(maxDataBytesToScan, this.numberOfBytesInBuffer) - 1;
-        
+
             for (int i = scanStartIx; i <= lastByteToCheck; ++i)
             {
                 char ch = (char)this.bytes[i];
@@ -356,7 +355,7 @@ namespace Microsoft.OData.Core
                     // consists of a second character or not.
                     lineEndStartPosition = i;
 
-                    // We only want to report PartialMatch if we ran out of bytes in the buffer; 
+                    // We only want to report PartialMatch if we ran out of bytes in the buffer;
                     // so if we found the start of a line end in the last byte to check we still
                     // look ahead by one.
                     if (ch == '\r' && i == lastByteToCheck && maxDataBytesToScan >= this.numberOfBytesInBuffer)
@@ -396,17 +395,17 @@ namespace Microsoft.OData.Core
         /// <param name="lineEndStartPosition">The start of the line feed preceding the boundary (if present).</param>
         /// <param name="boundaryDelimiterStartPosition">The start position of the boundary delimiter.</param>
         /// <param name="boundary">The boundary string to check for.</param>
-        /// <param name="boundaryStartPosition">If a match is detected, the start of the boundary delimiter, 
+        /// <param name="boundaryStartPosition">If a match is detected, the start of the boundary delimiter,
         /// i.e., either the start of the leading line feed or of the leading dashes.</param>
         /// <param name="boundaryEndPosition">If a match is detected, the position of the boundary end; otherwise -1.</param>
         /// <param name="isEndBoundary">true if the detected boundary is an end boundary; otherwise false.</param>
         /// <returns>An <see cref="ODataBatchReaderStreamScanResult"/> indicating whether a match, a partial match or no match was found.</returns>
         private ODataBatchReaderStreamScanResult MatchBoundary(
-            int lineEndStartPosition, 
-            int boundaryDelimiterStartPosition, 
-            string boundary, 
-            out int boundaryStartPosition, 
-            out int boundaryEndPosition, 
+            int lineEndStartPosition,
+            int boundaryDelimiterStartPosition,
+            string boundary,
+            out int boundaryStartPosition,
+            out int boundaryEndPosition,
             out bool isEndBoundary)
         {
             boundaryStartPosition = -1;
@@ -417,8 +416,8 @@ namespace Microsoft.OData.Core
                 boundaryDelimiterStartPosition + TwoDashesLength + boundary.Length + TwoDashesLength - 1;
 
             // NOTE: for simplicity reasons we require that the full end (!) boundary plus the maximum size
-            //       of the line terminator fits into the buffer to get a non-partial match. 
-            //       By doing so we can reliably detect whether we are dealing with an end boundary or not. 
+            //       of the line terminator fits into the buffer to get a non-partial match.
+            //       By doing so we can reliably detect whether we are dealing with an end boundary or not.
             //       Otherwise the logic to figure out whether we found a boundary or not is riddled with
             //       corner cases that only complicate the code.
             bool isPartialMatch;
@@ -454,7 +453,7 @@ namespace Microsoft.OData.Core
 
                     // Once we could match all the characters and delimiters of the boundary string
                     // (and the optional trailing '--') we now have to continue reading until the next
-                    // line feed that terminates the boundary. Only whitespace characters may exist 
+                    // line feed that terminates the boundary. Only whitespace characters may exist
                     // after the boundary and before the line feed.
                     int terminatingLineFeedStartPosition, terminatingLineFeedEndPosition;
                     bool endOfBufferReached;
@@ -526,7 +525,7 @@ namespace Microsoft.OData.Core
         /// <summary>
         /// Try to match the specified boundary string starting at the specified position.
         /// </summary>
-        /// <param name="boundary">The boundary string to search for; this does not include 
+        /// <param name="boundary">The boundary string to search for; this does not include
         /// the leading line terminator or the leading dashes.</param>
         /// <param name="startIx">The index at which to start matching the boundary.</param>
         /// <param name="matchLength">The number of characters to match.</param>

@@ -11,12 +11,12 @@ namespace Microsoft.OData.Core
     using System.Diagnostics;
     using System.IO;
 
-    using Microsoft.OData.Core.MultipartMixed;
+    using Microsoft.OData.Core.JsonLight;
     #endregion Namespaces
 
     /// <summary>
-    /// A stream handed to clients from ODataBatchOperationMessage.GetStream or ODataBatchOperationMessage.GetStreamAsync. 
-    /// This stream communicates status changes to the owning batch reader (via IODataBatchOperationListener) 
+    /// A stream handed to clients from ODataBatchOperationMessage.GetStream or ODataBatchOperationMessage.GetStreamAsync.
+    /// This stream communicates status changes to the owning batch reader (via IODataBatchOperationListener)
     /// to prevent clients to use the batch reader while a content stream is still in use.
     /// </summary>
     internal abstract class ODataBatchOperationReadStream : ODataBatchOperationStream
@@ -24,18 +24,18 @@ namespace Microsoft.OData.Core
         /// <summary>
         /// The batch stream underlying this operation stream.
         /// </summary>
-        protected ODataMultipartMixedBatchReaderStream multipartMixedBatchReaderStream;
+        protected ODataBatchReaderStream batchReaderStream;
 
         /// <summary>
         /// Constructor.
         /// </summary>
-        /// <param name="multipartMixedBatchReaderStream">The underlying stream to read from.</param>
+        /// <param name="batchReaderStream">The underlying stream to read from.</param>
         /// <param name="listener">Listener interface to be notified of operation changes.</param>
-        internal ODataBatchOperationReadStream(ODataMultipartMixedBatchReaderStream multipartMixedBatchReaderStream, IODataBatchOperationListener listener)
+        internal ODataBatchOperationReadStream(ODataBatchReaderStream batchReaderStream, IODataBatchOperationListener listener)
             : base(listener)
         {
-            Debug.Assert(multipartMixedBatchReaderStream != null, "multipartMixedBatchReaderStream != null");
-            this.multipartMixedBatchReaderStream = multipartMixedBatchReaderStream;
+            Debug.Assert(batchReaderStream != null, "batchReaderStream != null");
+            this.batchReaderStream = batchReaderStream;
         }
 
         /// <summary>
@@ -108,26 +108,41 @@ namespace Microsoft.OData.Core
         }
 
         /// <summary>
+        /// Disposes the object.
+        /// </summary>
+        /// <param name="disposing">True if called from Dispose; false if called form the finalizer.</param>
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                // Dispose resource used by underlying batch reader stream.
+                this.batchReaderStream.DisposeResources();
+            }
+
+            base.Dispose(disposing);
+        }
+
+        /// <summary>
         /// Create a batch operation read stream over the specified batch stream with a given content length.
         /// </summary>
-        /// <param name="multipartMixedBatchReaderStream">The batch stream underlying the operation stream to create.</param>
+        /// <param name="batchReaderStream">The batch stream underlying the operation stream to create.</param>
         /// <param name="listener">The batch operation listener.</param>
         /// <param name="length">The content length of the operation stream.</param>
         /// <returns>A <see cref="ODataBatchOperationReadStream"/> to read the content of a batch operation from.</returns>
-        internal static ODataBatchOperationReadStream Create(ODataMultipartMixedBatchReaderStream multipartMixedBatchReaderStream, IODataBatchOperationListener listener, int length)
+        internal static ODataBatchOperationReadStream Create(ODataBatchReaderStream batchReaderStream, IODataBatchOperationListener listener, int length)
         {
-            return new ODataBatchOperationReadStreamWithLength(multipartMixedBatchReaderStream, listener, length);
+            return new ODataBatchOperationReadStreamWithLength(batchReaderStream, listener, length);
         }
 
         /// <summary>
         /// Create a batch operation read stream over the specified batch stream using the batch delimiter to detect the end of the stream.
         /// </summary>
-        /// <param name="multipartMixedBatchReaderStream">The batch stream underlying the operation stream to create.</param>
+        /// <param name="batchReaderStream">The batch stream underlying the operation stream to create.</param>
         /// <param name="listener">The batch operation listener.</param>
         /// <returns>A <see cref="ODataBatchOperationReadStream"/> to read the content of a batch operation from.</returns>
-        internal static ODataBatchOperationReadStream Create(ODataMultipartMixedBatchReaderStream multipartMixedBatchReaderStream, IODataBatchOperationListener listener)
+        internal static ODataBatchOperationReadStream Create(ODataBatchReaderStream batchReaderStream, IODataBatchOperationListener listener)
         {
-            return new ODataBatchOperationReadStreamWithDelimiter(multipartMixedBatchReaderStream, listener);
+            return new ODataBatchOperationReadStreamWithDelimiter(batchReaderStream, listener);
         }
 
         /// <summary>
@@ -141,11 +156,11 @@ namespace Microsoft.OData.Core
             /// <summary>
             /// Constructor.
             /// </summary>
-            /// <param name="multipartMixedBatchReaderStream">The underlying batch stream to write the message to.</param>
+            /// <param name="batchReaderStream">The underlying batch stream to write the message to.</param>
             /// <param name="listener">Listener interface to be notified of operation changes.</param>
             /// <param name="length">The total length of the stream.</param>
-            internal ODataBatchOperationReadStreamWithLength(ODataMultipartMixedBatchReaderStream multipartMixedBatchReaderStream, IODataBatchOperationListener listener, int length)
-                : base(multipartMixedBatchReaderStream, listener)
+            internal ODataBatchOperationReadStreamWithLength(ODataBatchReaderStream batchReaderStream, IODataBatchOperationListener listener, int length)
+                : base(batchReaderStream, listener)
             {
                 ExceptionUtils.CheckIntegerNotNegative(length, "length");
                 this.length = length;
@@ -171,9 +186,10 @@ namespace Microsoft.OData.Core
                     return 0;
                 }
 
-                int bytesRead = this.multipartMixedBatchReaderStream.ReadWithLength(buffer, offset, Math.Min(count, this.length));
+                int bytesRead = this.batchReaderStream.ReadWithLength(buffer, offset, Math.Min(count, this.length));
                 this.length -= bytesRead;
                 Debug.Assert(this.length >= 0, "Read beyond expected length.");
+
                 return bytesRead;
             }
         }
@@ -189,10 +205,10 @@ namespace Microsoft.OData.Core
             /// <summary>
             /// Constructor.
             /// </summary>
-            /// <param name="multipartMixedBatchReaderStream">The underlying batch stream to write the message to.</param>
+            /// <param name="batchReaderStream">The underlying batch stream to write the message to.</param>
             /// <param name="listener">Listener interface to be notified of operation changes.</param>
-            internal ODataBatchOperationReadStreamWithDelimiter(ODataMultipartMixedBatchReaderStream multipartMixedBatchReaderStream, IODataBatchOperationListener listener)
-                : base(multipartMixedBatchReaderStream, listener)
+            internal ODataBatchOperationReadStreamWithDelimiter(ODataBatchReaderStream batchReaderStream, IODataBatchOperationListener listener)
+                : base(batchReaderStream, listener)
             {
             }
 
@@ -216,7 +232,7 @@ namespace Microsoft.OData.Core
                     return 0;
                 }
 
-                int bytesRead = this.multipartMixedBatchReaderStream.ReadWithDelimiter(buffer, offset, count);
+                int bytesRead = this.batchReaderStream.ReadWithDelimiter(buffer, offset, count);
                 if (bytesRead < count)
                 {
                     this.exhausted = true;

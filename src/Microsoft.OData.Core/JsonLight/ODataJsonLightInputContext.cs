@@ -35,13 +35,18 @@ namespace Microsoft.OData.Core.JsonLight
 
         /// <summary>The text reader created for the input stream.</summary>
         /// <remarks>
-        /// The ODataJsonLightInputContext instance owns the textReader instance and thus disposes it. 
+        /// The ODataJsonLightInputContext instance owns the textReader instance and thus disposes it.
         /// We further set this field to null when the input is disposed and use it for checks whether the instance has already been disposed.
         /// </remarks>
         private TextReader textReader;
 
         /// <summary>The JSON reader to read from.</summary>
         private BufferingJsonReader jsonReader;
+
+        /// <summary>
+        /// The JsonLight message stream.
+        /// </summary>
+        private Stream stream;
 
         /// <summary>Constructor.</summary>
         /// <param name="format">The format for this input context.</param>
@@ -65,6 +70,8 @@ namespace Microsoft.OData.Core.JsonLight
             IODataUrlResolver urlResolver)
             : this(format, CreateTextReaderForMessageStreamConstructor(messageStream, encoding), contentType, messageReaderSettings, readingResponse, synchronous, model, urlResolver)
         {
+            Debug.Assert(messageStream != null, "messageStream != null");
+            this.stream = messageStream;
         }
 
         /// <summary>Constructor.</summary>
@@ -137,6 +144,17 @@ namespace Microsoft.OData.Core.JsonLight
             // Uri metadataDocumentUri = messageReaderSettings..MetadataDocumentUri == null ? null : messageReaderSettings.MetadataDocumentUri.BaseUri;
             // the uri here is used here to create the FullMetadataLevel can pass null in
             this.metadataLevel = JsonLight.JsonLightMetadataLevel.Create(contentType, null, model, readingResponse);
+        }
+
+        /// <summary>
+        /// The stream of the JsonLight input context.
+        /// </summary>
+        internal Stream Stream
+        {
+            get
+            {
+                return this.stream;
+            }
         }
 
         /// <summary>
@@ -254,7 +272,7 @@ namespace Microsoft.OData.Core.JsonLight
 #endif
 
         /// <summary>
-        /// This method creates an reads the property from the input and 
+        /// This method creates an reads the property from the input and
         /// returns an <see cref="ODataProperty"/> representing the read property.
         /// </summary>
         /// <param name="property">The <see cref="IEdmProperty"/> producing the property to be read.</param>
@@ -271,7 +289,7 @@ namespace Microsoft.OData.Core.JsonLight
 
 #if ODATALIB_ASYNC
         /// <summary>
-        /// Asynchronously read the property from the input and 
+        /// Asynchronously read the property from the input and
         /// return an <see cref="ODataProperty"/> representing the read property.
         /// </summary>
         /// <param name="property">The <see cref="IEdmProperty"/> producing the property to be read.</param>
@@ -397,8 +415,8 @@ namespace Microsoft.OData.Core.JsonLight
 #endif
 
         /// <summary>
-        /// Read a service document. 
-        /// This method reads the service document from the input and returns 
+        /// Read a service document.
+        /// This method reads the service document from the input and returns
         /// an <see cref="ODataServiceDocument"/> that represents the read service document.
         /// </summary>
         /// <returns>An <see cref="ODataServiceDocument"/> representing the read service document.</returns>
@@ -412,8 +430,8 @@ namespace Microsoft.OData.Core.JsonLight
 
 #if ODATALIB_ASYNC
         /// <summary>
-        /// Asynchronously read a service document. 
-        /// This method reads the service document from the input and returns 
+        /// Asynchronously read a service document.
+        /// This method reads the service document from the input and returns
         /// an <see cref="ODataServiceDocument"/> that represents the read service document.
         /// </summary>
         /// <returns>Task which when completed returns an <see cref="ODataServiceDocument"/> representing the read service document.</returns>
@@ -520,6 +538,8 @@ namespace Microsoft.OData.Core.JsonLight
             {
                 try
                 {
+                    this.stream = null;
+
                     if (this.textReader != null)
                     {
                         this.textReader.Dispose();

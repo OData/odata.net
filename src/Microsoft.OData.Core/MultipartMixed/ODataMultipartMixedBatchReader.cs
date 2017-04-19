@@ -30,7 +30,7 @@ namespace Microsoft.OData.Core.MultipartMixed
                 return this.InputContext as ODataRawInputContext;
             }
         }
- 
+
         /// <summary>
         /// Constructor.
         /// </summary>
@@ -39,7 +39,7 @@ namespace Microsoft.OData.Core.MultipartMixed
         /// <param name="batchEncoding">The encoding to use to read from the batch stream.</param>
         /// <param name="synchronous">true if the reader is created for synchronous operation; false for asynchronous.</param>
         internal ODataMultipartMixedBatchReader(ODataInputContext inputContext, string batchBoundary, Encoding batchEncoding, bool synchronous)
-            : base(inputContext, batchEncoding, synchronous)
+            : base(inputContext, synchronous)
         {
             Debug.Assert(inputContext != null, "inputContext != null");
             Debug.Assert(this.RawInputContext != null, "this.RawInputContext != null");
@@ -49,7 +49,7 @@ namespace Microsoft.OData.Core.MultipartMixed
         }
 
         /// <summary>
-        /// Returns the cached <see cref="ODataBatchOperationRequestMessage"/> for reading the content of an operation 
+        /// Returns the cached <see cref="ODataBatchOperationRequestMessage"/> for reading the content of an operation
         /// in a batch request.
         /// </summary>
         /// <returns>The message that can be used to read the content of the batch request operation from.</returns>
@@ -107,7 +107,7 @@ namespace Microsoft.OData.Core.MultipartMixed
         }
 
         /// <summary>
-        /// Returns the cached <see cref="ODataBatchOperationRequestMessage"/> for reading the content of an operation 
+        /// Returns the cached <see cref="ODataBatchOperationRequestMessage"/> for reading the content of an operation
         /// in a batch request.
         /// </summary>
         /// <returns>The message that can be used to read the content of the batch request operation from.</returns>
@@ -167,7 +167,7 @@ namespace Microsoft.OData.Core.MultipartMixed
                 {
                     throw new ODataException(Strings.ODataBatch_InvalidHttpMethodForChangeSetRequest(httpMethod));
                 }
-            }            
+            }
         }
 
         /// <summary>
@@ -187,7 +187,7 @@ namespace Microsoft.OData.Core.MultipartMixed
                     break;
 
                 case ODataBatchReaderState.Operation:
-                    // When reaching this state we already read the MIME headers of the operation. 
+                    // When reaching this state we already read the MIME headers of the operation.
                     // Clients MUST call CreateOperationRequestMessage
                     // or CreateOperationResponseMessage to read at least the headers of the operation.
                     // This is important since we need to read the ContentId header (if present) and
@@ -203,7 +203,7 @@ namespace Microsoft.OData.Core.MultipartMixed
                     this.ReaderOperationState = OperationState.None;
 
                     // Also add a pending ContentId header to the URL resolver now. We ensured above
-                    // that a message has been created for this operation and thus the headers (incl. 
+                    // that a message has been created for this operation and thus the headers (incl.
                     // a potential content ID header) have been read.
                     if (this.ContentIdToAddOnNextRead != null)
                     {
@@ -219,7 +219,7 @@ namespace Microsoft.OData.Core.MultipartMixed
                     break;
 
                 case ODataBatchReaderState.ChangesetStart:
-                    // When at the start of a changeset, skip ahead to the first operation in the 
+                    // When at the start of a changeset, skip ahead to the first operation in the
                     // changeset (or the end boundary of the changeset).
                     Debug.Assert(this.batchStream.ChangeSetBoundary != null, "Changeset boundary must have been set by now.");
                     this.State = this.SkipToNextPartAndReadHeaders();
@@ -278,7 +278,7 @@ namespace Microsoft.OData.Core.MultipartMixed
 
                 if (nextState == ODataBatchReaderState.ChangesetEnd)
                 {
-                    // Reset the URL resolver at the end of a changeset; Content IDs are 
+                    // Reset the URL resolver at the end of a changeset; Content IDs are
                     // unique within a given changeset.
                     this.urlResolver.Reset();
                 }

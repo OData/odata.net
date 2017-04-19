@@ -166,7 +166,11 @@
     <Compile Include="JsonLight\JsonNoMetadataLevel.cs" />
     <Compile Include="JsonLight\JsonNoMetadataTypeNameOracle.cs" />
     <Compile Include="JsonLight\ODataAnnotationNames.cs" />
+    <Compile Include="JsonLight\ODataJsonLightBatchAtomicGroupCache.cs" />
+    <Compile Include="JsonLight\ODataJsonLightBatchBodyContentReaderStream.cs" />
     <Compile Include="JsonLight\ODataJsonLightBatchReader.cs" />
+    <Compile Include="JsonLight\ODataJsonLightBatchReaderStream.cs" />
+    <Compile Include="JsonLight\ODataJsonLightBatchRequestPropertiesCache.cs" />
     <Compile Include="JsonLight\ODataJsonLightBatchWriter.cs" />
     <Compile Include="JsonLight\ODataJsonLightCollectionDeserializer.cs" />
     <Compile Include="JsonLight\ODataJsonLightCollectionReader.cs" />
@@ -224,6 +228,7 @@
     <Compile Include="Json\TextWriterWrapper.cs" />
     <Compile Include="MultipartMixed\ODataMultipartMixedBatchReader.cs" />
     <Compile Include="MultipartMixed\ODataMultipartMixedBatchReaderStream.cs" />
+    <Compile Include="ODataBatchReaderStream.cs" />
     <Compile Include="MultipartMixed\ODataMultipartMixedBatchWriter.cs" />
     <Compile Include="ODataErrorDetail.cs" />
     <Compile Include="ODataUntypedValue.cs" />
@@ -699,6 +704,5 @@
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(BuildExtensionsPath)\Portable.targets" />
 </Project>

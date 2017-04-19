@@ -259,6 +259,7 @@
     <Compile Include="ODataBatchOperationWriteStream.cs" />
     <Compile Include="ODataBatchReader.cs" />
     <Compile Include="ODataBatchReaderState.cs" />
+    <Compile Include="ODataBatchReaderStream.cs" />
     <Compile Include="ODataBatchReaderStreamBuffer.cs" />
     <Compile Include="ODataBatchReaderStreamScanResult.cs" />
     <Compile Include="ODataBatchUrlResolver.cs" />
