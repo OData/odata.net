@@ -22,13 +22,13 @@ namespace Microsoft.OData.Core.JsonLight
 
     internal sealed class ODataJsonLightBatchBodyContentReaderStream : ODataBatchReaderStream, IDisposable
     {
-        // Input in-memory stream providing body content data.
+        // Input memory stream providing body content data.
         private readonly Stream bodyContentStream = null;
 
-        // Writer for writing Json data to in-memory stream.
+        // Writer for writing Json data to memory stream.
         private readonly StreamWriter streamWriter = null;
 
-        // Status to ensure that the underlying in-memory stream is ready.
+        // Status to ensure that the underlying memory stream is ready.
         private bool isDataPopulatedToStream;
 
         // Type of the data in request body
@@ -185,10 +185,10 @@ namespace Microsoft.OData.Core.JsonLight
 
         /// <summary>
         /// Read off the data of the starting Json object from the Json reader,
-        /// and populate the data into the in-memory stream.
+        /// and populate the data into the memory stream.
         /// </summary>
         /// <param name="reader"> The json reader pointing at the json structure whose data needs to
-        /// be populated into an in-memory stream.
+        /// be populated into an memory stream.
         /// </param>
         private void WriteJsonContent(JsonReader reader)
         {
@@ -214,7 +214,7 @@ namespace Microsoft.OData.Core.JsonLight
         /// Write the current Json object.
         /// </summary>
         /// <param name="reader">The Json reader providing the data.</param>
-        /// <param name="jsonWriter">The Json writer writes data into in-memory stream.</param>
+        /// <param name="jsonWriter">The Json writer writes data into memory stream.</param>
         private static void WriteCurrentJsonObject(JsonReader reader, IJsonWriter jsonWriter)
         {
             Stack<JsonNodeType> nodeTypes = new Stack<JsonNodeType>();
