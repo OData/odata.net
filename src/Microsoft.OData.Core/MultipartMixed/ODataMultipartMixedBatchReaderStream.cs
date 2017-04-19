@@ -1,4 +1,4 @@
-//---------------------------------------------------------------------
+﻿//---------------------------------------------------------------------
 // <copyright file="ODataMultipartMixedBatchReaderStream.cs" company="Microsoft">
 //      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 // </copyright>
@@ -16,13 +16,14 @@ namespace Microsoft.OData.Core.MultipartMixed
     #endregion Namespaces
 
     /// <summary>
-    /// Class used by the <see cref="ODataBatchReader"/> to read the various pieces of a batch payload.
+    /// Class used by the <see cref="ODataMultipartMixedBatchReader"/> to read the various pieces of a batch payload
+    /// in multipart/mixed format.
     /// </summary>
     /// <remarks>
     /// This stream separates a batch payload into multiple parts by scanning ahead and matching
     /// a boundary string against the current payload.
     /// </remarks>
-    internal sealed class ODataMultipartMixedBatchReaderStream
+    internal sealed class ODataMultipartMixedBatchReaderStream: ODataBatchReaderStream
     {
         /// <summary>
         /// The default length for the line buffer byte array used to read lines; expecting lines to normally be less than 2000 bytes.
@@ -35,29 +36,13 @@ namespace Microsoft.OData.Core.MultipartMixed
         /// </summary>
         private readonly byte[] lineBuffer;
 
-        /// <summary>The input context to read the content from.</summary>
-        private readonly ODataRawInputContext inputContext;
-
         /// <summary>The boundary string for the batch structure itself.</summary>
         private readonly string batchBoundary;
-
-        /// <summary>The buffer used by the batch reader stream to scan for boundary strings.</summary>
-        private readonly ODataBatchReaderStreamBuffer batchBuffer;
-
-        /// <summary>The encoding to use to read from the batch stream.</summary>
-        private Encoding batchEncoding;
 
         /// <summary>The boundary string for a changeset (or null if not in a changeset part).</summary>
         private string changesetBoundary;
 
-        /// <summary>The encoding for a given changeset.</summary>
-        private Encoding changesetEncoding;
-
-        /// <summary>
-        /// true if the underlying stream was exhausted during a read operation; we won't try to read from the 
-        /// underlying stream again once it was exhausted.
-        /// </summary>
-        private bool underlyingStreamExhausted;
+        private ODataRawInputContext rawInputContext;
 
         /// <summary>
         /// Constructor.
@@ -69,15 +54,12 @@ namespace Microsoft.OData.Core.MultipartMixed
             ODataRawInputContext inputContext,
             string batchBoundary,
             Encoding batchEncoding)
+            : base(batchEncoding)
         {
-            Debug.Assert(inputContext != null, "inputContext != null");
             Debug.Assert(!string.IsNullOrEmpty(batchBoundary), "!string.IsNullOrEmpty(batchBoundary)");
 
-            this.inputContext = inputContext;
+            this.rawInputContext = inputContext;
             this.batchBoundary = batchBoundary;
-            this.batchEncoding = batchEncoding;
-
-            this.batchBuffer = new ODataBatchReaderStreamBuffer();
 
             // When we allocate a batch reader stream we will in almost all cases also call ReadLine
             // (to read the headers of the parts); so allocating it here.
@@ -126,18 +108,6 @@ namespace Microsoft.OData.Core.MultipartMixed
         }
 
         /// <summary>
-        /// The current encoding to use when reading from the stream.
-        /// </summary>
-        /// <remarks>This is the changeset encoding when reading a changeset or the batch encoding otherwise.</remarks>
-        private Encoding CurrentEncoding
-        {
-            get
-            {
-                return this.changesetEncoding ?? this.batchEncoding;
-            }
-        }
-
-        /// <summary>
         /// Resets the changeset boundary at the end of the changeset.
         /// </summary>
         internal void ResetChangeSetBoundary()
@@ -156,7 +126,7 @@ namespace Microsoft.OData.Core.MultipartMixed
         internal bool SkipToBoundary(out bool isEndBoundary, out bool isParentBoundary)
         {
             // Ensure we have a batch encoding; if not detect it on the first read/skip.
-            this.EnsureBatchEncoding();
+            this.EnsureBatchEncoding(this.rawInputContext.Stream);
 
             ODataBatchReaderStreamScanResult scanResult = ODataBatchReaderStreamScanResult.NoMatch;
             while (scanResult != ODataBatchReaderStreamScanResult.Match)
@@ -180,7 +150,7 @@ namespace Microsoft.OData.Core.MultipartMixed
                         }
 
                         // skip everything in the buffer and refill it from the underlying stream; continue scanning
-                        this.underlyingStreamExhausted = this.batchBuffer.RefillFrom(this.inputContext.Stream, /*preserveFrom*/ODataBatchReaderStreamBuffer.BufferLength);
+                        this.underlyingStreamExhausted = this.batchBuffer.RefillFrom(this.rawInputContext.Stream, /*preserveFrom*/ODataBatchReaderStreamBuffer.BufferLength);
 
                         break;
                     case ODataBatchReaderStreamScanResult.PartialMatch:
@@ -191,7 +161,7 @@ namespace Microsoft.OData.Core.MultipartMixed
                             return false;
                         }
 
-                        this.underlyingStreamExhausted = this.batchBuffer.RefillFrom(this.inputContext.Stream, /*preserveFrom*/boundaryStartPosition);
+                        this.underlyingStreamExhausted = this.batchBuffer.RefillFrom(this.rawInputContext.Stream, /*preserveFrom*/boundaryStartPosition);
 
                         break;
                     case ODataBatchReaderStreamScanResult.Match:
@@ -216,7 +186,7 @@ namespace Microsoft.OData.Core.MultipartMixed
         /// <param name="userBufferOffset">The offset in the buffer where to start reading bytes into.</param>
         /// <param name="count">The number of bytes to read.</param>
         /// <returns>The number of bytes actually read.</returns>
-        internal int ReadWithDelimiter(byte[] userBuffer, int userBufferOffset, int count)
+        internal override int ReadWithDelimiter(byte[] userBuffer, int userBufferOffset, int count)
         {
             Debug.Assert(userBuffer != null, "userBuffer != null");
             Debug.Assert(userBufferOffset >= 0 && userBufferOffset < userBuffer.Length, "Offset must be within the range of the user buffer.");
@@ -248,7 +218,7 @@ namespace Microsoft.OData.Core.MultipartMixed
                 switch (scanResult)
                 {
                     case ODataBatchReaderStreamScanResult.NoMatch:
-                        // The boundary was not found in the buffer or after the required number of bytes to be read; 
+                        // The boundary was not found in the buffer or after the required number of bytes to be read;
                         // Check whether we can satisfy the full read request from the buffer
                         // or whether we have to split the request and read more data into the buffer.
                         if (this.batchBuffer.NumberOfBytesInBuffer >= remainingNumberOfBytesToRead)
@@ -276,7 +246,7 @@ namespace Microsoft.OData.Core.MultipartMixed
                             }
                             else
                             {
-                                this.underlyingStreamExhausted = this.batchBuffer.RefillFrom(this.inputContext.Stream, /*preserveFrom*/ ODataBatchReaderStreamBuffer.BufferLength);
+                                this.underlyingStreamExhausted = this.batchBuffer.RefillFrom(this.rawInputContext.Stream, /*preserveFrom*/ ODataBatchReaderStreamBuffer.BufferLength);
                             }
                         }
 
@@ -306,7 +276,7 @@ namespace Microsoft.OData.Core.MultipartMixed
                             remainingNumberOfBytesToRead -= bytesBeforeBoundaryStart;
                             userBufferOffset += bytesBeforeBoundaryStart;
 
-                            this.underlyingStreamExhausted = this.batchBuffer.RefillFrom(this.inputContext.Stream, /*preserveFrom*/ boundaryStartPosition);
+                            this.underlyingStreamExhausted = this.batchBuffer.RefillFrom(this.rawInputContext.Stream, /*preserveFrom*/ boundaryStartPosition);
                         }
 
                         break;
@@ -333,14 +303,14 @@ namespace Microsoft.OData.Core.MultipartMixed
         }
 
         /// <summary>
-        /// Reads from the batch stream without checking for a boundary delimiter since we 
+        /// Reads from the batch stream without checking for a boundary delimiter since we
         /// know the length of the stream.
         /// </summary>
         /// <param name="userBuffer">The byte array to read bytes into.</param>
         /// <param name="userBufferOffset">The offset in the buffer where to start reading bytes into.</param>
         /// <param name="count">The number of bytes to read.</param>
         /// <returns>The number of bytes actually read.</returns>
-        internal int ReadWithLength(byte[] userBuffer, int userBufferOffset, int count)
+        internal override int ReadWithLength(byte[] userBuffer, int userBufferOffset, int count)
         {
             Debug.Assert(userBuffer != null, "userBuffer != null");
             Debug.Assert(userBufferOffset >= 0, "userBufferOffset >= 0");
@@ -379,7 +349,7 @@ namespace Microsoft.OData.Core.MultipartMixed
                     }
                     else
                     {
-                        this.underlyingStreamExhausted = this.batchBuffer.RefillFrom(this.inputContext.Stream, /*preserveFrom*/ ODataBatchReaderStreamBuffer.BufferLength);
+                        this.underlyingStreamExhausted = this.batchBuffer.RefillFrom(this.rawInputContext.Stream, /*preserveFrom*/ ODataBatchReaderStreamBuffer.BufferLength);
                     }
                 }
             }
@@ -414,7 +384,7 @@ namespace Microsoft.OData.Core.MultipartMixed
                     // NOTE: We do not have to skip over the potential preamble of the encoding
                     //       because the batch reader will skip over everything (incl. the preamble)
                     //       until it finds the first changeset (or batch) boundary
-                    this.changesetEncoding = this.DetectEncoding();
+                    this.changesetEncoding = this.DetectEncoding(this.rawInputContext.Stream);
                 }
 
                 // Verify that we only allow single byte encodings and UTF-8 for now.
@@ -539,7 +509,7 @@ namespace Microsoft.OData.Core.MultipartMixed
                         {
                             if (lineBufferSize == 0)
                             {
-                                // If there's nothing more to pull from the underlying stream, and we didn't read anything 
+                                // If there's nothing more to pull from the underlying stream, and we didn't read anything
                                 // in this invocation of ReadLine(), return null to indicate end of input.
                                 return null;
                             }
@@ -550,7 +520,7 @@ namespace Microsoft.OData.Core.MultipartMixed
                         }
                         else
                         {
-                            this.underlyingStreamExhausted = this.batchBuffer.RefillFrom(this.inputContext.Stream, /*preserveFrom*/ ODataBatchReaderStreamBuffer.BufferLength);
+                            this.underlyingStreamExhausted = this.batchBuffer.RefillFrom(this.rawInputContext.Stream, /*preserveFrom*/ ODataBatchReaderStreamBuffer.BufferLength);
                         }
 
                         break;
@@ -559,7 +529,7 @@ namespace Microsoft.OData.Core.MultipartMixed
                         // This can happen if a line end is represented as \r\n and we found \r at the very last position in the buffer.
                         // In this case we copy the bytes into the result byte[] and continue at the start of the line end; this will guarantee
                         // that the next scan will find the full line end, not find any additional bytes and then skip the full line end.
-                        // It is safe to copy the string right here because we will also accept \r as a line end; we are just not sure whether there 
+                        // It is safe to copy the string right here because we will also accept \r as a line end; we are just not sure whether there
                         // will be a subsequent \n.
                         // This can also happen if the last byte in the stream is \r.
                         byteCount = lineEndStartPosition - this.batchBuffer.CurrentReadPosition;
@@ -578,7 +548,7 @@ namespace Microsoft.OData.Core.MultipartMixed
                         }
                         else
                         {
-                            this.underlyingStreamExhausted = this.batchBuffer.RefillFrom(this.inputContext.Stream, /*preserveFrom*/ lineEndStartPosition);
+                            this.underlyingStreamExhausted = this.batchBuffer.RefillFrom(this.rawInputContext.Stream, /*preserveFrom*/ lineEndStartPosition);
                         }
 
                         break;
@@ -605,110 +575,6 @@ namespace Microsoft.OData.Core.MultipartMixed
             Debug.Assert(bytesForString != null, "bytesForString != null");
 
             return this.CurrentEncoding.GetString(bytesForString, 0, lineBufferSize);
-        }
-
-        /// <summary>
-        /// Ensure that a batch encoding exists; if not, detect it from the first couple of bytes of the stream.
-        /// </summary>
-        private void EnsureBatchEncoding()
-        {
-            // If no batch encoding is specified we detect it from the first bytes in the buffer.
-            if (this.batchEncoding == null)
-            {
-                // NOTE: The batch encoding will only ever be null on the first call to this method which 
-                //       happens before the batch reader skips to the first boundary.
-                this.batchEncoding = this.DetectEncoding();
-            }
-
-            // Verify that we only allow single byte encodings and UTF-8 for now.
-            ReaderValidationUtils.ValidateEncodingSupportedInBatch(this.batchEncoding);
-        }
-
-        /// <summary>Detect the encoding based data from the stream.</summary>
-        /// <returns>The encoding discovered from the bytes in the buffer or the fallback encoding.</returns>
-        /// <remarks>
-        /// We don't have to skip a potential preamble of the encoding since the batch reader
-        /// will skip over everything (incl. the potential preamble) until it finds the first
-        /// boundary.
-        /// </remarks>
-        private Encoding DetectEncoding()
-        {
-            // We need at most 4 bytes in the buffer to determine the encoding; if we have less than that,
-            // refill the buffer.
-            while (!this.underlyingStreamExhausted && this.batchBuffer.NumberOfBytesInBuffer < 4)
-            {
-                this.underlyingStreamExhausted = this.batchBuffer.RefillFrom(this.inputContext.Stream, this.batchBuffer.CurrentReadPosition);
-            }
-
-            // Now we should have a full buffer unless the underlying stream did not have enough bytes.
-            int numberOfBytesInBuffer = this.batchBuffer.NumberOfBytesInBuffer;
-            if (numberOfBytesInBuffer < 2)
-            {
-                Debug.Assert(this.underlyingStreamExhausted, "Underlying stream must be exhausted if we have less than 2 bytes in the buffer after refilling.");
-
-                // If we cannot read any of the known preambles we fall back to the default encoding, which is US-ASCII.
-#if !ORCAS
-                // ASCII not available; use UTF8 without preamble
-                return MediaTypeUtils.FallbackEncoding;
-#else
-                return Encoding.ASCII;
-#endif
-            }
-            else if (this.batchBuffer[this.batchBuffer.CurrentReadPosition] == 0xFE && this.batchBuffer[this.batchBuffer.CurrentReadPosition + 1] == 0xFF)
-            {
-                // Big Endian Unicode
-                return new UnicodeEncoding(/*bigEndian*/ true, /*byteOrderMark*/ true);
-            }
-            else if (this.batchBuffer[this.batchBuffer.CurrentReadPosition] == 0xFF && this.batchBuffer[this.batchBuffer.CurrentReadPosition + 1] == 0xFE)
-            {
-                // Little Endian Unicode, or possibly little endian UTF32
-                if (numberOfBytesInBuffer >= 4 &&
-                    this.batchBuffer[this.batchBuffer.CurrentReadPosition + 2] == 0 &&
-                    this.batchBuffer[this.batchBuffer.CurrentReadPosition + 3] == 0)
-                {
-#if !ORCAS
-                    // Little Endian UTF32 not available
-                    throw Error.NotSupported();
-#else
-                    return new UTF32Encoding(/*bigEndian*/ false, /*byteOrderMark*/ true);
-#endif
-                }
-                else
-                {
-                    return new UnicodeEncoding(/*bigEndian*/ false, /*byteOrderMark*/ true);
-                }
-            }
-            else if (numberOfBytesInBuffer >= 3 &&
-                     this.batchBuffer[this.batchBuffer.CurrentReadPosition] == 0xEF &&
-                     this.batchBuffer[this.batchBuffer.CurrentReadPosition + 1] == 0xBB &&
-                     this.batchBuffer[this.batchBuffer.CurrentReadPosition + 2] == 0xBF)
-            {
-                // UTF-8
-                return Encoding.UTF8;
-            }
-            else if (numberOfBytesInBuffer >= 4 &&
-                     this.batchBuffer[this.batchBuffer.CurrentReadPosition] == 0 &&
-                     this.batchBuffer[this.batchBuffer.CurrentReadPosition + 1] == 0 &&
-                     this.batchBuffer[this.batchBuffer.CurrentReadPosition + 2] == 0xFE &&
-                     this.batchBuffer[this.batchBuffer.CurrentReadPosition + 3] == 0xFF)
-            {
-                // Big Endian UTF32
-#if !ORCAS
-                // Big Endian UTF32 not available
-                throw Error.NotSupported();
-#else
-                return new UTF32Encoding(/*bigEndian*/ true, /*byteOrderMark*/ true);
-#endif
-            }
-            else
-            {
-#if !ORCAS
-                // ASCII not available; use UTF8 without preamble
-                return MediaTypeUtils.FallbackEncoding;
-#else
-                return Encoding.ASCII;
-#endif
-            }
         }
 
         /// <summary>
@@ -746,8 +612,8 @@ namespace Microsoft.OData.Core.MultipartMixed
             {
                 isChangeSetPart = false;
 
-                // An operation part is required to have application/http content type and 
-                // binary content transfer encoding. 
+                // An operation part is required to have application/http content type and
+                // binary content transfer encoding.
                 string transferEncoding;
                 if (!headers.TryGetValue(ODataConstants.ContentTransferEncoding, out transferEncoding) ||
                     string.Compare(transferEncoding, ODataConstants.BatchContentTransferEncoding, StringComparison.OrdinalIgnoreCase) != 0)
@@ -803,3 +669,4 @@ namespace Microsoft.OData.Core.MultipartMixed
         }
     }
 }
+

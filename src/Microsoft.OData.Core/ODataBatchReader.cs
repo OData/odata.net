@@ -57,7 +57,7 @@ namespace Microsoft.OData.Core
         /// </summary>
         private bool allowLegacyContentIdBehavior;
 
-        protected ODataInputContext InputContext 
+        protected ODataInputContext InputContext
         {
             get { return this.inputContext; }
         }
@@ -84,9 +84,8 @@ namespace Microsoft.OData.Core
         /// </summary>
         /// <param name="inputContext">The input context to read the content from.</param>
         /// <param name="batchBoundary">The boundary string for the batch structure itself.</param>
-        /// <param name="batchEncoding">The encoding to use to read from the batch stream.</param>
         /// <param name="synchronous">true if the reader is created for synchronous operation; false for asynchronous.</param>
-        internal ODataBatchReader(ODataInputContext inputContext, Encoding batchEncoding, bool synchronous)
+        internal ODataBatchReader(ODataInputContext inputContext, bool synchronous)
         {
             Debug.Assert(inputContext != null, "inputContext != null");
 
@@ -203,7 +202,7 @@ namespace Microsoft.OData.Core
         /// This method is called to notify that the content stream for a batch operation has been requested.
         /// </summary>
         /// <returns>
-        /// A task representing any action that is running as part of the status change of the reader; 
+        /// A task representing any action that is running as part of the status change of the reader;
         /// null if no such action exists.
         /// </returns>
         Task IODataBatchOperationListener.BatchOperationContentStreamRequestedAsync()
@@ -228,17 +227,17 @@ namespace Microsoft.OData.Core
         protected abstract bool ReadImplementation();
 
         /// <summary>
-        /// Returns the cached <see cref="ODataBatchOperationRequestMessage"/> for reading the content of an operation 
+        /// Returns the cached <see cref="ODataBatchOperationRequestMessage"/> for reading the content of an operation
         /// in a batch request.
         /// </summary>
         /// <returns>The message that can be used to read the content of the batch request operation from.</returns>
         protected abstract ODataBatchOperationRequestMessage CreateOperationRequestMessageImplementation();
 
         /// <summary>
-        /// Returns the cached <see cref="ODataBatchOperationRequestMessage"/> for reading the content of an operation 
-        /// in a batch request.
+        /// Returns the cached <see cref="ODataBatchOperationResponseMessage"/> for reading the content of a
+        /// batch response.
         /// </summary>
-        /// <returns>The message that can be used to read the content of the batch request operation from.</returns>
+        /// <returns>The message that can be used to read the content of the batch response from.</returns>
         protected abstract ODataBatchOperationResponseMessage CreateOperationResponseMessageImplementation();
 
         /// <summary>
@@ -292,7 +291,7 @@ namespace Microsoft.OData.Core
             // them.
             int firstSpaceIndex = requestLine.IndexOf(' ');
 
-            // Check whether there are enough characters after the first space for the 2nd and 3rd segments 
+            // Check whether there are enough characters after the first space for the 2nd and 3rd segments
             // (and a whitespace in between)
             if (firstSpaceIndex <= 0 || requestLine.Length - 3 <= firstSpaceIndex)
             {
@@ -308,8 +307,8 @@ namespace Microsoft.OData.Core
                 throw new ODataException(Strings.ODataBatchReaderStream_InvalidRequestLine(requestLine));
             }
 
-            httpMethod = requestLine.Substring(0, firstSpaceIndex);               // Request - Http method  
-            string uriSegment = requestLine.Substring(firstSpaceIndex + 1, lastSpaceIndex - firstSpaceIndex - 1);      // Request - Request uri  
+            httpMethod = requestLine.Substring(0, firstSpaceIndex);               // Request - Http method
+            string uriSegment = requestLine.Substring(firstSpaceIndex + 1, lastSpaceIndex - firstSpaceIndex - 1);      // Request - Request uri
             string httpVersionSegment = requestLine.Substring(lastSpaceIndex + 1);             // Request - Http version
 
             // Validate HttpVersion

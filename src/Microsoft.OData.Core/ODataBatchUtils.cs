@@ -4,6 +4,8 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+using Microsoft.OData.Core.JsonLight;
+
 namespace Microsoft.OData.Core
 {
     #region Namespaces
@@ -13,7 +15,6 @@ namespace Microsoft.OData.Core
     using System.Globalization;
     using System.IO;
 
-    using Microsoft.OData.Core.MultipartMixed;
     #endregion Namespaces
 
     /// <summary>
@@ -32,7 +33,7 @@ namespace Microsoft.OData.Core
         /// returns null. In the default scheme, the method either returns the specified <paramref name="uri"/> if it was absolute,
         /// or it's combination with the <paramref name="baseUri"/> if it was relative.</returns>
         /// <remarks>
-        /// This method will fail if no custom resolution is implemented and the specified <paramref name="uri"/> is 
+        /// This method will fail if no custom resolution is implemented and the specified <paramref name="uri"/> is
         /// relative and there's no base URI available.
         /// </remarks>
         internal static Uri CreateOperationRequestUri(Uri uri, Uri baseUri, IODataUrlResolver urlResolver)
@@ -73,21 +74,31 @@ namespace Microsoft.OData.Core
         /// <summary>
         /// Creates a batch operation stream from the specified batch stream.
         /// </summary>
-        /// <param name="multipartMixedBatchReaderStream">The batch stream to create the operation read stream for.</param>
+        /// <param name="batchReaderStream">The batch stream to create the operation read stream for.</param>
         /// <param name="headers">The headers of the current part; based on the header we create different, optimized stream implementations.</param>
         /// <param name="operationListener">The operation listener to be passed to the newly created read stream.</param>
         /// <returns>A new <see cref="ODataBatchOperationReadStream"/> instance.</returns>
         internal static ODataBatchOperationReadStream CreateBatchOperationReadStream(
-            ODataMultipartMixedBatchReaderStream multipartMixedBatchReaderStream,
+            ODataBatchReaderStream batchReaderStream,
             ODataBatchOperationHeaders headers,
             IODataBatchOperationListener operationListener)
         {
-            Debug.Assert(multipartMixedBatchReaderStream != null, "multipartMixedBatchReaderStream != null");
+            Debug.Assert(batchReaderStream != null, "batchReaderStream != null");
             Debug.Assert(operationListener != null, "operationListener != null");
 
             // See whether we have a Content-Length header
             string contentLengthValue;
-            if (headers.TryGetValue(ODataConstants.ContentLengthHeader, out contentLengthValue))
+
+            ODataJsonLightBatchBodyContentReaderStream jsonLightBatchBodyContentReaderStream
+                = batchReaderStream as ODataJsonLightBatchBodyContentReaderStream;
+            if (jsonLightBatchBodyContentReaderStream != null)
+            {
+                return ODataBatchOperationReadStream.Create(
+                    batchReaderStream,
+                    operationListener,
+                    jsonLightBatchBodyContentReaderStream.StreamContentLength);
+            }
+            else if (headers.TryGetValue(ODataConstants.ContentLengthHeader, out contentLengthValue))
             {
                 int length = Int32.Parse(contentLengthValue, CultureInfo.InvariantCulture);
                 if (length < 0)
@@ -95,10 +106,10 @@ namespace Microsoft.OData.Core
                     throw new ODataException(Strings.ODataBatchReaderStream_InvalidContentLengthSpecified(contentLengthValue));
                 }
 
-                return ODataBatchOperationReadStream.Create(multipartMixedBatchReaderStream, operationListener, length);
+                return ODataBatchOperationReadStream.Create(batchReaderStream, operationListener, length);
             }
 
-            return ODataBatchOperationReadStream.Create(multipartMixedBatchReaderStream, operationListener);
+            return ODataBatchOperationReadStream.Create(batchReaderStream, operationListener);
         }
 
         /// <summary>
@@ -139,8 +150,8 @@ namespace Microsoft.OData.Core
             int numberOfAdditionalBytesNeeded = requiredByteCount - remainingUnusedBytesInBuffer;
             Debug.Assert(numberOfAdditionalBytesNeeded > 0, "Expected a positive number of additional bytes.");
 
-            // NOTE: grow the array only by the exact number of needed bytes; we expect the 
-            //       caller to specify a larger required byte count to grow the array more. 
+            // NOTE: grow the array only by the exact number of needed bytes; we expect the
+            //       caller to specify a larger required byte count to grow the array more.
             byte[] oldBytes = buffer;
             buffer = new byte[buffer.Length + numberOfAdditionalBytesNeeded];
             Buffer.BlockCopy(oldBytes, 0, buffer, 0, numberOfBytesInBuffer);

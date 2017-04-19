@@ -4,6 +4,8 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+using Microsoft.OData.Core.JsonLight;
+
 namespace Microsoft.OData.Core
 {
     #region Namespaces
@@ -15,7 +17,6 @@ namespace Microsoft.OData.Core
     using System.Threading.Tasks;
 #endif
 
-    using Microsoft.OData.Core.MultipartMixed;
     #endregion Namespaces
 
     /// <summary>
@@ -160,7 +161,7 @@ namespace Microsoft.OData.Core
         /// <summary>
         /// Creates an operation response message that can be used to read the operation content from.
         /// </summary>
-        /// <param name="multipartMixedBatchReaderStream">The batch stream underyling the operation response message.</param>
+        /// <param name="batchReaderStream">The batch stream underyling the operation response message.</param>
         /// <param name="statusCode">The status code to use for the operation response message.</param>
         /// <param name="headers">The headers to use for the operation response message.</param>
         /// <param name="contentId">The content-ID for the operation response message.</param>
@@ -168,17 +169,17 @@ namespace Microsoft.OData.Core
         /// <param name="urlResolver">The (optional) URL resolver for the message to create.</param>
         /// <returns>An <see cref="ODataBatchOperationResponseMessage"/> that can be used to read the operation content.</returns>
         internal static ODataBatchOperationResponseMessage CreateReadMessage(
-            ODataMultipartMixedBatchReaderStream multipartMixedBatchReaderStream,
+            ODataBatchReaderStream batchReaderStream,
             int statusCode,
             ODataBatchOperationHeaders headers,
             string contentId,
             IODataBatchOperationListener operationListener,
             IODataUrlResolver urlResolver)
         {
-            Debug.Assert(multipartMixedBatchReaderStream != null, "multipartMixedBatchReaderStream != null");
+            Debug.Assert(batchReaderStream != null, "batchReaderStream != null");
             Debug.Assert(operationListener != null, "operationListener != null");
 
-            Func<Stream> streamCreatorFunc = () => ODataBatchUtils.CreateBatchOperationReadStream(multipartMixedBatchReaderStream, headers, operationListener);
+            Func<Stream> streamCreatorFunc = () => ODataBatchUtils.CreateBatchOperationReadStream(batchReaderStream, headers, operationListener);
             ODataBatchOperationResponseMessage responseMessage =
                 new ODataBatchOperationResponseMessage(streamCreatorFunc, headers, operationListener, contentId, urlResolver, /*writing*/ false);
             responseMessage.statusCode = statusCode;
