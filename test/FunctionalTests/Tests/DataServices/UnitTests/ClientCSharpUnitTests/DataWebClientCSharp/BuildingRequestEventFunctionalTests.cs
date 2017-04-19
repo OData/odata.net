@@ -4,6 +4,8 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+using System.Globalization;
+
 namespace AstoriaUnitTests.DataWebClientCSharp
 {
     using System;
@@ -43,7 +45,7 @@ namespace AstoriaUnitTests.DataWebClientCSharp
         private const string ExpectedPostQueryItem = PostSpecificQueryParameter + "=" + PostSpecificValue;
 
         private int buildingRequestCallCount;
-        private Queue<Descriptor> descriptors = new Queue<Descriptor>(); 
+        private Queue<Descriptor> descriptors = new Queue<Descriptor>();
 
         private static readonly Dictionary<string, string> Headers = new Dictionary<string, string>
         {
@@ -116,7 +118,7 @@ namespace AstoriaUnitTests.DataWebClientCSharp
                 AddDescriptorShouldBeNullVerifier(ctx);
 
                 Action actionToTest = () => ctx.Execute<Customer>(new Uri(web.ServiceRoot + "/Customers(1)"));
-                
+
                 RunTest(actionToTest);
                 buildingRequestCallCount.Should().Be(1);
             }
@@ -167,7 +169,7 @@ namespace AstoriaUnitTests.DataWebClientCSharp
                             ctx.Execute(continuation);
                         }
                     };
-                
+
                 RunTest(actionToTest);
                 buildingRequestCallCount.Should().Be(2);
             }
@@ -203,7 +205,7 @@ namespace AstoriaUnitTests.DataWebClientCSharp
             }
         }
         #endregion
-         
+
         #region Query, LoadPropety Tests
 
         [TestMethod]
@@ -219,14 +221,14 @@ namespace AstoriaUnitTests.DataWebClientCSharp
 
                 var query = (DataServiceQuery<Customer>)(ctx.CreateQuery<Customer>("Customers").Where(c => c.Name.Contains("1")));
                 query = query.AddQueryOption("ParameterFromLinqMethod", "value&split");
-                
+
                 Action actionToTest = () => query.Execute();
 
                 RunTest(actionToTest);
                 buildingRequestCallCount.Should().Be(1);
             }
-        }        
-        
+        }
+
         [TestMethod]
         public void QueryAsync()
         {
@@ -274,7 +276,7 @@ namespace AstoriaUnitTests.DataWebClientCSharp
                 ctx.AttachTo("Customers", customer, "*");
 
                 Action actionToTest = () => ctx.LoadProperty(customer, "Orders");
-                
+
                 RunTest(actionToTest);
                 buildingRequestCallCount.Should().Be(1);
             }
@@ -322,7 +324,7 @@ namespace AstoriaUnitTests.DataWebClientCSharp
                 ctx.ResolveName = T => T.FullName;
                 Customer customer = new Customer() { ID = 1 };
                 ctx.AttachTo("Customers", customer, "*");
-                
+
                 Action actionToTest = () =>
                     {
                         QueryOperationResponse qor = ctx.LoadProperty(customer, "Orders", new Uri(web.ServiceRoot + "/Customers(1)/Orders"));
@@ -383,7 +385,7 @@ namespace AstoriaUnitTests.DataWebClientCSharp
                 RunTest(actionToTest);
                 buildingRequestCallCount.Should().Be(1);
             }
-        }        
+        }
         #endregion
 
         #region Stream Related Tests
@@ -406,7 +408,7 @@ namespace AstoriaUnitTests.DataWebClientCSharp
                 var result = query.Execute();
                 var entry = result.First();
 
-                this.AddDescriptorShouldBeStreamVerifier(ctx, descriptor => 
+                this.AddDescriptorShouldBeStreamVerifier(ctx, descriptor =>
                 {
                     descriptor.State.Should().Be(EntityStates.Unchanged);
                     descriptor.EntityDescriptor.State.Should().Be(EntityStates.Unchanged);
@@ -497,7 +499,7 @@ namespace AstoriaUnitTests.DataWebClientCSharp
                 buildingRequestCallCount.Should().Be(1);
             }
         }
-       
+
         [TestMethod]
         public void SetSaveStreamEditNamedStream()
         {
@@ -521,7 +523,7 @@ namespace AstoriaUnitTests.DataWebClientCSharp
                     descriptor.State.Should().Be(EntityStates.Modified);
                     descriptor.EntityDescriptor.State.Should().Be(EntityStates.Unchanged);
                 });
-                
+
                 Stream newStream = new MemoryStream();
                 ctx.SetSaveStream(entry, "NamedStream", newStream, false, new DataServiceRequestArgs() { ContentType = "application/jpeg" });
                 buildingRequestCallCount = 0;
@@ -787,8 +789,8 @@ namespace AstoriaUnitTests.DataWebClientCSharp
 
                 Order order1 = new Order() { ID = 1239 };
 
-                AddDescriptorShouldBeEntityVerifier(ctx, descriptor => 
-                { 
+                AddDescriptorShouldBeEntityVerifier(ctx, descriptor =>
+                {
                     descriptor.State.Should().Be(EntityStates.Added);
                     descriptor.Entity.Should().Be(order1);
                     descriptor.ParentForInsert.Entity.Should().Be(customer1);
@@ -807,7 +809,7 @@ namespace AstoriaUnitTests.DataWebClientCSharp
         #region Batch Tests
 
         /// <summary>
-        /// Inserts our plethora of query string parameters and headers onto the top level batch request and verifies that they 
+        /// Inserts our plethora of query string parameters and headers onto the top level batch request and verifies that they
         /// are added to the top level batch request (only).
         /// </summary>
         [TestMethod]
@@ -825,14 +827,14 @@ namespace AstoriaUnitTests.DataWebClientCSharp
                 {
                     if (e.RequestUri.AbsoluteUri.Contains("$batch"))
                     {
-                        e.Descriptor.Should().BeNull();                                               
+                        e.Descriptor.Should().BeNull();
                     }
                 };
                 ctx.SendingRequest2 += (sender, e) =>
                 {
                     if (e.RequestMessage.Url.AbsoluteUri.Contains("$batch"))
                     {
-                        e.Descriptor.Should().BeNull();                                               
+                        e.Descriptor.Should().BeNull();
                     }
                 };
 
@@ -843,10 +845,10 @@ namespace AstoriaUnitTests.DataWebClientCSharp
                 Action actionToRun = () => ctx.SaveChanges();
 
                 RunTest(actionToRun);
-                buildingRequestCallCount.Should().Be(3); // 1 for outer batch, 2 for inner operations 
+                buildingRequestCallCount.Should().Be(3); // 1 for outer batch, 2 for inner operations
             }
-        }   
-        
+        }
+
         /// <summary>
         /// Sends a batch request with two inserts. This test ensures that inner inserts have the additional parameters and headers added.
         /// We do NOT add the parameters and headers to the outer batch request, so the server can process it properly.
@@ -891,8 +893,8 @@ namespace AstoriaUnitTests.DataWebClientCSharp
                 RunTest(actionToRun);
                 buildingRequestCallCount.Should().Be(3); // 1 for outer batch, 2 for the 2 inner insert operations
             }
-        }          
-  
+        }
+
         /// <summary>
         /// Sends a batch request with a single query in it. This test ensures that inner query has the additional parameters and headers added.
         /// We do NOT add the parameters and headers to the outer batch request, so the server can process it properly.
@@ -914,8 +916,67 @@ namespace AstoriaUnitTests.DataWebClientCSharp
                     result.StatusCode.Should().Be(418);
                     result.Error.Message.Should().Contain("Server received user altered request correctly.");
                 }
-                
+
                 buildingRequestCallCount.Should().Be(2); // 1 for outer batch, 1 for inner query
+            }
+        }
+
+        /// <summary>
+        /// Sends a batch request with a single query in it. This test ensures that inner query has the additional parameters and headers added.
+        /// We do NOT add the parameters and headers to the outer batch request, so the server can process it properly.
+        /// </summary>
+        [TestMethod]
+        public void BatchQueryExpandedAPI()
+        {
+            using (TestWebRequest web = TestWebRequest.CreateForInProcessWcf())
+            {
+                web.DataServiceType = typeof(InnerBatchValidatingService);
+                web.StartService();
+
+                var ctx = GetContextWithBuildingRequestHandler(web, args => !args.RequestUri.AbsoluteUri.Contains("$batch"), args => !args.RequestMessage.Url.AbsoluteUri.Contains("$batch"));
+                AddDescriptorShouldBeNullVerifier(ctx);
+
+                // Construct Content-Type header value "application/json;odata.metadata=minimal;odata.streaming=true;IEEE754Compatible=false"
+                BatchContentType jsonBatchContentType = new BatchContentType(BatchContentType.ApplicationJson)
+                    .AddParameter(BatchContentType.MimeMetadataParameterName, BatchContentType.MimeMetadataParameterValueMinimal)
+                    .AddParameter(BatchContentType.MimeStreamingParameterName, BatchContentType.MimeParameterValueTrue)
+                    .AddParameter(BatchContentType.MimeIeee754CompatibleParameterName, BatchContentType.MimeParameterValueFalse);
+
+                BatchContentType[] batchContentTypes = new[]
+                {
+                    new BatchContentType(XmlConstants.MimeMultiPartMixed),
+                    jsonBatchContentType
+                };
+
+                // Accepting multipart/mixed
+                foreach (BatchContentType batchContentType in batchContentTypes)
+                {
+                    var response = ctx.ExecuteBatchAcceptMultipartMixed(
+                        batchContentType,
+                        (DataServiceRequest)(ctx.CreateQuery<Customer>("Customers").Where(c => c.Name.Contains("1"))));
+                    foreach (var result in response)
+                    {
+                        result.StatusCode.Should().Be(418);
+                        result.Error.Message.Should().Contain("Server received user altered request correctly.");
+                    }
+
+                    buildingRequestCallCount.Should().Be(2); // 1 for outer batch, 1 for inner query
+                }
+
+                // Accepting application/json
+                foreach (BatchContentType batchContentType in batchContentTypes)
+                {
+                    var response = ctx.ExecuteBatchAcceptApplicationJson(
+                        batchContentType,
+                        (DataServiceRequest)(ctx.CreateQuery<Customer>("Customers").Where(c => c.Name.Contains("1"))));
+                    foreach (var result in response)
+                    {
+                        result.StatusCode.Should().Be(418);
+                        result.Error.Message.Should().Contain("Server received user altered request correctly.");
+                    }
+
+                    buildingRequestCallCount.Should().Be(2); // 1 for outer batch, 1 for inner query
+                }
             }
         }
 
@@ -959,8 +1020,8 @@ namespace AstoriaUnitTests.DataWebClientCSharp
                 Customer customer1 = new Customer() { ID = 659 };
                 Order order1 = new Order() { ID = 1239 };
 
-                AddDescriptorShouldBeEntityVerifier(ctx, descriptor => 
-                { 
+                AddDescriptorShouldBeEntityVerifier(ctx, descriptor =>
+                {
                     descriptor.State.Should().Be(EntityStates.Added);
                     if (this.buildingRequestCallCount == 2)
                     {
@@ -1165,7 +1226,7 @@ namespace AstoriaUnitTests.DataWebClientCSharp
                 ctx.BuildingRequest += SimpleBuildingRequest;
                 ctx.Execute<Customer>(new Uri(web.ServiceRoot + "/Customers"));
                 buildingRequestCallCount.Should().Be(1);
-                
+
                 buildingRequestCallCount = 0;
                 ctx.BuildingRequest -= SimpleBuildingRequest;
                 ctx.Execute<Customer>(new Uri(web.ServiceRoot + "/Customers"));
@@ -1385,7 +1446,7 @@ namespace AstoriaUnitTests.DataWebClientCSharp
             buildingRequestCallCount++;
         }
 
-        #endregion       
+        #endregion
 
         #region Utility Methods
 
@@ -1412,17 +1473,17 @@ OData-Version: 4.0;
 X-AspNet-Version: 4.0.30319
 X-Powered-By: ASP.NET
 
-<?xml version=""1.0"" encoding=""utf-8"" ?> 
+<?xml version=""1.0"" encoding=""utf-8"" ?>
 <entry xml:base=""http://services.odata.org/V3/Northwind/Northwind.svc/"" xmlns=""http://www.w3.org/2005/Atom"" xmlns:d=""http://docs.oasis-open.org/odata/ns/data"" xmlns:m=""http://docs.oasis-open.org/odata/ns/metadata"">
-<id>http://services.odata.org/V3/Northwind/Northwind.svc/Categories(1)</id> 
-<category term=""#NorthwindModel.Category"" scheme=""http://docs.oasis-open.org/odata/ns/scheme"" /> 
-<link rel=""edit"" title=""Category"" href=""Categories(1)"" /> 
+<id>http://services.odata.org/V3/Northwind/Northwind.svc/Categories(1)</id>
+<category term=""#NorthwindModel.Category"" scheme=""http://docs.oasis-open.org/odata/ns/scheme"" />
+<link rel=""edit"" title=""Category"" href=""Categories(1)"" />
 <link rel=""edit-media"" href=""" + resourcePath + @"Categories(1)/$value"" />
 " + NamedStreamTests.GetNamedStreamEditLink(resourcePath, "application/jpeg", null, "NamedStream") + @"
-<title /> 
-<updated>2012-07-17T00:48:10Z</updated> 
+<title />
+<updated>2012-07-17T00:48:10Z</updated>
 <author>
-<name />    
+<name />
 </author>
 <content type=""application/jpeg"" src=""" + resourcePath + @"""/>
 <m:properties>
@@ -1466,7 +1527,7 @@ X-Powered-By: ASP.NET
         }
 
         /// <summary>
-        /// Builds a query string from a set of query items. The result will not include a leading question mark. The result is unescaped. 
+        /// Builds a query string from a set of query items. The result will not include a leading question mark. The result is unescaped.
         /// If queryStringItems is null or empty, this method will return an empty string.
         /// </summary>
         /// <param name="queryStringItems">Set of query string items.</param>
@@ -1554,8 +1615,8 @@ X-Powered-By: ASP.NET
         private static void AddDescriptorShouldBeEntityVerifier(DataServiceContext ctx, Action<EntityDescriptor> extraVerifier = null)
         {
             AddDescriptorShouldBeEntityVerifier(ctx, null, extraVerifier);
-        }        
-        
+        }
+
         /// <summary>
         /// Adds code to verify that in BuildingRequest and SendingRequest2 we get a non-null EntityDescriptor that is the same object.
         /// Skips the check if $batch is in the URL.
@@ -1620,7 +1681,7 @@ X-Powered-By: ASP.NET
                     streamDescriptor.Should().BeSameAs(descriptor);
                 }
             };
-            
+
         }
 
         /// <summary>
@@ -1835,7 +1896,7 @@ X-Powered-By: ASP.NET
                 EnsureValueIsCorrect(header.Key, args.OperationContext.RequestHeaders.Get(header.Key), header.Value);
             }
 
-            // If our checks have passed, we do a little hack to short circuit the rest of the server 
+            // If our checks have passed, we do a little hack to short circuit the rest of the server
             throw new DataServiceException(418, "Server received user altered request correctly.");
         }
 
@@ -1859,7 +1920,7 @@ X-Powered-By: ASP.NET
                     EnsureValueIsCorrect(header.Key, args.OperationContext.RequestHeaders.Get(header.Key), header.Value);
                 }
 
-                // If our checks have passed, we do a little hack to short circuit the rest of the server 
+                // If our checks have passed, we do a little hack to short circuit the rest of the server
                 throw new DataServiceException(418, "Server received user altered request correctly.");
             }
         }

@@ -26,7 +26,7 @@ namespace Microsoft.OData.Client
 
         /// <summary>MIME type for JSON bodies in light mode (http://www.iana.org/assignments/media-types/application/).</summary>
         private const string MimeApplicationJsonODataLight = "application/json;odata.metadata=minimal";
-       
+
         /// <summary>MIME type for JSON bodies in light mode with all metadata.</summary>
         private const string MimeApplicationJsonODataLightWithAllMetadata = "application/json;odata.metadata=full";
 
@@ -73,7 +73,7 @@ namespace Microsoft.OData.Client
         /// Invoked when using the parameterless UseJson method in order to get the service model.
         /// </summary>
         public Func<IEdmModel> LoadServiceModel { get; set; }
-        
+
         /// <summary>
         /// True if the format has been configured to use Atom, otherwise False.
         /// </summary>
@@ -181,12 +181,17 @@ namespace Microsoft.OData.Client
         }
 
         /// <summary>
-        /// Sets the value of the Accept header for a count request (will set it to 'multipart/mixed').
+        /// Sets the value of the Accept header for a count request (will set it to 'multipart/mixed' or 'application/json' variants).
+        /// For now, use application/json
         /// </summary>
         /// <param name="headers">The headers to modify.</param>
-        internal void SetRequestAcceptHeaderForBatch(HeaderCollection headers)
+        /// <param name="acceptMimeMultipartMixed">Whether the accept header is multipart/mixed.</para>
+        internal void SetRequestAcceptHeaderForBatch(HeaderCollection headers, bool acceptMimeMultipartMixed)
         {
-            this.SetAcceptHeaderAndCharset(headers, MimeMultiPartMixed);
+            this.SetAcceptHeaderAndCharset(headers,
+                acceptMimeMultipartMixed
+                ? MimeMultiPartMixed
+                : MimeApplicationJson);
         }
 
         /// <summary>
@@ -312,7 +317,7 @@ namespace Microsoft.OData.Client
         /// </summary>
         /// <param name="valueIfUsingAtom">The value if using atom.</param>
         /// <param name="hasSelectQueryOption">
-        ///   Whether or not the select query option is present in the request URI. 
+        ///   Whether or not the select query option is present in the request URI.
         ///   If true, indicates that the client should ask the server to include all metadata in a JSON-Light response.
         /// </param>
         /// <returns>The media type to use (either JSON-Light or the provided value)</returns>
@@ -327,7 +332,7 @@ namespace Microsoft.OData.Client
             {
                 return MimeApplicationJsonODataLightWithAllMetadata;
             }
-            
+
             return MimeApplicationJsonODataLight;
         }
     }
