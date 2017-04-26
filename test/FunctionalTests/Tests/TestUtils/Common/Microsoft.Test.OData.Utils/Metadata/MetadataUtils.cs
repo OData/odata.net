@@ -11,6 +11,7 @@ namespace Microsoft.Test.OData.Utils.Metadata
     using System.Diagnostics;
     using System.IO;
     using System.Linq;
+    using System.Reflection;
     using System.Xml.Linq;
     using Microsoft.OData.Edm;
     using Microsoft.Spatial;
@@ -732,7 +733,13 @@ namespace Microsoft.Test.OData.Utils.Metadata
         public static bool IsNullableType(Type type)
         {
             ExceptionUtilities.CheckArgumentNotNull(type, "type");
-            return type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Nullable<>);
+            bool isGenericType = false;
+#if NETCOREAPP1_0
+            isGenericType = type.GetTypeInfo().IsGenericType;
+#else
+            isGenericType = type.IsGenericType;
+#endif
+            return isGenericType && type.GetGenericTypeDefinition() == typeof(Nullable<>);
         }
 
         /// <summary>
@@ -757,7 +764,13 @@ namespace Microsoft.Test.OData.Utils.Metadata
         public static bool TypeAllowsNull(Type type)
         {
             ExceptionUtilities.CheckArgumentNotNull(type, "type");
-            return !type.IsValueType || IsNullableType(type);
+            bool isValueType = false;
+#if NETCOREAPP1_0
+            isValueType = type.GetTypeInfo().IsValueType;
+#else
+            isValueType = type.IsValueType;
+#endif
+            return !isValueType || IsNullableType(type);
         }
 
         /// <summary>
@@ -792,7 +805,14 @@ namespace Microsoft.Test.OData.Utils.Metadata
                 return typeof(IEnumerable<>).MakeGenericType(seqType.GetElementType());
             }
 
-            if (seqType.IsGenericType)
+            bool isGenericType = false;
+#if NETCOREAPP1_0
+            isGenericType = seqType.GetTypeInfo().IsGenericType;
+#else
+            isGenericType = seqType.IsGenericType;
+#endif
+
+            if (isGenericType)
             {
                 foreach (Type arg in seqType.GetGenericArguments())
                 {
@@ -814,9 +834,16 @@ namespace Microsoft.Test.OData.Utils.Metadata
                 }
             }
 
-            if (seqType.BaseType != null && seqType.BaseType != typeof(object))
+            Type baseType = null;
+#if NETCOREAPP1_0
+            baseType = seqType.GetTypeInfo().BaseType;
+#else
+            baseType = seqType.BaseType;
+#endif
+
+            if (baseType != null && baseType != typeof(object))
             {
-                return FindIEnumerable(seqType.BaseType);
+                return FindIEnumerable(baseType);
             }
 
             return null;

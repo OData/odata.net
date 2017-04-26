@@ -22,14 +22,14 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         {
             UriQueryExpressionParser parser = new UriQueryExpressionParser(345, new ExpressionLexer("stuff", true, false));
             Action createWithNullLexer = () => new FunctionCallParser(null, parser  /*resolveAlias*/);
-            createWithNullLexer.ShouldThrow<Exception>().WithMessage("lexer", ComparisonMode.EquivalentSubstring);
+            createWithNullLexer.ShouldThrow<Exception>().Where(e => e.Message.Contains("lexer"));
         }
 
         [Fact]
         public void ParserCannotBeNull()
         {
             Action createWithNullLexer = () => new FunctionCallParser(new ExpressionLexer("foo", true, false), null /*resolveAlias*/);
-            createWithNullLexer.ShouldThrow<Exception>().WithMessage("parser", ComparisonMode.EquivalentSubstring);
+            createWithNullLexer.ShouldThrow<Exception>().Where(e => e.Message.Contains("parser"));
         }
 
         [Fact]

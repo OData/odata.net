@@ -10,7 +10,9 @@ using Microsoft.OData;
 using Microsoft.OData.Edm;
 using Microsoft.Test.OData.Utils.Common;
 using Microsoft.Test.OData.Utils.Metadata;
+#if !NETCOREAPP1_0
 using Microsoft.Test.OData.Utils.ODataLibOM;
+#endif
 
 namespace Microsoft.Test.OData.Utils.ODataLibTest
 {
@@ -142,8 +144,6 @@ namespace Microsoft.Test.OData.Utils.ODataLibTest
             return entityType;
         }
 
-
-        /// <summary>
         /// <summary>
         /// Adds a new property to the <paramref name="entityType"/>.
         /// </summary>

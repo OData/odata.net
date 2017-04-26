@@ -272,7 +272,7 @@ namespace Microsoft.OData.Tests.UriParser
         public void ODataUrlKeyDelimiterCannotBeSetToNull()
         {
             Action setToNull = () => new ODataUriParser(HardCodedTestModel.TestModel, ServiceRoot, FullUri).UrlKeyDelimiter = null;
-            setToNull.ShouldThrow<ArgumentNullException>().WithMessage("UrlKeyDelimiter", ComparisonMode.EquivalentSubstring);
+            setToNull.ShouldThrow<ArgumentNullException>().Where(e => e.Message.Contains("UrlKeyDelimiter"));
         }
 
         [Fact]

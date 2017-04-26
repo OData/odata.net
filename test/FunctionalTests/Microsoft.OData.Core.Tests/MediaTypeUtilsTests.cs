@@ -39,7 +39,11 @@ namespace Microsoft.OData.Tests
             Action acceptUnrecognizedStreamingValue = () => TestMediaTypeWithFormat.GetResponseTypeFromAccept("application/json;odata.metadata=minimal;odata.streaming=foo", ODataVersion.V4);
             acceptUnrecognizedStreamingValue
                 .ShouldThrow<ODataException>()
+#if NETCOREAPP1_0
+                .WithMessage(ErrorStrings.MediaTypeUtils_DidNotFindMatchingMediaType("*", "application/json;odata.metadata=minimal;odata.streaming=foo"));
+#else
                 .WithMessage(ErrorStrings.MediaTypeUtils_DidNotFindMatchingMediaType("*", "application/json;odata.metadata=minimal;odata.streaming=foo"), ComparisonMode.Wildcard);
+#endif
         }
 
         [Fact]
@@ -68,7 +72,11 @@ namespace Microsoft.OData.Tests
             Action acceptUnrecognizedIeee754CompatibleValue = () => TestMediaTypeWithFormat.GetResponseTypeFromAccept("application/json;odata.metadata=minimal;IEEE754Compatible=none", ODataVersion.V4);
             acceptUnrecognizedIeee754CompatibleValue
                 .ShouldThrow<ODataException>()
+#if NETCOREAPP1_0
+                .WithMessage(ErrorStrings.MediaTypeUtils_DidNotFindMatchingMediaType("*", "application/json;odata.metadata=minimal;IEEE754Compatible=none"));
+#else
                 .WithMessage(ErrorStrings.MediaTypeUtils_DidNotFindMatchingMediaType("*", "application/json;odata.metadata=minimal;IEEE754Compatible=none"), ComparisonMode.Wildcard);
+#endif
         }
 
         [Fact]
@@ -77,7 +85,11 @@ namespace Microsoft.OData.Tests
             Action acceptUnrecognizedStreamingValue = () => TestMediaTypeWithFormat.GetResponseTypeFromAccept("application/json;odata.metadata=foometadata;", ODataVersion.V4);
             acceptUnrecognizedStreamingValue
                 .ShouldThrow<ODataException>()
+#if NETCOREAPP1_0
+                .WithMessage(ErrorStrings.MediaTypeUtils_DidNotFindMatchingMediaType("*", "application/json;odata.metadata=foometadata;"));
+#else
                 .WithMessage(ErrorStrings.MediaTypeUtils_DidNotFindMatchingMediaType("*", "application/json;odata.metadata=foometadata;"), ComparisonMode.Wildcard);
+#endif
         }
 
         [Fact]
@@ -86,7 +98,11 @@ namespace Microsoft.OData.Tests
             Action acceptUnrecognizedParameter = () => TestMediaTypeWithFormat.GetResponseTypeFromAccept("application/json;odata.metadata=minimal;foo=bar", ODataVersion.V4);
             acceptUnrecognizedParameter
                 .ShouldThrow<ODataException>()
+#if NETCOREAPP1_0
+                .WithMessage(ErrorStrings.MediaTypeUtils_DidNotFindMatchingMediaType("*", "application/json;odata.metadata=minimal;foo=bar"));
+#else
                 .WithMessage(ErrorStrings.MediaTypeUtils_DidNotFindMatchingMediaType("*", "application/json;odata.metadata=minimal;foo=bar"), ComparisonMode.Wildcard);
+#endif
         }
 
         [Fact]

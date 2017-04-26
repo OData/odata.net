@@ -76,14 +76,14 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         public void ParseUnclosedGeographyPolygonShouldThrowWithReason()
         {
             Action parse = () => this.testSubject.ParseFilter("geo.intersects(GeoTag, geography'POLYGON((-148.734375 71.459124,-43.265625 71.459124,-43.265625 -8.109371,-148.734375 -8.109371))')");
-            parse.ShouldThrow<ODataException>().WithMessage("Invalid spatial data", ComparisonMode.Substring);
+            parse.ShouldThrow<ODataException>().Where(e => e.Message.Contains("Invalid spatial data"));
         }
 
         [Fact]
         public void ParseUnclosedGeometryPolygonShouldThrowWithReason()
         {
             Action parse = () => this.testSubject.ParseFilter("geo.intersects(GeoTag, geometry'POLYGON((-148.734375 71.459124,-43.265625 71.459124,-43.265625 -8.109371,-148.734375 -8.109371))')");
-            parse.ShouldThrow<ODataException>().WithMessage("Invalid spatial data", ComparisonMode.Substring);
+            parse.ShouldThrow<ODataException>().Where(e => e.Message.Contains("Invalid spatial data"));
         }
 
         [Fact]

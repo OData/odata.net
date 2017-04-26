@@ -617,6 +617,7 @@ namespace Microsoft.OData.Tests.UriParser
             EdmValidNamesNotAllowedInUri("_some_name");
         }
 
+#if !NETCOREAPP1_0
         [Fact]
         public void EdmValidNamesNotAllowedInUri_Combinations()
         {
@@ -662,6 +663,7 @@ namespace Microsoft.OData.Tests.UriParser
                 EdmValidNamesNotAllowedInUri(propertyNameSB.ToString());
             }
         }
+#endif
 
         [Fact]
         public void ExpressionLexerShouldFailByDefaultForAtSymbol()
@@ -932,13 +934,14 @@ namespace Microsoft.OData.Tests.UriParser
             lexer.NextToken().Text.Should().Be("next");
         }
 
-        private char FindMatchingChar(UnicodeCategory cateogry)
+#if !NETCOREAPP1_0
+        private char FindMatchingChar(UnicodeCategory category)
         {
             for (int i = 0; i <= 0xffff; i++)
             {
                 char ch = (char)i;
 
-                if (Char.GetUnicodeCategory(ch) == cateogry)
+                if (Char.GetUnicodeCategory(ch) == category)
                 {
                     return ch;
                 }
@@ -946,6 +949,7 @@ namespace Microsoft.OData.Tests.UriParser
             Assert.True(false, "Should never get here");
             return (char)0;
         }
+#endif
 
         private void EdmValidNamesNotAllowedInUri(string propertyName)
         {
