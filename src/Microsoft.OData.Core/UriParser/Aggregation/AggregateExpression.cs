@@ -35,11 +35,11 @@ namespace Microsoft.OData.UriParser.Aggregation
         {
             ExceptionUtils.CheckArgumentNotNull(expression, "expression");
             ExceptionUtils.CheckArgumentNotNull(alias, "alias");
-            ExceptionUtils.CheckArgumentNotNull(typeReference, "typeReference");
 
             this.expression = expression;
             this.method = method;
             this.alias = alias;
+            // TypeRefrence is null for dynamic properties
             this.typeReference = typeReference;
         }
 
