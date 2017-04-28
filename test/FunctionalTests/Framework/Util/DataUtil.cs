@@ -26,7 +26,7 @@ namespace System.Data.Test.Astoria
             [DebuggerStepThrough]
             get
             {
-#if VS2015
+#if USELOCALDB
                 return @"(LocalDB)\MSSQLLocalDB";
 #else
                 return @".\SQLEXPRESS";

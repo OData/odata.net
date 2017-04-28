@@ -16,7 +16,7 @@
   </PropertyGroup>
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), Build.props))\Build.props" />
   <PropertyGroup>
-    <DefineConstants Condition=" '$(VisualStudioVersion)' == '14.0' ">$(DefineConstants);VS2015</DefineConstants>
+    <DefineConstants Condition=" '$(VisualStudioVersion)' == '14.0' and '$(BuildingInLab)' != 'true'">$(DefineConstants);USELOCALDB</DefineConstants>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
