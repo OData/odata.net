@@ -30,7 +30,7 @@
       <Project>{989A83CC-B864-4A75-8BF3-5EDA99203A86}</Project>
       <Name>Microsoft.OData.Core</Name>
     </ProjectReference>
-    <ProjectReference Include="$(EnlistmentRoot)\test\Common\Microsoft.Test.OData.DependencyInjection\Microsoft.Test.OData.DependencyInjection.csproj">
+    <ProjectReference Include="$(EnlistmentRoot)\test\Common\Microsoft.Test.OData.DependencyInjection\Build.NetFramework\Microsoft.Test.OData.DependencyInjection.csproj">
       <Project>{50aa23b2-56ef-4c51-a270-8d5bd0c899b6}</Project>
       <Name>Microsoft.Test.OData.DependencyInjection</Name>
     </ProjectReference>
