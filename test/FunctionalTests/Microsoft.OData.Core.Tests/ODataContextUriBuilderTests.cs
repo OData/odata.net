@@ -103,11 +103,27 @@ namespace Microsoft.OData.Core.Tests
         }
 
         [Fact]
+        public void FeedContextUriWithApplyAggreagateOnDynamicProperty()
+        {
+            string applyClause = "aggregate(DynamicProperty with sum as DynamicPropertyTotal)";
+
+            this.CreateFeedContextUri(applyClause).OriginalString.Should().Be(MetadataDocumentUriString + "#Cities(DynamicPropertyTotal)");
+        }
+
+        [Fact]
         public void FeedContextUriWithApplyGroupBy()
         {
             string applyClause = "groupby((Name, Address/Street))";
 
             this.CreateFeedContextUri(applyClause).OriginalString.Should().Be(MetadataDocumentUriString + "#Cities(Name,Address(Street))");
+        }
+
+        [Fact]
+        public void FeedContextUriWithApplyGroupByDynamicProperty()
+        {
+            string applyClause = "groupby((Name, DynamicProperty, Address/Street))";
+
+            this.CreateFeedContextUri(applyClause).OriginalString.Should().Be(MetadataDocumentUriString + "#Cities(Name,DynamicProperty,Address(Street))");
         }
 
         [Fact]
@@ -636,7 +652,7 @@ namespace Microsoft.OData.Core.Tests
             addressType.AddStructuralProperty("Street", EdmCoreModel.Instance.GetString(/*isNullable*/false));
             addressType.AddStructuralProperty("Zip", EdmCoreModel.Instance.GetString(/*isNullable*/false));
 
-            this.cityType = new EdmEntityType("TestModel", "City");
+            this.cityType = new EdmEntityType("TestModel", "City", baseType: null, isAbstract: false, isOpen: true);
             EdmStructuralProperty cityIdProperty = cityType.AddStructuralProperty("Id", EdmCoreModel.Instance.GetInt32(/*isNullable*/false));
             cityType.AddKeys(cityIdProperty);
             cityType.AddStructuralProperty("Name", EdmCoreModel.Instance.GetString(/*isNullable*/false));
