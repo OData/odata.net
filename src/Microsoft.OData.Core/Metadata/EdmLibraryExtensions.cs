@@ -172,21 +172,33 @@ namespace Microsoft.OData.Metadata
                     parametersToMatch = parametersToMatch.Skip(1);
                 }
 
-                // if any parameter count is different, don't consider it a match.
-                List<IEdmOperationParameter> operationImportParameters = parametersToMatch.ToList();
-                if (operationImportParameters.Count != parameterNameList.Count)
+                List<IEdmOperationParameter> functionImportParameters = parametersToMatch.ToList();
+
+                // if any required parameters are missing, don't consider it a match.
+                if (functionImportParameters.Where(p => !(p is IEdmOptionalParameter)).Any(p => parameterNameList.All(k => !string.Equals(k, p.Name, caseInsensitive ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal))))
                 {
                     continue;
                 }
 
-                // if any parameter was missing, don't consider it a match.
-                if (operationImportParameters.Any(p => parameterNameList.All(k => !string.Equals(k, p.Name, caseInsensitive ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal))))
+                // if any specified parameters don't match, don't consider it a match.
+                if (parameterNameList.Any(k => functionImportParameters.All(p => !string.Equals(k, p.Name, caseInsensitive ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal))))
                 {
                     continue;
                 }
 
                 yield return functionImport;
             }
+        }
+
+        /// <summary>
+        /// Filters the operations by parameter names.
+        /// <param name="functions">The operations.</param>
+        /// <param name="parameters">The list of non-binding parameter names to match.</param>
+        /// <param name="caseInsensitive">Whether case insensitive.</param>
+        internal static IEnumerable<IEdmOperationImport> FindBestOverloadBasedOnParameters(this IEnumerable<IEdmOperationImport> functions, IEnumerable<string> parameters, bool caseInsensitive = false)
+        {
+            IEnumerable<IEdmOperationImport> exactMatches = functions.Where(f => f.Operation.Parameters.Count() == parameters.Count());
+            return exactMatches.Count() > 0 ? exactMatches : functions;
         }
 
         /// <summary>
@@ -263,6 +275,17 @@ namespace Microsoft.OData.Metadata
         }
 
         /// <summary>
+        /// Filters the operations by parameter names.
+        /// <param name="functions">The operations.</param>
+        /// <param name="parameters">The list of non-binding parameter names to match.</param>
+        /// <param name="caseInsensitive">Whether case insensitive.</param>
+        internal static IEnumerable<IEdmOperation> FindBestOverloadBasedOnParameters(this IEnumerable<IEdmOperation> functions, IEnumerable<string> parameters, bool caseInsensitive = false)
+        {
+            IEnumerable<IEdmOperation> exactMatches = functions.Where(f => f.Parameters.Count() == parameters.Count() + (f.IsBound ? 1 : 0));
+            return exactMatches.Count() > 0 ? exactMatches : functions;
+        }
+
+        /// <summary>
         /// Given a list of possible operations and a list of parameter names, filter operations that exactly matches
         /// the parameter names. If more than one function matches, throw.
         /// </summary>
@@ -305,13 +328,15 @@ namespace Microsoft.OData.Metadata
 
                 // if any parameter count is different, don't consider it a match.
                 List<IEdmOperationParameter> functionImportParameters = parametersToMatch.ToList();
-                if (functionImportParameters.Count != parametersList.Count)
+
+                // if any required parameters are missing, don't consider it a match.
+                if (functionImportParameters.Where(p => !(p is IEdmOptionalParameter)).Any(p => parametersList.All(k => !string.Equals(k, p.Name, caseInsensitive ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal))))
                 {
                     continue;
                 }
 
-                // if any parameter was missing, don't consider it a match.
-                if (functionImportParameters.Any(p => parametersList.All(k => !string.Equals(k, p.Name, caseInsensitive ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal))))
+                // if any specified parameters don't match, don't consider it a match.
+                if (parametersList.Any(k => functionImportParameters.All(p => !string.Equals(k, p.Name, caseInsensitive ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal))))
                 {
                     continue;
                 }

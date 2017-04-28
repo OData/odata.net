@@ -56,6 +56,12 @@ namespace Microsoft.OData.Edm.Vocabularies.V1
         /// <summary>Org.OData.Core.V1.OptimisticConcurrency </summary>
         public const string OptimisticConcurrency = "Org.OData.Core.V1.OptimisticConcurrency";
 
+        /// <summary>Org.OData.Core.V1.OptionalParameter</summary>
+        public const string OptionalParameter = "Org.OData.Core.V1.OptionalParameter";
+
+        /// <summary>IsOptional property</summary>
+        public const string IsOptional = "IsOptional";
+
         /// <summary>Org.OData.Core.V1.xml file suffix</summary>
         internal const string VocabularyUrlSuffix = "/Org.OData.Core.V1.xml";
     }

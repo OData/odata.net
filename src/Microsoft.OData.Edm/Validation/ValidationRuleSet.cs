@@ -57,6 +57,7 @@ namespace Microsoft.OData.Edm.Validation
                 ValidationRules.EnumMemberValueMustHaveSameTypeAsUnderlyingType,
                 ValidationRules.EnumTypeEnumMemberNameAlreadyDefined,
                 ValidationRules.BoundOperationMustHaveParameters,
+                ValidationRules.OptionalParametersMustComeAfterRequiredParameters,
                 ValidationRules.OperationEntitySetPathMustBeValid,
                 ValidationRules.OperationReturnTypeEntityTypeMustBeValid,
                 ValidationRules.OperationImportEntitySetExpressionIsInvalid,

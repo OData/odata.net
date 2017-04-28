@@ -60,6 +60,7 @@ EdmModel_Validator_Semantic_InvalidPropertyInRelationshipConstraintDependentEnd=
 EdmModel_Validator_Semantic_InvalidPropertyInRelationshipConstraintPrimaryEnd=The principal end properties in the referential constraint of the association '{0}' do not match the key of the type referred to by role '{1}'.
 EdmModel_Validator_Semantic_InvalidPropertyType=A property cannot be of type '{0}'. The property type must be a complex, a primitive, an enum or an untyped type, or a collection of complex, primitive, or enum types.
 EdmModel_Validator_Semantic_BoundOperationMustHaveParameters=The Bound operation '{0}' must have at least one parameter.
+EdmModel_Validator_Semantic_RequiredParametersMustPrecedeOptional=Required Parameter '{0}' must not follow an optional parameter.
 EdmModel_Validator_Semantic_OperationWithUnsupportedReturnType=The return type is not valid in operation '{0}'. The operation has an unsupported type.
 EdmModel_Validator_Semantic_OperationImportEntityTypeDoesNotMatchEntitySet=The operation import '{0}' returns entities of type '{1}' that cannot exist in the entity set '{2}' specified for the operation import.
 EdmModel_Validator_Semantic_OperationImportEntityTypeDoesNotMatchEntitySet2=The operation import '{0}' returns entities of type '{1}' that cannot be returned by the entity set path specified for the operation import.
