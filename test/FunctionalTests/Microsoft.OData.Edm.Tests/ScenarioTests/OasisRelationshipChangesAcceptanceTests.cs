@@ -276,17 +276,14 @@ namespace Microsoft.OData.Edm.Tests.ScenarioTests
         }
 
         [Fact]
-        public void ParsingShouldFailIfABindingHasAnnotations()
+        public void ParsingShouldNotFailIfABindingHasAnnotations()
         {
-            const string invalidBinding = @"
+            const string validBinding = @"
               <NavigationPropertyBinding Path=""Navigation"" Target=""EntitySet"">
                 <Annotation Term=""FQ.NS.Term""/>
               </NavigationPropertyBinding>";
 
-            this.ParseBindingWithExpectedErrors(
-                invalidBinding,
-                EdmErrorCode.UnexpectedXmlElement,
-                ErrorStrings.XmlParser_UnexpectedElement("Annotation"));
+            this.ParseBindingWithExpectedErrors(validBinding);
         }
 
         [Fact]
@@ -319,17 +316,14 @@ namespace Microsoft.OData.Edm.Tests.ScenarioTests
         }
 
         [Fact]
-        public void ParsingShouldFailIfAConstraintHasAnnotations()
+        public void ParsingShouldNotFailIfAConstraintHasAnnotations()
         {
-            const string invalidConstraint = @"
+            const string validConstraint = @"
               <ReferentialConstraint Property=""ForeignKeyId1"" ReferencedProperty=""ID1"">
                 <Annotation Term=""FQ.NS.Term""/>
               </ReferentialConstraint>";
 
-            this.ParseReferentialConstraintWithExpectedErrors(
-                invalidConstraint,
-                EdmErrorCode.UnexpectedXmlElement,
-                ErrorStrings.XmlParser_UnexpectedElement("Annotation"));
+            this.ParseReferentialConstraint(validConstraint);
         }
 
         [Fact]
@@ -590,7 +584,7 @@ namespace Microsoft.OData.Edm.Tests.ScenarioTests
             }
         }
 
-        private void ParseBindingWithExpectedErrors(string bindingText, EdmErrorCode errorCode, params string[] messages)
+        private void ParseBindingWithExpectedErrors(string bindingText, EdmErrorCode? errorCode = null, params string[] messages)
         {
             const string template = @"<edmx:Edmx Version=""4.0"" xmlns:edmx=""http://docs.oasis-open.org/odata/ns/edmx"">
   <edmx:DataServices>
@@ -607,16 +601,19 @@ namespace Microsoft.OData.Edm.Tests.ScenarioTests
 
             IEdmModel model;
             IEnumerable<EdmError> errors;
-            CsdlReader.TryParse(XElement.Parse(modelText).CreateReader(), out model, out errors).Should().BeFalse();
-
-            errors.Should().HaveCount(messages.Length);
-            foreach (var message in messages)
+            bool result = CsdlReader.TryParse(XElement.Parse(modelText).CreateReader(), out model, out errors);
+            if (errorCode != null)
             {
-                errors.Should().Contain(e => e.ErrorCode == errorCode && e.ErrorMessage == message);
+                result.Should().BeFalse();
+                errors.Should().HaveCount(messages.Length);
+                foreach (var message in messages)
+                {
+                    errors.Should().Contain(e => e.ErrorCode == errorCode && e.ErrorMessage == message);
+                }
             }
         }
 
-        private void ParseReferentialConstraintWithExpectedErrors(string referentialConstraintText, EdmErrorCode errorCode, params string[] messages)
+        private void ParseReferentialConstraint(string referentialConstraintText, EdmErrorCode? errorCode = null, params string[] messages)
         {
             const string template = @"<edmx:Edmx Version=""4.0"" xmlns:edmx=""http://docs.oasis-open.org/odata/ns/edmx"">
   <edmx:DataServices>
@@ -641,13 +638,21 @@ namespace Microsoft.OData.Edm.Tests.ScenarioTests
 
             IEdmModel model;
             IEnumerable<EdmError> errors;
-            CsdlReader.TryParse(XElement.Parse(modelText).CreateReader(), out model, out errors).Should().BeFalse();
-
-            errors.Should().HaveCount(messages.Length);
-            foreach (var message in messages)
+            bool result = CsdlReader.TryParse(XElement.Parse(modelText).CreateReader(), out model, out errors);
+            if (errorCode != null)
             {
-                errors.Should().Contain(e => e.ErrorCode == errorCode && e.ErrorMessage == message);
+                result.Should().BeFalse();
+                errors.Should().HaveCount(messages.Length);
+                foreach (var message in messages)
+                {
+                    errors.Should().Contain(e => e.ErrorCode == errorCode && e.ErrorMessage == message);
+                }
             }
+        }
+
+        private void ParseReferentialConstraintWithExpectedErrors(string referentialConstraintText, EdmErrorCode errorCode, params string[] messages)
+        {
+            ParseReferentialConstraint(referentialConstraintText, errorCode, messages);
         }
 
         private void ParseNavigationExpectedErrors(string navigationText, EdmErrorCode[] errorCodes, string[] messages)

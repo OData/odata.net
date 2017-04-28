@@ -4,12 +4,14 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+using Microsoft.OData.Edm.Vocabularies;
+
 namespace Microsoft.OData.Edm.Csdl.Parsing.Ast
 {
     /// <summary>
     /// Represents a CSDL function return type.
     /// </summary>
-    internal class CsdlOperationReturnType : CsdlElement
+    internal class CsdlOperationReturnType : CsdlElement, IEdmVocabularyAnnotatable
     {
         private readonly CsdlTypeReference returnType;
 

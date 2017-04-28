@@ -752,6 +752,57 @@ namespace Microsoft.OData.Edm.Tests.Validation
         }
 
         [Fact]
+        public void OperationWithOptionalParametersBeforeRequiredShouldError()
+        {
+            var function = new EdmFunction("n.s", "GetStuff", EdmCoreModel.Instance.GetString(true), false /*isBound*/, null /*entitySetPath*/, false /*isComposable*/);
+            function.AddOptionalParameter("param1", EdmCoreModel.Instance.GetString(true));
+            function.AddParameter("param2", EdmCoreModel.Instance.GetInt16(true));
+
+            EdmModel model = new EdmModel();
+            model.AddElement(function);
+
+            ValidateError(
+                ValidationRules.OptionalParametersMustComeAfterRequiredParameters,
+                model,
+                function,
+                EdmErrorCode.RequiredParametersMustPrecedeOptional,
+                Strings.EdmModel_Validator_Semantic_RequiredParametersMustPrecedeOptional("param2"));
+        }
+
+        [Fact]
+        public void BoundOperationWithoutParameterShouldError()
+        {
+            var function = new EdmFunction("n.s", "GetStuff", EdmCoreModel.Instance.GetString(true), true /*isBound*/, null /*entitySetPath*/, false /*isComposable*/);
+
+            EdmModel model = new EdmModel();
+            model.AddElement(function);
+
+            ValidateError(
+                ValidationRules.BoundOperationMustHaveParameters,
+                model,
+                function,
+                EdmErrorCode.BoundOperationMustHaveParameters,
+                Strings.EdmModel_Validator_Semantic_BoundOperationMustHaveParameters(function.Name));
+        }
+
+        [Fact]
+        public void BoundOperationWithOnlyOptionalParametersShouldError()
+        {
+            var function = new EdmFunction("n.s", "GetStuff", EdmCoreModel.Instance.GetString(true), true /*isBound*/, null /*entitySetPath*/, false /*isComposable*/);
+            function.AddOptionalParameter("param1", EdmCoreModel.Instance.GetString(true));
+
+            EdmModel model = new EdmModel();
+            model.AddElement(function);
+
+            ValidateError(
+                ValidationRules.BoundOperationMustHaveParameters,
+                model,
+                function,
+                EdmErrorCode.BoundOperationMustHaveParameters,
+                Strings.EdmModel_Validator_Semantic_BoundOperationMustHaveParameters(function.Name));
+        }
+
+        [Fact]
         public void TestInterfaceSingletonTypeOfCollectionOfEntityTypeModel()
         {
             var model = new EdmModel();

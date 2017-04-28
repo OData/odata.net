@@ -98,6 +98,12 @@ namespace Microsoft.OData.UriParser
                 return false;
             }
 
+            // If more than one overload matches, try to select based on optional parameters
+            if (candidateMatchingOperationImports.Count > 1)
+            {
+                candidateMatchingOperationImports = candidateMatchingOperationImports.FindBestOverloadBasedOnParameters(parameterNames).ToList();
+            }
+
             if (candidateMatchingOperationImports.Count > 1)
             {
                 throw new ODataException(ODataErrorStrings.FunctionOverloadResolver_MultipleOperationImportOverloads(identifier));
@@ -217,6 +223,12 @@ namespace Microsoft.OData.UriParser
             if (foundActionsWhenLookingForFunctions.Count > 0)
             {
                 throw ExceptionUtil.CreateBadRequestError(ODataErrorStrings.RequestUriProcessor_SegmentDoesNotSupportKeyPredicates(identifier));
+            }
+
+            // If more than one overload matches, try to select based on optional parameters
+            if (candidateMatchingOperations.Count > 1)
+            {
+                candidateMatchingOperations = candidateMatchingOperations.FindBestOverloadBasedOnParameters(parameterNames).ToList();
             }
 
             if (candidateMatchingOperations.Count > 1)

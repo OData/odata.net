@@ -194,7 +194,7 @@ namespace Microsoft.OData
             }
 
             ODataEnumValue enumValue = value as ODataEnumValue;
-            if(enumValue != null)
+            if (enumValue != null)
             {
                 this.WriteInstanceAnnotationName(propertyName, name);
                 this.valueSerializer.WriteEnumValue(enumValue, expectedType);

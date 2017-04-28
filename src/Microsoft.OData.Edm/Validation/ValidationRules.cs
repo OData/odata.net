@@ -1571,18 +1571,42 @@ namespace Microsoft.OData.Edm.Validation
                });
 
         /// <summary>
-        /// Validates that if an operation is bindable, it must have parameters.
+        /// Validates that if an operation is bindable, it must have non-optional parameters.
         /// </summary>
         public static readonly ValidationRule<IEdmOperation> BoundOperationMustHaveParameters =
            new ValidationRule<IEdmOperation>(
                (context, operation) =>
                {
-                   if (operation.IsBound && operation.Parameters.Count() == 0)
+                   if (operation.IsBound && !operation.Parameters.Any(p => !(p is IEdmOptionalParameter)))
                    {
                        context.AddError(
                            operation.Location(),
                            EdmErrorCode.BoundOperationMustHaveParameters,
                            Strings.EdmModel_Validator_Semantic_BoundOperationMustHaveParameters(operation.Name));
+                   }
+               });
+
+        /// <summary>
+        /// Validates optional parameters must come before required parameters.
+        /// </summary>
+        public static readonly ValidationRule<IEdmOperation> OptionalParametersMustComeAfterRequiredParameters =
+           new ValidationRule<IEdmOperation>(
+               (context, operation) =>
+               {
+                   bool foundOptional = false;
+                   foreach (IEdmOperationParameter parameter in operation.Parameters)
+                   {
+                       if (parameter is IEdmOptionalParameter)
+                       {
+                           foundOptional = true;
+                       }
+                       else if (foundOptional)
+                       {
+                           context.AddError(
+                               operation.Location(),
+                               EdmErrorCode.RequiredParametersMustPrecedeOptional,
+                               Strings.EdmModel_Validator_Semantic_RequiredParametersMustPrecedeOptional(parameter.Name));
+                       }
                    }
                });
 

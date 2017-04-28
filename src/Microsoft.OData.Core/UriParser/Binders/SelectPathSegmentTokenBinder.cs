@@ -111,6 +111,7 @@ namespace Microsoft.OData.UriParser
             Debug.Assert(entityType != null, "bindingType != null");
 
             List<IEdmOperation> possibleFunctions = new List<IEdmOperation>();
+            IList<string> parameterNames = new List<string>();
 
             // Catch all catchable exceptions as FindDeclaredBoundOperations is implemented by anyone.
             // If an exception occurs it will be supressed and the possible functions will be empty and return false.
@@ -125,7 +126,6 @@ namespace Microsoft.OData.UriParser
                 else
                 {
                     NonSystemToken nonSystemToken = pathToken as NonSystemToken;
-                    IList<string> parameterNames = new List<string>();
                     if (nonSystemToken != null && nonSystemToken.NamedValues != null)
                     {
                         parameterNames = nonSystemToken.NamedValues.Select(s => s.Name).ToList();
@@ -156,6 +156,12 @@ namespace Microsoft.OData.UriParser
             if (possibleFunctions.Count > 1)
             {
                 possibleFunctions = possibleFunctions.FilterBoundOperationsWithSameTypeHierarchyToTypeClosestToBindingType(entityType).ToList();
+            }
+
+            // If more than one overload matches, try to select based on optional parameters
+            if (possibleFunctions.Count > 1 && parameterNames.Count > 0)
+            {
+                possibleFunctions = possibleFunctions.FindBestOverloadBasedOnParameters(parameterNames).ToList();
             }
 
             if (possibleFunctions.Count <= 0)

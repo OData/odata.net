@@ -928,9 +928,9 @@ namespace EdmLibTests.FunctionalTests
 <edmx:Edmx xmlns:edmx=""http://docs.oasis-open.org/odata/ns/edmx"" Version=""4.0"">
   <edmx:DataServices>
     <Schema xmlns=""http://docs.oasis-open.org/odata/ns/edm"" Namespace=""Org.OData.Core.V1"" Alias=""Core"">
-      <Annotation Term=""Core.Description"">
+      <UnExpected Term=""Core.Description"">
         <String>Core terms needed to write vocabularies</String>
-      </Annotation>
+      </UnExpected>
     </Schema>
   </edmx:DataServices>
 </edmx:Edmx>";
@@ -965,9 +965,9 @@ namespace EdmLibTests.FunctionalTests
                 "<edmx:Edmx xmlns:edmx=\"http://docs.oasis-open.org/odata/ns/edmx\" Version=\"4.0\">" +
                 "<edmx:DataServices>" +
                 "<Schema xmlns=\"http://docs.oasis-open.org/odata/ns/edm\" Namespace=\"Org.OData.Core.V1\" Alias=\"Core\">" +
-                "<Annotation Term=\"Core.Description\">" +
+                "<UnExpected Term=\"Core.Description\">" +
                 "<String>Core terms needed to write vocabularies</String>" +
-                "</Annotation>" +
+                "</UnExpected>" +
                 "</Schema>" +
                 "</edmx:DataServices>" +
                 "</edmx:Edmx>";
