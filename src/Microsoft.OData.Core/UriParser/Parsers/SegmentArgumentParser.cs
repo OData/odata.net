@@ -189,6 +189,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         /// <param name="keyPairs">The converted key-value pairs.</param>
         /// <param name="resolver">The resolver to use.</param>
         /// <returns>true if all values were converted; false otherwise.</returns>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1804:RemoveUnusedLocals", MessageId = "keyProperties", Justification = "keyProperties improves debugging experience.")]
         public bool TryConvertValues(IEdmEntityType targetEntityType, out IEnumerable<KeyValuePair<string, object>> keyPairs, ODataUriResolver resolver)
         {
             Debug.Assert(!this.IsEmpty, "!this.IsEmpty -- caller should check");
