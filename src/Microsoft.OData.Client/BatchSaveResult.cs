@@ -51,8 +51,14 @@ namespace Microsoft.OData.Client
         /// <summary>Buffer used for caching operation response body streams.</summary>
         private byte[] streamCopyBuffer;
 
+        /// <summary>
+        /// The Content-Type header for the batch request.
+        /// </summary>
         private readonly BatchContentType batchContentType;
 
+        /// <summary>
+        /// Whether the client requires multipart/mixed in the batch response.
+        /// </summary>
         private readonly bool acceptMimeMultipartMixed;
 
         #endregion
@@ -70,7 +76,7 @@ namespace Microsoft.OData.Client
             SaveChangesOptions options, AsyncCallback callback, object state)
             : this(
                 context, method, queries, options, callback, state,
-                new BatchContentType(XmlConstants.MimeMultiPartMixed),
+                new BatchContentType(BatchContentType.TypeMultipartMixed),
                 /*acceptMimeMultipartMixed*/true)
         {
         }

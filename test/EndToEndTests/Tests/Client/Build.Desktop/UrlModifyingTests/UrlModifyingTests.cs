@@ -131,6 +131,52 @@ namespace Microsoft.Test.OData.Tests.Client.UrlModifyingTests
             }
         }
 
+        [TestMethod]
+        public void BatchRequestExpandApi()
+        {
+            var context = this.CreateWrappedContext<DefaultContainer>();
+            //Setup queries
+            DataServiceRequest[] requests = new DataServiceRequest[] {
+                context.CreateQuery<Customer>("BatchRequest1"),
+                context.CreateQuery<Person>("BatchRequest2")
+            };
+
+            // Construct Content-Type header value "application/json;odata.metadata=minimal;odata.streaming=true;IEEE754Compatible=false"
+            BatchContentType jsonBatchContentType = new BatchContentType(BatchContentType.TypeApplicationJson)
+                .AddParameter(BatchContentType.MimeMetadataParameterName, BatchContentType.MimeMetadataParameterValueMinimal)
+                .AddParameter(BatchContentType.MimeStreamingParameterName, BatchContentType.MimeParameterValueTrue)
+                .AddParameter(BatchContentType.MimeIeee754CompatibleParameterName, BatchContentType.MimeParameterValueFalse);
+
+            BatchContentType[] batchContentTypes = new[]
+                {
+                    jsonBatchContentType,
+                    new BatchContentType(BatchContentType.TypeMultipartMixed)
+                };
+
+            // Accepting multipart/mixed
+            foreach (BatchContentType batchContentType in batchContentTypes)
+            {
+                var response = context.ExecuteBatchAcceptMultipartMixed(
+                    batchContentType,
+                    requests);
+                foreach (var item in response)
+                {
+                    Assert.IsTrue(item.StatusCode == 200);
+                }
+            }
+
+            // Accepting application/json
+            foreach (BatchContentType batchContentType in batchContentTypes)
+            {
+                var response = context.ExecuteBatchAcceptApplicationJson(
+                    batchContentType,
+                    requests);
+                foreach (var item in response)
+                {
+                    Assert.IsTrue(item.StatusCode == 200);
+                }
+            }
+        }
 
         [TestMethod]
         public void BatchRequestBaseUriDifferentBetweenBatchAndRequest()

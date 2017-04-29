@@ -19,7 +19,7 @@ namespace Microsoft.OData.Core.JsonLight
     #endregion Namespaces
 
     /// <summary>
-    /// Class for writing OData batch messages of JSON type.
+    /// Class for writing OData batch messages of MIME application/json type.
     /// </summary>
     internal sealed class ODataJsonLightBatchWriter : ODataBatchWriter
     {
@@ -29,6 +29,11 @@ namespace Microsoft.OData.Core.JsonLight
         private readonly IJsonWriter jsonWriter;
 
         /// <summary>
+        /// Indicates whether the json batch top-level envelope has been written
+        /// </summary>
+        private bool isBatchEnvelopeWritten;
+
+        /// <summary>
         /// Constructor.
         /// </summary>
         /// <param name="jsonLightOutputContext">The output context to write to.</param>
@@ -36,6 +41,7 @@ namespace Microsoft.OData.Core.JsonLight
             : base(jsonLightOutputContext)
         {
             this.jsonWriter = this.JsonLightOutputContext.JsonWriter;
+            this.isBatchEnvelopeWritten = false;
         }
 
         /// <summary>Flushes the write buffer to the underlying stream.</summary>
@@ -67,6 +73,9 @@ namespace Microsoft.OData.Core.JsonLight
         }
 #endif
 
+        /// <summary>
+        /// Gets the writer's output context as the real runtime type.
+        /// </summary>
         private ODataJsonLightOutputContext JsonLightOutputContext
         {
             get { return this.OutputContext as ODataJsonLightOutputContext;}
@@ -120,7 +129,7 @@ namespace Microsoft.OData.Core.JsonLight
         /// This method is called to notify that the content stream for a batch operation has been requested.
         /// </summary>
         /// <returns>
-        /// A task representing any action that is running as part of the status change of the operation; 
+        /// A task representing any action that is running as part of the status change of the operation;
         /// null if no such action exists.
         /// </returns>
         public override Task BatchOperationContentStreamRequestedAsync()
@@ -156,13 +165,6 @@ namespace Microsoft.OData.Core.JsonLight
         protected override void WriteStartBatchImplementation()
         {
             this.SetState(BatchWriterState.BatchStarted);
-
-            // Start the top level scope
-            this.jsonWriter.StartObjectScope();
-
-            // Start the responses array
-            this.jsonWriter.WriteName("responses");
-            this.jsonWriter.StartArrayScope();
         }
 
         /// <summary>
@@ -217,8 +219,117 @@ namespace Microsoft.OData.Core.JsonLight
         protected override ODataBatchOperationRequestMessage CreateOperationRequestMessageImplementation(string method,
             Uri uri, string contentId)
         {
-            // TODO: biaol --- this is only consumed by client lib, later.
-            return null;
+            if (this.State == BatchWriterState.ChangesetStarted)
+            {
+                this.InterceptException(this.IncreaseChangeSetSize);
+            }
+            else
+            {
+                this.InterceptException(this.IncreaseBatchSize);
+            }
+
+            // write pending message data (headers, request line) for a previously unclosed message/request
+            this.WritePendingMessageData(true);
+
+            // Add a potential Content-ID header to the URL resolver so that it will be available
+            // to subsequent operations.
+            // Note that what we add here is the Content-ID header of the previous operation (if any).
+            // This also means that the Content-ID of the last operation in a changeset will never get
+            // added to the cache which is fine since we cannot reference it anywhere.
+            if (this.CurrentOperationContentId != null)
+            {
+                this.urlResolver.AddContentId(this.CurrentOperationContentId);
+            }
+
+            this.InterceptException(() => uri = ODataBatchUtils.CreateOperationRequestUri(uri, this.JsonLightOutputContext.MessageWriterSettings.PayloadBaseUri, this.urlResolver));
+
+            // create the new request operation
+            this.CurrentOperationRequestMessage = ODataBatchOperationRequestMessage.CreateWriteMessage(
+                this.JsonLightOutputContext.GetOutputStream(),
+                method,
+                uri,
+                /*operationListener*/ this,
+                this.urlResolver);
+
+            // Generate a GUID if the content Id is not provided.
+            if (contentId == null)
+            {
+                contentId = Guid.NewGuid().ToString();
+            }
+
+            if (this.State == BatchWriterState.ChangesetStarted)
+            {
+                this.RememberContentIdHeader(contentId);
+            }
+
+            this.SetState(BatchWriterState.OperationCreated);
+
+            if (!this.isBatchEnvelopeWritten)
+            {
+                WriteBatchEnvelope(true);
+            }
+
+            // write the operation's start boundary string
+            this.WriteStartBoundaryForOperation();
+
+            this.jsonWriter.WriteName("id");
+            this.jsonWriter.WriteValue( contentId);
+
+            this.jsonWriter.WriteName("method");
+            this.jsonWriter.WriteValue(method);
+
+            this.jsonWriter.WriteName("url");
+            this.jsonWriter.WriteValue(UriUtils.UriToString(uri));
+
+            return this.CurrentOperationRequestMessage;
+        }
+
+        /// <summary>
+        /// Remember a non-null Content-ID header for change set request operations.
+        /// If a non-null content ID header is specified for a change set request operation, record it in the URL resolver.
+        /// </summary>
+        /// <param name="contentId">The Content-ID header value read from the message.</param>
+        /// <remarks>
+        /// Note that the content ID of this operation will only
+        /// become visible once this operation has been written
+        /// and OperationCompleted has been called on the URL resolver.
+        /// </remarks>
+        private void RememberContentIdHeader(string contentId)
+        {
+            // The Content-ID header is only supported in request messages and inside of changesets.
+            Debug.Assert(this.CurrentOperationRequestMessage != null, "this.CurrentOperationRequestMessage != null");
+            Debug.Assert(this.State != BatchWriterState.ChangesetStarted, "this.State != BatchWriterState.ChangesetStarted");
+
+            // Set the current content ID. If no Content-ID header is found in the message,
+            // the 'contentId' argument will be null and this will reset the current operation content ID field.
+            this.CurrentOperationContentId = contentId;
+
+            // Check for duplicate content IDs; we have to do this here instead of in the cache itself
+            // since the content ID of the last operation never gets added to the cache but we still
+            // want to fail on the duplicate.
+            if (contentId != null && this.urlResolver.ContainsContentId(contentId))
+            {
+                throw new ODataException(Strings.ODataBatchWriter_DuplicateContentIDsNotAllowed(contentId));
+            }
+        }
+
+        /// <summary>
+        /// Writes the json format batch envelope.
+        /// Always sets the isBatchEvelopeWritten flag to true before return.
+        /// </summary>
+        /// <param name="isRequest">Whether this is for request envelope.</param>
+        private void WriteBatchEnvelope(bool isRequest)
+        {
+            Debug.Assert(!this.isBatchEnvelopeWritten, "!this.isBatchEnvelopeWritten");
+
+            // Start the top level scope
+            this.jsonWriter.StartObjectScope();
+
+            // Start the requests / responses property
+            this.jsonWriter.WriteName(isRequest ? "requests" : "responses");
+            this.jsonWriter.StartArrayScope();
+
+            this.isBatchEnvelopeWritten = true;
         }
 
         /// <summary>
@@ -265,6 +376,11 @@ namespace Microsoft.OData.Core.JsonLight
 
             Debug.Assert(this.CurrentOperationContentId == null, "The Content-ID header is only supported in request messages.");
 
+            if (!this.isBatchEnvelopeWritten)
+            {
+                WriteBatchEnvelope(false);
+            }
+
             // Start the Json object for the response
             this.WriteStartBoundaryForOperation();
 
@@ -290,14 +406,14 @@ namespace Microsoft.OData.Core.JsonLight
                     this.jsonWriter.WriteName("id");
                     this.jsonWriter.WriteValue(this.CurrentOperationResponseMessage.ContentId);
 
-                    this.jsonWriter.WriteName("status"); 
+                    this.jsonWriter.WriteName("status");
                     this.jsonWriter.WriteValue(this.CurrentOperationResponseMessage.StatusCode);
                 }
 
                 // headers attribute
                 this.jsonWriter.WriteName("headers");
                 this.jsonWriter.StartObjectScope();
-                IEnumerable<KeyValuePair<string, string>> headers = this.CurrentOperationResponseMessage.Headers;
+                IEnumerable<KeyValuePair<string, string>> headers = this.CurrentOperationMessage.Headers;
                 if (headers != null)
                 {
                     foreach (KeyValuePair<string, string> headerPair in headers)
@@ -309,16 +425,30 @@ namespace Microsoft.OData.Core.JsonLight
                 this.jsonWriter.EndObjectScope();
 
                 // body attribute
-                if (!ODataBatchWriterUtils.HasResponseBody(this.CurrentOperationResponseMessage))
+                if (this.CurrentOperationResponseMessage != null)
                 {
-                    // Close the individual response object now since there are no content.
-                    // If there is content, the response object will be closed when the content stream is disposed.
-                    // See <cref="ODataJsonLightBatchWriter.BatchOperationContentStreamDisposed"/>.
-                    this.jsonWriter.EndObjectScope();
+                    if (!ODataBatchWriterUtils.HasResponseBody(this.CurrentOperationResponseMessage))
+                    {
+                        // Close the individual response object now since there are no content.
+                        // If there is content, the response object will be closed when the content stream is disposed.
+                        // See <cref="ODataJsonLightBatchWriter.BatchOperationContentStreamDisposed"/>.
+                        this.jsonWriter.EndObjectScope();
+                    }
+                    else
+                    {
+                        this.jsonWriter.WriteName("body");
+                    }
                 }
                 else
                 {
-                    this.jsonWriter.WriteName("body");
+                    if (!ODataBatchWriterUtils.HasRequestBody(this.CurrentOperationRequestMessage.Method))
+                    {
+                        this.jsonWriter.EndObjectScope();
+                    }
+                    else
+                    {
+                        this.jsonWriter.WriteName("body");
+                    }
                 }
 
                 if (reportMessageCompleted)

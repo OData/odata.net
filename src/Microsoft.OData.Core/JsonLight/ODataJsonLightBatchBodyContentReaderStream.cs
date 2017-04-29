@@ -20,29 +20,42 @@ namespace Microsoft.OData.Core.JsonLight
 
     #endregion Namespaces
 
+    /// <summary>
+    /// Wrapper stream backed by memory stream containing body content of request or response in Json batch.
+    /// </summary>
     internal sealed class ODataJsonLightBatchBodyContentReaderStream : ODataBatchReaderStream, IDisposable
     {
-        // Input memory stream providing body content data.
+        /// <summary>
+        /// Input memory stream providing body content data.
+        /// </summary>
         private readonly Stream bodyContentStream = null;
 
-        // Writer for writing Json data to memory stream.
+        /// <summary>
+        /// Writer for writing data to memory stream.
+        /// </summary>
         private readonly StreamWriter streamWriter = null;
 
-        // Status to ensure that the underlying memory stream is ready.
+        /// <summary>
+        /// Status to ensure that the underlying memory stream is ready for reading.
+        /// </summary>
         private bool isDataPopulatedToStream;
 
-        // Type of the data in request body
-        private BatchRequestBodyContentType contentType;
+        /// <summary>
+        /// Type of the data in body.
+        /// </summary>
+        private BatchPayloadBodyContentType contentType;
 
-        private enum BatchRequestBodyContentType
+        /// <summary>
+        /// Enum type for data type of body content.
+        /// </summary>
+        private enum BatchPayloadBodyContentType
         {
-            // The body of the request contains Json data.
+            // The body content contains Json data.
             Json,
 
-            // The body of the request contains binary data, e.g. jpeg image raw data.
+            // The body content contains binary data, e.g. jpeg image raw data.
             Binary,
         }
-
 
         /// <summary>
         /// Constructor using default encoding (UTF-8 without the BOM preamble)
@@ -80,7 +93,7 @@ namespace Microsoft.OData.Core.JsonLight
                 {
                     throw new ODataException(String.Format(
                         CultureInfo.InvariantCulture,
-                        "Single request body size {0} exceeds max size of {1}",
+                        "Single batch item body content size {0} exceeds max size of {1}",
                         len,
                         ODataConstants.DefaultMaxReadMessageSize));
                 }
@@ -101,15 +114,20 @@ namespace Microsoft.OData.Core.JsonLight
             throw new NotImplementedException("Read with delimiter is not applicable for body content stream.");
         }
 
-        private void EnsureBatchRequestBodyContentType(JsonReader jsonReader)
+        /// <summary>
+        /// Detect batch item (request or response) body content's data type.
+        /// The conent of the "body" property can be either Json type or binary type.
+        /// </summary>
+        /// <param name="jsonReader">The json reader that provides access to the json object.</param>
+        private void DetectBatchPayloadBodyContentType(JsonReader jsonReader)
         {
             if (jsonReader.NodeType == JsonNodeType.StartObject)
             {
-                this.contentType = BatchRequestBodyContentType.Json;
+                this.contentType = BatchPayloadBodyContentType.Json;
             }
             else if (jsonReader.NodeType == JsonNodeType.PrimitiveValue)
             {
-                this.contentType = BatchRequestBodyContentType.Binary;
+                this.contentType = BatchPayloadBodyContentType.Binary;
             }
             else
             {
@@ -120,29 +138,36 @@ namespace Microsoft.OData.Core.JsonLight
             }
         }
 
+        /// <summary>
+        /// Populate the current property value the Json reader is referencing.
+        /// The property value should be of either Json type or binary type.
+        /// </summary>
+        /// <param name="jsonReader">The Json reader providing access to the data.</param>
+        /// <remarks>Need to test binary type with real usage.</remarks>
         internal void PopulateBodyContent(JsonReader jsonReader)
         {
             Debug.Assert(!this.isDataPopulatedToStream, "!this.isDataPopulatedToStream");
-            EnsureBatchRequestBodyContentType(jsonReader);
+            DetectBatchPayloadBodyContentType(jsonReader);
 
             switch (this.contentType)
             {
-                case BatchRequestBodyContentType.Json:
-                    {
-                        WriteJsonContent(jsonReader);
+                case BatchPayloadBodyContentType.Json:
+                {
+                    WriteJsonContent(jsonReader);
+                }
+                break;
 
-                    }
-                    break;
-                case BatchRequestBodyContentType.Binary:
-                    {
-                        // body content is a string value of binary data.
-                        string contentStr = jsonReader.ReadStringValue();
+                case BatchPayloadBodyContentType.Binary:
+                {
+                    // body content is a string value of binary data.
+                    string contentStr = jsonReader.ReadStringValue();
 
-                        byte[] contentBytes = Encoding.UTF8.GetBytes(contentStr);
+                    byte[] contentBytes = Encoding.UTF8.GetBytes(contentStr);
 
-                        WriteBase64EncodedContent(contentBytes);
-                    }
-                    break;
+                    WriteBinaryContent(contentBytes);
+                }
+                break;
+
                 default:
                     throw new NotSupportedException("unknow / undefined type, new type that needs to be supported?");
             }
@@ -150,15 +175,19 @@ namespace Microsoft.OData.Core.JsonLight
             // Set the flag so that data is only popuplated once.
             this.isDataPopulatedToStream = true;
 
-            // Set the stream position to the beginning of the stream for reading.
+            // Rewind the stream position to the beginning of the stream so that it is ready for consumption.
             this.bodyContentStream.Position = 0;
         }
 
+/***
         /// <summary>
         /// Convert the binary data into base64-encoded bytes.
         /// </summary>
         /// <param name="bytes">Bindary data to be encoded.</param>
         /// <returns>Base64-encoded char array</returns>
+        /// <remark>
+        /// Currently not used. Base64 encode/decode should not be processed in ODL layer??
+        /// </remark>
         internal static char[] GetBase64Encode(byte[] bytes)
         {
             if (bytes == null)
@@ -182,6 +211,7 @@ namespace Microsoft.OData.Core.JsonLight
 
             return encodedChars;
         }
+***/
 
         /// <summary>
         /// Read off the data of the starting Json object from the Json reader,
@@ -204,7 +234,11 @@ namespace Microsoft.OData.Core.JsonLight
             WriteCurrentJsonObject(reader, jsonWriter);
         }
 
-        private void WriteBase64EncodedContent(byte[] bytes)
+        /// <summary>
+        /// Writes the binary bytes to the underlying memory stream.
+        /// </summary>
+        /// <param name="bytes">The bytes to be written.</param>
+        private void WriteBinaryContent(byte[] bytes)
         {
             streamWriter.Write(bytes);
             streamWriter.Flush();
@@ -224,48 +258,55 @@ namespace Microsoft.OData.Core.JsonLight
                 switch (reader.NodeType)
                 {
                     case JsonNodeType.PrimitiveValue:
+                    {
+                        if (reader.Value != null)
                         {
                             jsonWriter.WritePrimitiveValue(reader.Value);
                         }
-                        break;
+                        else
+                        {
+                            jsonWriter.WriteValue((string)null);
+                        }
+                    }
+                    break;
                     case JsonNodeType.Property:
-                        {
-                            jsonWriter.WriteName(reader.Value.ToString());
-                        }
-                        break;
+                    {
+                        jsonWriter.WriteName(reader.Value.ToString());
+                    }
+                    break;
                     case JsonNodeType.StartObject:
-                        {
-                            nodeTypes.Push(reader.NodeType);
-                            jsonWriter.StartObjectScope();
-                        }
-                        break;
+                    {
+                        nodeTypes.Push(reader.NodeType);
+                        jsonWriter.StartObjectScope();
+                    }
+                    break;
                     case JsonNodeType.StartArray:
-                        {
-                            nodeTypes.Push(reader.NodeType);
-                            jsonWriter.StartArrayScope();
-                        }
-                        break;
+                    {
+                        nodeTypes.Push(reader.NodeType);
+                        jsonWriter.StartArrayScope();
+                    }
+                    break;
                     case JsonNodeType.EndObject:
-                        {
-                            Debug.Assert(nodeTypes.Peek() == JsonNodeType.StartObject);
-                            nodeTypes.Pop();
-                            jsonWriter.EndObjectScope();
-                        }
-                        break;
+                    {
+                        Debug.Assert(nodeTypes.Peek() == JsonNodeType.StartObject);
+                        nodeTypes.Pop();
+                        jsonWriter.EndObjectScope();
+                    }
+                    break;
                     case JsonNodeType.EndArray:
-                        {
-                            Debug.Assert(nodeTypes.Peek() == JsonNodeType.StartArray);
-                            nodeTypes.Pop();
-                            jsonWriter.EndArrayScope();
-                        }
-                        break;
+                    {
+                        Debug.Assert(nodeTypes.Peek() == JsonNodeType.StartArray);
+                        nodeTypes.Pop();
+                        jsonWriter.EndArrayScope();
+                    }
+                    break;
                     default:
-                        {
-                            throw new ODataException(String.Format(
-                                CultureInfo.InvariantCulture,
-                                "Unexpected reader.NodeType: {0}.",
-                                reader.NodeType));
-                        }
+                    {
+                        throw new ODataException(String.Format(
+                            CultureInfo.InvariantCulture,
+                            "Unexpected reader.NodeType: {0}.",
+                            reader.NodeType));
+                    }
                 }
 
                 reader.ReadNext(); // This can be EndOfInput, where nodeTypes should be empty.
@@ -285,22 +326,26 @@ namespace Microsoft.OData.Core.JsonLight
         /// <returns>The number of bytes actually read.</returns>
         internal override int ReadWithLength(byte[] userBuffer, int userBufferOffset, int count)
         {
-            Debug.Assert(this.isDataPopulatedToStream, "this.isDataPopulatedToStream");
             Debug.Assert(userBuffer != null, "userBuffer != null");
             Debug.Assert(userBufferOffset >= 0, "userBufferOffset >= 0");
             Debug.Assert(count >= 0, "count >= 0");
             Debug.Assert(this.batchEncoding != null, "Batch encoding should have been established on first call to SkipToBoundary.");
 
-            //// NOTE: if we have a stream with length we don't even check for boundaries but rely solely on the content length
+            // Ensure that the memory stream contains data to be consumed.
+            if (!this.isDataPopulatedToStream)
+            {
+                throw new ODataException(Strings.General_InternalError(InternalErrorCodes.ODataBatchReader_ReadImplementation));
+            }
 
+            // NOTE: if we have a stream with length we don't even check for boundaries but rely solely on the content length
             int remainingNumberOfBytesToRead = count;
             while (remainingNumberOfBytesToRead > 0)
             {
-                // check whether we can satisfy the full read request from the buffer
+                // check whether we can satisfy the full read  from the buffer
                 // or whether we have to split the request and read more data into the buffer.
                 if (this.batchBuffer.NumberOfBytesInBuffer >= remainingNumberOfBytesToRead)
                 {
-                    // we can satisfy the full read request from the buffer
+                    // we can satisfy the full read from the buffer
                     Buffer.BlockCopy(
                         this.batchBuffer.Bytes,
                         this.batchBuffer.CurrentReadPosition,
@@ -313,7 +358,7 @@ namespace Microsoft.OData.Core.JsonLight
                 }
                 else
                 {
-                    // we can only partially satisfy the read request
+                    // we can only partially satisfy the read
                     int availableBytesToRead = this.batchBuffer.NumberOfBytesInBuffer;
                     Buffer.BlockCopy(
                         this.batchBuffer.Bytes,
@@ -328,7 +373,7 @@ namespace Microsoft.OData.Core.JsonLight
                     // we exhausted the buffer; if the underlying stream is not exhausted, refill the buffer
                     if (this.underlyingStreamExhausted)
                     {
-                        // We cannot fully satisfy the read request since there are not enough bytes in the stream.
+                        // We cannot fully satisfy the read since there are not enough bytes in the stream.
                         // This means that the content length of the stream was incorrect; this should never happen
                         // since the caller should already have checked this.
                         throw new ODataException(Strings.General_InternalError(

@@ -8,8 +8,6 @@ namespace Microsoft.OData.Core
 {
     #region Namespaces
 
-    using System;
-    using System.Collections.Generic;
     using System.Diagnostics;
     using System.IO;
     using System.Text;
@@ -64,7 +62,23 @@ namespace Microsoft.OData.Core
             }
         }
 
+        /// <summary>
+        /// Reads from the batch stream while ensuring that we stop reading at each boundary.
+        /// </summary>
+        /// <param name="userBuffer">The byte array to read bytes into.</param>
+        /// <param name="userBufferOffset">The offset in the buffer where to start reading bytes into.</param>
+        /// <param name="count">The number of bytes to read.</param>
+        /// <returns>The number of bytes actually read.</returns>
         internal abstract int ReadWithDelimiter(byte[] userBuffer, int userBufferOffset, int count);
+
+        /// <summary>
+        /// Reads from the batch stream without checking for a boundary delimiter since we
+        /// know the length of the stream.
+        /// </summary>
+        /// <param name="userBuffer">The byte array to read bytes into.</param>
+        /// <param name="userBufferOffset">The offset in the buffer where to start reading bytes into.</param>
+        /// <param name="count">The number of bytes to read.</param>
+        /// <returns>The number of bytes actually read.</returns>
         internal abstract int ReadWithLength(byte[] userBuffer, int userBufferOffset, int count);
 
         /// <summary>

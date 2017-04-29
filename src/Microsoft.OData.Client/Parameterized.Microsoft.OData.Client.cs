@@ -46,6 +46,14 @@ namespace Microsoft.OData.Client {
         }
 
         /// <summary>
+        /// "Unsupported batch content type [{0}], only MIME {1} or {2} are supported"
+        /// </summary>
+        internal static string Batch_UnsupportedBatchContentType(object p0, object p1, object p2)
+        {
+            return Microsoft.OData.Client.TextRes.GetString(Microsoft.OData.Client.TextRes.Batch_UnsupportedBatchContentType, p0, p1, p2);
+        }
+
+        /// <summary>
         /// A string like "Expected an absolute, well formed http URL without a query or fragment."
         /// </summary>
         internal static string Context_BaseUri {
@@ -1988,14 +1996,6 @@ namespace Microsoft.OData.Client {
             get {
                 return Microsoft.OData.Client.TextRes.GetString(Microsoft.OData.Client.TextRes.Context_ExecuteExpectedVoidResponse);
             }
-        }
-
-        /// <summary>
-        /// "Unsupported batch content type [{0}], only MIME {1} or {2} are supported"
-        /// </summary>
-        internal static string Batch_UnsupportedBatchContentType(object p0, object p1, object p2)
-        {
-            return Microsoft.OData.Client.TextRes.GetString(Microsoft.OData.Client.TextRes.Batch_UnsupportedBatchContentType, p0, p1, p2);
         }
     }
 

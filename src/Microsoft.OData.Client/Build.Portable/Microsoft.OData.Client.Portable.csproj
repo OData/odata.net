@@ -250,6 +250,9 @@
     <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Client\BatchSaveResult.cs">
       <Link>BatchSaveResult.cs</Link>
     </Compile>
+    <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Client\BatchContentType.cs">
+      <Link>BatchContentType.cs</Link>
+    </Compile>    
     <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Client\BodyOperationParameter.cs">
       <Link>BodyOperationParameter.cs</Link>
     </Compile>

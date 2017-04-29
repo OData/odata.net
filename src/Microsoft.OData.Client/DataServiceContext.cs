@@ -1600,12 +1600,16 @@ namespace Microsoft.OData.Client
         }
 
         /// <summary>
-        /// Synchronously submits a group of queries as a batch to the data service, accepting multipart/mixed response.
+        /// WIP: Synchronously submits a group of queries as a batch to the data service, accepting multipart/mixed response.
         /// Not supported by the WCF Data Services 5.0 client for Silverlight.
         /// </summary>
         /// <returns>The response to the batch operation.</returns>
         /// <param name="batchContentType">Batch content type header information.</param>
         /// <param name="queries">Array of <see cref="T:Microsoft.OData.Client.DataServiceRequest[]" /> objects that make up the queries.</param>
+        /// <remarks>
+        /// We might need to revisit the exact machanism enabling client to specify Content-Type and Accept headers in json batch
+        /// requests.
+        /// </remarks>
         public DataServiceResponse ExecuteBatchAcceptMultipartMixed(BatchContentType batchContentType, params DataServiceRequest[] queries)
         {
             Util.CheckArgumentNotEmpty(queries, "queries");
@@ -1617,12 +1621,16 @@ namespace Microsoft.OData.Client
         }
 
         /// <summary>
-        /// Synchronously submits a group of queries as a batch to the data service, accepting application/json response.
+        /// WIP: Synchronously submits a group of queries as a batch to the data service, accepting application/json response.
         /// Not supported by the WCF Data Services 5.0 client for Silverlight.
         /// </summary>
         /// <returns>The response to the batch operation.</returns>
         /// <param name="batchContentType">Batch content type header information.</param>
         /// <param name="queries">Array of <see cref="T:Microsoft.OData.Client.DataServiceRequest[]" /> objects that make up the queries.</param>
+        /// <remarks>
+        /// We might need to revisit the exact machanism enabling client to specify Content-Type and Accept headers in json batch
+        /// requests.
+        /// </remarks>
         public DataServiceResponse ExecuteBatchAcceptApplicationJson(BatchContentType batchContentType, params DataServiceRequest[] queries)
         {
             Util.CheckArgumentNotEmpty(queries, "queries");

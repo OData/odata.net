@@ -688,6 +688,24 @@
     <Compile Include="$(ODataCrossTargettingSourcePath)\JsonLight\ODataJsonLightBatchReader.cs">
       <Link>Microsoft\OData\Core\JsonLight\ODataJsonLightBatchReader.cs</Link>
     </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\JsonLight\ODataJsonLightBatchReaderStream.cs">
+      <Link>Microsoft\OData\Core\JsonLight\ODataJsonLightBatchReaderStream.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\JsonLight\ODataJsonLightBatchAtomicGroupCache.cs">
+      <Link>Microsoft\OData\Core\JsonLight\ODataJsonLightBatchAtomicGroupCache.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\JsonLight\ODataJsonLightBatchRequestPropertiesCache.cs">
+      <Link>Microsoft\OData\Core\JsonLight\ODataJsonLightBatchRequestPropertiesCache.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\JsonLight\ODataJsonLightBatchResponsePropertiesCache.cs">
+      <Link>Microsoft\OData\Core\JsonLight\ODataJsonLightBatchResponsePropertiesCache.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\JsonLight\ODataJsonLightBatchPayloadItemPropertiesCache.cs">
+      <Link>Microsoft\OData\Core\JsonLight\ODataJsonLightBatchPayloadItemPropertiesCache.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\JsonLight\ODataJsonLightBatchBodyContentReaderStream.cs">
+      <Link>Microsoft\OData\Core\JsonLight\ODataJsonLightBatchBodyContentReaderStream.cs</Link>
+    </Compile>
     <Compile Include="$(ODataCrossTargettingSourcePath)\ODataBatchReaderState.cs">
       <Link>Microsoft\OData\Core\ODataBatchReaderState.cs</Link>
     </Compile>

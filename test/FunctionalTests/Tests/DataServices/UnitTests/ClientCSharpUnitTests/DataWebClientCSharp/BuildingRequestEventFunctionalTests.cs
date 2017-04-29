@@ -921,65 +921,6 @@ namespace AstoriaUnitTests.DataWebClientCSharp
             }
         }
 
-        /// <summary>
-        /// Sends a batch request with a single query in it. This test ensures that inner query has the additional parameters and headers added.
-        /// We do NOT add the parameters and headers to the outer batch request, so the server can process it properly.
-        /// </summary>
-        [TestMethod]
-        public void BatchQueryExpandedAPI()
-        {
-            using (TestWebRequest web = TestWebRequest.CreateForInProcessWcf())
-            {
-                web.DataServiceType = typeof(InnerBatchValidatingService);
-                web.StartService();
-
-                var ctx = GetContextWithBuildingRequestHandler(web, args => !args.RequestUri.AbsoluteUri.Contains("$batch"), args => !args.RequestMessage.Url.AbsoluteUri.Contains("$batch"));
-                AddDescriptorShouldBeNullVerifier(ctx);
-
-                // Construct Content-Type header value "application/json;odata.metadata=minimal;odata.streaming=true;IEEE754Compatible=false"
-                BatchContentType jsonBatchContentType = new BatchContentType(BatchContentType.ApplicationJson)
-                    .AddParameter(BatchContentType.MimeMetadataParameterName, BatchContentType.MimeMetadataParameterValueMinimal)
-                    .AddParameter(BatchContentType.MimeStreamingParameterName, BatchContentType.MimeParameterValueTrue)
-                    .AddParameter(BatchContentType.MimeIeee754CompatibleParameterName, BatchContentType.MimeParameterValueFalse);
-
-                BatchContentType[] batchContentTypes = new[]
-                {
-                    new BatchContentType(XmlConstants.MimeMultiPartMixed),
-                    jsonBatchContentType
-                };
-
-                // Accepting multipart/mixed
-                foreach (BatchContentType batchContentType in batchContentTypes)
-                {
-                    var response = ctx.ExecuteBatchAcceptMultipartMixed(
-                        batchContentType,
-                        (DataServiceRequest)(ctx.CreateQuery<Customer>("Customers").Where(c => c.Name.Contains("1"))));
-                    foreach (var result in response)
-                    {
-                        result.StatusCode.Should().Be(418);
-                        result.Error.Message.Should().Contain("Server received user altered request correctly.");
-                    }
-
-                    buildingRequestCallCount.Should().Be(2); // 1 for outer batch, 1 for inner query
-                }
-
-                // Accepting application/json
-                foreach (BatchContentType batchContentType in batchContentTypes)
-                {
-                    var response = ctx.ExecuteBatchAcceptApplicationJson(
-                        batchContentType,
-                        (DataServiceRequest)(ctx.CreateQuery<Customer>("Customers").Where(c => c.Name.Contains("1"))));
-                    foreach (var result in response)
-                    {
-                        result.StatusCode.Should().Be(418);
-                        result.Error.Message.Should().Contain("Server received user altered request correctly.");
-                    }
-
-                    buildingRequestCallCount.Should().Be(2); // 1 for outer batch, 1 for inner query
-                }
-            }
-        }
-
         [TestMethod]
         public void BatchQueryAsync()
         {

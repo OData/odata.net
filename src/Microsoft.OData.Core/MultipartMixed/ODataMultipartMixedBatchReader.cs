@@ -4,7 +4,6 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-
 namespace Microsoft.OData.Core.MultipartMixed
 {
     #region Namespaces
@@ -17,12 +16,18 @@ namespace Microsoft.OData.Core.MultipartMixed
 #endif
     #endregion Namespaces
 
+    /// <summary>
+    /// Class for reading OData batch messages of MIME multipart/mixed type.
+    /// Also verifies the proper sequence of read calls on the reader.
+    /// </summary>
     internal sealed class ODataMultipartMixedBatchReader: ODataBatchReader
     {
-
         /// <summary>The batch stream used by the batch reader to devide a batch payload into parts.</summary>
         private readonly ODataMultipartMixedBatchReaderStream batchStream;
 
+        /// <summary>
+        /// Gets the reader's input context as the real runtime type.
+        /// </summary>
         internal ODataRawInputContext RawInputContext
         {
             get
@@ -63,7 +68,10 @@ namespace Microsoft.OData.Core.MultipartMixed
             Uri requestUri;
             this.ParseRequestLine(
                 requestLine,
-                ValidateQueryMethodNotAllowedInChangeSet, // HTTP GET is not allowed in change set for MIME format batching.
+
+                // HTTP GET is not allowed in change set for MIME multipart/mixex format batching.
+                ValidateQueryMethodNotAllowedInChangeSet,
+
                 out httpMethod,
                 out requestUri);
 
@@ -157,6 +165,10 @@ namespace Microsoft.OData.Core.MultipartMixed
             return responseMessage;
         }
 
+        /// <summary>
+        /// Validates that HTTP GET is not allowed within changeset for MIME multipart/mixed batch format.
+        /// </summary>
+        /// <param name="httpMethod">The HTTP method string.</param>
         private void ValidateQueryMethodNotAllowedInChangeSet(string httpMethod)
         {
             // Validate the HTTP method when reading a request

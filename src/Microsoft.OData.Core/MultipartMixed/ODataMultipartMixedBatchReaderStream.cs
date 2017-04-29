@@ -36,12 +36,19 @@ namespace Microsoft.OData.Core.MultipartMixed
         /// </summary>
         private readonly byte[] lineBuffer;
 
-        /// <summary>The boundary string for the batch structure itself.</summary>
+        /// <summary>
+        /// The boundary string for the batch structure itself.
+        /// </summary>
         private readonly string batchBoundary;
 
-        /// <summary>The boundary string for a changeset (or null if not in a changeset part).</summary>
+        /// <summary>
+        /// The boundary string for a changeset (or null if not in a changeset part).
+        /// </summary>
         private string changesetBoundary;
 
+        /// <summary>
+        /// The raw input context used by the reader.
+        /// </summary>
         private ODataRawInputContext rawInputContext;
 
         /// <summary>

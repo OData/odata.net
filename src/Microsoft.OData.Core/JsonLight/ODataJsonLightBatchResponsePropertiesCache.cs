@@ -1,5 +1,5 @@
 ﻿//---------------------------------------------------------------------
-// <copyright file="ODataJsonLightBatchRequestPropertiesCache.cs" company="Microsoft">
+// <copyright file="ODataJsonLightBatchResponsePropertiesCache.cs" company="Microsoft">
 //      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 // </copyright>
 //---------------------------------------------------------------------
@@ -19,50 +19,32 @@ namespace Microsoft.OData.Core.JsonLight
     #endregion Namespaces
 
     /// <summary>
-    /// Cache of properties of the current request.
+    /// Cache of properties in the current response.
     /// This cache handles the orderlessness of Json properties and the
-    /// creation of body content stream for <see cref="ODataBatchOperationRequestMessage"/>.
+    /// creation of body content stream for <see cref="ODataBatchOperationResponseMessage"/>.
     /// </summary>
-    internal sealed class ODataJsonLightBatchRequestPropertiesCache : ODataJsonLightBatchPayloadItemPropertiesCache
+    internal sealed class ODataJsonLightBatchResponsePropertiesCache : ODataJsonLightBatchPayloadItemPropertiesCache
     {
         /// <summary>
-        /// Property name for request Id in Json batch request.
+        /// Property name for response Id in Json batch response.
         /// Property names definitions here are all in upper case to support case insensitiveness.
         /// </summary>
         internal const string PropertyNameId = "ID";
 
         /// <summary>
-        /// Property name for request atomic group association in Json batch request.
+        /// Property name for response status in Json batch response.
         /// Property names definitions here are all in upper case to support case insensitiveness.
         /// </summary>
-        internal const string PropertyNameAtomicityGroup = "ATOMICITYGROUP";
+        internal const string PropertyNameStatus = "STATUS";
 
         /// <summary>
-        /// Property name for request execution dependency in Json batch request.
-        /// Property names definitions here are all in upper case to support case insensitiveness.
-        /// </summary>
-        internal const string PropertyNameDependsOn = "DEPENDSON";
-
-        /// <summary>
-        /// Property name for request HTTP method in Json batch request.
-        /// Property names definitions here are all in upper case to support case insensitiveness.
-        /// </summary>
-        internal const string PropertyNameMethod = "METHOD";
-
-        /// <summary>
-        /// Property name for request URL in Json batch request.
-        /// Property names definitions here are all in upper case to support case insensitiveness.
-        /// </summary>
-        internal const string PropertyNameUrl = "URL";
-
-        /// <summary>
-        /// Property name for request HTTP headers in Json batch request.
+        /// Property name for response headers in Json batch response.
         /// Property names definitions here are all in upper case to support case insensitiveness.
         /// </summary>
         internal const string PropertyNameHeaders = "HEADERS";
 
         /// <summary>
-        /// Property name for request body in Json batch request.
+        /// Property name for response body in Json batch response.
         /// Property names definitions here are all in upper case to support case insensitiveness.
         /// </summary>
         internal const string PropertyNameBody = "BODY";
@@ -72,57 +54,46 @@ namespace Microsoft.OData.Core.JsonLight
         /// </summary>
         /// <param name="jsonReader">The Json reader from the batch reader input context.</param>
         /// <remarks>Properties are loaded as part of construction of the most-derived type.</remarks>
-        internal ODataJsonLightBatchRequestPropertiesCache(JsonReader jsonReader)
+        internal ODataJsonLightBatchResponsePropertiesCache(JsonReader jsonReader)
             : base(jsonReader)
         {
         }
 
         /// <summary>
-        /// Scan the request Json object for known properties.
+        /// Scan the response Json object for known properties.
         /// </summary>
         /// <remark>
-        ///     Pre condition: Json reader is positioned at the json start object of the request.
-        ///     Post condition: Json reader is positioned next to the json end object of the request.
+        ///     Pre condition: Json reader is positioned at the json start object of the response.
+        ///     Post condition: Json reader is positioned at the json end object of the response.
         /// </remark>
         protected override void ScanJsonPropertiesImplementation()
         {
             Debug.Assert(this.jsonReader != null);
 
-            // There are maximum of 7 properties per request.
-            this.jsonProperties = new Dictionary<string, object>(7);
+            // There are maximum of 4 properties per response.
+            this.jsonProperties = new Dictionary<string, object>(4);
 
             try
             {
-                // Request object start.
+                // Response object start.
                 this.jsonReader.ReadStartObject();
 
                 while (this.jsonReader.NodeType != JsonNodeType.EndObject)
                 {
-                    // Convert to upper case to support case-insensitive request property names
+                    // Convert to upper case to support case-insensitive response property names
                     string propertyName = Normalize(this.jsonReader.ReadPropertyName());
 
                     switch (propertyName)
                     {
                         case PropertyNameId:
-                        case PropertyNameAtomicityGroup:
-                        case PropertyNameMethod:
-                        case PropertyNameUrl:
                         {
                             jsonProperties.Add(propertyName, this.jsonReader.ReadStringValue());
                         }
                         break;
 
-                        case PropertyNameDependsOn:
+                        case PropertyNameStatus:
                         {
-                            IList<string> dependsOnIds = new List<string>();
-                            this.jsonReader.ReadStartArray();
-                            while (this.jsonReader.NodeType != JsonNodeType.EndArray)
-                            {
-                                dependsOnIds.Add(this.jsonReader.ReadStringValue());
-                            }
-                            this.jsonReader.ReadEndArray();
-
-                            jsonProperties.Add(propertyName, dependsOnIds);
+                            jsonProperties.Add(propertyName, this.jsonReader.ReadPrimitiveValue());
                         }
                         break;
 
@@ -156,13 +127,13 @@ namespace Microsoft.OData.Core.JsonLight
                             {
                                 throw new ODataException(string.Format(
                                     CultureInfo.InvariantCulture,
-                                    "Unknown property name '{0}' for request in batch",
+                                    "Unknown property name '{0}' for response in batch",
                                     propertyName));
                             }
                     }
                 }
 
-                // Request object end.
+                // Response object end.
                 this.jsonReader.ReadEndObject();
             }
             finally

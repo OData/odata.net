@@ -12,6 +12,7 @@ Batch_ExpectedContentType=The expected content type for a batch requests is "mul
 Batch_ExpectedResponse=The POST request expected a response with content. ID={0}
 Batch_IncompleteResponseCount=Not all requests in the batch had a response.
 Batch_UnexpectedContent=The web response contained unexpected sections. ID={0}
+Batch_UnsupportedBatchContentType=Unsupported batch content type [{0}], only MIME {1} or {2} are supported.
 
 Context_BaseUri=Expected an absolute, well formed http URL without a query or fragment.
 Context_BaseUriRequired=You must set the BaseUri property before you perform this operation.
