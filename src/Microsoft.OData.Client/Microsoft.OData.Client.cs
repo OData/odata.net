@@ -28,6 +28,7 @@ namespace Microsoft.OData.Client {
         internal const string Batch_ExpectedResponse = "Batch_ExpectedResponse";
         internal const string Batch_IncompleteResponseCount = "Batch_IncompleteResponseCount";
         internal const string Batch_UnexpectedContent = "Batch_UnexpectedContent";
+        internal const string Batch_UnsupportedBatchContentType = "Batch_UnsupportedBatchContentType";
         internal const string Context_BaseUri = "Context_BaseUri";
         internal const string Context_BaseUriRequired = "Context_BaseUriRequired";
         internal const string Context_ResolveReturnedInvalidUri = "Context_ResolveReturnedInvalidUri";
@@ -271,7 +272,6 @@ namespace Microsoft.OData.Client {
         internal const string DefaultLiteralFormatter_EnumValueTypeNameShouldNotBeNullOrEmpty = "DefaultLiteralFormatter_EnumValueTypeNameShouldNotBeNullOrEmpty";
         internal const string DataServiceRequest_FailGetCount = "DataServiceRequest_FailGetCount";
         internal const string Context_ExecuteExpectedVoidResponse = "Context_ExecuteExpectedVoidResponse";
-        internal const string Batch_UnsupportedBatchContentType = "Batch_UnsupportedBatchContentType";
 
         static TextRes loader = null;
         ResourceManager resources;

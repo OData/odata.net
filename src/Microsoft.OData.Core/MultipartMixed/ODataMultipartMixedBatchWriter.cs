@@ -17,7 +17,7 @@ namespace Microsoft.OData.Core.MultipartMixed
     #endregion Namespaces
 
     /// <summary>
-    /// Class for writing OData batch messages of MIME type.
+    /// Class for writing OData batch messages of MIME multipart/mixed type.
     /// </summary>
     internal sealed class ODataMultipartMixedBatchWriter : ODataBatchWriter
     {
@@ -38,7 +38,7 @@ namespace Microsoft.OData.Core.MultipartMixed
         private bool changesetStartBoundaryWritten;
 
         /// <summary>
-        /// The boundary string for the current changeset (only set when writing a changeset, 
+        /// The boundary string for the current changeset (only set when writing a changeset,
         /// e.g., after WriteStartChangeSet has been called and before WriteEndChangeSet is called).
         /// </summary>
         /// <remarks>When not writing a changeset this field is null.</remarks>
@@ -60,6 +60,9 @@ namespace Microsoft.OData.Core.MultipartMixed
             this.RawOutputContext.InitializeRawValueWriter();
         }
 
+        /// <summary>
+        /// Gets the writer's output context as the real runtime type.
+        /// </summary>
         internal ODataRawOutputContext RawOutputContext
         {
             get { return this.OutputContext as ODataRawOutputContext; }
@@ -165,7 +168,7 @@ namespace Microsoft.OData.Core.MultipartMixed
                 this.InterceptException(this.IncreaseChangeSetSize);
             }
 
-            // write pending message data (headers, response line) for a previously unclosed message/request
+            // write pending message data (headers, request line) for a previously unclosed message/request
             this.WritePendingMessageData(true);
 
             // Add a potential Content-ID header to the URL resolver so that it will be available
@@ -211,7 +214,7 @@ namespace Microsoft.OData.Core.MultipartMixed
         protected override void SetState(BatchWriterState newState)
         {
             this.InterceptException(() => this.ValidateTransition(
-                newState, 
+                newState,
                 () => ValidateTransitionAgainstChangesetBoundary(newState, this.changeSetBoundary)));
 
             switch (newState)
@@ -231,7 +234,7 @@ namespace Microsoft.OData.Core.MultipartMixed
 
             this.State = newState;
         }
-      
+
         /// <summary>
         /// Remember a non-null Content-ID header for change set request operations.
         /// If a non-null content ID header is specified for a change set request operation, record it in the URL resolver.
@@ -247,11 +250,11 @@ namespace Microsoft.OData.Core.MultipartMixed
             // The Content-ID header is only supported in request messages and inside of changesets.
             Debug.Assert(this.CurrentOperationRequestMessage != null, "this.CurrentOperationRequestMessage != null");
             Debug.Assert(this.changeSetBoundary != null, "this.changeSetBoundary != null");
-        
+
             // Set the current content ID. If no Content-ID header is found in the message,
             // the 'contentId' argument will be null and this will reset the current operation content ID field.
             this.CurrentOperationContentId = contentId;
-        
+
             // Check for duplicate content IDs; we have to do this here instead of in the cache itself
             // since the content ID of the last operation never gets added to the cache but we still
             // want to fail on the duplicate.
@@ -426,7 +429,7 @@ namespace Microsoft.OData.Core.MultipartMixed
         /// This method is called to notify that the content stream for a batch operation has been requested.
         /// </summary>
         /// <returns>
-        /// A task representing any action that is running as part of the status change of the operation; 
+        /// A task representing any action that is running as part of the status change of the operation;
         /// null if no such action exists.
         /// </returns>
         public override Task BatchOperationContentStreamRequestedAsync()
@@ -513,7 +516,11 @@ namespace Microsoft.OData.Core.MultipartMixed
             VerifyCanCreateOperationRequestMessageAgainstChangeSetBoundary(method, contentId);
         }
 
-
+        /// <summary>
+        /// Verifies that, for the case within a changeset, CreateOperationRequestMessage is valid.
+        /// </summary>
+        /// <param name="method"></param>
+        /// <param name="contentId"></param>
         private void VerifyCanCreateOperationRequestMessageAgainstChangeSetBoundary(string method, string contentId)
         {
             if (this.changeSetBoundary != null)
@@ -529,7 +536,11 @@ namespace Microsoft.OData.Core.MultipartMixed
                 }
             }
         }
-
+        /// <summary>
+        /// Validates state transition is allowed if we are within a changeset.
+        /// </summary>
+        /// <param name="newState">Teh new writer state to transition into.</param>
+        /// <param name="changeSetBoundary">The changeset boundary string.</param>
         private static void ValidateTransitionAgainstChangesetBoundary(BatchWriterState newState, string changeSetBoundary)
         {
             // make sure that we are not starting a changeset when one is already active
@@ -540,7 +551,7 @@ namespace Microsoft.OData.Core.MultipartMixed
                     throw new ODataException(Strings.ODataBatchWriter_CannotStartChangeSetWithActiveChangeSet);
                 }
             }
-            
+
             // make sure that we are not completing a changeset without an active changeset
             if (newState == BatchWriterState.ChangesetCompleted)
             {
@@ -549,7 +560,7 @@ namespace Microsoft.OData.Core.MultipartMixed
                     throw new ODataException(Strings.ODataBatchWriter_CannotCompleteChangeSetWithoutActiveChangeSet);
                 }
             }
-            
+
             // make sure that we are not completing a batch while a changeset is still active
             if (newState == BatchWriterState.BatchCompleted)
             {

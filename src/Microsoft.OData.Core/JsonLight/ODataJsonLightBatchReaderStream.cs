@@ -4,8 +4,6 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-using Microsoft.OData.Core.Json;
-
 namespace Microsoft.OData.Core.JsonLight
 {
     #region Namespaces
@@ -15,14 +13,25 @@ namespace Microsoft.OData.Core.JsonLight
     using System.Diagnostics;
     using System.Linq;
     using System.Text;
-
+    using Microsoft.OData.Core.Json;
     #endregion Namespaces
 
+    /// <summary>
+    /// Class used by the <see cref="ODataJsonLightBatchReader"/> to read the various pieces of a batch payload
+    /// in MIME application/json format.
+    /// </summary>
     internal sealed class ODataJsonLightBatchReaderStream: ODataBatchReaderStream
     {
-
+        /// <summary>
+        /// The input context used by the JsonLight reader.
+        /// </summary>
         private readonly ODataJsonLightInputContext inputContext;
 
+        /// <summary>
+        /// Constructor.
+        /// </summary>
+        /// <param name="inputContext">The JsonLight input context.</param>
+        /// <param name="batchEncoding">The encoding to use to read from the batch stream.</param>
         internal ODataJsonLightBatchReaderStream(
             ODataJsonLightInputContext inputContext,
             Encoding batchEncoding)
@@ -32,6 +41,9 @@ namespace Microsoft.OData.Core.JsonLight
             this.inputContext = inputContext;
         }
 
+        /// <summary>
+        /// The reader providing access to payload in Json format.
+        /// </summary>
         internal BufferingJsonReader JsonReader
         {
             get
@@ -40,6 +52,13 @@ namespace Microsoft.OData.Core.JsonLight
             }
         }
 
+        /// <summary>
+        /// This method is not applicable for application/json format, and throws an exception.
+        /// </summary>
+        /// <param name="userBuffer">The byte array to read bytes into.</param>
+        /// <param name="userBufferOffset">The offset in the buffer where to start reading bytes into.</param>
+        /// <param name="count">The number of bytes to read.</param>
+        /// <returns>The number of bytes actually read.</returns>
         internal override int ReadWithDelimiter(byte[] userBuffer, int userBufferOffset, int count)
         {
             throw new NotImplementedException();

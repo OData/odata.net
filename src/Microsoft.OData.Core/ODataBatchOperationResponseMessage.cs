@@ -4,8 +4,6 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-using Microsoft.OData.Core.JsonLight;
-
 namespace Microsoft.OData.Core
 {
     #region Namespaces

@@ -23,15 +23,21 @@ namespace Microsoft.OData.Core.JsonLight
     /// </summary>
     internal class ODataJsonLightBatchAtomicGroupCache
     {
-        // Lookup table for atomicitGroup.
+        /// <summary>
+        /// Lookup table for atomicitGroup.
+        /// </summary>
         private Dictionary<string, IList<string>> groupToRequestIds = new Dictionary<string, IList<string>>();
 
-        // Group Id of the preceeding request. Could be null.
+        /// <summary>
+        /// Group Id of the preceeding request. Could be null.
+        /// </summary>
         private string preceedingRequestGroupId = null;
 
-        // Latest status of whether the processing is within scope of an atomic group.
-        // The scope is ended by a top-level request, the starting of another atomic group, or
-        // end of the batch requests array.
+        /// <summary>
+        /// Latest status of whether the processing is within scope of an atomic group.
+        /// The scope is ended by a top-level request, the starting of another atomic group, or
+        /// end of the batch requests array.
+        /// </summary>
         private bool isWithinAtomicGroup = false;
 
         /// <summary>
@@ -150,36 +156,32 @@ namespace Microsoft.OData.Core.JsonLight
         /// Flatten a given list of groupIds and requestIds into a string containing comma-separated request Ids.
         /// </summary>
         /// <param name="ids">List of ids to be flattened.</param>
-        /// <returns>The flatten string containing comma-separated request Ids.</returns>
-        internal string GetFlattenedRequestIds(IList<string> ids)
+        /// <returns>The list containing comma-separated request Ids.</returns>
+        internal IList<string> GetFlattenedRequestIds(IList<string> ids)
         {
+            IList<string> result = new List<string>();
             if (ids.Count == 0)
             {
-                return "";
+                return result;
             }
 
-            StringBuilder sb = new StringBuilder();
             foreach (string id in ids)
             {
-                if (!IsGroupId(id))
+                IList<string> reqIds;
+                if (!this.groupToRequestIds.TryGetValue(id, out reqIds))
                 {
-                    sb.Append(id).Append(',');
+                    result.Add(id);
                 }
                 else
                 {
-                    IList<string> reqIds;
-                    if (this.groupToRequestIds.TryGetValue(id, out reqIds))
+                    foreach (string reqId in reqIds)
                     {
-                        foreach (string reqId in reqIds)
-                        {
-                            sb.Append(reqId).Append(',');
-                        }
+                        result.Add(reqId);
                     }
                 }
             }
 
-            return sb.Remove(sb.Length - 1, 1).ToString();
+            return result;
         }
-
     }
 }

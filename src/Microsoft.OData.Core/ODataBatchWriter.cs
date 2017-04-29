@@ -31,11 +31,11 @@ namespace Microsoft.OData.Core
         /// <summary>The state the writer currently is in.</summary>
         private BatchWriterState state;
 
-        /// <summary>The request message for the operation that is currently written if it's a request; 
+        /// <summary>The request message for the operation that is currently written if it's a request;
         /// or null if no part is written right now or it's a response part.</summary>
         private ODataBatchOperationRequestMessage currentOperationRequestMessage;
 
-        /// <summary>The response message for the operation that is currently written if it's a response; 
+        /// <summary>The response message for the operation that is currently written if it's a response;
         /// or null if no part is written right now or it's a request part.</summary>
         private ODataBatchOperationResponseMessage currentOperationResponseMessage;
 
@@ -54,18 +54,27 @@ namespace Microsoft.OData.Core
         /// <summary>The current size of the active changeset, i.e., how many request have been written for the changeset.</summary>
         private uint currentChangeSetSize;
 
+        /// <summary>
+        /// Gets or Sets the content Id of the current operation.
+        /// </summary>
         protected string CurrentOperationContentId
         {
             get { return this.currentOperationContentId; }
             set { this.currentOperationContentId = value; }
         }
 
+        /// <summary>
+        /// Gets or Sets the batch writer's state.
+        /// </summary>
         protected BatchWriterState State
         {
             get { return this.state; }
             set { this.state = value; }
         }
 
+        /// <summary>
+        /// Gets the writer's output context.
+        /// </summary>
         protected ODataOutputContext OutputContext
         {
             get { return this.outputContext; }
@@ -105,7 +114,7 @@ namespace Microsoft.OData.Core
             OperationCreated,
 
             /// <summary>
-            /// ODataMessage.GetStreamAsync() has been called on an operation which caused a <see cref="ODataBatchOperationStream"/> to be created; 
+            /// ODataMessage.GetStreamAsync() has been called on an operation which caused a <see cref="ODataBatchOperationStream"/> to be created;
             /// the batch writer is unusable while an operation is being written.
             /// </summary>
             OperationStreamRequested,
@@ -141,7 +150,7 @@ namespace Microsoft.OData.Core
             }
         }
 
-        /// <summary>The response message for the operation that is currently written if it's a response; 
+        /// <summary>The response message for the operation that is currently written if it's a response;
         /// or null if no operation is written right now or it's a request operation.</summary>
         protected ODataBatchOperationResponseMessage CurrentOperationResponseMessage
         {
@@ -322,7 +331,7 @@ namespace Microsoft.OData.Core
         /// This method is called to notify that the content stream for a batch operation has been requested.
         /// </summary>
         /// <returns>
-        /// A task representing any action that is running as part of the status change of the operation; 
+        /// A task representing any action that is running as part of the status change of the operation;
         /// null if no such action exists.
         /// </returns>
         public abstract Task BatchOperationContentStreamRequestedAsync();
@@ -541,6 +550,11 @@ namespace Microsoft.OData.Core
         /// <param name="newState">The writer state to transition into.</param>
         protected abstract void SetState(BatchWriterState newState);
 
+        /// <summary>
+        /// Wrapper method to validate state transition with optional customized validation.
+        /// </summary>
+        /// <param name="newState">Teh new writer state to transition into.</param>
+        /// <param name="customizedValidationAction">Optional validation action.</param>
         internal void ValidateTransition(BatchWriterState newState, Action customizedValidationAction)
         {
             if (customizedValidationAction != null)
@@ -552,7 +566,7 @@ namespace Microsoft.OData.Core
         }
 
         /// <summary>
-        /// Verify that the transition from the current state into new state is valid .
+        /// Verifies that the transition from the current state into new state is valid .
         /// </summary>
         /// <param name="newState">The new writer state to transition into.</param>
         [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity", Justification = "Validating the transition in the state machine should stay in a single method.")]

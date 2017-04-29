@@ -192,7 +192,6 @@
     </Compile>
     <Compile Include="Annotation\AnnotationHelper.cs" />
     <Compile Include="Annotation\InstanceAnnotationDictWeakKeyComparer.cs" />
-    <Compile Include="BatchContentType.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="DataServiceActionQueryOfT.cs" />
     <Compile Include="ActionDescriptor.cs" />
@@ -212,6 +211,7 @@
     <Compile Include="Attribute\OriginalNameAttribute.cs" />
     <Compile Include="BaseEntityType.cs" />
     <Compile Include="BaseSaveResult.cs" />
+    <Compile Include="BatchContentType.cs" />
     <Compile Include="BatchSaveResult.cs" />
     <Compile Include="BodyOperationParameter.cs" />
     <Compile Include="BuildingRequestEventArgs.cs" />

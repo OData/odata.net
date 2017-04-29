@@ -4,21 +4,51 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-using System;
-using System.Net;
-using System.Text;
-
 namespace Microsoft.OData.Client
 {
+    #region Namespaces
+
+    using System;
     using System.Collections.Generic;
     using System.Globalization;
+    using System.Net;
+    using System.Text;
+
+    #endregion Namespaces
 
     /// <summary>
     /// Batch content type header information.
     /// </summary>
     public sealed class BatchContentType
     {
-        public static string ApplicationJson = "application/json";
+        /// <summary>
+        /// Enum for the full type (main type & sub type) supported for batch.
+        /// </summary>
+        public enum BatchFullType
+        {
+            BatchApplicationJson,
+            BatchMultipartMixed
+        }
+
+        /// <summary>
+        /// Convenient public constant for application/json.
+        /// </summary>
+        public const BatchFullType TypeApplicationJson = BatchFullType.BatchApplicationJson;
+
+        /// <summary>
+        /// Convenient public constant for multipart/mixed.
+        /// </summary>
+        public const BatchFullType TypeMultipartMixed = BatchFullType.BatchMultipartMixed;
+
+        /// <summary>
+        /// MIME media full type string for application/json.
+        /// </summary>
+        public static string MimeApplicationJson = "application/json";
+
+        /// <summary>
+        /// MIME media full type string for multipart/mixed.
+        /// </summary>
+        public static string MimeMultipartMixed = "multipart/mixed";
 
         /// <summary>JSON Light parameter name for 'odata.metadata' parameter.</summary>
         public const string MimeMetadataParameterName = "odata.metadata";
@@ -48,50 +78,31 @@ namespace Microsoft.OData.Client
         /// <summary>
         /// Content-Type.
         /// </summary>
-        private readonly string contentType;
+        private readonly BatchFullType fullType;
 
         /// <summary>
         /// Content-Type parameters.
         /// </summary>
         private IList<KeyValuePair<string, string>> parameters;
 
-        public BatchContentType(string contentType)
-            : this(contentType, null)
+        /// <summary>
+        /// Constructor without parameters for Content-Type header value.
+        /// </summary>
+        /// <param name="fullType">Enum value of the batch full Content-Type.</param>
+        public BatchContentType(BatchFullType fullType)
+            : this(fullType, null)
         {
         }
 
-        public BatchContentType(string contentType, IList<KeyValuePair<string, string>> parameters)
+        /// <summary>
+        /// Constructor with parameters for Content-Type header value.
+        /// </summary>
+        /// <param name="fullType">Enum value of the batch full Content-Type.</param>
+        /// <param name="parameters">List of parameters for the header value.</param>
+        private BatchContentType(BatchFullType fullType, IList<KeyValuePair<string, string>> parameters)
         {
-            ValidateType(contentType);
-            this.contentType = contentType;
+            this.fullType = fullType;
             this.parameters = parameters;
-        }
-
-        private static void ValidateType(string contentType)
-        {
-            if (!(contentType.Equals(XmlConstants.MimeMultiPartMixed) || contentType.Equals(ApplicationJson)))
-            {
-                throw Error.InvalidOperation(Strings.Batch_UnsupportedBatchContentType(
-                    contentType,
-                    XmlConstants.MimeMultiPartMixed,
-                    ApplicationJson));
-            }
-        }
-
-        /// <summary>
-        /// Get the value of content type.
-        /// </summary>
-        public string ContentType
-        {
-            get { return this.contentType; }
-        }
-
-        /// <summary>
-        /// Get the value of parameters for enumeration.
-        /// </summary>
-        public IEnumerable<KeyValuePair<string, string>> Parameters
-        {
-            get { return this.parameters; }
         }
 
         /// <summary>
@@ -115,37 +126,49 @@ namespace Microsoft.OData.Client
         /// <returns>A string.</returns>
         public string CreateMimeContentTypeValue()
         {
-            if (this.contentType.Equals(XmlConstants.MimeMultiPartMixed))
+            string value = null;
+
+            switch (this.fullType)
             {
-                return string.Format(
-                    CultureInfo.InvariantCulture, "{0}; {1}={2}_{3}",
-                    XmlConstants.MimeMultiPartMixed,
-                    XmlConstants.HttpMultipartBoundary,
-                    XmlConstants.HttpMultipartBoundaryBatch,
-                    Guid.NewGuid());
-            }
-            else if (this.contentType.Equals(ApplicationJson))
-            {
-                if (this.parameters.Count == 0)
+                case TypeMultipartMixed:
                 {
-                    return ApplicationJson;
+                    value = string.Format(
+                        CultureInfo.InvariantCulture, "{0}; {1}={2}_{3}",
+                        XmlConstants.MimeMultiPartMixed,
+                        XmlConstants.HttpMultipartBoundary,
+                        XmlConstants.HttpMultipartBoundaryBatch,
+                        Guid.NewGuid());
                 }
-                else
+                break;
+
+                case TypeApplicationJson:
                 {
-                    StringBuilder sb = new StringBuilder(ApplicationJson);
-                    foreach (var pair in this.parameters)
+                    value = string.Format(CultureInfo.InvariantCulture, "{0}/{1}",
+                        XmlConstants.MimeApplicationType,
+                        XmlConstants.MimeJsonSubType);
+                    if (this.parameters.Count > 0)
                     {
-                        sb.Append(";")
-                          .Append(string.Format(CultureInfo.InvariantCulture, "{0}={1}", pair.Key, pair.Value));
+                        StringBuilder sb = new StringBuilder(value);
+                        foreach (var pair in this.parameters)
+                        {
+                            sb.Append(";")
+                              .Append(string.Format(CultureInfo.InvariantCulture, "{0}={1}", pair.Key, pair.Value));
+                        }
+                        value = sb.ToString();
                     }
-                    return sb.ToString();
+                }
+                break;
+
+                default:
+                {
+                    throw Error.InvalidOperation(Strings.Batch_UnsupportedBatchContentType(
+                        this.fullType.ToString(),
+                        XmlConstants.MimeMultiPartMixed,
+                        MimeApplicationJson));
                 }
             }
 
-            throw Error.InvalidOperation(Strings.Batch_UnsupportedBatchContentType(
-                this.contentType,
-                XmlConstants.MimeMultiPartMixed,
-                ApplicationJson));
+            return value;
         }
     }
 }

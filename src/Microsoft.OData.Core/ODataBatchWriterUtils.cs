@@ -28,7 +28,7 @@ namespace Microsoft.OData.Core
         internal static string CreateBatchBoundary(bool isResponse)
         {
             string template = isResponse ? ODataConstants.BatchResponseBoundaryTemplate : ODataConstants.BatchRequestBoundaryTemplate;
-            return string.Format(CultureInfo.InvariantCulture, template, Guid.NewGuid().ToString());
+            return String.Format(CultureInfo.InvariantCulture, template, Guid.NewGuid().ToString());
         }
 
         /// <summary>
@@ -39,7 +39,7 @@ namespace Microsoft.OData.Core
         internal static string CreateChangeSetBoundary(bool isResponse)
         {
             string template = isResponse ? ODataConstants.ResponseChangeSetBoundaryTemplate : ODataConstants.RequestChangeSetBoundaryTemplate;
-            return string.Format(CultureInfo.InvariantCulture, template, Guid.NewGuid().ToString());
+            return String.Format(CultureInfo.InvariantCulture, template, Guid.NewGuid().ToString());
         }
 
         /// <summary>
@@ -49,7 +49,7 @@ namespace Microsoft.OData.Core
         /// <returns>The multipart/mixed content type with the specified boundary (if any).</returns>
         internal static string CreateMultipartMixedContentType(string boundary)
         {
-            return string.Format(
+            return String.Format(
                 CultureInfo.InvariantCulture,
                 "{0}; {1}={2}",
                 MimeConstants.MimeMultipartMixed,
@@ -171,6 +171,30 @@ namespace Microsoft.OData.Core
         internal static bool HasResponseBody(ODataBatchOperationResponseMessage responseMessage)
         {
             return responseMessage.StatusCode != HTTP_STATUS_NO_CONTENT;
+        }
+
+        /// <summary>
+        /// Determine whether the specified batch operation has request body.
+        /// </summary>
+        /// <param name="httpMethod">Http method name of the batch operation.</param>
+        /// <returns>true if the specified operation requires request body.</returns>
+        internal static bool HasRequestBody(string httpMethod)
+        {
+            if (string.CompareOrdinal(ODataConstants.MethodPost, httpMethod)==0
+                || string.CompareOrdinal(ODataConstants.MethodPut, httpMethod) == 0
+                || string.CompareOrdinal(ODataConstants.MethodPatch, httpMethod) == 0)
+            {
+                return true;
+            }
+            else if (string.CompareOrdinal(ODataConstants.MethodGet, httpMethod) == 0
+                     || string.CompareOrdinal(ODataConstants.MethodDelete, httpMethod) == 0)
+            {
+                return false;
+            }
+            else
+            {
+                throw new ODataException(Strings.HttpUtils_InvalidHttpMethodString(httpMethod));
+            }
         }
     }
 }

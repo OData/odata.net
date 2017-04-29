@@ -186,7 +186,7 @@ namespace Microsoft.OData.Client
         /// </summary>
         /// <param name="headers">The headers to modify.</param>
         /// <param name="acceptMimeMultipartMixed">Whether the accept header is multipart/mixed.</para>
-        internal void SetRequestAcceptHeaderForBatch(HeaderCollection headers, bool acceptMimeMultipartMixed)
+        internal void SetRequestAcceptHeaderForBatch(HeaderCollection headers, bool acceptMimeMultipartMixed=true)
         {
             this.SetAcceptHeaderAndCharset(headers,
                 acceptMimeMultipartMixed

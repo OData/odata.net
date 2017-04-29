@@ -20,7 +20,7 @@ namespace Microsoft.OData.Core
     #endregion Namespaces
 
     /// <summary>
-    /// Class for reading OData batch messages; also verifies the proper sequence of read calls on the reader.
+    /// Abstract class for reading OData batch messages; also verifies the proper sequence of read calls on the reader.
     /// </summary>
     public abstract class ODataBatchReader : IODataBatchOperationListener
     {
