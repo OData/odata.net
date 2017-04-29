@@ -56,9 +56,13 @@ $FXCOP = $FXCOPDIR + "\FxCopCmd.exe"
 $BUILDLOG = $LOGDIR + "\msbuild.log"
 $TESTLOG = $LOGDIR + "\mstest.log"
 $TESTDIR = $ENLISTMENT_ROOT + "\bin\AnyCPU\$Configuration\Test\Desktop"
+$NETCORETESTDIR = $ENLISTMENT_ROOT + "\bin\AnyCPU\$Configuration\Test\.NETPortable\netcoreapp1.0"
 $PRODUCTDIR = $ENLISTMENT_ROOT + "\bin\AnyCPU\$Configuration\Product\Desktop"
+$NUGETEXE = $ENLISTMENT_ROOT + "\sln\.nuget\NuGet.exe"
 $NUGETPACK = $ENLISTMENT_ROOT + "\sln\packages"
 $XUNITADAPTER = "/TestAdapterPath:" + $NUGETPACK + "\xunit.runner.visualstudio.2.1.0\build\_common"
+
+$NugetRestoreSolutions = "Microsoft.OData.DotNetStandard.sln"
 
 $ProductDlls = "Microsoft.OData.Client.dll",
     "Microsoft.OData.Core.dll",
@@ -91,10 +95,21 @@ $RollingTestDlls = "Microsoft.OData.Core.Tests.dll",
     "RegressionUnitTests.dll",
     "Microsoft.Test.OData.PluggableFormat.Tests.dll"
 
+$NetCoreUnitTestDlls = "Microsoft.OData.Core.Tests.dll",
+    "Microsoft.OData.Edm.Tests.dll",
+    "Microsoft.Spatial.Tests.dll"
+    
 $RollingTestSuite = @()
 ForEach($dll in $RollingTestDlls)
 {
     $RollingTestSuite += $TESTDIR + "\" + $dll
+}
+
+ForEach($dll in $NetCoreUnitTestDlls)
+{
+    # Turn on once we migrate to VS 2017 as there are some technical difficulties
+    # with running .NET Core tests through script for VS 2015
+    # $RollingTestSuite += $NETCORETESTDIR + "\" + $dll
 }
 
 $AdditionalNightlyTestDlls = "Microsoft.Data.MetadataObjectModel.UnitTests.dll", 
@@ -430,6 +445,33 @@ Function RunTest($title, $testdir)
     }
 }
 
+Function NugetRestoreSolution
+{
+    Write-Host '**********Pull NuGet Packages*********'
+    foreach($solution in $NugetRestoreSolutions)
+    {
+        & $NUGETEXE "restore" ($ENLISTMENT_ROOT + "\sln\" + $solution)
+    } 
+}
+
+# Copy any xproj output to the appropriate bin folder. We use this workaround instead of doing it in the
+# xproj file due to xproj appending additional directory paths in its OutputPath parameter.
+# See https://github.com/aspnet/Tooling/issues/383
+Function CopyNetCoreOutput
+{
+    Write-Host '**********Copying NetCore Output Binaries*********'
+
+    $NETCOREUNITTESTROOT = $ENLISTMENT_ROOT + "\test\FunctionalTests\"
+    $UNITTESTFOLDERS = "Microsoft.OData.Core.Tests",
+        "Microsoft.OData.Edm.Tests",
+        "Microsoft.Spatial.Tests"
+
+    ForEach($TEST in $UNITTESTFOLDERS)
+    {
+        Copy-Item ($NETCOREUNITTESTROOT + $TEST + "\bin\$Configuration\*") ($ENLISTMENT_ROOT + "\bin\AnyCPU\$Configuration\Test\.NETPortable") -Recurse -Force
+    }
+}
+
 Function BuildProcess
 {
     Write-Host '**********Start To Build The Project*********'
@@ -516,21 +558,27 @@ if (! (Test-Path $LOGDIR))
 
 if ($TestType -eq 'SkipStrongName')
 {
-    CleanBeforeScorch 
+    CleanBeforeScorch
+    NugetRestoreSolution
     BuildProcess
+    CopyNetCoreOutput
     SkipStrongName
     Exit
 }
 elseif ($TestType -eq 'DisableSkipStrongName')
 {
-    CleanBeforeScorch 
+    CleanBeforeScorch
+    NugetRestoreSolution
     BuildProcess
+    CopyNetCoreOutput
     DisableSkipStrongName
     Exit
 }
 
-CleanBeforeScorch 
+CleanBeforeScorch
+NugetRestoreSolution
 BuildProcess
+CopyNetCoreOutput
 SkipStrongName
 TestProcess
 FxCopProcess
