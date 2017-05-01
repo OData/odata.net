@@ -17,7 +17,7 @@ namespace Microsoft.OData.UriParser
     /// <summary>
     /// Lexical token representing an order by operation.
     /// </summary>
-    internal sealed class OrderByToken : QueryToken
+    public sealed class OrderByToken : QueryToken
     {
         /// <summary>
         /// The direction of the ordering.

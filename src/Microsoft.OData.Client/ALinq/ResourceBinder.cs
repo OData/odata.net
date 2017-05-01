@@ -21,7 +21,8 @@ namespace Microsoft.OData.Client
     using Microsoft.OData;
     using Microsoft.OData.UriParser;
     using Microsoft.OData.Edm;
-
+    using PathSegmentToken = Microsoft.OData.Client.ALinq.UriParser.PathSegmentToken;
+    using NonSystemToken = Microsoft.OData.Client.ALinq.UriParser.NonSystemToken;
     #endregion Namespaces
 
     /// <summary>

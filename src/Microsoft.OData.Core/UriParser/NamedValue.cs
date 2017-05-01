@@ -13,7 +13,7 @@ namespace Microsoft.OData.UriParser
     /// <summary>
     /// Class representing a single named value (name and value pair).
     /// </summary>
-    internal sealed class NamedValue
+    public sealed class NamedValue
     {
         /// <summary>
         /// The name of the value. Or null if the name was not used for this value.

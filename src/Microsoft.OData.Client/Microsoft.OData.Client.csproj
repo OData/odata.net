@@ -166,8 +166,8 @@
     <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Core\UriParser\SyntacticAst\QueryToken.cs">
       <Link>ALinq\UriParser\SyntacticAst\QueryToken.cs</Link>
     </Compile>
-    <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Core\UriParser\TreeNodeKinds\QueryTokenKind.cs">
-      <Link>ALinq\UriParser\TreeNodeKinds\QueryTokenKind.cs</Link>
+    <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Core\UriParser\SyntacticAst\QueryTokenKind.cs">
+      <Link>ALinq\UriParser\SyntacticAst\QueryTokenKind.cs</Link>
     </Compile>
     <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Core\UriParser\SyntacticAst\RangeVariableToken.cs">
       <Link>ALinq\UriParser\SyntacticAst\RangeVariableToken.cs</Link>

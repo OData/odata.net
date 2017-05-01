@@ -217,8 +217,8 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         {
             var results = this.StarExpandTesting("*/$ref,CityHall", "Cities");
             results.ExpandTerms.Should().HaveCount(3);
-            results.ExpandTerms.First().PathToNavProp.Identifier.ShouldBeEquivalentTo("CityHall");
-            results.ExpandTerms.Last().PathToNavProp.Identifier.ShouldBeEquivalentTo("$ref");
+            results.ExpandTerms.First().PathToNavigationProp.Identifier.ShouldBeEquivalentTo("CityHall");
+            results.ExpandTerms.Last().PathToNavigationProp.Identifier.ShouldBeEquivalentTo("$ref");
         }
 
         [Fact]
@@ -226,8 +226,8 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         {
             var results = this.StarExpandTesting("CityHall($levels=2),*/$ref,PoliceStation($select=Id, Address)", "Cities");
             results.ExpandTerms.Should().HaveCount(3);
-            results.ExpandTerms.First().PathToNavProp.Identifier.ShouldBeEquivalentTo("CityHall");
-            results.ExpandTerms.Last().PathToNavProp.Identifier.ShouldBeEquivalentTo("$ref");
+            results.ExpandTerms.First().PathToNavigationProp.Identifier.ShouldBeEquivalentTo("CityHall");
+            results.ExpandTerms.Last().PathToNavigationProp.Identifier.ShouldBeEquivalentTo("$ref");
         }
 
         [Fact]

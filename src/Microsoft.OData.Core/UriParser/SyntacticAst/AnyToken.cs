@@ -16,7 +16,7 @@ namespace Microsoft.OData.UriParser
     /// <summary>
     /// Lexical token representing the Any Query
     /// </summary>
-    internal sealed class AnyToken : LambdaToken
+    public sealed class AnyToken : LambdaToken
     {
         /// <summary>
         /// Create a AnyToken given the expression, parameter, and parent

@@ -14,7 +14,10 @@ namespace Microsoft.OData.UriParser.Aggregation
 #endif
     using Microsoft.OData.UriParser;
 
-    internal sealed class AggregateExpressionToken : QueryToken
+    /// <summary>
+    /// Query token representing an Aggregate expression.
+    /// </summary>
+    public sealed class AggregateExpressionToken : QueryToken
     {
         private readonly QueryToken expression;
 
@@ -24,6 +27,12 @@ namespace Microsoft.OData.UriParser.Aggregation
 
         private readonly string alias;
 
+        /// <summary>
+        /// Create an AggregateExpressionToken.
+        /// </summary>
+        /// <param name="expression">The aggregate expression.</param>
+        /// <param name="method">The aggregation method.</param>
+        /// <param name="alias">The alias for this query token.</param>
         public AggregateExpressionToken(QueryToken expression, AggregationMethod method, string alias)
         {
             ExceptionUtils.CheckArgumentNotNull(expression, "expression");
@@ -34,32 +43,53 @@ namespace Microsoft.OData.UriParser.Aggregation
             this.alias = alias;
         }
 
+        /// <summary>
+        /// Create an AggregateExpressionToken.
+        /// </summary>
+        /// <param name="expression">The aggregate expression.</param>
+        /// <param name="methodDefinition">The aggregate method definition.</param>
+        /// <param name="alias">The alias for this query token.</param>
         public AggregateExpressionToken(QueryToken expression, AggregationMethodDefinition methodDefinition, string alias)
             : this(expression, methodDefinition.MethodKind, alias)
         {
             this.methodDefinition = methodDefinition;
         }
 
+        /// <summary>
+        /// Gets the kind of this token.
+        /// </summary>
         public override QueryTokenKind Kind
         {
             get { return QueryTokenKind.AggregateExpression; }
         }
 
+        /// <summary>
+        /// Gets the AggregationMethod of this token.
+        /// </summary>
         public AggregationMethod Method
         {
             get { return this.method; }
         }
 
+        /// <summary>
+        /// Gets the aggregate method definition.
+        /// </summary>
         public AggregationMethodDefinition MethodDefinition
         {
             get { return this.methodDefinition; }
         }
 
+        /// <summary>
+        /// Gets the expression.
+        /// </summary>
         public QueryToken Expression
         {
             get { return this.expression; }
         }
 
+        /// <summary>
+        /// Gets the alias.
+        /// </summary>
         public string Alias
         {
             get { return this.alias; }
