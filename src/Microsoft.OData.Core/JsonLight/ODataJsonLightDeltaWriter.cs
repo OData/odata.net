@@ -963,6 +963,7 @@ namespace Microsoft.OData.Core.JsonLight
         /// <summary>
         /// Finish writing a delta feed/entry.
         /// </summary>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1804:RemoveUnusedLocals", MessageId = "entry", Justification = "entry improves debugging experience.")]
         private void WriteEndImplementation()
         {
             if (this.State == WriterState.ExpandedNavigationProperty)

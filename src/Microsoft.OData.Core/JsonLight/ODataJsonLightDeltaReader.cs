@@ -343,6 +343,7 @@ namespace Microsoft.OData.Core.JsonLight
         /// Removes the current scope from the stack of all scopes.
         /// </summary>
         /// <param name="state">The expected state of the current scope (to be popped).</param>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1804:RemoveUnusedLocals", MessageId = "scope", Justification = "scope improves debugging experience.")]
         private void PopScope(ODataDeltaReaderState state)
         {
             Debug.Assert(this.scopes.Count > 1, "Stack must have more than 1 items in order to pop an item.");

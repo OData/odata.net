@@ -385,12 +385,7 @@ namespace Microsoft.OData.Core
             {
                 return null;
             }
-
-            // TODO: Refactor the duplicate property names checker and use different implementations for JSON Light
-            //      and the other formats (most of the logic is not needed for JSON Light).
-            //      Once we create a JSON Light specific duplicate property names checker, we will check for duplicates in
-            //      the ParseProperty method and thus detect duplicates before we get here.
-            ThrowIfPropertyIsProcessed(propertyName, duplicationRecord);
+            
             return duplicationRecord.PropertyODataAnnotations;
         }
 

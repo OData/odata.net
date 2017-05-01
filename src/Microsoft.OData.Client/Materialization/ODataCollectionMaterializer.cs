@@ -49,6 +49,7 @@ namespace Microsoft.OData.Client.Materialization
         /// </summary>
         /// <param name="expectedClientType">The expected client type being materialized into.</param>
         /// <param name="expectedReaderType">The expected type for the underlying reader.</param>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1804:RemoveUnusedLocals", MessageId = "isClrCollection", Justification = "isClrCollection improves debugging experience.")]
         protected override void ReadWithExpectedType(IEdmTypeReference expectedClientType, IEdmTypeReference expectedReaderType)
         {
             if (!expectedClientType.IsCollection())

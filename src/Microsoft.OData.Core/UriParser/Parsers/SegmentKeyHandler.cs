@@ -150,6 +150,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         /// <param name="key">The key to apply.</param>
         /// <param name="resolver">The resolver to use.</param>
         /// <returns>The newly created key segment.</returns>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1804:RemoveUnusedLocals", MessageId = "isEntity", Justification = "isEntity improves debugging experience.")]
         private static KeySegment CreateKeySegment(ODataPathSegment segment, KeySegment previousKeySegment, SegmentArgumentParser key, ODataUriResolver resolver)
         {
             Debug.Assert(segment != null, "segment != null");
