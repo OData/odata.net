@@ -1312,6 +1312,9 @@
     <Compile Include="$(ODataCrossTargettingSourcePath)\UriParser\SyntacticAst\QueryToken.cs">
       <Link>Microsoft\OData\Core\UriParser\SyntacticAst\QueryToken.cs</Link>
     </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\UriParser\SyntacticAst\QueryTokenKind.cs">
+      <Link>Microsoft\OData\Core\UriParser\SyntacticAst\QueryTokenKind.cs</Link>
+    </Compile>	
     <Compile Include="$(ODataCrossTargettingSourcePath)\UriParser\SyntacticAst\RangeVariableToken.cs">
       <Link>Microsoft\OData\Core\UriParser\SyntacticAst\RangeVariableToken.cs</Link>
     </Compile>
@@ -1338,9 +1341,6 @@
     </Compile>
     <Compile Include="$(ODataCrossTargettingSourcePath)\UriParser\TreeNodeKinds\QueryNodeKind.cs">
       <Link>Microsoft\OData\Core\UriParser\TreeNodeKinds\QueryNodeKind.cs</Link>
-    </Compile>
-    <Compile Include="$(ODataCrossTargettingSourcePath)\UriParser\TreeNodeKinds\QueryTokenKind.cs">
-      <Link>Microsoft\OData\Core\UriParser\TreeNodeKinds\QueryTokenKind.cs</Link>
     </Compile>
     <Compile Include="$(ODataCrossTargettingSourcePath)\UriParser\TreeNodeKinds\RequestTargetKind.cs">
       <Link>Microsoft\OData\Core\UriParser\TreeNodeKinds\RequestTargetKind.cs</Link>

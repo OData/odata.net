@@ -13,7 +13,7 @@ namespace Microsoft.OData.UriParser
     /// <summary>
     /// Lexical token representing a type segment.
     /// </summary>
-    internal sealed class DottedIdentifierToken : PathToken
+    public sealed class DottedIdentifierToken : PathToken
     {
         /// <summary>
         /// The Identifier of the type segment.

@@ -270,7 +270,7 @@ namespace Microsoft.OData.UriParser
                 List<string> explicitedTokens = new List<string>();
                 foreach (var tmpTokens in termTokens)
                 {
-                    var pathToNav = tmpTokens.PathToNavProp;
+                    var pathToNav = tmpTokens.PathToNavigationProp;
                     if (pathToNav.Identifier != UriQueryConstants.RefSegment)
                     {
                         explicitedTokens.Add(pathToNav.Identifier);
@@ -284,7 +284,7 @@ namespace Microsoft.OData.UriParser
                 // Add navigation path if it is not in list yet
                 foreach (var tmpTokens in starTermTokens)
                 {
-                    var pathToNav = tmpTokens.PathToNavProp;
+                    var pathToNav = tmpTokens.PathToNavigationProp;
                     if (pathToNav.Identifier != UriQueryConstants.RefSegment && !explicitedTokens.Contains(pathToNav.Identifier))
                     {
                         termTokens.Add(tmpTokens);

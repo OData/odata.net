@@ -20,7 +20,7 @@ namespace Microsoft.OData.UriParser
     /// <summary>
     /// Parser which consumes the query expression ($filter, $orderby) and produces the lexical object model.
     /// </summary>
-    internal sealed class UriQueryExpressionParser
+    public sealed class UriQueryExpressionParser
     {
         /// <summary>
         /// The maximum number of recursion nesting allowed.
@@ -54,6 +54,15 @@ namespace Microsoft.OData.UriParser
         /// Whether to allow case insensitive for builtin identifier.
         /// </summary>
         private bool enableCaseInsensitiveBuiltinIdentifier = false;
+
+        /// <summary>
+        /// Creates a UriQueryExpressionParser.
+        /// </summary>
+        /// <param name="maxDepth">The maximum depth of each part of the query - a recursion limit.</param>
+        public UriQueryExpressionParser(int maxDepth)
+            : this(maxDepth, false)
+        {
+        }
 
         /// <summary>
         /// Constructor.
@@ -93,6 +102,16 @@ namespace Microsoft.OData.UriParser
         internal ExpressionLexer Lexer
         {
             get { return this.lexer; }
+        }
+
+        /// <summary>
+        /// Parses the $filter expression.
+        /// </summary>
+        /// <param name="filter">The $filter expression string to parse.</param>
+        /// <returns>The lexical token representing the filter.</returns>
+        public QueryToken ParseFilter(string filter)
+        {
+            return this.ParseExpressionText(filter);
         }
 
         /// <summary>
@@ -184,16 +203,6 @@ namespace Microsoft.OData.UriParser
                 default:
                     return edmTypeReference.Definition.FullTypeName();
             }
-        }
-
-        /// <summary>
-        /// Parses the $filter expression.
-        /// </summary>
-        /// <param name="filter">The $filter expression string to parse.</param>
-        /// <returns>The lexical token representing the filter.</returns>
-        internal QueryToken ParseFilter(string filter)
-        {
-            return this.ParseExpressionText(filter);
         }
 
         internal IEnumerable<QueryToken> ParseApply(string apply)

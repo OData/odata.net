@@ -13,7 +13,7 @@ namespace Microsoft.OData.UriParser
     /// <summary>
     /// Lexical token representing a query option.
     /// </summary>
-    internal sealed class CustomQueryOptionToken : QueryToken
+    public sealed class CustomQueryOptionToken : QueryToken
     {
         /// <summary>
         /// The name of the query option.

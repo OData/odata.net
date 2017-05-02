@@ -20,7 +20,7 @@ namespace Microsoft.OData.UriParser
     /// <summary>
     /// Lexical token representing a function call.
     /// </summary>
-    internal sealed class FunctionCallToken : QueryToken
+    public sealed class FunctionCallToken : QueryToken
     {
         /// <summary>
         /// The name of the function to call.

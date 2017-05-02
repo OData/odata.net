@@ -14,7 +14,7 @@ namespace Microsoft.OData.UriParser
     /// Lexical token representing a segment in a path.
     /// </summary>
     ///
-    internal abstract class PathToken : QueryToken
+    public abstract class PathToken : QueryToken
     {
         /// <summary>
         /// The NextToken in the path(can either be the parent or the child depending on whether the tree has

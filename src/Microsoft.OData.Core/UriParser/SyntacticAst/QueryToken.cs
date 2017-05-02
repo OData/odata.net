@@ -20,7 +20,7 @@ namespace Microsoft.OData.UriParser
     /// <summary>
     /// Base class for all lexical tokens of OData query.
     /// </summary>
-    internal abstract class QueryToken
+    public abstract class QueryToken
     {
         /// <summary>
         /// Empty list of arguments.

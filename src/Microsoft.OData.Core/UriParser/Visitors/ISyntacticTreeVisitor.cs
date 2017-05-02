@@ -16,7 +16,7 @@ namespace Microsoft.OData.UriParser
     /// Visitor interface for walking the Syntactic Tree.
     /// </summary>
     /// <typeparam name="T">Return type for the visitor methods on this visitor.</typeparam>
-    internal interface ISyntacticTreeVisitor<T>
+    public interface ISyntacticTreeVisitor<T>
     {
         /// <summary>
         /// Visit an AllToken
