@@ -440,35 +440,6 @@ namespace Microsoft.Test.OData.Framework.Client
         }
 
         /// <summary>
-        /// Wrapper entry for the DataServiceContext.ExecuteBatchAcceptMultipartMixed method.
-        /// </summary>
-        /// <param name="batchContentType">Content-Type of the batch request.</param>
-        /// <param name="param">Requests in the batch.</param>
-        /// <returns></returns>
-        public DataServiceResponse ExecuteBatchAcceptMultipartMixed(BatchContentType batchContentType, DataServiceRequest[] param)
-        {
-#if SILVERLIGHT || PORTABLELIB
-            throw new NotImplementedException();
-#else
-            return this.wrappedInstance.ExecuteBatchAcceptMultipartMixed(batchContentType, param);
-#endif
-        }
-        /// <summary>
-        /// Wrapper entry for the DataServiceContext.ExecuteBatchAcceptApplicationJson method.
-        /// </summary>
-        /// <param name="batchContentType">Content-Type of the batch request.</param>
-        /// <param name="param">Requests in the batch.</param>
-        /// <returns></returns>
-        public DataServiceResponse ExecuteBatchAcceptApplicationJson(BatchContentType batchContentType, DataServiceRequest[] param)
-        {
-#if SILVERLIGHT || PORTABLELIB
-            throw new NotImplementedException();
-#else
-            return this.wrappedInstance.ExecuteBatchAcceptApplicationJson(batchContentType, param);
-#endif
-        }
-
-        /// <summary>
         /// Wrapper entry for the DataServiceContext.CreateQuery method.
         /// </summary>
         /// <typeparam name="T">element type of the result</typeparam>

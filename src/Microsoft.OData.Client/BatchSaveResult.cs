@@ -4,6 +4,8 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+using System.Runtime.CompilerServices;
+
 namespace Microsoft.OData.Client
 {
     #region Namespaces
@@ -51,35 +53,7 @@ namespace Microsoft.OData.Client
         /// <summary>Buffer used for caching operation response body streams.</summary>
         private byte[] streamCopyBuffer;
 
-        /// <summary>
-        /// The Content-Type header for the batch request.
-        /// </summary>
-        private readonly BatchContentType batchContentType;
-
-        /// <summary>
-        /// Whether the client requires multipart/mixed in the batch response.
-        /// </summary>
-        private readonly bool acceptMimeMultipartMixed;
-
         #endregion
-
-        /// <summary>
-        /// Constructor for BatchSaveResult with default content type of MIME multipart/mixed and accepting application/json.
-        /// </summary>
-        /// <param name="context">context</param>
-        /// <param name="method">method</param>
-        /// <param name="queries">queries</param>
-        /// <param name="options">options</param>
-        /// <param name="callback">user callback</param>
-        /// <param name="state">user state object</param>
-        internal BatchSaveResult(DataServiceContext context, string method, DataServiceRequest[] queries,
-            SaveChangesOptions options, AsyncCallback callback, object state)
-            : this(
-                context, method, queries, options, callback, state,
-                new BatchContentType(BatchContentType.TypeMultipartMixed),
-                /*acceptMimeMultipartMixed*/true)
-        {
-        }
 
         /// <summary>
         /// constructor for BatchSaveResult.
@@ -91,18 +65,12 @@ namespace Microsoft.OData.Client
         /// <param name="callback">user callback</param>
         /// <param name="state">user state object</param>
          /// <param name="batchContentType">The content type header information.</param>
-        /// <param name="acceptMimeMultipartMixed">Whether the accept header specifies "multipart/mixed"</param>
-       internal BatchSaveResult(DataServiceContext context, string method, DataServiceRequest[] queries, SaveChangesOptions options, AsyncCallback callback, object state,
-           BatchContentType batchContentType, bool acceptMimeMultipartMixed)
+       internal BatchSaveResult(DataServiceContext context, string method, DataServiceRequest[] queries, SaveChangesOptions options, AsyncCallback callback, object state)
             : base(context, method, queries, options, callback, state)
         {
             Debug.Assert(Util.IsBatch(options), "the options must have batch  flag set");
             this.Queries = queries;
             this.streamCopyBuffer = new byte[StreamCopyBufferSize];
-
-            this.batchContentType = batchContentType;
-            this.acceptMimeMultipartMixed = acceptMimeMultipartMixed;
-
         }
 
         /// <summary>returns true since this class handles batch requests.</summary>
@@ -311,8 +279,10 @@ namespace Microsoft.OData.Client
             Uri requestUri = UriUtil.CreateUri(this.RequestInfo.BaseUriResolver.GetBaseUriWithSlash(), UriUtil.CreateUri("$batch", UriKind.Relative));
             HeaderCollection headers = new HeaderCollection();
             headers.SetRequestVersion(Util.ODataVersion4, this.RequestInfo.MaxProtocolVersionAsVersion);
-            headers.SetHeader(XmlConstants.HttpContentType, this.batchContentType.CreateMimeContentTypeValue());
-            this.RequestInfo.Format.SetRequestAcceptHeaderForBatch(headers, this.acceptMimeMultipartMixed);
+
+            // Set headers for batch format.
+            this.RequestInfo.Format.SetRequestContentTypeHeaderForBatch(headers);
+            this.RequestInfo.Format.SetRequestAcceptHeaderForBatch(headers);
 
             return this.CreateTopLevelRequest(XmlConstants.HttpMethodPost, requestUri, headers, this.RequestInfo.HttpStack, null /*descriptor*/);
         }
