@@ -13,7 +13,7 @@ namespace Microsoft.OData.UriParser
     /// <summary>
     /// Lexical token representing the last segment in a path.
     /// </summary>
-    internal sealed class EndPathToken : PathToken
+    public sealed class EndPathToken : PathToken
     {
         /// <summary>
         /// The Identifier of the property to access.
