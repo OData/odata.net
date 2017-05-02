@@ -1533,42 +1533,6 @@ namespace Microsoft.OData.Client
             return result;
         }
 
-        /// <summary>
-        /// Asynchronously submits a group of queries as a batch to the data service.
-        /// Expanded API for accepting multipart/mixed response.
-        /// </summary>
-        /// <param name="callback">The delegate that is called when a response to the batch request is received.</param>
-        /// <param name="state">User-defined state object that is used to pass context data to the callback method.</param>
-        /// <param name="batchContentType">Batch content type header information.</param>
-        /// <param name="queries">The array of query requests to include in the batch request.</param>
-        /// <returns>An <see cref="T:System.IAsyncResult" /> object that is used to track the status of the asynchronous operation. </returns>
-        public IAsyncResult BeginExecuteBatchAcceptMultipartMixed(AsyncCallback callback, object state, BatchContentType batchContentType, params DataServiceRequest[] queries)
-        {
-            Util.CheckArgumentNotEmpty(queries, "queries");
-            BatchSaveResult result = new BatchSaveResult(this, "ExecuteBatch", queries, SaveChangesOptions.BatchWithSingleChangeset, callback, state,
-                batchContentType, /*AcceptMimeMultipartMixed*/true);
-            result.BatchBeginRequest();
-            return result;
-        }
-
-        /// <summary>
-        /// Asynchronously submits a group of queries as a batch to the data service.
-        /// Expanded API for accepting applcation/json response.
-        /// </summary>
-        /// <param name="callback">The delegate that is called when a response to the batch request is received.</param>
-        /// <param name="state">User-defined state object that is used to pass context data to the callback method.</param>
-        /// <param name="batchContentType">Batch content type header information.</param>
-        /// <param name="queries">The array of query requests to include in the batch request.</param>
-        /// <returns>An <see cref="T:System.IAsyncResult" /> object that is used to track the status of the asynchronous operation. </returns>
-        public IAsyncResult BeginExecuteBatchAcceptApplicationJson(AsyncCallback callback, object state, BatchContentType batchContentType, params DataServiceRequest[] queries)
-        {
-            Util.CheckArgumentNotEmpty(queries, "queries");
-            BatchSaveResult result = new BatchSaveResult(this, "ExecuteBatch", queries, SaveChangesOptions.BatchWithSingleChangeset, callback, state,
-                batchContentType, /*AcceptMimeMultipartMixed*/false);
-            result.BatchBeginRequest();
-            return result;
-        }
-
         /// <summary>Asynchronously submits a group of queries as a batch to the data service.</summary>
         /// <returns>An Task that represents the DataServiceResult object that indicates the result of the batch operation.</returns>
         /// <param name="queries">The array of query requests to include in the batch request.</param>
@@ -1595,48 +1559,6 @@ namespace Microsoft.OData.Client
             Util.CheckArgumentNotEmpty(queries, "queries");
 
             BatchSaveResult result = new BatchSaveResult(this, "ExecuteBatch", queries, SaveChangesOptions.BatchWithSingleChangeset, null, null);
-            result.BatchRequest();
-            return result.EndRequest();
-        }
-
-        /// <summary>
-        /// WIP: Synchronously submits a group of queries as a batch to the data service, accepting multipart/mixed response.
-        /// Not supported by the WCF Data Services 5.0 client for Silverlight.
-        /// </summary>
-        /// <returns>The response to the batch operation.</returns>
-        /// <param name="batchContentType">Batch content type header information.</param>
-        /// <param name="queries">Array of <see cref="T:Microsoft.OData.Client.DataServiceRequest[]" /> objects that make up the queries.</param>
-        /// <remarks>
-        /// We might need to revisit the exact machanism enabling client to specify Content-Type and Accept headers in json batch
-        /// requests.
-        /// </remarks>
-        public DataServiceResponse ExecuteBatchAcceptMultipartMixed(BatchContentType batchContentType, params DataServiceRequest[] queries)
-        {
-            Util.CheckArgumentNotEmpty(queries, "queries");
-
-            BatchSaveResult result = new BatchSaveResult(this, "ExecuteBatch", queries, SaveChangesOptions.BatchWithSingleChangeset, null, null,
-                batchContentType, /*acceptMimeMultipartMixed*/true);
-            result.BatchRequest();
-            return result.EndRequest();
-        }
-
-        /// <summary>
-        /// WIP: Synchronously submits a group of queries as a batch to the data service, accepting application/json response.
-        /// Not supported by the WCF Data Services 5.0 client for Silverlight.
-        /// </summary>
-        /// <returns>The response to the batch operation.</returns>
-        /// <param name="batchContentType">Batch content type header information.</param>
-        /// <param name="queries">Array of <see cref="T:Microsoft.OData.Client.DataServiceRequest[]" /> objects that make up the queries.</param>
-        /// <remarks>
-        /// We might need to revisit the exact machanism enabling client to specify Content-Type and Accept headers in json batch
-        /// requests.
-        /// </remarks>
-        public DataServiceResponse ExecuteBatchAcceptApplicationJson(BatchContentType batchContentType, params DataServiceRequest[] queries)
-        {
-            Util.CheckArgumentNotEmpty(queries, "queries");
-
-            BatchSaveResult result = new BatchSaveResult(this, "ExecuteBatch", queries, SaveChangesOptions.BatchWithSingleChangeset, null, null,
-                batchContentType, /*acceptMimeMultipartMixed*/false);
             result.BatchRequest();
             return result.EndRequest();
         }
