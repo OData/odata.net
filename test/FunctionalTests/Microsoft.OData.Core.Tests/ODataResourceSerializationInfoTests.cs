@@ -53,14 +53,14 @@ namespace Microsoft.OData.Tests
         public void SettingNullBaseTypeNameShouldThrow()
         {
             Action action = () => this.testSubject.NavigationSourceEntityTypeName = null;
-            action.ShouldThrow<ArgumentNullException>().WithMessage("NavigationSourceEntityTypeName", ComparisonMode.Substring);
+            action.ShouldThrow<ArgumentNullException>().Where(e => e.Message.Contains("NavigationSourceEntityTypeName"));
         }
 
         [Fact]
         public void SettingEmptyBaseTypeNameShouldThrow()
         {
             Action action = () => this.testSubject.NavigationSourceEntityTypeName = "";
-            action.ShouldThrow<ArgumentNullException>().WithMessage("NavigationSourceEntityTypeName", ComparisonMode.Substring);
+            action.ShouldThrow<ArgumentNullException>().Where(e => e.Message.Contains("NavigationSourceEntityTypeName"));
         }
 
         [Fact]
@@ -81,7 +81,7 @@ namespace Microsoft.OData.Tests
         public void SettingEmptyExpectedTypeNameShouldThrow()
         {
             Action action = () => this.testSubject.ExpectedTypeName = "";
-            action.ShouldThrow<ArgumentException>().WithMessage("ExpectedTypeName", ComparisonMode.Substring);
+            action.ShouldThrow<ArgumentException>().Where(e => e.Message.Contains("ExpectedTypeName"));
         }
 
         [Fact]
@@ -109,14 +109,14 @@ namespace Microsoft.OData.Tests
         {
             Action action = () => ODataResourceSerializationInfo.Validate(
                 new ODataResourceSerializationInfo() { NavigationSourceKind = EdmNavigationSourceKind.EntitySet });
-            action.ShouldThrow<ArgumentNullException>().WithMessage("serializationInfo.NavigationSourceName", ComparisonMode.Substring);
+            action.ShouldThrow<ArgumentNullException>().Where(e => e.Message.Contains("serializationInfo.NavigationSourceName"));
         }
 
         [Fact]
         public void ValidatingSerializationInfoShouldThrowIfBaseTypeNameNotSet()
         {
             Action action = () => ODataResourceSerializationInfo.Validate(new ODataResourceSerializationInfo { NavigationSourceName = "Set", NavigationSourceKind = EdmNavigationSourceKind.EntitySet });
-            action.ShouldThrow<ArgumentNullException>().WithMessage("serializationInfo.NavigationSourceEntityTypeName", ComparisonMode.Substring);
+            action.ShouldThrow<ArgumentNullException>().Where(e => e.Message.Contains("serializationInfo.NavigationSourceEntityTypeName"));
         }
 
         [Fact]

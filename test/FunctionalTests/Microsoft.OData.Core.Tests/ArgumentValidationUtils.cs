@@ -14,13 +14,13 @@ namespace Microsoft.OData.Tests
         internal static void ShouldThrowOnNullArgument<T>(this Action<T> action, string argumentName) where T : class
         {
             Action withNullValue = () => action(null);
-            withNullValue.ShouldThrow<ArgumentNullException>().WithMessage(argumentName, ComparisonMode.Substring);
+            withNullValue.ShouldThrow<ArgumentNullException>().Where(e => e.Message.Contains(argumentName));
         }
 
         internal static void ShouldThrowOnEmptyStringArgument(this Action<string> action, string argumentName)
         {
             Action withEmptyValue = () => action(string.Empty);
-            withEmptyValue.ShouldThrow<ArgumentException>().WithMessage(argumentName, ComparisonMode.Substring);
+            withEmptyValue.ShouldThrow<ArgumentException>().Where(e => e.Message.Contains(argumentName));
         }
 
         internal static void ShouldThrowOnNullOrEmptyStringArgument(this Action<string> action, string argumentName)

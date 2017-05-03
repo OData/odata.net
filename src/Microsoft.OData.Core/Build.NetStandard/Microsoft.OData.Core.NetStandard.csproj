@@ -1547,6 +1547,9 @@
     <Compile Include="..\UriParser\SyntacticAst\QueryToken.cs">
       <Link>UriParser\SyntacticAst\QueryToken.cs</Link>
     </Compile>
+    <Compile Include="..\UriParser\SyntacticAst\QueryTokenKind.cs">
+      <Link>UriParser\SyntacticAst\QueryTokenKind.cs</Link>
+    </Compile>
     <Compile Include="..\UriParser\SyntacticAst\RangeVariableToken.cs">
       <Link>UriParser\SyntacticAst\RangeVariableToken.cs</Link>
     </Compile>
@@ -1573,9 +1576,6 @@
     </Compile>
     <Compile Include="..\UriParser\TreeNodeKinds\QueryNodeKind.cs">
       <Link>UriParser\TreeNodeKinds\QueryNodeKind.cs</Link>
-    </Compile>
-    <Compile Include="..\UriParser\TreeNodeKinds\QueryTokenKind.cs">
-      <Link>UriParser\TreeNodeKinds\QueryTokenKind.cs</Link>
     </Compile>
     <Compile Include="..\UriParser\TreeNodeKinds\RequestTargetKind.cs">
       <Link>UriParser\TreeNodeKinds\RequestTargetKind.cs</Link>

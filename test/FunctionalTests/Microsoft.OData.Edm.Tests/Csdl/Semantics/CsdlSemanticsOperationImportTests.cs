@@ -90,7 +90,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl.Semantics
 
         private static CsdlSemanticsSchema CreateCsdlSemanticsSchema(CsdlEntityContainer csdlEntityContainer, params CsdlOperation[] operations)
         {
-            var csdlEntityType = new CsdlEntityType("EntityType", null, false, false, false, null, new Collection<CsdlProperty>(), new BindingList<CsdlNavigationProperty>(), null, null);
+            var csdlEntityType = new CsdlEntityType("EntityType", null, false, false, false, null, new Collection<CsdlProperty>(), new System.Collections.Generic.List<CsdlNavigationProperty>(), null, null);
             var schema = CsdlBuilder.Schema("FQ.NS", csdlOperations: operations, csdlEntityContainers: new CsdlEntityContainer[] { csdlEntityContainer }, csdlStructuredTypes: new CsdlStructuredType[] { csdlEntityType });
             var csdlModel = new CsdlModel();
             csdlModel.AddSchema(schema);

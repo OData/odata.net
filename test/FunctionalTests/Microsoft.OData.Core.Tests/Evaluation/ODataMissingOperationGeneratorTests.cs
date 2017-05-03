@@ -62,9 +62,13 @@ namespace Microsoft.OData.Tests.Evaluation
             this.entry.AddFunction(this.odataFunction);
             AddMissingOperations(this.entry, this.entityType, SelectedPropertiesNode.EntireSubtree, this.model, type => this.allOperations, null, e => false);
             this.entry.Actions.ToList().Count.Should().Be(1);
+#if !NETCOREAPP1_0
             this.entry.Actions.Single().ShouldHave().AllProperties().EqualTo(this.odataAction);
+#endif
             this.entry.Functions.ToList().Count.Should().Be(1);
+#if !NETCOREAPP1_0
             this.entry.Functions.Single().ShouldHave().AllProperties().EqualTo(this.odataFunction);
+#endif
         }
 
         [Fact]
@@ -83,7 +87,9 @@ namespace Microsoft.OData.Tests.Evaluation
             this.entry.Functions.Should().BeEmpty();
 
             this.entry.Actions.Should().HaveCount(1);
+#if !NETCOREAPP1_0
             this.entry.Actions.Single().ShouldHave().AllProperties().EqualTo(this.odataAction);
+#endif
         }
 
         [Fact]
@@ -94,7 +100,9 @@ namespace Microsoft.OData.Tests.Evaluation
             this.entry.Actions.Should().BeEmpty();
 
             this.entry.Functions.Should().HaveCount(1);
+#if !NETCOREAPP1_0
             this.entry.Functions.Single().ShouldHave().AllProperties().EqualTo(this.odataFunction);
+#endif
         }
 
         [Fact]

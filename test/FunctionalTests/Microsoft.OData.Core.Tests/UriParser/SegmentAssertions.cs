@@ -186,7 +186,7 @@ namespace Microsoft.OData.Tests.UriParser
             }
             else
             {
-                if (typeof(TValue).IsPrimitive || typeof(TValue) == typeof(decimal))
+                if (typeof(TValue).IsPrimitive() || typeof(TValue) == typeof(decimal))
                 {
                     // for int value --> long TValue
                     TValue tmp = (TValue)Convert.ChangeType(constantNode.Value, typeof(TValue));

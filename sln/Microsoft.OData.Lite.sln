@@ -50,17 +50,17 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.Test.OData.Plugga
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.Test.OData.PluggableFormat.Tests", "..\test\FunctionalTests\Tests\DataOData\Tests\OData.PluggableFormat.Tests\Microsoft.Test.OData.PluggableFormat.Tests.csproj", "{1D872F31-6100-4C76-999E-ED948E2CD249}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.OData.TestCommon", "..\test\FunctionalTests\Microsoft.OData.TestCommon\Microsoft.OData.TestCommon.csproj", "{9037FF4A-4636-41AA-BFA2-0930EF1563EE}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.OData.TestCommon", "..\test\FunctionalTests\Microsoft.OData.TestCommon\Build.NetFramework\Microsoft.OData.TestCommon.csproj", "{9037FF4A-4636-41AA-BFA2-0930EF1563EE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.OData.Edm.Tests", "..\test\FunctionalTests\Microsoft.OData.Edm.Tests\Microsoft.OData.Edm.Tests.csproj", "{419F42FA-3313-46A7-B519-B2ED042B0F5C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.OData.Edm.Tests", "..\test\FunctionalTests\Microsoft.OData.Edm.Tests\Build.NetFramework\Microsoft.OData.Edm.Tests.csproj", "{419F42FA-3313-46A7-B519-B2ED042B0F5C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.OData.Core.Tests", "..\test\FunctionalTests\Microsoft.OData.Core.Tests\Microsoft.OData.Core.Tests.csproj", "{C6547B28-DC0C-414B-A1D7-488FC8EA7B6C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.OData.Core.Tests", "..\test\FunctionalTests\Microsoft.OData.Core.Tests\Build.NetFramework\Microsoft.OData.Core.Tests.csproj", "{C6547B28-DC0C-414B-A1D7-488FC8EA7B6C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.Spatial.Tests", "..\test\FunctionalTests\Microsoft.Spatial.Tests\Microsoft.Spatial.Tests.csproj", "{68C25902-0FBD-4694-9EE9-47F2219CE039}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.Spatial.Tests", "..\test\FunctionalTests\Microsoft.Spatial.Tests\Build.NetFramework\Microsoft.Spatial.Tests.csproj", "{68C25902-0FBD-4694-9EE9-47F2219CE039}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.OData.Client.Tests", "..\test\FunctionalTests\Microsoft.OData.Client.Tests\Microsoft.OData.Client.Tests.csproj", "{9F0AB290-8164-4885-BFCA-A6F87AB81740}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.Test.OData.DependencyInjection", "..\test\Common\Microsoft.Test.OData.DependencyInjection\Microsoft.Test.OData.DependencyInjection.csproj", "{50AA23B2-56EF-4C51-A270-8D5BD0C899B6}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.Test.OData.DependencyInjection", "..\test\Common\Microsoft.Test.OData.DependencyInjection\Build.NetFramework\Microsoft.Test.OData.DependencyInjection.csproj", "{50AA23B2-56EF-4C51-A270-8D5BD0C899B6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

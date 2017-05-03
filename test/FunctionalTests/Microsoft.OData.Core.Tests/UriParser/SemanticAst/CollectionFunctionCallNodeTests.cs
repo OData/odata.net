@@ -34,14 +34,14 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
         public void NameCannotBeNull()
         {
             Action createWithNullName = () => new CollectionFunctionCallNode(null, null, new QueryNode[] { }, collectionTypeReference, null);
-            createWithNullName.ShouldThrow<ArgumentNullException>().WithMessage("name", ComparisonMode.EquivalentSubstring);
+            createWithNullName.ShouldThrow<ArgumentNullException>().Where(e => e.Message.Contains("name"));
         }
 
         [Fact]
         public void CollectionTypeReferenceCannotBeNull()
         {
             Action createWithNullType = () => new CollectionFunctionCallNode("stuff", new List<IEdmFunction>() { HardCodedTestModel.GetFunctionForHasJob() }, new QueryNode[] { }, null, null);
-            createWithNullType.ShouldThrow<ArgumentNullException>().WithMessage("collectionType", ComparisonMode.EquivalentSubstring);
+            createWithNullType.ShouldThrow<ArgumentNullException>().Where(e => e.Message.IndexOf("collectionType", StringComparison.OrdinalIgnoreCase) >= 0);
         }
 
         [Fact]

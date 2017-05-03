@@ -30,14 +30,26 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         public void ParsePathSplitsManySimpleSegmentsCorrectly()
         {
             var list = this.pathParser.ParsePathIntoSegments(new Uri(this.baseUri.AbsoluteUri + "One/Two/Three/Four/Five/Six/Seven/Eight/Nine/Ten/Eleven"), this.baseUri);
-            list.Should().ContainExactly(new[] { "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten", "Eleven" });
+            string[] expectedListOrder = new[] { "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten", "Eleven" };
+
+#if NETCOREAPP1_0
+            list.SequenceEqual(expectedListOrder).Should().BeTrue();
+#else
+            list.Should().ContainExactly(expectedListOrder);
+#endif
         }
 
         [Fact]
         public void ParsePathHandlesParenthesisKeyAsPartOfSameSegment()
         {
             var list = this.pathParser.ParsePathIntoSegments(new Uri(this.baseUri.AbsoluteUri + "One/Two(1)/Three"), this.baseUri);
-            list.Should().ContainExactly(new[] { "One", "Two(1)", "Three" });
+            string[] expectedListOrder = new[] { "One", "Two(1)", "Three" };
+
+#if NETCOREAPP1_0
+            list.SequenceEqual(expectedListOrder).Should().BeTrue();
+#else
+            list.Should().ContainExactly(expectedListOrder);
+#endif
         }
 
         // TODO: Astoria does this. Not quite sure what the spec says.
@@ -45,28 +57,52 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         public void ParsePathIgnoresExtraSlashes()
         {
             var list = this.pathParser.ParsePathIntoSegments(new Uri(this.baseUri.AbsoluteUri + "One////Three"), this.baseUri);
-            list.Should().ContainExactly(new[] { "One", "Three" });
+            string[] expectedListOrder = new[] { "One", "Three" };
+
+#if NETCOREAPP1_0
+            list.SequenceEqual(expectedListOrder).Should().BeTrue();
+#else
+            list.Should().ContainExactly(expectedListOrder);
+#endif
         }
 
         [Fact]
         public void ParsePathShouldAllowParenthesisKeyWithStringValue()
         {
             var list = this.pathParser.ParsePathIntoSegments(new Uri(this.baseUri.AbsoluteUri + "EntitySet('stringkey')"), this.baseUri);
-            list.Should().ContainExactly(new[] { "EntitySet('stringkey')" });
+            string[] expectedListOrder = new[] { "EntitySet('stringkey')" };
+
+#if NETCOREAPP1_0
+            list.SequenceEqual(expectedListOrder).Should().BeTrue();
+#else
+            list.Should().ContainExactly(expectedListOrder);
+#endif
         }
 
         [Fact]
         public void ParsePathRespectsSlashAsSegmentMarkerOverSingleQuotes()
         {
             var list = this.pathParser.ParsePathIntoSegments(new Uri(this.baseUri.AbsoluteUri + "EntitySet('string/key')"), this.baseUri);
-            list.Should().ContainExactly(new[] { "EntitySet('string", "key')" });
+            string[] expectedListOrder = new[] { "EntitySet('string", "key')" };
+
+#if NETCOREAPP1_0
+            list.SequenceEqual(expectedListOrder).Should().BeTrue();
+#else
+            list.Should().ContainExactly(expectedListOrder);
+#endif
         }
 
         [Fact]
         public void ParsePathKeepsUnescapedSpace()
         {
             var list = this.pathParser.ParsePathIntoSegments(new Uri(this.baseUri.AbsoluteUri + "S p a c e"), this.baseUri);
-            list.Should().ContainExactly(new[] { "S p a c e" });
+            string[] expectedListOrder = new[] { "S p a c e" };
+
+#if NETCOREAPP1_0
+            list.SequenceEqual(expectedListOrder).Should().BeTrue();
+#else
+            list.Should().ContainExactly(expectedListOrder);
+#endif
         }
 
         /*
@@ -77,49 +113,91 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         public void ParsePathKeepsUnescapedNewline()
         {
             var list = this.pathParser.ParsePathIntoSegments(new Uri(this.baseUri.AbsoluteUri + "Newline\n"), this.baseUri);
-            list.Should().ContainExactly(new[] { "Newline\n" });
+            string[] expectedListOrder = new[] { "Newline\n" };
+
+#if NETCOREAPP1_0
+            list.SequenceEqual(expectedListOrder).Should().BeTrue();
+#else
+            list.Should().ContainExactly(expectedListOrder);
+#endif
         }
 
         [Fact]
         public void ParsePathKeepsEscapedSpace()
         {
             var list = this.pathParser.ParsePathIntoSegments(new Uri(this.baseUri.AbsoluteUri + Uri.EscapeDataString("Space ")), this.baseUri);
-            list.Should().ContainExactly(new[] { "Space " });
+            string[] expectedListOrder = new[] { "Space " };
+
+#if NETCOREAPP1_0
+            list.SequenceEqual(expectedListOrder).Should().BeTrue();
+#else
+            list.Should().ContainExactly(expectedListOrder);
+#endif
         }
 
         [Fact]
         public void ParsePathKeepsEscapedTab()
         {
             var list = this.pathParser.ParsePathIntoSegments(new Uri(this.baseUri.AbsoluteUri + Uri.EscapeDataString("Tab\t")), this.baseUri);
-            list.Should().ContainExactly(new[] { "Tab\t" });
+            string[] expectedListOrder = new[] { "Tab\t" };
+
+#if NETCOREAPP1_0
+            list.SequenceEqual(expectedListOrder).Should().BeTrue();
+#else
+            list.Should().ContainExactly(expectedListOrder);
+#endif
         }
 
         [Fact]
         public void ParsePathKeepsEscapedNewline()
         {
             var list = this.pathParser.ParsePathIntoSegments(new Uri(this.baseUri.AbsoluteUri + Uri.EscapeDataString("Newline\n")), this.baseUri);
-            list.Should().ContainExactly(new[] { "Newline\n" });
+            string[] expectedListOrder = new[] { "Newline\n" };
+
+#if NETCOREAPP1_0
+            list.SequenceEqual(expectedListOrder).Should().BeTrue();
+#else
+            list.Should().ContainExactly(expectedListOrder);
+#endif
         }
 
         [Fact]
         public void ParsePathKeepsEscapedCarriageReturn()
         {
             var list = this.pathParser.ParsePathIntoSegments(new Uri(this.baseUri.AbsoluteUri + Uri.EscapeDataString("CarriageReturn\r")), this.baseUri);
-            list.Should().ContainExactly(new[] { "CarriageReturn\r" });
+            string[] expectedListOrder = new[] { "CarriageReturn\r" };
+
+#if NETCOREAPP1_0
+            list.SequenceEqual(expectedListOrder).Should().BeTrue();
+#else
+            list.Should().ContainExactly(expectedListOrder);
+#endif
         }
 
         [Fact]
         public void ParseMultiPathIgnoresQueryString()
         {
             var list = this.pathParser.ParsePathIntoSegments(new Uri(this.baseUri.AbsoluteUri + "One/Two?query=value"), this.baseUri);
-            list.Should().ContainExactly(new[] { "One", "Two" });
+            string[] expectedListOrder = new[] { "One", "Two" };
+
+#if NETCOREAPP1_0
+            list.SequenceEqual(expectedListOrder).Should().BeTrue();
+#else
+            list.Should().ContainExactly(expectedListOrder);
+#endif
         }
 
         [Fact]
         public void ParsePathIgnoresQueryStringEvenWhenItHasSlashes()
         {
             var list = this.pathParser.ParsePathIntoSegments(new Uri(this.baseUri.AbsoluteUri + "One/Two?query=value/with/slashes"), this.baseUri);
-            list.Should().ContainExactly(new[] { "One", "Two" });
+            string[] expectedListOrder = new[] { "One", "Two" };
+
+#if NETCOREAPP1_0
+            list.SequenceEqual(expectedListOrder).Should().BeTrue();
+#else
+            list.Should().ContainExactly(expectedListOrder);
+#endif
         }
 
         [Fact]

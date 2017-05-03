@@ -33,6 +33,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip.JsonLight
             this.organizationsSet = this.defaultContainer.FindEntitySet("Organizations");
         }
 
+#if !NETCOREAPP1_0
         [Fact]
         public void EntryMetadataUrlRoundTrip()
         {
@@ -66,5 +67,6 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip.JsonLight
             organizationReader.Read().Should().Be(true);
             organizationReader.Item.As<ODataResource>();
         }
+#endif
     }
 }

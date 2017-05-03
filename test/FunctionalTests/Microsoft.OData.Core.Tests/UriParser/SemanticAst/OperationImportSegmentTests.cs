@@ -71,7 +71,7 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
         public void OperationCannotBeNull()
         {
             Action createWithNullServiceOperations = () => new OperationImportSegment((IEdmOperationImport)null, HardCodedTestModel.GetPeopleSet());
-            createWithNullServiceOperations.ShouldThrow<ArgumentNullException>().WithMessage("operation", ComparisonMode.EquivalentSubstring);
+            createWithNullServiceOperations.ShouldThrow<ArgumentNullException>().Where(e => e.Message.Contains("operation"));
         }
 
         [Fact]
@@ -80,7 +80,7 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
             Action createWithNullServiceOperations = () => new OperationImportSegment((List<IEdmOperationImport>)null, HardCodedTestModel.GetPeopleSet());
 
             // bad error message as a result of making OperationSegment take IEnumerable... but its still thrown by us so I don't care.
-            createWithNullServiceOperations.ShouldThrow<ArgumentNullException>().WithMessage("operations", ComparisonMode.EquivalentSubstring);
+            createWithNullServiceOperations.ShouldThrow<ArgumentNullException>().Where(e => e.Message.Contains("operations"));
         }
 
         [Fact]
@@ -119,7 +119,7 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
             var operations = new List<IEdmOperationImport>();
             Action create = () => new OperationImportSegment(operations, null);
 
-            create.ShouldThrow<ArgumentException>().WithMessage("operations", ComparisonMode.EquivalentSubstring);
+            create.ShouldThrow<ArgumentException>().Where(e => e.Message.Contains("operations"));
         }
 
         [Fact]

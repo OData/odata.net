@@ -45,7 +45,7 @@
       <Project>{5d921888-fe03-4c3f-40fe-2f624505461d}</Project>
       <Name>Microsoft.Spatial</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\..\Common\Microsoft.Test.OData.DependencyInjection\Microsoft.Test.OData.DependencyInjection.csproj">
+    <ProjectReference Include="..\..\..\Common\Microsoft.Test.OData.DependencyInjection\Build.NetFramework\Microsoft.Test.OData.DependencyInjection.csproj">
       <Project>{50aa23b2-56ef-4c51-a270-8d5bd0c899b6}</Project>
       <Name>Microsoft.Test.OData.DependencyInjection</Name>
     </ProjectReference>
