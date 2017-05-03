@@ -362,7 +362,9 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
                             //// <CollectionType/>
                             collectionTypeParser,
                             //// <ReferenceType/>
-                            referenceTypeParser),
+                            referenceTypeParser,
+                            //// <Annotation/>
+                            annotationParser),
                         //// </ReturnType>
 
                         //// <Annotation/>
@@ -392,7 +394,9 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
                         //// <CollectionType/>
                         collectionTypeParser,
                         //// <ReferenceType/>
-                        referenceTypeParser),
+                        referenceTypeParser,
+                        //// <Annotation/>
+                        annotationParser),
                     //// </ReturnType>
 
                     //// <Annotation/>

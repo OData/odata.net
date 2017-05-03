@@ -93,7 +93,7 @@ namespace Microsoft.OData.Edm.Vocabularies.V1
         /// </summary>
         [SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes", Justification = "Resolver is immutable")]
         public static readonly IEdmTerm OptionalParameterTerm;
-        
+
         /// <summary>
         /// The IsURL term.
         /// </summary>

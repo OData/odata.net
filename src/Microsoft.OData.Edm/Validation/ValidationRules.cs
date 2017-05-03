@@ -1577,7 +1577,7 @@ namespace Microsoft.OData.Edm.Validation
            new ValidationRule<IEdmOperation>(
                (context, operation) =>
                {
-                   if (operation.IsBound && operation.Parameters.Where(p=>!(p is IEdmOptionalParameter)).Count() == 0)
+                   if (operation.IsBound && operation.Parameters.Where(p => !(p is IEdmOptionalParameter)).Count() == 0)
                    {
                        context.AddError(
                            operation.Location(),

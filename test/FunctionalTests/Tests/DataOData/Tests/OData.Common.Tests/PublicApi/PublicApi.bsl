@@ -842,6 +842,10 @@ public interface Microsoft.OData.Edm.IEdmOperationParameter : IEdmElement, IEdmN
 	Microsoft.OData.Edm.IEdmTypeReference Type  { public abstract get; }
 }
 
+public interface Microsoft.OData.Edm.IEdmOptionalParameter : IEdmElement, IEdmNamedElement, IEdmOperationParameter, IEdmVocabularyAnnotatable {
+	string DefaultValueString  { public abstract get; }
+}
+
 public interface Microsoft.OData.Edm.IEdmPathExpression : IEdmElement, IEdmExpression {
 	string Path  { public abstract get; }
 	System.Collections.Generic.IEnumerable`1[[System.String]] PathSegments  { public abstract get; }
@@ -1018,6 +1022,8 @@ public abstract class Microsoft.OData.Edm.EdmOperation : Microsoft.OData.Edm.Edm
 	Microsoft.OData.Edm.IEdmTypeReference ReturnType  { public virtual get; }
 	Microsoft.OData.Edm.EdmSchemaElementKind SchemaElementKind  { public abstract get; }
 
+	public Microsoft.OData.Edm.EdmOptionalParameter AddOptionalParameter (string name, Microsoft.OData.Edm.IEdmTypeReference type)
+	public Microsoft.OData.Edm.EdmOptionalParameter AddOptionalParameter (string name, Microsoft.OData.Edm.IEdmTypeReference type, string defaultValue)
 	public void AddParameter (Microsoft.OData.Edm.IEdmOperationParameter parameter)
 	public Microsoft.OData.Edm.EdmOperationParameter AddParameter (string name, Microsoft.OData.Edm.IEdmTypeReference type)
 	public virtual Microsoft.OData.Edm.IEdmOperationParameter FindParameter (string name)
@@ -2470,6 +2476,13 @@ public class Microsoft.OData.Edm.EdmOperationParameter : Microsoft.OData.Edm.Edm
 	Microsoft.OData.Edm.IEdmTypeReference Type  { public virtual get; }
 }
 
+public class Microsoft.OData.Edm.EdmOptionalParameter : Microsoft.OData.Edm.EdmOperationParameter, IEdmElement, IEdmNamedElement, IEdmOperationParameter, IEdmOptionalParameter, IEdmVocabularyAnnotatable {
+	public EdmOptionalParameter (Microsoft.OData.Edm.IEdmOperation declaringOperation, string name, Microsoft.OData.Edm.IEdmTypeReference type)
+	public EdmOptionalParameter (Microsoft.OData.Edm.IEdmOperation declaringOperation, string name, Microsoft.OData.Edm.IEdmTypeReference type, string defaultValue)
+
+	string DefaultValueString  { public virtual get; }
+}
+
 public class Microsoft.OData.Edm.EdmPathExpression : Microsoft.OData.Edm.EdmElement, IEdmElement, IEdmExpression, IEdmPathExpression {
 	public EdmPathExpression (System.Collections.Generic.IEnumerable`1[[System.String]] pathSegments)
 	public EdmPathExpression (string path)
@@ -2939,6 +2952,7 @@ public enum Microsoft.OData.Edm.Validation.EdmErrorCode : int {
 	ReferencedTypeMustHaveValidName = 322
 	ReferenceElementMustContainAtLeastOneIncludeOrIncludeAnnotationsElement = 372
 	ReferentialConstraintPrincipalEndMustBelongToAssociation = 243
+	RequiredParametersMustPrecedeOptional = 379
 	SameRoleReferredInReferentialConstraint = 119
 	ScaleOutOfRange = 52
 	SchemaElementMustNotHaveKindOfNone = 338
@@ -3091,6 +3105,7 @@ public sealed class Microsoft.OData.Edm.Validation.ValidationRules {
 	public static readonly Microsoft.OData.Edm.Validation.ValidationRule`1[[Microsoft.OData.Edm.IEdmOperation]] OperationParameterNameAlreadyDefinedDuplicate = Microsoft.OData.Edm.Validation.ValidationRule`1[Microsoft.OData.Edm.IEdmOperation]
 	public static readonly Microsoft.OData.Edm.Validation.ValidationRule`1[[Microsoft.OData.Edm.IEdmOperation]] OperationReturnTypeEntityTypeMustBeValid = Microsoft.OData.Edm.Validation.ValidationRule`1[Microsoft.OData.Edm.IEdmOperation]
 	public static readonly Microsoft.OData.Edm.Validation.ValidationRule`1[[Microsoft.OData.Edm.IEdmOperation]] OperationUnsupportedReturnType = Microsoft.OData.Edm.Validation.ValidationRule`1[Microsoft.OData.Edm.IEdmOperation]
+	public static readonly Microsoft.OData.Edm.Validation.ValidationRule`1[[Microsoft.OData.Edm.IEdmOperation]] OptionalParametersMustComeAfterRequiredParameters = Microsoft.OData.Edm.Validation.ValidationRule`1[Microsoft.OData.Edm.IEdmOperation]
 	public static readonly Microsoft.OData.Edm.Validation.ValidationRule`1[[Microsoft.OData.Edm.IEdmPrimitiveType]] PrimitiveTypeMustNotHaveKindOfNone = Microsoft.OData.Edm.Validation.ValidationRule`1[Microsoft.OData.Edm.IEdmPrimitiveType]
 	public static readonly Microsoft.OData.Edm.Validation.ValidationRule`1[[Microsoft.OData.Edm.Vocabularies.IEdmPrimitiveValue]] PrimitiveValueValidForType = Microsoft.OData.Edm.Validation.ValidationRule`1[Microsoft.OData.Edm.Vocabularies.IEdmPrimitiveValue]
 	public static readonly Microsoft.OData.Edm.Validation.ValidationRule`1[[Microsoft.OData.Edm.IEdmProperty]] PropertyMustNotHaveKindOfNone = Microsoft.OData.Edm.Validation.ValidationRule`1[Microsoft.OData.Edm.IEdmProperty]
@@ -3765,10 +3780,12 @@ public sealed class Microsoft.OData.Edm.Vocabularies.V1.CoreVocabularyConstants 
 	public static string Immutable = "Org.OData.Core.V1.Immutable"
 	public static string IsLanguageDependent = "Org.OData.Core.V1.IsLanguageDependent"
 	public static string IsMediaType = "Org.OData.Core.V1.IsMediaType"
+	public static string IsOptional = "IsOptional"
 	public static string IsURL = "Org.OData.Core.V1.IsURL"
 	public static string LongDescription = "Org.OData.Core.V1.LongDescription"
 	public static string MediaType = "Org.OData.Core.V1.MediaType"
 	public static string OptimisticConcurrency = "Org.OData.Core.V1.OptimisticConcurrency"
+	public static string OptionalParameter = "Org.OData.Core.V1.OptionalParameter"
 	public static string Permissions = "Org.OData.Core.V1.Permissions"
 	public static string RequiresType = "Org.OData.Core.V1.RequiresType"
 	public static string ResourcePath = "Org.OData.Core.V1.ResourcePath"
@@ -3788,6 +3805,7 @@ public sealed class Microsoft.OData.Edm.Vocabularies.V1.CoreVocabularyModel {
 	public static readonly Microsoft.OData.Edm.Vocabularies.IEdmTerm IsURLTerm = Microsoft.OData.Edm.Csdl.CsdlSemantics.CsdlSemanticsTerm
 	public static readonly Microsoft.OData.Edm.Vocabularies.IEdmTerm LongDescriptionTerm = Microsoft.OData.Edm.Csdl.CsdlSemantics.CsdlSemanticsTerm
 	public static readonly Microsoft.OData.Edm.Vocabularies.IEdmTerm MediaTypeTerm = Microsoft.OData.Edm.Csdl.CsdlSemantics.CsdlSemanticsTerm
+	public static readonly Microsoft.OData.Edm.Vocabularies.IEdmTerm OptionalParameterTerm = Microsoft.OData.Edm.Csdl.CsdlSemantics.CsdlSemanticsTerm
 	public static readonly Microsoft.OData.Edm.Vocabularies.IEdmTerm PermissionsTerm = Microsoft.OData.Edm.Csdl.CsdlSemantics.CsdlSemanticsTerm
 	public static readonly Microsoft.OData.Edm.Vocabularies.IEdmTerm RequiresTypeTerm = Microsoft.OData.Edm.Csdl.CsdlSemantics.CsdlSemanticsTerm
 	public static readonly Microsoft.OData.Edm.Vocabularies.IEdmTerm ResourcePathTerm = Microsoft.OData.Edm.Csdl.CsdlSemantics.CsdlSemanticsTerm

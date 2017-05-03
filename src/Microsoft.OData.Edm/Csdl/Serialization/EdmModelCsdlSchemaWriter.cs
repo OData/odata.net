@@ -404,7 +404,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         internal void WriteOperationParameterEndElement(IEdmOperationParameter parameter)
         {
             IEdmOptionalParameter optionalParameter = parameter as IEdmOptionalParameter;
-            if (optionalParameter != null && !(optionalParameter.VocabularyAnnotations(this.model).Where(a => a.Term == CoreVocabularyModel.OptionalParameterTerm).Count() > 0 ))
+            if (optionalParameter != null && !(optionalParameter.VocabularyAnnotations(this.model).Where(a => a.Term == CoreVocabularyModel.OptionalParameterTerm).Count() > 0))
             {
                 string defaultValue = optionalParameter.DefaultValueString;
                 List<EdmPropertyConstructor> properties = new List<EdmPropertyConstructor>();

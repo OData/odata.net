@@ -493,7 +493,11 @@ namespace Microsoft.OData.Edm.Csdl.Parsing.Common
 
         private void ReportUnexpectedElement(CsdlLocation errorLocation, string elementName)
         {
-            this.ReportError(errorLocation, EdmErrorCode.UnexpectedXmlElement, Edm.Strings.XmlParser_UnexpectedElement(elementName));
+            // Don't error on unexpected annotations, just ignore
+            if (elementName != CsdlConstants.Element_Annotation)
+            {
+                this.ReportError(errorLocation, EdmErrorCode.UnexpectedXmlElement, Edm.Strings.XmlParser_UnexpectedElement(elementName));
+            }
         }
 
         private void ReportUnusedElement(CsdlLocation errorLocation, string elementName)

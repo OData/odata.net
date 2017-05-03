@@ -21,7 +21,7 @@ namespace Microsoft.OData.Edm
             : this(declaringOperation, name, type, null)
         {
         }
-        
+
         /// <summary>
          /// Initializes a new instance of the <see cref="EdmOperationParameter"/> class.
          /// </summary>
