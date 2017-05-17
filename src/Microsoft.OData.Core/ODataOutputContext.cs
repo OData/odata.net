@@ -19,7 +19,7 @@ namespace Microsoft.OData.Core
     #endregion Namespaces
 
     /// <summary>
-    /// Base class for all output contexts, defines the interface 
+    /// Base class for all output contexts, defines the interface
     /// to be implemented by the specific formats.
     /// </summary>
     public abstract class ODataOutputContext : IDisposable
@@ -360,7 +360,7 @@ namespace Microsoft.OData.Core
         /// </summary>
         /// <param name="error">The error to write.</param>
         /// <param name="includeDebugInformation">
-        /// A flag indicating whether debug information (e.g., the inner error from the <paramref name="error"/>) should 
+        /// A flag indicating whether debug information (e.g., the inner error from the <paramref name="error"/>) should
         /// be included in the payload. This should only be used in debug scenarios.
         /// </param>
         /// <remarks>It is the responsibility of this method to flush the output before the method returns.</remarks>
@@ -375,7 +375,7 @@ namespace Microsoft.OData.Core
         /// </summary>
         /// <param name="error">The error to write.</param>
         /// <param name="includeDebugInformation">
-        /// A flag indicating whether debug information (e.g., the inner error from the <paramref name="error"/>) should 
+        /// A flag indicating whether debug information (e.g., the inner error from the <paramref name="error"/>) should
         /// be included in the payload. This should only be used in debug scenarios.
         /// </param>
         /// <returns>A task representing the asynchronous operation of writing the error.</returns>
@@ -391,7 +391,7 @@ namespace Microsoft.OData.Core
         /// </summary>
         /// <param name="error">The error to write.</param>
         /// <param name="includeDebugInformation">
-        /// A flag indicating whether debug information (e.g., the inner error from the <paramref name="error"/>) should 
+        /// A flag indicating whether debug information (e.g., the inner error from the <paramref name="error"/>) should
         /// be included in the payload. This should only be used in debug scenarios.
         /// </param>
         /// <remarks>
@@ -412,7 +412,7 @@ namespace Microsoft.OData.Core
         /// </summary>
         /// <param name="error">The error to write.</param>
         /// <param name="includeDebugInformation">
-        /// A flag indicating whether debug information (e.g., the inner error from the <paramref name="error"/>) should 
+        /// A flag indicating whether debug information (e.g., the inner error from the <paramref name="error"/>) should
         /// be included in the payload. This should only be used in debug scenarios.
         /// </param>
         /// <returns>Task which represents the pending write operation.</returns>
@@ -512,7 +512,7 @@ namespace Microsoft.OData.Core
 #endif
 
         /// <summary>
-        /// Writes a service document with the specified <paramref name="serviceDocument"/> 
+        /// Writes a service document with the specified <paramref name="serviceDocument"/>
         /// as message payload.
         /// </summary>
         /// <param name="serviceDocument">The service document to write in the service document.</param>
@@ -524,7 +524,7 @@ namespace Microsoft.OData.Core
 
 #if ODATALIB_ASYNC
         /// <summary>
-        /// Asynchronously writes a service document with the specified <paramref name="serviceDocument"/> 
+        /// Asynchronously writes a service document with the specified <paramref name="serviceDocument"/>
         /// as message payload.
         /// </summary>
         /// <param name="serviceDocument">The service document to write in the service document.</param>

@@ -221,6 +221,11 @@ namespace Microsoft.OData.Core.Json
                 : this.asynchronousOutputStream;
         }
 
+        internal bool IsOutputToBatchOperationWriteStream()
+        {
+            return GetOutputStream() is ODataBatchOperationWriteStream;
+        }
+
         /// <summary>
         /// Perform the actual cleanup work.
         /// </summary>

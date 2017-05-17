@@ -44,7 +44,7 @@ namespace Microsoft.Test.Taupo.OData.Common.Tests.ObjectModelTests
         [TestMethod, Variation(Description = "Test the proper behavior of the headers of a request message.")]
         public void RequestMessageHeaderTest()
         {
-            const bool useMimeWriterAsListener = true; 
+            const bool useMimeWriterAsListener = true;
             Func<bool, bool, IODataRequestMessage>[] requestMessageFuncs = new Func<bool, bool, IODataRequestMessage>[]
                 {
                     (writing, mimeWriterAsListener) => CreateBatchOperationRequestMessage(writing, mimeWriterAsListener),
@@ -75,7 +75,7 @@ namespace Microsoft.Test.Taupo.OData.Common.Tests.ObjectModelTests
         [TestMethod, Variation(Description = "Test the proper behavior of the headers of a response message.")]
         public void ResponseMessageHeaderTest()
         {
-            const bool useMimeWriterAsListener = true; 
+            const bool useMimeWriterAsListener = true;
             Func<bool, bool, IODataResponseMessage>[] responseMessageFuncs = new Func<bool, bool, IODataResponseMessage>[]
                 {
                     (writing, mimeWriterAsListener) => CreateBatchOperationResponseMessage(writing, mimeWriterAsListener),
@@ -104,9 +104,9 @@ namespace Microsoft.Test.Taupo.OData.Common.Tests.ObjectModelTests
         }
 
         private static void RunHeaderTest(
-            Func<IEnumerable<KeyValuePair<string, string>>> getHeadersFunc, 
+            Func<IEnumerable<KeyValuePair<string, string>>> getHeadersFunc,
             bool writing,
-            Func<string, string> getHeaderFunc, 
+            Func<string, string> getHeaderFunc,
             Action<string, string> setHeaderAction,
             AssertionHandler assert,
             IExceptionVerifier exceptionVerifier)
@@ -175,7 +175,18 @@ namespace Microsoft.Test.Taupo.OData.Common.Tests.ObjectModelTests
             Stream stream = new TestStream();
             return (IODataRequestMessage)ReflectionUtils.CreateInstance(
                 typeof(ODataBatchOperationRequestMessage),
-                new Type[] { typeof(Func<Stream>), typeof(string), typeof(Uri), batchOperationsHeadersType, batchOperationListenerType, typeof(string), urlResolverType, typeof(bool) },
+                new Type[]
+                {
+                    typeof(Func<Stream>),
+                    typeof(string),
+                    typeof(Uri),
+                    batchOperationsHeadersType,
+                    batchOperationListenerType,
+                    typeof(string),
+                    urlResolverType,
+                    typeof(bool),
+                    typeof(IList<string>)
+                },
                 (object)(Func<Stream>)(() => stream),
                 ODataConstants.MethodGet,
                 new Uri("http://www.odata.org/"),
@@ -185,7 +196,8 @@ namespace Microsoft.Test.Taupo.OData.Common.Tests.ObjectModelTests
                 : CreateODataJsonLightBatchWriterListener(stream, false, writing),
                 "1",
                 ReflectionUtils.CreateInstance(urlResolverType, new Type[] { typeof(IODataUrlResolver) }, new object[] { null }),
-                writing);
+                writing,
+                null);
         }
 
         private static IODataResponseMessage CreateBatchOperationResponseMessage(bool writing, bool mimeWriterAsListener)
@@ -196,7 +208,7 @@ namespace Microsoft.Test.Taupo.OData.Common.Tests.ObjectModelTests
                 typeof(ODataBatchOperationResponseMessage),
                 new Type[] { typeof(Func<Stream>), batchOperationsHeadersType, batchOperationListenerType, typeof(string), typeof(IODataUrlResolver), typeof(bool) },
                 (object)(Func<Stream>)(() => stream),
-                /*headers*/null, 
+                /*headers*/null,
                 mimeWriterAsListener
                 ? CreateODataMultipartMixedBatchWriterListener(stream, true, writing)
                 : CreateODataJsonLightBatchWriterListener(stream, false, writing),

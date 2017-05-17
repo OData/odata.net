@@ -52,7 +52,7 @@ namespace AstoriaUnitTests.Tests
             {
                 AstoriaTestProperties.Host = Host.Cassini;
             }
-            
+
             #region Service Operations
 
             [TestMethod, Variation("Service Operation rights is not checked, service operation always invoke even if there are errors in query syntax. Also Exception message should be more user friendly.")]
@@ -66,43 +66,43 @@ namespace AstoriaUnitTests.Tests
                 // Dimension 1: operation rights
                 var serviceOperationRights = new ServiceOperationRights[]
                 {
-                    ServiceOperationRights.All, 
-                    ServiceOperationRights.AllRead, 
-                    ServiceOperationRights.ReadMultiple, 
-                    ServiceOperationRights.ReadSingle, 
-                    ServiceOperationRights.OverrideEntitySetRights | ServiceOperationRights.ReadMultiple, 
+                    ServiceOperationRights.All,
+                    ServiceOperationRights.AllRead,
+                    ServiceOperationRights.ReadMultiple,
+                    ServiceOperationRights.ReadSingle,
+                    ServiceOperationRights.OverrideEntitySetRights | ServiceOperationRights.ReadMultiple,
                     ServiceOperationRights.OverrideEntitySetRights | ServiceOperationRights.ReadSingle
                 };
-                
+
                 // Dimension 2: result kind (skip void)
                 var providers = new Providers.ServiceOperationResultKind[]
                 {
-                    Providers.ServiceOperationResultKind.DirectValue, 
-                    Providers.ServiceOperationResultKind.QueryWithMultipleResults, 
-                    Providers.ServiceOperationResultKind.QueryWithSingleResult, 
+                    Providers.ServiceOperationResultKind.DirectValue,
+                    Providers.ServiceOperationResultKind.QueryWithMultipleResults,
+                    Providers.ServiceOperationResultKind.QueryWithSingleResult,
                     Providers.ServiceOperationResultKind.Enumeration
                 };
-                
+
                 // Dimension 3: uri string
                 var requestUris = new string[]
                 {
-                    "/GetEntity?id=1", 
-                    "/GetEntity?id=1&$filter=ID eq 1&$select=ID", 
-                    "/GetEntity?id=1&$top=1", "/GetEntity()?id=1", 
+                    "/GetEntity?id=1",
+                    "/GetEntity?id=1&$filter=ID eq 1&$select=ID",
+                    "/GetEntity?id=1&$top=1", "/GetEntity()?id=1",
                     "/GetEntity(1)?id=1", "/GetEntity(1)/ID?id=1"
                 };
-                    
+
                 // Dimension 4: entity set rights
                 var entitySetRights = new EntitySetRights[]
                 {
-                    EntitySetRights.All, 
-                    EntitySetRights.AllRead, 
-                    EntitySetRights.AllWrite, 
-                    EntitySetRights.None, 
-                    EntitySetRights.ReadMultiple, 
+                    EntitySetRights.All,
+                    EntitySetRights.AllRead,
+                    EntitySetRights.AllWrite,
+                    EntitySetRights.None,
+                    EntitySetRights.ReadMultiple,
                     EntitySetRights.ReadSingle
                 };
-    
+
                 TestUtil.RunCombinations(serviceOperationRights, providers, requestUris, entitySetRights, (sopRights, resultKind, uri, esRights) =>
                     {
                         DSPDataService serviceInstance = null;
@@ -1469,9 +1469,9 @@ Content-Type: APPLicATiON/json;odata.metadata=minimal
             [TestMethod, Variation("Ensure we error gracefully on service operations returning complex types that are then used in property access")]
             public void ShouldFailOnServiceOperationsReturningComplexTypeUsedInPropertyAccess()
             {
-                var serviceOps = new[] 
-                { 
-                    new {Operation = "GET", ServiceOpName="FirstAddress"}, 
+                var serviceOps = new[]
+                {
+                    new {Operation = "GET", ServiceOpName="FirstAddress"},
                     new {Operation = "POST", ServiceOpName="FirstAddressI"},
                     new {Operation = "GET", ServiceOpName="FirstAddressQ"},
                     new {Operation = "POST", ServiceOpName="FirstAddressQI"},
@@ -1542,7 +1542,7 @@ Content-Type: APPLicATiON/json;odata.metadata=minimal
                 {
                     config.SetEntitySetAccessRule("*", EntitySetRights.AllRead);
                     config.SetServiceOperationAccessRule("*", ServiceOperationRights.All);
-                    config.DataServiceBehavior.MaxProtocolVersion = ODataProtocolVersion.V4; 
+                    config.DataServiceBehavior.MaxProtocolVersion = ODataProtocolVersion.V4;
                 }
 
                 [WebGet]
@@ -1556,7 +1556,7 @@ Content-Type: APPLicATiON/json;odata.metadata=minimal
                 {
                     return this.CurrentDataSource.GetPeople();
                 }
- 
+
             }
 
             [TestMethod]
@@ -1630,7 +1630,7 @@ Content-Type: APPLicATiON/json;odata.metadata=minimal
                 }
 
                 [WebGet]
-                public int TestMethod_Int() 
+                public int TestMethod_Int()
                 {
                     throw new DataServiceException(400, "code1", ERROR_INT, null, null);
                 }
@@ -1645,7 +1645,7 @@ Content-Type: APPLicATiON/json;odata.metadata=minimal
             [TestMethod]
             public void VoidServiceOperationUnchangedResponse()
             {
-                var tests = new[] { new { Function = "/TestMethod_Int", Error = TestDataService4.ERROR_INT }, 
+                var tests = new[] { new { Function = "/TestMethod_Int", Error = TestDataService4.ERROR_INT },
                     new { Function = "/TestMethod_Int", Error = TestDataService4.ERROR_INT } };
                 TestUtil.RunCombinations(tests, serviceCallInfo =>
                 {
@@ -1977,7 +1977,7 @@ Content-Type: APPLicATiON/json;odata.metadata=minimal
             public void ExpandingReferencePropertyShouldWorkIfEntityInstanceTypeDerivesFromIEnumerable()
             {
                 DSPServiceDefinition service = GetService1();
-                var jsonXPaths = new string[] 
+                var jsonXPaths = new string[]
                 {
                     String.Format("{0}[odata.context='http://host/$metadata#Orders']", JsonValidator.ObjectString),
                     String.Format("{1}/value/{0}/{1}[Customer[ID=1 and Name='Customer 1'] and ID=1 and DollarAmount='1000']", JsonValidator.ArrayString, JsonValidator.ObjectString),
@@ -2169,7 +2169,7 @@ Content-Type: APPLicATiON/json;odata.metadata=minimal
 
                 metadata.AddKeyProperty(customerType, "ID", typeof(int));
                 metadata.AddPrimitiveProperty(customerType, "Name", typeof(string));
-                
+
                 Providers.ResourceType addressType = metadata.AddComplexType("Address", null, null, false);
                 metadata.AddPrimitiveProperty(addressType, "Street", typeof(string));
                 metadata.AddPrimitiveProperty(addressType, "Zip", typeof(int));
@@ -2337,7 +2337,7 @@ Content-Type: APPLicATiON/json;odata.metadata=minimal
                     TypedCustomDataContext<AllTypes>.ValuesRequested += handler;
                 }
             }
-            #endregion 
+            #endregion
 
             #region SingleResult attribute shouldn't affect nav props
 
@@ -2362,7 +2362,7 @@ Content-Type: APPLicATiON/json;odata.metadata=minimal
                     // navigation should succeed
                     request.SendRequest();
                     request.GetResponseStreamAsXDocument();
-                    
+
                     request.RequestUriString = "/FirstCustomer?$top=1";
                     // Direct composition should fail
                     Exception ex = TestUtil.RunCatching(request.SendRequest);
@@ -2374,7 +2374,7 @@ Content-Type: APPLicATiON/json;odata.metadata=minimal
                     Assert.AreEqual(DataServicesResourceUtil.GetString("RequestQueryProcessor_QuerySetOptionsNotApplicable"), ex.Message);
                 }
             }
-            
+
             #endregion
 
             #region Abstract complex types and types in the System namespace cause $metadata to blow off (was: $metadata small breaking change after Edmlib integration on Reflection Service on Array Type)
@@ -2457,7 +2457,7 @@ Content-Type: APPLicATiON/json;odata.metadata=minimal
                         Assert.IsTrue(reader.Read());
                         Assert.AreEqual(reader.NodeType, XmlNodeType.XmlDeclaration);
                         Assert.AreEqual(XmlNodeType.Element, reader.MoveToContent());
-                        
+
                         reader.ReadToFollowing("error", metadataNs);
                         Assert.AreEqual("error", reader.LocalName);
                         Assert.AreEqual(metadataNs, reader.NamespaceURI);
@@ -2617,7 +2617,7 @@ Accept: application/atom+xml
                 }
             }
             #endregion
-            
+
             #region Edm Version
             [TestMethod, Variation("Fix for: EDM version does not get a bump when the first Function Import is a service operation and there are actions later in the list")]
             public void EdmVersionShouldBe40IfThereIsAnAction()
@@ -2721,22 +2721,22 @@ Accept: application/atom+xml
 
                 // Replace Enabled In Config
                 RunReplaceFunctionTest(null, true, 3);
-           
+
                 // Replace Enabled In Both
                 RunReplaceFunctionTest(true, true, 4);
-            
+
                 // Replace Disabled In Code And Enabled In Config
                 RunReplaceFunctionTest(false, true, 5);
 
                 // Replace Disabled In Code
                 RunReplaceFunctionTest(false, null, 6);
-            
+
                 // Replace Disabled In Config
                 RunReplaceFunctionTest(null, false, 7);
-           
+
                 // Replace Enabled In Code And Disabled In Config
                 RunReplaceFunctionTest(true, false, 8);
-            
+
                 // Replace Disabled In Both
                 RunReplaceFunctionTest(false, false, 9);
             }
@@ -3129,7 +3129,7 @@ Accept: application/atom+xml
             /// Setting InstanceContextMode to Single on DataService results in cached query results being returned for subsequent queries
             /// This test sends multiple requests before getting first response.
             /// Please note that in this case the only the InstanceContextMode property was tested with "Single" value
-            /// There is ConcurrencyMode which by default is "Single" and got tested in this particular test. 
+            /// There is ConcurrencyMode which by default is "Single" and got tested in this particular test.
             /// For "Multiple" ConcurrencyMode, the code throws exception. That is by design.
             /// </summary>
             [TestMethod]

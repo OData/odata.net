@@ -23,6 +23,30 @@ namespace Microsoft.OData.Core.JsonLight
     internal abstract class ODataJsonLightBatchPayloadItemPropertiesCache
     {
         /// <summary>
+        /// Property name for message Id in Json batch payload's message object.
+        /// Property names definitions here are all in upper case to support case insensitiveness.
+        /// </summary>
+        internal const string PropertyNameId = "ID";
+
+        /// <summary>
+        /// Property name for message atomicityGroup association in Json batch payload's message object.
+        /// Property names definitions here are all in upper case to support case insensitiveness.
+        /// </summary>
+        internal const string PropertyNameAtomicityGroup = "ATOMICITYGROUP";
+
+        /// <summary>
+        /// Property name for response headers in Json batch response.
+        /// Property names definitions here are all in upper case to support case insensitiveness.
+        /// </summary>
+        internal const string PropertyNameHeaders = "HEADERS";
+
+        /// <summary>
+        /// Property name for message body in Json batch payload's message object.
+        /// Property names definitions here are all in upper case to support case insensitiveness.
+        /// </summary>
+        internal const string PropertyNameBody = "BODY";
+
+        /// <summary>
         /// The Json reader to payload item in Json format.
         /// </summary>
         protected JsonReader jsonReader;
@@ -100,6 +124,12 @@ namespace Microsoft.OData.Core.JsonLight
             stream.PopulateBodyContent(this.jsonReader);
 
             return stream;
+        }
+
+        protected virtual ODataBatchReaderStream CreateJsonPayloadBodyContentStreamFromString(string content)
+        {
+            throw new ODataException(
+                "not implemented at based class. Derived class nessed to provide overriding implementation.");
         }
 
         /// <summary>

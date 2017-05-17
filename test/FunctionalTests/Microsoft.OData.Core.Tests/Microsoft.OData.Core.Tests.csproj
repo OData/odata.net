@@ -209,6 +209,8 @@
     <Compile Include="ScenarioTests\Roundtrip\JsonLight\AsyncBatchRoundtripJsonLightTests.cs" />
     <Compile Include="ScenarioTests\Roundtrip\JsonLight\AsyncRoundtripJsonLightTests.cs" />
     <Compile Include="ScenarioTests\Roundtrip\JsonLight\CustomInstanceAnnotationRoundtripJsonLightTests.cs" />
+    <Compile Include="ScenarioTests\Roundtrip\JsonLight\ODataJsonBatchAtomicityGroupTests.cs" />
+    <Compile Include="ScenarioTests\Roundtrip\JsonLight\ODataJsonBatchPayloadAtomicGroupTestCase.cs" />
     <Compile Include="ScenarioTests\Roundtrip\JsonLight\MetadataUriRoundTripTests.cs" />
     <Compile Include="ScenarioTests\Roundtrip\JsonLight\NonPrimitiveTypeRoundtripJsonLightTests.cs" />
     <Compile Include="ScenarioTests\Roundtrip\JsonLight\ODataEntryExtensions.cs" />

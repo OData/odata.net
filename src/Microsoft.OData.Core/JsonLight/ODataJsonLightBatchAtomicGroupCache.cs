@@ -17,26 +17,26 @@ namespace Microsoft.OData.Core.JsonLight
 
     #endregion Namespaces
     /// <summary>
-    /// Cache for atomic groups along with the stably-ordered request Ids in each group.
+    /// Cache for atomic groups along with the stably-ordered message Ids in each group.
     /// It also keeps track of atomic group start and atomic group end status during the reading
-    /// of batch request.
+    /// of batch message.
     /// </summary>
-    internal class ODataJsonLightBatchAtomicGroupCache
+    internal sealed class ODataJsonLightBatchAtomicGroupCache
     {
         /// <summary>
         /// Lookup table for atomicitGroup.
         /// </summary>
-        private Dictionary<string, IList<string>> groupToRequestIds = new Dictionary<string, IList<string>>();
+        private Dictionary<string, IList<string>> groupToMessageIds = new Dictionary<string, IList<string>>();
 
         /// <summary>
-        /// Group Id of the preceeding request. Could be null.
+        /// Group Id of the preceeding message. Could be null.
         /// </summary>
-        private string preceedingRequestGroupId = null;
+        private string preceedingMessageGroupId = null;
 
         /// <summary>
         /// Latest status of whether the processing is within scope of an atomic group.
-        /// The scope is ended by a top-level request, the starting of another atomic group, or
-        /// end of the batch requests array.
+        /// The scope is ended by a top-level message, the starting of another atomic group, or
+        /// end of the batch messages array.
         /// </summary>
         private bool isWithinAtomicGroup = false;
 
@@ -57,11 +57,11 @@ namespace Microsoft.OData.Core.JsonLight
         internal bool IsChangesetEnd(string groupId)
         {
             // Preceeding group Id cannot null when we are within an atomic group.
-            Debug.Assert(!(isWithinAtomicGroup && preceedingRequestGroupId == null),
+            Debug.Assert(!(isWithinAtomicGroup && preceedingMessageGroupId == null),
                 "!(isWithinAtomicGroup && preceedingGroupId == null)");
 
             if (!isWithinAtomicGroup
-                || ((preceedingRequestGroupId != null) && preceedingRequestGroupId.Equals(groupId))
+                || ((preceedingMessageGroupId != null) && preceedingMessageGroupId.Equals(groupId))
                 /*groupId is member of existing atomic group scope*/)
             {
                 return false;
@@ -69,40 +69,38 @@ namespace Microsoft.OData.Core.JsonLight
 
             // This groupId ends the preceeding atomic group.
             this.isWithinAtomicGroup = false;
-            this.preceedingRequestGroupId = null;
+            this.preceedingMessageGroupId = null;
             return true;
         }
 
         /// <summary>
-        /// Construct the list of request Ids for the group, and determine whether the
-        /// request Id is the start of an atomic group.
+        /// Construct the list of Ids for the group, and determine whether this
+        /// is the start of an atomic group.
         /// </summary>
-        /// <param name="requestId">Request id to add.</param>
-        /// <param name="groupId">Id of the group to add the requstId. Cannot be null.</param>
+        /// <param name="messageId">Message Id to add.</param>
+        /// <param name="groupId">Id of the group to add the message Id. Cannot be null.</param>
         /// <returns>
         /// True if changeset start is detected; false otherwise.
-        /// Ensure all request Ids of the same groups are adjacent, otherwise throw an error.
+        /// Ensure all message Ids of the same groups are adjacent, otherwise throw an error.
         /// </returns>
-        internal bool AddRequestToGroup(string requestId, string groupId)
+        internal bool AddMessageIdAndGroupId(string messageId, string groupId)
         {
+            Debug.Assert(messageId  != null, "messageId  != null");
             Debug.Assert(groupId != null, "groupId != null");
 
             bool isChangesetStart = false;
-            if (groupId.Equals(this.preceedingRequestGroupId, StringComparison.Ordinal))
+            if (groupId.Equals(this.preceedingMessageGroupId, StringComparison.Ordinal))
             {
-                // Adjacent groupIds, add requestId to the existing group
-                IList<string> requestIds;
-                groupToRequestIds.TryGetValue(groupId, out requestIds);
-
-                Debug.Assert(requestIds != null, "requestIds != null");
-                requestIds.Add(requestId);
+                // Adjacent groupIds, add messageId to the existing group
+                Debug.Assert(groupToMessageIds[groupId] != null, "groupToMessageIds[groupId] != null");
+                groupToMessageIds[groupId].Add(messageId);
             }
-            else if (!groupToRequestIds.ContainsKey(groupId))
+            else if (!groupToMessageIds.ContainsKey(groupId))
             {
                 // We get a new groupId.
-                groupToRequestIds.Add(groupId, new List<string> { requestId });
+                groupToMessageIds.Add( groupId, new List<string> { messageId });
 
-                this.preceedingRequestGroupId = groupId;
+                this.preceedingMessageGroupId = groupId;
 
                 // Mark the atomic group status.
                 this.isWithinAtomicGroup = true;
@@ -111,32 +109,25 @@ namespace Microsoft.OData.Core.JsonLight
             }
             else
             {
-                throw new ODataException(String.Format(
-                    CultureInfo.InvariantCulture,
-                    " Request with id {0} is positioned incorrectly: all requests of same groupId {1} must be adjacent.",
-                    requestId,
-                    groupId));
+                throw new ODataException(Strings.ODataBatchReader_MessageIdPositionedIncorrectly(messageId, groupId));
             }
 
             return isChangesetStart;
         }
 
         /// <summary>
-        /// Get the atomic group Id of the request; null if the request does not belong to any groups.
+        /// Get the atomic group Id of the message; null if the message does not belong to any groups.
         /// </summary>
-        /// <param name="targetRequestId">Id of the request from the request property.</param>
+        /// <param name="targetMessageId">Id of the message from the json property.</param>
         /// <returns>The group Id if found; null otherwise.</returns>
-        internal string GetGroupId(string targetRequestId)
+        internal string GetGroupId(string targetMessageId)
         {
-            foreach (string groupId in groupToRequestIds.Keys)
+            foreach (KeyValuePair<string,IList<string>> pair in this.groupToMessageIds)
             {
-                IList<string> requestIds;
-                groupToRequestIds.TryGetValue(groupId, out requestIds);
-                Debug.Assert(requestIds != null, "requestIds != null");
-
-                if (requestIds.Contains(targetRequestId))
+                IList<string> messageIds = pair.Value;
+                if (messageIds != null && messageIds.Contains(targetMessageId))
                 {
-                    return groupId;
+                    return pair.Key;
                 }
             }
             return null;
@@ -149,17 +140,17 @@ namespace Microsoft.OData.Core.JsonLight
         /// <returns>True if it is group Id of the batch; false otherwise.</returns>
         internal bool IsGroupId(string id)
         {
-            return this.groupToRequestIds.Keys.Contains(id);
+            return this.groupToMessageIds.Keys.Contains(id);
         }
 
         /// <summary>
-        /// Flatten a given list of groupIds and requestIds into a string containing comma-separated request Ids.
+        /// Flatten a given list of groupIds and messageIds into a string containing comma-separated message Ids.
         /// </summary>
         /// <param name="ids">List of ids to be flattened.</param>
-        /// <returns>The list containing comma-separated request Ids.</returns>
-        internal IList<string> GetFlattenedRequestIds(IList<string> ids)
+        /// <returns>The list containing comma-separated message Ids.</returns>
+        internal IList<string> GetFlattenedMessageIds(IList<string> ids)
         {
-            IList<string> result = new List<string>();
+            List<string> result = new List<string>();
             if (ids.Count == 0)
             {
                 return result;
@@ -168,16 +159,13 @@ namespace Microsoft.OData.Core.JsonLight
             foreach (string id in ids)
             {
                 IList<string> reqIds;
-                if (!this.groupToRequestIds.TryGetValue(id, out reqIds))
+                if (this.groupToMessageIds.TryGetValue(id, out reqIds))
                 {
-                    result.Add(id);
+                    result.AddRange(reqIds);
                 }
                 else
                 {
-                    foreach (string reqId in reqIds)
-                    {
-                        result.Add(reqId);
-                    }
+                    result.Add(id);
                 }
             }
 

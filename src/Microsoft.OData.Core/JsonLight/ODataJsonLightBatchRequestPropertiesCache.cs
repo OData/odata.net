@@ -26,18 +26,6 @@ namespace Microsoft.OData.Core.JsonLight
     internal sealed class ODataJsonLightBatchRequestPropertiesCache : ODataJsonLightBatchPayloadItemPropertiesCache
     {
         /// <summary>
-        /// Property name for request Id in Json batch request.
-        /// Property names definitions here are all in upper case to support case insensitiveness.
-        /// </summary>
-        internal const string PropertyNameId = "ID";
-
-        /// <summary>
-        /// Property name for request atomic group association in Json batch request.
-        /// Property names definitions here are all in upper case to support case insensitiveness.
-        /// </summary>
-        internal const string PropertyNameAtomicityGroup = "ATOMICITYGROUP";
-
-        /// <summary>
         /// Property name for request execution dependency in Json batch request.
         /// Property names definitions here are all in upper case to support case insensitiveness.
         /// </summary>
@@ -54,18 +42,6 @@ namespace Microsoft.OData.Core.JsonLight
         /// Property names definitions here are all in upper case to support case insensitiveness.
         /// </summary>
         internal const string PropertyNameUrl = "URL";
-
-        /// <summary>
-        /// Property name for request HTTP headers in Json batch request.
-        /// Property names definitions here are all in upper case to support case insensitiveness.
-        /// </summary>
-        internal const string PropertyNameHeaders = "HEADERS";
-
-        /// <summary>
-        /// Property name for request body in Json batch request.
-        /// Property names definitions here are all in upper case to support case insensitiveness.
-        /// </summary>
-        internal const string PropertyNameBody = "BODY";
 
         /// <summary>
         /// Constructor.
