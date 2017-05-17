@@ -16,7 +16,8 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Roundtrip.JsonLight
     public class AsyncBatchRoundtripJsonLightTests
     {
         private const string serviceDocumentUri = "http://service";
-        private const string batchContentType = "multipart/mixed; boundary=batch_36522ad7-fc75-4b56-8c71-56071383e77b";
+        private const string batchContentTypeMultipartMixed = "multipart/mixed; boundary=batch_36522ad7-fc75-4b56-8c71-56071383e77b";
+        private const string batchContentTypeApplicationJson = "application/json";
         private readonly EdmEntityContainer defaultContainer;
         private readonly EdmModel userModel;
         private readonly EdmEntityType customerType;
@@ -38,19 +39,31 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Roundtrip.JsonLight
         }
 
         [Fact]
-        public void AsyncBatchJsonLightTestFromSpecExample85()
+        public void AsyncBatchJsonLightTestFromSpecExample85MultipartMime()
         {
-            var requestPayload = this.ClientWriteAsyncBatchRequest();
-            var responsePayload = this.ServiceReadAsyncBatchRequestAndWriteAsyncResponse(requestPayload);
-            this.ClientReadAsyncBatchResponse(responsePayload);
+            AsyncBatchJsonLightTestFromSpecExample85(batchContentTypeMultipartMixed);
         }
 
-        private byte[] ClientWriteAsyncBatchRequest()
+        [Fact]
+        public void AsyncBatchJsonLightTestFromSpecExample85Json()
+        {
+            AsyncBatchJsonLightTestFromSpecExample85(batchContentTypeApplicationJson);
+        }
+
+
+        private void AsyncBatchJsonLightTestFromSpecExample85(string batchContentType)
+        {
+            var requestPayload = this.ClientWriteAsyncBatchRequest(batchContentType);
+            var responsePayload = this.ServiceReadAsyncBatchRequestAndWriteAsyncResponse(requestPayload, batchContentType);
+            this.ClientReadAsyncBatchResponse(responsePayload, batchContentType);
+        }
+
+        private byte[] ClientWriteAsyncBatchRequest(string contentType)
         {
             var stream = new MemoryStream();
 
             IODataRequestMessage requestMessage = new InMemoryMessage { Stream = stream };
-            requestMessage.SetHeader("Content-Type", batchContentType);
+            requestMessage.SetHeader("Content-Type", contentType);
 
             using (var messageWriter = new ODataMessageWriter(requestMessage))
             {
@@ -98,17 +111,17 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Roundtrip.JsonLight
             }
         }
 
-        private byte[] ServiceReadAsyncBatchRequestAndWriteAsyncResponse(byte[] requestPayload)
+        private byte[] ServiceReadAsyncBatchRequestAndWriteAsyncResponse(byte[] requestPayload, string contentType)
         {
             IODataRequestMessage requestMessage = new InMemoryMessage() { Stream = new MemoryStream(requestPayload) };
-            requestMessage.SetHeader("Content-Type", batchContentType);
+            requestMessage.SetHeader("Content-Type", contentType);
 
             using (var messageReader = new ODataMessageReader(requestMessage, new ODataMessageReaderSettings(), this.userModel))
             {
                 var responseStream = new MemoryStream();
 
                 IODataResponseMessage responseMessage = new InMemoryMessage { Stream = responseStream };
-                responseMessage.SetHeader("Content-Type", batchContentType);
+                responseMessage.SetHeader("Content-Type", contentType);
                 var messageWriter = new ODataMessageWriter(responseMessage);
                 var batchWriter = messageWriter.CreateODataBatchWriter();
                 batchWriter.WriteStartBatch();
@@ -152,10 +165,10 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Roundtrip.JsonLight
             }
         }
 
-        private void ClientReadAsyncBatchResponse(byte[] responsePayload)
+        private void ClientReadAsyncBatchResponse(byte[] responsePayload, string contentType)
         {
             IODataResponseMessage responseMessage = new InMemoryMessage() { Stream = new MemoryStream(responsePayload) };
-            responseMessage.SetHeader("Content-Type", batchContentType);
+            responseMessage.SetHeader("Content-Type", contentType);
             using (var messageReader = new ODataMessageReader(responseMessage, new ODataMessageReaderSettings(), this.userModel))
             {
                 var batchReader = messageReader.CreateODataBatchReader();

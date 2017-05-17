@@ -662,7 +662,7 @@ namespace Microsoft.OData.Core
         protected abstract void ValidateWriterReady();
 
         /// <summary>
-        /// Write any pending headers for the current operation message (if any).
+        /// Write any pending data for the current operation message (if any).
         /// </summary>
         /// <param name="reportMessageCompleted">
         /// A flag to control whether after writing the pending data we report writing the message to be completed or not.

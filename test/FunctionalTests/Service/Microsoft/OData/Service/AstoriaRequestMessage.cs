@@ -42,7 +42,7 @@ namespace Microsoft.OData.Service
 
 #if DEBUG
         /// <summary>
-        /// To keep track of whether the stream was already retrieved or not. After this is set to true, 
+        /// To keep track of whether the stream was already retrieved or not. After this is set to true,
         /// we need to make sure that there is no call to retrieve the headers. Not that we would not have the values
         /// but the contract is like that.
         /// </summary>
@@ -96,7 +96,7 @@ namespace Microsoft.OData.Service
         }
 
         /// <summary>
-        /// Creates a new instance of AstoriaRequestMessage. This is meant to be a constructor for unit tests only. 
+        /// Creates a new instance of AstoriaRequestMessage. This is meant to be a constructor for unit tests only.
         /// </summary>
         /// <param name="host">IDataServiceHost instance to access all the request headers.</param>
         /// <param name="selector">Object to select acceptable content types.</param>
@@ -202,7 +202,7 @@ namespace Microsoft.OData.Service
                             break;
 
                         default:
-                            // 501: Not Implemented (rather than 405 - Method Not Allowed, 
+                            // 501: Not Implemented (rather than 405 - Method Not Allowed,
                             // which implies it was understood and rejected).
                             throw DataServiceException.CreateMethodNotImplemented(Strings.DataService_NotImplementedException);
                     }
@@ -287,9 +287,9 @@ namespace Microsoft.OData.Service
                 return this.requestVersion;
             }
 
-            private set 
-            { 
-                this.requestVersion = value; 
+            private set
+            {
+                this.requestVersion = value;
             }
         }
 
@@ -363,7 +363,7 @@ namespace Microsoft.OData.Service
             Debug.Assert(headerName != null, "headerName != null");
 
             // In astoria, IDataServiceHost2.RequestHeaders is never called to set the value of these headers.
-            // It will be breaking change to call it now. Hence trying to call the right property depending on the 
+            // It will be breaking change to call it now. Hence trying to call the right property depending on the
             // header name to keep it backward-compatible.
             switch (headerName)
             {
@@ -380,6 +380,8 @@ namespace Microsoft.OData.Service
                     return this.requestAcceptCharSet;
                 case XmlConstants.HttpPrefer:
                     return this.GetCustomHeaderIfAvailable(headerName);
+                case XmlConstants.HttpAccept:
+                    return this.requestAccept;
                 default:
                     Debug.Assert(false, "Invalid header name encountered: " + headerName);
                     throw new DataServiceException(500, Strings.DataServiceException_GeneralError);
@@ -464,7 +466,7 @@ namespace Microsoft.OData.Service
         {
             Debug.Assert(this.requestVersion == null, "this.requestVersion was not null, implying that we called InitializeRequestVersionHeaders before CacheHeaders. We need our version logic to run AFTER the incoming headers get modified by the user.");
             Debug.Assert(this.RequestMaxVersion == null, "this.RequestMaxVersion was not null, implying that we called InitializeRequestVersionHeaders before CacheHeaders. We need our version logic to run AFTER the incoming headers get modified by the user.");
-            
+
             this.requestAccept = this.host.RequestAccept;
             this.requestAcceptCharSet = this.host.RequestAcceptCharSet;
             this.requestIfMatch = this.host.RequestIfMatch;
@@ -544,7 +546,7 @@ namespace Microsoft.OData.Service
                 this.requestVersionString = this.RequestVersion.ToString(2);
             }
             else
-            {                
+            {
                 if (this.RequestVersion > maxRequestVersionAllowed)
                 {
                     throw DataServiceException.CreateBadRequestError(Strings.DataService_RequestVersionMustBeLessThanMPV(this.RequestVersion, maxProtocolVersion));
@@ -700,7 +702,7 @@ namespace Microsoft.OData.Service
 
             if (validateQueryString)
             {
-                // For now, require the query string to be exactly the same. 
+                // For now, require the query string to be exactly the same.
                 // This needs to be this strict in order to support the following cases.
                 // 1) Add to or replace the query string
                 // 2) Completely remove the query string from the original URI by not providing one

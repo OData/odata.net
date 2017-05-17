@@ -16,8 +16,15 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Roundtrip.JsonLight
 {
     public class BatchRoundtripJsonLightTests
     {
+        private enum BatchFormat
+        {
+            MultipartMIME,
+            ApplicationJson
+        };
+
         private const string serviceDocumentUri = "http://odata.org/test/";
-        private const string batchContentType = "multipart/mixed; boundary=batch_cb48b61f-511b-48e6-b00a-77c847badfb9";
+        private const string batchContentTypeMultipartMime   = "multipart/mixed; boundary=batch_cb48b61f-511b-48e6-b00a-77c847badfb9";
+        private const string batchContentTypeApplicationJson = "application/json; odata.streaming=true";
         private readonly EdmEntityContainer defaultContainer;
         private readonly EdmModel userModel;
         private readonly EdmSingleton singleton;
@@ -70,7 +77,7 @@ Content-Type: multipart/mixed; boundary=changeset_702fbcf5-653b-4217-bf4b-563aae
 --changeset_702fbcf5-653b-4217-bf4b-563aae4971fe
 Content-Type: application/http
 Content-Transfer-Encoding: binary
-Content-ID: 1
+Content-ID: 3
 
 DELETE http://odata.org/test/MySingleton HTTP/1.1
 
@@ -125,7 +132,7 @@ Content-Type: multipart/mixed; boundary=changeset_6ddc5056-67cd-42e2-85d2-e6fdea
 --changeset_6ddc5056-67cd-42e2-85d2-e6fdea46ea77
 Content-Type: application/http
 Content-Transfer-Encoding: binary
-Content-ID: 1
+Content-ID: 3
 
 HTTP/1.1 500 Internal Server Error
 
@@ -133,6 +140,108 @@ HTTP/1.1 500 Internal Server Error
 --changeset_6ddc5056-67cd-42e2-85d2-e6fdea46ea76--
 --batch_cb48b61f-511b-48e6-b00a-77c847badfb9--
 ";
+
+        private const string ExpectedRequestPayloadUsingJson = @"
+{
+    ""requests"": [{
+            ""id"": ""a05368c8-479d-4409-a2ee-9b54b133ec38"",
+            ""method"": ""GET"",
+            ""url"": ""http://odata.org/test//MySingleton"",
+            ""headers"": {
+                ""Accept"": ""application/json;odata.metadata=full""
+            }
+        }, {
+            ""id"": ""1"",
+            ""atomicityGroup"": ""f7de7314-2f3d-4422-b840-ada6d6de0f18"",
+            ""method"": ""PATCH"",
+            ""url"": ""http://odata.org/test//MySingleton"",
+            ""headers"": {
+                ""OData-Version"": ""4.0"",
+                ""Content-Type"": ""application/json;odata.metadata=minimal;odata.streaming=true;IEEE754Compatible=false;charset=utf-8""
+            },
+            ""body"": {
+                ""@odata.type"": ""#NS.Web"",
+                ""WebId"": 10,
+                ""Name"": ""SingletonWeb""
+            }
+        }, {
+            ""id"": ""2"",
+            ""atomicityGroup"": ""f7de7314-2f3d-4422-b840-ada6d6de0f18"",
+            ""method"": ""PATCH"",
+            ""url"": ""http://odata.org/test//MySingleton"",
+            ""headers"": {
+                ""OData-Version"": ""4.0"",
+                ""Content-Type"": ""application/json;odata.metadata=minimal;odata.streaming=true;IEEE754Compatible=false;charset=utf-8""
+            },
+            ""body"": {
+                ""@odata.type"": ""#NS.Web"",
+                ""WebId"": 111
+            }
+        }, {
+            ""id"": ""adec0e52-7647-4d9d-baac-9316f9dc6927"",
+            ""method"": ""GET"",
+            ""url"": ""http://odata.org/test//MySingleton/WebId"",
+            ""headers"": {
+                ""Accept"": ""application/json;odata.metadata=full""
+            }
+        }, {
+            ""id"": ""1"",
+            ""atomicityGroup"": ""29873bf8-2d2c-478d-a7df-1e7b236faebf"",
+            ""method"": ""DELETE"",
+            ""url"": ""http://odata.org/test/MySingleton"",
+            ""headers"": {}
+        }
+    ]
+}";
+
+        private const string ExpectedResponsePayloadUsingJson = @"
+{
+    ""responses"": [{
+            ""id"": ""cbcdb345-afdc-4125-8832-fcd7e14a013f"",
+            ""status"": 200,
+            ""headers"": {
+                ""Content-Type"": ""application/json;"",
+                ""OData-Version"": ""4.0""
+            },
+            ""body"": {
+                ""@odata.context"": ""http://odata.org/test/$metadata#MySingleton"",
+                ""WebId"": 10,
+                ""Name"": ""WebSingleton""
+            }
+        }, {
+            ""id"": ""1"",
+            ""atomicityGroup"": ""6e5679f2-2fb9-4097-84a9-623a0960a50f"",
+            ""status"": 204,
+            ""headers"": {
+                ""Content-Type"": ""application/json;odata.metadata=none""
+            }
+        }, {
+            ""id"": ""2"",
+            ""atomicityGroup"": ""6e5679f2-2fb9-4097-84a9-623a0960a50f"",
+            ""status"": 204,
+            ""headers"": {
+                ""Content-Type"": ""application/json;odata.metadata=none""
+            }
+        }, {
+            ""id"": ""fd811ff7-4c67-4a2f-bbe1-60b606093f14"",
+            ""status"": 200,
+            ""headers"": {
+                ""Content-Type"": ""application/json;"",
+                ""OData-Version"": ""4.0""
+            },
+            ""body"": {
+                ""@odata.context"": ""http://odata.org/test/$metadata#MySingleton"",
+                ""WebId"": 10,
+                ""Name"": ""WebSingleton""
+            }
+        }, {
+            ""id"": ""3"",
+            ""atomicityGroup"": ""a2f8de08-ae49-4717-92c5-9dbc198acc71"",
+            ""status"": 500,
+            ""headers"": {}
+        }
+    ]
+}";
 
         public BatchRoundtripJsonLightTests()
         {
@@ -153,39 +262,65 @@ HTTP/1.1 500 Internal Server Error
         [Fact]
         public void BatchJsonLightTest()
         {
-            var requestPayload = this.ClientWriteSingletonBatchRequest();
-            VerifyPayload(ExpectedRequestPayload, requestPayload);
-            var responsePayload = this.ServiceReadSingletonBatchRequestAndWriterBatchResponse(requestPayload);
-            VerifyPayload(ExpectedResponsePayload, responsePayload);
-            this.ClientReadSingletonBatchResponse(responsePayload);
+            BatchJsonLightTestUsingBatchFormat(BatchFormat.MultipartMIME);
         }
 
-        private void VerifyPayload(string expectedPayload, byte[] payloadBytes)
+        [Fact]
+        public void BatchJsonLightTestUsingJson()
         {
-            Stream stream = null;
-            try
-            {
-                stream = new MemoryStream(payloadBytes);
-                using (var sr = new StreamReader(stream))
-                {
-                    string payload = sr.ReadToEnd();
+            BatchJsonLightTestUsingBatchFormat(BatchFormat.ApplicationJson);
+        }
 
-                    expectedPayload = Regex.Replace(expectedPayload, "changeset.*$", "changeset_GUID", RegexOptions.Multiline);
-                    payload = Regex.Replace(payload, "changeset.*$", "changeset_GUID", RegexOptions.Multiline);
+        private void BatchJsonLightTestUsingBatchFormat(BatchFormat batchFormat)
+        {
+            var requestPayload = this.ClientWriteSingletonBatchRequest(GetContentTypeHeader(batchFormat));
+            VerifyPayload(requestPayload, batchFormat, true /*for request*/);
+            var responsePayload = this.ServiceReadSingletonBatchRequestAndWriterBatchResponse(requestPayload, GetContentTypeHeader(batchFormat));
+            VerifyPayload(responsePayload, batchFormat, false /*for response*/);
+            this.ClientReadSingletonBatchResponse(responsePayload, GetContentTypeHeader(batchFormat));
+        }
 
-                    Assert.Equal(expectedPayload, payload);
-                }
-            }
-            finally
+        private void VerifyPayload(byte[] payloadBytes, BatchFormat batchFormat, bool forRequest)
+        {
+            using (var stream = new MemoryStream(payloadBytes))
+            using (var sr = new StreamReader(stream))
             {
-                if (stream != null)
+                string payload = sr.ReadToEnd();
+                string expectedPayload = null;
+
+                switch (batchFormat)
                 {
-                    stream.Dispose();
+                    case BatchFormat.MultipartMIME:
+                        {
+                            expectedPayload = Regex.Replace(
+                                forRequest ? ExpectedRequestPayload : ExpectedResponsePayload,
+                                "changeset.*$", "changeset_GUID", RegexOptions.Multiline);
+
+                            payload = Regex.Replace(payload, "changeset.*$", "changeset_GUID", RegexOptions.Multiline);
+                        }
+                        break;
+
+                    case BatchFormat.ApplicationJson:
+                        {
+                            expectedPayload = GetNormalizedJsonMessage(forRequest ?
+                                ExpectedRequestPayloadUsingJson : ExpectedResponsePayloadUsingJson);
+
+                            payload = GetNormalizedJsonMessage(payload);
+                        }
+                        break;
+
+                    default:
+                        {
+                            Assert.True(false, "Unknown BatchFormat value");
+                        }
+                        break;
                 }
+
+                Assert.Equal(expectedPayload, payload);
             }
         }
 
-        private byte[] ClientWriteSingletonBatchRequest()
+        private byte[] ClientWriteSingletonBatchRequest(string batchContentType)
         {
             var stream = new MemoryStream();
 
@@ -238,7 +373,7 @@ HTTP/1.1 500 Internal Server Error
 
                 // DELETE singleton, invalid
                 batchWriter.WriteStartChangeset();
-                batchWriter.CreateOperationRequestMessage("DELETE", new Uri(serviceDocumentUri + "MySingleton"), "1");
+                batchWriter.CreateOperationRequestMessage("DELETE", new Uri(serviceDocumentUri + "MySingleton"), "3");
                 batchWriter.WriteEndChangeset();
 
                 batchWriter.WriteEndBatch();
@@ -248,7 +383,7 @@ HTTP/1.1 500 Internal Server Error
             }
         }
 
-        private byte[] ServiceReadSingletonBatchRequestAndWriterBatchResponse(byte[] requestPayload)
+        private byte[] ServiceReadSingletonBatchRequestAndWriterBatchResponse(byte[] requestPayload, string batchContentType)
         {
             IODataRequestMessage requestMessage = new InMemoryMessage() { Stream = new MemoryStream(requestPayload) };
             requestMessage.SetHeader("Content-Type", batchContentType);
@@ -258,6 +393,8 @@ HTTP/1.1 500 Internal Server Error
                 var responseStream = new MemoryStream();
 
                 IODataResponseMessage responseMessage = new InMemoryMessage { Stream = responseStream };
+
+                // Client is expected to receive the response message in the same format as that is used in the request sent.
                 responseMessage.SetHeader("Content-Type", batchContentType);
                 var messageWriter = new ODataMessageWriter(responseMessage);
                 var batchWriter = messageWriter.CreateODataBatchWriter();
@@ -314,7 +451,7 @@ HTTP/1.1 500 Internal Server Error
             }
         }
 
-        private void ClientReadSingletonBatchResponse(byte[] responsePayload)
+        private void ClientReadSingletonBatchResponse(byte[] responsePayload, string batchContentType)
         {
             IODataResponseMessage responseMessage = new InMemoryMessage() { Stream = new MemoryStream(responsePayload) };
             responseMessage.SetHeader("Content-Type", batchContentType);
@@ -353,6 +490,30 @@ HTTP/1.1 500 Internal Server Error
                     }
                 }
             }
+        }
+
+        private string GetContentTypeHeader(BatchFormat batchFormat)
+        {
+            return batchFormat == BatchFormat.MultipartMIME
+                ? batchContentTypeMultipartMime
+                : batchContentTypeApplicationJson;
+        }
+
+        /// <summary>
+        /// Normalize the json message by replacing Guids and removing whitespaces from formatted input.
+        /// </summary>
+        /// <param name="jsonMessage">The json message to be normalized.</param>
+        /// <returns>The normalized message.</returns>
+        private string GetNormalizedJsonMessage(string jsonMessage)
+        {
+            const string myIdProperty = @"""id"":""my_id_guid""";
+            const string myAtomicGroupProperty = @"""atomicityGroup"":""my_groupid_guid""";
+
+            string result = Regex.Replace(jsonMessage, @"\s*", "", RegexOptions.Multiline);
+            result = Regex.Replace(result, "\"id\":\"[^\"]*\"", myIdProperty, RegexOptions.Multiline);
+            result = Regex.Replace(result, "\"atomicityGroup\":\"[^\"]*\"", myAtomicGroupProperty, RegexOptions.Multiline);
+
+            return result;
         }
     }
 }

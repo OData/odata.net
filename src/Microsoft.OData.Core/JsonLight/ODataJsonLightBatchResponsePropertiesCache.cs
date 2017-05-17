@@ -26,28 +26,10 @@ namespace Microsoft.OData.Core.JsonLight
     internal sealed class ODataJsonLightBatchResponsePropertiesCache : ODataJsonLightBatchPayloadItemPropertiesCache
     {
         /// <summary>
-        /// Property name for response Id in Json batch response.
-        /// Property names definitions here are all in upper case to support case insensitiveness.
-        /// </summary>
-        internal const string PropertyNameId = "ID";
-
-        /// <summary>
         /// Property name for response status in Json batch response.
         /// Property names definitions here are all in upper case to support case insensitiveness.
         /// </summary>
         internal const string PropertyNameStatus = "STATUS";
-
-        /// <summary>
-        /// Property name for response headers in Json batch response.
-        /// Property names definitions here are all in upper case to support case insensitiveness.
-        /// </summary>
-        internal const string PropertyNameHeaders = "HEADERS";
-
-        /// <summary>
-        /// Property name for response body in Json batch response.
-        /// Property names definitions here are all in upper case to support case insensitiveness.
-        /// </summary>
-        internal const string PropertyNameBody = "BODY";
 
         /// <summary>
         /// Constructor.
@@ -81,55 +63,78 @@ namespace Microsoft.OData.Core.JsonLight
                 while (this.jsonReader.NodeType != JsonNodeType.EndObject)
                 {
                     // Convert to upper case to support case-insensitive response property names
-                    string propertyName = Normalize(this.jsonReader.ReadPropertyName());
+                    string propertyName = Normalize(this.jsonReader.GetPropertyName());
 
-                    switch (propertyName)
+                    try
                     {
-                        case PropertyNameId:
+                        // Json reader could throw when reading response containing error data in payload.
+                        jsonReader.ReadNext();
+
+                        switch (propertyName)
                         {
-                            jsonProperties.Add(propertyName, this.jsonReader.ReadStringValue());
-                        }
-                        break;
-
-                        case PropertyNameStatus:
-                        {
-                            jsonProperties.Add(propertyName, this.jsonReader.ReadPrimitiveValue());
-                        }
-                        break;
-
-                        case PropertyNameHeaders:
-                        {
-                            ODataBatchOperationHeaders headers = new ODataBatchOperationHeaders();
-
-                            this.jsonReader.ReadStartObject();
-
-                            while (this.jsonReader.NodeType != JsonNodeType.EndObject)
+                            case PropertyNameId:
+                            case PropertyNameAtomicityGroup:
                             {
-                                headers.Add(
-                                    this.jsonReader.ReadPropertyName(),
-                                    this.jsonReader.ReadPrimitiveValue().ToString());
+                                jsonProperties.Add(propertyName, this.jsonReader.ReadStringValue());
                             }
+                                break;
 
-                            this.jsonReader.ReadEndObject();
+                            case PropertyNameStatus:
+                            {
+                                jsonProperties.Add(propertyName, this.jsonReader.ReadPrimitiveValue());
+                            }
+                                break;
 
-                            jsonProperties.Add(propertyName, headers);
-                        }
-                        break;
+                            case PropertyNameHeaders:
+                            {
+                                ODataBatchOperationHeaders headers = new ODataBatchOperationHeaders();
 
-                        case PropertyNameBody:
-                        {
-                            ODataBatchReaderStream bodyContentStream = CreateJsonPayloadBodyContentStream();
-                            jsonProperties.Add(propertyName, bodyContentStream);
-                        }
-                        break;
+                                this.jsonReader.ReadStartObject();
 
-                        default:
+                                while (this.jsonReader.NodeType != JsonNodeType.EndObject)
+                                {
+                                    headers.Add(
+                                        this.jsonReader.ReadPropertyName(),
+                                        this.jsonReader.ReadPrimitiveValue().ToString());
+                                }
+
+                                this.jsonReader.ReadEndObject();
+
+                                jsonProperties.Add(propertyName, headers);
+                            }
+                                break;
+
+                            case PropertyNameBody:
+                            {
+                                ODataBatchReaderStream bodyContentStream = CreateJsonPayloadBodyContentStream();
+                                jsonProperties.Add(propertyName, bodyContentStream);
+                            }
+                                break;
+
+                            default:
                             {
                                 throw new ODataException(string.Format(
                                     CultureInfo.InvariantCulture,
                                     "Unknown property name '{0}' for response in batch",
                                     propertyName));
                             }
+                        }
+                    }
+                    catch (ODataErrorException instreamDataErrorException)
+                    {
+                        // JsonReader detects instream error during parsing of response containing error information in payload.
+                        Debug.Assert(propertyName.Equals(PropertyNameBody, StringComparison.Ordinal));
+
+                        // Close the response object scope since the Json reader has detected the instream error and throw.
+                        this.jsonReader.ReadEndObject();
+
+                        // Convert the exception here back to string for the property under parsing.
+                        ODataError error = instreamDataErrorException.Error;
+
+                        // Create the stream in the properties cache.
+                        ODataBatchReaderStream bodyContentStream =
+                            CreateJsonPayloadBodyContentStreamFromString(error.ToString());
+                        jsonProperties.Add(propertyName, bodyContentStream);
                     }
                 }
 
@@ -141,6 +146,15 @@ namespace Microsoft.OData.Core.JsonLight
                 // We don't need to use the Json reader anymore.
                 this.jsonReader = null;
             }
+        }
+
+        protected override ODataBatchReaderStream CreateJsonPayloadBodyContentStreamFromString(string content)
+        {
+            ODataJsonLightBatchBodyContentReaderStream stream = new ODataJsonLightBatchBodyContentReaderStream();
+
+            stream.PopulateBodyContentFromString(content);
+
+            return stream;
         }
     }
 }

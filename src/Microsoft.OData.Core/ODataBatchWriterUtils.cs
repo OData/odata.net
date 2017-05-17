@@ -18,7 +18,7 @@ namespace Microsoft.OData.Core
     /// </summary>
     internal static class ODataBatchWriterUtils
     {
-        internal static int HTTP_STATUS_NO_CONTENT = 204;
+        internal const int HTTP_STATUS_NO_CONTENT = 204;
 
         /// <summary>
         /// Creates a new batch boundary string based on a randomly created GUID.
@@ -170,7 +170,17 @@ namespace Microsoft.OData.Core
 
         internal static bool HasResponseBody(ODataBatchOperationResponseMessage responseMessage)
         {
-            return responseMessage.StatusCode != HTTP_STATUS_NO_CONTENT;
+            switch (responseMessage.StatusCode)
+            {
+                case HTTP_STATUS_NO_CONTENT:
+                case 202:
+                {
+                    return false;
+                }
+
+                default:
+                    return true;
+            }
         }
 
         /// <summary>

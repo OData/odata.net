@@ -70,8 +70,7 @@ namespace Microsoft.OData.Core.JsonLight
         /// Constructor.
         /// </summary>
         /// <param name="batchEncoding">The encoding to use to read & write from the batch stream.</param>
-        internal ODataJsonLightBatchBodyContentReaderStream(
-            Encoding batchEncoding)
+        internal ODataJsonLightBatchBodyContentReaderStream(Encoding batchEncoding)
             : base(batchEncoding)
         {
             this.bodyContentStream = new MemoryStream();
@@ -143,7 +142,6 @@ namespace Microsoft.OData.Core.JsonLight
         /// The property value should be of either Json type or binary type.
         /// </summary>
         /// <param name="jsonReader">The Json reader providing access to the data.</param>
-        /// <remarks>Need to test binary type with real usage.</remarks>
         internal void PopulateBodyContent(JsonReader jsonReader)
         {
             Debug.Assert(!this.isDataPopulatedToStream, "!this.isDataPopulatedToStream");
@@ -179,39 +177,25 @@ namespace Microsoft.OData.Core.JsonLight
             this.bodyContentStream.Position = 0;
         }
 
-/***
         /// <summary>
-        /// Convert the binary data into base64-encoded bytes.
+        /// Populate the content to the created stream.
         /// </summary>
-        /// <param name="bytes">Bindary data to be encoded.</param>
-        /// <returns>Base64-encoded char array</returns>
-        /// <remark>
-        /// Currently not used. Base64 encode/decode should not be processed in ODL layer??
-        /// </remark>
-        internal static char[] GetBase64Encode(byte[] bytes)
+        /// <param name="content">Data to be populated.</param>
+        internal void PopulateBodyContentFromString(string content)
         {
-            if (bytes == null)
-            {
-                throw new ODataException("Binary data cannot be null");
-            }
-            long encodedLength = (long)((4.0d / 3.0d) * bytes.Length);
+            // Reader is on the value node after the "body" property name node.
+            IJsonWriter jsonWriter = new JsonWriter(
+                streamWriter,
+                false /*indent*/,
+                ODataFormat.Json,
+                true /*isIeee754Compatible*/);
 
-            // Round up to the next the base64 encoded length to multiple of 4.
-            if (encodedLength % 4 != 0)
-            {
-                encodedLength += 4 - encodedLength % 4;
-            }
+            jsonWriter.WriteRawValue(content);
+            jsonWriter.Flush();
 
-            char[] encodedChars = new char[encodedLength];
-            Convert.ToBase64CharArray(bytes,
-                         0,
-                         bytes.Length,
-                         encodedChars,
-                         0);
-
-            return encodedChars;
+            this.isDataPopulatedToStream = true;
+            this.bodyContentStream.Position = 0;
         }
-***/
 
         /// <summary>
         /// Read off the data of the starting Json object from the Json reader,

@@ -66,7 +66,7 @@ namespace Microsoft.OData.Core.JsonLight
         private readonly ODataJsonLightBatchReaderStream batchStream;
 
         /// <summary>
-        /// The cache to keep track of atomicity group information during json batch request reading.
+        /// The cache to keep track of atomicity group information during json batch message reading.
         /// </summary>
         private readonly ODataJsonLightBatchAtomicGroupCache atomicGroups
             = new ODataJsonLightBatchAtomicGroupCache();
@@ -113,12 +113,15 @@ namespace Microsoft.OData.Core.JsonLight
         protected override ODataBatchOperationRequestMessage CreateOperationRequestMessageImplementation()
         {
             Debug.Assert(this.requestPropertiesCache != null, "this.requestPropertiesCache != null");
+
             // id
-            string id = (string)this.requestPropertiesCache.GetPropertyValue(ODataJsonLightBatchRequestPropertiesCache.PropertyNameId);
+            string id = (string)this.requestPropertiesCache.GetPropertyValue(
+                ODataJsonLightBatchPayloadItemPropertiesCache.PropertyNameId);
             this.ContentIdToAddOnNextRead = id;
 
             // atomicityGroup
-            string atomicityGroupId = (string)this.requestPropertiesCache.GetPropertyValue(ODataJsonLightBatchRequestPropertiesCache.PropertyNameAtomicityGroup);
+            string atomicityGroupId = (string)this.requestPropertiesCache.GetPropertyValue(
+                ODataJsonLightBatchPayloadItemPropertiesCache.PropertyNameAtomicityGroup);
 
             // dependsOn
             // Flatten the dependsOn list by converting every groupId into request Ids, so that the caller
@@ -126,35 +129,42 @@ namespace Microsoft.OData.Core.JsonLight
             // Note that the forward reference of dependsOn id is not allowed, so the atomicGroups should have accurate
             // information of atomicGroup that needs to be flattened.
             IList<string> dependsOnReqIds = null;
-            List<string> dependsOn = (List<string>)this.requestPropertiesCache.GetPropertyValue(ODataJsonLightBatchRequestPropertiesCache.PropertyNameDependsOn);
+            List<string> dependsOn = (List<string>)this.requestPropertiesCache.GetPropertyValue(
+                ODataJsonLightBatchRequestPropertiesCache.PropertyNameDependsOn);
             if (dependsOn != null && dependsOn.Count != 0)
             {
                 ValidateDependsOnId(dependsOn, atomicityGroupId, id);
-                dependsOnReqIds = atomicGroups.GetFlattenedRequestIds(dependsOn);
+                dependsOnReqIds = atomicGroups.GetFlattenedMessageIds(dependsOn);
             }
 
             // header
             ODataBatchOperationHeaders headers =
-                (ODataBatchOperationHeaders)this.requestPropertiesCache.GetPropertyValue(ODataJsonLightBatchRequestPropertiesCache.PropertyNameHeaders);
+                (ODataBatchOperationHeaders)this.requestPropertiesCache.GetPropertyValue(
+                ODataJsonLightBatchPayloadItemPropertiesCache.PropertyNameHeaders);
 
             // Add the atomicityGroup request header.
             if (atomicityGroupId != null)
             {
-                headers.Add(ODataJsonLightBatchRequestPropertiesCache.PropertyNameAtomicityGroup, atomicityGroupId);
+                headers.Add(ODataJsonLightBatchPayloadItemPropertiesCache.PropertyNameAtomicityGroup, atomicityGroupId);
             }
 
             // body. Use empty stream when request body is not present.
             ODataBatchReaderStream bodyContentStream =
-                (ODataBatchReaderStream)this.requestPropertiesCache.GetPropertyValue(ODataJsonLightBatchRequestPropertiesCache.PropertyNameBody)
+                (ODataBatchReaderStream)this.requestPropertiesCache.GetPropertyValue(
+                ODataJsonLightBatchPayloadItemPropertiesCache.PropertyNameBody)
                 ?? new ODataJsonLightBatchBodyContentReaderStream();
 
             // method. Support case-insensitive valus of HTTP methods.
-            string httpMethod = (string)this.requestPropertiesCache.GetPropertyValue(ODataJsonLightBatchRequestPropertiesCache.PropertyNameMethod);
+            string httpMethod = (string)this.requestPropertiesCache.GetPropertyValue(
+                ODataJsonLightBatchRequestPropertiesCache.PropertyNameMethod);
+
             ValidateRequiredProperty(httpMethod, ODataJsonLightBatchRequestPropertiesCache.PropertyNameMethod);
+
             httpMethod = httpMethod.ToUpperInvariant();
 
             // url
-            string url = (string)this.requestPropertiesCache.GetPropertyValue(ODataJsonLightBatchRequestPropertiesCache.PropertyNameUrl);
+            string url = (string)this.requestPropertiesCache.GetPropertyValue(
+                ODataJsonLightBatchRequestPropertiesCache.PropertyNameUrl);
             ValidateRequiredProperty(url, ODataJsonLightBatchRequestPropertiesCache.PropertyNameUrl);
             Uri requestUri = BuildRequestUri(url);
 
@@ -186,10 +196,7 @@ namespace Microsoft.OData.Core.JsonLight
         {
             if (propertyValue == null)
             {
-                throw new ODataException(string.Format(
-                    CultureInfo.InvariantCulture,
-                    "Request property [{0}] is required but is missing",
-                    propertyName));
+                throw new ODataException(Strings.ODataBatchReader_RequestPropertyMissing(propertyName));
             }
         }
 
@@ -207,18 +214,14 @@ namespace Microsoft.OData.Core.JsonLight
                 if (dependsOnId.Equals(atomicityGroupId))
                 {
                     // Self reference to atomicityGroup is not allowed.
-                    throw new ODataException(string.Format(
-                        CultureInfo.InvariantCulture,
-                        "Error: The dependsOn request Id [{0}] is same as atomicityGroup property value [{1}], not allowed.",
+                    throw new ODataException(Strings.ODataBatchReader_SameRequestIdAsAtomicityGroupIdNotAllowed(
                         dependsOnId,
                         atomicityGroupId));
                 }
                 else if (dependsOnId.Equals(requestId))
                 {
                     // Self reference is not allowed.
-                    throw new ODataException(string.Format(
-                        CultureInfo.InvariantCulture,
-                        "Error: The dependsOn request Id [{0}] is same as id property value [{1}], not allowed.",
+                    throw new ODataException(Strings.ODataBatchReader_SelfReferenceDependsOnRequestIdNotAllowed(
                         dependsOnId,
                         requestId));
                 }
@@ -228,10 +231,7 @@ namespace Microsoft.OData.Core.JsonLight
                     string groupId = this.atomicGroups.GetGroupId(dependsOnId);
                     if (groupId != null)
                     {
-                        throw new ODataException(string.Format(
-                            CultureInfo.InvariantCulture,
-                            "Error: The dependsOn request Id [{0}] is part of atomic group [{1}]. Therefore " +
-                            "dependsOn property should refer to atomic group Id [{1}] instead.",
+                        throw new ODataException(Strings.ODataBatchReader_DependsOnRequestIdIsPartOfAtomicityGroupNotAllowed(
                             dependsOnId,
                             groupId));
                     }
@@ -241,10 +241,7 @@ namespace Microsoft.OData.Core.JsonLight
                     // Unknown request Id. Check whether it is a group Id, error if it is not.
                     if (!this.atomicGroups.IsGroupId(dependsOnId))
                     {
-                        throw new ODataException(string.Format(
-                            CultureInfo.InvariantCulture,
-                            "Error: The dependsOn Id: [{0}] in request [{1}] is not matching any of the request Id " +
-                            "and atomic group Id seen so far. Forward reference is not allowed",
+                        throw new ODataException(Strings.ODataBatchReader_DependsOnIdNotFound(
                             dependsOnId,
                             requestId));
                     }
@@ -269,8 +266,8 @@ namespace Microsoft.OData.Core.JsonLight
 
                 if (string.CompareOrdinal(ODataConstants.HttpVersionInBatching, httpVersionSegment) != 0)
                 {
-                    throw new ODataException(
-                        Strings.ODataBatchReaderStream_InvalidHttpVersionSpecified(httpVersionSegment,
+                    throw new ODataException(Strings.ODataBatchReaderStream_InvalidHttpVersionSpecified(
+                        httpVersionSegment,
                         ODataConstants.HttpVersionInBatching));
                 }
             }
@@ -294,13 +291,28 @@ namespace Microsoft.OData.Core.JsonLight
 
             // body. Use empty stream when request body is not present.
             ODataBatchReaderStream bodyContentStream =
-                (ODataBatchReaderStream)this.responsePropertiesCache.GetPropertyValue(ODataJsonLightBatchResponsePropertiesCache.PropertyNameBody)
+                (ODataBatchReaderStream)this.responsePropertiesCache.GetPropertyValue(ODataJsonLightBatchPayloadItemPropertiesCache.PropertyNameBody)
                 ?? new ODataJsonLightBatchBodyContentReaderStream();
 
             int statusCode = (int)
                 this.responsePropertiesCache.GetPropertyValue(ODataJsonLightBatchResponsePropertiesCache.PropertyNameStatus);
             ODataBatchOperationHeaders headers = (ODataBatchOperationHeaders)
-                this.responsePropertiesCache.GetPropertyValue(ODataJsonLightBatchResponsePropertiesCache.PropertyNameHeaders);
+                this.responsePropertiesCache.GetPropertyValue(ODataJsonLightBatchPayloadItemPropertiesCache.PropertyNameHeaders);
+
+            // Add the potential id value to the URL resolver so that it will be available
+            // to subsequent operations.
+            string valueId =(string)
+                this.responsePropertiesCache.GetPropertyValue(ODataJsonLightBatchPayloadItemPropertiesCache.PropertyNameId);
+            if (valueId != null && this.urlResolver.ContainsContentId(valueId))
+            {
+                throw new ODataException(Strings.ODataBatchReader_DuplicateContentIDsNotAllowed(valueId));
+            }
+            else if (this.ContentIdToAddOnNextRead == null)
+            {
+                this.ContentIdToAddOnNextRead = valueId;
+            }
+
+            this.ReaderOperationState = OperationState.MessageCreated;
 
             // Reset the response property cache since all data in cache has been processed.
             // So that new instance can be created during subsequent read in operation state.
@@ -341,7 +353,7 @@ namespace Microsoft.OData.Core.JsonLight
             }
             else
             {
-                throw new ODataException("JsonLight batch format requires top level property name 'requests' or 'responses'");
+                throw new ODataException(Strings.ODataBatchReader_JsonBatchTopLevelPropertyMissing);
             }
         }
 
@@ -360,14 +372,17 @@ namespace Microsoft.OData.Core.JsonLight
         /// <summary>
         /// Process atomic group start.
         /// </summary>
+        /// <param name="messageId"> Id of the first message (request or response) in the group. </param>
         /// <param name="groupId"> Group Id for the new atomic group. </param>
-        /// <param name="requestId"> Id of the first request in the group. </param>
-        private void HandleNewAtomicGroupStart(string requestId, string groupId)
+        private void HandleNewAtomicGroupStart(string messageId, string groupId)
         {
+            if (this.atomicGroups.IsGroupId(groupId))
+            {
+                throw new ODataException(Strings.ODataBatchReader_DuplicateAtomicityGroupIDsNotAllowed(groupId));
+            }
+
             // Add the request Id to the new group.
-            this.atomicGroups.AddRequestToGroup(
-                requestId,
-                groupId);
+            this.atomicGroups.AddMessageIdAndGroupId(messageId, groupId);
 
             // Set the changesetStart directly.
             this.State = ODataBatchReaderState.ChangesetStart;
@@ -397,7 +412,7 @@ namespace Microsoft.OData.Core.JsonLight
             }
             else
             {
-                throw new ODataException("Reader mode is not setup correctly");
+                throw new ODataException(Strings.ODataBatchReader_ReaderModeNotInitilized);
             }
 
             return this.State != ODataBatchReaderState.Completed && this.State != ODataBatchReaderState.Exception;
@@ -418,6 +433,17 @@ namespace Microsoft.OData.Core.JsonLight
                     Debug.Assert(this.responsePropertiesCache == null, "this.responsePropertiesCache == null");
                     this.responsePropertiesCache =
                         new ODataJsonLightBatchResponsePropertiesCache(this.JsonLightInputContext.JsonReader);
+
+                    string currentGroup = (string)this.responsePropertiesCache.GetPropertyValue(
+                        ODataJsonLightBatchPayloadItemPropertiesCache.PropertyNameAtomicityGroup);
+
+                    if (currentGroup != null)
+                    {
+                        // Use null for messageId in response read since it is irrelevant.
+                        HandleNewAtomicGroupStart(
+                            (string)this.responsePropertiesCache.GetPropertyValue(ODataJsonLightBatchPayloadItemPropertiesCache.PropertyNameId),
+                            currentGroup);
+                    }
                 }
                 break;
 
@@ -432,10 +458,8 @@ namespace Microsoft.OData.Core.JsonLight
 
                     if (this.JsonLightInputContext.JsonReader.NodeType != JsonNodeType.StartObject)
                     {
-                        // Set the completion state.
-                        this.JsonLightInputContext.JsonReader.ReadEndArray();
-                        this.JsonLightInputContext.JsonReader.ReadEndObject();
-                        this.State = ODataBatchReaderState.Completed;
+                        // No more responses in the batch.
+                        HandleMessagesEnd();
                         break;
                     }
 
@@ -453,9 +477,7 @@ namespace Microsoft.OData.Core.JsonLight
                         this.ContentIdToAddOnNextRead = null;
                     }
 
-                    Debug.Assert(this.responsePropertiesCache == null, "this.responsePropertiesCache == null");
-
-                    // Load the response properties.
+                    // Load the response properties if there is no cached item for processing.
                     if (this.responsePropertiesCache == null)
                     {
                         // Load the request details since operation is detected.
@@ -463,13 +485,10 @@ namespace Microsoft.OData.Core.JsonLight
                             new ODataJsonLightBatchResponsePropertiesCache(this.JsonLightInputContext.JsonReader);
                     }
 
-                    // Validate response Id.
-                    string valueId = ((string)this.responsePropertiesCache.GetPropertyValue(
-                        ODataJsonLightBatchResponsePropertiesCache.PropertyNameId))
-                        ?? Guid.NewGuid().ToString();
-                    if (this.urlResolver.ContainsContentId(valueId))
+                    // Return when changeset state transition is detected.
+                    if (DetectChangesetStates(this.responsePropertiesCache))
                     {
-                        throw new ODataException(Strings.ODataBatchReader_DuplicateContentIDsNotAllowed(valueId));
+                        break;
                     }
 
                     Debug.Assert(this.ReaderOperationState == OperationState.None,
@@ -479,16 +498,44 @@ namespace Microsoft.OData.Core.JsonLight
                 }
                 break;
 
-                // For json response reading, there are no explicit changesets, therefore neither are
-                // changeset-related states.
-                // Note that for json request there is notion of atomicityGroup, which can be controlled
-                // by ODL caller.
                 case ODataBatchReaderState.ChangesetStart:
+                {
+                    Debug.Assert(this.responsePropertiesCache != null,
+                        "response properties cache must have been set by now.");
+                    this.State = ODataBatchReaderState.Operation;
+                }
+                    break;
+
                 case ODataBatchReaderState.ChangesetEnd:
+                {
+                    ReadAtChangesetEndState(this.responsePropertiesCache);
+                }
+                break;
+
                 default:
                     Debug.Assert(false, "Unsupported reader state " + this.State + " detected.");
-                    throw new ODataException(
-                        Strings.General_InternalError(InternalErrorCodes.ODataBatchReader_ReadImplementation));
+                    throw new ODataException(Strings.General_InternalError(InternalErrorCodes.ODataBatchReader_ReadImplementation));
+            }
+        }
+
+        /// <summary>
+        /// Setup the reader's states at the end of the messages.
+        /// If atomicGroup is under processing, it needs to be closed first.
+        /// </summary>
+        private void HandleMessagesEnd()
+        {
+            if (this.atomicGroups.IsWithinAtomicGroup)
+            {
+                // We need to close pending changeset and update the atomic group status first.
+                this.atomicGroups.IsWithinAtomicGroup = false;
+                this.State = ODataBatchReaderState.ChangesetEnd;
+            }
+            else
+            {
+                // Set the completion state.
+                this.JsonLightInputContext.JsonReader.ReadEndArray();
+                this.JsonLightInputContext.JsonReader.ReadEndObject();
+                this.State = ODataBatchReaderState.Completed;
             }
         }
 
@@ -509,12 +556,12 @@ namespace Microsoft.OData.Core.JsonLight
                     this.requestPropertiesCache = new ODataJsonLightBatchRequestPropertiesCache(this.JsonLightInputContext.JsonReader);
 
                     string currentGroup = (string)this.requestPropertiesCache.GetPropertyValue(
-                                ODataJsonLightBatchRequestPropertiesCache.PropertyNameAtomicityGroup);
+                                ODataJsonLightBatchPayloadItemPropertiesCache.PropertyNameAtomicityGroup);
 
                     if (currentGroup != null)
                     {
                         HandleNewAtomicGroupStart(
-                            (string)this.requestPropertiesCache.GetPropertyValue(ODataJsonLightBatchRequestPropertiesCache.PropertyNameId),
+                            (string)this.requestPropertiesCache.GetPropertyValue(ODataJsonLightBatchPayloadItemPropertiesCache.PropertyNameId),
                             currentGroup);
                     }
                 }
@@ -532,19 +579,7 @@ namespace Microsoft.OData.Core.JsonLight
                     if (this.JsonLightInputContext.JsonReader.NodeType != JsonNodeType.StartObject)
                     {
                         // No more requests in the batch.
-                        if (this.atomicGroups.IsWithinAtomicGroup)
-                        {
-                            // We need to close pending changeset and update the atomic group status first.
-                            this.State = ODataBatchReaderState.ChangesetEnd;
-                            this.atomicGroups.IsWithinAtomicGroup = false;
-                        }
-                        else
-                        {
-                            // Not within atomic group, set the completion state directly.
-                            this.JsonLightInputContext.JsonReader.ReadEndArray();
-                            this.JsonLightInputContext.JsonReader.ReadEndObject();
-                            this.State = ODataBatchReaderState.Completed;
-                        }
+                        HandleMessagesEnd();
                         break;
                     }
 
@@ -562,60 +597,20 @@ namespace Microsoft.OData.Core.JsonLight
                         this.ContentIdToAddOnNextRead = null;
                     }
 
-                    // Examine changeset states.
-                    bool changesetStart = false;
-                    bool changesetEnd = false;
-
-                    // Load the request properties if there is nothing available from cache.
+                    // Load the request properties if there is no cache item for processing.
                     if (this.requestPropertiesCache == null)
                     {
                         // Load the request details since operation is detected.
                         this.requestPropertiesCache = new ODataJsonLightBatchRequestPropertiesCache(this.JsonLightInputContext.JsonReader);
                     }
 
-                    // Validate request Id.
-                    string valueId = (string)this.requestPropertiesCache.GetPropertyValue(
-                            ODataJsonLightBatchRequestPropertiesCache.PropertyNameId);
-                    ValidateRequiredProperty(valueId, ODataJsonLightBatchRequestPropertiesCache.PropertyNameId);
-                    if (this.urlResolver.ContainsContentId(valueId))
+                    // Return when changeset state transition is detected.
+                    if (DetectChangesetStates(this.requestPropertiesCache))
                     {
-                        throw new ODataException(Strings.ODataBatchReader_DuplicateContentIDsNotAllowed(valueId));
-                    }
-
-
-                    string currentGroup = (string)this.requestPropertiesCache.GetPropertyValue(
-                                ODataJsonLightBatchRequestPropertiesCache.PropertyNameAtomicityGroup);
-
-                    // ChangesetEnd check first; If not, check for changesetStart.
-                    changesetEnd = this.atomicGroups.IsChangesetEnd(currentGroup);
-                    if (!changesetEnd)
-                    {
-                        if (currentGroup != null)
-                        {
-                            // Add request Id to atomic group (create new group if needed).
-                            // Also detect changeset start.
-                            changesetStart = this.atomicGroups.AddRequestToGroup(valueId, currentGroup);
-                        }
-                    }
-
-                    // If we have changeset state change detected, set the state and return now.
-                    if (changesetEnd)
-                    {
-                        this.State = ODataBatchReaderState.ChangesetEnd;
-                        break;
-                    }
-                    else if (changesetStart)
-                    {
-                        this.State = ODataBatchReaderState.ChangesetStart;
                         break;
                     }
 
-                    // Reaching here, we have either of the followings:
-                    // a). top-level request
-                    // b). request associated with atomic group, and processing has gone through ChangesetStart state.
-                    // In both cases, request property cache contains the data that needs to be processed in
-                    // batch reader Operation state.
-
+                    // Set reader's state for single request.
                     Debug.Assert(this.ReaderOperationState == OperationState.None,
                         "Operation state must be 'None' at the end of the operation.");
 
@@ -625,6 +620,7 @@ namespace Microsoft.OData.Core.JsonLight
 
                 case ODataBatchReaderState.ChangesetStart:
                 {
+                    // Direct transition back to opration state.
                     Debug.Assert(this.requestPropertiesCache != null,
                         "request properties cache must have been set by now.");
                     this.State = ODataBatchReaderState.Operation;
@@ -633,33 +629,7 @@ namespace Microsoft.OData.Core.JsonLight
 
                 case ODataBatchReaderState.ChangesetEnd:
                 {
-                    if (this.requestPropertiesCache != null)
-                    {
-                        // There are more requests for processing.
-                        string groupId = (string)requestPropertiesCache.GetPropertyValue(
-                            ODataJsonLightBatchRequestPropertiesCache.PropertyNameAtomicityGroup);
-
-                        if (groupId != null)
-                        {
-                            // For back-to-back changesets, we need to transit to ChangesetStart back-to-back.
-                            HandleNewAtomicGroupStart(
-                                (string)this.requestPropertiesCache.GetPropertyValue(ODataJsonLightBatchRequestPropertiesCache.PropertyNameId),
-                                groupId);
-                        }
-                        else
-                        {
-                            // changeset followed by top-level request.
-                            this.State = ODataBatchReaderState.Operation;
-                        }
-                    }
-                    else
-                    {
-                        // We have read all the way to the end of the batch requests,
-                        // and there are no cached items.
-                        this.JsonLightInputContext.JsonReader.ReadEndArray();
-                        this.JsonLightInputContext.JsonReader.ReadEndObject();
-                        this.State = ODataBatchReaderState.Completed;
-                    }
+                    ReadAtChangesetEndState(this.requestPropertiesCache);
                 }
                 break;
 
@@ -667,6 +637,92 @@ namespace Microsoft.OData.Core.JsonLight
                     Debug.Assert(false, "Unsupported reader state " + this.State + " detected.");
                     throw new ODataException(Strings.General_InternalError(InternalErrorCodes.ODataBatchReader_ReadImplementation));
             }
+        }
+
+        /// <summary>
+        /// Process current message properties at changeset end state.
+        /// </summary>
+        /// <param name="messagePropertyCache">The current message properties.</param>
+        private void ReadAtChangesetEndState(ODataJsonLightBatchPayloadItemPropertiesCache messagePropertyCache)
+        {
+            if (messagePropertyCache != null)
+            {
+                // There are more requests for processing.
+                string groupId = (string)messagePropertyCache.GetPropertyValue(
+                    ODataJsonLightBatchPayloadItemPropertiesCache.PropertyNameAtomicityGroup);
+
+                if (groupId != null)
+                {
+                    // For back-to-back changesets, we need to transit to ChangesetStart back-to-back.
+                    HandleNewAtomicGroupStart(
+                        (string)messagePropertyCache.GetPropertyValue(ODataJsonLightBatchPayloadItemPropertiesCache.PropertyNameId),
+                        groupId);
+                }
+                else
+                {
+                    // changeset followed by top-level request.
+                    this.State = ODataBatchReaderState.Operation;
+                }
+            }
+            else
+            {
+                // We have read all the way to the end of the batch requests,
+                // and there are no cached items.
+                this.JsonLightInputContext.JsonReader.ReadEndArray();
+                this.JsonLightInputContext.JsonReader.ReadEndObject();
+                this.State = ODataBatchReaderState.Completed;
+            }
+        }
+
+        /// <summary>
+        /// Examine changeset states for the current message and setup reader state accordingly when
+        /// changeset related state transition is detected.
+        /// </summary>
+        /// <param name="messagePropertiesCache">Current message properties.</param>
+        /// <returns>True if changeset state transition is detected; false otherwise.</returns>
+        private bool DetectChangesetStates(ODataJsonLightBatchPayloadItemPropertiesCache messagePropertiesCache)
+        {
+            bool changesetStart = false;
+            bool changesetEnd = false;
+
+            // Validate message Id.
+            string valueId = (string) messagePropertiesCache.GetPropertyValue(
+                ODataJsonLightBatchPayloadItemPropertiesCache.PropertyNameId);
+            ValidateRequiredProperty(valueId, ODataJsonLightBatchPayloadItemPropertiesCache.PropertyNameId);
+
+            if (this.urlResolver.ContainsContentId(valueId))
+            {
+                throw new ODataException(Strings.ODataBatchReader_DuplicateContentIDsNotAllowed(valueId));
+            }
+
+            string currentGroup = (string) messagePropertiesCache.GetPropertyValue(
+                ODataJsonLightBatchPayloadItemPropertiesCache.PropertyNameAtomicityGroup);
+
+            // ChangesetEnd check first; If not, check for changesetStart.
+            changesetEnd = this.atomicGroups.IsChangesetEnd(currentGroup);
+            if (!changesetEnd)
+            {
+                if (currentGroup != null)
+                {
+                    // Add message Id to atomic group (create new group if needed).
+                    // Also detect changeset start.
+                    changesetStart = this.atomicGroups.AddMessageIdAndGroupId(valueId, currentGroup);
+                }
+            }
+
+            // If we have changeset state change detected, set the state here.
+            if (changesetEnd)
+            {
+                this.State = ODataBatchReaderState.ChangesetEnd;
+                return true;
+            }
+            else if (changesetStart)
+            {
+                this.State = ODataBatchReaderState.ChangesetStart;
+                return true;
+            }
+
+            return false;
         }
     }
 }

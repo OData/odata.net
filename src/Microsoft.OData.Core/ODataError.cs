@@ -4,6 +4,8 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+
+
 namespace Microsoft.OData.Core
 {
     #region Namespaces
@@ -11,8 +13,13 @@ namespace Microsoft.OData.Core
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
+    using System.Globalization;
     using System.Linq;
+    using System.Text;
+
+    using Microsoft.OData.Core.Json;
     #endregion Namespaces
+
 
     /// <summary>
     /// Class representing an error payload.
@@ -44,7 +51,7 @@ namespace Microsoft.OData.Core
         public string Target { get; set; }
 
         /// <summary>
-        /// A collection of JSON objects that MUST contain name/value pairs for code and message, and MAY contain 
+        /// A collection of JSON objects that MUST contain name/value pairs for code and message, and MAY contain
         /// a name/value pair for target, as described above.
         /// </summary>
         /// <returns>The error details.</returns>
@@ -66,6 +73,36 @@ namespace Microsoft.OData.Core
         {
             get { return this.GetInstanceAnnotations(); }
             set { this.SetInstanceAnnotations(value); }
+        }
+
+        /// <summary>
+        /// Serilization to Json format string representing the error object.
+        /// </summary>
+        /// <returns>The string in Json format</returns>
+        public override string ToString()
+        {
+            return string.Format(CultureInfo.InvariantCulture,
+                "{{\"error\":{{" +
+                "\"code\":\"{0}\"," +
+                "\"message\":\"{1}\"," +
+                "\"target\":\"{2}\"," +
+                "\"details\":{3}," +
+                "\"innererror\":{4}" +
+                " }}}}",
+                this.ErrorCode == null ? ""  : JsonValueUtils.GetEscapedJsonString(this.ErrorCode),
+                this.Message  == null ? ""  : JsonValueUtils.GetEscapedJsonString(this.Message),
+                this.Target == null ? "" : JsonValueUtils.GetEscapedJsonString(this.Target),
+                this.Details == null ? "{}" : GetJsonStringForDetails(),
+                this.InnerError == null ? "{}" : this.InnerError.ToString());
+        }
+
+        /// <summary>
+        /// Convert the Details property to Json format string.
+        /// </summary>
+        /// <returns>Json format string representing collection.</returns>
+        private string GetJsonStringForDetails()
+        {
+            return "[" + String.Join(",", this.Details.Select(i => i.ToString()).ToArray()) + "]";
         }
     }
 }

@@ -27,7 +27,8 @@ namespace Microsoft.Test.OData.Tests.Client
         public static void RunOnAtomAndJsonFormats<TContext>(
             this EndToEndTestBase testBase,
             Func<DataServiceContextWrapper<TContext>> createContext,
-            Action<DataServiceContextWrapper<TContext>> test) where TContext : DataServiceContext
+            Action<DataServiceContextWrapper<TContext>> test,
+            bool useJsonForBatch = false) where TContext : DataServiceContext
         {
             //var atomContext = createContext();
             //atomContext.ContextLabel = "Atom";
@@ -35,6 +36,11 @@ namespace Microsoft.Test.OData.Tests.Client
             var jsonContext = createContext();
             jsonContext.ContextLabel = "Json";
             jsonContext.Format.UseJson();
+
+            if (useJsonForBatch)
+            {
+                jsonContext.Format.UseJsonForBatch();
+            }
 
             testBase.InvokeDataDrivenTest(test, DataDrivenTest.CreateData(/*atomContext,*/ jsonContext));
         }

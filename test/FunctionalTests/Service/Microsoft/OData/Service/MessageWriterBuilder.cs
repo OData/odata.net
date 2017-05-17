@@ -135,11 +135,12 @@ namespace Microsoft.OData.Service
             // Hence passing */* as the accept header value by default.
             string contentType = XmlConstants.MimeAny;
 
-            if (string.CompareOrdinal(XmlConstants.ODataVersion4Dot0,
-                dataService.OperationContext.RequestHeaders.Get(XmlConstants.HttpODataVersion)) == 0)
+            if (dataService.OperationContext.RequestMessage != null &&
+                string.CompareOrdinal(XmlConstants.ODataVersion4Dot0,
+                dataService.OperationContext.RequestMessage.GetHeader(XmlConstants.HttpODataVersion)) == 0)
             {
                 // For V4, batch request & response payload can be in Json format
-                string accept = dataService.OperationContext.RequestHeaders.Get(XmlConstants.HttpAccept);
+                string accept = dataService.OperationContext.RequestMessage.GetHeader(XmlConstants.HttpAccept);
 
                 if (accept != null && accept.StartsWith(XmlConstants.MimeApplicationJson))
                 {
@@ -147,7 +148,7 @@ namespace Microsoft.OData.Service
                 }
             }
 
-            messageWriterBuilder.WriterSettings.SetContentType( contentType, null /*acceptableCharSets*/);
+            messageWriterBuilder.WriterSettings.SetContentType(contentType, null /*acceptableCharSets*/);
 
             return messageWriterBuilder;
         }

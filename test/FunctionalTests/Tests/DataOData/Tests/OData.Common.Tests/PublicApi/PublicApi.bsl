@@ -4466,6 +4466,7 @@ public sealed class Microsoft.OData.Core.ODataAsynchronousWriter : IODataOutputI
 public sealed class Microsoft.OData.Core.ODataBatchOperationRequestMessage : IODataRequestMessage, IODataRequestMessageAsync, IODataUrlResolver {
 	public const readonly string ContentId = 
 
+	System.Collections.Generic.IList`1[[System.String]] DependsOnRequestIds  { public get; }
 	System.Collections.Generic.IEnumerable`1[[System.Collections.Generic.KeyValuePair`2[[System.String],[System.String]]]] Headers  { public virtual get; }
 	string Method  { public virtual get; public virtual set; }
 	System.Uri Url  { public virtual get; public virtual set; }
@@ -4615,6 +4616,8 @@ public sealed class Microsoft.OData.Core.ODataError : Microsoft.OData.Core.OData
 	System.Collections.Generic.ICollection`1[[Microsoft.OData.Core.ODataInstanceAnnotation]] InstanceAnnotations  { public get; public set; }
 	string Message  { public get; public set; }
 	string Target  { public get; public set; }
+
+	public virtual string ToString ()
 }
 
 public sealed class Microsoft.OData.Core.ODataErrorDetail {
@@ -4623,6 +4626,8 @@ public sealed class Microsoft.OData.Core.ODataErrorDetail {
 	string ErrorCode  { public get; public set; }
 	string Message  { public get; public set; }
 	string Target  { public get; public set; }
+
+	public virtual string ToString ()
 }
 
 [
@@ -4681,6 +4686,8 @@ public sealed class Microsoft.OData.Core.ODataInnerError {
 	string Message  { public get; public set; }
 	string StackTrace  { public get; public set; }
 	string TypeName  { public get; public set; }
+
+	public virtual string ToString ()
 }
 
 public sealed class Microsoft.OData.Core.ODataInstanceAnnotation : Microsoft.OData.Core.ODataAnnotatable {
@@ -6855,6 +6862,8 @@ public sealed class Microsoft.OData.Client.DataServiceClientFormat {
 
 	public void UseJson ()
 	public void UseJson (Microsoft.OData.Edm.IEdmModel serviceModel)
+	public void UseJsonForBatch ()
+	public void UseJsonForBatch (Microsoft.OData.Edm.IEdmModel serviceModel)
 }
 
 public sealed class Microsoft.OData.Client.DataServiceQueryContinuation`1 : Microsoft.OData.Client.DataServiceQueryContinuation {
