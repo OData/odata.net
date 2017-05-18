@@ -503,11 +503,11 @@ Function BuildProcess
     {
         RunBuild ('Microsoft.Test.OData.Tests.Client.Portable.WindowsStore.sln') -vsToolVersion '12.0'
     }
-	else
-	{
-		Write-Host 'Skipping Microsoft.Test.OData.Tests.Client.Portable.WindowsStore.sln because VS2013 not installed or `
-		missing Microsoft.Windows.UI.Xaml.CSharp.targets for VS2013'
-	}
+    else
+    {
+        Write-Host 'Skipping Microsoft.Test.OData.Tests.Client.Portable.WindowsStore.sln because VS2013 not installed or `
+        missing Microsoft.Windows.UI.Xaml.CSharp.targets for VS2013'
+    }
     RunBuild ('Microsoft.OData.CodeGen.sln')
     RunBuild ('Microsoft.OData.E2E.sln')
     
