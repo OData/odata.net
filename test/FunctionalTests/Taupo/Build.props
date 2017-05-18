@@ -16,6 +16,7 @@
     <!-- Set this so that we get SecurityRulesetAttribute(Level2) on Taupo assemblies -->
     <SecurityMigration>false</SecurityMigration>
     
+    <CodeAnalysisRuleSetDirectories Condition="'$(CodeAnalysisRuleSet)' == ''">$(CodeAnalysisRuleSetDirectories);$(MSBuildThisFileDirectory)</CodeAnalysisRuleSetDirectories>
     <CodeAnalysisRuleSet Condition="'$(CodeAnalysisRuleSet)' == ''">Taupo.ruleset</CodeAnalysisRuleSet>
     <RunCodeAnalysis Condition="'$(RunCodeAnalysis)' == '' and '$(TargetFrameworkIdentifier)' != 'Silverlight'">true</RunCodeAnalysis>
   </PropertyGroup>

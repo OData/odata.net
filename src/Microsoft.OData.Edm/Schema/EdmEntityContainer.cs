@@ -112,6 +112,20 @@ namespace Microsoft.OData.Edm
         }
 
         /// <summary>
+        /// Creates and adds an entity set to this entity container.
+        /// </summary>
+        /// <param name="name">Name of the entity set.</param>
+        /// <param name="elementType">The entity type of the elements in this entity set.</param>
+        /// <param name="includeInServiceDocument">Indicates whether the entity set is advertised in the service document.</param>
+        /// <returns>Created entity set.</returns>
+        public virtual EdmEntitySet AddEntitySet(string name, IEdmEntityType elementType, bool includeInServiceDocument)
+        {
+            EdmEntitySet entitySet = new EdmEntitySet(this, name, elementType, includeInServiceDocument);
+            this.AddElement(entitySet);
+            return entitySet;
+        }
+
+        /// <summary>
         /// Creates and adds an singleton to this entity container.
         /// </summary>
         /// <param name="name">Name of the singleton.</param>

@@ -29,7 +29,7 @@ namespace Microsoft.OData.Tests
         public void SerializationInfoShouldBeValidatedByTheSetter()
         {
             Action action = () => this.collectionStart.SerializationInfo = new ODataCollectionStartSerializationInfo();
-            action.ShouldThrow<ArgumentNullException>().WithMessage("serializationInfo.CollectionTypeName", ComparisonMode.Substring);
+            action.ShouldThrow<ArgumentNullException>().Where(e => e.Message.Contains("serializationInfo.CollectionTypeName"));
         }
 
         [Fact]

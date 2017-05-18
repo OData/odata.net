@@ -123,7 +123,11 @@ namespace Microsoft.OData.Tests
 
         private ODataAsynchronousReader CreateAsyncReader(string payload)
         {
+#if NETCOREAPP1_0
+            responseStream = new MemoryStream(Encoding.GetEncoding(0).GetBytes(payload));
+#else
             responseStream = new MemoryStream(Encoding.Default.GetBytes(payload));
+#endif
 
             responseMessage = new InMemoryMessage { Stream = responseStream };
             responseMessage.SetHeader("Content-Type", "application/http");

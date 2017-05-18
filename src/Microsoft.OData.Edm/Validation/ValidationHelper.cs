@@ -6,6 +6,7 @@
 
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Xml;
@@ -73,6 +74,7 @@ namespace Microsoft.OData.Edm.Validation
             return true;
         }
 
+        [SuppressMessage("Microsoft.Security.Xml", "CA3053", Justification = "The XmlResolver property no longer exists in .NET portable framework.")]
         internal static bool ValidateValueCanBeWrittenAsXmlElementAnnotation(IEdmValue value, string annotationNamespace, string annotationName, out EdmError error)
         {
             IEdmStringValue edmStringValue = value as IEdmStringValue;

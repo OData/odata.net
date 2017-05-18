@@ -166,7 +166,12 @@ namespace Microsoft.OData.Tests.UriParser.Binders
             IEdmEntityType entityType = new EdmEntityType("n", "EntityType");
             ODataPathSegment foundPathSegment = null;
             Action test = () => SelectPathSegmentTokenBinder.TryBindAsOperation(new SystemToken("foo", null), model, entityType, out foundPathSegment);
+
+#if NETCOREAPP1_0
+            test.ShouldThrow<Exception>();
+#else
             test.ShouldThrow<StackOverflowException>();
+#endif
         }
 
         [Fact]
@@ -234,7 +239,11 @@ namespace Microsoft.OData.Tests.UriParser.Binders
         {
             public override IEnumerable<IEdmOperation> FindDeclaredBoundOperations(IEdmType bindingType)
             {
-                throw new StackOverflowException( "Oh no!");
+#if NETCOREAPP1_0
+                throw new Exception("Oh no!");
+#else
+                throw new StackOverflowException("Oh no!");
+#endif
             }
         }
     }

@@ -19,7 +19,7 @@ namespace Microsoft.OData.UriParser
     /// <summary>
     /// Lexical token representing an expand operation.
     /// </summary>
-    internal sealed class ExpandToken : QueryToken
+    public sealed class ExpandToken : QueryToken
     {
         /// <summary>
         /// The properties according to which to expand in the results.

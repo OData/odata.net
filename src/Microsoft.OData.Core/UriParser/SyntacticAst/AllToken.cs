@@ -16,7 +16,7 @@ namespace Microsoft.OData.UriParser
     /// <summary>
     /// Lexical token representing the All Query
     /// </summary>
-    internal sealed class AllToken : LambdaToken
+    public sealed class AllToken : LambdaToken
     {
         /// <summary>
         /// Create a AllToken given the expression, parameter, and parent

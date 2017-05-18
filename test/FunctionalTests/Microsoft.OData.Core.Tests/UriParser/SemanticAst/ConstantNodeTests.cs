@@ -49,7 +49,7 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
         public void NullLiteralTextShouldThrow()
         {
             Action target = () => new ConstantNode(null, null);
-            target.ShouldThrow<ArgumentNullException>().WithMessage("literalText", ComparisonMode.EquivalentSubstring);
+            target.ShouldThrow<ArgumentNullException>().Where(e => e.Message.Contains("literalText"));
         }
 
         [Fact]

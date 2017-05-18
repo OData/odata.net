@@ -44,29 +44,25 @@ $env:ENLISTMENT_ROOT = Split-Path -Parent $MyInvocation.MyCommand.Definition
 $ENLISTMENT_ROOT = Split-Path -Parent $MyInvocation.MyCommand.Definition
 $LOGDIR = $ENLISTMENT_ROOT + "\bin"
 
-# Default to use Visual Studio 2013.
-$MSBUILD = $PROGRAMFILESX86 + "\MSBuild\12.0\Bin\MSBuild.exe"
-$VSTEST = $PROGRAMFILESX86 + "\Microsoft Visual Studio 12.0\Common7\IDE\CommonExtensions\Microsoft\TestWindow\vstest.console.exe"
-$FXCOPDIR = $PROGRAMFILESX86 + "\Microsoft Visual Studio 12.0\Team Tools\Static Analysis Tools\FxCop"
+# Default to use Visual Studio 2015 since the upgrade to .Net Core.
+$VS14MSBUILD=$PROGRAMFILESX86 + "\MSBuild\14.0\Bin\MSBuild.exe"
+$MSBUILD = $VS14MSBUILD
+$VSTEST = $PROGRAMFILESX86 + "\Microsoft Visual Studio 14.0\Common7\IDE\CommonExtensions\Microsoft\TestWindow\vstest.console.exe"
+$FXCOPDIR = $PROGRAMFILESX86 + "\Microsoft Visual Studio 14.0\Team Tools\Static Analysis Tools\FxCop"
 $SN = $PROGRAMFILESX86 + "\Microsoft SDKs\Windows\v8.1A\bin\NETFX 4.5.1 Tools\sn.exe"
 $SNx64 = $PROGRAMFILESX86 + "\Microsoft SDKs\Windows\v8.1A\bin\NETFX 4.5.1 Tools\x64\sn.exe"
-
-# Fall back to Visual Studio 2015.
-$VS14MSBUILD=$PROGRAMFILESX86 + "\MSBuild\14.0\Bin\MSBuild.exe"
-if (!(Test-Path $MSBUILD) -or !(Test-Path $VSTEST) -or !(Test-Path $FXCOPDIR))
-{
-    $MSBUILD = $VS14MSBUILD
-    $VSTEST = $PROGRAMFILESX86 + "\Microsoft Visual Studio 14.0\Common7\IDE\CommonExtensions\Microsoft\TestWindow\vstest.console.exe"
-    $FXCOPDIR = $PROGRAMFILESX86 + "\Microsoft Visual Studio 14.0\Team Tools\Static Analysis Tools\FxCop"
-}
 
 $FXCOP = $FXCOPDIR + "\FxCopCmd.exe"
 $BUILDLOG = $LOGDIR + "\msbuild.log"
 $TESTLOG = $LOGDIR + "\mstest.log"
 $TESTDIR = $ENLISTMENT_ROOT + "\bin\AnyCPU\$Configuration\Test\Desktop"
+$NETCORETESTDIR = $ENLISTMENT_ROOT + "\bin\AnyCPU\$Configuration\Test\.NETPortable\netcoreapp1.0"
 $PRODUCTDIR = $ENLISTMENT_ROOT + "\bin\AnyCPU\$Configuration\Product\Desktop"
+$NUGETEXE = $ENLISTMENT_ROOT + "\sln\.nuget\NuGet.exe"
 $NUGETPACK = $ENLISTMENT_ROOT + "\sln\packages"
 $XUNITADAPTER = "/TestAdapterPath:" + $NUGETPACK + "\xunit.runner.visualstudio.2.1.0\build\_common"
+
+$NugetRestoreSolutions = "Microsoft.OData.DotNetStandard.sln"
 
 $ProductDlls = "Microsoft.OData.Client.dll",
     "Microsoft.OData.Core.dll",
@@ -99,10 +95,21 @@ $RollingTestDlls = "Microsoft.OData.Core.Tests.dll",
     "RegressionUnitTests.dll",
     "Microsoft.Test.OData.PluggableFormat.Tests.dll"
 
+$NetCoreUnitTestDlls = "Microsoft.OData.Core.Tests.dll",
+    "Microsoft.OData.Edm.Tests.dll",
+    "Microsoft.Spatial.Tests.dll"
+    
 $RollingTestSuite = @()
 ForEach($dll in $RollingTestDlls)
 {
     $RollingTestSuite += $TESTDIR + "\" + $dll
+}
+
+ForEach($dll in $NetCoreUnitTestDlls)
+{
+    # Turn on once we migrate to VS 2017 as there are some technical difficulties
+    # with running .NET Core tests through script for VS 2015
+    # $RollingTestSuite += $NETCORETESTDIR + "\" + $dll
 }
 
 $AdditionalNightlyTestDlls = "Microsoft.Data.MetadataObjectModel.UnitTests.dll", 
@@ -262,11 +269,6 @@ Function RunBuild ($sln, $vsToolVersion)
     Write-Host "*** Building $sln ***"
     $slnpath = $ENLISTMENT_ROOT + "\sln\$sln"
     $Conf = "/p:Configuration=" + "$Configuration"
-
-    if($vsToolVersion -eq '14.0')
-    {
-        $MSBUILD=$VS14MSBUILD
-    }
 
     & $MSBUILD $slnpath /t:$Build /m /nr:false /fl "/p:Platform=Any CPU" $Conf /p:Desktop=true `
         /flp:LogFile=$LOGDIR/msbuild.log /flp:Verbosity=Normal 1>$null 2>$null
@@ -443,6 +445,33 @@ Function RunTest($title, $testdir)
     }
 }
 
+Function NugetRestoreSolution
+{
+    Write-Host '**********Pull NuGet Packages*********'
+    foreach($solution in $NugetRestoreSolutions)
+    {
+        & $NUGETEXE "restore" ($ENLISTMENT_ROOT + "\sln\" + $solution)
+    } 
+}
+
+# Copy any xproj output to the appropriate bin folder. We use this workaround instead of doing it in the
+# xproj file due to xproj appending additional directory paths in its OutputPath parameter.
+# See https://github.com/aspnet/Tooling/issues/383
+Function CopyNetCoreOutput
+{
+    Write-Host '**********Copying NetCore Output Binaries*********'
+
+    $NETCOREUNITTESTROOT = $ENLISTMENT_ROOT + "\test\FunctionalTests\"
+    $UNITTESTFOLDERS = "Microsoft.OData.Core.Tests",
+        "Microsoft.OData.Edm.Tests",
+        "Microsoft.Spatial.Tests"
+
+    ForEach($TEST in $UNITTESTFOLDERS)
+    {
+        Copy-Item ($NETCOREUNITTESTROOT + $TEST + "\bin\$Configuration\*") ($ENLISTMENT_ROOT + "\bin\AnyCPU\$Configuration\Test\.NETPortable") -Recurse -Force
+    }
+}
+
 Function BuildProcess
 {
     Write-Host '**********Start To Build The Project*********'
@@ -460,10 +489,10 @@ Function BuildProcess
     RunBuild ('Microsoft.Test.OData.Tests.Client.Portable.WindowsStore.sln')
     RunBuild ('Microsoft.OData.CodeGen.sln')
     RunBuild ('Microsoft.OData.E2E.sln')
-    if(Test-Path $VS14MSBUILD)
-    {
-        RunBuild -sln 'Microsoft.Test.OData.DotNetCore.sln' -vsToolVersion '14.0'
-    }
+    
+    # Requires VS2015 (14.0) ($MSBUILD = $VS14MSBUILD)
+    RunBuild -sln 'Microsoft.Test.OData.DotNetStandard.sln' -vsToolVersion '14.0'
+    
     Write-Host "Build Done" -ForegroundColor $Success
     $script:BUILD_END_TIME = Get-Date
 }
@@ -529,21 +558,27 @@ if (! (Test-Path $LOGDIR))
 
 if ($TestType -eq 'SkipStrongName')
 {
-    CleanBeforeScorch 
+    CleanBeforeScorch
+    NugetRestoreSolution
     BuildProcess
+    CopyNetCoreOutput
     SkipStrongName
     Exit
 }
 elseif ($TestType -eq 'DisableSkipStrongName')
 {
-    CleanBeforeScorch 
+    CleanBeforeScorch
+    NugetRestoreSolution
     BuildProcess
+    CopyNetCoreOutput
     DisableSkipStrongName
     Exit
 }
 
-CleanBeforeScorch 
+CleanBeforeScorch
+NugetRestoreSolution
 BuildProcess
+CopyNetCoreOutput
 SkipStrongName
 TestProcess
 FxCopProcess

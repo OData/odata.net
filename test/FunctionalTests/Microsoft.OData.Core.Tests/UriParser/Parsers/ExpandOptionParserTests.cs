@@ -26,7 +26,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             ExpandOptionParser optionParser = new ExpandOptionParser(5);
             var termToken = optionParser.BuildExpandTermToken(pathToken, "");
 
-            termToken.ElementAt(0).PathToNavProp.Should().Be(pathToken);
+            termToken.ElementAt(0).PathToNavigationProp.Should().Be(pathToken);
         }
 
         [Fact]
@@ -116,7 +116,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         {
             var result = this.ParseExpandOptions("($expand=two)");
             ExpandTermToken two = result.ExpandOption.ExpandTerms.Single();
-            two.PathToNavProp.ShouldBeNonSystemToken("two");
+            two.PathToNavigationProp.ShouldBeNonSystemToken("two");
         }
 
         [Fact]
@@ -124,9 +124,9 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         {
             var result = this.ParseExpandOptions("($expand=two($expand=three))");
             ExpandTermToken two = result.ExpandOption.ExpandTerms.Single();
-            two.PathToNavProp.ShouldBeNonSystemToken("two");
+            two.PathToNavigationProp.ShouldBeNonSystemToken("two");
             ExpandTermToken three = two.ExpandOption.ExpandTerms.Single();
-            three.PathToNavProp.ShouldBeNonSystemToken("three");
+            three.PathToNavigationProp.ShouldBeNonSystemToken("three");
         }
 
         [Fact]
@@ -134,9 +134,9 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         {
             var result = this.ParseExpandOptions("($expand=two($expand=three;);)");
             ExpandTermToken two = result.ExpandOption.ExpandTerms.Single();
-            two.PathToNavProp.ShouldBeNonSystemToken("two");
+            two.PathToNavigationProp.ShouldBeNonSystemToken("two");
             ExpandTermToken three = two.ExpandOption.ExpandTerms.Single();
-            three.PathToNavProp.ShouldBeNonSystemToken("three");
+            three.PathToNavigationProp.ShouldBeNonSystemToken("three");
         }
 
         [Fact(Skip = "This test currently fails.")]

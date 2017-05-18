@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RuleSet Name="Taupo Rules" Description="This rule set contains rules specific to Taupo" ToolsVersion="11.0">
+  <Localization ResourceAssembly="Microsoft.VisualStudio.CodeAnalysis.RuleSets.Strings.dll" ResourceBaseName="Microsoft.VisualStudio.CodeAnalysis.RuleSets.Strings.Localized">
+    <Name Resource="AllRules_Name" />
+    <Description Resource="AllRules_Description" />
+  </Localization>
+  <Include Path="extendedcorrectnessrules.ruleset" Action="Default" />
+  <Include Path="extendeddesignguidelinerules.ruleset" Action="Default" />
+  <Rules AnalyzerId="Microsoft.Analyzers.ManagedCodeAnalysis" RuleNamespace="Microsoft.Rules.Managed">
+    <Rule Id="CA1004" Action="None" />
+    <Rule Id="CA1006" Action="None" />
+    <Rule Id="CA1010" Action="None" />
+    <Rule Id="CA1020" Action="None" />
+    <Rule Id="CA1024" Action="None" />
+    <Rule Id="CA1026" Action="None" />
+    <Rule Id="CA1062" Action="None" />
+    <Rule Id="CA1303" Action="None" />
+    <Rule Id="CA1402" Action="None" />
+    <Rule Id="CA1822" Action="None" />
+    
+    <!--
+      Security rules below are suppressed since we
+      maintain a baseline of assertions for full trust
+      in a unit test.
+    -->
+    <Rule Id="CA2106" Action="None" />
+    <Rule Id="CA2122" Action="None" />
+    
+    <!-- Running this custom rule agaisnt some projects results in:
+      The following error was encountered while reading module 'System.ServiceModel.Internals': Could not resolve type reference: 
+      [mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]System.Runtime.CompilerServices.IAsyncStateMachine. 
+    <Rule Id="TA1000" Action="Error" />
+    -->
+    <Rule Id="TDS0001" Action="Error" />
+  </Rules>
+</RuleSet>

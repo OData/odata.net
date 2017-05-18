@@ -127,7 +127,11 @@ namespace Microsoft.OData.Edm.Tests.Vocabularies
             XmlWriter xw = XmlWriter.Create(sw, settings);
             coreVocModel.TryWriteSchema(xw, out errors);
             xw.Flush();
+#if NETCOREAPP1_0
+            xw.Dispose();
+#else
             xw.Close();
+#endif
             string output = sw.ToString();
             Assert.False(errors.Any(), "No Errors");
             Assert.Equal(expectedText, output);

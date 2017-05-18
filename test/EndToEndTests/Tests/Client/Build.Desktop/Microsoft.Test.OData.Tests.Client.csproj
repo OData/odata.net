@@ -55,7 +55,7 @@
       <Project>{D1567C63-4A0D-4E18-A14E-79699B9BA325}</Project>
       <Name>Microsoft.OData.Service</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\..\..\Common\Microsoft.Test.OData.DependencyInjection\Microsoft.Test.OData.DependencyInjection.csproj">
+    <ProjectReference Include="..\..\..\..\Common\Microsoft.Test.OData.DependencyInjection\Build.NetFramework\Microsoft.Test.OData.DependencyInjection.csproj">
       <Project>{50aa23b2-56ef-4c51-a270-8d5bd0c899b6}</Project>
       <Name>Microsoft.Test.OData.DependencyInjection</Name>
     </ProjectReference>
@@ -230,7 +230,12 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="AfterBuild">
-    <CreateItem Include="$(NugetPack)\EntityFramework.5.0.0\EntityFramework.5.0.0.nuspec" AdditionalMetadata="TargetPath=">
+    <CreateItem Condition="Exists('$(NugetPack)\EntityFramework.5.0.0\EntityFramework.5.0.0.nuspec')"
+         Include="$(NugetPack)\EntityFramework.5.0.0\EntityFramework.5.0.0.nuspec" AdditionalMetadata="TargetPath=">
+      <Output TaskParameter="Include" ItemName="EF5" />
+    </CreateItem>
+    <CreateItem Condition="Exists('$(NugetPack)\EntityFramework.5.0.0\EntityFramework.nuspec')"
+         Include="$(NugetPack)\EntityFramework.5.0.0\EntityFramework.nuspec" AdditionalMetadata="TargetPath=">
       <Output TaskParameter="Include" ItemName="EF5" />
     </CreateItem>
     <CreateItem Include="$(NugetPack)\EntityFramework.5.0.0\Content\App.config.transform" AdditionalMetadata="TargetPath=Content">

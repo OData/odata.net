@@ -19,7 +19,7 @@
   </PropertyGroup>
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), Build.props))\Build.props" />
   <PropertyGroup>
-    <DefineConstants Condition=" '$(VisualStudioVersion)' == '14.0' ">$(DefineConstants);VS2015</DefineConstants>
+    <DefineConstants Condition=" '$(VisualStudioVersion)' == '14.0' and '$(BuildingInLab)' != 'true'">$(DefineConstants);USELOCALDB</DefineConstants>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />

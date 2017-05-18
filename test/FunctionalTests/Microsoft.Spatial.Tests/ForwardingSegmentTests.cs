@@ -74,7 +74,10 @@ namespace Microsoft.Spatial.Tests
             var coordinateSystem = CoordinateSystem.DefaultGeography;
             Exception ex = SpatialTestUtils.RunCatching(() => this.testSubject.GeographyPipeline.SetCoordinateSystem(coordinateSystem));
             Assert.True(ex.GetType() == typeof(InvalidOperationException), "got the exception we threw");
+#if !NETCOREAPP1_0
+            // .NET Core does not appear to generate this stack trace
             Assert.True(ex.StackTrace.Contains("DoWhenNotCall"), "Lost the original stack trace");
+#endif
 
             AssertResetCalledLastOnCurrentAndDownstream();
         }
@@ -85,7 +88,10 @@ namespace Microsoft.Spatial.Tests
             var coordinateSystem = CoordinateSystem.DefaultGeography;
             Exception ex = SpatialTestUtils.RunCatching(() => this.testSubject.GeographyPipeline.EndFigure());
             Assert.True(ex.GetType() == typeof(InvalidOperationException), "got the exception we threw");
+#if !NETCOREAPP1_0
+            // .NET Core does not appear to generate this stack trace
             Assert.True(ex.StackTrace.Contains("DoWhenCall"), "Lost the original stack trace");
+#endif
 
             AssertResetCalledLastOnCurrentAndDownstream();
         }

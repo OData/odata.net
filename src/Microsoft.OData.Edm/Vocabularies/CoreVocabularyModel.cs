@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Xml;
 using Microsoft.OData.Edm.Csdl;
@@ -122,12 +123,18 @@ namespace Microsoft.OData.Edm.Vocabularies.V1
         /// <summary>
         /// Parse Core Vocabulary Model from CoreVocabularies.xml
         /// </summary>
+        [SuppressMessage("Microsoft.Security.Xml", "CA3053", Justification = "The XmlResolver property no longer exists in .NET portable framework.")]
         static CoreVocabularyModel()
         {
             IsInitializing = true;
             Assembly assembly = typeof(CoreVocabularyModel).GetAssembly();
 
-            using (Stream stream = assembly.GetManifestResourceStream("CoreVocabularies.xml"))
+            // Resource name has leading namespace and folder in .NetStandard dll.
+            string[] allResources = assembly.GetManifestResourceNames();
+            string coreVocabularies = allResources.Where(x => x.Contains("CoreVocabularies.xml")).FirstOrDefault();
+            Debug.Assert(coreVocabularies != null, "CoreVocabularies.xml: not found.");
+
+            using (Stream stream = assembly.GetManifestResourceStream(coreVocabularies))
             {
                 IEnumerable<EdmError> errors;
                 Debug.Assert(stream != null, "CoreVocabularies.xml: stream!=null");

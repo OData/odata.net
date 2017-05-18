@@ -20,7 +20,7 @@ namespace Microsoft.OData.UriParser
     /// <summary>
     /// Parser which consumes the query expression ($filter, $orderby) and produces the lexical object model.
     /// </summary>
-    internal sealed class UriQueryExpressionParser
+    public sealed class UriQueryExpressionParser
     {
         /// <summary>
         /// The maximum number of recursion nesting allowed.
@@ -54,6 +54,15 @@ namespace Microsoft.OData.UriParser
         /// Whether to allow case insensitive for builtin identifier.
         /// </summary>
         private bool enableCaseInsensitiveBuiltinIdentifier = false;
+
+        /// <summary>
+        /// Creates a UriQueryExpressionParser.
+        /// </summary>
+        /// <param name="maxDepth">The maximum depth of each part of the query - a recursion limit.</param>
+        public UriQueryExpressionParser(int maxDepth)
+            : this(maxDepth, false)
+        {
+        }
 
         /// <summary>
         /// Constructor.
@@ -93,6 +102,16 @@ namespace Microsoft.OData.UriParser
         internal ExpressionLexer Lexer
         {
             get { return this.lexer; }
+        }
+
+        /// <summary>
+        /// Parses the $filter expression.
+        /// </summary>
+        /// <param name="filter">The $filter expression string to parse.</param>
+        /// <returns>The lexical token representing the filter.</returns>
+        public QueryToken ParseFilter(string filter)
+        {
+            return this.ParseExpressionText(filter);
         }
 
         /// <summary>
@@ -186,16 +205,6 @@ namespace Microsoft.OData.UriParser
             }
         }
 
-        /// <summary>
-        /// Parses the $filter expression.
-        /// </summary>
-        /// <param name="filter">The $filter expression string to parse.</param>
-        /// <returns>The lexical token representing the filter.</returns>
-        internal QueryToken ParseFilter(string filter)
-        {
-            return this.ParseExpressionText(filter);
-        }
-
         internal IEnumerable<QueryToken> ParseApply(string apply)
         {
             Debug.Assert(apply != null, "apply != null");
@@ -285,13 +294,13 @@ namespace Microsoft.OData.UriParser
             // expression
             var expression = this.ParseExpression();
             var endPathExpression = expression as EndPathToken;
-            AggregationMethod verb;
+            AggregationMethodDefinition verb;
 
             // "with" verb
             if (endPathExpression != null && endPathExpression.Identifier == ExpressionConstants.QueryOptionCount)
             {
                 // e.g. aggregate($count as Count)
-                verb = AggregationMethod.VirtualPropertyCount;
+                verb = AggregationMethodDefinition.VirtualPropertyCount;
             }
             else
             {
@@ -981,7 +990,7 @@ namespace Microsoft.OData.UriParser
             return new InnerPathToken(propertyName, parent, null);
         }
 
-        private AggregationMethod ParseAggregateWith()
+        private AggregationMethodDefinition ParseAggregateWith()
         {
             if (!TokenIdentifierIs(ExpressionConstants.KeywordWith))
             {
@@ -990,30 +999,40 @@ namespace Microsoft.OData.UriParser
 
             lexer.NextToken();
 
-            AggregationMethod verb;
+            AggregationMethodDefinition verb;
+            int identifierStartPosition = lexer.CurrentToken.Position;
+            string methodLabel = lexer.ReadDottedIdentifier(false /* acceptStar */);
 
-            switch (lexer.CurrentToken.GetIdentifier())
+            switch (methodLabel)
             {
                 case ExpressionConstants.KeywordAverage:
-                    verb = AggregationMethod.Average;
+                    verb = AggregationMethodDefinition.Average;
                     break;
                 case ExpressionConstants.KeywordCountDistinct:
-                    verb = AggregationMethod.CountDistinct;
+                    verb = AggregationMethodDefinition.CountDistinct;
                     break;
                 case ExpressionConstants.KeywordMax:
-                    verb = AggregationMethod.Max;
+                    verb = AggregationMethodDefinition.Max;
                     break;
                 case ExpressionConstants.KeywordMin:
-                    verb = AggregationMethod.Min;
+                    verb = AggregationMethodDefinition.Min;
                     break;
                 case ExpressionConstants.KeywordSum:
-                    verb = AggregationMethod.Sum;
+                    verb = AggregationMethodDefinition.Sum;
                     break;
                 default:
-                    throw ParseError(ODataErrorStrings.UriQueryExpressionParser_UnrecognizedWithVerb(lexer.CurrentToken.GetIdentifier(), this.lexer.CurrentToken.Position, this.lexer.ExpressionText));
-            }
+                    if (!methodLabel.Contains(OData.ExpressionConstants.SymbolDot))
+                    {
+                        throw ParseError(
+                            ODataErrorStrings.UriQueryExpressionParser_UnrecognizedWithMethod(
+                                methodLabel,
+                                identifierStartPosition,
+                                this.lexer.ExpressionText));
+                    }
 
-            lexer.NextToken();
+                    verb = AggregationMethodDefinition.Custom(methodLabel);
+                    break;
+            }
 
             return verb;
         }

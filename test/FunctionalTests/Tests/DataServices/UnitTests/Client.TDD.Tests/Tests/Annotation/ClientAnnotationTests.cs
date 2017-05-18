@@ -1006,6 +1006,115 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests.Annotation
                 Assert.AreEqual("Test2", annotation);
             });
         }
+        
+        [TestMethod]
+        public void TestGetInstanceAnnotationsOnEntityAndPropertiesWithSameName()
+        {
+            string response = @"{
+	""@odata.context"":""http://odataService/$metadata#People('Adrian')/Location"",
+	""@odata.type"":""#Microsoft.OData.SampleService.Models.TripPin.CompanyLocation"",
+	""@Org.OData.Core.V1.Description"":""My Company"",
+	""CompanyName@Org.OData.Core.V1.Description"":""My Company Name"",
+	""CompanyName"":""HMC"",
+	""Address@Org.OData.Core.V1.Description"":""My Company Address"",
+	""Address"":""9 Seed Street"",
+	""City"":
+	{
+	""Name"":""Crest"",
+	""CountryRegion"":""France""
+	}
+	}";
+
+            TestAnnotation(response, () =>
+            {
+                var location = dsc.PeoplePlus.ByKey("Adrian").Select(p => p.LocationPlus).GetValue() as CompanyLocationPlus;
+
+                string annotation = null;
+                bool result = false;
+
+                result = dsc.TryGetAnnotation<string>(location, "Org.OData.Core.V1.Description", out annotation);
+                Assert.IsTrue(result);
+                Assert.AreEqual("My Company", annotation);
+
+                result = dsc.TryGetAnnotation<Func<string>, string>(() => location.CompanyNamePlus, "Org.OData.Core.V1.Description", out annotation);
+                Assert.IsTrue(result);
+                Assert.AreEqual("My Company Name", annotation);
+
+                result = dsc.TryGetAnnotation<Func<string>, string>(() => location.AddressPlus, "Org.OData.Core.V1.Description", out annotation);
+                Assert.IsTrue(result);
+                Assert.AreEqual("My Company Address", annotation);
+            });
+        }
+
+        [TestMethod]
+        public void TesDuplicateAnnotationsOnEntityThrows()
+        {
+            string response = @"{
+	""@odata.context"":""http://odataService/$metadata#People('Adrian')/Location"",
+	""@odata.type"":""#Microsoft.OData.SampleService.Models.TripPin.CompanyLocation"",
+	""@Org.OData.Core.V1.Description"":""My Company 1"",
+	""@Org.OData.Core.V1.Description"":""My Company 2"",
+	""CompanyName"":""HMC"",
+	""Address"":""9 Seed Street"",
+	""City"":
+	{
+	""Name"":""Crest"",
+	""CountryRegion"":""France""
+	}
+	}";
+
+            TestAnnotation(response, () =>
+            {
+                Exception exception = null;
+
+                try
+                {
+                    var location = dsc.PeoplePlus.ByKey("Adrian").Select(p => p.LocationPlus).GetValue() as CompanyLocationPlus;
+                }
+                catch (ArgumentException ex)
+                {
+                    Assert.AreEqual("An item with the same key has already been added.", ex.Message);
+                    exception = ex;
+                }
+
+                Assert.IsNotNull(exception);
+            });
+        }
+
+        [TestMethod]
+        public void TesDuplicateAnnotationsOnPropertyThrows()
+        {
+            string response = @"{
+	""@odata.context"":""http://odataService/$metadata#People('Adrian')/Location"",
+	""@odata.type"":""#Microsoft.OData.SampleService.Models.TripPin.CompanyLocation"",
+	""CompanyName@Org.OData.Core.V1.Description"":""My Company Name 1"",
+	""CompanyName@Org.OData.Core.V1.Description"":""My Company Name 2"",
+	""CompanyName"":""HMC"",
+	""Address"":""9 Seed Street"",
+	""City"":
+	{
+	""Name"":""Crest"",
+	""CountryRegion"":""France""
+	}
+	}";
+
+            TestAnnotation(response, () =>
+            {
+                Exception exception = null;
+
+                try
+                {
+                    var location = dsc.PeoplePlus.ByKey("Adrian").Select(p => p.LocationPlus).GetValue() as CompanyLocationPlus;
+                }
+                catch (ArgumentException ex)
+                {
+                    Assert.AreEqual("An item with the same key has already been added.", ex.Message);
+                    exception = ex;
+                }
+
+                Assert.IsNotNull(exception);
+            });
+        }
 
         [TestMethod]
         public void TestGetInstanceAnnotationOnSingleNavigationProperty()

@@ -96,7 +96,7 @@ namespace Microsoft.Test.OData.Services.PublicProvider
         private static string GetConnectionString()
         {
             var connStr = ConfigurationManager.ConnectionStrings["AstoriaDefaultServiceDBEntities"].ConnectionString;
-#if VS2015
+#if USELOCALDB
             connStr = connStr.Replace(@".\SQLExpress", @"(LocalDB)\MSSQLLocalDB");
 #endif
             return connStr;

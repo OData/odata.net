@@ -343,8 +343,8 @@ namespace Microsoft.OData.Edm.Tests.Csdl
   </edmx:DataServices>
 </edmx:Edmx>";
             Action parseAction = () => CsdlReader.Parse(XElement.Parse(EdmxwithMultipleEntityContainers).CreateReader());
-            parseAction.ShouldThrow<EdmParseException>().WithMessage(
-                Strings.CsdlParser_MetadataDocumentCannotHaveMoreThanOneEntityContainer, ComparisonMode.Substring).And.Errors.Should().HaveCount(1);
+            parseAction.ShouldThrow<EdmParseException>().Where(e => e.Message.Contains(
+                Strings.CsdlParser_MetadataDocumentCannotHaveMoreThanOneEntityContainer)).And.Errors.Should().HaveCount(1);
         }
 
         private void RunValidTest(Func<XmlReader, IEdmModel> parse)

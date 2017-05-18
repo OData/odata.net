@@ -256,8 +256,10 @@ namespace Microsoft.Test.OData.Utils.Metadata
             // Model with OData-specific attribute annotations
             yield return BuildODataAnnotationTestModel(true);
 
+#if !NETCOREAPP1_0
             // Astoria Default Test Model
             yield return BuildDefaultAstoriaTestModel();
+#endif
         }
 
         /// <summary>
@@ -338,6 +340,7 @@ namespace Microsoft.Test.OData.Utils.Metadata
             return model;
         }
 
+#if !NETCOREAPP1_0
         /// <summary>
         /// Builds the Astoria default test model and applies necessary fixups for use in OData tests.
         /// </summary>
@@ -363,6 +366,7 @@ namespace Microsoft.Test.OData.Utils.Metadata
                 return model;
             }
         }
+#endif
 
         /// <summary>
         /// Creates a test model to test our conversion of OData instances into EDM values.

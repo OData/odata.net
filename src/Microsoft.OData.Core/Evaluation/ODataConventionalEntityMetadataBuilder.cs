@@ -718,7 +718,7 @@ namespace Microsoft.OData.Evaluation
             ODataPath path = odataUri.Path;
             List<ODataPathSegment> segments = path.ToList();
             ODataPathSegment lastSegment = segments.Last();
-            while (!(lastSegment is NavigationPropertySegment))
+            while (!(lastSegment is NavigationPropertySegment) && !(lastSegment is OperationSegment))
             {
                 segments.Remove(lastSegment);
                 lastSegment = segments.Last();

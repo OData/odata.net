@@ -1018,6 +1018,11 @@ namespace Microsoft.OData.Edm.Tests.Validation
                 get { return type; }
                 set { type = value; }
             }
+
+            public bool IncludeInServiceDocument
+            {
+                get; set;
+            }
         }
 
         private sealed class CustomSingleton : EdmNamedElement, IEdmSingleton

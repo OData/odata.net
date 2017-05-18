@@ -200,7 +200,7 @@ namespace Microsoft.OData.Tests
         public void SerializationInfoShouldBeValidatedByTheSetter()
         {
             Action action = () => this.odataEntry.SerializationInfo = new ODataResourceSerializationInfo() { NavigationSourceKind = EdmNavigationSourceKind.Singleton };
-            action.ShouldThrow<ArgumentNullException>().WithMessage("serializationInfo.NavigationSourceName", ComparisonMode.Substring);
+            action.ShouldThrow<ArgumentNullException>().Where(e => e.Message.Contains("serializationInfo.NavigationSourceName"));
         }
 
         [Fact]
@@ -214,7 +214,7 @@ namespace Microsoft.OData.Tests
         public void AddNullActionShouldThrow()
         {
             Action action = () => this.odataEntry.AddAction(null);
-            action.ShouldThrow<ArgumentNullException>().WithMessage("action", ComparisonMode.Substring);
+            action.ShouldThrow<ArgumentNullException>().Where(e => e.Message.Contains("action"));
         }
 
         [Fact]
@@ -231,7 +231,7 @@ namespace Microsoft.OData.Tests
         public void AddNullFunctionShouldThrow()
         {
             Action action = () => this.odataEntry.AddFunction(null);
-            action.ShouldThrow<ArgumentNullException>().WithMessage("function", ComparisonMode.Substring);
+            action.ShouldThrow<ArgumentNullException>().Where(e => e.Message.Contains("function"));
         }
 
         [Fact]

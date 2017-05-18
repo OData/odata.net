@@ -140,7 +140,11 @@ namespace Microsoft.OData.Tests.JsonLight
             {
                 MessageStream = stream,
                 MediaType = new ODataMediaType("application", "json"),
+#if NETCOREAPP1_0
+                Encoding = Encoding.GetEncoding(0),
+#else
                 Encoding = Encoding.Default,
+#endif
                 IsResponse = writingResponse,
                 IsAsync = false,
                 Model = model,

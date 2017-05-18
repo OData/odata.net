@@ -62,7 +62,7 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
         public void PathsShouldNotAllowSegmentsToBeNull()
         {
             Action createWithNull = () => new ODataPath((IEnumerable<ODataPathSegment>)null);
-            createWithNull.ShouldThrow<ArgumentNullException>().WithMessage("segments", ComparisonMode.EquivalentSubstring);
+            createWithNull.ShouldThrow<ArgumentNullException>().Where(e => e.Message.Contains("segments"));
         }
 
         [Fact]
@@ -70,7 +70,7 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
         {
             Action createWithNull = () => new ODataPath((ODataPathSegment)null);
             // TODO: better error?
-            createWithNull.ShouldThrow<ArgumentNullException>().WithMessage("segments", ComparisonMode.EquivalentSubstring);
+            createWithNull.ShouldThrow<ArgumentNullException>().Where(e => e.Message.Contains("segments"));
         }
 
         [Fact]

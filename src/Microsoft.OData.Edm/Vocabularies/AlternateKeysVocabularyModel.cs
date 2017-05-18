@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Xml;
 using Microsoft.OData.Edm.Csdl;
@@ -47,11 +48,17 @@ namespace Microsoft.OData.Edm.Vocabularies.Community.V1
         /// <summary>
         /// Parse Alternate Keys Vocabulary Model from AlternateKeysVocabularies.xml
         /// </summary>
+        [SuppressMessage("Microsoft.Security.Xml", "CA3053", Justification = "The XmlResolver property no longer exists in .NET portable framework.")]
         static AlternateKeysVocabularyModel()
         {
             Assembly assembly = typeof(AlternateKeysVocabularyModel).GetAssembly();
 
-            using (Stream stream = assembly.GetManifestResourceStream("AlternateKeysVocabularies.xml"))
+            // Resource name has leading namespace and folder in .NetStandard dll.
+            string[] allResources = assembly.GetManifestResourceNames();
+            string alternateKeysVocabularies = allResources.Where(x => x.Contains("AlternateKeysVocabularies.xml")).FirstOrDefault();
+            Debug.Assert(alternateKeysVocabularies != null, "AlternateKeysVocabularies.xml: not found.");
+
+            using (Stream stream = assembly.GetManifestResourceStream(alternateKeysVocabularies))
             {
                 IEnumerable<EdmError> errors;
                 Debug.Assert(stream != null, "AlternateKeysVocabularies.xml: stream!=null");

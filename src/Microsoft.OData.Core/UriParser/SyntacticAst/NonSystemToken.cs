@@ -20,7 +20,7 @@ namespace Microsoft.OData.UriParser
     /// Lexical token representing a segment in a path.
     /// </summary>
     ///
-    internal sealed class NonSystemToken : PathSegmentToken
+    public sealed class NonSystemToken : PathSegmentToken
     {
         /// <summary>
         /// Any named values for this NonSystemToken

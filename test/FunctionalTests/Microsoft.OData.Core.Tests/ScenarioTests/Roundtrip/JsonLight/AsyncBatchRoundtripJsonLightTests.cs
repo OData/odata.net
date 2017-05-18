@@ -49,7 +49,11 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip.JsonLight
         {
             var requestPayload = this.ClientWriteAsyncBatchRequest(BatchPayloadUriOption.AbsoluteUriUsingHostHeader);
 
+#if NETCOREAPP1_0
+            var payloadString = System.Text.Encoding.GetEncoding(0).GetString(requestPayload);
+#else
             var payloadString = System.Text.Encoding.Default.GetString(requestPayload);
+#endif
             Assert.True(payloadString.Contains("GET /Customers('ALFKI') HTTP/1.1") &&
                 payloadString.Contains("POST /Customers HTTP/1.1") &&
                 payloadString.Contains("PATCH /Customers('ALFKI') HTTP/1.1") &&
@@ -64,7 +68,11 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip.JsonLight
         {
             var requestPayload = this.ClientWriteAsyncBatchRequest(BatchPayloadUriOption.RelativeUri);
 
+#if NETCOREAPP1_0
+            var payloadString = System.Text.Encoding.GetEncoding(0).GetString(requestPayload);
+#else
             var payloadString = System.Text.Encoding.Default.GetString(requestPayload);
+#endif
             Assert.True(payloadString.Contains("GET Customers('ALFKI') HTTP/1.1") &&
                 payloadString.Contains("POST Customers HTTP/1.1") &&
                 payloadString.Contains("PATCH Customers('ALFKI') HTTP/1.1") &&

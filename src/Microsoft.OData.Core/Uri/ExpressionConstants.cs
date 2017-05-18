@@ -51,6 +51,9 @@ namespace Microsoft.OData
         /// <summary>',' constant to represent an value list separator.</summary>
         internal const string SymbolComma = ",";
 
+        /// <summary>'.' constant to represent the value of a dot separator.</summary>
+        internal const string SymbolDot = ".";
+
         /// <summary>'/' constant to represent the forward slash used in a query.</summary>
         internal const string SymbolForwardSlash = "/";
 

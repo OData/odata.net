@@ -51,6 +51,7 @@ namespace Microsoft.OData.Edm.Csdl
         internal const string Attribute_Abstract = "Abstract";
         internal const string Attribute_Action = "Action";
         internal const string Attribute_Alias = "Alias";
+        internal const string Attribute_AnnotationPath = "AnnotationPath";
         internal const string Attribute_AppliesTo = "AppliesTo";
         internal const string Attribute_BaseType = "BaseType";
         internal const string Attribute_Binary = "Binary";

@@ -15,7 +15,7 @@ namespace Microsoft.OData.UriParser
     /// <summary>
     /// Lexical token representing a binary operator.
     /// </summary>
-    internal sealed class BinaryOperatorToken : QueryToken
+    public sealed class BinaryOperatorToken : QueryToken
     {
         /// <summary>
         /// The operator represented by this node.

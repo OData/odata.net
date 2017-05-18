@@ -18,7 +18,7 @@ namespace Microsoft.OData.Tests
         {
             ODataProperty property = null;
             Action action = () => property.SetSerializationInfo(null);
-            action.ShouldThrow<ArgumentNullException>().WithMessage("property", ComparisonMode.Substring);
+            action.ShouldThrow<ArgumentNullException>().Where(e => e.Message.Contains("property"));
         }
 
         [Fact]
@@ -47,7 +47,7 @@ namespace Microsoft.OData.Tests
         {
             ODataResourceSet resourceCollection = null;
             Action action = () => resourceCollection.SetSerializationInfo(null);
-            action.ShouldThrow<ArgumentNullException>().WithMessage("resourceSet", ComparisonMode.Substring);
+            action.ShouldThrow<ArgumentNullException>().Where(e => e.Message.Contains("resourceSet"));
         }
 
         [Fact]
@@ -76,7 +76,7 @@ namespace Microsoft.OData.Tests
         {
             ODataResource entry = null;
             Action action = () => entry.SetSerializationInfo(null);
-            action.ShouldThrow<ArgumentNullException>().WithMessage("resource", ComparisonMode.Substring);
+            action.ShouldThrow<ArgumentNullException>().Where(e => e.Message.Contains("resource"));
         }
 
         [Fact]
@@ -105,7 +105,7 @@ namespace Microsoft.OData.Tests
         {
             ODataCollectionStart collectionStart = null;
             Action action = () => collectionStart.SetSerializationInfo(null);
-            action.ShouldThrow<ArgumentNullException>().WithMessage("collectionStart", ComparisonMode.Substring);
+            action.ShouldThrow<ArgumentNullException>().Where(e => e.Message.Contains("collectionStart"));
         }
 
         [Fact]

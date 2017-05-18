@@ -36,7 +36,7 @@ namespace Microsoft.OData.Tests.UriParser.TreeNodeKinds
             int i = 0;
             foreach (var queryNodeKind in queryNodeKindFields)
             {
-                internalQueryNodeKindFields[i].Name.Should().Be(queryNodeKind.Name);
+                internalQueryNodeKindFields.ElementAt(i).Name.Should().Be(queryNodeKind.Name);
                 i++;
             }
         }
