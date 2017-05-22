@@ -15,6 +15,9 @@ namespace Microsoft.OData.Client.Materialization
     using Microsoft.OData;
     using Microsoft.OData.Edm;
     using DSClient = Microsoft.OData.Client;
+#if NETSTANDARD1_3
+    using System.Reflection;
+#endif
 
     /// <summary>
     /// Use this class to materialize objects provided from an <see cref="ODataMessageReader"/>.

@@ -1,0 +1,41 @@
+﻿{
+  "version": "6.15.0-*",
+
+  "buildOptions": {
+    "define": [
+      "CODE_ANALYSIS",
+      "ODATA_CORE",
+      "PORTABLELIB"
+    ],
+    "compile": {
+      "include": "../../../src/Microsoft.OData.Core/**/*.cs",
+      "includeFiles": [
+        "../../../src/AssemblyInfo/AssemblyKeys.cs",
+        "../../../src/Microsoft.OData.Edm/Csdl/EdmValueParser.cs",
+        "../../../src/Microsoft.OData.Edm/Csdl/EdmValueWriter.cs",
+        "../../../src/PlatformHelper.cs"
+      ],
+      "excludeFiles": [
+        "../../../src/Microsoft.OData.Core/PortabilityExtensionMethods.cs"
+      ]
+    }
+  },
+
+  "dependencies": {
+    "Microsoft.OData.Edm": {
+      "target": "project"
+    },
+    "Microsoft.Spatial": {
+      "target": "project"
+    },
+    "System.ComponentModel":  "4.0.1",
+    "System.Diagnostics.Tools": "4.0.1",
+    "System.Reflection.TypeExtensions": "4.1.0",
+    "System.Runtime": "4.1.0",
+    "System.Text.RegularExpressions": "4.1.0"
+  },
+
+  "frameworks": {
+    "netstandard1.3": { }
+  }
+}

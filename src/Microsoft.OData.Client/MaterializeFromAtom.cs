@@ -16,6 +16,9 @@ namespace Microsoft.OData.Client
     using System.Diagnostics;
     using System.Xml;
     using Microsoft.OData;
+#if NETSTANDARD1_3
+    using System.Reflection;
+#endif
 
     #endregion Namespaces
 

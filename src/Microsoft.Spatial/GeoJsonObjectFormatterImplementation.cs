@@ -7,6 +7,9 @@
 namespace Microsoft.Spatial
 {
     using System.Collections.Generic;
+#if NETSTANDARD1_3
+    using System.Reflection;
+#endif
 
     /// <summary>
     /// Formatter for Json Object

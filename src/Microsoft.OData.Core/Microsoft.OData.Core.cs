@@ -811,11 +811,7 @@ namespace Microsoft.OData {
         ResourceManager resources;
 
         internal TextRes() {
-#if !PORTABLELIB
-            resources = new System.Resources.ResourceManager("Microsoft.OData.Core", this.GetType().Assembly);
-#else
-            resources = new System.Resources.ResourceManager("Microsoft.OData.Core", this.GetType().GetTypeInfo().Assembly);
-#endif
+            resources = new System.Resources.ResourceManager("Microsoft.OData.Core", this.GetType().GetAssembly());
         }
 
         private static TextRes GetLoader() {

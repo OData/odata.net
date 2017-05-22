@@ -10,6 +10,9 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using Microsoft.OData.Edm.Vocabularies;
+#if NETSTANDARD1_3
+    using System.Reflection;
+#endif
 
 namespace Microsoft.OData.Edm.Validation
 {

@@ -15,7 +15,6 @@ using Microsoft.Spatial;
     using PlatformHelpers = Microsoft.OData.Client.PlatformHelper;
 #else
 using ErrorStrings = Microsoft.OData.Strings;
-using PlatformHelpers = Microsoft.OData.PlatformHelper;
 #endif
 
 #if ODATA_CLIENT

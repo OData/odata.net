@@ -12,6 +12,9 @@ using System.Text;
 using System.Xml;
 using Microsoft.OData.Edm;
 using Microsoft.Spatial;
+#if NETSTANDARD1_3
+    using System.Reflection;
+#endif
 
 namespace Microsoft.OData.UriParser
 {

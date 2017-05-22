@@ -1,0 +1,6 @@
+{
+  "projects": [ "src", "test", "test/EndToEndTests/Framework", "NetStandard.Projects/src", "NetStandard.Projects/test/EndToEndTests/Framework" ],
+  "sdk": {
+    "version": "1.0.0-preview2-003121"
+  }
+}

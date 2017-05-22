@@ -7,6 +7,9 @@
 namespace Microsoft.Spatial
 {
     using System;
+#if NETSTANDARD1_3
+    using System.Reflection;
+#endif
 
     /// <summary>
     /// Util class

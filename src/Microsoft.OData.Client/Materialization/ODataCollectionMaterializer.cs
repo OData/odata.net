@@ -15,6 +15,9 @@ namespace Microsoft.OData.Client.Materialization
     using Microsoft.OData;
     using Microsoft.OData.Edm;
     using DSClient = Microsoft.OData.Client;
+#if NETSTANDARD1_3
+    using System.Reflection;
+#endif
 
     /// <summary>
     /// Used to materialize a collection of primitive or complex values from an <see cref="ODataCollectionMaterializer"/>.

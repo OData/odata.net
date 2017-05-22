@@ -11,6 +11,9 @@ namespace Microsoft.Spatial
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
+#if NETSTANDARD1_3
+    using System.Reflection;
+#endif
 
     /// <summary>
     /// Tree based builder for spatial types

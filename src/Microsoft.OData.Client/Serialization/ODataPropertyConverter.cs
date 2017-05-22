@@ -16,6 +16,9 @@ namespace Microsoft.OData.Client
     using Microsoft.OData.Metadata;
     using Microsoft.OData.Client.Metadata;
     using Microsoft.OData.Edm;
+#if NETSTANDARD1_3
+    using System.Reflection;
+#endif
 
     /// <summary>
     /// Component for converting properties on client types into instance of <see cref="ODataProperty"/> in order to serialize insert/update payloads.
