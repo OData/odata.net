@@ -1108,7 +1108,10 @@ namespace Microsoft.OData.Edm
         /// <returns>The primitive kind of the definition of this reference.</returns>
         public static EdmPrimitiveTypeKind PrimitiveKind(this IEdmTypeReference type)
         {
-            EdmUtil.CheckArgumentNull(type, "type");
+            if (type == null)
+            {
+                return EdmPrimitiveTypeKind.None;
+            }
             IEdmType typeDefinition = type.Definition;
             if (typeDefinition.TypeKind != EdmTypeKind.Primitive)
             {
