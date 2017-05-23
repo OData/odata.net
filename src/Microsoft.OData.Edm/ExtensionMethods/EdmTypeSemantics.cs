@@ -905,6 +905,7 @@ namespace Microsoft.OData.Edm
             {
                 return EdmPrimitiveTypeKind.None;
             }
+
             IEdmType typeDefinition = type.Definition;
             if (typeDefinition.TypeKind != EdmTypeKind.Primitive)
             {
