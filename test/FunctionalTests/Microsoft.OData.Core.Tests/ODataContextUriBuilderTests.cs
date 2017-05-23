@@ -102,10 +102,15 @@ namespace Microsoft.OData.Core.Tests
             this.CreateFeedContextUri(applyClause).OriginalString.Should().Be(MetadataDocumentUriString + "#Cities(TotalId)");
         }
 
-        [Fact]
-        public void FeedContextUriWithApplyAggreagateOnDynamicProperty()
+        [Theory]
+        [InlineData("sum")]
+        [InlineData("average")]
+        [InlineData("max")]
+        [InlineData("min")]
+        [InlineData("countdistinct")]
+        public void FeedContextUriWithApplyAggreagateOnDynamicProperty(string method)
         {
-            string applyClause = "aggregate(DynamicProperty with sum as DynamicPropertyTotal)";
+            string applyClause = "aggregate(DynamicProperty with " + method +" as DynamicPropertyTotal)";
 
             this.CreateFeedContextUri(applyClause).OriginalString.Should().Be(MetadataDocumentUriString + "#Cities(DynamicPropertyTotal)");
         }
