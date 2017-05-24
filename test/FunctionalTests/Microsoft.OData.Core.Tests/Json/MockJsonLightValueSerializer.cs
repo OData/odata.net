@@ -22,6 +22,7 @@ namespace Microsoft.OData.Tests.Json
         public Action<ODataResource, IEdmTypeReference, bool, bool, IDuplicatePropertyNameChecker> WriteComplexVerifier { get; set; }
         public Action<ODataCollectionValue, IEdmTypeReference, IEdmTypeReference, bool, bool, bool> WriteCollectionVerifier { get; set; }
         public Action<object, IEdmTypeReference> WritePrimitiveVerifier { get; set; }
+        public Action<object, IEdmTypeReference> WriteEnumVerifier { get; set; }
         public Action WriteNullVerifier { get; set; }
 
         public MockJsonLightValueSerializer(ODataJsonLightOutputContext outputContext, bool initContextUriBuilder = false)
@@ -42,7 +43,8 @@ namespace Microsoft.OData.Tests.Json
         /// <param name="expectedTypeReference">expected type reference</param>
         public override void WriteEnumValue(ODataEnumValue value, IEdmTypeReference expectedTypeReference)
         {
-            throw new NotImplementedException();
+            this.WriteEnumVerifier.Should().NotBeNull("WriteEnumValue was called.");
+            this.WriteEnumVerifier(value, expectedTypeReference);
         }
 
         public override void WriteCollectionValue(ODataCollectionValue collectionValue, IEdmTypeReference metadataTypeReference, IEdmTypeReference valueTypeReference, bool isTopLevelProperty, bool isInUri, bool isOpenPropertyType)
