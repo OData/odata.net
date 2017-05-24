@@ -4,6 +4,9 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+using System.Collections.Generic;
+using System.Linq;
+
 namespace Microsoft.OData.Core.JsonLight
 {
     #region Namespaces
@@ -501,9 +504,27 @@ namespace Microsoft.OData.Core.JsonLight
         /// <returns>The created writer.</returns>
         private ODataWriter CreateODataFeedWriterImplementation(IEdmEntitySetBase entitySet, IEdmEntityType entityType)
         {
-            ODataJsonLightWriter odataJsonWriter = new ODataJsonLightWriter(this, entitySet, entityType, /*writingFeed*/true);
+            ODataJsonLightWriterCore odataJsonWriter;
+            if (IsJsonBatching())
+            {
+                odataJsonWriter = new ODataJsonLightBatchBodyWriter(this, entitySet, entityType, /*writingFeed*/true);
+            }
+            else
+            {
+                odataJsonWriter = new ODataJsonLightWriter(this, entitySet, entityType, /*writingFeed*/true);
+            }
             this.outputInStreamErrorListener = odataJsonWriter;
             return odataJsonWriter;
+        }
+
+        private bool IsJsonBatching()
+        {
+            IList<KeyValuePair<ODataMediaType, string>> mediaTypeToCharsetList = HttpUtils.MediaTypesFromString(this.MessageWriterSettings.AcceptableMediaTypes);
+
+            return mediaTypeToCharsetList.Any(
+                _ =>
+                    _.Key.Type.Equals(MimeConstants.MimeApplicationType) &&
+                    _.Key.SubType.Equals(MimeConstants.MimeJsonSubType));
         }
 
         /// <summary>
@@ -527,7 +548,15 @@ namespace Microsoft.OData.Core.JsonLight
         /// <returns>The created writer.</returns>
         private ODataWriter CreateODataEntryWriterImplementation(IEdmNavigationSource navigationSource, IEdmEntityType entityType)
         {
-            ODataJsonLightWriter odataJsonWriter = new ODataJsonLightWriter(this, navigationSource, entityType, /*writingFeed*/false);
+            ODataJsonLightWriterCore odataJsonWriter;
+            if (IsJsonBatching())
+            {
+                odataJsonWriter = new ODataJsonLightBatchBodyWriter(this, navigationSource, entityType, /*writingFeed*/false);
+            }
+            else
+            {
+                odataJsonWriter = new ODataJsonLightWriter(this, navigationSource, entityType, /*writingFeed*/false);
+            }
             this.outputInStreamErrorListener = odataJsonWriter;
             return odataJsonWriter;
         }

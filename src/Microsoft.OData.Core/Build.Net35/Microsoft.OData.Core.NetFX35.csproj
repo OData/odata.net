@@ -1827,6 +1827,10 @@
     <Compile Include="..\UriParser\UriFunctionsHelper.cs">
       <Link>Microsoft\OData\Core\UriParser\UriFunctionsHelper.cs</Link>
     </Compile>
+    <Compile Include="Microsoft\OData\Core\JsonLight\ODataJsonLightBatchBodyWriter.cs" />
+    <Compile Include="Microsoft\OData\Core\JsonLight\ODataJsonLightWriterCore.cs" />
+    <Compile Include="Microsoft\OData\Core\ODataBatchJsonWriter.cs" />
+    <Compile Include="Microsoft\OData\Core\ODataBatchMimeWriter.cs" />
     <Compile Include="ShippingAssemblyAttributes.cs" />
     <Compile Include="$(AssemblyKeysCSharpFilePath)">
       <IncludeInOpenSource>false</IncludeInOpenSource>

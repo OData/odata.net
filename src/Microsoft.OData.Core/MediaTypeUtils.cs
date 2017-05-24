@@ -217,9 +217,10 @@ namespace Microsoft.OData.Core
 
             ODataFormat format = GetFormatFromContentType(contentTypeHeader, supportedPayloadKinds, mediaTypeResolver, out mediaType, out encoding, out selectedPayloadKind);
 
-            // for batch payloads, read the batch boundary from the content type header; this is the only
-            // content type parameter we support (and that is required for batch payloads)
-            if (selectedPayloadKind == ODataPayloadKind.Batch)
+            // For batch payload of multipart/mixed type, read the required batch boundary parameter from the content type header.
+            if (selectedPayloadKind == ODataPayloadKind.Batch && 
+                mediaType.Type.Equals(MimeConstants.MimeMultipartType) &&
+                mediaType.SubType.Equals(MimeConstants.MimeMixedSubType))
             {
                 KeyValuePair<string, string> boundaryPair = default(KeyValuePair<string, string>);
                 IEnumerable<KeyValuePair<string, string>> parameters = mediaType.Parameters;
@@ -238,9 +239,12 @@ namespace Microsoft.OData.Core
                     }
                 }
 
+                // Boundary parameter is required for multipart/mixed media type.
                 if (boundaryPair.Key == null)
                 {
-                    throw new ODataException(Strings.MediaTypeUtils_BoundaryMustBeSpecifiedForBatchPayloads(contentTypeHeader, ODataConstants.HttpMultipartBoundary));
+                    throw new ODataException(
+                        Strings.MediaTypeUtils_BoundaryMustBeSpecifiedForBatchPayloads(contentTypeHeader,
+                            ODataConstants.HttpMultipartBoundary));
                 }
 
                 batchBoundary = boundaryPair.Value;
