@@ -111,6 +111,7 @@ namespace Microsoft.OData.Core.JsonLight
 
                     // Read the annotation value.
                     entryState.Entry.TypeName = this.ReadODataTypeAnnotationValue();
+                    entryState.Entry.InstanceAnnotations.Add(new ODataInstanceAnnotation(ODataAnnotationNames.ODataType, entryState.Entry.TypeName.ToODataValue(), true));
                 }
             }
 
@@ -1049,6 +1050,22 @@ namespace Microsoft.OData.Core.JsonLight
                     {
                         // annotation.Value == null indicates that this annotation should be skipped.
                         property.InstanceAnnotations.Add(new ODataInstanceAnnotation(annotation.Key, annotation.Value.ToODataValue()));
+                    }
+                }
+            }
+
+            propertyAnnotations = entryState.DuplicatePropertyNamesChecker.GetODataPropertyAnnotations(propertyName);
+            if (propertyAnnotations != null)
+            {
+                foreach (var annotation in propertyAnnotations)
+                {
+                    if (annotation.Value != null)
+                    {
+                        Uri uri = annotation.Value as Uri;
+                        object value = uri != null ? uri.OriginalString : annotation.Value;
+
+                        // annotation.Value == null indicates that this annotation should be skipped.
+                        property.InstanceAnnotations.Add(new ODataInstanceAnnotation(annotation.Key, value.ToODataValue(), true));
                     }
                 }
             }

@@ -86,11 +86,12 @@ namespace Microsoft.Test.OData.Tests.Client.CustomInstanceAnnotationsTests
                 ((HttpWebRequestMessage)eventArgs.RequestMessage).SetHeader("Prefer", "odata.include-annotations=\"*\"");
             };
 
+            // Don't include the "odata" annotations in these counts
             context.Configurations.ResponsePipeline
                 .OnEntityMaterialized((args) =>
                 {
                     entityMaterialised = true;
-                    Assert.AreEqual(199, args.Entry.InstanceAnnotations.Count, "Unexpected count of entry annotations");
+                    Assert.AreEqual(199, args.Entry.InstanceAnnotations.Count(a => !a.Name.StartsWith("odata.")), "Unexpected count of entry annotations");
                 })
                 .OnFeedEnded((args) =>
                 {
@@ -120,7 +121,7 @@ namespace Microsoft.Test.OData.Tests.Client.CustomInstanceAnnotationsTests
                 .OnEntityMaterialized((args) =>
                 {
                     entityMaterialised = true;
-                    Assert.IsTrue(args.Entry.InstanceAnnotations.Count() == 0, "No entity annotations were requested");
+                    Assert.IsTrue(args.Entry.InstanceAnnotations.Count(a => !a.Name.StartsWith("odata.")) == 0, "No entity annotations were requested");
                 })
                 .OnFeedEnded((args) =>
                 {
@@ -152,7 +153,7 @@ namespace Microsoft.Test.OData.Tests.Client.CustomInstanceAnnotationsTests
                 .OnEntityMaterialized((args) =>
                 {
                     entityMaterialised = true;
-                    Assert.IsTrue(args.Entry.InstanceAnnotations.Count() == 0, "No entity annotations were requested");
+                    Assert.IsTrue(args.Entry.InstanceAnnotations.Count(a => !a.Name.StartsWith("odata.")) == 0, "No entity annotations were requested");
                 })
                 .OnFeedEnded((args) =>
                 {
@@ -205,7 +206,7 @@ namespace Microsoft.Test.OData.Tests.Client.CustomInstanceAnnotationsTests
                 .OnEntityMaterialized((args) =>
                 {
                     entityMaterialised = true;
-                    Assert.IsTrue(args.Entry.InstanceAnnotations.Count == 0, "negative filter should result in no annotations");
+                    Assert.IsTrue(args.Entry.InstanceAnnotations.Count(a => !a.Name.StartsWith("odata.")) == 0, "negative filter should result in no annotations");
                 })
                 .OnFeedEnded((args) =>
                 {
@@ -235,7 +236,7 @@ namespace Microsoft.Test.OData.Tests.Client.CustomInstanceAnnotationsTests
             context.Configurations.ResponsePipeline.OnEntityMaterialized((args) =>
             {
                 entityMaterialised = true;
-                Assert.AreEqual(199, args.Entry.InstanceAnnotations.Count, "Unexpected count of entry annotations");
+                Assert.AreEqual(199, args.Entry.InstanceAnnotations.Count(a => !a.Name.StartsWith("odata.")), "Unexpected count of entry annotations");
             });
             context.Configurations.ResponsePipeline.OnFeedEnded((args) =>
             {

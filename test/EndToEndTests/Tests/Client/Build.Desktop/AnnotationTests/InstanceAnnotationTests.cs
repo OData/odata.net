@@ -95,7 +95,7 @@ namespace Microsoft.Test.OData.Tests.Client.AnnotationTests
                                 var complexValue = entry.Properties.Single(p => p.Name.Equals("HomeAddress")).Value as ODataComplexValue;
 
                                 // Verify Annotation on Complex Type
-                                ODataInstanceAnnotation annotationOnHomeAddress = complexValue.InstanceAnnotations.SingleOrDefault();
+                                ODataInstanceAnnotation annotationOnHomeAddress = complexValue.InstanceAnnotations.SingleOrDefault(a => !a.Name.StartsWith("odata."));
                                 Assert.AreEqual(string.Format("{0}.AddressType", TestModelNameSpace), annotationOnHomeAddress.Name);
                                 Assert.AreEqual("Home", (annotationOnHomeAddress.Value as ODataPrimitiveValue).Value);
 
@@ -105,7 +105,7 @@ namespace Microsoft.Test.OData.Tests.Client.AnnotationTests
                                 Assert.AreEqual(2, (annotationOnCity.Value as ODataComplexValue).Properties.Count());
 
                                 // Verify Annotation on Property of Entity
-                                ODataInstanceAnnotation annotationonEmails = entry.Properties.SingleOrDefault(p => p.Name.Equals("Emails")).InstanceAnnotations.SingleOrDefault();
+                                ODataInstanceAnnotation annotationonEmails = entry.Properties.SingleOrDefault(p => p.Name.Equals("Emails")).InstanceAnnotations.SingleOrDefault(a => !a.Name.StartsWith("odata."));
                                 Assert.AreEqual(string.Format("{0}.DisplayName", TestModelNameSpace), annotationonEmails.Name);
                                 Assert.AreEqual("EmailAddresses", (annotationonEmails.Value as ODataPrimitiveValue).Value);
                             }

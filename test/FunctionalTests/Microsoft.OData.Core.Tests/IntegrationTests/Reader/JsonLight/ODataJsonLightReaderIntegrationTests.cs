@@ -17,6 +17,7 @@ using Xunit;
 
 namespace Microsoft.OData.Core.Tests.IntegrationTests.Reader.JsonLight
 {
+
     public class ODataJsonLightReaderIntegrationTests
     {
         private static readonly IEdmModel Model;
@@ -35,6 +36,7 @@ namespace Microsoft.OData.Core.Tests.IntegrationTests.Reader.JsonLight
         {
             EdmModel tmp = new EdmModel();
             EntityType = new EdmEntityType("Namespace", "EntityType");
+            tmp.AddElement(EntityType);
             EdmEntityContainer edmEntityContainer = new EdmEntityContainer("Namespace", "Container_sub");
             EntitySet = edmEntityContainer.AddEntitySet("EntitySet", EntityType);
             tmp.AddElement(edmEntityContainer);
@@ -289,6 +291,17 @@ namespace Microsoft.OData.Core.Tests.IntegrationTests.Reader.JsonLight
         }
 
         [Fact]
+        public void TypeAnnotationShouldBePresent()
+        {
+            const string payload = "{" + ContextUrl + ", " +
+                "\"@odata.type\": \"#Namespace.EntityType\", " +
+                "\"@odata.id\":\"entryId\"}";
+            var actual = this.ReadJsonLightEntry(payload, FullMetadata, readingResponse: false, odataSimplified: true, annotationFilter: "*");
+            actual.InstanceAnnotations.Should().HaveCount(1);
+            TestUtils.AssertODataValueAreEqual(new ODataPrimitiveValue("Namespace.EntityType"), actual.InstanceAnnotations.Single(ia => ia.Name == "odata.type").Value);
+        }
+
+        [Fact]
         public void UnknownAnnotationRequestShouldBeIgnored()
         {
             const string payload = "{" + ContextUrl + ", " +
@@ -310,7 +323,7 @@ namespace Microsoft.OData.Core.Tests.IntegrationTests.Reader.JsonLight
             actual.Id.Should().Be(CreateUri("http://www.example.com/defaultService.svc/entryId"));
         }
 
-        private ODataEntry ReadJsonLightEntry(string payload, string contentType, bool readingResponse, bool odataSimplified = false)
+        private ODataEntry ReadJsonLightEntry(string payload, string contentType, bool readingResponse, bool odataSimplified = false, string annotationFilter = "-*")
         {
             InMemoryMessage message = new InMemoryMessage();
             message.SetHeader("Content-Type", contentType);
@@ -318,7 +331,7 @@ namespace Microsoft.OData.Core.Tests.IntegrationTests.Reader.JsonLight
 
             ODataEntry topLevelEntry = null;
 
-            ODataMessageReaderSettings settings = new ODataMessageReaderSettings { ODataSimplified = odataSimplified };
+            ODataMessageReaderSettings settings = new ODataMessageReaderSettings { ODataSimplified = odataSimplified, ShouldIncludeAnnotation = ODataUtils.CreateAnnotationFilter(annotationFilter) };
 
             using (var messageReader = readingResponse
                 ? new ODataMessageReader((IODataResponseMessage)message, settings, Model)
