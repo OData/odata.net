@@ -45,10 +45,12 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
         private static readonly Func<ReaderTestConfiguration, IEnumerable<PayloadKindDetectionResult>> serviceDocDetectionResult =
             testConfig => CreateJsonLightFormatResult(ODataPayloadKind.ServiceDocument);
 
+        // TODO: unused -> cleanup.
         /// <summary>Reusable constant of an entity reference link detection result.</summary>
         private static readonly Func<ReaderTestConfiguration, IEnumerable<PayloadKindDetectionResult>> entityReferenceLinkDetectionResult =
             testConfig => CreateJsonLightFormatResult(ODataPayloadKind.EntityReferenceLink);
 
+        // TODO: unused -> cleanup.
         /// <summary>Reusable constant of an entity reference links detection result.</summary>
         private static readonly Func<ReaderTestConfiguration, IEnumerable<PayloadKindDetectionResult>> entityReferenceLinksDetectionResult =
             testConfig => CreateJsonLightFormatResult(ODataPayloadKind.EntityReferenceLinks);

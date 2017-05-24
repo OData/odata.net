@@ -71,6 +71,8 @@ namespace Microsoft.OData.Core
             Encoding batchEncoding)
         {
             Debug.Assert(inputContext != null, "inputContext != null");
+
+            //TODO: biaol -- pending batch json Reader changes should not assert this.
             Debug.Assert(!string.IsNullOrEmpty(batchBoundary), "!string.IsNullOrEmpty(batchBoundary)");
 
             this.inputContext = inputContext;

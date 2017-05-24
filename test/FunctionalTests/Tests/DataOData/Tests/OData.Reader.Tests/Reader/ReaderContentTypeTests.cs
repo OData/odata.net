@@ -349,11 +349,18 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
         {
             IEnumerable<ContentTypeTestCase> testCases = new ContentTypeTestCase[]
             {
-                // correct batch content type
+                // correct batch content type -- multipart
                 new ContentTypeTestCase 
                 { 
                     ContentType = "multipart/mixed;boundary=--aa_bb_cc--", 
                     ExpectedFormat = ODataFormat.Batch, 
+                },
+
+                // correct batch content type -- json
+                new ContentTypeTestCase
+                {
+                    ContentType = ApplicationJsonODataLight,
+                    ExpectedFormat = ODataFormat.Batch,
                 },
 
                 // missing batch boundary
@@ -390,12 +397,6 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
                     ContentType = "abc/pqr", 
                     ExpectedFormat = ODataFormat.Batch,
                     ExpectedException = ODataExpectedExceptions.ODataContentTypeException("MediaTypeUtils_CannotDetermineFormatFromContentType", TestMediaTypeUtils.GetSupportedMediaTypes(ODataPayloadKind.Batch), "abc/pqr")
-                },
-                new ContentTypeTestCase
-                {
-                    ContentType = ApplicationJson,
-                    ExpectedFormat = ODataFormat.Batch,
-                    ExpectedException = ODataExpectedExceptions.ODataContentTypeException("MediaTypeUtils_CannotDetermineFormatFromContentType", TestMediaTypeUtils.GetSupportedMediaTypes(ODataPayloadKind.Batch), ApplicationJson)
                 }
             };
 

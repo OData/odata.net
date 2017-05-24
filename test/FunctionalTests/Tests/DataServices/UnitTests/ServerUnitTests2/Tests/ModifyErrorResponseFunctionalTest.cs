@@ -207,8 +207,15 @@ namespace AstoriaUnitTests.Tests
                 webRequest.ForceVerboseErrors = true;
                 const string boundary = "batch-set";
 
-                // set content type to json so the batch request fails with 400
-                webRequest.RequestContentType = String.Format("{0}; boundary={1}", "application/json;odata.metadata=minimal", boundary);
+                // TODO: biaol -- content type of application/json will become a positive case for Batch Json support (pending on reader implementation). 
+                // To be added later.
+
+//                // set content type to json so the batch request fails with 400
+//                webRequest.RequestContentType = String.Format("{0}; boundary={1}", "application/json;odata.metadata=minimal", boundary);
+
+                // set content type to plain so the batch request fails with 400
+                webRequest.RequestContentType = String.Format("{0}; boundary={1}", "application/plain", boundary);
+                
                 webRequest.SetRequestStreamAsText(BatchRequestWritingUtils.GetBatchText(test.RequestPayload, boundary));
 
                 AnnotationValue = new ODataPrimitiveValue("This is a custom value message");

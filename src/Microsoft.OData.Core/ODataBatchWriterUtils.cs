@@ -18,6 +18,8 @@ namespace Microsoft.OData.Core
     /// </summary>
     internal static class ODataBatchWriterUtils
     {
+        internal static int HTTP_STATUS_NO_CONTENT = 204;
+
         /// <summary>
         /// Creates a new batch boundary string based on a randomly created GUID.
         /// </summary>
@@ -77,6 +79,54 @@ namespace Microsoft.OData.Core
             writer.WriteLine("--{0}", boundary);
         }
 
+        internal static void WriteJsonStart(TextWriter writer, bool firstBoundary)
+        {
+            Debug.Assert(writer != null, "writer != null");
+
+            if (!firstBoundary)
+            {
+                writer.WriteLine();
+            }
+
+            writer.WriteLine("{");
+        }
+
+        internal static void WriteSubBatchJsonStartBoundary(TextWriter writer, string subBatchId, bool firstBoundary)
+        {
+            Debug.Assert(writer != null, "writer != null");
+
+            if (!firstBoundary)
+            {
+                // If not first sub-batch, write separator followed by new line to start new sub-batch
+                writer.WriteLine(",");
+            }
+
+            writer.Write("\"{0}\": ", subBatchId);
+            writer.WriteLine("{");        // have to write out the opening curly brace separated from the preceeding string.
+
+            writer.WriteLine("\"responses\": [");
+        }
+
+        internal static void WriteResponseJsonStartBoundary(
+            TextWriter writer,
+            bool firstBoundary)
+        {
+            Debug.Assert(writer != null, "writer != null");
+
+            if (!firstBoundary)
+            {
+                writer.WriteLine("},");            // Start new line after adding response separator.
+            }
+
+            writer.WriteLine("{");
+        }
+
+        internal static void WriteSubBatchJsonEndBoundary(TextWriter writer, bool missingStartBoundary)
+        {
+            Debug.Assert(writer != null, "writer != null");
+
+        }
+
         /// <summary>
         /// Write the end boundary.
         /// </summary>
@@ -98,6 +148,30 @@ namespace Microsoft.OData.Core
 
             // Note that we don't write a newline AFTER the end boundary since there's no need to.
             writer.Write("--{0}--", boundary);
+        }
+
+        internal static void WriteJsonEndResponse(TextWriter writer)
+        {
+            Debug.Assert(writer != null, "writer != null");
+
+            writer.WriteLine();
+            writer.Write("}");
+        }
+
+        internal static void WriteJsonEndSubBatch(TextWriter writer)
+        {
+            Debug.Assert(writer != null, "writer != null");
+
+            writer.WriteLine("]");
+            writer.Write("}");
+        }
+
+        internal static void WriteJsonEndBatch(TextWriter writer)
+        {
+            Debug.Assert(writer != null, "writer != null");
+
+            writer.WriteLine();
+            writer.Write("}");
         }
 
         /// <summary>
@@ -164,6 +238,11 @@ namespace Microsoft.OData.Core
 
             // write separator line between headers and first change set operation
             writer.WriteLine();
+        }
+
+        internal static bool HasResponseBody(ODataBatchOperationResponseMessage responseMessage)
+        {
+            return responseMessage.StatusCode != HTTP_STATUS_NO_CONTENT;
         }
     }
 }

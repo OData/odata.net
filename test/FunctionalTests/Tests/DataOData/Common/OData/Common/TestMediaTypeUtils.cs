@@ -386,7 +386,7 @@ namespace Microsoft.Test.Taupo.OData.Common
                 case ODataPayloadKind.ServiceDocument:
                     break;
                 case ODataPayloadKind.Batch:
-                    builder.Append("multipart/mixed");
+                    builder.Append("multipart/mixed, application/json;odata.metadata=minimal");
                     break;
                 case ODataPayloadKind.MetadataDocument:
                     break;

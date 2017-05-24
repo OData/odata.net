@@ -28,6 +28,17 @@ namespace Microsoft.OData.Core
         /// <summary>application/json media type</summary>
         private static readonly ODataMediaType ApplicationJsonMediaType = new ODataMediaType(MimeConstants.MimeApplicationType, MimeConstants.MimeJsonSubType);
 
+        private static readonly ODataMediaType ApplicationJsonLightMediaType =
+            new ODataMediaType(
+                MimeConstants.MimeApplicationType,
+                MimeConstants.MimeJsonSubType,
+                new List<KeyValuePair<string, string>>()
+                {
+                    new KeyValuePair<string, string>(
+                        MimeConstants.MimeMetadataParameterName,
+                        MimeConstants.MimeMetadataParameterValueMinimal)
+                }
+                );
         #region Default media types per payload kind
         /// <summary>
         /// An array that maps stores the supported media types for all <see cref="ODataPayloadKind"/> .
@@ -300,6 +311,9 @@ namespace Microsoft.OData.Core
 
             // Add JSON-light media types into the media type table
             this.AddJsonLightMediaTypes();
+
+            // Add JSON media type for batch payload kind
+            this.AddJsonMediaTypeForBatchPayloadKind();
         }
 
         /// <summary>
@@ -350,6 +364,17 @@ namespace Microsoft.OData.Core
             }
 
             return clone;
+        }
+
+        /// <summary>
+        /// Add application json media type for batch payload.
+        /// </summary>
+        /// <remarks>
+        /// This is only used in V4 and beyond.
+        /// </remarks>
+        private void AddJsonMediaTypeForBatchPayloadKind()
+        {
+            this.mediaTypesForPayloadKind[(int)ODataPayloadKind.Batch].Add(new ODataMediaTypeFormat(ApplicationJsonLightMediaType, ODataFormat.Batch));
         }
 
         /// <summary>

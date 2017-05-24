@@ -83,6 +83,17 @@ namespace Microsoft.OData.Core
         }
 
         /// <summary>
+        /// The message format used by <see cref="ODataMessageWriter" />.
+        /// </summary>
+        protected ODataFormat Format
+        {
+            get
+            {
+                return this.format;
+            }
+        }
+
+        /// <summary>
         /// The message writer settings to be used for writing.
         /// </summary>
         public ODataMessageWriterSettings MessageWriterSettings

@@ -787,7 +787,8 @@ namespace Microsoft.OData.Core
                 {
                     // Note that this serves as verification only for now, since we only support a single content type and format for $batch payloads.
                     Debug.Assert(this.format == ODataFormat.Batch, "$batch should only support batch format since it's format independent.");
-                    Debug.Assert(this.mediaType.FullTypeName == MimeConstants.MimeMultipartMixed, "$batch content type is currently only supported to be multipart/mixed.");
+                    Debug.Assert(this.mediaType.FullTypeName == MimeConstants.MimeMultipartMixed || this.mediaType.FullTypeName == MimeConstants.MimeApplicationJson,
+                        "$batch content type is currently supported to be multipart/mixed or application/json.");
 
                     //// TODO: What about the encoding - should we verify that it's 7bit US-ASCII only?
 
@@ -799,7 +800,10 @@ namespace Microsoft.OData.Core
                     // We need the boundary to be as unique as possible to avoid possible collision with content of the batch operation payload.
                     // Our boundary string are generated to fulfill this requirement, client specified ones might not which might lead to wrong responses
                     // and at least in theory security issues.
-                    contentType = ODataBatchWriterUtils.CreateMultipartMixedContentType(this.batchBoundary);
+                    contentType = 
+                        this.mediaType.FullTypeName == MimeConstants.MimeMultipartMixed
+                        ? ODataBatchWriterUtils.CreateMultipartMixedContentType(this.batchBoundary)
+                        : MimeConstants.MimeApplicationJson;
                 }
                 else
                 {

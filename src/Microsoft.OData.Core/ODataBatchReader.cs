@@ -69,6 +69,8 @@ namespace Microsoft.OData.Core
         internal ODataBatchReader(ODataRawInputContext inputContext, string batchBoundary, Encoding batchEncoding, bool synchronous)
         {
             Debug.Assert(inputContext != null, "inputContext != null");
+
+            //TODO: biaol -- pending json batch Reader changes should not assert this.
             Debug.Assert(!string.IsNullOrEmpty(batchBoundary), "!string.IsNullOrEmpty(batchBoundary)");
 
             this.inputContext = inputContext;

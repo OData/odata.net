@@ -172,18 +172,33 @@ namespace Microsoft.OData.Core
         /// <returns>An enumerable of zero, one or more payload kinds that were detected from looking at the payload in the message stream.</returns>
         private static IEnumerable<ODataPayloadKind> DetectPayloadKindImplementation(ODataMediaType contentType)
         {
+            IEnumerable<ODataPayloadKind> batchKinds = new ODataPayloadKind[] { ODataPayloadKind.Batch };
+
             // NOTE: for batch payloads we only use the content type header of the message to detect the payload kind.
-            //       We assume a valid batch payload if the content type is multipart/mixed and a boundary parameter exists
-            // Require 'multipart/mixed' content type with a boundary parameter to be considered batch.
-            if (HttpUtils.CompareMediaTypeNames(MimeConstants.MimeMultipartType, contentType.Type) &&
-                HttpUtils.CompareMediaTypeNames(MimeConstants.MimeMixedSubType, contentType.SubType) &&
-                contentType.Parameters != null &&
-                contentType.Parameters.Any(kvp => HttpUtils.CompareMediaTypeParameterNames(ODataConstants.HttpMultipartBoundary, kvp.Key)))
+            // Batch payload is valid when either of the followings:
+            // a). The content type is multipart/mixed and a boundary parameter exists;
+            // b). The content type is application/json.
+            if (IsMultipartMixed(contentType) || IsApplicationJson(contentType))
             {
-                return new ODataPayloadKind[] { ODataPayloadKind.Batch };
+                return batchKinds;
             }
 
             return Enumerable.Empty<ODataPayloadKind>();
+        }
+
+        private static bool IsMultipartMixed(ODataMediaType contentType)
+        {
+            return HttpUtils.CompareMediaTypeNames(MimeConstants.MimeMultipartType, contentType.Type) &&
+                    HttpUtils.CompareMediaTypeNames(MimeConstants.MimeMixedSubType, contentType.SubType) &&
+                    contentType.Parameters != null &&
+                    contentType.Parameters.Any(
+                        kvp => HttpUtils.CompareMediaTypeParameterNames(ODataConstants.HttpMultipartBoundary, kvp.Key));
+        }
+
+        private static bool IsApplicationJson(ODataMediaType contentType)
+        {
+            return HttpUtils.CompareMediaTypeNames(contentType.Type, MimeConstants.MimeApplicationType) &&
+                   HttpUtils.CompareMediaTypeNames(contentType.SubType, MimeConstants.MimeJsonSubType);
         }
     }
 }

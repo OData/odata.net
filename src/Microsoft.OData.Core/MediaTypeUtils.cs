@@ -217,9 +217,12 @@ namespace Microsoft.OData.Core
 
             ODataFormat format = GetFormatFromContentType(contentTypeHeader, supportedPayloadKinds, mediaTypeResolver, out mediaType, out encoding, out selectedPayloadKind);
 
-            // for batch payloads, read the batch boundary from the content type header; this is the only
-            // content type parameter we support (and that is required for batch payloads)
-            if (selectedPayloadKind == ODataPayloadKind.Batch)
+            batchBoundary = null;
+
+            // For batch payload of multipart/mixed type, read the required batch boundary parameter from the content type header.
+            if (selectedPayloadKind == ODataPayloadKind.Batch && 
+                !(HttpUtils.CompareMediaTypeNames(MimeConstants.MimeApplicationType, mediaType.Type) &&
+                  HttpUtils.CompareMediaTypeNames(MimeConstants.MimeJsonSubType, mediaType.SubType)))
             {
                 KeyValuePair<string, string> boundaryPair = default(KeyValuePair<string, string>);
                 IEnumerable<KeyValuePair<string, string>> parameters = mediaType.Parameters;
@@ -232,23 +235,22 @@ namespace Microsoft.OData.Core
                         {
                             throw new ODataException(Strings.MediaTypeUtils_BoundaryMustBeSpecifiedForBatchPayloads(contentTypeHeader, ODataConstants.HttpMultipartBoundary));
                         }
-
+                
                         boundaryPair = pair;
                         boundaryPairFound = true;
                     }
                 }
-
+                
+                // Boundary parameter is required for multipart/mixed media type.
                 if (boundaryPair.Key == null)
                 {
-                    throw new ODataException(Strings.MediaTypeUtils_BoundaryMustBeSpecifiedForBatchPayloads(contentTypeHeader, ODataConstants.HttpMultipartBoundary));
+                    throw new ODataException(
+                        Strings.MediaTypeUtils_BoundaryMustBeSpecifiedForBatchPayloads(contentTypeHeader,
+                            ODataConstants.HttpMultipartBoundary));
                 }
-
+                
                 batchBoundary = boundaryPair.Value;
                 ValidationUtils.ValidateBoundaryString(batchBoundary);
-            }
-            else
-            {
-                batchBoundary = null;
             }
 
             return format;
