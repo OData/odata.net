@@ -6,13 +6,11 @@
 
 using System;
 using FluentAssertions;
-using Microsoft.OData.Core.UriParser;
-using Microsoft.OData.Core.UriParser.Metadata;
+using Microsoft.OData.UriParser;
 using Microsoft.OData.Edm;
-using Microsoft.OData.Edm.Library;
-using Microsoft.OData.Edm.Library.Values;
+using Microsoft.OData.Edm.Vocabularies;
 
-namespace Microsoft.OData.Core.Tests.UriParser.Metadata
+namespace Microsoft.OData.Tests.UriParser.Metadata
 {
     public class ExtensionTestBase
     {
@@ -191,8 +189,8 @@ namespace Microsoft.OData.Core.Tests.UriParser.Metadata
 
             EdmEnumType colorType = new EdmEnumType("TestNS", "Color");
             Color = colorType;
-            colorType.AddMember("Red", new EdmIntegerConstant(1L));
-            colorType.AddMember("Blue", new EdmIntegerConstant(2L));
+            colorType.AddMember("Red", new EdmEnumMemberValue(1L));
+            colorType.AddMember("Blue", new EdmEnumMemberValue(2L));
             model.AddElement(colorType);
             var moonType = new EdmEntityType("TestNS", "Moon");
             MoonType = moonType;

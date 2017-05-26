@@ -8,15 +8,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using FluentAssertions;
-using Microsoft.OData.Core.UriParser;
-using Microsoft.OData.Core.UriParser.Metadata;
-using Microsoft.OData.Core.UriParser.Semantic;
-using Microsoft.OData.Core.UriParser.TreeNodeKinds;
+using Microsoft.OData.UriParser;
 using Microsoft.OData.Edm;
-using Microsoft.OData.Edm.Library;
 using Xunit;
 
-namespace Microsoft.OData.Core.Tests.UriParser.Metadata
+namespace Microsoft.OData.Tests.UriParser.Metadata
 {
     /// <summary>
     /// Unit tests for ODataUriResolver
@@ -33,10 +29,11 @@ namespace Microsoft.OData.Core.Tests.UriParser.Metadata
         [Fact]
         public void DefaultResolverShouldBeInvariant()
         {
+            // Now different parsers share the same instance of the default resolver.
             ODataQueryOptionParser parser1 = new ODataQueryOptionParser(HardCodedTestModel.TestModel, null, null, new Dictionary<string, string>());
             ODataQueryOptionParser parser2 = new ODataQueryOptionParser(HardCodedTestModel.TestModel, null, null, new Dictionary<string, string>());
             parser1.Resolver.EnableCaseInsensitive = true;
-            parser2.Resolver.EnableCaseInsensitive.Should().BeFalse();
+            parser2.Resolver.EnableCaseInsensitive.Should().BeTrue();
         }
 
         #region Enum vesus string
@@ -158,6 +155,12 @@ namespace Microsoft.OData.Core.Tests.UriParser.Metadata
                 "GetColorCmykImport(CO='Blue')",
                 parser =>
                 {
+                    if (!(parser.Resolver is StringAsEnumResolver))
+                    {
+                        // Use a new instance in order not to affect the global instance.
+                        parser.Resolver = new ODataUriResolver();
+                    }
+
                     parser.Resolver.EnableCaseInsensitive = true;
                     return parser.ParsePath();
                 },
@@ -190,7 +193,10 @@ namespace Microsoft.OData.Core.Tests.UriParser.Metadata
             var uriParser = new ODataUriParser(
                 Model,
                 ServiceRoot,
-                new Uri("http://host/GetMixedColorImport(co=['Blue', null])"));
+                new Uri("http://host/GetMixedColorImport(co=['Blue', null])"))
+            {
+                Resolver = new ODataUriResolver()
+            };
 
             var path = uriParser.ParsePath();
             var node = path.LastSegment
@@ -232,7 +238,7 @@ namespace Microsoft.OData.Core.Tests.UriParser.Metadata
                 "MoonSet/'Blue'",
                 parser =>
                 {
-                    parser.UrlConventions = ODataUrlConventions.KeyAsSegment; return parser.ParsePath();
+                    parser.UrlKeyDelimiter = ODataUrlKeyDelimiter.Slash; return parser.ParsePath();
                 },
                 path =>
                 {
@@ -267,6 +273,20 @@ namespace Microsoft.OData.Core.Tests.UriParser.Metadata
         }
         #endregion
 
+        [Fact]
+        public void UnqualifiedTypeNameShouldNotBeTreatedAsTypeCast()
+        {
+            var model = new EdmModel();
+            var entityType = new EdmEntityType("NS", "Entity");
+            entityType.AddKeys(entityType.AddStructuralProperty("IdStr", EdmPrimitiveTypeKind.String, false));
+            var container = new EdmEntityContainer("NS", "Container");
+            var set = container.AddEntitySet("Set", entityType);
+            model.AddElements(new IEdmSchemaElement[] { entityType, container });
+
+            var svcRoot = new Uri("http://host", UriKind.Absolute);
+            var parseResult = new ODataUriParser(model, svcRoot, new Uri("http://host/Set/Date", UriKind.Absolute)).ParseUri();
+            Assert.True(parseResult.Path.LastSegment is KeySegment);
+        }
 
         [Fact]
         public void CaseInsensitiveEntitySetKeyNamePositional()

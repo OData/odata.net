@@ -1,0 +1,15 @@
+﻿{
+  "supports": {},
+  "dependencies": {
+    "NETStandard.Library": "1.6.0",
+    "System.ComponentModel": "4.3.0",
+    "System.ComponentModel.EventBasedAsync": "4.3.0",
+    "System.Dynamic.Runtime": "4.3.0",
+    "System.Linq.Queryable": "4.3.0",
+    "System.Net.Requests": "4.3.0",
+    "System.Runtime.Serialization.Primitives": "4.3.0"
+  },
+  "frameworks": {
+    "netstandard1.1": {}
+  }
+}

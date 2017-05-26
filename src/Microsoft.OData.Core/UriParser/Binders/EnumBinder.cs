@@ -4,37 +4,18 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core.UriParser.Parsers
+namespace Microsoft.OData.UriParser
 {
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
-    using Microsoft.OData.Core.UriParser.Metadata;
-    using Microsoft.OData.Core.UriParser.Parsers.UriParsers;
-    using Microsoft.OData.Core.UriParser.Semantic;
-    using Microsoft.OData.Core.UriParser.Syntactic;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Library;
 
     /// <summary>
     /// Enum binder
     /// </summary>
     internal sealed class EnumBinder
     {
-        /// <summary>
-        /// Method to use for binding the parent node, if needed.
-        /// </summary>
-        private readonly MetadataBinder.QueryTokenVisitor bindMethod;
-
-        /// <summary>
-        /// Constructs a EnumBinder with the given method to be used binding the parent token if needed.
-        /// </summary>
-        /// <param name="bindMethod">Method to use for binding the parent token, if needed.</param>
-        internal EnumBinder(MetadataBinder.QueryTokenVisitor bindMethod)
-        {
-            this.bindMethod = bindMethod;
-        }
-
         /// <summary>
         /// Try to bind a dotted identifier as enum node
         /// </summary>
@@ -51,7 +32,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         /// <summary>
         /// Try to bind an identifier to a EnumNode
         /// </summary>
-        /// <param name="identifier">the identifier to bind</param> 
+        /// <param name="identifier">the identifier to bind</param>
         /// <param name="typeReference">the enum typeReference</param>
         /// <param name="modelWhenNoTypeReference">the current model when no enum typeReference.</param>
         /// <param name="boundEnum">an enum node .</param>

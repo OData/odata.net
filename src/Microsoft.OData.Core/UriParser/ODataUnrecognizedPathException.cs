@@ -4,7 +4,7 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core.UriParser
+namespace Microsoft.OData.UriParser
 {
     using System;
     using System.Collections.Generic;
@@ -14,7 +14,6 @@ namespace Microsoft.OData.Core.UriParser
     using System.Runtime.Serialization;
     using System.Security.Permissions;
 #endif
-    using Microsoft.OData.Core.UriParser.Semantic;
 
     /// <summary>
     /// The exception that is thrown when path parsing detects an unrecognized or unresolvable token in a path (which servers should treat as a 404).
@@ -29,9 +28,9 @@ namespace Microsoft.OData.Core.UriParser
         /// Initializes a new instance of the ODataUnrecognizedPathException class.
         /// </summary>
         /// <remarks>
-        /// The Message property is initialized to a system-supplied message 
-        /// that describes the error. This message takes into account the 
-        /// current system culture. 
+        /// The Message property is initialized to a system-supplied message
+        /// that describes the error. This message takes into account the
+        /// current system culture.
         /// </remarks>
         public ODataUnrecognizedPathException()
             : this((string)Strings.ODataUriParserException_GeneralError, (Exception)null)
@@ -56,9 +55,9 @@ namespace Microsoft.OData.Core.UriParser
             : base(message, innerException)
         {
         }
-        
+
 #if ORCAS
-        /// <summary>Creates a new instance of the <see cref="T:Microsoft.OData.Core.ODataUnrecognizedPathException" /> class from the  specified SerializationInfo and StreamingContext instances.</summary>
+        /// <summary>Creates a new instance of the <see cref="T:Microsoft.OData.ODataUnrecognizedPathException" /> class from the  specified SerializationInfo and StreamingContext instances.</summary>
         /// <param name="info"> A SerializationInfo containing the information required to serialize the new ODataUnrecognizedPathException. </param>
         /// <param name="context"> A StreamingContext containing the source of the serialized stream  associated with the new ODataUnrecognizedPathException. </param>
         [SuppressMessage("Microsoft.Design", "CA1047", Justification = "Follows serialization info pattern.")]
@@ -68,7 +67,7 @@ namespace Microsoft.OData.Core.UriParser
         {
         }
 #endif
-        
+
         /// <summary>
         /// Segments that have been successfully parsed when this exception was thrown.
         /// </summary>

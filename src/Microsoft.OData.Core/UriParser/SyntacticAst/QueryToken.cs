@@ -4,26 +4,23 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-#if ASTORIA_CLIENT
+#if ODATA_CLIENT
 namespace Microsoft.OData.Client.ALinq.UriParser
 #else
-namespace Microsoft.OData.Core.UriParser.Syntactic
+namespace Microsoft.OData.UriParser
 #endif
 {
     #region Namespaces
 
     using System.Diagnostics.CodeAnalysis;
-    using Microsoft.OData.Core;
-    using Microsoft.OData.Core.UriParser.Semantic;
-    using Microsoft.OData.Core.UriParser.TreeNodeKinds;
-    using Microsoft.OData.Core.UriParser.Visitors;
+    using Microsoft.OData;
 
     #endregion
 
     /// <summary>
     /// Base class for all lexical tokens of OData query.
     /// </summary>
-    internal abstract class QueryToken : ODataAnnotatable
+    public abstract class QueryToken
     {
         /// <summary>
         /// Empty list of arguments.

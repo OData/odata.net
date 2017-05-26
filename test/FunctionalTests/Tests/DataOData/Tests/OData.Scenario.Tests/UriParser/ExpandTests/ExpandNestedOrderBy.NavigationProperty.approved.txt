@@ -11,7 +11,7 @@ SelectExpandQueryOption
 				Item Type = [Microsoft.Test.Taupo.OData.WCFService.Order Nullable=False]
 				Direction = Descending
 				Range Variable = 
-				EntityRangeVariable
+				ResourceRangeVariable
 					Name = $it
 					NavigationSource = Orders
 					TypeReference = [Microsoft.Test.Taupo.OData.WCFService.Order Nullable=False]
@@ -26,11 +26,11 @@ SelectExpandQueryOption
 						Property = CustomerForOrder
 						Multiplicity = ZeroOrOne
 						Source = 
-						EntityRangeVariableReferenceNode
+						ResourceRangeVariableReferenceNode
 							Name = $it
 							NavigationSource = Orders
 							TypeReference = [Microsoft.Test.Taupo.OData.WCFService.Order Nullable=False]
-							Range Variable = Microsoft.OData.Core.UriParser.Semantic.EntityRangeVariable
+							Range Variable = Microsoft.OData.UriParser.ResourceRangeVariable
 				Then By = 
 			SelectExpandQueryOption
 				AllSelected = True

@@ -9,7 +9,7 @@ namespace Microsoft.OData.Client.Materialization
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
 
     /// <summary>
     /// Contains an odata reader that is wrapped
@@ -70,23 +70,23 @@ namespace Microsoft.OData.Client.Materialization
                 // is only in an update payload so it will never occur
                 switch (this.reader.State)
                 {
-                    case ODataReaderState.EntryStart:
-                        this.responsePipeline.ExecuteOnEntryStartActions((ODataEntry)this.reader.Item);
+                    case ODataReaderState.ResourceStart:
+                        this.responsePipeline.ExecuteOnEntryStartActions((ODataResource)this.reader.Item);
                         break;
-                    case ODataReaderState.EntryEnd:
-                        this.responsePipeline.ExecuteOnEntryEndActions((ODataEntry)this.reader.Item);
+                    case ODataReaderState.ResourceEnd:
+                        this.responsePipeline.ExecuteOnEntryEndActions((ODataResource)this.reader.Item);
                         break;
-                    case ODataReaderState.FeedStart:
-                        this.responsePipeline.ExecuteOnFeedStartActions((ODataFeed)this.reader.Item);
+                    case ODataReaderState.ResourceSetStart:
+                        this.responsePipeline.ExecuteOnFeedStartActions((ODataResourceSet)this.reader.Item);
                         break;
-                    case ODataReaderState.FeedEnd:
-                        this.responsePipeline.ExecuteOnFeedEndActions((ODataFeed)this.reader.Item);
+                    case ODataReaderState.ResourceSetEnd:
+                        this.responsePipeline.ExecuteOnFeedEndActions((ODataResourceSet)this.reader.Item);
                         break;
-                    case ODataReaderState.NavigationLinkStart:
-                        this.responsePipeline.ExecuteOnNavigationStartActions((ODataNavigationLink)this.reader.Item);
+                    case ODataReaderState.NestedResourceInfoStart:
+                        this.responsePipeline.ExecuteOnNavigationStartActions((ODataNestedResourceInfo)this.reader.Item);
                         break;
-                    case ODataReaderState.NavigationLinkEnd:
-                        this.responsePipeline.ExecuteOnNavigationEndActions((ODataNavigationLink)this.reader.Item);
+                    case ODataReaderState.NestedResourceInfoEnd:
+                        this.responsePipeline.ExecuteOnNavigationEndActions((ODataNestedResourceInfo)this.reader.Item);
                         break;
                 }
             }
@@ -104,13 +104,13 @@ namespace Microsoft.OData.Client.Materialization
         /// <returns>A reader.</returns>
         internal static ODataReaderWrapper Create(ODataMessageReader messageReader, ODataPayloadKind messageType, IEdmType expectedType, DataServiceClientResponsePipelineConfiguration responsePipeline)
         {
-            IEdmEntityType entityType = expectedType as IEdmEntityType;
-            if (messageType == ODataPayloadKind.Entry)
+            IEdmStructuredType entityType = expectedType as IEdmStructuredType;
+            if (messageType == ODataPayloadKind.Resource)
             {
-                return new ODataReaderWrapper(messageReader.CreateODataEntryReader(entityType), responsePipeline);
+                return new ODataReaderWrapper(messageReader.CreateODataResourceReader(entityType), responsePipeline);
             }
 
-            return new ODataReaderWrapper(messageReader.CreateODataFeedReader(entityType), responsePipeline);
+            return new ODataReaderWrapper(messageReader.CreateODataResourceSetReader(entityType), responsePipeline);
         }
 
         /// <summary>

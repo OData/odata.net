@@ -13,11 +13,10 @@ namespace AstoriaUnitTests.TDD.Tests.Client
     using System.Linq;
     using FluentAssertions;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Library;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using AstoriaUnitTests.TDD.Common;
-    using Microsoft.OData.Edm.Library.Values;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using Microsoft.OData.Edm.Vocabularies;
 
     /// <summary>
     /// Tests a subset of the serializer functionality in the client. More tests should be added as changes are made.
@@ -46,7 +45,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client
             this.serverEntityTypeName = "Server.NS.ServerEntityType";
             this.serverModel.AddElement(this.serverEntityType);
             this.serverEntityType.AddKeys(this.serverEntityType.AddStructuralProperty("Id", EdmPrimitiveTypeKind.Int32));
-            
+
             var addressType = new EdmComplexType("Server.NS", "Address");
             addressType.AddStructuralProperty("Street", EdmPrimitiveTypeKind.String);
             this.serverEntityType.AddStructuralProperty("Address", new EdmComplexTypeReference(addressType, true));
@@ -57,9 +56,9 @@ namespace AstoriaUnitTests.TDD.Tests.Client
             this.serverComplexTypeName = "Server.NS.HomeAddress";
 
             var colorType = new EdmEnumType("Server.NS", "Color");
-            colorType.AddMember(new EdmEnumMember(colorType, "Red", new EdmIntegerConstant(1)));
-            colorType.AddMember(new EdmEnumMember(colorType, "Blue", new EdmIntegerConstant(2)));
-            colorType.AddMember(new EdmEnumMember(colorType, "Green", new EdmIntegerConstant(3)));
+            colorType.AddMember(new EdmEnumMember(colorType, "Red", new EdmEnumMemberValue(1)));
+            colorType.AddMember(new EdmEnumMember(colorType, "Blue", new EdmEnumMemberValue(2)));
+            colorType.AddMember(new EdmEnumMember(colorType, "Green", new EdmEnumMemberValue(3)));
             this.serverEntityType.AddStructuralProperty("Color", new EdmEnumTypeReference(colorType, false));
 
             this.serverEntityType.AddStructuralProperty("Nicknames", new EdmCollectionTypeReference(new EdmCollectionType(EdmCoreModel.Instance.GetInt32(false))));
@@ -90,11 +89,11 @@ namespace AstoriaUnitTests.TDD.Tests.Client
                                        };
             this.entity = new TestClientEntityType
             {
-                Id = 1, 
-                Name = "foo", 
-                Number = 1.23f, 
+                Id = 1,
+                Name = "foo",
+                Number = 1.23f,
                 Address = new Address(),
-                OpenAddress = new Address(), 
+                OpenAddress = new Address(),
                 Nicknames = new string[0],
                 OtherAddresses = new[] { new Address() },
                 Color = 0
@@ -153,27 +152,28 @@ namespace AstoriaUnitTests.TDD.Tests.Client
         [TestMethod]
         public void ComplexPropertyNotDefinedOnTheServerShouldHaveTypeAnnotation()
         {
-            var value = this.ConvertSinglePropertyValue("OpenAddress");
-            value.Should().BeComplex().And.HaveSerializationTypeName(this.serverComplexTypeName);
+            var complex = this.ConvertSingleComplexProperty("OpenAddress");
+            complex.Item.Should().BeResource().And.HaveSerializationTypeName(this.serverComplexTypeName);
         }
 
         [TestMethod]
         public void ComplexPropertyDefinedOnTheServerShouldHaveTypeAnnotation()
         {
-            var value = this.ConvertSinglePropertyValue("Address");
-            value.Should().BeComplex().And.HaveSerializationTypeName(this.serverComplexTypeName);
+            var complex = this.ConvertSingleComplexProperty("Address");
+            complex.Item.Should().BeResource().And.HaveSerializationTypeName(this.serverComplexTypeName);
         }
 
         [TestMethod]
         public void DerivedComplexPropertyDefinedOnTheServerShouldHaveDerivedTypeAnnotation()
         {
-            var property = this.clientTypeAnnotation.GetProperty("Address", false);
-            var results = this.testSubject.PopulateProperties(this.entityWithDerivedComplexProperty, this.serverEntityTypeName, new[] { property });
+            var property = this.clientTypeAnnotation.GetProperty("Address", UndeclaredPropertyBehavior.ThrowException);
+            var results = this.testSubject.PopulateNestedComplexProperties(this.entityWithDerivedComplexProperty, this.serverEntityTypeName, new[] { property }, null);
             results.Should().HaveCount(1);
 
-            var odataProperty = results.Single();
-            odataProperty.Name.Should().Be("Address");
-            odataProperty.ODataValue.Should().BeComplex().And.HaveSerializationTypeName(this.serverDerivedComplexTypeName);
+            var nestedResourceInfo = results.Single().NestedResourceInfo;
+            var nestedResource = results.Single().NestedResourceOrResourceSet.Item;
+            nestedResource.Should().BeResource().And.HaveSerializationTypeName(this.serverDerivedComplexTypeName);
+            nestedResourceInfo.Name.Should().Be("Address");
         }
 
         [TestMethod]
@@ -193,32 +193,41 @@ namespace AstoriaUnitTests.TDD.Tests.Client
         [TestMethod]
         public void ComplexInsideCollectionPropertyShouldHaveTypeAnnotation()
         {
-            var value = this.ConvertSinglePropertyValue("OtherAddresses");
-            value.Should().BeCollection();
-            var collection = (ODataCollectionValue)value;
-            collection.Items.Should().HaveCount(1);
-            collection.Items.Cast<ODataValue>().Single().Should().BeComplex().And.HaveSerializationTypeName("Server.NS.HomeAddress");
+            var collection = this.ConvertSingleComplexProperty("OtherAddresses");
+            collection.Item.Should().BeResourceSet();
+            var resourceSet = (ODataResourceSetWrapper)collection;
+            resourceSet.Resources.Should().HaveCount(1);
+            resourceSet.Resources.Cast<ODataResourceWrapper>().Single().Item.Should().BeResource().And.HaveSerializationTypeName("Server.NS.HomeAddress");
         }
 
         [TestMethod]
         public void DerivedComplexInsideCollectionPropertyShouldNotThrow()
         {
-            var property = this.clientTypeAnnotation.GetProperty("OtherAddresses", false);
-            var results = this.testSubject.PopulateProperties(this.entityWithDerivedComplexInCollection, this.serverEntityTypeName, new[] { property });
-            var value = results.Single().ODataValue;
-            value.Should().BeCollection();
-            var collection = (ODataCollectionValue)value;
-            collection.Items.Should().HaveCount(2);
+            var property = this.clientTypeAnnotation.GetProperty("OtherAddresses", UndeclaredPropertyBehavior.ThrowException);
+            var results = this.testSubject.PopulateNestedComplexProperties(this.entityWithDerivedComplexInCollection, this.serverEntityTypeName, new[] { property }, null);
+            var nested = results.Single().NestedResourceOrResourceSet as ODataResourceSetWrapper;
+            nested.Item.Should().BeResourceSet();
+            nested.Resources.Should().HaveCount(2);
         }
 
         private ODataValue ConvertSinglePropertyValue(string propertyName)
         {
-            var property = this.clientTypeAnnotation.GetProperty(propertyName, false);
+            var property = this.clientTypeAnnotation.GetProperty(propertyName, UndeclaredPropertyBehavior.ThrowException);
             var results = this.testSubject.PopulateProperties(this.entity, this.serverEntityTypeName, new[] { property });
             results.Should().HaveCount(1);
             var odataProperty = results.Single();
             odataProperty.Name.Should().Be(propertyName);
             return odataProperty.ODataValue;
+        }
+
+        private ODataItemWrapper ConvertSingleComplexProperty(string propertyName)
+        {
+            var property = this.clientTypeAnnotation.GetProperty(propertyName, UndeclaredPropertyBehavior.ThrowException);
+            var results = this.testSubject.PopulateNestedComplexProperties(this.entity, this.serverEntityTypeName, new[] { property }, null);
+            results.Should().HaveCount(1);
+            var odataProperty = results.Single();
+            odataProperty.NestedResourceInfo.Name.Should().Be(propertyName);
+            return odataProperty.NestedResourceOrResourceSet;
         }
 
         [Key("Id")]

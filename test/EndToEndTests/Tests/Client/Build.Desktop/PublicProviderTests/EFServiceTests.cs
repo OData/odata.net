@@ -10,7 +10,7 @@ namespace Microsoft.Test.OData.Tests.Client.PublicProviderTests
     using System.Linq;
     using Microsoft.Spatial;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.Test.OData.Services.TestServices;
     using Microsoft.Test.OData.Services.TestServices.PublicProviderEFServiceReference.AstoriaDefaultServiceDBModel;
     using Microsoft.Test.OData.Services.TestServices.PublicProviderEFServiceReference.Microsoft.Test.OData.Services.Astoria;

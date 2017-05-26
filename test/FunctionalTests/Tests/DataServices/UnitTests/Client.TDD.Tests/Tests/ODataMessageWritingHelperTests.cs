@@ -9,7 +9,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client
     using System;
     using Microsoft.OData.Client;
     using FluentAssertions;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
     using ClientStrings = Microsoft.OData.Client.Strings;
 
@@ -44,10 +44,10 @@ namespace AstoriaUnitTests.TDD.Tests.Client
         [TestMethod]
         public void ShortIntegrationCreateWriterSettingsShouldSetInstanceAnnotationFilter()
         {
-            this.requestInfo.Configurations.RequestPipeline.OnMessageWriterSettingsCreated((a => a.Settings.Indent = true));
-           
-            var settings = this.writingHelper.CreateSettings(false, false, false);
-            settings.Indent.Should().BeTrue();
+            this.requestInfo.Configurations.RequestPipeline.OnMessageWriterSettingsCreated((a => a.Settings.EnableMessageStreamDisposal = true));
+
+            var settings = this.writingHelper.CreateSettings(false, false);
+            settings.EnableMessageStreamDisposal.Should().BeTrue();
         }
     }
 }

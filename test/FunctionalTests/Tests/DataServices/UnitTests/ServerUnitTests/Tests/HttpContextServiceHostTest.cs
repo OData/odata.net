@@ -478,6 +478,7 @@ namespace AstoriaUnitTests.Tests
             });
         }
 
+        [Ignore] // Remove Atom
         [TestMethod]
         public void HttpContextServiceHostRequestNameTest()
         {
@@ -770,6 +771,7 @@ namespace AstoriaUnitTests.Tests
             TestUtil.AssertExceptionExpected(exception, true);
         }
 
+        [Ignore] // Remove Atom
         [TestMethod]
         public void IncomingMessagePropertiesTest()
         {

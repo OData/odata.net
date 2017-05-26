@@ -96,505 +96,6 @@ namespace Microsoft.Test.Taupo.Contracts
         }
 
         /// <summary>
-        /// Rewrites CodeObject
-        /// </summary>
-        /// <param name="source">A CodeObject to be rewritten.</param>
-        /// <param name="didRewrite">A value which will be set to true if the rewriting returned a new object.</param>
-        /// <returns>Rewritten CodeObject.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity", Justification = "Generated code.")]
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Maintainability", "CA1505:AvoidUnmaintainableCode", Justification = "Code is generated.")]
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling", Justification = "Generated code.")]
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1045:DoNotPassTypesByReference", MessageId = "1#", Justification = "Need this to simplify recursive code.")]
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1800:DoNotCastUnnecessarily", Justification = "Makes the code more readable, avoids too many variables.")]
-        protected virtual CodeObject Rewrite(CodeObject source, ref bool didRewrite)
-        {
-            if (source == null)
-            {
-                return source;
-            }
-
-            if (source is CodeConstructor)
-            {
-                return this.Rewrite((CodeConstructor)source, ref didRewrite);
-            }
-
-            if (source is CodeEntryPointMethod)
-            {
-                return this.Rewrite((CodeEntryPointMethod)source, ref didRewrite);
-            }
-
-            if (source is CodeTypeConstructor)
-            {
-                return this.Rewrite((CodeTypeConstructor)source, ref didRewrite);
-            }
-
-            if (source is CodeTypeDelegate)
-            {
-                return this.Rewrite((CodeTypeDelegate)source, ref didRewrite);
-            }
-
-            if (source is CodeArgumentReferenceExpression)
-            {
-                return this.Rewrite((CodeArgumentReferenceExpression)source, ref didRewrite);
-            }
-
-            if (source is CodeArrayCreateExpression)
-            {
-                return this.Rewrite((CodeArrayCreateExpression)source, ref didRewrite);
-            }
-
-            if (source is CodeArrayIndexerExpression)
-            {
-                return this.Rewrite((CodeArrayIndexerExpression)source, ref didRewrite);
-            }
-
-            if (source is CodeAssignStatement)
-            {
-                return this.Rewrite((CodeAssignStatement)source, ref didRewrite);
-            }
-
-            if (source is CodeAttachEventStatement)
-            {
-                return this.Rewrite((CodeAttachEventStatement)source, ref didRewrite);
-            }
-
-            if (source is CodeBaseReferenceExpression)
-            {
-                return this.Rewrite((CodeBaseReferenceExpression)source, ref didRewrite);
-            }
-
-            if (source is CodeBinaryOperatorExpression)
-            {
-                return this.Rewrite((CodeBinaryOperatorExpression)source, ref didRewrite);
-            }
-
-            if (source is CodeCastExpression)
-            {
-                return this.Rewrite((CodeCastExpression)source, ref didRewrite);
-            }
-
-            if (source is CodeChecksumPragma)
-            {
-                return this.Rewrite((CodeChecksumPragma)source, ref didRewrite);
-            }
-
-            if (source is CodeCommentStatement)
-            {
-                return this.Rewrite((CodeCommentStatement)source, ref didRewrite);
-            }
-
-            if (source is CodeConditionStatement)
-            {
-                return this.Rewrite((CodeConditionStatement)source, ref didRewrite);
-            }
-
-            if (source is CodeDefaultValueExpression)
-            {
-                return this.Rewrite((CodeDefaultValueExpression)source, ref didRewrite);
-            }
-
-            if (source is CodeDelegateCreateExpression)
-            {
-                return this.Rewrite((CodeDelegateCreateExpression)source, ref didRewrite);
-            }
-
-            if (source is CodeDelegateInvokeExpression)
-            {
-                return this.Rewrite((CodeDelegateInvokeExpression)source, ref didRewrite);
-            }
-
-            if (source is CodeDirectionExpression)
-            {
-                return this.Rewrite((CodeDirectionExpression)source, ref didRewrite);
-            }
-
-            if (source is CodeEventReferenceExpression)
-            {
-                return this.Rewrite((CodeEventReferenceExpression)source, ref didRewrite);
-            }
-
-            if (source is CodeExpressionStatement)
-            {
-                return this.Rewrite((CodeExpressionStatement)source, ref didRewrite);
-            }
-
-            if (source is CodeFieldReferenceExpression)
-            {
-                return this.Rewrite((CodeFieldReferenceExpression)source, ref didRewrite);
-            }
-
-            if (source is CodeGotoStatement)
-            {
-                return this.Rewrite((CodeGotoStatement)source, ref didRewrite);
-            }
-
-            if (source is CodeIndexerExpression)
-            {
-                return this.Rewrite((CodeIndexerExpression)source, ref didRewrite);
-            }
-
-            if (source is CodeIterationStatement)
-            {
-                return this.Rewrite((CodeIterationStatement)source, ref didRewrite);
-            }
-
-            if (source is CodeLabeledStatement)
-            {
-                return this.Rewrite((CodeLabeledStatement)source, ref didRewrite);
-            }
-
-            if (source is CodeMemberEvent)
-            {
-                return this.Rewrite((CodeMemberEvent)source, ref didRewrite);
-            }
-
-            if (source is CodeMemberField)
-            {
-                return this.Rewrite((CodeMemberField)source, ref didRewrite);
-            }
-
-            if (source is CodeMemberMethod)
-            {
-                return this.Rewrite((CodeMemberMethod)source, ref didRewrite);
-            }
-
-            if (source is CodeMemberProperty)
-            {
-                return this.Rewrite((CodeMemberProperty)source, ref didRewrite);
-            }
-
-            if (source is CodeMethodInvokeExpression)
-            {
-                return this.Rewrite((CodeMethodInvokeExpression)source, ref didRewrite);
-            }
-
-            if (source is CodeMethodReferenceExpression)
-            {
-                return this.Rewrite((CodeMethodReferenceExpression)source, ref didRewrite);
-            }
-
-            if (source is CodeMethodReturnStatement)
-            {
-                return this.Rewrite((CodeMethodReturnStatement)source, ref didRewrite);
-            }
-
-            if (source is CodeObjectCreateExpression)
-            {
-                return this.Rewrite((CodeObjectCreateExpression)source, ref didRewrite);
-            }
-
-            if (source is CodeParameterDeclarationExpression)
-            {
-                return this.Rewrite((CodeParameterDeclarationExpression)source, ref didRewrite);
-            }
-
-            if (source is CodePrimitiveExpression)
-            {
-                return this.Rewrite((CodePrimitiveExpression)source, ref didRewrite);
-            }
-
-            if (source is CodePropertyReferenceExpression)
-            {
-                return this.Rewrite((CodePropertyReferenceExpression)source, ref didRewrite);
-            }
-
-            if (source is CodePropertySetValueReferenceExpression)
-            {
-                return this.Rewrite((CodePropertySetValueReferenceExpression)source, ref didRewrite);
-            }
-
-            if (source is CodeRegionDirective)
-            {
-                return this.Rewrite((CodeRegionDirective)source, ref didRewrite);
-            }
-
-            if (source is CodeRemoveEventStatement)
-            {
-                return this.Rewrite((CodeRemoveEventStatement)source, ref didRewrite);
-            }
-
-            if (source is CodeSnippetCompileUnit)
-            {
-                return this.Rewrite((CodeSnippetCompileUnit)source, ref didRewrite);
-            }
-
-            if (source is CodeSnippetExpression)
-            {
-                return this.Rewrite((CodeSnippetExpression)source, ref didRewrite);
-            }
-
-            if (source is CodeSnippetStatement)
-            {
-                return this.Rewrite((CodeSnippetStatement)source, ref didRewrite);
-            }
-
-            if (source is CodeSnippetTypeMember)
-            {
-                return this.Rewrite((CodeSnippetTypeMember)source, ref didRewrite);
-            }
-
-            if (source is CodeThisReferenceExpression)
-            {
-                return this.Rewrite((CodeThisReferenceExpression)source, ref didRewrite);
-            }
-
-            if (source is CodeThrowExceptionStatement)
-            {
-                return this.Rewrite((CodeThrowExceptionStatement)source, ref didRewrite);
-            }
-
-            if (source is CodeTryCatchFinallyStatement)
-            {
-                return this.Rewrite((CodeTryCatchFinallyStatement)source, ref didRewrite);
-            }
-
-            if (source is CodeTypeDeclaration)
-            {
-                return this.Rewrite((CodeTypeDeclaration)source, ref didRewrite);
-            }
-
-            if (source is CodeTypeOfExpression)
-            {
-                return this.Rewrite((CodeTypeOfExpression)source, ref didRewrite);
-            }
-
-            if (source is CodeTypeReferenceExpression)
-            {
-                return this.Rewrite((CodeTypeReferenceExpression)source, ref didRewrite);
-            }
-
-            if (source is CodeVariableDeclarationStatement)
-            {
-                return this.Rewrite((CodeVariableDeclarationStatement)source, ref didRewrite);
-            }
-
-            if (source is CodeVariableReferenceExpression)
-            {
-                return this.Rewrite((CodeVariableReferenceExpression)source, ref didRewrite);
-            }
-
-            if (source is CodeComment)
-            {
-                return this.Rewrite((CodeComment)source, ref didRewrite);
-            }
-
-            if (source is CodeCompileUnit)
-            {
-                return this.Rewrite((CodeCompileUnit)source, ref didRewrite);
-            }
-
-            if (source is CodeDirective)
-            {
-                return this.Rewrite((CodeDirective)source, ref didRewrite);
-            }
-
-            if (source is CodeExpression)
-            {
-                return this.Rewrite((CodeExpression)source, ref didRewrite);
-            }
-
-            if (source is CodeNamespace)
-            {
-                return this.Rewrite((CodeNamespace)source, ref didRewrite);
-            }
-
-            if (source is CodeNamespaceImport)
-            {
-                return this.Rewrite((CodeNamespaceImport)source, ref didRewrite);
-            }
-
-            if (source is CodeStatement)
-            {
-                return this.Rewrite((CodeStatement)source, ref didRewrite);
-            }
-
-            if (source is CodeTypeMember)
-            {
-                return this.Rewrite((CodeTypeMember)source, ref didRewrite);
-            }
-
-            if (source is CodeTypeParameter)
-            {
-                return this.Rewrite((CodeTypeParameter)source, ref didRewrite);
-            }
-
-            if (source is CodeTypeReference)
-            {
-                return this.Rewrite((CodeTypeReference)source, ref didRewrite);
-            }
-
-            bool didChildRewrite = false;
-            CodeObject result = new CodeObject();
-            this.Rewrite(result.UserData, source.UserData, ref didChildRewrite);
-            if (didChildRewrite)
-            {
-                didRewrite = true;
-                return result;
-            }
-            else
-            {
-                return source;
-            }
-        }
-
-        /// <summary>
-        /// Rewrites CodeExpression
-        /// </summary>
-        /// <param name="source">A CodeExpression to be rewritten.</param>
-        /// <param name="didRewrite">A value which will be set to true if the rewriting returned a new object.</param>
-        /// <returns>Rewritten CodeExpression.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity", Justification = "Generated code.")]
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Maintainability", "CA1505:AvoidUnmaintainableCode", Justification = "Code is generated.")]
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling", Justification = "Generated code.")]
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1045:DoNotPassTypesByReference", MessageId = "1#", Justification = "Need this to simplify recursive code.")]
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1800:DoNotCastUnnecessarily", Justification = "Makes the code more readable, avoids too many variables.")]
-        protected virtual CodeExpression Rewrite(CodeExpression source, ref bool didRewrite)
-        {
-            if (source == null)
-            {
-                return source;
-            }
-
-            if (source is CodeArgumentReferenceExpression)
-            {
-                return this.Rewrite((CodeArgumentReferenceExpression)source, ref didRewrite);
-            }
-
-            if (source is CodeArrayCreateExpression)
-            {
-                return this.Rewrite((CodeArrayCreateExpression)source, ref didRewrite);
-            }
-
-            if (source is CodeArrayIndexerExpression)
-            {
-                return this.Rewrite((CodeArrayIndexerExpression)source, ref didRewrite);
-            }
-
-            if (source is CodeBaseReferenceExpression)
-            {
-                return this.Rewrite((CodeBaseReferenceExpression)source, ref didRewrite);
-            }
-
-            if (source is CodeBinaryOperatorExpression)
-            {
-                return this.Rewrite((CodeBinaryOperatorExpression)source, ref didRewrite);
-            }
-
-            if (source is CodeCastExpression)
-            {
-                return this.Rewrite((CodeCastExpression)source, ref didRewrite);
-            }
-
-            if (source is CodeDefaultValueExpression)
-            {
-                return this.Rewrite((CodeDefaultValueExpression)source, ref didRewrite);
-            }
-
-            if (source is CodeDelegateCreateExpression)
-            {
-                return this.Rewrite((CodeDelegateCreateExpression)source, ref didRewrite);
-            }
-
-            if (source is CodeDelegateInvokeExpression)
-            {
-                return this.Rewrite((CodeDelegateInvokeExpression)source, ref didRewrite);
-            }
-
-            if (source is CodeDirectionExpression)
-            {
-                return this.Rewrite((CodeDirectionExpression)source, ref didRewrite);
-            }
-
-            if (source is CodeEventReferenceExpression)
-            {
-                return this.Rewrite((CodeEventReferenceExpression)source, ref didRewrite);
-            }
-
-            if (source is CodeFieldReferenceExpression)
-            {
-                return this.Rewrite((CodeFieldReferenceExpression)source, ref didRewrite);
-            }
-
-            if (source is CodeIndexerExpression)
-            {
-                return this.Rewrite((CodeIndexerExpression)source, ref didRewrite);
-            }
-
-            if (source is CodeMethodInvokeExpression)
-            {
-                return this.Rewrite((CodeMethodInvokeExpression)source, ref didRewrite);
-            }
-
-            if (source is CodeMethodReferenceExpression)
-            {
-                return this.Rewrite((CodeMethodReferenceExpression)source, ref didRewrite);
-            }
-
-            if (source is CodeObjectCreateExpression)
-            {
-                return this.Rewrite((CodeObjectCreateExpression)source, ref didRewrite);
-            }
-
-            if (source is CodeParameterDeclarationExpression)
-            {
-                return this.Rewrite((CodeParameterDeclarationExpression)source, ref didRewrite);
-            }
-
-            if (source is CodePrimitiveExpression)
-            {
-                return this.Rewrite((CodePrimitiveExpression)source, ref didRewrite);
-            }
-
-            if (source is CodePropertyReferenceExpression)
-            {
-                return this.Rewrite((CodePropertyReferenceExpression)source, ref didRewrite);
-            }
-
-            if (source is CodePropertySetValueReferenceExpression)
-            {
-                return this.Rewrite((CodePropertySetValueReferenceExpression)source, ref didRewrite);
-            }
-
-            if (source is CodeSnippetExpression)
-            {
-                return this.Rewrite((CodeSnippetExpression)source, ref didRewrite);
-            }
-
-            if (source is CodeThisReferenceExpression)
-            {
-                return this.Rewrite((CodeThisReferenceExpression)source, ref didRewrite);
-            }
-
-            if (source is CodeTypeOfExpression)
-            {
-                return this.Rewrite((CodeTypeOfExpression)source, ref didRewrite);
-            }
-
-            if (source is CodeTypeReferenceExpression)
-            {
-                return this.Rewrite((CodeTypeReferenceExpression)source, ref didRewrite);
-            }
-
-            if (source is CodeVariableReferenceExpression)
-            {
-                return this.Rewrite((CodeVariableReferenceExpression)source, ref didRewrite);
-            }
-
-            bool didChildRewrite = false;
-            CodeExpression result = new CodeExpression();
-            this.Rewrite(result.UserData, source.UserData, ref didChildRewrite);
-            if (didChildRewrite)
-            {
-                didRewrite = true;
-                return result;
-            }
-            else
-            {
-                return source;
-            }
-        }
-
-        /// <summary>
         /// Rewrites CodeArgumentReferenceExpression
         /// </summary>
         /// <param name="source">A CodeArgumentReferenceExpression to be rewritten.</param>
@@ -685,111 +186,6 @@ namespace Microsoft.Test.Taupo.Contracts
             CodeArrayIndexerExpression result = new CodeArrayIndexerExpression();
             result.TargetObject = this.Rewrite(source.TargetObject, ref didChildRewrite);
             this.Rewrite(result.Indices, source.Indices, ref didChildRewrite);
-            this.Rewrite(result.UserData, source.UserData, ref didChildRewrite);
-            if (didChildRewrite)
-            {
-                didRewrite = true;
-                return result;
-            }
-            else
-            {
-                return source;
-            }
-        }
-
-        /// <summary>
-        /// Rewrites CodeStatement
-        /// </summary>
-        /// <param name="source">A CodeStatement to be rewritten.</param>
-        /// <param name="didRewrite">A value which will be set to true if the rewriting returned a new object.</param>
-        /// <returns>Rewritten CodeStatement.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity", Justification = "Generated code.")]
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Maintainability", "CA1505:AvoidUnmaintainableCode", Justification = "Code is generated.")]
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling", Justification = "Generated code.")]
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1045:DoNotPassTypesByReference", MessageId = "1#", Justification = "Need this to simplify recursive code.")]
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1800:DoNotCastUnnecessarily", Justification = "Makes the code more readable, avoids too many variables.")]
-        protected virtual CodeStatement Rewrite(CodeStatement source, ref bool didRewrite)
-        {
-            if (source == null)
-            {
-                return source;
-            }
-
-            if (source is CodeAssignStatement)
-            {
-                return this.Rewrite((CodeAssignStatement)source, ref didRewrite);
-            }
-
-            if (source is CodeAttachEventStatement)
-            {
-                return this.Rewrite((CodeAttachEventStatement)source, ref didRewrite);
-            }
-
-            if (source is CodeCommentStatement)
-            {
-                return this.Rewrite((CodeCommentStatement)source, ref didRewrite);
-            }
-
-            if (source is CodeConditionStatement)
-            {
-                return this.Rewrite((CodeConditionStatement)source, ref didRewrite);
-            }
-
-            if (source is CodeExpressionStatement)
-            {
-                return this.Rewrite((CodeExpressionStatement)source, ref didRewrite);
-            }
-
-            if (source is CodeGotoStatement)
-            {
-                return this.Rewrite((CodeGotoStatement)source, ref didRewrite);
-            }
-
-            if (source is CodeIterationStatement)
-            {
-                return this.Rewrite((CodeIterationStatement)source, ref didRewrite);
-            }
-
-            if (source is CodeLabeledStatement)
-            {
-                return this.Rewrite((CodeLabeledStatement)source, ref didRewrite);
-            }
-
-            if (source is CodeMethodReturnStatement)
-            {
-                return this.Rewrite((CodeMethodReturnStatement)source, ref didRewrite);
-            }
-
-            if (source is CodeRemoveEventStatement)
-            {
-                return this.Rewrite((CodeRemoveEventStatement)source, ref didRewrite);
-            }
-
-            if (source is CodeSnippetStatement)
-            {
-                return this.Rewrite((CodeSnippetStatement)source, ref didRewrite);
-            }
-
-            if (source is CodeThrowExceptionStatement)
-            {
-                return this.Rewrite((CodeThrowExceptionStatement)source, ref didRewrite);
-            }
-
-            if (source is CodeTryCatchFinallyStatement)
-            {
-                return this.Rewrite((CodeTryCatchFinallyStatement)source, ref didRewrite);
-            }
-
-            if (source is CodeVariableDeclarationStatement)
-            {
-                return this.Rewrite((CodeVariableDeclarationStatement)source, ref didRewrite);
-            }
-
-            bool didChildRewrite = false;
-            CodeStatement result = new CodeStatement();
-            result.LinePragma = this.Rewrite(source.LinePragma, ref didChildRewrite);
-            this.Rewrite(result.StartDirectives, source.StartDirectives, ref didChildRewrite);
-            this.Rewrite(result.EndDirectives, source.EndDirectives, ref didChildRewrite);
             this.Rewrite(result.UserData, source.UserData, ref didChildRewrite);
             if (didChildRewrite)
             {
@@ -1116,48 +512,6 @@ namespace Microsoft.Test.Taupo.Contracts
         }
 
         /// <summary>
-        /// Rewrites CodeDirective
-        /// </summary>
-        /// <param name="source">A CodeDirective to be rewritten.</param>
-        /// <param name="didRewrite">A value which will be set to true if the rewriting returned a new object.</param>
-        /// <returns>Rewritten CodeDirective.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity", Justification = "Generated code.")]
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Maintainability", "CA1505:AvoidUnmaintainableCode", Justification = "Code is generated.")]
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling", Justification = "Generated code.")]
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1045:DoNotPassTypesByReference", MessageId = "1#", Justification = "Need this to simplify recursive code.")]
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1800:DoNotCastUnnecessarily", Justification = "Makes the code more readable, avoids too many variables.")]
-        protected virtual CodeDirective Rewrite(CodeDirective source, ref bool didRewrite)
-        {
-            if (source == null)
-            {
-                return source;
-            }
-
-            if (source is CodeChecksumPragma)
-            {
-                return this.Rewrite((CodeChecksumPragma)source, ref didRewrite);
-            }
-
-            if (source is CodeRegionDirective)
-            {
-                return this.Rewrite((CodeRegionDirective)source, ref didRewrite);
-            }
-
-            bool didChildRewrite = false;
-            CodeDirective result = new CodeDirective();
-            this.Rewrite(result.UserData, source.UserData, ref didChildRewrite);
-            if (didChildRewrite)
-            {
-                didRewrite = true;
-                return result;
-            }
-            else
-            {
-                return source;
-            }
-        }
-
-        /// <summary>
         /// Rewrites CodeChecksumPragma
         /// </summary>
         /// <param name="source">A CodeChecksumPragma to be rewritten.</param>
@@ -1358,156 +712,6 @@ namespace Microsoft.Test.Taupo.Contracts
         }
 
         /// <summary>
-        /// Rewrites CodeTypeMember
-        /// </summary>
-        /// <param name="source">A CodeTypeMember to be rewritten.</param>
-        /// <param name="didRewrite">A value which will be set to true if the rewriting returned a new object.</param>
-        /// <returns>Rewritten CodeTypeMember.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity", Justification = "Generated code.")]
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Maintainability", "CA1505:AvoidUnmaintainableCode", Justification = "Code is generated.")]
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling", Justification = "Generated code.")]
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1045:DoNotPassTypesByReference", MessageId = "1#", Justification = "Need this to simplify recursive code.")]
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1800:DoNotCastUnnecessarily", Justification = "Makes the code more readable, avoids too many variables.")]
-        protected virtual CodeTypeMember Rewrite(CodeTypeMember source, ref bool didRewrite)
-        {
-            if (source == null)
-            {
-                return source;
-            }
-
-            if (source is CodeConstructor)
-            {
-                return this.Rewrite((CodeConstructor)source, ref didRewrite);
-            }
-
-            if (source is CodeEntryPointMethod)
-            {
-                return this.Rewrite((CodeEntryPointMethod)source, ref didRewrite);
-            }
-
-            if (source is CodeTypeConstructor)
-            {
-                return this.Rewrite((CodeTypeConstructor)source, ref didRewrite);
-            }
-
-            if (source is CodeTypeDelegate)
-            {
-                return this.Rewrite((CodeTypeDelegate)source, ref didRewrite);
-            }
-
-            if (source is CodeMemberEvent)
-            {
-                return this.Rewrite((CodeMemberEvent)source, ref didRewrite);
-            }
-
-            if (source is CodeMemberField)
-            {
-                return this.Rewrite((CodeMemberField)source, ref didRewrite);
-            }
-
-            if (source is CodeMemberMethod)
-            {
-                return this.Rewrite((CodeMemberMethod)source, ref didRewrite);
-            }
-
-            if (source is CodeMemberProperty)
-            {
-                return this.Rewrite((CodeMemberProperty)source, ref didRewrite);
-            }
-
-            if (source is CodeSnippetTypeMember)
-            {
-                return this.Rewrite((CodeSnippetTypeMember)source, ref didRewrite);
-            }
-
-            if (source is CodeTypeDeclaration)
-            {
-                return this.Rewrite((CodeTypeDeclaration)source, ref didRewrite);
-            }
-
-            bool didChildRewrite = false;
-            CodeTypeMember result = new CodeTypeMember();
-            result.Name = source.Name;
-            result.Attributes = this.Rewrite(source.Attributes, ref didChildRewrite);
-            this.Rewrite(result.CustomAttributes, source.CustomAttributes, ref didChildRewrite);
-            result.LinePragma = this.Rewrite(source.LinePragma, ref didChildRewrite);
-            this.Rewrite(result.Comments, source.Comments, ref didChildRewrite);
-            this.Rewrite(result.StartDirectives, source.StartDirectives, ref didChildRewrite);
-            this.Rewrite(result.EndDirectives, source.EndDirectives, ref didChildRewrite);
-            this.Rewrite(result.UserData, source.UserData, ref didChildRewrite);
-            if (didChildRewrite)
-            {
-                didRewrite = true;
-                return result;
-            }
-            else
-            {
-                return source;
-            }
-        }
-
-        /// <summary>
-        /// Rewrites CodeMemberMethod
-        /// </summary>
-        /// <param name="source">A CodeMemberMethod to be rewritten.</param>
-        /// <param name="didRewrite">A value which will be set to true if the rewriting returned a new object.</param>
-        /// <returns>Rewritten CodeMemberMethod.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity", Justification = "Generated code.")]
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Maintainability", "CA1505:AvoidUnmaintainableCode", Justification = "Code is generated.")]
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling", Justification = "Generated code.")]
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1045:DoNotPassTypesByReference", MessageId = "1#", Justification = "Need this to simplify recursive code.")]
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1800:DoNotCastUnnecessarily", Justification = "Makes the code more readable, avoids too many variables.")]
-        protected virtual CodeMemberMethod Rewrite(CodeMemberMethod source, ref bool didRewrite)
-        {
-            if (source == null)
-            {
-                return source;
-            }
-
-            if (source is CodeConstructor)
-            {
-                return this.Rewrite((CodeConstructor)source, ref didRewrite);
-            }
-
-            if (source is CodeEntryPointMethod)
-            {
-                return this.Rewrite((CodeEntryPointMethod)source, ref didRewrite);
-            }
-
-            if (source is CodeTypeConstructor)
-            {
-                return this.Rewrite((CodeTypeConstructor)source, ref didRewrite);
-            }
-
-            bool didChildRewrite = false;
-            CodeMemberMethod result = new CodeMemberMethod();
-            result.ReturnType = this.Rewrite(source.ReturnType, ref didChildRewrite);
-            this.Rewrite(result.Statements, source.Statements, ref didChildRewrite);
-            this.Rewrite(result.Parameters, source.Parameters, ref didChildRewrite);
-            result.PrivateImplementationType = this.Rewrite(source.PrivateImplementationType, ref didChildRewrite);
-            this.Rewrite(result.ImplementationTypes, source.ImplementationTypes, ref didChildRewrite);
-            this.Rewrite(result.ReturnTypeCustomAttributes, source.ReturnTypeCustomAttributes, ref didChildRewrite);
-            this.Rewrite(result.TypeParameters, source.TypeParameters, ref didChildRewrite);
-            result.Name = source.Name;
-            result.Attributes = this.Rewrite(source.Attributes, ref didChildRewrite);
-            this.Rewrite(result.CustomAttributes, source.CustomAttributes, ref didChildRewrite);
-            result.LinePragma = this.Rewrite(source.LinePragma, ref didChildRewrite);
-            this.Rewrite(result.Comments, source.Comments, ref didChildRewrite);
-            this.Rewrite(result.StartDirectives, source.StartDirectives, ref didChildRewrite);
-            this.Rewrite(result.EndDirectives, source.EndDirectives, ref didChildRewrite);
-            this.Rewrite(result.UserData, source.UserData, ref didChildRewrite);
-            if (didChildRewrite)
-            {
-                didRewrite = true;
-                return result;
-            }
-            else
-            {
-                return source;
-            }
-        }
-
-        /// <summary>
         /// Rewrites CodeConstructor
         /// </summary>
         /// <param name="source">A CodeConstructor to be rewritten.</param>
@@ -1692,6 +896,48 @@ namespace Microsoft.Test.Taupo.Contracts
         }
 
         /// <summary>
+        /// Rewrites CodeDirective
+        /// </summary>
+        /// <param name="source">A CodeDirective to be rewritten.</param>
+        /// <param name="didRewrite">A value which will be set to true if the rewriting returned a new object.</param>
+        /// <returns>Rewritten CodeDirective.</returns>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity", Justification = "Generated code.")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Maintainability", "CA1505:AvoidUnmaintainableCode", Justification = "Code is generated.")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling", Justification = "Generated code.")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1045:DoNotPassTypesByReference", MessageId = "1#", Justification = "Need this to simplify recursive code.")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1800:DoNotCastUnnecessarily", Justification = "Makes the code more readable, avoids too many variables.")]
+        protected virtual CodeDirective Rewrite(CodeDirective source, ref bool didRewrite)
+        {
+            if (source == null)
+            {
+                return source;
+            }
+
+            if (source is CodeChecksumPragma)
+            {
+                return this.Rewrite((CodeChecksumPragma)source, ref didRewrite);
+            }
+
+            if (source is CodeRegionDirective)
+            {
+                return this.Rewrite((CodeRegionDirective)source, ref didRewrite);
+            }
+
+            bool didChildRewrite = false;
+            CodeDirective result = new CodeDirective();
+            this.Rewrite(result.UserData, source.UserData, ref didChildRewrite);
+            if (didChildRewrite)
+            {
+                didRewrite = true;
+                return result;
+            }
+            else
+            {
+                return source;
+            }
+        }
+
+        /// <summary>
         /// Rewrites CodeDirectiveCollection
         /// </summary>
         /// <param name="target">Target collection.</param>
@@ -1774,6 +1020,163 @@ namespace Microsoft.Test.Taupo.Contracts
             CodeEventReferenceExpression result = new CodeEventReferenceExpression();
             result.TargetObject = this.Rewrite(source.TargetObject, ref didChildRewrite);
             result.EventName = source.EventName;
+            this.Rewrite(result.UserData, source.UserData, ref didChildRewrite);
+            if (didChildRewrite)
+            {
+                didRewrite = true;
+                return result;
+            }
+            else
+            {
+                return source;
+            }
+        }
+
+        /// <summary>
+        /// Rewrites CodeExpression
+        /// </summary>
+        /// <param name="source">A CodeExpression to be rewritten.</param>
+        /// <param name="didRewrite">A value which will be set to true if the rewriting returned a new object.</param>
+        /// <returns>Rewritten CodeExpression.</returns>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity", Justification = "Generated code.")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Maintainability", "CA1505:AvoidUnmaintainableCode", Justification = "Code is generated.")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling", Justification = "Generated code.")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1045:DoNotPassTypesByReference", MessageId = "1#", Justification = "Need this to simplify recursive code.")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1800:DoNotCastUnnecessarily", Justification = "Makes the code more readable, avoids too many variables.")]
+        protected virtual CodeExpression Rewrite(CodeExpression source, ref bool didRewrite)
+        {
+            if (source == null)
+            {
+                return source;
+            }
+
+            if (source is CodeArgumentReferenceExpression)
+            {
+                return this.Rewrite((CodeArgumentReferenceExpression)source, ref didRewrite);
+            }
+
+            if (source is CodeArrayCreateExpression)
+            {
+                return this.Rewrite((CodeArrayCreateExpression)source, ref didRewrite);
+            }
+
+            if (source is CodeArrayIndexerExpression)
+            {
+                return this.Rewrite((CodeArrayIndexerExpression)source, ref didRewrite);
+            }
+
+            if (source is CodeBaseReferenceExpression)
+            {
+                return this.Rewrite((CodeBaseReferenceExpression)source, ref didRewrite);
+            }
+
+            if (source is CodeBinaryOperatorExpression)
+            {
+                return this.Rewrite((CodeBinaryOperatorExpression)source, ref didRewrite);
+            }
+
+            if (source is CodeCastExpression)
+            {
+                return this.Rewrite((CodeCastExpression)source, ref didRewrite);
+            }
+
+            if (source is CodeDefaultValueExpression)
+            {
+                return this.Rewrite((CodeDefaultValueExpression)source, ref didRewrite);
+            }
+
+            if (source is CodeDelegateCreateExpression)
+            {
+                return this.Rewrite((CodeDelegateCreateExpression)source, ref didRewrite);
+            }
+
+            if (source is CodeDelegateInvokeExpression)
+            {
+                return this.Rewrite((CodeDelegateInvokeExpression)source, ref didRewrite);
+            }
+
+            if (source is CodeDirectionExpression)
+            {
+                return this.Rewrite((CodeDirectionExpression)source, ref didRewrite);
+            }
+
+            if (source is CodeEventReferenceExpression)
+            {
+                return this.Rewrite((CodeEventReferenceExpression)source, ref didRewrite);
+            }
+
+            if (source is CodeFieldReferenceExpression)
+            {
+                return this.Rewrite((CodeFieldReferenceExpression)source, ref didRewrite);
+            }
+
+            if (source is CodeIndexerExpression)
+            {
+                return this.Rewrite((CodeIndexerExpression)source, ref didRewrite);
+            }
+
+            if (source is CodeMethodInvokeExpression)
+            {
+                return this.Rewrite((CodeMethodInvokeExpression)source, ref didRewrite);
+            }
+
+            if (source is CodeMethodReferenceExpression)
+            {
+                return this.Rewrite((CodeMethodReferenceExpression)source, ref didRewrite);
+            }
+
+            if (source is CodeObjectCreateExpression)
+            {
+                return this.Rewrite((CodeObjectCreateExpression)source, ref didRewrite);
+            }
+
+            if (source is CodeParameterDeclarationExpression)
+            {
+                return this.Rewrite((CodeParameterDeclarationExpression)source, ref didRewrite);
+            }
+
+            if (source is CodePrimitiveExpression)
+            {
+                return this.Rewrite((CodePrimitiveExpression)source, ref didRewrite);
+            }
+
+            if (source is CodePropertyReferenceExpression)
+            {
+                return this.Rewrite((CodePropertyReferenceExpression)source, ref didRewrite);
+            }
+
+            if (source is CodePropertySetValueReferenceExpression)
+            {
+                return this.Rewrite((CodePropertySetValueReferenceExpression)source, ref didRewrite);
+            }
+
+            if (source is CodeSnippetExpression)
+            {
+                return this.Rewrite((CodeSnippetExpression)source, ref didRewrite);
+            }
+
+            if (source is CodeThisReferenceExpression)
+            {
+                return this.Rewrite((CodeThisReferenceExpression)source, ref didRewrite);
+            }
+
+            if (source is CodeTypeOfExpression)
+            {
+                return this.Rewrite((CodeTypeOfExpression)source, ref didRewrite);
+            }
+
+            if (source is CodeTypeReferenceExpression)
+            {
+                return this.Rewrite((CodeTypeReferenceExpression)source, ref didRewrite);
+            }
+
+            if (source is CodeVariableReferenceExpression)
+            {
+                return this.Rewrite((CodeVariableReferenceExpression)source, ref didRewrite);
+            }
+
+            bool didChildRewrite = false;
+            CodeExpression result = new CodeExpression();
             this.Rewrite(result.UserData, source.UserData, ref didChildRewrite);
             if (didChildRewrite)
             {
@@ -2134,6 +1537,67 @@ namespace Microsoft.Test.Taupo.Contracts
         }
 
         /// <summary>
+        /// Rewrites CodeMemberMethod
+        /// </summary>
+        /// <param name="source">A CodeMemberMethod to be rewritten.</param>
+        /// <param name="didRewrite">A value which will be set to true if the rewriting returned a new object.</param>
+        /// <returns>Rewritten CodeMemberMethod.</returns>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity", Justification = "Generated code.")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Maintainability", "CA1505:AvoidUnmaintainableCode", Justification = "Code is generated.")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling", Justification = "Generated code.")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1045:DoNotPassTypesByReference", MessageId = "1#", Justification = "Need this to simplify recursive code.")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1800:DoNotCastUnnecessarily", Justification = "Makes the code more readable, avoids too many variables.")]
+        protected virtual CodeMemberMethod Rewrite(CodeMemberMethod source, ref bool didRewrite)
+        {
+            if (source == null)
+            {
+                return source;
+            }
+
+            if (source is CodeConstructor)
+            {
+                return this.Rewrite((CodeConstructor)source, ref didRewrite);
+            }
+
+            if (source is CodeEntryPointMethod)
+            {
+                return this.Rewrite((CodeEntryPointMethod)source, ref didRewrite);
+            }
+
+            if (source is CodeTypeConstructor)
+            {
+                return this.Rewrite((CodeTypeConstructor)source, ref didRewrite);
+            }
+
+            bool didChildRewrite = false;
+            CodeMemberMethod result = new CodeMemberMethod();
+            result.ReturnType = this.Rewrite(source.ReturnType, ref didChildRewrite);
+            this.Rewrite(result.Statements, source.Statements, ref didChildRewrite);
+            this.Rewrite(result.Parameters, source.Parameters, ref didChildRewrite);
+            result.PrivateImplementationType = this.Rewrite(source.PrivateImplementationType, ref didChildRewrite);
+            this.Rewrite(result.ImplementationTypes, source.ImplementationTypes, ref didChildRewrite);
+            this.Rewrite(result.ReturnTypeCustomAttributes, source.ReturnTypeCustomAttributes, ref didChildRewrite);
+            this.Rewrite(result.TypeParameters, source.TypeParameters, ref didChildRewrite);
+            result.Name = source.Name;
+            result.Attributes = this.Rewrite(source.Attributes, ref didChildRewrite);
+            this.Rewrite(result.CustomAttributes, source.CustomAttributes, ref didChildRewrite);
+            result.LinePragma = this.Rewrite(source.LinePragma, ref didChildRewrite);
+            this.Rewrite(result.Comments, source.Comments, ref didChildRewrite);
+            this.Rewrite(result.StartDirectives, source.StartDirectives, ref didChildRewrite);
+            this.Rewrite(result.EndDirectives, source.EndDirectives, ref didChildRewrite);
+            this.Rewrite(result.UserData, source.UserData, ref didChildRewrite);
+            if (didChildRewrite)
+            {
+                didRewrite = true;
+                return result;
+            }
+            else
+            {
+                return source;
+            }
+        }
+
+        /// <summary>
         /// Rewrites CodeMemberProperty
         /// </summary>
         /// <param name="source">A CodeMemberProperty to be rewritten.</param>
@@ -2382,6 +1846,348 @@ namespace Microsoft.Test.Taupo.Contracts
             foreach (CodeNamespaceImport item in source)
             {
                 target.Add(this.Rewrite(item, ref didRewrite));
+            }
+        }
+
+        /// <summary>
+        /// Rewrites CodeObject
+        /// </summary>
+        /// <param name="source">A CodeObject to be rewritten.</param>
+        /// <param name="didRewrite">A value which will be set to true if the rewriting returned a new object.</param>
+        /// <returns>Rewritten CodeObject.</returns>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity", Justification = "Generated code.")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Maintainability", "CA1505:AvoidUnmaintainableCode", Justification = "Code is generated.")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling", Justification = "Generated code.")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1045:DoNotPassTypesByReference", MessageId = "1#", Justification = "Need this to simplify recursive code.")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1800:DoNotCastUnnecessarily", Justification = "Makes the code more readable, avoids too many variables.")]
+        protected virtual CodeObject Rewrite(CodeObject source, ref bool didRewrite)
+        {
+            if (source == null)
+            {
+                return source;
+            }
+
+            if (source is CodeConstructor)
+            {
+                return this.Rewrite((CodeConstructor)source, ref didRewrite);
+            }
+
+            if (source is CodeEntryPointMethod)
+            {
+                return this.Rewrite((CodeEntryPointMethod)source, ref didRewrite);
+            }
+
+            if (source is CodeTypeConstructor)
+            {
+                return this.Rewrite((CodeTypeConstructor)source, ref didRewrite);
+            }
+
+            if (source is CodeTypeDelegate)
+            {
+                return this.Rewrite((CodeTypeDelegate)source, ref didRewrite);
+            }
+
+            if (source is CodeArgumentReferenceExpression)
+            {
+                return this.Rewrite((CodeArgumentReferenceExpression)source, ref didRewrite);
+            }
+
+            if (source is CodeArrayCreateExpression)
+            {
+                return this.Rewrite((CodeArrayCreateExpression)source, ref didRewrite);
+            }
+
+            if (source is CodeArrayIndexerExpression)
+            {
+                return this.Rewrite((CodeArrayIndexerExpression)source, ref didRewrite);
+            }
+
+            if (source is CodeAssignStatement)
+            {
+                return this.Rewrite((CodeAssignStatement)source, ref didRewrite);
+            }
+
+            if (source is CodeAttachEventStatement)
+            {
+                return this.Rewrite((CodeAttachEventStatement)source, ref didRewrite);
+            }
+
+            if (source is CodeBaseReferenceExpression)
+            {
+                return this.Rewrite((CodeBaseReferenceExpression)source, ref didRewrite);
+            }
+
+            if (source is CodeBinaryOperatorExpression)
+            {
+                return this.Rewrite((CodeBinaryOperatorExpression)source, ref didRewrite);
+            }
+
+            if (source is CodeCastExpression)
+            {
+                return this.Rewrite((CodeCastExpression)source, ref didRewrite);
+            }
+
+            if (source is CodeChecksumPragma)
+            {
+                return this.Rewrite((CodeChecksumPragma)source, ref didRewrite);
+            }
+
+            if (source is CodeCommentStatement)
+            {
+                return this.Rewrite((CodeCommentStatement)source, ref didRewrite);
+            }
+
+            if (source is CodeConditionStatement)
+            {
+                return this.Rewrite((CodeConditionStatement)source, ref didRewrite);
+            }
+
+            if (source is CodeDefaultValueExpression)
+            {
+                return this.Rewrite((CodeDefaultValueExpression)source, ref didRewrite);
+            }
+
+            if (source is CodeDelegateCreateExpression)
+            {
+                return this.Rewrite((CodeDelegateCreateExpression)source, ref didRewrite);
+            }
+
+            if (source is CodeDelegateInvokeExpression)
+            {
+                return this.Rewrite((CodeDelegateInvokeExpression)source, ref didRewrite);
+            }
+
+            if (source is CodeDirectionExpression)
+            {
+                return this.Rewrite((CodeDirectionExpression)source, ref didRewrite);
+            }
+
+            if (source is CodeEventReferenceExpression)
+            {
+                return this.Rewrite((CodeEventReferenceExpression)source, ref didRewrite);
+            }
+
+            if (source is CodeExpressionStatement)
+            {
+                return this.Rewrite((CodeExpressionStatement)source, ref didRewrite);
+            }
+
+            if (source is CodeFieldReferenceExpression)
+            {
+                return this.Rewrite((CodeFieldReferenceExpression)source, ref didRewrite);
+            }
+
+            if (source is CodeGotoStatement)
+            {
+                return this.Rewrite((CodeGotoStatement)source, ref didRewrite);
+            }
+
+            if (source is CodeIndexerExpression)
+            {
+                return this.Rewrite((CodeIndexerExpression)source, ref didRewrite);
+            }
+
+            if (source is CodeIterationStatement)
+            {
+                return this.Rewrite((CodeIterationStatement)source, ref didRewrite);
+            }
+
+            if (source is CodeLabeledStatement)
+            {
+                return this.Rewrite((CodeLabeledStatement)source, ref didRewrite);
+            }
+
+            if (source is CodeMemberEvent)
+            {
+                return this.Rewrite((CodeMemberEvent)source, ref didRewrite);
+            }
+
+            if (source is CodeMemberField)
+            {
+                return this.Rewrite((CodeMemberField)source, ref didRewrite);
+            }
+
+            if (source is CodeMemberMethod)
+            {
+                return this.Rewrite((CodeMemberMethod)source, ref didRewrite);
+            }
+
+            if (source is CodeMemberProperty)
+            {
+                return this.Rewrite((CodeMemberProperty)source, ref didRewrite);
+            }
+
+            if (source is CodeMethodInvokeExpression)
+            {
+                return this.Rewrite((CodeMethodInvokeExpression)source, ref didRewrite);
+            }
+
+            if (source is CodeMethodReferenceExpression)
+            {
+                return this.Rewrite((CodeMethodReferenceExpression)source, ref didRewrite);
+            }
+
+            if (source is CodeMethodReturnStatement)
+            {
+                return this.Rewrite((CodeMethodReturnStatement)source, ref didRewrite);
+            }
+
+            if (source is CodeObjectCreateExpression)
+            {
+                return this.Rewrite((CodeObjectCreateExpression)source, ref didRewrite);
+            }
+
+            if (source is CodeParameterDeclarationExpression)
+            {
+                return this.Rewrite((CodeParameterDeclarationExpression)source, ref didRewrite);
+            }
+
+            if (source is CodePrimitiveExpression)
+            {
+                return this.Rewrite((CodePrimitiveExpression)source, ref didRewrite);
+            }
+
+            if (source is CodePropertyReferenceExpression)
+            {
+                return this.Rewrite((CodePropertyReferenceExpression)source, ref didRewrite);
+            }
+
+            if (source is CodePropertySetValueReferenceExpression)
+            {
+                return this.Rewrite((CodePropertySetValueReferenceExpression)source, ref didRewrite);
+            }
+
+            if (source is CodeRegionDirective)
+            {
+                return this.Rewrite((CodeRegionDirective)source, ref didRewrite);
+            }
+
+            if (source is CodeRemoveEventStatement)
+            {
+                return this.Rewrite((CodeRemoveEventStatement)source, ref didRewrite);
+            }
+
+            if (source is CodeSnippetCompileUnit)
+            {
+                return this.Rewrite((CodeSnippetCompileUnit)source, ref didRewrite);
+            }
+
+            if (source is CodeSnippetExpression)
+            {
+                return this.Rewrite((CodeSnippetExpression)source, ref didRewrite);
+            }
+
+            if (source is CodeSnippetStatement)
+            {
+                return this.Rewrite((CodeSnippetStatement)source, ref didRewrite);
+            }
+
+            if (source is CodeSnippetTypeMember)
+            {
+                return this.Rewrite((CodeSnippetTypeMember)source, ref didRewrite);
+            }
+
+            if (source is CodeThisReferenceExpression)
+            {
+                return this.Rewrite((CodeThisReferenceExpression)source, ref didRewrite);
+            }
+
+            if (source is CodeThrowExceptionStatement)
+            {
+                return this.Rewrite((CodeThrowExceptionStatement)source, ref didRewrite);
+            }
+
+            if (source is CodeTryCatchFinallyStatement)
+            {
+                return this.Rewrite((CodeTryCatchFinallyStatement)source, ref didRewrite);
+            }
+
+            if (source is CodeTypeDeclaration)
+            {
+                return this.Rewrite((CodeTypeDeclaration)source, ref didRewrite);
+            }
+
+            if (source is CodeTypeOfExpression)
+            {
+                return this.Rewrite((CodeTypeOfExpression)source, ref didRewrite);
+            }
+
+            if (source is CodeTypeReferenceExpression)
+            {
+                return this.Rewrite((CodeTypeReferenceExpression)source, ref didRewrite);
+            }
+
+            if (source is CodeVariableDeclarationStatement)
+            {
+                return this.Rewrite((CodeVariableDeclarationStatement)source, ref didRewrite);
+            }
+
+            if (source is CodeVariableReferenceExpression)
+            {
+                return this.Rewrite((CodeVariableReferenceExpression)source, ref didRewrite);
+            }
+
+            if (source is CodeComment)
+            {
+                return this.Rewrite((CodeComment)source, ref didRewrite);
+            }
+
+            if (source is CodeCompileUnit)
+            {
+                return this.Rewrite((CodeCompileUnit)source, ref didRewrite);
+            }
+
+            if (source is CodeDirective)
+            {
+                return this.Rewrite((CodeDirective)source, ref didRewrite);
+            }
+
+            if (source is CodeExpression)
+            {
+                return this.Rewrite((CodeExpression)source, ref didRewrite);
+            }
+
+            if (source is CodeNamespace)
+            {
+                return this.Rewrite((CodeNamespace)source, ref didRewrite);
+            }
+
+            if (source is CodeNamespaceImport)
+            {
+                return this.Rewrite((CodeNamespaceImport)source, ref didRewrite);
+            }
+
+            if (source is CodeStatement)
+            {
+                return this.Rewrite((CodeStatement)source, ref didRewrite);
+            }
+
+            if (source is CodeTypeMember)
+            {
+                return this.Rewrite((CodeTypeMember)source, ref didRewrite);
+            }
+
+            if (source is CodeTypeParameter)
+            {
+                return this.Rewrite((CodeTypeParameter)source, ref didRewrite);
+            }
+
+            if (source is CodeTypeReference)
+            {
+                return this.Rewrite((CodeTypeReference)source, ref didRewrite);
+            }
+
+            bool didChildRewrite = false;
+            CodeObject result = new CodeObject();
+            this.Rewrite(result.UserData, source.UserData, ref didChildRewrite);
+            if (didChildRewrite)
+            {
+                didRewrite = true;
+                return result;
+            }
+            else
+            {
+                return source;
             }
         }
 
@@ -2815,6 +2621,111 @@ namespace Microsoft.Test.Taupo.Contracts
         }
 
         /// <summary>
+        /// Rewrites CodeStatement
+        /// </summary>
+        /// <param name="source">A CodeStatement to be rewritten.</param>
+        /// <param name="didRewrite">A value which will be set to true if the rewriting returned a new object.</param>
+        /// <returns>Rewritten CodeStatement.</returns>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity", Justification = "Generated code.")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Maintainability", "CA1505:AvoidUnmaintainableCode", Justification = "Code is generated.")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling", Justification = "Generated code.")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1045:DoNotPassTypesByReference", MessageId = "1#", Justification = "Need this to simplify recursive code.")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1800:DoNotCastUnnecessarily", Justification = "Makes the code more readable, avoids too many variables.")]
+        protected virtual CodeStatement Rewrite(CodeStatement source, ref bool didRewrite)
+        {
+            if (source == null)
+            {
+                return source;
+            }
+
+            if (source is CodeAssignStatement)
+            {
+                return this.Rewrite((CodeAssignStatement)source, ref didRewrite);
+            }
+
+            if (source is CodeAttachEventStatement)
+            {
+                return this.Rewrite((CodeAttachEventStatement)source, ref didRewrite);
+            }
+
+            if (source is CodeCommentStatement)
+            {
+                return this.Rewrite((CodeCommentStatement)source, ref didRewrite);
+            }
+
+            if (source is CodeConditionStatement)
+            {
+                return this.Rewrite((CodeConditionStatement)source, ref didRewrite);
+            }
+
+            if (source is CodeExpressionStatement)
+            {
+                return this.Rewrite((CodeExpressionStatement)source, ref didRewrite);
+            }
+
+            if (source is CodeGotoStatement)
+            {
+                return this.Rewrite((CodeGotoStatement)source, ref didRewrite);
+            }
+
+            if (source is CodeIterationStatement)
+            {
+                return this.Rewrite((CodeIterationStatement)source, ref didRewrite);
+            }
+
+            if (source is CodeLabeledStatement)
+            {
+                return this.Rewrite((CodeLabeledStatement)source, ref didRewrite);
+            }
+
+            if (source is CodeMethodReturnStatement)
+            {
+                return this.Rewrite((CodeMethodReturnStatement)source, ref didRewrite);
+            }
+
+            if (source is CodeRemoveEventStatement)
+            {
+                return this.Rewrite((CodeRemoveEventStatement)source, ref didRewrite);
+            }
+
+            if (source is CodeSnippetStatement)
+            {
+                return this.Rewrite((CodeSnippetStatement)source, ref didRewrite);
+            }
+
+            if (source is CodeThrowExceptionStatement)
+            {
+                return this.Rewrite((CodeThrowExceptionStatement)source, ref didRewrite);
+            }
+
+            if (source is CodeTryCatchFinallyStatement)
+            {
+                return this.Rewrite((CodeTryCatchFinallyStatement)source, ref didRewrite);
+            }
+
+            if (source is CodeVariableDeclarationStatement)
+            {
+                return this.Rewrite((CodeVariableDeclarationStatement)source, ref didRewrite);
+            }
+
+            bool didChildRewrite = false;
+            CodeStatement result = new CodeStatement();
+            result.LinePragma = this.Rewrite(source.LinePragma, ref didChildRewrite);
+            this.Rewrite(result.StartDirectives, source.StartDirectives, ref didChildRewrite);
+            this.Rewrite(result.EndDirectives, source.EndDirectives, ref didChildRewrite);
+            this.Rewrite(result.UserData, source.UserData, ref didChildRewrite);
+            if (didChildRewrite)
+            {
+                didRewrite = true;
+                return result;
+            }
+            else
+            {
+                return source;
+            }
+        }
+
+        /// <summary>
         /// Rewrites CodeStatementCollection
         /// </summary>
         /// <param name="target">Target collection.</param>
@@ -3080,6 +2991,95 @@ namespace Microsoft.Test.Taupo.Contracts
             result.IsPartial = source.IsPartial;
             this.Rewrite(result.Members, source.Members, ref didChildRewrite);
             this.Rewrite(result.TypeParameters, source.TypeParameters, ref didChildRewrite);
+            result.Name = source.Name;
+            result.Attributes = this.Rewrite(source.Attributes, ref didChildRewrite);
+            this.Rewrite(result.CustomAttributes, source.CustomAttributes, ref didChildRewrite);
+            result.LinePragma = this.Rewrite(source.LinePragma, ref didChildRewrite);
+            this.Rewrite(result.Comments, source.Comments, ref didChildRewrite);
+            this.Rewrite(result.StartDirectives, source.StartDirectives, ref didChildRewrite);
+            this.Rewrite(result.EndDirectives, source.EndDirectives, ref didChildRewrite);
+            this.Rewrite(result.UserData, source.UserData, ref didChildRewrite);
+            if (didChildRewrite)
+            {
+                didRewrite = true;
+                return result;
+            }
+            else
+            {
+                return source;
+            }
+        }
+
+        /// <summary>
+        /// Rewrites CodeTypeMember
+        /// </summary>
+        /// <param name="source">A CodeTypeMember to be rewritten.</param>
+        /// <param name="didRewrite">A value which will be set to true if the rewriting returned a new object.</param>
+        /// <returns>Rewritten CodeTypeMember.</returns>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity", Justification = "Generated code.")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Maintainability", "CA1505:AvoidUnmaintainableCode", Justification = "Code is generated.")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling", Justification = "Generated code.")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1045:DoNotPassTypesByReference", MessageId = "1#", Justification = "Need this to simplify recursive code.")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1800:DoNotCastUnnecessarily", Justification = "Makes the code more readable, avoids too many variables.")]
+        protected virtual CodeTypeMember Rewrite(CodeTypeMember source, ref bool didRewrite)
+        {
+            if (source == null)
+            {
+                return source;
+            }
+
+            if (source is CodeConstructor)
+            {
+                return this.Rewrite((CodeConstructor)source, ref didRewrite);
+            }
+
+            if (source is CodeEntryPointMethod)
+            {
+                return this.Rewrite((CodeEntryPointMethod)source, ref didRewrite);
+            }
+
+            if (source is CodeTypeConstructor)
+            {
+                return this.Rewrite((CodeTypeConstructor)source, ref didRewrite);
+            }
+
+            if (source is CodeTypeDelegate)
+            {
+                return this.Rewrite((CodeTypeDelegate)source, ref didRewrite);
+            }
+
+            if (source is CodeMemberEvent)
+            {
+                return this.Rewrite((CodeMemberEvent)source, ref didRewrite);
+            }
+
+            if (source is CodeMemberField)
+            {
+                return this.Rewrite((CodeMemberField)source, ref didRewrite);
+            }
+
+            if (source is CodeMemberMethod)
+            {
+                return this.Rewrite((CodeMemberMethod)source, ref didRewrite);
+            }
+
+            if (source is CodeMemberProperty)
+            {
+                return this.Rewrite((CodeMemberProperty)source, ref didRewrite);
+            }
+
+            if (source is CodeSnippetTypeMember)
+            {
+                return this.Rewrite((CodeSnippetTypeMember)source, ref didRewrite);
+            }
+
+            if (source is CodeTypeDeclaration)
+            {
+                return this.Rewrite((CodeTypeDeclaration)source, ref didRewrite);
+            }
+
+            bool didChildRewrite = false;
+            CodeTypeMember result = new CodeTypeMember();
             result.Name = source.Name;
             result.Attributes = this.Rewrite(source.Attributes, ref didChildRewrite);
             this.Rewrite(result.CustomAttributes, source.CustomAttributes, ref didChildRewrite);

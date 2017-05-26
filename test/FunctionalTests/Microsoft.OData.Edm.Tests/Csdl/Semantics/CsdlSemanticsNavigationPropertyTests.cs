@@ -6,12 +6,12 @@
 
 using System.Linq;
 using FluentAssertions;
+using Microsoft.OData.Edm;
 using Microsoft.OData.Edm.Csdl;
 using Microsoft.OData.Edm.Csdl.CsdlSemantics;
 using Microsoft.OData.Edm.Csdl.Parsing.Ast;
-using Microsoft.OData.Edm.Library.Annotations;
-using Microsoft.OData.Edm.Library;
 using Microsoft.OData.Edm.Validation;
+using Microsoft.OData.Edm.Vocabularies;
 using Xunit;
 
 namespace Microsoft.OData.Edm.Tests.Csdl.Semantics
@@ -37,8 +37,8 @@ namespace Microsoft.OData.Edm.Tests.Csdl.Semantics
 
             var navigationWithoutPartner = new CsdlNavigationProperty("WithoutPartner", "FQ.NS.EntityType", false, null, false, null, Enumerable.Empty<CsdlReferentialConstraint>(), null, null);
 
-            var idProperty = new CsdlProperty("ID", new CsdlNamedTypeReference("Edm.Int32", false, null), false, null, null, null);
-            var fkProperty = new CsdlProperty("FK", new CsdlNamedTypeReference("Edm.Int32", false, null), false, null, null, null);
+            var idProperty = new CsdlProperty("ID", new CsdlNamedTypeReference("Edm.Int32", false, null), null, null, null);
+            var fkProperty = new CsdlProperty("FK", new CsdlNamedTypeReference("Edm.Int32", false, null), null, null, null);
             this.csdlEntityType = new CsdlEntityType("EntityType", null, false, false, false, new CsdlKey(new[] { new CsdlPropertyReference("ID", null) }, null), new[] { idProperty, fkProperty }, new[] { collectionProperty, referenceProperty, navigationWithoutPartner }, null, null);
 
             var csdlSchema = new CsdlSchema("FQ.NS", null, null, new[] { this.csdlEntityType }, Enumerable.Empty<CsdlEnumType>(), Enumerable.Empty<CsdlOperation>(),Enumerable.Empty<CsdlTerm>(),Enumerable.Empty<CsdlEntityContainer>(),Enumerable.Empty<CsdlAnnotations>(), Enumerable.Empty<CsdlTypeDefinition>(), null, null);
@@ -46,7 +46,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl.Semantics
             csdlModel.AddSchema(csdlSchema);
 
             var semanticModel = new CsdlSemanticsModel(csdlModel, new EdmDirectValueAnnotationsManager(), Enumerable.Empty<IEdmModel>());
-           
+
             this.semanticEntityType = semanticModel.FindType("FQ.NS.EntityType") as CsdlSemanticsEntityTypeDefinition;
             this.semanticEntityType.Should().NotBeNull();
 
@@ -62,14 +62,14 @@ namespace Microsoft.OData.Edm.Tests.Csdl.Semantics
         [Fact]
         public void NavigationPartnerShouldWorkIfExplicitlySpecified()
         {
-            this.collectionProperty.Partner.Should().Be("Reference"); // ensure that the test configuration is unchanged.
+            this.collectionProperty.PartnerPath.Path.Should().Be("Reference"); // ensure that the test configuration is unchanged.
             this.semanticCollectionNavigation.Partner.Should().BeSameAs(this.semanticReferenceNavigation);
         }
 
         [Fact]
         public void NavigationPartnerShouldWorkIfAnotherPropertyOnTheTargetTypeHasThisPropertyExplicitlySpecified()
         {
-            this.referenceProperty.Partner.Should().BeNull(); // ensure that the test configuration is unchanged.
+            this.referenceProperty.PartnerPath.Should().BeNull(); // ensure that the test configuration is unchanged.
             this.semanticReferenceNavigation.Partner.Should().BeSameAs(this.semanticCollectionNavigation);
         }
 

@@ -4,17 +4,13 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core.UriParser.Parsers
-{
-    using System.Diagnostics;
-    using Microsoft.OData.Edm;
-    using Microsoft.OData.Core.Metadata;
-    using Microsoft.OData.Core.UriParser.Binders;
-    using Microsoft.OData.Core.UriParser.Metadata;
-    using Microsoft.OData.Core.UriParser.Semantic;
-    using Microsoft.OData.Core.UriParser.Syntactic;
-    using ODataErrorStrings = Microsoft.OData.Core.Strings;
+using System.Diagnostics;
+using Microsoft.OData.Metadata;
+using Microsoft.OData.Edm;
+using ODataErrorStrings = Microsoft.OData.Strings;
 
+namespace Microsoft.OData.UriParser
+{
     /// <summary>
     /// Class that knows how to bind CastTokens.
     /// </summary>
@@ -56,7 +52,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
                 }
             }
 
-            SingleEntityNode parentAsSingleValue = parent as SingleEntityNode;
+            SingleResourceNode parentAsSingleResource = parent as SingleResourceNode;
             IEdmSchemaType childType = UriEdmHelpers.FindTypeFromModel(state.Model, dottedIdentifierToken.Identifier, this.Resolver);
             IEdmStructuredType childStructuredType = childType as IEdmStructuredType;
             if (childStructuredType == null)
@@ -72,7 +68,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
                 {
                     // check if it is enum or not
                     QueryNode enumNode;
-                    if (EnumBinder.TryBindDottedIdentifierAsEnum(dottedIdentifierToken, parentAsSingleValue, state, out enumNode))
+                    if (EnumBinder.TryBindDottedIdentifierAsEnum(dottedIdentifierToken, parentAsSingleResource, state, out enumNode))
                     {
                         return enumNode;
                     }
@@ -98,45 +94,15 @@ namespace Microsoft.OData.Core.UriParser.Parsers
             // Check whether childType is a derived type of the type of its parent node
             UriEdmHelpers.CheckRelatedTo(parentType, childType);
 
-            IEdmEntityType childEntityType = childStructuredType as IEdmEntityType;
-            if (childEntityType != null)
+            this.state.ParsedSegments.Add(new TypeSegment(childType, parentType, null));
+
+            CollectionResourceNode parentAsCollection = parent as CollectionResourceNode;
+            if (parentAsCollection != null)
             {
-                EntityCollectionNode parentAsCollection = parent as EntityCollectionNode;
-                if (parentAsCollection != null)
-                {
-                    return new EntityCollectionCastNode(parentAsCollection, childEntityType);
-                }
-
-                // parent can be null for casts on the implicit parameter; this is OK
-                if (parent == null)
-                {
-                    return new SingleEntityCastNode(null, childEntityType);
-                }
-
-                Debug.Assert(parentAsSingleValue != null, "If parent of the cast node was not collection, it should be a single value.");
-                return new SingleEntityCastNode(parentAsSingleValue, childEntityType);
+                return new CollectionResourceCastNode(parentAsCollection, childStructuredType);
             }
-            else
-            {
-                IEdmComplexType childComplexType = childStructuredType as IEdmComplexType;
-                Debug.Assert(childComplexType != null, "If it is not entity type, it should be complex type");
 
-                CollectionPropertyAccessNode parentAsCollectionProperty = parent as CollectionPropertyAccessNode;
-                if (parentAsCollectionProperty != null)
-                {
-                    return new CollectionPropertyCastNode(parentAsCollectionProperty, childComplexType);
-                }
-
-                // parent can be null for casts on the implicit parameter; this is OK
-                if (parent == null)
-                {
-                    return new SingleValueCastNode(null, childComplexType);
-                }
-
-                SingleValueNode parentAsSingleValueNode = parent as SingleValueNode;
-                Debug.Assert(parentAsSingleValueNode != null, "If parent of the cast node was not collection, it should be a single value.");
-                return new SingleValueCastNode(parentAsSingleValueNode, childComplexType);
-            }
+            return new SingleResourceCastNode(parentAsSingleResource, childStructuredType);
         }
     }
 }

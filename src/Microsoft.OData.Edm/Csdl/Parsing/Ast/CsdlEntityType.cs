@@ -15,20 +15,12 @@ namespace Microsoft.OData.Edm.Csdl.Parsing.Ast
     {
         private readonly CsdlKey key;
         private readonly bool hasStream;
-        private readonly List<CsdlNavigationProperty> navigationProperties;
 
-        public CsdlEntityType(string name, string baseTypeName, bool isAbstract, bool isOpen, bool hasStream, CsdlKey key, IEnumerable<CsdlProperty> properties, IEnumerable<CsdlNavigationProperty> navigationProperties, CsdlDocumentation documentation, CsdlLocation location)
-            : base(name, baseTypeName, isAbstract, isOpen, properties, documentation, location)
+        public CsdlEntityType(string name, string baseTypeName, bool isAbstract, bool isOpen, bool hasStream, CsdlKey key, IEnumerable<CsdlProperty> structualProperties, IEnumerable<CsdlNavigationProperty> navigationProperties, CsdlDocumentation documentation, CsdlLocation location)
+            : base(name, baseTypeName, isAbstract, isOpen, structualProperties, navigationProperties, documentation, location)
         {
             this.key = key;
             this.hasStream = hasStream;
-
-            this.navigationProperties = new List<CsdlNavigationProperty>(navigationProperties);
-        }
-
-        public IEnumerable<CsdlNavigationProperty> NavigationProperties
-        {
-            get { return this.navigationProperties; }
         }
 
         public CsdlKey Key
@@ -36,7 +28,7 @@ namespace Microsoft.OData.Edm.Csdl.Parsing.Ast
             get { return this.key; }
         }
 
-        public bool HasStream 
+        public bool HasStream
         {
             get { return this.hasStream; }
         }

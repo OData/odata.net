@@ -70,10 +70,19 @@ namespace Microsoft.OData.Client.Metadata
             this.model = model;
         }
 
-        /// <summary>if true then EntityType else if !KnownType then ComplexType else PrimitiveType</summary>
+        /// <summary>if it is an IEdmEntityType</summary>
         internal bool IsEntityType
         {
             get { return this.EdmType.TypeKind == EdmTypeKind.Entity; }
+        }
+
+        /// <summary>if it is an IEdmStructuredType</summary>
+        internal bool IsStructuredType
+        {
+            get
+            {
+                return this.EdmType.TypeKind == EdmTypeKind.Entity || this.EdmType.TypeKind == EdmTypeKind.Complex;
+            }
         }
 
         /// <summary>Property that holds data for ATOM-style media link entries</summary>
@@ -148,10 +157,10 @@ namespace Microsoft.OData.Client.Metadata
         /// get property wrapper for a property name, might be method around open types for otherwise unknown properties
         /// </summary>
         /// <param name="propertyName">property name</param>
-        /// <param name="ignoreMissingProperties">are missing properties ignored</param>
+        /// <param name="undeclaredPropertyBehavior">UndeclaredPropertyBehavior</param>
         /// <returns>property wrapper</returns>
         /// <exception cref="InvalidOperationException">for unknown properties on closed types</exception>
-        internal ClientPropertyAnnotation GetProperty(string propertyName, bool ignoreMissingProperties)
+        internal ClientPropertyAnnotation GetProperty(string propertyName, UndeclaredPropertyBehavior undeclaredPropertyBehavior)
         {
             Debug.Assert(propertyName != null, "property name");
             if (this.clientPropertyCache == null)
@@ -163,8 +172,8 @@ namespace Microsoft.OData.Client.Metadata
 
             if (!this.clientPropertyCache.TryGetValue(propertyName, out property))
             {
-                string propertyClientName = ClientTypeUtil.GetClientPropertyName(this.ElementType, propertyName, ignoreMissingProperties);
-                if ((string.IsNullOrEmpty(propertyClientName) || !this.clientPropertyCache.TryGetValue(propertyClientName, out property)) && !ignoreMissingProperties)
+                string propertyClientName = ClientTypeUtil.GetClientPropertyName(this.ElementType, propertyName, undeclaredPropertyBehavior);
+                if ((string.IsNullOrEmpty(propertyClientName) || !this.clientPropertyCache.TryGetValue(propertyClientName, out property)) && (undeclaredPropertyBehavior == UndeclaredPropertyBehavior.ThrowException))
                 {
                     throw Microsoft.OData.Client.Error.InvalidOperation(Microsoft.OData.Client.Strings.ClientType_MissingProperty(this.ElementTypeName, propertyName));
                 }

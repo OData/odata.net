@@ -13,25 +13,21 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests
     using System.IO;
     using System.Linq;
     using System.Net;
-    using System.Xml.Linq;
     using System.Text.RegularExpressions;
+    using System.Xml.Linq;
+    using Microsoft.OData;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Library;
-    using Microsoft.OData.Core;
     using Microsoft.Test.Taupo.Astoria.Contracts.Http;
     using Microsoft.Test.Taupo.Astoria.Contracts.Json;
     using Microsoft.Test.Taupo.Astoria.Contracts.OData;
     using Microsoft.Test.Taupo.Common;
     using Microsoft.Test.Taupo.Contracts;
-    using Microsoft.Test.Taupo.Contracts.EntityModel;
     using Microsoft.Test.Taupo.OData.Common;
     using Microsoft.Test.Taupo.OData.Contracts;
     using Microsoft.Test.Taupo.OData.Json;
     using Microsoft.Test.Taupo.OData.Writer.Tests.Common;
     using Microsoft.Test.Taupo.OData.Writer.Tests.Json;
     using Microsoft.Test.Taupo.OData.Writer.Tests.WriterCombinatorialEngine;
-    using Microsoft.OData.Core.Atom;
-
     #endregion Namespaces
 
     /// <summary>
@@ -153,7 +149,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests
             using (var memoryStream = new MemoryStream())
             using (var testMemoryStream = CreateTestStream(testConfiguration, memoryStream, ignoreDispose: true))
             {
-                bool feedWriter = descriptor.PayloadItems[0] is ODataFeed;
+                bool feedWriter = descriptor.PayloadItems[0] is ODataResourceSet;
                 TestMessage testMessage = null;
                 Exception exception = TestExceptionUtils.RunCatching(() =>
                 {
@@ -189,9 +185,9 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests
                 (messageWriter, writerDescriptor, feedWriter) =>
                 {
                     writerDescriptor.TestDescriptorSettings.ObjectModelToMessageWriter.WriteMessage(
-                        messageWriter, 
-                        ODataPayloadKind.Parameter, 
-                        writerDescriptor.PayloadItems.First(), 
+                        messageWriter,
+                        ODataPayloadKind.Parameter,
+                        writerDescriptor.PayloadItems.First(),
                         /*model*/ null,
                         functionImport);
                 },
@@ -281,18 +277,19 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests
         /// <param name="testConfiguration">The configuration of the test.</param>
         /// <param name="alwaysSpecifyOwningContainer">If true the owning container (type, ...) will be used always if specified by the test,
         /// otherwise it will only be used in formats which require it.</param>
-        internal static void RunTopLevelPropertyPayload(
-            this PayloadWriterTestDescriptor<ODataProperty> testDescriptor,
+        internal static void RunTopLevelPropertyPayload<T>(
+            this PayloadWriterTestDescriptor<T> testDescriptor,
             WriterTestConfiguration testConfiguration,
             bool alwaysSpecifyOwningContainer = false,
-            BaselineLogger baselineLogger = null)
+            BaselineLogger baselineLogger = null, 
+            Action<ODataMessageWriterTestWrapper> writeAction = null)
         {
-            ODataProperty property = testDescriptor.PayloadItems.Single();
+            T property = testDescriptor.PayloadItems.Single();
 
             WriteAndVerifyTopLevelContent(
                 testDescriptor,
                 testConfiguration,
-                (messageWriter) => messageWriter.WriteProperty(property),
+                writeAction ?? ((messageWriter) => messageWriter.WriteProperty(property as ODataProperty)),
                 testDescriptor.TestDescriptorSettings.Assert,
                 testConfiguration.MessageWriterSettings,
                 baselineLogger: baselineLogger);
@@ -374,7 +371,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests
             out TestMessage testMessage,
             ODataMessageWriterSettings settings = null,
             IEdmModel model = null,
-            IODataUrlResolver urlResolver = null)
+            IODataPayloadUriConverter urlResolver = null)
         {
             testMessage = CreateOutputMessageFromStream(stream, testConfiguration, null, null, urlResolver);
             return CreateMessageWriter(testMessage, model, testConfiguration, assert, settings);
@@ -459,7 +456,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests
             WriterTestConfiguration testConfiguration,
             ODataPayloadKind? payloadKind,
             string customContentTypeHeader,
-            IODataUrlResolver urlResolver)
+            IODataPayloadUriConverter urlResolver)
         {
             TestMessage message;
 
@@ -495,10 +492,10 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests
             }
 
             // set the OData-Version header
-            message.SetHeader(Microsoft.OData.Core.ODataConstants.ODataVersionHeader, testConfiguration.Version.ToText());
+            message.SetHeader(Microsoft.OData.ODataConstants.ODataVersionHeader, testConfiguration.Version.ToText());
             if (customContentTypeHeader != null)
             {
-                message.SetHeader(Microsoft.OData.Core.ODataConstants.ContentTypeHeader, customContentTypeHeader);
+                message.SetHeader(Microsoft.OData.ODataConstants.ContentTypeHeader, customContentTypeHeader);
             }
             else if (payloadKind.HasValue)
             {
@@ -535,19 +532,19 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests
 
             try
             {
-                var feed = item as ODataFeed;
+                var feed = item as ODataResourceSet;
                 if (feed != null)
                 {
                     WritePayload(messageWriter, writer, feed);
                 }
 
-                var entry = item as ODataEntry;
+                var entry = item as ODataResource;
                 if (entry != null)
                 {
                     WritePayload(messageWriter, writer, entry);
                 }
 
-                var navLink = item as ODataNavigationLink;
+                var navLink = item as ODataNestedResourceInfo;
                 if (navLink != null)
                 {
                     WritePayload(messageWriter, writer, navLink);
@@ -571,7 +568,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests
             }
         }
 
-        private static void WritePayload(ODataMessageWriterTestWrapper messageWriter, ODataWriter writer, ODataEntry entry)
+        private static void WritePayload(ODataMessageWriterTestWrapper messageWriter, ODataWriter writer, ODataResource entry)
         {
             ExceptionUtilities.CheckArgumentNotNull(messageWriter, "messageWriter");
             ExceptionUtilities.CheckArgumentNotNull(writer, "writer");
@@ -585,7 +582,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests
 
             if (entry.IsNullEntry())
             {
-                writer.WriteStart((ODataEntry)null);
+                writer.WriteStart((ODataResource)null);
             }
             else
             {
@@ -594,7 +591,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests
 
             //Write Navigation Links
             var expandedLinksAnnotation = entry.GetAnnotation<ODataEntryNavigationLinksObjectModelAnnotation>();
-            ODataNavigationLink link = null;
+            ODataNestedResourceInfo link = null;
             if (expandedLinksAnnotation != null)
             {
                 for (int i = 0; i < expandedLinksAnnotation.Count; ++i)
@@ -608,7 +605,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests
             writer.WriteEnd();
         }
 
-        private static void WritePayload(ODataMessageWriterTestWrapper messageWriter, ODataWriter writer, ODataNavigationLink link)
+        private static void WritePayload(ODataMessageWriterTestWrapper messageWriter, ODataWriter writer, ODataNestedResourceInfo link)
         {
             ExceptionUtilities.CheckArgumentNotNull(messageWriter, "messageWriter");
             ExceptionUtilities.CheckArgumentNotNull(writer, "writer");
@@ -635,7 +632,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests
             writer.WriteEnd();
         }
 
-        private static void WritePayload(ODataMessageWriterTestWrapper messageWriter, ODataWriter writer, ODataFeed feed)
+        private static void WritePayload(ODataMessageWriterTestWrapper messageWriter, ODataWriter writer, ODataResourceSet feed)
         {
             ExceptionUtilities.CheckArgumentNotNull(messageWriter, "messageWriter");
             ExceptionUtilities.CheckArgumentNotNull(writer, "writer");
@@ -712,19 +709,9 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests
                     }
                     else
                     {
-                        ODataEntry entry = item as ODataEntry;
+                        ODataResource entry = item as ODataResource;
                         if (entry != null)
                         {
-                            AtomEntryMetadata metadata = entry.GetAnnotation<AtomEntryMetadata>();
-
-                            // Fix up metadata for baselining
-                            metadata = metadata.Fixup();
-
-                            if (metadata != null)
-                            {
-                                entry.SetAnnotation<AtomEntryMetadata>(metadata);
-                            }
-
                             WriteEntryCallbacksAnnotation callbacksAnnotation = entry.GetAnnotation<WriteEntryCallbacksAnnotation>();
                             if (callbacksAnnotation != null && callbacksAnnotation.BeforeWriteStartCallback != null)
                             {
@@ -733,7 +720,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests
 
                             if (entry.IsNullEntry())
                             {
-                                writer.WriteStart((ODataEntry)null);
+                                writer.WriteStart((ODataResource)null);
                             }
                             else
                             {
@@ -744,36 +731,26 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests
                         }
                         else
                         {
-                            ODataFeed feed = item as ODataFeed;
-                            if (feed != null)
+                            ODataResourceSet resourceCollection = item as ODataResourceSet;
+                            if (resourceCollection != null)
                             {
-                                AtomFeedMetadata metadata = feed.GetAnnotation<AtomFeedMetadata>();
-                                
-                                // Fix up metadata for baselining
-                                metadata = metadata.Fixup();
-
-                                if (metadata != null)
-                                {
-                                    feed.SetAnnotation<AtomFeedMetadata>(metadata);
-                                }
-
-                                WriteFeedCallbacksAnnotation callbacksAnnotation = feed.GetAnnotation<WriteFeedCallbacksAnnotation>();
+                                WriteFeedCallbacksAnnotation callbacksAnnotation = resourceCollection.GetAnnotation<WriteFeedCallbacksAnnotation>();
                                 if (callbacksAnnotation != null && callbacksAnnotation.BeforeWriteStartCallback != null)
                                 {
-                                    callbacksAnnotation.BeforeWriteStartCallback(feed);
+                                    callbacksAnnotation.BeforeWriteStartCallback(resourceCollection);
                                 }
 
-                                writer.WriteStart(feed);
+                                writer.WriteStart(resourceCollection);
                                 if (callbacksAnnotation != null && callbacksAnnotation.AfterWriteStartCallback != null)
                                 {
-                                    callbacksAnnotation.AfterWriteStartCallback(feed);
+                                    callbacksAnnotation.AfterWriteStartCallback(resourceCollection);
                                 }
 
-                                itemsStack.Push(feed);
+                                itemsStack.Push(resourceCollection);
                             }
                             else
                             {
-                                ODataNavigationLink navigationLink = item as ODataNavigationLink;
+                                ODataNestedResourceInfo navigationLink = item as ODataNestedResourceInfo;
                                 if (navigationLink != null)
                                 {
                                     writer.WriteStart(navigationLink);
@@ -875,10 +852,10 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests
 
                             if (op.Body != null && op.Body.RootElement != null)
                             {
-                                var contentType = changesetOperation.GetHeaderValueIfExists(Microsoft.OData.Core.ODataConstants.ContentTypeHeader);
+                                var contentType = changesetOperation.GetHeaderValueIfExists(Microsoft.OData.ODataConstants.ContentTypeHeader);
                                 ODataFormat format = TestMediaTypeUtils.GetODataFormat(contentType, op.Body.RootElement.GetPayloadKindFromPayloadElement());
 
-                                var messageWriterSettings = new ODataMessageWriterSettings(config.MessageWriterSettings);
+                                var messageWriterSettings = config.MessageWriterSettings.Clone();
                                 messageWriterSettings.SetContentType(format);
                                 var messageConfig = new WriterTestConfiguration(format, messageWriterSettings, config.IsRequest, config.Synchronous);
 
@@ -913,9 +890,9 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests
 
                         if (operation.RootElement != null)
                         {
-                            var contentType = operation.GetHeaderValueIfExists(Microsoft.OData.Core.ODataConstants.ContentTypeHeader);
+                            var contentType = operation.GetHeaderValueIfExists(Microsoft.OData.ODataConstants.ContentTypeHeader);
                             ODataFormat format = TestMediaTypeUtils.GetODataFormat(contentType, operation.RootElement.GetPayloadKindFromPayloadElement());
-                            var messageWriterSettings = new ODataMessageWriterSettings(config.MessageWriterSettings);
+                            var messageWriterSettings = config.MessageWriterSettings.Clone();
                             messageWriterSettings.SetContentType(format);
                             var messageConfig = new WriterTestConfiguration(format, messageWriterSettings, config.IsRequest, config.Synchronous);
                             using (ODataMessageWriterTestWrapper messageWriterWrapper = TestWriterUtils.CreateMessageWriter(TestWriterUtils.GetStream(message, messageConfig), messageConfig, assert, messageWriterSettings, model))
@@ -944,9 +921,9 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests
 
                             if (op.RootElement != null)
                             {
-                                var contentType = op.GetHeaderValueIfExists(Microsoft.OData.Core.ODataConstants.ContentTypeHeader);
+                                var contentType = op.GetHeaderValueIfExists(Microsoft.OData.ODataConstants.ContentTypeHeader);
                                 ODataFormat format = TestMediaTypeUtils.GetODataFormat(contentType, op.RootElement.GetPayloadKindFromPayloadElement());
-                                var messageWriterSettings = new ODataMessageWriterSettings(config.MessageWriterSettings);
+                                var messageWriterSettings = config.MessageWriterSettings.Clone();
                                 messageWriterSettings.SetContentType(format);
                                 var messageConfig = new WriterTestConfiguration(format, messageWriterSettings, config.IsRequest, config.Synchronous);
 
@@ -1089,16 +1066,6 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests
         }
 
         /// <summary>
-        /// Clones the <paramref name="source"/>.
-        /// </summary>
-        /// <param name="source">The message writer settings to clone.</param>
-        /// <returns>The cloned message writer settings.</returns>
-        public static ODataMessageWriterSettings Clone(this ODataMessageWriterSettings source)
-        {
-            return new ODataMessageWriterSettings(source);
-        }
-
-        /// <summary>
         /// Depending on the <paramref name="testConfiguration"/> this method modifies the <paramref name="testDescriptor"/>
         /// to use entity reference links instead of deferred links.
         /// </summary>
@@ -1116,7 +1083,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests
             {
                 for (int i = 0; i < newItems.Count; i++)
                 {
-                    ODataNavigationLink navigationLink = newItems[i] as ODataNavigationLink;
+                    ODataNestedResourceInfo navigationLink = newItems[i] as ODataNestedResourceInfo;
                     if (navigationLink != null)
                     {
                         if (i == newItems.Count - 1)
@@ -1202,7 +1169,6 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests
         /// <returns>The variables for the given test configuration.</returns>
         internal static Dictionary<string, string> GetPayloadVariablesForTestConfiguration(WriterTestConfiguration testConfiguration)
         {
-            bool indent = testConfiguration.MessageWriterSettings.Indent;
             // a data wrapper is required for all responses
             bool requiresDataWrapper = !testConfiguration.IsRequest;
             // for v3 responses a results wrapper is injected as well
@@ -1210,10 +1176,10 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests
 
             var expansions = new Dictionary<string, string>()
                 {
-                    { "NL", indent ? Environment.NewLine : string.Empty },
-                    { "Indent", indent ? "  " : string.Empty },
-                    { "JsonDataWrapperIndent", indent && requiresDataWrapper ? "  " : string.Empty },
-                    { "JsonResultsWrapperIndent", indent && requiresResultsWrapper ? "  " : string.Empty },
+                    { "NL", string.Empty },
+                    { "Indent", string.Empty },
+                    { "JsonDataWrapperIndent", string.Empty },
+                    { "JsonResultsWrapperIndent", string.Empty },
                 };
             return expansions;
         }
@@ -1242,13 +1208,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests
 
             bool success;
             string error;
-            if (testConfiguration.Format == ODataFormat.Atom)
-            {
-                var atomExpectedResults = expectedResults as AtomWriterTestExpectedResults;
-                ExceptionUtilities.CheckObjectNotNull(atomExpectedResults, "The expected result should be for ATOM format.");
-                success = CompareAtomResults(atomExpectedResults, stream, testConfiguration, out error);
-            }
-            else if (testConfiguration.Format == ODataFormat.Json)
+            if (testConfiguration.Format == ODataFormat.Json)
             {
                 var jsonExpectedResults = expectedResults as JsonWriterTestExpectedResults;
                 ExceptionUtilities.CheckObjectNotNull(jsonExpectedResults, "The expected result should be for Json format.");
@@ -1311,7 +1271,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests
             string expectedContentType = expectedResults.ExpectedContentType;
             if (expectedContentType != null)
             {
-                string actualContentType = testMessage.GetHeader(Microsoft.OData.Core.ODataConstants.ContentTypeHeader);
+                string actualContentType = testMessage.GetHeader(Microsoft.OData.ODataConstants.ContentTypeHeader);
                 assert.IsNotNull(actualContentType, "Expected to find non-null 'Content-Type' header on a response message.");
                 if (exactMatch)
                 {
@@ -1607,7 +1567,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests
             // TODO: More involved JSON comparison. We could parse the expected JSON into the JsonValue and compare the trees here
             // For now just compare the strings as they are; we trim the leading/trailing whitespace here again since the fragment extractor
             // trims it in some cases but not in others. For comparison we strip leading/trailing whitespace from the expected and actual results.
-            string observedJsonText = observedJson.ToText(testConfiguration.Format == ODataFormat.Json, testConfiguration.MessageWriterSettings.Indent).Trim();
+            string observedJsonText = observedJson.ToText(testConfiguration.Format == ODataFormat.Json).Trim();
             return CompareJsonStrings(expectedJsonString, observedJsonText, out error);
         }
 
@@ -1798,7 +1758,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests
                 return deserializer.DeserializeBatchResponse(request, response);
             }
         }
-        
+
         /// <summary>
         /// Writes the end of a given item to the specified writer.
         /// </summary>
@@ -1808,7 +1768,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests
         {
             if (item != null)
             {
-                ODataEntry entry = item as ODataEntry;
+                ODataResource entry = item as ODataResource;
                 if (entry != null)
                 {
                     WriteEntryCallbacksAnnotation callbacksAnnotation = entry.GetAnnotation<WriteEntryCallbacksAnnotation>();
@@ -1818,7 +1778,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests
                     }
                 }
 
-                ODataFeed feed = item as ODataFeed;
+                ODataResourceSet feed = item as ODataResourceSet;
                 if (feed != null)
                 {
                     WriteFeedCallbacksAnnotation callbacksAnnotation = feed.GetAnnotation<WriteFeedCallbacksAnnotation>();
@@ -1847,9 +1807,8 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests
             }
 
             public ODataVersion? Version { get { return this.settings.Version; } }
-            public bool Indent { get { return this.settings.Indent; } }
-            public bool CheckCharacters { get { return this.settings.CheckCharacters; } }
-            public Uri BaseUri { get { return this.settings.PayloadBaseUri; } }
+            public bool CheckCharacters { get { return this.settings.EnableCharactersCheck; } }
+            public Uri BaseUri { get { return this.settings.BaseUri; } }
             public string AcceptableMediaTypes { get { return (string)ReflectionUtils.GetProperty(this.settings, "AcceptableMediaTypes"); } }
             public string AcceptableCharsets { get { return (string)ReflectionUtils.GetProperty(this.settings, "AcceptableCharsets"); } }
             public ODataFormat Format { get { return (ODataFormat)ReflectionUtils.GetProperty(this.settings, "Format"); } }

@@ -11,9 +11,7 @@ namespace EdmLibTests.FunctionalUtilities
     using System.Xml.Linq;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Edm.Csdl;
-    using Microsoft.OData.Edm.Library;
-    using Microsoft.OData.Edm.Library.Annotations;
-    using Microsoft.OData.Edm.Library.Values;
+    using Microsoft.OData.Edm.Vocabularies;
     using Microsoft.Test.OData.Utils.Metadata;
 
     public static class FindMethodsTestModelBuilder
@@ -187,7 +185,7 @@ namespace EdmLibTests.FunctionalUtilities
             return csdl.Select(XElement.Parse);
         }
 
-        public static IEnumerable<XElement> ValueTermAndFunctionCsdl()
+        public static IEnumerable<XElement> TermAndFunctionCsdl()
         {
             return ConvertCsdlsToXElements(@"
 <Schema Namespace=""DefaultNamespace"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
@@ -458,7 +456,7 @@ namespace EdmLibTests.FunctionalUtilities
         }
 
         [CustomCsdlSchemaCompliantTest, ValidationTestInvalidModel]
-        public static IEnumerable<XElement> FindVocabularyAnnotationWithValueTermCsdl()
+        public static IEnumerable<XElement> FindVocabularyAnnotationWithTermCsdl()
         {
             return ConvertCsdlsToXElements(@"
 <Schema Namespace=""DefaultNamespace"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
@@ -616,7 +614,7 @@ namespace EdmLibTests.FunctionalUtilities
         }
 
         [ValidationTestInvalidModel]
-        public static IEnumerable<XElement> FindVocabularyAnnotationAcrossModelValueAnnotationCsdl()
+        public static IEnumerable<XElement> FindVocabularyAnnotationAcrossModelAnnotationCsdl()
         {
             return ConvertCsdlsToXElements(@"
 <Schema Namespace=""DefaultNamespace"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
@@ -630,7 +628,7 @@ namespace EdmLibTests.FunctionalUtilities
 </Schema>");
         }
 
-        public static EdmModel FindVocabularyAnnotationAcrossModelValueAnnotationModel()
+        public static EdmModel FindVocabularyAnnotationAcrossModelAnnotationModel()
         {
             var model = new EdmModel();
 
@@ -642,7 +640,7 @@ namespace EdmLibTests.FunctionalUtilities
             var termTwo = new EdmTerm("DefaultNamespace", "TermTwo", EdmCoreModel.Instance.GetString(true));
             model.AddElement(termTwo);
 
-            var valueAnnotationOne = new EdmAnnotation(
+            var valueAnnotationOne = new EdmVocabularyAnnotation(
                 containerOne,
                 termOne,
                 new EdmStringConstant("1"));
@@ -685,7 +683,7 @@ namespace EdmLibTests.FunctionalUtilities
         }
 
         [ValidationTestInvalidModel]
-        public static IEnumerable<XElement> FindValueTermCsdl()
+        public static IEnumerable<XElement> FindTermCsdl()
         {
             return ConvertCsdlsToXElements(@"
 <Schema Namespace=""DefaultNamespace"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
@@ -699,7 +697,7 @@ namespace EdmLibTests.FunctionalUtilities
 </Schema>");
         }
 
-        public static EdmModel FindValueTermModel()
+        public static EdmModel FindTermModel()
         {
             var model = new EdmModel();
 

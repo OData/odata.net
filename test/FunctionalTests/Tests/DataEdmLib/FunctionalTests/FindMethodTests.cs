@@ -16,10 +16,9 @@ namespace EdmLibTests.FunctionalTests
     using EdmLibTests.FunctionalUtilities;
     using EdmLibTests.StubEdm;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Annotations;
     using Microsoft.OData.Edm.Csdl;
-    using Microsoft.OData.Edm.Library;
     using Microsoft.OData.Edm.Validation;
+    using Microsoft.OData.Edm.Vocabularies;
     using Microsoft.Test.OData.Utils.Metadata;
 #if SILVERLIGHT
     using Microsoft.Silverlight.Testing;
@@ -66,12 +65,12 @@ namespace EdmLibTests.FunctionalTests
 
             IEdmModel testModel;
             IEnumerable<EdmError> errors;
-            bool parsed = CsdlReader.TryParse(
+            bool parsed = SchemaReader.TryParse(
                 from xElement in testData select xElement.CreateReader(),
                 out testModel,
                 out errors);
-            Assert.IsTrue(parsed, "CsdlReader.TryParse failed");
-            Assert.IsTrue(!errors.Any(), "CsdlReader.TryParse returned errors");
+            Assert.IsTrue(parsed, "SchemaReader.TryParse failed");
+            Assert.IsTrue(!errors.Any(), "SchemaReader.TryParse returned errors");
             Assert.IsNull(testModel.FindType("NonExistSchema"), "FindSchemaTypeForNoContentModel failed");
         }
 
@@ -82,12 +81,12 @@ namespace EdmLibTests.FunctionalTests
 
             IEdmModel testModel;
             IEnumerable<EdmError> errors;
-            bool parsed = CsdlReader.TryParse(
+            bool parsed = SchemaReader.TryParse(
                 from xElement in testData select xElement.CreateReader(),
                 out testModel,
                 out errors);
-            Assert.IsTrue(parsed, "CsdlReader.TryParse failed");
-            Assert.IsTrue(!errors.Any(), "CsdlReader.TryParse returned errors");
+            Assert.IsTrue(parsed, "SchemaReader.TryParse failed");
+            Assert.IsTrue(!errors.Any(), "SchemaReader.TryParse returned errors");
             Assert.IsNull(testModel.FindDeclaredType("Edm.Int32"), "FindSchemaType should not return primitive types");
             //Assert.IsNull(testModel.FindType("Int32"), "FindSchemaType should not return primitive types");
             Assert.IsNotNull(testModel.FindType("Edm.Int32"), "FindSchemaType should not return primitive types");
@@ -292,9 +291,9 @@ namespace EdmLibTests.FunctionalTests
         }
 
         [TestMethod]
-        public void FindMethodTestValueTermAndFunctionCsdl()
+        public void FindMethodTestTermAndFunctionCsdl()
         {
-            this.BasicFindMethodsTest(FindMethodsTestModelBuilder.ValueTermAndFunctionCsdl());
+            this.BasicFindMethodsTest(FindMethodsTestModelBuilder.TermAndFunctionCsdl());
         }
 
         [TestMethod]
@@ -458,42 +457,38 @@ namespace EdmLibTests.FunctionalTests
         }
 
         [TestMethod]
-        public void FindMethodTestFindVocabularyAnnotationWithValueTermCsdl()
+        public void FindMethodTestFindVocabularyAnnotationWithTermCsdl()
         {
-            var csdls = FindMethodsTestModelBuilder.FindVocabularyAnnotationWithValueTermCsdl();
+            var csdls = FindMethodsTestModelBuilder.FindVocabularyAnnotationWithTermCsdl();
             var model = this.GetParserResult(csdls);
 
             var modelVocabulary = model.VocabularyAnnotations;
             Assert.AreEqual(1, modelVocabulary.Count(), "Invalid vocabulary count.");
 
-            var personEntity = model.FindEntityType("AnnotationNamespace.Person");
-            var addressTerm = model.FindValueTerm("AnnotationNamespace.AddressObject");
+            var addressTerm = model.FindTerm("AnnotationNamespace.AddressObject");
             var petType = model.FindType("DefaultNamespace.Pet") as IEdmComplexType;
             this.CompareVacabulraryAnnoationsVariations(model.FindDeclaredVocabularyAnnotations(addressTerm), model.FindVocabularyAnnotations(addressTerm));
             Assert.AreEqual(0, model.FindDeclaredVocabularyAnnotations(addressTerm).Count(), "Invalid annotation count.");
             this.CompareVacabulraryAnnoationsVariations(model.FindDeclaredVocabularyAnnotations(petType), model.FindVocabularyAnnotations(petType));
             Assert.AreEqual(1, model.FindDeclaredVocabularyAnnotations(petType).Count(), "Invalid annotation count.");
 
-            var valueAnnotationsFound = model.FindVocabularyAnnotations<IEdmValueAnnotation>(addressTerm, addressTerm);
-            Assert.AreEqual(0, valueAnnotationsFound.Count(), "Invalid value annotation count.");
+            var valueAnnotationsFound = model.FindVocabularyAnnotations<IEdmVocabularyAnnotation>(addressTerm, addressTerm);
+            Assert.AreEqual(0, valueAnnotationsFound.Count(), "Invalid annotation count.");
 
-            valueAnnotationsFound = model.FindVocabularyAnnotations<IEdmValueAnnotation>(petType, personEntity);
-            Assert.AreEqual(0, valueAnnotationsFound.Count(), "Invalid value annotation count.");
+            valueAnnotationsFound = model.FindVocabularyAnnotations<IEdmVocabularyAnnotation>(petType, "AnnotationNamespace.Person");
+            Assert.AreEqual(0, valueAnnotationsFound.Count(), "Invalid annotation count.");
 
-            valueAnnotationsFound = model.FindVocabularyAnnotations<IEdmValueAnnotation>(petType, "AnnotationNamespace.Person");
-            Assert.AreEqual(0, valueAnnotationsFound.Count(), "Invalid value annotation count.");
+            valueAnnotationsFound = model.FindVocabularyAnnotations<IEdmVocabularyAnnotation>(petType, "AnnotationNamespace.Nonsense");
+            Assert.AreEqual(0, valueAnnotationsFound.Count(), "Invalid annotation count.");
 
-            valueAnnotationsFound = model.FindVocabularyAnnotations<IEdmValueAnnotation>(petType, "AnnotationNamespace.Nonsense");
-            Assert.AreEqual(0, valueAnnotationsFound.Count(), "Invalid value annotation count.");
+            valueAnnotationsFound = model.FindVocabularyAnnotations<IEdmVocabularyAnnotation>(petType, addressTerm);
+            Assert.AreEqual(1, valueAnnotationsFound.Count(), "Invalid annotation count.");
 
-            valueAnnotationsFound = model.FindVocabularyAnnotations<IEdmValueAnnotation>(petType, addressTerm);
-            Assert.AreEqual(1, valueAnnotationsFound.Count(), "Invalid value annotation count.");
+            valueAnnotationsFound = model.FindVocabularyAnnotations<IEdmVocabularyAnnotation>(petType, "AnnotationNamespace.AddressObject");
+            Assert.AreEqual(1, valueAnnotationsFound.Count(), "Invalid annotation count.");
 
-            valueAnnotationsFound = model.FindVocabularyAnnotations<IEdmValueAnnotation>(petType, "AnnotationNamespace.AddressObject");
-            Assert.AreEqual(1, valueAnnotationsFound.Count(), "Invalid value annotation count.");
-
-            var expectedValueAnnotation = petType.VocabularyAnnotations(model).Where(n => n.Term.TermKind.Equals(EdmTermKind.Value)).SingleOrDefault() as IEdmValueAnnotation;
-            Assert.AreSame(expectedValueAnnotation, valueAnnotationsFound.SingleOrDefault(), "Invalid value annotation.");
+            var expectedValueAnnotation = petType.VocabularyAnnotations(model).SingleOrDefault();
+            Assert.AreSame(expectedValueAnnotation, valueAnnotationsFound.SingleOrDefault(), "Invalid annotation.");
         }
         
         [TestMethod]
@@ -506,7 +501,7 @@ namespace EdmLibTests.FunctionalTests
             Assert.AreEqual(1, modelVocabulary.Count(), "Invalid vocabulary count.");
 
             var personEntity = model.FindEntityType("AnnotationNamespace.Person");
-            var addressTerm = model.FindValueTerm("AnnotationNamespace.AddressObject");
+            var addressTerm = model.FindTerm("AnnotationNamespace.AddressObject");
             var petType = model.FindType("DefaultNamespace.Pet") as IEdmComplexType;
             this.CompareVacabulraryAnnoationsVariations(model.FindDeclaredVocabularyAnnotations(personEntity), model.FindVocabularyAnnotations(personEntity));
             Assert.AreEqual(0, model.FindDeclaredVocabularyAnnotations(personEntity).Count(), "Invalid annotation count.");
@@ -515,14 +510,11 @@ namespace EdmLibTests.FunctionalTests
             this.CompareVacabulraryAnnoationsVariations(model.FindDeclaredVocabularyAnnotations(petType), model.FindVocabularyAnnotations(petType));
             Assert.AreEqual(1, model.FindDeclaredVocabularyAnnotations(petType).Count(), "Invalid annotation count.");
 
-            var valueAnnotationsFound = model.FindVocabularyAnnotations<IEdmValueAnnotation>(addressTerm, addressTerm);
-            Assert.AreEqual(0, valueAnnotationsFound.Count(), "Invalid value annotation count.");
+            var valueAnnotationsFound = model.FindVocabularyAnnotations<IEdmVocabularyAnnotation>(addressTerm, addressTerm);
+            Assert.AreEqual(0, valueAnnotationsFound.Count(), "Invalid annotation count.");
 
-            valueAnnotationsFound = model.FindVocabularyAnnotations<IEdmValueAnnotation>(petType, personEntity);
-            Assert.AreEqual(0, valueAnnotationsFound.Count(), "Invalid value annotation count.");
-
-            valueAnnotationsFound = model.FindVocabularyAnnotations<IEdmValueAnnotation>(petType, addressTerm);
-            Assert.AreEqual(0, valueAnnotationsFound.Count(), "Invalid value annotation count.");
+            valueAnnotationsFound = model.FindVocabularyAnnotations<IEdmVocabularyAnnotation>(petType, addressTerm);
+            Assert.AreEqual(0, valueAnnotationsFound.Count(), "Invalid annotation count.");
         }
 
         [TestMethod]
@@ -534,20 +526,16 @@ namespace EdmLibTests.FunctionalTests
             var modelVocabulary = model.VocabularyAnnotations;
             Assert.AreEqual(1, modelVocabulary.Count(), "Invalid vocabulary count.");
 
-            var personEntity = model.FindEntityType("AnnotationNamespace.Person");
-            var addressTerm = model.FindValueTerm("AnnotationNamespace.AddressObject");
+            var addressTerm = model.FindTerm("AnnotationNamespace.AddressObject");
             var petType = model.FindType("DefaultNamespace.Pet") as IEdmComplexType;
             this.CompareVacabulraryAnnoationsVariations(model.FindDeclaredVocabularyAnnotations(addressTerm), model.FindVocabularyAnnotations(addressTerm));
             this.CompareVacabulraryAnnoationsVariations(model.FindDeclaredVocabularyAnnotations(petType), model.FindVocabularyAnnotations(petType));
 
-            var valueAnnotationsFound = model.FindVocabularyAnnotations<IEdmValueAnnotation>(addressTerm, addressTerm);
-            Assert.AreEqual(0, valueAnnotationsFound.Count(), "Invalid value annotation count.");
+            var valueAnnotationsFound = model.FindVocabularyAnnotations<IEdmVocabularyAnnotation>(addressTerm, addressTerm);
+            Assert.AreEqual(0, valueAnnotationsFound.Count(), "Invalid annotation count.");
 
-            valueAnnotationsFound = model.FindVocabularyAnnotations<IEdmValueAnnotation>(petType, personEntity);
-            Assert.AreEqual(0, valueAnnotationsFound.Count(), "Invalid value annotation count.");
-
-            valueAnnotationsFound = model.FindVocabularyAnnotations<IEdmValueAnnotation>(petType, addressTerm);
-            Assert.AreEqual(0, valueAnnotationsFound.Count(), "Invalid value annotation count.");
+            valueAnnotationsFound = model.FindVocabularyAnnotations<IEdmVocabularyAnnotation>(petType, addressTerm);
+            Assert.AreEqual(0, valueAnnotationsFound.Count(), "Invalid annotation count.");
         }
 
         [TestMethod]
@@ -560,7 +548,7 @@ namespace EdmLibTests.FunctionalTests
             Assert.AreEqual(3, modelVocabulary.Count(), "Invalid vocabulary count.");
 
             var personEntity = model.FindEntityType("AnnotationNamespace.Person");
-            var addressTerm = model.FindValueTerm("AnnotationNamespace.AddressObject");
+            var addressTerm = model.FindTerm("AnnotationNamespace.AddressObject");
             var petType = model.FindType("DefaultNamespace.Pet") as IEdmComplexType;
             this.CompareVacabulraryAnnoationsVariations(model.FindDeclaredVocabularyAnnotations(personEntity), model.FindVocabularyAnnotations(personEntity));
             Assert.AreEqual(0, model.FindDeclaredVocabularyAnnotations(personEntity).Count(), "Invalid annotation count.");
@@ -568,18 +556,15 @@ namespace EdmLibTests.FunctionalTests
             Assert.AreEqual(0, model.FindDeclaredVocabularyAnnotations(addressTerm).Count(), "Invalid annotation count.");
             this.CompareVacabulraryAnnoationsVariations(model.FindDeclaredVocabularyAnnotations(petType), model.FindVocabularyAnnotations(petType));
             Assert.AreEqual(3, model.FindDeclaredVocabularyAnnotations(petType).Count(), "Invalid annotation count.");
-            var expectedValueAnnotation = modelVocabulary.Where(n => n.Term.TermKind.Equals(EdmTermKind.Value) && n.Term == addressTerm);
+            var expectedValueAnnotation = modelVocabulary.Where(n => n.Term == addressTerm);
 
-            var valueAnnotationsFound = model.FindVocabularyAnnotations<IEdmValueAnnotation>(addressTerm, addressTerm);
-            Assert.AreEqual(0, valueAnnotationsFound.Count(), "Invalid value annotation count.");
+            var valueAnnotationsFound = model.FindVocabularyAnnotations<IEdmVocabularyAnnotation>(addressTerm, addressTerm);
+            Assert.AreEqual(0, valueAnnotationsFound.Count(), "Invalid annotation count.");
 
-            valueAnnotationsFound = model.FindVocabularyAnnotations<IEdmValueAnnotation>(petType, personEntity);
-            Assert.AreEqual(0, valueAnnotationsFound.Count(), "Invalid value annotation count.");
-
-            valueAnnotationsFound = model.FindVocabularyAnnotations<IEdmValueAnnotation>(petType, addressTerm);
-            Assert.AreEqual(2, valueAnnotationsFound.Count(), "Invalid value annotation count.");
-            Assert.AreSame(expectedValueAnnotation.ElementAt(0), valueAnnotationsFound.ElementAt(0), "Invalid value annotation.");
-            Assert.AreSame(expectedValueAnnotation.ElementAt(1), valueAnnotationsFound.ElementAt(1), "Invalid value annotation.");
+            valueAnnotationsFound = model.FindVocabularyAnnotations<IEdmVocabularyAnnotation>(petType, addressTerm);
+            Assert.AreEqual(2, valueAnnotationsFound.Count(), "Invalid annotation count.");
+            Assert.AreSame(expectedValueAnnotation.ElementAt(0), valueAnnotationsFound.ElementAt(0), "Invalid annotation.");
+            Assert.AreSame(expectedValueAnnotation.ElementAt(1), valueAnnotationsFound.ElementAt(1), "Invalid annotation.");
         }
 
         [TestMethod]
@@ -592,8 +577,8 @@ namespace EdmLibTests.FunctionalTests
             var valueAnnotationType = model.FindType("DefaultNamespace.ValueAnnotationType");
             this.CompareVacabulraryAnnoationsVariations(model.FindDeclaredVocabularyAnnotations(valueAnnotationType), model.FindVocabularyAnnotations(valueAnnotationType));
 
-            var valueAnnotationsFound = model.FindVocabularyAnnotations(valueAnnotationType).Where(n => n.Term.TermKind.Equals(EdmTermKind.Value));
-            Assert.AreEqual(3, valueAnnotationsFound.Count(), "Invalid value annotation count.");
+            var valueAnnotationsFound = model.FindVocabularyAnnotations(valueAnnotationType);
+            Assert.AreEqual(3, valueAnnotationsFound.Count(), "Invalid annotation count.");
 
             var valueAnnotationFoundCount = valueAnnotationsFound.Where(n => n.Term.Name.Equals("ValueTermInModel")).Count();
             Assert.AreEqual(1, valueAnnotationFoundCount, "Type annotation cannot be found.");
@@ -623,8 +608,8 @@ namespace EdmLibTests.FunctionalTests
             anntationFound = model.FindVocabularyAnnotations(valueAnnotationType);
             Assert.AreEqual(3, anntationFound.Count(), "Invalid annotation count.");
 
-            var valueAnnotationsFound = model.FindVocabularyAnnotations(valueAnnotationType).Where(n => n.Term.TermKind.Equals(EdmTermKind.Value));
-            Assert.AreEqual(3, valueAnnotationsFound.Count(), "Invalid value annotation count.");
+            var valueAnnotationsFound = model.FindVocabularyAnnotations(valueAnnotationType);
+            Assert.AreEqual(3, valueAnnotationsFound.Count(), "Invalid annotation count.");
 
             var valueAnnotationFoundCount = valueAnnotationsFound.Where(n => n.Term.Name.Equals("ValueTermInModel")).Count();
             Assert.AreEqual(1, valueAnnotationFoundCount, "Type annotation cannot be found.");
@@ -637,49 +622,49 @@ namespace EdmLibTests.FunctionalTests
         }
 
         [TestMethod]
-        public void FindMethodTestFindValueTermSingleCsdl()
+        public void FindMethodTestFindTermSingleCsdl()
         {
-            var csdls = FindMethodsTestModelBuilder.FindValueTermCsdl();
+            var csdls = FindMethodsTestModelBuilder.FindTermCsdl();
             var model = this.GetParserResult(csdls);
 
-            var valueTermInModel = model.FindValueTerm("DefaultNamespace.ValueTermInModel");
-            Assert.IsNotNull(valueTermInModel, "Invalid value term.");
-            Assert.AreSame(valueTermInModel, model.FindValueTerm("DefaultNamespace.ValueTermInModel"), "Invalid value term.");
+            var valueTermInModel = model.FindTerm("DefaultNamespace.ValueTermInModel");
+            Assert.IsNotNull(valueTermInModel, "Invalid term.");
+            Assert.AreSame(valueTermInModel, model.FindTerm("DefaultNamespace.ValueTermInModel"), "Invalid term.");
 
-            var ambiguousValueTerm = model.FindValueTerm("DefaultNamespace.AmbigousValueTerm");
-            Assert.IsNotNull(ambiguousValueTerm, "Invalid ambiguous value term.");
+            var ambiguousValueTerm = model.FindTerm("DefaultNamespace.AmbigousValueTerm");
+            Assert.IsNotNull(ambiguousValueTerm, "Invalid ambiguous term.");
             Assert.AreEqual(true, ambiguousValueTerm.IsBad(), "Invalid IsBad value.");
-            Assert.AreSame(ambiguousValueTerm, model.FindValueTerm("DefaultNamespace.AmbigousValueTerm"), "Invalid value term.");
+            Assert.AreSame(ambiguousValueTerm, model.FindTerm("DefaultNamespace.AmbigousValueTerm"), "Invalid term.");
 
-            var valueTermInOtherModel = model.FindValueTerm("AnnotationNamespace.ValueTerm");
-            Assert.IsNotNull(valueTermInOtherModel, "Invalid value term.");
-            Assert.AreSame(valueTermInOtherModel, model.FindValueTerm("AnnotationNamespace.ValueTerm"), "Invalid value term.");
+            var valueTermInOtherModel = model.FindTerm("AnnotationNamespace.ValueTerm");
+            Assert.IsNotNull(valueTermInOtherModel, "Invalid term.");
+            Assert.AreSame(valueTermInOtherModel, model.FindTerm("AnnotationNamespace.ValueTerm"), "Invalid term.");
 
-            var valueTermDoesNotExist = model.FindValueTerm("fooNamespace.ValueTerm");
-            Assert.IsNull(valueTermDoesNotExist, "Invalid value term.");
+            var valueTermDoesNotExist = model.FindTerm("fooNamespace.ValueTerm");
+            Assert.IsNull(valueTermDoesNotExist, "Invalid term.");
         }
 
         [TestMethod]
-        public void FindMethodTestFindValueTermAmbiguousReferences()
+        public void FindMethodTestFindTermAmbiguousReferences()
         {
-            var model = FindMethodsTestModelBuilder.FindValueTermModel();
-            var referencedModel = this.GetParserResult(FindMethodsTestModelBuilder.FindValueTermCsdl());
+            var model = FindMethodsTestModelBuilder.FindTermModel();
+            var referencedModel = this.GetParserResult(FindMethodsTestModelBuilder.FindTermCsdl());
             model.AddReferencedModel(referencedModel);
 
-            var valueTermInModel = model.FindValueTerm("DefaultNamespace.ValueTermInModel");
-            Assert.IsNotNull(valueTermInModel, "Invalid value term.");
-            Assert.AreSame(valueTermInModel, referencedModel.FindValueTerm("DefaultNamespace.ValueTermInModel"), "Invalid value term.");
+            var valueTermInModel = model.FindTerm("DefaultNamespace.ValueTermInModel");
+            Assert.IsNotNull(valueTermInModel, "Invalid term.");
+            Assert.AreSame(valueTermInModel, referencedModel.FindTerm("DefaultNamespace.ValueTermInModel"), "Invalid term.");
 
-            var secondValueTermInModel = model.FindValueTerm("DefaultNamespace.SecondValueTermInModel");
-            Assert.IsNotNull(secondValueTermInModel, "Invalid value term.");
-            Assert.AreSame(secondValueTermInModel, model.FindValueTerm("DefaultNamespace.SecondValueTermInModel"), "Invalid value term.");
+            var secondValueTermInModel = model.FindTerm("DefaultNamespace.SecondValueTermInModel");
+            Assert.IsNotNull(secondValueTermInModel, "Invalid term.");
+            Assert.AreSame(secondValueTermInModel, model.FindTerm("DefaultNamespace.SecondValueTermInModel"), "Invalid term.");
 
             IEnumerable<EdmError> errors;
             model.Validate(out errors);
             Assert.AreNotEqual(0, errors.Count(), "Ambiguous error should occur.");
 
-            var ambiguousValueTerm = model.FindValueTerm("DefaultNamespace.ReferenceAmbigousValueTerm");
-            Assert.IsNotNull(ambiguousValueTerm, "Invalid ambiguous value term.");
+            var ambiguousValueTerm = model.FindTerm("DefaultNamespace.ReferenceAmbigousValueTerm");
+            Assert.IsNotNull(ambiguousValueTerm, "Invalid ambiguous term.");
             Assert.AreEqual(true, ambiguousValueTerm.IsBad(), "Invalid IsBad value.");
         }
 
@@ -900,7 +885,7 @@ namespace EdmLibTests.FunctionalTests
 
             IEdmModel model;
             IEnumerable<EdmError> errors;
-            bool parsed = EdmxReader.TryParse(XmlReader.Create(new StringReader(edmx)), new IEdmModel[] { referencedEntityContainerModel }, out model, out errors);
+            bool parsed = CsdlReader.TryParse(XmlReader.Create(new StringReader(edmx)), new IEdmModel[] { referencedEntityContainerModel }, out model, out errors);
             Assert.IsTrue(parsed, "parsed");
             Assert.IsTrue(errors.Count() == 0, "no errors");
 
@@ -910,10 +895,10 @@ namespace EdmLibTests.FunctionalTests
         }
 
         [TestMethod]
-        public void FindMethodTestFindVocabularyAnnotationAcrossModelValueAnnotationModel()
+        public void FindMethodTestFindVocabularyAnnotationAcrossModelVocabularyAnnotationModel()
         {
-            var model = FindMethodsTestModelBuilder.FindVocabularyAnnotationAcrossModelValueAnnotationModel();
-            var referenceModel = this.GetParserResult(FindMethodsTestModelBuilder.FindVocabularyAnnotationAcrossModelValueAnnotationCsdl());
+            var model = FindMethodsTestModelBuilder.FindVocabularyAnnotationAcrossModelAnnotationModel();
+            var referenceModel = this.GetParserResult(FindMethodsTestModelBuilder.FindVocabularyAnnotationAcrossModelAnnotationCsdl());
             model.AddReferencedModel(referenceModel);
 
             var containerOne = model.FindEntityContainer("ContainerOne");

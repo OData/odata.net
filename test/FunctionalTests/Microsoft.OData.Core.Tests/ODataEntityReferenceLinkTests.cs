@@ -10,13 +10,12 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using FluentAssertions;
-using Microsoft.OData.Core.JsonLight;
+using Microsoft.OData.JsonLight;
 using Microsoft.OData.Edm;
-using Microsoft.OData.Edm.Library;
 using Xunit;
-using ODataErrorStrings = Microsoft.OData.Core.Strings;
+using ODataErrorStrings = Microsoft.OData.Strings;
 
-namespace Microsoft.OData.Core.Tests
+namespace Microsoft.OData.Tests
 {
     public class ODataEntityReferenceLinkTests
     {
@@ -151,12 +150,12 @@ namespace Microsoft.OData.Core.Tests
         }
 
         [Fact]
-        public void ReadForEntityReferenceLinkWithDuplicateAnnotationNameShouldThrow()
+        public void ReadForEntityReferenceLinkWithDuplicateAnnotationNameShouldNotThrow()
         {
             string payload = "{\"@odata.context\":\"http://odata.org/test/$metadata#$ref\",\"@odata.id\":\"http://host/Customers(1)\",\"@TestNamespace.unknown\":123,\"@TestNamespace.unknown\":456}";
             var deserializer = this.CreateJsonLightEntryAndFeedDeserializer(payload);
             Action readResult = () => deserializer.ReadEntityReferenceLink();
-            readResult.ShouldThrow<ODataException>().WithMessage(Strings.DuplicatePropertyNamesChecker_DuplicateAnnotationNotAllowed("TestNamespace.unknown"));
+            readResult.ShouldNotThrow();
         }
 
         [Fact]
@@ -229,19 +228,19 @@ namespace Microsoft.OData.Core.Tests
 
         private static ODataJsonLightOutputContext CreateJsonLightOutputContext(MemoryStream stream, bool writingResponse = true, bool synchronous = true)
         {
-            ODataMessageWriterSettings settings = new ODataMessageWriterSettings { Version = ODataVersion.V4 };
+            var messageInfo = new ODataMessageInfo
+            {
+                MessageStream = new NonDisposingStream(stream),
+                MediaType = new ODataMediaType("application", "json"),
+                Encoding = Encoding.UTF8,
+                IsResponse = writingResponse,
+                IsAsync = !synchronous,
+                Model = EdmCoreModel.Instance
+            };
+            var settings = new ODataMessageWriterSettings { Version = ODataVersion.V4 };
             settings.SetServiceDocumentUri(new Uri("http://odata.org/test"));
             settings.ShouldIncludeAnnotation = ODataUtils.CreateAnnotationFilter("*");
-            return new ODataJsonLightOutputContext(
-                ODataFormat.Json,
-                new NonDisposingStream(stream),
-                new ODataMediaType("application", "json"),
-                Encoding.UTF8,
-                settings,
-                writingResponse,
-                synchronous,
-                EdmCoreModel.Instance,
-                /*urlResolver*/ null);
+            return new ODataJsonLightOutputContext(messageInfo, settings);
         }
 
         private ODataJsonLightEntityReferenceLinkDeserializer CreateJsonLightEntryAndFeedDeserializer(string payload, bool isIeee754Compatible = false)
@@ -253,19 +252,22 @@ namespace Microsoft.OData.Core.Tests
 
         private ODataJsonLightInputContext CreateJsonLightInputContext(string payload, bool isIeee754Compatible)
         {
-            ODataMediaType mediaType = isIeee754Compatible
+            var mediaType = isIeee754Compatible
                 ? new ODataMediaType("application", "json", new KeyValuePair<string, string>("IEEE754Compatible", "true"))
                 : new ODataMediaType("application", "json", new KeyValuePair<string, string>("odata.streaming", "true"));
+
+            var messageInfo = new ODataMessageInfo
+            {
+                IsResponse = true,
+                MediaType = mediaType,
+                IsAsync = false,
+                Model = EdmModel,
+            };
+
             return new ODataJsonLightInputContext(
-                ODataFormat.Json,
-                new MemoryStream(Encoding.UTF8.GetBytes(payload)),
-                mediaType,
-                Encoding.UTF8,
-                MessageReaderSettingsReadAndValidateCustomInstanceAnnotations,
-                /*readingResponse*/ true,
-                /*synchronous*/ true,
-                EdmModel,
-                /*urlResolver*/ null);
+                new StringReader(payload),
+                messageInfo,
+                MessageReaderSettingsReadAndValidateCustomInstanceAnnotations);
         }
     }
 }

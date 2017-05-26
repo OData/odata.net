@@ -11,7 +11,7 @@ namespace Microsoft.Test.OData.Services.ODataWCFService
     using System.Collections.ObjectModel;
     using System.Linq;
     using System.Text;
-    using Microsoft.OData.Edm.Library;
+    using Microsoft.OData.Edm;
     using Microsoft.Test.OData.Services.ODataWCFService.DataSource;
 
     public class DefaultServiceOperationProvider : ODataReflectionOperationProvider

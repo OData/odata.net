@@ -12,7 +12,6 @@ namespace EdmLibTests.FunctionalUtilities
     using System.Xml;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Edm.Csdl;
-    using Microsoft.OData.Edm.Library;
     using Microsoft.OData.Edm.Validation;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -315,7 +314,7 @@ namespace EdmLibTests.FunctionalUtilities
             };
 
             IEnumerable<EdmError> errors;
-            bool parsed = EdmxReader.TryParse(XmlReader.Create(new StringReader(mainEdmx)), getReferencedModelReaderFunc, out model, out errors);
+            bool parsed = CsdlReader.TryParse(XmlReader.Create(new StringReader(mainEdmx)), getReferencedModelReaderFunc, out model, out errors);
             Assert.IsTrue(parsed);
             return parsed;
         }

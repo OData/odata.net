@@ -4,10 +4,9 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core.UriParser.Visitors
+namespace Microsoft.OData.UriParser
 {
     using System.Collections.Generic;
-    using Microsoft.OData.Core.UriParser.Syntactic;
 
     /// <summary>
     /// Equality comparer for <see cref="PathSegmentToken"/>.
@@ -40,7 +39,7 @@ namespace Microsoft.OData.Core.UriParser.Visitors
         /// </summary>
         /// <param name="path">The path to hash.</param>
         /// <returns>
-        /// A hash code for this instance, suitable for use in hashing algorithms and data structures like a hash table. 
+        /// A hash code for this instance, suitable for use in hashing algorithms and data structures like a hash table.
         /// </returns>
         public override int GetHashCode(PathSegmentToken path)
         {

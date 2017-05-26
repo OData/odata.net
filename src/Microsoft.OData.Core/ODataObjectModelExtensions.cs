@@ -3,7 +3,7 @@
 //      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 // </copyright>
 //---------------------------------------------------------------------
-namespace Microsoft.OData.Core
+namespace Microsoft.OData
 {
     using Microsoft.OData.Edm;
 
@@ -13,25 +13,36 @@ namespace Microsoft.OData.Core
     public static class ODataObjectModelExtensions
     {
         /// <summary>
-        /// Provide additional serialization information to the <see cref="ODataWriter"/> for <paramref name="feed"/>.
+        /// Provide additional serialization information to the <see cref="ODataWriter"/> for <paramref name="resourceSet"/>.
         /// </summary>
-        /// <param name="feed">The instance to set the serialization info.</param>
+        /// <param name="resourceSet">The instance to set the serialization info.</param>
         /// <param name="serializationInfo">The serialization info to set.</param>
-        public static void SetSerializationInfo(this ODataFeed feed, ODataFeedAndEntrySerializationInfo serializationInfo)
+        public static void SetSerializationInfo(this ODataResourceSet resourceSet, ODataResourceSerializationInfo serializationInfo)
         {
-            ExceptionUtils.CheckArgumentNotNull(feed, "feed");
-            feed.SerializationInfo = serializationInfo;
+            ExceptionUtils.CheckArgumentNotNull(resourceSet, "resourceSet");
+            resourceSet.SerializationInfo = serializationInfo;
         }
 
         /// <summary>
-        /// Provide additional serialization information to the <see cref="ODataWriter"/> for <paramref name="entry"/>.
+        /// Provide additional serialization information to the <see cref="ODataWriter"/> for <paramref name="resource"/>.
         /// </summary>
-        /// <param name="entry">The instance to set the serialization info.</param>
+        /// <param name="resource">The instance to set the serialization info.</param>
         /// <param name="serializationInfo">The serialization info to set.</param>
-        public static void SetSerializationInfo(this ODataEntry entry, ODataFeedAndEntrySerializationInfo serializationInfo)
+        public static void SetSerializationInfo(this ODataResource resource, ODataResourceSerializationInfo serializationInfo)
         {
-            ExceptionUtils.CheckArgumentNotNull(entry, "entry");
-            entry.SerializationInfo = serializationInfo;
+            ExceptionUtils.CheckArgumentNotNull(resource, "resource");
+            resource.SerializationInfo = serializationInfo;
+        }
+
+        /// <summary>
+        /// Provide additional serialization information to the <see cref="ODataWriter"/> for <paramref name="nestedResourceInfo"/>.
+        /// </summary>
+        /// <param name="nestedResourceInfo">The instance to set the serialization info.</param>
+        /// <param name="serializationInfo">The serialization info to set.</param>
+        public static void SetSerializationInfo(this ODataNestedResourceInfo nestedResourceInfo, ODataNestedResourceInfoSerializationInfo serializationInfo)
+        {
+            ExceptionUtils.CheckArgumentNotNull(nestedResourceInfo, "resource");
+            nestedResourceInfo.SerializationInfo = serializationInfo;
         }
 
         /// <summary>
@@ -57,14 +68,14 @@ namespace Microsoft.OData.Core
         }
 
         /// <summary>
-        /// Provide additional serialization information to the <see cref="ODataDeltaWriter"/> for <paramref name="deltaFeed"/>.
+        /// Provide additional serialization information to the <see cref="ODataDeltaWriter"/> for <paramref name="deltaResourceSet"/>.
         /// </summary>
-        /// <param name="deltaFeed">The instance to set the serialization info.</param>
+        /// <param name="deltaResourceSet">The instance to set the serialization info.</param>
         /// <param name="serializationInfo">The serialization info to set.</param>
-        public static void SetSerializationInfo(this ODataDeltaFeed deltaFeed, ODataDeltaFeedSerializationInfo serializationInfo)
+        public static void SetSerializationInfo(this ODataDeltaResourceSet deltaResourceSet, ODataDeltaResourceSetSerializationInfo serializationInfo)
         {
-            ExceptionUtils.CheckArgumentNotNull(deltaFeed, "deltaFeed");
-            deltaFeed.SerializationInfo = serializationInfo;
+            ExceptionUtils.CheckArgumentNotNull(deltaResourceSet, "deltaResourceSet");
+            deltaResourceSet.SerializationInfo = serializationInfo;
         }
 
         /// <summary>
@@ -87,43 +98,6 @@ namespace Microsoft.OData.Core
         {
             ExceptionUtils.CheckArgumentNotNull(deltalink, "deltalink");
             deltalink.SerializationInfo = serializationInfo;
-        }
-
-        /// <summary>
-        /// Set the payload value converter
-        /// </summary>
-        /// <param name="model">The instance to set the value payload converter.</param>
-        /// <param name="converter">The payload value converter to set.</param>
-        public static void SetPayloadValueConverter(this IEdmModel model, ODataPayloadValueConverter converter)
-        {
-            ExceptionUtils.CheckArgumentNotNull(model, "model");
-            ExceptionUtils.CheckArgumentNotNull(converter, "converter");
-
-            // Set payload value converter for the model.
-            model.SetAnnotationValue(
-                model,
-                Metadata.EdmConstants.InternalUri,
-                Metadata.EdmConstants.PayloadValueConverterAnnotation,
-                converter);
-        }
-
-        /// <summary>
-        /// Get the payload value converter
-        /// </summary>
-        /// <param name="model">The instance to get the value payload converter from.</param>
-        /// <returns>The payload value converter</returns>
-        public static ODataPayloadValueConverter GetPayloadValueConverter(this IEdmModel model)
-        {
-            ExceptionUtils.CheckArgumentNotNull(model, "model");
-
-            // Get payload value converter for the model.
-            ODataPayloadValueConverter converter = model.GetAnnotationValue(
-                model,
-                Metadata.EdmConstants.InternalUri,
-                Metadata.EdmConstants.PayloadValueConverterAnnotation)
-                as ODataPayloadValueConverter;
-
-            return converter ?? ODataPayloadValueConverter.Default;
         }
     }
 }

@@ -4,17 +4,17 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core
+namespace Microsoft.OData
 {
     #region Namespaces
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Core.Json;
-    using Microsoft.OData.Core.JsonLight;
-    using Microsoft.OData.Core.Metadata;
-    using ODataErrorStrings = Microsoft.OData.Core.Strings;
+    using Microsoft.OData.Json;
+    using Microsoft.OData.JsonLight;
+    using Microsoft.OData.Metadata;
+    using ODataErrorStrings = Microsoft.OData.Strings;
     #endregion
 
     /// <summary>
@@ -25,7 +25,7 @@ namespace Microsoft.OData.Core
         /// <summary>
         /// Value serializer, responsible for serializing the annotation values.
         /// </summary>
-        private readonly IODataJsonLightValueSerializer valueSerializer;
+        private readonly ODataJsonLightValueSerializer valueSerializer;
 
         /// <summary>
         /// The oracle to use to determine the type name to write for entries and values.
@@ -50,18 +50,18 @@ namespace Microsoft.OData.Core
         /// <summary>
         /// Constructs a <see cref="JsonLightInstanceAnnotationWriter"/> that can write a collection of <see cref="ODataInstanceAnnotation"/>.
         /// </summary>
-        /// <param name="valueSerializer">The <see cref="IODataJsonLightValueSerializer"/> to use for writing values of instance annotations.
+        /// <param name="valueSerializer">The <see cref="ODataJsonLightValueSerializer"/> to use for writing values of instance annotations.
         /// The <see cref="IJsonWriter"/> that is also used internally will be acquired from the this instance.</param>
         /// <param name="typeNameOracle">The oracle to use to determine the type name to write for entries and values.</param>
-        internal JsonLightInstanceAnnotationWriter(IODataJsonLightValueSerializer valueSerializer, JsonLightTypeNameOracle typeNameOracle)
+        internal JsonLightInstanceAnnotationWriter(ODataJsonLightValueSerializer valueSerializer, JsonLightTypeNameOracle typeNameOracle)
         {
             Debug.Assert(valueSerializer != null, "valueSerializer should not be null");
             this.valueSerializer = valueSerializer;
             this.typeNameOracle = typeNameOracle;
             this.jsonWriter = this.valueSerializer.JsonWriter;
-            this.odataAnnotationWriter = new JsonLightODataAnnotationWriter(this.jsonWriter, valueSerializer.Settings.ODataSimplified);
-            this.writerValidator =
-                ValidatorFactory.CreateWriterValidator(this.valueSerializer.Settings.EnableFullValidation);
+            this.odataAnnotationWriter = new JsonLightODataAnnotationWriter(this.jsonWriter,
+                valueSerializer.JsonLightOutputContext.ODataSimplifiedOptions.EnableWritingODataAnnotationWithoutPrefix);
+            this.writerValidator = this.valueSerializer.MessageWriterSettings.Validator;
         }
 
         /// <summary>
@@ -71,7 +71,9 @@ namespace Microsoft.OData.Core
         /// <param name="tracker">The tracker to track if instance annotations are written.</param>
         /// <param name="ignoreFilter">Whether to ignore the filter in settings.</param>
         /// <param name="propertyName">The name of the property this instance annotation applies to</param>
-        internal void WriteInstanceAnnotations(IEnumerable<ODataInstanceAnnotation> instanceAnnotations, InstanceAnnotationWriteTracker tracker, bool ignoreFilter = false, string propertyName = null)
+        internal void WriteInstanceAnnotations(IEnumerable<ODataInstanceAnnotation> instanceAnnotations,
+                                               InstanceAnnotationWriteTracker tracker,
+                                               bool ignoreFilter = false, string propertyName = null)
         {
             Debug.Assert(instanceAnnotations != null, "instanceAnnotations should not be null if we called this");
             Debug.Assert(tracker != null, "tracker should not be null if we called this");
@@ -84,7 +86,8 @@ namespace Microsoft.OData.Core
                     throw new ODataException(ODataErrorStrings.JsonLightInstanceAnnotationWriter_DuplicateAnnotationNameInCollection(annotation.Name));
                 }
 
-                if (!tracker.IsAnnotationWritten(annotation.Name))
+                if (!tracker.IsAnnotationWritten(annotation.Name)
+                    && (!ODataAnnotationNames.IsODataAnnotationName(annotation.Name) || ODataAnnotationNames.IsUnknownODataAnnotationName(annotation.Name)))
                 {
                     this.WriteInstanceAnnotation(annotation, ignoreFilter, propertyName);
                     tracker.MarkAnnotationWritten(annotation.Name);
@@ -97,10 +100,22 @@ namespace Microsoft.OData.Core
         /// </summary>
         /// <param name="instanceAnnotations">Collection of instance annotations to write.</param>
         /// <param name="propertyName">The name of the property this instance annotation applies to</param>
-        internal void WriteInstanceAnnotations(IEnumerable<ODataInstanceAnnotation> instanceAnnotations, string propertyName = null)
+        /// <param name="isUndeclaredProperty">If writing an undeclared property.</param>
+        internal void WriteInstanceAnnotations(IEnumerable<ODataInstanceAnnotation> instanceAnnotations, string propertyName = null, bool isUndeclaredProperty = false)
         {
             Debug.Assert(instanceAnnotations != null, "instanceAnnotations should not be null if we called this");
-            this.WriteInstanceAnnotations(instanceAnnotations, new InstanceAnnotationWriteTracker(), false, propertyName);
+            if (isUndeclaredProperty)
+            {
+                // write undeclared property's all annotations
+                foreach (var annotation in instanceAnnotations)
+                {
+                    this.WriteInstanceAnnotation(annotation, true, propertyName);
+                }
+            }
+            else
+            {
+                this.WriteInstanceAnnotations(instanceAnnotations, new InstanceAnnotationWriteTracker(), false, propertyName);
+            }
         }
 
         /// <summary>
@@ -124,23 +139,24 @@ namespace Microsoft.OData.Core
             string name = instanceAnnotation.Name;
             ODataValue value = instanceAnnotation.Value;
             Debug.Assert(!string.IsNullOrEmpty(name), "name should not be null or empty");
-            Debug.Assert(!ODataAnnotationNames.IsODataAnnotationName(name), "A reserved name cannot be used as instance annotation key");
             Debug.Assert(value != null, "value should not be null because we use ODataNullValue for null instead");
             Debug.Assert(!(value is ODataStreamReferenceValue), "!(value is ODataStreamReferenceValue) -- ODataInstanceAnnotation and InstanceAnnotationCollection will throw if the value is a stream value.");
             Debug.Assert(this.valueSerializer.Model != null, "this.valueSerializer.Model != null");
 
-            if (!ignoreFilter && this.valueSerializer.Settings.ShouldSkipAnnotation(name))
+            if (!ignoreFilter && this.valueSerializer.MessageWriterSettings.ShouldSkipAnnotation(name))
             {
                 return;
             }
 
-            IEdmTypeReference expectedType = MetadataUtils.LookupTypeOfValueTerm(name, this.valueSerializer.Model);
+            IEdmTypeReference expectedType = MetadataUtils.LookupTypeOfTerm(name, this.valueSerializer.Model);
 
             if (value is ODataNullValue)
             {
                 if (expectedType != null && !expectedType.IsNullable)
                 {
-                    throw new ODataException(ODataErrorStrings.ODataAtomPropertyAndValueSerializer_NullValueNotAllowedForInstanceAnnotation(instanceAnnotation.Name, expectedType.FullName()));
+                    throw new ODataException(
+                        ODataErrorStrings.JsonLightInstanceAnnotationWriter_NullValueNotAllowedForInstanceAnnotation(
+                            instanceAnnotation.Name, expectedType.FullName()));
                 }
 
                 this.WriteInstanceAnnotationName(propertyName, name);
@@ -148,23 +164,16 @@ namespace Microsoft.OData.Core
                 return;
             }
 
-            // If we didn't find an expected type from looking up the term in the model, treat this value the same way we would for open property values. 
-            // That is, write the type name (unless its a primitive value with a JSON-native type).  If we did find an expected type, treat the annotation value like a 
+            // If we didn't find an expected type from looking up the term in the model, treat this value the same way we would for open property values.
+            // That is, write the type name (unless its a primitive value with a JSON-native type).  If we did find an expected type, treat the annotation value like a
             // declared property with an expected type. This will still write out the type if the value type is more derived than the declared type, for example.
             bool treatLikeOpenProperty = expectedType == null;
-
-            ODataComplexValue complexValue = value as ODataComplexValue;
-            if (complexValue != null)
-            {
-                this.WriteInstanceAnnotationName(propertyName, name);
-                this.valueSerializer.WriteComplexValue(complexValue, expectedType, false /*isTopLevel*/, treatLikeOpenProperty, this.valueSerializer.CreateDuplicatePropertyNamesChecker());
-                return;
-            }
 
             ODataCollectionValue collectionValue = value as ODataCollectionValue;
             if (collectionValue != null)
             {
-                IEdmTypeReference typeFromCollectionValue = (IEdmCollectionTypeReference)TypeNameOracle.ResolveAndValidateTypeForCollectionValue(this.valueSerializer.Model, expectedType, collectionValue, treatLikeOpenProperty, this.writerValidator);
+                IEdmTypeReference typeFromCollectionValue = (IEdmCollectionTypeReference)TypeNameOracle.ResolveAndValidateTypeForCollectionValue(
+                    this.valueSerializer.Model, expectedType, collectionValue, treatLikeOpenProperty, this.writerValidator);
                 string collectionTypeNameToWrite = this.typeNameOracle.GetValueTypeNameForWriting(collectionValue, expectedType, typeFromCollectionValue, treatLikeOpenProperty);
                 if (collectionTypeNameToWrite != null)
                 {
@@ -173,6 +182,14 @@ namespace Microsoft.OData.Core
 
                 this.WriteInstanceAnnotationName(propertyName, name);
                 this.valueSerializer.WriteCollectionValue(collectionValue, expectedType, typeFromCollectionValue, false /*isTopLevelProperty*/, false /*isInUri*/, treatLikeOpenProperty);
+                return;
+            }
+
+            ODataUntypedValue untypedValue = value as ODataUntypedValue;
+            if (untypedValue != null)
+            {
+                this.WriteInstanceAnnotationName(propertyName, name);
+                this.valueSerializer.WriteUntypedValue(untypedValue);
                 return;
             }
 
@@ -188,7 +205,7 @@ namespace Microsoft.OData.Core
             }
 
             this.WriteInstanceAnnotationName(propertyName, name);
-            this.valueSerializer.WritePrimitiveValue(primitiveValue.Value, expectedType);
+            this.valueSerializer.WritePrimitiveValue(primitiveValue.Value, typeFromPrimitiveValue, expectedType);
         }
 
         /// <summary>

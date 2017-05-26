@@ -65,7 +65,7 @@ namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
             context.AddLink(c1, "Orders", o1);
 
             //Post with batch
-            expectedPropertyCount = 3;
+            expectedPropertyCount = 2;
             var batchResponse = await context.SaveChangesAsync(SaveChangesOptions.BatchWithSingleChangeset);
 
             List<Order> orders = new List<Order>();
@@ -92,6 +92,15 @@ namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
             //Partial Update an Entity
             expectedPropertyCount = 1;
             c1.Orders[0].Concurrency.Token = "UpdatedToken";
+            checkEntry = false;
+            Action<WritingEntryArgs> onEntryEnding1 = (args) =>
+            {
+                if (args.Entry.TypeName.EndsWith("ConcurrencyInfo"))
+                {
+                    Assert.AreEqual("UpdatedToken", args.Entry.Properties.Single(p => p.Name == "Token").Value);
+                }
+            };
+            context.Configurations.RequestPipeline.OnEntryEnding(onEntryEnding1);
             await context.SaveChangesAsync(SaveChangesOptions.None);
 
             this.EnqueueTestComplete();

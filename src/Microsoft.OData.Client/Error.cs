@@ -65,7 +65,7 @@ namespace Microsoft.OData.Client
         }
 
         /// <summary>
-        /// create and trace a 
+        /// create and trace a
         /// </summary>
         /// <param name="errorCode">errorCode</param>
         /// <param name="message">message</param>

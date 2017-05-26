@@ -4,18 +4,14 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core
+namespace Microsoft.OData
 {
     #region Namespaces
     using System.Collections.Generic;
-    using System.Diagnostics.CodeAnalysis;
-    using System.Text;
-#if ODATALIB_ASYNC
+#if PORTABLELIB
     using System.Threading.Tasks;
 #endif
-    using Microsoft.OData.Edm;
-    using Microsoft.OData.Core.Atom;
-    using Microsoft.OData.Core.Json;
+    using Microsoft.OData.Json;
     #endregion Namespaces
 
     /// <summary>
@@ -23,9 +19,6 @@ namespace Microsoft.OData.Core
     /// </summary>
     public abstract class ODataFormat
     {
-        /// <summary>The ATOM format instance.</summary>
-        private static ODataAtomFormat atomFormat = new ODataAtomFormat();
-
         /// <summary>The JSON Light format instance.</summary>
         private static ODataJsonFormat JsonFormat = new ODataJsonFormat();
 
@@ -37,17 +30,6 @@ namespace Microsoft.OData.Core
 
         /// <summary>The metadata format instance.</summary>
         private static ODataMetadataFormat metadataFormat = new ODataMetadataFormat();
-
-        /// <summary>Specifies the ATOM format; we also use this for all Xml based formats (if ATOM can't be used).</summary>
-        /// <returns>The ATOM format.</returns>
-        [System.Obsolete("ATOM support is obsolete.")]
-        public static ODataFormat Atom
-        {
-            get
-            {
-                return atomFormat;
-            }
-        }
 
         /// <summary>Specifies the JSON format.</summary>
         /// <returns>The JSON format.</returns>
@@ -117,13 +99,13 @@ namespace Microsoft.OData.Core
         /// <returns>The newly created output context.</returns>
         public abstract ODataOutputContext CreateOutputContext(ODataMessageInfo messageInfo, ODataMessageWriterSettings messageWriterSettings);
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary>
         /// Asynchronously detects the payload kinds supported by this format for the specified message payload.
         /// </summary>
         /// <param name="messageInfo">The context information for the message.</param>
         /// <param name="settings">Configuration settings of the OData reader.</param>
-        /// <returns>A task that when completed returns the set of <see cref="ODataPayloadKind"/>s 
+        /// <returns>A task that when completed returns the set of <see cref="ODataPayloadKind"/>s
         /// that are supported with the specified payload.</returns>
         /// <remarks>
         /// The stream returned by GetMessageStream of <paramref name="messageInfo"/> could be used for reading for

@@ -9,9 +9,9 @@ using System.Text;
 using FluentAssertions;
 using FluentAssertions.Primitives;
 using Xunit;
-using ErrorStrings = Microsoft.OData.Core.Strings;
+using ErrorStrings = Microsoft.OData.Strings;
 
-namespace Microsoft.OData.Core.Tests
+namespace Microsoft.OData.Tests
 {
     public class MediaTypeUtilsTests
     {
@@ -39,7 +39,11 @@ namespace Microsoft.OData.Core.Tests
             Action acceptUnrecognizedStreamingValue = () => TestMediaTypeWithFormat.GetResponseTypeFromAccept("application/json;odata.metadata=minimal;odata.streaming=foo", ODataVersion.V4);
             acceptUnrecognizedStreamingValue
                 .ShouldThrow<ODataException>()
+#if NETCOREAPP1_0
+                .WithMessage(ErrorStrings.MediaTypeUtils_DidNotFindMatchingMediaType("*", "application/json;odata.metadata=minimal;odata.streaming=foo"));
+#else
                 .WithMessage(ErrorStrings.MediaTypeUtils_DidNotFindMatchingMediaType("*", "application/json;odata.metadata=minimal;odata.streaming=foo"), ComparisonMode.Wildcard);
+#endif
         }
 
         [Fact]
@@ -53,7 +57,7 @@ namespace Microsoft.OData.Core.Tests
         {
             string[] args =
             {
-                "application/json;IEEE754Compatible=false", 
+                "application/json;IEEE754Compatible=false",
                 "application/json"
             };
             foreach (var arg in args)
@@ -68,7 +72,11 @@ namespace Microsoft.OData.Core.Tests
             Action acceptUnrecognizedIeee754CompatibleValue = () => TestMediaTypeWithFormat.GetResponseTypeFromAccept("application/json;odata.metadata=minimal;IEEE754Compatible=none", ODataVersion.V4);
             acceptUnrecognizedIeee754CompatibleValue
                 .ShouldThrow<ODataException>()
+#if NETCOREAPP1_0
+                .WithMessage(ErrorStrings.MediaTypeUtils_DidNotFindMatchingMediaType("*", "application/json;odata.metadata=minimal;IEEE754Compatible=none"));
+#else
                 .WithMessage(ErrorStrings.MediaTypeUtils_DidNotFindMatchingMediaType("*", "application/json;odata.metadata=minimal;IEEE754Compatible=none"), ComparisonMode.Wildcard);
+#endif
         }
 
         [Fact]
@@ -77,7 +85,11 @@ namespace Microsoft.OData.Core.Tests
             Action acceptUnrecognizedStreamingValue = () => TestMediaTypeWithFormat.GetResponseTypeFromAccept("application/json;odata.metadata=foometadata;", ODataVersion.V4);
             acceptUnrecognizedStreamingValue
                 .ShouldThrow<ODataException>()
+#if NETCOREAPP1_0
+                .WithMessage(ErrorStrings.MediaTypeUtils_DidNotFindMatchingMediaType("*", "application/json;odata.metadata=foometadata;"));
+#else
                 .WithMessage(ErrorStrings.MediaTypeUtils_DidNotFindMatchingMediaType("*", "application/json;odata.metadata=foometadata;"), ComparisonMode.Wildcard);
+#endif
         }
 
         [Fact]
@@ -86,7 +98,11 @@ namespace Microsoft.OData.Core.Tests
             Action acceptUnrecognizedParameter = () => TestMediaTypeWithFormat.GetResponseTypeFromAccept("application/json;odata.metadata=minimal;foo=bar", ODataVersion.V4);
             acceptUnrecognizedParameter
                 .ShouldThrow<ODataException>()
+#if NETCOREAPP1_0
+                .WithMessage(ErrorStrings.MediaTypeUtils_DidNotFindMatchingMediaType("*", "application/json;odata.metadata=minimal;foo=bar"));
+#else
                 .WithMessage(ErrorStrings.MediaTypeUtils_DidNotFindMatchingMediaType("*", "application/json;odata.metadata=minimal;foo=bar"), ComparisonMode.Wildcard);
+#endif
         }
 
         [Fact]
@@ -262,14 +278,12 @@ namespace Microsoft.OData.Core.Tests
             var result1 = TestMediaTypeWithFormat.ParseContentType("application/json;odata.metadata=minimal", ODataVersion.V4);
             var result2 = TestMediaTypeWithFormat.ParseContentType("application/json;odata.metadata=minimal", ODataVersion.V4);
             var result3 = TestMediaTypeWithFormat.ParseContentType("application/json", ODataVersion.V4);
-            var result4 = TestMediaTypeWithFormat.ParseContentType("application/json", ODataVersion.V4, ODataMediaTypeResolver.GetMediaTypeResolver(true));
-            var result5 = TestMediaTypeWithFormat.ParseContentType("application/json", ODataVersion.V4, ODataMediaTypeResolver.GetMediaTypeResolver(true));
+            var result4 = TestMediaTypeWithFormat.ParseContentType("application/json", ODataVersion.V4, ODataMediaTypeResolver.GetMediaTypeResolver(null));
 
             result1.Should().BeJsonLight().And.SpecifyDefaultMetadata();
             result2.Should().BeJsonLight().And.SpecifyDefaultMetadata();
             result3.Should().BeUnspecifiedJson();
             result4.Should().BeUnspecifiedJson();
-            result5.Should().BeUnspecifiedJson();
         }
 
         [Fact]
@@ -337,7 +351,7 @@ namespace Microsoft.OData.Core.Tests
             Encoding encoding;
             ODataPayloadKind payloadKind;
             string batchBoundary;
-            var format = MediaTypeUtils.GetFormatFromContentType(contentType, new[] { ODataPayloadKind.Entry }, resolver ?? ODataMediaTypeResolver.DefaultMediaTypeResolver, out mediaType, out encoding, out payloadKind, out batchBoundary);
+            var format = MediaTypeUtils.GetFormatFromContentType(contentType, new[] { ODataPayloadKind.Resource }, resolver ?? ODataMediaTypeResolver.GetMediaTypeResolver(null), out mediaType, out encoding, out payloadKind, out batchBoundary);
             mediaType.Should().NotBeNull();
             format.Should().NotBeNull();
             return new TestMediaTypeWithFormat { MediaType = mediaType, Format = format };
@@ -355,7 +369,7 @@ namespace Microsoft.OData.Core.Tests
 
             ODataMediaType mediaType;
             Encoding encoding;
-            var format = MediaTypeUtils.GetContentTypeFromSettings(settings, ODataPayloadKind.Entry, ODataMediaTypeResolver.DefaultMediaTypeResolver, out mediaType, out encoding);
+            var format = MediaTypeUtils.GetContentTypeFromSettings(settings, ODataPayloadKind.Resource, ODataMediaTypeResolver.GetMediaTypeResolver(null), out mediaType, out encoding);
             mediaType.Should().NotBeNull();
             format.Should().NotBeNull();
             return new TestMediaTypeWithFormat { MediaType = mediaType, Format = format };

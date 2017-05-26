@@ -10,9 +10,8 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
     using System.Collections.Generic;
     using System.Linq;
     using System.Xml.Linq;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Library;
     using Microsoft.Test.OData.Utils.CombinatorialEngine;
     using Microsoft.Test.Taupo.Astoria.Contracts.Json;
     using Microsoft.Test.Taupo.Common;
@@ -40,6 +39,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
         [InjectDependency(IsRequired = true)]
         public PayloadWriterTestDescriptor.Settings Settings { get; set; }
 
+        [Ignore] // Remove Atom
         [TestMethod, Variation(Description = "Test writing of navigation links in response.")]
         public void NavigationLinksInResponse()
         {
@@ -62,9 +62,9 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
             customerSet.AddNavigationTarget(ordersNavProp, orderSet);
             customerSet.AddNavigationTarget(bestFriendNavProp, customerSet);
 
-            ODataEntry expandedCustomerInstance = ObjectModelUtils.CreateDefaultEntryWithAtomMetadata();
+            ODataResource expandedCustomerInstance = ObjectModelUtils.CreateDefaultEntryWithAtomMetadata();
             expandedCustomerInstance.TypeName = "TestModel.Customer";
-            ODataEntry expandedOrderInstance = ObjectModelUtils.CreateDefaultEntryWithAtomMetadata();
+            ODataResource expandedOrderInstance = ObjectModelUtils.CreateDefaultEntryWithAtomMetadata();
             expandedOrderInstance.TypeName = "TestModel.Order";
 
             var testCases = new[]
@@ -72,7 +72,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 // Collection deferred link
                 new NavigationLinkTestCase
                 {
-                    Items = new ODataItem[] { new ODataNavigationLink() { IsCollection = true, Name = "Orders", Url = new Uri("http://odata.org/collection") } },
+                    Items = new ODataItem[] { new ODataNestedResourceInfo() { IsCollection = true, Name = "Orders", Url = new Uri("http://odata.org/collection") } },
                     PropertyName = "Orders",
                     Xml = "<link " + TestAtomUtils.GetExpectedAtomNavigationLinkAttributesAsString("Orders", "application/atom+xml;type=feed", "Orders", "http://odata.org/collection") + " />",
                     JsonLight = "{\"" + JsonLightUtils.GetPropertyAnnotationName("Orders", JsonLightConstants.ODataNavigationLinkUrlAnnotationName) + "\":\"http://odata.org/collection\"}"
@@ -80,7 +80,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 // Singleton deferred link
                 new NavigationLinkTestCase
                 {
-                    Items = new ODataItem[] { new ODataNavigationLink() { IsCollection = false, Name = "BestFriend", Url = new Uri("http://odata.org/singleton") } },
+                    Items = new ODataItem[] { new ODataNestedResourceInfo() { IsCollection = false, Name = "BestFriend", Url = new Uri("http://odata.org/singleton") } },
                     PropertyName = "BestFriend",
                     Xml = "<link " + TestAtomUtils.GetExpectedAtomNavigationLinkAttributesAsString("BestFriend", "application/atom+xml;type=entry", "BestFriend", "http://odata.org/singleton") + " />",
                     JsonLight = "{\"" + JsonLightUtils.GetPropertyAnnotationName("BestFriend", JsonLightConstants.ODataNavigationLinkUrlAnnotationName) + "\":\"http://odata.org/singleton\"}"
@@ -88,15 +88,15 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 // Deferred link with IsCollection set to null - should fail in ATOM only
                 new NavigationLinkTestCase
                 {
-                    Items = new ODataItem[] { new ODataNavigationLink() { IsCollection = null, Name = "Orders", Url = new Uri("http://odata.org/collection") } },
+                    Items = new ODataItem[] { new ODataNestedResourceInfo() { IsCollection = null, Name = "Orders", Url = new Uri("http://odata.org/collection") } },
                     PropertyName = "Orders",
                     JsonLight = "{\"" + JsonLightUtils.GetPropertyAnnotationName("Orders", JsonLightConstants.ODataNavigationLinkUrlAnnotationName) + "\":\"http://odata.org/collection\"}",
-                    EdmExpectedExceptionCallback = (tc, m) => tc.Format == ODataFormat.Atom ? ODataExpectedExceptions.ODataException("WriterValidationUtils_NavigationLinkMustSpecifyIsCollection", "Orders") : null
+                    EdmExpectedExceptionCallback = (tc, m) => null
                 },
                 // Deferred link with Url set to null - should work only in JSON Light
                 new NavigationLinkTestCase
                 {
-                    Items = new ODataItem[] { new ODataNavigationLink() { IsCollection = true, Name = "Orders", Url = null } },
+                    Items = new ODataItem[] { new ODataNestedResourceInfo() { IsCollection = true, Name = "Orders", Url = null } },
                     PropertyName = "Orders",
                     JsonLight = "{}",
                     EdmExpectedExceptionCallback = (tc, m) => tc.Format != ODataFormat.Json ? ODataExpectedExceptions.ODataException("WriterValidationUtils_NavigationLinkMustSpecifyUrl", "Orders") : null
@@ -104,8 +104,8 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 // Entity reference link in response should fail
                 new NavigationLinkTestCase
                 {
-                    Items = new ODataItem[] { 
-                        new ODataNavigationLink() { IsCollection = null, Name = "Orders", Url = new Uri("http://odata.org/collection") },
+                    Items = new ODataItem[] {
+                        new ODataNestedResourceInfo() { IsCollection = null, Name = "Orders", Url = new Uri("http://odata.org/collection") },
                         new ODataEntityReferenceLink() { Url = new Uri("http://odata.org/entityrefernce") },
                         null
                     },
@@ -114,8 +114,8 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 // Single expanded entry in a singleton
                 new NavigationLinkTestCase
                 {
-                    Items = new ODataItem[] { 
-                        new ODataNavigationLink() { IsCollection = false, Name = "BestFriend", Url = new Uri("http://odata.org/nav") },
+                    Items = new ODataItem[] {
+                        new ODataNestedResourceInfo() { IsCollection = false, Name = "BestFriend", Url = new Uri("http://odata.org/nav") },
                         expandedCustomerInstance,
                         null,
                         null
@@ -137,32 +137,32 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 // Single expanded entry in a collection - should fail
                 new NavigationLinkTestCase
                 {
-                    Items = new ODataItem[] { 
-                        new ODataNavigationLink() { IsCollection = true, Name = "Orders", Url = new Uri("http://odata.org/nav") },
+                    Items = new ODataItem[] {
+                        new ODataNestedResourceInfo() { IsCollection = true, Name = "Orders", Url = new Uri("http://odata.org/nav") },
                         expandedOrderInstance,
                         null,
                         null
                     },
-                    EdmExpectedExceptionCallback = (tc, m) => ODataExpectedExceptions.ODataException("WriterValidationUtils_ExpandedLinkIsCollectionTrueWithEntryContent", "http://odata.org/nav")
+                    EdmExpectedExceptionCallback = (tc, m) => ODataExpectedExceptions.ODataException("WriterValidationUtils_ExpandedLinkIsCollectionTrueWithResourceContent", "http://odata.org/nav")
                 },
                 // Two expanded entries in a singleton
                 new NavigationLinkTestCase
                 {
-                    Items = new ODataItem[] { 
-                        new ODataNavigationLink() { IsCollection = false, Name = "BestFriend", Url = new Uri("http://odata.org/nav") },
+                    Items = new ODataItem[] {
+                        new ODataNestedResourceInfo() { IsCollection = false, Name = "BestFriend", Url = new Uri("http://odata.org/nav") },
                         expandedCustomerInstance,
                         null,
                         expandedCustomerInstance,
                         null,
                         null
                     },
-                    ExpectedException = ODataExpectedExceptions.ODataException("ODataWriterCore_MultipleItemsInNavigationLinkContent")
+                    ExpectedException = ODataExpectedExceptions.ODataException("ODataWriterCore_MultipleItemsInNestedResourceInfoWithContent")
                 },
                 // Expanded feed in a collection
                 new NavigationLinkTestCase
                 {
-                    Items = new ODataItem[] { 
-                        new ODataNavigationLink() { IsCollection = true, Name = "Orders", Url = new Uri("http://odata.org/nav") },
+                    Items = new ODataItem[] {
+                        new ODataNestedResourceInfo() { IsCollection = true, Name = "Orders", Url = new Uri("http://odata.org/nav") },
                         ObjectModelUtils.CreateDefaultFeedWithAtomMetadata(),
                         null,
                         null
@@ -181,26 +181,26 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 // Expanded feed in a singleton
                 new NavigationLinkTestCase
                 {
-                    Items = new ODataItem[] { 
-                        new ODataNavigationLink() { IsCollection = false, Name = "BestFriend", Url = new Uri("http://odata.org/nav") },
+                    Items = new ODataItem[] {
+                        new ODataNestedResourceInfo() { IsCollection = false, Name = "BestFriend", Url = new Uri("http://odata.org/nav") },
                         ObjectModelUtils.CreateDefaultFeedWithAtomMetadata(),
                         null,
                         null
                     },
-                    EdmExpectedExceptionCallback = (tc, m) => ODataExpectedExceptions.ODataException("WriterValidationUtils_ExpandedLinkIsCollectionFalseWithFeedContent", "http://odata.org/nav")
+                    EdmExpectedExceptionCallback = (tc, m) => ODataExpectedExceptions.ODataException("WriterValidationUtils_ExpandedLinkIsCollectionFalseWithResourceSetContent", "http://odata.org/nav")
                 },
                 // Two expanded feeds in a singleton
                 new NavigationLinkTestCase
                 {
-                    Items = new ODataItem[] { 
-                        new ODataNavigationLink() { IsCollection = true, Name = "Orders", Url = new Uri("http://odata.org/nav") },
+                    Items = new ODataItem[] {
+                        new ODataNestedResourceInfo() { IsCollection = true, Name = "Orders", Url = new Uri("http://odata.org/nav") },
                         ObjectModelUtils.CreateDefaultFeedWithAtomMetadata(),
                         null,
                         ObjectModelUtils.CreateDefaultFeedWithAtomMetadata(),
                         null,
                         null
                     },
-                    ExpectedException = ODataExpectedExceptions.ODataException("ODataWriterCore_MultipleItemsInNavigationLinkContent")
+                    ExpectedException = ODataExpectedExceptions.ODataException("ODataWriterCore_MultipleItemsInNestedResourceInfoWithContent")
                 },
             };
 
@@ -230,6 +230,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 });
         }
 
+        [Ignore] // Remove Atom
         [TestMethod, Variation(Description = "Test writing of navigation links in request.")]
         public void NavigationLinksInRequest()
         {
@@ -252,10 +253,10 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
             customerSet.AddNavigationTarget(ordersNavProp, orderSet);
             customerSet.AddNavigationTarget(bestFriendNavProp, customerSet);
 
-            ODataEntry expandedOrderInstance = ObjectModelUtils.CreateDefaultEntryWithAtomMetadata();
+            ODataResource expandedOrderInstance = ObjectModelUtils.CreateDefaultEntryWithAtomMetadata();
             expandedOrderInstance.TypeName = "TestModel.Order";
 
-            ODataEntry expandedBestFriendInstance = ObjectModelUtils.CreateDefaultEntryWithAtomMetadata();
+            ODataResource expandedBestFriendInstance = ObjectModelUtils.CreateDefaultEntryWithAtomMetadata();
             expandedBestFriendInstance.TypeName = "TestModel.Customer";
 
             var testCases = new[]
@@ -263,8 +264,8 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 // Empty navigation link should fail - there must be something in it - collection
                 new NavigationLinkTestCase
                 {
-                    Items = new ODataItem[] { 
-                        new ODataNavigationLink() { IsCollection = true, Name = "Orders", Url = new Uri("http://odata.org/nav") },
+                    Items = new ODataItem[] {
+                        new ODataNestedResourceInfo() { IsCollection = true, Name = "Orders", Url = new Uri("http://odata.org/nav") },
                         null
                     },
                     ExpectedException = ODataExpectedExceptions.ODataException("ODataWriterCore_DeferredLinkInRequest")
@@ -272,8 +273,8 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 // Empty navigation link should fail - there must be something in it - singleton
                 new NavigationLinkTestCase
                 {
-                    Items = new ODataItem[] { 
-                        new ODataNavigationLink() { IsCollection = false, Name = "BestFriend", Url = new Uri("http://odata.org/nav") },
+                    Items = new ODataItem[] {
+                        new ODataNestedResourceInfo() { IsCollection = false, Name = "BestFriend", Url = new Uri("http://odata.org/nav") },
                         null
                     },
                     ExpectedException = ODataExpectedExceptions.ODataException("ODataWriterCore_DeferredLinkInRequest")
@@ -281,18 +282,18 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 // Entity reference link with IsCollection = null, should fail always in request
                 new NavigationLinkTestCase
                 {
-                    Items = new ODataItem[] { 
-                        new ODataNavigationLink() { IsCollection = null, Name = "BestFriend", Url = new Uri("http://odata.org/nav") },
+                    Items = new ODataItem[] {
+                        new ODataNestedResourceInfo() { IsCollection = null, Name = "BestFriend", Url = new Uri("http://odata.org/nav") },
                         new ODataEntityReferenceLink() { Url = new Uri("http://odata.org/singleton") },
                         null
                     },
-                    ExpectedException = ODataExpectedExceptions.ODataException("WriterValidationUtils_NavigationLinkMustSpecifyIsCollection", "BestFriend")
+                    ExpectedException = ODataExpectedExceptions.ODataException("WriterValidationUtils_NestedResourceInfoMustSpecifyIsCollection", "BestFriend")
                 },
                 // Single entity reference link in a singleton
                 new NavigationLinkTestCase
                 {
-                    Items = new ODataItem[] { 
-                        new ODataNavigationLink() { IsCollection = false, Name = "BestFriend", Url = new Uri("http://odata.org/nav") },
+                    Items = new ODataItem[] {
+                        new ODataNestedResourceInfo() { IsCollection = false, Name = "BestFriend", Url = new Uri("http://odata.org/nav") },
                         new ODataEntityReferenceLink() { Url = new Uri("http://odata.org/singleton") },
                         null
                     },
@@ -303,8 +304,8 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 // Single expanded entry in a singleton
                 new NavigationLinkTestCase
                 {
-                    Items = new ODataItem[] { 
-                        new ODataNavigationLink() { IsCollection = false, Name = "BestFriend", Url = new Uri("http://odata.org/nav") },
+                    Items = new ODataItem[] {
+                        new ODataNestedResourceInfo() { IsCollection = false, Name = "BestFriend", Url = new Uri("http://odata.org/nav") },
                         expandedBestFriendInstance,
                         null,
                         null
@@ -320,61 +321,61 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 // Single expanded feed in a singleton
                 new NavigationLinkTestCase
                 {
-                    Items = new ODataItem[] { 
-                        new ODataNavigationLink() { IsCollection = false, Name = "BestFriend", Url = new Uri("http://odata.org/nav") },
+                    Items = new ODataItem[] {
+                        new ODataNestedResourceInfo() { IsCollection = false, Name = "BestFriend", Url = new Uri("http://odata.org/nav") },
                         ObjectModelUtils.CreateDefaultFeedWithAtomMetadata(),
                         null,
                         null
                     },
-                    ExpectedException = ODataExpectedExceptions.ODataException("WriterValidationUtils_ExpandedLinkIsCollectionFalseWithFeedContent", "http://odata.org/nav")
+                    ExpectedException = ODataExpectedExceptions.ODataException("WriterValidationUtils_ExpandedLinkIsCollectionFalseWithResourceSetContent", "http://odata.org/nav")
                 },
                 // Multiple expanded entries in a singleton
                 new NavigationLinkTestCase
                 {
-                    Items = new ODataItem[] { 
-                        new ODataNavigationLink() { IsCollection = false, Name = "BestFriend", Url = new Uri("http://odata.org/nav") },
+                    Items = new ODataItem[] {
+                        new ODataNestedResourceInfo() { IsCollection = false, Name = "BestFriend", Url = new Uri("http://odata.org/nav") },
                         expandedBestFriendInstance,
                         null,
                         expandedBestFriendInstance,
                         null,
                         null
                     },
-                    ExpectedException = ODataExpectedExceptions.ODataException("ODataWriterCore_MultipleItemsInNavigationLinkContent")
+                    ExpectedException = ODataExpectedExceptions.ODataException("ODataWriterCore_MultipleItemsInNestedResourceInfoWithContent")
                 },
                 // Expanded entry and entity reference link in a singleton
                 new NavigationLinkTestCase
                 {
-                    Items = new ODataItem[] { 
-                        new ODataNavigationLink() { IsCollection = false, Name = "BestFriend", Url = new Uri("http://odata.org/nav") },
+                    Items = new ODataItem[] {
+                        new ODataNestedResourceInfo() { IsCollection = false, Name = "BestFriend", Url = new Uri("http://odata.org/nav") },
                         expandedBestFriendInstance,
                         null,
                         new ODataEntityReferenceLink() { Url = new Uri("http://odata.org/singleton") },
                         null
                     },
-                    ExpectedException = ODataExpectedExceptions.ODataException("ODataWriterCore_MultipleItemsInNavigationLinkContent")
+                    ExpectedException = ODataExpectedExceptions.ODataException("ODataWriterCore_MultipleItemsInNestedResourceInfoWithContent")
                 },
                 // Expanded entry and entity reference link in a singleton
                 new NavigationLinkTestCase
                 {
-                    Items = new ODataItem[] { 
-                        new ODataNavigationLink() { IsCollection = false, Name = "BestFriend", Url = new Uri("http://odata.org/nav") },
+                    Items = new ODataItem[] {
+                        new ODataNestedResourceInfo() { IsCollection = false, Name = "BestFriend", Url = new Uri("http://odata.org/nav") },
                         new ODataEntityReferenceLink() { Url = new Uri("http://odata.org/singleton") },
                         expandedBestFriendInstance,
                         null,
                         null
                     },
-                    ExpectedException = ODataExpectedExceptions.ODataException("ODataWriterCore_MultipleItemsInNavigationLinkContent")
+                    ExpectedException = ODataExpectedExceptions.ODataException("ODataWriterCore_MultipleItemsInNestedResourceInfoWithContent")
                 },
                 // Multiple entity reference links in a singleton
                 new NavigationLinkTestCase
                 {
-                    Items = new ODataItem[] { 
-                        new ODataNavigationLink() { IsCollection = false, Name = "BestFriend", Url = new Uri("http://odata.org/nav") },
+                    Items = new ODataItem[] {
+                        new ODataNestedResourceInfo() { IsCollection = false, Name = "BestFriend", Url = new Uri("http://odata.org/nav") },
                         new ODataEntityReferenceLink() { Url = new Uri("http://odata.org/singleton") },
                         new ODataEntityReferenceLink() { Url = new Uri("http://odata.org/singleton") },
                         null
                     },
-                    ExpectedException = ODataExpectedExceptions.ODataException("ODataWriterCore_MultipleItemsInNavigationLinkContent")
+                    ExpectedException = ODataExpectedExceptions.ODataException("ODataWriterCore_MultipleItemsInNestedResourceInfoWithContent")
                 },
 
                 // Single entity reference link in a collection
@@ -383,8 +384,8 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 //   otherwise we seem to prefer the "feed" type in this case.
                 new NavigationLinkTestCase
                 {
-                    Items = new ODataItem[] { 
-                        new ODataNavigationLink() { IsCollection = true, Name = "Orders", Url = new Uri("http://odata.org/nav") },
+                    Items = new ODataItem[] {
+                        new ODataNestedResourceInfo() { IsCollection = true, Name = "Orders", Url = new Uri("http://odata.org/nav") },
                         new ODataEntityReferenceLink() { Url = new Uri("http://odata.org/collection") },
                         null
                     },
@@ -396,7 +397,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 new NavigationLinkTestCase
                 {
                     Items = new ODataItem[] {
-                        new ODataNavigationLink() { IsCollection = true, Name = "Orders", Url = new Uri("http://odata.org/nav") },
+                        new ODataNestedResourceInfo() { IsCollection = true, Name = "Orders", Url = new Uri("http://odata.org/nav") },
                         new ODataEntityReferenceLink() { Url = new Uri("http://odata.org/collection") },
                         new ODataEntityReferenceLink() { Url = new Uri("http://odata.org/collection2") },
                         null
@@ -409,8 +410,8 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 // Single expanded feed with no entries in a collection
                 new NavigationLinkTestCase
                 {
-                    Items = new ODataItem[] { 
-                        new ODataNavigationLink() { IsCollection = true, Name = "Orders", Url = new Uri("http://odata.org/nav") },
+                    Items = new ODataItem[] {
+                        new ODataNestedResourceInfo() { IsCollection = true, Name = "Orders", Url = new Uri("http://odata.org/nav") },
                         ObjectModelUtils.CreateDefaultFeedWithAtomMetadata(),
                         null,
                         null
@@ -426,8 +427,8 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 // Single expanded feed with one entry in a collection
                 new NavigationLinkTestCase
                 {
-                    Items = new ODataItem[] { 
-                        new ODataNavigationLink() { IsCollection = true, Name = "Orders", Url = new Uri("http://odata.org/nav") },
+                    Items = new ODataItem[] {
+                        new ODataNestedResourceInfo() { IsCollection = true, Name = "Orders", Url = new Uri("http://odata.org/nav") },
                         ObjectModelUtils.CreateDefaultFeedWithAtomMetadata(),
                         expandedOrderInstance,
                         null,
@@ -437,7 +438,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                     PropertyName = "Orders",
                     Xml = "<link " + TestAtomUtils.GetExpectedAtomNavigationLinkAttributesAsString("Orders", "application/atom+xml;type=feed", "Orders", "http://odata.org/nav") + ">" +
                             "<inline xmlns=\"http://docs.oasis-open.org/odata/ns/metadata\">" +
-                                GetDefaultFeedStartXmlAsString() +
+                                GetDefaultResourceSetStartXmlAsString() +
                                     GetDefaultEntryXmlAsString("TestModel.Order") +
                                 "</feed>" +
                             "</inline>" +
@@ -447,8 +448,8 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 // Single expanded feed with two entries in a collection
                 new NavigationLinkTestCase
                 {
-                    Items = new ODataItem[] { 
-                        new ODataNavigationLink() { IsCollection = true, Name = "Orders", Url = new Uri("http://odata.org/nav") },
+                    Items = new ODataItem[] {
+                        new ODataNestedResourceInfo() { IsCollection = true, Name = "Orders", Url = new Uri("http://odata.org/nav") },
                         ObjectModelUtils.CreateDefaultFeedWithAtomMetadata(),
                         expandedOrderInstance,
                         null,
@@ -460,7 +461,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                     PropertyName = "Orders",
                     Xml = "<link " + TestAtomUtils.GetExpectedAtomNavigationLinkAttributesAsString("Orders", "application/atom+xml;type=feed", "Orders", "http://odata.org/nav") + ">" +
                             "<inline xmlns=\"http://docs.oasis-open.org/odata/ns/metadata\">" +
-                                GetDefaultFeedStartXmlAsString() +
+                                GetDefaultResourceSetStartXmlAsString() +
                                     GetDefaultEntryXmlAsString("TestModel.Order") +
                                     GetDefaultEntryXmlAsString("TestModel.Order") +
                                 "</feed>" +
@@ -474,8 +475,8 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 // Single expanded feed with no entries and with entity reference link in a collection
                 new NavigationLinkTestCase
                 {
-                    Items = new ODataItem[] { 
-                        new ODataNavigationLink() { IsCollection = true, Name = "Orders", Url = new Uri("http://odata.org/nav") },
+                    Items = new ODataItem[] {
+                        new ODataNestedResourceInfo() { IsCollection = true, Name = "Orders", Url = new Uri("http://odata.org/nav") },
                         ObjectModelUtils.CreateDefaultFeedWithAtomMetadata(),
                         null,
                         new ODataEntityReferenceLink() { Url = new Uri("http://odata.org/collection") },
@@ -494,8 +495,8 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 // Single expanded feed with one entry and with entity reference link in a collection
                 new NavigationLinkTestCase
                 {
-                    Items = new ODataItem[] { 
-                        new ODataNavigationLink() { IsCollection = true, Name = "Orders", Url = new Uri("http://odata.org/nav") },
+                    Items = new ODataItem[] {
+                        new ODataNestedResourceInfo() { IsCollection = true, Name = "Orders", Url = new Uri("http://odata.org/nav") },
                             new ODataEntityReferenceLink() { Url = new Uri("http://odata.org/collection") },
                             ObjectModelUtils.CreateDefaultFeedWithAtomMetadata(),
                                 expandedOrderInstance,
@@ -504,11 +505,11 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                         null
                     },
                     PropertyName = "Orders",
-                    Xml = 
+                    Xml =
                         "<link " + TestAtomUtils.GetExpectedAtomNavigationLinkAttributesAsString("Orders", "application/atom+xml;type=feed", "Orders", "http://odata.org/collection") + " />" +
                         "<link " + TestAtomUtils.GetExpectedAtomNavigationLinkAttributesAsString("Orders", "application/atom+xml;type=feed", "Orders", "http://odata.org/nav") + ">" +
                             "<inline xmlns=\"http://docs.oasis-open.org/odata/ns/metadata\">" +
-                                GetDefaultFeedStartXmlAsString() +
+                                GetDefaultResourceSetStartXmlAsString() +
                                     GetDefaultEntryXmlAsString("TestModel.Order") +
                                 "</feed>" +
                             "</inline>" +
@@ -521,8 +522,8 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 // Two expanded feeds with one entry and with entity reference link in a collection
                 new NavigationLinkTestCase
                 {
-                    Items = new ODataItem[] { 
-                        new ODataNavigationLink() { IsCollection = true, Name = "Orders", Url = new Uri("http://odata.org/nav") },
+                    Items = new ODataItem[] {
+                        new ODataNestedResourceInfo() { IsCollection = true, Name = "Orders", Url = new Uri("http://odata.org/nav") },
                             ObjectModelUtils.CreateDefaultFeedWithAtomMetadata(),
                                 expandedOrderInstance,
                                 null,
@@ -535,10 +536,10 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                         null
                     },
                     PropertyName = "Orders",
-                    Xml = 
+                    Xml =
                         "<link " + TestAtomUtils.GetExpectedAtomNavigationLinkAttributesAsString("Orders", "application/atom+xml;type=feed", "Orders", "http://odata.org/nav") + ">" +
                             "<inline xmlns=\"http://docs.oasis-open.org/odata/ns/metadata\">" +
-                                GetDefaultFeedStartXmlAsString() +
+                                GetDefaultResourceSetStartXmlAsString() +
                                     GetDefaultEntryXmlAsString("TestModel.Order") +
                                 "</feed>" +
                             "</inline>" +
@@ -546,7 +547,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                         "<link " + TestAtomUtils.GetExpectedAtomNavigationLinkAttributesAsString("Orders", "application/atom+xml;type=feed", "Orders", "http://odata.org/collection") + " />" +
                         "<link " + TestAtomUtils.GetExpectedAtomNavigationLinkAttributesAsString("Orders", "application/atom+xml;type=feed", "Orders", "http://odata.org/nav") + ">" +
                             "<inline xmlns=\"http://docs.oasis-open.org/odata/ns/metadata\">" +
-                                GetDefaultFeedStartXmlAsString() +
+                                GetDefaultResourceSetStartXmlAsString() +
                                     GetDefaultEntryXmlAsString("TestModel.Order") +
                                 "</feed>" +
                             "</inline>" +
@@ -557,8 +558,8 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 // An entity reference link and two expanded feeds with one entry and in a collection
                 new NavigationLinkTestCase
                 {
-                    Items = new ODataItem[] { 
-                        new ODataNavigationLink() { IsCollection = true, Name = "Orders", Url = new Uri("http://odata.org/nav") },
+                    Items = new ODataItem[] {
+                        new ODataNestedResourceInfo() { IsCollection = true, Name = "Orders", Url = new Uri("http://odata.org/nav") },
                             new ODataEntityReferenceLink() { Url = new Uri("http://odata.org/collection") },
                             ObjectModelUtils.CreateDefaultFeedWithAtomMetadata(),
                                 expandedOrderInstance,
@@ -571,18 +572,18 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                         null
                     },
                     PropertyName = "Orders",
-                    Xml = 
+                    Xml =
                         "<link " + TestAtomUtils.GetExpectedAtomNavigationLinkAttributesAsString("Orders", "application/atom+xml;type=feed", "Orders", "http://odata.org/collection") + " />" +
                         "<link " + TestAtomUtils.GetExpectedAtomNavigationLinkAttributesAsString("Orders", "application/atom+xml;type=feed", "Orders", "http://odata.org/nav") + ">" +
                             "<inline xmlns=\"http://docs.oasis-open.org/odata/ns/metadata\">" +
-                                GetDefaultFeedStartXmlAsString() +
+                                GetDefaultResourceSetStartXmlAsString() +
                                     GetDefaultEntryXmlAsString("TestModel.Order") +
                                 "</feed>" +
                             "</inline>" +
                         "</link>" +
                         "<link " + TestAtomUtils.GetExpectedAtomNavigationLinkAttributesAsString("Orders", "application/atom+xml;type=feed", "Orders", "http://odata.org/nav") + ">" +
                             "<inline xmlns=\"http://docs.oasis-open.org/odata/ns/metadata\">" +
-                                GetDefaultFeedStartXmlAsString() +
+                                GetDefaultResourceSetStartXmlAsString() +
                                     GetDefaultEntryXmlAsString("TestModel.Order") +
                                 "</feed>" +
                             "</inline>" +
@@ -598,8 +599,8 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 // Single expanded feed with two entries surrounded by entity reference links in a collection
                 new NavigationLinkTestCase
                 {
-                    Items = new ODataItem[] { 
-                        new ODataNavigationLink() { IsCollection = true, Name = "Orders", Url = new Uri("http://odata.org/nav") },
+                    Items = new ODataItem[] {
+                        new ODataNestedResourceInfo() { IsCollection = true, Name = "Orders", Url = new Uri("http://odata.org/nav") },
                         new ODataEntityReferenceLink() { Url = new Uri("http://odata.org/collection") },
                         ObjectModelUtils.CreateDefaultFeedWithAtomMetadata(),
                         expandedOrderInstance,
@@ -611,11 +612,11 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                         null
                     },
                     PropertyName = "Orders",
-                    Xml = 
+                    Xml =
                         "<link " + TestAtomUtils.GetExpectedAtomNavigationLinkAttributesAsString("Orders", "application/atom+xml;type=feed", "Orders", "http://odata.org/collection") + " />" +
                         "<link " + TestAtomUtils.GetExpectedAtomNavigationLinkAttributesAsString("Orders", "application/atom+xml;type=feed", "Orders", "http://odata.org/nav") + ">" +
                             "<inline xmlns=\"http://docs.oasis-open.org/odata/ns/metadata\">" +
-                                GetDefaultFeedStartXmlAsString() +
+                                GetDefaultResourceSetStartXmlAsString() +
                                     GetDefaultEntryXmlAsString("TestModel.Order") +
                                     GetDefaultEntryXmlAsString("TestModel.Order") +
                                 "</feed>" +
@@ -628,8 +629,8 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 // Single expanded feed with two entries surrounded preceeded by two entity reference links in a collection
                 new NavigationLinkTestCase
                 {
-                    Items = new ODataItem[] { 
-                        new ODataNavigationLink() { IsCollection = true, Name = "Orders", Url = new Uri("http://odata.org/nav") },
+                    Items = new ODataItem[] {
+                        new ODataNestedResourceInfo() { IsCollection = true, Name = "Orders", Url = new Uri("http://odata.org/nav") },
                         new ODataEntityReferenceLink() { Url = new Uri("http://odata.org/collection") },
                         new ODataEntityReferenceLink() { Url = new Uri("http://odata.org/collection") },
                         ObjectModelUtils.CreateDefaultFeedWithAtomMetadata(),
@@ -641,12 +642,12 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                         null
                     },
                     PropertyName = "Orders",
-                    Xml = 
+                    Xml =
                         "<link " + TestAtomUtils.GetExpectedAtomNavigationLinkAttributesAsString("Orders", "application/atom+xml;type=feed", "Orders", "http://odata.org/collection") + " />" +
                         "<link " + TestAtomUtils.GetExpectedAtomNavigationLinkAttributesAsString("Orders", "application/atom+xml;type=feed", "Orders", "http://odata.org/collection") + " />" +
                         "<link " + TestAtomUtils.GetExpectedAtomNavigationLinkAttributesAsString("Orders", "application/atom+xml;type=feed", "Orders", "http://odata.org/nav") + ">" +
                             "<inline xmlns=\"http://docs.oasis-open.org/odata/ns/metadata\">" +
-                                GetDefaultFeedStartXmlAsString() +
+                                GetDefaultResourceSetStartXmlAsString() +
                                     GetDefaultEntryXmlAsString("TestModel.Order") +
                                     GetDefaultEntryXmlAsString("TestModel.Order") +
                                 "</feed>" +
@@ -663,25 +664,25 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 // Single expanded entry in a collection - should fail
                 new NavigationLinkTestCase
                 {
-                    Items = new ODataItem[] { 
-                        new ODataNavigationLink() { IsCollection = true, Name = "Orders", Url = new Uri("http://odata.org/nav") },
+                    Items = new ODataItem[] {
+                        new ODataNestedResourceInfo() { IsCollection = true, Name = "Orders", Url = new Uri("http://odata.org/nav") },
                         ObjectModelUtils.CreateDefaultEntryWithAtomMetadata(),
                         null,
                         null
                     },
-                    ExpectedException = ODataExpectedExceptions.ODataException("WriterValidationUtils_ExpandedLinkIsCollectionTrueWithEntryContent", "http://odata.org/nav")
+                    ExpectedException = ODataExpectedExceptions.ODataException("WriterValidationUtils_ExpandedLinkIsCollectionTrueWithResourceContent", "http://odata.org/nav")
                 },
                 // Expanded entry after an entity reference link in a collection - should fail
                 new NavigationLinkTestCase
                 {
-                    Items = new ODataItem[] { 
-                        new ODataNavigationLink() { IsCollection = true, Name = "Orders", Url = new Uri("http://odata.org/nav") },
+                    Items = new ODataItem[] {
+                        new ODataNestedResourceInfo() { IsCollection = true, Name = "Orders", Url = new Uri("http://odata.org/nav") },
                         new ODataEntityReferenceLink() { Url = new Uri("http://odata.org/collection") },
                         ObjectModelUtils.CreateDefaultEntryWithAtomMetadata(),
                         null,
                         null
                     },
-                    ExpectedException = ODataExpectedExceptions.ODataException("WriterValidationUtils_ExpandedLinkIsCollectionTrueWithEntryContent", "http://odata.org/nav")
+                    ExpectedException = ODataExpectedExceptions.ODataException("WriterValidationUtils_ExpandedLinkIsCollectionTrueWithResourceContent", "http://odata.org/nav")
                 },
             };
 
@@ -711,6 +712,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 });
         }
 
+        [Ignore] // Remove Atom
         [TestMethod, Variation(Description = "Test that we protect the caller by failing on deeply nested expanded entries")]
         public void NavigationLinkDepthTests()
         {
@@ -733,22 +735,22 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
             customerSet.AddNavigationTarget(ordersNavProp, orderSet);
             orderSet.AddNavigationTarget(singletonOrderNavProp, orderSet);
 
-            ODataEntry expandedOrderInstance = ObjectModelUtils.CreateDefaultEntryWithAtomMetadata();
+            ODataResource expandedOrderInstance = ObjectModelUtils.CreateDefaultEntryWithAtomMetadata();
             expandedOrderInstance.TypeName = "TestModel.Order";
 
             // Note: we configure the entry depth limit to be 3 in RunCombinations below
-            var testCases = new [] 
+            var testCases = new[]
             {
                 // 4 nested entries (the outer navigation link gets wrapped in an entry as well), should fail
                 new NavigationLinkTestCase
                 {
-                    Items = new ODataItem[] { 
-                        new ODataNavigationLink() { IsCollection = true, Name = "Orders", Url = new Uri("http://odata.org/nav") },
+                    Items = new ODataItem[] {
+                        new ODataNestedResourceInfo() { IsCollection = true, Name = "Orders", Url = new Uri("http://odata.org/nav") },
                         ObjectModelUtils.CreateDefaultFeedWithAtomMetadata(),
                         expandedOrderInstance,
-                        new ODataNavigationLink() { IsCollection = false, Name = "SingletonOrder", Url = new Uri("http://odata.org/nav") },
+                        new ODataNestedResourceInfo() { IsCollection = false, Name = "SingletonOrder", Url = new Uri("http://odata.org/nav") },
                         expandedOrderInstance,
-                        new ODataNavigationLink() { IsCollection = false, Name = "SingletonOrder", Url = new Uri("http://odata.org/nav") },
+                        new ODataNestedResourceInfo() { IsCollection = false, Name = "SingletonOrder", Url = new Uri("http://odata.org/nav") },
                         expandedOrderInstance,
                         null,
                         null,
@@ -764,10 +766,10 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 new NavigationLinkTestCase
                 {
                     Items = new ODataItem[] {
-                        new ODataNavigationLink() { IsCollection = true, Name = "Orders", Url = new Uri("http://odata.org/nav") },
+                        new ODataNestedResourceInfo() { IsCollection = true, Name = "Orders", Url = new Uri("http://odata.org/nav") },
                         ObjectModelUtils.CreateDefaultFeedWithAtomMetadata(),
                         expandedOrderInstance,
-                        new ODataNavigationLink() { IsCollection = false, Name = "SingletonOrder", Url = new Uri("http://odata.org/nav") },
+                        new ODataNestedResourceInfo() { IsCollection = false, Name = "SingletonOrder", Url = new Uri("http://odata.org/nav") },
                         expandedOrderInstance,
                         null,
                         null,
@@ -778,14 +780,14 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                     PropertyName = "Orders",
                     Xml = "<link " + TestAtomUtils.GetExpectedAtomNavigationLinkAttributesAsString("Orders", "application/atom+xml;type=feed", "Orders", "http://odata.org/nav") + ">" +
                             "<inline xmlns=\"http://docs.oasis-open.org/odata/ns/metadata\">" +
-                                GetDefaultFeedStartXmlAsString() +
+                                GetDefaultResourceSetStartXmlAsString() +
                                     GetDefaultEntryStartXmlAsString("TestModel.Order") +
                                       "<link " + TestAtomUtils.GetExpectedAtomNavigationLinkAttributesAsString("SingletonOrder", "application/atom+xml;type=entry", "SingletonOrder", "http://odata.org/nav") + ">" +
                                         "<inline xmlns=\"http://docs.oasis-open.org/odata/ns/metadata\">" +
                                           GetDefaultEntryXmlAsString("TestModel.Order") +
                                         "</inline>" +
                                       "</link>" +
-                                    GetDefaultEntryEndXmlAsString() +  
+                                    GetDefaultEntryEndXmlAsString() +
                                 "</feed>" +
                             "</inline>" +
                         "</link>",
@@ -831,23 +833,24 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 });
         }
 
+        [Ignore] // Remove Atom
         [TestMethod, Variation(Description = "Test that we cannot write a navigation link with incorrect multiplicity.")]
         public void NavigationLinkMultiplicityTests()
         {
-            ODataEntry cityEntry = ObjectModelUtils.CreateDefaultEntry("TestModel.CityType");
+            ODataResource cityEntry = ObjectModelUtils.CreateDefaultEntry("TestModel.CityType");
 
             // CityHall is a nav prop with multiplicity '*' of type 'TestModel.OfficeType'
-            ODataNavigationLink cityHallLinkIsCollectionNull = ObjectModelUtils.CreateDefaultCollectionLink("CityHall", /*isCollection*/ null);
-            ODataNavigationLink cityHallLinkIsCollectionTrue = ObjectModelUtils.CreateDefaultCollectionLink("CityHall", /*isCollection*/ true);
-            ODataNavigationLink cityHallLinkIsCollectionFalse = ObjectModelUtils.CreateDefaultCollectionLink("CityHall", /*isCollection*/ false);
+            ODataNestedResourceInfo cityHallLinkIsCollectionNull = ObjectModelUtils.CreateDefaultCollectionLink("CityHall", /*isCollection*/ null);
+            ODataNestedResourceInfo cityHallLinkIsCollectionTrue = ObjectModelUtils.CreateDefaultCollectionLink("CityHall", /*isCollection*/ true);
+            ODataNestedResourceInfo cityHallLinkIsCollectionFalse = ObjectModelUtils.CreateDefaultCollectionLink("CityHall", /*isCollection*/ false);
 
             // PoliceStation is a nav prop with multiplicity '1' of type 'TestModel.OfficeType'
-            ODataNavigationLink policeStationLinkIsCollectionNull = ObjectModelUtils.CreateDefaultCollectionLink("PoliceStation", /*isCollection*/ null);
-            ODataNavigationLink policeStationLinkIsCollectionTrue = ObjectModelUtils.CreateDefaultCollectionLink("PoliceStation", /*isCollection*/ true);
-            ODataNavigationLink policeStationLinkIsCollectionFalse = ObjectModelUtils.CreateDefaultCollectionLink("PoliceStation", /*isCollection*/ false);
+            ODataNestedResourceInfo policeStationLinkIsCollectionNull = ObjectModelUtils.CreateDefaultCollectionLink("PoliceStation", /*isCollection*/ null);
+            ODataNestedResourceInfo policeStationLinkIsCollectionTrue = ObjectModelUtils.CreateDefaultCollectionLink("PoliceStation", /*isCollection*/ true);
+            ODataNestedResourceInfo policeStationLinkIsCollectionFalse = ObjectModelUtils.CreateDefaultCollectionLink("PoliceStation", /*isCollection*/ false);
 
-            ExpectedException expandedFeedLinkWithEntryMetadataError = ODataExpectedExceptions.ODataException("WriterValidationUtils_ExpandedLinkIsCollectionTrueWithEntryMetadata", "http://odata.org/link");
-            ExpectedException expandedEntryLinkWithFeedMetadataError = ODataExpectedExceptions.ODataException("WriterValidationUtils_ExpandedLinkIsCollectionFalseWithFeedMetadata", "http://odata.org/link");
+            ExpectedException expandedFeedLinkWithEntryMetadataError = ODataExpectedExceptions.ODataException("WriterValidationUtils_ExpandedLinkIsCollectionTrueWithResourceMetadata", "http://odata.org/link");
+            ExpectedException expandedEntryLinkWithFeedMetadataError = ODataExpectedExceptions.ODataException("WriterValidationUtils_ExpandedLinkIsCollectionFalseWithResourceSetMetadata", "http://odata.org/link");
             ExpectedException deferredLinkInRequestError = ODataExpectedExceptions.ODataException("ODataWriterCore_DeferredLinkInRequest");
 
             IEdmModel model = Microsoft.Test.OData.Utils.Metadata.TestModels.BuildTestModel();
@@ -856,57 +859,51 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
             var cityType = (IEdmEntityType)model.FindType("TestModel.CityType");
 
             var testCases = new NavigationLinkMultiplicityTestCase[]
+            {
+                new NavigationLinkMultiplicityTestCase
                 {
-                    new NavigationLinkMultiplicityTestCase
-                    {
-                        // Deferred link, IsCollection == false, singleton nav prop; should not fail.
-                        Items = new ODataItem[] { cityEntry, policeStationLinkIsCollectionFalse },
-                        ExpectedError = tc => tc.IsRequest ? deferredLinkInRequestError : null,
-                    },
-                    new NavigationLinkMultiplicityTestCase
-                    {
-                        // Deferred link, IsCollection == true, singleton nav prop; should fail.
-                        Items = new ODataItem[] { cityEntry, policeStationLinkIsCollectionTrue },
-                        ExpectedError = tc => tc.IsRequest ? deferredLinkInRequestError : expandedFeedLinkWithEntryMetadataError,
-                        Model = model,
-                    },
-                    new NavigationLinkMultiplicityTestCase
-                    {
-                        // Deferred link, IsCollection == false, collection nav prop; should fail.
-                        Items = new ODataItem[] { cityEntry, cityHallLinkIsCollectionFalse },
-                        ExpectedError = tc => tc.IsRequest ? deferredLinkInRequestError : expandedEntryLinkWithFeedMetadataError,
-                        Model = model
-                    },
-                    new NavigationLinkMultiplicityTestCase
-                    {
-                        // Deferred link, IsCollection == true, collection nav prop; should not fail.
-                        Items = new ODataItem[] { cityEntry, cityHallLinkIsCollectionTrue },
-                        ExpectedError = tc => tc.IsRequest ? deferredLinkInRequestError : null,
-                        Model = model
-                    },
-                    new NavigationLinkMultiplicityTestCase
-                    {
-                        // Deferred link, IsCollection == null, singleton nav prop; should not fail.
-                        Items = new ODataItem[] { cityEntry, policeStationLinkIsCollectionNull },
-                        ExpectedError = tc => tc.IsRequest 
-                            ? deferredLinkInRequestError 
-                            : tc.Format == ODataFormat.Atom
-                                ? ODataExpectedExceptions.ODataException("WriterValidationUtils_NavigationLinkMustSpecifyIsCollection", "PoliceStation")
-                                :  null,
-                        Model = model,
-                    },
-                    new NavigationLinkMultiplicityTestCase
-                    {
-                        // Deferred link, IsCollection == null, collection nav prop; should not fail.
-                        Items = new ODataItem[] { cityEntry, cityHallLinkIsCollectionNull },
-                        ExpectedError = tc => tc.IsRequest 
-                            ?  deferredLinkInRequestError
-                            : tc.Format == ODataFormat.Atom
-                                ? ODataExpectedExceptions.ODataException("WriterValidationUtils_NavigationLinkMustSpecifyIsCollection", "CityHall")
-                                :  null,
-                        Model = model,
-                    },
-                };
+                    // Deferred link, IsCollection == false, singleton nav prop; should not fail.
+                    Items = new ODataItem[] {cityEntry, policeStationLinkIsCollectionFalse},
+                    ExpectedError = tc => tc.IsRequest ? deferredLinkInRequestError : null,
+                },
+                new NavigationLinkMultiplicityTestCase
+                {
+                    // Deferred link, IsCollection == true, singleton nav prop; should fail.
+                    Items = new ODataItem[] {cityEntry, policeStationLinkIsCollectionTrue},
+                    ExpectedError =
+                        tc => tc.IsRequest ? deferredLinkInRequestError : expandedFeedLinkWithEntryMetadataError,
+                    Model = model,
+                },
+                new NavigationLinkMultiplicityTestCase
+                {
+                    // Deferred link, IsCollection == false, collection nav prop; should fail.
+                    Items = new ODataItem[] {cityEntry, cityHallLinkIsCollectionFalse},
+                    ExpectedError =
+                        tc => tc.IsRequest ? deferredLinkInRequestError : expandedEntryLinkWithFeedMetadataError,
+                    Model = model
+                },
+                new NavigationLinkMultiplicityTestCase
+                {
+                    // Deferred link, IsCollection == true, collection nav prop; should not fail.
+                    Items = new ODataItem[] {cityEntry, cityHallLinkIsCollectionTrue},
+                    ExpectedError = tc => tc.IsRequest ? deferredLinkInRequestError : null,
+                    Model = model
+                },
+                new NavigationLinkMultiplicityTestCase
+                {
+                    // Deferred link, IsCollection == null, singleton nav prop; should not fail.
+                    Items = new ODataItem[] {cityEntry, policeStationLinkIsCollectionNull},
+                    ExpectedError = tc => tc.IsRequest ? deferredLinkInRequestError : null,
+                    Model = model,
+                },
+                new NavigationLinkMultiplicityTestCase
+                {
+                    // Deferred link, IsCollection == null, collection nav prop; should not fail.
+                    Items = new ODataItem[] {cityEntry, cityHallLinkIsCollectionNull},
+                    ExpectedError = tc => tc.IsRequest ? deferredLinkInRequestError : null,
+                    Model = model,
+                },
+            };
 
             this.CombinatorialEngineProvider.RunCombinations(
                 testCases,
@@ -923,7 +920,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                     {
                         ODataWriter writer = messageWriter.CreateODataWriter(
                             /*isFeed*/ false,
-                            isJsonLight ? citySet : null, 
+                            isJsonLight ? citySet : null,
                             isJsonLight ? cityType : null);
                         TestExceptionUtils.ExpectedException(
                             this.Assert,
@@ -946,7 +943,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
 
             public PayloadWriterTestDescriptor<ODataItem> ToEdmTestDescriptor(PayloadWriterTestDescriptor.Settings settings, EdmModel model = null, EdmEntitySet entitySet = null, EdmEntityType entityType = null)
             {
-                ODataEntry entry = ObjectModelUtils.CreateDefaultEntry();
+                ODataResource entry = ObjectModelUtils.CreateDefaultEntry();
                 entry.TypeName = entityType == null ? null : entityType.FullName();
 
                 return new PayloadWriterTestDescriptor<ODataItem>(
@@ -960,18 +957,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                             expectedException = this.EdmExpectedExceptionCallback(testConfiguration, model);
                         }
 
-                        if (testConfiguration.Format == ODataFormat.Atom)
-                        {
-                            return new AtomWriterTestExpectedResults(settings.ExpectedResultSettings)
-                            {
-                                FragmentExtractor = result => new XElement("results",
-                                    result.Elements(TestAtomConstants.AtomXNamespace + "link")
-                                        .Where(e => e.Attribute("rel").Value == (TestAtomConstants.ODataNavigationPropertiesRelatedLinkRelationPrefix + this.PropertyName))),
-                                Xml = "<results>" + this.Xml + "</results>",
-                                ExpectedException2 = expectedException
-                            };
-                        }
-                        else if (testConfiguration.Format == ODataFormat.Json)
+                        if (testConfiguration.Format == ODataFormat.Json)
                         {
                             return new JsonWriterTestExpectedResults(settings.ExpectedResultSettings)
                             {
@@ -1013,12 +999,12 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
             return "<entry xmlns=\"" + TestAtomConstants.AtomNamespace + "\">" +
                     "<id>" + ObjectModelUtils.DefaultEntryId + "</id>" +
                     (typeName == null ? string.Empty : ("<category term='" + typeName + "' scheme='http://docs.oasis-open.org/odata/ns/scheme' />")) +
-                    "<link rel=\"self\" href=\"" + ObjectModelUtils.DefaultEntryReadLink.OriginalString + "\" />";                    
+                    "<link rel=\"self\" href=\"" + ObjectModelUtils.DefaultEntryReadLink.OriginalString + "\" />";
         }
 
         private static string GetDefaultEntryEndXmlAsString()
         {
-            return  "<title />" +
+            return "<title />" +
                     "<updated>" + ObjectModelUtils.DefaultEntryUpdated + "</updated>" +
                     "<author><name /></author>" +
                     "<content type=\"application/xml\" />" +
@@ -1027,12 +1013,12 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
 
         private static string GetDefaultFeedXmlAsString()
         {
-            return GetDefaultFeedStartXmlAsString() +
+            return GetDefaultResourceSetStartXmlAsString() +
                     "<author><name /></author>" +
                 "</feed>";
         }
 
-        private static string GetDefaultFeedStartXmlAsString()
+        private static string GetDefaultResourceSetStartXmlAsString()
         {
             return "<feed xmlns=\"" + TestAtomConstants.AtomNamespace + "\">" +
                     "<id>" + ObjectModelUtils.DefaultFeedId + "</id>" +

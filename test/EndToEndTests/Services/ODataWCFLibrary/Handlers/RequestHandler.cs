@@ -14,8 +14,8 @@ namespace Microsoft.Test.OData.Services.ODataWCFService.Handlers
     using System.ServiceModel;
     using System.ServiceModel.Web;
     using System.Text;
-    using Microsoft.OData.Core;
-    using Microsoft.OData.Core.UriParser;
+    using Microsoft.OData;
+    using Microsoft.OData.UriParser;
     using Microsoft.Test.OData.Services.ODataWCFService.DataSource;
 
     /// <summary>
@@ -33,13 +33,15 @@ namespace Microsoft.Test.OData.Services.ODataWCFService.Handlers
             this.RequestUri = Utility.RebuildUri(OperationContext.Current.RequestContext.RequestMessage.Properties.Via);
 
             this.DataSource = dataSource;
+            this.RootContainer = this.DataSource.Container;
+            this.RequestContainer = null;
 
             this.RequestAcceptHeader = WebOperationContext.Current.IncomingRequest.Accept;
             this.RequestHeaders = WebOperationContext.Current.IncomingRequest.Headers.ToDictionary();
 
             this.ServiceRootUri = Utility.RebuildUri(new Uri(OperationContext.Current.Host.BaseAddresses.First().AbsoluteUri.TrimEnd('/') + "/"));
 
-            this.QueryContext = new QueryContext(this.ServiceRootUri, this.RequestUri, this.DataSource.Model);
+            this.QueryContext = new QueryContext(this.ServiceRootUri, this.RequestUri, this.DataSource.Model, this.RequestContainer);
 
             string preference = this.RequestHeaders.ContainsKey(ServiceConstants.HttpHeaders.Prefer) ? this.RequestHeaders[ServiceConstants.HttpHeaders.Prefer] : string.Empty;
             this.PreferenceContext = new PreferenceContext(preference);
@@ -61,6 +63,8 @@ namespace Microsoft.Test.OData.Services.ODataWCFService.Handlers
 
 
             this.DataSource = other.DataSource;
+            this.RootContainer = other.RootContainer;
+            this.RequestContainer = other.RequestContainer;
 
             if (headers == null)
             {
@@ -81,7 +85,7 @@ namespace Microsoft.Test.OData.Services.ODataWCFService.Handlers
 
             this.ServiceRootUri = Utility.RebuildUri(other.ServiceRootUri);
 
-            this.QueryContext = new QueryContext(this.ServiceRootUri, this.RequestUri, this.DataSource.Model);
+            this.QueryContext = new QueryContext(this.ServiceRootUri, this.RequestUri, this.DataSource.Model, this.RequestContainer);
 
             this.PreferenceContext = other.PreferenceContext;
         }
@@ -102,6 +106,18 @@ namespace Microsoft.Test.OData.Services.ODataWCFService.Handlers
         {
             get;
             private set;
+        }
+
+        public IServiceProvider RootContainer
+        {
+            get;
+            private set;
+        }
+
+        public IServiceProvider RequestContainer
+        {
+            get;
+            protected set;
         }
 
         /// <summary>
@@ -215,28 +231,28 @@ namespace Microsoft.Test.OData.Services.ODataWCFService.Handlers
 
         protected virtual IODataRequestMessage CreateRequestMessage(Stream messageBody)
         {
-            return new ODataRequestMessage(messageBody, this.RequestHeaders, this.RequestUri, this.HttpMethod.ToString());
+            return new ODataRequestMessage(messageBody, this.RequestHeaders, this.RequestUri, this.HttpMethod.ToString())
+            {
+                Container = this.RequestContainer
+            };
         }
 
         protected virtual IODataResponseMessage CreateResponseMessage(Stream stream)
         {
-            return new ODataResponseMessage(stream, 200);
+            return new ODataResponseMessage(stream, 200)
+            {
+                Container = this.RequestContainer
+            };
         }
 
         protected virtual ODataMessageReader CreateMessageReader(IODataRequestMessage message)
         {
-            return new ODataMessageReader(
-                message,
-                this.GetReaderSettings(),
-                this.DataSource.Model);
+            return new ODataMessageReader(message, this.GetReaderSettings());
         }
 
         protected virtual ODataMessageWriter CreateMessageWriter(IODataResponseMessage message)
         {
-            return new ODataMessageWriter(
-                message,
-                this.GetWriterSettings(),
-                this.DataSource.Model);
+            return new ODataMessageWriter(message, this.GetWriterSettings());
         }
 
         #endregion
@@ -245,22 +261,24 @@ namespace Microsoft.Test.OData.Services.ODataWCFService.Handlers
 
         protected virtual ODataMessageReaderSettings GetReaderSettings()
         {
-            return new ODataMessageReaderSettings();
+            // Let ODataMessageReader get ODataMessageReaderSettings from the container.
+            return null;
         }
 
         protected virtual ODataMessageWriterSettings GetWriterSettings()
         {
             ODataMessageWriterSettings settings = new ODataMessageWriterSettings
             {
-                AutoComputePayloadMetadataInJson = true,
-                PayloadBaseUri = this.ServiceRootUri,
+                BaseUri = this.ServiceRootUri,
                 ODataUri = new ODataUri()
                 {
                     RequestUri = this.RequestUri,
                     ServiceRoot = this.ServiceRootUri,
                     Path = this.QueryContext.QueryPath,
                     SelectAndExpand = this.QueryContext.QuerySelectExpandClause,
-                }
+                },
+                Validations = ~ValidationKinds.ThrowOnUndeclaredPropertyForNonOpenType,
+                // EnableIndentation = true
             };
 
             // TODO: howang why here?
@@ -286,5 +304,54 @@ namespace Microsoft.Test.OData.Services.ODataWCFService.Handlers
         }
 
         #endregion
+
+        /// <summary>
+        /// Annotation for marking a new entry with bound associated entries.
+        /// </summary>
+        protected class BoundNavigationPropertyAnnotation
+        {
+            public IList<Tuple<ODataNestedResourceInfo, object>> BoundProperties { get; set; }
+        }
+
+        /// <summary>
+        /// Annotation for marking a navigation property or feed with new entry instances belonging to it.
+        /// </summary>
+        protected class ChildInstanceAnnotation
+        {
+            public IList<object> ChildInstances { get; set; }
+        }
+
+        protected static void AddChildInstanceAnnotation(ODataItem item, object childEntry)
+        {
+            var annotation = item.GetAnnotation<ChildInstanceAnnotation>();
+            if (annotation == null)
+            {
+                annotation = new ChildInstanceAnnotation { ChildInstances = new List<object>() };
+                item.SetAnnotation(annotation);
+            }
+
+            annotation.ChildInstances.Add(childEntry);
+        }
+        protected static void AddChildInstanceAnnotations(ODataItem item, IList<object> childEntries)
+        {
+            var annotation = item.GetAnnotation<ChildInstanceAnnotation>();
+            if (annotation == null)
+            {
+                annotation = new ChildInstanceAnnotation { ChildInstances = childEntries };
+                item.SetAnnotation(annotation);
+            }
+        }
+
+        protected static void AddBoundNavigationPropertyAnnotation(ODataItem item, ODataNestedResourceInfo navigationLink, object boundValue)
+        {
+            var annotation = item.GetAnnotation<BoundNavigationPropertyAnnotation>();
+            if (annotation == null)
+            {
+                annotation = new BoundNavigationPropertyAnnotation { BoundProperties = new List<Tuple<ODataNestedResourceInfo, object>>() };
+                item.SetAnnotation(annotation);
+            }
+
+            annotation.BoundProperties.Add(new Tuple<ODataNestedResourceInfo, object>(navigationLink, boundValue));
+        }
     }
 }

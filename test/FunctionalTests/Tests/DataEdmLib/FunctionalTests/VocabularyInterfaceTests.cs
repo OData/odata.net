@@ -10,9 +10,7 @@ namespace EdmLibTests.FunctionalTests
     using EdmLibTests.StubEdm;
     using EdmLibTests.VocabularyStubs;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Annotations;
-    using Microsoft.OData.Edm.Expressions;
-    using Microsoft.OData.Edm.Library;
+    using Microsoft.OData.Edm.Vocabularies;
 #if SILVERLIGHT
     using Microsoft.Silverlight.Testing;
 #endif
@@ -22,13 +20,13 @@ namespace EdmLibTests.FunctionalTests
     public class VocabularyInterfaceTests : EdmLibTestCaseBase
     {
         [TestMethod]
-        public void AttachValueTermAnnotation()
+        public void AttachTermAnnotation()
         {
             var entityType = new StubEdmEntityType("NS1", "Person");
 
-            var valueTerm = new StubValueTerm("", "FullName") { Type = EdmCoreModel.Instance.GetString(false) };
+            var valueTerm = new StubTerm("", "FullName") { Type = EdmCoreModel.Instance.GetString(false) };
 
-            var valueAnnotation = new StubValueAnnotation()
+            var valueAnnotation = new StubVocabularyAnnotation()
             {
                 Term = valueTerm,
                 Value = new StubStringConstantExpression("Forever Young"),
@@ -38,11 +36,11 @@ namespace EdmLibTests.FunctionalTests
 
             Assert.AreEqual(1, entityType.InlineVocabularyAnnotations.Count(), "annotation count");
 
-            var actual = entityType.InlineVocabularyAnnotations.Single() as IEdmValueAnnotation;
+            var actual = entityType.InlineVocabularyAnnotations.Single();
 
             Assert.AreEqual("", actual.Term.Namespace, "namespace");
             Assert.AreEqual("FullName", actual.Term.Name, "name");
-            Assert.IsTrue(((IEdmValueTerm)actual.Term).Type.IsString() , "value term type is string");
+            Assert.IsTrue(actual.Term.Type.IsString() , "Term type is string");
             Assert.AreEqual("Forever Young", ((IEdmStringConstantExpression)actual.Value).Value, "annotation value");
         }
     }

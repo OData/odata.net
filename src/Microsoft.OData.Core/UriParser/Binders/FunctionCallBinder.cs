@@ -4,25 +4,19 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core.UriParser.Parsers
-{
-    using System;
-    using System.Collections.Generic;
-    using System.Collections.ObjectModel;
-    using System.Diagnostics;
-    using System.Diagnostics.CodeAnalysis;
-    using System.Globalization;
-    using System.Linq;
-    using Microsoft.OData.Core.Metadata;
-    using Microsoft.OData.Core.UriParser.Binders;
-    using Microsoft.OData.Core.UriParser.Metadata;
-    using Microsoft.OData.Core.UriParser.Semantic;
-    using Microsoft.OData.Core.UriParser.Syntactic;
-    using Microsoft.OData.Core.UriParser.TreeNodeKinds;
-    using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Library;
-    using ODataErrorStrings = Microsoft.OData.Core.Strings;
+using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
+using System.Linq;
+using Microsoft.OData.Metadata;
+using Microsoft.OData.Edm;
+using ODataErrorStrings = Microsoft.OData.Strings;
 
+namespace Microsoft.OData.UriParser
+{
     /// <summary>
     /// Class that knows how to bind function call tokens.
     /// </summary>
@@ -110,7 +104,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
             if (argumentTypes.All(a => a == null) && argumentCount > 0)
             {
                 // we specifically want to find just the first function that matches the number of arguments, we don't care about
-                // ambiguity here because we're already in an ambiguous case where we don't know what kind of types 
+                // ambiguity here because we're already in an ambiguous case where we don't know what kind of types
                 // those arguments are.
                 signature = signatures.FirstOrDefault(candidateFunction => candidateFunction.ArgumentTypes.Count() == argumentCount);
                 if (signature == null)
@@ -119,7 +113,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
                 }
                 else
                 {
-                    // in this case we can't assert the return type, we can only assert that a function exists... so 
+                    // in this case we can't assert the return type, we can only assert that a function exists... so
                     // we need to set the return type to null.
                     signature = new FunctionSignatureWithReturnType(null, signature.ArgumentTypes);
                 }
@@ -176,10 +170,10 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         }
 
         /// <summary>
-        /// Binds the token to a SingleValueFunctionCallNode
+        /// Binds the token to a SingleValueFunctionCallNode or a SingleResourceFunctionCallNode for complex
         /// </summary>
         /// <param name="functionCallToken">Token to bind</param>
-        /// <returns>The resulting SingleValueFunctionCallNode</returns>
+        /// <returns>The resulting SingleValueFunctionCallNode/SingleResourceFunctionCallNode</returns>
         internal QueryNode BindFunctionCall(FunctionCallToken functionCallToken)
         {
             ExceptionUtils.CheckArgumentNotNull(functionCallToken, "functionCallToken");
@@ -290,9 +284,12 @@ namespace Microsoft.OData.Core.UriParser.Parsers
                 TypePromoteArguments(signature, argumentNodes);
             }
 
-            IEdmTypeReference returnType = signature.ReturnType;
+            if (signature.ReturnType != null && signature.ReturnType.IsStructured())
+            {
+                return new SingleResourceFunctionCallNode(functionCallTokenName, new ReadOnlyCollection<QueryNode>(argumentNodes), signature.ReturnType.AsStructured(), null);
+            }
 
-            return new SingleValueFunctionCallNode(functionCallTokenName, new ReadOnlyCollection<QueryNode>(argumentNodes), returnType);
+            return new SingleValueFunctionCallNode(functionCallTokenName, new ReadOnlyCollection<QueryNode>(argumentNodes), signature.ReturnType);
         }
 
         /// <summary>
@@ -349,7 +346,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
 
             if (singleValueParent != null && singleValueParent.TypeReference == null)
             {
-                // if the parent exists, but has no type information, then we're in open type land, and we 
+                // if the parent exists, but has no type information, then we're in open type land, and we
                 // shouldn't go any farther.
                 throw new ODataException(ODataErrorStrings.FunctionCallBinder_CallingFunctionOnOpenProperty(identifier));
             }
@@ -369,7 +366,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
             boundArguments = boundArguments.ToList(); // force enumerable to run : will immediately evaluate all this.bindMethod(p).
             IEdmTypeReference returnType = function.ReturnType;
             IEdmEntitySetBase returnSet = null;
-            var singleEntityNode = parent as SingleEntityNode;
+            var singleEntityNode = parent as SingleResourceNode;
             if (singleEntityNode != null)
             {
                 returnSet = function.GetTargetEntitySet(singleEntityNode.NavigationSource, state.Model);
@@ -379,12 +376,12 @@ namespace Microsoft.OData.Core.UriParser.Parsers
 
             if (returnType.IsEntity())
             {
-                boundFunction = new SingleEntityFunctionCallNode(functionName, new[] { function }, boundArguments, (IEdmEntityTypeReference)returnType.Definition.ToTypeReference(), returnSet, parent);
+                boundFunction = new SingleResourceFunctionCallNode(functionName, new[] { function }, boundArguments, (IEdmEntityTypeReference)returnType.Definition.ToTypeReference(), returnSet, parent);
             }
-            else if (returnType.IsEntityCollection())
+            else if (returnType.IsStructuredCollection())
             {
                 IEdmCollectionTypeReference collectionTypeReference = (IEdmCollectionTypeReference)returnType;
-                boundFunction = new EntityCollectionFunctionCallNode(functionName, new[] { function }, boundArguments, collectionTypeReference, returnSet, parent);
+                boundFunction = new CollectionResourceFunctionCallNode(functionName, new[] { function }, boundArguments, collectionTypeReference, returnSet, parent);
             }
             else if (returnType.IsCollection())
             {
@@ -393,7 +390,8 @@ namespace Microsoft.OData.Core.UriParser.Parsers
             }
             else
             {
-                boundFunction = new SingleValueFunctionCallNode(functionName, new[] { function }, boundArguments, returnType, parent);
+                boundFunction = new SingleValueFunctionCallNode(functionName, new[] { function }, boundArguments,
+                    returnType, parent);
             }
 
             return true;
@@ -568,7 +566,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
                 if (valueToken != null && (valueStr = valueToken.Value as string) != null && !string.IsNullOrEmpty(valueToken.OriginalText))
                 {
                     var lexer = new ExpressionLexer(valueToken.OriginalText, true /*moveToFirstToken*/, false /*useSemicolonDelimiter*/, true /*parsingFunctionParameters*/);
-                    if (lexer.CurrentToken.Kind == ExpressionTokenKind.BracketedExpression)
+                    if (lexer.CurrentToken.Kind == ExpressionTokenKind.BracketedExpression || lexer.CurrentToken.Kind == ExpressionTokenKind.BracedExpression)
                     {
                         object result;
                         UriTemplateExpression expression;
@@ -577,11 +575,17 @@ namespace Microsoft.OData.Core.UriParser.Parsers
                         {
                             result = expression;
                         }
+                        else if (!functionParameter.Type.IsStructured() && !functionParameter.Type.IsStructuredCollectionType())
+                        {
+                            // ExpressionTokenKind.BracketedExpression means text like [1,2]
+                            // so now try convert it to collection type value:
+                            result = ODataUriUtils.ConvertFromUriLiteral(valueStr, ODataVersion.V4, model, functionParameter.Type);
+                        }
                         else
                         {
-                            // ExpressionTokenKind.BracketedExpression means text like [{\"Street\":\"NE 24th St.\",\"City\":\"Redmond\"},{\"Street\":\"Pine St.\",\"City\":\"Seattle\"}]
-                            // so now try convert it into complex or collection type value:
-                            result = ODataUriUtils.ConvertFromUriLiteral(valueStr, ODataVersion.V4, model, functionParameter.Type);
+                            // For complex & colleciton of complex directly return the raw string.
+                            partiallyParsedParametersWithComplexOrCollection.Add(funcParaToken);
+                            continue;
                         }
 
                         LiteralToken newValueToken = new LiteralToken(result, valueToken.OriginalText);
@@ -628,14 +632,12 @@ namespace Microsoft.OData.Core.UriParser.Parsers
                 case ExpressionConstants.UnboundFunctionCast:
                     {
                         returnType = ValidateAndBuildCastArgs(state, ref args);
-                        if (returnType.IsEntity())
+                        if (returnType.IsStructured())
                         {
-                            IEdmEntityTypeReference returnEntityType = returnType.AsEntity();
-                            SingleEntityNode entityNode = args.ElementAt(0) as SingleEntityNode;
-                            if (entityNode != null)
-                            {
-                                return new SingleEntityFunctionCallNode(functionCallTokenName, args, returnEntityType, entityNode.NavigationSource);
-                            }
+                            SingleResourceNode entityNode = args.ElementAt(0) as SingleResourceNode;
+
+                            return new SingleResourceFunctionCallNode(functionCallTokenName, args,
+                                returnType.AsStructured(), entityNode != null ? entityNode.NavigationSource : null);
                         }
 
                         break;
@@ -712,9 +714,9 @@ namespace Microsoft.OData.Core.UriParser.Parsers
             {
                 args = new List<QueryNode>()
                     {
-                        new EntityRangeVariableReferenceNode(
+                        new ResourceRangeVariableReferenceNode(
                                                              state.ImplicitRangeVariable.Name,
-                                                             state.ImplicitRangeVariable as EntityRangeVariable),
+                                                             state.ImplicitRangeVariable as ResourceRangeVariable),
                         args[0]
                     };
             }
@@ -727,7 +729,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
             {
                 // throw if cast enum to not-string :
                 if ((args[0].GetEdmTypeReference() is IEdmEnumTypeReference)
-                    && !string.Equals(typeArgument.Value as string, Microsoft.OData.Core.Metadata.EdmConstants.EdmStringTypeName, StringComparison.Ordinal))
+                    && !string.Equals(typeArgument.Value as string, Microsoft.OData.Metadata.EdmConstants.EdmStringTypeName, StringComparison.Ordinal))
                 {
                     throw new ODataException(ODataErrorStrings.CastBinder_EnumOnlyCastToOrFromString);
                 }

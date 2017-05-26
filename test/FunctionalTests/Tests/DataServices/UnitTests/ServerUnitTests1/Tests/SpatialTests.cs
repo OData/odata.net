@@ -6,7 +6,6 @@
 
 using System;
 using System.Collections.Generic;
-using Microsoft.OData.Service;
 using Microsoft.OData.Service.Providers;
 using System.Data.Test.Astoria;
 using System.Linq;
@@ -15,7 +14,6 @@ using Microsoft.Spatial;
 using System.Xml.Linq;
 using AstoriaUnitTests.Stubs;
 using AstoriaUnitTests.Stubs.DataServiceProvider;
-using Microsoft.Data.Spatial;
 using Microsoft.Test.ModuleCore;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -128,7 +126,7 @@ namespace AstoriaUnitTests.Tests.Server
 
                                      });
         }
-
+        [Ignore] // Remove Atom
         [TestCategory("Partition2"), TestMethod, Variation("Validate that ServiceOperations with spatial parameters work correctly")]
         public void TestServiceOperationsWithSpatialParameters()
         {
@@ -309,7 +307,7 @@ namespace AstoriaUnitTests.Tests.Server
                 sendRequestAndAssertBehavior(request);
             }
         }
-
+        [Ignore] // Remove Atom
         [TestCategory("Partition2"), TestMethod, Variation("Serialize Geodetic properties on entities using the ObjectContextServiceProvider and Atom and Json formats")]
         public void SerializeGeodeticPropertiesInResource()
         {
@@ -358,7 +356,7 @@ namespace AstoriaUnitTests.Tests.Server
             DSPResourceSerializerFormat payloadFormat = responseFormat == UnitTestsUtil.AtomFormat ? DSPResourceSerializerFormat.Atom : DSPResourceSerializerFormat.Json;
             return new ResourceVerification(request, payloadFormat, id, defaultValues);
         }
-
+        [Ignore] // Remove Atom
         [TestCategory("Partition2"), TestMethod, Variation("Insert and update Geodetic properties on entities using the ObjectContextServiceProvider and all supported format")]
         public void InsertAndUpdateGeodeticProperties()
         {
@@ -429,14 +427,6 @@ namespace AstoriaUnitTests.Tests.Server
         {
             TestSpatialMetadata(DSPDataProviderKind.CustomProvider);
         }
-
-#if !EFRTM
-        [TestMethod, Variation("Verify spatial properties are represented correctly in $metadata for ObjectContextServiceProvider")]
-        public void SpatialMetadataObjectContext()
-        {
-            TestSpatialMetadata(DSPDataProviderKind.EF);
-        }
-#endif
 
         #endregion
 

@@ -9,11 +9,11 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using FluentAssertions;
-using Microsoft.OData.Core.JsonLight;
-using Microsoft.OData.Edm.Library;
+using Microsoft.OData.JsonLight;
+using Microsoft.OData.Edm;
 using Xunit;
 
-namespace Microsoft.OData.Core.Tests.JsonLight
+namespace Microsoft.OData.Tests.JsonLight
 {
     public class ODataJsonLightServiceDocumentDeserializerTests
     {
@@ -157,11 +157,20 @@ namespace Microsoft.OData.Core.Tests.JsonLight
             return deserializer.ReadServiceDocument();
         }
 
-        private ODataJsonLightServiceDocumentDeserializer CreateODataJsonServiceDocumentDeserializer(MemoryStream stream, IODataUrlResolver urlResolver = null)
+        private ODataJsonLightServiceDocumentDeserializer CreateODataJsonServiceDocumentDeserializer(MemoryStream stream, IODataPayloadUriConverter urlResolver = null)
         {
-            ODataMessageReaderSettings settings = new ODataMessageReaderSettings();
+            var messageInfo = new ODataMessageInfo
+            {
+                Encoding = Encoding.UTF8,
+                IsResponse = true,
+                MediaType = new ODataMediaType("application", "json"),
+                IsAsync = false,
+                Model = new EdmModel(),
+                PayloadUriConverter = urlResolver,
+                MessageStream = stream
+            };
 
-            ODataJsonLightInputContext inputContext = new ODataJsonLightInputContext(ODataFormat.Json, stream, new ODataMediaType("application", "json"), Encoding.UTF8, settings, true /*readingResponse*/, true /*sync*/, new EdmModel() /*edmModel*/, urlResolver);
+            var inputContext = new ODataJsonLightInputContext(messageInfo, new ODataMessageReaderSettings());
             return new ODataJsonLightServiceDocumentDeserializer(inputContext);
         }
 

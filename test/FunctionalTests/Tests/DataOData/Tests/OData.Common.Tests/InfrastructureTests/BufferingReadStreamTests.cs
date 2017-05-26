@@ -13,7 +13,7 @@ namespace Microsoft.Test.Taupo.OData.Common.Tests.InfrastructureTests
     using System;
     using System.Collections.Generic;
     using System.IO;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.Test.Taupo.Common;
     using Microsoft.Test.Taupo.Execution;
     using Microsoft.Test.Taupo.OData.Contracts;
@@ -255,7 +255,7 @@ namespace Microsoft.Test.Taupo.OData.Common.Tests.InfrastructureTests
         /// </summary>
         private sealed class BufferingReadStreamTestWrapper : Stream, IDisposable
         {
-            private static readonly Type bufferingReadStreamType = typeof(ODataAnnotatable).Assembly.GetType("Microsoft.OData.Core.BufferingReadStream");
+            private static readonly Type bufferingReadStreamType = typeof(ODataAnnotatable).Assembly.GetType("Microsoft.OData.BufferingReadStream");
 
             private Stream bufferingReadStream;
 

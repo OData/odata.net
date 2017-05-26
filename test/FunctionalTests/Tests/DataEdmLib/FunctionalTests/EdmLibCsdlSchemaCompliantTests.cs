@@ -17,7 +17,6 @@ namespace EdmLibTests.FunctionalTests
     using EdmLibTests.FunctionalUtilities;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Edm.Csdl;
-    using Microsoft.OData.Edm.Library;
     using Microsoft.OData.Edm.Validation;
     using Microsoft.Test.OData.Utils.Metadata;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -66,7 +65,6 @@ namespace EdmLibTests.FunctionalTests
             var edmVersions = new EdmVersion[] { EdmVersion.V40 };
             foreach (var edmVersion in edmVersions)
             {
-                this.BasicXsdValidationTestForParserInputCsdl(ValidationTestModelBuilder.ConcurrencyModeTypes(edmVersion), edmVersion);
                 this.BasicXsdValidationTestForParserInputCsdl(ValidationTestModelBuilder.CollectionTypeTypeRefSimpleTypeCanHaveFacets(edmVersion), edmVersion);
             }
         }
@@ -210,32 +208,32 @@ namespace EdmLibTests.FunctionalTests
         }
 
         [TestMethod]
-        public void ParserModelWithEnumValueTerm()
+        public void ParserModelWithEnumTerm()
         {
             var edmVersions = new EdmVersion[] { EdmVersion.V40 };
             foreach (var edmVersion in edmVersions)
             {
-                Assert.IsFalse(this.GetXsdValidationResults(ValidationTestModelBuilder.ModelWithEnumValueTerm(), edmVersion).Any(), "EnumType should be able to have inline vocab. annotations");
+                Assert.IsFalse(this.GetXsdValidationResults(ValidationTestModelBuilder.ModelWithEnumTerm(), edmVersion).Any(), "EnumType should be able to have inline vocab. annotations");
             }
         }
 
         [TestMethod]
-        public void ValueTermXsdValidation()
+        public void TermXsdValidation()
         {
             var edmVersions = new EdmVersion[] { EdmVersion.V40 };
             foreach (var edmVersion in edmVersions)
             {
-                this.BasicXsdValidationTestForSerializerOutputCsdl(this.GetParserResult(VocabularyTestModelBuilder.ValueTermOnlyCsdl()), edmVersion);
+                this.BasicXsdValidationTestForSerializerOutputCsdl(this.GetParserResult(VocabularyTestModelBuilder.TermOnlyCsdl()), edmVersion);
             }
         }
 
         [TestMethod]
-        public void ParserValueAnnotationIfCsdlSchemaCompliantTest()
+        public void ParserVocabularyAnnotationIfCsdlSchemaCompliantTest()
         {
             var edmVersions = new EdmVersion[] { EdmVersion.V40 };
             foreach (var edmVersion in edmVersions)
             {
-                this.BasicXsdValidationTestForParserInputCsdl(VocabularyTestModelBuilder.ValueAnnotationIfCsdl(), edmVersion);
+                this.BasicXsdValidationTestForParserInputCsdl(VocabularyTestModelBuilder.VocabularyAnnotationIfCsdl(), edmVersion);
             }
         }
 
@@ -245,7 +243,7 @@ namespace EdmLibTests.FunctionalTests
             var edmVersions = new EdmVersion[] { EdmVersion.V40 };
             foreach (var edmVersion in edmVersions)
             {
-                this.BasicXsdValidationTestForParserInputCsdl(VocabularyTestModelBuilder.ValueAnnotationFunctionCsdl(), edmVersion);
+                this.BasicXsdValidationTestForParserInputCsdl(VocabularyTestModelBuilder.VocabularyAnnotationFunctionCsdl(), edmVersion);
             }
         }
 
@@ -255,7 +253,7 @@ namespace EdmLibTests.FunctionalTests
             var edmVersions = new EdmVersion[] { EdmVersion.V40 };
             foreach (var edmVersion in edmVersions)
             {
-                this.BasicXsdValidationTestForParserInputCsdl(VocabularyTestModelBuilder.SimpleValueAnnotationCsdl(), edmVersion);
+                this.BasicXsdValidationTestForParserInputCsdl(VocabularyTestModelBuilder.SimpleVocabularyAnnotationCsdl(), edmVersion);
             }
         }
 
@@ -374,13 +372,13 @@ namespace EdmLibTests.FunctionalTests
         }
 
         [TestMethod]
-        public void ParserAnnotationValueTermCsdlSchemaCompliantTest()
+        public void ParserAnnotationTermCsdlSchemaCompliantTest()
         {
             var edmVersions = new EdmVersion[] { EdmVersion.V40 };
             foreach (var edmVersion in edmVersions)
             {
-                this.BasicXsdValidationTestForParserInputCsdl(VocabularyTestModelBuilder.OutOfLineAnnotationValueTerm(), edmVersion);
-                this.BasicXsdValidationTestForParserInputCsdl(VocabularyTestModelBuilder.InlineAnnotationValueTerm(), edmVersion);
+                this.BasicXsdValidationTestForParserInputCsdl(VocabularyTestModelBuilder.OutOfLineAnnotationTerm(), edmVersion);
+                this.BasicXsdValidationTestForParserInputCsdl(VocabularyTestModelBuilder.InlineAnnotationTerm(), edmVersion);
             }
         }
 
@@ -493,7 +491,7 @@ namespace EdmLibTests.FunctionalTests
             IEnumerable<EdmError> parserErrors;
             var csdlsEdmVersionUpdated = csdls.Select(n => XElement.Parse(n.ToString().Replace(n.Name.NamespaceName, EdmLibCsdlContentGenerator.GetCsdlFullNamespace(edmVersion).NamespaceName)));
 
-            var isParsed = CsdlReader.TryParse(csdlsEdmVersionUpdated.Select(e => e.CreateReader()), out edmModel, out parserErrors);
+            var isParsed = SchemaReader.TryParse(csdlsEdmVersionUpdated.Select(e => e.CreateReader()), out edmModel, out parserErrors);
             if (!isParsed)
             {
                 // XSD verification is a sufficent condition, but not a necessary condition of EDMLib parser. 
@@ -560,14 +558,14 @@ namespace EdmLibTests.FunctionalTests
 
             var codegenerationTargetNamespace = EdmConstants.CodegenNamespace;
             var annotationTargetNamespace = EdmConstants.AnnotationNamespace;
-            var codegenerationXsdFileName = "System.Data.Resources.CodeGenerationSchema.xsd";
-            var annotationXsdFileName = "System.Data.Resources.AnnotationSchema.xsd";
+            var codegenerationXsdFileName = "Microsoft.OData.Resources.CodeGenerationSchema.xsd";
+            var annotationXsdFileName = "Microsoft.OData.Resources.AnnotationSchema.xsd";
 
             EdmLibXmlSchemas = new Dictionary<EdmVersion, XmlSchemaSet>();
             var schemas = new XmlSchemaSet();
             schemas.Add(codegenerationTargetNamespace, XmlReader.Create(this.GetXsdStream(codegenerationXsdFileName)));
             schemas.Add(annotationTargetNamespace, XmlReader.Create(this.GetXsdStream(annotationXsdFileName)));
-            schemas.Add(EdmConstants.EdmOasisNamespace, XmlReader.Create(this.GetXsdStream("System.Data.Resources.CSDLSchema_4.xsd")));
+            schemas.Add(EdmConstants.EdmOasisNamespace, XmlReader.Create(this.GetXsdStream("Microsoft.OData.Resources.CSDLSchema_4.xsd")));
             EdmLibXmlSchemas.Add(EdmVersion.V40, schemas);
         }
     }

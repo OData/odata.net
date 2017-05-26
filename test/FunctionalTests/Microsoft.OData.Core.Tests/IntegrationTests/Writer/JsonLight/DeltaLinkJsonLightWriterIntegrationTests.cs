@@ -8,7 +8,7 @@ using System;
 using FluentAssertions;
 using Xunit;
 
-namespace Microsoft.OData.Core.Tests.IntegrationTests.Writer.JsonLight
+namespace Microsoft.OData.Tests.IntegrationTests.Writer.JsonLight
 {
     public class DeltaLinkJsonLightWriterIntegrationTests : DeltaLinkWriterIntegrationTests
     {
@@ -25,7 +25,7 @@ namespace Microsoft.OData.Core.Tests.IntegrationTests.Writer.JsonLight
 
             Action<ODataWriter> deltaLinkAtWriteStart = (odataWriter) =>
             {
-                var feedToWrite = new ODataFeed { DeltaLink = new Uri("http://host/deltaLink", UriKind.Absolute) };
+                var feedToWrite = new ODataResourceSet { DeltaLink = new Uri("http://host/deltaLink", UriKind.Absolute) };
                 odataWriter.WriteStart(feedToWrite);
                 odataWriter.WriteEnd();
             };
@@ -44,7 +44,7 @@ namespace Microsoft.OData.Core.Tests.IntegrationTests.Writer.JsonLight
 
             Action<ODataWriter> deltaLinkAtWriteStart = (odataWriter) =>
             {
-                var feedToWrite = new ODataFeed();
+                var feedToWrite = new ODataResourceSet();
                 odataWriter.WriteStart(feedToWrite);
                 feedToWrite.DeltaLink = new Uri("http://host/deltaLink", UriKind.Absolute);
                 odataWriter.WriteEnd();
@@ -65,7 +65,7 @@ namespace Microsoft.OData.Core.Tests.IntegrationTests.Writer.JsonLight
 
             Action<ODataWriter> deltaLinkAtWriteStart = (odataWriter) =>
             {
-                var feedToWrite = new ODataFeed { DeltaLink = new Uri("http://host/deltaLink", UriKind.Absolute) };
+                var feedToWrite = new ODataResourceSet { DeltaLink = new Uri("http://host/deltaLink", UriKind.Absolute) };
                 odataWriter.WriteStart(feedToWrite);
                 odataWriter.WriteEnd();
             };
@@ -85,7 +85,7 @@ namespace Microsoft.OData.Core.Tests.IntegrationTests.Writer.JsonLight
 
             Action<ODataWriter> deltaLinkAtWriteStart = (odataWriter) =>
             {
-                var feedToWrite = new ODataFeed();
+                var feedToWrite = new ODataResourceSet();
                 odataWriter.WriteStart(feedToWrite);
                 feedToWrite.DeltaLink = new Uri("deltaLink", UriKind.Relative);
                 odataWriter.WriteEnd();
@@ -103,22 +103,22 @@ namespace Microsoft.OData.Core.Tests.IntegrationTests.Writer.JsonLight
         {
             Action<ODataWriter> deltaLinkAtWriteStart = (odataWriter) =>
             {
-                var entryToWrite = new ODataEntry { Properties = new[] { new ODataProperty { Name = "ID", Value = 1 } }};
+                var entryToWrite = new ODataResource { Properties = new[] { new ODataProperty { Name = "ID", Value = 1 } }};
                 odataWriter.WriteStart(entryToWrite);
 
-                ODataNavigationLink navLink = new ODataNavigationLink { Name = "ResourceSetNavigationProperty", IsCollection = true };
+                ODataNestedResourceInfo navLink = new ODataNestedResourceInfo { Name = "ResourceSetNavigationProperty", IsCollection = true };
                 odataWriter.WriteStart(navLink);
 
-                    var feedToWrite = new ODataFeed();
+                    var feedToWrite = new ODataResourceSet();
                     feedToWrite.DeltaLink = new Uri("relative", UriKind.Relative);
                     odataWriter.WriteStart(feedToWrite);
             };
 
             Action requestTest = () => WriteAnnotationsAndValidatePayload(deltaLinkAtWriteStart, ODataFormat.Json, string.Empty, request: true, createFeedWriter: false);
-            requestTest.ShouldThrow<ODataException>().WithMessage(Strings.ODataWriterCore_DeltaLinkNotSupportedOnExpandedFeed);
+            requestTest.ShouldThrow<ODataException>().WithMessage(Strings.ODataWriterCore_DeltaLinkNotSupportedOnExpandedResourceSet);
 
             Action responseTest = () => WriteAnnotationsAndValidatePayload(deltaLinkAtWriteStart, ODataFormat.Json, string.Empty, request: false, createFeedWriter: false);
-            responseTest.ShouldThrow<ODataException>().WithMessage(Strings.ODataWriterCore_DeltaLinkNotSupportedOnExpandedFeed);
+            responseTest.ShouldThrow<ODataException>().WithMessage(Strings.ODataWriterCore_DeltaLinkNotSupportedOnExpandedResourceSet);
         }
 
         [Fact]
@@ -126,23 +126,23 @@ namespace Microsoft.OData.Core.Tests.IntegrationTests.Writer.JsonLight
         {
             Action<ODataWriter> deltaLinkAtWriteEnd = (odataWriter) =>
             {
-                var entryToWrite = new ODataEntry { Properties = new[] { new ODataProperty { Name = "ID", Value = 1 } }};
+                var entryToWrite = new ODataResource { Properties = new[] { new ODataProperty { Name = "ID", Value = 1 } }};
                 odataWriter.WriteStart(entryToWrite);
 
-                ODataNavigationLink navLink = new ODataNavigationLink { Name = "ResourceSetNavigationProperty", IsCollection = true };
+                ODataNestedResourceInfo navLink = new ODataNestedResourceInfo { Name = "ResourceSetNavigationProperty", IsCollection = true };
                 odataWriter.WriteStart(navLink);
 
-                    var feedToWrite = new ODataFeed();
+                    var feedToWrite = new ODataResourceSet();
                     odataWriter.WriteStart(feedToWrite);
                     feedToWrite.DeltaLink = new Uri("relative", UriKind.Relative);
                     odataWriter.WriteEnd();
             };
 
             Action requestTest = () => WriteAnnotationsAndValidatePayload(deltaLinkAtWriteEnd, ODataFormat.Json, string.Empty, request: true, createFeedWriter: false);
-            requestTest.ShouldThrow<ODataException>().WithMessage(Strings.ODataWriterCore_DeltaLinkNotSupportedOnExpandedFeed);
+            requestTest.ShouldThrow<ODataException>().WithMessage(Strings.ODataWriterCore_DeltaLinkNotSupportedOnExpandedResourceSet);
 
             Action responseTest = () => WriteAnnotationsAndValidatePayload(deltaLinkAtWriteEnd, ODataFormat.Json, string.Empty, request: false, createFeedWriter: false);
-            responseTest.ShouldThrow<ODataException>().WithMessage(Strings.ODataWriterCore_DeltaLinkNotSupportedOnExpandedFeed);
+            responseTest.ShouldThrow<ODataException>().WithMessage(Strings.ODataWriterCore_DeltaLinkNotSupportedOnExpandedResourceSet);
         }
 
         #endregion Writing delta link on expanded feeds

@@ -9,13 +9,12 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using FluentAssertions;
-using Microsoft.OData.Core.JsonLight;
-using Microsoft.OData.Core.UriParser;
+using Microsoft.OData.JsonLight;
+using Microsoft.OData.UriParser;
 using Microsoft.OData.Edm;
-using Microsoft.OData.Edm.Library;
 using Xunit;
 
-namespace Microsoft.OData.Core.Tests.JsonLight
+namespace Microsoft.OData.Tests.JsonLight
 {
     public class ODataJsonLightDeltaWriterTests
     {
@@ -25,10 +24,10 @@ namespace Microsoft.OData.Core.Tests.JsonLight
 
         #region Entities
 
-        private readonly ODataDeltaFeed feed = new ODataDeltaFeed
+        private readonly ODataDeltaResourceSet feed = new ODataDeltaResourceSet
         {
             Count = 5,
-            SerializationInfo = new ODataDeltaFeedSerializationInfo
+            SerializationInfo = new ODataDeltaResourceSetSerializationInfo
             {
                 EntitySetName = "Customers",
                 EntityTypeName = "MyNS.Customer",
@@ -37,20 +36,20 @@ namespace Microsoft.OData.Core.Tests.JsonLight
             DeltaLink = new Uri("Customers?$expand=Orders&$deltatoken=8015", UriKind.Relative)
         };
 
-        private readonly ODataDeltaFeed feedWithoutInfo = new ODataDeltaFeed
+        private readonly ODataDeltaResourceSet feedWithoutInfo = new ODataDeltaResourceSet
         {
             Count = 5,
             DeltaLink = new Uri("Customers?$expand=Orders&$deltatoken=8015", UriKind.Relative)
         };
 
-        private readonly ODataEntry customerUpdated = new ODataEntry
+        private readonly ODataResource customerUpdated = new ODataResource
         {
             Id = new Uri("Customers('BOTTM')", UriKind.Relative),
             Properties = new List<ODataProperty>
             {
                 new ODataProperty { Name = "ContactName", Value = "Susan Halvenstern" }
             },
-            SerializationInfo = new ODataFeedAndEntrySerializationInfo
+            SerializationInfo = new ODataResourceSerializationInfo
             {
                 NavigationSourceEntityTypeName = "Customer",
                 NavigationSourceKind = EdmNavigationSourceKind.EntitySet,
@@ -62,27 +61,10 @@ namespace Microsoft.OData.Core.Tests.JsonLight
 
         private readonly ODataDeltaLink linkToOrder10645 = new ODataDeltaLink(new Uri("Customers('BOTTM')", UriKind.Relative), new Uri("Orders('10645')", UriKind.Relative), "Orders");
 
-        private readonly ODataEntry order10643 = new ODataEntry
+        private readonly ODataResource order10643 = new ODataResource
         {
             Id = new Uri("Orders(10643)", UriKind.Relative),
-            Properties = new List<ODataProperty>
-            {
-                new ODataProperty
-                {
-                    Name = "ShippingAddress",
-                    Value = new ODataComplexValue
-                    {
-                        Properties = new List<ODataProperty>
-                        {
-                            new ODataProperty { Name = "Street", Value = "23 Tsawassen Blvd." },
-                            new ODataProperty { Name = "City", Value = "Tsawassen" },
-                            new ODataProperty { Name = "Region", Value = "BC" },
-                            new ODataProperty { Name = "PostalCode", Value = "T2F 8M4" }
-                        }
-                    }
-                }
-            },
-            SerializationInfo = new ODataFeedAndEntrySerializationInfo
+            SerializationInfo = new ODataResourceSerializationInfo
             {
                 NavigationSourceEntityTypeName = "Order",
                 NavigationSourceKind = EdmNavigationSourceKind.EntitySet,
@@ -106,6 +88,10 @@ namespace Microsoft.OData.Core.Tests.JsonLight
             writer.WriteDeltaDeletedLink(linkToOrder10643);
             writer.WriteDeltaLink(linkToOrder10645);
             writer.WriteStart(order10643);
+            writer.WriteStart(shippingAddressInfo);
+            writer.WriteStart(shippingAddress);
+            writer.WriteEnd(); // shippingAddress
+            writer.WriteEnd(); // shippingAddressInfo
             writer.WriteEnd();
             writer.WriteDeltaDeletedEntry(customerDeleted);
             writer.WriteEnd();
@@ -126,6 +112,10 @@ namespace Microsoft.OData.Core.Tests.JsonLight
             writer.WriteDeltaDeletedLink(linkToOrder10643);
             writer.WriteDeltaLink(linkToOrder10645);
             writer.WriteStart(order10643);
+            writer.WriteStart(shippingAddressInfo);
+            writer.WriteStart(shippingAddress);
+            writer.WriteEnd(); // shippingAddress
+            writer.WriteEnd(); // shippingAddressInfo
             writer.WriteEnd();
             writer.WriteDeltaDeletedEntry(customerDeleted);
             writer.WriteEnd();
@@ -152,35 +142,35 @@ namespace Microsoft.OData.Core.Tests.JsonLight
         {
             this.TestInit(this.GetModel());
 
-            ODataDeltaFeed feed = new ODataDeltaFeed();
-            ODataEntry containedEntry = new ODataEntry()
+            ODataDeltaResourceSet feed = new ODataDeltaResourceSet();
+            ODataResource containedEntry = new ODataResource()
             {
                 TypeName = "MyNS.ProductDetail",
                 Properties = new[]
                 {
-                    new ODataProperty {Name = "Id", Value = new ODataPrimitiveValue(1)}, 
+                    new ODataProperty {Name = "Id", Value = new ODataPrimitiveValue(1)},
                     new ODataProperty {Name = "Detail", Value = new ODataPrimitiveValue("made in china")},
                 },
             };
 
-            containedEntry.SetSerializationInfo(new ODataFeedAndEntrySerializationInfo()
+            containedEntry.SetSerializationInfo(new ODataResourceSerializationInfo()
             {
                 NavigationSourceEntityTypeName = "MyNS.ProductDetail",
                 NavigationSourceName = "Products(1)/Details",
                 NavigationSourceKind = EdmNavigationSourceKind.ContainedEntitySet
             });
 
-            ODataEntry containedInContainedEntity = new ODataEntry()
+            ODataResource containedInContainedEntity = new ODataResource()
             {
                 TypeName = "MyNS.ProductDetailItem",
                 Properties = new[]
                 {
-                    new ODataProperty {Name = "ItemId", Value = new ODataPrimitiveValue(1)}, 
+                    new ODataProperty {Name = "ItemId", Value = new ODataPrimitiveValue(1)},
                     new ODataProperty {Name = "Description", Value = new ODataPrimitiveValue("made by HCC")},
                 },
             };
 
-            containedInContainedEntity.SetSerializationInfo(new ODataFeedAndEntrySerializationInfo()
+            containedInContainedEntity.SetSerializationInfo(new ODataResourceSerializationInfo()
             {
                 NavigationSourceEntityTypeName = "MyNS.ProductDetailItem",
                 NavigationSourceName = "Products(1)/Details(1)/Items",
@@ -196,7 +186,7 @@ namespace Microsoft.OData.Core.Tests.JsonLight
             writer.WriteEnd();
             writer.Flush();
 
-            this.TestPayload().Should().Be("{\"@odata.context\":\"http://host/service/$metadata#Products/$delta\",\"value\":[{\"@odata.context\":\"http://host/service/$metadata#Products(1)/Details/$entity\",\"Id\":1,\"Detail\":\"made in china\"},{\"@odata.context\":\"http://host/service/$metadata#Products(1)/Details(1)/Items/$entity\",\"ItemId\":1,\"Description\":\"made by HCC\"}]}"); 
+            this.TestPayload().Should().Be("{\"@odata.context\":\"http://host/service/$metadata#Products/$delta\",\"value\":[{\"@odata.context\":\"http://host/service/$metadata#Products(1)/Details/$entity\",\"Id\":1,\"Detail\":\"made in china\"},{\"@odata.context\":\"http://host/service/$metadata#Products(1)/Details(1)/Items/$entity\",\"ItemId\":1,\"Description\":\"made by HCC\"}]}");
         }
 
         [Fact]
@@ -204,29 +194,29 @@ namespace Microsoft.OData.Core.Tests.JsonLight
         {
             this.TestInit(this.GetModel());
 
-            ODataDeltaFeed feed = new ODataDeltaFeed();
+            ODataDeltaResourceSet feed = new ODataDeltaResourceSet();
 
-            ODataEntry entry = new ODataEntry()
+            ODataResource entry = new ODataResource()
             {
                 TypeName = "MyNS.Product",
                 Properties = new[]
                 {
-                    new ODataProperty {Name = "Id", Value = new ODataPrimitiveValue(1)}, 
+                    new ODataProperty {Name = "Id", Value = new ODataPrimitiveValue(1)},
                     new ODataProperty {Name = "Name", Value = new ODataPrimitiveValue("Car")},
                 },
             };
 
-            ODataEntry containedEntry = new ODataEntry()
+            ODataResource containedEntry = new ODataResource()
             {
                 TypeName = "MyNS.ProductDetail",
                 Properties = new[]
                 {
-                    new ODataProperty {Name = "Id", Value = new ODataPrimitiveValue(1)}, 
+                    new ODataProperty {Name = "Id", Value = new ODataPrimitiveValue(1)},
                     new ODataProperty {Name = "Detail", Value = new ODataPrimitiveValue("made in china")},
                 },
             };
 
-            containedEntry.SetSerializationInfo(new ODataFeedAndEntrySerializationInfo()
+            containedEntry.SetSerializationInfo(new ODataResourceSerializationInfo()
             {
                 NavigationSourceEntityTypeName = "MyNS.ProductDetail",
                 NavigationSourceName = "Products(1)/Details",
@@ -252,7 +242,7 @@ namespace Microsoft.OData.Core.Tests.JsonLight
             writer.WriteEnd();
             writer.Flush();
 
-            this.TestPayload().Should().Be("{\"@odata.context\":\"http://host/service/$metadata#Products(Name,Details,Details(Detail))/$delta\",\"value\":[{\"@odata.context\":\"http://host/service/$metadata#Products(1)/Details/$entity\",\"Id\":1,\"Detail\":\"made in china\"},{\"Id\":1,\"Name\":\"Car\"}]}");
+            this.TestPayload().Should().Be("{\"@odata.context\":\"http://host/service/$metadata#Products(Name,Details(Detail))/$delta\",\"value\":[{\"@odata.context\":\"http://host/service/$metadata#Products(1)/Details/$entity\",\"Id\":1,\"Detail\":\"made in china\"},{\"Id\":1,\"Name\":\"Car\"}]}");
         }
 
         [Fact]
@@ -260,25 +250,11 @@ namespace Microsoft.OData.Core.Tests.JsonLight
         {
             this.TestInit(this.GetModel());
 
-            ODataDeltaFeed feed = new ODataDeltaFeed();
+            ODataDeltaResourceSet feed = new ODataDeltaResourceSet();
 
-            ODataEntry orderEntry= new ODataEntry()
+            ODataResource orderEntry = new ODataResource()
             {
-                Properties = new List<ODataProperty>
-                {
-                    new ODataProperty
-                    {
-                        Name = "ShippingAddress",
-                        Value = new ODataComplexValue
-                        {
-                            Properties = new List<ODataProperty>
-                            {
-                                new ODataProperty { Name = "City", Value = "Shanghai" },
-                            }
-                        }
-                    }
-                },
-                SerializationInfo = new ODataFeedAndEntrySerializationInfo
+                SerializationInfo = new ODataResourceSerializationInfo
                 {
                     NavigationSourceEntityTypeName = "Order",
                     NavigationSourceKind = EdmNavigationSourceKind.EntitySet,
@@ -286,8 +262,21 @@ namespace Microsoft.OData.Core.Tests.JsonLight
                 },
             };
 
+            ODataNestedResourceInfo shippingAddressInfo = new ODataNestedResourceInfo
+            {
+                Name = "ShippingAddress",
+                IsCollection = false
+            };
 
-           var result = new ODataQueryOptionParser(this.GetModel(), this.GetCustomerType(), this.GetCustomers(), new Dictionary<string, string> { { "$expand", "Orders($select=ShippingAddress)" }, { "$select", "ContactName" } }).ParseSelectAndExpand();
+            ODataResource shippingAddress = new ODataResource
+            {
+                Properties = new List<ODataProperty>
+                {
+                    new ODataProperty { Name = "City", Value = "Shanghai" },
+                }
+            };
+
+            var result = new ODataQueryOptionParser(this.GetModel(), this.GetCustomerType(), this.GetCustomers(), new Dictionary<string, string> { { "$expand", "Orders($select=ShippingAddress)" }, { "$select", "ContactName" } }).ParseSelectAndExpand();
 
             ODataUri odataUri = new ODataUri()
             {
@@ -299,11 +288,15 @@ namespace Microsoft.OData.Core.Tests.JsonLight
             ODataJsonLightDeltaWriter writer = new ODataJsonLightDeltaWriter(outputContext, this.GetProducts(), this.GetProductType());
             writer.WriteStart(feed);
             writer.WriteStart(orderEntry);
+            writer.WriteStart(shippingAddressInfo);
+            writer.WriteStart(shippingAddress);
+            writer.WriteEnd();
+            writer.WriteEnd();
             writer.WriteEnd();
             writer.WriteEnd();
             writer.Flush();
 
-            this.TestPayload().Should().Be("{\"@odata.context\":\"http://host/service/$metadata#Products(ContactName,Orders,Orders(ShippingAddress))/$delta\",\"value\":[{\"@odata.context\":\"http://host/service/$metadata#Orders/$entity\",\"ShippingAddress\":{\"City\":\"Shanghai\"}}]}");
+            this.TestPayload().Should().Be("{\"@odata.context\":\"http://host/service/$metadata#Products(ContactName,Orders(ShippingAddress))/$delta\",\"value\":[{\"@odata.context\":\"http://host/service/$metadata#Orders/$entity\",\"ShippingAddress\":{\"City\":\"Shanghai\"}}]}");
         }
 
         [Fact]
@@ -311,13 +304,13 @@ namespace Microsoft.OData.Core.Tests.JsonLight
         {
             this.TestInit(this.GetModel());
 
-            ODataDeltaFeed feed = new ODataDeltaFeed();
-            ODataEntry derivedEntity = new ODataEntry()
+            ODataDeltaResourceSet feed = new ODataDeltaResourceSet();
+            ODataResource derivedEntity = new ODataResource()
             {
                 TypeName = "MyNS.PhysicalProduct",
                 Properties = new[]
                 {
-                    new ODataProperty {Name = "Id", Value = new ODataPrimitiveValue(1)}, 
+                    new ODataProperty {Name = "Id", Value = new ODataPrimitiveValue(1)},
                     new ODataProperty {Name = "Name", Value = new ODataPrimitiveValue("car")},
                     new ODataProperty {Name = "Material", Value = new ODataPrimitiveValue("gold")},
                 },
@@ -338,18 +331,18 @@ namespace Microsoft.OData.Core.Tests.JsonLight
         {
             this.TestInit(this.GetModel());
 
-            ODataDeltaFeed feed = new ODataDeltaFeed();
-            ODataEntry derivedEntity = new ODataEntry()
+            ODataDeltaResourceSet feed = new ODataDeltaResourceSet();
+            ODataResource derivedEntity = new ODataResource()
             {
                 TypeName = "MyNS.PhysicalProduct",
                 Properties = new[]
                 {
-                    new ODataProperty {Name = "Id", Value = new ODataPrimitiveValue(1)}, 
+                    new ODataProperty {Name = "Id", Value = new ODataPrimitiveValue(1)},
                     new ODataProperty {Name = "Name", Value = new ODataPrimitiveValue("car")},
                     new ODataProperty {Name = "Material", Value = new ODataPrimitiveValue("gold")},
                 },
 
-                SerializationInfo = new ODataFeedAndEntrySerializationInfo()
+                SerializationInfo = new ODataResourceSerializationInfo()
                 {
                     ExpectedTypeName = "MyNS.Product",
                     NavigationSourceEntityTypeName = "MyNS.Product",
@@ -371,18 +364,18 @@ namespace Microsoft.OData.Core.Tests.JsonLight
 
         #region Test Data
 
-        private readonly ODataDeltaFeed deltaFeed = new ODataDeltaFeed();
+        private readonly ODataDeltaResourceSet deltaFeed = new ODataDeltaResourceSet();
 
-        private readonly ODataDeltaFeed deltaFeedWithInfo = new ODataDeltaFeed
+        private readonly ODataDeltaResourceSet deltaFeedWithInfo = new ODataDeltaResourceSet
         {
-            SerializationInfo = new ODataDeltaFeedSerializationInfo
+            SerializationInfo = new ODataDeltaResourceSetSerializationInfo
             {
                 EntitySetName = "Customers",
                 EntityTypeName = "MyNS.Customer"
             }
         };
 
-        private readonly ODataEntry customerEntry = new ODataEntry
+        private readonly ODataResource customerEntry = new ODataResource
         {
             Id = new Uri("http://host/service/Customers('BOTTM')"),
             Properties = new[]
@@ -392,60 +385,49 @@ namespace Microsoft.OData.Core.Tests.JsonLight
             TypeName = "MyNS.Customer",
         };
 
-        private readonly ODataNavigationLink ordersNavigationLink = new ODataNavigationLink
+        private readonly ODataNestedResourceInfo ordersNavigationLink = new ODataNestedResourceInfo
         {
             Name = "Orders",
             IsCollection = true
         };
 
-        private readonly ODataFeed ordersFeed = new ODataFeed();
+        private readonly ODataResourceSet ordersFeed = new ODataResourceSet();
 
-        private readonly ODataEntry orderEntry = new ODataEntry
+        private readonly ODataResource orderEntry = new ODataResource
         {
             Id = new Uri("http://host/service/Orders(10643)"),
             Properties = new[]
                 {
                     new ODataProperty { Name = "Id", Value = 10643 },
-                    new ODataProperty
-                    {
-                        Name = "ShippingAddress",
-                        Value = new ODataComplexValue
-                        {
-                            Properties = new List<ODataProperty>
-                            {
-                                new ODataProperty { Name = "Street", Value = "23 Tsawassen Blvd." },
-                                new ODataProperty { Name = "City", Value = "Tsawassen" },
-                                new ODataProperty { Name = "Region", Value = "BC" },
-                                new ODataProperty { Name = "PostalCode", Value = "T2F 8M4" }
-                            }
-                        }
-                    }
                 },
             TypeName = "MyNS.Order"
         };
 
-        private readonly ODataEntry orderEntryWithInfo = new ODataEntry
+        private readonly ODataNestedResourceInfo shippingAddressInfo = new ODataNestedResourceInfo
+        {
+            Name = "ShippingAddress",
+            IsCollection = false
+        };
+
+        private readonly ODataResource shippingAddress = new ODataResource
+        {
+            Properties = new List<ODataProperty>
+            {
+                new ODataProperty { Name = "Street", Value = "23 Tsawassen Blvd." },
+                new ODataProperty { Name = "City", Value = "Tsawassen" },
+                new ODataProperty { Name = "Region", Value = "BC" },
+                new ODataProperty { Name = "PostalCode", Value = "T2F 8M4" }
+            }
+        };
+
+        private readonly ODataResource orderEntryWithInfo = new ODataResource
         {
             Id = new Uri("http://host/service/Orders(10643)"),
             Properties = new[]
                 {
                     new ODataProperty { Name = "Id", Value = 10643 },
-                    new ODataProperty
-                    {
-                        Name = "ShippingAddress",
-                        Value = new ODataComplexValue
-                        {
-                            Properties = new List<ODataProperty>
-                            {
-                                new ODataProperty { Name = "Street", Value = "23 Tsawassen Blvd." },
-                                new ODataProperty { Name = "City", Value = "Tsawassen" },
-                                new ODataProperty { Name = "Region", Value = "BC" },
-                                new ODataProperty { Name = "PostalCode", Value = "T2F 8M4" }
-                            }
-                        }
-                    }
                 },
-            SerializationInfo = new ODataFeedAndEntrySerializationInfo
+            SerializationInfo = new ODataResourceSerializationInfo
             {
                 NavigationSourceEntityTypeName = "MyNS.Order",
                 NavigationSourceKind = EdmNavigationSourceKind.EntitySet,
@@ -453,33 +435,33 @@ namespace Microsoft.OData.Core.Tests.JsonLight
             }
         };
 
-        private readonly ODataNavigationLink favouriteProductsNavigationLink = new ODataNavigationLink
+        private readonly ODataNestedResourceInfo favouriteProductsNavigationLink = new ODataNestedResourceInfo
         {
             Name = "FavouriteProducts",
             IsCollection = true
         };
 
-        private readonly ODataFeed favouriteProductsFeed = new ODataFeed();
+        private readonly ODataResourceSet favouriteProductsFeed = new ODataResourceSet();
 
-        private readonly ODataEntry productEntry = new ODataEntry
+        private readonly ODataResource productEntry = new ODataResource
         {
             Id = new Uri("http://host/service/Product(1)"),
             Properties = new[]
                 {
-                    new ODataProperty { Name = "Id", Value = 1 }, 
+                    new ODataProperty { Name = "Id", Value = 1 },
                     new ODataProperty { Name = "Name", Value = "Car" },
                 },
             TypeName = "MyNS.Product",
         };
 
-        private readonly ODataEntry customerEntryWithInfo = new ODataEntry
+        private readonly ODataResource customerEntryWithInfo = new ODataResource
         {
             Id = new Uri("http://host/service/Customers('BOTTM')"),
             Properties = new[]
                 {
                     new ODataProperty { Name = "ContactName", Value = "Susan Halvenstern" },
                 },
-            SerializationInfo = new ODataFeedAndEntrySerializationInfo
+            SerializationInfo = new ODataResourceSerializationInfo
             {
                 NavigationSourceEntityTypeName = "MyNS.Customer",
                 NavigationSourceKind = EdmNavigationSourceKind.EntitySet,
@@ -487,25 +469,25 @@ namespace Microsoft.OData.Core.Tests.JsonLight
             }
         };
 
-        private readonly ODataEntry productDetailEntry = new ODataEntry()
+        private readonly ODataResource productDetailEntry = new ODataResource()
         {
             Properties = new[]
                 {
-                    new ODataProperty {Name = "Id", Value = new ODataPrimitiveValue(1)}, 
+                    new ODataProperty {Name = "Id", Value = new ODataPrimitiveValue(1)},
                     new ODataProperty {Name = "Detail", Value = new ODataPrimitiveValue("made in china")},
                 },
             TypeName = "MyNS.ProductDetail",
         };
 
-        private readonly ODataNavigationLink detailsNavigationLink = new ODataNavigationLink
+        private readonly ODataNestedResourceInfo detailsNavigationLink = new ODataNestedResourceInfo
         {
             Name = "Details",
             IsCollection = true
         };
 
-        private readonly ODataFeed detailsFeed = new ODataFeed();
+        private readonly ODataResourceSet detailsFeed = new ODataResourceSet();
 
-        private readonly ODataNavigationLink productBeingViewedNavigationLink = new ODataNavigationLink
+        private readonly ODataNestedResourceInfo productBeingViewedNavigationLink = new ODataNestedResourceInfo
         {
             Name = "ProductBeingViewed",
             IsCollection = false
@@ -521,6 +503,10 @@ namespace Microsoft.OData.Core.Tests.JsonLight
             writer.WriteStart(ordersNavigationLink);
             writer.WriteStart(ordersFeed);
             writer.WriteStart(orderEntry);
+            writer.WriteStart(shippingAddressInfo);
+            writer.WriteStart(shippingAddress);
+            writer.WriteEnd(); // shippingAddress
+            writer.WriteEnd(); // shippingAddressInfo
             writer.WriteEnd(); // orderEntry
             writer.WriteEnd(); // ordersFeed
             writer.WriteEnd(); // ordersNavigationLink
@@ -559,7 +545,7 @@ namespace Microsoft.OData.Core.Tests.JsonLight
                                 "}" +
                             "]" +
                         "}" +
-                    "]"+
+                    "]" +
                 "}");
         }
 
@@ -619,6 +605,10 @@ namespace Microsoft.OData.Core.Tests.JsonLight
             writer.WriteStart(ordersNavigationLink);
             writer.WriteStart(ordersFeed);
             writer.WriteStart(orderEntryWithInfo);
+            writer.WriteStart(shippingAddressInfo);
+            writer.WriteStart(shippingAddress);
+            writer.WriteEnd(); // shippingAddress
+            writer.WriteEnd(); // shippingAddressInfo
             writer.WriteEnd(); // orderEntryWithInfo
             writer.WriteEnd(); // ordersFeed
             writer.WriteEnd(); // ordersNavigationLink
@@ -664,6 +654,10 @@ namespace Microsoft.OData.Core.Tests.JsonLight
             writer.WriteStart(ordersNavigationLink);
             writer.WriteStart(ordersFeed);
             writer.WriteStart(orderEntry);
+            writer.WriteStart(shippingAddressInfo);
+            writer.WriteStart(shippingAddress);
+            writer.WriteEnd(); // shippingAddress
+            writer.WriteEnd(); // shippingAddressInfo
             writer.WriteEnd(); // orderEntry
             writer.WriteEnd(); // ordersFeed
             writer.WriteEnd(); // ordersNavigationLink
@@ -750,10 +744,10 @@ namespace Microsoft.OData.Core.Tests.JsonLight
                                     "\"@odata.id\":\"http://host/service/Product(1)\"," +
                                     "\"Id\":1," +
                                     "\"Name\":\"Car\"," +
+                                    "\"Details@odata.context\":\"http://host/service/$metadata#Products(1)/Details\"," +
                                     "\"Details\":" +
                                     "[" +
                                         "{" +
-                                            "\"@odata.type\":\"#MyNS.ProductDetail\"," +
                                             "\"Id\":1," +
                                             "\"Detail\":\"made in china\"" +
                                         "}" +
@@ -777,7 +771,7 @@ namespace Microsoft.OData.Core.Tests.JsonLight
                 writer.WriteStart(ordersNavigationLink);
             };
 
-            writeAction.ShouldThrow<ODataException>().WithMessage(Strings.ODataJsonLightDeltaWriter_InvalidTransitionToExpandedNavigationProperty("DeltaFeed", "ExpandedNavigationProperty"));
+            writeAction.ShouldThrow<ODataException>().WithMessage(Strings.ODataJsonLightDeltaWriter_InvalidTransitionToNestedResource("DeltaResourceSet", "NestedResource"));
         }
 
         [Fact]
@@ -795,7 +789,7 @@ namespace Microsoft.OData.Core.Tests.JsonLight
                 writer.WriteDeltaDeletedEntry(customerDeleted);
             };
 
-            writeAction.ShouldThrow<ODataException>().WithMessage(Strings.ODataJsonLightDeltaWriter_InvalidTransitionFromExpandedNavigationProperty("ExpandedNavigationProperty", "DeltaDeletedEntry"));
+            writeAction.ShouldThrow<ODataException>().WithMessage(Strings.ODataJsonLightDeltaWriter_InvalidTransitionFromNestedResource("NestedResource", "DeltaDeletedEntry"));
         }
 
         [Fact]
@@ -811,7 +805,7 @@ namespace Microsoft.OData.Core.Tests.JsonLight
                 writer.WriteStart(ordersFeed);
             };
 
-            writeAction.ShouldThrow<ODataException>().WithMessage(Strings.ODataJsonLightDeltaWriter_WriteStartExpandedFeedCalledInInvalidState("DeltaEntry"));
+            writeAction.ShouldThrow<ODataException>().WithMessage(Strings.ODataJsonLightDeltaWriter_WriteStartExpandedResourceSetCalledInInvalidState("DeltaResource"));
         }
 
         [Fact]
@@ -826,7 +820,7 @@ namespace Microsoft.OData.Core.Tests.JsonLight
                 writer.WriteStart(ordersFeed);
             };
 
-            writeAction.ShouldThrow<ODataException>().WithMessage(Strings.ODataJsonLightDeltaWriter_WriteStartExpandedFeedCalledInInvalidState("DeltaFeed"));
+            writeAction.ShouldThrow<ODataException>().WithMessage(Strings.ODataJsonLightDeltaWriter_WriteStartExpandedResourceSetCalledInInvalidState("DeltaResourceSet"));
         }
 
         [Fact]
@@ -864,10 +858,10 @@ namespace Microsoft.OData.Core.Tests.JsonLight
                                 "\"@odata.id\":\"http://host/service/Product(1)\"," +
                                 "\"Id\":1," +
                                 "\"Name\":\"Car\"," +
+                                "\"Details@odata.context\":\"http://host/service/$metadata#Products(1)/Details\"," +
                                 "\"Details\":" +
                                 "[" +
                                     "{" +
-                                        "\"@odata.type\":\"#MyNS.ProductDetail\"," +
                                         "\"Id\":1," +
                                         "\"Detail\":\"made in china\"" +
                                     "}" +
@@ -957,13 +951,13 @@ namespace Microsoft.OData.Core.Tests.JsonLight
                     ContainsTarget = true,
                 });
 
-                customer.AddUnidirectionalNavigation(new EdmNavigationPropertyInfo
+                var favouriteProducts = customer.AddUnidirectionalNavigation(new EdmNavigationPropertyInfo
                 {
                     Name = "FavouriteProducts",
                     Target = productType,
                     TargetMultiplicity = EdmMultiplicity.Many,
                 });
-                customer.AddUnidirectionalNavigation(new EdmNavigationPropertyInfo
+                var productBeingViewed = customer.AddUnidirectionalNavigation(new EdmNavigationPropertyInfo
                 {
                     Name = "ProductBeingViewed",
                     Target = productType,
@@ -971,11 +965,12 @@ namespace Microsoft.OData.Core.Tests.JsonLight
                 });
 
                 EdmEntityContainer container = new EdmEntityContainer("MyNS", "Example30");
-                container.AddEntitySet("Customers", customer);
+                var products = container.AddEntitySet("Products", productType);
+                var customers = container.AddEntitySet("Customers", customer);
+                customers.AddNavigationTarget(favouriteProducts, products);
+                customers.AddNavigationTarget(productBeingViewed, products);
                 container.AddEntitySet("Orders", orderType);
                 myModel.AddElement(container);
-
-                container.AddEntitySet("Products", productType);
             }
             return myModel;
         }
@@ -1008,7 +1003,7 @@ namespace Microsoft.OData.Core.Tests.JsonLight
 
         private static ODataJsonLightOutputContext CreateJsonLightOutputContext(MemoryStream stream, IEdmModel userModel, bool fullMetadata = false, ODataUri uri = null)
         {
-            ODataMessageWriterSettings settings = new ODataMessageWriterSettings { Version = ODataVersion.V4, AutoComputePayloadMetadataInJson = true, ShouldIncludeAnnotation = ODataUtils.CreateAnnotationFilter("*") };
+            var settings = new ODataMessageWriterSettings { Version = ODataVersion.V4, ShouldIncludeAnnotation = ODataUtils.CreateAnnotationFilter("*") };
             settings.SetServiceDocumentUri(new Uri("http://host/service"));
             if (uri != null)
             {
@@ -1025,17 +1020,19 @@ namespace Microsoft.OData.Core.Tests.JsonLight
                 parameters = new List<KeyValuePair<string, string>>();
             }
 
-            ODataMediaType mediaType = new ODataMediaType("application", "json", parameters);
-            return new ODataJsonLightOutputContext(
-                ODataFormat.Json,
-                new NonDisposingStream(stream),
-                mediaType,
-                Encoding.UTF8,
-                settings,
-                /*writingResponse*/ true,
-                /*synchronous*/ true,
-                userModel ?? EdmCoreModel.Instance,
-                /*urlResolver*/ null);
+            var mediaType = new ODataMediaType("application", "json", parameters);
+
+            var messageInfo = new ODataMessageInfo
+            {
+                MessageStream = new NonDisposingStream(stream),
+                MediaType = mediaType,
+                Encoding = Encoding.UTF8,
+                IsResponse = true,
+                IsAsync = false,
+                Model = userModel ?? EdmCoreModel.Instance
+            };
+
+            return new ODataJsonLightOutputContext(messageInfo, settings);
         }
 
         #endregion

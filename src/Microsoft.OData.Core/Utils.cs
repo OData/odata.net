@@ -4,13 +4,13 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core
+namespace Microsoft.OData
 {
     #region Namespaces
     using System;
     using System.Collections.Generic;
     using System.IO;
-#if ODATALIB_ASYNC
+#if PORTABLELIB
     using System.Threading.Tasks;
 #endif
     #endregion Namespaces
@@ -21,7 +21,7 @@ namespace Microsoft.OData.Core
     internal static class Utils
     {
         /// <summary>
-        /// Calls IDisposable.Dispose() on the argument if it is not null 
+        /// Calls IDisposable.Dispose() on the argument if it is not null
         /// and is an IDisposable.
         /// </summary>
         /// <param name="o">The instance to dispose.</param>
@@ -38,7 +38,7 @@ namespace Microsoft.OData.Core
             return false;
         }
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary>
         /// Asynchronously flushes a stream.
         /// </summary>
@@ -74,7 +74,7 @@ namespace Microsoft.OData.Core
         }
 
         /// <summary>
-        /// Stable comparer of a sequence of key/value pairs where each pair 
+        /// Stable comparer of a sequence of key/value pairs where each pair
         /// knows its position in the sequence and its value.
         /// </summary>
         /// <typeparam name="T">The type of the values in the sequence.</typeparam>

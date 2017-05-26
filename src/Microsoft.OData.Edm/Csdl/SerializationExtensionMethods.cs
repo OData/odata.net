@@ -7,16 +7,11 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.OData.Edm.Annotations;
-using Microsoft.OData.Edm.Library;
 using Microsoft.OData.Edm.Validation;
-using Microsoft.OData.Edm.Validation.Internal;
-using Microsoft.OData.Edm.Values;
+using Microsoft.OData.Edm.Vocabularies;
 
 namespace Microsoft.OData.Edm.Csdl
 {
-    using System.Diagnostics;
-
     /// <summary>
     /// Represents whether a vocabulary annotation should be serialized within the element it applies to or in a separate section of the CSDL.
     /// </summary>
@@ -279,7 +274,7 @@ namespace Microsoft.OData.Edm.Csdl
             return mappings.Get(namespaceName);
         }
 
-        // This internal method exists so we can get a consistent view of the mappings through the entire serialization process. 
+        // This internal method exists so we can get a consistent view of the mappings through the entire serialization process.
         // Otherwise, changes to the dictionary durring serialization would result in an invalid or inconsistent output.
         internal static VersioningDictionary<string, string> GetNamespaceAliases(this IEdmModel model)
         {

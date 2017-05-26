@@ -12,13 +12,12 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests
     using System.Diagnostics;
     using System.Linq;
     using System.Xml.Linq;
-    using Microsoft.OData.Core;
-    using Microsoft.OData.Core.Atom;
+    using Microsoft.OData;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Library;
     using Microsoft.Test.OData.Utils.Metadata;
     using Microsoft.Test.OData.Utils.ODataLibTest;
     using Microsoft.Test.Taupo.Astoria.Contracts.Json;
+    using Microsoft.Test.Taupo.Astoria.Contracts.OData;
     using Microsoft.Test.Taupo.OData.Atom;
     using Microsoft.Test.Taupo.OData.Common;
     using Microsoft.Test.Taupo.OData.Json;
@@ -31,7 +30,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests
     /// <summary>
     /// Helper methods to generate interesting writer payloads for specific item/property/value
     /// </summary>
-    
+
     internal static class WriterPayloads
     {
         /// <summary>
@@ -73,7 +72,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests
         /// <returns>Enumeration of test descriptors which will include the original entry in some interesting scenarios.</returns>
         public static IEnumerable<PayloadWriterTestDescriptor<ODataItem>> EntryPayloads(PayloadWriterTestDescriptor<ODataItem> testDescriptor)
         {
-            Debug.Assert(testDescriptor.PayloadItems[0] is ODataEntry, "The payload does not specify an entry.");
+            Debug.Assert(testDescriptor.PayloadItems[0] is ODataResource, "The payload does not specify an entry.");
 
             var payloadCases = new WriterPayloadCase<ODataItem>[] 
             {
@@ -209,7 +208,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests
         /// <returns>Enumeration of test descriptors which will include the original feed in some interesting scenarios.</returns>
         public static IEnumerable<PayloadWriterTestDescriptor<ODataItem>> FeedPayloads(PayloadWriterTestDescriptor<ODataItem> testDescriptor)
         {
-            Debug.Assert(testDescriptor.PayloadItems[0] is ODataFeed, "The payload does not specify a feed.");
+            Debug.Assert(testDescriptor.PayloadItems[0] is ODataResourceSet, "The payload does not specify a feed.");
 
             var payloadCases = new WriterPayloadCase<ODataItem>[] 
             {
@@ -289,7 +288,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests
         /// <returns>Enumeration of test descriptors which will include the original property in some interesting scenarios.</returns>
         public static IEnumerable<PayloadWriterTestDescriptor<ODataItem>> PropertyPayloads(PayloadWriterTestDescriptor<ODataItem> testDescriptor)
         {
-            ODataEntry tempEntry = testDescriptor.PayloadItems[0] as ODataEntry;
+            ODataResource tempEntry = testDescriptor.PayloadItems[0] as ODataResource;
             Debug.Assert(tempEntry != null, "A single entry payload is expected.");
             ODataProperty property = tempEntry.Properties.First();
 
@@ -298,7 +297,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests
             var payloadCases = new WriterPayloadCase<ODataItem>[] {
                 new WriterPayloadCase<ODataItem>() { // Single property on an entry
                     GetPayloadItems = () => { 
-                        ODataEntry entry = ObjectModelUtils.CreateDefaultEntry(); 
+                        ODataResource entry = ObjectModelUtils.CreateDefaultEntry(); 
                         entry.Properties = new ODataProperty[] { property }; 
                         return new ODataItem[] { entry }; },
                     AtomFragmentExtractor = (testConfiguration, result) =>
@@ -322,7 +321,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests
         /// <returns>Enumeration of test descriptors which will include the original value in some interesting scenarios.</returns>
         public static IEnumerable<PayloadWriterTestDescriptor<ODataItem>> ValuePayloads(PayloadWriterTestDescriptor<ODataItem> testDescriptor)
         {
-            ODataEntry tempEntry = testDescriptor.PayloadItems[0] as ODataEntry;
+            ODataResource tempEntry = testDescriptor.PayloadItems[0] as ODataResource;
             Debug.Assert(tempEntry != null, "A single entry payload is expected.");
             ODataProperty property = tempEntry.Properties.First();
             Debug.Assert(property != null, "A single property is expected.");
@@ -331,7 +330,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests
             var payloadCases = new WriterPayloadCase<ODataItem>[] {
                 new WriterPayloadCase<ODataItem>() { // Value of a property
                     GetPayloadItems = () => {
-                        ODataEntry entry = ObjectModelUtils.CreateDefaultEntry(); 
+                        ODataResource entry = ObjectModelUtils.CreateDefaultEntry(); 
                         entry.Properties = new ODataProperty[] { new ODataProperty() { Name = "TestProperty", Value = propertyValue } }; 
                         return new ODataItem[] { entry }; },
                     AtomFragmentExtractor = (testConfiguration, result) =>
@@ -343,7 +342,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests
                 new WriterPayloadCase<ODataItem>() { // Value as item in a collection
                     ShouldSkip = testConfiguration => propertyValue is ODataCollectionValue,
                     GetPayloadItems = () => {
-                        ODataEntry entry = ObjectModelUtils.CreateDefaultEntry(); 
+                        ODataResource entry = ObjectModelUtils.CreateDefaultEntry(); 
                         entry.Properties = new ODataProperty[] { new ODataProperty() { Name = "TestProperty", Value = new ODataCollectionValue() { Items = new object[] { propertyValue } } } }; 
                         return new ODataItem[] { entry }; },
                     AtomFragmentExtractor = (testConfiguration, result) =>
@@ -368,7 +367,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests
         /// <returns>Enumeration of test descriptors which will include the original named stream in some interesting scenarios.</returns>
         public static IEnumerable<PayloadWriterTestDescriptor<ODataItem>> NamedStreamPayloads(PayloadWriterTestDescriptor<ODataItem> testDescriptor)
         {
-            ODataEntry tempEntry = testDescriptor.PayloadItems[0] as ODataEntry;
+            ODataResource tempEntry = testDescriptor.PayloadItems[0] as ODataResource;
             Debug.Assert(tempEntry != null, "A single entry payload is expected.");
             ODataProperty namedStreamProperty = tempEntry.Properties.FirstOrDefault(p => p != null && p.Value is ODataStreamReferenceValue);
 
@@ -377,7 +376,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests
             var payloadCases = new WriterPayloadCase<ODataItem>[] {
                 new WriterPayloadCase<ODataItem>() { // Single named stream on an entry
                     GetPayloadItems = () => { 
-                        ODataEntry entry = ObjectModelUtils.CreateDefaultEntry(); 
+                        ODataResource entry = ObjectModelUtils.CreateDefaultEntry(); 
                         entry.TypeName = "TestModel.EntityWithStreamProperty";
                         entry.Properties = new ODataProperty[] { namedStreamProperty }; 
                         return new ODataItem[] { entry }; },
@@ -400,7 +399,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests
 
                 new WriterPayloadCase<ODataItem>() { // Single named stream on an entry with other properties before/after it
                     GetPayloadItems = () => { 
-                        ODataEntry entry = ObjectModelUtils.CreateDefaultEntry();
+                        ODataResource entry = ObjectModelUtils.CreateDefaultEntry();
                         entry.TypeName = "TestModel.EntityWithStreamPropertyAndOtherProperties";
                         entry.Properties = new ODataProperty[] 
                         { 
@@ -446,7 +445,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests
 
                 new WriterPayloadCase<ODataItem>() { // Multiple named stream properties on an entry
                     GetPayloadItems = () => { 
-                        ODataEntry entry = ObjectModelUtils.CreateDefaultEntry();
+                        ODataResource entry = ObjectModelUtils.CreateDefaultEntry();
                         entry.TypeName = "TestModel.EntityWithSeveralStreamProperties";
                         entry.Properties = new ODataProperty[] 
                         { 
@@ -483,15 +482,15 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests
         }
 
         /// <summary>
-        /// Returns all interesting payloads for a navigation link itself. That is the ODataNavigationLink without any subsequent events.
+        /// Returns all interesting payloads for a navigation link itself. That is the ODataNestedResourceInfo without any subsequent events.
         /// </summary>
         /// <param name="testDescriptor">Test descriptor which will end up writing a single navigation link.</param>
         /// <returns>Enumeration of test descriptors which will include the original navigation link in some interesting scenarios.</returns>
         public static IEnumerable<PayloadWriterTestDescriptor<ODataItem>> NavigationLinkOnlyPayloads(PayloadWriterTestDescriptor<ODataItem> testDescriptor)
         {
-            ODataNavigationLink navigationLink = testDescriptor.PayloadItems[0] as ODataNavigationLink;
+            ODataNestedResourceInfo navigationLink = testDescriptor.PayloadItems[0] as ODataNestedResourceInfo;
             Debug.Assert(navigationLink != null, "Navigation link payload expected.");
-            Debug.Assert(navigationLink.IsCollection.HasValue, "ODataNavigationLink.IsCollection required.");
+            Debug.Assert(navigationLink.IsCollection.HasValue, "ODataNestedResourceInfo.IsCollection required.");
 
             var payloadCases = new WriterPayloadCase<ODataItem>[] {
                 new WriterPayloadCase<ODataItem>() { // Just the link as non-expanded
@@ -522,7 +521,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests
         /// <returns>Enumeration of test descriptors which will include the original navigation link in some interesting scenarios.</returns>
         public static IEnumerable<PayloadWriterTestDescriptor<ODataItem>> NavigationLinkPayloads(PayloadWriterTestDescriptor<ODataItem> testDescriptor)
         {
-            ODataNavigationLink navigationLink = testDescriptor.PayloadItems[0] as ODataNavigationLink;
+            ODataNestedResourceInfo navigationLink = testDescriptor.PayloadItems[0] as ODataNestedResourceInfo;
             Debug.Assert(navigationLink != null, "Link payload expected.");
 
             var payloadCases = new WriterPayloadCase<ODataItem>[] {
@@ -540,185 +539,6 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests
             };
 
             return ApplyPayloadCases<ODataItem>(testDescriptor, payloadCases);
-        }
-
-        /// <summary>
-        /// Returns all interesting payloads for a text construct on ODataItem.
-        /// </summary>
-        /// <param name="testDescriptor">Test descriptor which will end up writing a single text construct.</param>
-        /// <returns>Enumeration of test descriptors which will include the original text construct in some interesting scenarios.</returns>
-        public static IEnumerable<PayloadWriterTestDescriptor<ODataItem>> AtomTextConstructPayloadsForItem(PayloadWriterTestDescriptor<AtomTextConstruct> testDescriptor)
-        {
-            AtomTextConstruct textConstruct = testDescriptor.PayloadItems[0] as AtomTextConstruct;
-            Debug.Assert(textConstruct != null, "A single text construct is expected.");
-
-            var payloadCases = new WriterPayloadCase<AtomTextConstruct, ODataItem>[] {
-                new WriterPayloadCase<AtomTextConstruct, ODataItem>() 
-                { // Title of a feed
-                    GetPayloadItems = () => { 
-                        ODataFeed feed = ObjectModelUtils.CreateDefaultFeedWithAtomMetadata();
-                        AtomFeedMetadata metadata = feed.Atom();
-                        metadata.Title = textConstruct;
-                        return new ODataItem[] { feed }; 
-                    },
-                    AtomFragmentExtractor = (testConfiguration, result) =>
-                    {
-                        return AtomTextConstructExtractorGenerator(TestAtomConstants.AtomTitleElementName)(testConfiguration, result);
-                    },
-                },
-
-                new WriterPayloadCase<AtomTextConstruct, ODataItem>() 
-                { // Subtitle of a feed
-                    GetPayloadItems = () => { 
-                        ODataFeed feed = ObjectModelUtils.CreateDefaultFeedWithAtomMetadata();
-                        AtomFeedMetadata metadata = feed.Atom();
-                        metadata.Subtitle = textConstruct;
-                        return new ODataItem[] { feed }; 
-                    },
-                    AtomFragmentExtractor = (testConfiguration, result) =>
-                    {
-                        return AtomTextConstructExtractorGenerator(TestAtomConstants.AtomSubtitleElementName)(testConfiguration, result);
-                    },
-                },
-
-                new WriterPayloadCase<AtomTextConstruct, ODataItem>() 
-                { // Rights of a feed
-                    GetPayloadItems = () => { 
-                        ODataFeed feed = ObjectModelUtils.CreateDefaultFeedWithAtomMetadata();
-                        AtomFeedMetadata metadata = feed.Atom();
-                        metadata.Rights = textConstruct;
-                        return new ODataItem[] { feed }; 
-                    },
-                    AtomFragmentExtractor = (testConfiguration, result) =>
-                    {
-                        return AtomTextConstructExtractorGenerator(TestAtomConstants.AtomRightsElementName)(testConfiguration, result);
-                    },
-                },
-
-                new WriterPayloadCase<AtomTextConstruct, ODataItem>() 
-                { // Title of a entry
-                    GetPayloadItems = () => { 
-                        ODataEntry entry = ObjectModelUtils.CreateDefaultEntryWithAtomMetadata();
-                        AtomEntryMetadata metadata = entry.Atom();
-                        metadata.Title = textConstruct;
-                        return new ODataItem[] { entry }; 
-                    },
-                    AtomFragmentExtractor = (testConfiguration, result) =>
-                        {
-                            return AtomTextConstructExtractorGenerator(TestAtomConstants.AtomTitleElementName)(testConfiguration, result);
-                        },
-                },
-
-                new WriterPayloadCase<AtomTextConstruct, ODataItem>() 
-                { // Summary of an entry
-                    GetPayloadItems = () => { 
-                        ODataEntry entry = ObjectModelUtils.CreateDefaultEntryWithAtomMetadata();
-                        AtomEntryMetadata metadata = entry.Atom();
-                        metadata.Summary = textConstruct;
-                        return new ODataItem[] { entry }; 
-                    },
-                    AtomFragmentExtractor = (testConfiguration, result) =>
-                        {
-                            return AtomTextConstructExtractorGenerator(TestAtomConstants.AtomSummaryElementName)(testConfiguration, result);
-                        },
-                },
-
-                new WriterPayloadCase<AtomTextConstruct, ODataItem>() 
-                { // Rights of an entry
-                    GetPayloadItems = () => { 
-                        ODataEntry entry = ObjectModelUtils.CreateDefaultEntryWithAtomMetadata();
-                        AtomEntryMetadata metadata = entry.Atom();
-                        metadata.Rights = textConstruct;
-                        return new ODataItem[] { entry }; 
-                    },
-                    AtomFragmentExtractor = (testConfiguration, result) =>
-                        {
-                            return AtomTextConstructExtractorGenerator(TestAtomConstants.AtomRightsElementName)(testConfiguration, result);
-                        },
-                },
-            };
-
-            return ApplyPayloadCases<AtomTextConstruct, ODataItem>(testDescriptor, payloadCases);
-        }
-
-        /// <summary>
-        /// Returns all interesting payloads for a text construct on ODataServiceDocument.
-        /// </summary>
-        /// <param name="testDescriptor">Test descriptor which will end up writing a single text construct.</param>
-        /// <returns>Enumeration of test descriptors which will include the original text construct in some interesting scenarios.</returns>
-        public static IEnumerable<PayloadWriterTestDescriptor<ODataServiceDocument>> AtomTextConstructPayloadsForWorkspace(PayloadWriterTestDescriptor<AtomTextConstruct> testDescriptor)
-        {
-            AtomTextConstruct textConstruct = testDescriptor.PayloadItems[0] as AtomTextConstruct;
-            Debug.Assert(textConstruct != null, "A single text construct is expected.");
-
-            var payloadCases = new WriterPayloadCase<AtomTextConstruct, ODataServiceDocument>[] {
-                new WriterPayloadCase<AtomTextConstruct, ODataServiceDocument>() 
-                { // Title of a workspace
-                    GetPayloadItems = () => { 
-                        ODataServiceDocument serviceDocument = ObjectModelUtils.CreateDefaultWorkspace();
-                        AtomWorkspaceMetadata metadata = new AtomWorkspaceMetadata();
-                        serviceDocument.SetAnnotation(metadata);
-                        metadata.Title = textConstruct;
-                        return new ODataServiceDocument[] { serviceDocument }; 
-                    },
-                    AtomFragmentExtractor = (testConfiguration, result) =>
-                    {
-                        return AtomTextConstructExtractorGenerator(TestAtomConstants.AtomTitleElementName)(
-                            testConfiguration,
-                            result.Element(TestAtomConstants.AtomPublishingXNamespace + TestAtomConstants.AtomPublishingWorkspaceElementName));
-                    },
-                },
-
-                new WriterPayloadCase<AtomTextConstruct, ODataServiceDocument>() 
-                { // Title of a collection in a workspace
-                    GetPayloadItems = () => { 
-                        ODataServiceDocument serviceDocument = ObjectModelUtils.CreateDefaultWorkspace();
-                        ODataEntitySetInfo collection = new ODataEntitySetInfo() { Url = new Uri("http://odata.org/collection") };
-                        serviceDocument.EntitySets = new List<ODataEntitySetInfo>() { collection };
-                        AtomResourceCollectionMetadata metadata = new AtomResourceCollectionMetadata();
-                        collection.SetAnnotation(metadata);
-                        metadata.Title = textConstruct;
-                        return new ODataServiceDocument[] { serviceDocument }; 
-                    },
-                    AtomFragmentExtractor = (testConfiguration, result) =>
-                    {
-                        return AtomTextConstructExtractorGenerator(TestAtomConstants.AtomTitleElementName)(
-                            testConfiguration, 
-                            result
-                                .Element(TestAtomConstants.AtomPublishingXNamespace + TestAtomConstants.AtomPublishingWorkspaceElementName)
-                                .Element(TestAtomConstants.AtomPublishingXNamespace + TestAtomConstants.AtomPublishingCollectionElementName));
-                    },
-                },
-            };
-
-            return ApplyPayloadCases<AtomTextConstruct, ODataServiceDocument>(testDescriptor, payloadCases);
-        }
-
-        /// <summary>
-        /// Helper method to generate extractors for text construct payloads.
-        /// </summary>
-        /// <param name="textConstructElementName">The name of the text construct element to extract.</param>
-        /// <returns>The fragment extractor for the text construct element.</returns>
-        private static Func<WriterTestConfiguration, XElement, XElement> AtomTextConstructExtractorGenerator(string textConstructElementName)
-        {
-            return (testConfiguration, result) =>
-            {
-                XElement expectedElement = result.Elements(TestAtomConstants.AtomXNamespace + textConstructElementName).Single();
-                XElement constructedElement = new XElement(TestAtomConstants.AtomXNamespace + "TextConstructElement");
-                if (expectedElement.HasAttributes)
-                {
-                    constructedElement.Add(expectedElement.Attributes().ToArray());
-                }
-                if (expectedElement.HasElements)
-                {
-                    constructedElement.Add(expectedElement.Elements());
-                }
-                else
-                {
-                    constructedElement.Add(expectedElement.Value);
-                }
-                return constructedElement;
-            };
         }
 
         /// <summary>

@@ -11,7 +11,7 @@ namespace Microsoft.Test.Taupo.OData.WCFService
     using System.IO;
     using System.Linq;
     using System.Net;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
 
     /// <summary>
     /// A class representing a message that has been received by the service.

@@ -15,7 +15,7 @@ namespace Microsoft.OData.Client
     using System.Linq;
     using Microsoft.OData.Client.Metadata;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Values;
+    using Microsoft.OData.Edm.Vocabularies;
 
     /// <summary>
     /// represents the cached entity
@@ -547,7 +547,7 @@ namespace Microsoft.OData.Client
             // If the entity was inserted using the AddRelatedObject API
             if (this.ParentEntityDescriptor != null)
             {
-                // This is the batch scenario, where the entity might not have been saved yet, and there is another operation 
+                // This is the batch scenario, where the entity might not have been saved yet, and there is another operation
                 // (for e.g. PUT $1/links/BestFriend or something). Hence we need to generate a Uri with the changeorder number.
                 if (this.ParentEntityDescriptor.Identity == null)
                 {
@@ -624,7 +624,7 @@ namespace Microsoft.OData.Client
         /// </summary>
         /// <param name="propertyName">name of the navigation property via which this entity is related to the other end.</param>
         /// <param name="navigationUri">uri that can be used to navigate from this entity to the other end.</param>
-        internal void AddNavigationLink(string propertyName, Uri navigationUri)
+        internal void AddNestedResourceInfo(string propertyName, Uri navigationUri)
         {
             LinkInfo linkInfo = this.GetLinkInfo(propertyName);
 
@@ -646,7 +646,7 @@ namespace Microsoft.OData.Client
         }
 
         /// <summary>
-        /// Merges the given linkInfo to the entity descriptor, 
+        /// Merges the given linkInfo to the entity descriptor,
         /// overwrites existing links with new ones (coming from the payload)
         /// </summary>
         /// <param name="linkInfo">linkInfo</param>
@@ -684,7 +684,7 @@ namespace Microsoft.OData.Client
         /// <param name="baseUriResolver">retrieves the appropriate baseUri for a given entitySet.</param>
         /// <param name="property">ClientProperty instance representing the navigation property.</param>
         /// <returns>returns the uri for the given link. If the link is not present, its uses the self link of the current entity and appends the navigation property name.</returns>
-        internal Uri GetNavigationLink(UriResolver baseUriResolver, ClientPropertyAnnotation property)
+        internal Uri GetNestedResourceInfo(UriResolver baseUriResolver, ClientPropertyAnnotation property)
         {
             LinkInfo linkInfo = null;
             Uri uri = null;
@@ -695,7 +695,7 @@ namespace Microsoft.OData.Client
 
             if (uri == null)
             {
-                Uri relativeUri = UriUtil.CreateUri(property.PropertyName, UriKind.Relative); 
+                Uri relativeUri = UriUtil.CreateUri(property.PropertyName, UriKind.Relative);
                 uri = UriUtil.CreateUri(this.GetResourceUri(baseUriResolver, true /*queryLink*/), relativeUri);
             }
 
@@ -703,7 +703,7 @@ namespace Microsoft.OData.Client
         }
 
         /// <summary>
-        /// Returns the LinkInfo for the given navigation property. 
+        /// Returns the LinkInfo for the given navigation property.
         /// </summary>
         /// <param name="propertyName">name of the navigation property </param>
         /// <param name="linkInfo"> LinkInfo for the navigation propery</param>
@@ -911,7 +911,7 @@ namespace Microsoft.OData.Client
 
         /// <summary>
         /// In V1, we used to not support self links. Hence we used to use edit links as self links.
-        /// IN V2, we are adding support for self links. But if there are not specified, we need to 
+        /// IN V2, we are adding support for self links. But if there are not specified, we need to
         /// fall back on the edit link.
         /// </summary>
         /// <param name="queryLink">whether to get query link or the edit link.</param>

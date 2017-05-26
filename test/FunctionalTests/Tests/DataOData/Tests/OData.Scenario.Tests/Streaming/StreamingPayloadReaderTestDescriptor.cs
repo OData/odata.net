@@ -9,13 +9,12 @@ namespace Microsoft.Test.Taupo.OData.Scenario.Tests.Streaming
     using System;
     using System.IO;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.Test.Taupo.Common;
     using Microsoft.Test.Taupo.OData.Common;
     using Microsoft.Test.Taupo.OData.Reader.Tests;
     using Microsoft.Test.Taupo.OData.Writer.Tests;
     using Microsoft.Test.Taupo.OData.Writer.Tests.Common;
-    using Microsoft.Test.Taupo.OData.Writer.Tests.Fixups;
     using Microsoft.Test.Taupo.OData.Writer.Tests.WriterCombinatorialEngine;
 
     public class StreamingPayloadReaderTestDescriptor : PayloadReaderTestDescriptor
@@ -56,30 +55,24 @@ namespace Microsoft.Test.Taupo.OData.Scenario.Tests.Streaming
             {
                 return;
             }
-            
+
             var originalPayload = this.PayloadElement;
             this.PayloadElement = this.PayloadElement.DeepCopy();
-                        
-            if (testConfiguration.Format == ODataFormat.Atom)
-            {
-                this.PayloadElement.Accept(new AddFeedIDFixup());
-                this.PayloadElement.Accept(new WriteFeedIDFirstFixup());
-            }
 
             // Create messages (payload gets serialized in createInputMessage)
             TestMessage readerMessage = this.CreateInputMessage(testConfiguration);
             var settings = new ODataMessageWriterSettings()
             {
                 Version = testConfiguration.Version,
-                PayloadBaseUri = testConfiguration.MessageReaderSettings.BaseUri,
-                DisableMessageStreamDisposal = testConfiguration.MessageReaderSettings.DisableMessageStreamDisposal,
+                BaseUri = testConfiguration.MessageReaderSettings.BaseUri,
+                EnableMessageStreamDisposal = testConfiguration.MessageReaderSettings.EnableMessageStreamDisposal,
             };
-            
+
             settings.SetContentType(testConfiguration.Format);
 
             WriterTestConfiguration writerConfig = new WriterTestConfiguration(testConfiguration.Format, settings, testConfiguration.IsRequest, testConfiguration.Synchronous);
             TestMessage writerMessage = TestWriterUtils.CreateOutputMessageFromStream(new TestStream(new MemoryStream()), writerConfig, this.PayloadKind, String.Empty, this.UrlResolver);
-            
+
             IEdmModel model = this.GetMetadataProvider(testConfiguration);
             WriterTestExpectedResults expectedResult = this.GetExpectedResult(writerConfig);
 

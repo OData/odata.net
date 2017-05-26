@@ -11,7 +11,6 @@ namespace Microsoft.Test.Taupo.OData.Query.Tests
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Linq;
-    using Microsoft.Test.Taupo.OData.DataServiceProvider;
     using Microsoft.Test.Taupo.OData.Query.Tests.Common.DataServiceProvider;
     using Microsoft.Test.Taupo.OData.Query.Tests.DataClasses;
     #endregion Namespaces

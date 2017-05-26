@@ -6,6 +6,7 @@
 
 // #define TESTUNIXNEWLINE
 
+
 namespace Microsoft.OData.Client
 {
     #region Namespaces
@@ -21,15 +22,29 @@ namespace Microsoft.OData.Client
     using System.Net;
     using System.Reflection;
     using System.Threading.Tasks;
+    using Microsoft.OData;
     using Microsoft.OData.Client.Annotation;
     using Microsoft.OData.Client.Metadata;
-    using Microsoft.OData.Core;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Annotations;
-    using Microsoft.OData.Edm.Values;
+    using Microsoft.OData.Edm.Vocabularies;
     using ClientStrings = Microsoft.OData.Client.Strings;
 
     #endregion Namespaces
+    /// <summary>
+    /// Indicates DataServiceContext's behavior on undeclared property in entity/complex value.
+    /// </summary>
+    internal enum UndeclaredPropertyBehavior
+    {
+        /// <summary>
+        /// The default value. Supports undeclared property.
+        /// </summary>
+        Support = 0,
+
+        /// <summary>
+        /// Throw on undeclared property.
+        /// </summary>
+        ThrowException = 1,
+    }
 
     /// <summary>
     /// The <see cref="T:Microsoft.OData.Client.DataServiceContext" /> represents the runtime context of the data service.
@@ -58,8 +73,8 @@ namespace Microsoft.OData.Client
             CreateWeakKey = InstanceAnnotationDictWeakKeyComparer.Default.CreateKey
         };
 
-        /// <summary>metadata annotations for currenct context</summary>
-        private readonly WeakDictionary<object, IList<IEdmValueAnnotation>> metadataAnnotationsDictionary = new WeakDictionary<object, IList<IEdmValueAnnotation>>(EqualityComparer<object>.Default);
+        /// <summary>metadata annotations for current context</summary>
+        private readonly WeakDictionary<object, IList<IEdmVocabularyAnnotation>> metadataAnnotationsDictionary = new WeakDictionary<object, IList<IEdmVocabularyAnnotation>>(EqualityComparer<object>.Default);
 
         /// <summary>The tracker for user-specified format information.</summary>
         private DataServiceClientFormat formatTracker;
@@ -96,9 +111,6 @@ namespace Microsoft.OData.Client
         /// <summary>whether to use post-tunneling for PUT/DELETE</summary>
         private bool postTunneling;
 
-        /// <summary>Options when deserializing properties to the target type.</summary>
-        private bool ignoreMissingProperties = true;
-
         /// <summary>Used to specify a strategy to send entity parameter.</summary>
         private EntityParameterSendOption entityParameterSendOption;
 
@@ -111,8 +123,11 @@ namespace Microsoft.OData.Client
         /// <summary>Client will ignore 404 resource not found exception and return an empty set when this is set to true</summary>
         private bool ignoreResourceNotFoundException;
 
-        /// <summary>The URL conventions to use.</summary>
-        private DataServiceUrlConventions urlConventions;
+        /// <summary>Options that can overwrite ignoreMissingProperties.</summary>
+        private UndeclaredPropertyBehavior undeclaredPropertyBehavior = UndeclaredPropertyBehavior.Support;
+
+        /// <summary>The URL key delimiter to use.</summary>
+        private DataServiceUrlKeyDelimiter urlKeyDelimiter;
 
         /// <summary>The HTTP stack to use for requests.</summary>
         private HttpStack httpStack;
@@ -148,7 +163,7 @@ namespace Microsoft.OData.Client
         #endregion
 
         /// <summary>
-        /// A flag indicating if the data service context is applying changes 
+        /// A flag indicating if the data service context is applying changes
         /// </summary>
         private bool applyingChanges;
 
@@ -168,7 +183,7 @@ namespace Microsoft.OData.Client
         /// <remarks>
         /// The library expects the Uri to point to the root of a data service,
         /// but does not issue a request to validate it does indeed identify the root of a service.
-        /// If the Uri does not identify the root of the service, the behavior of the client library is undefined.    
+        /// If the Uri does not identify the root of the service, the behavior of the client library is undefined.
         /// A Uri provided with a trailing slash is equivalent to one without such a trailing character.
         /// With Silverlight, the <paramref name="serviceRoot"/> can be a relative Uri
         /// that will be combined with System.Windows.Browser.HtmlPage.Document.DocumentUri.
@@ -184,7 +199,7 @@ namespace Microsoft.OData.Client
         /// <remarks>
         /// The library expects the Uri to point to the root of a data service,
         /// but does not issue a request to validate it does indeed identify the root of a service.
-        /// If the Uri does not identify the root of the service, the behavior of the client library is undefined. 
+        /// If the Uri does not identify the root of the service, the behavior of the client library is undefined.
         /// A Uri provided with a trailing slash is equivalent to one without such a trailing character.
         /// With Silverlight, the <paramref name="serviceRoot"/> can be a relative Uri
         /// that will be combined with System.Windows.Browser.HtmlPage.Document.DocumentUri.
@@ -198,7 +213,7 @@ namespace Microsoft.OData.Client
         /// Instantiates a new context with the specified <paramref name="serviceRoot"/> Uri.
         /// The library expects the Uri to point to the root of a data service,
         /// but does not issue a request to validate it does indeed identify the root of a service.
-        /// If the Uri does not identify the root of the service, the behavior of the client library is undefined.    
+        /// If the Uri does not identify the root of the service, the behavior of the client library is undefined.
         /// </summary>
         /// <param name="serviceRoot">
         /// An absolute, well formed http or https URI without a query or fragment which identifies the root of a data service.
@@ -223,11 +238,10 @@ namespace Microsoft.OData.Client
             this.entityTracker = new EntityTracker(model);
             this.MaxProtocolVersionAsVersion = Util.GetVersionFromMaxProtocolVersion(maxProtocolVersion);
             this.formatTracker = new DataServiceClientFormat(this);
-            this.urlConventions = DataServiceUrlConventions.Default;
+            this.urlKeyDelimiter = DataServiceUrlKeyDelimiter.Parentheses;
             this.Configurations = new DataServiceClientConfigurations(this);
             this.httpStack = HttpStack.Auto;
             this.UsingDataServiceCollection = false;
-            this.EnableAtom = false;
             this.UsePostTunneling = false;
 
             // Need to use the same defaults when running sl in portable lib as when running in SL normally.
@@ -254,10 +268,10 @@ namespace Microsoft.OData.Client
         public event EventHandler<SendingRequest2EventArgs> SendingRequest2;
 
         /// <summary>
-        /// This event is fired before a request message object is built, giving 
+        /// This event is fired before a request message object is built, giving
         /// the handler the opportunity to inspect, adjust and/or replace some
-        /// request information before the message is built. This event should be 
-        /// used to modify the outgoing Url of the request or alter request headers. 
+        /// request information before the message is built. This event should be
+        /// used to modify the outgoing Url of the request or alter request headers.
         /// After the request is built, other modifications on the WebRequest object can be made
         /// in SendingRequest2.
         /// </summary>
@@ -424,17 +438,6 @@ namespace Microsoft.OData.Client
             internal set { this.applyingChanges = value; }
         }
 
-        /// <summary>Gets or sets whether the properties read from the type must be mapped to properties on the client-side type.</summary>
-        /// <returns>A Boolean value that indicates whether the properties read from the type must be mapped to properties on the client-side type.</returns>
-        /// <remarks>
-        /// This also affects responses during SaveChanges.
-        /// </remarks>
-        public bool IgnoreMissingProperties
-        {
-            get { return this.ignoreMissingProperties; }
-            set { this.ignoreMissingProperties = value; }
-        }
-
         /// <summary>Gets or sets a function to override the default type resolution strategy used by the client library when you send entities to a data service.</summary>
         /// <returns>Returns a string that contains the name of the <see cref="T:Microsoft.OData.Client.DataServiceContext" />.</returns>
         /// <remarks>
@@ -456,7 +459,7 @@ namespace Microsoft.OData.Client
         /// <returns>A function delegate that identifies an override function that is used to override the default type resolution option that is used by the client library.</returns>
         /// <remarks>
         /// Enables one to override the default type resolution strategy used by the client library.
-        /// Set this property to a delegate which identifies a function that resolves a 
+        /// Set this property to a delegate which identifies a function that resolves a
         /// namespace-qualified type name to type within the client application.
         /// This enables the client to perform custom mapping between the type name
         /// provided in a response from the server and a type on the client.
@@ -578,19 +581,19 @@ namespace Microsoft.OData.Client
         }
 
         /// <summary>
-        /// Gets or sets the URL conventions the client should use.
+        /// Gets or sets the URL key delimiter the client should use.
         /// </summary>
-        public DataServiceUrlConventions UrlConventions
+        public DataServiceUrlKeyDelimiter UrlKeyDelimiter
         {
             get
             {
-                return this.urlConventions;
+                return this.urlKeyDelimiter;
             }
 
             set
             {
                 Util.CheckArgumentNull(value, "value");
-                this.urlConventions = value;
+                this.urlKeyDelimiter = value;
             }
         }
 
@@ -616,9 +619,17 @@ namespace Microsoft.OData.Client
         public bool DisableInstanceAnnotationMaterialization { get; set; }
 
         /// <summary>
-        /// Whether OData Simplified is enabled.
+        /// Whether enable writing odata annotation without prefix.
         /// </summary>
-        public bool ODataSimplified { get; set; }
+        public bool EnableWritingODataAnnotationWithoutPrefix { get; set; }
+
+        /// <summary>Gets or sets whether to support undeclared properties.</summary>
+        /// <returns>UndeclaredPropertyBehavior.</returns>
+        internal UndeclaredPropertyBehavior UndeclaredPropertyBehavior
+        {
+            get { return this.undeclaredPropertyBehavior; }
+            set { this.undeclaredPropertyBehavior = value; }
+        }
 
         /// <summary>
         /// Gets or sets a System.Boolean value that controls whether default credentials are sent with requests.
@@ -686,11 +697,6 @@ namespace Microsoft.OData.Client
         /// </summary>
         internal bool UsingDataServiceCollection { get; set; }
 
-        /// <summary>
-        /// Internal flag for whether Atom support is enabled.
-        /// </summary>
-        internal bool EnableAtom { get; set; }
-
         /// <summary>The instance annotations in current context</summary>
         internal WeakDictionary<object, IDictionary<string, object>> InstanceAnnotations
         {
@@ -703,7 +709,7 @@ namespace Microsoft.OData.Client
         /// <summary>
         /// Gets the MetadataAnnotationsDictionary
         /// </summary>
-        internal WeakDictionary<object, IList<IEdmValueAnnotation>> MetadataAnnotationsDictionary
+        internal WeakDictionary<object, IList<IEdmVocabularyAnnotation>> MetadataAnnotationsDictionary
         {
             get
             {
@@ -867,7 +873,7 @@ namespace Microsoft.OData.Client
         /// otherwise, the default value for the type of the annotation parameter.
         /// </param>
         /// <returns>true if the annotation is found</returns>
-        /// 
+        ///
         public bool TryGetAnnotation<TFunc, TResult>(Expression<TFunc> expression, string term, out TResult annotation)
         {
             return TryGetAnnotation(expression, term, null, out annotation);
@@ -1137,7 +1143,7 @@ namespace Microsoft.OData.Client
         }
 
 #if !PORTABLELIB // Synchronous methods not available
-        /// <summary>Loads deferred content for a specified property from the data service.Not supported by the WCF Data Services 5.0 client for Silverlight.</summary>
+        /// <summary>Loads deferred content for a specified property from the data service.</summary>
         /// <returns>The response to the load operation.</returns>
         /// <param name="entity">The entity that contains the property to load.</param>
         /// <param name="propertyName">The name of the property of the specified entity to load.</param>
@@ -1156,7 +1162,7 @@ namespace Microsoft.OData.Client
             return this.LoadProperty(entity, propertyName, (Uri)null);
         }
 
-        /// <summary>Loads a page of related entities by using the supplied next link URI.Not supported by the WCF Data Services 5.0 client for Silverlight.</summary>
+        /// <summary>Loads a page of related entities by using the supplied next link URI.</summary>
         /// <returns>An instance of <see cref="T:Microsoft.OData.Client.QueryOperationResponse`1" /> that contains the results of the request.</returns>
         /// <param name="entity">The entity that contains the property to load.</param>
         /// <param name="propertyName">The name of the property of the specified entity to load.</param>
@@ -1179,7 +1185,7 @@ namespace Microsoft.OData.Client
             return result.LoadProperty();
         }
 
-        /// <summary>Loads the next page of related entities from the data service by using the supplied query continuation object.Not supported by the WCF Data Services 5.0 client for Silverlight.</summary>
+        /// <summary>Loads the next page of related entities from the data service by using the supplied query continuation object.</summary>
         /// <returns>The response that contains the next page of related entity data.</returns>
         /// <param name="entity">The entity that contains the property to load.</param>
         /// <param name="propertyName">The name of the property of the specified entity to load.</param>
@@ -1202,7 +1208,7 @@ namespace Microsoft.OData.Client
             return result.LoadProperty();
         }
 
-        /// <summary>Loads the next page of related entities from the data service by using the supplied generic query continuation object.Not supported by the WCF Data Services 5.0 client for Silverlight.</summary>
+        /// <summary>Loads the next page of related entities from the data service by using the supplied generic query continuation object.</summary>
         /// <returns>The response that contains the next page of related entity data.</returns>
         /// <param name="entity">The entity that contains the property to load.</param>
         /// <param name="propertyName">The name of the property of the specified entity to load.</param>
@@ -1551,7 +1557,7 @@ namespace Microsoft.OData.Client
         }
 
 #if !PORTABLELIB // Synchronous methods not available
-        /// <summary>Synchronously submits a group of queries as a batch to the data service.Not supported by the WCF Data Services 5.0 client for Silverlight.</summary>
+        /// <summary>Synchronously submits a group of queries as a batch to the data service.</summary>
         /// <returns>The response to the batch operation.</returns>
         /// <param name="queries">Array of <see cref="T:Microsoft.OData.Client.DataServiceRequest[]" /> objects that make up the queries.</param>
         public DataServiceResponse ExecuteBatch(params DataServiceRequest[] queries)
@@ -1726,7 +1732,7 @@ namespace Microsoft.OData.Client
         }
 
 #if !PORTABLELIB // Synchronous methods not available
-        /// <summary>Sends a request to the data service to execute a specific URI.Not supported by the WCF Data Services 5.0 client for Silverlight.</summary>
+        /// <summary>Sends a request to the data service to execute a specific URI.</summary>
         /// <returns>The results of the query operation.</returns>
         /// <param name="requestUri">The URI to which the query request will be sent. The URI may be any valid data service URI. Can contain $ query parameters.</param>
         /// <typeparam name="TElement">The type that the query returns.</typeparam>
@@ -1744,7 +1750,7 @@ namespace Microsoft.OData.Client
             return InnerSynchExecute<TElement>(requestUri, XmlConstants.HttpMethodGet, null);
         }
 
-        /// <summary>Sends a request to the data service to retrieve the next page of data in a paged query result.Not supported by the WCF Data Services 5.0 client for Silverlight.</summary>
+        /// <summary>Sends a request to the data service to retrieve the next page of data in a paged query result.</summary>
         /// <returns>The response that contains the next page of data in the query result.</returns>
         /// <param name="continuation">A <see cref="T:Microsoft.OData.Client.DataServiceQueryContinuation`1" /> object that represents the next page of data to return from the data service.</param>
         /// <typeparam name="T">The type returned by the query.</typeparam>
@@ -1757,7 +1763,7 @@ namespace Microsoft.OData.Client
             return request.Execute<T>(this, qc);
         }
 
-        /// <summary>Sends a request to the data service to execute a specific URI by using a specific HTTP method.Not supported by the WCF Data Services 5.0 client for Silverlight.</summary>
+        /// <summary>Sends a request to the data service to execute a specific URI by using a specific HTTP method.</summary>
         /// <returns>The response of the operation.</returns>
         /// <param name="requestUri">The URI to which the query request will be sent. The URI may be any valid data service URI. Can contain $ query parameters.</param>
         /// <param name="httpMethod">The HTTP data transfer method used by the client.</param>
@@ -1781,7 +1787,7 @@ namespace Microsoft.OData.Client
             return result;
         }
 
-        /// <summary>Sends a request to the data service to execute a specific URI by using a specific HTTP method.Not supported by the WCF Data Services 5.0 client for Silverlight.</summary>
+        /// <summary>Sends a request to the data service to execute a specific URI by using a specific HTTP method.</summary>
         /// <returns>Returns <see cref="T:System.Collections.Generic.IEnumerable`1" />.</returns>
         /// <param name="requestUri">The URI to which the query request will be sent. The URI may be any valid data service URI. Can contain $ query parameters.</param>
         /// <param name="httpMethod">The HTTP data transfer method used by the client.</param>
@@ -1799,7 +1805,7 @@ namespace Microsoft.OData.Client
             return InnerSynchExecute<TElement>(requestUri, httpMethod, singleResult, operationParameters);
         }
 
-        /// <summary>Sends a request to the data service to execute a specific URI by using a specific HTTP method.Not supported by the WCF Data Services 5.0 client for Silverlight.</summary>
+        /// <summary>Sends a request to the data service to execute a specific URI by using a specific HTTP method.</summary>
         /// <returns>Returns <see cref="T:System.Collections.Generic.IEnumerable`1" />.</returns>
         /// <param name="requestUri">The URI to which the query request will be sent. The URI may be any valid data service URI. Can contain $ query parameters.</param>
         /// <param name="httpMethod">The HTTP data transfer method used by the client.</param>
@@ -1889,14 +1895,14 @@ namespace Microsoft.OData.Client
         }
 
 #if !PORTABLELIB // Synchronous methods not available
-        /// <summary>Saves the changes that the <see cref="T:Microsoft.OData.Client.DataServiceContext" /> is tracking to storage.Not supported by the WCF Data Services 5.0 client for Silverlight.</summary>
+        /// <summary>Saves the changes that the <see cref="T:Microsoft.OData.Client.DataServiceContext" /> is tracking to storage.</summary>
         /// <returns>A <see cref="T:Microsoft.OData.Client.DataServiceResponse" /> that contains status, headers, and errors that result from the call to <see cref="M:Microsoft.OData.Client.DataServiceContext.SaveChanges.Remarks" />.</returns>
         public DataServiceResponse SaveChanges()
         {
             return this.SaveChanges(this.SaveChangesDefaultOptions);
         }
 
-        /// <summary>Saves the changes that the <see cref="T:Microsoft.OData.Client.DataServiceContext" /> is tracking to storage.Not supported by the WCF Data Services 5.0 client for Silverlight.</summary>
+        /// <summary>Saves the changes that the <see cref="T:Microsoft.OData.Client.DataServiceContext" /> is tracking to storage.</summary>
         /// <returns>A <see cref="T:Microsoft.OData.Client.DataServiceResponse" /> that contains status, headers, and errors that result from the call to <see cref="M:Microsoft.OData.Client.DataServiceContext.SaveChanges" />.</returns>
         /// <param name="options">A member of the <see cref="T:Microsoft.OData.Client.SaveChangesOptions" /> enumeration for how the client can save the pending set of changes.</param>
         public DataServiceResponse SaveChanges(SaveChangesOptions options)
@@ -2126,7 +2132,7 @@ namespace Microsoft.OData.Client
 
             // Validate that the property is valid and exists on the source
             ClientTypeAnnotation parentType = this.model.GetClientTypeAnnotation(this.model.GetOrCreateEdmType(source.GetType()));
-            ClientPropertyAnnotation property = parentType.GetProperty(sourceProperty, false);
+            ClientPropertyAnnotation property = parentType.GetProperty(sourceProperty, UndeclaredPropertyBehavior.ThrowException);
             if (property.IsKnownType || !property.IsEntityCollection)
             {
                 throw Error.InvalidOperation(Strings.Context_AddRelatedObjectCollectionOnly);
@@ -2196,7 +2202,7 @@ namespace Microsoft.OData.Client
                 EntitySetName = entitySetName,
             };
 
-            ODataEntityMetadataBuilder entityMetadataBuilder = this.GetEntityMetadataBuilderInternal(descriptor);
+            ODataResourceMetadataBuilder entityMetadataBuilder = this.GetEntityMetadataBuilderInternal(descriptor);
 
             descriptor.EditLink = entityMetadataBuilder.GetEditLink();
             descriptor.Identity = entityMetadataBuilder.GetId();
@@ -2265,7 +2271,7 @@ namespace Microsoft.OData.Client
 
             // Validate that the property is valid and exists on the source
             ClientTypeAnnotation parentType = this.model.GetClientTypeAnnotation(this.model.GetOrCreateEdmType(source.GetType()));
-            ClientPropertyAnnotation property = parentType.GetProperty(sourceProperty, false);
+            ClientPropertyAnnotation property = parentType.GetProperty(sourceProperty, UndeclaredPropertyBehavior.ThrowException);
 
             if (property.IsKnownType || property.IsEntityCollection)
             {
@@ -2294,7 +2300,7 @@ namespace Microsoft.OData.Client
                 {
                     Entity = target,
                     State = EntityStates.Modified,
-                    EditLink = sourceResource.GetNavigationLink(this.baseUriResolver, property)
+                    EditLink = sourceResource.GetNestedResourceInfo(this.baseUriResolver, property)
                 };
 
                 targetResource.SetParentForUpdate(sourceResource, sourceProperty);
@@ -2304,7 +2310,7 @@ namespace Microsoft.OData.Client
         }
 
         /// <summary>
-        /// Changes the state of the given entity. 
+        /// Changes the state of the given entity.
         /// Note that the 'Added' state is not supported by this method, and that AddObject or AddRelatedObject should be used instead.
         /// If the state 'Modified' is given, calling this method is exactly equivalent to calling UpdateObject.
         /// If the state 'Deleted' is given, calling this method is exactly equivalent to calling DeleteObject.
@@ -2435,7 +2441,7 @@ namespace Microsoft.OData.Client
 #if !PORTABLELIB
 
         /// <summary>
-        /// Loads all pages of related entities for a specified property from the data service.Not supported by the WCF Data Services 5.0 client for Silverlight.
+        /// Loads all pages of related entities for a specified property from the data service.
         /// </summary>
         /// <param name="entity">The entity that contains the property to load.</param>
         /// <param name="propertyName">The name of the property of the specified entity to load.</param>
@@ -2469,7 +2475,7 @@ namespace Microsoft.OData.Client
         /// <param name="requestUri">Request URI to execute.</param>
         /// <param name="httpMethod">HttpMethod to use. Only GET or POST are supported.</param>
         /// <param name="singleResult">If set to true, indicates that a single result is expected as a response.
-        /// False indicates that a collection of TElement is assumed. Should be null for void, entry, and feed cases. 
+        /// False indicates that a collection of TElement is assumed. Should be null for void, entry, and feed cases.
         /// This function will check if TElement is an entity type and set singleResult to null in this case.</param>
         /// <param name="operationParameters">The operation parameters associated with the service operation.</param>
         /// <returns>A QueryOperationResponse that is enumerable over the results and holds other response information.</returns>
@@ -2712,9 +2718,9 @@ namespace Microsoft.OData.Client
         /// <remarks>
         /// This is used for example to determine the edit link for an entity if the payload didn't have one, or to determine the URL for a navigation when building a query through LINQ.
         /// </remarks>
-        internal virtual ODataEntityMetadataBuilder GetEntityMetadataBuilder(string entitySetName, IEdmStructuredValue entityInstance)
+        internal virtual ODataResourceMetadataBuilder GetEntityMetadataBuilder(string entitySetName, IEdmStructuredValue entityInstance)
         {
-            return new ConventionalODataEntityMetadataBuilder(this.baseUriResolver, entitySetName, entityInstance, this.UrlConventions);
+            return new ConventionalODataEntityMetadataBuilder(this.baseUriResolver, entitySetName, entityInstance, this.UrlKeyDelimiter);
         }
 
         /// <summary>
@@ -2729,7 +2735,6 @@ namespace Microsoft.OData.Client
         internal BuildingRequestEventArgs CreateRequestArgsAndFireBuildingRequest(string method, Uri requestUri, HeaderCollection headers, HttpStack stack, Descriptor descriptor)
         {
             BuildingRequestEventArgs requestMessageArgs = new BuildingRequestEventArgs(method, requestUri, headers, descriptor, stack);
-            this.UrlConventions.AddRequiredHeaders(requestMessageArgs.HeaderCollection);
 
             // Set default headers before firing BudingRequest event
             requestMessageArgs.HeaderCollection.SetDefaultHeaders();
@@ -2990,7 +2995,7 @@ namespace Microsoft.OData.Client
 
         /// <summary>
         /// Validate and process the input parameters to all the execute methods. Also seperates and returns
-        /// the input operation parameters list into two seperate list - one of body operation parameters and the other 
+        /// the input operation parameters list into two seperate list - one of body operation parameters and the other
         /// for uri operation parameters.
         /// </summary>
         /// <typeparam name="TElement">element type. See Execute method for more details.</typeparam>
@@ -3015,7 +3020,7 @@ namespace Microsoft.OData.Client
                 throw new ArgumentException(Strings.Context_ExecuteExpectsGetOrPostOrDelete, "httpMethod");
             }
 
-            if (ClientTypeUtil.TypeOrElementTypeIsEntity(typeof(TElement)))
+            if (ClientTypeUtil.TypeOrElementTypeIsStructured(typeof(TElement)))
             {
                 singleResult = null;
             }
@@ -3058,7 +3063,7 @@ namespace Microsoft.OData.Client
                 throw Error.InvalidOperation(Strings.Context_NoLoadWithInsertEnd);
             }
 
-            ClientPropertyAnnotation property = type.GetProperty(propertyName, false);
+            ClientPropertyAnnotation property = type.GetProperty(propertyName, UndeclaredPropertyBehavior.ThrowException);
             Debug.Assert(null != property, "should have thrown if propertyName didn't exist");
 
             bool isContinuation = requestUri != null || continuation != null;
@@ -3086,7 +3091,7 @@ namespace Microsoft.OData.Client
                 }
                 else
                 {
-                    requestUri = box.GetNavigationLink(this.baseUriResolver, property);
+                    requestUri = box.GetNestedResourceInfo(this.baseUriResolver, property);
                 }
             }
 
@@ -3150,7 +3155,7 @@ namespace Microsoft.OData.Client
             Debug.Assert(type.IsEntityType, "should be enforced by just adding an object");
 
             // will throw InvalidOperationException if property doesn't exist
-            ClientPropertyAnnotation property = type.GetProperty(sourceProperty, false);
+            ClientPropertyAnnotation property = type.GetProperty(sourceProperty, UndeclaredPropertyBehavior.ThrowException);
 
             if (property.IsKnownType)
             {
@@ -3224,7 +3229,7 @@ namespace Microsoft.OData.Client
         /// <param name="name">name of the stream.</param>
         /// <returns>The async result object for the request, the request hasn't been started yet.</returns>
         /// <exception cref="ArgumentNullException">Either entity or args parameters are null.</exception>
-        /// <exception cref="ArgumentException">The specified entity is either not tracked, 
+        /// <exception cref="ArgumentException">The specified entity is either not tracked,
         /// is in the added state or it's not an MLE.</exception>
         private GetReadStreamResult CreateGetReadStreamResult(
             object entity,
@@ -3299,13 +3304,13 @@ namespace Microsoft.OData.Client
         /// </summary>
         /// <param name="descriptor">The entity descriptor tracking the entity.</param>
         /// <returns>A metadata builder for the entity tracked by the given descriptor.</returns>
-        private ODataEntityMetadataBuilder GetEntityMetadataBuilderInternal(EntityDescriptor descriptor)
+        private ODataResourceMetadataBuilder GetEntityMetadataBuilderInternal(EntityDescriptor descriptor)
         {
             Debug.Assert(descriptor != null, "descriptor != null");
 
             // TODO: Should things with slashes still be passed down? We will need to make a decision one way or the other.
             // For now we will pass them down.
-            ODataEntityMetadataBuilder entityMetadataBuilder = this.GetEntityMetadataBuilder(descriptor.EntitySetName, descriptor.EdmValue);
+            ODataResourceMetadataBuilder entityMetadataBuilder = this.GetEntityMetadataBuilder(descriptor.EntitySetName, descriptor.EdmValue);
             if (entityMetadataBuilder == null)
             {
                 throw new InvalidOperationException(Strings.Context_EntityMetadataBuilderIsRequired);

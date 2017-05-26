@@ -4,7 +4,7 @@ $filter = TimeBetweenLastTwoOrders lt TimeBetweenLastTwoOrders
 FilterQueryOption
 	ItemType = [Microsoft.Test.Taupo.OData.WCFService.Customer Nullable=False]
 	Parameter = 
-	EntityRangeVariable
+	ResourceRangeVariable
 		Name = $it
 		NavigationSource = Customers
 		TypeReference = [Microsoft.Test.Taupo.OData.WCFService.Customer Nullable=False]
@@ -13,18 +13,18 @@ FilterQueryOption
 			Property = TimeBetweenLastTwoOrders
 			TypeReference = [Edm.Duration Nullable=False Precision=0]
 			Source = 
-			EntityRangeVariableReferenceNode
+			ResourceRangeVariableReferenceNode
 				Name = $it
 				NavigationSource = Customers
 				TypeReference = [Microsoft.Test.Taupo.OData.WCFService.Customer Nullable=False]
-				Range Variable = Microsoft.OData.Core.UriParser.Semantic.EntityRangeVariable
+				Range Variable = Microsoft.OData.UriParser.ResourceRangeVariable
 	LessThan
 		SingleValuePropertyAccessNode
 			Property = TimeBetweenLastTwoOrders
 			TypeReference = [Edm.Duration Nullable=False Precision=0]
 			Source = 
-			EntityRangeVariableReferenceNode
+			ResourceRangeVariableReferenceNode
 				Name = $it
 				NavigationSource = Customers
 				TypeReference = [Microsoft.Test.Taupo.OData.WCFService.Customer Nullable=False]
-				Range Variable = Microsoft.OData.Core.UriParser.Semantic.EntityRangeVariable
+				Range Variable = Microsoft.OData.UriParser.ResourceRangeVariable

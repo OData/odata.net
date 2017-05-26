@@ -8,17 +8,17 @@ using System;
 using FluentAssertions;
 using Xunit;
 
-namespace Microsoft.OData.Core.Tests
+namespace Microsoft.OData.Tests
 {
     public class ODataInstanceAnnotationTests
     {
         [Fact]
         public void SetNameToNullOrEmptyShouldThrow()
         {
-            foreach(string name in new[] {null, string.Empty, ""})
+            foreach (string name in new[] { null, string.Empty, "" })
             {
                 Action test = () => new ODataInstanceAnnotation(name, new ODataPrimitiveValue("value"));
-                test.ShouldThrow<ArgumentNullException>().WithMessage(Strings.ExceptionUtils_ArgumentStringNullOrEmpty + "\r\nParameter name: name");
+                test.ShouldThrow<ArgumentNullException>().WithMessage(Strings.ExceptionUtils_ArgumentStringNullOrEmpty + "\r\nParameter name: annotationName");
             }
         }
 
@@ -71,7 +71,7 @@ namespace Microsoft.OData.Core.Tests
         [Fact]
         public void SetValueToNullShouldThrowArgumentNullException()
         {
-            Action test = () => new ODataInstanceAnnotation("namespace.name", null); 
+            Action test = () => new ODataInstanceAnnotation("namespace.name", null);
             test.ShouldThrow<ArgumentNullException>().WithMessage("Value cannot be null.\r\nParameter name: value");
         }
 
@@ -85,7 +85,7 @@ namespace Microsoft.OData.Core.Tests
         [Fact]
         public void TheValuePropertyShouldReturnTheAnnotationValue()
         {
-            foreach(ODataValue value in new ODataValue[] {new ODataNullValue(), new ODataPrimitiveValue(1), new ODataComplexValue(), new ODataCollectionValue()})
+            foreach (ODataValue value in new ODataValue[] { new ODataNullValue(), new ODataPrimitiveValue(1), new ODataCollectionValue() })
             {
                 var annotation = new ODataInstanceAnnotation("namespace.name", value);
                 annotation.Value.Should().BeSameAs(value);

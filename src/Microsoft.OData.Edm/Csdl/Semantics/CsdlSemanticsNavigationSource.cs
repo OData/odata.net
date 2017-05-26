@@ -12,11 +12,8 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Annotations;
     using Microsoft.OData.Edm.Csdl.Parsing.Ast;
-    using Microsoft.OData.Edm.Expressions;
-    using Microsoft.OData.Edm.Library;
-    using Microsoft.OData.Edm.Library.Expressions;
+    using Microsoft.OData.Edm.Vocabularies;
 
     /// <summary>
     /// Provides semantics for CsdlAbstractNavigationSource.
@@ -71,7 +68,7 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
             get { return this.navigationSource.Name; }
         }
 
-        public Expressions.IEdmPathExpression Path
+        public IEdmPathExpression Path
         {
             get { return this.path; }
         }
@@ -85,21 +82,21 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
             get { return this.navigationTargetsCache.GetValue(this, ComputeNavigationTargetsFunc, null); }
         }
 
-        public IEdmNavigationSource FindNavigationTarget(IEdmNavigationProperty property)
+        public IEdmNavigationSource FindNavigationTarget(IEdmNavigationProperty property, IEdmPathExpression bindingPath)
         {
             EdmUtil.CheckArgumentNull(property, "property");
 
-            if (!property.ContainsTarget)
+            if (!property.ContainsTarget && bindingPath != null)
             {
                 foreach (IEdmNavigationPropertyBinding targetMapping in this.NavigationPropertyBindings)
                 {
-                    if (targetMapping.NavigationProperty == property)
+                    if (targetMapping.NavigationProperty == property && targetMapping.Path.Path == bindingPath.Path)
                     {
                         return targetMapping.Target;
                     }
                 }
             }
-            else
+            else if (property.ContainsTarget)
             {
                 return EdmUtil.DictionaryGetOrUpdate(
                     this.containedNavigationPropertyCache,
@@ -111,6 +108,27 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
                     this.unknownNavigationPropertyCache,
                     property,
                     navProperty => new EdmUnknownEntitySet(this, navProperty));
+        }
+
+        public IEdmNavigationSource FindNavigationTarget(IEdmNavigationProperty navigationProperty)
+        {
+            bool isDerived = !this.Type.AsElementType().IsOrInheritsFrom(navigationProperty.DeclaringType);
+
+            IEdmPathExpression bindingPath = isDerived
+                ? new EdmPathExpression(navigationProperty.DeclaringType.FullTypeName(), navigationProperty.Name)
+                : new EdmPathExpression(navigationProperty.Name);
+
+            return FindNavigationTarget(navigationProperty, bindingPath);
+        }
+
+        public IEnumerable<IEdmNavigationPropertyBinding> FindNavigationPropertyBindings(IEdmNavigationProperty navigationProperty)
+        {
+            if (!navigationProperty.ContainsTarget)
+            {
+                return this.NavigationPropertyBindings.Where(targetMapping => targetMapping.NavigationProperty == navigationProperty).ToList();
+            }
+
+            return null;
         }
 
         protected override IEnumerable<IEdmVocabularyAnnotation> ComputeInlineVocabularyAnnotations()
@@ -128,7 +146,7 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
         private IEdmNavigationPropertyBinding CreateSemanticMappingForBinding(CsdlNavigationPropertyBinding binding)
         {
             IEdmNavigationProperty navigationProperty = this.ResolveNavigationPropertyPathForBinding(binding);
-            
+
             IEdmNavigationSource targetNavigationSource = this.Container.FindEntitySetExtended(binding.Target);
             if (targetNavigationSource == null)
             {
@@ -139,63 +157,55 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
                 }
             }
 
-            return new EdmNavigationPropertyBinding(navigationProperty, targetNavigationSource);
+            return new EdmNavigationPropertyBinding(navigationProperty, targetNavigationSource, new EdmPathExpression(binding.Path));
         }
 
         private IEdmNavigationProperty ResolveNavigationPropertyPathForBinding(CsdlNavigationPropertyBinding binding)
         {
-            Debug.Assert(binding != null, "binding != null");
-
-            string bindingPath = binding.Path;
-            Debug.Assert(bindingPath != null, "bindingPath != null");
-
-            IEdmEntityType definingType = this.typeCache.GetValue(this, ComputeElementTypeFunc, null);
-
-            const char Slash = '/';
-            if (bindingPath.Length == 0 || bindingPath[bindingPath.Length - 1] == Slash)
+            Debug.Assert(binding != null);
+            Debug.Assert(binding.Path != null);
+            var pathSegments = binding.Path.Split('/');
+            IEdmStructuredType definingType = this.typeCache.GetValue(this, ComputeElementTypeFunc, null);
+            for (int index = 0; index < pathSegments.Length - 1; index++)
             {
-                // if the path did not actually contain a navigation property, then treat it as an unresolved path.
-                // TODO: improve the error given in this case?
-                return new UnresolvedNavigationPropertyPath(definingType, bindingPath, binding.Location);
-            }
-
-            IEdmNavigationProperty navigationProperty;
-            string[] pathSegements = bindingPath.Split(Slash);
-            for (int index = 0; index < pathSegements.Length - 1; index++)
-            {
-                string pathSegement = pathSegements[index];
-                if (pathSegement.Length == 0)
+                string segment = pathSegments[index];
+                if (segment.IndexOf('.') < 0)
                 {
-                    // TODO: improve the error given in this case?
-                    return new UnresolvedNavigationPropertyPath(definingType, bindingPath, binding.Location);
-                }
-
-                IEdmEntityType derivedType = this.container.Context.FindType(pathSegement) as IEdmEntityType;
-                if (derivedType == null)
-                {
-                    IEdmProperty property = definingType.FindProperty(pathSegement);
-                    navigationProperty = property as IEdmNavigationProperty;
-                    if (navigationProperty == null)
+                    var property = definingType.FindProperty(segment);
+                    if (property == null)
                     {
-                        return new UnresolvedNavigationPropertyPath(definingType, bindingPath, binding.Location);
+                        return new UnresolvedNavigationPropertyPath(definingType, binding.Path, binding.Location);
                     }
 
-                    definingType = navigationProperty.ToEntityType();
+                    var navProperty = property as IEdmNavigationProperty;
+                    if (navProperty != null && !navProperty.ContainsTarget)
+                    {
+                        // TODO: Improve error message #644.
+                        return new UnresolvedNavigationPropertyPath(definingType, binding.Path, binding.Location);
+                    }
+
+                    definingType = property.Type.Definition.AsElementType() as IEdmStructuredType;
+                    if (definingType == null)
+                    {
+                        // TODO: Improve error message #644.
+                        return new UnresolvedNavigationPropertyPath(definingType, binding.Path, binding.Location);
+                    }
                 }
                 else
                 {
+                    var derivedType = container.Context.FindType(segment) as IEdmStructuredType;
+                    if (derivedType == null || !derivedType.IsOrInheritsFrom(definingType))
+                    {
+                        // TODO: Improve error message #644.
+                        return new UnresolvedNavigationPropertyPath(definingType, binding.Path, binding.Location);
+                    }
+
                     definingType = derivedType;
                 }
             }
 
-            navigationProperty = definingType.FindProperty(pathSegements.Last()) as IEdmNavigationProperty;
-            if (navigationProperty == null)
-            {
-                // TODO: improve the error given in this case?
-                navigationProperty = new UnresolvedNavigationPropertyPath(definingType, bindingPath, binding.Location);
-            }
-
-            return navigationProperty;
+            return definingType.FindProperty(pathSegments.Last()) as IEdmNavigationProperty
+                   ?? new UnresolvedNavigationPropertyPath(definingType, binding.Path, binding.Location);
         }
     }
 }

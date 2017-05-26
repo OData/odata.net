@@ -7,7 +7,6 @@
 namespace Microsoft.Test.Taupo.Edmlib
 {
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Library;
     using Microsoft.Test.Taupo.Common;
 
     /// <summary>

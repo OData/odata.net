@@ -13,7 +13,7 @@ namespace AstoriaUnitTests.TDD.Tests.Server
     using AstoriaUnitTests.TDD.Tests.Server.Simulators;
     using AstoriaUnitTests.Tests.Server.Simulators;
     using FluentAssertions;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     [TestClass]
@@ -43,12 +43,6 @@ namespace AstoriaUnitTests.TDD.Tests.Server
         public void RequestDescriptionResponseFormat_VoidOperation()
         {
             RunSimpleFormatTest(RequestTargetKind.VoidOperation, null);
-        }
-
-        [TestMethod]
-        public void RequestDescriptionResponseFormat_Atom()
-        {
-            RunNegotiatedFormatTest("application/xml", null, ODataProtocolVersion.V4, ODataFormat.Atom);
         }
 
         [TestMethod]
@@ -123,11 +117,11 @@ namespace AstoriaUnitTests.TDD.Tests.Server
         public void RequestDescriptionPayloadKind_Resource()
         {
             var resourceType = new ResourceType(typeof(object), ResourceTypeKind.EntityType, null, "fake", "fake", false);
-            RunPayloadKindTest(RequestTargetKind.Resource, RequestTargetSource.EntitySet, resourceType, true, false, ODataPayloadKind.Entry);
-            RunPayloadKindTest(RequestTargetKind.Resource, RequestTargetSource.EntitySet, resourceType, false, false, ODataPayloadKind.Feed);
+            RunPayloadKindTest(RequestTargetKind.Resource, RequestTargetSource.EntitySet, resourceType, true, false, ODataPayloadKind.Resource);
+            RunPayloadKindTest(RequestTargetKind.Resource, RequestTargetSource.EntitySet, resourceType, false, false, ODataPayloadKind.ResourceSet);
 
             resourceType = new ResourceType(typeof(object), ResourceTypeKind.EntityCollection, "fake", "fake");
-            RunPayloadKindTest(RequestTargetKind.Resource, RequestTargetSource.EntitySet, resourceType, false, false, ODataPayloadKind.Feed);
+            RunPayloadKindTest(RequestTargetKind.Resource, RequestTargetSource.EntitySet, resourceType, false, false, ODataPayloadKind.ResourceSet);
         }
 
         [TestMethod]
@@ -203,7 +197,7 @@ namespace AstoriaUnitTests.TDD.Tests.Server
                     new SegmentInfo(),
                     new SegmentInfo
                     {
-                       TargetKind = RequestTargetKind.Link,  
+                       TargetKind = RequestTargetKind.Link,
                     },
                     segment
                 };

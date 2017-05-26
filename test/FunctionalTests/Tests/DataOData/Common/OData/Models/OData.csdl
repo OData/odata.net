@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Schema Namespace="OData" xmlns="http://docs.oasis-open.org/odata/ns/edm">
 
-  <!-- Value terms for template expansion. -->
+  <!-- Terms for template expansion. -->
   <Term Name="BaseUri" Type="Edm.String" />
   <Term Name="EntitySetUri" Type="Edm.String" />
   <Term Name="EntitySetUriSuffix" Type="Edm.String" />

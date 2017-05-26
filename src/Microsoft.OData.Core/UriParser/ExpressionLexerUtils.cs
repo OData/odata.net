@@ -4,8 +4,8 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-#if ODATALIB
-namespace Microsoft.OData.Core.UriParser
+#if ODATA_CORE
+namespace Microsoft.OData.UriParser
 #else
 namespace Microsoft.OData.Service.Parsing
 #endif
@@ -13,7 +13,6 @@ namespace Microsoft.OData.Service.Parsing
     #region Namespaces
     using System;
     using System.Diagnostics;
-    using Microsoft.OData.Core.UriParser.TreeNodeKinds;
 
     #endregion Namespaces
 

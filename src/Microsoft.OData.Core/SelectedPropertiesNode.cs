@@ -4,18 +4,17 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core
+namespace Microsoft.OData
 {
     #region Namespaces
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Linq;
-    using Microsoft.OData.Core.Metadata;
-    using Microsoft.OData.Core.UriParser.Semantic;
-    using Microsoft.OData.Core.UriParser.Visitors;
+    using Microsoft.OData.Metadata;
+    using Microsoft.OData.UriParser;
     using Microsoft.OData.Edm;
-    using ODataErrorStrings = Microsoft.OData.Core.Strings;
+    using ODataErrorStrings = Microsoft.OData.Strings;
 
     #endregion Namespaces
 
@@ -48,6 +47,9 @@ namespace Microsoft.OData.Core
         /// <summary>The separator character used to separate paths from each other.</summary>
         private const char ItemSeparator = ',';
 
+        /// <summary>The special '*' segment indicating that all properties are selected.</summary>
+        private const string StarSegment = "*";
+
         /// <summary>The list of selected properties at the current level.</summary>
         private HashSet<string> selectedProperties;
 
@@ -64,7 +66,7 @@ namespace Microsoft.OData.Core
         /// Constructor.
         /// TODO: Update SelectedPropertiesNode class to adapt to V4, get rid of old style constructor
         /// </summary>
-        /// <param name="selectClause">The string representation of the selected property hierarchy using 
+        /// <param name="selectClause">The string representation of the selected property hierarchy using
         /// the same format as in the $select query option.</param>
         internal SelectedPropertiesNode(string selectClause)
             : this(SelectionType.PartialSubtree)
@@ -235,10 +237,10 @@ namespace Microsoft.OData.Core
         /// <summary>
         /// Gets the selected properties node for the specified navigation property.
         /// </summary>
-        /// <param name="entityType">The current entity type.</param>
+        /// <param name="structuredType">The current structured type.</param>
         /// <param name="navigationPropertyName">The name of the navigation property.</param>
         /// <returns>The selected properties node for the property with name <paramref name="navigationPropertyName"/>.</returns>
-        internal SelectedPropertiesNode GetSelectedPropertiesForNavigationProperty(IEdmEntityType entityType, string navigationPropertyName)
+        internal SelectedPropertiesNode GetSelectedPropertiesForNavigationProperty(IEdmStructuredType structuredType, string navigationPropertyName)
         {
             if (this.selectionType == SelectionType.Empty)
             {
@@ -252,7 +254,7 @@ namespace Microsoft.OData.Core
 
             // We cannot determine the selected navigation properties without the user model. This means we won't be computing the missing navigation properties.
             // For reading we will report what's on the wire and for writing we just write what the user explicitely told us to write.
-            if (entityType == null)
+            if (structuredType == null)
             {
                 return EntireSubtree;
             }
@@ -275,8 +277,8 @@ namespace Microsoft.OData.Core
 
                 // try to find a child with a type segment before it that matches the current type.
                 // Note: the result of this aggregation will be either empty or a found child node.
-                return this.GetMatchingTypeSegments(entityType)
-                    .Select(typeSegmentChild => typeSegmentChild.GetSelectedPropertiesForNavigationProperty(entityType, navigationPropertyName))
+                return this.GetMatchingTypeSegments(structuredType)
+                    .Select(typeSegmentChild => typeSegmentChild.GetSelectedPropertiesForNavigationProperty(structuredType, navigationPropertyName))
                     .Aggregate(child, CombineNodes);
             }
 
@@ -287,9 +289,9 @@ namespace Microsoft.OData.Core
         /// <summary>
         /// Gets the selected navigation properties for the current node.
         /// </summary>
-        /// <param name="entityType">The current entity type.</param>
+        /// <param name="structuredType">The current structured type.</param>
         /// <returns>The set of selected navigation properties.</returns>
-        internal IEnumerable<IEdmNavigationProperty> GetSelectedNavigationProperties(IEdmEntityType entityType)
+        internal IEnumerable<IEdmNavigationProperty> GetSelectedNavigationProperties(IEdmStructuredType structuredType)
         {
             if (this.selectionType == SelectionType.Empty)
             {
@@ -298,14 +300,14 @@ namespace Microsoft.OData.Core
 
             // We cannot determine the selected navigation properties without the user model. This means we won't be computing the missing navigation properties.
             // For reading we will report what's on the wire and for writing we just write what the user explicitely told us to write.
-            if (entityType == null)
+            if (structuredType == null)
             {
                 return EmptyNavigationProperties;
             }
 
             if (this.selectionType == SelectionType.EntireSubtree || this.hasWildcard)
             {
-                return entityType.NavigationProperties();
+                return structuredType.NavigationProperties();
             }
 
             // Find all the selected navigation properties
@@ -320,13 +322,13 @@ namespace Microsoft.OData.Core
             }
 
             IEnumerable<IEdmNavigationProperty> selectedNavigationProperties = navigationPropertyNames
-                .Select(entityType.FindProperty)
+                .Select(structuredType.FindProperty)
                 .OfType<IEdmNavigationProperty>();
 
             // gather up the selected navigations from any child nodes that have type segments matching the current type and append them.
-            foreach (SelectedPropertiesNode typeSegmentChild in this.GetMatchingTypeSegments(entityType))
+            foreach (SelectedPropertiesNode typeSegmentChild in this.GetMatchingTypeSegments(structuredType))
             {
-                selectedNavigationProperties = selectedNavigationProperties.Concat(typeSegmentChild.GetSelectedNavigationProperties(entityType));
+                selectedNavigationProperties = selectedNavigationProperties.Concat(typeSegmentChild.GetSelectedNavigationProperties(structuredType));
             }
 
             // ensure no duplicates are returned.
@@ -381,31 +383,31 @@ namespace Microsoft.OData.Core
         /// <summary>
         /// Determines whether or not the given operation is selected and takes type-segments into account.
         /// </summary>
-        /// <param name="entityType">The current entity type.</param>
+        /// <param name="structuredType">The current resource type.</param>
         /// <param name="operation">The operation.</param>
         /// <param name="mustBeNamespaceQualified">Whether or not the operation name must be container qualified in the $select string.</param>
         /// <returns>
         ///   <c>true</c> if the operation is selected; otherwise, <c>false</c>.
         /// </returns>
-        internal bool IsOperationSelected(IEdmEntityType entityType, IEdmOperation operation, bool mustBeNamespaceQualified)
+        internal bool IsOperationSelected(IEdmStructuredType structuredType, IEdmOperation operation, bool mustBeNamespaceQualified)
         {
-            Debug.Assert(entityType != null, "entityType != null");
+            Debug.Assert(structuredType != null, "structuredType != null");
             Debug.Assert(operation != null, "operation != null");
 
             // If the operation name conflicts with a property name then it must be namespace qualified
-            mustBeNamespaceQualified = mustBeNamespaceQualified || entityType.FindProperty(operation.Name) != null;
+            mustBeNamespaceQualified = mustBeNamespaceQualified || structuredType.FindProperty(operation.Name) != null;
 
-            return this.IsOperationSelectedAtThisLevel(operation, mustBeNamespaceQualified) || this.GetMatchingTypeSegments(entityType).Any(typeSegment => typeSegment.IsOperationSelectedAtThisLevel(operation, mustBeNamespaceQualified));
+            return this.IsOperationSelectedAtThisLevel(operation, mustBeNamespaceQualified) || this.GetMatchingTypeSegments(structuredType).Any(typeSegment => typeSegment.IsOperationSelectedAtThisLevel(operation, mustBeNamespaceQualified));
         }
 
         /// <summary>
         /// Gets an enumerable containing the given type and all of its base/ancestor types.
         /// </summary>
-        /// <param name="entityType">The starting entity type. Will be included in the returned enumeration.</param>
+        /// <param name="structuredType">The starting resource type. Will be included in the returned enumeration.</param>
         /// <returns>An enumerable containing the given type and all of its base/ancestor types.</returns>
-        private static IEnumerable<IEdmEntityType> GetBaseTypesAndSelf(IEdmEntityType entityType)
+        private static IEnumerable<IEdmStructuredType> GetBaseTypesAndSelf(IEdmStructuredType structuredType)
         {
-            for (IEdmEntityType currentType = entityType; currentType != null; currentType = currentType.BaseEntityType())
+            for (IEdmStructuredType currentType = structuredType; currentType != null; currentType = currentType.BaseType())
             {
                 yield return currentType;
             }
@@ -461,7 +463,7 @@ namespace Microsoft.OData.Core
 
             // last, try matching wildcards and specific names, but qualified with the namespace-qualified name.
             string qualifiedContainerName = operation.Namespace + ".";
-            yield return qualifiedContainerName + ProjectedPropertiesAnnotation.StarSegment;
+            yield return qualifiedContainerName + StarSegment;
             yield return qualifiedContainerName + operationName;
             yield return qualifiedContainerName + operationNameWithParameters;
         }
@@ -469,16 +471,16 @@ namespace Microsoft.OData.Core
         /// <summary>
         /// Gets the matching type segments for the given type based on this node's children.
         /// </summary>
-        /// <param name="entityType">The entity type to match.</param>
+        /// <param name="structuredType">The structured type to match.</param>
         /// <returns>All child nodes which start with a type segment in the given types hierarchy.</returns>
-        private IEnumerable<SelectedPropertiesNode> GetMatchingTypeSegments(IEdmEntityType entityType)
+        private IEnumerable<SelectedPropertiesNode> GetMatchingTypeSegments(IEdmStructuredType structuredType)
         {
             if (this.children != null)
             {
-                foreach (IEdmEntityType currentType in GetBaseTypesAndSelf(entityType))
+                foreach (IEdmStructuredType currentType in GetBaseTypesAndSelf(structuredType))
                 {
                     SelectedPropertiesNode typeSegmentChild;
-                    if (this.children.TryGetValue(currentType.FullName(), out typeSegmentChild))
+                    if (this.children.TryGetValue(currentType.FullTypeName(), out typeSegmentChild))
                     {
                         if (typeSegmentChild.hasWildcard)
                         {
@@ -509,7 +511,7 @@ namespace Microsoft.OData.Core
                 this.selectedProperties = CreateSelectedPropertiesHashSet();
             }
 
-            bool isStar = string.CompareOrdinal(ProjectedPropertiesAnnotation.StarSegment, currentSegment) == 0;
+            bool isStar = string.CompareOrdinal(StarSegment, currentSegment) == 0;
             bool isLastSegment = index == segments.Length - 1;
             if (!isLastSegment)
             {
@@ -619,7 +621,7 @@ namespace Microsoft.OData.Core
 
             foreach (string selectItem in rawSelect)
             {
-                if (ProjectedPropertiesAnnotation.StarSegment == selectItem)
+                if (StarSegment == selectItem)
                 {
                     node.hasWildcard = true;
                 }

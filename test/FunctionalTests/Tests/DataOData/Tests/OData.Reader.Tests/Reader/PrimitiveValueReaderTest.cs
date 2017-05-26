@@ -10,7 +10,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.Spatial;
     using Microsoft.Test.Taupo.Astoria.Contracts.OData;
     using Microsoft.Test.Taupo.Common;
@@ -25,7 +25,6 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
     using Microsoft.VisualStudio.TestTools.UnitTesting;
     using TestModels = Microsoft.Test.OData.Utils.Metadata.TestModels;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Library;
     using Microsoft.Test.OData.Utils.ODataLibTest;
     #endregion Namespaces
 
@@ -304,18 +303,18 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
             this.CombinatorialEngineProvider.RunCombinations(
                 testDescriptors,
                 // restricting the set of default format configurations to limiti runtime of the tests
-                this.ReaderTestConfigurationProvider.DefaultFormatConfigurations.Where(tc =>!tc.MessageReaderSettings.DisableMessageStreamDisposal && !tc.IsRequest),
+                this.ReaderTestConfigurationProvider.DefaultFormatConfigurations.Where(tc =>tc.MessageReaderSettings.EnableMessageStreamDisposal && !tc.IsRequest),
                 (testDescriptor, testConfig) =>
                 {
                     testConfig = new ReaderTestConfiguration(testConfig);
-                    testConfig.MessageReaderSettings.DisablePrimitiveTypeConversion = true;
+                    testConfig.MessageReaderSettings.EnablePrimitiveTypeConversion = false;
 
                     testDescriptor.RunTest(testConfig);
                 });
         }
 
-        
 
+        [Ignore] // Remove Atom
         [TestMethod, TestCategory("Reader.PrimitiveValues"), Variation(Description = "Verifies correct reading of spatial properties when type conversion is disabled.")]
         public void SpatialPropertyWithDisabledPrimitiveTypeConversionTest()
         {
@@ -345,11 +344,11 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
             this.CombinatorialEngineProvider.RunCombinations(
                 testDescriptors,
                 new bool[] { false, true },
-                this.ReaderTestConfigurationProvider.ExplicitFormatConfigurations.Where(tc => tc.Format == ODataFormat.Atom),
+                this.ReaderTestConfigurationProvider.ExplicitFormatConfigurations.Where(tc => false),
                 (testDescriptor, disableStrictValidation, testConfig) =>
                 {
                     testConfig = new ReaderTestConfiguration(testConfig);
-                    testConfig.MessageReaderSettings.DisablePrimitiveTypeConversion = true;
+                    testConfig.MessageReaderSettings.EnablePrimitiveTypeConversion = false;
                     if (disableStrictValidation)
                     {
                         testConfig = testConfig.CloneAndApplyBehavior(TestODataBehaviorKind.WcfDataServicesServer);

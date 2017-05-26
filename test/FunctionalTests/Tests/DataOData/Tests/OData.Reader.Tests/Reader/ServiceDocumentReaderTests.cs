@@ -10,8 +10,8 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using Microsoft.OData.Core;
-    using Microsoft.OData.Edm.Library;
+    using Microsoft.OData;
+    using Microsoft.OData.Edm;
     using Microsoft.Test.Taupo.Astoria.Contracts.OData;
     using Microsoft.Test.Taupo.Common;
     using Microsoft.Test.Taupo.Execution;
@@ -95,15 +95,6 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
                                     ExpectedException = null
                                 };
                             }
-
-                            if (tc.Format == ODataFormat.Atom)
-                            {
-                                return new PayloadReaderTestExpectedResult(this.PayloadExpectedResultSettings)
-                                {
-                                    ExpectedException = ODataExpectedExceptions.ODataException("ODataAtomDeserializer_RelativeUriUsedWithoutBaseUriSpecified", "collection")
-                                };
-                            }
-
                             throw new NotImplementedException();
                         }
                 },

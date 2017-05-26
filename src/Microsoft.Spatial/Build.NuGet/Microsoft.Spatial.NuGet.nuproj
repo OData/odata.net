@@ -8,13 +8,6 @@
     <NugetPackBasePath>$(OutputRootDir)\Product</NugetPackBasePath>
     <NuGetPackSpecFile>Microsoft.Spatial.$(Configuration).nuspec</NuGetPackSpecFile>
   </PropertyGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Microsoft.Spatial.csproj">
-      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
-      <Project>{5D921888-FE03-4C3F-40FE-2F624505461D}</Project>
-      <Name>Microsoft.Spatial</Name>
-    </ProjectReference>
-  </ItemGroup>
   <Import Project="$(BuildExtensionsPath)\NoTarget.targets" />
   
   <!-- Override the CrossTarget -->

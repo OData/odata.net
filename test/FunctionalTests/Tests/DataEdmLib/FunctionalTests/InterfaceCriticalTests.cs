@@ -12,10 +12,8 @@ namespace EdmLibTests.FunctionalTests
     using EdmLibTests.FunctionalUtilities;
     using EdmLibTests.StubEdm;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Annotations;
-    using Microsoft.OData.Edm.Library;
-    using Microsoft.OData.Edm.Library.Values;
     using Microsoft.OData.Edm.Validation;
+    using Microsoft.OData.Edm.Vocabularies;
 #if SILVERLIGHT
     using Microsoft.Silverlight.Testing;
 #endif
@@ -208,7 +206,7 @@ namespace EdmLibTests.FunctionalTests
             var model = InterfaceCriticalModelBuilder.InterfaceCriticalKindValueMismatchOnlyModel();
             this.ValidateElement(model, expectedErrors);
 
-            var valueAnnotation = model.VocabularyAnnotations.OfType<IEdmValueAnnotation>().ElementAt(0);
+            var valueAnnotation = model.VocabularyAnnotations.ElementAt(0);
             this.ValidateElement(valueAnnotation, expectedErrors);
 
             var annotationValue = valueAnnotation.Value;
@@ -433,7 +431,7 @@ namespace EdmLibTests.FunctionalTests
             {
                 { null, null, EdmErrorCode.InterfaceCriticalPropertyValueMustNotBeNull }
             };
-            this.ValidateElement(new MutableValueTerm() { Namespace = "f.o/o", Name = "bar" }, expectedErrors);
+            this.ValidateElement(new MutableTerm() { Namespace = "f.o/o", Name = "bar" }, expectedErrors);
         }
 
         [TestMethod]
@@ -800,7 +798,7 @@ namespace EdmLibTests.FunctionalTests
             this.ValidateUsingEdmValidator(model, ValidationRuleSet.GetEdmModelRuleSet(EdmConstants.EdmVersion4), expectedErrors);
         }
 
-        private sealed class MutableValueTerm : IEdmValueTerm
+        private sealed class MutableTerm : IEdmTerm
         {
             public IEdmTypeReference Type
             {
@@ -822,7 +820,7 @@ namespace EdmLibTests.FunctionalTests
 
             public EdmSchemaElementKind SchemaElementKind
             {
-                get { return EdmSchemaElementKind.ValueTerm; }
+                get { return EdmSchemaElementKind.Term; }
             }
 
             public string Name
@@ -835,11 +833,6 @@ namespace EdmLibTests.FunctionalTests
             {
                 get;
                 set;
-            }
-
-            public EdmTermKind TermKind
-            {
-                get { return EdmTermKind.Value; }
             }
         }
 

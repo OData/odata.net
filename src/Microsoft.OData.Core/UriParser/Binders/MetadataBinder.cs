@@ -4,20 +4,13 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core.UriParser.Parsers
+namespace Microsoft.OData.UriParser
 {
     #region Namespaces
-    using System;
+
     using System.Collections.Generic;
-    using System.Collections.ObjectModel;
-    using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
-    using System.Linq;
-    using Microsoft.OData.Core.UriParser.TreeNodeKinds;
-    using Microsoft.OData.Edm;
-    using Microsoft.OData.Core.UriParser.Semantic;
-    using Microsoft.OData.Core.UriParser.Syntactic;
-    using ODataErrorStrings = Microsoft.OData.Core.Strings;
+    using ODataErrorStrings = Microsoft.OData.Strings;
 
     #endregion Namespaces
 
@@ -34,7 +27,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
 
         /// <summary>
         /// Constructs a MetadataBinder with the given <paramref name="initialState"/>.
-        /// This constructor gets used if you are not calling the top level entry point ParseQuery.
+        /// This constructor gets used if you are not calling the top level resource point ParseQuery.
         /// This is an at-your-own-risk constructor, since you must provide valid initial state.
         /// </summary>
         /// <param name="initialState">The initialState to use for binding.</param>
@@ -228,7 +221,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         /// Binds an InnerPathToken.
         /// </summary>
         /// <param name="token">Token to bind.</param>
-        /// <returns>Either a SingleNavigationNode, CollectionNavigationNode, SinglePropertyAccessNode (complex), 
+        /// <returns>Either a SingleNavigationNode, CollectionNavigationNode, SinglePropertyAccessNode (complex),
         /// or CollectionPropertyAccessNode (primitive or complex) that is the metadata-bound version of the given token.</returns>
         protected virtual QueryNode BindInnerPathSegment(InnerPathToken token)
         {

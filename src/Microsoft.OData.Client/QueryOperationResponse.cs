@@ -136,7 +136,7 @@ namespace Microsoft.OData.Client
             return (QueryOperationResponse)Util.ConstructorInvoke(info, new object[] { headers, query, results });
 #endif
         }
-        
+
         /// <summary>Gets the enumeration helper for the <see cref="T:Microsoft.OData.Client.QueryOperationResponse" />.</summary>
         /// <param name="getEnumerator">The enumerator.</param>
         /// <typeparam name="T">The generic type.</typeparam>

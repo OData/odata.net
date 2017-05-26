@@ -9,7 +9,7 @@ using System.Collections.Generic;
 using FluentAssertions;
 using Xunit;
 
-namespace Microsoft.OData.Core.Tests
+namespace Microsoft.OData.Tests
 {
     public class ODataAnnotatableTests
     {
@@ -17,7 +17,7 @@ namespace Microsoft.OData.Core.Tests
 
         public ODataAnnotatableTests()
         {
-            this.annotatable = new ODataFeed();
+            this.annotatable = new ODataResourceSet();
         }
 
         [Fact]

@@ -758,7 +758,7 @@ namespace System.Data.Test.Astoria
             collection.Add(typeof(System.Data.Test.Astoria.FullTrust.TrustedMethods).Assembly);
             collection.Add(typeof(System.Reflection.MethodInfo).Assembly);
             collection.Add(typeof(Microsoft.OData.Client.KeyAttribute).Assembly);
-            collection.Add(typeof(Microsoft.OData.Core.ODataUtils).Assembly);
+            collection.Add(typeof(Microsoft.OData.ODataUtils).Assembly);
 
 #if !ClientSKUFramework
             collection.Add(typeof(System.Data.Linq.MemberChangeConflict).Assembly);

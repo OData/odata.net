@@ -9,9 +9,8 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.JsonLight
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Library;
     using Microsoft.Test.Taupo.Common;
     using Microsoft.Test.Taupo.Execution;
     using Microsoft.Test.Taupo.OData.Common;
@@ -51,7 +50,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.JsonLight
             model.AddElement(customerType);
             model.AddElement(orderType);
 
-            ODataEntry expandedOrderInstance = ObjectModelUtils.CreateDefaultEntryWithAtomMetadata();
+            ODataResource expandedOrderInstance = ObjectModelUtils.CreateDefaultEntryWithAtomMetadata();
             expandedOrderInstance.TypeName = "TestModel.Order";
 
             var testCases = new WriterNavigationLinkTests.NavigationLinkTestCase[]
@@ -60,43 +59,43 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.JsonLight
                 new WriterNavigationLinkTests.NavigationLinkTestCase
                 {
                     Items = new ODataItem[] { 
-                        new ODataNavigationLink() { IsCollection = true, Name = "Orders", Url = new Uri("http://odata.org/nav") },
+                        new ODataNestedResourceInfo() { IsCollection = true, Name = "Orders", Url = new Uri("http://odata.org/nav") },
                         ObjectModelUtils.CreateDefaultFeedWithAtomMetadata(),
                         null,
                         new ODataEntityReferenceLink() { Url = new Uri("http://odata.org/singleton") },
                     },
-                    ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightWriter_EntityReferenceLinkAfterFeedInRequest")
+                    ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightWriter_EntityReferenceLinkAfterResourceSetInRequest")
                 },
                 // Entity reference link after non-empty feed in collection navigation link
                 new WriterNavigationLinkTests.NavigationLinkTestCase
                 {
                     Items = new ODataItem[] { 
-                        new ODataNavigationLink() { IsCollection = true, Name = "Orders", Url = new Uri("http://odata.org/nav") },
+                        new ODataNestedResourceInfo() { IsCollection = true, Name = "Orders", Url = new Uri("http://odata.org/nav") },
                         ObjectModelUtils.CreateDefaultFeedWithAtomMetadata(),
                             expandedOrderInstance,
                             null,
                         null,
                         new ODataEntityReferenceLink() { Url = new Uri("http://odata.org/singleton") },
                     },
-                    ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightWriter_EntityReferenceLinkAfterFeedInRequest")
+                    ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightWriter_EntityReferenceLinkAfterResourceSetInRequest")
                 },
                 // Entity reference link before and after empty feed in collection navigation link
                 new WriterNavigationLinkTests.NavigationLinkTestCase
                 {
                     Items = new ODataItem[] { 
-                        new ODataNavigationLink() { IsCollection = true, Name = "Orders", Url = new Uri("http://odata.org/nav") },
+                        new ODataNestedResourceInfo() { IsCollection = true, Name = "Orders", Url = new Uri("http://odata.org/nav") },
                         new ODataEntityReferenceLink() { Url = new Uri("http://odata.org/singleton") },
                         ObjectModelUtils.CreateDefaultFeedWithAtomMetadata(),
                         null,
                         new ODataEntityReferenceLink() { Url = new Uri("http://odata.org/singleton") },
                     },
-                    ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightWriter_EntityReferenceLinkAfterFeedInRequest")
+                    ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightWriter_EntityReferenceLinkAfterResourceSetInRequest")
                 },
                 // Entity reference link after two empty feeds in collection navigation link
                 new WriterNavigationLinkTests.NavigationLinkTestCase
                 {
                     Items = new ODataItem[] { 
-                        new ODataNavigationLink() { IsCollection = true, Name = "Orders", Url = new Uri("http://odata.org/nav") },
+                        new ODataNestedResourceInfo() { IsCollection = true, Name = "Orders", Url = new Uri("http://odata.org/nav") },
                         new ODataEntityReferenceLink() { Url = new Uri("http://odata.org/singleton") },
                         ObjectModelUtils.CreateDefaultFeedWithAtomMetadata(),
                         null,
@@ -104,7 +103,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.JsonLight
                         null,
                         new ODataEntityReferenceLink() { Url = new Uri("http://odata.org/singleton") },
                     },
-                    ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightWriter_EntityReferenceLinkAfterFeedInRequest")
+                    ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightWriter_EntityReferenceLinkAfterResourceSetInRequest")
                 },
             };
 

@@ -4,8 +4,8 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-#if ODATALIB_ASYNC
-namespace Microsoft.OData.Core
+#if PORTABLELIB
+namespace Microsoft.OData
 {
     #region Namespaces
     using System.Diagnostics.CodeAnalysis;

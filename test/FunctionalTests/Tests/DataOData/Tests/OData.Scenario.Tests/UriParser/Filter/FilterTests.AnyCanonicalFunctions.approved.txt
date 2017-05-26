@@ -4,7 +4,7 @@ $filter = OrderDetails/any(a: a/ProductID ge 3.2 and year(a/OrderPlaced) eq 1971
 FilterQueryOption
 	ItemType = [Microsoft.Test.Taupo.OData.WCFService.Order Nullable=False]
 	Parameter = 
-	EntityRangeVariable
+	ResourceRangeVariable
 		Name = $it
 		NavigationSource = Orders
 		TypeReference = [Microsoft.Test.Taupo.OData.WCFService.Order Nullable=False]
@@ -19,11 +19,11 @@ FilterQueryOption
 								Property = ProductID
 								TypeReference = [Edm.Int32 Nullable=False]
 								Source = 
-								EntityRangeVariableReferenceNode
+								ResourceRangeVariableReferenceNode
 									Name = a
 									NavigationSource = OrderDetails
 									TypeReference = [Microsoft.Test.Taupo.OData.WCFService.OrderDetail Nullable=True]
-									Range Variable = Microsoft.OData.Core.UriParser.Semantic.EntityRangeVariable
+									Range Variable = Microsoft.OData.UriParser.ResourceRangeVariable
 					GreaterThanOrEqual
 						3.2(Type: [Edm.Single Nullable=False])
 				And
@@ -36,11 +36,11 @@ FilterQueryOption
 									Property = OrderPlaced
 									TypeReference = [Edm.DateTimeOffset Nullable=False Precision=0]
 									Source = 
-									EntityRangeVariableReferenceNode
+									ResourceRangeVariableReferenceNode
 										Name = a
 										NavigationSource = OrderDetails
 										TypeReference = [Microsoft.Test.Taupo.OData.WCFService.OrderDetail Nullable=True]
-										Range Variable = Microsoft.OData.Core.UriParser.Semantic.EntityRangeVariable
+										Range Variable = Microsoft.OData.UriParser.ResourceRangeVariable
 					Equal
 						1971(Type: [Edm.Int32 Nullable=False])
 			Or
@@ -53,11 +53,11 @@ FilterQueryOption
 								Property = OrderPlaced
 								TypeReference = [Edm.DateTimeOffset Nullable=False Precision=0]
 								Source = 
-								EntityRangeVariableReferenceNode
+								ResourceRangeVariableReferenceNode
 									Name = a
 									NavigationSource = OrderDetails
 									TypeReference = [Microsoft.Test.Taupo.OData.WCFService.OrderDetail Nullable=True]
-									Range Variable = Microsoft.OData.Core.UriParser.Semantic.EntityRangeVariable
+									Range Variable = Microsoft.OData.UriParser.ResourceRangeVariable
 				LessThan
 					2(Type: [Edm.Int32 Nullable=False])
 		Or
@@ -70,11 +70,11 @@ FilterQueryOption
 										Property = OrderPlaced
 										TypeReference = [Edm.DateTimeOffset Nullable=False Precision=0]
 										Source = 
-										EntityRangeVariableReferenceNode
+										ResourceRangeVariableReferenceNode
 											Name = a
 											NavigationSource = OrderDetails
 											TypeReference = [Microsoft.Test.Taupo.OData.WCFService.OrderDetail Nullable=True]
-											Range Variable = Microsoft.OData.Core.UriParser.Semantic.EntityRangeVariable
+											Range Variable = Microsoft.OData.UriParser.ResourceRangeVariable
 						Equal
 							1(Type: [Edm.Int32 Nullable=False])
 					And
@@ -87,11 +87,11 @@ FilterQueryOption
 										Property = OrderPlaced
 										TypeReference = [Edm.DateTimeOffset Nullable=False Precision=0]
 										Source = 
-										EntityRangeVariableReferenceNode
+										ResourceRangeVariableReferenceNode
 											Name = a
 											NavigationSource = OrderDetails
 											TypeReference = [Microsoft.Test.Taupo.OData.WCFService.OrderDetail Nullable=True]
-											Range Variable = Microsoft.OData.Core.UriParser.Semantic.EntityRangeVariable
+											Range Variable = Microsoft.OData.UriParser.ResourceRangeVariable
 						NotEqual
 							3(Type: [Edm.Int32 Nullable=False])
 				And
@@ -104,11 +104,11 @@ FilterQueryOption
 									Property = OrderPlaced
 									TypeReference = [Edm.DateTimeOffset Nullable=False Precision=0]
 									Source = 
-									EntityRangeVariableReferenceNode
+									ResourceRangeVariableReferenceNode
 										Name = a
 										NavigationSource = OrderDetails
 										TypeReference = [Microsoft.Test.Taupo.OData.WCFService.OrderDetail Nullable=True]
-										Range Variable = Microsoft.OData.Core.UriParser.Semantic.EntityRangeVariable
+										Range Variable = Microsoft.OData.UriParser.ResourceRangeVariable
 					Equal
 						5(Type: [Edm.Int32 Nullable=False])
 			And
@@ -121,11 +121,11 @@ FilterQueryOption
 								Property = OrderPlaced
 								TypeReference = [Edm.DateTimeOffset Nullable=False Precision=0]
 								Source = 
-								EntityRangeVariableReferenceNode
+								ResourceRangeVariableReferenceNode
 									Name = a
 									NavigationSource = OrderDetails
 									TypeReference = [Microsoft.Test.Taupo.OData.WCFService.OrderDetail Nullable=True]
-									Range Variable = Microsoft.OData.Core.UriParser.Semantic.EntityRangeVariable
+									Range Variable = Microsoft.OData.UriParser.ResourceRangeVariable
 				LessThan
 					40(Type: [Edm.Int32 Nullable=False])
 		Source = 
@@ -136,17 +136,17 @@ FilterQueryOption
 			Multiplicity = Many
 			Navigation Property = OrderDetails
 			Source = 
-			EntityRangeVariableReferenceNode
+			ResourceRangeVariableReferenceNode
 				Name = $it
 				NavigationSource = Orders
 				TypeReference = [Microsoft.Test.Taupo.OData.WCFService.Order Nullable=False]
-				Range Variable = Microsoft.OData.Core.UriParser.Semantic.EntityRangeVariable
+				Range Variable = Microsoft.OData.UriParser.ResourceRangeVariable
 		Parameters = 
-		EntityRangeVariable
+		ResourceRangeVariable
 			Name = a
 			NavigationSource = OrderDetails
 			TypeReference = [Microsoft.Test.Taupo.OData.WCFService.OrderDetail Nullable=True]
-		EntityRangeVariable
+		ResourceRangeVariable
 			Name = $it
 			NavigationSource = Orders
 			TypeReference = [Microsoft.Test.Taupo.OData.WCFService.Order Nullable=False]

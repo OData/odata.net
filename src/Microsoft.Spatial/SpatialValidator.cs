@@ -15,7 +15,7 @@ namespace Microsoft.Spatial
         /// <returns>The created SpatialValidator.</returns>
         public static SpatialPipeline Create()
         {
-            return SpatialImplementation.CurrentImplementation.CreateValidator(); 
+            return SpatialImplementation.CurrentImplementation.CreateValidator();
         }
     }
 }

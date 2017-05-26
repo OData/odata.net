@@ -9,7 +9,6 @@ namespace EdmLibTests.FunctionalTests
     using System.Linq;
     using EdmLibTests.FunctionalUtilities;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Library;
 #if SILVERLIGHT
     using Microsoft.Silverlight.Testing;
 #endif
@@ -558,6 +557,37 @@ namespace EdmLibTests.FunctionalTests
             var roundTripNav = roundTripNavs.First();
             Assert.IsFalse(roundTripNav.IsPrincipal(), "Invalid navigation principal value.");
             Assert.IsFalse(roundTripNav.Partner.IsPrincipal(), "Invalid navigation principal value.");
+        }
+
+        [TestMethod]
+        public void ParsingMultiBindingCsdl()
+        {
+            // check model
+            var model = NavigationTestModelBuilder.MultiNavigationBindingModel();
+            CheckMultiBindingModel(model);
+
+            // check csdl
+            var csdl = NavigationTestModelBuilder.MultiNavigationBindingModelCsdl();
+            model = this.GetParserResult(csdl);
+            CheckMultiBindingModel(model);
+        }
+
+        private void CheckMultiBindingModel(IEdmModel model)
+        {
+            var entitySet = model.EntityContainer.FindEntitySet("EntitySet");
+
+            var complexType = model.FindType("NS.ComplexType") as IEdmStructuredType;
+            var navComplex = complexType.FindProperty("CollectionOfNavOnComplex") as IEdmNavigationProperty;
+
+            var containedType = model.FindType("NS.ContainedEntityType") as IEdmStructuredType;
+            var navOnContained = containedType.FindProperty("NavOnContained") as IEdmNavigationProperty;
+
+            var target11 = entitySet.FindNavigationTarget(navComplex, new EdmPathExpression("complexProp1/CollectionOfNavOnComplex"));
+            var target12 = entitySet.FindNavigationTarget(navComplex, new EdmPathExpression("complexProp2/CollectionOfNavOnComplex"));
+            var target21 = entitySet.FindNavigationTarget(navOnContained, new EdmPathExpression("ContainedNav1/NavOnContained"));
+            var target22 = entitySet.FindNavigationTarget(navOnContained, new EdmPathExpression("ContainedNav2/NavOnContained"));
+            Assert.AreEqual(target11, target21);
+            Assert.AreEqual(target12, target22);
         }
 
         private void CheckNavigationsArePartners(IEdmNavigationProperty navigation, IEdmNavigationProperty partner)

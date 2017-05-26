@@ -4,7 +4,7 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Edm.PrimitiveValueConverters
+namespace Microsoft.OData.Edm
 {
     /// <summary>
     /// Class for defining a primitive value conversion for a type definition.

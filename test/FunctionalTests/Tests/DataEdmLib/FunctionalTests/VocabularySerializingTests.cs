@@ -56,39 +56,39 @@ namespace EdmLibTests.FunctionalTests
         }
 
         [TestMethod]
-        public void VocabularySerializingMultipleValueAnnotations()
+        public void VocabularySerializingMultipleVocabularyAnnotations()
         {
-            PerformCustomVocabularySerializerTest(VocabularyTestModelBuilder.MultipleValueAnnotations());
+            PerformCustomVocabularySerializerTest(VocabularyTestModelBuilder.MultipleVocabularyAnnotations());
         }
 
         [TestMethod]
-        public void VocabularySerializingSimpleValueAnnotation()
+        public void VocabularySerializingSimpleVocabularyAnnotation()
         {
-            PerformCustomVocabularySerializerTest(VocabularyTestModelBuilder.SimpleValueAnnotation());
+            PerformCustomVocabularySerializerTest(VocabularyTestModelBuilder.SimpleVocabularyAnnotation());
         }
 
         [TestMethod]
-        public void VocabularySerializingSimpleValueAnnotationWithQualifiers()
+        public void VocabularySerializingSimpleVocabularyAnnotationWithQualifiers()
         {
-            PerformCustomVocabularySerializerTest(VocabularyTestModelBuilder.SimpleValueAnnotationWithQualifiers());
+            PerformCustomVocabularySerializerTest(VocabularyTestModelBuilder.SimpleVocabularyAnnotationWithQualifiers());
         }
 
         [TestMethod]
-        public void VocabularySerializingSimpleValueAnnotationConfict()
+        public void VocabularySerializingSimpleVocabularyAnnotationConfict()
         {
-            PerformCustomVocabularySerializerTest(VocabularyTestModelBuilder.SimpleValueAnnotationConfict());
+            PerformCustomVocabularySerializerTest(VocabularyTestModelBuilder.SimpleVocabularyAnnotationConfict());
         }
 
         [TestMethod]
-        public void VocabularySerializingStructuredValueAnnotation()
+        public void VocabularySerializingStructuredVocabularyAnnotation()
         {
-            PerformCustomVocabularySerializerTest(VocabularyTestModelBuilder.StructuredValueAnnotation());
+            PerformCustomVocabularySerializerTest(VocabularyTestModelBuilder.StructuredVocabularyAnnotation());
         }
 
         [TestMethod]
-        public void VocabularySerializingValueAnnotationWithRecord()
+        public void VocabularySerializingVocabularyAnnotationWithRecord()
         {
-            PerformCustomVocabularySerializerTest(VocabularyTestModelBuilder.ValueAnnotationWithRecord());
+            PerformCustomVocabularySerializerTest(VocabularyTestModelBuilder.VocabularyAnnotationWithRecord());
         }
 
         [TestMethod]
@@ -96,9 +96,9 @@ namespace EdmLibTests.FunctionalTests
         {
             IEdmModel edmModel;
             IEnumerable<EdmError> errors;
-            var isParsed = CsdlReader.TryParse(VocabularyTestModelBuilder.AnnotationTermsWithNoNamespace().Select(e => e.CreateReader()), out edmModel, out errors);
-            Assert.IsFalse(isParsed, "CsdlReader.TryParse failed");
-            Assert.IsFalse(errors.Count() == 0, "CsdlReader.TryParse returned errors");
+            var isParsed = SchemaReader.TryParse(VocabularyTestModelBuilder.AnnotationTermsWithNoNamespace().Select(e => e.CreateReader()), out edmModel, out errors);
+            Assert.IsFalse(isParsed, "SchemaReader.TryParse failed");
+            Assert.IsFalse(errors.Count() == 0, "SchemaReader.TryParse returned errors");
         }
 
         [TestMethod]
@@ -109,7 +109,7 @@ namespace EdmLibTests.FunctionalTests
             StringWriter actualResult = new StringWriter();
             XmlWriter xw = XmlWriter.Create(actualResult);
             IEnumerable<EdmError> errors;
-            expectedModel.TryWriteCsdl(xw, out errors);
+            expectedModel.TryWriteSchema(xw, out errors);
             xw.Flush();
             xw.Close();
 
@@ -127,7 +127,7 @@ namespace EdmLibTests.FunctionalTests
             StringWriter actualResult = new StringWriter();
             XmlWriter xw = XmlWriter.Create(actualResult);
             IEnumerable<EdmError> errors;
-            expectedModel.TryWriteCsdl(xw, out errors);
+            expectedModel.TryWriteSchema(xw, out errors);
             xw.Flush();
             xw.Close();
 
@@ -193,55 +193,55 @@ namespace EdmLibTests.FunctionalTests
         }
 
         [TestMethod]
-        public void SerializeSimpleValueAnnotationCsdl()
+        public void SerializeSimpleVocabularyAnnotationCsdl()
         {
-            SerializingValidator(VocabularyTestModelBuilder.SimpleValueAnnotationCsdl());
+            SerializingValidator(VocabularyTestModelBuilder.SimpleVocabularyAnnotationCsdl());
         }
 
         [TestMethod]
-        public void SerializeValueTermNameConflictCsdl()
+        public void SerializeTermNameConflictCsdl()
         {
-            SerializingValidator(VocabularyTestModelBuilder.ValueTermNameConflictCsdl());
+            SerializingValidator(VocabularyTestModelBuilder.TermNameConflictCsdl());
         }
 
         [TestMethod]
-        public void SerializeValueTermNameConflictWithOthersCsdl()
+        public void SerializeTermNameConflictWithOthersCsdl()
         {
-            SerializingValidator(VocabularyTestModelBuilder.ValueTermNameConflictWithOthersCsdl());
+            SerializingValidator(VocabularyTestModelBuilder.TermNameConflictWithOthersCsdl());
         }
 
         [TestMethod]
-        public void SerializeValueTermTypeNotResolvableCsdl()
+        public void SerializeTermTypeNotResolvableCsdl()
         {
-            SerializingValidator(VocabularyTestModelBuilder.ValueTermTypeNotResolvableCsdl());
+            SerializingValidator(VocabularyTestModelBuilder.TermTypeNotResolvableCsdl());
         }
 
         [TestMethod]
-        public void SerializeValueAnnotationTargetNotResolvableCsdl()
+        public void SerializeVocabularyAnnotationTargetNotResolvableCsdl()
         {
-            SerializingValidator(VocabularyTestModelBuilder.ValueAnnotationTargetNotResolvableCsdl());
+            SerializingValidator(VocabularyTestModelBuilder.VocabularyAnnotationTargetNotResolvableCsdl());
         }
 
         [TestMethod]
-        public void SerializeValueAnnotationTermNotResolvableCsdl()
+        public void SerializeVocabularyAnnotationTermNotResolvableCsdl()
         {
-            SerializingValidator(VocabularyTestModelBuilder.ValueAnnotationTermNotResolvableCsdl());
+            SerializingValidator(VocabularyTestModelBuilder.VocabularyAnnotationTermNotResolvableCsdl());
         }
 
         [TestMethod]
-        public void SerializeValueAnnotationAmbiguousSameTermNoQualiferCsdl()
+        public void SerializeVocabularyAnnotationAmbiguousSameTermNoQualiferCsdl()
         {
-            SerializingValidator(VocabularyTestModelBuilder.ValueAnnotationAmbiguousSameTermNoQualiferCsdl());
+            SerializingValidator(VocabularyTestModelBuilder.VocabularyAnnotationAmbiguousSameTermNoQualiferCsdl());
         }
 
         [TestMethod]
-        public void SerializeValueAnnotationAmbiguousSameTermSameQualiferCsdl()
+        public void SerializeVocabularyAnnotationAmbiguousSameTermSameQualiferCsdl()
         {
-            SerializingValidator(VocabularyTestModelBuilder.ValueAnnotationAmbiguousSameTermSameQualiferCsdl());
+            SerializingValidator(VocabularyTestModelBuilder.VocabularyAnnotationAmbiguousSameTermSameQualiferCsdl());
         }
 
         [TestMethod]
-        public void SerializeInvalidPropertyValueAnnotationCsdl()
+        public void SerializeInvalidPropertyVocabularyAnnotationCsdl()
         {
             var actualCsdl = ConvertCsdlsToXElements(@"
 <Schema Namespace=""DefaultNamespace"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
@@ -260,71 +260,71 @@ namespace EdmLibTests.FunctionalTests
         <Property Name=""ListofFriendsAge"" Type=""Collection(Edm.Int32)"" />
     </EntityType>
 </Schema>");
-            SerializingValidator(VocabularyTestModelBuilder.InvalidPropertyValueAnnotationCsdl(), actualCsdl);
+            SerializingValidator(VocabularyTestModelBuilder.InvalidPropertyVocabularyAnnotationCsdl(), actualCsdl);
         }
 
         [TestMethod]
-        public void SerializeValueTermOnlyCsdl()
+        public void SerializeTermOnlyCsdl()
         {
-            SerializingValidator(VocabularyTestModelBuilder.ValueTermOnlyCsdl());
+            SerializingValidator(VocabularyTestModelBuilder.TermOnlyCsdl());
         }
 
         [TestMethod]
-        public void SerializeValueTermWithAnnotationTargetCsdl()
+        public void SerializeTermWithAnnotationTargetCsdl()
         {
-            SerializingValidator(VocabularyTestModelBuilder.ValueTermWithAnnotationTargetCsdl());
+            SerializingValidator(VocabularyTestModelBuilder.TermWithAnnotationTargetCsdl());
         }
 
         [TestMethod]
-        public void SerializeValueAnnotationPropertyTypeExactMatchCsdl()
+        public void SerializeVocabularyAnnotationPropertyTypeExactMatchCsdl()
         {
-            SerializingValidator(VocabularyTestModelBuilder.ValueAnnotationPropertyTypeExactMatchCsdl());
+            SerializingValidator(VocabularyTestModelBuilder.VocabularyAnnotationPropertyTypeExactMatchCsdl());
         }
 
         [TestMethod]
-        public void SerializeValueAnnotationTypeNotMatchCsdl()
+        public void SerializeVocabularyAnnotationTypeNotMatchCsdl()
         {
-            SerializingValidator(VocabularyTestModelBuilder.ValueAnnotationTypeNotMatchCsdl());
+            SerializingValidator(VocabularyTestModelBuilder.VocabularyAnnotationTypeNotMatchCsdl());
         }
 
         [TestMethod]
-        public void SerializeValueAnnotationPropertyNameNotMatchCsdl()
+        public void SerializeVocabularyAnnotationPropertyNameNotMatchCsdl()
         {
-            SerializingValidator(VocabularyTestModelBuilder.ValueAnnotationPropertyNameNotMatchCsdl());
+            SerializingValidator(VocabularyTestModelBuilder.VocabularyAnnotationPropertyNameNotMatchCsdl());
         }
 
         [TestMethod]
-        public void SerializeValueAnnotationNullablePropertyUndeclaredCsdl()
+        public void SerializeVocabularyAnnotationNullablePropertyUndeclaredCsdl()
         {
-            SerializingValidator(VocabularyTestModelBuilder.ValueAnnotationNullablePropertyUndeclaredCsdl());
+            SerializingValidator(VocabularyTestModelBuilder.VocabularyAnnotationNullablePropertyUndeclaredCsdl());
         }
 
         [TestMethod]
-        public void SerializeValueAnnotationPropertyTypeNotMatchCsdl()
+        public void SerializeVocabularyAnnotationPropertyTypeNotMatchCsdl()
         {
-            SerializingValidator(VocabularyTestModelBuilder.ValueAnnotationPropertyTypeNotMatchCsdl());
+            SerializingValidator(VocabularyTestModelBuilder.VocabularyAnnotationPropertyTypeNotMatchCsdl());
         }
 
         [TestMethod]
-        public void SerializeValueAnnotationNestedCsdl()
+        public void SerializeVocabularyAnnotationNestedCsdl()
         {
-            SerializingValidator(VocabularyTestModelBuilder.ValueAnnotationNestedCsdl());
+            SerializingValidator(VocabularyTestModelBuilder.VocabularyAnnotationNestedCsdl());
         }
 
         [TestMethod]
-        public void SerializeValueAnnotationNestedPropertyNotMatchCsdl()
+        public void SerializeVocabularyAnnotationNestedPropertyNotMatchCsdl()
         {
-            SerializingValidator(VocabularyTestModelBuilder.ValueAnnotationNestedPropertyNotMatchCsdl());
+            SerializingValidator(VocabularyTestModelBuilder.VocabularyAnnotationNestedPropertyNotMatchCsdl());
         }
 
         [TestMethod]
-        public void SerializeValueAnnotationTypeConvertibleCsdl()
+        public void SerializeVocabularyAnnotationTypeConvertibleCsdl()
         {
-            SerializingValidator(VocabularyTestModelBuilder.ValueAnnotationTypeConvertibleCsdl());
+            SerializingValidator(VocabularyTestModelBuilder.VocabularyAnnotationTypeConvertibleCsdl());
         }
 
         [TestMethod]
-        public void SerializeValueAnnotationBadValueCsdl()
+        public void SerializeVocabularyAnnotationBadValueCsdl()
         {
             var actualCsdl = ConvertCsdlsToXElements(@"
 <Schema Namespace=""My.NS1"" Alias=""Self"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
@@ -349,11 +349,11 @@ namespace EdmLibTests.FunctionalTests
     </Annotations>
 </Schema>");
 
-            SerializingValidator(VocabularyTestModelBuilder.ValueAnnotationBadValueCsdl(), actualCsdl);
+            SerializingValidator(VocabularyTestModelBuilder.VocabularyAnnotationBadValueCsdl(), actualCsdl);
         }
 
         [TestMethod]
-        public void SerializeValueAnnotationPathCsdl()
+        public void SerializeVocabularyAnnotationPathCsdl()
         {
             var actualCsdl = ConvertCsdlsToXElements(@"
 <Schema Namespace=""My.NS1"" Alias=""Self"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
@@ -369,11 +369,11 @@ namespace EdmLibTests.FunctionalTests
     </Annotations>
 </Schema>");
 
-            SerializingValidator(VocabularyTestModelBuilder.ValueAnnotationPathCsdl(), actualCsdl);
+            SerializingValidator(VocabularyTestModelBuilder.VocabularyAnnotationPathCsdl(), actualCsdl);
         }
 
         [TestMethod]
-        public void SerializeValueAnnotationPathNotValidCsdl()
+        public void SerializeVocabularyAnnotationPathNotValidCsdl()
         {
             var actualCsdl = ConvertCsdlsToXElements(@"
 <Schema Namespace=""My.NS1"" Alias=""Self"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
@@ -389,53 +389,53 @@ namespace EdmLibTests.FunctionalTests
     </Annotations>
 </Schema>");
 
-            SerializingValidator(VocabularyTestModelBuilder.ValueAnnotationPathNotValidCsdl(), actualCsdl);
+            SerializingValidator(VocabularyTestModelBuilder.VocabularyAnnotationPathNotValidCsdl(), actualCsdl);
         }
 
         [TestMethod]
-        public void SerializeValueAnnotationIfCsdl()
+        public void SerializeVocabularyAnnotationIfCsdl()
         {
-            SerializingValidator(VocabularyTestModelBuilder.ValueAnnotationIfCsdl());
+            SerializingValidator(VocabularyTestModelBuilder.VocabularyAnnotationIfCsdl());
         }
 
         [TestMethod]
-        public void SerializeValueAnnotationIfTypeNotMatchCsdl()
+        public void SerializeVocabularyAnnotationIfTypeNotMatchCsdl()
         {
-            SerializingValidator(VocabularyTestModelBuilder.ValueAnnotationIfTypeNotMatchCsdl());
+            SerializingValidator(VocabularyTestModelBuilder.VocabularyAnnotationIfTypeNotMatchCsdl());
         }
 
         [TestMethod]
-        public void SerializeValueAnnotationIfTypeNotResolvedCsdl()
+        public void SerializeVocabularyAnnotationIfTypeNotResolvedCsdl()
         {
-            SerializingValidator(VocabularyTestModelBuilder.ValueAnnotationIfTypeNotResolvedCsdl());
+            SerializingValidator(VocabularyTestModelBuilder.VocabularyAnnotationIfTypeNotResolvedCsdl());
         }
 
         [TestMethod]
-        public void SerializeValueAnnotationFunctionCsdl()
+        public void SerializeVocabularyAnnotationFunctionCsdl()
         {
-            SerializingValidator(VocabularyTestModelBuilder.ValueAnnotationFunctionCsdl());
+            SerializingValidator(VocabularyTestModelBuilder.VocabularyAnnotationFunctionCsdl());
         }
 
         [TestMethod]
-        public void SerializeValueAnnotationFunctionTypeNotMatchCsdl()
+        public void SerializeVocabularyAnnotationFunctionTypeNotMatchCsdl()
         {
-            SerializingValidator(VocabularyTestModelBuilder.ValueAnnotationFunctionTypeNotMatchCsdl());
+            SerializingValidator(VocabularyTestModelBuilder.VocabularyAnnotationFunctionTypeNotMatchCsdl());
         }
 
         [TestMethod]
-        public void SerializeValueAnnotationNullablePropertyWithNullExpressionCsdl()
+        public void SerializeVocabularyAnnotationNullablePropertyWithNullExpressionCsdl()
         {
-            SerializingValidator(VocabularyTestModelBuilder.ValueAnnotationNullablePropertyWithNullExpressionCsdl());
+            SerializingValidator(VocabularyTestModelBuilder.VocabularyAnnotationNullablePropertyWithNullExpressionCsdl());
         }
 
         [TestMethod]
-        public void SerializeValueAnnotationPropertyWithNullExpressionCsdl()
+        public void SerializeVocabularyAnnotationPropertyWithNullExpressionCsdl()
         {
-            SerializingValidator(VocabularyTestModelBuilder.ValueAnnotationPropertyWithNullExpressionCsdl());
+            SerializingValidator(VocabularyTestModelBuilder.VocabularyAnnotationPropertyWithNullExpressionCsdl());
         }
 
         [TestMethod]
-        public void SerializeSimpleValueAnnotationModel()
+        public void SerializeSimpleVocabularyAnnotationModel()
         {
             var actualCsdl = ConvertCsdlsToXElements(@"
 <Schema Namespace=""Foo"" Alias=""Self"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
@@ -458,7 +458,7 @@ namespace EdmLibTests.FunctionalTests
     <Term Name=""EntityTerm"" Type=""Foo.SimpleEntity"" />
 </Schema>");
 
-            SerializingValidator(VocabularyTestModelBuilder.SimpleValueAnnotationModel(), actualCsdl);
+            SerializingValidator(VocabularyTestModelBuilder.SimpleVocabularyAnnotationModel(), actualCsdl);
         }
 
         [TestMethod]
@@ -495,10 +495,10 @@ namespace EdmLibTests.FunctionalTests
             IEnumerable<EdmError> actualErrors;
             var expectedErrors = new EdmLibTestErrors()
             {
-                { "(Microsoft.OData.Edm.Library.Annotations.EdmAnnotation)", EdmErrorCode.InvalidName },
-                { "(Microsoft.OData.Edm.Library.Annotations.EdmAnnotation)", EdmErrorCode.InvalidName },
-                { "(Microsoft.OData.Edm.Library.Annotations.EdmAnnotation)", EdmErrorCode.InvalidName },
-                { "(Microsoft.OData.Edm.Library.Annotations.EdmAnnotation)", EdmErrorCode.InvalidName }
+                { "(Microsoft.OData.Edm.Vocabularies.EdmVocabularyAnnotation)", EdmErrorCode.InvalidName },
+                { "(Microsoft.OData.Edm.Vocabularies.EdmVocabularyAnnotation)", EdmErrorCode.InvalidName },
+                { "(Microsoft.OData.Edm.Vocabularies.EdmVocabularyAnnotation)", EdmErrorCode.InvalidName },
+                { "(Microsoft.OData.Edm.Vocabularies.EdmVocabularyAnnotation)", EdmErrorCode.InvalidName }
             };
 
             GetSerializerResult(VocabularyTestModelBuilder.AnnotationWithInvalidTargetModel(EdmVocabularyAnnotationSerializationLocation.OutOfLine), out actualErrors);
@@ -516,27 +516,27 @@ namespace EdmLibTests.FunctionalTests
         }
 
         [TestMethod]
-        public void SerializeSimpleValueAnnotationWithComplexTypeModel()
+        public void SerializeSimpleVocabularyAnnotationWithComplexTypeModel()
         {
-            SerializingValidator(VocabularyTestModelBuilder.SimpleValueAnnotationWithComplexTypeModel(), VocabularyTestModelBuilder.SimpleValueAnnotationWithComplexTypeCsdl());
+            SerializingValidator(VocabularyTestModelBuilder.SimpleVocabularyAnnotationWithComplexTypeModel(), VocabularyTestModelBuilder.SimpleVocabularyAnnotationWithComplexTypeCsdl());
         }
 
         [TestMethod]
-        public void SerializeValueAnnotationComplexTypeWithNullValuesModel()
+        public void SerializeVocabularyAnnotationComplexTypeWithNullValuesModel()
         {
-            SerializingValidator(VocabularyTestModelBuilder.ValueAnnotationComplexTypeWithNullValuesModel(), VocabularyTestModelBuilder.ValueAnnotationComplexTypeWithNullValuesCsdl());
+            SerializingValidator(VocabularyTestModelBuilder.VocabularyAnnotationComplexTypeWithNullValuesModel(), VocabularyTestModelBuilder.VocabularyAnnotationComplexTypeWithNullValuesCsdl());
         }
 
         [TestMethod]
-        public void SerializeValueAnnotationComplexTypeWithFewerPropertiesModel()
+        public void SerializeVocabularyAnnotationComplexTypeWithFewerPropertiesModel()
         {
-            SerializingValidator(VocabularyTestModelBuilder.ValueAnnotationComplexTypeWithFewerPropertiesModel(), VocabularyTestModelBuilder.ValueAnnotationComplexTypeWithFewerPropertiesCsdl());
+            SerializingValidator(VocabularyTestModelBuilder.VocabularyAnnotationComplexTypeWithFewerPropertiesModel(), VocabularyTestModelBuilder.VocabularyAnnotationComplexTypeWithFewerPropertiesCsdl());
         }
 
         [TestMethod]
-        public void SerializeValueAnnotationWithCollectionComplexTypeModel()
+        public void SerializeVocabularyAnnotationWithCollectionComplexTypeModel()
         {
-            SerializingValidator(VocabularyTestModelBuilder.ValueAnnotationWithCollectionComplexTypeModel(), VocabularyTestModelBuilder.ValueAnnotationWithCollectionComplexTypeCsdl());
+            SerializingValidator(VocabularyTestModelBuilder.VocabularyAnnotationWithCollectionComplexTypeModel(), VocabularyTestModelBuilder.VocabularyAnnotationWithCollectionComplexTypeCsdl());
         }
 
         [TestMethod]

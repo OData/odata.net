@@ -19,7 +19,7 @@ namespace Microsoft.Test.Taupo.Astoria.Contracts.Wrappers
     using System.Reflection;
     using Microsoft.Test.Taupo.Contracts;
     using Microsoft.Test.Taupo.Contracts.Wrappers;
-    
+    using Microsoft.OData.Client;
     /// <summary>
     /// Wraps the 'Microsoft.OData.Client.DataServiceContext' type.
     /// </summary>
@@ -31,7 +31,7 @@ namespace Microsoft.Test.Taupo.Astoria.Contracts.Wrappers
         private static readonly IDictionary<string, ConstructorInfo> AfterEventArgs = new Dictionary<string, ConstructorInfo>();
         private static readonly IDictionary<string, MethodInfo> BeforeEvents = new Dictionary<string, MethodInfo>();
         private static readonly IDictionary<string, MethodInfo> AfterEvents = new Dictionary<string, MethodInfo>();
-        
+
         /// <summary>
         /// Initializes static members of the WrappedDataServiceContext class.
         /// </summary>
@@ -51,7 +51,7 @@ namespace Microsoft.Test.Taupo.Astoria.Contracts.Wrappers
             BeforeEvents["Boolean DetachLink(System.Object, System.String, System.Object)"] = typeof(EventsTracker).GetMethod("RaiseBeforeDetachLink", null, false);
             AfterEvents["Boolean DetachLink(System.Object, System.String, System.Object)"] = typeof(EventsTracker).GetMethod("RaiseAfterDetachLink", null, false);
         }
-        
+
         /// <summary>
         /// Initializes a new instance of the WrappedDataServiceContext class.
         /// </summary>
@@ -62,7 +62,7 @@ namespace Microsoft.Test.Taupo.Astoria.Contracts.Wrappers
         {
             this.TrackEvents = new EventsTracker(this);
         }
-        
+
         /// <summary>
         /// Gets or sets a value of the 'AddAndUpdateResponsePreference' property on 'Microsoft.OData.Client.DataServiceContext'
         /// </summary>
@@ -72,13 +72,13 @@ namespace Microsoft.Test.Taupo.Astoria.Contracts.Wrappers
             {
                 return WrapperUtilities.InvokeMethodAndWrap<WrappedEnum>(this, AstoriaWrapperUtilities.GetMethodInfo(WrappedObjectType, MethodInfoCache, "Microsoft.OData.Client.DataServiceResponsePreference get_AddAndUpdateResponsePreference()"), new object[] { });
             }
-            
+
             set
             {
                 WrapperUtilities.InvokeMethodWithoutResult(this, AstoriaWrapperUtilities.GetMethodInfo(WrappedObjectType, MethodInfoCache, "Void set_AddAndUpdateResponsePreference(Microsoft.OData.Client.DataServiceResponsePreference)"), new object[] { value });
             }
         }
-        
+
         /// <summary>
         /// Gets a value indicating whether ApplyingChanges on 'Microsoft.OData.Client.DataServiceContext' is set to true
         /// </summary>
@@ -89,7 +89,7 @@ namespace Microsoft.Test.Taupo.Astoria.Contracts.Wrappers
                 return WrapperUtilities.InvokeMethodAndCast<bool>(this, AstoriaWrapperUtilities.GetMethodInfo(WrappedObjectType, MethodInfoCache, "Boolean get_ApplyingChanges()"), new object[] { });
             }
         }
-        
+
         /// <summary>
         /// Gets or sets a value of the 'BaseUri' property on 'Microsoft.OData.Client.DataServiceContext'
         /// </summary>
@@ -99,13 +99,13 @@ namespace Microsoft.Test.Taupo.Astoria.Contracts.Wrappers
             {
                 return WrapperUtilities.InvokeMethodAndCast<System.Uri>(this, AstoriaWrapperUtilities.GetMethodInfo(WrappedObjectType, MethodInfoCache, "System.Uri get_BaseUri()"), new object[] { });
             }
-            
+
             set
             {
                 WrapperUtilities.InvokeMethodWithoutResult(this, AstoriaWrapperUtilities.GetMethodInfo(WrappedObjectType, MethodInfoCache, "Void set_BaseUri(System.Uri)"), new object[] { value });
             }
         }
-        
+
         /// <summary>
         /// Gets or sets a value of the 'Credentials' property on 'Microsoft.OData.Client.DataServiceContext'
         /// </summary>
@@ -115,13 +115,13 @@ namespace Microsoft.Test.Taupo.Astoria.Contracts.Wrappers
             {
                 return WrapperUtilities.InvokeMethodAndWrap<WrappedObject>(this, AstoriaWrapperUtilities.GetMethodInfo(WrappedObjectType, MethodInfoCache, "System.Net.ICredentials get_Credentials()"), new object[] { });
             }
-            
+
             set
             {
                 WrapperUtilities.InvokeMethodWithoutResult(this, AstoriaWrapperUtilities.GetMethodInfo(WrappedObjectType, MethodInfoCache, "Void set_Credentials(System.Net.ICredentials)"), new object[] { value });
             }
         }
-        
+
         /// <summary>
         /// Gets or sets a value of the 'DataNamespace' property on 'Microsoft.OData.Client.DataServiceContext'
         /// </summary>
@@ -131,13 +131,13 @@ namespace Microsoft.Test.Taupo.Astoria.Contracts.Wrappers
             {
                 return WrapperUtilities.InvokeMethodAndCast<string>(this, AstoriaWrapperUtilities.GetMethodInfo(WrappedObjectType, MethodInfoCache, "System.String get_DataNamespace()"), new object[] { });
             }
-            
+
             set
             {
                 WrapperUtilities.InvokeMethodWithoutResult(this, AstoriaWrapperUtilities.GetMethodInfo(WrappedObjectType, MethodInfoCache, "Void set_DataNamespace(System.String)"), new object[] { value });
             }
         }
-        
+
         /// <summary>
         /// Gets a value of the 'Entities' property on 'Microsoft.OData.Client.DataServiceContext'
         /// </summary>
@@ -148,23 +148,23 @@ namespace Microsoft.Test.Taupo.Astoria.Contracts.Wrappers
                 return WrapperUtilities.InvokeMethodAndWrap<WrappedReadOnlyCollection<WrappedEntityDescriptor>>(this, AstoriaWrapperUtilities.GetMethodInfo(WrappedObjectType, MethodInfoCache, "System.Collections.ObjectModel.ReadOnlyCollection`1[Microsoft.OData.Client.EntityDescriptor] get_Entities()"), new object[] { });
             }
         }
-        
-        /// <summary>
-        /// Gets or sets a value indicating whether IgnoreMissingProperties on 'Microsoft.OData.Client.DataServiceContext' is set to true
-        /// </summary>
-        public virtual bool IgnoreMissingProperties
-        {
-            get
-            {
-                return WrapperUtilities.InvokeMethodAndCast<bool>(this, AstoriaWrapperUtilities.GetMethodInfo(WrappedObjectType, MethodInfoCache, "Boolean get_IgnoreMissingProperties()"), new object[] { });
-            }
-            
-            set
-            {
-                WrapperUtilities.InvokeMethodWithoutResult(this, AstoriaWrapperUtilities.GetMethodInfo(WrappedObjectType, MethodInfoCache, "Void set_IgnoreMissingProperties(Boolean)"), new object[] { value });
-            }
-        }
-        
+
+        ///// <summary>
+        ///// Gets or sets a value indicating whether IgnoreMissingProperties on 'Microsoft.OData.Client.DataServiceContext' is set to true
+        ///// </summary>
+        //public virtual UndeclaredPropertyBehavior UndeclaredPropertyBehavior
+        //{
+        //    get
+        //    {
+        //        return WrapperUtilities.InvokeMethodAndCast<UndeclaredPropertyBehavior>(this, AstoriaWrapperUtilities.GetMethodInfo(WrappedObjectType, MethodInfoCache, "UndeclaredPropertyBehavior get_UndeclaredPropertyBehavior()"), new object[] { });
+        //    }
+
+        //    set
+        //    {
+        //        WrapperUtilities.InvokeMethodWithoutResult(this, AstoriaWrapperUtilities.GetMethodInfo(WrappedObjectType, MethodInfoCache, "Void set_UndeclaredPropertyBehavior(UndeclaredPropertyBehavior)"), new object[] { value });
+        //    }
+        //}
+
         /// <summary>
         /// Gets or sets a value indicating whether IgnoreResourceNotFoundException on 'Microsoft.OData.Client.DataServiceContext' is set to true
         /// </summary>
@@ -174,13 +174,13 @@ namespace Microsoft.Test.Taupo.Astoria.Contracts.Wrappers
             {
                 return WrapperUtilities.InvokeMethodAndCast<bool>(this, AstoriaWrapperUtilities.GetMethodInfo(WrappedObjectType, MethodInfoCache, "Boolean get_IgnoreResourceNotFoundException()"), new object[] { });
             }
-            
+
             set
             {
                 WrapperUtilities.InvokeMethodWithoutResult(this, AstoriaWrapperUtilities.GetMethodInfo(WrappedObjectType, MethodInfoCache, "Void set_IgnoreResourceNotFoundException(Boolean)"), new object[] { value });
             }
         }
-        
+
         /// <summary>
         /// Gets a value of the 'Links' property on 'Microsoft.OData.Client.DataServiceContext'
         /// </summary>
@@ -191,7 +191,7 @@ namespace Microsoft.Test.Taupo.Astoria.Contracts.Wrappers
                 return WrapperUtilities.InvokeMethodAndWrap<WrappedReadOnlyCollection<WrappedLinkDescriptor>>(this, AstoriaWrapperUtilities.GetMethodInfo(WrappedObjectType, MethodInfoCache, "System.Collections.ObjectModel.ReadOnlyCollection`1[Microsoft.OData.Client.LinkDescriptor] get_Links()"), new object[] { });
             }
         }
-        
+
         /// <summary>
         /// Gets a value of the 'MaxProtocolVersion' property on 'Microsoft.OData.Client.DataServiceContext'
         /// </summary>
@@ -202,7 +202,7 @@ namespace Microsoft.Test.Taupo.Astoria.Contracts.Wrappers
                 return WrapperUtilities.InvokeMethodAndWrap<WrappedEnum>(this, AstoriaWrapperUtilities.GetMethodInfo(WrappedObjectType, MethodInfoCache, "Microsoft.OData.Client.ODataProtocolVersion get_MaxProtocolVersion()"), new object[] { });
             }
         }
-        
+
         /// <summary>
         /// Gets or sets a value of the 'MergeOption' property on 'Microsoft.OData.Client.DataServiceContext'
         /// </summary>
@@ -212,13 +212,13 @@ namespace Microsoft.Test.Taupo.Astoria.Contracts.Wrappers
             {
                 return WrapperUtilities.InvokeMethodAndWrap<WrappedEnum>(this, AstoriaWrapperUtilities.GetMethodInfo(WrappedObjectType, MethodInfoCache, "Microsoft.OData.Client.MergeOption get_MergeOption()"), new object[] { });
             }
-            
+
             set
             {
                 WrapperUtilities.InvokeMethodWithoutResult(this, AstoriaWrapperUtilities.GetMethodInfo(WrappedObjectType, MethodInfoCache, "Void set_MergeOption(Microsoft.OData.Client.MergeOption)"), new object[] { value });
             }
         }
-        
+
         /// <summary>
         /// Gets or sets a value of the 'ResolveEntitySet' property on 'Microsoft.OData.Client.DataServiceContext'
         /// </summary>
@@ -228,13 +228,13 @@ namespace Microsoft.Test.Taupo.Astoria.Contracts.Wrappers
             {
                 return WrapperUtilities.InvokeMethodAndCast<System.Func<string, System.Uri>>(this, AstoriaWrapperUtilities.GetMethodInfo(WrappedObjectType, MethodInfoCache, "System.Func`2[System.String,System.Uri] get_ResolveEntitySet()"), new object[] { });
             }
-            
+
             set
             {
                 WrapperUtilities.InvokeMethodWithoutResult(this, AstoriaWrapperUtilities.GetMethodInfo(WrappedObjectType, MethodInfoCache, "Void set_ResolveEntitySet(System.Func`2[System.String,System.Uri])"), new object[] { value });
             }
         }
-        
+
         /// <summary>
         /// Gets or sets a value of the 'ResolveName' property on 'Microsoft.OData.Client.DataServiceContext'
         /// </summary>
@@ -244,13 +244,13 @@ namespace Microsoft.Test.Taupo.Astoria.Contracts.Wrappers
             {
                 return WrapperUtilities.InvokeMethodAndCast<System.Func<Type, string>>(this, AstoriaWrapperUtilities.GetMethodInfo(WrappedObjectType, MethodInfoCache, "System.Func`2[System.Type,System.String] get_ResolveName()"), new object[] { });
             }
-            
+
             set
             {
                 WrapperUtilities.InvokeMethodWithoutResult(this, AstoriaWrapperUtilities.GetMethodInfo(WrappedObjectType, MethodInfoCache, "Void set_ResolveName(System.Func`2[System.Type,System.String])"), new object[] { value });
             }
         }
-        
+
         /// <summary>
         /// Gets or sets a value of the 'ResolveType' property on 'Microsoft.OData.Client.DataServiceContext'
         /// </summary>
@@ -260,13 +260,13 @@ namespace Microsoft.Test.Taupo.Astoria.Contracts.Wrappers
             {
                 return WrapperUtilities.InvokeMethodAndCast<System.Func<string, Type>>(this, AstoriaWrapperUtilities.GetMethodInfo(WrappedObjectType, MethodInfoCache, "System.Func`2[System.String,System.Type] get_ResolveType()"), new object[] { });
             }
-            
+
             set
             {
                 WrapperUtilities.InvokeMethodWithoutResult(this, AstoriaWrapperUtilities.GetMethodInfo(WrappedObjectType, MethodInfoCache, "Void set_ResolveType(System.Func`2[System.String,System.Type])"), new object[] { value });
             }
         }
-        
+
         /// <summary>
         /// Gets or sets a value of the 'SaveChangesDefaultOptions' property on 'Microsoft.OData.Client.DataServiceContext'
         /// </summary>
@@ -276,13 +276,13 @@ namespace Microsoft.Test.Taupo.Astoria.Contracts.Wrappers
             {
                 return WrapperUtilities.InvokeMethodAndWrap<WrappedEnum>(this, AstoriaWrapperUtilities.GetMethodInfo(WrappedObjectType, MethodInfoCache, "Microsoft.OData.Client.SaveChangesOptions get_SaveChangesDefaultOptions()"), new object[] { });
             }
-            
+
             set
             {
                 WrapperUtilities.InvokeMethodWithoutResult(this, AstoriaWrapperUtilities.GetMethodInfo(WrappedObjectType, MethodInfoCache, "Void set_SaveChangesDefaultOptions(Microsoft.OData.Client.SaveChangesOptions)"), new object[] { value });
             }
         }
-        
+
         /// <summary>
         /// Gets or sets a value of the 'Timeout' property on 'Microsoft.OData.Client.DataServiceContext'
         /// </summary>
@@ -292,13 +292,13 @@ namespace Microsoft.Test.Taupo.Astoria.Contracts.Wrappers
             {
                 return WrapperUtilities.InvokeMethodAndCast<int>(this, AstoriaWrapperUtilities.GetMethodInfo(WrappedObjectType, MethodInfoCache, "Int32 get_Timeout()"), new object[] { });
             }
-            
+
             set
             {
                 WrapperUtilities.InvokeMethodWithoutResult(this, AstoriaWrapperUtilities.GetMethodInfo(WrappedObjectType, MethodInfoCache, "Void set_Timeout(Int32)"), new object[] { value });
             }
         }
-        
+
         /// <summary>
         /// Gets or sets a value of the 'TypeScheme' property on 'Microsoft.OData.Client.DataServiceContext'
         /// </summary>
@@ -308,13 +308,13 @@ namespace Microsoft.Test.Taupo.Astoria.Contracts.Wrappers
             {
                 return WrapperUtilities.InvokeMethodAndCast<System.Uri>(this, AstoriaWrapperUtilities.GetMethodInfo(WrappedObjectType, MethodInfoCache, "System.Uri get_TypeScheme()"), new object[] { });
             }
-            
+
             set
             {
                 WrapperUtilities.InvokeMethodWithoutResult(this, AstoriaWrapperUtilities.GetMethodInfo(WrappedObjectType, MethodInfoCache, "Void set_TypeScheme(System.Uri)"), new object[] { value });
             }
         }
-        
+
         /// <summary>
         /// Gets or sets a value indicating whether UsePostTunneling on 'Microsoft.OData.Client.DataServiceContext' is set to true
         /// </summary>
@@ -324,18 +324,18 @@ namespace Microsoft.Test.Taupo.Astoria.Contracts.Wrappers
             {
                 return WrapperUtilities.InvokeMethodAndCast<bool>(this, AstoriaWrapperUtilities.GetMethodInfo(WrappedObjectType, MethodInfoCache, "Boolean get_UsePostTunneling()"), new object[] { });
             }
-            
+
             set
             {
                 WrapperUtilities.InvokeMethodWithoutResult(this, AstoriaWrapperUtilities.GetMethodInfo(WrappedObjectType, MethodInfoCache, "Void set_UsePostTunneling(Boolean)"), new object[] { value });
             }
         }
-        
+
         /// <summary>
         /// Gets the value of the EventsTracker class
         /// </summary>
         public EventsTracker TrackEvents { get; private set; }
-        
+
         /// <summary>
         /// Wraps the 'Void AddLink(System.Object, System.String, System.Object)' on the 'Microsoft.OData.Client.DataServiceContext' type.
         /// </summary>
@@ -346,7 +346,7 @@ namespace Microsoft.Test.Taupo.Astoria.Contracts.Wrappers
         {
             WrapperUtilities.InvokeMethodWithoutResult(this, AstoriaWrapperUtilities.GetMethodInfo(WrappedObjectType, MethodInfoCache, "Void AddLink(System.Object, System.String, System.Object)"), new object[] { source, sourceProperty, target });
         }
-        
+
         /// <summary>
         /// Wraps the 'Void AddObject(System.String, System.Object)' on the 'Microsoft.OData.Client.DataServiceContext' type.
         /// </summary>
@@ -356,7 +356,7 @@ namespace Microsoft.Test.Taupo.Astoria.Contracts.Wrappers
         {
             WrapperUtilities.InvokeMethodWithoutResult(this, AstoriaWrapperUtilities.GetMethodInfo(WrappedObjectType, MethodInfoCache, "Void AddObject(System.String, System.Object)"), new object[] { entitySetName, entity }, BeforeEvents["Void AddObject(System.String, System.Object)"], AfterEvents["Void AddObject(System.String, System.Object)"], BeforeEventArgs["Void AddObject(System.String, System.Object)"], AfterEventArgs["Void AddObject(System.String, System.Object)"]);
         }
-        
+
         /// <summary>
         /// Wraps the 'Void AddRelatedObject(System.Object, System.String, System.Object)' on the 'Microsoft.OData.Client.DataServiceContext' type.
         /// </summary>
@@ -367,7 +367,7 @@ namespace Microsoft.Test.Taupo.Astoria.Contracts.Wrappers
         {
             WrapperUtilities.InvokeMethodWithoutResult(this, AstoriaWrapperUtilities.GetMethodInfo(WrappedObjectType, MethodInfoCache, "Void AddRelatedObject(System.Object, System.String, System.Object)"), new object[] { source, sourceProperty, target });
         }
-        
+
         /// <summary>
         /// Wraps the 'Void AttachLink(System.Object, System.String, System.Object)' on the 'Microsoft.OData.Client.DataServiceContext' type.
         /// </summary>
@@ -378,7 +378,7 @@ namespace Microsoft.Test.Taupo.Astoria.Contracts.Wrappers
         {
             WrapperUtilities.InvokeMethodWithoutResult(this, AstoriaWrapperUtilities.GetMethodInfo(WrappedObjectType, MethodInfoCache, "Void AttachLink(System.Object, System.String, System.Object)"), new object[] { source, sourceProperty, target });
         }
-        
+
         /// <summary>
         /// Wraps the 'Void AttachTo(System.String, System.Object)' on the 'Microsoft.OData.Client.DataServiceContext' type.
         /// </summary>
@@ -388,7 +388,7 @@ namespace Microsoft.Test.Taupo.Astoria.Contracts.Wrappers
         {
             WrapperUtilities.InvokeMethodWithoutResult(this, AstoriaWrapperUtilities.GetMethodInfo(WrappedObjectType, MethodInfoCache, "Void AttachTo(System.String, System.Object)"), new object[] { entitySetName, entity });
         }
-        
+
         /// <summary>
         /// Wraps the 'Void AttachTo(System.String, System.Object, System.String)' on the 'Microsoft.OData.Client.DataServiceContext' type.
         /// </summary>
@@ -399,7 +399,7 @@ namespace Microsoft.Test.Taupo.Astoria.Contracts.Wrappers
         {
             WrapperUtilities.InvokeMethodWithoutResult(this, AstoriaWrapperUtilities.GetMethodInfo(WrappedObjectType, MethodInfoCache, "Void AttachTo(System.String, System.Object, System.String)"), new object[] { entitySetName, entity, etag });
         }
-        
+
         /// <summary>
         /// Wraps the 'System.IAsyncResult BeginExecute(System.Uri, System.AsyncCallback, System.Object, System.String, Microsoft.OData.Client.OperationParameter[])' on the 'Microsoft.OData.Client.DataServiceContext' type.
         /// </summary>
@@ -413,7 +413,7 @@ namespace Microsoft.Test.Taupo.Astoria.Contracts.Wrappers
         {
             return WrapperUtilities.InvokeMethodAndCast<System.IAsyncResult>(this, AstoriaWrapperUtilities.GetMethodInfo(WrappedObjectType, MethodInfoCache, "System.IAsyncResult BeginExecute(System.Uri, System.AsyncCallback, System.Object, System.String, Microsoft.OData.Client.OperationParameter[])"), new object[] { requestUri, callback, state, httpMethod, operationParameters });
         }
-        
+
         /// <summary>
         /// Wraps the 'System.IAsyncResult BeginExecute[T](Microsoft.OData.Client.DataServiceQueryContinuation`1[T], System.AsyncCallback, System.Object)' on the 'Microsoft.OData.Client.DataServiceContext' type.
         /// </summary>
@@ -428,7 +428,7 @@ namespace Microsoft.Test.Taupo.Astoria.Contracts.Wrappers
         {
             return WrapperUtilities.InvokeMethodAndCast<System.IAsyncResult>(this, AstoriaWrapperUtilities.GetMethodInfo(WrappedObjectType, MethodInfoCache, "System.IAsyncResult BeginExecute[T](Microsoft.OData.Client.DataServiceQueryContinuation`1[T], System.AsyncCallback, System.Object)"), new object[] { continuation, callback, state }, new Type[] { typeT });
         }
-        
+
         /// <summary>
         /// Wraps the 'System.IAsyncResult BeginExecute[TElement](System.Uri, System.AsyncCallback, System.Object)' on the 'Microsoft.OData.Client.DataServiceContext' type.
         /// </summary>
@@ -443,7 +443,7 @@ namespace Microsoft.Test.Taupo.Astoria.Contracts.Wrappers
         {
             return WrapperUtilities.InvokeMethodAndCast<System.IAsyncResult>(this, AstoriaWrapperUtilities.GetMethodInfo(WrappedObjectType, MethodInfoCache, "System.IAsyncResult BeginExecute[TElement](System.Uri, System.AsyncCallback, System.Object)"), new object[] { requestUri, callback, state }, new Type[] { typeTElement });
         }
-        
+
         /// <summary>
         /// Wraps the 'System.IAsyncResult BeginExecute[TElement](System.Uri, System.AsyncCallback, System.Object, System.String, Boolean, Microsoft.OData.Client.OperationParameter[])' on the 'Microsoft.OData.Client.DataServiceContext' type.
         /// </summary>
@@ -461,7 +461,7 @@ namespace Microsoft.Test.Taupo.Astoria.Contracts.Wrappers
         {
             return WrapperUtilities.InvokeMethodAndCast<System.IAsyncResult>(this, AstoriaWrapperUtilities.GetMethodInfo(WrappedObjectType, MethodInfoCache, "System.IAsyncResult BeginExecute[TElement](System.Uri, System.AsyncCallback, System.Object, System.String, Boolean, Microsoft.OData.Client.OperationParameter[])"), new object[] { requestUri, callback, state, httpMethod, singleResult, operationParameters }, new Type[] { typeTElement });
         }
-        
+
         /// <summary>
         /// Wraps the 'System.IAsyncResult BeginExecuteBatch(System.AsyncCallback, System.Object, Microsoft.OData.Client.DataServiceRequest[])' on the 'Microsoft.OData.Client.DataServiceContext' type.
         /// </summary>
@@ -473,7 +473,7 @@ namespace Microsoft.Test.Taupo.Astoria.Contracts.Wrappers
         {
             return WrapperUtilities.InvokeMethodAndCast<System.IAsyncResult>(this, AstoriaWrapperUtilities.GetMethodInfo(WrappedObjectType, MethodInfoCache, "System.IAsyncResult BeginExecuteBatch(System.AsyncCallback, System.Object, Microsoft.OData.Client.DataServiceRequest[])"), new object[] { callback, state, queries });
         }
-        
+
         /// <summary>
         /// Wraps the 'System.IAsyncResult BeginGetReadStream(System.Object, Microsoft.OData.Client.DataServiceRequestArgs, System.AsyncCallback, System.Object)' on the 'Microsoft.OData.Client.DataServiceContext' type.
         /// </summary>
@@ -486,7 +486,7 @@ namespace Microsoft.Test.Taupo.Astoria.Contracts.Wrappers
         {
             return WrapperUtilities.InvokeMethodAndCast<System.IAsyncResult>(this, AstoriaWrapperUtilities.GetMethodInfo(WrappedObjectType, MethodInfoCache, "System.IAsyncResult BeginGetReadStream(System.Object, Microsoft.OData.Client.DataServiceRequestArgs, System.AsyncCallback, System.Object)"), new object[] { entity, args, callback, state });
         }
-        
+
         /// <summary>
         /// Wraps the 'System.IAsyncResult BeginGetReadStream(System.Object, System.String, Microsoft.OData.Client.DataServiceRequestArgs, System.AsyncCallback, System.Object)' on the 'Microsoft.OData.Client.DataServiceContext' type.
         /// </summary>
@@ -500,7 +500,7 @@ namespace Microsoft.Test.Taupo.Astoria.Contracts.Wrappers
         {
             return WrapperUtilities.InvokeMethodAndCast<System.IAsyncResult>(this, AstoriaWrapperUtilities.GetMethodInfo(WrappedObjectType, MethodInfoCache, "System.IAsyncResult BeginGetReadStream(System.Object, System.String, Microsoft.OData.Client.DataServiceRequestArgs, System.AsyncCallback, System.Object)"), new object[] { entity, name, args, callback, state });
         }
-        
+
         /// <summary>
         /// Wraps the 'System.IAsyncResult BeginLoadProperty(System.Object, System.String, System.AsyncCallback, System.Object)' on the 'Microsoft.OData.Client.DataServiceContext' type.
         /// </summary>
@@ -513,7 +513,7 @@ namespace Microsoft.Test.Taupo.Astoria.Contracts.Wrappers
         {
             return WrapperUtilities.InvokeMethodAndCast<System.IAsyncResult>(this, AstoriaWrapperUtilities.GetMethodInfo(WrappedObjectType, MethodInfoCache, "System.IAsyncResult BeginLoadProperty(System.Object, System.String, System.AsyncCallback, System.Object)"), new object[] { entity, propertyName, callback, state });
         }
-        
+
         /// <summary>
         /// Wraps the 'System.IAsyncResult BeginLoadProperty(System.Object, System.String, Microsoft.OData.Client.DataServiceQueryContinuation, System.AsyncCallback, System.Object)' on the 'Microsoft.OData.Client.DataServiceContext' type.
         /// </summary>
@@ -527,7 +527,7 @@ namespace Microsoft.Test.Taupo.Astoria.Contracts.Wrappers
         {
             return WrapperUtilities.InvokeMethodAndCast<System.IAsyncResult>(this, AstoriaWrapperUtilities.GetMethodInfo(WrappedObjectType, MethodInfoCache, "System.IAsyncResult BeginLoadProperty(System.Object, System.String, Microsoft.OData.Client.DataServiceQueryContinuation, System.AsyncCallback, System.Object)"), new object[] { entity, propertyName, continuation, callback, state });
         }
-        
+
         /// <summary>
         /// Wraps the 'System.IAsyncResult BeginLoadProperty(System.Object, System.String, System.Uri, System.AsyncCallback, System.Object)' on the 'Microsoft.OData.Client.DataServiceContext' type.
         /// </summary>
@@ -541,7 +541,7 @@ namespace Microsoft.Test.Taupo.Astoria.Contracts.Wrappers
         {
             return WrapperUtilities.InvokeMethodAndCast<System.IAsyncResult>(this, AstoriaWrapperUtilities.GetMethodInfo(WrappedObjectType, MethodInfoCache, "System.IAsyncResult BeginLoadProperty(System.Object, System.String, System.Uri, System.AsyncCallback, System.Object)"), new object[] { entity, propertyName, nextLinkUri, callback, state });
         }
-        
+
         /// <summary>
         /// Wraps the 'System.IAsyncResult BeginSaveChanges(System.AsyncCallback, System.Object)' on the 'Microsoft.OData.Client.DataServiceContext' type.
         /// </summary>
@@ -552,7 +552,7 @@ namespace Microsoft.Test.Taupo.Astoria.Contracts.Wrappers
         {
             return WrapperUtilities.InvokeMethodAndCast<System.IAsyncResult>(this, AstoriaWrapperUtilities.GetMethodInfo(WrappedObjectType, MethodInfoCache, "System.IAsyncResult BeginSaveChanges(System.AsyncCallback, System.Object)"), new object[] { callback, state });
         }
-        
+
         /// <summary>
         /// Wraps the 'System.IAsyncResult BeginSaveChanges(Microsoft.OData.Client.SaveChangesOptions, System.AsyncCallback, System.Object)' on the 'Microsoft.OData.Client.DataServiceContext' type.
         /// </summary>
@@ -564,7 +564,7 @@ namespace Microsoft.Test.Taupo.Astoria.Contracts.Wrappers
         {
             return WrapperUtilities.InvokeMethodAndCast<System.IAsyncResult>(this, AstoriaWrapperUtilities.GetMethodInfo(WrappedObjectType, MethodInfoCache, "System.IAsyncResult BeginSaveChanges(Microsoft.OData.Client.SaveChangesOptions, System.AsyncCallback, System.Object)"), new object[] { options, callback, state });
         }
-        
+
         /// <summary>
         /// Wraps the 'Void CancelRequest(System.IAsyncResult)' on the 'Microsoft.OData.Client.DataServiceContext' type.
         /// </summary>
@@ -573,7 +573,7 @@ namespace Microsoft.Test.Taupo.Astoria.Contracts.Wrappers
         {
             WrapperUtilities.InvokeMethodWithoutResult(this, AstoriaWrapperUtilities.GetMethodInfo(WrappedObjectType, MethodInfoCache, "Void CancelRequest(System.IAsyncResult)"), new object[] { asyncResult });
         }
-        
+
         /// <summary>
         /// Wraps the 'Microsoft.OData.Client.DataServiceQuery`1[T] CreateQuery[T](System.String)' on the 'Microsoft.OData.Client.DataServiceContext' type.
         /// </summary>
@@ -586,7 +586,7 @@ namespace Microsoft.Test.Taupo.Astoria.Contracts.Wrappers
         {
             return WrapperUtilities.InvokeMethodAndWrap<WrappedDataServiceQuery<T>>(this, AstoriaWrapperUtilities.GetMethodInfo(WrappedObjectType, MethodInfoCache, "Microsoft.OData.Client.DataServiceQuery`1[T] CreateQuery[T](System.String)"), new object[] { entitySetName }, new Type[] { typeT });
         }
-        
+
         /// <summary>
         /// Wraps the 'Void DeleteLink(System.Object, System.String, System.Object)' on the 'Microsoft.OData.Client.DataServiceContext' type.
         /// </summary>
@@ -597,7 +597,7 @@ namespace Microsoft.Test.Taupo.Astoria.Contracts.Wrappers
         {
             WrapperUtilities.InvokeMethodWithoutResult(this, AstoriaWrapperUtilities.GetMethodInfo(WrappedObjectType, MethodInfoCache, "Void DeleteLink(System.Object, System.String, System.Object)"), new object[] { source, sourceProperty, target });
         }
-        
+
         /// <summary>
         /// Wraps the 'Void DeleteObject(System.Object)' on the 'Microsoft.OData.Client.DataServiceContext' type.
         /// </summary>
@@ -606,7 +606,7 @@ namespace Microsoft.Test.Taupo.Astoria.Contracts.Wrappers
         {
             WrapperUtilities.InvokeMethodWithoutResult(this, AstoriaWrapperUtilities.GetMethodInfo(WrappedObjectType, MethodInfoCache, "Void DeleteObject(System.Object)"), new object[] { entity });
         }
-        
+
         /// <summary>
         /// Wraps the 'Boolean Detach(System.Object)' on the 'Microsoft.OData.Client.DataServiceContext' type.
         /// </summary>
@@ -616,7 +616,7 @@ namespace Microsoft.Test.Taupo.Astoria.Contracts.Wrappers
         {
             return WrapperUtilities.InvokeMethodAndCast<bool>(this, AstoriaWrapperUtilities.GetMethodInfo(WrappedObjectType, MethodInfoCache, "Boolean Detach(System.Object)"), new object[] { entity });
         }
-        
+
         /// <summary>
         /// Wraps the 'Boolean DetachLink(System.Object, System.String, System.Object)' on the 'Microsoft.OData.Client.DataServiceContext' type.
         /// </summary>
@@ -628,7 +628,7 @@ namespace Microsoft.Test.Taupo.Astoria.Contracts.Wrappers
         {
             return WrapperUtilities.InvokeMethodAndCast<bool>(this, AstoriaWrapperUtilities.GetMethodInfo(WrappedObjectType, MethodInfoCache, "Boolean DetachLink(System.Object, System.String, System.Object)"), new object[] { source, sourceProperty, target }, BeforeEvents["Boolean DetachLink(System.Object, System.String, System.Object)"], AfterEvents["Boolean DetachLink(System.Object, System.String, System.Object)"], BeforeEventArgs["Boolean DetachLink(System.Object, System.String, System.Object)"], AfterEventArgs["Boolean DetachLink(System.Object, System.String, System.Object)"]);
         }
-        
+
         /// <summary>
         /// Wraps the 'System.Collections.Generic.IEnumerable`1[TElement] EndExecute[TElement](System.IAsyncResult)' on the 'Microsoft.OData.Client.DataServiceContext' type.
         /// </summary>
@@ -641,7 +641,7 @@ namespace Microsoft.Test.Taupo.Astoria.Contracts.Wrappers
         {
             return WrapperUtilities.InvokeMethodAndWrap<WrappedIEnumerable<TElement>>(this, AstoriaWrapperUtilities.GetMethodInfo(WrappedObjectType, MethodInfoCache, "System.Collections.Generic.IEnumerable`1[TElement] EndExecute[TElement](System.IAsyncResult)"), new object[] { asyncResult }, new Type[] { typeTElement });
         }
-        
+
         /// <summary>
         /// Wraps the 'Microsoft.OData.Client.OperationResponse EndExecute(System.IAsyncResult)' on the 'Microsoft.OData.Client.DataServiceContext' type.
         /// </summary>
@@ -651,7 +651,7 @@ namespace Microsoft.Test.Taupo.Astoria.Contracts.Wrappers
         {
             return WrapperUtilities.InvokeMethodAndWrap<WrappedObject>(this, AstoriaWrapperUtilities.GetMethodInfo(WrappedObjectType, MethodInfoCache, "Microsoft.OData.Client.OperationResponse EndExecute(System.IAsyncResult)"), new object[] { asyncResult });
         }
-        
+
         /// <summary>
         /// Wraps the 'Microsoft.OData.Client.DataServiceResponse EndExecuteBatch(System.IAsyncResult)' on the 'Microsoft.OData.Client.DataServiceContext' type.
         /// </summary>
@@ -661,7 +661,7 @@ namespace Microsoft.Test.Taupo.Astoria.Contracts.Wrappers
         {
             return WrapperUtilities.InvokeMethodAndWrap<WrappedDataServiceResponse>(this, AstoriaWrapperUtilities.GetMethodInfo(WrappedObjectType, MethodInfoCache, "Microsoft.OData.Client.DataServiceResponse EndExecuteBatch(System.IAsyncResult)"), new object[] { asyncResult });
         }
-        
+
         /// <summary>
         /// Wraps the 'Microsoft.OData.Client.DataServiceStreamResponse EndGetReadStream(System.IAsyncResult)' on the 'Microsoft.OData.Client.DataServiceContext' type.
         /// </summary>
@@ -671,7 +671,7 @@ namespace Microsoft.Test.Taupo.Astoria.Contracts.Wrappers
         {
             return WrapperUtilities.InvokeMethodAndWrap<WrappedDataServiceStreamResponse>(this, AstoriaWrapperUtilities.GetMethodInfo(WrappedObjectType, MethodInfoCache, "Microsoft.OData.Client.DataServiceStreamResponse EndGetReadStream(System.IAsyncResult)"), new object[] { asyncResult });
         }
-        
+
         /// <summary>
         /// Wraps the 'Microsoft.OData.Client.QueryOperationResponse EndLoadProperty(System.IAsyncResult)' on the 'Microsoft.OData.Client.DataServiceContext' type.
         /// </summary>
@@ -681,7 +681,7 @@ namespace Microsoft.Test.Taupo.Astoria.Contracts.Wrappers
         {
             return WrapperUtilities.InvokeMethodAndWrap<WrappedQueryOperationResponse>(this, AstoriaWrapperUtilities.GetMethodInfo(WrappedObjectType, MethodInfoCache, "Microsoft.OData.Client.QueryOperationResponse EndLoadProperty(System.IAsyncResult)"), new object[] { asyncResult });
         }
-        
+
         /// <summary>
         /// Wraps the 'Microsoft.OData.Client.DataServiceResponse EndSaveChanges(System.IAsyncResult)' on the 'Microsoft.OData.Client.DataServiceContext' type.
         /// </summary>
@@ -691,7 +691,7 @@ namespace Microsoft.Test.Taupo.Astoria.Contracts.Wrappers
         {
             return WrapperUtilities.InvokeMethodAndWrap<WrappedDataServiceResponse>(this, AstoriaWrapperUtilities.GetMethodInfo(WrappedObjectType, MethodInfoCache, "Microsoft.OData.Client.DataServiceResponse EndSaveChanges(System.IAsyncResult)"), new object[] { asyncResult });
         }
-        
+
         /// <summary>
         /// Wraps the 'System.Collections.Generic.IEnumerable`1[TElement] Execute[TElement](System.Uri)' on the 'Microsoft.OData.Client.DataServiceContext' type.
         /// </summary>
@@ -704,7 +704,7 @@ namespace Microsoft.Test.Taupo.Astoria.Contracts.Wrappers
         {
             return WrapperUtilities.InvokeMethodAndWrap<WrappedIEnumerable<TElement>>(this, AstoriaWrapperUtilities.GetMethodInfo(WrappedObjectType, MethodInfoCache, "System.Collections.Generic.IEnumerable`1[TElement] Execute[TElement](System.Uri)"), new object[] { requestUri }, new Type[] { typeTElement });
         }
-        
+
         /// <summary>
         /// Wraps the 'System.Collections.Generic.IEnumerable`1[TElement] Execute[TElement](System.Uri, System.String, Boolean, Microsoft.OData.Client.OperationParameter[])' on the 'Microsoft.OData.Client.DataServiceContext' type.
         /// </summary>
@@ -720,7 +720,7 @@ namespace Microsoft.Test.Taupo.Astoria.Contracts.Wrappers
         {
             return WrapperUtilities.InvokeMethodAndWrap<WrappedIEnumerable<TElement>>(this, AstoriaWrapperUtilities.GetMethodInfo(WrappedObjectType, MethodInfoCache, "System.Collections.Generic.IEnumerable`1[TElement] Execute[TElement](System.Uri, System.String, Boolean, Microsoft.OData.Client.OperationParameter[])"), new object[] { requestUri, httpMethod, singleResult, operationParameters }, new Type[] { typeTElement });
         }
-        
+
         /// <summary>
         /// Wraps the 'Microsoft.OData.Client.OperationResponse Execute(System.Uri, System.String, Microsoft.OData.Client.OperationParameter[])' on the 'Microsoft.OData.Client.DataServiceContext' type.
         /// </summary>
@@ -732,7 +732,7 @@ namespace Microsoft.Test.Taupo.Astoria.Contracts.Wrappers
         {
             return WrapperUtilities.InvokeMethodAndWrap<WrappedObject>(this, AstoriaWrapperUtilities.GetMethodInfo(WrappedObjectType, MethodInfoCache, "Microsoft.OData.Client.OperationResponse Execute(System.Uri, System.String, Microsoft.OData.Client.OperationParameter[])"), new object[] { requestUri, httpMethod, operationParameters });
         }
-        
+
         /// <summary>
         /// Wraps the 'Microsoft.OData.Client.QueryOperationResponse`1[T] Execute[T](Microsoft.OData.Client.DataServiceQueryContinuation`1[T])' on the 'Microsoft.OData.Client.DataServiceContext' type.
         /// </summary>
@@ -745,7 +745,7 @@ namespace Microsoft.Test.Taupo.Astoria.Contracts.Wrappers
         {
             return WrapperUtilities.InvokeMethodAndWrap<WrappedQueryOperationResponse<T>>(this, AstoriaWrapperUtilities.GetMethodInfo(WrappedObjectType, MethodInfoCache, "Microsoft.OData.Client.QueryOperationResponse`1[T] Execute[T](Microsoft.OData.Client.DataServiceQueryContinuation`1[T])"), new object[] { continuation }, new Type[] { typeT });
         }
-        
+
         /// <summary>
         /// Wraps the 'Microsoft.OData.Client.DataServiceResponse ExecuteBatch(Microsoft.OData.Client.DataServiceRequest[])' on the 'Microsoft.OData.Client.DataServiceContext' type.
         /// </summary>
@@ -755,7 +755,7 @@ namespace Microsoft.Test.Taupo.Astoria.Contracts.Wrappers
         {
             return WrapperUtilities.InvokeMethodAndWrap<WrappedDataServiceResponse>(this, AstoriaWrapperUtilities.GetMethodInfo(WrappedObjectType, MethodInfoCache, "Microsoft.OData.Client.DataServiceResponse ExecuteBatch(Microsoft.OData.Client.DataServiceRequest[])"), new object[] { queries });
         }
-        
+
         /// <summary>
         /// Wraps the 'Microsoft.OData.Client.EntityDescriptor GetEntityDescriptor(System.Object)' on the 'Microsoft.OData.Client.DataServiceContext' type.
         /// </summary>
@@ -765,7 +765,7 @@ namespace Microsoft.Test.Taupo.Astoria.Contracts.Wrappers
         {
             return WrapperUtilities.InvokeMethodAndWrap<WrappedEntityDescriptor>(this, AstoriaWrapperUtilities.GetMethodInfo(WrappedObjectType, MethodInfoCache, "Microsoft.OData.Client.EntityDescriptor GetEntityDescriptor(System.Object)"), new object[] { entity });
         }
-        
+
         /// <summary>
         /// Wraps the 'Microsoft.OData.Client.LinkDescriptor GetLinkDescriptor(System.Object, System.String, System.Object)' on the 'Microsoft.OData.Client.DataServiceContext' type.
         /// </summary>
@@ -777,7 +777,7 @@ namespace Microsoft.Test.Taupo.Astoria.Contracts.Wrappers
         {
             return WrapperUtilities.InvokeMethodAndWrap<WrappedLinkDescriptor>(this, AstoriaWrapperUtilities.GetMethodInfo(WrappedObjectType, MethodInfoCache, "Microsoft.OData.Client.LinkDescriptor GetLinkDescriptor(System.Object, System.String, System.Object)"), new object[] { source, sourceProperty, target });
         }
-        
+
         /// <summary>
         /// Wraps the 'System.Uri GetMetadataUri()' on the 'Microsoft.OData.Client.DataServiceContext' type.
         /// </summary>
@@ -786,7 +786,7 @@ namespace Microsoft.Test.Taupo.Astoria.Contracts.Wrappers
         {
             return WrapperUtilities.InvokeMethodAndCast<System.Uri>(this, AstoriaWrapperUtilities.GetMethodInfo(WrappedObjectType, MethodInfoCache, "System.Uri GetMetadataUri()"), new object[] { });
         }
-        
+
         /// <summary>
         /// Wraps the 'Microsoft.OData.Client.DataServiceStreamResponse GetReadStream(System.Object)' on the 'Microsoft.OData.Client.DataServiceContext' type.
         /// </summary>
@@ -796,7 +796,7 @@ namespace Microsoft.Test.Taupo.Astoria.Contracts.Wrappers
         {
             return WrapperUtilities.InvokeMethodAndWrap<WrappedDataServiceStreamResponse>(this, AstoriaWrapperUtilities.GetMethodInfo(WrappedObjectType, MethodInfoCache, "Microsoft.OData.Client.DataServiceStreamResponse GetReadStream(System.Object)"), new object[] { entity });
         }
-        
+
         /// <summary>
         /// Wraps the 'Microsoft.OData.Client.DataServiceStreamResponse GetReadStream(System.Object, Microsoft.OData.Client.DataServiceRequestArgs)' on the 'Microsoft.OData.Client.DataServiceContext' type.
         /// </summary>
@@ -807,7 +807,7 @@ namespace Microsoft.Test.Taupo.Astoria.Contracts.Wrappers
         {
             return WrapperUtilities.InvokeMethodAndWrap<WrappedDataServiceStreamResponse>(this, AstoriaWrapperUtilities.GetMethodInfo(WrappedObjectType, MethodInfoCache, "Microsoft.OData.Client.DataServiceStreamResponse GetReadStream(System.Object, Microsoft.OData.Client.DataServiceRequestArgs)"), new object[] { entity, args });
         }
-        
+
         /// <summary>
         /// Wraps the 'Microsoft.OData.Client.DataServiceStreamResponse GetReadStream(System.Object, System.String)' on the 'Microsoft.OData.Client.DataServiceContext' type.
         /// </summary>
@@ -818,7 +818,7 @@ namespace Microsoft.Test.Taupo.Astoria.Contracts.Wrappers
         {
             return WrapperUtilities.InvokeMethodAndWrap<WrappedDataServiceStreamResponse>(this, AstoriaWrapperUtilities.GetMethodInfo(WrappedObjectType, MethodInfoCache, "Microsoft.OData.Client.DataServiceStreamResponse GetReadStream(System.Object, System.String)"), new object[] { entity, acceptContentType });
         }
-        
+
         /// <summary>
         /// Wraps the 'Microsoft.OData.Client.DataServiceStreamResponse GetReadStream(System.Object, System.String, Microsoft.OData.Client.DataServiceRequestArgs)' on the 'Microsoft.OData.Client.DataServiceContext' type.
         /// </summary>
@@ -830,7 +830,7 @@ namespace Microsoft.Test.Taupo.Astoria.Contracts.Wrappers
         {
             return WrapperUtilities.InvokeMethodAndWrap<WrappedDataServiceStreamResponse>(this, AstoriaWrapperUtilities.GetMethodInfo(WrappedObjectType, MethodInfoCache, "Microsoft.OData.Client.DataServiceStreamResponse GetReadStream(System.Object, System.String, Microsoft.OData.Client.DataServiceRequestArgs)"), new object[] { entity, name, args });
         }
-        
+
         /// <summary>
         /// Wraps the 'System.Uri GetReadStreamUri(System.Object)' on the 'Microsoft.OData.Client.DataServiceContext' type.
         /// </summary>
@@ -840,7 +840,7 @@ namespace Microsoft.Test.Taupo.Astoria.Contracts.Wrappers
         {
             return WrapperUtilities.InvokeMethodAndCast<System.Uri>(this, AstoriaWrapperUtilities.GetMethodInfo(WrappedObjectType, MethodInfoCache, "System.Uri GetReadStreamUri(System.Object)"), new object[] { entity });
         }
-        
+
         /// <summary>
         /// Wraps the 'System.Uri GetReadStreamUri(System.Object, System.String)' on the 'Microsoft.OData.Client.DataServiceContext' type.
         /// </summary>
@@ -851,7 +851,7 @@ namespace Microsoft.Test.Taupo.Astoria.Contracts.Wrappers
         {
             return WrapperUtilities.InvokeMethodAndCast<System.Uri>(this, AstoriaWrapperUtilities.GetMethodInfo(WrappedObjectType, MethodInfoCache, "System.Uri GetReadStreamUri(System.Object, System.String)"), new object[] { entity, name });
         }
-        
+
         /// <summary>
         /// Wraps the 'Microsoft.OData.Client.QueryOperationResponse LoadProperty(System.Object, System.String)' on the 'Microsoft.OData.Client.DataServiceContext' type.
         /// </summary>
@@ -862,7 +862,7 @@ namespace Microsoft.Test.Taupo.Astoria.Contracts.Wrappers
         {
             return WrapperUtilities.InvokeMethodAndWrap<WrappedQueryOperationResponse>(this, AstoriaWrapperUtilities.GetMethodInfo(WrappedObjectType, MethodInfoCache, "Microsoft.OData.Client.QueryOperationResponse LoadProperty(System.Object, System.String)"), new object[] { entity, propertyName });
         }
-        
+
         /// <summary>
         /// Wraps the 'Microsoft.OData.Client.QueryOperationResponse LoadProperty(System.Object, System.String, Microsoft.OData.Client.DataServiceQueryContinuation)' on the 'Microsoft.OData.Client.DataServiceContext' type.
         /// </summary>
@@ -874,7 +874,7 @@ namespace Microsoft.Test.Taupo.Astoria.Contracts.Wrappers
         {
             return WrapperUtilities.InvokeMethodAndWrap<WrappedQueryOperationResponse>(this, AstoriaWrapperUtilities.GetMethodInfo(WrappedObjectType, MethodInfoCache, "Microsoft.OData.Client.QueryOperationResponse LoadProperty(System.Object, System.String, Microsoft.OData.Client.DataServiceQueryContinuation)"), new object[] { entity, propertyName, continuation });
         }
-        
+
         /// <summary>
         /// Wraps the 'Microsoft.OData.Client.QueryOperationResponse LoadProperty(System.Object, System.String, System.Uri)' on the 'Microsoft.OData.Client.DataServiceContext' type.
         /// </summary>
@@ -886,7 +886,7 @@ namespace Microsoft.Test.Taupo.Astoria.Contracts.Wrappers
         {
             return WrapperUtilities.InvokeMethodAndWrap<WrappedQueryOperationResponse>(this, AstoriaWrapperUtilities.GetMethodInfo(WrappedObjectType, MethodInfoCache, "Microsoft.OData.Client.QueryOperationResponse LoadProperty(System.Object, System.String, System.Uri)"), new object[] { entity, propertyName, nextLinkUri });
         }
-        
+
         /// <summary>
         /// Wraps the 'Microsoft.OData.Client.QueryOperationResponse`1[T] LoadProperty[T](System.Object, System.String, Microsoft.OData.Client.DataServiceQueryContinuation`1[T])' on the 'Microsoft.OData.Client.DataServiceContext' type.
         /// </summary>
@@ -901,7 +901,7 @@ namespace Microsoft.Test.Taupo.Astoria.Contracts.Wrappers
         {
             return WrapperUtilities.InvokeMethodAndWrap<WrappedQueryOperationResponse<T>>(this, AstoriaWrapperUtilities.GetMethodInfo(WrappedObjectType, MethodInfoCache, "Microsoft.OData.Client.QueryOperationResponse`1[T] LoadProperty[T](System.Object, System.String, Microsoft.OData.Client.DataServiceQueryContinuation`1[T])"), new object[] { entity, propertyName, continuation }, new Type[] { typeT });
         }
-        
+
         /// <summary>
         /// Wraps the 'Microsoft.OData.Client.DataServiceResponse SaveChanges()' on the 'Microsoft.OData.Client.DataServiceContext' type.
         /// </summary>
@@ -910,7 +910,7 @@ namespace Microsoft.Test.Taupo.Astoria.Contracts.Wrappers
         {
             return WrapperUtilities.InvokeMethodAndWrap<WrappedDataServiceResponse>(this, AstoriaWrapperUtilities.GetMethodInfo(WrappedObjectType, MethodInfoCache, "Microsoft.OData.Client.DataServiceResponse SaveChanges()"), new object[] { });
         }
-        
+
         /// <summary>
         /// Wraps the 'Microsoft.OData.Client.DataServiceResponse SaveChanges(Microsoft.OData.Client.SaveChangesOptions)' on the 'Microsoft.OData.Client.DataServiceContext' type.
         /// </summary>
@@ -920,7 +920,7 @@ namespace Microsoft.Test.Taupo.Astoria.Contracts.Wrappers
         {
             return WrapperUtilities.InvokeMethodAndWrap<WrappedDataServiceResponse>(this, AstoriaWrapperUtilities.GetMethodInfo(WrappedObjectType, MethodInfoCache, "Microsoft.OData.Client.DataServiceResponse SaveChanges(Microsoft.OData.Client.SaveChangesOptions)"), new object[] { options });
         }
-        
+
         /// <summary>
         /// Wraps the 'Void SetLink(System.Object, System.String, System.Object)' on the 'Microsoft.OData.Client.DataServiceContext' type.
         /// </summary>
@@ -931,7 +931,7 @@ namespace Microsoft.Test.Taupo.Astoria.Contracts.Wrappers
         {
             WrapperUtilities.InvokeMethodWithoutResult(this, AstoriaWrapperUtilities.GetMethodInfo(WrappedObjectType, MethodInfoCache, "Void SetLink(System.Object, System.String, System.Object)"), new object[] { source, sourceProperty, target });
         }
-        
+
         /// <summary>
         /// Wraps the 'Void SetSaveStream(System.Object, System.IO.Stream, Boolean, Microsoft.OData.Client.DataServiceRequestArgs)' on the 'Microsoft.OData.Client.DataServiceContext' type.
         /// </summary>
@@ -943,7 +943,7 @@ namespace Microsoft.Test.Taupo.Astoria.Contracts.Wrappers
         {
             WrapperUtilities.InvokeMethodWithoutResult(this, AstoriaWrapperUtilities.GetMethodInfo(WrappedObjectType, MethodInfoCache, "Void SetSaveStream(System.Object, System.IO.Stream, Boolean, Microsoft.OData.Client.DataServiceRequestArgs)"), new object[] { entity, stream, closeStream, args });
         }
-        
+
         /// <summary>
         /// Wraps the 'Void SetSaveStream(System.Object, System.IO.Stream, Boolean, System.String, System.String)' on the 'Microsoft.OData.Client.DataServiceContext' type.
         /// </summary>
@@ -956,7 +956,7 @@ namespace Microsoft.Test.Taupo.Astoria.Contracts.Wrappers
         {
             WrapperUtilities.InvokeMethodWithoutResult(this, AstoriaWrapperUtilities.GetMethodInfo(WrappedObjectType, MethodInfoCache, "Void SetSaveStream(System.Object, System.IO.Stream, Boolean, System.String, System.String)"), new object[] { entity, stream, closeStream, contentType, slug });
         }
-        
+
         /// <summary>
         /// Wraps the 'Void SetSaveStream(System.Object, System.String, System.IO.Stream, Boolean, Microsoft.OData.Client.DataServiceRequestArgs)' on the 'Microsoft.OData.Client.DataServiceContext' type.
         /// </summary>
@@ -969,7 +969,7 @@ namespace Microsoft.Test.Taupo.Astoria.Contracts.Wrappers
         {
             WrapperUtilities.InvokeMethodWithoutResult(this, AstoriaWrapperUtilities.GetMethodInfo(WrappedObjectType, MethodInfoCache, "Void SetSaveStream(System.Object, System.String, System.IO.Stream, Boolean, Microsoft.OData.Client.DataServiceRequestArgs)"), new object[] { entity, name, stream, closeStream, args });
         }
-        
+
         /// <summary>
         /// Wraps the 'Void SetSaveStream(System.Object, System.String, System.IO.Stream, Boolean, System.String)' on the 'Microsoft.OData.Client.DataServiceContext' type.
         /// </summary>
@@ -982,7 +982,7 @@ namespace Microsoft.Test.Taupo.Astoria.Contracts.Wrappers
         {
             WrapperUtilities.InvokeMethodWithoutResult(this, AstoriaWrapperUtilities.GetMethodInfo(WrappedObjectType, MethodInfoCache, "Void SetSaveStream(System.Object, System.String, System.IO.Stream, Boolean, System.String)"), new object[] { entity, name, stream, closeStream, contentType });
         }
-        
+
         /// <summary>
         /// Wraps the 'Boolean TryGetEntity[TEntity](System.Uri, TEntity ByRef)' on the 'Microsoft.OData.Client.DataServiceContext' type.
         /// </summary>
@@ -1000,7 +1000,7 @@ namespace Microsoft.Test.Taupo.Astoria.Contracts.Wrappers
 
             return result;
         }
-        
+
         /// <summary>
         /// Wraps the 'Boolean TryGetUri(System.Object, System.Uri ByRef)' on the 'Microsoft.OData.Client.DataServiceContext' type.
         /// </summary>
@@ -1015,7 +1015,7 @@ namespace Microsoft.Test.Taupo.Astoria.Contracts.Wrappers
 
             return result;
         }
-        
+
         /// <summary>
         /// Wraps the 'Void UpdateObject(System.Object)' on the 'Microsoft.OData.Client.DataServiceContext' type.
         /// </summary>
@@ -1024,7 +1024,7 @@ namespace Microsoft.Test.Taupo.Astoria.Contracts.Wrappers
         {
             WrapperUtilities.InvokeMethodWithoutResult(this, AstoriaWrapperUtilities.GetMethodInfo(WrappedObjectType, MethodInfoCache, "Void UpdateObject(System.Object)"), new object[] { entity });
         }
-        
+
         /// <summary>
         /// Initializes a new instance of the EventsTracker class.
         /// </summary>
@@ -1033,7 +1033,7 @@ namespace Microsoft.Test.Taupo.Astoria.Contracts.Wrappers
         {
             [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1823:AvoidUnusedPrivateFields", Justification = "Code is generated")]
             private WrappedDataServiceContext wrapperType;
-            
+
             /// <summary>
             /// Initializes a new instance of the EventsTracker class.
             /// </summary>
@@ -1042,27 +1042,27 @@ namespace Microsoft.Test.Taupo.Astoria.Contracts.Wrappers
             {
                 this.wrapperType = wrapType;
             }
-            
+
             /// <summary>
             /// Event for AddObjectBefore.
             /// </summary>
             public event EventHandler<AddObjectEventArgs> AddObjectBeforeEvent;
-            
+
             /// <summary>
             /// Event for AddObjectAfter.
             /// </summary>
             public event EventHandler<AddObjectEventArgs> AddObjectAfterEvent;
-            
+
             /// <summary>
             /// Event for DetachLinkBefore.
             /// </summary>
             public event EventHandler<BeforeDetachLinkEventArgs> DetachLinkBeforeEvent;
-            
+
             /// <summary>
             /// Event for DetachLinkAfter.
             /// </summary>
             public event EventHandler<AfterDetachLinkEventArgs> DetachLinkAfterEvent;
-            
+
             /// <summary>
             /// Raises the BeforeAddObject event.
             /// </summary>
@@ -1074,7 +1074,7 @@ namespace Microsoft.Test.Taupo.Astoria.Contracts.Wrappers
                     this.AddObjectBeforeEvent(this, args);
                 }
             }
-            
+
             /// <summary>
             /// Raises the AfterAddObject event.
             /// </summary>
@@ -1086,7 +1086,7 @@ namespace Microsoft.Test.Taupo.Astoria.Contracts.Wrappers
                     this.AddObjectAfterEvent(this, args);
                 }
             }
-            
+
             /// <summary>
             /// Raises the BeforeDetachLink event.
             /// </summary>
@@ -1098,7 +1098,7 @@ namespace Microsoft.Test.Taupo.Astoria.Contracts.Wrappers
                     this.DetachLinkBeforeEvent(this, args);
                 }
             }
-            
+
             /// <summary>
             /// Raises the AfterDetachLink event.
             /// </summary>
@@ -1110,7 +1110,7 @@ namespace Microsoft.Test.Taupo.Astoria.Contracts.Wrappers
                     this.DetachLinkAfterEvent(this, args);
                 }
             }
-            
+
             /// <summary>
             /// Represents the event arguments.
             /// </summary>
@@ -1127,18 +1127,18 @@ namespace Microsoft.Test.Taupo.Astoria.Contracts.Wrappers
                     this.EntitySetName = entitySetName;
                     this.Entity = entity;
                 }
-                
+
                 /// <summary>
                 /// Gets the value of EntitySetName property.
                 /// </summary>
                 public string EntitySetName { get; private set; }
-                
+
                 /// <summary>
                 /// Gets the value of Entity property.
                 /// </summary>
                 public WrappedObject Entity { get; private set; }
             }
-            
+
             /// <summary>
             /// Represents the event arguments.
             /// </summary>
@@ -1157,23 +1157,23 @@ namespace Microsoft.Test.Taupo.Astoria.Contracts.Wrappers
                     this.SourceProperty = sourceProperty;
                     this.Target = target;
                 }
-                
+
                 /// <summary>
                 /// Gets the value of Source property.
                 /// </summary>
                 public WrappedObject Source { get; private set; }
-                
+
                 /// <summary>
                 /// Gets the value of SourceProperty property.
                 /// </summary>
                 public string SourceProperty { get; private set; }
-                
+
                 /// <summary>
                 /// Gets the value of Target property.
                 /// </summary>
                 public WrappedObject Target { get; private set; }
             }
-            
+
             /// <summary>
             /// Represents the event arguments.
             /// </summary>
@@ -1194,22 +1194,22 @@ namespace Microsoft.Test.Taupo.Astoria.Contracts.Wrappers
                     this.Target = target;
                     this.Result = result;
                 }
-                
+
                 /// <summary>
                 /// Gets the value of Source property.
                 /// </summary>
                 public WrappedObject Source { get; private set; }
-                
+
                 /// <summary>
                 /// Gets the value of SourceProperty property.
                 /// </summary>
                 public string SourceProperty { get; private set; }
-                
+
                 /// <summary>
                 /// Gets the value of Target property.
                 /// </summary>
                 public WrappedObject Target { get; private set; }
-                
+
                 /// <summary>
                 /// Gets a value indicating whether the Result property is set to true.
                 /// </summary>

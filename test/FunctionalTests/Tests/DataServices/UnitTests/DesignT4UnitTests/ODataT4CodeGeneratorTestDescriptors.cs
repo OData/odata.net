@@ -4,15 +4,14 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-using FluentAssertions;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Xml;
-using System.Reflection;
-
+using FluentAssertions;
 
 namespace Microsoft.OData.Client.Design.T4.UnitTests
 {

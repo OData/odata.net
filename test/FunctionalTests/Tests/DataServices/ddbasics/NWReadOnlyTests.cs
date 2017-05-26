@@ -8,9 +8,7 @@ namespace AstoriaUnitTests
 {
     using System;
     using Microsoft.OData.Client;
-    using System.Reflection;
     using System.Diagnostics;
-    using Suites.Data.Test;
     using System.Net;
     using System.Linq;
     using System.Collections.Generic;
@@ -18,9 +16,7 @@ namespace AstoriaUnitTests
     using System.IO;
     using System.Collections;
     using System.Xml;
-    using Microsoft.OData.Service.Providers;
     using Microsoft.OData.Service;
-    using System.Collections.ObjectModel;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     public partial class ClientModule
@@ -28,6 +24,7 @@ namespace AstoriaUnitTests
         /// <summary>
         /// Northwind database, read only tests
         /// </summary>
+        [Ignore] // Remove Atom
         [TestClass]
         public class ClientBasicsNWReadOnly
         {
@@ -66,7 +63,7 @@ namespace AstoriaUnitTests
                     return northwindWorkspacePaged;
                 }
             }
-            
+
             private SimpleWorkspace NWServiceOpWorkspace
             {
                 get
@@ -100,8 +97,8 @@ namespace AstoriaUnitTests
                 SimpleWorkspace workspace = this.NorthwindWorkspace;
                 Uri baseUri = new Uri(workspace.ServiceEndPoint + workspace.ServiceContainer.Name + ".svc", UriKind.Absolute);
                 this.ctx = new northwindClient.northwindContext(baseUri);
-                this.ctx.EnableAtom = true;
-                this.ctx.Format.UseAtom();
+                //this.ctx.EnableAtom = true;
+                //this.ctx.Format.UseAtom();
                 ctx.Timeout = TestConstants.MaxTestTimeout;
                 Trace.WriteLine("Querying workspace at " + baseUri);
             }
@@ -307,7 +304,7 @@ namespace AstoriaUnitTests
                     new { uri = "/GetCustomerNamesEnumerable", xpath="/adsm:value[count(adsm:element)=5]", method="GET", mime="application/xml" },
 
                     // Posts
-                    new { uri = "/GetCustomersByIdPOST?customerId='QUICK'", xpath="/atom:feed[count(atom:entry)=1]", method="POST", mime="application/atom+xml" },                    
+                    new { uri = "/GetCustomersByIdPOST?customerId='QUICK'", xpath="/atom:feed[count(atom:entry)=1]", method="POST", mime="application/atom+xml" },
                 };
 
                 using (Utils.ConfigurationCacheCleaner())
@@ -430,7 +427,7 @@ namespace AstoriaUnitTests
             [TestMethod]
             public void QueryRowCountInlineAndValueWithKeyPredicate()
             {
-                DataServiceQuery<northwindClient.Customers> q = 
+                DataServiceQuery<northwindClient.Customers> q =
                     ((DataServiceQuery<northwindClient.Customers>)
                     (from c in ctx.CreateQuery<northwindClient.Customers>("Customers").Where(cc => cc.CustomerID == "ALFKI")
                      select c)).IncludeTotalCount();
@@ -440,7 +437,7 @@ namespace AstoriaUnitTests
 
                 q = (DataServiceQuery<northwindClient.Customers>)
                     (from c in ctx.CreateQuery<northwindClient.Customers>("Customers").Where(cc => cc.CustomerID == "ALFKI")
-                    select c);
+                     select c);
                 long sc2 = q.LongCount();
 
                 Assert.AreEqual(sc1, sc2);
@@ -687,7 +684,7 @@ namespace AstoriaUnitTests
             }
 
             #endregion
-            
+
             #region Server Driven Paging
 
             private static void PageSizeCustomizer(DataServiceConfiguration config)
@@ -781,8 +778,8 @@ namespace AstoriaUnitTests
                     Uri baseUri = new Uri(workspace.ServiceEndPoint + workspace.ServiceContainer.Name + ".svc", UriKind.Absolute);
 
                     DataServiceContext ctx = new DataServiceContext(baseUri);
-                    ctx.EnableAtom = true;
-                    ctx.Format.UseAtom();
+                    //ctx.EnableAtom = true;
+                    //ctx.Format.UseAtom();
                     var q = ctx.CreateQuery<northwindBinding.Customers>("Customers").Expand("Orders");
 
                     int totalCustomerCount = q.Count();
@@ -795,8 +792,8 @@ namespace AstoriaUnitTests
                         {
                             // second iteration
                             ctx = new DataServiceContext(baseUri);
-                            ctx.EnableAtom = true;
-                            ctx.Format.UseAtom();
+                            //ctx.EnableAtom = true;
+                            //ctx.Format.UseAtom();
                             q = ctx.CreateQuery<northwindBinding.Customers>("Customers").Expand("Orders");
                             custs = new DataServiceCollection<northwindBinding.Customers>(q);
                         }
@@ -842,8 +839,8 @@ namespace AstoriaUnitTests
                     Uri baseUri = new Uri(workspace.ServiceEndPoint + workspace.ServiceContainer.Name + ".svc", UriKind.Absolute);
 
                     DataServiceContext ctx = new DataServiceContext(baseUri);
-                    ctx.EnableAtom = true;
-                    ctx.Format.UseAtom();
+                    //ctx.EnableAtom = true;
+                    //ctx.Format.UseAtom();
                     var q = ctx.CreateQuery<northwindBinding.Customers>("Customers").Expand("Orders");
 
                     int totalCustomerCount = q.Count();

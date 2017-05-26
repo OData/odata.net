@@ -6,14 +6,14 @@
 
 using System;
 using FluentAssertions;
-using Microsoft.OData.Core.Evaluation;
+using Microsoft.OData.Evaluation;
 using Xunit;
 
-namespace Microsoft.OData.Core.Tests.Evaluation
+namespace Microsoft.OData.Tests.Evaluation
 {
     public class ODataEntityMetadataBuilderTests
     {
-        private readonly ODataEntityMetadataBuilder builder = new TestBuilder();
+        private readonly ODataResourceMetadataBuilder builder = new TestBuilder();
 
         [Fact]
         public void GetStreamEditLinkShouldValidateArguments()
@@ -114,7 +114,7 @@ namespace Microsoft.OData.Core.Tests.Evaluation
             this.builder.GetStreamReadLink(null).Should().BeNull();
         }
 
-        private class TestBuilder : ODataEntityMetadataBuilder
+        private class TestBuilder : ODataResourceMetadataBuilder
         {
             internal override System.Uri GetEditLink()
             {

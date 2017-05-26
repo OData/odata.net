@@ -9,11 +9,10 @@ namespace Microsoft.Test.OData.PluggableFormat.Avro
 {
     using System.Linq;
     using System.Collections.Generic;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
 
     public class AvroMediaTypeResolver : ODataMediaTypeResolver
     {
-        private static readonly AvroMediaTypeResolver instance = new AvroMediaTypeResolver();
         private static readonly ODataMediaTypeFormat[] mediaTypeFormats =
             {
                 new ODataMediaTypeFormat(
@@ -23,17 +22,13 @@ namespace Microsoft.Test.OData.PluggableFormat.Avro
 
         private static readonly ODataPayloadKind[] supportedPayloadKinds =
             {
-                ODataPayloadKind.Entry,
-                ODataPayloadKind.Feed,
+                ODataPayloadKind.Resource,
+                ODataPayloadKind.ResourceSet,
                 ODataPayloadKind.Property, 
                 ODataPayloadKind.Collection, 
                 ODataPayloadKind.Parameter, 
                 ODataPayloadKind.Error, 
             };
-
-        public static AvroMediaTypeResolver Instance { get { return instance; } }
-
-        private AvroMediaTypeResolver() { }
 
         public override IEnumerable<ODataMediaTypeFormat> GetMediaTypeFormats(ODataPayloadKind payloadKind)
         {

@@ -4,19 +4,10 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-#if SPATIAL
-namespace Microsoft.Data.Spatial
-#else
-namespace Microsoft.OData.Core.Json
-#endif
-{
-    #region Namespaces
-    using System;
-    using System.Diagnostics;
-    using System.IO;
-    using System.Text;
-    #endregion Namespaces
+using System.IO;
 
+namespace Microsoft.OData.Json
+{
     /// <summary>
     /// Writes text indented as per the indentation level setting
     /// </summary>

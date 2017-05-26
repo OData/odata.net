@@ -12,8 +12,8 @@ namespace Microsoft.OData.Service
     /// <summary>Use this class to add settings that define service behavior.</summary>
     public sealed class DataServiceBehavior
     {
-        /// <summary>The conventions to use when generating and parsing URLs.</summary>
-        private DataServiceUrlConventions urlConventions;
+        /// <summary>The key delimiter to use when generating and parsing URLs.</summary>
+        private DataServiceUrlKeyDelimiter urlKeyDelimiter;
 
         /// <summary>
         /// Initializes a new <see cref="DataServiceBehavior"/>.
@@ -28,7 +28,7 @@ namespace Microsoft.OData.Service
             this.IncludeAssociationLinksInResponse = false;
             this.UseMetadataKeyOrderForBuiltInProviders = false;
             this.AcceptSpatialLiteralsInQuery = true;
-            this.UrlConventions = DataServiceUrlConventions.Default;
+            this.UrlKeyDelimiter = DataServiceUrlKeyDelimiter.Parentheses;
         }
 
         /// <summary>Gets or sets whether to invoke change interceptors when a link is deleted.</summary>
@@ -73,10 +73,10 @@ namespace Microsoft.OData.Service
 
         /// <summary>Get or sets whether relationship links are included in responses from the data service.</summary>
         /// <returns>True when relationship links are returned; otherwise false. </returns>
-        public bool IncludeAssociationLinksInResponse 
-        { 
-            get; 
-            set; 
+        public bool IncludeAssociationLinksInResponse
+        {
+            get;
+            set;
         }
 
         /// <summary>Get or sets whether to use the order of key properties as defined in the metadata of an Entity Framework or reflection provider when constructing an implicit OrderBy query.</summary>
@@ -105,30 +105,20 @@ namespace Microsoft.OData.Service
         }
 
         /// <summary>
-        /// The conventions to use when generating and parsing URLs.
+        /// The key delimiter to use when generating and parsing URLs.
         /// </summary>
-        public DataServiceUrlConventions UrlConventions
+        public DataServiceUrlKeyDelimiter UrlKeyDelimiter
         {
             get
             {
-                return this.urlConventions;
+                return this.urlKeyDelimiter;
             }
 
             set
             {
-                WebUtil.CheckArgumentNull(value, "UrlConventions");
-                this.urlConventions = value;
+                WebUtil.CheckArgumentNull(value, "UrlKeyDelimiter");
+                this.urlKeyDelimiter = value;
             }
-        }
-
-        /// <summary>
-        /// If set to true, then the root element of each payload will be written in the default (non-prefix-qualified) namespace of the document. 
-        /// All other elements in the same namespace will also not have prefixes.
-        /// </summary>
-        public bool AlwaysUseDefaultXmlNamespaceForRootElement
-        {
-            get;
-            set;
         }
 
         /// <summary>
@@ -136,7 +126,7 @@ namespace Microsoft.OData.Service
         /// </summary>
         internal bool GenerateKeyAsSegment
         {
-            get { return this.urlConventions == DataServiceUrlConventions.KeyAsSegment; }
+            get { return this.urlKeyDelimiter == DataServiceUrlKeyDelimiter.Slash; }
         }
 
         /// <summary>

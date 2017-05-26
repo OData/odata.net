@@ -4,18 +4,18 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core
+namespace Microsoft.OData
 {
     #region Namespaces
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
-#if ODATALIB_ASYNC
-    using System.Threading.Tasks;    
+#if PORTABLELIB
+    using System.Threading.Tasks;
 #endif
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Core.Metadata;
+    using Microsoft.OData.Metadata;
     #endregion Namespaces
 
     /// <summary>
@@ -66,8 +66,8 @@ namespace Microsoft.OData.Core
         /// <summary>
         /// The current state of the reader.
         /// </summary>
-        public override sealed ODataCollectionReaderState State 
-        { 
+        public override sealed ODataCollectionReaderState State
+        {
             get
             {
                 this.inputContext.VerifyNotDisposed();
@@ -79,8 +79,8 @@ namespace Microsoft.OData.Core
         /// <summary>
         /// The most recent item that has been read.
         /// </summary>
-        public override sealed object Item 
-        { 
+        public override sealed object Item
+        {
             get
             {
                 this.inputContext.VerifyNotDisposed();
@@ -110,9 +110,9 @@ namespace Microsoft.OData.Core
         /// </summary>
         protected IEdmTypeReference ExpectedItemTypeReference
         {
-            get 
-            { 
-                return this.expectedItemTypeReference; 
+            get
+            {
+                return this.expectedItemTypeReference;
             }
 
             set
@@ -123,7 +123,7 @@ namespace Microsoft.OData.Core
                 {
                     throw new ODataException(
                         Strings.ODataCollectionReaderCore_ExpectedItemTypeSetInInvalidState(
-                            this.State.ToString(), 
+                            this.State.ToString(),
                             ODataCollectionReaderState.Start.ToString()));
                 }
 
@@ -150,7 +150,7 @@ namespace Microsoft.OData.Core
         }
 
         /// <summary>
-        /// Returns true if we are reading a nested payload, e.g. an entry, a feed or a collection within a parameters payload.
+        /// Returns true if we are reading a nested payload, e.g. a resource, a resource set or a collection within a parameters payload.
         /// </summary>
         protected bool IsReadingNestedPayload
         {
@@ -170,7 +170,7 @@ namespace Microsoft.OData.Core
             return this.InterceptException(this.ReadSynchronously);
         }
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary>
         /// Asynchronously reads the next item from the message payload.
         /// </summary>
@@ -254,7 +254,7 @@ namespace Microsoft.OData.Core
             return this.ReadImplementation();
         }
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary>
         /// Asynchronously reads the next <see cref="ODataItem"/> from the message payload.
         /// </summary>
@@ -393,7 +393,7 @@ namespace Microsoft.OData.Core
             }
             else
             {
-#if ODATALIB_ASYNC
+#if PORTABLELIB
                 this.VerifyAsynchronousCallAllowed();
 #else
                 Debug.Assert(false, "Async calls are not allowed in this build.");
@@ -412,7 +412,7 @@ namespace Microsoft.OData.Core
             }
         }
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary>
         /// Verifies that an asynchronous operation is allowed on this reader.
         /// </summary>
@@ -461,7 +461,7 @@ namespace Microsoft.OData.Core
                 Debug.Assert(
                    state == ODataCollectionReaderState.Start && item == null ||
                    state == ODataCollectionReaderState.CollectionStart && item is ODataCollectionStart ||
-                   state == ODataCollectionReaderState.Value && (item == null || item is ODataComplexValue || EdmLibraryExtensions.IsPrimitiveType(item.GetType()) || item is ODataEnumValue) ||
+                   state == ODataCollectionReaderState.Value && (item == null || EdmLibraryExtensions.IsPrimitiveType(item.GetType()) || item is ODataEnumValue) ||
                    state == ODataCollectionReaderState.CollectionEnd && item is ODataCollectionStart ||
                    state == ODataCollectionReaderState.Exception && item == null ||
                    state == ODataCollectionReaderState.Completed && item == null,

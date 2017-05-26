@@ -6,8 +6,8 @@
 
 /*  DESIGN NOTES (pqian):
  *  a note on the primitive type parser/materializer on the client side
- *  Since the client type system allows multiple CLR types mapping to 
- *  a single EDM type (i.e., String, Char, Char[], XDocument and XElement 
+ *  Since the client type system allows multiple CLR types mapping to
+ *  a single EDM type (i.e., String, Char, Char[], XDocument and XElement
  *  all maps to Edm.String). We cannot handle materialization based on the
  *  wire Edm type. The correct behavior would be to "tokenize" the wire data
  *  using the wire type, and them "materialize" the token using the CLR type

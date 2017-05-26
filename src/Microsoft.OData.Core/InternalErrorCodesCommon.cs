@@ -4,9 +4,7 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-#if !INTERNAL_DROP
-
-namespace Microsoft.OData.Core
+namespace Microsoft.OData
 {
     /// <summary>
     /// An enumeration that lists the internal errors that are shared between the OData library and the query library.
@@ -38,4 +36,3 @@ namespace Microsoft.OData.Core
         EdmLibraryExtensions_Clone_PrimitiveTypeKind,
     }
 }
-#endif

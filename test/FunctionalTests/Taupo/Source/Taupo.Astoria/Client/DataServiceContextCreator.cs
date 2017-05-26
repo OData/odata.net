@@ -33,7 +33,7 @@ namespace Microsoft.Test.Taupo.Astoria.Client
         /// </summary>
         public DataServiceContextCreator()
         {
-            this.IgnoreMissingProperties = true;
+            //this.UndeclaredPropertyBehavior = UndeclaredPropertyBehavior.Support;
             this.MaxProtocolVersion = DataServiceProtocolVersion.V4;
             this.ClientRequestAcceptHeader = string.Empty;
         }
@@ -59,11 +59,11 @@ namespace Microsoft.Test.Taupo.Astoria.Client
         [InjectTestParameter("ClientRequestAcceptHeader", DefaultValueDescription = "Empty string", HelpText = "Value to set for 'Accept' header of requests")]
         public string ClientRequestAcceptHeader { get; set; }
 
-        /// <summary>
-        /// Gets or sets a value indicating whether the client ignores properties present on the server but not in the client type.
-        /// </summary>
-        [InjectTestParameter("IgnoreMissingProperties", DefaultValueDescription = "True", HelpText = "Allows the client to ignore properties present on the server but not in the client type")]
-        public bool IgnoreMissingProperties { get; set; }
+        ///// <summary>
+        ///// Gets or sets a value indicating whether the client ignores properties present on the server but not in the client type.
+        ///// </summary>
+        //[InjectTestParameter("UndeclaredPropertyBehavior", DefaultValueDescription = "Support", HelpText = "Allows the client to ignore properties present on the server but not in the client type")]
+        //internal UndeclaredPropertyBehavior UndeclaredPropertyBehavior { get; set; }
 
         /// <summary>
         /// Gets or sets the max protocol version to allow the context to use
@@ -98,7 +98,7 @@ namespace Microsoft.Test.Taupo.Astoria.Client
             this.authenticationHeaders = this.AuthenticationProvider.GetAuthenticationHeaders();
 
             this.SetAcceptAndContentTypeHeaders(context);
-            ctx.IgnoreMissingProperties = this.IgnoreMissingProperties;
+            //ctx.UndeclaredPropertyBehavior = this.UndeclaredPropertyBehavior;
 
             this.FormatApplier.Apply(context);
 

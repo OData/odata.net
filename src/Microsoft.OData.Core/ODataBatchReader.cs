@@ -4,16 +4,14 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core
+namespace Microsoft.OData
 {
     #region Namespaces
     using System;
-    using System.Collections.Generic;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
-    using System.Globalization;
     using System.Text;
-#if ODATALIB_ASYNC
+#if PORTABLELIB
     using System.Threading.Tasks;
 #endif
     #endregion Namespaces
@@ -32,8 +30,11 @@ namespace Microsoft.OData.Core
         /// <summary>True if the writer was created for synchronous operation; false for asynchronous.</summary>
         private readonly bool synchronous;
 
-        /// <summary>The batch-specific URL resolver that stores the content IDs found in a changeset and supports resolving cross-referencing URLs.</summary>
-        private readonly ODataBatchUrlResolver urlResolver;
+        /// <summary>The batch-specific URL converter that stores the content IDs found in a changeset and supports resolving cross-referencing URLs.</summary>
+        private readonly ODataBatchPayloadUriConverter payloadUriConverter;
+
+        /// <summary>The dependency injection container to get related services.</summary>
+        private readonly IServiceProvider container;
 
         /// <summary>The current state of the batch reader.</summary>
         private ODataBatchReaderState batchReaderState;
@@ -72,8 +73,9 @@ namespace Microsoft.OData.Core
             Debug.Assert(!string.IsNullOrEmpty(batchBoundary), "!string.IsNullOrEmpty(batchBoundary)");
 
             this.inputContext = inputContext;
+            this.container = inputContext.Container;
             this.synchronous = synchronous;
-            this.urlResolver = new ODataBatchUrlResolver(inputContext.UrlResolver);
+            this.payloadUriConverter = new ODataBatchPayloadUriConverter(inputContext.PayloadUriConverter);
             this.batchStream = new ODataBatchReaderStream(inputContext, batchBoundary, batchEncoding);
             this.allowLegacyContentIdBehaviour = true;
         }
@@ -120,7 +122,7 @@ namespace Microsoft.OData.Core
             return this.InterceptException((Func<bool>)this.ReadSynchronously);
         }
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary>Asynchronously reads the next part from the batch message payload.</summary>
         /// <returns>A task that when completed indicates whether more items were read.</returns>
         [SuppressMessage("Microsoft.MSInternal", "CA908:AvoidTypesThatRequireJitCompilationInPrecompiledAssemblies", Justification = "API design calls for a bool being returned from the task here.")]
@@ -131,7 +133,7 @@ namespace Microsoft.OData.Core
         }
 #endif
 
-        /// <summary>Returns an <see cref="T:Microsoft.OData.Core.ODataBatchOperationRequestMessage" /> for reading the content of a batch operation.</summary>
+        /// <summary>Returns an <see cref="T:Microsoft.OData.ODataBatchOperationRequestMessage" /> for reading the content of a batch operation.</summary>
         /// <returns>A request message for reading the content of a batch operation.</returns>
         public ODataBatchOperationRequestMessage CreateOperationRequestMessage()
         {
@@ -139,8 +141,8 @@ namespace Microsoft.OData.Core
             return this.InterceptException((Func<ODataBatchOperationRequestMessage>)this.CreateOperationRequestMessageImplementation);
         }
 
-#if ODATALIB_ASYNC
-        /// <summary>Asynchronously returns an <see cref="T:Microsoft.OData.Core.ODataBatchOperationRequestMessage" /> for reading the content of a batch operation.</summary>
+#if PORTABLELIB
+        /// <summary>Asynchronously returns an <see cref="T:Microsoft.OData.ODataBatchOperationRequestMessage" /> for reading the content of a batch operation.</summary>
         /// <returns>A task that when completed returns a request message for reading the content of a batch operation.</returns>
         public Task<ODataBatchOperationRequestMessage> CreateOperationRequestMessageAsync()
         {
@@ -151,7 +153,7 @@ namespace Microsoft.OData.Core
         }
 #endif
 
-        /// <summary>Returns an <see cref="T:Microsoft.OData.Core.ODataBatchOperationResponseMessage" /> for reading the content of a batch operation.</summary>
+        /// <summary>Returns an <see cref="T:Microsoft.OData.ODataBatchOperationResponseMessage" /> for reading the content of a batch operation.</summary>
         /// <returns>A response message for reading the content of a batch operation.</returns>
         public ODataBatchOperationResponseMessage CreateOperationResponseMessage()
         {
@@ -159,8 +161,8 @@ namespace Microsoft.OData.Core
             return this.InterceptException((Func<ODataBatchOperationResponseMessage>)this.CreateOperationResponseMessageImplementation);
         }
 
-#if ODATALIB_ASYNC
-        /// <summary>Asynchronously returns an <see cref="T:Microsoft.OData.Core.ODataBatchOperationResponseMessage" /> for reading the content of a batch operation.</summary>
+#if PORTABLELIB
+        /// <summary>Asynchronously returns an <see cref="T:Microsoft.OData.ODataBatchOperationResponseMessage" /> for reading the content of a batch operation.</summary>
         /// <returns>A task that when completed returns a response message for reading the content of a batch operation.</returns>
         public Task<ODataBatchOperationResponseMessage> CreateOperationResponseMessageAsync()
         {
@@ -179,12 +181,12 @@ namespace Microsoft.OData.Core
             this.operationState = OperationState.StreamRequested;
         }
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary>
         /// This method is called to notify that the content stream for a batch operation has been requested.
         /// </summary>
         /// <returns>
-        /// A task representing any action that is running as part of the status change of the reader; 
+        /// A task representing any action that is running as part of the status change of the reader;
         /// null if no such action exists.
         /// </returns>
         Task IODataBatchOperationListener.BatchOperationContentStreamRequestedAsync()
@@ -256,7 +258,7 @@ namespace Microsoft.OData.Core
             return this.ReadImplementation();
         }
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary>
         /// Asynchronously reads the next part from the batch message payload.
         /// </summary>
@@ -288,7 +290,7 @@ namespace Microsoft.OData.Core
                     break;
 
                 case ODataBatchReaderState.Operation:
-                    // When reaching this state we already read the MIME headers of the operation. 
+                    // When reaching this state we already read the MIME headers of the operation.
                     // Clients MUST call CreateOperationRequestMessage
                     // or CreateOperationResponseMessage to read at least the headers of the operation.
                     // This is important since we need to read the ContentId header (if present) and
@@ -304,11 +306,11 @@ namespace Microsoft.OData.Core
                     this.operationState = OperationState.None;
 
                     // Also add a pending ContentId header to the URL resolver now. We ensured above
-                    // that a message has been created for this operation and thus the headers (incl. 
+                    // that a message has been created for this operation and thus the headers (incl.
                     // a potential content ID header) have been read.
                     if (this.contentIdToAddOnNextRead != null)
                     {
-                        this.urlResolver.AddContentId(this.contentIdToAddOnNextRead);
+                        this.payloadUriConverter.AddContentId(this.contentIdToAddOnNextRead);
                         this.contentIdToAddOnNextRead = null;
                     }
 
@@ -320,7 +322,7 @@ namespace Microsoft.OData.Core
                     break;
 
                 case ODataBatchReaderState.ChangesetStart:
-                    // When at the start of a changeset, skip ahead to the first operation in the 
+                    // When at the start of a changeset, skip ahead to the first operation in the
                     // changeset (or the end boundary of the changeset).
                     Debug.Assert(this.batchStream.ChangeSetBoundary != null, "Changeset boundary must have been set by now.");
                     this.batchReaderState = this.SkipToNextPartAndReadHeaders();
@@ -379,9 +381,9 @@ namespace Microsoft.OData.Core
 
                 if (nextState == ODataBatchReaderState.ChangesetEnd)
                 {
-                    // Reset the URL resolver at the end of a changeset; Content IDs are 
+                    // Reset the URL resolver at the end of a changeset; Content IDs are
                     // unique within a given changeset.
-                    this.urlResolver.Reset();
+                    this.payloadUriConverter.Reset();
                 }
             }
             else
@@ -414,7 +416,7 @@ namespace Microsoft.OData.Core
                     // to subsequent operations.
                     Debug.Assert(this.contentIdToAddOnNextRead == null, "Must not have a content ID to be added to a part.");
 
-                    if (contentId != null && this.urlResolver.ContainsContentId(contentId))
+                    if (contentId != null && this.payloadUriConverter.ContainsContentId(contentId))
                     {
                         throw new ODataException(Strings.ODataBatchReader_DuplicateContentIDsNotAllowed(contentId));
                     }
@@ -427,7 +429,7 @@ namespace Microsoft.OData.Core
         }
 
         /// <summary>
-        /// Returns the cached <see cref="ODataBatchOperationRequestMessage"/> for reading the content of an operation 
+        /// Returns the cached <see cref="ODataBatchOperationRequestMessage"/> for reading the content of an operation
         /// in a batch request.
         /// </summary>
         /// <returns>The message that can be used to read the content of the batch request operation from.</returns>
@@ -453,7 +455,7 @@ namespace Microsoft.OData.Core
                     string contentId;
                     if (this.contentIdToAddOnNextRead == null && headers.TryGetValue(ODataConstants.ContentIdHeader, out contentId))
                     {
-                        if (contentId != null && this.urlResolver.ContainsContentId(contentId))
+                        if (contentId != null && this.payloadUriConverter.ContainsContentId(contentId))
                         {
                             throw new ODataException(Strings.ODataBatchReader_DuplicateContentIDsNotAllowed(contentId));
                         }
@@ -475,13 +477,14 @@ namespace Microsoft.OData.Core
                 headers,
                 /*operationListener*/ this,
                 this.contentIdToAddOnNextRead,
-                this.urlResolver);
+                this.payloadUriConverter,
+                this.container);
 
             return requestMessage;
         }
 
         /// <summary>
-        /// Returns the cached <see cref="ODataBatchOperationRequestMessage"/> for reading the content of an operation 
+        /// Returns the cached <see cref="ODataBatchOperationRequestMessage"/> for reading the content of an operation
         /// in a batch request.
         /// </summary>
         /// <returns>The message that can be used to read the content of the batch request operation from.</returns>
@@ -505,7 +508,7 @@ namespace Microsoft.OData.Core
                     string contentId;
                     if (this.contentIdToAddOnNextRead == null && headers.TryGetValue(ODataConstants.ContentIdHeader, out contentId))
                     {
-                        if (contentId != null && this.urlResolver.ContainsContentId(contentId))
+                        if (contentId != null && this.payloadUriConverter.ContainsContentId(contentId))
                         {
                             throw new ODataException(Strings.ODataBatchReader_DuplicateContentIDsNotAllowed(contentId));
                         }
@@ -523,7 +526,8 @@ namespace Microsoft.OData.Core
                 headers,
                 this.contentIdToAddOnNextRead,
                 /*operationListener*/ this,
-                this.urlResolver.BatchMessageUrlResolver);
+                this.payloadUriConverter.BatchMessagePayloadUriConverter,
+                this.container);
 
             //// NOTE: Content-IDs for cross referencing are only supported in request messages; in responses
             ////       we allow a Content-ID header but don't process it (i.e., don't add the content ID to the URL resolver).
@@ -547,7 +551,7 @@ namespace Microsoft.OData.Core
             // them.
             int firstSpaceIndex = requestLine.IndexOf(' ');
 
-            // Check whether there are enough characters after the first space for the 2nd and 3rd segments 
+            // Check whether there are enough characters after the first space for the 2nd and 3rd segments
             // (and a whitespace in between)
             if (firstSpaceIndex <= 0 || requestLine.Length - 3 <= firstSpaceIndex)
             {
@@ -563,8 +567,8 @@ namespace Microsoft.OData.Core
                 throw new ODataException(Strings.ODataBatchReaderStream_InvalidRequestLine(requestLine));
             }
 
-            httpMethod = requestLine.Substring(0, firstSpaceIndex);               // Request - Http method  
-            string uriSegment = requestLine.Substring(firstSpaceIndex + 1, lastSpaceIndex - firstSpaceIndex - 1);      // Request - Request uri  
+            httpMethod = requestLine.Substring(0, firstSpaceIndex);               // Request - Http method
+            string uriSegment = requestLine.Substring(firstSpaceIndex + 1, lastSpaceIndex - firstSpaceIndex - 1);      // Request - Request uri
             string httpVersionSegment = requestLine.Substring(lastSpaceIndex + 1);             // Request - Http version
 
             // Validate HttpVersion
@@ -587,7 +591,7 @@ namespace Microsoft.OData.Core
             }
 
             requestUri = new Uri(uriSegment, UriKind.RelativeOrAbsolute);
-            requestUri = ODataBatchUtils.CreateOperationRequestUri(requestUri, this.inputContext.MessageReaderSettings.BaseUri, this.urlResolver);
+            requestUri = ODataBatchUtils.CreateOperationRequestUri(requestUri, this.inputContext.MessageReaderSettings.BaseUri, this.payloadUriConverter);
         }
 
         /// <summary>
@@ -731,7 +735,7 @@ namespace Microsoft.OData.Core
             }
             else
             {
-#if ODATALIB_ASYNC
+#if PORTABLELIB
                 if (this.synchronous)
                 {
                     throw new ODataException(Strings.ODataBatchReader_AsyncCallOnSyncReader);

@@ -5,11 +5,10 @@
 //---------------------------------------------------------------------
 
 using System;
-using Microsoft.OData.Core.Tests.UriParser;
-using Microsoft.OData.Core.UriBuilder;
-using Microsoft.OData.Core.UriParser;
+using Microsoft.OData.Tests.UriParser;
+using Microsoft.OData.UriParser;
 
-namespace Microsoft.OData.Core.Tests.ScenarioTests.UriBuilder
+namespace Microsoft.OData.Tests.ScenarioTests.UriBuilder
 {
     public class UriBuilderTestBase
     {
@@ -26,15 +25,14 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.UriBuilder
             }
         }
 
-        public static Uri UriBuilder(Uri queryUri, ODataUrlConventions urlConventions, ODataUriParserSettings settings)
+        public static Uri UriBuilder(Uri queryUri, ODataUrlKeyDelimiter urlKeyDelimiter, ODataUriParserSettings settings)
         {
             ODataUriParser odataUriParser = new ODataUriParser(HardCodedTestModel.TestModel, ServiceRoot, queryUri);
             SetODataUriParserSettingsTo(settings, odataUriParser.Settings);
-            odataUriParser.UrlConventions = urlConventions;
+            odataUriParser.UrlKeyDelimiter = urlKeyDelimiter;
             ODataUri odataUri = odataUriParser.ParseUri();
 
-            ODataUriBuilder odataUriBuilder = new ODataUriBuilder(urlConventions, odataUri);
-            return odataUriBuilder.BuildUri();
+            return odataUri.BuildUri(urlKeyDelimiter);
         }
         #endregion  
     }

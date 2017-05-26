@@ -48,8 +48,8 @@ namespace AstoriaUnitTests.Tests
             _baseUri = request.ServiceRoot;
 
             context = new DataServiceContext(_baseUri);
-            context.EnableAtom = true;
-            context.Format.UseAtom();
+            //context.EnableAtom = true;
+            //context.Format.UseAtom();
             context.MergeOption = MergeOption.NoTracking;
             context.SendingRequest2 += LinqTests.VerifyMimeTypeForCountRequests;
             baseLineContext = ReadOnlyTestContext.CreateBaseLineContext();
@@ -97,6 +97,7 @@ namespace AstoriaUnitTests.Tests
             RunTest(baseline, queryable);
         }
 
+        [Ignore] // Remove Atom
         [TestMethod]
         public void TestContinuation()
         {
@@ -113,8 +114,8 @@ namespace AstoriaUnitTests.Tests
                     request.DataServiceType = typeof(ReadOnlyTestContext);
                     request.StartService();
                     DataServiceContext ctx = new DataServiceContext(request.ServiceRoot);
-                    ctx.EnableAtom = true;
-                    ctx.Format.UseAtom();
+                    //ctx.EnableAtom = true;
+                    //ctx.Format.UseAtom();
                     ctx.MergeOption = MergeOption.NoTracking;
 
                     var teams = from cs in ctx.CreateQuery<Team>("Teams")
@@ -148,8 +149,8 @@ namespace AstoriaUnitTests.Tests
                     request.DataServiceType = typeof(NorthwindContext);
                     request.StartService();
                     DataServiceContext ctx = new DataServiceContext(request.ServiceRoot);
-                    ctx.EnableAtom = true;
-                    ctx.Format.UseAtom();
+                    //ctx.EnableAtom = true;
+                    //ctx.Format.UseAtom();
                     ctx.MergeOption = MergeOption.NoTracking;
 
                     var q = from c in ctx.CreateQuery<northwindClient.Categories>("Categories")
@@ -6762,7 +6763,7 @@ namespace AstoriaUnitTests.Tests
                 Trace.WriteLine("Cast to narrow type");
                 ReadOnlyTestContext.ClearBaselineIncludes();
                 ReadOnlyTestContext.AddBaselineIncludes(typeof(Team), "HomeStadium");
-                context.IgnoreMissingProperties = true;
+                context.UndeclaredPropertyBehavior = UndeclaredPropertyBehavior.Support;
 
                 var query10 = (from Team t in context.CreateQuery<Team>("Teams")
                                where t.TeamID == 1
@@ -8400,6 +8401,7 @@ namespace AstoriaUnitTests.Tests
             }
         }
 
+        [Ignore] // Remove Atom
         [TestMethod]
         public void ProjectionClient_X_ServiceOp()
         {
@@ -8409,8 +8411,8 @@ namespace AstoriaUnitTests.Tests
                 request.DataServiceType = typeof(Projections_ServiceOperations_NorthWindDataContextService);
                 request.StartService();
                 var ctx = new DataServiceContext(request.ServiceRoot);
-                ctx.EnableAtom = true;
-                ctx.Format.UseAtom();
+                //ctx.EnableAtom = true;
+                //ctx.Format.UseAtom();
                 ctx.MergeOption = Microsoft.OData.Client.MergeOption.NoTracking;
                 ctx.Credentials = System.Net.CredentialCache.DefaultCredentials;
 

@@ -75,7 +75,7 @@ namespace Microsoft.OData.Client
 
         /// <summary>false for function, true for action</summary>
         private bool isAction;
- 
+
         #endregion Fields
 
         /// <summary>
@@ -244,7 +244,7 @@ namespace Microsoft.OData.Client
         }
 
         /// <summary>
-        /// Creates an <see cref="InputReferenceExpression"/> that refers to this component of the resource path. 
+        /// Creates an <see cref="InputReferenceExpression"/> that refers to this component of the resource path.
         /// The returned expression is guaranteed to be reference-equal (object.ReferenceEquals)
         /// to any other InputReferenceExpression that also refers to this resource path component.
         /// </summary>

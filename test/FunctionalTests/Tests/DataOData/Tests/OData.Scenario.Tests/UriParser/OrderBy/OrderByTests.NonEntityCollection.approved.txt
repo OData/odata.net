@@ -5,14 +5,14 @@ OrderByClause
 	Item Type = [Edm.String Nullable=False Unicode=True]
 	Direction = Ascending
 	Range Variable = 
-	NonentityRangeVariable
+	NonResourceRangeVariable
 		Name = $it
 		TypeReference = [Edm.String Nullable=False Unicode=True]
 	Expression = 
 	NonentityRangeVariableReferenceNode
 		Name = $it
 		Range Variable = 
-		NonentityRangeVariable
+		NonResourceRangeVariable
 			Name = $it
 			TypeReference = [Edm.String Nullable=False Unicode=True]
 		TypeReference = [Edm.String Nullable=False Unicode=True]

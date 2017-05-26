@@ -12,8 +12,7 @@ namespace EdmLibTests.FunctionalTests
     using System.Xml.Linq;
     using EdmLibTests.FunctionalUtilities;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Library;
-    using Microsoft.OData.Edm.Library.Values;
+    using Microsoft.OData.Edm.Vocabularies;
     using Microsoft.Test.OData.Utils.Metadata;
 #if SILVERLIGHT
     using Microsoft.Silverlight.Testing;
@@ -95,7 +94,7 @@ namespace EdmLibTests.FunctionalTests
         }
 
         [TestMethod]
-        // [EdmLib] CsdlReader.TryParse uses wrong default values for the string type's facets such as unicode - Fixed
+        // [EdmLib] SchemaReader.TryParse uses wrong default values for the string type's facets such as unicode - Fixed
         // [EdmLib] Precision facet should not be required for the temporal and decimal types - Fixed
         public void ConstructibleModelUsingConverterOneComplexWithAllPrimitivePropertyTest()
         {
@@ -115,7 +114,7 @@ namespace EdmLibTests.FunctionalTests
         }
 
         [TestMethod]
-        // [EdmLib] CsdlReader.TryParse uses wrong default values for the string type's facets such as unicode - Fixed
+        // [EdmLib] SchemaReader.TryParse uses wrong default values for the string type's facets such as unicode - Fixed
         // [EdmLib] Precision facet should not be required for the temporal and decimal types - Fixed
         public void ConstructibleModelUsingConverterOneEntityWithAllPrimitivePropertyTest()
         {
@@ -413,7 +412,7 @@ namespace EdmLibTests.FunctionalTests
         }
 
         [TestMethod]
-        public void TestingDirectValueAnnotationsWithVariousConstantTypes()
+        public void TestingDirectVocabularyAnnotationsWithVariousConstantTypes()
         {
             EdmModel model = new EdmModel();
 
@@ -727,7 +726,7 @@ namespace EdmLibTests.FunctionalTests
             orderLine.AddKeys(orderLineOrderId);
             orderLine.AddKeys(orderLineProductId);
             EdmStructuralProperty orderLineQuantity = orderLine.AddStructuralProperty("Quantity", EdmCoreModel.Instance.GetInt32(false));
-            EdmStructuralProperty orderLineConcurrencyToken = orderLine.AddStructuralProperty("ConcurrencyToken", EdmCoreModel.Instance.GetString(false), null, EdmConcurrencyMode.Fixed);
+            EdmStructuralProperty orderLineConcurrencyToken = orderLine.AddStructuralProperty("ConcurrencyToken", EdmCoreModel.Instance.GetString(false), null);
             EdmStructuralProperty orderLineStream = orderLine.AddStructuralProperty("OrderLineStream", EdmCoreModel.Instance.GetStream(false));
             model.AddElement(orderLine);
 
@@ -741,7 +740,7 @@ namespace EdmLibTests.FunctionalTests
             product.AddKeys(productId);
             EdmStructuralProperty productDescription = product.AddStructuralProperty("Description", EdmCoreModel.Instance.GetString(false, 1000, true, true));
             EdmStructuralProperty productDimensions = product.AddStructuralProperty("Dimensions", new EdmComplexTypeReference(dimensions, false));
-            EdmStructuralProperty productBaseConcurrency = new EdmStructuralProperty( product, "BaseConcurrency", EdmCoreModel.Instance.GetString(false), null, EdmConcurrencyMode.Fixed);
+            EdmStructuralProperty productBaseConcurrency = new EdmStructuralProperty( product, "BaseConcurrency", EdmCoreModel.Instance.GetString(false), null);
             product.AddProperty(productBaseConcurrency);
             EdmStructuralProperty productComplexConcurrency = product.AddStructuralProperty("ComplexConcurrency", new EdmComplexTypeReference(concurrency, false));
             EdmStructuralProperty productNestedComplexConcurrency = product.AddStructuralProperty("NestedComplexConcurrency", new EdmComplexTypeReference(audit, false));

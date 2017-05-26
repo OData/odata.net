@@ -9,11 +9,11 @@ using System.IO;
 using System.Text;
 using System.Xml;
 using FluentAssertions;
-using Microsoft.OData.Core.Metadata;
+using Microsoft.OData.Metadata;
 using Microsoft.OData.Edm;
 using Xunit;
 
-namespace Microsoft.OData.Core.Tests.ScenarioTests.Reader
+namespace Microsoft.OData.Tests.ScenarioTests.Reader
 {
     public class MetadataReaderTests
     {
@@ -104,7 +104,11 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Reader
                 string uriStr = uri.ToString();
                 if (map.ContainsKey(uriStr))
                 {
+#if NETCOREAPP1_0
+                    return XmlReader.Create(new StringReader(map[uriStr]));
+#else
                     return new XmlTextReader(new StringReader(map[uriStr]));
+#endif
                 }
 
                 return null;

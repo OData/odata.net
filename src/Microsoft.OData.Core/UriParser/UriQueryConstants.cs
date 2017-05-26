@@ -4,7 +4,7 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core.UriParser
+namespace Microsoft.OData.UriParser
 {
     /// <summary>
     /// Constant values related to the URI query syntax.
@@ -76,5 +76,8 @@ namespace Microsoft.OData.Core.UriParser
 
         /// <summary>A search query option name.</summary>
         internal const string SearchQueryOption = "$search";
+
+        /// <summary>Dollar sign.</summary>
+        internal const string DollarSign = "$";
     }
 }

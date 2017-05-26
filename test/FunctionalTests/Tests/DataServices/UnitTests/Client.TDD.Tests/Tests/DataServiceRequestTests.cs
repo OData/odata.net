@@ -12,7 +12,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client
     using System.Linq;
     using System.Net;
     using Microsoft.OData.Client;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     [TestClass]
@@ -21,7 +21,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client
         [TestMethod]
         public void NoContentMaterializeTestForEntry()
         {
-            this.MaterializeTest(HttpStatusCode.NoContent, ODataPayloadKind.Entry);
+            this.MaterializeTest(HttpStatusCode.NoContent, ODataPayloadKind.Resource);
         }
 
         [TestMethod]

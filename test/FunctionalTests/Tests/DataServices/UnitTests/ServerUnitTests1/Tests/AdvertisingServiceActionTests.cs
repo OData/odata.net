@@ -18,7 +18,7 @@ namespace AstoriaUnitTests.Tests.Server
     using System.Reflection;
     using AstoriaUnitTests.Stubs;
     using AstoriaUnitTests.Stubs.DataServiceProvider;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
     using AstoriaTest = System.Data.Test.Astoria;
     
@@ -318,7 +318,7 @@ namespace AstoriaUnitTests.Tests.Server
         private static void Action1(DSPResource param1)
         {
         }
-
+        [Ignore] // Remove Atom
         [TestCategory("Partition1"), TestMethod, Description("Test that actions and functions are correctly advertised in the payload")]
         public void AdvertiseOperationsInPayload()
         {
@@ -378,7 +378,7 @@ namespace AstoriaUnitTests.Tests.Server
                 }
             }
         }
-
+        [Ignore] // Remove Atom
         [TestCategory("Partition1"), TestMethod, Description("JsonLight should return relative uris for a default action, for atom and json verbose output is always absolute")]
         public void ValidateJsonLightRelativeOtherFormatsNot()
         {
@@ -512,7 +512,7 @@ namespace AstoriaUnitTests.Tests.Server
                         
                         return sos;
                     });
-
+        [Ignore] // Remove Atom
         [TestCategory("Partition1"), TestMethod, Description("Test that actions and functions are correctly advertised in the payload")]
         public void AdvertiseOperationsInPayload2()
         {
@@ -857,7 +857,7 @@ namespace AstoriaUnitTests.Tests.Server
                 }
             }
         }
-
+        [Ignore] // Remove Atom
         [TestCategory("Partition1"), TestMethod, Description("Test that actions are correctly advertised in the payload with property name collision")]
         public void AdvertiseOperationsWithPropertyNameCollision()
         {
@@ -1162,7 +1162,8 @@ namespace AstoriaUnitTests.Tests.Server
                 }
             }
         }
-        
+
+        [Ignore]
         [TestCategory("Partition1"), TestMethod, Description("Test the resourceInstanceInFeed parameter of the AdvertiseServiceAction method.")]
         public void AdvertiseServiceActionInFeedTest()
         {
@@ -1313,7 +1314,7 @@ namespace AstoriaUnitTests.Tests.Server
                     "//csdl:Action[@Name='ActionWithOverload' and not(csdl:Parameter)]");
             }
         }
-
+        [Ignore] // Remove Atom
         [TestCategory("Partition1"), TestMethod]
         public void MultipleOverloadsShouldSerializeInEntry()
         {
@@ -1331,7 +1332,7 @@ namespace AstoriaUnitTests.Tests.Server
                 UnitTestsUtil.VerifyXPathExists(document, "//adsm:action[@metadata='http://host/$metadata#TestNamespace.ActionWithOverload' and @title='ActionWithOverload' and @target='http://host/Customers(3)/TestNamespace.Customer/TestNamespace.ActionWithOverload']", "//adsm:action[@metadata='http://host/$metadata#TestNamespace.ActionWithOverload' and @title='ActionWithOverload' and @target='http://host/Customers(3)/TestNamespace.ChildCustomer/TestNamespace.ActionWithOverload']");
             }
         }
-
+        [Ignore] // Remove Atom
         [TestCategory("Partition1"), TestMethod]
         public void SingleOverloadsShouldSerializeInEntryWithNormalLinks()
         {
@@ -1346,7 +1347,7 @@ namespace AstoriaUnitTests.Tests.Server
                 UnitTestsUtil.VerifyXPathExists(document, "//adsm:action[@metadata='http://host/$metadata#TestNamespace.ActionWithOverload' and @title='ActionWithOverload' and @target='http://host/Customers(1)/TestNamespace.ActionWithOverload']");
             }
         }
-
+        [Ignore] // Remove Atom
         [TestCategory("Partition1"), TestMethod]
         public void CorrectOverloadShouldBeInvoked()
         {
@@ -1359,7 +1360,7 @@ namespace AstoriaUnitTests.Tests.Server
             RunActionInvokeTest(service, "/Customers/TestNamespace.Customer/TestNamespace.ActionWithOverload()", "BoundToBaseCollection");
             RunActionInvokeTest(service, "/Customers/TestNamespace.ChildCustomer/TestNamespace.ActionWithOverload()", "BoundToChildCollection");
         }
-
+        [Ignore] // Remove Atom
         [TestCategory("Partition1"), TestMethod]
         public void CorrectOverloadShouldBeSelected()
         {
@@ -1373,7 +1374,7 @@ namespace AstoriaUnitTests.Tests.Server
             RunActionSelectTest(service, "/Customers(1)?$select=TestNamespace.Customer/TestNamespace.ActionWithOverload", "#TestNamespace.ActionWithOverload");
             RunActionSelectTest(service, "/Customers(1)?$select=TestNamespace.ChildCustomer/TestNamespace.ActionWithOverload");
         }
-
+        [Ignore] // Remove Atom
         [TestCategory("Partition1"), TestMethod]
         public void OnlyOverloadsForSpecificTypeShouldBeSelected()
         {

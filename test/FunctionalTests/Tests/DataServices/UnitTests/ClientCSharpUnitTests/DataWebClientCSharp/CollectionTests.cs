@@ -297,52 +297,52 @@ namespace AstoriaUnitTests.DataWebClientCSharp
             var testCases = new[] {
                 new {
                     WireTypeName = string.Empty,
-                    ExpectedCollectionTypeName = (string)null, 
+                    ExpectedCollectionTypeName = (string)null,
                     ExceptionExpected = false
                 },
                 new {
                     WireTypeName = "abc",
-                    ExpectedCollectionTypeName = (string)null, 
+                    ExpectedCollectionTypeName = (string)null,
                     ExceptionExpected = false
                 },
                 new {
                     WireTypeName = "Collection",
-                    ExpectedCollectionTypeName = (string)null, 
+                    ExpectedCollectionTypeName = (string)null,
                     ExceptionExpected = false
                 },
                 new {
                     WireTypeName = "Collection(",
-                    ExpectedCollectionTypeName = (string)null, 
+                    ExpectedCollectionTypeName = (string)null,
                     ExceptionExpected = false
                 },
                 new {
                     WireTypeName = "Collection()",
-                    ExpectedCollectionTypeName = (string)null, 
+                    ExpectedCollectionTypeName = (string)null,
                     ExceptionExpected = false
                 },
                 new {
                     WireTypeName = " Collection(Edm.Int32)",
-                    ExpectedCollectionTypeName = (string)null, 
+                    ExpectedCollectionTypeName = (string)null,
                     ExceptionExpected = false
                 },
                 new {
                     WireTypeName = "Collection(Edm.Int32) ",
-                    ExpectedCollectionTypeName = (string)null, 
+                    ExpectedCollectionTypeName = (string)null,
                     ExceptionExpected = false
                 },
                 new {
                     WireTypeName = "Collection (Edm.Int32)",
-                    ExpectedCollectionTypeName = (string)null, 
+                    ExpectedCollectionTypeName = (string)null,
                     ExceptionExpected = false
                 },
                 new {
                     WireTypeName = "Collection(Edm.Int32)",
-                    ExpectedCollectionTypeName = "Edm.Int32", 
+                    ExpectedCollectionTypeName = "Edm.Int32",
                     ExceptionExpected = false
                 },
                 new {
                     WireTypeName = "Collection(Edm.Int32 )",
-                    ExpectedCollectionTypeName = "Edm.Int32 ", 
+                    ExpectedCollectionTypeName = "Edm.Int32 ",
                     ExceptionExpected = false
                 },
                 new {
@@ -352,17 +352,17 @@ namespace AstoriaUnitTests.DataWebClientCSharp
                 },
                 new {
                     WireTypeName = "Collection( Edm.Int32 )",
-                    ExpectedCollectionTypeName = " Edm.Int32 ", 
+                    ExpectedCollectionTypeName = " Edm.Int32 ",
                     ExceptionExpected = false
                 },
                 new {
                     WireTypeName = "Collection( )",
-                    ExpectedCollectionTypeName = " ", 
+                    ExpectedCollectionTypeName = " ",
                     ExceptionExpected = false
                 },
                 new {
                     WireTypeName = "Collection(Collection())",
-                    ExpectedCollectionTypeName = "Collection()", 
+                    ExpectedCollectionTypeName = "Collection()",
                     ExceptionExpected = false
                 },
                 new {
@@ -640,7 +640,7 @@ namespace AstoriaUnitTests.DataWebClientCSharp
                 ExpectedException = (Exception)null,
                 ValuesToInitializeCollection = (IEnumerable)new DerivedComplexType[] { new DerivedComplexType() { Description = "as", Number = 35 } },
                 PropertyName = "Collection"
-            },            
+            },
             new MaterializationTestCase() { // materializing a collection where the collection payload contains mixed content (m:type present)
                 CollectionItemType = typeof(int),
                 CollectionPropertyPayload = @"<m:value m:type=""Collection(Edm.Int32)"" xmlns:d=""http://docs.oasis-open.org/odata/ns/data"" xmlns:m=""http://docs.oasis-open.org/odata/ns/metadata"">12<m:element>3</m:element></m:value>",
@@ -742,7 +742,7 @@ namespace AstoriaUnitTests.DataWebClientCSharp
             },
             new MaterializationTestCase( // Assigning a collection to a property that does not implement ICollection<T> and is not initialized- should fail. For .LoadProperty we have a different exception since we are not able to distiguish between a collection and single entity in AtomMaterializer
                 alternateException : new InvalidOperationException(ODataLibResourceUtil.GetString("ValidationUtils_IncorrectTypeKind", "Collection(Edm.Int32)", "Complex", "Collection")),
-                loadProperty: true)  { 
+                loadProperty: true)  {
                 CollectionItemType = typeof(DateTimeOffset),
                  CollectionPropertyPayload = @"<m:value m:type=""Collection(Edm.Int32)"" xmlns:d=""http://docs.oasis-open.org/odata/ns/data"" xmlns:m=""http://docs.oasis-open.org/odata/ns/metadata"">
                     <m:element>1</m:element>
@@ -753,7 +753,7 @@ namespace AstoriaUnitTests.DataWebClientCSharp
             },
             new MaterializationTestCase( // Assigning a collection to a property that does not implement ICollection<T> and is initialized- should fail. For .LoadProperty we have a different exception since we are not able to distiguish between a collection and single entity in AtomMaterializer
                 alternateException : new InvalidOperationException(ODataLibResourceUtil.GetString("ValidationUtils_IncorrectTypeKind", "Collection(Edm.Int32)", "Complex", "Collection")),
-                loadProperty: true)  { 
+                loadProperty: true)  {
                 CollectionItemType = typeof(DateTimeOffset),
                  CollectionPropertyPayload = @"<m:value m:type=""Collection(Edm.Int32)"" xmlns:d=""http://docs.oasis-open.org/odata/ns/data"" xmlns:m=""http://docs.oasis-open.org/odata/ns/metadata"">
                     <m:element>1</m:element>
@@ -764,7 +764,7 @@ namespace AstoriaUnitTests.DataWebClientCSharp
             },
             new MaterializationTestCase(  // Assigning an empty collection to a property that does not implement ICollection<T> - should fail. For .LoadProperty we have a different exception since we are not able to distiguish between a collection and single entity in AtomMaterializer
                 alternateException : new InvalidOperationException(ODataLibResourceUtil.GetString("ValidationUtils_IncorrectTypeKind", "Collection(Edm.Int32)", "Complex", "Collection")),
-                loadProperty: true)  { 
+                loadProperty: true)  {
                 CollectionItemType = typeof(int),
                  CollectionPropertyPayload = @"<m:value m:type=""Collection(Edm.Int32)"" xmlns:d=""http://docs.oasis-open.org/odata/ns/data"" xmlns:m=""http://docs.oasis-open.org/odata/ns/metadata"" />",
                ExpectedException = (Exception)new InvalidOperationException(ODataLibResourceUtil.GetString("ValidationUtils_IncorrectTypeKind", "Collection(Edm.Int32)", "Complex", "Collection")),
@@ -773,7 +773,7 @@ namespace AstoriaUnitTests.DataWebClientCSharp
             },
             // Assigning collection to a primitive type - should fail
             new MaterializationTestCase(
-                (Exception)new InvalidOperationException(ODataLibResourceUtil.GetString("ValidationUtils_IncorrectTypeKind", "Collection(Edm.String)", "Primitive", "Collection")), true, true) {      
+                (Exception)new InvalidOperationException(ODataLibResourceUtil.GetString("ValidationUtils_IncorrectTypeKind", "Collection(Edm.String)", "Primitive", "Collection")), true, true) {
                 CollectionItemType = typeof(string),
                  CollectionPropertyPayload = @"<m:value m:type=""Collection(Edm.String)"" xmlns:d=""http://docs.oasis-open.org/odata/ns/data"" xmlns:m=""http://docs.oasis-open.org/odata/ns/metadata"">
                     <m:element>1</m:element>
@@ -902,7 +902,7 @@ namespace AstoriaUnitTests.DataWebClientCSharp
         private static DataServiceContext GetContextForCollectionMaterializationTestCases(string baseUri)
         {
             DataServiceContext ctx = new DataServiceContext(new Uri(baseUri), ODataProtocolVersion.V4);
-            ctx.EnableAtom = true;
+            //ctx.EnableAtom = true;
 
             ctx.ResolveType = (typeName) =>
             {
@@ -958,14 +958,14 @@ namespace AstoriaUnitTests.DataWebClientCSharp
         }
 
         #endregion
-
+        [Ignore] // Remove Atom
         [TestMethod]
         public void MaterializationOfCollection()
         {
             Type[] collectionGenericTypes = {
-                typeof(ICollection<>), 
+                typeof(ICollection<>),
                 typeof(IList<>),
-                typeof(List<>), 
+                typeof(List<>),
                 typeof(ObservableCollection<>),
                 typeof(LoggingCollection<>),
                 typeof(CustomCollection<,>)
@@ -986,12 +986,12 @@ namespace AstoriaUnitTests.DataWebClientCSharp
                 new MaterializationTestCase()
                 { // Complex type on the server but entity on the client with no m:type.
                     CollectionItemType = typeof(BaseEntity),
-                     CollectionPropertyPayload = @"<m:value xmlns:d=""http://docs.oasis-open.org/odata/ns/data"" xmlns:m=""http://docs.oasis-open.org/odata/ns/metadata"">
+                    CollectionPropertyPayload = @"<m:value xmlns:d=""http://docs.oasis-open.org/odata/ns/data"" xmlns:m=""http://docs.oasis-open.org/odata/ns/metadata"">
                     <m:element>
                         <d:ID>3</d:ID>
                     </m:element>
                 </m:value>",
-                   ExpectedException = (Exception)new InvalidOperationException(DataServicesClientResourceUtil.GetString("AtomMaterializer_InvalidEntityType", typeof(BaseEntity))),
+                    ExpectedException = (Exception)new InvalidOperationException(DataServicesClientResourceUtil.GetString("AtomMaterializer_InvalidEntityType", typeof(BaseEntity))),
                     ValuesToInitializeCollection = (IEnumerable)null,
                     PropertyName = "Collection"
                 });
@@ -1006,7 +1006,7 @@ namespace AstoriaUnitTests.DataWebClientCSharp
                     (testCase, collectionGenericType, initializeCollection, includeTypeAttr, entityGenericType, projectCollectionProperty) =>
                     {
                         bool isComplexTypeTesting = entityGenericType == typeof(MaterializationTestsEntityWithComplexTypeWithCollection<,>);
-                        
+
                         // for negative testcases we don't want to touch the payload so we skip them if m:type attribute is supposed to be removed
                         if (testCase.GetException(projectCollectionProperty, includeTypeAttr, false, true) != null && !includeTypeAttr)
                         {
@@ -1028,22 +1028,22 @@ namespace AstoriaUnitTests.DataWebClientCSharp
 
                         // for nested collection we need to add the corresponding property to the payload
                         PlaybackService.OverridingPlayback.Value = CreatePayload(
-                            ( isComplexTypeTesting?
+                            (isComplexTypeTesting ?
                                 string.Format(
                                     "{0}{1}{2}",
                                     @"<d:Complex m:type=""Complex"" xmlns:d=""http://docs.oasis-open.org/odata/ns/data"" xmlns:m=""http://docs.oasis-open.org/odata/ns/metadata"">",
                                     collectionPayload.ToString().Replace("m:value", "d:" + testCase.PropertyName),
-                                    "</d:Complex>"):
+                                    "</d:Complex>") :
                                      collectionPayload.ToString().Replace("m:value", "d:" + testCase.PropertyName)),
                             host.BaseUri);
 
                         DataServiceContext ctx = GetContextForCollectionMaterializationTestCases(host.BaseUri);
-                        ctx.IgnoreMissingProperties = false;
+                        ctx.UndeclaredPropertyBehavior = UndeclaredPropertyBehavior.Support;
 
                         Type entityType = GetEntityTypeForCollectionMaterializationTestCases(entityGenericType, collectionGenericType, testCase.CollectionItemType);
                         entityType.GetProperty("InitialCollectionValues", BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy).SetValue(null, initializeCollection ? testCase.ValuesToInitializeCollection : null, null);
 
-                        MethodInfo createQueryMethod = typeof(DataServiceContext).GetMethod("CreateQuery", new Type[] {typeof(string)}).MakeGenericMethod(entityType);
+                        MethodInfo createQueryMethod = typeof(DataServiceContext).GetMethod("CreateQuery", new Type[] { typeof(string) }).MakeGenericMethod(entityType);
                         var query = createQueryMethod.Invoke(ctx, new object[] { "Entities" });
                         if (projectCollectionProperty)
                         {
@@ -1146,86 +1146,6 @@ namespace AstoriaUnitTests.DataWebClientCSharp
             }
         }
 
-        [TestMethod]
-        public void MaterializingCollectionWithNoSetter()
-        {
-            // Verify it is OK to materialize a pre-initialized collection even if does not have setter
-            const string collectionPayload =
-         @"<m:value m:type=""Collection(Edm.String)"" xmlns:d=""http://docs.oasis-open.org/odata/ns/data"" xmlns:m=""http://docs.oasis-open.org/odata/ns/metadata"">
-           <element>testString</element>
-        </m:value>";
-
-            using (TestWebRequest host = TestWebRequest.CreateForInProcessWcf())
-            using (PlaybackService.OverridingPlayback.Restore())
-            {
-                host.ServiceType = typeof(AstoriaUnitTests.Stubs.PlaybackService);
-                host.StartService();
-
-                PlaybackService.OverridingPlayback.Value = CreatePayload(collectionPayload, host.BaseUri);
-
-                DataServiceContext ctx = new DataServiceContext(new Uri(host.BaseUri), ODataProtocolVersion.V4);
-                ctx.EnableAtom = true;
-                EntityWithCollectionHavingNoSetter e = ctx.CreateQuery<EntityWithCollectionHavingNoSetter>("Entities").Single();
-                VerifyCollectionAndPayloadMatch(XElement.Parse(collectionPayload), e.NoSetterCollection);
-            }
-        }
-
-        [TestMethod]
-        public void MaterializingCollectionWithInvalidNameInPayload_Interface()
-        {
-            // Client uses declared type of a collection if the name of the type is incorrect in payload.
-            const string collectionPayload =
-          @"<d:ICollectionBagProperty m:type=""Coll(Edm.String)"" xmlns:d=""http://docs.oasis-open.org/odata/ns/data"" xmlns:m=""http://docs.oasis-open.org/odata/ns/metadata"">
-            <m:element>testString1</m:element>
-            <m:element>testString2</m:element>
-        </d:ICollectionBagProperty>";
-            using (TestWebRequest host = TestWebRequest.CreateForInProcessWcf())
-            using (PlaybackService.OverridingPlayback.Restore())
-            {
-                host.ServiceType = typeof(AstoriaUnitTests.Stubs.PlaybackService);
-                host.StartService();
-
-                PlaybackService.OverridingPlayback.Value = CreatePayload(collectionPayload, host.BaseUri);
-
-                DataServiceContext ctx = new DataServiceContext(new Uri(host.BaseUri), ODataProtocolVersion.V4);
-                ctx.EnableAtom = true;
-
-                EntityWithICollectionBagType_Interface e = ctx.CreateQuery<EntityWithICollectionBagType_Interface>("Entities").Single();
-                Assert.IsInstanceOfType(e.ICollectionBagProperty, typeof(ObservableCollection<string>), "The default collection type is ObservableCollection<T>");
-                VerifyCollectionAndPayloadMatch(XElement.Parse(collectionPayload), e.ICollectionBagProperty);
-
-                host.StopService();
-            }
-        }
-
-        [TestMethod]
-        public void MaterializingCollectionWithInvalidNameInPayload_Concrete()
-        {
-            // Client uses declared type of a collection if the name of the type is incorrect in payload.
-            const string collectionPayload =
-          @"<d:ListBagProperty m:type=""Coll(Edm.String)"" xmlns:d=""http://docs.oasis-open.org/odata/ns/data"" xmlns:m=""http://docs.oasis-open.org/odata/ns/metadata"">
-            <m:element>testString1</m:element>
-            <m:element>testString2</m:element>
-        </d:ListBagProperty>";
-            using (TestWebRequest host = TestWebRequest.CreateForInProcessWcf())
-            using (PlaybackService.OverridingPlayback.Restore())
-            {
-                host.ServiceType = typeof(AstoriaUnitTests.Stubs.PlaybackService);
-                host.StartService();
-
-                PlaybackService.OverridingPlayback.Value = CreatePayload(collectionPayload, host.BaseUri);
-
-                DataServiceContext ctx = new DataServiceContext(new Uri(host.BaseUri), ODataProtocolVersion.V4);
-                ctx.EnableAtom = true;
-
-                EntityWithICollectionBagType_Concrete e = ctx.CreateQuery<EntityWithICollectionBagType_Concrete>("Entities").Single();
-                Assert.IsInstanceOfType(e.ListBagProperty, typeof(List<string>), "The default collection type if the wire collection name is incorrect is the property's concrete declaring type");
-                VerifyCollectionAndPayloadMatch(XElement.Parse(collectionPayload), e.ListBagProperty);
-
-                host.StopService();
-            }
-        }
-
         public class ListWithNoPublicConstructor<T> : List<T>
         {
             private ListWithNoPublicConstructor() { }
@@ -1235,59 +1155,31 @@ namespace AstoriaUnitTests.DataWebClientCSharp
         {
             public ListWithNoPublicConstructor<string> Collection { get; set; }
         }
-
-        [TestMethod]
-        public void MaterializingUninitializedCollectionThatHasNoPublicCtor()
-        {
-            // Verify we fail correctly on trying to materialize a collection that does not have a public parameterless constructor
-            const string collectionPayload =
-          @"<d:Collection m:type=""Collection(Edm.String)"" xmlns:d=""http://docs.oasis-open.org/odata/ns/data"" xmlns:m=""http://docs.oasis-open.org/odata/ns/metadata"">
-          <element>testString</element>
-        </d:Collection>";
-
-            using (TestWebRequest host = TestWebRequest.CreateForInProcessWcf())
-            using (PlaybackService.OverridingPlayback.Restore())
-            {
-                host.ServiceType = typeof(AstoriaUnitTests.Stubs.PlaybackService);
-                host.StartService();
-
-                PlaybackService.OverridingPlayback.Value = CreatePayload(collectionPayload, host.BaseUri);
-
-                DataServiceContext ctx = new DataServiceContext(new Uri(host.BaseUri), ODataProtocolVersion.V4);
-                ctx.EnableAtom = true;
-                try
-                {
-                    EntityWithCollectionWithNoPublicCtor e = ctx.CreateQuery<EntityWithCollectionWithNoPublicCtor>("Entities").Single();
-                    Assert.Fail("Exception expected but not thrown");
-                }
-                catch (InvalidOperationException ex)
-                {
-                    Assert.AreEqual("Collection property 'Collection' cannot be created because the type 'AstoriaUnitTests.DataWebClientCSharp.Collection+ListWithNoPublicConstructor`1[System.String]' does not have a public parameterless constructor.", ex.Message);
-                }
-            }
-        }
         #endregion
 
         #region LoadProperty
-
+        [Ignore] // Remove Atom
         [TestMethod]
         public void LoadPropertyNonErrorTestsAsync()
         {
             LoadPropertyTests(testCasesWithoutExceptions, true);
         }
 
+        [Ignore] // Remove Atom
         [TestMethod]
         public void LoadPropertyNonErrorTestsSync()
         {
             LoadPropertyTests(testCasesWithoutExceptions, false);
         }
 
+        [Ignore] // Remove Atom
         [TestMethod]
         public void LoadPropertyErrorTestsAsync()
         {
             LoadPropertyTests(testCasesWithExceptions, true);
         }
 
+        [Ignore] // Remove Atom
         [TestMethod]
         public void LoadPropertyErrorTestsSync()
         {
@@ -1297,9 +1189,9 @@ namespace AstoriaUnitTests.DataWebClientCSharp
         public void LoadPropertyTests(MaterializationTestCase[] payloadTestCases, bool invokeAsync)
         {
             Type[] collectionGenericTypes = {
-                typeof(ICollection<>), 
+                typeof(ICollection<>),
                 typeof(IList<>),
-                typeof(List<>), 
+                typeof(List<>),
                 typeof(ObservableCollection<>),
                 typeof(LoggingCollection<>),
                 typeof(CustomCollection<,>)
@@ -1356,11 +1248,11 @@ X-Powered-By: ASP.NET
                             "{0}{1}{2}",
                             @"<m:value m:type=""Complex"" xmlns:d=""http://docs.oasis-open.org/odata/ns/data"" xmlns:m=""http://docs.oasis-open.org/odata/ns/metadata"">",
                             collectionPayload.ToString().Replace("m:value", "d:" + testCase.PropertyName),
-                            "</m:value>"):
+                            "</m:value>") :
                         collectionPayload.ToString());
 
                         DataServiceContext ctx = GetContextForCollectionMaterializationTestCases(host.BaseUri);
-                        ctx.IgnoreMissingProperties = false;
+                        ctx.UndeclaredPropertyBehavior = UndeclaredPropertyBehavior.Support;
                         Type entityType = GetEntityTypeForCollectionMaterializationTestCases(entityGenericType, collectionGenericType, testCase.CollectionItemType);
                         entityType.GetProperty("InitialCollectionValues", BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy).SetValue(null, initializeCollection ? testCase.ValuesToInitializeCollection : null, null);
 
@@ -1370,7 +1262,7 @@ X-Powered-By: ASP.NET
                         try
                         {
                             // Load property can only load top level properties
-                            string propertyName = entityGenericType == typeof(MaterializationTestsEntityWithComplexTypeWithCollection<,>) ? "Complex" : testCase.PropertyName ;
+                            string propertyName = entityGenericType == typeof(MaterializationTestsEntityWithComplexTypeWithCollection<,>) ? "Complex" : testCase.PropertyName;
 
                             if (invokeAsync)
                             {
@@ -1428,14 +1320,15 @@ X-Powered-By: ASP.NET
 
         #region Serialization
 
+        [Ignore] // Remove Atom
         [TestMethod]
         public void SerializationOfCollection()
         {
             Type[] collectionGenericTypes = new Type[]
             {
-                typeof(ICollection<>), 
+                typeof(ICollection<>),
                 typeof(IList<>),
-                typeof(List<>), 
+                typeof(List<>),
                 typeof(ObservableCollection<>),
             };
 
@@ -1458,8 +1351,8 @@ X-Powered-By: ASP.NET
                     CollectionItemType = typeof(DateTimeOffset),
                     ExpectedCollectionWireType = "#Collection(DateTimeOffset)",
                     ExpectedException = (Exception)null,
-                    ValuesToInitializeCollection = (IEnumerable)new DateTimeOffset[] { 
-                        new DateTime(2010, 3, 16, 10, 15, 20, DateTimeKind.Utc),  
+                    ValuesToInitializeCollection = (IEnumerable)new DateTimeOffset[] {
+                        new DateTime(2010, 3, 16, 10, 15, 20, DateTimeKind.Utc),
                         new DateTime(2000, 1, 1, 0, 0, 0, DateTimeKind.Utc),
                         new DateTime(2132, 11, 14, 23, 47, 07, DateTimeKind.Utc) }
                 },
@@ -1509,7 +1402,7 @@ X-Powered-By: ASP.NET
                     ExpectedCollectionWireType = default(string),
                     ExpectedException = (Exception)null,
                     ValuesToInitializeCollection = (IEnumerable)new ComplexType[] {
-                        new ComplexType() { Description = "TestDescription", Number = 123 }, 
+                        new ComplexType() { Description = "TestDescription", Number = 123 },
                         new ComplexType() { Number = 098 } }
                 },
                 new { // verify that collection item type is passed to the type resolver when serializing and it is passed only once - should pass
@@ -1517,7 +1410,7 @@ X-Powered-By: ASP.NET
                     ExpectedCollectionWireType = "#Collection(epyTxelpmoCdetalernU)",
                     ExpectedException = (Exception)null,
                     ValuesToInitializeCollection = (IEnumerable)new UnrelatedComplexType[] {
-                        new UnrelatedComplexType() { Description = "Unrelated ComplexType", AnotherDescription = "Another Description" }, 
+                        new UnrelatedComplexType() { Description = "Unrelated ComplexType", AnotherDescription = "Another Description" },
                         new UnrelatedComplexType() { Description = "XYZ" } }
                 },
                 new { // verify serialization of collection of complex types that have collection - should pass
@@ -1527,7 +1420,7 @@ X-Powered-By: ASP.NET
                     ValuesToInitializeCollection = (IEnumerable)new DerivedComplexType[] {
                         new DerivedComplexType() { Description = "1st Item", Number = 1, Summary = "Collection 1", CollectionOfComplexTypes = new DerivedComplexType[] {
                             new DerivedComplexType() { Description = "1.1", Number = 1, Summary = "1st item in the 1st nested collection", CollectionOfComplexTypes = new List<DerivedComplexType>() },
-                            new DerivedComplexType() { Description = "1.2", Number = 2, Summary = "2nd item in the 1st nested collection", CollectionOfComplexTypes = new List<DerivedComplexType>() }}}, 
+                            new DerivedComplexType() { Description = "1.2", Number = 2, Summary = "2nd item in the 1st nested collection", CollectionOfComplexTypes = new List<DerivedComplexType>() }}},
                         new DerivedComplexType() { Description = "2nd Item", Number = 2, Summary = "Collection 2", CollectionOfComplexTypes = new DerivedComplexType[] {
                             new DerivedComplexType() { Description = "1.1", Number = 1, Summary = "1st item in the 2nd nested collection", CollectionOfComplexTypes = new List<DerivedComplexType>() },
                             new DerivedComplexType() { Description = "1.2", Number = 2, Summary = "2nd item in the 2nd nested collection", CollectionOfComplexTypes = new List<DerivedComplexType>() }}}}
@@ -1538,7 +1431,7 @@ X-Powered-By: ASP.NET
                     CollectionItemType = typeof(ComplexType),
                     ExpectedCollectionWireType = default(string),
                     ExpectedException = (Exception)null,
-                    ValuesToInitializeCollection = (IEnumerable)new ComplexType[] { 
+                    ValuesToInitializeCollection = (IEnumerable)new ComplexType[] {
                         new ComplexType() { Number = 1, Description = "ComplexType" },
                         null,
                         new ComplexType() { Number = 3, Description = "ComplexType" }}
@@ -1599,8 +1492,8 @@ X-Powered-By: ASP.NET
                     };
 
                     DataServiceContext ctx = new DataServiceContext(new Uri(host.BaseUri), ODataProtocolVersion.V4);
-                    ctx.EnableAtom = true;
-                    ctx.Format.UseAtom();
+                    //ctx.EnableAtom = true;
+                    //ctx.Format.UseAtom();
                     ctx.AddObject("Entities", entity);
 
                     ctx.ResolveName = (type) =>
@@ -1660,7 +1553,7 @@ X-Powered-By: ASP.NET
 
         private DerivedComplexType[] CreateCollectionWithCycle()
         {
-            DerivedComplexType[] array = new DerivedComplexType[] { 
+            DerivedComplexType[] array = new DerivedComplexType[] {
                 new DerivedComplexType() {
                     Number = 1,
                     Description = "Collection with loops",
@@ -1682,6 +1575,7 @@ X-Powered-By: ASP.NET
             public UntypedCollection<T> Collection { get; set; }
         }
 
+        [Ignore] // Remove Atom
         [TestMethod]
         public void InvalidItemsInCollection()
         {
@@ -1699,8 +1593,8 @@ X-Powered-By: ASP.NET
                 },
                 new { // unrelated complex type in the collection
                     TypeOfEntity =  typeof(EntityWithUntypedCollection<ComplexType>),
-                    Collection  = (object)new UntypedCollection<ComplexType>(new object[] { 
-                        new ComplexType() { Number = 1, Description = "ComplexTypes" }, 
+                    Collection  = (object)new UntypedCollection<ComplexType>(new object[] {
+                        new ComplexType() { Number = 1, Description = "ComplexTypes" },
                         new UnrelatedComplexType() { Description = "Unrelated" } }),
                     ExpectedException = (Exception)new InvalidOperationException("An item in the collection property 'Collection' is not of the correct type. All items in the collection property must be of the collection item type.")
                 },
@@ -1766,6 +1660,7 @@ X-Powered-By: ASP.NET
             public Dictionary<string, string> Collection { get; set; }
         }
 
+        [Ignore] // Remove Atom
         [TestMethod]
         public void SerializationOfEntityWithDictionary()
         {
@@ -1800,8 +1695,8 @@ X-Powered-By: ASP.NET
                 };
 
                 DataServiceContext ctx = new DataServiceContext(new Uri(host.BaseUri));
-                ctx.EnableAtom = true;
-                ctx.Format.UseAtom();
+                //ctx.EnableAtom = true;
+                //ctx.Format.UseAtom();
                 ctx.AddObject("Entities", entity);
                 ctx.SaveChanges();
             }
@@ -1946,6 +1841,7 @@ X-Powered-By: ASP.NET
             }
         }
 
+        [Ignore] // Remove Atom
         [TestMethod]
         public void Collection_SupportedClientLINQQueries()
         {
@@ -1959,8 +1855,8 @@ X-Powered-By: ASP.NET
                 request.StartService();
 
                 DataServiceContext ctx = new DataServiceContext(request.ServiceRoot, ODataProtocolVersion.V4);
-                ctx.EnableAtom = true;
-                ctx.Format.UseAtom();
+                //ctx.EnableAtom = true;
+                //ctx.Format.UseAtom();
                 ctx.MergeOption = MergeOption.NoTracking;
 
                 string[] names;
@@ -2315,8 +2211,8 @@ X-Powered-By: ASP.NET
                 {
                     // Test expansions and projections of collection - entity type
                     DataServiceContext context = new DataServiceContext(request.ServiceRoot, ODataProtocolVersion.V4);
-                    context.EnableAtom = true;
-                    context.Format.UseAtom();
+                    //context.EnableAtom = true;
+                    //context.Format.UseAtom();
                     var q = from e in context.CreateQuery<CollectionEntityType>("Entities")
                             where e.ID == 0
                             select new CollectionEntityType
@@ -2343,8 +2239,8 @@ X-Powered-By: ASP.NET
                 {
                     // Test expansions and projections of collection - anonymous/nonentity type
                     DataServiceContext context = new DataServiceContext(request.ServiceRoot, ODataProtocolVersion.V4);
-                    context.EnableAtom = true;
-                    context.Format.UseAtom();
+                    //context.EnableAtom = true;
+                    //context.Format.UseAtom();
                     var q = from e in context.CreateQuery<CollectionEntityType>("Entities")
                             where e.ID == 0
                             select new
@@ -2369,8 +2265,8 @@ X-Powered-By: ASP.NET
                 {
                     // Test projecting collection to entity types
                     DataServiceContext context = new DataServiceContext(request.ServiceRoot, ODataProtocolVersion.V4);
-                    context.EnableAtom = true;
-                    context.Format.UseAtom();
+                    //context.EnableAtom = true;
+                    //context.Format.UseAtom();
                     var q = from e in context.CreateQuery<CollectionEntityType>("Entities")
                             where e.ID == 0
                             select new CollectionEntityType
@@ -2392,8 +2288,8 @@ X-Powered-By: ASP.NET
                 {
                     // Test projecting collection to entity types
                     DataServiceContext context = new DataServiceContext(request.ServiceRoot, ODataProtocolVersion.V4);
-                    context.EnableAtom = true;
-                    context.Format.UseAtom();
+                    //context.EnableAtom = true;
+                    //context.Format.UseAtom();
                     var q = from e in context.CreateQuery<CollectionEntityType>("Entities")
                             where e.ID == 0
                             select new CollectionEntityType
@@ -2415,8 +2311,8 @@ X-Powered-By: ASP.NET
                 {
                     // Test projecting collection to non-entity types
                     DataServiceContext context = new DataServiceContext(request.ServiceRoot, ODataProtocolVersion.V4);
-                    context.EnableAtom = true;
-                    context.Format.UseAtom();
+                    //context.EnableAtom = true;
+                    //context.Format.UseAtom();
                     var q = from e in context.CreateQuery<CollectionEntityType>("Entities")
                             where e.ID == 0
                             select new CollectionNonEntityType
@@ -2437,8 +2333,8 @@ X-Powered-By: ASP.NET
                 {
                     // Test projecting collection to non-entity types
                     DataServiceContext context = new DataServiceContext(request.ServiceRoot, ODataProtocolVersion.V4);
-                    context.EnableAtom = true;
-                    context.Format.UseAtom();
+                    //context.EnableAtom = true;
+                    //context.Format.UseAtom();
                     var q = from e in context.CreateQuery<CollectionEntityType>("Entities")
                             where e.ID == 0
                             select new CollectionNonEntityType
@@ -2460,8 +2356,8 @@ X-Powered-By: ASP.NET
                 // Test projecting collection to non-entity types
                 {
                     DataServiceContext context = new DataServiceContext(request.ServiceRoot, ODataProtocolVersion.V4);
-                    context.EnableAtom = true;
-                    context.Format.UseAtom();
+                    //context.EnableAtom = true;
+                    //context.Format.UseAtom();
                     var q = from e in ctx.CreateQuery<CollectionEntityType>("Entities")
                             select new
                             {
@@ -2481,8 +2377,8 @@ X-Powered-By: ASP.NET
                 }
                 {
                     DataServiceContext context = new DataServiceContext(request.ServiceRoot, ODataProtocolVersion.V4);
-                    context.EnableAtom = true;
-                    context.Format.UseAtom();
+                    //context.EnableAtom = true;
+                    //context.Format.UseAtom();
                     var q = from e in ctx.CreateQuery<CollectionEntityType>("Entities")
                             select new
                             {
@@ -2503,13 +2399,13 @@ X-Powered-By: ASP.NET
                 }
                 {
                     DataServiceContext context = new DataServiceContext(request.ServiceRoot, ODataProtocolVersion.V4);
-                    context.EnableAtom = true;
-                    context.Format.UseAtom();
+                    //context.EnableAtom = true;
+                    //context.Format.UseAtom();
                     var q = from e in ctx.CreateQuery<CollectionEntityType>("Entities")
                             select new
-                                {
-                                    Names = new List<string>(new string[] { e.ComplexCollection[0].Description, e.ComplexCollection[1].Description })
-                                };
+                            {
+                                Names = new List<string>(new string[] { e.ComplexCollection[0].Description, e.ComplexCollection[1].Description })
+                            };
                     names = null;
                     foreach (var e in q)
                     {
@@ -2523,8 +2419,8 @@ X-Powered-By: ASP.NET
                 }
                 {
                     DataServiceContext context = new DataServiceContext(request.ServiceRoot, ODataProtocolVersion.V4);
-                    context.EnableAtom = true;
-                    context.Format.UseAtom();
+                    //context.EnableAtom = true;
+                    //context.Format.UseAtom();
                     var q = from e in ctx.CreateQuery<CollectionEntityType>("Entities")
                             select new
                             {
@@ -2545,6 +2441,7 @@ X-Powered-By: ASP.NET
             }
         }
 
+        [Ignore] // Remove Atom
         [TestMethod]
         public void Collection_NotSupportedClientLINQQueries()
         {
@@ -2564,7 +2461,7 @@ X-Powered-By: ASP.NET
 
                         from e in ctx.CreateQuery<CollectionEntityType>("Entities")
                         let firstName = e.NamesAsList[0]
-                        where  "value" == firstName 
+                        where  "value" == firstName
                         select e,
 
                         from e in ctx.CreateQuery<CollectionEntityType>("Entities")
@@ -2578,7 +2475,7 @@ X-Powered-By: ASP.NET
                         from e in ctx.CreateQuery<CollectionEntityType>("Entities")
                         orderby e.ComplexCollection[0].Description
                         select e,
-     
+
                         from e in ctx.CreateQuery<CollectionEntityType>("Entities")
                         where e.ID == 0
                         select e.NamesAsList.Count(),
@@ -2598,7 +2495,7 @@ X-Powered-By: ASP.NET
                         {
                             Names = e.Names.Where(str => str !="").ToList()
                         },
-                        
+
                         from e in ctx.CreateQuery<CollectionEntityType>("Entities")
                         select new CollectionEntityType()
                         {
@@ -2620,131 +2517,7 @@ X-Powered-By: ASP.NET
                 });
             }
         }
-
-
         #endregion client LINQ support for collection
-
-        #region ICollection<T> used to be treated always as Collection (1..* NavigationProperty) even if the type on the client is not an Entity
-        [TestMethod]
-        public void OnlyNavigationPropertyShouldBeTreatedAsCollection()
-        {
-            // ICollection<T> used to be treated always as Collection (1..* NavigationProperty) even if the type on the client is not an Entity
-            string typeName = "AstoriaUnitTests.DataWebClientCSharp.Entity`2[System.Collections.Generic.ICollection`1[AstoriaUnitTests.DataWebClientCSharp.ComplexType] AstoriaUnitTests.DataWebClientCSharp.ComplexType]";
-            var testCases = new[] {
-                new { 
-                    NavigationPropertyLinks = "",
-                    ExpectedException = (InvalidOperationException)null,
-                },
-                new {
-                    NavigationPropertyLinks = 
-                        @"<link rel=""http://docs.oasis-open.org/odata/ns/related/Collection"" type=""application/atom+xml;type=feed"" href=""Entity('42')/Collection"" xmlns=""http://www.w3.org/2005/Atom""/>",
-                    ExpectedException = new InvalidOperationException(ODataLibResourceUtil.GetString("ValidationUtils_NavigationPropertyExpected", "Collection", typeName, "Structural")),
-                },
-                new {
-                    NavigationPropertyLinks = 
-                        @"<link rel=""http://docs.oasis-open.org/odata/ns/related/Collection"" type=""application/atom+xml;type=feed"" href=""Entity('42')/Collection"" xmlns=""http://www.w3.org/2005/Atom""></link>",
-                    ExpectedException = new InvalidOperationException(ODataLibResourceUtil.GetString("ValidationUtils_NavigationPropertyExpected", "Collection", typeName, "Structural")),
-                },
-                new {
-                    NavigationPropertyLinks = 
-                        @"<link rel=""http://docs.oasis-open.org/odata/ns/related/Collection"" type=""application/atom+xml;type=feed"" href=""Entity('42')/Collection"" xmlns=""http://www.w3.org/2005/Atom""></link>",
-                    ExpectedException = new InvalidOperationException(ODataLibResourceUtil.GetString("ValidationUtils_NavigationPropertyExpected", "Collection", typeName, "Structural")),
-                },
-                new {
-                    NavigationPropertyLinks = 
-                        @"<link rel=""http://docs.oasis-open.org/odata/ns/related/Collection"" type=""application/atom+xml;type=feed"" href=""Entity('42')/Collection"" xmlns=""http://www.w3.org/2005/Atom"">
-                        </link>",
-                    ExpectedException = new InvalidOperationException(ODataLibResourceUtil.GetString("ValidationUtils_NavigationPropertyExpected", "Collection", typeName, "Structural")),
-                },
-                new {
-                    NavigationPropertyLinks = 
-                        @"<link rel=""http://docs.oasis-open.org/odata/ns/related/Collection"" type=""application/atom+xml;type=feed"" href=""Entity('42')/Collection"" xmlns=""http://www.w3.org/2005/Atom"">
-                            <m:inline xmlns:m=""http://docs.oasis-open.org/odata/ns/metadata""/>
-                        </link>",
-                    ExpectedException = new InvalidOperationException(ODataLibResourceUtil.GetString("ValidationUtils_NavigationPropertyExpected", "Collection", typeName, "Structural")),
-                },
-                new {
-                    NavigationPropertyLinks = 
-                        @"<link rel=""http://docs.oasis-open.org/odata/ns/related/Collection"" type=""application/atom+xml;type=feed"" href=""Entity('42')/Collection"" xmlns=""http://www.w3.org/2005/Atom"">
-                            <m:inline xmlns:m=""http://docs.oasis-open.org/odata/ns/metadata""></m:inline>
-                        </link>",
-                    ExpectedException = new InvalidOperationException(ODataLibResourceUtil.GetString("ValidationUtils_NavigationPropertyExpected", "Collection", typeName, "Structural")),
-                },
-                new {
-                    NavigationPropertyLinks = 
-                        @"<link rel=""http://docs.oasis-open.org/odata/ns/related/Collection"" type=""application/atom+xml;type=feed"" href=""Entity('42')/Collection"" xmlns=""http://www.w3.org/2005/Atom"">
-                            <m:inline xmlns:m=""http://docs.oasis-open.org/odata/ns/metadata"">
-                            </m:inline>
-                        </link>",
-                    ExpectedException = new InvalidOperationException(ODataLibResourceUtil.GetString("ValidationUtils_NavigationPropertyExpected", "Collection", typeName, "Structural")),
-                },
-                new {
-                    NavigationPropertyLinks = 
-                        @"<link rel=""http://docs.oasis-open.org/odata/ns/related/Collection"" type=""application/atom+xml;type=feed"" href=""Entity('42')/Collection"" xmlns=""http://www.w3.org/2005/Atom"">
-                            <m:inline xmlns:m=""http://docs.oasis-open.org/odata/ns/metadata"">
-                                <feed xmlns:d=""http://docs.oasis-open.org/odata/ns/data"" xmlns:m=""http://docs.oasis-open.org/odata/ns/metadata"" xmlns=""http://www.w3.org/2005/Atom"">
-                                    <title type=""text"" />
-                                    <id>http://host/Collection</id>
-                                    <updated>2010-01-27T18:06:26Z</updated>
-                                </feed>
-                            </m:inline>
-                        </link>",
-                    ExpectedException = new InvalidOperationException(ODataLibResourceUtil.GetString("ValidationUtils_NavigationPropertyExpected", "Collection", typeName, "Structural")),
-                },
-                new {
-                    NavigationPropertyLinks = 
-                        @"<link rel=""http://docs.oasis-open.org/odata/ns/related/Collection"" type=""application/atom+xml;type=feed"" href=""Entity('42')/Collection"" xmlns=""http://www.w3.org/2005/Atom"">
-                            <m:inline xmlns:m=""http://docs.oasis-open.org/odata/ns/metadata"">
-                                <feed xmlns:d=""http://docs.oasis-open.org/odata/ns/data"" xmlns:m=""http://docs.oasis-open.org/odata/ns/metadata"" xmlns=""http://www.w3.org/2005/Atom"">
-                                    <title type=""text"" />
-                                    <id>http://host/Collection</id>
-                                    <updated>2010-01-27T18:06:26Z</updated>
-                                    <entry>
-                                        <title type=""text"" />
-                                        <id>http://host/Collection(1)</id>
-                                        <updated>2010-01-27T18:06:26Z</updated>
-                                        <author><name /></author>
-                                        <category term=""#AstoriaService.ChildEntity"" scheme=""http://docs.oasis-open.org/odata/ns/scheme"" /> 
-                                        <content type=""application/xml"">
-                                            <m:properties>
-                                                <d:ID m:type=""Edm.Int32"">1</d:ID> 
-                                            </m:properties>
-                                        </content>
-                                    </entry>
-                                </feed>
-                            </m:inline>
-                        </link>",
-                    ExpectedException = new InvalidOperationException(ODataLibResourceUtil.GetString("ValidationUtils_NavigationPropertyExpected", "Collection", typeName, "Structural")),
-                }
-            };
-
-            using (TestWebRequest host = TestWebRequest.CreateForInProcessWcf())
-            using (PlaybackService.OverridingPlayback.Restore())
-            {
-                host.ServiceType = typeof(AstoriaUnitTests.Stubs.PlaybackService);
-                host.StartService();
-
-                TestUtil.RunCombinations(testCases, (testCase) =>
-                {
-                    PlaybackService.OverridingPlayback.Value = CreatePayload(string.Empty, host.BaseUri, testCase.NavigationPropertyLinks);
-
-                    DataServiceContext ctx = new DataServiceContext(new Uri(host.BaseUri), ODataProtocolVersion.V4);
-                    ctx.EnableAtom = true;
-                    try
-                    {
-                        var entity = ctx.CreateQuery<Entity<ICollection<ComplexType>, ComplexType>>("Entities").First();
-                        Assert.IsNull(testCase.ExpectedException, "Exception expected but not thrown.");
-                        Assert.AreEqual(null, entity.Collection);
-                    }
-                    catch (InvalidOperationException ex)
-                    {
-                        Assert.IsNotNull(testCase.ExpectedException, "Unexpected exception");
-                        Assert.AreEqual(testCase.ExpectedException.Message, ex.Message);
-                    }
-                });
-            }
-        }
-        #endregion
 
         #region Collection Client: Client does not write complex types that have only collection properties.
         public class ComplexTypeWithCollectionOfArrays
@@ -2759,11 +2532,12 @@ X-Powered-By: ASP.NET
             public ComplexTypeWithCollectionOfArrays ComplexType { get; set; }
         }
 
+        [Ignore] // Remove Atom
         [TestMethod]
         public void ClientShouldWriteComplexTypesWithOnlyCollectionProperties()
         {
             // Collection Client: Client does not write complex types that have only collection properties.
-            TestEntity[] testEntities = new TestEntity[] { 
+            TestEntity[] testEntities = new TestEntity[] {
                 new TestEntity() {
                     ID = 2010,
                     ComplexType = new ComplexTypeWithCollectionOfArrays() {
@@ -2774,7 +2548,7 @@ X-Powered-By: ASP.NET
                                     new char[] { 'd', 'd', '1', '@' },
                                     new char[] { 'q', 'w', 'e', 'r', 't', 'y' }})
                     }},
-                new TestEntity() { 
+                new TestEntity() {
                     ID = 2011,
                     ComplexType = new ComplexTypeWithCollectionOfArrays() {
                         ByteArray = new List<byte[]>(),
@@ -2807,8 +2581,8 @@ X-Powered-By: ASP.NET
                     };
 
                     DataServiceContext ctx = new DataServiceContext(new Uri(host.BaseUri), ODataProtocolVersion.V4);
-                    ctx.EnableAtom = true;
-                    ctx.Format.UseAtom();
+                    //ctx.EnableAtom = true;
+                    //ctx.Format.UseAtom();
 
                     SaveChangesOptions? saveChangesOptions = null;
                     switch (httpMethod)
@@ -2868,6 +2642,7 @@ X-Powered-By: ASP.NET
             public string SettableProperty { get; set; }
         }
 
+        [Ignore] // Remove Atom
         [TestMethod]
         public void Collection_CollectionTypeRecognition()
         {
@@ -2928,8 +2703,8 @@ X-Powered-By: ASP.NET
                         };
 
                         DataServiceContext ctx = new DataServiceContext(request.ServiceRoot, ODataProtocolVersion.V4);
-                        ctx.EnableAtom = true;
-                        ctx.Format.UseAtom();
+                        //ctx.EnableAtom = true;
+                        //ctx.Format.UseAtom();
                         ctx.AddObject("entity", testCase.Entity);
                         ctx.SaveChanges();
                     });

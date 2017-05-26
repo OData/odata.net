@@ -7,12 +7,12 @@
 namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
 {
     using System;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.Test.OData.Utils.CombinatorialEngine;
     using Microsoft.Test.Taupo.Execution;
     using Microsoft.Test.Taupo.OData.Common;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
-    
+
     /// <summary>
     /// Tests for correct API argument validation in writers
     /// </summary>
@@ -21,30 +21,33 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
     {
         private static readonly Uri ServiceDocumentUri = new Uri("http://odata.org/");
 
-        [TestMethod, Variation(Description = "Verifies argument validation behavior for WriteStart(ODataFeed) method")]
+        [Ignore] // Remove Atom
+        [TestMethod, Variation(Description = "Verifies argument validation behavior for WriteStart(ODataResourceSet) method")]
         public void WriteStartFeedTest()
         {
             ForWriters(true, (writer) =>
             {
-                this.VerifyArgumentNullException(() => writer.WriteStart((ODataFeed)null));
+                this.VerifyArgumentNullException(() => writer.WriteStart((ODataResourceSet)null));
             });
         }
 
+        [Ignore] // Remove Atom
         [TestMethod, Variation(Description = "Verifies argument validation behavior for WriteStart(ODataEntry) method")]
-        public void WriteStartEntryTest()
+        public void WriteStartResourceTest()
         {
             ForWriters(false, (writer) =>
             {
-                this.VerifyArgumentNullException(() => writer.WriteStart((ODataEntry)null));
+                this.VerifyArgumentNullException(() => writer.WriteStart((ODataResource)null));
             });
         }
 
-        [TestMethod, Variation(Description = "Verifies argument validation behavior for WriteStart(ODataNavigationLink) method")]
+        [Ignore] // Remove Atom
+        [TestMethod, Variation(Description = "Verifies argument validation behavior for WriteStart(ODataNestedResourceInfo) method")]
         public void WriteStartLinkTest()
         {
             ForWriters(false, (writer) =>
             {
-                this.VerifyArgumentNullException(() => writer.WriteStart((ODataNavigationLink)null));
+                this.VerifyArgumentNullException(() => writer.WriteStart((ODataNestedResourceInfo)null));
             });
         }
 

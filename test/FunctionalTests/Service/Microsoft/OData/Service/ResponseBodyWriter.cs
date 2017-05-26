@@ -12,7 +12,7 @@ namespace Microsoft.OData.Service
     using System.Diagnostics.CodeAnalysis;
     using System.IO;
     using System.Text;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Service.Providers;
     using Microsoft.OData.Service.Serializers;
@@ -79,8 +79,8 @@ namespace Microsoft.OData.Service
 
             this.encoding = ContentTypeUtil.EncodingFromAcceptCharset(this.service.OperationContext.RequestMessage.GetRequestAcceptCharsetHeader());
 
-            if (this.PayloadKind == ODataPayloadKind.Entry ||
-                this.PayloadKind == ODataPayloadKind.Feed ||
+            if (this.PayloadKind == ODataPayloadKind.Resource ||
+                this.PayloadKind == ODataPayloadKind.ResourceSet ||
                 this.PayloadKind == ODataPayloadKind.Property ||
                 this.PayloadKind == ODataPayloadKind.Collection ||
                 this.PayloadKind == ODataPayloadKind.EntityReferenceLink ||
@@ -93,7 +93,7 @@ namespace Microsoft.OData.Service
                 IODataResponseMessage responseMessageOnOperationContext = service.OperationContext.ResponseMessage;
 
                 Version effectiveMaxResponseVersion = VersionUtil.GetEffectiveMaxResponseVersion(service.Configuration.DataServiceBehavior.MaxProtocolVersion.ToVersion(), requestMessage.RequestMaxVersion);
-                bool isEntityOrFeed = this.PayloadKind == ODataPayloadKind.Entry || this.PayloadKind == ODataPayloadKind.Feed;
+                bool isEntityOrFeed = this.PayloadKind == ODataPayloadKind.Resource || this.PayloadKind == ODataPayloadKind.ResourceSet;
                 if (ContentTypeUtil.IsResponseMediaTypeJsonLight(requestMessage.GetAcceptableContentTypes(), isEntityOrFeed, effectiveMaxResponseVersion))
                 {
                     // If JSON light 'wins', then bump the version to V3.
@@ -243,11 +243,20 @@ namespace Microsoft.OData.Service
                         Debug.Assert(this.requestDescription.TargetKind != RequestTargetKind.Resource || this.requestDescription.LinkUri, "this.requestDescription.TargetKind != RequestTargetKind.Resource || this.requestDescription.LinkUri");
                         NonEntitySerializer nonEntitySerializer = new NonEntitySerializer(this.requestDescription, this.AbsoluteServiceUri, this.service, this.messageWriter);
                         responseSerializer = nonEntitySerializer;
+                        if (this.requestDescription.TargetKind == RequestTargetKind.ComplexObject)
+                        {
+                            ODataUtils.SetHeadersForPayload(this.messageWriter, ODataPayloadKind.Resource);
+                        }
+                        if (this.requestDescription.TargetKind == RequestTargetKind.Collection
+                            && this.requestDescription.TargetResourceType.ElementType().ResourceTypeKind == ResourceTypeKind.ComplexType)
+                        {
+                            ODataUtils.SetHeadersForPayload(this.messageWriter, ODataPayloadKind.ResourceSet);
+                        }
                         nonEntitySerializer.WriteRequest(this.queryResults);
                         break;
 
-                    case ODataPayloadKind.Entry:
-                    case ODataPayloadKind.Feed:
+                    case ODataPayloadKind.Resource:
+                    case ODataPayloadKind.ResourceSet:
                         Debug.Assert(this.requestDescription.TargetKind == RequestTargetKind.Resource, "TargetKind " + this.requestDescription.TargetKind + " == Resource");
                         EntitySerializer entitySerializer = new EntitySerializer(
                                this.requestDescription,

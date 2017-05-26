@@ -1171,9 +1171,7 @@ namespace Microsoft.OData.Service.Providers
             Debug.Assert(this.dataService.Provider == this, "this.dataService.Provider == this");
             Debug.Assert(typeof(T) != typeof(IDataServiceMetadataProvider), "typeof(T) != typeof(IDataServiceMetadataProvider)");
             Debug.Assert(typeof(T) != typeof(IDataServiceQueryProvider), "typeof(T) != typeof(IDataServiceQueryProvider)");
-#if !INTERNAL_DROP
             Debug.Assert(typeof(T).IsVisible, "Trying to ask the service for non-public interface.");
-#endif
 
             this.dataService.ProcessingPipeline.AssertAndUpdateDebugStateAtGetService();
 

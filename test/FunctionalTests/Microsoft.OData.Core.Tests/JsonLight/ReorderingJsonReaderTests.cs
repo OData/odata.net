@@ -6,11 +6,11 @@
 
 using System.IO;
 using FluentAssertions;
-using Microsoft.OData.Core.Json;
-using Microsoft.OData.Core.JsonLight;
+using Microsoft.OData.Json;
+using Microsoft.OData.JsonLight;
 using Xunit;
 
-namespace Microsoft.OData.Core.Tests.JsonLight
+namespace Microsoft.OData.Tests.JsonLight
 {
     public class ReorderingJsonReaderTests
     {
@@ -73,7 +73,7 @@ namespace Microsoft.OData.Core.Tests.JsonLight
             }";
 
             var reader = CreateReorderingReaderPositionedOnFirstProperty(json);
-            
+
             // Expect type name first.
             reader.ReadPropertyName().Should().Be("@odata.type");
             reader.ReadPrimitiveValue().Should().Be("SomeEntityType");
@@ -93,7 +93,9 @@ namespace Microsoft.OData.Core.Tests.JsonLight
         /// <returns>The created json reader.</returns>
         private static ReorderingJsonReader CreateReorderingReaderPositionedOnFirstProperty(string json)
         {
-            var reader = new ReorderingJsonReader(new StringReader(json), maxInnerErrorDepth: 0, isIeee754Comaptible: true);
+            var stringReader = new StringReader(json);
+            var innerReader = new JsonReader(stringReader, isIeee754Compatible: true);
+            var reader = new ReorderingJsonReader(innerReader, maxInnerErrorDepth: 0);
 
             reader.NodeType.Should().Be(JsonNodeType.None);
             reader.Read();

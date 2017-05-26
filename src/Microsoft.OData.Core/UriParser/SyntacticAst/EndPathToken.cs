@@ -4,23 +4,16 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-#if ASTORIA_CLIENT
+#if ODATA_CLIENT
 namespace Microsoft.OData.Client.ALinq.UriParser
 #else
-namespace Microsoft.OData.Core.UriParser.Syntactic
+namespace Microsoft.OData.UriParser
 #endif
 {
-    using Microsoft.OData.Core.UriParser.Semantic;
-    using Microsoft.OData.Core.UriParser.TreeNodeKinds;
-    using Microsoft.OData.Core.UriParser.Visitors;
-
-    #region Namespaces
-    #endregion Namespaces
-
     /// <summary>
     /// Lexical token representing the last segment in a path.
     /// </summary>
-    internal sealed class EndPathToken : PathToken
+    public sealed class EndPathToken : PathToken
     {
         /// <summary>
         /// The Identifier of the property to access.

@@ -4,7 +4,7 @@ $filter = Brother/any(d:d/Microsoft.Test.Taupo.OData.WCFService.Customer/City ne
 FilterQueryOption
 	ItemType = [Microsoft.Test.Taupo.OData.WCFService.Person Nullable=False]
 	Parameter = 
-	EntityRangeVariable
+	ResourceRangeVariable
 		Name = $it
 		NavigationSource = People
 		TypeReference = [Microsoft.Test.Taupo.OData.WCFService.Person Nullable=False]
@@ -16,16 +16,16 @@ FilterQueryOption
 				Property = City
 				TypeReference = [Edm.String Nullable=True Unicode=True]
 				Source = 
-				SingleEntityCastNode
+				SingleResourceCastNode
 					Type Reference = [Microsoft.Test.Taupo.OData.WCFService.Customer Nullable=False]
 					NavigationSource = Brother
 					Entity Type Reference = [Microsoft.Test.Taupo.OData.WCFService.Customer Nullable=False]
 					Source = 
-					EntityRangeVariableReferenceNode
+					ResourceRangeVariableReferenceNode
 						Name = d
 						NavigationSource = Brother
 						TypeReference = [Microsoft.Test.Taupo.OData.WCFService.Person Nullable=True]
-						Range Variable = Microsoft.OData.Core.UriParser.Semantic.EntityRangeVariable
+						Range Variable = Microsoft.OData.UriParser.ResourceRangeVariable
 		NotEqual
 			Shanghai(Type: [Edm.String Nullable=True Unicode=True])
 		Source = 
@@ -36,17 +36,17 @@ FilterQueryOption
 			Multiplicity = Many
 			Navigation Property = Brother
 			Source = 
-			EntityRangeVariableReferenceNode
+			ResourceRangeVariableReferenceNode
 				Name = $it
 				NavigationSource = People
 				TypeReference = [Microsoft.Test.Taupo.OData.WCFService.Person Nullable=False]
-				Range Variable = Microsoft.OData.Core.UriParser.Semantic.EntityRangeVariable
+				Range Variable = Microsoft.OData.UriParser.ResourceRangeVariable
 		Parameters = 
-		EntityRangeVariable
+		ResourceRangeVariable
 			Name = d
 			NavigationSource = Brother
 			TypeReference = [Microsoft.Test.Taupo.OData.WCFService.Person Nullable=True]
-		EntityRangeVariable
+		ResourceRangeVariable
 			Name = $it
 			NavigationSource = People
 			TypeReference = [Microsoft.Test.Taupo.OData.WCFService.Person Nullable=False]

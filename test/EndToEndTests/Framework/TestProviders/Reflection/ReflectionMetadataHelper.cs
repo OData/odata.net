@@ -160,23 +160,23 @@ namespace Microsoft.Test.OData.Framework.TestProviders.Reflection
             Type type = this.FindClrTypeByFullName(fullTypeName);
             List<string> etags = new List<string>();
 
-            // Any property that is marked as a key is one as well.            
+            // Any property that is marked as a key is one as well.
             // GetCustomAttributes does not return attributes on base types correcly, hence this workaround to
             // make sure we get all properties.
             do
-            {                
+            {
                 foreach (ETagAttribute customAttribute in type.GetCustomAttributes(typeof(ETagAttribute), true))
                 {
-                    foreach (var propertyNAme in customAttribute.PropertyNames)
+                    foreach (var propertyName in customAttribute.PropertyNames)
                     {
-                        if (!etags.Contains(propertyNAme))
+                        if (!etags.Contains(propertyName))
                         {
-                            etags.Add(propertyNAme);   
-                        }                        
+                            etags.Add(propertyName);
+                        }
                     }
                 }
 
-                type = type.BaseType;    
+                type = type.BaseType;
             }
             while (type.BaseType != null);
 
@@ -260,7 +260,7 @@ namespace Microsoft.Test.OData.Framework.TestProviders.Reflection
             {
                 string setName = setProperty.Name;
                 Type baseEntityType = setProperty.PropertyType.GetGenericArguments()[0];
-                
+
                 this.resourceSetBaseResourceTypesLookup.Add(setName, baseEntityType);
 
                 // Find the derivedTypes

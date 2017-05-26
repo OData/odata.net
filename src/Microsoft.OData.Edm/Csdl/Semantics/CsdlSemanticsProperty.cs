@@ -6,8 +6,8 @@
 
 using System;
 using System.Collections.Generic;
-using Microsoft.OData.Edm.Annotations;
 using Microsoft.OData.Edm.Csdl.Parsing.Ast;
+using Microsoft.OData.Edm.Vocabularies;
 
 namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
 {
@@ -52,11 +52,6 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
         public string DefaultValueString
         {
             get { return this.property.DefaultValue; }
-        }
-
-        public EdmConcurrencyMode ConcurrencyMode
-        {
-            get { return this.property.IsFixedConcurrency ? EdmConcurrencyMode.Fixed : EdmConcurrencyMode.None; }
         }
 
         public EdmPropertyKind PropertyKind

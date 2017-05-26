@@ -4,29 +4,23 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core
+namespace Microsoft.OData
 {
     #region Namespaces
     using System;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
-    using System.Globalization;
     using System.IO;
     using System.Text;
-    using System.Xml;
-#if ODATALIB_ASYNC
+#if PORTABLELIB
     using System.Threading.Tasks;
 #endif
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Csdl;
-    using Microsoft.OData.Edm.Library;
-    using Microsoft.OData.Core.Atom;
-    using Microsoft.OData.Core.Metadata;
-    using Microsoft.OData.Core.Json;
+    using Microsoft.OData.Metadata;
     #endregion Namespaces
 
     /// <summary>
-    /// Writer class used to write all OData payloads (entries, feeds, metadata documents, service documents, etc.).
+    /// Writer class used to write all OData payloads (entries, resource sets, metadata documents, service documents, etc.).
     /// </summary>
     public sealed class ODataMessageWriter : IDisposable
     {
@@ -42,8 +36,14 @@ namespace Microsoft.OData.Core
         /// <summary>The model. Non-null if we do have metadata available.</summary>
         private readonly IEdmModel model;
 
-        /// <summary>The optional URL resolver to perform custom URL resolution for URLs written to the payload.</summary>
-        private readonly IODataUrlResolver urlResolver;
+        /// <summary>The optional URL converter to perform custom URL conversion for URLs written to the payload.</summary>
+        private readonly IODataPayloadUriConverter payloadUriConverter;
+
+        /// <summary>The optional dependency injection container to get related services for message writing.</summary>
+        private readonly IServiceProvider container;
+
+        /// <summary>The media type resolver to use when interpreting the incoming content type.</summary>
+        private readonly ODataMediaTypeResolver mediaTypeResolver;
 
         /// <summary>Flag to ensure that only a single write method is called on the message writer.</summary>
         private bool writeMethodCalled;
@@ -78,14 +78,17 @@ namespace Microsoft.OData.Core
         /// <remarks>This is either set via the SetHeadersForPayload method or implicitly when one of the write (or writer creation) methods is called.</remarks>
         private ODataMediaType mediaType;
 
-        /// <summary> Creates a new <see cref="T:Microsoft.OData.Core.ODataMessageWriter" /> for the given request message. </summary>
+        /// <summary>The context information for the message.</summary>
+        private ODataMessageInfo messageInfo;
+
+        /// <summary> Creates a new <see cref="T:Microsoft.OData.ODataMessageWriter" /> for the given request message. </summary>
         /// <param name="requestMessage">The request message for which to create the writer.</param>
         public ODataMessageWriter(IODataRequestMessage requestMessage)
             : this(requestMessage, null)
         {
         }
 
-        /// <summary> Creates a new <see cref="T:Microsoft.OData.Core.ODataMessageWriter" /> for the given request message and message writer settings. </summary>
+        /// <summary> Creates a new <see cref="T:Microsoft.OData.ODataMessageWriter" /> for the given request message and message writer settings. </summary>
         /// <param name="requestMessage">The request message for which to create the writer.</param>
         /// <param name="settings">The message writer settings to use for writing the message payload.</param>
         public ODataMessageWriter(IODataRequestMessage requestMessage, ODataMessageWriterSettings settings)
@@ -103,27 +106,28 @@ namespace Microsoft.OData.Core
         {
             ExceptionUtils.CheckArgumentNotNull(requestMessage, "requestMessage");
 
-            // Clone the settings here so we can later modify them without changing the settings passed to us by the user
-            this.settings = settings == null ? new ODataMessageWriterSettings() : new ODataMessageWriterSettings(settings);
+            this.container = GetContainer(requestMessage);
+            this.settings = ODataMessageWriterSettings.CreateWriterSettings(this.container, settings);
             this.writingResponse = false;
-            this.urlResolver = requestMessage as IODataUrlResolver;
-            this.model = model ?? EdmCoreModel.Instance;
+            this.payloadUriConverter = requestMessage as IODataPayloadUriConverter;
+            this.mediaTypeResolver = ODataMediaTypeResolver.GetMediaTypeResolver(this.container);
+            this.model = model ?? GetModel(this.container);
             WriterValidationUtils.ValidateMessageWriterSettings(this.settings, this.writingResponse);
-            this.message = new ODataRequestMessage(requestMessage, /*writing*/ true, this.settings.DisableMessageStreamDisposal, /*maxMessageSize*/ -1);
+            this.message = new ODataRequestMessage(requestMessage, /*writing*/ true, this.settings.EnableMessageStreamDisposal, /*maxMessageSize*/ -1);
 
             // Always include all annotations when writting request message.
             Debug.Assert(this.settings.ShouldIncludeAnnotation == null, "this.settings.ShouldIncludeAnnotation == null");
             this.settings.ShouldIncludeAnnotation = AnnotationFilter.CreateInclueAllFilter().Matches;
         }
 
-        /// <summary> Creates a new <see cref="T:Microsoft.OData.Core.ODataMessageWriter" /> for the given response message. </summary>
+        /// <summary> Creates a new <see cref="T:Microsoft.OData.ODataMessageWriter" /> for the given response message. </summary>
         /// <param name="responseMessage">The response message for which to create the writer.</param>
         public ODataMessageWriter(IODataResponseMessage responseMessage)
             : this(responseMessage, null)
         {
         }
 
-        /// <summary> Creates a new <see cref="T:Microsoft.OData.Core.ODataMessageWriter" /> for the given response message and message writer settings. </summary>
+        /// <summary> Creates a new <see cref="T:Microsoft.OData.ODataMessageWriter" /> for the given response message and message writer settings. </summary>
         /// <param name="responseMessage">The response message for which to create the writer.</param>
         /// <param name="settings">The message writer settings to use for writing the message payload.</param>
         public ODataMessageWriter(IODataResponseMessage responseMessage, ODataMessageWriterSettings settings)
@@ -141,13 +145,14 @@ namespace Microsoft.OData.Core
         {
             ExceptionUtils.CheckArgumentNotNull(responseMessage, "responseMessage");
 
-            // Clone the settings here so we can later modify them without changing the settings passed to us by the user
-            this.settings = settings == null ? new ODataMessageWriterSettings() : new ODataMessageWriterSettings(settings);
+            this.container = GetContainer(responseMessage);
+            this.settings = ODataMessageWriterSettings.CreateWriterSettings(this.container, settings);
             this.writingResponse = true;
-            this.urlResolver = responseMessage as IODataUrlResolver;
-            this.model = model ?? EdmCoreModel.Instance;
+            this.payloadUriConverter = responseMessage as IODataPayloadUriConverter;
+            this.mediaTypeResolver = ODataMediaTypeResolver.GetMediaTypeResolver(this.container);
+            this.model = model ?? GetModel(this.container);
             WriterValidationUtils.ValidateMessageWriterSettings(this.settings, this.writingResponse);
-            this.message = new ODataResponseMessage(responseMessage, /*writing*/ true, this.settings.DisableMessageStreamDisposal, /*maxMessageSize*/ -1);
+            this.message = new ODataResponseMessage(responseMessage, /*writing*/ true, this.settings.EnableMessageStreamDisposal, /*maxMessageSize*/ -1);
 
             // If the Preference-Applied header on the response message contains an annotation filter, we set the filter
             // to the writer settings so that we would only write annotations that satisfy the filter.
@@ -169,91 +174,87 @@ namespace Microsoft.OData.Core
             }
         }
 
-        /// <summary> Creates an <see cref="T:Microsoft.OData.Core.ODataAsyncWriter" /> to write an async response. </summary>
+        /// <summary> Creates an <see cref="T:Microsoft.OData.ODataAsyncWriter" /> to write an async response. </summary>
         /// <returns>The created writer.</returns>
         public ODataAsynchronousWriter CreateODataAsynchronousWriter()
         {
             this.VerifyCanCreateODataAsyncWriter();
             return this.WriteToOutput(
                 ODataPayloadKind.Asynchronous,
-                null /* verifyHeaders */,
                 context => context.CreateODataAsynchronousWriter());
         }
 
-        /// <summary> Creates an <see cref="T:Microsoft.OData.Core.ODataWriter" /> to write a feed. </summary>
+        /// <summary> Creates an <see cref="T:Microsoft.OData.ODataWriter" /> to write a resource set. </summary>
         /// <returns>The created writer.</returns>
-        public ODataWriter CreateODataFeedWriter()
+        public ODataWriter CreateODataResourceSetWriter()
         {
-            return CreateODataFeedWriter(/*entitySet*/null, /*entityType*/null);
+            return CreateODataResourceSetWriter(/*entitySet*/null, /*entityType*/null);
         }
 
         /// <summary>
-        /// Creates an <see cref="ODataWriter" /> to write a feed.
+        /// Creates an <see cref="ODataWriter" /> to write a resource set.
         /// </summary>
         /// <returns>The created writer.</returns>
         /// <param name="entitySet">The entity set we are going to write entities for.</param>
-        public ODataWriter CreateODataFeedWriter(IEdmEntitySetBase entitySet)
+        public ODataWriter CreateODataResourceSetWriter(IEdmEntitySetBase entitySet)
         {
-            return CreateODataFeedWriter(entitySet, /*entityType*/null);
+            return CreateODataResourceSetWriter(entitySet, /*entityType*/null);
         }
 
         /// <summary>
-        /// Creates an <see cref="ODataWriter" /> to write a feed.
+        /// Creates an <see cref="ODataWriter" /> to write a resource set.
         /// </summary>
         /// <returns>The created writer.</returns>
         /// <param name="entitySet">The entity set we are going to write entities for.</param>
-        /// <param name="entityType">The entity type for the entries in the feed to be written (or null if the entity set base type should be used).</param>
-        public ODataWriter CreateODataFeedWriter(IEdmEntitySetBase entitySet, IEdmEntityType entityType)
+        /// <param name="resourceType">The entity type for the entries in the resource set to be written (or null if the entity set base type should be used).</param>
+        public ODataWriter CreateODataResourceSetWriter(IEdmEntitySetBase entitySet, IEdmStructuredType resourceType)
         {
-            this.VerifyCanCreateODataFeedWriter();
+            this.VerifyCanCreateODataResourceSetWriter();
             return this.WriteToOutput(
-                ODataPayloadKind.Feed,
-                null /* verifyHeaders */,
-                (context) => context.CreateODataFeedWriter(entitySet, entityType));
+                ODataPayloadKind.ResourceSet,
+                (context) => context.CreateODataResourceSetWriter(entitySet, resourceType));
         }
 
-#if ODATALIB_ASYNC
-        /// <summary> Asynchronously creates an <see cref="T:Microsoft.OData.Core.ODataAsyncWriter" /> to write an async response. </summary>
+#if PORTABLELIB
+        /// <summary> Asynchronously creates an <see cref="T:Microsoft.OData.ODataAsyncWriter" /> to write an async response. </summary>
         /// <returns>A running task for the created writer.</returns>
         public Task<ODataAsynchronousWriter> CreateODataAsynchronousWriterAsync()
         {
             this.VerifyCanCreateODataAsyncWriter();
             return this.WriteToOutputAsync(
                 ODataPayloadKind.Asynchronous,
-                null /* verifyHeaders */,
                 (context) => context.CreateODataAsynchronousWriterAsync());
         }
 
-        /// <summary> Asynchronously creates an <see cref="T:Microsoft.OData.Core.ODataWriter" /> to write a feed. </summary>
+        /// <summary> Asynchronously creates an <see cref="T:Microsoft.OData.ODataWriter" /> to write a resource set. </summary>
         /// <returns>A running task for the created writer.</returns>
-        public Task<ODataWriter> CreateODataFeedWriterAsync()
+        public Task<ODataWriter> CreateODataResourceSetWriterAsync()
         {
-            return CreateODataFeedWriterAsync(/*entitySet*/null, /*entityType*/null);
+            return CreateODataResourceSetWriterAsync(/*entitySet*/null, /*entityType*/null);
         }
 
         /// <summary>
-        /// Asynchronously creates an <see cref="ODataWriter" /> to write a feed.
+        /// Asynchronously creates an <see cref="ODataWriter" /> to write a resource set.
         /// </summary>
         /// <param name="entitySet">The entity set we are going to write entities for.</param>
         /// <returns>A running task for the created writer.</returns>
-        public Task<ODataWriter> CreateODataFeedWriterAsync(IEdmEntitySetBase entitySet)
+        public Task<ODataWriter> CreateODataResourceSetWriterAsync(IEdmEntitySetBase entitySet)
         {
-            return CreateODataFeedWriterAsync(entitySet, /*entityType*/null);
+            return CreateODataResourceSetWriterAsync(entitySet, /*entityType*/null);
         }
 
         /// <summary>
-        /// Asynchronously creates an <see cref="ODataWriter" /> to write a feed.
+        /// Asynchronously creates an <see cref="ODataWriter" /> to write a resource set.
         /// </summary>
         /// <param name="entitySet">The entity set we are going to write entities for.</param>
-        /// <param name="entityType">The entity type for the entries in the feed to be written (or null if the entity set base type should be used).</param>
+        /// <param name="entityType">The entity type for the entries in the resource set to be written (or null if the entity set base type should be used).</param>
         /// <returns>A running task for the created writer.</returns>
-        public Task<ODataWriter> CreateODataFeedWriterAsync(IEdmEntitySetBase entitySet, IEdmEntityType entityType)
+        public Task<ODataWriter> CreateODataResourceSetWriterAsync(IEdmEntitySetBase entitySet, IEdmEntityType entityType)
         {
-            this.VerifyCanCreateODataFeedWriter();
+            this.VerifyCanCreateODataResourceSetWriter();
             return this.WriteToOutputAsync(
-                ODataPayloadKind.Feed,
-                null /* verifyHeaders */,
-                (context) => context.CreateODataFeedWriterAsync(entitySet, entityType));
+                ODataPayloadKind.ResourceSet,
+                (context) => context.CreateODataResourceSetWriterAsync(entitySet, entityType));
         }
 #endif
 
@@ -262,100 +263,156 @@ namespace Microsoft.OData.Core
         /// </summary>
         /// <returns>The created writer.</returns>
         /// <param name="entitySet">The entity set we are going to write entities for.</param>
-        /// <param name="entityType">The entity type for the entries in the feed to be written (or null if the entity set base type should be used).</param>
+        /// <param name="entityType">The entity type for the entries in the resource set to be written (or null if the entity set base type should be used).</param>
         public ODataDeltaWriter CreateODataDeltaWriter(IEdmEntitySetBase entitySet, IEdmEntityType entityType)
         {
             this.VerifyCanCreateODataDeltaWriter();
             return this.WriteToOutput(
-                ODataPayloadKind.Feed,
-                null /* verifyHeaders */,
+                ODataPayloadKind.ResourceSet,
                 (context) => context.CreateODataDeltaWriter(entitySet, entityType));
         }
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary>
         /// Asynchronously creates an <see cref="ODataDeltaWriter" /> to write a delta response.
         /// </summary>
         /// <param name="entitySet">The entity set we are going to write entities for.</param>
-        /// <param name="entityType">The entity type for the entries in the feed to be written (or null if the entity set base type should be used).</param>
+        /// <param name="entityType">The entity type for the entries in the resource set to be written (or null if the entity set base type should be used).</param>
         /// <returns>A running task for the created writer.</returns>
         public Task<ODataDeltaWriter> CreateODataDeltaWriterAsync(IEdmEntitySetBase entitySet, IEdmEntityType entityType)
         {
-            this.VerifyCanCreateODataFeedWriter();
+            this.VerifyCanCreateODataResourceSetWriter();
             return this.WriteToOutputAsync(
-                ODataPayloadKind.Feed,
-                null /* verifyHeaders */,
+                ODataPayloadKind.ResourceSet,
                 (context) => context.CreateODataDeltaWriterAsync(entitySet, entityType));
         }
 #endif
 
-        /// <summary> Creates an <see cref="T:Microsoft.OData.Core.ODataWriter" /> to write an entry. </summary>
+        /// <summary> Creates an <see cref="T:Microsoft.OData.ODataWriter" /> to write a resource. </summary>
         /// <returns>The created writer.</returns>
-        public ODataWriter CreateODataEntryWriter()
+        public ODataWriter CreateODataResourceWriter()
         {
-            return CreateODataEntryWriter(/*navigationSource*/null, /*entityType*/ null);
+            return CreateODataResourceWriter(/*navigationSource*/null, /*resourceType*/ null);
         }
 
         /// <summary>
-        /// Creates an <see cref="ODataWriter" /> to write an entry.
+        /// Creates an <see cref="ODataWriter" /> to write a resource.
         /// </summary>
-        /// <param name="navigationSource">The navigation source we are going to write entities for.</param>
+        /// <param name="navigationSource">The navigation source we are going to write resources for.</param>
         /// <returns>The created writer.</returns>
-        public ODataWriter CreateODataEntryWriter(IEdmNavigationSource navigationSource)
+        public ODataWriter CreateODataResourceWriter(IEdmNavigationSource navigationSource)
         {
-            return CreateODataEntryWriter(navigationSource, /*entityType*/ null);
+            return CreateODataResourceWriter(navigationSource, /*resourceType*/ null);
         }
 
         /// <summary>
-        /// Creates an <see cref="ODataWriter" /> to write an entry.
+        /// Creates an <see cref="ODataWriter" /> to write a resource.
         /// </summary>
-        /// <param name="navigationSource">The navigation source we are going to write entities for.</param>
-        /// <param name="entityType">The entity type for the entries in the feed to be written (or null if the entity set base type should be used).</param>
+        /// <param name="navigationSource">The navigation source we are going to write resource set for.</param>
+        /// <param name="resourceType">The structured type for the items in the resource set to be written (or null if the entity set base type should be used).</param>
         /// <returns>The created writer.</returns>
-        public ODataWriter CreateODataEntryWriter(IEdmNavigationSource navigationSource, IEdmEntityType entityType)
+        public ODataWriter CreateODataResourceWriter(IEdmNavigationSource navigationSource, IEdmStructuredType resourceType)
         {
-            this.VerifyCanCreateODataEntryWriter();
+            this.VerifyCanCreateODataResourceWriter();
             return this.WriteToOutput(
-                ODataPayloadKind.Entry,
-                null /* verifyHeaders */,
-                (context) => context.CreateODataEntryWriter(navigationSource, entityType));
+                ODataPayloadKind.Resource,
+                (context) => context.CreateODataResourceWriter(navigationSource, resourceType));
         }
 
-#if ODATALIB_ASYNC
-        /// <summary> Asynchronously creates an <see cref="T:Microsoft.OData.Core.ODataWriter" /> to write an entry. </summary>
+#if PORTABLELIB
+        /// <summary> Asynchronously creates an <see cref="T:Microsoft.OData.ODataWriter" /> to write a resource. </summary>
         /// <returns>A running task for the created writer.</returns>
-        public Task<ODataWriter> CreateODataEntryWriterAsync()
+        public Task<ODataWriter> CreateODataResourceWriterAsync()
         {
-            return CreateODataEntryWriterAsync(/*entitySet*/null, /*entityType*/null);
-        }
-
-        /// <summary>
-        /// Asynchronously creates an <see cref="ODataWriter" /> to write an entry.
-        /// </summary>
-        /// <param name="navigationSource">The navigation source we are going to write entities for.</param>
-        /// <returns>A running task for the created writer.</returns>
-        public Task<ODataWriter> CreateODataEntryWriterAsync(IEdmNavigationSource navigationSource)
-        {
-            return CreateODataEntryWriterAsync(navigationSource, /*entityType*/null);
+            return CreateODataResourceWriterAsync(/*entitySet*/null, /*resourceType*/null);
         }
 
         /// <summary>
-        /// Asynchronously creates an <see cref="ODataWriter" /> to write an entry.
+        /// Asynchronously creates an <see cref="ODataWriter" /> to write a resource.
         /// </summary>
         /// <param name="navigationSource">The navigation source we are going to write entities for.</param>
-        /// <param name="entityType">The entity type for the entries in the feed to be written (or null if the entity set base type should be used).</param>
         /// <returns>A running task for the created writer.</returns>
-        public Task<ODataWriter> CreateODataEntryWriterAsync(IEdmNavigationSource navigationSource, IEdmEntityType entityType)
+        public Task<ODataWriter> CreateODataResourceWriterAsync(IEdmNavigationSource navigationSource)
         {
-            this.VerifyCanCreateODataEntryWriter();
+            return CreateODataResourceWriterAsync(navigationSource, /*resourceType*/null);
+        }
+
+        /// <summary>
+        /// Asynchronously creates an <see cref="ODataWriter" /> to write a resource.
+        /// </summary>
+        /// <param name="navigationSource">The navigation source we are going to write resource set for.</param>
+        /// <param name="resourceType">The structured type for the items in the resource set to be written (or null if the entity set base type should be used).</param>
+        /// <returns>A running task for the created writer.</returns>
+        public Task<ODataWriter> CreateODataResourceWriterAsync(IEdmNavigationSource navigationSource, IEdmStructuredType resourceType)
+        {
+            this.VerifyCanCreateODataResourceWriter();
             return this.WriteToOutputAsync(
-                ODataPayloadKind.Entry,
-                null /* verifyHeaders */,
-                (context) => context.CreateODataEntryWriterAsync(navigationSource, entityType));
+                ODataPayloadKind.Resource,
+                (context) => context.CreateODataResourceWriterAsync(navigationSource, resourceType));
         }
 #endif
 
-        /// <summary> Creates an <see cref="T:Microsoft.OData.Core.ODataCollectionWriter" /> to write a collection of primitive or complex values (as result of a service operation invocation). </summary>
+        /// <summary>
+        /// Creates an <see cref="ODataWriter" /> to write a Uri operation parameter.
+        /// </summary>
+        /// <param name="navigationSource">The navigation source we are going to write resource for.</param>
+        /// <param name="resourceType">The structured type for the resources in the resource set to be written.</param>
+        /// <returns>The created uri parameter writer.</returns>
+        public ODataWriter CreateODataUriParameterResourceWriter(IEdmNavigationSource navigationSource, IEdmStructuredType resourceType)
+        {
+            this.VerifyCanCreateODataResourceWriter();
+            return this.WriteToOutput(
+                ODataPayloadKind.Resource,
+                (context) => context.CreateODataUriParameterResourceWriter(navigationSource, resourceType));
+        }
+
+#if PORTABLELIB
+        /// <summary>
+        /// Asynchronously creates an <see cref="ODataWriter" /> to write Uri operation parameter.
+        /// </summary>
+        /// <param name="navigationSource">The navigation source we are going to write resource for.</param>
+        /// <param name="resourceType">The structured type for the resources in the resource set to be written.</param>
+        /// <returns>A running task for the created uri parameter writer.</returns>
+        public Task<ODataWriter> CreateODataUriParameterResourceWriterAsync(IEdmNavigationSource navigationSource, IEdmStructuredType resourceType)
+        {
+            this.VerifyCanCreateODataResourceWriter();
+            return this.WriteToOutputAsync(
+                ODataPayloadKind.Resource,
+                (context) => context.CreateODataUriParameterResourceWriterAsync(navigationSource, resourceType));
+        }
+#endif
+
+        /// <summary>
+        /// Creates an <see cref="ODataWriter" /> to write a Uri operation parameter.
+        /// </summary>
+        /// <param name="entitySetBase">The resource set we are going to write resources for.</param>
+        /// <param name="resourceType">The structured type for the resources in the resource set to be written.</param>
+        /// <returns>The created uri parameter writer.</returns>
+        public ODataWriter CreateODataUriParameterResourceSetWriter(IEdmEntitySetBase entitySetBase, IEdmStructuredType resourceType)
+        {
+            this.VerifyCanCreateODataResourceSetWriter();
+            return this.WriteToOutput(
+                ODataPayloadKind.ResourceSet,
+                (context) => context.CreateODataUriParameterResourceSetWriter(entitySetBase, resourceType));
+        }
+
+#if PORTABLELIB
+        /// <summary>
+        /// Asynchronously creates an <see cref="ODataWriter" /> to write Uri operation parameter.
+        /// </summary>
+        /// <param name="entitySetBase">The resource set we are going to write resources for.</param>
+        /// <param name="resourceType">The structured type for the resources in the resource set to be written.</param>
+        /// <returns>A running task for the created uri parameter writer.</returns>
+        public Task<ODataWriter> CreateODataUriParameterResourceSetWriterAsync(IEdmEntitySetBase entitySetBase, IEdmStructuredType resourceType)
+        {
+            this.VerifyCanCreateODataResourceSetWriter();
+            return this.WriteToOutputAsync(
+                ODataPayloadKind.ResourceSet,
+                (context) => context.CreateODataUriParameterResourceSetWriterAsync(entitySetBase, resourceType));
+        }
+#endif
+
+        /// <summary> Creates an <see cref="T:Microsoft.OData.ODataCollectionWriter" /> to write a collection of primitive or complex values (as result of a service operation invocation). </summary>
         /// <returns>The created collection writer.</returns>
         public ODataCollectionWriter CreateODataCollectionWriter()
         {
@@ -372,12 +429,11 @@ namespace Microsoft.OData.Core
             this.VerifyCanCreateODataCollectionWriter(itemTypeReference);
             return this.WriteToOutput(
                 ODataPayloadKind.Collection,
-                null /* verifyHeaders */,
                 (context) => context.CreateODataCollectionWriter(itemTypeReference));
         }
 
-#if ODATALIB_ASYNC
-        /// <summary> Asynchronously creates an <see cref="T:Microsoft.OData.Core.ODataCollectionWriter" /> to write a collection of primitive or complex values (as result of a service operation invocation). </summary>
+#if PORTABLELIB
+        /// <summary> Asynchronously creates an <see cref="T:Microsoft.OData.ODataCollectionWriter" /> to write a collection of primitive or complex values (as result of a service operation invocation). </summary>
         /// <returns>A running task for the created collection writer.</returns>
         public Task<ODataCollectionWriter> CreateODataCollectionWriterAsync()
         {
@@ -394,31 +450,28 @@ namespace Microsoft.OData.Core
             this.VerifyCanCreateODataCollectionWriter(itemTypeReference);
             return this.WriteToOutputAsync(
                 ODataPayloadKind.Collection,
-                null /* verifyHeaders */,
                 (context) => context.CreateODataCollectionWriterAsync(itemTypeReference));
         }
 #endif
 
-        /// <summary> Creates an <see cref="T:Microsoft.OData.Core.ODataBatchWriter" /> to write a batch of requests or responses. </summary>
+        /// <summary> Creates an <see cref="T:Microsoft.OData.ODataBatchWriter" /> to write a batch of requests or responses. </summary>
         /// <returns>The created batch writer.</returns>
         public ODataBatchWriter CreateODataBatchWriter()
         {
             this.VerifyCanCreateODataBatchWriter();
             return this.WriteToOutput(
                 ODataPayloadKind.Batch,
-                null /* verifyHeaders */,
                 (context) => context.CreateODataBatchWriter(this.batchBoundary));
         }
 
-#if ODATALIB_ASYNC
-        /// <summary> Asynchronously creates an <see cref="T:Microsoft.OData.Core.ODataBatchWriter" /> to write a batch of requests or responses. </summary>
+#if PORTABLELIB
+        /// <summary> Asynchronously creates an <see cref="T:Microsoft.OData.ODataBatchWriter" /> to write a batch of requests or responses. </summary>
         /// <returns>A running task for the created batch writer.</returns>
         public Task<ODataBatchWriter> CreateODataBatchWriterAsync()
         {
             this.VerifyCanCreateODataBatchWriter();
             return this.WriteToOutputAsync(
                 ODataPayloadKind.Batch,
-                null /* verifyHeaders */,
                 (context) => context.CreateODataBatchWriterAsync(this.batchBoundary));
         }
 #endif
@@ -433,11 +486,10 @@ namespace Microsoft.OData.Core
             this.VerifyCanCreateODataParameterWriter(operation);
             return this.WriteToOutput(
                 ODataPayloadKind.Parameter,
-                null,
                 (context) => context.CreateODataParameterWriter(operation));
         }
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary>
         /// Asynchronously creates an <see cref="ODataParameterWriter" /> to write a parameter payload.
         /// </summary>
@@ -448,7 +500,6 @@ namespace Microsoft.OData.Core
             this.VerifyCanCreateODataParameterWriter(operation);
             return this.WriteToOutputAsync(
                 ODataPayloadKind.Parameter,
-                null,
                 (context) => context.CreateODataParameterWriterAsync(operation));
         }
 #endif
@@ -460,11 +511,10 @@ namespace Microsoft.OData.Core
             this.VerifyCanWriteServiceDocument(serviceDocument);
             this.WriteToOutput(
                 ODataPayloadKind.ServiceDocument,
-                null /* verifyHeaders */,
                 (context) => context.WriteServiceDocument(serviceDocument));
         }
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary> Asynchronously writes a service document with the specified <paramref name="serviceDocument" /> as the message payload. </summary>
         /// <returns>A task representing the asynchronous operation of writing the service document.</returns>
         /// <param name="serviceDocument">The service document to write.</param>
@@ -473,24 +523,22 @@ namespace Microsoft.OData.Core
             this.VerifyCanWriteServiceDocument(serviceDocument);
             return this.WriteToOutputAsync(
                 ODataPayloadKind.ServiceDocument,
-                null /* verifyHeaders */,
                 (context) => context.WriteServiceDocumentAsync(serviceDocument));
         }
 #endif
 
-        /// <summary> Writes an <see cref="T:Microsoft.OData.Core.ODataProperty" /> as the message payload. </summary>
+        /// <summary> Writes an <see cref="T:Microsoft.OData.ODataProperty" /> as the message payload. </summary>
         /// <param name="property">The property to write.</param>
         public void WriteProperty(ODataProperty property)
         {
             this.VerifyCanWriteProperty(property);
             this.WriteToOutput(
                 ODataPayloadKind.Property,
-                null /* verifyHeaders */,
                 (context) => context.WriteProperty(property));
         }
 
-#if ODATALIB_ASYNC
-        /// <summary> Asynchronously writes an <see cref="T:Microsoft.OData.Core.ODataProperty" /> as the message payload. </summary>
+#if PORTABLELIB
+        /// <summary> Asynchronously writes an <see cref="T:Microsoft.OData.ODataProperty" /> as the message payload. </summary>
         /// <returns>A task representing the asynchronous operation of writing the property.</returns>
         /// <param name="property">The property to write</param>
         public Task WritePropertyAsync(ODataProperty property)
@@ -498,19 +546,18 @@ namespace Microsoft.OData.Core
             this.VerifyCanWriteProperty(property);
             return this.WriteToOutputAsync(
                 ODataPayloadKind.Property,
-                null /* verifyHeaders */,
                 (context) => context.WritePropertyAsync(property));
         }
 #endif
 
-        /// <summary> Writes an <see cref="T:Microsoft.OData.Core.ODataError" /> as the message payload. </summary>
+        /// <summary> Writes an <see cref="T:Microsoft.OData.ODataError" /> as the message payload. </summary>
         /// <param name="error">The error to write.</param>
         /// <param name="includeDebugInformation"> A flag indicating whether debug information (for example, the inner error from the <paramref name="error" />) should be included in the payload. This should only be used in debug scenarios. </param>
         public void WriteError(ODataError error, bool includeDebugInformation)
         {
             // We currently assume that the error is top-level if no create/write method has been called on this message writer.
             // It is possible that the user would create a Json writer, but writes nothing to it before writes the first error.
-            // For example it is valid to call CreateEntryWriter() and then WriteError(). In that case the Json payload would
+            // For example it is valid to call CreateResourceWriter() and then WriteError(). In that case the Json payload would
             // contain just an error without the Json wrapper.
             if (this.outputContext == null)
             {
@@ -518,7 +565,6 @@ namespace Microsoft.OData.Core
                 this.VerifyCanWriteTopLevelError(error);
                 this.WriteToOutput(
                     ODataPayloadKind.Error,
-                    null /* verifyHeaders */,
                     (context) => context.WriteError(error, includeDebugInformation));
                 return;
             }
@@ -528,8 +574,8 @@ namespace Microsoft.OData.Core
             this.outputContext.WriteInStreamError(error, includeDebugInformation);
         }
 
-#if ODATALIB_ASYNC
-        /// <summary> Asynchronously writes an <see cref="T:Microsoft.OData.Core.ODataError" /> as the message payload. </summary>
+#if PORTABLELIB
+        /// <summary> Asynchronously writes an <see cref="T:Microsoft.OData.ODataError" /> as the message payload. </summary>
         /// <returns>A task representing the asynchronous operation of writing the error.</returns>
         /// <param name="error">The error to write.</param>
         /// <param name="includeDebugInformation"> A flag indicating whether debug information (for example, the inner error from the <paramref name="error" />) should be included in the payload. This should only be used in debug scenarios. </param>
@@ -537,7 +583,7 @@ namespace Microsoft.OData.Core
         {
             // We currently assume that the error is top-level if no create/write method has been called on this message writer.
             // It is possible that the user would create a Json writer, but writes nothing to it before writes the first error.
-            // For example it is valid to call CreateEntryWriter() and then WriteError(). In that case the Json payload would
+            // For example it is valid to call CreateResourceWriter() and then WriteError(). In that case the Json payload would
             // contain just an error without the Json wrapper.
             if (this.outputContext == null)
             {
@@ -545,7 +591,6 @@ namespace Microsoft.OData.Core
                 this.VerifyCanWriteTopLevelError(error);
                 return this.WriteToOutputAsync(
                     ODataPayloadKind.Error,
-                    null /* verifyHeaders */,
                     (context) => context.WriteErrorAsync(error, includeDebugInformation));
             }
 
@@ -562,11 +607,10 @@ namespace Microsoft.OData.Core
             this.VerifyCanWriteEntityReferenceLinks(links);
             this.WriteToOutput(
                 ODataPayloadKind.EntityReferenceLinks,
-                null,
                 (context) => context.WriteEntityReferenceLinks(links));
         }
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary> Asynchronously writes the result of a $ref query as the message payload. </summary>
         /// <returns>A task representing the asynchronous writing of the entity reference links.</returns>
         /// <param name="links">The entity reference links to write as message payload.</param>
@@ -575,7 +619,6 @@ namespace Microsoft.OData.Core
             this.VerifyCanWriteEntityReferenceLinks(links);
             return this.WriteToOutputAsync(
                 ODataPayloadKind.EntityReferenceLinks,
-                null,
                 (context) => context.WriteEntityReferenceLinksAsync(links));
         }
 #endif
@@ -587,11 +630,10 @@ namespace Microsoft.OData.Core
             this.VerifyCanWriteEntityReferenceLink(link);
             this.WriteToOutput(
                 ODataPayloadKind.EntityReferenceLink,
-                null /* verifyHeaders */,
                 (context) => context.WriteEntityReferenceLink(link));
         }
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary> Asynchronously writes a singleton result of a $ref query as the message payload. </summary>
         /// <returns>A running task representing the writing of the link.</returns>
         /// <param name="link">The link result to write as the message payload.</param>
@@ -600,7 +642,6 @@ namespace Microsoft.OData.Core
             this.VerifyCanWriteEntityReferenceLink(link);
             return this.WriteToOutputAsync(
                 ODataPayloadKind.EntityReferenceLink,
-                null /* verifyHeaders */,
                 (context) => context.WriteEntityReferenceLinkAsync(link));
         }
 #endif
@@ -612,11 +653,10 @@ namespace Microsoft.OData.Core
             ODataPayloadKind payloadKind = this.VerifyCanWriteValue(value);
             this.WriteToOutput(
                 payloadKind,
-                null /* verifyHeaders */,
                 (context) => context.WriteValue(value));
         }
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary> Asynchronously writes a single value as the message body. </summary>
         /// <returns>A running task representing the writing of the value.</returns>
         /// <param name="value">The value to write.</param>
@@ -625,7 +665,6 @@ namespace Microsoft.OData.Core
             ODataPayloadKind payloadKind = this.VerifyCanWriteValue(value);
             return this.WriteToOutputAsync(
                 payloadKind,
-                null /* verifyHeaders */,
                 (context) => context.WriteValueAsync(value));
         }
 #endif
@@ -636,7 +675,6 @@ namespace Microsoft.OData.Core
             this.VerifyCanWriteMetadataDocument();
             this.WriteToOutput(
                 ODataPayloadKind.MetadataDocument,
-                null /* verifyHeaders */,
                 (context) => context.WriteMetadataDocument());
         }
 
@@ -674,9 +712,29 @@ namespace Microsoft.OData.Core
             return this.format;
         }
 
+        private static IServiceProvider GetContainer<T>(T message)
+            where T : class
+        {
+#if PORTABLELIB
+            var containerProvider = message as IContainerProvider;
+            return containerProvider == null ? null : containerProvider.Container;
+#else
+            return null;
+#endif
+        }
+
+        private static IEdmModel GetModel(IServiceProvider container)
+        {
+#if PORTABLELIB
+            return container == null ? EdmCoreModel.Instance : container.GetRequiredService<IEdmModel>();
+#else
+            return EdmCoreModel.Instance;
+#endif
+        }
+
         /// <summary>
         /// If no headers have been set, sets the content-type and OData-Version headers on the message used by the message writer.
-        /// If headers have been set explicitly (via ODataUtils.SetHeaderForPayload) this method verifies that the payload kind used to 
+        /// If headers have been set explicitly (via ODataUtils.SetHeaderForPayload) this method verifies that the payload kind used to
         /// create the headers is the same as the one being passed in <paramref name="payloadKind"/>.
         /// </summary>
         /// <param name="payloadKind">The kind of payload to be written with this message writer.</param>
@@ -684,7 +742,7 @@ namespace Microsoft.OData.Core
         {
             Debug.Assert(payloadKind != ODataPayloadKind.Unsupported, "payloadKind != ODataPayloadKind.Unsupported");
 
-            // verify that no payload kind has been set or that the payload kind set previously and the 
+            // verify that no payload kind has been set or that the payload kind set previously and the
             // payload that is attempted to being written are the same
             this.VerifyPayloadKind(payloadKind);
 
@@ -725,13 +783,6 @@ namespace Microsoft.OData.Core
                 // Set the OData-Version
                 ODataUtilsInternal.SetODataVersion(this.message, this.settings);
             }
-
-            // If the version is set to >= 3.0 we must not have a format behavior other than the default behavior.
-            // Custom format behaviors for the WCF DS client and server are only supported in versions < 3.0
-            if (this.settings.WriterBehavior.FormatBehaviorKind != ODataBehaviorKind.Default)
-            {
-                this.settings.WriterBehavior.UseDefaultFormatBehavior();
-            }
         }
 
         /// <summary>
@@ -739,10 +790,10 @@ namespace Microsoft.OData.Core
         /// header of the message.
         /// </summary>
         /// <remarks>
-        /// This method computes and ensures that a content type exists and computes the 
-        /// OData format from it. If a content type is explicitly specified through 
-        /// <see cref="Microsoft.OData.Core.ODataUtils.SetHeadersForPayload(Microsoft.OData.Core.ODataMessageWriter, Microsoft.OData.Core.ODataPayloadKind)"/>
-        /// or <see cref="Microsoft.OData.Core.ODataMessageWriterSettings.SetContentType(string, string)"/> it will be used. If no
+        /// This method computes and ensures that a content type exists and computes the
+        /// OData format from it. If a content type is explicitly specified through
+        /// <see cref="Microsoft.OData.ODataUtils.SetHeadersForPayload(Microsoft.OData.ODataMessageWriter, Microsoft.OData.ODataPayloadKind)"/>
+        /// or <see cref="Microsoft.OData.ODataMessageWriterSettings.SetContentType(string, string)"/> it will be used. If no
         /// content type is specified in either place, the message headers are checked for
         /// a content type header.
         /// If the content type is computed from settings, the content type header is set on the message.
@@ -764,7 +815,7 @@ namespace Microsoft.OData.Core
             if (!string.IsNullOrEmpty(contentType))
             {
                 ODataPayloadKind computedPayloadKind;
-                this.format = MediaTypeUtils.GetFormatFromContentType(contentType, new ODataPayloadKind[] { this.writerPayloadKind }, this.settings.MediaTypeResolver, out this.mediaType, out this.encoding, out computedPayloadKind, out this.batchBoundary);
+                this.format = MediaTypeUtils.GetFormatFromContentType(contentType, new ODataPayloadKind[] { this.writerPayloadKind }, this.mediaTypeResolver, out this.mediaType, out this.encoding, out computedPayloadKind, out this.batchBoundary);
                 Debug.Assert(this.writerPayloadKind == computedPayloadKind, "The payload kinds must always match.");
 
                 if (this.settings.HasJsonPaddingFunction())
@@ -781,7 +832,7 @@ namespace Microsoft.OData.Core
             {
                 // Determine the content type and format from the settings. Note that if neither format nor accept headers have been specified in the settings
                 // we fall back to a default (of null accept headers).
-                this.format = MediaTypeUtils.GetContentTypeFromSettings(this.settings, this.writerPayloadKind, this.settings.MediaTypeResolver, out this.mediaType, out this.encoding);
+                this.format = MediaTypeUtils.GetContentTypeFromSettings(this.settings, this.writerPayloadKind, this.mediaTypeResolver, out this.mediaType, out this.encoding);
 
                 if (this.writerPayloadKind == ODataPayloadKind.Batch)
                 {
@@ -837,9 +888,9 @@ namespace Microsoft.OData.Core
         }
 
         /// <summary>
-        /// Verifies that feed writer can be created.
+        /// Verifies that resource set writer can be created.
         /// </summary>
-        private void VerifyCanCreateODataFeedWriter()
+        private void VerifyCanCreateODataResourceSetWriter()
         {
             this.VerifyWriterNotDisposedAndNotUsed();
         }
@@ -860,9 +911,9 @@ namespace Microsoft.OData.Core
         }
 
         /// <summary>
-        /// Verifies that entry writer can be created.
+        /// Verifies that resource writer can be created.
         /// </summary>
-        private void VerifyCanCreateODataEntryWriter()
+        private void VerifyCanCreateODataResourceWriter()
         {
             this.VerifyWriterNotDisposedAndNotUsed();
         }
@@ -980,7 +1031,7 @@ namespace Microsoft.OData.Core
 
             this.VerifyNotDisposed();
 
-            // We only allow writing top-level error to response messages. Do we have any scenario to write in-stream errors to request messages? 
+            // We only allow writing top-level error to response messages. Do we have any scenario to write in-stream errors to request messages?
             //             We decided to not allow in-stream errors in requests.
             if (!this.writingResponse)
             {
@@ -1046,9 +1097,9 @@ namespace Microsoft.OData.Core
 
             this.VerifyWriterNotDisposedAndNotUsed();
 
-            // We cannot use AtomValueUtils.TryConvertPrimitiveToString for all cases since binary values are
-            // converted into unencoded byte streams in the raw format 
-            // (as opposed to base64 encoded byte streams in the AtomValueUtils); see OIPI 2.2.6.4.1.
+            // We cannot use ODataRawValueUtils.TryConvertPrimitiveToString for all cases since binary values are
+            // converted into unencoded byte streams in the raw format
+            // (as opposed to base64 encoded byte streams in the ODataRawValueUtils); see OIPI 2.2.6.4.1.
             return value is byte[] ? ODataPayloadKind.BinaryValue : ODataPayloadKind.Value;
         }
 
@@ -1139,36 +1190,45 @@ namespace Microsoft.OData.Core
             }
         }
 
+        private ODataMessageInfo GetOrCreateMessageInfo(Stream messageStream, bool isAsync)
+        {
+            if (this.messageInfo == null)
+            {
+                if (this.container == null)
+                {
+                    this.messageInfo = new ODataMessageInfo();
+                }
+                else
+                {
+                    this.messageInfo = this.container.GetRequiredService<ODataMessageInfo>();
+                }
+
+                this.messageInfo.Encoding = this.encoding;
+                this.messageInfo.IsResponse = this.writingResponse;
+                this.messageInfo.IsAsync = isAsync;
+                this.messageInfo.MediaType = this.mediaType;
+                this.messageInfo.Model = this.model;
+                this.messageInfo.PayloadUriConverter = this.payloadUriConverter;
+                this.messageInfo.Container = this.container;
+                this.messageInfo.MessageStream = messageStream;
+            }
+
+            return this.messageInfo;
+        }
+
         /// <summary>
         /// Creates an output context and invokes a write operation on it.
         /// </summary>
         /// <param name="payloadKind">The payload kind to write.</param>
-        /// <param name="verifyHeaders">Optional action which will be called after the headers has been verified to perform payload specific verification.</param>
         /// <param name="writeAction">The write operation to invoke on the output.</param>
-        private void WriteToOutput(ODataPayloadKind payloadKind, Action verifyHeaders, Action<ODataOutputContext> writeAction)
+        private void WriteToOutput(ODataPayloadKind payloadKind, Action<ODataOutputContext> writeAction)
         {
             // Set the content type header here since all headers have to be set before getting the stream
             this.SetOrVerifyHeaders(payloadKind);
 
-            if (verifyHeaders != null)
-            {
-                verifyHeaders();
-            }
-
             // Create the output context
             this.outputContext = this.format.CreateOutputContext(
-                new ODataMessageInfo()
-                {
-                    Encoding = this.encoding,
-                    GetMessageStream = this.message.GetStream,
-#if ODATALIB_ASYNC
-                    GetMessageStreamAsync = this.message.GetStreamAsync,
-#endif
-                    IsResponse = this.writingResponse,
-                    MediaType = this.mediaType,
-                    Model = this.model,
-                    UrlResolver = this.urlResolver,
-                },
+                this.GetOrCreateMessageInfo(this.message.GetStream(), false),
                 this.settings);
             writeAction(this.outputContext);
         }
@@ -1178,74 +1238,41 @@ namespace Microsoft.OData.Core
         /// </summary>
         /// <typeparam name="TResult">The type of the result of the write operation.</typeparam>
         /// <param name="payloadKind">The payload kind to write.</param>
-        /// <param name="verifyHeaders">Optional action which will be called after the headers has been verified to perform payload specific verification.</param>
         /// <param name="writeFunc">The write operation to invoke on the output.</param>
         /// <returns>The result of the write operation.</returns>
-        private TResult WriteToOutput<TResult>(ODataPayloadKind payloadKind, Action verifyHeaders, Func<ODataOutputContext, TResult> writeFunc)
+        private TResult WriteToOutput<TResult>(ODataPayloadKind payloadKind, Func<ODataOutputContext, TResult> writeFunc)
         {
             // Set the content type header here since all headers have to be set before getting the stream
             this.SetOrVerifyHeaders(payloadKind);
 
-            if (verifyHeaders != null)
-            {
-                verifyHeaders();
-            }
-
             // Create the output context
             this.outputContext = this.format.CreateOutputContext(
-                new ODataMessageInfo()
-                {
-                    Encoding = this.encoding,
-                    GetMessageStream = this.message.GetStream,
-#if ODATALIB_ASYNC
-                    GetMessageStreamAsync = this.message.GetStreamAsync,
-#endif
-                    IsResponse = this.writingResponse,
-                    MediaType = this.mediaType,
-                    Model = this.model,
-                    UrlResolver = this.urlResolver,
-                },
+                this.GetOrCreateMessageInfo(this.message.GetStream(), false),
                 this.settings);
             return writeFunc(this.outputContext);
         }
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary>
         /// Creates an output context and invokes a write operation on it.
         /// </summary>
         /// <param name="payloadKind">The payload kind to write.</param>
-        /// <param name="verifyHeaders">Optional action which will be called after the headers has been verified to perform payload specific verification.</param>
         /// <param name="writeAsyncAction">The write operation to invoke on the output.</param>
         /// <returns>Task which represents the pending write operation.</returns>
         [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope", Justification = "The output context is disposed by Dispose on the writer.")]
-        private Task WriteToOutputAsync(ODataPayloadKind payloadKind, Action verifyHeaders, Func<ODataOutputContext, Task> writeAsyncAction)
+        private Task WriteToOutputAsync(ODataPayloadKind payloadKind, Func<ODataOutputContext, Task> writeAsyncAction)
         {
             // Set the content type header here since all headers have to be set before getting the stream
             this.SetOrVerifyHeaders(payloadKind);
 
-            if (verifyHeaders != null)
-            {
-                verifyHeaders();
-            }
-
             // Create the output context
-            return this.format.CreateOutputContextAsync(
-                new ODataMessageInfo()
-                {
-                    Encoding = this.encoding,
-                    GetMessageStream = this.message.GetStream,
-#if ODATALIB_ASYNC
-                    GetMessageStreamAsync = this.message.GetStreamAsync,
-#endif
-                    IsResponse = this.writingResponse,
-                    MediaType = this.mediaType,
-                    Model = this.model,
-                    UrlResolver = this.urlResolver,
-                },
-                this.settings)
-
+            return this.message.GetStreamAsync()
                 .FollowOnSuccessWithTask(
-                    (createOutputContextTask) =>
+                    streamTask => this.format.CreateOutputContextAsync(
+                        this.GetOrCreateMessageInfo(streamTask.Result, true),
+                        this.settings))
+                .FollowOnSuccessWithTask(
+                    createOutputContextTask =>
                     {
                         this.outputContext = createOutputContextTask.Result;
                         return writeAsyncAction(this.outputContext);
@@ -1257,38 +1284,22 @@ namespace Microsoft.OData.Core
         /// </summary>
         /// <typeparam name="TResult">The type of the result of the write operation.</typeparam>
         /// <param name="payloadKind">The payload kind to write.</param>
-        /// <param name="verifyHeaders">Optional action which will be called after the headers has been verified to perform payload specific verification.</param>
         /// <param name="writeFunc">The write operation to invoke on the output.</param>
         /// <returns>Task which represents the pending write operation.</returns>
         [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope", Justification = "The output context is disposed by Dispose on the writer.")]
-        private Task<TResult> WriteToOutputAsync<TResult>(ODataPayloadKind payloadKind, Action verifyHeaders, Func<ODataOutputContext, Task<TResult>> writeFunc)
+        private Task<TResult> WriteToOutputAsync<TResult>(ODataPayloadKind payloadKind, Func<ODataOutputContext, Task<TResult>> writeFunc)
         {
             // Set the content type header here since all headers have to be set before getting the stream
             this.SetOrVerifyHeaders(payloadKind);
 
-            if (verifyHeaders != null)
-            {
-                verifyHeaders();
-            }
-
             // Create the output context
-            return this.format.CreateOutputContextAsync(
-                new ODataMessageInfo()
-                {
-                    Encoding = this.encoding,
-                    GetMessageStream = this.message.GetStream,
-#if ODATALIB_ASYNC
-                    GetMessageStreamAsync = this.message.GetStreamAsync,
-#endif
-                    IsResponse = this.writingResponse,
-                    MediaType = this.mediaType,
-                    Model = this.model,
-                    UrlResolver = this.urlResolver,
-                },
-                this.settings)
-
+            return this.message.GetStreamAsync()
                 .FollowOnSuccessWithTask(
-                    (createOutputContextTask) =>
+                    streamTask => this.format.CreateOutputContextAsync(
+                        this.GetOrCreateMessageInfo(streamTask.Result, true),
+                        this.settings))
+                .FollowOnSuccessWithTask(
+                    createOutputContextTask =>
                     {
                         this.outputContext = createOutputContextTask.Result;
                         return writeFunc(this.outputContext);

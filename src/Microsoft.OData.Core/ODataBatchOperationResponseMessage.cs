@@ -4,14 +4,14 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core
+namespace Microsoft.OData
 {
     #region Namespaces
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.IO;
-#if ODATALIB_ASYNC
+#if PORTABLELIB
     using System.Threading.Tasks;
 #endif
     #endregion Namespaces
@@ -19,10 +19,10 @@ namespace Microsoft.OData.Core
     /// <summary>
     /// Message representing an operation in a batch response.
     /// </summary>
-#if ODATALIB_ASYNC
-    public sealed class ODataBatchOperationResponseMessage : IODataResponseMessageAsync, IODataUrlResolver
+#if PORTABLELIB
+    public sealed class ODataBatchOperationResponseMessage : IODataResponseMessageAsync, IODataPayloadUriConverter, IContainerProvider
 #else
-    public sealed class ODataBatchOperationResponseMessage : IODataResponseMessage, IODataUrlResolver
+    public sealed class ODataBatchOperationResponseMessage : IODataResponseMessage, IODataPayloadUriConverter, IContainerProvider
 #endif
     {
         /// <summary>Gets or Sets the Content-ID for this response message.</summary>
@@ -46,21 +46,24 @@ namespace Microsoft.OData.Core
         /// <param name="headers">The headers of the batch operation message.</param>
         /// <param name="operationListener">Listener interface to be notified of part changes.</param>
         /// <param name="contentId">The content-ID for the operation response message.</param>
-        /// <param name="urlResolver">The optional URL resolver to perform custom URL resolution for URLs written to the payload.</param>
+        /// <param name="payloadUriConverter">The optional URL converter to perform custom URL conversion for URLs written to the payload.</param>
         /// <param name="writing">true if the request message is being written; false when it is read.</param>
+        /// <param name="container">The dependency injection container to get related services.</param>
         private ODataBatchOperationResponseMessage(
             Func<Stream> contentStreamCreatorFunc,
             ODataBatchOperationHeaders headers,
             IODataBatchOperationListener operationListener,
             string contentId,
-            IODataUrlResolver urlResolver,
-            bool writing)
+            IODataPayloadUriConverter payloadUriConverter,
+            bool writing,
+            IServiceProvider container)
         {
             Debug.Assert(contentStreamCreatorFunc != null, "contentStreamCreatorFunc != null");
             Debug.Assert(operationListener != null, "operationListener != null");
 
-            this.message = new ODataBatchOperationMessage(contentStreamCreatorFunc, headers, operationListener, urlResolver, writing);
+            this.message = new ODataBatchOperationMessage(contentStreamCreatorFunc, headers, operationListener, payloadUriConverter, writing);
             this.ContentId = contentId;
+            this.Container = container;
         }
 
         /// <summary>Gets or sets the result status code of the response message.</summary>
@@ -85,6 +88,11 @@ namespace Microsoft.OData.Core
         {
             get { return this.message.Headers; }
         }
+
+        /// <summary>
+        /// The dependency injection container to get related services.
+        /// </summary>
+        public IServiceProvider Container { get; private set; }
 
         /// <summary>
         /// Returns the actual operation message which is being wrapped.
@@ -120,7 +128,7 @@ namespace Microsoft.OData.Core
             return this.message.GetStream();
         }
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary>Asynchronously get the stream backing for this message.</summary>
         /// <returns>The stream backing for this message.</returns>
         public Task<Stream> GetStreamAsync()
@@ -133,7 +141,7 @@ namespace Microsoft.OData.Core
         /// <returns> A <see cref="T:System.Uri" /> instance that reflects the custom resolution of the method arguments into a URL or null if no custom resolution is desired; in that case the default resolution is used. </returns>
         /// <param name="baseUri">The (optional) base URI to use for the resolution.</param>
         /// <param name="payloadUri">The URI read from the payload.</param>
-        Uri IODataUrlResolver.ResolveUrl(Uri baseUri, Uri payloadUri)
+        Uri IODataPayloadUriConverter.ConvertPayloadUri(Uri baseUri, Uri payloadUri)
         {
             return this.message.ResolveUrl(baseUri, payloadUri);
         }
@@ -143,15 +151,17 @@ namespace Microsoft.OData.Core
         /// </summary>
         /// <param name="outputStream">The output stream underlying the operation message.</param>
         /// <param name="operationListener">The operation listener.</param>
-        /// <param name="urlResolver">The (optional) URL resolver for the message to create.</param>
+        /// <param name="payloadUriConverter">The (optional) URL converter for the message to create.</param>
+        /// <param name="container">The dependency injection container to get related services.</param>
         /// <returns>An <see cref="ODataBatchOperationResponseMessage"/> that can be used to write the operation content.</returns>
         internal static ODataBatchOperationResponseMessage CreateWriteMessage(
             Stream outputStream,
             IODataBatchOperationListener operationListener,
-            IODataUrlResolver urlResolver)
+            IODataPayloadUriConverter payloadUriConverter,
+            IServiceProvider container)
         {
             Func<Stream> streamCreatorFunc = () => ODataBatchUtils.CreateBatchOperationWriteStream(outputStream, operationListener);
-            return new ODataBatchOperationResponseMessage(streamCreatorFunc, /*headers*/ null, operationListener, /*contentId*/ null, urlResolver, /*writing*/ true);
+            return new ODataBatchOperationResponseMessage(streamCreatorFunc, /*headers*/ null, operationListener, /*contentId*/ null, payloadUriConverter, /*writing*/ true, container);
         }
 
         /// <summary>
@@ -162,7 +172,8 @@ namespace Microsoft.OData.Core
         /// <param name="headers">The headers to use for the operation response message.</param>
         /// <param name="contentId">The content-ID for the operation response message.</param>
         /// <param name="operationListener">The operation listener.</param>
-        /// <param name="urlResolver">The (optional) URL resolver for the message to create.</param>
+        /// <param name="payloadUriConverter">The (optional) URL converter for the message to create.</param>
+        /// <param name="container">The dependency injection container to get related services.</param>
         /// <returns>An <see cref="ODataBatchOperationResponseMessage"/> that can be used to read the operation content.</returns>
         internal static ODataBatchOperationResponseMessage CreateReadMessage(
             ODataBatchReaderStream batchReaderStream,
@@ -170,14 +181,15 @@ namespace Microsoft.OData.Core
             ODataBatchOperationHeaders headers,
             string contentId,
             IODataBatchOperationListener operationListener,
-            IODataUrlResolver urlResolver)
+            IODataPayloadUriConverter payloadUriConverter,
+            IServiceProvider container)
         {
             Debug.Assert(batchReaderStream != null, "batchReaderStream != null");
             Debug.Assert(operationListener != null, "operationListener != null");
 
             Func<Stream> streamCreatorFunc = () => ODataBatchUtils.CreateBatchOperationReadStream(batchReaderStream, headers, operationListener);
             ODataBatchOperationResponseMessage responseMessage =
-                new ODataBatchOperationResponseMessage(streamCreatorFunc, headers, operationListener, contentId, urlResolver, /*writing*/ false);
+                new ODataBatchOperationResponseMessage(streamCreatorFunc, headers, operationListener, contentId, payloadUriConverter, /*writing*/ false, container);
             responseMessage.statusCode = statusCode;
             return responseMessage;
         }

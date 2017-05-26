@@ -4,26 +4,25 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-using FluentAssertions;
-using Microsoft.CSharp;
-using Microsoft.OData.Edm;
-using Microsoft.Spatial;
-using Microsoft.VisualBasic;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.CodeDom.Compiler;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Reflection;
+using System.Text.RegularExpressions;
 using System.Xml;
+using FluentAssertions;
+using Microsoft.CSharp;
+using Microsoft.OData;
+using Microsoft.OData.Edm;
+using Microsoft.Spatial;
+using Microsoft.VisualBasic;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Microsoft.OData.Client.Design.T4.UnitTests
 {
-    using System.Reflection;
-    using Microsoft.OData.Core;
-    using System.Text.RegularExpressions;
-
     [TestClass]
     public class ODataT4CodeGeneratorTests
     {
@@ -511,14 +510,16 @@ namespace Microsoft.OData.Client.Design.T4.UnitTests
                 WarningLevel = 4,
                 ReferencedAssemblies =
                 {
-                    typeof(DataServiceContext).Assembly.Location, 
-                    typeof(IEdmModel).Assembly.Location, 
+                    typeof(DataServiceContext).Assembly.Location,
+                    typeof(IEdmModel).Assembly.Location,
                     typeof(GeographyPoint).Assembly.Location,
-                    typeof(Uri).Assembly.Location, 
-                    typeof(IQueryable).Assembly.Location, 
-                    typeof(INotifyPropertyChanged).Assembly.Location, 
-                    typeof(XmlReader).Assembly.Location,
                     typeof(ODataVersion).Assembly.Location,
+                    DataFxAssemblyRef.File.System,
+                    DataFxAssemblyRef.File.SystemCore,
+                    DataFxAssemblyRef.File.SystemIO,
+                    DataFxAssemblyRef.File.SystemRuntime,
+                    DataFxAssemblyRef.File.SystemXml,
+                    DataFxAssemblyRef.File.SystemXmlReaderWriter
                 }
             };
 

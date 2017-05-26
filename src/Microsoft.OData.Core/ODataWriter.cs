@@ -4,19 +4,15 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core
+namespace Microsoft.OData
 {
     #region Namespaces
+
     using System;
-    using System.Diagnostics;
-    using System.IO;
-    using System.Text;
-#if ODATALIB_ASYNC
+    #if PORTABLELIB
     using System.Threading.Tasks;
-#endif
-    using Microsoft.OData.Edm;
-    using Microsoft.OData.Core.Atom;
-    using Microsoft.OData.Core.Json;
+    #endif
+
     #endregion Namespaces
 
     /// <summary>
@@ -24,44 +20,110 @@ namespace Microsoft.OData.Core
     /// </summary>
     public abstract class ODataWriter
     {
-        /// <summary>Starts the writing of a feed.</summary>
-        /// <param name="feed">The feed or collection to write.</param>
-        public abstract void WriteStart(ODataFeed feed);
+        /// <summary>Starts the writing of a resource set.</summary>
+        /// <param name="resourceSet">The resource set or collection to write.</param>
+        public abstract void WriteStart(ODataResourceSet resourceSet);
 
-#if ODATALIB_ASYNC
-        /// <summary> Asynchronously start writing a feed. </summary>
+        /// <summary>Writes a resource set.</summary>
+        /// <param name="resourceSet">The resource set or collection to write.</param>
+        /// <returns>This ODataWriter, allowing for chaining operations.</returns>
+        public ODataWriter Write(ODataResourceSet resourceSet)
+        {
+            WriteStart(resourceSet);
+            WriteEnd();
+            return this;
+        }
+
+        /// <summary>Writes a resource set and performs an action in-between.</summary>
+        /// <param name="resourceSet">The resource set or collection to write.</param>
+        /// <param name="nestedAction">The action to perform in-between writing the resource set.</param>
+        /// <returns>This ODataWriter, allowing for chaining operations.</returns>
+        public ODataWriter Write(ODataResourceSet resourceSet, Action nestedAction)
+        {
+            WriteStart(resourceSet);
+            nestedAction();
+            WriteEnd();
+            return this;
+        }
+
+#if PORTABLELIB
+        /// <summary> Asynchronously start writing a resource set. </summary>
         /// <returns>A task instance that represents the asynchronous write operation.</returns>
-        /// <param name="feed">The feed or collection to write.</param>
-        public abstract Task WriteStartAsync(ODataFeed feed);
+        /// <param name="resourceSet">The resource set or collection to write.</param>
+        public abstract Task WriteStartAsync(ODataResourceSet resourceSet);
 #endif
 
-        /// <summary>Starts the writing of an entry.</summary>
-        /// <param name="entry">The entry or item to write.</param>
-        public abstract void WriteStart(ODataEntry entry);
+        /// <summary>Starts the writing of a resource.</summary>
+        /// <param name="resource">The resource or item to write.</param>
+        public abstract void WriteStart(ODataResource resource);
 
-#if ODATALIB_ASYNC
-        /// <summary> Asynchronously start writing an entry. </summary>
+        /// <summary>Writes a resource.</summary>
+        /// <param name="resource">The resource or item to write.</param>
+        /// <returns>This ODataWriter, allowing for chaining operations.</returns>
+        public ODataWriter Write(ODataResource resource)
+        {
+            WriteStart(resource);
+            WriteEnd();
+            return this;
+        }
+
+        /// <summary>Writes a resource and performs an action in-between.</summary>
+        /// <param name="resource">The resource or item to write.</param>
+        /// <param name="nestedAction">The action to perform in-between the writing.</param>
+        /// <returns>This ODataWriter, allowing for chaining operations.</returns>
+        public ODataWriter Write(ODataResource resource, Action nestedAction)
+        {
+            WriteStart(resource);
+            nestedAction();
+            WriteEnd();
+            return this;
+        }
+
+#if PORTABLELIB
+        /// <summary> Asynchronously start writing a resource. </summary>
         /// <returns>A task instance that represents the asynchronous write operation.</returns>
-        /// <param name="entry">The entry or item to write.</param>
-        public abstract Task WriteStartAsync(ODataEntry entry);
+        /// <param name="resource">The resource or item to write.</param>
+        public abstract Task WriteStartAsync(ODataResource resource);
 #endif
 
-        /// <summary>Starts the writing of a navigation link.</summary>
-        /// <param name="navigationLink">The navigation link to write.</param>
-        public abstract void WriteStart(ODataNavigationLink navigationLink);
+        /// <summary>Starts the writing of a nested resource info.</summary>
+        /// <param name="nestedResourceInfo">The nested resource info to write.</param>
+        public abstract void WriteStart(ODataNestedResourceInfo nestedResourceInfo);
 
-#if ODATALIB_ASYNC
-        /// <summary> Asynchronously start writing a navigation link. </summary>
+        /// <summary>Writes a nested resource info.</summary>
+        /// <param name="nestedResourceInfo">The nested resource info to write.</param>
+        /// <returns>This ODataWriter, allowing for chaining operations.</returns>
+        public ODataWriter Write(ODataNestedResourceInfo nestedResourceInfo)
+        {
+            WriteStart(nestedResourceInfo);
+            WriteEnd();
+            return this;
+        }
+
+        /// <summary>Writes a nested resource info and performs an action in-between.</summary>
+        /// <param name="nestedResourceInfo">The nested resource info to write.</param>
+        /// <param name="nestedAction">The action to perform in-between the writing.</param>
+        /// <returns>This ODataWriter, allowing for chaining operations.</returns>
+        public ODataWriter Write(ODataNestedResourceInfo nestedResourceInfo, Action nestedAction)
+        {
+            WriteStart(nestedResourceInfo);
+            nestedAction();
+            WriteEnd();
+            return this;
+        }
+
+#if PORTABLELIB
+        /// <summary> Asynchronously start writing a nested resource info. </summary>
         /// <returns>A task instance that represents the asynchronous write operation.</returns>
-        /// <param name="navigationLink">The navigation link to writer.</param>
-        public abstract Task WriteStartAsync(ODataNavigationLink navigationLink);
+        /// <param name="nestedResourceInfo">The nested resource info to writer.</param>
+        public abstract Task WriteStartAsync(ODataNestedResourceInfo nestedResourceInfo);
 #endif
 
-        /// <summary>Finishes the writing of a feed, an entry, or a navigation link.</summary>
+        /// <summary>Finishes the writing of a resource set, a resource, or a nested resource info.</summary>
         public abstract void WriteEnd();
 
-#if ODATALIB_ASYNC
-        /// <summary> Asynchronously finish writing a feed, entry, or navigation link. </summary>
+#if PORTABLELIB
+        /// <summary> Asynchronously finish writing a resource set, resource, or nested resource info. </summary>
         /// <returns>A task instance that represents the asynchronous write operation.</returns>
         public abstract Task WriteEndAsync();
 #endif
@@ -70,20 +132,20 @@ namespace Microsoft.OData.Core
         /// <param name="entityReferenceLink">The entity reference link to write.</param>
         /// <remarks>
         /// This method can only be called for writing request messages. The entity reference link must be surrounded
-        /// by a navigation link written through WriteStart/WriteEnd.
-        /// The <see cref="ODataNavigationLink.Url"/> will be ignored in that case and the Uri from the <see cref="ODataEntityReferenceLink.Url"/> will be used
+        /// by a nested resource info written through WriteStart/WriteEnd.
+        /// The <see cref="ODataNestedResourceInfo.Url"/> will be ignored in that case and the Uri from the <see cref="ODataEntityReferenceLink.Url"/> will be used
         /// as the binding URL to be written.
         /// </remarks>
         public abstract void WriteEntityReferenceLink(ODataEntityReferenceLink entityReferenceLink);
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary> Asynchronously writes an entity reference link, which is used to represent binding to an existing resource in a request payload. </summary>
         /// <returns>A task instance that represents the asynchronous write operation.</returns>
         /// <param name="entityReferenceLink">The entity reference link to write.</param>
         /// <remarks>
         /// This method can only be called for writing request messages. The entity reference link must be surrounded
-        /// by a navigation link written through WriteStart/WriteEnd.
-        /// The <see cref="ODataNavigationLink.Url"/> will be ignored in that case and the Uri from the <see cref="ODataEntityReferenceLink.Url"/> will be used
+        /// by a nested resource info written through WriteStart/WriteEnd.
+        /// The <see cref="ODataNestedResourceInfo.Url"/> will be ignored in that case and the Uri from the <see cref="ODataEntityReferenceLink.Url"/> will be used
         /// as the binding URL to be written.
         /// </remarks>
         public abstract Task WriteEntityReferenceLinkAsync(ODataEntityReferenceLink entityReferenceLink);
@@ -92,7 +154,7 @@ namespace Microsoft.OData.Core
         /// <summary>Flushes the write buffer to the underlying stream.</summary>
         public abstract void Flush();
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary>Flushes the write buffer to the underlying stream asynchronously.</summary>
         /// <returns>A task instance that represents the asynchronous operation.</returns>
         public abstract Task FlushAsync();

@@ -9,9 +9,8 @@ namespace Microsoft.Test.OData.Tests.Client.EnumerationTypeTests
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Library;
     using Microsoft.Test.OData.Services.TestServices;
     using Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReference;
     using Microsoft.Test.OData.Tests.Client.Common;
@@ -48,20 +47,20 @@ namespace Microsoft.Test.OData.Tests.Client.EnumerationTypeTests
                 {
                     using (var messageReader = new ODataMessageReader(responseMessage, readerSettings, Model))
                     {
-                        List<ODataEntry> entries = new List<ODataEntry>();
-                        var reader = messageReader.CreateODataFeedReader();
+                        List<ODataResource> entries = new List<ODataResource>();
+                        var reader = messageReader.CreateODataResourceSetReader();
 
                         while (reader.Read())
                         {
-                            if (reader.State == ODataReaderState.EntryEnd)
+                            if (reader.State == ODataReaderState.ResourceEnd)
                             {
-                                ODataEntry entry = reader.Item as ODataEntry;
+                                ODataResource entry = reader.Item as ODataResource;
                                 Assert.IsNotNull(entry);
                                 entries.Add(entry);
                             }
-                            else if (reader.State == ODataReaderState.FeedEnd)
+                            else if (reader.State == ODataReaderState.ResourceSetEnd)
                             {
-                                Assert.IsNotNull(reader.Item as ODataFeed);
+                                Assert.IsNotNull(reader.Item as ODataResourceSet);
                             }
                         }
 
@@ -93,14 +92,14 @@ namespace Microsoft.Test.OData.Tests.Client.EnumerationTypeTests
                 {
                     using (var messageReader = new ODataMessageReader(responseMessage, readerSettings, Model))
                     {
-                        List<ODataEntry> entries = new List<ODataEntry>();
-                        var reader = messageReader.CreateODataEntryReader();
+                        List<ODataResource> entries = new List<ODataResource>();
+                        var reader = messageReader.CreateODataResourceReader();
 
                         while (reader.Read())
                         {
-                            if (reader.State == ODataReaderState.EntryEnd)
+                            if (reader.State == ODataReaderState.ResourceEnd)
                             {
-                                ODataEntry entry = reader.Item as ODataEntry;
+                                ODataResource entry = reader.Item as ODataResource;
                                 Assert.IsNotNull(entry);
                                 entries.Add(entry);
                             }
@@ -168,7 +167,7 @@ namespace Microsoft.Test.OData.Tests.Client.EnumerationTypeTests
         public void InvokeActionWithEnumParameterAndReturnType()
         {
             var writerSettings = new ODataMessageWriterSettings();
-            writerSettings.PayloadBaseUri = ServiceBaseUri;
+            writerSettings.BaseUri = ServiceBaseUri;
             var readerSettings = new ODataMessageReaderSettings();
             readerSettings.BaseUri = ServiceBaseUri;
 
@@ -255,14 +254,14 @@ namespace Microsoft.Test.OData.Tests.Client.EnumerationTypeTests
                 {
                     using (var messageReader = new ODataMessageReader(responseMessage, readerSettings, Model))
                     {
-                        List<ODataEntry> entries = new List<ODataEntry>();
-                        var reader = messageReader.CreateODataFeedReader();
+                        List<ODataResource> entries = new List<ODataResource>();
+                        var reader = messageReader.CreateODataResourceSetReader();
 
                         while (reader.Read())
                         {
-                            if (reader.State == ODataReaderState.EntryEnd)
+                            if (reader.State == ODataReaderState.ResourceEnd)
                             {
-                                ODataEntry entry = reader.Item as ODataEntry;
+                                ODataResource entry = reader.Item as ODataResource;
                                 Assert.IsNotNull(entry);
                                 entries.Add(entry);
                             }
@@ -295,14 +294,14 @@ namespace Microsoft.Test.OData.Tests.Client.EnumerationTypeTests
                 {
                     using (var messageReader = new ODataMessageReader(responseMessage, readerSettings, Model))
                     {
-                        List<ODataEntry> entries = new List<ODataEntry>();
-                        var reader = messageReader.CreateODataFeedReader();
+                        List<ODataResource> entries = new List<ODataResource>();
+                        var reader = messageReader.CreateODataResourceSetReader();
 
                         while (reader.Read())
                         {
-                            if (reader.State == ODataReaderState.EntryEnd)
+                            if (reader.State == ODataReaderState.ResourceEnd)
                             {
-                                ODataEntry entry = reader.Item as ODataEntry;
+                                ODataResource entry = reader.Item as ODataResource;
                                 Assert.IsNotNull(entry);
                                 entries.Add(entry);
                             }
@@ -337,14 +336,14 @@ namespace Microsoft.Test.OData.Tests.Client.EnumerationTypeTests
                 {
                     using (var messageReader = new ODataMessageReader(responseMessage, readerSettings, Model))
                     {
-                        List<ODataEntry> entries = new List<ODataEntry>();
-                        var reader = messageReader.CreateODataFeedReader();
+                        List<ODataResource> entries = new List<ODataResource>();
+                        var reader = messageReader.CreateODataResourceSetReader();
 
                         while (reader.Read())
                         {
-                            if (reader.State == ODataReaderState.EntryEnd)
+                            if (reader.State == ODataReaderState.ResourceEnd)
                             {
-                                ODataEntry entry = reader.Item as ODataEntry;
+                                ODataResource entry = reader.Item as ODataResource;
                                 Assert.IsNotNull(entry);
                                 entries.Add(entry);
                             }

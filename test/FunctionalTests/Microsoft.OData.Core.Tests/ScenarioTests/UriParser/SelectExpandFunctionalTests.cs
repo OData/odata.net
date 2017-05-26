@@ -8,15 +8,14 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using FluentAssertions;
-using Microsoft.OData.Core.Tests.UriParser;
-using Microsoft.OData.Core.Tests.UriParser.Binders;
-using Microsoft.OData.Core.UriParser;
-using Microsoft.OData.Core.UriParser.Semantic;
+using Microsoft.OData.Tests.UriParser;
+using Microsoft.OData.Tests.UriParser.Binders;
+using Microsoft.OData.UriParser;
 using Microsoft.OData.Edm;
 using Xunit;
-using ODataErrorStrings = Microsoft.OData.Core.Strings;
+using ODataErrorStrings = Microsoft.OData.Strings;
 
-namespace Microsoft.OData.Core.Tests.ScenarioTests.UriParser
+namespace Microsoft.OData.Tests.ScenarioTests.UriParser
 {
     /// <summary>
     /// URI Parser functional tests for V4 $select and $expand.
@@ -134,17 +133,10 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.UriParser
         }
 
         [Fact]
-        public void SelectComplexCollectionPropertySubProp()
-        {
-            Action parse = () => ParseSingleSelectForPerson("PreviousAddresses/Street");
-            parse.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.SelectBinder_MultiLevelPathInSelect);
-        }
-
-        [Fact]
         public void SelectComplexCollectionPropertyWrongSubProp()
         {
             Action parse = () => ParseSingleSelectForPerson("PreviousAddresses/WrongProp");
-            parse.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.SelectBinder_MultiLevelPathInSelect);
+            parse.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.MetadataBinder_PropertyNotDeclared("Fully.Qualified.Namespace.Address", "WrongProp"));
         }
 
         [Fact]
@@ -155,13 +147,6 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.UriParser
             segments[0] = new PropertySegment(HardCodedTestModel.GetPersonPreviousAddressesProp());
             segments[1] = new TypeSegment(HardCodedTestModel.GetHomeAddressType(), null);
             selectItem.ShouldBePathSelectionItem(new ODataPath(segments));
-        }
-
-        [Fact]
-        public void SelectComplexCollectionPropertyWithCastProp()
-        {
-            Action parse = () => ParseSingleSelectForPerson("PreviousAddresses/Fully.Qualified.Namespace.HomeAddress/Street");
-            parse.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.SelectBinder_MultiLevelPathInSelect);
         }
 
         [Fact]
@@ -217,7 +202,7 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.UriParser
         public void CallingAFunctionIsNotRecognizedInSelect()
         {
             Action parse = () => ParseSingleSelectForPerson("HasDog(inOffice=true)");
-            parse.ShouldThrow<ODataException>().WithMessage("HasDog(inOffice=true)", ComparisonMode.EquivalentSubstring);
+            parse.ShouldThrow<ODataException>().Where(e => e.Message.Contains("HasDog(inOffice=true)"));
         }
 
         [Fact]
@@ -283,7 +268,7 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.UriParser
             results.AllSelected.Should().BeFalse();
             results.SelectedItems.Single().ShouldBePathSelectionItem(new ODataSelectPath(
                     new TypeSegment(HardCodedTestModel.GetFramedPaintingType(), HardCodedTestModel.GetPaintingsSet()),
-                    new OpenPropertySegment("OpenProp")));
+                    new DynamicPathSegment("OpenProp")));
         }
 
         [Fact]
@@ -293,7 +278,7 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.UriParser
 
             item.ShouldBePathSelectionItem(new ODataSelectPath(
                     new TypeSegment(HardCodedTestModel.GetOpenEmployeeType(), HardCodedTestModel.GetPeopleSet()),
-                    new OpenPropertySegment("OpenProp")));
+                    new DynamicPathSegment("OpenProp")));
         }
 
         [Fact]
@@ -332,7 +317,7 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.UriParser
         [Fact]
         public void UnqualifiedActionNameOnOpenTypeShouldBeInterpretedAsAnOperation()
         {
-            ParseSingleSelectForPainting("Restore").ShouldBePathSelectionItem(new ODataPath(new OpenPropertySegment("Restore")));
+            ParseSingleSelectForPainting("Restore").ShouldBePathSelectionItem(new ODataPath(new DynamicPathSegment("Restore")));
         }
 
         [Fact]
@@ -394,7 +379,7 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.UriParser
                 HardCodedTestModel.GetPaintingType(),
                 HardCodedTestModel.GetPaintingsSet());
 
-            result.SelectedItems.Single().ShouldBePathSelectionItem(new ODataPath(new OpenPropertySegment("SomeOpenProperty")));
+            result.SelectedItems.Single().ShouldBePathSelectionItem(new ODataPath(new DynamicPathSegment("SomeOpenProperty")));
             result.AllSelected.Should().BeFalse();
         }
 
@@ -420,7 +405,7 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.UriParser
 
             var items = result.SelectedItems.ToArray();
             items[0].ShouldBePathSelectionItem(new ODataPath(new PropertySegment(HardCodedTestModel.GetPaintingArtistProp())));
-            items[1].ShouldBePathSelectionItem(new ODataPath(new OpenPropertySegment("SomeOpenProperty")));
+            items[1].ShouldBePathSelectionItem(new ODataPath(new DynamicPathSegment("SomeOpenProperty")));
             result.AllSelected.Should().BeFalse();
         }
 
@@ -1074,7 +1059,7 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.UriParser
                 HardCodedTestModel.GetPeopleSet());
             var filterClause = results.SelectedItems.Single(x => x is ExpandedNavigationSelectItem).ShouldBeExpansionFor(HardCodedTestModel.GetPersonMyPaintingsNavProp()).And.FilterOption;
             filterClause.ItemType.FullName().Should().Be(HardCodedTestModel.GetPaintingType().FullName());
-            filterClause.RangeVariable.Kind.Should().Be(RangeVariableKind.Entity);
+            filterClause.RangeVariable.Kind.Should().Be(RangeVariableKind.Resource);
             filterClause.RangeVariable.Name.Should().Be("$it");
             filterClause.Expression.ShouldBeConstantQueryNode(true);
         }
@@ -1095,7 +1080,7 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.UriParser
                 HardCodedTestModel.GetPeopleSet());
             var orderbyClause = results.SelectedItems.Single(x => x is ExpandedNavigationSelectItem).ShouldBeExpansionFor(HardCodedTestModel.GetPersonMyPaintingsNavProp()).And.OrderByOption;
             orderbyClause.ItemType.FullName().Should().Be(HardCodedTestModel.GetPaintingType().FullName());
-            orderbyClause.RangeVariable.Kind.Should().Be(RangeVariableKind.Entity);
+            orderbyClause.RangeVariable.Kind.Should().Be(RangeVariableKind.Resource);
             orderbyClause.RangeVariable.Name.Should().Be("$it");
             orderbyClause.Expression.ShouldBeSingleValuePropertyAccessQueryNode(HardCodedTestModel.GetPaintingValueProperty());
         }

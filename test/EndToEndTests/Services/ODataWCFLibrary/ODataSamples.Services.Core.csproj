@@ -7,11 +7,10 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>ODataSamples.Services.Core</RootNamespace>
     <AssemblyName>ODataSamples.Services.Core</AssemblyName>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <SignAssemblyAttribute>true</SignAssemblyAttribute>
     <AssemblyAttributeClsCompliant>false</AssemblyAttributeClsCompliant>
-    <TargetFrameworkProfile />
   </PropertyGroup>
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), Build.props))\Build.props" />
   <ItemGroup>
@@ -63,6 +62,21 @@
     </When>
   </Choose>
   <ItemGroup>
+    <Compile Include="..\..\..\..\src\Microsoft.OData.Client\Wrappers\ODataItemWrapper.cs">
+      <Link>Wrappers\ODataItemWrapper.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\..\src\Microsoft.OData.Client\Wrappers\ODataNestedResourceInfoWrapper.cs">
+      <Link>Wrappers\ODataNestedResourceInfoWrapper.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\..\src\Microsoft.OData.Client\Wrappers\ODataResourceSetWrapper.cs">
+      <Link>Wrappers\ODataResourceSetWrapper.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\..\src\Microsoft.OData.Client\Wrappers\ODataResourceWrapper.cs">
+      <Link>Wrappers\ODataResourceWrapper.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\..\src\Microsoft.OData.Client\Wrappers\ODataWriterHelper.cs">
+      <Link>Wrappers\ODataWriterHelper.cs</Link>
+    </Compile>
     <Compile Include="AsyncTask.cs" />
     <Compile Include="BuiltInFunctionHelper\GeoFunctionHelper.cs" />
     <Compile Include="BuiltInFunctionHelper\TypeFunctionHelper.cs" />
@@ -95,6 +109,7 @@
     <Compile Include="Handlers\UpdateHandler.cs" />
     <Compile Include="HttpMethod.cs" />
     <Compile Include="InMemoryMessage.cs" />
+    <Compile Include="ODataAnnotatableExtensions.cs" />
     <Compile Include="ReadOnlyFieldAttribute.cs" />
     <Compile Include="DataSource\IODataDataSource.cs" />
     <Compile Include="DataSource\IODataOperationProvider.cs" />
@@ -137,11 +152,14 @@
     <Compile Include="Vocabularies\MeasuresHelpers.cs" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Vocabularies\CoreVocabularies.xml" />
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="Vocabularies\CapabilitiesVocabularies.xml" />
     <EmbeddedResource Include="Vocabularies\MeasuresVocabularies.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Common\Microsoft.Test.OData.DependencyInjection\Build.NetFramework\Microsoft.Test.OData.DependencyInjection.csproj">
+      <Project>{50aa23b2-56ef-4c51-a270-8d5bd0c899b6}</Project>
+      <Name>Microsoft.Test.OData.DependencyInjection</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -4,21 +4,11 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core.UriParser.Semantic
+using Microsoft.OData.Edm;
+using ODataErrorStrings = Microsoft.OData.Strings;
+
+namespace Microsoft.OData.UriParser
 {
-    #region Namespaces
-
-    using System;
-    using System.Collections.Generic;
-    using System.Collections.ObjectModel;
-    using System.Diagnostics.CodeAnalysis;
-    using Microsoft.OData.Core.UriParser.Visitors;
-    using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Library;
-    using ODataErrorStrings = Microsoft.OData.Core.Strings;
-
-    #endregion Namespaces
-
     /// <summary>
     /// A segment representing $value
     /// </summary>
@@ -53,7 +43,7 @@ namespace Microsoft.OData.Core.UriParser.Semantic
             else
             {
                 // Otherwise $value is the value of the previous property (null is OK for open properties)
-                this.edmType = previousType; 
+                this.edmType = previousType;
             }
         }
 

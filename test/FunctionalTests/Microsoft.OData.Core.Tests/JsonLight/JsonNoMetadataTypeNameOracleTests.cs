@@ -6,21 +6,20 @@
 
 using System;
 using FluentAssertions;
-using Microsoft.OData.Core.JsonLight;
+using Microsoft.OData.JsonLight;
 using Microsoft.OData.Edm;
-using Microsoft.OData.Edm.Library;
 using Microsoft.Spatial;
 using Xunit;
 
-namespace Microsoft.OData.Core.Tests.JsonLight
+namespace Microsoft.OData.Tests.JsonLight
 {
     public class JsonNoMetadataTypeNameOracleTests
     {
         private readonly JsonNoMetadataTypeNameOracle testSubject = new JsonNoMetadataTypeNameOracle();
-        private readonly ODataEntry entryWithoutTypeName = new ODataEntry();
-        private readonly ODataEntry entryWithTypeName = new ODataEntry {TypeName = "TypeNameFromOM"};
-        private readonly ODataEntry entryWithTypeAnnotationAndTypeName = new ODataEntry {TypeName = "TypeNameFromOM"};
-        private readonly ODataEntry entryWithTypeAnnotationWithoutTypeName = new ODataEntry();
+        private readonly ODataResource entryWithoutTypeName = new ODataResource();
+        private readonly ODataResource entryWithTypeName = new ODataResource {TypeName = "TypeNameFromOM"};
+        private readonly ODataResource entryWithTypeAnnotationAndTypeName = new ODataResource {TypeName = "TypeNameFromOM"};
+        private readonly ODataResource entryWithTypeAnnotationWithoutTypeName = new ODataResource();
 
         private readonly EdmComplexTypeReference complexTypeReference = new EdmComplexTypeReference(new EdmComplexType("Namespace", "ComplexTypeName"), false);
         private const string ComplexTypeName = "Namespace.ComplexTypeName";
@@ -31,8 +30,8 @@ namespace Microsoft.OData.Core.Tests.JsonLight
 
         public JsonNoMetadataTypeNameOracleTests()
         {
-            entryWithTypeAnnotationAndTypeName.SetAnnotation(new SerializationTypeNameAnnotation{TypeName="TypeNameFromSTNA"});
-            entryWithTypeAnnotationWithoutTypeName.SetAnnotation(new SerializationTypeNameAnnotation{TypeName="TypeNameFromSTNA"});
+            entryWithTypeAnnotationAndTypeName.TypeAnnotation = new ODataTypeAnnotation("TypeNameFromSTNA");
+            entryWithTypeAnnotationWithoutTypeName.TypeAnnotation = new ODataTypeAnnotation("TypeNameFromSTNA");
         }
 
         // Note: Type names should never be written in no-metadata mode. These tests ensure the type name is null for every possible combination of inputs.
@@ -40,29 +39,29 @@ namespace Microsoft.OData.Core.Tests.JsonLight
         [Fact]
         public void TypeNameShouldBeNullEvenWhenAnnotationIsSet()
         {
-            this.testSubject.GetEntryTypeNameForWriting("TypeNameFromMetadata", this.entryWithTypeAnnotationAndTypeName).Should().BeNull();
-            this.testSubject.GetEntryTypeNameForWriting(null, this.entryWithTypeAnnotationAndTypeName).Should().BeNull();
-            this.testSubject.GetEntryTypeNameForWriting("TypeNameFromMetadata", this.entryWithTypeAnnotationWithoutTypeName).Should().BeNull();
-            this.testSubject.GetEntryTypeNameForWriting(null, this.entryWithTypeAnnotationWithoutTypeName).Should().BeNull();
+            this.testSubject.GetResourceTypeNameForWriting("TypeNameFromMetadata", this.entryWithTypeAnnotationAndTypeName).Should().BeNull();
+            this.testSubject.GetResourceTypeNameForWriting(null, this.entryWithTypeAnnotationAndTypeName).Should().BeNull();
+            this.testSubject.GetResourceTypeNameForWriting("TypeNameFromMetadata", this.entryWithTypeAnnotationWithoutTypeName).Should().BeNull();
+            this.testSubject.GetResourceTypeNameForWriting(null, this.entryWithTypeAnnotationWithoutTypeName).Should().BeNull();
         }
 
         [Fact]
         public void TypeNameShouldBeNullWhenAnnotationIsNotSetAndObjectModelHasTypeName()
         {
-            this.testSubject.GetEntryTypeNameForWriting("TypeNameFromMetadata", this.entryWithTypeName).Should().BeNull();
-            this.testSubject.GetEntryTypeNameForWriting(null, this.entryWithTypeName).Should().BeNull();
+            this.testSubject.GetResourceTypeNameForWriting("TypeNameFromMetadata", this.entryWithTypeName).Should().BeNull();
+            this.testSubject.GetResourceTypeNameForWriting(null, this.entryWithTypeName).Should().BeNull();
         }
 
         [Fact]
         public void TypeNameShouldBeNullWhenTypeNameFromAnnotationMatchesExpectedTypeName()
         {
-            this.testSubject.GetEntryTypeNameForWriting("TypeNameFromSTNA", this.entryWithTypeAnnotationAndTypeName).Should().BeNull();
+            this.testSubject.GetResourceTypeNameForWriting("TypeNameFromSTNA", this.entryWithTypeAnnotationAndTypeName).Should().BeNull();
         }
 
         [Fact]
         public void TypeNameShouldBeNullWhenTypeNameFromObjectModelMatchesExpectedTypeName()
         {
-            this.testSubject.GetEntryTypeNameForWriting("TypeNameFromOM", this.entryWithTypeName).Should().BeNull();
+            this.testSubject.GetResourceTypeNameForWriting("TypeNameFromOM", this.entryWithTypeName).Should().BeNull();
         }
         #endregion No metadata entry type name tests
 
@@ -70,10 +69,9 @@ namespace Microsoft.OData.Core.Tests.JsonLight
         [Fact]
         public void ClosedComplexValueShouldReturnNull()
         {
-            this.testSubject.GetValueTypeNameForWriting(
-                new ODataComplexValue {TypeName = ComplexTypeName}, 
-                this.complexTypeReference, 
-                this.complexTypeReference, 
+            this.testSubject.GetResourceTypeNameForWriting(
+                this.complexTypeReference.FullName(),
+                new ODataResource { TypeName = ComplexTypeName }, 
                 /*isOpen*/ false)
                 .Should().BeNull();
         }   
@@ -81,10 +79,9 @@ namespace Microsoft.OData.Core.Tests.JsonLight
         [Fact]
         public void OpenComplexValueShouldReturnNull()
         {
-            this.testSubject.GetValueTypeNameForWriting(
-                new ODataComplexValue {TypeName = ComplexTypeName}, 
-                null, 
-                this.complexTypeReference,
+            this.testSubject.GetResourceTypeNameForWriting(
+                null,
+                new ODataResource { TypeName = ComplexTypeName }, 
                 /*isOpen*/ false)
                 .Should().BeNull();
         }
@@ -93,10 +90,9 @@ namespace Microsoft.OData.Core.Tests.JsonLight
         public void DerivedComplexValueShouldReturnNull()
         {
             string DerivedComplexTypeName = "Namespace.DerivedComplexTypeName";
-            this.testSubject.GetValueTypeNameForWriting(
-                new ODataComplexValue { TypeName = DerivedComplexTypeName },
-                this.complexTypeReference,
-                new EdmComplexTypeReference(new EdmComplexType("Namespace", "DerivedComplexTypeName", this.complexTypeReference.ComplexDefinition(), false), false),
+            this.testSubject.GetResourceTypeNameForWriting(
+                this.complexTypeReference.FullName(),
+                new ODataResource { TypeName = DerivedComplexTypeName },
                 /*isOpen*/ false)
                 .Should().BeNull();
         }
@@ -159,13 +155,12 @@ namespace Microsoft.OData.Core.Tests.JsonLight
         [Fact]
         public void ValueWithTypeNameAnnotationShouldReturnNull()
         {
-            var complexValue = new ODataComplexValue() {TypeName = ComplexTypeName};
-            complexValue.SetAnnotation(new SerializationTypeNameAnnotation{TypeName = "TypeNameFromSTNA"});
+            var complexValue = new ODataResource() {TypeName = ComplexTypeName};
+            complexValue.TypeAnnotation = new ODataTypeAnnotation("TypeNameFromSTNA");
 
-            this.testSubject.GetValueTypeNameForWriting(
+            this.testSubject.GetResourceTypeNameForWriting(
+                complexTypeReference.FullName(),
                 complexValue,
-                complexTypeReference,
-                complexTypeReference,
                 /*isOpen*/ false)
                 .Should().BeNull();
         }

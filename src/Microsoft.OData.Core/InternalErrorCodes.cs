@@ -4,7 +4,7 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core
+namespace Microsoft.OData
 {
     /// <summary>
     /// An enumeration that lists the internal errors.
@@ -20,11 +20,11 @@ namespace Microsoft.OData.Core
         /// <summary>Unreachable codepath in ODataWriterCore.Scope.Create</summary>
         ODataWriterCore_Scope_Create_UnreachableCodePath,
 
-        /// <summary>Unreachable codepath in ODataWriterCore.DuplicatePropertyNamesChecker.</summary>
-        ODataWriterCore_DuplicatePropertyNamesChecker,
+        /// <summary>Unreachable codepath in ODataWriterCore.PropertyAndAnnotationCollector.</summary>
+        ODataWriterCore_PropertyAndAnnotationCollector,
 
-        /// <summary>Unreachable codepath in ODataWriterCore.ParentNavigationLinkScope.</summary>
-        ODataWriterCore_ParentNavigationLinkScope,
+        /// <summary>Unreachable codepath in ODataWriterCore.ParentNestedResourceInfoScope.</summary>
+        ODataWriterCore_ParentNestedResourceInfoScope,
 
         /// <summary>Unreachable codepath in ODataUtils.VersionString</summary>
         ODataUtils_VersionString_UnreachableCodePath,
@@ -52,9 +52,6 @@ namespace Microsoft.OData.Core
 
         /// <summary>Unreachable codepath in ODataMessageWriter.WriteMetadataDocument</summary>
         ODataMessageWriter_WriteMetadataDocument,
-
-        /// <summary>Unreachable codepath in ODataAtomConvert.ToString(AtomTextConstructKind)</summary>
-        ODataAtomConvert_ToString,
 
         /// <summary>Unreachable codepath in ODataCollectionWriter.CreateCollectionWriter</summary>
         ODataCollectionWriter_CreateCollectionWriter_UnreachableCodePath,
@@ -140,15 +137,6 @@ namespace Microsoft.OData.Core
         /// <summary>Unreachable codepath in ODataReaderCoreAsync.ReadAsynchronously.</summary>
         ODataReaderCoreAsync_ReadAsynchronously,
 
-        /// <summary>Unreachable codepath in ODataVerboseJsonEntryAndFeedDeserializer.ReadFeedProperty.</summary>
-        ODataVerboseJsonEntryAndFeedDeserializer_ReadFeedProperty,
-
-        /// <summary>Unreachable codepath in ODataVerboseJsonReader.ReadEntryStart.</summary>
-        ODataVerboseJsonReader_ReadEntryStart,
-
-        /// <summary>Unreachable codepath in ODataVerboseJsonPropertyAndValueDeserializer.ReadPropertyValue.</summary>
-        ODataVerboseJsonPropertyAndValueDeserializer_ReadPropertyValue,
-
         /// <summary>Unreachable codepath in ODataCollectionReader.CreateReader.</summary>
         ODataCollectionReader_CreateReader_UnreachableCodePath,
 
@@ -164,17 +152,11 @@ namespace Microsoft.OData.Core
         /// <summary>Unreachable codepath in ODataParameterReaderCoreAsync.ReadAsynchronously.</summary>
         ODataParameterReaderCoreAsync_ReadAsynchronously,
 
-        /// <summary>The value from the parameter reader must be a primitive value, an ODataComplexValue or null</summary>
-        ODataParameterReaderCore_ValueMustBePrimitiveOrComplexOrNull,
+        /// <summary>The value from the parameter reader must be a primitive value, or null</summary>
+        ODataParameterReaderCore_ValueMustBePrimitiveOrNull,
 
-        /// <summary>Unreachable codepath in ODataAtomReader.ReadAtNavigationLinkStartImplementation.</summary>
-        ODataAtomReader_ReadAtNavigationLinkStartImplementation,
-
-        /// <summary>Unreachable codepath in ODataAtomPropertyAndValueDeserializer.ReadNonEntityValue.</summary>
-        ODataAtomPropertyAndValueDeserializer_ReadNonEntityValue,
-
-        /// <summary>Unreachable codepath in AtomValueUtils.ConvertStringToPrimitive.</summary>
-        AtomValueUtils_ConvertStringToPrimitive,
+        /// <summary>Unreachable codepath in ODataRawValueUtils.ConvertStringToPrimitive.</summary>
+        ODataRawValueUtils_ConvertStringToPrimitive,
 
         /// <summary>Unreachable codepath in EdmCoreModel.PrimitiveType (unsupported type).</summary>
         EdmCoreModel_PrimitiveType,
@@ -200,17 +182,11 @@ namespace Microsoft.OData.Core
         /// <summary>Unreachable codepath in ODataJsonLightPropertyAndValueDeserializer.GetNonEntityValueKind.</summary>
         ODataJsonLightPropertyAndValueDeserializer_GetNonEntityValueKind,
 
-        /// <summary>Unreachable codepath in ODataJsonLightEntryAndFeedDeserializer.ReadFeedProperty.</summary>
-        ODataJsonLightEntryAndFeedDeserializer_ReadFeedProperty,
+        /// <summary>Unreachable codepath in ODataJsonLightReader.ReadResourceStart.</summary>
+        ODataJsonLightReader_ReadResourceStart,
 
-        /// <summary>Unreachable codepath in ODataJsonLightReader.ReadEntryStart.</summary>
-        ODataJsonLightReader_ReadEntryStart,
-
-        /// <summary>Unreachable codepath in ODataJsonLightEntryAndFeedDeserializer_ReadTopLevelFeedAnnotations.ReadTopLevelFeedAnnotations.</summary>
-        ODataJsonLightEntryAndFeedDeserializer_ReadTopLevelFeedAnnotations,
-
-        /// <summary>Unreachable codepath in ODataJsonLightReader.ReadFeedEnd.</summary>
-        ODataJsonLightReader_ReadFeedEnd,
+        /// <summary>Unreachable codepath in ODataJsonLightResourceDeserializer.ReadTopLevelResourceSetAnnotations.</summary>
+        ODataJsonLightResourceDeserializer_ReadTopLevelResourceSetAnnotations,
 
         /// <summary>Unreachable codepath in ODataJsonLightCollectionDeserializer.ReadCollectionStart.</summary>
         ODataJsonLightCollectionDeserializer_ReadCollectionStart,

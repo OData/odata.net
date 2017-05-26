@@ -10,7 +10,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Linq;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.OData.Edm;
     using Microsoft.Test.Taupo.Common;
     using Microsoft.Test.Taupo.Execution;
@@ -32,6 +32,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
         [InjectDependency]
         public PayloadReaderTestDescriptor.Settings Settings { get; set; }
 
+        [Ignore] // Remove Atom
         [TestMethod, TestCategory("Reader.Links"), Variation(Description = "Test the the reading of deferred links on entry payloads.")]
         public void DeferredLinkTest()
         {
@@ -86,7 +87,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
                 testDescriptors,
                 // Deferred links are response only.
                 // TODO: Reenable Json Light support
-                this.ReaderTestConfigurationProvider.ExplicitFormatConfigurations.Where(tc => !tc.IsRequest && tc.Format == ODataFormat.Atom),
+                this.ReaderTestConfigurationProvider.ExplicitFormatConfigurations.Where(tc => false),
                 (testDescriptor, testConfiguration) =>
                 {
                     testDescriptor.RunTest(testConfiguration);
@@ -200,7 +201,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
                     PayloadElement = PayloadBuilder.Entity("TestModel.CityType")
                         .PrimitiveProperty("Id", 1)
                         .ExpandedNavigationProperty("PoliceStation", PayloadBuilder.Entity("TestModel.CityType")),
-                    ExpectedException = ODataExpectedExceptions.ODataException("ValidationUtils_EntryTypeNotAssignableToExpectedType", "TestModel.CityType", "TestModel.OfficeType"),
+                    ExpectedException = ODataExpectedExceptions.ODataException("ValidationUtils_ResourceTypeNotAssignableToExpectedType", "TestModel.CityType", "TestModel.OfficeType"),
                 },
                 // Nested entry of depth 4 should fail because we set MaxNestingDepth = 3 below
                 new PayloadReaderTestDescriptor(this.Settings)

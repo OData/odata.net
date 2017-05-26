@@ -4,16 +4,13 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core
-{
-    #region Namespaces
-    using System;
-    using System.Collections.Generic;
-    using System.Diagnostics;
-    using System.Diagnostics.CodeAnalysis;
-    using System.Linq;
-    #endregion Namespaces
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 
+namespace Microsoft.OData
+{
     /// <summary>
     /// Class representing an error payload.
     /// </summary>
@@ -44,7 +41,7 @@ namespace Microsoft.OData.Core
         public string Target { get; set; }
 
         /// <summary>
-        /// A collection of JSON objects that MUST contain name/value pairs for code and message, and MAY contain 
+        /// A collection of JSON objects that MUST contain name/value pairs for code and message, and MAY contain
         /// a name/value pair for target, as described above.
         /// </summary>
         /// <returns>The error details.</returns>

@@ -4,7 +4,7 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-#if ASTORIA_SERVER
+#if ODATA_SERVICE
 namespace Microsoft.OData.Service
 #else
 namespace Microsoft.OData.Client
@@ -16,7 +16,7 @@ namespace Microsoft.OData.Client
     using System.Linq.Expressions;
 
     /// <summary>
-    /// base vistor class for walking an expression tree bottom up.
+    /// base visitor class for walking an expression tree bottom up.
     /// </summary>
     internal abstract class ALinqExpressionVisitor
     {
@@ -52,7 +52,7 @@ namespace Microsoft.OData.Client
                 case ExpressionType.MultiplyChecked:
                 case ExpressionType.Divide:
                 case ExpressionType.Modulo:
-#if !ASTORIA_CLIENT
+#if !ODATA_CLIENT
                 case ExpressionType.Power:
 #endif
                 case ExpressionType.And:

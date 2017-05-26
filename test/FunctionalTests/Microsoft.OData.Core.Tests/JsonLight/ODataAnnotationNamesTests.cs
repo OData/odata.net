@@ -6,21 +6,29 @@
 
 using System;
 using System.Linq;
-using System.Reflection;
 using FluentAssertions;
-using Microsoft.OData.Core.JsonLight;
+using Microsoft.OData.JsonLight;
 using Xunit;
 
-namespace Microsoft.OData.Core.Tests.JsonLight
+namespace Microsoft.OData.Tests.JsonLight
 {
+    using BindingFlags = System.Reflection.BindingFlags;
+
     public class ODataAnnotationNamesTests
     {
+        
         private static readonly string[] ReservedODataAnnotationNames =
             typeof(ODataAnnotationNames)
+#if NETCOREAPP1_0
+            .GetFields()
+#else
             .GetFields(BindingFlags.NonPublic | BindingFlags.Static)
+#endif
             .Where(f => f.FieldType == typeof(string))
             .Select(f => (string)f.GetValue(null)).ToArray();
 
+#if !NETCOREAPP1_0
+        // Not applicable to .NET Core due to changes in framework
         [Fact]
         public void ReservedODataAnnotationNamesHashSetShouldContainAllODataAnnotationNamesSpecialToODataLib()
         {
@@ -32,6 +40,7 @@ namespace Microsoft.OData.Core.Tests.JsonLight
                 ODataAnnotationNames.KnownODataAnnotationNames.Contains(annotationName.ToUpperInvariant()).Should().BeFalse();
             }
         }
+#endif
 
         [Fact]
         public void IsODataAnnotationNameShouldReturnTrueForAnnotationNamesUnderODataNamespace()

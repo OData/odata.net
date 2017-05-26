@@ -9,14 +9,12 @@ namespace Microsoft.Test.Taupo.OData.Scenario.Tests
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using Microsoft.OData.Core;
-    using Microsoft.OData.Core.UriParser;
-    using Microsoft.OData.Edm.Library;
+    using Microsoft.OData;
+    using Microsoft.OData.Edm;
     using Microsoft.Test.OData.Utils.CombinatorialEngine;
     using Microsoft.Test.OData.Utils.Metadata;
     using Microsoft.Test.Taupo.Astoria.Contracts.OData;
     using Microsoft.Test.Taupo.Common;
-    using Microsoft.Test.Taupo.Contracts.EntityModel;
     using Microsoft.Test.Taupo.OData.Common;
     using Microsoft.Test.Taupo.OData.Contracts;
     using Microsoft.Test.Taupo.OData.Scenario.Tests.Streaming;
@@ -31,13 +29,14 @@ namespace Microsoft.Test.Taupo.OData.Scenario.Tests
 
         [InjectDependency(IsRequired = true)]
         public StreamingPayloadWriterTestDescriptor<ODataPayloadElement>.Settings Settings { get; set; }
-        
+
         [InjectDependency(IsRequired = true)]
         public PayloadWriterTestExpectedResults.Settings ExpectedResultSettings { get; set; }
-        
+
         [InjectDependency(IsRequired = true)]
         public IPayloadGenerator PayloadGenerator { get; set; }
 
+        [Ignore] // Remove Atom
         [TestMethod]
         public void StreamWriteReadFeed()
         {
@@ -48,27 +47,25 @@ namespace Microsoft.Test.Taupo.OData.Scenario.Tests
             //ToDo: Fix places where we've lost JsonVerbose coverage to add JsonLight
             this.CombinatorialEngineProvider.RunCombinations(
                testDescriptors,
-               this.WriterTestConfigurationProvider.ExplicitFormatConfigurationsWithIndent.Where(tc => tc.Synchronous && tc.Format == ODataFormat.Atom),
+               this.WriterTestConfigurationProvider.ExplicitFormatConfigurationsWithIndent.Where(tc => false),
                (testDescriptor, testConfiguration) =>
                {
                    testConfiguration = testConfiguration.Clone();
-                   testConfiguration.MessageWriterSettings.ODataUri = new Microsoft.OData.Core.ODataUri()
+                   testConfiguration.MessageWriterSettings.ODataUri = new Microsoft.OData.ODataUri()
                    {
                        ServiceRoot = ServiceDocumentUri
                    };
-
-                   testConfiguration.MessageWriterSettings.EnableAtom = true;
                    testDescriptor.RunTest(testConfiguration);
                });
         }
-       
+
         [Ignore]
         [TestMethod]
         public void StreamWriteReadEntry()
         {
             EdmModel model = Microsoft.Test.OData.Utils.Metadata.TestModels.BuildTestModel();
             ComplexInstance complexValue = ODataStreamingTestCase.GetComplexInstanceWithManyPrimitiveProperties(model);
-            
+
             var payloadDescriptors = new PayloadTestDescriptor[]
             { 
                 // Multiple nesting of Complex Values and Multiple Values.
@@ -127,7 +124,7 @@ namespace Microsoft.Test.Taupo.OData.Scenario.Tests
             //ToDo: Fix places where we've lost JsonVerbose coverage to add JsonLight
             this.CombinatorialEngineProvider.RunCombinations(
                testDescriptors,
-               this.WriterTestConfigurationProvider.ExplicitFormatConfigurationsWithIndent.Where(tc => tc.Synchronous && tc.Format == ODataFormat.Atom),
+               this.WriterTestConfigurationProvider.ExplicitFormatConfigurationsWithIndent.Where(tc => false),
                (testDescriptor, testConfiguration) =>
                {
                    testDescriptor.RunTest(testConfiguration);

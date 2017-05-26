@@ -12,9 +12,8 @@ namespace Microsoft.Test.OData.PluggableFormat.Avro
     using System.Linq;
     using Microsoft.Hadoop.Avro;
     using Microsoft.Hadoop.Avro.Schema;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Library;
 
     class ODataAvroParameterWriter : ODataParameterWriter
     {
@@ -58,12 +57,12 @@ namespace Microsoft.Test.OData.PluggableFormat.Avro
             throw new System.NotImplementedException();
         }
 
-        public override ODataWriter CreateEntryWriter(string parameterName)
+        public override ODataWriter CreateResourceWriter(string parameterName)
         {
             return CreateWriterImplementation(parameterName, writingFeed: false);
         }
 
-        public override ODataWriter CreateFeedWriter(string parameterName)
+        public override ODataWriter CreateResourceSetWriter(string parameterName)
         {
             return CreateWriterImplementation(parameterName, writingFeed: true);
         }
@@ -104,12 +103,12 @@ namespace Microsoft.Test.OData.PluggableFormat.Avro
             throw new System.NotImplementedException();
         }
 
-        public override System.Threading.Tasks.Task<ODataWriter> CreateEntryWriterAsync(string parameterName)
+        public override System.Threading.Tasks.Task<ODataWriter> CreateResourceWriterAsync(string parameterName)
         {
             throw new System.NotImplementedException();
         }
 
-        public override System.Threading.Tasks.Task<ODataWriter> CreateFeedWriterAsync(string parameterName)
+        public override System.Threading.Tasks.Task<ODataWriter> CreateResourceSetWriterAsync(string parameterName)
         {
             throw new System.NotImplementedException();
         }

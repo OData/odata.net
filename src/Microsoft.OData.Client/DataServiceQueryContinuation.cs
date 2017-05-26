@@ -128,7 +128,7 @@ namespace Microsoft.OData.Client
         }
 
         /// <summary>
-        /// Initializes a new <see cref="QueryComponents"/> instance that can 
+        /// Initializes a new <see cref="QueryComponents"/> instance that can
         /// be used for this continuation.
         /// </summary>
         /// <returns>A new initializes <see cref="QueryComponents"/>.</returns>

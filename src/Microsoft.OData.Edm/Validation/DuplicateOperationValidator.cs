@@ -16,7 +16,7 @@ namespace Microsoft.OData.Edm.Validation
         private readonly HashSetInternal<string> functionsParameterNameHash = new HashSetInternal<string>();
         private readonly HashSetInternal<string> functionsParameterTypeHash = new HashSetInternal<string>();
         private readonly HashSetInternal<string> actionsNameHash = new HashSetInternal<string>();
-        
+
         private readonly ValidationContext context;
 
         internal DuplicateOperationValidator(ValidationContext context)
@@ -103,7 +103,7 @@ namespace Microsoft.OData.Edm.Validation
 
         /// <summary>
         /// Creates a unique function name based on the type. Used to find duplicates of functions.
-        /// - The combination of function name, binding parameter type, and unordered set of non-binding parameter names MUST be unique within a namespace. 
+        /// - The combination of function name, binding parameter type, and unordered set of non-binding parameter names MUST be unique within a namespace.
         /// - An unbound function MAY have the same name as a bound function. (Note this is why IsBound is added into the string)
         /// </summary>
         /// <param name="function">function to create the hash for.</param>
@@ -151,7 +151,7 @@ namespace Microsoft.OData.Edm.Validation
         /// - An unbound function MAY have the same name as a bound function. (Note this is why IsBound is added into the string)
         /// </summary>
         /// <param name="function">function to use to create the hash. </param>
-        /// <returns>A unique string that identifies a function.</returns>  
+        /// <returns>A unique string that identifies a function.</returns>
         private static string BuildInternalUniqueParameterTypeFunctionString(IEdmFunction function)
         {
             StringBuilder builder = new StringBuilder();

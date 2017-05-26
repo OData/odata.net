@@ -4,14 +4,13 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core.JsonLight
+namespace Microsoft.OData.JsonLight
 {
     #region Namespaces
     using System;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
-    using System.Linq;
-    using Microsoft.OData.Core.Json;
+    using Microsoft.OData.Json;
     #endregion Namespaces
 
     /// <summary>
@@ -57,7 +56,8 @@ namespace Microsoft.OData.Core.JsonLight
             this.instanceAnnotationWriter = new SimpleLazy<JsonLightInstanceAnnotationWriter>(() =>
                 new JsonLightInstanceAnnotationWriter(new ODataJsonLightValueSerializer(jsonLightOutputContext), jsonLightOutputContext.TypeNameOracle));
             this.odataAnnotationWriter = new SimpleLazy<JsonLightODataAnnotationWriter>(() =>
-                new JsonLightODataAnnotationWriter(jsonLightOutputContext.JsonWriter, jsonLightOutputContext.MessageWriterSettings.ODataSimplified));
+                new JsonLightODataAnnotationWriter(jsonLightOutputContext.JsonWriter,
+                    this.JsonLightOutputContext.ODataSimplifiedOptions.EnableWritingODataAnnotationWithoutPrefix));
 
             if (initContextUriBuilder)
             {
@@ -215,15 +215,15 @@ namespace Microsoft.OData.Core.JsonLight
         {
             Debug.Assert(uri != null, "uri != null");
 
-            // Get the metadataDocumentUri directly from MessageWriterSettings and not using ContextUriBuilder because in the case of getting the service document with nometadata 
+            // Get the metadataDocumentUri directly from MessageWriterSettings and not using ContextUriBuilder because in the case of getting the service document with nometadata
             // ContextUriBuilder returns null, but the metadataDocumentUri is needed to calculate Absolute Uris in the service document. In any other case jsonLightOutputContext.CreateContextUriBuilder() should be used.
             Uri metadataDocumentUri = this.jsonLightOutputContext.MessageWriterSettings.MetadataDocumentUri;
 
             Uri resultUri;
-            if (this.jsonLightOutputContext.UrlResolver != null)
+            if (this.jsonLightOutputContext.PayloadUriConverter != null)
             {
                 // The resolver returns 'null' if no custom resolution is desired.
-                resultUri = this.jsonLightOutputContext.UrlResolver.ResolveUrl(metadataDocumentUri, uri);
+                resultUri = this.jsonLightOutputContext.PayloadUriConverter.ConvertPayloadUri(metadataDocumentUri, uri);
                 if (resultUri != null)
                 {
                     return UriUtils.UriToString(resultUri);

@@ -13,9 +13,8 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
     using Microsoft.Spatial;
     using FluentAssertions;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Library;
-    using Microsoft.OData.Core;
-    using Microsoft.OData.Core.UriParser;
+    using Microsoft.OData;
+    using Microsoft.OData.UriParser;
     using Microsoft.Test.Taupo.Astoria.Contracts.OData;
     using Microsoft.Test.Taupo.Common;
     using Microsoft.Test.Taupo.Contracts.EntityModel;
@@ -780,7 +779,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
                 new ConvertFromUriLiteralTestCase()
                 {
                     Parameter = "{\"property1\":123.456abc}",
-                    ExpectedException = ODataExpectedExceptions.ODataException("JsonReader_MissingComma", "Object"),
+                    ExpectedException = ODataExpectedExceptions.ODataException("ExpressionLexer_ExpectedLiteralToken", "{\"property1\":123.456abc}"),
                 });
             #endregion
 
@@ -945,22 +944,6 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
             convertFrom.ShouldThrow<ArgumentNullException>();
         }
 
-        [TestMethod, TestCategory("Reader.UriHandling"), Variation]
-        public void ConvertFromUriShouldThrowOnPrimitiveInsideBraces()
-        {
-            var edmModel = Microsoft.Test.OData.Utils.Metadata.TestModels.BuildTestModel() as EdmModel;
-
-            var complexType = new EdmComplexType(DefaultNamespaceName, "ComplexTypeWithNumberProperty");
-            complexType.AddStructuralProperty("numberProperty", Int32TypeRef);
-            edmModel.AddElement(complexType);
-
-            IEdmTypeReference expectedType = edmModel.FindType("TestModel.ComplexTypeWithNumberProperty").ToTypeReference();
-            const string text = "{5}";
-
-            Action convertFrom = () => ODataUriUtils.ConvertFromUriLiteral(text, ODataVersion.V4, edmModel, expectedType);
-            convertFrom.ShouldThrow<ODataException>().WithMessage("Invalid JSON. A colon character ':' is expected after the property name '5', but none was found.");
-        }
-
         #endregion
 
         #region JSON Light
@@ -975,39 +958,6 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
         }
 
         [TestMethod, TestCategory("Reader.UriHandling"), Variation]
-        public void ConvertFromUriShouldParseComplexValueWithTypeNameWhenNoExpectedTypeIsProvided()
-        {
-            var edmModel = Microsoft.Test.OData.Utils.Metadata.TestModels.BuildTestModel() as EdmModel;
-
-            var complexType = new EdmComplexType(DefaultNamespaceName, "ComplexTypeWithNumberProperty");
-            complexType.AddStructuralProperty("numberProperty", Int32TypeRef);
-            edmModel.AddElement(complexType);
-
-            var text = "{\"@odata.type\":\"#TestModel.ComplexTypeWithNumberProperty\",\"numberProperty\":42}";
-
-            var result = ODataUriUtils.ConvertFromUriLiteral(text, ODataVersion.V4, edmModel, null /*typeReference*/);
-            result.Should().BeAssignableTo<ODataComplexValue>();
-            result.As<ODataComplexValue>().TypeName.Should().Be("TestModel.ComplexTypeWithNumberProperty");
-            result.As<ODataComplexValue>().Properties.Should().OnlyContain(p => p.Name == "numberProperty" && p.Value.Equals(42));
-        }
-
-        [TestMethod, TestCategory("Reader.UriHandling"), Variation]
-        public void ConvertFromUriThrowsOnComplexValueWithNoTypeWhenNoExpectedTypeIsProvided()
-        {
-            var edmModel = Microsoft.Test.OData.Utils.Metadata.TestModels.BuildTestModel() as EdmModel;
-
-            var complexType = new EdmComplexType(DefaultNamespaceName, "ComplexTypeWithNumberProperty");
-            complexType.AddStructuralProperty("numberProperty", Int32TypeRef);
-            edmModel.AddElement(complexType);
-
-            var text = "{\"numberProperty\":42}";
-
-            object resultTmp = ODataUriUtils.ConvertFromUriLiteral(text, ODataVersion.V4, edmModel, null /*typeReference*/);
-            resultTmp.As<ODataComplexValue>().TypeName.Should().Be(null);
-            resultTmp.As<ODataComplexValue>().Properties.Should().OnlyContain(p => p.Name == "numberProperty" && p.Value.Equals(42));
-        }
-
-        [TestMethod, TestCategory("Reader.UriHandling"), Variation]
         public void ConvertFromUriShouldParseComplexValue()
         {
             var edmModel = Microsoft.Test.OData.Utils.Metadata.TestModels.BuildTestModel() as EdmModel;
@@ -1019,138 +969,8 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
             IEdmTypeReference expectedType = edmModel.FindType("TestModel.ComplexTypeWithNumberProperty").ToTypeReference();
             var text = "{\"@odata.type\":\"#TestModel.ComplexTypeWithNumberProperty\",\"numberProperty\":42}";
 
-            var result = ODataUriUtils.ConvertFromUriLiteral(text, ODataVersion.V4, edmModel, expectedType);
-            result.Should().BeAssignableTo<ODataComplexValue>();
-            result.As<ODataComplexValue>().TypeName.Should().Be("TestModel.ComplexTypeWithNumberProperty");
-            result.As<ODataComplexValue>().Properties.Should().OnlyContain(p => p.Name == "numberProperty" && p.Value.Equals(42));
-        }
-
-        [TestMethod, TestCategory("Reader.UriHandling"), Variation]
-        public void ConvertFromUriShouldParseComplexValueWithNullProperty()
-        {
-            var edmModel = Microsoft.Test.OData.Utils.Metadata.TestModels.BuildTestModel() as EdmModel;
-
-            var complexType = new EdmComplexType(DefaultNamespaceName, "ComplexTypeWithNullProperty");
-            complexType.AddStructuralProperty("null", Int32NullableTypeRef);
-            edmModel.AddElement(complexType);
-
-            IEdmTypeReference expectedType = edmModel.FindType("TestModel.ComplexTypeWithNullProperty").ToTypeReference();
-            var text = "{\"@odata.type\":\"#TestModel.ComplexTypeWithNullProperty\",\"null\":null}";
-
-            var result = ODataUriUtils.ConvertFromUriLiteral(text, ODataVersion.V4, edmModel, expectedType);
-            result.Should().BeAssignableTo<ODataComplexValue>();
-            result.As<ODataComplexValue>().TypeName.Should().Be("TestModel.ComplexTypeWithNullProperty");
-            result.As<ODataComplexValue>().Properties.Should().OnlyContain(p => p.Name == "null" && p.Value == null);
-        }
-
-        [TestMethod, TestCategory("Reader.UriHandling"), Variation]
-        public void ConvertFromUriShouldParseComplexValueWithComplexProperty()
-        {
-            var edmModel = Microsoft.Test.OData.Utils.Metadata.TestModels.BuildTestModel() as EdmModel;
-
-            var innerType = new EdmComplexType(DefaultNamespaceName, "InnerComplexTypeWithStringProperty");
-            innerType.AddStructuralProperty("foo", StringNullableTypeRef);
-            edmModel.AddElement(innerType);
-
-            var complexType = new EdmComplexType(DefaultNamespaceName, "ComplexTypeWithPrimitiveAndComplexProperty");
-            complexType.AddStructuralProperty("number", Int32TypeRef);
-            complexType.AddStructuralProperty("complex", new EdmComplexTypeReference(innerType, isNullable: true));
-            edmModel.AddElement(complexType);
-
-            IEdmTypeReference expectedType = edmModel.FindType("TestModel.ComplexTypeWithPrimitiveAndComplexProperty").ToTypeReference();
-            var text = "{\"@odata.type\":\"#TestModel.ComplexTypeWithPrimitiveAndComplexProperty\",\"number\":42,\"complex\":{\"@odata.type\":\"#TestModel.InnerComplexTypeWithStringProperty\",\"foo\":\"bar\"}}";
-
-            var result = ODataUriUtils.ConvertFromUriLiteral(text, ODataVersion.V4, edmModel, expectedType);
-            result.Should().BeAssignableTo<ODataComplexValue>();
-            result.As<ODataComplexValue>().TypeName.Should().Be("TestModel.ComplexTypeWithPrimitiveAndComplexProperty");
-            result.As<ODataComplexValue>().Properties.Should().HaveCount(2);
-            result.As<ODataComplexValue>().Properties.Should().Contain(p => p.Name == "number" && p.Value.Equals(42));
-            result.As<ODataComplexValue>().Properties.Should().Contain(p => p.Name == "complex" && p.Value is ODataComplexValue);
-        }
-
-        [TestMethod, TestCategory("Reader.UriHandling"), Variation]
-        public void ConvertFromUriShouldParseComplexValueWithSpatialProperty()
-        {
-            var edmModel = Microsoft.Test.OData.Utils.Metadata.TestModels.BuildTestModel() as EdmModel;
-
-            var complexType = new EdmComplexType(DefaultNamespaceName, "ComplexTypeWithSpatialProperties");
-            complexType.AddStructuralProperty("geographyPoint", EdmCoreModel.Instance.GetSpatial(EdmPrimitiveTypeKind.GeographyPoint, false));
-            complexType.AddStructuralProperty("geometryPoint", EdmCoreModel.Instance.GetSpatial(EdmPrimitiveTypeKind.GeometryPoint, false));
-            edmModel.AddElement(complexType);
-
-            IEdmTypeReference expectedType = edmModel.FindType("TestModel.ComplexTypeWithSpatialProperties").ToTypeReference();
-            var text = "{\"@odata.type\":\"#TestModel.ComplexTypeWithSpatialProperties\",\"geographyPoint\":{\"type\":\"Point\",\"coordinates\":[-200.0,32.0],\"crs\":{\"type\":\"name\",\"properties\":{\"name\":\"EPSG:4326\"}}},\"geometryPoint\":{\"type\":\"Point\",\"coordinates\":[60.5,-50.0],\"crs\":{\"type\":\"name\",\"properties\":{\"name\":\"EPSG:0\"}}}}";
-
-            var result = ODataUriUtils.ConvertFromUriLiteral(text, ODataVersion.V4, edmModel, expectedType);
-            result.Should().BeAssignableTo<ODataComplexValue>();
-            result.As<ODataComplexValue>().TypeName.Should().Be("TestModel.ComplexTypeWithSpatialProperties");
-            result.As<ODataComplexValue>().Properties.Should().HaveCount(2);
-            result.As<ODataComplexValue>().Properties.Should().Contain(p => p.Name == "geographyPoint" && p.Value is GeographyPoint);
-            result.As<ODataComplexValue>().Properties.Should().Contain(p => p.Name == "geometryPoint" && p.Value is GeometryPoint);
-        }
-
-        [TestMethod, TestCategory("Reader.UriHandling"), Variation]
-        public void ConvertFromUriShouldParseComplexValueWithNoTypeOnWire()
-        {
-            var edmModel = Microsoft.Test.OData.Utils.Metadata.TestModels.BuildTestModel() as EdmModel;
-
-            var complexType = new EdmComplexType(DefaultNamespaceName, "ComplexTypeWithNumberProperty");
-            complexType.AddStructuralProperty("numberProperty", Int32TypeRef);
-            edmModel.AddElement(complexType);
-
-            IEdmTypeReference expectedType = edmModel.FindType("TestModel.ComplexTypeWithNumberProperty").ToTypeReference();
-            var text = "{\"@odata.type\":\"#TestModel.ComplexTypeWithNumberProperty\",\"numberProperty\":42}";
-
-            var result = ODataUriUtils.ConvertFromUriLiteral(text, ODataVersion.V4, edmModel, expectedType);
-            result.Should().BeAssignableTo<ODataComplexValue>();
-            result.As<ODataComplexValue>().TypeName.Should().Be("TestModel.ComplexTypeWithNumberProperty");
-            result.As<ODataComplexValue>().Properties.Should().OnlyContain(p => p.Name == "numberProperty" && p.Value.Equals(42));
-        }
-
-        [TestMethod, TestCategory("Reader.UriHandling"), Variation]
-        public void ConvertFromUriShouldParseComplexValueWithNoType()
-        {
-            var edmModel = Microsoft.Test.OData.Utils.Metadata.TestModels.BuildTestModel() as EdmModel;
-
-            var complexType = new EdmComplexType(DefaultNamespaceName, "ComplexTypeWithNumberProperty");
-            complexType.AddStructuralProperty("numberProperty", Int32TypeRef);
-            edmModel.AddElement(complexType);
-
-            IEdmTypeReference expectedType = edmModel.FindType("TestModel.ComplexTypeWithNumberProperty").ToTypeReference();
-            var text = "{\"numberProperty\":42}";
-
-            var result = ODataUriUtils.ConvertFromUriLiteral(text, ODataVersion.V4, edmModel, expectedType);
-            result.Should().BeAssignableTo<ODataComplexValue>();
-            result.As<ODataComplexValue>().TypeName.Should().Be("TestModel.ComplexTypeWithNumberProperty");
-            result.As<ODataComplexValue>().Properties.Should().OnlyContain(p => p.Name == "numberProperty" && p.Value.Equals(42));
-        }
-
-        [TestMethod, TestCategory("Reader.UriHandling"), Variation]
-        public void ConvertFromUriShouldParseEmptyComplexValueWithNoType()
-        {
-            var edmModel = Microsoft.Test.OData.Utils.Metadata.TestModels.BuildTestModel() as EdmModel;
-            object complextTmp = ODataUriUtils.ConvertFromUriLiteral("{}", ODataVersion.V4, edmModel, null);
-            complextTmp.As<ODataComplexValue>().TypeName.Should().Be(null);
-            complextTmp.As<ODataComplexValue>().Properties.Count().Should().Be(0);
-        }
-
-        [TestMethod, TestCategory("Reader.UriHandling"), Variation]
-        public void ConvertFromUriShouldParseInterestingComplexValueWithNoType()
-        {
-            var edmModel = Microsoft.Test.OData.Utils.Metadata.TestModels.BuildTestModel() as EdmModel;
-
-            var complexType = new EdmComplexType(DefaultNamespaceName, "ComplexTypeWithSpatialProperties");
-            complexType.AddStructuralProperty("geographyPoint", EdmCoreModel.Instance.GetSpatial(EdmPrimitiveTypeKind.GeographyPoint, false));
-            complexType.AddStructuralProperty("geometryPoint", EdmCoreModel.Instance.GetSpatial(EdmPrimitiveTypeKind.GeometryPoint, false));
-            edmModel.AddElement(complexType);
-
-            IEdmTypeReference expectedType = edmModel.FindType("TestModel.ComplexTypeWithSpatialProperties").ToTypeReference();
-            var text = "{\"geographyPoint\":{\"type\":\"Point\",\"coordinates\":[-200.0,32.0],\"crs\":{\"type\":\"name\",\"properties\":{\"name\":\"EPSG:4326\"}}},\"geometryPoint\":{\"type\":\"Point\",\"coordinates\":[60.5,-50.0],\"crs\":{\"type\":\"name\",\"properties\":{\"name\":\"EPSG:0\"}}}}";
-
-            var result = ODataUriUtils.ConvertFromUriLiteral(text, ODataVersion.V4, edmModel, expectedType);
-            result.Should().BeAssignableTo<ODataComplexValue>();
-            result.As<ODataComplexValue>().TypeName.Should().Be("TestModel.ComplexTypeWithSpatialProperties");
-            result.As<ODataComplexValue>().Properties.Should().HaveCount(2);
+            Action parse = () => ODataUriUtils.ConvertFromUriLiteral(text, ODataVersion.V4, edmModel, expectedType);
+            parse.ShouldThrow<ODataException>();
         }
 
         [TestMethod, TestCategory("Reader.UriHandling"), Variation]
@@ -1211,25 +1031,6 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
             result.As<ODataCollectionValue>().Items.Should().HaveCount(2);
             result.As<ODataCollectionValue>().Items.Should().HaveElementAt(0, true);
             result.As<ODataCollectionValue>().Items.Should().HaveElementAt(1, false);
-        }
-
-        [TestMethod, TestCategory("Reader.UriHandling"), Variation]
-        public void ConvertFromUriShouldParseCollectionOfComplex()
-        {
-            var edmModel = Microsoft.Test.OData.Utils.Metadata.TestModels.BuildTestModel() as EdmModel;
-
-            var complexType = new EdmComplexType(DefaultNamespaceName, "ComplexTypeForMultipleItemsCollection");
-            complexType.AddStructuralProperty("Name", StringNullableTypeRef);
-            edmModel.AddElement(complexType);
-
-            IEdmTypeReference expectedType = EdmCoreModel.GetCollection(edmModel.FindType("TestModel.ComplexTypeForMultipleItemsCollection").ToTypeReference());
-            var text = "[{\"@odata.type\":\"#TestModel.ComplexTypeForMultipleItemsCollection\",\"Name\":\"Bart\"},{\"@odata.type\":\"#TestModel.ComplexTypeForMultipleItemsCollection\",\"Name\":\"Homer\"},{\"@odata.type\":\"#TestModel.ComplexTypeForMultipleItemsCollection\",\"Name\":\"Marge\"}]";
-
-            var result = ODataUriUtils.ConvertFromUriLiteral(text, ODataVersion.V4, edmModel, expectedType);
-            result.Should().BeAssignableTo<ODataCollectionValue>();
-            result.As<ODataCollectionValue>().TypeName.Should().Be("Collection(TestModel.ComplexTypeForMultipleItemsCollection)");
-            result.As<ODataCollectionValue>().Items.Should().HaveCount(3);
-            result.As<ODataCollectionValue>().Items.Cast<object>().All(o => o is ODataComplexValue).Should().BeTrue();
         }
 
         [TestMethod, TestCategory("Reader.UriHandling"), Variation]

@@ -10,7 +10,7 @@ namespace AstoriaUnitTests.Stubs
     using System.Collections.Generic;
     using Microsoft.OData.Service;
     using System.IO;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
 
     public class DataServiceHostResponseMessage : IODataResponseMessage
     {

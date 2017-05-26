@@ -4,15 +4,13 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core.JsonLight
+namespace Microsoft.OData.JsonLight
 {
     #region Namespaces
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
-    using Microsoft.OData.Edm;
-    using Microsoft.OData.Core.Json;
-    using Microsoft.OData.Core.Metadata;
+
     #endregion Namespaces
 
     /// <summary>
@@ -62,7 +60,7 @@ namespace Microsoft.OData.Core.JsonLight
         {
             Debug.Assert(entityReferenceLink != null, "entityReferenceLink != null");
 
-            this.WriterValidator.ValidateEntityReferenceLink(entityReferenceLink);
+            WriterValidationUtils.ValidateEntityReferenceLink(entityReferenceLink);
 
             this.JsonWriter.StartObjectScope();
 
@@ -123,7 +121,7 @@ namespace Microsoft.OData.Core.JsonLight
             {
                 foreach (ODataEntityReferenceLink entityReferenceLink in entityReferenceLinksEnumerable)
                 {
-                    this.WriterValidator.ValidateEntityReferenceLinkNotNull(entityReferenceLink);
+                    WriterValidationUtils.ValidateEntityReferenceLinkNotNull(entityReferenceLink);
                     this.WriteEntityReferenceLinkImplementation(entityReferenceLink, /* isTopLevel */ false);
                 }
             }

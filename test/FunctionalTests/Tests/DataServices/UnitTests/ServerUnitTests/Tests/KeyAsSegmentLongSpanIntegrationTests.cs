@@ -20,7 +20,7 @@ namespace AstoriaUnitTests.Tests
     using System.Xml;
     using AstoriaUnitTests.Stubs;
     using Microsoft.OData.Edm.Csdl;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
     using ResourceType = Microsoft.OData.Service.Providers.ResourceType;
 
@@ -29,17 +29,7 @@ namespace AstoriaUnitTests.Tests
     {
         private static readonly string EntityTypeNameWithStringKey = typeof(KeyAsSegmentLongSpanIntegrationTests).FullName + "_EntityTypeWithStringKey";
 
-        [TestCategory("Partition2")]
-        [TestMethod]
-        public void KeyAsSegmentEndToEndSmokeTestInAtom()
-        {
-            RunEndToEndSmokeTestWithClient(ctx =>
-            {
-                ctx.EnableAtom = true;
-                ctx.Format.UseAtom();
-            });
-        }
-
+        [Ignore] // Issue: #623
         [TestCategory("Partition2")]
         [TestMethod]
         public void KeyAsSegmentEndToEndSmokeTestInJsonLight()
@@ -48,24 +38,24 @@ namespace AstoriaUnitTests.Tests
                                            {
                                                ctx.ResolveName = t => t.FullName;
                                                ctx.ResolveType = n => n.Contains("Customer") ? typeof(Customer) : null;
-                                               ctx.Format.UseJson(EdmxReader.Parse(XmlReader.Create(ctx.GetMetadataUri().AbsoluteUri)));
+                                               ctx.Format.UseJson(CsdlReader.Parse(XmlReader.Create(ctx.GetMetadataUri().AbsoluteUri)));
                                            });
         }
-
+        [Ignore] // Remove Atom
         [TestCategory("Partition2")]
         [TestMethod]
         public void KeyAsSegmentUriParsingSmokeTestForTopLevelEntity()
         {
             ResponseShouldBeEntryWithEditLink("/Customers/0", "Customers/0");
         }
-
+        [Ignore] // Remove Atom
         [TestCategory("Partition2")]
         [TestMethod]
         public void KeyAsSegmentUriParsingSmokeTestForProperty()
         {
             ResponseShouldBeValueElement("/Customers/0/Name", "Customer 0");
         }
-
+        [Ignore] // Remove Atom
         [TestCategory("Partition2")]
         [TestMethod]
         public void KeyAsSegmentUriParsingSmokeTestForTypeSegments()
@@ -73,7 +63,7 @@ namespace AstoriaUnitTests.Tests
             ResponseShouldBeEntryWithEditLink("/Customers/$/AstoriaUnitTests.Stubs.Customer/0", "Customers/0");
             ResponseShouldBeEntryWithEditLink("/Customers/0/AstoriaUnitTests.Stubs.Customer", "Customers/0");
         }
-
+        [Ignore] // Remove Atom
         [TestCategory("Partition2")]
         [TestMethod]
         public void KeyAsSegmentUriParsingSmokeTestForNavigation()
@@ -81,7 +71,7 @@ namespace AstoriaUnitTests.Tests
             ResponseShouldBeEntryWithEditLink("/Customers/1/BestFriend", "Customers/0");
             ResponseShouldBeEntryWithEditLink("/Customers/0/Orders/0", "Orders/0");
         }
-
+        [Ignore] // Remove Atom
         [TestCategory("Partition2")]
         [TestMethod]
         public void KeyAsSegmentUriParsingSmokeTestForLinks()
@@ -89,14 +79,14 @@ namespace AstoriaUnitTests.Tests
             ResponseShouldBeSingleLink("/Customers/1/BestFriend/$ref", "Customers/0");
             ResponseShouldBeLinkCollection("/Customers/0/Orders/$ref", "Orders/0");
         }
-
+        [Ignore] // Remove Atom
         [TestCategory("Partition2")]
         [TestMethod]
         public void KeyAsSegmentUriParsingSmokeTestForServiceOperation()
         {
             ResponseShouldBeEntryWithEditLink("/GetCustomers/0", "Customers/0");
         }
-
+        [Ignore] // Remove Atom
         [TestCategory("Partition2")]
         [TestMethod]
         public void KeyAsSegmentUriParsingSmokeTestForReservedNameAsKeyValue()
@@ -110,7 +100,7 @@ namespace AstoriaUnitTests.Tests
             ResponseShouldHaveStatusCode("/StringKeys/$ref", 400);
             ResponseShouldHaveStatusCode("/StringKeys/$ref", 400);
         }
-
+        [Ignore] // Remove Atom
         [TestCategory("Partition2")]
         [TestMethod]
         public void KeyAsSegmentUriParsingSmokeTestForTypeNameAsKeyValue()
@@ -119,7 +109,7 @@ namespace AstoriaUnitTests.Tests
 
             ResponseShouldBeFeed("/StringKeys/$/" + EntityTypeNameWithStringKey, 200);
         }
-
+        [Ignore] // Remove Atom
         [TestCategory("Partition2")]
         [TestMethod]
         public void KeyAsSegmentUriParsingSmokeTestForActionNameAsKeyValue()
@@ -127,7 +117,7 @@ namespace AstoriaUnitTests.Tests
             ResponseShouldBeEntryWithEditLink("/StringKeys/Action?$format=atom", "StringKeys/Action");
             ResponseShouldHaveStatusCode("/StringKeys/$/AstoriaUnitTests.Tests.Action?$format=atom", 405);
         }
-
+        [Ignore] // Remove Atom
         [TestCategory("Partition2")]
         [TestMethod]
         public void KeyAsSegmentUriParsingSmokeTestForStream()
@@ -136,7 +126,7 @@ namespace AstoriaUnitTests.Tests
             ResponseShouldHaveStatusCode("/StringKeys/$value", 400);
             ResponseShouldHaveMediaType("/StringKeys/$$value/$value", "application/jpeg");
         }
-
+        [Ignore] // Remove Atom
         [TestCategory("Partition2")]
         [TestMethod]
         public void KeyAsSegmentUriParsingSmokeTestForKeysWithParens()
@@ -146,12 +136,12 @@ namespace AstoriaUnitTests.Tests
             ResponseShouldBeEntryWithEditLink("/StringKeys/)", "StringKeys/" + Uri.EscapeDataString(")"));
             ResponseShouldBeEntryWithEditLink("/StringKeys/pa()rens", "StringKeys/" + Uri.EscapeDataString("pa()rens"));
             ResponseShouldBeEntryWithEditLink("/StringKeys/parens()", "StringKeys/" + Uri.EscapeDataString("parens()"));
-            ResponseShouldBeEntryWithEditLink("/StringKeys/parens(", "StringKeys/"  + Uri.EscapeDataString("parens("));
-            ResponseShouldBeEntryWithEditLink("/StringKeys/(parens", "StringKeys/"  + Uri.EscapeDataString("(parens"));
-            ResponseShouldBeEntryWithEditLink("/StringKeys/(parens)", "StringKeys/"  + Uri.EscapeDataString("(parens)"));
-            ResponseShouldBeEntryWithEditLink("/StringKeys/)parens(", "StringKeys/"  + Uri.EscapeDataString(")parens("));
+            ResponseShouldBeEntryWithEditLink("/StringKeys/parens(", "StringKeys/" + Uri.EscapeDataString("parens("));
+            ResponseShouldBeEntryWithEditLink("/StringKeys/(parens", "StringKeys/" + Uri.EscapeDataString("(parens"));
+            ResponseShouldBeEntryWithEditLink("/StringKeys/(parens)", "StringKeys/" + Uri.EscapeDataString("(parens)"));
+            ResponseShouldBeEntryWithEditLink("/StringKeys/)parens(", "StringKeys/" + Uri.EscapeDataString(")parens("));
         }
-
+        [Ignore] // Remove Atom
         [TestCategory("Partition2")]
         [TestMethod]
         public void KeyAsSegmentMetadataSmokeTest()
@@ -261,7 +251,11 @@ namespace AstoriaUnitTests.Tests
 
                 request.StartService();
 
-                DataServiceContext ctx = new DataServiceContext(request.ServiceRoot, ODataProtocolVersion.V4) { UrlConventions = DataServiceUrlConventions.KeyAsSegment };
+                DataServiceContext ctx = new DataServiceContext(request.ServiceRoot, ODataProtocolVersion.V4)
+                {
+                    UrlKeyDelimiter = DataServiceUrlKeyDelimiter.Slash
+                };
+
                 if (customize != null)
                 {
                     customize(ctx);
@@ -270,13 +264,14 @@ namespace AstoriaUnitTests.Tests
                 var customer = ctx.CreateQuery<Customer>("Customers").Where(c => c.ID == 0).Single();
                 var descriptor = ctx.GetEntityDescriptor(customer);
 
+                var navigationsLinks = descriptor.LinkInfos.Where(l => l.NavigationLink != null).ToList();
                 var baseUri = request.ServiceRoot.AbsoluteUri;
                 Assert.AreEqual(baseUri + "/Customers/0", descriptor.Identity.OriginalString);
                 Assert.AreEqual(baseUri + "/Customers/0", descriptor.EditLink.OriginalString);
-                Assert.AreEqual(baseUri + "/Customers/0/BestFriend/$ref", descriptor.LinkInfos[0].AssociationLink.OriginalString);
-                Assert.AreEqual(baseUri + "/Customers/0/BestFriend", descriptor.LinkInfos[0].NavigationLink.OriginalString);
-                Assert.AreEqual(baseUri + "/Customers/0/Orders/$ref", descriptor.LinkInfos[1].AssociationLink.OriginalString);
-                Assert.AreEqual(baseUri + "/Customers/0/Orders", descriptor.LinkInfos[1].NavigationLink.OriginalString);
+                Assert.AreEqual(baseUri + "/Customers/0/BestFriend/$ref", navigationsLinks[0].AssociationLink.OriginalString);
+                Assert.AreEqual(baseUri + "/Customers/0/BestFriend", navigationsLinks[0].NavigationLink.OriginalString);
+                Assert.AreEqual(baseUri + "/Customers/0/Orders/$ref", navigationsLinks[1].AssociationLink.OriginalString);
+                Assert.AreEqual(baseUri + "/Customers/0/Orders", navigationsLinks[1].NavigationLink.OriginalString);
             }
         }
 
@@ -290,7 +285,7 @@ namespace AstoriaUnitTests.Tests
                 config.SetServiceActionAccessRule("*", ServiceActionRights.Invoke);
                 config.UseVerboseErrors = true;
 
-                config.DataServiceBehavior.UrlConventions = DataServiceUrlConventions.KeyAsSegment;
+                config.DataServiceBehavior.UrlKeyDelimiter = DataServiceUrlKeyDelimiter.Slash;
 
                 config.DataServiceBehavior.MaxProtocolVersion = ODataProtocolVersion.V4;
                 config.DataServiceBehavior.IncludeAssociationLinksInResponse = true;
@@ -309,8 +304,8 @@ namespace AstoriaUnitTests.Tests
             {
                 get
                 {
-                    return new List<EntityTypeWithStringKey> 
-                    { 
+                    return new List<EntityTypeWithStringKey>
+                    {
                         new EntityTypeWithStringKey { ID = "$count" },
                         new EntityTypeWithStringKey { ID = "$ref" },
                         new EntityTypeWithStringKey { ID = "$filter" },

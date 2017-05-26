@@ -9,11 +9,12 @@ using System.IO;
 using System.Text;
 using FluentAssertions;
 using Microsoft.OData.Edm;
-using Microsoft.OData.Edm.Library;
 using Xunit;
 
-namespace Microsoft.OData.Core.Tests
+namespace Microsoft.OData.Tests
 {
+    using TypeCode = System.TypeCode;
+
     public class ODataMessageReaderTests
     {
         [Fact]
@@ -55,7 +56,11 @@ namespace Microsoft.OData.Core.Tests
         [Fact]
         public void ReadValueOfTypeDefinitionShouldWork()
         {
+#if NETCOREAPP1_0
+            Stream stream = new MemoryStream(Encoding.GetEncoding(0).GetBytes("123"));
+#else
             Stream stream = new MemoryStream(Encoding.Default.GetBytes("123"));
+#endif
             IODataResponseMessage responseMessage = new InMemoryMessage() { StatusCode = 200, Stream = stream };
             ODataMessageReader reader = new ODataMessageReader(responseMessage, new ODataMessageReaderSettings(), new EdmModel());
             reader.ReadValue(new EdmTypeDefinitionReference(new EdmTypeDefinition("NS", "Length", EdmPrimitiveTypeKind.Int32), true)).Should().Be(123);
@@ -64,7 +69,11 @@ namespace Microsoft.OData.Core.Tests
         [Fact]
         public void ReadValueOfDateShouldWork()
         {
+#if NETCOREAPP1_0
+            Stream stream = new MemoryStream(Encoding.GetEncoding(0).GetBytes("2014-01-03"));
+#else
             Stream stream = new MemoryStream(Encoding.Default.GetBytes("2014-01-03"));
+#endif
             IODataResponseMessage responseMessage = new InMemoryMessage() { StatusCode = 200, Stream = stream };
             ODataMessageReader reader = new ODataMessageReader(responseMessage, new ODataMessageReaderSettings(), new EdmModel());
             reader.ReadValue(new EdmTypeDefinitionReference(new EdmTypeDefinition("NS", "DateValue", EdmPrimitiveTypeKind.Date), true)).Should().Be(new Date(2014, 1, 3));
@@ -73,7 +82,11 @@ namespace Microsoft.OData.Core.Tests
         [Fact]
         public void ReadValueOfAbbreviativeDateShouldWork()
         {
+#if NETCOREAPP1_0
+            Stream stream = new MemoryStream(Encoding.GetEncoding(0).GetBytes("2014-1-3"));
+#else
             Stream stream = new MemoryStream(Encoding.Default.GetBytes("2014-1-3"));
+#endif
             IODataResponseMessage responseMessage = new InMemoryMessage() { StatusCode = 200, Stream = stream };
             ODataMessageReader reader = new ODataMessageReader(responseMessage, new ODataMessageReaderSettings(), new EdmModel());
             reader.ReadValue(new EdmTypeDefinitionReference(new EdmTypeDefinition("NS", "DateValue", EdmPrimitiveTypeKind.Date), true)).Should().Be(new Date(2014, 1, 3));
@@ -82,7 +95,11 @@ namespace Microsoft.OData.Core.Tests
         [Fact]
         public void ReadValueOfTimeOfDayShouldWork()
         {
+#if NETCOREAPP1_0
+            Stream stream = new MemoryStream(Encoding.GetEncoding(0).GetBytes("12:30:04.998"));
+#else
             Stream stream = new MemoryStream(Encoding.Default.GetBytes("12:30:04.998"));
+#endif
             IODataResponseMessage responseMessage = new InMemoryMessage() { StatusCode = 200, Stream = stream };
             ODataMessageReader reader = new ODataMessageReader(responseMessage, new ODataMessageReaderSettings(), new EdmModel());
             reader.ReadValue(new EdmTypeDefinitionReference(new EdmTypeDefinition("NS", "TimeOfDayValue", EdmPrimitiveTypeKind.TimeOfDay), true)).Should().Be(new TimeOfDay(12, 30, 4, 998));
@@ -91,7 +108,11 @@ namespace Microsoft.OData.Core.Tests
         [Fact]
         public void ReadValueOfAbbreviativeTimeOfDayShouldWork()
         {
+#if NETCOREAPP1_0
+            Stream stream = new MemoryStream(Encoding.GetEncoding(0).GetBytes("12:30:4.998"));
+#else
             Stream stream = new MemoryStream(Encoding.Default.GetBytes("12:30:4.998"));
+#endif
             IODataResponseMessage responseMessage = new InMemoryMessage() { StatusCode = 200, Stream = stream };
             ODataMessageReader reader = new ODataMessageReader(responseMessage, new ODataMessageReaderSettings(), new EdmModel());
             reader.ReadValue(new EdmTypeDefinitionReference(new EdmTypeDefinition("NS", "TimeOfDayValue", EdmPrimitiveTypeKind.TimeOfDay), true)).Should().Be(new TimeOfDay(12, 30, 4, 998));
@@ -122,7 +143,7 @@ namespace Microsoft.OData.Core.Tests
                 "UnexpectedXmlElement : The schema element 'Annotation' was not expected in the given context. : (6, 8)\r\n";
 
             Action test = () => reader.ReadMetadataDocument();
-            test.ShouldThrow<ODataException>().WithMessage(expectedErrorMessage, ComparisonMode.Exact);
+            test.ShouldThrow<ODataException>().Where(e => e.Message.Equals(expectedErrorMessage));
         }
 
         [Fact]
@@ -150,7 +171,7 @@ namespace Microsoft.OData.Core.Tests
                 "UnexpectedXmlElement : The schema element 'Annotation' was not expected in the given context. : (1, 250)\r\n";
 
             Action test = () => reader.ReadMetadataDocument();
-            test.ShouldThrow<ODataException>().WithMessage(expectedErrorMessage, ComparisonMode.Exact);
+            test.ShouldThrow<ODataException>().Where(e => e.Message.Equals(expectedErrorMessage));
         }
 
         [Fact]

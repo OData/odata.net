@@ -40,7 +40,7 @@ namespace Microsoft.Spatial
         public void ReadGeography(TSource input)
         {
             Util.CheckArgumentNull(input, "input");
-            
+
             try
             {
                 this.ReadGeographyImplementation(input);
@@ -81,7 +81,7 @@ namespace Microsoft.Spatial
 
                 throw;
             }
-        }   
+        }
 
         /// <summary>
         /// Sets the reader and underlying Destination back to a clean

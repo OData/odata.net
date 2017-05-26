@@ -4,7 +4,7 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-#if ASTORIA_SERVER
+#if ODATA_SERVICE
 namespace Microsoft.OData.Service.Serializers
 #else
 namespace Microsoft.OData.Client
@@ -21,7 +21,7 @@ namespace Microsoft.OData.Client
     {
         /// <summary>
         /// Sensitive characters that we should always skip
-        /// This should be the set of Http control characters intersecting with 
+        /// This should be the set of Http control characters intersecting with
         /// the set of characters OData literal format allows outside of strings
         /// (In V3: only +, as used in double literals ex. 3E+8)
         /// </summary>

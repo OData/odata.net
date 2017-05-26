@@ -234,7 +234,7 @@ namespace System.Data.Test.Astoria
         public static IEdmModel IsValidMetadata(XPathDocument document)
         {
             var reader = document.CreateNavigator().ReadSubtree();
-            var model = EdmxReader.Parse(reader);
+            var model = CsdlReader.Parse(reader);
             IEnumerable<EdmError> errors;
             if (!model.Validate(out errors))
             {

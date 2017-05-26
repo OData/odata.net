@@ -20,19 +20,19 @@ namespace Microsoft.OData.Client
     /// <summary>
     /// Replaces expression patterns produced by the compiler with approximations
     /// used in query translation. For instance, the following VB code:
-    /// 
+    ///
     ///     x = y
-    ///     
+    ///
     /// becomes the expression
-    /// 
+    ///
     ///     Equal(MethodCallExpression(Microsoft.VisualBasic.CompilerServices.Operators.CompareString(x, y, False), 0)
-    ///     
+    ///
     /// which is normalized to
-    /// 
+    ///
     ///     Equal(x, y)
-    ///     
+    ///
     /// Comment convention:
-    /// 
+    ///
     ///     CODE(Lang): _VB or C# coding pattern being simplified_
     ///     ORIGINAL: _original LINQ expression_
     ///     NORMALIZED: _normalized LINQ expression_
@@ -82,8 +82,8 @@ namespace Microsoft.OData.Client
         #endregion Internal properties
 
         /// <summary>
-        /// Applies normalization rewrites to the specified 
-        /// <paramref name="expression"/>, recording them in the 
+        /// Applies normalization rewrites to the specified
+        /// <paramref name="expression"/>, recording them in the
         /// <paramref name="rewrites"/> dictionary.
         /// </summary>
         /// <param name="expression">Expression to normalize.</param>
@@ -101,7 +101,7 @@ namespace Microsoft.OData.Client
 
         /// <summary>
         /// Handle binary patterns:
-        /// 
+        ///
         /// - VB 'Is' operator
         /// - Compare patterns
         /// </summary>
@@ -161,9 +161,9 @@ namespace Microsoft.OData.Client
             // because it breaks undoing the rewrite by making the non-local
             // change circular, ie:
             //   unary [operand = a]
-            // becomes 
+            // becomes
             //   a <- unary [operand = a]
-            // So the undoing visits a, then the original unary, then the 
+            // So the undoing visits a, then the original unary, then the
             // operand and again the unary, the operand, etc.
             this.RecordRewrite(u, result);
 
@@ -229,7 +229,7 @@ namespace Microsoft.OData.Client
 
         /// <summary>
         /// Handles MethodCall patterns:
-        /// 
+        ///
         /// - Operator overloads
         /// - VB operators
         /// </summary>
@@ -242,7 +242,7 @@ namespace Microsoft.OData.Client
 
         /// <summary>
         /// Handles MethodCall patterns (without recording rewrites):
-        /// 
+        ///
         /// - Operator overloads
         /// - VB operators
         /// </summary>
@@ -404,7 +404,7 @@ namespace Microsoft.OData.Client
                 (ReflectionUtil.IsAnyAllMethod(sequenceMethod) || sequenceMethod == SequenceMethod.OfType))
             {
                 Expression source = callExpression.Arguments[0];
-                
+
                 //strip converts
                 while (ExpressionType.Convert == source.NodeType)
                 {
@@ -460,7 +460,7 @@ namespace Microsoft.OData.Client
         }
 
         /// <summary>
-        /// Determines whether the given call expression has a 'predicate' argument (e.g. Where(source, predicate)) 
+        /// Determines whether the given call expression has a 'predicate' argument (e.g. Where(source, predicate))
         /// and returns the ordinal for the predicate.
         /// </summary>
         /// <remarks>
@@ -705,7 +705,7 @@ namespace Microsoft.OData.Client
         /// CODE(C#): Class.Compare(left, right)
         /// ORIGINAL: MethodCallExpression(Compare, left, right)
         /// NORMALIZED: Condition(Equal(left, right), 0, Condition(left > right, 1, -1))
-        /// 
+        ///
         /// Why is this an improvement? We know how to evaluate Condition in the store, but we don't
         /// know how to evaluate MethodCallExpression... Where the CompareTo appears within a larger expression,
         /// e.g. left.CompareTo(right) > 0, we can further simplify to left > right (we register the "ComparePattern"

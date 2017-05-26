@@ -4,24 +4,23 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core
+namespace Microsoft.OData
 {
     #region Namespaces
     using System;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
-#if ODATALIB_ASYNC
+#if PORTABLELIB
     using System.Threading.Tasks;
 #endif
     using System.Xml;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Library;
-    using Microsoft.OData.Core.Metadata;
+    using Microsoft.OData.Metadata;
 
     #endregion Namespaces
 
     /// <summary>
-    /// Base class for all input contexts, defines the interface 
+    /// Base class for all input contexts, defines the interface
     /// to be implemented by the specific formats.
     /// </summary>
     public abstract class ODataInputContext : IDisposable
@@ -39,7 +38,10 @@ namespace Microsoft.OData.Core
         private readonly bool synchronous;
 
         /// <summary>The optional URL resolver to perform custom URL resolution for URLs read from the payload.</summary>
-        private readonly IODataUrlResolver urlResolver;
+        private readonly IODataPayloadUriConverter payloadUriConverter;
+
+        /// <summary>The optional dependency injection container to get related services for message reading.</summary>
+        private readonly IServiceProvider container;
 
         /// <summary>The model to use.</summary>
         private readonly IEdmModel model;
@@ -50,6 +52,11 @@ namespace Microsoft.OData.Core
         /// <summary>The payload value converter to use.</summary>
         private readonly ODataPayloadValueConverter payloadValueConverter;
 
+        /// <summary>
+        /// The ODataSimplifiedOptions used in reader.
+        /// </summary>
+        private readonly ODataSimplifiedOptions odataSimplifiedOptions;
+
         /// <summary>Set to true if the input was disposed.</summary>
         private bool disposed;
 
@@ -57,30 +64,27 @@ namespace Microsoft.OData.Core
         /// Constructor.
         /// </summary>
         /// <param name="format">The format for this input context.</param>
+        /// <param name="messageInfo">The context information for the message.</param>
         /// <param name="messageReaderSettings">Configuration settings of the OData reader.</param>
-        /// <param name="readingResponse">true if reading a response message; otherwise false.</param>
-        /// <param name="synchronous">true if the input should be read synchronously; false if it should be read asynchronously.</param>
-        /// <param name="model">The model to use.</param>
-        /// <param name="urlResolver">The optional URL resolver to perform custom URL resolution for URLs read from the payload.</param>
         protected ODataInputContext(
             ODataFormat format,
-            ODataMessageReaderSettings messageReaderSettings,
-            bool readingResponse,
-            bool synchronous,
-            IEdmModel model,
-            IODataUrlResolver urlResolver)
+            ODataMessageInfo messageInfo,
+            ODataMessageReaderSettings messageReaderSettings)
         {
             ExceptionUtils.CheckArgumentNotNull(format, "format");
+            ExceptionUtils.CheckArgumentNotNull(messageInfo, "messageInfo");
             ExceptionUtils.CheckArgumentNotNull(messageReaderSettings, "messageReaderSettings");
 
             this.format = format;
             this.messageReaderSettings = messageReaderSettings;
-            this.readingResponse = readingResponse;
-            this.synchronous = synchronous;
-            this.model = model ?? EdmCoreModel.Instance;
-            this.urlResolver = urlResolver;
-            this.edmTypeResolver = new EdmTypeReaderResolver(this.Model, this.MessageReaderSettings.ReaderBehavior);
-            this.payloadValueConverter = this.model.GetPayloadValueConverter();
+            this.readingResponse = messageInfo.IsResponse;
+            this.synchronous = !messageInfo.IsAsync;
+            this.model = messageInfo.Model ?? EdmCoreModel.Instance;
+            this.payloadUriConverter = messageInfo.PayloadUriConverter;
+            this.container = messageInfo.Container;
+            this.edmTypeResolver = new EdmTypeReaderResolver(this.Model, this.MessageReaderSettings.ClientCustomTypeResolver);
+            this.payloadValueConverter = ODataPayloadValueConverter.GetPayloadValueConverter(this.container);
+            this.odataSimplifiedOptions = ODataSimplifiedOptions.GetODataSimplifiedOptions(this.container);
         }
 
         /// <summary>
@@ -128,13 +132,24 @@ namespace Microsoft.OData.Core
         }
 
         /// <summary>
-        /// The optional URL resolver to perform custom URL resolution for URLs read from the payload.
+        /// The optional URL converter to perform custom URL conversion for URLs read from the payload.
         /// </summary>
-        public IODataUrlResolver UrlResolver
+        public IODataPayloadUriConverter PayloadUriConverter
         {
             get
             {
-                return this.urlResolver;
+                return this.payloadUriConverter;
+            }
+        }
+
+        /// <summary>
+        /// The optional dependency injection container to get related services for message reading.
+        /// </summary>
+        internal IServiceProvider Container
+        {
+            get
+            {
+                return this.container;
             }
         }
 
@@ -161,57 +176,13 @@ namespace Microsoft.OData.Core
         }
 
         /// <summary>
-        /// true if the WCF DS server compatibility format behavior should be used; otherwise false.
+        /// The ODataSimplifiedOptions used in reader.
         /// </summary>
-        protected internal bool UseServerFormatBehavior
+        internal ODataSimplifiedOptions ODataSimplifiedOptions
         {
             get
             {
-                return this.messageReaderSettings.ReaderBehavior.FormatBehaviorKind == ODataBehaviorKind.ODataServer;
-            }
-        }
-
-        /// <summary>
-        /// true if the default format behavior should be used; otherwise false.
-        /// </summary>
-        protected internal bool UseDefaultFormatBehavior
-        {
-            get
-            {
-                return this.messageReaderSettings.ReaderBehavior.FormatBehaviorKind == ODataBehaviorKind.Default;
-            }
-        }
-
-        /// <summary>
-        /// true if the WCF DS client compatibility API behavior should be used; otherwise false.
-        /// </summary>
-        protected internal bool UseClientApiBehavior
-        {
-            get
-            {
-                return this.messageReaderSettings.ReaderBehavior.ApiBehaviorKind == ODataBehaviorKind.WcfDataServicesClient;
-            }
-        }
-
-        /// <summary>
-        /// true if the WCF DS server compatibility API behavior should be used; otherwise false.
-        /// </summary>
-        protected internal bool UseServerApiBehavior
-        {
-            get
-            {
-                return this.messageReaderSettings.ReaderBehavior.ApiBehaviorKind == ODataBehaviorKind.ODataServer;
-            }
-        }
-
-        /// <summary>
-        /// true if the default API behavior should be used; otherwise false.
-        /// </summary>
-        protected internal bool UseDefaultApiBehavior
-        {
-            get
-            {
-                return this.messageReaderSettings.ReaderBehavior.ApiBehaviorKind == ODataBehaviorKind.Default;
+                return this.odataSimplifiedOptions;
             }
         }
 
@@ -231,50 +202,50 @@ namespace Microsoft.OData.Core
         }
 
         /// <summary>
-        /// Creates an <see cref="ODataReader" /> to read a feed.
+        /// Creates an <see cref="ODataReader" /> to read a resource set.
         /// </summary>
-        /// <param name="entitySet">The entity set we are going to read entities for.</param>
-        /// <param name="expectedBaseEntityType">The expected base entity type for the entries in the feed.</param>
+        /// <param name="entitySet">The entity set we are going to read resources for.</param>
+        /// <param name="expectedResourceType">The expected structured type for the items in the resource set.</param>
         /// <returns>The newly created <see cref="ODataReader"/>.</returns>
-        public virtual ODataReader CreateFeedReader(IEdmEntitySetBase entitySet, IEdmEntityType expectedBaseEntityType)
+        public virtual ODataReader CreateResourceSetReader(IEdmEntitySetBase entitySet, IEdmStructuredType expectedResourceType)
         {
-            throw this.CreatePayloadKindNotSupportedException(ODataPayloadKind.Feed);
+            throw this.CreatePayloadKindNotSupportedException(ODataPayloadKind.ResourceSet);
         }
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary>
-        /// Asynchronously creates an <see cref="ODataReader" /> to read a feed.
+        /// Asynchronously creates an <see cref="ODataReader" /> to read a resource set.
         /// </summary>
-        /// <param name="entitySet">The entity set we are going to read entities for.</param>
-        /// <param name="expectedBaseEntityType">The expected base entity type for the entries in the feed.</param>
+        /// <param name="entitySet">The entity set we are going to read resources for.</param>
+        /// <param name="expectedResourceType">The expected structured type for the items in the resource set.</param>
         /// <returns>Task which when completed returns the newly created <see cref="ODataReader"/>.</returns>
-        public virtual Task<ODataReader> CreateFeedReaderAsync(IEdmEntitySetBase entitySet, IEdmEntityType expectedBaseEntityType)
+        public virtual Task<ODataReader> CreateResourceSetReaderAsync(IEdmEntitySetBase entitySet, IEdmStructuredType expectedResourceType)
         {
-            throw this.CreatePayloadKindNotSupportedException(ODataPayloadKind.Feed);
+            throw this.CreatePayloadKindNotSupportedException(ODataPayloadKind.ResourceSet);
         }
 #endif
 
         /// <summary>
-        /// Creates an <see cref="ODataReader" /> to read an entry.
+        /// Creates an <see cref="ODataReader" /> to read a resource.
         /// </summary>
-        /// <param name="navigationSource">The navigation source we are going to read entities for.</param>
-        /// <param name="expectedEntityType">The expected entity type for the entry to be read.</param>
+        /// <param name="navigationSource">The navigation source we are going to read resources for.</param>
+        /// <param name="expectedResourceType">The expected structured type for the resource to be read.</param>
         /// <returns>The newly created <see cref="ODataReader"/>.</returns>
-        public virtual ODataReader CreateEntryReader(IEdmNavigationSource navigationSource, IEdmEntityType expectedEntityType)
+        public virtual ODataReader CreateResourceReader(IEdmNavigationSource navigationSource, IEdmStructuredType expectedResourceType)
         {
-            throw this.CreatePayloadKindNotSupportedException(ODataPayloadKind.Entry);
+            throw this.CreatePayloadKindNotSupportedException(ODataPayloadKind.Resource);
         }
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary>
-        /// Asynchronously creates an <see cref="ODataReader" /> to read an entry.
+        /// Asynchronously creates an <see cref="ODataReader" /> to read a resource.
         /// </summary>
-        /// <param name="navigationSource">The navigation source we are going to read entities for.</param>
-        /// <param name="expectedEntityType">The expected entity type for the entry to be read.</param>
+        /// <param name="navigationSource">The navigation source we are going to read resources for.</param>
+        /// <param name="expectedResourceType">The expected structured type for the resource to be read.</param>
         /// <returns>Task which when completed returns the newly created <see cref="ODataReader"/>.</returns>
-        public virtual Task<ODataReader> CreateEntryReaderAsync(IEdmNavigationSource navigationSource, IEdmEntityType expectedEntityType)
+        public virtual Task<ODataReader> CreateResourceReaderAsync(IEdmNavigationSource navigationSource, IEdmStructuredType expectedResourceType)
         {
-            throw this.CreatePayloadKindNotSupportedException(ODataPayloadKind.Entry);
+            throw this.CreatePayloadKindNotSupportedException(ODataPayloadKind.Resource);
         }
 #endif
 
@@ -288,7 +259,7 @@ namespace Microsoft.OData.Core
             throw this.CreatePayloadKindNotSupportedException(ODataPayloadKind.Collection);
         }
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary>
         /// Asynchronously create a <see cref="ODataCollectionReader"/>.
         /// </summary>
@@ -301,7 +272,7 @@ namespace Microsoft.OData.Core
 #endif
 
         /// <summary>
-        /// Read the property from the input and 
+        /// Read the property from the input and
         /// return an <see cref="ODataProperty"/> representing the read property.
         /// </summary>
         /// <param name="property">The <see cref="IEdmProperty"/> producing the property to be read.</param>
@@ -312,9 +283,9 @@ namespace Microsoft.OData.Core
             throw this.CreatePayloadKindNotSupportedException(ODataPayloadKind.Property);
         }
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary>
-        /// Asynchronously read the property from the input and 
+        /// Asynchronously read the property from the input and
         /// return an <see cref="ODataProperty"/> representing the read property.
         /// </summary>
         /// <param name="property">The <see cref="IEdmProperty"/> producing the property to be read.</param>
@@ -335,7 +306,7 @@ namespace Microsoft.OData.Core
             throw this.CreatePayloadKindNotSupportedException(ODataPayloadKind.Error);
         }
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary>
         /// Asynchronously read a top-level error.
         /// </summary>
@@ -347,6 +318,53 @@ namespace Microsoft.OData.Core
 #endif
 
         /// <summary>
+        /// Creates an <see cref="ODataReader" /> to read a resource in a Uri operation parameter.
+        /// </summary>
+        /// <param name="navigationSource">The navigation source we are going to read resources for.</param>
+        /// <param name="expectedResourceType">The expected resource type for the resource to be read.</param>
+        /// <returns>The newly created <see cref="ODataReader"/>.</returns>
+        public virtual ODataReader CreateUriParameterResourceReader(IEdmNavigationSource navigationSource, IEdmStructuredType expectedResourceType)
+        {
+            throw this.CreatePayloadKindNotSupportedException(ODataPayloadKind.Parameter);
+        }
+
+#if PORTABLELIB
+        /// <summary>
+        /// Asynchronously creates an <see cref="ODataReader" /> to read a resource in a Uri operation parameter.
+        /// </summary>
+        /// <param name="navigationSource">The navigation source we are going to read resources for.</param>
+        /// <param name="expectedResourceType">The expected structured type for the resource to be read.</param>
+        /// <returns>Task which when completed returns the newly created <see cref="ODataReader"/>.</returns>
+        public virtual Task<ODataReader> CreateUriParameterResourceReaderAsync(IEdmNavigationSource navigationSource, IEdmStructuredType expectedResourceType)
+        {
+            throw this.CreatePayloadKindNotSupportedException(ODataPayloadKind.Parameter);
+        }
+#endif
+
+        /// <summary>
+        /// Creates an <see cref="ODataReader" /> to read a resource set in a Uri operation parameter.
+        /// </summary>
+        /// <param name="entitySet">The entity set we are going to read resources for.</param>
+        /// <param name="expectedResourceType">The expected structured type for the items in the resource set.</param>
+        /// <returns>The newly created <see cref="ODataReader"/>.</returns>
+        public virtual ODataReader CreateUriParameterResourceSetReader(IEdmEntitySetBase entitySet, IEdmStructuredType expectedResourceType)
+        {
+            throw this.CreatePayloadKindNotSupportedException(ODataPayloadKind.ResourceSet);
+        }
+
+#if PORTABLELIB
+        /// <summary>
+        /// Asynchronously creates an <see cref="ODataReader" /> to read a resource set in a Uri operation parameter.
+        /// </summary>
+        /// <param name="entitySet">The entity set we are going to read resources for.</param>
+        /// <param name="expectedResourceType">The expected structured type for the items in the resource set.</param>
+        /// <returns>Task which when completed returns the newly created <see cref="ODataReader"/>.</returns>
+        public virtual Task<ODataReader> CreateUriParameterResourceSetReaderAsync(IEdmEntitySetBase entitySet, IEdmStructuredType expectedResourceType)
+        {
+            throw this.CreatePayloadKindNotSupportedException(ODataPayloadKind.ResourceSet);
+        }
+#endif
+        /// <summary>
         /// Create a <see cref="ODataParameterReader"/>.
         /// </summary>
         /// <param name="operation">The operation whose parameters are being read.</param>
@@ -356,7 +374,7 @@ namespace Microsoft.OData.Core
             throw this.CreatePayloadKindNotSupportedException(ODataPayloadKind.Parameter);
         }
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary>
         /// Asynchronously create a <see cref="ODataParameterReader"/>.
         /// </summary>
@@ -377,7 +395,7 @@ namespace Microsoft.OData.Core
             throw this.CreatePayloadKindNotSupportedException(ODataPayloadKind.Asynchronous);
         }
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary>
         /// Asynchronously create an <see cref="ODataAsynchronousReader"/>.
         /// </summary>
@@ -389,26 +407,26 @@ namespace Microsoft.OData.Core
 #endif
 
         /// <summary>
-        /// Creates an <see cref="ODataDeltaReader" /> to read a feed.
+        /// Creates an <see cref="ODataDeltaReader" /> to read a resource set.
         /// </summary>
         /// <param name="entitySet">The entity set we are going to read entities for.</param>
         /// <param name="expectedBaseEntityType">The expected base entity type for the entries in the delta response.</param>
         /// <returns>The newly created <see cref="ODataDeltaReader"/>.</returns>
         internal virtual ODataDeltaReader CreateDeltaReader(IEdmEntitySetBase entitySet, IEdmEntityType expectedBaseEntityType)
         {
-            throw this.CreatePayloadKindNotSupportedException(ODataPayloadKind.Feed);
+            throw this.CreatePayloadKindNotSupportedException(ODataPayloadKind.ResourceSet);
         }
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary>
-        /// Asynchronously creates an <see cref="ODataDeltaReader" /> to read a feed.
+        /// Asynchronously creates an <see cref="ODataDeltaReader" /> to read a resource set.
         /// </summary>
         /// <param name="entitySet">The entity set we are going to read entities for.</param>
         /// <param name="expectedBaseEntityType">The expected base entity type for the entries in the delta response.</param>
         /// <returns>Task which when completed returns the newly created <see cref="ODataDeltaReader"/>.</returns>
         internal virtual Task<ODataDeltaReader> CreateDeltaReaderAsync(IEdmEntitySetBase entitySet, IEdmEntityType expectedBaseEntityType)
         {
-            throw this.CreatePayloadKindNotSupportedException(ODataPayloadKind.Feed);
+            throw this.CreatePayloadKindNotSupportedException(ODataPayloadKind.ResourceSet);
         }
 #endif
 
@@ -425,7 +443,7 @@ namespace Microsoft.OData.Core
             throw this.CreatePayloadKindNotSupportedException(ODataPayloadKind.Batch);
         }
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary>
         /// Asynchronously create a <see cref="ODataBatchReader"/>.
         /// </summary>
@@ -441,8 +459,8 @@ namespace Microsoft.OData.Core
 #endif
 
         /// <summary>
-        /// Read a service document. 
-        /// This method reads the service document from the input and returns 
+        /// Read a service document.
+        /// This method reads the service document from the input and returns
         /// an <see cref="ODataServiceDocument"/> that represents the read service document.
         /// </summary>
         /// <returns>An <see cref="ODataServiceDocument"/> representing the read service document.</returns>
@@ -451,10 +469,10 @@ namespace Microsoft.OData.Core
             throw this.CreatePayloadKindNotSupportedException(ODataPayloadKind.ServiceDocument);
         }
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary>
-        /// Asynchronously read a service document. 
-        /// This method reads the service document from the input and returns 
+        /// Asynchronously read a service document.
+        /// This method reads the service document from the input and returns
         /// an <see cref="ODataServiceDocument"/> that represents the read service document.
         /// </summary>
         /// <returns>Task which when completed returns an <see cref="ODataServiceDocument"/> representing the read service document.</returns>
@@ -465,8 +483,8 @@ namespace Microsoft.OData.Core
 #endif
 
         /// <summary>
-        /// Read a metadata document. 
-        /// This method reads the metadata document from the input and returns 
+        /// Read a metadata document.
+        /// This method reads the metadata document from the input and returns
         /// an <see cref="IEdmModel"/> that represents the read metadata document.
         /// </summary>
         /// <param name="getReferencedModelReaderFunc">The function to load referenced model xml. If null, will stop loading the referenced models. Normally it should throw no exception.</param>
@@ -485,7 +503,7 @@ namespace Microsoft.OData.Core
             throw this.CreatePayloadKindNotSupportedException(ODataPayloadKind.EntityReferenceLinks);
         }
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary>
         /// Asynchronously read a set of top-level entity reference links.
         /// </summary>
@@ -505,7 +523,7 @@ namespace Microsoft.OData.Core
             throw this.CreatePayloadKindNotSupportedException(ODataPayloadKind.EntityReferenceLink);
         }
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary>
         /// Asynchronously read a top-level entity reference link.
         /// </summary>
@@ -526,7 +544,7 @@ namespace Microsoft.OData.Core
             throw this.CreatePayloadKindNotSupportedException(ODataPayloadKind.Value);
         }
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary>
         /// Asynchronously read a top-level value.
         /// </summary>
@@ -578,9 +596,9 @@ namespace Microsoft.OData.Core
         /// Creates a new instance of a duplicate property names checker.
         /// </summary>
         /// <returns>The newly created instance of duplicate property names checker.</returns>
-        internal DuplicatePropertyNamesChecker CreateDuplicatePropertyNamesChecker()
+        internal PropertyAndAnnotationCollector CreatePropertyAndAnnotationCollector()
         {
-            return new DuplicatePropertyNamesChecker(this.MessageReaderSettings.ReaderBehavior.AllowDuplicatePropertyNames, this.ReadingResponse, !this.messageReaderSettings.EnableFullValidation);
+            return messageReaderSettings.Validator.CreatePropertyAndAnnotationCollector();
         }
 
         /// <summary>
@@ -598,9 +616,9 @@ namespace Microsoft.OData.Core
         {
             Debug.Assert(payloadUri != null, "uri != null");
 
-            if (this.UrlResolver != null)
+            if (this.PayloadUriConverter != null)
             {
-                return this.UrlResolver.ResolveUrl(baseUri, payloadUri);
+                return this.PayloadUriConverter.ConvertPayloadUri(baseUri, payloadUri);
             }
 
             return null;

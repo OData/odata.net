@@ -6,18 +6,18 @@
 
 using System;
 using FluentAssertions;
-using Microsoft.OData.Core.UriParser.Semantic;
+using Microsoft.OData.UriParser;
 using Xunit;
 
-namespace Microsoft.OData.Core.Tests.UriParser.SemanticAst
+namespace Microsoft.OData.Tests.UriParser.SemanticAst
 {
     public class PathSelectItemTests
     {
         [Fact]
         public void ConstructorShouldSetPropertyName()
         {
-            var item = new PathSelectItem(new ODataSelectPath(new OpenPropertySegment("abc")));
-            item.SelectedPath.FirstSegment.ShouldBeOpenPropertySegment("abc");
+            var item = new PathSelectItem(new ODataSelectPath(new DynamicPathSegment("abc")));
+            item.SelectedPath.FirstSegment.ShouldBeDynamicPathSegment("abc");
         }
 
         [Fact]

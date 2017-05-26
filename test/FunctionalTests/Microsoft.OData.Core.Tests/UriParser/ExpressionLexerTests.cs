@@ -9,13 +9,12 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Text;
 using FluentAssertions;
-using Microsoft.OData.Core.UriParser;
-using Microsoft.OData.Core.UriParser.TreeNodeKinds;
-using Microsoft.OData.Edm.Library;
+using Microsoft.OData.UriParser;
+using Microsoft.OData.Edm;
 using Xunit;
-using ODataErrorStrings = Microsoft.OData.Core.Strings;
+using ODataErrorStrings = Microsoft.OData.Strings;
 
-namespace Microsoft.OData.Core.Tests.UriParser
+namespace Microsoft.OData.Tests.UriParser
 {
     public class ExpressionLexerTests
     {
@@ -245,11 +244,21 @@ namespace Microsoft.OData.Core.Tests.UriParser
         }
 
         [Fact]
-        public void ShouldReturnDateTimeLiteralWhenNoSuffixDateLiteralToken()
+        public void ShouldReturnDateTimeOffSetLiteralWhenNoSuffixDateLiteralToken()
+        {
+            ExpressionLexer lexer = new ExpressionLexer("2014-09-19T12:13:14+00:00", false, false);
+            object result = lexer.ReadLiteralToken();
+            result.Should()
+                .BeOfType<DateTimeOffset>()
+                .And.Be(new DateTimeOffset(2014, 9, 19, 12, 13, 14, new TimeSpan(0, 0, 0)));
+        }
+
+        [Fact]
+        public void ShouldReturnDateLiteralWhenNoSuffixDateLiteralToken()
         {
             ExpressionLexer lexer = new ExpressionLexer("2014-09-19", false, false);
             object result = lexer.ReadLiteralToken();
-            result.Should().BeOfType<DateTimeOffset>().And.Be(new DateTimeOffset(new DateTime(2014, 9, 19)));
+            result.Should().BeOfType<Date>().And.Be(new Date(2014, 9, 19));
         }
 
         [Fact]
@@ -419,7 +428,7 @@ namespace Microsoft.OData.Core.Tests.UriParser
         [Fact]
         public void SpatialGeographyLiteralTests()
         {
-            string[] testCases = 
+            string[] testCases =
             {
                 "geography'\0fo\0o\0'",
                 "geography'foo'",
@@ -438,8 +447,8 @@ namespace Microsoft.OData.Core.Tests.UriParser
         [Fact]
         public void SpatialGeometryLiteralTests()
         {
-            string[] testCases = 
-            { 
+            string[] testCases =
+            {
                 "geometry'foo'",
                 "geometry''",
                 "gEomETRy'SRID=5; POINT(1 2)'",
@@ -608,6 +617,7 @@ namespace Microsoft.OData.Core.Tests.UriParser
             EdmValidNamesNotAllowedInUri("_some_name");
         }
 
+#if !NETCOREAPP1_0
         [Fact]
         public void EdmValidNamesNotAllowedInUri_Combinations()
         {
@@ -615,9 +625,9 @@ namespace Microsoft.OData.Core.Tests.UriParser
             var startingCharSupportedCategories = new UnicodeCategory[] {
                 UnicodeCategory.LowercaseLetter,
                 UnicodeCategory.UppercaseLetter,
-                UnicodeCategory.TitlecaseLetter, 
-                UnicodeCategory.OtherLetter, 
-                UnicodeCategory.ModifierLetter, 
+                UnicodeCategory.TitlecaseLetter,
+                UnicodeCategory.OtherLetter,
+                UnicodeCategory.ModifierLetter,
                 UnicodeCategory.LetterNumber
             };
 
@@ -625,12 +635,12 @@ namespace Microsoft.OData.Core.Tests.UriParser
             var nonStartingCharSupportedCategories = new UnicodeCategory[] {
                 UnicodeCategory.LowercaseLetter,
                 UnicodeCategory.UppercaseLetter,
-                UnicodeCategory.TitlecaseLetter, 
-                UnicodeCategory.OtherLetter, 
-                UnicodeCategory.ModifierLetter, 
-                UnicodeCategory.LetterNumber, 
+                UnicodeCategory.TitlecaseLetter,
+                UnicodeCategory.OtherLetter,
+                UnicodeCategory.ModifierLetter,
+                UnicodeCategory.LetterNumber,
                 UnicodeCategory.NonSpacingMark,
-                UnicodeCategory.SpacingCombiningMark, 
+                UnicodeCategory.SpacingCombiningMark,
                 UnicodeCategory.DecimalDigitNumber,
                 UnicodeCategory.ConnectorPunctuation,
                 UnicodeCategory.Format
@@ -653,6 +663,7 @@ namespace Microsoft.OData.Core.Tests.UriParser
                 EdmValidNamesNotAllowedInUri(propertyNameSB.ToString());
             }
         }
+#endif
 
         [Fact]
         public void ExpressionLexerShouldFailByDefaultForAtSymbol()
@@ -718,20 +729,20 @@ namespace Microsoft.OData.Core.Tests.UriParser
         [Fact]
         public void BracesIsParsedAsBracketedExpression()
         {
-            ValidateTokenSequence("{complex:value}", BracketToken("{complex:value}"));
+            ValidateTokenSequence("{complex:value}", BracedToken("{complex:value}"));
         }
 
         [Fact]
         public void BracesWithInnerBracesIsOneToken()
         {
             ValidateTokenSequence("{complex:value, subComplex : {subComplexParameter : subComplexValue}}",
-                BracketToken("{complex:value, subComplex : {subComplexParameter : subComplexValue}}"));
+                BracedToken("{complex:value, subComplex : {subComplexParameter : subComplexValue}}"));
         }
 
         [Fact]
         public void BracesWithInnerBracketsIsParsedAsOneToken()
         {
-            ValidateTokenSequence("{complex:value,InnerArray:[1,2,3]}", BracketToken("{complex:value,InnerArray:[1,2,3]}"));
+            ValidateTokenSequence("{complex:value,InnerArray:[1,2,3]}", BracedToken("{complex:value,InnerArray:[1,2,3]}"));
         }
 
         [Fact]
@@ -759,7 +770,7 @@ namespace Microsoft.OData.Core.Tests.UriParser
         public void BracketedExpressionsCanHaveCrazyStuffInsideStringLiteral()
         {
             ValidateTokenSequence("{ 'asdf!@#$%^&*()[]{}<>?:\";,./%1%2%3%4%5\t\n\r' }",
-                BracketToken("{ 'asdf!@#$%^&*()[]{}<>?:\";,./%1%2%3%4%5\t\n\r' }"));
+                BracedToken("{ 'asdf!@#$%^&*()[]{}<>?:\";,./%1%2%3%4%5\t\n\r' }"));
         }
 
         [Fact]
@@ -770,7 +781,7 @@ namespace Microsoft.OData.Core.Tests.UriParser
                 OpenParenToken,
                 IdentifierToken("param"),
                 EqualsToken,
-                BracketToken("{complex : value}"),
+                BracedToken("{complex : value}"),
                 CloseParenToken);
         }
 
@@ -803,7 +814,7 @@ namespace Microsoft.OData.Core.Tests.UriParser
         {
             ValidateTokenSequence("{\'}}}}}}}}}}}}}}}}}}}}}}}}}}}}}\'}",
                 false,
-                BracketToken("{\'}}}}}}}}}}}}}}}}}}}}}}}}}}}}}\'}"));
+                BracedToken("{\'}}}}}}}}}}}}}}}}}}}}}}}}}}}}}\'}"));
         }
 
         [Fact]
@@ -923,13 +934,14 @@ namespace Microsoft.OData.Core.Tests.UriParser
             lexer.NextToken().Text.Should().Be("next");
         }
 
-        private char FindMatchingChar(UnicodeCategory cateogry)
+#if !NETCOREAPP1_0
+        private char FindMatchingChar(UnicodeCategory category)
         {
             for (int i = 0; i <= 0xffff; i++)
             {
                 char ch = (char)i;
 
-                if (Char.GetUnicodeCategory(ch) == cateogry)
+                if (Char.GetUnicodeCategory(ch) == category)
                 {
                     return ch;
                 }
@@ -937,6 +949,7 @@ namespace Microsoft.OData.Core.Tests.UriParser
             Assert.True(false, "Should never get here");
             return (char)0;
         }
+#endif
 
         private void EdmValidNamesNotAllowedInUri(string propertyName)
         {
@@ -966,6 +979,11 @@ namespace Microsoft.OData.Core.Tests.UriParser
         private static ExpressionToken BracketToken(string text)
         {
             return new ExpressionToken() { Kind = ExpressionTokenKind.BracketedExpression, Text = text };
+        }
+
+        private static ExpressionToken BracedToken(string text)
+        {
+            return new ExpressionToken() { Kind = ExpressionTokenKind.BracedExpression, Text = text };
         }
 
         private static ExpressionToken StringToken(string text)

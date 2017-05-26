@@ -9,7 +9,7 @@ namespace Microsoft.Test.OData.Tests.Client.CustomInstanceAnnotationsTests.Utils
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.Test.OData.Framework.Common;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -34,7 +34,7 @@ namespace Microsoft.Test.OData.Tests.Client.CustomInstanceAnnotationsTests.Utils
                 if (verifyAnnotationsOnStart)
                 {
                     var actualAnnotationsOnStart = actualItem.AnnotationsOnStart.ToList();
-                    var baselineAnnotationsOnStart = baselineItem.GetExpectedAnnotationsOnStart(contentType, hasExpandedNavigationProperties).ToList();
+                    var baselineAnnotationsOnStart = baselineItem.GetExpectedAnnotationsOnStart(contentType, hasExpandedNavigationProperties && actualItem.hasNestedResourceInfo).ToList();
                     VerifyAnnotations(baselineAnnotationsOnStart, actualAnnotationsOnStart, "start", i, actualItem.TypeOfAnnotatedItem.Name);
                 }
 
@@ -94,7 +94,7 @@ namespace Microsoft.Test.OData.Tests.Client.CustomInstanceAnnotationsTests.Utils
                 return annotatedItem.AnnotationsOnStart;
             }
 
-            if (annotatedItem.IsTopLevelEntryOrEntryOfTopLevelFeed() && hasExpandedNavigationProperties)
+            if (annotatedItem.TypeOfAnnotatedItem == typeof(ODataResource) && hasExpandedNavigationProperties)
             {
                 return annotatedItem.AnnotationsOnStart;
             }
@@ -105,7 +105,7 @@ namespace Microsoft.Test.OData.Tests.Client.CustomInstanceAnnotationsTests.Utils
         private static bool IsTopLevelEntryOrEntryOfTopLevelFeed(this CustomInstanceAnnotationsDescriptor annotatedItem)
         {
             // Not an entry
-            if (annotatedItem.TypeOfAnnotatedItem != typeof(ODataEntry))
+            if (annotatedItem.TypeOfAnnotatedItem != typeof(ODataResource))
             {
                 return false;
             }
@@ -119,7 +119,7 @@ namespace Microsoft.Test.OData.Tests.Client.CustomInstanceAnnotationsTests.Utils
             // An entry of a top level feed
             if (annotatedItem.Parent.Parent == null)
             {
-                Assert.IsTrue(annotatedItem.Parent.TypeOfAnnotatedItem == typeof(ODataFeed), "Found an entry whose parent is not a feed! Revisit assumptions of top level feed.");
+                Assert.IsTrue(annotatedItem.Parent.TypeOfAnnotatedItem == typeof(ODataResourceSet), "Found an entry whose parent is not a feed! Revisit assumptions of top level feed.");
                 return true;
             }
 
@@ -129,7 +129,7 @@ namespace Microsoft.Test.OData.Tests.Client.CustomInstanceAnnotationsTests.Utils
 
         private static bool IsFeedWithStreaming(this CustomInstanceAnnotationsDescriptor item, string contentType)
         {
-            return item.TypeOfAnnotatedItem == typeof(ODataFeed) && contentType.Contains(MimeTypes.StreamingParameterTrue);
+            return item.TypeOfAnnotatedItem == typeof(ODataResourceSet) && contentType.Contains(MimeTypes.StreamingParameterTrue);
         }
 
         private static void ApplyFilter(this IEnumerable<CustomInstanceAnnotationsDescriptor> descriptors, Func<string, bool> shouldIncludeAnnotation)

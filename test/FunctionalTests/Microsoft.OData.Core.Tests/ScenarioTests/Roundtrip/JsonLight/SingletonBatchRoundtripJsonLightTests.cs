@@ -9,10 +9,9 @@ using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using Microsoft.OData.Edm;
-using Microsoft.OData.Edm.Library;
 using Xunit;
 
-namespace Microsoft.OData.Core.Tests.ScenarioTests.Roundtrip.JsonLight
+namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip.JsonLight
 {
     public class BatchRoundtripJsonLightTests
     {
@@ -213,8 +212,8 @@ HTTP/1.1 500 Internal Server Error
                 // Use a new message writer to write the body of this operation.
                 using (var operationMessageWriter = new ODataMessageWriter(updateOperationMessage))
                 {
-                    var entryWriter = operationMessageWriter.CreateODataEntryWriter();
-                    var entry = new ODataEntry() { TypeName = "NS.Web", Properties = new[] { new ODataProperty() { Name = "WebId", Value = 10 }, new ODataProperty() { Name = "Name", Value = "SingletonWeb" } } };
+                    var entryWriter = operationMessageWriter.CreateODataResourceWriter();
+                    var entry = new ODataResource() { TypeName = "NS.Web", Properties = new[] { new ODataProperty() { Name = "WebId", Value = 10 }, new ODataProperty() { Name = "Name", Value = "SingletonWeb" } } };
                     entryWriter.WriteStart(entry);
                     entryWriter.WriteEnd();
                 }
@@ -223,8 +222,8 @@ HTTP/1.1 500 Internal Server Error
 
                 using (var operationMessageWriter = new ODataMessageWriter(updateOperationMessage))
                 {
-                    var entryWriter = operationMessageWriter.CreateODataEntryWriter();
-                    var entry = new ODataEntry() { TypeName = "NS.Web", Properties = new[] { new ODataProperty() { Name = "WebId", Value = 111 } } };
+                    var entryWriter = operationMessageWriter.CreateODataResourceWriter();
+                    var entry = new ODataResource() { TypeName = "NS.Web", Properties = new[] { new ODataProperty() { Name = "WebId", Value = 111 } } };
                     entryWriter.WriteStart(entry);
                     entryWriter.WriteEnd();
                 }
@@ -286,8 +285,8 @@ HTTP/1.1 500 Internal Server Error
                                 settings.SetServiceDocumentUri(new Uri(serviceDocumentUri));
                                 using (var operationMessageWriter = new ODataMessageWriter(response, settings, this.userModel))
                                 {
-                                    var entryWriter = operationMessageWriter.CreateODataEntryWriter(this.singleton, this.webType);
-                                    var entry = new ODataEntry() { TypeName = "NS.Web", Properties = new[] { new ODataProperty() { Name = "WebId", Value = 10 }, new ODataProperty() { Name = "Name", Value = "WebSingleton" } } };
+                                    var entryWriter = operationMessageWriter.CreateODataResourceWriter(this.singleton, this.webType);
+                                    var entry = new ODataResource() { TypeName = "NS.Web", Properties = new[] { new ODataProperty() { Name = "WebId", Value = 10 }, new ODataProperty() { Name = "Name", Value = "WebSingleton" } } };
                                     entryWriter.WriteStart(entry);
                                     entryWriter.WriteEnd();
                                 }
@@ -332,13 +331,13 @@ HTTP/1.1 500 Internal Server Error
                             {
                                 using (ODataMessageReader innerMessageReader = new ODataMessageReader(operationMessage, new ODataMessageReaderSettings(), this.userModel))
                                 {
-                                    var reader = innerMessageReader.CreateODataEntryReader();
+                                    var reader = innerMessageReader.CreateODataResourceReader();
 
                                     while (reader.Read())
                                     {
-                                        if (reader.State == ODataReaderState.EntryEnd)
+                                        if (reader.State == ODataReaderState.ResourceEnd)
                                         {
-                                            ODataEntry entry = reader.Item as ODataEntry;
+                                            ODataResource entry = reader.Item as ODataResource;
                                             Assert.Equal(10, entry.Properties.Single(p => p.Name == "WebId").Value);
                                             Assert.Equal("WebSingleton", entry.Properties.Single(p => p.Name == "Name").Value);
                                         }

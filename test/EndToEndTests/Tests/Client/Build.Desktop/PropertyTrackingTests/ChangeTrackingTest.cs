@@ -10,7 +10,7 @@ namespace Microsoft.Test.OData.Tests.Client.CodeGenerationTests
     using System.Collections.ObjectModel;
     using System.Linq;
     using Microsoft.OData.Client;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.Spatial;
     using Microsoft.Test.OData.Services.TestServices;
     using Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReference;
@@ -33,7 +33,13 @@ namespace Microsoft.Test.OData.Tests.Client.CodeGenerationTests
             this.TestClientContext.Configurations.RequestPipeline.OnEntryEnding(
                 (arg) =>
                 {
-                    Assert.AreEqual(expectedPropertyCount, arg.Entry.Properties.Count());
+                    if (arg.Entry.TypeName.EndsWith("Order")
+                        || arg.Entry.TypeName.EndsWith("Person")
+                        || arg.Entry.TypeName.EndsWith("OrderDetail")
+                        || arg.Entry.TypeName.EndsWith("GiftCard"))
+                    {
+                        Assert.AreEqual(expectedPropertyCount, arg.Entry.Properties.Count());
+                    }
                 });
 
             DataServiceCollection<Order> orders =
@@ -72,7 +78,16 @@ namespace Microsoft.Test.OData.Tests.Client.CodeGenerationTests
             // Update the property under complex type.
             people[0].HomeAddress.City = "Redmond";
 
-            expectedPropertyCount = 1;
+            this.TestClientContext.Configurations.RequestPipeline.OnEntryEnding(
+            (arg) =>
+            {
+                if (arg.Entry.TypeName.EndsWith("HomeAddress"))
+                {
+                    Assert.AreEqual("Redmond", arg.Entry.Properties.Single(p=>p.Name.Equals("City")).Value);
+                }
+            });
+
+            expectedPropertyCount = 0;
             this.TestClientContext.SaveChanges();
 
             Assert.AreEqual(
@@ -85,7 +100,7 @@ namespace Microsoft.Test.OData.Tests.Client.CodeGenerationTests
             // Update the property under complex type (inherited).
             ((HomeAddress)people[0].HomeAddress).FamilyName = "Microsoft";
 
-            expectedPropertyCount = 1;
+            expectedPropertyCount = 0;
             this.TestClientContext.SaveChanges();
 
             Assert.AreEqual(
@@ -123,11 +138,24 @@ namespace Microsoft.Test.OData.Tests.Client.CodeGenerationTests
             Assert.AreEqual(
                 "Bill",
                 this.TestClientContext.Boss.GetValue().FirstName);
+        }
 
+        [TestMethod]
+        public void UpdateByPatchFullProperties()
+        {
+            DataServiceCollection<Person> people = new DataServiceCollection<Person>(this.TestClientContext.People);
             // Update object by update object without change => redo the PATCH all
             this.TestClientContext.UpdateObject(people[0]);
 
-            expectedPropertyCount = 12;
+            this.TestClientContext.Configurations.RequestPipeline.OnEntryEnding(
+                (arg) =>
+                {
+                    if (arg.Entry.TypeName.EndsWith("Person"))
+                    {
+                        Assert.AreEqual(11, arg.Entry.Properties.Count());
+                    }
+                });
+
             this.TestClientContext.SaveChanges();
         }
 
@@ -293,7 +321,11 @@ namespace Microsoft.Test.OData.Tests.Client.CodeGenerationTests
             int expectedPropertyCount = 0;
             Action<WritingEntryArgs> onEntryEndingAction = (arg) =>
             {
-                Assert.AreEqual(expectedPropertyCount, arg.Entry.Properties.Count());
+                if (arg.Entry.TypeName.EndsWith("ProductPlus")
+                    || arg.Entry.TypeName.EndsWith("PersonPlus"))
+                {
+                    Assert.AreEqual(expectedPropertyCount, arg.Entry.Properties.Count());
+                }
             };
             this.TestClientContext.Configurations.RequestPipeline.OnEntryEnding(onEntryEndingAction);
 
@@ -326,8 +358,15 @@ namespace Microsoft.Test.OData.Tests.Client.CodeGenerationTests
 
             // Update the property under complex type.
             people[0].HomeAddressPlus.CityPlus = "Redmond";
-
-            expectedPropertyCount = 1;
+            Action<WritingEntryArgs> onEntryEndingAction1 = (arg) =>
+            {
+                if (arg.Entry.TypeName.EndsWith("HomeAddressPlus"))
+                {
+                    Assert.AreEqual(4, arg.Entry.Properties.Count());
+                    Assert.AreEqual("Redmond", arg.Entry.Properties.Single(p => p.Name == "City").Value);
+                }
+            };
+            this.TestClientContext.Configurations.RequestPipeline.OnEntryEnding(onEntryEndingAction1);
             this.TestClientContext.SaveChanges();
 
             // Update the property under complex type (inherited).
@@ -340,6 +379,14 @@ namespace Microsoft.Test.OData.Tests.Client.CodeGenerationTests
             // Update Navigation property
             customer.OrdersPlus.First().OrderDatePlus = datetime;
             customer.OrdersPlus.First().OrderShelfLifesPlus.Add(new TimeSpan(2));
+            Action<WritingEntryArgs> onEntryEndingAction2 = (arg) =>
+            {
+                if (arg.Entry.TypeName.EndsWith("OrderPlus"))
+                {
+                    Assert.AreEqual(expectedPropertyCount, arg.Entry.Properties.Count());
+                }
+            };
+            this.TestClientContext.Configurations.RequestPipeline.OnEntryEnding(onEntryEndingAction2);
             expectedPropertyCount = 2;
             this.TestClientContext.SaveChanges();
 
@@ -355,15 +402,32 @@ namespace Microsoft.Test.OData.Tests.Client.CodeGenerationTests
             Assert.AreEqual(2, people0.OrdersPlus.First().OrderShelfLifesPlus.Count());
 
             TestClientContext.LoadProperty(accounts[0], "MyGiftCard");
-            //  Update single vlue navigation property .            
+            //  Update single vlue navigation property .
             accounts[0].MyGiftCardPlus.ExperationDatePlus = datetime;
-
+            Action<WritingEntryArgs> onEntryEndingAction3= (arg) =>
+            {
+                if (arg.Entry.TypeName.EndsWith("GiftCardPlus"))
+                {
+                    Assert.AreEqual(expectedPropertyCount, arg.Entry.Properties.Count());
+                }
+            };
+            this.TestClientContext.Configurations.RequestPipeline.OnEntryEnding(onEntryEndingAction3);
             expectedPropertyCount = 1;
             this.TestClientContext.SaveChanges();
 
             // Update open complex type
             accounts[0].AccountInfoPlus.MiddleNamePlus = "S.";
-            expectedPropertyCount = 1;
+            Action<WritingEntryArgs> onEntryEndingAction4 = (arg) =>
+            {
+                if (arg.Entry.TypeName.EndsWith("AccountInfoPlus"))
+                {
+                    Assert.AreEqual(expectedPropertyCount, arg.Entry.Properties.Count());
+                    Assert.AreEqual("S.", arg.Entry.Properties.Single(p => p.Name == "MiddleName").Value);
+                }
+            };
+            this.TestClientContext.Configurations.RequestPipeline.OnEntryEnding(onEntryEndingAction4);
+
+            expectedPropertyCount = 4;
             this.TestClientContext.SaveChanges();
 
             var account = this.TestClientContext.AccountsPlus.Expand("MyGiftCard").Where((it) => it.AccountIDPlus == accounts[0].AccountIDPlus).Single();
@@ -374,6 +438,14 @@ namespace Microsoft.Test.OData.Tests.Client.CodeGenerationTests
             // Update property in open singleton
             publicCompany.Single().TotalAssetsPlus = 10;
             publicCompany.Single().FullNamePlus = "MS Ltd.";
+            Action<WritingEntryArgs> onEntryEndingAction5 = (arg) =>
+            {
+                if (arg.Entry.TypeName.EndsWith("CompnayPlus"))
+                {
+                    Assert.AreEqual(expectedPropertyCount, arg.Entry.Properties.Count());
+                }
+            };
+            this.TestClientContext.Configurations.RequestPipeline.OnEntryEnding(onEntryEndingAction5);
             expectedPropertyCount = 2;
             this.TestClientContext.SaveChanges();
 
@@ -384,7 +456,7 @@ namespace Microsoft.Test.OData.Tests.Client.CodeGenerationTests
             // Update object by update object without change => redo the PATCH all
             this.TestClientContext.UpdateObject(people[0]);
 
-            expectedPropertyCount = 11;
+            expectedPropertyCount = 10;
             this.TestClientContext.SaveChanges();
         }
 
@@ -395,7 +467,10 @@ namespace Microsoft.Test.OData.Tests.Client.CodeGenerationTests
             this.TestClientContext.Configurations.RequestPipeline.OnEntryEnding(
             (arg) =>
             {
-                Assert.AreEqual(expectedPropertyCount, arg.Entry.Properties.Count());
+                if(arg.Entry.TypeName.EndsWith("Company"))
+                {
+                    Assert.AreEqual(expectedPropertyCount, arg.Entry.Properties.Count());
+                }
             });
 
             DataServiceCollection<CompanyPlus> publicCompany =
@@ -407,7 +482,7 @@ namespace Microsoft.Test.OData.Tests.Client.CodeGenerationTests
             // Update object by update object without change => redo the PATCH all
             this.TestClientContext.UpdateObject(publicCompany.Single());
             //Properties only defnied by customer will also be sent.
-            expectedPropertyCount = 8;
+            expectedPropertyCount = 5;
             this.TestClientContext.SaveChanges();
 
             publicCompany.Single().RevenuePlus = 200;
@@ -421,7 +496,10 @@ namespace Microsoft.Test.OData.Tests.Client.CodeGenerationTests
             this.TestClientContext.Configurations.RequestPipeline.OnEntryEnding(
             (arg) =>
             {
-                Assert.AreEqual(4, (arg.Entry.Properties.Where(p => p.Name == "AccountInfo").Single().Value as ODataComplexValue).Properties.Count());
+                if (arg.Entry.TypeName.EndsWith("AccountInfo"))
+                {
+                    Assert.AreEqual(4, arg.Entry.Properties.Count());
+                }
             });
             this.TestClientContext.SaveChanges();
         }
@@ -466,6 +544,9 @@ namespace Microsoft.Test.OData.Tests.Client.CodeGenerationTests
             this.TestClientContext.Configurations.RequestPipeline.OnEntryEnding(
                 (arg) =>
                 {
+                    if (arg.Entry.TypeName.EndsWith("OrderPlus")
+                        || arg.Entry.TypeName.EndsWith("CustomerPlus")
+                        || arg.Entry.TypeName.EndsWith("OrderDetailPlus"))
                     Assert.AreEqual(expectedPropertyCount, arg.Entry.Properties.Count());
                 });
 
@@ -487,7 +568,7 @@ namespace Microsoft.Test.OData.Tests.Client.CodeGenerationTests
 
             boss.Single().FirstNamePlus = "Bill";
 
-            expectedPropertyCount = 11;
+            expectedPropertyCount = 10;
             this.TestClientContext.SaveChanges(saveChangesOption);
 
             orders[0].OrderDetailsPlus.First().QuantityPlus = 1;
@@ -601,10 +682,14 @@ namespace Microsoft.Test.OData.Tests.Client.CodeGenerationTests
             TestClientContext.AddLink(customer, "Orders", orders[0]);
             this.TestClientContext.SaveChanges();
 
+            bool isEntity = true;
             int expectedPropertyCount = 0;
             Action<WritingEntryArgs> onEntryEndingAction = (arg) =>
             {
-                Assert.AreEqual(expectedPropertyCount, arg.Entry.Properties.Count());
+                if (isEntity)
+                {
+                    Assert.AreEqual(expectedPropertyCount, arg.Entry.Properties.Count());
+                }
             };
             this.TestClientContext.Configurations.RequestPipeline.OnEntryEnding(onEntryEndingAction);
 
@@ -639,14 +724,35 @@ namespace Microsoft.Test.OData.Tests.Client.CodeGenerationTests
             // Update the property under complex type.
             people[0].HomeAddressPlus.CityPlus = "Redmond";
 
-            expectedPropertyCount = 1;
+            bool isComplex = true;
+            isEntity = false;
+            Action<WritingEntryArgs> onEntryEndingAction1 = (arg) =>
+            {
+                if (isComplex && arg.Entry.TypeName.EndsWith("HomeAddressPlus"))
+                {
+                    Assert.AreEqual("Redmond", arg.Entry.Properties.Single(p => p.Name == "City").Value);
+                }
+            };
+
+            this.TestClientContext.Configurations.RequestPipeline.OnEntryEnding(onEntryEndingAction1);
             this.TestClientContext.SaveChanges();
 
             // Update the property under complex type (inherited).
             ((HomeAddressPlus)people[0].HomeAddressPlus).FamilyNamePlus = "Microsoft";
 
-            expectedPropertyCount = 1;
+            Action<WritingEntryArgs> onEntryEndingAction2 = (arg) =>
+            {
+                if (isComplex && arg.Entry.TypeName.EndsWith("HomeAddressPlus"))
+                {
+                    Assert.AreEqual("Microsoft", arg.Entry.Properties.Single(p => p.Name == "FamilyName").Value);
+                }
+            };
+
+            this.TestClientContext.Configurations.RequestPipeline.OnEntryEnding(onEntryEndingAction2);
             this.TestClientContext.SaveChanges();
+
+            isComplex = false;
+            isEntity = true;
 
             this.TestClientContext.LoadProperty(customer, "Orders");
             // Update Navigation property
@@ -668,7 +774,7 @@ namespace Microsoft.Test.OData.Tests.Client.CodeGenerationTests
             Assert.AreEqual(2, people0.OrdersPlus.First().OrderShelfLifesPlus.Count());
 
             TestClientContext.LoadProperty(accounts[0], "MyGiftCard");
-            //  Update single vlue navigation property .            
+            //  Update single vlue navigation property .
             accounts[0].MyGiftCardPlus.ExperationDatePlus = datetime;
 
             expectedPropertyCount = 1;
@@ -676,8 +782,19 @@ namespace Microsoft.Test.OData.Tests.Client.CodeGenerationTests
 
             // Update open complex type
             accounts[0].AccountInfoPlus.MiddleNamePlus = "S.";
-            expectedPropertyCount = 1;
+            isEntity = false;
+            isComplex = true;
+            Action<WritingEntryArgs> onEntryEndingAction3 = (arg) =>
+            {
+                if (isComplex && arg.Entry.TypeName.EndsWith("AccountInfoPlus"))
+                {
+                    Assert.AreEqual("S.", arg.Entry.Properties.Single(p => p.Name == "MiddleName").Value);
+                }
+            };
+            this.TestClientContext.Configurations.RequestPipeline.OnEntryEnding(onEntryEndingAction3);
             this.TestClientContext.SaveChanges();
+            isComplex = false;
+            isEntity = true;
 
             //this.TestClientContext.Detach(accounts[0]);
             var account = this.TestClientContext.AccountsPlus.Expand("MyGiftCard").Where((it) => it.AccountIDPlus == accounts[0].AccountIDPlus).Single();
@@ -699,7 +816,17 @@ namespace Microsoft.Test.OData.Tests.Client.CodeGenerationTests
             // Update object by update object without change => redo the PATCH all
             this.TestClientContext.UpdateObject(people[0]);
 
-            expectedPropertyCount = 11;
+            isEntity = false;
+            Action<WritingEntryArgs> onEntryEndingAction4 = (arg) =>
+            {
+                if (arg.Entry.TypeName.EndsWith("PersonPlus"))
+                {
+                    Assert.AreEqual(expectedPropertyCount, arg.Entry.Properties.Count());
+                }
+            };
+            this.TestClientContext.Configurations.RequestPipeline.OnEntryEnding(onEntryEndingAction4);
+
+            expectedPropertyCount = 10;
             this.TestClientContext.SaveChanges();
         }
     }

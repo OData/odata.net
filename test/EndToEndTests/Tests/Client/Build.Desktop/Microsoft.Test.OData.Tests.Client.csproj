@@ -7,7 +7,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Microsoft.Test.OData.Tests.Client</RootNamespace>
     <AssemblyName>Microsoft.Test.OData.Tests.Client</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
     <TargetFrameworkFolderName>Desktop</TargetFrameworkFolderName>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
@@ -54,6 +54,10 @@
     <ProjectReference Include="$(EnlistmentRoot)\test\FunctionalTests\Service\Microsoft.OData.Service.csproj">
       <Project>{D1567C63-4A0D-4E18-A14E-79699B9BA325}</Project>
       <Name>Microsoft.OData.Service</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\Common\Microsoft.Test.OData.DependencyInjection\Build.NetFramework\Microsoft.Test.OData.DependencyInjection.csproj">
+      <Project>{50aa23b2-56ef-4c51-a270-8d5bd0c899b6}</Project>
+      <Name>Microsoft.Test.OData.DependencyInjection</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\..\Framework\Core\Microsoft.Test.OData.Framework.csproj">
       <Project>{CEC8AF29-77BC-4C62-B79C-A9B22C311E3B}</Project>
@@ -102,6 +106,7 @@
     <Compile Include="ActionOverloadingTests\ActionOverloadingQueryTests.cs" />
     <Compile Include="AnnotationTests\InstanceAnnotationTests.cs" />
     <Compile Include="AsyncRequestTests\AsyncRequestTests.cs" />
+    <Compile Include="BatchRequestTests\BatchRequestWithRelativeUriTests.cs" />
     <Compile Include="ClientTests\ClientEntityDescripterTests.cs" />
     <Compile Include="ClientTests\ClientOpenTypeUpdateTests.cs" />
     <Compile Include="ClientTests\ClientQueryTests.cs" />
@@ -111,6 +116,7 @@
     <Compile Include="ClientWithoutTypeResolverTests\JsonWithoutTypeResolverTests.cs" />
     <Compile Include="CodeGenerationTests\CustomizeNamingTest.cs" />
     <Compile Include="CodeGenerationTests\T4DelayQueryTest.cs" />
+    <Compile Include="Common\ODataAnnotatableExtensions.cs" />
     <Compile Include="EdmDateAndTimeOfDay\DateAndTimeOfDayCRUDTestings.cs" />
     <Compile Include="ODataSimplifiedServiceTests\ODataSimplifiedServiceTests.cs" />
     <Compile Include="QueryOptionTests\EntityReferenceLinkTests.cs" />
@@ -195,7 +201,6 @@
     <Compile Include="TypeDefinitionTests\TypeDefinitionTests.cs" />
     <Compile Include="UriBuilderTests\UriBuilderTests.cs" />
     <Compile Include="UrlModifyingTests\UrlModifyingTests.cs" />
-    <Compile Include="WriteJsonPayloadTests\AutoComputePayloadMetadataInJsonTests.cs" />
     <Compile Include="WriteJsonPayloadTests\JsonLightConstants.cs" />
     <Compile Include="WriteJsonPayloadTests\VerifyPayloadHelper.cs" />
     <Compile Include="WriteJsonPayloadTests\SerializationInfoEdgeTests.cs" />
@@ -225,7 +230,12 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="AfterBuild">
-    <CreateItem Include="$(NugetPack)\EntityFramework.5.0.0\EntityFramework.5.0.0.nuspec" AdditionalMetadata="TargetPath=">
+    <CreateItem Condition="Exists('$(NugetPack)\EntityFramework.5.0.0\EntityFramework.5.0.0.nuspec')"
+         Include="$(NugetPack)\EntityFramework.5.0.0\EntityFramework.5.0.0.nuspec" AdditionalMetadata="TargetPath=">
+      <Output TaskParameter="Include" ItemName="EF5" />
+    </CreateItem>
+    <CreateItem Condition="Exists('$(NugetPack)\EntityFramework.5.0.0\EntityFramework.nuspec')"
+         Include="$(NugetPack)\EntityFramework.5.0.0\EntityFramework.nuspec" AdditionalMetadata="TargetPath=">
       <Output TaskParameter="Include" ItemName="EF5" />
     </CreateItem>
     <CreateItem Include="$(NugetPack)\EntityFramework.5.0.0\Content\App.config.transform" AdditionalMetadata="TargetPath=Content">

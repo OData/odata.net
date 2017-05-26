@@ -8,9 +8,8 @@ namespace Microsoft.OData.Client
 {
     using System;
     using System.Diagnostics;
-    using System.Xml;
+    using Microsoft.OData;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Core;
 
     /// <summary>
     /// Helper class for creating ODataLib readers, settings, and other read-related classes based on an instance of <see cref="ResponseInfo"/>.
@@ -37,35 +36,25 @@ namespace Microsoft.OData.Client
         internal ODataMessageReaderSettings CreateSettings()
         {
             ODataMessageReaderSettings settings = new ODataMessageReaderSettings();
-#if !DNXCORE50
-            if (this.responseInfo.Context.EnableAtom)
-            {
-                // Enable ATOM in client
-                settings.EnableAtomSupport();
-            }
-#endif
             Func<IEdmType, string, IEdmType> resolveWireTypeName = this.responseInfo.TypeResolver.ResolveWireTypeName;
             if (this.responseInfo.Context.Format.ServiceModel != null)
             {
                 resolveWireTypeName = null;
             }
 
-            settings.EnableWcfDataServicesClientBehavior(resolveWireTypeName);
-
+            settings.Validations &= ~(ValidationKinds.ThrowOnDuplicatePropertyNames | ValidationKinds.ThrowIfTypeConflictsWithMetadata);
+            settings.ClientCustomTypeResolver = resolveWireTypeName;
             settings.BaseUri = this.responseInfo.BaseUriResolver.BaseUriOrNull;
-            settings.ODataSimplified = this.responseInfo.Context.ODataSimplified;
-            settings.UndeclaredPropertyBehaviorKinds = ODataUndeclaredPropertyBehaviorKinds.ReportUndeclaredLinkProperty;
             settings.MaxProtocolVersion = CommonUtil.ConvertToODataVersion(this.responseInfo.MaxProtocolVersion);
-            if (this.responseInfo.IgnoreMissingProperties)
+
+            if (!this.responseInfo.ThrowOnUndeclaredPropertyForNonOpenType)
             {
-                settings.UndeclaredPropertyBehaviorKinds |= ODataUndeclaredPropertyBehaviorKinds.IgnoreUndeclaredValueProperty;
+                settings.Validations &= ~ValidationKinds.ThrowOnUndeclaredPropertyForNonOpenType;
             }
 
-            if (this.responseInfo.Context.UrlConventions == DataServiceUrlConventions.KeyAsSegment)
-            {
-                settings.UseKeyAsSegment = true;
-            }
-
+            // [#623] As client does not support DI currently, odata simplifiedoptions cannot be customize pre request.
+            // Now, we just change the global options.
+            // TODO: After finish the issue #623, need add the customize code of ODataAnnotationWithoutPrefix and KeyAsSegment for each request
             CommonUtil.SetDefaultMessageQuotas(settings.MessageQuotas);
 
             this.responseInfo.ResponsePipeline.ExecuteReaderSettingsConfiguration(settings);
@@ -83,7 +72,7 @@ namespace Microsoft.OData.Client
             Debug.Assert(responseMessage != null, "responseMessage != null");
             Debug.Assert(settings != null, "settings != null");
 
-            this.responseInfo.Context.Format.ValidateCanReadResponseFormat(responseMessage);
+            DataServiceClientFormat.ValidateCanReadResponseFormat(responseMessage);
             return new ODataMessageReader(responseMessage, settings, this.responseInfo.TypeResolver.ReaderModel);
         }
     }

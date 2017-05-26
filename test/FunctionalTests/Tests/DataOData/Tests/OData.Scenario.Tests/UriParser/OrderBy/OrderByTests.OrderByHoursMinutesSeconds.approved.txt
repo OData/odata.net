@@ -5,7 +5,7 @@ OrderByClause
 	Item Type = [Microsoft.Test.Taupo.OData.WCFService.Customer Nullable=False]
 	Direction = Ascending
 	Range Variable = 
-	EntityRangeVariable
+	ResourceRangeVariable
 		Name = $it
 		NavigationSource = Customers
 		TypeReference = [Microsoft.Test.Taupo.OData.WCFService.Customer Nullable=False]
@@ -19,11 +19,11 @@ OrderByClause
 							Property = TimeBetweenLastTwoOrders
 							TypeReference = [Edm.Duration Nullable=False Precision=0]
 							Source = 
-							EntityRangeVariableReferenceNode
+							ResourceRangeVariableReferenceNode
 								Name = $it
 								NavigationSource = Customers
 								TypeReference = [Microsoft.Test.Taupo.OData.WCFService.Customer Nullable=False]
-								Range Variable = Microsoft.OData.Core.UriParser.Semantic.EntityRangeVariable
+								Range Variable = Microsoft.OData.UriParser.ResourceRangeVariable
 			Multiply
 				3(Type: [Edm.Int32 Nullable=False])
 		Subtract
@@ -36,11 +36,11 @@ OrderByClause
 							Property = TimeBetweenLastTwoOrders
 							TypeReference = [Edm.Duration Nullable=False Precision=0]
 							Source = 
-							EntityRangeVariableReferenceNode
+							ResourceRangeVariableReferenceNode
 								Name = $it
 								NavigationSource = Customers
 								TypeReference = [Microsoft.Test.Taupo.OData.WCFService.Customer Nullable=False]
-								Range Variable = Microsoft.OData.Core.UriParser.Semantic.EntityRangeVariable
+								Range Variable = Microsoft.OData.UriParser.ResourceRangeVariable
 			Divide
 				2(Type: [Edm.Int32 Nullable=False])
 	Add
@@ -53,11 +53,11 @@ OrderByClause
 						Property = TimeBetweenLastTwoOrders
 						TypeReference = [Edm.Duration Nullable=False Precision=0]
 						Source = 
-						EntityRangeVariableReferenceNode
+						ResourceRangeVariableReferenceNode
 							Name = $it
 							NavigationSource = Customers
 							TypeReference = [Microsoft.Test.Taupo.OData.WCFService.Customer Nullable=False]
-							Range Variable = Microsoft.OData.Core.UriParser.Semantic.EntityRangeVariable
+							Range Variable = Microsoft.OData.UriParser.ResourceRangeVariable
 		Modulo
 			30(Type: [Edm.Int32 Nullable=False])
 	Then By = 

@@ -7,11 +7,11 @@
 using System.IO;
 using System.Text;
 using FluentAssertions;
-using Microsoft.OData.Edm.Library;
+using Microsoft.OData.Edm;
 using Microsoft.Spatial;
 using Xunit;
 
-namespace Microsoft.OData.Core.Tests
+namespace Microsoft.OData.Tests
 {
     /// <summary>
     /// This is a test class for RawValueWriter and is intended

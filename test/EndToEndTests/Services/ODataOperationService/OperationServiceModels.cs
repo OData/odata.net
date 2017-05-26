@@ -7,7 +7,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using Microsoft.OData.Core;
+using Microsoft.OData;
 using Microsoft.Test.OData.Services.ODataWCFService;
 using Microsoft.Test.OData.Services.ODataWCFService.DataSource;
 
@@ -90,13 +90,24 @@ namespace Microsoft.Test.OData.Services.ODataOperationService
         }
     }
 
+    public class OrderDetail : ClrObject
+    {
+        public int Quantity { get; set; }
+        public float UnitPrice { get; set; }
+    }
+
+    public class InfoFromCustomer : ClrObject
+    {
+        public string CustomerMessage { get; set; }
+    }
+
     public class Order : ClrObject
     {
         public int ID { get; set; }
         public DateTimeOffset OrderDate { get; set; }
         public Customer Customer { get; set; }
         public List<string> Notes { get; set; }
-
-       
+        public List<OrderDetail> OrderDetails { get; set; }
+        public InfoFromCustomer InfoFromCustomer { get; set; }
     }
 }

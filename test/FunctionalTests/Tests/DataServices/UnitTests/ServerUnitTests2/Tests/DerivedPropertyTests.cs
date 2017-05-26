@@ -22,6 +22,7 @@ namespace AstoriaUnitTests.Tests
     using ResourceProperty = Microsoft.OData.Service.Providers.ResourceProperty;
     using ResourceType = Microsoft.OData.Service.Providers.ResourceType;
 
+    [Ignore] // Remove Atom
     [TestClass]
     public class DerivedPropertyTests
     {

@@ -8,17 +8,13 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using FluentAssertions;
-using Microsoft.OData.Core.Tests.UriParser;
-using Microsoft.OData.Core.UriParser;
-using Microsoft.OData.Core.UriParser.Semantic;
-using Microsoft.OData.Core.UriParser.Syntactic;
-using Microsoft.OData.Core.UriParser.TreeNodeKinds;
+using Microsoft.OData.Tests.UriParser;
+using Microsoft.OData.UriParser;
 using Microsoft.OData.Edm;
-using Microsoft.OData.Edm.Library;
 using Xunit;
-using ODataErrorStrings = Microsoft.OData.Core.Strings;
+using ODataErrorStrings = Microsoft.OData.Strings;
 
-namespace Microsoft.OData.Core.Tests.ScenarioTests.UriParser
+namespace Microsoft.OData.Tests.ScenarioTests.UriParser
 {
     public class ParameterAliasFunctionalTests
     {
@@ -30,9 +26,56 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.UriParser
                 new Uri("http://gobbledygook/GetPet4(id=@p1)?@p1=1.01M"),
                 (oDataPath, filterClause, orderByClause, selectExpandClause, aliasNodes) =>
                 {
-                    oDataPath.LastSegment.ShouldBeOperationImportSegment(HardCodedTestModel.GetFunctionImportForGetPet4()).And.Parameters.First().ShouldHaveParameterAliasNode("id", "@p1", EdmCoreModel.Instance.GetDecimal(false));
+                    oDataPath.LastSegment.ShouldBeOperationImportSegment(
+                        HardCodedTestModel.GetFunctionImportForGetPet4())
+                        .And.Parameters.First()
+                        .ShouldHaveParameterAliasNode("id", "@p1", EdmCoreModel.Instance.GetDecimal(false));
                     aliasNodes["@p1"].ShouldBeConstantQueryNode(1.01M);
                 });
+        }
+
+        [Fact]
+        public void ParsePath_AliasInFunctionImport_Date()
+        {
+            ParseUriAndVerify(
+                new Uri("http://gobbledygook/GetPersonByDate(date=@p1)?@p1=1997-12-12"),
+                (oDataPath, filterClause, orderByClause, selectExpandClause, aliasNodes) =>
+                {
+                    oDataPath.LastSegment.ShouldBeOperationImportSegment(
+                        HardCodedTestModel.GetFunctionImportForGetPersonByDate())
+                        .And.Parameters.First()
+                        .ShouldHaveParameterAliasNode("date", "@p1", EdmCoreModel.Instance.GetDate(false));
+                    aliasNodes["@p1"].ShouldBeConstantQueryNode(new Date(1997, 12, 12));
+                });
+        }
+
+        [Fact]
+        public void ParsePath_AliasInFunctionImport_DateTimeOffsetPromote()
+        {
+            ParseUriAndVerify(
+                new Uri("http://gobbledygook/GetPersonByDTO(dto=@p1)?@p1=1997-12-12"),
+                (oDataPath, filterClause, orderByClause, selectExpandClause, aliasNodes) =>
+                {
+                    oDataPath.LastSegment.ShouldBeOperationImportSegment(
+                        HardCodedTestModel.GetFunctionImportForGetPersonByDTO())
+                        .And.Parameters.First()
+                        .ShouldHaveConvertNode("dto", EdmCoreModel.Instance.GetDateTimeOffset(false))
+                        .And.Source.ShouldBeParameterAliasNode("@p1", EdmCoreModel.Instance.GetDate(false));
+                    aliasNodes["@p1"].ShouldBeConstantQueryNode(new Date(1997, 12, 12));
+                });
+        }
+
+        [Fact]
+        public void ParsePath_AliasInFunctionImport_DateTimeOffset()
+        {
+            ParseUriAndVerify(
+               new Uri("http://gobbledygook/GetPersonByDTO(dto=@p1)?@p1=2014-09-19T07:13:14Z"),
+               (oDataPath, filterClause, orderByClause, selectExpandClause, aliasNodes) =>
+               {
+                   oDataPath.LastSegment.ShouldBeOperationImportSegment(HardCodedTestModel.GetFunctionImportForGetPersonByDTO()).And.Parameters.First().ShouldHaveParameterAliasNode("dto", "@p1", EdmCoreModel.Instance.GetDateTimeOffset(false));
+                   aliasNodes["@p1"].ShouldBeConstantQueryNode(new DateTimeOffset(2014, 9, 19, 7, 13, 14, new TimeSpan(0)));
+
+               });
         }
 
         [Fact]
@@ -110,7 +153,7 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.UriParser
                 (oDataPath, filterClause, orderByClause, selectExpandClause, aliasNodes) =>
                 {
                     oDataPath.LastSegment.ShouldBeOperationSegment(HardCodedTestModel.GetFunctionForCanMoveToAddress()).As<IEdmFunction>();
-                    aliasNodes["@address"].As<ConstantNode>().Value.ShouldBeODataComplexValue();
+                    aliasNodes["@address"].As<ConstantNode>().Value.Should().Be("{\"@odata.type\":\"#Fully.Qualified.Namespace.Address\",\"Street\":\"NE 24th St.\",\"City\":\"Redmond\"}");
                 });
         }
 
@@ -123,8 +166,7 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.UriParser
                 (oDataPath, filterClause, orderByClause, selectExpandClause, aliasNodes) =>
                 {
                     oDataPath.LastSegment.ShouldBeOperationSegment(HardCodedTestModel.GetFunctionForCanMoveToAddresses()).As<IEdmFunction>();
-                    aliasNodes["@addresses"].As<ConstantNode>().Value.ShouldBeODataCollectionValue().
-                        And.ItemsShouldBeAssignableTo<ODataComplexValue>().And.Count().Should().Be(2);
+                    var value = aliasNodes["@addresses"].As<ConstantNode>().Value.Should().Be("[{\"Street\":\"NE 24th St.\",\"City\":\"Redmond\"},{\"Street\":\"Pine St.\",\"City\":\"Seattle\"}]");
                 });
         }
 
@@ -180,7 +222,7 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.UriParser
                 new Uri("http://gobbledygook/People?$filter=null ne Fully.Qualified.Namespace.GetPetCount(colorPattern=@p1)&@p1=Fully.Qualified.Namespace.ColorPattern'BlueYellowStriped'"),
                 (oDataPath, filterClause, orderByClause, selectExpandClause, aliasNodes) =>
                 {
-                    NamedFunctionParameterNode p = filterClause.Expression.As<BinaryOperatorNode>().Right.As<SingleEntityFunctionCallNode>().Parameters.First().As<NamedFunctionParameterNode>();
+                    NamedFunctionParameterNode p = filterClause.Expression.As<BinaryOperatorNode>().Right.As<SingleResourceFunctionCallNode>().Parameters.First().As<NamedFunctionParameterNode>();
                     p.Value.As<ParameterAliasNode>().Alias.ShouldBeEquivalentTo("@p1");
                     p.Value.As<ParameterAliasNode>().TypeReference.IsEnum().Should().Be(true);
                     p.Value.As<ParameterAliasNode>().TypeReference.Definition.FullTypeName().ShouldBeEquivalentTo("Fully.Qualified.Namespace.ColorPattern");
@@ -197,7 +239,7 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.UriParser
                 new Uri("http://gobbledygook/People?$filter=null ne Fully.Qualified.Namespace.GetPetCount(colorPattern=@p1)&@p1=Fully.Qualified.Namespace.ColorPattern'238563'"),
                 (oDataPath, filterClause, orderByClause, selectExpandClause, aliasNodes) =>
                 {
-                    NamedFunctionParameterNode p = filterClause.Expression.As<BinaryOperatorNode>().Right.As<SingleEntityFunctionCallNode>().Parameters.First().As<NamedFunctionParameterNode>();
+                    NamedFunctionParameterNode p = filterClause.Expression.As<BinaryOperatorNode>().Right.As<SingleResourceFunctionCallNode>().Parameters.First().As<NamedFunctionParameterNode>();
                     p.Value.As<ParameterAliasNode>().Alias.ShouldBeEquivalentTo("@p1");
                     p.Value.As<ParameterAliasNode>().TypeReference.IsEnum().Should().Be(true);
                     p.Value.As<ParameterAliasNode>().TypeReference.Definition.FullTypeName().ShouldBeEquivalentTo("Fully.Qualified.Namespace.ColorPattern");
@@ -345,7 +387,7 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.UriParser
             // run 2 test passes:
             // 1. low level api - ODataUriParser instance methods
             {
-                List<CustomQueryOptionToken> queries = Microsoft.OData.Core.UriParser.UriUtils.ParseQueryOptions(uri);
+                List<CustomQueryOptionToken> queries = Microsoft.OData.UriParser.QueryOptionUtils.ParseQueryOptions(uri);
                 ODataUriParser parser = new ODataUriParser(HardCodedTestModel.TestModel, new Uri("http://gobbledygook/"), uri);
 
                 ODataPath path = parser.ParsePath();

@@ -4,30 +4,26 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-#if ASTORIA_CLIENT
+#if ODATA_CLIENT
 namespace Microsoft.OData.Client.ALinq.UriParser
 #else
-namespace Microsoft.OData.Core.UriParser.Syntactic
+namespace Microsoft.OData.UriParser
 #endif
 {
     #region Namespaces
     using System.Collections.Generic;
-    using System.Collections.ObjectModel;
-    using Microsoft.OData.Core.UriParser.Semantic;
-    using Microsoft.OData.Core.UriParser.TreeNodeKinds;
-    using Microsoft.OData.Core.UriParser.Visitors;
 
     #endregion Namespaces
 
     /// <summary>
     /// Lexical token representing an expand operation.
     /// </summary>
-    internal sealed class ExpandTermToken : QueryToken
+    public sealed class ExpandTermToken : QueryToken
     {
         /// <summary>
         /// The nav prop path for this ExpandTerm
         /// </summary>
-        private readonly PathSegmentToken pathToNavProp;
+        private readonly PathSegmentToken pathToNavigationProp;
 
         /// <summary>
         /// the filter option for this expand term
@@ -77,27 +73,27 @@ namespace Microsoft.OData.Core.UriParser.Syntactic
         /// <summary>
         /// Create an expand term token using only a property
         /// </summary>
-        /// <param name="pathToNavProp">the path to the navigation property</param>
-        public ExpandTermToken(PathSegmentToken pathToNavProp)
-            : this(pathToNavProp, null, null)
+        /// <param name="pathToNavigationProp">the path to the navigation property</param>
+        public ExpandTermToken(PathSegmentToken pathToNavigationProp)
+            : this(pathToNavigationProp, null, null)
         {
         }
 
         /// <summary>
         /// Create an expand term using only the property and its subexpand/select
         /// </summary>
-        /// <param name="pathToNavProp">the path to the navigation property for this expand term</param>
+        /// <param name="pathToNavigationProp">the path to the navigation property for this expand term</param>
         /// <param name="selectOption">the sub select for this token</param>
         /// <param name="expandOption">the sub expand for this token</param>
-        public ExpandTermToken(PathSegmentToken pathToNavProp, SelectToken selectOption, ExpandToken expandOption)
-            : this(pathToNavProp, null, null, null, null, null, null, null, selectOption, expandOption)
+        public ExpandTermToken(PathSegmentToken pathToNavigationProp, SelectToken selectOption, ExpandToken expandOption)
+            : this(pathToNavigationProp, null, null, null, null, null, null, null, selectOption, expandOption)
         {
         }
 
         /// <summary>
         /// Create an expand term token
         /// </summary>
-        /// <param name="pathToNavProp">the nav prop for this expand term</param>
+        /// <param name="pathToNavigationProp">the nav prop for this expand term</param>
         /// <param name="filterOption">the filter option for this expand term</param>
         /// <param name="orderByOptions">the orderby options for this expand term</param>
         /// <param name="topOption">the top option for this expand term</param>
@@ -107,11 +103,11 @@ namespace Microsoft.OData.Core.UriParser.Syntactic
         /// <param name="searchOption">the search option for this expand term</param>
         /// <param name="selectOption">the select option for this expand term</param>
         /// <param name="expandOption">the expand option for this expand term</param>
-        public ExpandTermToken(PathSegmentToken pathToNavProp, QueryToken filterOption, IEnumerable<OrderByToken> orderByOptions, long? topOption, long? skipOption, bool? countQueryOption, long? levelsOption, QueryToken searchOption, SelectToken selectOption, ExpandToken expandOption)
+        public ExpandTermToken(PathSegmentToken pathToNavigationProp, QueryToken filterOption, IEnumerable<OrderByToken> orderByOptions, long? topOption, long? skipOption, bool? countQueryOption, long? levelsOption, QueryToken searchOption, SelectToken selectOption, ExpandToken expandOption)
         {
-            ExceptionUtils.CheckArgumentNotNull(pathToNavProp, "property");
+            ExceptionUtils.CheckArgumentNotNull(pathToNavigationProp, "property");
 
-            this.pathToNavProp = pathToNavProp;
+            this.pathToNavigationProp = pathToNavigationProp;
             this.filterOption = filterOption;
             this.orderByOptions = orderByOptions;
             this.topOption = topOption;
@@ -126,9 +122,9 @@ namespace Microsoft.OData.Core.UriParser.Syntactic
         /// <summary>
         /// the nav property for this expand term
         /// </summary>
-        public PathSegmentToken PathToNavProp
+        public PathSegmentToken PathToNavigationProp
         {
-            get { return this.pathToNavProp; }
+            get { return this.pathToNavigationProp; }
         }
 
         /// <summary>

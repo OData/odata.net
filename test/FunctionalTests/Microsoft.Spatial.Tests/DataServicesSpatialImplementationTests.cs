@@ -6,7 +6,6 @@
 
 using System.Linq;
 using System.Reflection;
-using Microsoft.Data.Spatial;
 using Xunit;
 
 namespace Microsoft.Spatial.Tests

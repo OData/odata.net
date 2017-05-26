@@ -4,23 +4,16 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-#if ASTORIA_CLIENT
+#if ODATA_CLIENT
 namespace Microsoft.OData.Client.ALinq.UriParser
 #else
-namespace Microsoft.OData.Core.UriParser.Syntactic
+namespace Microsoft.OData.UriParser
 #endif
 {
-    using Microsoft.OData.Core.UriParser.Semantic;
-    using Microsoft.OData.Core.UriParser.TreeNodeKinds;
-    using Microsoft.OData.Core.UriParser.Visitors;
-
-    #region Namespaces
-    #endregion Namespaces
-
     /// <summary>
     /// Lexical token representing the parameter for an Any/All query.
     /// </summary>
-    internal sealed class RangeVariableToken : QueryToken
+    public sealed class RangeVariableToken : QueryToken
     {
         /// <summary>
         /// The name of the Any/All parameter.

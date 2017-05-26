@@ -25,7 +25,7 @@ namespace Microsoft.OData.Client
         private int version;
 
         /// <summary>
-        /// array set with an intial capacity
+        /// array set with an initial capacity
         /// </summary>
         /// <param name="capacity">initial capacity</param>
         public ArraySet(int capacity)
@@ -107,10 +107,10 @@ namespace Microsoft.OData.Client
         {
             return this.GetEnumerator();
         }
-        
+
         /// <summary>Find the current index of element within the set</summary>
         /// <param name="item">item to find</param>
-        /// <param name="comparer">comparision function</param>
+        /// <param name="comparer">comparison function</param>
         /// <returns>index of the item else (-1)</returns>
         public int IndexOf(T item, Func<T, T, bool> comparer)
         {

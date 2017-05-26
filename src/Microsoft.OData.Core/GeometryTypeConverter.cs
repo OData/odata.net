@@ -4,24 +4,20 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core
-{
-    #region Namespaces
-    using System.Collections.Generic;
-    using System.Diagnostics;
-    using System.IO;
-    using System.Xml;
-    using Microsoft.Data.Spatial;
-    using Microsoft.OData.Core.Atom;
-    using Microsoft.OData.Core.Json;
-    using Microsoft.Spatial;
-    #endregion
+using System.Diagnostics;
+using System.IO;
+using System.Xml;
+using Microsoft.OData.Json;
+using Microsoft.OData.Metadata;
+using Microsoft.Spatial;
 
+namespace Microsoft.OData
+{
     /// <summary>
     /// Handles serialization and deserialization for types derived from Geometry.
     /// This file is currently compiled by ODataLib and Astoria server, because it contains
     ///      functionality related to both serialization and deserialization, but deserialization
-    ///      is not yet integrated into Astoria. Once that integration happens this functionality 
+    ///      is not yet integrated into Astoria. Once that integration happens this functionality
     ///      should be fully contained within ODataLib only.
     /// </summary>
     internal sealed class GeometryTypeConverter : IPrimitiveTypeConverter
@@ -32,7 +28,7 @@ namespace Microsoft.OData.Core
         /// <param name="reader">The Xml reader to use to read the value.</param>
         /// <remarks>In order to be consistent with how we are reading other types of property values elsewhere in the product, the reader
         /// is expected to be placed at the beginning of the element when entering this method. After this method call, the reader will be placed
-        /// at the EndElement, such that the next Element will be read in the next Read call. The deserializer that uses this value expects 
+        /// at the EndElement, such that the next Element will be read in the next Read call. The deserializer that uses this value expects
         /// the reader to be in these states when entering and leaving the method.
         /// </remarks>
         /// <returns>Geometry instance that was read.</returns>

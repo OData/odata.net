@@ -7,7 +7,7 @@
 namespace Microsoft.Test.Taupo.OData.Scenario.Tests.Streaming
 {
     using System;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.Test.Taupo.Common;
     using Microsoft.Test.Taupo.OData.Reader.Tests;
     using Microsoft.Test.Taupo.OData.Writer.Tests.Common;
@@ -27,12 +27,12 @@ namespace Microsoft.Test.Taupo.OData.Scenario.Tests.Streaming
 
             switch(payloadKind)
             {
-                case ODataPayloadKind.Entry:
-                    this.StartRead(reader.CreateODataEntryReader(), writer.CreateODataEntryWriter());
+                case ODataPayloadKind.Resource:
+                    this.StartRead(reader.CreateODataResourceReader(), writer.CreateODataResourceWriter());
                     break;
 
-                case ODataPayloadKind.Feed:
-                    this.StartRead(reader.CreateODataFeedReader(), writer.CreateODataFeedWriter());
+                case ODataPayloadKind.ResourceSet:
+                    this.StartRead(reader.CreateODataResourceSetReader(), writer.CreateODataResourceSetWriter());
                     break;
                 default:
                     throw new NotSupportedException("ObjectModelReadWriteStreamer currently supports only feed and entry");
@@ -46,18 +46,18 @@ namespace Microsoft.Test.Taupo.OData.Scenario.Tests.Streaming
             {
                 switch(reader.State)
                 {
-                    case ODataReaderState.EntryStart:
-                        writer.WriteStart((ODataEntry)reader.Item);
+                    case ODataReaderState.ResourceStart:
+                        writer.WriteStart((ODataResource)reader.Item);
                         break;
-                    case ODataReaderState.FeedStart:
-                        writer.WriteStart((ODataFeed)reader.Item);
+                    case ODataReaderState.ResourceSetStart:
+                        writer.WriteStart((ODataResourceSet)reader.Item);
                         break;
-                    case ODataReaderState.NavigationLinkStart:
-                        writer.WriteStart((ODataNavigationLink)reader.Item);
+                    case ODataReaderState.NestedResourceInfoStart:
+                        writer.WriteStart((ODataNestedResourceInfo)reader.Item);
                         break;
-                    case ODataReaderState.EntryEnd:
-                    case ODataReaderState.FeedEnd:
-                    case ODataReaderState.NavigationLinkEnd:
+                    case ODataReaderState.ResourceEnd:
+                    case ODataReaderState.ResourceSetEnd:
+                    case ODataReaderState.NestedResourceInfoEnd:
                         writer.WriteEnd();
                         break;
                     default:

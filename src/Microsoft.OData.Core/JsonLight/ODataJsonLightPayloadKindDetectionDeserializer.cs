@@ -4,16 +4,16 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core.JsonLight
+namespace Microsoft.OData.JsonLight
 {
     #region Namespaces
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Linq;
-#if ODATALIB_ASYNC
+#if PORTABLELIB
     using System.Threading.Tasks;
 #endif
-    using Microsoft.OData.Core.Json;
+    using Microsoft.OData.Json;
     #endregion Namespaces
 
     /// <summary>
@@ -47,7 +47,7 @@ namespace Microsoft.OData.Core.JsonLight
             {
                 this.ReadPayloadStart(
                     ODataPayloadKind.Unsupported,
-                    /*duplicatePropertyNamesChecker*/null,
+                    /*propertyAndAnnotationCollector*/null,
                     /*isReadingNestedPayload*/false,
                     /*allowEmptyPayload*/false);
                 return this.DetectPayloadKindImplementation(detectionInfo);
@@ -64,7 +64,7 @@ namespace Microsoft.OData.Core.JsonLight
             }
         }
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary>
         /// Detects the payload kind(s).
         /// </summary>
@@ -80,7 +80,7 @@ namespace Microsoft.OData.Core.JsonLight
 
             return this.ReadPayloadStartAsync(
                 ODataPayloadKind.Unsupported,
-                /*duplicatePropertyNamesChecker*/null,
+                /*propertyAndAnnotationCollector*/null,
                 /*isReadingNestedPayload*/false,
                 /*allowEmptyPayload*/false)
 
@@ -153,7 +153,7 @@ namespace Microsoft.OData.Core.JsonLight
                                 return Enumerable.Empty<ODataPayloadKind>();
                             }
 
-                            // At this point we successfully read the first error property. 
+                            // At this point we successfully read the first error property.
                             // Skip the error value and check whether there are more properties.
                             this.JsonReader.SkipValue();
                         }

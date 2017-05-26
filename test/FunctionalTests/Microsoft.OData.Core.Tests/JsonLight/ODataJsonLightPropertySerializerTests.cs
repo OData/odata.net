@@ -9,13 +9,12 @@ using System.Collections.ObjectModel;
 using System.IO;
 using System.Text;
 using FluentAssertions;
-using Microsoft.OData.Core.JsonLight;
+using Microsoft.OData.JsonLight;
 using Microsoft.OData.Edm;
-using Microsoft.OData.Edm.Library;
 using Microsoft.Spatial;
 using Xunit;
 
-namespace Microsoft.OData.Core.Tests.JsonLight
+namespace Microsoft.OData.Tests.JsonLight
 {
     public class ODataJsonLightPropertySerializerTests
     {
@@ -24,18 +23,12 @@ namespace Microsoft.OData.Core.Tests.JsonLight
         private ODataProperty declaredProperty;
         private ODataProperty undeclaredProperty;
         private ODataProperty declaredGeometryProperty;
-        private EdmComplexType addressType;
-        private EdmComplexType derivedAddressType;
         private EdmComplexType openAddressType;
         private EdmTypeDefinition myInt32;
         private EdmTypeDefinition myString;
         private ODataProperty declaredPropertyCountryRegion;
         private ODataProperty declaredPropertyCountryRegionWithInstanceAnnotation;
         private ODataProperty undeclaredPropertyCity;
-        private ODataProperty declaredPropertyHomeAddress;
-        private ODataProperty declaredPropertyAddress;
-        private ODataProperty declaredPropertyAddressWithInstanceAnnotation;
-        private ODataProperty declaredPropertyHomeAddressWithInstanceAnnotations;
         private ODataProperty declaredPropertyMyInt32;
         private ODataProperty declaredPropertyMyInt32WithInstanceAnnotations;
         private ODataProperty declaredPropertyMyString;
@@ -67,6 +60,11 @@ namespace Microsoft.OData.Core.Tests.JsonLight
 
             edmModel.AddElement(edmEntityType);
 
+            // Initialize open ComplexType: OpenAddress.
+            this.openAddressType = new EdmComplexType("TestNamespace", "OpenAddress", baseType: null, isAbstract: false, isOpen: true);
+            this.openAddressType.AddStructuralProperty("CountryRegion", EdmPrimitiveTypeKind.String);
+            edmModel.AddElement(this.openAddressType);
+
             this.model = TestUtils.WrapReferencedModelsToMainModel(edmModel);
             this.entityType = edmEntityType;
             this.declaredProperty = new ODataProperty { Name = "DeclaredProperty", Value = Guid.Empty };
@@ -75,73 +73,6 @@ namespace Microsoft.OData.Core.Tests.JsonLight
             this.declaredPropertyTimeOfDay = new ODataProperty { Name = "TimeOfDayProperty", Value = new TimeOfDay(1, 30, 5, 123) };
             this.declaredPropertyDate = new ODataProperty { Name = "DateProperty", Value = new Date(2014, 9, 17) };
 
-            // Initialize derived ComplexType: Address and HomeAddress
-            this.addressType = new EdmComplexType("TestNamespace", "Address", baseType: null, isAbstract: false, isOpen: false);
-            this.addressType.AddStructuralProperty("City", EdmPrimitiveTypeKind.String);
-            this.derivedAddressType = new EdmComplexType("TestNamespace", "HomeAddress", baseType: this.addressType, isAbstract: false, isOpen: false);
-            this.derivedAddressType.AddStructuralProperty("FamilyName", EdmPrimitiveTypeKind.String);
-
-            // Initialize open ComplexType: OpenAddress.
-            this.openAddressType = new EdmComplexType("TestNamespace", "OpenAddress", baseType: null, isAbstract: false, isOpen: true);
-            this.openAddressType.AddStructuralProperty("CountryRegion", EdmPrimitiveTypeKind.String);
-
-            edmModel.AddElement(this.addressType);
-            edmModel.AddElement(this.derivedAddressType);
-            edmModel.AddElement(this.openAddressType);
-
-            this.declaredPropertyAddress = new ODataProperty() { Name = "AddressProperty", Value = new ODataComplexValue { TypeName = "TestNamespace.Address", Properties = new ODataProperty[] { new ODataProperty { Name = "City", Value = "Shanghai" } } } };
-            this.declaredPropertyHomeAddress = new ODataProperty() { Name = "HomeAddressProperty", Value = new ODataComplexValue { TypeName = "TestNamespace.HomeAddress", Properties = new ODataProperty[] { new ODataProperty { Name = "FamilyName", Value = "Green" }, new ODataProperty { Name = "City", Value = "Shanghai" } } } };
-            this.declaredPropertyAddressWithInstanceAnnotation = new ODataProperty()
-            {
-                Name = "AddressProperty",
-                Value = new ODataComplexValue
-                {
-                    TypeName = "TestNamespace.Address",
-                    Properties = new ODataProperty[]
-                    {
-                        new ODataProperty { Name = "City", Value = "Shanghai" }
-                    },
-                    InstanceAnnotations = new Collection<ODataInstanceAnnotation>
-                    {
-                        new ODataInstanceAnnotation("Is.ReadOnly", new ODataPrimitiveValue(true))
-                    }
-                }
-            };
-            this.declaredPropertyHomeAddressWithInstanceAnnotations = new ODataProperty()
-            {
-                Name = "HomeAddressProperty",
-                Value = new ODataComplexValue
-                {
-                    TypeName = "TestNamespace.HomeAddress",
-                    Properties = new ODataProperty[]
-                    {
-                        new ODataProperty
-                        {
-                            Name = "FamilyName",
-                            Value = "Green",
-                            InstanceAnnotations = new Collection<ODataInstanceAnnotation>
-                            {
-                                new ODataInstanceAnnotation("FamilyName.annotation", new ODataPrimitiveValue(true))
-                            }
-                        },
-                        new ODataProperty
-                        {
-                            Name = "City",
-                            Value = "Shanghai",
-                            InstanceAnnotations = new Collection<ODataInstanceAnnotation>
-                            {
-                                new ODataInstanceAnnotation("City.annotation1", new ODataPrimitiveValue(true)),
-                                new ODataInstanceAnnotation("City.annotation2", new ODataPrimitiveValue(123))
-                            }
-                        }
-                    },
-                    InstanceAnnotations = new Collection<ODataInstanceAnnotation>
-                    {
-                        new ODataInstanceAnnotation("Is.AutoComputable", new ODataPrimitiveValue(true)),
-                        new ODataInstanceAnnotation("Is.ReadOnly", new ODataPrimitiveValue(false))
-                    }
-                }
-            };
             this.declaredPropertyCountryRegion = new ODataProperty() { Name = "CountryRegion", Value = "China" };
             this.declaredPropertyCountryRegionWithInstanceAnnotation = new ODataProperty()
             {
@@ -153,6 +84,7 @@ namespace Microsoft.OData.Core.Tests.JsonLight
                 }
             };
             this.undeclaredPropertyCity = new ODataProperty() { Name = "City", Value = "Shanghai" };
+
             this.declaredPropertyMyInt32 = new ODataProperty() { Name = "MyInt32Property", Value = 12345 };
             this.declaredPropertyMyInt32WithInstanceAnnotations = new ODataProperty()
             {
@@ -166,43 +98,6 @@ namespace Microsoft.OData.Core.Tests.JsonLight
             };
             this.declaredPropertyMyString = new ODataProperty() { Name = "MyStringProperty", Value = "abcde" };
         }
-
-        #region Serializing top-level complextype properties
-        [Fact]
-        public void WritingTopLevelDerivedComplexTypePropertyWithJsonMiniShouldWriteTypeName()
-        {
-            this.SerializeProperty(null, this.declaredPropertyHomeAddress).Should().Contain("\"@odata.type\":\"#TestNamespace.HomeAddress\"");
-        }
-        [Fact]
-        public void WritingTopLevelUnderivedComplexTypePropertyWithJsonMiniShouldNotWriteTypeName()
-        {
-            this.SerializeProperty(null, this.declaredPropertyAddress).Should().NotContain("\"@odata.type\":\"#TestNamespace.Address\"");
-        }
-        [Fact]
-        public void WritingTopLevelComplexTypePropertyShouldWriteInstanceAnnotation()
-        {
-            this.SerializeProperty(null, this.declaredPropertyAddressWithInstanceAnnotation).Should().Contain("\"@Is.ReadOnly\":true");
-        }
-        [Fact]
-        public void WritingTopLevelComplexTypePropertyShouldWriteInstanceAnnotations()
-        {
-            this.SerializeProperty(null, this.declaredPropertyHomeAddressWithInstanceAnnotations).Should().Contain("\"@Is.AutoComputable\":true,\"@Is.ReadOnly\":false");
-        }
-        #endregion Serializing top-level complextype properties
-
-        #region Serializing declared and dynamic properties in open ComplexType
-        [Fact]
-        public void WritingDeclaredPropertyInOpenComplexTypeShouldWorkJsonLight()
-        {
-            this.SerializeProperty(this.openAddressType, this.declaredPropertyCountryRegion).Should().Contain("\"CountryRegion\":\"China\"");
-        }
-
-        [Fact]
-        public void WritingDynamicPropertyInOpenComplexTypeShouldWorkJsonLight()
-        {
-            this.SerializeProperty(this.openAddressType, this.undeclaredPropertyCity).Should().Contain("\"City\":\"Shanghai\"");
-        }
-        #endregion Serializing declared and dynamic properties in open ComplexType
 
         #region Default type name serialization behavior for primitive values
         [Fact]
@@ -272,28 +167,28 @@ namespace Microsoft.OData.Core.Tests.JsonLight
         [Fact]
         public void DeclaredPrimitivePropertyWithSerializationTypeNameAnnotationShouldWriteTypeNameFromAnnotation()
         {
-            this.declaredProperty.ODataValue.SetAnnotation(new SerializationTypeNameAnnotation { TypeName = "MyArbitraryTypeName" });
+            this.declaredProperty.ODataValue.TypeAnnotation = new ODataTypeAnnotation("MyArbitraryTypeName" );
             this.SerializeProperty(this.entityType, this.declaredProperty).Should().Contain("@odata.type\":\"#MyArbitraryTypeName\"");
         }
 
         [Fact]
         public void DeclaredPrimitivePropertyWithNullSerializationTypeNameAnnotationShouldNotWriteTypeName()
         {
-            this.declaredProperty.ODataValue.SetAnnotation(new SerializationTypeNameAnnotation { TypeName = null });
+            this.declaredProperty.ODataValue.TypeAnnotation = new ODataTypeAnnotation();
             this.SerializeProperty(this.entityType, this.declaredProperty).Should().NotContain("@odata.type");
         }
 
         [Fact]
         public void UndeclaredPrimitivePropertyWithSerializationTypeNameAnnotationShouldWriteTypeNameFromAnnotation()
         {
-            this.undeclaredProperty.ODataValue.SetAnnotation(new SerializationTypeNameAnnotation { TypeName = "MyArbitraryTypeName" });
+            this.undeclaredProperty.ODataValue.TypeAnnotation = new ODataTypeAnnotation("MyArbitraryTypeName");
             this.SerializeProperty(this.entityType, this.undeclaredProperty).Should().Contain("@odata.type\":\"#MyArbitraryTypeName\"");
         }
 
         [Fact]
         public void UndeclaredPrimitivePropertyWithNullSerializationTypeNameAnnotationShouldNotWriteTypeName()
         {
-            this.undeclaredProperty.ODataValue.SetAnnotation(new SerializationTypeNameAnnotation { TypeName = null });
+            this.undeclaredProperty.ODataValue.TypeAnnotation = new ODataTypeAnnotation();
             this.SerializeProperty(this.entityType, this.undeclaredProperty).Should().NotContain("@odata.type");
         }
         #endregion SerializationTypeNameAnnotation on primitive values
@@ -382,17 +277,19 @@ namespace Microsoft.OData.Core.Tests.JsonLight
 
         #endregion
 
-        #region Serializing complex properties
-
+        #region Serializing declared and dynamic properties in open ComplexType
         [Fact]
-        public void WritingPropertyInComplexTypeShouldWriteInsatanceAnnotation()
+        public void WritingDeclaredPropertyInOpenComplexTypeShouldWorkJsonLight()
         {
-            this.SerializeProperty(null, this.declaredPropertyHomeAddressWithInstanceAnnotations).Should()
-                .Contain("\"FamilyName@FamilyName.annotation\":true,\"FamilyName\":\"Green\"").And
-                .Contain("\"City@City.annotation1\":true,\"City@City.annotation2\":123,\"City\":\"Shanghai\"");
+            this.SerializeProperty(this.openAddressType, this.declaredPropertyCountryRegion).Should().Contain("\"CountryRegion\":\"China\"");
         }
 
-        #endregion
+        [Fact]
+        public void WritingDynamicPropertyInOpenComplexTypeShouldWorkJsonLight()
+        {
+            this.SerializeProperty(this.openAddressType, this.undeclaredPropertyCity).Should().Contain("\"City\":\"Shanghai\"");
+        }
+        #endregion Serializing declared and dynamic properties in open ComplexType
 
         /// <summary>
         /// Serialize the given property as a non-top-level property in JSON Light.
@@ -410,8 +307,7 @@ namespace Microsoft.OData.Core.Tests.JsonLight
                 owningType,
                 new[] { odataProperty },
                 /*isComplexValue*/ false,
-                new DuplicatePropertyNamesChecker(allowDuplicateProperties: true, isResponse: true),
-                ProjectedPropertiesAnnotation.AllProjectedPropertiesInstance);
+                new NullDuplicatePropertyNameChecker());
             jsonLightOutputContext.JsonWriter.EndObjectScope();
 
             jsonLightOutputContext.Flush();
@@ -423,20 +319,21 @@ namespace Microsoft.OData.Core.Tests.JsonLight
 
         private ODataJsonLightOutputContext CreateJsonLightOutputContext(MemoryStream stream)
         {
-            ODataMessageWriterSettings settings = new ODataMessageWriterSettings { Version = ODataVersion.V4 };
+            var settings = new ODataMessageWriterSettings { Version = ODataVersion.V4 };
             settings.ShouldIncludeAnnotation = ODataUtils.CreateAnnotationFilter("*");
             settings.SetServiceDocumentUri(new Uri("http://example.com/"));
 
-            return new ODataJsonLightOutputContext(
-                ODataFormat.Json,
-                new NonDisposingStream(stream),
-                new ODataMediaType("application", "json"),
-                Encoding.UTF8,
-                settings,
-                /*writingResponse*/ true,
-                /*synchronous*/ true,
-                this.model,
-                /*urlResolver*/ null);
+            var messageInfo = new ODataMessageInfo
+            {
+                MessageStream = new NonDisposingStream(stream),
+                MediaType = new ODataMediaType("application", "json"),
+                Encoding = Encoding.UTF8,
+                IsResponse = true,
+                IsAsync = false,
+                Model = this.model
+            };
+
+            return new ODataJsonLightOutputContext(messageInfo, settings);
         }
     }
 }

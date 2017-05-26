@@ -4,7 +4,7 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core.UriParser.Parsers.UriParsers
+namespace Microsoft.OData.UriParser
 {
     #region Namespaces
 
@@ -12,10 +12,8 @@ namespace Microsoft.OData.Core.UriParser.Parsers.UriParsers
     using System.Diagnostics;
     using System.Globalization;
     using System.Linq;
-    using Microsoft.OData.Core.UriParser.TreeNodeKinds;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Library;
-    using ODataErrorStrings = Microsoft.OData.Core.Strings;
+    using ODataErrorStrings = Microsoft.OData.Strings;
 
     #endregion
 

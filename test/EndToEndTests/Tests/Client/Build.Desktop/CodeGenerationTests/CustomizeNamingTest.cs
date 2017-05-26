@@ -10,7 +10,7 @@ namespace Microsoft.Test.OData.Tests.Client.CodeGenerationTests
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.Linq;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.OData.Edm;
     using Microsoft.Spatial;
     using Microsoft.Test.OData.Services.TestServices;
@@ -99,7 +99,7 @@ namespace Microsoft.Test.OData.Tests.Client.CodeGenerationTests
         public void BasicModify()
         {
             TestClientContext.MergeOption = Microsoft.OData.Client.MergeOption.OverwriteChanges;
-            TestClientContext.IgnoreMissingProperties = true;
+            ///TestClientContext.UndeclaredPropertyBehavior = ODataClient.UndeclaredPropertyBehavior.Support;
             // AddRelatedObject
             AccountPlus newAccount1 = new AccountPlus()
             {
@@ -273,44 +273,60 @@ namespace Microsoft.Test.OData.Tests.Client.CodeGenerationTests
             Assert.IsTrue(account.AccountInfoPlus.IsActivePlus);
 
             //Update entity with open complex type
-            var entry = new ODataEntry() { TypeName = ServerSideNameSpacePrefix + "Account" };
-            entry.Properties = new[]
+            var accountWrapper = new ODataResourceWrapper()
             {
-                new ODataProperty { Name = "AccountID", Value = 1000000 },
-                new ODataProperty
+                Resource = new ODataResource()
                 {
-                    Name = "AccountInfo",
-                    Value = new ODataComplexValue
+                    TypeName = ServerSideNameSpacePrefix + "Account",
+                    Properties = new[]
                     {
-                        TypeName = ServerSideNameSpacePrefix + "AccountInfo",
-                        Properties = new[]
+                        new ODataProperty { Name = "AccountID", Value = 1000000 }
+                    }
+                },
+                NestedResourceInfoWrappers = new List<ODataNestedResourceInfoWrapper>()
+                {
+                    new ODataNestedResourceInfoWrapper()
+                    {
+                        NestedResourceInfo = new ODataNestedResourceInfo()
                         {
-                            new ODataProperty
+                            Name = "AccountInfo",
+                            IsCollection = false
+                        },
+                        NestedResourceOrResourceSet = new ODataResourceWrapper()
+                        {
+                            Resource =new ODataResource()
                             {
-                                Name = "FirstName",
-                                Value = "Peter"
-                            },
-                            new ODataProperty
-                            {
-                                Name = "LastName",
-                                Value = "Andy"
-                            },
-                            //Property that exists in Customer-Defined client code.
-                            new ODataProperty
-                            {
-                                Name = "MiddleName",
-                                Value = "White2"
-                            },
-                            new ODataProperty
-                            {
-                                Name = "IsActive",
-                                Value = false,
-                            },                            
-                            //Property that doesn't exist in Customer-Defined client code.
-                            new ODataProperty
-                            {
-                                Name = "ShippingAddress",
-                                Value = "#999, ZiXing Road"
+                                TypeName = ServerSideNameSpacePrefix + "AccountInfo",
+                                Properties = new[]
+                                {
+                                    new ODataProperty
+                                    {
+                                        Name = "FirstName",
+                                        Value = "Peter"
+                                    },
+                                    new ODataProperty
+                                    {
+                                        Name = "LastName",
+                                        Value = "Andy"
+                                    },
+                                    //Property that exists in Customer-Defined client code.
+                                    new ODataProperty
+                                    {
+                                        Name = "MiddleName",
+                                        Value = "White2"
+                                    },
+                                    new ODataProperty
+                                    {
+                                        Name = "IsActive",
+                                        Value = false,
+                                    },
+                                    //Property that doesn't exist in Customer-Defined client code.
+                                    new ODataProperty
+                                    {
+                                        Name = "ShippingAddress",
+                                        Value = "#999, ZiXing Road"
+                                    }
+                                }
                             }
                         }
                     }
@@ -318,7 +334,7 @@ namespace Microsoft.Test.OData.Tests.Client.CodeGenerationTests
             };
 
             var settings = new ODataMessageWriterSettings();
-            settings.PayloadBaseUri = ServiceBaseUri;
+            settings.BaseUri = ServiceBaseUri;
 
             var accountType = Model.FindDeclaredType(ServerSideNameSpacePrefix + "Account") as IEdmEntityType;
             var accountSet = Model.EntityContainer.FindEntitySet("Accounts");
@@ -329,9 +345,8 @@ namespace Microsoft.Test.OData.Tests.Client.CodeGenerationTests
             requestMessage.Method = "PATCH";
             using (var messageWriter = new ODataMessageWriter(requestMessage, settings))
             {
-                var odataWriter = messageWriter.CreateODataEntryWriter(accountSet, accountType);
-                odataWriter.WriteStart(entry);
-                odataWriter.WriteEnd();
+                var odataWriter = messageWriter.CreateODataResourceWriter(accountSet, accountType);
+                ODataWriterHelper.WriteResource(odataWriter, accountWrapper);
             }
 
             var responseMessage = requestMessage.GetResponse();
@@ -348,7 +363,7 @@ namespace Microsoft.Test.OData.Tests.Client.CodeGenerationTests
         public void OpenEntityType()
         {
             //UpdateOpenTypeSingleton
-            var entry = new ODataEntry() { TypeName = ServerSideNameSpacePrefix + "PublicCompany" };
+            var entry = new ODataResource() { TypeName = ServerSideNameSpacePrefix + "PublicCompany" };
             entry.Properties = new[] 
             {
                 new ODataProperty
@@ -369,9 +384,7 @@ namespace Microsoft.Test.OData.Tests.Client.CodeGenerationTests
                 }
             };
             var settings = new ODataMessageWriterSettings();
-            settings.PayloadBaseUri = ServiceBaseUri;
-            settings.AutoComputePayloadMetadataInJson = true;
-
+            settings.BaseUri = ServiceBaseUri;
             var companyType = Model.FindDeclaredType(ServerSideNameSpacePrefix + "PublicCompany") as IEdmEntityType;
             var companySingleton = Model.EntityContainer.FindSingleton("PublicCompany");
 
@@ -381,7 +394,7 @@ namespace Microsoft.Test.OData.Tests.Client.CodeGenerationTests
             requestMessage.Method = "PATCH";
             using (var messageWriter = new ODataMessageWriter(requestMessage, settings))
             {
-                var odataWriter = messageWriter.CreateODataEntryWriter(companySingleton, companyType);
+                var odataWriter = messageWriter.CreateODataResourceWriter(companySingleton, companyType);
                 odataWriter.WriteStart(entry);
                 odataWriter.WriteEnd();
             }

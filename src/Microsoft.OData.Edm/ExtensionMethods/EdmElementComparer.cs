@@ -5,9 +5,6 @@
 //---------------------------------------------------------------------
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using Microsoft.OData.Edm.Expressions;
 
 namespace Microsoft.OData.Edm
 {
@@ -29,7 +26,7 @@ namespace Microsoft.OData.Edm
             {
                 return true;
             }
-            
+
             if (thisType == null || otherType == null)
             {
                 return false;
@@ -37,7 +34,7 @@ namespace Microsoft.OData.Edm
 
             thisType = thisType.AsActualType();
             otherType = otherType.AsActualType();
-            
+
             if (thisType.TypeKind != otherType.TypeKind)
             {
                 return false;
@@ -75,7 +72,7 @@ namespace Microsoft.OData.Edm
             {
                 return true;
             }
-            
+
             if (thisType == null || otherType == null)
             {
                 return false;

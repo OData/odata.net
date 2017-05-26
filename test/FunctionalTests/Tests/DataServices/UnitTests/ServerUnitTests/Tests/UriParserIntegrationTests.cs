@@ -28,6 +28,7 @@ namespace AstoriaUnitTests.Tests
     [TestClass]
     public class UriParserIntegrationTests
     {
+        [Ignore] // Remove Atom
         [TestCategory("Partition2")]
         [TestMethod]
         public void RequestShouldFailIfExpandIsTooDeep()
@@ -38,7 +39,7 @@ namespace AstoriaUnitTests.Tests
                 400,
                 "//adsm:error/adsm:message[text()='" + errorMessage + "']", serviceType: typeof(UriParserIntegrationTestServiceWithLowLimits));
         }
-
+        [Ignore] // Remove Atom
         [TestCategory("Partition2")]
         [TestMethod]
         public void RequestShouldNotFailIfExpandDepthIsIsExactlyAtMax()
@@ -48,7 +49,7 @@ namespace AstoriaUnitTests.Tests
                 200,
                 "//atom:feed", serviceType: typeof(UriParserIntegrationTestServiceWithLowLimits));
         }
-
+        [Ignore] // Remove Atom
         [TestCategory("Partition2")]
         [TestMethod]
         public void RequestShouldFailIfTooManyItemsAreExpanded()
@@ -59,7 +60,7 @@ namespace AstoriaUnitTests.Tests
                 400,
                 "//adsm:error/adsm:message[text()='" + errorMessage + "']", serviceType: typeof(UriParserIntegrationTestServiceWithLowLimits));
         }
-
+        [Ignore] // Remove Atom
         [TestCategory("Partition2")]
         [TestMethod]
         public void RequestShouldFailIfTooManyItemsAreExpandedAtMultipleLevels()
@@ -70,7 +71,7 @@ namespace AstoriaUnitTests.Tests
                 400,
                 "//adsm:error/adsm:message[text()='" + errorMessage + "']", serviceType: typeof(UriParserIntegrationTestServiceWithLowLimits));
         }
-
+        [Ignore] // Remove Atom
         [TestCategory("Partition2")]
         [TestMethod]
         public void RequestShouldFailIfTooManyItemsAreExpandedEvenIfTheRootOneIsDuplicated()
@@ -81,7 +82,7 @@ namespace AstoriaUnitTests.Tests
                 400,
                 "//adsm:error/adsm:message[text()='" + errorMessage + "']", serviceType: typeof(UriParserIntegrationTestServiceWithLowLimits));
         }
-
+        [Ignore] // Remove Atom
         [TestCategory("Partition2")]
         [TestMethod]
         public void RequestShouldNotFailIfExpandCountMatchesLimit()
@@ -91,7 +92,7 @@ namespace AstoriaUnitTests.Tests
                 200,
                 "//atom:feed", serviceType: typeof(UriParserIntegrationTestServiceWithLowLimits));
         }
-
+        [Ignore] // Remove Atom
         [TestCategory("Partition2")]
         [TestMethod]
         public void RequestShouldFailIfExpandDepthIsHugeButNoLimitHasBeenSet()
@@ -113,7 +114,7 @@ namespace AstoriaUnitTests.Tests
 
             ResponseShouldHaveStatusCode(expand, 400);
         }
-
+        [Ignore] // Remove Atom
         [TestCategory("Partition2")]
         [TestMethod]
         public void RequestShouldNotFailIfExpandWidthIsHugeButNoLimitHasBeenSet()
@@ -123,7 +124,7 @@ namespace AstoriaUnitTests.Tests
                 200,
                 "//atom:feed", serviceType: typeof(UriParserIntegrationTestServiceWithNoLimits));
         }
-
+        [Ignore] // Remove Atom
         [TestCategory("Partition2")]
         [TestMethod]
         public void RequestShouldFailIfExpandContainsNonNavigationProperties()
@@ -223,7 +224,7 @@ namespace AstoriaUnitTests.Tests
                 p => p.Replace("DoesNotExist", "HiddenNavigation"),
                 typeof (UriParserIntegrationTestServiceWithHiddenNavigation));
         }
-
+        [Ignore] // Remove Atom
         [TestCategory("Partition2")]
         [TestMethod]
         public void XmlKeyLookupShouldWork()
@@ -234,7 +235,7 @@ namespace AstoriaUnitTests.Tests
                 200,
                 "//atom:entry/atom:id[text()=\"http://host/EntitiesWithXmlKeys('%3Cfake%20%2F%3E')\"]");
         }
-
+        [Ignore] // Remove Atom
         [TestCategory("Partition2")]
         [TestMethod]
         public void XmlComparisonInFilterShouldNotWork()

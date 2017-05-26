@@ -8,7 +8,7 @@ namespace Microsoft.Test.Taupo.OData.Common
 {
     #region Namespaces
     using System.Collections.Generic;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     #endregion Namespaces
 
     /// <summary>
@@ -19,6 +19,6 @@ namespace Microsoft.Test.Taupo.OData.Common
         /// <summary>
         /// Returns enumeration of all supported formats
         /// </summary>
-        public static readonly IEnumerable<ODataFormat> ODataFormats = new ODataFormat[] { null, ODataFormat.Atom, ODataFormat.Json };
+        public static readonly IEnumerable<ODataFormat> ODataFormats = new ODataFormat[] { null, ODataFormat.Json };
     }
 }

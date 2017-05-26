@@ -14,7 +14,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client
     using System.Xml.Linq;
     using FluentAssertions;
     using Microsoft.OData.Client;
-    using Microsoft.OData.Edm.Library;
+    using Microsoft.OData.Edm;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     [TestClass]
@@ -243,10 +243,10 @@ namespace AstoriaUnitTests.TDD.Tests.Client
         [TestMethod]
         public void ClientErrorPinningTest()
         {
-            Action withNull = () => DataServiceUrlConventions.Default.AppendKeyExpression(new object[1], k => "foo", k => null, new StringBuilder());
+            Action withNull = () => DataServiceUrlKeyDelimiter.Parentheses.AppendKeyExpression(new object[1], k => "foo", k => null, new StringBuilder());
             withNull.ShouldThrow<InvalidOperationException>().WithMessage("The serialized resource has a null value in key member 'foo'. Null values are not supported in key members.");
 
-            Action withUnknownType = () => DataServiceUrlConventions.Default.AppendKeyExpression(new object[1], k => "foo", k => this, new StringBuilder());
+            Action withUnknownType = () => DataServiceUrlKeyDelimiter.Parentheses.AppendKeyExpression(new object[1], k => "foo", k => this, new StringBuilder());
             withUnknownType.ShouldThrow<InvalidOperationException>().WithMessage("Unable to convert value '" + this.GetType().FullName + "' into a key string for a URI.");
         }
 
@@ -271,7 +271,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client
                     builder.AppendLine();
                 }
 
-                DataServiceUrlConventions.Default.AppendKeyExpression(key, k => k.Name, k => k.Value, builder);
+                DataServiceUrlKeyDelimiter.Parentheses.AppendKeyExpression(key, k => k.Name, k => k.Value, builder);
             }
 
             builder.AppendLine();

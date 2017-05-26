@@ -4,13 +4,13 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core.JsonLight
+namespace Microsoft.OData.JsonLight
 {
     #region Namespaces
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
-    using ODataErrorStrings = Microsoft.OData.Core.Strings;
+    using ODataErrorStrings = Microsoft.OData.Strings;
     #endregion Namespaces
 
     /// <summary>
@@ -26,20 +26,19 @@ namespace Microsoft.OData.Core.JsonLight
                 new[]
                 {
                     ODataContext,
-                    ODataNull,
                     ODataType,
-                    ODataId, 
-                    ODataETag, 
-                    ODataEditLink, 
-                    ODataReadLink, 
-                    ODataMediaEditLink, 
-                    ODataMediaReadLink, 
-                    ODataMediaContentType, 
-                    ODataMediaETag, 
-                    ODataCount, 
-                    ODataNextLink, 
-                    ODataBind, 
-                    ODataAssociationLinkUrl, 
+                    ODataId,
+                    ODataETag,
+                    ODataEditLink,
+                    ODataReadLink,
+                    ODataMediaEditLink,
+                    ODataMediaReadLink,
+                    ODataMediaContentType,
+                    ODataMediaETag,
+                    ODataCount,
+                    ODataNextLink,
+                    ODataBind,
+                    ODataAssociationLinkUrl,
                     ODataNavigationLinkUrl,
                     ODataDeltaLink
                 },
@@ -47,9 +46,6 @@ namespace Microsoft.OData.Core.JsonLight
 
         /// <summary>The OData Context annotation name.</summary>
         internal const string ODataContext = "odata.context";
-
-        /// <summary>The OData 'null' annotation name.</summary>
-        internal const string ODataNull = "odata.null";
 
         /// <summary>The OData Type annotation name.</summary>
         internal const string ODataType = "odata.type";

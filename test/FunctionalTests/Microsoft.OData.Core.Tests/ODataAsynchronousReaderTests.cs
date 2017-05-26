@@ -10,10 +10,9 @@ using System.Linq;
 using System.Text;
 using FluentAssertions;
 using Microsoft.OData.Edm;
-using Microsoft.OData.Edm.Library;
 using Xunit;
 
-namespace Microsoft.OData.Core.Tests
+namespace Microsoft.OData.Tests
 {
     public class ODataAsynchronousReaderTests
     {
@@ -54,13 +53,13 @@ namespace Microsoft.OData.Core.Tests
 
             using (var innerMessageReader = new ODataMessageReader(asyncResponse, new ODataMessageReaderSettings(), userModel))
             {
-                var reader = innerMessageReader.CreateODataEntryReader();
+                var reader = innerMessageReader.CreateODataResourceReader();
 
                 while (reader.Read())
                 {
-                    if (reader.State == ODataReaderState.EntryEnd)
+                    if (reader.State == ODataReaderState.ResourceEnd)
                     {
-                        ODataEntry entry = reader.Item as ODataEntry;
+                        ODataResource entry = reader.Item as ODataResource;
                         Assert.Equal(1, entry.Properties.Single(p => p.Name == "Id").Value);
                     }
                 }
@@ -124,7 +123,11 @@ namespace Microsoft.OData.Core.Tests
 
         private ODataAsynchronousReader CreateAsyncReader(string payload)
         {
+#if NETCOREAPP1_0
+            responseStream = new MemoryStream(Encoding.GetEncoding(0).GetBytes(payload));
+#else
             responseStream = new MemoryStream(Encoding.Default.GetBytes(payload));
+#endif
 
             responseMessage = new InMemoryMessage { Stream = responseStream };
             responseMessage.SetHeader("Content-Type", "application/http");

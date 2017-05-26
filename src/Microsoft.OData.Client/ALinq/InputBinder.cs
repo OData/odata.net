@@ -34,7 +34,7 @@ namespace Microsoft.OData.Client
 
         /// <summary>The input resource, as a queryable resource (may be null if the input is actually a NavigationPropertySingletonExpression)</summary>
         private readonly QueryableResourceExpression inputResource;
-        
+
         /// <summary>The ParameterExpression that, if encountered, indicates a reference to the input resource</summary>
         private readonly ParameterExpression inputParameter;
 
@@ -80,7 +80,7 @@ namespace Microsoft.OData.Client
             referencedInputs.AddRange(binder.referencedInputs);
             return result;
         }
-                
+
         /// <summary>
         /// Resolves member accesses that represent transparent scope property accesses to the corresponding resource,
         /// iff the input resource is enclosed in a transparent scope and the specified MemberExpression represents

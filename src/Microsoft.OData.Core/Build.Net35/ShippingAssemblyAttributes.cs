@@ -5,12 +5,5 @@
 //---------------------------------------------------------------------
 
 #pragma warning disable 436
-#if INTERNAL_DROP
-#region Namespaces
-using System.Runtime.CompilerServices;
-#endregion Namespaces
-
-#else
 [assembly: System.Runtime.CompilerServices.InternalsVisibleTo("Microsoft.OData.Query.TDD.Tests.NetFX35" + AssemblyRef.TestPublicKey)]
-#endif
 #pragma warning restore 436

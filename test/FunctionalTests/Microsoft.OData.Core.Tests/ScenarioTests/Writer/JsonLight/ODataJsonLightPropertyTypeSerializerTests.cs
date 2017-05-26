@@ -8,12 +8,11 @@ using System;
 using System.IO;
 using System.Text;
 using FluentAssertions;
-using Microsoft.OData.Core.JsonLight;
+using Microsoft.OData.JsonLight;
 using Microsoft.OData.Edm;
-using Microsoft.OData.Edm.Library;
 using Xunit;
 
-namespace Microsoft.OData.Core.Tests.ScenarioTests.Writer.JsonLight
+namespace Microsoft.OData.Tests.ScenarioTests.Writer.JsonLight
 {
     public class ODataJsonLightPropertyTypeSerializerTests
     {
@@ -150,22 +149,6 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Writer.JsonLight
         }
 
         [Fact]
-        public void ShouldWriteODataTypeForComplexType()
-        {
-            ODataProperty property = new ODataProperty() { Name = "TestProperty", Value = new ODataComplexValue { Properties = new[] { new ODataProperty { Name = "StringProperty", Value = "StringValue1" } }, TypeName = "TestNamespace.TestComplexType" } };
-            string result = this.SerializeProperty(property);
-            result.Should().Contain("@odata.type\":\"#TestNamespace.TestComplexType");
-        }
-
-        [Fact]
-        public void ShouldWriteODataTypeForDerivedComplexType()
-        {
-            ODataProperty property = new ODataProperty() { Name = "TestProperty", Value = new ODataComplexValue { Properties = new[] { new ODataProperty { Name = "StringProperty", Value = "StringValue1" }, new ODataProperty { Name = "DerivedStringProperty", Value = "DerivedStringValue1" } }, TypeName = "TestNamespace.TestDerivedComplexType" } };
-            string result = this.SerializeProperty(property);
-            result.Should().Contain("@odata.type\":\"#TestNamespace.TestDerivedComplexType");
-        }
-
-        [Fact]
         public void ShouldWriteODataTypeForPrimitiveTypeGeometry()
         {
             var testCases = new[]
@@ -282,67 +265,70 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Writer.JsonLight
             {
                 new
                 {
-                    Expect = "@odata.type\":\"#Collection(String)\"", 
+                    Expect = "@odata.type\":\"#Collection(String)\"",
                     InstanceName = "NS.StringCollectionProperty",
                     CollectionValue = new ODataCollectionValue { TypeName = "Collection(Edm.String)", Items = new[] { "StringValue1", "StringValue2" } }
                 },
                 new
                 {
-                    Expect = "@odata.type\":\"#Collection(Guid)\"", 
+                    Expect = "@odata.type\":\"#Collection(Guid)\"",
                     InstanceName = "NS.GuidCollectionProperty",
-                    CollectionValue = new ODataCollectionValue { TypeName = "Collection(Edm.Guid)", Items = new[] { Guid.Empty, Guid.Empty } }
+                    CollectionValue = new ODataCollectionValue { TypeName = "Collection(Edm.Guid)", Items = new object[] { Guid.Empty, Guid.Empty } }
                 },
                 new
                 {
-                    Expect = "@odata.type\":\"#Collection(Double)\"", 
+                    Expect = "@odata.type\":\"#Collection(Double)\"",
                     InstanceName = "NS.DoubleCollectionProperty",
-                    CollectionValue = new ODataCollectionValue { TypeName = "Collection(Edm.Double)", Items = new[] { 11.11, 22.22 } }
+                    CollectionValue = new ODataCollectionValue { TypeName = "Collection(Edm.Double)", Items = new object[] { 11.11, 22.22 } }
                 },
                 new
                 {
-                    Expect = "@odata.type\":\"#Collection(Decimal)\"", 
+                    Expect = "@odata.type\":\"#Collection(Decimal)\"",
                     InstanceName = "NS.DecimalCollectionProperty",
-                    CollectionValue = new ODataCollectionValue { TypeName = "Collection(Edm.Decimal)", Items = new[] { 11.11m, 22.22m } }
+                    CollectionValue = new ODataCollectionValue { TypeName = "Collection(Edm.Decimal)", Items = new object[] { 11.11m, 22.22m } }
                 },
                 new
                 {
-                    Expect = "@odata.type\":\"#Collection(Int32)\"", 
+                    Expect = "@odata.type\":\"#Collection(Int32)\"",
                     InstanceName = "NS.DecimalCollectionProperty",
-                    CollectionValue = new ODataCollectionValue { TypeName = "Collection(Edm.Int32)", Items = new[] { 1, 2, 3, 5 } }
+                    CollectionValue = new ODataCollectionValue { TypeName = "Collection(Edm.Int32)", Items = new object[] { 1, 2, 3, 5 } }
                 },
-                new
-                {
-                    Expect = "@odata.type\":\"#Collection(TestNamespace.TestComplexType)\"",
-                    InstanceName = "NS.CustomComplexCollectionProperty",
-                    CollectionValue = new ODataCollectionValue
-                    {
-                        Items = new[]
-                        {
-                            new ODataComplexValue { Properties = new[] { new ODataProperty { Name = "StringProperty", Value = "StringValue1" } }, TypeName = "TestNamespace.TestComplexType" }, 
-                            new ODataComplexValue { Properties = new[] { new ODataProperty { Name = "StringProperty", Value = "StringValue2" } }, TypeName = "TestNamespace.TestComplexType" }
-                        }, 
-                        TypeName = "Collection(TestNamespace.TestComplexType)"
-                    }
-                },
-                new
-                {
-                    Expect = "@odata.type\":\"#Collection(TestNamespace.TestComplexType)\"",
-                    InstanceName = "NS.CustomComplexCollectionProperty",
-                    CollectionValue = new ODataCollectionValue
-                    {
-                        Items = new[]
-                        {
-                            new ODataComplexValue { Properties = new[] { new ODataProperty { Name = "StringProperty", Value = "StringValue1" } }, TypeName = "TestNamespace.TestComplexType" }, 
-                            new ODataComplexValue { Properties = new[] { new ODataProperty { Name = "StringProperty", Value = "StringValue2" }, new ODataProperty { Name = "DerivedStringProperty", Value = "DerivedStringProperty2" } }, TypeName = "TestNamespace.TestDerivedComplexType" }
-                        }, 
-                        TypeName = "Collection(TestNamespace.TestComplexType)"
-                    }
-                }
+
+                // #625
+
+                //new
+                //{
+                //    Expect = "@odata.type\":\"#Collection(TestNamespace.TestComplexType)\"",
+                //    InstanceName = "NS.CustomComplexCollectionProperty",
+                //    CollectionValue = new ODataCollectionValue
+                //    {
+                //        Items = new[]
+                //        {
+                //            new ODataComplexValue { Properties = new[] { new ODataProperty { Name = "StringProperty", Value = "StringValue1" } }, TypeName = "TestNamespace.TestComplexType" },
+                //            new ODataComplexValue { Properties = new[] { new ODataProperty { Name = "StringProperty", Value = "StringValue2" } }, TypeName = "TestNamespace.TestComplexType" }
+                //        },
+                //        TypeName = "Collection(TestNamespace.TestComplexType)"
+                //    }
+                //},
+                //new
+                //{
+                //    Expect = "@odata.type\":\"#Collection(TestNamespace.TestComplexType)\"",
+                //    InstanceName = "NS.CustomComplexCollectionProperty",
+                //    CollectionValue = new ODataCollectionValue
+                //    {
+                //        Items = new[]
+                //        {
+                //            new ODataComplexValue { Properties = new[] { new ODataProperty { Name = "StringProperty", Value = "StringValue1" } }, TypeName = "TestNamespace.TestComplexType" },
+                //            new ODataComplexValue { Properties = new[] { new ODataProperty { Name = "StringProperty", Value = "StringValue2" }, new ODataProperty { Name = "DerivedStringProperty", Value = "DerivedStringProperty2" } }, TypeName = "TestNamespace.TestDerivedComplexType" }
+                //        },
+                //        TypeName = "Collection(TestNamespace.TestComplexType)"
+                //    }
+                //}
             };
 
             foreach (var testCase in testCases)
             {
-                var entryToWrite = new ODataEntry { Properties = new[] { new ODataProperty { Name = "MyProperty", Value = 1 } } };
+                var entryToWrite = new ODataResource { Properties = new[] { new ODataProperty { Name = "MyProperty", Value = 1 } } };
                 entryToWrite.InstanceAnnotations.Add(new ODataInstanceAnnotation(testCase.InstanceName, testCase.CollectionValue));
                 string result = this.WriteODataEntry(entryToWrite);
                 result.Should().Contain(testCase.Expect);
@@ -361,8 +347,7 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Writer.JsonLight
                 this.entityType,
                 new[] { odataProperty },
                 /*isComplexValue*/ false,
-                new DuplicatePropertyNamesChecker(allowDuplicateProperties: true, isResponse: true),
-                ProjectedPropertiesAnnotation.AllProjectedPropertiesInstance);
+                new NullDuplicatePropertyNameChecker());
             jsonLightOutputContext.JsonWriter.EndObjectScope();
 
             jsonLightOutputContext.Flush();
@@ -371,16 +356,16 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Writer.JsonLight
             return result;
         }
 
-        private string WriteODataEntry(ODataEntry entryToWrite)
+        private string WriteODataEntry(ODataResource entryToWrite)
         {
-            var writerSettings = new ODataMessageWriterSettings { DisableMessageStreamDisposal = true };
+            var writerSettings = new ODataMessageWriterSettings { EnableMessageStreamDisposal = false };
             writerSettings.SetContentType(ODataFormat.Json);
             writerSettings.SetServiceDocumentUri(new Uri("http://www.example.com/"));
             MemoryStream stream = new MemoryStream();
             IODataRequestMessage requestMessageToWrite = new InMemoryMessage { Method = "GET", Stream = stream };
             using (var messageWriter = new ODataMessageWriter(requestMessageToWrite, writerSettings, this.model))
             {
-                ODataWriter odataWriter = messageWriter.CreateODataEntryWriter(this.entitySet, this.entityType);
+                ODataWriter odataWriter = messageWriter.CreateODataResourceWriter(this.entitySet, this.entityType);
                 odataWriter.WriteStart(entryToWrite);
                 odataWriter.WriteEnd();
             }
@@ -391,19 +376,20 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Writer.JsonLight
 
         private ODataJsonLightOutputContext CreateJsonLightOutputContext(MemoryStream stream)
         {
-            ODataMessageWriterSettings settings = new ODataMessageWriterSettings { Version = ODataVersion.V4 };
+            var settings = new ODataMessageWriterSettings { Version = ODataVersion.V4 };
             settings.SetServiceDocumentUri(new Uri("http://example.com/"));
 
-            return new ODataJsonLightOutputContext(
-                ODataFormat.Json,
-                new NonDisposingStream(stream),
-                new ODataMediaType("application", "json"),
-                Encoding.UTF8,
-                settings,
-                /*writingResponse*/ true,
-                /*synchronous*/ true,
-                this.model,
-                /*urlResolver*/ null);
+            var messageInfo = new ODataMessageInfo
+            {
+                MessageStream = new NonDisposingStream(stream),
+                MediaType = new ODataMediaType("application", "json"),
+                Encoding = Encoding.UTF8,
+                IsResponse = true,
+                IsAsync = false,
+                Model = this.model
+            };
+
+            return new ODataJsonLightOutputContext(messageInfo, settings);
         }
         #endregion
     }

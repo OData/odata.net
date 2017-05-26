@@ -7,7 +7,7 @@
 namespace Microsoft.Test.Taupo.OData.Common
 {
     using System.Diagnostics;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.OData.Edm;
     using Microsoft.Test.Taupo.Astoria.Contracts.Http;
     using Microsoft.Test.Taupo.Astoria.Contracts.OData;
@@ -67,18 +67,18 @@ namespace Microsoft.Test.Taupo.OData.Common
             {
                 case ODataPayloadElementType.NullPropertyInstance:
                 case ODataPayloadElementType.PrimitiveProperty:
-                case ODataPayloadElementType.ComplexProperty:
                 case ODataPayloadElementType.PrimitiveMultiValueProperty:
-                case ODataPayloadElementType.ComplexMultiValueProperty:
                 case ODataPayloadElementType.NamedStreamInstance:
                 case ODataPayloadElementType.NavigationPropertyInstance:
                     return ODataPayloadKind.Property;
 
+                case ODataPayloadElementType.ComplexMultiValueProperty:
                 case ODataPayloadElementType.EntitySetInstance:
-                    return ODataPayloadKind.Feed;
+                    return ODataPayloadKind.ResourceSet;
 
+                case ODataPayloadElementType.ComplexProperty:
                 case ODataPayloadElementType.EntityInstance:
-                    return ODataPayloadKind.Entry;
+                    return ODataPayloadKind.Resource;
 
                 case ODataPayloadElementType.PrimitiveCollection:
                 case ODataPayloadElementType.ComplexInstanceCollection:
@@ -164,8 +164,8 @@ namespace Microsoft.Test.Taupo.OData.Common
             ODataPayloadKind payloadKind = GetPayloadKindFromPayloadElement(payloadElement);
             switch (payloadKind)
             {
-                case ODataPayloadKind.Feed: return MimeTypes.ApplicationAtomXml;
-                case ODataPayloadKind.Entry: return MimeTypes.ApplicationAtomXml;
+                case ODataPayloadKind.ResourceSet: return MimeTypes.ApplicationAtomXml;
+                case ODataPayloadKind.Resource: return MimeTypes.ApplicationAtomXml;
                 case ODataPayloadKind.Property: return MimeTypes.ApplicationXml;
                 case ODataPayloadKind.EntityReferenceLink: return MimeTypes.ApplicationXml;
                 case ODataPayloadKind.EntityReferenceLinks: return MimeTypes.ApplicationXml;

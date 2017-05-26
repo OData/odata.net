@@ -13,7 +13,7 @@ namespace Microsoft.Test.Taupo.OData.Common.Tests.ObjectModelTests
     using System.IO;
     using System.Linq;
     using System.Text;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.Test.Taupo.Common;
     using Microsoft.Test.Taupo.Contracts;
     using Microsoft.Test.Taupo.Execution;
@@ -27,9 +27,9 @@ namespace Microsoft.Test.Taupo.OData.Common.Tests.ObjectModelTests
     [TestClass, TestCase(Name="OData Message Tests")]
     public class ODataMessageTests : ODataTestCase
     {
-        private static readonly Type batchOperationsHeadersType = typeof(ODataBatchReader).Assembly.GetType("Microsoft.OData.Core.ODataBatchOperationHeaders");
-        private static readonly Type batchOperationListenerType = typeof(ODataBatchOperationRequestMessage).Assembly.GetType("Microsoft.OData.Core.IODataBatchOperationListener");
-        private static readonly Type urlResolverType = typeof(ODataBatchOperationRequestMessage).Assembly.GetType("Microsoft.OData.Core.ODataBatchUrlResolver");
+        private static readonly Type batchOperationsHeadersType = typeof(ODataBatchReader).Assembly.GetType("Microsoft.OData.ODataBatchOperationHeaders");
+        private static readonly Type batchOperationListenerType = typeof(ODataBatchOperationRequestMessage).Assembly.GetType("Microsoft.OData.IODataBatchOperationListener");
+        private static readonly Type urlResolverType = typeof(ODataBatchOperationRequestMessage).Assembly.GetType("Microsoft.OData.ODataBatchPayloadUriConverter");
 
         [InjectDependency]
         public ICombinatorialEngineProvider CombinatorialEngineProvider { get; set; }
@@ -150,15 +150,16 @@ namespace Microsoft.Test.Taupo.OData.Common.Tests.ObjectModelTests
             Stream stream = new TestStream();
             return (IODataRequestMessage)ReflectionUtils.CreateInstance(
                 typeof(ODataBatchOperationRequestMessage),
-                new Type[] { typeof(Func<Stream>), typeof(string), typeof(Uri), batchOperationsHeadersType, batchOperationListenerType, typeof(string), urlResolverType, typeof(bool) },
+                new Type[] { typeof(Func<Stream>), typeof(string), typeof(Uri), batchOperationsHeadersType, batchOperationListenerType, typeof(string), urlResolverType, typeof(bool), typeof(IServiceProvider) },
                 (object)(Func<Stream>)(() => stream),
                 ODataConstants.MethodGet,
                 new Uri("http://www.odata.org/"),
                 /*headers*/ null,
                 CreateListener(stream, false, writing),
                 "1",
-                ReflectionUtils.CreateInstance(urlResolverType, new Type[] { typeof(IODataUrlResolver) }, new object[] { null }),
-                writing);
+                ReflectionUtils.CreateInstance(urlResolverType, new Type[] { typeof(IODataPayloadUriConverter) }, new object[] { null }),
+                writing,
+                /*container*/ null);
         }
 
         private static IODataResponseMessage CreateBatchOperationResponseMessage(bool writing)
@@ -167,37 +168,34 @@ namespace Microsoft.Test.Taupo.OData.Common.Tests.ObjectModelTests
 
             return (IODataResponseMessage)ReflectionUtils.CreateInstance(
                 typeof(ODataBatchOperationResponseMessage),
-                new Type[] { typeof(Func<Stream>), batchOperationsHeadersType, batchOperationListenerType, typeof(string), typeof(IODataUrlResolver), typeof(bool) },
-                (object)(Func<Stream>)(() => stream), /*headers*/null, CreateListener(stream, true, writing), "1", /*urlResolver*/null, writing);
+                new Type[] { typeof(Func<Stream>), batchOperationsHeadersType, batchOperationListenerType, typeof(string), typeof(IODataPayloadUriConverter), typeof(bool), typeof(IServiceProvider) },
+                (object)(Func<Stream>)(() => stream), /*headers*/null, CreateListener(stream, true, writing), "1", /*urlResolver*/null, writing, /*container*/ null);
         }
 
         private static object CreateListener(Stream stream, bool response, bool writing)
         {
             ODataMessageWriterSettings settings = new ODataMessageWriterSettings();
             object message = response
-                ? new ODataResponseMessageWrapper(new TestResponseMessage(stream), writing, settings.DisableMessageStreamDisposal).WrappedMessageObject
-                : new ODataRequestMessageWrapper(new TestRequestMessage(stream), writing, settings.DisableMessageStreamDisposal).WrappedMessageObject;
-            Type odataRawOutputContextType = typeof(ODataBatchWriter).Assembly.GetType("Microsoft.OData.Core.ODataRawOutputContext");
+                ? new ODataResponseMessageWrapper(new TestResponseMessage(stream), writing, settings.EnableMessageStreamDisposal).WrappedMessageObject
+                : new ODataRequestMessageWrapper(new TestRequestMessage(stream), writing, settings.EnableMessageStreamDisposal).WrappedMessageObject;
+            ODataMessageInfo messageInfo = new ODataMessageInfo
+            {
+                MessageStream = (Stream)ReflectionUtils.InvokeMethod(message, "GetStream"),
+                Encoding = Encoding.UTF8,
+                IsResponse = response,
+                IsAsync = false
+            };
+            Type odataRawOutputContextType = typeof(ODataBatchWriter).Assembly.GetType("Microsoft.OData.ODataRawOutputContext");
             object rawOutputContext = ReflectionUtils.CreateInstance(odataRawOutputContextType,
                 new Type[]
                 {
                     typeof(ODataFormat),
-                    typeof(Stream),
-                    typeof(Encoding),
+                    typeof(ODataMessageInfo),
                     typeof(ODataMessageWriterSettings),
-                    typeof(bool),
-                    typeof(bool),
-                    typeof(Microsoft.OData.Edm.IEdmModel),
-                    typeof(IODataUrlResolver)
                 },
                 ODataFormat.Batch,
-                (Stream)ReflectionUtils.InvokeMethod(message, "GetStream"),
-                Encoding.UTF8,
-                settings,
-                response,
-                /*synchronous*/true,
-                /*model*/null,
-                /*urlResolver*/null);
+                messageInfo,
+                settings);
             object listener = ReflectionUtils.CreateInstance(
                 typeof(ODataBatchWriter),
                 new Type[] { odataRawOutputContextType, typeof(string) },
@@ -207,13 +205,13 @@ namespace Microsoft.Test.Taupo.OData.Common.Tests.ObjectModelTests
 
         private sealed class ODataRequestMessageWrapper : IODataRequestMessage
         {
-            private static readonly Type requestMessageType = typeof(ODataWriter).Assembly.GetType("Microsoft.OData.Core.ODataRequestMessage");
+            private static readonly Type requestMessageType = typeof(ODataWriter).Assembly.GetType("Microsoft.OData.ODataRequestMessage");
 
             private readonly object requestMessage;
 
-            internal ODataRequestMessageWrapper(IODataRequestMessage requestMessage, bool writing, bool disableMessageStreamDisposal)
+            internal ODataRequestMessageWrapper(IODataRequestMessage requestMessage, bool writing, bool enableMessageStreamDisposal)
             {
-                this.requestMessage = ReflectionUtils.CreateInstance(requestMessageType, requestMessage, writing, disableMessageStreamDisposal, /*maxBytesToBeRead*/ -1);
+                this.requestMessage = ReflectionUtils.CreateInstance(requestMessageType, requestMessage, writing, enableMessageStreamDisposal, /*maxBytesToBeRead*/ -1);
             }
 
             public IEnumerable<KeyValuePair<string, string>> Headers
@@ -259,13 +257,13 @@ namespace Microsoft.Test.Taupo.OData.Common.Tests.ObjectModelTests
 
         private sealed class ODataResponseMessageWrapper : IODataResponseMessage
         {
-            private static readonly Type responseMessageType = typeof(ODataWriter).Assembly.GetType("Microsoft.OData.Core.ODataResponseMessage");
+            private static readonly Type responseMessageType = typeof(ODataWriter).Assembly.GetType("Microsoft.OData.ODataResponseMessage");
 
             private readonly object responseMessage;
 
-            internal ODataResponseMessageWrapper(IODataResponseMessage responseMessage, bool writing, bool disableMessageStreamDisposal)
+            internal ODataResponseMessageWrapper(IODataResponseMessage responseMessage, bool writing, bool enableMessageStreamDisposal)
             {
-                this.responseMessage = ReflectionUtils.CreateInstance(responseMessageType, responseMessage, writing, disableMessageStreamDisposal, /*maxBytesToBeRead*/ -1);
+                this.responseMessage = ReflectionUtils.CreateInstance(responseMessageType, responseMessage, writing, enableMessageStreamDisposal, /*maxBytesToBeRead*/ -1);
             }
 
             public IEnumerable<KeyValuePair<string, string>> Headers

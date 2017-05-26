@@ -5,7 +5,6 @@
 //---------------------------------------------------------------------
 
 using System;
-using Microsoft.Data.Spatial;
 using Xunit;
 
 namespace Microsoft.Spatial.Tests

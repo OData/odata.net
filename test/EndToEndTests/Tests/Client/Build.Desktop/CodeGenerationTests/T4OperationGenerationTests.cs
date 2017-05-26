@@ -134,7 +134,7 @@ namespace Microsoft.Test.OData.Tests.Client.CodeGenerationTests
         }
 
         [TestMethod]
-        public void ActionBoundOnEntityWithEntityParameter()
+        public void ActionBoundOnEntityWithEntityOrEntityCollectionParameter()
         {
             var customer = TestClientContext.Customers.First();
 
@@ -144,6 +144,7 @@ namespace Microsoft.Test.OData.Tests.Client.CodeGenerationTests
                 OrderID = orderId,
                 OrderDate = new DateTimeOffset(new DateTime(2011, 3, 4, 16, 3, 57)),
                 OrderShelfLifes = new ObservableCollection<TimeSpan>(),
+                InfoFromCustomer = new InfoFromCustomer { CustomerMessage = "I need XXL" },
             };
 
             Order newOrder = customer.PlaceOrder(order).GetValue();
@@ -191,7 +192,7 @@ namespace Microsoft.Test.OData.Tests.Client.CodeGenerationTests
         }
 
         [TestMethod]
-        public void ActionImportWithCollectionOfComplexTypeParameter()
+        public void ActionImportWithComplexTypeParameter()
         {
             TestClientContext.MergeOption = Microsoft.OData.Client.MergeOption.OverwriteChanges;
             var boss = TestClientContext.Boss.GetValue();

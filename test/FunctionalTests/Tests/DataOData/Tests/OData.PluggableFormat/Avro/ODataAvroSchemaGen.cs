@@ -11,7 +11,7 @@ namespace Microsoft.Test.OData.PluggableFormat.Avro
     using System.Linq;
     using Microsoft.Hadoop.Avro;
     using Microsoft.Hadoop.Avro.Schema;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.OData.Edm;
 
     internal static class ODataAvroSchemaGen
@@ -30,17 +30,10 @@ namespace Microsoft.Test.OData.PluggableFormat.Avro
             Schema.SetFields(ErrorSchema, fields);
         }
 
-        public static RecordSchema GetSchema(ODataEntry entry)
+        public static RecordSchema GetSchema(ODataResource entry)
         {
             RecordSchema rs = Schema.CreateRecord(entry.TypeName, null);
             Schema.SetFields(rs, entry.Properties.Select(property => Schema.CreateField(property.Name, GetSchema(property.Value))));
-            return rs;
-        }
-
-        public static RecordSchema GetSchema(ODataComplexValue value)
-        {
-            RecordSchema rs = Schema.CreateRecord(value.TypeName, null);
-            Schema.SetFields(rs, value.Properties.Select(property => Schema.CreateField(property.Name, GetSchema(property.Value))));
             return rs;
         }
 
@@ -59,7 +52,7 @@ namespace Microsoft.Test.OData.PluggableFormat.Avro
                 return Schema.CreateNull();
             }
 
-            ODataEntry entry = value as ODataEntry;
+            ODataResource entry = value as ODataResource;
             if (entry != null)
             {
                 return GetSchema(entry);
@@ -69,12 +62,6 @@ namespace Microsoft.Test.OData.PluggableFormat.Avro
             if (collectionValue != null)
             {
                 return GetSchema(collectionValue);
-            }
-
-            ODataComplexValue complexValue = value as ODataComplexValue;
-            if (complexValue != null)
-            {
-                return GetSchema(complexValue);
             }
 
             ODataError error = value as ODataError;
@@ -125,11 +112,6 @@ namespace Microsoft.Test.OData.PluggableFormat.Avro
 
         private static RecordSchema GetSchemaFromModel(IEdmStructuredType type)
         {
-            if (type.IsOpen)
-            {
-                throw new ApplicationException("not supported.");
-            }
-
             RecordSchema rs = Schema.CreateRecord(type.FullTypeName(), null);
             Schema.SetFields(rs, type.Properties().Select(property => Schema.CreateField(property.Name, GetSchemaFromModel(property.Type))));
             return rs;

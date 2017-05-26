@@ -8,32 +8,31 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
 using FluentAssertions;
-using Microsoft.OData.Core.JsonLight;
 using Microsoft.OData.Edm;
-using Microsoft.OData.Edm.Library;
+using Microsoft.OData.JsonLight;
+using Microsoft.Test.OData.DependencyInjection;
 using Xunit;
 
-namespace Microsoft.OData.Core.Tests.JsonLight
+namespace Microsoft.OData.Tests.JsonLight
 {
     public class ODataJsonLightDeltaReaderTests
     {
-        private const string payload = "{\"@odata.context\":\"http://host/service/$metadata#Customers/$delta\",\"@odata.count\":5,\"value\":[{\"@odata.id\":\"Customers('BOTTM')\",\"ContactName\":\"Susan Halvenstern\"},{\"@odata.context\":\"http://host/service/$metadata#Customers/$deletedLink\",\"source\":\"Customers('ALFKI')\",\"relationship\":\"Orders\",\"target\":\"Orders('10643')\"},{\"@odata.context\":\"http://host/service/$metadata#Customers/$link\",\"source\":\"Customers('BOTTM')\",\"relationship\":\"Orders\",\"target\":\"Orders('10645')\"},{\"@odata.context\":\"http://host/service/$metadata#Orders/$entity\",\"@odata.id\":\"Orders(10643)\",\"ShippingAddress\":{\"Street\":\"23 Tsawassen Blvd.\",\"City\":\"Tsawassen\",\"Region\":\"BC\",\"PostalCode\":\"T2F 8M4\"}},{\"@odata.context\":\"http://host/service/$metadata#Customers/$deletedEntity\",\"id\":\"Customers('ANTON')\",\"reason\":\"deleted\"}],\"@odata.deltaLink\":\"Customers?$expand=Orders&$deltatoken=8015\"}";
+        private const string payload = "{\"@odata.context\":\"http://host/service/$metadata#Customers/$delta\",\"@odata.count\":5,\"value\":[{\"@odata.id\":\"Customers('BOTTM')\",\"ContactName\":\"Susan Halvenstern\"},{\"@odata.context\":\"http://host/service/$metadata#Customers/$deletedLink\",\"source\":\"Customers('ALFKI')\",\"relationship\":\"Orders\",\"target\":\"Orders('10643')\"},{\"@odata.context\":\"http://host/service/$metadata#Customers/$link\",\"source\":\"Customers('BOTTM')\",\"relationship\":\"Orders\",\"target\":\"Orders('10645')\"},{\"@odata.context\":\"http://host/service/$metadata#Orders/$entity\",\"@odata.id\":\"Orders(10643)\",\"Address\":{\"Street\":\"23 Tsawassen Blvd.\",\"City\":{\"CityName\":\"Tsawassen\"},\"Region\":\"BC\",\"PostalCode\":\"T2F 8M4\"}},{\"@odata.context\":\"http://host/service/$metadata#Customers/$deletedEntity\",\"id\":\"Customers('ANTON')\",\"reason\":\"deleted\"}],\"@odata.deltaLink\":\"Customers?$expand=Orders&$deltatoken=8015\"}";
 
-        private const string payloadWithNavigationLinks = "{\"@odata.context\":\"http://host/service/$metadata#Customers/$delta\",\"@odata.count\":5,\"value\":[{\"@odata.id\":\"Customers('BOTTM')\",\"ContactName\":\"Susan Halvenstern\",\"Orders@odata.associationLink\":\"http://ouyang-sqldev:9090/ODL635336926402810015/Customers(1)/Order/$ref\",\"Orders@odata.navigationLink\":\"http://ouyang-sqldev:9090/ODL635336926402810015/Customers(1)/Order\",\"Parent@odata.associationLink\":\"http://ouyang-sqldev:9090/ODL635336926402810015/Customers(1)/Person/$ref\",\"Parent@odata.navigationLink\":\"http://ouyang-sqldev:9090/ODL635336926402810015/Customers(1)/Person\"},{\"@odata.context\":\"http://host/service/$metadata#Customers/$deletedLink\",\"source\":\"Customers('ALFKI')\",\"relationship\":\"Orders\",\"target\":\"Orders('10643')\"},{\"@odata.context\":\"http://host/service/$metadata#Customers/$link\",\"source\":\"Customers('BOTTM')\",\"relationship\":\"Orders\",\"target\":\"Orders('10645')\"},{\"@odata.context\":\"http://host/service/$metadata#Orders/$entity\",\"@odata.type\":\"MyNS.Order\",\"@odata.id\":\"Orders(10643)\",\"ShippingAddress\":{\"@odata.type\":\"MyNS.ShippingAddress\",\"Street\":\"23 Tsawassen Blvd.\",\"City\":\"Tsawassen\",\"Region\":\"BC\",\"PostalCode\":\"T2F 8M4\"}},{\"@odata.context\":\"http://host/service/$metadata#Customers/$deletedEntity\",\"id\":\"Customers('ANTON')\",\"reason\":\"deleted\"}],\"@odata.deltaLink\":\"Customers?$expand=Orders&$deltatoken=8015\"}";
+        private const string payloadWithNavigationLinks = "{\"@odata.context\":\"http://host/service/$metadata#Customers/$delta\",\"@odata.count\":5,\"value\":[{\"@odata.id\":\"Customers('BOTTM')\",\"ContactName\":\"Susan Halvenstern\",\"Orders@odata.associationLink\":\"http://ouyang-sqldev:9090/ODL635336926402810015/Customers(1)/Order/$ref\",\"Orders@odata.navigationLink\":\"http://ouyang-sqldev:9090/ODL635336926402810015/Customers(1)/Order\",\"Parent@odata.associationLink\":\"http://ouyang-sqldev:9090/ODL635336926402810015/Customers(1)/Person/$ref\",\"Parent@odata.navigationLink\":\"http://ouyang-sqldev:9090/ODL635336926402810015/Customers(1)/Person\"},{\"@odata.context\":\"http://host/service/$metadata#Customers/$deletedLink\",\"source\":\"Customers('ALFKI')\",\"relationship\":\"Orders\",\"target\":\"Orders('10643')\"},{\"@odata.context\":\"http://host/service/$metadata#Customers/$link\",\"source\":\"Customers('BOTTM')\",\"relationship\":\"Orders\",\"target\":\"Orders('10645')\"},{\"@odata.context\":\"http://host/service/$metadata#Orders/$entity\",\"@odata.type\":\"MyNS.Order\",\"@odata.id\":\"Orders(10643)\",\"Address\":{\"@odata.type\":\"MyNS.Address\",\"Street\":\"23 Tsawassen Blvd.\",\"City\":{\"CityName\":\"Tsawassen\"},\"Region\":\"BC\",\"PostalCode\":\"T2F 8M4\"}},{\"@odata.context\":\"http://host/service/$metadata#Customers/$deletedEntity\",\"id\":\"Customers('ANTON')\",\"reason\":\"deleted\"}],\"@odata.deltaLink\":\"Customers?$expand=Orders&$deltatoken=8015\"}";
 
-        private const string payloadWithSimplifiedAnnotations = "{\"@context\":\"http://host/service/$metadata#Customers/$delta\",\"@count\":5,\"value\":[{\"@id\":\"Customers('BOTTM')\",\"ContactName\":\"Susan Halvenstern\",\"Orders@associationLink\":\"http://ouyang-sqldev:9090/ODL635336926402810015/Customers(1)/Order/$ref\",\"Orders@navigationLink\":\"http://ouyang-sqldev:9090/ODL635336926402810015/Customers(1)/Order\",\"Parent@associationLink\":\"http://ouyang-sqldev:9090/ODL635336926402810015/Customers(1)/Person/$ref\",\"Parent@navigationLink\":\"http://ouyang-sqldev:9090/ODL635336926402810015/Customers(1)/Person\"},{\"@context\":\"http://host/service/$metadata#Customers/$deletedLink\",\"source\":\"Customers('ALFKI')\",\"relationship\":\"Orders\",\"target\":\"Orders('10643')\"},{\"@context\":\"http://host/service/$metadata#Customers/$link\",\"source\":\"Customers('BOTTM')\",\"relationship\":\"Orders\",\"target\":\"Orders('10645')\"},{\"@context\":\"http://host/service/$metadata#Orders/$entity\",\"@type\":\"MyNS.Order\",\"@id\":\"Orders(10643)\",\"ShippingAddress\":{\"@type\":\"MyNS.ShippingAddress\",\"Street\":\"23 Tsawassen Blvd.\",\"City\":\"Tsawassen\",\"Region\":\"BC\",\"PostalCode\":\"T2F 8M4\"}},{\"@context\":\"http://host/service/$metadata#Customers/$deletedEntity\",\"id\":\"Customers('ANTON')\",\"reason\":\"deleted\"}],\"@deltaLink\":\"Customers?$expand=Orders&$deltatoken=8015\"}";
+        private const string payloadWithSimplifiedAnnotations = "{\"@context\":\"http://host/service/$metadata#Customers/$delta\",\"@count\":5,\"value\":[{\"@id\":\"Customers('BOTTM')\",\"ContactName\":\"Susan Halvenstern\",\"Orders@associationLink\":\"http://ouyang-sqldev:9090/ODL635336926402810015/Customers(1)/Order/$ref\",\"Orders@navigationLink\":\"http://ouyang-sqldev:9090/ODL635336926402810015/Customers(1)/Order\",\"Parent@associationLink\":\"http://ouyang-sqldev:9090/ODL635336926402810015/Customers(1)/Person/$ref\",\"Parent@navigationLink\":\"http://ouyang-sqldev:9090/ODL635336926402810015/Customers(1)/Person\"},{\"@context\":\"http://host/service/$metadata#Customers/$deletedLink\",\"source\":\"Customers('ALFKI')\",\"relationship\":\"Orders\",\"target\":\"Orders('10643')\"},{\"@context\":\"http://host/service/$metadata#Customers/$link\",\"source\":\"Customers('BOTTM')\",\"relationship\":\"Orders\",\"target\":\"Orders('10645')\"},{\"@context\":\"http://host/service/$metadata#Orders/$entity\",\"@type\":\"MyNS.Order\",\"@id\":\"Orders(10643)\",\"Address\":{\"@type\":\"MyNS.Address\",\"Street\":\"23 Tsawassen Blvd.\",\"City\":{\"CityName\":\"Tsawassen\"},\"Region\":\"BC\",\"PostalCode\":\"T2F 8M4\"}},{\"@context\":\"http://host/service/$metadata#Customers/$deletedEntity\",\"id\":\"Customers('ANTON')\",\"reason\":\"deleted\"}],\"@deltaLink\":\"Customers?$expand=Orders&$deltatoken=8015\"}";
 
         #region Entities
 
-        private readonly ODataDeltaFeed feed = new ODataDeltaFeed
+        private readonly ODataDeltaResourceSet feed = new ODataDeltaResourceSet
         {
             Count = 5,
             DeltaLink = new Uri("Customers?$expand=Orders&$deltatoken=8015", UriKind.Relative)
         };
 
-        private readonly ODataEntry customerUpdated = new ODataEntry
+        private readonly ODataResource customerUpdated = new ODataResource
         {
             Id = new Uri("Customers('BOTTM')", UriKind.Relative),
             Properties = new List<ODataProperty>
@@ -46,33 +45,32 @@ namespace Microsoft.OData.Core.Tests.JsonLight
 
         private readonly ODataDeltaLink linkToOrder10645 = new ODataDeltaLink(new Uri("Customers('BOTTM')", UriKind.Relative), new Uri("Orders('10645')", UriKind.Relative), "Orders");
 
-        private readonly ODataEntry order10643 = new ODataEntry
+        private readonly ODataResource order10643 = new ODataResource
         {
             Id = new Uri("Orders(10643)", UriKind.Relative),
             Properties = new List<ODataProperty>
             {
-                new ODataProperty
-                {
-                    Name = "ShippingAddress",
-                    Value = new ODataComplexValue
-                    {
-                        Properties = new List<ODataProperty>
-                        {
-                            new ODataProperty { Name = "Street", Value = "23 Tsawassen Blvd." },
-                            new ODataProperty { Name = "City", Value = "Tsawassen" },
-                            new ODataProperty { Name = "Region", Value = "BC" },
-                            new ODataProperty { Name = "PostalCode", Value = "T2F 8M4" }
-                        }
-                    }
-                }
             },
+        };
+
+        private readonly ODataResource complexPropertyInOrder10643 = new ODataResource
+        {
+            Properties = new List<ODataProperty>
+            {
+                new ODataProperty { Name = "Street", Value = "23 Tsawassen Blvd." },
+                new ODataProperty { Name = "City", Value = "Tsawassen" },
+                new ODataProperty { Name = "Region", Value = "BC" },
+                new ODataProperty { Name = "PostalCode", Value = "T2F 8M4" }
+            }
         };
 
         private readonly ODataDeltaDeletedEntry customerDeleted = new ODataDeltaDeletedEntry("Customers('ANTON')", DeltaDeletedEntryReason.Deleted);
 
         private EdmEntitySet customers;
+        private EdmEntitySet orders;
 
         private EdmEntityType customer;
+        private EdmEntityType order;
 
         #endregion
 
@@ -96,7 +94,7 @@ namespace Microsoft.OData.Core.Tests.JsonLight
         public void ReadExample30FromV4SpecWithFullODataAnnotationsODataSimplified()
         {
             // cover "@odata.deltaLink"
-            var tuples = this.ReadItem(payloadWithNavigationLinks, this.GetModel(), customers, customer, odataSimplified: true);
+            var tuples = this.ReadItem(payloadWithNavigationLinks, this.GetModel(), customers, customer, enableReadingODataAnnotationWithoutPrefix: true);
             this.ValidateTuples(tuples);
         }
 
@@ -104,7 +102,7 @@ namespace Microsoft.OData.Core.Tests.JsonLight
         public void ReadExample30FromV4SpecWithSimplifiedODataAnnotationsODataSimplified()
         {
             // cover "@deltaLink"
-            var tuples = this.ReadItem(payloadWithSimplifiedAnnotations, this.GetModel(), customers, customer, odataSimplified: true);
+            var tuples = this.ReadItem(payloadWithSimplifiedAnnotations, this.GetModel(), customers, customer, enableReadingODataAnnotationWithoutPrefix: true);
             this.ValidateTuples(tuples);
         }
 
@@ -113,7 +111,7 @@ namespace Microsoft.OData.Core.Tests.JsonLight
         [Fact]
         public void ReadODataType()
         {
-            var payloadWithODataType = "{\"@odata.context\":\"http://host/service/$metadata#Customers/$delta\",\"value\":[{\"@odata.context\":\"http://host/service/$metadata#Orders/$entity\",\"@odata.type\":\"MyNS.Order\",\"@odata.id\":\"Orders(10643)\",\"ShippingAddress\":{\"Street\":\"23 Tsawassen Blvd.\",\"City\":\"Tsawassen\",\"Region\":\"BC\",\"PostalCode\":\"T2F 8M4\"}}]}";
+            var payloadWithODataType = "{\"@odata.context\":\"http://host/service/$metadata#Customers/$delta\",\"value\":[{\"@odata.context\":\"http://host/service/$metadata#Orders/$entity\",\"@odata.type\":\"MyNS.Order\",\"@odata.id\":\"Orders(10643)\",\"Address\":{\"Street\":\"23 Tsawassen Blvd.\",\"City\":{\"CityName\":\"Tsawassen\"},\"Region\":\"BC\",\"PostalCode\":\"T2F 8M4\"}}]}";
             var tuples = this.ReadItem(payloadWithODataType, this.GetModel(), customers, customer);
             this.ValidateTuples(tuples);
         }
@@ -168,10 +166,13 @@ namespace Microsoft.OData.Core.Tests.JsonLight
                                 "{" +
                                     "\"@odata.id\":\"http://host/service/Orders(10643)\"," +
                                     "\"Id\":10643," +
-                                    "\"ShippingAddress\":" +
+                                    "\"Address\":" +
                                     "{" +
                                         "\"Street\":\"23 Tsawassen Blvd.\"," +
-                                        "\"City\":\"Tsawassen\"," +
+                                        "\"City\":" +
+                                        "{" +
+                                            "\"CityName\":\"Tsawassen\"" +
+                                        "}," +
                                         "\"Region\":\"BC\"," +
                                         "\"PostalCode\":\"T2F 8M4\"" +
                                     "}" +
@@ -207,10 +208,13 @@ namespace Microsoft.OData.Core.Tests.JsonLight
                                     "\"@odata.id\":\"http://host/service/Orders(10643)\"," +
                                     "\"@odata.editLink\":\"http://host/service/Orders(10643)\"," +
                                     "\"Id\":10643," +
-                                    "\"ShippingAddress\":" +
+                                    "\"Address\":" +
                                     "{" +
                                         "\"Street\":\"23 Tsawassen Blvd.\"," +
-                                        "\"City\":\"Tsawassen\"," +
+                                        "\"City\":" +
+                                        "{" +
+                                            "\"CityName\":\"Tsawassen\"" +
+                                        "}," +
                                         "\"Region\":\"BC\"," +
                                         "\"PostalCode\":\"T2F 8M4\"" +
                                     "}" +
@@ -243,10 +247,13 @@ namespace Microsoft.OData.Core.Tests.JsonLight
                                 "{" +
                                     "\"@odata.id\":\"http://host/service/Orders(10643)\"," +
                                     "\"Id\":10643," +
-                                    "\"ShippingAddress\":" +
+                                    "\"Address\":" +
                                     "{" +
                                         "\"Street\":\"23 Tsawassen Blvd.\"," +
-                                        "\"City\":\"Tsawassen\"," +
+                                        "\"City\":" +
+                                        "{" +
+                                            "\"CityName\":\"Tsawassen\"" +
+                                        "}," +
                                         "\"Region\":\"BC\"," +
                                         "\"PostalCode\":\"T2F 8M4\"" +
                                     "}" +
@@ -349,10 +356,13 @@ namespace Microsoft.OData.Core.Tests.JsonLight
                                 "{" +
                                     "\"@odata.id\":\"http://host/service/Orders(10643)\"," +
                                     "\"Id\":\"Id shouldn't be a string\"," +
-                                    "\"ShippingAddress\":" +
+                                    "\"Address\":" +
                                     "{" +
                                         "\"Street\":\"23 Tsawassen Blvd.\"," +
-                                        "\"City\":\"Tsawassen\"," +
+                                        "\"City\":" +
+                                        "{" +
+                                            "\"CityName\":\"Tsawassen\"" +
+                                        "}," +
                                         "\"Region\":\"BC\"," +
                                         "\"PostalCode\":\"T2F 8M4\"" +
                                     "}" +
@@ -367,7 +377,81 @@ namespace Microsoft.OData.Core.Tests.JsonLight
                 var tuples = this.ReadItem(payload, this.GetModel(), customers, customer);
                 this.ValidateTuples(tuples);
             };
-            readAction.ShouldThrow<ODataException>().WithMessage("Id shouldn't be a string", ComparisonMode.Substring);
+            readAction.ShouldThrow<ODataException>().Where(e => e.Message.Contains("Id shouldn't be a string"));
+        }
+
+        #endregion
+
+        #region ComplexProperty
+
+        [Fact]
+        public void ReadNestedComplexProperty()
+        {
+            var payload =
+                "{" +
+                    "\"@odata.context\":\"http://host/service/$metadata#Orders/$delta\"," +
+                    "\"value\":" +
+                    "[" +
+                        "{" +
+                            "\"@odata.id\":\"http://host/service/Orders(10643)\"," +
+                            "\"Id\":10643," +
+                            "\"Address\":" +
+                            "{" +
+                                "\"Street\":\"23 Tsawassen Blvd.\"," +
+                                "\"City\":" +
+                                "{" +
+                                    "\"CityName\":\"Tsawassen\"" +
+                                "}," +
+                                "\"Region\":\"BC\"," +
+                                "\"PostalCode\":\"T2F 8M4\"" +
+                            "}" +
+                        "}" +
+                    "]" +
+                "}";
+            var tuples = this.ReadItem(payload, this.GetModel(), orders, order);
+            this.ValidateTuples(tuples);
+        }
+
+        [Fact]
+        public void ReadNestedOpenCollectionOfComplexProperty()
+        {
+            var payload =
+                "{" +
+                    "\"@odata.context\":\"http://host/service/$metadata#Orders/$delta\"," +
+                    "\"value\":" +
+                    "[" +
+                        "{" +
+                            "\"@odata.id\":\"http://host/service/Orders(10643)\"," +
+                            "\"Id\":10643," +
+                            "\"Addresses@odata.type\":\"#Collection(MyNS.Address)\"," +
+                            "\"Addresses\":" +
+                            "[" +
+                                "{" +
+                                    "\"@odata.type\":\"#MyNS.Address\"," +
+                                    "\"Street\":\"23 Tsawassen Blvd.\"," +
+                                    "\"City\":" +
+                                    "{" +
+                                        "\"CityName\":\"Tsawassen\"" +
+                                    "}," +
+                                    "\"Region\":\"BC\"," +
+                                    "\"PostalCode\":\"T2F 8M4\"" +
+                                "}," +
+                                "{" +
+                                    "\"@odata.type\":\"#MyNS.Address\"," +
+                                    "\"Street\":\"ZixingRoad.\"," +
+                                    "\"City\":" +
+                                    "{" +
+                                        "\"CityName\":\"Shanghai\"" +
+                                    "}," +
+                                    "\"PostalCode\":\"200001\"" +
+                                "}" +
+
+                            "]" +
+                        "}" +
+                    "]" +
+                "}";
+            var tuples = this.ReadItem(payload, this.GetModel(), orders, order);
+            this.ValidateTuples(tuples);
         }
 
         #endregion
@@ -378,18 +462,26 @@ namespace Microsoft.OData.Core.Tests.JsonLight
         {
             EdmModel myModel = new EdmModel();
 
-            EdmComplexType shippingAddress = new EdmComplexType("MyNS", "ShippingAddress");
-            shippingAddress.AddStructuralProperty("Street", EdmPrimitiveTypeKind.String);
-            shippingAddress.AddStructuralProperty("City", EdmPrimitiveTypeKind.String);
-            shippingAddress.AddStructuralProperty("Region", EdmPrimitiveTypeKind.String);
-            shippingAddress.AddStructuralProperty("PostalCode", EdmPrimitiveTypeKind.String);
-            myModel.AddElement(shippingAddress);
+            EdmComplexType city = new EdmComplexType("MyNS", "City");
+            city.AddStructuralProperty("CityName", EdmPrimitiveTypeKind.String);
+            myModel.AddElement(city);
 
-            EdmComplexTypeReference shippingAddressReference = new EdmComplexTypeReference(shippingAddress, true);
+            EdmComplexType address = new EdmComplexType("MyNS", "Address");
+            address.AddStructuralProperty("Street", EdmPrimitiveTypeKind.String);
+            address.AddStructuralProperty("City", new EdmComplexTypeReference(city, false));
+            address.AddStructuralProperty("Region", EdmPrimitiveTypeKind.String);
+            address.AddStructuralProperty("PostalCode", EdmPrimitiveTypeKind.String);
+            myModel.AddElement(address);
 
-            EdmEntityType order = new EdmEntityType("MyNS", "Order");
+            EdmComplexType homeAddress = new EdmComplexType("MyNS", "HomeAddress", address);
+            homeAddress.AddStructuralProperty("IsHomeAddress", EdmPrimitiveTypeKind.Boolean);
+            myModel.AddElement(address);
+
+            EdmComplexTypeReference AddressReference = new EdmComplexTypeReference(address, true);
+
+            order = new EdmEntityType("MyNS", "Order", null, false, true);
             order.AddKeys(order.AddStructuralProperty("Id", EdmPrimitiveTypeKind.Int32));
-            order.AddStructuralProperty("ShippingAddress", shippingAddressReference);
+            order.AddStructuralProperty("Address", AddressReference);
             myModel.AddElement(order);
 
             EdmEntityType person = new EdmEntityType("MyNS", "Person");
@@ -437,7 +529,7 @@ namespace Microsoft.OData.Core.Tests.JsonLight
                 Name = "FavouriteProducts",
                 Target = product,
                 TargetMultiplicity = EdmMultiplicity.Many,
-                
+
             });
             EdmNavigationProperty productBeingViewed = customer.AddUnidirectionalNavigation(new EdmNavigationPropertyInfo
             {
@@ -448,7 +540,7 @@ namespace Microsoft.OData.Core.Tests.JsonLight
 
             EdmEntityContainer container = new EdmEntityContainer("MyNS", "Example30");
             customers = container.AddEntitySet("Customers", customer);
-            container.AddEntitySet("Orders", order);
+            orders = container.AddEntitySet("Orders", order);
             EdmEntitySet products = container.AddEntitySet("Products", product);
             customers.AddNavigationTarget(favouriteProducts, products);
             customers.AddNavigationTarget(productBeingViewed, products);
@@ -458,25 +550,27 @@ namespace Microsoft.OData.Core.Tests.JsonLight
             return myModel;
         }
 
-        private IEnumerable<Tuple<ODataItem, ODataDeltaReaderState, ODataReaderState>> ReadItem(string payload, IEdmModel model = null, IEdmNavigationSource navigationSource = null, IEdmEntityType entityType = null, bool odataSimplified = false)
+        private IEnumerable<Tuple<ODataItem, ODataDeltaReaderState, ODataReaderState>> ReadItem(string payload, IEdmModel model = null, IEdmNavigationSource navigationSource = null, IEdmEntityType entityType = null, bool enableReadingODataAnnotationWithoutPrefix = false)
         {
-            MemoryStream stream = new MemoryStream(Encoding.UTF8.GetBytes(payload));
+            var settings = new ODataMessageReaderSettings
+            {
+                ShouldIncludeAnnotation = s => true,
+            };
 
-            ODataMessageReaderSettings settings = new ODataMessageReaderSettings();
-            settings.ShouldIncludeAnnotation = s => true;
-            settings.ODataSimplified = odataSimplified;
+            var messageInfo = new ODataMessageInfo
+            {
+                IsResponse = true,
+                MediaType = new ODataMediaType("application", "json"),
+                IsAsync = false,
+                Model = model ?? new EdmModel(),
+                Container = ContainerBuilderHelper.BuildContainer(null)
+            };
 
             using (var inputContext = new ODataJsonLightInputContext(
-                ODataFormat.Json,
-                stream,
-                new ODataMediaType("application", "json"),
-                Encoding.UTF8,
-                settings,
-                /*readingResponse*/ true,
-                /*synchronous*/ true,
-                model ?? new EdmModel(),
-                /*urlResolver*/ null))
+                new StringReader(payload), messageInfo, settings))
             {
+                inputContext.Container.GetRequiredService<ODataSimplifiedOptions>()
+                    .EnableReadingODataAnnotationWithoutPrefix = enableReadingODataAnnotationWithoutPrefix;
                 var jsonLightReader = new ODataJsonLightDeltaReader(inputContext, navigationSource, entityType);
                 while (jsonLightReader.Read())
                 {
@@ -491,43 +585,43 @@ namespace Microsoft.OData.Core.Tests.JsonLight
             {
                 switch (tuple.Item2)
                 {
-                    case ODataDeltaReaderState.DeltaFeedStart:
-                        ODataDeltaFeed deltaFeed = tuple.Item1 as ODataDeltaFeed;
+                    case ODataDeltaReaderState.DeltaResourceSetStart:
+                        ODataDeltaResourceSet deltaFeed = tuple.Item1 as ODataDeltaResourceSet;
                         Assert.NotNull(deltaFeed);
                         if (deltaFeed.Count.HasValue)
                         {
                             Assert.Equal(deltaFeed.Count, feed.Count);
                         }
                         break;
-                    case ODataDeltaReaderState.FeedEnd:
-                        Assert.NotNull(tuple.Item1 as ODataDeltaFeed);
+                    case ODataDeltaReaderState.DeltaResourceSetEnd:
+                        Assert.NotNull(tuple.Item1 as ODataDeltaResourceSet);
                         if (nextLink != null)
                         {
-                            Assert.Equal(nextLink, ((ODataDeltaFeed)tuple.Item1).NextPageLink);
+                            Assert.Equal(nextLink, ((ODataDeltaResourceSet)tuple.Item1).NextPageLink);
                         }
                         if (feedDeltaLink != null)
                         {
-                            Assert.Equal(feedDeltaLink, ((ODataDeltaFeed)tuple.Item1).DeltaLink);
+                            Assert.Equal(feedDeltaLink, ((ODataDeltaResourceSet)tuple.Item1).DeltaLink);
                         }
                         break;
-                    case ODataDeltaReaderState.DeltaEntryStart:
-                        Assert.True(tuple.Item1 is ODataEntry);
+                    case ODataDeltaReaderState.DeltaResourceStart:
+                        Assert.True(tuple.Item1 is ODataResource);
                         break;
-                    case ODataDeltaReaderState.DeltaEntryEnd:
-                        var deltaEntry = tuple.Item1 as ODataEntry;
-                        Assert.NotNull(deltaEntry);
-                        Assert.NotNull(deltaEntry.Id);
-                        if (this.IdEqual(deltaEntry.Id, customerUpdated.Id))
+                    case ODataDeltaReaderState.DeltaResourceEnd:
+                        var deltaResource = tuple.Item1 as ODataResource;
+                        Assert.NotNull(deltaResource);
+                        Assert.NotNull(deltaResource.Id);
+                        if (this.IdEqual(deltaResource.Id, customerUpdated.Id))
                         {
-                            Assert.True(PropertiesEqual(deltaEntry.Properties, customerUpdated.Properties));
+                            Assert.True(PropertiesEqual(deltaResource.Properties, customerUpdated.Properties));
                         }
-                        else if (this.IdEqual(deltaEntry.Id, order10643.Id))
+                        else if (this.IdEqual(deltaResource.Id, order10643.Id))
                         {
-                            Assert.True(this.PropertiesEqual(deltaEntry.Properties, order10643.Properties));
+                            Assert.True(this.PropertiesEqual(deltaResource.Properties, order10643.Properties));
                         }
                         else
                         {
-                            Assert.True(false, "Invalid id read.");
+                            Assert.True(this.PropertiesEqual(deltaResource.Properties, complexPropertyInOrder10643.Properties));
                         }
                         break;
                     case ODataDeltaReaderState.DeltaDeletedEntry:
@@ -550,16 +644,18 @@ namespace Microsoft.OData.Core.Tests.JsonLight
                         Assert.Equal(deltaDeletedLink.Relationship, linkToOrder10643.Relationship);
                         Assert.True(this.IdEqual(deltaDeletedLink.Target, linkToOrder10643.Target));
                         break;
-                    case ODataDeltaReaderState.ExpandedNavigationProperty:
+                    case ODataDeltaReaderState.NestedResource:
                         switch (tuple.Item3)
                         {
                             case ODataReaderState.Completed:
                             case ODataReaderState.Start:
+                                ODataNestedResourceInfo nestedResource = tuple.Item1 as ODataNestedResourceInfo;
+                                Assert.NotNull(nestedResource);
                                 break;
                             case ODataReaderState.EntityReferenceLink:
                                 break;
-                            case ODataReaderState.EntryEnd:
-                                ODataEntry entry = tuple.Item1 as ODataEntry;
+                            case ODataReaderState.ResourceEnd:
+                                ODataResource entry = tuple.Item1 as ODataResource;
                                 Assert.NotNull(entry);
                                 if (entry.TypeName == "MyNS.Order")
                                 {
@@ -573,23 +669,31 @@ namespace Microsoft.OData.Core.Tests.JsonLight
                                 {
                                     Assert.Equal(1, entry.Properties.Single(p => p.Name == "Id").Value);
                                 }
+                                else if (entry.TypeName == "MyNS.Address")
+                                {
+                                    Assert.NotNull(entry.Properties.Single(p => p.Name == "Street").Value);
+                                }
+                                else if (entry.TypeName == "MyNS.City")
+                                {
+                                    Assert.NotNull(entry.Properties.Single(p => p.Name == "CityName").Value);
+                                }
                                 break;
-                            case ODataReaderState.EntryStart:
-                                Assert.NotNull(tuple.Item1 as ODataEntry);
+                            case ODataReaderState.ResourceStart:
+                                Assert.NotNull(tuple.Item1 as ODataResource);
                                 break;
-                            case ODataReaderState.FeedEnd:
-                                Assert.NotNull(tuple.Item1 as ODataFeed);
+                            case ODataReaderState.ResourceSetEnd:
+                                Assert.NotNull(tuple.Item1 as ODataResourceSet);
                                 break;
-                            case ODataReaderState.FeedStart:
-                                Assert.NotNull(tuple.Item1 as ODataFeed);
+                            case ODataReaderState.ResourceSetStart:
+                                Assert.NotNull(tuple.Item1 as ODataResourceSet);
                                 break;
-                            case ODataReaderState.NavigationLinkEnd:
-                                Assert.NotNull(tuple.Item1 as ODataNavigationLink);
+                            case ODataReaderState.NestedResourceInfoEnd:
+                                Assert.NotNull(tuple.Item1 as ODataNestedResourceInfo);
                                 break;
-                            case ODataReaderState.NavigationLinkStart:
-                                ODataNavigationLink navigationLink = tuple.Item1 as ODataNavigationLink;
-                                Assert.NotNull(navigationLink);
-                                Assert.Equal("Details", navigationLink.Name);
+                            case ODataReaderState.NestedResourceInfoStart:
+                                ODataNestedResourceInfo nestedResourceInfo = tuple.Item1 as ODataNestedResourceInfo;
+                                Assert.NotNull(nestedResourceInfo);
+                                Assert.True(nestedResourceInfo.Name.Equals("Details") || nestedResourceInfo.Name.Equals("Address") || nestedResourceInfo.Name.Equals("City"));
                                 break;
                             default:
                                 Assert.True(false, "Wrong reader sub state.");
@@ -625,11 +729,6 @@ namespace Microsoft.OData.Core.Tests.JsonLight
                 if (!i.Current.Name.Equals(j.Current.Name))
                 {
                     return false;
-                }
-
-                if (i.Current.Value is ODataComplexValue && j.Current.Value is ODataComplexValue)
-                {
-                    return this.PropertiesEqual(((ODataComplexValue)i.Current.Value).Properties, ((ODataComplexValue)j.Current.Value).Properties);
                 }
 
                 if (!i.Current.Value.Equals(j.Current.Value))

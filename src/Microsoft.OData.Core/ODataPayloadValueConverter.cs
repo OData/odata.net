@@ -4,16 +4,15 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core
+namespace Microsoft.OData
 {
     using System;
     using System.Diagnostics;
     using System.Globalization;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Library;
-    using Microsoft.OData.Core.Json;
-    using Microsoft.OData.Core.Metadata;
-    using ODataErrorStrings = Microsoft.OData.Core.Strings;
+    using Microsoft.OData.Json;
+    using Microsoft.OData.Metadata;
+    using ODataErrorStrings = Microsoft.OData.Strings;
 
     /// <summary>
     /// Class for defining a payload value conversion for given model. Currently supports primitive only.
@@ -23,7 +22,7 @@ namespace Microsoft.OData.Core
         /// <summary>
         /// The default instance for <see cref="ODataPayloadValueConverter"/>.
         /// </summary>
-        internal static readonly ODataPayloadValueConverter Default = new ODataPayloadValueConverter();
+        private static readonly ODataPayloadValueConverter Default = new ODataPayloadValueConverter();
 
         /// <summary>
         /// Converts the given primitive value defined in a type definition from the payload object.
@@ -129,6 +128,16 @@ namespace Microsoft.OData.Core
 
             // otherwise just return the value without doing any conversion
             return value;
+        }
+
+        internal static ODataPayloadValueConverter GetPayloadValueConverter(IServiceProvider container)
+        {
+            if (container == null)
+            {
+                return Default;
+            }
+
+            return container.GetRequiredService<ODataPayloadValueConverter>();
         }
 
         /// <summary>

@@ -4,7 +4,7 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core.JsonLight
+namespace Microsoft.OData.JsonLight
 {
     #region Namespaces
     using System;
@@ -12,14 +12,14 @@ namespace Microsoft.OData.Core.JsonLight
     using System.Diagnostics;
     using System.IO;
     using System.Text;
-#if ODATALIB_ASYNC
+#if PORTABLELIB
     using System.Threading.Tasks;
 #endif
-    using Microsoft.OData.Core.Metadata;
+    using Microsoft.OData.Metadata;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Core.Json;
+    using Microsoft.OData.Json;
     // ReSharper disable RedundantUsingDirective
-    using ODataErrorStrings = Microsoft.OData.Core.Strings;
+    using ODataErrorStrings = Microsoft.OData.Strings;
     // ReSharper restore RedundantUsingDirective
     #endregion Namespaces
 
@@ -35,7 +35,7 @@ namespace Microsoft.OData.Core.JsonLight
 
         /// <summary>The text reader created for the input stream.</summary>
         /// <remarks>
-        /// The ODataJsonLightInputContext instance owns the textReader instance and thus disposes it. 
+        /// The ODataJsonLightInputContext instance owns the textReader instance and thus disposes it.
         /// We further set this field to null when the input is disposed and use it for checks whether the instance has already been disposed.
         /// </remarks>
         private TextReader textReader;
@@ -44,90 +44,50 @@ namespace Microsoft.OData.Core.JsonLight
         private BufferingJsonReader jsonReader;
 
         /// <summary>Constructor.</summary>
-        /// <param name="format">The format for this input context.</param>
-        /// <param name="messageStream">The stream to read data from.</param>
-        /// <param name="contentType">The content type of the message to read.</param>
-        /// <param name="encoding">The encoding to use to read the input.</param>
+        /// <param name="messageInfo">The context information for the message.</param>
         /// <param name="messageReaderSettings">Configuration settings of the OData reader.</param>
-        /// <param name="readingResponse">true if reading a response message; otherwise false.</param>
-        /// <param name="synchronous">true if the input should be read synchronously; false if it should be read asynchronously.</param>
-        /// <param name="model">The model to use.</param>
-        /// <param name="urlResolver">The optional URL resolver to perform custom URL resolution for URLs read from the payload.</param>
-        internal ODataJsonLightInputContext(
-            ODataFormat format,
-            Stream messageStream,
-            ODataMediaType contentType,
-            Encoding encoding,
-            ODataMessageReaderSettings messageReaderSettings,
-            bool readingResponse,
-            bool synchronous,
-            IEdmModel model,
-            IODataUrlResolver urlResolver)
-            : this(format, CreateTextReaderForMessageStreamConstructor(messageStream, encoding), contentType, messageReaderSettings, readingResponse, synchronous, model, urlResolver)
+        public ODataJsonLightInputContext(
+            ODataMessageInfo messageInfo,
+            ODataMessageReaderSettings messageReaderSettings)
+            : this(CreateTextReader(messageInfo.MessageStream, messageInfo.Encoding), messageInfo, messageReaderSettings)
         {
         }
 
         /// <summary>Constructor.</summary>
-        /// <param name="format">The format for this input context.</param>
-        /// <param name="reader">The reader to use.</param>
-        /// <param name="contentType">The content type of the message to read.</param>
+        /// <param name="textReader">The text reader to use.</param>
+        /// <param name="messageInfo">The context information for the message.</param>
         /// <param name="messageReaderSettings">Configuration settings of the OData reader.</param>
-        /// <param name="readingResponse">true if reading a response message; otherwise false.</param>
-        /// <param name="synchronous">true if the input should be read synchronously; false if it should be read asynchronously.</param>
-        /// <param name="model">The model to use.</param>
-        /// <param name="urlResolver">The optional URL resolver to perform custom URL resolution for URLs read from the payload.</param>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("DataWeb.Usage", "AC0014", Justification = "Throws every time")]
         internal ODataJsonLightInputContext(
-            ODataFormat format,
-            TextReader reader,
-            ODataMediaType contentType,
-            ODataMessageReaderSettings messageReaderSettings,
-            bool readingResponse,
-            bool synchronous,
-            IEdmModel model,
-            IODataUrlResolver urlResolver)
-            : base(format, messageReaderSettings, readingResponse, synchronous, model, urlResolver)
+            TextReader textReader,
+            ODataMessageInfo messageInfo,
+            ODataMessageReaderSettings messageReaderSettings)
+            : base(ODataFormat.Json, messageInfo, messageReaderSettings)
         {
-            Debug.Assert(reader != null, "reader != null");
-            Debug.Assert(contentType != null, "contentType != null");
+            Debug.Assert(messageInfo.MediaType != null, "messageInfo.MediaType != null");
 
             try
             {
-                ExceptionUtils.CheckArgumentNotNull(format, "format");
-                ExceptionUtils.CheckArgumentNotNull(messageReaderSettings, "messageReaderSettings");
-            }
-            catch (ArgumentNullException)
-            {
-                // Dispose the message stream if we failed to create the input context.
-                reader.Dispose();
-                throw;
-            }
-
-            try
-            {
-                this.textReader = reader;
-
-                if (contentType.HasStreamingSetToTrue())
+                this.textReader = textReader;
+                var innerReader = CreateJsonReader(this.Container, this.textReader, messageInfo.MediaType.HasIeee754CompatibleSetToTrue());
+                if (messageInfo.MediaType.HasStreamingSetToTrue())
                 {
                     this.jsonReader = new BufferingJsonReader(
-                        this.textReader,
+                        innerReader,
                         JsonLightConstants.ODataErrorPropertyName,
-                        messageReaderSettings.MessageQuotas.MaxNestingDepth,
-                        ODataFormat.Json,
-                        contentType.HasIeee754CompatibleSetToTrue());
+                        messageReaderSettings.MessageQuotas.MaxNestingDepth);
                 }
                 else
                 {
                     // If we have a non-streaming Json Light content type we need to use the re-ordering Json reader
-                    this.jsonReader = new ReorderingJsonReader(this.textReader, messageReaderSettings.MessageQuotas.MaxNestingDepth, contentType.HasIeee754CompatibleSetToTrue());
+                    this.jsonReader = new ReorderingJsonReader(innerReader, messageReaderSettings.MessageQuotas.MaxNestingDepth);
                 }
             }
             catch (Exception e)
             {
                 // Dispose the message stream if we failed to create the input context.
-                if (ExceptionUtils.IsCatchableExceptionType(e) && reader != null)
+                if (ExceptionUtils.IsCatchableExceptionType(e) && this.textReader != null)
                 {
-                    reader.Dispose();
+                    this.textReader.Dispose();
                 }
 
                 throw;
@@ -136,13 +96,14 @@ namespace Microsoft.OData.Core.JsonLight
             // dont know how to get MetadataDocumentUri uri here, messageReaderSettings do not have one
             // Uri metadataDocumentUri = messageReaderSettings..MetadataDocumentUri == null ? null : messageReaderSettings.MetadataDocumentUri.BaseUri;
             // the uri here is used here to create the FullMetadataLevel can pass null in
-            this.metadataLevel = JsonLight.JsonLightMetadataLevel.Create(contentType, null, model, readingResponse);
+            this.metadataLevel = JsonLightMetadataLevel.Create(messageInfo.MediaType, null, this.Model, this.ReadingResponse);
         }
+
 
         /// <summary>
         /// The json metadata level (i.e., full, none, minimal) being written.
         /// </summary>
-        internal JsonLightMetadataLevel MetadataLevel
+        public JsonLightMetadataLevel MetadataLevel
         {
             get
             {
@@ -153,7 +114,7 @@ namespace Microsoft.OData.Core.JsonLight
         /// <summary>
         /// Returns the <see cref="BufferingJsonReader"/> which is to be used to read the content of the message.
         /// </summary>
-        internal BufferingJsonReader JsonReader
+        public BufferingJsonReader JsonReader
         {
             get
             {
@@ -163,64 +124,64 @@ namespace Microsoft.OData.Core.JsonLight
         }
 
         /// <summary>
-        /// Creates an <see cref="ODataReader" /> to read a feed.
+        /// Creates an <see cref="ODataReader" /> to read a resource set.
         /// </summary>
-        /// <param name="entitySet">The entity set we are going to read entities for.</param>
-        /// <param name="expectedBaseEntityType">The expected base entity type for the entries in the feed.</param>
+        /// <param name="entitySet">The entity set we are going to read resources for.</param>
+        /// <param name="expectedResourceType">The expected structured type for the items in the resource set.</param>
         /// <returns>The newly created <see cref="ODataReader"/>.</returns>
-        public override ODataReader CreateFeedReader(IEdmEntitySetBase entitySet, IEdmEntityType expectedBaseEntityType)
+        public override ODataReader CreateResourceSetReader(IEdmEntitySetBase entitySet, IEdmStructuredType expectedResourceType)
         {
             this.AssertSynchronous();
-            this.VerifyCanCreateODataReader(entitySet, expectedBaseEntityType);
+            this.VerifyCanCreateODataReader(entitySet, expectedResourceType);
 
-            return this.CreateFeedReaderImplementation(entitySet, expectedBaseEntityType);
+            return this.CreateResourceSetReaderImplementation(entitySet, expectedResourceType, false);
         }
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary>
-        /// Asynchronously creates an <see cref="ODataReader" /> to read a feed.
+        /// Asynchronously creates an <see cref="ODataReader" /> to read a resource set.
         /// </summary>
-        /// <param name="entitySet">The entity set we are going to read entities for.</param>
-        /// <param name="expectedBaseEntityType">The expected base entity type for the entries in the feed.</param>
+        /// <param name="entitySet">The entity set we are going to read resources for.</param>
+        /// <param name="expectedResourceType">The expected structured type for the items in the resource set.</param>
         /// <returns>Task which when completed returns the newly created <see cref="ODataReader"/>.</returns>
-        public override Task<ODataReader> CreateFeedReaderAsync(IEdmEntitySetBase entitySet, IEdmEntityType expectedBaseEntityType)
+        public override Task<ODataReader> CreateResourceSetReaderAsync(IEdmEntitySetBase entitySet, IEdmStructuredType expectedResourceType)
         {
             this.AssertAsynchronous();
-            this.VerifyCanCreateODataReader(entitySet, expectedBaseEntityType);
+            this.VerifyCanCreateODataReader(entitySet, expectedResourceType);
 
             // Note that the reading is actually synchronous since we buffer the entire input when getting the stream from the message.
-            return TaskUtils.GetTaskForSynchronousOperation(() => this.CreateFeedReaderImplementation(entitySet, expectedBaseEntityType));
+            return TaskUtils.GetTaskForSynchronousOperation(() => this.CreateResourceSetReaderImplementation(entitySet, expectedResourceType, false));
         }
 #endif
 
         /// <summary>
-        /// Creates an <see cref="ODataReader" /> to read an entry.
+        /// Creates an <see cref="ODataReader" /> to read a resource.
         /// </summary>
-        /// <param name="navigationSource">The navigation source we are going to read entities for.</param>
-        /// <param name="expectedEntityType">The expected entity type for the entry to be read.</param>
+        /// <param name="navigationSource">The navigation source we are going to read resources for.</param>
+        /// <param name="expectedResourceType">The expected resource type for the resource to be read.</param>
         /// <returns>The newly created <see cref="ODataReader"/>.</returns>
-        public override ODataReader CreateEntryReader(IEdmNavigationSource navigationSource, IEdmEntityType expectedEntityType)
+        public override ODataReader CreateResourceReader(IEdmNavigationSource navigationSource, IEdmStructuredType expectedResourceType)
         {
             this.AssertSynchronous();
-            this.VerifyCanCreateODataReader(navigationSource, expectedEntityType);
+            this.VerifyCanCreateODataReader(navigationSource, expectedResourceType);
 
-            return this.CreateEntryReaderImplementation(navigationSource, expectedEntityType);
+            return this.CreateResourceReaderImplementation(navigationSource, expectedResourceType);
         }
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary>
-        /// Asynchronously creates an <see cref="ODataReader" /> to read an entry.
+        /// Asynchronously creates an <see cref="ODataReader" /> to read a resource.
         /// </summary>
-        /// <param name="navigationSource">The navigation source we are going to read entities for.</param>
-        /// <param name="expectedEntityType">The expected entity type for the entry to be read.</param>
+        /// <param name="navigationSource">The navigation source we are going to read resources for.</param>
+        /// <param name="expectedResourceType">The expected structured type for the resource to be read.</param>
         /// <returns>Task which when completed returns the newly created <see cref="ODataReader"/>.</returns>
-        public override Task<ODataReader> CreateEntryReaderAsync(IEdmNavigationSource navigationSource, IEdmEntityType expectedEntityType)
+        public override Task<ODataReader> CreateResourceReaderAsync(IEdmNavigationSource navigationSource, IEdmStructuredType expectedResourceType)
         {
             this.AssertAsynchronous();
-            this.VerifyCanCreateODataReader(navigationSource, expectedEntityType);
+            this.VerifyCanCreateODataReader(navigationSource, expectedResourceType);
 
             // Note that the reading is actually synchronous since we buffer the entire input when getting the stream from the message.
-            return TaskUtils.GetTaskForSynchronousOperation(() => this.CreateEntryReaderImplementation(navigationSource, expectedEntityType));
+            return TaskUtils.GetTaskForSynchronousOperation(() => this.CreateResourceReaderImplementation(navigationSource, expectedResourceType));
         }
 #endif
 
@@ -237,7 +198,7 @@ namespace Microsoft.OData.Core.JsonLight
             return this.CreateCollectionReaderImplementation(expectedItemTypeReference);
         }
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary>
         /// Asynchronously create a <see cref="ODataCollectionReader"/>.
         /// </summary>
@@ -254,7 +215,7 @@ namespace Microsoft.OData.Core.JsonLight
 #endif
 
         /// <summary>
-        /// This method creates an reads the property from the input and 
+        /// This method creates an reads the property from the input and
         /// returns an <see cref="ODataProperty"/> representing the read property.
         /// </summary>
         /// <param name="property">The <see cref="IEdmProperty"/> producing the property to be read.</param>
@@ -269,9 +230,9 @@ namespace Microsoft.OData.Core.JsonLight
             return jsonLightPropertyAndValueDeserializer.ReadTopLevelProperty(expectedPropertyTypeReference);
         }
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary>
-        /// Asynchronously read the property from the input and 
+        /// Asynchronously read the property from the input and
         /// return an <see cref="ODataProperty"/> representing the read property.
         /// </summary>
         /// <param name="property">The <see cref="IEdmProperty"/> producing the property to be read.</param>
@@ -299,7 +260,7 @@ namespace Microsoft.OData.Core.JsonLight
             return jsonLightErrorDeserializer.ReadTopLevelError();
         }
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary>
         /// Asynchronously read a top-level error.
         /// </summary>
@@ -310,6 +271,60 @@ namespace Microsoft.OData.Core.JsonLight
 
             ODataJsonLightErrorDeserializer jsonLightErrorDeserializer = new ODataJsonLightErrorDeserializer(this);
             return jsonLightErrorDeserializer.ReadTopLevelErrorAsync();
+        }
+#endif
+
+        /// <summary>
+        /// Creates an <see cref="ODataReader" /> to read a resource set in a Uri operation parameter.
+        /// </summary>
+        /// <param name="entitySet">The entity set we are going to read resources for.</param>
+        /// <param name="expectedResourceType">The expected structured type for the items in the resource set.</param>
+        /// <returns>The newly created <see cref="ODataReader"/>.</returns>
+        public override ODataReader CreateUriParameterResourceSetReader(IEdmEntitySetBase entitySet, IEdmStructuredType expectedResourceType)
+        {
+            this.AssertSynchronous();
+            this.VerifyCanCreateODataReader(entitySet, expectedResourceType);
+
+            return this.CreateResourceSetReaderImplementation(entitySet, expectedResourceType, true);
+        }
+
+#if PORTABLELIB
+        /// <summary>
+        /// Asynchronously creates an <see cref="ODataReader" /> to read a resource set in a Uri operation parameter.
+        /// </summary>
+        /// <param name="entitySet">The entity set we are going to read resources for.</param>
+        /// <param name="expectedResourceType">The expected structured type for the items in the resource set.</param>
+        /// <returns>Task which when completed returns the newly created <see cref="ODataReader"/>.</returns>
+        public override Task<ODataReader> CreateUriParameterResourceSetReaderAsync(IEdmEntitySetBase entitySet, IEdmStructuredType expectedResourceType)
+        {
+            this.AssertAsynchronous();
+            this.VerifyCanCreateODataReader(entitySet, expectedResourceType);
+
+            return TaskUtils.GetTaskForSynchronousOperation(() => this.CreateResourceSetReaderImplementation(entitySet, expectedResourceType, true));
+        }
+#endif
+
+        /// <summary>
+        /// Creates an <see cref="ODataReader" /> to read a resource in a Uri operation parameter.
+        /// </summary>
+        /// <param name="navigationSource">The navigation source we are going to read resources for.</param>
+        /// <param name="expectedResourceType">The expected resource type for the resource to be read.</param>
+        /// <returns>The newly created <see cref="ODataReader"/>.</returns>
+        public override ODataReader CreateUriParameterResourceReader(IEdmNavigationSource navigationSource, IEdmStructuredType expectedResourceType)
+        {
+            return this.CreateResourceReader(navigationSource, expectedResourceType);
+        }
+
+#if PORTABLELIB
+        /// <summary>
+        /// Asynchronously creates an <see cref="ODataReader" /> to read a resource in a Uri operation parameter.
+        /// </summary>
+        /// <param name="navigationSource">The navigation source we are going to read resources for.</param>
+        /// <param name="expectedResourceType">The expected structured type for the resource to be read.</param>
+        /// <returns>Task which when completed returns the newly created <see cref="ODataReader"/>.</returns>
+        public override Task<ODataReader> CreateUriParameterResourceReaderAsync(IEdmNavigationSource navigationSource, IEdmStructuredType expectedResourceType)
+        {
+            return this.CreateResourceReaderAsync(navigationSource, expectedResourceType);
         }
 #endif
 
@@ -326,7 +341,7 @@ namespace Microsoft.OData.Core.JsonLight
             return this.CreateParameterReaderImplementation(operation);
         }
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary>
         /// Asynchronously create a <see cref="ODataParameterReader"/>.
         /// </summary>
@@ -343,7 +358,37 @@ namespace Microsoft.OData.Core.JsonLight
 #endif
 
         /// <summary>
-        /// Creates an <see cref="ODataDeltaReader" /> to read a feed.
+        /// Detects the payload kind(s) from the message stream.
+        /// </summary>
+        /// <param name="detectionInfo">Additional information available for the payload kind detection.</param>
+        /// <returns>An enumerable of zero, one or more payload kinds that were detected from looking at the payload in the message stream.</returns>
+        public IEnumerable<ODataPayloadKind> DetectPayloadKind(ODataPayloadKindDetectionInfo detectionInfo)
+        {
+            Debug.Assert(detectionInfo != null, "detectionInfo != null");
+            this.VerifyCanDetectPayloadKind();
+
+            ODataJsonLightPayloadKindDetectionDeserializer payloadKindDetectionDeserializer = new ODataJsonLightPayloadKindDetectionDeserializer(this);
+            return payloadKindDetectionDeserializer.DetectPayloadKind(detectionInfo);
+        }
+
+#if PORTABLELIB
+        /// <summary>
+        /// Detects the payload kind(s) from the message stream.
+        /// </summary>
+        /// <param name="detectionInfo">Additional information available for the payload kind detection.</param>
+        /// <returns>A task which returns an enumerable of zero, one or more payload kinds that were detected from looking at the payload in the message stream.</returns>
+        public Task<IEnumerable<ODataPayloadKind>> DetectPayloadKindAsync(ODataPayloadKindDetectionInfo detectionInfo)
+        {
+            Debug.Assert(detectionInfo != null, "detectionInfo != null");
+            this.VerifyCanDetectPayloadKind();
+
+            ODataJsonLightPayloadKindDetectionDeserializer payloadKindDetectionDeserializer = new ODataJsonLightPayloadKindDetectionDeserializer(this);
+            return payloadKindDetectionDeserializer.DetectPayloadKindAsync(detectionInfo);
+        }
+#endif
+
+        /// <summary>
+        /// Creates an <see cref="ODataDeltaReader" /> to read a resource set.
         /// </summary>
         /// <param name="entitySet">The entity set we are going to read entities for.</param>
         /// <param name="expectedBaseEntityType">The expected base entity type for the entries in the delta response.</param>
@@ -356,9 +401,9 @@ namespace Microsoft.OData.Core.JsonLight
             return this.CreateDeltaReaderImplementation(entitySet, expectedBaseEntityType);
         }
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary>
-        /// Asynchronously creates an <see cref="ODataDeltaReader" /> to read a feed.
+        /// Asynchronously creates an <see cref="ODataDeltaReader" /> to read a resource set.
         /// </summary>
         /// <param name="entitySet">The entity set we are going to read entities for.</param>
         /// <param name="expectedBaseEntityType">The expected base entity type for the entries in the delta response.</param>
@@ -374,8 +419,8 @@ namespace Microsoft.OData.Core.JsonLight
 #endif
 
         /// <summary>
-        /// Read a service document. 
-        /// This method reads the service document from the input and returns 
+        /// Read a service document.
+        /// This method reads the service document from the input and returns
         /// an <see cref="ODataServiceDocument"/> that represents the read service document.
         /// </summary>
         /// <returns>An <see cref="ODataServiceDocument"/> representing the read service document.</returns>
@@ -387,10 +432,10 @@ namespace Microsoft.OData.Core.JsonLight
             return jsonLightServiceDocumentDeserializer.ReadServiceDocument();
         }
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary>
-        /// Asynchronously read a service document. 
-        /// This method reads the service document from the input and returns 
+        /// Asynchronously read a service document.
+        /// This method reads the service document from the input and returns
         /// an <see cref="ODataServiceDocument"/> that represents the read service document.
         /// </summary>
         /// <returns>Task which when completed returns an <see cref="ODataServiceDocument"/> representing the read service document.</returns>
@@ -415,7 +460,7 @@ namespace Microsoft.OData.Core.JsonLight
             return jsonLightEntityReferenceLinkDeserializer.ReadEntityReferenceLinks();
         }
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary>
         /// Asynchronously read a set of top-level entity reference links.
         /// </summary>
@@ -442,7 +487,7 @@ namespace Microsoft.OData.Core.JsonLight
             return jsonLightEntityReferenceLinkDeserializer.ReadEntityReferenceLink();
         }
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary>
         /// Asynchronously read a top-level entity reference link.
         /// </summary>
@@ -454,36 +499,6 @@ namespace Microsoft.OData.Core.JsonLight
 
             ODataJsonLightEntityReferenceLinkDeserializer jsonLightEntityReferenceLinkDeserializer = new ODataJsonLightEntityReferenceLinkDeserializer(this);
             return jsonLightEntityReferenceLinkDeserializer.ReadEntityReferenceLinkAsync();
-        }
-#endif
-
-        /// <summary>
-        /// Detects the payload kind(s) from the message stream.
-        /// </summary>
-        /// <param name="detectionInfo">Additional information available for the payload kind detection.</param>
-        /// <returns>An enumerable of zero, one or more payload kinds that were detected from looking at the payload in the message stream.</returns>
-        internal IEnumerable<ODataPayloadKind> DetectPayloadKind(ODataPayloadKindDetectionInfo detectionInfo)
-        {
-            Debug.Assert(detectionInfo != null, "detectionInfo != null");
-            this.VerifyCanDetectPayloadKind();
-
-            ODataJsonLightPayloadKindDetectionDeserializer payloadKindDetectionDeserializer = new ODataJsonLightPayloadKindDetectionDeserializer(this);
-            return payloadKindDetectionDeserializer.DetectPayloadKind(detectionInfo);
-        }
-
-#if ODATALIB_ASYNC
-        /// <summary>
-        /// Detects the payload kind(s) from the message stream.
-        /// </summary>
-        /// <param name="detectionInfo">Additional information available for the payload kind detection.</param>
-        /// <returns>A task which returns an enumerable of zero, one or more payload kinds that were detected from looking at the payload in the message stream.</returns>
-        internal Task<IEnumerable<ODataPayloadKind>> DetectPayloadKindAsync(ODataPayloadKindDetectionInfo detectionInfo)
-        {
-            Debug.Assert(detectionInfo != null, "detectionInfo != null");
-            this.VerifyCanDetectPayloadKind();
-
-            ODataJsonLightPayloadKindDetectionDeserializer payloadKindDetectionDeserializer = new ODataJsonLightPayloadKindDetectionDeserializer(this);
-            return payloadKindDetectionDeserializer.DetectPayloadKindAsync(detectionInfo);
         }
 #endif
 
@@ -520,9 +535,9 @@ namespace Microsoft.OData.Core.JsonLight
         /// <param name="encoding">The encoding to use to read the input.</param>
         /// <returns>The newly created text reader.</returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("DataWeb.Usage", "AC0014", Justification = "Throws every time")]
-        private static TextReader CreateTextReaderForMessageStreamConstructor(Stream messageStream, Encoding encoding)
+        private static TextReader CreateTextReader(Stream messageStream, Encoding encoding)
         {
-            Debug.Assert(messageStream != null, "stream != null");
+            Debug.Assert(messageStream != null, "messageStream != null");
 
             try
             {
@@ -540,6 +555,20 @@ namespace Microsoft.OData.Core.JsonLight
             }
         }
 
+        private static IJsonReader CreateJsonReader(IServiceProvider container, TextReader textReader, bool isIeee754Compatible)
+        {
+            if (container == null)
+            {
+                return new JsonReader(textReader, isIeee754Compatible);
+            }
+
+            var jsonReaderFactory = container.GetRequiredService<IJsonReaderFactory>();
+            var jsonReader = jsonReaderFactory.CreateJsonReader(textReader, isIeee754Compatible);
+            Debug.Assert(jsonReader != null, "jsonWriter != null");
+
+            return jsonReader;
+        }
+
         /// <summary>
         /// Verifies that CreateParameterReader can be called.
         /// </summary>
@@ -555,31 +584,32 @@ namespace Microsoft.OData.Core.JsonLight
         }
 
         /// <summary>
-        /// Verifies that CreateEntryReader or CreateFeedReader or CreateDeltaReader can be called.
+        /// Verifies that CreateResourceReader or CreateResourceSetReader or CreateDeltaReader can be called.
         /// </summary>
-        /// <param name="navigationSource">The navigation source we are going to read entities for.</param>
-        /// <param name="entityType">The expected entity type for the entry/entries to be read.</param>
-        private void VerifyCanCreateODataReader(IEdmNavigationSource navigationSource, IEdmEntityType entityType)
+        /// <param name="navigationSource">The navigation source we are going to read resources for.</param>
+        /// <param name="structuredType">The expected structured type for the resource/resource set to be read.</param>
+        private void VerifyCanCreateODataReader(IEdmNavigationSource navigationSource, IEdmStructuredType structuredType)
         {
-            Debug.Assert(navigationSource == null || entityType != null, "If an navigation source is specified, the entity type must be specified as well.");
+            Debug.Assert(navigationSource == null || structuredType != null, "If an navigation source is specified, the structured type must be specified as well.");
 
             // We require metadata information for reading requests.
             if (!this.ReadingResponse)
             {
                 this.VerifyUserModel();
 
-                if (navigationSource == null)
+                // TODO: check for entity only
+                if (navigationSource == null && (structuredType != null && structuredType.IsODataEntityTypeKind()))
                 {
                     throw new ODataException(ODataErrorStrings.ODataJsonLightInputContext_NoEntitySetForRequest);
                 }
             }
 
             // We only check that the base type of the entity set is assignable from the specified entity type.
-            // If no entity set/entity type is specified in the API, we will read it from the context URI.
+            // If no resource set/resource type is specified in the API, we will read it from the context URI.
             IEdmEntityType entitySetElementType = this.EdmTypeResolver.GetElementType(navigationSource);
-            if (navigationSource != null && entityType != null && !entityType.IsOrInheritsFrom(entitySetElementType))
+            if (navigationSource != null && structuredType != null && !structuredType.IsOrInheritsFrom(entitySetElementType))
             {
-                throw new ODataException(ODataErrorStrings.ODataJsonLightInputContext_EntityTypeMustBeCompatibleWithEntitySetBaseType(entityType.FullName(), entitySetElementType.FullName(), navigationSource.FullNavigationSourceName()));
+                throw new ODataException(ODataErrorStrings.ODataJsonLightInputContext_EntityTypeMustBeCompatibleWithEntitySetBaseType(structuredType.FullTypeName(), entitySetElementType.FullName(), navigationSource.FullNavigationSourceName()));
             }
         }
 
@@ -648,18 +678,19 @@ namespace Microsoft.OData.Core.JsonLight
         }
 
         /// <summary>
-        /// Creates an <see cref="ODataReader" /> to read a feed.
+        /// Creates an <see cref="ODataReader" /> to read a resource set.
         /// </summary>
-        /// <param name="entitySet">The entity set we are going to read entities for.</param>
-        /// <param name="expectedBaseEntityType">The expected base entity type for the entries in the feed.</param>
+        /// <param name="entitySet">The entity set we are going to read resources for.</param>
+        /// <param name="expectedResourceType">The expected structured type for the items in the resource set.</param>
+        /// <param name="readingParameter">true means reading a resource set in uri operation parameter, false reading a resource set in other payloads.</param>
         /// <returns>The newly created <see cref="ODataReader"/>.</returns>
-        private ODataReader CreateFeedReaderImplementation(IEdmEntitySetBase entitySet, IEdmEntityType expectedBaseEntityType)
+        private ODataReader CreateResourceSetReaderImplementation(IEdmEntitySetBase entitySet, IEdmStructuredType expectedResourceType, bool readingParameter)
         {
-            return new ODataJsonLightReader(this, entitySet, expectedBaseEntityType, true);
+            return new ODataJsonLightReader(this, entitySet, expectedResourceType, true, readingParameter);
         }
 
         /// <summary>
-        /// Creates an <see cref="ODataDeltaReader" /> to read a feed.
+        /// Creates an <see cref="ODataDeltaReader" /> to read a resource set.
         /// </summary>
         /// <param name="entitySet">The entity set we are going to read entities for.</param>
         /// <param name="expectedBaseEntityType">The expected base entity type for the entries in the delta response.</param>
@@ -670,14 +701,14 @@ namespace Microsoft.OData.Core.JsonLight
         }
 
         /// <summary>
-        /// Creates an <see cref="ODataReader" /> to read an entry.
+        /// Creates an <see cref="ODataReader" /> to read a resource.
         /// </summary>
-        /// <param name="navigationSource">The navigation source we are going to read entities for.</param>
-        /// <param name="expectedEntityType">The expected entity type for the entry to be read.</param>
+        /// <param name="navigationSource">The navigation source we are going to read resources for.</param>
+        /// <param name="expectedBaseResourceType">The expected structured type for the resource to be read.</param>
         /// <returns>The newly created <see cref="ODataReader"/>.</returns>
-        private ODataReader CreateEntryReaderImplementation(IEdmNavigationSource navigationSource, IEdmEntityType expectedEntityType)
+        private ODataReader CreateResourceReaderImplementation(IEdmNavigationSource navigationSource, IEdmStructuredType expectedBaseResourceType)
         {
-            return new ODataJsonLightReader(this, navigationSource, expectedEntityType, false);
+            return new ODataJsonLightReader(this, navigationSource, expectedBaseResourceType, false);
         }
 
         /// <summary>

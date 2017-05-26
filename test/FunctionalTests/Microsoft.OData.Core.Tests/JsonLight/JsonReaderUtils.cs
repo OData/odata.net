@@ -4,13 +4,13 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-using Microsoft.OData.Core.Json;
+using Microsoft.OData.Json;
 
-namespace Microsoft.OData.Core.Tests.JsonLight
+namespace Microsoft.OData.Tests.JsonLight
 {
     public static class JsonReaderUtils
     {
-        internal static JsonReaderAssertions Should(this JsonReader jsonReader)
+        internal static JsonReaderAssertions Should(this IJsonReader jsonReader)
         {
             return new JsonReaderAssertions(jsonReader);
         }

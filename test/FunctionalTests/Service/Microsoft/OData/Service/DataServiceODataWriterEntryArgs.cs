@@ -7,10 +7,10 @@
 namespace Microsoft.OData.Service
 {
     using System.Diagnostics;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
 
     /// <summary>
-    /// Class that keeps track of the ODataEntry, entity instance and other information
+    /// Class that keeps track of the ODataResource, entity instance and other information
     /// that we need to provide to the service author when they choose to provide their own
     /// instance of ODataWriter.
     /// </summary>
@@ -19,10 +19,10 @@ namespace Microsoft.OData.Service
         /// <summary>
         /// Creates a new instance of DataServiceODataWriterEntryArgs
         /// </summary>
-        /// <param name="entry">ODataEntry instance.</param>
+        /// <param name="entry">ODataResource instance.</param>
         /// <param name="entityInstance">Entity instance that is getting serialized.</param>
         /// <param name="operationContext">DataServiceOperationContext instance.</param>
-        public DataServiceODataWriterEntryArgs(ODataEntry entry, object entityInstance, DataServiceOperationContext operationContext)
+        public DataServiceODataWriterEntryArgs(ODataResource entry, object entityInstance, DataServiceOperationContext operationContext)
         {
             Debug.Assert(operationContext != null, "operationContext != null");
             this.Entry = entry;
@@ -31,10 +31,10 @@ namespace Microsoft.OData.Service
         }
 
         /// <summary>
-        /// Gets the ODataEntry instance containing all the information
+        /// Gets the ODataResource instance containing all the information
         /// that is going to be written in the wire.
         /// </summary>
-        public ODataEntry Entry
+        public ODataResource Entry
         {
             get;
             private set;

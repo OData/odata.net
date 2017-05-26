@@ -6,17 +6,12 @@
 
 using System;
 using FluentAssertions;
-using Microsoft.OData.Core.UriParser;
-using Microsoft.OData.Core.UriParser.Parsers;
-using Microsoft.OData.Core.UriParser.Semantic;
-using Microsoft.OData.Core.UriParser.Syntactic;
-using Microsoft.OData.Core.UriParser.TreeNodeKinds;
-using Microsoft.OData.Core.UriParser.Visitors;
+using Microsoft.OData.UriParser;
 using Microsoft.OData.Edm;
 using Xunit;
-using ODataErrorStrings = Microsoft.OData.Core.Strings;
+using ODataErrorStrings = Microsoft.OData.Strings;
 
-namespace Microsoft.OData.Core.Tests.UriParser.Binders
+namespace Microsoft.OData.Tests.UriParser.Binders
 {
     public class DottedIdentifierBinderTests
     {
@@ -27,8 +22,8 @@ namespace Microsoft.OData.Core.Tests.UriParser.Binders
         public DottedIdentifierBinderTests()
         {
             IEdmEntitySet set = HardCodedTestModel.GetPeopleSet();
-            EntityCollectionNode entityCollectionNode = new EntitySetNode(set);
-            var implicitParameter = new EntityRangeVariable(ExpressionConstants.It, HardCodedTestModel.GetPersonTypeReference(), entityCollectionNode);
+            CollectionResourceNode entityCollectionNode = new EntitySetNode(set);
+            var implicitParameter = new ResourceRangeVariable(ExpressionConstants.It, HardCodedTestModel.GetPersonTypeReference(), entityCollectionNode);
             this.bindingState = new BindingState(this.configuration) { ImplicitRangeVariable = implicitParameter };
             this.bindingState.RangeVariables.Push(new BindingState(this.configuration) { ImplicitRangeVariable = implicitParameter }.ImplicitRangeVariable);
             this.dottedIdentifierBinder = new DottedIdentifierBinder(FakeBindMethods.BindMethodReturningASinglePerson, this.bindingState);
@@ -41,7 +36,7 @@ namespace Microsoft.OData.Core.Tests.UriParser.Binders
             var resultNode = this.dottedIdentifierBinder.BindDottedIdentifier(castToken);
 
             resultNode.ShouldBeSingleCastNode(HardCodedTestModel.GetEmployeeTypeReference())
-                .And.Source.ShouldBeEntityRangeVariableReferenceNode(ExpressionConstants.It);
+                .And.Source.ShouldBeResourceRangeVariableReferenceNode(ExpressionConstants.It);
         }
 
         [Fact]
@@ -91,21 +86,21 @@ namespace Microsoft.OData.Core.Tests.UriParser.Binders
         [Fact]
         public void CastWithComplexTypeShouldWork()
         {
-            this.dottedIdentifierBinder = new DottedIdentifierBinder(FakeBindMethods.BindSingleValueProperty, this.bindingState);
+            this.dottedIdentifierBinder = new DottedIdentifierBinder(FakeBindMethods.BindSingleComplexProperty, this.bindingState);
             var castToken = new DottedIdentifierToken("Fully.Qualified.Namespace.HomeAddress", new DummyToken());
             var resultNode = this.dottedIdentifierBinder.BindDottedIdentifier(castToken);
 
-            resultNode.ShouldBeSingleValueCastNode(HardCodedTestModel.GetHomeAddressReference());
+            resultNode.ShouldBeSingleResourceCastNode(HardCodedTestModel.GetHomeAddressReference());
         }
 
         [Fact]
         public void CastWithCollectionComplexTypeShouldWork()
         {
-            this.dottedIdentifierBinder = new DottedIdentifierBinder(FakeBindMethods.BindCollectionProperty, this.bindingState);
+            this.dottedIdentifierBinder = new DottedIdentifierBinder(FakeBindMethods.BindCollectionComplex, this.bindingState);
             var castToken = new DottedIdentifierToken("Fully.Qualified.Namespace.HomeAddress", new DummyToken());
             var resultNode = this.dottedIdentifierBinder.BindDottedIdentifier(castToken);
 
-            resultNode.ShouldBeCollectionPropertyCastNode(HardCodedTestModel.GetHomeAddressReference());
+            resultNode.ShouldBeCollectionResourceCastNode(HardCodedTestModel.GetHomeAddressReference());
         }
 
         [Fact]

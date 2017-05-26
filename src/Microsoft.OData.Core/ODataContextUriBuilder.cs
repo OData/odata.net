@@ -4,7 +4,7 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core
+namespace Microsoft.OData
 {
     #region Namespaces
     using System;
@@ -39,8 +39,8 @@ namespace Microsoft.OData.Core
             { ODataPayloadKind.IndividualProperty,      ValidateResourcePath },
             { ODataPayloadKind.Collection,              ValidateCollectionType },
             { ODataPayloadKind.Property,                ValidateType },
-            { ODataPayloadKind.Entry,                   ValidateNavigationSource },
-            { ODataPayloadKind.Feed,                    ValidateNavigationSource },
+            { ODataPayloadKind.Resource,                   ValidateNavigationSource },
+            { ODataPayloadKind.ResourceSet,                    ValidateNavigationSource },
             { ODataPayloadKind.Delta,                   ValidateDelta },
         };
 
@@ -128,32 +128,27 @@ namespace Microsoft.OData.Core
             if (!string.IsNullOrEmpty(info.ResourcePath))
             {
                 builder.Append(info.ResourcePath);
+
+                // For navigation property under complex property
+                if (info.DeltaKind == ODataDeltaKind.None)
+                {
+                    AppendTypeCastAndQueryClause(builder, info);
+                }
             }
             else if (!string.IsNullOrEmpty(info.NavigationPath))
             {
                 // #ContainerName.NavigationSourceName
                 builder.Append(info.NavigationPath);
 
-                if (info.DeltaKind == ODataDeltaKind.None || info.DeltaKind == ODataDeltaKind.Feed || info.DeltaKind == ODataDeltaKind.Entry)
+                if (info.DeltaKind == ODataDeltaKind.None || info.DeltaKind == ODataDeltaKind.ResourceSet || info.DeltaKind == ODataDeltaKind.Resource)
                 {
-                    // #ContainerName.NavigationSourceName  ==>  #ContainerName.NavigationSourceName/Namespace.DerivedTypeName
-                    if (!string.IsNullOrEmpty(info.TypeCast))
-                    {
-                        builder.Append(ODataConstants.UriSegmentSeparatorChar);
-                        builder.Append(info.TypeCast);
-                    }
-
-                    // #ContainerName.NavigationSourceName  ==>  #ContainerName.NavigationSourceName(selectedPropertyList)
-                    if (!string.IsNullOrEmpty(info.QueryClause))
-                    {
-                        builder.Append(info.QueryClause);
-                    }
+                    AppendTypeCastAndQueryClause(builder, info);
                 }
 
                 switch (info.DeltaKind)
                 {
                     case ODataDeltaKind.None:
-                    case ODataDeltaKind.Entry:
+                    case ODataDeltaKind.Resource:
                         if (info.IncludeFragmentItemSelector)
                         {
                             // #ContainerName.NavigationSourceName  ==>  #ContainerName.NavigationSourceName/$entity
@@ -161,8 +156,8 @@ namespace Microsoft.OData.Core
                         }
 
                         break;
-                    case ODataDeltaKind.Feed:
-                        builder.Append(ODataConstants.ContextUriDeltaFeed);
+                    case ODataDeltaKind.ResourceSet:
+                        builder.Append(ODataConstants.ContextUriDeltaResourceSet);
                         break;
                     case ODataDeltaKind.DeletedEntry:
                         builder.Append(ODataConstants.ContextUriDeletedEntry);
@@ -186,6 +181,27 @@ namespace Microsoft.OData.Core
             }
 
             return new Uri(this.baseContextUrl, builder.ToString());
+        }
+
+        /// <summary>
+        /// Append type cast and query clause info to string builder if any.
+        /// </summary>
+        /// <param name="builder">The string builder to append info.</param>
+        /// <param name="info">The ODataContextUrlInfo includes type cast and query clause info.</param>
+        private static void AppendTypeCastAndQueryClause(StringBuilder builder, ODataContextUrlInfo info)
+        {
+            // #ContainerName.NavigationSourceName  ==>  #ContainerName.NavigationSourceName/Namespace.DerivedTypeName
+            if (!string.IsNullOrEmpty(info.TypeCast))
+            {
+                builder.Append(ODataConstants.UriSegmentSeparatorChar);
+                builder.Append(info.TypeCast);
+            }
+
+            // #ContainerName.NavigationSourceName  ==>  #ContainerName.NavigationSourceName(selectedPropertyList)
+            if (!string.IsNullOrEmpty(info.QueryClause))
+            {
+                builder.Append(info.QueryClause);
+            }
         }
 
         /// <summary>
@@ -213,11 +229,23 @@ namespace Microsoft.OData.Core
         }
 
         /// <summary>
-        /// Validate NavigationSource for given ODataContextUrlInfo for entry or feed.
+        /// Validate NavigationSource for given ODataContextUrlInfo for resource or resource set.
         /// </summary>
         /// <param name="contextUrlInfo">The ODataContextUrlInfo to evaluate on.</param>
         private static void ValidateNavigationSource(ODataContextUrlInfo contextUrlInfo)
         {
+            // For complex or complex collection property, it doesn't have any navigation source,
+            // Then the TypeName should be provided.
+            if (!contextUrlInfo.HasNavigationSourceInfo)
+            {
+                if (string.IsNullOrEmpty(contextUrlInfo.TypeName))
+                {
+                    throw new ODataException(Strings.ODataContextUriBuilder_NavigationSourceOrTypeNameMissingForResourceOrResourceSet);
+                }
+
+                return;
+            }
+
             // For navigation property without navigation target, navigation path should be null so
             // validate its navigation source (should be the name of the navigation property) which
             // at least requires EdmUnknownEntitySet to be present; otherwise validate its navigation
@@ -226,7 +254,7 @@ namespace Microsoft.OData.Core
                 contextUrlInfo.IsUnknownEntitySet && string.IsNullOrEmpty(contextUrlInfo.NavigationSource) &&
                 string.IsNullOrEmpty(contextUrlInfo.TypeName))
             {
-                throw new ODataException(Strings.ODataContextUriBuilder_NavigationSourceMissingForEntryAndFeed);
+                throw new ODataException(Strings.ODataContextUriBuilder_NavigationSourceOrTypeNameMissingForResourceOrResourceSet);
             }
         }
 

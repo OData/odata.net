@@ -11,7 +11,7 @@ namespace Microsoft.Test.Taupo.OData.WCFService
     using System.IO;
     using System.Linq;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
 
     /// <summary>
     /// Class for handling requests to update entry & property values.
@@ -48,7 +48,7 @@ namespace Microsoft.Test.Taupo.OData.WCFService
                {
                    ODataVersion targetVersion = writerSettings.Version.GetValueOrDefault();
                    responseMessage.SetHeader("Location", ODataObjectModelConverter.BuildEntryUri(result, targetEntitySet, targetVersion).OriginalString);
-                   ResponseWriter.WriteEntry(writer.CreateODataEntryWriter(targetEntitySet), result, targetEntitySet, this.Model, targetVersion, Enumerable.Empty<string>());
+                   ResponseWriter.WriteEntry(writer.CreateODataResourceWriter(targetEntitySet), result, targetEntitySet, this.Model, targetVersion, Enumerable.Empty<string>());
                });
         }
 
@@ -93,7 +93,7 @@ namespace Microsoft.Test.Taupo.OData.WCFService
                {
                    var targetVersion = writerSettings.Version.GetValueOrDefault();
                    responseMessage.SetHeader("Location", ODataObjectModelConverter.BuildEntryUri(result, targetEntitySet, targetVersion).OriginalString);
-                   ResponseWriter.WriteEntry(writer.CreateODataEntryWriter(targetEntitySet), result, targetEntitySet, this.Model, targetVersion, Enumerable.Empty<string>());
+                   ResponseWriter.WriteEntry(writer.CreateODataResourceWriter(targetEntitySet), result, targetEntitySet, this.Model, targetVersion, Enumerable.Empty<string>());
                });
         }
 
@@ -101,14 +101,14 @@ namespace Microsoft.Test.Taupo.OData.WCFService
         {
             using (var messageReader = new ODataMessageReader(message, this.GetDefaultReaderSettings(), this.Model))
             {
-                var entryReader = messageReader.CreateODataEntryReader(entitySet.EntityType());
+                var entryReader = messageReader.CreateODataResourceReader(entitySet.EntityType());
 
                 while (entryReader.Read())
                 {
                     switch(entryReader.State)
                     {
-                        case ODataReaderState.EntryEnd:
-                            var entry = (ODataEntry)entryReader.Item;
+                        case ODataReaderState.ResourceEnd:
+                            var entry = (ODataResource)entryReader.Item;
                             foreach (var property in entry.Properties)
                             {
                                 this.DataContext.UpdateItem(entitySet, entityKeys, property.Name, property.Value);

@@ -11,7 +11,6 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Atom
     using System.Xml;
     using Microsoft.Test.Taupo.Common;
     using Microsoft.Test.Taupo.Contracts;
-    using Microsoft.Test.Taupo.OData.Atom;
     using Microsoft.Test.Taupo.OData.Common;
     #endregion Namespaces
 
@@ -23,7 +22,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Atom
         /// <summary>
         /// The type of the BufferingXmlReader from the product.
         /// </summary>
-        private static Type BufferingXmlReaderType = typeof(Microsoft.OData.Core.ODataAnnotatable).Assembly.GetType("Microsoft.OData.Core.Atom.BufferingXmlReader");
+        private static Type BufferingXmlReaderType = typeof(Microsoft.OData.ODataAnnotatable).Assembly.GetType("Microsoft.OData.Metadata.BufferingXmlReader");
 
         /// <summary>
         /// The underlying product instance.

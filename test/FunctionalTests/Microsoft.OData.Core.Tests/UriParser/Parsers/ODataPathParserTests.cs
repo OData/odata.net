@@ -8,23 +8,21 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using FluentAssertions;
-using Microsoft.OData.Core.Tests.ScenarioTests.UriBuilder;
-using Microsoft.OData.Core.UriParser;
-using Microsoft.OData.Core.UriParser.Parsers;
-using Microsoft.OData.Core.UriParser.Semantic;
 using Microsoft.OData.Edm;
-using Microsoft.OData.Edm.Library;
+using Microsoft.OData.Tests.ScenarioTests.UriBuilder;
+using Microsoft.OData.UriParser;
 using Microsoft.Spatial;
 using Xunit;
-using ErrorStrings = Microsoft.OData.Core.Strings;
+using ErrorStrings = Microsoft.OData.Strings;
 
-namespace Microsoft.OData.Core.Tests.UriParser.Parsers
+namespace Microsoft.OData.Tests.UriParser.Parsers
 {
     public class ODataPathParserTests
     {
         private readonly Func<string, BatchReferenceSegment> callback = s => new BatchReferenceSegment(s, HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());
         private readonly ODataPathParser testSubject = new ODataPathParser(new ODataUriParserConfiguration(HardCodedTestModel.TestModel));
-        private readonly ODataPathParser templateParser = new ODataPathParser(new ODataUriParserConfiguration(HardCodedTestModel.TestModel) { EnableUriTemplateParsing = true });
+        private readonly ODataPathParser templateParser = new ODataPathParser(new ODataUriParserConfiguration(HardCodedTestModel.TestModel) { EnableUriTemplateParsing = true, UrlKeyDelimiter = ODataUrlKeyDelimiter.Parentheses });
+        private readonly ODataPathParser keyAsSegmentTemplateParser = new ODataPathParser(new ODataUriParserConfiguration(HardCodedTestModel.TestModel) { EnableUriTemplateParsing = true, UrlKeyDelimiter = ODataUrlKeyDelimiter.Slash });
 
         [Fact]
         public void CallbackReturnsBatchReferenceSegment()
@@ -230,7 +228,8 @@ namespace Microsoft.OData.Core.Tests.UriParser.Parsers
             var parameter = path[0].ShouldBeOperationImportSegment(HardCodedTestModel.GetFunctionImportForFindMyOwner()).And.Parameters.Single();
             parameter.As<OperationSegmentParameter>().Value.As<ConstantNode>().Value.Should().Be("000110011E0124221929");
         }
-        #region Template cases
+
+        #region Template cases without KeyAsSgment
         [Fact]
         public void NormalFunctionImportShouldWorkWithTemplateParser()
         {
@@ -278,14 +277,66 @@ namespace Microsoft.OData.Core.Tests.UriParser.Parsers
         }
 
         [Fact]
-        public void KeyAsSegmentWithTemplateShouldWork()
+        public void ParseTemplateWithTypeCastShouldWork()
         {
-            var keyAsSegmentTemplateParser = new ODataPathParser(new ODataUriParserConfiguration(HardCodedTestModel.TestModel) { EnableUriTemplateParsing = true, UrlConventions = ODataUrlConventions.KeyAsSegment });
-            IList<ODataPathSegment> path = keyAsSegmentTemplateParser.ParsePath(new[] { "Dogs", "{fido}", "MyPeople" });
+            IList<ODataPathSegment> path = this.keyAsSegmentTemplateParser.ParsePath(new[] { "Dogs(ID={fido})", "MyPeople", "Fully.Qualified.Namespace.Employee" });
             var keySegment = path[1].As<KeySegment>();
             KeyValuePair<string, object> keypair = keySegment.Keys.Single();
             keypair.Key.Should().Be("ID");
             keypair.Value.As<UriTemplateExpression>().ShouldBeEquivalentTo(new UriTemplateExpression() { LiteralText = "{fido}", ExpectedType = keySegment.EdmType.As<IEdmEntityType>().DeclaredKey.Single().Type });
+
+            var typeSegment = path[3].As<TypeSegment>();
+            typeSegment.Identifier.ShouldBeEquivalentTo("Fully.Qualified.Namespace.Employee");
+        }
+        #endregion
+
+        #region Template cases with KeyAsSgment
+        [Fact]
+        public void KeyAsSegmentWithTemplateShouldWork()
+        {
+            IList<ODataPathSegment> path = this.keyAsSegmentTemplateParser.ParsePath(new[] { "Dogs", "{fido}", "MyPeople" });
+            var keySegment = path[1].As<KeySegment>();
+            KeyValuePair<string, object> keypair = keySegment.Keys.Single();
+            keypair.Key.Should().Be("ID");
+            keypair.Value.As<UriTemplateExpression>().ShouldBeEquivalentTo(new UriTemplateExpression() { LiteralText = "{fido}", ExpectedType = keySegment.EdmType.As<IEdmEntityType>().DeclaredKey.Single().Type });
+        }
+
+        [Fact]
+        public void ParseTemplateWithTypeCastWhenKeyAsSegmentShouldWork()
+        {
+            IList<ODataPathSegment> path = this.keyAsSegmentTemplateParser.ParsePath(new[] { "Dogs", "{fido}", "MyPeople", "Fully.Qualified.Namespace.Employee" });
+            var keySegment = path[1].As<KeySegment>();
+            KeyValuePair<string, object> keypair = keySegment.Keys.Single();
+            keypair.Key.Should().Be("ID");
+            keypair.Value.As<UriTemplateExpression>().ShouldBeEquivalentTo(new UriTemplateExpression() { LiteralText = "{fido}", ExpectedType = keySegment.EdmType.As<IEdmEntityType>().DeclaredKey.Single().Type });
+            var typeSegment = path[3].As<TypeSegment>();
+            typeSegment.Identifier.ShouldBeEquivalentTo("Fully.Qualified.Namespace.Employee");
+        }
+
+        [Fact]
+        public void NormalFunctionImportShouldWorkWithTemplateParserWhenKeyAsSegmentShouldWork()
+        {
+            IList<ODataPathSegment> path = this.keyAsSegmentTemplateParser.ParsePath(new[] { "FindMyOwner(dogsName='fido')" });
+            var parameter = path[0].ShouldBeOperationImportSegment(HardCodedTestModel.GetFunctionImportForFindMyOwner()).And.Parameters.Single();
+            parameter.As<OperationSegmentParameter>().Value.As<ConstantNode>().Value.Should().Be("fido");
+        }
+
+        [Fact]
+        public void ActionWithTemplateShouldWorkWhenKeyAsSegmentShouldWork()
+        {
+            IEdmFunction operation = HardCodedTestModel.GetHasDogOverloadForPeopleWithTwoParameters();
+            IList<ODataPathSegment> path = this.keyAsSegmentTemplateParser.ParsePath(new[] { "Boss", "Fully.Qualified.Namespace.HasDog(inOffice={fido})" });
+            OperationSegmentParameter parameter = path[1].ShouldBeOperationSegment(operation).And.Parameters.Single();
+            parameter.ShouldBeConstantParameterWithValueType("inOffice", new UriTemplateExpression { LiteralText = "{fido}", ExpectedType = operation.Parameters.Last().Type });
+        }
+
+        [Fact]
+        public void FunctionImportWithTemplateShouldWorkWhenKeyAsSegmentShouldWork()
+        {
+            IEdmOperationImport operationImport = HardCodedTestModel.GetFunctionImportForFindMyOwner();
+            IList<ODataPathSegment> path = this.keyAsSegmentTemplateParser.ParsePath(new[] { "FindMyOwner(dogsName={fido})" });
+            OperationSegmentParameter parameter = path[0].ShouldBeOperationImportSegment(operationImport).And.Parameters.Single();
+            parameter.ShouldBeConstantParameterWithValueType("dogsName", new UriTemplateExpression { LiteralText = "{fido}", ExpectedType = operationImport.Operation.Parameters.Single().Type });
         }
         #endregion
 

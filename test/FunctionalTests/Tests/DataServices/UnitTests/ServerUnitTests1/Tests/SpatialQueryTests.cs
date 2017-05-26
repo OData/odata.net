@@ -266,6 +266,7 @@ namespace AstoriaUnitTests.Tests
         }
 
         #region $filter
+        [Ignore] // Remove Atom
         [TestCategory("Partition1"), TestMethod]
         public void FilterBySpatialLengthFunction()
         {
@@ -281,7 +282,7 @@ namespace AstoriaUnitTests.Tests
             VerifySpatialFilterResult("geo.length(GeometryLineString) eq 3.3699999999999974", 3); // entity property name is 'GeometryLineString'
             VerifySpatialFilterResult("geo.length(GeometryLineString) gt 3.3699999999999974", 0); // entity property name is 'GeometryLineString'
         }
-
+        [Ignore] // Remove Atom
         [TestCategory("Partition1"), TestMethod]
         public void FilterBySpatialIntersectsFunction()
         {
@@ -315,7 +316,7 @@ namespace AstoriaUnitTests.Tests
             // TwoProperties
             VerifySpatialFilterResult("geo.intersects(GeometryPoint, GeometryPolygon)", 1);
         }
-
+        [Ignore] // Remove Atom
         [TestCategory("Partition1"), TestMethod]
         public void FilterBySpatialProperty()
         {
@@ -407,7 +408,7 @@ namespace AstoriaUnitTests.Tests
                 TestUtil.AssertContains(ex.InnerException.Message, "At least one object must implement IComparable.");
             }
         }
-
+        [Ignore] // Remove Atom
         [TestCategory("Partition1"), TestMethod]
         public void OrderByDistanceToPoint()
         {
@@ -428,7 +429,7 @@ namespace AstoriaUnitTests.Tests
         }
 
         #endregion
-
+        [Ignore] // Remove Atom
         [TestCategory("Partition1"), TestMethod]
         public void QueryEntitySetWithSpatialProperty()
         {
@@ -447,7 +448,7 @@ namespace AstoriaUnitTests.Tests
                 });
             }
         }
-
+        [Ignore] // Remove Atom
         [TestCategory("Partition1"), TestMethod]
         public void QueryAndUpdateSingleEntityWithSpatialProperty()
         {
@@ -483,7 +484,7 @@ namespace AstoriaUnitTests.Tests
                 });
             }
         }
-
+        [Ignore] // Remove Atom
         [TestCategory("Partition1"), TestMethod]
         public void QuerySpatialProperty()
         {

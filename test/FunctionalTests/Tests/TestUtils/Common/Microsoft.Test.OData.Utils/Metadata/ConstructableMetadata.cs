@@ -12,11 +12,7 @@ namespace Microsoft.Test.OData.Utils.Metadata
     using System.Linq;
     using System.Reflection;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Annotations;
-    using Microsoft.OData.Edm.Expressions;
-    using Microsoft.OData.Edm.Library;
-    using Microsoft.OData.Edm.Library.Annotations;
-    using Microsoft.OData.Edm.Library.Expressions;
+    using Microsoft.OData.Edm.Vocabularies;
 
     /// <summary>Metadata definition for the DSP. This also implements the <see cref="IEdmModel"/>.</summary>
     public class ConstructableMetadata : IEdmEntityContainer, IEdmModel
@@ -161,7 +157,7 @@ namespace Microsoft.Test.OData.Utils.Metadata
         /// <param name="name">The name of the property to add.</param>
         /// <param name="propertyType">The CLR type of the property to add. This can be only a primitive type.</param>
         /// <param name="etag">true if the property should be part of the ETag</param>
-        public void AddKeyProperty(IEdmStructuredType structuredType, string name, Type propertyType, bool etag = false)
+        public void AddKeyProperty(IEdmStructuredType structuredType, string name, Type propertyType)
         {
             EdmEntityType entityType = structuredType as EdmEntityType;
             if (entityType == null)
@@ -169,19 +165,9 @@ namespace Microsoft.Test.OData.Utils.Metadata
                 throw new InvalidOperationException("Expected an EdmEntityType instance.");
             }
 
-            IEdmStructuralProperty keyProperty = this.AddPrimitiveProperty(entityType, name, propertyType, etag ? EdmConcurrencyMode.Fixed : EdmConcurrencyMode.None);
+            IEdmStructuralProperty keyProperty = this.AddPrimitiveProperty(entityType, name, propertyType);
 
             AddKeyFragment(entityType, keyProperty);
-        }
-
-        /// <summary>Adds a primitive property to the specified <paramref name="structuredType"/>.</summary>
-        /// <param name="structuredType">The type to add the property to.</param>
-        /// <param name="name">The name of the property to add.</param>
-        /// <param name="propertyType">The CLR type of the property to add. This can be only a primitive type.</param>
-        /// <param name="etag">true if the property should be part of the ETag</param>
-        public IEdmStructuralProperty AddPrimitiveProperty(IEdmStructuredType structuredType, string name, Type propertyType, bool etag = false)
-        {
-            return this.AddPrimitiveProperty(structuredType, name, propertyType, etag ? EdmConcurrencyMode.Fixed : EdmConcurrencyMode.None);
         }
 
         /// <summary>Adds a named stream property to the specified <paramref name="structuredType"/>.</summary>
@@ -191,15 +177,14 @@ namespace Microsoft.Test.OData.Utils.Metadata
         public IEdmStructuralProperty AddNamedStreamProperty(IEdmStructuredType structuredType, string streamName)
         {
             IEdmPrimitiveTypeReference streamTypeReference = EdmCoreModel.Instance.GetStream(true);
-            return AddStructuralProperty(structuredType, streamName, EdmConcurrencyMode.None, streamTypeReference);
+            return AddStructuralProperty(structuredType, streamName, streamTypeReference);
         }
 
         /// <summary>Adds a key property to the specified <paramref name="structuredType"/>.</summary>
         /// <param name="structuredType">The type to add the property to.</param>
         /// <param name="name">The name of the property to add.</param>
         /// <param name="propertyType">The CLR type of the property to add. This can be only a primitive type.</param>
-        /// <param name="concurrencyMode">Concurrency mode of the property to add.</param>
-        private IEdmStructuralProperty AddPrimitiveProperty(IEdmStructuredType structuredType, string name, Type propertyType, EdmConcurrencyMode concurrencyMode)
+        public IEdmStructuralProperty AddPrimitiveProperty(IEdmStructuredType structuredType, string name, Type propertyType)
         {
             PropertyInfo propertyInfo = null;
             if (propertyType == null)
@@ -210,28 +195,24 @@ namespace Microsoft.Test.OData.Utils.Metadata
             }
 
             IEdmPrimitiveTypeReference typeReference = MetadataUtils.GetPrimitiveTypeReference(propertyType);
-            return AddStructuralProperty(structuredType, name, concurrencyMode, typeReference);
+            return AddStructuralProperty(structuredType, name, typeReference);
         }
 
         /// <summary>Adds a new structural property.</summary>
         /// <param name="structuredType">The type to add the property to.</param>
         /// <param name="name">The name of the property to add.</param>
-        /// <param name="concurrencyMode">The concurrency mode of the property.</param>
         /// <param name="propertyTypeReference">The type of the property to add.</param>
-        /// <param name="propertyInfo">If this is a CLR property, the <see cref="PropertyInfo"/> for the property, or null otherwise.</param>
         /// <returns>The newly created and added property.</returns>
         private IEdmStructuralProperty AddStructuralProperty(
             IEdmStructuredType structuredType,
             string name,
-            EdmConcurrencyMode concurrencyMode,
             IEdmTypeReference propertyTypeReference)
         {
             EdmStructuralProperty property = new EdmStructuralProperty(
                 structuredType,
                 name,
                 propertyTypeReference,
-                /*defaultValue*/null,
-                concurrencyMode);
+                /*defaultValue*/null);
 
             ((EdmStructuredType)structuredType).AddProperty(property);
 
@@ -243,7 +224,6 @@ namespace Microsoft.Test.OData.Utils.Metadata
         /// <param name="name">The name of the property to add.</param>
         /// <param name="deleteAction">The delete action of the nav property.</param>
         /// <param name="propertyTypeReference">The type of the property to add.</param>
-        /// <param name="propertyInfo">If this is a CLR property, the <see cref="PropertyInfo"/> for the property, or null otherwise.</param>
         /// <param name="containsTarget">The contains target of the nav property</param>
         /// <returns>The newly created and added property.</returns>
         private IEdmNavigationProperty AddNavigationProperty(
@@ -282,7 +262,7 @@ namespace Microsoft.Test.OData.Utils.Metadata
         /// <param name="isCollection">Whether the property is a collection of complex type.</param>
         public void AddComplexProperty(IEdmStructuredType structuredType, string name, IEdmComplexType complexType, bool isCollection = false)
         {
-            AddStructuralProperty(structuredType, name, EdmConcurrencyMode.None,
+            AddStructuralProperty(structuredType, name,
                 isCollection ? ((EdmComplexTypeReference)complexType.ToTypeReference(true)).ToCollectionTypeReference() : complexType.ToTypeReference(true));
         }
 
@@ -307,7 +287,7 @@ namespace Microsoft.Test.OData.Utils.Metadata
         /// <param name="multiValueItemPrimitiveType">Primitive type for items in the multiValue.</param>
         public void AddMultiValueProperty(IEdmStructuredType structuredType, string name, IEdmTypeReference multiValueItemType)
         {
-            AddStructuralProperty(structuredType, name, EdmConcurrencyMode.None, multiValueItemType);
+            AddStructuralProperty(structuredType, name, multiValueItemType);
         }
 
         /// <summary>Adds a contained entity set resource reference property to the specified <paramref name="entityType"/>.</summary>
@@ -426,10 +406,10 @@ namespace Microsoft.Test.OData.Utils.Metadata
                 edmFunction.AddParameter("bindingparameter", bindingType);
             }
 
-            EdmEntitySetReferenceExpression entitySetExpression = null;
+            IEdmPathExpression entitySetExpression = null;
             if (resultSet != null)
             {
-                entitySetExpression = new EdmEntitySetReferenceExpression(resultSet);
+                entitySetExpression = new EdmPathExpression(resultSet.Name);
             }
 
             this.AddOperation(edmFunction);
@@ -446,7 +426,7 @@ namespace Microsoft.Test.OData.Utils.Metadata
         /// <param name="resultSet">EntitySet of the result expected from this operation.</param>
         public EdmFunctionImport AddFunctionImport(string name, IEdmFunction function, IEdmEntitySet resultSet, bool includeInServiceDocument)
         {
-            var functionImport = new EdmFunctionImport(this, name, function, new EdmEntitySetReferenceExpression(resultSet), includeInServiceDocument);
+            var functionImport = new EdmFunctionImport(this, name, function, new EdmPathExpression(resultSet.Name), includeInServiceDocument);
             this.AddOperationImport(name, functionImport);
             return functionImport;
         }
@@ -505,7 +485,7 @@ namespace Microsoft.Test.OData.Utils.Metadata
             EdmActionImport actionImport = new EdmActionImport(this,
                 name,
                 action,
-                resultSet == null ? null : new EdmEntitySetReferenceExpression(resultSet));
+                resultSet == null ? null : new EdmPathExpression(resultSet.Name));
 
             this.AddOperationImport(name, actionImport);
             return actionImport;
@@ -719,11 +699,11 @@ namespace Microsoft.Test.OData.Utils.Metadata
         }
 
         /// <summary>
-        /// Searches for a value term with the given name in this model and returns null if no such value term exists.
+        /// Searches for a term with the given name in this model and returns null if no such term exists.
         /// </summary>
-        /// <param name="qualifiedName">The qualified name of the value term being found.</param>
-        /// <returns>The requested value term, or null if no such value term exists.</returns>
-        public IEdmValueTerm FindDeclaredValueTerm(string qualifiedName)
+        /// <param name="qualifiedName">The qualified name of the term being found.</param>
+        /// <returns>The requested term, or null if no such term exists.</returns>
+        public IEdmTerm FindDeclaredTerm(string qualifiedName)
         {
             return null;
         }

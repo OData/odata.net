@@ -8,10 +8,9 @@ using System;
 using System.IO;
 using System.Linq;
 using Microsoft.OData.Edm;
-using Microsoft.OData.Edm.Library;
 using Xunit;
 
-namespace Microsoft.OData.Core.Tests.ScenarioTests.Roundtrip.JsonLight
+namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip.JsonLight
 {
     public class AsyncBatchRoundtripJsonLightTests
     {
@@ -40,48 +39,86 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Roundtrip.JsonLight
         [Fact]
         public void AsyncBatchJsonLightTestFromSpecExample85()
         {
-            var requestPayload = this.ClientWriteAsyncBatchRequest();
+            var requestPayload = this.ClientWriteAsyncBatchRequest(BatchPayloadUriOption.AbsoluteUri);
             var responsePayload = this.ServiceReadAsyncBatchRequestAndWriteAsyncResponse(requestPayload);
             this.ClientReadAsyncBatchResponse(responsePayload);
         }
 
-        private byte[] ClientWriteAsyncBatchRequest()
+        [Fact]
+        public void AsyncBatchJsonLightWrtingAbsoluteResourcePathAndHostTest()
+        {
+            var requestPayload = this.ClientWriteAsyncBatchRequest(BatchPayloadUriOption.AbsoluteUriUsingHostHeader);
+
+#if NETCOREAPP1_0
+            var payloadString = System.Text.Encoding.GetEncoding(0).GetString(requestPayload);
+#else
+            var payloadString = System.Text.Encoding.Default.GetString(requestPayload);
+#endif
+            Assert.True(payloadString.Contains("GET /Customers('ALFKI') HTTP/1.1") &&
+                payloadString.Contains("POST /Customers HTTP/1.1") &&
+                payloadString.Contains("PATCH /Customers('ALFKI') HTTP/1.1") &&
+                payloadString.Contains("GET /Products HTTP/1.1"));
+
+            var responsePayload = this.ServiceReadAsyncBatchRequestAndWriteAsyncResponse(requestPayload);
+            this.ClientReadAsyncBatchResponse(responsePayload);
+        }
+
+        [Fact]
+        public void AsyncBatchJsonLightWrtingRelativeResourcePathTest()
+        {
+            var requestPayload = this.ClientWriteAsyncBatchRequest(BatchPayloadUriOption.RelativeUri);
+
+#if NETCOREAPP1_0
+            var payloadString = System.Text.Encoding.GetEncoding(0).GetString(requestPayload);
+#else
+            var payloadString = System.Text.Encoding.Default.GetString(requestPayload);
+#endif
+            Assert.True(payloadString.Contains("GET Customers('ALFKI') HTTP/1.1") &&
+                payloadString.Contains("POST Customers HTTP/1.1") &&
+                payloadString.Contains("PATCH Customers('ALFKI') HTTP/1.1") &&
+                payloadString.Contains("GET Products HTTP/1.1"));
+
+            var responsePayload = this.ServiceReadAsyncBatchRequestAndWriteAsyncResponse(requestPayload);
+            this.ClientReadAsyncBatchResponse(responsePayload);
+        }
+
+        private byte[] ClientWriteAsyncBatchRequest(BatchPayloadUriOption payloadUriOption)
         {
             var stream = new MemoryStream();
 
             IODataRequestMessage requestMessage = new InMemoryMessage { Stream = stream };
             requestMessage.SetHeader("Content-Type", batchContentType);
 
-            using (var messageWriter = new ODataMessageWriter(requestMessage))
+            using (var messageWriter = new ODataMessageWriter(requestMessage, new ODataMessageWriterSettings { BaseUri = new Uri(serviceDocumentUri) }))
             {
                 var batchWriter = messageWriter.CreateODataBatchWriter();
 
                 batchWriter.WriteStartBatch();
 
                 // Write a query operation.
-                var queryOperationMessage = batchWriter.CreateOperationRequestMessage("GET", new Uri(serviceDocumentUri + "/Customers('ALFKI')"), /*contentId*/ null);
+                var queryOperationMessage = batchWriter.CreateOperationRequestMessage("GET", new Uri(serviceDocumentUri + "/Customers('ALFKI')"), /*contentId*/ null, payloadUriOption);
 
                 // Write a changeset with multi update operation.
                 batchWriter.WriteStartChangeset();
 
                 // Create a creation operation in the changeset.
-                var updateOperationMessage = batchWriter.CreateOperationRequestMessage("POST", new Uri(serviceDocumentUri + "/Customers"), "1");
+                var updateOperationMessage = batchWriter.CreateOperationRequestMessage("POST", new Uri(serviceDocumentUri + "/Customers"), "1", payloadUriOption);
 
                 // Use a new message writer to write the body of this operation.
                 using (var operationMessageWriter = new ODataMessageWriter(updateOperationMessage))
                 {
-                    var entryWriter = operationMessageWriter.CreateODataEntryWriter();
-                    var entry = new ODataEntry() { TypeName = "MyNS.Customer", Properties = new[] { new ODataProperty() { Name = "Id", Value = "AFKIL" }, new ODataProperty() { Name = "Name", Value = "Bob" } } };
+                    var entryWriter = operationMessageWriter.CreateODataResourceWriter();
+                    var entry = new ODataResource() { TypeName = "MyNS.Customer", Properties = new[] { new ODataProperty() { Name = "Id", Value = "AFKIL" }, new ODataProperty() { Name = "Name", Value = "Bob" } } };
                     entryWriter.WriteStart(entry);
                     entryWriter.WriteEnd();
                 }
 
-                updateOperationMessage = batchWriter.CreateOperationRequestMessage("PATCH", new Uri(serviceDocumentUri + "/Customers('ALFKI')"), "2");
+                updateOperationMessage = batchWriter.CreateOperationRequestMessage("PATCH", new Uri(serviceDocumentUri + "/Customers('ALFKI')"), "2", payloadUriOption);
 
                 using (var operationMessageWriter = new ODataMessageWriter(updateOperationMessage))
                 {
-                    var entryWriter = operationMessageWriter.CreateODataEntryWriter();
-                    var entry = new ODataEntry() { TypeName = "MyNS.Customer", Properties = new[] { new ODataProperty() { Name = "Name", Value = "Jack" } } };
+                    var entryWriter = operationMessageWriter.CreateODataResourceWriter();
+                    var entry = new ODataResource() { TypeName = "MyNS.Customer", Properties = new[] { new ODataProperty() { Name = "Name", Value = "Jack" } } };
                     entryWriter.WriteStart(entry);
                     entryWriter.WriteEnd();
                 }
@@ -89,7 +126,7 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Roundtrip.JsonLight
                 batchWriter.WriteEndChangeset();
 
                 // Write a query operation.
-                batchWriter.CreateOperationRequestMessage("GET", new Uri(serviceDocumentUri + "/Products"), /*contentId*/ null);
+                batchWriter.CreateOperationRequestMessage("GET", new Uri(serviceDocumentUri + "/Products"), /*contentId*/ null, payloadUriOption);
 
                 batchWriter.WriteEndBatch();
 
@@ -103,7 +140,7 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Roundtrip.JsonLight
             IODataRequestMessage requestMessage = new InMemoryMessage() { Stream = new MemoryStream(requestPayload) };
             requestMessage.SetHeader("Content-Type", batchContentType);
 
-            using (var messageReader = new ODataMessageReader(requestMessage, new ODataMessageReaderSettings(), this.userModel))
+            using (var messageReader = new ODataMessageReader(requestMessage, new ODataMessageReaderSettings { BaseUri = new Uri(serviceDocumentUri) }, this.userModel))
             {
                 var responseStream = new MemoryStream();
 
@@ -130,8 +167,8 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Roundtrip.JsonLight
                                 settings.SetServiceDocumentUri(new Uri(serviceDocumentUri));
                                 using (var operationMessageWriter = new ODataMessageWriter(response, settings, this.userModel))
                                 {
-                                    var entryWriter = operationMessageWriter.CreateODataEntryWriter(this.customers, this.customerType);
-                                    var entry = new ODataEntry() { TypeName = "MyNS.Customer", Properties = new[] { new ODataProperty() { Name = "Id", Value = "ALFKI" }, new ODataProperty() { Name = "Name", Value = "John" } } };
+                                    var entryWriter = operationMessageWriter.CreateODataResourceWriter(this.customers, this.customerType);
+                                    var entry = new ODataResource() { TypeName = "MyNS.Customer", Properties = new[] { new ODataProperty() { Name = "Id", Value = "ALFKI" }, new ODataProperty() { Name = "Name", Value = "John" } } };
                                     entryWriter.WriteStart(entry);
                                     entryWriter.WriteEnd();
                                 }
@@ -170,13 +207,13 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Roundtrip.JsonLight
                             {
                                 using (ODataMessageReader innerMessageReader = new ODataMessageReader(operationMessage, new ODataMessageReaderSettings(), this.userModel))
                                 {
-                                    var reader = innerMessageReader.CreateODataEntryReader();
+                                    var reader = innerMessageReader.CreateODataResourceReader();
 
                                     while (reader.Read())
                                     {
-                                        if (reader.State == ODataReaderState.EntryEnd)
+                                        if (reader.State == ODataReaderState.ResourceEnd)
                                         {
-                                            ODataEntry entry = reader.Item as ODataEntry;
+                                            ODataResource entry = reader.Item as ODataResource;
                                             Assert.Equal("ALFKI", entry.Properties.Single(p => p.Name == "Id").Value);
                                             Assert.Equal("John", entry.Properties.Single(p => p.Name == "Name").Value);
                                         }

@@ -46,7 +46,7 @@ namespace Microsoft.OData.Edm
             {
                 return value;
             }
-            
+
             throw new KeyNotFoundException(key.ToString());
         }
 

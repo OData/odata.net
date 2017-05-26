@@ -147,7 +147,7 @@ namespace Microsoft.Spatial
                 return result;
             }
         }
-        
+
         /// <summary>Formats this instance to a readable string.</summary>
         /// <returns>The string representation of this instance.</returns>
         public override string ToString()

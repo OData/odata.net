@@ -4,20 +4,20 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace EdmLibTests.FunctionalUtilities.UnitTests
-{
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using EdmLibTests.StubEdm;
-    using EdmLibTests.VocabularyStubs;
-    using Microsoft.OData.Edm;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using EdmLibTests.StubEdm;
+using EdmLibTests.VocabularyStubs;
+using Microsoft.OData.Edm;
+using Microsoft.OData.Edm.Vocabularies;
 #if SILVERLIGHT
     using Microsoft.Silverlight.Testing;
 #endif
-    using Microsoft.OData.Edm.Library;
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
+namespace EdmLibTests.FunctionalUtilities.UnitTests
+{
     [TestClass]
     public class VocabularyModelComparerTests
     {
@@ -48,9 +48,9 @@ namespace EdmLibTests.FunctionalUtilities.UnitTests
         }
 
         [TestMethod]
-        public void ValueTerm_Count_Not_Match_Should_Error()
+        public void Term_Count_Not_Match_Should_Error()
         {
-            this.actualModel.Add(new StubValueTerm("", ""));
+            this.actualModel.Add(new StubTerm("", ""));
 
             var errors = this.comparer.CompareModels(this.expectedModel, this.actualModel);
             this.DumpErrors(errors);
@@ -60,9 +60,9 @@ namespace EdmLibTests.FunctionalUtilities.UnitTests
         }
 
         [TestMethod]
-        public void ValueTerm_Name_Not_Match_Should_Error()
+        public void Term_Name_Not_Match_Should_Error()
         {
-            this.actualModel.SchemaElements.OfType<StubValueTerm>().First().Name = "_non_exist_";
+            this.actualModel.SchemaElements.OfType<StubTerm>().First().Name = "_non_exist_";
 
             var errors = this.comparer.CompareModels(this.expectedModel, this.actualModel);
             this.DumpErrors(errors);
@@ -72,10 +72,10 @@ namespace EdmLibTests.FunctionalUtilities.UnitTests
         }
 
         [TestMethod]
-        public void ValueTerm_Type_Nullable_Not_Match_Should_Error()
+        public void Term_Type_Nullable_Not_Match_Should_Error()
         {
             IEdmTypeReference nonMatchTypeReference = EdmCoreModel.Instance.GetInt32(false);
-            this.actualModel.SchemaElements.OfType<StubValueTerm>().First().Type = nonMatchTypeReference;
+            this.actualModel.SchemaElements.OfType<StubTerm>().First().Type = nonMatchTypeReference;
 
             var errors = this.comparer.CompareModels(this.expectedModel, this.actualModel);
             this.DumpErrors(errors);
@@ -86,10 +86,10 @@ namespace EdmLibTests.FunctionalUtilities.UnitTests
         }
 
         [TestMethod]
-        public void ValueTerm_Type_Not_Match_Should_Error()
+        public void Term_Type_Not_Match_Should_Error()
         {
             IEdmTypeReference nonMatchTypeReference = EdmCoreModel.Instance.GetSpatial(EdmPrimitiveTypeKind.Geography, false);
-            this.actualModel.SchemaElements.OfType<StubValueTerm>().First().Type = nonMatchTypeReference;
+            this.actualModel.SchemaElements.OfType<StubTerm>().First().Type = nonMatchTypeReference;
 
             var errors = this.comparer.CompareModels(this.expectedModel, this.actualModel);
             this.DumpErrors(errors);
@@ -99,11 +99,11 @@ namespace EdmLibTests.FunctionalUtilities.UnitTests
         }
 
         [TestMethod]
-        public void ValueTerm_Annotation_Count_Not_Match_Should_Error()
+        public void Term_Annotation_Count_Not_Match_Should_Error()
         {
-            var bazValueTerm = this.definitionModel.SchemaElements.OfType<IEdmValueTerm>().FirstOrDefault(t => t.Name == "baz");
-            var valueAnnotation = new StubValueAnnotation() { Term = bazValueTerm, Value = new StubStringConstantExpression("zzz") };
-            this.actualModel.SchemaElements.OfType<StubValueTerm>().First().AddVocabularyAnnotation(valueAnnotation);
+            var bazValueTerm = this.definitionModel.SchemaElements.OfType<IEdmTerm>().FirstOrDefault(t => t.Name == "baz");
+            var valueAnnotation = new StubVocabularyAnnotation() { Term = bazValueTerm, Value = new StubStringConstantExpression("zzz") };
+            this.actualModel.SchemaElements.OfType<StubTerm>().First().AddVocabularyAnnotation(valueAnnotation);
 
             var errors = this.comparer.CompareModels(this.expectedModel, this.actualModel);
             this.DumpErrors(errors);
@@ -113,13 +113,13 @@ namespace EdmLibTests.FunctionalUtilities.UnitTests
         }
 
         [TestMethod]
-        public void ValueTerm_Annotation_Term_Not_Match_Should_Error()
+        public void Term_Annotation_Term_Not_Match_Should_Error()
         {
-            var barValueTerm = this.definitionModel.SchemaElements.OfType<IEdmValueTerm>().FirstOrDefault(t => t.Name == "bar");
-            var bazValueTerm = this.definitionModel.SchemaElements.OfType<IEdmValueTerm>().FirstOrDefault(t => t.Name == "baz");
-            var valueAnnotation = new StubValueAnnotation() { Term = bazValueTerm, Value = new StubStringConstantExpression("zzz") };
+            var barValueTerm = this.definitionModel.SchemaElements.OfType<IEdmTerm>().FirstOrDefault(t => t.Name == "bar");
+            var bazValueTerm = this.definitionModel.SchemaElements.OfType<IEdmTerm>().FirstOrDefault(t => t.Name == "baz");
+            var valueAnnotation = new StubVocabularyAnnotation() { Term = bazValueTerm, Value = new StubStringConstantExpression("zzz") };
 
-            var target = this.actualModel.SchemaElements.OfType<StubValueTerm>().First();
+            var target = this.actualModel.SchemaElements.OfType<StubTerm>().First();
             target.RemoveAnnotationsForTerm(barValueTerm);
             target.AddVocabularyAnnotation(valueAnnotation);
 
@@ -131,12 +131,12 @@ namespace EdmLibTests.FunctionalUtilities.UnitTests
         }
 
         [TestMethod]
-        public void ValueTerm_Annotation_Value_Not_Match_Should_Error()
+        public void Term_Annotation_Value_Not_Match_Should_Error()
         {
-            var barValueTerm = this.definitionModel.SchemaElements.OfType<IEdmValueTerm>().FirstOrDefault(t => t.Name == "bar");
-            var valueAnnotation = new StubValueAnnotation() { Term = barValueTerm, Value = new StubStringConstantExpression("_not_exist_") };
+            var barValueTerm = this.definitionModel.SchemaElements.OfType<IEdmTerm>().FirstOrDefault(t => t.Name == "bar");
+            var valueAnnotation = new StubVocabularyAnnotation() { Term = barValueTerm, Value = new StubStringConstantExpression("_not_exist_") };
 
-            var target = this.actualModel.SchemaElements.OfType<StubValueTerm>().First();
+            var target = this.actualModel.SchemaElements.OfType<StubTerm>().First();
             target.RemoveAnnotationsForTerm(barValueTerm);
             target.AddVocabularyAnnotation(valueAnnotation);
 
@@ -156,10 +156,10 @@ namespace EdmLibTests.FunctionalUtilities.UnitTests
         {
             var model = new StubEdmModel();
 
-            var barValueTerm = new StubValueTerm("", "bar") { Type = EdmCoreModel.Instance.GetInt32(true) };
+            var barValueTerm = new StubTerm("", "bar") { Type = EdmCoreModel.Instance.GetInt32(true) };
             model.Add(barValueTerm);
 
-            var bazValueTerm = new StubValueTerm("", "baz") { Type = EdmCoreModel.Instance.GetString(true) };
+            var bazValueTerm = new StubTerm("", "baz") { Type = EdmCoreModel.Instance.GetString(true) };
             model.Add(bazValueTerm);
 
             var p1 = new StubEdmStructuralProperty("p1") { Type = EdmCoreModel.Instance.GetString(true) };
@@ -178,11 +178,11 @@ namespace EdmLibTests.FunctionalUtilities.UnitTests
         {
             var model = new StubEdmModel();
 
-            var valueTerm = new StubValueTerm("", "foo") { Type = EdmCoreModel.Instance.GetInt32(true) };
+            var valueTerm = new StubTerm("", "foo") { Type = EdmCoreModel.Instance.GetInt32(true) };
             model.Add(valueTerm);
 
-            var barValueTerm = this.definitionModel.SchemaElements.OfType<IEdmValueTerm>().FirstOrDefault(t => t.Name == "bar");
-            var valueAnnotation = new StubValueAnnotation() { Term = barValueTerm, Value = new StubStringConstantExpression("zzz") };
+            var barValueTerm = this.definitionModel.SchemaElements.OfType<IEdmTerm>().FirstOrDefault(t => t.Name == "bar");
+            var valueAnnotation = new StubVocabularyAnnotation() { Term = barValueTerm, Value = new StubStringConstantExpression("zzz") };
             valueTerm.AddVocabularyAnnotation(valueAnnotation);
 
             return model;

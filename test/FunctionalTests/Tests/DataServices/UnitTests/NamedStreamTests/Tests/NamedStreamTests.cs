@@ -69,7 +69,7 @@ namespace AstoriaUnitTests.Tests
             #region Metadata Runtime Tests
 
             #region IDSP Metadata Tests
-
+            [Ignore] // Remove Atom
             [TestMethod]
             public void NamedStreamIDSPNamedStreamsOnDerivedTypes()
             {
@@ -284,7 +284,7 @@ namespace AstoriaUnitTests.Tests
                     }
                 }
             }
-
+            [Ignore] // Remove Atom
             [TestMethod]
             public void NamedStreamIDSPMetadataStreamProviderValidationTest()
             {
@@ -387,9 +387,8 @@ namespace AstoriaUnitTests.Tests
             {
                 using (TestUtil.RestoreStaticMembersOnDispose(typeof(BlobDataServicePipelineHandlers)))
                 using (TestUtil.RestoreStaticMembersOnDispose(typeof(NorthwindDefaultStreamService)))
-                using (NorthwindDefaultStreamService.SetupNorthwindWithStreamAndETag(
+                using (NorthwindDefaultStreamService.SetupNorthwindWithStream(
                     new KeyValuePair<string, string>[] { new KeyValuePair<string, string>("Customers", "true"), new KeyValuePair<string, string>("Orders", "true") },
-                    null,
                     "NamedStreamTests_EFMetadataSerialization"))
                 using (TestUtil.RestoreStaticValueOnDispose(typeof(OpenWebDataServiceHelper), "ForceVerboseErrors"))
                 using (TestWebRequest request = TestWebRequest.CreateForInProcessWcf())
@@ -427,7 +426,7 @@ namespace AstoriaUnitTests.Tests
                     VerifyStreamsInMetadata(edmMetadata, 26, new string[] { "Customers", "Orders" }, expectedNameStreams);
                 }
             }
-            
+            [Ignore] // Remove Atom
             [TestMethod]
             public void NamedStreamEFMetadataStreamProviderValidationTest()
             {
@@ -444,7 +443,7 @@ namespace AstoriaUnitTests.Tests
                     }
 
                     using (TestUtil.RestoreStaticValueOnDispose(typeof(OpenWebDataServiceHelper), "ForceVerboseErrors"))
-                    using (NorthwindDefaultStreamService.SetupNorthwindWithStreamAndETag(mles, null, "NamedStreamTests_EFMetadataStreamProvider"))
+                    using (NorthwindDefaultStreamService.SetupNorthwindWithStream(mles, "NamedStreamTests_EFMetadataStreamProvider"))
                     using (TestUtil.RestoreStaticMembersOnDispose(typeof(NorthwindDefaultStreamService)))
                     {
                         OpenWebDataServiceHelper.ForceVerboseErrors = true;
@@ -585,7 +584,7 @@ namespace AstoriaUnitTests.Tests
                         "Stream1", "AstoriaUnitTests.Tests.NamedStreamUnitTestModule_NamedStreamTests_EntityWithConflictStream"));
                 }
             }
-
+            [Ignore] // Remove Atom
             [TestMethod]
             public void NamedStreamReflectionNamedStreamOnDerivedTypes()
             {
@@ -815,7 +814,7 @@ namespace AstoriaUnitTests.Tests
             {
                 public int ID { get; set; }
             }
-
+            [Ignore] // Remove Atom
             [TestMethod]
             public void NamedStreamReflectionMetadataStreamProviderValidationTest()
             {
@@ -924,7 +923,7 @@ namespace AstoriaUnitTests.Tests
             #endregion Metadata Runtime Tests
 
             #region Uri Parsing Tests
-
+            [Ignore] // Remove Atom
             [TestMethod]
             public void NamedStreamUriNegativeTest()
             {
@@ -1029,7 +1028,7 @@ namespace AstoriaUnitTests.Tests
             #region Main Scenario Functional Tests
 
             #region IDSP Main Scenario Functional Tests
-
+            [Ignore] // Remove Atom
             [TestMethod]
             public void NamedStreamIDSPPostEntityTest()
             {
@@ -1158,7 +1157,7 @@ namespace AstoriaUnitTests.Tests
                     }
                 }
             }
-
+            [Ignore] // Remove Atom
             [TestMethod]
             public void NamedStreamIDSPGetAndPutDefaultStreamTest()
             {
@@ -1360,7 +1359,7 @@ namespace AstoriaUnitTests.Tests
                     }
                 }
             }
-
+            [Ignore] // Remove Atom
             [TestMethod]
             public void NamedStreamIDSPGetDeleteEntityTest()
             {
@@ -1466,9 +1465,8 @@ namespace AstoriaUnitTests.Tests
                 DSPMediaResourceStorage mediaStorage = null;
 
                 using (TestUtil.RestoreStaticMembersOnDispose(typeof(NorthwindDefaultStreamService)))
-                using (NorthwindDefaultStreamService.SetupNorthwindWithStreamAndETag(
+                using (NorthwindDefaultStreamService.SetupNorthwindWithStream(
                     new KeyValuePair<string, string>[] { new KeyValuePair<string, string>("Customers", "true"), new KeyValuePair<string, string>("Orders", "true") },
-                    null,
                     "NamedStreamTests_EFBasicScenarios"))
                 using (TestUtil.RestoreStaticValueOnDispose(typeof(OpenWebDataServiceHelper), "ForceVerboseErrors"))
                 {
@@ -1635,7 +1633,7 @@ namespace AstoriaUnitTests.Tests
             #endregion Main Scenario Functional Tests
 
             #region Stream Provider API Tests
-
+            [Ignore] // Remove Atom
             [TestMethod]
             public void NamedStreamIDSSP2ApiTest()
             {
@@ -1987,7 +1985,7 @@ namespace AstoriaUnitTests.Tests
                     WebException e = (WebException)TestUtil.RunCatching(request.SendRequest);
                     Assert.IsNotNull(e, "exception expected but received none.");
                     Assert.AreEqual(400, request.ResponseStatusCode);
-                    TestUtil.AssertContains(request.GetResponseStreamAsText(), ODataLibResourceUtil.GetString("ExpandItemBinder_PropertyIsNotANavigationProperty", "Stream1", "NamedStreamTests.EntityType1"));
+                    TestUtil.AssertContains(request.GetResponseStreamAsText(), ODataLibResourceUtil.GetString("ExpandItemBinder_PropertyIsNotANavigationPropertyOrComplexProperty", "Stream1", "NamedStreamTests.EntityType1"));
                 }
             }
 
@@ -2065,7 +2063,7 @@ namespace AstoriaUnitTests.Tests
 
                 return xpaths;
             }
-
+            [Ignore] // Remove Atom
             [TestMethod]
             public void NamedStreamProjectExpandSDPTest()
             {

@@ -4,16 +4,13 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core.UriParser.Parsers
-{
-    using System;
-    using System.Collections.Generic;
-    using System.Diagnostics;
-    using System.Linq;
-    using Microsoft.OData.Core.UriParser.Syntactic;
-    using Microsoft.OData.Core.UriParser.Visitors;
-    using ODataErrorStrings = Microsoft.OData.Core.Strings;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
+using ODataErrorStrings = Microsoft.OData.Strings;
 
+namespace Microsoft.OData.UriParser
+{
     /// <summary>
     /// Translator from the old expand syntax tree to the new Expand Option syntax tree
     /// </summary>
@@ -35,7 +32,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         }
 
         /// <summary>
-        /// Invert the all of the paths in an expandToken, such that they are now in the same order as they are present in the 
+        /// Invert the all of the paths in an expandToken, such that they are now in the same order as they are present in the
         /// base url
         /// </summary>
         /// <param name="treeToInvert">the tree to invert paths on</param>
@@ -47,7 +44,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
             foreach (ExpandTermToken term in treeToInvert.ExpandTerms)
             {
                 PathReverser pathReverser = new PathReverser();
-                PathSegmentToken reversedPath = term.PathToNavProp.Accept(pathReverser);
+                PathSegmentToken reversedPath = term.PathToNavigationProp.Accept(pathReverser);
 
                 // we also need to call the select token normalizer for this level to reverse the select paths
                 SelectToken newSelectToken = term.SelectOption;
@@ -89,7 +86,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
                 {
                     ExpandToken newSubExpand = CombineTerms(termToken.ExpandOption);
                     finalTermToken = new ExpandTermToken(
-                                                              termToken.PathToNavProp,
+                                                              termToken.PathToNavigationProp,
                                                               termToken.FilterOption,
                                                               termToken.OrderByOptions,
                                                               termToken.TopOption,
@@ -115,12 +112,12 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         /// <returns>the combined token, or, if the two are mutually exclusive, the same tokens</returns>
         public ExpandTermToken CombineTerms(ExpandTermToken existingToken, ExpandTermToken newToken)
         {
-            Debug.Assert(new PathSegmentTokenEqualityComparer().Equals(existingToken.PathToNavProp, newToken.PathToNavProp), "Paths should be equal.");
+            Debug.Assert(new PathSegmentTokenEqualityComparer().Equals(existingToken.PathToNavigationProp, newToken.PathToNavigationProp), "Paths should be equal.");
 
             List<ExpandTermToken> childNodes = CombineChildNodes(existingToken, newToken).ToList();
             SelectToken combinedSelects = CombineSelects(existingToken, newToken);
             return new ExpandTermToken(
-                    existingToken.PathToNavProp,
+                    existingToken.PathToNavigationProp,
                     existingToken.FilterOption,
                     existingToken.OrderByOptions,
                     existingToken.TopOption,
@@ -180,13 +177,13 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         private void AddOrCombine(IDictionary<PathSegmentToken, ExpandTermToken> combinedTerms, ExpandTermToken expandedTerm)
         {
             ExpandTermToken existingTerm;
-            if (combinedTerms.TryGetValue(expandedTerm.PathToNavProp, out existingTerm))
+            if (combinedTerms.TryGetValue(expandedTerm.PathToNavigationProp, out existingTerm))
             {
-                combinedTerms[expandedTerm.PathToNavProp] = CombineTerms(expandedTerm, existingTerm);
+                combinedTerms[expandedTerm.PathToNavigationProp] = CombineTerms(expandedTerm, existingTerm);
             }
             else
             {
-                combinedTerms.Add(expandedTerm.PathToNavProp, expandedTerm);
+                combinedTerms.Add(expandedTerm.PathToNavigationProp, expandedTerm);
             }
         }
 

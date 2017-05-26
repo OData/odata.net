@@ -558,7 +558,9 @@ namespace EdmLibTests.FunctionalTests
             var expectedErrors = new EdmLibTestErrors()
             {
                 { null, null, EdmErrorCode.NavigationPropertyMappingMustPointToValidTargetForProperty },
-                { null, null, EdmErrorCode.NavigationPropertyMappingMustPointToValidTargetForProperty }
+                { null, null, EdmErrorCode.UnresolvedNavigationPropertyBindingPath },
+                { null, null, EdmErrorCode.NavigationPropertyMappingMustPointToValidTargetForProperty },
+                { null, null, EdmErrorCode.UnresolvedNavigationPropertyBindingPath },
             };
             this.VerifySemanticValidation(model, EdmVersion.V40, expectedErrors);
         }
@@ -571,7 +573,9 @@ namespace EdmLibTests.FunctionalTests
             var expectedErrors = new EdmLibTestErrors()
             {
                 { null, null, EdmErrorCode.NavigationPropertyMappingMustPointToValidTargetForProperty },
-                { null, null, EdmErrorCode.NavigationPropertyMappingMustPointToValidTargetForProperty }
+                { null, null, EdmErrorCode.UnresolvedNavigationPropertyBindingPath },
+                { null, null, EdmErrorCode.NavigationPropertyMappingMustPointToValidTargetForProperty },
+                { null, null, EdmErrorCode.UnresolvedNavigationPropertyBindingPath },
             };
             this.VerifySemanticValidation(model, EdmVersion.V40, expectedErrors);
         }

@@ -57,14 +57,14 @@ namespace Microsoft.OData.Client
 #if !PORTABLELIB
 #pragma warning disable 0628
         /// <summary>
-        /// Initializes a new instance of the DataServiceQueryException class from the 
+        /// Initializes a new instance of the DataServiceQueryException class from the
         /// specified SerializationInfo and StreamingContext instances.
         /// </summary>
         /// <param name="info">
-        /// A SerializationInfo containing the information required to serialize 
+        /// A SerializationInfo containing the information required to serialize
         /// the new DataServiceException.</param>
         /// <param name="context">
-        /// A StreamingContext containing the source of the serialized stream 
+        /// A StreamingContext containing the source of the serialized stream
         /// associated with the new DataServiceException.</param>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1047", Justification = "Follows serialization info pattern.")]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1032", Justification = "Follows serialization info pattern.")]

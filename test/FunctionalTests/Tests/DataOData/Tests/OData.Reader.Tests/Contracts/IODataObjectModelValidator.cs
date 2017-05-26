@@ -21,12 +21,12 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Contracts
         /// </summary>
         /// <param name="objectModelRoot">The root of the object model.</param>
         /// <remarks>The OData object model can be rooted with:
-        /// ODataFeed
-        /// ODataEntry
+        /// ODataResourceSet
+        /// ODataResource
         /// ODataProperty
         /// 
-        /// ODataFeed may have annotation which stores the entries in it.
-        /// ODataNavigationLink may have annotation which stores the expanded items in it.</remarks>
+        /// ODataResourceSet may have annotation which stores the entries in it.
+        /// ODataNestedResourceInfo may have annotation which stores the expanded items in it.</remarks>
         void ValidateODataObjectModel(object objectModelRoot);
     }
 }

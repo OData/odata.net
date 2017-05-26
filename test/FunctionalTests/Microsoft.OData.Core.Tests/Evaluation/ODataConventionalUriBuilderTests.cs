@@ -8,14 +8,12 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using FluentAssertions;
-using Microsoft.OData.Core.Evaluation;
 using Microsoft.OData.Edm;
-using Microsoft.OData.Edm.Library;
-using Microsoft.OData.Edm.Library.Values;
-using Microsoft.OData.Edm.Values;
+using Microsoft.OData.Edm.Vocabularies;
+using Microsoft.OData.Evaluation;
 using Xunit;
 
-namespace Microsoft.OData.Core.Tests.Evaluation
+namespace Microsoft.OData.Tests.Evaluation
 {
     public class ODataConventionalUriBuilderTests : ODataUriBuilderTestsBase
     {
@@ -30,7 +28,7 @@ namespace Microsoft.OData.Core.Tests.Evaluation
         public ODataConventionalUriBuilderTests()
         {
             this.defaultBaseUri = new Uri("http://odata.org/base/");
-            this.builder = new ODataConventionalUriBuilder(this.defaultBaseUri, UrlConvention.CreateWithExplicitValue(false));
+            this.builder = new ODataConventionalUriBuilder(this.defaultBaseUri, ODataUrlKeyDelimiter.Parentheses);
 
             this.model = TestModel.BuildDefaultTestModel();
             this.defaultProductInstance = TestModel.BuildDefaultProductValue(TestModel.GetEntityType(this.model, "TestModel.Product"));
@@ -96,7 +94,7 @@ namespace Microsoft.OData.Core.Tests.Evaluation
         [Fact]
         public void BuildEntityInstanceUriShouldWorkWithSingleKey()
         {
-            this.builder.BuildEntityInstanceUri(new Uri("http://odata.org/base/Products"), new Collection<KeyValuePair<string, object>> {new KeyValuePair<string, object>("Id", 42)}, this.defaultProductInstance.Type.FullName())
+            this.builder.BuildEntityInstanceUri(new Uri("http://odata.org/base/Products"), new Collection<KeyValuePair<string, object>> { new KeyValuePair<string, object>("Id", 42) }, this.defaultProductInstance.Type.FullName())
                 .Should().Be(new Uri("http://odata.org/base/Products(42)"));
         }
 
@@ -116,7 +114,7 @@ namespace Microsoft.OData.Core.Tests.Evaluation
         [Fact]
         public void BuildEntityInstanceUriShouldWorkWithMultipleKeys()
         {
-            this.builder.BuildEntityInstanceUri(new Uri("http://odata.org/base/MultipleKeys"), new Collection<KeyValuePair<string, object>> {new KeyValuePair<string, object>("KeyA", "keya"), new KeyValuePair<string, object>("KeyB", 1)}, this.defaultMultipleKeyInstance.Type.FullName())
+            this.builder.BuildEntityInstanceUri(new Uri("http://odata.org/base/MultipleKeys"), new Collection<KeyValuePair<string, object>> { new KeyValuePair<string, object>("KeyA", "keya"), new KeyValuePair<string, object>("KeyB", 1) }, this.defaultMultipleKeyInstance.Type.FullName())
                 .Should().Be(new Uri("http://odata.org/base/MultipleKeys(KeyA='keya',KeyB=1)"));
         }
 
@@ -130,7 +128,7 @@ namespace Microsoft.OData.Core.Tests.Evaluation
         [Fact]
         public void BuildEntityInstanceUriShouldFailWithNullKeyValueKind()
         {
-            Action action = () => this.builder.BuildEntityInstanceUri(new Uri("http://odata.org/base/Products"), new Collection<KeyValuePair<string, object>>{new KeyValuePair<string, object>("Id", null)}, "TestModel.Product");
+            Action action = () => this.builder.BuildEntityInstanceUri(new Uri("http://odata.org/base/Products"), new Collection<KeyValuePair<string, object>> { new KeyValuePair<string, object>("Id", null) }, "TestModel.Product");
             action.ShouldThrow<ODataException>().WithMessage(Strings.ODataConventionalUriBuilder_NullKeyValue("Id", "TestModel.Product"));
         }
 
@@ -300,7 +298,7 @@ namespace Microsoft.OData.Core.Tests.Evaluation
         private string GetEntityInstanceUriForStringKey(string keyValue)
         {
             var instance = new EdmStructuredValueSimulator(this.typeWithStringKey, new[] { new KeyValuePair<string, IEdmValue>("Id", new EdmStringConstant(EdmCoreModel.Instance.GetString(true), keyValue)) });
-            Uri entityInstanceUri = this.builder.BuildEntityInstanceUri(new Uri("http://odata.org/base/Products"), new Collection<KeyValuePair<string, object>>{new KeyValuePair<string, object>("Id", keyValue)}, instance.Type.FullName());
+            Uri entityInstanceUri = this.builder.BuildEntityInstanceUri(new Uri("http://odata.org/base/Products"), new Collection<KeyValuePair<string, object>> { new KeyValuePair<string, object>("Id", keyValue) }, instance.Type.FullName());
             return entityInstanceUri.OriginalString;
         }
 

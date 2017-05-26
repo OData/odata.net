@@ -9,10 +9,10 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Library;
     using Microsoft.Test.OData.Utils.CombinatorialEngine;
+    using Microsoft.Test.Taupo.Astoria.Contracts.OData;
     using Microsoft.Test.Taupo.Common;
     using Microsoft.Test.Taupo.Execution;
     using Microsoft.Test.Taupo.OData.Atom;
@@ -35,6 +35,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
         [InjectDependency(IsRequired = true)]
         public PayloadWriterTestDescriptor.Settings Settings { get; set; }
 
+        [Ignore] // Remove Atom
         [TestMethod, Variation(Description = "Validates the payloads for various stream properties.")]
         public void WriterStreamPropertiesTests()
         {
@@ -114,10 +115,10 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
             var testDescriptors = testCases.SelectMany(testCase =>
                 {
                     EdmModel model = new EdmModel();
-                    
+
                     EdmEntityType edmEntityType = new EdmEntityType("TestModel", "StreamPropertyEntityType");
-                    EdmStructuralProperty edmStructuralProperty= edmEntityType.AddStructuralProperty("Id", EdmPrimitiveTypeKind.Int32, false);
-                    edmEntityType.AddKeys(new IEdmStructuralProperty[]{edmStructuralProperty});
+                    EdmStructuralProperty edmStructuralProperty = edmEntityType.AddStructuralProperty("Id", EdmPrimitiveTypeKind.Int32, false);
+                    edmEntityType.AddKeys(new IEdmStructuralProperty[] { edmStructuralProperty });
                     model.AddElement(edmEntityType);
 
                     EdmEntityContainer edmEntityContainer = new EdmEntityContainer("TestModel", "DefaultContainer");
@@ -126,13 +127,13 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                     EdmEntitySet edmEntitySet = new EdmEntitySet(edmEntityContainer, "StreamPropertyEntitySet", edmEntityType);
                     edmEntityContainer.AddElement(edmEntitySet);
 
-                    ODataEntry entry = new ODataEntry()
+                    ODataResource entry = new ODataResource()
                     {
                         Id = ObjectModelUtils.DefaultEntryId,
                         ReadLink = ObjectModelUtils.DefaultEntryReadLink,
                         TypeName = edmEntityType.FullName()
                     };
-                    
+
                     var streamReference = (ODataStreamReferenceValue)testCase.NamedStreamProperty.Value;
                     bool needBaseUri = (streamReference.ReadLink != null && !streamReference.ReadLink.IsAbsoluteUri) || (streamReference.EditLink != null && !streamReference.EditLink.IsAbsoluteUri);
                     entry.Properties = new ODataProperty[] { testCase.NamedStreamProperty };
@@ -142,15 +143,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                         entry,
                         (testConfiguration) =>
                         {
-                            if (testConfiguration.Format == ODataFormat.Atom)
-                            {
-                                return new AtomWriterTestExpectedResults(this.Settings.ExpectedResultSettings)
-                                {
-                                    Xml = "<NamedStream>" + testCase.GetExpectedAtomPayload(testConfiguration) + "</NamedStream>",
-                                    FragmentExtractor = result => result,
-                                };
-                            }
-                            else if (testConfiguration.Format == ODataFormat.Json)
+                            if (testConfiguration.Format == ODataFormat.Json)
                             {
                                 return new JsonWriterTestExpectedResults(this.Settings.ExpectedResultSettings)
                                 {
@@ -167,11 +160,11 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                                 throw new NotSupportedException("Unsupported ODataFormat found: " + testConfiguration.Format.ToString());
                             }
                         })
-                        {
-                            Model = model,
-                            PayloadEdmElementContainer = edmEntityContainer,
-                            PayloadEdmElementType = edmEntityType,
-                        };
+                    {
+                        Model = model,
+                        PayloadEdmElementContainer = edmEntityContainer,
+                        PayloadEdmElementType = edmEntityType,
+                    };
 
                     var resultTestCases = new List<StreamPropertyTestDescriptor>();
                     if (needBaseUri)
@@ -205,7 +198,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                     }
 
                     ODataMessageWriterSettings settings = testConfiguration.MessageWriterSettings.Clone();
-                    settings.PayloadBaseUri = testDescriptorBaseUriPair.Item2;
+                    settings.BaseUri = testDescriptorBaseUriPair.Item2;
                     settings.SetServiceDocumentUri(ServiceDocumentUri);
 
                     WriterTestConfiguration config =
@@ -213,7 +206,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
 
                     if (testConfiguration.IsRequest)
                     {
-                        ODataEntry payloadEntry = (ODataEntry)testDescriptor.PayloadItems[0];
+                        ODataResource payloadEntry = (ODataResource)testDescriptor.PayloadItems[0];
                         ODataProperty firstStreamProperty = payloadEntry.Properties.Where(p => p.Value is ODataStreamReferenceValue).FirstOrDefault();
                         this.Assert.IsNotNull(firstStreamProperty, "firstStreamProperty != null");
 
@@ -243,11 +236,12 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
             public Func<WriterTestConfiguration, string> GetExpectedJsonLightPayload { get; set; }
         }
 
+        [Ignore] // Remove Atom
         [TestMethod, Variation(Description = "Negative test cases for named streams.")]
         public void StreamPropertiesNegativeTests()
         {
-            EdmModel model=new EdmModel();
-            
+            EdmModel model = new EdmModel();
+
             EdmComplexType edmComplexType = new EdmComplexType("TestModel", "MyComplexType");
             edmComplexType.AddStructuralProperty("Stream1", EdmCoreModel.Instance.GetStream(false));
             model.AddElement(edmComplexType);
@@ -263,7 +257,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
             model.AddElement(edmEntityContainer);
 
             var entitySet = edmEntityContainer.AddEntitySet("EntitySetForStreams", edmEntityType);
-            
+
             var testCases = new[] {
                 // Note that negative test cases to validate the content of an ODataStreamReferenceValue are in WriteInputValidationTests.cs.
                 // TODO: We need to add these test cases for writing top level properties and metadata as well.
@@ -287,8 +281,8 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                             }
                         }
                     },
-                    ExpectedExceptionWithoutModel = ODataExpectedExceptions.ODataException("ODataWriter_StreamPropertiesMustBePropertiesOfODataEntry"),
-                    ExpectedExceptionWithModel = ODataExpectedExceptions.ODataException("ODataWriter_StreamPropertiesMustBePropertiesOfODataEntry"),
+                    ExpectedExceptionWithoutModel = ODataExpectedExceptions.ODataException("ODataWriter_StreamPropertiesMustBePropertiesOfODataResource"),
+                    ExpectedExceptionWithModel = ODataExpectedExceptions.ODataException("ODataWriter_StreamPropertiesMustBePropertiesOfODataResource"),
                 },
                 new { // named stream properties are not allowed on complex collection types
                     NamedStreamProperty = new ODataProperty()
@@ -317,8 +311,8 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                             }
                         }
                     },
-                    ExpectedExceptionWithoutModel = ODataExpectedExceptions.ODataException("ODataWriter_StreamPropertiesMustBePropertiesOfODataEntry"),
-                    ExpectedExceptionWithModel = ODataExpectedExceptions.ODataException("ODataWriter_StreamPropertiesMustBePropertiesOfODataEntry"),
+                    ExpectedExceptionWithoutModel = ODataExpectedExceptions.ODataException("ODataWriter_StreamPropertiesMustBePropertiesOfODataResource"),
+                    ExpectedExceptionWithModel = ODataExpectedExceptions.ODataException("ODataWriter_StreamPropertiesMustBePropertiesOfODataResource"),
                 },
                 // TODO: Add the following case for the top-level collection writer as well.
                 new { // named stream collection properties are not allowed.
@@ -329,7 +323,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                         {
                             TypeName = EntityModelUtils.GetCollectionTypeName("Edm.Int32"),
                             Items = new[]
-                            { 
+                            {
                                 new ODataStreamReferenceValue()
                                 {
                                     EditLink = new Uri("someUri", UriKind.RelativeOrAbsolute)
@@ -348,7 +342,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                         {
                             TypeName = EntityModelUtils.GetCollectionTypeName("Edm.Stream"),
                             Items = new[]
-                            { 
+                            {
                                 new ODataStreamReferenceValue()
                                 {
                                     EditLink = new Uri("someUri", UriKind.RelativeOrAbsolute)
@@ -363,18 +357,18 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
 
             var testDescriptors = testCases.SelectMany(testCase =>
             {
-                ODataEntry entry = new ODataEntry()
+                ODataResource entry = new ODataResource()
                 {
                     TypeName = "TestModel.EntityTypeForStreams",
                     Properties = new ODataProperty[] { testCase.NamedStreamProperty },
-                    SerializationInfo = new ODataFeedAndEntrySerializationInfo()
+                    SerializationInfo = new ODataResourceSerializationInfo()
                     {
                         NavigationSourceEntityTypeName = "TestModel.EntityTypeForStreams",
                         ExpectedTypeName = "TestModel.EntityTypeForStreams",
                         NavigationSourceName = "MySet"
                     }
                 };
-                return new []
+                return new[]
                 {
                     new PayloadWriterTestDescriptor<ODataItem>(
                         this.Settings,

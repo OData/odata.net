@@ -17,12 +17,11 @@ namespace Microsoft.OData.Service
     using System.Reflection;
     using System.Web;
     using System.Xml.Linq;
-    using Microsoft.OData.Core;
-    using Microsoft.OData.Core.UriParser;
-    using Microsoft.OData.Core.UriParser.Semantic;
+    using Microsoft.OData;
     using Microsoft.OData.Service.Parsing;
     using Microsoft.OData.Service.Providers;
     using Microsoft.OData.Service.Serializers;
+    using Microsoft.OData.UriParser;
     using DataServiceProviderMethods = Microsoft.OData.Service.Providers.DataServiceProviderMethods;
     using LiteralParser = Microsoft.OData.Service.Parsing.LiteralParser;
     using OpenTypeMethods = Microsoft.OData.Service.Providers.OpenTypeMethods;
@@ -73,7 +72,7 @@ namespace Microsoft.OData.Service
             Debug.Assert(service != null, "service != null");
             Debug.Assert(absoluteRequestUri != null, "absoluteRequestUri != null");
             Debug.Assert(absoluteRequestUri.IsAbsoluteUri, "absoluteRequestUri.IsAbsoluteUri(" + absoluteRequestUri + ")");
-            
+
             MetadataProviderEdmModel metadataProviderEdmModel = service.Provider.GetMetadataProviderEdmModel();
 
             ODataPath path = ParsePath(metadataProviderEdmModel, absoluteRequestUri, service);
@@ -224,7 +223,7 @@ namespace Microsoft.OData.Service
                 // Note that we defer the same test for the default atom stream till later when we know if the instance type is an MLE.
                 if (resultDescription.TargetKind == RequestTargetKind.MediaResource &&
                     resultDescription.IsNamedStream &&
-                    service.OperationContext.RequestMessage.HttpVerb.IsChange() &&                    
+                    service.OperationContext.RequestMessage.HttpVerb.IsChange() &&
                     service.OperationContext.RequestMessage.HttpVerb != HttpVerbs.PUT)
                 {
                     throw DataServiceException.CreateMethodNotAllowed(
@@ -385,9 +384,9 @@ namespace Microsoft.OData.Service
                 }
             };
 
-            if (UrlConvention.Create(service).GenerateKeyAsSegment)
+            if (service.Configuration.DataServiceBehavior.GenerateKeyAsSegment)
             {
-                parser.UrlConventions = ODataUrlConventions.KeyAsSegment;
+                parser.UrlKeyDelimiter = Microsoft.OData.ODataUrlKeyDelimiter.Slash;
             }
 
             // configure the callback for handling batch cross-referencing segments ($0 etc).
@@ -712,7 +711,7 @@ namespace Microsoft.OData.Service
             {
                 return;
             }
-            
+
             int segmentIdxToSkipRightsCheck = -1;
             var lastSegment = segments.Last();
             Debug.Assert(lastSegment != null, "lastSegment != null");
@@ -746,9 +745,9 @@ namespace Microsoft.OData.Service
                 if (previous != null)
                 {
                     // for legacy reasons, the request expression for cross-referencing URI's is only modified for certain cases.
-                    if (isCrossReferencingUri 
-                        && (segment.TargetKind != RequestTargetKind.PrimitiveValue 
-                        && segment.TargetKind != RequestTargetKind.OpenPropertyValue 
+                    if (isCrossReferencingUri
+                        && (segment.TargetKind != RequestTargetKind.PrimitiveValue
+                        && segment.TargetKind != RequestTargetKind.OpenPropertyValue
                         && segment.TargetKind != RequestTargetKind.MediaResource))
                     {
                         continue;
@@ -1160,7 +1159,7 @@ namespace Microsoft.OData.Service
         {
             Debug.Assert(queryExpression != null, "queryExpression != null");
             Debug.Assert(key != null, "key != null");
-            
+
             List<KeyValuePair<string, object>> keyValues = key.Keys.ToList();
             Debug.Assert(keyValues.Count != 0, "keyValues.Count != 0");
             Debug.Assert(resourceType.KeyProperties.Count == keyValues.Count, "resourceType.KeyProperties.Count == keyValues.Count");
@@ -1177,9 +1176,9 @@ namespace Microsoft.OData.Service
                 }
                 else
                 {
-                    keyValue = keyValues.Single(v => v.Key == keyProperty.Name).Value;    
+                    keyValue = keyValues.Single(v => v.Key == keyProperty.Name).Value;
                 }
-                
+
                 var binaryValue = keyValue as byte[];
                 if (binaryValue != null && keyProperty.Type == typeof(System.Data.Linq.Binary))
                 {

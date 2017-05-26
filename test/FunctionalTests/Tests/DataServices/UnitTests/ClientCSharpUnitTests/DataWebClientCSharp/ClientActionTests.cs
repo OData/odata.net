@@ -21,10 +21,10 @@ namespace AstoriaUnitTests
     using Provider = Microsoft.OData.Service.Providers;
     using System.Linq;
     using System.Reflection;
-	using System.Text;
+    using System.Text;
     using AstoriaUnitTests.Stubs;
     using AstoriaUnitTests.Stubs.DataServiceProvider;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
     using t = System.Data.Test.Astoria;
     #endregion
@@ -38,6 +38,7 @@ namespace AstoriaUnitTests
     /// entity, collection of entity, entity queryable. Collection of primitive and collection
     /// of complex are included but require a slightly different pattern for use.
     /// </remarks>
+    [Ignore] // Remove Atom
     [TestClass]
     public class ClientActionTests
     {
@@ -174,8 +175,8 @@ namespace AstoriaUnitTests
         private class ClientErrorTestCase
         {
             public string RequestUri
-            { 
-                get; 
+            {
+                get;
                 set;
             }
 
@@ -580,7 +581,7 @@ namespace AstoriaUnitTests
                 return (string)resource.GetValue("PrimitiveProperty");
             }
 
-            [DSPActionAttribute(Provider.OperationParameterBindingKind.Never, ReturnElementTypeName="AstoriaUnitTests.Tests.Actions.ComplexType")]
+            [DSPActionAttribute(Provider.OperationParameterBindingKind.Never, ReturnElementTypeName = "AstoriaUnitTests.Tests.Actions.ComplexType")]
             public DSPResource TopLevelAction_Complex()
             {
                 DSPResource resource = (DSPResource)this.context.GetResourceSetEntities("Set").First();
@@ -596,7 +597,7 @@ namespace AstoriaUnitTests
                 return (IEnumerable<string>)resource.GetValue("PrimitiveCollectionProperty");
             }
 
-            [DSPActionAttribute(Provider.OperationParameterBindingKind.Never, ReturnElementTypeName="AstoriaUnitTests.Tests.Actions.ComplexType")]
+            [DSPActionAttribute(Provider.OperationParameterBindingKind.Never, ReturnElementTypeName = "AstoriaUnitTests.Tests.Actions.ComplexType")]
             public IEnumerable<DSPResource> TopLevelAction_ComplexCollection()
             {
                 DSPResource resource = (DSPResource)this.context.GetResourceSetEntities("Set").First();
@@ -604,7 +605,7 @@ namespace AstoriaUnitTests
                 return (IEnumerable<DSPResource>)resource.GetValue("ComplexCollectionProperty");
             }
 
-            [DSPActionAttribute(Provider.OperationParameterBindingKind.Never, ReturnElementTypeName="AstoriaUnitTests.Tests.Actions.EntityType", ReturnSet="Set")]
+            [DSPActionAttribute(Provider.OperationParameterBindingKind.Never, ReturnElementTypeName = "AstoriaUnitTests.Tests.Actions.EntityType", ReturnSet = "Set")]
             public DSPResource TopLevelAction_Entity()
             {
                 DSPResource resource = (DSPResource)this.context.GetResourceSetEntities("Set").First();
@@ -612,7 +613,7 @@ namespace AstoriaUnitTests
                 return resource;
             }
 
-            [DSPActionAttribute(Provider.OperationParameterBindingKind.Never, ReturnElementTypeName="AstoriaUnitTests.Tests.Actions.EntityType", ReturnSet="Set")]
+            [DSPActionAttribute(Provider.OperationParameterBindingKind.Never, ReturnElementTypeName = "AstoriaUnitTests.Tests.Actions.EntityType", ReturnSet = "Set")]
             public IEnumerable<DSPResource> TopLevelAction_EntityCollection()
             {
                 List<object> resources = this.context.GetResourceSetEntities("Set");
@@ -626,7 +627,7 @@ namespace AstoriaUnitTests
                 return enumerableResources;
             }
 
-            [DSPActionAttribute(Provider.OperationParameterBindingKind.Never, ReturnElementTypeName="AstoriaUnitTests.Tests.Actions.EntityType", ReturnSet="Set")]
+            [DSPActionAttribute(Provider.OperationParameterBindingKind.Never, ReturnElementTypeName = "AstoriaUnitTests.Tests.Actions.EntityType", ReturnSet = "Set")]
             public IQueryable<DSPResource> TopLevelAction_EntityQueryable()
             {
                 return this.TopLevelAction_EntityCollection().AsQueryable();
@@ -638,7 +639,7 @@ namespace AstoriaUnitTests
 
             /*
              *  Actions on a single entity operation. Gets the corresponding property from the binded entity.
-             */ 
+             */
 
             [DSPActionAttribute(Provider.OperationParameterBindingKind.Sometimes, ParameterTypeNames = new string[] { "AstoriaUnitTests.Tests.Actions.EntityType" })]
             public static void ActionOnSingleEntity_Void(DSPResource resource)
@@ -653,7 +654,7 @@ namespace AstoriaUnitTests
                 return (string)resource.GetValue("PrimitiveProperty");
             }
 
-            [DSPActionAttribute(Provider.OperationParameterBindingKind.Sometimes, ReturnElementTypeName="AstoriaUnitTests.Tests.Actions.ComplexType", ParameterTypeNames = new string[] { "AstoriaUnitTests.Tests.Actions.EntityType" })]
+            [DSPActionAttribute(Provider.OperationParameterBindingKind.Sometimes, ReturnElementTypeName = "AstoriaUnitTests.Tests.Actions.ComplexType", ParameterTypeNames = new string[] { "AstoriaUnitTests.Tests.Actions.EntityType" })]
             public static DSPResource ActionOnSingleEntity_Complex(DSPResource resource)
             {
                 resource.SetValue("Updated", true);
@@ -667,14 +668,14 @@ namespace AstoriaUnitTests
                 return (IEnumerable<string>)resource.GetValue("PrimitiveCollectionProperty");
             }
 
-            [DSPActionAttribute(Provider.OperationParameterBindingKind.Sometimes, ReturnElementTypeName="AstoriaUnitTests.Tests.Actions.ComplexType", ParameterTypeNames = new string[] { "AstoriaUnitTests.Tests.Actions.EntityType" })]
+            [DSPActionAttribute(Provider.OperationParameterBindingKind.Sometimes, ReturnElementTypeName = "AstoriaUnitTests.Tests.Actions.ComplexType", ParameterTypeNames = new string[] { "AstoriaUnitTests.Tests.Actions.EntityType" })]
             public static IEnumerable<DSPResource> ActionOnSingleEntity_ComplexCollection(DSPResource resource)
             {
                 resource.SetValue("Updated", true);
                 return (IEnumerable<DSPResource>)resource.GetValue("ComplexCollectionProperty");
             }
 
-            [DSPActionAttribute(Provider.OperationParameterBindingKind.Sometimes, ReturnElementTypeName="AstoriaUnitTests.Tests.Actions.EntityType", ReturnSetPath="resource", ParameterTypeNames = new string[] { "AstoriaUnitTests.Tests.Actions.EntityType" })]
+            [DSPActionAttribute(Provider.OperationParameterBindingKind.Sometimes, ReturnElementTypeName = "AstoriaUnitTests.Tests.Actions.EntityType", ReturnSetPath = "resource", ParameterTypeNames = new string[] { "AstoriaUnitTests.Tests.Actions.EntityType" })]
             public static DSPResource ActionOnSingleEntity_Entity(DSPResource resource)
             {
                 resource.SetValue("Updated", true);
@@ -701,7 +702,7 @@ namespace AstoriaUnitTests
             /*
              * Does the same thing as the equivalent action on a single entity for the First on the set given,
              * but also set's Updated to true for all resources.
-             */ 
+             */
 
             [DSPActionAttribute(Provider.OperationParameterBindingKind.Sometimes, ParameterTypeNames = new string[] { "AstoriaUnitTests.Tests.Actions.EntityType" })]
             public static void ActionOnEntityCollection_Void(IEnumerable<DSPResource> resources)
@@ -723,7 +724,7 @@ namespace AstoriaUnitTests
                 return (string)resources.First().GetValue("PrimitiveProperty");
             }
 
-            [DSPActionAttribute(Provider.OperationParameterBindingKind.Sometimes, ReturnElementTypeName="AstoriaUnitTests.Tests.Actions.ComplexType", ParameterTypeNames = new string[] { "AstoriaUnitTests.Tests.Actions.EntityType" })]
+            [DSPActionAttribute(Provider.OperationParameterBindingKind.Sometimes, ReturnElementTypeName = "AstoriaUnitTests.Tests.Actions.ComplexType", ParameterTypeNames = new string[] { "AstoriaUnitTests.Tests.Actions.EntityType" })]
             public static DSPResource ActionOnEntityCollection_Complex(IEnumerable<DSPResource> resources)
             {
                 foreach (var resource in resources)
@@ -745,7 +746,7 @@ namespace AstoriaUnitTests
                 return (IEnumerable<string>)((DSPResource)resources.First()).GetValue("PrimitiveCollectionProperty");
             }
 
-            [DSPActionAttribute(Provider.OperationParameterBindingKind.Sometimes, ReturnElementTypeName="AstoriaUnitTests.Tests.Actions.ComplexType", ParameterTypeNames = new string[] { "AstoriaUnitTests.Tests.Actions.EntityType" })]
+            [DSPActionAttribute(Provider.OperationParameterBindingKind.Sometimes, ReturnElementTypeName = "AstoriaUnitTests.Tests.Actions.ComplexType", ParameterTypeNames = new string[] { "AstoriaUnitTests.Tests.Actions.EntityType" })]
             public static IEnumerable<DSPResource> ActionOnEntityCollection_ComplexCollection(IEnumerable<DSPResource> resources)
             {
                 foreach (var resource in resources)
@@ -812,7 +813,7 @@ namespace AstoriaUnitTests
                 return (string)resources.First().GetValue("PrimitiveProperty");
             }
 
-            [DSPActionAttribute(Provider.OperationParameterBindingKind.Sometimes, ReturnElementTypeName="AstoriaUnitTests.Tests.Actions.ComplexType", ParameterTypeNames = new string[] { "AstoriaUnitTests.Tests.Actions.EntityType" })]
+            [DSPActionAttribute(Provider.OperationParameterBindingKind.Sometimes, ReturnElementTypeName = "AstoriaUnitTests.Tests.Actions.ComplexType", ParameterTypeNames = new string[] { "AstoriaUnitTests.Tests.Actions.EntityType" })]
             public static DSPResource ActionOnEntityQueryable_Complex(IQueryable<DSPResource> resources)
             {
                 foreach (var resource in resources)
@@ -834,7 +835,7 @@ namespace AstoriaUnitTests
                 return (IEnumerable<string>)((DSPResource)resources.First()).GetValue("PrimitiveCollectionProperty");
             }
 
-            [DSPActionAttribute(Provider.OperationParameterBindingKind.Sometimes, ReturnElementTypeName="AstoriaUnitTests.Tests.Actions.ComplexType", ParameterTypeNames = new string[] { "AstoriaUnitTests.Tests.Actions.EntityType" })]
+            [DSPActionAttribute(Provider.OperationParameterBindingKind.Sometimes, ReturnElementTypeName = "AstoriaUnitTests.Tests.Actions.ComplexType", ParameterTypeNames = new string[] { "AstoriaUnitTests.Tests.Actions.EntityType" })]
             public static IEnumerable<DSPResource> ActionOnEntityQueryable_ComplexCollection(IQueryable<DSPResource> resources)
             {
                 foreach (var resource in resources)
@@ -856,7 +857,7 @@ namespace AstoriaUnitTests
                 return (DSPResource)resources.First().GetValue("ResourceReferenceProperty");
             }
 
-            [DSPActionAttribute(Provider.OperationParameterBindingKind.Sometimes, ReturnElementTypeName = "AstoriaUnitTests.Tests.Actions.EntityType", ReturnSetPath= "resources", ParameterTypeNames = new string[] { "AstoriaUnitTests.Tests.Actions.EntityType" })]
+            [DSPActionAttribute(Provider.OperationParameterBindingKind.Sometimes, ReturnElementTypeName = "AstoriaUnitTests.Tests.Actions.EntityType", ReturnSetPath = "resources", ParameterTypeNames = new string[] { "AstoriaUnitTests.Tests.Actions.EntityType" })]
             public static IEnumerable<DSPResource> ActionOnEntityQueryable_EntityCollection(IQueryable<DSPResource> resources)
             {
                 foreach (var resource in resources)
@@ -994,10 +995,10 @@ namespace AstoriaUnitTests
                     ExpectedResults = new object[] { },
                     StatusCode = 204,
                     ExpectedReturnType = typeof(void),
-                    ExecuteMethod = (ctx, uri, isAsync) => 
-                    { 
-                        entityInstances.First().Updated = true; 
-                        return MyExecute(ctx, uri, isAsync); 
+                    ExecuteMethod = (ctx, uri, isAsync) =>
+                    {
+                        entityInstances.First().Updated = true;
+                        return MyExecute(ctx, uri, isAsync);
                     },
                 },
                 new PositiveTestCase() {
@@ -1005,8 +1006,8 @@ namespace AstoriaUnitTests
                     ExpectedResults = new object[] { entityInstances.First().PrimitiveProperty },
                     StatusCode = 200,
                     ExpectedReturnType = typeof(string),
-                    ExecuteMethod = (ctx, uri, isAsync) => 
-                    { 
+                    ExecuteMethod = (ctx, uri, isAsync) =>
+                    {
                         entityInstances.First().Updated = true;
                         return MyExecute<string>(ctx, uri, true, isAsync);
                     },
@@ -1016,10 +1017,10 @@ namespace AstoriaUnitTests
                     ExpectedResults = new object[] { entityInstances.First().ComplexProperty },
                     StatusCode = 200,
                     ExpectedReturnType = typeof(ComplexType),
-                    ExecuteMethod = (ctx, uri, isAsync) => 
-                    { 
+                    ExecuteMethod = (ctx, uri, isAsync) =>
+                    {
                         entityInstances.First().Updated = true;
-                        return MyExecute<ComplexType>(ctx, uri, true, isAsync); 
+                        return MyExecute<ComplexType>(ctx, uri, true, isAsync);
                     },
                 },
                 new PositiveTestCase() {
@@ -1027,7 +1028,7 @@ namespace AstoriaUnitTests
                     ExpectedResults = entityInstances.First().PrimitiveCollectionProperty,
                     StatusCode = 200,
                     ExpectedReturnType = typeof(string),
-                    ExecuteMethod = (ctx, uri, isAsync) => 
+                    ExecuteMethod = (ctx, uri, isAsync) =>
                     {
                         entityInstances.First().Updated = true;
                         return MyExecute<string>(ctx, uri, false, isAsync);
@@ -1038,9 +1039,9 @@ namespace AstoriaUnitTests
                     ExpectedResults = entityInstances.First().ComplexCollectionProperty,
                     StatusCode = 200,
                     ExpectedReturnType = typeof(ComplexType),
-                    ExecuteMethod = (ctx, uri, isAsync) => 
+                    ExecuteMethod = (ctx, uri, isAsync) =>
                     {
-                        entityInstances.First().Updated = true; 
+                        entityInstances.First().Updated = true;
                         return MyExecute<ComplexType>(ctx, uri, false, isAsync);
                     },
                 },
@@ -1049,8 +1050,8 @@ namespace AstoriaUnitTests
                     ExpectedResults = new object[] { entityInstances.First() },
                     StatusCode = 200,
                     ExpectedReturnType = typeof(EntityType),
-                    ExecuteMethod = (ctx, uri, isAsync) => 
-                    { 
+                    ExecuteMethod = (ctx, uri, isAsync) =>
+                    {
                         entityInstances.First().Updated = true;
                         return MyExecute<EntityType>(ctx, uri, false, isAsync);
                     },
@@ -1060,8 +1061,8 @@ namespace AstoriaUnitTests
                     ExpectedResults = new object[] { entityInstances.First() },
                     StatusCode = 200,
                     ExpectedReturnType = typeof(EntityType),
-                    ExecuteMethod = (ctx, uri, isAsync) => 
-                    { 
+                    ExecuteMethod = (ctx, uri, isAsync) =>
+                    {
                         entityInstances.First().Updated = true;
                         return MyExecute<EntityType>(ctx, uri, true, isAsync);
                     },
@@ -1071,8 +1072,8 @@ namespace AstoriaUnitTests
                     ExpectedResults = entityInstances,
                     StatusCode = 200,
                     ExpectedReturnType = typeof(EntityType),
-                    ExecuteMethod = (ctx, uri, isAsync) => 
-                    { 
+                    ExecuteMethod = (ctx, uri, isAsync) =>
+                    {
                         foreach(EntityType e in entityInstances)
                         {
                             e.Updated = true;
@@ -1080,13 +1081,13 @@ namespace AstoriaUnitTests
                         return MyExecute<EntityType>(ctx, uri, false, isAsync);
                     },
                 },
-                new PositiveTestCase() { 
+                new PositiveTestCase() {
                     RequestUri = "/TopLevelAction_EntityCollection",
                     ExpectedResults = entityInstances,
                     StatusCode = 200,
                     ExpectedReturnType = typeof(EntityType),
-                    ExecuteMethod = (ctx, uri, isAsync) => 
-                    { 
+                    ExecuteMethod = (ctx, uri, isAsync) =>
+                    {
                         foreach(EntityType e in entityInstances)
                         {
                             e.Updated = true;
@@ -1099,8 +1100,8 @@ namespace AstoriaUnitTests
                     ExpectedResults = entityInstances.AsQueryable(),
                     StatusCode = 200,
                     ExpectedReturnType = typeof(EntityType),
-                    ExecuteMethod = (ctx, uri, isAsync) => 
-                    { 
+                    ExecuteMethod = (ctx, uri, isAsync) =>
+                    {
                         foreach(EntityType e in entityInstances)
                         {
                             e.Updated = true;
@@ -1113,8 +1114,8 @@ namespace AstoriaUnitTests
                     ExpectedResults = entityInstances.AsQueryable(),
                     StatusCode = 200,
                     ExpectedReturnType = typeof(EntityType),
-                    ExecuteMethod = (ctx, uri, isAsync) => 
-                    { 
+                    ExecuteMethod = (ctx, uri, isAsync) =>
+                    {
                         foreach(EntityType e in entityInstances)
                         {
                             e.Updated = true;
@@ -1127,7 +1128,7 @@ namespace AstoriaUnitTests
                     ExpectedResults = new object[] { },
                     StatusCode = 204,
                     ExpectedReturnType = typeof(void),
-                    ExecuteMethod = (ctx, uri, isAsync) => 
+                    ExecuteMethod = (ctx, uri, isAsync) =>
                     {
                         entityInstances[1].Updated = true;
                         return MyExecute(ctx, uri, isAsync);
@@ -1138,8 +1139,8 @@ namespace AstoriaUnitTests
                     ExpectedResults = new object[] { entityInstances[1].PrimitiveProperty },
                     StatusCode = 200,
                     ExpectedReturnType = typeof(string),
-                    ExecuteMethod = (ctx, uri, isAsync) => 
-                    { 
+                    ExecuteMethod = (ctx, uri, isAsync) =>
+                    {
                         entityInstances[1].Updated = true;
                         return MyExecute<string>(ctx, uri, true, isAsync);
                     },
@@ -1149,7 +1150,7 @@ namespace AstoriaUnitTests
                     ExpectedResults = new object[] { entityInstances[1].ComplexProperty },
                     StatusCode = 200,
                     ExpectedReturnType = typeof(ComplexType),
-                    ExecuteMethod = (ctx, uri, isAsync) => 
+                    ExecuteMethod = (ctx, uri, isAsync) =>
                     {
                         entityInstances[1].Updated = true;
                         return MyExecute<ComplexType>(ctx, uri, true, isAsync);
@@ -1160,7 +1161,7 @@ namespace AstoriaUnitTests
                     ExpectedResults = entityInstances[1].PrimitiveCollectionProperty,
                     StatusCode = 200,
                     ExpectedReturnType = typeof(string),
-                    ExecuteMethod = (ctx, uri, isAsync) => 
+                    ExecuteMethod = (ctx, uri, isAsync) =>
                     {
                         entityInstances[1].Updated = true;
                         return MyExecute<string>(ctx, uri, false, isAsync);
@@ -1171,7 +1172,7 @@ namespace AstoriaUnitTests
                     ExpectedResults = entityInstances[1].ComplexCollectionProperty,
                     StatusCode = 200,
                     ExpectedReturnType = typeof(void),
-                    ExecuteMethod = (ctx, uri, isAsync) => 
+                    ExecuteMethod = (ctx, uri, isAsync) =>
                     {
                         entityInstances[1].Updated = true;
                         return MyExecute<ComplexType>(ctx, uri, false, isAsync);
@@ -1182,7 +1183,7 @@ namespace AstoriaUnitTests
                     ExpectedResults = new object[] { entityInstances[1].ResourceReferenceProperty },
                     StatusCode = 200,
                     ExpectedReturnType = typeof(EntityType),
-                    ExecuteMethod = (ctx, uri, isAsync) => 
+                    ExecuteMethod = (ctx, uri, isAsync) =>
                     {
                         entityInstances[1].Updated = true;
                         return MyExecute<EntityType>(ctx, uri, false, isAsync);
@@ -1193,7 +1194,7 @@ namespace AstoriaUnitTests
                     ExpectedResults = entityInstances[1].ResourceSetReferenceProperty,
                     StatusCode = 200,
                     ExpectedReturnType = typeof(EntityType),
-                    ExecuteMethod = (ctx, uri, isAsync) => 
+                    ExecuteMethod = (ctx, uri, isAsync) =>
                     {
                         entityInstances[1].Updated = true;
                         return MyExecute<EntityType>(ctx, uri, false, isAsync);
@@ -1204,7 +1205,7 @@ namespace AstoriaUnitTests
                     ExpectedResults = entityInstances[1].ResourceSetReferenceProperty.AsQueryable(),
                     StatusCode = 200,
                     ExpectedReturnType = typeof(EntityType),
-                    ExecuteMethod = (ctx, uri, isAsync) => 
+                    ExecuteMethod = (ctx, uri, isAsync) =>
                     {
                         entityInstances[1].Updated = true;
                         return MyExecute<EntityType>(ctx, uri, false, isAsync);
@@ -1215,7 +1216,7 @@ namespace AstoriaUnitTests
                     ExpectedResults = new object[] { },
                     StatusCode = 204,
                     ExpectedReturnType = typeof(void),
-                    ExecuteMethod = (ctx, uri, isAsync) => 
+                    ExecuteMethod = (ctx, uri, isAsync) =>
                     {
                         foreach (EntityType e in entityInstances)
                         {
@@ -1229,11 +1230,11 @@ namespace AstoriaUnitTests
                     ExpectedResults = new object[] { entityInstances.First().PrimitiveProperty },
                     StatusCode = 200,
                     ExpectedReturnType = typeof(string),
-                    ExecuteMethod = (ctx, uri, isAsync) => 
-                    { 
+                    ExecuteMethod = (ctx, uri, isAsync) =>
+                    {
                         foreach(EntityType e in entityInstances)
                         {
-                            e.Updated = true; 
+                            e.Updated = true;
                         }
                         return MyExecute<string>(ctx, uri, true, isAsync);
                     },
@@ -1243,7 +1244,7 @@ namespace AstoriaUnitTests
                     ExpectedResults = new object[] { entityInstances.First().ComplexProperty },
                     StatusCode = 200,
                     ExpectedReturnType = typeof(ComplexType),
-                    ExecuteMethod = (ctx, uri, isAsync) => 
+                    ExecuteMethod = (ctx, uri, isAsync) =>
                     {
                         foreach (EntityType e in entityInstances)
                         {
@@ -1257,7 +1258,7 @@ namespace AstoriaUnitTests
                     ExpectedResults = entityInstances.First().PrimitiveCollectionProperty,
                     StatusCode = 200,
                     ExpectedReturnType = typeof(string),
-                    ExecuteMethod = (ctx, uri, isAsync) => 
+                    ExecuteMethod = (ctx, uri, isAsync) =>
                     {
                         foreach (EntityType e in entityInstances)
                         {
@@ -1271,7 +1272,7 @@ namespace AstoriaUnitTests
                     ExpectedResults = entityInstances.First().ComplexCollectionProperty,
                     StatusCode = 200,
                     ExpectedReturnType = typeof(ComplexType),
-                    ExecuteMethod = (ctx, uri, isAsync) => 
+                    ExecuteMethod = (ctx, uri, isAsync) =>
                     {
                         foreach (EntityType e in entityInstances)
                         {
@@ -1285,7 +1286,7 @@ namespace AstoriaUnitTests
                     ExpectedResults = new object[] { entityInstances.First().ResourceReferenceProperty },
                     StatusCode = 200,
                     ExpectedReturnType = typeof(EntityType),
-                    ExecuteMethod = (ctx, uri, isAsync) => 
+                    ExecuteMethod = (ctx, uri, isAsync) =>
                     {
                         foreach (EntityType e in entityInstances)
                         {
@@ -1299,7 +1300,7 @@ namespace AstoriaUnitTests
                     ExpectedResults = entityInstances.First().ResourceSetReferenceProperty,
                     StatusCode = 200,
                     ExpectedReturnType = typeof(EntityType),
-                    ExecuteMethod = (ctx, uri, isAsync) => 
+                    ExecuteMethod = (ctx, uri, isAsync) =>
                     {
                         foreach (EntityType e in entityInstances)
                         {
@@ -1313,7 +1314,7 @@ namespace AstoriaUnitTests
                     ExpectedResults = entityInstances.First().ResourceSetReferenceProperty.AsQueryable(),
                     StatusCode = 200,
                     ExpectedReturnType = typeof(EntityType),
-                    ExecuteMethod = (ctx, uri, isAsync) => 
+                    ExecuteMethod = (ctx, uri, isAsync) =>
                     {
                         foreach (EntityType e in entityInstances)
                         {
@@ -1327,7 +1328,7 @@ namespace AstoriaUnitTests
                     ExpectedResults = new object[] { },
                     StatusCode = 204,
                     ExpectedReturnType = typeof(void),
-                    ExecuteMethod = (ctx, uri, isAsync) => 
+                    ExecuteMethod = (ctx, uri, isAsync) =>
                     {
                         foreach (EntityType e in entityInstances)
                         {
@@ -1341,7 +1342,7 @@ namespace AstoriaUnitTests
                     ExpectedResults = new object[] { entityInstances.First().PrimitiveProperty },
                     StatusCode = 200,
                     ExpectedReturnType = typeof(string),
-                    ExecuteMethod = (ctx, uri, isAsync) => 
+                    ExecuteMethod = (ctx, uri, isAsync) =>
                     {
                         foreach (EntityType e in entityInstances)
                         {
@@ -1355,7 +1356,7 @@ namespace AstoriaUnitTests
                     ExpectedResults = new object[] { entityInstances.First().ComplexProperty },
                     StatusCode = 200,
                     ExpectedReturnType = typeof(ComplexType),
-                    ExecuteMethod = (ctx, uri, isAsync) => 
+                    ExecuteMethod = (ctx, uri, isAsync) =>
                     {
                         foreach (EntityType e in entityInstances)
                         {
@@ -1369,7 +1370,7 @@ namespace AstoriaUnitTests
                     ExpectedResults = entityInstances.First().PrimitiveCollectionProperty,
                     StatusCode = 200,
                     ExpectedReturnType = typeof(string),
-                    ExecuteMethod = (ctx, uri, isAsync) => 
+                    ExecuteMethod = (ctx, uri, isAsync) =>
                     {
                         foreach (EntityType e in entityInstances)
                         {
@@ -1397,7 +1398,7 @@ namespace AstoriaUnitTests
                     ExpectedResults = new object[] { entityInstances.First().ResourceReferenceProperty },
                     StatusCode = 200,
                     ExpectedReturnType = typeof(EntityType),
-                    ExecuteMethod = (ctx, uri, isAsync) => 
+                    ExecuteMethod = (ctx, uri, isAsync) =>
                     {
                         foreach (EntityType e in entityInstances)
                         {
@@ -1411,7 +1412,7 @@ namespace AstoriaUnitTests
                     ExpectedResults = entityInstances.First().ResourceSetReferenceProperty,
                     StatusCode = 200,
                     ExpectedReturnType = typeof(EntityType),
-                    ExecuteMethod = (ctx, uri, isAsync) => 
+                    ExecuteMethod = (ctx, uri, isAsync) =>
                     {
                         foreach (EntityType e in entityInstances)
                         {
@@ -1425,7 +1426,7 @@ namespace AstoriaUnitTests
                     ExpectedResults = entityInstances.First().ResourceSetReferenceProperty.AsQueryable(),
                     StatusCode = 200,
                     ExpectedReturnType = typeof(EntityType),
-                    ExecuteMethod = (ctx, uri, isAsync) => 
+                    ExecuteMethod = (ctx, uri, isAsync) =>
                     {
                         foreach (EntityType e in entityInstances)
                         {
@@ -1446,13 +1447,13 @@ namespace AstoriaUnitTests
                     RequestUri = "/TopLevelAction_WithParam_Primitive",
                     ErrorMsg = "A null value was found for the property named 'value', which has the expected type 'Edm.Int32[Nullable=False]'. The expected type 'Edm.Int32[Nullable=False]' does not allow null values.",
                     StatusCode = 400,
-                    ExecuteMethod = (ctx, uri, isAsync) => 
-                    { 
-                        return MyExecute(ctx, uri, isAsync, 
-                        new OperationParameter[] 
-                        { 
+                    ExecuteMethod = (ctx, uri, isAsync) =>
+                    {
+                        return MyExecute(ctx, uri, isAsync,
+                        new OperationParameter[]
+                        {
                             new BodyOperationParameter("value", null)
-                        }); 
+                        });
                     },
                 },
                 new ServerErrorTestCase() {
@@ -1654,10 +1655,10 @@ namespace AstoriaUnitTests
         #region Client Error Test Cases
 
         // These error messages aren't ideal, but Execute() with the bool will only be around until ODataLib is integrated into the client. 
-        private ClientErrorTestCase[] clientErrorTestCases = new ClientErrorTestCase[] 
+        private ClientErrorTestCase[] clientErrorTestCases = new ClientErrorTestCase[]
             {
                 // singleResult param is false for primitive
-                new ClientErrorTestCase() { 
+                new ClientErrorTestCase() {
                     RequestUri = "/TopLevelAction_Primitive",
                     AtomErrorMsg = "",
                     JsonLightErrorMsg = string.Format(CultureInfo.InvariantCulture, ODataLibResourceUtil.GetString("ReaderValidationUtils_TypeInContextUriDoesNotMatchExpectedType"), "<serviceRoot>/$metadata#Edm.String", "Edm.String", "Collection(Edm.String)"),
@@ -1665,7 +1666,7 @@ namespace AstoriaUnitTests
                     ExecuteMethod = (ctx, uri, isAsync) => { return MyExecute<string>(ctx, uri, false, isAsync); },
                 },
                 // singleResult param is false for complex
-                new ClientErrorTestCase() { 
+                new ClientErrorTestCase() {
                     RequestUri = "/TopLevelAction_Complex",
                     AtomErrorMsg = "",
                     JsonLightErrorMsg = string.Format(CultureInfo.InvariantCulture, ODataLibResourceUtil.GetString("ReaderValidationUtils_TypeInContextUriDoesNotMatchExpectedType"), "<serviceRoot>/$metadata#AstoriaUnitTests.Tests.Actions.ComplexType", "AstoriaUnitTests.Tests.Actions.ComplexType", "Collection(AstoriaUnitTests.Tests.Actions.ComplexType)"),
@@ -1700,178 +1701,178 @@ namespace AstoriaUnitTests
             // Use Execute to invoke service actions with parameters from the client. Success cases.
             #region Testcases
             PositiveTestCase[] positiveTestCases = new PositiveTestCase[]
-            {   
-                new PositiveTestCase() 
+            {
+                new PositiveTestCase()
                 {
                     RequestUri = "/Set/AstoriaUnitTests.Tests.Actions.ActionOnEntityCollectionWithParam_PrimitiveByteArray",
                     ExpectedResults = new object[] { 3 },
                     StatusCode = 200,
                     ExpectedReturnType = typeof(int),
                     OperationParameters = new OperationParameter[] { new BodyOperationParameter("value", new byte[] { 0x01, 0x02 } )},
-                    ExecuteMethodWithParams = (ctx, uri, isAsync, operationParameters) => 
-                    { 
+                    ExecuteMethodWithParams = (ctx, uri, isAsync, operationParameters) =>
+                    {
                         entityInstances.First().Updated = true;
-                        return MyExecute<int>(ctx, uri, true, isAsync, operationParameters); 
+                        return MyExecute<int>(ctx, uri, true, isAsync, operationParameters);
                     },
                 },
 
-                new PositiveTestCase() 
+                new PositiveTestCase()
                 {
                     RequestUri = "/Set/AstoriaUnitTests.Tests.Actions.ActionOnEntityCollectionWithParam_Primitive",
                     ExpectedResults = new object[] { "first" },
                     StatusCode = 200,
                     ExpectedReturnType = typeof(string),
                     OperationParameters = new OperationParameter[] { new BodyOperationParameter("value", "first")},
-                    ExecuteMethodWithParams = (ctx, uri, isAsync, operationParameters) => 
-                    { 
+                    ExecuteMethodWithParams = (ctx, uri, isAsync, operationParameters) =>
+                    {
                         entityInstances.First().Updated = true;
-                        return MyExecute<string>(ctx, uri, true, isAsync, operationParameters); 
+                        return MyExecute<string>(ctx, uri, true, isAsync, operationParameters);
                     },
                 },
 
-                new PositiveTestCase() 
+                new PositiveTestCase()
                 {
                     RequestUri = "/Set/AstoriaUnitTests.Tests.Actions.ActionOnEntityCollectionWithParam_PrimitiveCollection",
                     ExpectedResults = new object[] { "first", "second" },
                     StatusCode = 200,
                     ExpectedReturnType = typeof(string),
                     OperationParameters = new OperationParameter[] { new BodyOperationParameter("value", new List<string>() { "first", "second" })},
-                    ExecuteMethodWithParams = (ctx, uri, isAsync, operationParameters) => 
-                    { 
+                    ExecuteMethodWithParams = (ctx, uri, isAsync, operationParameters) =>
+                    {
                         entityInstances.First().Updated = true;
-                        return MyExecute<string>(ctx, uri, false, isAsync, operationParameters); 
+                        return MyExecute<string>(ctx, uri, false, isAsync, operationParameters);
                     },
                 },
 
-                new PositiveTestCase() 
+                new PositiveTestCase()
                 {
                     RequestUri = "/Set/AstoriaUnitTests.Tests.Actions.ActionOnEntityCollectionWithParam_PrimitiveQueryable",
                     ExpectedResults = new object[] { "first", "second" },
                     StatusCode = 200,
                     ExpectedReturnType = typeof(string),
                     OperationParameters = new OperationParameter[] { new BodyOperationParameter("value", new List<string>() {"first", "second"} )},
-                    ExecuteMethodWithParams = (ctx, uri, isAsync, operationParameters) => 
-                    { 
+                    ExecuteMethodWithParams = (ctx, uri, isAsync, operationParameters) =>
+                    {
                         entityInstances.First().Updated = true;
-                        return MyExecute<string>(ctx, uri, false, isAsync, operationParameters); 
+                        return MyExecute<string>(ctx, uri, false, isAsync, operationParameters);
                     },
                 },
 
-                new PositiveTestCase() 
+                new PositiveTestCase()
                 {
                     RequestUri = "/Set/AstoriaUnitTests.Tests.Actions.ActionOnEntityCollectionWithParam_Complex",
                     ExpectedResults = new object[] {new ComplexType() { PrimitiveProperty = "complex1" }},
                     StatusCode = 200,
                     ExpectedReturnType = typeof(ComplexType),
                     OperationParameters = new OperationParameter[] { new BodyOperationParameter("value", new ComplexType() { PrimitiveProperty = "complex1" })},
-                    ExecuteMethodWithParams = (ctx, uri, isAsync, operationParameters) => 
-                    { 
+                    ExecuteMethodWithParams = (ctx, uri, isAsync, operationParameters) =>
+                    {
                         entityInstances.First().Updated = true;
-                        return MyExecute<ComplexType>(ctx, uri, true, isAsync, operationParameters); 
+                        return MyExecute<ComplexType>(ctx, uri, true, isAsync, operationParameters);
                     },
                 },
 
-                new PositiveTestCase() 
+                new PositiveTestCase()
                 {
                     RequestUri = "/Set/AstoriaUnitTests.Tests.Actions.ActionOnEntityCollectionWithParam_ComplexCollection",
                     ExpectedResults = entityInstances.First().ComplexCollectionProperty,
                     StatusCode = 200,
                     ExpectedReturnType = typeof(ComplexType),
                     OperationParameters = new OperationParameter[] { new BodyOperationParameter("value", entityInstances.First().ComplexCollectionProperty )},
-                    ExecuteMethodWithParams = (ctx, uri, isAsync, operationParameters) => 
-                    { 
+                    ExecuteMethodWithParams = (ctx, uri, isAsync, operationParameters) =>
+                    {
                         entityInstances.First().Updated = true;
-                        return MyExecute<ComplexType>(ctx, uri, false /*singleResult*/, isAsync, operationParameters); 
+                        return MyExecute<ComplexType>(ctx, uri, false /*singleResult*/, isAsync, operationParameters);
                     },
                 },
 
-                new PositiveTestCase() 
+                new PositiveTestCase()
                 {
                     RequestUri = "/Set/AstoriaUnitTests.Tests.Actions.ActionOnEntityCollectionWithParam_ComplexQueryable",
                     ExpectedResults = entityInstances.First().ComplexCollectionProperty,
                     StatusCode = 200,
                     ExpectedReturnType = typeof(ComplexType),
                     OperationParameters = new OperationParameter[] { new BodyOperationParameter("value", entityInstances.First().ComplexCollectionProperty )},
-                    ExecuteMethodWithParams = (ctx, uri, isAsync, operationParameters) => 
-                    { 
+                    ExecuteMethodWithParams = (ctx, uri, isAsync, operationParameters) =>
+                    {
                         entityInstances.First().Updated = true;
-                        return MyExecute<ComplexType>(ctx, uri, false /*singleResult*/, isAsync, operationParameters); 
+                        return MyExecute<ComplexType>(ctx, uri, false /*singleResult*/, isAsync, operationParameters);
                     },
                 },
 
-                new PositiveTestCase() 
+                new PositiveTestCase()
                 {
                     RequestUri = "/Set/AstoriaUnitTests.Tests.Actions.ActionOnEntityCollectionWithParam_Primitive_Primitive",
                     ExpectedResults = new object[] { "first5" },
                     StatusCode = 200,
                     ExpectedReturnType = typeof(string),
                     OperationParameters = new OperationParameter[] { new BodyOperationParameter("value1", "first"), new BodyOperationParameter("value2", 5)},
-                    ExecuteMethodWithParams = (ctx, uri, isAsync, operationParameters) => 
-                    { 
+                    ExecuteMethodWithParams = (ctx, uri, isAsync, operationParameters) =>
+                    {
                         entityInstances.First().Updated = true;
-                        return MyExecute<string>(ctx, uri, true /*singleResult*/, isAsync, operationParameters); 
+                        return MyExecute<string>(ctx, uri, true /*singleResult*/, isAsync, operationParameters);
                     },
                 },
-            
-                new PositiveTestCase() 
+
+                new PositiveTestCase()
                 {
                     RequestUri = "/Set/AstoriaUnitTests.Tests.Actions.ActionOnEntityCollectionWithParam_PrimitiveCollection_Primitive",
                     ExpectedResults = new object[] { "first5", "second5" },
                     StatusCode = 200,
                     ExpectedReturnType = typeof(string),
                     OperationParameters = new OperationParameter[] { new BodyOperationParameter("value1", new List<string>() { "first", "second" }), new BodyOperationParameter("value2", 5)},
-                    ExecuteMethodWithParams = (ctx, uri, isAsync, operationParameters) => 
-                    { 
+                    ExecuteMethodWithParams = (ctx, uri, isAsync, operationParameters) =>
+                    {
                         entityInstances.First().Updated = true;
-                        return MyExecute<string>(ctx, uri, false /*singleResult*/, isAsync, operationParameters); 
+                        return MyExecute<string>(ctx, uri, false /*singleResult*/, isAsync, operationParameters);
                     },
                 },
 
-                new PositiveTestCase() 
+                new PositiveTestCase()
                 {
                     RequestUri = "/Set/AstoriaUnitTests.Tests.Actions.ActionOnEntityCollectionWithParam_Primitive_PrimitiveQueryable",
                     ExpectedResults = new object[] { "first", "second" },
                     StatusCode = 200,
                     ExpectedReturnType = typeof(string),
                     OperationParameters = new OperationParameter[] { new BodyOperationParameter("value1", 5), new BodyOperationParameter("value2", new List<string>() { "first", "second" })},
-                    ExecuteMethodWithParams = (ctx, uri, isAsync, operationParameters) => 
-                    { 
+                    ExecuteMethodWithParams = (ctx, uri, isAsync, operationParameters) =>
+                    {
                         entityInstances.First().Updated = true;
-                        return MyExecute<string>(ctx, uri, false /*singleResult*/, isAsync, operationParameters); 
+                        return MyExecute<string>(ctx, uri, false /*singleResult*/, isAsync, operationParameters);
                     },
                 },
-     
-                new PositiveTestCase() 
+
+                new PositiveTestCase()
                 {
                     RequestUri = "/Set/AstoriaUnitTests.Tests.Actions.ActionOnEntityCollectionWithParam_Complex_Complex",
                     ExpectedResults = new object[] { entityInstances.First().ComplexProperty },
                     StatusCode = 200,
                     ExpectedReturnType = typeof(ComplexType),
-                    OperationParameters = new OperationParameter[] 
-                    { 
-                        new BodyOperationParameter("value1", entityInstances.First().ComplexProperty), 
+                    OperationParameters = new OperationParameter[]
+                    {
+                        new BodyOperationParameter("value1", entityInstances.First().ComplexProperty),
                         new BodyOperationParameter("value2", entityInstances.First().ComplexProperty)
                     },
-                    ExecuteMethodWithParams = (ctx, uri, isAsync, operationParameters) => 
-                    { 
+                    ExecuteMethodWithParams = (ctx, uri, isAsync, operationParameters) =>
+                    {
                         entityInstances.First().Updated = true;
-                        return MyExecute<ComplexType>(ctx, uri, true /*singleResult*/, isAsync, operationParameters); 
+                        return MyExecute<ComplexType>(ctx, uri, true /*singleResult*/, isAsync, operationParameters);
                     },
                 },
 
-                new PositiveTestCase() 
+                new PositiveTestCase()
                 {
                     RequestUri = "/TopLevelAction_WithParam_NullablePrimitive",
                     ExpectedResults = new object[] {  },
                     StatusCode = 204,
                     ExpectedReturnType = typeof(void),
-                    OperationParameters = new OperationParameter[] 
-                    { 
+                    OperationParameters = new OperationParameter[]
+                    {
                         new BodyOperationParameter("value", null)
                     },
-                    ExecuteMethodWithParams = (ctx, uri, isAsync, operationParameters) => 
-                    { 
-                        return MyExecute(ctx, uri, isAsync, operationParameters); 
+                    ExecuteMethodWithParams = (ctx, uri, isAsync, operationParameters) =>
+                    {
+                        return MyExecute(ctx, uri, isAsync, operationParameters);
                     },
                 },
             };
@@ -1885,7 +1886,7 @@ namespace AstoriaUnitTests
 
                 foreach (bool isAsync in this.AsyncOptions)
                 {
-                    t.TestUtil.RunCombinations(positiveTestCases, new[] { true, false }, (testCase, useJsonLight) =>
+                    t.TestUtil.RunCombinations(positiveTestCases, new[] { true }, (testCase, useJsonLight) =>
                     {
                         try
                         {
@@ -1896,11 +1897,6 @@ namespace AstoriaUnitTests
                                 ctx.Format.UseJson(serverModel);
                                 ctx.ResolveType = this.ResolveClientTypeFromServerName;
                                 ctx.ResolveName = this.ResolveServerNameFromClientType;
-                            }
-                            else
-                            {
-                                ctx.EnableAtom = true;
-                                ctx.Format.UseAtom();
                             }
 
                             Uri uri = new Uri(request.ServiceRoot + testCase.RequestUri);
@@ -1936,7 +1932,7 @@ namespace AstoriaUnitTests
         {
             IEdmModel serviceModel;
             IEnumerable<EdmError> errors;
-            if (!EdmxReader.TryParse(XmlReader.Create(metadataDocumentUri.OriginalString), out serviceModel, out errors))
+            if (!CsdlReader.TryParse(XmlReader.Create(metadataDocumentUri.OriginalString), out serviceModel, out errors))
             {
                 Assert.Fail(string.Join(Environment.NewLine, errors.Select(e => e.ToString())));
             }
@@ -1968,12 +1964,12 @@ namespace AstoriaUnitTests
             {
                 return "AstoriaUnitTests.Tests.Actions.ComplexType";
             }
-            
+
             if (type == typeof(AstoriaUnitTests.ClientActionTests.EntityType))
             {
                 return "AstoriaUnitTests.Tests.Actions.EntityType";
             }
-            
+
             if (type == typeof(AstoriaUnitTests.ClientActionTests.EntityType2))
             {
                 return "AstoriaUnitTests.Tests.Actions.EntityType2";
@@ -1993,20 +1989,15 @@ namespace AstoriaUnitTests
 
                 foreach (bool isAsync in this.AsyncOptions)
                 {
-                    t.TestUtil.RunCombinations(positiveTestCases, new[] { true, false }, (testCase, useJsonLight) =>
+                    t.TestUtil.RunCombinations(positiveTestCases, new[] { true }, (testCase, useJsonLight) =>
                     {
                         ResetUpdateFlags(service);
                         DataServiceContext ctx = new DataServiceContext(request.ServiceRoot, ODataProtocolVersion.V4);
-                        if(useJsonLight)
+                        if (useJsonLight)
                         {
                             ctx.Format.UseJson(serverModel);
                             ctx.ResolveType = this.ResolveClientTypeFromServerName;
                             ctx.ResolveName = this.ResolveServerNameFromClientType;
-                        }
-                        else
-                        {
-                            ctx.EnableAtom = true;
-                            ctx.Format.UseAtom();
                         }
 
                         Uri uri = new Uri(request.ServiceRoot + testCase.RequestUri);
@@ -2030,7 +2021,7 @@ namespace AstoriaUnitTests
                 }
             }
         }
-        
+
         [TestMethod]
         public void ExecuteActionSuccessTests2()
         {
@@ -2042,7 +2033,7 @@ namespace AstoriaUnitTests
 
                 foreach (bool isAsync in this.AsyncOptions)
                 {
-                    t.TestUtil.RunCombinations(positiveTestCases, new[] { true, false }, (testCase, useJsonLight) =>
+                    t.TestUtil.RunCombinations(positiveTestCases, new[] { true }, (testCase, useJsonLight) =>
                     {
                         ResetUpdateFlags(service);
                         DataServiceContext ctx = new DataServiceContext(request.ServiceRoot, ODataProtocolVersion.V4);
@@ -2051,11 +2042,6 @@ namespace AstoriaUnitTests
                             ctx.Format.UseJson(serverModel);
                             ctx.ResolveType = this.ResolveClientTypeFromServerName;
                             ctx.ResolveName = this.ResolveServerNameFromClientType;
-                        }
-                        else
-                        {
-                            ctx.EnableAtom = true;
-                            ctx.Format.UseAtom();
                         }
 
                         Uri uri = new Uri(request.ServiceRoot + testCase.RequestUri);
@@ -2146,39 +2132,35 @@ namespace AstoriaUnitTests
 
                 foreach (bool isAsync in this.AsyncOptions)
                 {
-                    t.TestUtil.RunCombinations(serverErrorTestCases, new[] {true}, (testCase, useJsonLight) =>
-                    {
-                        try
-                        {
-                            ResetUpdateFlags(service);
-                            DataServiceContext ctx = new DataServiceContext(request.ServiceRoot, ODataProtocolVersion.V4);
-                            if (useJsonLight)
-                            {
-                                ctx.Format.UseJson(serverModel);
-                                ctx.ResolveType = this.ResolveClientTypeFromServerName;
-                                ctx.ResolveName = this.ResolveServerNameFromClientType;
-                            }
-                            else
-                            {
-                                ctx.Format.UseAtom();
-                            }
+                    t.TestUtil.RunCombinations(serverErrorTestCases, new[] { true }, (testCase, useJsonLight) =>
+                      {
+                          try
+                          {
+                              ResetUpdateFlags(service);
+                              DataServiceContext ctx = new DataServiceContext(request.ServiceRoot, ODataProtocolVersion.V4);
+                              if (useJsonLight)
+                              {
+                                  ctx.Format.UseJson(serverModel);
+                                  ctx.ResolveType = this.ResolveClientTypeFromServerName;
+                                  ctx.ResolveName = this.ResolveServerNameFromClientType;
+                              }
 
-                            Uri uri = new Uri(request.ServiceRoot + testCase.RequestUri);
+                              Uri uri = new Uri(request.ServiceRoot + testCase.RequestUri);
 
-                            Exception e = t.TestUtil.RunCatching(() => testCase.ExecuteMethod.Invoke(ctx, uri, isAsync));
-                            Assert.IsNotNull(e);
-                            t.TestUtil.AssertContains(e.InnerException.Message, testCase.ErrorMsg);
-                            foreach (object o in service.CurrentDataSource.GetResourceSetEntities("Set"))
-                            {
-                                Assert.IsFalse((Boolean)((DSPResource)o).GetValue("Updated"));
-                            }
-                        }
-                        catch (Exception)
-                        {
-                            failingTestCaseUris.Add(testCase.RequestUri);
-                            throw;
-                        }
-                    });
+                              Exception e = t.TestUtil.RunCatching(() => testCase.ExecuteMethod.Invoke(ctx, uri, isAsync));
+                              Assert.IsNotNull(e);
+                              t.TestUtil.AssertContains(e.InnerException.Message, testCase.ErrorMsg);
+                              foreach (object o in service.CurrentDataSource.GetResourceSetEntities("Set"))
+                              {
+                                  Assert.IsFalse((Boolean)((DSPResource)o).GetValue("Updated"));
+                              }
+                          }
+                          catch (Exception)
+                          {
+                              failingTestCaseUris.Add(testCase.RequestUri);
+                              throw;
+                          }
+                      });
                 }
             }
         }
@@ -2194,25 +2176,16 @@ namespace AstoriaUnitTests
 
                 foreach (bool isAsync in this.AsyncOptions)
                 {
-                    t.TestUtil.RunCombinations(clientErrorTestCases, new[] { true, false }, (testCase, useJsonLight) =>
+                    t.TestUtil.RunCombinations(clientErrorTestCases, new[] { true }, (testCase, useJsonLight) =>
                     {
                         ResetUpdateFlags(service);
                         DataServiceContext ctx = new DataServiceContext(request.ServiceRoot, ODataProtocolVersion.V4);
-                        ctx.EnableAtom = true;
 
-                        string testCaseErrorMsg;
-                        if (useJsonLight)
-                        {
-                            testCaseErrorMsg = testCase.JsonLightErrorMsg.Replace("<serviceRoot>", request.BaseUri);
-                            ctx.Format.UseJson(serverModel);
-                            ctx.ResolveType = this.ResolveClientTypeFromServerName;
-                            ctx.ResolveName = this.ResolveServerNameFromClientType;
-                        }
-                        else
-                        {
-                            testCaseErrorMsg = testCase.AtomErrorMsg;
-                            ctx.Format.UseAtom();
-                        }
+                        string testCaseErrorMsg = testCase.JsonLightErrorMsg.Replace("<serviceRoot>", request.BaseUri);
+                        ctx.Format.UseJson(serverModel);
+                        ctx.ResolveType = this.ResolveClientTypeFromServerName;
+                        ctx.ResolveName = this.ResolveServerNameFromClientType;
+
 
                         Uri uri = new Uri(request.ServiceRoot + testCase.RequestUri);
 
@@ -2231,7 +2204,7 @@ namespace AstoriaUnitTests
                             {
                                 object o = actualEnumerator.Current;
                             }
-                           // Assert.Fail();
+                            // Assert.Fail();
                         }
                         catch (Exception e)
                         {
@@ -2243,6 +2216,7 @@ namespace AstoriaUnitTests
             }
         }
 
+        [Ignore] // Remove Atom
         [TestMethod]
         public void TestClientEventsWithAction()
         {
@@ -2256,16 +2230,16 @@ namespace AstoriaUnitTests
                 int receivingResponseCalls = 0;
 
                 DataServiceContext ctx = new DataServiceContext(request.ServiceRoot, ODataProtocolVersion.V4);
-                ctx.EnableAtom = true;
-                ctx.Format.UseAtom();
+                //ctx.EnableAtom = true;
+                //ctx.Format.UseAtom();
                 ctx.BuildingRequest += (sender, args) =>
-                {     
+                {
                     args.Descriptor.Should().BeNull("we shouldn't expose a descriptor on Execute action calls");
                     args.Headers.Add("CustomHeader", "Custom value");
                     buildingRequestCalls++;
                 };
                 ctx.SendingRequest2 += (sender, args) =>
-                { 
+                {
                     args.Descriptor.Should().BeNull("we shouldn't expose a descriptor on Execute action calls");
                     args.RequestMessage.Headers.Should().Contain(new KeyValuePair<string, string>("CustomHeader", "Custom value"));
                     sendingRequest2Calls++;
@@ -2277,7 +2251,7 @@ namespace AstoriaUnitTests
                     args.IsBatchPart.Should().BeFalse();
                     receivingResponseCalls++;
                 };
-                
+
                 Uri uri = new Uri(request.ServiceRoot + "/TopLevelAction_Entity");
 
                 var operationResponse = (QueryOperationResponse<EntityType>)ctx.Execute<EntityType>(uri, "POST", true);

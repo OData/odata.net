@@ -13,11 +13,11 @@ namespace Microsoft.OData.Client
     using System.Reflection;
     using System.Xml.Linq;
     using System.Net;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.OData.Client.Metadata;
 
     /// <summary>
-    /// Class which wraps the dataservicecontext and exposes information required for 
+    /// Class which wraps the dataservicecontext and exposes information required for
     /// generating request to send to the server
     /// </summary>
     internal class RequestInfo
@@ -91,7 +91,7 @@ namespace Microsoft.OData.Client
             get
             {
                 Debug.Assert(this.Context.ResolveName != null, "this.context.ResolveName != null.");
-#if DNXCORE50
+#if PORTABLELIB
     // Func<>.Method property does not exist on Win8 and there is no other way to access any MethodInfo that is behind the Func,
     // so we have no way to determine if the Func was supplied by the user or if it's the one provided by codegen.
     // In this case we will always assume it's the one provided by codegen, which means we'll try to resolve the name using the entity descriptor
@@ -189,14 +189,6 @@ namespace Microsoft.OData.Client
         internal TypeResolver TypeResolver
         {
             get { return this.typeResolver; }
-        }
-
-        /// <summary>
-        /// Gets the URL conventions the user set on the context.
-        /// </summary>
-        internal DataServiceUrlConventions UrlConventions
-        {
-            get { return this.Context.UrlConventions; }
         }
 
         /// <summary>
@@ -409,7 +401,7 @@ namespace Microsoft.OData.Client
         }
 
         /// <summary>
-        /// Returns an instance of the IODataRequestMessage 
+        /// Returns an instance of the IODataRequestMessage
         /// </summary>
         /// <param name="requestMessageArgs">Arguments for creating the request message.</param>
         /// <returns>an instance of the IODataRequestMessage </returns>
@@ -420,7 +412,7 @@ namespace Microsoft.OData.Client
             // We are implementing the PostTunneling logic here. The reason for doing this is
             // 1> In this public class, the Method property returns the actual method (PUT, PATCH, DELETE),
             //    and not the verb that goes in the wire. So this class needs to know about
-            //    actual verb since it will be using this verb to send over http.     
+            //    actual verb since it will be using this verb to send over http.
             if (this.UsePostTunneling)
             {
                 bool setXHttpMethodHeader = false;

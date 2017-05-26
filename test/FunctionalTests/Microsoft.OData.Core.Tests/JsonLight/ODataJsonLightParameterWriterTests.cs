@@ -9,12 +9,11 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using FluentAssertions;
-using Microsoft.OData.Core.JsonLight;
+using Microsoft.OData.JsonLight;
 using Microsoft.OData.Edm;
-using Microsoft.OData.Edm.Library;
 using Xunit;
 
-namespace Microsoft.OData.Core.Tests.JsonLight
+namespace Microsoft.OData.Tests.JsonLight
 {
     public class ODataJsonLightParameterWriterTests
     {
@@ -26,7 +25,9 @@ namespace Microsoft.OData.Core.Tests.JsonLight
                 var parameterWriter = new ODataJsonLightParameterWriter(outputContext, operation: null);
                 parameterWriter.WriteStart();
                 parameterWriter.WriteValue("primitive", Guid.Empty);
-                parameterWriter.WriteValue("complex", new ODataComplexValue { Properties = new[] { new ODataProperty { Name = "prop1", Value = 1 } } });
+                var resourceWriter = parameterWriter.CreateResourceWriter("complex");
+                resourceWriter.WriteStart(new ODataResource() { Properties = new[] { new ODataProperty { Name = "prop1", Value = 1 } } });
+                resourceWriter.WriteEnd();
                 var collectionWriter = parameterWriter.CreateCollectionWriter("collection");
                 collectionWriter.WriteStart(new ODataCollectionStart());
                 collectionWriter.WriteItem("item1");
@@ -43,12 +44,12 @@ namespace Microsoft.OData.Core.Tests.JsonLight
         {
             Action<ODataJsonLightOutputContext> test = outputContext =>
             {
-                var entry = new ODataEntry();
+                var entry = new ODataResource();
                 entry.Properties = new List<ODataProperty>() { new ODataProperty() { Name = "ID", Value = 1 } };
 
                 var parameterWriter = new ODataJsonLightParameterWriter(outputContext, operation: null);
                 parameterWriter.WriteStart();
-                var entryWriter = parameterWriter.CreateEntryWriter("entry");
+                var entryWriter = parameterWriter.CreateResourceWriter("entry");
                 entryWriter.WriteStart(entry);
                 entryWriter.WriteEnd();
                 parameterWriter.WriteEnd();
@@ -63,16 +64,24 @@ namespace Microsoft.OData.Core.Tests.JsonLight
         {
             Action<ODataJsonLightOutputContext> test = outputContext =>
             {
-                var entry = new ODataEntry();
+                var entry = new ODataResource();
 
-                var complex = new ODataComplexValue() {Properties = new List<ODataProperty>() {new ODataProperty() {Name = "Name", Value = "ComplexName"}}};
-                entry.Properties = new List<ODataProperty>() {new ODataProperty() {Name = "ID", Value = 1}, new ODataProperty() {Name = "complexProperty", Value = complex}};
+                var complex = new ODataResource() { Properties = new List<ODataProperty>() { new ODataProperty() { Name = "Name", Value = "ComplexName" } } };
+                entry.Properties = new List<ODataProperty>() {new ODataProperty() {Name = "ID", Value = 1}};
+                var nestedComplexInfo = new ODataNestedResourceInfo() { Name = "complexProperty", IsCollection = false };
                 var parameterWriter = new ODataJsonLightParameterWriter(outputContext, operation: null);
                 parameterWriter.WriteStart();
-                var entryWriter = parameterWriter.CreateEntryWriter("entry");
+                var entryWriter = parameterWriter.CreateResourceWriter("entry");
                 entryWriter.WriteStart(entry);
+                entryWriter.WriteStart(nestedComplexInfo);
+                entryWriter.WriteStart(complex);
                 entryWriter.WriteEnd();
-                parameterWriter.WriteValue("complex", complex);
+                entryWriter.WriteEnd();
+                entryWriter.WriteEnd();
+
+                var complexWriter = parameterWriter.CreateResourceWriter("complex");
+                complexWriter.WriteStart(complex);
+                complexWriter.WriteEnd();
                 parameterWriter.WriteEnd();
                 parameterWriter.Flush();
             };
@@ -85,13 +94,13 @@ namespace Microsoft.OData.Core.Tests.JsonLight
         {
             Action<ODataJsonLightOutputContext> test = outputContext =>
             {
-                var entry = new ODataEntry();
+                var entry = new ODataResource();
                 entry.Properties = new List<ODataProperty>() { new ODataProperty() { Name = "ID", Value = 1 } };
 
                 var parameterWriter = new ODataJsonLightParameterWriter(outputContext, operation: null);
                 parameterWriter.WriteStart();
-                var entryWriter = parameterWriter.CreateFeedWriter("feed");
-                entryWriter.WriteStart(new ODataFeed());
+                var entryWriter = parameterWriter.CreateResourceSetWriter("feed");
+                entryWriter.WriteStart(new ODataResourceSet());
                 entryWriter.WriteStart(entry);
                 entryWriter.WriteEnd();
                 entryWriter.WriteEnd();
@@ -115,12 +124,12 @@ namespace Microsoft.OData.Core.Tests.JsonLight
 
             Action<ODataJsonLightOutputContext> test = outputContext =>
             {
-                var entry = new ODataEntry();
+                var entry = new ODataResource();
                 entry.Properties = new List<ODataProperty>() { new ODataProperty() { Name = "ID", Value = 1 } };
 
                 var parameterWriter = new ODataJsonLightParameterWriter(outputContext, operation);
                 parameterWriter.WriteStart();
-                var entryWriter = parameterWriter.CreateEntryWriter("entry");
+                var entryWriter = parameterWriter.CreateResourceWriter("entry");
                 entryWriter.WriteStart(entry);
                 entryWriter.WriteEnd();
                 parameterWriter.WriteEnd();
@@ -143,12 +152,12 @@ namespace Microsoft.OData.Core.Tests.JsonLight
 
             Action<ODataJsonLightOutputContext> test = outputContext =>
             {
-                var entry = new ODataEntry();
+                var entry = new ODataResource();
                 entry.Properties = new List<ODataProperty>() { new ODataProperty() { Name = "ID", Value = 1 }, new ODataProperty() { Name = "DynamicProperty", Value = "DynamicValue" } };
 
                 var parameterWriter = new ODataJsonLightParameterWriter(outputContext, operation);
                 parameterWriter.WriteStart();
-                var entryWriter = parameterWriter.CreateEntryWriter("entry");
+                var entryWriter = parameterWriter.CreateResourceWriter("entry");
                 entryWriter.WriteStart(entry);
                 entryWriter.WriteEnd();
                 parameterWriter.WriteEnd();
@@ -172,13 +181,13 @@ namespace Microsoft.OData.Core.Tests.JsonLight
 
             Action<ODataJsonLightOutputContext> test = outputContext =>
             {
-                var entry = new ODataEntry();
+                var entry = new ODataResource();
                 entry.Properties = new List<ODataProperty>() { new ODataProperty() { Name = "ID", Value = 1 } };
 
                 var parameterWriter = new ODataJsonLightParameterWriter(outputContext, operation: null);
                 parameterWriter.WriteStart();
-                var entryWriter = parameterWriter.CreateFeedWriter("feed");
-                entryWriter.WriteStart(new ODataFeed());
+                var entryWriter = parameterWriter.CreateResourceSetWriter("feed");
+                entryWriter.WriteStart(new ODataResourceSet());
                 entryWriter.WriteStart(entry);
                 entryWriter.WriteEnd();
                 entryWriter.WriteEnd();
@@ -204,10 +213,10 @@ namespace Microsoft.OData.Core.Tests.JsonLight
 
             Action<ODataJsonLightOutputContext> test = outputContext =>
             {
-                var entry = new ODataEntry();
+                var entry = new ODataResource();
                 entry.Properties = new List<ODataProperty>() { new ODataProperty() { Name = "ID", Value = 1 } };
 
-                var entry2 = new ODataEntry()
+                var entry2 = new ODataResource()
                 {
                     TypeName = "NS.DerivedType",
                 };
@@ -219,8 +228,8 @@ namespace Microsoft.OData.Core.Tests.JsonLight
 
                 var parameterWriter = new ODataJsonLightParameterWriter(outputContext, operation: null);
                 parameterWriter.WriteStart();
-                var entryWriter = parameterWriter.CreateFeedWriter("feed");
-                entryWriter.WriteStart(new ODataFeed());
+                var entryWriter = parameterWriter.CreateResourceSetWriter("feed");
+                entryWriter.WriteStart(new ODataResourceSet());
                 entryWriter.WriteStart(entry);
                 entryWriter.WriteEnd();
                 entryWriter.WriteStart(entry2);
@@ -249,8 +258,8 @@ namespace Microsoft.OData.Core.Tests.JsonLight
                 var parameterWriter = new ODataJsonLightParameterWriter(outputContext, operation);
                 parameterWriter.WriteStart();
 
-                var entryWriter = parameterWriter.CreateEntryWriter("entry");
-                entryWriter.WriteStart((ODataEntry)null);
+                var entryWriter = parameterWriter.CreateResourceWriter("entry");
+                entryWriter.WriteStart((ODataResource)null);
                 entryWriter.WriteEnd();
 
                 parameterWriter.WriteEnd();
@@ -275,7 +284,7 @@ namespace Microsoft.OData.Core.Tests.JsonLight
 
             Action<ODataJsonLightOutputContext> test = outputContext =>
             {
-                var entry = new ODataEntry()
+                var entry = new ODataResource()
                 {
                     TypeName = "NS.DerivedType",
                 };
@@ -288,7 +297,7 @@ namespace Microsoft.OData.Core.Tests.JsonLight
                 var parameterWriter = new ODataJsonLightParameterWriter(outputContext, operation);
                 parameterWriter.WriteStart();
 
-                var entryWriter = parameterWriter.CreateEntryWriter("entry");
+                var entryWriter = parameterWriter.CreateResourceWriter("entry");
                 entryWriter.WriteStart(entry);
                 entryWriter.WriteEnd();
 
@@ -316,7 +325,7 @@ namespace Microsoft.OData.Core.Tests.JsonLight
 
             Action<ODataJsonLightOutputContext> test = outputContext =>
             {
-                var entry = new ODataEntry()
+                var entry = new ODataResource()
                 {
                     TypeName = "NS.DerivedType",
                 };
@@ -328,8 +337,8 @@ namespace Microsoft.OData.Core.Tests.JsonLight
 
                 var parameterWriter = new ODataJsonLightParameterWriter(outputContext, operation: null);
                 parameterWriter.WriteStart();
-                var entryWriter = parameterWriter.CreateFeedWriter("feed");
-                entryWriter.WriteStart(new ODataFeed());
+                var entryWriter = parameterWriter.CreateResourceSetWriter("feed");
+                entryWriter.WriteStart(new ODataResourceSet());
                 entryWriter.WriteStart(entry);
                 entryWriter.WriteEnd();
                 entryWriter.WriteEnd();
@@ -357,13 +366,13 @@ namespace Microsoft.OData.Core.Tests.JsonLight
 
             Action<ODataJsonLightOutputContext> test = outputContext =>
             {
-                var entry1 = new ODataEntry();
+                var entry1 = new ODataResource();
                 entry1.Properties = new List<ODataProperty>()
                 {
                     new ODataProperty() { Name = "ID", Value = 1 }, 
                 };
 
-                var entry2 = new ODataEntry();
+                var entry2 = new ODataResource();
                 entry2.Properties = new List<ODataProperty>()
                 {
                     new ODataProperty() { Name = "ID", Value = 1 }, 
@@ -372,10 +381,10 @@ namespace Microsoft.OData.Core.Tests.JsonLight
 
                 var parameterWriter = new ODataJsonLightParameterWriter(outputContext, operation: null);
                 parameterWriter.WriteStart();
-                var entryWriter = parameterWriter.CreateFeedWriter("feed");
-                entryWriter.WriteStart(new ODataFeed());
+                var entryWriter = parameterWriter.CreateResourceSetWriter("feed");
+                entryWriter.WriteStart(new ODataResourceSet());
                 entryWriter.WriteStart(entry1);
-                entryWriter.WriteStart(new ODataNavigationLink()
+                entryWriter.WriteStart(new ODataNestedResourceInfo()
                 {
                     Name = "Property1",
                     IsCollection = false
@@ -409,13 +418,13 @@ namespace Microsoft.OData.Core.Tests.JsonLight
 
             Action<ODataJsonLightOutputContext> test = outputContext =>
             {
-                var entry1 = new ODataEntry();
+                var entry1 = new ODataResource();
                 entry1.Properties = new List<ODataProperty>()
                 {
                     new ODataProperty() { Name = "ID", Value = 1 }, 
                 };
 
-                var entry2 = new ODataEntry();
+                var entry2 = new ODataResource();
                 entry2.Properties = new List<ODataProperty>()
                 {
                     new ODataProperty() { Name = "ID", Value = 1 }, 
@@ -424,10 +433,10 @@ namespace Microsoft.OData.Core.Tests.JsonLight
 
                 var parameterWriter = new ODataJsonLightParameterWriter(outputContext, operation: null);
                 parameterWriter.WriteStart();
-                var entryWriter = parameterWriter.CreateFeedWriter("feed");
-                entryWriter.WriteStart(new ODataFeed());
+                var entryWriter = parameterWriter.CreateResourceSetWriter("feed");
+                entryWriter.WriteStart(new ODataResourceSet());
                 entryWriter.WriteStart(entry1);
-                entryWriter.WriteStart(new ODataNavigationLink()
+                entryWriter.WriteStart(new ODataNestedResourceInfo()
                 {
                     Name = "Property1",
                     IsCollection = false
@@ -461,13 +470,13 @@ namespace Microsoft.OData.Core.Tests.JsonLight
 
             Action<ODataJsonLightOutputContext> test = outputContext =>
             {
-                var entry1 = new ODataEntry();
+                var entry1 = new ODataResource();
                 entry1.Properties = new List<ODataProperty>()
                 {
                     new ODataProperty() { Name = "ID", Value = 1 }, 
                 };
 
-                var entry2 = new ODataEntry();
+                var entry2 = new ODataResource();
                 entry2.Properties = new List<ODataProperty>()
                 {
                     new ODataProperty() { Name = "ID", Value = 1 }, 
@@ -476,15 +485,15 @@ namespace Microsoft.OData.Core.Tests.JsonLight
 
                 var parameterWriter = new ODataJsonLightParameterWriter(outputContext, operation: null);
                 parameterWriter.WriteStart();
-                var entryWriter = parameterWriter.CreateFeedWriter("feed");
-                entryWriter.WriteStart(new ODataFeed());
+                var entryWriter = parameterWriter.CreateResourceSetWriter("feed");
+                entryWriter.WriteStart(new ODataResourceSet());
                 entryWriter.WriteStart(entry1);
-                entryWriter.WriteStart(new ODataNavigationLink()
+                entryWriter.WriteStart(new ODataNestedResourceInfo()
                 {
                     Name = "Property1",
                     IsCollection = true
                 });
-                entryWriter.WriteStart(new ODataFeed());
+                entryWriter.WriteStart(new ODataResourceSet());
                 entryWriter.WriteStart(entry2);
                 entryWriter.WriteEnd();
                 entryWriter.WriteEnd();
@@ -515,13 +524,13 @@ namespace Microsoft.OData.Core.Tests.JsonLight
 
             Action<ODataJsonLightOutputContext> test = outputContext =>
             {
-                var entry1 = new ODataEntry();
+                var entry1 = new ODataResource();
                 entry1.Properties = new List<ODataProperty>()
                 {
                     new ODataProperty() { Name = "ID", Value = 1 }, 
                 };
 
-                var entry2 = new ODataEntry();
+                var entry2 = new ODataResource();
                 entry2.Properties = new List<ODataProperty>()
                 {
                     new ODataProperty() { Name = "ID", Value = 1 }, 
@@ -530,15 +539,15 @@ namespace Microsoft.OData.Core.Tests.JsonLight
 
                 var parameterWriter = new ODataJsonLightParameterWriter(outputContext, operation: null);
                 parameterWriter.WriteStart();
-                var entryWriter = parameterWriter.CreateFeedWriter("feed");
-                entryWriter.WriteStart(new ODataFeed());
+                var entryWriter = parameterWriter.CreateResourceSetWriter("feed");
+                entryWriter.WriteStart(new ODataResourceSet());
                 entryWriter.WriteStart(entry1);
-                entryWriter.WriteStart(new ODataNavigationLink()
+                entryWriter.WriteStart(new ODataNestedResourceInfo()
                 {
                     Name = "Property1",
                     IsCollection = true
                 });
-                entryWriter.WriteStart(new ODataFeed());
+                entryWriter.WriteStart(new ODataResourceSet());
                 entryWriter.WriteStart(entry2);
                 entryWriter.WriteEnd();
                 entryWriter.WriteEnd();
@@ -560,7 +569,9 @@ namespace Microsoft.OData.Core.Tests.JsonLight
                 var parameterWriter = new ODataJsonLightParameterWriter(outputContext, operation: null);
                 parameterWriter.WriteStartAsync().Wait();
                 parameterWriter.WriteValueAsync("primitive", Guid.Empty).Wait();
-                parameterWriter.WriteValueAsync("complex", new ODataComplexValue { Properties = new[] { new ODataProperty { Name = "prop1", Value = 1 } } }).Wait();
+                var complexWriter = parameterWriter.CreateResourceWriterAsync("complex").Result;
+                complexWriter.WriteStartAsync(new ODataResource { Properties = new[] { new ODataProperty { Name = "prop1", Value = 1 } } }).Wait();
+                complexWriter.WriteEndAsync().Wait();
                 var collectionWriter = parameterWriter.CreateCollectionWriterAsync("collection").Result;
                 collectionWriter.WriteStartAsync(new ODataCollectionStart()).Wait();
                 collectionWriter.WriteItemAsync("item1").Wait();
@@ -606,19 +617,20 @@ namespace Microsoft.OData.Core.Tests.JsonLight
 
         private static ODataJsonLightOutputContext CreateJsonLightOutputContext(MemoryStream stream, bool writingResponse = true, bool synchronous = true)
         {
-            ODataMessageWriterSettings settings = new ODataMessageWriterSettings { Version = ODataVersion.V4 };
+            var settings = new ODataMessageWriterSettings { Version = ODataVersion.V4 };
             settings.SetServiceDocumentUri(new Uri("http://odata.org/test/"));
 
-            return new ODataJsonLightOutputContext(
-                ODataFormat.Json,
-                new NonDisposingStream(stream),
-                new ODataMediaType("application", "json"),
-                Encoding.UTF8,
-                settings,
-                writingResponse,
-                synchronous,
-                EdmCoreModel.Instance,
-                /*urlResolver*/ null);
+            var messageInfo = new ODataMessageInfo
+            {
+                MessageStream = new NonDisposingStream(stream),
+                MediaType = new ODataMediaType("application", "json"),
+                Encoding = Encoding.UTF8,
+                IsResponse = writingResponse,
+                IsAsync = !synchronous,
+                Model = EdmCoreModel.Instance
+            };
+
+            return new ODataJsonLightOutputContext(messageInfo, settings);
         }
     }
 }

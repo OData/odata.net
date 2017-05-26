@@ -13,10 +13,9 @@ namespace EdmLibTests.FunctionalTests
     using System.Xml;
     using EdmLibTests.StubEdm;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Annotations;
     using Microsoft.OData.Edm.Csdl;
-    using Microsoft.OData.Edm.Library;
     using Microsoft.OData.Edm.Validation;
+    using Microsoft.OData.Edm.Vocabularies;
     using Microsoft.Test.OData.Utils.Metadata;
 #if SILVERLIGHT
     using Microsoft.Silverlight.Testing;
@@ -62,7 +61,7 @@ namespace EdmLibTests.FunctionalTests
 
             IEdmModel model;
             IEnumerable<EdmError> errors;
-            bool parsed = CsdlReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(csdl)) }, out model, out errors);
+            bool parsed = SchemaReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(csdl)) }, out model, out errors);
             Assert.IsTrue(parsed, "parsed");
             Assert.IsTrue(errors.Count() == 0, "No errors");
 
@@ -100,7 +99,7 @@ namespace EdmLibTests.FunctionalTests
 
             IEdmModel model;
             IEnumerable<EdmError> errors;
-            bool parsed = CsdlReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(csdl)) }, out model, out errors);
+            bool parsed = SchemaReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(csdl)) }, out model, out errors);
             Assert.IsTrue(parsed, "parsed");
             Assert.IsTrue(errors.Count() == 0, "No errors");
 
@@ -165,7 +164,7 @@ namespace EdmLibTests.FunctionalTests
 
             IEdmModel model;
             IEnumerable<EdmError> errors;
-            bool parsed = CsdlReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(csdl)) }, out model, out errors);
+            bool parsed = SchemaReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(csdl)) }, out model, out errors);
             Assert.IsTrue(parsed, "parsed");
             Assert.IsTrue(errors.Count() == 0, "No errors");
 
@@ -206,7 +205,6 @@ namespace EdmLibTests.FunctionalTests
             var expectedErrors = new EdmLibTestErrors()
             {
                 { "(EdmLibTests.FunctionalTests.CodeCoverageBoostingTests+NoneKinds1)", EdmErrorCode.TypeMustNotHaveKindOfNone },
-                { "(EdmLibTests.FunctionalTests.CodeCoverageBoostingTests+NoneKinds1)", EdmErrorCode.TermMustNotHaveKindOfNone },
                 { "(EdmLibTests.FunctionalTests.CodeCoverageBoostingTests+NoneKinds1)", EdmErrorCode.EntityContainerElementMustNotHaveKindOfNone },
                 { "(EdmLibTests.FunctionalTests.CodeCoverageBoostingTests+NoneKinds1)", EdmErrorCode.SchemaElementMustNotHaveKindOfNone },
                 { "(namespace.type)", EdmErrorCode.KeyMissingOnEntityType },
@@ -244,12 +242,12 @@ namespace EdmLibTests.FunctionalTests
 
             StringBuilder sb = new StringBuilder();
             IEnumerable<EdmError> errors;
-            bool written = model.TryWriteCsdl(XmlWriter.Create(sb), out errors);
+            bool written = model.TryWriteSchema(XmlWriter.Create(sb), out errors);
             var expectedErrors = new EdmLibTestErrors()
             {
                 { "([. Nullable=False])", EdmErrorCode.ReferencedTypeMustHaveValidName },
                 { "(Foo.Quip)", EdmErrorCode.ReferencedTypeMustHaveValidName },
-                { "(Microsoft.OData.Edm.Library.EdmEntitySet)", EdmErrorCode.ReferencedTypeMustHaveValidName },
+                { "(Microsoft.OData.Edm.EdmEntitySet)", EdmErrorCode.ReferencedTypeMustHaveValidName },
             };
 
             this.CompareErrors(errors, expectedErrors);
@@ -356,7 +354,7 @@ namespace EdmLibTests.FunctionalTests
 
             IEnumerable<EdmError> errors;
             IEdmModel model;
-            bool parsed = CsdlReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(annotatingModelCsdl)) }, out model, out errors);
+            bool parsed = SchemaReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(annotatingModelCsdl)) }, out model, out errors);
             Assert.IsTrue(parsed, "parsed");
             Assert.IsTrue(errors.Count() == 0, "No errors");
 
@@ -364,7 +362,7 @@ namespace EdmLibTests.FunctionalTests
             this.VerifySemanticValidation(model, EdmVersion.V40, expectedErrors);
         }
 
-        class NoneKinds1 : IEdmType, IEdmEntityContainerElement, IEdmSchemaElement, IEdmTerm
+        class NoneKinds1 : IEdmType, IEdmEntityContainerElement, IEdmSchemaElement
         {
             public NoneKinds1(string namespaceName, string name, IEdmEntityContainer container)
             {
@@ -372,7 +370,6 @@ namespace EdmLibTests.FunctionalTests
                 this.Name = name;
                 this.Container = container;
                 TypeKind = EdmTypeKind.None;
-                TermKind = EdmTermKind.None;
                 SchemaElementKind = EdmSchemaElementKind.None;
                 ContainerElementKind = EdmContainerElementKind.None;
             }
@@ -380,7 +377,6 @@ namespace EdmLibTests.FunctionalTests
             public string Namespace { get; set; }
             public string Name { get; set; }
             public EdmTypeKind TypeKind { get; set; }
-            public EdmTermKind TermKind { get; set; }
             public EdmSchemaElementKind SchemaElementKind { get; set; }
             public EdmContainerElementKind ContainerElementKind { get; set; }
             public IEdmEntityContainer Container { get; set; }

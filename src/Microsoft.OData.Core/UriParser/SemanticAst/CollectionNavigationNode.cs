@@ -4,22 +4,18 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core.UriParser.Semantic
+using System;
+using System.Collections.Generic;
+using Microsoft.OData.Edm;
+using Microsoft.OData.Metadata;
+using ODataErrorStrings = Microsoft.OData.Strings;
+
+namespace Microsoft.OData.UriParser
 {
-    #region Namespaces
-    using System;
-    using Microsoft.OData.Core.UriParser.TreeNodeKinds;
-    using Microsoft.OData.Core.UriParser.Visitors;
-    using Microsoft.OData.Edm;
-    using Microsoft.OData.Core.Metadata;
-    using ODataErrorStrings = Microsoft.OData.Core.Strings;
-
-    #endregion Namespaces
-
     /// <summary>
     /// Query node representing a collection navigation property.
     /// </summary>
-    public sealed class CollectionNavigationNode : EntityCollectionNode
+    public sealed class CollectionNavigationNode : CollectionResourceNode
     {
         /// <summary>
         /// The navigation property of the single entity this node represents.
@@ -27,7 +23,7 @@ namespace Microsoft.OData.Core.UriParser.Semantic
         private readonly IEdmNavigationProperty navigationProperty;
 
         /// <summary>
-        /// The resouce type of a single entity item from the collection represented by this node.
+        /// The resource type of a single entity item from the collection represented by this node.
         /// </summary>
         private readonly IEdmEntityTypeReference edmEntityTypeReference;
 
@@ -39,7 +35,7 @@ namespace Microsoft.OData.Core.UriParser.Semantic
         /// <summary>
         /// The parent node.
         /// </summary>
-        private readonly SingleValueNode source;
+        private readonly SingleResourceNode source;
 
         /// <summary>
         /// The navigation source from which the collection of entities comes from.
@@ -47,34 +43,70 @@ namespace Microsoft.OData.Core.UriParser.Semantic
         private readonly IEdmNavigationSource navigationSource;
 
         /// <summary>
+        /// The parsed segments in the path.
+        /// </summary>
+        private readonly List<ODataPathSegment> parsedSegments;
+
+        /// <summary>
+        /// The binding path of current navigation property.
+        /// </summary>
+        private readonly IEdmPathExpression bindingPath;
+
+        /// <summary>
         /// Creates a CollectionNavigationNode.
         /// </summary>
-        /// <param name="navigationProperty">The navigation property that defines the collection node.</param>
         /// <param name="source">The parent of this collection navigation node.</param>
+        /// <param name="navigationProperty">The navigation property that defines the collection node.</param>
+        /// <param name="bindingPath">The binding path of navigation property</param>
         /// <returns>The collection node.</returns>
         /// <exception cref="System.ArgumentNullException">Throws if the input source or navigation property is null.</exception>
         /// <exception cref="ArgumentException">Throws if the input navigation doesn't target a collection.</exception>
-        public CollectionNavigationNode(IEdmNavigationProperty navigationProperty, SingleEntityNode source)
-            : this(navigationProperty)
+        public CollectionNavigationNode(SingleResourceNode source, IEdmNavigationProperty navigationProperty, IEdmPathExpression bindingPath)
+            : this(ExceptionUtils.CheckArgumentNotNull(source, "source").NavigationSource, navigationProperty, bindingPath)
         {
-            ExceptionUtils.CheckArgumentNotNull(source, "source");
             this.source = source;
-
-            this.navigationSource = source.NavigationSource != null ? source.NavigationSource.FindNavigationTarget(navigationProperty) : null;
         }
 
         /// <summary>
         /// Creates a CollectionNavigationNode.
         /// </summary>
+        /// <param name="navigationSource">The navigation source that this of the previous segment.</param>
         /// <param name="navigationProperty">The navigation property that defines the collection node.</param>
-        /// <param name="source">The navigation source.</param>
+        /// <param name="bindingPath">The binding path of navigation property</param>
         /// <returns>The collection node.</returns>
         /// <exception cref="System.ArgumentNullException">Throws if the input navigation property is null.</exception>
         /// <exception cref="ArgumentException">Throws if the input navigation doesn't target a collection.</exception>
-        public CollectionNavigationNode(IEdmNavigationProperty navigationProperty, IEdmNavigationSource source)
+        internal CollectionNavigationNode(IEdmNavigationSource navigationSource, IEdmNavigationProperty navigationProperty, IEdmPathExpression bindingPath)
             : this(navigationProperty)
         {
-            this.navigationSource = source != null ? source.FindNavigationTarget(navigationProperty) : null;
+            this.bindingPath = bindingPath;
+            this.navigationSource = navigationSource != null ? navigationSource.FindNavigationTarget(navigationProperty, bindingPath) : null;
+        }
+
+        /// <summary>
+        /// Constructs a CollectionNavigationNode.
+        /// </summary>
+        /// <param name="source">The previous node in the path.</param>
+        /// <param name="navigationProperty">The navigation property this node represents.</param>
+        /// <param name="parsedSegments">The path segments parsed in path and query option.</param>
+        internal CollectionNavigationNode(SingleResourceNode source, IEdmNavigationProperty navigationProperty, List<ODataPathSegment> parsedSegments)
+            : this(ExceptionUtils.CheckArgumentNotNull(source, "source").NavigationSource, navigationProperty, parsedSegments)
+        {
+            this.source = source;
+        }
+
+        /// <summary>
+        /// Constructs a CollectionNavigationNode.
+        /// </summary>
+        /// <param name="navigationSource">The navigation source that this of the previous segment.</param>
+        /// <param name="navigationProperty">The navigation property this node represents.</param>
+        /// <param name="parsedSegments">The path segments parsed in path and query option.</param>
+        private CollectionNavigationNode(IEdmNavigationSource navigationSource, IEdmNavigationProperty navigationProperty, List<ODataPathSegment> parsedSegments)
+            : this(navigationProperty)
+        {
+            this.parsedSegments = parsedSegments;
+
+            this.navigationSource = navigationSource != null ? navigationSource.FindNavigationTarget(navigationProperty, BindingPathHelper.MatchBindingPath, this.parsedSegments, out this.bindingPath) : null;
         }
 
         /// <summary>
@@ -101,7 +133,7 @@ namespace Microsoft.OData.Core.UriParser.Semantic
         /// <summary>
         /// Gets the parent node of this Collection Navigation Node.
         /// </summary>
-        public SingleValueNode Source
+        public SingleResourceNode Source
         {
             get { return this.source; }
         }
@@ -140,9 +172,17 @@ namespace Microsoft.OData.Core.UriParser.Semantic
         }
 
         /// <summary>
-        /// Gets the resouce type of a single entity from the collection.
+        /// Gets the resource type of a single entity from the collection.
         /// </summary>
-        public override IEdmEntityTypeReference EntityItemType
+        public IEdmEntityTypeReference EntityItemType
+        {
+            get { return this.edmEntityTypeReference; }
+        }
+
+        /// <summary>
+        /// Gets the resource type of a single entity from the collection.
+        /// </summary>
+        public override IEdmStructuredTypeReference ItemStructuredType
         {
             get { return this.edmEntityTypeReference; }
         }
@@ -153,6 +193,14 @@ namespace Microsoft.OData.Core.UriParser.Semantic
         public override IEdmNavigationSource NavigationSource
         {
             get { return this.navigationSource; }
+        }
+
+        /// <summary>
+        /// The binding path of current navigation property.
+        /// </summary>
+        public IEdmPathExpression BindingPath
+        {
+            get { return bindingPath; }
         }
 
         /// <summary>

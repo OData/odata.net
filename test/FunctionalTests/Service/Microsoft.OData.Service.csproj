@@ -2,11 +2,12 @@
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <AssemblyName>Microsoft.OData.Service</AssemblyName>
+    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
     <OutputType>Library</OutputType>
     <TransparentAssembly>true</TransparentAssembly>
     <SecurityMigration>false</SecurityMigration>
     <AssemblyAttributeComCompatibleSideBySide>true</AssemblyAttributeComCompatibleSideBySide>
-    <DefineConstants>$(DefineConstants);ASTORIA_SERVER;ASTORIA_OPEN_OBJECT;EFRTM</DefineConstants>
+    <DefineConstants>$(DefineConstants);ODATA_SERVICE</DefineConstants>
     <DocumentationFile>$(AssemblyName).xml</DocumentationFile>
     <RootNamespace>System</RootNamespace>
     <ProjectGuid>{D1567C63-4A0D-4E18-A14E-79699B9BA325}</ProjectGuid>
@@ -105,8 +106,8 @@
       <Link>Common.cs</Link>
     </Compile>
     <!-- Main server files. -->
-    <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Core\Atom\AtomConstants.cs">
-      <Link>Microsoft\OData\Service\AtomConstants.cs</Link>
+    <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Core\Metadata\ODataMetadataConstants.cs">
+      <Link>Microsoft\OData\Service\ODataMetadataConstants.cs</Link>
     </Compile>
     <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Core\ErrorUtils.cs">
       <Link>Microsoft\OData\Service\ErrorUtils.cs</Link>
@@ -117,10 +118,22 @@
     <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Core\InternalErrorCodesCommon.cs">
       <Link>Microsoft\OData\Service\InternalErrorCodesCommon.cs</Link>
     </Compile>
-    <Compile Include="Microsoft\OData\Service\DataServiceStaticConfiguration.cs" />
-    <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Client\MessageSettingsHelper.cs">
-      <Link>Microsoft\OData\Service\MessageSettingsHelper.cs</Link>
+    <Compile Include="..\..\..\src\Microsoft.OData.Client\Wrappers\ODataItemWrapper.cs">
+      <Link>Microsoft\OData\Service\Wrappers\ODataItemWrapper.cs</Link>
     </Compile>
+    <Compile Include="..\..\..\src\Microsoft.OData.Client\Wrappers\ODataNestedResourceInfoWrapper.cs">
+      <Link>Microsoft\OData\Service\Wrappers\ODataNestedResourceInfoWrapper.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\Microsoft.OData.Client\Wrappers\ODataResourceSetWrapper.cs">
+      <Link>Microsoft\OData\Service\Wrappers\ODataResourceSetWrapper.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\Microsoft.OData.Client\Wrappers\ODataResourceWrapper.cs">
+      <Link>Microsoft\OData\Service\Wrappers\ODataResourceWrapper.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\Microsoft.OData.Client\Wrappers\ODataWriterHelper.cs">
+      <Link>Microsoft\OData\Service\Wrappers\ODataWriterHelper.cs</Link>
+    </Compile>
+    <Compile Include="Microsoft\OData\Service\DataServiceStaticConfiguration.cs" />
     <Compile Include="Microsoft\OData\Service\ODataPathToSegmentInfoConverter.cs" />
     <Compile Include="Microsoft\OData\Service\OpenTypeMethodCallDetector.cs" />
     <Compile Include="Microsoft\OData\Service\Parsing\SkipTokenExpressionBuilder.cs" />
@@ -205,9 +218,6 @@
     <Compile Include="Microsoft\OData\Service\Serializers\PayloadMetadataKind.cs" />
     <Compile Include="Microsoft\OData\Service\RequestQueryCountOption.cs" />
     <Compile Include="Microsoft\OData\Service\Serializers\SerializedEntityKey.cs" />
-    <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Core\Evaluation\UrlConvention.cs">
-      <Link>Microsoft\OData\Service\UrlConvention.cs</Link>
-    </Compile>
     <Compile Include="Microsoft\OData\Service\ServiceActionRights.cs" />
     <Compile Include="Microsoft\OData\Service\DataServiceOperationContext.cs" />
     <Compile Include="Microsoft\OData\Service\BatchServiceHost.cs" />
@@ -374,7 +384,6 @@
     <Compile Include="Microsoft\OData\Service\Providers\OperationKind.cs" />
     <Compile Include="Microsoft\OData\Service\Providers\ResourceSetPathExpression.cs" />
     <Compile Include="Microsoft\OData\Service\Providers\ServiceAction.cs" />
-    <Compile Include="Microsoft\OData\Service\ObjectContextSpatialUtil.cs" />
     <Compile Include="Microsoft\OData\Service\Providers\ResourceReferentialConstraint.cs" />
     <!-- Code Analysis suppressions. -->
     <Compile Include="GlobalSuppressions.cs" />

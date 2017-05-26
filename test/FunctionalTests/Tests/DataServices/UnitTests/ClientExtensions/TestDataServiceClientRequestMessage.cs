@@ -11,7 +11,7 @@ namespace AstoriaUnitTests.ClientExtensions
     using Microsoft.OData.Client;
     using System.IO;
     using System.Threading;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
 
     internal class TestDataServiceClientRequestMessage : DataServiceClientRequestMessage
     {

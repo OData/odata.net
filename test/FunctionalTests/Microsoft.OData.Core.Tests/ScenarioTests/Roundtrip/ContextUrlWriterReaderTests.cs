@@ -12,13 +12,12 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using FluentAssertions;
-using Microsoft.OData.Core.UriParser;
+using Microsoft.OData.UriParser;
 using Microsoft.OData.Edm;
-using Microsoft.OData.Edm.Library;
-using Microsoft.OData.Edm.Library.Values;
+using Microsoft.OData.Edm.Vocabularies;
 using Xunit;
 
-namespace Microsoft.OData.Core.Tests.ScenarioTests.Roundtrip
+namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip
 {
     public class Address
     {
@@ -60,7 +59,7 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Roundtrip
 
     public class ContextUrlWriterReaderTests
     {
-        private const string TestNameSpace = "Microsoft.OData.Core.Tests.ScenarioTests.Roundtrip";
+        private const string TestNameSpace = "Microsoft.OData.Tests.ScenarioTests.Roundtrip";
         private const string TestContainerName = "InMemoryEntities";
         private const string TestBaseUri = "http://www.example.com/";
 
@@ -71,6 +70,8 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Roundtrip
         private EdmEntityType productType;
         private EdmEntityType productBookType;
         private EdmEntityType productCdType;
+        private EdmComplexType addressType;
+        private EdmEnumType accessLevelType;
 
         private EdmEntitySet employeeSet;
         private EdmEntitySet companySet;
@@ -80,7 +81,6 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Roundtrip
 
         protected readonly ODataFormat[] mimeTypes = new ODataFormat[]
         {
-            ODataFormat.Atom,
             ODataFormat.Json
         };
 
@@ -108,7 +108,7 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Roundtrip
             productCdType.AddProperty(new EdmStructuralProperty(productCdType, "Artist", EdmCoreModel.Instance.GetString(false)));
             this.model.AddElement(productCdType);
 
-            var addressType = new EdmComplexType(TestNameSpace, "Address");
+            addressType = new EdmComplexType(TestNameSpace, "Address");
             addressType.AddProperty(new EdmStructuralProperty(addressType, "Street", EdmCoreModel.Instance.GetString(false)));
             addressType.AddProperty(new EdmStructuralProperty(addressType, "City", EdmCoreModel.Instance.GetString(false)));
             this.model.AddElement(addressType);
@@ -129,12 +129,12 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Roundtrip
             companyDivisionType.AddProperty(new EdmStructuralProperty(companyDivisionType, "Manufactory", new EdmComplexTypeReference(manufactoryType, true)));
             this.model.AddElement(companyDivisionType);
 
-            var accessLevelType = new EdmEnumType(TestNameSpace, "AccessLevel", isFlags: true);
-            accessLevelType.AddMember("None", new EdmIntegerConstant(0));
-            accessLevelType.AddMember("Read", new EdmIntegerConstant(1));
-            accessLevelType.AddMember("Write", new EdmIntegerConstant(2));
-            accessLevelType.AddMember("Execute", new EdmIntegerConstant(4));
-            accessLevelType.AddMember("ReadWrite", new EdmIntegerConstant(3));
+            accessLevelType = new EdmEnumType(TestNameSpace, "AccessLevel", isFlags: true);
+            accessLevelType.AddMember("None", new EdmEnumMemberValue(0));
+            accessLevelType.AddMember("Read", new EdmEnumMemberValue(1));
+            accessLevelType.AddMember("Write", new EdmEnumMemberValue(2));
+            accessLevelType.AddMember("Execute", new EdmEnumMemberValue(4));
+            accessLevelType.AddMember("ReadWrite", new EdmEnumMemberValue(3));
             this.model.AddElement(accessLevelType);
 
             personType = new EdmEntityType(TestNameSpace, "Person", null, false, /*IsOpen*/ true);
@@ -215,8 +215,8 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Roundtrip
                 string payload, contentType;
                 this.WriteAndValidateContextUri(mimeType, model, omWriter =>
                 {
-                    var writer = omWriter.CreateODataFeedWriter(this.peopleSet, this.personType);
-                    var feed = new ODataFeed();
+                    var writer = omWriter.CreateODataResourceSetWriter(this.peopleSet, this.personType);
+                    var feed = new ODataResourceSet();
                     feed.Id = new Uri("urn:test");
                     writer.WriteStart(feed);
                     writer.WriteEnd();
@@ -224,7 +224,7 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Roundtrip
 
                 this.ReadPayload(payload, contentType, model, omReader =>
                 {
-                    var reader = omReader.CreateODataFeedReader(this.peopleSet, this.personType);
+                    var reader = omReader.CreateODataResourceSetReader(this.peopleSet, this.personType);
                     while (reader.Read()) { }
                     Assert.Equal(ODataReaderState.Completed, reader.State);
                 });
@@ -245,7 +245,7 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Roundtrip
         [Fact]
         public void NotContainedEntity()
         {
-            ODataEntry entry = new ODataEntry()
+            ODataResource entry = new ODataResource()
             {
                 TypeName = TestNameSpace + ".Person",
                 Properties = new[]
@@ -262,14 +262,14 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Roundtrip
                 string payload, contentType;
                 this.WriteAndValidateContextUri(mimeType, model, omWriter =>
                 {
-                    var writer = omWriter.CreateODataEntryWriter(this.peopleSet, this.personType);
+                    var writer = omWriter.CreateODataResourceWriter(this.peopleSet, this.personType);
                     writer.WriteStart(entry);
                     writer.WriteEnd();
                 }, string.Format("\"{0}$metadata#People/$entity\"", TestBaseUri), out payload, out contentType);
                 payload = payload.Replace(".People/$", ".Test/$");
                 this.ReadPayload(payload, contentType, model, omReader =>
                 {
-                    var reader = omReader.CreateODataEntryReader(this.peopleSet, this.personType);
+                    var reader = omReader.CreateODataResourceReader(this.peopleSet, this.personType);
                     while (reader.Read()) { }
                     Assert.Equal(ODataReaderState.Completed, reader.State);
                 });
@@ -277,7 +277,7 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Roundtrip
         }
 
         // V4 Protocol Spec Chapters 10.3: Entity
-        // 
+        //
         [Fact(Skip = "TODO: Complete after Containment Feature Finished")]
         public void ContainedEntity()
         {
@@ -302,8 +302,8 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Roundtrip
                 string payload, contentType;
                 this.WriteAndValidateContextUri(mimeType, model, omWriter =>
                 {
-                    var writer = omWriter.CreateODataFeedWriter(this.peopleSet, this.employeeType);
-                    var feed = new ODataFeed();
+                    var writer = omWriter.CreateODataResourceSetWriter(this.peopleSet, this.employeeType);
+                    var feed = new ODataResourceSet();
                     feed.Id = new Uri("urn:test");
                     writer.WriteStart(feed);
                     writer.WriteEnd();
@@ -313,7 +313,7 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Roundtrip
 
                 this.ReadPayload(payload, contentType, model, omReader =>
                 {
-                    var reader = omReader.CreateODataFeedReader(this.peopleSet, this.employeeType);
+                    var reader = omReader.CreateODataResourceSetReader(this.peopleSet, this.employeeType);
                     while (reader.Read()) { }
                     Assert.Equal(ODataReaderState.Completed, reader.State);
                 });
@@ -326,7 +326,7 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Roundtrip
         [Fact]
         public void DerivedEntity()
         {
-            ODataEntry entry = new ODataEntry()
+            ODataResource entry = new ODataResource()
             {
                 TypeName = TestNameSpace + ".Employee",
                 Properties = new[]
@@ -344,7 +344,7 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Roundtrip
                 string payload, contentType;
                 this.WriteAndValidateContextUri(mimeType, model, omWriter =>
                 {
-                    var writer = omWriter.CreateODataEntryWriter(this.peopleSet, this.employeeType);
+                    var writer = omWriter.CreateODataResourceWriter(this.peopleSet, this.employeeType);
                     writer.WriteStart(entry);
                     writer.WriteEnd();
                 },
@@ -353,7 +353,7 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Roundtrip
 
                 this.ReadPayload(payload, contentType, model, omReader =>
                 {
-                    var reader = omReader.CreateODataEntryReader(this.peopleSet, this.employeeType);
+                    var reader = omReader.CreateODataResourceReader(this.peopleSet, this.employeeType);
                     while (reader.Read()) { }
                     Assert.Equal(ODataReaderState.Completed, reader.State);
                 });
@@ -362,7 +362,7 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Roundtrip
 
         // V4 Protocol Spec Chapters 10.7: Collection of Projected Entities (not on derived types)
         // Sample Request: http://host/service/People?$select=PersonId,Name
-        // Context Url in Response: http://host/service/$metadata#People(PersonId,Name)  
+        // Context Url in Response: http://host/service/$metadata#People(PersonId,Name)
         [Fact]
         public void CollectionOfProjectedNotDerivedEntities()
         {
@@ -379,8 +379,8 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Roundtrip
                         SelectAndExpand = selectExpandClause
                     };
 
-                    var writer = omWriter.CreateODataFeedWriter(this.peopleSet, this.personType);
-                    var feed = new ODataFeed();
+                    var writer = omWriter.CreateODataResourceSetWriter(this.peopleSet, this.personType);
+                    var feed = new ODataResourceSet();
                     feed.Id = new Uri("urn:test");
                     writer.WriteStart(feed);
                     writer.WriteEnd();
@@ -388,7 +388,7 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Roundtrip
 
                 this.ReadPayload(payload, contentType, model, omReader =>
                 {
-                    var reader = omReader.CreateODataFeedReader(this.peopleSet, this.personType);
+                    var reader = omReader.CreateODataResourceSetReader(this.peopleSet, this.personType);
                     while (reader.Read()) { }
                     Assert.Equal(ODataReaderState.Completed, reader.State);
                 });
@@ -397,7 +397,7 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Roundtrip
 
         // V4 Protocol Spec Chapters 10.7: Collection of Projected Entities (on derived types)
         // Sample Request: http://host/service/People/Model.Employee?$select=PersonId,Name
-        // Context Url in Response: http://host/service/$metadata#People/Model.Employee(PersonId,Name)  
+        // Context Url in Response: http://host/service/$metadata#People/Model.Employee(PersonId,Name)
         [Fact]
         public void CollectionOfProjectedDerivedEntities()
         {
@@ -414,8 +414,8 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Roundtrip
                         SelectAndExpand = selectExpandClause
                     };
 
-                    var writer = omWriter.CreateODataFeedWriter(this.peopleSet, this.employeeType);
-                    var feed = new ODataFeed();
+                    var writer = omWriter.CreateODataResourceSetWriter(this.peopleSet, this.employeeType);
+                    var feed = new ODataResourceSet();
                     feed.Id = new Uri("urn:test");
                     writer.WriteStart(feed);
                     writer.WriteEnd();
@@ -425,7 +425,7 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Roundtrip
 
                 this.ReadPayload(payload, contentType, model, omReader =>
                 {
-                    var reader = omReader.CreateODataFeedReader(this.peopleSet, this.employeeType);
+                    var reader = omReader.CreateODataResourceSetReader(this.peopleSet, this.employeeType);
                     while (reader.Read()) { }
                     Assert.Equal(ODataReaderState.Completed, reader.State);
                 });
@@ -438,7 +438,7 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Roundtrip
         [Fact]
         public void ProjectedNotDerivedEntity()
         {
-            ODataEntry entry = new ODataEntry()
+            ODataResource entry = new ODataResource()
             {
                 TypeName = TestNameSpace + ".Person",
                 Properties = new[]
@@ -459,14 +459,14 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Roundtrip
                         ServiceRoot = this.testServiceRootUri,
                         SelectAndExpand = selectExpandClause
                     };
-                    var writer = omWriter.CreateODataEntryWriter(this.peopleSet, this.personType);
+                    var writer = omWriter.CreateODataResourceWriter(this.peopleSet, this.personType);
                     writer.WriteStart(entry);
                     writer.WriteEnd();
                 }, string.Format("\"{0}$metadata#People(PersonId,Name)/$entity\"", TestBaseUri), out payload, out contentType);
 
                 this.ReadPayload(payload, contentType, model, omReader =>
                 {
-                    var reader = omReader.CreateODataEntryReader(this.peopleSet, this.personType);
+                    var reader = omReader.CreateODataResourceReader(this.peopleSet, this.personType);
                     while (reader.Read()) { }
                     Assert.Equal(ODataReaderState.Completed, reader.State);
                 });
@@ -479,7 +479,7 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Roundtrip
         [Fact]
         public void ProjectedDerivedEntity()
         {
-            ODataEntry entry = new ODataEntry()
+            ODataResource entry = new ODataResource()
             {
                 TypeName = TestNameSpace + ".Employee",
                 Properties = new[]
@@ -500,7 +500,7 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Roundtrip
                         ServiceRoot = this.testServiceRootUri,
                         SelectAndExpand = selectExpandClause
                     };
-                    var writer = omWriter.CreateODataEntryWriter(this.peopleSet, this.employeeType);
+                    var writer = omWriter.CreateODataResourceWriter(this.peopleSet, this.employeeType);
                     writer.WriteStart(entry);
                     writer.WriteEnd();
                 },
@@ -509,7 +509,7 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Roundtrip
 
                 this.ReadPayload(payload, contentType, model, omReader =>
                 {
-                    var reader = omReader.CreateODataEntryReader(this.peopleSet, this.employeeType);
+                    var reader = omReader.CreateODataResourceReader(this.peopleSet, this.employeeType);
                     while (reader.Read()) { }
                     Assert.Equal(ODataReaderState.Completed, reader.State);
                 });
@@ -535,8 +535,8 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Roundtrip
                         SelectAndExpand = selectExpandClause
                     };
 
-                    var writer = omWriter.CreateODataFeedWriter(this.employeeSet, this.employeeType);
-                    var feed = new ODataFeed();
+                    var writer = omWriter.CreateODataResourceSetWriter(this.employeeSet, this.employeeType);
+                    var feed = new ODataResourceSet();
                     feed.Id = new Uri("urn:test");
                     writer.WriteStart(feed);
                     writer.WriteEnd();
@@ -546,7 +546,7 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Roundtrip
 
                 this.ReadPayload(payload, contentType, model, omReader =>
                 {
-                    var reader = omReader.CreateODataFeedReader(this.employeeSet, this.employeeType);
+                    var reader = omReader.CreateODataResourceSetReader(this.employeeSet, this.employeeType);
                     while (reader.Read()) { }
                     Assert.Equal(ODataReaderState.Completed, reader.State);
                 });
@@ -572,8 +572,8 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Roundtrip
                         SelectAndExpand = selectExpandClause
                     };
 
-                    var writer = omWriter.CreateODataFeedWriter(this.employeeSet, this.employeeType);
-                    var feed = new ODataFeed();
+                    var writer = omWriter.CreateODataResourceSetWriter(this.employeeSet, this.employeeType);
+                    var feed = new ODataResourceSet();
                     feed.Id = new Uri("urn:test");
                     writer.WriteStart(feed);
                     writer.WriteEnd();
@@ -581,7 +581,7 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Roundtrip
 
                 this.ReadPayload(payload, contentType, model, omReader =>
                 {
-                    var reader = omReader.CreateODataFeedReader(this.employeeSet, this.employeeType);
+                    var reader = omReader.CreateODataResourceSetReader(this.employeeSet, this.employeeType);
                     while (reader.Read()) { }
                     Assert.Equal(ODataReaderState.Completed, reader.State);
                 });
@@ -594,7 +594,7 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Roundtrip
         [Fact]
         public void ProjectedExpandedEntity()
         {
-            ODataEntry entry = new ODataEntry()
+            ODataResource entry = new ODataResource()
             {
                 TypeName = TestNameSpace + ".Employee",
                 Properties = new[]
@@ -618,7 +618,7 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Roundtrip
                         ServiceRoot = this.testServiceRootUri,
                         SelectAndExpand = selectExpandClause
                     };
-                    var writer = omWriter.CreateODataEntryWriter(this.employeeSet, this.employeeType);
+                    var writer = omWriter.CreateODataResourceWriter(this.employeeSet, this.employeeType);
                     writer.WriteStart(entry);
                     writer.WriteEnd();
                 },
@@ -627,7 +627,7 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Roundtrip
 
                 this.ReadPayload(payload, contentType, model, omReader =>
                 {
-                    var reader = omReader.CreateODataEntryReader(this.employeeSet, this.employeeType);
+                    var reader = omReader.CreateODataResourceReader(this.employeeSet, this.employeeType);
                     while (reader.Read()) { }
                     Assert.Equal(ODataReaderState.Completed, reader.State);
                 });
@@ -640,7 +640,7 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Roundtrip
         [Fact]
         public void ExpandedEntity()
         {
-            ODataEntry entry = new ODataEntry()
+            ODataResource entry = new ODataResource()
             {
                 TypeName = TestNameSpace + ".Employee",
                 Properties = new[]
@@ -664,7 +664,7 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Roundtrip
                         ServiceRoot = this.testServiceRootUri,
                         SelectAndExpand = selectExpandClause
                     };
-                    var writer = omWriter.CreateODataEntryWriter(this.employeeSet, this.employeeType);
+                    var writer = omWriter.CreateODataResourceWriter(this.employeeSet, this.employeeType);
                     writer.WriteStart(entry);
                     writer.WriteEnd();
                 },
@@ -673,7 +673,7 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Roundtrip
 
                 this.ReadPayload(payload, contentType, model, omReader =>
                 {
-                    var reader = omReader.CreateODataEntryReader(this.employeeSet, this.employeeType);
+                    var reader = omReader.CreateODataResourceReader(this.employeeSet, this.employeeType);
                     while (reader.Read()) { }
                     Assert.Equal(ODataReaderState.Completed, reader.State);
                 });
@@ -792,11 +792,25 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Roundtrip
                             ServiceRoot = this.testServiceRootUri,
                             Path = odataUriParser.ParsePath()
                         };
-                        omWriter.WriteProperty(this.CreateODataProperty(address, "HomeAddress"));
+                        var odataWriter = omWriter.CreateODataResourceWriter();
+                        var complexResource = this.CreateComplexResource(address, "HomeAddress");
+                        odataWriter.WriteStart(complexResource);
+                        odataWriter.WriteEnd();
                     },
                     string.Format("\"{0}$metadata#People(1)/HomeAddress\"", TestBaseUri), out payload, out contentType);
 
-                this.ReadPayload(payload, contentType, model, omReader => omReader.ReadProperty());
+                this.ReadPayload(payload, contentType, model,
+                omReader =>
+                    {
+                        var odatareader = omReader.CreateODataResourceReader();
+                        while(odatareader.Read())
+                        {
+                            if(odatareader.State == ODataReaderState.ResourceEnd)
+                            {
+                                Assert.NotNull(odatareader.Item as ODataResource);
+                            }
+                        }
+                    });
             }
         }
 
@@ -821,11 +835,31 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Roundtrip
                             ServiceRoot = this.testServiceRootUri,
                             Path = odataUriParser.ParsePath()
                         };
-                        omWriter.WriteProperty(this.CreateODataProperty(addresses, "Name"));
+                        var odataWriter = omWriter.CreateODataResourceSetWriter(null, addressType);
+                        var complexResource = this.CreateComplexResource(address, "HomeAddress");
+                        odataWriter.WriteStart(new ODataResourceSet());
+                        odataWriter.WriteStart(complexResource);
+                        odataWriter.WriteEnd();
+                        odataWriter.WriteEnd();
                     },
                     string.Format("\"{0}$metadata#People(1)/Addresses\"", TestBaseUri), out payload, out contentType);
 
-                this.ReadPayload(payload, contentType, model, omReader => omReader.ReadProperty());
+                this.ReadPayload(payload, contentType, model,
+                    omReader =>
+                    {
+                        var odatareader = omReader.CreateODataResourceSetReader();
+                        while (odatareader.Read())
+                        {
+                            if (odatareader.State == ODataReaderState.ResourceSetEnd)
+                            {
+                                Assert.NotNull(odatareader.Item as ODataResourceSet);
+                            }
+                            if (odatareader.State == ODataReaderState.ResourceEnd)
+                            {
+                                Assert.NotNull(odatareader.Item as ODataResource);
+                            }
+                        }
+                    });
             }
         }
 
@@ -893,11 +927,33 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Roundtrip
             {
                 string payload, contentType;
                 this.WriteAndValidateContextUri(mimeType, model,
-                    omWriter => omWriter.WriteProperty(this.CreateODataProperty(addresses, "HomeAddress")),
+                    omWriter =>
+                    {
+                        var odataWriter = omWriter.CreateODataResourceSetWriter(null, addressType);
+                        var complexResource = this.CreateComplexResource(address, "HomeAddress");
+                        odataWriter.WriteStart(new ODataResourceSet());
+                        odataWriter.WriteStart(complexResource);
+                        odataWriter.WriteEnd();
+                        odataWriter.WriteEnd();
+                    },
                     string.Format("\"{0}$metadata#Collection({1}.Address)\"", TestBaseUri, TestNameSpace),
                     out payload, out contentType);
 
-                this.ReadPayload(payload, contentType, model, omReader => omReader.ReadProperty());
+                this.ReadPayload(payload, contentType, model, omReader =>
+                {
+                    var odatareader = omReader.CreateODataResourceSetReader();
+                    while (odatareader.Read())
+                    {
+                        if (odatareader.State == ODataReaderState.ResourceSetEnd)
+                        {
+                            Assert.NotNull(odatareader.Item as ODataResourceSet);
+                        }
+                        if (odatareader.State == ODataReaderState.ResourceEnd)
+                        {
+                            Assert.NotNull(odatareader.Item as ODataResource);
+                        }
+                    }
+                });
             }
         }
 
@@ -936,6 +992,56 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Roundtrip
             }
         }
 
+        // V4 Protocol Spec Chapter 10.14: Collection of Value with Enum Type
+        // Response: http://host/service/$metadata#Collection(Model.AccessLevel)
+        [Fact]
+        public void CollectionOfEnumTypeUsingODataCollectionReader()
+        {
+            foreach (ODataFormat mimeType in mimeTypes)
+            {
+                string payload, contentType;
+                IEdmTypeReference typeReference = new EdmEnumTypeReference(accessLevelType, true);
+
+                this.WriteAndValidateContextUri(mimeType, model,
+                    omWriter =>
+                    {
+                        ODataCollectionStart collectionStart = new ODataCollectionStart();
+                        collectionStart.SetSerializationInfo(new ODataCollectionStartSerializationInfo { CollectionTypeName = string.Format("Collection({0}.AccessLevel)", TestNameSpace) });
+                        ODataEnumValue[] items =
+                        {
+                            new ODataEnumValue(AccessLevel.Read.ToString(), TestNameSpace),
+                            new ODataEnumValue(AccessLevel.Write.ToString(), TestNameSpace)
+                        };
+
+                        ODataCollectionWriter collectionWriter = omWriter.CreateODataCollectionWriter(typeReference);
+                        collectionWriter.WriteStart(collectionStart);
+                        foreach (object item in items)
+                        {
+                            collectionWriter.WriteItem(item);
+                        }
+
+                        collectionWriter.WriteEnd();
+                    },
+                    string.Format("\"{0}$metadata#Collection({1}.AccessLevel)\"", TestBaseUri, TestNameSpace),
+                    out payload, out contentType);
+
+                this.ReadPayload(payload, contentType, model, omReader =>
+                {
+                    var reader = omReader.CreateODataCollectionReader(typeReference);
+                    IList items = new ArrayList();
+                    while (reader.Read())
+                    {
+                        if (ODataCollectionReaderState.Value == reader.State)
+                        {
+                            items.Add(reader.Item);
+                        }
+                    }
+
+                    Assert.Equal(2, items.Count);
+                });
+            }
+        }
+
         // V4 Protocol Spec Chapter 10.15: Value with Complex Type
         // Response: http://host/service/$metadata#Model.Address
         [Fact]
@@ -946,10 +1052,26 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Roundtrip
             {
                 string payload, contentType;
                 this.WriteAndValidateContextUri(mimeType, model,
-                    omWriter => omWriter.WriteProperty(this.CreateODataProperty(address, "HomeAddress")),
+                    omWriter =>
+                    {
+                        var odataWriter = omWriter.CreateODataResourceWriter();
+                        var complexResource = this.CreateComplexResource(address, "HomeAddress");
+                        odataWriter.WriteStart(complexResource);
+                        odataWriter.WriteEnd();
+                    },
                     string.Format("\"{0}$metadata#{1}.Address\"", TestBaseUri, TestNameSpace), out payload, out contentType);
 
-                this.ReadPayload(payload, contentType, model, omReader => omReader.ReadProperty());
+                this.ReadPayload(payload, contentType, model, omReader =>
+                    {
+                        var odatareader = omReader.CreateODataResourceReader();
+                        while (odatareader.Read())
+                        {
+                            if (odatareader.State == ODataReaderState.ResourceEnd)
+                            {
+                                Assert.NotNull(odatareader.Item as ODataResource);
+                            }
+                        }
+                    });
             }
         }
 
@@ -1013,7 +1135,7 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Roundtrip
         [Fact]
         public void IndividualPropertyInDerivedEntityType()
         {
-            var property = new ODataProperty { Name = "DateHired", Value = null };
+            var property = new ODataProperty { Name = "DateHired", Value = new DateTimeOffset() };
             foreach (ODataFormat mimeType in mimeTypes)
             {
                 string payload, contentType;
@@ -1057,11 +1179,26 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Roundtrip
                             Path = odataUriParser.ParsePath()
                         };
 
-                        omWriter.WriteProperty(this.CreateODataProperty(factoryAddress, "ManufactoryAddress"));
+                        var odataWriter = omWriter.CreateODataResourceWriter();
+                        var complexResource = this.CreateComplexResource(factoryAddress, "ManufactoryAddress");
+                        odataWriter.WriteStart(complexResource);
+                        odataWriter.WriteEnd();
                     },
                     string.Format("\"{0}$metadata#Companys(1)/Division/Manufactory/ManufactoryAddress/{1}.FactoryAddress\"", TestBaseUri, TestNameSpace), out payload, out contentType);
 
-                this.ReadPayload(payload, contentType, model, omReader => omReader.ReadProperty());
+                this.ReadPayload(payload, contentType, model, omReader =>
+                {
+                    var odatareader = omReader.CreateODataResourceReader();
+                    while (odatareader.Read())
+                    {
+                        if (odatareader.State == ODataReaderState.ResourceEnd)
+                        {
+                            var resource = odatareader.Item as ODataResource;
+                            Assert.NotNull(resource);
+                            Assert.Equal(4, resource.Properties.Count());
+                        }
+                    }
+                });
             }
         }
 
@@ -1165,7 +1302,7 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Roundtrip
         [Fact]
         public void DerivedEntityWithOpenType()
         {
-            var property = new ODataProperty { Name = "OpenType", Value = null };
+            var property = new ODataProperty { Name = "OpenType", Value = 123 };
             foreach (ODataFormat mimeType in mimeTypes)
             {
                 string payload, contentType;
@@ -1190,7 +1327,7 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Roundtrip
         [Fact]
         public void EntityTypeWithOpenType()
         {
-            var property = new ODataProperty { Name = "OpenType", Value = null };
+            var property = new ODataProperty { Name = "OpenType", Value = 123 };
             foreach (ODataFormat mimeType in mimeTypes)
             {
                 string payload, contentType;
@@ -1222,8 +1359,8 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Roundtrip
                 string payload, contentType;
                 this.WriteAndValidateContextUri(mimeType, model, omWriter =>
                 {
-                    var writer = omWriter.CreateODataFeedWriter(this.peopleSet, this.employeeType);
-                    var feed = new ODataFeed();
+                    var writer = omWriter.CreateODataResourceSetWriter(this.peopleSet, this.employeeType);
+                    var feed = new ODataResourceSet();
                     feed.Id = new Uri("urn:test");
                     writer.WriteStart(feed);
                     writer.WriteEnd();
@@ -1231,10 +1368,10 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Roundtrip
                 string.Format("\"{0}$metadata#People/{1}.Employee\"", TestBaseUri, TestNameSpace),
                 out payload, out contentType);
 
-                payload = payload.Replace("$metadata#People/Microsoft.OData.Core.Tests.Employee", "WrongURL");
+                payload = payload.Replace("$metadata#People/Microsoft.OData.Tests.Employee", "WrongURL");
                 this.ReadPayload(payload, contentType, model, omReader =>
                 {
-                    var reader = omReader.CreateODataFeedReader(this.peopleSet, this.employeeType);
+                    var reader = omReader.CreateODataResourceSetReader(this.peopleSet, this.employeeType);
                     while (reader.Read()) { }
                     Assert.Equal(ODataReaderState.Completed, reader.State);
                 },
@@ -1252,10 +1389,8 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Roundtrip
 
             var writerSettings = new ODataMessageWriterSettings
             {
-                DisableMessageStreamDisposal = true,
-                PayloadBaseUri = new Uri(TestBaseUri),
-                AutoComputePayloadMetadataInJson = true,
-                EnableAtom = true
+                EnableMessageStreamDisposal = false,
+                BaseUri = new Uri(TestBaseUri),
             };
             writerSettings.SetServiceDocumentUri(new Uri(TestBaseUri));
             writerSettings.SetContentType(odataFormat);
@@ -1282,8 +1417,7 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Roundtrip
             ODataMessageReaderSettings readerSettings = new ODataMessageReaderSettings()
             {
                 BaseUri = new Uri(TestBaseUri + "$metadata"),
-                DisableMessageStreamDisposal = false,
-                EnableAtom = true
+                EnableMessageStreamDisposal = true,
             };
 
             using (var msgReader =
@@ -1295,19 +1429,31 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Roundtrip
             }
         }
 
+        private ODataResource CreateComplexResource(object value, string propertyName)
+        {
+            Type t = value.GetType();
+            List<ODataProperty> properties = new List<ODataProperty>();
+            foreach (var p in t.GetProperties())
+            {
+                properties.Add(CreateODataProperty(t.GetProperty(p.Name).GetValue(value, new object[] { }), p.Name));
+            }
+
+            return new ODataResource() { TypeName = t.FullName, Properties = properties, };
+        }
+
         private ODataProperty CreateODataProperty(object value, string propertyName)
         {
             if (value != null)
             {
                 Type t = value.GetType();
-                if (t.IsGenericType)
+                if (t.IsGenericType())
                 {
                     // Build a collection type property
                     string genericTypeName = t.GetGenericTypeDefinition().Name;
                     genericTypeName = genericTypeName.Substring(0, genericTypeName.IndexOf('`'));
                     genericTypeName += "(" + t.GetGenericArguments().Single().FullName.Replace("System.", "Edm.") + ")";
 
-                    if (t.GetGenericArguments().Single().Namespace != "System" && !t.GetGenericArguments().Single().Namespace.StartsWith("Microsoft.Data.Spatial"))
+                    if (t.GetGenericArguments().Single().Namespace != "System" && !t.GetGenericArguments().Single().Namespace.StartsWith("Microsoft.Spatial"))
                     {
                         var items = new List<object>();
                         var values = value as IEnumerable;
@@ -1319,28 +1465,16 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Roundtrip
                     }
                     else
                     {
-                        return new ODataProperty { Name = propertyName, Value = new ODataCollectionValue() { TypeName = genericTypeName, Items = value as IEnumerable } };
+                        return new ODataProperty { Name = propertyName, Value = new ODataCollectionValue() { TypeName = genericTypeName, Items = (value as IEnumerable).Cast<object>() } };
                     }
                 }
-                else if (t.Namespace != "System" && !t.Namespace.StartsWith("Microsoft.Data.Spatial"))
+                else if (t.Namespace != "System" && !t.Namespace.StartsWith("Microsoft.Spatial"))
                 {
-                    if (t.IsEnum == true)
+                    if (t.IsEnum() == true)
                     {
                         return new ODataProperty { Name = propertyName, Value = new ODataEnumValue(value.ToString(), t.FullName) };
                     }
-                    else
-                    {
-                        // Build a complex type property. We consider type t to be primitive if t.Namespace is  "System" or if t is spatial type.
-                        List<ODataProperty> properties = new List<ODataProperty>();
-                        foreach (var p in t.GetProperties())
-                        {
-                            properties.Add(CreateODataProperty(t.GetProperty(p.Name).GetValue(value, new object[] { }), p.Name));
-                        }
-
-                        return new ODataProperty { Name = propertyName, Value = new ODataComplexValue() { TypeName = t.FullName, Properties = properties, } };
-                    }
                 }
-
             }
 
             return new ODataProperty { Name = propertyName, Value = value };

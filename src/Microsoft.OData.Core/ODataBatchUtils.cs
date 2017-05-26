@@ -4,11 +4,10 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core
+namespace Microsoft.OData
 {
     #region Namespaces
     using System;
-    using System.Collections.Generic;
     using System.Diagnostics;
     using System.Globalization;
     using System.IO;
@@ -24,24 +23,24 @@ namespace Microsoft.OData.Core
         /// </summary>
         /// <param name="uri">The uri to process.</param>
         /// <param name="baseUri">The base Uri to use.</param>
-        /// <param name="urlResolver">An optional custom URL resolver to resolve URLs for writing them into the payload.</param>
-        /// <returns>An URI to be used in the request line of a batch request operation. It uses the <paramref name="urlResolver"/>
+        /// <param name="payloadUriConverter">An optional custom URL converter to convert URLs for writing them into the payload.</param>
+        /// <returns>An URI to be used in the request line of a batch request operation. It uses the <paramref name="payloadUriConverter"/>
         /// first and falls back to the defaullt URI building schema if the no URL resolver is specified or the URL resolver
         /// returns null. In the default scheme, the method either returns the specified <paramref name="uri"/> if it was absolute,
         /// or it's combination with the <paramref name="baseUri"/> if it was relative.</returns>
         /// <remarks>
-        /// This method will fail if no custom resolution is implemented and the specified <paramref name="uri"/> is 
+        /// This method will fail if no custom resolution is implemented and the specified <paramref name="uri"/> is
         /// relative and there's no base URI available.
         /// </remarks>
-        internal static Uri CreateOperationRequestUri(Uri uri, Uri baseUri, IODataUrlResolver urlResolver)
+        internal static Uri CreateOperationRequestUri(Uri uri, Uri baseUri, IODataPayloadUriConverter payloadUriConverter)
         {
             Debug.Assert(uri != null, "uri != null");
 
             Uri resultUri;
-            if (urlResolver != null)
+            if (payloadUriConverter != null)
             {
                 // The resolver returns 'null' if no custom resolution is desired.
-                resultUri = urlResolver.ResolveUrl(baseUri, uri);
+                resultUri = payloadUriConverter.ConvertPayloadUri(baseUri, uri);
                 if (resultUri != null)
                 {
                     return resultUri;
@@ -137,8 +136,8 @@ namespace Microsoft.OData.Core
             int numberOfAdditionalBytesNeeded = requiredByteCount - remainingUnusedBytesInBuffer;
             Debug.Assert(numberOfAdditionalBytesNeeded > 0, "Expected a positive number of additional bytes.");
 
-            // NOTE: grow the array only by the exact number of needed bytes; we expect the 
-            //       caller to specify a larger required byte count to grow the array more. 
+            // NOTE: grow the array only by the exact number of needed bytes; we expect the
+            //       caller to specify a larger required byte count to grow the array more.
             byte[] oldBytes = buffer;
             buffer = new byte[buffer.Length + numberOfAdditionalBytesNeeded];
             Buffer.BlockCopy(oldBytes, 0, buffer, 0, numberOfBytesInBuffer);

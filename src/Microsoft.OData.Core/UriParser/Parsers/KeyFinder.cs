@@ -4,13 +4,12 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core.UriParser.Parsers
+namespace Microsoft.OData.UriParser
 {
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.Diagnostics;
     using System.Linq;
-    using Microsoft.OData.Core.UriParser.Semantic;
     using Microsoft.OData.Edm;
 
     /// <summary>
@@ -39,7 +38,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
             Debug.Assert(rawKeyValuesFromUri.ValueCount < targetKeyPropertyList.Count(), "rawKeyValuesFromUri.ValueCount < targetEntityKeyProperties.Count()");
 
             // if the raw key from the uri has positional values, there must be only one of them
-            // its important to cache this value here because we'll change it when we add new 
+            // its important to cache this value here because we'll change it when we add new
             // named values below (the implementation of AreValuesNamed is just namedValues !=null)
             bool hasPositionalValues = !rawKeyValuesFromUri.AreValuesNamed;
             if (hasPositionalValues && rawKeyValuesFromUri.ValueCount > 1)
@@ -73,7 +72,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
                 }
             }
 
-            // also need to look to see if any nav props exist in the target set that refer back to this same set, which might have 
+            // also need to look to see if any nav props exist in the target set that refer back to this same set, which might have
             // referential constraints also.
             keysFromReferentialIntegrityConstraint.Clear();
             IEdmNavigationProperty reverseNavProp = currentNavigationProperty.Partner;
@@ -117,7 +116,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
                         return rawKeyValuesFromUri;
                     }
 
-                    // clear out the positional value so that we keep a consistent state in the 
+                    // clear out the positional value so that we keep a consistent state in the
                     // raw keys from uri.
                     rawKeyValuesFromUri.PositionalValues.Clear();
                 }

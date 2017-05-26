@@ -11,10 +11,7 @@ namespace Microsoft.Test.OData.Utils.Metadata
     using System.Linq;
     using System.Xml.Linq;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Expressions;
-    using Microsoft.OData.Edm.Library;
-    using Microsoft.OData.Edm.Library.Expressions;
-    using Microsoft.OData.Edm.Library.Values;
+    using Microsoft.OData.Edm.Vocabularies;
     using Microsoft.Test.OData.Utils.Common;
 
     /// <summary>
@@ -68,7 +65,7 @@ namespace Microsoft.Test.OData.Utils.Metadata
                     ExceptionUtilities.CheckObjectNotNull(modelMember, "Failed to find enum member " + memberName);
 
                     // Member value defaults to the position in the list of members
-                    var modelMemberValue = modelMember.Value as EdmIntegerConstant;
+                    var modelMemberValue = modelMember.Value;
                     CompareLongAttribute(enumMemberElement, "Value", modelMemberValue.Value, memberCount++);
                 }
             }
@@ -686,18 +683,9 @@ namespace Microsoft.Test.OData.Utils.Metadata
 
         private static void CompareEntitySetPaths(string entitySetPathValue, IEdmExpression entitySetExpression)
         {
-            if (entitySetPathValue.Contains("/"))
-            {
-                var modelPath = entitySetExpression as EdmPathExpression;
-                ExceptionUtilities.CheckObjectNotNull(modelPath, "Expected a Path expression");
-                ExceptionUtilities.Assert(entitySetPathValue == string.Join("/", modelPath.Path), "Unexpected value for path expression");
-            }
-            else
-            {
-                var modelEntitySetReference = entitySetExpression as EdmEntitySetReferenceExpression;
-                ExceptionUtilities.CheckObjectNotNull(modelEntitySetReference, "Expected an EntitySet Reference expression");
-                ExceptionUtilities.Assert(entitySetPathValue == modelEntitySetReference.ReferencedEntitySet.Name, "Unexpected value for entity set expression");
-            }
+            var modelPath = entitySetExpression as EdmPathExpression;
+            ExceptionUtilities.CheckObjectNotNull(modelPath, "Expected a Path expression");
+            ExceptionUtilities.Assert(entitySetPathValue == string.Join("/", modelPath.PathSegments), "Unexpected value for path expression");
         }
 
         private static Dictionary<string, XElement> BuildNamedElementIndex(IEnumerable<XElement> csdlElements, string elementName)

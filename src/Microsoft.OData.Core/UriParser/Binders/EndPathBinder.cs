@@ -4,18 +4,12 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core.UriParser.Parsers
+using Microsoft.OData.Metadata;
+using Microsoft.OData.Edm;
+using ODataErrorStrings = Microsoft.OData.Strings;
+
+namespace Microsoft.OData.UriParser
 {
-    #region Namespaces
-    using Microsoft.OData.Edm;
-    using Microsoft.OData.Core.Metadata;
-    using Microsoft.OData.Core.UriParser.Binders;
-    using Microsoft.OData.Core.UriParser.Semantic;
-    using Microsoft.OData.Core.UriParser.Syntactic;
-    using ODataErrorStrings = Microsoft.OData.Core.Strings;
-
-    #endregion Namespaces
-
     /// <summary>
     /// Class that knows how to bind an end path token, which could be several things.
     /// </summary>
@@ -45,13 +39,14 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         /// </summary>
         /// <param name="parentNode">The semantically bound source node of this end path token</param>
         /// <param name="property">The <see cref="IEdmProperty"/> that will be bound to this node. Must not be primitive collection</param>
+        /// <param name="state">The state of binding.</param>
         /// <returns>QueryNode bound to this property.</returns>
-        internal static QueryNode GeneratePropertyAccessQueryNode(SingleValueNode parentNode, IEdmProperty property)
+        internal static QueryNode GeneratePropertyAccessQueryNode(SingleResourceNode parentNode, IEdmProperty property, BindingState state)
         {
-            ExceptionUtils.CheckArgumentNotNull(parentNode, "parent");
+            ExceptionUtils.CheckArgumentNotNull(parentNode, "parentNode");
             ExceptionUtils.CheckArgumentNotNull(property, "property");
 
-            // TODO: Remove this check. 
+            // TODO: Remove this check.
             // We should verify that the top level of an expression is a bool rather than arbitrarily restrict property types.
             // We can get here if there is a query like $filter=MyCollectionProperty eq 'foo' or something.
             // If it was $filter=MyCollectionProperty/any(...) then we would have gone down the 'NonRootSegment' code path instead of this one
@@ -59,20 +54,31 @@ namespace Microsoft.OData.Core.UriParser.Parsers
             {
                 // if this happens to be a top level node (i.e. $filter=MyCollection), then it will fail further up the chain, so
                 // don't need to worry about checking for that here.
-                return new CollectionPropertyAccessNode(parentNode, property);
+                if (property.Type.IsStructuredCollectionType())
+                {
+                    return new CollectionComplexNode(parentNode, property);
+                }
+                else
+                {
+                    return new CollectionPropertyAccessNode(parentNode, property);
+                }
             }
 
             if (property.PropertyKind == EdmPropertyKind.Navigation)
             {
                 // These are error cases in practice, but we let ourselves throw later for better context-sensitive error messages
                 var edmNavigationProperty = (IEdmNavigationProperty)property;
-                var singleEntityParentNode = (SingleEntityNode)parentNode;
                 if (edmNavigationProperty.TargetMultiplicity() == EdmMultiplicity.Many)
                 {
-                    return new CollectionNavigationNode(edmNavigationProperty, singleEntityParentNode);
+                    return new CollectionNavigationNode(parentNode, edmNavigationProperty, state.ParsedSegments);
                 }
 
-                return new SingleNavigationNode(edmNavigationProperty, singleEntityParentNode);
+                return new SingleNavigationNode(parentNode, edmNavigationProperty, state.ParsedSegments);
+            }
+
+            if (property.Type.IsComplex())
+            {
+                return new SingleComplexNode(parentNode, property);
             }
 
             return new SingleValuePropertyAccessNode(parentNode, property);
@@ -104,8 +110,8 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         /// <returns>Will return a <see cref="SingleValueOpenPropertyAccessNode"/> when open types are supported</returns>
         internal SingleValueOpenPropertyAccessNode GeneratePropertyAccessQueryForOpenType(EndPathToken endPathToken, SingleValueNode parentNode)
         {
-            if (parentNode.TypeReference == null || 
-                parentNode.TypeReference.Definition.IsOpenType() || 
+            if (parentNode.TypeReference == null ||
+                parentNode.TypeReference.Definition.IsOpenType() ||
                 IsAggregatedProperty(endPathToken.Identifier))
             {
                 return new SingleValueOpenPropertyAccessNode(parentNode, endPathToken.Identifier);
@@ -163,7 +169,12 @@ namespace Microsoft.OData.Core.UriParser.Parsers
 
             if (property != null)
             {
-                return GeneratePropertyAccessQueryNode(singleValueParent, property);
+                return GeneratePropertyAccessQueryNode(singleValueParent as SingleResourceNode, property, state);
+            }
+
+            if (endPathToken.Identifier == ExpressionConstants.QueryOptionCount)
+            {
+                return new CountVirtualPropertyNode();
             }
 
             if (functionCallBinder.TryBindEndPathAsFunctionCall(endPathToken, singleValueParent, state, out boundFunction))
@@ -175,7 +186,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         }
 
         /// <summary>
-        /// Determines the parent node. If the token has a parent, that token is bound. If not, then we 
+        /// Determines the parent node. If the token has a parent, that token is bound. If not, then we
         /// use the implicit parameter from the BindingState as the parent node.
         /// </summary>
         /// <param name="segmentToken">Token to determine the parent node for.</param>

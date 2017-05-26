@@ -4,14 +4,12 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core.UriParser.Semantic
+namespace Microsoft.OData.UriParser
 {
-    using Microsoft.OData.Core.UriParser.Visitors;
-
     /// <summary>
     /// An item that has been selected by the query at the current level of the tree.
     /// </summary>
-    public abstract class SelectItem : ODataAnnotatable
+    public abstract class SelectItem
     {
         /// <summary>
         /// Translate a <see cref="SelectItem"/> using an implemntation of<see cref="SelectItemTranslator{T}"/>.

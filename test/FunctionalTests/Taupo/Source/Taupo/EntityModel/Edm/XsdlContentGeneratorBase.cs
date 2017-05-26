@@ -351,7 +351,6 @@ namespace Microsoft.Test.Taupo.EntityModel.Edm
                 this.GetDataTypeGenerator().GeneratePropertyType(prop, xmlNamespace),
                 this.GenerateDefaultValue(prop.DefaultValue),
                 this.GenerateStoreGeneratedPattern(prop),
-                this.GenerateConcurrencyToken(prop),
                 this.GenerateAnnotations(xmlNamespace, prop));
         }
 
@@ -361,16 +360,6 @@ namespace Microsoft.Test.Taupo.EntityModel.Edm
         /// <param name="memberProperty">The property.</param>
         /// <returns>Generated attribute</returns>
         protected abstract XAttribute GenerateStoreGeneratedPattern(MemberProperty memberProperty);
-
-        /// <summary>
-        /// Generates the concurrency token attribute.
-        /// </summary>
-        /// <param name="memberProperty">The property.</param>
-        /// <returns>Generated attribute</returns>
-        protected virtual XAttribute GenerateConcurrencyToken(MemberProperty memberProperty)
-        {
-            return null;
-        }
 
         /// <summary>
         /// Generates additional description for function

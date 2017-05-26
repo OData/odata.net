@@ -4,7 +4,7 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core.Metadata
+namespace Microsoft.OData.Metadata
 {
     /// <summary>
     /// Constant values used in the EDM.
@@ -130,11 +130,6 @@ namespace Microsoft.OData.Core.Metadata
         /// The URI of annotations that are internal and will not be serialized.
         /// </summary>
         internal const string InternalUri = "http://schemas.microsoft.com/ado/2011/04/edm/internal";
-
-        /// <summary>
-        /// The Payload Value Converter Annotation.
-        /// </summary>
-        internal const string PayloadValueConverterAnnotation = "PrimitivePayloadValueConverter";
 
         #endregion
     }

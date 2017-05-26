@@ -8,10 +8,11 @@ namespace AstoriaUnitTests.TDD.Tests.Client
 {
     using System;
     using System.Collections.Generic;
-    using Microsoft.OData.Client;
+    using System.Globalization;
     using System.Linq;
     using System.Net;
     using FluentAssertions;
+    using Microsoft.OData.Client;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     [TestClass]
@@ -105,7 +106,9 @@ namespace AstoriaUnitTests.TDD.Tests.Client
             var headers = new HeaderCollection();
             headers.SetUserAgent();
             headers.HeaderNames.Count().Should().Be(1);
-            headers.GetHeader("User-Agent").Should().Be("Microsoft ADO.NET Data Services");
+
+            Version assemblyVersion = typeof(HeaderCollection).GetAssembly().GetName().Version;
+            headers.GetHeader("User-Agent").Should().Be(string.Format(CultureInfo.InvariantCulture, "Microsoft.OData.Client/{0}.{1}.{2}", assemblyVersion.Major, assemblyVersion.Minor, assemblyVersion.Build));
         }
 
         [TestMethod]

@@ -15,8 +15,6 @@ namespace EdmLibTests.FunctionalTests
     using FluentAssertions;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Edm.Csdl;
-    using Microsoft.OData.Edm.Library;
-    using Microsoft.OData.Edm.PrimitiveValueConverters;
     using Microsoft.OData.Edm.Validation;
     using Microsoft.Test.OData.Utils.Metadata;
 #if SILVERLIGHT
@@ -391,7 +389,7 @@ namespace EdmLibTests.FunctionalTests
 
             IEdmModel mainModel;
             IEnumerable<EdmError> errors;
-            bool parsed = EdmxReader.TryParse(XmlReader.Create(new StringReader(mainModelxml)), new IEdmModel[] { model1 }, out mainModel, out errors);
+            bool parsed = CsdlReader.TryParse(XmlReader.Create(new StringReader(mainModelxml)), new IEdmModel[] { model1 }, out mainModel, out errors);
             Assert.IsTrue(parsed);
 
             IEdmEntitySet entitySet1 = mainModel.FindDeclaredEntitySet("EntitySet1");
@@ -435,11 +433,11 @@ namespace EdmLibTests.FunctionalTests
 
             IEnumerable<EdmError> errors;
             IEdmModel model1;
-            bool parsed = EdmxReader.TryParse(XmlReader.Create(new StringReader(model1xml)), out model1, out errors);
+            bool parsed = CsdlReader.TryParse(XmlReader.Create(new StringReader(model1xml)), out model1, out errors);
             Assert.IsTrue(parsed);
 
             IEdmModel mainModel;
-            parsed = EdmxReader.TryParse(XmlReader.Create(new StringReader(mainModelxml)), new IEdmModel[] { model1 }, out mainModel, out errors);
+            parsed = CsdlReader.TryParse(XmlReader.Create(new StringReader(mainModelxml)), new IEdmModel[] { model1 }, out mainModel, out errors);
             Assert.IsTrue(parsed);
 
             IEdmEntitySet entitySet1 = mainModel.FindDeclaredEntitySet("EntitySet1");
@@ -483,11 +481,11 @@ namespace EdmLibTests.FunctionalTests
 
             IEnumerable<EdmError> errors;
             IEdmModel model1;
-            bool parsed = EdmxReader.TryParse(XmlReader.Create(new StringReader(model1xml)), out model1, out errors);
+            bool parsed = CsdlReader.TryParse(XmlReader.Create(new StringReader(model1xml)), out model1, out errors);
             Assert.IsTrue(parsed);
 
             IEdmModel mainModel;
-            parsed = EdmxReader.TryParse(XmlReader.Create(new StringReader(mainModelxml)), new IEdmModel[] { model1 }, out mainModel, out errors);
+            parsed = CsdlReader.TryParse(XmlReader.Create(new StringReader(mainModelxml)), new IEdmModel[] { model1 }, out mainModel, out errors);
             Assert.IsTrue(parsed);
 
             IEdmSingleton singleton1 = mainModel.FindDeclaredSingleton("Singleton1");
@@ -528,11 +526,11 @@ namespace EdmLibTests.FunctionalTests
 
             IEnumerable<EdmError> errors;
             IEdmModel model1;
-            bool parsed = EdmxReader.TryParse(XmlReader.Create(new StringReader(model1xml)), out model1, out errors);
+            bool parsed = CsdlReader.TryParse(XmlReader.Create(new StringReader(model1xml)), out model1, out errors);
             Assert.IsTrue(parsed);
 
             IEdmModel mainModel;
-            parsed = EdmxReader.TryParse(XmlReader.Create(new StringReader(mainModelxml)), new IEdmModel[] { model1 }, out mainModel, out errors);
+            parsed = CsdlReader.TryParse(XmlReader.Create(new StringReader(mainModelxml)), new IEdmModel[] { model1 }, out mainModel, out errors);
             Assert.IsTrue(parsed);
 
             IEnumerable<IEdmOperationImport> operationImports1 = mainModel.FindDeclaredOperationImports("FunctionImport1");
@@ -575,11 +573,11 @@ namespace EdmLibTests.FunctionalTests
 
             IEnumerable<EdmError> errors;
             IEdmModel model1;
-            bool parsed = EdmxReader.TryParse(XmlReader.Create(new StringReader(model1xml)), out model1, out errors);
+            bool parsed = CsdlReader.TryParse(XmlReader.Create(new StringReader(model1xml)), out model1, out errors);
             Assert.IsTrue(parsed);
 
             IEdmModel mainModel;
-            parsed = EdmxReader.TryParse(XmlReader.Create(new StringReader(mainModelxml)), new IEdmModel[] { model1 }, out mainModel, out errors);
+            parsed = CsdlReader.TryParse(XmlReader.Create(new StringReader(mainModelxml)), new IEdmModel[] { model1 }, out mainModel, out errors);
             Assert.IsTrue(parsed);
 
             Action action = (() => mainModel.FindDeclaredEntitySet("EntitySet1"));
@@ -612,7 +610,7 @@ namespace EdmLibTests.FunctionalTests
 
             IEdmModel mainModel;
             IEnumerable<EdmError> errors;
-            bool parsed = EdmxReader.TryParse(XmlReader.Create(new StringReader(mainModelxml)), new IEdmModel[] { model1 }, out mainModel, out errors);
+            bool parsed = CsdlReader.TryParse(XmlReader.Create(new StringReader(mainModelxml)), new IEdmModel[] { model1 }, out mainModel, out errors);
             Assert.IsTrue(parsed);
 
             var container = mainModel.EntityContainer;
@@ -634,7 +632,7 @@ namespace EdmLibTests.FunctionalTests
             IEdmModel mainModel;
             IEnumerable<EdmError> errors;
 
-            bool parsed = EdmxReader.TryParse(XmlReader.Create(new StringReader(mainModelxml)), out mainModel, out errors);
+            bool parsed = CsdlReader.TryParse(XmlReader.Create(new StringReader(mainModelxml)), out mainModel, out errors);
             Assert.IsTrue(parsed);
 
             var container = mainModel.EntityContainer;
@@ -657,7 +655,7 @@ namespace EdmLibTests.FunctionalTests
             settings.Indent = true;
             settings.Encoding = System.Text.Encoding.UTF8;
             XmlWriter xw = XmlWriter.Create(sw, settings);
-            model.TryWriteCsdl(xw, out errors);
+            model.TryWriteSchema(xw, out errors);
             xw.Flush();
             xw.Close();
 

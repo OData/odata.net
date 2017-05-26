@@ -9,7 +9,7 @@ namespace Microsoft.Test.OData.Tests.Client.ModelReferenceTests
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.Test.OData.Services.TestServices;
     using Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReference;
     using Microsoft.Test.OData.Tests.Client.Common;
@@ -71,21 +71,22 @@ namespace Microsoft.Test.OData.Tests.Client.ModelReferenceTests
                 {
                     using (var messageReader = new ODataMessageReader(responseMessage, readerSettings, Model))
                     {
-                        var reader = messageReader.CreateODataFeedReader();
+                        var reader = messageReader.CreateODataResourceSetReader();
 
+                        ODataResource entry = null;
                         while (reader.Read())
                         {
-                            if (reader.State == ODataReaderState.EntryEnd)
+                            if (reader.State == ODataReaderState.ResourceEnd)
                             {
-                                ODataEntry entry = reader.Item as ODataEntry;
-                                Assert.IsNotNull(entry.Properties.Single(p => p.Name == "Key").Value);
-                                Assert.IsNotNull(entry.TypeName, string.Format("{0}.TruckDemo.TruckType", TestModelNameSpace));
+                                entry = reader.Item as ODataResource;
                             }
-                            else if (reader.State == ODataReaderState.FeedEnd)
+                            else if (reader.State == ODataReaderState.ResourceSetEnd)
                             {
-                                Assert.IsNotNull(reader.Item as ODataFeed);
+                                Assert.IsNotNull(reader.Item as ODataResourceSet);
                             }
                         }
+                        Assert.IsNotNull(entry.Properties.Single(p => p.Name == "Key").Value);
+                        Assert.IsNotNull(entry.TypeName, string.Format("{0}.TruckDemo.TruckType", TestModelNameSpace));
                         Assert.AreEqual(ODataReaderState.Completed, reader.State);
                     }
                 }
@@ -107,16 +108,16 @@ namespace Microsoft.Test.OData.Tests.Client.ModelReferenceTests
                 {
                     using (var messageReader = new ODataMessageReader(responseMessage, readerSettings, Model))
                     {
-                        var reader = messageReader.CreateODataEntryReader();
-
+                        var reader = messageReader.CreateODataResourceReader();
+                        List<ODataResource> entries = new List<ODataResource>();
                         while (reader.Read())
                         {
-                            if (reader.State == ODataReaderState.EntryEnd)
+                            if (reader.State == ODataReaderState.ResourceEnd)
                             {
-                                ODataEntry entry = reader.Item as ODataEntry;
-                                Assert.AreEqual("Key1", entry.Properties.Single(p => p.Name == "Key").Value);
+                                entries.Add(reader.Item as ODataResource);
                             }
                         }
+                        Assert.AreEqual("Key1", entries.Last().Properties.Single(p => p.Name == "Key").Value);
                         Assert.AreEqual(ODataReaderState.Completed, reader.State);
                     }
                 }
@@ -138,20 +139,22 @@ namespace Microsoft.Test.OData.Tests.Client.ModelReferenceTests
                 {
                     using (var messageReader = new ODataMessageReader(responseMessage, readerSettings, Model))
                     {
-                        var reader = messageReader.CreateODataFeedReader();
+                        var reader = messageReader.CreateODataResourceSetReader();
+                        ODataResource entry = null;
 
                         while (reader.Read())
                         {
-                            if (reader.State == ODataReaderState.EntryEnd)
+                            if (reader.State == ODataReaderState.ResourceEnd)
                             {
-                                ODataEntry entry = reader.Item as ODataEntry;
-                                Assert.IsNotNull(entry.Properties.Single(p => p.Name == "Key").Value);
+                                entry = reader.Item as ODataResource;
                             }
-                            else if (reader.State == ODataReaderState.FeedEnd)
+                            else if (reader.State == ODataReaderState.ResourceSetEnd)
                             {
-                                Assert.IsNotNull(reader.Item as ODataFeed);
+                                Assert.IsNotNull(reader.Item as ODataResourceSet);
                             }
                         }
+
+                        Assert.IsNotNull(entry.Properties.Single(p => p.Name == "Key").Value);
                         Assert.AreEqual(ODataReaderState.Completed, reader.State);
                     }
                 }
@@ -173,16 +176,17 @@ namespace Microsoft.Test.OData.Tests.Client.ModelReferenceTests
                 {
                     using (var messageReader = new ODataMessageReader(responseMessage, readerSettings, Model))
                     {
-                        var reader = messageReader.CreateODataEntryReader();
+                        var reader = messageReader.CreateODataResourceReader();
 
+                        List<ODataResource> entries = new List<ODataResource>();
                         while (reader.Read())
                         {
-                            if (reader.State == ODataReaderState.EntryEnd)
+                            if (reader.State == ODataReaderState.ResourceEnd)
                             {
-                                ODataEntry entry = reader.Item as ODataEntry;
-                                Assert.AreEqual("VehicleKey2", entry.Properties.Single(p => p.Name == "Key").Value);
+                                entries.Add(reader.Item as ODataResource);
                             }
                         }
+                        Assert.AreEqual("VehicleKey2", entries.Last().Properties.Single(p => p.Name == "Key").Value);
                         Assert.AreEqual(ODataReaderState.Completed, reader.State);
                     }
                 }
@@ -204,21 +208,23 @@ namespace Microsoft.Test.OData.Tests.Client.ModelReferenceTests
                 {
                     using (var messageReader = new ODataMessageReader(responseMessage, readerSettings, Model))
                     {
-                        var reader = messageReader.CreateODataFeedReader();
+                        var reader = messageReader.CreateODataResourceSetReader();
+                        ODataResource entry = null;
 
                         while (reader.Read())
                         {
-                            if (reader.State == ODataReaderState.EntryEnd)
+                            if (reader.State == ODataReaderState.ResourceEnd)
                             {
-                                ODataEntry entry = reader.Item as ODataEntry;
-                                Assert.IsNotNull(entry.Properties.Single(p => p.Name == "DisplayName").Value);
-                                Assert.IsNotNull(entry.TypeName, string.Format("{0}.TruckDemo.DerivedVehicleGPSType", TestModelNameSpace));
+                                entry = reader.Item as ODataResource;
                             }
-                            else if (reader.State == ODataReaderState.FeedEnd)
+                            else if (reader.State == ODataReaderState.ResourceSetEnd)
                             {
-                                Assert.IsNotNull(reader.Item as ODataFeed);
+                                Assert.IsNotNull(reader.Item as ODataResourceSet);
                             }
                         }
+
+                        Assert.IsNotNull(entry.Properties.Single(p => p.Name == "DisplayName").Value);
+                        Assert.IsNotNull(entry.TypeName, string.Format("{0}.TruckDemo.DerivedVehicleGPSType", TestModelNameSpace));
                         Assert.AreEqual(ODataReaderState.Completed, reader.State);
                     }
                 }
@@ -240,16 +246,19 @@ namespace Microsoft.Test.OData.Tests.Client.ModelReferenceTests
                 {
                     using (var messageReader = new ODataMessageReader(responseMessage, readerSettings, Model))
                     {
-                        var reader = messageReader.CreateODataEntryReader();
+                        var reader = messageReader.CreateODataResourceReader();
 
                         while (reader.Read())
                         {
-                            if (reader.State == ODataReaderState.EntryEnd)
+                            if (reader.State == ODataReaderState.ResourceEnd)
                             {
-                                ODataEntry entry = reader.Item as ODataEntry;
-                                Assert.AreEqual("VehicleKey6", entry.Properties.Single(p => p.Name == "Key").Value);
-                                Assert.AreEqual("DisplayName6", entry.Properties.Single(p => p.Name == "DisplayName").Value);
-                                Assert.AreEqual(entry.TypeName, string.Format("{0}.TruckDemo.DerivedVehicleGPSType", TestModelNameSpace));
+                                ODataResource entry = reader.Item as ODataResource;
+                                if (entry != null & entry.TypeName.EndsWith("VehicleGPSType"))
+                                {
+                                    Assert.AreEqual("VehicleKey6", entry.Properties.Single(p => p.Name == "Key").Value);
+                                    Assert.AreEqual("DisplayName6", entry.Properties.Single(p => p.Name == "DisplayName").Value);
+                                    Assert.AreEqual(entry.TypeName, string.Format("{0}.TruckDemo.DerivedVehicleGPSType", TestModelNameSpace));
+                                }
                             }
                         }
                         Assert.AreEqual(ODataReaderState.Completed, reader.State);
@@ -270,7 +279,14 @@ namespace Microsoft.Test.OData.Tests.Client.ModelReferenceTests
 
             using (var messageReader = new ODataMessageReader(responseMessage, readerSettings, Model))
             {
-                messageReader.ReadProperty();
+                var odatareader = messageReader.CreateODataResourceReader();
+                while (odatareader.Read())
+                {
+                    if (odatareader.State == ODataReaderState.ResourceEnd)
+                    {
+                        Assert.IsNotNull(odatareader.Item as ODataResource);
+                    }
+                }
             }
         }
 
@@ -289,20 +305,21 @@ namespace Microsoft.Test.OData.Tests.Client.ModelReferenceTests
                 {
                     using (var messageReader = new ODataMessageReader(responseMessage, readerSettings, Model))
                     {
-                        var reader = messageReader.CreateODataFeedReader();
-
+                        var reader = messageReader.CreateODataResourceSetReader();
+                        ODataResource entry = null;
                         while (reader.Read())
                         {
-                            if (reader.State == ODataReaderState.EntryEnd)
+                            if (reader.State == ODataReaderState.ResourceEnd)
                             {
-                                ODataEntry entry = reader.Item as ODataEntry;
-                                Assert.IsNotNull(entry.Properties.Single(p => p.Name == "Key").Value);
+                                entry = reader.Item as ODataResource;
                             }
-                            else if (reader.State == ODataReaderState.FeedEnd)
+                            else if (reader.State == ODataReaderState.ResourceSetEnd)
                             {
-                                Assert.IsNotNull(reader.Item as ODataFeed);
+                                Assert.IsNotNull(reader.Item as ODataResourceSet);
                             }
                         }
+
+                        Assert.IsNotNull(entry.Properties.Single(p => p.Name == "Key").Value);
                         Assert.AreEqual(ODataReaderState.Completed, reader.State);
                     }
                 }
@@ -324,16 +341,19 @@ namespace Microsoft.Test.OData.Tests.Client.ModelReferenceTests
                 {
                     using (var messageReader = new ODataMessageReader(responseMessage, readerSettings, Model))
                     {
-                        var reader = messageReader.CreateODataEntryReader();
+                        var reader = messageReader.CreateODataResourceReader();
 
                         while (reader.Read())
                         {
-                            if (reader.State == ODataReaderState.EntryEnd)
+                            if (reader.State == ODataReaderState.ResourceEnd)
                             {
-                                ODataEntry entry = reader.Item as ODataEntry;
-                                Assert.AreEqual("DerivedVehicleGPSInGPSKey3", entry.Properties.Single(p => p.Name == "Key").Value);
-                                Assert.AreEqual("DerivedVehicleGPSInGPSDP", entry.Properties.Single(p => p.Name == "DisplayName").Value);
-                                Assert.AreEqual(entry.TypeName, string.Format("{0}.TruckDemo.DerivedVehicleGPSType", TestModelNameSpace));
+                                ODataResource entry = reader.Item as ODataResource;
+                                if (entry != null & entry.TypeName.EndsWith("VehicleGPSType"))
+                                {
+                                    Assert.AreEqual("DerivedVehicleGPSInGPSKey3", entry.Properties.Single(p => p.Name == "Key").Value);
+                                    Assert.AreEqual("DerivedVehicleGPSInGPSDP", entry.Properties.Single(p => p.Name == "DisplayName").Value);
+                                    Assert.AreEqual(entry.TypeName, string.Format("{0}.TruckDemo.DerivedVehicleGPSType", TestModelNameSpace));
+                                }
                             }
                         }
                         Assert.AreEqual(ODataReaderState.Completed, reader.State);
@@ -369,25 +389,27 @@ namespace Microsoft.Test.OData.Tests.Client.ModelReferenceTests
                     {
                         using (var messageReader = new ODataMessageReader(responseMessage, readerSettings, Model))
                         {
-                            List<ODataEntry> entries = new List<ODataEntry>();
-                            List<ODataNavigationLink> navigationLinks = new List<ODataNavigationLink>();
+                            List<ODataResource> entries = new List<ODataResource>();
+                            List<ODataNestedResourceInfo> navigationLinks = new List<ODataNestedResourceInfo>();
 
-                            var reader = messageReader.CreateODataEntryReader();
+                            var reader = messageReader.CreateODataResourceReader();
                             while (reader.Read())
                             {
-                                if (reader.State == ODataReaderState.EntryEnd)
+                                if (reader.State == ODataReaderState.ResourceEnd)
                                 {
-                                    entries.Add(reader.Item as ODataEntry);
+                                    entries.Add(reader.Item as ODataResource);
                                 }
-                                else if (reader.State == ODataReaderState.NavigationLinkEnd)
+                                else if (reader.State == ODataReaderState.NestedResourceInfoEnd)
                                 {
-                                    navigationLinks.Add(reader.Item as ODataNavigationLink);
+                                    navigationLinks.Add(reader.Item as ODataNestedResourceInfo);
                                 }
                             }
 
                             Assert.AreEqual(ODataReaderState.Completed, reader.State);
-                            Assert.AreEqual(testCase.Value[0], entries.Count);
-                            Assert.AreEqual(testCase.Value[1], navigationLinks.Count);
+                            Assert.AreEqual(testCase.Value[0], entries.Where(e=>e.TypeName.Contains("TruckType")
+                                || e.TypeName.Contains("VehicleGPSType")
+                                || e.TypeName.Contains("HeadUnitType")).Count());
+                            Assert.AreEqual(testCase.Value[1], navigationLinks.Where(n => n.Url != null).Count());
                         }
                     }
                 }
@@ -418,14 +440,18 @@ namespace Microsoft.Test.OData.Tests.Client.ModelReferenceTests
                     {
                         using (var messageReader = new ODataMessageReader(responseMessage, readerSettings, Model))
                         {
-                            List<ODataEntry> entries = new List<ODataEntry>();
+                            List<ODataResource> entries = new List<ODataResource>();
 
-                            var reader = messageReader.CreateODataFeedReader();
+                            var reader = messageReader.CreateODataResourceSetReader();
                             while (reader.Read())
                             {
-                                if (reader.State == ODataReaderState.EntryEnd)
+                                if (reader.State == ODataReaderState.ResourceEnd)
                                 {
-                                    entries.Add(reader.Item as ODataEntry);
+                                    var entry = reader.Item as ODataResource;
+                                    if (entry.TypeName.Contains("VehicleGPSType"))
+                                    {
+                                        entries.Add(reader.Item as ODataResource);
+                                    }
                                 }
                             }
                             Assert.AreEqual(ODataReaderState.Completed, reader.State);
@@ -461,19 +487,19 @@ namespace Microsoft.Test.OData.Tests.Client.ModelReferenceTests
                     {
                         using (var messageReader = new ODataMessageReader(responseMessage, readerSettings, Model))
                         {
-                            ODataEntry entry = new ODataEntry();
+                            List<ODataResource> entries = new List<ODataResource>();
 
-                            var reader = messageReader.CreateODataEntryReader();
+                            var reader = messageReader.CreateODataResourceReader();
                             while (reader.Read())
                             {
-                                if (reader.State == ODataReaderState.EntryEnd)
+                                if (reader.State == ODataReaderState.ResourceEnd)
                                 {
-                                    entry = reader.Item as ODataEntry;
+                                    entries.Add(reader.Item as ODataResource);
                                 }
                             }
 
                             Assert.AreEqual(ODataReaderState.Completed, reader.State);
-                            Assert.AreEqual(testCase.Value, entry.Properties.Count());
+                            Assert.AreEqual(testCase.Value, entries.Last().Properties.Count() + entries.Count -1 /*non-ComplexP + ComplexP*/);
                         }
                     }
                 }
@@ -497,14 +523,18 @@ namespace Microsoft.Test.OData.Tests.Client.ModelReferenceTests
                 {
                     using (var messageReader = new ODataMessageReader(responseMessage, readerSettings, Model))
                     {
-                        List<ODataEntry> entries = new List<ODataEntry>();
+                        List<ODataResource> entries = new List<ODataResource>();
 
-                        var reader = messageReader.CreateODataFeedReader();
+                        var reader = messageReader.CreateODataResourceSetReader();
                         while (reader.Read())
                         {
-                            if (reader.State == ODataReaderState.EntryEnd)
+                            if (reader.State == ODataReaderState.ResourceEnd)
                             {
-                                entries.Add(reader.Item as ODataEntry);
+                                var resource = reader.Item as ODataResource;
+                                if (resource.TypeName.Contains("VehicleGPSType"))
+                                {
+                                    entries.Add(reader.Item as ODataResource);
+                                }
                             }
                         }
 
@@ -527,7 +557,7 @@ namespace Microsoft.Test.OData.Tests.Client.ModelReferenceTests
             requestMessage.SetHeader("Accept", "*/*");
             requestMessage.Method = "POST";
 
-            ODataMessageWriterSettings writerSettings = new ODataMessageWriterSettings() { PayloadBaseUri = ServiceBaseUri };
+            ODataMessageWriterSettings writerSettings = new ODataMessageWriterSettings() { BaseUri = ServiceBaseUri };
             using (var messageWriter = new ODataMessageWriter(requestMessage, writerSettings, Model))
             {
                 var odataWriter = messageWriter.CreateODataParameterWriter(null);
@@ -538,7 +568,7 @@ namespace Microsoft.Test.OData.Tests.Client.ModelReferenceTests
             var responseMessage = requestMessage.GetResponse();
             Assert.AreEqual(204, responseMessage.StatusCode);
 
-            var actual = (this.QueryEntityItem("VehicleGPSSet('VehicleKey6')") as ODataEntry).Properties.Single(p => p.Name == "VehicleSpeed").Value;
+            var actual = (this.QueryEntityItem("VehicleGPSSet('VehicleKey6')") as ODataResource).Properties.Single(p => p.Name == "VehicleSpeed").Value;
             Assert.AreEqual((double)80, actual);
         }
 
@@ -549,7 +579,7 @@ namespace Microsoft.Test.OData.Tests.Client.ModelReferenceTests
             requestMessage.SetHeader("Accept", "*/*");
             requestMessage.Method = "POST";
 
-            ODataMessageWriterSettings writerSettings = new ODataMessageWriterSettings() { PayloadBaseUri = ServiceBaseUri };
+            ODataMessageWriterSettings writerSettings = new ODataMessageWriterSettings() { BaseUri = ServiceBaseUri };
             using (var messageWriter = new ODataMessageWriter(requestMessage, writerSettings, Model))
             {
                 var odataWriter = messageWriter.CreateODataParameterWriter(null);
@@ -560,7 +590,7 @@ namespace Microsoft.Test.OData.Tests.Client.ModelReferenceTests
             var responseMessage = requestMessage.GetResponse();
             Assert.AreEqual(200, responseMessage.StatusCode);
 
-            var actual = (this.QueryEntityItem("VehicleGPSSetInGPS('VehicleGPSSetInGPSKey2')") as ODataEntry).Properties.Single(p => p.Name == "VehicleSpeed").Value;
+            var actual = (this.QueryEntityItem("VehicleGPSSetInGPS('VehicleGPSSetInGPSKey2')") as ODataResource).Properties.Single(p => p.Name == "VehicleSpeed").Value;
             Assert.AreEqual((double)80, actual);
         }
 
@@ -591,11 +621,19 @@ namespace Microsoft.Test.OData.Tests.Client.ModelReferenceTests
             var responseMessage = requestMessage.GetResponse();
             Assert.AreEqual(200, responseMessage.StatusCode);
 
-            ODataProperty perp;
+            ODataResource perp = null;
             using (var messageReader = new ODataMessageReader(responseMessage, readerSettings, Model))
             {
-                perp = messageReader.ReadProperty();
-                Assert.AreEqual(1, (perp.Value as ODataComplexValue).Properties.Single(p => p.Name == "Severity").Value);
+                var odataReader = messageReader.CreateODataResourceReader();
+                while (odataReader.Read())
+                {
+                    if (odataReader.State == ODataReaderState.ResourceEnd)
+                    {
+                        perp = odataReader.Item as ODataResource;
+                    }
+                }
+
+                Assert.AreEqual(1, perp.Properties.Single(p => p.Name == "Severity").Value);
             }
         }
 
@@ -616,10 +654,10 @@ namespace Microsoft.Test.OData.Tests.Client.ModelReferenceTests
             {
                 using (var messageReader = new ODataMessageReader(queryResponseMessage, readerSettings, Model))
                 {
-                    var reader = messageReader.CreateODataEntryReader();
+                    var reader = messageReader.CreateODataResourceReader();
                     while (reader.Read())
                     {
-                        if (reader.State == ODataReaderState.EntryEnd)
+                        if (reader.State == ODataReaderState.ResourceEnd)
                         {
                             item = reader.Item;
                         }

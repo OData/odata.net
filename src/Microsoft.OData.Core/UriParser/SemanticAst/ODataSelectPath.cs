@@ -4,17 +4,15 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core.UriParser.Semantic
+namespace Microsoft.OData.UriParser
 {
-    using System;
     using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
-    using System.Linq;
-    using ODataErrorStrings = Microsoft.OData.Core.Strings;
+    using ODataErrorStrings = Microsoft.OData.Strings;
 
     /// <summary>
     /// A specific type of <see cref="ODataPath"/> which can only contain instances of <see cref="TypeSegment"/>, <see cref="NavigationPropertySegment"/>,
-    /// <see cref="PropertySegment"/>, <see cref="OperationSegment"/>, or <see cref="OpenPropertySegment"/>.
+    /// <see cref="PropertySegment"/>, <see cref="OperationSegment"/>, or <see cref="DynamicPathSegment"/>.
     /// </summary>
     [SuppressMessage("Microsoft.Naming", "CA1710:IdentifiersShouldHaveCorrectSuffix", Justification = "ODataSelectPathCollection just doesn't sound right")]
     public class ODataSelectPath : ODataPath
@@ -48,6 +46,12 @@ namespace Microsoft.OData.Core.UriParser.Semantic
         private void ValidatePath()
         {
             int index = 0;
+
+            if (this.Count == 1 && this.FirstSegment is TypeSegment)
+            {
+                throw new ODataException(ODataErrorStrings.ODataSelectPath_CannotOnlyHaveTypeSegment);
+            }
+
             foreach (ODataPathSegment segment in this)
             {
                 if (segment is NavigationPropertySegment)
@@ -64,20 +68,15 @@ namespace Microsoft.OData.Core.UriParser.Semantic
                         throw new ODataException(ODataErrorStrings.ODataSelectPath_OperationSegmentCanOnlyBeLastSegment);
                     }
                 }
-                else if (segment is TypeSegment)
+                else if (segment is DynamicPathSegment || segment is PropertySegment || segment is TypeSegment)
                 {
-                    if (index == this.Count - 1)
-                    {
-                        throw new ODataException(ODataErrorStrings.ODataSelectPath_CannotEndInTypeSegment);
-                    }
-                }
-                else if (segment is OpenPropertySegment || segment is PropertySegment)
-                {
+                    index++;
                     continue;
                 }
                 else
                 {
-                    throw new ODataException(ODataErrorStrings.ODataSelectPath_InvalidSelectPathSegmentType(segment.GetType().Name));
+                    throw new ODataException(
+                        ODataErrorStrings.ODataSelectPath_InvalidSelectPathSegmentType(segment.GetType().Name));
                 }
 
                 index++;

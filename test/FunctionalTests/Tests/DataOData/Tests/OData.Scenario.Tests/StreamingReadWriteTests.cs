@@ -10,8 +10,8 @@ namespace Microsoft.Test.Taupo.OData.Scenario.Tests
     using System.Collections.Generic;
     using System.Linq;
     using System.Xml;
-    using Microsoft.OData.Core;
-    using Microsoft.OData.Edm.Library;
+    using Microsoft.OData;
+    using Microsoft.OData.Edm;
     using Microsoft.Test.OData.Utils.Metadata;
     using Microsoft.Test.Taupo.Astoria.Common;
     using Microsoft.Test.Taupo.Astoria.Contracts.Json;
@@ -23,7 +23,6 @@ namespace Microsoft.Test.Taupo.OData.Scenario.Tests
     using Microsoft.Test.Taupo.OData.Reader.Tests;
     using Microsoft.Test.Taupo.OData.Scenario.Tests.Streaming;
     using Microsoft.Test.Taupo.OData.Writer.Tests.Common;
-    using Microsoft.Test.Taupo.OData.Writer.Tests.Fixups;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     /// <summary>
@@ -34,7 +33,7 @@ namespace Microsoft.Test.Taupo.OData.Scenario.Tests
     {
         [InjectDependency(IsRequired = true)]
         public IPayloadGenerator PayloadGenerator { get; set; }
-        
+
         [InjectDependency(IsRequired = true)]
         public PayloadReaderTestDescriptor.Settings Settings { get; set; }
 
@@ -46,7 +45,7 @@ namespace Microsoft.Test.Taupo.OData.Scenario.Tests
         public void StreamReadWriteFeed()
         {
             var payloadDescriptors = Test.OData.Utils.ODataLibTest.TestFeeds.GetFeeds(new EdmModel(), true /*withTypeNames*/);
-            
+
             var testDescriptors = this.PayloadDescriptorsToStreamDescriptors(payloadDescriptors);
 
             this.CombinatorialEngineProvider.RunCombinations(
@@ -153,7 +152,7 @@ namespace Microsoft.Test.Taupo.OData.Scenario.Tests
             foreach (var payloadDescriptor in payloadDescriptors)
             {
                 var payload = payloadDescriptor.PayloadElement.DeepCopy();
-                
+
                 testDescriptors.Add(new StreamingPayloadReaderTestDescriptor(this.Settings)
                 {
                     PayloadDescriptor = payloadDescriptor,
@@ -162,18 +161,13 @@ namespace Microsoft.Test.Taupo.OData.Scenario.Tests
                     SkipTestConfiguration = payloadDescriptor.SkipTestConfiguration,
                     ExpectedResultCallback = (tc) =>
                      {
-                        var payloadCopy = payload.DeepCopy();
+                         var payloadCopy = payload.DeepCopy();
 
-                        if (tc.Format == ODataFormat.Atom)
-                        {
-                            payloadCopy.Accept(new AddFeedIDFixup());
-                        }
-
-                        return new PayloadWriterTestExpectedResults(this.ExpectedResultSettings)
-                        {
-                            ExpectedPayload = payloadCopy,
-                        };
-                    }
+                         return new PayloadWriterTestExpectedResults(this.ExpectedResultSettings)
+                         {
+                             ExpectedPayload = payloadCopy,
+                         };
+                     }
                 });
             }
 
@@ -187,13 +181,13 @@ namespace Microsoft.Test.Taupo.OData.Scenario.Tests
                 if (payloadElement.ClrValue is DateTime)
                 {
                     // In V3, JSON DateTimes use ISO format - use XmlConvert to overwrite the default.
-                    var dateTimePayload = (DateTime) payloadElement.ClrValue;
+                    var dateTimePayload = (DateTime)payloadElement.ClrValue;
                     payloadElement.JsonRepresentation(
                         new JsonPrimitiveValue(XmlConvert.ToString(dateTimePayload, XmlDateTimeSerializationMode.RoundtripKind)));
                 }
 
                 base.Visit(payloadElement);
-            } 
+            }
         }
 
         private class JsonDateTimePreV3ClrValueFixup : ODataPayloadElementVisitorBase
@@ -211,7 +205,7 @@ namespace Microsoft.Test.Taupo.OData.Scenario.Tests
 
                     // In V1 and V2, a certain amount of precision is lost when deserializing the old JSON format,
                     // so strip out the last four digits on the Ticks property.
-                    long newTicks = Convert.ToInt64(Math.Truncate((decimal) dateTimePayload.Ticks/10000)*10000);
+                    long newTicks = Convert.ToInt64(Math.Truncate((decimal)dateTimePayload.Ticks / 10000) * 10000);
                     payloadElement.ClrValue = new DateTime(newTicks, DateTimeKind.Utc);
                 }
 

@@ -4,13 +4,12 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.Data.Spatial
+namespace Microsoft.Spatial
 {
     using System;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
-    using Microsoft.Spatial;
 
     /// <summary>
     /// This is a forwarding transform pipe segment
@@ -23,7 +22,7 @@ namespace Microsoft.Data.Spatial
         internal static readonly SpatialPipeline SpatialPipelineNoOp = new SpatialPipeline(new NoOpGeographyPipeline(), new NoOpGeometryPipeline());
 
         /// <summary>
-        /// The current drawspatial that will be called and whose results will be forwarded to the 
+        /// The current drawspatial that will be called and whose results will be forwarded to the
         /// next segment
         /// </summary>
         private readonly SpatialPipeline current;
@@ -107,7 +106,7 @@ namespace Microsoft.Data.Spatial
 
 #if DEBUG
             // must be null, a user implemented pipeline, lastly if it is ours, it better be wrapped in a forwarder
-            string[] spatialNamespaces = new string[] { "Microsoft.Spatial", "Microsoft.Data.Spatial" };
+            string[] spatialNamespaces = new string[] { "Microsoft.Spatial", "Microsoft.Spatial" };
             Debug.Assert(destination.GeographyPipeline == null || !spatialNamespaces.Any(s => s == destination.GeographyPipeline.GetType().Namespace) || destination.GeographyPipeline is GeographyForwarder, "the destination must be wrapped with the same type of the exception handling/Reset won't work correctly.");
             Debug.Assert(destination.GeometryPipeline == null || !spatialNamespaces.Any(s => s == destination.GeometryPipeline.GetType().Namespace) || destination.GeometryPipeline is GeometryForwarder, "the destination must be wrapped with the same type of the exception handling/Reset won't work correctly.");
 #endif
@@ -204,7 +203,7 @@ namespace Microsoft.Data.Spatial
         internal class GeographyForwarder : GeographyPipeline
         {
             /// <summary>
-            /// The ForwardingSegment instance that this pipe is 
+            /// The ForwardingSegment instance that this pipe is
             /// associated with
             /// </summary>
             private readonly ForwardingSegment segment;
@@ -261,7 +260,7 @@ namespace Microsoft.Data.Spatial
             }
 
             /// <summary>
-            /// Begin drawing a Geography figure 
+            /// Begin drawing a Geography figure
             /// </summary>
             /// <param name="position">Next position</param>
             public override void BeginFigure(GeographyPosition position)
@@ -274,7 +273,7 @@ namespace Microsoft.Data.Spatial
             }
 
             /// <summary>
-            /// Finish drawing a Geography figure 
+            /// Finish drawing a Geography figure
             /// </summary>
             public override void EndFigure()
             {
@@ -282,7 +281,7 @@ namespace Microsoft.Data.Spatial
             }
 
             /// <summary>
-            /// Continue drawing a Geography figure 
+            /// Continue drawing a Geography figure
             /// </summary>
             /// <param name="position">Next position</param>
             public override void LineTo(GeographyPosition position)
@@ -331,7 +330,7 @@ namespace Microsoft.Data.Spatial
         internal class GeometryForwarder : GeometryPipeline
         {
             /// <summary>
-            /// The ForwardingSegment instance that this pipe is 
+            /// The ForwardingSegment instance that this pipe is
             /// associated with
             /// </summary>
             private readonly ForwardingSegment segment;
@@ -388,7 +387,7 @@ namespace Microsoft.Data.Spatial
             }
 
             /// <summary>
-            /// Begin drawing a Geometry figure 
+            /// Begin drawing a Geometry figure
             /// </summary>
             /// <param name="position">Next position</param>
             public override void BeginFigure(GeometryPosition position)
@@ -398,7 +397,7 @@ namespace Microsoft.Data.Spatial
             }
 
             /// <summary>
-            /// Finish drawing a Geometry figure 
+            /// Finish drawing a Geometry figure
             /// </summary>
             public override void EndFigure()
             {
@@ -406,7 +405,7 @@ namespace Microsoft.Data.Spatial
             }
 
             /// <summary>
-            /// Continue drawing a Geometry figure 
+            /// Continue drawing a Geometry figure
             /// </summary>
             /// <param name="position">Next position</param>
             public override void LineTo(GeometryPosition position)

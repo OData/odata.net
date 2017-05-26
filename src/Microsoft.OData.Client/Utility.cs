@@ -9,7 +9,7 @@ namespace Microsoft.OData.Client
     using System;
     using System.Collections.Generic;
     using System.Reflection;
-    
+
     /// <summary>
     /// Helper class for T4 Template, provide uniform API for different platforms
     /// </summary>
@@ -36,7 +36,7 @@ namespace Microsoft.OData.Client
         /// </returns>
         public static IEnumerable<object> GetCustomAttributes(Type type, Type attributeType, bool inherit)
         {
-#if DNXCORE50
+#if PORTABLELIB
             return type.GetTypeInfo().GetCustomAttributes(attributeType, inherit);
 #else
             return type.GetCustomAttributes(attributeType, inherit);

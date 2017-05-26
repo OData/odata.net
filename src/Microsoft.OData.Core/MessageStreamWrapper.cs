@@ -4,13 +4,13 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core
+namespace Microsoft.OData
 {
     #region Namespaces
     using System;
     using System.Diagnostics;
     using System.IO;
-#if DNXCORE50
+#if PORTABLELIB
     using System.Threading;
     using System.Threading.Tasks;
 #endif
@@ -52,7 +52,7 @@ namespace Microsoft.OData.Core
         /// </summary>
         /// <param name="innerStream">The inner <see cref="Stream"/> to wrap.</param>
         /// <param name="maxBytesToBeRead">The maximum number of bytes to be read from the <paramref name="innerStream"/>.</param>
-        /// <returns>A stream wrapping the <paramref name="innerStream"/> that ignores calls to Dispose and 
+        /// <returns>A stream wrapping the <paramref name="innerStream"/> that ignores calls to Dispose and
         /// enforces the maximum number of bytes to be read from the stream.</returns>
         internal static Stream CreateNonDisposingStreamWithMaxSize(Stream innerStream, long maxBytesToBeRead)
         {
@@ -73,7 +73,7 @@ namespace Microsoft.OData.Core
             MessageStreamWrappingStream wrappingStream = stream as MessageStreamWrappingStream;
             return wrappingStream != null && wrappingStream.IgnoreDispose;
         }
-        
+
         /// <summary>
         /// Stream wrapper that supports counting the total number of bytes read from the stream and ensures
         /// that they don't exceed a specified maximum (used for security purposes) and ignoring calls
@@ -180,7 +180,7 @@ namespace Microsoft.OData.Core
                 return bytesRead;
             }
 
-#if DNXCORE50
+#if PORTABLELIB
             /// <inheritdoc />
             public async override Task<int> ReadAsync(
                 byte[] buffer,
@@ -251,7 +251,7 @@ namespace Microsoft.OData.Core
                 this.innerStream.Write(buffer, offset, count);
             }
 
-#if DNXCORE50
+#if PORTABLELIB
             /// <inheritdoc />
             public override Task WriteAsync(byte[] buffer, int offset, int count, CancellationToken cancellationToken)
             {

@@ -8,16 +8,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using FluentAssertions;
-using Microsoft.OData.Core.UriParser;
-using Microsoft.OData.Core.UriParser.Parsers;
-using Microsoft.OData.Core.UriParser.Semantic;
-using Microsoft.OData.Core.UriParser.Syntactic;
+using Microsoft.OData.UriParser;
 using Microsoft.OData.Edm;
-using Microsoft.OData.Edm.Library;
 using Xunit;
-using ODataErrorStrings = Microsoft.OData.Core.Strings;
+using ODataErrorStrings = Microsoft.OData.Strings;
 
-namespace Microsoft.OData.Core.Tests.UriParser.Binders
+namespace Microsoft.OData.Tests.UriParser.Binders
 {
     /// <summary>
     /// Unit tests for the FunctionCallBinder class.
@@ -219,7 +215,7 @@ namespace Microsoft.OData.Core.Tests.UriParser.Binders
                                             new ConstantNode("Hello"),
                                         };
             Action a = () => FunctionCallBinder.TypePromoteArguments(signature, nodes);
-            a.ShouldThrow<ODataException>().WithMessage(Microsoft.OData.Core.Strings.MetadataBinder_CannotConvertToType("Edm.Int32", "Edm.String"));
+            a.ShouldThrow<ODataException>().WithMessage(Strings.MetadataBinder_CannotConvertToType("Edm.Int32", "Edm.String"));
         }
 
         [Fact]
@@ -232,7 +228,7 @@ namespace Microsoft.OData.Core.Tests.UriParser.Binders
                                             new ConstantNode("Hello")
                                         };
             Action a = () => FunctionCallBinder.TypePromoteArguments(signature, nodes);
-            a.ShouldThrow<ODataException>().WithMessage(Microsoft.OData.Core.Strings.MetadataBinder_CannotConvertToType("Edm.String", "Edm.Int32"));
+            a.ShouldThrow<ODataException>().WithMessage(Strings.MetadataBinder_CannotConvertToType("Edm.String", "Edm.Int32"));
         }
 
 
@@ -246,7 +242,7 @@ namespace Microsoft.OData.Core.Tests.UriParser.Binders
                                             new ConstantNode("Hello")
                                         };
             Action a = () => FunctionCallBinder.TypePromoteArguments(signature, nodes);
-            a.ShouldThrow<ODataException>().WithMessage(Microsoft.OData.Core.Strings.MetadataBinder_CannotConvertToType("Edm.String", "Edm.Int32"));
+            a.ShouldThrow<ODataException>().WithMessage(Strings.MetadataBinder_CannotConvertToType("Edm.String", "Edm.Int32"));
         }
 
         //EnsureArgumentsAreSingleValue Tests
@@ -269,7 +265,7 @@ namespace Microsoft.OData.Core.Tests.UriParser.Binders
             List<QueryNode> argumentNodes =
                 new List<QueryNode>()
                 {
-                    new CollectionNavigationNode(HardCodedTestModel.GetDogMyPeopleNavProp(), HardCodedTestModel.GetDogsSet())
+                    new CollectionNavigationNode(HardCodedTestModel.GetDogsSet(), HardCodedTestModel.GetDogMyPeopleNavProp(), new EdmPathExpression("MyDog"))
                 };
 
             Action bind = () => FunctionCallBinder.ValidateArgumentsAreSingleValue("year", argumentNodes);
@@ -408,7 +404,7 @@ namespace Microsoft.OData.Core.Tests.UriParser.Binders
             FunctionCallToken functionToken = new FunctionCallToken("cast", args);
             QueryNode node = this.functionCallBinder.BindFunctionCall(functionToken);
             node.ShouldBeSingleValueFunctionCallQueryNode("cast");
-            node.As<SingleValueFunctionCallNode>().Parameters.ElementAt(0).ShouldBeEntityRangeVariableReferenceNode(ExpressionConstants.It);
+            node.As<SingleValueFunctionCallNode>().Parameters.ElementAt(0).ShouldBeResourceRangeVariableReferenceNode(ExpressionConstants.It);
             node.As<SingleValueFunctionCallNode>().Parameters.ElementAt(1).ShouldBeConstantQueryNode("Edm.String");
         }
 
@@ -513,7 +509,7 @@ namespace Microsoft.OData.Core.Tests.UriParser.Binders
                 new LiteralToken("Fully.Qualified.Namespace.Dog")
             };
             FunctionCallToken function = new FunctionCallToken("cast", args);
-            SingleEntityFunctionCallNode functionCallNode = this.functionCallBinder.BindFunctionCall(function) as SingleEntityFunctionCallNode;
+            SingleResourceFunctionCallNode functionCallNode = this.functionCallBinder.BindFunctionCall(function) as SingleResourceFunctionCallNode;
             functionCallNode.Should().NotBeNull();
             functionCallNode.Parameters.Should().HaveCount(2);
             functionCallNode.Parameters.ElementAt(0).ShouldBeSingleNavigationNode(HardCodedTestModel.GetPersonMyDogNavProp());
@@ -544,7 +540,7 @@ namespace Microsoft.OData.Core.Tests.UriParser.Binders
             };
             FunctionCallToken functionToken = new FunctionCallToken("isof", args);
             QueryNode node = this.functionCallBinder.BindFunctionCall(functionToken);
-            node.As<SingleValueFunctionCallNode>().Parameters.ElementAt(0).ShouldBeEntityRangeVariableReferenceNode(ExpressionConstants.It);
+            node.As<SingleValueFunctionCallNode>().Parameters.ElementAt(0).ShouldBeResourceRangeVariableReferenceNode(ExpressionConstants.It);
             node.ShouldBeSingleValueFunctionCallQueryNode("isof");
             node.As<SingleValueFunctionCallNode>().Parameters.ElementAt(1).ShouldBeConstantQueryNode("Edm.String");
         }
@@ -1133,7 +1129,7 @@ namespace Microsoft.OData.Core.Tests.UriParser.Binders
         {
             QueryNode functionCallNode;
             RunBindEndPathAsFunctionCall("Fully.Qualified.Namespace.GetMyDog", out functionCallNode).Should().BeTrue();
-            functionCallNode.ShouldBeSingleEntityFunctionCallNode(HardCodedTestModel.GetFunctionForGetMyDog())
+            functionCallNode.ShouldBeSingleResourceFunctionCallNode(HardCodedTestModel.GetFunctionForGetMyDog())
                 .And.NavigationSource.Should().Be(HardCodedTestModel.GetDogsSet());
         }
 
@@ -1142,7 +1138,7 @@ namespace Microsoft.OData.Core.Tests.UriParser.Binders
         {
             QueryNode functionCallNode;
             RunBindEndPathAsFunctionCall("Fully.Qualified.Namespace.AllMyFriendsDogs", out functionCallNode).Should().BeTrue();
-            functionCallNode.ShouldBeEntityCollectionFunctionCallNode(HardCodedTestModel.GetFunctionForAllMyFriendsDogs())
+            functionCallNode.ShouldBeCollectionResourceFunctionCallNode(HardCodedTestModel.GetFunctionForAllMyFriendsDogs())
                 .And.NavigationSource.Should().Be(HardCodedTestModel.GetDogsSet());
         }
 
@@ -1151,7 +1147,7 @@ namespace Microsoft.OData.Core.Tests.UriParser.Binders
         {
             QueryNode functionCallNode;
             RunBindEndPathAsFunctionCall("Fully.Qualified.Namespace.AllMyFriendsDogs_NoSet", out functionCallNode).Should().BeTrue();
-            functionCallNode.As<EntityCollectionFunctionCallNode>().NavigationSource.Should().BeNull();
+            functionCallNode.As<CollectionResourceFunctionCallNode>().NavigationSource.Should().BeNull();
         }
 
         [Fact]
@@ -1189,7 +1185,7 @@ namespace Microsoft.OData.Core.Tests.UriParser.Binders
                 },
                 null);
             QueryNode functionCallNode = this.functionCallBinder.BindFunctionCall(functionCallToken);
-            functionCallNode.ShouldBeSingleEntityFunctionCallNode(HardCodedTestModel.GetFunctionForFindMyOwner());
+            functionCallNode.ShouldBeSingleResourceFunctionCallNode(HardCodedTestModel.GetFunctionForFindMyOwner());
         }
 
         [Fact]
@@ -1339,9 +1335,9 @@ namespace Microsoft.OData.Core.Tests.UriParser.Binders
         {
             var boundFunctionCallToken = new EndPathToken(endPathIdentifier, null);
             return this.functionCallBinder.TryBindEndPathAsFunctionCall(boundFunctionCallToken,
-                                                                 new EntityRangeVariableReferenceNode(
+                                                                 new ResourceRangeVariableReferenceNode(
                                                                      ExpressionConstants.It,
-                                                                     (EntityRangeVariable)
+                                                                     (ResourceRangeVariable)
                                                                      this.binder.BindingState.ImplicitRangeVariable),
                                                                  this.binder.BindingState, out functionCallNode);
         }
@@ -1350,9 +1346,9 @@ namespace Microsoft.OData.Core.Tests.UriParser.Binders
         {
             var dottedIdentifierToken = new DottedIdentifierToken(identifier, null);
             return this.functionCallBinder.TryBindDottedIdentifierAsFunctionCall(dottedIdentifierToken,
-                                                                          new EntityRangeVariableReferenceNode(
+                                                                          new ResourceRangeVariableReferenceNode(
                                                                               ExpressionConstants.It,
-                                                                              (EntityRangeVariable)
+                                                                              (ResourceRangeVariable)
                                                                               this.binder.BindingState
                                                                                   .ImplicitRangeVariable),
                                                                           out functionCallNode);
@@ -1360,7 +1356,7 @@ namespace Microsoft.OData.Core.Tests.UriParser.Binders
 
         private void TestUnaryCanonicalFunctionBinding(string functionName, IEdmTypeReference typeReference, IEdmTypeReference returnTypeReference = null)
         {
-            this.binder.BindingState.RangeVariables.Push(new NonentityRangeVariable("a", typeReference, null));
+            this.binder.BindingState.RangeVariables.Push(new NonResourceRangeVariable("a", typeReference, null));
             this.functionCallBinder.BindFunctionCall(
                 new FunctionCallToken(functionName, new[] { new RangeVariableToken("a") }))
                 .ShouldBeSingleValueFunctionCallQueryNode(functionName, returnTypeReference);

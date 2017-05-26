@@ -6,6 +6,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Microsoft.Test.OData.PluggableFormat.Tests</RootNamespace>
     <AssemblyName>Microsoft.Test.OData.PluggableFormat.Tests</AssemblyName>
+    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <ErrorReport>prompt</ErrorReport>
@@ -28,6 +29,10 @@
     <ProjectReference Include="$(EnlistmentRoot)\src\Microsoft.OData.Core\Microsoft.OData.Core.csproj">
       <Project>{989A83CC-B864-4A75-8BF3-5EDA99203A86}</Project>
       <Name>Microsoft.OData.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="$(EnlistmentRoot)\test\Common\Microsoft.Test.OData.DependencyInjection\Build.NetFramework\Microsoft.Test.OData.DependencyInjection.csproj">
+      <Project>{50aa23b2-56ef-4c51-a270-8d5bd0c899b6}</Project>
+      <Name>Microsoft.Test.OData.DependencyInjection</Name>
     </ProjectReference>
     <ProjectReference Include="..\OData.PluggableFormat\Microsoft.Test.OData.PluggableFormat.csproj">
       <Project>{1d872f31-6100-4c76-999e-ed948e2cd248}</Project>

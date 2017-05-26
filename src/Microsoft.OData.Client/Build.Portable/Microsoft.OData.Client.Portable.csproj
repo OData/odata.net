@@ -3,10 +3,11 @@
   <PropertyGroup>
     <AssemblyName>Microsoft.OData.Client</AssemblyName>
     <OutputType>Library</OutputType>
-    <TargetFrameworkProfile>Profile259</TargetFrameworkProfile>
+    <TargetFrameworkProfile>Profile111</TargetFrameworkProfile>
     <TargetFrameworkIdentifier>.NETPortable</TargetFrameworkIdentifier>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
-    <DefineConstants>$(DefineConstants);ASTORIA_CLIENT;DNXCORE50;</DefineConstants>
+    <GenerateTargetFrameworkAttribute>true</GenerateTargetFrameworkAttribute>
+    <DefineConstants>$(DefineConstants);ODATA_CLIENT;PORTABLELIB;SUPPRESS_PORTABLELIB_TARGETFRAMEWORK_ATTRIBUTE</DefineConstants>
     <DocumentationFile>$(AssemblyName).xml</DocumentationFile>
     <CopyOutputSymbolsToOutputDirectory>true</CopyOutputSymbolsToOutputDirectory>
     <RootNamespace>System</RootNamespace>
@@ -14,25 +15,9 @@
     <ProjectTypeGuids>{786C830F-07A1-408B-BD7F-6EE04809D6DB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <MinimumVisualStudioVersion>11.0</MinimumVisualStudioVersion>
     <EnableLocalization>true</EnableLocalization>
-    <NoStdLib>true</NoStdLib>
-    <ProgramFiles32 Condition="Exists('$(PROGRAMFILES) (x86)')">$(PROGRAMFILES) (x86)</ProgramFiles32>
-    <ProgramFiles32 Condition="$(ProgramFiles32) == ''">$(PROGRAMFILES)</ProgramFiles32>
   </PropertyGroup>
   <Import Project="..\Build.props" />
-  <Import Project="$(NugetPack)\Microsoft.Portable.$(TargetFrameworkProfile).SQLIS.8.1.0.0\Portable.props" Condition="'$(BuildInOSS)' != 'true'" />
-  <!--
-  Setting CodeAnalysisDependentAssemblyPaths explicitly, otherwise dependencies won't
-  be found in the correct order and the FxCop failure will produce a build error.
-  -->
-  <ItemGroup>
-    <CodeAnalysisDependentAssemblyPaths Include="$(ProgramFiles32)\Reference Assemblies\Microsoft\Framework\.NETPortable\v4.5\" />
-  </ItemGroup>
-  <ItemGroup>
-    <XTargetOutputFile Include="$(MSBuildThisFile)">
-      <SourceProject>$(EnlistmentRoot)\src\Microsoft.OData.Client\Microsoft.OData.Client.csproj</SourceProject>
-      <TargetPathPrefixName>$(EnlistmentRoot)\src\Microsoft.OData.Client\</TargetPathPrefixName>
-    </XTargetOutputFile>
-  </ItemGroup>
+  <!--<Import Project="$(NugetPack)\Microsoft.Portable.$(TargetFrameworkProfile).SQLIS.8.1.0.0\Portable.props" Condition="'$(BuildInOSS)' != 'true'" /> -->
   <!-- References -->
   <ItemGroup>
     <ProjectReference Include="$(EnlistmentRoot)\src\Microsoft.OData.Edm\Microsoft.OData.Edm.csproj">
@@ -76,8 +61,8 @@
     <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Core\Evaluation\EdmValueUtils.cs">
       <Link>EdmValueUtils.cs</Link>
     </Compile>
-    <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Core\Evaluation\ODataEntityMetadataBuilder.cs">
-      <Link>ODataEntityMetadataBuilder.cs</Link>
+    <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Core\Evaluation\ODataResourceMetadataBuilder.cs">
+      <Link>ODataResourceMetadataBuilder.cs</Link>
     </Compile>
     <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Core\Evaluation\ODataUriBuilder.cs">
       <Link>ODataUriBuilder.cs</Link>
@@ -175,8 +160,8 @@
     <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Core\UriParser\SyntacticAst\QueryToken.cs">
       <Link>ALinq\UriParser\SyntacticAst\QueryToken.cs</Link>
     </Compile>
-    <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Core\UriParser\TreeNodeKinds\QueryTokenKind.cs">
-      <Link>ALinq\UriParser\TreeNodeKinds\QueryTokenKind.cs</Link>
+    <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Core\UriParser\SyntacticAst\QueryTokenKind.cs">
+      <Link>ALinq\UriParser\SyntacticAst\QueryTokenKind.cs</Link>
     </Compile>
     <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Core\UriParser\SyntacticAst\RangeVariableToken.cs">
       <Link>ALinq\UriParser\SyntacticAst\RangeVariableToken.cs</Link>
@@ -280,12 +265,6 @@
     <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Client\ConventionalODataEntityMetadataBuilder.cs">
       <Link>ConventionalODataEntityMetadataBuilder.cs</Link>
     </Compile>
-    <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Client\DataServiceClientMessageWriterSettingsShim.cs">
-      <Link>DataServiceClientMessageWriterSettingsShim.cs</Link>
-    </Compile>
-    <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Client\DataServiceClientMessageReaderSettingsShim.cs">
-      <Link>DataServiceClientMessageReaderSettingsShim.cs</Link>
-    </Compile>
     <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Client\DataServiceQuerySingleOfT.cs">
       <Link>DataServiceQuerySingleOfT.cs</Link>
     </Compile>
@@ -316,9 +295,6 @@
     <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Client\Materialization\CollectionValueMaterializationPolicy.cs">
       <Link>Materialization\CollectionValueMaterializationPolicy.cs</Link>
     </Compile>
-    <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Client\Materialization\ComplexValueMaterializationPolicy.cs">
-      <Link>Materialization\ComplexValueMaterializationPolicy.cs</Link>
-    </Compile>
     <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Client\Materialization\EntityTrackingAdapter.cs">
       <Link>Materialization\EntityTrackingAdapter.cs</Link>
     </Compile>
@@ -343,6 +319,9 @@
     <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Client\MaterializedEntityArgs.cs">
       <Link>MaterializedEntityArgs.cs</Link>
     </Compile>
+    <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Client\ODataAnnotatableExtensions.cs">
+      <Link>ODataAnnotatableExtensions.cs</Link>
+    </Compile>
     <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Client\Serialization\DataServiceClientRequestMessage.cs">
       <Link>Serialization\DataServiceClientRequestMessage.cs</Link>
     </Compile>
@@ -355,14 +334,14 @@
     <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Client\WritingEntryArgs.cs">
       <Link>WritingEntryArgs.cs</Link>
     </Compile>
-    <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Client\WritingNavigationLinkArgs.cs">
-      <Link>WritingNavigationLinkArgs.cs</Link>
+    <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Client\WritingNestedResourceInfoArgs.cs">
+      <Link>WritingNestedResourceInfoArgs.cs</Link>
     </Compile>
     <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Client\DataServiceClientRequestPipelineConfiguration.cs">
       <Link>DataServiceClientRequestPipelineConfiguration.cs</Link>
     </Compile>
-    <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Client\ReadingNavigationLinkArgs.cs">
-      <Link>ReadingNavigationLinkArgs.cs</Link>
+    <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Client\ReadingNestedResourceInfoArgs.cs">
+      <Link>ReadingNestedResourceInfoArgs.cs</Link>
     </Compile>
     <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Client\ReadingFeedArgs.cs">
       <Link>ReadingFeedArgs.cs</Link>
@@ -767,12 +746,6 @@
     <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Client\MimeTypePropertyAttribute.cs">
       <Link>MimeTypePropertyAttribute.cs</Link>
     </Compile>
-    <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Client\OpenObject.cs">
-      <Link>OpenObject.cs</Link>
-    </Compile>
-    <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Client\OpenObjectAttribute.cs">
-      <Link>OpenObjectAttribute.cs</Link>
-    </Compile>
     <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Client\EntityDescriptor.cs">
       <Link>EntityDescriptor.cs</Link>
     </Compile>
@@ -809,11 +782,8 @@
     <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Client\UriUtil.cs">
       <Link>UriUtil.cs</Link>
     </Compile>
-    <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Core\Evaluation\UrlConvention.cs">
-      <Link>UrlConvention.cs</Link>
-    </Compile>
-    <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Client\DataServiceUrlConventions.cs">
-      <Link>DataServiceUrlConventions.cs</Link>
+    <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Client\DataServiceUrlKeyDelimiter.cs">
+      <Link>DataServiceUrlKeyDelimiter.cs</Link>
     </Compile>
     <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Client\Util.cs">
       <Link>Util.cs</Link>
@@ -826,9 +796,6 @@
     </Compile>
     <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Client\WebUtil.cs">
       <Link>WebUtil.cs</Link>
-    </Compile>
-    <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Client\MessageSettingsHelper.cs">
-      <Link>MessageSettingsHelper.cs</Link>
     </Compile>
     <Compile Include="$(EnlistmentRoot)\src\Microsoft.OData.Client\Metadata\ClientPropertyAnnotation.cs">
       <Link>Metadata\ClientPropertyAnnotation.cs</Link>
@@ -884,6 +851,21 @@
     </Compile>
     <Compile Include="..\WeakDictionary.cs">
       <Link>WeakDictionary.cs</Link>
+    </Compile>
+    <Compile Include="..\Wrappers\ODataItemWrapper.cs">
+      <Link>Wrappers\ODataItemWrapper.cs</Link>
+    </Compile>
+    <Compile Include="..\Wrappers\ODataNestedResourceInfoWrapper.cs">
+      <Link>Wrappers\ODataNestedResourceInfoWrapper.cs</Link>
+    </Compile>
+    <Compile Include="..\Wrappers\ODataResourceSetWrapper.cs">
+      <Link>Wrappers\ODataResourceSetWrapper.cs</Link>
+    </Compile>
+    <Compile Include="..\Wrappers\ODataResourceWrapper.cs">
+      <Link>Wrappers\ODataResourceWrapper.cs</Link>
+    </Compile>
+    <Compile Include="..\Wrappers\ODataWriterHelper.cs">
+      <Link>Wrappers\ODataWriterHelper.cs</Link>
     </Compile>
     <Compile Include="Microsoft.OData.Client.Portable.cs">
       <AutoGen>True</AutoGen>

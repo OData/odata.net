@@ -8,7 +8,7 @@ using System;
 using Microsoft.OData.Service;
 using Microsoft.OData.Service.Providers;
 using System.Linq;
-using Microsoft.OData.Core;
+using Microsoft.OData;
 
 namespace AstoriaUnitTests.Tests.Server.Simulators
 {

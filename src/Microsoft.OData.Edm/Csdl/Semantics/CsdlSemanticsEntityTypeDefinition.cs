@@ -8,7 +8,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.OData.Edm.Csdl.Parsing.Ast;
-using Microsoft.OData.Edm.Library;
 
 namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
 {
@@ -70,25 +69,9 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
             }
         }
 
-        public EdmTermKind TermKind
-        {
-            get { return EdmTermKind.Type; }
-        }
-
         protected override CsdlStructuredType MyStructured
         {
             get { return this.entity; }
-        }
-
-        protected override List<IEdmProperty> ComputeDeclaredProperties()
-        {
-            List<IEdmProperty> properties = base.ComputeDeclaredProperties();
-            foreach (CsdlNavigationProperty navigationProperty in this.entity.NavigationProperties)
-            {
-                properties.Add(new CsdlSemanticsNavigationProperty(this, navigationProperty));
-            }
-
-            return properties;
         }
 
         private IEdmEntityType ComputeBaseType()

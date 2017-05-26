@@ -4,11 +4,7 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-#if SPATIAL
-namespace Microsoft.Data.Spatial
-#else
-namespace Microsoft.OData.Core.Json
-#endif
+namespace Microsoft.OData.Json
 {
     #region Namespaces
     using System;
@@ -17,7 +13,7 @@ namespace Microsoft.OData.Core.Json
     using System.Globalization;
     using System.IO;
     using System.Xml;
-    using Microsoft.OData.Edm.Library;
+    using Microsoft.OData.Edm;
     #endregion Namespaces
 
     /// <summary>
@@ -56,7 +52,7 @@ namespace Microsoft.OData.Core.Json
         private static readonly string[] SpecialCharToEscapedStringMap = CreateSpecialCharToEscapedStringMap();
 
         /// <summary>
-        /// Initialize static properties 
+        /// Initialize static properties
         /// </summary>
         static JsonValueUtils()
         {
@@ -193,11 +189,7 @@ namespace Microsoft.OData.Core.Json
         /// <param name="writer">The text writer to write the output to.</param>
         /// <param name="value">DateTimeOffset value to be written.</param>
         /// <param name="dateTimeFormat">The format to write out the DateTime value in.</param>
-#if SPATIAL
-        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "Microsoft.Data.Spatial.JsonValueUtils.WriteQuoted(System.IO.TextWriter,System.String)", Justification = "Constant defined by the JSON spec.")]
-#else
-        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "Microsoft.OData.Core.Json.JsonValueUtils.WriteQuoted(System.IO.TextWriter,System.String)", Justification = "Constant defined by the JSON spec.")]
-#endif
+        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "Microsoft.OData.Json.JsonValueUtils.WriteQuoted(System.IO.TextWriter,System.String)", Justification = "Constant defined by the JSON spec.")]
         internal static void WriteValue(TextWriter writer, DateTimeOffset value, ODataJsonDateTimeFormat dateTimeFormat)
         {
             Debug.Assert(writer != null, "writer != null");
@@ -209,10 +201,10 @@ namespace Microsoft.OData.Core.Json
                 case ODataJsonDateTimeFormat.ISO8601DateTime:
                     {
                         // Uses the same format as DateTime but with offset:
-                        // jsonDateTime= quotation-mark   
-                        //  YYYY-MM-DDThh:mm:ss.sTZD 
-                        //  [("+" / "-") offset] 
-                        //  quotation-mark  
+                        // jsonDateTime= quotation-mark
+                        //  YYYY-MM-DDThh:mm:ss.sTZD
+                        //  [("+" / "-") offset]
+                        //  quotation-mark
                         //
                         // offset = 4DIGIT
                         string textValue = XmlConvert.ToString(value);
@@ -224,12 +216,12 @@ namespace Microsoft.OData.Core.Json
                 case ODataJsonDateTimeFormat.ODataDateTime:
                     {
                         // Uses the same format as DateTime but with offset:
-                        // jsonDateTime= quotation-mark   
-                        //  "\/Date("  
-                        //  ticks 
-                        //  [("+" / "-") offset] 
-                        //  ")\/"  
-                        //  quotation-mark  
+                        // jsonDateTime= quotation-mark
+                        //  "\/Date("
+                        //  ticks
+                        //  [("+" / "-") offset]
+                        //  ")\/"
+                        //  quotation-mark
                         //
                         // ticks = *DIGIT
                         // offset = 4DIGIT

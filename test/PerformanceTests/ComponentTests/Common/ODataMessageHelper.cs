@@ -8,8 +8,9 @@ namespace Microsoft.OData.Performance
 {
     using System;
     using System.IO;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.OData.Edm;
+    using Microsoft.OData.Performance.Common;
 
     /// <summary>
     /// Helper class to create ODataMessageReader and ODataMessageWriter
@@ -17,31 +18,50 @@ namespace Microsoft.OData.Performance
     public static class ODataMessageHelper
     {
         private static readonly Uri BaseUri = new Uri("http://odata.org/Perf.svc");
+        private static IServiceProvider container;
         private const string ContentType = "application/json;odata.metadata=minimal;odata.streaming=true;";
-        private const bool DisablePrimitiveTypeConversion = false;
+        private const bool EnablePrimitiveTypeConversion = true;
         private const bool CheckCharacters = false;
-        private const bool DisableMessageStreamDisposal = true;
-        private const bool Indent = false;
+        private const bool EnableMessageStreamDisposal = false;
         private const int MaxPartsPerBatch = 16;
         private const int MaxOperationsPerChangeset = 16;
         private const int MaxNestingDepth = 16;
         private const ODataVersion Version = ODataVersion.V4;
 
+        #region Container
+        /// <summary>
+        /// Gets the shared DI container
+        /// </summary>
+        /// <returns>Instance of the DI container</returns>
+        private static IServiceProvider GetSharedContainer()
+        {
+            if (container == null)
+            {
+                var builder = new TestContainerBuilder();
+                builder.AddDefaultODataServices();
+                container = builder.BuildContainer();
+            }
+
+            return container;
+        }
+
+        #endregion
+
         #region Reader
         /// <summary>
         /// Creates ODataMessageReaderSettings
         /// </summary>
-        /// <param name="isFullValidation">Whether turn on EnableFullValidation</param>
+        /// <param name="isFullValidation">Whether turn on FullValidation</param>
         /// <returns>Instance of ODataMessageReaderSettings</returns>
         private static ODataMessageReaderSettings CreateMessageReaderSettings(bool isFullValidation)
         {
             var settings = new ODataMessageReaderSettings
             {
                 BaseUri = BaseUri,
-                CheckCharacters = CheckCharacters,
-                DisableMessageStreamDisposal = DisableMessageStreamDisposal,
-                DisablePrimitiveTypeConversion = DisablePrimitiveTypeConversion,
-                EnableFullValidation = isFullValidation,
+                EnableCharactersCheck = CheckCharacters,
+                EnableMessageStreamDisposal = EnableMessageStreamDisposal,
+                EnablePrimitiveTypeConversion = EnablePrimitiveTypeConversion,
+                Validations = isFullValidation ? ValidationKinds.All : ValidationKinds.None,
                 MessageQuotas = new ODataMessageQuotas
                 {
                     MaxPartsPerBatch = MaxPartsPerBatch,
@@ -60,7 +80,7 @@ namespace Microsoft.OData.Performance
         /// <param name="messageStream">Message stream</param>
         /// <param name="model">Edm model</param>
         /// <param name="messageKind">Is request or response</param>
-        /// <param name="isFullValidation">Whether turn on EnableFullValidation</param>
+        /// <param name="isFullValidation">Whether turn on FullValidation</param>
         /// <returns>Instance of ODataMessageReader</returns>
         public static ODataMessageReader CreateMessageReader(Stream messageStream, IEdmModel model, ODataMessageKind messageKind, bool isFullValidation)
         {
@@ -69,12 +89,14 @@ namespace Microsoft.OData.Performance
             if (messageKind == ODataMessageKind.Request)
             {
                 var message = new StreamBasedRequestMessage(messageStream);
+                message.Container = GetSharedContainer();
                 message.SetHeader(ODataConstants.ContentTypeHeader, ContentType);
                 return new ODataMessageReader(message, settings, model);
             }
             else
             {
                 var message = new StreamBasedResponseMessage(messageStream);
+                message.Container = GetSharedContainer();
                 message.SetHeader(ODataConstants.ContentTypeHeader, ContentType);
                 return new ODataMessageReader(message, settings, model);
             }
@@ -90,6 +112,7 @@ namespace Microsoft.OData.Performance
         {
             var settings = CreateMessageReaderSettings(true);
             var message = new StreamBasedRequestMessage(messageStream);
+            message.Container = GetSharedContainer();
             message.SetHeader(ODataConstants.ContentTypeHeader, ContentType);
             return new ODataMessageReader(message, settings, model);
         }
@@ -99,18 +122,17 @@ namespace Microsoft.OData.Performance
         /// <summary>
         /// Creates ODataMessageWriterSettings
         /// </summary>
-        /// <param name="isFullValidation">Whether turn on EnableFullValidation</param>
+        /// <param name="isFullValidation">Whether turn on FullValidation</param>
         /// <returns>Instance of ODataMessageWriterSettings</returns>
         private static ODataMessageWriterSettings CreateMessageWriterSettings(bool isFullValidation)
         {
             var settings = new ODataMessageWriterSettings
             {
-                PayloadBaseUri = BaseUri,
-                CheckCharacters = CheckCharacters,
-                Indent = Indent,
-                DisableMessageStreamDisposal = DisableMessageStreamDisposal,
+                BaseUri = BaseUri,
+                EnableCharactersCheck = CheckCharacters,
+                EnableMessageStreamDisposal = EnableMessageStreamDisposal,
                 Version = Version,
-                EnableFullValidation = isFullValidation,
+                Validations = isFullValidation ? ValidationKinds.All : ValidationKinds.None,
                 MessageQuotas = new ODataMessageQuotas
                 {
                     MaxPartsPerBatch = MaxPartsPerBatch,
@@ -131,7 +153,7 @@ namespace Microsoft.OData.Performance
         /// <param name="stream">Message stream</param>
         /// <param name="model">Edm model</param>
         /// <param name="messageKind">Is request or response</param>
-        /// <param name="isFullValidation">Whether turn on EnableFullValidation</param>
+        /// <param name="isFullValidation">Whether turn on FullValidation</param>
         /// <returns>Instance of ODataMessageWriter</returns>
         public static ODataMessageWriter CreateMessageWriter(Stream stream, IEdmModel model, ODataMessageKind messageKind, bool isFullValidation)
         {
@@ -139,9 +161,10 @@ namespace Microsoft.OData.Performance
 
             if (messageKind == ODataMessageKind.Request)
             {
-                return new ODataMessageWriter(new StreamBasedRequestMessage(stream), settings, model);
+                return new ODataMessageWriter(new StreamBasedRequestMessage(stream) { Container = GetSharedContainer() }, settings, model);
             }
-            return new ODataMessageWriter(new StreamBasedResponseMessage(stream), settings, model);
+
+            return new ODataMessageWriter(new StreamBasedResponseMessage(stream) { Container = GetSharedContainer() }, settings, model);
         }
 
         /// <summary>
@@ -153,7 +176,7 @@ namespace Microsoft.OData.Performance
         public static ODataMessageWriter CreateMessageWriter(Stream stream, IEdmModel model)
         {
             var settings = CreateMessageWriterSettings(true);
-            return new ODataMessageWriter(new StreamBasedRequestMessage(stream), settings, model);
+            return new ODataMessageWriter(new StreamBasedRequestMessage(stream) { Container = GetSharedContainer() }, settings, model);
         }
         #endregion
     }

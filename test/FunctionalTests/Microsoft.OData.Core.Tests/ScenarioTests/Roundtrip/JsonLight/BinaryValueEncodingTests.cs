@@ -8,12 +8,12 @@ using System;
 using System.IO;
 using System.Text;
 using FluentAssertions;
-using Microsoft.OData.Core.Evaluation;
-using Microsoft.OData.Core.Json;
-using Microsoft.OData.Core.UriParser.Parsers;
+using Microsoft.OData.Evaluation;
+using Microsoft.OData.Json;
+using Microsoft.OData.UriParser;
 using Xunit;
 
-namespace Microsoft.OData.Core.Tests.ScenarioTests.Roundtrip.JsonLight
+namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip.JsonLight
 {
     public class BinaryValueEncodingTests
     {
@@ -44,7 +44,7 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Roundtrip.JsonLight
         {
             // Writing binary literal
             var builder = new StringBuilder();
-            var writer = new JsonWriter(new StringWriter(builder), false /*indent*/, ODataFormat.Json, isIeee754Compatible: true);
+            var writer = new JsonWriter(new StringWriter(builder), isIeee754Compatible: true);
             writer.WritePrimitiveValue(byteArray);
 
             // Json literals is surrounded with quotes, so we need to add quotes to the encoded string. 
@@ -60,12 +60,12 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Roundtrip.JsonLight
             Assert.Equal(Uri.EscapeDataString(encodedByteArr), keyAsSegmentFormattedByteArray);
 
             // Parsing binary literal
-            var jsonReader = new JsonReader(new StringReader(builder.ToString()), ODataFormat.Json, isIeee754Compatible:true);
+            var jsonReader = new JsonReader(new StringReader(builder.ToString()), isIeee754Compatible: true);
             jsonReader.Read();
             Assert.Equal(encodedByteArr, jsonReader.Value);
 
             object defaultParsedByteArray;
-            DefaultLiteralParser.TryParseLiteral(byteArray.GetType(),Uri.UnescapeDataString(defaultFormattedByteArray), out defaultParsedByteArray).Should().BeTrue();
+            DefaultLiteralParser.TryParseLiteral(byteArray.GetType(), Uri.UnescapeDataString(defaultFormattedByteArray), out defaultParsedByteArray).Should().BeTrue();
             Assert.Equal((byte[])defaultParsedByteArray, byteArray);
 
             object keyAsSegmentParsedByteArray;
@@ -75,4 +75,3 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Roundtrip.JsonLight
     }
 }
 
- 

@@ -9,11 +9,11 @@ using System.Collections.ObjectModel;
 using System.IO;
 using System.Text;
 using FluentAssertions;
-using Microsoft.OData.Core.JsonLight;
-using Microsoft.OData.Edm.Library;
+using Microsoft.OData.JsonLight;
+using Microsoft.OData.Edm;
 using Xunit;
 
-namespace Microsoft.OData.Core.Tests.JsonLight
+namespace Microsoft.OData.Tests.JsonLight
 {
     public class ODataJsonLightOutputContextTests
     {
@@ -80,57 +80,57 @@ namespace Microsoft.OData.Core.Tests.JsonLight
 
         #endregion WriteProperty
 
-        #region CreateFeedWriter
+        #region CreateResourceSetWriter
         [Fact]
-        public void ShouldBeAbleToCreateFeedWriterForRequestWithoutModelAndWithoutSet()
+        public void ShouldBeAbleToCreateResourceSetWriterForRequestWithoutModelAndWithoutSet()
         {
-            WriteAndValidate(outputContext => outputContext.CreateODataFeedWriter(entitySet:null, entityType:null), "", writingResponse: false);
+            WriteAndValidate(outputContext => outputContext.CreateODataResourceSetWriter(entitySet:null, resourceType:null), "", writingResponse: false);
         }
 
         [Fact]
-        public void ShouldBeAbleToCreateFeedWriterForResponseWithoutModelAndWithoutSet()
+        public void ShouldBeAbleToCreateResourceSetWriterForResponseWithoutModelAndWithoutSet()
         {
-            WriteAndValidate(outputContext => outputContext.CreateODataFeedWriter(entitySet: null, entityType: null), "", writingResponse: true);
+            WriteAndValidate(outputContext => outputContext.CreateODataResourceSetWriter(entitySet: null, resourceType: null), "", writingResponse: true);
         }
 
         [Fact]
-        public void ShouldBeAbleToCreateFeedWriterAsyncForRequestWithoutModelAndWithoutSet()
+        public void ShouldBeAbleToCreateResourceSetWriterAsyncForRequestWithoutModelAndWithoutSet()
         {
-            WriteAndValidate(outputContext => outputContext.CreateODataFeedWriterAsync(entitySet: null, entityType: null).Result.Should().NotBeNull(), "", writingResponse: false, synchronous: false);
+            WriteAndValidate(outputContext => outputContext.CreateODataResourceSetWriterAsync(entitySet: null, resourceType: null).Result.Should().NotBeNull(), "", writingResponse: false, synchronous: false);
         }
 
         [Fact]
-        public void ShouldBeAbleToCreateFeedWriterAsyncForResponseWithoutModelAndWithoutSet()
+        public void ShouldBeAbleToCreateResourceSetWriterAsyncForResponseWithoutModelAndWithoutSet()
         {
-            WriteAndValidate(outputContext => outputContext.CreateODataFeedWriterAsync(entitySet: null, entityType: null).Result.Should().NotBeNull(), "", writingResponse: true, synchronous: false);
+            WriteAndValidate(outputContext => outputContext.CreateODataResourceSetWriterAsync(entitySet: null, resourceType: null).Result.Should().NotBeNull(), "", writingResponse: true, synchronous: false);
         }
-        #endregion CreateFeedWriter
+        #endregion CreateResourceSetWriter
 
-        #region CreateEntryWriter
+        #region CreateResourceWriter
         [Fact]
-        public void ShouldBeAbleToCreateEntryWriterForRequestWithoutModelAndWithoutSet()
+        public void ShouldBeAbleToCreateResourceWriterForRequestWithoutModelAndWithoutSet()
         {
-            WriteAndValidate(outputContext => outputContext.CreateODataEntryWriter(navigationSource: null, entityType: null), "", writingResponse: false);
-        }
-
-        [Fact]
-        public void ShouldBeAbleToCreateEntryWriterForResponseWithoutModelAndWithoutSet()
-        {
-            WriteAndValidate(outputContext => outputContext.CreateODataEntryWriter(navigationSource: null, entityType: null), "", writingResponse: true);
+            WriteAndValidate(outputContext => outputContext.CreateODataResourceWriter(navigationSource: null, resourceType: null), "", writingResponse: false);
         }
 
         [Fact]
-        public void ShouldBeAbleToCreateEntryWriterAsyncForRequestWithoutModelAndWithoutSet()
+        public void ShouldBeAbleToCreateResourceWriterForResponseWithoutModelAndWithoutSet()
         {
-            WriteAndValidate(outputContext => outputContext.CreateODataEntryWriterAsync(navigationSource: null, entityType: null).Result.Should().NotBeNull(), "", writingResponse: false, synchronous: false);
+            WriteAndValidate(outputContext => outputContext.CreateODataResourceWriter(navigationSource: null, resourceType: null), "", writingResponse: true);
         }
 
         [Fact]
-        public void ShouldBeAbleToCreateEntryWriterAsyncForResponseWithoutModelAndWithoutSet()
+        public void ShouldBeAbleToCreateResourceWriterAsyncForRequestWithoutModelAndWithoutSet()
         {
-            WriteAndValidate(outputContext => outputContext.CreateODataEntryWriterAsync(navigationSource: null, entityType: null).Result.Should().NotBeNull(), "", writingResponse: true, synchronous: false);
+            WriteAndValidate(outputContext => outputContext.CreateODataResourceWriterAsync(navigationSource: null, resourceType: null).Result.Should().NotBeNull(), "", writingResponse: false, synchronous: false);
         }
-        #endregion CreateEntryWriter
+
+        [Fact]
+        public void ShouldBeAbleToCreateResourceWriterAsyncForResponseWithoutModelAndWithoutSet()
+        {
+            WriteAndValidate(outputContext => outputContext.CreateODataResourceWriterAsync(navigationSource: null, resourceType: null).Result.Should().NotBeNull(), "", writingResponse: true, synchronous: false);
+        }
+        #endregion CreateResourceWriter
 
         #region CreateCollectionWriter
         [Fact]
@@ -265,20 +265,21 @@ namespace Microsoft.OData.Core.Tests.JsonLight
 
         private static ODataJsonLightOutputContext CreateJsonLightOutputContext(MemoryStream stream, bool writingResponse = true, bool synchronous = true)
         {
-            ODataMessageWriterSettings settings = new ODataMessageWriterSettings { Version = ODataVersion.V4 };
+            var messageInfo = new ODataMessageInfo
+            {
+                MessageStream = new NonDisposingStream(stream),
+                MediaType = new ODataMediaType("application", "json"),
+                Encoding = Encoding.UTF8,
+                IsResponse = writingResponse,
+                IsAsync = !synchronous,
+                Model = EdmCoreModel.Instance
+            };
+
+            var settings = new ODataMessageWriterSettings { Version = ODataVersion.V4 };
             settings.SetServiceDocumentUri(new Uri("http://odata.org/test"));
             settings.ShouldIncludeAnnotation = ODataUtils.CreateAnnotationFilter("*");
 
-            return new ODataJsonLightOutputContext(
-                ODataFormat.Json,
-                new NonDisposingStream(stream),
-                new ODataMediaType("application", "json"),
-                Encoding.UTF8,
-                settings,
-                writingResponse,
-                synchronous,
-                EdmCoreModel.Instance,
-                /*urlResolver*/ null);
+            return new ODataJsonLightOutputContext(messageInfo, settings);
         }
     }
 }

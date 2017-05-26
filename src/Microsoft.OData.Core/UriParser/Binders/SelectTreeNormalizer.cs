@@ -4,16 +4,12 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core.UriParser.Parsers
-{
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using Microsoft.OData.Core.UriParser.Syntactic;
-    using Microsoft.OData.Edm;
-    using Microsoft.OData.Core.UriParser.Semantic;
-    using ODataErrorStrings = Microsoft.OData.Core.Strings;
+using System.Collections.Generic;
+using System.Linq;
+using ODataErrorStrings = Microsoft.OData.Strings;
 
+namespace Microsoft.OData.UriParser
+{
     /// <summary>
     /// Translate a select tree into the right format to be used with an expand tree.
     /// </summary>
@@ -27,10 +23,10 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         public SelectToken NormalizeSelectTree(SelectToken treeToNormalize)
         {
             PathReverser pathReverser = new PathReverser();
-            List<PathSegmentToken> invertedPaths = (from property in treeToNormalize.Properties 
+            List<PathSegmentToken> invertedPaths = (from property in treeToNormalize.Properties
                                                     select property.Accept(pathReverser)).ToList();
 
-            // to normalize a select token we just need to invert its paths, so that 
+            // to normalize a select token we just need to invert its paths, so that
             // we match the ordering on an ExpandToken.
             return new SelectToken(invertedPaths);
         }

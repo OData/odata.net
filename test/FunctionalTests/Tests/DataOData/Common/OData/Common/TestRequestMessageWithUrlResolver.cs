@@ -9,25 +9,25 @@ namespace Microsoft.Test.Taupo.OData.Common
     #region Namespaces
     using System;
     using System.IO;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     #endregion Namespaces
 
     /// <summary>
     /// A test request message which implements the URL resolver
     /// </summary>
-    public class TestRequestMessageWithUrlResolver : TestRequestMessage, IODataUrlResolver
+    public class TestRequestMessageWithUrlResolver : TestRequestMessage, IODataPayloadUriConverter
     {
         /// <summary>
         /// The URL resolver to forward all URI resolution calls to.
         /// </summary>
-        private IODataUrlResolver urlResolver;
+        private IODataPayloadUriConverter urlResolver;
 
         /// <summary>
         /// Constructor.
         /// </summary>
         /// <param name="stream">The stream with the content of the message.</param>
         /// <param name="flags">The flags modifying the behavior of the message.</param>
-        public TestRequestMessageWithUrlResolver(Stream stream, IODataUrlResolver urlResolver, TestMessageFlags flags = TestMessageFlags.None)
+        public TestRequestMessageWithUrlResolver(Stream stream, IODataPayloadUriConverter urlResolver, TestMessageFlags flags = TestMessageFlags.None)
             : base(stream, flags)
         {
             this.urlResolver = urlResolver;
@@ -44,9 +44,9 @@ namespace Microsoft.Test.Taupo.OData.Common
         /// A <see cref="Uri"/> instance that reflects the custom resolution of the method arguments
         /// into a URL or null if no custom resolution is desired; in that case the default resolution is used.
         /// </returns>
-        public Uri ResolveUrl(Uri baseUri, Uri payloadUri)
+        public Uri ConvertPayloadUri(Uri baseUri, Uri payloadUri)
         {
-            return this.urlResolver.ResolveUrl(baseUri, payloadUri);
+            return this.urlResolver.ConvertPayloadUri(baseUri, payloadUri);
         }
     }
 }

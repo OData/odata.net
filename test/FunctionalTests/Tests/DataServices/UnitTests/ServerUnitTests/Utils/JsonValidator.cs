@@ -8,7 +8,6 @@ namespace AstoriaUnitTests.Tests
 {
     using System;
     using System.Collections.Generic;
-    using System.Data.Metadata.Edm;
     using Microsoft.Spatial;
     using System.Diagnostics;
     using System.Reflection;
@@ -20,8 +19,6 @@ namespace AstoriaUnitTests.Tests
     using System.Xml.Linq;
     using AstoriaUnitTests.Data;
     using Microsoft.OData.Edm;
-    using Microsoft.Data.Spatial;
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
     using System.Linq;
 
     public class JsonValidator

@@ -104,22 +104,6 @@ namespace Microsoft.Test.Taupo.EntityModel.Edm
         }
 
         /// <summary>
-        /// Generates the concurrency token attribute.
-        /// </summary>
-        /// <param name="memberProperty">The property.</param>
-        /// <returns>Generated attribute</returns>
-        protected override XAttribute GenerateConcurrencyToken(MemberProperty memberProperty)
-        {
-            ConcurrencyTokenAnnotation annotation = memberProperty.Annotations.OfType<ConcurrencyTokenAnnotation>().SingleOrDefault();
-            if (annotation == null)
-            {
-                return null;
-            }
-
-            return new XAttribute("ConcurrencyMode", "Fixed");
-        }
-
-        /// <summary>
         /// Generates the <see cref="XAttribute"/> that contains the default value for a <see cref="MemberProperty"/>.
         /// </summary>
         /// <param name="defaultValue">The default value of the <see cref="MemberProperty"/>.</param>

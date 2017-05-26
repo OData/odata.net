@@ -4,10 +4,10 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core
+namespace Microsoft.OData
 {
     #region Namespaces
-    using System;
+
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Linq;
@@ -72,13 +72,13 @@ namespace Microsoft.OData.Core
                 case ODataPayloadKind.Value:
                 case ODataPayloadKind.BinaryValue:
                 case ODataPayloadKind.Batch:
-                case ODataPayloadKind.Entry:
+                case ODataPayloadKind.Resource:
                 case ODataPayloadKind.Property:
                 case ODataPayloadKind.EntityReferenceLink:
                     return true;
 
                 // These payload kinds are only valid in responses
-                case ODataPayloadKind.Feed:
+                case ODataPayloadKind.ResourceSet:
                 case ODataPayloadKind.EntityReferenceLinks:
                 case ODataPayloadKind.Collection:
                 case ODataPayloadKind.ServiceDocument:

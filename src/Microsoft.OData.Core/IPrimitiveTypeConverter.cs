@@ -4,13 +4,13 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core
+namespace Microsoft.OData
 {
     #region Namespaces
 
     using System.IO;
     using System.Xml;
-    using Microsoft.OData.Core.Json;
+    using Microsoft.OData.Json;
     #endregion
 
     /// <summary>

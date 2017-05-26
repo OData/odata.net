@@ -4,12 +4,10 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core.UriParser.Parsers
+namespace Microsoft.OData.UriParser
 {
     using System;
-    using Microsoft.OData.Core.UriParser.Syntactic;
-    using Microsoft.OData.Core.UriParser.TreeNodeKinds;
-    using ODataErrorStrings = Microsoft.OData.Core.Strings;
+    using ODataErrorStrings = Microsoft.OData.Strings;
 
     /// <summary>
     /// Sub-parser that <see cref="SelectExpandParser"/> uses to parse a single select or expand term.
@@ -48,7 +46,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         /// <summary>
         /// Parses a select or expand term into a PathSegmentToken.
         /// Assumes the lexer is positioned at the beginning of the term to parse.
-        /// When done, the lexer will be positioned at whatever is after the identifier. 
+        /// When done, the lexer will be positioned at whatever is after the identifier.
         /// </summary>
         /// <param name="allowRef">Whether the $ref operation is valid in this token.</param>
         /// <returns>parsed query token</returns>
@@ -103,7 +101,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         }
 
         /// <summary>
-        /// Uses the ExpressionLexer to visit the next ExpressionToken, and delegates parsing of segments, type segments, identifiers, 
+        /// Uses the ExpressionLexer to visit the next ExpressionToken, and delegates parsing of segments, type segments, identifiers,
         /// and the star token to other methods.
         /// </summary>
         /// <param name="previousSegment">Previously parsed PathSegmentToken, or null if this is the first token.</param>
@@ -150,7 +148,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
                     // expand option like "customer?$expand=VIPCUstomer/*" is not allowed as specification does not allowed any property before *.
                     throw new ODataException(ODataErrorStrings.ExpressionToken_NoSegmentAllowedBeforeStarInExpand);
                 }
-                
+
                 propertyName = this.lexer.CurrentToken.Text;
                 this.lexer.NextToken();
             }

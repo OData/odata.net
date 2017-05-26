@@ -9,8 +9,8 @@ namespace Microsoft.OData.Service
     using System;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
-    using Microsoft.OData.Core;
-    using Microsoft.OData.Core.UriParser;
+    using Microsoft.OData;
+    using Microsoft.OData.UriParser;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Service.Internal;
 
@@ -168,11 +168,11 @@ namespace Microsoft.OData.Service
         internal static void ApplyCommonSettings(ODataMessageWriterSettings writerSettings, Uri serviceUri, Version responseVersion, IDataService dataService, IODataResponseMessage responseMessage)
         {
             writerSettings.Version = CommonUtil.ConvertToODataVersion(responseVersion);
-            writerSettings.PayloadBaseUri = serviceUri;
+            writerSettings.BaseUri = serviceUri;
 
-            writerSettings.EnableODataServerBehavior(
-                dataService.Configuration.DataServiceBehavior.AlwaysUseDefaultXmlNamespaceForRootElement);
-            writerSettings.DisableMessageStreamDisposal = responseMessage is AstoriaResponseMessage;
+            writerSettings.Validations &= ~ValidationKinds.ThrowOnDuplicatePropertyNames;
+
+            writerSettings.EnableMessageStreamDisposal = !(responseMessage is AstoriaResponseMessage);
         }
 
         /// <summary>
@@ -181,8 +181,7 @@ namespace Microsoft.OData.Service
         /// <returns>A new settings instance.</returns>
         internal static ODataMessageWriterSettings CreateMessageWriterSettings()
         {
-            var writerSettings = new ODataMessageWriterSettings { Indent = false, CheckCharacters = false };
-            writerSettings.EnableAtomSupport();
+            var writerSettings = new ODataMessageWriterSettings { EnableCharactersCheck = false };
             CommonUtil.SetDefaultMessageQuotas(writerSettings.MessageQuotas);
             return writerSettings;
         }

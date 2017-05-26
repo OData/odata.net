@@ -4,10 +4,8 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.Data.Spatial
+namespace Microsoft.Spatial
 {
-    using Microsoft.Spatial;
-
     /// <summary>
     /// Internal pipeline Inteface that washes the distinction between Geography and Geometry
     /// </summary>

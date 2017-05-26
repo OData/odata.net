@@ -1,5 +1,5 @@
 ﻿//---------------------------------------------------------------------
-// <copyright file="DuplicatePropertyNamesCheckerTests.cs" company="Microsoft">
+// <copyright file="PropertyAndAnnotationCollectorTests.cs" company="Microsoft">
 //      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 // </copyright>
 //---------------------------------------------------------------------
@@ -7,77 +7,68 @@
 using System;
 using System.Collections.Generic;
 using FluentAssertions;
-using Microsoft.OData.Core.JsonLight;
+using Microsoft.OData.JsonLight;
 using Xunit;
-using ErrorStrings = Microsoft.OData.Core.Strings;
+using ErrorStrings = Microsoft.OData.Strings;
 
-namespace Microsoft.OData.Core.Tests
+namespace Microsoft.OData.Tests
 {
-    public class DuplicatePropertyNamesCheckerTests
+    public class PropertyAndAnnotationCollectorTests
     {
         [Fact]
         public void DuplicateInstanceODataAnnotationShouldFail()
         {
-            DuplicatePropertyNamesChecker duplicateChecker = new DuplicatePropertyNamesChecker(false, true);
+            PropertyAndAnnotationCollector duplicateChecker = new PropertyAndAnnotationCollector(true);
             Action action = () => duplicateChecker.MarkPropertyAsProcessed(JsonLightConstants.ODataAnnotationNamespacePrefix + "name");
             action.ShouldNotThrow();
-            action.ShouldThrow<ODataException>().WithMessage(ErrorStrings.DuplicatePropertyNamesChecker_DuplicateAnnotationNotAllowed(JsonLightConstants.ODataAnnotationNamespacePrefix + "name"));
-        }
-
-        [Fact]
-        public void DuplicateInstanceCustomAnnotationShouldFail()
-        {
-            DuplicatePropertyNamesChecker duplicateChecker = new DuplicatePropertyNamesChecker(false, true);
-            Action action = () => duplicateChecker.MarkPropertyAsProcessed("custom.name");
-            action.ShouldNotThrow();
-            action.ShouldThrow<ODataException>().WithMessage(ErrorStrings.DuplicatePropertyNamesChecker_DuplicateAnnotationNotAllowed("custom.name"));
+            action.ShouldThrow<ODataException>().WithMessage(ErrorStrings.DuplicateAnnotationNotAllowed(JsonLightConstants.ODataAnnotationNamespacePrefix + "name"));
         }
 
         [Fact]
         public void DuplicatePropertyODataAnnotationShouldFail()
         {
-            DuplicatePropertyNamesChecker duplicateChecker = new DuplicatePropertyNamesChecker(false, true);
-            Action action = () => duplicateChecker.AddODataPropertyAnnotation("property", JsonLightConstants.ODataAnnotationNamespacePrefix + "name", null);
+            PropertyAndAnnotationCollector duplicateChecker = new PropertyAndAnnotationCollector(true);
+            Action action = () => duplicateChecker.AddODataPropertyAnnotation("property", JsonLightConstants.ODataAnnotationNamespacePrefix + "name", "SomeValue");
             action.ShouldNotThrow();
-            action.ShouldThrow<ODataException>().WithMessage(ErrorStrings.DuplicatePropertyNamesChecker_DuplicateAnnotationForPropertyNotAllowed(JsonLightConstants.ODataAnnotationNamespacePrefix + "name", "property"));
+            action.ShouldThrow<ODataException>().WithMessage(ErrorStrings.DuplicateAnnotationForPropertyNotAllowed(JsonLightConstants.ODataAnnotationNamespacePrefix + "name", "property"));
         }
 
         [Fact]
-        public void DuplicatePropertyCustomAnnotationShouldFail()
+        public void DuplicatePropertyCustomAnnotationShouldNotFail()
         {
-            DuplicatePropertyNamesChecker duplicateChecker = new DuplicatePropertyNamesChecker(false, true);
-            Action action = () => duplicateChecker.AddCustomPropertyAnnotation("property", "custom.name");
+            PropertyAndAnnotationCollector duplicateChecker = new PropertyAndAnnotationCollector(true);
+            Action action = () => duplicateChecker.AddCustomPropertyAnnotation("property", "custom.name", "value");
             action.ShouldNotThrow();
-            action.ShouldThrow<ODataException>().WithMessage(ErrorStrings.DuplicatePropertyNamesChecker_DuplicateAnnotationForPropertyNotAllowed("custom.name", "property"));
+            action.ShouldNotThrow();
         }
 
         [Fact]
-        public void NoAnnotationsForObjectScopeAddedShouldReturnNull()
+        public void NoAnnotationsForObjectScopeAddedShouldReturnEmpty()
         {
-            DuplicatePropertyNamesChecker duplicateChecker = new DuplicatePropertyNamesChecker(false, true);
-            duplicateChecker.GetODataPropertyAnnotations(string.Empty).Should().BeNull();
+            PropertyAndAnnotationCollector duplicateChecker = new PropertyAndAnnotationCollector(true);
+            duplicateChecker.GetODataPropertyAnnotations(string.Empty).Should().BeEmpty();
         }
 
         [Fact]
-        public void NoAnnotationsForPropertyAddedShouldReturnNull()
+        public void NoAnnotationsForPropertyAddedShouldReturnEmpty()
         {
-            DuplicatePropertyNamesChecker duplicateChecker = new DuplicatePropertyNamesChecker(false, true);
-            duplicateChecker.GetODataPropertyAnnotations("property").Should().BeNull();
+            PropertyAndAnnotationCollector duplicateChecker = new PropertyAndAnnotationCollector(true);
+            duplicateChecker.GetODataPropertyAnnotations("property").Should().BeEmpty();
         }
 
         [Fact]
-        public void OnlyCustomAnnotationsForPropertyAddedShouldReturnNull()
+        public void OnlyCustomAnnotationsForPropertyAddedShouldReturnEmpty()
         {
-            DuplicatePropertyNamesChecker duplicateChecker = new DuplicatePropertyNamesChecker(false, true);
-            duplicateChecker.AddCustomPropertyAnnotation("property", "custom.annotation");
-            duplicateChecker.AddCustomPropertyAnnotation("property", "custom.annotation2");
-            duplicateChecker.GetODataPropertyAnnotations("property").Should().BeNull();
+            PropertyAndAnnotationCollector duplicateChecker = new PropertyAndAnnotationCollector(true);
+            duplicateChecker.AddCustomPropertyAnnotation("property", "custom.annotation", "value");
+            duplicateChecker.AddCustomPropertyAnnotation("property", "custom.annotation2", "value");
+            duplicateChecker.GetODataPropertyAnnotations("property").Should().BeEmpty();
         }
 
         [Fact]
         public void AnnotationsForPropertyShouldBeStored()
         {
-            DuplicatePropertyNamesChecker duplicateChecker = new DuplicatePropertyNamesChecker(false, true);
+            PropertyAndAnnotationCollector duplicateChecker = new PropertyAndAnnotationCollector(true);
             duplicateChecker.AddODataPropertyAnnotation("property", JsonLightConstants.ODataAnnotationNamespacePrefix + "one", 1);
             duplicateChecker.AddODataPropertyAnnotation("property", JsonLightConstants.ODataAnnotationNamespacePrefix + "two", "Two");
             duplicateChecker.GetODataPropertyAnnotations("property").Should().Equal(new Dictionary<string, object>()
@@ -90,24 +81,24 @@ namespace Microsoft.OData.Core.Tests
         [Fact]
         public void MarkPropertyAsProcessedWithNoPropertyShouldWork()
         {
-            DuplicatePropertyNamesChecker duplicateChecker = new DuplicatePropertyNamesChecker(false, true);
+            PropertyAndAnnotationCollector duplicateChecker = new PropertyAndAnnotationCollector(true);
             duplicateChecker.MarkPropertyAsProcessed("property");
-            Action odataAction = () => duplicateChecker.AddODataPropertyAnnotation("property", JsonLightConstants.ODataAnnotationNamespacePrefix + "name", null);
-            odataAction.ShouldThrow<ODataException>().WithMessage(ErrorStrings.DuplicatePropertyNamesChecker_PropertyAnnotationAfterTheProperty(JsonLightConstants.ODataAnnotationNamespacePrefix + "name", "property"));
-            Action customAction = () => duplicateChecker.AddCustomPropertyAnnotation("property", "custom.name");
-            customAction.ShouldThrow<ODataException>().WithMessage(ErrorStrings.DuplicatePropertyNamesChecker_PropertyAnnotationAfterTheProperty("custom.name", "property"));
+            Action odataAction = () => duplicateChecker.AddODataPropertyAnnotation("property", JsonLightConstants.ODataAnnotationNamespacePrefix + "name", "value");
+            odataAction.ShouldThrow<ODataException>().WithMessage(ErrorStrings.PropertyAnnotationAfterTheProperty(JsonLightConstants.ODataAnnotationNamespacePrefix + "name", "property"));
+            Action customAction = () => duplicateChecker.AddCustomPropertyAnnotation("property", "custom.name", "value");
+            customAction.ShouldThrow<ODataException>().WithMessage(ErrorStrings.PropertyAnnotationAfterTheProperty("custom.name", "property"));
         }
 
         [Fact]
         public void MarkPropertyAsProcessedWithSomeAnnotationsShouldWork()
         {
-            DuplicatePropertyNamesChecker duplicateChecker = new DuplicatePropertyNamesChecker(false, true);
+            PropertyAndAnnotationCollector duplicateChecker = new PropertyAndAnnotationCollector(true);
             duplicateChecker.AddODataPropertyAnnotation("property", JsonLightConstants.ODataAnnotationNamespacePrefix + "first", 42);
             duplicateChecker.MarkPropertyAsProcessed("property");
-            Action odataAction = () => duplicateChecker.AddODataPropertyAnnotation("property", JsonLightConstants.ODataAnnotationNamespacePrefix + "name", null);
-            odataAction.ShouldThrow<ODataException>().WithMessage(ErrorStrings.DuplicatePropertyNamesChecker_PropertyAnnotationAfterTheProperty(JsonLightConstants.ODataAnnotationNamespacePrefix + "name", "property"));
-            Action customAction = () => duplicateChecker.AddCustomPropertyAnnotation("property", "custom.name");
-            customAction.ShouldThrow<ODataException>().WithMessage(ErrorStrings.DuplicatePropertyNamesChecker_PropertyAnnotationAfterTheProperty("custom.name", "property"));
+            Action odataAction = () => duplicateChecker.AddODataPropertyAnnotation("property", JsonLightConstants.ODataAnnotationNamespacePrefix + "name", "value");
+            odataAction.ShouldThrow<ODataException>().WithMessage(ErrorStrings.PropertyAnnotationAfterTheProperty(JsonLightConstants.ODataAnnotationNamespacePrefix + "name", "property"));
+            Action customAction = () => duplicateChecker.AddCustomPropertyAnnotation("property", "custom.name", "value");
+            customAction.ShouldThrow<ODataException>().WithMessage(ErrorStrings.PropertyAnnotationAfterTheProperty("custom.name", "property"));
         }
     }
 }

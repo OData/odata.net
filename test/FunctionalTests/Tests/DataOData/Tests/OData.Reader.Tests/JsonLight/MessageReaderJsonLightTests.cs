@@ -10,8 +10,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
     using System.Collections.Generic;
     using System.Linq;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Library;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.Test.Taupo.Astoria.Contracts.OData;
     using Microsoft.Test.Taupo.Common;
     using Microsoft.Test.Taupo.Contracts.EntityModel;
@@ -55,7 +54,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                         PayloadElement = PayloadBuilder.EntitySet(),
                         PayloadEdmModel = model,
                         SkipTestConfiguration = tc => !tc.IsRequest,
-                        ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightInputContext_NoEntitySetForRequest"),
+                        //ExpectedException = ODataExpectedExceptions.ODataException("ReaderValidationUtils_ResourceWithoutType"),
                     },
                     new PayloadReaderTestDescriptor(this.Settings)
                     {
@@ -74,7 +73,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                         PayloadElement = PayloadBuilder.Entity(),
                         PayloadEdmModel = model,
                         SkipTestConfiguration = tc => !tc.IsRequest,
-                        ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightInputContext_NoEntitySetForRequest"),
+                        ExpectedException = ODataExpectedExceptions.ODataException("ReaderValidationUtils_ResourceWithoutType"),
                     },
                     new PayloadReaderTestDescriptor(this.Settings)
                     {

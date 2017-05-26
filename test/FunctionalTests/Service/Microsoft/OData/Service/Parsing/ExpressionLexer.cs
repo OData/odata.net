@@ -909,7 +909,7 @@ namespace Microsoft.OData.Service.Parsing
                 return ExpressionTokenKind.DoubleLiteral;
             }
 
-            throw new Microsoft.OData.Core.ODataException(Strings.RequestQueryParser_InvalidNumericString(numericStr));
+            throw new Microsoft.OData.ODataException(Strings.RequestQueryParser_InvalidNumericString(numericStr));
         }
 
         /// <summary>

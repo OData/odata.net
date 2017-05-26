@@ -6,11 +6,10 @@
 
 using System;
 using FluentAssertions;
-using Microsoft.OData.Core.UriParser.Syntactic;
-using Microsoft.OData.Core.UriParser.Visitors;
+using Microsoft.OData.UriParser;
 using Xunit;
 
-namespace Microsoft.OData.Core.Tests.UriParser.SyntacticAst
+namespace Microsoft.OData.Tests.UriParser.SyntacticAst
 {
     public class PathSegmentTokenTests
     {

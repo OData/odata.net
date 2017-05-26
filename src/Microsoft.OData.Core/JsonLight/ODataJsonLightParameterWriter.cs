@@ -4,17 +4,15 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core.JsonLight
+namespace Microsoft.OData.JsonLight
 {
     #region Namespaces
     using System.Diagnostics;
-    using System.Diagnostics.CodeAnalysis;
     using System.IO;
-#if ODATALIB_ASYNC
+#if PORTABLELIB
     using System.Threading.Tasks;
 #endif
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Core.Metadata;
 
     #endregion Namespaces
 
@@ -64,7 +62,7 @@ namespace Microsoft.OData.Core.JsonLight
             this.jsonLightOutputContext.Flush();
         }
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary>
         /// Flush the output.
         /// </summary>
@@ -96,7 +94,7 @@ namespace Microsoft.OData.Core.JsonLight
         }
 
         /// <summary>
-        /// Writes a value parameter (either primitive or complex)
+        /// Writes a value parameter (either primitive or enum)
         /// </summary>
         /// <param name="parameterName">The name of the parameter to write.</param>
         /// <param name="parameterValue">The value of the parameter to write.</param>
@@ -111,21 +109,8 @@ namespace Microsoft.OData.Core.JsonLight
             }
             else
             {
-                ODataComplexValue complexValue = parameterValue as ODataComplexValue;
-                ODataEnumValue enumVal = null;
-                if (complexValue != null)
-                {
-                    this.jsonLightValueSerializer.AssertRecursionDepthIsZero();
-                    this.jsonLightValueSerializer.WriteComplexValue(
-                        complexValue,
-                        expectedTypeReference,
-                        false /*isTopLevel*/,
-                        false /*isOpenPropertyType*/,
-                        this.DuplicatePropertyNamesChecker);
-                    this.jsonLightValueSerializer.AssertRecursionDepthIsZero();
-                    this.DuplicatePropertyNamesChecker.Clear();
-                }
-                else if ((enumVal = parameterValue as ODataEnumValue) != null)
+                ODataEnumValue enumVal = parameterValue as ODataEnumValue;
+                if (enumVal != null)
                 {
                     this.jsonLightValueSerializer.WriteEnumValue(enumVal, expectedTypeReference);
                 }
@@ -152,26 +137,26 @@ namespace Microsoft.OData.Core.JsonLight
             return new ODataJsonLightCollectionWriter(this.jsonLightOutputContext, expectedItemType, /*listener*/this);
         }
 
-        /// <summary>Creates a format specific <see cref="ODataWriter"/> to write an entry.</summary>
+        /// <summary>Creates a format specific <see cref="ODataWriter"/> to write a resource.</summary>
         /// <param name="parameterName">The name of the parameter to write.</param>
         /// <param name="expectedItemType">The type reference of the expected item type or null if no expected item type exists.</param>
         /// <returns>The newly created <see cref="ODataWriter"/>.</returns>
-        protected override ODataWriter CreateFormatEntryWriter(string parameterName, IEdmTypeReference expectedItemType)
+        protected override ODataWriter CreateFormatResourceWriter(string parameterName, IEdmTypeReference expectedItemType)
         {
             Debug.Assert(!string.IsNullOrEmpty(parameterName), "!string.IsNullOrEmpty(parameterName)");
             this.jsonLightOutputContext.JsonWriter.WriteName(parameterName);
-            return new ODataJsonLightWriter(this.jsonLightOutputContext, null, null, /*writingFeed*/false, /*writingParameter*/true, /*writingDelta*/false, /*listener*/this);
+            return new ODataJsonLightWriter(this.jsonLightOutputContext, null, null, /*writingResourceSet*/false, /*writingParameter*/true, /*writingDelta*/false, /*listener*/this);
         }
 
-        /// <summary>Creates a format specific <see cref="ODataWriter"/> to write a feed.</summary>
+        /// <summary>Creates a format specific <see cref="ODataWriter"/> to write a resource set.</summary>
         /// <param name="parameterName">The name of the parameter to write.</param>
         /// <param name="expectedItemType">The type reference of the expected item type or null if no expected item type exists.</param>
         /// <returns>The newly created <see cref="ODataWriter"/>.</returns>
-        protected override ODataWriter CreateFormatFeedWriter(string parameterName, IEdmTypeReference expectedItemType)
+        protected override ODataWriter CreateFormatResourceSetWriter(string parameterName, IEdmTypeReference expectedItemType)
         {
             Debug.Assert(!string.IsNullOrEmpty(parameterName), "!string.IsNullOrEmpty(parameterName)");
             this.jsonLightOutputContext.JsonWriter.WriteName(parameterName);
-            return new ODataJsonLightWriter(this.jsonLightOutputContext, null, null, /*writingFeed*/true, /*writingParameter*/true, /*writingDelta*/false, /*listener*/this);
+            return new ODataJsonLightWriter(this.jsonLightOutputContext, null, null, /*writingResourceSet*/true, /*writingParameter*/true, /*writingDelta*/false, /*listener*/this);
         }
     }
 }

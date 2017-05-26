@@ -10,7 +10,7 @@ namespace Microsoft.Test.Taupo.OData.Common
     using System;
     using System.Collections.Generic;
     using System.IO;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     #endregion Namespaces
 
     /// <summary>

@@ -4,15 +4,13 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core.UriParser.Parsers
-{
-    using System.Collections.ObjectModel;
-    using System.Diagnostics;
-    using System.Linq;
-    using Microsoft.OData.Core.UriParser.TreeNodeKinds;
-    using Microsoft.OData.Edm;
-    using Microsoft.OData.Core.UriParser.Semantic;
+using System.Collections.ObjectModel;
+using System.Diagnostics;
+using System.Linq;
+using Microsoft.OData.Edm;
 
+namespace Microsoft.OData.UriParser
+{
     /// <summary>
     /// Factory class to build IParameterQueryNodes.
     /// </summary>
@@ -40,47 +38,47 @@ namespace Microsoft.OData.Core.UriParser.Parsers
                 elementType = elementType.AsCollection().ElementType();
             }
 
-            if (elementType.IsEntity())
+            if (elementType.IsStructured())
             {
-                IEdmEntityTypeReference entityTypeReference = elementType as IEdmEntityTypeReference;
-                return new EntityRangeVariable(ExpressionConstants.It, entityTypeReference, path.NavigationSource());
+                IEdmStructuredTypeReference structuredTypeReference = elementType.AsStructured();
+                return new ResourceRangeVariable(ExpressionConstants.It, structuredTypeReference, path.NavigationSource());
             }
 
-            return new NonentityRangeVariable(ExpressionConstants.It, elementType, null);
+            return new NonResourceRangeVariable(ExpressionConstants.It, elementType, null);
         }
 
         /// <summary>
         /// Creates a ParameterQueryNode for an implicit parameter ($it).
         /// </summary>
         /// <param name="elementType">Element type the parameter represents.</param>
-        /// <param name="navigationSource">The navigation source. May be null and must be null for non entities.</param>
+        /// <param name="navigationSource">The navigation source. May be null and must be null for non structured types.</param>
         /// <returns>A new IParameterNode.</returns>
         internal static RangeVariable CreateImplicitRangeVariable(IEdmTypeReference elementType, IEdmNavigationSource navigationSource)
         {
-            if (elementType.IsEntity())
+            if (elementType.IsStructured())
             {
-                return new EntityRangeVariable(ExpressionConstants.It, elementType as IEdmEntityTypeReference, navigationSource);
+                return new ResourceRangeVariable(ExpressionConstants.It, elementType as IEdmStructuredTypeReference, navigationSource);
             }
 
-            Debug.Assert(navigationSource == null, "if the type wasn't an entity then there should be no navigation source");
-            return new NonentityRangeVariable(ExpressionConstants.It, elementType, null);
+            Debug.Assert(navigationSource == null, "if the type wasn't a structured type then there should be no navigation source");
+            return new NonResourceRangeVariable(ExpressionConstants.It, elementType, null);
         }
 
         /// <summary>
         /// Creates a RangeVariableReferenceNode for a given range variable
         /// </summary>
         /// <param name="rangeVariable">Name of the rangeVariable.</param>
-        /// <returns>A new SingleValueNode (either an Entity or NonEntity RangeVariableReferenceNode.</returns>
+        /// <returns>A new SingleValueNode (either an Resource or NonResource RangeVariableReferenceNode.</returns>
         internal static SingleValueNode CreateRangeVariableReferenceNode(RangeVariable rangeVariable)
         {
-            if (rangeVariable.Kind == RangeVariableKind.Nonentity)
+            if (rangeVariable.Kind == RangeVariableKind.NonResource)
             {
-                return new NonentityRangeVariableReferenceNode(rangeVariable.Name, (NonentityRangeVariable)rangeVariable);
+                return new NonResourceRangeVariableReferenceNode(rangeVariable.Name, (NonResourceRangeVariable)rangeVariable);
             }
             else
             {
-                EntityRangeVariable entityRangeVariable = (EntityRangeVariable)rangeVariable;
-                return new EntityRangeVariableReferenceNode(entityRangeVariable.Name, entityRangeVariable);
+                ResourceRangeVariable resourceRangeVariable = (ResourceRangeVariable)rangeVariable;
+                return new ResourceRangeVariableReferenceNode(resourceRangeVariable.Name, resourceRangeVariable);
             }
         }
 
@@ -94,18 +92,18 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         {
             IEdmTypeReference elementType = nodeToIterateOver.ItemType;
 
-            if (elementType != null && elementType.IsEntity())
+            if (elementType != null && elementType.IsStructured())
             {
-                var entityCollectionNode = nodeToIterateOver as EntityCollectionNode;
-                Debug.Assert(entityCollectionNode != null, "IF the element type was entity, the node type should be an entity collection");
-                return new EntityRangeVariable(parameter, elementType as IEdmEntityTypeReference, entityCollectionNode);
+                var collectionResourceNode = nodeToIterateOver as CollectionResourceNode;
+                Debug.Assert(collectionResourceNode != null, "IF the element type was structured, the node type should be a resource collection");
+                return new ResourceRangeVariable(parameter, elementType as IEdmStructuredTypeReference, collectionResourceNode);
             }
 
-            return new NonentityRangeVariable(parameter, elementType, null);
+            return new NonResourceRangeVariable(parameter, elementType, null);
         }
 
         /// <summary>
-        /// Creates an AnyNode or an AllNode from the given 
+        /// Creates an AnyNode or an AllNode from the given
         /// </summary>
         /// <param name="state">State of binding.</param>
         /// <param name="parent">Parent node to the lambda.</param>
@@ -115,8 +113,8 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         /// <returns>A new LambdaNode bound to metadata.</returns>
         internal static LambdaNode CreateLambdaNode(
             BindingState state,
-            CollectionNode parent,                                           
-            SingleValueNode lambdaExpression, 
+            CollectionNode parent,
+            SingleValueNode lambdaExpression,
             RangeVariable newRangeVariable,
             QueryTokenKind queryTokenKind)
         {
@@ -138,7 +136,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
                         Source = parent,
                     };
             }
-            
+
             return lambdaNode;
         }
     }

@@ -6,8 +6,8 @@
     </Key>
     <Property Name="ID" Type="Int32" Nullable="false" />
     <Property Name="Name" Type="String" />
-    <Property Name="Concurrency" Type="String" ConcurrencyMode="Fixed" />
-    <Property Name="EditTimeStamp" Nullable="false" Type="Binary" MaxLength="8" FixedLength="true" ConcurrencyMode="Fixed" />
+    <Property Name="Concurrency" Type="String" />
+    <Property Name="EditTimeStamp" Nullable="false" Type="Binary" MaxLength="8" FixedLength="true" />
     <Property Name="GuidValue" Type="Guid" />
     <Property Name="Address" Type="AstoriaUnitTests.ObjectContextStubs.Types.Address" Nullable="false" />
   </EntityType>

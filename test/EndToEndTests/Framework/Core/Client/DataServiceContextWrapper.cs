@@ -80,14 +80,14 @@ namespace Microsoft.Test.OData.Framework.Client
             get { return this.wrappedInstance.Format; }
         }
 
-        /// <summary>
-        /// Gets or sets a value indicating whether the DataServiceContext.IgnoreMissingProperties property is set.
-        /// </summary>
-        public bool IgnoreMissingProperties
-        {
-            get { return this.wrappedInstance.IgnoreMissingProperties; }
-            set { this.wrappedInstance.IgnoreMissingProperties = value; }
-        }
+        ///// <summary>
+        ///// Gets or sets a value indicating whether the DataServiceContext.IgnoreMissingProperties property is set.
+        ///// </summary>
+        //public UndeclaredPropertyBehavior UndeclaredPropertyBehavior
+        //{
+        //    get { return this.wrappedInstance.UndeclaredPropertyBehavior; }
+        //    set { this.wrappedInstance.UndeclaredPropertyBehavior = value; }
+        //}
 
         /// <summary>
         /// Gets or sets a value indicating whether the DataServiceContext.IgnoreResourceNotFoundException property is set.
@@ -126,12 +126,12 @@ namespace Microsoft.Test.OData.Framework.Client
         }
 
         /// <summary>
-        /// Gets or sets the DataServiceContext.UrlConventions property.
+        /// Gets or sets the DataServiceContext.UrlKeyDelimiter property.
         /// </summary>
-        public DataServiceUrlConventions UrlConventions
+        public DataServiceUrlKeyDelimiter UrlKeyDelimiter
         {
-            get { return this.wrappedInstance.UrlConventions; }
-            set { this.wrappedInstance.UrlConventions = value; }
+            get { return this.wrappedInstance.UrlKeyDelimiter; }
+            set { this.wrappedInstance.UrlKeyDelimiter = value; }
         }
 
         /// <summary>

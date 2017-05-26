@@ -11,15 +11,12 @@ using System.Linq;
 using System.Xml;
 using System.Xml.Linq;
 using FluentAssertions;
-using Microsoft.OData.Core.UriParser;
+using Microsoft.OData.UriParser;
 using Microsoft.OData.Edm;
 using Microsoft.OData.Edm.Csdl;
-using Microsoft.OData.Edm.Library;
-using Microsoft.OData.Edm.Library.Expressions;
-using Microsoft.OData.Edm.Library.Values;
 using Microsoft.OData.Edm.Validation;
 
-namespace Microsoft.OData.Core.Tests.UriParser
+namespace Microsoft.OData.Tests.UriParser
 {
     /// <summary>
     /// Class to provide a test model for semantic unit tests.
@@ -59,25 +56,25 @@ namespace Microsoft.OData.Core.Tests.UriParser
 
             #region Enum Types
             var colorType = new EdmEnumType("Fully.Qualified.Namespace", "ColorPattern", EdmPrimitiveTypeKind.Int64, true);
-            colorType.AddMember("Red", new EdmIntegerConstant(1L));
-            colorType.AddMember("Blue", new EdmIntegerConstant(2L));
-            colorType.AddMember("Yellow", new EdmIntegerConstant(4L));
-            colorType.AddMember("Solid", new EdmIntegerConstant(8L));
-            colorType.AddMember("Striped", new EdmIntegerConstant(16L));
-            colorType.AddMember("SolidRed", new EdmIntegerConstant(9L));
-            colorType.AddMember("SolidBlue", new EdmIntegerConstant(10L));
-            colorType.AddMember("SolidYellow", new EdmIntegerConstant(12L));
-            colorType.AddMember("RedBlueStriped", new EdmIntegerConstant(19L));
-            colorType.AddMember("RedYellowStriped", new EdmIntegerConstant(21L));
-            colorType.AddMember("BlueYellowStriped", new EdmIntegerConstant(22L));
+            colorType.AddMember("Red", new EdmEnumMemberValue(1L));
+            colorType.AddMember("Blue", new EdmEnumMemberValue(2L));
+            colorType.AddMember("Yellow", new EdmEnumMemberValue(4L));
+            colorType.AddMember("Solid", new EdmEnumMemberValue(8L));
+            colorType.AddMember("Striped", new EdmEnumMemberValue(16L));
+            colorType.AddMember("SolidRed", new EdmEnumMemberValue(9L));
+            colorType.AddMember("SolidBlue", new EdmEnumMemberValue(10L));
+            colorType.AddMember("SolidYellow", new EdmEnumMemberValue(12L));
+            colorType.AddMember("RedBlueStriped", new EdmEnumMemberValue(19L));
+            colorType.AddMember("RedYellowStriped", new EdmEnumMemberValue(21L));
+            colorType.AddMember("BlueYellowStriped", new EdmEnumMemberValue(22L));
             model.AddElement(colorType);
             var colorTypeReference = new EdmEnumTypeReference(colorType, false);
             var nullableColorTypeReference = new EdmEnumTypeReference(colorType, true);
 
             var NonFlagShapeType = new EdmEnumType("Fully.Qualified.Namespace", "NonFlagShape", EdmPrimitiveTypeKind.SByte, false);
-            NonFlagShapeType.AddMember("Rectangle", new EdmIntegerConstant(1));
-            NonFlagShapeType.AddMember("Triangle", new EdmIntegerConstant(2));
-            NonFlagShapeType.AddMember("foursquare", new EdmIntegerConstant(3));
+            NonFlagShapeType.AddMember("Rectangle", new EdmEnumMemberValue(1));
+            NonFlagShapeType.AddMember("Triangle", new EdmEnumMemberValue(2));
+            NonFlagShapeType.AddMember("foursquare", new EdmEnumMemberValue(3));
             model.AddElement(NonFlagShapeType);
             #endregion
 
@@ -258,7 +255,7 @@ namespace Microsoft.OData.Core.Tests.UriParser
                     TargetMultiplicity = EdmMultiplicity.One,
                     Target = FullyQualifiedNamespaceDog,
                     DependentProperties = new List<IEdmStructuralProperty>()
-                    { 
+                    {
                         FullyQualifiedNamespaceLion_ID1
                     },
                     PrincipalProperties = new List<IEdmStructuralProperty>()
@@ -279,7 +276,7 @@ namespace Microsoft.OData.Core.Tests.UriParser
                     TargetMultiplicity = EdmMultiplicity.Many,
                     Target = FullyQualifiedNamespaceDog,
                     DependentProperties = new List<IEdmStructuralProperty>()
-                    { 
+                    {
                         FullyQualifiedNamespaceLion_ID1
                     },
                     PrincipalProperties = new List<IEdmStructuralProperty>()
@@ -294,7 +291,7 @@ namespace Microsoft.OData.Core.Tests.UriParser
                     TargetMultiplicity = EdmMultiplicity.Many,
                     Target = FullyQualifiedNamespaceLion,
                     DependentProperties = new List<IEdmStructuralProperty>()
-                    { 
+                    {
                         FullyQualifiedNamespaceLion_ID2
                     },
                     PrincipalProperties = new List<IEdmStructuralProperty>()
@@ -368,9 +365,21 @@ namespace Microsoft.OData.Core.Tests.UriParser
             FullyQualifiedNamespacePet6.AddKeys(FullyQualifiedNamespacePet6.AddStructuralProperty("ID", FullyQualifiedNamespaceIdTypeReference));
             FullyQualifiedNamespacePet6.AddStructuralProperty("Color", EdmPrimitiveTypeKind.String);
             model.AddElement(FullyQualifiedNamespacePet6);
+
+            // entity type with enum as key
+            var fullyQualifiedNamespaceShape = new EdmEntityType("Fully.Qualified.Namespace", "Shape", null, false, false);
+            fullyQualifiedNamespaceShape.AddKeys(fullyQualifiedNamespaceShape.AddStructuralProperty("Color", colorTypeReference));
             #endregion
 
             #region Operations
+
+            var FullyQualifiedNamespaceGetPersonByDTOFunction = new EdmFunction("Fully.Qualified.Namespace", "GetPersonByDTO", FullyQualifiedNamespacePersonTypeReference, false, null, true);
+            FullyQualifiedNamespaceGetPersonByDTOFunction.AddParameter("dto", EdmCoreModel.Instance.GetDateTimeOffset(false));
+            model.AddElement(FullyQualifiedNamespaceGetPersonByDTOFunction);
+
+            var FullyQualifiedNamespaceGetPersonByDateFunction = new EdmFunction("Fully.Qualified.Namespace", "GetPersonByDate", FullyQualifiedNamespacePersonTypeReference, false, null, true);
+            FullyQualifiedNamespaceGetPersonByDateFunction.AddParameter("date", EdmCoreModel.Instance.GetDate(false));
+            model.AddElement(FullyQualifiedNamespaceGetPersonByDateFunction);
 
             var FullyQualifiedNamespaceGetPet1Function = new EdmFunction("Fully.Qualified.Namespace", "GetPet1", FullyQualifiedNamespacePet1TypeReference, false, null, true);
             FullyQualifiedNamespaceGetPet1Function.AddParameter("id", EdmCoreModel.Instance.GetInt64(false));
@@ -666,6 +675,8 @@ namespace Microsoft.OData.Core.Tests.UriParser
             var FullyQualifiedNamespaceContextPet6Set = FullyQualifiedNamespaceContext.AddEntitySet("Pet6Set", FullyQualifiedNamespacePet6);
             var FullyQualifiedNamespaceContextChimera = FullyQualifiedNamespaceContext.AddEntitySet("Chimeras", FullyQualifiedNamespaceChimera);
 
+            FullyQualifiedNamespaceContext.AddEntitySet("Shapes", fullyQualifiedNamespaceShape);
+
             FullyQualifiedNamespaceContextPeople.AddNavigationTarget(FullyQualifiedNamespacePerson_MyDog, FullyQualifiedNamespaceContextDogs);
             FullyQualifiedNamespaceContextPeople.AddNavigationTarget(FullyQualifiedNamespacePerson_MyRelatedDogs, FullyQualifiedNamespaceContextDogs);
             FullyQualifiedNamespaceContextPeople.AddNavigationTarget(FullyQualifiedNamespacePerson_MyLions, FullyQualifiedNamespaceContextLions);
@@ -685,25 +696,27 @@ namespace Microsoft.OData.Core.Tests.UriParser
             var FullQualifiedNamespaceSingletonBoss = FullyQualifiedNamespaceContext.AddSingleton("Boss", FullyQualifiedNamespacePerson);
             FullQualifiedNamespaceSingletonBoss.AddNavigationTarget(FullyQualifiedNamespacePerson_MyDog, FullyQualifiedNamespaceContextDogs);
             FullQualifiedNamespaceSingletonBoss.AddNavigationTarget(FullyQualifiedNamespacePerson_MyPaintings, FullyQualifiedNamespaceContextPaintings);
-            FullyQualifiedNamespaceContext.AddFunctionImport("GetPet1", FullyQualifiedNamespaceGetPet1Function, new EdmEntitySetReferenceExpression(FullyQualifiedNamespaceContextPet1Set));
-            FullyQualifiedNamespaceContext.AddFunctionImport("GetPet2", FullyQualifiedNamespaceGetPet2Function, new EdmEntitySetReferenceExpression(FullyQualifiedNamespaceContextPet2Set));
-            FullyQualifiedNamespaceContext.AddFunctionImport("GetPet3", FullyQualifiedNamespaceGetPet3Function, new EdmEntitySetReferenceExpression(FullyQualifiedNamespaceContextPet3Set));
-            FullyQualifiedNamespaceContext.AddFunctionImport("GetPet4", FullyQualifiedNamespaceGetPet4Function, new EdmEntitySetReferenceExpression(FullyQualifiedNamespaceContextPet4Set));
-            FullyQualifiedNamespaceContext.AddFunctionImport("GetPet5", FullyQualifiedNamespaceGetPet5Function, new EdmEntitySetReferenceExpression(FullyQualifiedNamespaceContextPet5Set));
-            FullyQualifiedNamespaceContext.AddFunctionImport("GetPet6", FullyQualifiedNamespaceGetPet6Function, new EdmEntitySetReferenceExpression(FullyQualifiedNamespaceContextPet6Set));
-            FullyQualifiedNamespaceContext.AddFunctionImport("GetPetCount", FullyQualifiedNamespaceGetPetCountFunction, new EdmEntitySetReferenceExpression(FullyQualifiedNamespaceContextPet5Set));
+            FullyQualifiedNamespaceContext.AddFunctionImport("GetPersonByDate", FullyQualifiedNamespaceGetPersonByDateFunction, new EdmPathExpression("People"));
+            FullyQualifiedNamespaceContext.AddFunctionImport("GetPersonByDTO", FullyQualifiedNamespaceGetPersonByDTOFunction, new EdmPathExpression("People"));
+            FullyQualifiedNamespaceContext.AddFunctionImport("GetPet1", FullyQualifiedNamespaceGetPet1Function, new EdmPathExpression("Pet1Set"));
+            FullyQualifiedNamespaceContext.AddFunctionImport("GetPet2", FullyQualifiedNamespaceGetPet2Function, new EdmPathExpression("Pet2Set"));
+            FullyQualifiedNamespaceContext.AddFunctionImport("GetPet3", FullyQualifiedNamespaceGetPet3Function, new EdmPathExpression("Pet3Set"));
+            FullyQualifiedNamespaceContext.AddFunctionImport("GetPet4", FullyQualifiedNamespaceGetPet4Function, new EdmPathExpression("Pet4Set"));
+            FullyQualifiedNamespaceContext.AddFunctionImport("GetPet5", FullyQualifiedNamespaceGetPet5Function, new EdmPathExpression("Pet5Set"));
+            FullyQualifiedNamespaceContext.AddFunctionImport("GetPet6", FullyQualifiedNamespaceGetPet6Function, new EdmPathExpression("Pet6Set"));
+            FullyQualifiedNamespaceContext.AddFunctionImport("GetPetCount", FullyQualifiedNamespaceGetPetCountFunction, new EdmPathExpression("Pet5Set"));
 
-            FullyQualifiedNamespaceContext.AddFunctionImport("FindMyOwner", FullyQualifiedNamespaceFindMyOwnerFunction, new EdmEntitySetReferenceExpression(model.FindEntityContainer("Fully.Qualified.Namespace.Context").FindEntitySet("People")));
+            FullyQualifiedNamespaceContext.AddFunctionImport("FindMyOwner", FullyQualifiedNamespaceFindMyOwnerFunction, new EdmPathExpression("People"));
 
             FullyQualifiedNamespaceContext.AddFunctionImport("IsAddressGood", FullyQualifiedNamespaceIsAddressGoodFunction, null);
 
-            FullyQualifiedNamespaceContext.AddFunctionImport("GetCoolPeople", FullyQualifiedNamespaceGetCoolPeopleAction, new EdmEntitySetReferenceExpression(model.FindEntityContainer("Fully.Qualified.Namespace.Context").FindEntitySet("People")));
+            FullyQualifiedNamespaceContext.AddFunctionImport("GetCoolPeople", FullyQualifiedNamespaceGetCoolPeopleAction, new EdmPathExpression("People"));
 
-            FullyQualifiedNamespaceContext.AddFunctionImport("GetCoolestPerson", FullyQualifiedNamespaceGetCoolestPersonAction, new EdmEntitySetReferenceExpression(model.FindEntityContainer("Fully.Qualified.Namespace.Context").FindEntitySet("People")));
+            FullyQualifiedNamespaceContext.AddFunctionImport("GetCoolestPerson", FullyQualifiedNamespaceGetCoolestPersonAction, new EdmPathExpression("People"));
 
-            FullyQualifiedNamespaceContext.AddFunctionImport("GetCoolestPersonWithStyle", FullyQualifiedNamespaceGetCoolestPersonWithStyleAction, new EdmEntitySetReferenceExpression(model.FindEntityContainer("Fully.Qualified.Namespace.Context").FindEntitySet("People")));
+            FullyQualifiedNamespaceContext.AddFunctionImport("GetCoolestPersonWithStyle", FullyQualifiedNamespaceGetCoolestPersonWithStyleAction, new EdmPathExpression("People"));
 
-            FullyQualifiedNamespaceContext.AddFunctionImport("GetBestManager", FullyQualifiedNamespaceGetBestManagerAction, new EdmEntitySetReferenceExpression(model.FindEntityContainer("Fully.Qualified.Namespace.Context").FindEntitySet("People")));
+            FullyQualifiedNamespaceContext.AddFunctionImport("GetBestManager", FullyQualifiedNamespaceGetBestManagerAction, new EdmPathExpression("People"));
 
             FullyQualifiedNamespaceContext.AddActionImport("GetNothing", FullyQualifiedNamespaceGetNothingAction);
 
@@ -732,7 +745,7 @@ namespace Microsoft.OData.Core.Tests.UriParser
                 IEnumerable<EdmError> errors;
                 using (var writer = document.CreateWriter())
                 {
-                    EdmxWriter.TryWriteEdmx(model, writer, EdmxTarget.OData, out errors).Should().BeTrue();
+                    CsdlWriter.TryWriteCsdl(model, writer, CsdlTarget.OData, out errors).Should().BeTrue();
                 }
 
                 string doc = document.ToString();
@@ -740,7 +753,7 @@ namespace Microsoft.OData.Core.Tests.UriParser
                 // deserialize edm xml
                 // TODO: remove the above model building codes.
                 IEdmModel parsedModel;
-                if (EdmxReader.TryParse(XmlReader.Create(new StringReader(HardCodedTestModelXml.MainModelXml)), (Uri uri) =>
+                if (CsdlReader.TryParse(XmlReader.Create(new StringReader(HardCodedTestModelXml.MainModelXml)), (Uri uri) =>
                 {
                     if (string.Equals(uri.AbsoluteUri, "http://submodel1/"))
                     {
@@ -762,7 +775,7 @@ namespace Microsoft.OData.Core.Tests.UriParser
                     throw new Exception("edmx:refernece must have a valid url." + uri.AbsoluteUri);
                 }, out parsedModel, out errors))
                 {
-                   return parsedModel;
+                    return parsedModel;
                 }
             }
             catch (Exception e)
@@ -813,6 +826,7 @@ namespace Microsoft.OData.Core.Tests.UriParser
           <NavigationPropertyBinding Path=""FastestOwner"" Target=""People"" />
           <NavigationPropertyBinding Path=""LionsISaw"" Target=""Lions"" />
         </EntitySet>
+        <EntitySet Name=""Shapes"" EntityType=""Fully.Qualified.Namespace.Shape"" />
         <EntitySet Name=""Lions"" EntityType=""Fully.Qualified.Namespace.Lion"">
           <NavigationPropertyBinding Path=""Friends"" Target=""Lions"" />
         </EntitySet>
@@ -832,6 +846,8 @@ namespace Microsoft.OData.Core.Tests.UriParser
           <NavigationPropertyBinding Path=""MyDog"" Target=""Dogs"" />
           <NavigationPropertyBinding Path=""MyPaintings"" Target=""Paintings"" />
         </Singleton>
+        <FunctionImport Name=""GetPersonByDate"" Function=""Fully.Qualified.Namespace.GetPersonByDate"" EntitySet=""People"" />
+        <FunctionImport Name=""GetPersonByDTO"" Function=""Fully.Qualified.Namespace.GetPersonByDTO"" EntitySet=""People"" />
         <FunctionImport Name=""GetPet1"" Function=""Fully.Qualified.Namespace.GetPet1"" EntitySet=""Pet1Set"" />
         <FunctionImport Name=""GetPet2"" Function=""Fully.Qualified.Namespace.GetPet2"" EntitySet=""Pet2Set"" />
         <FunctionImport Name=""GetPet3"" Function=""Fully.Qualified.Namespace.GetPet3"" EntitySet=""Pet3Set"" />
@@ -1003,6 +1019,12 @@ namespace Microsoft.OData.Core.Tests.UriParser
         <NavigationProperty Name=""LionWhoAteMe"" Type=""Fully.Qualified.Namespace.Lion"" Nullable=""false"" Partner=""DogThatIAte"" />
         <NavigationProperty Name=""LionsISaw"" Type=""Collection(Fully.Qualified.Namespace.Lion)"" Nullable=""false"" Partner=""DogsSeenMe"" />
       </EntityType>
+      <EntityType Name=""Shape"">
+        <Key>
+          <PropertyRef Name=""Color"" />
+        </Key>
+        <Property Name=""Color"" Type=""Fully.Qualified.Namespace.ColorPattern"" Nullable=""false"" />
+      </EntityType>
       <ComplexType Name=""Heartbeat"">
         <Property Name=""Frequency"" Type=""Edm.Double"" />
       </ComplexType>
@@ -1116,6 +1138,14 @@ namespace Microsoft.OData.Core.Tests.UriParser
         <Property Name=""Name"" Type=""Edm.String"" />
         <Property Name=""PetCategorysColorPattern"" Type=""Fully.Qualified.Namespace.ColorPattern"" Nullable=""false"" />
       </EntityType>
+      <Function Name=""GetPersonByDate"" IsComposable=""true"">
+        <Parameter Name=""date"" Type=""Edm.Date"" Nullable=""false"" />
+        <ReturnType Type=""Fully.Qualified.Namespace.Person"" />
+      </Function>
+      <Function Name=""GetPersonByDTO"" IsComposable=""true"">
+        <Parameter Name=""dto"" Type=""Edm.DateTimeOffset"" Nullable=""false"" />
+        <ReturnType Type=""Fully.Qualified.Namespace.Person"" />
+      </Function>
       <Function Name=""GetPet1"" IsComposable=""true"">
         <Parameter Name=""id"" Type=""Edm.Int64"" Nullable=""false"" />
         <ReturnType Type=""Fully.Qualified.Namespace.Pet1"" />
@@ -1867,6 +1897,16 @@ namespace Microsoft.OData.Core.Tests.UriParser
         public static IEdmOperation GetHasDogOverloadForPeopleWithThreeParameters()
         {
             return TestModel.FindOperations("Fully.Qualified.Namespace.HasDog").Single(f => f.Parameters.Count() == 3 && f.Parameters.First().Type.FullName() == "Fully.Qualified.Namespace.Person");
+        }
+
+        public static IEdmOperationImport GetFunctionImportForGetPersonByDate()
+        {
+            return TestModel.EntityContainer.FindOperationImports("GetPersonByDate").Single();
+        }
+
+        public static IEdmOperationImport GetFunctionImportForGetPersonByDTO()
+        {
+            return TestModel.EntityContainer.FindOperationImports("GetPersonByDTO").Single();
         }
 
         public static IEdmOperationImport GetFunctionImportForGetPet1()

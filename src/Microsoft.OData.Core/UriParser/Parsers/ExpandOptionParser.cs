@@ -4,17 +4,13 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core.UriParser.Parsers
+namespace Microsoft.OData.UriParser
 {
     using System;
     using System.Collections.Generic;
     using System.Globalization;
-    using Microsoft.OData.Core.UriParser.Metadata;
-    using Microsoft.OData.Core.UriParser.Syntactic;
-    using Microsoft.OData.Core.UriParser.TreeNodeKinds;
     using Microsoft.OData.Edm;
-    using Microsoft.Spatial;
-    using ODataErrorStrings = Microsoft.OData.Core.Strings;
+    using ODataErrorStrings = Microsoft.OData.Strings;
 
     /// <summary>
     /// Parser that knows how to parse expand options that could come after the path part of an expand term.
@@ -32,32 +28,42 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         /// The parent entity type for expand option in case expand option is star, get all parent navigation properties
         /// </summary>
         private readonly IEdmStructuredType parentEntityType;
-        
+
         /// <summary>
         /// Max recursion depth. As we recurse, each new instance of this class will have this lowered by 1.
         /// </summary>
         private readonly int maxRecursionDepth;
 
         /// <summary>
-        /// Lexer to parse over the optionsText for a single $expand term. This is NOT the same lexer used by <see cref="SelectExpandParser"/>
-        /// to parse over the entirety of $select or $expand. 
+        /// Whether to enable no dollar query options.
         /// </summary>
-        private ExpressionLexer lexer;
+        private readonly bool enableNoDollarQueryOptions;
 
         /// <summary>
         /// Whether to allow case insensitive for builtin identifier.
         /// </summary>
-        private bool enableCaseInsensitiveBuiltinIdentifier;
+        private readonly bool enableCaseInsensitiveBuiltinIdentifier;
+
+        /// <summary>
+        /// Lexer to parse over the optionsText for a single $expand term. This is NOT the same lexer used by <see cref="SelectExpandParser"/>
+        /// to parse over the entirety of $select or $expand.
+        /// </summary>
+        private ExpressionLexer lexer;
 
         /// <summary>
         /// Creates an instance of this class to parse options.
         /// </summary>
         /// <param name="maxRecursionDepth">Max recursion depth left.</param>
         /// <param name="enableCaseInsensitiveBuiltinIdentifier">Whether to allow case insensitive for builtin identifier.</param>
-        internal ExpandOptionParser(int maxRecursionDepth, bool enableCaseInsensitiveBuiltinIdentifier = false)
+        /// <param name="enableNoDollarQueryOptions">Whether to enable no dollar query options.</param>
+        internal ExpandOptionParser(
+            int maxRecursionDepth,
+            bool enableCaseInsensitiveBuiltinIdentifier = false,
+            bool enableNoDollarQueryOptions = false)
         {
             this.maxRecursionDepth = maxRecursionDepth;
             this.enableCaseInsensitiveBuiltinIdentifier = enableCaseInsensitiveBuiltinIdentifier;
+            this.enableNoDollarQueryOptions = enableNoDollarQueryOptions;
         }
 
         /// <summary>
@@ -67,8 +73,14 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         /// <param name="parentEntityType">The parent entity type for expand option</param>
         /// <param name="maxRecursionDepth">Max recursion depth left.</param>
         /// <param name="enableCaseInsensitiveBuiltinIdentifier">Whether to allow case insensitive for builtin identifier.</param>
-        internal ExpandOptionParser(ODataUriResolver resolver, IEdmStructuredType parentEntityType, int maxRecursionDepth, bool enableCaseInsensitiveBuiltinIdentifier = false)
-            : this(maxRecursionDepth, enableCaseInsensitiveBuiltinIdentifier)
+        /// <param name="enableNoDollarQueryOptions">Whether to enable no dollar query options.</param>
+        internal ExpandOptionParser(
+            ODataUriResolver resolver,
+            IEdmStructuredType parentEntityType,
+            int maxRecursionDepth,
+            bool enableCaseInsensitiveBuiltinIdentifier = false,
+            bool enableNoDollarQueryOptions = false)
+            : this(maxRecursionDepth, enableCaseInsensitiveBuiltinIdentifier, enableNoDollarQueryOptions)
         {
             this.resolver = resolver;
             this.parentEntityType = parentEntityType;
@@ -134,6 +146,13 @@ namespace Microsoft.OData.Core.UriParser.Parsers
                     string text = this.enableCaseInsensitiveBuiltinIdentifier
                         ? this.lexer.CurrentToken.Text.ToLowerInvariant()
                         : this.lexer.CurrentToken.Text;
+
+                    // Prepend '$' prefix if needed.
+                    if (this.enableNoDollarQueryOptions && !text.StartsWith(UriQueryConstants.DollarSign, StringComparison.Ordinal))
+                    {
+                        text = string.Format(CultureInfo.InvariantCulture, "{0}{1}", UriQueryConstants.DollarSign, text);
+                    }
+
                     switch (text)
                     {
                         case ExpressionConstants.QueryOptionFilter:
@@ -255,20 +274,28 @@ namespace Microsoft.OData.Core.UriParser.Parsers
                                 this.lexer.NextToken();
                                 string expandText = this.ReadQueryOption();
 
-                                // As 2016/1/8, the navigation property is only supported in entity type, and will support in ComplexType in future. 
+                                // As 2016/1/8, the navigation property is only supported in entity type, and will support in ComplexType in future.
                                 IEdmStructuredType targetEntityType = null;
                                 if (this.resolver != null && this.parentEntityType != null)
                                 {
                                     var parentProperty = this.resolver.ResolveProperty(parentEntityType, pathToken.Identifier) as IEdmNavigationProperty;
 
-                                    // it is a navigation property, need to find the type. Like $expand=Friends($expand=Trips($expand=*)), when expandText becomes "Trips($expand=*)", find navigation property Trips of Friends, then get Entity type of Trips.
+                                    // it is a navigation property, need to find the type.
+                                    // Like $expand=Friends($expand=Trips($expand=*)), when expandText becomes "Trips($expand=*)",
+                                    // find navigation property Trips of Friends, then get Entity type of Trips.
                                     if (parentProperty != null)
-                                    { 
+                                    {
                                         targetEntityType = parentProperty.ToEntityType();
                                     }
                                 }
 
-                                SelectExpandParser innerExpandParser = new SelectExpandParser(resolver, expandText, targetEntityType, this.maxRecursionDepth - 1, enableCaseInsensitiveBuiltinIdentifier);
+                                SelectExpandParser innerExpandParser = new SelectExpandParser(
+                                    resolver,
+                                    expandText,
+                                    targetEntityType,
+                                    this.maxRecursionDepth - 1,
+                                    this.enableCaseInsensitiveBuiltinIdentifier,
+                                    this.enableNoDollarQueryOptions);
                                 expandOption = innerExpandParser.ParseExpand();
                                 break;
                             }
@@ -311,18 +338,18 @@ namespace Microsoft.OData.Core.UriParser.Parsers
             long? levelsOption = null;
             bool isRefExpand = (pathToken.Identifier == UriQueryConstants.RefSegment);
 
-            // Based on the specification, 
+            // Based on the specification,
             //   For star in expand, this will be supported,
             //   $expand=*
             //   $expand=EntitySet($expand=* )
-            //   $expand=*/$ref 
+            //   $expand=*/$ref
             //   $expand=*,EntitySet
             //   $expand=EntitySet, *
             //   $expand=*/$ref,EntitySet
             //   Parenthesized set of expand options for star expand option supported are $level per specification.
             //   And this will throw exception,
             //   $expand= * /$count
-            //   Parenthesized set of expand options for star expand option which will also cause exception are $filter, $select, $orderby, $skip, $top, $count, $search, and $expand per specification. 
+            //   Parenthesized set of expand options for star expand option which will also cause exception are $filter, $select, $orderby, $skip, $top, $count, $search, and $expand per specification.
             // And level is not supported with "*/$ref".
 
             // As 2016/1/8, the navigation property is only supported in entity type, and will support in ComplexType in future.
@@ -347,8 +374,8 @@ namespace Microsoft.OData.Core.UriParser.Parsers
                     {
                         case ExpressionConstants.QueryOptionLevels:
                             {
-                                if (!isRefExpand) 
-                                { 
+                                if (!isRefExpand)
+                                {
                                     levelsOption = ResolveLevelOption();
                                 }
                                 else

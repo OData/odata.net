@@ -6,11 +6,11 @@
 
 using System;
 using FluentAssertions;
-using Microsoft.OData.Core.UriParser.Parsers;
-using Microsoft.OData.Edm.Library;
+using Microsoft.OData.UriParser;
+using Microsoft.OData.Edm;
 using Xunit;
 
-namespace Microsoft.OData.Core.Tests.UriParser.Parsers
+namespace Microsoft.OData.Tests.UriParser.Parsers
 {
     public class LiteralParserTest
     {
@@ -24,7 +24,7 @@ namespace Microsoft.OData.Core.Tests.UriParser.Parsers
         }
 
         [Fact]
-        public void TryParseLiteralWithDurationLiteralForDefaultUrlConventionsShouldReturnValidTimeSpan()
+        public void TryParseLiteralWithDurationLiteralForParenthesesKeyDelimiterShouldReturnValidTimeSpan()
         {
             var parser = LiteralParser.ForKeys(false/*keyAsSegment*/);
             object output;
@@ -33,7 +33,7 @@ namespace Microsoft.OData.Core.Tests.UriParser.Parsers
         }
 
         [Fact]
-        public void TryParseLiteralWithDurationLiteralForKeyAsSegmentUrlConventionsShouldReturnValidTimeSpan()
+        public void TryParseLiteralWithDurationLiteralForSlashKeyDelimiterShouldReturnValidTimeSpan()
         {
             var parser = LiteralParser.ForKeys(true/*keyAsSegment*/);
             object output;
@@ -42,7 +42,7 @@ namespace Microsoft.OData.Core.Tests.UriParser.Parsers
         }
 
         [Fact]
-        public void TryParseLiteralWithDateForKeyAsSegmentUrlConventionsShouldReturnValidDate()
+        public void TryParseLiteralWithDateForSlashKeyDelimiterShouldReturnValidDate()
         {
             var parser = LiteralParser.ForKeys(true /*keyAsSegment*/);
             object output;
@@ -51,7 +51,7 @@ namespace Microsoft.OData.Core.Tests.UriParser.Parsers
         }
 
         [Fact]
-        public void TryParseLiteralWithDateForDefaultUrlConventionsConventionsShouldReturnValidDate()
+        public void TryParseLiteralWithDateForParenthesesKeyDelimiterShouldReturnValidDate()
         {
             var parser = LiteralParser.ForKeys(false /*keyAsSegment*/);
             object output;

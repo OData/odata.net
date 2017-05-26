@@ -4,19 +4,15 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core.UriParser.Parsers
-{
-    using System;
-    using System.Linq;
-    using System.Collections.Generic;
-    using System.Diagnostics;
-    using Microsoft.OData.Core.Metadata;
-    using Microsoft.OData.Core.UriParser.Metadata;
-    using Microsoft.OData.Core.UriParser.Semantic;
-    using Microsoft.OData.Core.UriParser.Syntactic;
-    using Microsoft.OData.Core.UriParser.TreeNodeKinds;
-    using Microsoft.OData.Edm;
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
+using Microsoft.OData.Metadata;
+using Microsoft.OData.Edm;
 
+namespace Microsoft.OData.UriParser
+{
     /// <summary>Provides a class used to represent a key for a resource.</summary>
     /// <remarks>
     /// Internally, every key instance has a collection of values. These values
@@ -145,7 +141,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         /// <param name='instance'>After invocation, the parsed key instance.</param>
         /// <param name="enableUriTemplateParsing">Whether Uri template parsing is enabled.</param>
         /// <returns>
-        /// true if the key instance was parsed; false if there was a 
+        /// true if the key instance was parsed; false if there was a
         /// syntactic error.
         /// </returns>
         /// <remarks>
@@ -154,7 +150,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         /// </remarks>
         public static bool TryParseKeysFromUri(string text, out SegmentArgumentParser instance, bool enableUriTemplateParsing)
         {
-            return TryParseFromUri(text, true /*allowNamedValues*/, false /*allowNull*/, out instance, enableUriTemplateParsing);
+            return TryParseFromUri(text, out instance, enableUriTemplateParsing);
         }
 
         /// <summary>
@@ -172,7 +168,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         /// <param name='text'>Text to parse (not null).</param>
         /// <param name='instance'>After invocation, the parsed key instance.</param>
         /// <returns>
-        /// true if the given values were parsed; false if there was a 
+        /// true if the given values were parsed; false if there was a
         /// syntactic error.
         /// </returns>
         /// <remarks>
@@ -181,7 +177,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         /// </remarks>
         public static bool TryParseNullableTokens(string text, out SegmentArgumentParser instance)
         {
-            return TryParseFromUri(text, false /*allowNamedValues*/, true /*allowNull*/, out instance, false);
+            return TryParseFromUri(text, out instance, false);
         }
 
         /// <summary>Tries to convert values to the keys of the specified type.</summary>
@@ -192,8 +188,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         public bool TryConvertValues(IEdmEntityType targetEntityType, out IEnumerable<KeyValuePair<string, object>> keyPairs, ODataUriResolver resolver)
         {
             Debug.Assert(!this.IsEmpty, "!this.IsEmpty -- caller should check");
-            IList<IEdmStructuralProperty> keyProperties = targetEntityType.Key().ToList();
-            Debug.Assert(keyProperties.Count == this.ValueCount || resolver.GetType() != typeof(ODataUriResolver), "type.KeyProperties.Count == this.ValueCount -- will change with containment");
+            Debug.Assert(targetEntityType.Key().Count() == this.ValueCount || resolver.GetType() != typeof(ODataUriResolver), "type.KeyProperties.Count == this.ValueCount -- will change with containment");
 
             if (this.NamedValues != null)
             {
@@ -202,7 +197,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
             else
             {
                 Debug.Assert(this.positionalValues != null, "positionalValues != null -- otherwise this is Empty");
-                Debug.Assert(this.PositionalValues.Count == keyProperties.Count || resolver.GetType() != typeof(ODataUriResolver), "Count of positional values does not match.");
+                Debug.Assert(this.PositionalValues.Count == targetEntityType.Key().Count() || resolver.GetType() != typeof(ODataUriResolver), "Count of positional values does not match.");
                 keyPairs = resolver.ResolveKeys(targetEntityType, this.PositionalValues, this.ConvertValueWrapper);
             }
 
@@ -236,6 +231,13 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         /// <returns>true if the conversion was successful.</returns>
         private bool TryConvertValue(IEdmTypeReference typeReference, string valueText, out object convertedValue)
         {
+            UriTemplateExpression expression;
+            if (this.enableUriTemplateParsing && UriTemplateParser.TryParseLiteral(valueText, typeReference, out expression))
+            {
+                convertedValue = expression;
+                return true;
+            }
+
             if (typeReference.IsEnum())
             {
                 QueryNode enumNode = null;
@@ -250,13 +252,6 @@ namespace Microsoft.OData.Core.UriParser.Parsers
             }
 
             IEdmPrimitiveTypeReference primitiveType = typeReference.AsPrimitive();
-            UriTemplateExpression expression;
-            if (this.enableUriTemplateParsing && UriTemplateParser.TryParseLiteral(valueText, primitiveType, out expression))
-            {
-                convertedValue = expression;
-                return true;
-            }
-
             Type primitiveClrType = EdmLibraryExtensions.GetPrimitiveClrType((IEdmPrimitiveType)primitiveType.Definition, primitiveType.IsNullable);
             LiteralParser literalParser = LiteralParser.ForKeys(this.keysAsSegment);
             return literalParser.TryParseLiteral(primitiveClrType, valueText, out convertedValue);
@@ -264,21 +259,17 @@ namespace Microsoft.OData.Core.UriParser.Parsers
 
         /// <summary>Attempts to parse key values from the specified text.</summary>
         /// <param name='text'>Text to parse (not null).</param>
-        /// <param name="allowNamedValues">Set to true if the parser should accept named values
-        ///     so syntax like Name='value'. If this is false, the parsing will fail on such constructs.</param>
-        /// <param name="allowNull">Set to true if the parser should accept null values.
-        ///     If set to false, the parser will fail on null values.</param>
         /// <param name='instance'>After invocation, the parsed key instance.</param>
         /// <param name="enableUriTemplateParsing">Whether Uri template parsing is enabled.</param>
         /// <returns>
-        /// true if the key instance was parsed; false if there was a 
+        /// true if the key instance was parsed; false if there was a
         /// syntactic error.
         /// </returns>
         /// <remarks>
         /// The returned instance contains only string values. To get typed values, a call to
         /// TryConvertValues is necessary.
         /// </remarks>
-        private static bool TryParseFromUri(string text, bool allowNamedValues, bool allowNull, out SegmentArgumentParser instance, bool enableUriTemplateParsing)
+        private static bool TryParseFromUri(string text, out SegmentArgumentParser instance, bool enableUriTemplateParsing)
         {
             Debug.Assert(text != null, "text != null");
 
@@ -301,10 +292,9 @@ namespace Microsoft.OData.Core.UriParser.Parsers
                 return true;
             }
 
-            string valueText = null;
             foreach (FunctionParameterToken t in tmp)
             {
-                valueText = null;
+                string valueText = null;
                 LiteralToken literalToken = t.ValueToken as LiteralToken;
                 if (literalToken != null)
                 {

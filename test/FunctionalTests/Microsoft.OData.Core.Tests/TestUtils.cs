@@ -8,28 +8,28 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Xml;
-using Microsoft.OData.Core.Evaluation;
+using Microsoft.OData.Evaluation;
 using Microsoft.OData.Edm;
 using Microsoft.OData.Edm.Csdl;
 using Microsoft.OData.Edm.Validation;
-using Microsoft.OData.Edm.Values;
+using Microsoft.OData.Edm.Vocabularies;
 using Xunit;
 
-namespace Microsoft.OData.Core.Tests
+namespace Microsoft.OData.Tests
 {
     public static class TestUtils
     {
         /// <summary>
-        /// Creates a new ODataEntry from the specified entity set, instance, and type.
+        /// Creates a new ODataResource from the specified entity set, instance, and type.
         /// </summary>
         /// <param name="entitySet">Entity set for the new entry.</param>
         /// <param name="value">Entity instance for the new entry.</param>
         /// <param name="entityType">Entity type for the new entry.</param>
-        /// <returns>New ODataEntry with the specified entity set and type, property values from the specified instance.</returns>
-        internal static ODataEntry CreateODataEntry(IEdmEntitySet entitySet, IEdmStructuredValue value, IEdmEntityType entityType)
+        /// <returns>New ODataResource with the specified entity set and type, property values from the specified instance.</returns>
+        internal static ODataResource CreateODataEntry(IEdmEntitySet entitySet, IEdmStructuredValue value, IEdmEntityType entityType)
         {
-            var entry = new ODataEntry();
-            entry.SetAnnotation(new ODataTypeAnnotation(entitySet, entityType));
+            var entry = new ODataResource();
+            entry.TypeAnnotation = new ODataTypeAnnotation(entityType.FullTypeName());
             entry.Properties = value.PropertyValues.Select(p =>
             {
                 object propertyValue;
@@ -43,7 +43,7 @@ namespace Microsoft.OData.Core.Tests
                 }
                 else
                 {
-                    Assert.True(false, "Test only currently supports creating ODataEntry from IEdmPrimitiveValue instances.");
+                    Assert.True(false, "Test only currently supports creating ODataResource from IEdmPrimitiveValue instances.");
                     return null;
                 }
 
@@ -73,7 +73,7 @@ namespace Microsoft.OData.Core.Tests
 </edmx:Edmx>";
             IEdmModel ret;
             IEnumerable<EdmError> errors;
-            if (EdmxReader.TryParse(XmlReader.Create(new StringReader(mainModelxml)), new List<IEdmModel>(referencedModels), out ret, out errors))
+            if (CsdlReader.TryParse(XmlReader.Create(new StringReader(mainModelxml)), new List<IEdmModel>(referencedModels), out ret, out errors))
             {
                 return ret;
             }
@@ -107,7 +107,7 @@ namespace Microsoft.OData.Core.Tests
             mainModelxml = string.Format(mainModelxml, namespaceOfContainerToExtend, nameOfContainerToExtend);
             IEdmModel ret;
             IEnumerable<EdmError> errors;
-            if (EdmxReader.TryParse(XmlReader.Create(new StringReader(mainModelxml)), new List<IEdmModel>(referencedModels), out ret, out errors))
+            if (CsdlReader.TryParse(XmlReader.Create(new StringReader(mainModelxml)), new List<IEdmModel>(referencedModels), out ret, out errors))
             {
                 return ret;
             }
@@ -116,6 +116,26 @@ namespace Microsoft.OData.Core.Tests
             return null;
         }
         #region Util methods to AssertAreEqual ODataValues
+
+        public static void AssertODataResourceAreEqual(ODataResource value1, ODataResource value2)
+        {
+            Assert.NotNull(value1);
+            Assert.NotNull(value2);
+            Assert.Equal(value1.TypeName, value2.TypeName);
+            AssertODataPropertiesAreEqual(value1.Properties, value2.Properties);
+        }
+
+        public static void AssertODataResourceSetAreEqual(List<ODataResource> collectionValue1, List<ODataResource> collectionValue2)
+        {
+            Assert.NotNull(collectionValue1);
+            Assert.NotNull(collectionValue2);
+
+            Assert.Equal(collectionValue1.Count, collectionValue2.Count);
+            for (int i = 0; i < collectionValue1.Count; i++)
+            {
+                AssertODataResourceAreEqual(collectionValue1[i], collectionValue2[i]);
+            }
+        }
 
         public static void AssertODataValueAreEqual(ODataValue value1, ODataValue value2)
         {
@@ -132,25 +152,25 @@ namespace Microsoft.OData.Core.Tests
             }
             else
             {
-                ODataComplexValue complexValue1 = value1 as ODataComplexValue;
-                ODataComplexValue complexValue2 = value2 as ODataComplexValue;
-                if (complexValue1 != null && complexValue2 != null)
+                ODataEnumValue enumValue1 = value1 as ODataEnumValue;
+                ODataEnumValue enumValue2 = value2 as ODataEnumValue;
+                if (enumValue1 != null && enumValue2 != null)
                 {
-                    AssertODataComplexValueAreEqual(complexValue1, complexValue2);
+                    AssertODataEnumValueAreEqual(enumValue1, enumValue2);
                 }
                 else
                 {
-                    ODataEnumValue enumValue1 = value1 as ODataEnumValue;
-                    ODataEnumValue enumValue2 = value2 as ODataEnumValue;
-                    if (enumValue1 != null && enumValue2 != null)
+                    ODataCollectionValue collectionValue1 = value1 as ODataCollectionValue;
+                    ODataCollectionValue collectionValue2 = value2 as ODataCollectionValue;
+                    if (collectionValue1 != null && collectionValue2 != null)
                     {
-                        AssertODataEnumValueAreEqual(enumValue1, enumValue2);
+                        AssertODataCollectionValueAreEqual(collectionValue1, collectionValue2);
                     }
                     else
                     {
-                        ODataCollectionValue collectionValue1 = (ODataCollectionValue)value1;
-                        ODataCollectionValue collectionValue2 = (ODataCollectionValue)value2;
-                        AssertODataCollectionValueAreEqual(collectionValue1, collectionValue2);
+                        ODataUntypedValue untyped1 = value1 as ODataUntypedValue;
+                        ODataUntypedValue untyped2 = value2 as ODataUntypedValue;
+                        Assert.Equal(untyped1.RawValue, untyped2.RawValue);
                     }
                 }
             }
@@ -178,14 +198,6 @@ namespace Microsoft.OData.Core.Tests
                     Assert.Equal(itemsArray1[i], itemsArray2[i]);
                 }
             }
-        }
-
-        private static void AssertODataComplexValueAreEqual(ODataComplexValue complexValue1, ODataComplexValue complexValue2)
-        {
-            Assert.NotNull(complexValue1);
-            Assert.NotNull(complexValue2);
-            Assert.Equal(complexValue1.TypeName, complexValue2.TypeName);
-            AssertODataPropertiesAreEqual(complexValue1.Properties, complexValue2.Properties);
         }
 
         public static void AssertODataPropertiesAreEqual(IEnumerable<ODataProperty> properties1, IEnumerable<ODataProperty> properties2)

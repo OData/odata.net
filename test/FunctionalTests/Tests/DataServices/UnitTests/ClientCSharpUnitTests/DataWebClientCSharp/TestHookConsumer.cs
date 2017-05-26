@@ -17,7 +17,7 @@ namespace AstoriaUnitTests.Tests
     using System.Net;
     using System.Reflection;
     using System.Xml.Linq;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     #endregion

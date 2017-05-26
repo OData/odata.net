@@ -14,7 +14,6 @@ namespace Microsoft.Test.Taupo.OData.Query.Tests
     using Microsoft.Test.Taupo.Astoria.Client;
     using Microsoft.Test.Taupo.Astoria.Contracts;
     using Microsoft.Test.Taupo.Astoria.Contracts.Client;
-    using Microsoft.Test.Taupo.Astoria.LinqToAstoria;
     using Microsoft.Test.Taupo.Common;
     using Microsoft.Test.Taupo.DependencyInjection;
     using Microsoft.Test.Taupo.Execution;
@@ -25,7 +24,6 @@ namespace Microsoft.Test.Taupo.OData.Query.Tests
     using Microsoft.Test.Taupo.Query.Common;
     using Microsoft.Test.Taupo.Query.Contracts;
     using Microsoft.Test.Taupo.Query.Contracts.Linq;
-    using Microsoft.Test.Taupo.Query.Linq;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
     #endregion Namespaces
 

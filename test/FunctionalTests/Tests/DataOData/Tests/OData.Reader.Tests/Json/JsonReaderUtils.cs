@@ -11,7 +11,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Json
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.Test.Taupo.Astoria.Contracts.Json;
     using Microsoft.Test.Taupo.Contracts;
     using Microsoft.Test.Taupo.OData.Common;
@@ -45,11 +45,11 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Json
 
             Func<TextReader, AssertionHandler, JsonReader>[] creatorFuncs = new Func<TextReader, AssertionHandler, JsonReader>[]
             {
-                (textReader, assert) => new JsonReader(textReader, assert, ODataFormat.Json, isIeee754Compatible: true),
-                (textReader, assert) => new BufferingJsonReader(textReader, ODataConstants.DefaultMaxRecursionDepth, assert, ODataFormat.Json, isIeee754Compatible: true),
+                (textReader, assert) => new JsonReader(textReader, assert, isIeee754Compatible: true),
+                (textReader, assert) => new BufferingJsonReader(textReader, ODataConstants.DefaultMaxRecursionDepth, assert, isIeee754Compatible: true),
                 (textReader, assert) => 
                 {
-                    BufferingJsonReader reader = new BufferingJsonReader(textReader, ODataConstants.DefaultMaxRecursionDepth, assert, ODataFormat.Json, isIeee754Compatible: true);
+                    BufferingJsonReader reader = new BufferingJsonReader(textReader, ODataConstants.DefaultMaxRecursionDepth, assert, isIeee754Compatible: true);
                     reader.StartBuffering();
                     return reader;
                 },
@@ -117,7 +117,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Json
         public static void ReadAndVerifyBufferingJson(BufferingJsonReaderTestCaseDescriptor testCase, AssertionHandler assert)
         {
             TextReader testReader = new StringReader(testCase.JsonText);
-            BufferingJsonReader bufferingJsonReader = new BufferingJsonReader(testReader, ODataConstants.DefaultMaxRecursionDepth, assert, ODataFormat.Json, isIeee754Compatible: true);
+            BufferingJsonReader bufferingJsonReader = new BufferingJsonReader(testReader, ODataConstants.DefaultMaxRecursionDepth, assert, isIeee754Compatible: true);
 
             bool isBuffering = false;
             int callCount = -1;
@@ -218,7 +218,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Json
             TextReader testReader = new StringReader(testCase.JsonText);
             Exception exception = TestExceptionUtils.RunCatching(() =>
             {
-                BufferingJsonReader bufferingJsonReader = new BufferingJsonReader(testReader, ODataConstants.DefaultMaxRecursionDepth, assert, ODataFormat.Json, isIeee754Compatible: true);
+                BufferingJsonReader bufferingJsonReader = new BufferingJsonReader(testReader, ODataConstants.DefaultMaxRecursionDepth, assert, isIeee754Compatible: true);
                    
                 int callCount = -1;
                 int startBuffering = testCase.ToggleBufferingCallCounts[0];

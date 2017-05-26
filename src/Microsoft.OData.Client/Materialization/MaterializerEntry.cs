@@ -9,29 +9,29 @@ namespace Microsoft.OData.Client.Materialization
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.OData.Client.Metadata;
     using DSClient = Microsoft.OData.Client;
 
     /// <summary>
-    /// Materializer state for a given ODataEntry
+    /// Materializer state for a given ODataResource
     /// </summary>
     internal class MaterializerEntry
     {
         /// <summary>The entry.</summary>
-        private readonly ODataEntry entry;
+        private readonly ODataResource entry;
 
         /// <summary>entity descriptor object which keeps track of the entity state and other entity specific information.</summary>
         private readonly EntityDescriptor entityDescriptor;
 
         /// <summary>True if the context format is Atom or if the MergeOption is anything other than NoTracking.</summary>
-        private readonly bool isAtomOrTracking;
+        private readonly bool isTracking;
 
         /// <summary>Entry flags.</summary>
         private EntryFlags flags;
 
         /// <summary>List of navigation links for this entry.</summary>
-        private ICollection<ODataNavigationLink> navigationLinks = ODataMaterializer.EmptyLinks;
+        private ICollection<ODataNestedResourceInfo> navigationLinks = ODataMaterializer.EmptyLinks;
 
         /// <summary>
         /// Creates a new instance of MaterializerEntry.
@@ -47,25 +47,23 @@ namespace Microsoft.OData.Client.Materialization
         /// <param name="format">The format the entry was read in.</param>
         /// <param name="isTracking">True if the contents of the entry will be tracked in the context, otherwise False.</param>
         /// <param name="model">The client model.</param>
-        private MaterializerEntry(ODataEntry entry, ODataFormat format, bool isTracking, ClientEdmModel model)
+        private MaterializerEntry(ODataResource entry, ODataFormat format, bool isTracking, ClientEdmModel model)
         {
             Debug.Assert(entry != null, "entry != null");
 
             this.entry = entry;
             this.Format = format;
             this.entityDescriptor = new EntityDescriptor(model);
-#pragma warning disable 618
-            this.isAtomOrTracking = isTracking || this.Format == ODataFormat.Atom;
-#pragma warning restore 618
+            this.isTracking = isTracking;
+
             string serverTypeName = this.Entry.TypeName;
-            SerializationTypeNameAnnotation serializationTypeNameAnnotation = entry.GetAnnotation<SerializationTypeNameAnnotation>();
-            if (serializationTypeNameAnnotation != null)
+            if (entry.TypeAnnotation != null)
             {
                 // If the annotation has a value use it. Otherwise, in JSON-Light, the types can be inferred from the
                 // context URI even if they are not present on the wire, so just use the type name from the entry.
-                if (serializationTypeNameAnnotation.TypeName != null || this.Format != ODataFormat.Json)
+                if (entry.TypeAnnotation.TypeName != null || this.Format != ODataFormat.Json)
                 {
-                    serverTypeName = serializationTypeNameAnnotation.TypeName;
+                    serverTypeName = entry.TypeAnnotation.TypeName;
                 }
             }
 
@@ -83,9 +81,7 @@ namespace Microsoft.OData.Client.Materialization
         {
             this.entityDescriptor = entityDescriptor;
             this.Format = format;
-#pragma warning disable 618
-            this.isAtomOrTracking = isTracking || this.Format == ODataFormat.Atom;
-#pragma warning restore 618
+            this.isTracking = isTracking;
             this.SetFlagValue(EntryFlags.ShouldUpdateFromPayload | EntryFlags.EntityHasBeenResolved | EntryFlags.ForLoadProperty, true);
         }
 
@@ -114,7 +110,7 @@ namespace Microsoft.OData.Client.Materialization
         /// <summary>
         /// Gets the entry.
         /// </summary>
-        public ODataEntry Entry
+        public ODataResource Entry
         {
             get { return this.entry; }
         }
@@ -125,9 +121,9 @@ namespace Microsoft.OData.Client.Materialization
         /// as odata.id and odata.editlink. Since this information is always available in the payload with Atom, for
         /// backward compatibility we continue using it as we always have, even for NoTracking cases.
         /// </summary>
-        public bool IsAtomOrTracking
+        public bool IsTracking
         {
-            get { return this.isAtomOrTracking; }
+            get { return this.isTracking; }
         }
 
         /// <summary>
@@ -137,7 +133,7 @@ namespace Microsoft.OData.Client.Materialization
         {
             get
             {
-                Debug.Assert(this.IsAtomOrTracking, "Id property should not be used when this.IsAtomOrTracking is false.");
+                Debug.Assert(this.IsTracking, "Id property should not be used when this.isTracking is false.");
                 return this.entry.Id;
             }
         }
@@ -197,7 +193,7 @@ namespace Microsoft.OData.Client.Materialization
         }
 
         /// <summary>The navigation links.</summary>
-        public ICollection<ODataNavigationLink> NavigationLinks
+        public ICollection<ODataNestedResourceInfo> NestedResourceInfos
         {
             get { return this.navigationLinks; }
         }
@@ -229,7 +225,7 @@ namespace Microsoft.OData.Client.Materialization
         /// <param name="isTracking">True if the contents of the entry will be tracked in the context, otherwise False.</param>
         /// <param name="model">The client model.</param>
         /// <returns>A new materializer entry.</returns>
-        public static MaterializerEntry CreateEntry(ODataEntry entry, ODataFormat format, bool isTracking, ClientEdmModel model)
+        public static MaterializerEntry CreateEntry(ODataResource entry, ODataFormat format, bool isTracking, ClientEdmModel model)
         {
             Debug.Assert(entry.GetAnnotation<MaterializerEntry>() == null, "MaterializerEntry has already been created.");
 
@@ -252,11 +248,11 @@ namespace Microsoft.OData.Client.Materialization
         }
 
         /// <summary>
-        /// Gets an entry for a given ODataEntry.
+        /// Gets an entry for a given ODataResource.
         /// </summary>
-        /// <param name="entry">The ODataEntry.</param>
+        /// <param name="entry">The ODataResource.</param>
         /// <returns>The materializer entry</returns>
-        public static MaterializerEntry GetEntry(ODataEntry entry)
+        public static MaterializerEntry GetEntry(ODataResource entry)
         {
             return entry.GetAnnotation<MaterializerEntry>();
         }
@@ -265,11 +261,11 @@ namespace Microsoft.OData.Client.Materialization
         /// Adds a navigation link.
         /// </summary>
         /// <param name="link">The link.</param>
-        public void AddNavigationLink(ODataNavigationLink link)
+        public void AddNestedResourceInfo(ODataNestedResourceInfo link)
         {
-            if (this.IsAtomOrTracking)
+            if (this.IsTracking)
             {
-                this.EntityDescriptor.AddNavigationLink(link.Name, link.Url);
+                this.EntityDescriptor.AddNestedResourceInfo(link.Name, link.Url);
                 Uri associationLinkUrl = link.AssociationLinkUrl;
                 if (associationLinkUrl != null)
                 {
@@ -279,7 +275,7 @@ namespace Microsoft.OData.Client.Materialization
 
             if (this.navigationLinks == ODataMaterializer.EmptyLinks)
             {
-                this.navigationLinks = new List<ODataNavigationLink>();
+                this.navigationLinks = new List<ODataNestedResourceInfo>();
             }
 
             this.navigationLinks.Add(link);
@@ -318,11 +314,12 @@ namespace Microsoft.OData.Client.Materialization
                     }
                 }
 
-                if (this.IsAtomOrTracking)
+                if (this.IsTracking)
                 {
                     if (this.Id == null)
                     {
-                        throw DSClient.Error.InvalidOperation(DSClient.Strings.Deserialize_MissingIdElement);
+                        // TODO: Remove these lines since complex type doesn't have Id.
+                        // throw DSClient.Error.InvalidOperation(DSClient.Strings.Deserialize_MissingIdElement);
                     }
 
                     this.EntityDescriptor.Identity = this.entry.Id;

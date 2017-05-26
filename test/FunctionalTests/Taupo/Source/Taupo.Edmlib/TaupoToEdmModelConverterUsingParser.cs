@@ -79,7 +79,7 @@ namespace Microsoft.Test.Taupo.Edmlib
         {
             IEdmModel edmModel;
             IEnumerable<EdmError> errors;
-            bool success = CsdlReader.TryParse(csdlElements.Select(e => e.CreateReader()), out edmModel, out errors);
+            bool success = SchemaReader.TryParse(csdlElements.Select(e => e.CreateReader()), out edmModel, out errors);
             
             ExceptionUtilities.Assert(success, "Parse failed -- are you using an invalid model?");
             return edmModel;

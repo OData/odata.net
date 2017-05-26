@@ -4,24 +4,18 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core
-{
-    #region Namespaces
-    using System;
-    using System.Collections.Generic;
-    using System.Diagnostics;
-    using System.IO;
-    using System.Text;
-    using System.Xml;
-#if ODATALIB_ASYNC
-    using System.Threading.Tasks;
-#endif
-    using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Csdl;
-    using Microsoft.OData.Edm.Validation;
-    using Microsoft.OData.Core.Atom;
-    #endregion Namespaces
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Text;
+using System.Xml;
+using Microsoft.OData.Metadata;
+using Microsoft.OData.Edm;
+using Microsoft.OData.Edm.Csdl;
+using Microsoft.OData.Edm.Validation;
 
+namespace Microsoft.OData
+{
     /// <summary>
     /// Implementation of the OData input for metadata documents.
     /// </summary>
@@ -35,35 +29,20 @@ namespace Microsoft.OData.Core
         private BufferingXmlReader xmlReader;
 
         /// <summary>Constructor.</summary>
-        /// <param name="format">The format for this input context.</param>
-        /// <param name="messageStream">The stream to read data from.</param>
-        /// <param name="encoding">The encoding to use to read the input.</param>
+        /// <param name="messageInfo">The context information for the message.</param>
         /// <param name="messageReaderSettings">Configuration settings of the OData reader.</param>
-        /// <param name="readingResponse">true if reading a response message; otherwise false.</param>
-        /// <param name="synchronous">true if the input should be read synchronously; false if it should be read asynchronously.</param>
-        /// <param name="model">The model to use.</param>
-        /// <param name="urlResolver">The optional URL resolver to perform custom URL resolution for URLs read from the payload.</param>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("DataWeb.Usage", "AC0014", Justification = "Throws every time")]
-        internal ODataMetadataInputContext(
-            ODataFormat format,
-            Stream messageStream,
-            Encoding encoding,
-            ODataMessageReaderSettings messageReaderSettings,
-            bool readingResponse,
-            bool synchronous,
-            IEdmModel model,
-            IODataUrlResolver urlResolver)
-            : base(format, messageReaderSettings, readingResponse, synchronous, model, urlResolver)
+        public ODataMetadataInputContext(
+            ODataMessageInfo messageInfo,
+            ODataMessageReaderSettings messageReaderSettings)
+            : base(ODataFormat.Metadata, messageInfo, messageReaderSettings)
         {
-            Debug.Assert(messageStream != null, "stream != null");
-
-            ExceptionUtils.CheckArgumentNotNull(format, "format");
-            ExceptionUtils.CheckArgumentNotNull(messageReaderSettings, "messageReaderSettings");
+            Debug.Assert(messageInfo.MessageStream != null, "messageInfo.MessageStream != null");
 
             try
             {
                 // Which encoding do we use when reading XML payloads
-                this.baseXmlReader = ODataAtomReaderUtils.CreateXmlReader(messageStream, encoding, messageReaderSettings);
+                this.baseXmlReader = ODataMetadataReaderUtils.CreateXmlReader(messageInfo.MessageStream, messageInfo.Encoding, messageReaderSettings);
 
                 // We use the buffering reader here only for in-stream error detection (not for buffering).
                 this.xmlReader = new BufferingXmlReader(
@@ -76,9 +55,9 @@ namespace Microsoft.OData.Core
             catch (Exception e)
             {
                 // Dispose the message stream if we failed to create the input context.
-                if (ExceptionUtils.IsCatchableExceptionType(e) && messageStream != null)
+                if (ExceptionUtils.IsCatchableExceptionType(e))
                 {
-                    messageStream.Dispose();
+                    messageInfo.MessageStream.Dispose();
                 }
 
                 throw;
@@ -86,8 +65,8 @@ namespace Microsoft.OData.Core
         }
 
         /// <summary>
-        /// Read a metadata document. 
-        /// This method reads the metadata document from the input and returns 
+        /// Read a metadata document.
+        /// This method reads the metadata document from the input and returns
         /// an <see cref="IEdmModel"/> that represents the read metadata document.
         /// </summary>
         /// <param name="getReferencedModelReaderFunc">The function to load referenced model xml. If null, will stop loading the referenced models. Normally it should throw no exception.</param>
@@ -132,7 +111,7 @@ namespace Microsoft.OData.Core
         {
             IEdmModel model;
             IEnumerable<EdmError> errors;
-            if (!EdmxReader.TryParse(this.xmlReader, getReferencedModelReaderFunc, out model, out errors))
+            if (!CsdlReader.TryParse(this.xmlReader, getReferencedModelReaderFunc, out model, out errors))
             {
                 Debug.Assert(errors != null, "errors != null");
 

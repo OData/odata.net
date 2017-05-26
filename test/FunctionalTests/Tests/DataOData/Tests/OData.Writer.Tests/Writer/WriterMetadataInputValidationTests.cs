@@ -10,11 +10,11 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
     using System.Collections.Generic;
     using System.Linq;
     using System.Xml.Linq;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Library;
     using Microsoft.Test.OData.Utils.CombinatorialEngine;
     using Microsoft.Test.Taupo.Astoria.Contracts.Json;
+    using Microsoft.Test.Taupo.Astoria.Contracts.OData;
     using Microsoft.Test.Taupo.Common;
     using Microsoft.Test.Taupo.Execution;
     using Microsoft.Test.Taupo.OData.Atom;
@@ -35,6 +35,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
         [InjectDependency(IsRequired = true)]
         public PayloadWriterTestDescriptor.Settings Settings { get; set; }
 
+        [Ignore] // Remove Atom
         [TestMethod, Variation(Description = "Verifies that entry type is correctly validated if metadata is specified.")]
         public void InvalidEntryTypeTest()
         {
@@ -75,7 +76,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
 
             var testDescriptors = testCases.Select(tc =>
             {
-                ODataEntry entry = ObjectModelUtils.CreateDefaultEntry();
+                ODataResource entry = ObjectModelUtils.CreateDefaultEntry();
                 entry.TypeName = tc.TypeName;
                 var descriptor = new PayloadWriterTestDescriptor<ODataItem>(
                     this.Settings,
@@ -86,7 +87,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 tc.TypeCreate(model);
                 var container = new EdmEntityContainer("TestNS", "TestContainer");
                 model.AddElement(container);
-                
+
                 descriptor.Model = model;
                 return descriptor;
             });
@@ -103,6 +104,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 });
         }
 
+        [Ignore] // Remove Atom
         [TestMethod, Variation(Description = "Verifies that property value types are correctly validated if metadata is specified.")]
         public void InvalidPropertyValueTypeTest()
         {
@@ -172,13 +174,13 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 },
                 new { // open property with collection but without a type; error.
                     PropertyCreate = (Func<ODataProperty>)(
-                        () => new ODataProperty() 
-                        { 
-                            Name = "Address", 
-                            Value = new ODataCollectionValue() 
+                        () => new ODataProperty()
+                        {
+                            Name = "Address",
+                            Value = new ODataCollectionValue()
                             {
                                 Items = null
-                            } 
+                            }
                         }),
                     MetadataCreate = openEntityType,
                     ExpectedException = ODataExpectedExceptions.ODataException("WriterValidationUtils_MissingTypeNameWithMetadata"),
@@ -186,9 +188,9 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 },
                 new { // open property with stream value
                     PropertyCreate = (Func<ODataProperty>)(
-                        () => new ODataProperty() 
-                        { 
-                            Name = "Address", 
+                        () => new ODataProperty()
+                        {
+                            Name = "Address",
                             Value = new ODataStreamReferenceValue()
                             {
                                 ReadLink = new Uri("http://odata.org/readlink"),
@@ -215,16 +217,17 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                         return;
                     }
 
-                    ODataEntry entry = ObjectModelUtils.CreateDefaultEntry();
+                    ODataResource entry = ObjectModelUtils.CreateDefaultEntry();
                     entry.TypeName = "TestNS.EntityType";
                     ODataProperty idProperty = new ODataProperty() { Name = "Id", Value = "1" };
                     entry.Properties = new ODataProperty[] { idProperty, testCase.PropertyCreate() };
                     var descriptor = new PayloadWriterTestDescriptor<ODataItem>(
                         this.Settings,
                         entry,
-                        (tc) => new WriterTestExpectedResults(this.Settings.ExpectedResultSettings) 
-                        { 
-                            ExpectedException2 = testCase.ExpectedException });
+                        (tc) => new WriterTestExpectedResults(this.Settings.ExpectedResultSettings)
+                        {
+                            ExpectedException2 = testCase.ExpectedException
+                        });
                     var model = new EdmModel();
                     testCase.MetadataCreate(model);
                     var container = new EdmEntityContainer("TestNS", "TestContainer");
@@ -235,6 +238,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 });
         }
 
+        [Ignore] // Remove Atom
         [TestMethod, Variation(Description = "Verifies that item types in collections match the type specified for the collection.")]
         public void InvalidCollectionItemTypeTest()
         {
@@ -277,13 +281,13 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 // Primitive item in a complex collection
                 new {
                     PropertyCreate = (Func<ODataProperty>)(
-                        () => new ODataProperty() 
-                        { 
-                            Name = "Addresses", 
-                            Value = new ODataCollectionValue() 
-                            { 
-                                TypeName = EntityModelUtils.GetCollectionTypeName("OtherTestNamespace.AddressComplexType"), 
-                                Items = new string[] { "One Redmond Way" } 
+                        () => new ODataProperty()
+                        {
+                            Name = "Addresses",
+                            Value = new ODataCollectionValue()
+                            {
+                                TypeName = EntityModelUtils.GetCollectionTypeName("OtherTestNamespace.AddressComplexType"),
+                                Items = new string[] { "One Redmond Way" }
                             }
                         }),
                     MetadataCreate = entityTypeWithComplexCollectionProperty,
@@ -292,15 +296,15 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 // Complex item in a primitive collection
                 new {
                     PropertyCreate = (Func<ODataProperty>)(
-                        () => new ODataProperty() 
-                        { 
-                            Name = "Addresses", 
+                        () => new ODataProperty()
+                        {
+                            Name = "Addresses",
                             Value = new ODataCollectionValue()
-                            { 
-                                TypeName = EntityModelUtils.GetCollectionTypeName("String"), 
-                                Items = new ODataComplexValue[] 
-                                { 
-                                    new ODataComplexValue() { TypeName = "OtherTestNamespace.AddressComplexType" } 
+                            {
+                                TypeName = EntityModelUtils.GetCollectionTypeName("String"),
+                                Items = new ODataComplexValue[]
+                                {
+                                    new ODataComplexValue() { TypeName = "OtherTestNamespace.AddressComplexType" }
                                 }
                             }
                         }),
@@ -310,12 +314,12 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 // Type name of the collection doesn't match the metadata - complex collection
                 new {
                     PropertyCreate = (Func<ODataProperty>)(
-                        () => new ODataProperty() 
-                        { 
-                            Name = "Addresses", 
-                            Value = new ODataCollectionValue() 
-                            { 
-                                TypeName = EntityModelUtils.GetCollectionTypeName("OtherTestNamespace.OtherComplexType"), 
+                        () => new ODataProperty()
+                        {
+                            Name = "Addresses",
+                            Value = new ODataCollectionValue()
+                            {
+                                TypeName = EntityModelUtils.GetCollectionTypeName("OtherTestNamespace.OtherComplexType"),
                                 Items = new ODataComplexValue[0]
                             }
                         }),
@@ -325,13 +329,13 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 // Type name of the collection doesn't match the metadata - primitive collection
                 new {
                     PropertyCreate = (Func<ODataProperty>)(
-                        () => new ODataProperty() 
-                        { 
-                            Name = "Addresses", 
-                            Value = new ODataCollectionValue() 
-                            { 
-                                TypeName = EntityModelUtils.GetCollectionTypeName("Int32"), 
-                                Items = new int[0]
+                        () => new ODataProperty()
+                        {
+                            Name = "Addresses",
+                            Value = new ODataCollectionValue()
+                            {
+                                TypeName = EntityModelUtils.GetCollectionTypeName("Int32"),
+                                Items = new object[0]
                             }
                         }),
                     MetadataCreate = entityTypeWithPrimitiveCollectionProperty,
@@ -340,13 +344,13 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 // Item of a different primitive type in a complex collection
                 new {
                     PropertyCreate = (Func<ODataProperty>)(
-                        () => new ODataProperty() 
-                        { 
-                            Name = "Addresses", 
+                        () => new ODataProperty()
+                        {
+                            Name = "Addresses",
                             Value = new ODataCollectionValue()
-                            { 
-                                TypeName = EntityModelUtils.GetCollectionTypeName("String"), 
-                                Items = new int[] { 1 }
+                            {
+                                TypeName = EntityModelUtils.GetCollectionTypeName("String"),
+                                Items = new object[] { 1 }
                             }
                         }),
                     MetadataCreate = entityTypeWithPrimitiveCollectionProperty,
@@ -355,16 +359,16 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 // Item of a different complex type in a complex collection
                 new {
                     PropertyCreate = (Func<ODataProperty>)(
-                        () => new ODataProperty() 
-                        { 
-                            Name = "Addresses", 
-                            Value = new ODataCollectionValue() 
-                            { 
-                                TypeName = EntityModelUtils.GetCollectionTypeName("OtherTestNamespace.AddressComplexType"), 
-                                Items = new ODataComplexValue[] 
-                                { 
-                                    new ODataComplexValue() { TypeName = "OtherTestNamespace.OtherComplexType" } 
-                                } 
+                        () => new ODataProperty()
+                        {
+                            Name = "Addresses",
+                            Value = new ODataCollectionValue()
+                            {
+                                TypeName = EntityModelUtils.GetCollectionTypeName("OtherTestNamespace.AddressComplexType"),
+                                Items = new ODataComplexValue[]
+                                {
+                                    new ODataComplexValue() { TypeName = "OtherTestNamespace.OtherComplexType" }
+                                }
                             }
                         }),
                     MetadataCreate = entityTypeWithComplexCollectionProperty,
@@ -373,32 +377,32 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 // Bogus item for a primitive collection
                 new {
                     PropertyCreate = (Func<ODataProperty>)(
-                        () => new ODataProperty() 
-                        { 
-                            Name = "Addresses", 
+                        () => new ODataProperty()
+                        {
+                            Name = "Addresses",
                             Value = new ODataCollectionValue()
-                            { 
-                                TypeName = EntityModelUtils.GetCollectionTypeName("String"), 
+                            {
+                                TypeName = EntityModelUtils.GetCollectionTypeName("String"),
                                 Items = new object[] { new ODataMessageWriterSettings() }
                             }
                         }),
                     MetadataCreate = entityTypeWithPrimitiveCollectionProperty,
-                    ExpectedException = ODataExpectedExceptions.ODataException("ValidationUtils_UnsupportedPrimitiveType", "Microsoft.OData.Core.ODataMessageWriterSettings"),
+                    ExpectedException = ODataExpectedExceptions.ODataException("ValidationUtils_UnsupportedPrimitiveType", "Microsoft.OData.ODataMessageWriterSettings"),
                 },
                 // Bogus item for a complex collection
                 new {
                     PropertyCreate = (Func<ODataProperty>)(
-                        () => new ODataProperty() 
-                        { 
-                            Name = "Addresses", 
-                            Value = new ODataCollectionValue() 
-                            { 
-                                TypeName = EntityModelUtils.GetCollectionTypeName("OtherTestNamespace.AddressComplexType"), 
+                        () => new ODataProperty()
+                        {
+                            Name = "Addresses",
+                            Value = new ODataCollectionValue()
+                            {
+                                TypeName = EntityModelUtils.GetCollectionTypeName("OtherTestNamespace.AddressComplexType"),
                                 Items = new object[] { new ODataMessageWriterSettings() }
                             }
                         }),
                     MetadataCreate = entityTypeWithComplexCollectionProperty,
-                    ExpectedException = ODataExpectedExceptions.ODataException("ValidationUtils_UnsupportedPrimitiveType", "Microsoft.OData.Core.ODataMessageWriterSettings"),
+                    ExpectedException = ODataExpectedExceptions.ODataException("ValidationUtils_UnsupportedPrimitiveType", "Microsoft.OData.ODataMessageWriterSettings"),
                 },
             };
 
@@ -410,17 +414,17 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                     testConfiguration = testConfiguration.Clone();
                     testConfiguration.MessageWriterSettings.SetServiceDocumentUri(ServiceDocumentUri);
 
-                    ODataEntry entry = ObjectModelUtils.CreateDefaultEntry();
+                    ODataResource entry = ObjectModelUtils.CreateDefaultEntry();
                     entry.TypeName = "TestNS.EntityType";
                     ODataProperty idProperty = new ODataProperty() { Name = "Id", Value = "1" };
                     entry.Properties = new ODataProperty[] { idProperty, testCase.PropertyCreate() };
                     var testDescriptor = new PayloadWriterTestDescriptor<ODataItem>(
                         this.Settings,
                         entry,
-                        (tc) => 
-                            new WriterTestExpectedResults(this.Settings.ExpectedResultSettings) 
-                            { 
-                                ExpectedException2 = testCase.ExpectedException 
+                        (tc) =>
+                            new WriterTestExpectedResults(this.Settings.ExpectedResultSettings)
+                            {
+                                ExpectedException2 = testCase.ExpectedException
                             });
                     var model = new EdmModel();
                     testCase.MetadataCreate(model);
@@ -432,6 +436,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 });
         }
 
+        [Ignore] // Remove Atom
         [TestMethod, Variation(Description = "Verifies that collection properties must not have null values.")]
         public void NullCollectionTest()
         {
@@ -471,9 +476,9 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
             var testCases = new[] {
                 new {
                     PropertyCreate = (Func<ODataProperty>)(
-                        () => new ODataProperty() 
-                        { 
-                            Name = "Addresses", 
+                        () => new ODataProperty()
+                        {
+                            Name = "Addresses",
                             Value = null
                         }),
                     MetadataCreate = entityTypeWithComplexCollectionProperty,
@@ -481,9 +486,9 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 },
                 new {
                     PropertyCreate = (Func<ODataProperty>)(
-                        () => new ODataProperty() 
-                        { 
-                            Name = "Addresses", 
+                        () => new ODataProperty()
+                        {
+                            Name = "Addresses",
                             Value = null
                         }),
                     MetadataCreate = entityTypeWithPrimitiveCollectionProperty,
@@ -493,7 +498,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
 
             var testDescriptors = testCases.Select(tc =>
             {
-                ODataEntry entry = ObjectModelUtils.CreateDefaultEntry();
+                ODataResource entry = ObjectModelUtils.CreateDefaultEntry();
                 entry.TypeName = "TestNS.EntityType";
                 ODataProperty idProperty = new ODataProperty() { Name = "Id", Value = "1" };
                 entry.Properties = new ODataProperty[] { idProperty, tc.PropertyCreate() };
@@ -512,7 +517,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
             //ToDo: Fix places where we've lost JsonVerbose coverage to add JsonLight
             this.CombinatorialEngineProvider.RunCombinations(
                 testDescriptors,
-                this.WriterTestConfigurationProvider.ExplicitFormatConfigurations.Where(tc => tc.Format == ODataFormat.Atom),
+                this.WriterTestConfigurationProvider.ExplicitFormatConfigurations.Where(tc => false),
                 (testDescriptor, testConfiguration) =>
                 {
                     testConfiguration = testConfiguration.Clone();
@@ -522,6 +527,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 });
         }
 
+        [Ignore] // Remove Atom
         [TestMethod, Variation(Description = "Verifies that all properties on (closed) types have to be declared.")]
         public void MissingPropertyTest()
         {
@@ -549,81 +555,84 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                     return type;
                 };
 
-            var testCases = new[] {
-                new {
-                    PropertyCreate = (Func<ODataProperty>)(
-                        () => new ODataProperty() 
-                        { 
-                            Name = "NonExistentProperty", 
+            var testCases = new[]
+            {
+                new
+                {
+                    PropertyCreate = (Func<ODataProperty>) (
+                        () => new ODataProperty()
+                        {
+                            Name = "NonExistentProperty",
                             Value = null
                         }),
                     MetadataCreate = entityType,
-                    ExpectedResults = (PayloadWriterTestDescriptor<ODataItem>.WriterTestExpectedResultCallback)(
-                        (testConfiguration) => new WriterTestExpectedResults(this.Settings.ExpectedResultSettings) 
+                    ExpectedResults = (PayloadWriterTestDescriptor<ODataItem>.WriterTestExpectedResultCallback) (
+                        (testConfiguration) => new WriterTestExpectedResults(this.Settings.ExpectedResultSettings)
                         {
-                            ExpectedException2 = ODataExpectedExceptions.ODataException("ValidationUtils_PropertyDoesNotExistOnType", "NonExistentProperty", "TestNS.EntityType"),
+                            ExpectedException2 =
+                                ODataExpectedExceptions.ODataException("ValidationUtils_PropertyDoesNotExistOnType",
+                                    "NonExistentProperty", "TestNS.EntityType"),
                         })
                 },
-                new {
-                    PropertyCreate = (Func<ODataProperty>)(
-                        () => new ODataProperty() 
-                        { 
-                            Name = "Addresses", 
-                            Value = new ODataComplexValue() 
+                new
+                {
+                    PropertyCreate = (Func<ODataProperty>) (
+                        () => new ODataProperty()
+                        {
+                            Name = "Addresses",
+                            Value = new ODataComplexValue()
                             {
                                 TypeName = "TestNS.AddressComplexType",
                                 Properties = new ODataProperty[]
                                 {
-                                    new ODataProperty() { Name = "Street", Value = "One Microsoft Way" }
+                                    new ODataProperty() {Name = "Street", Value = "One Microsoft Way"}
                                 }
 
                             }
                         }),
                     MetadataCreate = entityType,
-                    ExpectedResults = (PayloadWriterTestDescriptor<ODataItem>.WriterTestExpectedResultCallback)(
+                    ExpectedResults = (PayloadWriterTestDescriptor<ODataItem>.WriterTestExpectedResultCallback) (
                         (testConfiguration) => new WriterTestExpectedResults(this.Settings.ExpectedResultSettings)
-                        { 
-                            ExpectedException2 = ODataExpectedExceptions.ODataException("ValidationUtils_PropertyDoesNotExistOnType", "Street", "TestNS.AddressComplexType"),
+                        {
+                            ExpectedException2 =
+                                ODataExpectedExceptions.ODataException("ValidationUtils_PropertyDoesNotExistOnType",
+                                    "Street", "TestNS.AddressComplexType"),
                         })
                 },
-                new {
-                    PropertyCreate = (Func<ODataProperty>)(
-                        () => new ODataProperty() 
-                        { 
-                            Name = "FirstName", 
+                new
+                {
+                    PropertyCreate = (Func<ODataProperty>) (
+                        () => new ODataProperty()
+                        {
+                            Name = "FirstName",
                             Value = "Bill"
                         }),
                     MetadataCreate = openEntityType,
-                    ExpectedResults = (PayloadWriterTestDescriptor<ODataItem>.WriterTestExpectedResultCallback)((testConfiguration) =>
-                        {
-                            if (testConfiguration.Format == ODataFormat.Atom)
+                    ExpectedResults =
+                        (PayloadWriterTestDescriptor<ODataItem>.WriterTestExpectedResultCallback)
+                            ((testConfiguration) =>
                             {
-                                // TODO, ckerer: follow up to see whether title has to be non-empty, is required at all on self/edit link, etc.
-                                return new AtomWriterTestExpectedResults(this.Settings.ExpectedResultSettings)
-                                {
-                                    Xml = @"<d:FirstName xmlns:d=""" + TestAtomConstants.ODataNamespace + @""">Bill</d:FirstName>",
-                                    FragmentExtractor = (element) => element.Elements(TestAtomConstants.AtomXNamespace + TestAtomConstants.AtomContentElementName).Single()
-                                        .Elements(TestAtomConstants.ODataMetadataXNamespace + TestAtomConstants.AtomPropertiesElementName).Single()
-                                        .Elements(TestAtomConstants.ODataXNamespace + "FirstName").Single()
-                                };
-                            }
-                            else
-                            {
+
                                 string jsonResult = "\"FirstName\":\"Bill\"";
 
-                                return new JsonWriterTestExpectedResults(this.Settings.ExpectedResultSettings) 
-                                { 
+                                return new JsonWriterTestExpectedResults(this.Settings.ExpectedResultSettings)
+                                {
                                     Json = jsonResult,
-                                    FragmentExtractor = (element) => JsonUtils.UnwrapTopLevelValue(testConfiguration, element).Object().Properties.Where(p => p.Name == "FirstName").Single()
+                                    FragmentExtractor =
+                                        (element) =>
+                                            JsonUtils.UnwrapTopLevelValue(testConfiguration, element)
+                                                .Object()
+                                                .Properties.Where(p => p.Name == "FirstName")
+                                                .Single()
                                 };
-                            }
-                        })
+
+                            })
                 },
             };
 
             var testDescriptors = testCases.Select(tc =>
             {
-                ODataEntry entry = ObjectModelUtils.CreateDefaultEntry();
+                ODataResource entry = ObjectModelUtils.CreateDefaultEntry();
                 entry.TypeName = "TestNS.EntityType";
 
                 ODataProperty idProperty = new ODataProperty() { Name = "Id", Value = "1" };
@@ -641,7 +650,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
             //TODO: Fix places where we've lost JsonVerbose coverage to add JsonLight
             this.CombinatorialEngineProvider.RunCombinations(
                 testDescriptors,
-                this.WriterTestConfigurationProvider.ExplicitFormatConfigurations.Where(tc => tc.Format == ODataFormat.Atom),
+                this.WriterTestConfigurationProvider.ExplicitFormatConfigurations.Where(tc => false),
                 (testDescriptor, testConfiguration) =>
                 {
                     testConfiguration = testConfiguration.Clone();
@@ -669,6 +678,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
             new ODataStreamReferenceValue() { ReadLink = new Uri("http://odata.org/ReadLink"), ContentType = "media/type", EditLink = new Uri("http://odata.org/EditLink"), ETag = "W/\"myetag\"" },
         };
 
+        [Ignore] // Remove Atom
         [TestMethod, Variation(Description = "Verifies that default stream is validated against metadata.")]
         public void DefaultStreamMetadataTest()
         {
@@ -688,10 +698,10 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 NonMLEDefaultStreamValues.Select(mr => this.CreateDefaultStreamMetadataTestDescriptor(model, cityType.FullName(), mr))
                 // non-MLE payload and MLE type
                 .Concat(NonMLEDefaultStreamValues.Select(mr => this.CreateDefaultStreamMetadataTestDescriptor(model, cityWithMapType.FullName(), mr,
-                    ODataExpectedExceptions.ODataException("ValidationUtils_EntryWithoutMediaResourceAndMLEType", "TestModel.CityWithMapType"))))
+                    ODataExpectedExceptions.ODataException("ValidationUtils_ResourceWithoutMediaResourceAndMLEType", "TestModel.CityWithMapType"))))
                 // MLE payload and non-MLE type
                 .Concat(MLEDefaultStreamValues.Select(mr => this.CreateDefaultStreamMetadataTestDescriptor(model, cityType.FullName(), mr,
-                    ODataExpectedExceptions.ODataException("ValidationUtils_EntryWithMediaResourceAndNonMLEType", "TestModel.CityType"))))
+                    ODataExpectedExceptions.ODataException("ValidationUtils_ResourceWithMediaResourceAndNonMLEType", "TestModel.CityType"))))
                 // MLE payload and MLE type
                 .Concat(MLEDefaultStreamValues.Select(mr => this.CreateDefaultStreamMetadataTestDescriptor(model, cityWithMapType.FullName(), mr)));
 
@@ -707,6 +717,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 });
         }
 
+        [Ignore] // Remove Atom
         [TestMethod, Variation(Description = "Verifies that default stream is validated against metadata in WCF DS Server mode.")]
         public void DefaultStreamMetadataWcfDSServerTest()
         {
@@ -727,10 +738,10 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 NonMLEDefaultStreamValues.Select(mr => this.CreateDefaultStreamMetadataTestDescriptor(model, cityType.FullName(), mr))
                 // non-MLE payload and MLE type
                 .Concat(NonMLEDefaultStreamValues.Select(mr => this.CreateDefaultStreamMetadataTestDescriptor(model, cityWithMapType.FullName(), mr,
-                    ODataExpectedExceptions.ODataException("ValidationUtils_EntryWithoutMediaResourceAndMLEType", "TestModel.CityWithMapType"))))
+                    ODataExpectedExceptions.ODataException("ValidationUtils_ResourceWithoutMediaResourceAndMLEType", "TestModel.CityWithMapType"))))
                 // MLE payload and non-MLE type
                 .Concat(MLEDefaultStreamValues.Select(mr => this.CreateDefaultStreamMetadataTestDescriptor(model, cityType.FullName(), mr,
-                    ODataExpectedExceptions.ODataException("ValidationUtils_EntryWithMediaResourceAndNonMLEType", "TestModel.CityType"))))
+                    ODataExpectedExceptions.ODataException("ValidationUtils_ResourceWithMediaResourceAndNonMLEType", "TestModel.CityType"))))
                 // MLE payload and MLE type
                 .Concat(MLEDefaultStreamValues.Select(mr => this.CreateDefaultStreamMetadataTestDescriptor(model, cityWithMapType.FullName(), mr)));
 
@@ -740,7 +751,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 (testDescriptor, testConfiguration) =>
                 {
                     testConfiguration = testConfiguration.Clone();
-                    testConfiguration.MessageWriterSettings.EnableODataServerBehavior(false);
+                    testConfiguration.MessageWriterSettings.Validations &= ~ValidationKinds.ThrowOnDuplicatePropertyNames;
                     testConfiguration.MessageWriterSettings.SetServiceDocumentUri(ServiceDocumentUri);
                     TestWriterUtils.WriteAndVerifyODataPayload(testDescriptor, testConfiguration, this.Assert, this.Logger);
                 });
@@ -754,13 +765,17 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
         {
             return new PayloadWriterTestDescriptor<ODataItem>(
                 this.Settings,
-                new ODataEntry() { TypeName = typeName, MediaResource = mediaResourceValue,
-                    SerializationInfo = new ODataFeedAndEntrySerializationInfo()
+                new ODataResource()
+                {
+                    TypeName = typeName,
+                    MediaResource = mediaResourceValue,
+                    SerializationInfo = new ODataResourceSerializationInfo()
                     {
                         NavigationSourceEntityTypeName = typeName,
                         NavigationSourceName = "MySet",
                         ExpectedTypeName = typeName
-                    }},
+                    }
+                },
                 (tc) =>
                 {
                     if (expectedException != null)
@@ -769,14 +784,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                     }
                     else
                     {
-                        if (tc.Format == ODataFormat.Atom)
-                        {
-                            return new AtomWriterTestExpectedResults(this.Settings.ExpectedResultSettings) { FragmentExtractor = (result) => new XElement("root"), Xml = "<root/>" };
-                        }
-                        else
-                        {
-                            return new JsonWriterTestExpectedResults(this.Settings.ExpectedResultSettings) { FragmentExtractor = (result) => new JsonObject(), Json = "{}" };
-                        }
+                        return new JsonWriterTestExpectedResults(this.Settings.ExpectedResultSettings) { FragmentExtractor = (result) => new JsonObject(), Json = "{}" };
                     }
                 })
             {
@@ -784,6 +792,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
             };
         }
 
+        [Ignore] // Remove Atom
         [TestMethod, Variation(Description = "Verifies that we do not allow inconsistent type information in the metadata and on the values.")]
         public void InconsistentTypeNamesTest()
         {
@@ -810,9 +819,9 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
             ODataProperty[] defaultProperties = new ODataProperty[]
             {
                 new ODataProperty() { Name = "Id", Value = "1" },
-                new ODataProperty() 
-                { 
-                    Name = "Address", 
+                new ODataProperty()
+                {
+                    Name = "Address",
                     Value = new ODataComplexValue()
                     {
                         TypeName = "TestNS.AddressComplexType",
@@ -867,8 +876,8 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
 
             var testCases = new[] {
                 new InconsistentTypeNamesTestCase {
-                    CreateProperties = () => new ODataProperty[] 
-                        { 
+                    CreateProperties = () => new ODataProperty[]
+                        {
                             // inconsistent primitive type
                             new ODataProperty() { Name = "Id", Value = 1 },
                             defaultProperties[1],
@@ -878,8 +887,8 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                     ExpectedException = ODataExpectedExceptions.ODataException("ValidationUtils_IncompatiblePrimitiveItemType", "Edm.Int32", "False" /* nullable */, "Edm.String", "True" /* nullable */),
                 },
                 new InconsistentTypeNamesTestCase {
-                    CreateProperties = () => new ODataProperty[] 
-                        { 
+                    CreateProperties = () => new ODataProperty[]
+                        {
                             // inconsistent primitive type
                             new ODataProperty() { Name = "Id", Value = new ODataComplexValue { } },
                             defaultProperties[1],
@@ -889,8 +898,8 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                     ExpectedException = ODataExpectedExceptions.ODataException("ValidationUtils_IncorrectTypeKindNoTypeName", "Complex", "Primitive"),
                 },
                 new InconsistentTypeNamesTestCase {
-                    CreateProperties = () => new ODataProperty[] 
-                        { 
+                    CreateProperties = () => new ODataProperty[]
+                        {
                             // inconsistent primitive type
                             new ODataProperty() { Name = "Id", Value = new ODataCollectionValue { } },
                             defaultProperties[1],
@@ -900,8 +909,8 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                     ExpectedException = ODataExpectedExceptions.ODataException("ValidationUtils_IncorrectTypeKindNoTypeName", "Collection", "Primitive"),
                 },
                 new InconsistentTypeNamesTestCase {
-                    CreateProperties = () => new ODataProperty[] 
-                        { 
+                    CreateProperties = () => new ODataProperty[]
+                        {
                             // inconsistent primitive type
                             new ODataProperty() { Name = "Id", Value = new ODataStreamReferenceValue { } },
                             defaultProperties[1],
@@ -911,13 +920,13 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                     ExpectedException = ODataExpectedExceptions.ODataException("ValidationUtils_MismatchPropertyKindForStreamProperty", "Id"),
                 },
                 new InconsistentTypeNamesTestCase {
-                    CreateProperties = () => new ODataProperty[] 
-                        { 
+                    CreateProperties = () => new ODataProperty[]
+                        {
                             defaultProperties[0],
                             // inconsistent complex type (same kind)
                             new ODataProperty()
                             {
-                                Name = "Address", 
+                                Name = "Address",
                                 Value = new ODataComplexValue()
                                 {
                                     TypeName = "OtherTestNamespace.OrderComplexType",
@@ -930,13 +939,13 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                     ExpectedException = ODataExpectedExceptions.ODataException("ValidationUtils_IncompatibleType", "OtherTestNamespace.OrderComplexType", "TestNS.AddressComplexType"),
                 },
                 new InconsistentTypeNamesTestCase {
-                    CreateProperties = () => new ODataProperty[] 
-                        { 
+                    CreateProperties = () => new ODataProperty[]
+                        {
                             defaultProperties[0],
                             // inconsistent complex type (different kind)
                             new ODataProperty()
                             {
-                                Name = "Address", 
+                                Name = "Address",
                                 Value = "some"
                             },
                             defaultProperties[2],
@@ -945,13 +954,13 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                     ExpectedException = ODataExpectedExceptions.ODataException("ValidationUtils_NonPrimitiveTypeForPrimitiveValue", "TestNS.AddressComplexType"),
                 },
                 new InconsistentTypeNamesTestCase {
-                    CreateProperties = () => new ODataProperty[] 
-                        { 
+                    CreateProperties = () => new ODataProperty[]
+                        {
                             defaultProperties[0],
                             // inconsistent complex type (different kind)
                             new ODataProperty()
                             {
-                                Name = "Address", 
+                                Name = "Address",
                                 Value = new ODataCollectionValue { }
                             },
                             defaultProperties[2],
@@ -960,13 +969,13 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                     ExpectedException = ODataExpectedExceptions.ODataException("ValidationUtils_IncorrectTypeKindNoTypeName", "Collection", "Complex"),
                 },
                 new InconsistentTypeNamesTestCase {
-                    CreateProperties = () => new ODataProperty[] 
-                        { 
+                    CreateProperties = () => new ODataProperty[]
+                        {
                             defaultProperties[0],
                             // inconsistent complex type (different kind)
                             new ODataProperty()
                             {
-                                Name = "Address", 
+                                Name = "Address",
                                 Value = new ODataStreamReferenceValue { }
                             },
                             defaultProperties[2],
@@ -975,8 +984,8 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                     ExpectedException = ODataExpectedExceptions.ODataException("ValidationUtils_MismatchPropertyKindForStreamProperty", "Address"),
                 },
                 new InconsistentTypeNamesTestCase {
-                    CreateProperties = () => new ODataProperty[] 
-                        { 
+                    CreateProperties = () => new ODataProperty[]
+                        {
                             defaultProperties[0],
                             defaultProperties[1],
                             // inconsistent collection type
@@ -994,8 +1003,8 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                     ExpectedException = ODataExpectedExceptions.ODataException("ValidationUtils_IncompatibleType", EntityModelUtils.GetCollectionTypeName("Edm.Int32"), EntityModelUtils.GetCollectionTypeName("Edm.String")),
                 },
                 new InconsistentTypeNamesTestCase {
-                    CreateProperties = () => new ODataProperty[] 
-                        { 
+                    CreateProperties = () => new ODataProperty[]
+                        {
                             defaultProperties[0],
                             defaultProperties[1],
                             new ODataProperty()
@@ -1005,7 +1014,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                                 {
                                     TypeName = EntityModelUtils.GetCollectionTypeName("String"),
                                     // inconsistent collection item type (same kind)
-                                    Items = new int[] { 1, 2, 3 }
+                                    Items = new object[] { 1, 2, 3 }
                                 }
                             },
                             defaultProperties[3]
@@ -1013,8 +1022,8 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                     ExpectedException = ODataExpectedExceptions.ODataException("CollectionWithoutExpectedTypeValidator_IncompatibleItemTypeName", "Edm.Int32", "Edm.String"),
                 },
                 new InconsistentTypeNamesTestCase {
-                    CreateProperties = () => new ODataProperty[] 
-                        { 
+                    CreateProperties = () => new ODataProperty[]
+                        {
                             defaultProperties[0],
                             defaultProperties[1],
                             new ODataProperty()
@@ -1024,7 +1033,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                                 {
                                     TypeName = EntityModelUtils.GetCollectionTypeName("String"),
                                     // inconsistent collection item type (different kind)
-                                    Items = new object[] 
+                                    Items = new object[]
                                     {
                                         new ODataComplexValue()
                                         {
@@ -1042,8 +1051,8 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                     ExpectedException = ODataExpectedExceptions.ODataException("CollectionWithoutExpectedTypeValidator_IncompatibleItemTypeKind", "Complex", "Primitive"),
                 },
                 new InconsistentTypeNamesTestCase {
-                    CreateProperties = () => new ODataProperty[] 
-                        { 
+                    CreateProperties = () => new ODataProperty[]
+                        {
                             defaultProperties[0],
                             defaultProperties[1],
                             new ODataProperty()
@@ -1061,8 +1070,8 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                     ExpectedException = ODataExpectedExceptions.ODataException("ValidationUtils_StreamReferenceValuesNotSupportedInCollections", EntityModelUtils.GetCollectionTypeName("OtherTestNamespace.OrderComplexType"), EntityModelUtils.GetCollectionTypeName("TestNS.AddressComplexType")),
                 },
                 new InconsistentTypeNamesTestCase {
-                    CreateProperties = () => new ODataProperty[] 
-                        { 
+                    CreateProperties = () => new ODataProperty[]
+                        {
                             defaultProperties[0],
                             defaultProperties[1],
                             defaultProperties[2],
@@ -1080,8 +1089,8 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                     ExpectedException = ODataExpectedExceptions.ODataException("ValidationUtils_IncompatibleType", EntityModelUtils.GetCollectionTypeName("OtherTestNamespace.OrderComplexType"), EntityModelUtils.GetCollectionTypeName("TestNS.AddressComplexType")),
                 },
                 new InconsistentTypeNamesTestCase {
-                    CreateProperties = () => new ODataProperty[] 
-                        { 
+                    CreateProperties = () => new ODataProperty[]
+                        {
                             defaultProperties[0],
                             defaultProperties[1],
                             defaultProperties[2],
@@ -1109,8 +1118,8 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                     ExpectedException = ODataExpectedExceptions.ODataException("CollectionWithoutExpectedTypeValidator_IncompatibleItemTypeName", "OtherTestNamespace.OrderComplexType", "TestNS.AddressComplexType"),
                 },
                 new InconsistentTypeNamesTestCase {
-                    CreateProperties = () => new ODataProperty[] 
-                        { 
+                    CreateProperties = () => new ODataProperty[]
+                        {
                             defaultProperties[0],
                             defaultProperties[1],
                             defaultProperties[2],
@@ -1129,9 +1138,9 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 },
             };
 
-            var testDescriptors = testCases.Select(tc => 
+            var testDescriptors = testCases.Select(tc =>
             {
-                ODataEntry entry = ObjectModelUtils.CreateDefaultEntry();
+                ODataResource entry = ObjectModelUtils.CreateDefaultEntry();
                 entry.TypeName = "TestNS.EntityType";
 
                 ODataProperty idProperty = new ODataProperty() { Name = "Id", Value = "1" };
@@ -1143,7 +1152,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                     (testConfiguration) =>
                     {
                         ExpectedException expectedException = tc.ExpectedException;
-                       
+
                         return new WriterTestExpectedResults(this.Settings.ExpectedResultSettings)
                         {
                             ExpectedException2 = expectedException

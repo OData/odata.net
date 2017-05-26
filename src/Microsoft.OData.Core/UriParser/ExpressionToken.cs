@@ -4,14 +4,12 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core.UriParser
+namespace Microsoft.OData.UriParser
 {
     #region Namespaces
 
     using System;
     using System.Diagnostics;
-    using Microsoft.OData.Core.UriParser.Parsers.UriParsers;
-    using Microsoft.OData.Core.UriParser.TreeNodeKinds;
     using Microsoft.OData.Edm;
 
     #endregion Namespaces
@@ -68,7 +66,10 @@ namespace Microsoft.OData.Core.UriParser
         {
             get
             {
-                return this.IsKeyValueToken || this.Kind == ExpressionTokenKind.BracketedExpression || this.Kind == ExpressionTokenKind.NullLiteral;
+                return this.IsKeyValueToken
+                    || this.Kind == ExpressionTokenKind.BracketedExpression
+                    || this.Kind == ExpressionTokenKind.BracedExpression
+                    || this.Kind == ExpressionTokenKind.NullLiteral;
             }
         }
 

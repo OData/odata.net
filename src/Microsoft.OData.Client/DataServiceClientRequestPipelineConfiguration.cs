@@ -9,7 +9,7 @@ namespace Microsoft.OData.Client
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using ClientStrings = Microsoft.OData.Client.Strings;
 
     /// <summary>
@@ -18,19 +18,19 @@ namespace Microsoft.OData.Client
     public class DataServiceClientRequestPipelineConfiguration
     {
         /// <summary> Actions to execute before start entry called. </summary>
-        private readonly List<Action<WritingEntryArgs>> writingStartEntryActions;
+        private readonly List<Action<WritingEntryArgs>> writingStartResourceActions;
 
         /// <summary> Actions to execute before end entry called. </summary>
-        private readonly List<Action<WritingEntryArgs>> writingEndEntryActions;
+        private readonly List<Action<WritingEntryArgs>> writingEndResourceActions;
 
         /// <summary> Actions to execute before entity reference link written. </summary>
         private readonly List<Action<WritingEntityReferenceLinkArgs>> writeEntityReferenceLinkActions;
 
         /// <summary> Actions to execute after before start navigation link called. </summary>
-        private readonly List<Action<WritingNavigationLinkArgs>> writingStartNavigationLinkActions;
+        private readonly List<Action<WritingNestedResourceInfoArgs>> writingStartNestedResourceInfoActions;
 
         /// <summary> Actions to execute before end navigation link called. </summary>
-        private readonly List<Action<WritingNavigationLinkArgs>> writingEndNavigationLinkActions;
+        private readonly List<Action<WritingNestedResourceInfoArgs>> writingEndNestedResourceInfoActions;
 
         /// <summary> The message writer setting configurations. </summary>
         private readonly List<Action<MessageWriterSettingsArgs>> messageWriterSettingsConfigurationActions;
@@ -44,10 +44,10 @@ namespace Microsoft.OData.Client
         internal DataServiceClientRequestPipelineConfiguration()
         {
             this.writeEntityReferenceLinkActions = new List<Action<WritingEntityReferenceLinkArgs>>();
-            this.writingEndEntryActions = new List<Action<WritingEntryArgs>>();
-            this.writingEndNavigationLinkActions = new List<Action<WritingNavigationLinkArgs>>();
-            this.writingStartEntryActions = new List<Action<WritingEntryArgs>>();
-            this.writingStartNavigationLinkActions = new List<Action<WritingNavigationLinkArgs>>();
+            this.writingEndResourceActions = new List<Action<WritingEntryArgs>>();
+            this.writingEndNestedResourceInfoActions = new List<Action<WritingNestedResourceInfoArgs>>();
+            this.writingStartResourceActions = new List<Action<WritingEntryArgs>>();
+            this.writingStartNestedResourceInfoActions = new List<Action<WritingNestedResourceInfoArgs>>();
             this.messageWriterSettingsConfigurationActions = new List<Action<MessageWriterSettingsArgs>>();
         }
 
@@ -57,11 +57,11 @@ namespace Microsoft.OData.Client
         /// </summary>
         public Func<DataServiceClientRequestMessageArgs, DataServiceClientRequestMessage> OnMessageCreating
         {
-            get 
-            { 
-                return this.onmessageCreating; 
+            get
+            {
+                return this.onmessageCreating;
             }
-            
+
             set
             {
                 if (this.ContextUsingSendingRequest)
@@ -80,7 +80,7 @@ namespace Microsoft.OData.Client
         {
             get { return this.OnMessageCreating != null; }
         }
-        
+
         /// <summary>
         /// Gets or sets the a value indicating whether the context is using the sending request event or not.
         /// </summary>
@@ -108,7 +108,7 @@ namespace Microsoft.OData.Client
         {
             WebUtil.CheckArgumentNull(action, "action");
 
-            this.writingStartEntryActions.Add(action);
+            this.writingStartResourceActions.Add(action);
             return this;
         }
 
@@ -121,7 +121,7 @@ namespace Microsoft.OData.Client
         {
             WebUtil.CheckArgumentNull(action, "action");
 
-            this.writingEndEntryActions.Add(action);
+            this.writingEndResourceActions.Add(action);
             return this;
         }
 
@@ -143,11 +143,11 @@ namespace Microsoft.OData.Client
         /// </summary>
         /// <param name="action">The action.</param>
         /// <returns>The request pipeline configuration.</returns>
-        public DataServiceClientRequestPipelineConfiguration OnNavigationLinkStarting(Action<WritingNavigationLinkArgs> action)
+        public DataServiceClientRequestPipelineConfiguration OnNestedResourceInfoStarting(Action<WritingNestedResourceInfoArgs> action)
         {
             WebUtil.CheckArgumentNull(action, "action");
 
-            this.writingStartNavigationLinkActions.Add(action);
+            this.writingStartNestedResourceInfoActions.Add(action);
             return this;
         }
 
@@ -156,11 +156,11 @@ namespace Microsoft.OData.Client
         /// </summary>
         /// <param name="action">The action.</param>
         /// <returns>The request pipeline configuration.</returns>
-        public DataServiceClientRequestPipelineConfiguration OnNavigationLinkEnding(Action<WritingNavigationLinkArgs> action)
+        public DataServiceClientRequestPipelineConfiguration OnNestedResourceInfoEnding(Action<WritingNestedResourceInfoArgs> action)
         {
             WebUtil.CheckArgumentNull(action, "action");
 
-            this.writingEndNavigationLinkActions.Add(action);
+            this.writingEndNestedResourceInfoActions.Add(action);
             return this;
         }
 
@@ -168,13 +168,13 @@ namespace Microsoft.OData.Client
         /// Called when [create message writer settings configurations].
         /// </summary>
         /// <param name="writerSettings">The writer settings.</param>
-        internal void ExecuteWriterSettingsConfiguration(ODataMessageWriterSettingsBase writerSettings)
+        internal void ExecuteWriterSettingsConfiguration(ODataMessageWriterSettings writerSettings)
         {
             Debug.Assert(writerSettings != null, "writerSettings != null");
 
             if (this.messageWriterSettingsConfigurationActions.Count > 0)
             {
-                MessageWriterSettingsArgs args = new MessageWriterSettingsArgs(new DataServiceClientMessageWriterSettingsShim(writerSettings));
+                MessageWriterSettingsArgs args = new MessageWriterSettingsArgs(writerSettings);
                 foreach (Action<MessageWriterSettingsArgs> configureWriterSettings in this.messageWriterSettingsConfigurationActions)
                 {
                     configureWriterSettings(args);
@@ -187,15 +187,15 @@ namespace Microsoft.OData.Client
         /// </summary>
         /// <param name="entry">The entry.</param>
         /// <param name="entity">The entity.</param>
-        internal void ExecuteOnEntryEndActions(ODataEntry entry, object entity)
+        internal void ExecuteOnEntryEndActions(ODataResource entry, object entity)
         {
             Debug.Assert(entry != null, "entry != null");
             Debug.Assert(entity != null, "entity != entity");
 
-            if (this.writingEndEntryActions.Count > 0)
+            if (this.writingEndResourceActions.Count > 0)
             {
                 WritingEntryArgs args = new WritingEntryArgs(entry, entity);
-                foreach (Action<WritingEntryArgs> entryArgsAction in this.writingEndEntryActions)
+                foreach (Action<WritingEntryArgs> entryArgsAction in this.writingEndResourceActions)
                 {
                     entryArgsAction(args);
                 }
@@ -207,15 +207,15 @@ namespace Microsoft.OData.Client
         /// </summary>
         /// <param name="entry">The entry.</param>
         /// <param name="entity">The entity.</param>
-        internal void ExecuteOnEntryStartActions(ODataEntry entry, object entity)
+        internal void ExecuteOnEntryStartActions(ODataResource entry, object entity)
         {
             Debug.Assert(entry != null, "entry != null");
             Debug.Assert(entity != null, "entity != entity");
 
-            if (this.writingStartEntryActions.Count > 0)
+            if (this.writingStartResourceActions.Count > 0)
             {
                 WritingEntryArgs args = new WritingEntryArgs(entry, entity);
-                foreach (Action<WritingEntryArgs> entryArgsAction in this.writingStartEntryActions)
+                foreach (Action<WritingEntryArgs> entryArgsAction in this.writingStartResourceActions)
                 {
                     entryArgsAction(args);
                 }
@@ -228,14 +228,14 @@ namespace Microsoft.OData.Client
         /// <param name="link">The link.</param>
         /// <param name="source">The source.</param>
         /// <param name="target">The target.</param>
-        internal void ExecuteOnNavigationLinkEndActions(ODataNavigationLink link, object source, object target)
+        internal void ExecuteOnNestedResourceInfoEndActions(ODataNestedResourceInfo link, object source, object target)
         {
             Debug.Assert(link != null, "link != null");
 
-            if (this.writingEndNavigationLinkActions.Count > 0)
+            if (this.writingEndNestedResourceInfoActions.Count > 0)
             {
-                WritingNavigationLinkArgs args = new WritingNavigationLinkArgs(link, source, target);
-                foreach (Action<WritingNavigationLinkArgs> navArgsAction in this.writingEndNavigationLinkActions)
+                WritingNestedResourceInfoArgs args = new WritingNestedResourceInfoArgs(link, source, target);
+                foreach (Action<WritingNestedResourceInfoArgs> navArgsAction in this.writingEndNestedResourceInfoActions)
                 {
                     navArgsAction(args);
                 }
@@ -248,14 +248,14 @@ namespace Microsoft.OData.Client
         /// <param name="link">The link.</param>
         /// <param name="source">The source.</param>
         /// <param name="target">The target.</param>
-        internal void ExecuteOnNavigationLinkStartActions(ODataNavigationLink link, object source, object target)
+        internal void ExecuteOnNestedResourceInfoStartActions(ODataNestedResourceInfo link, object source, object target)
         {
             Debug.Assert(link != null, "link != null");
 
-            if (this.writingStartNavigationLinkActions.Count > 0)
+            if (this.writingStartNestedResourceInfoActions.Count > 0)
             {
-                WritingNavigationLinkArgs args = new WritingNavigationLinkArgs(link, source, target);
-                foreach (Action<WritingNavigationLinkArgs> navArgsAction in this.writingStartNavigationLinkActions)
+                WritingNestedResourceInfoArgs args = new WritingNestedResourceInfoArgs(link, source, target);
+                foreach (Action<WritingNestedResourceInfoArgs> navArgsAction in this.writingStartNestedResourceInfoActions)
                 {
                     navArgsAction(args);
                 }

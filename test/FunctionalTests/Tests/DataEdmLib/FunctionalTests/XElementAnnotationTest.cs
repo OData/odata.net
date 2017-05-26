@@ -7,16 +7,15 @@
 namespace EdmLibTests.FunctionalTests
 {
     using System;
-    using System.Text;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Text;
     using System.Xml.Linq;
     using EdmLibTests.FunctionalUtilities;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Edm.Csdl;
-    using Microsoft.OData.Edm.Library;
-    using Microsoft.OData.Edm.Library.Values;
     using Microsoft.OData.Edm.Validation;
+    using Microsoft.OData.Edm.Vocabularies;
     using Microsoft.Test.OData.Utils.Metadata;
 #if SILVERLIGHT
     using Microsoft.Silverlight.Testing;
@@ -366,7 +365,7 @@ namespace EdmLibTests.FunctionalTests
             try
             {
                 SetNullAnnotationNameModel();
-                Assert.Fail("exception exptected");
+                Assert.Fail("exception expected");
             }
             catch (ArgumentNullException)
             {
@@ -397,7 +396,7 @@ namespace EdmLibTests.FunctionalTests
             return model;
         }
 
-        private sealed class MutableDirectValueAnnotation : Microsoft.OData.Edm.Annotations.IEdmDirectValueAnnotation
+        private sealed class MutableDirectValueAnnotation : Microsoft.OData.Edm.Vocabularies.IEdmDirectValueAnnotation
         {
             public string NamespaceUri
             {
@@ -517,7 +516,7 @@ namespace EdmLibTests.FunctionalTests
         }
 
         [TestMethod]
-        public void XElementAnnotationTestValueTermWithAnnotationCsdl()
+        public void XElementAnnotationTestTermWithAnnotationCsdl()
         {
             XElement expectedAnnotation =
                 new XElement("{http://foo}Annotation", 1);
@@ -526,15 +525,15 @@ namespace EdmLibTests.FunctionalTests
 
             List<ElementInfo> annotationPath = new List<ElementInfo>()
             {
-                new ElementInfo() { Name = "Note", Type = AnnotatableElementType.ValueTerm }
+                new ElementInfo() { Name = "Note", Type = AnnotatableElementType.Term }
             };
             ElementLocation annotationLocation = new ElementLocation() { Namespace = "DefaultNamespace", ElementPath = annotationPath };
 
-            this.AnnotationRoundTripCsdlCheck(XElementAnnotationModelBuilder.ValueTermWithAnnotationCsdl(), expectedAnnotation, annotationInfo, annotationLocation);
+            this.AnnotationRoundTripCsdlCheck(XElementAnnotationModelBuilder.TermWithAnnotationCsdl(), expectedAnnotation, annotationInfo, annotationLocation);
         }
 
         [TestMethod]
-        public void XElementAnnotationTestValueTermWithAnnotationModel()
+        public void XElementAnnotationTestTermWithAnnotationModel()
         {
             XElement expectedAnnotation =
                 new XElement("{http://foo}Annotation", 1);
@@ -543,11 +542,11 @@ namespace EdmLibTests.FunctionalTests
 
             List<ElementInfo> annotationPath = new List<ElementInfo>()
             {
-                new ElementInfo() { Name = "Note", Type = AnnotatableElementType.ValueTerm }
+                new ElementInfo() { Name = "Note", Type = AnnotatableElementType.Term }
             };
             ElementLocation annotationLocation = new ElementLocation() { Namespace = "DefaultNamespace", ElementPath = annotationPath };
 
-            this.AnnotationRoundTripCsdlCheck(XElementAnnotationModelBuilder.ValueTermWithAnnotationCsdl(), expectedAnnotation, annotationInfo, annotationLocation, XElementAnnotationModelBuilder.ValueTermWithAnnotationModel());
+            this.AnnotationRoundTripCsdlCheck(XElementAnnotationModelBuilder.TermWithAnnotationCsdl(), expectedAnnotation, annotationInfo, annotationLocation, XElementAnnotationModelBuilder.TermWithAnnotationModel());
         }
 
         [TestMethod]
@@ -621,15 +620,15 @@ namespace EdmLibTests.FunctionalTests
         }
 
         [TestMethod]
-        public void XElementAnnotationTestOutOfLineValueAnnotationWithAnnotationCsdl()
+        public void XElementAnnotationTestOutOfLineVocabularyAnnotationWithAnnotationCsdl()
         {
-            var csdls = XElementAnnotationModelBuilder.OutOfLineValueAnnotationWithAnnotationCsdl();
+            var csdls = XElementAnnotationModelBuilder.OutOfLineVocabularyAnnotationWithAnnotationCsdl();
             var model = this.GetParserResult(csdls);
             var seri = this.GetSerializerResult(model).Select(n => XElement.Parse(n));
             var errors = new EdmLibTestErrors();
             this.VerifySemanticValidation(model, EdmVersion.Latest, errors);
 
-            var vocabularyAnnotation = model.VocabularyAnnotations.Where(n => n.Term.TermKind.Equals(EdmTermKind.Value));
+            var vocabularyAnnotation = model.VocabularyAnnotations;
             Assert.AreEqual(1, vocabularyAnnotation.Count(), "Invalid vocabulary count.");
 
             var actualAnnotationValue = (model.GetAnnotationValue(vocabularyAnnotation.Single(), "http://foo", "Annotation") as EdmStringConstant).Value;
@@ -644,14 +643,14 @@ namespace EdmLibTests.FunctionalTests
         }
 
         [TestMethod]
-        public void XElementAnnotationTestOutOfLineValueAnnotationWithAnnotationModel()
+        public void XElementAnnotationTestOutOfLineVocabularyAnnotationWithAnnotationModel()
         {
-            var model = XElementAnnotationModelBuilder.OutOfLineValueAnnotationWithAnnotationModel();
+            var model = XElementAnnotationModelBuilder.OutOfLineVocabularyAnnotationWithAnnotationModel();
 
             var errors = new EdmLibTestErrors();
             this.VerifySemanticValidation(model, EdmVersion.Latest, errors);
 
-            var vocabularyAnnotation = model.VocabularyAnnotations.Where(n => n.Term.TermKind.Equals(EdmTermKind.Value));
+            var vocabularyAnnotation = model.VocabularyAnnotations;
             Assert.AreEqual(1, vocabularyAnnotation.Count(), "Invalid vocabulary count.");
 
             var actualAnnotationValue = (model.GetAnnotationValue(vocabularyAnnotation.Single(), "http://foo", "Annotation") as EdmStringConstant).Value;
@@ -662,7 +661,7 @@ namespace EdmLibTests.FunctionalTests
             Assert.IsTrue(expectedAnnotationValue.ToString().Equals(actualAnnotationValue), "XElement annotation are not the same.");
 
             var serializedModel = ModelBuilderHelpers.ReplaceCsdlNamespacesForEdmVersion(this.GetSerializerResult(model).Select(n => XElement.Parse(n)).ToArray(), EdmVersion.V40).ToList();
-            new ConstructiveApiCsdlXElementComparer().Compare(XElementAnnotationModelBuilder.OutOfLineValueAnnotationWithAnnotationCsdl().ToList(), serializedModel);
+            new ConstructiveApiCsdlXElementComparer().Compare(XElementAnnotationModelBuilder.OutOfLineVocabularyAnnotationWithAnnotationCsdl().ToList(), serializedModel);
         }
 
         private void AnnotationRoundTripCsdlCheck(IEnumerable<XElement> csdls, XElement expectedAnnotation, AnnotationInfo annotationInfo, ElementLocation annotationLocation)
@@ -806,9 +805,9 @@ namespace EdmLibTests.FunctionalTests
                     var functions = model.FindOperations(this.GetFullName(targetNamespace, targetName));
                     return functions == null || functions.Count() == 0 ? null : functions.First();
                 }
-                else if (targetType.Equals(AnnotatableElementType.ValueTerm))
+                else if (targetType.Equals(AnnotatableElementType.Term))
                 {
-                    return model.FindValueTerm(this.GetFullName(targetNamespace, targetName));
+                    return model.FindTerm(this.GetFullName(targetNamespace, targetName));
                 }
                 else if (targetType.Equals(AnnotatableElementType.EntityContainer))
                 {
@@ -924,7 +923,7 @@ namespace EdmLibTests.FunctionalTests
             NavigationProperty,
             Parameter,
             Property,
-            ValueTerm
+            Term
         }
     }
 }

@@ -4,7 +4,7 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Edm.PrimitiveValueConverters
+namespace Microsoft.OData.Edm
 {
     using System;
     using System.Globalization;
@@ -25,17 +25,19 @@ namespace Microsoft.OData.Edm.PrimitiveValueConverters
 
         public object ConvertToUnderlyingType(object value)
         {
-            var type = value.GetType();
-            var typeCode = PlatformHelper.GetTypeCode(type);
-
-            switch (typeCode)
+            if (value is UInt16)
             {
-                case TypeCode.UInt16:
-                    return Convert.ToInt32(value, CultureInfo.InvariantCulture);
-                case TypeCode.UInt32:
-                    return Convert.ToInt64(value, CultureInfo.InvariantCulture);
-                case TypeCode.UInt64:
-                    return Convert.ToDecimal(value, CultureInfo.InvariantCulture);
+                return Convert.ToInt32(value, CultureInfo.InvariantCulture);
+            }
+
+            if (value is UInt32)
+            {
+                return Convert.ToInt64(value, CultureInfo.InvariantCulture);
+            }
+
+            if (value is UInt64)
+            {
+                return Convert.ToDecimal(value, CultureInfo.InvariantCulture);
             }
 
             return value;
@@ -43,17 +45,19 @@ namespace Microsoft.OData.Edm.PrimitiveValueConverters
 
         public object ConvertFromUnderlyingType(object value)
         {
-            var type = value.GetType();
-            var typeCode = PlatformHelper.GetTypeCode(type);
-
-            switch (typeCode)
+            if (value is Int32)
             {
-                case TypeCode.Int32:
-                    return Convert.ToUInt16(value, CultureInfo.InvariantCulture);
-                case TypeCode.Int64:
-                    return Convert.ToUInt32(value, CultureInfo.InvariantCulture);
-                case TypeCode.Decimal:
-                    return Convert.ToUInt64(value, CultureInfo.InvariantCulture);
+                return Convert.ToUInt16(value, CultureInfo.InvariantCulture);
+            }
+
+            if (value is Int64)
+            {
+                return Convert.ToUInt32(value, CultureInfo.InvariantCulture);
+            }
+
+            if (value is Decimal)
+            {
+                return Convert.ToUInt64(value, CultureInfo.InvariantCulture);
             }
 
             return value;

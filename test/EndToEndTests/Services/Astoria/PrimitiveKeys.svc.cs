@@ -16,9 +16,9 @@ namespace Microsoft.Test.OData.Services.PrimitiveKeysService
         public static void InitializeService(DataServiceConfiguration config)
         {
             config.DataServiceBehavior.MaxProtocolVersion = ODataProtocolVersion.V4;
-            config.DataServiceBehavior.UrlConventions = DataServiceUrlConventions.KeyAsSegment;
+            config.DataServiceBehavior.UrlKeyDelimiter = DataServiceUrlKeyDelimiter.Slash;
             config.SetEntitySetAccessRule("*", EntitySetRights.All);
-            config.SetEntitySetPageSize("*",2);
+            config.SetEntitySetPageSize("*", 2);
             config.DataServiceBehavior.IncludeAssociationLinksInResponse = true;
         }
     }

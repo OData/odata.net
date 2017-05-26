@@ -5,13 +5,14 @@
 //---------------------------------------------------------------------
 
 using System;
+using System.IO;
+using System.Text;
 using System.Threading.Tasks;
 using FluentAssertions;
 using Microsoft.OData.Edm;
-using Microsoft.OData.Edm.Library;
 using Xunit;
 
-namespace Microsoft.OData.Core.Tests
+namespace Microsoft.OData.Tests
 {
     /// <summary>
     /// Unit tests for ODataWriterCore.
@@ -20,6 +21,101 @@ namespace Microsoft.OData.Core.Tests
     public class ODataWriterCoreTests
     {
         [Fact]
+        public void ValidateWriteMethodGroup()
+        {
+            // setup model
+            var model = new EdmModel();
+            var complexType = new EdmComplexType("NS", "ComplexType");
+            complexType.AddStructuralProperty("PrimitiveProperty1", EdmPrimitiveTypeKind.Int64);
+            complexType.AddStructuralProperty("PrimitiveProperty2", EdmPrimitiveTypeKind.Int64);
+            var entityType = new EdmEntityType("NS", "EntityType", null, false, true);
+            entityType.AddKeys(
+                entityType.AddStructuralProperty("PrimitiveProperty", EdmPrimitiveTypeKind.Int64));
+            var container = new EdmEntityContainer("NS", "Container");
+            var entitySet = container.AddEntitySet("EntitySet", entityType);
+            model.AddElements(new IEdmSchemaElement[] { complexType, entityType, container });
+
+            // write payload using new API
+            string str1;
+            {
+                // setup
+                var stream = new MemoryStream();
+                var message = new InMemoryMessage { Stream = stream };
+                message.SetHeader("Content-Type", "application/json;odata.metadata=full");
+                var settings = new ODataMessageWriterSettings
+                {
+                    ODataUri = new ODataUri
+                    {
+                        ServiceRoot = new Uri("http://svc/")
+                    },
+                };
+                var writer = new ODataMessageWriter((IODataResponseMessage)message, settings, model);
+
+                var entitySetWriter = writer.CreateODataResourceSetWriter(entitySet);
+                entitySetWriter.Write(new ODataResourceSet(), () => entitySetWriter
+                    .Write(new ODataResource
+                    {
+                        Properties = new[] { new ODataProperty { Name = "PrimitiveProperty", Value = 1L } }
+                    })
+                    .Write(new ODataResource
+                    {
+                        Properties = new[] { new ODataProperty { Name = "PrimitiveProperty", Value = 2L } }
+                    }, () => entitySetWriter
+                        .Write(new ODataNestedResourceInfo { Name = "DynamicNavProperty" })
+                        .Write(new ODataNestedResourceInfo
+                        {
+                            Name = "DynamicCollectionProperty",
+                            IsCollection = true
+                        }, () => entitySetWriter
+                            .Write(new ODataResourceSet { TypeName = "Collection(NS.ComplexType)" })))
+                );
+                str1 = Encoding.UTF8.GetString(stream.ToArray());
+            }
+            // write payload using old API
+            string str2;
+            {
+                // setup
+                var stream = new MemoryStream();
+                var message = new InMemoryMessage { Stream = stream };
+                message.SetHeader("Content-Type", "application/json;odata.metadata=full");
+                var settings = new ODataMessageWriterSettings
+                {
+                    ODataUri = new ODataUri
+                    {
+                        ServiceRoot = new Uri("http://svc/")
+                    },
+                };
+                var writer = new ODataMessageWriter((IODataResponseMessage)message, settings, model);
+
+                var entitySetWriter = writer.CreateODataResourceSetWriter(entitySet);
+                entitySetWriter.WriteStart(new ODataResourceSet());
+                    entitySetWriter.WriteStart(new ODataResource
+                    {
+                        Properties = new[] { new ODataProperty { Name = "PrimitiveProperty", Value = 1L } }
+                    });
+                    entitySetWriter.WriteEnd();
+                    entitySetWriter.WriteStart(new ODataResource
+                    {
+                        Properties = new[] { new ODataProperty { Name = "PrimitiveProperty", Value = 2L } }
+                    });
+                    entitySetWriter.WriteStart(new ODataNestedResourceInfo { Name = "DynamicNavProperty" });
+                    entitySetWriter.WriteEnd();
+                    entitySetWriter.WriteStart(new ODataNestedResourceInfo
+                    {
+                        Name = "DynamicCollectionProperty",
+                        IsCollection = true
+                    });
+                        entitySetWriter.WriteStart(new ODataResourceSet { TypeName = "Collection(NS.ComplexType)" });
+                        entitySetWriter.WriteEnd();
+                    entitySetWriter.WriteEnd();    
+                    entitySetWriter.WriteEnd();
+                entitySetWriter.WriteEnd();
+                str2 = Encoding.UTF8.GetString(stream.ToArray());
+            }
+            str1.Should().Be(str2);
+        }
+
+        [Fact]
         public void ValidateEntityTypeShouldAlwaysReturnSpecifiedTypeName()
         {
             var model = CreateTestModel();
@@ -27,8 +123,8 @@ namespace Microsoft.OData.Core.Tests
             var objectType = (IEdmEntityType)model.FindDeclaredType("DefaultNamespace.Object");
             var coreWriter = CreateODataWriterCore(ODataFormat.Json, true, model, set, objectType, false);
 
-            var entry = new ODataEntry() { TypeName = "DefaultNamespace.Person" };
-            var entityType = coreWriter.ValidateEntityType2(entry);
+            var entry = new ODataResource() { TypeName = "DefaultNamespace.Person" };
+            var entityType = coreWriter.GetEntityType2(entry);
             entityType.Should().BeSameAs(model.FindDeclaredType("DefaultNamespace.Person"));
         }
 
@@ -41,8 +137,8 @@ namespace Microsoft.OData.Core.Tests
 
             var coreWriter = CreateODataWriterCore(ODataFormat.Json, true, model, set, objectType, false);
 
-            var entry = new ODataEntry();
-            var entityType = coreWriter.ValidateEntityType2(entry);
+            var entry = new ODataResource();
+            var entityType = coreWriter.GetEntityType2(entry);
             entityType.Should().BeSameAs(objectType);
         }
 
@@ -55,8 +151,8 @@ namespace Microsoft.OData.Core.Tests
 
             var coreWriter = CreateODataWriterCore(ODataFormat.Json, true, model, peopleSet, null, false);
 
-            var entry = new ODataEntry();
-            var entityType = coreWriter.ValidateEntityType2(entry);
+            var entry = new ODataResource();
+            var entityType = coreWriter.GetEntityType2(entry);
             entityType.Should().BeSameAs(personType);
         }
 
@@ -66,8 +162,8 @@ namespace Microsoft.OData.Core.Tests
             var model = CreateTestModel();
             var coreWriter = CreateODataWriterCore(ODataFormat.Json, true, model, null, null, false);
 
-            var entry = new ODataEntry();
-            Action test = () => coreWriter.ValidateEntityType2(entry);
+            var entry = new ODataResource();
+            Action test = () => coreWriter.GetEntityType2(entry);
 
             test.ShouldThrow<ODataException>().WithMessage(Strings.WriterValidationUtils_MissingTypeNameWithMetadata);
         }
@@ -89,7 +185,7 @@ namespace Microsoft.OData.Core.Tests
         private static TestODataWriterCore CreateODataWriterCore(ODataFormat format, bool writingResponse, IEdmModel model, IEdmEntitySet writerSet, IEdmEntityType writerEntityType, bool writeFeed)
         {
             var resolver = new TestUrlResolver();
-            var settings = new ODataMessageWriterSettings { DisableMessageStreamDisposal = true, Version = ODataVersion.V4 };
+            var settings = new ODataMessageWriterSettings { EnableMessageStreamDisposal = false, Version = ODataVersion.V4 };
             settings.SetServiceDocumentUri(new Uri("http://example.com"));
 
             var outputContext = new TestODataOutputContext(format, settings, writingResponse, false, model, resolver);
@@ -98,14 +194,14 @@ namespace Microsoft.OData.Core.Tests
 
         internal class TestODataWriterCore : ODataWriterCore
         {
-            public TestODataWriterCore(ODataOutputContext outputContext, IEdmEntitySet navigationSource, IEdmEntityType entityType, bool writingFeed):
+            public TestODataWriterCore(ODataOutputContext outputContext, IEdmEntitySet navigationSource, IEdmEntityType entityType, bool writingFeed) :
                 base(outputContext, navigationSource, entityType, writingFeed)
             {
             }
 
-            public IEdmEntityType ValidateEntityType2(ODataEntry entry)
+            public IEdmStructuredType GetEntityType2(ODataResource entry)
             {
-                return this.ValidateEntryType(entry);
+                return this.GetResourceType(entry);
             }
 
             #region Non-implemented abstract methods
@@ -129,17 +225,17 @@ namespace Microsoft.OData.Core.Tests
                 throw new NotImplementedException();
             }
 
-            protected override void StartEntry(ODataEntry entry)
+            protected override void StartResource(ODataResource entry)
             {
                 throw new NotImplementedException();
             }
 
-            protected override void EndEntry(ODataEntry entry)
+            protected override void EndResource(ODataResource entry)
             {
                 throw new NotImplementedException();
             }
 
-            protected override void StartFeed(ODataFeed feed)
+            protected override void StartResourceSet(ODataResourceSet resourceCollection)
             {
                 throw new NotImplementedException();
             }
@@ -149,37 +245,37 @@ namespace Microsoft.OData.Core.Tests
                 throw new NotImplementedException();
             }
 
-            protected override void EndFeed(ODataFeed feed)
+            protected override void EndResourceSet(ODataResourceSet resourceCollection)
             {
                 throw new NotImplementedException();
             }
 
-            protected override void WriteDeferredNavigationLink(ODataNavigationLink navigationLink)
+            protected override void WriteDeferredNestedResourceInfo(ODataNestedResourceInfo navigationLink)
             {
                 throw new NotImplementedException();
             }
 
-            protected override void StartNavigationLinkWithContent(ODataNavigationLink navigationLink)
+            protected override void StartNestedResourceInfoWithContent(ODataNestedResourceInfo navigationLink)
             {
                 throw new NotImplementedException();
             }
 
-            protected override void EndNavigationLinkWithContent(ODataNavigationLink navigationLink)
+            protected override void EndNestedResourceInfoWithContent(ODataNestedResourceInfo navigationLink)
             {
                 throw new NotImplementedException();
             }
 
-            protected override void WriteEntityReferenceInNavigationLinkContent(ODataNavigationLink parentNavigationLink, ODataEntityReferenceLink entityReferenceLink)
+            protected override void WriteEntityReferenceInNavigationLinkContent(ODataNestedResourceInfo parentNavigationLink, ODataEntityReferenceLink entityReferenceLink)
             {
                 throw new NotImplementedException();
             }
 
-            protected override ODataWriterCore.FeedScope CreateFeedScope(ODataFeed feed, IEdmNavigationSource navigationSource, IEdmEntityType entityType, bool skipWriting, SelectedPropertiesNode selectedProperties, ODataUri odataUri)
+            protected override ODataWriterCore.ResourceSetScope CreateResourceSetScope(ODataResourceSet resourceCollection, IEdmNavigationSource navigationSource, IEdmStructuredType resourceType, bool skipWriting, SelectedPropertiesNode selectedProperties, ODataUri odataUri, bool isUndeclared)
             {
                 throw new NotImplementedException();
             }
 
-            protected override ODataWriterCore.EntryScope CreateEntryScope(ODataEntry entry, IEdmNavigationSource navigationSource, IEdmEntityType entityType, bool skipWriting, SelectedPropertiesNode selectedProperties, ODataUri odataUri)
+            protected override ODataWriterCore.ResourceScope CreateResourceScope(ODataResource entry, IEdmNavigationSource navigationSource, IEdmStructuredType resourceType, bool skipWriting, SelectedPropertiesNode selectedProperties, ODataUri odataUri, bool isUndeclared)
             {
                 throw new NotImplementedException();
             }
@@ -188,16 +284,23 @@ namespace Microsoft.OData.Core.Tests
 
         internal class TestODataOutputContext : ODataOutputContext
         {
-            public TestODataOutputContext(ODataFormat format, ODataMessageWriterSettings messageWriterSettings, bool writingResponse, bool synchronous, IEdmModel model, IODataUrlResolver urlResolver)
-                :base(format, messageWriterSettings, writingResponse, synchronous, model, urlResolver)
+            public TestODataOutputContext(ODataFormat format, ODataMessageWriterSettings messageWriterSettings, bool writingResponse, bool synchronous, IEdmModel model, IODataPayloadUriConverter urlResolver)
+                : base(format,
+                    new ODataMessageInfo
+                    {
+                        IsAsync = !synchronous,
+                        IsResponse = writingResponse,
+                        Model = model,
+                        PayloadUriConverter = urlResolver
+                    }, messageWriterSettings)
             {
             }
         }
 
-        internal class TestUrlResolver : IODataUrlResolver
+        internal class TestUrlResolver : IODataPayloadUriConverter
         {
-            public Func<Uri, Uri, Uri> ResolveUrlFunc {get; set;}
-            public Uri ResolveUrl(Uri baseUri, Uri payloadUri)
+            public Func<Uri, Uri, Uri> ResolveUrlFunc { get; set; }
+            public Uri ConvertPayloadUri(Uri baseUri, Uri payloadUri)
             {
                 return this.ResolveUrlFunc(baseUri, payloadUri);
             }

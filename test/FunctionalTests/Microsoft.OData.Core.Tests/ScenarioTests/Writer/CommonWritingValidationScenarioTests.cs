@@ -9,10 +9,9 @@ using System.Collections.Generic;
 using System.IO;
 using FluentAssertions;
 using Microsoft.OData.Edm;
-using Microsoft.OData.Edm.Library;
 using Xunit;
 
-namespace Microsoft.OData.Core.Tests.ScenarioTests.Writer
+namespace Microsoft.OData.Tests.ScenarioTests.Writer
 {
     public class CommonWritingValidationScenarioTests
     {
@@ -22,13 +21,13 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Writer
             IEdmEntitySet entitySet = null;
             var model = CreatePersonModel(out entitySet);
 
-            foreach (string contentType in new string[] { "application/json", "application/atom+xml" })
+            foreach (string contentType in new string[] { "application/json" })
             {
                 var messageWriter = CreateODataMessageWriter(model, contentType);
-                var odataWriter = messageWriter.CreateODataEntryWriter();
+                var odataWriter = messageWriter.CreateODataResourceWriter();
                 Action test = () =>
                 {
-                    var entry = new ODataEntry() { Properties = new List<ODataProperty>(new ODataProperty[] { new ODataProperty() { Name = "Id", Value = 1 } }) };
+                    var entry = new ODataResource() { Properties = new List<ODataProperty>(new ODataProperty[] { new ODataProperty() { Name = "Id", Value = 1 } }) };
                     entry.TypeName = "DefaultNamespace.FakeType";
                     odataWriter.WriteStart(entry);
                     odataWriter.WriteEnd();
@@ -44,13 +43,13 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Writer
             IEdmEntitySet entitySet = null;
             var model = CreatePersonModel(out entitySet);
 
-            foreach (string contentType in new string[] { "application/json", "application/atom+xml" })
+            foreach (string contentType in new string[] { "application/json" })
             {
                 var messageWriter = CreateODataMessageWriter(model, contentType);
-                var odataWriter = messageWriter.CreateODataEntryWriter(null, entitySet.EntityType());
+                var odataWriter = messageWriter.CreateODataResourceWriter(null, entitySet.EntityType());
                 Action test = () =>
                 {
-                    var entry = new ODataEntry();
+                    var entry = new ODataResource();
                     odataWriter.WriteStart(entry);
                     odataWriter.WriteEnd();
                 };
@@ -65,13 +64,13 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Writer
             IEdmEntitySet entitySet = null;
             var model = CreatePersonModel(out entitySet);
 
-            foreach (string contentType in new string[] { "application/json", "application/atom+xml" })
+            foreach (string contentType in new string[] { "application/json" })
             {
                 var messageWriter = CreateODataMessageWriter(model, contentType);
-                var odataWriter = messageWriter.CreateODataEntryWriter();
+                var odataWriter = messageWriter.CreateODataResourceWriter();
                 Action test = () =>
                 {
-                    var entry = new ODataEntry() { Properties = new List<ODataProperty>(new ODataProperty[] { new ODataProperty() { Name = "Id", Value = 1 } }) };
+                    var entry = new ODataResource() { Properties = new List<ODataProperty>(new ODataProperty[] { new ODataProperty() { Name = "Id", Value = 1 } }) };
                     odataWriter.WriteStart(entry);
                     odataWriter.WriteEnd();
                 };
@@ -85,15 +84,15 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Writer
         {
             foreach (IEdmModel model in new IEdmModel[] { null, EdmCoreModel.Instance })
             {
-                foreach (string contentType in new string[] { "application/json", "application/atom+xml" })
+                foreach (string contentType in new string[] { "application/json" })
                 {
                     string currentContentType = contentType;
                     var currentModel = model;
                     Action test = () =>
                     {
                         var messageWriter = CreateODataMessageWriter(currentModel, currentContentType);
-                        var odataWriter = messageWriter.CreateODataEntryWriter();
-                        var entry = new ODataEntry() { Properties = new List<ODataProperty>(new ODataProperty[] { new ODataProperty() { Name = "Id", Value = 1 } }) };
+                        var odataWriter = messageWriter.CreateODataResourceWriter();
+                        var entry = new ODataResource() { Properties = new List<ODataProperty>(new ODataProperty[] { new ODataProperty() { Name = "Id", Value = 1 } }) };
                         odataWriter.WriteStart(entry);
                         odataWriter.WriteEnd();
                     };
@@ -112,10 +111,10 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Writer
             foreach (string contentType in new string[] { "application/json" })
             {
                 var messageWriter = CreateODataMessageWriter(model, contentType);
-                var odataWriter = messageWriter.CreateODataEntryWriter(null, entitySet.EntityType());
+                var odataWriter = messageWriter.CreateODataResourceWriter(null, entitySet.EntityType());
                 Action test = () =>
                 {
-                    var entry = new ODataEntry()
+                    var entry = new ODataResource()
                     {
                         Properties = new[]
                         {
@@ -127,7 +126,7 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Writer
                             new ODataProperty()
                             {
                                 Name = "Numbers",
-                                Value = new ODataCollectionValue() {Items = new[] { (UInt32)1, UInt32.MaxValue, UInt32.MinValue } }
+                                Value = new ODataCollectionValue() {Items = new object[] { (UInt32)1, UInt32.MaxValue, UInt32.MinValue } }
                             }
                         }
                     };
@@ -169,7 +168,7 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Writer
 
         private static ODataMessageWriter CreateODataMessageWriter(IEdmModel model, string contentType)
         {
-            var settings = new ODataMessageWriterSettings { DisableMessageStreamDisposal = true, Version = ODataVersion.V4, EnableAtom = true };
+            var settings = new ODataMessageWriterSettings { EnableMessageStreamDisposal = false, Version = ODataVersion.V4 };
             settings.SetServiceDocumentUri(new Uri("http://example.com"));
 
             var message = new InMemoryMessage();

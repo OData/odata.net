@@ -4,14 +4,13 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core
+namespace Microsoft.OData
 {
     #region Namespaces
     using System;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
-    using System.Linq;
-    using Microsoft.OData.Core.Metadata;
+    using Microsoft.OData.Metadata;
     using Microsoft.OData.Edm;
     #endregion Namespaces
 
@@ -21,75 +20,87 @@ namespace Microsoft.OData.Core
     internal static class ReaderUtils
     {
         /// <summary>
-        /// Creates a new <see cref="ODataEntry"/> instance to return to the user.
+        /// Gets the expected type kind based on the given <see cref="IEdmTypeReference"/>, or EdmTypeKind.None if no specific type should be expected.
         /// </summary>
-        /// <returns>The newly created entry.</returns>
-        /// <remarks>The method populates the Properties property with an empty read only enumeration.</remarks>
-        internal static ODataEntry CreateNewEntry()
+        /// <param name="expectedTypeReference">The expected type reference.</param>
+        /// <param name="enablePrimitiveTypeConversion">Whether primitive type conversion is enabled.</param>
+        /// <returns>The expected type kind based on the settings and type reference, or EdmTypeKind.None if no specific type should be expected.</returns>
+        internal static EdmTypeKind GetExpectedTypeKind(IEdmTypeReference expectedTypeReference,
+                                                       bool enablePrimitiveTypeConversion)
         {
-            return new ODataEntry
+            IEdmType expectedTypeDefinition;
+            if (expectedTypeReference == null || (expectedTypeDefinition = expectedTypeReference.Definition) == null)
+            {
+                return EdmTypeKind.None;
+            }
+
+            // If the EnablePrimitiveTypeConversion is off, we must not infer the type kind from the expected type
+            // but instead we need to read it from the payload.
+            // This is necessary to correctly fail on complex/collection as well as to correctly read spatial values.
+            EdmTypeKind expectedTypeKind = expectedTypeDefinition.TypeKind;
+            if (!enablePrimitiveTypeConversion
+                && (expectedTypeKind == EdmTypeKind.Primitive && !expectedTypeDefinition.IsStream()))
+            {
+                return EdmTypeKind.None;
+            }
+
+            // Otherwise, if we have an expected type, use that.
+            return expectedTypeKind;
+        }
+
+        /// <summary>
+        /// Creates a new <see cref="ODataResource"/> instance to return to the user.
+        /// </summary>
+        /// <returns>The newly created resource.</returns>
+        /// <remarks>The method populates the Properties property with an empty read only enumeration.</remarks>
+        internal static ODataResource CreateNewResource()
+        {
+            return new ODataResource
             {
                 Properties = new ReadOnlyEnumerable<ODataProperty>()
             };
         }
 
         /// <summary>Checks for duplicate navigation links and if there already is an association link with the same name
-        /// sets the association link URL on the navigation link.</summary>
-        /// <param name="duplicatePropertyNamesChecker">The duplicate property names checker for the current scope.</param>
-        /// <param name="navigationLink">The navigation link to be checked.</param>
-        /// <param name="isExpanded">true if the link is expanded, false otherwise.</param>
-        /// <param name="isCollection">true if the navigation link is a collection, false if it's a singleton or null if we don't know.</param>
-        internal static void CheckForDuplicateNavigationLinkNameAndSetAssociationLink(
-            DuplicatePropertyNamesChecker duplicatePropertyNamesChecker,
-            ODataNavigationLink navigationLink,
-            bool isExpanded,
-            bool? isCollection)
+        /// sets the association link URL on the nested resource info.</summary>
+        /// <param name="propertyAndAnnotationCollector">The duplicate property names checker for the current scope.</param>
+        /// <param name="nestedResourceInfo">The nested resource info to be checked.</param>
+        internal static void CheckForDuplicateNestedResourceInfoNameAndSetAssociationLink(
+            PropertyAndAnnotationCollector propertyAndAnnotationCollector,
+            ODataNestedResourceInfo nestedResourceInfo)
         {
-            Debug.Assert(duplicatePropertyNamesChecker != null, "duplicatePropertyNamesChecker != null");
-            Debug.Assert(navigationLink != null, "navigationLink != null");
-            
-            Uri associationLinkUrl = duplicatePropertyNamesChecker.CheckForDuplicatePropertyNames(navigationLink, isExpanded, isCollection);
+            Debug.Assert(propertyAndAnnotationCollector != null, "propertyAndAnnotationCollector != null");
+            Debug.Assert(nestedResourceInfo != null, "nestedResourceInfo != null");
+
+            Uri associationLinkUrl = propertyAndAnnotationCollector.ValidatePropertyUniquenessAndGetAssociationLink(nestedResourceInfo);
 
             // We must not set the AssociationLinkUrl to null since that would disable templating on it, but we want templating to work if the association link was not in the payload.
-            if (associationLinkUrl != null && navigationLink.AssociationLinkUrl == null)
+            if (associationLinkUrl != null && nestedResourceInfo.AssociationLinkUrl == null)
             {
-                navigationLink.AssociationLinkUrl = associationLinkUrl;
+                nestedResourceInfo.AssociationLinkUrl = associationLinkUrl;
             }
         }
 
-        /// <summary>Checks that for duplicate association links and if there already is a navigation link with the same name
-        /// sets the association link URL on that navigation link.</summary>
-        /// <param name="duplicatePropertyNamesChecker">The duplicate property names checker for the current scope.</param>
+        /// <summary>Checks that for duplicate association links and if there already is a nested resource info with the same name
+        /// sets the association link URL on that nested resource info.</summary>
+        /// <param name="propertyAndAnnotationCollector">The duplicate property names checker for the current scope.</param>
         /// <param name="associationLinkName">The name of association link to be checked.</param>
         /// <param name="associationLinkUrl">The url of association link to be checked.</param>
-        internal static void CheckForDuplicateAssociationLinkAndUpdateNavigationLink(
-            DuplicatePropertyNamesChecker duplicatePropertyNamesChecker,
+        internal static void CheckForDuplicateAssociationLinkAndUpdateNestedResourceInfo(
+            PropertyAndAnnotationCollector propertyAndAnnotationCollector,
             string associationLinkName,
             Uri associationLinkUrl)
         {
-            Debug.Assert(duplicatePropertyNamesChecker != null, "duplicatePropertyNamesChecker != null");
+            Debug.Assert(propertyAndAnnotationCollector != null, "propertyAndAnnotationCollector != null");
             Debug.Assert(associationLinkName != null, "associationLinkName != null");
 
-            ODataNavigationLink navigationLink = duplicatePropertyNamesChecker.CheckForDuplicateAssociationLinkNames(associationLinkName, associationLinkUrl);
+            ODataNestedResourceInfo nestedResourceInfo = propertyAndAnnotationCollector.ValidatePropertyOpenForAssociationLinkAndGetNestedResourceInfo(associationLinkName, associationLinkUrl);
 
             // We must not set the AssociationLinkUrl to null since that would disable templating on it, but we want templating to work if the association link was not in the payload.
-            if (navigationLink != null && navigationLink.AssociationLinkUrl == null && associationLinkUrl != null)
+            if (nestedResourceInfo != null && nestedResourceInfo.AssociationLinkUrl == null && associationLinkUrl != null)
             {
-                navigationLink.AssociationLinkUrl = associationLinkUrl;
+                nestedResourceInfo.AssociationLinkUrl = associationLinkUrl;
             }
-        }
-
-        /// <summary>
-        /// Returns true if the specified <paramref name="flag"/> is set in the <paramref name="undeclaredPropertyBehaviorKinds"/>.
-        /// </summary>
-        /// <param name="undeclaredPropertyBehaviorKinds">The value of the setting to test.</param>
-        /// <param name="flag">The flag to test.</param>
-        /// <returns>true if the flas is present, flase otherwise.</returns>
-        internal static bool HasFlag(this ODataUndeclaredPropertyBehaviorKinds undeclaredPropertyBehaviorKinds, ODataUndeclaredPropertyBehaviorKinds flag)
-        {
-            Debug.Assert(((int)flag | ((int)flag - 1)) + 1 == (int)flag * 2, "Only one flag must be set.");
-
-            return (undeclaredPropertyBehaviorKinds & flag) == flag;
         }
 
         /// <summary>

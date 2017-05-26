@@ -72,14 +72,14 @@
         <Property Name="ValueProp" Type="Edm.String" Nullable="false" />
       </EntityType>
       <EntityType Name="Child" BaseType="MergedFunctionalTest.Person">
-        <Property Name="Description" Type="Edm.String" ConcurrencyMode="Fixed" />
+        <Property Name="Description" Type="Edm.String" />
       </EntityType>
       <EntityType Name="Person">
         <Key>
           <PropertyRef Name="ID" />
         </Key>
         <Property Name="ID" Type="Edm.Guid" Nullable="false" />
-        <Property Name="Name" Type="Edm.String" ConcurrencyMode="Fixed" />
+        <Property Name="Name" Type="Edm.String" />
       </EntityType>
       <EntityType Name="TestType">
         <Key>

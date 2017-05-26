@@ -67,6 +67,7 @@ namespace AstoriaUnitTests.TDD.Tests.Server
             this.service.OperationContext.InitializeAndCacheHeaders(this.service);
         }
 
+        [Ignore] // Remove Atom
         [TestMethod]
         public void HandleExceptionArgShouldContainCorrectResponseContentTypeWhenMpvIs30()
         {
@@ -95,6 +96,7 @@ namespace AstoriaUnitTests.TDD.Tests.Server
             }
         }
 
+        [Ignore] // Remove Atom
         [TestMethod]
         public void HandleExceptionArgShouldContainCorrectResponseContentTypeWhenMpvIs20()
         {

@@ -10,7 +10,7 @@
     <Property Name="MobilePhone" Type="NS1.Phone" Nullable="false" />
   </ComplexType>
   <ComplexType Name="ConcurrencyInfo">
-    <Property Name="Token" Type="Edm.String" ConcurrencyMode="Fixed" DefaultValue="" Nullable="false" MaxLength="20" Unicode="false" />
+    <Property Name="Token" Type="Edm.String" DefaultValue="" Nullable="false" MaxLength="20" Unicode="false" />
     <Property Name="QueriedDateTimeOffset" Type="Edm.DateTimeOffset" />
   </ComplexType>
   <ComplexType Name="AuditInfo">
@@ -118,7 +118,7 @@
     <Property Name="ProductId" Type="Edm.Int32" Nullable="false" />
     <Property Name="Description" Type="Edm.String" MaxLength="1000" Unicode="false" />
     <Property Name="Dimensions" Type="NS1.Dimensions" Nullable="false" />
-    <Property Name="BaseConcurrency" Type="Edm.String" ConcurrencyMode="Fixed" DefaultValue="" Nullable="false" />
+    <Property Name="BaseConcurrency" Type="Edm.String" DefaultValue="" Nullable="false" />
     <Property Name="ComplexConcurrency" Type="NS1.ConcurrencyInfo" Nullable="false" />
     <Property Name="NestedComplexConcurrency" Type="NS1.AuditInfo" Nullable="false" />
     <NavigationProperty Name="Barcodes" Type="Collection(NS1.Barcode)" Partner="Product" />
@@ -293,7 +293,7 @@
     <Property Name="OrderId" Type="Edm.Int32" Nullable="false" />
     <Property Name="ProductId" Type="Edm.Int32" Nullable="false" />
     <Property Name="Quantity" Type="Edm.Int32" />
-    <Property Name="ConcurrencyToken" Type="Edm.String" ConcurrencyMode="Fixed" DefaultValue="" Nullable="false" />
+    <Property Name="ConcurrencyToken" Type="Edm.String" DefaultValue="" Nullable="false" />
     <NavigationProperty Name="Order" Type="NS1.Order" Nullable="false" Partner="OrderLines">
       <ReferentialConstraint Property="OrderId" ReferencedProperty="OrderId" />
     </NavigationProperty>

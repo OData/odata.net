@@ -25,19 +25,11 @@ namespace Microsoft.OData.Service.Serializers
             : base(update, dataService, tracker, requestDescription)
         {
         }
-        
-        /// <summary>
-        /// Gets a value indicating whether the request is Atom
-        /// </summary>
-        protected override bool IsAtomRequest
-        {
-            get { return false; }
-        }
 
         /// <summary>
         /// Gets a value indicating whether the request is json light
         /// </summary>
-        protected override bool IsJsonLightRequest 
+        protected override bool IsJsonLightRequest
         {
             get { return false; }
         }

@@ -9,15 +9,15 @@ namespace Microsoft.Test.Taupo.OData.Query.Tests.MetadataBinder
     #region Namespaces
     using Microsoft.OData.Edm;
     using System.Text;
-    using Microsoft.OData.Core;
-    using Microsoft.OData.Core.UriParser;
+    using Microsoft.OData;
+    using Microsoft.OData.UriParser;
     using Microsoft.Test.Taupo.Common;
     using Microsoft.Test.Taupo.Execution;
     using Microsoft.Test.Taupo.OData.Common;
     using Microsoft.Test.Taupo.OData.Contracts;
     using Microsoft.Test.Taupo.OData.Query.Tests.Common;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
-    using Microsoft.OData.Core.UriParser.Semantic;
+
     #endregion Namespaces
 
     /// <summary>
@@ -47,7 +47,7 @@ namespace Microsoft.Test.Taupo.OData.Query.Tests.MetadataBinder
 
             // TODO: add an error test where the input collection to the order-by is a singleton
 
-            EntityRangeVariable entityRangeVariable = new EntityRangeVariable("dummy", model.ResolveTypeReference("TestNS.Customer", false).AsEntity(), model.FindEntityContainer("BinderTestMetadata").FindEntitySet("Customers"));
+            ResourceRangeVariable entityRangeVariable = new ResourceRangeVariable("dummy", model.ResolveTypeReference("TestNS.Customer", false).AsEntity(), model.FindEntityContainer("BinderTestMetadata").FindEntitySet("Customers"));
 
             OrderByTestCase[] testCases = new OrderByTestCase[]
             {
@@ -66,7 +66,7 @@ namespace Microsoft.Test.Taupo.OData.Query.Tests.MetadataBinder
                     ExpectedOrderByExpressions = new SingleValueNode[]
                     {
                         new SingleValuePropertyAccessNode(
-                            new EntityRangeVariableReferenceNode(entityRangeVariable.Name, entityRangeVariable),
+                            new ResourceRangeVariableReferenceNode(entityRangeVariable.Name, entityRangeVariable),
                             model.ResolveProperty("TestNS.Customer.Name")
                         )
                     }
@@ -115,11 +115,11 @@ namespace Microsoft.Test.Taupo.OData.Query.Tests.MetadataBinder
                     ExpectedOrderByExpressions = new SingleValueNode[]
                     {
                         new SingleValuePropertyAccessNode(
-                            new EntityRangeVariableReferenceNode(entityRangeVariable.Name, entityRangeVariable),
+                            new ResourceRangeVariableReferenceNode(entityRangeVariable.Name, entityRangeVariable),
                             model.ResolveProperty("TestNS.Customer.Name")
                         ),
                         new SingleValuePropertyAccessNode(
-                            new EntityRangeVariableReferenceNode(entityRangeVariable.Name, entityRangeVariable), 
+                            new ResourceRangeVariableReferenceNode(entityRangeVariable.Name, entityRangeVariable), 
                             model.ResolveProperty("TestNS.Customer.ID")
                         ),
                     }
@@ -182,7 +182,7 @@ namespace Microsoft.Test.Taupo.OData.Query.Tests.MetadataBinder
                                     orderByNode,
                                     testCase.ExpectedOrderByExpressions[i],
                                     direction ?? OrderByDirection.Ascending,
-                                    new EntityRangeVariable(ExpressionConstants.It, model.ResolveTypeReference("TestNS.Customer", false).AsEntity(), model.FindEntityContainer("BinderTestMetadata").FindEntitySet("Customers"))
+                                    new ResourceRangeVariable(ExpressionConstants.It, model.ResolveTypeReference("TestNS.Customer", false).AsEntity(), model.FindEntityContainer("BinderTestMetadata").FindEntitySet("Customers"))
                                 );
                             }
 

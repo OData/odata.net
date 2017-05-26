@@ -4,27 +4,25 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-
 namespace AstoriaUnitTests.TDD.Tests.Client
 {
-    using System.Collections;
+    using System;
+    using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.IO;
+    using System.Linq;
     using System.Linq.Expressions;
     using AstoriaUnitTests.Tests;
     using FluentAssertions;
+    using Microsoft.OData;
     using Microsoft.OData.Client;
     using Microsoft.OData.Client.Materialization;
-    using Microsoft.OData.Core;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     public partial class Container : DataServiceContext
     {
-        public Container(Uri serviceRoot) : 
-                base(serviceRoot, ODataProtocolVersion.V4)
+        public Container(Uri serviceRoot) :
+            base(serviceRoot, ODataProtocolVersion.V4)
         {
             this.ResolveName = this.ResolveNameFromType;
             this.ResolveType = this.ResolveTypeFromName;
@@ -249,57 +247,17 @@ namespace AstoriaUnitTests.TDD.Tests.Client
         [TestMethod]
         public void MaterializeEntityShouldWork()
         {
-            var odataEntry = new ODataEntry() { Id = new Uri("http://www.odata.org/service.svc/entitySet(1)") };
+            var odataEntry = new ODataResource() { Id = new Uri("http://www.odata.org/service.svc/entitySet(1)") };
             odataEntry.Properties = new ODataProperty[]
             {
                 new ODataProperty { Name = "keyProp", Value = 1 },
-                new ODataProperty
-                {
-                    Name = "complexProp",
-                    Value = new ODataComplexValue
-                    {
-                        Properties = new ODataProperty[]
-                        {
-                            new ODataProperty { Name = "age", Value = 11 },
-                            new ODataProperty { Name = "name", Value = "June" }
-                        }
-                    }
-                },
                 new ODataProperty { Name = "colorProp", Value = new ODataEnumValue("blue") },
                 new ODataProperty {
                     Name = "primitiveCollection",
                     Value = new ODataCollectionValue
                     {
                         TypeName = "Edm.Int32",
-                        Items = new List<int> {1, 2, 3}
-                    }
-                },
-                new ODataProperty {
-                    Name = "complexCollection",
-                    Value = new ODataCollectionValue
-                    {
-                        TypeName = "complexType",
-                        Items = new List<ODataComplexValue>
-                        {
-                            new ODataComplexValue
-                            {
-                                Properties = new ODataProperty[]
-                                {
-                                    new ODataProperty { Name = "name", Value = "Aug" },
-                                    new ODataProperty { Name = "age", Value = 8 },
-                                    new ODataProperty { Name = "color", Value = new ODataEnumValue("white")}
-                                }
-                            },
-                            new ODataComplexValue
-                            {
-                                Properties = new ODataProperty[]
-                                {
-                                    new ODataProperty { Name = "name", Value = "Sep" },
-                                    new ODataProperty { Name = "age", Value = 9 },
-                                    new ODataProperty { Name = "color", Value = new ODataEnumValue("blue") }
-                                }
-                            }
-                        }
+                        Items = new List<object> {1, 2, 3}
                     }
                 },
                 new ODataProperty {
@@ -312,14 +270,64 @@ namespace AstoriaUnitTests.TDD.Tests.Client
                 }
             };
 
+            var complexP = new ODataNestedResourceInfo()
+            {
+                Name = "complexProp",
+                IsCollection = false
+            };
+
+            var complexResource = new ODataResource
+            {
+                Properties = new ODataProperty[]
+                {
+                    new ODataProperty { Name = "age", Value = 11 },
+                    new ODataProperty { Name = "name", Value = "June" }
+                }
+            };
+
+            var complexColP = new ODataNestedResourceInfo
+            {
+                Name = "complexCollection",
+                IsCollection = true
+            };
+
+            var complexColResourceSet = new ODataResourceSet();
+
+            var items = new List<ODataResource>
+            {
+                new ODataResource
+                {
+                    Properties = new ODataProperty[]
+                    {
+                        new ODataProperty { Name = "name", Value = "Aug" },
+                        new ODataProperty { Name = "age", Value = 8 },
+                        new ODataProperty { Name = "color", Value = new ODataEnumValue("white")}
+                    }
+                },
+                new ODataResource
+                {
+                    Properties = new ODataProperty[]
+                    {
+                        new ODataProperty { Name = "name", Value = "Sep" },
+                        new ODataProperty { Name = "age", Value = 9 },
+                        new ODataProperty { Name = "color", Value = new ODataEnumValue("blue") }
+                    }
+                }
+            };
+
             var clientEdmModel = new ClientEdmModel(ODataProtocolVersion.V4);
             var context = new DataServiceContext();
-            MaterializerEntry.CreateEntry(odataEntry, ODataFormat.Atom, true, clientEdmModel);
+            var materializerEntry = MaterializerEntry.CreateEntry(odataEntry, ODataFormat.Json, true, clientEdmModel);
+
+            MaterializerNavigationLink.CreateLink(complexP, MaterializerEntry.CreateEntry(complexResource, ODataFormat.Json, true, clientEdmModel));
+            MaterializerFeed.CreateFeed(complexColResourceSet, items);
+            MaterializerNavigationLink.CreateLink(complexColP, complexColResourceSet);
+
             var materializerContext = new TestMaterializerContext() { Model = clientEdmModel, Context = context };
             var adapter = new EntityTrackingAdapter(new TestEntityTracker(), MergeOption.OverwriteChanges, clientEdmModel, context);
             QueryComponents components = new QueryComponents(new Uri("http://foo.com/Service"), new Version(4, 0), typeof(EntityType), null, new Dictionary<Expression, Expression>());
 
-            var entriesMaterializer = new ODataEntriesEntityMaterializer(new ODataEntry[] { odataEntry }, materializerContext, adapter, components, typeof(EntityType), null, ODataFormat.Atom);
+            var entriesMaterializer = new ODataEntriesEntityMaterializer(new ODataResource[] { odataEntry }, materializerContext, adapter, components, typeof(EntityType), null, ODataFormat.Json);
 
             var customersRead = new List<EntityType>();
             while (entriesMaterializer.Read())
@@ -341,7 +349,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client
         [TestMethod]
         public void MaterializeComplexTypeShouldWork()
         {
-            ODataComplexValue complexValue = new ODataComplexValue
+            ODataResource complexValue = new ODataResource
             {
                 Properties = new ODataProperty[]
                 {
@@ -354,7 +362,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client
                         Value = new ODataCollectionValue
                         {
                             TypeName = "Edm.Int32",
-                            Items = new List<int> {1, 2, 3}
+                            Items = new List<object> {1, 2, 3}
                         }
                     },
                     new ODataProperty
@@ -368,9 +376,9 @@ namespace AstoriaUnitTests.TDD.Tests.Client
                     }
                 }
             };
-            this.CreatePrimitiveValueMaterializationPolicy().MaterializeComplexTypeProperty(typeof(ComplexType), complexValue);
-            complexValue.HasMaterializedValue().Should().BeTrue();
-            var complex = complexValue.GetMaterializedValue().As<ComplexType>();
+            var materializerEntry = MaterializerEntry.CreateEntry(complexValue, ODataFormat.Json, false, new ClientEdmModel(ODataProtocolVersion.V4));
+            this.CreateEntryMaterializationPolicy().Materialize(materializerEntry, typeof(ComplexType), false);
+            var complex = materializerEntry.ResolvedObject as ComplexType;
             complex.Name.Should().Be("June");
             complex.Age.Should().Be(11);
             complex.Color.Should().Be(Color.Blue);
@@ -382,7 +390,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client
         public void MaterializeEnumTypeShouldWork()
         {
             ODataEnumValue enumValue = new ODataEnumValue("blue");
-            ODataProperty property = new ODataProperty{ Name = "enumProperty", Value = enumValue };
+            ODataProperty property = new ODataProperty { Name = "enumProperty", Value = enumValue };
             var enumPolicy = new EnumValueMaterializationPolicy(new TestMaterializerContext());
             var result = enumPolicy.MaterializeEnumTypeProperty(typeof(Color), property);
             property.GetMaterializedValue().Should().Be(Color.Blue);
@@ -453,25 +461,22 @@ namespace AstoriaUnitTests.TDD.Tests.Client
             body.Should().Contain(enumsParameterString);
         }
 
-        private ComplexValueMaterializationPolicy CreatePrimitiveValueMaterializationPolicy()
+        internal EntryValueMaterializationPolicy CreateEntryMaterializationPolicy(TestMaterializerContext materializerContext = null)
         {
-            TestMaterializerContext context = new TestMaterializerContext() { Context = new DataServiceContext()};
-            return CreatePrimitiveValueMaterializationPolicy(context);
-        }
+            var clientEdmModel = new ClientEdmModel(ODataProtocolVersion.V4);
+            var context = new DataServiceContext();
+            materializerContext = materializerContext ?? new TestMaterializerContext() { Model = clientEdmModel, Context = context };
+            var adapter = new EntityTrackingAdapter(new TestEntityTracker(), MergeOption.OverwriteChanges, clientEdmModel, context);
+            var lazyPrimitivePropertyConverter = new Microsoft.OData.Client.SimpleLazy<PrimitivePropertyConverter>(() => new PrimitivePropertyConverter());
+            var primitiveValueMaterializerPolicy = new PrimitiveValueMaterializationPolicy(materializerContext, lazyPrimitivePropertyConverter);
+            var entryPolicy = new EntryValueMaterializationPolicy(materializerContext, adapter, lazyPrimitivePropertyConverter, null);
+            var collectionPolicy = new CollectionValueMaterializationPolicy(materializerContext, primitiveValueMaterializerPolicy);
+            var intanceAnnotationPolicy = new InstanceAnnotationMaterializationPolicy(materializerContext);
 
-        private ComplexValueMaterializationPolicy CreatePrimitiveValueMaterializationPolicy(TestMaterializerContext context)
-        {
-            var lazyPrimitivePropertyConverter = new Microsoft.OData.Client.SimpleLazy<PrimitivePropertyConverter>(() => new PrimitivePropertyConverter(ODataFormat.Json));
-            var primitiveValueMaterializerPolicy = new PrimitiveValueMaterializationPolicy(context, lazyPrimitivePropertyConverter);
-            var complexPolicy = new ComplexValueMaterializationPolicy(context, lazyPrimitivePropertyConverter);
-            var collectionPolicy = new CollectionValueMaterializationPolicy(context, primitiveValueMaterializerPolicy);
-            var intanceAnnotationPolicy = new InstanceAnnotationMaterializationPolicy(context);
+            entryPolicy.CollectionValueMaterializationPolicy = collectionPolicy;
+            entryPolicy.InstanceAnnotationMaterializationPolicy = intanceAnnotationPolicy;
 
-            collectionPolicy.ComplexValueMaterializationPolicy = complexPolicy;
-            complexPolicy.CollectionValueMaterializationPolicy = collectionPolicy;
-            complexPolicy.InstanceAnnotationMaterializationPolicy = intanceAnnotationPolicy;
-
-            return complexPolicy;
+            return entryPolicy;
         }
     }
 }

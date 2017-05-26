@@ -50,6 +50,10 @@ namespace Microsoft.Test.Taupo.Astoria.Contracts.OData
         }
 
         /// <summary>
+        /// Gets or sets the IsComplex for the enti
+        /// </summary>
+        public bool IsComplex { get; set; }
+        /// <summary>
         /// Gets or sets the ETag for the entity
         /// </summary>
         public string ETag { get; set; }

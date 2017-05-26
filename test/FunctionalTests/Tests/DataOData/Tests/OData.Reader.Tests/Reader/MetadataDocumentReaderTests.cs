@@ -11,9 +11,8 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Library;
     using Microsoft.Test.Taupo.Astoria.Contracts;
     using Microsoft.Test.Taupo.Common;
     using Microsoft.Test.Taupo.Execution;
@@ -87,7 +86,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
         public void MetadataFunctionImportAnnotationsReaderTest()
         {
             // HttpMethod 
-            var interestingValues = new[] 
+            var interestingValues = new[]
             {
                 new { HttpMethod = "GET" },
                 new { HttpMethod= "POST" },
@@ -167,7 +166,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
                 (testDescriptor, testConfiguration) => testDescriptor.RunTest(testConfiguration));
         }
 
-        [TestMethod, TestCategory("Reader.MetadataDocument"), Variation(Description="Test for reading metadata documents with element types appearing in different orders.")]
+        [TestMethod, TestCategory("Reader.MetadataDocument"), Variation(Description = "Test for reading metadata documents with element types appearing in different orders.")]
         public void MetadataDocumentElementTypeOrderTest()
         {
             IEdmModel model = Microsoft.Test.OData.Utils.Metadata.TestModels.BuildDefaultAstoriaTestModel();
@@ -187,77 +186,6 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
                     testDescriptorCopy.MetadataDocumentTransform = new MetadataDocumentReorderingTransform(metadataOrder, entityContainerOrder);
                     testDescriptorCopy.RunTest(testConfiguration);
                 });
-        }
-
-        [TestMethod, TestCategory("Reader.MetadataDocument"), Variation(Description = "Test the payload kind detection of metadata document payloads.")]
-        public void MetadataDocumentReaderPayloadKindDetectionTest()
-        {
-            // Test cases
-            PayloadKindDetectionResult metadataResult = new PayloadKindDetectionResult(ODataPayloadKind.MetadataDocument, ODataFormat.Metadata);
-            IEnumerable<PayloadKindDetectionResult> metadataDetectionResult = new PayloadKindDetectionResult[] { metadataResult };
-
-            IEnumerable<PayloadKindDetectionResult> emptyDetectionResult = Enumerable.Empty<PayloadKindDetectionResult>();
-
-            var testDescriptors = new PayloadKindDetectionTestDescriptor[]
-            {
-                // Correct element
-                new PayloadKindDetectionTestDescriptor(this.PayloadKindDetectionSettings)
-                {
-                    ContentType = "application/xml",
-                    PayloadString = "<edmx:" + ODataCommon.EdmConstants.EdmxName + " xmlns:edmx = \"" + ODataCommon.EdmConstants.EdmxOasisNamespace + "\" />",
-                    ExpectedDetectionResults = testConfig => testConfig.IsRequest
-                        ? emptyDetectionResult
-                        : metadataDetectionResult,
-                },
-
-                // Non-metadata top-level element
-                new PayloadKindDetectionTestDescriptor(this.PayloadKindDetectionSettings)
-                {
-                    ContentType = "application/xml",
-                    PayloadString = "<metadata />",
-                    ExpectedDetectionResults = testConfig => emptyDetectionResult,
-                },
-                // Top-level element in correct namespace but with wrong name
-                new PayloadKindDetectionTestDescriptor(this.PayloadKindDetectionSettings)
-                {
-                    ContentType = "application/xml",
-                    PayloadString = "<edmx:metadata xmlns:edmx = \"" + ODataCommon.EdmConstants.EdmxOasisNamespace + "\" />",
-                    ExpectedDetectionResults = testConfig => emptyDetectionResult,
-                },
-
-                // Non-Xml content
-                new PayloadKindDetectionTestDescriptor(this.PayloadKindDetectionSettings)
-                {
-                    ContentType = "application/xml",
-                    PayloadString = "Some non-Xml content",
-                    ExpectedDetectionResults = testConfig => emptyDetectionResult,
-                },
-
-                // Unsupported content type
-                new PayloadKindDetectionTestDescriptor(this.PayloadKindDetectionSettings)
-                {
-                    ContentType = "application/invalid",
-                    PayloadString = "<edmx:" + ODataCommon.EdmConstants.EdmxName + " xmlns:edmx = \"" + ODataCommon.EdmConstants.EdmxOasisNamespace + "\" />",
-                    ExpectedDetectionResults = testConfig => emptyDetectionResult,
-                },
-
-                // Correct element with leading nodes that should be ignored
-                new PayloadKindDetectionTestDescriptor(this.PayloadKindDetectionSettings)
-                {
-                    ContentType = "application/xml",
-                    PayloadString = "<!-- Comment -->" +
-                        "<?pi Ignore this?>" +
-                        "<edmx:" + ODataCommon.EdmConstants.EdmxName + " xmlns:edmx = \"" + ODataCommon.EdmConstants.EdmxOasisNamespace + "\" />",
-                    ExpectedDetectionResults = testConfig => testConfig.IsRequest
-                        ? emptyDetectionResult
-                        : metadataDetectionResult,
-                },
-            };
-
-            this.CombinatorialEngineProvider.RunCombinations(
-                testDescriptors,
-                this.ReaderTestConfigurationProvider.AtomFormatConfigurations.Where(tc => tc.Synchronous),
-                (testDescriptor, testConfiguration) => testDescriptor.RunTest(testConfiguration));
         }
 
         private MetadataReaderTestDescriptor CreateMetadataDescriptor(IEdmModel testModel, ExpectedException expectedException = null)

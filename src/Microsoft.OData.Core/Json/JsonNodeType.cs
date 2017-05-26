@@ -4,24 +4,12 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-#if SPATIAL
-namespace Microsoft.Data.Spatial
-#else
-namespace Microsoft.OData.Core.Json
-#endif
+namespace Microsoft.OData.Json
 {
-    #region Namespaces
-    #endregion Namespaces
-
     /// <summary>
     /// Enumeration of all JSON node type.
     /// </summary>
-#if ODATALIB_PUBLICJSONREADER
-    public
-#else
-    internal
-#endif
-    enum JsonNodeType
+    public enum JsonNodeType
     {
         /// <summary>
         /// No node - invalid value.

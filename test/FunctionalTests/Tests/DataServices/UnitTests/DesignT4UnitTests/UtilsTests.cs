@@ -7,15 +7,13 @@
 using System;
 using System.Xml.Linq;
 using FluentAssertions;
+using Microsoft.OData.Client.Design.T4;
 using Microsoft.OData.Edm;
-using Microsoft.OData.Edm.Library;
-using Microsoft.OData.Edm.Library.Values;
+using Microsoft.OData.Edm.Vocabularies;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Microsoft.OData.Service.Design.UnitTests
 {
-    using Microsoft.OData.Client.Design.T4;
-
     public class EdmSchemaTypeForTest : EdmType, IEdmSchemaElement
     {
         private readonly string name;
@@ -304,8 +302,8 @@ namespace Microsoft.OData.Service.Design.UnitTests
         public void GetClrTypeNameShouldReturnICollectionStructureTemplateForCollectionOfEnumType()
         {
             EdmEnumType gender = new EdmEnumType("Namespace", "Gender", EdmPrimitiveTypeKind.Byte, true);
-            gender.AddMember("Male", new EdmIntegerConstant(1));
-            gender.AddMember("Female", new EdmIntegerConstant(2));
+            gender.AddMember("Male", new EdmEnumMemberValue(1));
+            gender.AddMember("Female", new EdmEnumMemberValue(2));
 
             IEdmTypeReference elementTypeReference = new EdmTypeReferenceForTest(gender, false);
             IEdmCollectionType collectionType = new EdmCollectionType(elementTypeReference);
@@ -567,13 +565,13 @@ namespace Microsoft.OData.Service.Design.UnitTests
         [TestMethod]
         public void GetClrTypeNameDateShouldBeGlobalMicrosoftODataEdmLibraryDate()
         {
-            ODataT4CodeGenerator.Utils.GetClrTypeName(new EdmPrimitiveType(EdmPrimitiveTypeKind.Date), template).Should().Be("global::Microsoft.OData.Edm.Library.Date");
+            ODataT4CodeGenerator.Utils.GetClrTypeName(new EdmPrimitiveType(EdmPrimitiveTypeKind.Date), template).Should().Be("global::Microsoft.OData.Edm.Date");
         }
 
         [TestMethod]
         public void GetClrTypeNameTimeOfDayShouldBeGlobalMicrosoftODataEdmLibraryTimeOfDay()
         {
-            ODataT4CodeGenerator.Utils.GetClrTypeName(new EdmPrimitiveType(EdmPrimitiveTypeKind.TimeOfDay), template).Should().Be("global::Microsoft.OData.Edm.Library.TimeOfDay");
+            ODataT4CodeGenerator.Utils.GetClrTypeName(new EdmPrimitiveType(EdmPrimitiveTypeKind.TimeOfDay), template).Should().Be("global::Microsoft.OData.Edm.TimeOfDay");
         }
 
         [TestMethod]

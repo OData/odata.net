@@ -4,9 +4,8 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core.UriParser.Semantic
+namespace Microsoft.OData.UriParser
 {
-    using Microsoft.OData.Core.UriParser.Visitors;
     using Microsoft.OData.Edm;
 
     /// <summary>
@@ -15,7 +14,7 @@ namespace Microsoft.OData.Core.UriParser.Semantic
     public sealed class ExpandedNavigationSelectItem : ExpandedReferenceSelectItem
     {
         /// <summary>
-        /// Create an Expand item using a nav prop, its entity set and a SelectExpandClause 
+        /// Create an Expand item using a nav prop, its entity set and a SelectExpandClause
         /// </summary>
         /// <param name="pathToNavigationProperty">the path to the navigation property for this expand item, including any type segments</param>
         /// <param name="navigationSource">the navigation source for this ExpandItem</param>
@@ -62,7 +61,7 @@ namespace Microsoft.OData.Core.UriParser.Semantic
         /// <summary>
         /// The select and expand clause for this expanded navigation.
         /// </summary>
-        public SelectExpandClause SelectAndExpand       
+        public SelectExpandClause SelectAndExpand
         {
             get; private set;
         }

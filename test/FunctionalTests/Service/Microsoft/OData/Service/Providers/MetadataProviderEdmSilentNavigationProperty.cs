@@ -12,7 +12,6 @@ namespace Microsoft.OData.Service.Providers
     using System.Linq;
     using System.Text;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Library;
 
     /// <summary>
     /// Represents a navigation property synthesized for an association end that does not have a corresponding navigation property.

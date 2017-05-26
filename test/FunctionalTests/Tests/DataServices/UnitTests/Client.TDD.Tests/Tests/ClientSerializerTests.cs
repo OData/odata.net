@@ -14,8 +14,8 @@ namespace AstoriaUnitTests.TDD.Tests.Client
     using Microsoft.OData.Client;
     using Microsoft.OData.Client.Metadata;
     using FluentAssertions;
-    using Microsoft.OData.Edm.Library;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
+    using Microsoft.OData.Edm;
     using Microsoft.Spatial;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -25,19 +25,6 @@ namespace AstoriaUnitTests.TDD.Tests.Client
     [TestClass]
     public class ClientSerializerTests
     {
-        [TestMethod]
-        public void ClientShouldIncludeIdInAtomUpdates()
-        {
-            Action<EntityDescriptor> configureDescriptor = d =>
-            {
-                d.Identity = new Uri("http://foo.org");
-                d.State = EntityStates.Modified;
-            };
-
-            var testSubject = CreateODataEntry(configureDescriptor, f => f.UseAtom());
-            testSubject.Id.Should().Be(new Uri("http://foo.org"));
-        }
-
         [TestMethod]
         public void ClientShouldNotIncludeIdInJsonLightUpdates()
         {
@@ -52,19 +39,6 @@ namespace AstoriaUnitTests.TDD.Tests.Client
         }
 
         [TestMethod]
-        public void ClientShouldNotIncludeIdInAtomInserts()
-        {
-            Action<EntityDescriptor> configureDescriptor = d =>
-            {
-                d.Identity = new Uri("http://foo.org");
-                d.State = EntityStates.Added;
-            };
-
-            var testSubject = CreateODataEntry(configureDescriptor, f => f.UseAtom());
-            testSubject.Id.Should().BeNull();
-        }
-
-        [TestMethod]
         public void ClientShouldSetTypeNameFromClientTypeAnnotation()
         {
             var testSubject = CreateODataEntry(clientTypeName: "Fake.Type");
@@ -75,7 +49,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client
         public void ClientShouldAddTypeAnnotationIfServerNameIsDifferent()
         {
             var testSubject = CreateODataEntry(serverTypeName: "Foo", clientTypeName: "Fake.Type");
-            var annotation = testSubject.GetAnnotation<SerializationTypeNameAnnotation>();
+            var annotation = testSubject.TypeAnnotation;
             annotation.Should().NotBeNull();
             annotation.TypeName.Should().Be("Foo");
         }
@@ -84,7 +58,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client
         public void ClientShouldNotAddTypeAnnotationIfServerNameIsTheSame()
         {
             var testSubject = CreateODataEntry(serverTypeName: "Fake.Type", clientTypeName: "Fake.Type");
-            testSubject.GetAnnotation<SerializationTypeNameAnnotation>().Should().BeNull();
+            testSubject.TypeAnnotation.Should().BeNull();
         }
 
         [TestMethod]
@@ -101,12 +75,12 @@ namespace AstoriaUnitTests.TDD.Tests.Client
             testSubject.MediaResource.Should().NotBeNull();
         }
 
-        private static ODataEntry CreateODataEntry(Action<EntityDescriptor> configureDescriptor = null, Action<DataServiceClientFormat> configureFormat = null, string serverTypeName = "serverTypeName", string clientTypeName = "clientTypeName")
+        private static ODataResource CreateODataEntry(Action<EntityDescriptor> configureDescriptor = null, Action<DataServiceClientFormat> configureFormat = null, string serverTypeName = "serverTypeName", string clientTypeName = "clientTypeName")
         {
             return CreateODataEntry<object>(configureDescriptor, configureFormat, serverTypeName, clientTypeName);
         }
 
-        private static ODataEntry CreateODataEntry<T>(Action<EntityDescriptor> configureDescriptor = null, Action<DataServiceClientFormat> configureFormat = null, string serverTypeName = "serverTypeName", string clientTypeName = "clientTypeName")
+        private static ODataResource CreateODataEntry<T>(Action<EntityDescriptor> configureDescriptor = null, Action<DataServiceClientFormat> configureFormat = null, string serverTypeName = "serverTypeName", string clientTypeName = "clientTypeName")
         {
             ClientEdmModel model = new ClientEdmModel(ODataProtocolVersion.V4);
             var ctx = new DataServiceContext(new Uri("http://www.example.com/odata.svc"), ODataProtocolVersion.V4, model);
@@ -339,7 +313,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client
             List<BodyOperationParameter> parameters = new List<BodyOperationParameter> { new BodyOperationParameter("customer", customer) };
             ODataRequestMessageWrapper requestMessage = CreateRequestMessageForPost(requestInfo);
             serializer.WriteBodyOperationParameters(parameters, requestMessage);
-            const string parameterString = "{\"customer\":{\"@odata.type\":\"#AstoriaUnitTests.TDD.Tests.Client.Customer\",\"Address\":{\"@odata.type\":\"#AstoriaUnitTests.TDD.Tests.Client.Address\",\"Street\":\"Microsoft Street\"},\"Emails@odata.type\":\"#Collection(String)\",\"Emails\":[\"tom@microsoft.com\",\"jerry@microsoft.com\"],\"Id\":1}}";
+            const string parameterString = "{\"customer\":{\"@odata.type\":\"#AstoriaUnitTests.TDD.Tests.Client.Customer\",\"Emails@odata.type\":\"#Collection(String)\",\"Emails\":[\"tom@microsoft.com\",\"jerry@microsoft.com\"],\"Id\":1,\"Address\":{\"@odata.type\":\"#AstoriaUnitTests.TDD.Tests.Client.Address\",\"Street\":\"Microsoft Street\"}}}";
             VerifyMessageBody(requestMessage, parameterString);
         }
 
@@ -378,7 +352,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client
             List<BodyOperationParameter> parameters = new List<BodyOperationParameter> { new BodyOperationParameter("customer", new List<Customer>(){customer1, customer2}) };
             ODataRequestMessageWrapper requestMessage = CreateRequestMessageForPost(requestInfo);
             serializer.WriteBodyOperationParameters(parameters, requestMessage);
-            const string parameterString = "{\"customer\":[{\"@odata.type\":\"#AstoriaUnitTests.TDD.Tests.Client.Customer\",\"Address\":{\"@odata.type\":\"#AstoriaUnitTests.TDD.Tests.Client.Address\",\"Street\":\"Microsoft Street\"},\"Emails@odata.type\":\"#Collection(String)\",\"Emails\":[\"tom@microsoft.com\",\"jerry@microsoft.com\"],\"Id\":1},{\"@odata.type\":\"#AstoriaUnitTests.TDD.Tests.Client.Customer\",\"Address\":null,\"Emails@odata.type\":\"#Collection(String)\",\"Emails\":[],\"Id\":2}]}";
+            const string parameterString = "{\"customer\":[{\"@odata.type\":\"#AstoriaUnitTests.TDD.Tests.Client.Customer\",\"Emails@odata.type\":\"#Collection(String)\",\"Emails\":[\"tom@microsoft.com\",\"jerry@microsoft.com\"],\"Id\":1,\"Address\":{\"@odata.type\":\"#AstoriaUnitTests.TDD.Tests.Client.Address\",\"Street\":\"Microsoft Street\"}},{\"@odata.type\":\"#AstoriaUnitTests.TDD.Tests.Client.Customer\",\"Emails@odata.type\":\"#Collection(String)\",\"Emails\":[],\"Id\":2,\"Address\":null}]}";
             VerifyMessageBody(requestMessage, parameterString);
         }
 

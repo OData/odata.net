@@ -139,6 +139,15 @@ namespace Microsoft.OData.Edm {
         }
 
         /// <summary>
+        /// A string like "The navigation property binding path is not valid."
+        /// </summary>
+        internal static string NavigationPropertyBinding_PathIsNotValid {
+            get {
+                return Microsoft.OData.Edm.EntityRes.GetString(Microsoft.OData.Edm.EntityRes.NavigationPropertyBinding_PathIsNotValid);
+            }
+        }
+
+        /// <summary>
         /// A string like "Type '{0}' must have a single type annotation with term type '{1}'."
         /// </summary>
         internal static string Edm_Evaluator_NoTermTypeAnnotationOnType(object p0, object p1) {
@@ -146,14 +155,14 @@ namespace Microsoft.OData.Edm {
         }
 
         /// <summary>
-        /// A string like "Type '{0}' must have a single value annotation with term '{1}'."
+        /// A string like "Type '{0}' must have a single annotation with term '{1}'."
         /// </summary>
         internal static string Edm_Evaluator_NoValueAnnotationOnType(object p0, object p1) {
             return Microsoft.OData.Edm.EntityRes.GetString(Microsoft.OData.Edm.EntityRes.Edm_Evaluator_NoValueAnnotationOnType, p0, p1);
         }
 
         /// <summary>
-        /// A string like "Element must have a single value annotation with term '{0}'."
+        /// A string like "Element must have a single annotation with term '{0}'."
         /// </summary>
         internal static string Edm_Evaluator_NoValueAnnotationOnElement(object p0) {
             return Microsoft.OData.Edm.EntityRes.GetString(Microsoft.OData.Edm.EntityRes.Edm_Evaluator_NoValueAnnotationOnElement, p0);
@@ -392,7 +401,7 @@ namespace Microsoft.OData.Edm {
         }
 
         /// <summary>
-        /// A string like "A property cannot be of type '{0}'. The property type must be a complex, a primitive or an enum type, or a collection of complex, primitive, or enum types."
+        /// A string like "A property cannot be of type '{0}'. The property type must be a complex, a primitive, an enum or an untyped type, or a collection of complex, primitive, or enum types."
         /// </summary>
         internal static string EdmModel_Validator_Semantic_InvalidPropertyType(object p0) {
             return Microsoft.OData.Edm.EntityRes.GetString(Microsoft.OData.Edm.EntityRes.EdmModel_Validator_Semantic_InvalidPropertyType, p0);
@@ -724,17 +733,10 @@ namespace Microsoft.OData.Edm {
         }
 
         /// <summary>
-        /// A string like "A property with a fixed concurrency mode cannot be of type '{0}'. The property type must be a primitive type."
+        /// A string like "The value of enum member '{0}' exceeds the range of its underlying type."
         /// </summary>
-        internal static string EdmModel_Validator_Semantic_InvalidPropertyTypeConcurrencyMode(object p0) {
-            return Microsoft.OData.Edm.EntityRes.GetString(Microsoft.OData.Edm.EntityRes.EdmModel_Validator_Semantic_InvalidPropertyTypeConcurrencyMode, p0);
-        }
-
-        /// <summary>
-        /// A string like "The type of the value of enum member '{0}' must match the underlying type of the parent enum."
-        /// </summary>
-        internal static string EdmModel_Validator_Semantic_EnumMemberTypeMustMatchEnumUnderlyingType(object p0) {
-            return Microsoft.OData.Edm.EntityRes.GetString(Microsoft.OData.Edm.EntityRes.EdmModel_Validator_Semantic_EnumMemberTypeMustMatchEnumUnderlyingType, p0);
+        internal static string EdmModel_Validator_Semantic_EnumMemberValueOutOfRange(object p0) {
+            return Microsoft.OData.Edm.EntityRes.GetString(Microsoft.OData.Edm.EntityRes.EdmModel_Validator_Semantic_EnumMemberValueOutOfRange, p0);
         }
 
         /// <summary>
@@ -934,13 +936,6 @@ namespace Microsoft.OData.Edm {
         }
 
         /// <summary>
-        /// A string like "A term without other errors must not have kind of none. The kind of term '{0}' is none."
-        /// </summary>
-        internal static string EdmModel_Validator_Semantic_TermMustNotHaveKindOfNone(object p0) {
-            return Microsoft.OData.Edm.EntityRes.GetString(Microsoft.OData.Edm.EntityRes.EdmModel_Validator_Semantic_TermMustNotHaveKindOfNone, p0);
-        }
-
-        /// <summary>
         /// A string like "A schema element without other errors must not have kind of none. The kind of schema element '{0}' is none."
         /// </summary>
         internal static string EdmModel_Validator_Semantic_SchemaElementMustNotHaveKindOfNone(object p0) {
@@ -1025,7 +1020,7 @@ namespace Microsoft.OData.Edm {
         }
 
         /// <summary>
-        /// A string like "An element already has a direct value annotation with the namespace '{0}' and name '{1}'."
+        /// A string like "An element already has a direct annotation with the namespace '{0}' and name '{1}'."
         /// </summary>
         internal static string EdmModel_Validator_Semantic_ElementDirectValueAnnotationFullNameMustBeUnique(object p0, object p1) {
             return Microsoft.OData.Edm.EntityRes.GetString(Microsoft.OData.Edm.EntityRes.EdmModel_Validator_Semantic_ElementDirectValueAnnotationFullNameMustBeUnique, p0, p1);
@@ -1412,13 +1407,6 @@ namespace Microsoft.OData.Edm {
         }
 
         /// <summary>
-        /// A string like "The concurrency mode '{0}' is not valid. Concurrency mode must be: 'None', or 'Fixed'."
-        /// </summary>
-        internal static string CsdlParser_InvalidConcurrencyMode(object p0) {
-            return Microsoft.OData.Edm.EntityRes.GetString(Microsoft.OData.Edm.EntityRes.CsdlParser_InvalidConcurrencyMode, p0);
-        }
-
-        /// <summary>
         /// A string like "There is no Role with name '{0}' defined in relationship '{1}'."
         /// </summary>
         internal static string CsdlParser_InvalidEndRoleInRelationshipConstraint(object p0, object p1) {
@@ -1560,11 +1548,11 @@ namespace Microsoft.OData.Edm {
         }
 
         /// <summary>
-        /// A string like "The enumeration member value exceeds the range of its data type 'http://www.w3.org/2001/XMLSchema:long'."
+        /// A string like "The enumeration member must have a value."
         /// </summary>
-        internal static string CsdlSemantics_EnumMemberValueOutOfRange {
+        internal static string CsdlSemantics_EnumMemberMustHaveValue {
             get {
-                return Microsoft.OData.Edm.EntityRes.GetString(Microsoft.OData.Edm.EntityRes.CsdlSemantics_EnumMemberValueOutOfRange);
+                return Microsoft.OData.Edm.EntityRes.GetString(Microsoft.OData.Edm.EntityRes.CsdlSemantics_EnumMemberMustHaveValue);
             }
         }
 
@@ -1764,17 +1752,10 @@ namespace Microsoft.OData.Edm {
         }
 
         /// <summary>
-        /// A string like "Invalid edmx target: '{0}'"
+        /// A string like "Invalid CSDL target: '{0}'"
         /// </summary>
-        internal static string UnknownEnumVal_EdmxTarget(object p0) {
-            return Microsoft.OData.Edm.EntityRes.GetString(Microsoft.OData.Edm.EntityRes.UnknownEnumVal_EdmxTarget, p0);
-        }
-
-        /// <summary>
-        /// A string like "Invalid concurrency mode: '{0}'"
-        /// </summary>
-        internal static string UnknownEnumVal_ConcurrencyMode(object p0) {
-            return Microsoft.OData.Edm.EntityRes.GetString(Microsoft.OData.Edm.EntityRes.UnknownEnumVal_ConcurrencyMode, p0);
+        internal static string UnknownEnumVal_CsdlTarget(object p0) {
+            return Microsoft.OData.Edm.EntityRes.GetString(Microsoft.OData.Edm.EntityRes.UnknownEnumVal_CsdlTarget, p0);
         }
 
         /// <summary>
@@ -1782,13 +1763,6 @@ namespace Microsoft.OData.Edm {
         /// </summary>
         internal static string UnknownEnumVal_PropertyKind(object p0) {
             return Microsoft.OData.Edm.EntityRes.GetString(Microsoft.OData.Edm.EntityRes.UnknownEnumVal_PropertyKind, p0);
-        }
-
-        /// <summary>
-        /// A string like "Invalid term kind: '{0}'"
-        /// </summary>
-        internal static string UnknownEnumVal_TermKind(object p0) {
-            return Microsoft.OData.Edm.EntityRes.GetString(Microsoft.OData.Edm.EntityRes.UnknownEnumVal_TermKind, p0);
         }
 
         /// <summary>
@@ -1941,10 +1915,10 @@ namespace Microsoft.OData.Edm {
         }
 
         /// <summary>
-        /// A string like "Conversion of EDM values to a CLR type with type code {0} is not supported."
+        /// A string like "Conversion of EDM values to a CLR type with type {0} is not supported."
         /// </summary>
-        internal static string EdmToClr_UnsupportedTypeCode(object p0) {
-            return Microsoft.OData.Edm.EntityRes.GetString(Microsoft.OData.Edm.EntityRes.EdmToClr_UnsupportedTypeCode, p0);
+        internal static string EdmToClr_UnsupportedType(object p0) {
+            return Microsoft.OData.Edm.EntityRes.GetString(Microsoft.OData.Edm.EntityRes.EdmToClr_UnsupportedType, p0);
         }
 
         /// <summary>
@@ -2092,7 +2066,7 @@ namespace Microsoft.OData.Edm {
         internal static Exception ArgumentNull(string paramName) {
             return new ArgumentNullException(paramName);
         }
-        
+
         /// <summary>
         /// The exception that is thrown when the value of an argument is outside the allowable range of values as defined by the invoked method.
         /// </summary>
@@ -2108,7 +2082,7 @@ namespace Microsoft.OData.Edm {
         }
 
         /// <summary>
-        /// The exception that is thrown when an invoked method is not supported, or when there is an attempt to read, seek, or write to a stream that does not support the invoked functionality. 
+        /// The exception that is thrown when an invoked method is not supported, or when there is an attempt to read, seek, or write to a stream that does not support the invoked functionality.
         /// </summary>
         internal static Exception NotSupported() {
             return new NotSupportedException();

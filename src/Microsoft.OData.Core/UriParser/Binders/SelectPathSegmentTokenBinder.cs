@@ -4,21 +4,16 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core.UriParser.Parsers
+namespace Microsoft.OData.UriParser
 {
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
-    using System.Globalization;
     using System.Linq;
-    using Microsoft.OData.Core.JsonLight;
-    using Microsoft.OData.Core.UriParser.Syntactic;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Core.Metadata;
-    using Microsoft.OData.Core.UriParser.Metadata;
-    using Microsoft.OData.Core.UriParser.Semantic;
-    using ODataErrorStrings = Microsoft.OData.Core.Strings;
+    using Microsoft.OData.Metadata;
+    using ODataErrorStrings = Microsoft.OData.Strings;
 
     /// <summary>
     /// Builds segments from tokens within $select.
@@ -33,12 +28,9 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         /// <param name="edmType">the type of the current scope based on type segments.</param>
         /// <param name="resolver">Resolver for uri parser.</param>
         /// <returns>The segment created from the token.</returns>
-        public static ODataPathSegment ConvertNonTypeTokenToSegment(PathSegmentToken tokenIn, IEdmModel model, IEdmStructuredType edmType, ODataUriResolver resolver = null)
+        public static ODataPathSegment ConvertNonTypeTokenToSegment(PathSegmentToken tokenIn, IEdmModel model, IEdmStructuredType edmType, ODataUriResolver resolver)
         {
-            if (resolver == null)
-            {
-                resolver = ODataUriResolver.Default;
-            }
+            ExceptionUtils.CheckArgumentNotNull(resolver, "resolver");
 
             ODataPathSegment nextSegment;
             if (TryBindAsDeclaredProperty(tokenIn, edmType, resolver, out nextSegment))
@@ -54,7 +46,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
                     return nextSegment;
                 }
 
-                // If an action or function is requested in a selectItem using a qualifiedActionName or a qualifiedFunctionName 
+                // If an action or function is requested in a selectItem using a qualifiedActionName or a qualifiedFunctionName
                 // and that operation cannot be bound to the entities requested, the service MUST ignore the selectItem.
                 if (!edmType.IsOpen)
                 {
@@ -64,7 +56,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
 
             if (edmType.IsOpen)
             {
-                return new OpenPropertySegment(tokenIn.Identifier);
+                return new DynamicPathSegment(tokenIn.Identifier);
             }
 
             throw new ODataException(ODataErrorStrings.MetadataBinder_PropertyNotDeclared(edmType.FullTypeName(), tokenIn.Identifier));

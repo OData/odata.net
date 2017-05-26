@@ -4,25 +4,23 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-#if ASTORIA_CLIENT
+#if ODATA_CLIENT
 namespace Microsoft.OData.Client.ALinq.UriParser
 #else
-namespace Microsoft.OData.Core.UriParser.Syntactic
+namespace Microsoft.OData.UriParser
 #endif
 {
     #region Namespaces
-    using System;
+
     using System.Collections.Generic;
-    using Microsoft.OData.Core.UriParser.Semantic;
-    using Microsoft.OData.Core.UriParser.Visitors;
 
     #endregion Namespaces
 
     /// <summary>
     /// Lexical token representing a segment in a path.
     /// </summary>
-    /// 
-    internal sealed class NonSystemToken : PathSegmentToken
+    ///
+    public sealed class NonSystemToken : PathSegmentToken
     {
         /// <summary>
         /// Any named values for this NonSystemToken

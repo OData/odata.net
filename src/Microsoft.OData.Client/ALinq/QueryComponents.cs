@@ -14,7 +14,7 @@ namespace Microsoft.OData.Client
     using System.Linq;
     using System.Linq.Expressions;
     using System.Text;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
 
     #endregion Namespaces
 
@@ -97,19 +97,19 @@ namespace Microsoft.OData.Client
         /// <param name="projection">selector Lambda Expression</param>
         /// <param name="normalizerRewrites">Records the generated-to-source rewrites created (possibly null).</param>
         /// <param name="httpMethod">The HttpMethod to be used in the request.</param>
-        /// <param name="singleResult">If true, then a single primitive or complex value is expected. If false, then a collection of primitives or complex 
+        /// <param name="singleResult">If true, then a single primitive or complex value is expected. If false, then a collection of primitives or complex
         /// is expected. Should be null when expecting a void response, a single entry, or a feed.</param>
         /// <param name="bodyOperationParameters">The body operation parameters associated with a service action.</param>
         /// <param name="uriOperationParameters">The uri operation parameters associated with a service function or a service operation.</param>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Justification = "Used in DataServiceContext")]
         internal QueryComponents(
-            Uri uri, 
-            Version version, 
-            Type lastSegmentType, 
-            LambdaExpression projection, 
-            Dictionary<Expression, Expression> normalizerRewrites, 
-            string httpMethod, 
-            bool? singleResult, 
+            Uri uri,
+            Version version,
+            Type lastSegmentType,
+            LambdaExpression projection,
+            Dictionary<Expression, Expression> normalizerRewrites,
+            string httpMethod,
+            bool? singleResult,
             List<BodyOperationParameter> bodyOperationParameters,
             List<UriOperationParameter> uriOperationParameters)
         {
@@ -135,9 +135,9 @@ namespace Microsoft.OData.Client
         /// <summary>Records the generated-to-source rewrites created.</summary>
         internal Dictionary<Expression, Expression> NormalizerRewrites
         {
-            get 
-            { 
-                return this.normalizerRewrites; 
+            get
+            {
+                return this.normalizerRewrites;
             }
         }
 
@@ -178,7 +178,7 @@ namespace Microsoft.OData.Client
         }
 
         /// <summary>
-        /// List of operation parameters for service operation or a service function. 
+        /// List of operation parameters for service operation or a service function.
         /// </summary>
         internal List<UriOperationParameter> UriOperationParameters
         {
@@ -235,7 +235,7 @@ namespace Microsoft.OData.Client
         /// </remarks>
         private static bool ContainsSelectQueryOption(string queryString)
         {
-            return queryString.Contains(SelectQueryOptionWithQuestionMark) 
+            return queryString.Contains(SelectQueryOptionWithQuestionMark)
                 || queryString.Contains(SelectQueryOptionWithAmpersand)
                 || queryString.Contains(SelectQueryOptionWithLeftParen)
                 || queryString.Contains(SelectQueryOptionWithSemi);

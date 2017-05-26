@@ -8,7 +8,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests
 {
     using System;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.Test.Taupo.Common;
     using Microsoft.Test.Taupo.OData.Common;
     using Microsoft.Test.Taupo.OData.Writer.Tests.Common;
@@ -31,9 +31,9 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests
         /// <param name="model">The model used for writing the payloads.</param>
         /// <param name="functionImport">Function import whose parameters are to be written when the payload kind is Parameters.</param>
         public virtual void WriteMessage(
-            ODataMessageWriterTestWrapper messageWriter, 
-            ODataPayloadKind payloadKind, 
-            object payload, 
+            ODataMessageWriterTestWrapper messageWriter,
+            ODataPayloadKind payloadKind,
+            object payload,
             IEdmModel model = null,
             IEdmOperationImport functionImport = null)
         {
@@ -45,12 +45,12 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests
                     messageWriter.WriteProperty((ODataProperty)payload);
                     break;
 
-                case ODataPayloadKind.Feed:
-                    this.WriteTopLevelFeed(messageWriter, (ODataFeed)payload);
+                case ODataPayloadKind.ResourceSet:
+                    this.WriteTopLevelFeed(messageWriter, (ODataResourceSet)payload);
                     break;
 
-                case ODataPayloadKind.Entry:
-                    this.WriteTopLevelEntry(messageWriter, (ODataEntry)payload);
+                case ODataPayloadKind.Resource:
+                    this.WriteTopLevelEntry(messageWriter, (ODataResource)payload);
                     break;
 
                 case ODataPayloadKind.Collection:
@@ -95,26 +95,26 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests
             }
         }
 
-        private void WriteTopLevelFeed(ODataMessageWriterTestWrapper messageWriter, ODataFeed feed)
+        private void WriteTopLevelFeed(ODataMessageWriterTestWrapper messageWriter, ODataResourceSet feed)
         {
             ExceptionUtilities.CheckArgumentNotNull(messageWriter, "messageWriter");
 
-            var feedWriter = messageWriter.CreateODataFeedWriter();
+            var feedWriter = messageWriter.CreateODataResourceSetWriter();
             this.WriteFeed(feedWriter, feed);
-            
+
             feedWriter.Flush();
-            
+
         }
 
-        private void WriteTopLevelEntry(ODataMessageWriterTestWrapper messageWriter, ODataEntry entry)
+        private void WriteTopLevelEntry(ODataMessageWriterTestWrapper messageWriter, ODataResource entry)
         {
             ExceptionUtilities.CheckArgumentNotNull(messageWriter, "messageWriter");
-            ODataWriter entryWriter = messageWriter.CreateODataEntryWriter();
+            ODataWriter entryWriter = messageWriter.CreateODataResourceWriter();
 
             this.WriteEntry(entryWriter, entry);
-            
+
             entryWriter.Flush();
-            
+
         }
 
         public void WriteEntityReferenceLink(ODataMessageWriterTestWrapper messageWriter, ODataEntityReferenceLink referenceLink)
@@ -136,7 +136,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests
         {
             ODataCollectionWriter collectionWriter = messageWriter.CreateODataCollectionWriter();
             this.WriteCollection(collectionWriter, collection);
-            
+
             collectionWriter.Flush();
         }
 
@@ -147,21 +147,21 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests
             foreach (var parameter in parameters)
             {
                 ODataCollectionStart collectionStart = parameter.Value as ODataCollectionStart;
-                ODataFeed feed;
-                ODataEntry entry;
+                ODataResourceSet feed;
+                ODataResource entry;
                 if (collectionStart != null)
                 {
                     ODataCollectionWriter collectionWriter = parameterWriter.CreateCollectionWriter(parameter.Key);
                     this.WriteCollection(collectionWriter, collectionStart);
                     collectionWriter.Flush();
                 }
-                else if ((feed = parameter.Value as ODataFeed) != null)
+                else if ((feed = parameter.Value as ODataResourceSet) != null)
                 {
-                    this.WriteFeed(parameterWriter.CreateFeedWriter(parameter.Key), feed);
+                    this.WriteFeed(parameterWriter.CreateResourceSetWriter(parameter.Key), feed);
                 }
-                else if ((entry = parameter.Value as ODataEntry) != null)
+                else if ((entry = parameter.Value as ODataResource) != null)
                 {
-                    this.WriteEntry(parameterWriter.CreateEntryWriter(parameter.Key), entry);
+                    this.WriteEntry(parameterWriter.CreateResourceWriter(parameter.Key), entry);
                 }
                 else
                 {
@@ -204,10 +204,10 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests
             messageWriter.WriteError(error, debug);
         }
 
-        private void WriteFeed(ODataWriter writer, ODataFeed feed)
+        private void WriteFeed(ODataWriter writer, ODataResourceSet resourceCollection)
         {
-            writer.WriteStart(feed);
-            var annotation = feed.GetAnnotation<ODataFeedEntriesObjectModelAnnotation>();
+            writer.WriteStart(resourceCollection);
+            var annotation = resourceCollection.GetAnnotation<ODataFeedEntriesObjectModelAnnotation>();
             if (annotation != null)
             {
                 foreach (var entry in annotation)
@@ -219,11 +219,11 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests
             writer.WriteEnd();
         }
 
-        private void WriteEntry(ODataWriter writer, ODataEntry entry)
+        private void WriteEntry(ODataWriter writer, ODataResource entry)
         {
             writer.WriteStart(entry);
             var annotation = entry.GetAnnotation<ODataEntryNavigationLinksObjectModelAnnotation>();
-            ODataNavigationLink navLink = null;
+            ODataNestedResourceInfo navLink = null;
             if (annotation != null)
             {
                 for (int i = 0; i < annotation.Count; ++i)
@@ -237,20 +237,20 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests
             writer.WriteEnd();
         }
 
-        private void WriteNavigationLink(ODataWriter writer, ODataNavigationLink link)
+        private void WriteNavigationLink(ODataWriter writer, ODataNestedResourceInfo link)
         {
             writer.WriteStart(link);
             var expanded = link.GetAnnotation<ODataNavigationLinkExpandedItemObjectModelAnnotation>();
             if (expanded != null)
             {
-                var feed = expanded.ExpandedItem as ODataFeed;
+                var feed = expanded.ExpandedItem as ODataResourceSet;
                 if (feed != null)
                 {
                     this.WriteFeed(writer, feed);
                 }
                 else
                 {
-                    ODataEntry entry = expanded.ExpandedItem as ODataEntry;
+                    ODataResource entry = expanded.ExpandedItem as ODataResource;
                     if (entry != null || expanded.ExpandedItem == null)
                     {
                         this.WriteEntry(writer, entry);

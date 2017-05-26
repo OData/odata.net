@@ -18,12 +18,12 @@
     <ProjectGuid>{F3EE82F0-8DDD-45EE-BD9C-47AC3A3AF4BB}</ProjectGuid>
     <SignAssemblyAttribute>false</SignAssemblyAttribute>
     <DocumentationFile>AstoriaTestFramework.xml</DocumentationFile>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
     <ResolveAssemblyWarnOrErrorOnTargetArchitectureMismatch>None</ResolveAssemblyWarnOrErrorOnTargetArchitectureMismatch>
   </PropertyGroup>
   <Import Project="..\Build.props" />
   <PropertyGroup>
-    <DefineConstants Condition=" '$(VisualStudioVersion)' == '14.0' ">$(DefineConstants);VS2015</DefineConstants>
+    <DefineConstants Condition=" '$(VisualStudioVersion)' == '14.0' and '$(BuildingInLab)' != 'true'">$(DefineConstants);USELOCALDB</DefineConstants>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="CustomMarshalers" />
@@ -133,7 +133,6 @@
     <Compile Include="Verification\JSONPayload.cs" />
     <Compile Include="Verification\PayloadObject.cs" />
     <Compile Include="Verification\PayloadProperty.cs" />
-    <Compile Include="Verification\XMLPayload.cs" />
     <Compile Include="Tree\Astoria\Resource.cs" />
     <Compile Include="Tree\Astoria\ResouceNode.cs" />
     <Compile Include="Tree\Astoria\ResourceType.cs" />
@@ -233,7 +232,6 @@
       <Link>Features\Expressions\Resources\ExpressionTreeToXmlSerializer.cs</Link>
     </EmbeddedResource>
     <Compile Include="Client\CLWrappers\KeyAttWrapper.cs" />
-    <Compile Include="Client\CLWrappers\OpenObjectWrapper.cs" />
     <Compile Include="Client\CLWrappers\ServerDrivenPagingClientWrapper.cs" />
     <Compile Include="Client\CLWrappers\WebDataContextWrapper.cs" />
     <Compile Include="Client\CLWrappers\WebDataQueryWrapper.cs" />
@@ -261,9 +259,7 @@
     <Compile Include="Features\Blobs\Client\PicturesTagsWorkspaces.cs" />
     <EmbeddedResource Include="Features\Blobs\Client\Resources\PicturesTagsHelperService.svc.cs" />
     <EmbeddedResource Include="Features\Blobs\Client\Resources\PicturesTagsHelperService.svc" />
-    <Compile Include="Features\Concurrency\ConcurrencyAttribute.cs" />
     <Compile Include="Features\Concurrency\ConcurrencyUtil.cs" />
-    <Compile Include="Features\Concurrency\ConcurrencyWorkspaces.cs" />
     <Compile Include="Features\Containment\ContainmentUtil.cs" />
     <Compile Include="Features\Containment\ContainmentAttribute.cs" />
     <Compile Include="Features\Containment\ContainmentQuery.cs" />
@@ -305,7 +301,6 @@
     <Compile Include="Resources\SystemResourceIdentifiers.cs" />
     <Compile Include="Resources\MicrosoftDataWebResourceIdentifiers.cs" />
     <Compile Include="Resources\ResourceUtil.cs" />
-    <Compile Include="TestExecutionLayer\AstoriaClientTestCase.cs" />
     <Compile Include="TestExecutionLayer\AstoriaWebDataServiceBase.cs" />
     <Compile Include="TestExecutionLayer\dptestmoduleattribute.cs" />
     <Compile Include="TestExecutionLayer\MatrixVariation.cs" />

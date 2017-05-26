@@ -48,7 +48,7 @@ namespace AstoriaUnitTests.Tests
         //        TestUtil.AssertExceptionStatusCode(exception, 404, "/Customers('A&B') should return a 404 result");
         //    }
         //}
-
+        [Ignore] // Remove Atom
         [TestMethod]
         public void RequestUriCaseInsensitive()
         {
@@ -76,7 +76,7 @@ namespace AstoriaUnitTests.Tests
                 }
             });
         }
-
+        [Ignore] // Remove Atom
         [TestMethod]
         public void RequestUriProcessorKeySpecialCharsTest()
         {
@@ -143,7 +143,7 @@ namespace AstoriaUnitTests.Tests
                 }
             });
         }
-
+        [Ignore] // Remove Atom
         /// <summary>This test verifies that special real keywords (Infinity, -Infinity, NaN) are covered.</summary>
         [TestMethod]
         public void RequestUriProcessorKeySpecialRealTest()
@@ -193,7 +193,7 @@ namespace AstoriaUnitTests.Tests
                 });
             }
         }
-
+        [Ignore] // Remove Atom
         [TestMethod]
         public void RequestUriProcessorEmptySegments()
         {
@@ -337,7 +337,7 @@ namespace AstoriaUnitTests.Tests
                 }
             }
         }
-
+        [Ignore] // Remove Atom
         [TestMethod]
         public void RequestUriProcessExtraParensTest()
         {
@@ -418,7 +418,7 @@ namespace AstoriaUnitTests.Tests
                 }
             }
         }
-
+        [Ignore] // Remove Atom
         [TestMethod]
         public void RequestUriProcessorMetadataTest()
         {
@@ -463,7 +463,7 @@ namespace AstoriaUnitTests.Tests
                 }
             });
         }
-
+        [Ignore] // Remove Atom
         [TestMethod]
         public void RequestUriResourceKeySimpleTest()
         {
@@ -478,7 +478,7 @@ namespace AstoriaUnitTests.Tests
                     String.Format("count(//{0})=1", JsonValidator.ObjectString)},
                 new string[0]);
         }
-
+        [Ignore] // Remove Atom
         [TestMethod]
         public void RequestUriResourcePropertyTest()
         {
@@ -498,7 +498,7 @@ namespace AstoriaUnitTests.Tests
                                String.Format("count(//{0})>10", JsonValidator.ObjectString) },
                 new string[0]);
         }
-
+        [Ignore] // Remove Atom
         [TestMethod]
         public void RequestUriResourceSetPropertyTest()
         {
@@ -546,7 +546,7 @@ namespace AstoriaUnitTests.Tests
             //UnitTestsUtil.VerifyInvalidUri("/Customers!1000/Orders", typeof(CustomDataContext));
             UnitTestsUtil.VerifyInvalidUri("/Customers(1)/Orders(10000)", typeof(CustomDataContext));
         }
-
+        [Ignore] // Remove Atom
         [TestMethod]
         public void RequestUriComplexPropertyTest()
         {
@@ -561,7 +561,7 @@ namespace AstoriaUnitTests.Tests
                 new string[] { String.Format("/{0}/StreetAddress[text()='Line1']", JsonValidator.ObjectString) },
                 new string[0]);
         }
-
+        [Ignore] // Remove Atom
         [TestMethod]
         public void RequestUriResourceKeyTest()
         {
@@ -645,7 +645,7 @@ namespace AstoriaUnitTests.Tests
                 }
             }
         }
-
+        [Ignore] // Remove Atom
         [TestMethod]
         public void RequestUriNamedKeyTest()
         {
@@ -728,7 +728,7 @@ namespace AstoriaUnitTests.Tests
                 setup.Cleanup();
             });
         }
-
+        [Ignore] // Remove Atom
         [TestMethod]
         public void RequestUriProjectPropertyTest()
         {
@@ -738,7 +738,7 @@ namespace AstoriaUnitTests.Tests
                 new string[] { String.Format("/{0}/Name[text()='Customer 1']", JsonValidator.ObjectString) },
                 new string[0]);
         }
-
+        [Ignore] // Remove Atom
         [TestMethod]
         public void RequestUriLinksReferenceTest()
         {
@@ -752,7 +752,7 @@ namespace AstoriaUnitTests.Tests
                     String.Format("/{0}/odata.id[text()='http://host/Customers(0)']", JsonValidator.ObjectString),
                     String.Format("count(//{0}/odata.id)=1", JsonValidator.ObjectString)});
         }
-
+        [Ignore] // Remove Atom
         [TestMethod]
         public void RequestUriLinksCollectionTest()
         {
@@ -766,7 +766,7 @@ namespace AstoriaUnitTests.Tests
                                String.Format("/{1}/value/{0}/{1}/odata.id[text()='http://host/Orders(102)']", JsonValidator.ArrayString, JsonValidator.ObjectString),
                                String.Format("count(/{1}/value/{0}/{1}//odata.id)=2", JsonValidator.ArrayString, JsonValidator.ObjectString) });
         }
-
+        [Ignore] // Remove Atom
         [TestMethod]
         public void EdmValidNamesNotAllowedInUri()
         {
@@ -790,8 +790,8 @@ namespace AstoriaUnitTests.Tests
             {
                 request.StartService();
                 DataServiceContext context = new DataServiceContext(request.ServiceRoot);
-                context.EnableAtom = true;
-                context.Format.UseAtom();
+                //context.EnableAtom = true;
+                //context.Format.UseAtom();
 
                 string value = "value of Pròjè_x00A2_tÎð瑞갂థ్క_x0020_Iiلإَّ";
 

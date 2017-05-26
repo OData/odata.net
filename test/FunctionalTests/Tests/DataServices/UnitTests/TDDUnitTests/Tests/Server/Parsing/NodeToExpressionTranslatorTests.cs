@@ -9,29 +9,25 @@ namespace AstoriaUnitTests.TDD.Tests.Server.Parsing
     using System;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
+    using System.Linq;
+    using System.Linq.Expressions;
+    using FluentAssertions;
     using Microsoft.OData.Client;
-    using Microsoft.OData.Core.UriParser.TreeNodeKinds;
+    using Microsoft.OData.UriParser;
+    using Microsoft.OData.Edm;
     using Microsoft.OData.Service;
     using Microsoft.OData.Service.Parsing;
     using Microsoft.OData.Service.Providers;
-    using System.Linq;
-    using System.Linq.Expressions;
     using Microsoft.Spatial;
-    using FluentAssertions;
-    using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Library;
-    using Microsoft.OData.Core.UriParser;
-    using Microsoft.OData.Core.UriParser.Semantic;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
     using DataServiceProviderMethods = Microsoft.OData.Service.Providers.DataServiceProviderMethods;
     using ErrorStrings = Microsoft.OData.Service.Strings;
     using OpenTypeMethods = Microsoft.OData.Service.Providers.OpenTypeMethods;
-    
+
     [TestClass]
     public class NodeToExpressionTranslatorTests
     {
         private readonly FunctionExpressionBinder functionExpressionBinder;
-        private readonly NodeToExpressionTranslator testSubject;
         private readonly EdmEntityType customerEdmType;
         private readonly EdmEntityType derivedCustomerEdmType;
         private readonly EdmEntityType weaklyBackedCustomerEdmType;
@@ -48,6 +44,7 @@ namespace AstoriaUnitTests.TDD.Tests.Server.Parsing
         private readonly EdmModel model;
         private readonly ParameterExpression implicitParameterExpression = Expression.Parameter(typeof(object), "it");
         private readonly ResourceType customerResourceType;
+        private NodeToExpressionTranslator testSubject;
 
         public NodeToExpressionTranslatorTests()
         {
@@ -99,19 +96,19 @@ namespace AstoriaUnitTests.TDD.Tests.Server.Parsing
             this.weaklyBackedCustomerEdmType = new MetadataProviderEdmEntityType("Fake", weaklyBackedDerivedType, this.derivedCustomerEdmType, false, false, false, t => { });
             this.model.AddElement(this.weaklyBackedCustomerEdmType);
 
-            this.nameProperty = new MetadataProviderEdmStructuralProperty(this.customerEdmType, nameResourceProperty, EdmCoreModel.Instance.GetString(true), null, EdmConcurrencyMode.None);
+            this.nameProperty = new MetadataProviderEdmStructuralProperty(this.customerEdmType, nameResourceProperty, EdmCoreModel.Instance.GetString(true), null);
             this.customerEdmType.AddProperty(this.nameProperty);
 
             var addressEdmType = new MetadataProviderEdmComplexType("Fake", addressResourceType, null, false, false, t => {});
             this.model.AddElement(addressEdmType);
 
-            this.addressProperty = new MetadataProviderEdmStructuralProperty(this.customerEdmType, addressResourceProperty, new EdmComplexTypeReference(addressEdmType, true), null, EdmConcurrencyMode.None);
+            this.addressProperty = new MetadataProviderEdmStructuralProperty(this.customerEdmType, addressResourceProperty, new EdmComplexTypeReference(addressEdmType, true), null);
             this.customerEdmType.AddProperty(this.addressProperty);
 
-            this.namesProperty = new MetadataProviderEdmStructuralProperty(this.customerEdmType, namesResourceProperty, new EdmCollectionTypeReference(new EdmCollectionType(EdmCoreModel.Instance.GetString(false))), null, EdmConcurrencyMode.None);
+            this.namesProperty = new MetadataProviderEdmStructuralProperty(this.customerEdmType, namesResourceProperty, new EdmCollectionTypeReference(new EdmCollectionType(EdmCoreModel.Instance.GetString(false))), null);
             this.customerEdmType.AddProperty(this.namesProperty);
 
-            this.addressesProperty = new MetadataProviderEdmStructuralProperty(this.customerEdmType, addressesResourceProperty, new EdmCollectionTypeReference(new EdmCollectionType(new EdmComplexTypeReference(addressEdmType, false))), null, EdmConcurrencyMode.None);
+            this.addressesProperty = new MetadataProviderEdmStructuralProperty(this.customerEdmType, addressesResourceProperty, new EdmCollectionTypeReference(new EdmCollectionType(new EdmComplexTypeReference(addressEdmType, false))), null);
             this.customerEdmType.AddProperty(this.addressesProperty);
 
             this.bestFriendNavigation = new MetadataProviderEdmNavigationProperty(this.customerEdmType, bestFriendResourceProperty, new EdmEntityTypeReference(this.customerEdmType, true));
@@ -120,16 +117,16 @@ namespace AstoriaUnitTests.TDD.Tests.Server.Parsing
             this.otherFriendsNavigation = new MetadataProviderEdmNavigationProperty(this.customerEdmType, otherFriendsResourceProperty, new EdmCollectionTypeReference(new EdmCollectionType(new EdmEntityTypeReference(this.customerEdmType, true))));
             this.customerEdmType.AddProperty(this.otherFriendsNavigation);
 
-            this.weaklyBackedProperty = new MetadataProviderEdmStructuralProperty(this.customerEdmType, this.weaklyBackedResourceProperty, EdmCoreModel.Instance.GetString(true), null, EdmConcurrencyMode.None);
+            this.weaklyBackedProperty = new MetadataProviderEdmStructuralProperty(this.customerEdmType, this.weaklyBackedResourceProperty, EdmCoreModel.Instance.GetString(true), null);
             this.customerEdmType.AddProperty(this.weaklyBackedProperty);
 
-            var guid1EdmProperty = new MetadataProviderEdmStructuralProperty(this.customerEdmType, guid1ResourceProperty, EdmCoreModel.Instance.GetGuid(false), null, EdmConcurrencyMode.None);
+            var guid1EdmProperty = new MetadataProviderEdmStructuralProperty(this.customerEdmType, guid1ResourceProperty, EdmCoreModel.Instance.GetGuid(false), null);
             this.customerEdmType.AddProperty(guid1EdmProperty);
-            var guid2EdmProperty = new MetadataProviderEdmStructuralProperty(this.customerEdmType, guid2ResourceProperty, EdmCoreModel.Instance.GetGuid(false), null, EdmConcurrencyMode.None);
+            var guid2EdmProperty = new MetadataProviderEdmStructuralProperty(this.customerEdmType, guid2ResourceProperty, EdmCoreModel.Instance.GetGuid(false), null);
             this.customerEdmType.AddProperty(guid2EdmProperty);
-            var nullableGuid1EdmProperty = new MetadataProviderEdmStructuralProperty(this.customerEdmType, nullableGuid1ResourceProperty, EdmCoreModel.Instance.GetGuid(true), null, EdmConcurrencyMode.None);
+            var nullableGuid1EdmProperty = new MetadataProviderEdmStructuralProperty(this.customerEdmType, nullableGuid1ResourceProperty, EdmCoreModel.Instance.GetGuid(true), null);
             this.customerEdmType.AddProperty(nullableGuid1EdmProperty);
-            var nullableGuid2EdmProperty = new MetadataProviderEdmStructuralProperty(this.customerEdmType, nullableGuid2ResourceProperty, EdmCoreModel.Instance.GetGuid(true), null, EdmConcurrencyMode.None);
+            var nullableGuid2EdmProperty = new MetadataProviderEdmStructuralProperty(this.customerEdmType, nullableGuid2ResourceProperty, EdmCoreModel.Instance.GetGuid(true), null);
             this.customerEdmType.AddProperty(nullableGuid2EdmProperty);
 
             this.entitySet = new EdmEntitySetWithResourceSet(new EdmEntityContainer("Fake", "Container"), resourceSetWrapper, this.customerEdmType);
@@ -384,8 +381,8 @@ namespace AstoriaUnitTests.TDD.Tests.Server.Parsing
         [TestMethod]
         public void TranslatorShouldConvertWeaklyBackedSingleEntityCast()
         {
-            SingleEntityNode source = EntityParameter<Customer>("c");
-            QueryNode node = new SingleEntityCastNode(source, this.weaklyBackedCustomerEdmType);
+            SingleResourceNode source = EntityParameter<Customer>("c");
+            QueryNode node = new SingleResourceCastNode(source, this.weaklyBackedCustomerEdmType);
             var result = this.testSubject.TranslateNode(node);
 
             var parameterExpression = Expression.Parameter(typeof(Customer), "c");
@@ -396,8 +393,8 @@ namespace AstoriaUnitTests.TDD.Tests.Server.Parsing
         [TestMethod]
         public void TranslatorShouldConvertWeaklyBackedEntityCollectionCast()
         {
-            EntityCollectionNode source = this.CollectionNavigationFromParameter("c");
-            QueryNode node = new EntityCollectionCastNode(source, this.weaklyBackedCustomerEdmType);
+            CollectionResourceNode source = this.CollectionNavigationFromParameter("c");
+            QueryNode node = new CollectionResourceCastNode(source, this.weaklyBackedCustomerEdmType);
             var result = this.testSubject.TranslateNode(node);
 
             var parameterExpression = Expression.Parameter(typeof(Customer), "c");
@@ -433,24 +430,24 @@ namespace AstoriaUnitTests.TDD.Tests.Server.Parsing
         [TestMethod]
         public void TranslatorShouldTranslateReplaceIfEnabled()
         {
-            var withReplaceEnabled = this.CreateTestSubject(new DataServiceBehavior { AcceptReplaceFunctionInQuery = true });
-            this.TestFunctionCall<string, string>("replace", new[] { Parameter<string>("s"), Constant("foo"), Constant("bar") }, s => s.Replace("foo", "bar"), withReplaceEnabled);
+            this.testSubject = this.CreateTestSubject(new DataServiceBehavior { AcceptReplaceFunctionInQuery = true });
+            this.TestFunctionCall<string, string>("replace", new[] { Parameter<string>("s"), Constant("foo"), Constant("bar") }, s => s.Replace("foo", "bar"), this.testSubject);
         }
 
         [TestMethod]
         public void TranslatorShouldTranslateIsOfFunctionCallWithTwoParameters()
         {
             ConstantNode constantNode;
-            var testSubjectWithEdmStringLiteral = this.CreateTestSubjectWithEdmStringLiteral(out constantNode);
-            this.TestFunctionCall<object, bool>("isof", new[] { Parameter<object>("o"), constantNode }, o => o is string, testSubjectWithEdmStringLiteral);
+            this.testSubject = this.CreateTestSubjectWithEdmStringLiteral(out constantNode);
+            this.TestFunctionCall<object, bool>("isof", new[] { Parameter<object>("o"), constantNode }, o => o is string, this.testSubject);
         }
 
         [TestMethod]
         public void TranslatorShouldTranslateCastFunctionCallWithTwoParameters()
         {
             ConstantNode constantNode;
-            var testSubjectWithEdmStringLiteral = this.CreateTestSubjectWithEdmStringLiteral(out constantNode);
-            this.TestFunctionCall<object, string>("cast", new[] { Parameter<object>("o"), constantNode }, o => (string)o, testSubjectWithEdmStringLiteral);
+            this.testSubject = this.CreateTestSubjectWithEdmStringLiteral(out constantNode);
+            this.TestFunctionCall<object, string>("cast", new[] { Parameter<object>("o"), constantNode }, o => (string)o, this.testSubject);
         }
 
         [TestMethod]
@@ -502,13 +499,13 @@ namespace AstoriaUnitTests.TDD.Tests.Server.Parsing
         {
             ODataProtocolVersion validatedProtocolVersion = ODataProtocolVersion.V4;
             ODataProtocolVersion validatedRequestVersion = ODataProtocolVersion.V4;
-            var withVersionCallbacks = this.CreateTestSubject(verifyProtocolVersion: v => { validatedProtocolVersion = v; }, verifyRequestVersion:v => { validatedRequestVersion = v; });
+            this.testSubject = this.CreateTestSubject(verifyProtocolVersion: v => { validatedProtocolVersion = v; }, verifyRequestVersion:v => { validatedRequestVersion = v; });
             
             LambdaNode node = new AnyNode(new Collection<RangeVariable>(), null);
             node.Body = Constant(true);
             node.Source = this.CollectionNavigationFromParameter("o");
 
-            withVersionCallbacks.TranslateNode(node);
+            this.testSubject.TranslateNode(node);
             validatedProtocolVersion.Should().Be(ODataProtocolVersion.V4);
             validatedRequestVersion.Should().Be(ODataProtocolVersion.V4);
         }
@@ -517,11 +514,11 @@ namespace AstoriaUnitTests.TDD.Tests.Server.Parsing
         public void TranslatorShouldRequireProtocolVersionThreeForCollectionTypeSegment()
         {
             ODataProtocolVersion validatedProtocolVersion = ODataProtocolVersion.V4;
-            var withVersionCallbacks = this.CreateTestSubject(verifyProtocolVersion: v => { validatedProtocolVersion = v; }, verifyRequestVersion: v => { throw new Exception("Should not be called."); });
+            this.testSubject = this.CreateTestSubject(verifyProtocolVersion: v => { validatedProtocolVersion = v; }, verifyRequestVersion: v => { throw new Exception("Should not be called."); });
 
-            QueryNode node = new EntityCollectionCastNode(this.CollectionNavigationFromParameter("o"), this.customerEdmType);
+            QueryNode node = new CollectionResourceCastNode(this.CollectionNavigationFromParameter("o"), this.customerEdmType);
 
-            withVersionCallbacks.TranslateNode(node);
+            this.testSubject.TranslateNode(node);
             validatedProtocolVersion.Should().Be(ODataProtocolVersion.V4);
         }
 
@@ -529,11 +526,11 @@ namespace AstoriaUnitTests.TDD.Tests.Server.Parsing
         public void TranslatorShouldRequireProtocolVersionThreeForSingletonTypeSegment()
         {
             ODataProtocolVersion validatedProtocolVersion = ODataProtocolVersion.V4;
-            var withVersionCallbacks = this.CreateTestSubject(verifyProtocolVersion: v => { validatedProtocolVersion = v; }, verifyRequestVersion: v => { throw new Exception("Should not be called."); });
+            this.testSubject = this.CreateTestSubject(verifyProtocolVersion: v => { validatedProtocolVersion = v; }, verifyRequestVersion: v => { throw new Exception("Should not be called."); });
 
-            QueryNode node = new SingleEntityCastNode(this.EntityParameter<Customer>("o"), this.customerEdmType);
+            QueryNode node = new SingleResourceCastNode(this.EntityParameter<Customer>("o"), this.customerEdmType);
 
-            withVersionCallbacks.TranslateNode(node);
+            this.testSubject.TranslateNode(node);
             validatedProtocolVersion.Should().Be(ODataProtocolVersion.V4);
         }
 
@@ -554,16 +551,16 @@ namespace AstoriaUnitTests.TDD.Tests.Server.Parsing
             verify(result.As<ConstantExpression>());
         }
 
-        private void TestNavigation<TParam, TReturn>(SingleEntityNode source, IEdmNavigationProperty navigation, Expression<Func<TParam, TReturn>> expectedExpression)
+        private void TestNavigation<TParam, TReturn>(SingleResourceNode source, IEdmNavigationProperty navigation, Expression<Func<TParam, TReturn>> expectedExpression)
         {
             QueryNode node;
             if (navigation.Type.IsCollection())
             {
-                node = new CollectionNavigationNode(navigation, source);
+                node = new CollectionNavigationNode(source, navigation, new EdmPathExpression(navigation.Name));
             }
             else
             {
-                node = new SingleNavigationNode(navigation, source);
+                node = new SingleNavigationNode(source, navigation, new EdmPathExpression(navigation.Name));
             }
 
             var result = this.testSubject.TranslateNode(node);
@@ -616,16 +613,16 @@ namespace AstoriaUnitTests.TDD.Tests.Server.Parsing
             CompareExpressions(expectedExpression.Body, result);
         }
 
-        private void TestCast<TParam, TReturn>(EntityCollectionNode source, IEdmEntityType cast, Expression<Func<TParam, TReturn>> expectedExpression)
+        private void TestCast<TParam, TReturn>(CollectionResourceNode source, IEdmEntityType cast, Expression<Func<TParam, TReturn>> expectedExpression)
         {
-            var node = new EntityCollectionCastNode(source, cast);
+            var node = new CollectionResourceCastNode(source, cast);
             var result = this.testSubject.TranslateNode(node);
             CompareExpressions(expectedExpression.Body, result);
         }
 
-        private void TestCast<TParam, TReturn>(SingleEntityNode source, IEdmEntityType cast, Expression<Func<TParam, TReturn>> expectedExpression)
+        private void TestCast<TParam, TReturn>(SingleResourceNode source, IEdmEntityType cast, Expression<Func<TParam, TReturn>> expectedExpression)
         {
-            var node = new SingleEntityCastNode(source, cast);
+            var node = new SingleResourceCastNode(source, cast);
             var result = this.testSubject.TranslateNode(node);
             CompareExpressions(expectedExpression.Body, result);
         }
@@ -645,11 +642,11 @@ namespace AstoriaUnitTests.TDD.Tests.Server.Parsing
         private void TestLambda<TLambda, TParam, TReturn>(CollectionNode source, string parameterName, SingleValueNode body, Expression<Func<TParam, TReturn>> expectedExpression)
             where TLambda : LambdaNode
         {
-            EntityRangeVariable currentRangeVariable = null;
+            ResourceRangeVariable currentRangeVariable = null;
             if (parameterName != null)
             {
-                currentRangeVariable = new EntityRangeVariable(parameterName, new EdmEntityTypeReference(this.customerEdmType, false), this.entitySet);
-                currentRangeVariable.SetAnnotation(Expression.Parameter(typeof(TParam), parameterName));
+                currentRangeVariable = new ResourceRangeVariable(parameterName, new EdmEntityTypeReference(this.customerEdmType, false), this.entitySet);
+                this.testSubject.ParameterExpressions[currentRangeVariable] = Expression.Parameter(typeof(TParam), parameterName);
             }
 
             LambdaNode node;
@@ -680,23 +677,23 @@ namespace AstoriaUnitTests.TDD.Tests.Server.Parsing
             return constantNode;
         }
 
-        private static SingleValueNode Parameter<T>(string name)
+        private SingleValueNode Parameter<T>(string name)
         {
-            var nonentityRangeVariable = new NonentityRangeVariable(name, null, null);
-            nonentityRangeVariable.SetAnnotation(Expression.Parameter(typeof(T), name));
-            return new NonentityRangeVariableReferenceNode(name, nonentityRangeVariable);
+            var nonentityRangeVariable = new NonResourceRangeVariable(name, null, null);
+            this.testSubject.ParameterExpressions[nonentityRangeVariable] = Expression.Parameter(typeof(T), name);
+            return new NonResourceRangeVariableReferenceNode(name, nonentityRangeVariable);
         }
 
-        private SingleEntityNode EntityParameter<T>(string name)
+        private SingleResourceNode EntityParameter<T>(string name)
         {
-            var entityRangeVariable = new EntityRangeVariable(name, new EdmEntityTypeReference(this.entitySet.EntityType(), false), this.entitySet);
-            entityRangeVariable.SetAnnotation(Expression.Parameter(typeof(T), name));
-            return new EntityRangeVariableReferenceNode(name, entityRangeVariable);
+            var entityRangeVariable = new ResourceRangeVariable(name, new EdmEntityTypeReference(this.entitySet.EntityType(), false), this.entitySet);
+            this.testSubject.ParameterExpressions[entityRangeVariable] = Expression.Parameter(typeof(T), name);
+            return new ResourceRangeVariableReferenceNode(name, entityRangeVariable);
         }
 
-        private EntityCollectionNode CollectionNavigationFromParameter(string name)
+        private CollectionResourceNode CollectionNavigationFromParameter(string name)
         {
-            return new CollectionNavigationNode(this.otherFriendsNavigation, this.EntityParameter<Customer>(name));
+            return new CollectionNavigationNode(this.EntityParameter<Customer>(name), this.otherFriendsNavigation, new EdmPathExpression(this.otherFriendsNavigation.Name));
         }
 
         private CollectionOpenPropertyAccessNode OpenCollectionNavigationFromParameter(string parameterName, string openPropertyName)

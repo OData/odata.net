@@ -8,7 +8,7 @@ using System;
 using System.Linq;
 using System.Collections.Generic;
 using Microsoft.OData.Edm;
-using Microsoft.OData.Edm.Annotations;
+using Microsoft.OData.Edm.Vocabularies;
 
 namespace EdmLibTests.FunctionalUtilities
 {
@@ -107,9 +107,9 @@ namespace EdmLibTests.FunctionalUtilities
             return this.FindDeclaredOperations(qualifiedName).Where(o => o.IsBound && o.Parameters.Any() && o.HasEquivalentBindingType(bindingType));
         }
 
-        public IEdmValueTerm FindDeclaredValueTerm(string qualifiedName)
+        public IEdmTerm FindDeclaredTerm(string qualifiedName)
         {
-            IEdmValueTerm term = this.model.FindDeclaredValueTerm(qualifiedName);
+            IEdmTerm term = this.model.FindDeclaredTerm(qualifiedName);
             return term != null && this.removedElements.ContainsKey(term) ? null : term;
         }
 

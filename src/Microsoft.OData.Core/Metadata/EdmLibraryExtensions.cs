@@ -4,8 +4,7 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-#if !INTERNAL_DROP
-namespace Microsoft.OData.Core.Metadata
+namespace Microsoft.OData.Metadata
 {
     #region Namespaces
     using System;
@@ -17,18 +16,17 @@ namespace Microsoft.OData.Core.Metadata
     using System.Linq;
     using Microsoft.Spatial;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Library;
-#if ASTORIA_SERVER
+#if ODATA_SERVICE
     using Microsoft.OData.Service;
     using ErrorStrings = Microsoft.OData.Service.Strings;
 #endif
-#if ASTORIA_CLIENT
+#if ODATA_CLIENT
     using ErrorStrings = Microsoft.OData.Client.Strings;
 #endif
-#if !ASTORIA_SERVER && !ASTORIA_CLIENT
-    using Microsoft.OData.Core.JsonLight;
-    using ErrorStrings = Microsoft.OData.Core.Strings;
-    using PlatformHelper = Microsoft.OData.Core.PlatformHelper;
+#if !ODATA_SERVICE && !ODATA_CLIENT
+    using Microsoft.OData.JsonLight;
+    using ErrorStrings = Microsoft.OData.Strings;
+    using PlatformHelper = Microsoft.OData.PlatformHelper;
 #endif
     #endregion Namespaces
 
@@ -102,7 +100,7 @@ namespace Microsoft.OData.Core.Metadata
             PrimitiveTypeReferenceMap.Add(typeof(String), StringTypeReference);
             PrimitiveTypeReferenceMap.Add(typeof(Single), SingleTypeReference);
 
-#if ASTORIA_SERVER
+#if ODATA_SERVICE
             PrimitiveTypeReferenceMap.Add(typeof(DateTime), ToTypeReference(EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.DateTimeOffset), false));
 #endif
             PrimitiveTypeReferenceMap.Add(typeof(DateTimeOffset), ToTypeReference(EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.DateTimeOffset), false));
@@ -113,7 +111,7 @@ namespace Microsoft.OData.Core.Metadata
 
             PrimitiveTypeReferenceMap.Add(typeof(Boolean?), ToTypeReference(EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.Boolean), true));
             PrimitiveTypeReferenceMap.Add(typeof(Byte?), ToTypeReference(EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.Byte), true));
-#if ASTORIA_SERVER
+#if ODATA_SERVICE
             PrimitiveTypeReferenceMap.Add(typeof(DateTime?), ToTypeReference(EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.DateTimeOffset), true));
 #endif
             PrimitiveTypeReferenceMap.Add(typeof(DateTimeOffset?), ToTypeReference(EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.DateTimeOffset), true));
@@ -135,7 +133,7 @@ namespace Microsoft.OData.Core.Metadata
 
         #region Internal methods
         #region ODataLib only
-#if !ODATALIB_QUERY && !ASTORIA_SERVER && !ASTORIA_CLIENT
+#if !ODATA_SERVICE && !ODATA_CLIENT
 
         /// <summary>
         /// Returns the fully qualified name of a navigation source.
@@ -146,7 +144,7 @@ namespace Microsoft.OData.Core.Metadata
         {
             Debug.Assert(navigationSource != null, "navigationSource != null");
 
-            return string.Join(".", navigationSource.Path.Path.ToArray());
+            return string.Join(".", navigationSource.Path.PathSegments.ToArray());
         }
 
         /// <summary>
@@ -192,7 +190,7 @@ namespace Microsoft.OData.Core.Metadata
         }
 
         /// <summary>
-        /// Filters the type of the bound operations in by the bindingtype inheritance hierarchy to type closest to bindingtype. 
+        /// Filters the type of the bound operations in by the bindingtype inheritance hierarchy to type closest to bindingtype.
         /// </summary>
         /// <param name="operations">The operations.</param>
         /// <param name="bindingType">Type of the binding.</param>
@@ -404,7 +402,7 @@ namespace Microsoft.OData.Core.Metadata
         }
 
         /// <summary>
-        /// Checks whether all operation imports have the same return type 
+        /// Checks whether all operation imports have the same return type
         /// </summary>
         /// <param name="operationImports">the list to check</param>
         /// <returns>true if the list of operation imports all have the same return type</returns>
@@ -453,7 +451,7 @@ namespace Microsoft.OData.Core.Metadata
         }
 
         /// <summary>
-        /// Checks whether all operations have the same return type 
+        /// Checks whether all operations have the same return type
         /// </summary>
         /// <param name="operations">the list to check</param>
         /// <returns>true if the list of operation imports all have the same return type</returns>
@@ -635,27 +633,13 @@ namespace Microsoft.OData.Core.Metadata
         {
             Debug.Assert(clrType != null, "clrType != null");
 
-            // PERF
-            switch (PlatformHelper.GetTypeCode(clrType))
+            if (clrType == typeof(UInt16) || clrType == typeof(UInt32) || clrType == typeof(UInt64))
             {
-                case TypeCode.Boolean:
-                case TypeCode.Byte:
-                case TypeCode.Decimal:
-                case TypeCode.Double:
-                case TypeCode.Int16:
-                case TypeCode.Int32:
-                case TypeCode.Int64:
-                case TypeCode.UInt16:
-                case TypeCode.UInt32:
-                case TypeCode.UInt64:
-                case TypeCode.SByte:
-                case TypeCode.String:
-                case TypeCode.Single:
-                    return true;
-
-                default:
-                    return PrimitiveTypeReferenceMap.ContainsKey(clrType) || typeof(ISpatial).IsAssignableFrom(clrType);
+                // Since UInt types are not in the core model, they cannot be found in the map below.
+                return true;
             }
+
+            return PrimitiveTypeReferenceMap.ContainsKey(clrType) || typeof(ISpatial).IsAssignableFrom(clrType);
         }
 
         /// <summary>
@@ -736,6 +720,9 @@ namespace Microsoft.OData.Core.Metadata
                 case EdmTypeKind.Collection:
                     // NOTE: we do allow inheritance (or co-/contra-variance) in collection types.
                     return ((IEdmCollectionType)baseType).ElementType.Definition.IsAssignableFrom(((IEdmCollectionType)subtype).ElementType.Definition);
+
+                case EdmTypeKind.Enum:
+                    return baseType.IsEquivalentTo(subtype);
 
                 default:
                     throw new ODataException(ErrorStrings.General_InternalError(InternalErrorCodesCommon.EdmLibraryExtensions_IsAssignableFrom_Type));
@@ -950,20 +937,6 @@ namespace Microsoft.OData.Core.Metadata
         }
 
         /// <summary>
-        /// Returns the actual type of the given type.
-        /// If the given type is type definition, the actual type is its underlying type;
-        /// otherwise, return the given type itself.
-        /// </summary>
-        /// <param name="type">The given type.</param>
-        /// <returns>The actual type of the given type.</returns>
-        internal static IEdmType AsActualType(this IEdmType type)
-        {
-            Debug.Assert(type != null, "type != null");
-
-            return type.TypeKind == EdmTypeKind.TypeDefinition ? ((IEdmTypeDefinition)type).UnderlyingType : type;
-        }
-
-        /// <summary>
         /// Compare if the two collection types are equal on the element type regardless of nullable, facets.
         /// </summary>
         /// <param name="type">The left operand.</param>
@@ -1092,7 +1065,7 @@ namespace Microsoft.OData.Core.Metadata
         }
 
         /// <summary>
-        /// Returns the IEdmCollectionType implementation with the given IEdmType as element type.
+        /// Returns the IEdmCollectionType implementation with the given IEdmType as nullable element type.
         /// </summary>
         /// <param name="itemType">IEdmType instance which is the element type.</param>
         /// <returns>An <see cref="IEdmCollectionType"/> instance using the <paramref name="itemType"/> as Collection item type.</returns>
@@ -1100,7 +1073,7 @@ namespace Microsoft.OData.Core.Metadata
         {
             Debug.Assert(itemType != null, "itemType != null");
 
-            IEdmTypeReference itemTypeReference = itemType.ToTypeReference();
+            IEdmTypeReference itemTypeReference = EdmLibraryExtensions.ToTypeReference(itemType, true);
             return GetCollectionType(itemTypeReference);
         }
 
@@ -1112,11 +1085,6 @@ namespace Microsoft.OData.Core.Metadata
         internal static IEdmCollectionType GetCollectionType(IEdmTypeReference itemTypeReference)
         {
             Debug.Assert(itemTypeReference != null, "itemTypeReference != null");
-
-            if (!itemTypeReference.IsODataPrimitiveTypeKind() && !itemTypeReference.IsODataComplexTypeKind() && !itemTypeReference.IsODataEnumTypeKind() && !itemTypeReference.IsODataTypeDefinitionTypeKind())
-            {
-                throw new ODataException(ErrorStrings.EdmLibraryExtensions_CollectionItemCanBeOnlyPrimitiveEnumComplex);
-            }
 
             return new EdmCollectionType(itemTypeReference);
         }
@@ -1215,18 +1183,18 @@ namespace Microsoft.OData.Core.Metadata
         /// <summary>
         /// Determines whether operations bound to this type must be qualified with the operation they belong to when appearing in a $select clause.
         /// </summary>
-        /// <param name="entityType">The entity type the operations are bound to.</param>
+        /// <param name="structuredType">The structured type the operations are bound to.</param>
         /// <returns>True if the operations must be container qualified, otherwise false.</returns>
-        internal static bool OperationsBoundToEntityTypeMustBeContainerQualified(this IEdmEntityType entityType)
+        internal static bool OperationsBoundToStructuredTypeMustBeContainerQualified(this IEdmStructuredType structuredType)
         {
-            Debug.Assert(entityType != null, "entityType != null");
-            return entityType.IsOpen;
+            Debug.Assert(structuredType != null, "structuredType != null");
+            return structuredType.IsOpen;
         }
 #endif
         #endregion
 
         #region ODataLib and WCF DS Server
-#if !ODATALIB_QUERY && !ASTORIA_CLIENT
+#if !ODATA_CLIENT
         /// <summary>
         /// Gets the Partail name of the definition referred to by the type reference.
         /// </summary>
@@ -1239,8 +1207,6 @@ namespace Microsoft.OData.Core.Metadata
         /// </remarks>
         internal static string ODataShortQualifiedName(this IEdmTypeReference typeReference)
         {
-#if !ASTORIA_SERVER
-#endif
             Debug.Assert(typeReference != null, "typeReference != null");
             Debug.Assert(typeReference.Definition != null, "typeReference.Definition != null");
             return typeReference.Definition.ODataShortQualifiedName();
@@ -1258,8 +1224,6 @@ namespace Microsoft.OData.Core.Metadata
         /// </remarks>
         internal static string ODataShortQualifiedName(this IEdmType type)
         {
-#if !ASTORIA_SERVER
-#endif
             Debug.Assert(type != null, "type != null");
 
             // Handle collection type names here since for EdmLib collection values are functions
@@ -1432,7 +1396,7 @@ namespace Microsoft.OData.Core.Metadata
         #endregion
 
         #region ODataLib and Query project
-#if !ASTORIA_SERVER && !ASTORIA_CLIENT
+#if !ODATA_SERVICE && !ODATA_CLIENT
         /// <summary>
         /// Checks if the <paramref name="baseType"/> is assignable to <paramref name="subtype"/>.
         /// In other words, if <paramref name="subtype"/> is a subtype of <paramref name="baseType"/> or not.
@@ -1663,7 +1627,18 @@ namespace Microsoft.OData.Core.Metadata
                 return structuredType.IsOpen;
             }
 
-            return false;
+            // If its a collection, return whether its element type is open.
+            // This is because when processing a navigation property, the target type
+            // may be a collection type even though a key expression has been applied.
+            // This will be cleaned up in a subsequent change.
+            // TODO: when SingleResult is removed from the semantic path parser, change this to return false.
+            var collectionType = type as IEdmCollectionType;
+            if (collectionType == null)
+            {
+                return false;
+            }
+
+            return collectionType.ElementType.Definition.IsOpenType();
         }
 
         /// <summary>
@@ -1694,19 +1669,17 @@ namespace Microsoft.OData.Core.Metadata
         /// </summary>
         /// <param name="containerElement">The container element to get the full name for.</param>
         /// <returns>The full name of the owning entity container, slash, name of the container element.</returns>
-#if ASTORIA_CLIENT || ODATALIB_QUERY
+#if ODATA_CLIENT
         [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Justification = "Will be used in a later change")]
 #endif
         internal static string FullName(this IEdmEntityContainerElement containerElement)
         {
-#if !ASTORIA_SERVER && !ASTORIA_CLIENT
-#endif
             Debug.Assert(containerElement != null, "containerElement != null");
 
             return containerElement.Container.Name + "." + containerElement.Name;
         }
 
-#if !ASTORIA_CLIENT
+#if !ODATA_CLIENT
         /// <summary>
         /// Returns the primitive type reference for the given Clr type.
         /// </summary>
@@ -1716,40 +1689,6 @@ namespace Microsoft.OData.Core.Metadata
         internal static IEdmPrimitiveTypeReference GetPrimitiveTypeReference(Type clrType)
         {
             Debug.Assert(clrType != null, "clrType != null");
-
-            TypeCode typeCode = PlatformHelper.GetTypeCode(clrType);
-            switch (typeCode)
-            {
-                case TypeCode.Boolean:
-                    return BooleanTypeReference;
-
-                case TypeCode.Byte:
-                    return ByteTypeReference;
-
-                case TypeCode.Decimal:
-                    return DecimalTypeReference;
-
-                case TypeCode.Double:
-                    return DoubleTypeReference;
-
-                case TypeCode.Int16:
-                    return Int16TypeReference;
-
-                case TypeCode.Int32:
-                    return Int32TypeReference;
-
-                case TypeCode.Int64:
-                    return Int64TypeReference;
-
-                case TypeCode.SByte:
-                    return SByteTypeReference;
-
-                case TypeCode.String:
-                    return StringTypeReference;
-
-                case TypeCode.Single:
-                    return SingleTypeReference;
-            }
 
             // Try to lookup the type in our map.
             IEdmPrimitiveTypeReference primitiveTypeReference;
@@ -1843,9 +1782,6 @@ namespace Microsoft.OData.Core.Metadata
         /// <returns>A type reference for the <paramref name="type"/>.</returns>
         internal static IEdmTypeReference ToTypeReference(this IEdmType type, bool nullable)
         {
-#if !ASTORIA_CLIENT
-#endif
-
             if (type == null)
             {
                 return null;
@@ -1857,6 +1793,8 @@ namespace Microsoft.OData.Core.Metadata
                     return ToTypeReference((IEdmPrimitiveType)type, nullable);
                 case EdmTypeKind.Enum:
                     return new EdmEnumTypeReference((IEdmEnumType)type, nullable);
+                case EdmTypeKind.Untyped:
+                    return new EdmUntypedTypeReference((IEdmUntypedType)type);
                 case EdmTypeKind.Complex:
                     return new EdmComplexTypeReference((IEdmComplexType)type, nullable);
                 case EdmTypeKind.Entity:
@@ -1880,12 +1818,10 @@ namespace Microsoft.OData.Core.Metadata
         /// <returns>Type name for a collection of the specified item type name.</returns>
         internal static string GetCollectionTypeName(string itemTypeName)
         {
-#if !ASTORIA_SERVER && !ASTORIA_CLIENT
-#endif
             return string.Format(CultureInfo.InvariantCulture, CollectionTypeFormat, itemTypeName);
         }
 
-#if !ASTORIA_CLIENT
+#if !ODATA_CLIENT
         /// <summary>
         /// Resolves a operation import or operation import group.
         /// </summary>
@@ -1915,7 +1851,7 @@ namespace Microsoft.OData.Core.Metadata
                 return Enumerable.Empty<IEdmOperationImport>();
             }
 
-#if !ASTORIA_SERVER && !ASTORIA_CLIENT && !ODATALIB_QUERY
+#if !ODATA_SERVICE && !ODATA_CLIENT
             int indexOfParameterStart = operationImportName.IndexOf(JsonLightConstants.FunctionParameterStart);
             string functionImportNameWithoutParameterTypes = operationImportName;
             if (indexOfParameterStart > 0)
@@ -1948,7 +1884,7 @@ namespace Microsoft.OData.Core.Metadata
 
             IEnumerable<IEdmOperationImport> operationImports = container.FindOperationImports(operationNameWithoutContainerOrNamespace);
             Debug.Assert(operationImports != null, "operationImports != null");
-#if !ASTORIA_SERVER && !ASTORIA_CLIENT && !ODATALIB_QUERY
+#if !ODATA_SERVICE && !ODATA_CLIENT
             if (indexOfParameterStart > 0)
             {
                 return FilterByOperationParameterTypes(operationImports, functionImportNameWithoutParameterTypes, operationImportName);
@@ -2048,7 +1984,7 @@ namespace Microsoft.OData.Core.Metadata
 
         #region Private methods
         #region ODataLib only
-#if ODATALIB
+#if ODATA_CORE
 
         /// <summary>
         /// Validates the kind of the operation group returns only on.
@@ -2297,7 +2233,7 @@ namespace Microsoft.OData.Core.Metadata
             /// </summary>
             /// <param name="obj">The obj.</param>
             /// <returns>
-            /// A hash code for this instance, suitable for use in hashing algorithms and data structures like a hash table. 
+            /// A hash code for this instance, suitable for use in hashing algorithms and data structures like a hash table.
             /// </returns>
             public int GetHashCode(IEdmType obj)
             {
@@ -2309,4 +2245,3 @@ namespace Microsoft.OData.Core.Metadata
         #endregion
     }
 }
-#endif

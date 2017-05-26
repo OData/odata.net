@@ -4,14 +4,11 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core.UriParser.Semantic
+namespace Microsoft.OData.UriParser
 {
-    using System;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
-    using System.Diagnostics;
     using System.Linq;
-    using Microsoft.OData.Edm;
 
     /// <summary>
     /// Class representing the combined semantic meaning of any select or expand clauses in the uri.
@@ -25,7 +22,7 @@ namespace Microsoft.OData.Core.UriParser.Semantic
         private ReadOnlyCollection<SelectItem> selectedItems;
 
         /// <summary>
-        /// Gets a flag indicating that everything at this level has been selected. 
+        /// Gets a flag indicating that everything at this level has been selected.
         /// </summary>
         /// <remarks>
         /// If true, then all structural properties, bound actions and functions, and all navigations in the SelectedItems list have been selected.
@@ -57,7 +54,7 @@ namespace Microsoft.OData.Core.UriParser.Semantic
         }
 
         /// <summary>
-        /// Gets a flag indicating that everything at this level has been selected. 
+        /// Gets a flag indicating that everything at this level has been selected.
         /// </summary>
         /// <remarks>
         /// If true, then all structural properties, bound actions and functions, and all navigations in the SelectedItems list have been selected.
@@ -100,7 +97,7 @@ namespace Microsoft.OData.Core.UriParser.Semantic
                 {
                     newSelectedItems.Add(selectedItem);
                 }
-            }        
+            }
 
             newSelectedItems.Add(itemToAdd);
             this.selectedItems = new ReadOnlyCollection<SelectItem>(newSelectedItems);

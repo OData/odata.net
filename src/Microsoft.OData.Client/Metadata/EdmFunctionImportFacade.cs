@@ -10,8 +10,7 @@ namespace Microsoft.OData.Service.Client.Metadata
     using System.Diagnostics;
     using System.Linq;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Annotations;
-    using Microsoft.OData.Edm.Expressions;
+    using Microsoft.OData.Edm.Vocabularies;
 
     /// <summary>
     /// Wraps a function import from the server-side model.

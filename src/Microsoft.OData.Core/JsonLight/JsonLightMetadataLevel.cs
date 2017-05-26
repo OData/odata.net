@@ -4,20 +4,18 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core.JsonLight
+namespace Microsoft.OData.JsonLight
 {
     #region Namespaces
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
-
-    using Microsoft.OData.Core.UriParser;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Core.Evaluation;
+    using Microsoft.OData.Evaluation;
     #endregion Namespaces
 
     /// <summary>
-    /// Class responsible for logic that varies based on the JSON Light metadata level. 
+    /// Class responsible for logic that varies based on the JSON Light metadata level.
     /// </summary>
     internal abstract class JsonLightMetadataLevel
     {
@@ -29,7 +27,7 @@ namespace Microsoft.OData.Core.JsonLight
         /// <summary>
         /// Creates the appropriate metadata level based on the media type being written.
         /// </summary>
-        /// <param name="mediaType">The full media type being written. This media type must have a type/subtype of "application/json".</param> 
+        /// <param name="mediaType">The full media type being written. This media type must have a type/subtype of "application/json".</param>
         /// <param name="metadataDocumentUri">The metadata document uri from the writer settings.</param>
         /// <param name="model">The edm model.</param>
         /// <param name="writingResponse">true if we are writing a response, false otherwise.</param>
@@ -80,48 +78,42 @@ namespace Microsoft.OData.Core.JsonLight
         /// <summary>
         /// Returns the oracle to use when determing the type name to write for entries and values.
         /// </summary>
-        /// <param name="autoComputePayloadMetadataInJson">
-        /// If true, the type name to write will vary based on the metadata level. 
-        /// If false, the type name writing rules will always match minimal metadata, 
-        /// regardless of the actual metadata level being written. 
-        /// This is for backwards compatibility.
-        /// </param>
         /// <returns>An oracle that can be queried to determine the type name to write.</returns>
-        internal abstract JsonLightTypeNameOracle GetTypeNameOracle(bool autoComputePayloadMetadataInJson);
+        internal abstract JsonLightTypeNameOracle GetTypeNameOracle();
 
         /// <summary>
-        /// Creates the metadata builder for the given entry. If such a builder is set, asking for payload
-        /// metadata properties (like EditLink) of the entry may return a value computed by convention, 
+        /// Creates the metadata builder for the given resource. If such a builder is set, asking for payload
+        /// metadata properties (like EditLink) of the resource may return a value computed by convention,
         /// depending on the metadata level and whether the user manually set an edit link or not.
         /// </summary>
-        /// <param name="entry">The entry to create the metadata builder for.</param>
-        /// <param name="typeContext">The context object to answer basic questions regarding the type of the entry or feed.</param>
-        /// <param name="serializationInfo">The serialization info for the entry.</param>
-        /// <param name="actualEntityType">The entity type of the entry.</param>
+        /// <param name="resource">The resource to create the metadata builder for.</param>
+        /// <param name="typeContext">The context object to answer basic questions regarding the type of the resource or resource set.</param>
+        /// <param name="serializationInfo">The serialization info for the resource.</param>
+        /// <param name="actualResourceType">The structured type of the resource.</param>
         /// <param name="selectedProperties">The selected properties of this scope.</param>
-        /// <param name="isResponse">true if the entity metadata builder to create should be for a response payload; false for a request.</param>
+        /// <param name="isResponse">true if the resource metadata builder to create should be for a response payload; false for a request.</param>
         /// <param name="keyAsSegment">true if keys should go in separate segments in auto-generated URIs, false if they should go in parentheses.
         /// A null value means the user hasn't specified a preference and we should look for an annotation in the entity container, if available.</param>
         /// <param name="odataUri">The OData Uri.</param>
         /// <returns>The created metadata builder.</returns>
-        internal abstract ODataEntityMetadataBuilder CreateEntityMetadataBuilder(
-            ODataEntry entry, 
-            IODataFeedAndEntryTypeContext typeContext,
-            ODataFeedAndEntrySerializationInfo serializationInfo, 
-            IEdmEntityType actualEntityType, 
-            SelectedPropertiesNode selectedProperties, 
-            bool isResponse, 
-            bool? keyAsSegment,
+        internal abstract ODataResourceMetadataBuilder CreateResourceMetadataBuilder(
+            ODataResource resource,
+            IODataResourceTypeContext typeContext,
+            ODataResourceSerializationInfo serializationInfo,
+            IEdmStructuredType actualResourceType,
+            SelectedPropertiesNode selectedProperties,
+            bool isResponse,
+            bool keyAsSegment,
             ODataUri odataUri);
 
         /// <summary>
         /// Injects the appropriate metadata builder based on the metadata level.
         /// </summary>
-        /// <param name="entry">The entry to inject the builder.</param>
+        /// <param name="resource">The resource to inject the builder.</param>
         /// <param name="builder">The metadata builder to inject.</param>
-        internal virtual void InjectMetadataBuilder(ODataEntry entry, ODataEntityMetadataBuilder builder)
+        internal virtual void InjectMetadataBuilder(ODataResource resource, ODataResourceMetadataBuilder builder)
         {
-            entry.MetadataBuilder = builder;
+            resource.MetadataBuilder = builder;
         }
     }
 }

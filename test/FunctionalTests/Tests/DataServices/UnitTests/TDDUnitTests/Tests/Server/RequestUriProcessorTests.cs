@@ -17,7 +17,6 @@ namespace AstoriaUnitTests.Tests.Server
     using AstoriaUnitTests.Tests.Server.Simulators;
     using DataSpatialUnitTests.Utils;
     using FluentAssertions;
-    using Microsoft.Data.Spatial;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     [TestClass]
@@ -74,6 +73,7 @@ namespace AstoriaUnitTests.Tests.Server
             this.serviceFactory.ClearQueryArgument();
         }
 
+        [Ignore] // Remove Atom
         [TestMethod]
         public void QuerySpatialProperty()
         {
@@ -85,6 +85,7 @@ namespace AstoriaUnitTests.Tests.Server
             Assert.AreEqual("Spatial", d.LastSegmentInfo.Identifier);
         }
 
+        [Ignore] // Remove Atom
         [TestMethod]
         public void FilterCompareSpatialPropertyAndLiteral()
         {
@@ -107,10 +108,11 @@ namespace AstoriaUnitTests.Tests.Server
                 var service = this.serviceFactory.CreateService();
 
                 Action processUri = () => RequestUriProcessor.ProcessRequestUri(this.serviceFactory.RequestUri, service, false);
-                processUri.ShouldThrow<DataServiceException>().WithMessage(Microsoft.OData.Core.Strings.MetadataBinder_IncompatibleOperandsError("Edm.Geography", "Edm.GeographyPoint", test.ErrorName));
+                processUri.ShouldThrow<DataServiceException>().WithMessage(Microsoft.OData.Strings.MetadataBinder_IncompatibleOperandsError("Edm.Geography", "Edm.GeographyPoint", test.ErrorName));
             }
         }
 
+        [Ignore] // Remove Atom
         [TestMethod]
         public void FilterCompareSpatialLiterals()
         {
@@ -134,10 +136,11 @@ namespace AstoriaUnitTests.Tests.Server
                 var service = this.serviceFactory.CreateService();
 
                 Action processUri = () => RequestUriProcessor.ProcessRequestUri(this.serviceFactory.RequestUri, service, false);
-                processUri.ShouldThrow<DataServiceException>().WithMessage(Microsoft.OData.Core.Strings.MetadataBinder_IncompatibleOperandsError("Edm.GeographyPoint", "Edm.GeographyPoint", test.ErrorName));
+                processUri.ShouldThrow<DataServiceException>().WithMessage(Microsoft.OData.Strings.MetadataBinder_IncompatibleOperandsError("Edm.GeographyPoint", "Edm.GeographyPoint", test.ErrorName));
             }
         }
 
+        [Ignore] // Remove Atom
         [TestMethod]
         public void FilterSpatialMathOperators()
         {
@@ -156,10 +159,11 @@ namespace AstoriaUnitTests.Tests.Server
                 var service = this.serviceFactory.CreateService();
 
                 Action processUri = () => RequestUriProcessor.ProcessRequestUri(this.serviceFactory.RequestUri, service, false);
-                processUri.ShouldThrow<DataServiceException>().WithMessage(Microsoft.OData.Core.Strings.MetadataBinder_IncompatibleOperandsError("Edm.Geography", "Edm.GeographyPoint", test.ErrorName));
+                processUri.ShouldThrow<DataServiceException>().WithMessage(Microsoft.OData.Strings.MetadataBinder_IncompatibleOperandsError("Edm.Geography", "Edm.GeographyPoint", test.ErrorName));
             }
         }
 
+        [Ignore] // Remove Atom
         [TestMethod]
         public void FilterBySpatialFunctionWithLiterals()
         {
@@ -192,7 +196,7 @@ namespace AstoriaUnitTests.Tests.Server
             }
         }
 
-
+        [Ignore] // Remove Atom
         [TestMethod]
         public void FilterBySpatialFunctionWithProperties()
         {
@@ -231,17 +235,14 @@ namespace AstoriaUnitTests.Tests.Server
 
             Action test = () => RequestUriProcessor.ProcessRequestUri(this.serviceFactory.RequestUri, service, false);
 
-#if !EFRTM
-            string expectedFunctions = "geo.distance(System.Data.Spatial.Geography.GeographyPoint, System.Data.Spatial.Geography.GeographyPoint); geo.distance(System.Data.Spatial.DbGeography, System.Data.Spatial.Geography.GeographyPoint); geo.distance(System.Data.Spatial.DbGeography, System.Data.Spatial.DbGeography); geo.distance(System.Data.Spatial.Geography.GeographyPoint, System.Data.Spatial.DbGeography)";
-#else
             string expectedFunctions = "geo.distance(System.Data.Spatial.Geography.GeographyPoint, System.Data.Spatial.Geography.GeographyPoint)";
-#endif
 
             test.ShouldThrow<DataServiceException>().WithMessage(Microsoft.OData.Service.Strings.RequestQueryParser_NoApplicableFunction(
                             "geo.distance",
                             expectedFunctions));
         }
 
+        [Ignore] // Remove Atom
         [TestMethod]
         public void FilterBySpatialFunctionWithNulls()
         {
@@ -253,6 +254,7 @@ namespace AstoriaUnitTests.Tests.Server
             RunSpatialExpressionTest("$filter", "geo.distance(null, Point) gt cast(0, 'Edm.Double')", q => q.Where(it => GeographyOperationsExtensions.Distance(null, it.Point) > (double?)(object)0));
         }
 
+        [Ignore] // Remove Atom
         [TestMethod]
         public void OrderBySpatialFunctionWithNulls()
         {

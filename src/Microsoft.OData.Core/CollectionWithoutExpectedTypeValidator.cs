@@ -4,19 +4,18 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core
+namespace Microsoft.OData
 {
     #region Namespaces
     using System.Diagnostics;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Library;
-    using Microsoft.OData.Core.Metadata;
+    using Microsoft.OData.Metadata;
     #endregion Namespaces
 
     /// <summary>
     /// Helper class to verify that all items of a collection are of the same kind and type.
     /// </summary>
-    /// <remarks>This class is only used if no expected item type is specified for the collection; 
+    /// <remarks>This class is only used if no expected item type is specified for the collection;
     /// otherwise all items are already validated against the expected item type.</remarks>
     internal sealed class CollectionWithoutExpectedTypeValidator
     {

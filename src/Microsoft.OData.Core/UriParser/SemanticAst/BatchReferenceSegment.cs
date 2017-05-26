@@ -4,16 +4,13 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core.UriParser.Semantic
+namespace Microsoft.OData.UriParser
 {
     #region Namespaces
 
     using System.Diagnostics.CodeAnalysis;
-    using Microsoft.OData.Core.UriParser.Parsers;
-    using Microsoft.OData.Core.UriParser.TreeNodeKinds;
-    using Microsoft.OData.Core.UriParser.Visitors;
     using Microsoft.OData.Edm;
-    using ODataErrorStrings = Microsoft.OData.Core.Strings;
+    using ODataErrorStrings = Microsoft.OData.Strings;
 
     #endregion Namespaces
 
@@ -127,7 +124,7 @@ namespace Microsoft.OData.Core.UriParser.Semantic
         internal override bool Equals(ODataPathSegment other)
         {
             BatchReferenceSegment otherBatchReferenceSegment = other as BatchReferenceSegment;
-            return otherBatchReferenceSegment != null && 
+            return otherBatchReferenceSegment != null &&
                 otherBatchReferenceSegment.EdmType == this.edmType &&
                 otherBatchReferenceSegment.EntitySet == this.entitySet &&
                 otherBatchReferenceSegment.ContentId == this.contentId;

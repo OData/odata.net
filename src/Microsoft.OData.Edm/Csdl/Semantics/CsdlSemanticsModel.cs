@@ -8,13 +8,9 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
-using Microsoft.OData.Edm;
-using Microsoft.OData.Edm.Annotations;
 using Microsoft.OData.Edm.Csdl.Parsing.Ast;
-using Microsoft.OData.Edm.Expressions;
-using Microsoft.OData.Edm.Library;
-using Microsoft.OData.Edm.Library.Annotations;
 using Microsoft.OData.Edm.Validation;
+using Microsoft.OData.Edm.Vocabularies;
 
 namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
 {
@@ -137,7 +133,7 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
                         yield return function;
                     }
 
-                    foreach (IEdmSchemaElement valueTerm in schema.ValueTerms)
+                    foreach (IEdmSchemaElement valueTerm in schema.Terms)
                     {
                         yield return valueTerm;
                     }
@@ -361,19 +357,14 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
                         return new CsdlSemanticsDateTimeOffsetConstantExpression((CsdlConstantExpression)expression, schema);
                     case EdmExpressionKind.DecimalConstant:
                         return new CsdlSemanticsDecimalConstantExpression((CsdlConstantExpression)expression, schema);
-                    case EdmExpressionKind.EntitySetReference:
-                        return new CsdlSemanticsEntitySetReferenceExpression((CsdlEntitySetReferenceExpression)expression, bindingContext, schema);
                     case EdmExpressionKind.EnumMember:
-                    case EdmExpressionKind.EnumMemberReference:
                         return new CsdlSemanticsEnumMemberExpression((CsdlEnumMemberExpression)expression, bindingContext, schema);
                     case EdmExpressionKind.FloatingConstant:
                         return new CsdlSemanticsFloatingConstantExpression((CsdlConstantExpression)expression, schema);
                     case EdmExpressionKind.Null:
                         return new CsdlSemanticsNullExpression((CsdlConstantExpression)expression, schema);
-                    case EdmExpressionKind.OperationApplication:
+                    case EdmExpressionKind.FunctionApplication:
                         return new CsdlSemanticsApplyExpression((CsdlApplyExpression)expression, bindingContext, schema);
-                    case EdmExpressionKind.OperationReference:
-                        return new CsdlSemanticsOperationReferenceExpression((CsdlOperationReferenceExpression)expression, bindingContext, schema);
                     case EdmExpressionKind.GuidConstant:
                         return new CsdlSemanticsGuidConstantExpression((CsdlConstantExpression)expression, schema);
                     case EdmExpressionKind.If:
@@ -386,16 +377,12 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
                         return new CsdlSemanticsLabeledExpressionReferenceExpression((CsdlLabeledExpressionReferenceExpression)expression, bindingContext, schema);
                     case EdmExpressionKind.Labeled:
                         return schema.WrapLabeledElement((CsdlLabeledExpression)expression, bindingContext);
-                    case EdmExpressionKind.ParameterReference:
-                        return new CsdlSemanticsParameterReferenceExpression((CsdlParameterReferenceExpression)expression, bindingContext, schema);
                     case EdmExpressionKind.Path:
                         return new CsdlSemanticsPathExpression((CsdlPathExpression)expression, bindingContext, schema);
                     case EdmExpressionKind.PropertyPath:
                         return new CsdlSemanticsPropertyPathExpression((CsdlPropertyPathExpression)expression, bindingContext, schema);
                     case EdmExpressionKind.NavigationPropertyPath:
                         return new CsdlSemanticsNavigationPropertyPathExpression((CsdlNavigationPropertyPathExpression)expression, bindingContext, schema);
-                    case EdmExpressionKind.PropertyReference:
-                        return new CsdlSemanticsPropertyReferenceExpression((CsdlPropertyReferenceExpression)expression, bindingContext, schema);
                     case EdmExpressionKind.Record:
                         return new CsdlSemanticsRecordExpression((CsdlRecordExpression)expression, bindingContext, schema);
                     case EdmExpressionKind.StringConstant:
@@ -406,6 +393,8 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
                         return new CsdlSemanticsDateConstantExpression((CsdlConstantExpression)expression, schema);
                     case EdmExpressionKind.TimeOfDayConstant:
                         return new CsdlSemanticsTimeOfDayConstantExpression((CsdlConstantExpression)expression, schema);
+                    case EdmExpressionKind.AnnotationPath:
+                        return new CsdlSemanticsAnnotationPathExpression((CsdlAnnotationPathExpression)expression, bindingContext, schema);
                 }
             }
 
@@ -468,6 +457,19 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
                             return new CsdlSemanticsSpatialTypeReference(schema, (CsdlSpatialTypeReference)primitiveReference);
                     }
                 }
+                else
+                {
+                    CsdlUntypedTypeReference csdlUntypedTypeReference = typeReference as CsdlUntypedTypeReference;
+                    if (csdlUntypedTypeReference != null)
+                    {
+                        return new CsdlSemanticsUntypedTypeReference(schema, csdlUntypedTypeReference);
+                    }
+
+                    if (schema.FindType(typeReference.FullName) is IEdmTypeDefinition)
+                    {
+                        return new CsdlSemanticsTypeDefinitionReference(schema, typeReference);
+                    }
+                }
 
                 return new CsdlSemanticsNamedTypeReference(schema, typeReference);
             }
@@ -519,7 +521,7 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
             return EdmUtil.DictionaryGetOrUpdate(
                 this.wrappedAnnotations,
                 annotation,
-                ann => new CsdlSemanticsValueAnnotation(schema, targetContext, annotationsContext, ann, qualifier));
+                ann => new CsdlSemanticsVocabularyAnnotation(schema, targetContext, annotationsContext, ann, qualifier));
         }
 
         private void AddSchema(CsdlSchema schema)
@@ -565,7 +567,7 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
                 RegisterElement(function);
             }
 
-            foreach (IEdmValueTerm valueTerm in schemaWrapper.ValueTerms)
+            foreach (IEdmTerm valueTerm in schemaWrapper.Terms)
             {
                 RegisterElement(valueTerm);
             }

@@ -4,18 +4,15 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core.UriParser.Semantic
+namespace Microsoft.OData.UriParser
 {
     #region Namespaces
 
     using System;
     using System.Collections;
     using System.Collections.Generic;
-    using System.Collections.ObjectModel;
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
-    using Microsoft.OData.Core.UriParser.Visitors;
-    using Microsoft.OData.Edm;
 
     #endregion Namespaces
 
@@ -23,7 +20,7 @@ namespace Microsoft.OData.Core.UriParser.Semantic
     /// A representation of the path portion of an OData URI which is made up of <see cref="ODataPathSegment"/>s.
     /// </summary>
     [SuppressMessage("Microsoft.Naming", "CA1710:IdentifiersShouldHaveCorrectSuffix", Justification = "ODataPathCollection just doesn't sound right")]
-    public class ODataPath : ODataAnnotatable, IEnumerable<ODataPathSegment>
+    public class ODataPath : IEnumerable<ODataPathSegment>
     {
         /// <summary>
         /// The segments that make up this path.

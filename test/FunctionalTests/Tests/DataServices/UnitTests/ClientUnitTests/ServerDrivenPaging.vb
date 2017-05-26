@@ -16,8 +16,8 @@ Imports Microsoft.Test.ModuleCore
 Imports Microsoft.VisualStudio.TestTools.UnitTesting
 
 Partial Public Class ClientModule
-
-    <TestClass()> Public Class ServerDrivenPagingTests
+    'Remove Atom
+    <Ignore> <TestClass()> Public Class ServerDrivenPagingTests
         Inherits AstoriaTestCase
 
         Private Shared cleanups As List(Of IDisposable) = New List(Of IDisposable)
@@ -27,10 +27,10 @@ Partial Public Class ClientModule
 #Region "Additional test attributes"
 
         <ClassInitialize()> Public Shared Sub PerClassSetup(ByVal context As TestContext)
-            
+
             web = AstoriaUnitTests.Stubs.TestWebRequest.CreateForInProcessWcf()
             web.DataServiceType = AstoriaUnitTests.Data.ServiceModelData.CustomData.ServiceModelType
-            
+
             web.StartService()
         End Sub
 
@@ -50,8 +50,8 @@ Partial Public Class ClientModule
             AstoriaUnitTests.Stubs.OpenWebDataServiceHelper.PageSizeCustomizer.Value = AddressOf PageSizeCustomizer
 
             Me.ctx = New CustomDataContext(web.ServiceRoot)
-            Me.ctx.EnableAtom = True
-            Me.ctx.Format.UseAtom()
+            'Me.'ctx.EnableAtom = True
+            'Me.'ctx.Format.UseAtom()
 
             BaseTestWebRequest.SerializedTestArguments = New Hashtable()
             BaseTestWebRequest.SerializedTestArguments("CustomDataContext.CustomerCount") = 10      ' 10 custs
@@ -77,13 +77,13 @@ Partial Public Class ClientModule
         End Sub
 #End Region
 
-        <TestCategory("Partition3")> <TestMethod(), Variation("Make sure page size customizer is working correctly")> _
+        <TestCategory("Partition3")> <TestMethod(), Variation("Make sure page size customizer is working correctly")>
         Public Sub PagingSizeTest()
             Assert.AreEqual(3, ctx.CreateQuery(Of Customer)("/Customers").Execute().Count())
             Assert.AreEqual(5, ctx.CreateQuery(Of Order)("/Orders").Execute().Count())
         End Sub
 
-        <TestCategory("Partition3")> <TestMethod(), Variation("Non tracking DSC factory and load testing")> _
+        <TestCategory("Partition3")> <TestMethod(), Variation("Non tracking DSC factory and load testing")>
         Public Sub DSC_FactoryAndLoad()
             Dim q = ctx.Customers               ' first page = 1,2,3 
             Dim q2 = ctx.Customers.Skip(2)      ' skipped 2 = 3,4,5 (total should be 5)
@@ -109,7 +109,7 @@ Partial Public Class ClientModule
             Assert.AreEqual(custs_tracking.Count, 3)
         End Sub
 
-        <TestCategory("Partition3")> <TestMethod(), Variation("DSC Loading multi level")> _
+        <TestCategory("Partition3")> <TestMethod(), Variation("DSC Loading multi level")>
         Public Sub DSC_LoadMultiLevelSimple()
             Dim q = ctx.Customers.Expand("Orders")
             Dim custs = New DataServiceCollection(Of Customer)(q, TrackingMode.None)
@@ -117,7 +117,7 @@ Partial Public Class ClientModule
             Assert.AreEqual(5, custs.FirstOrDefault().Orders.Count)
         End Sub
 
-        <TestCategory("Partition3")> <TestMethod(), Variation("Retrieving Links from QOR")> _
+        <TestCategory("Partition3")> <TestMethod(), Variation("Retrieving Links from QOR")>
         Public Sub QOR_GetLinksMultiLevel()
             Dim q = ctx.Customers.Expand("Orders")
             Dim qor = CType(q.Execute(), QueryOperationResponse(Of Customer))
@@ -142,11 +142,11 @@ Partial Public Class ClientModule
             Assert.AreEqual(4, links.Count)
         End Sub
 
-        <TestCategory("Partition3")> <TestMethod(), Variation("Retrieving links from DSC")> _
+        <TestCategory("Partition3")> <TestMethod(), Variation("Retrieving links from DSC")>
         Public Sub DSC_GetLinksMultiLevel()
             Dim q = ctx.Customers.Expand("Orders")
-            For Each custs In New DataServiceCollection(Of Customer)() { _
-                New DataServiceCollection(Of Customer)(q, TrackingMode.None), _
+            For Each custs In New DataServiceCollection(Of Customer)() {
+                New DataServiceCollection(Of Customer)(q, TrackingMode.None),
                 New DataServiceCollection(Of Customer)(ctx, q, TrackingMode.AutoChangeTracking, Nothing, Nothing, Nothing)}
 
                 Assert.IsNotNull(custs.Continuation)
@@ -170,7 +170,7 @@ Partial Public Class ClientModule
 
         End Sub
 
-        <TestCategory("Partition3")> <TestMethod(), Variation("Load Property paging")> _
+        <TestCategory("Partition3")> <TestMethod(), Variation("Load Property paging")>
         Public Sub CTX_LoadPropertyGetLinks()
             Dim c = ctx.Customers.FirstOrDefault()
             Dim qor = ctx.LoadProperty(c, "Orders")
@@ -183,7 +183,7 @@ Partial Public Class ClientModule
             Assert.AreEqual(nextLink, nextLinkFromDSC.NextLinkUri)
         End Sub
 
-        <TestCategory("Partition3")> <TestMethod(), Variation("LoadPropertyPage loading call")> _
+        <TestCategory("Partition3")> <TestMethod(), Variation("LoadPropertyPage loading call")>
         Public Sub CTX_LoadPropertyPageLoading()
             Dim options = New MergeOption() {MergeOption.AppendOnly, MergeOption.OverwriteChanges, MergeOption.PreserveChanges}
 
@@ -418,7 +418,7 @@ Partial Public Class ClientModule
             End Property
         End Class
 
-        <EntityType()> _
+        <EntityType()>
         Public Class NarrowCustomerWithPagableOrders
 
             Private m_Orders As MyPagableCollection(Of Order) = New MyPagableCollection(Of Order)()
@@ -486,7 +486,7 @@ Partial Public Class ClientModule
                             testCase.NextLink +
                             "</feed>"
                         Dim context = New DataServiceContext(request.ServiceRoot)
-                        context.EnableAtom = True
+                        'context.EnableAtom = True
                         Dim qor = CType(context.Execute(Of Customer)("/Items"), QueryOperationResponse(Of Customer))
                         Dim exception = TestUtil.RunCatching(Sub()
                                                                  qor.AsEnumerable().Count()

@@ -24,12 +24,12 @@ namespace Microsoft.OData.Edm.Csdl.Parsing.Ast
         /// <param name="documentation">The documentation.</param>
         /// <param name="location">The location in the csdl document of the function.</param>
         public CsdlAction(
-            string name, 
-            IEnumerable<CsdlOperationParameter> parameters, 
-            CsdlTypeReference returnType, 
-            bool isBound, 
-            string entitySetPath, 
-            CsdlDocumentation documentation, 
+            string name,
+            IEnumerable<CsdlOperationParameter> parameters,
+            CsdlTypeReference returnType,
+            bool isBound,
+            string entitySetPath,
+            CsdlDocumentation documentation,
             CsdlLocation location)
             : base(name, parameters, returnType, isBound, entitySetPath, documentation, location)
         {

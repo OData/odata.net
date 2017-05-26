@@ -8,7 +8,7 @@ namespace Microsoft.Test.Taupo.OData.Common
 {
     #region Namespaces
     using System.Collections.Generic;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     #endregion Namespaces
 
     /// <summary>
@@ -19,7 +19,7 @@ namespace Microsoft.Test.Taupo.OData.Common
         /// <summary>
         /// A dictionary of all the navigation links keyed off the position among the list of all properties where the navigation navigationLink was read.
         /// </summary>
-        private readonly Dictionary<int, ODataNavigationLink> navigationLinks = new Dictionary<int, ODataNavigationLink>();
+        private readonly Dictionary<int, ODataNestedResourceInfo> navigationLinks = new Dictionary<int, ODataNestedResourceInfo>();
 
         /// <summary>
         /// The number of navigation links stored in this annotation.
@@ -35,7 +35,7 @@ namespace Microsoft.Test.Taupo.OData.Common
         /// <summary>
         /// The navigation links stored in this annotation.
         /// </summary>
-        public IEnumerable<ODataNavigationLink> NavigationLinks
+        public IEnumerable<ODataNestedResourceInfo> NavigationLinks
         {
             get
             {
@@ -48,7 +48,7 @@ namespace Microsoft.Test.Taupo.OData.Common
         /// </summary>
         /// <param name="navigationLink">The navigation link read from the payload.</param>
         /// <param name="position">The position of the navigation link among all the properties being from the payload.</param>
-        public void Add(ODataNavigationLink link, int position)
+        public void Add(ODataNestedResourceInfo link, int position)
         {
             this.navigationLinks.Add(position, link);
         }
@@ -59,7 +59,7 @@ namespace Microsoft.Test.Taupo.OData.Common
         /// <param name="position">The position to get the navigation link for.</param>
         /// <param name="navigationLink">The navigation link for the specified position or null if none exists for that position.</param>
         /// <returns>true if navigation link was found for the specified position; otherwise false.</returns>
-        public bool TryGetNavigationLinkAt(int position, out ODataNavigationLink link)
+        public bool TryGetNavigationLinkAt(int position, out ODataNestedResourceInfo link)
         {
             return this.navigationLinks.TryGetValue(position, out link);
         }

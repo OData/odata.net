@@ -9,7 +9,7 @@ namespace Microsoft.OData.Service.Serializers
     using System;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.OData.Service.Providers;
 
     /// <summary>
@@ -39,7 +39,7 @@ namespace Microsoft.OData.Service.Serializers
         /// <param name="entry">The entry to modify.</param>
         /// <param name="computeETag">The callback to compute the ETag.</param>
         [SuppressMessage("DataWeb.Usage", "AC0019:ShouldNotDireclyAccessPayloadMetadataProperties", Justification = "This component is allowed to set these properties.")]
-        internal void SetETag(ODataEntry entry, Func<string> computeETag)
+        internal void SetETag(ODataResource entry, Func<string> computeETag)
         {
             Debug.Assert(entry != null, "entry != null");
             if (this.interpreter.ShouldIncludeEntryMetadata(PayloadMetadataKind.Entry.ETag))
@@ -55,7 +55,7 @@ namespace Microsoft.OData.Service.Serializers
         /// <param name="entitySetBaseTypeName">Name of the entity set's base type.</param>
         /// <param name="entryTypeName">Name of the entry's type.</param>
         [SuppressMessage("DataWeb.Usage", "AC0019:ShouldNotDireclyAccessPayloadMetadataProperties", Justification = "This component is allowed to set these properties.")]
-        internal void SetTypeName(ODataEntry entry, string entitySetBaseTypeName, string entryTypeName)
+        internal void SetTypeName(ODataResource entry, string entitySetBaseTypeName, string entryTypeName)
         {
             Debug.Assert(entry != null, "entry != null");
 
@@ -64,13 +64,39 @@ namespace Microsoft.OData.Service.Serializers
 
             if (this.interpreter.ShouldIncludeEntryTypeName(entitySetBaseTypeName, entryTypeName))
             {
-                entry.SetAnnotation(new SerializationTypeNameAnnotation() { TypeName = entry.TypeName });
+                entry.TypeAnnotation = new ODataTypeAnnotation(entry.TypeName);
             }
             else
             {
                 // When we should not write the typename, setting the serialization type name to null
                 // so that ODL does not write the type on the wire.
-                entry.SetAnnotation(new SerializationTypeNameAnnotation() { TypeName = null });
+                entry.TypeAnnotation = new ODataTypeAnnotation();
+            }
+        }
+
+        /// <summary>
+        /// Sets the entry's TypeName property if it should be included according to the current query option.
+        /// </summary>
+        /// <param name="entry">The entry to modify.</param>
+        /// <param name="entitySetBaseTypeName">Name of the entity set's base type.</param>
+        /// <param name="entryTypeName">Name of the entry's type.</param>
+        [SuppressMessage("DataWeb.Usage", "AC0019:ShouldNotDireclyAccessPayloadMetadataProperties", Justification = "This component is allowed to set these properties.")]
+        internal void SetTypeName(ODataResourceSet resourceSet, string entitySetBaseTypeName, string resourceTypeName)
+        {
+            Debug.Assert(resourceSet != null, "resourceSet != null");
+
+            // We should always write this since for derived types, ODL needs to know the typename.
+            resourceSet.TypeName = resourceTypeName;
+
+            if (this.interpreter.ShouldIncludeEntryTypeName(entitySetBaseTypeName, resourceTypeName))
+            {
+                resourceSet.TypeAnnotation = new ODataTypeAnnotation(resourceSet.TypeName);
+            }
+            else
+            {
+                // When we should not write the typename, setting the serialization type name to null
+                // so that ODL does not write the type on the wire.
+                resourceSet.TypeAnnotation = new ODataTypeAnnotation();
             }
         }
 
@@ -80,7 +106,7 @@ namespace Microsoft.OData.Service.Serializers
         /// <param name="entry">The entry to modify.</param>
         /// <param name="computeIdentity">The callback to compute the identity.</param>
         [SuppressMessage("DataWeb.Usage", "AC0019:ShouldNotDireclyAccessPayloadMetadataProperties", Justification = "This component is allowed to set these properties.")]
-        internal void SetId(ODataEntry entry, Func<Uri> computeIdentity)
+        internal void SetId(ODataResource entry, Func<Uri> computeIdentity)
         {
             Debug.Assert(entry != null, "entry != null");
             if (this.interpreter.ShouldIncludeEntryMetadata(PayloadMetadataKind.Entry.Id))
@@ -95,7 +121,7 @@ namespace Microsoft.OData.Service.Serializers
         /// <param name="entry">The entry to modify.</param>
         /// <param name="computeEditLink">The callback to compute the edit link.</param>
         [SuppressMessage("DataWeb.Usage", "AC0019:ShouldNotDireclyAccessPayloadMetadataProperties", Justification = "This component is allowed to set these properties.")]
-        internal void SetEditLink(ODataEntry entry, Func<Uri> computeEditLink)
+        internal void SetEditLink(ODataResource entry, Func<Uri> computeEditLink)
         {
             Debug.Assert(entry != null, "entry != null");
             if (this.interpreter.ShouldIncludeEntryMetadata(PayloadMetadataKind.Entry.EditLink))
@@ -110,7 +136,7 @@ namespace Microsoft.OData.Service.Serializers
         /// <param name="feed">The feed to modify.</param>
         /// <param name="computeIdentity">The callback to compute the identity.</param>
         [SuppressMessage("DataWeb.Usage", "AC0019:ShouldNotDireclyAccessPayloadMetadataProperties", Justification = "This component is allowed to set these properties.")]
-        internal void SetId(ODataFeed feed, Func<Uri> computeIdentity)
+        internal void SetId(ODataResourceSet feed, Func<Uri> computeIdentity)
         {
             Debug.Assert(feed != null, "feed != null");
             if (this.interpreter.ShouldIncludeFeedMetadata(PayloadMetadataKind.Feed.Id))
@@ -125,9 +151,9 @@ namespace Microsoft.OData.Service.Serializers
         /// <param name="feed">The feed to modify.</param>
         /// <param name="absoluteServiceUri">The absolute service Uri.</param>
         /// <param name="absoluteNextPageLinkUri">The absolute next link uri.</param>
-        internal void SetNextPageLink(ODataFeed feed, Uri absoluteServiceUri, Uri absoluteNextPageLinkUri)
+        internal void SetNextPageLink(ODataResourceSet resourceCollection, Uri absoluteServiceUri, Uri absoluteNextPageLinkUri)
         {
-            Debug.Assert(feed != null, "feed != null");
+            Debug.Assert(resourceCollection != null, "feed != null");
             Debug.Assert(absoluteServiceUri != null && absoluteServiceUri.IsAbsoluteUri, "absoluteServiceUri != null && absoluteServiceUri.IsAbsoluteUri");
             Debug.Assert(absoluteNextPageLinkUri != null && absoluteNextPageLinkUri.IsAbsoluteUri, "absoluteNextPageLinkUri != null && absoluteNextPageLinkUri.IsAbsoluteUri");
             Debug.Assert(
@@ -136,11 +162,11 @@ namespace Microsoft.OData.Service.Serializers
 
             if (this.interpreter.ShouldNextPageLinkBeAbsolute())
             {
-                feed.NextPageLink = absoluteNextPageLinkUri;
+                resourceCollection.NextPageLink = absoluteNextPageLinkUri;
             }
             else
             {
-                feed.NextPageLink = absoluteServiceUri.MakeRelativeUri(absoluteNextPageLinkUri);
+                resourceCollection.NextPageLink = absoluteServiceUri.MakeRelativeUri(absoluteNextPageLinkUri);
             }
         }
 
@@ -210,7 +236,7 @@ namespace Microsoft.OData.Service.Serializers
         /// <param name="link">The link to modify.</param>
         /// <param name="computeUrl">The callback to compute the url.</param>
         [SuppressMessage("DataWeb.Usage", "AC0019:ShouldNotDireclyAccessPayloadMetadataProperties", Justification = "This component is allowed to set these properties.")]
-        internal void SetUrl(ODataNavigationLink link, Func<Uri> computeUrl)
+        internal void SetUrl(ODataNestedResourceInfo link, Func<Uri> computeUrl)
         {
             Debug.Assert(link != null, "link != null");
             if (this.interpreter.ShouldIncludeNavigationMetadata(PayloadMetadataKind.Navigation.Url))
@@ -225,7 +251,7 @@ namespace Microsoft.OData.Service.Serializers
         /// <param name="link">The link to modify.</param>
         /// <param name="computeUrl">The callback to compute the url.</param>
         [SuppressMessage("DataWeb.Usage", "AC0019:ShouldNotDireclyAccessPayloadMetadataProperties", Justification = "This component is allowed to set these properties.")]
-        internal void SetAssociationLinkUrl(ODataNavigationLink link, Func<Uri> computeUrl)
+        internal void SetAssociationLinkUrl(ODataNestedResourceInfo link, Func<Uri> computeUrl)
         {
             Debug.Assert(link != null, "link != null");
             if (this.interpreter.ShouldIncludeNavigationMetadata(PayloadMetadataKind.Navigation.AssociationLinkUrl))
@@ -245,21 +271,13 @@ namespace Microsoft.OData.Service.Serializers
             Debug.Assert(value != null, "value != null");
 
 #if DEBUG
-            var complexValue = value as ODataComplexValue;
-            if (complexValue != null)
-            {
-                Debug.Assert(!String.IsNullOrEmpty(complexValue.TypeName), "Type name must be specified in ODataComplexValue since ODL needs it for validation.");
-            }
-            else
-            {
-                var collectionValue = value as ODataCollectionValue;
-                Debug.Assert(collectionValue == null || !String.IsNullOrEmpty(collectionValue.TypeName), "Type name must be specified in ODataCollectionValue since ODL needs it for validation.");
-            }
+            var collectionValue = value as ODataCollectionValue;
+            Debug.Assert(collectionValue == null || !String.IsNullOrEmpty(collectionValue.TypeName), "Type name must be specified in ODataCollectionValue since ODL needs it for validation.");
 #endif
             string typeNameToWrite;
             if (this.interpreter.ShouldSpecifyTypeNameAnnotation(value, actualType, out typeNameToWrite))
             {
-                value.SetAnnotation(new SerializationTypeNameAnnotation { TypeName = typeNameToWrite });
+                value.TypeAnnotation = new ODataTypeAnnotation(typeNameToWrite);
             }
         }
 

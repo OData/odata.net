@@ -163,7 +163,7 @@ namespace Microsoft.Test.OData.Utils.Common
         /// </returns>
         public static bool IsCatchable(Exception exception)
         {
-#if !WIN8
+#if !WIN8 && !NETCOREAPP1_0
             if (exception is ThreadAbortException)
             {
                 return false;

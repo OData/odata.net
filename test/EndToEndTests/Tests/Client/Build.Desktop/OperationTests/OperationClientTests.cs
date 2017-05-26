@@ -23,6 +23,7 @@ namespace Microsoft.Test.OData.Tests.Client.OperationTests
 
         }
 
+        // TODO : Reactive this test cases after merging entity and complex for writer
         [TestMethod]
         public void FunctionOfEntitiesTakeComplexsReturnEntities()
         {
@@ -91,10 +92,14 @@ namespace Microsoft.Test.OData.Tests.Client.OperationTests
                 {
                     ID = 1,
                     Notes = new ObservableCollection<string>() {"note1", "note2"},
+                    OrderDetails = new ObservableCollection<OrderDetail>{ new OrderDetail{Quantity = 1, UnitPrice = 1.0f}},
+                    InfoFromCustomer = new InfoFromCustomer { CustomerMessage = "XXL"}
                 },
                 new Order()
                 {
                     ID = 2,
+                    OrderDetails = new ObservableCollection<OrderDetail>{ new OrderDetail{Quantity = 2, UnitPrice = 2.0f}},
+                    InfoFromCustomer = new InfoFromCustomer { CustomerMessage = "XXL"}
                 },
             };
             this.TestClientContext.AttachTo("Orders", orders[0]);  // Do not need to call this if the order is from service.
@@ -127,13 +132,14 @@ namespace Microsoft.Test.OData.Tests.Client.OperationTests
             {
                 ID = 1,
                 Notes = new ObservableCollection<string>() { "note1", "note2" },
+                OrderDetails = new ObservableCollection<OrderDetail> { new OrderDetail { Quantity = 1, UnitPrice = 1.0f } },
+                InfoFromCustomer = new InfoFromCustomer { CustomerMessage = "XXL" }
             };
             var customerQuery = this.TestClientContext.CreateQuery<Customer>("Customers");
             var functionQuery = customerQuery.CreateFunctionQuery<Customer>("Microsoft.Test.OData.Services.ODataOperationService.GetCustomerByOrder", true, new UriOperationParameter("order", order));
             var customers = functionQuery.Execute();
             Assert.AreEqual(1, customers.Count());
         }
-
 
         [TestMethod]
         public void FunctionOfEntitiesTakeEntityReferencesReturnEntities()

@@ -4,28 +4,23 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core.UriParser.Parsers
+namespace Microsoft.OData.UriParser
 {
     #region Namespaces
     using System;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.Diagnostics;
-    using Microsoft.OData.Core.UriParser.Parsers;
-    using Microsoft.OData.Core.UriParser.Parsers.Common;
-    using Microsoft.OData.Core.UriParser.Syntactic;
-    using Microsoft.OData.Core.UriParser.Aggregation;
-    using Microsoft.OData.Core.UriParser.TreeNodeKinds;
+    using Microsoft.OData.UriParser.Aggregation;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Library;
-    using ODataErrorStrings = Microsoft.OData.Core.Strings;
+    using ODataErrorStrings = Microsoft.OData.Strings;
 
     #endregion Namespaces
 
     /// <summary>
     /// Parser which consumes the query expression ($filter, $orderby) and produces the lexical object model.
     /// </summary>
-    internal sealed class UriQueryExpressionParser
+    public sealed class UriQueryExpressionParser
     {
         /// <summary>
         /// The maximum number of recursion nesting allowed.
@@ -59,6 +54,15 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         /// Whether to allow case insensitive for builtin identifier.
         /// </summary>
         private bool enableCaseInsensitiveBuiltinIdentifier = false;
+
+        /// <summary>
+        /// Creates a UriQueryExpressionParser.
+        /// </summary>
+        /// <param name="maxDepth">The maximum depth of each part of the query - a recursion limit.</param>
+        public UriQueryExpressionParser(int maxDepth)
+            : this(maxDepth, false)
+        {
+        }
 
         /// <summary>
         /// Constructor.
@@ -101,6 +105,16 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         }
 
         /// <summary>
+        /// Parses the $filter expression.
+        /// </summary>
+        /// <param name="filter">The $filter expression string to parse.</param>
+        /// <returns>The lexical token representing the filter.</returns>
+        public QueryToken ParseFilter(string filter)
+        {
+            return this.ParseExpressionText(filter);
+        }
+
+        /// <summary>
         /// Parses a literal.
         /// </summary>
         /// <param name="lexer">The lexer to use.</param>
@@ -134,9 +148,9 @@ namespace Microsoft.OData.Core.UriParser.Parsers
                     string edmConstantName = GetEdmConstantNames(literalEdmTypeReference);
                     return ParseTypedLiteral(lexer, literalEdmTypeReference, edmConstantName);
 
+                case ExpressionTokenKind.BracedExpression:
                 case ExpressionTokenKind.BracketedExpression:
                     {
-                        // TODO: need a BracketLiteralToken for real complex type vaule like [\"Barky\",\"Junior\"]  or {...}
                         LiteralToken result = new LiteralToken(lexer.CurrentToken.Text, lexer.CurrentToken.Text);
                         lexer.NextToken();
                         return result;
@@ -157,48 +171,38 @@ namespace Microsoft.OData.Core.UriParser.Parsers
             switch (edmTypeReference.PrimitiveKind())
             {
                 case EdmPrimitiveTypeKind.Boolean:
-                    return Microsoft.OData.Core.Metadata.EdmConstants.EdmBooleanTypeName;
+                    return Microsoft.OData.Metadata.EdmConstants.EdmBooleanTypeName;
                 case EdmPrimitiveTypeKind.TimeOfDay:
-                    return Microsoft.OData.Core.Metadata.EdmConstants.EdmTimeOfDayTypeName;
+                    return Microsoft.OData.Metadata.EdmConstants.EdmTimeOfDayTypeName;
                 case EdmPrimitiveTypeKind.Date:
-                    return Microsoft.OData.Core.Metadata.EdmConstants.EdmDateTypeName;
+                    return Microsoft.OData.Metadata.EdmConstants.EdmDateTypeName;
                 case EdmPrimitiveTypeKind.DateTimeOffset:
-                    return Microsoft.OData.Core.Metadata.EdmConstants.EdmDateTimeOffsetTypeName;
+                    return Microsoft.OData.Metadata.EdmConstants.EdmDateTimeOffsetTypeName;
                 case EdmPrimitiveTypeKind.Duration:
-                    return Microsoft.OData.Core.Metadata.EdmConstants.EdmDurationTypeName;
+                    return Microsoft.OData.Metadata.EdmConstants.EdmDurationTypeName;
                 case EdmPrimitiveTypeKind.Decimal:
-                    return Microsoft.OData.Core.Metadata.EdmConstants.EdmDecimalTypeName;
+                    return Microsoft.OData.Metadata.EdmConstants.EdmDecimalTypeName;
                 case EdmPrimitiveTypeKind.String:
-                    return Microsoft.OData.Core.Metadata.EdmConstants.EdmStringTypeName;
+                    return Microsoft.OData.Metadata.EdmConstants.EdmStringTypeName;
                 case EdmPrimitiveTypeKind.Int64:
-                    return Microsoft.OData.Core.Metadata.EdmConstants.EdmInt64TypeName;
+                    return Microsoft.OData.Metadata.EdmConstants.EdmInt64TypeName;
                 case EdmPrimitiveTypeKind.Int32:
-                    return Microsoft.OData.Core.Metadata.EdmConstants.EdmInt32TypeName;
+                    return Microsoft.OData.Metadata.EdmConstants.EdmInt32TypeName;
                 case EdmPrimitiveTypeKind.Double:
-                    return Microsoft.OData.Core.Metadata.EdmConstants.EdmDoubleTypeName;
+                    return Microsoft.OData.Metadata.EdmConstants.EdmDoubleTypeName;
                 case EdmPrimitiveTypeKind.Single:
-                    return Microsoft.OData.Core.Metadata.EdmConstants.EdmSingleTypeName;
+                    return Microsoft.OData.Metadata.EdmConstants.EdmSingleTypeName;
                 case EdmPrimitiveTypeKind.Guid:
-                    return Microsoft.OData.Core.Metadata.EdmConstants.EdmGuidTypeName;
+                    return Microsoft.OData.Metadata.EdmConstants.EdmGuidTypeName;
                 case EdmPrimitiveTypeKind.Binary:
-                    return Microsoft.OData.Core.Metadata.EdmConstants.EdmBinaryTypeName;
+                    return Microsoft.OData.Metadata.EdmConstants.EdmBinaryTypeName;
                 case EdmPrimitiveTypeKind.Geography:
-                    return Microsoft.OData.Core.Metadata.EdmConstants.EdmGeographyTypeName;
+                    return Microsoft.OData.Metadata.EdmConstants.EdmGeographyTypeName;
                 case EdmPrimitiveTypeKind.Geometry:
-                    return Microsoft.OData.Core.Metadata.EdmConstants.EdmGeometryTypeName;
+                    return Microsoft.OData.Metadata.EdmConstants.EdmGeometryTypeName;
                 default:
                     return edmTypeReference.Definition.FullTypeName();
             }
-        }
-
-        /// <summary>
-        /// Parses the $filter expression.
-        /// </summary>
-        /// <param name="filter">The $filter expression string to parse.</param>
-        /// <returns>The lexical token representing the filter.</returns>
-        internal QueryToken ParseFilter(string filter)
-        {
-            return this.ParseExpressionText(filter);
         }
 
         internal IEnumerable<QueryToken> ParseApply(string apply)
@@ -289,9 +293,20 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         {
             // expression
             var expression = this.ParseExpression();
+            var endPathExpression = expression as EndPathToken;
+            AggregationMethodDefinition verb;
 
             // "with" verb
-            var verb = this.ParseAggregateWith();
+            if (endPathExpression != null && endPathExpression.Identifier == ExpressionConstants.QueryOptionCount)
+            {
+                // e.g. aggregate($count as Count)
+                verb = AggregationMethodDefinition.VirtualPropertyCount;
+            }
+            else
+            {
+                // e.g. aggregate(UnitPrice with sum as Total)
+                verb = this.ParseAggregateWith();
+            }
 
             // "as" alias
             var alias = this.ParseAggregateAs();
@@ -975,7 +990,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
             return new InnerPathToken(propertyName, parent, null);
         }
 
-        private AggregationMethod ParseAggregateWith()
+        private AggregationMethodDefinition ParseAggregateWith()
         {
             if (!TokenIdentifierIs(ExpressionConstants.KeywordWith))
             {
@@ -984,30 +999,40 @@ namespace Microsoft.OData.Core.UriParser.Parsers
 
             lexer.NextToken();
 
-            AggregationMethod verb;
+            AggregationMethodDefinition verb;
+            int identifierStartPosition = lexer.CurrentToken.Position;
+            string methodLabel = lexer.ReadDottedIdentifier(false /* acceptStar */);
 
-            switch (lexer.CurrentToken.GetIdentifier())
+            switch (methodLabel)
             {
                 case ExpressionConstants.KeywordAverage:
-                    verb = AggregationMethod.Average;
+                    verb = AggregationMethodDefinition.Average;
                     break;
                 case ExpressionConstants.KeywordCountDistinct:
-                    verb = AggregationMethod.CountDistinct;
+                    verb = AggregationMethodDefinition.CountDistinct;
                     break;
                 case ExpressionConstants.KeywordMax:
-                    verb = AggregationMethod.Max;
+                    verb = AggregationMethodDefinition.Max;
                     break;
                 case ExpressionConstants.KeywordMin:
-                    verb = AggregationMethod.Min;
+                    verb = AggregationMethodDefinition.Min;
                     break;
                 case ExpressionConstants.KeywordSum:
-                    verb = AggregationMethod.Sum;
+                    verb = AggregationMethodDefinition.Sum;
                     break;
                 default:
-                    throw ParseError(ODataErrorStrings.UriQueryExpressionParser_UnrecognizedWithVerb(lexer.CurrentToken.GetIdentifier(), this.lexer.CurrentToken.Position, this.lexer.ExpressionText));
-            }
+                    if (!methodLabel.Contains(OData.ExpressionConstants.SymbolDot))
+                    {
+                        throw ParseError(
+                            ODataErrorStrings.UriQueryExpressionParser_UnrecognizedWithMethod(
+                                methodLabel,
+                                identifierStartPosition,
+                                this.lexer.ExpressionText));
+                    }
 
-            lexer.NextToken();
+                    verb = AggregationMethodDefinition.Custom(methodLabel);
+                    break;
+            }
 
             return verb;
         }

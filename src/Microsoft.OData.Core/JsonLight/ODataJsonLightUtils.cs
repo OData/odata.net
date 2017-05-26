@@ -4,13 +4,13 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core.JsonLight
+namespace Microsoft.OData.JsonLight
 {
     using System;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
-    using Microsoft.OData.Core.Metadata;
+    using Microsoft.OData.Metadata;
     using Microsoft.OData.Edm;
 
     /// <summary>
@@ -115,7 +115,7 @@ namespace Microsoft.OData.Core.JsonLight
 
             string metadataReferenceName = operation.FullName();
             bool hasOverload = model.FindDeclaredOperations(operation.FullName()).Take(2).Count() > 1;
-            
+
             if (hasOverload)
             {
                 if (operation is IEdmFunction)

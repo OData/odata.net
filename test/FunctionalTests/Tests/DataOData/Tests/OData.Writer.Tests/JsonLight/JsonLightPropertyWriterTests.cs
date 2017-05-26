@@ -10,9 +10,8 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.JsonLight
     using System.Collections.Generic;
     using System.Globalization;
     using System.Linq;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Library;
     using Microsoft.Spatial;
     using Microsoft.Test.OData.Utils.CombinatorialEngine;
     using Microsoft.Test.Taupo.Common;
@@ -34,31 +33,6 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.JsonLight
 
         [InjectDependency(IsRequired = true)]
         public PayloadWriterTestExpectedResults.Settings ExpectedResultSettings { get; set; }
-
-        [TestMethod, Variation(Description = "Error case for writing properties in JSON Lite without owning type.")]
-        public void WritePropertyWithoutOwningType()
-        {
-            var model = new EdmModel();
-            var container = new EdmEntityContainer("DefaultNamespace", "DefaultContainer");
-            model.AddElement(container);
-
-            var testDescriptor = new PayloadWriterTestDescriptor<ODataProperty>(
-                this.Settings,
-                new ODataProperty() { Name = "PropertyName", Value = null },
-                tc => new JsonWriterTestExpectedResults(this.ExpectedResultSettings)
-                {
-                })
-                {
-                    Model = model
-                };
-
-            this.CombinatorialEngineProvider.RunCombinations(
-                this.WriterTestConfigurationProvider.JsonLightFormatConfigurations,
-                (testConfiguration) =>
-                {
-                    testDescriptor.RunTopLevelPropertyPayload(testConfiguration, baselineLogger: this.Logger);
-                });
-        }
 
         [TestMethod, Variation(Description = "Test correct serialization format when writing top-level open properties in JSON Lite.")]
         public void TopLevelOpenPropertiesTest()
@@ -108,21 +82,10 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.JsonLight
                         "\"type\":\"name\",\"properties\":{{",
                         "\"name\":\"EPSG:4326\"",
                         "}}",
-                        "}}", 
+                        "}}",
                         "}}",
                         "}}")
-                },
-                new PropertyPayloadTestCase
-                {
-                    DebugDescription = "Top-level open complex property.",
-                    Property = new ODataProperty { Name = "Address", Value = new ODataComplexValue { TypeName = "TestModel.AddressType" } },
-                    Model = edmModel,
-                    PropertyType = "TestModel.AddressType",
-                    Json = string.Join("$(NL)",
-                        "{{",
-                        "{0}",
-                        "}}")
-                },
+                }
             };
 
             IEnumerable<PayloadWriterTestDescriptor<ODataProperty>> testDescriptors = testCases.Select(testCase =>
@@ -148,7 +111,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.JsonLight
                 (testDescriptor, testConfiguration) =>
                 {
                     TestWriterUtils.WriteAndVerifyTopLevelContent(
-                        testDescriptor, 
+                        testDescriptor,
                         testConfiguration,
                         (messageWriter) => messageWriter.WriteProperty(testDescriptor.PayloadItems.Single()),
                         this.Assert,
@@ -190,7 +153,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.JsonLight
                         "\"type\":\"name\",\"properties\":{{",
                         "\"name\":\"EPSG:4326\"",
                         "}}",
-                        "}}", 
+                        "}}",
                         "}}",
                         "}}")
                 },
@@ -210,7 +173,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.JsonLight
                         "\"type\":\"name\",\"properties\":{{",
                         "\"name\":\"EPSG:4326\"",
                         "}}",
-                        "}}", 
+                        "}}",
                         "}}",
                         "}}")
                 },
@@ -334,69 +297,69 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.JsonLight
             edmModel.AddElement(container);
 
             const string JsonFormat = "$(NL){{{0},\"Value\":{1}}}";
-                
+
             IEnumerable<PropertyPayloadTestCase> testCases = new[]
             {
                 new PropertyPayloadTestCase
                 {
                     DebugDescription = "Null.",
-                    Property = new ODataProperty 
+                    Property = new ODataProperty
                                 {
-                                    Name = "Value", 
+                                    Name = "Value",
                                     Value = new ODataUntypedValue() { RawValue = "null" }
                                 },
                 },
                 new PropertyPayloadTestCase
                 {
                     DebugDescription = "Integer.",
-                    Property = new ODataProperty 
+                    Property = new ODataProperty
                                 {
-                                    Name = "Value", 
+                                    Name = "Value",
                                     Value = new ODataUntypedValue() { RawValue = "42" }
                                 },
                 },
                 new PropertyPayloadTestCase
                 {
                     DebugDescription = "Float.",
-                    Property = new ODataProperty 
+                    Property = new ODataProperty
                                 {
-                                    Name = "Value", 
+                                    Name = "Value",
                                     Value = new ODataUntypedValue() { RawValue = "3.1415" }
                                 },
                 },
                 new PropertyPayloadTestCase
                 {
                     DebugDescription = "String.",
-                    Property = new ODataProperty 
+                    Property = new ODataProperty
                                 {
-                                    Name = "Value", 
+                                    Name = "Value",
                                     Value = new ODataUntypedValue() { RawValue = "\"foo bar\"" }
                                 },
                 },
                 new PropertyPayloadTestCase
                 {
                     DebugDescription = "Array of elements of mixed types.",
-                    Property = new ODataProperty 
+                    Property = new ODataProperty
                                 {
-                                    Name = "Value", 
+                                    Name = "Value",
                                     Value = new ODataUntypedValue() { RawValue = "[1, 2, \"abc\"]" }
                                 },
                 },
                 new PropertyPayloadTestCase
                 {
                     DebugDescription = "Array of arrays.",
-                    Property = new ODataProperty 
+                    Property = new ODataProperty
                                 {
-                                    Name = "Value", 
+                                    Name = "Value",
                                     Value = new ODataUntypedValue() { RawValue = "[ [1, \"abc\"], [2, \"def\"], [[3],[4, 5]] ]" }
                                 },
                 },
                 new PropertyPayloadTestCase
                 {
                     DebugDescription = "Negative - empty RawValue",
-                    Property = new ODataProperty 
+                    Property = new ODataProperty
                                 {
-                                    Name = "Value", 
+                                    Name = "Value",
                                     Value = new ODataUntypedValue() { RawValue = string.Empty },
                                 },
                     ExpectedException = ODataExpectedExceptions.ODataException(
@@ -405,17 +368,17 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.JsonLight
                 new PropertyPayloadTestCase
                 {
                     DebugDescription = "Collection of Edm.Untyped elements.",
-                    Property = new ODataProperty 
+                    Property = new ODataProperty
                                 {
-                                    Name = "CollectionValue", 
+                                    Name = "CollectionValue",
                                     Value = new ODataCollectionValue()
                                             {
                                                 TypeName = "Collection(TestModel.JsonType)",
                                                 Items = new object[]
                                                         {
                                                             new ODataUntypedValue()
-                                                            { 
-                                                                RawValue = "\"foo bar\"" 
+                                                            {
+                                                                RawValue = "\"foo bar\""
                                                             },
                                                             new ODataUntypedValue()
                                                             {
@@ -444,7 +407,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.JsonLight
                             GetExpectedJson(testCase.Property.Value)),
                         FragmentExtractor = (result) => result.RemoveAllAnnotations(false),
                         ExpectedException2 = testCase.ExpectedException,
-                     })
+                    })
                 {
                     DebugDescription = testCase.DebugDescription,
                     Model = edmModel,
@@ -458,7 +421,11 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.JsonLight
                     TestWriterUtils.WriteAndVerifyTopLevelContent(
                         testDescriptor,
                         testConfiguration,
-                        (messageWriter) => messageWriter.WriteProperty(testDescriptor.PayloadItems.Single()),
+                        (messageWriter) =>
+                        {
+                            messageWriter.PrivateSettings.Validations = ~ValidationKinds.ThrowOnUndeclaredPropertyForNonOpenType;
+                            messageWriter.WriteProperty(testDescriptor.PayloadItems.Single());
+                        },
                         this.Assert,
                         baselineLogger: this.Logger);
                 });
@@ -481,10 +448,10 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.JsonLight
             ODataCollectionValue collectionValue = value as ODataCollectionValue;
             if (collectionValue != null)
             {
-                return 
+                return
                     "[" +
                         string.Join<string>(
-                            ",", 
+                            ",",
                             collectionValue.Items.OfType<ODataUntypedValue>().Select(uv => uv.RawValue)) +
                      "]";
             }

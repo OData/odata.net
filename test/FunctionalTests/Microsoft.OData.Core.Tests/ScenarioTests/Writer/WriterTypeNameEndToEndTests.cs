@@ -9,14 +9,13 @@ using System.Collections.Generic;
 using System.IO;
 using FluentAssertions;
 using Microsoft.OData.Edm;
-using Microsoft.OData.Edm.Library;
 using Xunit;
 
-namespace Microsoft.OData.Core.Tests.ScenarioTests.Writer
+namespace Microsoft.OData.Tests.ScenarioTests.Writer
 {
     /// <summary>
     /// These tests baseline the end-to-end behavior of when type names are written on the wire, 
-    /// based on the format and metadata level along with whether the AutoComputePayloadMetadataInJson 
+    /// based on the format and metadata level along with whether the AutoComputePayloadMetadata 
     /// flag is set on the message writer settings. These tests are not meant to be exhaustive, but
     /// should catch major end-to-end problems. The unit tests for the individual components are more extensive.
     /// </summary>
@@ -57,21 +56,21 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Writer
                     this.settings,
                     model));
 
-            var entryWriter = new Lazy<ODataWriter>(() => this.messageWriter.Value.CreateODataEntryWriter(set, type));
+            var entryWriter = new Lazy<ODataWriter>(() => this.messageWriter.Value.CreateODataResourceWriter(set, type));
 
             var valueWithAnnotation = new ODataPrimitiveValue(45);
-            valueWithAnnotation.SetAnnotation(new SerializationTypeNameAnnotation { TypeName = "TypeNameFromSTNA" });
+            valueWithAnnotation.TypeAnnotation = new ODataTypeAnnotation("TypeNameFromSTNA");
 
             var propertiesToWrite = new List<ODataProperty>
             {
                 new ODataProperty
                 {
                     Name = "DeclaredInt16", Value = (Int16)42
-                }, 
+                },
                 new ODataProperty
                 {
                     Name = "UndeclaredDecimal", Value = (Decimal)4.5
-                }, 
+                },
                 new ODataProperty
                 {
                     // Note: value is more derived than the declared type.
@@ -85,7 +84,7 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Writer
 
             this.writerOutput = new Lazy<string>(() =>
             {
-                entryWriter.Value.WriteStart(new ODataEntry { Properties = propertiesToWrite });
+                entryWriter.Value.WriteStart(new ODataResource { Properties = propertiesToWrite });
                 entryWriter.Value.WriteEnd();
                 entryWriter.Value.Flush();
                 writerStream.Seek(0, SeekOrigin.Begin);
@@ -105,7 +104,6 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Writer
         public void TypeNameShouldBeWrittenCorrectlyInMinimalMetadataWhenKnobIsOff()
         {
             this.settings.SetContentType(jsonLightMinimalMetadata, null);
-            this.settings.AutoComputePayloadMetadataInJson = false;
             this.writerOutput.Value.Should()
                 .NotContain("DeclaredInt16@odata.type")
                 .And.Contain("UndeclaredDecimal@odata.type\":\"#Decimal\"")
@@ -117,9 +115,8 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Writer
         public void TypeNameShouldBeWrittenCorrectlyInFullMetadataWhenKnobIsOff()
         {
             this.settings.SetContentType(jsonLightFullMetadata, null);
-            this.settings.AutoComputePayloadMetadataInJson = false;
             this.writerOutput.Value.Should()
-                .NotContain("DeclaredInt16@odata.type")
+                .Contain("DeclaredInt16@odata.type")
                 .And.Contain("UndeclaredDecimal@odata.type\":\"#Decimal\"")
                 .And.Contain("DerivedPrimitive@odata.type\":\"#GeographyPoint\"")
                 .And.Contain("PropertyWithSTNA@odata.type\":\"#TypeNameFromSTNA\"");
@@ -129,32 +126,17 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Writer
         public void TypeNameShouldBeWrittenCorrectlyInNoMetadataWhenKnobIsOff()
         {
             this.settings.SetContentType(jsonLightNoMetadata, null);
-            this.settings.AutoComputePayloadMetadataInJson = false;
             this.writerOutput.Value.Should()
                 .NotContain("DeclaredInt16@odata.type")
-                .And.Contain("UndeclaredDecimal@odata.type\":\"#Decimal\"")
-                .And.Contain("DerivedPrimitive@odata.type\":\"#GeographyPoint\"")
-                .And.Contain("PropertyWithSTNA@odata.type\":\"#TypeNameFromSTNA\"");
-        }
-
-        [Fact]
-        public void TypeNameShouldBeWrittenCorrectlyInAtomWhenKnobIsOff()
-        {
-            this.settings.SetContentType(atom, null);
-            this.settings.EnableAtom = true;
-            this.settings.AutoComputePayloadMetadataInJson = false;
-            this.writerOutput.Value.Should()
-                .Contain("d:DeclaredInt16 m:type=\"Int16\"")
-                .And.Contain("d:UndeclaredDecimal m:type=\"Decimal\"")
-                .And.Contain("d:DerivedPrimitive m:type=\"GeographyPoint\"")
-                .And.Contain("d:PropertyWithSTNA m:type=\"#TypeNameFromSTNA\"");
+                .And.NotContain("UndeclaredDecimal@odata.type\":\"#Decimal\"")
+                .And.NotContain("DerivedPrimitive@odata.type\":\"#GeographyPoint\"")
+                .And.NotContain("PropertyWithSTNA@odata.type\":\"#TypeNameFromSTNA\"");
         }
 
         [Fact]
         public void TypeNameShouldBeWrittenCorrectlyInMinimalMetadataWhenKnobIsSet()
         {
             this.settings.SetContentType(jsonLightMinimalMetadata, null);
-            this.settings.AutoComputePayloadMetadataInJson = true;
             this.writerOutput.Value.Should()
                 .NotContain("DeclaredInt16@odata.type")
                 .And.Contain("UndeclaredDecimal@odata.type\":\"#Decimal\"")
@@ -166,7 +148,6 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Writer
         public void TypeNameShouldBeWrittenCorrectlyInNoMetadataWhenKnobIsSet()
         {
             this.settings.SetContentType(jsonLightNoMetadata, null);
-            this.settings.AutoComputePayloadMetadataInJson = true;
             this.writerOutput.Value.Should()
                 .NotContain("DeclaredInt16@odata.type")
                 .And.NotContain("UndeclaredDecimal@odata.type")
@@ -179,7 +160,6 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Writer
         {
             this.settings.SetContentType(jsonLightNoMetadata, null);
             this.settings.JsonPCallback = "callback";
-            this.settings.AutoComputePayloadMetadataInJson = true;
             this.writerOutput.Value.Should()
                 .NotContain("DeclaredInt16@odata.type")
                 .And.NotContain("UndeclaredDecimal@odata.type")
@@ -191,25 +171,11 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Writer
         public void TypeNameShouldBeWrittenCorrectlyInFullMetadataWhenKnobIsSet()
         {
             this.settings.SetContentType(jsonLightFullMetadata, null);
-            this.settings.AutoComputePayloadMetadataInJson = true;
             this.writerOutput.Value.Should()
                 .Contain("DeclaredInt16@odata.type\":\"#Int16\"")
                 .And.Contain("UndeclaredDecimal@odata.type\":\"#Decimal\"")
                 .And.Contain("DerivedPrimitive@odata.type\":\"#GeographyPoint\"")
                 .And.Contain("PropertyWithSTNA@odata.type\":\"#TypeNameFromSTNA\"");
-        }
-
-        [Fact]
-        public void TypeNameShouldBeWrittenCorrectlyInAtomWhenKnobIsSet()
-        {
-            this.settings.SetContentType(atom, null);
-            this.settings.EnableAtom = true;
-            this.settings.AutoComputePayloadMetadataInJson = true;
-            this.writerOutput.Value.Should()
-                .Contain("d:DeclaredInt16 m:type=\"Int16\"")
-                .And.Contain("d:UndeclaredDecimal m:type=\"Decimal\"")
-                .And.Contain("d:DerivedPrimitive m:type=\"GeographyPoint\"")
-                .And.Contain("d:PropertyWithSTNA m:type=\"#TypeNameFromSTNA\"");
         }
     }
 }

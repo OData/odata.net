@@ -4,10 +4,10 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core.UriParser.Aggregation
+namespace Microsoft.OData.UriParser.Aggregation
 {
     using System.Collections.Generic;
-    using Microsoft.OData.Core.UriParser.Semantic;
+    using Microsoft.OData.UriParser;
 
     /// <summary>
     /// Node representing a groupBy transformation.
@@ -19,7 +19,7 @@ namespace Microsoft.OData.Core.UriParser.Aggregation
         private readonly TransformationNode childTransformations;
 
         private readonly IEnumerable<GroupByPropertyNode> groupingProperties;
-        
+
         /// <summary>
         /// Create a GroupByTransformationNode.
         /// </summary>

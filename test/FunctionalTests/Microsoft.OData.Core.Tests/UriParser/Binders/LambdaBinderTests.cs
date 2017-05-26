@@ -6,15 +6,11 @@
 
 using System;
 using FluentAssertions;
-using Microsoft.OData.Core.UriParser;
-using Microsoft.OData.Core.UriParser.Parsers;
-using Microsoft.OData.Core.UriParser.Semantic;
-using Microsoft.OData.Core.UriParser.Syntactic;
-using Microsoft.OData.Core.UriParser.TreeNodeKinds;
+using Microsoft.OData.UriParser;
 using Microsoft.OData.Edm;
 using Xunit;
 
-namespace Microsoft.OData.Core.Tests.UriParser.Binders
+namespace Microsoft.OData.Tests.UriParser.Binders
 {
     /// <summary>
     /// Tests for the Lambda binder. (any/all)
@@ -147,8 +143,8 @@ namespace Microsoft.OData.Core.Tests.UriParser.Binders
         private BindingState GetBindingStateForTest(IEdmEntityTypeReference typeReference, IEdmEntitySet type)
         {
             type.Should().NotBeNull();
-            EntityCollectionNode entityCollectionNode = new EntitySetNode(type);
-            var implicitParameter = new EntityRangeVariable(ExpressionConstants.It, typeReference, entityCollectionNode);
+            CollectionResourceNode entityCollectionNode = new EntitySetNode(type);
+            var implicitParameter = new ResourceRangeVariable(ExpressionConstants.It, typeReference, entityCollectionNode);
             var state = new BindingState(this.configuration) { ImplicitRangeVariable = implicitParameter };
             state.RangeVariables.Push(state.ImplicitRangeVariable);
             return state;

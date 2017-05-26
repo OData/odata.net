@@ -10,7 +10,7 @@ namespace AstoriaUnitTests.Tests
     using System.Collections;
     using System.Collections.Generic;
     using Microsoft.OData.Client.Materialization;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using System.Threading.Tasks;
 
     /// <summary>

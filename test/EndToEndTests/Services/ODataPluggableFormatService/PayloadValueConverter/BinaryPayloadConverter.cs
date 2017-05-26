@@ -8,7 +8,7 @@ namespace Microsoft.Test.OData.Services.PluggableFormat
 {
     using System.Globalization;
     using System.Linq;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.OData.Edm;
 
     public class BinaryPayloadConverter : ODataPayloadValueConverter

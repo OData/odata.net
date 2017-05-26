@@ -13,55 +13,52 @@ namespace EdmLibTests.FunctionalUtilities
     using EdmLibTests.VocabularyStubs;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Edm.Csdl;
-    using Microsoft.OData.Edm.Library;
-    using Microsoft.OData.Edm.Library.Annotations;
-    using Microsoft.OData.Edm.Library.Expressions;
-    using Microsoft.OData.Edm.Library.Values;
+    using Microsoft.OData.Edm.Vocabularies;
     using Microsoft.Test.OData.Utils.Metadata;
 
     public static class VocabularyTestModelBuilder
     {
         [CustomConsistentValidationTest]
-        public static IEdmModel SimpleValueTerms()
+        public static IEdmModel SimpleTerms()
         {
             StubEdmModel model = new StubEdmModel();
 
-            var titleValueTerm = new StubValueTerm("NS1", "Title") { Type = EdmCoreModel.Instance.GetString(true) };
+            var titleValueTerm = new StubTerm("NS1", "Title") { Type = EdmCoreModel.Instance.GetString(true) };
             model.Add(titleValueTerm);
 
-            var displaySizeValueTerm = new StubValueTerm("NS2", "DisplaySize") { Type = EdmCoreModel.Instance.GetInt32(false) };
+            var displaySizeValueTerm = new StubTerm("NS2", "DisplaySize") { Type = EdmCoreModel.Instance.GetInt32(false) };
             model.Add(displaySizeValueTerm);
 
             return model;
         }
 
         [CustomConsistentValidationTest]
-        public static IEdmModel SimpleValueTermWithDuplicate()
+        public static IEdmModel SimpleTermWithDuplicate()
         {
             StubEdmModel model = new StubEdmModel();
 
-            var titleValueTerm = new StubValueTerm("NS1", "Title") { Type = EdmCoreModel.Instance.GetString(true) };
+            var titleValueTerm = new StubTerm("NS1", "Title") { Type = EdmCoreModel.Instance.GetString(true) };
             model.Add(titleValueTerm);
 
-            var anotherTitleValueTerm = new StubValueTerm("NS1", "Title") { Type = EdmCoreModel.Instance.GetInt32(false) };
+            var anotherTitleValueTerm = new StubTerm("NS1", "Title") { Type = EdmCoreModel.Instance.GetInt32(false) };
             model.Add(anotherTitleValueTerm);
 
             return model;
         }
 
         [CustomConsistentValidationTest]
-        public static IEdmModel SimpleValueTermInV10()
+        public static IEdmModel SimpleTermInV10()
         {
             StubEdmModel model = new StubEdmModel();
 
-            var titleValueTerm = new StubValueTerm("NS1", "Title") { Type = EdmCoreModel.Instance.GetString(true) };
+            var titleValueTerm = new StubTerm("NS1", "Title") { Type = EdmCoreModel.Instance.GetString(true) };
             model.Add(titleValueTerm);
 
             return model;
         }
 
         [CustomVocabularySerializerTest, CustomConsistentValidationTest]
-        public static IEdmModel SimpleValueAnnotation()
+        public static IEdmModel SimpleVocabularyAnnotation()
         {
             StubEdmModel model = new StubEdmModel();
             CreateVocabularyDefinitions(model);
@@ -73,8 +70,8 @@ namespace EdmLibTests.FunctionalUtilities
                 new StubEdmStructuralProperty("LastName") { Type = EdmCoreModel.Instance.GetString(false) },
             };
 
-            var titleValueTerm = model.FindValueTerm("NS1.Title");
-            var titleValueAnnotation = new StubValueAnnotation() { Term = titleValueTerm, Value = new StubStringConstantExpression("Sir") };
+            var titleValueTerm = model.FindTerm("NS1.Title");
+            var titleValueAnnotation = new StubVocabularyAnnotation() { Term = titleValueTerm, Value = new StubStringConstantExpression("Sir") };
             person.AddVocabularyAnnotation(titleValueAnnotation);
             model.Add(person);
 
@@ -82,7 +79,7 @@ namespace EdmLibTests.FunctionalUtilities
         }
 
         [CustomVocabularySerializerTest]
-        public static IEdmModel SimpleValueAnnotationNonStubImplementation()
+        public static IEdmModel SimpleVocabularyAnnotationNonStubImplementation()
         {
             var model = new EdmModel();
             
@@ -96,8 +93,8 @@ namespace EdmLibTests.FunctionalUtilities
             var id = person.AddStructuralProperty("Id", EdmCoreModel.Instance.GetInt16(false));
             var firstName = person.AddStructuralProperty("FirstName", EdmCoreModel.Instance.GetString(false));
             var lastName = person.AddStructuralProperty("LastName", EdmCoreModel.Instance.GetString(false));
-            
-            var titleValueAnnotation = new EdmAnnotation(person, titleValueTerm, new EdmStringConstant("Sir"));
+
+            var titleValueAnnotation = new EdmVocabularyAnnotation(person, titleValueTerm, new EdmStringConstant("Sir"));
             model.AddVocabularyAnnotation(titleValueAnnotation);
             model.AddElement(person);
 
@@ -105,17 +102,17 @@ namespace EdmLibTests.FunctionalUtilities
         }
 
         [CustomVocabularySerializerTest, CustomConsistentValidationTest]
-        public static IEdmModel SimpleValueAnnotationWithQualifiers()
+        public static IEdmModel SimpleVocabularyAnnotationWithQualifiers()
         {
             StubEdmModel model = new StubEdmModel();
             CreateVocabularyDefinitions(model);
 
             var person = new StubEdmEntityType("NS1", "Person");
 
-            var titleValueTerm = model.FindValueTerm("NS1.Title");
-            var titleValueAnnotation = new StubValueAnnotation() { Term = titleValueTerm, Value = new StubStringConstantExpression("Sir"), Qualifier = "VAR1" };
+            var titleValueTerm = model.FindTerm("NS1.Title");
+            var titleValueAnnotation = new StubVocabularyAnnotation() { Term = titleValueTerm, Value = new StubStringConstantExpression("Sir"), Qualifier = "VAR1" };
             person.AddVocabularyAnnotation(titleValueAnnotation);
-            var titleValueAnnotationSp = new StubValueAnnotation() { Term = titleValueTerm, Value = new StubStringConstantExpression("Senor"), Qualifier = "SP" };
+            var titleValueAnnotationSp = new StubVocabularyAnnotation() { Term = titleValueTerm, Value = new StubStringConstantExpression("Senor"), Qualifier = "SP" };
             person.AddVocabularyAnnotation(titleValueAnnotationSp);
 
             model.Add(person);
@@ -124,17 +121,17 @@ namespace EdmLibTests.FunctionalUtilities
         }
 
         [CustomVocabularySerializerTest, CustomConsistentValidationTest]
-        public static IEdmModel SimpleValueAnnotationConfict()
+        public static IEdmModel SimpleVocabularyAnnotationConfict()
         {
             StubEdmModel model = new StubEdmModel();
             CreateVocabularyDefinitions(model);
 
             var person = new StubEdmEntityType("NS1", "Person");
 
-            var titleValueTerm = model.FindValueTerm("NS1.Title");
-            var titleValueAnnotation = new StubValueAnnotation() { Term = titleValueTerm, Value = new StubStringConstantExpression("Sir") };
+            var titleValueTerm = model.FindTerm("NS1.Title");
+            var titleValueAnnotation = new StubVocabularyAnnotation() { Term = titleValueTerm, Value = new StubStringConstantExpression("Sir") };
             person.AddVocabularyAnnotation(titleValueAnnotation);
-            var titleValueAnnotation2 = new StubValueAnnotation() { Term = titleValueTerm, Value = new StubStringConstantExpression("Senor") };
+            var titleValueAnnotation2 = new StubVocabularyAnnotation() { Term = titleValueTerm, Value = new StubStringConstantExpression("Senor") };
             person.AddVocabularyAnnotation(titleValueAnnotation2);
 
             model.Add(person);
@@ -143,7 +140,7 @@ namespace EdmLibTests.FunctionalUtilities
         }
 
         [CustomVocabularySerializerTest, CustomConsistentValidationTest]
-        public static IEdmModel MultipleValueAnnotations()
+        public static IEdmModel MultipleVocabularyAnnotations()
         {
             StubEdmModel model = new StubEdmModel();
             CreateVocabularyDefinitions(model);
@@ -155,12 +152,12 @@ namespace EdmLibTests.FunctionalUtilities
                 new StubEdmStructuralProperty("LastName") { Type = EdmCoreModel.Instance.GetString(false) },
             };
 
-            var titleValueTerm = model.FindValueTerm("NS1.Title");
-            var titleValueAnnotation = new StubValueAnnotation() { Term = titleValueTerm, Value = new StubStringConstantExpression("Sir") };
+            var titleValueTerm = model.FindTerm("NS1.Title");
+            var titleValueAnnotation = new StubVocabularyAnnotation() { Term = titleValueTerm, Value = new StubStringConstantExpression("Sir") };
             person.AddVocabularyAnnotation(titleValueAnnotation);
 
-            var displaySizeValueTerm = model.FindValueTerm("NS1.DisplaySize");
-            var displaySizeValueAnnotation = new StubValueAnnotation() { Term = displaySizeValueTerm, Value = new StubStringConstantExpression("1024") };
+            var displaySizeValueTerm = model.FindTerm("NS1.DisplaySize");
+            var displaySizeValueAnnotation = new StubVocabularyAnnotation() { Term = displaySizeValueTerm, Value = new StubStringConstantExpression("1024") };
             person.AddVocabularyAnnotation(displaySizeValueAnnotation);
             model.Add(person);
 
@@ -174,7 +171,7 @@ namespace EdmLibTests.FunctionalUtilities
         }
 
         [CustomConstructibleVocabularyTest, CustomConsistentValidationTest]
-        public static IEdmModel SimpleValueAnnotationOnContainerAndEntitySet()
+        public static IEdmModel SimpleVocabularyAnnotationOnContainerAndEntitySet()
         {
             StubEdmModel model = new StubEdmModel();
             CreateVocabularyDefinitions(model);
@@ -186,8 +183,8 @@ namespace EdmLibTests.FunctionalUtilities
             model.Add(container);
             model.Add(person);
 
-            var titleValueTerm = model.FindValueTerm("NS1.Title");
-            var titleValueAnnotation = new StubValueAnnotation() { Term = titleValueTerm, Value = new StubStringConstantExpression("Sir") };
+            var titleValueTerm = model.FindTerm("NS1.Title");
+            var titleValueAnnotation = new StubVocabularyAnnotation() { Term = titleValueTerm, Value = new StubStringConstantExpression("Sir") };
 
             container.AddVocabularyAnnotation(titleValueAnnotation);
             personSet.AddVocabularyAnnotation(titleValueAnnotation);
@@ -196,7 +193,7 @@ namespace EdmLibTests.FunctionalUtilities
         }
 
         [CustomConstructibleVocabularyTest, CustomVocabularySerializerTest, CustomConsistentValidationTest]
-        public static IEdmModel StructuredValueAnnotation()
+        public static IEdmModel StructuredVocabularyAnnotation()
         {
             StubEdmModel model = new StubEdmModel();
             CreateVocabularyDefinitions(model);
@@ -204,11 +201,11 @@ namespace EdmLibTests.FunctionalUtilities
             var person = new StubEdmEntityType("NS1", "Person");
             model.Add(person);
 
-            var reviewValueTerm = new StubValueTerm("NS1", "hReviewTerm");
+            var reviewValueTerm = new StubTerm("NS1", "hReviewTerm");
             reviewValueTerm.Type = new StubEdmTypeReference() { Definition = model.FindType("NS1.hReviewEntity"), IsNullable = true };
             model.Add(reviewValueTerm);
 
-            var reviewValueAnnotation = new StubValueAnnotation()
+            var reviewValueAnnotation = new StubVocabularyAnnotation()
             {
                 Term = reviewValueTerm,
                 Value = new StubStringConstantExpression("this should be Record"),
@@ -220,7 +217,7 @@ namespace EdmLibTests.FunctionalUtilities
         }
 
         [CustomConsistentValidationTest]
-        public static IEdmModel ValueTermOfStructuredDataType()
+        public static IEdmModel TermOfStructuredDataType()
         {
             StubEdmModel model = new StubEdmModel();
 
@@ -232,7 +229,7 @@ namespace EdmLibTests.FunctionalUtilities
             };
             model.Add(person);
 
-            var titleValueTerm = new StubValueTerm("NS1", "Title") { Type = person.ToTypeReference(false) };
+            var titleValueTerm = new StubTerm("NS1", "Title") { Type = person.ToTypeReference(false) };
             model.Add(titleValueTerm);
 
             return model;
@@ -291,7 +288,7 @@ namespace EdmLibTests.FunctionalUtilities
         }
 
         [CustomConstructibleVocabularyTest, CustomVocabularySerializerTest, CustomConsistentValidationTest]
-        public static IEdmModel ValueAnnotationWithRecord()
+        public static IEdmModel VocabularyAnnotationWithRecord()
         {
             StubEdmModel model = new StubEdmModel();
             CreateVocabularyDefinitions(model);
@@ -299,14 +296,14 @@ namespace EdmLibTests.FunctionalUtilities
             var person = new StubEdmEntityType("NS1", "Person");
             model.Add(person);
 
-            var reviewValueTerm = new StubValueTerm("NS1", "hReviewTerm");
+            var reviewValueTerm = new StubTerm("NS1", "hReviewTerm");
             reviewValueTerm.Type = new StubEdmTypeReference() { Definition = model.FindType("NS1.hReviewEntity"), IsNullable = true };
             model.Add(reviewValueTerm);
 
             var recordExpression = new StubRecordExpression();
             recordExpression.AddProperty("Name", new StubStringConstantExpression("Young"));
             recordExpression.AddProperty("IdType", new StubStringConstantExpression("Driver License"));
-            var reviewValueAnnotation = new StubValueAnnotation()
+            var reviewValueAnnotation = new StubVocabularyAnnotation()
             {
                 Term = reviewValueTerm,
                 Value = recordExpression
@@ -401,14 +398,14 @@ namespace EdmLibTests.FunctionalUtilities
             };
             model.Add(reviewEntityType);
 
-            var titleValueTerm = new StubValueTerm("NS1", "Title") { Type = EdmCoreModel.Instance.GetString(true) };
+            var titleValueTerm = new StubTerm("NS1", "Title") { Type = EdmCoreModel.Instance.GetString(true) };
             model.Add(titleValueTerm);
 
-            var displaySizeValueTerm = new StubValueTerm("NS1", "DisplaySize") { Type = EdmCoreModel.Instance.GetInt32(false) };
+            var displaySizeValueTerm = new StubTerm("NS1", "DisplaySize") { Type = EdmCoreModel.Instance.GetInt32(false) };
             model.Add(displaySizeValueTerm);
         }
 
-        public static IEnumerable<XElement> InlineValueAnnotationEntityTypeUsingAlias()
+        public static IEnumerable<XElement> InlineVocabularyAnnotationEntityTypeUsingAlias()
         {
             return ConvertCsdlsToXElements(@"
 <Schema Namespace=""DefaultNamespace"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
@@ -1209,7 +1206,7 @@ namespace EdmLibTests.FunctionalUtilities
 </Schema>"};
         }
 
-        public static IEnumerable<XElement> InlineAnnotationValueTerm()
+        public static IEnumerable<XElement> InlineAnnotationTerm()
         {
             return ConvertCsdlsToXElements(@"
 <Schema Namespace=""DefaultNamespace"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
@@ -1238,7 +1235,7 @@ namespace EdmLibTests.FunctionalUtilities
 </Schema>");
         }
 
-        public static IEnumerable<XElement> OutOfLineAnnotationValueTerm()
+        public static IEnumerable<XElement> OutOfLineAnnotationTerm()
         {
             return ConvertCsdlsToXElements(@"
 <Schema Namespace=""DefaultNamespace"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
@@ -1264,7 +1261,7 @@ namespace EdmLibTests.FunctionalUtilities
         }
 
         [CustomCsdlSchemaCompliantTest]
-        public static IEnumerable<XElement> InlineAnnotationInValueAnnotation()
+        public static IEnumerable<XElement> InlineAnnotationInVocabularyAnnotation()
         {
             return ConvertCsdlsToXElements(@"
 <Schema Namespace=""DefaultNamespace"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
@@ -1357,7 +1354,7 @@ namespace EdmLibTests.FunctionalUtilities
 </Schema>");
         }
 
-        public static IEnumerable<XElement> OutOfLineValueAnnotationWithoutExpressionCsdl()
+        public static IEnumerable<XElement> OutOfLineVocabularyAnnotationWithoutExpressionCsdl()
         {
             return ConvertCsdlsToXElements(@"
 <Schema Namespace=""DefaultNamespace"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
@@ -1628,7 +1625,7 @@ namespace EdmLibTests.FunctionalUtilities
             EdmTerm stringTerm = new EdmTerm("AnnotationNamespace", "StringTerm", EdmCoreModel.Instance.GetString(true));
             model.AddElement(stringTerm);
 
-            var valueAnnotation = new FunctionalTests.MutableValueAnnotation()
+            var valueAnnotation = new FunctionalTests.MutableVocabularyAnnotation()
             {
                 Target = carWheels,
                 Term = stringTerm,
@@ -1647,7 +1644,7 @@ namespace EdmLibTests.FunctionalUtilities
         }
 
         [CustomCsdlSchemaCompliantTest]
-        public static IEnumerable<XElement> SimpleValueAnnotationCsdl()
+        public static IEnumerable<XElement> SimpleVocabularyAnnotationCsdl()
         {
             return ConvertCsdlsToXElements(@"
 <Schema Namespace=""My.NS1"" Alias=""Self"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
@@ -1663,7 +1660,7 @@ namespace EdmLibTests.FunctionalUtilities
 </Schema>");
         }
 
-        public static IEnumerable<XElement> ValueTermNameConflictCsdl()
+        public static IEnumerable<XElement> TermNameConflictCsdl()
         {
             return ConvertCsdlsToXElements(@"
 <Schema Namespace=""My.NS1"" Alias=""Self"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
@@ -1672,7 +1669,7 @@ namespace EdmLibTests.FunctionalUtilities
 </Schema>");
         }
 
-        public static IEnumerable<XElement> ValueTermNameConflictWithOthersCsdl()
+        public static IEnumerable<XElement> TermNameConflictWithOthersCsdl()
         {
             return ConvertCsdlsToXElements(@"
 <Schema Namespace=""My.NS1"" Alias=""Self"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
@@ -1683,7 +1680,7 @@ namespace EdmLibTests.FunctionalUtilities
 </Schema>");
         }
 
-        public static IEnumerable<XElement> ValueTermTypeNotResolvableCsdl()
+        public static IEnumerable<XElement> TermTypeNotResolvableCsdl()
         {
             return ConvertCsdlsToXElements(@"
 <Schema Namespace=""My.NS1"" Alias=""Self"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
@@ -1691,7 +1688,7 @@ namespace EdmLibTests.FunctionalUtilities
 </Schema>");
         }
 
-        public static IEnumerable<XElement> ValueAnnotationTargetNotResolvableCsdl()
+        public static IEnumerable<XElement> VocabularyAnnotationTargetNotResolvableCsdl()
         {
             return ConvertCsdlsToXElements(@"
 <Schema Namespace=""My.NS1"" Alias=""Self"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
@@ -1705,7 +1702,7 @@ namespace EdmLibTests.FunctionalUtilities
 </Schema>");
         }
 
-        public static IEnumerable<XElement> ValueAnnotationTermNotResolvableCsdl()
+        public static IEnumerable<XElement> VocabularyAnnotationTermNotResolvableCsdl()
         {
             return ConvertCsdlsToXElements(@"
 <Schema Namespace=""My.NS1"" Alias=""Self"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
@@ -1719,7 +1716,7 @@ namespace EdmLibTests.FunctionalUtilities
 </Schema>");
         }
 
-        public static IEnumerable<XElement> ValueAnnotationRecordTypeNotResolvableCsdl()
+        public static IEnumerable<XElement> VocabularyAnnotationRecordTypeNotResolvableCsdl()
         {
             return ConvertCsdlsToXElements(@"
 <Schema Namespace=""My.NS1"" Alias=""Self"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
@@ -1737,7 +1734,7 @@ namespace EdmLibTests.FunctionalUtilities
 </Schema>");
         }
 
-        public static IEnumerable<XElement> ValueAnnotationAmbiguousSameTermNoQualiferCsdl()
+        public static IEnumerable<XElement> VocabularyAnnotationAmbiguousSameTermNoQualiferCsdl()
         {
             return ConvertCsdlsToXElements(@"
 <Schema Namespace=""My.NS1"" Alias=""Self"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
@@ -1753,7 +1750,7 @@ namespace EdmLibTests.FunctionalUtilities
 </Schema>");
         }
 
-        public static IEnumerable<XElement> ValueAnnotationAmbiguousSameTermSameQualiferCsdl()
+        public static IEnumerable<XElement> VocabularyAnnotationAmbiguousSameTermSameQualiferCsdl()
         {
             return ConvertCsdlsToXElements(@"
 <Schema Namespace=""My.NS1"" Alias=""Self"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
@@ -1769,7 +1766,7 @@ namespace EdmLibTests.FunctionalUtilities
 </Schema>");
         }
 
-        public static IEnumerable<XElement> InvalidPropertyValueAnnotationCsdl()
+        public static IEnumerable<XElement> InvalidPropertyVocabularyAnnotationCsdl()
         {
             return ConvertCsdlsToXElements(@"
 <Schema Namespace=""DefaultNamespace"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
@@ -1791,7 +1788,7 @@ namespace EdmLibTests.FunctionalUtilities
 </Schema>");
         }
 
-        public static IEnumerable<XElement> ValueTermOnlyCsdl()
+        public static IEnumerable<XElement> TermOnlyCsdl()
         {
             return ConvertCsdlsToXElements(@"
 <Schema Namespace=""My.NS1"" Alias=""Self"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
@@ -1800,7 +1797,7 @@ namespace EdmLibTests.FunctionalUtilities
 ");
         }
 
-        public static IEnumerable<XElement> ValueTermWithAnnotationTargetCsdl()
+        public static IEnumerable<XElement> TermWithAnnotationTargetCsdl()
         {
             return ConvertCsdlsToXElements(@"
 <Schema Namespace=""DefaultNamespace"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
@@ -1813,7 +1810,7 @@ namespace EdmLibTests.FunctionalUtilities
         }
 
 
-        public static IEnumerable<XElement> ValueAnnotationPropertyTypeExactMatchCsdl()
+        public static IEnumerable<XElement> VocabularyAnnotationPropertyTypeExactMatchCsdl()
         {
             return ConvertCsdlsToXElements(@"
 <Schema Namespace=""My.NS1"" Alias=""Self"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
@@ -1835,7 +1832,7 @@ namespace EdmLibTests.FunctionalUtilities
 </Schema>");
         }
 
-        public static IEnumerable<XElement> ValueAnnotationTypeNotMatchCsdl()
+        public static IEnumerable<XElement> VocabularyAnnotationTypeNotMatchCsdl()
         {
             return ConvertCsdlsToXElements(@"
 <Schema Namespace=""My.NS1"" Alias=""Self"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
@@ -1856,7 +1853,7 @@ namespace EdmLibTests.FunctionalUtilities
 </Schema>");
         }
 
-        public static IEnumerable<XElement> ValueAnnotationPropertyNameNotMatchCsdl()
+        public static IEnumerable<XElement> VocabularyAnnotationPropertyNameNotMatchCsdl()
         {
             return ConvertCsdlsToXElements(@"
 <Schema Namespace=""My.NS1"" Alias=""Self"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
@@ -1874,7 +1871,7 @@ namespace EdmLibTests.FunctionalUtilities
 </Schema>");
         }
 
-        public static IEnumerable<XElement> ValueAnnotationNullablePropertyUndeclaredCsdl()
+        public static IEnumerable<XElement> VocabularyAnnotationNullablePropertyUndeclaredCsdl()
         {
             return ConvertCsdlsToXElements(@"
 <Schema Namespace=""My.NS1"" Alias=""Self"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
@@ -1893,7 +1890,7 @@ namespace EdmLibTests.FunctionalUtilities
 </Schema>");
         }
 
-        public static IEnumerable<XElement> ValueAnnotationPropertyTypeNotMatchCsdl()
+        public static IEnumerable<XElement> VocabularyAnnotationPropertyTypeNotMatchCsdl()
         {
             return ConvertCsdlsToXElements(@"
 <Schema Namespace=""My.NS1"" Alias=""Self"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
@@ -1911,7 +1908,7 @@ namespace EdmLibTests.FunctionalUtilities
 </Schema>");
         }
 
-        public static IEnumerable<XElement> ValueAnnotationNestedCsdl()
+        public static IEnumerable<XElement> VocabularyAnnotationNestedCsdl()
         {
             return ConvertCsdlsToXElements(@"
 <Schema Namespace=""My.NS1"" Alias=""Self"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
@@ -1947,7 +1944,7 @@ namespace EdmLibTests.FunctionalUtilities
 </Schema>");
         }
 
-        public static IEnumerable<XElement> ValueAnnotationNestedPropertyNotMatchCsdl()
+        public static IEnumerable<XElement> VocabularyAnnotationNestedPropertyNotMatchCsdl()
         {
             return ConvertCsdlsToXElements(@"
 <Schema Namespace=""My.NS1"" Alias=""Self"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
@@ -1978,7 +1975,7 @@ namespace EdmLibTests.FunctionalUtilities
 </Schema>");
         }
 
-        public static IEnumerable<XElement> ValueAnnotationTypeConvertibleCsdl()
+        public static IEnumerable<XElement> VocabularyAnnotationTypeConvertibleCsdl()
         {
             return ConvertCsdlsToXElements(@"
 <Schema Namespace=""My.NS1"" Alias=""Self"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
@@ -2004,7 +2001,7 @@ namespace EdmLibTests.FunctionalUtilities
 </Schema>");
         }
 
-        public static IEnumerable<XElement> ValueAnnotationBadValueCsdl()
+        public static IEnumerable<XElement> VocabularyAnnotationBadValueCsdl()
         {
             return ConvertCsdlsToXElements(@"
 <Schema Namespace=""My.NS1"" Alias=""Self"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
@@ -2030,7 +2027,7 @@ namespace EdmLibTests.FunctionalUtilities
 </Schema>");
         }
 
-        public static IEnumerable<XElement> ValueAnnotationPathCsdl()
+        public static IEnumerable<XElement> VocabularyAnnotationPathCsdl()
         {
             return ConvertCsdlsToXElements(@"
 <Schema Namespace=""My.NS1"" Alias=""Self"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
@@ -2140,7 +2137,7 @@ namespace EdmLibTests.FunctionalUtilities
 </Schema>");
         }
 
-        public static IEnumerable<XElement> ValueAnnotationPathNotValidCsdl()
+        public static IEnumerable<XElement> VocabularyAnnotationPathNotValidCsdl()
         {
             return ConvertCsdlsToXElements(@"
 <Schema Namespace=""My.NS1"" Alias=""Self"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
@@ -2158,7 +2155,7 @@ namespace EdmLibTests.FunctionalUtilities
         }
 
         [CustomCsdlSchemaCompliantTest]
-        public static IEnumerable<XElement> ValueAnnotationIfCsdl()
+        public static IEnumerable<XElement> VocabularyAnnotationIfCsdl()
         {
             return ConvertCsdlsToXElements(@"
 <Schema Namespace=""My.NS1"" Alias=""Self"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
@@ -2181,7 +2178,7 @@ namespace EdmLibTests.FunctionalUtilities
 </Schema>");
         }
 
-        public static IEnumerable<XElement> ValueAnnotationIfTypeNotMatchCsdl()
+        public static IEnumerable<XElement> VocabularyAnnotationIfTypeNotMatchCsdl()
         {
             return ConvertCsdlsToXElements(@"
 <Schema Namespace=""My.NS1"" Alias=""Self"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
@@ -2202,7 +2199,7 @@ namespace EdmLibTests.FunctionalUtilities
 </Schema>");
         }
 
-        public static IEnumerable<XElement> ValueAnnotationIfTypeNotResolvedCsdl()
+        public static IEnumerable<XElement> VocabularyAnnotationIfTypeNotResolvedCsdl()
         {
             return ConvertCsdlsToXElements(@"
 <Schema Namespace=""My.NS1"" Alias=""Self"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
@@ -2226,7 +2223,7 @@ namespace EdmLibTests.FunctionalUtilities
         }
 
         [CustomCsdlSchemaCompliantTest]
-        public static IEnumerable<XElement> ValueAnnotationFunctionCsdl()
+        public static IEnumerable<XElement> VocabularyAnnotationFunctionCsdl()
         {
             return ConvertCsdlsToXElements(@"
 <Schema Namespace=""My.NS1"" Alias=""Self"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
@@ -2251,7 +2248,7 @@ namespace EdmLibTests.FunctionalUtilities
 </Schema>");
         }
 
-        public static IEnumerable<XElement> ValueAnnotationFunctionTypeNotMatchCsdl()
+        public static IEnumerable<XElement> VocabularyAnnotationFunctionTypeNotMatchCsdl()
         {
             return ConvertCsdlsToXElements(@"
 <Schema Namespace=""My.NS1"" Alias=""Self"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
@@ -2277,7 +2274,7 @@ namespace EdmLibTests.FunctionalUtilities
 </Schema>");
         }
 
-        public static IEnumerable<XElement> ValueAnnotationNullablePropertyWithNullExpressionCsdl()
+        public static IEnumerable<XElement> VocabularyAnnotationNullablePropertyWithNullExpressionCsdl()
         {
             return ConvertCsdlsToXElements(@"
 <Schema Namespace=""My.NS1"" Alias=""Self"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
@@ -2299,7 +2296,7 @@ namespace EdmLibTests.FunctionalUtilities
 </Schema>");
         }
 
-        public static IEnumerable<XElement> ValueAnnotationPropertyWithNullExpressionCsdl()
+        public static IEnumerable<XElement> VocabularyAnnotationPropertyWithNullExpressionCsdl()
         {
             return ConvertCsdlsToXElements(@"
 <Schema Namespace=""My.NS1"" Alias=""Self"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
@@ -2327,7 +2324,7 @@ namespace EdmLibTests.FunctionalUtilities
         {
             var model = new EdmModel();
 
-            var annotation = new EdmAnnotation(
+            var annotation = new EdmVocabularyAnnotation(
                 new EdmEntityType("Self", "Address"),
                 new EdmTerm("My.NS1", "StructuredValue", new EdmEntityTypeReference(new EdmEntityType("Foo", "Bar"), false)),
                 new EdmRecordExpression(new []{new EdmPropertyConstructor("Id", new EdmIntegerConstant(99)), new EdmPropertyConstructor("String", new EdmStringConstant("BorkBorkBork"))}));
@@ -2376,11 +2373,11 @@ namespace EdmLibTests.FunctionalUtilities
             return model;
         }
 
-        public static EdmModel DefaultValueAnnotationWithTargetOnlyModel()
+        public static EdmModel DefaultVocabularyAnnotationWithTargetOnlyModel()
         {
             EdmModel model = VocabularyTestModelBuilder.SimpleModel();
 
-            var valueAnnotation = new FunctionalTests.MutableValueAnnotation()
+            var valueAnnotation = new FunctionalTests.MutableVocabularyAnnotation()
             {
                 Target = new EdmEntityType("", "")
             };
@@ -2389,20 +2386,20 @@ namespace EdmLibTests.FunctionalUtilities
             return model;
         }
 
-        public static EdmModel SimpleValueAnnotationModel()
+        public static EdmModel SimpleVocabularyAnnotationModel()
         {
             EdmModel model = VocabularyTestModelBuilder.SimpleModel();
-            var simpleTerm = model.FindValueTerm("Foo.SimpleTerm");
-            var complexTerm = model.FindValueTerm("Foo.ComplexTerm");
+            var simpleTerm = model.FindTerm("Foo.SimpleTerm");
+            var complexTerm = model.FindTerm("Foo.ComplexTerm");
 
-            EdmAnnotation inlineValueAnnotation = new EdmAnnotation(
+            EdmVocabularyAnnotation inlineValueAnnotation = new EdmVocabularyAnnotation(
                 simpleTerm,
                 simpleTerm,
                 new EdmIntegerConstant(1));
             inlineValueAnnotation.SetSerializationLocation(model, EdmVocabularyAnnotationSerializationLocation.Inline);
             model.AddVocabularyAnnotation(inlineValueAnnotation);
 
-            EdmAnnotation outOfLineValueAnnotation = new EdmAnnotation(
+            EdmVocabularyAnnotation outOfLineValueAnnotation = new EdmVocabularyAnnotation(
                 complexTerm,
                 simpleTerm,
                 new EdmIntegerConstant(2));
@@ -2416,8 +2413,8 @@ namespace EdmLibTests.FunctionalUtilities
         public static EdmModel AnnotationWithInvalidTargetModel(EdmVocabularyAnnotationSerializationLocation location)
         {
             EdmModel model = VocabularyTestModelBuilder.SimpleModel();
-            var simpleTerm = model.FindValueTerm("Foo.SimpleTerm");
-            var entityTerm = model.FindValueTerm("Foo.EntityTerm");
+            var simpleTerm = model.FindTerm("Foo.SimpleTerm");
+            var entityTerm = model.FindTerm("Foo.EntityTerm");
             var entityType = model.FindType("Foo.SimpleEntity") as EdmEntityType;
             var entityTypeProperty = entityType.FindProperty("Int32Value");
 
@@ -2433,64 +2430,64 @@ namespace EdmLibTests.FunctionalUtilities
 
             model.AddElement(invalidFunction);
             var invalidFunctionImport = new EdmFunctionImport(new EdmEntityContainer("", ""), "InvalidFunctionImport", invalidFunction);
-            
-            EdmAnnotation valueAnnotationOnContainer = new EdmAnnotation(
+
+            EdmVocabularyAnnotation valueAnnotationOnContainer = new EdmVocabularyAnnotation(
                 new EdmEntityContainer("", ""),
                 simpleTerm,
                 new EdmIntegerConstant(1));
             valueAnnotationOnContainer.SetSerializationLocation(model, location);
             model.AddVocabularyAnnotation(valueAnnotationOnContainer);
 
-            EdmAnnotation valueAnnotationOnEntitySet = new EdmAnnotation(
+            EdmVocabularyAnnotation valueAnnotationOnEntitySet = new EdmVocabularyAnnotation(
                 invalidEntitySet,
                 simpleTerm,
                 new EdmIntegerConstant(1));
             valueAnnotationOnEntitySet.SetSerializationLocation(model, location);
             model.AddVocabularyAnnotation(valueAnnotationOnEntitySet);
 
-            EdmAnnotation valueAnnotationOnType = new EdmAnnotation(
+            EdmVocabularyAnnotation valueAnnotationOnType = new EdmVocabularyAnnotation(
                 invalidType,
                 simpleTerm,
                 new EdmIntegerConstant(1));
             valueAnnotationOnType.SetSerializationLocation(model, location);
             model.AddVocabularyAnnotation(valueAnnotationOnType);
 
-            EdmAnnotation valueAnnotationOnProperty = new EdmAnnotation(
+            EdmVocabularyAnnotation valueAnnotationOnProperty = new EdmVocabularyAnnotation(
                 invalidTypeProperty,
                 simpleTerm,
                 new EdmIntegerConstant(1));
             valueAnnotationOnProperty.SetSerializationLocation(model, location);
             model.AddVocabularyAnnotation(valueAnnotationOnProperty);
 
-            EdmAnnotation valueAnnotationOnTerm = new EdmAnnotation(
+            EdmVocabularyAnnotation valueAnnotationOnTerm = new EdmVocabularyAnnotation(
                 invalidTerm,
                 simpleTerm,
                 new EdmIntegerConstant(1));
             valueAnnotationOnTerm.SetSerializationLocation(model, location);
             model.AddVocabularyAnnotation(valueAnnotationOnTerm);
 
-            EdmAnnotation valueAnnotationOnFunction = new EdmAnnotation(
+            EdmVocabularyAnnotation valueAnnotationOnFunction = new EdmVocabularyAnnotation(
                 invalidFunction,
                 simpleTerm,
                 new EdmIntegerConstant(1));
             valueAnnotationOnFunction.SetSerializationLocation(model, location);
             model.AddVocabularyAnnotation(valueAnnotationOnFunction);
 
-            EdmAnnotation valueAnnotationOnParameter = new EdmAnnotation(
+            EdmVocabularyAnnotation valueAnnotationOnParameter = new EdmVocabularyAnnotation(
                 invalidFunctionParameter,
                 simpleTerm,
                 new EdmIntegerConstant(1));
             valueAnnotationOnParameter.SetSerializationLocation(model, location);
             model.AddVocabularyAnnotation(valueAnnotationOnParameter);
 
-            EdmAnnotation valueAnnotationOnFunctionImport = new EdmAnnotation(
+            EdmVocabularyAnnotation valueAnnotationOnFunctionImport = new EdmVocabularyAnnotation(
                 invalidFunctionImport,
                 simpleTerm,
                 new EdmIntegerConstant(1));
             valueAnnotationOnFunctionImport.SetSerializationLocation(model, location);
             model.AddVocabularyAnnotation(valueAnnotationOnFunctionImport);
 
-            EdmAnnotation valueAnnotation = new EdmAnnotation(
+            EdmVocabularyAnnotation valueAnnotation = new EdmVocabularyAnnotation(
                 new EdmEntityContainer("", ""),
                 entityTerm,
                 new EdmRecordExpression(new EdmPropertyConstructor(entityTypeProperty.Name, new EdmIntegerConstant(1))));
@@ -2504,11 +2501,11 @@ namespace EdmLibTests.FunctionalUtilities
         public static EdmModel AnnotationWithInvalidTermModel()
         {
             EdmModel model = VocabularyTestModelBuilder.SimpleModel();
-            var simpleTerm = model.FindDeclaredValueTerm("Foo.SimpleTerm");
+            var simpleTerm = model.FindDeclaredTerm("Foo.SimpleTerm");
             var entityType = model.FindDeclaredType("Foo.SimpleEntity") as EdmEntityType;
             var entityId = entityType.FindProperty("Int32Value");
 
-            EdmAnnotation inlineValueAnnotation = new EdmAnnotation(
+            EdmVocabularyAnnotation inlineValueAnnotation = new EdmVocabularyAnnotation(
                 simpleTerm,
                 new EdmTerm("Bar", "Foo", EdmCoreModel.Instance.GetInt32(false)),
                 new EdmIntegerConstant(1));
@@ -2518,12 +2515,12 @@ namespace EdmLibTests.FunctionalUtilities
             return model;
         }
 
-        public static EdmModel DuplicateValueAnnotationModel()
+        public static EdmModel DuplicateVocabularyAnnotationModel()
         {
             EdmModel model = VocabularyTestModelBuilder.SimpleModel();
-            var simpleTerm = model.FindValueTerm("Foo.SimpleTerm");
+            var simpleTerm = model.FindTerm("Foo.SimpleTerm");
 
-            EdmAnnotation inlineValueAnnotation = new EdmAnnotation(
+            EdmVocabularyAnnotation inlineValueAnnotation = new EdmVocabularyAnnotation(
                 simpleTerm,
                 simpleTerm,
                 new EdmIntegerConstant(1));
@@ -2536,12 +2533,12 @@ namespace EdmLibTests.FunctionalUtilities
             return model;
         }
 
-        public static EdmModel DuplicateValueAnnotationWithQualifierModel()
+        public static EdmModel DuplicateVocabularyAnnotationWithQualifierModel()
         {
             EdmModel model = VocabularyTestModelBuilder.SimpleModel();
-            var simpleTerm = model.FindValueTerm("Foo.SimpleTerm");
+            var simpleTerm = model.FindTerm("Foo.SimpleTerm");
 
-            EdmAnnotation inlineValueAnnotation = new EdmAnnotation(
+            EdmVocabularyAnnotation inlineValueAnnotation = new EdmVocabularyAnnotation(
                 simpleTerm,
                 simpleTerm,
                 "q1",
@@ -2555,13 +2552,13 @@ namespace EdmLibTests.FunctionalUtilities
             return model;
         }
 
-        public static EdmModel ValueAnnotationWithQualifierModel()
+        public static EdmModel VocabularyAnnotationWithQualifierModel()
         {
             EdmModel model = VocabularyTestModelBuilder.SimpleModel();
-            var simpleTerm = model.FindValueTerm("Foo.SimpleTerm");
-            var complexTerm = model.FindValueTerm("Foo.ComplexTerm");
+            var simpleTerm = model.FindTerm("Foo.SimpleTerm");
+            var complexTerm = model.FindTerm("Foo.ComplexTerm");
 
-            EdmAnnotation inlineValueAnnotation = new EdmAnnotation(
+            EdmVocabularyAnnotation inlineValueAnnotation = new EdmVocabularyAnnotation(
                 complexTerm,
                 simpleTerm,
                 "q1",
@@ -2569,7 +2566,7 @@ namespace EdmLibTests.FunctionalUtilities
             inlineValueAnnotation.SetSerializationLocation(model, EdmVocabularyAnnotationSerializationLocation.Inline);
             model.AddVocabularyAnnotation(inlineValueAnnotation);
 
-            EdmAnnotation inlineValueAnnotation2 = new EdmAnnotation(
+            EdmVocabularyAnnotation inlineValueAnnotation2 = new EdmVocabularyAnnotation(
                 complexTerm,
                 simpleTerm,
                 "q2",
@@ -2602,7 +2599,7 @@ namespace EdmLibTests.FunctionalUtilities
 </Schema>");
         }
 
-        public static IEnumerable<XElement> SimpleValueAnnotationWithComplexTypeCsdl()
+        public static IEnumerable<XElement> SimpleVocabularyAnnotationWithComplexTypeCsdl()
         {
             return ConvertCsdlsToXElements(@"
 <Schema Namespace=""ßÆœÇèÒöæ"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
@@ -2637,7 +2634,7 @@ namespace EdmLibTests.FunctionalUtilities
         }
 
         [CustomVocabularySerializerTestAttribute]
-        public static IEdmModel SimpleValueAnnotationWithComplexTypeModel()
+        public static IEdmModel SimpleVocabularyAnnotationWithComplexTypeModel()
         {
             var model = new EdmModel();
 
@@ -2663,7 +2660,7 @@ namespace EdmLibTests.FunctionalUtilities
                 new EdmPropertyConstructor("Address", addressRecord),
                 new EdmPropertyConstructor("öøãçšŰŽ", friendNamesRecord));
 
-            var valueAnnotation = new EdmAnnotation(
+            var valueAnnotation = new EdmVocabularyAnnotation(
                 personInfoTerm,
                 personInfoTerm,
                 valueAnnotationRecord);
@@ -2674,7 +2671,7 @@ namespace EdmLibTests.FunctionalUtilities
             return model;
         }
 
-        public static IEnumerable<XElement> ValueAnnotationComplexTypeWithNullValuesCsdl()
+        public static IEnumerable<XElement> VocabularyAnnotationComplexTypeWithNullValuesCsdl()
         {
             return ConvertCsdlsToXElements(@"
 <Schema Namespace=""NS"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
@@ -2708,7 +2705,7 @@ namespace EdmLibTests.FunctionalUtilities
         }
 
         [CustomVocabularySerializerTestAttribute]
-        public static IEdmModel ValueAnnotationComplexTypeWithNullValuesModel()
+        public static IEdmModel VocabularyAnnotationComplexTypeWithNullValuesModel()
         {
             var model = new EdmModel();
 
@@ -2732,7 +2729,7 @@ namespace EdmLibTests.FunctionalUtilities
                 new EdmPropertyConstructor("Address", EdmNullExpression.Instance),
                 new EdmPropertyConstructor("FriendNames", friendNamesRecord));
 
-            var valueAnnotation = new EdmAnnotation(
+            var valueAnnotation = new EdmVocabularyAnnotation(
                 personInfoTerm,
                 personInfoTerm,
                 valueAnnotationRecord);
@@ -2742,7 +2739,7 @@ namespace EdmLibTests.FunctionalUtilities
             return model;
         }
 
-        public static IEnumerable<XElement> ValueAnnotationComplexTypeWithFewerPropertiesCsdl()
+        public static IEnumerable<XElement> VocabularyAnnotationComplexTypeWithFewerPropertiesCsdl()
         {
             return ConvertCsdlsToXElements(@"
 <Schema Namespace=""NS"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
@@ -2771,7 +2768,7 @@ namespace EdmLibTests.FunctionalUtilities
         }
 
         [CustomVocabularySerializerTestAttribute]
-        public static IEdmModel ValueAnnotationComplexTypeWithFewerPropertiesModel()
+        public static IEdmModel VocabularyAnnotationComplexTypeWithFewerPropertiesModel()
         {
             var model = new EdmModel();
 
@@ -2793,8 +2790,8 @@ namespace EdmLibTests.FunctionalUtilities
             var valueAnnotationRecord = new EdmRecordExpression(
                 new EdmPropertyConstructor("Id", new EdmIntegerConstant(7)),
                 new EdmPropertyConstructor("Address", addressRecord));
-            
-            var valueAnnotation = new EdmAnnotation(
+
+            var valueAnnotation = new EdmVocabularyAnnotation(
                 personInfoTerm,
                 personInfoTerm,
                 valueAnnotationRecord);
@@ -2805,7 +2802,7 @@ namespace EdmLibTests.FunctionalUtilities
             return model;
         }
 
-        public static IEnumerable<XElement> ValueAnnotationWithCollectionComplexTypeCsdl()
+        public static IEnumerable<XElement> VocabularyAnnotationWithCollectionComplexTypeCsdl()
         {
             return ConvertCsdlsToXElements(@"
 <Schema Namespace=""NS"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
@@ -2829,7 +2826,7 @@ namespace EdmLibTests.FunctionalUtilities
         }
 
         [CustomVocabularySerializerTestAttribute]
-        public static IEdmModel ValueAnnotationWithCollectionComplexTypeModel()
+        public static IEdmModel VocabularyAnnotationWithCollectionComplexTypeModel()
         {
             var model = new EdmModel();
 
@@ -2844,7 +2841,7 @@ namespace EdmLibTests.FunctionalUtilities
             var steveBRecord = new EdmRecordExpression(new EdmPropertyConstructor("Name", new EdmStringConstant("Steve B")));
             var annotationValue = new EdmCollectionExpression(billGatesRecord, steveBRecord);
 
-            var valueAnnotation = new EdmAnnotation(
+            var valueAnnotation = new EdmVocabularyAnnotation(
                 person,
                 friendNames,
                 annotationValue);
@@ -2853,7 +2850,7 @@ namespace EdmLibTests.FunctionalUtilities
             return model;
         }
 
-        public static IEnumerable<XElement> ValueAnnotationNonNullablePropertyWithNullValueCsdl()
+        public static IEnumerable<XElement> VocabularyAnnotationNonNullablePropertyWithNullValueCsdl()
         {
             return ConvertCsdlsToXElements(@"
 <Schema Namespace=""NS"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">

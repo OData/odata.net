@@ -4,13 +4,12 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.Data.Spatial
+namespace Microsoft.Spatial
 {
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
-    using Microsoft.Spatial;
 
     /// <summary>
     /// Semantically validate a GeoData
@@ -38,7 +37,7 @@ namespace Microsoft.Data.Spatial
     ///     <CurvePolygonSimpleRing> := StartSimpleRing 0 <CurvePolygonImplicitRing>
     ///     <CurvePolygonCompoundCurveRing> := <CurvePolygonCompoundCurveRingStart> { <CurvePolygonCompoundCurveRingPart> }
     ///     <CurvePolygonCompoundCurveRingStart> := AddSegmentLine 0 BeginFigure { LineTo } | AddSegmentArc 0 BeginFigure { AddCircularArc }
-    ///     <CurvePolygonCompoundCurveRingPart> := AddSegmentLine { LineTo } | AddSegmentArc { AddCircularArc }    
+    ///     <CurvePolygonCompoundCurveRingPart> := AddSegmentLine { LineTo } | AddSegmentArc { AddCircularArc }
     /// ]]>
     /// </remarks>
     internal class SpatialValidatorImplementation : SpatialPipeline

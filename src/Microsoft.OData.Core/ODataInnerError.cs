@@ -4,7 +4,7 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core
+namespace Microsoft.OData
 {
     #region Namespaces
     using System;
@@ -20,12 +20,12 @@ namespace Microsoft.OData.Core
 #endif
     public sealed class ODataInnerError
     {
-        /// <summary>Initializes a new instance of the <see cref="T:Microsoft.OData.Core.ODataInnerError" /> class with default values.</summary>
+        /// <summary>Initializes a new instance of the <see cref="T:Microsoft.OData.ODataInnerError" /> class with default values.</summary>
         public ODataInnerError()
         {
         }
 
-        /// <summary>Initializes a new instance of the <see cref="T:Microsoft.OData.Core.ODataInnerError" /> class with exception object.</summary>
+        /// <summary>Initializes a new instance of the <see cref="T:Microsoft.OData.ODataInnerError" /> class with exception object.</summary>
         /// <param name="exception">The <see cref="T:System.Exception" /> used to create the inner error.</param>
         public ODataInnerError(Exception exception)
         {

@@ -14,37 +14,37 @@ For more information about OData, please refer to the following resources:
 - [OData .Net Client](http://odata.github.io/odata.net/#04-01-basic-crud-operations)
 
 ## 2. Project structure
-The project currently has six branches: [ODataV4-6.x](https://github.com/OData/odata.net/tree/ODataV4-6.x), [ODataV4-7.x](https://github.com/OData/odata.net/tree/ODataV4-7.x), [master](https://github.com/OData/odata.net/tree/master), [gh-pages](https://github.com/OData/odata.net/tree/gh-pages), [ODATAV3](https://github.com/OData/odata.net/tree/ODATAV3), and [WCFDSV4](https://github.com/OData/odata.net/tree/WCFDSV4).
+The project currently has six branches: [master](https://github.com/OData/odata.net/tree/master), [release](https://github.com/OData/odata.net/tree/release), [gh-pages](https://github.com/OData/odata.net/tree/gh-pages), [maintenance-6.x](https://github.com/OData/odata.net/tree/maintenance-6.x), [maintenance-5.x](https://github.com/OData/odata.net/tree/maintenance-5.x), and [maintenance-wcf-dataservice-v4](https://github.com/OData/odata.net/tree/maintenance-wcf-dataservice-v4).
 
+**master branch**
 
+This master branch is the developement branch for ODataV4 7.x and is now most actively iterated. It builds upon the OData 6.15 release which is now on [maintenance-6.x branch](https://github.com/OData/odata.net/tree/maintenance-6.x) and produces both [PCL (Portable Class Libraries) Profile111](https://msdn.microsoft.com/library/gg597391.aspx) and [.NET Standard 1.1](https://docs.microsoft.com/en-us/dotnet/articles/standard/library) libraries.
 
-**ODataV4-6.x branch**
+For each profile above, it has the following libraries:
 
-The ODataV4-6.x branch includes the .NET libraries for OData V4 only that are now most actively iterated and maintained by the OData team, it has newest OData lib 6.x release code base. It has the following libraries:
 - [ODataLib](http://www.nuget.org/packages/Microsoft.OData.Core/) (namespace `Microsoft.OData.Core`):<br />The ODataLib contains classes to serialize, deserialize and validate OData JSON payloads.
 - [EdmLib](http://www.nuget.org/packages/Microsoft.OData.Edm/) (namespace `Microsoft.OData.Edm`):<br />The EdmLib contains classes to represent, construct, parse, serialize and validate entity data models.
 - [Microsoft.Spatial](http://www.nuget.org/packages/Microsoft.Spatial/) (namespace `Microsoft.Spatial`):<br />The spatial library contains classes and methods that facilitate geography and geometry spatial operations.
 - [OData Client for .NET](http://www.nuget.org/packages/Microsoft.OData.Client/) (namespace `Microsoft.OData.Client`):<br />The client library is built on top of ODataLib and EdmLib that has LINQ-enabled client APIs for issuing OData queries and consuming OData JSON payloads.
-
 For these libraries, we accept bug reports and pull requests. The corresponding fixes and implementations will be included into every new release.
 
-**ODataV4-7.x branch**
+While Visual Studio 2017 has been released, this branch currently compiles against Visual Studio 2015 due to internal migrations to Visual Studio 2017--rest assured, the desire to move to the new product is highly visible. With that said, this branch utilizes `project.json` files for its `.csproj` files, there is a change in the build process for those who are unfamiliar. Please either 1) run `nuget restore Microsoft.Test.OData.DotNetStandard.sln` in the commandline of the `odata.net/sln` directory, or 2) enable automatic package restore via Visual Studio to build them (in VS2015, go to `Tools->NuGet Package Manager->Package Manager Settings`. Enable "Allow NuGet to download missing packages".). More info regarding the command can be found [here](https://docs.microsoft.com/en-us/nuget/consume-packages/package-restore).
 
-The ODataV4-7.x branch includes the .NET libraries for OData V4 only that are in development now. It is evolved from ODataV4-6.x with kinds of improvements, new features and so on. It is in-compatible with ODataV4-6.x release and will become the master branch after it is released. It has same libraries as ODataV4-6.x branch.
+**release branch**
 
-For these libraries, we accept feature requirements, but we do not accept bug reports and pull requests before first release is ready.
-
-**Master branch**
-
-The master branch has most recently stable 6.x release code base, and is recommended to use before OData lib 7.x is released.
+This branch is for ODataV4 7.x release developed on the [master branch](https://github.com/OData/odata.net/tree/master), contains most recently stable ODataV4 7.x release code base.
 
 **gh-pages branch**
 
 The gh-pages branch contains documentation source for OData v4 Lib - tutorials, guides, etc.  The documention source is in Markdown format. It is hosted at [ODataLib Pages](http://odata.github.io/odata.net "ODataLib Pages").
 
-**ODATAV3 branch** (maintenance mode)
+**maintenance-6.x branch** (maintenance mode)
 
-The ODATAV3 branch includes the .NET libraries for OData V1-3 only. It has the similar libraries as the master branch except for some differences in namespaces and two additional libraries:
+The maintenance-6.x branch includes the .NET libraries for ODataV4 6.x maintenance releases.
+
+**maintenance-5.x branch** (maintenance mode)
+
+The maintenance-5.x branch includes the .NET libraries for OData V1-3 releases only. It has the similar libraries as the maintenance-6.x branch except for some differences in namespaces and two additional libraries:
 - [ODataLib for OData v1-3](http://www.nuget.org/packages/Microsoft.Data.OData/) (namespace `Microsoft.Data.Core`): <br />It contains classes to serialize, deserialize and validate OData payloads. Enables construction of OData producers and consumers.
 - [EdmLib for OData v1-3](http://www.nuget.org/packages/Microsoft.Data.Edm/) (namespace `Microsoft.Data.Edm`): <br />It contains classes to represent, construct, parse, serialize and validate entity data models.
 - [System.Spatial for OData v1-3](http://www.nuget.org/packages/System.Spatial/) (namespace `System.Spatial`): <br />It contains classes and methods that facilitate geography and geometry spatial operations.
@@ -54,9 +54,9 @@ The ODATAV3 branch includes the .NET libraries for OData V1-3 only. It has the s
 
 These libraries are in maintenance mode. Only security bugs will be accepted. The release will be irregular depends on the bugs fixed.
 
-**WCFDSV4 branch** (maintenance mode)  
+**maintenance-wcf-dataservice-v4 branch** (maintenance mode)  
 
-The WCFDSV4 branch has the source code of the OData V4 parity of the WCF Data Services Server for OData v1-3. It is only for cloning and doesn't accept contributions. There is no binary release of it either. WCF DS is not recommended to be adopted now, instead [WebApi](https://github.com/OData/WebApi/ "WeiApi") or [RESTier](https://github.com/odata/RESTier/ "RESTier") is recommended to be adopted to build new OData Services.
+The maintenance-wcf-dataservice-v4 branch has the source code of the OData V4 parity of the WCF Data Services Server for OData v1-3. It is only for cloning and doesn't accept contributions. There is no binary release of it either. WCF DS is not recommended to be adopted now, instead [WebApi](https://github.com/OData/WebApi/ "WeiApi") or [RESTier](https://github.com/odata/RESTier/ "RESTier") is recommended to be adopted to build new OData Services.
 
 ## 3. Building, Testing, Debugging and Release
 In the case of VS2013, [SQL Express 2008](https://www.microsoft.com/en-sg/download/details.aspx?id=30438) or above must be installed. In the case of VS2015, LocalDB v12.0 or above will be used which is part of VS2015 and no additional installation is needed. The Database will be automatically initialized by the test code if it doesn't exist.
@@ -116,3 +116,9 @@ There are many ways for you to contribute to OData .NET. The easiest way is to p
 - Questions<br />Ask questions on [Stack Overflow](http://stackoverflow.com/questions/ask?tags=odata).
 - Feedback<br />Please send mails to [odatafeedback@microsoft.com](mailto:odatafeedback@microsoft.com).
 - Team blog<br />Please visit [http://blogs.msdn.com/b/odatateam/](http://blogs.msdn.com/b/odatateam/) and [http://www.odata.org/blog/](http://www.odata.org/blog/).
+
+### Thank You!
+
+We’re using NDepend to analyze and increase code quality.
+
+[![NDepend](images/ndependlogo.png)](http://www.ndepend.com)

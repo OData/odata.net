@@ -10,7 +10,7 @@ namespace Microsoft.OData.Performance
     using System.IO;
     using System.Linq;
     using global::Xunit;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.OData.Edm;
     using Microsoft.Xunit.Performance;
 
@@ -26,7 +26,7 @@ namespace Microsoft.OData.Performance
         [Benchmark]
         public void WriteFeedBinaryData_4MB()
         {
-            var entry = CreateEntry(4 * 1024);
+            Action<ODataWriter> writeEntry = (writer) => this.WriteEntry(writer, 4 * 1024);
 
             foreach (var iteration in Benchmark.Iterations)
             {
@@ -34,7 +34,7 @@ namespace Microsoft.OData.Performance
 
                 using (iteration.StartMeasurement())
                 {
-                    WriteFeed(WriteStream, ExchangeAttachmentModel, NumberOfEntries, entry, TestEntitySet);
+                    WriteFeed(WriteStream, ExchangeAttachmentModel, NumberOfEntries, writeEntry, TestEntitySet);
                 }
             }
         }
@@ -42,10 +42,10 @@ namespace Microsoft.OData.Performance
         [Benchmark]
         public void ReadFeedBinaryData_4MB()
         {
-            var entry = CreateEntry(4 * 1024);
+            Action<ODataWriter> writeEntry = (writer) => this.WriteEntry(writer, 4 * 1024);
 
             WriteStream.SetLength(0);
-            WriteFeed(WriteStream, ExchangeAttachmentModel, NumberOfEntries, entry, TestEntitySet);
+            WriteFeed(WriteStream, ExchangeAttachmentModel, NumberOfEntries, writeEntry, TestEntitySet);
 
             foreach (var iteration in Benchmark.Iterations)
             {
@@ -56,9 +56,9 @@ namespace Microsoft.OData.Performance
             }
         }
 
-        private ODataEntry CreateEntry(int dataSizeKb)
+        private void WriteEntry(ODataWriter odataWriter, int dataSizeKb)
         {
-            var entry = new ODataEntry
+            var entry = new ODataResource
             {
                 Id = new Uri("http://www.odata.org/Perf.svc/Item(1)"),
                 EditLink = new Uri("Item(1)", UriKind.Relative),
@@ -67,26 +67,40 @@ namespace Microsoft.OData.Performance
                 Properties = new[]
                     {
                         new ODataProperty{ Name = "HasAttachments", Value = false},
-                        new ODataProperty{ Name = "Attachments", Value = new ODataCollectionValue
-                            {
-                                TypeName = "Collection(PerformanceServices.Edm.ExchangeAttachment.Attachment)",
-                                Items = dataSizeKb == 0 ? new ODataComplexValue[0]: 
-                                Enumerable.Range(0, 1).Select(n => new ODataComplexValue
-                                {
-                                    TypeName = "PerformanceServices.Edm.ExchangeAttachment.Attachment",
-                                    Properties = new[]
-                                    {
-                                        new ODataProperty { Name = "Name", Value = "attachment" },
-                                        new ODataProperty { Name = "IsInline", Value = false },
-                                        new ODataProperty { Name = "LastModifiedTime", Value = new DateTimeOffset(1987, 6, 5, 4, 3, 21, 0, new TimeSpan(0, 0, 3, 0)) },
-                                        new ODataProperty { Name = "Content", Value = new byte[dataSizeKb * 1024]}, 
-                                    }
-                                })
-                            }}
                     }
             };
 
-            return entry;
+            var attachmentsP = new ODataNestedResourceInfo(){Name = "Attachments", IsCollection = true};
+
+            var attachmentsResourceSet = new ODataResourceSet()
+            {
+                TypeName = "Collection(PerformanceServices.Edm.ExchangeAttachment.Attachment)"
+            };
+
+            var attachment = dataSizeKb == 0 ? null
+                : new ODataResource()
+                {
+                    TypeName = "PerformanceServices.Edm.ExchangeAttachment.Attachment",
+                    Properties = new[]
+                    {
+                        new ODataProperty { Name = "Name", Value = "attachment" },
+                        new ODataProperty { Name = "IsInline", Value = false },
+                        new ODataProperty { Name = "LastModifiedTime", Value = new DateTimeOffset(1987, 6, 5, 4, 3, 21, 0, new TimeSpan(0, 0, 3, 0)) },
+                        new ODataProperty { Name = "Content", Value = new byte[dataSizeKb * 1024]}, 
+                    }
+                };
+
+            odataWriter.WriteStart(entry);
+            odataWriter.WriteStart(attachmentsP);
+            odataWriter.WriteStart(attachmentsResourceSet);
+            if (attachment != null)
+            {
+                odataWriter.WriteStart(attachment);
+                odataWriter.WriteEnd();
+            }
+            odataWriter.WriteEnd();
+            odataWriter.WriteEnd();
+            odataWriter.WriteEnd();
         }
     }
 }

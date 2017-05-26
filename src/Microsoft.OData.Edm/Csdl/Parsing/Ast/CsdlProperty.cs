@@ -13,13 +13,11 @@ namespace Microsoft.OData.Edm.Csdl.Parsing.Ast
     {
         private readonly CsdlTypeReference type;
         private readonly string defaultValue;
-        private readonly bool isFixedConcurrency;
 
-        public CsdlProperty(string name, CsdlTypeReference type, bool isFixedConcurrency, string defaultValue, CsdlDocumentation documentation, CsdlLocation location)
+        public CsdlProperty(string name, CsdlTypeReference type, string defaultValue, CsdlDocumentation documentation, CsdlLocation location)
             : base(name, documentation, location)
         {
             this.type = type;
-            this.isFixedConcurrency = isFixedConcurrency;
             this.defaultValue = defaultValue;
         }
 
@@ -31,11 +29,6 @@ namespace Microsoft.OData.Edm.Csdl.Parsing.Ast
         public string DefaultValue
         {
             get { return this.defaultValue; }
-        }
-
-        public bool IsFixedConcurrency
-        {
-            get { return this.isFixedConcurrency; }
         }
     }
 }

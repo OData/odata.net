@@ -8,14 +8,9 @@ namespace Microsoft.Test.Taupo.OData.Query.Tests.Common
 {
     #region Namespaces
     using System;
-    using System.Collections.Generic;
-    using System.Linq;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Core.Metadata;
-    using Microsoft.OData.Core.UriParser.Metadata;
     using Microsoft.Test.Taupo.Common;
     using Microsoft.Test.Taupo.Contracts.EntityModel;
-    using Microsoft.Test.Taupo.Contracts.Types;
     using Microsoft.Test.Taupo.OData.Contracts;
     #endregion Namespaces
 

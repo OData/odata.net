@@ -4,11 +4,8 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.Data.Spatial
+namespace Microsoft.Spatial
 {
-    using System;
-    using Microsoft.Spatial;
-
     /// <summary>
     /// Adapter from the type washed API to Geometry, where it assumes that coord1 is X.
     /// </summary>
@@ -18,7 +15,7 @@ namespace Microsoft.Data.Spatial
         /// The pipeline to redirect the calls to
         /// </summary>
         private readonly GeometryPipeline output;
-        
+
         /// <summary>
         /// Constructor
         /// </summary>

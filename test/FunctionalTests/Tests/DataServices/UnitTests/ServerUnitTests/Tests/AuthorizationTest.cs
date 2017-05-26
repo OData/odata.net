@@ -149,6 +149,7 @@ namespace AstoriaUnitTests.Tests
                 }
             }
 
+            [Ignore] // Remove Atom
             [TestMethod, Variation]
             public void AuthorizationForMethodsTest()
             {
@@ -1235,6 +1236,7 @@ namespace AstoriaUnitTests.Tests
                 }
             }
 
+            [Ignore] // Remove Atom
             [TestMethod, Variation]
             public void AuthorizationCallbackForReadingTest()
             {

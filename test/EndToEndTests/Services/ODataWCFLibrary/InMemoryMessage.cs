@@ -9,7 +9,7 @@ namespace Microsoft.Test.OData.Services.ODataWCFService
     using System;
     using System.Collections.Generic;
     using System.IO;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
 
     /// An implementation of IODataRequestMessage and IODataResponseMessage that uses an System.IO.Stream under the covers.
     /// In ODataLibrary, a message is an abstraction which consists of stream and header interfaces that hides the details of stream-reading/writing.

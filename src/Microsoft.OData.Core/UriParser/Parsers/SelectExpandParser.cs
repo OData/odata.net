@@ -4,18 +4,15 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core.UriParser.Parsers
+namespace Microsoft.OData.UriParser
 {
     using System;
     using System.Collections.Generic;
-    using Microsoft.OData.Core.UriParser.Metadata;
-    using Microsoft.OData.Core.UriParser.Syntactic;
-    using Microsoft.OData.Core.UriParser.TreeNodeKinds;
     using Microsoft.OData.Edm;
-    using ODataErrorStrings = Microsoft.OData.Core.Strings;
+    using ODataErrorStrings = Microsoft.OData.Strings;
 
     /// <summary>
-    /// Object that knows how to parse a select or expand expression. That is, a path to a property, 
+    /// Object that knows how to parse a select or expand expression. That is, a path to a property,
     /// a wildcard, operation name, etc, including nested expand options.
     /// </summary>
     internal sealed class SelectExpandParser
@@ -36,6 +33,16 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         private readonly int maxRecursiveDepth;
 
         /// <summary>
+        /// Whether to enable no dollar query options.
+        /// </summary>
+        private readonly bool enableNoDollarQueryOptions;
+
+        /// <summary>
+        /// Whether to allow case insensitive for builtin identifier.
+        /// </summary>
+        private readonly bool enableCaseInsensitiveBuiltinIdentifier;
+
+        /// <summary>
         /// Object to handle the parsing of any nested expand options that we discover.
         /// </summary>
         private ExpandOptionParser expandOptionParser;
@@ -51,18 +58,18 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         private bool isSelect;
 
         /// <summary>
-        /// Whether to allow case insensitive for builtin identifier.
-        /// </summary>
-        private bool enableCaseInsensitiveBuiltinIdentifier;
-
-        /// <summary>
         /// Build the SelectOption strategy.
         /// TODO: Really should not take the clauseToParse here. Instead it should be provided with a call to ParseSelect() or ParseExpand().
         /// </summary>
         /// <param name="clauseToParse">the clause to parse</param>
         /// <param name="maxRecursiveDepth">max recursive depth</param>
         /// <param name="enableCaseInsensitiveBuiltinIdentifier">Whether to allow case insensitive for builtin identifier.</param>
-        public SelectExpandParser(string clauseToParse, int maxRecursiveDepth, bool enableCaseInsensitiveBuiltinIdentifier = false)
+        /// <param name="enableNoDollarQueryOptions">Whether to enable no dollar query options.</param>
+        public SelectExpandParser(
+            string clauseToParse,
+            int maxRecursiveDepth,
+            bool enableCaseInsensitiveBuiltinIdentifier = false,
+            bool enableNoDollarQueryOptions = false)
         {
             this.maxRecursiveDepth = maxRecursiveDepth;
 
@@ -72,11 +79,13 @@ namespace Microsoft.OData.Core.UriParser.Parsers
             this.MaxOrderByDepth = maxRecursiveDepth;
             this.MaxSearchDepth = maxRecursiveDepth;
 
-            // Sets up our lexer. We don't turn useSemicolonDelimiter on since the parsing code for expand options, 
+            // Sets up our lexer. We don't turn useSemicolonDelimiter on since the parsing code for expand options,
             // which is the only thing that needs it, is in a different class that uses it's own lexer.
             this.lexer = clauseToParse != null ? new ExpressionLexer(clauseToParse, false /*moveToFirstToken*/, false /*useSemicolonDelimiter*/) : null;
 
             this.enableCaseInsensitiveBuiltinIdentifier = enableCaseInsensitiveBuiltinIdentifier;
+
+            this.enableNoDollarQueryOptions = enableNoDollarQueryOptions;
         }
 
         /// <summary>
@@ -87,13 +96,20 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         /// <param name="parentEntityType">the parent entity type for expand option</param>
         /// <param name="maxRecursiveDepth">max recursive depth</param>
         /// <param name="enableCaseInsensitiveBuiltinIdentifier">Whether to allow case insensitive for builtin identifier.</param>
-        public SelectExpandParser(ODataUriResolver resolver, string clauseToParse, IEdmStructuredType parentEntityType, int maxRecursiveDepth, bool enableCaseInsensitiveBuiltinIdentifier = false)
-            : this(clauseToParse, maxRecursiveDepth, enableCaseInsensitiveBuiltinIdentifier)
+        /// <param name="enableNoDollarQueryOptions">Whether to enable no dollar query options.</param>
+        public SelectExpandParser(
+            ODataUriResolver resolver,
+            string clauseToParse,
+            IEdmStructuredType parentEntityType,
+            int maxRecursiveDepth,
+            bool enableCaseInsensitiveBuiltinIdentifier = false,
+            bool enableNoDollarQueryOptions = false)
+            : this(clauseToParse, maxRecursiveDepth, enableCaseInsensitiveBuiltinIdentifier, enableNoDollarQueryOptions)
         {
             this.resolver = resolver;
             this.parentEntityType = parentEntityType;
         }
-        
+
         /// <summary>
         /// The maximum depth for path nested in $expand.
         /// </summary>
@@ -168,7 +184,12 @@ namespace Microsoft.OData.Core.UriParser.Parsers
 
             if (expandOptionParser == null)
             {
-                expandOptionParser = new ExpandOptionParser(this.resolver, this.parentEntityType, this.maxRecursiveDepth, enableCaseInsensitiveBuiltinIdentifier)
+                expandOptionParser = new ExpandOptionParser(
+                    this.resolver,
+                    this.parentEntityType,
+                    this.maxRecursiveDepth,
+                    this.enableCaseInsensitiveBuiltinIdentifier,
+                    this.enableNoDollarQueryOptions)
                 {
                     MaxFilterDepth = MaxFilterDepth,
                     MaxOrderByDepth = MaxOrderByDepth,
@@ -249,7 +270,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
                 List<string> explicitedTokens = new List<string>();
                 foreach (var tmpTokens in termTokens)
                 {
-                    var pathToNav = tmpTokens.PathToNavProp;
+                    var pathToNav = tmpTokens.PathToNavigationProp;
                     if (pathToNav.Identifier != UriQueryConstants.RefSegment)
                     {
                         explicitedTokens.Add(pathToNav.Identifier);
@@ -263,7 +284,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
                 // Add navigation path if it is not in list yet
                 foreach (var tmpTokens in starTermTokens)
                 {
-                    var pathToNav = tmpTokens.PathToNavProp;
+                    var pathToNav = tmpTokens.PathToNavigationProp;
                     if (pathToNav.Identifier != UriQueryConstants.RefSegment && !explicitedTokens.Contains(pathToNav.Identifier))
                     {
                         termTokens.Add(tmpTokens);

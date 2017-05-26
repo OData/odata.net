@@ -7,7 +7,7 @@
     <RootNamespace>Microsoft.Test.Taupo.OData.Scenario.Tests</RootNamespace>
     <AssemblyName>Microsoft.Test.Taupo.OData.Scenario.Tests</AssemblyName>
     <OutputType>Library</OutputType>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <ErrorReport>prompt</ErrorReport>
@@ -37,6 +37,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="MultiBindingModel.cs" />
     <Compile Include="StreamingReadWriteTests.cs" />
     <Compile Include="StreamingWriteReadTests.cs" />
     <Compile Include="Streaming\ObjectModelReadWriteStreamer.cs" />
@@ -51,6 +52,7 @@
     <Compile Include="UriParser\ExpandTests\ExpandNestedOrderBy.cs" />
     <Compile Include="UriParser\ExpandTests\ExpandNestedFilter.cs" />
     <Compile Include="UriParser\Filter\FilterTests.cs" />
+    <Compile Include="UriParser\MultiBindingTests\MultiBindingTests.cs" />
     <Compile Include="UriParser\OrderBy\OrderByTests.cs" />
     <Compile Include="UriParser\Path\PathTests.cs" />
     <Compile Include="UriParser\QueryNodeComparer.cs" />
@@ -459,6 +461,33 @@
     <None Include="UriParser\OrderBy\OrderByTests.NonEntityCollection.approved.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <Content Include="UriParser\MultiBindingTests\MultiBindingTests.ExpandNested.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="UriParser\MultiBindingTests\MultiBindingTests.FilterContained.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="UriParser\MultiBindingTests\MultiBindingTests.FilterOnNavigationUnderComplex.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="UriParser\MultiBindingTests\MultiBindingTests.FilterOnNavigationUnderComplexAndComplexIsInPath.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="UriParser\MultiBindingTests\MultiBindingTests.NestedExpandUnderComplex.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="UriParser\MultiBindingTests\MultiBindingTests.NestedExpandUnderSplitComplex.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="UriParser\MultiBindingTests\MultiBindingTests.OrderByContained.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="UriParser\MultiBindingTests\MultiBindingTests.OrderByOnNavigationUnderComplex.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="UriParser\MultiBindingTests\MultiBindingTests.OrderByOnNavigationUnderComplexAndComplexIsInPath.approved.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="UriParser\OrderBy\OrderByTests.TemporalValueSubtraction.approved.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

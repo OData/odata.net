@@ -43,13 +43,7 @@ namespace Microsoft.OData.Edm.Tests.Validation
             }
 
             unFoundValidationRules.Should().HaveCount(0);
-
-            // The 4 remaining rules are deprecated:
-            // ComplexTypeMustContainProperties
-            // OnlyEntityTypesCanBeOpen
-            // ComplexTypeInvalidPolymorphicComplexType
-            // ComplexTypeInvalidAbstractComplexType
-            validationRules.ToList().Should().HaveCount(4);
+            validationRules.ToList().Should().HaveCount(0);
         }
     }
 }

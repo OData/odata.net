@@ -12,7 +12,7 @@ using System.Linq.Expressions;
 using System.Net;
 using System.Reflection;
 using Microsoft.OData.Client;
-using Microsoft.OData.Core;
+using Microsoft.OData;
 using Microsoft.Test.OData.Services.TestServices;
 using Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReference;
 using Microsoft.VisualStudio.TestTools.UnitTesting;

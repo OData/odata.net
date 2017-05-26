@@ -4,8 +4,6 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-using Microsoft.Data.Spatial;
-
 namespace Microsoft.Spatial.Tests
 {
     /// <summary>

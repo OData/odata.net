@@ -233,7 +233,6 @@ namespace Microsoft.Test.OData.Services.AstoriaDefaultService
         }
     }
 
-    [ETag("ConcurrencyToken")]
     public partial class ProductPageView : PageView
     {
 
@@ -310,7 +309,6 @@ namespace Microsoft.Test.OData.Services.AstoriaDefaultService
 
     [Key("OrderId", "ProductId")]
     [NamedStream("OrderLineStream")]
-    [ETag("ConcurrencyToken")]
     public partial class OrderLine
     {
 
@@ -344,7 +342,6 @@ namespace Microsoft.Test.OData.Services.AstoriaDefaultService
 
     [Key("ProductId")]
     [NamedStream("Picture")]
-    [ETag("BaseConcurrency")]
     public partial class Product
     {
 
@@ -367,7 +364,6 @@ namespace Microsoft.Test.OData.Services.AstoriaDefaultService
         }
     }
 
-    [ETag("ChildConcurrencyToken")]
     public partial class DiscontinuedProduct : Product
     {
 

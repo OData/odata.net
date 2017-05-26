@@ -6,12 +6,9 @@
 
 namespace Microsoft.Test.Taupo.OData.Scenario.Tests.UriParser
 {
-    using System.Globalization;
-    using Microsoft.OData.Core.UriParser.Visitors;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Core;
-    using Microsoft.OData.Core.UriParser;
-    using Microsoft.OData.Core.UriParser.Semantic;
+    using Microsoft.OData;
+    using Microsoft.OData.UriParser;
     using System;
     using System.Linq;
     using Microsoft.Spatial;
@@ -69,9 +66,9 @@ namespace Microsoft.Test.Taupo.OData.Scenario.Tests.UriParser
             return WriteParameterValue(value.Value);
         }
 
-        public override string Translate(OpenPropertySegment segment)
+        public override string Translate(DynamicPathSegment segment)
         {
-            return string.Format("(OpenProperty: {0})", segment.PropertyName);
+            return string.Format("(OpenProperty: {0})", segment.Identifier);
         }
 
         public override string Translate(CountSegment segment)
@@ -156,27 +153,6 @@ namespace Microsoft.Test.Taupo.OData.Scenario.Tests.UriParser
                 outputString = ((int)value).ToString();
             }
 
-            var complex = value as ODataComplexValue;
-            if (complex != null)
-            {
-                outputString = "Complex Value(";
-                if (complex.TypeName != null)
-                {
-                    outputString += String.Format("Type Name = {0}", complex.TypeName);
-                    if (complex.Properties.Any()) outputString += String.Format(", ");
-                }
-                if (complex.Properties.Any())
-                {
-                    outputString += String.Format("Properties = (");
-                    foreach (var property in complex.Properties)
-                    {
-                        outputString += String.Format("{0}: {1}, ", property.Name, property.Value);
-                    }
-                    outputString = outputString.TrimEnd(',', ' ') + ")";
-                }
-                outputString += ")";
-            }
-
             var nullval = value as ODataNullValue;
             if (nullval != null)
             {
@@ -187,6 +163,12 @@ namespace Microsoft.Test.Taupo.OData.Scenario.Tests.UriParser
             if (aliasedparam != null)
             {
                 outputString = String.Format("Unresolved Aliased Parameter({0})", aliasedparam.Alias);
+            }
+
+            ConvertNode convertNode = value as ConvertNode;
+            if (convertNode != null)
+            {
+                outputString = String.Format("ConvertNode(Type = {0}, Source = {1})", convertNode.TypeReference, WriteParameterValue(convertNode.Source));
             }
 
             ConstantNode constNode = value as ConstantNode;

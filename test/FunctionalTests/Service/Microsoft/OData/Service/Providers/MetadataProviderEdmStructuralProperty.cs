@@ -7,7 +7,6 @@
 namespace Microsoft.OData.Service.Providers
 {
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Library;
 
     /// <summary>
     /// Implementation of <see cref="IEdmStructuralProperty"/> based on a <see cref="ResourceProperty"/>.
@@ -21,14 +20,12 @@ namespace Microsoft.OData.Service.Providers
         /// <param name="resourceProperty">The resource-property this edm property is based on.</param>
         /// <param name="type">The type of the property.</param>
         /// <param name="defaultValue">The default value of this property.</param>
-        /// <param name="concurrencyMode">The concurrency mode of this property.</param>
         public MetadataProviderEdmStructuralProperty(
             IEdmStructuredType declaringType,
             ResourceProperty resourceProperty,
             IEdmTypeReference type, 
-            string defaultValue,
-            EdmConcurrencyMode concurrencyMode)
-            : base(declaringType, resourceProperty.Name, type, defaultValue, concurrencyMode)
+            string defaultValue)
+            : base(declaringType, resourceProperty.Name, type, defaultValue)
         {
             this.ResourceProperty = resourceProperty;
         }

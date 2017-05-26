@@ -1,0 +1,50 @@
+$filter = CollectionOfNavOnComplex/any(t:t/ID eq 'abc')
+
+
+FilterQueryOption
+	ItemType = [NS.ComplexType Nullable=False]
+	Parameter = 
+	ResourceRangeVariable
+		Name = $it
+		NavigationSource = EntitySet
+		TypeReference = [NS.ComplexType Nullable=False]
+	Expression = 
+	AnyNode
+		TypeReference = [Edm.Boolean Nullable=True]
+		Body = 
+			ConvertNode
+				TypeReference = [Edm.String Nullable=True Unicode=True]
+				Source = 
+				SingleValuePropertyAccessNode
+					Property = ID
+					TypeReference = [Edm.String Nullable=False Unicode=True]
+					Source = 
+					ResourceRangeVariableReferenceNode
+						Name = t
+						NavigationSource = NavEntitySet1
+						TypeReference = [NS.NavEntityType Nullable=False]
+						Range Variable = Microsoft.OData.UriParser.ResourceRangeVariable
+		Equal
+			abc(Type: [Edm.String Nullable=True Unicode=True])
+		Source = 
+		CollectionNavigationNode
+			ItemType = [NS.NavEntityType Nullable=False]
+			Entity Item Type = [NS.NavEntityType Nullable=False]
+			NavigationSource = NavEntitySet1
+			Multiplicity = Many
+			Navigation Property = CollectionOfNavOnComplex
+			Source = 
+			ResourceRangeVariableReferenceNode
+				Name = $it
+				NavigationSource = EntitySet
+				TypeReference = [NS.ComplexType Nullable=False]
+				Range Variable = Microsoft.OData.UriParser.ResourceRangeVariable
+		Parameters = 
+		ResourceRangeVariable
+			Name = t
+			NavigationSource = NavEntitySet1
+			TypeReference = [NS.NavEntityType Nullable=False]
+		ResourceRangeVariable
+			Name = $it
+			NavigationSource = EntitySet
+			TypeReference = [NS.ComplexType Nullable=False]

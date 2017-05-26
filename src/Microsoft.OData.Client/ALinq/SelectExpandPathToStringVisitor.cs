@@ -8,7 +8,7 @@ namespace Microsoft.OData.Client
 {
     using System;
     using Microsoft.OData.Client.ALinq.UriParser;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
 
     /// <summary>
     /// Translate from an expand path token to a string.
@@ -96,7 +96,7 @@ namespace Microsoft.OData.Client
                         stringToWrite += firstNonStructuralProperty.Identifier;
                     }
 
-                    firstNonStructuralProperty = firstNonStructuralProperty.NextToken;  
+                    firstNonStructuralProperty = firstNonStructuralProperty.NextToken;
                 }
                 else
                 {

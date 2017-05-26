@@ -6,7 +6,7 @@
 
 namespace Microsoft.Test.OData.Utils.ODataLibOM
 {
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     
     /// <summary>
     /// Annotation used on the ODataProperty to hint the metadata building about the desired type of the property.

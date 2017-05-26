@@ -4,12 +4,12 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core.JsonLight
+namespace Microsoft.OData.JsonLight
 {
     #region Namespaces
     using System;
     using System.Collections.Generic;
-    using Microsoft.OData.Core.UriParser.Semantic;
+    using Microsoft.OData.UriParser;
     using Microsoft.OData.Edm;
     #endregion Namespaces
 
@@ -71,11 +71,6 @@ namespace Microsoft.OData.Core.JsonLight
         /// The detected payload kinds from parsing the context URI.
         /// </summary>
         internal IEnumerable<ODataPayloadKind> DetectedPayloadKinds { get; set; }
-
-        /// <summary>
-        /// true if we just parsed the context Uri for null properties, i.e. ~/$metadata#Edm.Null; false otherwise.
-        /// </summary>
-        internal bool IsNullProperty { get; set; }
 
         /// <summary>
         /// ODataPath parsed from context Url

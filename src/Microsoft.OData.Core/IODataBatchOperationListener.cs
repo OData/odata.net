@@ -4,10 +4,10 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core
+namespace Microsoft.OData
 {
     #region Namespaces
-#if ODATALIB_ASYNC
+#if PORTABLELIB
     using System.Threading.Tasks;
 #endif
     #endregion
@@ -23,12 +23,12 @@ namespace Microsoft.OData.Core
         /// </summary>
         void BatchOperationContentStreamRequested();
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary>
         /// This method notifies the implementer of this interface that the content stream for a batch operation has been requested.
         /// </summary>
         /// <returns>
-        /// A task representing any async operation that is running in reaction to the 
+        /// A task representing any async operation that is running in reaction to the
         /// status change (or null if no such action is required).
         /// </returns>
         Task BatchOperationContentStreamRequestedAsync();

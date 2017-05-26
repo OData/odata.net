@@ -8,13 +8,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using FluentAssertions;
-using Microsoft.OData.Core.Evaluation;
-using Microsoft.OData.Core.JsonLight;
 using Microsoft.OData.Edm;
-using Microsoft.OData.Edm.Library;
+using Microsoft.OData.Evaluation;
+using Microsoft.OData.JsonLight;
 using Xunit;
 
-namespace Microsoft.OData.Core.Tests.Evaluation
+namespace Microsoft.OData.Tests.Evaluation
 {
     public class ODataMissingOperationGeneratorTests
     {
@@ -26,7 +25,7 @@ namespace Microsoft.OData.Core.Tests.Evaluation
         private readonly ODataAction odataAction;
         private readonly ODataFunction odataFunction;
 
-        private ODataEntry entry;
+        private ODataResource entry;
         private EdmEntityType entityType;
 
         public ODataMissingOperationGeneratorTests()
@@ -41,10 +40,10 @@ namespace Microsoft.OData.Core.Tests.Evaluation
 
             this.allOperations = new EdmOperation[] { this.actionEdmMetadata, this.functionEdmMetadata };
 
-            this.odataAction = new ODataAction {Metadata = new Uri("http://temp.org/$metadata#Fake.FakeAction")};
-            this.odataFunction = new ODataFunction {Metadata = new Uri("http://temp.org/$metadata#Fake.FakeFunction")};
+            this.odataAction = new ODataAction { Metadata = new Uri("http://temp.org/$metadata#Fake.FakeAction") };
+            this.odataFunction = new ODataFunction { Metadata = new Uri("http://temp.org/$metadata#Fake.FakeFunction") };
 
-            this.entry = ReaderUtils.CreateNewEntry();
+            this.entry = ReaderUtils.CreateNewResource();
             this.entityType = new EdmEntityType("TestNamespace", "EntityType");
         }
 
@@ -63,9 +62,13 @@ namespace Microsoft.OData.Core.Tests.Evaluation
             this.entry.AddFunction(this.odataFunction);
             AddMissingOperations(this.entry, this.entityType, SelectedPropertiesNode.EntireSubtree, this.model, type => this.allOperations, null, e => false);
             this.entry.Actions.ToList().Count.Should().Be(1);
+#if !NETCOREAPP1_0
             this.entry.Actions.Single().ShouldHave().AllProperties().EqualTo(this.odataAction);
+#endif
             this.entry.Functions.ToList().Count.Should().Be(1);
+#if !NETCOREAPP1_0
             this.entry.Functions.Single().ShouldHave().AllProperties().EqualTo(this.odataFunction);
+#endif
         }
 
         [Fact]
@@ -84,24 +87,28 @@ namespace Microsoft.OData.Core.Tests.Evaluation
             this.entry.Functions.Should().BeEmpty();
 
             this.entry.Actions.Should().HaveCount(1);
+#if !NETCOREAPP1_0
             this.entry.Actions.Single().ShouldHave().AllProperties().EqualTo(this.odataAction);
+#endif
         }
 
         [Fact]
         public void SelectedFunctionShouldBeGenerated()
         {
             this.AddMissingOperationsForAll(SelectedPropertiesNode.Create(this.functionEdmMetadata.Name));
-            
+
             this.entry.Actions.Should().BeEmpty();
 
             this.entry.Functions.Should().HaveCount(1);
+#if !NETCOREAPP1_0
             this.entry.Functions.Single().ShouldHave().AllProperties().EqualTo(this.odataFunction);
+#endif
         }
 
         [Fact]
         public void SelectedFunctionWithoutContainerQualifierShouldNotBeGeneratedForOpenType()
         {
-            AddMissingOperations(this.entry, this.entityType, SelectedPropertiesNode.Create(this.functionEdmMetadata.Name), this.model, type => this.allOperations, entry => new NoOpEntityMetadataBuilder(entry), e => true);
+            AddMissingOperations(this.entry, this.entityType, SelectedPropertiesNode.Create(this.functionEdmMetadata.Name), this.model, type => this.allOperations, entry => new NoOpResourceMetadataBuilder(entry), e => true);
 
             this.entry.Actions.Should().BeEmpty();
             this.entry.Functions.Should().BeEmpty();
@@ -109,22 +116,22 @@ namespace Microsoft.OData.Core.Tests.Evaluation
 
         private void AddMissingOperationsForAll(SelectedPropertiesNode selectedProperties)
         {
-            AddMissingOperations(this.entry, this.entityType, selectedProperties, this.model, type => this.allOperations, entry => new NoOpEntityMetadataBuilder(entry), e => false);
+            AddMissingOperations(this.entry, this.entityType, selectedProperties, this.model, type => this.allOperations, entry => new NoOpResourceMetadataBuilder(entry), e => false);
         }
 
-        private static void AddMissingOperations(ODataEntry entry, IEdmEntityType entityType, SelectedPropertiesNode selectedProperties, IEdmModel model, Func<IEdmType, IEdmOperation[]> getOperations, Func<ODataEntry, ODataEntityMetadataBuilder> getEntityMetadataBuilder = null, Func<IEdmEntityType, bool> typeIsOpen = null)
+        private static void AddMissingOperations(ODataResource entry, IEdmEntityType entityType, SelectedPropertiesNode selectedProperties, IEdmModel model, Func<IEdmType, IEdmOperation[]> getOperations, Func<ODataResource, ODataResourceMetadataBuilder> getEntityMetadataBuilder = null, Func<IEdmStructuredType, bool> typeIsOpen = null)
         {
-            var metadataContext = new TestMetadataContext 
+            var metadataContext = new TestMetadataContext
             {
                 GetModelFunc = () => model,
                 GetMetadataDocumentUriFunc = () => new Uri("http://temp.org/$metadata"),
                 GetServiceBaseUriFunc = () => new Uri("http://temp.org/"),
                 GetBindableOperationsForTypeFunc = getOperations,
                 GetEntityMetadataBuilderFunc = getEntityMetadataBuilder,
-                OperationsBoundToEntityTypeMustBeContainerQualifiedFunc = typeIsOpen,
+                OperationsBoundToStructuredTypeMustBeContainerQualifiedFunc = typeIsOpen,
             };
 
-            var entryContext = ODataEntryMetadataContext.Create(entry, new TestFeedAndEntryTypeContext(), /*serializationInfo*/null, entityType, metadataContext, selectedProperties);
+            var entryContext = ODataResourceMetadataContext.Create(entry, new TestFeedAndEntryTypeContext(), /*serializationInfo*/null, entityType, metadataContext, selectedProperties);
             var generator = new ODataMissingOperationGenerator(entryContext, metadataContext);
             List<ODataAction> actions = generator.GetComputedActions().ToList();
             List<ODataFunction> functions = generator.GetComputedFunctions().ToList();
@@ -139,8 +146,8 @@ namespace Microsoft.OData.Core.Tests.Evaluation
         public Func<Uri> GetMetadataDocumentUriFunc { get; set; }
         public Func<Uri> GetServiceBaseUriFunc { get; set; }
         public Func<IEdmType, IEdmOperation[]> GetBindableOperationsForTypeFunc { get; set; }
-        public Func<ODataEntry, ODataEntityMetadataBuilder> GetEntityMetadataBuilderFunc { get; set; }
-        public Func<IEdmEntityType, bool> OperationsBoundToEntityTypeMustBeContainerQualifiedFunc { get; set; }
+        public Func<ODataResource, ODataResourceMetadataBuilder> GetEntityMetadataBuilderFunc { get; set; }
+        public Func<IEdmStructuredType, bool> OperationsBoundToStructuredTypeMustBeContainerQualifiedFunc { get; set; }
 
         public IEdmModel Model
         {
@@ -181,11 +188,11 @@ namespace Microsoft.OData.Core.Tests.Evaluation
             }
         }
 
-        public ODataEntityMetadataBuilder GetEntityMetadataBuilderForReader(IODataJsonLightReaderEntryState entryState, bool? useKeyAsSegment)
+        public ODataResourceMetadataBuilder GetResourceMetadataBuilderForReader(IODataJsonLightReaderResourceState entryState, bool useKeyAsSegment)
         {
             if (this.GetEntityMetadataBuilderFunc != null)
             {
-                return this.GetEntityMetadataBuilderFunc(entryState.Entry);
+                return this.GetEntityMetadataBuilderFunc(entryState.Resource);
             }
 
             throw new NotImplementedException();
@@ -201,11 +208,11 @@ namespace Microsoft.OData.Core.Tests.Evaluation
             throw new NotImplementedException();
         }
 
-        public bool OperationsBoundToEntityTypeMustBeContainerQualified(IEdmEntityType entityType)
+        public bool OperationsBoundToStructuredTypeMustBeContainerQualified(IEdmStructuredType entityType)
         {
-            if (this.OperationsBoundToEntityTypeMustBeContainerQualifiedFunc != null)
+            if (this.OperationsBoundToStructuredTypeMustBeContainerQualifiedFunc != null)
             {
-                return this.OperationsBoundToEntityTypeMustBeContainerQualifiedFunc(entityType);
+                return this.OperationsBoundToStructuredTypeMustBeContainerQualifiedFunc(entityType);
             }
 
             throw new NotImplementedException();

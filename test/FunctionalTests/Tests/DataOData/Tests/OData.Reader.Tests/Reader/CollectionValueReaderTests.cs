@@ -10,9 +10,8 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Library;
     using Microsoft.Test.OData.Utils.ODataLibTest;
     using Microsoft.Test.Taupo.Astoria.Common;
     using Microsoft.Test.Taupo.Astoria.Contracts.OData;
@@ -59,10 +58,6 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
                 (testDescriptor, testConfiguration) =>
                 {
                     var property = testDescriptor.PayloadElement as PropertyInstance;
-                    if (property != null && testConfiguration.Format == ODataFormat.Atom)
-                    {
-                        property.Name = null;
-                    }
                     testDescriptor.RunTest(testConfiguration);
                 });
         }
@@ -145,11 +140,6 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
                     testDescriptor.PayloadNormalizers.Add((tc) => tc.Format == ODataFormat.Json ? ReplaceExpectedTypeWithContextUriVisitor.VisitPayload : (Func<ODataPayloadElement, ODataPayloadElement>)null);
 
                     var property = testDescriptor.PayloadElement as PropertyInstance;
-                    if (property != null && testConfiguration.Format == ODataFormat.Atom)
-                    {
-                        property.Name = null;
-                    }
-                    
                     testDescriptor.RunTest(testConfiguration);
                 });
         }
@@ -178,14 +168,9 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
                 {
                     if (testConfiguration.Format == ODataFormat.Json && testConfiguration.MessageReaderSettings.BaseUri == null)
                     {
-                        testConfiguration.MessageReaderSettings.BaseUri = new Uri("http://odata.org/");   
+                        testConfiguration.MessageReaderSettings.BaseUri = new Uri("http://odata.org/");
                     }
                     var property = testDescriptor.PayloadElement as PropertyInstance;
-                    if (property != null && testConfiguration.Format == ODataFormat.Atom)
-                    {
-                        property.Name = null;
-                    }
-
                     testDescriptor.RunTest(testConfiguration);
                 });
         }
@@ -194,7 +179,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
         public void CollectionWithHeterogenousItemsErrorTest()
         {
             EdmModel model = new EdmModel();
-            
+
             var complexType1 = model.ComplexType("ComplexTypeWithStringAndInteger32")
                 .Property("Property1", EdmCoreModel.Instance.GetString(true) as EdmTypeReference)
                 .Property("Property2", EdmCoreModel.Instance.GetInt32(false) as EdmTypeReference);
@@ -214,9 +199,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
                     PayloadEdmModel = model,
                     ExpectedResultCallback = tc => new PayloadReaderTestExpectedResult(this.Settings.ExpectedResultSettings)
                     {
-                        ExpectedException = tc.Format == ODataFormat.Atom ?
-                            ODataExpectedExceptions.ODataException("ValidationUtils_IncompatibleType", "Edm.Boolean", "Edm.Int32") :
-                            ODataExpectedExceptions.ODataException("ReaderValidationUtils_CannotConvertPrimitiveValue", "True", "Edm.Int32")
+                        ExpectedException = ODataExpectedExceptions.ODataException("ReaderValidationUtils_CannotConvertPrimitiveValue", "True", "Edm.Int32")
                     }
                 },
                 // Complex collection containing items of different complex type (correct type attribute value)
@@ -239,31 +222,22 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
                     PayloadEdmModel = model,
                     ExpectedResultCallback = tc => new PayloadReaderTestExpectedResult(this.Settings.ExpectedResultSettings)
                     {
-                        ExpectedException = tc.Format == ODataFormat.Atom ?
-                            ODataExpectedExceptions.ODataException("ValidationUtils_IncompatibleType", "Edm.Int32", "Edm.DateTimeOffset") :
-                            ODataExpectedExceptions.ODataException("ReaderValidationUtils_CannotConvertPrimitiveValue", "-1", "Edm.DateTimeOffset")
+                        ExpectedException = ODataExpectedExceptions.ODataException("ReaderValidationUtils_CannotConvertPrimitiveValue", "-1", "Edm.DateTimeOffset")
                     }
                 },
             };
 
-           this.CombinatorialEngineProvider.RunCombinations(
-                testDescriptors,
-                this.ReaderTestConfigurationProvider.ExplicitFormatConfigurations,
-                (testDescriptor, testConfiguration) =>
-                {
-                    if (testConfiguration.Format == ODataFormat.Atom)
-                    {
-                        testDescriptor = testDescriptor.InProperty();
-                    }
-                    else
-                    {
-                        testDescriptor = testDescriptor.InProperty("RootProperty");
-                    }
-
-                    testDescriptor.RunTest(testConfiguration);
-                });
+            this.CombinatorialEngineProvider.RunCombinations(
+                 testDescriptors,
+                 this.ReaderTestConfigurationProvider.ExplicitFormatConfigurations,
+                 (testDescriptor, testConfiguration) =>
+                 {
+                     testDescriptor = testDescriptor.InProperty("RootProperty");
+                     testDescriptor.RunTest(testConfiguration);
+                 });
         }
 
+        [Ignore] // Remove Atom
         [TestMethod, TestCategory("Reader.Collections"), Variation(Description = "Verifies correct handling of collections without expected type and without metadata.")]
         public void CollectionWithoutExpectedTypeAndWithoutMetadataTest()
         {
@@ -390,7 +364,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
 
             this.CombinatorialEngineProvider.RunCombinations(
                 noCollectionTypeNameTestDescriptors.Concat(collectionTypeNameTestDescriptors),
-                this.ReaderTestConfigurationProvider.AtomFormatConfigurations,  // only in ATOM since we don't support reading JSON without metadata yet
+                this.ReaderTestConfigurationProvider.JsonLightFormatConfigurations,
                 (testDescriptor, testConfiguration) =>
                 {
                     testDescriptor.RunTest(testConfiguration);
@@ -401,7 +375,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
         {
             // Start with the standard set of collections
             IEnumerable<PayloadReaderTestDescriptor> testDescriptors = PayloadReaderTestDescriptorGenerator.CreateCollectionTestDescriptors(this.Settings, withTypeNames);
-            
+
             // Add collections with all of the primitive values (except null)
             testDescriptors = testDescriptors.Concat(PayloadReaderTestDescriptorGenerator.CreatePrimitiveValueTestDescriptors(this.Settings, false)
                 .Where(primitivePayload => ((PrimitiveValue)primitivePayload.PayloadElement).ClrValue != null)
@@ -503,9 +477,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
                     ExpectedResultCallback = tc =>
                         new PayloadReaderTestExpectedResult(this.Settings.ExpectedResultSettings)
                         {
-                            ExpectedException = tc.Format == ODataFormat.Atom ?
-                                ODataExpectedExceptions.ODataException("ValidationUtils_IncompatibleType", "Edm.Int32", "Edm.String") :
-                                ODataExpectedExceptions.ODataException("ReaderValidationUtils_CannotConvertPrimitiveValue", "-42", "Edm.String")
+                            ExpectedException = ODataExpectedExceptions.ODataException("ReaderValidationUtils_CannotConvertPrimitiveValue", "-42", "Edm.String")
                         },
                 },
                 new PayloadReaderTestDescriptor(this.Settings)
@@ -550,7 +522,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
     /// </summary>
     internal class ReplaceExpectedTypeWithContextUriVisitor : ODataPayloadElementVisitorBase
     {
-        private readonly Stack<ODataPayloadElement> payloadElementStack = new Stack<ODataPayloadElement>(); 
+        private readonly Stack<ODataPayloadElement> payloadElementStack = new Stack<ODataPayloadElement>();
 
         public static ODataPayloadElement VisitPayload(ODataPayloadElement payloadElement)
         {
@@ -616,7 +588,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
     /// </summary>
     public class AddJsonLightTypeAnnotationToCollectionsVisitor : ODataPayloadElementVisitorBase
     {
-        private readonly Stack<ODataPayloadElement> payloadElementStack = new Stack<ODataPayloadElement>(); 
+        private readonly Stack<ODataPayloadElement> payloadElementStack = new Stack<ODataPayloadElement>();
 
         public static ODataPayloadElement Normalize(ODataPayloadElement payloadElement)
         {
@@ -645,7 +617,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
             }
             finally
             {
-                this.payloadElementStack.Pop(); 
+                this.payloadElementStack.Pop();
             }
         }
 

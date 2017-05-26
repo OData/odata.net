@@ -4,7 +4,7 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core
+namespace Microsoft.OData
 {
     #region Namespaces
     using System;
@@ -78,7 +78,7 @@ namespace Microsoft.OData.Core
         }
 
         /// <summary>
-        /// Removes the entry with the specified <paramref name="key"/> from the headers.
+        /// Removes the resource with the specified <paramref name="key"/> from the headers.
         /// </summary>
         /// <param name="key">The key of the item to remove.</param>
         /// <returns>true if the item with the specified <paramref name="key"/> was removed; otherwise false.</returns>
@@ -102,7 +102,7 @@ namespace Microsoft.OData.Core
         /// Gets the value associated with the specified key.
         /// </summary>
         /// <param name="key">The key whose value to get.</param>
-        /// <param name="value">When this method returns, the value associated with the specified key, if the key is found; 
+        /// <param name="value">When this method returns, the value associated with the specified key, if the key is found;
         /// otherwise, the default value for the type of the value parameter. This parameter is passed uninitialized.</param>
         /// <returns>true if the dictionary contains an element with the specified key; otherwise, false.</returns>
         public bool TryGetValue(string key, out string value)

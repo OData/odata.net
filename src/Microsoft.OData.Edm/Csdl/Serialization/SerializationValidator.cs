@@ -6,9 +6,8 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.OData.Edm.Annotations;
 using Microsoft.OData.Edm.Validation;
-using Microsoft.OData.Edm.Validation.Internal;
+using Microsoft.OData.Edm.Vocabularies;
 
 namespace Microsoft.OData.Edm.Csdl.Serialization
 {
@@ -134,7 +133,6 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
                 ValidationRules.TypeMustNotHaveKindOfNone,
                 ValidationRules.PrimitiveTypeMustNotHaveKindOfNone,
                 ValidationRules.PropertyMustNotHaveKindOfNone,
-                ValidationRules.TermMustNotHaveKindOfNone,
                 ValidationRules.SchemaElementMustNotHaveKindOfNone,
                 ValidationRules.EntityContainerElementMustNotHaveKindOfNone,
                 ValidationRules.EnumMustHaveIntegerUnderlyingType,
@@ -169,12 +167,11 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
                 case EdmErrorCode.TypeMustNotHaveKindOfNone:
                 case EdmErrorCode.PrimitiveTypeMustNotHaveKindOfNone:
                 case EdmErrorCode.PropertyMustNotHaveKindOfNone:
-                case EdmErrorCode.TermMustNotHaveKindOfNone:
                 case EdmErrorCode.SchemaElementMustNotHaveKindOfNone:
                 case EdmErrorCode.EntityContainerElementMustNotHaveKindOfNone:
                 case EdmErrorCode.BinaryValueCannotHaveEmptyValue:
                 case EdmErrorCode.EnumMustHaveIntegerUnderlyingType:
-                case EdmErrorCode.EnumMemberTypeMustMatchEnumUnderlyingType:
+                case EdmErrorCode.EnumMemberValueOutOfRange:
                     return true;
             }
 

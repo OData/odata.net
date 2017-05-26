@@ -13,9 +13,8 @@ namespace Microsoft.Test.Taupo.OData.WCFService
     using System.Reflection;
     using System.Xml;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Library;
-    using Microsoft.OData.Core;
-    using Microsoft.OData.Core.UriParser;
+    using Microsoft.OData;
+    using Microsoft.OData.UriParser;
 
     /// <summary>
     /// Static methods for converting CLR objects from the data store into OData objects.
@@ -23,19 +22,19 @@ namespace Microsoft.Test.Taupo.OData.WCFService
     public static class ODataObjectModelConverter
     {
         /// <summary>
-        /// Converts an item from the data store into an ODataEntry.
+        /// Converts an item from the data store into an ODataResource.
         /// </summary>
         /// <param name="element">The item to convert.</param>
         /// <param name="entitySet">The entity set that the item belongs to.</param>
         /// <param name="targetVersion">The OData version this segment is targeting.</param>
-        /// <returns>The converted ODataEntry.</returns>
-        public static ODataEntry ConvertToODataEntry(object element, IEdmEntitySet entitySet, ODataVersion targetVersion)
+        /// <returns>The converted ODataResource.</returns>
+        public static ODataResource ConvertToODataEntry(object element, IEdmEntitySet entitySet, ODataVersion targetVersion)
         {
             IEdmEntityType entityType = entitySet.EntityType();
 
             Uri entryUri = BuildEntryUri(element, entitySet, targetVersion);
 
-            var entry = new ODataEntry
+            var entry = new ODataResource
             {
                 // writes out the edit link including the service base uri  , e.g.: http://<serviceBase>/Customers('ALFKI')
                 EditLink = entryUri,
@@ -46,7 +45,7 @@ namespace Microsoft.Test.Taupo.OData.WCFService
                 // we use the EditLink as the Id for this entity to maintain convention,
                 Id = entryUri,
 
-                // writes out the <category term='Customer'/> element 
+                // writes out the <category term='Customer'/> element
                 TypeName = element.GetType().Namespace + "." + entityType.Name,
 
                 Properties = entityType.StructuralProperties().Select(p => ConvertToODataProperty(element, p.Name)),
@@ -82,7 +81,7 @@ namespace Microsoft.Test.Taupo.OData.WCFService
                 string genericTypeName = t.GetGenericTypeDefinition().Name;
                 genericTypeName = genericTypeName.Substring(0, genericTypeName.IndexOf('`'));
                 genericTypeName += "(" + t.GetGenericArguments().Single().FullName.Replace("System.", "Edm.") + ")";
-                return new ODataProperty { Name = propertyName, Value = new ODataCollectionValue() { TypeName = genericTypeName, Items = value as IEnumerable } };
+                return new ODataProperty { Name = propertyName, Value = new ODataCollectionValue() { TypeName = genericTypeName, Items = (value as IEnumerable).Cast<object>() } };
             }
 
             return new ODataProperty { Name = propertyName, Value = value };

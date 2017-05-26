@@ -8,6 +8,7 @@
     <SignAssemblyAttribute>false</SignAssemblyAttribute>
     <KeyOriginatorFile>..\..\Astoria.Test.Key.snk</KeyOriginatorFile>
     <AssemblyName>Astoria.EFFKModel</AssemblyName>
+    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
     <CreateMetaAssembly>false</CreateMetaAssembly>
     <DefineConstants>$(DefineConstants);MICROSOFT_ASTORIA</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
@@ -18,7 +19,7 @@
   </PropertyGroup>
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), Build.props))\Build.props" />
   <PropertyGroup>
-    <DefineConstants Condition=" '$(VisualStudioVersion)' == '14.0' ">$(DefineConstants);VS2015</DefineConstants>
+    <DefineConstants Condition=" '$(VisualStudioVersion)' == '14.0' and '$(BuildingInLab)' != 'true'">$(DefineConstants);USELOCALDB</DefineConstants>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />

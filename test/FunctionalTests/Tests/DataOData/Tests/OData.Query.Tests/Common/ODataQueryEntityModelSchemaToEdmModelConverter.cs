@@ -8,9 +8,7 @@ namespace Microsoft.Test.Taupo.OData.Query.Tests.Common
 {
     using System.Collections.Generic;
     using System.Diagnostics;
-    using System.Linq;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Core;
     using Microsoft.Test.Taupo.Contracts.EntityModel;
     using Microsoft.Test.Taupo.OData.Common;
 

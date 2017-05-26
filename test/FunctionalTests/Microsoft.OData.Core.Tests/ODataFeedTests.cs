@@ -10,15 +10,15 @@ using FluentAssertions;
 using Microsoft.OData.Edm;
 using Xunit;
 
-namespace Microsoft.OData.Core.Tests
+namespace Microsoft.OData.Tests
 {
     public class ODataFeedTests
     {
-        private ODataFeed odataFeed;
+        private ODataResourceSet odataFeed;
 
         public ODataFeedTests()
         {
-            this.odataFeed = new ODataFeed();
+            this.odataFeed = new ODataResourceSet();
         }
 
         [Fact]
@@ -70,7 +70,7 @@ namespace Microsoft.OData.Core.Tests
         {
             this.odataFeed.NextPageLink = new Uri("http://www.example.com/nextPageLink");
             Action test = () => this.odataFeed.DeltaLink = new Uri("http://www.example.com/deltaLink");
-            test.ShouldThrow<ODataException>().WithMessage(Strings.ODataFeed_MustNotContainBothNextPageLinkAndDeltaLink);
+            test.ShouldThrow<ODataException>().WithMessage(Strings.ODataResourceSet_MustNotContainBothNextPageLinkAndDeltaLink);
         }
 
         [Fact]
@@ -78,7 +78,7 @@ namespace Microsoft.OData.Core.Tests
         {
             this.odataFeed.DeltaLink = new Uri("http://www.example.com/deltaLink");
             Action test = () => this.odataFeed.NextPageLink = new Uri("http://www.example.com/nextPageLink");
-            test.ShouldThrow<ODataException>().WithMessage(Strings.ODataFeed_MustNotContainBothNextPageLinkAndDeltaLink);
+            test.ShouldThrow<ODataException>().WithMessage(Strings.ODataResourceSet_MustNotContainBothNextPageLinkAndDeltaLink);
         }
 
         [Fact]
@@ -88,23 +88,16 @@ namespace Microsoft.OData.Core.Tests
         }
 
         [Fact]
-        public void SerializationInfoShouldBeValidatedByTheSetter()
-        {
-            Action action = () => this.odataFeed.SerializationInfo = new ODataFeedAndEntrySerializationInfo();
-            action.ShouldThrow<ArgumentNullException>().WithMessage("serializationInfo.NavigationSourceName", ComparisonMode.Substring);
-        }
-
-        [Fact]
         public void ShouldBeAbleToSetSerializationInfo()
         {
-            this.odataFeed.SerializationInfo = new ODataFeedAndEntrySerializationInfo { NavigationSourceName = "Set", NavigationSourceEntityTypeName = "ns.base", ExpectedTypeName = "ns.expected" };
+            this.odataFeed.SerializationInfo = new ODataResourceSerializationInfo { NavigationSourceName = "Set", NavigationSourceEntityTypeName = "ns.base", ExpectedTypeName = "ns.expected" };
             this.odataFeed.SerializationInfo.NavigationSourceName.Should().Be("Set");
         }
 
         [Fact]
         public void ShouldBeAbleToSetSerializationInfoWithEdmUnknowEntitySet()
         {
-            this.odataFeed.SerializationInfo = new ODataFeedAndEntrySerializationInfo { NavigationSourceName = null, NavigationSourceKind = EdmNavigationSourceKind.UnknownEntitySet, NavigationSourceEntityTypeName = "ns.base", ExpectedTypeName = "ns.expected" };
+            this.odataFeed.SerializationInfo = new ODataResourceSerializationInfo { NavigationSourceName = null, NavigationSourceKind = EdmNavigationSourceKind.UnknownEntitySet, NavigationSourceEntityTypeName = "ns.base", ExpectedTypeName = "ns.expected" };
             this.odataFeed.SerializationInfo.NavigationSourceName.Should().BeNull();
         }
     }

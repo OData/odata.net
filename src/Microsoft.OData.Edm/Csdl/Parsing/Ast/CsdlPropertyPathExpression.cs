@@ -16,9 +16,9 @@ namespace Microsoft.OData.Edm.Csdl.Parsing.Ast
         {
         }
 
-        public override Expressions.EdmExpressionKind ExpressionKind
+        public override EdmExpressionKind ExpressionKind
         {
-            get { return Expressions.EdmExpressionKind.PropertyPath; }
+            get { return EdmExpressionKind.PropertyPath; }
         }
     }
 }

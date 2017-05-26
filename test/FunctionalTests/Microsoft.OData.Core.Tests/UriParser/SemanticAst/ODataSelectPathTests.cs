@@ -7,11 +7,11 @@
 using System;
 using System.Collections.Generic;
 using FluentAssertions;
-using Microsoft.OData.Core.UriParser.Semantic;
+using Microsoft.OData.UriParser;
 using Xunit;
-using ODataErrorStrings = Microsoft.OData.Core.Strings;
+using ODataErrorStrings = Microsoft.OData.Strings;
 
-namespace Microsoft.OData.Core.Tests.UriParser.SemanticAst
+namespace Microsoft.OData.Tests.UriParser.SemanticAst
 {
     public class ODataSelectPathTests
     {
@@ -19,14 +19,14 @@ namespace Microsoft.OData.Core.Tests.UriParser.SemanticAst
         public void SelectPathShouldNotAllowCountSegment()
         {
             Action buildWithCountSegment = () => new ODataSelectPath(CountSegment.Instance);
-            buildWithCountSegment.ShouldThrow<ODataException>(ODataErrorStrings.ODataSelectPath_InvalidSelectPathSegmentType("Microsoft.OData.Core.UriParser.Semantic.CountSegment"));
+            buildWithCountSegment.ShouldThrow<ODataException>(ODataErrorStrings.ODataSelectPath_InvalidSelectPathSegmentType("Microsoft.OData.UriParser.CountSegment"));
         }
 
         [Fact]
         public void SelectPathShouldNotAllowValueSegment()
         {
             Action buildWithCountSegment = () => new ODataSelectPath(new ValueSegment(ModelBuildingHelpers.BuildValidEntityType()));
-            buildWithCountSegment.ShouldThrow<ODataException>(ODataErrorStrings.ODataSelectPath_InvalidSelectPathSegmentType("Microsoft.OData.Core.UriParser.Semantic.ValueSegment"));
+            buildWithCountSegment.ShouldThrow<ODataException>(ODataErrorStrings.ODataSelectPath_InvalidSelectPathSegmentType("Microsoft.OData.UriParser.ValueSegment"));
         }
 
         [Fact]
@@ -41,7 +41,7 @@ namespace Microsoft.OData.Core.Tests.UriParser.SemanticAst
         {
             List<ODataPathSegment> typeSegments = new List<ODataPathSegment>() { new TypeSegment(HardCodedTestModel.GetPersonType(), null) };
             Action createWithTypeAsLastSegment = () => new ODataSelectPath(typeSegments);
-            createWithTypeAsLastSegment.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.ODataSelectPath_CannotEndInTypeSegment);
+            createWithTypeAsLastSegment.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.ODataSelectPath_CannotOnlyHaveTypeSegment);
         }
 
         [Fact]

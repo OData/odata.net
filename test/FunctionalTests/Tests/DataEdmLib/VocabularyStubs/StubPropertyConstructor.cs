@@ -4,10 +4,11 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+using Microsoft.OData.Edm;
+using Microsoft.OData.Edm.Vocabularies;
+
 namespace EdmLibTests.VocabularyStubs
 {
-    using Microsoft.OData.Edm.Expressions;
-
     public class StubPropertyConstructor : StubNonAnnotatedElement, IEdmPropertyConstructor
     {
         private string propertyName;

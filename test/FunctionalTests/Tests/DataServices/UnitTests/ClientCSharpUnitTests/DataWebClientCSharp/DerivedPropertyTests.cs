@@ -9,7 +9,6 @@ namespace AstoriaUnitTests.Tests.DerivedProperty
     using System;
     using System.Collections.Generic;
     using Microsoft.OData.Client;
-    using Microsoft.OData.Edm.Library;
     using Microsoft.OData.Service.Providers;
     using Microsoft.OData.Edm;
     using System.IO;
@@ -29,10 +28,11 @@ namespace AstoriaUnitTests.Tests.DerivedProperty
 
         #region TypeFilter tests
 
+        [Ignore] // Remove Atom
         [TestMethod]
         public void TypeFilterTests()
         {
-           SendRequestAndVerifyUriAndContext(ModelWithDerivedNavigationProperties(), GetTypeFilterTests);
+            SendRequestAndVerifyUriAndContext(ModelWithDerivedNavigationProperties(), GetTypeFilterTests);
         }
 
         IEnumerable<Tuple<Func<DataServiceContext, IQueryable>[], Func<DataServiceContext, string>, Action<DataServiceContext, IQueryable, List<object>>>> GetTypeFilterTests()
@@ -286,6 +286,7 @@ namespace AstoriaUnitTests.Tests.DerivedProperty
 
         #region OrderBy tests
 
+        [Ignore] // Remove Atom
         [TestMethod]
         public void OrderByTests()
         {
@@ -498,7 +499,7 @@ namespace AstoriaUnitTests.Tests.DerivedProperty
         #endregion OrderBy tests
 
         #region Filter tests
-
+        [Ignore] // Remove Atom
         [TestMethod]
         public void FilterTests()
         {
@@ -619,7 +620,7 @@ namespace AstoriaUnitTests.Tests.DerivedProperty
         #endregion Filter tests
 
         #region Expand tests
-
+        [Ignore] // Remove Atom
         [TestMethod]
         public void ExpandTests()
         {
@@ -706,6 +707,7 @@ namespace AstoriaUnitTests.Tests.DerivedProperty
 
         #endregion Expand tests
 
+        [Ignore] // Remove Atom
         [TestMethod]
         public void ProjectionTests()
         {
@@ -1339,7 +1341,7 @@ namespace AstoriaUnitTests.Tests.DerivedProperty
                         MyID = e.ID,
                         OfficeBuilding = (e as PeopleManager).Office == null ? null : (e as PeopleManager).Office.Building,
                         OfficeNumber = (e as PeopleManager).Office == null ? 0 : (e as PeopleManager).Office.OfficeNumber,
-                        Colleagues = (e as Employee).Manager == null ? null : ((e as Employee).Manager.DirectReports == null ? null : (e as Employee).Manager.DirectReports.Select(co => new { MyID = co.ID, Name = co.Name }).ToList()),    
+                        Colleagues = (e as Employee).Manager == null ? null : ((e as Employee).Manager.DirectReports == null ? null : (e as Employee).Manager.DirectReports.Select(co => new { MyID = co.ID, Name = co.Name }).ToList()),
                         SkipLevelManager = (e as Employee).Manager == null ? null : ((e as Employee).Manager.Manager == null ? null : new { MyID = (e as Employee).Manager.Manager.ID, Name = (e as Employee).Manager.Manager.Name }),
                     }),
                     c => c.CreateQuery<Person>("People").Select(e => new MyEmployeeNonEntity
@@ -1347,7 +1349,7 @@ namespace AstoriaUnitTests.Tests.DerivedProperty
                         MyID = e.ID,
                         OfficeBuilding = (e as PeopleManager).Office == null ? null : (e as PeopleManager).Office.Building,
                         OfficeNumber = (e as PeopleManager).Office == null ? 0 : (e as PeopleManager).Office.OfficeNumber,
-                        Colleagues = (e as Employee).Manager == null ? null : ((e as Employee).Manager.DirectReports == null ? null : (e as Employee).Manager.DirectReports.Select(co => new MyEmployeeNonEntity { MyID = co.ID, Name = co.Name }).ToList()),    
+                        Colleagues = (e as Employee).Manager == null ? null : ((e as Employee).Manager.DirectReports == null ? null : (e as Employee).Manager.DirectReports.Select(co => new MyEmployeeNonEntity { MyID = co.ID, Name = co.Name }).ToList()),
                         SkipLevelManager = (e as Employee).Manager == null ? null : ((e as Employee).Manager.Manager == null ? null : new MyEmployeeNonEntity { MyID = (e as Employee).Manager.Manager.ID, Name = (e as Employee).Manager.Manager.Name }),
                     }),
                 },
@@ -1485,33 +1487,10 @@ namespace AstoriaUnitTests.Tests.DerivedProperty
                         }
                     }
                 }
-            );        
+            );
         }
 
-        [TestMethod]
-        public void NegativeQueryTests_AtomTracking()
-        {
-            VerifyNegativeQueryErrorMessage(ModelWithDerivedNavigationProperties(), GetNegativeQueryTests, context => { context.MergeOption = MergeOption.AppendOnly;  });
-        }
-
-        [TestMethod]
-        public void NegativeQueryTests_AtomNoTracking()
-        {
-            VerifyNegativeQueryErrorMessage(ModelWithDerivedNavigationProperties(), GetNegativeQueryTests, context => { context.MergeOption = MergeOption.NoTracking; });
-        }
-
-        [TestMethod]
-        public void NegativeQueryTestsForMissingProperty_AtomTracking()
-        {
-            VerifyNegativeQueryErrorMessage(ModelWithDerivedNavigationProperties(), this.GetNegativeQueryTestsForMissingProperty, context => { context.MergeOption = MergeOption.AppendOnly; });
-        }
-
-        [TestMethod]
-        public void NegativeQueryTestsForMissingProperty_AtomNoTracking()
-        {
-            VerifyNegativeQueryErrorMessage(ModelWithDerivedNavigationProperties(), this.GetNegativeQueryTestsForMissingProperty, context => { context.MergeOption = MergeOption.NoTracking; });
-        }
-
+        [Ignore] // Remove Atom
         [TestMethod]
         public void NegativeQueryTestsForMissingProperty_JsonTracking()
         {
@@ -1525,6 +1504,7 @@ namespace AstoriaUnitTests.Tests.DerivedProperty
                 });
         }
 
+        [Ignore] // Remove Atom
         [TestMethod]
         public void NegativeQueryTestsForMissingProperty_JsonNoTracking()
         {
@@ -1788,14 +1768,14 @@ namespace AstoriaUnitTests.Tests.DerivedProperty
                 request.StartService();
 
                 DataServiceContext context = new DataServiceContext(new Uri(request.BaseUri), ODataProtocolVersion.V4);
-                context.EnableAtom = true;
-                context.Format.UseAtom();
-                
+                //context.EnableAtom = true;
+                //context.Format.UseAtom();
+
                 if (configureContext != null)
                 {
                     configureContext(context);
                 }
-                
+
                 t.TestUtil.RunCombinations(getTestCases(context), testCase =>
                 {
                     var queries = testCase.Item1;
@@ -1869,8 +1849,8 @@ namespace AstoriaUnitTests.Tests.DerivedProperty
                             request.SendRequest(host);
                             return new DataServiceHostResponseMessage(host);
                         });
-                        ctx.EnableAtom = true;
-                        ctx.Format.UseAtom();
+                        //ctx.EnableAtom = true;
+                        //ctx.Format.UseAtom();
 
                         if (version < ODataProtocolVersion.V4)
                         {
@@ -2122,7 +2102,7 @@ namespace AstoriaUnitTests.Tests.DerivedProperty
         #region DataServiceContext Tests
 
         #region AddLink
-
+        [Ignore] // Remove Atom
         [TestMethod]
         public void AddLinkTests()
         {
@@ -2270,7 +2250,7 @@ namespace AstoriaUnitTests.Tests.DerivedProperty
 
                 Assert.IsNotNull(ctx.Links.SingleOrDefault(l => l.SourceProperty == "DirectReports" && l.Source == shyam && l.Target == pratik));
             },
-            new List<Version>() { V4, V4},
+            new List<Version>() { V4, V4 },
             null);
 
             // add link to newly added objects, for derived property
@@ -2341,7 +2321,7 @@ namespace AstoriaUnitTests.Tests.DerivedProperty
         #endregion AddLink
 
         #region SetLink
-
+        [Ignore] // Remove Atom
         [TestMethod]
         public void SetLinkTests()
         {
@@ -2586,7 +2566,7 @@ namespace AstoriaUnitTests.Tests.DerivedProperty
         #endregion SetLink
 
         #region DeleteLink
-
+        [Ignore] // Remove Atom
         [TestMethod]
         public void DeleteLinkTests()
         {
@@ -2696,14 +2676,14 @@ namespace AstoriaUnitTests.Tests.DerivedProperty
                 Assert.AreEqual(6, marcelo.ID);
                 Assert.AreEqual(1, ctx.Links.Count());
             },
-            new List<Version>() { V4 , V4 },
+            new List<Version>() { V4, V4 },
             null);
         }
 
         #endregion DeleteLink
 
         #region AddRelatedObject
-
+        [Ignore] // Remove Atom
         [TestMethod]
         public void AddRelatedObjectTests()
         {
@@ -2838,7 +2818,7 @@ namespace AstoriaUnitTests.Tests.DerivedProperty
         #endregion AddRelatedObject
 
         #region LoadProperty
-
+        [Ignore] // Remove Atom
         [TestMethod]
         public void LoadPropertyTests()
         {
@@ -2909,7 +2889,7 @@ namespace AstoriaUnitTests.Tests.DerivedProperty
         #endregion LoadProperty
 
         #region NamedStreams
-
+        [Ignore] // Remove Atom
         [TestMethod]
         public void NamedStreamTests()
         {
@@ -2949,9 +2929,9 @@ namespace AstoriaUnitTests.Tests.DerivedProperty
             {
                 var query = ctx.CreateQuery<Person>("People").Where(p => p.ID == 3);
                 Employee pratik = (Employee)query.Single();
-                ctx.SetSaveStream(pratik, "Photo", new MemoryStream(new byte[] { 1,2,3}), true, "abc/pqr");
+                ctx.SetSaveStream(pratik, "Photo", new MemoryStream(new byte[] { 1, 2, 3 }), true, "abc/pqr");
                 ctx.SaveChanges(saveChangeOption);
-                
+
                 DataServiceRequestArgs arg = new DataServiceRequestArgs() { AcceptContentType = "abc/pqr" };
                 var response = ctx.GetReadStream(pratik, "Photo", new DataServiceRequestArgs() { AcceptContentType = "abc/pqr" });
                 byte[] buffer = new byte[4];
@@ -2977,8 +2957,8 @@ namespace AstoriaUnitTests.Tests.DerivedProperty
                 {
                     request.StartService();
                     DataServiceContext ctx = new DataServiceContext(new Uri(request.BaseUri, UriKind.Absolute), ODataProtocolVersion.V4);
-                    ctx.EnableAtom = true;
-                    ctx.Format.UseAtom();
+                    //ctx.EnableAtom = true;
+                    //ctx.Format.UseAtom();
                     ctx.ResolveType = (typeName) =>
                     {
                         if (typeName == typeof(Employee).FullName)
@@ -3230,7 +3210,7 @@ namespace AstoriaUnitTests.Tests.DerivedProperty
             };
 
             return service;
-            
+
         }
 
         private IEdmModel LoadModelFromString()
@@ -3283,7 +3263,7 @@ namespace AstoriaUnitTests.Tests.DerivedProperty
 	</edmx:DataServices>
 </edmx:Edmx>";
             System.Xml.XmlReader reader = System.Xml.XmlReader.Create(new StringReader(metadata));
-            IEdmModel model = Microsoft.OData.Edm.Csdl.EdmxReader.Parse(reader);
+            IEdmModel model = Microsoft.OData.Edm.Csdl.CsdlReader.Parse(reader);
             return model;
         }
     }

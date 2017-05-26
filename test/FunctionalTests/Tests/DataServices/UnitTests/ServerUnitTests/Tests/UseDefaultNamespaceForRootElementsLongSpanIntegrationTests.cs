@@ -17,6 +17,7 @@ namespace AstoriaUnitTests.Tests
     using AstoriaUnitTests.Stubs;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
+    [Ignore] // Remove Atom
     [TestClass]
     public class UseDefaultNamespaceForRootElementsLongSpanIntegrationTests
     {
@@ -182,7 +183,6 @@ namespace AstoriaUnitTests.Tests
                 config.UseVerboseErrors = true;
 
                 config.DataServiceBehavior.MaxProtocolVersion = ODataProtocolVersion.V4;
-                config.DataServiceBehavior.AlwaysUseDefaultXmlNamespaceForRootElement = true;
             }
 
             [WebGet]

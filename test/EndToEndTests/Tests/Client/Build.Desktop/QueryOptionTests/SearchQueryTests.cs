@@ -11,7 +11,7 @@ namespace Microsoft.Test.OData.Tests.Client.QueryOptionTests
     using System.Linq;
     using System.Text;
     using System.Threading.Tasks;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.Test.OData.Services.TestServices;
     using Microsoft.Test.OData.Tests.Client.Common;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -38,7 +38,7 @@ namespace Microsoft.Test.OData.Tests.Client.QueryOptionTests
         {
             foreach (var mimeType in mimeTypes)
             {
-                List<ODataEntry> details = this.TestsHelper.QueryFeed("ProductDetails?$search=(drink OR snack) AND (suger OR sweet) AND NOT \"0\"", mimeType);
+                List<ODataResource> details = this.TestsHelper.QueryFeed("ProductDetails?$search=(drink OR snack) AND (suger OR sweet) AND NOT \"0\"", mimeType);
                 if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
                 {
                     Assert.AreEqual(2, details.Count);
@@ -78,7 +78,7 @@ namespace Microsoft.Test.OData.Tests.Client.QueryOptionTests
         {
             foreach (var mimeType in mimeTypes)
             {
-                List<ODataEntry> details = this.TestsHelper.QueryFeed("ProductDetails?$filter=contains(Description,'drink')&$search=suger OR spicy NOT \"0\"&$select=Description", mimeType);
+                List<ODataResource> details = this.TestsHelper.QueryFeed("ProductDetails?$filter=contains(Description,'drink')&$search=suger OR spicy NOT \"0\"&$select=Description", mimeType);
                 if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
                 {
                     Assert.AreEqual(2, details.Count);
@@ -90,7 +90,7 @@ namespace Microsoft.Test.OData.Tests.Client.QueryOptionTests
                     }
                 }
 
-                List<ODataEntry> entries = this.TestsHelper.QueryFeed("ProductDetails?$search=suger OR sweet&$orderby=ProductName&$expand=Reviews", mimeType);
+                List<ODataResource> entries = this.TestsHelper.QueryFeed("ProductDetails?$search=suger OR sweet&$orderby=ProductName&$expand=Reviews", mimeType);
                 if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
                 {
                     Assert.AreEqual(7, entries.Count);

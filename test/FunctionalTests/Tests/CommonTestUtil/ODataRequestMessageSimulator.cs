@@ -10,7 +10,7 @@ namespace AstoriaUnitTests.TDD.Tests
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
 
     public class ODataRequestMessageSimulator : IODataRequestMessage
     {

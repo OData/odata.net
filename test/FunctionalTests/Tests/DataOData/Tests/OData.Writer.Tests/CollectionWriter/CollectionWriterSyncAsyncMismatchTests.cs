@@ -11,7 +11,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.CollectionWriter
 {
     using System;
     using System.Linq;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.Test.OData.Utils.CombinatorialEngine;
     using Microsoft.Test.Taupo.Execution;
     using Microsoft.Test.Taupo.OData.Common;
@@ -61,13 +61,14 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.CollectionWriter
             },
         };
 
+        [Ignore] // Remove Atom
         [TestMethod, Variation(Description = "Verifies that sync and async calls cannot be mixed on a single collection writer.")]
         public void SyncAsyncMismatchTest()
         {
             // ToDo: Fix places where we've lost JsonVerbose coverage to add JsonLight
             this.CombinatorialEngineProvider.RunCombinations(
                 TestCalls,
-                this.WriterTestConfigurationProvider.ExplicitFormatConfigurations.Where(tc => !tc.IsRequest && tc.Format == ODataFormat.Atom),
+                this.WriterTestConfigurationProvider.ExplicitFormatConfigurations.Where(tc => false),
                 new bool[] { false, true },
                 (testCall, testConfiguration, testSynchronousCall) =>
                 {

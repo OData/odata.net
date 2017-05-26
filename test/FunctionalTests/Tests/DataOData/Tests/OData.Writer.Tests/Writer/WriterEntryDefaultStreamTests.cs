@@ -9,7 +9,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
     using System;
     using System.Linq;
     using System.Xml.Linq;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.Test.OData.Utils.CombinatorialEngine;
     using Microsoft.Test.Taupo.Common;
     using Microsoft.Test.Taupo.Execution;
@@ -37,6 +37,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 JsonConstants.ODataMetadataMediaETagPropertyName
             };
 
+        [Ignore] // Remove Atom
         [TestMethod, Variation(Description = "Validates the payloads for various default streams.")]
         public void EntryDefaultStreamTest()
         {
@@ -83,7 +84,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
 
             var testDescriptors = testCases.Select(testCase =>
                 {
-                    ODataEntry entry = ObjectModelUtils.CreateDefaultEntry();
+                    ODataResource entry = ObjectModelUtils.CreateDefaultEntry();
                     entry.Properties = new ODataProperty[] { new ODataProperty { Name = "ID", Value = "foo" } };
                     entry.MediaResource = testCase.DefaultStream;
                     return new PayloadWriterTestDescriptor<ODataItem>(

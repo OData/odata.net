@@ -8,31 +8,30 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using FluentAssertions;
-using Microsoft.OData.Core.Evaluation;
 using Microsoft.OData.Edm;
-using Microsoft.OData.Edm.Library;
+using Microsoft.OData.Evaluation;
 using Xunit;
 
-namespace Microsoft.OData.Core.Tests.Evaluation
+namespace Microsoft.OData.Tests.Evaluation
 {
     public class ODataConventionalEntityMetadataBuilderTests
     {
         private static readonly Uri DefaultBaseUri = new Uri("http://odata.org/base/");
         private static readonly Uri MetadataDocumentUri = new Uri(DefaultBaseUri, "$metadata");
         private static readonly TestModel TestModel = TestModel.Initialize();
-        private readonly SelectedPropertiesNode selectedProperties = SelectedPropertiesNode.EntireSubtree;
 
-        private readonly ODataConventionalUriBuilder uriBuilder = new ODataConventionalUriBuilder(DefaultBaseUri, UrlConvention.CreateWithExplicitValue(false));
-        private readonly TestMetadataContext metadataContext = new TestMetadataContext { GetMetadataDocumentUriFunc = () => MetadataDocumentUri, GetModelFunc = () => TestModel.Model, OperationsBoundToEntityTypeMustBeContainerQualifiedFunc = type => false };
-        private ODataEntry productEntry;
+        private readonly ODataConventionalUriBuilder uriBuilder = new ODataConventionalUriBuilder(DefaultBaseUri,
+            ODataUrlKeyDelimiter.Parentheses);
+        private readonly TestMetadataContext metadataContext = new TestMetadataContext { GetMetadataDocumentUriFunc = () => MetadataDocumentUri, GetModelFunc = () => TestModel.Model, OperationsBoundToStructuredTypeMustBeContainerQualifiedFunc = type => false };
+        private ODataResource productEntry;
         private Dictionary<string, object> sinlgeKeyCollection;
         private Dictionary<string, object> multiKeysCollection;
         private ODataConventionalEntityMetadataBuilder productConventionalEntityMetadataBuilder;
-        private ODataEntry derivedMultiKeyMultiEtagMleEntry;
+        private ODataResource derivedMultiKeyMultiEtagMleEntry;
         private ODataConventionalEntityMetadataBuilder derivedMultiKeyMultiEtagMleConventionalEntityMetadataBuilder;
-        private ODataEntry containedCollectionProductEntry;
+        private ODataResource containedCollectionProductEntry;
         private ODataConventionalEntityMetadataBuilder containedCollectionProductConventionalEntityMetadataBuilder;
-        private ODataEntry containedProductEntry;
+        private ODataResource containedProductEntry;
         private ODataConventionalEntityMetadataBuilder containedProductConventionalEntityMetadataBuilder;
         private Dictionary<string, object> containedSinlgeKeyCollection;
         private Dictionary<string, object> containedMultiKeysCollection;
@@ -46,7 +45,7 @@ namespace Microsoft.OData.Core.Tests.Evaluation
         {
             #region Product Entry
 
-            this.productEntry = new ODataEntry();
+            this.productEntry = new ODataResource();
             this.sinlgeKeyCollection = new Dictionary<string, object>() { { "Id", 42 } };
             this.multiKeysCollection = new Dictionary<string, object>() { { "KeyA", "keya" }, { "KeyB", 1 } };
 
@@ -54,9 +53,8 @@ namespace Microsoft.OData.Core.Tests.Evaluation
             {
                 NavigationSourceName = EntitySetName,
                 NavigationSourceEntityTypeName = EntityTypeName,
-                ExpectedEntityTypeName = EntityTypeName,
+                ExpectedResourceTypeName = EntityTypeName,
                 IsMediaLinkEntry = false,
-                UrlConvention = UrlConvention.CreateWithExplicitValue(/*generateKeyAsSegment*/ false),
                 IsFromCollection = false,
                 NavigationSourceKind = EdmNavigationSourceKind.EntitySet
             };
@@ -64,10 +62,10 @@ namespace Microsoft.OData.Core.Tests.Evaluation
             TestEntryMetadataContext productEntryMetadataContext = new TestEntryMetadataContext
             {
                 TypeContext = productTypeContext,
-                Entry = this.productEntry,
+                Resource = this.productEntry,
                 ETagProperties = new[] { new KeyValuePair<string, object>("Name", "Value") },
                 KeyProperties = this.sinlgeKeyCollection,
-                ActualEntityTypeName = EntityTypeName,
+                ActualResourceTypeName = EntityTypeName,
                 SelectedBindableOperations = new IEdmOperation[0],
                 SelectedNavigationProperties = new IEdmNavigationProperty[0],
                 SelectedStreamProperties = new Dictionary<string, IEdmStructuralProperty>()
@@ -85,24 +83,23 @@ namespace Microsoft.OData.Core.Tests.Evaluation
 
             var function = new EdmFunction("TestModel", "Function", /*returnType*/ EdmCoreModel.Instance.GetInt32(true), /*isBindable*/ true, /*entitySet*/ null, false /*isComposable*/);
             var functionImport = new EdmFunctionImport(TestModel.Container, "Function", function);
-            this.derivedMultiKeyMultiEtagMleEntry = new ODataEntry();
+            this.derivedMultiKeyMultiEtagMleEntry = new ODataResource();
             TestFeedAndEntryTypeContext derivedMultiKeyMultiEtagMleTypeContext = new TestFeedAndEntryTypeContext
             {
                 NavigationSourceName = EntitySetName,
                 NavigationSourceEntityTypeName = EntityTypeName,
-                ExpectedEntityTypeName = DerivedEntityTypeName,
+                ExpectedResourceTypeName = DerivedEntityTypeName,
                 IsMediaLinkEntry = true,
-                UrlConvention = UrlConvention.CreateWithExplicitValue(/*generateKeyAsSegment*/ false),
                 IsFromCollection = false
             };
             TestEntryMetadataContext derivedProductMleEntryMetadataContext = new TestEntryMetadataContext
             {
                 TypeContext = derivedMultiKeyMultiEtagMleTypeContext,
-                Entry = this.derivedMultiKeyMultiEtagMleEntry,
+                Resource = this.derivedMultiKeyMultiEtagMleEntry,
                 ETagProperties = new[] { new KeyValuePair<string, object>("ETag1", "ETagValue1"), new KeyValuePair<string, object>("ETag2", "ETagValue2") },
                 KeyProperties = this.multiKeysCollection,
-                ActualEntityTypeName = DerivedMleEntityTypeName,
-                SelectedBindableOperations = new IEdmOperation[] 
+                ActualResourceTypeName = DerivedMleEntityTypeName,
+                SelectedBindableOperations = new IEdmOperation[]
                 {
                     action,
                     function
@@ -121,7 +118,7 @@ namespace Microsoft.OData.Core.Tests.Evaluation
 
             #region Contained Product Entry
 
-            this.containedCollectionProductEntry = new ODataEntry();
+            this.containedCollectionProductEntry = new ODataResource();
             this.containedSinlgeKeyCollection = new Dictionary<string, object>() { { "Id", 43 } };
             this.containedMultiKeysCollection = new Dictionary<string, object>() { { "KeyA", "keya" }, { "KeyB", 2 } };
 
@@ -129,9 +126,8 @@ namespace Microsoft.OData.Core.Tests.Evaluation
             {
                 NavigationSourceName = EntitySetName,
                 NavigationSourceEntityTypeName = EntityTypeName,
-                ExpectedEntityTypeName = EntityTypeName,
+                ExpectedResourceTypeName = EntityTypeName,
                 IsMediaLinkEntry = false,
-                UrlConvention = UrlConvention.CreateWithExplicitValue(/*generateKeyAsSegment*/ false),
                 NavigationSourceKind = EdmNavigationSourceKind.ContainedEntitySet,
                 IsFromCollection = true
             };
@@ -139,10 +135,10 @@ namespace Microsoft.OData.Core.Tests.Evaluation
             TestEntryMetadataContext containedCollectionProductEntryMetadataContext = new TestEntryMetadataContext
             {
                 TypeContext = containedCollectionProductTypeContext,
-                Entry = this.containedCollectionProductEntry,
+                Resource = this.containedCollectionProductEntry,
                 ETagProperties = new[] { new KeyValuePair<string, object>("Name", "Value") },
                 KeyProperties = this.containedSinlgeKeyCollection,
-                ActualEntityTypeName = EntityTypeName,
+                ActualResourceTypeName = EntityTypeName,
                 SelectedBindableOperations = new IEdmOperation[0],
                 SelectedNavigationProperties = new IEdmNavigationProperty[0],
                 SelectedStreamProperties = new Dictionary<string, IEdmStructuralProperty>()
@@ -152,7 +148,7 @@ namespace Microsoft.OData.Core.Tests.Evaluation
             this.containedCollectionProductEntry.MetadataBuilder = this.containedCollectionProductConventionalEntityMetadataBuilder;
             this.containedCollectionProductEntry.MetadataBuilder.ParentMetadataBuilder = this.productConventionalEntityMetadataBuilder;
 
-            this.containedProductEntry = new ODataEntry();
+            this.containedProductEntry = new ODataResource();
             this.containedSinlgeKeyCollection = new Dictionary<string, object>() { { "Id", 43 } };
             this.containedMultiKeysCollection = new Dictionary<string, object>() { { "KeyA", "keya" }, { "KeyB", 2 } };
 
@@ -160,9 +156,8 @@ namespace Microsoft.OData.Core.Tests.Evaluation
             {
                 NavigationSourceName = EntitySetName,
                 NavigationSourceEntityTypeName = EntityTypeName,
-                ExpectedEntityTypeName = EntityTypeName,
+                ExpectedResourceTypeName = EntityTypeName,
                 IsMediaLinkEntry = false,
-                UrlConvention = UrlConvention.CreateWithExplicitValue(/*generateKeyAsSegment*/ false),
                 NavigationSourceKind = EdmNavigationSourceKind.ContainedEntitySet,
                 IsFromCollection = false
             };
@@ -170,10 +165,10 @@ namespace Microsoft.OData.Core.Tests.Evaluation
             TestEntryMetadataContext containedProductEntryMetadataContext = new TestEntryMetadataContext
             {
                 TypeContext = containedProductTypeContext,
-                Entry = this.containedCollectionProductEntry,
+                Resource = this.containedCollectionProductEntry,
                 ETagProperties = new[] { new KeyValuePair<string, object>("Name", "Value") },
                 KeyProperties = this.containedSinlgeKeyCollection,
-                ActualEntityTypeName = EntityTypeName,
+                ActualResourceTypeName = EntityTypeName,
                 SelectedBindableOperations = new IEdmOperation[0],
                 SelectedNavigationProperties = new IEdmNavigationProperty[0],
                 SelectedStreamProperties = new Dictionary<string, IEdmStructuralProperty>()
@@ -596,7 +591,7 @@ namespace Microsoft.OData.Core.Tests.Evaluation
         [Fact]
         public void ETagShouldBeNullForTypeWithoutConcurrencyTokens()
         {
-            var testSubject = new ODataConventionalEntityMetadataBuilder(new TestEntryMetadataContext { Entry = new ODataEntry(), ETagProperties = new KeyValuePair<string, object>[0] }, this.metadataContext, this.uriBuilder);
+            var testSubject = new ODataConventionalEntityMetadataBuilder(new TestEntryMetadataContext { Resource = new ODataResource(), ETagProperties = new KeyValuePair<string, object>[0] }, this.metadataContext, this.uriBuilder);
             testSubject.GetETag().Should().Be((string)null);
         }
 
@@ -604,27 +599,27 @@ namespace Microsoft.OData.Core.Tests.Evaluation
         public void EtagShouldBeUriEscaped()
         {
             // if this fails System.Uri has changed its behavior and we may need to adjust how we encode our strings for JsonLight
-            // .net 45 changed this behavior initially to escape ' to a value, but was changed. below test 
-            // validates that important uri literal values that OData uses don't change, and that we escape characters when 
+            // .net 45 changed this behavior initially to escape ' to a value, but was changed. below test
+            // validates that important uri literal values that OData uses don't change, and that we escape characters when
             // producing the etag for JsonLight
             var escapedStrings = Uri.EscapeUriString(@".:''-");
             escapedStrings.Should().Be(@".:''-");
 
-            var testSubject = new ODataConventionalEntityMetadataBuilder(new TestEntryMetadataContext { Entry = new ODataEntry(), ETagProperties = new[] { new KeyValuePair<string, object>("ETag", "Value ") } }, this.metadataContext, this.uriBuilder);
+            var testSubject = new ODataConventionalEntityMetadataBuilder(new TestEntryMetadataContext { Resource = new ODataResource(), ETagProperties = new[] { new KeyValuePair<string, object>("ETag", "Value ") } }, this.metadataContext, this.uriBuilder);
             testSubject.GetETag().Should().Be(@"W/""'Value%20'""");
         }
 
         [Fact]
         public void ETagShouldBeCorrectForTypeWithOneConcurrencyToken()
         {
-            var testSubject = new ODataConventionalEntityMetadataBuilder(new TestEntryMetadataContext { Entry = new ODataEntry(), ETagProperties = new[] { new KeyValuePair<string, object>("ETag", "Value") } }, this.metadataContext, this.uriBuilder);
+            var testSubject = new ODataConventionalEntityMetadataBuilder(new TestEntryMetadataContext { Resource = new ODataResource(), ETagProperties = new[] { new KeyValuePair<string, object>("ETag", "Value") } }, this.metadataContext, this.uriBuilder);
             testSubject.GetETag().Should().Be(@"W/""'Value'""");
         }
 
         [Fact]
         public void ETagShouldBeCorrectForNullConcurrencyToken()
         {
-            var testSubject = new ODataConventionalEntityMetadataBuilder(new TestEntryMetadataContext { Entry = new ODataEntry(), ETagProperties = new[] { new KeyValuePair<string, object>("ETag", default(string)) } }, this.metadataContext, this.uriBuilder);
+            var testSubject = new ODataConventionalEntityMetadataBuilder(new TestEntryMetadataContext { Resource = new ODataResource(), ETagProperties = new[] { new KeyValuePair<string, object>("ETag", default(string)) } }, this.metadataContext, this.uriBuilder);
             testSubject.GetETag().Should().Be(@"W/""null""");
         }
 
@@ -633,12 +628,12 @@ namespace Microsoft.OData.Core.Tests.Evaluation
         {
             var values = new[]
             {
-                new KeyValuePair<string, object>("ETag1", 1.2345e+45), 
-                new KeyValuePair<string, object>("ETag2", new byte[] { 1, 2, 3 }), 
+                new KeyValuePair<string, object>("ETag1", 1.2345e+45),
+                new KeyValuePair<string, object>("ETag2", new byte[] { 1, 2, 3 }),
                 new KeyValuePair<string, object>("ETag3", 2.3M)
             };
 
-            var testSubject = new ODataConventionalEntityMetadataBuilder(new TestEntryMetadataContext { Entry = new ODataEntry(), ETagProperties = values }, this.metadataContext, this.uriBuilder);
+            var testSubject = new ODataConventionalEntityMetadataBuilder(new TestEntryMetadataContext { Resource = new ODataResource(), ETagProperties = values }, this.metadataContext, this.uriBuilder);
             testSubject.GetETag().Should().Be(@"W/""1.2345E%2B45,binary'AQID',2.3""");
         }
 
@@ -647,13 +642,13 @@ namespace Microsoft.OData.Core.Tests.Evaluation
         {
             var values = new[]
             {
-                new KeyValuePair<string, object>("ETagLong", 1L), 
-                new KeyValuePair<string, object>("ETagFloat", 1.0F), 
+                new KeyValuePair<string, object>("ETagLong", 1L),
+                new KeyValuePair<string, object>("ETagFloat", 1.0F),
                 new KeyValuePair<string, object>("ETagDouble", 1.0D),
                 new KeyValuePair<string, object>("ETagDecimal", 1.0M)
             };
 
-            var testSubject = new ODataConventionalEntityMetadataBuilder(new TestEntryMetadataContext { Entry = new ODataEntry(), ETagProperties = values }, this.metadataContext, this.uriBuilder);
+            var testSubject = new ODataConventionalEntityMetadataBuilder(new TestEntryMetadataContext { Resource = new ODataResource(), ETagProperties = values }, this.metadataContext, this.uriBuilder);
             testSubject.GetETag().Should().Be(@"W/""1,1,1.0,1.0""");
         }
         #endregion Tests for GetETag()
@@ -883,45 +878,45 @@ namespace Microsoft.OData.Core.Tests.Evaluation
         }
         #endregion Tests for GetAssociationLinkUri()
 
-        #region Tests for MarkNavigationLinkAsProcessed() and GetNextUnprocessedNavigationLink()
+        #region Tests for MarkNestedResourceInfoAsProcessed() and GetNextUnprocessedNestedResourceInfo()
         [Fact]
-        public void GetNextUnprocessedNavigationLinkShouldBeNullIfTypeHasNoNavProps()
+        public void GetNextUnprocessedNestedResourceInfoShouldBeNullIfTypeHasNoNavProps()
         {
             this.productConventionalEntityMetadataBuilder.GetNextUnprocessedNavigationLink()
                 .Should().BeNull();
         }
 
         [Fact]
-        public void GetNextUnprocessedNavigationLinkShouldReturnNavProps()
+        public void GetNextUnprocessedNestedResourceInfoShouldReturnNavProps()
         {
             var nextNavProp = this.derivedMultiKeyMultiEtagMleConventionalEntityMetadataBuilder.GetNextUnprocessedNavigationLink();
-            nextNavProp.NavigationLink.Name.Should().Be("RelatedProducts");
+            nextNavProp.NestedResourceInfo.Name.Should().Be("RelatedProducts");
 
             nextNavProp = this.derivedMultiKeyMultiEtagMleConventionalEntityMetadataBuilder.GetNextUnprocessedNavigationLink();
-            nextNavProp.NavigationLink.Name.Should().Be("RelatedDerivedProduct");
+            nextNavProp.NestedResourceInfo.Name.Should().Be("RelatedDerivedProduct");
         }
 
         [Fact]
-        public void GetNextUnprocessedNavigationLinkShouldNotReturnNavPropsThatWerePreviouslyMarkedAsProcessed()
+        public void GetNextUnprocessedNestedResourceInfoShouldNotReturnNavPropsThatWerePreviouslyMarkedAsProcessed()
         {
-            this.derivedMultiKeyMultiEtagMleConventionalEntityMetadataBuilder.MarkNavigationLinkProcessed("RelatedDerivedProduct");
+            this.derivedMultiKeyMultiEtagMleConventionalEntityMetadataBuilder.MarkNestedResourceInfoProcessed("RelatedDerivedProduct");
 
             var nextNavProp = this.derivedMultiKeyMultiEtagMleConventionalEntityMetadataBuilder.GetNextUnprocessedNavigationLink();
-            nextNavProp.NavigationLink.Name.Should().Be("RelatedProducts");
+            nextNavProp.NestedResourceInfo.Name.Should().Be("RelatedProducts");
 
             nextNavProp = this.derivedMultiKeyMultiEtagMleConventionalEntityMetadataBuilder.GetNextUnprocessedNavigationLink();
             nextNavProp.Should().BeNull();
         }
 
         [Fact]
-        public void GetNextUnprocessedNavigationLinkShouldReturnANavPropWithoutUrls()
+        public void GetNextUnprocessedNestedResourceInfoShouldReturnANavPropWithoutUrls()
         {
             // Note: it is up to the reader and writer to later add a metadata builder to navigation links generated this way.
             var nextNavProp = this.derivedMultiKeyMultiEtagMleConventionalEntityMetadataBuilder.GetNextUnprocessedNavigationLink();
-            nextNavProp.NavigationLink.Url.Should().BeNull();
-            nextNavProp.NavigationLink.AssociationLinkUrl.Should().BeNull();
+            nextNavProp.NestedResourceInfo.Url.Should().BeNull();
+            nextNavProp.NestedResourceInfo.AssociationLinkUrl.Should().BeNull();
         }
-        #endregion Tests for MarkNavigationLinkAsProcessed() and GetNextUnprocessedNavigationLink()
+        #endregion Tests for MarkNestedResourceInfoAsProcessed() and GetNextUnprocessedNestedResourceInfo()
 
         #region Tests for GetOperationTargetUri()
         [Fact]
@@ -1104,18 +1099,17 @@ namespace Microsoft.OData.Core.Tests.Evaluation
             {
                 NavigationSourceName = "Boss",
                 NavigationSourceEntityTypeName = "BossType",
-                ExpectedEntityTypeName = "BossType",
-                UrlConvention = UrlConvention.CreateWithExplicitValue(/*generateKeyAsSegment*/ false),
+                ExpectedResourceTypeName = "BossType",
                 NavigationSourceKind = EdmNavigationSourceKind.Singleton,
             };
 
             var singletonEntryMetadataContext = new TestEntryMetadataContext
             {
                 TypeContext = singletonEntryTypeContext,
-                Entry = new ODataEntry(),
+                Resource = new ODataResource(),
                 ETagProperties = new[] { new KeyValuePair<string, object>("Name", "Value") },
                 KeyProperties = this.sinlgeKeyCollection,
-                ActualEntityTypeName = "BossType",
+                ActualResourceTypeName = "BossType",
                 SelectedBindableOperations = new IEdmOperation[0],
                 SelectedNavigationProperties = new IEdmNavigationProperty[0],
                 SelectedStreamProperties = new Dictionary<string, IEdmStructuralProperty>(),
@@ -1166,13 +1160,13 @@ namespace Microsoft.OData.Core.Tests.Evaluation
         }
     }
 
-    internal class TestEntryMetadataContext : IODataEntryMetadataContext
+    internal class TestEntryMetadataContext : IODataResourceMetadataContext
     {
-        public ODataEntry Entry { get; set; }
+        public ODataResource Resource { get; set; }
 
-        public IODataFeedAndEntryTypeContext TypeContext { get; set; }
+        public IODataResourceTypeContext TypeContext { get; set; }
 
-        public string ActualEntityTypeName { get; set; }
+        public string ActualResourceTypeName { get; set; }
 
         public ICollection<KeyValuePair<string, object>> KeyProperties { get; set; }
 
@@ -1185,7 +1179,7 @@ namespace Microsoft.OData.Core.Tests.Evaluation
         public IEnumerable<IEdmOperation> SelectedBindableOperations { get; set; }
     }
 
-    internal class TestFeedAndEntryTypeContext : IODataFeedAndEntryTypeContext
+    internal class TestFeedAndEntryTypeContext : IODataResourceTypeContext
     {
         public string NavigationSourceName { get; set; }
 
@@ -1193,11 +1187,9 @@ namespace Microsoft.OData.Core.Tests.Evaluation
 
         public string NavigationSourceFullTypeName { get; set; }
 
-        public string ExpectedEntityTypeName { get; set; }
+        public string ExpectedResourceTypeName { get; set; }
 
         public bool IsMediaLinkEntry { get; set; }
-
-        public UrlConvention UrlConvention { get; set; }
 
         public EdmNavigationSourceKind NavigationSourceKind { get; set; }
 

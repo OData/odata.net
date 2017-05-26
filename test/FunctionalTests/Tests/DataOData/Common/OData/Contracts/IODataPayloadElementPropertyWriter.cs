@@ -7,7 +7,7 @@
 namespace Microsoft.Test.Taupo.OData.Contracts
 {
     #region Namespaces
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.Test.Taupo.Astoria.Contracts.OData;
     using Microsoft.Test.Taupo.Common;
     #endregion Namespaces

@@ -1036,7 +1036,7 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
                 global::System.Xml.XmlReader reader = CreateXmlReader(Edmx);
                 try
                 {
-                    return global::Microsoft.OData.Edm.Csdl.EdmxReader.Parse(reader);
+                    return global::Microsoft.OData.Edm.Csdl.CsdlReader.Parse(reader);
                 }
                 finally
                 {
@@ -3228,8 +3228,8 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         public static OrderPlus CreateOrderPlus(int orderID,
                     global::System.DateTimeOffset orderDate,
-                    global::Microsoft.OData.Edm.Library.Date shipDate,
-                    global::Microsoft.OData.Edm.Library.TimeOfDay shipTime,
+                    global::Microsoft.OData.Edm.Date shipDate,
+                    global::Microsoft.OData.Edm.TimeOfDay shipTime,
                     global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.EmployeePlus loggedInEmployee,
                     global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.CustomerPlus customerForOrder)
         {
@@ -3347,7 +3347,7 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("ShipDate")]
-        public global::Microsoft.OData.Edm.Library.Date ShipDatePlus
+        public global::Microsoft.OData.Edm.Date ShipDatePlus
         {
             get
             {
@@ -3362,15 +3362,15 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
             }
         }
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
-        private global::Microsoft.OData.Edm.Library.Date _ShipDatePlus;
-        partial void OnShipDatePlusChanging(global::Microsoft.OData.Edm.Library.Date value);
+        private global::Microsoft.OData.Edm.Date _ShipDatePlus;
+        partial void OnShipDatePlusChanging(global::Microsoft.OData.Edm.Date value);
         partial void OnShipDatePlusChanged();
         /// <summary>
         /// There are no comments for Property ShipTimePlus in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("ShipTime")]
-        public global::Microsoft.OData.Edm.Library.TimeOfDay ShipTimePlus
+        public global::Microsoft.OData.Edm.TimeOfDay ShipTimePlus
         {
             get
             {
@@ -3385,8 +3385,8 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
             }
         }
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
-        private global::Microsoft.OData.Edm.Library.TimeOfDay _ShipTimePlus;
-        partial void OnShipTimePlusChanging(global::Microsoft.OData.Edm.Library.TimeOfDay value);
+        private global::Microsoft.OData.Edm.TimeOfDay _ShipTimePlus;
+        partial void OnShipTimePlusChanging(global::Microsoft.OData.Edm.TimeOfDay value);
         partial void OnShipTimePlusChanged();
         /// <summary>
         /// There are no comments for Property LoggedInEmployeePlus in the schema.
@@ -3461,29 +3461,29 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
         /// There are no comments for GetShipDatePlus in the schema.
         /// </summary>
         [global::Microsoft.OData.Client.OriginalNameAttribute("GetShipDate")]
-        public global::Microsoft.OData.Client.DataServiceQuerySingle<global::Microsoft.OData.Edm.Library.Date> GetShipDatePlus()
+        public global::Microsoft.OData.Client.DataServiceQuerySingle<global::Microsoft.OData.Edm.Date> GetShipDatePlus()
         {
             global::System.Uri requestUri;
             Context.TryGetUri(this, out requestUri);
 
-            return this.Context.CreateFunctionQuerySingle<global::Microsoft.OData.Edm.Library.Date>(string.Join("/", global::System.Linq.Enumerable.Select(global::System.Linq.Enumerable.Skip(requestUri.Segments, this.Context.BaseUri.Segments.Length), s => s.Trim('/'))), "Microsoft.Test.OData.Services.ODataWCFService.GetShipDate", false);
+            return this.Context.CreateFunctionQuerySingle<global::Microsoft.OData.Edm.Date>(string.Join("/", global::System.Linq.Enumerable.Select(global::System.Linq.Enumerable.Skip(requestUri.Segments, this.Context.BaseUri.Segments.Length), s => s.Trim('/'))), "Microsoft.Test.OData.Services.ODataWCFService.GetShipDate", false);
         }
         /// <summary>
         /// There are no comments for GetShipTimePlus in the schema.
         /// </summary>
         [global::Microsoft.OData.Client.OriginalNameAttribute("GetShipTime")]
-        public global::Microsoft.OData.Client.DataServiceQuerySingle<global::Microsoft.OData.Edm.Library.TimeOfDay> GetShipTimePlus()
+        public global::Microsoft.OData.Client.DataServiceQuerySingle<global::Microsoft.OData.Edm.TimeOfDay> GetShipTimePlus()
         {
             global::System.Uri requestUri;
             Context.TryGetUri(this, out requestUri);
 
-            return this.Context.CreateFunctionQuerySingle<global::Microsoft.OData.Edm.Library.TimeOfDay>(string.Join("/", global::System.Linq.Enumerable.Select(global::System.Linq.Enumerable.Skip(requestUri.Segments, this.Context.BaseUri.Segments.Length), s => s.Trim('/'))), "Microsoft.Test.OData.Services.ODataWCFService.GetShipTime", false);
+            return this.Context.CreateFunctionQuerySingle<global::Microsoft.OData.Edm.TimeOfDay>(string.Join("/", global::System.Linq.Enumerable.Select(global::System.Linq.Enumerable.Skip(requestUri.Segments, this.Context.BaseUri.Segments.Length), s => s.Trim('/'))), "Microsoft.Test.OData.Services.ODataWCFService.GetShipTime", false);
         }
         /// <summary>
         /// There are no comments for CheckShipTimePlus in the schema.
         /// </summary>
         [global::Microsoft.OData.Client.OriginalNameAttribute("CheckShipTime")]
-        public global::Microsoft.OData.Client.DataServiceQuerySingle<bool> CheckShipTimePlus(global::Microsoft.OData.Edm.Library.TimeOfDay time)
+        public global::Microsoft.OData.Client.DataServiceQuerySingle<bool> CheckShipTimePlus(global::Microsoft.OData.Edm.TimeOfDay time)
         {
             global::System.Uri requestUri;
             Context.TryGetUri(this, out requestUri);
@@ -3494,7 +3494,7 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
         /// There are no comments for CheckShipDatePlus in the schema.
         /// </summary>
         [global::Microsoft.OData.Client.OriginalNameAttribute("CheckShipDate")]
-        public global::Microsoft.OData.Client.DataServiceQuerySingle<bool> CheckShipDatePlus(global::Microsoft.OData.Edm.Library.Date date)
+        public global::Microsoft.OData.Client.DataServiceQuerySingle<bool> CheckShipDatePlus(global::Microsoft.OData.Edm.Date date)
         {
             global::System.Uri requestUri;
             Context.TryGetUri(this, out requestUri);
@@ -3505,7 +3505,7 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
         /// There are no comments for ChangeShipTimeAndDatePlus in the schema.
         /// </summary>
         [global::Microsoft.OData.Client.OriginalNameAttribute("ChangeShipTimeAndDate")]
-        public global::Microsoft.OData.Client.DataServiceActionQuerySingle<global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.OrderPlus> ChangeShipTimeAndDatePlus(global::Microsoft.OData.Edm.Library.Date date, global::Microsoft.OData.Edm.Library.TimeOfDay time)
+        public global::Microsoft.OData.Client.DataServiceActionQuerySingle<global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.OrderPlus> ChangeShipTimeAndDatePlus(global::Microsoft.OData.Edm.Date date, global::Microsoft.OData.Edm.TimeOfDay time)
         {
             global::Microsoft.OData.Client.EntityDescriptor resource = Context.EntityTracker.TryGetEntityDescriptor(this);
             if (resource == null)
@@ -3558,7 +3558,7 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
         /// </summary>
         /// <param name="day">Initial value of DayPlus.</param>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
-        public static CalendarPlus CreateCalendarPlus(global::Microsoft.OData.Edm.Library.Date day)
+        public static CalendarPlus CreateCalendarPlus(global::Microsoft.OData.Edm.Date day)
         {
             CalendarPlus calendarPlus = new CalendarPlus();
             calendarPlus.DayPlus = day;
@@ -3569,7 +3569,7 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("Day")]
-        public global::Microsoft.OData.Edm.Library.Date DayPlus
+        public global::Microsoft.OData.Edm.Date DayPlus
         {
             get
             {
@@ -3584,8 +3584,8 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
             }
         }
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "2.3.0")]
-        private global::Microsoft.OData.Edm.Library.Date _DayPlus;
-        partial void OnDayPlusChanging(global::Microsoft.OData.Edm.Library.Date value);
+        private global::Microsoft.OData.Edm.Date _DayPlus;
+        partial void OnDayPlusChanging(global::Microsoft.OData.Edm.Date value);
         partial void OnDayPlusChanged();
     }
     /// <summary>
@@ -7302,7 +7302,7 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
         /// <param name="source">source entity set</param>
         /// <param name="day">The value of day</param>
         public static global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.CalendarPlusSingle ByKey(this global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.CalendarPlus> source,
-            global::Microsoft.OData.Edm.Library.Date day)
+            global::Microsoft.OData.Edm.Date day)
         {
             global::System.Collections.Generic.Dictionary<string, object> keys = new global::System.Collections.Generic.Dictionary<string, object>
             {
@@ -7776,33 +7776,33 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
         /// There are no comments for GetShipDatePlus in the schema.
         /// </summary>
         [global::Microsoft.OData.Client.OriginalNameAttribute("GetShipDate")]
-        public static global::Microsoft.OData.Client.DataServiceQuerySingle<global::Microsoft.OData.Edm.Library.Date> GetShipDatePlus(this global::Microsoft.OData.Client.DataServiceQuerySingle<global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.OrderPlus> source)
+        public static global::Microsoft.OData.Client.DataServiceQuerySingle<global::Microsoft.OData.Edm.Date> GetShipDatePlus(this global::Microsoft.OData.Client.DataServiceQuerySingle<global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.OrderPlus> source)
         {
             if (!source.IsComposable)
             {
                 throw new global::System.NotSupportedException("The previous function is not composable.");
             }
 
-            return source.CreateFunctionQuerySingle<global::Microsoft.OData.Edm.Library.Date>("Microsoft.Test.OData.Services.ODataWCFService.GetShipDate", false);
+            return source.CreateFunctionQuerySingle<global::Microsoft.OData.Edm.Date>("Microsoft.Test.OData.Services.ODataWCFService.GetShipDate", false);
         }
         /// <summary>
         /// There are no comments for GetShipTimePlus in the schema.
         /// </summary>
         [global::Microsoft.OData.Client.OriginalNameAttribute("GetShipTime")]
-        public static global::Microsoft.OData.Client.DataServiceQuerySingle<global::Microsoft.OData.Edm.Library.TimeOfDay> GetShipTimePlus(this global::Microsoft.OData.Client.DataServiceQuerySingle<global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.OrderPlus> source)
+        public static global::Microsoft.OData.Client.DataServiceQuerySingle<global::Microsoft.OData.Edm.TimeOfDay> GetShipTimePlus(this global::Microsoft.OData.Client.DataServiceQuerySingle<global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.OrderPlus> source)
         {
             if (!source.IsComposable)
             {
                 throw new global::System.NotSupportedException("The previous function is not composable.");
             }
 
-            return source.CreateFunctionQuerySingle<global::Microsoft.OData.Edm.Library.TimeOfDay>("Microsoft.Test.OData.Services.ODataWCFService.GetShipTime", false);
+            return source.CreateFunctionQuerySingle<global::Microsoft.OData.Edm.TimeOfDay>("Microsoft.Test.OData.Services.ODataWCFService.GetShipTime", false);
         }
         /// <summary>
         /// There are no comments for CheckShipTimePlus in the schema.
         /// </summary>
         [global::Microsoft.OData.Client.OriginalNameAttribute("CheckShipTime")]
-        public static global::Microsoft.OData.Client.DataServiceQuerySingle<bool> CheckShipTimePlus(this global::Microsoft.OData.Client.DataServiceQuerySingle<global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.OrderPlus> source, global::Microsoft.OData.Edm.Library.TimeOfDay time)
+        public static global::Microsoft.OData.Client.DataServiceQuerySingle<bool> CheckShipTimePlus(this global::Microsoft.OData.Client.DataServiceQuerySingle<global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.OrderPlus> source, global::Microsoft.OData.Edm.TimeOfDay time)
         {
             if (!source.IsComposable)
             {
@@ -7815,7 +7815,7 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
         /// There are no comments for CheckShipDatePlus in the schema.
         /// </summary>
         [global::Microsoft.OData.Client.OriginalNameAttribute("CheckShipDate")]
-        public static global::Microsoft.OData.Client.DataServiceQuerySingle<bool> CheckShipDatePlus(this global::Microsoft.OData.Client.DataServiceQuerySingle<global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.OrderPlus> source, global::Microsoft.OData.Edm.Library.Date date)
+        public static global::Microsoft.OData.Client.DataServiceQuerySingle<bool> CheckShipDatePlus(this global::Microsoft.OData.Client.DataServiceQuerySingle<global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.OrderPlus> source, global::Microsoft.OData.Edm.Date date)
         {
             if (!source.IsComposable)
             {
@@ -8039,7 +8039,7 @@ namespace Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlu
         /// There are no comments for ChangeShipTimeAndDatePlus in the schema.
         /// </summary>
         [global::Microsoft.OData.Client.OriginalNameAttribute("ChangeShipTimeAndDate")]
-        public static global::Microsoft.OData.Client.DataServiceActionQuerySingle<global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.OrderPlus> ChangeShipTimeAndDatePlus(this global::Microsoft.OData.Client.DataServiceQuerySingle<global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.OrderPlus> source, global::Microsoft.OData.Edm.Library.Date date, global::Microsoft.OData.Edm.Library.TimeOfDay time)
+        public static global::Microsoft.OData.Client.DataServiceActionQuerySingle<global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.OrderPlus> ChangeShipTimeAndDatePlus(this global::Microsoft.OData.Client.DataServiceQuerySingle<global::Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReferencePlus.OrderPlus> source, global::Microsoft.OData.Edm.Date date, global::Microsoft.OData.Edm.TimeOfDay time)
         {
             if (!source.IsComposable)
             {

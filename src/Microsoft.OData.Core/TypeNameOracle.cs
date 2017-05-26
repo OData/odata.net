@@ -4,15 +4,13 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core
+namespace Microsoft.OData
 {
     #region Namespaces
 
-    using System;
     using System.Diagnostics;
-    using System.Linq;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Core.Metadata;
+    using Microsoft.OData.Metadata;
     #endregion Namespaces
 
     /// <summary>
@@ -26,15 +24,22 @@ namespace Microsoft.OData.Core
         /// <param name="model">The model to use.</param>
         /// <param name="typeName">The type name to validate.</param>
         /// <param name="expectedTypeKind">The expected type kind for the given type name.</param>
+        /// <param name="expectStructuredType">This value indicates if a structured type is expected to be return.
+        /// True for structured type, false for non-structured type, null for indetermination.</param>
         /// <param name="writerValidator">The writer validator to use for validation.</param>
         /// <returns>The type with the given name and kind if a user model was available, otherwise null.</returns>
-        internal static IEdmType ResolveAndValidateTypeName(IEdmModel model, string typeName, EdmTypeKind expectedTypeKind, IWriterValidator writerValidator)
+        internal static IEdmType ResolveAndValidateTypeName(IEdmModel model, string typeName, EdmTypeKind expectedTypeKind, bool? expectStructuredType, IWriterValidator writerValidator)
         {
             Debug.Assert(model != null, "model != null");
+            Debug.Assert(
+                !expectStructuredType.HasValue
+                || !expectStructuredType.Value && !expectedTypeKind.IsStructured()
+                || expectStructuredType.Value && (expectedTypeKind.IsStructured() || expectedTypeKind == EdmTypeKind.None),
+                "!expectStructuredType.HasValue || !expectStructuredType.Value && !expectedTypeKind.IsStructured() || expectStructuredType.Value && (expectedTypeKind.IsStructured() || expectedTypeKind == EdmTypeKind.None)");
 
             if (typeName == null)
             {
-                // if we have metadata, the type name of an entry must not be null
+                // if we have metadata, the type name of a resource must not be null
                 if (model.IsUserModel())
                 {
                     throw new ODataException(Strings.WriterValidationUtils_MissingTypeNameWithMetadata);
@@ -60,12 +65,38 @@ namespace Microsoft.OData.Core
                 throw new ODataException(Strings.ValidationUtils_UnrecognizedTypeName(typeName));
             }
 
-            writerValidator.ValidateTypeKind(resolvedType.TypeKind, expectedTypeKind, resolvedType);
+            writerValidator.ValidateTypeKind(resolvedType.TypeKind, expectedTypeKind, expectStructuredType, resolvedType);
+
             return resolvedType;
         }
 
         /// <summary>
-        /// Resolve a primitive value type name 
+        /// Resolve a resource type name
+        /// </summary>
+        /// <param name="model">The model to use.</param>
+        /// <param name="expectedType">The type inferred from the model or null if the model is not a user model.</param>
+        /// <param name="typeName">Name of the type to resolve.</param>
+        /// <param name="writerValidator">The writer validator to use for validation.</param>
+        /// <returns>A type for primitive value</returns>
+        internal static IEdmStructuredType ResolveAndValidateTypeFromTypeName(IEdmModel model, IEdmStructuredType expectedType, string typeName, IWriterValidator writerValidator)
+        {
+            if (typeName == null && expectedType != null)
+            {
+                return expectedType;
+            }
+
+            // TODO: Clean up handling of expected types/sets during writing
+            var typeFromResource = (IEdmStructuredType)ResolveAndValidateTypeName(model, typeName, EdmTypeKind.None, /* expectStructuredType */ true, writerValidator);
+            IEdmTypeReference typeReferenceFromValue = ResolveTypeFromMetadataAndValue(
+                expectedType.ToTypeReference(),
+                typeFromResource == null ? null : typeFromResource.ToTypeReference(),
+                writerValidator);
+
+            return typeReferenceFromValue == null ? null : typeReferenceFromValue.ToStructuredType();
+        }
+
+        /// <summary>
+        /// Resolve a primitive value type name
         /// </summary>
         /// <param name="primitiveValue">The value to get the type name from.</param>
         /// <returns>A type for primitive value</returns>
@@ -87,37 +118,9 @@ namespace Microsoft.OData.Core
             Debug.Assert(model != null, "model != null");
 
             ValidateIfTypeNameMissing(enumValue.TypeName, model, isOpenPropertyType);
-             
+
             // starting from enum type, we want to skip validation (but still let the above makes sure open type's enum value has .TypeName)
             return null;
-        }
-
-        /// <summary>
-        /// Resolve a type name against the provided <paramref name="model"/>. If not payload type name is specified,
-        /// derive the type from the model type (if available).
-        /// </summary>
-        /// <param name="model">The model to use.</param>
-        /// <param name="typeReferenceFromMetadata">The type inferred from the model or null if the model is not a user model.</param>
-        /// <param name="complexValue">The value in question to resolve the type for.</param>
-        /// <param name="isOpenPropertyType">True if the type name belongs to an open property.</param>
-        /// <param name="writerValidator">The writer validator to use for validation.</param>
-        /// <returns>A type for the <paramref name="complexValue"/> or null if no type name is specified and no metadata is available.</returns>
-        internal static IEdmTypeReference ResolveAndValidateTypeForComplexValue(IEdmModel model, IEdmTypeReference typeReferenceFromMetadata, ODataComplexValue complexValue, bool isOpenPropertyType, IWriterValidator writerValidator)
-        {
-            Debug.Assert(model != null, "model != null");
-
-            var typeName = complexValue.TypeName;
-
-            ValidateIfTypeNameMissing(typeName, model, isOpenPropertyType);
-
-            IEdmType typeFromValue = typeName == null ? null : ResolveAndValidateTypeName(model, typeName, EdmTypeKind.Complex, writerValidator);
-            if (typeReferenceFromMetadata != null)
-            {
-                writerValidator.ValidateTypeKind(EdmTypeKind.Complex, typeReferenceFromMetadata.TypeKind(), typeFromValue);
-            }
-
-            IEdmTypeReference typeReferenceFromValue = ResolveTypeFromMetadataAndValue(typeReferenceFromMetadata, typeFromValue == null ? null : typeFromValue.ToTypeReference(), writerValidator);
-            return typeReferenceFromValue;
         }
 
         /// <summary>
@@ -138,10 +141,10 @@ namespace Microsoft.OData.Core
 
             ValidateIfTypeNameMissing(typeName, model, isOpenPropertyType);
 
-            IEdmType typeFromValue = typeName == null ? null : ResolveAndValidateTypeName(model, typeName, EdmTypeKind.Collection, writerValidator);
+            IEdmType typeFromValue = typeName == null ? null : ResolveAndValidateTypeName(model, typeName, EdmTypeKind.Collection, false, writerValidator);
             if (typeReferenceFromMetadata != null)
             {
-                writerValidator.ValidateTypeKind(EdmTypeKind.Collection, typeReferenceFromMetadata.TypeKind(), typeFromValue);
+                writerValidator.ValidateTypeKind(EdmTypeKind.Collection, typeReferenceFromMetadata.TypeKind(), false, typeFromValue);
             }
 
             IEdmTypeReference typeReferenceFromValue = ResolveTypeFromMetadataAndValue(typeReferenceFromMetadata, typeFromValue == null ? null : typeFromValue.ToTypeReference(), writerValidator);
@@ -154,16 +157,34 @@ namespace Microsoft.OData.Core
                 }
 
                 // validate that the collection type represents a valid Collection type (e.g., is unordered).
-                typeReferenceFromValue = writerValidator.ValidateCollectionType(typeReferenceFromValue);
+                typeReferenceFromValue = ValidationUtils.ValidateCollectionType(typeReferenceFromValue);
             }
 
             return typeReferenceFromValue;
         }
 
         /// <summary>
+        /// Try to get type name from ODataValue annotation.
+        /// </summary>
+        /// <param name="value">The value to get type annotation.</param>
+        /// <param name="propertyName">The type name from annotation</param>
+        /// <returns>True if there is type name annotation.</returns>
+        internal static bool TryGetTypeNameFromAnnotation(ODataValue value, out string propertyName)
+        {
+            if (value.TypeAnnotation != null)
+            {
+                propertyName = value.TypeAnnotation.TypeName;
+                return true;
+            }
+
+            propertyName = null;
+            return false;
+        }
+
+        /// <summary>
         /// Gets the type name from the given <paramref name="value"/>.
         /// </summary>
-        /// <param name="value">The value to get the type name from. This can be an ODataPrimitiveValue, an ODataComplexValue, an ODataCollectionValue or a Clr primitive object.</param>
+        /// <param name="value">The value to get the type name from. This can be an ODataPrimitiveValue, an ODataCollectionValue or a Clr primitive object.</param>
         /// <returns>The type name for the given <paramref name="value"/>.</returns>
         protected static string GetTypeNameFromValue(object value)
         {
@@ -180,12 +201,6 @@ namespace Microsoft.OData.Core
                 //     since we don't know its underlying type as well as how to serialize it.
                 IEdmPrimitiveTypeReference primitiveValueTypeReference = EdmLibraryExtensions.GetPrimitiveTypeReference(primitiveValue.Value.GetType());
                 return primitiveValueTypeReference == null ? null : primitiveValueTypeReference.FullName();
-            }
-
-            ODataComplexValue complexValue = value as ODataComplexValue;
-            if (complexValue != null)
-            {
-                return complexValue.TypeName;
             }
 
             ODataEnumValue enumValue = value as ODataEnumValue;

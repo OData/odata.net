@@ -128,20 +128,7 @@ namespace Microsoft.Test.OData.Tests.Client.KeyAsSegmentTests
             Assert.AreEqual(3, person.PersonMetadata.Count, "person.PersonMetadata.Count == 3");
         }
 
-        [TestMethod]
-        public void AttachToWithEtag()
-        {
-            var contextWrapper = this.CreateWrappedContext();
-
-            var product = contextWrapper.Context.Product.First();
-            string productEtag = contextWrapper.GetEntityDescriptor(product).ETag;
-            var attachToProduct = new Product { ProductId = product.ProductId };
-            contextWrapper.Detach(product);
-
-            contextWrapper.AttachTo("Product", attachToProduct, productEtag);
-            contextWrapper.LoadProperty(attachToProduct, "Detail");
-        }
-
+        [Ignore] // Issue: #623
         [TestMethod]
         public void ContextReferencesTest()
         {

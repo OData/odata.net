@@ -8,7 +8,7 @@ namespace Microsoft.OData.Service
 {
     using System;
     using System.Diagnostics;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
 
     /// <summary>
     /// Represents the client's preferences as specified in the 'prefer' request header.

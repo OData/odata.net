@@ -4,17 +4,12 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core.UriParser.Semantic
+namespace Microsoft.OData.UriParser
 {
     #region Namespaces
 
-    using System;
-    using Microsoft.OData.Core.UriParser.TreeNodeKinds;
-    using Microsoft.OData.Core.UriParser.Visitors;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Core;
-    using Microsoft.OData.Core.UriParser;
-    using Microsoft.OData.Core.UriParser.Semantic;
+    using Microsoft.OData;
 
     #endregion Namespaces
 
@@ -34,7 +29,7 @@ namespace Microsoft.OData.Core.UriParser.Semantic
         /// <param name="navigationProperty">The navigaiton property this link or ref acts on</param>
         /// <param name="navigationSource">The navigation source of entities linked to by this <see cref="NavigationPropertyLinkSegment"/>. This can be null.</param>
         /// <exception cref="System.ArgumentNullException">Throws if the input navigationProperty is null.</exception>
-        public NavigationPropertyLinkSegment(IEdmNavigationProperty navigationProperty, IEdmNavigationSource navigationSource) 
+        public NavigationPropertyLinkSegment(IEdmNavigationProperty navigationProperty, IEdmNavigationSource navigationSource)
         {
             ExceptionUtils.CheckArgumentNotNull(navigationProperty, "navigationProperty");
             this.navigationProperty = navigationProperty;

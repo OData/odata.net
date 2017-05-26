@@ -5,12 +5,11 @@
 //---------------------------------------------------------------------
 
 using System;
-using Microsoft.OData.Core.Tests.UriParser;
-using Microsoft.OData.Core.UriParser;
-using Microsoft.OData.Core.UriParser.Semantic;
+using Microsoft.OData.Tests.UriParser;
+using Microsoft.OData.UriParser;
 using Xunit;
 
-namespace Microsoft.OData.Core.Tests.ScenarioTests.UriBuilder
+namespace Microsoft.OData.Tests.ScenarioTests.UriBuilder
 {
     public class ContextUrlPathStringTests : UriBuilderTestBase
     {
@@ -58,7 +57,7 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.UriBuilder
         private string GetContextUrlPathString(Uri queryUri)
         {
             ODataUriParser odataUriParser = new ODataUriParser(HardCodedTestModel.TestModel, queryUri);
-            odataUriParser.UrlConventions = ODataUrlConventions.Default;
+            odataUriParser.UrlKeyDelimiter = ODataUrlKeyDelimiter.Parentheses;
             ODataUri odataUri = odataUriParser.ParseUri();
             ODataPath odataPath = odataUri.Path;
            return odataPath.ToContextUrlPathString();

@@ -8,7 +8,7 @@ namespace Microsoft.OData.Service.Serializers
 {
     #region Namespaces
     using System.Diagnostics;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     #endregion Namespaces
 
     /// <summary>

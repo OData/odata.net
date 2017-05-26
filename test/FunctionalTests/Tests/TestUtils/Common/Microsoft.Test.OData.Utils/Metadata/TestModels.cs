@@ -4,26 +4,20 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Reflection;
+using System.Xml;
+using Microsoft.OData.Edm;
+using Microsoft.OData.Edm.Csdl;
+using Microsoft.OData.Edm.Validation;
+using Microsoft.OData.Edm.Vocabularies;
+using Microsoft.Test.OData.Utils.ODataLibTest;
+
 namespace Microsoft.Test.OData.Utils.Metadata
 {
-    #region Namespaces
-
-    using System;
-    using System.Collections.Generic;
-    using System.IO;
-    using System.Linq;
-    using System.Reflection;
-    using System.Xml;
-    using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Csdl;
-    using Microsoft.OData.Edm.Library;
-    using Microsoft.OData.Edm.Library.Values;
-    using Microsoft.OData.Edm.Validation;
-    using Microsoft.OData.Core;
-    using Microsoft.Test.OData.Utils.ODataLibTest;
-
-    #endregion Namespaces
-
     /// <summary>
     /// A helper class to create our test models using the <see cref="ModelBuilder"/>.
     /// </summary>
@@ -262,8 +256,10 @@ namespace Microsoft.Test.OData.Utils.Metadata
             // Model with OData-specific attribute annotations
             yield return BuildODataAnnotationTestModel(true);
 
+#if !NETCOREAPP1_0
             // Astoria Default Test Model
             yield return BuildDefaultAstoriaTestModel();
+#endif
         }
 
         /// <summary>
@@ -319,7 +315,7 @@ namespace Microsoft.Test.OData.Utils.Metadata
             model.AddElement(complexType2);
 
             EdmEnumType enumType1 = new EdmEnumType(defaultNamespaceName, "enumType1");
-            enumType1.AddMember(new EdmEnumMember(enumType1, "enumType1_value1", new EdmIntegerConstant(coreModel.GetInt64(false), 6)));
+            enumType1.AddMember(new EdmEnumMember(enumType1, "enumType1_value1", new EdmEnumMemberValue(6)));
             model.AddElement(enumType1);
 
             var functionImport_MultipleNullableParameters = container.AddFunctionAndFunctionImport(model, "FunctionImport_MultipleNullableParameters", coreModel.GetString(false) /*returnType*/, null /*entitySet*/, false /*composable*/, false /*bindable*/);
@@ -344,6 +340,7 @@ namespace Microsoft.Test.OData.Utils.Metadata
             return model;
         }
 
+#if !NETCOREAPP1_0
         /// <summary>
         /// Builds the Astoria default test model and applies necessary fixups for use in OData tests.
         /// </summary>
@@ -361,7 +358,7 @@ namespace Microsoft.Test.OData.Utils.Metadata
             {
                 IEdmModel model;
                 IEnumerable<EdmError> errors;
-                if (!EdmxReader.TryParse(reader, out model, out errors))
+                if (!CsdlReader.TryParse(reader, out model, out errors))
                 {
                     throw new Exception("Model loading failed: " + string.Join("\r\n", errors.Select(e => e.ErrorLocation.ToString() + ": " + e.ErrorMessage)));
                 }
@@ -369,6 +366,7 @@ namespace Microsoft.Test.OData.Utils.Metadata
                 return model;
             }
         }
+#endif
 
         /// <summary>
         /// Creates a test model to test our conversion of OData instances into EDM values.

@@ -9,7 +9,6 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
     #region Namespaces
     using System.Collections.Generic;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Library;
     using Microsoft.Test.Taupo.Common;
     using Microsoft.Test.Taupo.Contracts.EntityModel;
     using Microsoft.Test.Taupo.Contracts.EntityModel.Edm;
@@ -240,7 +239,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                             "}")
                         .ExpectedEntityType(cityType, citiesEntitySet),
                     PayloadEdmModel = model,
-                    ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightEntryAndFeedDeserializer_CannotReadFeedContentStart", "StartObject")
+                    ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightResourceDeserializer_CannotReadResourceSetContentStart", "StartObject")
                 },
                 new PayloadReaderTestDescriptor(this.Settings)
                 {
@@ -252,7 +251,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                             "}")
                         .ExpectedEntityType(cityType, citiesEntitySet),
                     PayloadEdmModel = model,
-                    ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightEntryAndFeedDeserializer_InvalidNodeTypeForItemsInFeed", "PrimitiveValue")
+                    ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightResourceDeserializer_InvalidNodeTypeForItemsInResourceSet", "PrimitiveValue")
                 },
                 new PayloadReaderTestDescriptor(this.Settings)
                 {
@@ -264,7 +263,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                             "}")
                         .ExpectedEntityType(cityType, citiesEntitySet),
                     PayloadEdmModel = model,
-                    ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightEntryAndFeedDeserializer_InvalidNodeTypeForItemsInFeed", "StartArray")
+                    ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightResourceDeserializer_InvalidNodeTypeForItemsInResourceSet", "StartArray")
                 },
                 new PayloadReaderTestDescriptor(this.Settings)
                 {
@@ -277,7 +276,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                             "}")
                         .ExpectedEntityType(cityType, citiesEntitySet),
                     PayloadEdmModel = model,
-                    ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightEntryAndFeedDeserializer_InvalidPropertyInTopLevelFeed", "other", JsonLightConstants.ODataValuePropertyName)
+                    ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightResourceDeserializer_InvalidPropertyInTopLevelResourceSet", "other", JsonLightConstants.ODataValuePropertyName)
                 },
                 new PayloadReaderTestDescriptor(this.Settings)
                 {
@@ -303,7 +302,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                             "}")
                         .ExpectedEntityType(cityType, citiesEntitySet),
                     PayloadEdmModel = model,
-                    ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightEntryAndFeedDeserializer_InvalidPropertyInTopLevelFeed", "other", JsonLightConstants.ODataValuePropertyName)
+                    ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightResourceDeserializer_InvalidPropertyInTopLevelResourceSet", "other", JsonLightConstants.ODataValuePropertyName)
                 },
                 new PayloadReaderTestDescriptor(this.Settings)
                 {
@@ -328,7 +327,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                             "}")
                         .ExpectedEntityType(cityType, citiesEntitySet),
                     PayloadEdmModel = model,
-                    ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightEntryAndFeedDeserializer_ExpectedFeedPropertyNotFound", "value")
+                    ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightResourceDeserializer_ExpectedResourceSetPropertyNotFound", "value")
                 },
                 new PayloadReaderTestDescriptor(this.Settings)
                 {
@@ -380,7 +379,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                             "}")
                         .ExpectedEntityType(cityType, citiesEntitySet),
                     PayloadEdmModel = model,
-                    ExpectedException = ODataExpectedExceptions.ODataException("DuplicatePropertyNamesChecker_DuplicatePropertyNamesNotAllowed", JsonLightConstants.ODataValuePropertyName)
+                    ExpectedException = ODataExpectedExceptions.ODataException("DuplicatePropertyNamesNotAllowed", JsonLightConstants.ODataValuePropertyName)
                 },
                 #endregion Test cases
             };

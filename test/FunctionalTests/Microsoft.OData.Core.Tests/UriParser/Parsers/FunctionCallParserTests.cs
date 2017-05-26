@@ -6,13 +6,11 @@
 
 using System;
 using FluentAssertions;
-using Microsoft.OData.Core.UriParser;
-using Microsoft.OData.Core.UriParser.Parsers;
-using Microsoft.OData.Core.UriParser.Syntactic;
+using Microsoft.OData.UriParser;
 using Xunit;
-using ODataErrorStrings = Microsoft.OData.Core.Strings;
+using ODataErrorStrings = Microsoft.OData.Strings;
 
-namespace Microsoft.OData.Core.Tests.UriParser.Parsers
+namespace Microsoft.OData.Tests.UriParser.Parsers
 {
     /// <summary>
     /// Unit tests for the FunctionCallParser implementation of IFunctionCallParser.
@@ -24,14 +22,14 @@ namespace Microsoft.OData.Core.Tests.UriParser.Parsers
         {
             UriQueryExpressionParser parser = new UriQueryExpressionParser(345, new ExpressionLexer("stuff", true, false));
             Action createWithNullLexer = () => new FunctionCallParser(null, parser  /*resolveAlias*/);
-            createWithNullLexer.ShouldThrow<Exception>().WithMessage("lexer", ComparisonMode.EquivalentSubstring);
+            createWithNullLexer.ShouldThrow<Exception>().Where(e => e.Message.Contains("lexer"));
         }
 
         [Fact]
         public void ParserCannotBeNull()
         {
             Action createWithNullLexer = () => new FunctionCallParser(new ExpressionLexer("foo", true, false), null /*resolveAlias*/);
-            createWithNullLexer.ShouldThrow<Exception>().WithMessage("parser", ComparisonMode.EquivalentSubstring);
+            createWithNullLexer.ShouldThrow<Exception>().Where(e => e.Message.Contains("parser"));
         }
 
         [Fact]

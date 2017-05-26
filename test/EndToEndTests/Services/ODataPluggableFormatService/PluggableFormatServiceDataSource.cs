@@ -7,6 +7,7 @@
 namespace Microsoft.Test.OData.Services.PluggableFormat
 {
     using System.Collections.Generic;
+    using Microsoft.OData;
     using Microsoft.OData.Edm;
     using Microsoft.Test.OData.PluggableFormat;
     using Microsoft.Test.OData.Services.ODataWCFService;
@@ -61,10 +62,10 @@ namespace Microsoft.Test.OData.Services.PluggableFormat
                     BusinessCard = new ContactInfo()
                     {
                         N = "Name1",
-                        OpenProperties =
-                        {
-                            {"Tel_Home", "01"},
-                        }
+                        //OpenProperties =
+                        //{
+                        //    {"Tel_Home", "01"},
+                        //}
                     }
                 },
                 new Person()
@@ -74,10 +75,10 @@ namespace Microsoft.Test.OData.Services.PluggableFormat
                     BusinessCard = new ContactInfo()
                     {
                         N = "Name2",
-                        OpenProperties =
-                        {
-                            {"Tel_Home", "02"},
-                        }
+                        //OpenProperties =
+                        //{
+                        //    {"Tel_Home", "02"},
+                        //}
                     }
                 },
             });
@@ -115,6 +116,12 @@ namespace Microsoft.Test.OData.Services.PluggableFormat
         protected override IEdmModel CreateModel()
         {
             return TestHelper.GetModel("Microsoft.Test.OData.Services.PluggableFormat.Csdl.PluggableFormat.xml");
+        }
+
+        protected override void ConfigureContainer(IContainerBuilder builder)
+        {
+            base.ConfigureContainer(builder);
+            builder.AddService<ODataMediaTypeResolver, PluggableFormatResolver>(ServiceLifetime.Singleton);
         }
     }
 }

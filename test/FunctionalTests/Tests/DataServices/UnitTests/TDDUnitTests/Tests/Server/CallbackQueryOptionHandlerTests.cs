@@ -10,7 +10,7 @@ namespace AstoriaUnitTests.TDD.Tests.Server
     using Microsoft.OData.Service;
     using AstoriaUnitTests.TDD.Tests.Server.Simulators;
     using FluentAssertions;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
     using ds = Microsoft.OData.Service;
 
@@ -20,7 +20,7 @@ namespace AstoriaUnitTests.TDD.Tests.Server
         [TestMethod]
         public void NoCallbackQueryOptionShouldDoNothingSpecial()
         {
-            var host = new DataServiceHostSimulator {RequestHttpMethod = "GET"};
+            var host = new DataServiceHostSimulator { RequestHttpMethod = "GET" };
             var result = CallbackQueryOptionHandler.HandleCallbackQueryOption(new AstoriaRequestMessage(host), new ODataFormatWithParameters(ODataFormat.Json));
             result.Should().BeNull();
         }
@@ -60,15 +60,6 @@ namespace AstoriaUnitTests.TDD.Tests.Server
             host.SetQueryStringItem("$callback", "foo");
             Action method = () => CallbackQueryOptionHandler.HandleCallbackQueryOption(new AstoriaRequestMessage(host), new ODataFormatWithParameters(ODataFormat.Json));
             method.ShouldThrow<DataServiceException>().WithMessage(ds.Strings.CallbackQueryOptionHandler_GetRequestsOnly);
-        }
-
-        [TestMethod]
-        public void FailIfContentTypeIsAtom()
-        {
-            var host = new DataServiceHostSimulator { RequestHttpMethod = "GET" };
-            host.SetQueryStringItem("$callback", "foo");
-            Action method = () => CallbackQueryOptionHandler.HandleCallbackQueryOption(new AstoriaRequestMessage(host), new ODataFormatWithParameters(ODataFormat.Atom));
-            method.ShouldThrow<DataServiceException>().WithMessage(ds.Strings.CallbackQueryOptionHandler_UnsupportedContentType(ODataFormat.Atom));
         }
 
         [TestMethod]

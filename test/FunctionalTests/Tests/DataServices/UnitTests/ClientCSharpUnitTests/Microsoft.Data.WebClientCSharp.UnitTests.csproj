@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <AssemblyAttributeClsCompliant>false</AssemblyAttributeClsCompliant>
@@ -6,9 +6,9 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>AstoriaUnitTests</RootNamespace>
     <AssemblyName>AstoriaUnitTests.ClientCSharp</AssemblyName>
+    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
-    <DefineConstants>ASTORIA_OPEN_OBJECT</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <SignAssemblyAttribute>false</SignAssemblyAttribute>
@@ -118,26 +118,20 @@
     <Compile Include="DataWebClientCSharp\ClientActionTests.cs" />
     <Compile Include="DataWebClientCSharp\AlternativeContext.cs" />
     <Compile Include="DataWebClientCSharp\AssemblyCleanup.cs" />
-    <Compile Include="DataWebClientCSharp\AtomMaterializerTests.cs" />
-    <Compile Include="DataWebClientCSharp\AtomParserTests.cs" />
     <Compile Include="DataWebClientCSharp\DerivedPropertyTests.cs" />
     <Compile Include="DataWebClientCSharp\LinqAnyAllTests.cs" />
     <Compile Include="DataWebClientCSharp\CollectionBinding.cs" />
     <Compile Include="DataWebClientCSharp\CollectionTests.cs" />
-    <Compile Include="DataWebClientCSharp\ClientBlobTests.cs" />
     <Compile Include="DataWebClientCSharp\ClientCSharpRegressionTests.cs" />
     <Compile Include="DataWebClientCSharp\ClientPartialTrustTests.cs" />
     <Compile Include="DataWebClientCSharp\DataServiceContextTests.cs" />
     <Compile Include="DataWebClientCSharp\Dev10EF4FKTests.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="DataWebClientCSharp\InputBinderTests.cs" />
     <Compile Include="DataWebClientCSharp\Dev10TypeTestsClient.cs" />
     <Compile Include="DataWebClientCSharp\InternalTestHookTests.cs" />
     <Compile Include="DataWebClientCSharp\LinqTests.cs" />
-    <Compile Include="DataWebClientCSharp\NamedStreamTests.cs" />
     <Compile Include="DataWebClientCSharp\NamedStream_ProjectionTests.cs" />
-    <Compile Include="DataWebClientCSharp\ProjectionTests.cs" />
     <Compile Include="DataWebClientCSharp\ReceivingResponseFunctionalTests.cs" />
     <Compile Include="DataWebClientCSharp\BuildingRequestEventFunctionalTests.cs" />
     <Compile Include="DataWebClientCSharp\SpatialLinqTests.cs" />

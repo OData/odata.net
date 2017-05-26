@@ -10,7 +10,7 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests
     using System.IO;
     using System.Text;
     using Microsoft.OData.Client;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
 
     public class CustomizedHttpWebRequestMessage : HttpWebRequestMessage
     {

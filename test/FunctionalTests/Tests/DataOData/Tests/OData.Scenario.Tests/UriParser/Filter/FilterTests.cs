@@ -9,8 +9,8 @@ namespace Microsoft.Test.Taupo.OData.Scenario.Tests.UriParser.Filter
     using System;
     using System.Runtime.CompilerServices;
     using FluentAssertions;
-    using Microsoft.OData.Core;
-    using Microsoft.OData.Core.UriParser;
+    using Microsoft.OData;
+    using Microsoft.OData.UriParser;
     using Microsoft.Test.Taupo.OData.Common;
     using Microsoft.Test.Taupo.OData.Scenario.Tests.UriParser;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -457,16 +457,6 @@ namespace Microsoft.Test.Taupo.OData.Scenario.Tests.UriParser.Filter
                 durationInKeysBase,
                 "NOW() le maxdatetime() AND now() gT mindatetime()",
                 "now() le maxdatetime() and now() gt mindatetime()");
-        }
-
-        private void TestAllInOneExtensionFilter(Uri baseUri, string filter, string origFilter)
-        {
-            this.TestExtension(
-                this.CreateFilterUriParser(baseUri, filter),
-                new AllInOneResolver() { EnableCaseInsensitive = true },
-                parser => parser.ParseFilter(),
-                clause => QueryNodeToStringVisitor.GetTestCaseAndResultString(clause, origFilter),
-                this.ApprovalVerify);
         }
     }
 }

@@ -28,7 +28,7 @@ Imports AstoriaUnitTests.Tests
 
 Partial Public Class ClientModule
 
-    <TestClass()> _
+    <TestClass()>
     Public Class MaterializeUnitTest
         Private Shared web As TestWebRequest = Nothing
         Private Shared random As New Random(4232008)
@@ -49,8 +49,8 @@ Partial Public Class ClientModule
 
         <TestInitialize()> Public Sub PerTestSetup()
             Me.ctx = New NorthwindSimpleModel.NorthwindContext(web.ServiceRoot)
-            Me.ctx.EnableAtom = True
-            Me.ctx.Format.UseAtom()
+            'Me.'ctx.EnableAtom = True
+            'Me.'ctx.Format.UseAtom()
         End Sub
 
         <TestCleanup()> Public Sub PerTestCleanup()
@@ -58,7 +58,7 @@ Partial Public Class ClientModule
         End Sub
 #End Region
 
-        <EntityType()> _
+        <EntityType()>
         Public Class NarrowOrder
             Private m_Foo As String
             Private m_employee As NarrowEmployee
@@ -95,10 +95,10 @@ Partial Public Class ClientModule
             End Property
         End Class
 
-        <TestCategory("Partition2")> <TestMethod()> _
+        <TestCategory("Partition2")> <TestMethod()>
         Public Sub AssertWhenProjectingEntityTypeIntoComplex()
-            Dim q = From o In ctx.CreateQuery(Of NorthwindSimpleModel.Orders)("Orders") _
-                    Select New NarrowOrder() With {.ShipCity = o.ShipCity, _
+            Dim q = From o In ctx.CreateQuery(Of NorthwindSimpleModel.Orders)("Orders")
+                    Select New NarrowOrder() With {.ShipCity = o.ShipCity,
                                                                   .Employees = New NarrowEmployee() With {.Name = o.Employees.FirstName}}
             Dim nse As NotSupportedException = Nothing
             Try
@@ -109,464 +109,11 @@ Partial Public Class ClientModule
             TestUtil.AssertExceptionExpected(nse, True)
             TestUtil.AssertContains(nse.ToString(), "System.NotSupportedException: Initializing instances of the entity type AstoriaClientUnitTests.ClientModule+MaterializeUnitTest+NarrowOrder with the expression new NarrowEmployee() {Name = o.Employees.FirstName} is not supported.")
         End Sub
-
-        Public Function GetEmployeesFeedXml() As XElement
-            Dim xml As XElement = _
-<feed xml:base="http://localhost/" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns="http://www.w3.org/2005/Atom">
-    <title type="text">Employees</title>
-    <id>http://localhost/Employees</id>
-    <updated>2009-07-15T18:40:15Z</updated>
-    <link rel="self" title="Employees" href="Employees"/>
-    <entry>
-        <id>http://localhost/Employees(1)</id>
-        <title type="text"></title>
-        <updated>2009-07-15T18:40:15Z</updated>
-        <link rel="edit" title="Employees" href="Employees(1)"/>
-        <link rel="http://docs.oasis-open.org/odata/ns/related/Employees1" type="application/atom+xml;type=feed" title="Employees1" href="Employees(1)/Employees1">
-            <m:inline>
-                <feed>
-                    <title type="text">Employees1</title>
-                    <id>http://localhost/Employees(1)/Employees1</id>
-                    <updated>2009-07-15T18:42:24Z</updated>
-                    <author>
-                        <name/>
-                    </author>
-                    <link rel="self" title="Employees1" href="Employees(1)/Employees1"/>
-                </feed>
-            </m:inline>
-        </link>
-        <link rel="http://docs.oasis-open.org/odata/ns/related/Employees2" type="application/atom+xml;type=entry" title="Employees2" href="Employees(1)/Employees2">
-            <m:inline>
-                <entry>
-                    <id>http://localhost/Employees(2)</id>
-                    <title type="text"></title>
-                    <updated>2009-07-15T18:44:26Z</updated>
-                    <author>
-                        <name/>
-                    </author>
-                    <link rel="edit" title="Employees" href="Employees(2)"/>
-                    <link rel="http://docs.oasis-open.org/odata/ns/related/Employees1" type="application/atom+xml;type=feed" title="Employees1" href="Employees(2)/Employees1"/>
-                    <link rel="http://docs.oasis-open.org/odata/ns/related/Employees2" type="application/atom+xml;type=entry" title="Employees2" href="Employees(2)/Employees2"/>
-                    <link rel="http://docs.oasis-open.org/odata/ns/related/Orders" type="application/atom+xml;type=feed" title="Orders" href="Employees(2)/Orders"/>
-                    <link rel="http://docs.oasis-open.org/odata/ns/related/Territories" type="application/atom+xml;type=feed" title="Territories" href="Employees(2)/Territories"/>
-                    <category term="NorthwindModel.Employees" scheme="http://docs.oasis-open.org/odata/ns/scheme"/>
-                    <content type="application/xml">
-                        <m:properties>
-                            <d:EmployeeID m:type="Edm.Int32">2</d:EmployeeID>
-                            <d:LastName>Fuller</d:LastName>
-                            <d:FirstName>Andrew</d:FirstName>
-                        </m:properties>
-                    </content>
-                </entry>
-            </m:inline>
-        </link>
-        <link rel="http://docs.oasis-open.org/odata/ns/related/Orders" type="application/atom+xml;type=feed" title="Orders" href="Employees(1)/Orders"/>
-        <link rel="http://docs.oasis-open.org/odata/ns/related/Territories" type="application/atom+xml;type=feed" title="Territories" href="Employees(1)/Territories"/>
-        <category term="NorthwindModel.Employees" scheme="http://docs.oasis-open.org/odata/ns/scheme"/>
-        <content type="application/xml">
-            <m:properties>
-                <d:EmployeeID m:type="Edm.Int32">1</d:EmployeeID>
-                <d:LastName>Davolio</d:LastName>
-                <d:FirstName>Nancy</d:FirstName>
-            </m:properties>
-        </content>
-    </entry>
-    <entry>
-        <id>http://localhost/Employees(2)</id>
-        <title type="text"></title>
-        <updated>2009-07-15T18:40:15Z</updated>
-        <link rel="edit" title="Employees" href="Employees(2)"/>
-        <link rel="http://docs.oasis-open.org/odata/ns/related/Employees2" type="application/atom+xml;type=entry" title="Employees2" href="Employees(2)/Employees2">
-            <m:inline/>
-        </link>
-        <link rel="http://docs.oasis-open.org/odata/ns/related/Employees1" type="application/atom+xml;type=feed" title="Employees1" href="Employees(2)/Employees1">
-            <m:inline>
-                <feed>
-                    <title type="text">Employees1</title>
-                    <id>http://localhost/Employees(2)/Employees1</id>
-                    <updated>2009-07-15T18:42:24Z</updated>
-                    <link rel="self" title="Employees1" href="Employees(2)/Employees1"/>
-                    <entry>
-                        <id>http://localhost/Employees(1)</id>
-                        <title type="text"></title>
-                        <updated>2009-07-15T18:42:24Z</updated>
-                        <author>
-                            <name/>
-                        </author>
-                        <link rel="edit" title="Employees" href="Employees(1)"/>
-                        <link rel="http://docs.oasis-open.org/odata/ns/related/Employees1" type="application/atom+xml;type=feed" title="Employees1" href="Employees(1)/Employees1"/>
-                        <link rel="http://docs.oasis-open.org/odata/ns/related/Employees2" type="application/atom+xml;type=entry" title="Employees2" href="Employees(1)/Employees2"/>
-                        <link rel="http://docs.oasis-open.org/odata/ns/related/Orders" type="application/atom+xml;type=feed" title="Orders" href="Employees(1)/Orders"/>
-                        <link rel="http://docs.oasis-open.org/odata/ns/related/Territories" type="application/atom+xml;type=feed" title="Territories" href="Employees(1)/Territories"/>
-                        <category term="NorthwindModel.Employees" scheme="http://docs.oasis-open.org/odata/ns/scheme"/>
-                        <content type="application/xml">
-                            <m:properties>
-                                <d:EmployeeID m:type="Edm.Int32">1</d:EmployeeID>
-                                <d:LastName>Davolio</d:LastName>
-                                <d:FirstName>Nancy</d:FirstName>
-                            </m:properties>
-                        </content>
-                    </entry>
-                    <entry>
-                        <id>http://localhost/Employees(3)</id>
-                        <link rel="edit" title="Employees" href="Employees(3)"/>
-                        <link rel="http://docs.oasis-open.org/odata/ns/related/Employees1" type="application/atom+xml;type=feed" title="Employees1" href="Employees(3)/Employees1"/>
-                        <link rel="http://docs.oasis-open.org/odata/ns/related/Employees2" type="application/atom+xml;type=entry" title="Employees2" href="Employees(3)/Employees2"/>
-                        <link rel="http://docs.oasis-open.org/odata/ns/related/Orders" type="application/atom+xml;type=feed" title="Orders" href="Employees(3)/Orders"/>
-                        <link rel="http://docs.oasis-open.org/odata/ns/related/Territories" type="application/atom+xml;type=feed" title="Territories" href="Employees(3)/Territories"/>
-                        <category term="NorthwindModel.Employees" scheme="http://docs.oasis-open.org/odata/ns/scheme"/>
-                        <content type="application/xml">
-                            <m:properties>
-                                <d:EmployeeID m:type="Edm.Int32">3</d:EmployeeID>
-                                <d:LastName>Leverling</d:LastName>
-                                <d:FirstName>Janet</d:FirstName>
-                            </m:properties>
-                        </content>
-                    </entry>
-                    <entry>
-                        <id>http://localhost/Employees(4)</id>
-                        <title type="text"></title>
-                        <updated>2009-07-15T18:42:24Z</updated>
-                        <author>
-                            <name/>
-                        </author>
-                        <link rel="edit" title="Employees" href="Employees(4)"/>
-                        <link rel="http://docs.oasis-open.org/odata/ns/related/Employees1" type="application/atom+xml;type=feed" title="Employees1" href="Employees(4)/Employees1"/>
-                        <link rel="http://docs.oasis-open.org/odata/ns/related/Employees2" type="application/atom+xml;type=entry" title="Employees2" href="Employees(4)/Employees2"/>
-                        <link rel="http://docs.oasis-open.org/odata/ns/related/Orders" type="application/atom+xml;type=feed" title="Orders" href="Employees(4)/Orders"/>
-                        <link rel="http://docs.oasis-open.org/odata/ns/related/Territories" type="application/atom+xml;type=feed" title="Territories" href="Employees(4)/Territories"/>
-                        <category term="NorthwindModel.Employees" scheme="http://docs.oasis-open.org/odata/ns/scheme"/>
-                        <content type="application/xml">
-                            <m:properties>
-                                <d:EmployeeID m:type="Edm.Int32">4</d:EmployeeID>
-                                <d:LastName>Peacock</d:LastName>
-                                <d:FirstName>Margaret</d:FirstName>
-                            </m:properties>
-                        </content>
-                    </entry>
-                    <entry>
-                        <id>http://localhost/Employees(5)</id>
-                        <link rel="edit" title="Employees" href="Employees(5)"/>
-                        <link rel="http://docs.oasis-open.org/odata/ns/related/Employees1" type="application/atom+xml;type=feed" title="Employees1" href="Employees(5)/Employees1"/>
-                        <link rel="http://docs.oasis-open.org/odata/ns/related/Employees2" type="application/atom+xml;type=entry" title="Employees2" href="Employees(5)/Employees2"/>
-                        <link rel="http://docs.oasis-open.org/odata/ns/related/Orders" type="application/atom+xml;type=feed" title="Orders" href="Employees(5)/Orders"/>
-                        <link rel="http://docs.oasis-open.org/odata/ns/related/Territories" type="application/atom+xml;type=feed" title="Territories" href="Employees(5)/Territories"/>
-                        <category term="NorthwindModel.Employees" scheme="http://docs.oasis-open.org/odata/ns/scheme"/>
-                        <content type="application/xml">
-                            <m:properties>
-                                <d:EmployeeID m:type="Edm.Int32">5</d:EmployeeID>
-                                <d:LastName>Buchanan</d:LastName>
-                                <d:FirstName>Steven</d:FirstName>
-                            </m:properties>
-                        </content>
-                    </entry>
-                    <entry>
-                        <id>http://localhost/Employees(8)</id>
-                        <link rel="edit" title="Employees" href="Employees(8)"/>
-                        <link rel="http://docs.oasis-open.org/odata/ns/related/Employees1" type="application/atom+xml;type=feed" title="Employees1" href="Employees(8)/Employees1"/>
-                        <link rel="http://docs.oasis-open.org/odata/ns/related/Employees2" type="application/atom+xml;type=entry" title="Employees2" href="Employees(8)/Employees2"/>
-                        <link rel="http://docs.oasis-open.org/odata/ns/related/Orders" type="application/atom+xml;type=feed" title="Orders" href="Employees(8)/Orders"/>
-                        <link rel="http://docs.oasis-open.org/odata/ns/related/Territories" type="application/atom+xml;type=feed" title="Territories" href="Employees(8)/Territories"/>
-                        <category term="NorthwindModel.Employees" scheme="http://docs.oasis-open.org/odata/ns/scheme"/>
-                        <content type="application/xml">
-                            <m:properties>
-                                <d:EmployeeID m:type="Edm.Int32">8</d:EmployeeID>
-                                <d:LastName>Callahan</d:LastName>
-                                <d:FirstName>Laura</d:FirstName>
-                            </m:properties>
-                        </content>
-                    </entry>
-                </feed>
-            </m:inline>
-        </link>
-        <link rel="http://docs.oasis-open.org/odata/ns/related/Employees2" type="application/atom+xml;type=entry" title="Employees2" href="Employees(2)/Employees2"/>
-        <link rel="http://docs.oasis-open.org/odata/ns/related/Orders" type="application/atom+xml;type=feed" title="Orders" href="Employees(2)/Orders"/>
-        <link rel="http://docs.oasis-open.org/odata/ns/related/Territories" type="application/atom+xml;type=feed" title="Territories" href="Employees(2)/Territories"/>
-        <category term="NorthwindModel.Employees" scheme="http://docs.oasis-open.org/odata/ns/scheme"/>
-        <content type="application/xml">
-            <m:properties>
-                <d:EmployeeID m:type="Edm.Int32">2</d:EmployeeID>
-                <d:LastName>Fuller</d:LastName>
-                <d:FirstName>Andrew</d:FirstName>
-            </m:properties>
-        </content>
-    </entry>
-</feed>
-            Return xml
-        End Function
-
-        Public Function GetCustomerEntryXml() As XElement
-            Dim xml As XElement = _
-    <entry xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns="http://www.w3.org/2005/Atom">
-        <category term="NorthwindModel.Customers" scheme="http://docs.oasis-open.org/odata/ns/scheme"/>
-        <id>http://something/odd</id>
-        <link rel="edit" href="//localhost/northwind.svc/Customers('ALFKI')" title="Customers"/>
-        <content type="application/xml">
-            <m:properties>
-                <d:CustomerID>ALFKI</d:CustomerID>
-            </m:properties>
-        </content>
-    </entry>
-            Return xml
-        End Function
-
-        <TestCategory("Partition2")> <TestMethod()> Public Sub MergeReferenceLink()
-            Dim dimensions As Dimension() = { _
-                New Dimension("MergeOption", [Enum].GetValues(GetType(MergeOption))) _
-                }
-            Dim engine As CombinatorialEngine = CombinatorialEngine.FromDimensions(dimensions)
-            TestUtil.RunCombinatorialEngineFail(engine, AddressOf MergeReferenceLinkWork)
-        End Sub
-
-        Private Sub MergeReferenceLinkWork(ByVal values As Hashtable)
-            Dim merge As MergeOption = DirectCast(values("MergeOption"), MergeOption)
-            Dim xml As XElement = GetEmployeesFeedXml()
-
-            Dim results As AtomEnumerationResults = Util.GetAtomResults(GetType(NorthwindSimpleModel.Employees), xml, merge)
-            Dim enumerable As System.Collections.IEnumerable = results.Enumerable
-            Dim count As Integer = 0
-            Dim nancy As NorthwindSimpleModel.Employees = Nothing
-            For Each obj As NorthwindSimpleModel.Employees In enumerable
-                count = count + 1
-                If count = 1 Then
-                    nancy = obj
-                    Assert.AreEqual("Nancy", obj.FirstName)
-                    Assert.AreEqual(0, obj.Employees1.Count)
-                    Assert.AreEqual("Andrew", obj.Employees2.FirstName)
-                ElseIf count = 2 Then
-                    Assert.AreEqual("Andrew", obj.FirstName)
-                    Assert.IsNull(obj.Employees2)
-                    Assert.AreEqual(5, obj.Employees1.Count)
-                    Assert.AreEqual("Nancy", obj.Employees1(0).FirstName)
-                    If merge <> MergeOption.NoTracking Then
-                        Assert.AreSame(nancy, obj.Employees1(0))
-                    End If
-                    Assert.AreEqual("Janet", obj.Employees1(1).FirstName)
-                    Assert.AreEqual("Margaret", obj.Employees1(2).FirstName)
-                    Assert.AreEqual("Steven", obj.Employees1(3).FirstName)
-                    Assert.AreEqual("Laura", obj.Employees1(4).FirstName)
-                End If
-            Next
-            Assert.AreEqual(2, count, "2 customers found")
-
-            If merge = MergeOption.NoTracking Then
-                Assert.AreEqual(0, results.Context.Links.Count, "0 links tracked")
-                Assert.AreEqual(0, results.Context.Entities.Count, "0 entities tracked")
-            Else
-                Assert.AreEqual(2 + 5, results.Context.Links.Count, "7 links tracked")
-                Assert.AreEqual(1 + 5, results.Context.Entities.Count, "6 entities tracked")
-            End If
-
-        End Sub
-
-        <TestCategory("Partition2")> <TestMethod()> Public Sub EntryWithNoEditLinkThrowsNullRef()
-            ' TODO: write test case for this!!!
-        End Sub
-
-        <TestCategory("Partition2")> <TestMethod()> Public Sub MergeSingleLink()
-            Dim dimensions As Dimension() = { _
-                New Dimension("JustOnce", New Boolean() {True, False}), _
-                New Dimension("MergeOption", [Enum].GetValues(GetType(MergeOption))) _
-                }
-            Dim engine As CombinatorialEngine = CombinatorialEngine.FromDimensions(dimensions)
-            TestUtil.RunCombinatorialEngineFail(engine, AddressOf MergeSingleLinkWork)
-        End Sub
-
-        Private Sub MergeSingleLinkWork(ByVal values As Hashtable)
-            Dim justOnce As Boolean = DirectCast(values("JustOnce"), Boolean)
-            Dim merge As MergeOption = DirectCast(values("MergeOption"), MergeOption)
-            Dim xml As XElement = GetCustomerEntryXml()
-            'Dim content As XElement = xml.Descendants().Where(Function(x) x.Name.LocalName = "content").Single
-            Dim entry As XElement = xml.DescendantsAndSelf().Where(Function(x) x.Name.LocalName = "entry").Single
-            Dim link As XElement = _
-                <link rel="http://docs.oasis-open.org/odata/ns/related/Orders" type="application/atom+xml;type=feed" title="Orders" href="Customers(55)/Orders" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns="http://www.w3.org/2005/Atom">
-                    <m:inline>
-                        <feed>
-                            <entry>
-                                <id>http://some-order-or-another</id>
-                                <link rel="edit" href="//localhost/northwind.svc/Orders('10248')" title="Orders"/>
-                                <category term="NorthwindModel.Orders" scheme="http://docs.oasis-open.org/odata/ns/scheme"/>
-                                <content type="application/xml">
-                                    <m:properties>
-                                        <d:OrderID m:type="Int32">10248</d:OrderID>
-                                    </m:properties>
-                                </content>
-                            </entry>
-                        </feed>
-                    </m:inline>
-                </link>
-            entry.Add(link)
-
-            Dim results As AtomEnumerationResults = Util.GetAtomResults(GetType(NorthwindSimpleModel.Customers), xml, merge)
-            Dim enumerable As System.Collections.IEnumerable = results.Enumerable
-            Dim count As Integer = 0
-            For Each obj As NorthwindSimpleModel.Customers In enumerable
-                count = count + 1
-                Assert.AreEqual("ALFKI", obj.CustomerID)
-                Assert.AreEqual(1, obj.Orders.Count)
-                Assert.AreEqual(10248, obj.Orders.Single.OrderID)
-            Next
-            Assert.AreEqual(1, count, "1 customer found")
-
-            If merge = MergeOption.NoTracking Then
-                Assert.AreEqual(0, results.Context.Entities.Count, "When NoTracking, no entries get populated in context")
-                Assert.AreEqual(0, results.Context.Links.Count, "When NoTracking, no links get populated in context")
-            Else
-                Assert.AreEqual(2, results.Context.Entities.Count, "2 entities tracked")
-                Assert.AreEqual(1, results.Context.Links.Count, "1 link tracked")
-            End If
-        End Sub
-
-        ' TODO: write a test for self-referential entity.
-        ' <link rel="http://docs.oasis-open.org/odata/ns/related/BestFriend" type="application/atom+xml;type=entry" title="BestFriend" href="Customers(55)/BestFriend" />
-
-        <TestCategory("Partition2")> <TestMethod()> Public Sub MergeOverwriteRefreshes()
-            Dim xml As XElement = GetCustomerEntryXml()
-
-            Dim results As AtomEnumerationResults = Util.GetAtomResults(GetType(NorthwindSimpleModel.Customers), xml, MergeOption.OverwriteChanges)
-            Dim enumerable As System.Collections.IEnumerable = results.Enumerable
-            Dim count As Integer = 0
-            For Each obj As NorthwindSimpleModel.Customers In enumerable
-                count = count + 1
-            Next
-            Assert.AreEqual(1, count, "1 customer found")
-            Assert.AreEqual(1, results.Context.Entities.Count, "1 entity tracked")
-
-            ' Update the payload, even with a local change, stuff is overwritten.
-            results.Context.UpdateObject(results.Context.Entities.Single.Entity)
-            xml.Descendants().Where(Function(e As XElement) e.Name.LocalName = "CustomerID" AndAlso e.Value = "ALFKI").Single().Value = "FOO"
-
-            results = Util.GetAtomResults(results.Context, GetType(NorthwindSimpleModel.Customers), xml, MergeOption.OverwriteChanges)
-            enumerable = results.Enumerable
-            count = 0
-            For Each obj As NorthwindSimpleModel.Customers In enumerable
-                count = count + 1
-                Assert.AreEqual("FOO", obj.CustomerID)
-            Next
-
-            Assert.AreEqual(1, count, "1 customer found")
-            Assert.AreEqual(1, results.Context.Entities.Count, "1 entity tracked")
-            Assert.AreEqual("FOO", TryCast(results.Context.Entities.Single.Entity, NorthwindSimpleModel.Customers).CustomerID)
-        End Sub
-
-        <TestCategory("Partition2")> <TestMethod()> Public Sub MergePreserveModifiedNoRefresh()
-            Dim xml As XElement = GetCustomerEntryXml()
-
-            Dim results As AtomEnumerationResults = Util.GetAtomResults(GetType(NorthwindSimpleModel.Customers), xml, MergeOption.PreserveChanges)
-            Dim enumerable As System.Collections.IEnumerable = results.Enumerable
-            Dim count As Integer = 0
-            For Each obj As NorthwindSimpleModel.Customers In enumerable
-                count = count + 1
-            Next
-            Assert.AreEqual(1, count, "1 customer found")
-            Assert.AreEqual(1, results.Context.Entities.Count, "1 entity tracked")
-
-            ' Update the payload; because we mark this as changed, Preserve will leave alone.
-            results.Context.UpdateObject(results.Context.Entities.Single.Entity)
-            xml.Descendants().Where(Function(e As XElement) e.Name.LocalName = "CustomerID" AndAlso e.Value = "ALFKI").Single().Value = "FOO"
-
-            results = Util.GetAtomResults(results.Context, GetType(NorthwindSimpleModel.Customers), xml, MergeOption.PreserveChanges)
-            enumerable = results.Enumerable
-            count = 0
-            For Each obj As NorthwindSimpleModel.Customers In enumerable
-                count = count + 1
-                Assert.AreEqual("ALFKI", obj.CustomerID)
-            Next
-
-            Assert.AreEqual(1, count, "1 customer found")
-            Assert.AreEqual(1, results.Context.Entities.Count, "1 entity tracked")
-            Assert.AreEqual("ALFKI", TryCast(results.Context.Entities.Single.Entity, NorthwindSimpleModel.Customers).CustomerID)
-        End Sub
-
-        <TestCategory("Partition2")> <TestMethod()> Public Sub MergePreserveChangesUntouched()
-            Dim xml As XElement = GetCustomerEntryXml()
-
-            Dim results As AtomEnumerationResults = Util.GetAtomResults(GetType(NorthwindSimpleModel.Customers), xml, MergeOption.PreserveChanges)
-            Dim enumerable As System.Collections.IEnumerable = results.Enumerable
-            Dim count As Integer = 0
-            For Each obj As NorthwindSimpleModel.Customers In enumerable
-                count = count + 1
-            Next
-            Assert.AreEqual(1, count, "1 customer found")
-            Assert.AreEqual(1, results.Context.Entities.Count, "1 entity tracked")
-
-            ' Update the payload; because there have been no changes, Preserve will still change.
-            xml.Descendants().Where(Function(e As XElement) e.Name.LocalName = "CustomerID" AndAlso e.Value = "ALFKI").Single().Value = "FOO"
-
-            results = Util.GetAtomResults(results.Context, GetType(NorthwindSimpleModel.Customers), xml, MergeOption.PreserveChanges)
-            enumerable = results.Enumerable
-            count = 0
-            For Each obj As NorthwindSimpleModel.Customers In enumerable
-                count = count + 1
-                Assert.AreEqual("FOO", obj.CustomerID)
-            Next
-
-            Assert.AreEqual(1, count, "1 customer found")
-            Assert.AreEqual(1, results.Context.Entities.Count, "1 entity tracked")
-            Assert.AreEqual("FOO", TryCast(results.Context.Entities.Single.Entity, NorthwindSimpleModel.Customers).CustomerID)
-        End Sub
-
-        <TestCategory("Partition2")> <TestMethod()> Public Sub MergeAppendOnlyTwiceNoRefresh()
-            Dim xml As XElement = GetCustomerEntryXml()
-
-            Dim results As AtomEnumerationResults = Util.GetAtomResults(GetType(NorthwindSimpleModel.Customers), xml, MergeOption.AppendOnly)
-            Dim enumerable As System.Collections.IEnumerable = results.Enumerable
-            Dim count As Integer = 0
-            For Each obj As NorthwindSimpleModel.Customers In enumerable
-                count = count + 1
-            Next
-            Assert.AreEqual(1, count, "1 customer found")
-            Assert.AreEqual(1, results.Context.Entities.Count, "1 entity tracked")
-
-            ' Update the payload, but nothing should change with AppendOnly.
-            xml.Descendants().Where(Function(e As XElement) e.Name.LocalName = "CustomerID" AndAlso e.Value = "ALFKI").Single().Value = "FOO"
-
-            results = Util.GetAtomResults(results.Context, GetType(NorthwindSimpleModel.Customers), xml, MergeOption.AppendOnly)
-            enumerable = results.Enumerable
-            count = 0
-            For Each obj As NorthwindSimpleModel.Customers In enumerable
-                count = count + 1
-                Assert.AreEqual("ALFKI", obj.CustomerID)
-            Next
-
-            Assert.AreEqual(1, count, "1 customer found")
-            Assert.AreEqual(1, results.Context.Entities.Count, "1 entity tracked")
-            Assert.AreEqual("ALFKI", TryCast(results.Context.Entities.Single.Entity, NorthwindSimpleModel.Customers).CustomerID)
-        End Sub
-
-        <TestCategory("Partition2")> <TestMethod()> Public Sub MergeAppendOnlyOnce()
-            Dim xml As XElement = GetCustomerEntryXml()
-            Dim results As AtomEnumerationResults = Util.GetAtomResults(GetType(NorthwindSimpleModel.Customers), xml, MergeOption.AppendOnly)
-            Dim enumerable As System.Collections.IEnumerable = results.Enumerable
-            Dim count As Integer = 0
-            For Each obj As NorthwindSimpleModel.Customers In enumerable
-                count = count + 1
-                Assert.AreEqual("ALFKI", obj.CustomerID)
-            Next
-            Assert.AreEqual(1, count, "1 customer found")
-            Assert.AreEqual(1, results.Context.Entities.Count, "1 entity tracked")
-        End Sub
-
-        <TestCategory("Partition2")> <TestMethod()> Public Sub MergeNoTrackingEmpty()
-            Dim xml As XElement = GetCustomerEntryXml()
-            Dim results As AtomEnumerationResults = Util.GetAtomResults(GetType(NorthwindSimpleModel.Customers), xml, MergeOption.NoTracking)
-            Dim enumerable As System.Collections.IEnumerable = results.Enumerable
-            Dim count As Integer = 0
-            For Each obj As NorthwindSimpleModel.Customers In enumerable
-                count = count + 1
-                Assert.AreEqual("ALFKI", obj.CustomerID)
-            Next
-            Assert.AreEqual(1, count, "1 customer found")
-            Assert.AreEqual(0, results.Context.Entities.Count, "no entities tracked")
-        End Sub
-
-        <TestCategory("Partition2")> <TestMethod()> Public Sub CustomerOrders()
+        'Remove Atom
+        <Ignore> <TestCategory("Partition2")> <TestMethod()> Public Sub CustomerOrders()
             Dim query = From cust As NorthwindSimpleModel.Customers In ctx.Customers Where cust.CustomerID = "AROUT"
             Dim languageQuery = CType(query, DataServiceQuery(Of NorthwindSimpleModel.Customers)).Expand("Orders")
             Dim explictQuery = ctx.CreateUri(Of NorthwindSimpleModel.Customers)("Customers('AROUT')?$expand=Orders", True)
-#If ASTORIA_OPEN_OBJECT Then
-            Dim openQuery = ctx.CreateUri(Of OpenObject)(explictQuery.ToString())
-#End If
             Assert.AreEqual(explictQuery.ToString(), languageQuery.ToString())
 
             For Each merger As MergeOption In New MergeOption() {MergeOption.NoTracking, MergeOption.AppendOnly}
@@ -584,19 +131,12 @@ Partial Public Class ClientModule
                     Assert.AreEqual(13, ctx.Links.Count, "link count")
                 End If
             Next
-
-#If ASTORIA_OPEN_OBJECT Then
-            Dim openCustomer = ctx.Execute(openQuery).Single()
-#End If
         End Sub
-
-        <TestCategory("Partition2")> <TestMethod()> Public Sub CircularRelationships()
+        'Remove Atom
+        <Ignore> <TestCategory("Partition2")> <TestMethod()> Public Sub CircularRelationships()
             Dim query = From cust As NorthwindSimpleModel.Customers In ctx.Customers Where cust.CustomerID = "AROUT"
             Dim languageQuery = CType(query, DataServiceQuery(Of NorthwindSimpleModel.Customers)).Expand("Orders($expand=Customers)")
             Dim explictQuery = ctx.CreateUri(Of NorthwindSimpleModel.Customers)("Customers('AROUT')?$expand=Orders($expand=Customers)", True)
-#If ASTORIA_OPEN_OBJECT Then
-            Dim openQuery = ctx.CreateUri(Of OpenObject)(explictQuery.ToString())
-#End If
             Assert.AreEqual(explictQuery.ToString(), languageQuery.ToString())
 
             For Each merger As MergeOption In New MergeOption() {MergeOption.NoTracking, MergeOption.AppendOnly}
@@ -613,19 +153,12 @@ Partial Public Class ClientModule
                     Assert.AreEqual(26, ctx.Links.Count, "link count")
                 End If
             Next
-
-#If ASTORIA_OPEN_OBJECT Then
-            Dim openCustomer = ctx.Execute(openQuery).Single()
-#End If
         End Sub
-
-        <TestCategory("Partition2")> <TestMethod()> Public Sub CircularRelationships_ExpandedFurther()
+        'Remove Atom
+        <Ignore> <TestCategory("Partition2")> <TestMethod()> Public Sub CircularRelationships_ExpandedFurther()
             Dim query = From cust As NorthwindSimpleModel.Customers In ctx.Customers Where cust.CustomerID = "AROUT"
             Dim languageQuery = CType(query, DataServiceQuery(Of NorthwindSimpleModel.Customers)).Expand("Orders($expand=Employees($expand=Orders($expand=Customers)))")
             Dim explictQuery = ctx.CreateUri(Of NorthwindSimpleModel.Customers)("Customers('AROUT')?$expand=Orders($expand=Employees($expand=Orders($expand=Customers)))", True)
-#If ASTORIA_OPEN_OBJECT Then
-            Dim openQuery = ctx.CreateUri(Of OpenObject)(explictQuery.ToString())
-#End If
             Assert.AreEqual(explictQuery.ToString(), languageQuery.ToString())
 
             For Each merger As MergeOption In New MergeOption() {MergeOption.NoTracking, MergeOption.AppendOnly}
@@ -642,13 +175,9 @@ Partial Public Class ClientModule
                     Assert.IsTrue(1200 < ctx.Links.Count, "link count")
                 End If
             Next
-
-#If ASTORIA_OPEN_OBJECT Then
-            Dim openCustomer = ctx.Execute(openQuery).Single()
-#End If
         End Sub
-
-        <TestCategory("Partition2")> <TestMethod()> _
+        'Remove Atom
+        <Ignore> <TestCategory("Partition2")> <TestMethod()>
         Public Sub CustomerExpandOrders()
             Dim query = ctx.CreateUri(Of NorthwindSimpleModel.Customers)("Customers?$top=5&$expand=Orders")
 
@@ -660,8 +189,8 @@ Partial Public Class ClientModule
             Assert.IsTrue(0 < totalOrders, "no orders expanded")
             Assert.AreEqual(totalOrders, Enumerable.Count(From a In ctx.Entities Where GetType(NorthwindSimpleModel.Orders).IsInstanceOfType(a.Entity) Select a))
         End Sub
-
-        <TestCategory("Partition2")> <TestMethod()> Public Sub SameEntityRepeatedWithOverwriteChanges()
+        'Remove Atom
+        <Ignore> <TestCategory("Partition2")> <TestMethod()> Public Sub SameEntityRepeatedWithOverwriteChanges()
             Dim requestUri = ctx.CreateUri(Of NorthwindSimpleModel.Customers)("Customers?$expand=Orders($expand=Customers)", True)
             ctx.MergeOption = MergeOption.OverwriteChanges
             Dim collection = New HashSet(Of NorthwindSimpleModel.Customers)()
@@ -696,8 +225,8 @@ Partial Public Class ClientModule
             End Try
         End Sub
 #End If
-
-        <TestCategory("Partition2")> <TestMethod()> Public Sub NoContent()
+        'Remove Atom
+        <Ignore> <TestCategory("Partition2")> <TestMethod()> Public Sub NoContent()
             ' Original bug failure.
             Dim q = ctx.CreateQuery(Of NorthwindSimpleModel.Employees)("Employees(2)/Employees2")
             For Each o In q
@@ -715,8 +244,8 @@ Partial Public Class ClientModule
             Next
 
         End Sub
-
-        <TestCategory("Partition2")> <TestMethod()> Public Sub KeyValueWithSingleQuote()
+        'Remove Atom
+        <Ignore> <TestCategory("Partition2")> <TestMethod()> Public Sub KeyValueWithSingleQuote()
             Dim products = ctx.Alphabetical_list_of_products.Execute().ToArray()
 
             ExecuteQuerySingle(HttpStatusCode.OK, ctx.CreateUri(Of NorthwindSimpleModel.Alphabetical_list_of_products)("Alphabetical_list_of_products(CategoryName='Condiments',Discontinued=false,ProductID=4,ProductName='Chef Anton''s Cajun Seasoning')"))
@@ -728,18 +257,6 @@ Partial Public Class ClientModule
             ExecuteQuerySingle(HttpStatusCode.BadRequest, ctx.CreateUri(Of NorthwindSimpleModel.Alphabetical_list_of_products)("Alphabetical_list_of_products(CategoryName='Condiments',Discontinued=false,ProductID=4,ProductName='Chef%20Anton'%20Cajun%20Seasoning')"))
 
             ExecuteQuerySingle(HttpStatusCode.BadRequest, ctx.CreateUri(Of NorthwindSimpleModel.Alphabetical_list_of_products)("Alphabetical_list_of_products(CategoryName='Condiments',Discontinued=false,ProductID=4,ProductName='Chef%20Anton%27%20Cajun%20Seasoning')"))
-
-#If ASTORIA_OPEN_OBJECT Then
-            ExecuteQuerySingle(HttpStatusCode.OK, ctx.CreateUri(Of OpenObject)("Alphabetical_list_of_products(CategoryName='Condiments',Discontinued=false,ProductID=4,ProductName='Chef Anton''s Cajun Seasoning')"))
-
-            ExecuteQuerySingle(HttpStatusCode.OK, ctx.CreateUri(Of OpenObject)("Alphabetical_list_of_products(CategoryName='Condiments',Discontinued=false,ProductID=4,ProductName='Chef%20Anton''s%20Cajun%20Seasoning')"))
-
-            ExecuteQuerySingle(HttpStatusCode.OK, ctx.CreateUri(Of OpenObject)("Alphabetical_list_of_products(CategoryName='Condiments',Discontinued=false,ProductID=4,ProductName='Chef%20Anton%27%27s%20Cajun%20Seasoning')"))
-
-            ExecuteQuerySingle(HttpStatusCode.BadRequest, ctx.CreateUri(Of OpenObject)("Alphabetical_list_of_products(CategoryName='Condiments',Discontinued=false,ProductID=4,ProductName='Chef%20Anton'%20Cajun%20Seasoning')"))
-
-            ExecuteQuerySingle(HttpStatusCode.BadRequest, ctx.CreateUri(Of OpenObject)("Alphabetical_list_of_products(CategoryName='Condiments',Discontinued=false,ProductID=4,ProductName='Chef%20Anton%27%20Cajun%20Seasoning')"))
-#End If
         End Sub
 
         Private Function ExecuteQuerySingle(Of T)(ByVal status As HttpStatusCode, ByVal query As DataServiceRequest(Of T)) As T
@@ -759,7 +276,7 @@ Partial Public Class ClientModule
         End Function
 
 
-        <TestCategory("Partition2")> <TestMethod()> _
+        <TestCategory("Partition2")> <TestMethod()>
         Public Sub BatchQueryFail()
             Dim data As DataServiceResponse = ctx.ExecuteBatch(ctx.CreateQuery(Of NorthwindSimpleModel.Customers)("Cust"))
 
@@ -782,8 +299,8 @@ Partial Public Class ClientModule
             Assert.AreEqual(1, queryCount)
             Assert.AreEqual(0, data.Count, "0 batch")
         End Sub
-
-        <TestCategory("Partition2")> <TestMethod()> _
+        'Remove Atom
+        <Ignore> <TestCategory("Partition2")> <TestMethod()>
         Public Sub BatchQuerySingle()
             Dim data As DataServiceResponse = ctx.ExecuteBatch(ctx.Customers)
 
@@ -813,8 +330,8 @@ Partial Public Class ClientModule
             Assert.AreEqual(1, queryCount)
             Assert.AreEqual(0, data.Count)
         End Sub
-
-        <TestCategory("Partition2")> <TestMethod()> _
+        'Remove Atom
+        <Ignore> <TestCategory("Partition2")> <TestMethod()>
         Public Sub BatchQueryDouble()
             Dim data As DataServiceResponse = ctx.ExecuteBatch(ctx.Customers, ctx.Suppliers)
 
@@ -859,8 +376,8 @@ Partial Public Class ClientModule
             Assert.AreEqual(2, queryCount)
             Assert.AreEqual(0, data.Count)
         End Sub
-
-        <TestCategory("Partition2")> <TestMethod()> Public Sub InterleaveExecute()
+        'Remove Atom
+        <Ignore> <TestCategory("Partition2")> <TestMethod()> Public Sub InterleaveExecute()
             Dim a = ctx.Customers.GetEnumerator()
             Dim b = ctx.Customers.GetEnumerator()
 
@@ -936,8 +453,8 @@ Partial Public Class ClientModule
                 semi.Release()
             End Try
         End Sub
-
-        <TestCategory("Partition2")> <TestMethod()> Public Sub EndExecuteFailure()
+        'Remove Atom
+        <Ignore> <TestCategory("Partition2")> <TestMethod()> Public Sub EndExecuteFailure()
             Try
                 ctx.Categories.EndExecute(Nothing) ' calling EndExecute with null
                 Assert.Fail("expected ArgumentNullException")
@@ -1038,8 +555,8 @@ Partial Public Class ClientModule
             End Try
 
         End Sub
-
-        <TestCategory("Partition2")> <TestMethod()> Public Sub EndLoadPropertyApiFailure()
+        'Remove Atom
+        <Ignore> <TestCategory("Partition2")> <TestMethod()> Public Sub EndLoadPropertyApiFailure()
             Try
                 ctx.EndLoadProperty(Nothing) ' calling EndLoadProperty with null
                 Assert.Fail("expected ArgumentNullException")
@@ -1048,8 +565,8 @@ Partial Public Class ClientModule
             End Try
 
             Dim ctx2 = New NorthwindSimpleModel.NorthwindContext(ctx.BaseUri)
-            ctx2.EnableAtom = True
-            ctx2.Format.UseAtom()
+            'ctx2.EnableAtom = True
+            'ctx2.Format.UseAtom()
             Dim customer = ctx2.Customers().First()
 
             Dim result = ctx2.BeginLoadProperty(customer, "Orders", Nothing, Nothing)
@@ -1167,18 +684,6 @@ Partial Public Class ClientModule
             End Try
         End Sub
 
-#If ASTORIA_OPEN_OBJECT Then
-        <TestMethod()> Public Sub LoadPropertyOpenType()
-            Dim customer As OpenObject = ctx.CreateQuery(Of OpenObject)("Customers").First()
-            Try
-                ctx.LoadProperty(customer, "Orders")
-                Assert.Fail("expected InvalidOperationException")
-            Catch ex As InvalidOperationException
-                Assert.IsTrue(ex.Message.Contains("not currently tracking"), "{0}", ex)
-            End Try
-        End Sub
-#End If
-
         Private Function ExtraMissing(Of T)(ByVal expected As Exception) As T
             Try
                 Dim od = ctx.Execute(Of T)(New Uri("Order_Details?$top=1&$expand=Orders", UriKind.Relative)).Single()
@@ -1199,7 +704,7 @@ Partial Public Class ClientModule
         Private Function MismatchedNavigationType(Of T)(ByVal expected As Exception) As T
             Try
                 Dim ctx = New NorthwindSimpleModel.NorthwindContext(Me.ctx.BaseUri, ODataProtocolVersion.V4)
-                ctx.Format.UseAtom()
+                'ctx.Format.UseAtom()
                 Dim od = ctx.Execute(Of T)(New Uri("Orders?$top=1", UriKind.Relative)).Single()
                 Assert.IsNull(expected, "expected exception was not thrown")
                 Return od
@@ -1213,80 +718,82 @@ Partial Public Class ClientModule
                 End If
             End Try
         End Function
-
-        <TestCategory("Partition2")> <TestMethod()> Public Sub NothingExtraOrMissing()
-            ctx.IgnoreMissingProperties = False
+        'Remove Atom
+        <Ignore> <TestCategory("Partition2")> <TestMethod()> Public Sub NothingExtraOrMissing()
+            ctx.UndeclaredPropertyBehavior = UndeclaredPropertyBehavior.ThrowException
             Assert.IsNotNull(ExtraMissing(Of NorthwindSimpleModel.Order_Details)(Nothing))
 
-            ctx.IgnoreMissingProperties = True
+            ctx.UndeclaredPropertyBehavior = UndeclaredPropertyBehavior.Support
             Assert.IsNotNull(ExtraMissing(Of NorthwindSimpleModel.Order_Details)(Nothing))
         End Sub
-
-        <TestCategory("Partition2")> <TestMethod()> Public Sub ExtraKey()
-            ctx.IgnoreMissingProperties = False
+        'Remove Atom
+        <Ignore> <TestCategory("Partition2")> <TestMethod()> Public Sub ExtraKey()
+            ctx.UndeclaredPropertyBehavior = UndeclaredPropertyBehavior.ThrowException
             Dim od = ExtraMissing(Of Order_Details_ExtraKeys)(New InvalidOperationException())
             Assert.IsNull(od)
 
-            ctx.IgnoreMissingProperties = True
+            ctx.UndeclaredPropertyBehavior = UndeclaredPropertyBehavior.Support
             Dim oe = ExtraMissing(Of Order_Details_ExtraKeys)(New InvalidOperationException())
             Assert.IsNull(oe)
         End Sub
-
-        <TestCategory("Partition2")> <TestMethod()> Public Sub ExtraProperty()
-            ctx.IgnoreMissingProperties = False
+        'Remove Atom
+        <Ignore> <TestCategory("Partition2")> <TestMethod()> Public Sub ExtraProperty()
+            ctx.UndeclaredPropertyBehavior = UndeclaredPropertyBehavior.ThrowException
             Dim od = ExtraMissing(Of Order_Details_ExtraProperties)(New InvalidOperationException())
             Assert.IsNull(od)
 
-            ctx.IgnoreMissingProperties = True
+            ctx.UndeclaredPropertyBehavior = UndeclaredPropertyBehavior.Support
             Dim oe = ExtraMissing(Of Order_Details_ExtraProperties)(New InvalidOperationException())
             Assert.IsNull(oe)
 
         End Sub
-
-        <TestCategory("Partition2")> <TestMethod()> Public Sub MismatchedNavigationPropertyType()
+        'Remove Atom
+        <Ignore> <TestCategory("Partition2")> <TestMethod()> Public Sub MismatchedNavigationPropertyType()
             ' Regression test for [Client-ODataLib-Integration] Astoria client does not fail if the client and server stream property does not match
-            ctx.IgnoreMissingProperties = False
+            ctx.UndeclaredPropertyBehavior = UndeclaredPropertyBehavior.ThrowException
             Dim od = MismatchedNavigationType(Of Orders_ElementNotEntityType)(New InvalidOperationException())
             Assert.IsNull(od)
 
-            ctx.IgnoreMissingProperties = True
+            ctx.UndeclaredPropertyBehavior = UndeclaredPropertyBehavior.Support
             Dim oe = MismatchedNavigationType(Of Orders_ElementNotEntityType)(New InvalidOperationException())
             Assert.IsNull(oe)
         End Sub
-        <TestCategory("Partition2")> <TestMethod()> Public Sub MissingDescribedKey()
-            ctx.IgnoreMissingProperties = False
+        'Doesn't check entry key properties before execute, So this case is invalid'
+        <Ignore> <TestCategory("Partition2")> <TestMethod()> Public Sub MissingDescribedKey()
+            ctx.UndeclaredPropertyBehavior = UndeclaredPropertyBehavior.ThrowException
+
             ExtraMissing(Of Order_Details_MissingDescribedKey)(New InvalidOperationException())
 
-            ctx.IgnoreMissingProperties = True
+            ctx.UndeclaredPropertyBehavior = UndeclaredPropertyBehavior.Support
             ExtraMissing(Of Order_Details_MissingDescribedKey)(New InvalidOperationException())
         End Sub
-
-        <TestCategory("Partition2")> <TestMethod()> Public Sub MissingKey()
-            ctx.IgnoreMissingProperties = False
+        'Remove Atom
+        <Ignore> <TestCategory("Partition2")> <TestMethod()> Public Sub MissingKey()
+            ctx.UndeclaredPropertyBehavior = UndeclaredPropertyBehavior.ThrowException
             ExtraMissing(Of Order_Details_MissingKeys)(New InvalidOperationException())
 
-            ctx.IgnoreMissingProperties = True
+            ctx.UndeclaredPropertyBehavior = UndeclaredPropertyBehavior.Support
             ExtraMissing(Of Order_Details_MissingKeys)(New InvalidOperationException())
         End Sub
-
-        <TestCategory("Partition2")> <TestMethod()> Public Sub MissingProperty()
-            ctx.IgnoreMissingProperties = False
+        'Remove Atom
+        <Ignore> <TestCategory("Partition2")> <TestMethod()> Public Sub MissingProperty()
+            ctx.UndeclaredPropertyBehavior = UndeclaredPropertyBehavior.ThrowException
             ExtraMissing(Of Order_Details_MissingProperties)(New InvalidOperationException())
 
-            ctx.IgnoreMissingProperties = True
+            ctx.UndeclaredPropertyBehavior = UndeclaredPropertyBehavior.Support
             ExtraMissing(Of Order_Details_MissingProperties)(New InvalidOperationException())
         End Sub
-
-        <TestCategory("Partition2")> <TestMethod()> Public Sub MissingLink()
-            ctx.IgnoreMissingProperties = False
+        'Remove Atom
+        <Ignore> <TestCategory("Partition2")> <TestMethod()> Public Sub MissingLink()
+            ctx.UndeclaredPropertyBehavior = UndeclaredPropertyBehavior.ThrowException
             ExtraMissing(Of Order_Details_MissingLinks)(New InvalidOperationException())
 
-            ctx.IgnoreMissingProperties = True
+            ctx.UndeclaredPropertyBehavior = UndeclaredPropertyBehavior.Support
             ExtraMissing(Of Order_Details_MissingLinks)(Nothing)
         End Sub
-
-        <TestCategory("Partition2")> <TestMethod()> Public Sub CompetingDefaultAKeyID()
-            ctx.IgnoreMissingProperties = True
+        'Remove Atom
+        <Ignore> <TestCategory("Partition2")> <TestMethod()> Public Sub CompetingDefaultAKeyID()
+            ctx.UndeclaredPropertyBehavior = UndeclaredPropertyBehavior.Support
             Assert.IsNotNull(ExtraMissing(Of AKey)(Nothing))
 
             Dim a As New AKey
@@ -1298,9 +805,9 @@ Partial Public Class ClientModule
             ctx.TryGetUri(a, identity)
             Assert.IsTrue(identity.ToString().Contains("a(1)"))
         End Sub
-
-        <TestCategory("Partition2")> <TestMethod()> Public Sub CompetingDefaultBKeyID()
-            ctx.IgnoreMissingProperties = True
+        'Remove Atom
+        <Ignore> <TestCategory("Partition2")> <TestMethod()> Public Sub CompetingDefaultBKeyID()
+            ctx.UndeclaredPropertyBehavior = UndeclaredPropertyBehavior.Support
             Assert.IsNotNull(ExtraMissing(Of BKey)(Nothing))
 
             Dim b As New BKey
@@ -1312,8 +819,8 @@ Partial Public Class ClientModule
             ctx.TryGetUri(b, identity)
             Assert.IsTrue(identity.ToString().Contains("b(1)"))
         End Sub
-
-        <TestCategory("Partition2")> <TestMethod()> Public Sub VerifyIncludingPropertiesOnBaseClassesOfClassWithKEy()
+        'Remove Atom
+        <Ignore> <TestCategory("Partition2")> <TestMethod()> Public Sub VerifyIncludingPropertiesOnBaseClassesOfClassWithKEy()
             Try
                 ctx.AttachTo("C", New CNoKey())
             Catch ex As ArgumentException
@@ -1342,8 +849,8 @@ Partial Public Class ClientModule
 
             DProperties(wrappingStream.GetLoggingStreamAsXDocument().Elements.First)
         End Sub
-
-        <TestCategory("Partition2")> <TestMethod(), Variation("Verify Server Type in Entity Descriptors gets materialized correctly")> _
+        'Remove Atom
+        <Ignore> <TestCategory("Partition2")> <TestMethod(), Variation("Verify Server Type in Entity Descriptors gets materialized correctly")>
         Public Sub ResolvingServerTypeNameInEntityDescriptor()
             Dim custs = ctx.Customers.Expand("Orders").FirstOrDefault()
             Dim custDescriptor = ctx.GetEntityDescriptor(custs)
@@ -1353,7 +860,7 @@ Partial Public Class ClientModule
         End Sub
 
         Private Shared Sub DProperties(ByVal data As XElement)
-            Dim result As XElement = _
+            Dim result As XElement =
                 <entry xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns="http://www.w3.org/2005/Atom">
                     <title/>
                     <updated>2008-05-19T21:12:53.5671702Z</updated>
@@ -1378,7 +885,7 @@ Partial Public Class ClientModule
 
     End Class
 
-    <Global.Microsoft.OData.Client.KeyAttribute("OrderID", "ProductID", "ExtraID")> _
+    <Global.Microsoft.OData.Client.KeyAttribute("OrderID", "ProductID", "ExtraID")>
     Partial Public Class Order_Details_MissingDescribedKey
         Public Property OrderID() As Integer
             Get
@@ -1463,7 +970,7 @@ Partial Public Class ClientModule
 
 
 #Region "Order_Details with additional key not on server, ExtraID"
-    <Global.Microsoft.OData.Client.KeyAttribute("OrderID", "ProductID", "ExtraID")> _
+    <Global.Microsoft.OData.Client.KeyAttribute("OrderID", "ProductID", "ExtraID")>
     Partial Public Class Order_Details_ExtraKeys
         Public Property OrderID() As Integer
             Get
@@ -1548,7 +1055,7 @@ Partial Public Class ClientModule
 #End Region
 
 #Region "Order_Details with additional property not on server, Quality"
-    <Global.Microsoft.OData.Client.KeyAttribute("OrderID", "ProductID")> _
+    <Global.Microsoft.OData.Client.KeyAttribute("OrderID", "ProductID")>
     Partial Public Class Order_Details_ExtraProperties
         Public Property OrderID() As Integer
             Get
@@ -1633,7 +1140,7 @@ Partial Public Class ClientModule
 #End Region
 
 #Region "Order_Details with missing ProductID"
-    <Global.Microsoft.OData.Client.KeyAttribute("OrderID")> _
+    <Global.Microsoft.OData.Client.KeyAttribute("OrderID")>
     Partial Public Class Order_Details_MissingKeys
         Public Property OrderID() As Integer
             Get
@@ -1698,7 +1205,7 @@ Partial Public Class ClientModule
 #End Region
 
 #Region "Order_Details with missing UnitPrice & Quantity"
-    <Global.Microsoft.OData.Client.KeyAttribute("OrderID", "ProductID")> _
+    <Global.Microsoft.OData.Client.KeyAttribute("OrderID", "ProductID")>
     Partial Public Class Order_Details_MissingProperties
         Public Property OrderID() As Integer
             Get
@@ -1751,7 +1258,7 @@ Partial Public Class ClientModule
         Private _Products As Products
     End Class
 #End Region
-    <Global.Microsoft.OData.Client.KeyAttribute("OrderID")> _
+    <Global.Microsoft.OData.Client.KeyAttribute("OrderID")>
     Partial Public Class Orders_ElementNotEntityType
         '''<summary>
         '''Create a new Orders object.
@@ -2027,7 +1534,7 @@ Partial Public Class ClientModule
     End Class
 
 #Region "Order_Details with missing Orders & Products (links)"
-    <Global.Microsoft.OData.Client.KeyAttribute("OrderID", "ProductID")> _
+    <Global.Microsoft.OData.Client.KeyAttribute("OrderID", "ProductID")>
     Partial Public Class Order_Details_MissingLinks
         Public Property OrderID() As Integer
             Get

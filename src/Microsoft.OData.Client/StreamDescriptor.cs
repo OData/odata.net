@@ -20,7 +20,7 @@ namespace Microsoft.OData.Client
         /// The Data service stream link object
         /// </summary>
         private DataServiceStreamLink streamLink;
-        
+
         /// <summary>entity descriptor refering the parent entity.</summary>
         private EntityDescriptor entityDescriptor;
 
@@ -79,7 +79,7 @@ namespace Microsoft.OData.Client
         }
 
         #region Internal Properties
-        
+
         /// <summary>
         /// Returns the name of the stream.
         /// </summary>

@@ -4,19 +4,12 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core
+namespace Microsoft.OData
 {
     #region Namespaces
-    using System;
-    using System.Diagnostics;
-    using System.IO;
-    using System.Text;
-#if ODATALIB_ASYNC
+#if PORTABLELIB
     using System.Threading.Tasks;
 #endif
-    using Microsoft.OData.Edm;
-    using Microsoft.OData.Core.Atom;
-    using Microsoft.OData.Core.Json;
     #endregion Namespaces
 
     /// <summary>
@@ -25,21 +18,21 @@ namespace Microsoft.OData.Core
     public abstract class ODataCollectionWriter
     {
         /// <summary>Start writing a collection.</summary>
-        /// <param name="collectionStart">The <see cref="T:Microsoft.OData.Core.ODataCollectionStart" /> representing the collection.</param>
+        /// <param name="collectionStart">The <see cref="T:Microsoft.OData.ODataCollectionStart" /> representing the collection.</param>
         public abstract void WriteStart(ODataCollectionStart collectionStart);
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary>Asynchronously start writing a collection.</summary>
         /// <returns>A task instance that represents the asynchronous write operation.</returns>
-        /// <param name="collectionStart">The <see cref="T:Microsoft.OData.Core.ODataCollectionStart" /> representing the collection.</param>
+        /// <param name="collectionStart">The <see cref="T:Microsoft.OData.ODataCollectionStart" /> representing the collection.</param>
         public abstract Task WriteStartAsync(ODataCollectionStart collectionStart);
 #endif
 
-        /// <summary>Starts writing an entry.</summary>
+        /// <summary>Starts writing a resource.</summary>
         /// <param name="item">The collection item to write.</param>
         public abstract void WriteItem(object item);
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary>Asynchronously start writing a collection item.</summary>
         /// <returns>A task instance that represents the asynchronous write operation.</returns>
         /// <param name="item">The collection item to write.</param>
@@ -49,7 +42,7 @@ namespace Microsoft.OData.Core
         /// <summary>Finishes writing a collection.</summary>
         public abstract void WriteEnd();
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary>Asynchronously finish writing a collection.</summary>
         /// <returns>A task instance that represents the asynchronous write operation.</returns>
         public abstract Task WriteEndAsync();
@@ -58,7 +51,7 @@ namespace Microsoft.OData.Core
         /// <summary>Flushes the write buffer to the underlying stream.</summary>
         public abstract void Flush();
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary>Flushes the write buffer to the underlying stream asynchronously.</summary>
         /// <returns>A task instance that represents the asynchronous operation.</returns>
         public abstract Task FlushAsync();

@@ -10,9 +10,8 @@ namespace Microsoft.Test.OData.Tests.Client.ContainmentTest
     using System.Collections.Generic;
     using System.Linq;
     using Microsoft.OData.Client;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Library;
     using Microsoft.Test.OData.Services.TestServices;
     using Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReference;
     using Microsoft.Test.OData.Tests.Client.Common;
@@ -76,9 +75,10 @@ namespace Microsoft.Test.OData.Tests.Client.ContainmentTest
             {
                 if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
                 {
-                    List<ODataEntry> entries = this.TestsHelper.QueryEntries("People(2)?$expand=Parent/$ref", mimeType);
+                    List<ODataResource> entries = this.TestsHelper.QueryEntries("People(2)?$expand=Parent/$ref", mimeType)
+                        .Where(e => e != null && (e.TypeName.EndsWith("Customer") || e.TypeName.EndsWith("Person"))).ToList();
                     Assert.AreEqual(2, entries.Count);
-                    ODataInstanceAnnotation annotation = entries.First().InstanceAnnotations.SingleOrDefault(ia => ia.Name == "Link.AnnotationByEntry");
+                    ODataInstanceAnnotation annotation = entries.First().InstanceAnnotations.FirstOrDefault(ia => ia.Name == "Link.AnnotationByEntry");
                     Assert.IsNotNull(annotation);
                     AssertODataPrimitiveValueAreEqual(new ODataPrimitiveValue(true), annotation.Value);
                 }
@@ -94,7 +94,7 @@ namespace Microsoft.Test.OData.Tests.Client.ContainmentTest
             {
                 if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
                 {
-                    ODataFeed feed = this.TestsHelper.QueryInnerFeed("Products(5)?$expand=Details/$ref", mimeType);
+                    ODataResourceSet feed = this.TestsHelper.QueryInnerFeed("Products(5)?$expand=Details/$ref", mimeType);
                     Assert.AreEqual(1, feed.InstanceAnnotations.Count);
                     ODataInstanceAnnotation annotation = feed.InstanceAnnotations.SingleOrDefault(ia => ia.Name == "Links.AnnotationByFeed");
                     Assert.IsNotNull(annotation);

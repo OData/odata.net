@@ -11,8 +11,8 @@ namespace Microsoft.OData.Service.Serializers
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Linq;
-    using Microsoft.OData.Core;
-    using Microsoft.OData.Core.Metadata;
+    using Microsoft.OData;
+    using Microsoft.OData.Metadata;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Service.Providers;
 
@@ -25,11 +25,6 @@ namespace Microsoft.OData.Service.Serializers
         /// The message reader being used.
         /// </summary>
         private readonly ODataMessageReader messageReader;
-
-        /// <summary>
-        /// Cached value indicating whether the request is Atom
-        /// </summary>
-        private bool? isAtomRequest = null;
 
         /// <summary>
         /// Cached value indicating whether the request is JSON Light
@@ -74,24 +69,6 @@ namespace Microsoft.OData.Service.Serializers
         }
 
         /// <summary>
-        /// Gets a value indicating whether the request is Atom
-        /// </summary>
-        protected override bool IsAtomRequest
-        {
-            get
-            {
-                if (!this.isAtomRequest.HasValue)
-                {
-#pragma warning disable 618
-                    this.isAtomRequest = ODataUtils.GetReadFormat(this.messageReader) == ODataFormat.Atom;
-#pragma warning restore 618
-                }
-
-                return this.isAtomRequest.Value;
-            }
-        }
-
-        /// <summary>
         /// Gets a value indicating whether the request is json light
         /// </summary>
         protected override bool IsJsonLightRequest
@@ -105,6 +82,19 @@ namespace Microsoft.OData.Service.Serializers
 
                 return this.isJsonLightRequest.Value;
             }
+        }
+
+        public static object ParseJsonToPrimitiveValue(string rawValue)
+        {
+            Debug.Assert(rawValue != null && rawValue.Length > 0, "");
+            ODataCollectionValue collectionValue = (ODataCollectionValue)
+                Microsoft.OData.ODataUriUtils.ConvertFromUriLiteral(string.Format("[{0}]", rawValue), ODataVersion.V4);
+            foreach (object item in collectionValue.Items)
+            {
+                return item;
+            }
+
+            return null;
         }
 
         /// <summary>
@@ -232,16 +222,16 @@ namespace Microsoft.OData.Service.Serializers
                 return null;
             }
 
-            ODataComplexValue complexValue = odataValue as ODataComplexValue;
-            if (complexValue != null)
-            {
-                return this.ConvertComplexValue(complexValue, ref resourceType);
-            }
-
             ODataCollectionValue collection = odataValue as ODataCollectionValue;
             if (collection != null)
             {
                 return this.ConvertCollection(collection, resourceType);
+            }
+
+            if (odataValue is ODataUntypedValue)
+            {
+                object primitiveVal = ParseJsonToPrimitiveValue((odataValue as ODataUntypedValue).RawValue);
+                return ConvertPrimitiveValue(primitiveVal, ref resourceType);
             }
 
             Debug.Assert(!(odataValue is ODataStreamReferenceValue), "We should never get here for stream values.");
@@ -342,44 +332,6 @@ namespace Microsoft.OData.Service.Serializers
         }
 
         /// <summary>
-        /// Converts the complex value reported by OData reader into WCF DS complex resource.
-        /// </summary>
-        /// <param name="complexValue">The complex value reported by the reader.</param>
-        /// <param name="complexResourceType">The expected resource type of the complex value. null if it's an open value.</param>
-        /// <returns>The newly created WCF DS complex resource.</returns>
-        private object ConvertComplexValue(ODataComplexValue complexValue, ref ResourceType complexResourceType)
-        {
-            Debug.Assert(complexValue != null, "complexValue != null");
-            
-            if ((complexResourceType == null) || (complexValue.TypeName != complexResourceType.FullName))
-            {
-                // Open complex value & Derived complex value - read the type from the value
-                // Note: 6.11 supports undeclared complex value, here it will cause exception (as expected) to be verified in test case.
-                Debug.Assert(!string.IsNullOrEmpty(complexValue.TypeName), "ODataLib should have verified that open complex value has a type name since we provided metadata.");
-                complexResourceType = this.Service.Provider.TryResolveResourceType(complexValue.TypeName);
-                Debug.Assert(complexResourceType.ResourceTypeKind == ResourceTypeKind.ComplexType, "ODataLib should have verified that complex value has a complex resource type.");
-            }
-
-            this.CheckAndIncrementObjectCount();
-
-            this.RecurseEnter();
-
-            // Create a new complex resource (complex values are atomic, so we never update existing ones, we already start from scratch)
-            object complexResource = this.Updatable.CreateResource(null, complexResourceType.FullName);
-
-            // Go through properties and apply them
-            Debug.Assert(complexValue.Properties != null, "The ODataLib reader should always populate the ODataComplexValue.Properties collection.");
-            foreach (ODataProperty complexProperty in complexValue.Properties)
-            {
-                this.ApplyProperty(complexProperty, complexResourceType, complexResource);
-            }
-
-            this.RecurseLeave();
-
-            return complexResource;
-        }
-
-        /// <summary>
         /// Converts the collection reported by OData reader into WCF DS collection resource.
         /// </summary>
         /// <param name="collection">The collection reported by the reader.</param>
@@ -396,7 +348,7 @@ namespace Microsoft.OData.Service.Serializers
                 var itemType = PrimitiveResourceTypeMap.TypeMap.GetPrimitive(itemTypeName);
                 itemType = itemType ?? this.Service.Provider.TryResolveResourceType(itemTypeName);
                 Debug.Assert(itemType != null, "The item Type in open collection property can not be resolved.");
-                
+
                 resourceType = CollectionResourceType.GetCollectionResourceType(itemType);
                 Debug.Assert(resourceType.ResourceTypeKind == ResourceTypeKind.Collection, "ODataLib should have verified that collection value has a collection resource type.");
             }

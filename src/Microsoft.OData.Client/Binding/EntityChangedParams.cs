@@ -11,29 +11,29 @@ namespace Microsoft.OData.Client
     public sealed class EntityChangedParams
     {
         #region Fields
-        
+
         /// <summary>Context associated with the BindingObserver.</summary>
         private readonly DataServiceContext context;
-        
+
         /// <summary>The entity object that has changed.</summary>
         private readonly object entity;
-        
+
         /// <summary>The property of the entity that has changed.</summary>
         private readonly string propertyName;
-        
+
         /// <summary>The current value of the target property.</summary>
         private readonly object propertyValue;
 
         /// <summary>Entity set to which the entity object belongs</summary>
         private readonly string sourceEntitySet;
-        
+
         /// <summary>Entity set to which the target propertyValue entity belongs</summary>
         private readonly string targetEntitySet;
 
         #endregion
 
         #region Constructor
-        
+
         /// <summary>
         /// Construct an EntityChangedParams object.
         /// </summary>
@@ -58,7 +58,7 @@ namespace Microsoft.OData.Client
             this.sourceEntitySet = sourceEntitySet;
             this.targetEntitySet = targetEntitySet;
         }
-        
+
         #endregion
 
         #region Properties
@@ -104,7 +104,7 @@ namespace Microsoft.OData.Client
         {
             get { return this.targetEntitySet; }
         }
-        
+
         #endregion
     }
 }

@@ -10,7 +10,7 @@ namespace Microsoft.OData.Performance
     using System.IO;
     using global::Xunit;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.Xunit.Performance;
 
     public class ODataReaderFeedTests
@@ -77,7 +77,7 @@ namespace Microsoft.OData.Performance
                     {
                         using (var messageReader = ODataMessageHelper.CreateMessageReader(stream, Model, ODataMessageKind.Response, isFullValidation))
                         {
-                            ODataReader feedReader = messageReader.CreateODataFeedReader(TestEntitySet, TestEntityType);
+                            ODataReader feedReader = messageReader.CreateODataResourceSetReader(TestEntitySet, TestEntityType);
                             while (feedReader.Read()) { }
                         }
                     }

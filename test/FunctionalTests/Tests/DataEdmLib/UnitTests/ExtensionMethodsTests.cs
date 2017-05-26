@@ -7,7 +7,6 @@
 namespace EdmLibTests.UnitTests
 {
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Library;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     [TestClass]

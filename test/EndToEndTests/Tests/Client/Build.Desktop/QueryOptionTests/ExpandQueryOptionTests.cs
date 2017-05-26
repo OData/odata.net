@@ -9,7 +9,7 @@ namespace Microsoft.Test.OData.Tests.Client.QueryOptionTests
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.Test.OData.Services.TestServices;
     using Microsoft.Test.OData.Tests.Client.Common;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -38,7 +38,7 @@ namespace Microsoft.Test.OData.Tests.Client.QueryOptionTests
             foreach (var mimeType in mimeTypes)
             {
                 // $top
-                List<ODataEntry> entries = this.TestsHelper.QueryEntries("Products(5)?$expand=Details($top=3)", mimeType);
+                List<ODataResource> entries = this.TestsHelper.QueryEntries("Products(5)?$expand=Details($top=3)", mimeType);
                 if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
                 {
                     var details = entries.FindAll(e => e.Id.AbsoluteUri.Contains("ProductDetails"));
@@ -109,7 +109,7 @@ namespace Microsoft.Test.OData.Tests.Client.QueryOptionTests
         {
             foreach (var mimeType in mimeTypes)
             {
-                List<ODataEntry> entries = this.TestsHelper.QueryEntries("Products(5)?$expand=Details($orderby=Description;$skip=2;$top=1;$select=Description)", mimeType);
+                List<ODataResource> entries = this.TestsHelper.QueryEntries("Products(5)?$expand=Details($orderby=Description;$skip=2;$top=1;$select=Description)", mimeType);
                 if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
                 {
                     var details = entries.FindAll(e => e.Id.AbsoluteUri.Contains("ProductDetails"));

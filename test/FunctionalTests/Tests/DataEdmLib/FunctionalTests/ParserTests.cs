@@ -189,12 +189,12 @@ namespace EdmLibTests.FunctionalTests
             IEdmModel model;
             IEnumerable<EdmError> errors;
             var csdlElements = new XElement[] { XElement.Parse(csdl) };
-            bool parsed = CsdlReader.TryParse(new System.Xml.XmlReader[] { System.Xml.XmlReader.Create(new System.IO.StringReader(csdl)) }, out model, out errors);
+            bool parsed = SchemaReader.TryParse(new System.Xml.XmlReader[] { System.Xml.XmlReader.Create(new System.IO.StringReader(csdl)) }, out model, out errors);
             Assert.IsFalse(parsed, "parsed");
             Assert.AreEqual(2, errors.Count(), "2 errors");
             Assert.AreEqual(EdmErrorCode.UnexpectedXmlElement, errors.First().ErrorCode, "10: Unexpected Xml Element");
 
-            parsed = CsdlReader.TryParse(new System.Xml.XmlReader[] { csdlElements.First().CreateReader() }, out model, out errors);
+            parsed = SchemaReader.TryParse(new System.Xml.XmlReader[] { csdlElements.First().CreateReader() }, out model, out errors);
             Assert.IsFalse(parsed, "parsed");
             Assert.AreEqual(2, errors.Count(), "2 errors");
             Assert.AreEqual(EdmErrorCode.UnexpectedXmlElement, errors.First().ErrorCode, "10: Unexpected Xml Element");
@@ -209,16 +209,16 @@ namespace EdmLibTests.FunctionalTests
 
             foreach (var csdl in csdls)
             {
-                bool parsed = CsdlReader.TryParse(new System.Xml.XmlReader[] { csdl.CreateReader() }, out model, out errors);
+                bool parsed = SchemaReader.TryParse(new System.Xml.XmlReader[] { csdl.CreateReader() }, out model, out errors);
                 Assert.IsTrue(parsed, "parsed");
 
                 // http://docs.oasis-open.org/odata/ns/edm is a namespace that OData uses. 
                 var csdlStringNewNamespace = csdl.ToString();
-                parsed = CsdlReader.TryParse(new System.Xml.XmlReader[] { System.Xml.XmlReader.Create(new System.IO.StringReader(csdlStringNewNamespace)) }, out model, out errors);
+                parsed = SchemaReader.TryParse(new System.Xml.XmlReader[] { System.Xml.XmlReader.Create(new System.IO.StringReader(csdlStringNewNamespace)) }, out model, out errors);
                 Assert.IsTrue(parsed, "parsed");
 
                 csdlStringNewNamespace = csdl.ToString().Replace(csdl.GetDefaultNamespace().NamespaceName, "http://schemas.microsoft.com/ado/2007/09/edm");
-                parsed = CsdlReader.TryParse(new System.Xml.XmlReader[] { System.Xml.XmlReader.Create(new System.IO.StringReader(csdlStringNewNamespace)) }, out model, out errors);
+                parsed = SchemaReader.TryParse(new System.Xml.XmlReader[] { System.Xml.XmlReader.Create(new System.IO.StringReader(csdlStringNewNamespace)) }, out model, out errors);
                 Assert.IsFalse(parsed, "The parser should not support other invalid namespaces than http://docs.oasis-open.org/odata/ns/edm.");
             }
         }

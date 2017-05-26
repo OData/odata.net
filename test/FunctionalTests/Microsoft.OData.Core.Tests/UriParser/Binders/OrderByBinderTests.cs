@@ -6,13 +6,10 @@
 
 using System.Collections.Generic;
 using FluentAssertions;
-using Microsoft.OData.Core.UriParser;
-using Microsoft.OData.Core.UriParser.Parsers;
-using Microsoft.OData.Core.UriParser.Semantic;
-using Microsoft.OData.Core.UriParser.Syntactic;
+using Microsoft.OData.UriParser;
 using Xunit;
 
-namespace Microsoft.OData.Core.Tests.UriParser.Binders
+namespace Microsoft.OData.Tests.UriParser.Binders
 {
     /// <summary>
     /// Unit test for the OrderByBinder class.
@@ -27,7 +24,7 @@ namespace Microsoft.OData.Core.Tests.UriParser.Binders
         {
             this.orderbyBinder = new OrderByBinder(FakeBindMethods.BindMethodReturningASinglePrimitive);
 
-            var implicitRangeVariable = new EntityRangeVariable(ExpressionConstants.It, HardCodedTestModel.GetPersonTypeReference(), HardCodedTestModel.GetPeopleSet());
+            var implicitRangeVariable = new ResourceRangeVariable(ExpressionConstants.It, HardCodedTestModel.GetPersonTypeReference(), HardCodedTestModel.GetPeopleSet());
             this.bindingState = new BindingState(configuration) { ImplicitRangeVariable = implicitRangeVariable };
             this.bindingState.RangeVariables.Push(new BindingState(configuration) { ImplicitRangeVariable = implicitRangeVariable }.ImplicitRangeVariable);
         }

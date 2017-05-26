@@ -4,7 +4,7 @@ $filter = contains($it,'200')
 FilterQueryOption
 	ItemType = [Edm.String Nullable=False Unicode=True]
 	Parameter = 
-	NonentityRangeVariable
+	NonResourceRangeVariable
 		Name = $it
 		TypeReference = [Edm.String Nullable=False Unicode=True]
 	Expression = 
@@ -19,7 +19,7 @@ FilterQueryOption
 				NonentityRangeVariableReferenceNode
 					Name = $it
 					Range Variable = 
-					NonentityRangeVariable
+					NonResourceRangeVariable
 						Name = $it
 						TypeReference = [Edm.String Nullable=False Unicode=True]
 					TypeReference = [Edm.String Nullable=False Unicode=True]

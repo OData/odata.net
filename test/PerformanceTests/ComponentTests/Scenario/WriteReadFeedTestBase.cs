@@ -8,7 +8,7 @@ namespace Microsoft.OData.Performance
 {
     using System;
     using System.IO;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.OData.Edm;
 
     public class WriteReadFeedTestBase
@@ -19,19 +19,18 @@ namespace Microsoft.OData.Performance
         /// <param name="writeStream"></param>
         /// <param name="edmModel"></param>
         /// <param name="numberOfEntries"></param>
-        /// <param name="entry"></param>
+        /// <param name="innerWrite"></param>
         /// <param name="entitySet"></param>
         /// <returns>The payload size</returns>
-        protected Int64 WriteFeed(Stream writeStream, IEdmModel edmModel, long numberOfEntries, ODataEntry entry, IEdmEntitySetBase entitySet)
+        protected Int64 WriteFeed(Stream writeStream, IEdmModel edmModel, long numberOfEntries, Action<ODataWriter> innerWrite, IEdmEntitySetBase entitySet)
         {
             using (var messageWriter = ODataMessageHelper.CreateMessageWriter(writeStream, edmModel))
             {
-                ODataWriter writer = messageWriter.CreateODataFeedWriter(entitySet);
-                writer.WriteStart(new ODataFeed { Id = new Uri("http://www.odata.org/Perf.svc") });
+                ODataWriter writer = messageWriter.CreateODataResourceSetWriter(entitySet);
+                writer.WriteStart(new ODataResourceSet { Id = new Uri("http://www.odata.org/Perf.svc") });
                 for (long i = 0; i < numberOfEntries; ++i)
                 {
-                    writer.WriteStart(entry);
-                    writer.WriteEnd();
+                    innerWrite(writer);
                 }
                 writer.WriteEnd();
                 writer.Flush();
@@ -52,7 +51,7 @@ namespace Microsoft.OData.Performance
             readStream.Seek(0, SeekOrigin.Begin);
             using (var messageReader = ODataMessageHelper.CreateMessageReader(readStream, edmModel))
             {
-                ODataReader feedReader = messageReader.CreateODataFeedReader(entitySet, expectedBaseEntityType);
+                ODataReader feedReader = messageReader.CreateODataResourceSetReader(entitySet, expectedBaseEntityType);
                 while (feedReader.Read()) { }
             }
         }

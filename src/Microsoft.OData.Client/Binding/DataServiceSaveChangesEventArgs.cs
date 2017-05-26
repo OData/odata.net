@@ -27,5 +27,5 @@ namespace Microsoft.OData.Client
         {
             this.response = response;
         }
-    }  
+    }
 }

@@ -13,13 +13,9 @@ namespace Microsoft.Test.OData.Services.ODataWCFService
     using System.Linq;
     using System.Linq.Expressions;
     using System.Reflection;
-    using Microsoft.OData.Core;
-    using Microsoft.OData.Core.UriParser;
-    using Microsoft.OData.Core.UriParser.Semantic;
-    using Microsoft.OData.Core.UriParser.TreeNodeKinds;
-    using Microsoft.OData.Core.UriParser.Visitors;
+    using Microsoft.OData;
+    using Microsoft.OData.UriParser;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Library;
     using Microsoft.Test.OData.Services.ODataWCFService.BuiltInFunctionHelper;
     using Microsoft.Test.OData.Services.ODataWCFService.DataSource;
 
@@ -61,7 +57,7 @@ namespace Microsoft.Test.OData.Services.ODataWCFService
 
             return (expression.Body as MethodCallExpression).Method.GetGenericMethodDefinition();
         }
-        
+
         /// <summary>
         /// Visit an AllNode
         /// </summary>
@@ -81,9 +77,9 @@ namespace Microsoft.Test.OData.Services.ODataWCFService
             Expression rootExpression = this.TranslateNode(nodeIn.Source);
 
             return Expression.Call(
-                typeof (Enumerable),
+                typeof(Enumerable),
                 "All",
-                new Type[] {instanceType},
+                new Type[] { instanceType },
                 rootExpression,
                 Expression.Lambda(conditionExpression, parameter));
         }
@@ -107,9 +103,9 @@ namespace Microsoft.Test.OData.Services.ODataWCFService
             Expression rootExpression = this.TranslateNode(nodeIn.Source);
 
             return Expression.Call(
-                typeof (Enumerable),
+                typeof(Enumerable),
                 "Any",
-                new Type[] {instanceType},
+                new Type[] { instanceType },
                 rootExpression,
                 Expression.Lambda(conditionExpression, parameter));
         }
@@ -199,21 +195,28 @@ namespace Microsoft.Test.OData.Services.ODataWCFService
 
             Type propType = null;
             Expression propExpr = null;
-            
+
             // Element of collection could be primitive type or enum or complex or entity type 
-            if (nodeIn.Source.ItemType.IsPrimitive() || nodeIn.Source.ItemType.IsEnum()
-                || (nodeIn.Source.ItemType.IsComplex() && nodeIn.Source.Kind.Equals(QueryNodeKind.CollectionPropertyAccess)))
+            if (nodeIn.Source.ItemType.IsPrimitive() || nodeIn.Source.ItemType.IsEnum())
             {
-                // This does not handle complex collection cast case, if it is a complex collection cast, the Kind will be CollectionPropertyCast and node.Source is CollectionPropertyCastNode
                 var collection = (CollectionPropertyAccessNode)nodeIn.Source;
                 propExpr = Visit(collection);
                 var def = collection.Property.Type.AsCollection();
                 propType = EdmClrTypeUtils.GetInstanceType(def.ElementType());
             }
-            else if (nodeIn.Source.ItemType.IsEntity() && nodeIn.Source.Kind.Equals(QueryNodeKind.CollectionNavigationNode))
+            else if ((nodeIn.Source.ItemType.IsComplex() && nodeIn.Source.Kind.Equals(QueryNodeKind.CollectionComplexNode)))
             {
-                // This does not handle entity collection cast case, if it is a entity collection cast, the Kind will be EntityCollectionCast and node.Source is EntityCollectionCastNode
-                var collection = (CollectionNavigationNode)nodeIn.Source;
+                // This does not handle complex collection cast case, if it is a complex collection cast, the Kind will be CollectionComplexCast and node.Source is CollectionComplexCastNode
+                var collection = (CollectionComplexNode)nodeIn.Source;
+                propExpr = Visit(collection);
+                var def = collection.Property.Type.AsCollection();
+                propType = EdmClrTypeUtils.GetInstanceType(def.ElementType());
+            }
+            else if (nodeIn.Source.ItemType.IsEntity() &&
+                     nodeIn.Source.Kind.Equals(QueryNodeKind.CollectionNavigationNode))
+            {
+                // This does not handle entity collection cast case, if it is a entity collection cast, the Kind will be CollectionResourceCast and node.Source is CollectionResourceCastNode
+                var collection = (CollectionNavigationNode) nodeIn.Source;
                 propExpr = Visit(collection);
                 var def = collection.NavigationProperty.Type.AsCollection();
                 propType = EdmClrTypeUtils.GetInstanceType(def.ElementType());
@@ -221,7 +224,10 @@ namespace Microsoft.Test.OData.Services.ODataWCFService
             else
             {
                 // Should no such case as collection item is either primitive or enum or complex or entity.
-                throw new NotSupportedException(string.Format("Filter based on count of collection with item of type {0} is not supported yet.", nodeIn.Source.ItemType));
+                throw new NotSupportedException(
+                    string.Format(
+                        "Filter based on count of collection with item of type {0} is not supported yet.",
+                        nodeIn.Source.ItemType));
             }
 
             // Per standard, collection can not be null, but could be an empty collection, so null is not considered here.
@@ -257,6 +263,17 @@ namespace Microsoft.Test.OData.Services.ODataWCFService
         }
 
         /// <summary>
+        /// Visit a CollectionComplexNode
+        /// </summary>
+        /// <param name="nodeIn">The node to visit</param>
+        /// <returns>The translated expression</returns>
+        public override Expression Visit(CollectionComplexNode nodeIn)
+        {
+            this.CheckArgumentNull(nodeIn, "CollectionComplexNode");
+            return this.TranslatePropertyAccess(nodeIn.Source, nodeIn.Property);
+        }
+
+        /// <summary>
         /// Visit a ConstantNode
         /// </summary>
         /// <param name="nodeIn">The node to visit</param>
@@ -271,18 +288,18 @@ namespace Microsoft.Test.OData.Services.ODataWCFService
 
             // collection of entity
             if (nodeIn.TypeReference != null && nodeIn.TypeReference.IsCollection() &&
-                (nodeIn.TypeReference.Definition as IEdmCollectionType).ElementType.IsEntity())
+                (nodeIn.TypeReference.Definition as IEdmCollectionType).ElementType.IsStructured())
             {
                 return Expression.Constant(ParseEntityCollection(nodeIn));
             }
 
             // the value is entity or entity reference.
-            if (nodeIn.TypeReference != null && nodeIn.TypeReference.IsEntity())
+            if (nodeIn.TypeReference != null && (nodeIn.TypeReference.IsStructured()))
             {
                 return Expression.Constant(ParseEntity(nodeIn));
             }
             // the value is complex or collection.
-            if (nodeIn.Value is ODataComplexValue || nodeIn.Value is ODataCollectionValue || nodeIn.Value is ODataEntry)
+            if (nodeIn.Value is ODataCollectionValue || nodeIn.Value is ODataResource)
             {
 
                 object value = ODataObjectModelConverter.ConvertPropertyValue(nodeIn.Value);
@@ -292,7 +309,7 @@ namespace Microsoft.Test.OData.Services.ODataWCFService
             // the value is enum
             if (nodeIn.TypeReference.IsEnum())
             {
-                ODataEnumValue enumValue = (ODataEnumValue) nodeIn.Value;
+                ODataEnumValue enumValue = (ODataEnumValue)nodeIn.Value;
                 object enumClrVal = Enum.Parse(EdmClrTypeUtils.GetInstanceType(enumValue.TypeName), enumValue.Value);
                 return Expression.Constant(enumClrVal, EdmClrTypeUtils.GetInstanceType(nodeIn.TypeReference));
             }
@@ -340,23 +357,23 @@ namespace Microsoft.Test.OData.Services.ODataWCFService
         }
 
         /// <summary>
-        /// Visit an EntityCollectionCastNode
+        /// Visit an CollectionResourceCastNode
         /// </summary>
         /// <param name="nodeIn">The node to visit</param>
         /// <returns>The translated expression</returns>
-        public override Expression Visit(EntityCollectionCastNode nodeIn)
+        public override Expression Visit(CollectionResourceCastNode nodeIn)
         {
             throw new NotImplementedException();
         }
 
         /// <summary>
-        /// Visit an EntityRangeVariableReferenceNode
+        /// Visit an ResourceRangeVariableReferenceNode
         /// </summary>
         /// <param name="nodeIn">The node to visit</param>
         /// <returns>The translated expression</returns>
-        public override Expression Visit(EntityRangeVariableReferenceNode nodeIn)
+        public override Expression Visit(ResourceRangeVariableReferenceNode nodeIn)
         {
-            this.CheckArgumentNull(nodeIn, "EntityRangeVariableReferenceNode");
+            this.CheckArgumentNull(nodeIn, "ResourceRangeVariableReferenceNode");
 
             // when this is called for a filter like svc/Customers?$filter=PersonID eq 1, nodeIn.Name has value "$it".
             // when this is called by any/all option, nodeIn.Name is specified by client, it can be any value.
@@ -364,22 +381,22 @@ namespace Microsoft.Test.OData.Services.ODataWCFService
         }
 
         /// <summary>
-        /// Visit a NonentityRangeVariableReferenceNode
+        /// Visit a NonResourceRangeVariableReferenceNode
         /// </summary>
         /// <param name="nodeIn">The node to visit</param>
         /// <returns>The translated expression</returns>
-        public override Expression Visit(NonentityRangeVariableReferenceNode nodeIn)
+        public override Expression Visit(NonResourceRangeVariableReferenceNode nodeIn)
         {
-            this.CheckArgumentNull(nodeIn, "NonentityRangeVariableReferenceNode");
+            this.CheckArgumentNull(nodeIn, "NonResourceRangeVariableReferenceNode");
             return this.ImplicitVariableParameterExpression;
         }
 
         /// <summary>
-        /// Visit a SingleEntityCastNode
+        /// Visit a SingleResourceCastNode
         /// </summary>
         /// <param name="nodeIn">The node to visit</param>
         /// <returns>The translated expression</returns>
-        public override Expression Visit(SingleEntityCastNode nodeIn)
+        public override Expression Visit(SingleResourceCastNode nodeIn)
         {
             this.CheckArgumentNull(nodeIn, "node");
             return this.TranslateSingleValueCastAccess(nodeIn.Source, nodeIn.TypeReference);
@@ -397,11 +414,11 @@ namespace Microsoft.Test.OData.Services.ODataWCFService
         }
 
         /// <summary>
-        /// Visit a SingleEntityFunctionCallNode
+        /// Visit a SingleResourceFunctionCallNode
         /// </summary>
         /// <param name="nodeIn">The node to visit</param>
         /// <returns>The translated expression</returns>
-        public override Expression Visit(SingleEntityFunctionCallNode nodeIn)
+        public override Expression Visit(SingleResourceFunctionCallNode nodeIn)
         {
             throw new NotImplementedException();
         }
@@ -418,11 +435,11 @@ namespace Microsoft.Test.OData.Services.ODataWCFService
         }
 
         /// <summary>
-        /// Visit a EntityCollectionFunctionCallNode
+        /// Visit a CollectionResourceFunctionCallNode
         /// </summary>
         /// <param name="nodeIn">The node to visit</param>
         /// <returns>The translated expression</returns>
-        public override Expression Visit(EntityCollectionFunctionCallNode nodeIn)
+        public override Expression Visit(CollectionResourceFunctionCallNode nodeIn)
         {
             throw new NotImplementedException();
         }
@@ -488,14 +505,14 @@ namespace Microsoft.Test.OData.Services.ODataWCFService
         }
 
         /// <summary>
-        /// Visit an SingleValueCastNode
+        /// Visit an SingleComplexNode
         /// </summary>
         /// <param name="nodeIn">the node to visit</param>
         /// <returns>The translated expression</returns>
-        public override Expression Visit(SingleValueCastNode nodeIn)
+        public override Expression Visit(SingleComplexNode nodeIn)
         {
             this.CheckArgumentNull(nodeIn, "node");
-            return this.TranslateSingleValueCastAccess(nodeIn.Source, nodeIn.TypeReference);
+            return this.TranslatePropertyAccess(nodeIn.Source, nodeIn.Property);
         }
 
         /// <summary>
@@ -939,7 +956,7 @@ namespace Microsoft.Test.OData.Services.ODataWCFService
                 Stream = new MemoryStream(System.Text.Encoding.UTF8.GetBytes(nodeIn.LiteralText)),
             };
 
-            var entityType = (nodeIn.TypeReference as IEdmEntityTypeReference).Definition as IEdmEntityType;
+            var resourceType = (nodeIn.TypeReference as IEdmStructuredTypeReference).Definition as IEdmStructuredType;
 
             using (
                 ODataMessageReader reader = new ODataMessageReader(message as IODataRequestMessage, settings,
@@ -949,24 +966,17 @@ namespace Microsoft.Test.OData.Services.ODataWCFService
                 {
                     ODataEntityReferenceLink referenceLink = reader.ReadEntityReferenceLink();
                     var queryContext = new QueryContext(this.UriParser.ServiceRoot, referenceLink.Url,
-                        this.DataSource.Model);
+                        this.DataSource.Model, this.UriParser.Container);
                     var target = queryContext.ResolveQuery(this.DataSource);
                     return target;
                 }
 
-                var entryReader = reader.CreateODataEntryReader(
-                    new EdmEntitySet(new EdmEntityContainer("NS", "Test"), "TestType", entityType),
-                    entityType);
-                ODataEntry entry = null;
-                while (entryReader.Read())
-                {
-                    if (entryReader.State == ODataReaderState.EntryEnd)
-                    {
-                        entry = entryReader.Item as ODataEntry;
+                var entityType = resourceType as IEdmEntityType;
 
-                    }
-                }
-                return ODataObjectModelConverter.ConvertPropertyValue(entry);
+                var entryReader = reader.CreateODataUriParameterResourceReader(
+                    entityType == null ? null : new EdmEntitySet(new EdmEntityContainer("NS", "Test"), "TestType", entityType),
+                    resourceType);
+                return ODataObjectModelConverter.ReadEntityOrEntityCollection(entryReader, false);
             }
         }
 
@@ -983,9 +993,9 @@ namespace Microsoft.Test.OData.Services.ODataWCFService
                 Stream = new MemoryStream(System.Text.Encoding.UTF8.GetBytes(nodeIn.LiteralText)),
             };
 
-            var entityType =
-                ((nodeIn.TypeReference.Definition as IEdmCollectionType).ElementType as IEdmEntityTypeReference)
-                    .Definition as IEdmEntityType;
+            var resourceType =
+                ((nodeIn.TypeReference.Definition as IEdmCollectionType).ElementType as IEdmStructuredTypeReference)
+                    .Definition as IEdmStructuredType;
             object list = null;
             MethodInfo addMethod = null;
             using (
@@ -998,7 +1008,7 @@ namespace Microsoft.Test.OData.Services.ODataWCFService
                     foreach (var referenceLink in referenceLinks.Links)
                     {
                         var queryContext = new QueryContext(this.UriParser.ServiceRoot, referenceLink.Url,
-                            this.DataSource.Model);
+                            this.DataSource.Model, this.UriParser.Container);
                         var target = queryContext.ResolveQuery(this.DataSource);
 
                         if (list == null)
@@ -1015,31 +1025,12 @@ namespace Microsoft.Test.OData.Services.ODataWCFService
                     return list;
                 }
 
-                var feedReader = reader.CreateODataFeedReader(
-                    new EdmEntitySet(new EdmEntityContainer("NS", "Test"), "TestType", entityType),
-                    entityType);
-                ODataEntry entry = null;
-                while (feedReader.Read())
-                {
-                    if (feedReader.State == ODataReaderState.EntryEnd)
-                    {
-                        entry = feedReader.Item as ODataEntry;
-                        object item = ODataObjectModelConverter.ConvertPropertyValue(entry);
+                var entityType = resourceType as IEdmEntityType;
+                var feedReader = reader.CreateODataUriParameterResourceSetReader(
+                    entityType == null ? null : new EdmEntitySet(new EdmEntityContainer("NS", "Test"), "TestType", entityType),
+                    resourceType);
 
-
-                        if (list == null)
-                        {
-                            // create the list. This would require the first type is not derived type.
-                            var type = EdmClrTypeUtils.GetInstanceType(entry.TypeName);
-                            Type listType = typeof(List<>).MakeGenericType(type);
-                            addMethod = listType.GetMethod("Add");
-                            list = Activator.CreateInstance(listType);
-                        }
-
-                        addMethod.Invoke(list, new[] { item });
-                    }
-                }
-                return list;
+                return ODataObjectModelConverter.ReadEntityOrEntityCollection(feedReader, true);
             }
         }
         #endregion

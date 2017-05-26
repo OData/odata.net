@@ -11,9 +11,7 @@ namespace EdmLibTests.FunctionalUtilities
     using System.Xml.Linq;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Edm.Csdl;
-    using Microsoft.OData.Edm.Library;
-    using Microsoft.OData.Edm.Library.Annotations;
-    using Microsoft.OData.Edm.Library.Values;
+    using Microsoft.OData.Edm.Vocabularies;
 
     public static class XElementAnnotationModelBuilder
     {
@@ -386,7 +384,7 @@ namespace EdmLibTests.FunctionalUtilities
             return model;
         }
 
-        public static IEnumerable<XElement> ValueTermWithAnnotationCsdl()
+        public static IEnumerable<XElement> TermWithAnnotationCsdl()
         {
             return ConvertCsdlsToXElements(@"
 <Schema Namespace=""DefaultNamespace"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
@@ -396,7 +394,7 @@ namespace EdmLibTests.FunctionalUtilities
 </Schema>");
         }
 
-        public static EdmModel ValueTermWithAnnotationModel()
+        public static EdmModel TermWithAnnotationModel()
         {
             EdmModel model = new EdmModel();
 
@@ -478,7 +476,7 @@ namespace EdmLibTests.FunctionalUtilities
             return model;
         }
 
-        public static IEnumerable<XElement> OutOfLineValueAnnotationWithAnnotationCsdl()
+        public static IEnumerable<XElement> OutOfLineVocabularyAnnotationWithAnnotationCsdl()
         {
             return ConvertCsdlsToXElements(@"
 <Schema Namespace=""DefaultNamespace"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
@@ -494,7 +492,7 @@ namespace EdmLibTests.FunctionalUtilities
 </Schema>");
         }
 
-        public static EdmModel OutOfLineValueAnnotationWithAnnotationModel()
+        public static EdmModel OutOfLineVocabularyAnnotationWithAnnotationModel()
         {
             EdmModel model = new EdmModel();
 
@@ -504,8 +502,8 @@ namespace EdmLibTests.FunctionalUtilities
 
             EdmTerm note = new EdmTerm("DefaultNamespace", "Note", EdmCoreModel.Instance.GetString(true));
             model.AddElement(note);
-            
-            EdmAnnotation valueAnnotation = new EdmAnnotation(
+
+            EdmVocabularyAnnotation valueAnnotation = new EdmVocabularyAnnotation(
                 simpleType,
                 note,
                 new EdmStringConstant("ComplexTypeNote"));

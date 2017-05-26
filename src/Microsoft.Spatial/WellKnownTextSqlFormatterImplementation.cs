@@ -4,10 +4,9 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.Data.Spatial
+namespace Microsoft.Spatial
 {
     using System.IO;
-    using Microsoft.Spatial;
 
     /// <summary>
     /// The object to move spatial types to and from the WellKnownTextSql format

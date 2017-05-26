@@ -6,7 +6,7 @@
 
 namespace Microsoft.Test.OData.Utils.ODataLibTest
 {
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
 
     /// <summary>
     /// Configuration settings for a test.

@@ -32,7 +32,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Common
         }
 
         /// <summary>
-        /// Collection of expected values for ODataNavigationLink.IsCollection property, as (link name -> expected value) pairs.
+        /// Collection of expected values for ODataNestedResourceInfo.IsCollection property, as (link name -> expected value) pairs.
         /// </summary>
         public IDictionary<string, bool?> ExpectedIsCollectionValues { get; set; }
 

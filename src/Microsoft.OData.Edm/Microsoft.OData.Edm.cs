@@ -84,6 +84,7 @@ namespace Microsoft.OData.Edm {
         internal const string PathSegmentMustNotContainSlash = "PathSegmentMustNotContainSlash";
         internal const string Constructable_DependentPropertyCountMustMatchNumberOfPropertiesOnPrincipalType = "Constructable_DependentPropertyCountMustMatchNumberOfPropertiesOnPrincipalType";
         internal const string EdmType_UnexpectedEdmType = "EdmType_UnexpectedEdmType";
+        internal const string NavigationPropertyBinding_PathIsNotValid = "NavigationPropertyBinding_PathIsNotValid";
         internal const string Edm_Evaluator_NoTermTypeAnnotationOnType = "Edm_Evaluator_NoTermTypeAnnotationOnType";
         internal const string Edm_Evaluator_NoValueAnnotationOnType = "Edm_Evaluator_NoValueAnnotationOnType";
         internal const string Edm_Evaluator_NoValueAnnotationOnElement = "Edm_Evaluator_NoValueAnnotationOnElement";
@@ -165,8 +166,7 @@ namespace Microsoft.OData.Edm {
         internal const string EdmModel_Validator_Semantic_PrecisionOutOfRange = "EdmModel_Validator_Semantic_PrecisionOutOfRange";
         internal const string EdmModel_Validator_Semantic_StringMaxLengthOutOfRange = "EdmModel_Validator_Semantic_StringMaxLengthOutOfRange";
         internal const string EdmModel_Validator_Semantic_MaxLengthOutOfRange = "EdmModel_Validator_Semantic_MaxLengthOutOfRange";
-        internal const string EdmModel_Validator_Semantic_InvalidPropertyTypeConcurrencyMode = "EdmModel_Validator_Semantic_InvalidPropertyTypeConcurrencyMode";
-        internal const string EdmModel_Validator_Semantic_EnumMemberTypeMustMatchEnumUnderlyingType = "EdmModel_Validator_Semantic_EnumMemberTypeMustMatchEnumUnderlyingType";
+        internal const string EdmModel_Validator_Semantic_EnumMemberValueOutOfRange = "EdmModel_Validator_Semantic_EnumMemberValueOutOfRange";
         internal const string EdmModel_Validator_Semantic_EnumMemberNameAlreadyDefined = "EdmModel_Validator_Semantic_EnumMemberNameAlreadyDefined";
         internal const string EdmModel_Validator_Semantic_OpenTypesSupportedForEntityTypesOnly = "EdmModel_Validator_Semantic_OpenTypesSupportedForEntityTypesOnly";
         internal const string EdmModel_Validator_Semantic_IsUnboundedCannotBeTrueWhileMaxLengthIsNotNull = "EdmModel_Validator_Semantic_IsUnboundedCannotBeTrueWhileMaxLengthIsNotNull";
@@ -191,7 +191,6 @@ namespace Microsoft.OData.Edm {
         internal const string EdmModel_Validator_Semantic_StringConstantLengthOutOfRange = "EdmModel_Validator_Semantic_StringConstantLengthOutOfRange";
         internal const string EdmModel_Validator_Semantic_BinaryConstantLengthOutOfRange = "EdmModel_Validator_Semantic_BinaryConstantLengthOutOfRange";
         internal const string EdmModel_Validator_Semantic_TypeMustNotHaveKindOfNone = "EdmModel_Validator_Semantic_TypeMustNotHaveKindOfNone";
-        internal const string EdmModel_Validator_Semantic_TermMustNotHaveKindOfNone = "EdmModel_Validator_Semantic_TermMustNotHaveKindOfNone";
         internal const string EdmModel_Validator_Semantic_SchemaElementMustNotHaveKindOfNone = "EdmModel_Validator_Semantic_SchemaElementMustNotHaveKindOfNone";
         internal const string EdmModel_Validator_Semantic_PropertyMustNotHaveKindOfNone = "EdmModel_Validator_Semantic_PropertyMustNotHaveKindOfNone";
         internal const string EdmModel_Validator_Semantic_PrimitiveTypeMustNotHaveKindOfNone = "EdmModel_Validator_Semantic_PrimitiveTypeMustNotHaveKindOfNone";
@@ -257,7 +256,6 @@ namespace Microsoft.OData.Edm {
         internal const string CsdlParser_InvalidAlias = "CsdlParser_InvalidAlias";
         internal const string CsdlParser_InvalidDeleteAction = "CsdlParser_InvalidDeleteAction";
         internal const string CsdlParser_MissingTypeAttributeOrElement = "CsdlParser_MissingTypeAttributeOrElement";
-        internal const string CsdlParser_InvalidConcurrencyMode = "CsdlParser_InvalidConcurrencyMode";
         internal const string CsdlParser_InvalidEndRoleInRelationshipConstraint = "CsdlParser_InvalidEndRoleInRelationshipConstraint";
         internal const string CsdlParser_InvalidMultiplicity = "CsdlParser_InvalidMultiplicity";
         internal const string CsdlParser_ReferentialConstraintRequiresOneDependent = "CsdlParser_ReferentialConstraintRequiresOneDependent";
@@ -275,7 +273,7 @@ namespace Microsoft.OData.Edm {
         internal const string CsdlParser_CannotSpecifyNullableAttributeForNavigationPropertyWithCollectionType = "CsdlParser_CannotSpecifyNullableAttributeForNavigationPropertyWithCollectionType";
         internal const string CsdlParser_MetadataDocumentCannotHaveMoreThanOneEntityContainer = "CsdlParser_MetadataDocumentCannotHaveMoreThanOneEntityContainer";
         internal const string CsdlSemantics_ReferentialConstraintMismatch = "CsdlSemantics_ReferentialConstraintMismatch";
-        internal const string CsdlSemantics_EnumMemberValueOutOfRange = "CsdlSemantics_EnumMemberValueOutOfRange";
+        internal const string CsdlSemantics_EnumMemberMustHaveValue = "CsdlSemantics_EnumMemberMustHaveValue";
         internal const string CsdlSemantics_ImpossibleAnnotationsTarget = "CsdlSemantics_ImpossibleAnnotationsTarget";
         internal const string CsdlSemantics_DuplicateAlias = "CsdlSemantics_DuplicateAlias";
         internal const string EdmxParser_EdmxVersionMismatch = "EdmxParser_EdmxVersionMismatch";
@@ -303,10 +301,8 @@ namespace Microsoft.OData.Edm {
         internal const string UnknownEnumVal_TypeKind = "UnknownEnumVal_TypeKind";
         internal const string UnknownEnumVal_PrimitiveKind = "UnknownEnumVal_PrimitiveKind";
         internal const string UnknownEnumVal_ContainerElementKind = "UnknownEnumVal_ContainerElementKind";
-        internal const string UnknownEnumVal_EdmxTarget = "UnknownEnumVal_EdmxTarget";
-        internal const string UnknownEnumVal_ConcurrencyMode = "UnknownEnumVal_ConcurrencyMode";
+        internal const string UnknownEnumVal_CsdlTarget = "UnknownEnumVal_CsdlTarget";
         internal const string UnknownEnumVal_PropertyKind = "UnknownEnumVal_PropertyKind";
-        internal const string UnknownEnumVal_TermKind = "UnknownEnumVal_TermKind";
         internal const string UnknownEnumVal_ExpressionKind = "UnknownEnumVal_ExpressionKind";
         internal const string Bad_AmbiguousElementBinding = "Bad_AmbiguousElementBinding";
         internal const string Bad_UnresolvedType = "Bad_UnresolvedType";
@@ -328,7 +324,7 @@ namespace Microsoft.OData.Edm {
         internal const string Bad_CyclicEntityContainer = "Bad_CyclicEntityContainer";
         internal const string Bad_UnresolvedNavigationPropertyPath = "Bad_UnresolvedNavigationPropertyPath";
         internal const string RuleSet_DuplicateRulesExistInRuleSet = "RuleSet_DuplicateRulesExistInRuleSet";
-        internal const string EdmToClr_UnsupportedTypeCode = "EdmToClr_UnsupportedTypeCode";
+        internal const string EdmToClr_UnsupportedType = "EdmToClr_UnsupportedType";
         internal const string EdmToClr_StructuredValueMappedToNonClass = "EdmToClr_StructuredValueMappedToNonClass";
         internal const string EdmToClr_IEnumerableOfTPropertyAlreadyHasValue = "EdmToClr_IEnumerableOfTPropertyAlreadyHasValue";
         internal const string EdmToClr_StructuredPropertyDuplicateValue = "EdmToClr_StructuredPropertyDuplicateValue";
@@ -352,13 +348,13 @@ namespace Microsoft.OData.Edm {
         ResourceManager resources;
 
         internal EntityRes() {
-#if !DNXCORE50
+#if !PORTABLELIB
             resources = new System.Resources.ResourceManager("Microsoft.OData.Edm", this.GetType().Assembly);
 #else
             resources = new System.Resources.ResourceManager("Microsoft.OData.Edm", this.GetType().GetTypeInfo().Assembly);
 #endif
         }
-        
+
         private static EntityRes GetLoader() {
             if (loader == null) {
                 EntityRes sr = new EntityRes();
@@ -370,13 +366,13 @@ namespace Microsoft.OData.Edm {
         private static CultureInfo Culture {
             get { return null/*use ResourceManager default, CultureInfo.CurrentUICulture*/; }
         }
-        
+
         public static ResourceManager Resources {
             get {
                 return GetLoader().resources;
             }
         }
-        
+
         public static string GetString(string name, params object[] args) {
             EntityRes sys = GetLoader();
             if (sys == null)
@@ -403,7 +399,7 @@ namespace Microsoft.OData.Edm {
                 return null;
             return sys.resources.GetString(name, EntityRes.Culture);
         }
-        
+
         public static string GetString(string name, out bool usedFallback) {
             // always false for this version of gensr
             usedFallback = false;

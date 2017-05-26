@@ -4,14 +4,14 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core
+namespace Microsoft.OData
 {
     #region Namespaces
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.IO;
-#if ODATALIB_ASYNC
+#if PORTABLELIB
     using System.Threading.Tasks;
 #endif
     #endregion Namespaces
@@ -19,8 +19,8 @@ namespace Microsoft.OData.Core
     /// <summary>
     /// Wrapper class around an IODataRequestMessageAsync to isolate our code from the interface implementation.
     /// </summary>
-    internal sealed class ODataRequestMessage : ODataMessage, 
-#if ODATALIB_ASYNC
+    internal sealed class ODataRequestMessage : ODataMessage,
+#if PORTABLELIB
         IODataRequestMessageAsync
 #else
         IODataRequestMessage
@@ -35,10 +35,10 @@ namespace Microsoft.OData.Core
         /// </summary>
         /// <param name="requestMessage">The request message to wrap.</param>
         /// <param name="writing">true if the request message is being written; false when it is read.</param>
-        /// <param name="disableMessageStreamDisposal">true if the stream returned should ignore dispose calls.</param>
+        /// <param name="enableMessageStreamDisposal">true if the stream returned should be disposed calls.</param>
         /// <param name="maxMessageSize">The maximum size of the message in bytes (or a negative value if no maximum applies).</param>
-        internal ODataRequestMessage(IODataRequestMessage requestMessage, bool writing, bool disableMessageStreamDisposal, long maxMessageSize)
-            : base(writing, disableMessageStreamDisposal, maxMessageSize)
+        internal ODataRequestMessage(IODataRequestMessage requestMessage, bool writing, bool enableMessageStreamDisposal, long maxMessageSize)
+            : base(writing, enableMessageStreamDisposal, maxMessageSize)
         {
             Debug.Assert(requestMessage != null, "requestMessage != null");
 
@@ -118,7 +118,7 @@ namespace Microsoft.OData.Core
             return this.GetStream(this.requestMessage.GetStream, /*isRequest*/ true);
         }
 
-#if ODATALIB_ASYNC
+#if PORTABLELIB
         /// <summary>
         /// Asynchronously get the stream backing this message.
         /// </summary>

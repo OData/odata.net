@@ -9,9 +9,6 @@ namespace Microsoft.Test.Taupo.OData.Query.Tests
     #region Namespaces
     using System.Collections.Generic;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Core.Metadata;
-    using Microsoft.OData.Core.UriParser.Metadata;
-    using Microsoft.Test.Taupo.Astoria.Contracts.EntityModel;
     using Microsoft.Test.Taupo.Contracts;
     using Microsoft.Test.Taupo.Contracts.EntityModel;
     using Microsoft.Test.Taupo.Contracts.EntityModel.Edm;

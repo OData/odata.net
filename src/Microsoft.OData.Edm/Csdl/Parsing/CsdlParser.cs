@@ -10,7 +10,7 @@ using Microsoft.OData.Edm.Csdl.Parsing.Ast;
 using Microsoft.OData.Edm.Validation;
 
 namespace Microsoft.OData.Edm.Csdl.Parsing
-{    
+{
     /// <summary>
     /// Provides for the loading and conversion of one or more CSDL XML readers into Entity Data Model.
     /// </summary>

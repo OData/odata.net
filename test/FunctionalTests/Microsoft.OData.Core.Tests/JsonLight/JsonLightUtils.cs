@@ -5,9 +5,9 @@
 //---------------------------------------------------------------------
 
 using System.Collections.Generic;
-using Microsoft.OData.Core.JsonLight;
+using Microsoft.OData.JsonLight;
 
-namespace Microsoft.OData.Core.Tests.JsonLight
+namespace Microsoft.OData.Tests.JsonLight
 {
     public static class JsonLightUtils
     {

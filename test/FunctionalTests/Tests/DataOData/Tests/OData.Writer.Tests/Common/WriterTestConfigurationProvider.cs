@@ -10,7 +10,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Common
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.Test.Taupo.Common;
     using Microsoft.Test.Taupo.OData.Common;
     using Microsoft.Test.Taupo.OData.Contracts;
@@ -219,7 +219,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Common
 
             return new CachedConfigurations
             {
-                AtomConfigurations = CreateConfigurationsWithDefaultSettings(runKind, combinatorialEngine, ODataFormat.Atom),
+                //AtomConfigurations = CreateConfigurationsWithDefaultSettings(runKind, combinatorialEngine, ODataFormat.Atom),
                 JsonLightConfigurations = CreateConfigurationsWithDefaultSettings(runKind, combinatorialEngine, ODataFormat.Json),
                 DefaultFormatConfigurations = CreateConfigurationsWithDefaultSettings(runKind, combinatorialEngine, /*format*/ null),
             };
@@ -237,7 +237,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Common
 
             return new CachedConfigurations
             {
-                AtomConfigurations = CreateConfigurationsWithIndent(runKind, combinatorialEngine, ODataFormat.Atom, defaultConfigurations.AtomConfigurations),
+                // AtomConfigurations = CreateConfigurationsWithIndent(runKind, combinatorialEngine, ODataFormat.Atom, defaultConfigurations.AtomConfigurations),
                 JsonLightConfigurations = CreateConfigurationsWithIndent(runKind, combinatorialEngine, ODataFormat.Json, defaultConfigurations.JsonLightConfigurations),
                 DefaultFormatConfigurations = CreateConfigurationsWithIndent(runKind, combinatorialEngine, /*format*/ null, defaultConfigurations.DefaultFormatConfigurations),
             };
@@ -261,7 +261,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Common
                     new bool[] { true, false },  // disableMessageStreamDisposal
                     new bool[] { true, false },  // isRequest
                     new bool[] { true, false },  // synchronous
-                    (version, disableMessageStreamDisposal, isRequest, synchronous) =>
+                    (version, enableMessageStreamDisposal, isRequest, synchronous) =>
                     {
 #if SILVERLIGHT || WINDOWS_PHONE
                         // If we are running in Silverlight or windows phone, we don't want to generate asynchronous variations
@@ -274,7 +274,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Common
 
                         configurations.Add(new WriterTestConfiguration(
                             format,
-                            GetDefaultMessageWriterSettings(format, null, disableMessageStreamDisposal, version),
+                            GetDefaultMessageWriterSettings(format, null, enableMessageStreamDisposal, version),
                             isRequest,
                             synchronous));
                     });
@@ -285,11 +285,11 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Common
                 limitedCombinations = new[]
                 {
                     new LimitedCombinationSpecification {
-                        DisableMessageStreamDisposal = false,
+                        EnableMessageStreamDisposal = true,
                         Synchronous = true,
                     },
                     new LimitedCombinationSpecification {
-                        DisableMessageStreamDisposal = true,
+                        EnableMessageStreamDisposal = false,
                         Synchronous = false,
                     },
                 };
@@ -299,7 +299,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Common
                     limitedCombinations
                         .ConcatSingle(new LimitedCombinationSpecification
                         {
-                            DisableMessageStreamDisposal = true,
+                            EnableMessageStreamDisposal = false,
                             Synchronous = true
                         });
                 }
@@ -322,7 +322,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Common
                             GetDefaultMessageWriterSettings(
                                 format,
                                 null,
-                                limitedCombination.DisableMessageStreamDisposal),
+                                limitedCombination.EnableMessageStreamDisposal),
                             isRequest,
                             limitedCombination.Synchronous));
                     });
@@ -346,11 +346,9 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Common
             {
                 combinatorialEngine.RunCombinations(
                     configurationsWithDefaultSettings,
-                    new bool[] { true, false }, // indent
-                    (config, indent) =>
+                    (config) =>
                     {
                         ODataMessageWriterSettings settings = config.MessageWriterSettings.Clone();
-                        settings.Indent = indent;
                         configurations.Add(new WriterTestConfiguration(config.Format,
                             settings,
                             config.IsRequest,
@@ -361,11 +359,9 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Common
             {
                 // We need only some to use indentation but we want for each of ATOM and JSON to to have some which use it for sure
                 int[] primes = new int[] { 1, 2, 3, 5, 7, 11, 13, 17, 19 };
-                int i = 0;
                 foreach (var config in configurationsWithDefaultSettings)
                 {
                     ODataMessageWriterSettings settings = config.MessageWriterSettings.Clone();
-                    settings.Indent = primes.Contains(i++);
                     configurations.Add(new WriterTestConfiguration(config.Format,
                         settings,
                         config.IsRequest,
@@ -382,20 +378,19 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Common
         /// <param name="format">The format for the message writer settings to create.</param>
         /// <param name="version">Version of the OData protocol.</param>
         /// <param name="baseUri">Base uri for all relative Uris.</param>
-        /// <param name="disableMessageStreamDisposal">When set to true, the writer will not dispose the message stream. When set to false, the message stream will be disposed.</param>
+        /// <param name="enableMessageStreamDisposal">When set to true, the writer will dispose the message stream. When set to false, the message stream will not be disposed.</param>
         /// <returns>The default message writer settings for the specified <paramref name="format"/>.</returns>
         private static ODataMessageWriterSettings GetDefaultMessageWriterSettings(
             ODataFormat format,
             Uri baseUri,
-            bool disableMessageStreamDisposal,
+            bool enableMessageStreamDisposal,
             ODataVersion version = ODataVersion.V4)
         {
             var settings = new ODataMessageWriterSettings()
             {
                 Version = version,
-                PayloadBaseUri = baseUri,
-                DisableMessageStreamDisposal = disableMessageStreamDisposal,
-                EnableAtom = true
+                BaseUri = baseUri,
+                EnableMessageStreamDisposal = enableMessageStreamDisposal,
             };
             settings.SetServiceDocumentUri(new Uri("http://odata.org/test"));
             settings.SetContentType(format);
@@ -429,7 +424,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Common
             {
                 get
                 {
-                    return this.JsonLightConfigurations.Concat(this.AtomConfigurations);
+                    return this.JsonLightConfigurations;
                 }
             }
 
@@ -474,9 +469,9 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Common
             public ODataVersion Version { get; set; }
 
             /// <summary>
-            /// The DisableMessageStreamDisposal setting value.
+            /// The EnableMessageStreamDisposal setting value.
             /// </summary>
-            public bool DisableMessageStreamDisposal { get; set; }
+            public bool EnableMessageStreamDisposal { get; set; }
 
             /// <summary>
             /// The Synchronous setting value.

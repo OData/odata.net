@@ -4,20 +4,20 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core.Json
+namespace Microsoft.OData.Json
 {
     #region Namespaces
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.IO;
-    using Microsoft.OData.Core.JsonLight;
+    using Microsoft.OData.JsonLight;
 
     #endregion Namespaces
 
     /// <summary>
     /// Reader for the JSON format (http://www.json.org) that supports look-ahead.
     /// </summary>
-    internal class BufferingJsonReader : JsonReader
+    internal class BufferingJsonReader : IJsonReader
     {
         /// <summary>The (possibly empty) list of buffered nodes.</summary>
         /// <remarks>This is a circular linked list where this field points to the first item of the list.</remarks>
@@ -27,6 +27,11 @@ namespace Microsoft.OData.Core.Json
         /// A pointer into the bufferedNodes list to track the most recent position of the current buffered node.
         /// </summary>
         protected BufferedNode currentBufferedNode;
+
+        /// <summary>
+        /// The inner JSON reader.
+        /// </summary>
+        private readonly IJsonReader innerReader;
 
         /// <summary>
         /// The maximum number of recursive internalexception objects to allow when reading in-stream errors.
@@ -40,7 +45,7 @@ namespace Microsoft.OData.Core.Json
         private bool isBuffering;
 
         /// <summary>
-        /// A flag indicating that the last node for non-buffering read was taken from the buffer; we leave the 
+        /// A flag indicating that the last node for non-buffering read was taken from the buffer; we leave the
         /// node in the buffer until the next Read call.
         /// </summary>
         private bool removeOnNextRead;
@@ -59,16 +64,14 @@ namespace Microsoft.OData.Core.Json
         /// <summary>
         /// Constructor.
         /// </summary>
-        /// <param name="reader">The text reader to read input characters from.</param>
+        /// <param name="innerReader">The inner JSON reader.</param>
         /// <param name="inStreamErrorPropertyName">The name of the property that denotes an in-stream error.</param>
         /// <param name="maxInnerErrorDepth">The maximum number of recursive internalexception objects to allow when reading in-stream errors.</param>
-        /// <param name="jsonFormat">The specific JSON-based format expected by the reader.</param>
-        /// <param name="isIeee754Compatible">If it is IEEE754 Compatible</param>
-        internal BufferingJsonReader(TextReader reader, string inStreamErrorPropertyName, int maxInnerErrorDepth, ODataFormat jsonFormat, bool isIeee754Compatible)
-            : base(reader, jsonFormat, isIeee754Compatible)
+        internal BufferingJsonReader(IJsonReader innerReader, string inStreamErrorPropertyName, int maxInnerErrorDepth)
         {
-            Debug.Assert(reader != null, "reader != null");
+            Debug.Assert(innerReader != null, "innerReader != null");
 
+            this.innerReader = innerReader;
             this.inStreamErrorPropertyName = inStreamErrorPropertyName;
             this.maxInnerErrorDepth = maxInnerErrorDepth;
             this.bufferedNodesHead = null;
@@ -82,7 +85,7 @@ namespace Microsoft.OData.Core.Json
         /// Depending on whether buffering is on or off this will return the node type of the last
         /// buffered read or the node type of the last unbuffered read.
         /// </remarks>
-        public override JsonNodeType NodeType
+        public JsonNodeType NodeType
         {
             get
             {
@@ -98,7 +101,7 @@ namespace Microsoft.OData.Core.Json
                     return this.bufferedNodesHead.NodeType;
                 }
 
-                return base.NodeType;
+                return this.innerReader.NodeType;
             }
         }
 
@@ -109,7 +112,7 @@ namespace Microsoft.OData.Core.Json
         /// Depending on whether buffering is on or off this will return the node type of the last
         /// buffered read or the node type of the last unbuffered read.
         /// </remarks>
-        public override object Value
+        public object Value
         {
             get
             {
@@ -125,7 +128,18 @@ namespace Microsoft.OData.Core.Json
                     return this.bufferedNodesHead.Value;
                 }
 
-                return base.Value;
+                return this.innerReader.Value;
+            }
+        }
+
+        /// <summary>
+        /// if it is IEEE754 compatible
+        /// </summary>
+        public bool IsIeee754Compatible
+        {
+            get
+            {
+                return this.innerReader.IsIeee754Compatible;
             }
         }
 
@@ -146,7 +160,6 @@ namespace Microsoft.OData.Core.Json
             }
         }
 
-#if DEBUG
         /// <summary>
         /// Flag indicating whether buffering is on or off; debug-only for use in asserts.
         /// </summary>
@@ -157,12 +170,12 @@ namespace Microsoft.OData.Core.Json
                 return this.isBuffering;
             }
         }
-#endif
+
         /// <summary>
         /// Reads the next node from the input.
         /// </summary>
         /// <returns>true if a new node was found, or false if end of input was reached.</returns>
-        public override bool Read()
+        public bool Read()
         {
             Debug.Assert(!this.parsingInStreamError, "!this.parsingInStreamError");
 
@@ -180,7 +193,7 @@ namespace Microsoft.OData.Core.Json
             if (this.bufferedNodesHead == null)
             {
                 // capture the current state of the reader as the first item in the buffer (if there are none)
-                this.bufferedNodesHead = new BufferedNode(base.NodeType, base.Value);
+                this.bufferedNodesHead = new BufferedNode(this.innerReader.NodeType, this.innerReader.Value);
             }
             else
             {
@@ -189,8 +202,8 @@ namespace Microsoft.OData.Core.Json
 
             Debug.Assert(this.bufferedNodesHead != null, "Expected at least the current node in the buffer when starting buffering.");
 
-            // Set the currentBufferedNode to the first node in the list; this means every time we start buffering we reset the 
-            // position of the current buffered node since in general we don't know how far ahead we have read before and thus don't 
+            // Set the currentBufferedNode to the first node in the list; this means every time we start buffering we reset the
+            // position of the current buffered node since in general we don't know how far ahead we have read before and thus don't
             // want to blindly continuing to read. The model is that with every call to StartBuffering you reset the position of the
             // current node in the list and start reading through the buffer again.
             if (this.currentBufferedNode == null)
@@ -244,7 +257,7 @@ namespace Microsoft.OData.Core.Json
             this.isBuffering = false;
             this.removeOnNextRead = true;
 
-            // We set the currentBufferedNode to null here to indicate that we want to reset the position of the current 
+            // We set the currentBufferedNode to null here to indicate that we want to reset the position of the current
             // buffered node when we turn on buffering the next time. So far this (i.e., resetting the position of the buffered
             // node) is the only mode the BufferingJsonReader supports. We can make resetting the current node position more explicit
             // if needed.
@@ -270,7 +283,7 @@ namespace Microsoft.OData.Core.Json
                 return this.TryReadInStreamErrorPropertyValue(out error);
             }
             finally
-            { 
+            {
                 this.StopBuffering();
                 this.parsingInStreamError = false;
             }
@@ -282,7 +295,7 @@ namespace Microsoft.OData.Core.Json
         /// </summary>
         /// <returns>true if a new node was found, or false if end of input was reached.</returns>
         /// <remarks>
-        /// If the parsingInStreamError field is false, the method will read ahead for every StartObject node read from the input to check whether the JSON object 
+        /// If the parsingInStreamError field is false, the method will read ahead for every StartObject node read from the input to check whether the JSON object
         /// represents an in-stream error. If so, it throws an <see cref="ODataErrorException"/>. If false, this check will not happen.
         /// This parsingInStremError field is set to true when trying to parse an in-stream error; in normal operation it is false.
         /// </remarks>
@@ -312,10 +325,10 @@ namespace Microsoft.OData.Core.Json
                     if (this.parsingInStreamError)
                     {
                         // read more from the input stream and buffer it
-                        result = base.Read();
+                        result = this.innerReader.Read();
 
                         // Add the new node to the end
-                        BufferedNode newNode = new BufferedNode(base.NodeType, base.Value);
+                        BufferedNode newNode = new BufferedNode(this.innerReader.NodeType, this.innerReader.Value);
                         newNode.Previous = this.bufferedNodesHead.Previous;
                         newNode.Next = this.bufferedNodesHead;
                         this.bufferedNodesHead.Previous.Next = newNode;
@@ -337,7 +350,7 @@ namespace Microsoft.OData.Core.Json
                     // if parsingInStreamError nothing in the buffer; read from the base,
                     // else read the next node from the input stream and check
                     // whether it is an in-stream error
-                    result = this.parsingInStreamError ? base.Read() : this.ReadNextAndCheckForInStreamError();
+                    result = this.parsingInStreamError ? this.innerReader.Read() : this.ReadNextAndCheckForInStreamError();
                 }
                 else
                 {
@@ -425,7 +438,7 @@ namespace Microsoft.OData.Core.Json
                 // read the next node in the current reader mode (buffering or non-buffering)
                 bool result = this.ReadInternal();
 
-                if (base.NodeType == JsonNodeType.StartObject)
+                if (this.innerReader.NodeType == JsonNodeType.StartObject)
                 {
                     // If we find a StartObject node we have to read ahead and check whether this
                     // JSON object represents an in-stream error. If we are currently in buffering
@@ -566,7 +579,7 @@ namespace Microsoft.OData.Core.Json
 
                         error.Details = details;
                         break;
-                    
+
                     case JsonConstants.ODataErrorInnerErrorName:
                         if (!ODataJsonLightReaderUtils.ErrorPropertyNotFound(ref propertiesFoundBitmask, ODataJsonLightReaderUtils.ErrorPropertyBitMask.InnerError))
                         {
@@ -879,7 +892,7 @@ namespace Microsoft.OData.Core.Json
 
         /// <summary>
         /// Skips over a JSON value (primitive, object or array) while parsing in-stream errors.
-        /// Note that the SkipValue extension method can not be used in this case as this method has to 
+        /// Note that the SkipValue extension method can not be used in this case as this method has to
         /// access the base instance's NodeType and call ReadInternal.
         /// </summary>
         /// <remarks>

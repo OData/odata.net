@@ -168,7 +168,7 @@ namespace AstoriaUnitTests.DataWebClientCSharp
         }
 
         #region Test cases
-
+        [Ignore] // Remove Atom
         [TestMethod]
         public void CollectionMembershipChanged()
         {
@@ -176,6 +176,7 @@ namespace AstoriaUnitTests.DataWebClientCSharp
             RunTestCases(allTestInfos, typeof(MembershipTest<,,>));
         }
 
+        [Ignore] // Remove Atom
         [TestMethod]
         public void ComplexTypePropertyChanges()
         {
@@ -185,6 +186,7 @@ namespace AstoriaUnitTests.DataWebClientCSharp
             RunTestCases(complexTestInfos, typeof(ComplexPropertyChangesTest<,,>));
         }
 
+        [Ignore] // Remove Atom
         [TestMethod]
         public void ErrorOnMultipleReferencesToSameCollection()
         {
@@ -217,6 +219,7 @@ namespace AstoriaUnitTests.DataWebClientCSharp
             });
         }
 
+        [Ignore] // Remove Atom
         [TestMethod]
         public void ErrorOnCollectionDoesntImplementINotifyCollectionChanged()
         {
@@ -257,6 +260,7 @@ namespace AstoriaUnitTests.DataWebClientCSharp
             RunTestCases(testInfos, typeof(ErrorOnCollectionChangedNotImplemented<,,>));
         }
 
+        [Ignore] // Remove Atom
         [TestMethod]
         public void ErrorOnComplexTypeDoesntImplementINotifyPropertyChanged()
         {
@@ -294,6 +298,7 @@ namespace AstoriaUnitTests.DataWebClientCSharp
             RunTestCases(complexWithPrimitivesInfos, typeof(InvalidItemsTest<,,>));
         }
 
+        [Ignore] // Remove Atom
         [TestMethod]
         public void ErrorOnCollectionChangedWithNullArgs()
         {
@@ -305,8 +310,8 @@ namespace AstoriaUnitTests.DataWebClientCSharp
                 host.StartService();
 
                 DataServiceContext ctx = new DataServiceContext(new Uri(host.BaseUri), ODataProtocolVersion.V4);
-                ctx.EnableAtom = true;
-                ctx.Format.UseAtom();
+                //ctx.EnableAtom = true;
+                //ctx.Format.UseAtom();
                 var dsc = new DataServiceCollection<EntityWithCollection<IntCollection>>(ctx);
                 EntityWithCollection<IntCollection> entity = new EntityWithCollection<IntCollection>();
                 dsc.Add(entity);
@@ -1165,8 +1170,8 @@ Connection: Close
                 PlaybackService.OverridingPlayback.Value = CreateAtomPayload(entityPayload, host.BaseUri);
                 // Create and set test context
                 context = new DataServiceContext(new Uri(host.BaseUri), ODataProtocolVersion.V4);
-                context.EnableAtom = true;
-                context.Format.UseAtom();
+                //context.EnableAtom = true;
+                //context.Format.UseAtom();
                 // Create DataServiceCollection for the specified entity type
                 DataServiceCollection<EntityType> dsc = new DataServiceCollection<EntityType>(context, null, TrackingMode.AutoChangeTracking, null, this.entityChangedHandler, null);
                 // Get an entity with a collection property to use for the test and load it into the DataServiceCollection
@@ -1652,67 +1657,6 @@ Connection: Close
                         String.Format(
                             "An attempt to track an entity or complex type failed because the entity or complex type contains a collection property of type '{0}' that does not implement the INotifyCollectionChanged interface.",
                             typeof(CollectionType))));
-            }
-        }
-
-        // Helper method for verifying an error occurs when there are multiple references to the same collection in the binding graph
-        private void ErrorOnMultipleReferencesToSameCollection<EntityType>(EntityType entity1, EntityType entity2)
-            where EntityType : EntityBase
-        {
-            using (TestWebRequest host = TestWebRequest.CreateForInProcessWcf())
-            using (PlaybackService.OverridingPlayback.Restore())
-            {
-                host.ServiceType = typeof(AstoriaUnitTests.Stubs.PlaybackService);
-                host.StartService();
-
-                DataServiceContext ctx = new DataServiceContext(new Uri(host.BaseUri), ODataProtocolVersion.V4);
-                ctx.EnableAtom = true;
-                ctx.Format.UseAtom();
-                var dsc = new DataServiceCollection<EntityType>(ctx);
-
-                dsc.Add(entity1);
-                dsc.Add(entity2);
-
-                try
-                {
-                    entity1.TestCollection = entity2.TestCollection;
-                    Assert.Fail("Expected exception was not thrown.");
-                }
-                catch (InvalidOperationException ex)
-                {
-                    Assert.AreEqual(
-                        String.Format("An attempt to track a collection object of type '{0}' failed because the collection object is already being tracked.", entity1.TestCollection.GetType()),
-                        ex.Message);
-                }
-            }
-        }
-
-        // Helper method for verifying an error occurs when attempting to bind to a collection of a complex type that doesn't implement INotifyPropertyChanged
-        private void ErrorOnComplexTypeDoesntImplementINotifyPropertyChanged<EntityType>(EntityType entity)
-            where EntityType : EntityBase
-        {
-            using (TestWebRequest host = TestWebRequest.CreateForInProcessWcf())
-            using (PlaybackService.OverridingPlayback.Restore())
-            {
-                host.ServiceType = typeof(AstoriaUnitTests.Stubs.PlaybackService);
-                host.StartService();
-
-                DataServiceContext ctx = new DataServiceContext(new Uri(host.BaseUri), ODataProtocolVersion.V4);
-                ctx.EnableAtom = true;
-                ctx.Format.UseAtom();
-                var dsc = new DataServiceCollection<EntityType>(ctx);
-
-                try
-                {
-                    dsc.Add(entity);
-                    Assert.Fail("Expected exception was not thrown.");
-                }
-                catch (InvalidOperationException ex)
-                {
-                    Assert.AreEqual(
-                        String.Format("An attempt to track an entity or complex type failed because the entity or complex type '{0}' does not implement the INotifyPropertyChanged interface.", typeof(ComplexTypeWithoutINPC)),
-                        ex.Message);
-                }
             }
         }
 

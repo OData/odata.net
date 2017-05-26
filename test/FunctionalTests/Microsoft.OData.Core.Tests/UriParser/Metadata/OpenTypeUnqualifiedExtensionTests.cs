@@ -5,11 +5,10 @@
 //---------------------------------------------------------------------
 
 using System;
-using Microsoft.OData.Core.UriParser;
-using Microsoft.OData.Core.UriParser.Metadata;
+using Microsoft.OData.UriParser;
 using Xunit;
 
-namespace Microsoft.OData.Core.Tests.UriParser.Metadata
+namespace Microsoft.OData.Tests.UriParser.Metadata
 {
     // Select unqualified Function not supported.
     public class OpenTypeUnqualifiedExtensionTests
@@ -104,7 +103,7 @@ namespace Microsoft.OData.Core.Tests.UriParser.Metadata
                 "People?$orderby=TestNS.FindPencil(pid=2)/Id",
                 "People?$orderby=FindPencil(pid=2)/Id",
                 parser => parser.ParseOrderBy(),
-                clause => clause.Expression.ShouldBeSingleValuePropertyAccessQueryNode(PencilId).And.Source.ShouldBeSingleEntityFunctionCallNode("TestNS.FindPencil"),
+                clause => clause.Expression.ShouldBeSingleValuePropertyAccessQueryNode(PencilId).And.Source.ShouldBeSingleResourceFunctionCallNode("TestNS.FindPencil"),
                 Strings.MetadataBinder_UnknownFunction("FindPencil"));
         }
 
@@ -115,7 +114,7 @@ namespace Microsoft.OData.Core.Tests.UriParser.Metadata
                 "People?$orderby=TestNS.FindPencil/Id",
                 "People?$orderby=FindPencil/Id",
                 parser => parser.ParseOrderBy(),
-                clause => clause.Expression.ShouldBeSingleValuePropertyAccessQueryNode(PencilId).And.Source.ShouldBeSingleEntityFunctionCallNode("TestNS.FindPencil"),
+                clause => clause.Expression.ShouldBeSingleValuePropertyAccessQueryNode(PencilId).And.Source.ShouldBeSingleResourceFunctionCallNode("TestNS.FindPencil"),
                 null);
         }
 
@@ -126,7 +125,7 @@ namespace Microsoft.OData.Core.Tests.UriParser.Metadata
                 "People?$orderby=TestNS.FindPencil()/Id",
                 "People?$orderby=FindPencil()/Id",
                 parser => parser.ParseOrderBy(),
-                clause => clause.Expression.ShouldBeSingleValuePropertyAccessQueryNode(PencilId).And.Source.ShouldBeSingleEntityFunctionCallNode("TestNS.FindPencil"),
+                clause => clause.Expression.ShouldBeSingleValuePropertyAccessQueryNode(PencilId).And.Source.ShouldBeSingleResourceFunctionCallNode("TestNS.FindPencil"),
                 Strings.MetadataBinder_UnknownFunction("FindPencil"));
         }
 
@@ -137,7 +136,7 @@ namespace Microsoft.OData.Core.Tests.UriParser.Metadata
                 "People?$orderby=Addr/TestNS.GetZip",
                 "People?$orderby=Addr/GetZip",
                 parser => parser.ParseOrderBy(),
-                clause => clause.Expression.ShouldBeSingleValueFunctionCallQueryNode("TestNS.GetZip").And.Source.ShouldBeSingleValuePropertyAccessQueryNode(AddrProperty),
+                clause => clause.Expression.ShouldBeSingleValueFunctionCallQueryNode("TestNS.GetZip").And.Source.ShouldBeSingleComplexNode(AddrProperty),
                 null);
         }
 
@@ -148,7 +147,7 @@ namespace Microsoft.OData.Core.Tests.UriParser.Metadata
                 "People?$orderby=Addr/TestNS.GetZip()",
                 "People?$orderby=Addr/GetZip()",
                 parser => parser.ParseOrderBy(),
-                clause => clause.Expression.ShouldBeSingleValueFunctionCallQueryNode("TestNS.GetZip").And.Source.ShouldBeSingleValuePropertyAccessQueryNode(AddrProperty),
+                clause => clause.Expression.ShouldBeSingleValueFunctionCallQueryNode("TestNS.GetZip").And.Source.ShouldBeSingleComplexNode(AddrProperty),
                 Strings.FunctionCallBinder_UriFunctionMustHaveHaveNullParent("GetZip"));
         }
 

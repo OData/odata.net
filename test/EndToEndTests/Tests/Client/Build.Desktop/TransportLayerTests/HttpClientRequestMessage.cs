@@ -17,7 +17,7 @@ namespace Microsoft.Test.OData.Tests.Client.TransportLayerTests
     using System.Net.Http.Headers;
     using System.Threading;
     using System.Threading.Tasks;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
 
     /// <summary>
     /// HttpClient based implementation of DataServiceClientRequestMessage.

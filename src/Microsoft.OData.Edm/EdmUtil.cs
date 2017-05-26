@@ -4,23 +4,18 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
+using System.Text;
+using System.Text.RegularExpressions;
+using Microsoft.OData.Edm.Csdl;
+using Microsoft.OData.Edm.Csdl.CsdlSemantics;
+using Microsoft.OData.Edm.Vocabularies;
+
 namespace Microsoft.OData.Edm
 {
-    #region Namespaces
-    using System;
-    using System.Collections;
-    using System.Collections.Generic;
-    using System.Diagnostics;
-    using System.Linq;
-    using System.Text;
-    using System.Text.RegularExpressions;
-    using Microsoft.OData.Edm.Csdl;
-    using Microsoft.OData.Edm.Csdl.CsdlSemantics;
-    using Microsoft.OData.Edm.Library;
-    using Microsoft.OData.Edm.Library.Values;
-    using Microsoft.OData.Edm.Values;
-    #endregion Namespaces
-
     /// <summary>
     /// Utilities for Edm.
     /// </summary>
@@ -451,7 +446,7 @@ namespace Microsoft.OData.Edm
                 if (!dictionary.TryGetValue(key, out val))
                 {
                     val = computedValue;
-                    dictionary.Add(key, computedValue);                    
+                    dictionary.Add(key, computedValue);
                 }
             }
 
@@ -459,7 +454,7 @@ namespace Microsoft.OData.Edm
         }
 
         /// <summary>
-        /// Checks whether the <paramref name="annotatable"/> has a value annotation.
+        /// Checks whether the <paramref name="annotatable"/> has an annotation.
         /// </summary>
         /// <param name="model">The <see cref="IEdmModel"/> containing the annotation.</param>
         /// <param name="annotatable">The <see cref="IEdmElement"/> to check.</param>

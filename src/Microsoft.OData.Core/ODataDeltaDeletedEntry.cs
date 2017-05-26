@@ -4,10 +4,10 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core
+namespace Microsoft.OData
 {
     /// <summary>
-    /// The reason of deleted entry in delta response.
+    /// The reason of deleted resource in delta response.
     /// </summary>
     public enum DeltaDeletedEntryReason
     {
@@ -36,7 +36,7 @@ namespace Microsoft.OData.Core
         /// Initializes a new <see cref="ODataDeltaDeletedEntry"/>.
         /// </summary>
         /// <param name="id">The id of the deleted entity, which may be absolute or relative.</param>
-        /// <param name="reason">The reason of deleted entry.</param>
+        /// <param name="reason">The reason of deleted resource.</param>
         public ODataDeltaDeletedEntry(string id, DeltaDeletedEntryReason reason)
         {
             this.Id = id;

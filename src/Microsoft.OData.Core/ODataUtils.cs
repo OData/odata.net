@@ -4,14 +4,13 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core
+namespace Microsoft.OData
 {
     #region Namespaces
     using System;
     using System.Collections.Generic;
     using System.Linq;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Core.Metadata;
     #endregion Namespaces
 
     /// <summary>
@@ -29,7 +28,7 @@ namespace Microsoft.OData.Core
         /// <remarks>
         /// This method can be called if it is important to set all the message headers before calling any of the
         /// write methods on the <paramref name="messageWriter"/>.
-        /// If it is sufficient to set the headers when the write methods on the <paramref name="messageWriter"/> 
+        /// If it is sufficient to set the headers when the write methods on the <paramref name="messageWriter"/>
         /// are called, you don't have to call this method and setting the headers will happen automatically.
         /// </remarks>
         public static ODataFormat SetHeadersForPayload(ODataMessageWriter messageWriter, ODataPayloadKind payloadKind)
@@ -46,9 +45,9 @@ namespace Microsoft.OData.Core
 
         /// <summary>Returns the format used by the message reader for reading the payload.</summary>
         /// <returns>The format used by the messageReader for reading the payload.</returns>
-        /// <param name="messageReader">The <see cref="T:Microsoft.OData.Core.ODataMessageReader" /> to get the read format from.</param>
+        /// <param name="messageReader">The <see cref="T:Microsoft.OData.ODataMessageReader" /> to get the read format from.</param>
         /// <remarks>This method must only be called once reading has started.
-        /// This means that a read method has been called on the <paramref name="messageReader"/> or that a reader (for entries, feeds, collections, etc.) has been created.
+        /// This means that a read method has been called on the <paramref name="messageReader"/> or that a reader (for entries, resource sets, collections, etc.) has been created.
         /// If the method is called prior to that it will throw.</remarks>
         public static ODataFormat GetReadFormat(ODataMessageReader messageReader)
         {
@@ -56,7 +55,7 @@ namespace Microsoft.OData.Core
             return messageReader.GetFormat();
         }
 
-       
+
         /// <summary>
         /// Gets the reader behavior for null property value on the specified property.
         /// </summary>
@@ -67,7 +66,7 @@ namespace Microsoft.OData.Core
         {
             ExceptionUtils.CheckArgumentNotNull(model, "model");
             ExceptionUtils.CheckArgumentNotNull(property, "property");
-            
+
             ODataEdmPropertyAnnotation annotation = model.GetAnnotationValue<ODataEdmPropertyAnnotation>(property);
             return annotation == null ? ODataNullValueBehaviorKind.Default : annotation.NullValueReadBehaviorKind;
         }
@@ -82,7 +81,7 @@ namespace Microsoft.OData.Core
         {
             ExceptionUtils.CheckArgumentNotNull(model, "model");
             ExceptionUtils.CheckArgumentNotNull(property, "property");
-            
+
             ODataEdmPropertyAnnotation annotation = model.GetAnnotationValue<ODataEdmPropertyAnnotation>(property);
             if (annotation == null)
             {
@@ -159,17 +158,17 @@ namespace Microsoft.OData.Core
         ///                 "-ns.*"    -- Excludes all annotation names under the namespace "ns".
         ///                 "-ns.name" -- Excludes only the annotation name "ns.name".
         /// Null or empty filter is equivalent to "-*".
-        /// 
+        ///
         /// The relative priority of the pattern is base on the relative specificity of the patterns being compared. If pattern1 is under the namespace pattern2,
         /// pattern1 is more specific than pattern2 because pattern1 matches a subset of what pattern2 matches. We give higher priority to the pattern that is more specific.
         /// For example:
         ///  "ns.*" has higher priority than "*"
         ///  "ns.name" has higher priority than "ns.*"
         ///  "ns1.name" has same priority as "ns2.*"
-        /// 
+        ///
         /// Patterns with the exclude operator takes higher precedence than the same pattern without.
         /// For example: "-ns.name" has higher priority than "ns.name".
-        /// 
+        ///
         /// Examples:
         ///   "ns1.*,ns.name"       -- Matches any annotation name under the "ns1" namespace and the "ns.name" annotation.
         ///   "*,-ns.*,ns.name"     -- Matches any annotation name outside of the "ns" namespace and only "ns.name" under the "ns" namespace.
@@ -201,7 +200,7 @@ namespace Microsoft.OData.Core
                 .Select(entitySet => new ODataEntitySetInfo() { Name = entitySet.Name, Title = entitySet.Name, Url = new Uri(entitySet.Name, UriKind.RelativeOrAbsolute) }).ToList();
             serviceDocument.Singletons = model.EntityContainer.Singletons()
                 .Select(singleton => new ODataSingletonInfo() { Name = singleton.Name, Title = singleton.Name, Url = new Uri(singleton.Name, UriKind.RelativeOrAbsolute) }).ToList();
-            serviceDocument.FunctionImports = model.EntityContainer.OperationImports().OfType<IEdmFunctionImport>().Where(functionImport => functionImport.IncludeInServiceDocument)
+            serviceDocument.FunctionImports = model.EntityContainer.OperationImports().OfType<IEdmFunctionImport>().Where(functionImport => functionImport.IncludeInServiceDocument && !functionImport.Function.Parameters.Any())
                 .Select(functionImport => new ODataFunctionImportInfo() { Name = functionImport.Name, Title = functionImport.Name, Url = new Uri(functionImport.Name, UriKind.RelativeOrAbsolute) }).ToList();
 
             return serviceDocument;
@@ -209,7 +208,7 @@ namespace Microsoft.OData.Core
 
         /// <summary>
         /// Append default values required by OData to specified HTTP header.
-        /// 
+        ///
         /// When header name is ODataConstants.ContentTypeHeader:
         ///     If header value is application/json, append the following default values:
         ///         odata.metadata=minimal

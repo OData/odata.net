@@ -8,7 +8,6 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
 {
     using Microsoft.OData.Edm;
     using Microsoft.OData.Edm.Csdl.Parsing.Ast;
-    using Microsoft.OData.Edm.Library;
 
     /// <summary>
     /// Provides semantics for CsdlEntitySet.
@@ -28,6 +27,11 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
         public override EdmContainerElementKind ContainerElementKind
         {
             get { return EdmContainerElementKind.EntitySet; }
+        }
+
+        public bool IncludeInServiceDocument
+        {
+            get { return ((CsdlEntitySet)this.navigationSource).IncludeInServiceDocument; }
         }
 
         protected override IEdmEntityType ComputeElementType()

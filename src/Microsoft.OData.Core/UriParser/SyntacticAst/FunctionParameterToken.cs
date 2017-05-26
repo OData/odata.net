@@ -4,20 +4,16 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-#if ASTORIA_CLIENT
+#if ODATA_CLIENT
 namespace Microsoft.OData.Client.ALinq.UriParser
 #else
-namespace Microsoft.OData.Core.UriParser.Syntactic
+namespace Microsoft.OData.UriParser
 #endif
 {
-    using Microsoft.OData.Core.UriParser.Syntactic;
-    using Microsoft.OData.Core.UriParser.TreeNodeKinds;
-    using Microsoft.OData.Core.UriParser.Visitors;
-
     /// <summary>
     /// A token to represent a parameter to a function call.
     /// </summary>
-    internal sealed class FunctionParameterToken : QueryToken
+    public sealed class FunctionParameterToken : QueryToken
     {
         /// <summary>
         /// get an empty list of parameters
@@ -28,12 +24,12 @@ namespace Microsoft.OData.Core.UriParser.Syntactic
         /// The name of the parameter
         /// </summary>
         private readonly string parameterName;
-        
+
         /// <summary>
         /// The value of this parameter
         /// </summary>
         private readonly QueryToken valueToken;
-        
+
         /// <summary>
         /// Creates a FunctionParameterToken
         /// </summary>
@@ -46,7 +42,7 @@ namespace Microsoft.OData.Core.UriParser.Syntactic
         }
 
         /// <summary>
-        /// Gets the name of this parameter 
+        /// Gets the name of this parameter
         /// </summary>
         public string ParameterName
         {

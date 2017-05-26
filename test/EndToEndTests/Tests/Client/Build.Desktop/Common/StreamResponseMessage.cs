@@ -4,15 +4,17 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+using System;
+
 namespace Microsoft.Test.OData.Tests.Client.Common
 {
     using System.Collections.Generic;
     using System.IO;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
 
     /// An implementation of IODataResponseMessage.
     /// In ODataLibrary, a message is an abstraction which consists of stream and header interfaces that hides the details of stream-reading/writing.
-    public class StreamResponseMessage : IODataResponseMessage
+    public class StreamResponseMessage : IODataResponseMessage, IContainerProvider
     {
         private readonly Stream stream;
         private readonly Dictionary<string, string> headers = new Dictionary<string, string>();
@@ -45,5 +47,7 @@ namespace Microsoft.Test.OData.Tests.Client.Common
         {
             return this.stream;
         }
+
+        public IServiceProvider Container { get; set; }
     }
 }

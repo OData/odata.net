@@ -6,7 +6,7 @@
 
 using Microsoft.Spatial;
 
-namespace Microsoft.OData.Core.Tests.ScenarioTests.Writer.JsonLight
+namespace Microsoft.OData.Tests.ScenarioTests.Writer.JsonLight
 {
     /// <summary>
     /// Common OData Spatial Type Utility class.

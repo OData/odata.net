@@ -4,7 +4,7 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core.UriParser.Parsers
+namespace Microsoft.OData.UriParser
 {
     #region Namespaces
     using System;
@@ -16,76 +16,68 @@ namespace Microsoft.OData.Core.UriParser.Parsers
     using Edm = Microsoft.OData.Edm;
     #endregion
 
-    /// <summary>Use this class to perform late-bound operations on open properties.</summary>    
+    /// <summary>Use this class to perform late-bound operations on open properties.</summary>
     /// <remarks>This class was copied from the product.</remarks>
     internal static class OpenTypeMethods
     {
         #region Reflection OpenType MethodInfos
 
         /// <summary>MethodInfo for Add.</summary>
-        internal static readonly MethodInfo AddMethodInfo = typeof(OpenTypeMethods).GetMethod("Add", BindingFlags.Static | BindingFlags.Public);
+        internal static readonly MethodInfo AddMethodInfo = GetMethodInfo("Add");
 
         /// <summary>MethodInfo for AndAlso.</summary>
-        internal static readonly MethodInfo AndAlsoMethodInfo = typeof(OpenTypeMethods).GetMethod("AndAlso", BindingFlags.Static | BindingFlags.Public);
+        internal static readonly MethodInfo AndAlsoMethodInfo = GetMethodInfo("AndAlso");
 
         /// <summary>MethodInfo for Convert.</summary>
-        internal static readonly MethodInfo ConvertMethodInfo = typeof(OpenTypeMethods).GetMethod("Convert", BindingFlags.Static | BindingFlags.Public);
+        internal static readonly MethodInfo ConvertMethodInfo = GetMethodInfo("Convert");
 
         /// <summary>MethodInfo for Divide.</summary>
-        internal static readonly MethodInfo DivideMethodInfo = typeof(OpenTypeMethods).GetMethod("Divide", BindingFlags.Static | BindingFlags.Public);
+        internal static readonly MethodInfo DivideMethodInfo = GetMethodInfo("Divide");
 
         /// <summary>MethodInfo for Equal.</summary>
-        internal static readonly MethodInfo EqualMethodInfo = typeof(OpenTypeMethods).GetMethod("Equal", BindingFlags.Static | BindingFlags.Public);
+        internal static readonly MethodInfo EqualMethodInfo = GetMethodInfo("Equal");
 
         /// <summary>MethodInfo for GreaterThan.</summary>
-        internal static readonly MethodInfo GreaterThanMethodInfo = typeof(OpenTypeMethods).GetMethod("GreaterThan", BindingFlags.Static | BindingFlags.Public);
+        internal static readonly MethodInfo GreaterThanMethodInfo = GetMethodInfo("GreaterThan");
 
         /// <summary>MethodInfo for GreaterThanOrEqual.</summary>
-        internal static readonly MethodInfo GreaterThanOrEqualMethodInfo = typeof(OpenTypeMethods).GetMethod("GreaterThanOrEqual", BindingFlags.Static | BindingFlags.Public);
+        internal static readonly MethodInfo GreaterThanOrEqualMethodInfo = GetMethodInfo("GreaterThanOrEqual");
 
         /// <summary>MethodInfo for LessThan.</summary>
-        internal static readonly MethodInfo LessThanMethodInfo = typeof(OpenTypeMethods).GetMethod("LessThan", BindingFlags.Static | BindingFlags.Public);
+        internal static readonly MethodInfo LessThanMethodInfo = GetMethodInfo("LessThan");
 
         /// <summary>MethodInfo for LessThanOrEqual.</summary>
-        internal static readonly MethodInfo LessThanOrEqualMethodInfo = typeof(OpenTypeMethods).GetMethod("LessThanOrEqual", BindingFlags.Static | BindingFlags.Public);
+        internal static readonly MethodInfo LessThanOrEqualMethodInfo = GetMethodInfo("LessThanOrEqual");
 
         /// <summary>MethodInfo for Modulo.</summary>
-        internal static readonly MethodInfo ModuloMethodInfo = typeof(OpenTypeMethods).GetMethod("Modulo", BindingFlags.Static | BindingFlags.Public);
+        internal static readonly MethodInfo ModuloMethodInfo = GetMethodInfo("Modulo");
 
         /// <summary>MethodInfo for Multiply.</summary>
-        internal static readonly MethodInfo MultiplyMethodInfo = typeof(OpenTypeMethods).GetMethod("Multiply", BindingFlags.Static | BindingFlags.Public);
+        internal static readonly MethodInfo MultiplyMethodInfo = GetMethodInfo("Multiply");
 
         /// <summary>MethodInfo for Negate.</summary>
-        internal static readonly MethodInfo NegateMethodInfo = typeof(OpenTypeMethods).GetMethod("Negate", BindingFlags.Static | BindingFlags.Public);
+        internal static readonly MethodInfo NegateMethodInfo = GetMethodInfo("Negate");
 
         /// <summary>MethodInfo for Not.</summary>
-        internal static readonly MethodInfo NotMethodInfo = typeof(OpenTypeMethods).GetMethod("Not", BindingFlags.Static | BindingFlags.Public);
+        internal static readonly MethodInfo NotMethodInfo = GetMethodInfo("Not");
 
         /// <summary>MethodInfo for NotEqual.</summary>
-        internal static readonly MethodInfo NotEqualMethodInfo = typeof(OpenTypeMethods).GetMethod("NotEqual", BindingFlags.Static | BindingFlags.Public);
+        internal static readonly MethodInfo NotEqualMethodInfo = GetMethodInfo("NotEqual");
 
         /// <summary>MethodInfo for OrElse.</summary>
-        internal static readonly MethodInfo OrElseMethodInfo = typeof(OpenTypeMethods).GetMethod("OrElse", BindingFlags.Static | BindingFlags.Public);
+        internal static readonly MethodInfo OrElseMethodInfo = GetMethodInfo("OrElse");
 
         /// <summary>MethodInfo for Subtract.</summary>
-        internal static readonly MethodInfo SubtractMethodInfo = typeof(OpenTypeMethods).GetMethod("Subtract", BindingFlags.Static | BindingFlags.Public);
+        internal static readonly MethodInfo SubtractMethodInfo = GetMethodInfo("Subtract");
 
         /// <summary>MethodInfo for TypeIs.</summary>
-        internal static readonly MethodInfo TypeIsMethodInfo = typeof(OpenTypeMethods).GetMethod("TypeIs", BindingFlags.Static | BindingFlags.Public);
+        internal static readonly MethodInfo TypeIsMethodInfo = GetMethodInfo("TypeIs");
 
         /// <summary>MethodInfo for object OpenTypeMethods.GetValue(this object value, string propertyName).</summary>
-        internal static readonly MethodInfo GetValueOpenPropertyMethodInfo = typeof(OpenTypeMethods).GetMethod(
-            "GetValue",
-            new Type[] { typeof(object), typeof(string) },
-            true /*isPublic*/,
-            true /*isStatic*/);
+        internal static readonly MethodInfo GetValueOpenPropertyMethodInfo = GetMethodInfo("GetValue");
 
         /// <summary>MethodInfo for IEnumerable&lt;object&gt; OpenTypeMethods.GetCollectionValue(this object value, string propertyName).</summary>
-        internal static readonly MethodInfo GetCollectionValueOpenPropertyMethodInfo = typeof(OpenTypeMethods).GetMethod(
-            "GetCollectionValue",
-            new Type[] { typeof(object), typeof(string) },
-            true /*isPublic*/,
-            true /*isStatic*/);
+        internal static readonly MethodInfo GetCollectionValueOpenPropertyMethodInfo = GetMethodInfo("GetCollectionValue");
 
         #endregion Internal fields.
 
@@ -338,7 +330,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         /// <param name="targetString">target string</param>
         /// <param name="substring">substring to be replaced.</param>
         /// <param name="newString">new string that replaces the sub string.</param>
-        /// <returns>returns a new string with the substring replaced with new string.</returns> 
+        /// <returns>returns a new string with the substring replaced with new string.</returns>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", Justification = "Parameters will be used in the actual impl")]
         public static object Replace(object targetString, object substring, object newString)
         {
@@ -418,7 +410,7 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         }
 
         /// <summary>
-        /// Removes all leading and trailing white-space characters from the target string. 
+        /// Removes all leading and trailing white-space characters from the target string.
         /// </summary>
         /// <param name="targetString">target string.</param>
         /// <returns>returns the trimed string.</returns>
@@ -715,18 +707,23 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         #region Helper methods
 
         /// <summary>
-        /// Returns the specified <paramref name="expression"/> with a 
+        /// Returns the specified <paramref name="expression"/> with a
         /// type assignable to System.Object.
         /// </summary>
         /// <param name="expression">Expression to convert.</param>
         /// <returns>
-        /// The specified <paramref name="expression"/> with a type assignable 
+        /// The specified <paramref name="expression"/> with a type assignable
         /// to System.Object.
         /// </returns>
         private static Expression ExpressionAsObject(Expression expression)
         {
             Debug.Assert(expression != null, "expression != null");
             return expression.Type.IsValueType() ? Expression.Convert(expression, typeof(object)) : expression;
+        }
+
+        private static MethodInfo GetMethodInfo(string methodName)
+        {
+            return typeof(OpenTypeMethods).GetMethod(methodName, /*isPublic*/true, /*isStatic*/true);
         }
 
         #endregion

@@ -9,13 +9,12 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using FluentAssertions;
-using Microsoft.OData.Core.JsonLight;
+using Microsoft.OData.JsonLight;
 using Microsoft.OData.Edm;
-using Microsoft.OData.Edm.Library;
 using Xunit;
-using ErrorStrings = Microsoft.OData.Core.Strings;
+using ErrorStrings = Microsoft.OData.Strings;
 
-namespace Microsoft.OData.Core.Tests.JsonLight
+namespace Microsoft.OData.Tests.JsonLight
 {
     public class ODataJsonLightEntryAndFeedSerializerTests
     {
@@ -26,13 +25,13 @@ namespace Microsoft.OData.Core.Tests.JsonLight
         {
             var jsonResult = this.SerializeJsonFragment(serializer =>
                 serializer.WriteNavigationLinkMetadata(
-                    new ODataNavigationLink
+                    new ODataNestedResourceInfo
                     {
                         Name = "NavigationProperty",
                         AssociationLinkUrl = new Uri("http://example.com/association"),
                         Url = new Uri("http://example.com/navigation")
                     },
-                    new DuplicatePropertyNamesChecker(false, true)));
+                    new DuplicatePropertyNameChecker()));
 
             jsonResult.Should().Contain("NavigationProperty@odata.associationLink\":\"http://example.com/association");
         }
@@ -42,13 +41,13 @@ namespace Microsoft.OData.Core.Tests.JsonLight
         {
             var jsonResult = this.SerializeJsonFragment(serializer =>
                 serializer.WriteNavigationLinkMetadata(
-                    new ODataNavigationLink
+                    new ODataNestedResourceInfo
                     {
                         Name = "NavigationProperty",
                         AssociationLinkUrl = new Uri("http://example.com/association"),
                         Url = new Uri("http://example.com/navigation")
                     },
-                    new DuplicatePropertyNamesChecker(false, true)));
+                    new DuplicatePropertyNameChecker()));
 
             jsonResult.Should().Contain("NavigationProperty@odata.navigationLink\":\"http://example.com/navigation");
         }
@@ -59,7 +58,7 @@ namespace Microsoft.OData.Core.Tests.JsonLight
             using (MemoryStream stream = new MemoryStream())
             {
                 var context = this.CreateJsonLightOutputContext(stream, writingResponse: false);
-                var serializer = new ODataJsonLightEntryAndFeedSerializer(context);
+                var serializer = new ODataJsonLightResourceSerializer(context);
                 Action test = () => serializer.WriteOperations(new ODataOperation[] { new ODataAction { Metadata = new Uri("#foo", UriKind.Relative) } }, /*isAction*/true);
                 test.ShouldThrow<ODataException>().WithMessage(ErrorStrings.WriterValidationUtils_OperationInRequest("#foo"));
             }
@@ -126,7 +125,7 @@ namespace Microsoft.OData.Core.Tests.JsonLight
         {
             var operations = new ODataOperation[] { new ODataAction { Metadata = new Uri("#foo", UriKind.Relative) }, new ODataAction { Metadata = new Uri("#foo", UriKind.Relative), Target = new Uri("http://www.example.com/foo") } };
             Action test = () => this.WriteOperationsAndValidatePayload(operations, null);
-            test.ShouldThrow<ODataException>().WithMessage(ErrorStrings.ODataJsonLightEntryAndFeedSerializer_ActionsAndFunctionsGroupMustSpecifyTarget("#foo"));
+            test.ShouldThrow<ODataException>().WithMessage(ErrorStrings.ODataJsonLightResourceSerializer_ActionsAndFunctionsGroupMustSpecifyTarget("#foo"));
         }
 
         [Fact]
@@ -134,7 +133,7 @@ namespace Microsoft.OData.Core.Tests.JsonLight
         {
             var operations = new ODataOperation[] { new ODataAction { Metadata = new Uri("#foo", UriKind.Relative) }, new ODataAction { Metadata = new Uri("#foo", UriKind.Relative) } };
             Action test = () => this.WriteOperationsAndValidatePayload(operations, null);
-            test.ShouldThrow<ODataException>().WithMessage(ErrorStrings.ODataJsonLightEntryAndFeedSerializer_ActionsAndFunctionsGroupMustSpecifyTarget("#foo"));
+            test.ShouldThrow<ODataException>().WithMessage(ErrorStrings.ODataJsonLightResourceSerializer_ActionsAndFunctionsGroupMustSpecifyTarget("#foo"));
         }
 
         [Fact]
@@ -142,7 +141,7 @@ namespace Microsoft.OData.Core.Tests.JsonLight
         {
             var operations = new ODataOperation[] { new ODataAction { Metadata = new Uri("#foo", UriKind.Relative), Target = new Uri("http://www.example.com/foo") }, new ODataAction { Metadata = new Uri("#foo", UriKind.Relative), Target = new Uri("http://www.example.com/foo") } };
             Action test = () => this.WriteOperationsAndValidatePayload(operations, null);
-            test.ShouldThrow<ODataException>().WithMessage(ErrorStrings.ODataJsonLightEntryAndFeedSerializer_ActionsAndFunctionsGroupMustNotHaveDuplicateTarget("#foo", "http://www.example.com/foo"));
+            test.ShouldThrow<ODataException>().WithMessage(ErrorStrings.ODataJsonLightResourceSerializer_ActionsAndFunctionsGroupMustNotHaveDuplicateTarget("#foo", "http://www.example.com/foo"));
         }
 
         [Fact]
@@ -174,7 +173,7 @@ namespace Microsoft.OData.Core.Tests.JsonLight
             using (MemoryStream stream = new MemoryStream())
             {
                 var context = this.CreateJsonLightOutputContext(stream, /*writingResponse*/true, setMetadataDocumentUri);
-                var serializer = new ODataJsonLightEntryAndFeedSerializer(context);
+                var serializer = new ODataJsonLightResourceSerializer(context);
                 serializer.JsonWriter.StartObjectScope();
                 if (writeMetadataAnnotation)
                 {
@@ -195,31 +194,32 @@ namespace Microsoft.OData.Core.Tests.JsonLight
         {
             IEdmModel model = new EdmModel();
 
-            ODataMessageWriterSettings settings = new ODataMessageWriterSettings { Version = ODataVersion.V4 };
+            var messageInfo = new ODataMessageInfo
+            {
+                MessageStream = new NonDisposingStream(stream),
+                MediaType = new ODataMediaType("application", "json"),
+                Encoding = Encoding.UTF8,
+                IsResponse = writingResponse,
+                IsAsync = false,
+                Model = TestUtils.WrapReferencedModelsToMainModel(model)
+            };
+
+            var settings = new ODataMessageWriterSettings { Version = ODataVersion.V4 };
             if (setMetadataDocumentUri)
             {
                 settings.SetServiceDocumentUri(this.serviceDocumentUri);
             }
 
-            return new ODataJsonLightOutputContext(
-                ODataFormat.Json,
-                new NonDisposingStream(stream),
-                new ODataMediaType("application", "json"),
-                Encoding.UTF8,
-                settings,
-                writingResponse,
-                /*synchronous*/ true,
-                TestUtils.WrapReferencedModelsToMainModel(model),
-                /*urlResolver*/ null);
+            return new ODataJsonLightOutputContext(messageInfo, settings);
         }
 
-        private string SerializeJsonFragment(Action<ODataJsonLightEntryAndFeedSerializer> writeWithSerializer)
+        private string SerializeJsonFragment(Action<ODataJsonLightResourceSerializer> writeWithSerializer)
         {
             string result;
             using (MemoryStream stream = new MemoryStream())
             {
                 var context = this.CreateJsonLightOutputContext(stream);
-                var serializer = new ODataJsonLightEntryAndFeedSerializer(context);
+                var serializer = new ODataJsonLightResourceSerializer(context);
                 serializer.JsonWriter.StartObjectScope();
                 writeWithSerializer(serializer);
                 serializer.JsonWriter.Flush();

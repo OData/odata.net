@@ -4,14 +4,14 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-#if ODATALIB
+#if ODATA_CORE
 namespace Microsoft.OData.Core.Query
 #else
 namespace Microsoft.OData.Service
 #endif
 {
     #region Namespaces
-#if !ODATALIB
+#if !ODATA_CORE
     using System.Collections.Generic;
     using Microsoft.OData.Service.Providers;
 #endif
@@ -19,7 +19,7 @@ namespace Microsoft.OData.Service
     using System.Linq;
     using System.Linq.Expressions;
     using Microsoft.OData.Edm;
-#if ODATALIB
+#if ODATA_CORE
     using Microsoft.OData.Core.Evaluation;
     using ErrorStrings = Microsoft.OData.Core.Strings;
     using ExceptionUtil = ODataUriParserException;

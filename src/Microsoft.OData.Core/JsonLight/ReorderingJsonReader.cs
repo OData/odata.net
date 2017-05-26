@@ -4,31 +4,31 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core.JsonLight
+namespace Microsoft.OData.JsonLight
 {
     #region Namespaces
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.IO;
-    using Microsoft.OData.Core.Json;
+    using Microsoft.OData.Json;
     #endregion Namespaces
 
     /// <summary>
     /// Reader for the JSON Lite format that supports look-ahead and re-ordering of payloads.
     /// </summary>
+    /// <remarks>TODO: not sure if this class could be implemented as a decorator as well.</remarks>
     internal sealed class ReorderingJsonReader : BufferingJsonReader
     {
         /// <summary>
         /// Constructor.
         /// </summary>
-        /// <param name="reader">The text reader to read input characters from.</param>
+        /// <param name="innerReader">The inner JSON reader.</param>
         /// <param name="maxInnerErrorDepth">The maximum number of recursive internalexception objects to allow when reading in-stream errors.</param>
-        /// <param name="isIeee754Comaptible">isIeee754Comaptible</param>
-        internal ReorderingJsonReader(TextReader reader, int maxInnerErrorDepth, bool isIeee754Comaptible)
-            : base(reader, JsonLightConstants.ODataErrorPropertyName, maxInnerErrorDepth, ODataFormat.Json, isIeee754Comaptible)
+        internal ReorderingJsonReader(IJsonReader innerReader, int maxInnerErrorDepth)
+            : base(innerReader, JsonLightConstants.ODataErrorPropertyName, maxInnerErrorDepth)
         {
-            Debug.Assert(reader != null, "reader != null");
+            Debug.Assert(innerReader != null, "innerReader != null");
         }
 
         /// <summary>
@@ -176,7 +176,7 @@ namespace Microsoft.OData.Core.JsonLight
                         else
                         {
                             // unexpected instance annotation name
-                            throw new ODataException(Microsoft.OData.Core.Strings.JsonReaderExtensions_UnexpectedInstanceAnnotationName(jsonPropertyName));
+                            throw new ODataException(Microsoft.OData.Strings.JsonReaderExtensions_UnexpectedInstanceAnnotationName(jsonPropertyName));
                         }
                     }
                 }
@@ -223,7 +223,7 @@ namespace Microsoft.OData.Core.JsonLight
         private sealed class BufferedObject
         {
             /// <summary>The cache for properties.</summary>
-            /// <remarks>The key is the property or instance annotation name, 
+            /// <remarks>The key is the property or instance annotation name,
             /// the value are the buffered properties grouped by property name (incl. annotation properties).</remarks>
             private readonly Dictionary<string, object> propertyCache;
 
@@ -450,7 +450,7 @@ namespace Microsoft.OData.Core.JsonLight
             /// <returns>The sorted enumerable of property names.</returns>
             /// <remarks>The sort order is to put odata.context first, then odata.type, odata.id, and odata.etag, followed by all other odata.* instance annotations.
             /// For the rest, we preserve the relative order of custom annotations with regard to the data property.
-            /// Note that we choose the position of the first property annotation in cases where no data property for a set of 
+            /// Note that we choose the position of the first property annotation in cases where no data property for a set of
             /// property annotations exists.</remarks>
             private IEnumerable<string> SortPropertyNames()
             {
@@ -464,7 +464,7 @@ namespace Microsoft.OData.Core.JsonLight
                 {
                     string propertyName = propertyNameWithAnnotation.Key;
 
-                    // First ignore a property annotation if we found a data property for it (since we will use the 
+                    // First ignore a property annotation if we found a data property for it (since we will use the
                     // position of the data property). To keep the property annotations is important for cases
                     // where no data property exists for a set of property annotations.
                     if (propertyNameWithAnnotation.Value != null && this.dataProperties.Contains(propertyName))
@@ -478,7 +478,7 @@ namespace Microsoft.OData.Core.JsonLight
                         this.dataProperties.Add(propertyName);
                     }
 
-                    // Then find the special properties 'odata.context', 'odata.type', 'odata.id', and 'odata.etag' before separating 
+                    // Then find the special properties 'odata.context', 'odata.type', 'odata.id', and 'odata.etag' before separating
                     // the rest into odata.* annotations and regular properties (and custom annotations).
                     if (IsODataContextAnnotation(propertyName))
                     {

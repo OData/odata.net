@@ -7,12 +7,12 @@
 namespace AstoriaUnitTests.TDD.Tests.Server
 {
     using System;
+    using FluentAssertions;
+    using Microsoft.OData;
     using Microsoft.OData.Service.Providers;
     using Microsoft.OData.Service.Serializers;
-    using FluentAssertions;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
-    using Microsoft.OData.Service;
-    
+
     [TestClass]
     public class KeySerializationTests
     {
@@ -30,8 +30,8 @@ namespace AstoriaUnitTests.TDD.Tests.Server
             this.keyProperty1 = new ResourceProperty("Key1", ResourcePropertyKind.Key | ResourcePropertyKind.Primitive, ResourceType.GetPrimitiveResourceType(typeof(string)));
             this.keyProperty2 = new ResourceProperty("Key2", ResourcePropertyKind.Key | ResourcePropertyKind.Primitive, ResourceType.GetPrimitiveResourceType(typeof(int)));
 
-            this.defaultSerializer = KeySerializer.Create(UrlConvention.CreateWithExplicitValue(false));
-            this.segmentSerializer = KeySerializer.Create(UrlConvention.CreateWithExplicitValue(true));
+            this.defaultSerializer = KeySerializer.Create(false);
+            this.segmentSerializer = KeySerializer.Create(true);
 
             this.singleKeyProperty = new[] { this.keyProperty1 };
             this.compositeKey = new[] { this.keyProperty1, this.keyProperty2 };

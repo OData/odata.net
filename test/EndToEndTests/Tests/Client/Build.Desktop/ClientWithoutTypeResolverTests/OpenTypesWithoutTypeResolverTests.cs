@@ -32,12 +32,6 @@ namespace Microsoft.Test.OData.Tests.Client.ClientWithoutTypeResolverTests
             OpenInt64 = Int64.MaxValue,
             OpenString = "hello world",
             OpenTime = TimeSpan.MaxValue,
-            OpenComplex = new ContactDetails
-                {
-                    GUID = Guid.NewGuid(), 
-                    PreferedContactTime = TimeSpan.MaxValue, 
-                    Single = Single.NegativeInfinity,
-                },
         };
 
         private Row row2 = new Row
@@ -52,27 +46,12 @@ namespace Microsoft.Test.OData.Tests.Client.ClientWithoutTypeResolverTests
             OpenInt64 = null,
             OpenString = null,
             OpenTime = null,
-            OpenComplex = null,
         };
 
         private IndexedRow row3 = new IndexedRow
         {
             Id = Guid.NewGuid(),
             OpenDouble = double.NaN,
-            OpenComplex = new ContactDetails
-            {
-                Byte = byte.MaxValue,
-                Short = short.MaxValue,
-                LastContacted = DateTimeOffset.Now,
-                Contacted = DateTimeOffset.Now,
-                GUID = Guid.NewGuid(),
-                PreferedContactTime = TimeSpan.MaxValue,
-                SignedByte = sbyte.MaxValue,
-                Double = double.MaxValue,
-                Single = Single.PositiveInfinity,
-                Int = 0,
-                Long = long.MinValue,
-            },
         };
         #endregion
 
@@ -121,7 +100,7 @@ namespace Microsoft.Test.OData.Tests.Client.ClientWithoutTypeResolverTests
         {
             var contextWrapper = this.CreateContext();
 
-            var query = contextWrapper.CreateQuery<Row>("Row").Select(r => new {r.Id, r.OpenDouble, r.OpenComplex});
+            var query = contextWrapper.CreateQuery<Row>("Row").Select(r => new {r.Id, r.OpenDouble});
             var results = query.ToList();
         }
 
@@ -146,21 +125,6 @@ namespace Microsoft.Test.OData.Tests.Client.ClientWithoutTypeResolverTests
             var row = baseQuery.Single();
 
             Assert.IsTrue(row is IndexedRow);
-        }
-
-        [TestMethod]
-        public void ComplexPropertyQuery()
-        {
-            var contextWrapper = this.CreateContext();
-            var queryResults = contextWrapper.Execute<ContactDetails>(new Uri(this.ServiceUri.OriginalString + "/Row(" + this.row1.Id.ToString() + ")/OpenComplex"));
-        }
-
-        [TestMethod]
-        public void OpenPrimitivePropertyQuery()
-        {
-            var contextWrapper = this.CreateContext();
-            var queryResults = contextWrapper.Execute<DateTimeOffset>(new Uri(this.ServiceUri.OriginalString + "/Row(" + this.row1.Id.ToString() + ")/OpenDateTimeOffset"));
-            Assert.AreEqual(row1.OpenDateTimeOffset, queryResults.Single());
         }
 
         [TestMethod]
@@ -198,7 +162,7 @@ namespace Microsoft.Test.OData.Tests.Client.ClientWithoutTypeResolverTests
         {
             var context = this.CreateWrappedContext<DefaultContainer>();
             context.Format.UseJson();
-            context.IgnoreMissingProperties = true;
+            ///context.UndeclaredPropertyBehavior = UndeclaredPropertyBehavior.Support;
             context.ResolveType = null;
 
             // We need to be able to restore the type name resolver in cases 

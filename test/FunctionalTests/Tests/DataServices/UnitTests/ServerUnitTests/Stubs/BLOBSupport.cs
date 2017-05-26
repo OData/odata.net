@@ -185,14 +185,9 @@ using System.CodeDom.Compiler;
         /// </summary>
         /// <param name="mediaLinkEntiries">List of types to mark with HasStream attribute. Key is the type name. Value is attribute value.</param>
         /// <param name="namedStreams">List of types and the corresponding named streams declared on them. Key is the type name, Value is the list of named streams declared on the type.</param>
-        /// <param name="etagProperties">
-        /// Dictionary containing properties to mark with ConcurrencyMode attribute (ETag). Key is a string[2] where the first element is type name while the second
-        /// element is property name. Value is value of the attribute.
-        /// </param>
         /// <returns></returns>
-        public static IDisposable SetupNorthwindWithStreamAndETag(
+        public static IDisposable SetupNorthwindWithStream(
             KeyValuePair<string, string>[] mediaLinkEntiries,
-            KeyValuePair<string[], string>[] etagProperties,
             string testName)
         {
             // Create a copy of northwind files.
@@ -221,20 +216,6 @@ using System.CodeDom.Compiler;
                     // Modify the CSDL to include HasStreamAttribute.
                     TestUtil.AssertSelectSingleElement(csdlDoc,
                         string.Format("/csdl1:Schema/csdl1:EntityType[@Name='{0}']", type.Key)).SetAttribute(HasStreamAttribute, UnitTestsUtil.MetadataNamespace.NamespaceName, type.Value);
-                }
-            }
-            
-            if (etagProperties != null)
-            {
-                foreach (KeyValuePair<string[], string> etagInfo in etagProperties)
-                {
-                    if (etagInfo.Key.Length != 2)
-                    {
-                        throw new ArgumentException("etagInfo.Key is a string array that has to have two elements. First element is Type name and the second element is Property name.");
-                    }
-                    // Modify the CSDL to include ConcurrencyMode attribute.
-                    TestUtil.AssertSelectSingleElement(csdlDoc,
-                        string.Format("/csdl1:Schema/csdl1:EntityType[@Name='{0}']/csdl1:Property[@Name='{1}']", etagInfo.Key[0], etagInfo.Key[1])).SetAttribute("ConcurrencyMode", etagInfo.Value);
                 }
             }
 

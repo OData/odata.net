@@ -5,14 +5,15 @@
 //---------------------------------------------------------------------
 
 using System;
+using System.Collections.Generic;
 using FluentAssertions;
-using Microsoft.OData.Core.UriParser.Parsers;
+using Microsoft.OData.Metadata;
+using Microsoft.OData.UriParser;
 using Microsoft.OData.Edm;
-using Microsoft.OData.Edm.Library;
-using Microsoft.OData.Edm.Library.Expressions;
+using Microsoft.OData.Edm.Vocabularies;
 using Xunit;
 
-namespace Microsoft.OData.Core.Tests.UriParser.Metadata
+namespace Microsoft.OData.Tests.UriParser.Metadata
 {
     public class PathParserModelUtilsTests
     {
@@ -123,7 +124,7 @@ namespace Microsoft.OData.Core.Tests.UriParser.Metadata
             model.AddElement(container);
             var entitySet = container.AddEntitySet("EntitySet", new EdmEntityType("Fake", "EntityType"));
             var function = new EdmFunction("Fake", "FakeFunction", new EdmEntityTypeReference(entitySet.EntityType(), false));
-            var operationImport = container.AddFunctionImport("FakeAction", function, new EdmEntitySetReferenceExpression(entitySet));
+            var operationImport = container.AddFunctionImport("FakeAction", function, new EdmPathExpression(entitySet.Name));
             operationImport.GetTargetEntitySet(null, model).Should().BeSameAs(entitySet);
         }
 

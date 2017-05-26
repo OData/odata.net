@@ -11,14 +11,12 @@ using System.Linq;
 using System.Text;
 using System.Xml;
 using FluentAssertions;
-using Microsoft.OData.Core.Evaluation;
+using Microsoft.OData.Evaluation;
 using Microsoft.OData.Edm;
-using Microsoft.OData.Edm.Library;
-using Microsoft.OData.Edm.Library.Values;
-using Microsoft.OData.Edm.Values;
+using Microsoft.OData.Edm.Vocabularies;
 using Xunit;
 
-namespace Microsoft.OData.Core.Tests.ScenarioTests.Evaluation
+namespace Microsoft.OData.Tests.ScenarioTests.Evaluation
 {
     public class KeyGenerationPinningTest
     {
@@ -241,7 +239,8 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Evaluation
                 var entityType = new EdmEntityType("Fake", "Fake");
                 entityType.AddKeys(properties.Select(p => new EdmStructuralProperty(entityType, p.Name, p.Value.Type)));
                 var entity = new EdmStructuredValue(new EdmEntityTypeReference(entityType, false), properties);
-                ODataConventionalUriBuilder uriBuilder = new ODataConventionalUriBuilder(new Uri("http://baseuri.org/"), UrlConvention.CreateWithExplicitValue(false));
+                ODataConventionalUriBuilder uriBuilder = new ODataConventionalUriBuilder(
+                    new Uri("http://baseuri.org/"), ODataUrlKeyDelimiter.Parentheses);
                 var entityInstanceUri = uriBuilder.BuildEntityInstanceUri(new Uri("http://baseuri.org/Customers"), new Collection<KeyValuePair<string, object>>(properties.Select(p => new KeyValuePair<string, object>(p.Name, ((IEdmPrimitiveValue)p.Value).ToClrValue())).ToList()), entity.Type.FullName());
                 builder.Append(entityInstanceUri.OriginalString.Replace("http://baseuri.org/Customers", null).Replace("()", "%28%29"));
             }

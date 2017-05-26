@@ -348,8 +348,6 @@ UpdatableWrapper_MissingIUpdatableForV1Provider=The data source must implement I
 UpdatableWrapper_MissingUpdateProviderInterface=The data source must implement IDataServiceUpdateProvider or IDataServiceUpdateProvider2 to support updates.
 UpdatableWrapper_MustImplementDataServiceUpdateProvider2ToSupportServiceActions=To support service actions, the data service must implement IServiceProvider.GetService() to return an implementation of IDataServiceUpdateProvider2 or the data source must implement IDataServiceUpdateProvider2.
 
-UrlConvention_BadRequestIfUnknown=The value '{0}' given in the '{1}' header was not recognized. Expected values are '{2}' and '{3}'.
-
 InvalidUri_OpenPropertiesCannotBeCollection=The property '{0}' referred in the request URI is a open property and refers to a collection of resources. Open properties are not allowed to contain collections.
 PropertyRequiresNonNegativeNumber=Property '{0}' requires a non-negative value.
 

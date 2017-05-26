@@ -128,6 +128,7 @@ namespace AstoriaUnitTests.Tests
         /// Verifies that all interesting primitve types round-trip when going
         /// through the XML serializer.
         /// </summary>
+        [Ignore] // Remove Atom
         [TestCategory("Partition2"), TestMethod]
         public void SerializerBasicTest()
         {
@@ -209,6 +210,7 @@ namespace AstoriaUnitTests.Tests
         }
 
         /// <summary>Ensures that links in Atom resolve to the expected resource.</summary>
+        [Ignore] // Remove Atom
         [TestCategory("Partition2"), TestMethod]
         public void AtomSerializerLinks()
         {
@@ -258,6 +260,7 @@ namespace AstoriaUnitTests.Tests
         }
 
         /// <summary>Ensures spaces are encoded as %20 rather than + in URIs.</summary>
+        [Ignore] // Remove Atom
         [TestCategory("Partition2"), TestMethod]
         public void AtomSerializerUriSpaces()
         {
@@ -284,6 +287,7 @@ namespace AstoriaUnitTests.Tests
         }
 
         /// <summary>Ensures commas between values aren't encoded in URIs.</summary>
+        [Ignore] // Remove Atom
         [TestCategory("Partition2"), TestMethod]
         public void AtomSerializerUriCommas()
         {
@@ -336,6 +340,7 @@ namespace AstoriaUnitTests.Tests
         }
 
         /// <summary>Verifies that all serializers return correct date values.</summary>
+        [Ignore] // Remove Atom
         [TestCategory("Partition2"), TestMethod]
         public void GeneralSerializerDates()
         {
@@ -573,6 +578,7 @@ namespace AstoriaUnitTests.Tests
         }
 
         /// <summary>Verifies that cycles can be detected correctly.</summary>
+        [Ignore] // Remove Atom
         [TestCategory("Partition2"), TestMethod]
         public void Web3SSerializerCycleDetectionTest()
         {
@@ -609,6 +615,7 @@ namespace AstoriaUnitTests.Tests
         /// Verifies that all interesting primitive types round-trip when going
         /// through the XML serializer.
         /// </summary>
+        [Ignore] // Remove Atom
         [TestCategory("Partition2"), TestMethod]
         public void Web3SSerializerBasicTypesTest()
         {
@@ -717,6 +724,7 @@ namespace AstoriaUnitTests.Tests
             });
         }
 
+        [Ignore] // Remove Atom
         [TestCategory("Partition2"), TestMethod]
         public void Web3SSerializerInheritanceTest()
         {
@@ -729,7 +737,7 @@ namespace AstoriaUnitTests.Tests
                 new string[] { JsonValidator.GetJsonTypeXPath(typeof(CustomerWithBirthday), true) },
                 new string[0]);
         }
-
+        [Ignore] // Remove Atom
         [TestCategory("Partition2"), TestMethod]
         public void Web3SSerializerOtherNamespaceTest()
         {
@@ -870,6 +878,7 @@ namespace AstoriaUnitTests.Tests
         /// <summary>
         /// Verifies that both valid and invalid container names can be resolved correctly.
         /// </summary>
+        [Ignore] // Remove Atom
         [TestCategory("Partition2"), TestMethod]
         public void Web3SSerializerServicesTest()
         {
@@ -922,7 +931,7 @@ namespace AstoriaUnitTests.Tests
                 Expression.Equal(Expression.Property(element, "ID"), Expression.Constant(key)), element);
             return context.CreateQuery<TElement>(entitySetName).Where(predicate);
         }
-
+        [Ignore] // Remove Atom
         [TestCategory("Partition2"), TestMethod]
         public void CountTest()
         {
@@ -944,8 +953,8 @@ namespace AstoriaUnitTests.Tests
                     request.StartService();
                     
                     DataServiceContext ctx = new DataServiceContext(request.ServiceRoot);
-                    ctx.EnableAtom = true;
-                    ctx.Format.UseAtom();
+                    //ctx.EnableAtom = true;
+                    //ctx.Format.UseAtom();
                     var q = ctx.CreateQuery<Customer>("Customers");
                     q = includeCount ? q.IncludeTotalCount() : q;
 
@@ -997,7 +1006,7 @@ namespace AstoriaUnitTests.Tests
                 }
             });
         }
-
+        [Ignore] // Remove Atom
         [TestCategory("Partition2"), TestMethod]
         public void SerializerKeyTypesTest()
         {

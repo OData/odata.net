@@ -4,14 +4,14 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core.Tests.ObjectModelTests
+namespace Microsoft.OData.Tests.ObjectModelTests
 {
     #region Namespaces
     using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Reflection;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.Test.Taupo.Execution;
     using Microsoft.Test.Taupo.OData.Common.Tests;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -32,6 +32,8 @@ namespace Microsoft.OData.Core.Tests.ObjectModelTests
             typeof(ODataContentTypeException),
             typeof(ODataMediaTypeResolver),
             typeof(ODataPayloadValueConverter),
+            typeof(ODataUntypedValue),
+            typeof(ODataPreferenceHeader)
         };
 
         // List of types explicitly allowed to be not-sealed.
@@ -39,7 +41,7 @@ namespace Microsoft.OData.Core.Tests.ObjectModelTests
         // Only sealed types can be easily serviced with targetted patching.
         private static string[] UnsealedNonPublicTypeNames = new string[]
         {
-            "Microsoft.OData.Core.UriParser.Parsers.MetadataBinder",
+            "Microsoft.OData.UriParser.MetadataBinder",
         };
 
         [TestMethod, Variation(Description = "Verifies that all OData public types are sealed as appropriate.")]
@@ -53,9 +55,9 @@ namespace Microsoft.OData.Core.Tests.ObjectModelTests
 
             // TODO: Enable this once we're done with Query OM.
             // Exclude all Query types for now.
-            allowedUnsealedTypes = allowedUnsealedTypes.Concat(odataTypes.Where(t => t.Namespace == "Microsoft.OData.Core.UriParser"));
-            allowedUnsealedTypes = allowedUnsealedTypes.Concat(odataTypes.Where(t => t.Namespace == "Microsoft.OData.Core.UriParser.Semantic"));
-            allowedUnsealedTypes = allowedUnsealedTypes.Concat(odataTypes.Where(t => t.Namespace == "Microsoft.OData.Core.UriParser.Metadata"));
+            allowedUnsealedTypes = allowedUnsealedTypes.Concat(odataTypes.Where(t => t.Namespace == "Microsoft.OData.UriParser"));
+            allowedUnsealedTypes = allowedUnsealedTypes.Concat(odataTypes.Where(t => t.Namespace == "Microsoft.OData.UriParser"));
+            allowedUnsealedTypes = allowedUnsealedTypes.Concat(odataTypes.Where(t => t.Namespace == "Microsoft.OData.UriParser.Metadata"));
 
             var allowedUnsealeadTypesList = allowedUnsealedTypes.ToList();
             foreach (var odataType in odataTypes)

@@ -19,6 +19,7 @@ namespace AstoriaUnitTests.Tests
     public partial class UnitTestModule1
     {
         /// <summary>This is a test class for update functionality on bindings.</summary>
+        [Ignore] // Remove Atom
         [TestClass, TestCase]
         public class UpdateBindingTests
         {

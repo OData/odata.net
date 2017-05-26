@@ -7,10 +7,10 @@
 using System;
 using System.Collections.Generic;
 using FluentAssertions;
-using Microsoft.OData.Core.UriParser.Semantic;
+using Microsoft.OData.UriParser;
 using Xunit;
 
-namespace Microsoft.OData.Core.Tests.UriParser.SemanticAst
+namespace Microsoft.OData.Tests.UriParser.SemanticAst
 {
     public class ODataPathTests
     {
@@ -55,14 +55,14 @@ namespace Microsoft.OData.Core.Tests.UriParser.SemanticAst
         [Fact]
         public void PathsWithEqualivalentSegmentsAreEqual()
         {
-            new ODataPath(new OpenPropertySegment("foo")).Equals(new ODataPath(new OpenPropertySegment("foo"))).Should().BeTrue();
+            new ODataPath(new DynamicPathSegment("foo")).Equals(new ODataPath(new DynamicPathSegment("foo"))).Should().BeTrue();
         }
 
         [Fact]
         public void PathsShouldNotAllowSegmentsToBeNull()
         {
             Action createWithNull = () => new ODataPath((IEnumerable<ODataPathSegment>)null);
-            createWithNull.ShouldThrow<ArgumentNullException>().WithMessage("segments", ComparisonMode.EquivalentSubstring);
+            createWithNull.ShouldThrow<ArgumentNullException>().Where(e => e.Message.Contains("segments"));
         }
 
         [Fact]
@@ -70,7 +70,7 @@ namespace Microsoft.OData.Core.Tests.UriParser.SemanticAst
         {
             Action createWithNull = () => new ODataPath((ODataPathSegment)null);
             // TODO: better error?
-            createWithNull.ShouldThrow<ArgumentNullException>().WithMessage("segments", ComparisonMode.EquivalentSubstring);
+            createWithNull.ShouldThrow<ArgumentNullException>().Where(e => e.Message.Contains("segments"));
         }
 
         [Fact]

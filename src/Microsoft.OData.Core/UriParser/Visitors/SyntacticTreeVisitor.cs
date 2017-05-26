@@ -4,11 +4,10 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core.UriParser.Visitors
+namespace Microsoft.OData.UriParser
 {
     using System;
-    using Microsoft.OData.Core.UriParser.Aggregation;
-    using Microsoft.OData.Core.UriParser.Syntactic;
+    using Microsoft.OData.UriParser.Aggregation;
 
     /// <summary>
     /// Visitor interface for walking the Syntactic Tree.
@@ -50,7 +49,7 @@ namespace Microsoft.OData.Core.UriParser.Visitors
         /// Visits a DottedIdentifierToken
         /// </summary>
         /// <param name="tokenIn">The DottedIdentifierToken to visit</param>
-        /// <returns>Either a SingleEntityCastNode, or EntityCollectionCastNode bound to this DottedIdentifierToken</returns>
+        /// <returns>Either a SingleResourceCastNode, or CollectionResourceCastNode bound to this DottedIdentifierToken</returns>
         public virtual T Visit(DottedIdentifierToken tokenIn)
         {
             throw new NotImplementedException();
@@ -180,7 +179,7 @@ namespace Microsoft.OData.Core.UriParser.Visitors
         /// Visits a RangeVariableToken
         /// </summary>
         /// <param name="tokenIn">The RangeVariableToken to bind</param>
-        /// <returns>An Entity or NonEntity RangeVariableReferenceNode bound to this RangeVariableToken</returns>
+        /// <returns>A Resource or NonResource RangeVariableReferenceNode bound to this RangeVariableToken</returns>
         public virtual T Visit(RangeVariableToken tokenIn)
         {
             throw new NotImplementedException();

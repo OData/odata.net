@@ -8,35 +8,35 @@ namespace Microsoft.Test.Taupo.OData.Common.Tests.ObjectModelTests
 {
     #region Namespaces
     using System;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.Test.Taupo.Execution;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
     #endregion Namespaces
 
     /// <summary>
-    /// Tests for the ODataNavigationLink object model type.
+    /// Tests for the ODataNestedResourceInfo object model type.
     /// </summary>
     [TestClass, TestCase]
     public class ODataNavigationLinkTests : ODataTestCase
     {
 
-        [TestMethod, Variation(Description = "Test the default values of ODataNavigationLink.")]
+        [TestMethod, Variation(Description = "Test the default values of ODataNestedResourceInfo.")]
         public void DefaultValuesTest()
         {
-            ODataNavigationLink navigationLink = new ODataNavigationLink();
+            ODataNestedResourceInfo navigationLink = new ODataNestedResourceInfo();
             this.Assert.IsNull(navigationLink.Name, "Expected null default value for property 'Name'.");
             this.Assert.IsNull(navigationLink.Url, "Expected null default value for property 'Url'.");
             this.Assert.IsNull(navigationLink.IsCollection, "Expected null default value for property 'IsCollection'.");
         }
 
-        [TestMethod, Variation(Description = "Test the property setters and getters of ODataNavigationLink.")]
+        [TestMethod, Variation(Description = "Test the property setters and getters of ODataNestedResourceInfo.")]
         public void PropertyGettersAndSettersTest()
         {
-            string name = "ODataNavigationLink";
+            string name = "ODataNestedResourceInfo";
             Uri url = new Uri("http://odatatest.org/");
             bool isCollection = true;
 
-            ODataNavigationLink navigationLink = new ODataNavigationLink()
+            ODataNestedResourceInfo navigationLink = new ODataNestedResourceInfo()
             {
                 Name = name,
                 Url = url,
@@ -51,7 +51,7 @@ namespace Microsoft.Test.Taupo.OData.Common.Tests.ObjectModelTests
         [TestMethod, Variation(Description = "Test setting properties to null.")]
         public void PropertySettersNullTest()
         {
-            ODataNavigationLink navigationLink = new ODataNavigationLink()
+            ODataNestedResourceInfo navigationLink = new ODataNestedResourceInfo()
                 {
                     Name = "NewLink",
                     Url = new Uri("http://odata.org"),

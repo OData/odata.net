@@ -12,7 +12,7 @@ namespace AstoriaUnitTests.TDD.Tests.Server
     using System.Linq;
     using FluentAssertions;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
 
     [TestClass]
     public class OperationSerializerTests

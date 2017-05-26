@@ -10,7 +10,7 @@ namespace Microsoft.OData.Client.Materialization
     using System.Collections;
     using System.Collections.Generic;
     using System.Diagnostics;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
 
     /// <summary>
     /// Use this class to invoke projection methods from <see cref="ODataEntityMaterializer"/>.
@@ -61,9 +61,9 @@ namespace Microsoft.OData.Client.Materialization
             Type expectedType,
             object path)
         {
-            Debug.Assert(entry.GetType() == typeof(ODataEntry), "entry.GetType() == typeof(ODataEntry)");
+            Debug.Assert(entry.GetType() == typeof(ODataResource), "entry.GetType() == typeof(ODataResource)");
             Debug.Assert(path.GetType() == typeof(ProjectionPath), "path.GetType() == typeof(ProjectionPath)");
-            return ODataEntityMaterializer.ProjectionCheckValueForPathIsNull(MaterializerEntry.GetEntry((ODataEntry)entry), expectedType, (ProjectionPath)path);
+            return ODataEntityMaterializer.ProjectionCheckValueForPathIsNull(MaterializerEntry.GetEntry((ODataResource)entry), expectedType, (ProjectionPath)path);
         }
 
         /// <summary>Provides support for Select invocations for projections.</summary>
@@ -83,9 +83,9 @@ namespace Microsoft.OData.Client.Materialization
             Func<object, object, Type, object> selector)
         {
             Debug.Assert(typeof(ODataEntityMaterializer).IsAssignableFrom(materializer.GetType()), "typeof(ODataEntityMaterializer).IsAssignableFrom(materializer.GetType())");
-            Debug.Assert(entry.GetType() == typeof(ODataEntry), "entry.GetType() == typeof(ODataEntry)");
+            Debug.Assert(entry.GetType() == typeof(ODataResource), "entry.GetType() == typeof(ODataResource)");
             Debug.Assert(path.GetType() == typeof(ProjectionPath), "path.GetType() == typeof(ProjectionPath)");
-            return ODataEntityMaterializer.ProjectionSelect((ODataEntityMaterializer)materializer, MaterializerEntry.GetEntry((ODataEntry)entry), expectedType, resultType, (ProjectionPath)path, selector);
+            return ODataEntityMaterializer.ProjectionSelect((ODataEntityMaterializer)materializer, MaterializerEntry.GetEntry((ODataResource)entry), expectedType, resultType, (ProjectionPath)path, selector);
         }
 
         /// <summary>Provides support for getting payload entries during projections.</summary>
@@ -94,8 +94,8 @@ namespace Microsoft.OData.Client.Materialization
         /// <returns>The sub-entry (never null).</returns>
         internal static object ProjectionGetEntry(object entry, string name)
         {
-            Debug.Assert(entry.GetType() == typeof(ODataEntry), "entry.GetType() == typeof(ODataEntry)");
-            return ODataEntityMaterializer.ProjectionGetEntry(MaterializerEntry.GetEntry((ODataEntry)entry), name);
+            Debug.Assert(entry.GetType() == typeof(ODataResource), "entry.GetType() == typeof(ODataResource)");
+            return ODataEntityMaterializer.ProjectionGetEntry(MaterializerEntry.GetEntry((ODataResource)entry), name);
         }
 
         /// <summary>Initializes a projection-driven entry (with a specific type and specific properties).</summary>
@@ -115,8 +115,8 @@ namespace Microsoft.OData.Client.Materialization
             Func<object, object, Type, object>[] propertyValues)
         {
             Debug.Assert(typeof(ODataEntityMaterializer).IsAssignableFrom(materializer.GetType()), "typeof(ODataEntityMaterializer).IsAssignableFrom(materializer.GetType())");
-            Debug.Assert(entry.GetType() == typeof(ODataEntry), "entry.GetType() == typeof(ODataEntry)");
-            return ODataEntityMaterializer.ProjectionInitializeEntity((ODataEntityMaterializer)materializer, MaterializerEntry.GetEntry((ODataEntry)entry), expectedType, resultType, properties, propertyValues);
+            Debug.Assert(entry.GetType() == typeof(ODataResource), "entry.GetType() == typeof(ODataResource)");
+            return ODataEntityMaterializer.ProjectionInitializeEntity((ODataEntityMaterializer)materializer, MaterializerEntry.GetEntry((ODataResource)entry), expectedType, resultType, properties, propertyValues);
         }
 
         /// <summary>Projects a simple value from the specified <paramref name="path"/>.</summary>
@@ -132,9 +132,9 @@ namespace Microsoft.OData.Client.Materialization
         internal static object ProjectionValueForPath(object materializer, object entry, Type expectedType, object path)
         {
             Debug.Assert(typeof(ODataEntityMaterializer).IsAssignableFrom(materializer.GetType()), "typeof(ODataEntityMaterializer).IsAssignableFrom(materializer.GetType())");
-            Debug.Assert(entry.GetType() == typeof(ODataEntry), "entry.GetType() == typeof(ODataEntry)");
+            Debug.Assert(entry.GetType() == typeof(ODataResource), "entry.GetType() == typeof(ODataResource)");
             Debug.Assert(path.GetType() == typeof(ProjectionPath), "path.GetType() == typeof(ProjectionPath)");
-            return ((ODataEntityMaterializer)materializer).ProjectionValueForPath(MaterializerEntry.GetEntry((ODataEntry)entry), expectedType, (ProjectionPath)path);
+            return ((ODataEntityMaterializer)materializer).ProjectionValueForPath(MaterializerEntry.GetEntry((ODataResource)entry), expectedType, (ProjectionPath)path);
         }
 
         /// <summary>Materializes an entry with no special selection.</summary>
@@ -145,8 +145,8 @@ namespace Microsoft.OData.Client.Materialization
         internal static object DirectMaterializePlan(object materializer, object entry, Type expectedEntryType)
         {
             Debug.Assert(typeof(ODataEntityMaterializer).IsAssignableFrom(materializer.GetType()), "typeof(ODataEntityMaterializer).IsAssignableFrom(materializer.GetType())");
-            Debug.Assert(entry.GetType() == typeof(ODataEntry), "entry.GetType() == typeof(ODataEntry)");
-            return ODataEntityMaterializer.DirectMaterializePlan((ODataEntityMaterializer)materializer, MaterializerEntry.GetEntry((ODataEntry)entry), expectedEntryType);
+            Debug.Assert(entry.GetType() == typeof(ODataResource), "entry.GetType() == typeof(ODataResource)");
+            return ODataEntityMaterializer.DirectMaterializePlan((ODataEntityMaterializer)materializer, MaterializerEntry.GetEntry((ODataResource)entry), expectedEntryType);
         }
 
         /// <summary>Materializes an entry without including in-lined expanded links.</summary>
@@ -157,8 +157,8 @@ namespace Microsoft.OData.Client.Materialization
         internal static object ShallowMaterializePlan(object materializer, object entry, Type expectedEntryType)
         {
             Debug.Assert(typeof(ODataEntityMaterializer).IsAssignableFrom(materializer.GetType()), "typeof(ODataEntityMaterializer).IsAssignableFrom(materializer.GetType())");
-            Debug.Assert(entry.GetType() == typeof(ODataEntry), "entry.GetType() == typeof(ODataEntry)");
-            return ODataEntityMaterializer.ShallowMaterializePlan((ODataEntityMaterializer)materializer, MaterializerEntry.GetEntry((ODataEntry)entry), expectedEntryType);
+            Debug.Assert(entry.GetType() == typeof(ODataResource), "entry.GetType() == typeof(ODataResource)");
+            return ODataEntityMaterializer.ShallowMaterializePlan((ODataEntityMaterializer)materializer, MaterializerEntry.GetEntry((ODataResource)entry), expectedEntryType);
         }
     }
 }

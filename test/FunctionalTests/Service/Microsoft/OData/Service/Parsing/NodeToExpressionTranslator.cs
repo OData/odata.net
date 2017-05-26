@@ -14,10 +14,7 @@ namespace Microsoft.OData.Service.Parsing
     using System.Linq.Expressions;
     using System.Reflection;
     using Microsoft.OData.Client;
-    using Microsoft.OData.Core.UriParser;
-    using Microsoft.OData.Core.UriParser.Semantic;
-    using Microsoft.OData.Core.UriParser.TreeNodeKinds;
-    using Microsoft.OData.Core.UriParser.Visitors;
+    using Microsoft.OData.UriParser;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Service.Providers;
     using Microsoft.Spatial;
@@ -80,6 +77,9 @@ namespace Microsoft.OData.Service.Parsing
         /// <summary>Callback to verify that the request's version is greather than or equal to the version required for a specific feature.</summary>
         private readonly Action<ODataProtocolVersion> verifyRequestVersion;
 
+        /// <summary>Dictionary that associates range variables with their parameter expressions.</summary>
+        private readonly IDictionary<RangeVariable, ParameterExpression> parameterExpressions = new Dictionary<RangeVariable, ParameterExpression>(); 
+
         /// <summary>
         /// Initializes a new instance of <see cref="NodeToExpressionTranslator"/>.
         /// </summary>
@@ -112,6 +112,14 @@ namespace Microsoft.OData.Service.Parsing
             this.implicitParameterExpression = implicitParameterExpression;
             this.verifyProtocolVersion = verifyProtocolVersion;
             this.verifyRequestVersion = verifyRequestVersion;
+        }
+
+        /// <summary>
+        /// Dictionary that associates range variables with their parameter expressions.
+        /// </summary>
+        public IDictionary<RangeVariable, ParameterExpression> ParameterExpressions
+        {
+            get { return this.parameterExpressions; }
         }
 
         /// <summary>
@@ -277,11 +285,11 @@ namespace Microsoft.OData.Service.Parsing
         }
 
         /// <summary>
-        /// Translates a <see cref="EntityCollectionCastNode"/> into a corresponding <see cref="Expression"/>.
+        /// Translates a <see cref="CollectionResourceCastNode"/> into a corresponding <see cref="Expression"/>.
         /// </summary>
         /// <param name="node">The node to translate.</param>
         /// <returns>The translated expression.</returns>
-        public override Expression Visit(EntityCollectionCastNode node)
+        public override Expression Visit(CollectionResourceCastNode node)
         {
             WebUtil.CheckArgumentNull(node, "node");
             Debug.Assert(node.Source != null, "sourceNode != null");
@@ -296,33 +304,33 @@ namespace Microsoft.OData.Service.Parsing
         }
 
         /// <summary>
-        /// Translates a <see cref="EntityRangeVariableReferenceNode"/> into a corresponding <see cref="Expression"/>.
+        /// Translates a <see cref="ResourceRangeVariableReferenceNode"/> into a corresponding <see cref="Expression"/>.
         /// </summary>
         /// <param name="node">The node to translate.</param>
         /// <returns>The translated expression.</returns>
-        public override Expression Visit(EntityRangeVariableReferenceNode node)
+        public override Expression Visit(ResourceRangeVariableReferenceNode node)
         {
             WebUtil.CheckArgumentNull(node, "node");
-            return node.RangeVariable.GetAnnotation<ParameterExpression>();
+            return this.ParameterExpressions[node.RangeVariable];
         }
 
         /// <summary>
-        /// Translates a <see cref="NonentityRangeVariableReferenceNode"/> into a corresponding <see cref="Expression"/>.
+        /// Translates a <see cref="NonResourceRangeVariableReferenceNode"/> into a corresponding <see cref="Expression"/>.
         /// </summary>
         /// <param name="node">The node to translate.</param>
         /// <returns>The translated expression.</returns>
-        public override Expression Visit(NonentityRangeVariableReferenceNode node)
+        public override Expression Visit(NonResourceRangeVariableReferenceNode node)
         {
             WebUtil.CheckArgumentNull(node, "node");
-            return node.RangeVariable.GetAnnotation<ParameterExpression>();
+            return this.ParameterExpressions[node.RangeVariable];
         }
 
         /// <summary>
-        /// Translates a <see cref="SingleEntityCastNode"/> into a corresponding <see cref="Expression"/>.
+        /// Translates a <see cref="SingleResourceCastNode"/> into a corresponding <see cref="Expression"/>.
         /// </summary>
         /// <param name="node">The node to translate.</param>
         /// <returns>The translated expression.</returns>
-        public override Expression Visit(SingleEntityCastNode node)
+        public override Expression Visit(SingleResourceCastNode node)
         {
             WebUtil.CheckArgumentNull(node, "node");
 
@@ -333,7 +341,7 @@ namespace Microsoft.OData.Service.Parsing
             
             Expression source = this.TranslateNode(node.Source);
 
-            ResourceType resourceType = MetadataProviderUtils.GetResourceType(node.EntityTypeReference.Definition);
+            ResourceType resourceType = MetadataProviderUtils.GetResourceType(node.StructuredTypeReference.Definition);
             Debug.Assert(resourceType != null, "resourceType != null");
 
             return ExpressionGenerator.GenerateTypeAs(source, resourceType);
@@ -351,11 +359,11 @@ namespace Microsoft.OData.Service.Parsing
         }
 
         /// <summary>
-        /// Translates a <see cref="SingleEntityFunctionCallNode"/> into a corresponding <see cref="Expression"/>.
+        /// Translates a <see cref="SingleResourceFunctionCallNode"/> into a corresponding <see cref="Expression"/>.
         /// </summary>
         /// <param name="node">The node to translate.</param>
         /// <returns>The translated expression.</returns>
-        public override Expression Visit(SingleEntityFunctionCallNode node)
+        public override Expression Visit(SingleResourceFunctionCallNode node)
         {
             WebUtil.CheckArgumentNull(node, "node");
             return this.TranslateFunctionCall(node.Name, node.Parameters);
@@ -418,6 +426,17 @@ namespace Microsoft.OData.Service.Parsing
         /// <param name="node">The node to translate.</param>
         /// <returns>The translated expression.</returns>
         public override Expression Visit(SingleValuePropertyAccessNode node)
+        {
+            WebUtil.CheckArgumentNull(node, "node");
+            return this.TranslatePropertyAccess(node.Source, node.Property);
+        }
+
+        /// <summary>
+        /// Translates a <see cref="SingleComplexNode"/> into a corresponding <see cref="Expression"/>.
+        /// </summary>
+        /// <param name="node">The node to translate.</param>
+        /// <returns>The translated expression.</returns>
+        public override Expression Visit(SingleComplexNode node)
         {
             WebUtil.CheckArgumentNull(node, "node");
             return this.TranslatePropertyAccess(node.Source, node.Property);
@@ -505,7 +524,7 @@ namespace Microsoft.OData.Service.Parsing
         internal LambdaExpression TranslateFilterClause(FilterClause filterClause)
         {
             Debug.Assert(filterClause != null, "filterClause != null");
-            filterClause.RangeVariable.SetAnnotation(this.implicitParameterExpression);
+            this.ParameterExpressions[filterClause.RangeVariable] = this.implicitParameterExpression;
             Expression expr = this.TranslateNode(filterClause.Expression);
             expr = ExpressionUtils.EnsurePredicateExpressionIsBoolean(expr);
             return Expression.Lambda(expr, this.implicitParameterExpression);
@@ -521,7 +540,7 @@ namespace Microsoft.OData.Service.Parsing
             List<OrderingExpression> orderings = new List<OrderingExpression>();
             while (orderByClause != null)
             {
-                orderByClause.RangeVariable.SetAnnotation(this.implicitParameterExpression);
+                this.ParameterExpressions[orderByClause.RangeVariable] = this.implicitParameterExpression;
 
                 Expression expr = this.TranslateNode(orderByClause.Expression);
                 expr = Expression.Lambda(expr, this.implicitParameterExpression);
@@ -711,16 +730,16 @@ namespace Microsoft.OData.Service.Parsing
         }
 
         /// <summary>
-        /// Translates a <see cref="EntityCollectionCastNode"/> into a corresponding <see cref="Expression"/>.
+        /// Translates a <see cref="CollectionResourceCastNode"/> into a corresponding <see cref="Expression"/>.
         /// </summary>
         /// <param name="node">The node to translate.</param>
         /// <param name="source">The already-translated source of the type cast.</param>
         /// <returns>The translated expression.</returns>
-        private static Expression TranslateTypeCast(EntityCollectionCastNode node, Expression source)
+        private static Expression TranslateTypeCast(CollectionResourceCastNode node, Expression source)
         {
             Debug.Assert(node != null, "node != null");
             Debug.Assert(node.Source != null, "sourceNode != null");
-            Debug.Assert(node.ItemType != null, "entityTypeReference != null");
+            Debug.Assert(node.ItemType != null, "typeReference != null");
             Debug.Assert(source != null, "source != null");
 
             ResourceType resourceType = MetadataProviderUtils.GetResourceType(node.ItemType.Definition);
@@ -745,7 +764,7 @@ namespace Microsoft.OData.Service.Parsing
 
             ResourceType currentResourceType = MetadataProviderUtils.GetResourceType(edmProperty.DeclaringType);
             ResourceProperty property = ((IResourcePropertyBasedEdmProperty)edmProperty).ResourceProperty;
-            ResourceSetWrapper container = navigationSource != null ? ((IResourceSetBasedEdmEntitySet)navigationSource).ResourceSet : null;
+            ResourceSetWrapper container = (navigationSource != null && !(navigationSource is IEdmUnknownEntitySet)) ? ((IResourceSetBasedEdmEntitySet)navigationSource).ResourceSet : null;
 
             Debug.Assert(currentResourceType != null, "currentResourceType != null");
             Debug.Assert(property != null, "property != null");
@@ -933,16 +952,16 @@ namespace Microsoft.OData.Service.Parsing
             // If it is, translate it's source and then add the null propagation before the type cast.
             // If it isn't, then just add the type cast before the lambda.
             QueryNode sourceNode = node.Source;
-            EntityCollectionCastNode castNode = null;
-            if (sourceNode.Kind == QueryNodeKind.EntityCollectionCast)
+            CollectionResourceCastNode castNode = null;
+            if (sourceNode.Kind == QueryNodeKind.CollectionResourceCast)
             {
-                castNode = ((EntityCollectionCastNode)sourceNode);
+                castNode = ((CollectionResourceCastNode)sourceNode);
                 sourceNode = castNode.Source;
 
-                if (sourceNode.Kind == QueryNodeKind.EntityCollectionCast)
+                if (sourceNode.Kind == QueryNodeKind.CollectionResourceCast)
                 {
                     // If 2 identifiers are specified back to back, then we need to check and throw in that scenario
-                    string message = Strings.RequestUriProcessor_TypeIdentifierCannotBeSpecifiedAfterTypeIdentifier(((EntityCollectionCastNode)sourceNode).ItemType.FullName(), castNode.ItemType.FullName());
+                    string message = Strings.RequestUriProcessor_TypeIdentifierCannotBeSpecifiedAfterTypeIdentifier(((CollectionResourceCastNode)sourceNode).ItemType.FullName(), castNode.ItemType.FullName());
                     throw DataServiceException.CreateBadRequestError(message);
                 }
             }
@@ -971,8 +990,7 @@ namespace Microsoft.OData.Service.Parsing
             }
 
             ParameterExpression predicateParameter = Expression.Parameter(BaseServiceProvider.GetIEnumerableElement(source.Type), node.CurrentRangeVariable.Name);
-            
-            node.CurrentRangeVariable.SetAnnotation(predicateParameter);
+            this.ParameterExpressions[node.CurrentRangeVariable] = predicateParameter;
 
             Expression predicateBody = this.TranslateNode(node.Body);
             predicateBody = ExpressionUtils.EnsurePredicateExpressionIsBoolean(predicateBody);

@@ -4,7 +4,7 @@ $filter = geo.intersects(geometry'Point(10 30)', geometry'Polygon((5 16, 5 30, 2
 FilterQueryOption
 	ItemType = [Microsoft.Test.Taupo.OData.WCFService.Employee Nullable=False]
 	Parameter = 
-	EntityRangeVariable
+	ResourceRangeVariable
 		Name = $it
 		NavigationSource = Employees
 		TypeReference = [Microsoft.Test.Taupo.OData.WCFService.Employee Nullable=False]
@@ -14,5 +14,5 @@ FilterQueryOption
 		Return Type = [Edm.Boolean Nullable=True]
 		Function = 
 		Arguments = 
-			Microsoft.Data.Spatial.GeometryPointImplementation(Type: [Edm.GeometryPoint Nullable=True SRID=0])
-			Microsoft.Data.Spatial.GeometryPolygonImplementation(Type: [Edm.GeometryPolygon Nullable=True SRID=0])
+			Microsoft.Spatial.GeometryPointImplementation(Type: [Edm.GeometryPoint Nullable=True SRID=0])
+			Microsoft.Spatial.GeometryPolygonImplementation(Type: [Edm.GeometryPolygon Nullable=True SRID=0])

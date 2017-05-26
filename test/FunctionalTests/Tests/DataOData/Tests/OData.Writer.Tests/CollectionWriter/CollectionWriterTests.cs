@@ -9,10 +9,10 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.CollectionWriter
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Library;
     using Microsoft.Test.OData.Utils.CombinatorialEngine;
+    using Microsoft.Test.Taupo.Astoria.Contracts.OData;
     using Microsoft.Test.Taupo.Common;
     using Microsoft.Test.Taupo.Execution;
     using Microsoft.Test.Taupo.OData.Common;
@@ -39,7 +39,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.CollectionWriter
             new CollectionWriterTestDescriptor.ItemDescription
             {
                 Item = (object)null,
-                ExpectedXml = @"<{3} {2}:null=""true"" xmlns:{2}=""{5}""/>",
+                ExpectedXml = string.Empty,
                 ExpectedJsonLightLines = new string[] { "null" },
             };
 
@@ -47,7 +47,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.CollectionWriter
             i => new CollectionWriterTestDescriptor.ItemDescription
             {
                 Item = (object)i,
-                ExpectedXml = @"<{3} {2}:{4}=""Int32"" xmlns:{2}=""{5}"">" + i + @"</{3}>",
+                ExpectedXml = string.Empty,
                 ExpectedJsonLightLines = new string[] { i.ToString() },
             };
 
@@ -55,7 +55,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.CollectionWriter
             new CollectionWriterTestDescriptor.ItemDescription
             {
                 Item = (object)2,
-                ExpectedXml = @"<{3} {2}:{4}=""Int32"" xmlns:{2}=""{5}"">2</{3}>",
+                ExpectedXml = string.Empty,
                 ExpectedJsonLightLines = new string[] { "2" },
             };
 
@@ -63,7 +63,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.CollectionWriter
             s => new CollectionWriterTestDescriptor.ItemDescription
             {
                 Item = (object)s,
-                ExpectedXml = @"<{3}>" + s + "</{3}>",
+                ExpectedXml = string.Empty,
                 ExpectedJsonLightLines = new string[] { "\"" + s.ToString() + "\"" },
             };
 
@@ -80,21 +80,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.CollectionWriter
                             new ODataProperty() { Name = "Zip", Value = 98052 },
                         }
                 },
-                ExpectedXml = typeName != null
-                    ? string.Join(
-                        "$(NL)",
-                        @"  <{3} {2}:{4}=""" + typeName + @""" xmlns:{2}=""{5}"">",
-                        @"    <{7}:Street>One Microsoft Way</{7}:Street>",
-                        @"    <{7}:City xml:space=""preserve"">Redmond </{7}:City>",
-                        @"    <{7}:Zip {2}:type=""Edm.Int32"">98052</{7}:Zip>",
-                        @"  </{3}>")
-                    : string.Join(
-                        "$(NL)",
-                        @"  <{3}>",
-                        @"    <{7}:Street>One Microsoft Way</{7}:Street>",
-                        @"    <{7}:City xml:space=""preserve"">Redmond </{7}:City>",
-                        @"    <{7}:Zip {2}:type=""Edm.Int32"" xmlns:{2}=""{5}"">98052</{7}:Zip>",
-                        @"  </{3}>"),
+                ExpectedXml = string.Empty,
                 ExpectedJsonLightLines =
                     new string[]
                     {
@@ -107,6 +93,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.CollectionWriter
         [InjectDependency(IsRequired = true)]
         public CollectionWriterTestDescriptor.Settings Settings { get; set; }
 
+        [Ignore] // Remove Atom
         [TestMethod, Variation(Description = "Test error conditions when writing collections.")]
         public void CollectionErrorTest()
         {
@@ -236,7 +223,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.CollectionWriter
             // TODO: Fix places where we've lost JsonVerbose coverage to add JsonLight
             this.CombinatorialEngineProvider.RunCombinations(
                 testDescriptors,
-                this.WriterTestConfigurationProvider.ExplicitFormatConfigurationsWithIndent.Where(tc => tc.Format == ODataFormat.Atom),
+                this.WriterTestConfigurationProvider.ExplicitFormatConfigurationsWithIndent.Where(tc => false),
                 (testDescriptor, testConfig) =>
                 {
                     CollectionWriterUtils.WriteAndVerifyCollectionPayload(testDescriptor, testConfig, this.Assert, this.Logger);
@@ -244,6 +231,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.CollectionWriter
 
         }
 
+        [Ignore] // Remove Atom
         [TestMethod, Variation(Description = "Test different combinations of collection writing.")]
         public void CollectionPayloadTest()
         {
@@ -354,7 +342,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.CollectionWriter
 
                     if (withModel)
                     {
-                        type = testCase.FunctionImport.Operation.ReturnType.AsCollection().ElementType(); 
+                        type = testCase.FunctionImport.Operation.ReturnType.AsCollection().ElementType();
                     }
 
                     CollectionWriterTestDescriptor testDescriptor = new CollectionWriterTestDescriptor(this.Settings, testCase.FunctionImport.Name, testCase.Items, withModel ? model : null)
@@ -366,6 +354,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.CollectionWriter
                 });
         }
 
+        [Ignore] // Remove Atom
         [TestMethod, Variation(Description = "Test different invalid combinations of collection writing.")]
         public void CollectionPayloadErrorTest()
         {
@@ -407,7 +396,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.CollectionWriter
             // TODO: Fix places where we've lost JsonVerbose coverage to add JsonLight
             this.CombinatorialEngineProvider.RunCombinations(
                 testCases,
-                this.WriterTestConfigurationProvider.ExplicitFormatConfigurationsWithIndent.Where(tc => tc.IsRequest == false && tc.Format == ODataFormat.Atom),
+                this.WriterTestConfigurationProvider.ExplicitFormatConfigurationsWithIndent.Where(tc => false),
                 (testCase, testConfig) =>
                 {
                     CollectionWriterTestDescriptor testDescriptor = new CollectionWriterTestDescriptor(this.Settings, collectionName, testCase.Items, testCase.ExpectedException, /*model*/ null);
@@ -418,6 +407,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.CollectionWriter
                 });
         }
 
+        [Ignore] // Remove Atom
         [TestMethod, Variation(Description = "Test different combinations of collection writing without metadata present.")]
         public void HomogeneousCollectionWriterWithoutMetadataTest()
         {
@@ -437,7 +427,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.CollectionWriter
 
                 // Complex collection with type names on complex values
                 new CollectionWriterTestDescriptor.ItemDescription[] { complexItem("TestNS.AddressType"), complexItem("TestNS.AddressType") },
-                
+
                 // Complex collection with type names on complex values and null values
                 new CollectionWriterTestDescriptor.ItemDescription[] { complexItem("TestNS.AddressType"), nullItem, complexItem("TestNS.AddressType") },
 
@@ -477,97 +467,98 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.CollectionWriter
                 });
         }
 
+        [Ignore] // Remove Atom
         [TestMethod, Variation(Description = "Test the the reading of heterogeneous ATOM collection payloads.")]
         public void HeterogeneousCollectionWriterWithoutMetadataTest()
         {
             var collections = new[]
             {
                 // Collection with different item type kinds (complex instead of primitive)
-                new 
+                new
                 {
                     Items = new CollectionWriterTestDescriptor.ItemDescription[] { intItem(0), complexItem(/*typeName*/null) },
                     ExpectedException = ODataExpectedExceptions.ODataException("CollectionWithoutExpectedTypeValidator_IncompatibleItemTypeKind", "Complex", "Primitive"),
                 },
 
                 // Collection where item type kind does not match item type name (primitive and complex items)
-                new 
+                new
                 {
                     Items = new CollectionWriterTestDescriptor.ItemDescription[] { stringItem(string.Empty), complexItem(/*typeName*/null) },
                     ExpectedException = ODataExpectedExceptions.ODataException("CollectionWithoutExpectedTypeValidator_IncompatibleItemTypeKind", "Complex", "Primitive"),
                 },
 
                 // Collection where item type names don't match (Edm.String and Edm.Int32)
-                new 
+                new
                 {
                     Items = new CollectionWriterTestDescriptor.ItemDescription[] { stringItem(string.Empty), intItem(2) },
                     ExpectedException = ODataExpectedExceptions.ODataException("CollectionWithoutExpectedTypeValidator_IncompatibleItemTypeName", "Edm.Int32", "Edm.String"),
                 },
 
                 // Collection where item type names don't match (Edm.String and Edm.Int32); including some null items
-                new 
+                new
                 {
                     Items = new CollectionWriterTestDescriptor.ItemDescription[] { nullItem, stringItem(string.Empty), nullItem, intItem(2), nullItem },
                     ExpectedException = ODataExpectedExceptions.ODataException("CollectionWithoutExpectedTypeValidator_IncompatibleItemTypeName", "Edm.Int32", "Edm.String"),
                 },
 
                 // Collection where item type names don't match (TestModel.SomeComplexType and TestModel.OtherComplexType)
-                new 
+                new
                 {
                     Items = new CollectionWriterTestDescriptor.ItemDescription[] { complexItem("TestModel.SomeComplexType"), complexItem("TestModel.OtherComplexType") },
                     ExpectedException = ODataExpectedExceptions.ODataException("CollectionWithoutExpectedTypeValidator_IncompatibleItemTypeName", "TestModel.OtherComplexType", "TestModel.SomeComplexType"),
                 },
 
                 // Collection where item type names don't match (TestModel.SomeComplexType and TestModel.OtherComplexType); including some null items
-                new 
+                new
                 {
                     Items = new CollectionWriterTestDescriptor.ItemDescription[] { nullItem, complexItem("TestModel.SomeComplexType"), nullItem, complexItem("TestModel.OtherComplexType"), nullItem },
                     ExpectedException = ODataExpectedExceptions.ODataException("CollectionWithoutExpectedTypeValidator_IncompatibleItemTypeName", "TestModel.OtherComplexType", "TestModel.SomeComplexType"),
                 },
 
                 // Collection where different item type kinds (primitive instead of complex)
-                new 
+                new
                 {
                     Items = new CollectionWriterTestDescriptor.ItemDescription[] { complexItem("TestModel.SomeComplexType"), intItem(0) },
                     ExpectedException = ODataExpectedExceptions.ODataException("CollectionWithoutExpectedTypeValidator_IncompatibleItemTypeKind", "Primitive", "Complex"),
                 },
 
                 // Collection with primitive and complex elements
-                new 
+                new
                 {
                     Items = new CollectionWriterTestDescriptor.ItemDescription[] { stringItem("Foo"), complexItem("TestModel.SomeComplexType"), stringItem("Perth") },
                     ExpectedException = ODataExpectedExceptions.ODataException("CollectionWithoutExpectedTypeValidator_IncompatibleItemTypeKind", "Complex", "Primitive"),
                 },
 
                 // Collection with primitive and geographic elements
-                new 
+                new
                 {
                     Items = new CollectionWriterTestDescriptor.ItemDescription[] { stringItem("Foo"), GetGeographyMultiLineStringItem() },
                     ExpectedException = ODataExpectedExceptions.ODataException("CollectionWithoutExpectedTypeValidator_IncompatibleItemTypeName", "Edm.GeographyMultiLineString", "Edm.String"),
                 },
 
                 // Collection with primitive and geometric elements
-                new 
+                new
                 {
                     Items = new CollectionWriterTestDescriptor.ItemDescription[] { stringItem("Foo"), GetGeometryPointItem() },
                     ExpectedException = ODataExpectedExceptions.ODataException("CollectionWithoutExpectedTypeValidator_IncompatibleItemTypeName", "Edm.GeometryPoint", "Edm.String"),
                 },
 
                 // Collection with geographic and geometric elements
-                new 
+                new
                 {
                     Items = new CollectionWriterTestDescriptor.ItemDescription[] { GetGeographyPointItem(), GetGeometryPointItem() },
                     ExpectedException = ODataExpectedExceptions.ODataException("CollectionWithoutExpectedTypeValidator_IncompatibleItemTypeName", "Edm.GeometryPoint", "Edm.GeographyPoint"),
                 },
 
                 // Collection with complex and geometric elements
-                new 
+                new
                 {
                     Items = new CollectionWriterTestDescriptor.ItemDescription[] { complexItem(/*typename*/ null), GetGeometryPointItem() },
                     ExpectedException = ODataExpectedExceptions.ODataException("CollectionWithoutExpectedTypeValidator_IncompatibleItemTypeKind", "Primitive", "Complex"),
                 },
 
                 // Collection with complex and geometric elements
-                new 
+                new
                 {
                     Items = new CollectionWriterTestDescriptor.ItemDescription[] { complexItem(/*typename*/ null), GetGeometryPointItem() },
                     ExpectedException = ODataExpectedExceptions.ODataException("CollectionWithoutExpectedTypeValidator_IncompatibleItemTypeKind", "Primitive", "Complex"),
@@ -586,6 +577,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.CollectionWriter
                 });
         }
 
+        [Ignore] // Remove Atom
         [TestMethod, Variation(Description = "Test different combinations of collection writing.")]
         public void CollectionWriterTest()
         {
@@ -602,7 +594,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.CollectionWriter
             var collectionItem = new CollectionWriterTestDescriptor.ItemDescription
             {
                 Item = (object)1,
-                ExpectedXml = @"<{3} {2}:{4}=""Int32"" xmlns:{2}=""{5}"">1</{3}>",
+                ExpectedXml = string.Empty,
                 ExpectedJsonLightLines = new string[] { "1" },
             };
 
@@ -617,12 +609,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.CollectionWriter
                         Message = "Dummy error message",
                     }
                 },
-                ExpectedXml = string.Join(
-                    "$(NL)",
-                    @"<m:error xmlns:m=""http://docs.oasis-open.org/odata/ns/metadata"">",
-                    @"  <m:code>5555</m:code>",
-                    @"  <m:message>Dummy error message</m:message>",
-                    @"</m:error>"),
+                ExpectedXml = string.Empty,
                 ExpectedJsonLightLines = new string[]
                 {
                     "{",
@@ -641,25 +628,25 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.CollectionWriter
                 },
                 new InvocationsAndExpectedException
                 {
-                    Invocations = new CollectionWriterTestDescriptor.WriterInvocations[] 
-                    { 
-                        CollectionWriterTestDescriptor.WriterInvocations.StartCollection, 
-                        CollectionWriterTestDescriptor.WriterInvocations.EndCollection 
+                    Invocations = new CollectionWriterTestDescriptor.WriterInvocations[]
+                    {
+                        CollectionWriterTestDescriptor.WriterInvocations.StartCollection,
+                        CollectionWriterTestDescriptor.WriterInvocations.EndCollection
                     },
                 },
                 new InvocationsAndExpectedException
                 {
-                    Invocations = new CollectionWriterTestDescriptor.WriterInvocations[] 
-                    { 
-                        CollectionWriterTestDescriptor.WriterInvocations.StartCollection, 
+                    Invocations = new CollectionWriterTestDescriptor.WriterInvocations[]
+                    {
+                        CollectionWriterTestDescriptor.WriterInvocations.StartCollection,
                         CollectionWriterTestDescriptor.WriterInvocations.Item,
-                        CollectionWriterTestDescriptor.WriterInvocations.EndCollection 
+                        CollectionWriterTestDescriptor.WriterInvocations.EndCollection
                     },
                 },
                 new InvocationsAndExpectedException
                 {
-                    Invocations = new CollectionWriterTestDescriptor.WriterInvocations[] 
-                    { 
+                    Invocations = new CollectionWriterTestDescriptor.WriterInvocations[]
+                    {
                         CollectionWriterTestDescriptor.WriterInvocations.Error,
                     },
                     ExpectedExceptionFunc = tc => tc.IsRequest
@@ -668,11 +655,11 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.CollectionWriter
                 },
                 new InvocationsAndExpectedException
                 {
-                    Invocations = new CollectionWriterTestDescriptor.WriterInvocations[] 
-                    { 
-                        CollectionWriterTestDescriptor.WriterInvocations.StartCollection, 
-                        CollectionWriterTestDescriptor.WriterInvocations.StartCollection, 
-                        CollectionWriterTestDescriptor.WriterInvocations.EndCollection 
+                    Invocations = new CollectionWriterTestDescriptor.WriterInvocations[]
+                    {
+                        CollectionWriterTestDescriptor.WriterInvocations.StartCollection,
+                        CollectionWriterTestDescriptor.WriterInvocations.StartCollection,
+                        CollectionWriterTestDescriptor.WriterInvocations.EndCollection
                     },
                     ExpectedExceptionFunc = tc => ODataExpectedExceptions.ODataException("ODataCollectionWriterCore_InvalidTransitionFromCollection", "Collection", "Collection")
                 },
@@ -680,26 +667,26 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.CollectionWriter
                 #region User code throws an exception
                 new InvocationsAndExpectedException
                 {
-                    Invocations = new CollectionWriterTestDescriptor.WriterInvocations[] 
-                    { 
+                    Invocations = new CollectionWriterTestDescriptor.WriterInvocations[]
+                    {
                         CollectionWriterTestDescriptor.WriterInvocations.UserException
                     },
                     ExpectedExceptionFunc = tc => new ExpectedException(typeof(Exception)),
                 },
                 new InvocationsAndExpectedException
                 {
-                    Invocations = new CollectionWriterTestDescriptor.WriterInvocations[] 
-                    { 
-                        CollectionWriterTestDescriptor.WriterInvocations.StartCollection, 
+                    Invocations = new CollectionWriterTestDescriptor.WriterInvocations[]
+                    {
+                        CollectionWriterTestDescriptor.WriterInvocations.StartCollection,
                         CollectionWriterTestDescriptor.WriterInvocations.UserException
                     },
                     ExpectedExceptionFunc = tc => new ExpectedException(typeof(Exception)),
                 },
                 new InvocationsAndExpectedException
                 {
-                    Invocations = new CollectionWriterTestDescriptor.WriterInvocations[] 
-                    { 
-                        CollectionWriterTestDescriptor.WriterInvocations.StartCollection, 
+                    Invocations = new CollectionWriterTestDescriptor.WriterInvocations[]
+                    {
+                        CollectionWriterTestDescriptor.WriterInvocations.StartCollection,
                         CollectionWriterTestDescriptor.WriterInvocations.Item,
                         CollectionWriterTestDescriptor.WriterInvocations.UserException
                     },
@@ -707,17 +694,17 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.CollectionWriter
                 },
                 new InvocationsAndExpectedException
                 {
-                    Invocations = new CollectionWriterTestDescriptor.WriterInvocations[] 
-                    { 
+                    Invocations = new CollectionWriterTestDescriptor.WriterInvocations[]
+                    {
                         CollectionWriterTestDescriptor.WriterInvocations.UserException,
                     },
                     ExpectedExceptionFunc = tc => new ExpectedException(typeof(Exception)),
                 },
                 new InvocationsAndExpectedException
                 {
-                    Invocations = new CollectionWriterTestDescriptor.WriterInvocations[] 
-                    { 
-                        CollectionWriterTestDescriptor.WriterInvocations.StartCollection, 
+                    Invocations = new CollectionWriterTestDescriptor.WriterInvocations[]
+                    {
+                        CollectionWriterTestDescriptor.WriterInvocations.StartCollection,
                         CollectionWriterTestDescriptor.WriterInvocations.EndCollection,
                         CollectionWriterTestDescriptor.WriterInvocations.UserException,
                     },
@@ -742,17 +729,18 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.CollectionWriter
                 });
         }
 
-        // These tests and helpers are disabled on Silverlight and Phone because they  
+        // These tests and helpers are disabled on Silverlight and Phone because they
         // use private reflection not available on Silverlight and Phone
 #if !SILVERLIGHT && !WINDOWS_PHONE
+        [Ignore] // Remove Atom
         [TestMethod, Variation(Description = "Test writing collection payloads with complex items that have duplicate property names.")]
         public void DuplicatePropertyNamesTest()
         {
             ODataProperty primitiveProperty = new ODataProperty { Name = "Foo", Value = 1 };
             ODataProperty complexProperty = new ODataProperty { Name = "Foo", Value = new ODataComplexValue { Properties = new[] { new ODataProperty() { Name = "StringProperty", Value = "xyz" } } } };
-            ODataProperty collectionProperty = new ODataProperty { Name = "Foo", Value = new ODataCollectionValue { Items = new int[] { 1, 2 } } };
+            ODataProperty collectionProperty = new ODataProperty { Name = "Foo", Value = new ODataCollectionValue { Items = new object[] { 1, 2 } } };
 
-            ExpectedException expectedException = ODataExpectedExceptions.ODataException("DuplicatePropertyNamesChecker_DuplicatePropertyNamesNotAllowed", "Foo");
+            ExpectedException expectedException = ODataExpectedExceptions.ODataException("DuplicatePropertyNamesNotAllowed", "Foo");
             Func<WriterTestConfiguration, ExpectedException> expectedExceptionFunc = (tc) => tc.MessageWriterSettings.GetAllowDuplicatePropertyNames() ? null : expectedException;
 
             DuplicatePropertyNamesTestCase[] testCases = new DuplicatePropertyNamesTestCase[]
@@ -789,11 +777,11 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.CollectionWriter
                 },
             };
 
-            var invocations = new CollectionWriterTestDescriptor.WriterInvocations[] 
-            { 
-                CollectionWriterTestDescriptor.WriterInvocations.StartCollection, 
+            var invocations = new CollectionWriterTestDescriptor.WriterInvocations[]
+            {
+                CollectionWriterTestDescriptor.WriterInvocations.StartCollection,
                 CollectionWriterTestDescriptor.WriterInvocations.Item,
-                CollectionWriterTestDescriptor.WriterInvocations.EndCollection 
+                CollectionWriterTestDescriptor.WriterInvocations.EndCollection
             };
 
             const string collectionName = "TestCollection";
@@ -801,8 +789,8 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.CollectionWriter
             IEnumerable<CollectionWriterTestDescriptor> testDescriptors = testCases.Select(testCase =>
                 new CollectionWriterTestDescriptor(
                     this.Settings,
-                    collectionName, 
-                    invocations, 
+                    collectionName,
+                    invocations,
                     testCase.ExpectedODataException,
                     new CollectionWriterTestDescriptor.ItemDescription { Item = testCase.CollectionItem }
                 ));
@@ -817,6 +805,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.CollectionWriter
         }
 #endif
 
+        [Ignore] // Remove Atom
         [TestMethod, Variation(Description = "Tests behavior of collection writers with collection type specified.")]
         public void CollectionWriterWithTypeProvidedTest()
         {
@@ -824,15 +813,15 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.CollectionWriter
 
             var container = new EdmEntityContainer("DefaultNamespace", "TestContainer");
             model.AddElement(container);
-            
+
             var testDescriptors = new[]
             {
                 // Case with entity type is now covered in TDD tests
                 // Incompatible item type
-                new CollectionWriterTestDescriptor(this.Settings, "CollectionFunction", 
-                    new [] { new CollectionWriterTestDescriptor.ItemDescription() { Item = 42 } }, 
+                new CollectionWriterTestDescriptor(this.Settings, "CollectionFunction",
+                    new [] { new CollectionWriterTestDescriptor.ItemDescription() { Item = 42 } },
                     ODataExpectedExceptions.ODataException("ValidationUtils_IncompatiblePrimitiveItemType", "Edm.Int32", "False", "Edm.String", "True"), null)
-                { 
+                {
                     Model = model,
                     ItemTypeParameter = EdmCoreModel.Instance.GetString(isNullable: true)
                 },
@@ -852,7 +841,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.CollectionWriter
             return new CollectionWriterTestDescriptor.ItemDescription
             {
                 Item = ObjectModelUtils.GeometryPointValue,
-                ExpectedXml = @"<{3} {2}:type=""GeometryPoint"" xmlns:{2}=""{5}"">" + SpatialUtils.GetSpatialStringValue(ODataFormat.Atom, ObjectModelUtils.GeometryPointValue) + "</{3}>",
+                ExpectedXml = string.Empty,
                 ExpectedJsonLightLines = JsonUtils.GetJsonLines(SpatialUtils.GetSpatialStringValue(ODataFormat.Json, ObjectModelUtils.GeometryPointValue)),
             };
         }
@@ -862,7 +851,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.CollectionWriter
             return new CollectionWriterTestDescriptor.ItemDescription
             {
                 Item = ObjectModelUtils.GeometryPolygonValue,
-                ExpectedXml = @"<{3} {2}:type=""GeometryPolygon"" xmlns:{2}=""{5}"">" + SpatialUtils.GetSpatialStringValue(ODataFormat.Atom, ObjectModelUtils.GeometryPolygonValue) + "</{3}>",
+                ExpectedXml = string.Empty,
                 ExpectedJsonLightLines = JsonUtils.GetJsonLines(SpatialUtils.GetSpatialStringValue(ODataFormat.Json, ObjectModelUtils.GeometryPolygonValue)),
             };
         }
@@ -872,7 +861,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.CollectionWriter
             return new CollectionWriterTestDescriptor.ItemDescription
             {
                 Item = ObjectModelUtils.GeometryCollectionValue,
-                ExpectedXml = @"<{3} {2}:type=""GeometryCollection"" xmlns:{2}=""{5}"">" + SpatialUtils.GetSpatialStringValue(ODataFormat.Atom, ObjectModelUtils.GeometryCollectionValue) + "</{3}>",
+                ExpectedXml = string.Empty,
                 ExpectedJsonLightLines = JsonUtils.GetJsonLines(SpatialUtils.GetSpatialStringValue(ODataFormat.Json, ObjectModelUtils.GeometryCollectionValue)),
             };
         }
@@ -882,7 +871,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.CollectionWriter
             return new CollectionWriterTestDescriptor.ItemDescription
             {
                 Item = ObjectModelUtils.GeometryMultiLineStringValue,
-                ExpectedXml = @"<{3} {2}:type=""GeometryMultiLineString"" xmlns:{2}=""{5}"">" + SpatialUtils.GetSpatialStringValue(ODataFormat.Atom, ObjectModelUtils.GeometryMultiLineStringValue) + "</{3}>",
+                ExpectedXml = string.Empty,
                 ExpectedJsonLightLines = JsonUtils.GetJsonLines(SpatialUtils.GetSpatialStringValue(ODataFormat.Json, ObjectModelUtils.GeometryMultiLineStringValue)),
             };
         }
@@ -892,7 +881,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.CollectionWriter
             return new CollectionWriterTestDescriptor.ItemDescription
             {
                 Item = ObjectModelUtils.GeographyPointValue,
-                ExpectedXml = @"<{3} {2}:type=""GeographyPoint"" xmlns:{2}=""{5}"">" + SpatialUtils.GetSpatialStringValue(ODataFormat.Atom, ObjectModelUtils.GeographyPointValue) + "</{3}>",
+                ExpectedXml = string.Empty,
                 ExpectedJsonLightLines = JsonUtils.GetJsonLines(SpatialUtils.GetSpatialStringValue(ODataFormat.Json, ObjectModelUtils.GeographyPointValue)),
             };
         }
@@ -902,7 +891,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.CollectionWriter
             return new CollectionWriterTestDescriptor.ItemDescription
             {
                 Item = ObjectModelUtils.GeographyPolygonValue,
-                ExpectedXml = @"<{3} {2}:type=""GeographyPolygon"" xmlns:{2}=""{5}"">" + SpatialUtils.GetSpatialStringValue(ODataFormat.Atom, ObjectModelUtils.GeographyPolygonValue) + "</{3}>",
+                ExpectedXml = string.Empty,
                 ExpectedJsonLightLines = JsonUtils.GetJsonLines(SpatialUtils.GetSpatialStringValue(ODataFormat.Json, ObjectModelUtils.GeographyPolygonValue)),
             };
         }
@@ -912,7 +901,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.CollectionWriter
             return new CollectionWriterTestDescriptor.ItemDescription
             {
                 Item = ObjectModelUtils.GeographyCollectionValue,
-                ExpectedXml = @"<{3} {2}:type=""GeographyCollection"" xmlns:{2}=""{5}"">" + SpatialUtils.GetSpatialStringValue(ODataFormat.Atom, ObjectModelUtils.GeographyCollectionValue) + "</{3}>",
+                ExpectedXml = string.Empty,
                 ExpectedJsonLightLines = JsonUtils.GetJsonLines(SpatialUtils.GetSpatialStringValue(ODataFormat.Json, ObjectModelUtils.GeographyCollectionValue)),
             };
         }
@@ -922,7 +911,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.CollectionWriter
             return new CollectionWriterTestDescriptor.ItemDescription
             {
                 Item = ObjectModelUtils.GeographyMultiLineStringValue,
-                ExpectedXml = @"<{3} {2}:type=""GeographyMultiLineString"" xmlns:{2}=""{5}"">" + SpatialUtils.GetSpatialStringValue(ODataFormat.Atom, ObjectModelUtils.GeographyMultiLineStringValue) + "</{3}>",
+                ExpectedXml = string.Empty,
                 ExpectedJsonLightLines = JsonUtils.GetJsonLines(SpatialUtils.GetSpatialStringValue(ODataFormat.Json, ObjectModelUtils.GeographyMultiLineStringValue)),
             };
         }
@@ -957,7 +946,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.CollectionWriter
 
             public IEdmOperationImport FunctionImport
             {
-                get { return this.functionImport;  }
+                get { return this.functionImport; }
             }
         }
     }

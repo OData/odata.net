@@ -6,7 +6,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.OData.Edm.Annotations;
+using Microsoft.OData.Edm.Vocabularies;
 
 namespace Microsoft.OData.Edm.Csdl.Serialization
 {
@@ -66,10 +66,10 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
                 schema = new EdmSchema(namespaceName);
                 this.modelSchemas.Add(namespaceName, schema);
             }
-            
+
             schema.AddSchemaElement(element);
             this.activeSchema = schema;
-            
+
             base.ProcessSchemaElement(element);
         }
 

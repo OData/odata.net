@@ -1,22 +1,20 @@
 ﻿//---------------------------------------------------------------------
-// <copyright file="ODataUriParserUnitTests.cs" company="Microsoft">
+// <copyright file="ODataUriParserTests.cs" company="Microsoft">
 //      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 // </copyright>
 //---------------------------------------------------------------------
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using FluentAssertions;
-using Microsoft.OData.Core.UriParser;
-using Microsoft.OData.Core.UriParser.Metadata;
-using Microsoft.OData.Core.UriParser.Semantic;
 using Microsoft.OData.Edm;
-using Microsoft.OData.Edm.Library;
+using Microsoft.OData.UriParser;
 using Xunit;
-using ODataErrorStrings = Microsoft.OData.Core.Strings;
+using ODataErrorStrings = Microsoft.OData.Strings;
 
-namespace Microsoft.OData.Core.Tests.UriParser
+namespace Microsoft.OData.Tests.UriParser
 {
     /// <summary>
     /// Unit tests for ODataUriParser.
@@ -26,10 +24,13 @@ namespace Microsoft.OData.Core.Tests.UriParser
         private readonly Uri ServiceRoot = new Uri("http://host");
         private readonly Uri FullUri = new Uri("http://host/People");
 
-        [Fact]
-        public void NoneQueryOptionShouldWork()
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public void NonQueryOptionShouldWork(bool enableNoDollarQueryOptions)
         {
             var uriParser = new ODataUriParser(HardCodedTestModel.TestModel, ServiceRoot, FullUri);
+            uriParser.EnableNoDollarQueryOptions = enableNoDollarQueryOptions;
             var path = uriParser.ParsePath();
             path.Should().HaveCount(1);
             path.LastSegment.ShouldBeEntitySetSegment(HardCodedTestModel.GetPeopleSet());
@@ -44,10 +45,14 @@ namespace Microsoft.OData.Core.Tests.UriParser
             uriParser.ParseDeltaToken().Should().BeNull();
         }
 
-        [Fact]
-        public void EmptyValueQueryOptionShouldWork()
+        [Theory]
+        [InlineData("?filter=&select=&expand=&orderby=&top=&skip=&count=&search=&unknown=&$unknownvalue&skiptoken=&deltatoken=", true)]
+        [InlineData("?$filter=&$select=&$expand=&$orderby=&$top=&$skip=&$count=&$search=&$unknown=&$unknownvalue&$skiptoken=&$deltatoken=", true)]
+        [InlineData("?$filter=&$select=&$expand=&$orderby=&$top=&$skip=&$count=&$search=&$unknown=&$unknownvalue&$skiptoken=&$deltatoken=", false)]
+        public void EmptyValueQueryOptionShouldWork(string relativeUriString, bool enableNoDollarQueryOptions)
         {
-            var uriParser = new ODataUriParser(HardCodedTestModel.TestModel, ServiceRoot, new Uri(FullUri, "?$filter=&$select=&$expand=&$orderby=&$top=&$skip=&$count=&$search=&$unknow=&$unknowvalue&$skiptoken=&$deltatoken="));
+            var uriParser = new ODataUriParser(HardCodedTestModel.TestModel, ServiceRoot, new Uri(FullUri, relativeUriString));
+            uriParser.EnableNoDollarQueryOptions = enableNoDollarQueryOptions;
             var path = uriParser.ParsePath();
             path.Should().HaveCount(1);
             path.LastSegment.ShouldBeEntitySetSegment(HardCodedTestModel.GetPeopleSet());
@@ -66,6 +71,18 @@ namespace Microsoft.OData.Core.Tests.UriParser
             action.ShouldThrow<ODataException>().WithMessage(Strings.UriQueryExpressionParser_ExpressionExpected(0, ""));
             uriParser.ParseSkipToken().Should().BeEmpty();
             uriParser.ParseDeltaToken().Should().BeEmpty();
+        }
+
+        [Fact]
+        public void DupilicateNonODataQueryOptionShouldWork()
+        {
+            Action action = () => new ODataUriParser(HardCodedTestModel.TestModel, ServiceRoot, new Uri(FullUri, "?$filter=UserName eq 'foo'&$filter=UserName eq 'bar'")).ParsePath();
+            var uriParser = new ODataUriParser(HardCodedTestModel.TestModel, ServiceRoot, new Uri(FullUri, "?$filter=UserName eq 'Tom'&nonODataQuery=foo&$select=Emails&nonODataQuery=bar"));
+            var nonODataqueryOptions = uriParser.CustomQueryOptions;
+
+            action.ShouldThrow<ODataException>().WithMessage(Strings.QueryOptionUtils_QueryParameterMustBeSpecifiedOnce("$filter"));
+            Assert.Equal(nonODataqueryOptions.Count, 2);
+            Assert.True(nonODataqueryOptions[0].Key.Equals("nonODataQuery") && nonODataqueryOptions[1].Key.Equals("nonODataQuery"));
         }
 
         #region Setter/getter and validation tests
@@ -126,18 +143,26 @@ namespace Microsoft.OData.Core.Tests.UriParser
             parser.Settings.FilterLimit.Should().Be(3);
         }
 
-        [Fact]
-        public void FilterLimitIsRespectedForFilter()
+        [Theory]
+        [InlineData("http://host/People?filter=1 eq 1", true)]
+        [InlineData("http://host/People?$filter=1 eq 1", true)]
+        [InlineData("http://host/People?$filter=1 eq 1", false)]
+        public void FilterLimitIsRespectedForFilter(string fullUriString, bool enableNoDollarQueryOptions)
         {
-            ODataUriParser parser = new ODataUriParser(HardCodedTestModel.TestModel, ServiceRoot, new Uri("http://host/People?$filter=1 eq 1")) { Settings = { FilterLimit = 0 } };
+            ODataUriParser parser = new ODataUriParser(HardCodedTestModel.TestModel, ServiceRoot, new Uri(fullUriString)) { Settings = { FilterLimit = 0 } };
+            parser.EnableNoDollarQueryOptions = enableNoDollarQueryOptions;
             Action parseWithLimit = () => parser.ParseFilter();
             parseWithLimit.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.UriQueryExpressionParser_TooDeep);
         }
 
-        [Fact]
-        public void FilterLimitWithInterestingTreeStructures()
+        [Theory]
+        [InlineData("http://host/People?filter=MyDog/Color eq 'Brown' or MyDog/Color eq 'White'", true)]
+        [InlineData("http://host/People?$filter=MyDog/Color eq 'Brown' or MyDog/Color eq 'White'", true)]
+        [InlineData("http://host/People?$filter=MyDog/Color eq 'Brown' or MyDog/Color eq 'White'", false)]
+        public void FilterLimitWithInterestingTreeStructures(string fullUriString, bool enableNoDollarQueryOptions)
         {
-            ODataUriParser parser = new ODataUriParser(HardCodedTestModel.TestModel, ServiceRoot, new Uri("http://host/People?$filter=MyDog/Color eq 'Brown' or MyDog/Color eq 'White'")) { Settings = { FilterLimit = 5 } };
+            ODataUriParser parser = new ODataUriParser(HardCodedTestModel.TestModel, ServiceRoot, new Uri(fullUriString)) { Settings = { FilterLimit = 5 } };
+            parser.EnableNoDollarQueryOptions = enableNoDollarQueryOptions;
             Action parseWithLimit = () => parser.ParseFilter();
             parseWithLimit.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.UriQueryExpressionParser_TooDeep);
         }
@@ -156,18 +181,26 @@ namespace Microsoft.OData.Core.Tests.UriParser
             parser.Settings.OrderByLimit.Should().Be(3);
         }
 
-        [Fact]
-        public void OrderByLimitIsRespectedForOrderby()
+        [Theory]
+        [InlineData("http://host/People?orderby= 1 eq 1", true)]
+        [InlineData("http://host/People?$orderby= 1 eq 1", true)]
+        [InlineData("http://host/People?$orderby= 1 eq 1", false)]
+        public void OrderByLimitIsRespectedForOrderby(string fullUriString, bool enableNoDollarQueryOptions)
         {
-            ODataUriParser parser = new ODataUriParser(HardCodedTestModel.TestModel, ServiceRoot, new Uri("http://host/People?$orderby= 1 eq 1")) { Settings = { OrderByLimit = 0 } };
+            ODataUriParser parser = new ODataUriParser(HardCodedTestModel.TestModel, ServiceRoot, new Uri(fullUriString)) { Settings = { OrderByLimit = 0 } };
+            parser.EnableNoDollarQueryOptions = enableNoDollarQueryOptions;
             Action parseWithLimit = () => parser.ParseOrderBy();
             parseWithLimit.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.UriQueryExpressionParser_TooDeep);
         }
 
-        [Fact]
-        public void OrderByLimitWithInterestingTreeStructures()
+        [Theory]
+        [InlineData("http://host/People?orderby=MyDog/MyPeople/MyDog/MyPeople/MyPaintings asc", true)]
+        [InlineData("http://host/People?$orderby=MyDog/MyPeople/MyDog/MyPeople/MyPaintings asc", true)]
+        [InlineData("http://host/People?$orderby=MyDog/MyPeople/MyDog/MyPeople/MyPaintings asc", false)]
+        public void OrderByLimitWithInterestingTreeStructures(string fullUriString, bool enableNoDollarQueryOptions)
         {
-            ODataUriParser parser = new ODataUriParser(HardCodedTestModel.TestModel, ServiceRoot, new Uri("http://host/People?$orderby=MyDog/MyPeople/MyDog/MyPeople/MyPaintings asc")) { Settings = { OrderByLimit = 5 } };
+            ODataUriParser parser = new ODataUriParser(HardCodedTestModel.TestModel, ServiceRoot, new Uri(fullUriString)) { Settings = { OrderByLimit = 5 } };
+            parser.EnableNoDollarQueryOptions = enableNoDollarQueryOptions;
             Action parseWithLimit = () => parser.ParseOrderBy();
             parseWithLimit.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.UriQueryExpressionParser_TooDeep);
         }
@@ -208,10 +241,14 @@ namespace Microsoft.OData.Core.Tests.UriParser
             parser.Settings.SelectExpandLimit.Should().Be(3);
         }
 
-        [Fact]
-        public void SelectExpandLimitIsRespectedForSelectExpand()
+        [Theory]
+        [InlineData("http://host/People?select=MyDog&expand=MyDog(select=color)", true)]
+        [InlineData("http://host/People?$select=MyDog&$expand=MyDog($select=color)", true)]
+        [InlineData("http://host/People?$select=MyDog&$expand=MyDog($select=color)", false)]
+        public void SelectExpandLimitIsRespectedForSelectExpand(string fullUriString, bool enableNoDollarQueryOptions)
         {
-            ODataUriParser parser = new ODataUriParser(HardCodedTestModel.TestModel, ServiceRoot, new Uri("http://host/People?$select=MyDog&$expand=MyDog($select=color)")) { Settings = { SelectExpandLimit = 0 } };
+            ODataUriParser parser = new ODataUriParser(HardCodedTestModel.TestModel, ServiceRoot, new Uri(fullUriString)) { Settings = { SelectExpandLimit = 0 } };
+            parser.EnableNoDollarQueryOptions = enableNoDollarQueryOptions;
             Action parseWithLimit = () => parser.ParseSelectAndExpand();
             parseWithLimit.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.UriQueryExpressionParser_TooDeep);
         }
@@ -226,16 +263,16 @@ namespace Microsoft.OData.Core.Tests.UriParser
 
         #region Default value tests
         [Fact]
-        public void DefaultUrlConventionsShouldBeDefault()
+        public void DefaultKeyDelimiterShouldBeSlash()
         {
-            new ODataUriParser(HardCodedTestModel.TestModel, ServiceRoot, FullUri).UrlConventions.Should().BeSameAs(ODataUrlConventions.Default);
+            new ODataUriParser(HardCodedTestModel.TestModel, ServiceRoot, FullUri).UrlKeyDelimiter.Should().BeSameAs(ODataUrlKeyDelimiter.Slash);
         }
 
         [Fact]
-        public void UrlConventionsCannotBeSetToNull()
+        public void ODataUrlKeyDelimiterCannotBeSetToNull()
         {
-            Action setToNull = () => new ODataUriParser(HardCodedTestModel.TestModel, ServiceRoot, FullUri).UrlConventions = null;
-            setToNull.ShouldThrow<ArgumentNullException>().WithMessage("UrlConventions", ComparisonMode.EquivalentSubstring);
+            Action setToNull = () => new ODataUriParser(HardCodedTestModel.TestModel, ServiceRoot, FullUri).UrlKeyDelimiter = null;
+            setToNull.ShouldThrow<ArgumentNullException>().Where(e => e.Message.Contains("UrlKeyDelimiter"));
         }
 
         [Fact]
@@ -258,10 +295,14 @@ namespace Microsoft.OData.Core.Tests.UriParser
         }
         #endregion
 
-        [Fact]
-        public void ParseSelectExpandForContainment()
+        [Theory]
+        [InlineData("http://host/People?select=MyContainedDog&expand=MyContainedDog", true)]
+        [InlineData("http://host/People?$select=MyContainedDog&$expand=MyContainedDog", true)]
+        [InlineData("http://host/People?$select=MyContainedDog&$expand=MyContainedDog", false)]
+        public void ParseSelectExpandForContainment(string fullUriString, bool enableNoDollarQueryOptions)
         {
-            ODataUriParser parser = new ODataUriParser(HardCodedTestModel.TestModel, ServiceRoot, new Uri("http://host/People?$select=MyContainedDog&$expand=MyContainedDog")) { Settings = { SelectExpandLimit = 5 } };
+            ODataUriParser parser = new ODataUriParser(HardCodedTestModel.TestModel, ServiceRoot, new Uri(fullUriString)) { Settings = { SelectExpandLimit = 5 } };
+            parser.EnableNoDollarQueryOptions = enableNoDollarQueryOptions;
             SelectExpandClause containedSelectExpandClause = parser.ParseSelectAndExpand();
             IEnumerator<SelectItem> enumerator = containedSelectExpandClause.SelectedItems.GetEnumerator();
             enumerator.MoveNext();
@@ -275,7 +316,7 @@ namespace Microsoft.OData.Core.Tests.UriParser
         public void AbsoluteUriInConstructorShouldThrow()
         {
             Action action = () => new ODataUriParser(HardCodedTestModel.TestModel, new Uri("http://host/People(1)"));
-            action.ShouldThrow<ODataException>().WithMessage(Strings.UriParser_FullUriMustBeRelative);
+            action.ShouldThrow<ODataException>().WithMessage(Strings.UriParser_RelativeUriMustBeRelative);
         }
 
         [Fact]
@@ -337,10 +378,14 @@ namespace Microsoft.OData.Core.Tests.UriParser
             path.LastSegment.ShouldBeEntitySetSegment(HardCodedTestModel.GetPeopleSet());
         }
 
-        [Fact]
-        public void ParseQueryOptionsShouldWork()
+        [Theory]
+        [InlineData("People?filter=MyDog/Color eq 'Brown'&select=ID&expand=MyDog&orderby=ID&top=1&skip=2&count=true&search=FA&$unknown=&$unknownvalue&skiptoken=abc&deltatoken=def", true)]
+        [InlineData("People?$filter=MyDog/Color eq 'Brown'&$select=ID&$expand=MyDog&$orderby=ID&$top=1&$skip=2&$count=true&$search=FA&$unknown=&$unknownvalue&$skiptoken=abc&$deltatoken=def", true)]
+        [InlineData("People?$filter=MyDog/Color eq 'Brown'&$select=ID&$expand=MyDog&$orderby=ID&$top=1&$skip=2&$count=true&$search=FA&$unknown=&$unknownvalue&$skiptoken=abc&$deltatoken=def", false)]
+        public void ParseQueryOptionsShouldWork(string relativeUriString, bool enableNoDollarQueryOptions)
         {
-            var parser = new ODataUriParser(HardCodedTestModel.TestModel, new Uri("People?$filter=MyDog/Color eq 'Brown'&$select=ID&$expand=MyDog&$orderby=ID&$top=1&$skip=2&$count=true&$search=FA&$unknow=&$unknowvalue&$skiptoken=abc&$deltatoken=def", UriKind.Relative));
+            var parser = new ODataUriParser(HardCodedTestModel.TestModel, new Uri(relativeUriString, UriKind.Relative));
+            parser.EnableNoDollarQueryOptions = enableNoDollarQueryOptions;
             parser.ParseSelectAndExpand().Should().NotBeNull();
             parser.ParseFilter().Should().NotBeNull();
             parser.ParseOrderBy().Should().NotBeNull();
@@ -353,9 +398,87 @@ namespace Microsoft.OData.Core.Tests.UriParser
         }
 
         [Fact]
-        public void ParseDeltaTokenWithKindsofCharactorsShouldWork()
+        public void ParseNoDollarQueryOptionsShouldReturnNullIfNoDollarQueryOptionsIsNotEnabled()
         {
-            var parser = new ODataUriParser(HardCodedTestModel.TestModel, new Uri("People?$deltatoken=Start@Next_Chunk:From%26$To=Here!?()*+%2B,1-._~;", UriKind.Relative));
+            var parser = new ODataUriParser(HardCodedTestModel.TestModel, new Uri("People?filter=MyDog/Color eq 'Brown'&select=ID&expand=MyDog&orderby=ID&top=1&skip=2&count=true&search=FA&$unknown=&$unknownvalue&skiptoken=abc&deltatoken=def", UriKind.Relative));
+            parser.ParseFilter().Should().BeNull();
+            parser.ParseSelectAndExpand().Should().BeNull();
+            parser.ParseOrderBy().Should().BeNull();
+            parser.ParseTop().Should().Be(null);
+            parser.ParseSkip().Should().Be(null);
+            parser.ParseCount().Should().Be(null);
+            parser.ParseSearch().Should().BeNull();
+            parser.ParseSkipToken().Should().BeNull();
+            parser.ParseDeltaToken().Should().BeNull();
+        }
+
+        [Theory]
+        // Should not throw duplicate query options exception.
+        // 1. Case sensitive, No dollar enabled.
+        [InlineData("People?select=ID&$SELECT=Name", false, true, "select", false)]
+        [InlineData("People?SELECT=ID&$select=Name", false, true, "select", false)]
+        [InlineData("People?SELECT=ID&$SELECT=Name", false, true, "select", false)]
+        // 2. Case insensitive, No dollar not enabled.
+        [InlineData("People?$select=ID&select=Name", true, false, "$select", false)]
+        [InlineData("People?$select=ID&SELECT=Name", true, false, "$select", false)]
+
+        // 3. Case insensitive, No dollar not enabled, be treated as custom query options.
+        // Duplication is allowed.
+        [InlineData("People?select=ID&select=Name", false, false, "select", false)]
+
+        // 4. Should throw duplicate query options exception.
+        [InlineData("People?$select=ID&$select=Name", false, false, "$select", true)]
+        [InlineData("People?select=ID&$select=Name", false, true, "select", true)]
+        [InlineData("People?$select=ID&$SELECT=Name", true, false, "$select", true)]
+        [InlineData("People?$select=ID&$SELECT=Name", true, true, "select", true)]
+        [InlineData("People?select=ID&$SELECT=Name", true, true, "select", true)]
+        public void ParseShouldFailWithDuplicateQueryOptions(string relativeUriString, bool enableCaseInsensitive, bool enableNoDollarQueryOptions, string queryOptionName, bool shouldThrow)
+        {
+            Uri relativeUri = new Uri(relativeUriString, UriKind.Relative);
+            Action action = () => new ODataUriParser(HardCodedTestModel.TestModel, relativeUri)
+            {
+                Resolver = new ODataUriResolver()
+                {
+                    EnableCaseInsensitive = enableCaseInsensitive
+                },
+
+                EnableNoDollarQueryOptions = enableNoDollarQueryOptions
+
+            }.ParseSelectAndExpand();
+
+            if (shouldThrow)
+            {
+                action.ShouldThrow<ODataException>().WithMessage(Strings.QueryOptionUtils_QueryParameterMustBeSpecifiedOnce(
+                    enableNoDollarQueryOptions ? string.Format(CultureInfo.InvariantCulture, "${0}/{0}", queryOptionName) : queryOptionName));
+            }
+            else
+            {
+                action.ShouldNotThrow<ODataException>();
+            }
+        }
+
+        [Theory]
+        [InlineData("People?expand=MyDog(select=ID,Color)")]
+        [InlineData("People?$expand=MyDog(select=ID,Color)")]
+        [InlineData("People?expand=MyDog(expand=MyPeople(select=Name))")]
+        [InlineData("People?expand=MyDog($expand=MyPeople($select=Name))")]
+        [InlineData("People?expand=MyDog(select=Color;expand=MyPeople(select=Name;count=true))")]
+        [InlineData("People?$expand=MyDog($select=Color;expand=MyPeople(select=Name;$count=true))")]
+        public void ParseNestedNoDollarQueryOptionsShouldWorkWhenNoDollarQueryOptionsIsEnabled(string relativeUriString)
+        {
+            var parser = new ODataUriParser(HardCodedTestModel.TestModel, new Uri(relativeUriString, UriKind.Relative));
+            parser.EnableNoDollarQueryOptions = true;
+            parser.ParseSelectAndExpand().Should().NotBeNull();
+        }
+
+        [Theory]
+        [InlineData("People?deltatoken=Start@Next_Chunk:From%26$To=Here!?()*+%2B,1-._~;", true)]
+        [InlineData("People?$deltatoken=Start@Next_Chunk:From%26$To=Here!?()*+%2B,1-._~;", true)]
+        [InlineData("People?$deltatoken=Start@Next_Chunk:From%26$To=Here!?()*+%2B,1-._~;", false)]
+        public void ParseDeltaTokenWithKindsofCharactorsShouldWork(string relativeUriString, bool enableNoDollarQueryOptions)
+        {
+            var parser = new ODataUriParser(HardCodedTestModel.TestModel, new Uri(relativeUriString, UriKind.Relative));
+            parser.EnableNoDollarQueryOptions = enableNoDollarQueryOptions;
             parser.ParseDeltaToken().Should().Be("Start@Next_Chunk:From&$To=Here!?()* +,1-._~;");
         }
 
@@ -412,23 +535,21 @@ namespace Microsoft.OData.Core.Tests.UriParser
 
         #region Composite key parse test
 
-        public enum TestUrlConvention
+        public enum TestODataUrlKeyDelimiter
         {
-            Default,
-            KeyAsSegment,
-            ODataSimplified
+            Parentheses,
+            Slash,
         }
 
         [Theory]
-        [InlineData(TestUrlConvention.Default, "http://host/customers('customerId')/orders(customerId='customerId',orderId='orderId')/Test.DetailedOrder/details(customerId='customerId',orderId='orderId',id=1)")]
-        [InlineData(TestUrlConvention.Default, "http://host/customers('customerId')/orders('orderId')/Test.DetailedOrder/details(1)")]
-        [InlineData(TestUrlConvention.ODataSimplified, "http://host/customers/customerId/orders/orderId/Test.DetailedOrder/details/1")]
-        [InlineData(TestUrlConvention.KeyAsSegment, "http://host/customers/customerId/orders/orderId/Test.DetailedOrder/details/1")]
-        [InlineData(TestUrlConvention.Default, "http://host/customers('customerId')/orders(customerId='customerId',orderId='orderId')")]
-        [InlineData(TestUrlConvention.Default, "http://host/customers('customerId')/orders('orderId')")]
-        [InlineData(TestUrlConvention.ODataSimplified, "http://host/customers/customerId/orders/orderId")]
-        [InlineData(TestUrlConvention.KeyAsSegment, "http://host/customers/customerId/orders/orderId")]
-        public void ParseCompositeKeyReference(TestUrlConvention testUrlConvention, string fullUrl)
+        [InlineData(TestODataUrlKeyDelimiter.Parentheses, "http://host/customers('customerId')/orders(customerId='customerId',orderId='orderId')/Test.DetailedOrder/details(customerId='customerId',orderId='orderId',id=1)")]
+        [InlineData(TestODataUrlKeyDelimiter.Parentheses, "http://host/customers('customerId')/orders('orderId')/Test.DetailedOrder/details(1)")]
+        [InlineData(TestODataUrlKeyDelimiter.Slash, "http://host/customers/customerId/orders/orderId/Test.DetailedOrder/details/1")]
+        [InlineData(TestODataUrlKeyDelimiter.Parentheses, "http://host/customers('customerId')/orders(customerId='customerId',orderId='orderId')")]
+        [InlineData(TestODataUrlKeyDelimiter.Parentheses, "http://host/customers('customerId')/orders('orderId')")]
+        [InlineData(TestODataUrlKeyDelimiter.Slash, "http://host/customers('customerId')/orders('orderId')")]
+        [InlineData(TestODataUrlKeyDelimiter.Slash, "http://host/customers/customerId/orders/orderId")]
+        public void ParseCompositeKeyReference(TestODataUrlKeyDelimiter testODataUrlKeyDelimiter, string fullUrl)
         {
             var model = new EdmModel();
 
@@ -478,16 +599,13 @@ namespace Microsoft.OData.Core.Tests.UriParser
             model.AddElement(container);
 
             var parser = new ODataUriParser(model, new Uri("http://host"), new Uri(fullUrl));
-            switch (testUrlConvention)
+            switch (testODataUrlKeyDelimiter)
             {
-                case TestUrlConvention.Default:
-                    parser.UrlConventions = ODataUrlConventions.Default;
+                case TestODataUrlKeyDelimiter.Parentheses:
+                    parser.UrlKeyDelimiter = ODataUrlKeyDelimiter.Parentheses;
                     break;
-                case TestUrlConvention.KeyAsSegment:
-                    parser.UrlConventions = ODataUrlConventions.KeyAsSegment;
-                    break;
-                case TestUrlConvention.ODataSimplified:
-                    parser.UrlConventions = ODataUrlConventions.ODataSimplified;
+                case TestODataUrlKeyDelimiter.Slash:
+                    parser.UrlKeyDelimiter = ODataUrlKeyDelimiter.Slash;
                     break;
                 default:
                     Assert.True(false, "Unreachable code path");
@@ -509,6 +627,55 @@ namespace Microsoft.OData.Core.Tests.UriParser
                 new KeyValuePair<string, object>("orderId", "orderId"),
                 new KeyValuePair<string, object>("id", 1));
             }
+        }
+        #endregion
+
+        #region Null EntitySetPath
+
+        [Fact]
+        public void ParsePathFunctionWithNullEntitySetPath()
+        {
+            var model = new EdmModel();
+
+            var customer = new EdmEntityType("Test", "Customer", null, false, false);
+            var customerId = customer.AddStructuralProperty("id", EdmPrimitiveTypeKind.String, false);
+            customer.AddKeys(customerId);
+            model.AddElement(customer);
+
+            var detail = new EdmEntityType("Test", "Detail", null, false, true);
+            detail.AddStructuralProperty("address", EdmPrimitiveTypeKind.String, true);
+            model.AddElement(detail);
+
+            var customerDetail = customer.AddUnidirectionalNavigation(
+                new EdmNavigationPropertyInfo()
+                {
+                    Name = "detail",
+                    Target = detail,
+                    TargetMultiplicity = EdmMultiplicity.One,
+                    ContainsTarget = true
+                });
+
+            // The test is to make sure the ODataUriParser works even though
+            // the entitySetPathExpression is null.
+            var getCurrentCustomer = new EdmFunction(
+                "Test",
+                "getCurrentCustomer",
+                new EdmEntityTypeReference(customer, false),
+                isBound: false,
+                entitySetPathExpression: null,
+                isComposable: true);
+            model.AddElement(getCurrentCustomer);
+
+            var container = new EdmEntityContainer("Test", "Container");
+            var getCurrentCustomerImport = container.AddFunctionImport(getCurrentCustomer);
+            model.AddElement(container);
+
+            var parser = new ODataUriParser(model, new Uri("http://host"), new Uri("http://host/getCurrentCustomer()/detail"));
+            var path = parser.ParsePath();
+            var pathSegmentList = path.ToList();
+            pathSegmentList.Count.Should().Be(2);
+            pathSegmentList[0].ShouldBeOperationImportSegment(getCurrentCustomerImport);
+            pathSegmentList[1].ShouldBeNavigationPropertySegment(customerDetail);
         }
 
         #endregion

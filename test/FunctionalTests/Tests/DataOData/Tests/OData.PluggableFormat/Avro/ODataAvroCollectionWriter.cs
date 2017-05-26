@@ -12,7 +12,7 @@ namespace Microsoft.Test.OData.PluggableFormat.Avro
     using System.Linq;
     using System.Threading.Tasks;
     using Microsoft.Hadoop.Avro.Schema;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
 
     class ODataAvroCollectionWriter : ODataCollectionWriter
     {

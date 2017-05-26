@@ -10,7 +10,7 @@ namespace Microsoft.Test.Taupo.OData.Tests.WriterTests.BatchWriter
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.Test.Taupo.Common;
     using Microsoft.Test.Taupo.OData.Common;
     using Microsoft.Test.Taupo.OData.Writer.Tests.BatchWriter;
@@ -34,7 +34,7 @@ namespace Microsoft.Test.Taupo.OData.Tests.WriterTests.BatchWriter
         private readonly Uri baseUri;
         private readonly int? maxPartsPerBatch;
         private readonly int? maxOperationsPerChangeset;
-        private readonly IODataUrlResolver urlResolver;
+        private readonly IODataPayloadUriConverter urlResolver;
 
         public BatchWriterTestDescriptor(Settings settings, WriterInvocations[] invocations, Dictionary<string, string> expectedHeaders = null, Uri baseUri = null)
         {
@@ -53,7 +53,7 @@ namespace Microsoft.Test.Taupo.OData.Tests.WriterTests.BatchWriter
             this.maxOperationsPerChangeset = maxOperationsPerChangeset;
         }
 
-        public BatchWriterTestDescriptor(Settings settings, InvocationAndOperationDescriptor[] invocationsAndOperationDescriptors, Dictionary<string, string> expectedHeaders = null, Uri baseUri = null, IODataUrlResolver urlResolver = null)
+        public BatchWriterTestDescriptor(Settings settings, InvocationAndOperationDescriptor[] invocationsAndOperationDescriptors, Dictionary<string, string> expectedHeaders = null, Uri baseUri = null, IODataPayloadUriConverter urlResolver = null)
         {
             this.TestDescriptorSettings = settings;
             this.invocationsAndOperationDescriptors = invocationsAndOperationDescriptors;
@@ -138,7 +138,7 @@ namespace Microsoft.Test.Taupo.OData.Tests.WriterTests.BatchWriter
             get { return this.expectedResultCallback; }
         }
 
-        internal IODataUrlResolver UrlResolver
+        internal IODataPayloadUriConverter UrlResolver
         {
             get { return this.urlResolver; }
         }

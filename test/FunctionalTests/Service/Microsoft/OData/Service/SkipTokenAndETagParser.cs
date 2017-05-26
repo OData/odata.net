@@ -8,7 +8,7 @@ namespace Microsoft.OData.Service
 {
     using System.Collections.Generic;
     using System.Diagnostics;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.OData.Service.Parsing;
 
     /// <summary>Provides a class used to parse a skip-token or etag.</summary>
@@ -31,7 +31,7 @@ namespace Microsoft.OData.Service
             List<object> positionalValues = new List<object>();
             values = positionalValues;
 
-#if ODATALIB
+#if ODATA_CORE
             ExpressionLexer lexer = new ExpressionLexer(text, true, false);
 #else
             ExpressionLexer lexer = new ExpressionLexer(text);

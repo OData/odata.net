@@ -14,7 +14,7 @@ namespace AstoriaUnitTests.Tests
     using System.Net;
     using AstoriaUnitTests.ClientExtensions;
     using FluentAssertions;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
     using System.Text;
 
@@ -103,25 +103,6 @@ namespace AstoriaUnitTests.Tests
             exception.Message.Should().Be("web exception on getting response");
         }
 
-        [TestMethod]
-        public void DataServiceTransportExceptionShouldNotBeSurfacedWhenGetResponseThrowsOnNonBatch()
-        {
-            int statusCode = 400;
-            var exception = TopLevelErrorPayloadWithTransportException(statusCode, (context)=> context.CreateQuery<NorthwindModel.Products>("Products").ToList());
-
-            exception.InnerException.Should().BeOfType<DataServiceClientException>();
-            exception.InnerException.Message.Should().Be("<?xml version=\"1.0\" encoding=\"utf-8\" standalone=\"yes\"?>\r\n<error xmlns=\"http://docs.oasis-open.org/odata/ns/metadata\">\r\n  <code></code>\r\n  <message xml:lang=\"en-US\">This error must show up in the error returned below</message>\r\n</error>");
-        }
-
-        [TestMethod]
-        public void DataServiceTransportExceptionInnerWebExceptionShouldNotBeSurfacedWhenGetResponseThrowsOnNonBatch()
-        {
-            int statusCode = 200;
-            var exception = TopLevelErrorPayloadWithTransportException(statusCode, (context)=> context.CreateQuery<NorthwindModel.Products>("Products").ToList());
-
-            exception.InnerException.Should().BeOfType<ODataErrorException>();
-            exception.InnerException.Message.Should().Be("This error must show up in the error returned below");
-        }
 
         [TestMethod]
         public void ObjectDisposedExceptionShouldNotBeSurfacedDirectlyOnAddObjectBatchOnFailureInGetStream()
@@ -153,29 +134,6 @@ namespace AstoriaUnitTests.Tests
             var test = GetQueryWithInjectedObjectDisposedOnGetStream(false /*BatchExecute*/);
 
             test.ShouldThrow<DataServiceQueryException>().WithInnerException<ObjectDisposedException>().WithInnerMessage("Cannot access a disposed object.\r\nObject name: 'Stream already disposed'.");
-        }
-
-        private static DataServiceQueryException TopLevelErrorPayloadWithTransportException(int statusCode, Action<DataServiceContextWithCustomTransportLayer> contextAction)
-        {
-            IODataRequestMessage requestMessage = new ODataTestMessage();
-
-            TopLevelBatchResponseMessage topLevelResponse = new TopLevelBatchResponseMessage();
-            byte[] payload = Encoding.UTF8.GetBytes("<?xml version=\"1.0\" encoding=\"utf-8\" standalone=\"yes\"?>\r\n<error xmlns=\"http://docs.oasis-open.org/odata/ns/metadata\">\r\n  <code></code>\r\n  <message xml:lang=\"en-US\">This error must show up in the error returned below</message>\r\n</error>");
-            topLevelResponse.SetHeader("OData-Version", "4.0");
-            topLevelResponse.SetHeader("Content-Type", "application/xml");
-            topLevelResponse.SetHeader("Content-Length", payload.Length.ToString());
-            topLevelResponse.StatusCode = statusCode;
-            topLevelResponse.GetStreamFunc = () =>
-            {
-                return new MemoryStream(payload);
-            };
-
-            var context = new DataServiceContextWithCustomTransportLayer(ODataProtocolVersion.V4, () => requestMessage, () => { throw new DataServiceTransportException(topLevelResponse, new WebException()); });
-            context.EnableAtom = true;
-            Action test = () => contextAction(context);
-
-            var exception = test.ShouldThrow<DataServiceQueryException>().And;
-            return exception;
         }
 
         private static Action AddObjectWithInjectedObjectDisposedOnGetStreamO(SaveChangesOptions saveChangesOptions)

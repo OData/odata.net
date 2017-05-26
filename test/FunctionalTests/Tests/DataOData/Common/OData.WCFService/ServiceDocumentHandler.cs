@@ -7,7 +7,7 @@
 namespace Microsoft.Test.Taupo.OData.WCFService
 {
     using System.IO;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
 
     /// <summary>
     /// Class for handling service document requests.

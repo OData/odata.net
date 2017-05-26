@@ -13,9 +13,8 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
     using System.Text;
     using System.Xml;
     using System.Xml.Linq;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Library;
     using Microsoft.OData.Edm.Validation;
     using Microsoft.Test.Taupo.Astoria.Common;
     using Microsoft.Test.Taupo.Astoria.Contracts.Http;
@@ -426,7 +425,6 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
 
             this.ExpectedResultNormalizers = new List<Func<ReaderTestConfiguration, Func<ODataPayloadElement, ODataPayloadElement>>>
             {
-                (tc) => tc.Format == ODataFormat.Atom ? AtomPayloadElementPropertyOrderNormalizer.Normalize : nullFunction,
                 (tc) => nullFunction,
                 (tc) => tc.Format == ODataFormat.Json ? RemoveCollectionNameAnnotationForCollectionPayloadElementVisitor.Visit : nullFunction,
                 (tc) => tc.Format == ODataFormat.Json ? (payloadElement) => JsonLightExpectedPayloadElementNormalizer.Normalize(payloadElement, tc) : nullFunction,
@@ -503,7 +501,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
                 this.PayloadDescriptor.PayloadElement = value;
             }
         }
-        
+
         /// <summary>
         /// A func to create the payload element to compare the results to based on the current test configuration. If this is null the PayloadElement will be used.
         /// </summary>
@@ -536,7 +534,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
         /// <summary>
         /// Optional URL resolver to put on the message.
         /// </summary>
-        public IODataUrlResolver UrlResolver { get; set; }
+        public IODataPayloadUriConverter UrlResolver { get; set; }
 
         /// <summary>true to ignore the order of properties in the payload during comparison; otherwise false.</summary>
         public bool IgnorePropertyOrder { get; set; }
@@ -755,8 +753,8 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
                 List<StringBuilder> stringBuilders = new List<StringBuilder>();
                 List<XmlWriter> xmlWriters = new List<XmlWriter>();
                 IEnumerable<EdmError> errors;
-                this.PayloadEdmModel.SetEdmVersion(Microsoft.OData.Edm.Library.EdmConstants.EdmVersionLatest);
-                this.PayloadEdmModel.TryWriteCsdl(
+                this.PayloadEdmModel.SetEdmVersion(Microsoft.OData.Edm.EdmConstants.EdmVersionLatest);
+                this.PayloadEdmModel.TryWriteSchema(
                     s =>
                     {
                         stringBuilders.Add(new StringBuilder());
@@ -903,14 +901,10 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
             /// <returns>Test configuration based on the batch test configuration with the format modified to apply to the operation in question.</returns>
             private ReaderTestConfiguration GetOperationTestConfiguration(IHttpMessage operation)
             {
-                string contentType = operation.GetHeaderValueIfExists(Microsoft.OData.Core.ODataConstants.ContentTypeHeader);
+                string contentType = operation.GetHeaderValueIfExists(Microsoft.OData.ODataConstants.ContentTypeHeader);
 
                 ODataFormat format = this.batchTestConfiguration.Format;
-                if (IsAtomMimeType(contentType))
-                {
-                    format = ODataFormat.Atom;
-                }
-                else if (IsJsonMimeType(contentType))
+                if (IsJsonMimeType(contentType))
                 {
                     format = ODataFormat.Json;
                 }

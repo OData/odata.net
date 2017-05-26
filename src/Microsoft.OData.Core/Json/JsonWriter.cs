@@ -4,11 +4,7 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-#if SPATIAL
-namespace Microsoft.Data.Spatial
-#else
-namespace Microsoft.OData.Core.Json
-#endif
+namespace Microsoft.OData.Json
 {
     #region Namespaces
     using System;
@@ -17,7 +13,7 @@ namespace Microsoft.OData.Core.Json
     using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
     using System.IO;
-    using Microsoft.OData.Edm.Library;
+    using Microsoft.OData.Edm;
     #endregion Namespaces
 
     /// <summary>
@@ -37,8 +33,8 @@ namespace Microsoft.OData.Core.Json
         private readonly Stack<Scope> scopes;
 
         /// <summary>
-        /// If it is IEEE754Compatible, write quoted string for INT64 and decimal to prevent dota loss;
-        /// otherwise keep number without quots.
+        /// If it is IEEE754Compatible, write quoted string for INT64 and decimal to prevent data loss;
+        /// otherwise keep number without quotes.
         /// </summary>
         private readonly bool isIeee754Compatible;
 
@@ -46,22 +42,10 @@ namespace Microsoft.OData.Core.Json
         /// Creates a new instance of Json writer.
         /// </summary>
         /// <param name="writer">Writer to which text needs to be written.</param>
-        /// <param name="indent">If the output should be indented or not.</param>
-        /// <param name="jsonFormat">The json-based format to use when writing.</param>
         /// <param name="isIeee754Compatible">if it is IEEE754Compatible</param>
-        internal JsonWriter(TextWriter writer, bool indent, ODataFormat jsonFormat, bool isIeee754Compatible)
+        internal JsonWriter(TextWriter writer, bool isIeee754Compatible)
         {
-            Debug.Assert(jsonFormat == ODataFormat.Json, "Expected a json-based format.");
-
-            if (indent == true)
-            {
-                this.writer = new IndentedTextWriter(writer);
-            }
-            else
-            {
-                this.writer = new NonIndentedTextWriter(writer);
-            }
-
+            this.writer = new NonIndentedTextWriter(writer);
             this.scopes = new Stack<Scope>();
             this.isIeee754Compatible = isIeee754Compatible;
         }
@@ -239,7 +223,7 @@ namespace Microsoft.OData.Core.Json
         {
             this.WriteValueSeparator();
 
-            // if it is IEEE754Compatible, write numbers with quots; otherwise, write numbers directly.
+            // if it is IEEE754Compatible, write numbers with quotes; otherwise, write numbers directly.
             if (isIeee754Compatible)
             {
                 JsonValueUtils.WriteValue(this.writer, value.ToString(CultureInfo.InvariantCulture));
@@ -278,7 +262,7 @@ namespace Microsoft.OData.Core.Json
         {
             this.WriteValueSeparator();
 
-            // if it is not IEEE754Compatible, write numbers directly without quots;
+            // if it is not IEEE754Compatible, write numbers directly without quotes;
             if (isIeee754Compatible)
             {
                 JsonValueUtils.WriteValue(this.writer, value.ToString(CultureInfo.InvariantCulture));

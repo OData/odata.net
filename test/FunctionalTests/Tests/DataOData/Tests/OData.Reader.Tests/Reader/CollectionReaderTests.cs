@@ -9,7 +9,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
     #region Namespaces
     using System.Collections.Generic;
     using System.Linq;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.Test.Taupo.Astoria.Contracts.OData;
     using Microsoft.Test.Taupo.Common;
     using Microsoft.Test.Taupo.Contracts.EntityModel;
@@ -20,7 +20,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
     using Microsoft.Test.Taupo.OData.Contracts;
     using Microsoft.Test.Taupo.OData.Reader.Tests;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
-    using Microsoft.OData.Edm.Library;
+    using Microsoft.OData.Edm;
     using Microsoft.Test.OData.Utils.ODataLibTest;
     #endregion Namespaces
 
@@ -46,50 +46,6 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
 
             // Generate interesting payloads around the collection
             testDescriptors = testDescriptors.SelectMany(td => this.PayloadGenerator.GenerateReaderPayloads(td));
-            this.CombinatorialEngineProvider.RunCombinations(
-                testDescriptors,
-                this.ReaderTestConfigurationProvider.ExplicitFormatConfigurations,
-                (testDescriptor, testConfiguration) =>
-                {
-                    testDescriptor.RunTest(testConfiguration);
-                });
-        }
-
-        [TestMethod, TestCategory("Reader.Collections"), Variation(Description = "Test the the reading of heterogeneous collection payloads.")]
-        public void HeterogeneousCollectionReaderTest()
-        {
-            EdmModel model = new EdmModel();
-            var cityType = new EdmComplexType("TestModel", "CityType");
-            cityType.AddStructuralProperty("Name", EdmCoreModel.Instance.GetString(true));
-            model.AddElement(cityType);
-
-            var addressType = new EdmComplexType("TestModel", "AddressType");
-            addressType.AddStructuralProperty("Street", EdmCoreModel.Instance.GetString(true));
-            model.AddElement(addressType);
-
-            var testContainer = new EdmEntityContainer("TestModel", "TestContainer");
-            model.AddElement(testContainer);
-            EdmFunction citiesFunction = new EdmFunction("TestModel", "Cities", EdmCoreModel.GetCollection(cityType.ToTypeReference()));
-            model.AddElement(citiesFunction);
-            EdmOperationImport citiesFunctionImport = testContainer.AddFunctionImport("Cities", citiesFunction);
-            model.Fixup();
-            
-            // Add some hand-crafted payloads
-            IEnumerable<PayloadReaderTestDescriptor> testDescriptors = new PayloadReaderTestDescriptor[]
-            {
-                // expected type without type names in the payload and heterogeneous items
-                new PayloadReaderTestDescriptor(this.Settings)
-                {
-                    PayloadElement = new ComplexInstanceCollection(
-                        PayloadBuilder.ComplexValue().Property("Name", PayloadBuilder.PrimitiveValue("Vienna")),
-                        PayloadBuilder.ComplexValue().Property("Street", PayloadBuilder.PrimitiveValue("Am Euro Platz")))
-                        .ExpectedFunctionImport(citiesFunctionImport)
-                        .CollectionName(null),
-                    PayloadEdmModel = model,
-                    ExpectedException = ODataExpectedExceptions.ODataException("ValidationUtils_PropertyDoesNotExistOnType", "Street", "TestModel.CityType"),
-                },
-            };
-
             this.CombinatorialEngineProvider.RunCombinations(
                 testDescriptors,
                 this.ReaderTestConfigurationProvider.ExplicitFormatConfigurations,

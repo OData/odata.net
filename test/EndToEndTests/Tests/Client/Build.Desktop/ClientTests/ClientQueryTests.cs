@@ -392,6 +392,24 @@ namespace Microsoft.Test.OData.Tests.Client
             Assert.AreEqual(2, sentRequestCount);
         }
 
+        [TestMethod]
+        public void DuplicateQueryTest()
+        {
+            var contextWrapper = this.CreateContext();
+            try
+            {
+                contextWrapper.Execute<Person>(new Uri(this.ServiceUri.OriginalString + "/Person?$orderby=PersonId&$orderby=PersonId"));
+                Assert.Fail("Expected Exception not thrown for duplicate odata query options.");
+            }
+            catch (DataServiceQueryException ex)
+            {
+                Assert.AreEqual(400, ex.Response.StatusCode);
+            }
+
+            var entryResults = contextWrapper.Execute<Person>(new Uri(this.ServiceUri.OriginalString + "/Person?nonODataQuery=foo&$filter=PersonId%20eq%200&nonODataQuery=bar"));
+            Assert.AreEqual(1, entryResults.Count());
+        }
+
         //[TestMethod]
         //public void LoadNavigationPropertyAllPagesTest()
         //{

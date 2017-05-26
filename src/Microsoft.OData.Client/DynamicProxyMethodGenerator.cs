@@ -104,7 +104,7 @@ namespace Microsoft.OData.Client
 
                 // Dynamic Method Signature return type:
                 // if method is a constructor, the return type is the reflected type
-                // otherwise, the return type is the method's return type                
+                // otherwise, the return type is the method's return type
                 DynamicMethod dm = CreateDynamicMethod(internalMethodName, methodInfo == null ? method.ReflectedType : methodInfo.ReturnType, parameterTypes);
 
                 ILGenerator g = dm.GetILGenerator();

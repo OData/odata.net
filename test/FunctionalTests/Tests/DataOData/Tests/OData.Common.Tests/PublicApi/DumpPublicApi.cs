@@ -3,7 +3,6 @@
 //      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 // </copyright>
 //---------------------------------------------------------------------
-
 namespace Suites.Data.Test
 {
     using System;
@@ -15,11 +14,12 @@ namespace Suites.Data.Test
     using System.IO;
     using System.Linq;
     using System.Reflection;
+    using System.Runtime.CompilerServices;
     using System.Text;
 
     public class ObjectModelTest
     {
-        private string [] args;
+        private string[] args;
         private List<Assembly> assemblies = new List<Assembly>();
         static public void Main(string[] args) { (new ObjectModelTest(args)).RunDataTest(); }
         public ObjectModelTest(string[] args) { this.args = args; }
@@ -47,9 +47,9 @@ namespace Suites.Data.Test
                 filter = new string[2 + this.assemblies.Count];
                 filter[0] = ", " + typeof(object).Assembly.ToString();
                 filter[1] = ", " + typeof(System.Uri).Assembly.ToString();
-                for(int i = 2; i < filter.Length; i++)
+                for (int i = 2; i < filter.Length; i++)
                 {
-                    filter[i] = ", " + assemblies[i-2].ToString();
+                    filter[i] = ", " + assemblies[i - 2].ToString();
                 }
                 OutputFilter = filter;
             }
@@ -97,7 +97,7 @@ namespace Suites.Data.Test
                     {
                         assembly = Assembly.Load(assemblyList[k]);
                     }
-                    
+
                     assemblies.Add(assembly);
                     typesList.AddRange(assembly.GetTypes());
                 }
@@ -400,6 +400,10 @@ namespace Suites.Data.Test
                         continue;
                     }
                     if (isEnum && (attribute is System.SerializableAttribute))
+                    {
+                        continue;
+                    }
+                    if (attribute is IteratorStateMachineAttribute)
                     {
                         continue;
                     }
@@ -1095,8 +1099,8 @@ namespace Suites.Data.Test
                                 yParameterInfos = ((ConstructorInfo)y).GetParameters();
                                 break;
                             case MemberTypes.Method:
-                                xMethodInfo = (MethodInfo) x;
-                                yMethodInfo = (MethodInfo) y;
+                                xMethodInfo = (MethodInfo)x;
+                                yMethodInfo = (MethodInfo)y;
                                 xParameterInfos = xMethodInfo.GetParameters();
                                 yParameterInfos = yMethodInfo.GetParameters();
                                 break;

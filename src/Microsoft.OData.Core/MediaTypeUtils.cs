@@ -4,7 +4,7 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core
+namespace Microsoft.OData
 {
     #region Namespaces
     using System;
@@ -22,8 +22,8 @@ namespace Microsoft.OData.Core
         /// <summary>An array of all the supported payload kinds.</summary>
         private static readonly ODataPayloadKind[] allSupportedPayloadKinds = new ODataPayloadKind[]
         {
-            ODataPayloadKind.Feed,
-            ODataPayloadKind.Entry,
+            ODataPayloadKind.ResourceSet,
+            ODataPayloadKind.Resource,
             ODataPayloadKind.Property,
             ODataPayloadKind.MetadataDocument,
             ODataPayloadKind.ServiceDocument,
@@ -42,12 +42,12 @@ namespace Microsoft.OData.Core
 
         /// <summary>UTF-8 encoding, without the BOM preamble.</summary>
         /// <remarks>
-        /// While a BOM preamble on UTF8 is generally benign, it seems that some MIME handlers under IE6 will not 
+        /// While a BOM preamble on UTF8 is generally benign, it seems that some MIME handlers under IE6 will not
         /// process the payload correctly when included.
-        /// 
+        ///
         /// Because the data service should include the encoding as part of the Content-Type in the response,
         /// there should be no ambiguity as to what encoding is being used.
-        /// 
+        ///
         /// For further information, see http://www.unicode.org/faq/utf_bom.html#BOM.
         /// </remarks>
         private static readonly UTF8Encoding encodingUtf8NoPreamble = new UTF8Encoding(false, true);
@@ -64,12 +64,12 @@ namespace Microsoft.OData.Core
 
         /// <summary>UTF-8 encoding, without the BOM preamble.</summary>
         /// <remarks>
-        /// While a BOM preamble on UTF8 is generally benign, it seems that some MIME handlers under IE6 will not 
+        /// While a BOM preamble on UTF8 is generally benign, it seems that some MIME handlers under IE6 will not
         /// process the payload correctly when included.
-        /// 
+        ///
         /// Because the data service should include the encoding as part of the Content-Type in the response,
         /// there should be no ambiguity as to what encoding is being used.
-        /// 
+        ///
         /// For further information, see http://www.unicode.org/faq/utf_bom.html#BOM.
         /// </remarks>
         internal static UTF8Encoding EncodingUtf8NoPreamble
@@ -199,7 +199,7 @@ namespace Microsoft.OData.Core
         /// <param name="mediaType">The media type parsed from the <paramref name="contentTypeHeader"/>.</param>
         /// <param name="encoding">The encoding from the content type or the default encoding for the <paramref name="mediaType" />.</param>
         /// <param name="selectedPayloadKind">
-        /// The payload kind that was selected form the list of <paramref name="supportedPayloadKinds"/> for the 
+        /// The payload kind that was selected form the list of <paramref name="supportedPayloadKinds"/> for the
         /// specified <paramref name="contentTypeHeader"/>.
         /// </param>
         /// <param name="batchBoundary">The batch boundary read from the content type for batch payloads; otherwise null.</param>
@@ -332,7 +332,7 @@ namespace Microsoft.OData.Core
         /// <param name="mediaType">The media type to check the parameters for.</param>
         /// <param name="parameterName">The name of the expected parameter.</param>
         /// <param name="parameterValue">The value of the expected parameter.</param>
-        /// <returns>true if the <paramref name="mediaType"/> has a parameter called <paramref name="parameterName"/> 
+        /// <returns>true if the <paramref name="mediaType"/> has a parameter called <paramref name="parameterName"/>
         /// with value <paramref name="parameterValue"/>; otherwise false.</returns>
         internal static bool MediaTypeHasParameterWithValue(this ODataMediaType mediaType, string parameterName, string parameterValue)
         {
@@ -418,7 +418,7 @@ namespace Microsoft.OData.Core
         /// <param name="mediaType">The media type parsed from the <paramref name="contentTypeName"/>.</param>
         /// <param name="encoding">The encoding from the content type or the default encoding for the <paramref name="mediaType" />.</param>
         /// <param name="selectedPayloadKind">
-        /// The payload kind that was selected form the list of <paramref name="supportedPayloadKinds"/> for the 
+        /// The payload kind that was selected form the list of <paramref name="supportedPayloadKinds"/> for the
         /// specified <paramref name="contentTypeName"/>.
         /// </param>
         /// <returns>The <see cref="ODataFormat"/> for the <paramref name="contentTypeName"/>.</returns>
@@ -498,8 +498,8 @@ namespace Microsoft.OData.Core
         {
             for (int i = 0; i < supportedMediaTypes.Count; ++i)
             {
-                // NOTE: the supportedMediaTypes are sorted (desc) by format and media type; so the 
-                //       default format and media type is the first entry in the list
+                // NOTE: the supportedMediaTypes are sorted (desc) by format and media type; so the
+                //       default format and media type is the first resource in the list
                 ODataMediaTypeFormat supportedMediaType = supportedMediaTypes[i];
                 if (specifiedFormat == null || supportedMediaType.Format == specifiedFormat)
                 {
@@ -594,7 +594,7 @@ namespace Microsoft.OData.Core
 
         /// <summary>
         /// Converts all occurrences of the 'application/json' media type to 'application/json;odata.metadata=minimal'.
-        /// This is necessary because for an accept header 'application/json 
+        /// This is necessary because for an accept header 'application/json
         /// we want the result to be 'application/json;odata.metadata=minimal'
         /// </summary>
         /// <param name="specifiedTypes">The parsed acceptable media types.</param>
@@ -927,8 +927,8 @@ namespace Microsoft.OData.Core
                     }
                 }
 
-                // if the source does not have parameters or it only has accept extensions 
-                // (parameters after the q value) or we match all the paramters we 
+                // if the source does not have parameters or it only has accept extensions
+                // (parameters after the q value) or we match all the paramters we
                 // have a perfect parameter match.
                 if (!sourceHasParams ||
                     this.SourceTypeParameterCountForMatching == 0 ||

@@ -91,25 +91,32 @@ namespace Microsoft.Test.OData.Services.ODataOperationService
                     ID = 0,
                     OrderDate = new DateTimeOffset(2011, 5, 29, 14, 21, 12, TimeSpan.FromHours(-8)),
                     Notes = new List<string>{"1111", "child"},
-                  
+                    OrderDetails = new List<OrderDetail>{},
+                    InfoFromCustomer = new InfoFromCustomer(){ CustomerMessage = "XXL" }
                 },
                 new Order()
                 {
                     ID = 1,
                     OrderDate = new DateTimeOffset(2011, 3, 4, 16, 3, 57, TimeSpan.FromHours(-8)),
                     Notes = new List<string>(),
+                    OrderDetails = new List<OrderDetail>{ new OrderDetail { Quantity = 1, UnitPrice = 1.0f }}
                 },
                 new Order()
                 {
                     ID = 2,
                     OrderDate = new DateTimeOffset(2011, 3, 4, 16, 3, 57, TimeSpan.FromHours(-8)),
                     Notes = new List<string>{"1111", "parent"},
+                    OrderDetails = new List<OrderDetail>{ new OrderDetail { Quantity = 1, UnitPrice = 1.0f }},
+                    InfoFromCustomer = new InfoFromCustomer(){ CustomerMessage = "XXL" }
+
                 },
                 new Order()
                 {
                     ID = 3,
                     OrderDate = new DateTimeOffset(2011, 3, 4, 16, 3, 57, TimeSpan.FromHours(-8)),
                     Notes = new List<string>{"child", "parent"},
+                    OrderDetails = new List<OrderDetail>{ new OrderDetail { Quantity = 1, UnitPrice = 1.0f }},
+                    InfoFromCustomer = new InfoFromCustomer(){ CustomerMessage = "XXL" }
                 },
             });
 

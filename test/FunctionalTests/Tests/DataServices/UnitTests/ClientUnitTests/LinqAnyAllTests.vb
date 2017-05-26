@@ -33,7 +33,7 @@ Public Class AnyAllFilterTests
                 request.StartService()
 
                 Dim ctx = New DataServiceContext(request.ServiceRoot, ODataProtocolVersion.V4)
-                ctx.Format.UseAtom()
+                'ctx.Format.UseAtom()
                 AddHandler ctx.SendingRequest2, AddressOf SendingRequestHandler
                 Dim customers = ctx.CreateQuery(Of Customer)("Customers")
 
@@ -108,7 +108,7 @@ Public Class AnyAllFilterTests
     Public Sub FilterCollectionWithAnyAll()
 
         Dim ctx = New DataServiceContext(New System.Uri("http://localhost"), ODataProtocolVersion.V4)
-        ctx.Format.UseAtom()
+        'ctx.Format.UseAtom()
 
         Dim values = ctx.CreateQuery(Of EntityWithCollections)("Values")
         Dim testCases = _MakeArray(
@@ -191,7 +191,7 @@ Public Class AnyAllFilterTests
     <TestCategory("Partition1")> <TestMethod()>
     Public Sub FilterNavigationWithAnyAllMovieModel()
         Dim ctx = New DataServiceContext(New System.Uri("http://localhost"), ODataProtocolVersion.V4)
-        ctx.Format.UseAtom()
+        'ctx.Format.UseAtom()
         ctx.ResolveName = Function(type) "NS." & type.Name
 
         Dim movies = ctx.CreateQuery(Of Movie)("Movies")

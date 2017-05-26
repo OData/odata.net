@@ -21,7 +21,7 @@ namespace Microsoft.OData.Service
 #if ASTORIA_FF_CALLBACKS    
     using System.ServiceModel.Syndication;
 #endif
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.OData.Service.Caching;
     using Microsoft.OData.Service.Providers;
     using Microsoft.OData.Service.Serializers;
@@ -188,8 +188,8 @@ namespace Microsoft.OData.Service
 
         /// <summary>
         /// Public func to wrap the current DataServiceODataWriter with custom one to intercept 
-        /// WCF Data Services calls to ODataWriter. This enables seeing the ODataFeed/ODataEntry/
-        /// ODataNavigationLink instances that gets passed to underlying instance.
+        /// WCF Data Services calls to ODataWriter. This enables seeing the ODataResourceSet/ODataResource/
+        /// ODataNestedResourceInfo instances that gets passed to underlying instance.
         /// </summary>
         public Func<ODataWriter, DataServiceODataWriter> ODataWriterFactory { get; set; }
 

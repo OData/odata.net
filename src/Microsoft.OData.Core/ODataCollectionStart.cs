@@ -4,7 +4,7 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core
+namespace Microsoft.OData
 {
     using System;
 
@@ -41,7 +41,7 @@ namespace Microsoft.OData.Core
             get;
             set;
         }
-        
+
         /// <summary>
         /// Provides additional serialization information to the <see cref="ODataCollectionWriter"/> for this <see cref="ODataCollectionStart"/>.
         /// </summary>

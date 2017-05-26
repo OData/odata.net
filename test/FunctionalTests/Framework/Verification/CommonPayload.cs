@@ -41,33 +41,11 @@ namespace System.Data.Test.Astoria
 
             switch (format)
             {
-                case SerializationFormatKind.Atom:
-                case SerializationFormatKind.PlainXml:
-                case SerializationFormatKind.Default:
-                    return new XMLPayload(rr);
-
                 case SerializationFormatKind.JSON:
                     return new JSONPayload(rr);
             }
 
             throw new Exception("Unrecognized format");
-        }
-
-        public static CommonPayload CreateCommonPayload(AstoriaRequest request, string responsePayload)
-        {
-            if (request == null)
-                throw new ArgumentNullException("request");
-
-            AstoriaResponse response = new AstoriaResponse(request);
-            response.Payload = responsePayload;
-
-            return CreateCommonPayload(response);
-        }
-
-        public static void ComparePrimitiveValuesStringAndString(string expected, Type expectedType, string actual, bool valueUri, SerializationFormatKind serializationKind, bool throwOnError)
-        {
-            object expectedObject = DeserializeStringToObject(expected, expectedType, valueUri, serializationKind);
-            ComparePrimitiveValuesObjectAndString(expectedObject, expectedType, actual, valueUri, serializationKind, throwOnError);
         }
 
         public static void ComparePrimitiveValuesObjectAndString(object expected, Type expectedType, string actual, bool valueUri, SerializationFormatKind serializationKind, bool throwOnError)

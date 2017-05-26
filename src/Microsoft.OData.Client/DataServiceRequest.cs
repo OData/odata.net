@@ -13,7 +13,7 @@ namespace Microsoft.OData.Client
     using System.Linq;
     using System.Net;
     using System.Xml;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
 
     /// <summary>non-generic placeholder for generic implementation</summary>
     public abstract class DataServiceRequest
@@ -338,8 +338,8 @@ namespace Microsoft.OData.Client
 
 #if PORTABLELIB
             // Empty Memorystream will be set when posting null operation parameters
-            return string.CompareOrdinal(XmlConstants.HttpMethodPost, qc.HttpMethod) == 0 
-                ? new QueryResult(source, method, this, requestMessage, requestInfo, callback, state, new ContentStream(new MemoryStream(), false /*isKnownMemoryStream*/)) 
+            return string.CompareOrdinal(XmlConstants.HttpMethodPost, qc.HttpMethod) == 0
+                ? new QueryResult(source, method, this, requestMessage, requestInfo, callback, state, new ContentStream(new MemoryStream(), false /*isKnownMemoryStream*/))
                 : new QueryResult(source, method, this, requestMessage, requestInfo, callback, state);
 #else
             return new QueryResult(source, method, this, requestMessage, requestInfo, callback, state);

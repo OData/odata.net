@@ -24,7 +24,7 @@ namespace AstoriaUnitTests
         [TestMethod]
         public void VerifyODataLibReaderTestCategories()
         {
-            var validCategoryNames = new[] 
+            var validCategoryNames = new[]
             {
                 "Reader.Atom",
                 "Reader.Batch",
@@ -64,6 +64,7 @@ namespace AstoriaUnitTests
             VerifyTestCategoryAttributes("Microsoft.Data.ServerUnitTests2.UnitTests.dll", new[] { "Partition1", "Partition2" });
         }
 
+        [Ignore] // Remove Atom
         [TestMethod]
         public void VerifyWebClientUnitTestsCategories()
         {
@@ -74,11 +75,11 @@ namespace AstoriaUnitTests
         {
             string assemblyLocation = Path.Combine(TestUtil.SuiteBinDirectory, assemblyName);
             Assembly currentAssembly = Assembly.LoadFrom(assemblyLocation);
-            
+
             foreach (Type type in currentAssembly.GetTypes())
             {
                 foreach (MethodInfo methodInfo in type.GetMethods())
-                {                   
+                {
                     if (methodInfo.IsDefined(typeof(TestMethodAttribute), true))
                     {
                         Assert.IsTrue(methodInfo.IsDefined(typeof(TestCategoryAttribute), true), "Test Method " + methodInfo.Name + " has no TestCategory attribute and therefore will never run as part of the Check-in Tests");
@@ -88,12 +89,12 @@ namespace AstoriaUnitTests
                         Assert.IsTrue(ValidValueForTestCategory((TestCategoryAttribute)customAttributes.Single(), validCategoryNames), "TestCategory attribute on method " + methodInfo.Name + " has invalid category name");
                     }
                 }
-            }            
+            }
         }
-       
+
         private static bool ValidValueForTestCategory(TestCategoryAttribute attribute, IEnumerable<string> validCategoryNames)
         {
             return attribute.TestCategories.Count(t => validCategoryNames.Contains(t)) == 1;
-        }       
+        }
     }
 }

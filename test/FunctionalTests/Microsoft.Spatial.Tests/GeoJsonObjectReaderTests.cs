@@ -7,8 +7,6 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using Microsoft.Data.Spatial;
-using Microsoft.Spatial.Tests;
 using Xunit;
 
 namespace Microsoft.Spatial.Tests
@@ -502,7 +500,8 @@ namespace Microsoft.Spatial.Tests
                                           GetJsonMembers(SpatialType.Polygon, arrayOfArrayMultipleElements, crs)
                                       };
 
-            members.Add(GeoJsonConstants.GeometriesMemberName, collectionItems.ConvertAll((o) => (object)o));
+            List<object> collectionList = new List<object>(collectionItems);
+            members.Add(GeoJsonConstants.GeometriesMemberName, collectionList);
 
             var actualPipeline = new CallSequenceLoggingPipeline();
             SendToPipeline(members, actualPipeline, true);
@@ -1177,7 +1176,8 @@ namespace Microsoft.Spatial.Tests
             collectionItems.Add(GetJsonMembers(SpatialType.LineString, arrayOfMultiplePositions, null));
             collectionItems.Add(GetJsonMembers(SpatialType.Polygon, arrayOfArrayMultipleElements, null));
 
-            members.Add(GeoJsonConstants.GeometriesMemberName, collectionItems.ConvertAll((o) => (object)o));
+            List<object> collectionList = new List<object>(collectionItems);
+            members.Add(GeoJsonConstants.GeometriesMemberName, collectionList);
 
             var actualPipeline = new CallSequenceLoggingPipeline();
             SendToPipeline(members, actualPipeline, isGeography);

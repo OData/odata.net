@@ -4,14 +4,13 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.Data.Spatial
+namespace Microsoft.Spatial
 {
     using System;
     using System.Collections;
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Globalization;
-    using Microsoft.Spatial;
 
     /// <summary>
     /// The spatial reader that can read from a pre parsed GeoJson payload
@@ -403,7 +402,7 @@ namespace Microsoft.Data.Spatial
             {
                 if (EnumerableAny(contentMembers))
                 {
-                    // non-empty shape            
+                    // non-empty shape
                     switch (spatialType)
                     {
                         case SpatialType.Point:
@@ -437,7 +436,7 @@ namespace Microsoft.Data.Spatial
                     }
                 }
             }
-            
+
             /// <summary>
             /// Translates the coordinates member value of a Point object into method calls on the spatial pipeline.
             /// </summary>
@@ -546,7 +545,7 @@ namespace Microsoft.Data.Spatial
                 {
                     throw new FormatException(Strings.GeoJsonReader_InvalidPosition);
                 }
-               
+
                 if (first)
                 {
                     this.pipeline.BeginFigure(x, y, z, m);

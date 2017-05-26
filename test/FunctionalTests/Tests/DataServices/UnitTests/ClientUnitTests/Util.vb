@@ -21,12 +21,12 @@ Imports System.Threading
 
 Module DataServiceContextExtensions
 
-    <System.Runtime.CompilerServices.Extension()> _
+    <System.Runtime.CompilerServices.Extension()>
     Public Function CreateUri(Of T)(ByVal ctx As DataServiceContext, ByVal request As String) As DataServiceRequest(Of T)
         Return ctx.CreateUri(Of T)(request, False)
     End Function
 
-    <System.Runtime.CompilerServices.Extension()> _
+    <System.Runtime.CompilerServices.Extension()>
     Public Function CreateUri(Of T)(ByVal ctx As DataServiceContext, ByVal request As String, ByVal combine As Boolean) As DataServiceRequest(Of T)
         Dim requestUri = New Uri(request, UriKind.RelativeOrAbsolute)
         If combine Then
@@ -39,18 +39,18 @@ Module DataServiceContextExtensions
         Return New DataServiceRequest(Of T)(requestUri)
     End Function
 
-    <System.Runtime.CompilerServices.Extension()> _
+    <System.Runtime.CompilerServices.Extension()>
     Public Function Execute(Of T)(ByVal ctx As DataServiceContext, ByVal request As String) As IEnumerable(Of T)
         Dim requestUri = New Uri(request, UriKind.RelativeOrAbsolute)
         Return ctx.Execute(Of T)(requestUri)
     End Function
 
-    <System.Runtime.CompilerServices.Extension()> _
+    <System.Runtime.CompilerServices.Extension()>
     Public Function Execute(Of T)(ByVal ctx As DataServiceContext, ByVal request As DataServiceRequest(Of T)) As IEnumerable(Of T)
         Return ctx.Execute(Of T)(request.RequestUri)
     End Function
 
-    <System.Runtime.CompilerServices.Extension()> _
+    <System.Runtime.CompilerServices.Extension()>
     Public Function QueryCount(ByVal response As DataServiceResponse) As Int32
         Dim count As Int32
         For Each query As QueryOperationResponse In response
@@ -65,7 +65,7 @@ End Module
 
 Partial Public Class ClientModule
 
-    <TestClass()> _
+    <TestClass()>
     Public Class Util
 
         Private testContextInstance As TestContext
@@ -84,7 +84,7 @@ Partial Public Class ClientModule
         End Property
 
 
-        <AssemblyCleanup()> _
+        <AssemblyCleanup()>
         Public Shared Sub AssemblyCleanup()
             AstoriaUnitTests.Tests.LocalWebServerHelper.AssemblyCleanup()
         End Sub
@@ -139,10 +139,6 @@ Partial Public Class ClientModule
             Return CreateReader(stream, Encoding.UTF8)
         End Function
 
-        Public Shared Function CreateTextReader(ByVal stream As Stream) As TextReader
-            Return New StreamReader(stream)
-        End Function
-
         Public Shared Function CreateReader(ByVal stream As Stream, ByVal encoding As Encoding) As XmlReader
             Dim name = GetType(DataServiceContext).FullName.Replace("DataServiceContext", "XmlUtil")
             Dim util As Type = GetType(DataServiceContext).Assembly.GetType(name, True, False)
@@ -150,49 +146,9 @@ Partial Public Class ClientModule
             Return CType(result, XmlReader)
         End Function
 
-        Public Shared Function EnumerateAtom(ByVal type As Type, ByVal element As XDocument) As System.Collections.IEnumerable
-            Return EnumerateAtom(type, element.ToString())
-        End Function
-
-        Public Shared Function EnumerateAtom(ByVal type As Type, ByVal element As XElement) As System.Collections.IEnumerable
-            Return EnumerateAtom(type, element.ToString())
-        End Function
-
-        Public Shared Function EnumerateAtom(ByVal type As Type, ByVal xmlText As String) As System.Collections.IEnumerable
-            Return EnumerateAtom(type, xmlText, MergeOption.NoTracking).Enumerable
-        End Function
-
-        Public Shared Function GetAtomResults(ByVal type As Type, ByVal xml As XContainer, ByVal merge As MergeOption) As AtomEnumerationResults
-            Return EnumerateAtom(type, xml.ToString(), merge)
-        End Function
-
-        Public Shared Function GetAtomResults(ByVal ctx As DataServiceContext, ByVal type As Type, ByVal xml As XContainer, ByVal merge As MergeOption) As AtomEnumerationResults
-            Return EnumerateAtom(ctx, type, xml.ToString(), merge)
-        End Function
-
-        Public Shared Function EnumerateAtom(ByVal ctx As DataServiceContext, ByVal type As Type, ByVal xmlText As String, ByVal merge As MergeOption) As AtomEnumerationResults
-            Dim materializer As Type = GetMaterializerType(type)
-            Dim deserializationInfo = AstoriaUnitTests.Tests.ProjectionTests.CreateDeserializationInfo(ctx)
-
-            Dim x As System.Collections.IEnumerable = AstoriaUnitTests.Tests.ProjectionTests.CreateMaterializeAtom(ctx, xmlText, type)
-
-            Dim result As AtomEnumerationResults = New AtomEnumerationResults()
-            result.Context = ctx
-            result.Enumerable = x
-            Return result
-        End Function
-
-        Public Shared Function EnumerateAtom(ByVal type As Type, ByVal xmlText As String, ByVal merge As MergeOption) As AtomEnumerationResults
-            Dim ctx As New DataServiceContext(New Uri("http://localhost/"))
-            ctx.EnableAtom = True
-            ctx.MergeOption = merge
-
-            Return EnumerateAtom(ctx, type, xmlText, merge)
-        End Function
-
         Public Shared Function GetMaterializerType(ByVal type As Type) As System.Type
             Dim name As String = GetType(Microsoft.OData.Client.DataServiceQuery).AssemblyQualifiedName
-            Dim materializer As Type = type.GetType(name.Replace("DataServiceQuery", "MaterializeAtom"))
+            Dim materializer As Type = Type.GetType(name.Replace("DataServiceQuery", "MaterializeAtom"))
             Return materializer
         End Function
 
@@ -427,11 +383,11 @@ Partial Public Class ClientModule
             Return DirectCast(result, T)
         End Function
 
-        Public Shared Sub VerifyLink( _
-            ByVal ctx As DataServiceContext, _
-            ByVal source As Object, _
-            ByVal propertyName As String, _
-            ByVal target As Object, _
+        Public Shared Sub VerifyLink(
+            ByVal ctx As DataServiceContext,
+            ByVal source As Object,
+            ByVal propertyName As String,
+            ByVal target As Object,
             ByVal state As EntityStates)
 
             For Each link In ctx.Links
@@ -443,8 +399,8 @@ Partial Public Class ClientModule
             Assert.Fail("Count't find the link in the ctx or the state of the link is different")
         End Sub
 
-        Public Shared Sub VerifyNoLink( _
-            ByVal ctx As DataServiceContext, _
+        Public Shared Sub VerifyNoLink(
+            ByVal ctx As DataServiceContext,
             ByVal entity As Object)
 
             For Each link In ctx.Links
@@ -455,9 +411,9 @@ Partial Public Class ClientModule
             Next
         End Sub
 
-        Public Shared Sub VerifyObject( _
-            ByVal ctx As DataServiceContext, _
-            ByVal entity As Object, _
+        Public Shared Sub VerifyObject(
+            ByVal ctx As DataServiceContext,
+            ByVal entity As Object,
             ByVal state As EntityStates)
 
             Dim descriptor = ctx.GetEntityDescriptor(entity)
@@ -470,8 +426,8 @@ Partial Public Class ClientModule
             End If
         End Sub
 
-        Public Shared Sub VerifyObjectNotPresent( _
-           ByVal ctx As DataServiceContext, _
+        Public Shared Sub VerifyObjectNotPresent(
+           ByVal ctx As DataServiceContext,
            ByVal entity As Object)
             Dim descriptor = ctx.GetEntityDescriptor(entity)
             If Not descriptor Is Nothing Then
@@ -488,36 +444,36 @@ Partial Public Class ClientModule
             AsynchronousPoll
         End Enum
 
-        Public Shared ExecutionMethods As ExecutionMethod() = New ExecutionMethod() { _
-            ExecutionMethod.Synchronous, _
-            ExecutionMethod.AsynchronousEnd, _
-            ExecutionMethod.AsynchronousWait, _
-            ExecutionMethod.AsynchronousCallback, _
-            ExecutionMethod.AsynchronousPoll _
+        Public Shared ExecutionMethods As ExecutionMethod() = New ExecutionMethod() {
+            ExecutionMethod.Synchronous,
+            ExecutionMethod.AsynchronousEnd,
+            ExecutionMethod.AsynchronousWait,
+            ExecutionMethod.AsynchronousCallback,
+            ExecutionMethod.AsynchronousPoll
         }
 
-        Public Shared Function ExecuteAsynchronously(ByVal beginFunction As Func(Of AsyncCallback, Object, IAsyncResult), _
-                                                     ByVal endFunction As Func(Of IAsyncResult, Object), _
+        Public Shared Function ExecuteAsynchronously(ByVal beginFunction As Func(Of AsyncCallback, Object, IAsyncResult),
+                                                     ByVal endFunction As Func(Of IAsyncResult, Object),
                                                      ByVal executionMethod As ExecutionMethod) As Object
             Dim asyncResult As IAsyncResult
             Dim waitState As ExecuteMethodAsyncWaitState
 
             Select Case executionMethod
-                Case executionMethod.Synchronous
+                Case ExecutionMethod.Synchronous
                     Debug.Fail("Only asynchronous calls are supported by ExecuteAsynchronously.")
                     Throw New AssertFailedException()
 
-                Case executionMethod.AsynchronousEnd
+                Case ExecutionMethod.AsynchronousEnd
                     asyncResult = beginFunction(Nothing, Nothing)
                     Return endFunction(asyncResult)
 
-                Case executionMethod.AsynchronousWait
+                Case ExecutionMethod.AsynchronousWait
                     asyncResult = beginFunction(Nothing, Nothing)
                     asyncResult.AsyncWaitHandle.WaitOne()
                     Assert.IsTrue(asyncResult.IsCompleted)
                     Return endFunction(asyncResult)
 
-                Case executionMethod.AsynchronousCallback
+                Case ExecutionMethod.AsynchronousCallback
                     waitState = New ExecuteMethodAsyncWaitState()
                     'waitState.Context = context
                     waitState.EndFunction = endFunction
@@ -528,7 +484,7 @@ Partial Public Class ClientModule
                     End If
                     Return waitState.Result
 
-                Case executionMethod.AsynchronousPoll
+                Case ExecutionMethod.AsynchronousPoll
                     asyncResult = beginFunction(Nothing, Nothing)
                     Do
                         System.Threading.Thread.Sleep(0)
@@ -564,7 +520,7 @@ Partial Public Class ClientModule
         End Class
 #End Region
 
-        Public Shared Function SaveChanges(ByVal context As DataServiceContext, _
+        Public Shared Function SaveChanges(ByVal context As DataServiceContext,
                                            ByVal executionMethod As ExecutionMethod) _
                                            As DataServiceResponse
             Dim beginFunction = Function(callback As AsyncCallback, state As Object) _
@@ -581,8 +537,8 @@ Partial Public Class ClientModule
             End Select
         End Function
 
-        Public Shared Function SaveChanges(ByVal context As DataServiceContext, _
-                                           ByVal options As SaveChangesOptions, _
+        Public Shared Function SaveChanges(ByVal context As DataServiceContext,
+                                           ByVal options As SaveChangesOptions,
                                            ByVal executionMethod As ExecutionMethod) _
                                            As DataServiceResponse
             Dim beginFunction = Function(callback As AsyncCallback, state As Object) _
@@ -599,9 +555,9 @@ Partial Public Class ClientModule
             End Select
         End Function
 
-        Public Shared Function GetReadStream(ByVal context As DataServiceContext, _
-                                             ByVal entity As Object, _
-                                             ByVal args As DataServiceRequestArgs, _
+        Public Shared Function GetReadStream(ByVal context As DataServiceContext,
+                                             ByVal entity As Object,
+                                             ByVal args As DataServiceRequestArgs,
                                              ByVal executionMethod As ExecutionMethod) _
                                              As DataServiceStreamResponse
             Dim beginFunction = Function(callback As AsyncCallback, state As Object) _
@@ -618,8 +574,8 @@ Partial Public Class ClientModule
             End Select
         End Function
 
-        Public Shared Function ExecuteBatch(ByVal context As DataServiceContext, _
-                                            ByVal queries As DataServiceQuery(), _
+        Public Shared Function ExecuteBatch(ByVal context As DataServiceContext,
+                                            ByVal queries As DataServiceQuery(),
                                             ByVal executionMethod As ExecutionMethod) _
                                             As DataServiceResponse
             Dim beginFunction = Function(callback As AsyncCallback, state As Object) _

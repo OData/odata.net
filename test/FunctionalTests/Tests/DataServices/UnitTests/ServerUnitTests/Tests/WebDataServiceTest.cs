@@ -104,7 +104,7 @@ namespace AstoriaUnitTests.Tests
             object actualHost = operationContext.GetType().GetField("hostInterface", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(operationContext);
             Assert.AreSame(host, actualHost);
         }
-
+        [Ignore] // Remove Atom
         [TestMethod]
         public void WebDataServiceCsdlMimeTypes()
         {
@@ -188,7 +188,7 @@ namespace AstoriaUnitTests.Tests
                 }
             });
         }
-
+        [Ignore] // Remove Atom
         [TestMethod]
         public void WebDataServiceWcfEntryPoint()
         {
@@ -234,7 +234,7 @@ namespace AstoriaUnitTests.Tests
                 TestUtil.AssertExceptionStatusCode(exception, 500, "500 expected for dangling property.");
             }
         }
-
+        [Ignore] // Remove Atom
         [TestMethod]
         public void WebDataServiceDocumentTest()
         {
@@ -281,7 +281,7 @@ namespace AstoriaUnitTests.Tests
                 }
             });
         }
-        
+        [Ignore] // Remove Atom
         [TestMethod]
         public void WebDataServiceDocumentJsonLightTest()
         {
@@ -473,7 +473,7 @@ namespace AstoriaUnitTests.Tests
                 Assert.IsTrue(list.Count > 0, "MimeType attributes present in attributed custom data context.");
             }
         }
-
+        [Ignore] // Remove Atom
         [TestMethod]
         public void ProcessGetTest()
         {
@@ -493,7 +493,7 @@ namespace AstoriaUnitTests.Tests
                 }
             }
         }
-
+        [Ignore] // Remove Atom
         [TestMethod]
         public void SerializeResponseBodyAcceptTypeTest()
         {
@@ -603,7 +603,7 @@ namespace AstoriaUnitTests.Tests
                 }
             });
         }
-
+        [Ignore] // Remove Atom
         [TestMethod]
         public void DataServiceHostServiceRootUriTest()
         {

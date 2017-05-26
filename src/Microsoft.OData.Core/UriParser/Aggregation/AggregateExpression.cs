@@ -4,10 +4,10 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core.UriParser.Aggregation
+namespace Microsoft.OData.UriParser.Aggregation
 {
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Core.UriParser.Semantic;
+    using Microsoft.OData.UriParser;
 
     /// <summary>
     /// A aggregate expression representing a aggregation transformation.
@@ -15,6 +15,8 @@ namespace Microsoft.OData.Core.UriParser.Aggregation
     public sealed class AggregateExpression
     {
         private readonly AggregationMethod method;
+
+        private readonly AggregationMethodDefinition methodDefinition;
 
         private readonly SingleValueNode expression;
 
@@ -33,12 +35,25 @@ namespace Microsoft.OData.Core.UriParser.Aggregation
         {
             ExceptionUtils.CheckArgumentNotNull(expression, "expression");
             ExceptionUtils.CheckArgumentNotNull(alias, "alias");
-            ExceptionUtils.CheckArgumentNotNull(typeReference, "typeReference");
 
             this.expression = expression;
             this.method = method;
             this.alias = alias;
+            //// TypeRefrence is null for dynamic properties
             this.typeReference = typeReference;
+        }
+
+        /// <summary>
+        /// Create a AggregateExpression.
+        /// </summary>
+        /// <param name="expression">The aggregation expression.</param>
+        /// <param name="methodDefinition">The <see cref="AggregationMethodDefinition"/>.</param>
+        /// <param name="alias">The aggregation alias.</param>
+        /// <param name="typeReference">The <see cref="IEdmTypeReference"/> of this aggregate expression.</param>
+        public AggregateExpression(SingleValueNode expression, AggregationMethodDefinition methodDefinition, string alias, IEdmTypeReference typeReference)
+            : this(expression, methodDefinition.MethodKind, alias, typeReference)
+        {
+            this.methodDefinition = methodDefinition;
         }
 
         /// <summary>
@@ -46,7 +61,7 @@ namespace Microsoft.OData.Core.UriParser.Aggregation
         /// </summary>
         public SingleValueNode Expression
         {
-            get 
+            get
             {
                 return expression;
             }
@@ -60,6 +75,17 @@ namespace Microsoft.OData.Core.UriParser.Aggregation
             get
             {
                 return method;
+            }
+        }
+
+        /// <summary>
+        /// Gets the <see cref="AggregationMethodDefinition"/>.
+        /// </summary>
+        public AggregationMethodDefinition MethodDefinition
+        {
+            get
+            {
+                return methodDefinition;
             }
         }
 

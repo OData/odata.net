@@ -8,7 +8,7 @@ namespace Microsoft.Test.OData.Tests.Client.CollectionTests
 {
     using System;
 using System.Linq;
-using Microsoft.OData.Core;
+using Microsoft.OData;
 using Microsoft.OData.Edm;
 using Microsoft.Test.OData.Services.TestServices;
 using Microsoft.Test.OData.Tests.Client.Common;
@@ -34,7 +34,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
         [TestMethod]
         public void CollectionNullableFalseInStructrualProperty()
         {
-            var personToAdd = new ODataEntry
+            var personToAdd = new ODataResource
             {
                 TypeName = NameSpacePrefix + "Customer",
                 Properties = new[] 
@@ -53,7 +53,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
         [TestMethod]
         public void CollectionNullableTrueInStructrualProperty()
         {
-            var personToAdd = new ODataEntry
+            var personToAdd = new ODataResource
             {
                 TypeName = NameSpacePrefix + "Customer",
                 Properties = new[] 
@@ -71,12 +71,10 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
         /// Update entity with null element in collection 
         /// testProperty is a structual property and its collection value contains null element 
         /// </summary>
-        private void UpdateEntityWithCollectionContainsNull(ODataEntry personToAdd, String testProperty)
+        private void UpdateEntityWithCollectionContainsNull(ODataResource personToAdd, String testProperty)
         {
             var settings = new ODataMessageWriterSettings();
-            settings.PayloadBaseUri = ServiceBaseUri;
-            settings.AutoComputePayloadMetadataInJson = true;
-
+            settings.BaseUri = ServiceBaseUri;
             var customerType = Model.FindDeclaredType(NameSpacePrefix + "Customer") as IEdmEntityType;
             var customerSet = Model.EntityContainer.FindEntitySet("Customers");
 
@@ -104,7 +102,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
                     //write request message
                     using (var messageWriter = new ODataMessageWriter(requestMessage, settings, Model))
                     {
-                        var odataWriter = messageWriter.CreateODataEntryWriter(customerSet, customerType);
+                        var odataWriter = messageWriter.CreateODataResourceWriter(customerSet, customerType);
                         odataWriter.WriteStart(personToAdd);
                         odataWriter.WriteEnd();
                     }
@@ -114,7 +112,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
                     // verify the update
                     Assert.AreEqual(204, responseMessage.StatusCode);
-                    ODataEntry updatedProduct = this.QueryEntityItem("Customers(1)") as ODataEntry;
+                    ODataResource updatedProduct = this.QueryEntityItem("Customers(1)") as ODataResource;
                     ODataCollectionValue testCollection = updatedProduct.Properties.Single(p => p.Name == testProperty).Value as ODataCollectionValue;
                     ODataCollectionValue expectValue = personToAdd.Properties.Single(p => p.Name == testProperty).Value as ODataCollectionValue;
                     var actIter = testCollection.Items.GetEnumerator();
@@ -152,10 +150,10 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
             {
                 using (var messageReader = new ODataMessageReader(queryResponseMessage, readerSettings, Model))
                 {
-                    var reader = messageReader.CreateODataEntryReader();
+                    var reader = messageReader.CreateODataResourceReader();
                     while (reader.Read())
                     {
-                        if (reader.State == ODataReaderState.EntryEnd)
+                        if (reader.State == ODataReaderState.ResourceEnd)
                         {
                             item = reader.Item;
                         }

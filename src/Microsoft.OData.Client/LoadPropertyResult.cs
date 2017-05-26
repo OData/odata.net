@@ -73,7 +73,7 @@ namespace Microsoft.OData.Client
                 throw Error.InvalidOperation(Strings.Context_NoLoadWithInsertEnd);
             }
 
-            ClientPropertyAnnotation property = type.GetProperty(this.propertyName, false);
+            ClientPropertyAnnotation property = type.GetProperty(this.propertyName, UndeclaredPropertyBehavior.ThrowException);
             Type elementType = property.EntityCollectionItemType ?? property.NullablePropertyType;
             try
             {
@@ -116,9 +116,9 @@ namespace Microsoft.OData.Client
             Debug.Assert(type.IsEntityType, "Must be entity type to be contained.");
 
             return this.RequestInfo.GetDeserializationInfoForLoadProperty(
-                null, 
-                context.GetEntityDescriptor(this.entity), 
-                type.GetProperty(this.propertyName, false));
+                null,
+                context.GetEntityDescriptor(this.entity),
+                type.GetProperty(this.propertyName, UndeclaredPropertyBehavior.ThrowException));
         }
 
         /// <summary>
@@ -202,13 +202,10 @@ namespace Microsoft.OData.Client
                 {
                     Debug.Assert(materializer != null, "materializer != null -- otherwise GetMaterializer() returned null rather than empty");
 
-#if ASTORIA_OPEN_OBJECT
-                     object openProperties = null;
-#endif
                     // when SetLink to null, we cannot get materializer because have no-content response.
-                    if (materializer.IsNoContentResponse() 
-                        && property.GetValue(entity) != null 
-                        && context.MergeOption != MergeOption.AppendOnly 
+                    if (materializer.IsNoContentResponse()
+                        && property.GetValue(entity) != null
+                        && context.MergeOption != MergeOption.AppendOnly
                         && context.MergeOption != MergeOption.NoTracking)
                     {
                         property.SetValue(this.entity, null, propertyName, false);
@@ -251,13 +248,9 @@ namespace Microsoft.OData.Client
                             }
                             else
                             {
-#if ASTORIA_OPEN_OBJECT
-                                property.SetValue(this.entity, child, this.propertyName, ref openProperties, false);
-#else
-                                // it is either primitive type, complex type or 1..1 navigation property so we just allow setting the value but not adding. 
+                                // it is either primitive type, complex type or 1..1 navigation property so we just allow setting the value but not adding.
                                 property.SetValue(this.entity, child, this.propertyName, false);
                                 results.Add(child);
-#endif
                             }
                         }
                     }
@@ -291,9 +284,6 @@ namespace Microsoft.OData.Client
 
                 // if this is the data property for a media entry, what comes back
                 // is the raw value (no markup)
-#if ASTORIA_OPEN_OBJECT
-                object openProps = null;
-#endif
                 string mimeType = null;
                 Encoding encoding = null;
                 Type elementType = property.EntityCollectionItemType ?? property.NullablePropertyType;
@@ -317,11 +307,8 @@ namespace Microsoft.OData.Client
                         }
 
                         results.Add(buffer);
-#if ASTORIA_OPEN_OBJECT
-                            property.SetValue(this.entity, buffer, this.propertyName, ref openProps, false);
-#else
+
                         property.SetValue(this.entity, buffer, this.propertyName, false);
-#endif
                     }
                     else
                     {
@@ -331,26 +318,15 @@ namespace Microsoft.OData.Client
                                                     reader.ReadToEnd() :
                                                     ClientConvert.ChangeType(reader.ReadToEnd(), property.PropertyType);
                         results.Add(convertedValue);
-#if ASTORIA_OPEN_OBJECT
-                            property.SetValue(this.entity, convertedValue, this.propertyName, ref openProps, false);
-#else
+
                         property.SetValue(this.entity, convertedValue, this.propertyName, false);
-#endif
                     }
                 }
 
-#if ASTORIA_OPEN_OBJECT
-                Debug.Assert(openProps == null, "These should not be set in this path");
-#endif
                 if (property.MimeTypeProperty != null)
                 {
                     // an implication of this 3rd-arg-null is that mime type properties cannot be open props
-#if ASTORIA_OPEN_OBJECT
-                    property.MimeTypeProperty.SetValue(this.entity, mimeType, null, ref openProps, false);
-                    Debug.Assert(openProps == null, "These should not be set in this path");
-#else
                     property.MimeTypeProperty.SetValue(this.entity, mimeType, null, false);
-#endif
                 }
 
                 return MaterializeAtom.CreateWrapper(context, results);

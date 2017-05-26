@@ -7,7 +7,7 @@
 namespace Microsoft.Test.Taupo.OData.Writer.Tests.Fixups
 {
     using System.Linq;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.Test.Taupo.Astoria.Common;
     using Microsoft.Test.Taupo.Astoria.Contracts.Http;
     using Microsoft.Test.Taupo.Astoria.Contracts.OData;
@@ -42,7 +42,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Fixups
             if (requestOperation.Body != null && requestOperation.Body.RootElement != null)
             {
                 rootElement = requestOperation.Body.RootElement;
-                contentType = requestOperation.GetHeaderValueIfExists(Microsoft.OData.Core.ODataConstants.ContentTypeHeader);
+                contentType = requestOperation.GetHeaderValueIfExists(Microsoft.OData.ODataConstants.ContentTypeHeader);
             }
             
             if (rootElement != null)
@@ -62,7 +62,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Fixups
             if (responseOperation.RootElement != null)
             {
                 rootElement = responseOperation.RootElement;
-                contentType = responseOperation.GetHeaderValueIfExists(Microsoft.OData.Core.ODataConstants.ContentTypeHeader);
+                contentType = responseOperation.GetHeaderValueIfExists(Microsoft.OData.ODataConstants.ContentTypeHeader);
             }
             if (rootElement != null)
             {

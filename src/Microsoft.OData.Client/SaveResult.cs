@@ -16,7 +16,7 @@ namespace Microsoft.OData.Client
     using System.Net;
     using System.Text;
     using System.Collections.Generic;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.OData.Client.Materialization;
     using Microsoft.OData.Client.Metadata;
 
@@ -361,7 +361,7 @@ namespace Microsoft.OData.Client
         protected override MaterializeAtom GetMaterializer(EntityDescriptor entityDescriptor, ResponseInfo responseInfo)
         {
             Debug.Assert(this.cachedResponse.Exception == null && this.cachedResponse.MaterializerEntry != null, "this.cachedResponse.Exception == null && this.cachedResponse.Entry != null");
-            ODataEntry entry = this.cachedResponse.MaterializerEntry == null ? null : this.cachedResponse.MaterializerEntry.Entry;
+            ODataResource entry = this.cachedResponse.MaterializerEntry == null ? null : this.cachedResponse.MaterializerEntry.Entry;
             return new MaterializeAtom(responseInfo, new[] { entry }, entityDescriptor.Entity.GetType(), this.cachedResponse.MaterializerEntry.Format);
         }
 
@@ -449,7 +449,7 @@ namespace Microsoft.OData.Client
                     //   but if the entity was not changed (just the MR changed) no PUT for MLE should be sent
                     if (this.streamRequestKind == StreamRequestKind.PutMediaResource && EntityStates.Unchanged == entityDescriptor.State)
                     {
-                        // Only the MR changed. In this case we also need to mark the descriptor as processed to notify 
+                        // Only the MR changed. In this case we also need to mark the descriptor as processed to notify
                         //   that the content for save has been generated as there's not going to be another request for it.
                         entityDescriptor.ContentGeneratedForSave = true;
                         moveForward = true;
@@ -520,7 +520,7 @@ namespace Microsoft.OData.Client
 
         /// <summary>
         /// Check to see if the resource to be inserted is a media descriptor, and if so
-        /// setup a POST request for the media content first and turn the rest of 
+        /// setup a POST request for the media content first and turn the rest of
         /// the operation into a PUT to update the rest of the properties.
         /// </summary>
         /// <param name="entityDescriptor">The resource to check/process</param>
@@ -618,7 +618,7 @@ namespace Microsoft.OData.Client
                     XmlConstants.HttpMethodPost,
                     Util.ODataVersion4,
                     type.MediaDataMember == null, // sendChunked
-                    true, // applyResponsePreference 
+                    true, // applyResponsePreference
                     headers,
                     entityDescriptor);
             }

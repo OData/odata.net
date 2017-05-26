@@ -6,11 +6,9 @@
 
 using System.Linq;
 using FluentAssertions;
-using Microsoft.OData.Core.UriParser;
-using Microsoft.OData.Core.UriParser.Syntactic;
-using Microsoft.OData.Core.UriParser.TreeNodeKinds;
+using Microsoft.OData.UriParser;
 
-namespace Microsoft.OData.Core.Tests.UriParser
+namespace Microsoft.OData.Tests.UriParser
 {
     /// <summary>
     /// Contains fluent assertion APIs for testing QueryTokens.
@@ -128,10 +126,10 @@ namespace Microsoft.OData.Core.Tests.UriParser
             token.Should().BeOfType<ExpandTermToken>();
             ExpandTermToken expandTermToken = token.As<ExpandTermToken>();
             expandTermToken.Kind.Should().Be(QueryTokenKind.ExpandTerm);
-            expandTermToken.PathToNavProp.Identifier.Should().Be(propertyName);
+            expandTermToken.PathToNavigationProp.Identifier.Should().Be(propertyName);
             if (checkNullParent)
             {
-                expandTermToken.PathToNavProp.NextToken.Should().BeNull();
+                expandTermToken.PathToNavigationProp.NextToken.Should().BeNull();
             }
             return new AndConstraint<ExpandTermToken>(expandTermToken);
         }

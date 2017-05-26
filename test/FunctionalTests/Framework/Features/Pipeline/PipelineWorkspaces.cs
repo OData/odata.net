@@ -161,31 +161,6 @@ namespace System.Data.Test.Astoria
 
             workspace.ServiceContainer.ResourceContainers.Remove("Invoices");
 
-            #region set up etags
-            if (workspace.DataLayerProviderKind != DataLayerProviderKind.LinqToSql)
-            {
-                HashSet<ResourceType> typesWithETags = new HashSet<ResourceType>();
-                foreach (ResourceContainer container in workspace.ServiceContainer.ResourceContainers)
-                {
-                    ResourceType baseType = container.BaseType;
-                    if (!typesWithETags.Add(baseType))
-                        continue;
-
-                    // set up ETags
-                    NodeType[] etagTypes = new NodeType[] { Clr.Types.String, Clr.Types.Int16, Clr.Types.Int32, Clr.Types.Int64, Clr.Types.Guid };
-                    List<ResourceProperty> possibleETagProperties = baseType.Properties.OfType<ResourceProperty>()
-                        .Where(p => etagTypes.Contains(p.Type) && !p.IsComplexType && !p.IsNavigation && p.PrimaryKey == null
-                            && p.Facets.IsDeclaredProperty && !p.Facets.FixedLength && p.ResourceType == baseType
-                            && p.Facets.UnderlyingType == UnderlyingType.Same && !p.Facets.IsStoreBlob
-                            && (p.Type != Clr.Types.String || (p.Facets.MaxSize.HasValue && p.Facets.MaxSize.Value < 512)))
-                        .ToList();
-
-                    if (possibleETagProperties.Any())
-                        baseType.Facets.Add(NodeFacet.Attribute(new ConcurrencyAttribute(baseType, possibleETagProperties.Choose(2).Select(p => p.Name).ToArray())));
-                }
-            }
-            #endregion
-
             #region set up blobs
             if (Versioning.Server.SupportsLiveFeatures && workspace.DataLayerProviderKind != DataLayerProviderKind.LinqToSql)
             {    

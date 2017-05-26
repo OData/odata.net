@@ -10,12 +10,12 @@ namespace AstoriaUnitTests.Stubs
 
     using System;
     using System.Collections.Generic;
-    using Microsoft.OData.Client;
-    using Microsoft.OData.Service;
     using System.Reflection;
-    using Microsoft.OData.Service.Providers;
+    using Microsoft.OData.Client;
+    using Microsoft.OData;
+    using Microsoft.OData.Service;
     using test = System.Data.Test.Astoria;
-    using Microsoft.OData.Core;
+    using BindingFlags = System.Reflection.BindingFlags;
 
     #endregion Namespaces
 
@@ -70,7 +70,7 @@ namespace AstoriaUnitTests.Stubs
             configuration.DisableValidationOnMetadataWrite = OpenWebDataServiceHelper.DisableValidationOnMetadataWrite;
             configuration.UseVerboseErrors = OpenWebDataServiceHelper.ForceVerboseErrors;
             configuration.EnableTypeConversion = OpenWebDataServiceHelper.EnableTypeConversion;
-            
+
             if (OpenWebDataServiceHelper.MaxBatchCount.Value.HasValue)
             {
                 configuration.MaxBatchCount = OpenWebDataServiceHelper.MaxBatchCount.Value.Value;
@@ -107,7 +107,9 @@ namespace AstoriaUnitTests.Stubs
             configuration.DataServiceBehavior.AcceptSpatialLiteralsInQuery = OpenWebDataServiceHelper.AcceptSpatialLiteralsInQuery;
             configuration.DataServiceBehavior.AcceptReplaceFunctionInQuery = OpenWebDataServiceHelper.AcceptReplaceFunctionInQuery;
 
-            configuration.DataServiceBehavior.UrlConventions = OpenWebDataServiceHelper.GenerateKeyAsSegment ? DataServiceUrlConventions.KeyAsSegment : DataServiceUrlConventions.Default;
+            configuration.DataServiceBehavior.UrlKeyDelimiter = OpenWebDataServiceHelper.GenerateKeyAsSegment
+                ? DataServiceUrlKeyDelimiter.Slash
+                : DataServiceUrlKeyDelimiter.Parentheses;
 
             //configuration.UseV4ExpandSyntax = false;
 
@@ -121,7 +123,7 @@ namespace AstoriaUnitTests.Stubs
     }
 
     /// <summary>Use this class to open access to a web data service.</summary>
-    public class OpenWebDataService<T>: DataService<T>, IServiceProvider
+    public class OpenWebDataService<T> : DataService<T>, IServiceProvider
     {
         public static void InitializeService(DataServiceConfiguration configuration)
         {
@@ -194,7 +196,7 @@ namespace AstoriaUnitTests.Stubs
         public static test.Restorable<Action<DataServiceConfiguration, Type>> PageSizeCustomizer { get { return pageSizeCustomer; } }
 
         private static test.Restorable<bool> includeRelationshipLinksInResponse = new test.Restorable<bool>();
-        public  static test.Restorable<bool> IncludeRelationshipLinksInResponse { get { return includeRelationshipLinksInResponse; } }
+        public static test.Restorable<bool> IncludeRelationshipLinksInResponse { get { return includeRelationshipLinksInResponse; } }
 
         private static test.Restorable<bool> enableFriendlyFeeds = new test.Restorable<bool>();
         public static test.Restorable<bool> EnableFriendlyFeeds { get { return enableFriendlyFeeds; } }
@@ -263,7 +265,7 @@ namespace AstoriaUnitTests.Stubs
         /// <summary>CreateDataSource callback</summary>
         private static test.Restorable<Func<ODataWriter, DataServiceODataWriter>> createODataWriterDelegate = new test.Restorable<Func<ODataWriter, DataServiceODataWriter>>();
         public static test.Restorable<Func<ODataWriter, DataServiceODataWriter>> CreateODataWriterDelegate { get { return createODataWriterDelegate; } }
-        
+
         public static object GetService<T>(Type serviceType)
         {
             if (GetServiceCustomizer.Value != null)

@@ -1,21 +1,21 @@
 <Schema Namespace="NS1" xmlns="http://docs.oasis-open.org/odata/ns/edm">
   <ComplexType Name="ComplexThing">
-    <Property Name="prop_0" Type="Edm.Geography" Nullable="false" SRID="4326" />
-    <Property Name="prop_1" Type="Edm.GeographyPoint" Nullable="false" SRID="4326" />
-    <Property Name="prop_2" Type="Edm.GeographyPolygon" Nullable="false" SRID="4326" />
-    <Property Name="prop_3" Type="Edm.GeographyLineString" Nullable="false" SRID="4326" />
-    <Property Name="prop_4" Type="Edm.GeographyCollection" Nullable="false" SRID="4326" />
-    <Property Name="prop_5" Type="Edm.GeographyMultiPolygon" Nullable="false" SRID="4326" />
-    <Property Name="prop_6" Type="Edm.GeographyMultiLineString" Nullable="false" SRID="4326" />
-    <Property Name="prop_7" Type="Edm.GeographyMultiPoint" Nullable="false" SRID="4326" />
-    <Property Name="prop_8" Type="Edm.Geometry" Nullable="false" SRID="0" />
-    <Property Name="prop_9" Type="Edm.GeometryPoint" Nullable="false" SRID="0" />
-    <Property Name="prop_10" Type="Edm.GeometryPolygon" Nullable="false" SRID="0" />
-    <Property Name="prop_11" Type="Edm.GeometryLineString" Nullable="false" SRID="0" />
-    <Property Name="prop_12" Type="Edm.GeometryCollection" Nullable="false" SRID="0" />
-    <Property Name="prop_13" Type="Edm.GeometryMultiPolygon" Nullable="false" SRID="0" />
-    <Property Name="prop_14" Type="Edm.GeometryMultiLineString" Nullable="false" SRID="0" />
-    <Property Name="prop_15" Type="Edm.GeometryMultiPoint" Nullable="false" SRID="0" />
+    <Property Name="prop_0" Type="Edm.Geography" Nullable="false" />
+    <Property Name="prop_1" Type="Edm.GeographyPoint" Nullable="false" />
+    <Property Name="prop_2" Type="Edm.GeographyPolygon" Nullable="false" />
+    <Property Name="prop_3" Type="Edm.GeographyLineString" Nullable="false" />
+    <Property Name="prop_4" Type="Edm.GeographyCollection" Nullable="false" />
+    <Property Name="prop_5" Type="Edm.GeographyMultiPolygon" Nullable="false" />
+    <Property Name="prop_6" Type="Edm.GeographyMultiLineString" Nullable="false" />
+    <Property Name="prop_7" Type="Edm.GeographyMultiPoint" Nullable="false" />
+    <Property Name="prop_8" Type="Edm.Geometry" Nullable="false" />
+    <Property Name="prop_9" Type="Edm.GeometryPoint" Nullable="false" />
+    <Property Name="prop_10" Type="Edm.GeometryPolygon" Nullable="false" />
+    <Property Name="prop_11" Type="Edm.GeometryLineString" Nullable="false" />
+    <Property Name="prop_12" Type="Edm.GeometryCollection" Nullable="false" />
+    <Property Name="prop_13" Type="Edm.GeometryMultiPolygon" Nullable="false" />
+    <Property Name="prop_14" Type="Edm.GeometryMultiLineString" Nullable="false" />
+    <Property Name="prop_15" Type="Edm.GeometryMultiPoint" Nullable="false" />
   </ComplexType>
   <EntityType Name="Foo">
     <Key>

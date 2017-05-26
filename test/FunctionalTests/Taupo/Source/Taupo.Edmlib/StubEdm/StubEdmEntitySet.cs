@@ -8,7 +8,7 @@ namespace Microsoft.Test.Taupo.Edmlib.StubEdm
 {
     using System.Collections.Generic;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Library;
+    using Microsoft.OData.Edm.Vocabularies;
 
     /// <summary>
     /// Stub implementation of EdmEntitySet
@@ -68,17 +68,25 @@ namespace Microsoft.Test.Taupo.Edmlib.StubEdm
         /// <summary>
         /// Gets the path that a navigation property targets.
         /// </summary>
-        public OData.Edm.Expressions.IEdmPathExpression Path
+        public IEdmPathExpression Path
         {
             get { return null; }
         }
 
-        /// <summary>
-        /// Sets the navigation target for a particular navigation property.
-        /// </summary>
-        /// <param name="navigationProperty">The navigation property.</param>
-        /// <param name="target">The target entity set.</param>
-        public void SetNavigationTarget(IEdmNavigationProperty navigationProperty, IEdmEntitySet target)
+		/// <summary>
+		/// Sets or gets whether to include in the service document
+		/// </summary>
+		public bool IncludeInServiceDocument
+		{
+			get; set;
+		}
+
+		/// <summary>
+		/// Sets the navigation target for a particular navigation property.
+		/// </summary>
+		/// <param name="navigationProperty">The navigation property.</param>
+		/// <param name="target">The target entity set.</param>
+		public void SetNavigationTarget(IEdmNavigationProperty navigationProperty, IEdmEntitySet target)
         {
             this.navigationTargets[navigationProperty] = target;
 
@@ -104,6 +112,16 @@ namespace Microsoft.Test.Taupo.Edmlib.StubEdm
             {
                 return null;
             }
+        }
+
+        public IEdmNavigationSource FindNavigationTarget(IEdmNavigationProperty navigationProperty, IEdmPathExpression bindingPath)
+        {
+            return FindNavigationTarget(navigationProperty);
+        }
+
+        public IEnumerable<IEdmNavigationPropertyBinding> FindNavigationPropertyBindings(IEdmNavigationProperty navigationProperty)
+        {
+            return null;
         }
     }
 }

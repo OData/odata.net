@@ -10,9 +10,8 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
     using System;
     using System.IO;
     using System.Linq;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Edm.Library;
     using Microsoft.Test.OData.Utils.Common;
     using Microsoft.Test.OData.Utils.ODataLibTest;
     using Microsoft.Test.Taupo.Execution;
@@ -69,6 +68,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
                 });
         }
 
+        [Ignore] // remove undeclared/untyped property case
         [TestMethod, TestCategory("Reader.MessageReader"), Variation(Description = "Verifies correct behavior of constructor of ODataMessageReader in regard to argument validation.")]
         public void MessageReaderConstructorArgumentValidationTest()
         {
@@ -89,27 +89,17 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
                         ODataExpectedExceptions.ODataException("ReaderValidationUtils_MessageReaderSettingsBaseUriMustBeNullOrAbsolute", "foo/"),
                         this.ExceptionVerifier);
 
-                    // Verify the None UndeclaredPropertyBehaviorKinds works on both request and response.
+                    var settings = new ODataMessageReaderSettings();
+
+                    settings.Validations |= ValidationKinds.ThrowOnUndeclaredPropertyForNonOpenType;
                     this.Assert.ExpectedException(
-                        () => settingsAction.Action(message, new ODataMessageReaderSettings { UndeclaredPropertyBehaviorKinds = ODataUndeclaredPropertyBehaviorKinds.None }),
+                        () => settingsAction.Action(message, settings),
                         null,
                         this.ExceptionVerifier);
 
-                    // Verify the IgnoreUndeclaredValueProperty UndeclaredPropertyBehaviorKinds fails on requests.
+                    settings.Validations &= ~ValidationKinds.ThrowOnUndeclaredPropertyForNonOpenType;
                     this.Assert.ExpectedException(
-                        () => settingsAction.Action(message, new ODataMessageReaderSettings { UndeclaredPropertyBehaviorKinds = ODataUndeclaredPropertyBehaviorKinds.IgnoreUndeclaredValueProperty }),
-                        settingsAction.Response ? null : ODataExpectedExceptions.ODataException("ReaderValidationUtils_UndeclaredPropertyBehaviorKindSpecifiedOnRequest"),
-                        this.ExceptionVerifier);
-
-                    // Verify the ReportUndeclaredLinkProperty UndeclaredPropertyBehaviorKinds fails on requests.
-                    this.Assert.ExpectedException(
-                        () => settingsAction.Action(message, new ODataMessageReaderSettings { UndeclaredPropertyBehaviorKinds = ODataUndeclaredPropertyBehaviorKinds.ReportUndeclaredLinkProperty }),
-                        settingsAction.Response ? null : ODataExpectedExceptions.ODataException("ReaderValidationUtils_UndeclaredPropertyBehaviorKindSpecifiedOnRequest"),
-                        this.ExceptionVerifier);
-
-                    // Verify the IgnoreUndeclaredValueProperty | ReportUndeclaredLinkProperty UndeclaredPropertyBehaviorKinds fails on requests.
-                    this.Assert.ExpectedException(
-                        () => settingsAction.Action(message, new ODataMessageReaderSettings { UndeclaredPropertyBehaviorKinds = ODataUndeclaredPropertyBehaviorKinds.IgnoreUndeclaredValueProperty | ODataUndeclaredPropertyBehaviorKinds.ReportUndeclaredLinkProperty }),
+                        () => settingsAction.Action(message, settings),
                         settingsAction.Response ? null : ODataExpectedExceptions.ODataException("ReaderValidationUtils_UndeclaredPropertyBehaviorKindSpecifiedOnRequest"),
                         this.ExceptionVerifier);
                 });
@@ -165,8 +155,8 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
                 });
         }
 
-        [TestMethod, TestCategory("Reader.MessageReader"), Variation(Description = "Verifies correct behavior of CreateFeedReader method in regard to argument validation.")]
-        public void CreateFeedReaderArgumentTest()
+        [TestMethod, TestCategory("Reader.MessageReader"), Variation(Description = "Verifies correct behavior of CreateResourceSetReader method in regard to argument validation.")]
+        public void CreateResourceSetReaderArgumentTest()
         {
             IEdmEntityType entityType = null;
             IEdmComplexType complexType = null;
@@ -180,15 +170,15 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
                     using (ODataMessageReaderTestWrapper messageReader = TestReaderUtils.CreateMessageReader(message, null, testConfiguration))
                     {
                         this.Assert.ExpectedException(
-                            () => messageReader.CreateODataFeedReader(entityType),
+                            () => messageReader.CreateODataResourceSetReader(entityType),
                             ODataExpectedExceptions.ArgumentException("ODataMessageReader_ExpectedTypeSpecifiedWithoutMetadata", "expectedBaseEntityType"),
                             this.ExceptionVerifier);
                     }
                 });
         }
 
-        [TestMethod, TestCategory("Reader.MessageReader"), Variation(Description = "Verifies correct behavior of CreateEntryReader method in regard to argument validation.")]
-        public void CreateEntryReaderArgumentTest()
+        [TestMethod, TestCategory("Reader.MessageReader"), Variation(Description = "Verifies correct behavior of CreateResourceReader method in regard to argument validation.")]
+        public void CreateResourceReaderArgumentTest()
         {
             IEdmEntityType entityType = null;
             IEdmComplexType complexType = null;
@@ -201,8 +191,8 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
                     TestMessage message = TestReaderUtils.CreateInputMessageFromStream(new TestStream(), testConfiguration);
                     ODataMessageReaderTestWrapper messageReader = TestReaderUtils.CreateMessageReader(message, null, testConfiguration);
                     this.Assert.ExpectedException(
-                        () => messageReader.CreateODataEntryReader(entityType),
-                        ODataExpectedExceptions.ArgumentException("ODataMessageReader_ExpectedTypeSpecifiedWithoutMetadata", "entityType"),
+                        () => messageReader.CreateODataResourceReader(entityType),
+                        ODataExpectedExceptions.ArgumentException("ODataMessageReader_ExpectedTypeSpecifiedWithoutMetadata", "resourceType"),
                         this.ExceptionVerifier);
                 });
         }

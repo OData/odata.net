@@ -51,14 +51,8 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
             TestClientContext.SendingRequest2 += (sender, eventArgs) => ((Microsoft.OData.Client.HttpWebRequestMessage)eventArgs.RequestMessage).SetHeader(TestHeader, "EditLink");
 
             TestClientContext.SendingRequest2 += (sender, eventArgs) => ((Microsoft.OData.Client.HttpWebRequestMessage)eventArgs.RequestMessage).SetHeader("Accept", mimeType);
-            if (mimeType.StartsWith(MimeTypes.ApplicationAtomXml))
-            {
-                TestClientContext.Format.UseAtom();
-            }
-            else
-            {
-                TestClientContext.Format.UseJson(Model);
-            }
+            TestClientContext.Format.UseJson(Model);
+
             var person = TestClientContext.People.Where(p => p.PersonID == 2).SingleOrDefault();
             var stringOfErrorMessage = "";
             try
@@ -104,14 +98,9 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
             TestClientContext.SendingRequest2 += (sender, eventArgs) => ((Microsoft.OData.Client.HttpWebRequestMessage)eventArgs.RequestMessage).SetHeader(TestHeader, "IsTransient");
 
             TestClientContext.SendingRequest2 += (sender, eventArgs) => ((Microsoft.OData.Client.HttpWebRequestMessage)eventArgs.RequestMessage).SetHeader("Accept", mimeType);
-            if (mimeType.StartsWith(MimeTypes.ApplicationAtomXml))
-            {
-                TestClientContext.Format.UseAtom();
-            }
-            else
-            {
-                TestClientContext.Format.UseJson(Model);
-            }
+
+            TestClientContext.Format.UseJson(Model);
+
             var person = TestClientContext.People.Where(p => p.PersonID == 2).SingleOrDefault();
             Assert.AreEqual(2, person.PersonID, String.Format("Expected PersonID is '2', but actually it is '{0}'", person.PersonID));
             var entityDescriptor = TestClientContext.GetEntityDescriptor(person);
@@ -143,14 +132,7 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
             TestClientContext.SendingRequest2 += (sender, eventArgs) => ((Microsoft.OData.Client.HttpWebRequestMessage)eventArgs.RequestMessage).SetHeader(TestHeader, "IsTransient");
 
             TestClientContext.SendingRequest2 += (sender, eventArgs) => ((Microsoft.OData.Client.HttpWebRequestMessage)eventArgs.RequestMessage).SetHeader("Accept", mimeType);
-            if (mimeType.StartsWith(MimeTypes.ApplicationAtomXml))
-            {
-                TestClientContext.Format.UseAtom();
-            }
-            else
-            {
-                TestClientContext.Format.UseJson(Model);
-            }
+            TestClientContext.Format.UseJson(Model);
 
             var entryResults = TestClientContext.Execute<Person>(new Uri(ServiceBaseUri + "/People?$filter=PersonID eq 1")).ToArray();
             Assert.AreEqual(1, entryResults.Count(), "Unexpected number of Products returned");
@@ -179,18 +161,10 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
         private void LoadProperty(string mimeType)
         {
             TestClientContext.MergeOption = MergeOption.OverwriteChanges;
-
             TestClientContext.SendingRequest2 += (sender, eventArgs) => ((Microsoft.OData.Client.HttpWebRequestMessage)eventArgs.RequestMessage).SetHeader(TestHeader, "ReadLink");
-
             TestClientContext.SendingRequest2 += (sender, eventArgs) => ((Microsoft.OData.Client.HttpWebRequestMessage)eventArgs.RequestMessage).SetHeader("Accept", mimeType);
-            if (mimeType.StartsWith(MimeTypes.ApplicationAtomXml))
-            {
-                TestClientContext.Format.UseAtom();
-            }
-            else
-            {
-                TestClientContext.Format.UseJson(Model);
-            }
+            TestClientContext.Format.UseJson(Model);
+
             var person = TestClientContext.People.Where(p => p.PersonID == 2).SingleOrDefault();
 
             var stringOfErrorMessage = "";
@@ -232,14 +206,8 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
         {
             TestClientContext.MergeOption = MergeOption.OverwriteChanges;
             TestClientContext.SendingRequest2 += (sender, eventArgs) => ((Microsoft.OData.Client.HttpWebRequestMessage)eventArgs.RequestMessage).SetHeader("Accept", mimeType);
-            if (mimeType.StartsWith(MimeTypes.ApplicationAtomXml))
-            {
-                TestClientContext.Format.UseAtom();
-            }
-            else
-            {
-                TestClientContext.Format.UseJson(Model);
-            }
+            TestClientContext.Format.UseJson(Model);
+
             //preparation
             //currently service does not support $expand, so need to query the navigation Orders first
             var uri = new Uri(ServiceBaseUri + "Products(5)/Details");

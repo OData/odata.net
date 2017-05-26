@@ -4,17 +4,13 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-#if !INTERNAL_DROP || ODATALIB
+using System;
+using System.Diagnostics;
+using System.Xml;
+using Microsoft.OData.Metadata;
 
-namespace Microsoft.OData.Core
+namespace Microsoft.OData
 {
-    #region Namespaces
-    using System;
-    using System.Diagnostics;
-    using System.Xml;
-    using Microsoft.OData.Core.Atom;
-    #endregion Namespaces
-
     /// <summary>
     /// Utility methods serializing the xml error payload
     /// </summary>
@@ -40,7 +36,7 @@ namespace Microsoft.OData.Core
             code = error.ErrorCode ?? string.Empty;
             message = error.Message ?? string.Empty;
         }
-        
+
         /// <summary>
         /// Write an error message.
         /// </summary>
@@ -75,17 +71,17 @@ namespace Microsoft.OData.Core
             Debug.Assert(message != null, "message != null");
 
             // <m:error>
-            writer.WriteStartElement(AtomConstants.ODataMetadataNamespacePrefix, AtomConstants.ODataErrorElementName, AtomConstants.ODataMetadataNamespace);
+            writer.WriteStartElement(ODataMetadataConstants.ODataMetadataNamespacePrefix, ODataMetadataConstants.ODataErrorElementName, ODataMetadataConstants.ODataMetadataNamespace);
 
             // <m:code>code</m:code>
-            writer.WriteElementString(AtomConstants.ODataMetadataNamespacePrefix, AtomConstants.ODataErrorCodeElementName, AtomConstants.ODataMetadataNamespace, code);
+            writer.WriteElementString(ODataMetadataConstants.ODataMetadataNamespacePrefix, ODataMetadataConstants.ODataErrorCodeElementName, ODataMetadataConstants.ODataMetadataNamespace, code);
 
             // <m:message>error message</m:message>
-            writer.WriteElementString(AtomConstants.ODataMetadataNamespacePrefix, AtomConstants.ODataErrorMessageElementName, AtomConstants.ODataMetadataNamespace, message);
+            writer.WriteElementString(ODataMetadataConstants.ODataMetadataNamespacePrefix, ODataMetadataConstants.ODataErrorMessageElementName, ODataMetadataConstants.ODataMetadataNamespace, message);
 
             if (innerError != null)
             {
-                WriteXmlInnerError(writer, innerError, AtomConstants.ODataInnerErrorElementName, /* recursionDepth */ 0, maxInnerErrorDepth);
+                WriteXmlInnerError(writer, innerError, ODataMetadataConstants.ODataInnerErrorElementName, /* recursionDepth */ 0, maxInnerErrorDepth);
             }
 
             // </m:error>
@@ -107,7 +103,7 @@ namespace Microsoft.OData.Core
             recursionDepth++;
             if (recursionDepth > maxInnerErrorDepth)
             {
-#if ODATALIB
+#if ODATA_CORE
                 throw new ODataException(Strings.ValidationUtils_RecursionDepthLimitReached(maxInnerErrorDepth));
 #else
                 throw new ODataException(Microsoft.OData.Service.Strings.BadRequest_DeepRecursion(maxInnerErrorDepth));
@@ -115,32 +111,32 @@ namespace Microsoft.OData.Core
             }
 
             // <m:innererror> or <m:internalexception>
-            writer.WriteStartElement(AtomConstants.ODataMetadataNamespacePrefix, innerErrorElementName, AtomConstants.ODataMetadataNamespace);
+            writer.WriteStartElement(ODataMetadataConstants.ODataMetadataNamespacePrefix, innerErrorElementName, ODataMetadataConstants.ODataMetadataNamespace);
 
             //// NOTE: we add empty elements if no information is provided for the message, error type and stack trace
             ////       to stay compatible with Astoria.
 
             // <m:message>...</m:message>
             string errorMessage = innerError.Message ?? String.Empty;
-            writer.WriteStartElement(AtomConstants.ODataInnerErrorMessageElementName, AtomConstants.ODataMetadataNamespace);
+            writer.WriteStartElement(ODataMetadataConstants.ODataInnerErrorMessageElementName, ODataMetadataConstants.ODataMetadataNamespace);
             writer.WriteString(errorMessage);
             writer.WriteEndElement();
 
             // <m:type>...</m:type>
             string errorType = innerError.TypeName ?? string.Empty;
-            writer.WriteStartElement(AtomConstants.ODataInnerErrorTypeElementName, AtomConstants.ODataMetadataNamespace);
+            writer.WriteStartElement(ODataMetadataConstants.ODataInnerErrorTypeElementName, ODataMetadataConstants.ODataMetadataNamespace);
             writer.WriteString(errorType);
             writer.WriteEndElement();
 
             // <m:stacktrace>...</m:stacktrace>
             string errorStackTrace = innerError.StackTrace ?? String.Empty;
-            writer.WriteStartElement(AtomConstants.ODataInnerErrorStackTraceElementName, AtomConstants.ODataMetadataNamespace);
+            writer.WriteStartElement(ODataMetadataConstants.ODataInnerErrorStackTraceElementName, ODataMetadataConstants.ODataMetadataNamespace);
             writer.WriteString(errorStackTrace);
             writer.WriteEndElement();
 
             if (innerError.InnerError != null)
             {
-                WriteXmlInnerError(writer, innerError.InnerError, AtomConstants.ODataInnerErrorInnerErrorElementName, recursionDepth, maxInnerErrorDepth);
+                WriteXmlInnerError(writer, innerError.InnerError, ODataMetadataConstants.ODataInnerErrorInnerErrorElementName, recursionDepth, maxInnerErrorDepth);
             }
 
             // </m:innererror> or </m:internalexception>
@@ -148,5 +144,3 @@ namespace Microsoft.OData.Core
         }
     }
 }
-
-#endif

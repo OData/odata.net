@@ -4,9 +4,8 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core.UriParser.Parsers
+namespace Microsoft.OData.UriParser
 {
-    using Microsoft.OData.Core.UriParser.Syntactic;
     using Microsoft.OData.Edm;
 
     /// <summary>
@@ -24,11 +23,11 @@ namespace Microsoft.OData.Core.UriParser.Parsers
         /// <param name="expandTree">the resulting expand AST</param>
         /// <param name="selectTree">the resulting select AST</param>
         public static void Parse(
-            string selectClause, 
+            string selectClause,
             string expandClause,
             IEdmStructuredType parentEntityType,
-            ODataUriParserConfiguration configuration, 
-            out ExpandToken expandTree, 
+            ODataUriParserConfiguration configuration,
+            out ExpandToken expandTree,
             out SelectToken selectTree)
         {
             SelectExpandParser selectParser = new SelectExpandParser(selectClause, configuration.Settings.SelectExpandLimit, configuration.EnableCaseInsensitiveUriFunctionIdentifier)
@@ -37,7 +36,13 @@ namespace Microsoft.OData.Core.UriParser.Parsers
             };
             selectTree = selectParser.ParseSelect();
 
-            SelectExpandParser expandParser = new SelectExpandParser(configuration.Resolver, expandClause, parentEntityType, configuration.Settings.SelectExpandLimit, configuration.EnableCaseInsensitiveUriFunctionIdentifier)
+            SelectExpandParser expandParser = new SelectExpandParser(
+                configuration.Resolver,
+                expandClause,
+                parentEntityType,
+                configuration.Settings.SelectExpandLimit,
+                configuration.EnableCaseInsensitiveUriFunctionIdentifier,
+                configuration.EnableNoDollarQueryOptions)
             {
                 MaxPathDepth = configuration.Settings.PathLimit,
                 MaxFilterDepth = configuration.Settings.FilterLimit,

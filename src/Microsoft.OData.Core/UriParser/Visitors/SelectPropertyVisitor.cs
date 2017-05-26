@@ -4,19 +4,15 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core.UriParser.Visitors
-{
-    using System.Collections.Generic;
-    using System.Diagnostics;
-    using System.Diagnostics.CodeAnalysis;
-    using System.Linq;
-    using Microsoft.OData.Core.UriParser.Metadata;
-    using Microsoft.OData.Core.UriParser.Parsers;
-    using Microsoft.OData.Core.UriParser.Syntactic;
-    using Microsoft.OData.Edm;
-    using Microsoft.OData.Core.UriParser.Semantic;
-    using ODataErrorStrings = Microsoft.OData.Core.Strings;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
+using System.Linq;
+using Microsoft.OData.Edm;
+using ODataErrorStrings = Microsoft.OData.Strings;
 
+namespace Microsoft.OData.UriParser
+{
     /// <summary>
     /// Visit a Select property and use it to decorate a SelectExpand Tree
     /// </summary>
@@ -61,7 +57,7 @@ namespace Microsoft.OData.Core.UriParser.Visitors
             this.edmType = edmType;
             this.maxDepth = maxDepth;
             this.expandClauseToDecorate = expandClauseToDecorate;
-            this.resolver = resolver ?? ODataUriResolver.Default;
+            this.resolver = resolver;
         }
 
         /// <summary>
@@ -89,7 +85,7 @@ namespace Microsoft.OData.Core.UriParser.Visitors
         public override void Visit(NonSystemToken tokenIn)
         {
             ExceptionUtils.CheckArgumentNotNull(tokenIn, "tokenIn");
-            
+
             // before looking for type segments or paths, handle both of the wildcard cases.
             if (tokenIn.NextToken == null)
             {
@@ -126,7 +122,7 @@ namespace Microsoft.OData.Core.UriParser.Visitors
                 if (tokenIn == null)
                 {
                     throw new ODataException(ODataErrorStrings.SelectPropertyVisitor_SystemTokenInSelect(firstNonTypeToken.Identifier));
-                }  
+                }
             }
 
             // next, create a segment for the first non-type segment in the path.
@@ -137,15 +133,13 @@ namespace Microsoft.OData.Core.UriParser.Visitors
             {
                 pathSoFar.Add(lastSegment);
 
-                bool hasCollectionInPath = false;
-
                 // try create a complex type property path.
                 while (true)
                 {
                     // no need to go on if the current property is not of complex type or collection of complex type.
                     currentLevelType = lastSegment.EdmType as IEdmStructuredType;
                     var collectionType = lastSegment.EdmType as IEdmCollectionType;
-                    if ((currentLevelType == null || currentLevelType.TypeKind != EdmTypeKind.Complex) 
+                    if ((currentLevelType == null || currentLevelType.TypeKind != EdmTypeKind.Complex)
                         && (collectionType == null || collectionType.ElementType.TypeKind() != EdmTypeKind.Complex))
                     {
                         break;
@@ -157,27 +151,24 @@ namespace Microsoft.OData.Core.UriParser.Visitors
                         break;
                     }
 
-                    lastSegment = null;
-
                     // This means last segment a collection of complex type,
-                    // current segment can only be type cast and cannot be proprty name.
+                    // current segment can only be type cast and cannot be property name.
                     if (currentLevelType == null)
                     {
                         currentLevelType = collectionType.ElementType.Definition as IEdmStructuredType;
-                        hasCollectionInPath = true;
                     }
-                    else if (!hasCollectionInPath)
-                    {
-                        // If there is no collection type in the path yet, will try to bind property for the next token
-                        // first try bind the segment as property.
-                        lastSegment = SelectPathSegmentTokenBinder.ConvertNonTypeTokenToSegment(nextToken, this.model,
-                            currentLevelType, resolver);
-                    }
+
+                    // If there is no collection type in the path yet, will try to bind property for the next token
+                    // first try bind the segment as property.
+                    lastSegment = SelectPathSegmentTokenBinder.ConvertNonTypeTokenToSegment(nextToken, this.model,
+                        currentLevelType, resolver);
 
                     // then try bind the segment as type cast.
                     if (lastSegment == null)
                     {
-                        IEdmStructuredType typeFromNextToken = UriEdmHelpers.FindTypeFromModel(this.model, nextToken.Identifier, this.resolver) as IEdmStructuredType;
+                        IEdmStructuredType typeFromNextToken =
+                            UriEdmHelpers.FindTypeFromModel(this.model, nextToken.Identifier, this.resolver) as
+                                IEdmStructuredType;
 
                         if (typeFromNextToken.IsOrInheritsFrom(currentLevelType))
                         {
@@ -218,7 +209,7 @@ namespace Microsoft.OData.Core.UriParser.Visitors
                 }
             }
 
-            this.expandClauseToDecorate.AddToSelectedItems(selectionItem);         
+            this.expandClauseToDecorate.AddToSelectedItems(selectionItem);
         }
     }
 }

@@ -4,7 +4,7 @@ $filter = Brother/Microsoft.Test.Taupo.OData.WCFService.Customer/any(d:d/City ne
 FilterQueryOption
 	ItemType = [Microsoft.Test.Taupo.OData.WCFService.Person Nullable=False]
 	Parameter = 
-	EntityRangeVariable
+	ResourceRangeVariable
 		Name = $it
 		NavigationSource = People
 		TypeReference = [Microsoft.Test.Taupo.OData.WCFService.Person Nullable=False]
@@ -16,15 +16,15 @@ FilterQueryOption
 				Property = City
 				TypeReference = [Edm.String Nullable=True Unicode=True]
 				Source = 
-				EntityRangeVariableReferenceNode
+				ResourceRangeVariableReferenceNode
 					Name = d
 					NavigationSource = Brother
 					TypeReference = [Microsoft.Test.Taupo.OData.WCFService.Customer Nullable=False]
-					Range Variable = Microsoft.OData.Core.UriParser.Semantic.EntityRangeVariable
+					Range Variable = Microsoft.OData.UriParser.ResourceRangeVariable
 		NotEqual
 			Shanghai(Type: [Edm.String Nullable=True Unicode=True])
 		Source = 
-		EntityCollectionCastNode
+		CollectionResourceCastNode
 			Entity Item Type = [Microsoft.Test.Taupo.OData.WCFService.Customer Nullable=False]
 			NavigationSource = Brother
 			Item Type = [Microsoft.Test.Taupo.OData.WCFService.Customer Nullable=False]
@@ -36,17 +36,17 @@ FilterQueryOption
 				Multiplicity = Many
 				Navigation Property = Brother
 				Source = 
-				EntityRangeVariableReferenceNode
+				ResourceRangeVariableReferenceNode
 					Name = $it
 					NavigationSource = People
 					TypeReference = [Microsoft.Test.Taupo.OData.WCFService.Person Nullable=False]
-					Range Variable = Microsoft.OData.Core.UriParser.Semantic.EntityRangeVariable
+					Range Variable = Microsoft.OData.UriParser.ResourceRangeVariable
 		Parameters = 
-		EntityRangeVariable
+		ResourceRangeVariable
 			Name = d
 			NavigationSource = Brother
 			TypeReference = [Microsoft.Test.Taupo.OData.WCFService.Customer Nullable=False]
-		EntityRangeVariable
+		ResourceRangeVariable
 			Name = $it
 			NavigationSource = People
 			TypeReference = [Microsoft.Test.Taupo.OData.WCFService.Person Nullable=False]

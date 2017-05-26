@@ -4,16 +4,16 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Core
+using System;
+using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
+using System.Text.RegularExpressions;
+using System.Xml;
+using Microsoft.OData.Edm;
+
+namespace Microsoft.OData
 {
-    #region Namespaces
-    using System;
-    using System.Diagnostics;
-    using System.Diagnostics.CodeAnalysis;
-    using Microsoft.OData.Core.JsonLight;
-
-    #endregion Namespaces
-
     /// <summary>
     /// Uri utility methods.
     /// </summary>
@@ -33,33 +33,6 @@ namespace Microsoft.OData.Core
             Debug.Assert(!relativeUri.IsAbsoluteUri, "relativeUri is not relative.");
 
             return new Uri(baseUri, relativeUri);
-        }
-
-        /// <summary>
-        /// Create a Uri as entry or feed id
-        /// </summary>
-        /// <param name="value">Uri value</param>
-        /// <param name="kind">UriKind</param>
-        /// <param name="swallowEmpty">if swallowEmpty is true, an empty value will be parsed as null Uri, otherwise invalid Uri format exception will throw. </param>
-        /// <returns>Created Uri from value</returns>
-        internal static Uri CreateUriAsEntryOrFeedId(string value, UriKind kind, bool swallowEmpty = true)
-        {
-            if (swallowEmpty && value == string.Empty || value == null)
-            {
-                return null;
-            }
-
-            Uri uri;
-            try
-            {
-                uri = new Uri(value, kind);
-            }
-            catch (FormatException)
-            {
-                throw new ODataException(Strings.ODataUriUtils_InvalidUriFormatForEntryIdOrFeedId(value));
-            }
-
-            return uri;
         }
 
         /// <summary>
@@ -126,6 +99,180 @@ namespace Microsoft.OData.Core
             }
 
             return uri;
+        }
+
+        /// <summary>
+        /// Determines whether the <paramref name="baseUri"/> Uri instance is a
+        /// base of the specified Uri instance.
+        /// </summary>
+        /// <remarks>
+        /// The check is host agnostic. For example, "http://host1.com/Service.svc" is a valid base Uri of "https://host2.org/Service.svc/Bla"
+        /// but is not a valid base for "http://host1.com/OtherService.svc/Bla".
+        /// </remarks>
+        /// <param name="baseUri">The candidate base URI.</param>
+        /// <param name="uri">The specified Uri instance to test.</param>
+        /// <returns>true if the baseUri Uri instance is a base of uri; otherwise false.</returns>
+        internal static bool UriInvariantInsensitiveIsBaseOf(Uri baseUri, Uri uri)
+        {
+            Debug.Assert(baseUri != null, "baseUri != null");
+            Debug.Assert(uri != null, "uri != null");
+
+            Uri upperCurrent = CreateBaseComparableUri(baseUri);
+            Uri upperUri = CreateBaseComparableUri(uri);
+
+            return upperCurrent.IsBaseOf(upperUri);
+        }
+
+        /// <summary>
+        /// Converts a string to a GUID value.
+        /// </summary>
+        /// <param name="text">String text to convert.</param>
+        /// <param name="targetValue">After invocation, converted value.</param>
+        /// <returns>true if the value was converted; false otherwise.</returns>
+        /// <remarks>Copy of WebConvert.TryKeyStringToGuid.</remarks>
+        internal static bool TryUriStringToGuid(string text, out Guid targetValue)
+        {
+            try
+            {
+                // ABNF shows guidValue defined as
+                // guidValue = 8HEXDIG "-" 4HEXDIG "-" 4HEXDIG "-" 4HEXDIG "-" 12HEXDIG
+                // which comes to length of 36
+                string trimmedText = text.Trim();
+                if (trimmedText.Length != 36 || trimmedText.IndexOf('-') != 8)
+                {
+                    targetValue = default(Guid);
+                    return false;
+                }
+
+                targetValue = XmlConvert.ToGuid(text);
+                return true;
+            }
+            catch (FormatException)
+            {
+                targetValue = default(Guid);
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Converts a string to a DateTimeOffset value.
+        /// </summary>
+        /// <param name="text">String text to convert.</param>
+        /// <param name="targetValue">After invocation, converted value.</param>
+        /// <returns>true if the value was converted; false otherwise.</returns>
+        /// <remarks>Copy of WebConvert.TryKeyStringToDateTimeOffset.</remarks>
+        internal static bool ConvertUriStringToDateTimeOffset(string text, out DateTimeOffset targetValue)
+        {
+            targetValue = default(DateTimeOffset);
+
+            try
+            {
+                targetValue = PlatformHelper.ConvertStringToDateTimeOffset(text);
+                return true;
+            }
+            catch (FormatException exception)
+            {
+                // This means it is a string similar to DateTimeOffset String, but cannot be parsed as DateTimeOffset and could not be a digit or GUID .etc.
+                Match m = PlatformHelper.PotentialDateTimeOffsetValidator.Match(text);
+                if (m.Success)
+                {
+                    // The format should be exactly "yyyy-mm-ddThh:mm:ss('.'s+)?(zzzzzz)?" and each field value is within valid range
+                    throw new ODataException(Strings.UriUtils_DateTimeOffsetInvalidFormat(text), exception);
+                }
+
+                return false;
+            }
+            catch (ArgumentOutOfRangeException exception)
+            {
+                // This means the timezone number is bigger than 14:00, inclusive exception has detail exception.
+                throw new ODataException(Strings.UriUtils_DateTimeOffsetInvalidFormat(text), exception);
+            }
+        }
+
+        /// <summary>
+        /// Converts a string to a Date value.
+        /// </summary>
+        /// <param name="text">String text to convert.</param>
+        /// <param name="targetValue">After invocation, converted value.</param>
+        /// <returns>true if the value was converted; false otherwise.</returns>
+        internal static bool TryUriStringToDate(string text, out Date targetValue)
+        {
+            targetValue = default(Date);
+
+            try
+            {
+                targetValue = PlatformHelper.ConvertStringToDate(text);
+                return true;
+            }
+            catch (FormatException)
+            {
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Converts a string to a TimeOfDay value.
+        /// </summary>
+        /// <param name="text">String text to convert.</param>
+        /// <param name="targetValue">After invocation, converted value.</param>
+        /// <returns>true if the value was converted; false otherwise.</returns>
+        internal static bool TryUriStringToTimeOfDay(string text, out TimeOfDay targetValue)
+        {
+            targetValue = default(TimeOfDay);
+
+            try
+            {
+                targetValue = PlatformHelper.ConvertStringToTimeOfDay(text);
+                return true;
+            }
+            catch (FormatException)
+            {
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Create mock absoulte Uri from given Uri
+        /// </summary>
+        /// <param name="uri">The Uri to be operated on.</param>
+        /// <returns>The mock Uri, the base Uri if given <paramref name="uri"/> is null</returns>
+        internal static Uri CreateMockAbsoluteUri(Uri uri = null)
+        {
+            Uri BaseMockUri = new Uri("http://host/");
+
+            if (uri == null)
+            {
+                return BaseMockUri;
+            }
+
+            if (uri.IsAbsoluteUri)
+            {
+                return uri;
+            }
+            else
+            {
+                return new Uri(BaseMockUri, uri);
+            }
+        }
+
+        /// <summary>Creates a URI suitable for host-agnostic comparison purposes.</summary>
+        /// <param name="uri">URI to compare.</param>
+        /// <returns>URI suitable for comparison.</returns>
+        private static Uri CreateBaseComparableUri(Uri uri)
+        {
+            Debug.Assert(uri != null, "uri != null");
+
+#if !ORCAS
+            uri = new Uri(UriUtils.UriToString(uri).ToUpperInvariant(), UriKind.RelativeOrAbsolute);
+#else
+            uri = new Uri(UriUtils.UriToString(uri).ToUpper(CultureInfo.InvariantCulture), UriKind.RelativeOrAbsolute);
+#endif
+
+            UriBuilder builder = new UriBuilder(uri);
+            builder.Host = "h";
+            builder.Port = 80;
+            builder.Scheme = "http";
+            return builder.Uri;
         }
     }
 }

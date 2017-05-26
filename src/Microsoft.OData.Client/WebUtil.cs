@@ -15,7 +15,7 @@ namespace Microsoft.OData.Client
     using System.Linq;
     using System.Reflection;
     using System.Runtime.CompilerServices;
-    using Microsoft.OData.Core;
+    using Microsoft.OData;
     using Microsoft.OData.Client.Metadata;
 
     /// <summary>web utility functions</summary>
@@ -27,12 +27,12 @@ namespace Microsoft.OData.Client
         internal const int DefaultBufferSizeForStreamCopy = 64 * 1024;
 
         /// <summary>
-        /// Whether DataServiceCollection&lt;&gt; type is available. 
+        /// Whether DataServiceCollection&lt;&gt; type is available.
         /// </summary>
         private static bool? dataServiceCollectionAvailable = null;
 
         /// <summary>Method info for GetDefaultValue&lt;T&gt;.</summary>
-#if DNXCORE50
+#if PORTABLELIB
         private static MethodInfo getDefaultValueMethodInfo = typeof(WebUtil).GetMethodWithGenericArgs("GetDefaultValue", false /*isPublic*/, true /*isStatic*/, 1 /*genericArgCount*/);
 #else
         private static MethodInfo getDefaultValueMethodInfo = (MethodInfo)typeof(WebUtil).GetMember("GetDefaultValue", BindingFlags.NonPublic | BindingFlags.Static).Single(m => ((MethodInfo)m).GetGenericArguments().Count() == 1);
@@ -132,7 +132,7 @@ namespace Microsoft.OData.Client
                 Type collectionType = ClientTypeUtil.GetImplementationType(type, typeof(ICollection<>));
                 if (collectionType != null)
                 {
-                    // collectionType is ICollection so we know that the first generic parameter 
+                    // collectionType is ICollection so we know that the first generic parameter
                     // is the collection item type
                     if (!ClientTypeUtil.TypeIsEntity(collectionType.GetGenericArguments()[0], model))
                     {
@@ -260,7 +260,7 @@ namespace Microsoft.OData.Client
 
             if (!PrimitiveType.IsKnownNullableType(itemValueType))
             {
-                throw Error.InvalidOperation(Strings.Collection_ComplexTypesInCollectionOfPrimitiveTypesNotAllowed);
+                throw Error.InvalidOperation(Strings.Collection_CollectionTypesInCollectionOfPrimitiveTypesNotAllowed);
             }
 
             if (!collectionItemType.IsAssignableFrom(itemValueType))
@@ -320,7 +320,7 @@ namespace Microsoft.OData.Client
             try
             {
                 // here we could just assign idText to Identity
-                // however we used to check for AbsoluteUri, thus we need to 
+                // however we used to check for AbsoluteUri, thus we need to
                 // convert string to Uri and check for absoluteness
                 identity = UriUtil.CreateUri(identityValue, UriKind.Absolute);
             }
@@ -463,7 +463,7 @@ namespace Microsoft.OData.Client
         }
 
         /// <summary>
-        /// Forces loading WindowsBase assembly. If WindowsBase assembly is not present JITter will throw an exception. 
+        /// Forces loading WindowsBase assembly. If WindowsBase assembly is not present JITter will throw an exception.
         /// This method MUST NOT be inlined otherwise we won't be able to catch the exception by JITter in the caller.
         /// </summary>
         /// <returns>typeof(DataServiceCollection&lt;&gt;)</returns>

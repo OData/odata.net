@@ -4,13 +4,12 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.Data.Spatial
+namespace Microsoft.Spatial
 {
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Xml;
-    using Microsoft.Spatial;
 
     /// <summary>
     /// Gml Reader
@@ -79,7 +78,7 @@ namespace Microsoft.Data.Spatial
             private readonly string fullGlobeNamespace;
 
             #endregion
-            
+
             /// <summary>
             /// Output pipeline
             /// </summary>
@@ -226,7 +225,7 @@ namespace Microsoft.Data.Spatial
                                 this.reader.MoveToElement();
                                 throw new FormatException(Strings.GmlReader_InvalidAttribute(attributeName, this.reader.Name));
                         }
-                    } 
+                    }
                     while (this.reader.MoveToNextAttribute());
 
                     this.reader.MoveToElement();
@@ -265,8 +264,8 @@ namespace Microsoft.Data.Spatial
             }
 
             /// <summary>
-            /// Creates a shape and parses the Polygon element. 
-            /// </summary>    
+            /// Creates a shape and parses the Polygon element.
+            /// </summary>
             private void ParseGmlPolygonShape()
             {
                 // GmlPolygonElement :=
@@ -303,7 +302,7 @@ namespace Microsoft.Data.Spatial
             }
 
             /// <summary>
-            /// Creates a shape and parses the MultiPoint element. 
+            /// Creates a shape and parses the MultiPoint element.
             /// </summary>
             private void ParseGmlMultiPointShape()
             {
@@ -482,13 +481,13 @@ namespace Microsoft.Data.Spatial
                 //                GmlPointMemberElement* GmlPointMembersElement?
                 //            </MultiPoint>
                 //            | <MultiPoint/>
-                //        
+                //
                 //        GmlPointMemberElement :=
                 //            <pointMember>
                 //                GmlPointElement?
                 //            </pointMember>
                 //            | </pointMember>
-                //        
+                //
                 //        GmlPointMembersElement :=
                 //            <pointMembers>
                 //                GmlPointElement*
@@ -552,7 +551,7 @@ namespace Microsoft.Data.Spatial
                     {
                         if (doubleList.Length < 2)
                         {
-                            // When parsing a pos, we need at least two coordinates. 
+                            // When parsing a pos, we need at least two coordinates.
                             throw new FormatException(Strings.GmlReader_PosNeedTwoNumbers);
                         }
 
@@ -589,7 +588,7 @@ namespace Microsoft.Data.Spatial
                     {
                         this.ParseGmlPointPropertyElement(allowEmpty);
                     }
-                } 
+                }
                 while (this.IsPosListStart());
             }
 
@@ -613,7 +612,7 @@ namespace Microsoft.Data.Spatial
             /// <summary>
             /// parses a GmlPosListElement.
             /// </summary>
-            /// <param name="allowEmpty">Alow empty posList</param>        
+            /// <param name="allowEmpty">Alow empty posList</param>
             private void ParseGmlPosListElement(bool allowEmpty)
             {
                 // GmlPosListElement :=
@@ -660,7 +659,7 @@ namespace Microsoft.Data.Spatial
                     throw new FormatException(Strings.GmlReader_PosListNeedsEvenCount);
                 }
             }
-            
+
             /// <summary>
             /// Reads the current content in the xml element as a double array
             /// </summary>
@@ -708,7 +707,7 @@ namespace Microsoft.Data.Spatial
 
                 return !isEmptyElement;
             }
-            
+
             /// <summary>
             /// Is Start Element
             /// </summary>
@@ -771,7 +770,7 @@ namespace Microsoft.Data.Spatial
                     }
                 }
             }
-            
+
             /// <summary>
             /// Is reader at the start of a pos or pointProperty
             /// </summary>
