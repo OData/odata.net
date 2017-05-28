@@ -374,7 +374,10 @@ namespace Microsoft.OData.Core
         /// <summary>
         /// Starts a new batch.
         /// </summary>
-        protected abstract void WriteStartBatchImplementation();
+        private void WriteStartBatchImplementation()
+        {
+            this.SetState(BatchWriterState.BatchStarted);
+        }
 
         /// <summary>
         /// Verifies that calling WriteEndBatch is valid.

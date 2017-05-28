@@ -4,6 +4,8 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+using System.Diagnostics.CodeAnalysis;
+
 namespace Microsoft.OData.Core.MultipartMixed
 {
     #region Namespaces
@@ -66,14 +68,7 @@ namespace Microsoft.OData.Core.MultipartMixed
 
             string httpMethod;
             Uri requestUri;
-            this.ParseRequestLine(
-                requestLine,
-
-                // HTTP GET is not allowed in change set for MIME multipart/mixex format batching.
-                ValidateQueryMethodNotAllowedInChangeSet,
-
-                out httpMethod,
-                out requestUri);
+            this.ParseRequestLine(requestLine, out httpMethod, out requestUri);
 
             // Read all headers and create the request message
             ODataBatchOperationHeaders headers = this.batchStream.ReadHeaders();
@@ -112,6 +107,66 @@ namespace Microsoft.OData.Core.MultipartMixed
                 this.urlResolver);
 
             return requestMessage;
+        }
+
+        /// <summary>
+        /// Parses the request line of a batch operation request.
+        /// </summary>
+        /// <param name="requestLine">The request line as a string.</param>
+        /// <param name="httpMethodValidation">The validation for the HTTP method in the request line.</param>
+        /// <param name="httpMethod">The parsed HTTP method of the request.</param>
+        /// <param name="requestUri">The parsed <see cref="Uri"/> of the request.</param>
+        internal void ParseRequestLine(string requestLine, out string httpMethod, out Uri requestUri)
+        {
+            Debug.Assert(!this.RawInputContext.ReadingResponse, "Must only be called for requests.");
+
+            // Batch Request: POST /Customers HTTP/1.1
+            // Since the uri can contain spaces, the only way to read the request url, is to
+            // check for first space character and last space character and anything between
+            // them.
+            int firstSpaceIndex = requestLine.IndexOf(' ');
+
+            // Check whether there are enough characters after the first space for the 2nd and 3rd segments
+            // (and a whitespace in between)
+            if (firstSpaceIndex <= 0 || requestLine.Length - 3 <= firstSpaceIndex)
+            {
+                // only 1 segment or empty first segment or not enough left for 2nd and 3rd segments
+                throw new ODataException(Strings.ODataBatchReaderStream_InvalidRequestLine(requestLine));
+            }
+
+            int lastSpaceIndex = requestLine.LastIndexOf(' ');
+            if (lastSpaceIndex < 0 || lastSpaceIndex - firstSpaceIndex - 1 <= 0 || requestLine.Length - 1 <= lastSpaceIndex)
+            {
+                // only 2 segments or empty 2nd or 3rd segments
+                // only 1 segment or empty first segment or not enough left for 2nd and 3rd segments
+                throw new ODataException(Strings.ODataBatchReaderStream_InvalidRequestLine(requestLine));
+            }
+
+            httpMethod = requestLine.Substring(0, firstSpaceIndex);               // Request - Http method
+            string uriSegment = requestLine.Substring(firstSpaceIndex + 1, lastSpaceIndex - firstSpaceIndex - 1);      // Request - Request uri
+            string httpVersionSegment = requestLine.Substring(lastSpaceIndex + 1);             // Request - Http version
+
+            // Validate HttpVersion
+            if (string.CompareOrdinal(ODataConstants.HttpVersionInBatching, httpVersionSegment) != 0)
+            {
+                throw new ODataException(Strings.ODataBatchReaderStream_InvalidHttpVersionSpecified(httpVersionSegment, ODataConstants.HttpVersionInBatching));
+            }
+
+            // NOTE: this method will throw if the method is not recognized.
+            HttpUtils.ValidateHttpMethod(httpMethod);
+
+            // Validate the HTTP method when reading a request
+            if (this.batchStream.ChangeSetBoundary != null)
+            {
+                // allow all methods except for GET
+                if (HttpUtils.IsQueryMethod(httpMethod))
+                {
+                    throw new ODataException(Strings.ODataBatch_InvalidHttpMethodForChangeSetRequest(httpMethod));
+                }
+            }
+
+            requestUri = new Uri(uriSegment, UriKind.RelativeOrAbsolute);
+            requestUri = ODataBatchUtils.CreateOperationRequestUri(requestUri, this.RawInputContext.MessageReaderSettings.BaseUri, this.urlResolver);
         }
 
         /// <summary>
@@ -163,6 +218,53 @@ namespace Microsoft.OData.Core.MultipartMixed
             ////       we allow a Content-ID header but don't process it (i.e., don't add the content ID to the URL resolver).
 
             return responseMessage;
+        }
+
+        /// <summary>
+        /// Parses the response line of a batch operation response.
+        /// </summary>
+        /// <param name="responseLine">The response line as a string.</param>
+        /// <returns>The parsed status code from the response line.</returns>
+        [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "'this' is used when built in debug")]
+        private int ParseResponseLine(string responseLine)
+        {
+            Debug.Assert(this.RawInputContext.ReadingResponse, "Must only be called for responses.");
+
+            // Batch Response: HTTP/1.1 200 Ok
+            // Since the http status code strings have spaces in them, we cannot use the same
+            // logic. We need to check for the second space and anything after that is the error
+            // message.
+            int firstSpaceIndex = responseLine.IndexOf(' ');
+            if (firstSpaceIndex <= 0 || responseLine.Length - 3 <= firstSpaceIndex)
+            {
+                // only 1 segment or empty first segment or not enough left for 2nd and 3rd segments
+                throw new ODataException(Strings.ODataBatchReaderStream_InvalidResponseLine(responseLine));
+            }
+
+            int secondSpaceIndex = responseLine.IndexOf(' ', firstSpaceIndex + 1);
+            if (secondSpaceIndex < 0 || secondSpaceIndex - firstSpaceIndex - 1 <= 0 || responseLine.Length - 1 <= secondSpaceIndex)
+            {
+                // only 2 segments or empty 2nd or 3rd segments
+                // only 1 segment or empty first segment or not enough left for 2nd and 3rd segments
+                throw new ODataException(Strings.ODataBatchReaderStream_InvalidResponseLine(responseLine));
+            }
+
+            string httpVersionSegment = responseLine.Substring(0, firstSpaceIndex);
+            string statusCodeSegment = responseLine.Substring(firstSpaceIndex + 1, secondSpaceIndex - firstSpaceIndex - 1);
+
+            // Validate HttpVersion
+            if (string.CompareOrdinal(ODataConstants.HttpVersionInBatching, httpVersionSegment) != 0)
+            {
+                throw new ODataException(Strings.ODataBatchReaderStream_InvalidHttpVersionSpecified(httpVersionSegment, ODataConstants.HttpVersionInBatching));
+            }
+
+            int intResult;
+            if (!Int32.TryParse(statusCodeSegment, out intResult))
+            {
+                throw new ODataException(Strings.ODataBatchReaderStream_NonIntegerHttpStatusCode(statusCodeSegment));
+            }
+
+            return intResult;
         }
 
         /// <summary>

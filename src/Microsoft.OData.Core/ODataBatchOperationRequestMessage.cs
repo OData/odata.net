@@ -103,7 +103,7 @@ namespace Microsoft.OData.Core
         }
 
         /// <summary>
-        /// Gets the requst prerequisites.
+        /// Gets the request prerequisites.
         /// </summary>
         public IList<string> DependsOnRequestIds
         {
