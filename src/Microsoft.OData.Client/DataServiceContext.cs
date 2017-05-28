@@ -148,7 +148,7 @@ namespace Microsoft.OData.Client
         #endregion
 
         /// <summary>
-        /// A flag indicating if the data service context is applying changes 
+        /// A flag indicating if the data service context is applying changes
         /// </summary>
         private bool applyingChanges;
 
@@ -168,7 +168,7 @@ namespace Microsoft.OData.Client
         /// <remarks>
         /// The library expects the Uri to point to the root of a data service,
         /// but does not issue a request to validate it does indeed identify the root of a service.
-        /// If the Uri does not identify the root of the service, the behavior of the client library is undefined.    
+        /// If the Uri does not identify the root of the service, the behavior of the client library is undefined.
         /// A Uri provided with a trailing slash is equivalent to one without such a trailing character.
         /// With Silverlight, the <paramref name="serviceRoot"/> can be a relative Uri
         /// that will be combined with System.Windows.Browser.HtmlPage.Document.DocumentUri.
@@ -184,7 +184,7 @@ namespace Microsoft.OData.Client
         /// <remarks>
         /// The library expects the Uri to point to the root of a data service,
         /// but does not issue a request to validate it does indeed identify the root of a service.
-        /// If the Uri does not identify the root of the service, the behavior of the client library is undefined. 
+        /// If the Uri does not identify the root of the service, the behavior of the client library is undefined.
         /// A Uri provided with a trailing slash is equivalent to one without such a trailing character.
         /// With Silverlight, the <paramref name="serviceRoot"/> can be a relative Uri
         /// that will be combined with System.Windows.Browser.HtmlPage.Document.DocumentUri.
@@ -198,7 +198,7 @@ namespace Microsoft.OData.Client
         /// Instantiates a new context with the specified <paramref name="serviceRoot"/> Uri.
         /// The library expects the Uri to point to the root of a data service,
         /// but does not issue a request to validate it does indeed identify the root of a service.
-        /// If the Uri does not identify the root of the service, the behavior of the client library is undefined.    
+        /// If the Uri does not identify the root of the service, the behavior of the client library is undefined.
         /// </summary>
         /// <param name="serviceRoot">
         /// An absolute, well formed http or https URI without a query or fragment which identifies the root of a data service.
@@ -254,10 +254,10 @@ namespace Microsoft.OData.Client
         public event EventHandler<SendingRequest2EventArgs> SendingRequest2;
 
         /// <summary>
-        /// This event is fired before a request message object is built, giving 
+        /// This event is fired before a request message object is built, giving
         /// the handler the opportunity to inspect, adjust and/or replace some
-        /// request information before the message is built. This event should be 
-        /// used to modify the outgoing Url of the request or alter request headers. 
+        /// request information before the message is built. This event should be
+        /// used to modify the outgoing Url of the request or alter request headers.
         /// After the request is built, other modifications on the WebRequest object can be made
         /// in SendingRequest2.
         /// </summary>
@@ -456,7 +456,7 @@ namespace Microsoft.OData.Client
         /// <returns>A function delegate that identifies an override function that is used to override the default type resolution option that is used by the client library.</returns>
         /// <remarks>
         /// Enables one to override the default type resolution strategy used by the client library.
-        /// Set this property to a delegate which identifies a function that resolves a 
+        /// Set this property to a delegate which identifies a function that resolves a
         /// namespace-qualified type name to type within the client application.
         /// This enables the client to perform custom mapping between the type name
         /// provided in a response from the server and a type on the client.
@@ -867,7 +867,7 @@ namespace Microsoft.OData.Client
         /// otherwise, the default value for the type of the annotation parameter.
         /// </param>
         /// <returns>true if the annotation is found</returns>
-        /// 
+        ///
         public bool TryGetAnnotation<TFunc, TResult>(Expression<TFunc> expression, string term, out TResult annotation)
         {
             return TryGetAnnotation(expression, term, null, out annotation);
@@ -2304,7 +2304,7 @@ namespace Microsoft.OData.Client
         }
 
         /// <summary>
-        /// Changes the state of the given entity. 
+        /// Changes the state of the given entity.
         /// Note that the 'Added' state is not supported by this method, and that AddObject or AddRelatedObject should be used instead.
         /// If the state 'Modified' is given, calling this method is exactly equivalent to calling UpdateObject.
         /// If the state 'Deleted' is given, calling this method is exactly equivalent to calling DeleteObject.
@@ -2469,7 +2469,7 @@ namespace Microsoft.OData.Client
         /// <param name="requestUri">Request URI to execute.</param>
         /// <param name="httpMethod">HttpMethod to use. Only GET or POST are supported.</param>
         /// <param name="singleResult">If set to true, indicates that a single result is expected as a response.
-        /// False indicates that a collection of TElement is assumed. Should be null for void, entry, and feed cases. 
+        /// False indicates that a collection of TElement is assumed. Should be null for void, entry, and feed cases.
         /// This function will check if TElement is an entity type and set singleResult to null in this case.</param>
         /// <param name="operationParameters">The operation parameters associated with the service operation.</param>
         /// <returns>A QueryOperationResponse that is enumerable over the results and holds other response information.</returns>
@@ -2990,7 +2990,7 @@ namespace Microsoft.OData.Client
 
         /// <summary>
         /// Validate and process the input parameters to all the execute methods. Also seperates and returns
-        /// the input operation parameters list into two seperate list - one of body operation parameters and the other 
+        /// the input operation parameters list into two seperate list - one of body operation parameters and the other
         /// for uri operation parameters.
         /// </summary>
         /// <typeparam name="TElement">element type. See Execute method for more details.</typeparam>
@@ -3224,7 +3224,7 @@ namespace Microsoft.OData.Client
         /// <param name="name">name of the stream.</param>
         /// <returns>The async result object for the request, the request hasn't been started yet.</returns>
         /// <exception cref="ArgumentNullException">Either entity or args parameters are null.</exception>
-        /// <exception cref="ArgumentException">The specified entity is either not tracked, 
+        /// <exception cref="ArgumentException">The specified entity is either not tracked,
         /// is in the added state or it's not an MLE.</exception>
         private GetReadStreamResult CreateGetReadStreamResult(
             object entity,

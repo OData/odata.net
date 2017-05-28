@@ -165,6 +165,14 @@
     <Compile Include="JsonLight\JsonNoMetadataLevel.cs" />
     <Compile Include="JsonLight\JsonNoMetadataTypeNameOracle.cs" />
     <Compile Include="JsonLight\ODataAnnotationNames.cs" />
+    <Compile Include="JsonLight\ODataJsonLightBatchReader.cs" />
+    <Compile Include="JsonLight\ODataJsonLightBatchReaderStream.cs" />
+    <Compile Include="JsonLight\ODataJsonLightBatchAtomicGroupCache.cs" />
+    <Compile Include="JsonLight\ODataJsonLightBatchRequestPropertiesCache.cs" />
+    <Compile Include="JsonLight\ODataJsonLightBatchResponsePropertiesCache.cs" />
+    <Compile Include="JsonLight\ODataJsonLightBatchPayloadItemPropertiesCache.cs" />
+    <Compile Include="JsonLight\ODataJsonLightBatchBodyContentReaderStream.cs" />
+    <Compile Include="JsonLight\ODataJsonLightBatchWriter.cs" />
     <Compile Include="JsonLight\ODataJsonLightCollectionDeserializer.cs" />
     <Compile Include="JsonLight\ODataJsonLightCollectionReader.cs" />
     <Compile Include="JsonLight\ODataJsonLightCollectionSerializer.cs" />
@@ -219,6 +227,9 @@
     <Compile Include="Json\ODataJsonReaderCoreUtils.cs" />
     <Compile Include="Json\ODataJsonWriterUtils.cs" />
     <Compile Include="Json\TextWriterWrapper.cs" />
+    <Compile Include="MultipartMixed\ODataMultipartMixedBatchWriter.cs" />
+    <Compile Include="MultipartMixed\ODataMultipartMixedBatchReader.cs" />
+    <Compile Include="MultipartMixed\ODataMultipartMixedBatchReaderStream.cs" />
     <Compile Include="ODataErrorDetail.cs" />
     <Compile Include="ODataUntypedValue.cs" />
     <Compile Include="ODataMediaType.cs" />
@@ -253,7 +264,7 @@
     <Compile Include="ODataBatchOperationWriteStream.cs" />
     <Compile Include="ODataBatchReader.cs" />
     <Compile Include="ODataBatchReaderState.cs" />
-    <Compile Include="ODataBatchReaderStream.cs" />
+    <Compile Include="ODataBatchReaderStream.cs" />    
     <Compile Include="ODataBatchReaderStreamBuffer.cs" />
     <Compile Include="ODataBatchReaderStreamScanResult.cs" />
     <Compile Include="ODataBatchUrlResolver.cs" />

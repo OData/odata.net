@@ -269,7 +269,8 @@ namespace Microsoft.OData.Core
             ODataPayloadKind.ServiceDocument,
             ODataPayloadKind.Error,
             ODataPayloadKind.Parameter,
-            ODataPayloadKind.IndividualProperty
+            ODataPayloadKind.IndividualProperty,
+            ODataPayloadKind.Batch, 
         };
 
         /// <summary>
@@ -353,7 +354,9 @@ namespace Microsoft.OData.Core
         }
 
         /// <summary>
-        /// Configure the media type tables so that Json Light is the first JSON format in the table.
+        /// Configure the media type tables so that Json Light is the first JSON format in the table, except for the
+        /// case of Batch payload kind, where the JsonLight media types is added to the back of the list to preserve
+        /// original behavior of default MIME media type.
         /// </summary>
         /// <remarks>
         /// This is only used in V4 and beyond.
@@ -408,7 +411,15 @@ namespace Microsoft.OData.Core
 
             foreach (ODataPayloadKind kind in JsonPayloadKinds)
             {
-                this.mediaTypesForPayloadKind[(int)kind].InsertRange(0, mediaTypeWithFormat);
+                if (kind == ODataPayloadKind.Batch)
+                {
+                    // Appending the json media types AFTER the existing MIME media type(s), which is the default media type for Batch payload kind.
+                    this.mediaTypesForPayloadKind[(int) kind].AddRange(mediaTypeWithFormat);
+                }
+                else
+                {   // For other payload kinds, insert the json media types to the front.
+                    this.mediaTypesForPayloadKind[(int) kind].InsertRange(0, mediaTypeWithFormat);
+                }
             }
         }
     }

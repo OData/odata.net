@@ -233,6 +233,36 @@ namespace Microsoft.OData.Core.JsonLight
 #endif
 
         /// <summary>
+        /// Creates an <see cref="ODataBatchWriter" /> to write a batch of requests or responses in Json.
+        /// </summary>
+        /// <param name="batchBoundary">Ignored, since the boundary string is not applicable for the Json batch structure.</param>
+        /// <returns>The created batch writer.</returns>
+        /// <remarks>We don't plan to make this public!</remarks>
+        /// <remarks>The write must flush the output when it's finished (inside the last Write call).</remarks>
+        internal override ODataBatchWriter CreateODataBatchWriter(string batchBoundary)
+        {
+            this.AssertSynchronous();
+
+            return this.CreateODataBatchWriterImplementation();
+        }
+
+#if ODATALIB_ASYNC
+        /// <summary>
+        /// Asynchronously creates an <see cref="ODataBatchWriter" /> to write a batch of requests or responses.
+        /// </summary>
+        /// <param name="batchBoundary">Ignored, since the boundary string is not applicable for the Json batch structure.</param>
+        /// <returns>A running task for the created batch writer.</returns>
+        /// <remarks>We don't plan to make this public!</remarks>
+        /// <remarks>The write must flush the output when it's finished (inside the last Write call).</remarks>
+        internal override Task<ODataBatchWriter> CreateODataBatchWriterAsync(string batchBoundary)
+        {
+            this.AssertAsynchronous();
+
+            return TaskUtils.GetTaskForSynchronousOperation(() => this.CreateODataBatchWriterImplementation());
+        }
+#endif
+
+        /// <summary>
         /// Writes an <see cref="ODataProperty"/> as message payload.
         /// </summary>
         /// <param name="property">The property to write.</param>
@@ -270,7 +300,7 @@ namespace Microsoft.OData.Core.JsonLight
         /// </summary>
         /// <param name="error">The error to write.</param>
         /// <param name="includeDebugInformation">
-        /// A flag indicating whether debug information (e.g., the inner error from the <paramref name="error"/>) should 
+        /// A flag indicating whether debug information (e.g., the inner error from the <paramref name="error"/>) should
         /// be included in the payload. This should only be used in debug scenarios.
         /// </param>
         /// <remarks>It is the responsibility of this method to flush the output before the method returns.</remarks>
@@ -288,7 +318,7 @@ namespace Microsoft.OData.Core.JsonLight
         /// </summary>
         /// <param name="error">The error to write.</param>
         /// <param name="includeDebugInformation">
-        /// A flag indicating whether debug information (e.g., the inner error from the <paramref name="error"/>) should 
+        /// A flag indicating whether debug information (e.g., the inner error from the <paramref name="error"/>) should
         /// be included in the payload. This should only be used in debug scenarios.
         /// </param>
         /// <returns>A task representing the asynchronous operation of writing the error.</returns>
@@ -311,7 +341,7 @@ namespace Microsoft.OData.Core.JsonLight
         /// </summary>
         /// <param name="error">The error to write.</param>
         /// <param name="includeDebugInformation">
-        /// A flag indicating whether debug information (e.g., the inner error from the <paramref name="error"/>) should 
+        /// A flag indicating whether debug information (e.g., the inner error from the <paramref name="error"/>) should
         /// be included in the payload. This should only be used in debug scenarios.
         /// </param>
         /// <remarks>
@@ -335,7 +365,7 @@ namespace Microsoft.OData.Core.JsonLight
         /// </summary>
         /// <param name="error">The error to write.</param>
         /// <param name="includeDebugInformation">
-        /// A flag indicating whether debug information (e.g., the inner error from the <paramref name="error"/>) should 
+        /// A flag indicating whether debug information (e.g., the inner error from the <paramref name="error"/>) should
         /// be included in the payload. This should only be used in debug scenarios.
         /// </param>
         /// <returns>Task which represents the pending write operation.</returns>
@@ -391,7 +421,7 @@ namespace Microsoft.OData.Core.JsonLight
 #endif
 
         /// <summary>
-        /// Writes a service document with the specified <paramref name="serviceDocument"/> 
+        /// Writes a service document with the specified <paramref name="serviceDocument"/>
         /// as message payload.
         /// </summary>
         /// <param name="serviceDocument">The service dcument to write.</param>
@@ -406,7 +436,7 @@ namespace Microsoft.OData.Core.JsonLight
 
 #if ODATALIB_ASYNC
         /// <summary>
-        /// Asynchronously writes a service document with the specified <paramref name="serviceDocument"/> 
+        /// Asynchronously writes a service document with the specified <paramref name="serviceDocument"/>
         /// as message payload.
         /// </summary>
         /// <param name="serviceDocument">The service document to write.</param>
@@ -557,11 +587,22 @@ namespace Microsoft.OData.Core.JsonLight
         }
 
         /// <summary>
+        /// Creates a concrete <see cref="ODataJsonLightBatchWriter" /> instance.
+        /// </summary>
+        /// <returns>The newly created batch writer.</returns>
+        private ODataBatchWriter CreateODataBatchWriterImplementation()
+        {
+            ODataBatchWriter batchWriter = new ODataJsonLightBatchWriter(this);
+            this.outputInStreamErrorListener = batchWriter;
+            return batchWriter;
+        }
+
+        /// <summary>
         /// Writes an in-stream error.
         /// </summary>
         /// <param name="error">The error to write.</param>
         /// <param name="includeDebugInformation">
-        /// A flag indicating whether debug information (e.g., the inner error from the <paramref name="error"/>) should 
+        /// A flag indicating whether debug information (e.g., the inner error from the <paramref name="error"/>) should
         /// be included in the payload. This should only be used in debug scenarios.
         /// </param>
         private void WriteInStreamErrorImplementation(ODataError error, bool includeDebugInformation)
@@ -586,7 +627,7 @@ namespace Microsoft.OData.Core.JsonLight
         }
 
         /// <summary>
-        /// Writes a service document with the specified <paramref name="serviceDocument"/> 
+        /// Writes a service document with the specified <paramref name="serviceDocument"/>
         /// as message payload.
         /// </summary>
         /// <param name="serviceDocument">The service document to write.</param>
@@ -601,7 +642,7 @@ namespace Microsoft.OData.Core.JsonLight
         /// </summary>
         /// <param name="error">The error to write.</param>
         /// <param name="includeDebugInformation">
-        /// A flag indicating whether debug information (e.g., the inner error from the <paramref name="error"/>) should 
+        /// A flag indicating whether debug information (e.g., the inner error from the <paramref name="error"/>) should
         /// be included in the payload. This should only be used in debug scenarios.
         /// </param>
         private void WriteErrorImplementation(ODataError error, bool includeDebugInformation)

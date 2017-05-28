@@ -79,7 +79,7 @@
   </PropertyGroup>
 
   <Target Name="RestoreNuGetPackages" BeforeTargets="$(GenerateTextStringResourcesDependsOn)">
-    <Exec Command="&quot;$(NuGetExePath)&quot; restore &quot;$(PackagesConfig)&quot; -PackageSaveMode nuspec -SolutionDirectory &quot;$(SolutionDir)\&quot;" />
+    <Exec Command="&quot;$(NuGetExePath)&quot; restore &quot;$(PackagesConfig)&quot; -PackageSaveMode nuspec -SolutionDirectory &quot;$(SolutionDir)\ &quot;" />
   </Target>
 
   <!-- StyleCop settings -->

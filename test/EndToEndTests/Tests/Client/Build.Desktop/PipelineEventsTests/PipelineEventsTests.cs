@@ -4,6 +4,8 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+using System.Net;
+
 namespace Microsoft.Test.OData.Tests.Client.PipelineEventsTests
 {
     using System;
@@ -498,6 +500,12 @@ namespace Microsoft.Test.OData.Tests.Client.PipelineEventsTests
             this.RunOnAtomAndJsonFormats(CreateContext, AddUpdateBatchTest);
         }
 
+        [TestMethod]
+        public void AddUpdateBatchTestUseJsonForBatch()
+        {
+            this.RunOnAtomAndJsonFormats(CreateContext, AddUpdateBatchTest, true /*useJsonForBatch*/);
+        }
+
         private static void AddUpdateBatchTest(DataServiceContextWrapper<DefaultContainer> contextWrapper)
         {
             contextWrapper.Configurations.RequestPipeline
@@ -513,7 +521,16 @@ namespace Microsoft.Test.OData.Tests.Client.PipelineEventsTests
             Order order = PipelineEventsTestsHelper.CreateNewOrder(300);
             contextWrapper.AddRelatedObject(customer, "Orders", order);
 
-            contextWrapper.SaveChanges(SaveChangesOptions.BatchWithSingleChangeset);
+            DataServiceResponse responses = contextWrapper.SaveChanges(SaveChangesOptions.BatchWithSingleChangeset);
+
+            Assert.IsTrue(responses.BatchStatusCode == 202);
+            foreach (OperationResponse response in responses)
+            {
+                ChangeOperationResponse changeOperationResponse = (ChangeOperationResponse) response;
+                Assert.IsNotNull(changeOperationResponse);
+                Assert.IsTrue(changeOperationResponse.StatusCode == 201);
+                Assert.IsInstanceOfType(changeOperationResponse.Descriptor, typeof(EntityDescriptor));
+            }
 
             if (contextWrapper.Format.ODataFormat == ODataFormat.Atom)
             {

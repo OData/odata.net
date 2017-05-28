@@ -9,7 +9,9 @@ namespace Microsoft.OData.Client
     using System;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
+    using System.Globalization;
     using System.Linq;
+
     using Microsoft.OData.Core;
     using Microsoft.OData.Edm;
 
@@ -26,7 +28,7 @@ namespace Microsoft.OData.Client
 
         /// <summary>MIME type for JSON bodies in light mode (http://www.iana.org/assignments/media-types/application/).</summary>
         private const string MimeApplicationJsonODataLight = "application/json;odata.metadata=minimal";
-       
+
         /// <summary>MIME type for JSON bodies in light mode with all metadata.</summary>
         private const string MimeApplicationJsonODataLightWithAllMetadata = "application/json;odata.metadata=full";
 
@@ -61,6 +63,9 @@ namespace Microsoft.OData.Client
 
             // On V6.0.2, we change the default format to be json for the client
             this.ODataFormat = ODataFormat.Json;
+
+            this.IsJsonBatchFormat = false;
+
             this.context = context;
         }
 
@@ -73,7 +78,7 @@ namespace Microsoft.OData.Client
         /// Invoked when using the parameterless UseJson method in order to get the service model.
         /// </summary>
         public Func<IEdmModel> LoadServiceModel { get; set; }
-        
+
         /// <summary>
         /// True if the format has been configured to use Atom, otherwise False.
         /// </summary>
@@ -106,6 +111,40 @@ namespace Microsoft.OData.Client
             {
                 serviceModel = value;
             }
+        }
+
+        /// <summary>
+        /// Gets the flag for using Json in current batch request.
+        /// Default value is false.
+        /// For now, ODL-client sets both the Accept and Content-Type headers to application/json
+        /// if this flag is set to true.
+        /// </summary>
+        internal bool IsJsonBatchFormat { get; private set; }
+
+        /// <summary>
+        /// Indicates that the client should use the JSON format for the batch request.
+        /// Will invoke the LoadServiceModel delegate property in order to get the required service model.
+        /// </summary>
+        public void UseJsonForBatch()
+        {
+            if (this.ServiceModel == null)
+            {
+                throw new InvalidOperationException(Strings.DataServiceClientFormat_LoadServiceModelRequired);
+            }
+
+            this.IsJsonBatchFormat = true;
+        }
+
+        /// <summary>
+        /// Indicates that the client should use the JSON format for the batch request.
+        /// Will invoke the LoadServiceModel delegate property in order to get the required service model.
+        /// </summary>
+        public void UseJsonForBatch(IEdmModel serviceModel)
+        {
+            Util.CheckArgumentNull(serviceModel, "serviceModel");
+
+            this.IsJsonBatchFormat = true;
+            this.serviceModel = serviceModel;
         }
 
         /// <summary>
@@ -181,12 +220,34 @@ namespace Microsoft.OData.Client
         }
 
         /// <summary>
-        /// Sets the value of the Accept header for a count request (will set it to 'multipart/mixed').
+        /// Sets the value of the Accept header for a batch request (will set it to 'multipart/mixed' or 'application/json').
+        /// For Json batch, ODL-client currently uses basic type application/json.
         /// </summary>
         /// <param name="headers">The headers to modify.</param>
         internal void SetRequestAcceptHeaderForBatch(HeaderCollection headers)
         {
-            this.SetAcceptHeaderAndCharset(headers, MimeMultiPartMixed);
+            this.SetAcceptHeaderAndCharset(headers,
+                this.IsJsonBatchFormat
+                ? MimeApplicationJson
+                : MimeMultiPartMixed);
+        }
+
+        /// <summary>
+        /// Sets the value of the Content-Type header for a batch request (will set it to 'multipart/mixed' or 'application/json').
+        /// For Json batch, ODL-client currently uses basic type application/json.
+        /// </summary>
+        /// <param name="headers">The headers to modify.</param>
+        internal void SetRequestContentTypeHeaderForBatch(HeaderCollection headers)
+        {
+            this.SetRequestContentTypeHeader(headers,
+                this.IsJsonBatchFormat
+                ? MimeApplicationJson
+                : string.Format(
+                        CultureInfo.InvariantCulture, "{0}; {1}={2}_{3}",
+                        MimeMultiPartMixed,
+                        XmlConstants.HttpMultipartBoundary,
+                        XmlConstants.HttpMultipartBoundaryBatch,
+                        Guid.NewGuid()));
         }
 
         /// <summary>
@@ -312,7 +373,7 @@ namespace Microsoft.OData.Client
         /// </summary>
         /// <param name="valueIfUsingAtom">The value if using atom.</param>
         /// <param name="hasSelectQueryOption">
-        ///   Whether or not the select query option is present in the request URI. 
+        ///   Whether or not the select query option is present in the request URI.
         ///   If true, indicates that the client should ask the server to include all metadata in a JSON-Light response.
         /// </param>
         /// <returns>The media type to use (either JSON-Light or the provided value)</returns>
@@ -327,7 +388,7 @@ namespace Microsoft.OData.Client
             {
                 return MimeApplicationJsonODataLightWithAllMetadata;
             }
-            
+
             return MimeApplicationJsonODataLight;
         }
     }

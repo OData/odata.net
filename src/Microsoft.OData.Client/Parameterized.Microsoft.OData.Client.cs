@@ -46,6 +46,14 @@ namespace Microsoft.OData.Client {
         }
 
         /// <summary>
+        /// "Unsupported batch content type [{0}], only MIME {1} or {2} are supported"
+        /// </summary>
+        internal static string Batch_UnsupportedBatchContentType(object p0, object p1, object p2)
+        {
+            return Microsoft.OData.Client.TextRes.GetString(Microsoft.OData.Client.TextRes.Batch_UnsupportedBatchContentType, p0, p1, p2);
+        }
+
+        /// <summary>
         /// A string like "Expected an absolute, well formed http URL without a query or fragment."
         /// </summary>
         internal static string Context_BaseUri {
@@ -1989,7 +1997,6 @@ namespace Microsoft.OData.Client {
                 return Microsoft.OData.Client.TextRes.GetString(Microsoft.OData.Client.TextRes.Context_ExecuteExpectedVoidResponse);
             }
         }
-
     }
 
     /// <summary>
@@ -2003,7 +2010,7 @@ namespace Microsoft.OData.Client {
         internal static Exception ArgumentNull(string paramName) {
             return new ArgumentNullException(paramName);
         }
-        
+
         /// <summary>
         /// The exception that is thrown when the value of an argument is outside the allowable range of values as defined by the invoked method.
         /// </summary>
@@ -2019,7 +2026,7 @@ namespace Microsoft.OData.Client {
         }
 
         /// <summary>
-        /// The exception that is thrown when an invoked method is not supported, or when there is an attempt to read, seek, or write to a stream that does not support the invoked functionality. 
+        /// The exception that is thrown when an invoked method is not supported, or when there is an attempt to read, seek, or write to a stream that does not support the invoked functionality.
         /// </summary>
         internal static Exception NotSupported() {
             return new NotSupportedException();

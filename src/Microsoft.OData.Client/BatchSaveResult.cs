@@ -4,6 +4,8 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+using System.Runtime.CompilerServices;
+
 namespace Microsoft.OData.Client
 {
     #region Namespaces
@@ -54,7 +56,7 @@ namespace Microsoft.OData.Client
         #endregion
 
         /// <summary>
-        /// constructor for BatchSaveResult
+        /// constructor for BatchSaveResult.
         /// </summary>
         /// <param name="context">context</param>
         /// <param name="method">method</param>
@@ -62,7 +64,8 @@ namespace Microsoft.OData.Client
         /// <param name="options">options</param>
         /// <param name="callback">user callback</param>
         /// <param name="state">user state object</param>
-        internal BatchSaveResult(DataServiceContext context, string method, DataServiceRequest[] queries, SaveChangesOptions options, AsyncCallback callback, object state)
+         /// <param name="batchContentType">The content type header information.</param>
+       internal BatchSaveResult(DataServiceContext context, string method, DataServiceRequest[] queries, SaveChangesOptions options, AsyncCallback callback, object state)
             : base(context, method, queries, options, callback, state)
         {
             Debug.Assert(Util.IsBatch(options), "the options must have batch  flag set");
@@ -268,15 +271,6 @@ namespace Microsoft.OData.Client
         }
 
         /// <summary>
-        /// Creates the type of the multi part MIME content.
-        /// </summary>
-        /// <returns>A multipart mime header with a generated batch boundary</returns>
-        private static string CreateMultiPartMimeContentType()
-        {
-            return string.Format(CultureInfo.InvariantCulture, "{0}; {1}={2}_{3}", XmlConstants.MimeMultiPartMixed, XmlConstants.HttpMultipartBoundary, XmlConstants.HttpMultipartBoundaryBatch, Guid.NewGuid());
-        }
-
-        /// <summary>
         /// Creates a ODataRequestMessage for batch request.
         /// </summary>
         /// <returns>Returns an instance of ODataRequestMessage for the batch request.</returns>
@@ -285,7 +279,9 @@ namespace Microsoft.OData.Client
             Uri requestUri = UriUtil.CreateUri(this.RequestInfo.BaseUriResolver.GetBaseUriWithSlash(), UriUtil.CreateUri("$batch", UriKind.Relative));
             HeaderCollection headers = new HeaderCollection();
             headers.SetRequestVersion(Util.ODataVersion4, this.RequestInfo.MaxProtocolVersionAsVersion);
-            headers.SetHeader(XmlConstants.HttpContentType, CreateMultiPartMimeContentType());
+
+            // Set headers for batch format.
+            this.RequestInfo.Format.SetRequestContentTypeHeaderForBatch(headers);
             this.RequestInfo.Format.SetRequestAcceptHeaderForBatch(headers);
 
             return this.CreateTopLevelRequest(XmlConstants.HttpMethodPost, requestUri, headers, this.RequestInfo.HttpStack, null /*descriptor*/);
@@ -293,6 +289,7 @@ namespace Microsoft.OData.Client
 
         /// <summary>
         /// Generate the batch request for all changes to save.
+        /// Default values are for Mime multipart/mixed request / response.
         /// </summary>
         /// <returns>Returns the instance of ODataRequestMessage containing all the headers and payload for the batch request.</returns>
         private ODataRequestMessageWrapper GenerateBatchRequest()
@@ -437,7 +434,7 @@ namespace Microsoft.OData.Client
                 Func<Stream> getResponseStream = () => this.ResponseStream;
 
                 // We are not going to use the responseVersion returned from this call, as the $batch request itself doesn't apply versioning
-                // of the responses on the root level. The responses are versioned on the part level. (Note that the version on the $batch level 
+                // of the responses on the root level. The responses are versioned on the part level. (Note that the version on the $batch level
                 // is actually used to version the batch itself, but we for now we only recognize a single version so to keep it backward compatible
                 // we don't check this here. Also note that the HandleResponse method will verify that we can support the version, that is it's
                 // lower than the highest version we understand).
@@ -561,10 +558,10 @@ namespace Microsoft.OData.Client
                     // by the enumerable of responses by now.
                 }
 
-                // Note that if we encounter any error in a batch request with a single changeset, 
-                // we throw here since all change operations in the changeset are rolled back on the server.  
-                // If we encounter any error in a batch request with independent operations, we don't want to throw 
-                // since some of the operations might succeed. 
+                // Note that if we encounter any error in a batch request with a single changeset,
+                // we throw here since all change operations in the changeset are rolled back on the server.
+                // If we encounter any error in a batch request with independent operations, we don't want to throw
+                // since some of the operations might succeed.
                 // Users need to inspect each OperationResponse to get the exception information from the failed operations.
                 if (exception != null)
                 {
@@ -611,7 +608,7 @@ namespace Microsoft.OData.Client
                         case ODataBatchReaderState.ChangesetStart:
                             if ((Util.IsBatchWithSingleChangeset(this.Options) && changesetFound) || (operationCount != 0))
                             {
-                                // Throw if we encounter multiple changesets when running in batch with single changeset mode 
+                                // Throw if we encounter multiple changesets when running in batch with single changeset mode
                                 // or if we encounter operations outside of a changeset.
                                 Error.ThrowBatchUnexpectedContent(InternalError.UnexpectedBeginChangeSet);
                             }

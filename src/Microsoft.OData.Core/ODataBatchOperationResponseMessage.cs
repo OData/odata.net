@@ -14,6 +14,7 @@ namespace Microsoft.OData.Core
 #if ODATALIB_ASYNC
     using System.Threading.Tasks;
 #endif
+
     #endregion Namespaces
 
     /// <summary>
@@ -148,10 +149,11 @@ namespace Microsoft.OData.Core
         internal static ODataBatchOperationResponseMessage CreateWriteMessage(
             Stream outputStream,
             IODataBatchOperationListener operationListener,
-            IODataUrlResolver urlResolver)
+            IODataUrlResolver urlResolver,
+            string contentId = null)
         {
             Func<Stream> streamCreatorFunc = () => ODataBatchUtils.CreateBatchOperationWriteStream(outputStream, operationListener);
-            return new ODataBatchOperationResponseMessage(streamCreatorFunc, /*headers*/ null, operationListener, /*contentId*/ null, urlResolver, /*writing*/ true);
+            return new ODataBatchOperationResponseMessage(streamCreatorFunc, /*headers*/ null, operationListener, contentId, urlResolver, /*writing*/ true);
         }
 
         /// <summary>

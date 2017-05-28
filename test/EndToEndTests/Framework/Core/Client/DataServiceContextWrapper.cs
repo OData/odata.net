@@ -106,7 +106,7 @@ namespace Microsoft.Test.OData.Framework.Client
             get { return this.wrappedInstance.MergeOption; }
             set { this.wrappedInstance.MergeOption = value; }
         }
-       
+
         /// <summary>
         /// Gets or sets the DataServiceContext.ResolveName property.
         /// </summary>
@@ -198,7 +198,7 @@ namespace Microsoft.Test.OData.Framework.Client
         /// <summary>
         /// Wrapper entry for the DataServiceContext.AttachTo method.
         /// </summary>
-        /// <param name="entitySetName">EntitySet for the object to be attached.</param>        
+        /// <param name="entitySetName">EntitySet for the object to be attached.</param>
         /// <param name="entity">entity graph to attach</param>
         public void AttachTo(string entitySetName, object entity)
         {
@@ -208,7 +208,7 @@ namespace Microsoft.Test.OData.Framework.Client
         /// <summary>
         /// Wrapper entry for the DataServiceContext.AttachTo method.
         /// </summary>
-        /// <param name="entitySetName">EntitySet for the object to be attached.</param>        
+        /// <param name="entitySetName">EntitySet for the object to be attached.</param>
         /// <param name="entity">entity graph to attach</param>
         /// <param name="etag">The entity's etag.</param>
         public void AttachTo(string entitySetName, object entity, string etag)
@@ -364,7 +364,7 @@ namespace Microsoft.Test.OData.Framework.Client
 
         /// <summary>
         /// Wrapper entry for the DataServiceContext.ChangeState method.
-        /// </summary>        
+        /// </summary>
         /// <param name="entity">entity whose state is to be changed</param>
         /// <param name="state">State to be applied</param>
         public void ChangeState(object entity, EntityStates state)
@@ -564,7 +564,7 @@ namespace Microsoft.Test.OData.Framework.Client
         /// <typeparam name="TElement">Element type for response.</typeparam>
         /// <param name="continuation">Continuation for query to execute.</param>
         /// <returns>The response for the specified <paramref name="continuation"/>.</returns>
-        public QueryOperationResponse<TElement> Execute<TElement>(DataServiceQueryContinuation<TElement> continuation) 
+        public QueryOperationResponse<TElement> Execute<TElement>(DataServiceQueryContinuation<TElement> continuation)
         {
 #if SILVERLIGHT || PORTABLELIB
             throw new NotImplementedException();
@@ -720,7 +720,7 @@ namespace Microsoft.Test.OData.Framework.Client
         /// even if it failed (throws) and even if it didn't get to use the stream.</param>
         /// <param name="contentType">The Content-Type header value to set for the MR request. The value is not validated
         /// in any way and it's the responsibility of the user to make sure it's a valid value for Content-Type header.</param>
-        /// <param name="slug">The Slug header value to set for the MR request. The value is not validated in any way 
+        /// <param name="slug">The Slug header value to set for the MR request. The value is not validated in any way
         /// and it's the responsibility of the user to make usre it's a valid value for Slug header.</param>
         public void SetSaveStream(object entity, Stream stream, bool closeStream, string contentType, string slug)
         {
@@ -737,7 +737,7 @@ namespace Microsoft.Test.OData.Framework.Client
         /// <param name="closeStream">If set to true SaveChanges will close the stream before it returns. It will close the stream
         /// even if it failed (throws) and even if it didn't get to use the stream.</param>
         /// <param name="contentType">
-        /// The Content-Type header value to set for the stream request. The value is not validated in any way other than that 
+        /// The Content-Type header value to set for the stream request. The value is not validated in any way other than that
         /// it is not null or empty and it's the responsibility of the user to make sure it's a valid value for Content-Type header.
         /// </param>
         public void SetSaveStream(object entity, string name, Stream stream, bool closeStream, string contentType)

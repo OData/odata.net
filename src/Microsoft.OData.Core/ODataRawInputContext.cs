@@ -15,6 +15,7 @@ namespace Microsoft.OData.Core
 #if ODATALIB_ASYNC
     using System.Threading.Tasks;
 #endif
+    using Microsoft.OData.Core.MultipartMixed;
     using Microsoft.OData.Edm;
     #endregion Namespaces
 
@@ -209,7 +210,7 @@ namespace Microsoft.OData.Core
         /// <returns>The newly created <see cref="ODataCollectionReader"/>.</returns>
         private ODataBatchReader CreateBatchReaderImplementation(string batchBoundary, bool synchronous)
         {
-            return new ODataBatchReader(this, batchBoundary, this.encoding, synchronous);
+            return new ODataMultipartMixedBatchReader(this, batchBoundary, this.encoding, synchronous);
         }
 
         /// <summary>
