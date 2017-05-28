@@ -495,6 +495,15 @@ namespace Microsoft.OData.Core.JsonLight
                         "Operation state must be 'None' at the end of the operation.");
 
                     this.State = ODataBatchReaderState.Operation;
+
+                    if (this.atomicGroups.IsWithinAtomicGroup)
+                    {
+                        this.IncreaseChangeSetSize();
+                    }
+                    else
+                    {
+                        this.IncreaseBatchSize();
+                    }
                 }
                 break;
 
@@ -502,12 +511,14 @@ namespace Microsoft.OData.Core.JsonLight
                 {
                     Debug.Assert(this.responsePropertiesCache != null,
                         "response properties cache must have been set by now.");
+                    this.IncreaseBatchSize();
                     this.State = ODataBatchReaderState.Operation;
                 }
                     break;
 
                 case ODataBatchReaderState.ChangesetEnd:
                 {
+                    this.ResetChangeSetSize();
                     ReadAtChangesetEndState(this.responsePropertiesCache);
                 }
                 break;
@@ -615,6 +626,15 @@ namespace Microsoft.OData.Core.JsonLight
                         "Operation state must be 'None' at the end of the operation.");
 
                     this.State = ODataBatchReaderState.Operation;
+
+                    if (this.atomicGroups.IsWithinAtomicGroup)
+                    {
+                        this.IncreaseChangeSetSize();
+                    }
+                    else
+                    {
+                        this.IncreaseBatchSize();
+                    }
                 }
                 break;
 
@@ -623,12 +643,14 @@ namespace Microsoft.OData.Core.JsonLight
                     // Direct transition back to opration state.
                     Debug.Assert(this.requestPropertiesCache != null,
                         "request properties cache must have been set by now.");
+                    this.IncreaseBatchSize(); 
                     this.State = ODataBatchReaderState.Operation;
                 }
                 break;
 
                 case ODataBatchReaderState.ChangesetEnd:
                 {
+                    this.ResetChangeSetSize();
                     ReadAtChangesetEndState(this.requestPropertiesCache);
                 }
                 break;

@@ -221,14 +221,6 @@ namespace Microsoft.OData.Core.JsonLight
         }
 
         /// <summary>
-        /// Starts a new batch - implementation of the actual functionality.
-        /// </summary>
-        protected override void WriteStartBatchImplementation()
-        {
-            this.SetState(BatchWriterState.BatchStarted);
-        }
-
-        /// <summary>
         /// Ends a batch - implementation of the actual functionality.
         /// </summary>
         protected override void WriteEndBatchImplementation()
