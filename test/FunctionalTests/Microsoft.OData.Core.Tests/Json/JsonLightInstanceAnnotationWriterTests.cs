@@ -14,6 +14,7 @@ using FluentAssertions;
 using Microsoft.OData.JsonLight;
 using Microsoft.OData.Edm;
 using Microsoft.OData.Edm.Vocabularies;
+using Microsoft.OData.Edm.Vocabularies.V1;
 using Microsoft.OData.Json;
 using Microsoft.Spatial;
 using Microsoft.Test.OData.DependencyInjection;
@@ -303,6 +304,29 @@ namespace Microsoft.OData.Tests.Json
                 verifierCalls++;
             };
             this.jsonLightInstanceAnnotationWriter.WriteInstanceAnnotation(new ODataInstanceAnnotation(term, new ODataNullValue()));
+            verifierCalls.Should().Be(2);
+        }
+
+        [Fact]
+        public void WriteInstanceAnnotation_ForEnumValue()
+        {
+            var enumValue = new ODataEnumValue("ReadOnly", "Org.OData.Core.V1.Permission");
+            string term = CoreVocabularyModel.PermissionsTerm.FullName();
+            var verifierCalls = 0;
+
+            this.jsonWriter.WriteNameVerifier = (name) =>
+            {
+                name.Should().Be("@" + term);
+                verifierCalls++;
+            };
+            this.valueWriter.WriteEnumVerifier = (value, expectedType) =>
+            {
+                value.Should().Be(enumValue);
+                expectedType.Definition.Should().Be(CoreVocabularyModel.Instance.SchemaElements.FirstOrDefault(e => e.FullName() == "Org.OData.Core.V1.Permission"));
+                verifierCalls.Should().Be(1);
+                verifierCalls++;
+            };
+            this.jsonLightInstanceAnnotationWriter.WriteInstanceAnnotation(new ODataInstanceAnnotation(term, enumValue));
             verifierCalls.Should().Be(2);
         }
 
