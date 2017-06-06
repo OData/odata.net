@@ -4,7 +4,11 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+#if ODATA_CLIENT
+namespace Microsoft.OData.Client.ALinq.UriParser
+#else
 namespace Microsoft.OData.UriParser
+#endif
 {
     using System;
     using Microsoft.OData.UriParser.Aggregation;
@@ -221,6 +225,26 @@ namespace Microsoft.OData.UriParser
         /// <param name="tokenIn">The FunctionParameterToken to bind</param>
         /// <returns>A user defined value</returns>
         public virtual T Visit(FunctionParameterToken tokenIn)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Visits a ComputeToken
+        /// </summary>
+        /// <param name="tokenIn">The ComputeToken to bind</param>
+        /// <returns>A user defined value</returns>
+        public virtual T Visit(ComputeToken tokenIn)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Visits a ComputeExpressionToken
+        /// </summary>
+        /// <param name="tokenIn">The ComputeExpressionToken to bind</param>
+        /// <returns>A user defined value</returns>
+        public virtual T Visit(ComputeExpressionToken tokenIn)
         {
             throw new NotImplementedException();
         }

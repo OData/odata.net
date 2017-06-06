@@ -59,6 +59,41 @@ namespace Microsoft.OData.UriParser
         }
 
         /// <summary>
+        /// Create an expand item, using a navigationProperty, its entity set, and any expand options.
+        /// </summary>
+        /// <param name="pathToNavigationProperty">the path to the navigation property for this expand item, including any type segments</param>
+        /// <param name="navigationSource">the navigation source for this expand level.</param>
+        /// <param name="selectAndExpand">This level select and any sub expands for this expand item.</param>
+        /// <param name="filterOption">A filter clause for this expand (can be null)</param>
+        /// <param name="orderByOption">An Orderby clause for this expand (can be null)</param>
+        /// <param name="topOption">A top clause for this expand (can be null)</param>
+        /// <param name="skipOption">A skip clause for this expand (can be null)</param>
+        /// <param name="countOption">An query count clause for this expand (can be null)</param>
+        /// <param name="searchOption">An levels clause for this expand (can be null)</param>
+        /// <param name="levelsOption">An levels clause for this expand (can be null)</param>
+        /// <param name="computeOption">A compute clause for this expand (can be null)</param>
+        /// <exception cref="System.ArgumentNullException">Throws if input pathToNavigationProperty is null.</exception>
+        public ExpandedNavigationSelectItem(
+             ODataExpandPath pathToNavigationProperty,
+             IEdmNavigationSource navigationSource,
+             SelectExpandClause selectAndExpand,
+             FilterClause filterOption,
+             OrderByClause orderByOption,
+             long? topOption,
+             long? skipOption,
+             bool? countOption,
+             SearchClause searchOption,
+             LevelsClause levelsOption,
+             ComputeClause computeOption)
+            : base(pathToNavigationProperty, navigationSource, filterOption, orderByOption, topOption, skipOption, countOption, searchOption, computeOption)
+        {
+            ExceptionUtils.CheckArgumentNotNull(pathToNavigationProperty, "pathToNavigationProperty");
+
+            this.SelectAndExpand = selectAndExpand;
+            this.LevelsOption = levelsOption;
+        }
+
+        /// <summary>
         /// The select and expand clause for this expanded navigation.
         /// </summary>
         public SelectExpandClause SelectAndExpand
