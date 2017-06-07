@@ -127,6 +127,16 @@ namespace Microsoft.OData.Edm.Csdl.Parsing.Common
             this.nameLookup = nameMap;
         }
 
+        public IEnumerator<XmlElementValue> GetEnumerator()
+        {
+            return this.values.GetEnumerator();
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return this.values.GetEnumerator();
+        }
+
         internal XmlTextValue FirstText
         {
             get { return (this.values.OfText().FirstOrDefault() ?? XmlTextValue.Missing); }
