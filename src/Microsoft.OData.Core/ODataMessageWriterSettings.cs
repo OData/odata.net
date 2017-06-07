@@ -114,6 +114,7 @@ namespace Microsoft.OData.Core
             this.EnableFullValidation = other.EnableFullValidation;
             this.mediaTypeResolver = other.mediaTypeResolver;
             this.ODataSimplified = other.ODataSimplified;
+            this.IgnoreNullValues = other.IgnoreNullValues;
         }
 
         /// <summary>Gets or sets the OData protocol version to be used for writing payloads. </summary>
@@ -211,6 +212,14 @@ namespace Microsoft.OData.Core
         /// Whether OData Simplified is enabled.
         /// </summary>
         public bool ODataSimplified { get; set; }
+
+        /// <summary>
+        /// Don't serialize null values
+        /// </summary>
+        /// <remarks>
+        /// Default valus is false, that means serialize null values.
+        /// </remarks>
+        public bool IgnoreNullValues { get; set; }
 
         /// <summary>
         /// If set to true, then the root element of each payload will be written in the default (non-prefix-qualified) namespace of the document. 

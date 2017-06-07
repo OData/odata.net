@@ -329,7 +329,7 @@ namespace Microsoft.OData.Core.JsonLight
                 this.ODataAnnotationWriter.WriteInstanceAnnotationName(ODataAnnotationNames.ODataNull);
                 this.JsonWriter.WriteValue(true);
             }
-            else
+            else if (!this.MessageWriterSettings.IgnoreNullValues)
             {
                 this.JsonWriter.WriteName(property.Name);
                 this.JsonLightValueSerializer.WriteNullValue();
