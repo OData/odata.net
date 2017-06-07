@@ -4809,6 +4809,7 @@ public sealed class Microsoft.OData.Core.ODataMessageWriterSettings : Microsoft.
 	bool AutoComputePayloadMetadataInJson  { public get; public set; }
 	bool DisableMessageStreamDisposal  { public get; public set; }
 	bool EnableFullValidation  { public get; public set; }
+	bool IgnoreNullValues  { public get; public set; }
 	string JsonPCallback  { public get; public set; }
 	Microsoft.OData.Core.ODataMediaTypeResolver MediaTypeResolver  { public get; public set; }
 	bool ODataSimplified  { public get; public set; }
