@@ -150,16 +150,6 @@ namespace Microsoft.OData.Edm.Csdl.Parsing.Common
             }
         }
 
-        internal bool Remove(XmlElementValue value)
-        {
-            if (value == null)
-            {
-                return false;
-            }
-
-            return this.values.Remove(value);
-        }
-
         public IEnumerator<XmlElementValue> GetEnumerator()
         {
             return this.values.GetEnumerator();
