@@ -13,7 +13,7 @@ namespace Microsoft.OData.UriParser
     /// <summary>
     /// A token to represent a parameter to a function call.
     /// </summary>
-    internal sealed class FunctionParameterToken : QueryToken
+    public sealed class FunctionParameterToken : QueryToken
     {
         /// <summary>
         /// get an empty list of parameters

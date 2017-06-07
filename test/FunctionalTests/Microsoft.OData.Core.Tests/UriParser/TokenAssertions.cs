@@ -126,10 +126,10 @@ namespace Microsoft.OData.Tests.UriParser
             token.Should().BeOfType<ExpandTermToken>();
             ExpandTermToken expandTermToken = token.As<ExpandTermToken>();
             expandTermToken.Kind.Should().Be(QueryTokenKind.ExpandTerm);
-            expandTermToken.PathToNavProp.Identifier.Should().Be(propertyName);
+            expandTermToken.PathToNavigationProp.Identifier.Should().Be(propertyName);
             if (checkNullParent)
             {
-                expandTermToken.PathToNavProp.NextToken.Should().BeNull();
+                expandTermToken.PathToNavigationProp.NextToken.Should().BeNull();
             }
             return new AndConstraint<ExpandTermToken>(expandTermToken);
         }

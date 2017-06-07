@@ -70,42 +70,42 @@ namespace Microsoft.OData.Tests
         public void ExcludeAllMatchesShouldThrowOnNullAnnotationName()
         {
             Action action = () => AnnotationFilter.Create("-*").Matches(null);
-            action.ShouldThrow<ArgumentNullException>().WithMessage("annotationName", ComparisonMode.Substring);
+            action.ShouldThrow<ArgumentNullException>().Where(e => e.Message.Contains("annotationName"));
         }
 
         [Fact]
         public void ExcludeAllMatchesShouldThrowOnEmptyAnnotationName()
         {
             Action action = () => AnnotationFilter.Create("-*").Matches("");
-            action.ShouldThrow<ArgumentNullException>().WithMessage("annotationName", ComparisonMode.Substring);
+            action.ShouldThrow<ArgumentNullException>().Where(e => e.Message.Contains("annotationName"));
         }
 
         [Fact]
         public void IncludeAllMatchesShouldThrowOnNullAnnotationName()
         {
             Action action = () => AnnotationFilter.Create("*").Matches(null);
-            action.ShouldThrow<ArgumentNullException>().WithMessage("annotationName", ComparisonMode.Substring);
+            action.ShouldThrow<ArgumentNullException>().Where(e => e.Message.Contains("annotationName"));
         }
 
         [Fact]
         public void IncludeAllMatchesShouldThrowOnEmptyAnnotationName()
         {
             Action action = () => AnnotationFilter.Create("*").Matches("");
-            action.ShouldThrow<ArgumentNullException>().WithMessage("annotationName", ComparisonMode.Substring);
+            action.ShouldThrow<ArgumentNullException>().Where(e => e.Message.Contains("annotationName"));
         }
 
         [Fact]
         public void MatchesShouldThrowOnNullAnnotationName()
         {
             Action action = () => AnnotationFilter.Create("ns.name").Matches(null);
-            action.ShouldThrow<ArgumentNullException>().WithMessage("annotationName", ComparisonMode.Substring);
+            action.ShouldThrow<ArgumentNullException>().Where(e => e.Message.Contains("annotationName"));
         }
 
         [Fact]
         public void MatchesShouldThrowOnEmptyAnnotationName()
         {
             Action action = () => AnnotationFilter.Create("ns.name").Matches("");
-            action.ShouldThrow<ArgumentNullException>().WithMessage("annotationName", ComparisonMode.Substring);
+            action.ShouldThrow<ArgumentNullException>().Where(e => e.Message.Contains("annotationName"));
         }
 
         [Fact]

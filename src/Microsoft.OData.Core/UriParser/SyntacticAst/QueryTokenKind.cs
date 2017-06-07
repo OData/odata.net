@@ -13,7 +13,8 @@ namespace Microsoft.OData.UriParser
     /// <summary>
     /// Enumeration of kinds of query tokens.
     /// </summary>
-    internal enum QueryTokenKind
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1008:EnumsShouldHaveZeroValue")]
+    public enum QueryTokenKind
     {
         /// <summary>
         /// The binary operator.

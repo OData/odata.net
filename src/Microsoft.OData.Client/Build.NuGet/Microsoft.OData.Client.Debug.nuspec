@@ -55,7 +55,7 @@ OData .NET library is open source at http://github.com/OData/odata.net</descript
     <file src="$SourcesRoot$\src\Microsoft.OData.Core\UriParser\Aggregation\AggregateToken.cs" target="src\Microsoft.OData.Core\UriParser\Aggregation\AggregateToken.cs" />
     <file src="$SourcesRoot$\src\Microsoft.OData.Core\UriParser\Aggregation\ApplyTransformationToken.cs" target="src\Microsoft.OData.Core\UriParser\Aggregation\ApplyTransformationToken.cs" />
     <file src="$SourcesRoot$\src\Microsoft.OData.Core\UriParser\Aggregation\GroupByToken.cs" target="src\Microsoft.OData.Core\UriParser\Aggregation\GroupByToken.cs" />
-    <file src="$SourcesRoot$\src\Microsoft.OData.Core\UriParser\TreeNodeKinds\QueryTokenKind.cs" target="src\Microsoft.OData.Core\UriParser\TreeNodeKinds\QueryTokenKind.cs" />
+    <file src="$SourcesRoot$\src\Microsoft.OData.Core\UriParser\SyntacticAst\QueryTokenKind.cs" target="src\Microsoft.OData.Core\UriParser\SyntacticAst\QueryTokenKind.cs" />
     <file src="$SourcesRoot$\src\Microsoft.OData.Core\UriParser\ReadOnlyEnumerableForUriParser.cs" target="src\Microsoft.OData.Core\UriParser\ReadOnlyEnumerableForUriParser.cs" />
     <file src="$SourcesRoot$\src\Microsoft.OData.Core\UriParser\NamedValue.cs" target="src\Microsoft.OData.Core\UriParser\NamedValue.cs" />
     <file src="$SourcesRoot$\src\Microsoft.OData.Core\UriParser\SyntacticAst\AllToken.cs" target="src\Microsoft.OData.Core\UriParser\SyntacticAst\AllToken.cs" />

@@ -16,7 +16,7 @@ namespace Microsoft.OData.UriParser
     /// <summary>
     /// Lexical token representing an all-properties access.
     /// </summary>
-    internal sealed class StarToken : PathToken
+    public sealed class StarToken : PathToken
     {
         /// <summary>
         /// The NextToken token to access the property on.

@@ -377,7 +377,7 @@ namespace Microsoft.OData.Tests.JsonLight
                 var tuples = this.ReadItem(payload, this.GetModel(), customers, customer);
                 this.ValidateTuples(tuples);
             };
-            readAction.ShouldThrow<ODataException>().WithMessage("Id shouldn't be a string", ComparisonMode.Substring);
+            readAction.ShouldThrow<ODataException>().Where(e => e.Message.Contains("Id shouldn't be a string"));
         }
 
         #endregion

@@ -202,7 +202,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         public void CallingAFunctionIsNotRecognizedInSelect()
         {
             Action parse = () => ParseSingleSelectForPerson("HasDog(inOffice=true)");
-            parse.ShouldThrow<ODataException>().WithMessage("HasDog(inOffice=true)", ComparisonMode.EquivalentSubstring);
+            parse.ShouldThrow<ODataException>().Where(e => e.Message.Contains("HasDog(inOffice=true)"));
         }
 
         [Fact]

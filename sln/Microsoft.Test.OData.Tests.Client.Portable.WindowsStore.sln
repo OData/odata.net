@@ -1,18 +1,48 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.Test.OData.Tests.Client.Portable.WindowsStore", "..\test\EndToEndTests\Tests\Client\Build.PortableLibrary.WindowsStore\Microsoft.Test.OData.Tests.Client.Portable.WindowsStore.csproj", "{D3F99EBE-1535-4F31-9C08-BEFEBF27CE2B}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.Test.OData.Services.TestServices.Portable", "..\test\EndToEndTests\Services\TestServices\Build.PortableLibrary\Microsoft.Test.OData.Services.TestServices.Portable.csproj", "{4382D649-1A86-48D0-9156-AC37C3D568C0}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.Test.OData.Framework.Portable", "..\test\EndToEndTests\Framework\Core\Build.PortableLibrary\Microsoft.Test.OData.Framework.Portable.csproj", "{134D2AD7-3C82-45C9-AC43-75F482081F8D}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.OData.Client.Portable", "..\src\Microsoft.OData.Client\Build.Portable\Microsoft.OData.Client.Portable.csproj", "{AED0DC9D-76E5-4145-AF5E-9E2F856F4D18}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.Spatial", "..\src\Microsoft.Spatial\Microsoft.Spatial.csproj", "{5D921888-FE03-4C3F-40FE-2F624505461D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.OData.Core", "..\src\Microsoft.OData.Core\Microsoft.OData.Core.csproj", "{989A83CC-B864-4A75-8BF3-5EDA99203A86}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.OData.Edm", "..\src\Microsoft.OData.Edm\Microsoft.OData.Edm.csproj", "{7D921888-FE03-4C3F-80FE-2F624505461C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.OData.Core", "..\src\Microsoft.OData.Core\Microsoft.OData.Core.csproj", "{989A83CC-B864-4A75-8BF3-5EDA99203A86}"
+	ProjectSection(ProjectDependencies) = postProject
+		{5D921888-FE03-4C3F-40FE-2F624505461D} = {5D921888-FE03-4C3F-40FE-2F624505461D}
+		{7D921888-FE03-4C3F-80FE-2F624505461C} = {7D921888-FE03-4C3F-80FE-2F624505461C}
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.OData.Client.Portable", "..\src\Microsoft.OData.Client\Build.Portable\Microsoft.OData.Client.Portable.csproj", "{AED0DC9D-76E5-4145-AF5E-9E2F856F4D18}"
+	ProjectSection(ProjectDependencies) = postProject
+		{5D921888-FE03-4C3F-40FE-2F624505461D} = {5D921888-FE03-4C3F-40FE-2F624505461D}
+		{7D921888-FE03-4C3F-80FE-2F624505461C} = {7D921888-FE03-4C3F-80FE-2F624505461C}
+		{989A83CC-B864-4A75-8BF3-5EDA99203A86} = {989A83CC-B864-4A75-8BF3-5EDA99203A86}
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.Test.OData.Framework.Portable", "..\test\EndToEndTests\Framework\Core\Build.PortableLibrary\Microsoft.Test.OData.Framework.Portable.csproj", "{134D2AD7-3C82-45C9-AC43-75F482081F8D}"
+	ProjectSection(ProjectDependencies) = postProject
+		{5D921888-FE03-4C3F-40FE-2F624505461D} = {5D921888-FE03-4C3F-40FE-2F624505461D}
+		{7D921888-FE03-4C3F-80FE-2F624505461C} = {7D921888-FE03-4C3F-80FE-2F624505461C}
+		{989A83CC-B864-4A75-8BF3-5EDA99203A86} = {989A83CC-B864-4A75-8BF3-5EDA99203A86}
+		{AED0DC9D-76E5-4145-AF5E-9E2F856F4D18} = {AED0DC9D-76E5-4145-AF5E-9E2F856F4D18}
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.Test.OData.Services.TestServices.Portable", "..\test\EndToEndTests\Services\TestServices\Build.PortableLibrary\Microsoft.Test.OData.Services.TestServices.Portable.csproj", "{4382D649-1A86-48D0-9156-AC37C3D568C0}"
+	ProjectSection(ProjectDependencies) = postProject
+		{5D921888-FE03-4C3F-40FE-2F624505461D} = {5D921888-FE03-4C3F-40FE-2F624505461D}
+		{7D921888-FE03-4C3F-80FE-2F624505461C} = {7D921888-FE03-4C3F-80FE-2F624505461C}
+		{989A83CC-B864-4A75-8BF3-5EDA99203A86} = {989A83CC-B864-4A75-8BF3-5EDA99203A86}
+		{AED0DC9D-76E5-4145-AF5E-9E2F856F4D18} = {AED0DC9D-76E5-4145-AF5E-9E2F856F4D18}
+		{134D2AD7-3C82-45C9-AC43-75F482081F8D} = {134D2AD7-3C82-45C9-AC43-75F482081F8D}
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.Test.OData.Tests.Client.Portable.WindowsStore", "..\test\EndToEndTests\Tests\Client\Build.PortableLibrary.WindowsStore\Microsoft.Test.OData.Tests.Client.Portable.WindowsStore.csproj", "{D3F99EBE-1535-4F31-9C08-BEFEBF27CE2B}"
+	ProjectSection(ProjectDependencies) = postProject
+		{5D921888-FE03-4C3F-40FE-2F624505461D} = {5D921888-FE03-4C3F-40FE-2F624505461D}
+		{7D921888-FE03-4C3F-80FE-2F624505461C} = {7D921888-FE03-4C3F-80FE-2F624505461C}
+		{989A83CC-B864-4A75-8BF3-5EDA99203A86} = {989A83CC-B864-4A75-8BF3-5EDA99203A86}
+		{AED0DC9D-76E5-4145-AF5E-9E2F856F4D18} = {AED0DC9D-76E5-4145-AF5E-9E2F856F4D18}
+		{134D2AD7-3C82-45C9-AC43-75F482081F8D} = {134D2AD7-3C82-45C9-AC43-75F482081F8D}
+		{4382D649-1A86-48D0-9156-AC37C3D568C0} = {4382D649-1A86-48D0-9156-AC37C3D568C0}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

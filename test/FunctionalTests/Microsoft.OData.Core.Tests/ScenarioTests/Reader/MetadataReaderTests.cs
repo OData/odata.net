@@ -104,7 +104,11 @@ namespace Microsoft.OData.Tests.ScenarioTests.Reader
                 string uriStr = uri.ToString();
                 if (map.ContainsKey(uriStr))
                 {
+#if NETCOREAPP1_0
+                    return XmlReader.Create(new StringReader(map[uriStr]));
+#else
                     return new XmlTextReader(new StringReader(map[uriStr]));
+#endif
                 }
 
                 return null;

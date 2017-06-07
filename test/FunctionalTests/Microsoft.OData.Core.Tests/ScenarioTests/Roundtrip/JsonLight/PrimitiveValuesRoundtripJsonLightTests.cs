@@ -523,7 +523,11 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip.JsonLight
             string payload = reader.ReadToEnd();
             payload.Should().Be("{\"@odata.context\":\"http://host/service/$metadata#People/$entity\",\"ID\":\"18446744073709551615\",\"Name\":\"Foo\",\"FavoriteNumber\":250.0,\"Age\":123,\"Guid\":-9223372036854775808,\"Weight\":123.45,\"Money\":79228162514264337593543950335}");
 
+#if NETCOREAPP1_0
+            stream = new MemoryStream(Encoding.GetEncoding(0).GetBytes(payload));
+#else
             stream = new MemoryStream(Encoding.Default.GetBytes(payload));
+#endif
             message = new InMemoryMessage { Stream = stream };
             message.StatusCode = 200;
 

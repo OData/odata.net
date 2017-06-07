@@ -36,7 +36,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
                     new List<KeyValuePair<string, object>>(),
                     ModelBuildingHelpers.BuildValidEntityType(),
                     null));
-            callWithNullNavProp.ShouldThrow<ArgumentNullException>().WithMessage("currentNavigationProperty", ComparisonMode.EquivalentSubstring);
+            callWithNullNavProp.ShouldThrow<ArgumentNullException>().Where(e => e.Message.Contains("currentNavigationProperty"));
         }
 
         [Fact]
@@ -56,7 +56,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
                     new List<KeyValuePair<string, object>>(),
                     ModelBuildingHelpers.BuildValidEntityType(),
                     null));
-            callWithNullRawKey.ShouldThrow<ArgumentNullException>().WithMessage("rawKeyValues", ComparisonMode.EquivalentSubstring);
+            callWithNullRawKey.ShouldThrow<ArgumentNullException>().Where(e => e.Message.Contains("rawKeyValues"));
         }
 
         [Fact]

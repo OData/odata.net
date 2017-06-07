@@ -366,21 +366,21 @@ namespace Microsoft.OData.Tests
         public void MaxPartsPerBatchShouldThrowIfSetToNegativeNumber()
         {
             Action testSubject = () => this.settings.MessageQuotas.MaxPartsPerBatch = -1;
-            testSubject.ShouldThrow<ArgumentOutOfRangeException>().WithMessage(ODataErrorStrings.ExceptionUtils_CheckIntegerNotNegative(-1), ComparisonMode.StartWith);
+            testSubject.ShouldThrow<ArgumentOutOfRangeException>().Where(e => e.Message.StartsWith(ODataErrorStrings.ExceptionUtils_CheckIntegerNotNegative(-1)));
         }
 
         [Fact]
         public void MaxOperationsPerChangesetShouldThrowIfSetToNegativeNumber()
         {
             Action testSubject = () => this.settings.MessageQuotas.MaxOperationsPerChangeset = -1;
-            testSubject.ShouldThrow<ArgumentOutOfRangeException>().WithMessage(ODataErrorStrings.ExceptionUtils_CheckIntegerNotNegative(-1), ComparisonMode.StartWith);
+            testSubject.ShouldThrow<ArgumentOutOfRangeException>().Where(e => e.Message.StartsWith(ODataErrorStrings.ExceptionUtils_CheckIntegerNotNegative(-1)));
         }
 
         [Fact]
         public void MaxNestingDepthShouldThrowIfSetToNonPositiveNumber()
         {
             Action testSubject = () => this.settings.MessageQuotas.MaxNestingDepth = 0;
-            testSubject.ShouldThrow<ArgumentOutOfRangeException>().WithMessage(ODataErrorStrings.ExceptionUtils_CheckIntegerPositive(0), ComparisonMode.StartWith);
+            testSubject.ShouldThrow<ArgumentOutOfRangeException>().Where(e => e.Message.StartsWith(ODataErrorStrings.ExceptionUtils_CheckIntegerPositive(0)));
         }
         #endregion Error tests
 

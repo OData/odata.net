@@ -370,7 +370,11 @@ namespace Microsoft.Spatial.Tests
 
             pipelineCalls(gw.GeographyPipeline);
             w.Flush();
+#if NETCOREAPP1_0
+            w.Dispose();
+#else
             w.Close();
+#endif
 
             // use XElement to validate basic XML integrity
             ms.Seek(0, SeekOrigin.Begin);
@@ -735,7 +739,11 @@ namespace Microsoft.Spatial.Tests
 
             pipelineCalls(gw.GeometryPipeline);
             w.Flush();
+#if NETCOREAPP1_0
+            w.Dispose();
+#else
             w.Close();
+#endif
 
             // use XElement to validate basic XML integrity
             ms.Seek(0, SeekOrigin.Begin);

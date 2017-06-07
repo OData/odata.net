@@ -13,7 +13,7 @@ namespace Microsoft.OData.UriParser
     /// <summary>
     /// Lexical token representing the parameter for an Any/All query.
     /// </summary>
-    internal sealed class RangeVariableToken : QueryToken
+    public sealed class RangeVariableToken : QueryToken
     {
         /// <summary>
         /// The name of the Any/All parameter.

@@ -180,7 +180,7 @@ namespace Microsoft.OData.UriParser
         {
             ExceptionUtils.CheckArgumentNotNull(tokenIn, "tokenIn");
 
-            PathSegmentToken currentToken = tokenIn.PathToNavProp;
+            PathSegmentToken currentToken = tokenIn.PathToNavigationProp;
 
             IEdmStructuredType currentLevelEntityType = this.EdmType;
             List<ODataPathSegment> pathSoFar = new List<ODataPathSegment>();

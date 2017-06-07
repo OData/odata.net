@@ -1446,7 +1446,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip
             if (value != null)
             {
                 Type t = value.GetType();
-                if (t.IsGenericType)
+                if (t.IsGenericType())
                 {
                     // Build a collection type property
                     string genericTypeName = t.GetGenericTypeDefinition().Name;
@@ -1470,7 +1470,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip
                 }
                 else if (t.Namespace != "System" && !t.Namespace.StartsWith("Microsoft.Spatial"))
                 {
-                    if (t.IsEnum == true)
+                    if (t.IsEnum() == true)
                     {
                         return new ODataProperty { Name = propertyName, Value = new ODataEnumValue(value.ToString(), t.FullName) };
                     }

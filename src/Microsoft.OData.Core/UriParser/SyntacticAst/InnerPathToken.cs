@@ -19,7 +19,7 @@ namespace Microsoft.OData.UriParser
     /// <summary>
     /// Lexical token representing a single nonroot segment in the query path.
     /// </summary>
-    internal sealed class InnerPathToken : PathToken
+    public sealed class InnerPathToken : PathToken
     {
         /// <summary>
         /// The Identifier of the segment.

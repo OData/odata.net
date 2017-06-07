@@ -29,7 +29,7 @@ namespace Microsoft.OData.Tests.UriParser
         public void NullInputQueryOptionShouldThrow()
         {
             Action action = () => new ODataQueryOptionParser(HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet(), null);
-            action.ShouldThrow<ArgumentNullException>().WithMessage("Value cannot be null.", ComparisonMode.Substring);
+            action.ShouldThrow<ArgumentNullException>().Where(e => e.Message.Contains("Value cannot be null."));
         }
 
         [Fact]
