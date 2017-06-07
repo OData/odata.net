@@ -1442,6 +1442,9 @@
     <Compile Include="..\Vocabularies\Values\IEdmValue.cs">
       <Link>Microsoft\OData\Edm\Vocabularies\Values\IEdmValue.cs</Link>
     </Compile>
+    <Compile Include="Microsoft\OData\Edm\Csdl\Semantics\CsdlSemanticsOptionalParameter.cs" />
+    <Compile Include="Microsoft\OData\Edm\Schema\EdmOptionalParameter.cs" />
+    <Compile Include="Microsoft\OData\Edm\Schema\Interfaces\IEdmOptionalParameter.cs" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="$(AssemblyKeysCSharpFilePath)">

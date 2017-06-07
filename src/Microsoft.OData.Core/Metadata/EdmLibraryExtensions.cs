@@ -192,9 +192,11 @@ namespace Microsoft.OData.Metadata
 
         /// <summary>
         /// Filters the operations by parameter names.
+        /// </summary>
         /// <param name="functions">The operations.</param>
         /// <param name="parameters">The list of non-binding parameter names to match.</param>
         /// <param name="caseInsensitive">Whether case insensitive.</param>
+        /// <returns>The best matching operations based on parameters.</returns>
         internal static IEnumerable<IEdmOperationImport> FindBestOverloadBasedOnParameters(this IEnumerable<IEdmOperationImport> functions, IEnumerable<string> parameters, bool caseInsensitive = false)
         {
             IEnumerable<IEdmOperationImport> exactMatches = functions.Where(f => f.Operation.Parameters.Count() == parameters.Count());
@@ -276,9 +278,11 @@ namespace Microsoft.OData.Metadata
 
         /// <summary>
         /// Filters the operations by parameter names.
+        /// </summary>
         /// <param name="functions">The operations.</param>
         /// <param name="parameters">The list of non-binding parameter names to match.</param>
         /// <param name="caseInsensitive">Whether case insensitive.</param>
+        /// <returns>The best matching operations based on parameters.</returns>
         internal static IEnumerable<IEdmOperation> FindBestOverloadBasedOnParameters(this IEnumerable<IEdmOperation> functions, IEnumerable<string> parameters, bool caseInsensitive = false)
         {
             IEnumerable<IEdmOperation> exactMatches = functions.Where(f => f.Parameters.Count() == parameters.Count() + (f.IsBound ? 1 : 0));
