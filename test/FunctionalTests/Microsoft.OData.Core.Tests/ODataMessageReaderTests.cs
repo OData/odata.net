@@ -157,7 +157,7 @@ namespace Microsoft.OData.Tests
                 "<Schema xmlns=\"http://docs.oasis-open.org/odata/ns/edm\" Namespace=\"Org.OData.Core.V1\" Alias=\"Core\">" +
                 "<Invalid Term=\"Core.Description\">" +
                 "<String>Core terms needed to write vocabularies</String>" +
-                "</Annotation>" +
+                "</Invalid>" +
                 "</Schema>" +
                 "</edmx:DataServices>" +
                 "</edmx:Edmx>"));
