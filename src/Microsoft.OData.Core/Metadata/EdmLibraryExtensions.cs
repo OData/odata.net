@@ -192,6 +192,7 @@ namespace Microsoft.OData.Metadata
 
         /// <summary>
         /// Filters the operations by parameter names.
+        /// </summary>
         /// <param name="functions">The operations.</param>
         /// <param name="parameters">The list of non-binding parameter names to match.</param>
         /// <param name="caseInsensitive">Whether case insensitive.</param>
@@ -276,6 +277,7 @@ namespace Microsoft.OData.Metadata
 
         /// <summary>
         /// Filters the operations by parameter names.
+        /// </summary>
         /// <param name="functions">The operations.</param>
         /// <param name="parameters">The list of non-binding parameter names to match.</param>
         /// <param name="caseInsensitive">Whether case insensitive.</param>
