@@ -227,7 +227,7 @@ namespace Microsoft.OData.UriParser
 
             // If more than one overload matches, try to select based on optional parameters
             if (candidateMatchingOperations.Count > 1)
-            { 
+            {
                 candidateMatchingOperations = candidateMatchingOperations.FindBestOverloadBasedOnParameters(parameterNames).ToList();
             }
 
