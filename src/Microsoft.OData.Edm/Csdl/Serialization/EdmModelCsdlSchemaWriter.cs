@@ -407,8 +407,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
             if (optionalParameter != null && !(optionalParameter.VocabularyAnnotations(this.model).Where(a => a.Term == CoreVocabularyModel.OptionalParameterTerm).Count() > 0))
             {
                 string defaultValue = optionalParameter.DefaultValueString;
-                List<EdmPropertyConstructor> properties = new List<EdmPropertyConstructor>();
-                var optionalValue = new EdmRecordExpression(properties);
+                var optionalValue = new EdmRecordExpression();
 
                 this.WriteVocabularyAnnotationElementHeader(new EdmVocabularyAnnotation(parameter, CoreVocabularyModel.OptionalParameterTerm, optionalValue), false);
                 if (!String.IsNullOrEmpty(defaultValue))
