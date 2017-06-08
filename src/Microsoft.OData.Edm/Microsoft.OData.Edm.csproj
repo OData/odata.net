@@ -146,7 +146,6 @@
     <Compile Include="Schema\EdmUntypedStructuredType.cs" />
     <Compile Include="Schema\EdmUntypedStructuredTypeReference.cs" />
     <Compile Include="Schema\EdmUntypedTypeReference.cs" />
-    <Compile Include="Schema\Interfaces\IEdmOptionalParameter.cs" />
     <Compile Include="Schema\Interfaces\IEdmUntypedType.cs" />
     <Compile Include="Schema\Interfaces\IEdmUntypedTypeReference.cs" />
     <Compile Include="Schema\Interfaces\IEdmTypeDefinitionReference.cs" />
