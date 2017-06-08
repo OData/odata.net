@@ -35,6 +35,7 @@ namespace Microsoft.OData
             this.EnablePrimitiveTypeConversion = true;
             this.EnableMessageStreamDisposal = true;
             this.EnableCharactersCheck = false;
+            this.ReadUntypedAsString = true;
             this.MaxProtocolVersion = ODataConstants.ODataDefaultProtocolVersion;
             Validations = ValidationKinds.All;
             Validator = new ReaderValidator(this);
@@ -131,6 +132,11 @@ namespace Microsoft.OData
         }
 
         /// <summary>
+        /// Whether to read untyped values as a raw string.
+        /// </summary>
+        public bool ReadUntypedAsString { get; set; }
+
+        /// <summary>
         /// Func to evaluate whether an annotation should be read or skipped by the reader. The func should return true if the annotation should
         /// be read and false if the annotation should be skipped. A null value indicates that all annotations should be skipped.
         /// </summary>
@@ -210,6 +216,7 @@ namespace Microsoft.OData
             this.EnableCharactersCheck = other.EnableCharactersCheck;
             this.messageQuotas = new ODataMessageQuotas(other.MessageQuotas);
             this.MaxProtocolVersion = other.MaxProtocolVersion;
+            this.ReadUntypedAsString = other.ReadUntypedAsString;
             this.ShouldIncludeAnnotation = other.ShouldIncludeAnnotation;
             this.validations = other.validations;
             this.ThrowOnDuplicatePropertyNames = other.ThrowOnDuplicatePropertyNames;

@@ -1465,6 +1465,12 @@ namespace Microsoft.OData.Metadata
                 case EdmTypeKind.Enum:
                     return new EdmEnumTypeReference((IEdmEnumType)type, nullable);
                 case EdmTypeKind.Untyped:
+                    EdmUntypedStructuredType untypedType = type as EdmUntypedStructuredType;
+                    if (untypedType != null)
+                    {
+                        return new EdmUntypedStructuredTypeReference(untypedType);
+                    }
+
                     return new EdmUntypedTypeReference((IEdmUntypedType)type);
                 case EdmTypeKind.Complex:
                     return new EdmComplexTypeReference((IEdmComplexType)type, nullable);
