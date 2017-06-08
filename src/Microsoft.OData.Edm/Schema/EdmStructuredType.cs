@@ -76,6 +76,14 @@ namespace Microsoft.OData.Edm
             get { return this.propertiesDictionary.GetValue(this, ComputePropertiesDictionaryFunc, null); }
         }
 
+        public override EdmTypeKind TypeKind
+        {
+            get
+            {
+                return EdmTypeKind.None;
+            }
+        }
+
         /// <summary>
         /// Adds the <paramref name="property"/> to this type.
         /// <see cref="IEdmProperty.DeclaringType"/> of the <paramref name="property"/> must be this type.

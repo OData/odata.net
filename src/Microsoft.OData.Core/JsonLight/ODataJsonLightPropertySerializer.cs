@@ -190,6 +190,12 @@ namespace Microsoft.OData.JsonLight
 
             duplicatePropertyNameChecker.ValidatePropertyUniqueness(property);
 
+            //TODO (mikep): omit annotation for string, bool, decimal
+            if (currentPropertyInfo.MetadataType.IsUndeclaredProperty)
+            {
+                WriteODataTypeAnnotation(property, isTopLevel);
+            }
+
             WriteInstanceAnnotation(property, isTopLevel, currentPropertyInfo.MetadataType.IsUndeclaredProperty);
 
             ODataValue value = property.ODataValue;
@@ -279,6 +285,27 @@ namespace Microsoft.OData.JsonLight
                 else
                 {
                     this.InstanceAnnotationWriter.WriteInstanceAnnotations(property.InstanceAnnotations, property.Name, isUndeclaredProperty);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Writes instance annotation for property
+        /// </summary>
+        /// <param name="property">The property to handle.</param>
+        /// <param name="isTopLevel">If writing top level property.</param>
+        /// <param name="isUndeclaredProperty">If writing an undeclared property.</param>
+        private void WriteODataTypeAnnotation(ODataProperty property, bool isTopLevel)
+        {
+            if (property.TypeAnnotation != null && property.TypeAnnotation.TypeName != null)
+            {
+                if (isTopLevel)
+                {
+                    this.ODataAnnotationWriter.WriteODataTypeInstanceAnnotation(property.TypeAnnotation.TypeName);
+                }
+                else
+                {
+                    this.ODataAnnotationWriter.WriteODataTypePropertyAnnotation(property.Name, property.TypeAnnotation.TypeName);
                 }
             }
         }

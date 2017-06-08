@@ -116,19 +116,6 @@ namespace Microsoft.OData.JsonLight
                 this.ODataAnnotationWriter.WriteODataTypeInstanceAnnotation(typeName);
             }
 
-            // uncomment the below if decide to expose OData information via .InstanceAnnotations
-            // else
-            // {
-            //    // close path for roundtrip :
-            //    // write it to the wire if @odata.type is ever read from payload into Resource.InstanceAnnotations.
-            //    ODataInstanceAnnotation odataTypeAnnotation = resource.InstanceAnnotations.FirstOrDefault(
-            //        s => string.Equals(ODataAnnotationNames.ODataType, s.Name, StringComparison.OrdinalIgnoreCase));
-            //    if (odataTypeAnnotation != null)
-            //    {
-            //        string rawTypeName = (string)odataTypeAnnotation.Value.FromODataValue();
-            //        this.ODataAnnotationWriter.WriteODataTypeInstanceAnnotation(rawTypeName, writeRawValue: true);
-            //    }
-            // }
             // Write the "@odata.id": "Entity Id"
             Uri id;
             if (resource.MetadataBuilder.TryGetIdForSerialization(out id))
