@@ -22,7 +22,7 @@ namespace Microsoft.OData.JsonLight
         /// <summary>
         /// Indicates which level of context Url should be used when writing payload.
         /// </summary>
-        internal abstract ODataContextUrlLevel ContextUrlLevel { get; }
+//        internal abstract ODataContextUrlLevel ContextUrlLevel { get; }
 
         /// <summary>
         /// Creates the appropriate metadata level based on the media type being written.

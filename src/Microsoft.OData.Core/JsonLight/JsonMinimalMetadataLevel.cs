@@ -18,13 +18,13 @@ namespace Microsoft.OData.JsonLight
     /// </remarks>
     internal sealed class JsonMinimalMetadataLevel : JsonLightMetadataLevel
     {
-        /// <summary>
-        /// Indicates which level of context Url should be used when writing payload.
-        /// </summary>
-        internal override ODataContextUrlLevel ContextUrlLevel
-        {
-            get { return ODataContextUrlLevel.OnDemand; }
-        }
+        ///// <summary>
+        ///// Indicates which level of context Url should be used when writing payload.
+        ///// </summary>
+        //internal override ODataContextUrlLevel ContextUrlLevel
+        //{
+        //    get { return ODataContextUrlLevel.OnDemand; }
+        //}
 
         /// <summary>
         /// Returns the oracle to use when determing the type name to write for entries and values.

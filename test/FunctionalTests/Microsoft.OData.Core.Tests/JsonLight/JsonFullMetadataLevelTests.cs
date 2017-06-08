@@ -43,11 +43,11 @@ namespace Microsoft.OData.Tests.JsonLight
             testSubject.GetTypeNameOracle().Should().BeOfType<JsonFullMetadataTypeNameOracle>();
         }
 
-        [Fact]
-        public void FullMetadataLevelShouldHaveContextUrlLevelFull()
-        {
-            testSubject.ContextUrlLevel.Should().Be(ODataContextUrlLevel.Full);
-        }
+        //[Fact]
+        //public void FullMetadataLevelShouldHaveContextUrlLevelFull()
+        //{
+        //    testSubject.ContextUrlLevel.Should().Be(ODataContextUrlLevel.Full);
+        //}
 
         [Fact]
         public void FullMetadataLevelCreateMetadataBuilderWithoutMetadataDocumentUriShouldThrow()

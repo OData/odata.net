@@ -47,13 +47,13 @@ namespace Microsoft.OData.JsonLight
             this.model = model;
         }
 
-        /// <summary>
-        /// Indicates which level of context Url should be used when writing payload.
-        /// </summary>
-        internal override ODataContextUrlLevel ContextUrlLevel
-        {
-            get { return ODataContextUrlLevel.Full; }
-        }
+        ///// <summary>
+        ///// Indicates which level of context Url should be used when writing payload.
+        ///// </summary>
+        //internal override ODataContextUrlLevel ContextUrlLevel
+        //{
+        //    get { return ODataContextUrlLevel.Full; }
+        //}
 
         /// <summary>
         /// Returns the metadata document URI which has been validated to be non-null.

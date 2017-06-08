@@ -82,7 +82,7 @@ namespace Microsoft.OData
             this.edmTypeResolver = EdmTypeWriterResolver.Instance;
             this.payloadValueConverter = ODataPayloadValueConverter.GetPayloadValueConverter(this.container);
             this.writerValidator = messageWriterSettings.Validator;
-            this.odataSimplifiedOptions = ODataSimplifiedOptions.GetODataSimplifiedOptions(this.container);
+            this.odataSimplifiedOptions = ODataSimplifiedOptions.GetODataSimplifiedOptions(this.container, messageWriterSettings.Version);
         }
 
         /// <summary>
@@ -196,13 +196,13 @@ namespace Microsoft.OData
             }
         }
 
-        /// <summary>
-        /// The Context Url level used when writing.
-        /// </summary>
-        internal virtual ODataContextUrlLevel ContextUrlLevel
-        {
-            get { return ODataContextUrlLevel.OnDemand; }
-        }
+        ///// <summary>
+        ///// The Context Url level used when writing.
+        ///// </summary>
+        //internal virtual ODataContextUrlLevel ContextUrlLevel
+        //{
+        //    get { return ODataContextUrlLevel.OnDemand; }
+        //}
 
         /// <summary>
         /// IDisposable.Dispose() implementation to cleanup unmanaged resources of the context.
@@ -655,7 +655,7 @@ namespace Microsoft.OData
         {
             return ODataContextUriBuilder.Create(
                 this.messageWriterSettings.MetadataDocumentUri,
-                this.writingResponse && this.ContextUrlLevel != ODataContextUrlLevel.None);
+                this.writingResponse);
         }
 
         /// <summary>
