@@ -500,6 +500,9 @@
     <Compile Include="..\Csdl\Semantics\CsdlSemanticsOperationParameter.cs">
       <Link>Csdl\Semantics\CsdlSemanticsOperationParameter.cs</Link>
     </Compile>
+    <Compile Include="..\Csdl\Semantics\CsdlSemanticsOptionalParameter.cs">
+      <Link>Csdl\Semantics\CsdlSemanticsOptionalParameter.cs</Link>
+    </Compile>
     <Compile Include="..\Csdl\Semantics\CsdlSemanticsPathExpression.cs">
       <Link>Csdl\Semantics\CsdlSemanticsPathExpression.cs</Link>
     </Compile>
@@ -858,6 +861,9 @@
     <Compile Include="..\Schema\EdmOperationParameter.cs">
       <Link>Schema\EdmOperationParameter.cs</Link>
     </Compile>
+    <Compile Include="..\Schema\EdmOptionalParameter.cs">
+      <Link>Schema\EdmOptionalParameter.cs</Link>
+    </Compile>
     <Compile Include="..\Schema\EdmPathExpression.cs">
       <Link>Schema\EdmPathExpression.cs</Link>
     </Compile>
@@ -1029,6 +1035,9 @@
     </Compile>
     <Compile Include="..\Schema\Interfaces\IEdmOperationParameter.cs">
       <Link>Schema\Interfaces\IEdmOperationParameter.cs</Link>
+    </Compile>
+    <Compile Include="..\Schema\Interfaces\IEdmOptionalParameter.cs">
+      <Link>Schema\Interfaces\IEdmOptionalParameter.cs</Link>
     </Compile>
     <Compile Include="..\Schema\Interfaces\IEdmPathExpression.cs">
       <Link>Schema\Interfaces\IEdmPathExpression.cs</Link>
@@ -1432,9 +1441,6 @@
     <Compile Include="..\Vocabularies\Values\IEdmValue.cs">
       <Link>Vocabularies\Values\IEdmValue.cs</Link>
     </Compile>
-    <Compile Include="Csdl\Semantics\CsdlSemanticsOptionalParameter.cs" />
-    <Compile Include="Schema\EdmOptionalParameter.cs" />
-    <Compile Include="Schema\Interfaces\IEdmOptionalParameter.cs" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\ShippingAssemblyAttributes.cs">
