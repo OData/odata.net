@@ -41,7 +41,6 @@
     <Compile Include="Csdl\Parsing\Ast\CsdlAnnotationPathExpression.cs" />
     <Compile Include="Csdl\Parsing\Ast\CsdlUntypedTypeReference.cs" />
     <Compile Include="Csdl\Semantics\CsdlSemanticsAnnotationPathExpression.cs" />
-    <Compile Include="Csdl\Semantics\CsdlSemanticsOptionalParameter.cs" />
     <Compile Include="Csdl\Semantics\CsdlSemanticsTypeDefinitionReference.cs" />
     <Compile Include="Csdl\Semantics\CsdlSemanticsUntypedTypeReference.cs" />
     <Compile Include="GlobalSuppressions.cs" />
