@@ -59,7 +59,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             this.TryParseUriStringToPrimitiveType("duration'P1Y'", EdmCoreModel.Instance.GetDuration(false /*isNullable*/), out output).Should().BeFalse();
         }
 
-        [Fact(Skip = "This test currently fails.")]
+        [Fact]
         public void TryUriStringToPrimitiveWithOverflowingDurationLiteralShouldReturnFalse()
         {
             object output;

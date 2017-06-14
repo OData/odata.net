@@ -124,11 +124,11 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
                 <BinaryOperatorNode>().Left.As<SingleValuePropertyAccessNode>().Source.As<SingleResourceCastNode>().Source.As<SingleResourceCastNode>().StructuredTypeReference.Definition.Should().Be(cmpPerson);
         }
 
-        [Fact(Skip = "This test currently fails.")]
+        [Fact]
         public void CollectionDowncastInPathShouldBeAllowed()
         {
             var semanticTree = HardCodedTestModel.ParseUri("People/Fully.Qualified.Namespace.Employee", this.edmModel);
-            semanticTree.Path.LastSegment.ShouldBeTypeSegment(HardCodedTestModel.GetEmployeeType());
+            semanticTree.Path.LastSegment.ShouldBeTypeSegment(new EdmCollectionType(HardCodedTestModel.GetEmployeeType().GetTypeReference()));
             semanticTree.Path.FirstSegment.ShouldBeEntitySetSegment(HardCodedTestModel.GetPeopleSet());
         }
 

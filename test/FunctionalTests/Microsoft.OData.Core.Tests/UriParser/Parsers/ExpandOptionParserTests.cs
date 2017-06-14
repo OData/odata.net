@@ -139,11 +139,12 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             three.PathToNavigationProp.ShouldBeNonSystemToken("three");
         }
 
-        [Fact(Skip = "This test currently fails.")]
-        public void CannotHaveAnOptionMoreThanOnce()
+        [Fact]
+        public void CanHaveAnOptionMoreThanOnce()
         {
-            Action parse = () => this.ParseExpandOptions("($filter=true; $filter=false)");
-            parse.ShouldThrow<ODataException>().WithMessage("TODO");
+            // This test was once written to support only one instance of filter
+            // but on 6.x and 7.x, it is supported.
+            this.ParseExpandOptions("($filter=true; $filter=false)");
         }
 
         [Fact]

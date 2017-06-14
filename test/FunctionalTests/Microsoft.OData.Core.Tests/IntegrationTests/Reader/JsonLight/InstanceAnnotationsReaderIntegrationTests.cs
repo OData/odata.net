@@ -224,30 +224,6 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.JsonLight
 
         #endregion Reading Instance Annotations from Top-Level Feeds
 
-        #region Reading Instance Annotations from Expanded Feeds
-
-        [Fact(Skip = "TODO: Need to design and support these.")]
-        public void ShouldReadInstanceAnnotationsOnExpandedFeedResponseInNonStreamingMode()
-        {
-        }
-
-        [Fact(Skip = "TODO: Need to design and support these.")]
-        public void ShouldReadInstanceAnnotationsOnExpandedFeedRequestInNonStreamingMode()
-        {
-        }
-
-        [Fact(Skip = "TODO: Need to design and support these.")]
-        public void ShouldReadInstanceAnnotationsOnExpandedFeedResponseInStreamingMode()
-        {
-        }
-
-        [Fact(Skip = "TODO: Need to design and support these.")]
-        public void ShouldReadInstanceAnnotationsOnExpandedFeedRequestInStreamingMode()
-        {
-        }
-
-        #endregion Reading Instance Annotations from Expanded Feeds
-
         #region Reading Instance Annotations from Top-Level Entries
 
         private const string TopLevelEntryResponseWithInstanceAnnotation =
