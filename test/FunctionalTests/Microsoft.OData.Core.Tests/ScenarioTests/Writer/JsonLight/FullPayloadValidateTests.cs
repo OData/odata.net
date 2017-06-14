@@ -944,7 +944,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Writer.JsonLight
             result.Should().Be(expectedPayload);
         }
 
-        [Fact(Skip = "Ignore this until writing nested context URL is supported")]
+        [Fact]
         public void ShouldWriteNestedContextUrlIfCanNotBeInferred()
         {
             var entryWithOnlyData2WithSerializationInfo = new ODataResource

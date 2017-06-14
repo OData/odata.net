@@ -105,15 +105,14 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
 #endif
         }
 
-        /*
-         * TODO: If an unescaped chracter like a newline, tab, carriage return or whatever is in a segment, it appears
-         * to be lost. I think this is impossible in practice, since real URLs will have them escaped, but we should ensure
-         * that we behavior in some reasonable manner. */
-        [Fact(Skip = "This test currently fails.")]
-        public void ParsePathKeepsUnescapedNewline()
+        [Fact]
+        public void ParsePathRemovesUnescapedNewline()
         {
+             // If an un-escaped character like a newline, tab, carriage return or whatever is in a segment, it is lost.
+             // This is unlikely in practice, since real URLs will have them escaped, but we should ensure
+             // that we behavior in some reasonable manner.
             var list = this.pathParser.ParsePathIntoSegments(new Uri(this.baseUri.AbsoluteUri + "Newline\n"), this.baseUri);
-            string[] expectedListOrder = new[] { "Newline\n" };
+            string[] expectedListOrder = new[] { "Newline" };
 
 #if NETCOREAPP1_0
             list.SequenceEqual(expectedListOrder).Should().BeTrue();

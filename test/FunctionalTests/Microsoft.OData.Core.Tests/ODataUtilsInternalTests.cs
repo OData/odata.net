@@ -19,7 +19,7 @@ namespace Microsoft.OData.Tests
             settings.SelectedProperties.Should().BeSameAs(SelectedPropertiesNode.EntireSubtree);
         }
 
-        [Fact(Skip = "TODO: Update SelectedPropertiesNode class to adapt to V4, fix EntireSubtree logic for V4")]
+        [Fact]
         public void SelectedPropertiesShouldReturnEntireSubTreeWhenSelectExpandClauseIsNull()
         {
             ODataMessageWriterSettings settings = new ODataMessageWriterSettings();

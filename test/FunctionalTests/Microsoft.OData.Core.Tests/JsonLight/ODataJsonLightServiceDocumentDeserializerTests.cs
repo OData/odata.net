@@ -47,9 +47,10 @@ namespace Microsoft.OData.Tests.JsonLight
             singletons[0].Url.ToString().Should().Be("http://service/singleton");
         }
 
-        [Fact(Skip = "TODO: Json ServiceDocumentReader can not accept a name/value pair with name title")]
+        [Fact]
         public void ReadServiceDocumentWithSingletonInfoWithRelativeUrlAndTitle()
         {
+            // Json ServiceDocumentReader can not accept a name/value pair with name title
             var serviceDocument = ReadServiceDocument(DefaultEmptyServiceDocumentStarter.Replace("REPLACE", @"{""name"":""singleton"",""url"":""singleton"", ""kind"":""Singleton"", ""title"":""Singleton Test""}"));
             serviceDocument.Singletons.Should().NotBeEmpty();
             var singletons = serviceDocument.Singletons.ToList();
