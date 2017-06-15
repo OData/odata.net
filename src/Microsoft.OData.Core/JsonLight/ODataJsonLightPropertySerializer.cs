@@ -143,6 +143,10 @@ namespace Microsoft.OData.JsonLight
             }
             else
             {
+                // TODO: (issue #888) this logic results in type annotations not being written for dynamic properties on types that are not
+                // marked as open. Type annotations should always be written for dynamic properties whose type cannot be hueristically
+                // determined. Need to change this.currentPropertyInfo.MetadataType.IsOpenProperty to this.currentPropertyInfo.MetadataType.IsDynamic,
+                // and fix related tests and other logic (this change alone results in writing type even if it's already implied by context).
                 isOpenProperty = (!this.WritingResponse && this.currentPropertyInfo.MetadataType.OwningType == null) // Treat property as dynamic property when writing request and owning type is null
                 || this.currentPropertyInfo.MetadataType.IsOpenProperty;
             }
@@ -190,7 +194,6 @@ namespace Microsoft.OData.JsonLight
 
             duplicatePropertyNameChecker.ValidatePropertyUniqueness(property);
 
-            //TODO (mikep): omit annotation for string, bool, decimal
             if (currentPropertyInfo.MetadataType.IsUndeclaredProperty)
             {
                 WriteODataTypeAnnotation(property, isTopLevel);
@@ -290,22 +293,29 @@ namespace Microsoft.OData.JsonLight
         }
 
         /// <summary>
-        /// Writes instance annotation for property
+        /// Writes odata type annotation for property
         /// </summary>
         /// <param name="property">The property to handle.</param>
         /// <param name="isTopLevel">If writing top level property.</param>
-        /// <param name="isUndeclaredProperty">If writing an undeclared property.</param>
         private void WriteODataTypeAnnotation(ODataProperty property, bool isTopLevel)
         {
             if (property.TypeAnnotation != null && property.TypeAnnotation.TypeName != null)
             {
-                if (isTopLevel)
+                string typeName = property.TypeAnnotation.TypeName;
+                IEdmPrimitiveType primitiveType = EdmCoreModel.Instance.FindType(typeName) as IEdmPrimitiveType;
+                if (primitiveType == null ||
+                    (primitiveType.PrimitiveKind != EdmPrimitiveTypeKind.String &&
+                    primitiveType.PrimitiveKind != EdmPrimitiveTypeKind.Decimal &&
+                    primitiveType.PrimitiveKind != EdmPrimitiveTypeKind.Boolean))
                 {
-                    this.ODataAnnotationWriter.WriteODataTypeInstanceAnnotation(property.TypeAnnotation.TypeName);
-                }
-                else
-                {
-                    this.ODataAnnotationWriter.WriteODataTypePropertyAnnotation(property.Name, property.TypeAnnotation.TypeName);
+                    if (isTopLevel)
+                    {
+                        this.ODataAnnotationWriter.WriteODataTypeInstanceAnnotation(typeName);
+                    }
+                    else
+                    {
+                        this.ODataAnnotationWriter.WriteODataTypePropertyAnnotation(property.Name, typeName);
+                    }
                 }
             }
         }

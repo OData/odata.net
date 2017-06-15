@@ -912,6 +912,12 @@
     <Compile Include="..\Schema\EdmUnknownEntitySet.cs">
       <Link>Schema\EdmUnknownEntitySet.cs</Link>
     </Compile>
+    <Compile Include="..\Schema\EdmUntypedStructuredType.cs">
+      <Link>Schema\EdmUntypedStructuredType.cs</Link>
+    </Compile>
+    <Compile Include="..\Schema\EdmUntypedStructuredTypeReference.cs">
+      <Link>Schema\EdmUntypedStructuredTypeReference.cs</Link>
+    </Compile>
     <Compile Include="..\Schema\EdmUntypedTypeReference.cs">
       <Link>Schema\EdmUntypedTypeReference.cs</Link>
     </Compile>

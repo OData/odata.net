@@ -126,6 +126,9 @@ namespace Microsoft.OData
             /// </remarks>
             NestedResourceInfoWithContent,
 
+            /// <summary>The writer is currently writing a primitive value.</summary>
+            Primitive,
+
             /// <summary>The writer has completed; nothing can be written anymore.</summary>
             Completed,
 
@@ -242,7 +245,7 @@ namespace Microsoft.OData
             {
                 Debug.Assert(
                     this.State == WriterState.NestedResourceInfo || this.State == WriterState.NestedResourceInfoWithContent,
-                    "ParentResourceType should only be called while writing a nested resource info (with or without content).");
+                    "ParentResourceType should only be called while writing a nested resource info (with or without content), or within an untyped ResourceSet.");
                 Scope resourceScope = this.scopeStack.Parent;
                 return resourceScope.ResourceType;
             }
@@ -354,9 +357,9 @@ namespace Microsoft.OData
 
                     // Get the resourceSet's parent (if any)
                     parentScope = this.scopeStack.ParentOfParent;
-                    if (parentScope.State == WriterState.Start)
+                    if (parentScope.State == WriterState.Start || (parentScope.State == WriterState.ResourceSet && parentScope.ResourceType != null && parentScope.ResourceType.TypeKind == EdmTypeKind.Untyped))
                     {
-                        // Top-level resourceSet.
+                        // Top-level resourceSet, or resourceSet within an untyped resourceSet.
                         return null;
                     }
                 }
@@ -462,6 +465,29 @@ namespace Microsoft.OData
         {
             this.VerifyCanWriteStartResource(false, resource);
             return TaskUtils.GetTaskForSynchronousOperation(() => this.WriteStartResourceImplementation(resource));
+        }
+#endif
+
+        /// <summary>
+        /// Write a primitive value within an untyped collection.
+        /// </summary>
+        /// <param name="primitiveValue">Primitive value to write.</param>
+        public sealed override void WritePrimitive(ODataPrimitiveValue primitiveValue)
+        {
+            this.VerifyCanWritePrimitive(true, primitiveValue);
+            this.WritePrimitiveValueImplementation(primitiveValue);
+        }
+
+#if PORTABLELIB
+        /// <summary>
+        /// Asynchronously write a primitive value.
+        /// </summary>
+        /// <param name="primitiveValue"> Primitive value to write.</param>
+        /// <returns>A task instance that represents the asynchronous write operation.</returns>
+        public sealed override Task WritePrimitiveAsync(ODataPrimitiveValue primitiveValue)
+        {
+            this.VerifyCanWritePrimitive(false, primitiveValue);
+            return TaskUtils.GetTaskForSynchronousOperation(() => this.WritePrimitiveValueImplementation(primitiveValue));
         }
 #endif
 
@@ -685,6 +711,15 @@ namespace Microsoft.OData
         /// </summary>
         /// <param name="resourceSet">The resourceSet to write.</param>
         protected abstract void EndResourceSet(ODataResourceSet resourceSet);
+
+        /// <summary>
+        /// Write a primitive value within an untyped collection.
+        /// </summary>
+        /// <param name="primitiveValue">The primitive value to write.</param>
+        protected virtual void WritePrimitiveValue(ODataPrimitiveValue primitiveValue)
+        {
+            throw new NotImplementedException();
+        }
 
         /// <summary>
         /// Write a deferred (non-expanded) nested resource info.
@@ -987,6 +1022,28 @@ namespace Microsoft.OData
         }
 
         /// <summary>
+        /// Verifies that calling WritePrimitive is valid.
+        /// </summary>
+        /// <param name="synchronousCall">true if the call is to be synchronous; false otherwise.</param>
+        /// <param name="primitiveValue">Primitive value to write.</param>
+        private void VerifyCanWritePrimitive(bool synchronousCall, ODataPrimitiveValue primitiveValue)
+        {
+            this.VerifyNotDisposed();
+            this.VerifyCallAllowed(synchronousCall);
+        }
+
+        /// <summary>
+        /// Write primitive value within an untyped collection - implementation of the actual functionality.
+        /// </summary>
+        /// <param name="primitiveValue">Primitive value to write.</param>
+        private void WritePrimitiveValueImplementation(ODataPrimitiveValue primitiveValue)
+        {
+            this.EnterScope(WriterState.Primitive, primitiveValue);
+            this.WritePrimitiveValue(primitiveValue);
+            this.WriteEnd();
+        }
+
+        /// <summary>
         /// Verify that calling WriteEnd is valid.
         /// </summary>
         /// <param name="synchronousCall">true if the call is to be synchronous; false otherwise.</param>
@@ -1051,6 +1108,8 @@ namespace Microsoft.OData
                             this.MarkNestedResourceInfoAsProcessed(link);
                         }
 
+                        break;
+                    case WriterState.Primitive:
                         break;
                     case WriterState.Start:                 // fall through
                     case WriterState.Completed:             // fall through
@@ -1365,7 +1424,7 @@ namespace Microsoft.OData
 
             WriterState currentState = currentScope.State;
 
-            if (newState == WriterState.Resource || newState == WriterState.ResourceSet)
+            if (newState == WriterState.Resource || newState == WriterState.ResourceSet || newState == WriterState.Primitive)
             {
                 navigationSource = currentScope.NavigationSource;
                 resourceType = currentScope.ResourceType;
@@ -1508,9 +1567,9 @@ namespace Microsoft.OData
                     }
                 }
             }
-            else if (newState == WriterState.Resource && currentState == WriterState.ResourceSet)
+            else if (currentState == WriterState.ResourceSet && (newState == WriterState.Resource || newState == WriterState.Primitive || newState == WriterState.ResourceSet))
             {
-                // When we're entering a resource scope on a resourceSet, increment the count of entries on that resourceSet.
+                // When writing a new resource to a resourceSet, increment the count of entries on that resourceSet.
                 ((ResourceSetScope)currentScope).ResourceCount++;
             }
 
@@ -1655,7 +1714,10 @@ namespace Microsoft.OData
 
                     break;
                 case WriterState.ResourceSet:
-                    if (newState != WriterState.Resource)
+                    if (newState != WriterState.Resource &&
+                        (this.CurrentScope.ResourceType == null ||
+                            (this.CurrentScope.ResourceType.TypeKind != EdmTypeKind.Untyped ||
+                                (newState != WriterState.Primitive && newState != WriterState.ResourceSet))))
                     {
                         throw new ODataException(Strings.ODataWriterCore_InvalidTransitionFromResourceSet(this.State.ToString(), newState.ToString()));
                     }
@@ -1708,6 +1770,7 @@ namespace Microsoft.OData
                 state == WriterState.Error ||
                 state == WriterState.Resource && (item == null || item is ODataResource) ||
                 state == WriterState.ResourceSet && item is ODataResourceSet ||
+                state == WriterState.Primitive && (item == null || item is ODataPrimitiveValue) ||
                 state == WriterState.NestedResourceInfo && item is ODataNestedResourceInfo ||
                 state == WriterState.NestedResourceInfoWithContent && item is ODataNestedResourceInfo ||
                 state == WriterState.Start && item == null ||
@@ -1734,6 +1797,7 @@ namespace Microsoft.OData
                 case WriterState.NestedResourceInfoWithContent:
                     scope = this.CreateNestedResourceInfoScope(state, (ODataNestedResourceInfo)item, navigationSource, resourceType, skipWriting, selectedProperties, odataUri);
                     break;
+                case WriterState.Primitive:                 // fall through
                 case WriterState.Start:                     // fall through
                 case WriterState.Completed:                 // fall through
                 case WriterState.Error:

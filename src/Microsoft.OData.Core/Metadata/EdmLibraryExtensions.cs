@@ -1189,6 +1189,11 @@ namespace Microsoft.OData.Metadata
                 return false;
             }
 
+            if (subtype.IsEquivalentTo(baseType))
+            {
+                return true;
+            }
+
             if (!baseType.IsODataEntityTypeKind() && !baseType.IsODataComplexTypeKind())
             {
                 // we only support complex and entity type inheritance.

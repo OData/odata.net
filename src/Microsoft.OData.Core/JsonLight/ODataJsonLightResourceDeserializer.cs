@@ -39,9 +39,11 @@ namespace Microsoft.OData.JsonLight
         /// Reads the start of the JSON array for the content of the resource set.
         /// </summary>
         /// <remarks>
-        /// Pre-Condition:  JsonNodeType.StartArray:    The start of the resource set property array; this method will fail if the node is anything else.
-        /// Post-Condition: JsonNodeType.StartObject:   The first item in the resource set
-        ///                 JsonNodeType.EndArray:      The end of the resource set
+        /// Pre-Condition:  JsonNodeType.StartArray:     The start of the resource set property array; this method will fail if the node is anything else.
+        /// Post-Condition: JsonNodeType.StartObject:    The first item in the resource set
+        ///                 JsonNodeType.PrimitiveValue: A null resource, or a primitive value within an untyped collection
+        ///                 JsonNodeType.StartArray:     A nested collection within an untyped collection
+        ///                 JsonNodeType.EndArray:       The end of the resource set
         /// </remarks>
         internal void ReadResourceSetContentStart()
         {
@@ -53,14 +55,6 @@ namespace Microsoft.OData.JsonLight
             }
 
             this.JsonReader.ReadStartArray();
-
-            if (this.JsonReader.NodeType != JsonNodeType.EndArray && this.JsonReader.NodeType != JsonNodeType.StartObject
-                && !(this.JsonReader.NodeType == JsonNodeType.PrimitiveValue && this.JsonReader.Value == null))
-            {
-                // TODO: Update error message after 7.0
-                throw new ODataException(ODataErrorStrings.ODataJsonLightResourceDeserializer_InvalidNodeTypeForItemsInResourceSet(this.JsonReader.NodeType));
-            }
-
             this.JsonReader.AssertNotBuffering();
         }
 
@@ -71,7 +65,11 @@ namespace Microsoft.OData.JsonLight
         /// Pre-Condition:  JsonNodeType.EndArray
         /// Post-Condition: JsonNodeType.Property   if the resource set is part of an expanded nested resource info and there are more properties in the object
         ///                 JsonNodeType.EndObject  if the resource set is a top-level resource set or the expanded nested resource info is the last property of the payload
-        ///                 JsonNodeType.EndOfInput  if the resource set is in a Uri operation parameter.
+        ///                 JsonNodeType.EndOfInput  if the resource set is in a Uri operation parameter
+        ///                 JsonNodeType.StartArray      if the resource set is a member of an untyped collection followed by a collection
+        ///                 JsonNodeType.PrimitiveValue  if the resource set is a member of an untyped collection followed by a primitive value
+        ///                 JsonNodeType.StartObject     if the resource set is a member of an untyped collection followed by a resource
+        ///                 JsonNodeType.EndArray        if the resource set is the last member of an untyped collection
         /// </remarks>
         internal void ReadResourceSetContentEnd()
         {
@@ -80,7 +78,7 @@ namespace Microsoft.OData.JsonLight
 
             this.JsonReader.ReadEndArray();
 
-            this.AssertJsonCondition(JsonNodeType.EndOfInput, JsonNodeType.EndObject, JsonNodeType.Property);
+            this.AssertJsonCondition(JsonNodeType.EndOfInput, JsonNodeType.EndObject, JsonNodeType.Property, JsonNodeType.StartArray, JsonNodeType.PrimitiveValue, JsonNodeType.StartObject, JsonNodeType.EndArray);
         }
 
         /// <summary>
@@ -1106,7 +1104,7 @@ namespace Microsoft.OData.JsonLight
                     out typeAnnotation);
             }
 
-            payloadTypeReference = ResolveUntypedType(this.JsonReader.NodeType, this.JsonReader.Value, payloadTypeName, payloadTypeReference, this.MessageReaderSettings.ReadUntypedAsString, !this.MessageReaderSettings.ThrowIfTypeConflictsWithMetadata);
+            payloadTypeReference = ResolveUntypedType(this.JsonReader.NodeType, this.JsonReader.Value, payloadTypeName, payloadTypeReference, this.MessageReaderSettings.PrimitiveTypeResolver, this.MessageReaderSettings.ReadUntypedAsString, !this.MessageReaderSettings.ThrowIfTypeConflictsWithMetadata);
             IEdmStructuredType payloadTypeOrItemType = payloadTypeReference.ToStructuredType();
             if (payloadTypeOrItemType != null)
             {
@@ -1131,7 +1129,7 @@ namespace Microsoft.OData.JsonLight
                 this.JsonReader.AssertNotBuffering();
                 propertyValue = this.ReadNonEntityValue(
                     outerPayloadTypeName,
-                    /*expectedValueTypeReference*/ null,
+                    payloadTypeReference,
                     /*propertyAndAnnotationCollector*/ null,
                     /*collectionValidator*/ null,
                     /*validateNullValue*/ true,
@@ -1232,7 +1230,6 @@ namespace Microsoft.OData.JsonLight
                 return null;
             }
 
-            // TODO (mikep) should treat all types as open for reading
             if (resourceState.ResourceType.IsOpen)
             {
                 // Open property - read it as such.

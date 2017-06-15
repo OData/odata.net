@@ -206,31 +206,33 @@ namespace Microsoft.OData.JsonLight
         }
 
         /// <summary>
-        /// Check if a property value type in entity or complex value is deterministic .
+        /// Resolve the IEdmTypeReference of the current untyped value to be read.
         /// </summary>
         /// <param name="jsonReaderNodeType">The current JsonReader NodeType.</param>
         /// <param name="jsonReaderValue">The current JsonReader Value</param>
         /// <param name="payloadTypeName">The 'odata.type' annotation in payload.</param>
         /// <param name="payloadTypeReference">The payloadTypeReference of 'odata.type'.</param>
+        /// <param name="primitiveTypeResolver">Function that takes a primitive value and returns an <see cref="IEdmTypeReference"/>.</param>
         /// <param name="readUntypedAsString">Whether unknown properties should be read as a raw string value.</param>
         /// <param name="generateTypeIfMissing">Whether to generate a type if not already part of the model.</param>
-        /// <returns>True if property value type is deterministic.</returns>
+        /// <returns>The <see cref="IEdmTypeReference"/> of the current value to be read.</returns>
         [SuppressMessage("Microsoft.Performance", "CA1800:DoNotCastUnnecessarily")]
-        protected static IEdmTypeReference ResolveUntypedType(JsonNodeType jsonReaderNodeType, object jsonReaderValue, string payloadTypeName, IEdmTypeReference payloadTypeReference, bool readUntypedAsString, bool generateTypeIfMissing)
+        internal static IEdmTypeReference ResolveUntypedType(
+                JsonNodeType jsonReaderNodeType,
+                object jsonReaderValue,
+                string payloadTypeName,
+                IEdmTypeReference payloadTypeReference,
+                Func<object, string, IEdmTypeReference> primitiveTypeResolver,
+                bool readUntypedAsString,
+                bool generateTypeIfMissing)
         {
-            // Known
-            //   (1) recognized odata.type not Edm.Untyped
-            //   (2) no odata.type and value is bool
-            // Unknown
-            //    (1) unrecognized odata.type or 'Edm.Untyped'
-            //    (2) no odata.type and value is null / string / numeric / collection
+            if (payloadTypeReference != null && (payloadTypeReference.TypeKind() != EdmTypeKind.Untyped || readUntypedAsString))
+            {
+                return payloadTypeReference;
+            }
+
             if (readUntypedAsString)
             {
-                if (payloadTypeReference != null)
-                {
-                    return payloadTypeReference;
-                }
-
                 if (jsonReaderNodeType == JsonNodeType.PrimitiveValue && jsonReaderValue is bool)
                 {
                     return EdmCoreModel.Instance.GetBoolean(true);
@@ -239,54 +241,54 @@ namespace Microsoft.OData.JsonLight
                 return EdmCoreModel.Instance.GetUntyped();
             }
 
-            if (payloadTypeReference != null && payloadTypeReference.TypeKind() != EdmTypeKind.Untyped)
-            {
-                return payloadTypeReference;
-            }
-
             string namespaceName;
             string name;
             bool isCollection;
-
+            IEdmTypeReference typeReference;
             switch (jsonReaderNodeType)
             {
                 case JsonNodeType.PrimitiveValue:
-                    IEdmTypeReference typeReference;
+                    if (primitiveTypeResolver != null)
+                    {
+                        typeReference = primitiveTypeResolver(jsonReaderValue, payloadTypeName);
+                        if (typeReference != null)
+                        {
+                            return typeReference;
+                        }
+                    }
+
                     if (jsonReaderValue == null)
                     {
                         if (payloadTypeName != null)
                         {
                             TypeUtils.ParseQualifiedTypeName(payloadTypeName, out namespaceName, out name, out isCollection);
-                            if (namespaceName != Metadata.EdmConstants.EdmNamespace)
-                            {
-                                // if there is a payload type name that is not a primitive type, assume complex
-                                typeReference = new EdmComplexTypeReference(new EdmComplexType(namespaceName, name, /*baseType*/ null, /*isAbstract*/true, /*isOpen*/ true), /*isNullable*/ true);
-                                return isCollection ? new EdmCollectionType(typeReference).ToTypeReference(true) : typeReference;
-                            }
+                            Debug.Assert(namespaceName != Metadata.EdmConstants.EdmNamespace, "If type was in the edm namespace it should already have been resolved");
 
-                            Debug.Assert(true, "If type was in the edm namespace it should already have been resolved");
+                            // if there is a payload type name that is not in the Edm namespace, assume complex
+                            // (it doesn't really matter; we just need someplace to hang the name)
+                            typeReference = new EdmComplexType(namespaceName, name, /*baseType*/ null, /*isAbstract*/true, /*isOpen*/ true).ToTypeReference(/*isNullable*/ true);
+                            return isCollection ? new EdmCollectionType(typeReference).ToTypeReference(/*isNullable*/ true) : typeReference;
                         }
 
-                        typeReference = EdmCoreModel.Instance.GetString(true);
+                        typeReference = EdmCoreModel.Instance.GetString(/*isNullable*/ true);
                     }
                     else if (jsonReaderValue is bool)
                     {
-                        typeReference = EdmCoreModel.Instance.GetBoolean(true);
+                        typeReference = EdmCoreModel.Instance.GetBoolean(/*isNullable*/ true);
                     }
                     else if (jsonReaderValue is string)
                     {
-                        // TODO (mikep) support inserting logic to guess type (date, guid, etc.)
-                        typeReference = EdmCoreModel.Instance.GetString(true);
+                        typeReference = EdmCoreModel.Instance.GetString(/*isNullable*/ true);
                     }
                     else
                     {
-                        typeReference = EdmCoreModel.Instance.GetDecimal(true);
+                        typeReference = EdmCoreModel.Instance.GetDecimal(/*isNullable*/ true);
                     }
 
                     if (payloadTypeName != null)
                     {
                         TypeUtils.ParseQualifiedTypeName(payloadTypeName, out namespaceName, out name, out isCollection);
-                        typeReference = new EdmTypeDefinition(namespaceName, name, typeReference.PrimitiveKind()).ToTypeReference(true);
+                        typeReference = new EdmTypeDefinition(namespaceName, name, typeReference.PrimitiveKind()).ToTypeReference(/*isNullable*/ true);
                     }
 
                     return typeReference;
@@ -296,20 +298,20 @@ namespace Microsoft.OData.JsonLight
                     {
                         TypeUtils.ParseQualifiedTypeName(payloadTypeName, out namespaceName, out name, out isCollection);
                         Debug.Assert(!isCollection, "NodeType is StartObject but payload specifies a collection.");
-                        return new EdmComplexTypeReference(new EdmComplexType(namespaceName, name, /*baseType*/ null, /*isAbstract*/true, /*isOpen*/ true), /*isNullable*/ true);
+                        return new EdmComplexType(namespaceName, name, /*baseType*/ null, /*isAbstract*/true, /*isOpen*/ true).ToTypeReference(/*isNullable*/ true);
                     }
 
-                    return new EdmUntypedStructuredTypeReference(new EdmUntypedStructuredType());
+                    return new EdmUntypedStructuredType().ToTypeReference(/*isNullable*/ true);
 
                 case JsonNodeType.StartArray:
                     if (payloadTypeName != null && generateTypeIfMissing)
                     {
                         TypeUtils.ParseQualifiedTypeName(payloadTypeName, out namespaceName, out name, out isCollection);
                         Debug.Assert(isCollection, "NodeType is start array but payload specifies a non-collection type");
-                        return new EdmCollectionType(new EdmComplexTypeReference(new EdmComplexType(namespaceName, name, /*baseType*/ null, /*isAbstract*/true, /*isOpen*/ true), /*isNullable*/ true)).ToTypeReference(true);
+                        return new EdmCollectionType(new EdmComplexTypeReference(new EdmComplexType(namespaceName, name, /*baseType*/ null, /*isAbstract*/true, /*isOpen*/ true), /*isNullable*/ true)).ToTypeReference(/*isNullable*/ true);
                     }
 
-                    return new EdmCollectionTypeReference(new EdmCollectionType(EdmCoreModel.Instance.GetUntyped()));
+                    return new EdmCollectionTypeReference(new EdmCollectionType(new EdmUntypedStructuredType().ToTypeReference(/*isNullable*/ true)));
 
                 default:
                     return EdmCoreModel.Instance.GetUntyped();
@@ -357,71 +359,6 @@ namespace Microsoft.OData.JsonLight
         }
 
         /// <summary>
-        /// Reads an entity or complex type's undeclared property, may return OdataUntypedValue.
-        /// </summary>
-        /// <param name="propertyAndAnnotationCollector">propertyAndAnnotationCollector.</param>
-        /// <param name="propertyName">Now this name can't be found in model.</param>
-        /// <param name="isTopLevelPropertyValue">bool</param>
-        /// <returns>The read result.</returns>
-        protected object InnerReadUndeclaredPropertyInComplex(PropertyAndAnnotationCollector propertyAndAnnotationCollector, string propertyName, bool isTopLevelPropertyValue)
-        {
-            bool insideComplexValue = false;
-            string outerPayloadTypeName = ValidateDataPropertyTypeNameAnnotation(propertyAndAnnotationCollector, propertyName);
-            string payloadTypeName = this.TryReadOrPeekPayloadType(propertyAndAnnotationCollector, propertyName, insideComplexValue);
-            EdmTypeKind payloadTypeKind;
-            IEdmType payloadType = ReaderValidationUtils.ResolvePayloadTypeName(
-                this.Model,
-                null, // expectedTypeReference
-                payloadTypeName,
-                EdmTypeKind.Complex,
-                this.MessageReaderSettings.ClientCustomTypeResolver,
-                out payloadTypeKind);
-            IEdmTypeReference payloadTypeReference = null;
-            if (!string.IsNullOrEmpty(payloadTypeName) && payloadType != null)
-            {
-                // only try resolving for known type (the below will throw on unknown type name) :
-                ODataTypeAnnotation typeAnnotation;
-                EdmTypeKind targetTypeKind;
-                payloadTypeReference = this.ReaderValidator.ResolvePayloadTypeNameAndComputeTargetType(
-                    EdmTypeKind.None,
-                    /*expectStructuredType*/ null,
-                    /*defaultPrimitivePayloadType*/ null,
-                    null, // expectedTypeReference
-                    payloadTypeName,
-                    this.Model,
-                    this.GetNonEntityValueKind,
-                    out targetTypeKind,
-                    out typeAnnotation);
-            }
-
-            object propertyValue = null;
-            payloadTypeReference = ResolveUntypedType(this.JsonReader.NodeType, this.JsonReader.Value, payloadTypeName, payloadTypeReference, this.MessageReaderSettings.ReadUntypedAsString, !this.MessageReaderSettings.ThrowIfTypeConflictsWithMetadata);
-            if (!(payloadTypeReference is IEdmUntypedTypeReference) || payloadTypeReference is IEdmStructuredTypeReference)
-            {
-                this.JsonReader.AssertNotBuffering();
-                propertyValue = this.ReadNonEntityValueImplementation(
-                    outerPayloadTypeName,
-                    payloadTypeReference,
-                    /*propertyAndAnnotationCollector*/ null,
-                    /*collectionValidator*/ null,
-                    false, // validateNullValue
-                    isTopLevelPropertyValue,
-                    insideComplexValue,
-                    propertyName);
-            }
-            else
-            {
-                propertyValue = this.JsonReader.ReadAsUntypedOrNullValue();
-            }
-
-            this.JsonReader.AssertNotBuffering();
-            Debug.Assert(
-                this.JsonReader.NodeType == JsonNodeType.Property || this.JsonReader.NodeType == JsonNodeType.EndObject,
-                "Post-Condition: expected JsonNodeType.Property or JsonNodeType.EndObject");
-            return propertyValue;
-        }
-
-        /// <summary>
         /// Reads an entity or complex type's undeclared property.
         /// </summary>
         /// <param name="resourceState">The IODataJsonLightReaderResourceState.</param>
@@ -461,7 +398,7 @@ namespace Microsoft.OData.JsonLight
             }
 
             object propertyValue = null;
-            payloadTypeReference = ResolveUntypedType(this.JsonReader.NodeType, this.JsonReader.Value, payloadTypeName, payloadTypeReference, this.MessageReaderSettings.ReadUntypedAsString, !this.MessageReaderSettings.ThrowIfTypeConflictsWithMetadata);
+            payloadTypeReference = ResolveUntypedType(this.JsonReader.NodeType, this.JsonReader.Value, payloadTypeName, payloadTypeReference, this.MessageReaderSettings.PrimitiveTypeResolver, this.MessageReaderSettings.ReadUntypedAsString, !this.MessageReaderSettings.ThrowIfTypeConflictsWithMetadata);
 
             if (payloadTypeReference.ToStructuredType() != null)
             {
@@ -949,7 +886,7 @@ namespace Microsoft.OData.JsonLight
                         : resourceState.PropertyAndAnnotationCollector.GetODataPropertyAnnotations(propertyName))
             {
                 Debug.Assert(annotation.Value != null);
-                if (String.Equals(annotation.Key,ODataAnnotationNames.ODataType, StringComparison.Ordinal) || String.Equals(annotation.Key, JsonLightConstants.SimplifiedODataTypePropertyName, StringComparison.Ordinal))
+                if (String.Equals(annotation.Key, ODataAnnotationNames.ODataType, StringComparison.Ordinal) || String.Equals(annotation.Key, JsonLightConstants.SimplifiedODataTypePropertyName, StringComparison.Ordinal))
                 {
                     property.TypeAnnotation = new ODataTypeAnnotation(
                         ReaderUtils.AddEdmPrefixOfTypeName(ReaderUtils.RemovePrefixOfTypeName((string)annotation.Value)));
@@ -1575,9 +1512,8 @@ namespace Microsoft.OData.JsonLight
 
             if (targetTypeKind == EdmTypeKind.Untyped || targetTypeKind == EdmTypeKind.None)
             {
-                targetTypeReference = ResolveUntypedType(this.JsonReader.NodeType, this.JsonReader.Value, payloadTypeName, expectedTypeReference, this.MessageReaderSettings.ReadUntypedAsString, !this.MessageReaderSettings.ThrowIfTypeConflictsWithMetadata);
+                targetTypeReference = ResolveUntypedType(this.JsonReader.NodeType, this.JsonReader.Value, payloadTypeName, expectedTypeReference, this.MessageReaderSettings.PrimitiveTypeResolver, this.MessageReaderSettings.ReadUntypedAsString, !this.MessageReaderSettings.ThrowIfTypeConflictsWithMetadata);
                 targetTypeKind = targetTypeReference.TypeKind();
-                // TODO (mikep) reset type annotation?
             }
 
             // Try to read a null value
@@ -1673,20 +1609,20 @@ namespace Microsoft.OData.JsonLight
             return result;
         }
 
-    /// <summary>
-    /// Reads the payload type name from a JSON object (if it exists).
-    /// </summary>
-    /// <param name="propertyAndAnnotationCollector">The duplicate property names checker to track the detected 'odata.type' annotation (if any).</param>
-    /// <param name="insideComplexValue">true if we are reading a complex value and the reader is already positioned inside the complex value; otherwise false.</param>
-    /// <param name="payloadTypeName">The value of the odata.type annotation or null if no such annotation exists.</param>
-    /// <returns>true if a type name was read from the payload; otherwise false.</returns>
-    /// <remarks>
-    /// Precondition:   StartObject     the start of a JSON object
-    /// Postcondition:  Property        the first property of the object if no 'odata.type' annotation exists as first property
-    ///                                 or the first property after the 'odata.type' annotation.
-    ///                 EndObject       for an empty JSON object or an object with only the 'odata.type' annotation
-    /// </remarks>
-    private bool TryReadPayloadTypeFromObject(PropertyAndAnnotationCollector propertyAndAnnotationCollector, bool insideComplexValue, out string payloadTypeName)
+        /// <summary>
+        /// Reads the payload type name from a JSON object (if it exists).
+        /// </summary>
+        /// <param name="propertyAndAnnotationCollector">The duplicate property names checker to track the detected 'odata.type' annotation (if any).</param>
+        /// <param name="insideComplexValue">true if we are reading a complex value and the reader is already positioned inside the complex value; otherwise false.</param>
+        /// <param name="payloadTypeName">The value of the odata.type annotation or null if no such annotation exists.</param>
+        /// <returns>true if a type name was read from the payload; otherwise false.</returns>
+        /// <remarks>
+        /// Precondition:   StartObject     the start of a JSON object
+        /// Postcondition:  Property        the first property of the object if no 'odata.type' annotation exists as first property
+        ///                                 or the first property after the 'odata.type' annotation.
+        ///                 EndObject       for an empty JSON object or an object with only the 'odata.type' annotation
+        /// </remarks>
+        private bool TryReadPayloadTypeFromObject(PropertyAndAnnotationCollector propertyAndAnnotationCollector, bool insideComplexValue, out string payloadTypeName)
         {
             Debug.Assert(propertyAndAnnotationCollector != null, "propertyAndAnnotationCollector != null");
             Debug.Assert(
