@@ -460,8 +460,8 @@
         public void ReadNonOpenUnknownNullAsValueTest()
         {
             // non-open entity's unknown property type including string & numeric values
-            const string payload = @"{""@odata.context"":""http://www.sampletest.com/$metadata#serverEntitySet/$entity"",""Id"":61880128,""UndeclaredAddress1"":"
-                + @"null,""UndeclaredAddress1@odata.type"":""#Server.NS.UndefComplex1""}";
+            const string payload = @"{""@odata.context"":""http://www.sampletest.com/$metadata#serverEntitySet/$entity"",""Id"":61880128,"
+                +@"""UndeclaredAddress1@odata.type"":""#Server.NS.UndefComplex1"",""UndeclaredAddress1"":null}";
             ODataResource entry = null;
             ODataResource undeclaredAddress1 = null;
             ODataNestedResourceInfo undeclaredAddress1NestedInfo = null;
@@ -633,9 +633,12 @@
         public void ReadNonOpenUnknownTypeCollectionAsValueTest()
         {
             const string payload = @"{""@odata.context"":""http://www.sampletest.com/$metadata#serverEntitySet/$entity"",""Id"":61880128,""UndeclaredFloatId"":12.3,
-                UndeclaredCollection1:[""email1@163.com"",""email2@gmail.com"",""email3@gmail2.com""],""Address"":{""Street"":""No.999,Zixing Rd Minhang"",""UndeclaredStreet"":""No.10000000999,Zixing Rd Minhang""}}";
+                UndeclaredCollection1:[null,""email1@163.com"",""email2@gmail.com"",""email3@gmail2.com""],""Address"":{""Street"":""No.999,Zixing Rd Minhang"",""UndeclaredStreet"":""No.10000000999,Zixing Rd Minhang""}}";
             ODataResource entry = null;
             ODataResource address = null;
+            ODataNestedResourceInfo undeclaredCollection1 = null;
+            ODataNestedResourceInfo addressNestedInfo = null;
+            List<object> undeclaredCollection1Items = new List<object>();
             this.ReadEntryPayload(payload, this.serverEntitySet, this.serverEntityType, reader =>
             {
                 if (reader.State == ODataReaderState.ResourceStart)
@@ -649,12 +652,30 @@
                         address = (reader.Item as ODataResource);
                     }
                 }
+                else if (reader.State == ODataReaderState.NestedResourceInfoStart)
+                {
+                    if (undeclaredCollection1 == null)
+                    {
+                        undeclaredCollection1 = (reader.Item as ODataNestedResourceInfo);
+                    }
+                    else
+                    {
+                        addressNestedInfo = (reader.Item as ODataNestedResourceInfo);
+                    }
+                }
+                else if (reader.State == ODataReaderState.Primitive)
+                {
+                    undeclaredCollection1Items.Add(reader.Item == null ? null : ((ODataPrimitiveValue)(reader.Item)).Value);
+                }
             }, /*readUntypedAsValue*/ true);
 
-            entry.Properties.Count().Should().Be(3);
-            ODataCollectionValue untypedCollection = entry.Properties.Single(s => string.Equals(s.Name, "UndeclaredCollection1")).Value.As<ODataCollectionValue>();
-            untypedCollection.Items.Count().Should().Be(3);
-            String.Concat(untypedCollection.Items).Should().Be("email1@163.comemail2@gmail.comemail3@gmail2.com");
+            entry.Properties.Count().Should().Be(2);
+            undeclaredCollection1.Name.Should().Be("UndeclaredCollection1");
+            undeclaredCollection1Items.Count().Should().Be(3);
+            undeclaredCollection1Items.First().Should().Be("email1@163.com");
+            String.Concat(undeclaredCollection1Items).Should().Be("email1@163.comemail2@gmail.comemail3@gmail2.com");
+            addressNestedInfo.Name.Should().Be("Address");
+            address.TypeName.Should().Be("Server.NS.Address");
             address.Properties.Count().Should().Be(2);
             address.Properties.First(s => string.Equals("Street", s.Name)).Value.Should().Be("No.999,Zixing Rd Minhang");
             address.Properties.First(s => string.Equals("UndeclaredStreet", s.Name)).Value.Should().Be("No.10000000999,Zixing Rd Minhang");
@@ -700,12 +721,14 @@
                     ODataNestedResourceInfo nestedInfo = (reader.Item as ODataNestedResourceInfo);
                     insideCollection = !(nestedInfo.IsCollection == true);
                 }
+                else if (reader.State == ODataReaderState.ResourceSetStart)
+                {
+                    undeclaredCollection1.TypeAnnotation = new ODataTypeAnnotation((reader.Item as ODataResourceSet).TypeName);
+                }
             }, /*readUntypedAsValue*/ true);
 
             entry.Properties.Count().Should().Be(2);
-//            ODataCollectionValue untypedCollectionProperty = entry.Properties.Single(s => string.Equals(s.Name, "UndeclaredCollection1")).Value.As<ODataCollectionValue>();
-//            untypedCollectionProperty.TypeName.Should().Be("Collection(Server.NS.UnkonwnCollectionType)");
-//            String.Concat(untypedCollectionProperty.Items.Select(c => ((ODataResource)c).Properties.Single(p => string.Equals(p.Name, "email")).Value)).Should().Be("email1@163.comemail2@gmail.comemail3@gmail2.com");
+            undeclaredCollection1.TypeAnnotation.TypeName.Should().Be("Collection(Server.NS.UnknownCollectionType)");
             untypedCollection.Count().Should().Be(3);
             String.Concat(untypedCollection.Select(c=>((ODataResource)c).Properties.Single(p => string.Equals(p.Name, "email")).Value)).Should().Be("email1@163.comemail2@gmail.comemail3@gmail2.com");
             address.Properties.Count().Should().Be(2);
@@ -883,7 +906,7 @@
         }
 
         [Fact]
-        public void ReadOpenEntryUndeclaredCollectionPropertiesWithoutODataTypeTest()
+        public void ReadOpenEntryUndeclaredPrimitiveCollectionPropertiesWithoutODataTypeTest()
         {
             const string payload = @"{""@odata.context"":""http://www.sampletest.com/$metadata#serverOpenEntitySet/$entity"",""Id"":61880128,""UndeclaredFloatId"":12.3,
                                                                           UndeclaredCollection1:[""email1@163.com"",""email2@gmail.com"",""email3@gmail2.com""],""Address"":{""Street"":""No.999,Zixing Rd Minhang"",""UndeclaredStreet"":""No.10000000999,Zixing Rd Minhang""}}";
@@ -1031,12 +1054,186 @@
         }
 
         [Fact]
-        public void ReadOpenEntryUndeclaredCollectionPropertiesWithoutODataTypeAsValueTest()
+        public void ReadOpenEntryUndeclaredPrimitiveCollectionPropertiesWithoutODataTypeAsValueTest()
         {
             const string payload = @"{""@odata.context"":""http://www.sampletest.com/$metadata#serverOpenEntitySet/$entity"",""Id"":61880128,""UndeclaredFloatId"":12.3,
-                                                                          UndeclaredCollection1:[""email1@163.com"",""email2@gmail.com"",""email3@gmail2.com""],""Address"":{""Street"":""No.999,Zixing Rd Minhang"",""UndeclaredStreet"":""No.10000000999,Zixing Rd Minhang""}}";
+                                        UndeclaredCollection1:[""email1@163.com"",null,""email2@gmail.com"",""email3@gmail2.com"",null],""Address"":{""Street"":""No.999,Zixing Rd Minhang"",""UndeclaredStreet"":""No.10000000999,Zixing Rd Minhang""}}";
             ODataResource entry = null;
             ODataResource address = null;
+            ODataNestedResourceInfo undeclaredCollection1 = null;
+            ODataNestedResourceInfo addressNestedInfo = null;
+            bool populatingCollection = false;
+            List<object> undeclaredCollection1Items = new List<object>();
+            this.ReadEntryPayload(payload, this.serverOpenEntitySet, this.serverOpenEntityType, reader =>
+            {
+                if (reader.State == ODataReaderState.ResourceStart)
+                {
+                    if (populatingCollection)
+                    {
+                        undeclaredCollection1Items.Add(reader.Item as ODataResource);
+                    }
+                    else if (entry == null)
+                    {
+                        entry = (reader.Item as ODataResource);
+                    }
+                    else if (address == null)
+                    {
+                        address = (reader.Item as ODataResource);
+                    }
+                }
+                else if (reader.State == ODataReaderState.ResourceSetStart)
+                {
+                    populatingCollection = true;
+                }
+                else if (reader.State == ODataReaderState.ResourceSetEnd)
+                {
+                    populatingCollection = false;
+                }
+                else if (reader.State == ODataReaderState.NestedResourceInfoStart)
+                {
+                    if (undeclaredCollection1 == null)
+                    {
+                        undeclaredCollection1 = (reader.Item as ODataNestedResourceInfo);
+                    }
+                    else
+                    {
+                        addressNestedInfo = (reader.Item as ODataNestedResourceInfo);
+                    }
+                }
+                else if (reader.State == ODataReaderState.Primitive)
+                {
+                    Assert.True(populatingCollection, "Found primitive type outside of collection");
+                    undeclaredCollection1Items.Add(((ODataPrimitiveValue)(reader.Item)).Value);
+                }
+            }, /*readUntypedAsValue*/ true);
+
+            entry.Properties.Count().Should().Be(2);
+            undeclaredCollection1.Name.Should().Be("UndeclaredCollection1");
+            undeclaredCollection1Items.Count().Should().Be(5);
+            undeclaredCollection1Items.Last().Should().Be(null);
+            String.Concat(undeclaredCollection1Items).Should().Be("email1@163.comemail2@gmail.comemail3@gmail2.com");
+            addressNestedInfo.Name.Should().Be("Address");
+            address.Properties.Count().Should().Be(2);
+            address.TypeName.Should().Be("Server.NS.Address");
+        }
+
+        [Fact]
+        public void ReadUndeclaredNonPrimitiveCollectionPropertyAsValueTest()
+        {
+            const string payload = @"{""@odata.context"":""http://www.sampletest.com/$metadata#serverOpenEntitySet/$entity"",
+                                        ""Id"":61880128,
+                                        ""UndeclaredFloatId"":12.3,
+                                        ""UndeclaredCollection1"":[
+                                            {""@odata.type"":""Server.NS.Address"",""Street"":""No.999,Zixing Rd Minhang"",""UndeclaredStreet"":""No.10000000999,Zixing Rd Minhang""},
+                                            ""email1@163.com"",
+                                            ""email2@gmail.com"",
+                                            [ 
+                                                ""email1@163.com"",
+                                                {""Street"":""No.999,Zixing Rd Minhang"",""UndeclaredStreet"":""No.10000000999,Zixing Rd Minhang""},
+                                                null,
+                                                ""email3@gmail2.com""
+                                            ],
+                                            ""email3@gmail2.com""
+                                        ],
+                                        ""Address"":{""Street"":""No.999,Zixing Rd Minhang"",""UndeclaredStreet"":""No.10000000999,Zixing Rd Minhang""}
+                                    }";
+            ODataResource entry = null;
+            ODataResource undeclaredCollection1Address = null;
+            ODataPrimitiveValue undeclaredCollection1Email1 = null;
+            ODataPrimitiveValue undeclaredCollection1Email2 = null;
+            ODataPrimitiveValue undeclaredCollection1NestedEmail1 = null;
+            ODataResource undeclaredCollection1NestedCollectionAddress = null;
+            ODataResource undeclaredCollection1NestedNull = null;
+            bool setNestedNull = false;
+            ODataPrimitiveValue undeclaredCollection1NestedEmail2 = null;
+            ODataResource address = null;
+            ODataNestedResourceInfo undeclaredCollection1 = null;
+            ODataNestedResourceInfo undeclaredNestedCollection = null;
+            this.ReadEntryPayload(payload, this.serverOpenEntitySet, this.serverOpenEntityType, reader =>
+            {
+                if (reader.State == ODataReaderState.ResourceStart)
+                {
+                    if (entry == null)
+                    {
+                        entry = (reader.Item as ODataResource);
+                    }
+                    else if (undeclaredCollection1Address == null)
+                    {
+                        undeclaredCollection1Address = (reader.Item as ODataResource);
+                    }
+                    else if (undeclaredCollection1NestedCollectionAddress == null)
+                    {
+                        undeclaredCollection1NestedCollectionAddress = (reader.Item as ODataResource);
+                    }
+                    else if (!setNestedNull)
+                    {
+                        setNestedNull = true;
+                        undeclaredCollection1NestedNull = (reader.Item as ODataResource);
+                    }
+                    else if (address == null)
+                    {
+                        address = (reader.Item as ODataResource);
+                    }
+                }
+                else if (reader.State == ODataReaderState.Primitive)
+                {
+                    if (undeclaredCollection1Email1 == null)
+                    {
+                        undeclaredCollection1Email1 = (reader.Item as ODataPrimitiveValue);
+                    }
+                    else if (undeclaredCollection1Email2 == null)
+                    {
+                        undeclaredCollection1Email2 = (reader.Item as ODataPrimitiveValue);
+                    }
+                    else if (undeclaredCollection1NestedEmail1 == null)
+                    {
+                        undeclaredCollection1NestedEmail1 = (reader.Item as ODataPrimitiveValue);
+                    }
+
+                    else if (undeclaredCollection1NestedEmail2 == null)
+                    {
+                        undeclaredCollection1NestedEmail2 = (reader.Item as ODataPrimitiveValue);
+                    }
+                }
+                else if (reader.State == ODataReaderState.NestedResourceInfoStart)
+                {
+                    if (undeclaredCollection1 == null)
+                    {
+                        undeclaredCollection1 = (reader.Item as ODataNestedResourceInfo);
+                    }
+                    else if (undeclaredNestedCollection == null)
+                    {
+                        undeclaredNestedCollection = (reader.Item as ODataNestedResourceInfo);
+                    }
+                }
+            }, /*readUntypedAsValue*/ true);
+
+            entry.Properties.Count().Should().Be(2);
+            undeclaredCollection1Address.Properties.Count().Should().Be(2);
+            undeclaredCollection1Address.TypeAnnotation.TypeName.Should().Be("Server.NS.Address");
+            undeclaredCollection1Email1.Value.Should().Be("email1@163.com");
+            undeclaredCollection1Email2.Value.Should().Be("email2@gmail.com");
+            undeclaredCollection1NestedEmail1.Value.Should().Be("email1@163.com");
+            undeclaredCollection1NestedCollectionAddress.Properties.Count().Should().Be(2);
+            undeclaredCollection1NestedNull.Should().Be(null);
+            undeclaredCollection1NestedEmail2.Value.Should().Be("email3@gmail2.com");
+            address.Properties.Count().Should().Be(2);
+            undeclaredCollection1.Name.Should().Be("UndeclaredCollection1");
+            //            undeclaredCollection1.TypeAnnotation.Type.Should().Be();
+            undeclaredNestedCollection.Name.Should().Be("Address");
+            //            undeclaredNestedCollection.TypeAnnotation.Type.Should().Be();
+        }
+
+        [Fact]
+        public void ReadOpenEntryUndeclaredEmptyCollectionPropertiesWithoutODataTypeAsValueTest()
+        {
+            const string payload = @"{""@odata.context"":""http://www.sampletest.com/$metadata#serverOpenEntitySet/$entity"",""Id"":61880128,""UndeclaredFloatId"":12.3,
+                                                                          UndeclaredCollection1:[],""Address"":{""Street"":""No.999,Zixing Rd Minhang"",""UndeclaredStreet"":""No.10000000999,Zixing Rd Minhang""}}";
+            ODataResource entry = null;
+            ODataResource address = null;
+            ODataNestedResourceInfo undeclaredCollection1 = null;
+            ODataNestedResourceInfo addressNestedInfo = null;
+            List<object> undeclaredCollection1Items = new List<object>();
             this.ReadEntryPayload(payload, this.serverOpenEntitySet, this.serverOpenEntityType, reader =>
             {
                 if (reader.State == ODataReaderState.ResourceStart)
@@ -1050,40 +1247,29 @@
                         address = (reader.Item as ODataResource);
                     }
                 }
-            }, /*readUntypedAsValue*/ true);
-
-            entry.Properties.Count().Should().Be(3);
-            ODataCollectionValue untypedCollection = entry.Properties.Single(s => string.Equals(s.Name, "UndeclaredCollection1")).Value.As<ODataCollectionValue>();
-            untypedCollection.Items.Count().Should().Be(3);
-            String.Concat(untypedCollection.Items).Should().Be("email1@163.comemail2@gmail.comemail3@gmail2.com");
-            address.Properties.Count().Should().Be(2);
-        }
-
-        [Fact]
-        public void ReadOpenEntryUndeclaredEmptyCollectionPropertiesWithoutODataTypeAsValueTest()
-        {
-            const string payload = @"{""@odata.context"":""http://www.sampletest.com/$metadata#serverOpenEntitySet/$entity"",""Id"":61880128,""UndeclaredFloatId"":12.3,
-                                                                          UndeclaredCollection1:[],""Address"":{""Street"":""No.999,Zixing Rd Minhang"",""UndeclaredStreet"":""No.10000000999,Zixing Rd Minhang""}}";
-            ODataResource entry = null;
-            ODataResource complex1 = null;
-            this.ReadEntryPayload(payload, this.serverOpenEntitySet, this.serverOpenEntityType, reader =>
-            {
-                if (reader.State == ODataReaderState.ResourceStart)
+                else if (reader.State == ODataReaderState.NestedResourceInfoStart)
                 {
-                    if (entry == null)
+                    if (undeclaredCollection1 == null)
                     {
-                        entry = (reader.Item as ODataResource);
+                        undeclaredCollection1 = (reader.Item as ODataNestedResourceInfo);
                     }
-                    else if (complex1 == null)
+                    else
                     {
-                        complex1 = (reader.Item as ODataResource);
+                        addressNestedInfo = (reader.Item as ODataNestedResourceInfo);
                     }
+                }
+                else if (reader.State == ODataReaderState.Primitive)
+                {
+                    undeclaredCollection1Items.Add(reader.Item == null ? null : ((ODataPrimitiveValue)(reader.Item)).Value);
                 }
             }, /*readUntypedAsValue*/ true);
 
-            entry.Properties.Count().Should().Be(3);
-            entry.Properties.Single(s => string.Equals(s.Name, "UndeclaredCollection1")).Value.As<ODataCollectionValue>().Items.Count().Should().Be(0);
-            complex1.Properties.Single(s => string.Equals(s.Name, "UndeclaredStreet")).Value.Should().Be("No.10000000999,Zixing Rd Minhang");
+            entry.Properties.Count().Should().Be(2);
+            undeclaredCollection1.Name.Should().Be("UndeclaredCollection1");
+            undeclaredCollection1Items.Count().Should().Be(0);
+            address.TypeName.Should().Be("Server.NS.Address");
+            addressNestedInfo.Name.Should().Be("Address");
+            address.Properties.Single(s => string.Equals(s.Name, "UndeclaredStreet")).Value.Should().Be("No.10000000999,Zixing Rd Minhang");
         }
 
         #endregion

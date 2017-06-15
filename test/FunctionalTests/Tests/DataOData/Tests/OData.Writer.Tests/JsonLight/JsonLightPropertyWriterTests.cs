@@ -392,6 +392,33 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.JsonLight
                                             }
                                 },
                 },
+                new PropertyPayloadTestCase
+                {
+                    DebugDescription = "Integer.",
+                    Property = new ODataProperty
+                                {
+                                    Name = "Value",
+                                    Value = new ODataPrimitiveValue(42)
+                                },
+                },
+                new PropertyPayloadTestCase
+                {
+                    DebugDescription = "Float.",
+                    Property = new ODataProperty
+                                {
+                                    Name = "Value",
+                                    Value = new ODataPrimitiveValue(3.1415)
+                                },
+                },
+                new PropertyPayloadTestCase
+                {
+                    DebugDescription = "String.",
+                    Property = new ODataProperty
+                                {
+                                    Name = "Value",
+                                    Value = new ODataPrimitiveValue("foo bar")
+                                },
+                },
             };
 
             IEnumerable<PayloadWriterTestDescriptor<ODataProperty>> testDescriptors = testCases.Select(testCase =>
@@ -430,7 +457,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.JsonLight
                         baselineLogger: this.Logger);
                 });
         }
-
+        
         /// <summary>
         /// Gets the expected JSON string from a given <see cref="T:ODataUntypedValue"/> or a
         /// <see cref="T:ODataCollectionValue"/> whose elements are <see cref="T:ODataUntypedValue"/>.

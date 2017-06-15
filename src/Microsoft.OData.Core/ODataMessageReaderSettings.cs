@@ -32,6 +32,7 @@ namespace Microsoft.OData
         public ODataMessageReaderSettings()
         {
             this.ClientCustomTypeResolver = null;
+            this.PrimitiveTypeResolver = null;
             this.EnablePrimitiveTypeConversion = true;
             this.EnableMessageStreamDisposal = true;
             this.EnableCharactersCheck = false;
@@ -86,6 +87,10 @@ namespace Microsoft.OData
         /// Gets or sets custom type resolver used by the Client.
         /// </summary>
         public Func<IEdmType, string, IEdmType> ClientCustomTypeResolver { get; set; }
+
+        /// <summary>Gets or sets a custom resolver for resolving untyped primitive values
+        /// </summary>
+        public Func<object, string, IEdmTypeReference> PrimitiveTypeResolver { get; set; }
 
         /// <summary>Gets or sets a value that indicates whether to convert all primitive values to the type specified in the model or provided as an expected type. Note that values will still be converted to the type specified in the payload itself.</summary>
         /// <returns>false if primitive values and report values are not converted; true if all primitive values are converted to the type specified in the model or provided as an expected type. The default value is true.</returns>
@@ -211,6 +216,7 @@ namespace Microsoft.OData
 
             this.BaseUri = other.BaseUri;
             this.ClientCustomTypeResolver = other.ClientCustomTypeResolver;
+            this.PrimitiveTypeResolver = other.PrimitiveTypeResolver;
             this.EnableMessageStreamDisposal = other.EnableMessageStreamDisposal;
             this.EnablePrimitiveTypeConversion = other.EnablePrimitiveTypeConversion;
             this.EnableCharactersCheck = other.EnableCharactersCheck;

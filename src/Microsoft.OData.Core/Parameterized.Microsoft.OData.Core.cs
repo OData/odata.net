@@ -3347,7 +3347,7 @@ namespace Microsoft.OData {
         }
 
         /// <summary>
-        /// A string like "A node of type '{0}' was read from the JSON reader when trying to read the entries of a resource set; however, a node of type 'StartObject' or 'EndArray' was expected."
+        /// A string like "A node of type '{0}' was read from the JSON reader when trying to read the entries of a typed resource set; however, a node of type 'StartObject' or 'EndArray', or a null value, was expected."
         /// </summary>
         internal static string ODataJsonLightResourceDeserializer_InvalidNodeTypeForItemsInResourceSet(object p0) {
             return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightResourceDeserializer_InvalidNodeTypeForItemsInResourceSet, p0);

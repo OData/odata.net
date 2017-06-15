@@ -1,5 +1,5 @@
 //---------------------------------------------------------------------
-// <copyright file="EdmStructuredType.cs" company="Microsoft">
+// <copyright file="EdmUntypedStructuredType.cs" company="Microsoft">
 //      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 // </copyright>
 //---------------------------------------------------------------------
@@ -17,11 +17,14 @@ namespace Microsoft.OData.Edm
         /// <summary>
         /// Initializes a new instance of the <see cref="EdmStructuredType"/> class.
         /// </summary>
-        public EdmUntypedStructuredType() 
-            :base(/*isAbstract*/true, /*isOpen*/true, /*baseType*/ null)
+        public EdmUntypedStructuredType()
+            : base(/*isAbstract*/true, /*isOpen*/true, /*baseType*/ null)
         {
         }
 
+        /// <summary>
+        /// Gets the kind of this type.
+        /// </summary>
         public override EdmTypeKind TypeKind
         {
             get

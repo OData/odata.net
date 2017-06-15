@@ -35,6 +35,11 @@ namespace Microsoft.OData.JsonLight
         private readonly ODataJsonLightResourceSerializer jsonLightResourceSerializer;
 
         /// <summary>
+        /// The JsonLight value serializer to use for primitive values in an untyped collection.
+        /// </summary>
+        private readonly ODataJsonLightValueSerializer jsonLightValueSerializer;
+
+        /// <summary>
         /// True if the writer was created for writing a parameter; false otherwise.
         /// </summary>
         private readonly bool writingParameter;
@@ -73,6 +78,7 @@ namespace Microsoft.OData.JsonLight
 
             this.jsonLightOutputContext = jsonLightOutputContext;
             this.jsonLightResourceSerializer = new ODataJsonLightResourceSerializer(this.jsonLightOutputContext);
+            this.jsonLightValueSerializer = new ODataJsonLightValueSerializer(this.jsonLightOutputContext);
 
             this.writingParameter = writingParameter;
             this.jsonWriter = this.jsonLightOutputContext.JsonWriter;
@@ -186,6 +192,17 @@ namespace Microsoft.OData.JsonLight
             ODataNestedResourceInfo parentNavLink = this.ParentNestedResourceInfo;
             if (parentNavLink != null)
             {
+                // For a null value, write the type as a property annotation
+                if (resource == null)
+                {
+                    if (parentNavLink.TypeAnnotation != null && parentNavLink.TypeAnnotation.TypeName != null)
+                    {
+                        this.jsonLightResourceSerializer.ODataAnnotationWriter.WriteODataTypePropertyAnnotation(parentNavLink.Name, parentNavLink.TypeAnnotation.TypeName);
+                    }
+
+                    this.jsonLightResourceSerializer.InstanceAnnotationWriter.WriteInstanceAnnotations(parentNavLink.GetInstanceAnnotations(), parentNavLink.Name);
+                }
+
                 // Write the property name of an expanded navigation property to start the value.
                 this.jsonWriter.WriteName(parentNavLink.Name);
             }
@@ -266,7 +283,7 @@ namespace Microsoft.OData.JsonLight
         {
             Debug.Assert(resourceSet != null, "resourceSet != null");
 
-            if (this.ParentNestedResourceInfo == null && this.writingParameter)
+            if (this.ParentNestedResourceInfo == null && (this.writingParameter || this.ParentScope.State == WriterState.ResourceSet))
             {
                 // Start array which will hold the entries in the resource set.
                 this.jsonWriter.StartArrayScope();
@@ -384,7 +401,7 @@ namespace Microsoft.OData.JsonLight
         {
             Debug.Assert(resourceSet != null, "resourceSet != null");
 
-            if (this.ParentNestedResourceInfo == null && this.writingParameter)
+            if (this.ParentNestedResourceInfo == null && (this.writingParameter || this.ParentScope.State == WriterState.ResourceSet))
             {
                 // End the array which holds the entries in the resource set.
                 this.jsonWriter.EndArrayScope();
@@ -434,6 +451,16 @@ namespace Microsoft.OData.JsonLight
 
             this.jsonLightOutputContext.PropertyCacheHandler.LeaveResourceSetScope();
         }
+
+        /// <summary>
+        /// Write a primitive type inside an untyped collection.
+        /// </summary>
+        /// <param name="primitiveValue">The nested resource info to write.</param>
+        protected override void WritePrimitiveValue(ODataPrimitiveValue primitiveValue)
+        {
+            this.jsonLightValueSerializer.WritePrimitiveValue(primitiveValue == null ? null : primitiveValue.Value, /*expectedType*/null);
+        }
+
 
         /// <summary>
         /// Start writing a deferred (non-expanded) nested resource info.
