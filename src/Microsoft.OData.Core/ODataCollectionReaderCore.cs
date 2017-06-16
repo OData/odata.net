@@ -208,11 +208,6 @@ namespace Microsoft.OData
                     result = this.ReadAtCollectionEndImplementation();
                     break;
 
-                case ODataCollectionReaderState.Exception:    // fall through
-                case ODataCollectionReaderState.Completed:
-                    Debug.Assert(false, "This case should have been caught earlier.");
-                    throw new ODataException(Strings.General_InternalError(InternalErrorCodes.ODataCollectionReaderCore_ReadImplementation));
-
                 default:
                     Debug.Assert(false, "Unsupported collection reader state " + this.State + " detected.");
                     throw new ODataException(Strings.General_InternalError(InternalErrorCodes.ODataCollectionReaderCore_ReadImplementation));
