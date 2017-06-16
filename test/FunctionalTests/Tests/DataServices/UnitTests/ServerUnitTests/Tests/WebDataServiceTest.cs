@@ -603,48 +603,6 @@ namespace AstoriaUnitTests.Tests
                 }
             });
         }
-        [Ignore] // Remove Atom
-        [TestMethod]
-        public void DataServiceHostServiceRootUriTest()
-        {
-            // Edit link "../Product(1)" incorrectly produced when base uri is http://service.svc using IDSH
-            // Make sure service root URIs always end in '/' when using an IDataServiceHost/IDataServiceHost2
-            //
-            // Verifies that the service root URI for a IDSH is always terminated in a '/'
-            // NOTE: if the service URI would not be properly terminated in a '/', the created edit link in the resulting
-            //       entry would be incorrect.
-            Uri[] uris = new Uri[]
-            {
-                new Uri("http://host"),
-                new Uri("http://host/a/b"),
-                new Uri("http://host/a/b.svc"),
-                new Uri("http://host/a/b/c.svc")
-            };
-
-            TestUtil.RunCombinations(uris, (uri) =>
-            {
-                TestServiceHost host = new TestServiceHost(uri)
-                {
-                    RequestAccept = "application/atom+xml",
-                    RequestPathInfo = "/Customers(0)",
-                };
-
-                DataService<CustomDataContext> context = new OpenWebDataService<CustomDataContext>();
-                context.AttachHost(host);
-
-                Exception exception = TestUtil.RunCatching(delegate()
-                {
-                    context.ProcessRequest();
-                });
-
-                XmlDocument document = new XmlDocument(TestUtil.TestNameTable);
-                host.ResponseStream.Seek(0, SeekOrigin.Begin);
-                document.Load(host.ResponseStream);
-                UnitTestsUtil.VerifyXPaths(document, "/atom:entry/atom:link[@rel='edit' and @href='Customers(0)']");
-
-                TestUtil.AssertExceptionExpected(exception, false);
-            });
-        }
 
         /// <summary>
         /// A test for DataService.ctor(host) for an ObjectContext type.

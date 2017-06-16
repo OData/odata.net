@@ -63,7 +63,7 @@ namespace AstoriaUnitTests.Tests
         public static readonly string MimeTextPlain = "tExt/plaIn";
         public static readonly string MimeMultipartMixed = "multIpart/mixEd";
         public static readonly string MimeTextXml = "texT/xMl"; // deprecated
-        public static string[] ResponseFormats = new string[] { AtomFormat }; // TODO:  Add Json Light to this Formats and Change tests to use Json Light
+        public static string[] ResponseFormats = new string[] { JsonLightMimeType };
         public static bool[] BooleanValues = new bool[] { false, true };
 
         public static string CustomerTypeName = "AstoriaUnitTests.ObjectContextStubs.Types.Customer";
@@ -265,7 +265,7 @@ namespace AstoriaUnitTests.Tests
             }
             else if (String.Equals(responseFormat, JsonLightMimeType, StringComparison.OrdinalIgnoreCase))
             {
-                return VerifyXPaths(resultStream, responseFormat, null);
+                return VerifyXPaths(resultStream, responseFormat, atomXPaths);
             }
             else
             {
