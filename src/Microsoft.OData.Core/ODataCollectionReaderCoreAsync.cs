@@ -86,11 +86,6 @@ namespace Microsoft.OData
                 case ODataCollectionReaderState.CollectionEnd:
                     return this.ReadAtCollectionEndImplementationAsync();
 
-                case ODataCollectionReaderState.Exception:    // fall through
-                case ODataCollectionReaderState.Completed:
-                    Debug.Assert(false, "This case should have been caught earlier.");
-                    return TaskUtils.GetFaultedTask<bool>(new ODataException(Strings.General_InternalError(InternalErrorCodes.ODataCollectionReaderCoreAsync_ReadAsynchronously)));
-
                 default:
                     Debug.Assert(false, "Unsupported collection reader state " + this.State + " detected.");
                     return TaskUtils.GetFaultedTask<bool>(new ODataException(Strings.General_InternalError(InternalErrorCodes.ODataCollectionReaderCoreAsync_ReadAsynchronously)));
