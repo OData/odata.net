@@ -73,6 +73,7 @@
     <Compile Include="UriParser\SemanticAst\ComputeExpression.cs" />
     <Compile Include="UriParser\SemanticAst\CountVirtualPropertyNode.cs" />
     <Compile Include="UriParser\SemanticAst\SingleComplexNode.cs" />
+    <Compile Include="UriParser\SemanticAst\SingleValueCastNode.cs" />
     <Compile Include="UriParser\SemanticAst\SingleResourceNode.cs" />
     <Compile Include="UriParser\SyntacticAst\ComputeToken.cs" />
     <Compile Include="UriParser\SyntacticAst\ComputeExpressionToken.cs" />

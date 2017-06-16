@@ -157,6 +157,46 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         }
 
         [Fact]
+        public void SelectWithCastProperty()
+        {
+            SelectExpandClause select = RunParseSelectExpand("Artist/Edm.String", null, HardCodedTestModel.GetPaintingType(), HardCodedTestModel.GetPaintingsSet());
+            List<SelectItem> items = select.SelectedItems.ToList();
+            items.Count.Should().Be(1);
+
+            ODataPathSegment[] segments = new ODataPathSegment[2];
+            segments[0] = new PropertySegment(HardCodedTestModel.GetPaintingArtistProp());
+            segments[1] = new TypeSegment(EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.String), null);
+            items[0].ShouldBePathSelectionItem(new ODataPath(segments));
+        }
+
+        [Fact]
+        public void SelectWithCastOpenProperty()
+        {
+            SelectExpandClause select = RunParseSelectExpand("Assistant/Edm.String", null, HardCodedTestModel.GetPaintingType(), HardCodedTestModel.GetPaintingsSet());
+            List<SelectItem> items = select.SelectedItems.ToList();
+            items.Count.Should().Be(1);
+
+            ODataPathSegment[] segments = new ODataPathSegment[2];
+            segments[0] = new DynamicPathSegment("Assistant");
+            segments[1] = new TypeSegment(EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.String), null);
+            items[0].ShouldBePathSelectionItem(new ODataPath(segments));
+        }
+
+        [Fact]
+        public void SelectWithCastOpenComplexProperty()
+        {
+            SelectExpandClause select = RunParseSelectExpand("Exhibit/Location/Edm.String", null, HardCodedTestModel.GetPaintingType(), HardCodedTestModel.GetPaintingsSet());
+            List<SelectItem> items = select.SelectedItems.ToList();
+            items.Count.Should().Be(1);
+
+            ODataPathSegment[] segments = new ODataPathSegment[3];
+            segments[0] = new DynamicPathSegment("Exhibit");
+            segments[1] = new DynamicPathSegment("Location");
+            segments[2] = new TypeSegment(EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.String), null);
+            items[0].ShouldBePathSelectionItem(new ODataPath(segments));
+        }
+
+        [Fact]
         public void SelectActionMeansOperation()
         {
             ParseSingleSelectForDog("Fully.Qualified.Namespace.Walk", "Fully.Qualified.Namespace.Walk").ShouldBePathSelectionItem(new ODataPath(new OperationSegment(new List<IEdmOperation>() { HardCodedTestModel.GetDogWalkAction() }, null)));

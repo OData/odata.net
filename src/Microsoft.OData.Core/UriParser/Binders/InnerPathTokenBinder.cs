@@ -171,6 +171,10 @@ namespace Microsoft.OData.UriParser
                 state.ParsedSegments.Add(new PropertySegment(structuralProperty));
                 return new SingleComplexNode(singleValueParent as SingleResourceNode, property);
             }
+            else if (property.Type.IsPrimitive())
+            {
+                return new SingleValuePropertyAccessNode(singleValueParent, property);
+            }
 
             // Note - this means nonentity collection (primitive or complex)
             if (property.Type.IsNonEntityCollectionType())

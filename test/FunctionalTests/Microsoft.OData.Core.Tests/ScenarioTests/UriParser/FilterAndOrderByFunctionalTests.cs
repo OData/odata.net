@@ -795,7 +795,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         {
             // regression test for: [UriParser] Trailing $ lost
             Action parseWithTrailingDollarSign = () => ParseOrderBy("Name/$", HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());
-            parseWithTrailingDollarSign.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.MetadataBinder_IllegalSegmentType("Name"));
+            parseWithTrailingDollarSign.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.MetadataBinder_PropertyNotDeclared("Edm.String", "$"));
         }
 
         [Fact]
@@ -836,7 +836,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         {
             // regression test for: [URIParser] $filter with Any/All throws invalid cast instead of Odata Exception
             Action anyOnPrimitiveType = () => ParseFilter("Name/any(a: a eq 'Bob')", HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());
-            anyOnPrimitiveType.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.MetadataBinder_IllegalSegmentType("Name"));
+            anyOnPrimitiveType.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.MetadataBinder_LambdaParentMustBeCollection);
         }
 
         #region Custom Functions
@@ -1041,7 +1041,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         {
             var model = ModelBuildingHelpers.GetModelFunctionsOnNonEntityTypes();
             Action parse = () => ParseFilter("ID/IsPrime()", model, model.EntityTypes().Single(e => e.Name == "Vegetable"), null);
-            parse.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.MetadataBinder_IllegalSegmentType("ID"));
+            parse.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.FunctionCallBinder_UriFunctionMustHaveHaveNullParent("IsPrime"));
         }
 
         [Fact]
@@ -1049,7 +1049,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         {
             var model = ModelBuildingHelpers.GetModelFunctionsOnNonEntityTypes();
             Action parse = () => ParseFilter("ID/Test.IsPrime", model, model.EntityTypes().Single(e => e.Name == "Vegetable"), null);
-            parse.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.MetadataBinder_IllegalSegmentType("ID"));
+            parse.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.CastBinder_ChildTypeIsNotEntity("Test.IsPrime"));
         }
 
         [Fact]
@@ -1592,6 +1592,74 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         {
             FilterClause clause = ParseFilter("MyAddress/Fully.Qualified.Namespace.HomeAddress/HomeNO eq 'dva'", HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());
             clause.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal).And.Left.ShouldBeSingleValuePropertyAccessQueryNode(homeNo);
+        }
+        #endregion
+
+        #region Primitive type cast
+        [Fact]
+        public void FilterWithCastStringProperty()
+        {
+            FilterClause filter = ParseFilter("Artist/Edm.String eq 'sdb'", HardCodedTestModel.TestModel, HardCodedTestModel.GetPaintingType());
+            filter.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal);
+            filter.Expression.As<BinaryOperatorNode>().Left.As<ConvertNode>().Source.As<SingleValueCastNode>().TypeReference.FullName().Should().Be("Edm.String");
+            filter.Expression.As<BinaryOperatorNode>().Left.As<ConvertNode>().Source.As<SingleValueCastNode>().InternalKind.ShouldBeEquivalentTo(InternalQueryNodeKind.SingleValueCast);
+            filter.Expression.As<BinaryOperatorNode>().Left.As<ConvertNode>().Source.As<SingleValueCastNode>().Kind.ShouldBeEquivalentTo(QueryNodeKind.SingleValueCast);
+            filter.Expression.As<BinaryOperatorNode>().Left.As<ConvertNode>().Source.As<SingleValueCastNode>().Source.ShouldBeSingleValuePropertyAccessQueryNode(HardCodedTestModel.GetPaintingArtistProp());
+        }
+
+        [Fact]
+        public void FilterWithCastStringOpenProperty()
+        {
+            FilterClause filter = ParseFilter("Assistant/Edm.String eq 'sdb'", HardCodedTestModel.TestModel, HardCodedTestModel.GetPaintingType());
+            filter.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal);
+            filter.Expression.As<BinaryOperatorNode>().Left.As<ConvertNode>().Source.As<SingleValueCastNode>().TypeReference.FullName().Should().Be("Edm.String");
+            filter.Expression.As<BinaryOperatorNode>().Left.As<ConvertNode>().Source.As<SingleValueCastNode>().InternalKind.ShouldBeEquivalentTo(InternalQueryNodeKind.SingleValueCast);
+            filter.Expression.As<BinaryOperatorNode>().Left.As<ConvertNode>().Source.As<SingleValueCastNode>().Kind.ShouldBeEquivalentTo(QueryNodeKind.SingleValueCast);
+            filter.Expression.As<BinaryOperatorNode>().Left.As<ConvertNode>().Source.As<SingleValueCastNode>().Source.ShouldBeSingleValueOpenPropertyAccessQueryNode("Assistant");
+        }
+
+        [Fact]
+        public void FilterWithCastAnyProperty()
+        {
+            FilterClause filter = ParseFilter("Colors/any(x:x/Edm.String eq 'blue')", HardCodedTestModel.TestModel, HardCodedTestModel.GetPaintingType());
+            filter.Expression.ShouldBeAnyQueryNode();
+            filter.Expression.As<AnyNode>().Body.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal);
+            filter.Expression.As<AnyNode>().Body.As<BinaryOperatorNode>().Left.As<ConvertNode>().Source.As<SingleValueCastNode>().TypeReference.FullName().Should().Be("Edm.String");
+            filter.Expression.As<AnyNode>().Body.As<BinaryOperatorNode>().Left.As<ConvertNode>().Source.As<SingleValueCastNode>().InternalKind.ShouldBeEquivalentTo(InternalQueryNodeKind.SingleValueCast);
+            filter.Expression.As<AnyNode>().Body.As<BinaryOperatorNode>().Left.As<ConvertNode>().Source.As<SingleValueCastNode>().Kind.ShouldBeEquivalentTo(QueryNodeKind.SingleValueCast);
+            filter.Expression.As<AnyNode>().Body.As<BinaryOperatorNode>().Left.As<ConvertNode>().Source.As<SingleValueCastNode>().Source.ShouldBeNonResourceRangeVariableReferenceNode("x");
+        }
+
+        [Fact]
+        public void FilterWithCastAnyOpenProperty()
+        {
+            FilterClause filter = ParseFilter("Exhibits/any(x:x/Edm.String eq 'Louvre')", HardCodedTestModel.TestModel, HardCodedTestModel.GetPaintingType());
+            filter.Expression.ShouldBeAnyQueryNode();
+            filter.Expression.As<AnyNode>().Body.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal);
+            filter.Expression.As<AnyNode>().Body.As<BinaryOperatorNode>().Left.As<ConvertNode>().Source.As<SingleValueCastNode>().TypeReference.FullName().Should().Be("Edm.String");
+            filter.Expression.As<AnyNode>().Body.As<BinaryOperatorNode>().Left.As<ConvertNode>().Source.As<SingleValueCastNode>().InternalKind.ShouldBeEquivalentTo(InternalQueryNodeKind.SingleValueCast);
+            filter.Expression.As<AnyNode>().Body.As<BinaryOperatorNode>().Left.As<ConvertNode>().Source.As<SingleValueCastNode>().Kind.ShouldBeEquivalentTo(QueryNodeKind.SingleValueCast);
+            filter.Expression.As<AnyNode>().Body.As<BinaryOperatorNode>().Left.As<ConvertNode>().Source.As<SingleValueCastNode>().Source.ShouldBeNonResourceRangeVariableReferenceNode("x");
+        }
+
+        [Fact]
+        public void OrderByWithCastStringProperty()
+        {
+            OrderByClause orderby = ParseOrderBy("Artist/Edm.String", HardCodedTestModel.TestModel, HardCodedTestModel.GetPaintingType());
+            orderby.Expression.As<SingleValueCastNode>().TypeReference.FullName().Should().Be("Edm.String");
+            orderby.Expression.As<SingleValueCastNode>().InternalKind.ShouldBeEquivalentTo(InternalQueryNodeKind.SingleValueCast);
+            orderby.Expression.As<SingleValueCastNode>().Kind.ShouldBeEquivalentTo(QueryNodeKind.SingleValueCast);
+            orderby.Expression.As<SingleValueCastNode>().Source.ShouldBeSingleValuePropertyAccessQueryNode(HardCodedTestModel.GetPaintingArtistProp());
+        }
+
+        [Fact]
+        public void OrderByWithCastStringOpenProperty()
+        {
+            OrderByClause orderby = ParseOrderBy("Assistant/Edm.String", HardCodedTestModel.TestModel, HardCodedTestModel.GetPaintingType());
+            orderby.Expression.As<SingleValueCastNode>().TypeReference.FullName().Should().Be("Edm.String");
+            orderby.Expression.As<SingleValueCastNode>().InternalKind.ShouldBeEquivalentTo(InternalQueryNodeKind.SingleValueCast);
+            orderby.Expression.As<SingleValueCastNode>().Kind.ShouldBeEquivalentTo(QueryNodeKind.SingleValueCast);
+            orderby.Expression.As<SingleValueCastNode>().Source.ShouldBeSingleValueOpenPropertyAccessQueryNode("Assistant");
         }
         #endregion
 
