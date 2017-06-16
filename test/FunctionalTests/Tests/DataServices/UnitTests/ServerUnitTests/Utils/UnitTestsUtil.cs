@@ -259,11 +259,8 @@ namespace AstoriaUnitTests.Tests
         {
             responseFormat = TestUtil.GetMediaType(responseFormat);
             if (String.Equals(responseFormat, AtomFormat, StringComparison.OrdinalIgnoreCase) ||
-                     String.Equals(responseFormat, MimeApplicationXml, StringComparison.OrdinalIgnoreCase))
-            {
-                return VerifyXPaths(resultStream, responseFormat, atomXPaths);
-            }
-            else if (String.Equals(responseFormat, JsonLightMimeType, StringComparison.OrdinalIgnoreCase))
+                String.Equals(responseFormat, MimeApplicationXml, StringComparison.OrdinalIgnoreCase) ||
+                String.Equals(responseFormat, JsonLightMimeType, StringComparison.OrdinalIgnoreCase))
             {
                 return VerifyXPaths(resultStream, responseFormat, atomXPaths);
             }
