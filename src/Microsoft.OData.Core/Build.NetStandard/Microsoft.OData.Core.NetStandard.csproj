@@ -1457,6 +1457,9 @@
     <Compile Include="..\UriParser\SemanticAst\SingleNavigationNode.cs">
       <Link>UriParser\SemanticAst\SingleNavigationNode.cs</Link>
     </Compile>
+    <Compile Include="..\UriParser\SemanticAst\SingleValueCastNode.cs">
+      <Link>UriParser\SemanticAst\SingleValueCastNode.cs</Link>
+    </Compile>
     <Compile Include="..\UriParser\SemanticAst\SingleResourceCastNode.cs">
       <Link>UriParser\SemanticAst\SingleResourceCastNode.cs</Link>
     </Compile>

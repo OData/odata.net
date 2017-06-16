@@ -348,6 +348,27 @@ namespace Microsoft.OData.Service.Parsing
         }
 
         /// <summary>
+        /// Translates a <see cref="SingleValueCastNode"/> into a corresponding <see cref="Expression"/>.
+        /// </summary>
+        /// <param name="node">The node to translate.</param>
+        /// <returns>The translated expression.</returns>
+        public override Expression Visit(SingleValueCastNode node)
+        {
+            WebUtil.CheckArgumentNull(node, "node");
+
+            // Whenever we encounter the type segment, we need to only verify that the MPV is set to 4.0 or higher.
+            // There is no need to check for request DSV, request MaxDSV since there are no protocol changes in
+            // the payload for uri's with type identifier.
+            this.verifyProtocolVersion(ODataProtocolVersion.V4);
+
+            Expression source = this.TranslateNode(node.Source);
+            ResourceType resourceType = MetadataProviderUtils.GetResourceType(node.TypeReference.Definition);
+            Debug.Assert(resourceType != null, "resourceType != null");
+
+            return ExpressionGenerator.GenerateTypeAs(source, resourceType);
+        }
+
+        /// <summary>
         /// Translates a <see cref="SingleNavigationNode"/> into a corresponding <see cref="Expression"/>.
         /// </summary>
         /// <param name="node">The node to translate.</param>

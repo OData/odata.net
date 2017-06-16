@@ -1632,6 +1632,9 @@
     <Compile Include="..\UriParser\SemanticAst\SingleComplexNode.cs">
       <Link>Microsoft\OData\Core\UriParser\SemanticAst\SingleComplexNode.cs</Link>
     </Compile>
+    <Compile Include="..\UriParser\SemanticAst\SingleValueCastNode.cs">
+      <Link>Microsoft\OData\Core\UriParser\SemanticAst\SingleValueCastNode.cs</Link>
+    </Compile>
     <Compile Include="..\UriParser\SemanticAst\SingleResourceCastNode.cs">
       <Link>Microsoft\OData\Core\UriParser\SemanticAst\SingleResourceCastNode.cs</Link>
     </Compile>

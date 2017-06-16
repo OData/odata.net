@@ -82,7 +82,15 @@ namespace Microsoft.OData.UriParser
                     IEdmTypeReference edmTypeReference = UriEdmHelpers.FindTypeFromModel(state.Model, dottedIdentifierToken.Identifier, this.Resolver).ToTypeReference();
                     if (edmTypeReference is IEdmPrimitiveTypeReference || edmTypeReference is IEdmEnumTypeReference)
                     {
-                        return new ConstantNode(dottedIdentifierToken.Identifier, dottedIdentifierToken.Identifier);
+                        IEdmPrimitiveType childPrimitiveType = childType as IEdmPrimitiveType;
+                        if (childPrimitiveType != null && dottedIdentifierToken.NextToken != null)
+                        {
+                            return new SingleValueCastNode(parent as SingleValueNode, childPrimitiveType);
+                        }
+                        else
+                        {
+                            return new ConstantNode(dottedIdentifierToken.Identifier, dottedIdentifierToken.Identifier);
+                        }
                     }
                     else
                     {

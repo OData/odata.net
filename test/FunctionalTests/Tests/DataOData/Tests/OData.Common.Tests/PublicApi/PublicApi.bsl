@@ -5175,6 +5175,7 @@ public enum Microsoft.OData.UriParser.QueryNodeKind : int {
 	SingleNavigationNode = 11
 	SingleResourceCast = 13
 	SingleResourceFunctionCall = 17
+	SingleValueCast = 29
 	SingleValueFunctionCall = 8
 	SingleValueOpenPropertyAccess = 12
 	SingleValuePropertyAccess = 6
@@ -5393,6 +5394,7 @@ public abstract class Microsoft.OData.UriParser.QueryNodeVisitor`1 {
 	public virtual T Visit (Microsoft.OData.UriParser.SingleNavigationNode nodeIn)
 	public virtual T Visit (Microsoft.OData.UriParser.SingleResourceCastNode nodeIn)
 	public virtual T Visit (Microsoft.OData.UriParser.SingleResourceFunctionCallNode nodeIn)
+	public virtual T Visit (Microsoft.OData.UriParser.SingleValueCastNode nodeIn)
 	public virtual T Visit (Microsoft.OData.UriParser.SingleValueFunctionCallNode nodeIn)
 	public virtual T Visit (Microsoft.OData.UriParser.SingleValueOpenPropertyAccessNode nodeIn)
 	public virtual T Visit (Microsoft.OData.UriParser.SingleValuePropertyAccessNode nodeIn)
@@ -6395,6 +6397,15 @@ public sealed class Microsoft.OData.UriParser.SingletonSegment : Microsoft.OData
 
 	public virtual void HandleWith (Microsoft.OData.UriParser.PathSegmentHandler handler)
 	public virtual T TranslateWith (PathSegmentTranslator`1 translator)
+}
+
+public sealed class Microsoft.OData.UriParser.SingleValueCastNode : Microsoft.OData.UriParser.SingleValueNode {
+	public SingleValueCastNode (Microsoft.OData.UriParser.SingleValueNode source, Microsoft.OData.Edm.IEdmPrimitiveType primitiveType)
+
+	Microsoft.OData.UriParser.SingleValueNode Source  { public get; }
+	Microsoft.OData.Edm.IEdmTypeReference TypeReference  { public virtual get; }
+
+	public virtual T Accept (QueryNodeVisitor`1 visitor)
 }
 
 public sealed class Microsoft.OData.UriParser.SingleValueFunctionCallNode : Microsoft.OData.UriParser.SingleValueNode {
