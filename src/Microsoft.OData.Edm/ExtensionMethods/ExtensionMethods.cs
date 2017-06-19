@@ -962,7 +962,7 @@ namespace Microsoft.OData.Edm
                 catch (NotImplementedException)
                 {
                     // model.EntityContainer can throw NotImplementedException
-                    return foundEntitySet;
+                    return null;
                 }
             }
 
@@ -992,7 +992,7 @@ namespace Microsoft.OData.Edm
                 catch (NotImplementedException)
                 {
                     // model.EntityContainer can throw NotImplementedException
-                    return foundSingleton;
+                    return null;
                 }
             }
 

@@ -148,6 +148,15 @@ namespace AstoriaUnitTests.Tests
 
         public static XmlDocument VerifyXPaths(Stream resultStream, string responseFormat, params string[] xPaths)
         {
+            responseFormat = TestUtil.GetMediaType(responseFormat);
+            if (!String.Equals(responseFormat, AtomFormat, StringComparison.OrdinalIgnoreCase) &&
+                !String.Equals(responseFormat, MimeApplicationXml, StringComparison.OrdinalIgnoreCase) &&
+                !String.Equals(responseFormat, JsonLightMimeType, StringComparison.OrdinalIgnoreCase))
+            {
+                Assert.Fail("invalid format: " + responseFormat);
+                return null;
+            }
+
             XmlDocument document = null;
             string traceDocument = null;
             if (String.Equals(responseFormat, JsonLightMimeType, StringComparison.OrdinalIgnoreCase)  ||
@@ -252,22 +261,6 @@ namespace AstoriaUnitTests.Tests
                     Trace.WriteLine(navigable.CreateNavigator().OuterXml);
                     Assert.Fail("The expression " + xpath + " did not find elements. The document has just been traced.");
                 }
-            }
-        }
-
-        public static XmlDocument VerifyXPaths(Stream resultStream, string responseFormat, string[] web3sXPaths, string[] jsonXPaths, string[] atomXPaths)
-        {
-            responseFormat = TestUtil.GetMediaType(responseFormat);
-            if (String.Equals(responseFormat, AtomFormat, StringComparison.OrdinalIgnoreCase) ||
-                String.Equals(responseFormat, MimeApplicationXml, StringComparison.OrdinalIgnoreCase) ||
-                String.Equals(responseFormat, JsonLightMimeType, StringComparison.OrdinalIgnoreCase))
-            {
-                return VerifyXPaths(resultStream, responseFormat, atomXPaths);
-            }
-            else
-            {
-                Assert.Fail("invalid format: " + responseFormat);
-                return null;
             }
         }
 
@@ -976,8 +969,7 @@ namespace AstoriaUnitTests.Tests
             }
         }
 
-        public static void VerifyPayload(string uri, Type dataServiceType, Func<Hashtable, XmlDocument, bool> testCallback,
-                                                                    string[] web3sXpaths, string[] jsonXPaths, string[] atomXPaths)
+        public static void VerifyPayload(string uri, Type dataServiceType, Func<Hashtable, XmlDocument, bool> testCallback, string[] atomXPaths)
         {
             CombinatorialEngine engine = CombinatorialEngine.FromDimensions(
                 new Dimension("ResponseFormat", ResponseFormats),
@@ -997,7 +989,7 @@ namespace AstoriaUnitTests.Tests
                 }
 
                 Stream resultStream = UnitTestsUtil.GetResponseStream(location, accept, uri, dataServiceType);
-                XmlDocument document = VerifyXPaths(resultStream, responseFormat, web3sXpaths, jsonXPaths, atomXPaths);
+                XmlDocument document = VerifyXPaths(resultStream, responseFormat, atomXPaths);
                 if (testCallback != null && !testCallback(values, document))
                 {
                     Assert.Fail("test callback failed");

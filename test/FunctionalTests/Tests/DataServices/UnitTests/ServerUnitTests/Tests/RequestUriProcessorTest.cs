@@ -395,48 +395,23 @@ namespace AstoriaUnitTests.Tests
         [TestMethod]
         public void RequestUriResourceKeySimpleTest()
         {
-            UnitTestsUtil.VerifyPayload("/Customers(1)", typeof(CustomDataContext), null,
-                new string[] {
-                    "/cdc:Customer",
-                    "/cdc:Customer/cdc:ID[text()='1']",
-                    "count(//cdc:Customer)=1"},
-                new string[] {
-                    JsonValidator.GetJsonTypeXPath(typeof(CustomerWithBirthday), false /*isArray*/),
-                    String.Format("/{0}/ID[text()='1']", JsonValidator.ObjectString),
-                    String.Format("count(//{0})=1", JsonValidator.ObjectString)},
-                new string[0]);
+            UnitTestsUtil.VerifyPayload("/Customers(1)", typeof(CustomDataContext), null, new string[0]);
         }
 
         [TestMethod]
         public void RequestUriResourcePropertyTest()
         {
             UnitTestsUtil.VerifyInvalidUri("/Customers(1000)/BestFriend", typeof(CustomDataContext));
-
-            UnitTestsUtil.VerifyPayload("/Customers(2)/BestFriend", typeof(CustomDataContext), null,
-                new string[] {"/cdc:BestFriend",
-                              "/cdc:BestFriend/web3s:ID[text()='1']"},
-                new string[] { String.Format("/{0}", JsonValidator.ObjectString),
-                               String.Format("/{0}/ID[text()='1']", JsonValidator.ObjectString) },
-                new string[0]);
+            UnitTestsUtil.VerifyPayload("/Customers(2)/BestFriend", typeof(CustomDataContext), null, new string[0]);
 
             ServiceModelData.Northwind.EnsureDependenciesAvailable();
-            UnitTestsUtil.VerifyPayload("/Territories", typeof(NorthwindContext), null,
-                new string[] { "//nc:Territories/web3s:ID" },
-                new string[] { String.Format("/{0}/{1}/TerritoryID[text()='01581']", JsonValidator.ArrayString, JsonValidator.ObjectString),
-                               String.Format("count(//{0})>10", JsonValidator.ObjectString) },
-                new string[0]);
+            UnitTestsUtil.VerifyPayload("/Territories", typeof(NorthwindContext), null, new string[0]);
         }
 
         [TestMethod]
         public void RequestUriResourceSetPropertyTest()
         {
-            UnitTestsUtil.VerifyPayload("/Customers(0)/Orders", typeof(CustomDataContext), null,
-                new string[] { "/cdc:Orders",
-                               "/cdc:Orders/cdc:Order" },
-                new string[] { String.Format("/{0}", JsonValidator.ArrayString),
-                               JsonValidator.GetJsonTypeXPath(typeof(Order), true /*isArray*/) },
-                new string[0]);
-
+            UnitTestsUtil.VerifyPayload("/Customers(0)/Orders", typeof(CustomDataContext), null, new string[0]);
             UnitTestsUtil.VerifyInvalidUri("/Customers!1000/Orders", typeof(CustomDataContext));
             UnitTestsUtil.VerifyInvalidUri("/Customers(1)/Orders(10000)", typeof(CustomDataContext));
         }
@@ -444,16 +419,8 @@ namespace AstoriaUnitTests.Tests
         [TestMethod]
         public void RequestUriComplexPropertyTest()
         {
-            UnitTestsUtil.VerifyPayload("/Customers(0)/Address", typeof(CustomDataContext), null,
-                new string[] { "/cdc:Address" },
-                new string[] { String.Format("/{0}/Address/StreetAddress[text()='Line1']", JsonValidator.ObjectString),
-                               String.Format("/{0}/Address/City[text()='Redmond']", JsonValidator.ObjectString) },
-                new string[0]);
-
-            UnitTestsUtil.VerifyPayload("/Customers(0)/Address/StreetAddress", typeof(CustomDataContext), null,
-                new string[] { "/cdc:Line1" },
-                new string[] { String.Format("/{0}/StreetAddress[text()='Line1']", JsonValidator.ObjectString) },
-                new string[0]);
+            UnitTestsUtil.VerifyPayload("/Customers(0)/Address", typeof(CustomDataContext), null, new string[0]);
+            UnitTestsUtil.VerifyPayload("/Customers(0)/Address/StreetAddress", typeof(CustomDataContext), null, new string[0]);
         }
 
         [TestMethod]
@@ -627,11 +594,7 @@ namespace AstoriaUnitTests.Tests
         [TestMethod]
         public void RequestUriProjectPropertyTest()
         {
-            UnitTestsUtil.VerifyPayload("/Customers(1)/Name", typeof(CustomDataContext), null,
-                new string[] { "/cdc:Name",
-                               "/cdc:Name[text()='Customer 1']" },
-                new string[] { String.Format("/{0}/Name[text()='Customer 1']", JsonValidator.ObjectString) },
-                new string[0]);
+            UnitTestsUtil.VerifyPayload("/Customers(1)/Name", typeof(CustomDataContext), null, new string[0]);
         }
 
         [TestMethod]

@@ -521,28 +521,19 @@ namespace AstoriaUnitTests.Tests
                                 string web3sPrefix = edmBased ? "nc" : "cdc";
                                 string elementName = (elementType == typeof(string) && webAttribute != null) ? "String" :
                                     (edmBased ? "Customers" : "Customer");
-                                string[] web3sXPaths = new string[] {
-                                    "/" + web3sPrefix + ":" + methodName,
-                                    "/" + web3sPrefix + ":" + methodName + "/" + web3sPrefix + ":" + elementName,
-                                };
 
                                 string jsonElementName = (elementType == typeof(string) && webAttribute != null) ? "System.String" :
                                     (edmBased ? typeof(NorthwindModel.Customers).FullName : typeof(Customer).FullName);
-                                string[] atomXPaths, jsonXPaths;
+                                string[] atomXPaths;
                                 if (elementType == typeof(string) && webAttribute != null)
                                 {
                                     if (singleResult)
                                     {
                                         atomXPaths = new string[] { "/adsm:value", "/adsm:value[count(adsm:Element) = 0]" };
-                                        jsonXPaths = new string[] { "/Object" };
                                     }
                                     else
                                     {
                                         atomXPaths = new string[] { "/adsm:value/adsm:element" };
-                                        jsonXPaths = new string[] {
-                                            String.Format("/{0}/{1}/{2}/{0}[count(@*) = 0]",
-                                                 JsonValidator.ObjectString, JsonValidator.ResultsString, JsonValidator.ArrayString )
-                                        };
                                     }
                                 }
                                 else
@@ -552,25 +543,16 @@ namespace AstoriaUnitTests.Tests
                                         atomXPaths = new string[] {
                                             "/atom:entry[atom:category/@term='#" + jsonElementName + "']"
                                         };
-                                        jsonXPaths = new string[] {
-                                            String.Format("/{0}/__metadata[type='{1}']",
-                                                JsonValidator.ObjectString, jsonElementName)
-                                        };
                                     }
                                     else
                                     {
                                         atomXPaths = new string[] {
                                             "/atom:feed/atom:entry[atom:category/@term='#" + jsonElementName + "']"
                                         };
-                                        jsonXPaths = new string[] {
-                                            String.Format("/{1}/{3}/{0}/{1}/__metadata[type='{2}']",
-                                                JsonValidator.ArrayString, JsonValidator.ObjectString, jsonElementName, JsonValidator.ResultsString)
-                                        };
                                     }
                                 }
 
-                                UnitTestsUtil.VerifyXPaths(stream, request.ResponseContentType,
-                                    web3sXPaths, jsonXPaths, atomXPaths);
+                                UnitTestsUtil.VerifyXPaths(stream, request.ResponseContentType, atomXPaths);
                             }
                         }
                     });

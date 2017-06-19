@@ -132,24 +132,6 @@ namespace AstoriaUnitTests.Tests
         [TestCategory("Partition2"), TestMethod]
         public void SerializerBasicTest()
         {
-            string arr = JsonValidator.ArrayString;
-            string obj = JsonValidator.ObjectString;
-            string[] jsonXPaths = new string[] {
-                                String.Format("/{0}", arr),
-                                String.Format("/{0}/{1}", arr, obj),
-                                String.Format("/{0}/{1}/{2}", arr, obj, JsonValidator.Metadata),
-                                String.Format("/{0}/{1}/{2}/uri[text()='http://host/Customers(0)']", arr, obj, JsonValidator.Metadata),
-                                String.Format("/{0}/{1}/{2}/type[text()='AstoriaUnitTests.Stubs.Customer']", arr, obj, JsonValidator.Metadata),
-                                String.Format("/{0}/{1}/ID", arr, obj),
-                                String.Format("/{0}/{1}/ID[text()='1']", arr, obj),
-                                String.Format("/{0}/{1}/Name", arr, obj),
-                                String.Format("/{0}/{1}/Name[text()='Customer 1']", arr, obj),
-                                String.Format("/{0}/{1}/Address", arr, obj),
-                                String.Format("/{0}/{1}/Address/StreetAddress[text()='Line1']", arr, obj),
-                                String.Format("/{0}/{1}/Address/City[text()='Redmond']", arr, obj),
-                                String.Format("/{0}/{1}/Orders/{2}/uri[text()='http://host/Customers(0)/Orders']", arr, obj, JsonValidator.Deferred),
-                                String.Format("/{0}/{1}/BestFriend/{2}/uri[text()='http://host/Customers(0)/BestFriend']", arr, obj, JsonValidator.Deferred) };
-
             string[] atomXPaths = new string[] {
                                 "/atom:feed",
                                 "/atom:feed/atom:title[text()='Customers']",
@@ -166,13 +148,12 @@ namespace AstoriaUnitTests.Tests
                                 "/atom:feed/atom:entry/atom:link[@rel='http://docs.oasis-open.org/odata/ns/related/Orders' and @href='Customers(1)/AstoriaUnitTests.Stubs.CustomerWithBirthday/Orders' and @title='Orders' and 0=count(@adsm:inline) and @type='application/atom+xml;type=feed']",
                                 "/atom:feed/atom:entry/atom:link[@rel='http://docs.oasis-open.org/odata/ns/related/BestFriend' and @href='Customers(1)/AstoriaUnitTests.Stubs.CustomerWithBirthday/BestFriend' and @title='BestFriend' and 0=count(@adsm:inline) and @type='application/atom+xml;type=entry']"};
 
-            VerifyPayload("/Customers", typeof(CustomDataContext), null, null, jsonXPaths, atomXPaths);
+            VerifyPayload("/Customers", typeof(CustomDataContext), null, atomXPaths);
         }
 
-        private static void VerifyPayload(string uri, Type dataServiceType, Func<Hashtable, XmlDocument, bool> testCallback,
-            string[] web3sXpaths, string[] jsonXPaths, string[] atomXPaths)
+        private static void VerifyPayload(string uri, Type dataServiceType, Func<Hashtable, XmlDocument, bool> testCallback, string[] atomXPaths)
         {
-            UnitTestsUtil.VerifyPayload(uri, dataServiceType, testCallback, web3sXpaths, jsonXPaths, atomXPaths);
+            UnitTestsUtil.VerifyPayload(uri, dataServiceType, testCallback, atomXPaths);
         }
 
         private static void VerifyPayload(string uri, Type dataServiceType, string responseFormat, Func<Hashtable, XmlDocument, bool> testCallback,
@@ -184,11 +165,6 @@ namespace AstoriaUnitTests.Tests
         private static void VerifyInvalidUri(string uri, Type dataServiceType)
         {
             UnitTestsUtil.VerifyInvalidUri(uri, dataServiceType);
-        }
-
-        private static XmlDocument VerifyXPaths(Stream resultStream, string responseFormat, string[] web3sXPaths, string[] jsonXPaths, string[] atomXPaths)
-        {
-            return UnitTestsUtil.VerifyXPaths(resultStream, responseFormat, web3sXPaths, jsonXPaths, atomXPaths);
         }
 
         private static XmlDocument VerifyXPaths(Stream resultStream, string responseFormat, string[] xPaths)
@@ -671,18 +647,11 @@ namespace AstoriaUnitTests.Tests
                         string xmlElementName = MakeXmlName(entityType);
                         string typeName = TestUtil.GetTypeName(entityType, true /*requiresNamespace*/);
 
-                        string[] web3sXPaths = new string[] {
-                            "/tcdc:Values/tcdc:" + xmlElementName};
-
-                        string[] jsonXPaths = new string[] {
-                            String.Format("/Object/value/{0}/{1}/odata.type[text()='#{2}']", JsonValidator.ArrayString, JsonValidator.ObjectString, typeName)
-                        };
-
                         string[] atomXPaths = new string[] {
                             "/atom:feed/atom:entry/atom:category[@term='#" + typeName + "']"
                         };
 
-                        XmlDocument document = VerifyXPaths(resultStream, responseFormat, web3sXPaths, jsonXPaths, atomXPaths);
+                        XmlDocument document = VerifyXPaths(resultStream, responseFormat, atomXPaths);
                         string memberXPath = null;
 
                         if (String.Equals(responseFormat, UnitTestsUtil.JsonLightMimeType, StringComparison.OrdinalIgnoreCase))
@@ -728,26 +697,13 @@ namespace AstoriaUnitTests.Tests
         [TestCategory("Partition2"), TestMethod]
         public void Web3SSerializerInheritanceTest()
         {
-            VerifyPayload("/Customers", typeof(CustomDataContext), null,
-                new string[] {
-                    "/cdc:Customers",
-                    "/cdc:Customers/cdc:Customer",
-                    "/cdc:Customers/cdc:Customer[@dw:TypeName='AstoriaUnitTests.Stubs.CustomerWithBirthday']",
-                    "/cdc:Customers/cdc:Customer[0 = count(@dw:TypeName)]" },
-                new string[] { JsonValidator.GetJsonTypeXPath(typeof(CustomerWithBirthday), true) },
-                new string[0]);
+            VerifyPayload("/Customers", typeof(CustomDataContext), null, new string[0]);
         }
         [Ignore] // Remove Atom
         [TestCategory("Partition2"), TestMethod]
         public void Web3SSerializerOtherNamespaceTest()
         {
-            VerifyPayload("/Regions", typeof(CustomDataContext), null,
-                new string[] {
-                    "/cdc:Regions",
-                    "/cdc:Regions/cdc:Region",
-                    "/cdc:Regions/cdc:Region[@dw:TypeName='AstoriaUnitTests.StubsOtherNs.Region']" },
-                new string[] { JsonValidator.GetJsonTypeXPath(typeof(Region), true /*isArray*/) },
-                new string[0]);
+            VerifyPayload("/Regions", typeof(CustomDataContext), null, new string[0]);
         }
 
         private static bool HasElementEmptyValue(XmlElement element)
@@ -912,7 +868,7 @@ namespace AstoriaUnitTests.Tests
                             request.RequestUriString = "/" + containerName + "?$top=2";
                             request.SendRequest();
 
-                            VerifyXPaths(request.GetResponseStream(), responseFormat, new string[0], new string[0], new string[0]);
+                            VerifyXPaths(request.GetResponseStream(), responseFormat, new string[0]);
                         }
 
                         // Negative testing for container names.
@@ -1093,7 +1049,7 @@ namespace AstoriaUnitTests.Tests
                                 request.SendRequest();
 
                                 Stream resultStream = request.GetResponseStream();
-                                XmlDocument document = VerifyXPaths(resultStream, responseFormat, null, jsonXPaths, atomXPaths);
+                                XmlDocument document = VerifyXPaths(resultStream, responseFormat, atomXPaths);
                                 XmlElement idElement = TestUtil.AssertSelectSingleElement(document, idXPath);
                                 string serializedValue = idElement.InnerText;
 
