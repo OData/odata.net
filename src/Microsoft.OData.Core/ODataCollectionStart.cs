@@ -26,20 +26,18 @@ namespace Microsoft.OData
             set;
         }
 
-        /// <summary>Gets or sets the number of items in the collection.</summary>
+        /// <summary>Gets the number of items in the collection.</summary>
         /// <returns>The number of items in the collection.</returns>
         public long? Count
         {
             get;
-            set;
         }
 
-        /// <summary>Gets or sets the URI representing the next page link.</summary>
+        /// <summary>Gets the URI representing the next page link.</summary>
         /// <returns>The URI representing the next page link.</returns>
         public Uri NextPageLink
         {
             get;
-            set;
         }
 
         /// <summary>
