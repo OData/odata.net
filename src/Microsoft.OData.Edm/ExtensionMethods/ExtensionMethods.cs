@@ -951,10 +951,18 @@ namespace Microsoft.OData.Edm
             if (!model.TryFindContainerQualifiedEntitySet(qualifiedName, out foundEntitySet))
             {
                 // try searching by entity set name in container and extended containers:
-                IEdmEntityContainer container = model.EntityContainer;
-                if (container != null)
+                try
                 {
-                    return container.FindEntitySetExtended(qualifiedName);
+                    IEdmEntityContainer container = model.EntityContainer;
+                    if (container != null)
+                    {
+                        return container.FindEntitySetExtended(qualifiedName);
+                    }
+                }
+                catch (NotImplementedException)
+                {
+                    // model.EntityContainer can throw NotImplementedException
+                    return null;
                 }
             }
 
@@ -973,10 +981,18 @@ namespace Microsoft.OData.Edm
             if (!model.TryFindContainerQualifiedSingleton(qualifiedName, out foundSingleton))
             {
                 // try searching by singleton name in container and extended containers:
-                IEdmEntityContainer container = model.EntityContainer;
-                if (container != null)
+                try
                 {
-                    return container.FindSingletonExtended(qualifiedName);
+                    IEdmEntityContainer container = model.EntityContainer;
+                    if (container != null)
+                    {
+                        return container.FindSingletonExtended(qualifiedName);
+                    }
+                }
+                catch (NotImplementedException)
+                {
+                    // model.EntityContainer can throw NotImplementedException
+                    return null;
                 }
             }
 
