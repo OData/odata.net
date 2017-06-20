@@ -410,6 +410,7 @@ namespace Microsoft.OData
             private readonly object item;
 
             /// <summary>True, if the collection element attached to this scope is empty. False otherwise.</summary>
+            [SuppressMessage("Microsoft.Performance", "CA1823", Justification = "isCollectionElementEmpty is used in debug.")]
             private readonly bool isCollectionElementEmpty;
 
             /// <summary>
