@@ -123,6 +123,16 @@ namespace AstoriaUnitTests.Tests
                         "//csdl:EntityType[@Name='DerivedWithBlobAndNamedStream' and @HasStream='true' and @BaseType='NamedStreamTest.RootEntityType']/csdl:Property[@Name='Stream3' and @Type='Edm.Stream']");
 
                     string setUri = request.ServiceRoot.AbsoluteUri + "/StreamedEntities";
+                    string[] jsonXPaths = new[] {
+                        String.Format(
+                            "//{0}[__metadata/type='NamedStreamTest.RootEntityType' and Stream1/__mediaresource/edit_media='{1}/Stream1' and Stream2/__mediaresource/edit_media='{1}/Stream2']", 
+                            JsonValidator.ObjectString,
+                            setUri + "(1)"),
+                        String.Format(
+                            "//{0}[__metadata/type='NamedStreamTest.DerivedWithBlobAndNamedStream' and Stream1/__mediaresource/edit_media='{1}/Stream1' and Stream2/__mediaresource/edit_media='{1}/Stream2' and Stream3/__mediaresource/edit_media='{1}/Stream3']", 
+                            JsonValidator.ObjectString,
+                            setUri + "(2)/NamedStreamTest.DerivedWithBlobAndNamedStream"),
+                    };
 
                     string[] atomXPaths = new[] {
                         String.Format(
@@ -145,7 +155,7 @@ namespace AstoriaUnitTests.Tests
                         request.Accept = format;
                         request.SendRequest();
                         Assert.AreEqual("4.0;", request.ResponseVersion);
-                        UnitTestsUtil.VerifyXPaths(request.GetResponseStream(), format, atomXPaths);
+                        UnitTestsUtil.VerifyXPaths(request.GetResponseStream(), format, null, jsonXPaths, atomXPaths);
                     }
 
                     request.RequestUriString = "/StreamedEntities(2)/NamedStreamTest.DerivedWithBlobAndNamedStream/Stream3";
@@ -626,6 +636,19 @@ namespace AstoriaUnitTests.Tests
                     });
 
                     string setUri = request.ServiceRoot + "/Values";
+                    string[] jsonXPaths = new string[]
+                    {
+                        String.Format(
+                            "//{0}[__metadata/type='{1}' and Stream1/__mediaresource/edit_media='{2}/Stream1' and Stream2/__mediaresource/edit_media='{2}/Stream2']", 
+                            JsonValidator.ObjectString,
+                            typeNamespace + base2EntityWithNoNamedStreamTypeName,
+                            setUri + "(1)"),
+                        String.Format(
+                            "//{0}[__metadata/type='{1}' and Stream1/__mediaresource/edit_media='{2}/{1}/Stream1' and Stream2/__mediaresource/edit_media='{2}/{1}/Stream2' and Stream3/__mediaresource/edit_media='{2}/{1}/Stream3' and Stream4/__mediaresource/edit_media='{2}/{1}/Stream4']", 
+                            JsonValidator.ObjectString,
+                            typeNamespace + rootEntityTypeName,
+                            setUri + "(2)"),
+                    };
 
                     string[] atomXPaths = new string[] {
                         String.Format(
@@ -648,7 +671,7 @@ namespace AstoriaUnitTests.Tests
                         request.Accept = format;
                         request.SendRequest();
                         Assert.AreEqual("4.0;", request.ResponseVersion);
-                        UnitTestsUtil.VerifyXPaths(request.GetResponseStream(), format, atomXPaths);
+                        UnitTestsUtil.VerifyXPaths(request.GetResponseStream(), format, null, jsonXPaths, atomXPaths);
                     }
                 }
             }
