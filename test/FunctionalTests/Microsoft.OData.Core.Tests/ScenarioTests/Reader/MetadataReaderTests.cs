@@ -111,14 +111,10 @@ namespace Microsoft.OData.Tests.ScenarioTests.Reader
 
             Action test = () => this.ReadMetadataDocument(map, "main");
 
-            var exception =
-                test.ShouldThrow<ODataErrorException>()
-                    .WithMessage("An error was read from the payload. See the 'Error' property for more details.");
-            exception.Subject.GetType().Should().Be<ODataErrorException>();
-            var odataErrorException = exception.Subject as ODataErrorException;
-            odataErrorException.Should().NotBeNull();
-            odataErrorException.Error.ErrorCode.Should().Be("code42");
-            odataErrorException.Error.Message.Should().Be("message text");
+            test.ShouldThrow<ODataErrorException>()
+                .WithMessage("An error was read from the payload. See the 'Error' property for more details.")
+                .Where(e => e.Error.ErrorCode == "code42")
+                .Where(e => e.Error.Message == "message text");
         }
 
         [Fact]
@@ -165,15 +161,11 @@ namespace Microsoft.OData.Tests.ScenarioTests.Reader
 
             Action test = () => this.ReadMetadataDocument(map, "main");
 
-            var exception =
-                test.ShouldThrow<ODataErrorException>()
-                    .WithMessage("An error was read from the payload. See the 'Error' property for more details.");
-            exception.Subject.GetType().Should().Be<ODataErrorException>();
-            var odataErrorException = exception.Subject as ODataErrorException;
-            odataErrorException.Should().NotBeNull();
-            odataErrorException.Error.ErrorCode.Should().Be("code42");
-            odataErrorException.Error.Message.Should().Be("message text");
-            odataErrorException.Error.InnerError.Message.Should().Be("some inner error");
+            test.ShouldThrow<ODataErrorException>()
+                .WithMessage("An error was read from the payload. See the 'Error' property for more details.")
+                .Where(e => e.Error.ErrorCode == "code42")
+                .Where(e => e.Error.Message == "message text")
+                .Where(e => e.Error.InnerError.Message == "some inner error");
         }
 
         [Fact]
