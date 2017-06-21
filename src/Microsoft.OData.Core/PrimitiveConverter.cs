@@ -78,32 +78,6 @@ namespace Microsoft.OData
         }
 
         /// <summary>
-        /// Try to create an object of type <paramref name="targetType"/> from the value in <paramref name="reader" />.
-        /// </summary>
-        /// <param name="reader">XmlReader to use to read the value.</param>
-        /// <param name="targetType">Expected type of the value in the reader.</param>
-        /// <param name="tokenizedPropertyValue">Object of type <paramref name="targetType"/>, null if no object could be created.</param>
-        /// <returns>True if the value was converted to the specified type, otherwise false.</returns>
-        internal bool TryTokenizeFromXml(XmlReader reader, Type targetType, out object tokenizedPropertyValue)
-        {
-            tokenizedPropertyValue = null;
-
-            Debug.Assert(reader != null, "Expected a non-null XmlReader.");
-            Debug.Assert(reader.NodeType == XmlNodeType.Element, "Expected the reader to be at the start of an element.");
-            Debug.Assert(targetType != null, "Expected a valid type to convert value.");
-
-            IPrimitiveTypeConverter primitiveTypeConverter;
-            if (this.TryGetConverter(targetType, out primitiveTypeConverter))
-            {
-                tokenizedPropertyValue = primitiveTypeConverter.TokenizeFromXml(reader);
-                Debug.Assert(reader.NodeType == XmlNodeType.EndElement, "Expected reader to be at the end of an element");
-                return true;
-            }
-
-            return false;
-        }
-
-        /// <summary>
         /// Try to write the XML representation of <paramref name="instance"/> to the specified <paramref name="writer"/>
         /// </summary>
         /// <param name="instance">Object to convert to XML representation.</param>
