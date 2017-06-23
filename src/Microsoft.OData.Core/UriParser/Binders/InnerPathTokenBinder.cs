@@ -154,7 +154,7 @@ namespace Microsoft.OData.UriParser
                     return boundFunction;
                 }
 
-                if (singleValueParent.TypeReference != null && !singleValueParent.TypeReference.Definition.IsOpenType())
+                if (singleValueParent.TypeReference != null && !singleValueParent.TypeReference.Definition.IsOpen())
                 {
                     throw new ODataException(
                         ODataErrorStrings.MetadataBinder_PropertyNotDeclared(

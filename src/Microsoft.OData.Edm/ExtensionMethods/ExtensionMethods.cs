@@ -1641,6 +1641,35 @@ namespace Microsoft.OData.Edm
         }
 
         /// <summary>
+        /// Returns true if the definition of this reference is open.
+        /// </summary>
+        /// <param name="type">Reference to the calling object.</param>
+        /// <returns>If the definition of this reference is open.</returns>
+        public static bool IsOpen(this IEdmType type)
+        {
+            EdmUtil.CheckArgumentNull(type, "type");
+
+            IEdmStructuredType structuredType = type as IEdmStructuredType;
+            if (structuredType != null)
+            {
+                return structuredType.IsOpen;
+            }
+
+            // If its a collection, return whether its element type is open.
+            // This is because when processing a navigation property, the target type
+            // may be a collection type even though a key expression has been applied.
+            // This will be cleaned up in a subsequent change.
+            // TODO: when SingleResult is removed from the semantic path parser, change this to return false.
+            var collectionType = type as IEdmCollectionType;
+            if (collectionType == null)
+            {
+                return false;
+            }
+
+            return collectionType.ElementType.Definition.IsOpen();
+        }
+
+        /// <summary>
         /// Returns the base type of the definition of this reference.
         /// </summary>
         /// <param name="type">Reference to the calling object.</param>
@@ -2404,6 +2433,18 @@ namespace Microsoft.OData.Edm
             }
 
             return EdmNavigationSourceKind.None;
+        }
+
+        /// <summary>
+        /// Returns the fully qualified name of a navigation source.
+        /// </summary>
+        /// <param name="navigationSource">The navigation source to get the full name for.</param>
+        /// <returns>The full qualified name of the navigation source.</returns>
+        public static string FullNavigationSourceName(this IEdmNavigationSource navigationSource)
+        {
+            EdmUtil.CheckArgumentNull(navigationSource, "navigationSource");
+
+            return string.Join(".", navigationSource.Path.PathSegments.ToArray());
         }
 
         /// <summary>

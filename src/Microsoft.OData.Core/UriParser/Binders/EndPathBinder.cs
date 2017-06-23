@@ -111,7 +111,7 @@ namespace Microsoft.OData.UriParser
         internal SingleValueOpenPropertyAccessNode GeneratePropertyAccessQueryForOpenType(EndPathToken endPathToken, SingleValueNode parentNode)
         {
             if (parentNode.TypeReference == null ||
-                parentNode.TypeReference.Definition.IsOpenType() ||
+                parentNode.TypeReference.Definition.IsOpen() ||
                 IsAggregatedProperty(endPathToken.Identifier))
             {
                 return new SingleValueOpenPropertyAccessNode(parentNode, endPathToken.Identifier);

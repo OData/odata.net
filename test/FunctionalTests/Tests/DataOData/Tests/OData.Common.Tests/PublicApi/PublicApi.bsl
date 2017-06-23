@@ -1359,6 +1359,11 @@ public sealed class Microsoft.OData.Edm.EdmTypeSemantics {
 	[
 	ExtensionAttribute(),
 	]
+	public static bool IsStream (Microsoft.OData.Edm.IEdmType type)
+
+	[
+	ExtensionAttribute(),
+	]
 	public static bool IsStream (Microsoft.OData.Edm.IEdmTypeReference type)
 
 	[
@@ -1749,6 +1754,11 @@ public sealed class Microsoft.OData.Edm.ExtensionMethods {
 	[
 	ExtensionAttribute(),
 	]
+	public static string FullNavigationSourceName (Microsoft.OData.Edm.IEdmNavigationSource navigationSource)
+
+	[
+	ExtensionAttribute(),
+	]
 	public static string FullTypeName (Microsoft.OData.Edm.IEdmType type)
 
 	[
@@ -1940,6 +1950,11 @@ public sealed class Microsoft.OData.Edm.ExtensionMethods {
 	ExtensionAttribute(),
 	]
 	public static bool IsOpen (Microsoft.OData.Edm.IEdmStructuredTypeReference type)
+
+	[
+	ExtensionAttribute(),
+	]
+	public static bool IsOpen (Microsoft.OData.Edm.IEdmType type)
 
 	[
 	ExtensionAttribute(),
