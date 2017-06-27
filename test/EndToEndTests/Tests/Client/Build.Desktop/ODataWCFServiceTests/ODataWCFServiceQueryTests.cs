@@ -183,7 +183,7 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
                 property = messageReader.ReadValue(new EdmStringTypeReference(EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.String), true));
             }
 
-            Assert.AreEqual("SRID=4326;POINT (23.1 32.1)", property);
+            Assert.AreEqual(@"{""type"":""Point"",""coordinates"":[23.1,32.1],""crs"":{""type"":""name"",""properties"":{""name"":""EPSG:4326""}}}", property);
         }
 
         [TestMethod]
