@@ -40,6 +40,11 @@ namespace Microsoft.OData
         private TextWriter textWriter;
 
         /// <summary>
+        /// JsonWriter instance for writing values.
+        /// </summary>
+        private JsonWriter jsonWriter;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="RawValueWriter"/> class.
         /// Initializes the TextWriter.
         /// </summary>
@@ -59,10 +64,15 @@ namespace Microsoft.OData
         /// </summary>
         internal TextWriter TextWriter
         {
-            get
-            {
-                return this.textWriter;
-            }
+            get { return this.textWriter; }
+        }
+
+        /// <summary>
+        /// Gets the json writer.
+        /// </summary>
+        internal JsonWriter JsonWriter
+        {
+            get { return this.jsonWriter; }
         }
 
         /// <summary>
@@ -117,7 +127,7 @@ namespace Microsoft.OData
             }
             else if (value is Geometry || value is Geography)
             {
-                PrimitiveConverter.Instance.TryWriteAtom(value, textWriter);
+                PrimitiveConverter.Instance.WriteJsonLight(value, jsonWriter);
             }
             else if (ODataRawValueUtils.TryConvertPrimitiveToString(value, out valueAsString))
             {
@@ -166,6 +176,7 @@ namespace Microsoft.OData
             }
 
             this.textWriter = new StreamWriter(nonDisposingStream, this.encoding);
+            this.jsonWriter = new JsonWriter(this.textWriter, isIeee754Compatible: false);
         }
     }
 }
