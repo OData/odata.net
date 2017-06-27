@@ -484,7 +484,24 @@ namespace Microsoft.OData.Edm
         public static bool IsStream(this IEdmTypeReference type)
         {
             EdmUtil.CheckArgumentNull(type, "type");
-            return type.PrimitiveKind() == EdmPrimitiveTypeKind.Stream;
+            return type.Definition.IsStream();
+        }
+
+        /// <summary>
+        /// Returns true if this reference refers to a stream type.
+        /// </summary>
+        /// <param name="type">Type reference.</param>
+        /// <returns>This reference refers to a stream type.</returns>
+        public static bool IsStream(this IEdmType type)
+        {
+            EdmUtil.CheckArgumentNull(type, "type");
+            IEdmPrimitiveType primitiveType = type as IEdmPrimitiveType;
+            if (primitiveType == null)
+            {
+                return false;
+            }
+
+            return primitiveType.PrimitiveKind == EdmPrimitiveTypeKind.Stream;
         }
 
         /// <summary>

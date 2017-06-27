@@ -643,7 +643,7 @@ namespace Microsoft.OData.UriParser
             // Handle an open type property. If the current leaf isn't an
             // object (which implies it's already an open type), then
             // it should be marked as an open type.
-            if ((previous.TargetEdmType != null && !previous.TargetEdmType.IsOpenType()))
+            if ((previous.TargetEdmType != null && !previous.TargetEdmType.IsOpen()))
             {
                 throw ExceptionUtil.CreateResourceNotFoundError(identifier);
             }

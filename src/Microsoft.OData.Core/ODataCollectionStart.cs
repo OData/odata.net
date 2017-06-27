@@ -31,7 +31,7 @@ namespace Microsoft.OData
         public long? Count
         {
             get;
-			set;
+            set;
         }
 
         /// <summary>Gets the URI representing the next page link.</summary>
@@ -39,7 +39,7 @@ namespace Microsoft.OData
         public Uri NextPageLink
         {
             get;
-			set;
+            set;
         }
 
         /// <summary>
