@@ -126,7 +126,7 @@ namespace Microsoft.OData.UriParser
         /// <param name="searchOption">the search option for this expand term</param>
         /// <param name="selectOption">the select option for this expand term</param>
         /// <param name="expandOption">the expand option for this expand term</param>
-        /// <param name="computeOptions">the compute option for this expand term.</param>
+        /// <param name="computeOption">the compute option for this expand term.</param>
         public ExpandTermToken(
             PathSegmentToken pathToNavigationProp,
             QueryToken filterOption,
