@@ -17,7 +17,7 @@ namespace Microsoft.OData.UriParser.Aggregation
     {
         private readonly IEnumerable<TransformationNode> transformations;
 
-        private readonly IEnumerable<AggregateExpression> lastAggregateExpressions;
+        private readonly IEnumerable<AggregateExpressionBase> lastAggregateExpressions;
 
         private readonly IEnumerable<GroupByPropertyNode> lastGroupByPropertyNodes;
 
@@ -35,7 +35,7 @@ namespace Microsoft.OData.UriParser.Aggregation
             {
                 if (transformations[i].Kind == TransformationNodeKind.Aggregate)
                 {
-                    lastAggregateExpressions = (transformations[i] as AggregateTransformationNode).Expressions;
+                    lastAggregateExpressions = (transformations[i] as AggregateTransformationNode).AggregateExpressions;
                     break;
                 }
                 else if (transformations[i].Kind == TransformationNodeKind.GroupBy)
@@ -46,7 +46,7 @@ namespace Microsoft.OData.UriParser.Aggregation
                     var childTransformation = groupByTransformationNode.ChildTransformations;
                     if (childTransformation != null && childTransformation.Kind == TransformationNodeKind.Aggregate)
                     {
-                        lastAggregateExpressions = (childTransformation as AggregateTransformationNode).Expressions;
+                        lastAggregateExpressions = (childTransformation as AggregateTransformationNode).AggregateExpressions;
                     }
 
                     break;
@@ -82,7 +82,7 @@ namespace Microsoft.OData.UriParser.Aggregation
 
         private string CreatePropertiesUriSegment(
             IEnumerable<GroupByPropertyNode> groupByPropertyNodes,
-            IEnumerable<AggregateExpression> aggregateExpressions)
+            IEnumerable<AggregateExpressionBase> aggregateExpressions)
         {
             string result = string.Empty;
             if (groupByPropertyNodes != null)
@@ -107,7 +107,7 @@ namespace Microsoft.OData.UriParser.Aggregation
                 : ODataConstants.ContextUriProjectionStart + result + ODataConstants.ContextUriProjectionEnd;
         }
 
-        private static string CreateAggregatePropertiesUriSegment(IEnumerable<AggregateExpression> aggregateExpressions)
+        private static string CreateAggregatePropertiesUriSegment(IEnumerable<AggregateExpressionBase> aggregateExpressions)
         {
             if (aggregateExpressions != null)
             {

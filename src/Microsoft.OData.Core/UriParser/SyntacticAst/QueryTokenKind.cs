@@ -122,13 +122,18 @@ namespace Microsoft.OData.UriParser
         Aggregate = 24,
 
         /// <summary>
-        /// $apply aggregate statement token
+        /// $apply aggregate statement to a property token
         /// </summary>
-        AggregateExpression = 25,
+        PropertyAggregateExpression = 25,
+
+        /// <summary>
+        /// $apply aggregate statement to a entity set token
+        /// </summary>
+        EntitySetAggregateExpression = 26,
 
         /// <summary>
         /// $apply groupby token
         /// </summary>
-        AggregateGroupBy = 26
+        AggregateGroupBy = 27
     }
 }

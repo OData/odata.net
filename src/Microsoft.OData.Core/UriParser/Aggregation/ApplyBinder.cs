@@ -20,7 +20,7 @@ namespace Microsoft.OData.UriParser.Aggregation
 
         private FilterBinder filterBinder;
 
-        private IEnumerable<AggregateExpression> aggregateExpressionsCache;
+        private IEnumerable<AggregateExpressionBase> aggregateExpressionsCache;
 
         public ApplyBinder(MetadataBinder.QueryTokenVisitor bindMethod, BindingState state)
         {
@@ -39,11 +39,11 @@ namespace Microsoft.OData.UriParser.Aggregation
                 switch (token.Kind)
                 {
                     case QueryTokenKind.Aggregate:
-                        var aggregate = BindAggregateToken((AggregateToken)(token));
+                        var aggregate = BindAggregateToken((AggregateTransformationToken)(token));
                         transformations.Add(aggregate);
-                        aggregateExpressionsCache = aggregate.Expressions;
+                        aggregateExpressionsCache = aggregate.AggregateExpressions;
                         state.AggregatedPropertyNames =
-                            aggregate.Expressions.Select(statement => statement.Alias).ToList();
+                            aggregate.AggregateExpressions.Select(statement => statement.Alias).ToList();
                         break;
                     case QueryTokenKind.AggregateGroupBy:
                         var groupBy = BindGroupByToken((GroupByToken)(token));
@@ -60,10 +60,12 @@ namespace Microsoft.OData.UriParser.Aggregation
             return new ApplyClause(transformations);
         }
 
-        private AggregateTransformationNode BindAggregateToken(AggregateToken token)
+        private AggregateTransformationNode BindAggregateToken(AggregateTransformationToken token)
         {
-            var statements = new List<AggregateExpression>();
-            foreach (var statementToken in token.Expressions)
+            var aggregateTokens = MergeEntitySetAggregates(token.Expressions);
+            var statements = new List<AggregateExpressionBase>();
+
+            foreach (var statementToken in aggregateTokens)
             {
                 statements.Add(BindAggregateExpressionToken(statementToken));
             }
@@ -71,22 +73,70 @@ namespace Microsoft.OData.UriParser.Aggregation
             return new AggregateTransformationNode(statements);
         }
 
-        private AggregateExpression BindAggregateExpressionToken(AggregateExpressionToken token)
+        private static IEnumerable<AggregateTokenBase> MergeEntitySetAggregates(IEnumerable<AggregateTokenBase> tokens)
         {
-            var expression = this.bindMethod(token.Expression) as SingleValueNode;
+            var mergedTokens = new List<AggregateTokenBase>();
+            var entitySetTokens = new Dictionary<string, AggregateTokenBase>();
 
-            if (expression == null)
+            foreach (AggregateTokenBase token in tokens)
             {
-                throw new ODataException(ODataErrorStrings.ApplyBinder_AggregateExpressionNotSingleValue(token.Expression));
+                switch (token.Kind)
+                {
+                    case QueryTokenKind.EntitySetAggregateExpression:
+                    {
+                        AggregateTokenBase currentValue;
+                        var entitySetToken = token as EntitySetAggregateToken;
+                        var key = entitySetToken.Path();
+
+                        if (entitySetTokens.TryGetValue(key, out currentValue))
+                        {
+                            entitySetTokens.Remove(key);
+                        }
+
+                        entitySetTokens.Add(key, EntitySetAggregateToken.Merge(entitySetToken, currentValue as EntitySetAggregateToken));
+                        break;
+                    }
+
+                    case QueryTokenKind.PropertyAggregateExpression:
+                    {
+                        mergedTokens.Add(token);
+                        break;
+                    }
+                }
             }
 
-            var typeReference = CreateAggregateExpressionTypeReference(expression, token.MethodDefinition);
-
-            // TODO: Determine source
-            return new AggregateExpression(expression, token.MethodDefinition, token.Alias, typeReference);
+            return mergedTokens.Concat(entitySetTokens.Values).ToList();
         }
 
-        private IEdmTypeReference CreateAggregateExpressionTypeReference(SingleValueNode expression, AggregationMethodDefinition method)
+        private AggregateExpressionBase BindAggregateExpressionToken(AggregateTokenBase aggregateToken)
+        {
+            switch (aggregateToken.Kind)
+            {
+                case QueryTokenKind.PropertyAggregateExpression:
+                {
+                    var token = aggregateToken as AggregateToken;
+                    SingleValueNode expression = this.bindMethod(token.Expression) as SingleValueNode;
+                    IEdmTypeReference typeReference = CreateAggregateExpressionTypeReference(expression, token.Method);
+
+                    // TODO: Determine source
+                    return new AggregateExpression(expression, token.Method, token.Alias, typeReference);
+                }
+
+                case QueryTokenKind.EntitySetAggregateExpression:
+                {
+                    var token = aggregateToken as EntitySetAggregateToken;
+                    var expression = this.bindMethod(token.EntitySet) as CollectionNavigationNode;
+
+                    IEnumerable<AggregateExpressionBase> children = token.Expressions.Select(x => BindAggregateExpressionToken(x));
+                    return new EntitySetAggregateExpression(expression, children);
+                }
+
+                default:
+                    throw new ODataException(ODataErrorStrings.ApplyBinder_UnsupportedAggregateKind(aggregateToken.Kind));
+            }
+        }
+
+        private IEdmTypeReference CreateAggregateExpressionTypeReference(SingleValueNode expression, AggregationMethod withVerb)
         {
             var expressionType = expression.TypeReference;
             if (expressionType == null && aggregateExpressionsCache != null)
@@ -98,7 +148,7 @@ namespace Microsoft.OData.UriParser.Aggregation
                 }
             }
 
-            switch (method.MethodKind)
+            switch (withVerb)
             {
                 case AggregationMethod.Average:
                     var expressionPrimitiveKind = expressionType.PrimitiveKind();
@@ -136,7 +186,8 @@ namespace Microsoft.OData.UriParser.Aggregation
         {
             if (aggregateExpressionsCache != null)
             {
-                var expression = aggregateExpressionsCache.FirstOrDefault(statement => statement.Alias.Equals(name));
+                var expression = aggregateExpressionsCache.OfType<AggregateExpression>()
+                    .FirstOrDefault(statement => statement.AggregateKind == AggregateExpressionKind.PropertyAggregate && statement.Alias.Equals(name));
                 if (expression != null)
                 {
                     return expression.TypeReference;
@@ -185,8 +236,8 @@ namespace Microsoft.OData.UriParser.Aggregation
             {
                 if (token.Child.Kind == QueryTokenKind.Aggregate)
                 {
-                    aggregate = BindAggregateToken((AggregateToken)token.Child);
-                    aggregateExpressionsCache = ((AggregateTransformationNode)aggregate).Expressions;
+                    aggregate = BindAggregateToken((AggregateTransformationToken)token.Child);
+                    aggregateExpressionsCache = ((AggregateTransformationNode)aggregate).AggregateExpressions;
                     state.AggregatedPropertyNames =
                         aggregateExpressionsCache.Select(statement => statement.Alias).ToList();
                 }

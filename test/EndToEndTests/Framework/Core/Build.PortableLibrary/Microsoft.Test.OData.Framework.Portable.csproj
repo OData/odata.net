@@ -14,7 +14,7 @@
     <NoStdLib>true</NoStdLib>
   </PropertyGroup>
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), Build.props))\Build.props" />
-    <ItemGroup>
+  <ItemGroup>
     <ProjectReference Include="$(EnlistmentRoot)\src\Microsoft.OData.Client\Build.Portable\Microsoft.OData.Client.Portable.csproj">
       <Project>{aed0dc9d-76e5-4145-af5e-9e2f856f4d18}</Project>
       <Name>Microsoft.OData.Client.Portable</Name>

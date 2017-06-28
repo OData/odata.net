@@ -7,6 +7,7 @@
 using Microsoft.OData.Metadata;
 using Microsoft.OData.Edm;
 using ODataErrorStrings = Microsoft.OData.Strings;
+using System.Linq;
 
 namespace Microsoft.OData.UriParser
 {
@@ -140,36 +141,50 @@ namespace Microsoft.OData.UriParser
             QueryNode boundFunction;
 
             SingleValueNode singleValueParent = parent as SingleValueNode;
-            if (singleValueParent == null)
+            if (singleValueParent != null)
             {
-                if (functionCallBinder.TryBindEndPathAsFunctionCall(endPathToken, parent, state, out boundFunction))
+                // Now that we have the parent type, can find its corresponding EDM type
+                IEdmStructuredTypeReference structuredParentType =
+                    singleValueParent.TypeReference == null ? null : singleValueParent.TypeReference.AsStructuredOrNull();
+
+                IEdmProperty property =
+                    structuredParentType == null ? null : this.Resolver.ResolveProperty(structuredParentType.StructuredDefinition(), endPathToken.Identifier);
+
+                if (property != null)
+                {
+                    return GeneratePropertyAccessQueryNode(singleValueParent as SingleResourceNode, property, state);
+                }
+
+                if (functionCallBinder.TryBindEndPathAsFunctionCall(endPathToken, singleValueParent, state, out boundFunction))
                 {
                     return boundFunction;
                 }
 
-                // Collection with any or all expression is already supported and handled separately.
-                // Add support of collection with $count segment.
-                CollectionNode colNode = parent as CollectionNode;
-                if (colNode != null && endPathToken.Identifier.Equals(UriQueryConstants.CountSegment))
-                {
-                    // create a collection count node for collection node property.
-                    return new CountNode(colNode);
-                }
-
-                throw new ODataException(ODataErrorStrings.MetadataBinder_PropertyAccessSourceNotSingleValue(endPathToken.Identifier));
+                return GeneratePropertyAccessQueryForOpenType(endPathToken, singleValueParent);
             }
 
-
-            // Now that we have the parent type, can find its corresponding EDM type
-            IEdmStructuredTypeReference structuredParentType =
-                singleValueParent.TypeReference == null ? null : singleValueParent.TypeReference.AsStructuredOrNull();
-
-            IEdmProperty property =
-                structuredParentType == null ? null : this.Resolver.ResolveProperty(structuredParentType.StructuredDefinition(), endPathToken.Identifier);
-
-            if (property != null)
+            // Collection with any or all expression is already supported and handled separately.
+            // Add support of collection with $count segment.
+            CollectionNode colNode = parent as CollectionNode;
+            if (colNode != null && endPathToken.Identifier.Equals(UriQueryConstants.CountSegment))
             {
-                return GeneratePropertyAccessQueryNode(singleValueParent as SingleResourceNode, property, state);
+                // create a collection count node for collection node property.
+                return new CountNode(colNode);
+            }
+
+            var collectionParent = parent as CollectionNavigationNode;
+            if (collectionParent != null)
+            {
+                var parentType = collectionParent.EntityItemType;
+                var property = this.Resolver.ResolveProperty(parentType.StructuredDefinition(), endPathToken.Identifier);
+
+                if (property.PropertyKind == EdmPropertyKind.Structural 
+                    && !property.Type.IsCollection()
+                    && this.state.AggregatedPropertyNames!= null 
+                    && this.state.AggregatedPropertyNames.Any(p => p == collectionParent.NavigationProperty.Name))
+                {
+                    return new AggregatedCollectionPropertyNode(collectionParent, property);
+                }
             }
 
             if (endPathToken.Identifier == ExpressionConstants.QueryOptionCount)
@@ -177,12 +192,12 @@ namespace Microsoft.OData.UriParser
                 return new CountVirtualPropertyNode();
             }
 
-            if (functionCallBinder.TryBindEndPathAsFunctionCall(endPathToken, singleValueParent, state, out boundFunction))
+            if (functionCallBinder.TryBindEndPathAsFunctionCall(endPathToken, parent, state, out boundFunction))
             {
                 return boundFunction;
             }
 
-            return GeneratePropertyAccessQueryForOpenType(endPathToken, singleValueParent);
+            throw new ODataException(ODataErrorStrings.MetadataBinder_PropertyAccessSourceNotSingleValue(endPathToken.Identifier));
         }
 
         /// <summary>

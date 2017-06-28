@@ -16,6 +16,7 @@ namespace Microsoft.OData.UriParser
     using Microsoft.OData;
     using Microsoft.OData.Edm;
     using ODataErrorStrings = Microsoft.OData.Strings;
+    using System.Diagnostics.CodeAnalysis;
 
     #endregion Namespaces
 
@@ -445,6 +446,44 @@ namespace Microsoft.OData.UriParser
             //// but until then CurrentToken is stale and misleading.
 
             return expressionText;
+        }
+
+        /// <summary>
+        /// Get the current position in this lexer that can be used restore the lexer to this position later.
+        /// </summary>
+        internal ExpressionLexerPosition SnapshotPosition()
+        {
+            return new ExpressionLexerPosition(this, this.textPos, this.token);
+        }
+
+        /// <summary>
+        /// Sets the current position to the specified position.
+        /// </summary>
+        /// <remarks>
+        /// The specified position must have been retrieved by GetPostion on this instance.
+        /// </remarks>
+        internal void RestorePosition(object position)
+        {
+            var pos = position as ExpressionLexerPosition;
+            if (pos == null)
+            {
+                throw new ArgumentException("Position is not valid for ExpressionLexer.", "position");
+            }
+
+            if (pos.Lexer != this)
+            {
+                throw new ArgumentException("Position was not taken from this ExpressionLexer instance.", "position");
+            }
+
+            if (pos.TextPos.HasValue)
+            {
+                SetTextPos(pos.TextPos.Value);
+            }
+
+            if (pos.Token.HasValue)
+            {
+                this.token = pos.Token.Value;
+            }
         }
 
         #endregion Internal methods
@@ -1251,6 +1290,26 @@ namespace Microsoft.OData.UriParser
                 return (int)obj;
             }
         }
+
+        /// <summary>
+        /// Provides fields to remember an ExpresionLexer's position.
+        /// </summary>
+        internal class ExpressionLexerPosition
+        {
+            public ExpressionLexerPosition(ExpressionLexer lexer, int? textPos, ExpressionToken? token)
+            {
+                this.Lexer = lexer;
+                this.TextPos = textPos;
+                this.Token = token;
+            }
+
+            public ExpressionLexer Lexer { get; private set; }
+
+            public int? TextPos { get; private set; }
+
+            public ExpressionToken? Token { get; private set; }
+        }
+
         #endregion
     }
 }

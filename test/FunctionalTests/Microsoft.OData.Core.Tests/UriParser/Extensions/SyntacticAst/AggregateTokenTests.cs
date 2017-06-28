@@ -15,26 +15,26 @@ namespace Microsoft.OData.Tests.UriParser.Extensions.SyntacticAst
 {
     public class AggregateTokenTests
     {
-        private IEnumerable<AggregateExpressionToken> statements = new List<AggregateExpressionToken>();
+        private IEnumerable<AggregateTokenBase> statements = new List<AggregateTokenBase>();
 
         [Fact]
         public void StatementsCannotBeNull()
         {
-            Action action = () => new AggregateToken(null);
+            Action action = () => new AggregateTransformationToken(null);
             action.ShouldThrow<Exception>(Error.ArgumentNull("statements").ToString());
         }
 
         [Fact]
         public void StatementsSetCorrectly()
         {
-            var token = new AggregateToken(statements);
+            var token = new AggregateTransformationToken(statements);
             ((object)token.Expressions).Should().Be(statements);
         }
 
         [Fact]
         public void KindIsSetCorrectly()
         {
-            var token = new AggregateToken(statements);
+            var token = new AggregateTransformationToken(statements);
             token.Kind.Should().Be(QueryTokenKind.Aggregate);
         }
     }

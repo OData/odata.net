@@ -36,7 +36,9 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         public void ParseDottedIdentifier()
         {
             var tokenizer = GetFunctionCallParser("geo.distance()");
-            QueryToken result = tokenizer.ParseIdentifierAsFunction(null);
+            QueryToken result;
+            bool success = tokenizer.TryParseIdentifierAsFunction(null, out result);
+            success.Should().BeTrue();
             result.ShouldBeFunctionCallToken("geo.distance").And.Arguments.Should().BeEmpty();
         }
 
@@ -44,7 +46,9 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         public void ParseManyDottedIdentifier()
         {
             var tokenizer = GetFunctionCallParser("one.two.three.four.five.six()");
-            QueryToken result = tokenizer.ParseIdentifierAsFunction(null);
+            QueryToken result;
+            bool success = tokenizer.TryParseIdentifierAsFunction(null, out result);
+            success.Should().BeTrue();
             result.ShouldBeFunctionCallToken("one.two.three.four.five.six").And.Arguments.Should().BeEmpty();
         }
 
@@ -52,7 +56,9 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         public void ParseNonDottedIdentifier()
         {
             var tokenizer = GetFunctionCallParser("func()");
-            QueryToken result = tokenizer.ParseIdentifierAsFunction(null);
+            QueryToken result;
+            bool success = tokenizer.TryParseIdentifierAsFunction(null, out result);
+            success.Should().BeTrue();
             result.ShouldBeFunctionCallToken("func").And.Arguments.Should().BeEmpty();
         }
 
@@ -61,7 +67,9 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         {
             var tokenizer = GetFunctionCallParser("func()");
             var parent = new InnerPathToken("Customer", null, null);
-            QueryToken result = tokenizer.ParseIdentifierAsFunction(parent);
+            QueryToken result;
+            bool success = tokenizer.TryParseIdentifierAsFunction(parent, out result);
+            success.Should().BeTrue();
             result.ShouldBeFunctionCallToken("func").And.Source.Should().BeSameAs(parent);
         }
 
@@ -70,7 +78,9 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         {
             var tokenizer = GetFunctionCallParser("func(x='blah')");
             var parent = new InnerPathToken("Customer", null, null);
-            QueryToken result = tokenizer.ParseIdentifierAsFunction(parent);
+            QueryToken result;
+            bool success = tokenizer.TryParseIdentifierAsFunction(parent, out result);
+            success.Should().BeTrue();
             var functionCallToken = result.ShouldBeFunctionCallToken("func").And;
             functionCallToken.Source.Should().BeSameAs(parent);
             functionCallToken.Arguments.Should().HaveCount(1);
@@ -91,7 +101,9 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         public void FunctionWithOneArgument()
         {
             var tokenizer = GetFunctionCallParser("func(1)");
-            QueryToken result = tokenizer.ParseIdentifierAsFunction(null);
+            QueryToken result;
+            bool success = tokenizer.TryParseIdentifierAsFunction(null, out result);
+            success.Should().BeTrue();
             result.ShouldBeFunctionCallToken("func")
                   .And.Arguments.Should().HaveCount(1);
         }
@@ -100,7 +112,9 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         public void FunctionWithTwoArguments()
         {
             var tokenizer = GetFunctionCallParser("func(1, 2)");
-            QueryToken result = tokenizer.ParseIdentifierAsFunction(null);
+            QueryToken result;
+            bool success = tokenizer.TryParseIdentifierAsFunction(null, out result);
+            success.Should().BeTrue();
             result.ShouldBeFunctionCallToken("func")
                   .And.Arguments.Should().HaveCount(2);
         }
@@ -109,7 +123,9 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         public void FunctionCallWithNamedArguments()
         {
             var tokenizer = GetFunctionCallParser("func(stuff=1, morestuff=2)");
-            QueryToken result = tokenizer.ParseIdentifierAsFunction(null);
+            QueryToken result;
+            bool success = tokenizer.TryParseIdentifierAsFunction(null, out result);
+            success.Should().BeTrue();
             result.ShouldBeFunctionCallToken("func")
                   .And.Arguments.Should().HaveCount(2);
         }
@@ -118,7 +134,8 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         public void FunctionCallWithOnlyOpeningParenthesis()
         {
             var tokenizer = GetFunctionCallParser("func(");
-            Action parse = () => tokenizer.ParseIdentifierAsFunction(null);
+            QueryToken result;
+            Action parse = () => tokenizer.TryParseIdentifierAsFunction(null, out result);
             parse.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.UriQueryExpressionParser_ExpressionExpected(5, "func("));
         }
 

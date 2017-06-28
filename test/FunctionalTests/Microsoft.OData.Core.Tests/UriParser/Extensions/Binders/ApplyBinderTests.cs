@@ -55,11 +55,12 @@ namespace Microsoft.OData.Tests.UriParser.Extensions.Binders
 
             aggregate.Should().NotBeNull();
             aggregate.Kind.Should().Be(TransformationNodeKind.Aggregate);
-            aggregate.Expressions.Should().NotBeNull();
-            aggregate.Expressions.Should().HaveCount(1);
+            aggregate.AggregateExpressions.Should().NotBeNull();
+            aggregate.AggregateExpressions.Should().HaveCount(1);
 
-            var statements = aggregate.Expressions.ToList();
-            var statement = statements[0];
+            var statements = aggregate.AggregateExpressions.ToList();
+            var statement = statements[0] as AggregateExpression;
+            statement.Should().NotBeNull();
             VerifyIsFakeSingleValueNode(statement.Expression);
             statement.Method.Should().Be(AggregationMethod.Sum);
             statement.Alias.Should().Be("TotalPrice");
