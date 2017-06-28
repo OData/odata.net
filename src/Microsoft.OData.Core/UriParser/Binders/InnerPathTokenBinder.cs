@@ -131,6 +131,7 @@ namespace Microsoft.OData.UriParser
             Debug.Assert(parent != null, "parent should never be null");
 
             SingleValueNode singleValueParent = parent as SingleValueNode;
+            CollectionNavigationNode collectionParent = parent as CollectionNavigationNode;
 
             if (singleValueParent == null)
             {
@@ -138,6 +139,16 @@ namespace Microsoft.OData.UriParser
                 if (functionCallBinder.TryBindInnerPathAsFunctionCall(segmentToken, parent, out boundFunction))
                 {
                     return boundFunction;
+                }
+
+                if (collectionParent != null)
+                {
+                    IEdmEntityTypeReference parentType = collectionParent.EntityItemType;
+                    IEdmProperty collectionProperty = this.Resolver.ResolveProperty(parentType.StructuredDefinition(), segmentToken.Identifier);
+                    if (collectionProperty != null && collectionProperty.PropertyKind == EdmPropertyKind.Structural)
+                    {
+                        return new AggregatedCollectionPropertyNode(collectionParent, collectionProperty);
+                    }
                 }
 
                 throw new ODataException(ODataErrorStrings.MetadataBinder_PropertyAccessSourceNotSingleValue(segmentToken.Identifier));

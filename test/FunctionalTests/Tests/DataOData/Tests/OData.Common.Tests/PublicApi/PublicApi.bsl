@@ -3809,7 +3809,6 @@ public sealed class Microsoft.OData.Edm.Vocabularies.V1.CoreVocabularyConstants 
 	public static string Immutable = "Org.OData.Core.V1.Immutable"
 	public static string IsLanguageDependent = "Org.OData.Core.V1.IsLanguageDependent"
 	public static string IsMediaType = "Org.OData.Core.V1.IsMediaType"
-	public static string IsOptional = "IsOptional"
 	public static string IsURL = "Org.OData.Core.V1.IsURL"
 	public static string LongDescription = "Org.OData.Core.V1.LongDescription"
 	public static string MediaType = "Org.OData.Core.V1.MediaType"
@@ -5188,6 +5187,7 @@ public enum Microsoft.OData.UriParser.OrderByDirection : int {
 }
 
 public enum Microsoft.OData.UriParser.QueryNodeKind : int {
+	AggregatedCollectionPropertyNode = 31
 	All = 14
 	Any = 9
 	BinaryOperator = 4
@@ -5196,6 +5196,7 @@ public enum Microsoft.OData.UriParser.QueryNodeKind : int {
 	CollectionNavigationNode = 10
 	CollectionOpenPropertyAccess = 25
 	CollectionPropertyAccess = 7
+	CollectionPropertyNode = 30
 	CollectionResourceCast = 15
 	CollectionResourceFunctionCall = 19
 	Constant = 1
@@ -5232,6 +5233,7 @@ public enum Microsoft.OData.UriParser.QueryTokenKind : int {
 	CustomQueryOption = 9
 	DottedIdentifier = 17
 	EndPath = 7
+	EntitySetAggregateExpression = 29
 	Expand = 13
 	ExpandTerm = 20
 	FunctionCall = 6
@@ -5264,8 +5266,9 @@ public interface Microsoft.OData.UriParser.IPathSegmentTokenVisitor`1 {
 }
 
 public interface Microsoft.OData.UriParser.ISyntacticTreeVisitor`1 {
-	T Visit (Microsoft.OData.UriParser.Aggregation.AggregateExpressionToken tokenIn)
 	T Visit (Microsoft.OData.UriParser.Aggregation.AggregateToken tokenIn)
+	T Visit (Microsoft.OData.UriParser.Aggregation.AggregateTransformationToken tokenIn)
+	T Visit (Microsoft.OData.UriParser.Aggregation.EntitySetAggregateToken tokenIn)
 	T Visit (Microsoft.OData.UriParser.Aggregation.GroupByToken tokenIn)
 	T Visit (Microsoft.OData.UriParser.AllToken tokenIn)
 	T Visit (Microsoft.OData.UriParser.AnyToken tokenIn)
@@ -5410,6 +5413,7 @@ public abstract class Microsoft.OData.UriParser.QueryNode {
 public abstract class Microsoft.OData.UriParser.QueryNodeVisitor`1 {
 	protected QueryNodeVisitor`1 ()
 
+	public virtual T Visit (Microsoft.OData.UriParser.AggregatedCollectionPropertyNode nodeIn)
 	public virtual T Visit (Microsoft.OData.UriParser.AllNode nodeIn)
 	public virtual T Visit (Microsoft.OData.UriParser.AnyNode nodeIn)
 	public virtual T Visit (Microsoft.OData.UriParser.BinaryOperatorNode nodeIn)
@@ -5673,6 +5677,18 @@ public class Microsoft.OData.UriParser.UriPathParser {
 	public UriPathParser (Microsoft.OData.UriParser.ODataUriParserSettings settings)
 
 	public virtual System.Collections.Generic.ICollection`1[[System.String]] ParsePathIntoSegments (System.Uri fullUri, System.Uri serviceBaseUri)
+}
+
+public sealed class Microsoft.OData.UriParser.AggregatedCollectionPropertyNode : Microsoft.OData.UriParser.SingleResourceNode {
+	public AggregatedCollectionPropertyNode (Microsoft.OData.UriParser.CollectionNavigationNode source, Microsoft.OData.Edm.IEdmProperty property)
+
+	Microsoft.OData.Edm.IEdmNavigationSource NavigationSource  { public virtual get; }
+	Microsoft.OData.Edm.IEdmProperty Property  { public get; }
+	Microsoft.OData.UriParser.CollectionNavigationNode Source  { public get; }
+	Microsoft.OData.Edm.IEdmStructuredTypeReference StructuredTypeReference  { public virtual get; }
+	Microsoft.OData.Edm.IEdmTypeReference TypeReference  { public virtual get; }
+
+	public virtual T Accept (QueryNodeVisitor`1 visitor)
 }
 
 public sealed class Microsoft.OData.UriParser.AllNode : Microsoft.OData.UriParser.LambdaNode {
@@ -6577,6 +6593,12 @@ public sealed class Microsoft.OData.UriParser.WildcardSelectItem : Microsoft.ODa
 	public virtual T TranslateWith (SelectItemTranslator`1 translator)
 }
 
+public enum Microsoft.OData.UriParser.Aggregation.AggregateExpressionKind : int {
+	EntitySetAggregate = 2
+	None = 0
+	PropertyAggregate = 1
+}
+
 public enum Microsoft.OData.UriParser.Aggregation.AggregationMethod : int {
 	Average = 3
 	CountDistinct = 4
@@ -6593,6 +6615,17 @@ public enum Microsoft.OData.UriParser.Aggregation.TransformationNodeKind : int {
 	GroupBy = 1
 }
 
+public abstract class Microsoft.OData.UriParser.Aggregation.AggregateExpressionBase {
+	protected AggregateExpressionBase (Microsoft.OData.UriParser.Aggregation.AggregateExpressionKind kind, string alias)
+
+	Microsoft.OData.UriParser.Aggregation.AggregateExpressionKind AggregateKind  { public get; }
+	string Alias  { public get; }
+}
+
+public abstract class Microsoft.OData.UriParser.Aggregation.AggregateTokenBase : Microsoft.OData.UriParser.Aggregation.ApplyTransformationToken {
+	protected AggregateTokenBase ()
+}
+
 public abstract class Microsoft.OData.UriParser.Aggregation.ApplyTransformationToken : Microsoft.OData.UriParser.QueryToken {
 	protected ApplyTransformationToken ()
 }
@@ -6603,20 +6636,19 @@ public abstract class Microsoft.OData.UriParser.Aggregation.TransformationNode {
 	Microsoft.OData.UriParser.Aggregation.TransformationNodeKind Kind  { public abstract get; }
 }
 
-public sealed class Microsoft.OData.UriParser.Aggregation.AggregateExpression {
+public sealed class Microsoft.OData.UriParser.Aggregation.AggregateExpression : Microsoft.OData.UriParser.Aggregation.AggregateExpressionBase {
 	public AggregateExpression (Microsoft.OData.UriParser.SingleValueNode expression, Microsoft.OData.UriParser.Aggregation.AggregationMethod method, string alias, Microsoft.OData.Edm.IEdmTypeReference typeReference)
 	public AggregateExpression (Microsoft.OData.UriParser.SingleValueNode expression, Microsoft.OData.UriParser.Aggregation.AggregationMethodDefinition methodDefinition, string alias, Microsoft.OData.Edm.IEdmTypeReference typeReference)
 
-	string Alias  { public get; }
 	Microsoft.OData.UriParser.SingleValueNode Expression  { public get; }
 	Microsoft.OData.UriParser.Aggregation.AggregationMethod Method  { public get; }
 	Microsoft.OData.UriParser.Aggregation.AggregationMethodDefinition MethodDefinition  { public get; }
 	Microsoft.OData.Edm.IEdmTypeReference TypeReference  { public get; }
 }
 
-public sealed class Microsoft.OData.UriParser.Aggregation.AggregateExpressionToken : Microsoft.OData.UriParser.QueryToken {
-	public AggregateExpressionToken (Microsoft.OData.UriParser.QueryToken expression, Microsoft.OData.UriParser.Aggregation.AggregationMethod method, string alias)
-	public AggregateExpressionToken (Microsoft.OData.UriParser.QueryToken expression, Microsoft.OData.UriParser.Aggregation.AggregationMethodDefinition methodDefinition, string alias)
+public sealed class Microsoft.OData.UriParser.Aggregation.AggregateToken : Microsoft.OData.UriParser.Aggregation.AggregateTokenBase {
+	public AggregateToken (Microsoft.OData.UriParser.QueryToken expression, Microsoft.OData.UriParser.Aggregation.AggregationMethod method, string alias)
+	public AggregateToken (Microsoft.OData.UriParser.QueryToken expression, Microsoft.OData.UriParser.Aggregation.AggregationMethodDefinition methodDefinition, string alias)
 
 	string Alias  { public get; }
 	Microsoft.OData.UriParser.QueryToken Expression  { public get; }
@@ -6627,20 +6659,21 @@ public sealed class Microsoft.OData.UriParser.Aggregation.AggregateExpressionTok
 	public virtual T Accept (ISyntacticTreeVisitor`1 visitor)
 }
 
-public sealed class Microsoft.OData.UriParser.Aggregation.AggregateToken : Microsoft.OData.UriParser.Aggregation.ApplyTransformationToken {
-	public AggregateToken (System.Collections.Generic.IEnumerable`1[[Microsoft.OData.UriParser.Aggregation.AggregateExpressionToken]] expressions)
+public sealed class Microsoft.OData.UriParser.Aggregation.AggregateTransformationNode : Microsoft.OData.UriParser.Aggregation.TransformationNode {
+	public AggregateTransformationNode (System.Collections.Generic.IEnumerable`1[[Microsoft.OData.UriParser.Aggregation.AggregateExpressionBase]] expressions)
 
-	System.Collections.Generic.IEnumerable`1[[Microsoft.OData.UriParser.Aggregation.AggregateExpressionToken]] Expressions  { public get; }
+	System.Collections.Generic.IEnumerable`1[[Microsoft.OData.UriParser.Aggregation.AggregateExpressionBase]] AggregateExpressions  { public get; }
+	System.Collections.Generic.IEnumerable`1[[Microsoft.OData.UriParser.Aggregation.AggregateExpression]] Expressions  { public get; }
+	Microsoft.OData.UriParser.Aggregation.TransformationNodeKind Kind  { public virtual get; }
+}
+
+public sealed class Microsoft.OData.UriParser.Aggregation.AggregateTransformationToken : Microsoft.OData.UriParser.Aggregation.ApplyTransformationToken {
+	public AggregateTransformationToken (System.Collections.Generic.IEnumerable`1[[Microsoft.OData.UriParser.Aggregation.AggregateTokenBase]] expressions)
+
+	System.Collections.Generic.IEnumerable`1[[Microsoft.OData.UriParser.Aggregation.AggregateTokenBase]] Expressions  { public get; }
 	Microsoft.OData.UriParser.QueryTokenKind Kind  { public virtual get; }
 
 	public virtual T Accept (ISyntacticTreeVisitor`1 visitor)
-}
-
-public sealed class Microsoft.OData.UriParser.Aggregation.AggregateTransformationNode : Microsoft.OData.UriParser.Aggregation.TransformationNode {
-	public AggregateTransformationNode (System.Collections.Generic.IEnumerable`1[[Microsoft.OData.UriParser.Aggregation.AggregateExpression]] expressions)
-
-	System.Collections.Generic.IEnumerable`1[[Microsoft.OData.UriParser.Aggregation.AggregateExpression]] Expressions  { public get; }
-	Microsoft.OData.UriParser.Aggregation.TransformationNodeKind Kind  { public virtual get; }
 }
 
 public sealed class Microsoft.OData.UriParser.Aggregation.AggregationMethodDefinition {
@@ -6661,6 +6694,25 @@ public sealed class Microsoft.OData.UriParser.Aggregation.ApplyClause {
 	public ApplyClause (System.Collections.Generic.IList`1[[Microsoft.OData.UriParser.Aggregation.TransformationNode]] transformations)
 
 	System.Collections.Generic.IEnumerable`1[[Microsoft.OData.UriParser.Aggregation.TransformationNode]] Transformations  { public get; }
+}
+
+public sealed class Microsoft.OData.UriParser.Aggregation.EntitySetAggregateExpression : Microsoft.OData.UriParser.Aggregation.AggregateExpressionBase {
+	public EntitySetAggregateExpression (Microsoft.OData.UriParser.CollectionNavigationNode expression, System.Collections.Generic.IEnumerable`1[[Microsoft.OData.UriParser.Aggregation.AggregateExpressionBase]] children)
+
+	System.Collections.Generic.IEnumerable`1[[Microsoft.OData.UriParser.Aggregation.AggregateExpressionBase]] Children  { public get; }
+	Microsoft.OData.UriParser.CollectionNavigationNode Expression  { public get; }
+}
+
+public sealed class Microsoft.OData.UriParser.Aggregation.EntitySetAggregateToken : Microsoft.OData.UriParser.Aggregation.AggregateTokenBase {
+	public EntitySetAggregateToken (Microsoft.OData.UriParser.QueryToken entitySet, System.Collections.Generic.IEnumerable`1[[Microsoft.OData.UriParser.Aggregation.AggregateTokenBase]] expressions)
+
+	Microsoft.OData.UriParser.QueryToken EntitySet  { public get; }
+	System.Collections.Generic.IEnumerable`1[[Microsoft.OData.UriParser.Aggregation.AggregateTokenBase]] Expressions  { public get; }
+	Microsoft.OData.UriParser.QueryTokenKind Kind  { public virtual get; }
+
+	public virtual T Accept (ISyntacticTreeVisitor`1 visitor)
+	public static Microsoft.OData.UriParser.Aggregation.EntitySetAggregateToken Merge (Microsoft.OData.UriParser.Aggregation.EntitySetAggregateToken token1, Microsoft.OData.UriParser.Aggregation.EntitySetAggregateToken token2)
+	public string Path ()
 }
 
 public sealed class Microsoft.OData.UriParser.Aggregation.FilterTransformationNode : Microsoft.OData.UriParser.Aggregation.TransformationNode {
@@ -7586,6 +7638,7 @@ public enum Microsoft.OData.Client.ALinq.UriParser.QueryTokenKind : int {
 	CustomQueryOption = 9
 	DottedIdentifier = 17
 	EndPath = 7
+	EntitySetAggregateExpression = 29
 	Expand = 13
 	ExpandTerm = 20
 	FunctionCall = 6
@@ -7613,14 +7666,15 @@ public interface Microsoft.OData.Client.ALinq.UriParser.IPathSegmentTokenVisitor
 }
 
 public interface Microsoft.OData.Client.ALinq.UriParser.ISyntacticTreeVisitor`1 {
-	T Visit (Microsoft.OData.Client.ALinq.UriParser.AggregateExpressionToken tokenIn)
 	T Visit (Microsoft.OData.Client.ALinq.UriParser.AggregateToken tokenIn)
+	T Visit (Microsoft.OData.Client.ALinq.UriParser.AggregateTransformationToken tokenIn)
 	T Visit (Microsoft.OData.Client.ALinq.UriParser.AllToken tokenIn)
 	T Visit (Microsoft.OData.Client.ALinq.UriParser.AnyToken tokenIn)
 	T Visit (Microsoft.OData.Client.ALinq.UriParser.BinaryOperatorToken tokenIn)
 	T Visit (Microsoft.OData.Client.ALinq.UriParser.CustomQueryOptionToken tokenIn)
 	T Visit (Microsoft.OData.Client.ALinq.UriParser.DottedIdentifierToken tokenIn)
 	T Visit (Microsoft.OData.Client.ALinq.UriParser.EndPathToken tokenIn)
+	T Visit (Microsoft.OData.Client.ALinq.UriParser.EntitySetAggregateToken tokenIn)
 	T Visit (Microsoft.OData.Client.ALinq.UriParser.ExpandTermToken tokenIn)
 	T Visit (Microsoft.OData.Client.ALinq.UriParser.ExpandToken tokenIn)
 	T Visit (Microsoft.OData.Client.ALinq.UriParser.FunctionCallToken tokenIn)
@@ -7634,6 +7688,10 @@ public interface Microsoft.OData.Client.ALinq.UriParser.ISyntacticTreeVisitor`1 
 	T Visit (Microsoft.OData.Client.ALinq.UriParser.SelectToken tokenIn)
 	T Visit (Microsoft.OData.Client.ALinq.UriParser.StarToken tokenIn)
 	T Visit (Microsoft.OData.Client.ALinq.UriParser.UnaryOperatorToken tokenIn)
+}
+
+public abstract class Microsoft.OData.Client.ALinq.UriParser.AggregateTokenBase : Microsoft.OData.Client.ALinq.UriParser.ApplyTransformationToken {
+	protected AggregateTokenBase ()
 }
 
 public abstract class Microsoft.OData.Client.ALinq.UriParser.ApplyTransformationToken : Microsoft.OData.Client.ALinq.UriParser.QueryToken {
@@ -7679,9 +7737,9 @@ public abstract class Microsoft.OData.Client.ALinq.UriParser.QueryToken {
 	public abstract T Accept (ISyntacticTreeVisitor`1 visitor)
 }
 
-public sealed class Microsoft.OData.Client.ALinq.UriParser.AggregateExpressionToken : Microsoft.OData.Client.ALinq.UriParser.QueryToken {
-	public AggregateExpressionToken (Microsoft.OData.Client.ALinq.UriParser.QueryToken expression, Microsoft.OData.UriParser.Aggregation.AggregationMethod method, string alias)
-	public AggregateExpressionToken (Microsoft.OData.Client.ALinq.UriParser.QueryToken expression, Microsoft.OData.UriParser.Aggregation.AggregationMethodDefinition methodDefinition, string alias)
+public sealed class Microsoft.OData.Client.ALinq.UriParser.AggregateToken : Microsoft.OData.Client.ALinq.UriParser.AggregateTokenBase {
+	public AggregateToken (Microsoft.OData.Client.ALinq.UriParser.QueryToken expression, Microsoft.OData.UriParser.Aggregation.AggregationMethod method, string alias)
+	public AggregateToken (Microsoft.OData.Client.ALinq.UriParser.QueryToken expression, Microsoft.OData.UriParser.Aggregation.AggregationMethodDefinition methodDefinition, string alias)
 
 	string Alias  { public get; }
 	Microsoft.OData.Client.ALinq.UriParser.QueryToken Expression  { public get; }
@@ -7692,10 +7750,10 @@ public sealed class Microsoft.OData.Client.ALinq.UriParser.AggregateExpressionTo
 	public virtual T Accept (ISyntacticTreeVisitor`1 visitor)
 }
 
-public sealed class Microsoft.OData.Client.ALinq.UriParser.AggregateToken : Microsoft.OData.Client.ALinq.UriParser.ApplyTransformationToken {
-	public AggregateToken (System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Client.ALinq.UriParser.AggregateExpressionToken]] expressions)
+public sealed class Microsoft.OData.Client.ALinq.UriParser.AggregateTransformationToken : Microsoft.OData.Client.ALinq.UriParser.ApplyTransformationToken {
+	public AggregateTransformationToken (System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Client.ALinq.UriParser.AggregateTokenBase]] expressions)
 
-	System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Client.ALinq.UriParser.AggregateExpressionToken]] Expressions  { public get; }
+	System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Client.ALinq.UriParser.AggregateTokenBase]] Expressions  { public get; }
 	Microsoft.OData.Client.ALinq.UriParser.QueryTokenKind Kind  { public virtual get; }
 
 	public virtual T Accept (ISyntacticTreeVisitor`1 visitor)
@@ -7775,6 +7833,18 @@ public sealed class Microsoft.OData.Client.ALinq.UriParser.EndPathToken : Micros
 	Microsoft.OData.Client.ALinq.UriParser.QueryToken NextToken  { public virtual get; public virtual set; }
 
 	public virtual T Accept (ISyntacticTreeVisitor`1 visitor)
+}
+
+public sealed class Microsoft.OData.Client.ALinq.UriParser.EntitySetAggregateToken : Microsoft.OData.Client.ALinq.UriParser.AggregateTokenBase {
+	public EntitySetAggregateToken (Microsoft.OData.Client.ALinq.UriParser.QueryToken entitySet, System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Client.ALinq.UriParser.AggregateTokenBase]] expressions)
+
+	Microsoft.OData.Client.ALinq.UriParser.QueryToken EntitySet  { public get; }
+	System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Client.ALinq.UriParser.AggregateTokenBase]] Expressions  { public get; }
+	Microsoft.OData.Client.ALinq.UriParser.QueryTokenKind Kind  { public virtual get; }
+
+	public virtual T Accept (ISyntacticTreeVisitor`1 visitor)
+	public static Microsoft.OData.Client.ALinq.UriParser.EntitySetAggregateToken Merge (Microsoft.OData.Client.ALinq.UriParser.EntitySetAggregateToken token1, Microsoft.OData.Client.ALinq.UriParser.EntitySetAggregateToken token2)
+	public string Path ()
 }
 
 public sealed class Microsoft.OData.Client.ALinq.UriParser.ExpandTermToken : Microsoft.OData.Client.ALinq.UriParser.QueryToken {

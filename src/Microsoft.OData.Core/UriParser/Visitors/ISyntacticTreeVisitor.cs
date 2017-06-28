@@ -145,18 +145,25 @@ namespace Microsoft.OData.UriParser
         T Visit(FunctionParameterToken tokenIn);
 
         /// <summary>
+        /// Visits a AggregateTransformationToken
+        /// </summary>
+        /// <param name="tokenIn">The AggregateTransformationToken to bind</param>
+        /// <returns>A T node bound to this AggregateTransformationToken</returns>
+        T Visit(AggregateTransformationToken tokenIn);
+
+        /// <summary>
         /// Visits a AggregateToken
         /// </summary>
-        /// <param name="tokenIn">The AggregateToken to bind</param>
-        /// <returns>A T node bound to this AggregateToken</returns>
+        /// <param name="tokenIn">The AggregateTokenBase to bind</param>
+        /// <returns>A T node bound to this AggregateTokenBase</returns>
         T Visit(AggregateToken tokenIn);
 
         /// <summary>
-        /// Visits a AggregateExpressionToken
+        /// Visits a EntitySetAggregateToken
         /// </summary>
-        /// <param name="tokenIn">The AggregateExpressionToken to bind</param>
-        /// <returns>A T node bound to this AggregateExpressionToken</returns>
-        T Visit(AggregateExpressionToken tokenIn);
+        /// <param name="tokenIn">The EntitySetAggregateToken to bind</param>
+        /// <returns>A T node bound to this EntitySetAggregateToken</returns>
+        T Visit(EntitySetAggregateToken tokenIn);
 
         /// <summary>
         /// Visits a GroupByToken

@@ -438,13 +438,55 @@ namespace Microsoft.OData.UriParser
         {
             int startPosition = this.Position;
             this.AdvanceThroughBalancedExpression('(', ')');
-            var expressionText = this.Text.Substring(startPosition, this.textPos - startPosition);
+            string expressionText = this.Text.Substring(startPosition, this.textPos - startPosition);
 
             //// TODO: Consider introducing a token type and setting up the current token instead of returning string.
             //// We've done weird stuff, and the state of hte lexer is weird now. All will be well once NextToken() is called,
             //// but until then CurrentToken is stale and misleading.
 
             return expressionText;
+        }
+
+        /// <summary>
+        /// Get the current position in this lexer that can be used restore the lexer to this position later.
+        /// </summary>
+        /// <returns>
+        /// Returns a snapshot position used to call RestorePosition.
+        /// </returns>
+        internal ExpressionLexerPosition SnapshotPosition()
+        {
+            return new ExpressionLexerPosition(this, this.textPos, this.token);
+        }
+
+        /// <summary>
+        /// Sets the current position to the specified position.
+        /// </summary>
+        /// <param name="position">The position to restore, returned from SnapshotPosition.</param>
+        /// <remarks>
+        /// The specified position must have been retrieved by GetPostion on this instance.
+        /// </remarks>
+        internal void RestorePosition(object position)
+        {
+            ExpressionLexerPosition pos = position as ExpressionLexerPosition;
+            if (pos == null)
+            {
+                throw new ArgumentException("Position is not valid for ExpressionLexer.", "position");
+            }
+
+            if (pos.Lexer != this)
+            {
+                throw new ArgumentException("Position was not taken from this ExpressionLexer instance.", "position");
+            }
+
+            if (pos.TextPos.HasValue)
+            {
+                SetTextPos(pos.TextPos.Value);
+            }
+
+            if (pos.Token.HasValue)
+            {
+                this.token = pos.Token.Value;
+            }
         }
 
         #endregion Internal methods
@@ -1223,6 +1265,25 @@ namespace Microsoft.OData.UriParser
         #endregion Private methods
 
         #region Private classes
+        /// <summary>
+        /// Provides fields to remember an ExpresionLexer's position.
+        /// </summary>
+        internal class ExpressionLexerPosition
+        {
+            public ExpressionLexerPosition(ExpressionLexer lexer, int? textPos, ExpressionToken? token)
+            {
+                this.Lexer = lexer;
+                this.TextPos = textPos;
+                this.Token = token;
+            }
+
+            public ExpressionLexer Lexer { get; private set; }
+
+            public int? TextPos { get; private set; }
+
+            public ExpressionToken? Token { get; private set; }
+        }
+
         /// <summary>This class implements IEqualityComparer for UnicodeCategory</summary>
         /// <remarks>
         /// Using this class rather than EqualityComparer&lt;T&gt;.Default

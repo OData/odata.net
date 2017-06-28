@@ -28,16 +28,33 @@ namespace Microsoft.OData.UriParser
         private readonly UriQueryExpressionParser parser;
 
         /// <summary>
+        /// If set to true, catches any ODataException thrown while trying to parse function arguments.
+        /// </summary>
+        private readonly bool restoreStateIfFail;
+
+        /// <summary>
         /// Create a new FunctionCallParser.
         /// </summary>
         /// <param name="lexer">Lexer positioned at a function identifier.</param>
         /// <param name="parser">The UriQueryExpressionParser.</param>
         public FunctionCallParser(ExpressionLexer lexer, UriQueryExpressionParser parser)
+            : this(lexer, parser, false /* restoreStateIfFail */)
+        {
+        }
+
+        /// <summary>
+        /// Create a new FunctionCallParser.
+        /// </summary>
+        /// <param name="lexer">Lexer positioned at a function identifier.</param>
+        /// <param name="parser">The UriQueryExpressionParser.</param>
+        /// <param name="restoreStateIfFail">If set to true, catches any ODataException thrown while trying to parse function arguments.</param>
+        public FunctionCallParser(ExpressionLexer lexer, UriQueryExpressionParser parser, bool restoreStateIfFail)
         {
             ExceptionUtils.CheckArgumentNotNull(lexer, "lexer");
             ExceptionUtils.CheckArgumentNotNull(parser, "parser");
             this.lexer = lexer;
             this.parser = parser;
+            this.restoreStateIfFail = restoreStateIfFail;
         }
 
         /// <summary>
@@ -57,13 +74,19 @@ namespace Microsoft.OData.UriParser
         }
 
         /// <summary>
-        /// Parses an identifier that represents a function.
+        /// Try to parse an identifier that represents a function. If the parser instance has
+        /// <see cref="restoreStateIfFail"/> set as false, then an <see cref="ODataException"/>
+        /// is thrown if the parser finds an error.
         /// </summary>
         /// <param name="parent">Token for the parent of the function being parsed.</param>
-        /// <returns>QueryToken representing this function.</returns>
-        public QueryToken ParseIdentifierAsFunction(QueryToken parent)
+        /// <param name="result">QueryToken representing this function.</param>
+        /// <returns>True if the parsing was successful.</returns>
+        public bool TryParseIdentifierAsFunction(QueryToken parent, out QueryToken result)
         {
+            result = null;
             string functionName;
+
+            ExpressionLexer.ExpressionLexerPosition position = lexer.SnapshotPosition();
 
             if (this.Lexer.PeekNextToken().Kind == ExpressionTokenKind.Dot)
             {
@@ -77,9 +100,22 @@ namespace Microsoft.OData.UriParser
                 this.Lexer.NextToken();
             }
 
-            FunctionParameterToken[] arguments = this.ParseArgumentListOrEntityKeyList();
+            try
+            {
+                FunctionParameterToken[] arguments = this.ParseArgumentListOrEntityKeyList();
+                result = new FunctionCallToken(functionName, arguments, parent);
+            }
+            catch (ODataException e)
+            {
+                if (!restoreStateIfFail)
+                {
+                    throw e;
+                }
 
-            return new FunctionCallToken(functionName, arguments, parent);
+                lexer.RestorePosition(position);
+            }
+
+            return result != null;
         }
 
         /// <summary>
