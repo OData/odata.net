@@ -90,22 +90,6 @@ namespace Microsoft.OData
         }
 
         /// <summary>
-        /// The state of the collection element - empty or non-empty.
-        /// </summary>
-        /// <remarks>
-        /// Only used by ATOM.
-        /// </remarks>
-        protected bool IsCollectionElementEmpty
-        {
-            get
-            {
-                Debug.Assert(this.scopes != null && this.scopes.Count > 0, "A scope must always exist.");
-                Debug.Assert(this.scopes.Peek().State == ODataCollectionReaderState.CollectionStart, "Expected the State to be CollectionStart");
-                return this.scopes.Peek().IsCollectionElementEmpty;
-            }
-        }
-
-        /// <summary>
         /// The expected item type for the items in the collection.
         /// </summary>
         protected IEdmTypeReference ExpectedItemTypeReference
@@ -119,13 +103,7 @@ namespace Microsoft.OData
             {
                 ExceptionUtils.CheckArgumentNotNull(value, "value");
 
-                if (this.State != ODataCollectionReaderState.Start)
-                {
-                    throw new ODataException(
-                        Strings.ODataCollectionReaderCore_ExpectedItemTypeSetInInvalidState(
-                            this.State.ToString(),
-                            ODataCollectionReaderState.Start.ToString()));
-                }
+                Debug.Assert(this.State == ODataCollectionReaderState.Start, "this.State == ODataCollectionReaderState.Start");
 
                 if (this.expectedItemTypeReference != value)
                 {
@@ -207,11 +185,6 @@ namespace Microsoft.OData
                 case ODataCollectionReaderState.CollectionEnd:
                     result = this.ReadAtCollectionEndImplementation();
                     break;
-
-                case ODataCollectionReaderState.Exception:    // fall through
-                case ODataCollectionReaderState.Completed:
-                    Debug.Assert(false, "This case should have been caught earlier.");
-                    throw new ODataException(Strings.General_InternalError(InternalErrorCodes.ODataCollectionReaderCore_ReadImplementation));
 
                 default:
                     Debug.Assert(false, "Unsupported collection reader state " + this.State + " detected.");
@@ -437,6 +410,7 @@ namespace Microsoft.OData
             private readonly object item;
 
             /// <summary>True, if the collection element attached to this scope is empty. False otherwise.</summary>
+            [SuppressMessage("Microsoft.Performance", "CA1823", Justification = "isCollectionElementEmpty is used in debug.")]
             private readonly bool isCollectionElementEmpty;
 
             /// <summary>
@@ -471,10 +445,11 @@ namespace Microsoft.OData
                 this.item = item;
                 this.isCollectionElementEmpty = isCollectionElementEmpty;
 
-                if (this.isCollectionElementEmpty)
-                {
-                    Debug.Assert(state == ODataCollectionReaderState.CollectionStart, "Expected state to be CollectionStart.");
-                }
+
+                // When isCollectionElementEmpty is true, Reader needs to be in CollectionStart state.
+                Debug.Assert(!this.isCollectionElementEmpty ||
+                        (this.isCollectionElementEmpty && state == ODataCollectionReaderState.CollectionStart),
+                        "Expected state to be CollectionStart if isCollectionElementyEmpty is true.");
             }
 
             /// <summary>
@@ -496,17 +471,6 @@ namespace Microsoft.OData
                 get
                 {
                     return this.item;
-                }
-            }
-
-            /// <summary>
-            /// The state of the Collection Element - empty or non-empty.
-            /// </summary>
-            public bool IsCollectionElementEmpty
-            {
-                get
-                {
-                    return this.isCollectionElementEmpty;
                 }
             }
         }

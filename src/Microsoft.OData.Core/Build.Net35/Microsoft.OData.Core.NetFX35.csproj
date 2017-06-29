@@ -856,6 +856,9 @@
     <Compile Include="$(ODataCrossTargettingSourcePath)\UriParser\Binders\BindingState.cs">
       <Link>Microsoft\OData\Core\UriParser\Binders\BindingState.cs</Link>
     </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\UriParser\Binders\ComputeBinder.cs">
+      <Link>Microsoft\OData\Core\UriParser\Binders\ComputeBinder.cs</Link>
+    </Compile>
     <Compile Include="$(ODataCrossTargettingSourcePath)\UriParser\Binders\DottedIdentifierBinder.cs">
       <Link>Microsoft\OData\Core\UriParser\Binders\DottedIdentifierBinder.cs</Link>
     </Compile>
@@ -1261,6 +1264,12 @@
     <Compile Include="$(ODataCrossTargettingSourcePath)\UriParser\SyntacticAst\BinaryOperatorToken.cs">
       <Link>Microsoft\OData\Core\UriParser\SyntacticAst\BinaryOperatorToken.cs</Link>
     </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\UriParser\SyntacticAst\ComputeToken.cs">
+      <Link>Microsoft\OData\Core\UriParser\SyntacticAst\ComputeToken.cs</Link>
+    </Compile>
+    <Compile Include="$(ODataCrossTargettingSourcePath)\UriParser\SyntacticAst\ComputeExpressionToken.cs">
+      <Link>Microsoft\OData\Core\UriParser\SyntacticAst\ComputeExpressionToken.cs</Link>
+    </Compile>
     <Compile Include="$(ODataCrossTargettingSourcePath)\UriParser\SyntacticAst\CustomQueryOptionToken.cs">
       <Link>Microsoft\OData\Core\UriParser\SyntacticAst\CustomQueryOptionToken.cs</Link>
     </Compile>
@@ -1598,6 +1607,12 @@
     </Compile>
     <Compile Include="..\UriParser\SemanticAst\CollectionResourceNode.cs">
       <Link>Microsoft\OData\Core\UriParser\SemanticAst\CollectionResourceNode.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\SemanticAst\ComputeClause.cs">
+      <Link>Microsoft\OData\Core\UriParser\SemanticAst\ComputeClause.cs</Link>
+    </Compile>
+    <Compile Include="..\UriParser\SemanticAst\ComputeExpression.cs">
+      <Link>Microsoft\OData\Core\UriParser\SemanticAst\ComputeExpression.cs</Link>
     </Compile>
     <Compile Include="..\UriParser\SemanticAst\CountVirtualPropertyNode.cs">
       <Link>Microsoft\OData\Core\UriParser\SemanticAst\CountVirtualPropertyNode.cs</Link>

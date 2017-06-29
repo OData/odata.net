@@ -30,7 +30,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
     {
         [InjectDependency(IsRequired = true)]
         public AssertionHandler Assert { get; set; }
-        
+
         /// <summary>
         /// If set to true the reader will add annotation storing the payload order.
         /// </summary>
@@ -176,9 +176,9 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
             /// <param name="storePayloadOrder">If set to true the reader will add annotation storing the payload order.</param>
             /// <param name="testConfiguration">The test configuration under which to read the message.</param>
             public ObjectModelReader(
-                MessageToObjectModelReader messageToObjectModelReader, 
+                MessageToObjectModelReader messageToObjectModelReader,
                 IEdmModel payloadModel,
-                bool storePayloadOrder, 
+                bool storePayloadOrder,
                 ReaderTestConfiguration testConfiguration)
             {
                 this.messageToObjectModelReader = messageToObjectModelReader;
@@ -352,6 +352,18 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
                     collectionReader.Read();
                     this.assert.AreEqual(ODataCollectionReaderState.Completed, collectionReader.State, "Reader states don't match.");
 
+                    // Exception is expected if try to read after completion.
+                    this.assert.ThrowsException<ODataException>(() => { collectionReader.Read(); },
+                            "Exception type ODataException is expected but is not.");
+
+                    this.assert.AreEqual(ODataCollectionReaderState.Completed, collectionReader.State, "Reader should be in Completed state, but it is not.");
+
+                    // Excpetion is expected if try to read in Exception state.
+                    this.assert.ThrowsException<ODataException>(() => { collectionReader.Read(); },
+                            "Exception type ODataException is expected but is not.");
+
+                    this.assert.AreEqual(ODataCollectionReaderState.Completed, collectionReader.State, "Reader should be in Exception state, but it is not.");
+
                     // attach the items to the collection and return it
                     collectionStart.SetAnnotation(itemsAnnotation);
 
@@ -404,14 +416,14 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
                         switch (parameterReader.State)
                         {
                             case ODataParameterReaderState.Value:
-                                odataParameters.Add(new KeyValuePair<string,object>(parameterReader.Name, parameterReader.Value));
+                                odataParameters.Add(new KeyValuePair<string, object>(parameterReader.Name, parameterReader.Value));
                                 break;
 
                             case ODataParameterReaderState.Resource:
                                 ODataReader entryReader = parameterReader.CreateResourceReader();
                                 entryReader.Read();
                                 this.assert.AreEqual(ODataReaderState.ResourceStart, entryReader.State, "Reader states don't match.");
-                                odataParameters.Add(new KeyValuePair<string,object>(parameterReader.Name, this.ReadEntry(entryReader)));
+                                odataParameters.Add(new KeyValuePair<string, object>(parameterReader.Name, this.ReadEntry(entryReader)));
                                 this.assert.AreEqual(ODataReaderState.ResourceEnd, entryReader.State, "Reader states don't match.");
                                 this.assert.IsFalse(entryReader.Read(), "Read() should return false after EntryEnd.");
                                 this.assert.AreEqual(ODataReaderState.Completed, entryReader.State, "Reader states don't match.");
@@ -421,7 +433,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
                                 ODataReader feedReader = parameterReader.CreateResourceSetReader();
                                 feedReader.Read();
                                 this.assert.AreEqual(ODataReaderState.ResourceSetStart, feedReader.State, "Reader states don't match.");
-                                odataParameters.Add(new KeyValuePair<string,object>(parameterReader.Name, this.ReadFeed(feedReader)));
+                                odataParameters.Add(new KeyValuePair<string, object>(parameterReader.Name, this.ReadFeed(feedReader)));
                                 this.assert.AreEqual(ODataReaderState.ResourceSetEnd, feedReader.State, "Reader states don't match.");
                                 this.assert.IsFalse(feedReader.Read(), "Read() should return false after EntryEnd.");
                                 this.assert.AreEqual(ODataReaderState.Completed, feedReader.State, "Reader states don't match.");
@@ -429,7 +441,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
 
                             case ODataParameterReaderState.Collection:
                                 ODataCollectionReader collectionReader = parameterReader.CreateCollectionReader();
-                                odataParameters.Add(new KeyValuePair<string,object>(parameterReader.Name, this.ReadCollection(collectionReader)));
+                                odataParameters.Add(new KeyValuePair<string, object>(parameterReader.Name, this.ReadCollection(collectionReader)));
                                 break;
 
                             default:
@@ -615,7 +627,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
                 {
                     expectedPartElement = odataRequest.Body == null ? null : odataRequest.Body.RootElement;
                 }
-                
+
                 ODataBatchOperationRequestMessage requestMessage = batchReader.CreateOperationRequestMessage();
                 object partPayload = null;
 

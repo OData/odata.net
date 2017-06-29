@@ -89,7 +89,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             PathFunctionalTestsUtil.RunParseErrorPath("People(7)/MyDog/$ref/Color", ODataErrorStrings.RequestUriProcessor_MustBeLeafSegment(UriQueryConstants.RefSegment));
         }
 
-        [Fact(Skip = "This test currently fails.")]
+        [Fact]
         public void ParsePathWithLinks()
         {
             ODataUriParser parser = new ODataUriParser(HardCodedTestModel.TestModel, new Uri("http://www.odata.com/OData"), new Uri("http://www.odata.com/OData/People(1)/MyDog/$ref"));

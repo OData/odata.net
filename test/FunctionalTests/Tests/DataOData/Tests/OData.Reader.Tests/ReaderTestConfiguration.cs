@@ -29,13 +29,16 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
         /// <param name="readerRequest">True if the test is reading a request. Otherwise false if it's reading a response.</param>
         /// <param name="synchronous">True if the test should be ran using synchronous API. Otherwise false if it should be ran using asynchronous APIs.</param>
         /// <param name="version">The OData protocol version to be used for reading the payload.</param>
-        public ReaderTestConfiguration(ODataFormat format, ODataMessageReaderSettings messageReaderSettings, bool IsRequest, bool synchronous, ODataVersion version = ODataVersion.V4)
+        /// <param name="skipStateValidationBeforeRead">True if test to skip reader state validation before reading.</param>
+        public ReaderTestConfiguration(ODataFormat format, ODataMessageReaderSettings messageReaderSettings, bool IsRequest, bool synchronous,
+            ODataVersion version = ODataVersion.V4, bool skipStateValidationBeforeRead = false)
             : base(format, version, IsRequest, TestODataBehaviorKind.Default)
         {
             Debug.Assert(messageReaderSettings != null, "readerSettings != null");
 
             this.MessageReaderSettings = messageReaderSettings;
             this.Synchronous = synchronous;
+            this.SkipStateValidationBeforeRead = skipStateValidationBeforeRead;
         }
 
         /// <summary>
@@ -48,6 +51,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
         {
             this.MessageReaderSettings = other.MessageReaderSettings.Clone();
             this.Synchronous = other.Synchronous;
+            this.SkipStateValidationBeforeRead = other.SkipStateValidationBeforeRead;
         }
 
         /// <summary>
@@ -70,18 +74,24 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
         public bool Synchronous { get; private set; }
 
         /// <summary>
+        /// True if test to skip reader state validation before reading.
+        /// </summary>
+        public bool SkipStateValidationBeforeRead { get; private set; }
+
+        /// <summary>
         /// Returns text representation of the configuration.
         /// </summary>
         /// <returns>Humanly readable text representation of the configuration. Used for debugging.</returns>
         public override string ToString()
         {
             return string.Format(
-                "Format: {0}, Version: {1}, ReaderSettings: [{2}], IsRequest: {3}, Synchronous: {4}",
+                "Format: {0}, Version: {1}, ReaderSettings: [{2}], IsRequest: {3}, Synchronous: {4}, SkipStateValidationBeforeRead: {5}",
                 this.Format,
                 this.Version.ToString(),
                 this.MessageReaderSettings.ToDebugString(),
                 this.IsRequest,
-                this.Synchronous);
+                this.Synchronous,
+                this.SkipStateValidationBeforeRead);
         }
 
         /// <summary>

@@ -241,7 +241,7 @@ namespace Microsoft.Test.OData.Tests.Client.SingletonTests
                 ODataProperty property = this.QueryProperty("VipCustomer/Orders(8)/OrderDate", mimeType);
                 if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
                 {
-                    Assert.AreEqual("3/4/2011 4:03:57 PM -08:00", property.Value.ToString());
+                    Assert.AreEqual(new DateTimeOffset(2011, 3, 4, 16, 3, 57, TimeSpan.FromHours(-8)), property.Value);
                 }
             }
         }

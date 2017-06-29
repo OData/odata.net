@@ -6,6 +6,8 @@
 
 using System;
 using FluentAssertions;
+using Microsoft.OData.Edm;
+using Microsoft.OData.Metadata;
 using Microsoft.OData.UriParser;
 using Xunit;
 using mbh = Microsoft.OData.Tests.UriParser.ModelBuildingHelpers;
@@ -17,19 +19,20 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
     {
         private readonly Uri testBaseUri = new Uri("http://odatatest/");
 
-        [Fact(Skip = "This test currently fails.")]
+        [Fact]
         public void TypeComputedForEntitySetSegment()
         {
-            var entitySet = mbh.BuildValidEntitySet();
+            IEdmEntitySet entitySet = mbh.BuildValidEntitySet();
             var path = new ODataPath(new ODataPathSegment[]
             {
                 new EntitySetSegment(entitySet)
             });
 
-            path.EdmType().Should().BeSameAs(entitySet);
+            IEdmType entitySetCollection = new EdmCollectionType(new EdmEntityTypeReference(entitySet.EntityType(), false));
+            path.EdmType().ShouldBeEquivalentTo(entitySetCollection.ToTypeReference());
         }
 
-        [Fact(Skip = "This test currently fails.")]
+        [Fact]
         public void EntitySetComputedForEntitySetSegment()
         {
             var entitySet = mbh.BuildValidEntitySet();

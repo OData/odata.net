@@ -171,16 +171,11 @@ namespace Microsoft.OData.Tests.UriParser.Binders
         [Fact(Skip = "This test currently fails.")]
         public void ValidateNonCatchableExceptionsThrowInFindOperationsByBindingParameterTypeHierarchyExceptionAndSurfaces()
         {
-            var model = new FindOperationsByBindingParameterTypeHierarchyThrowingStackOverflowEdmModel();
+            var model = new FindOperationsByBindingParameterTypeHierarchyThrowingNonCatchableExceptionEdmModel();
             IEdmEntityType entityType = new EdmEntityType("n", "EntityType");
             ODataPathSegment foundPathSegment = null;
             Action test = () => SelectPathSegmentTokenBinder.TryBindAsOperation(new SystemToken("foo", null), model, entityType, out foundPathSegment);
-
-#if NETCOREAPP1_0
-            test.ShouldThrow<Exception>();
-#else
-            test.ShouldThrow<StackOverflowException>();
-#endif
+            test.ShouldThrow<OutOfMemoryException>();
         }
 
         [Fact]
@@ -244,15 +239,11 @@ namespace Microsoft.OData.Tests.UriParser.Binders
             }
         }
 
-        private class FindOperationsByBindingParameterTypeHierarchyThrowingStackOverflowEdmModel : EdmModel
+        private class FindOperationsByBindingParameterTypeHierarchyThrowingNonCatchableExceptionEdmModel : EdmModel
         {
             public override IEnumerable<IEdmOperation> FindDeclaredBoundOperations(IEdmType bindingType)
             {
-#if NETCOREAPP1_0
-                throw new Exception("Oh no!");
-#else
-                throw new StackOverflowException("Oh no!");
-#endif
+                throw new OutOfMemoryException("OutOfMemoryException");
             }
         }
     }
