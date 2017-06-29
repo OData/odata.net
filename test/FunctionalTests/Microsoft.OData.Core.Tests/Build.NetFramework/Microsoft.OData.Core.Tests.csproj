@@ -137,6 +137,7 @@
     <Compile Include="..\JsonLight\PayloadValueConverters.cs" />
     <Compile Include="..\JsonLight\ReorderingJsonReaderTests.cs" />
     <Compile Include="..\JsonLight\TestEntityMetadataBuilder.cs" />
+    <Compile Include="..\JsonLight\ODataJsonLightReaderUtilsTests.cs" />	
     <Compile Include="..\Json\BufferingJsonReaderTests.cs" />
     <Compile Include="..\Json\JsonLightInstanceAnnotationWriterTests.cs" />
     <Compile Include="..\Json\JsonReaderTests.cs" />
