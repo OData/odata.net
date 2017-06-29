@@ -264,6 +264,40 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             });
         }
 
+        [Fact]
+        public void IsCharHexDigitTest()
+        {
+            UriParserHelper.IsCharHexDigit(' ').Should().Be(false);
+            UriParserHelper.IsCharHexDigit('0').Should().Be(true);
+            UriParserHelper.IsCharHexDigit('1').Should().Be(true);
+            UriParserHelper.IsCharHexDigit('9').Should().Be(true);
+            UriParserHelper.IsCharHexDigit(':').Should().Be(false);
+            UriParserHelper.IsCharHexDigit('A').Should().Be(true);
+            UriParserHelper.IsCharHexDigit('B').Should().Be(true);
+            UriParserHelper.IsCharHexDigit('F').Should().Be(true);
+            UriParserHelper.IsCharHexDigit('G').Should().Be(false);
+            UriParserHelper.IsCharHexDigit('a').Should().Be(true);
+            UriParserHelper.IsCharHexDigit('b').Should().Be(true);
+            UriParserHelper.IsCharHexDigit('f').Should().Be(true);
+            UriParserHelper.IsCharHexDigit('g').Should().Be(false);
+        }
+
+        [Fact]
+        public void TryRemoveQuotesTest()
+        {
+            string test = "' '";
+            UriParserHelper.TryRemoveQuotes(ref test).Should().Be(true);
+            test.Should().Be(" ");
+
+            test = "invalid";
+            UriParserHelper.TryRemoveQuotes(ref test).Should().Be(false);
+            test.Should().Be("invalid");
+
+            test = "'invalid";
+            UriParserHelper.TryRemoveQuotes(ref test).Should().Be(false);
+            test.Should().Be("'invalid");
+        }
+
         /// <summary>
         /// Enumerates the segments in a path and calls a corresponding delegate verifier on each segment.
         /// </summary>

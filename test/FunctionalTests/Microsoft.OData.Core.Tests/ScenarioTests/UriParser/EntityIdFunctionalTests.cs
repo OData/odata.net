@@ -21,6 +21,9 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         {
             var parser = new ODataUriParser(HardCodedTestModel.TestModel, new Uri("http://example.org/"), new Uri("http://example.org/People(0)/$ref?$id=http://test.org/People(1)"));
             Assert.Equal(new Uri("http://test.org/People(1)"), parser.ParseEntityId().Id);
+
+            // Call PrseEntityId() again to test different code path
+            Assert.Equal(new Uri("http://test.org/People(1)"), parser.ParseEntityId().Id);
         }
 
         [Fact]

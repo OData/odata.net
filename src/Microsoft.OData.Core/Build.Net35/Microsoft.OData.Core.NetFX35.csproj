@@ -1015,9 +1015,6 @@
     <Compile Include="$(ODataCrossTargettingSourcePath)\UriParser\Parsers\ODataPathParser.cs">
       <Link>Microsoft\OData\Core\UriParser\Parsers\ODataPathParser.cs</Link>
     </Compile>
-    <Compile Include="$(ODataCrossTargettingSourcePath)\UriParser\Parsers\OpenTypeMethods.cs">
-      <Link>Microsoft\OData\Core\UriParser\Parsers\OpenTypeMethods.cs</Link>
-    </Compile>
     <Compile Include="$(ODataCrossTargettingSourcePath)\UriParser\Parsers\PathReverser.cs">
       <Link>Microsoft\OData\Core\UriParser\Parsers\PathReverser.cs</Link>
     </Compile>

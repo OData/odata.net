@@ -1187,9 +1187,6 @@
     <Compile Include="..\UriParser\Parsers\ODataPathParser.cs">
       <Link>UriParser\Parsers\ODataPathParser.cs</Link>
     </Compile>
-    <Compile Include="..\UriParser\Parsers\OpenTypeMethods.cs">
-      <Link>UriParser\Parsers\OpenTypeMethods.cs</Link>
-    </Compile>
     <Compile Include="..\UriParser\Parsers\PathParserModelUtils.cs">
       <Link>UriParser\Parsers\PathParserModelUtils.cs</Link>
     </Compile>

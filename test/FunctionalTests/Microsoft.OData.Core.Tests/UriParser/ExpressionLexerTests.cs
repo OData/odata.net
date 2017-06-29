@@ -85,6 +85,18 @@ namespace Microsoft.OData.Tests.UriParser
             ExpressionTokenKind.Unknown.IsLiteralType().Should().BeFalse();
         }
 
+        [Fact]
+        public void CommaTokenIsKeyValueShouldReturnFalse()
+        {
+            CommaToken.IsKeyValueToken.Should().Be(false);
+        }
+
+        [Fact]
+        public void CommaTokenIsFunctionParameterTokenShouldReturnFalse()
+        {
+            CommaToken.IsFunctionParameterToken.Should().Be(false);
+        }
+
         // internal static bool IsInfinityOrNaNDouble(string tokenText)
         [Fact]
         public void IsInfinityOrNaNDoubleShouldReturnTrueForINF()

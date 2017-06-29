@@ -4374,6 +4374,27 @@ namespace Microsoft.OData {
         }
 
         /// <summary>
+        /// A string like "The bind state cannot be null. In OData, the bind state for query options should not be null and there should be query options in the object."
+        /// </summary>
+        internal static string MetadataBinder_QueryOptionsBindStateCannotBeNull
+        {
+            get
+            {
+                return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.MetadataBinder_QueryOptionsBindStateCannotBeNull);
+            }
+        }
+
+        /// <summary>
+        /// A string like "The bind method cannot be null. In OData, the processing of query options should have a corresponding bind method."
+        /// </summary>
+        internal static string MetadataBinder_QueryOptionsBindMethodCannotBeNull {
+            get
+            {
+                return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.MetadataBinder_QueryOptionsBindMethodCannotBeNull);
+            }
+        }
+
+        /// <summary>
         /// A string like "Encountered invalid type cast. '{0}' is not assignable from '{1}'."
         /// </summary>
         internal static string MetadataBinder_HierarchyNotFollowed(object p0, object p1) {
