@@ -248,6 +248,7 @@
     <Compile Include="..\ScenarioTests\UriParser\TopAndSkipFunctionalTests.cs" />
     <Compile Include="..\ScenarioTests\UriParser\VerificationHelpers.cs" />
     <Compile Include="..\ScenarioTests\Writer\JsonLight\WriteFeedWithoutNavigationSourceTests.cs" />
+    <Compile Include="..\UriParser\Binders\MetadataBindingTests.cs" />
     <Compile Include="..\UriParser\Binders\MetadataBindingUtilsTests.cs" />
     <Compile Include="..\UriParser\EntitySetNode.cs" />
     <Compile Include="..\UriParser\ExpressionLexerTests.cs" />
@@ -355,6 +356,7 @@
     <Compile Include="..\UriParser\SemanticAst\ODataPathExtensionsTests.cs" />
     <Compile Include="..\UriParser\SemanticAst\ODataPathTests.cs" />
     <Compile Include="..\UriParser\SemanticAst\ODataSelectPathTests.cs" />
+    <Compile Include="..\UriParser\SemanticAst\ODataUnresolvedFunctionParameterAliasTests.cs" />
     <Compile Include="..\UriParser\SemanticAst\DynamicPathSegmentTests.cs" />
     <Compile Include="..\UriParser\SemanticAst\OperationImportSegmentTests.cs" />
     <Compile Include="..\UriParser\SemanticAst\PathSelectItemTests.cs" />
@@ -382,6 +384,7 @@
     <Compile Include="..\UriParser\Parsers\UriTemplateParserTests.cs" />
     <Compile Include="..\UriParser\TreeNodeKinds\QueryNodeKindTests.cs" />
     <Compile Include="..\UriParser\TypePromotionUtilsTests.cs" />
+    <Compile Include="..\UriParser\UriEdmHelpersTests.cs" />
     <Compile Include="..\UriParser\Visitors\PathSegmentTokenEqualityComparerTests.cs" />
     <Compile Include="..\UriParser\Parsers\SegmentArgumentParserTests.cs" />
     <Compile Include="..\UriParser\Binders\SelectBinderTests.cs" />
@@ -403,6 +406,7 @@
     <Compile Include="..\UriParser\ODataUriParserInjectionTests.cs" />
     <Compile Include="..\UriParser\ODataUrlKeyDelimiterTests.cs" />
     <Compile Include="..\UriParser\SegmentAssertions.cs" />
+    <Compile Include="..\UriParser\Visitors\IsCollectionTranslatorTests.cs" />
     <Compile Include="..\UriParser\Visitors\QueryNodeVisitorTests.cs" />
     <Compile Include="..\UriParser\Visitors\SyntacticTreeVisitorTests.cs" />
     <Compile Include="..\ValidationUtilsTests.cs" />
@@ -449,6 +453,7 @@
     <Error Condition="!Exists('$(SolutionDir)\.nuget\NuGet.targets')" Text="$([System.String]::Format('$(ErrorText)', '$(SolutionDir)\.nuget\NuGet.targets'))" />
     <Error Condition="!Exists('$(SolutionDir)\packages\xunit.core.2.1.0\build\portable-net45+win8+wp8+wpa81\xunit.core.props')" Text="$([System.String]::Format('$(ErrorText)', '$(SolutionDir)\packages\xunit.core.2.1.0\build\portable-net45+win8+wp8+wpa81\xunit.core.props'))" />
     <Error Condition="!Exists('$(SolutionDir)\packages\xunit.runner.visualstudio.2.1.0\build\net20\xunit.runner.visualstudio.props')" Text="$([System.String]::Format('$(ErrorText)', '$(SolutionDir)\packages\xunit.runner.visualstudio.2.1.0\build\net20\xunit.runner.visualstudio.props'))" />
+    <Error Condition="!Exists('..\..\..\..\sln\packages\xunit.runner.visualstudio.2.2.0\build\net20\xunit.runner.visualstudio.props')" Text="$([System.String]::Format('$(ErrorText)', '..\..\..\..\sln\packages\xunit.runner.visualstudio.2.2.0\build\net20\xunit.runner.visualstudio.props'))" />
   </Target>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

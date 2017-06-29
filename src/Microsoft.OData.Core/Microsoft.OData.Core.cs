@@ -639,6 +639,8 @@ namespace Microsoft.OData {
         internal const string MetadataBinder_BoundNodeCannotBeNull = "MetadataBinder_BoundNodeCannotBeNull";
         internal const string MetadataBinder_TopRequiresNonNegativeInteger = "MetadataBinder_TopRequiresNonNegativeInteger";
         internal const string MetadataBinder_SkipRequiresNonNegativeInteger = "MetadataBinder_SkipRequiresNonNegativeInteger";
+        internal const string MetadataBinder_QueryOptionsBindStateCannotBeNull = "MetadataBinder_QueryOptionsBindStateCannotBeNull";
+        internal const string MetadataBinder_QueryOptionsBindMethodCannotBeNull = "MetadataBinder_QueryOptionsBindMethodCannotBeNull";
         internal const string MetadataBinder_HierarchyNotFollowed = "MetadataBinder_HierarchyNotFollowed";
         internal const string MetadataBinder_LambdaParentMustBeCollection = "MetadataBinder_LambdaParentMustBeCollection";
         internal const string MetadataBinder_ParameterNotInScope = "MetadataBinder_ParameterNotInScope";

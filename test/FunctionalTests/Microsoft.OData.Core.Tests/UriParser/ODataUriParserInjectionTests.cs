@@ -206,6 +206,9 @@ namespace Microsoft.OData.Tests.UriParser
                             throw new Exception("Not supported Type");
                     }
                 };
+
+            var parseDynamicPathSegmentFuncClone = uriParser.ParseDynamicPathSegmentFunc;
+            Assert.Equal(uriParser.ParseDynamicPathSegmentFunc, parseDynamicPathSegmentFuncClone);
             var path = uriParser.ParsePath();
 
             path.ElementAt(2).ShouldBeDynamicPathSegment("root");

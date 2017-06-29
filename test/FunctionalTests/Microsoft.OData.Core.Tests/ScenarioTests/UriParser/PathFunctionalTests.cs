@@ -788,6 +788,9 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         {
             ODataUriParser parser = new ODataUriParser(HardCodedTestModel.TestModel, new Uri("http://gobbldygook/"), new Uri("http://gobbldygook/$42(notgood)"));
             parser.BatchReferenceCallback = contentId => new BatchReferenceSegment(contentId, HardCodedTestModel.GetDogType(), HardCodedTestModel.GetDogsSet());
+            var batchReferenceCallbackClone = parser.BatchReferenceCallback;
+            Assert.Equal(parser.BatchReferenceCallback, batchReferenceCallbackClone);
+
             Action parse = () => parser.ParsePath();
 
             parse.ShouldThrow<ODataException>().WithMessage(ODataErrorStrings.RequestUriProcessor_SyntaxError);
