@@ -168,7 +168,6 @@ namespace Microsoft.OData.Tests.UriParser.Binders
             SelectPathSegmentTokenBinder.TryBindAsOperation(new SystemToken("f*oo", null), model, entityType, out foundPathSegment).Should().BeFalse();
         }
 
-        [Fact(Skip = "This test currently fails.")]
         public void ValidateNonCatchableExceptionsThrowInFindOperationsByBindingParameterTypeHierarchyExceptionAndSurfaces()
         {
             var model = new FindOperationsByBindingParameterTypeHierarchyThrowingNonCatchableExceptionEdmModel();
