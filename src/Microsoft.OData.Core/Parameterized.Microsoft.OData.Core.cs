@@ -4387,7 +4387,8 @@ namespace Microsoft.OData {
         /// <summary>
         /// A string like "The bind method cannot be null. In OData, the processing of query options should have a corresponding bind method."
         /// </summary>
-        internal static string MetadataBinder_QueryOptionsBindMethodCannotBeNull {
+        internal static string MetadataBinder_QueryOptionsBindMethodCannotBeNull
+        {
             get
             {
                 return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.MetadataBinder_QueryOptionsBindMethodCannotBeNull);
