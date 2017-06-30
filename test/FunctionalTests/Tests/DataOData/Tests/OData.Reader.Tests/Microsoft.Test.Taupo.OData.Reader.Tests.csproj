@@ -163,7 +163,6 @@
     <Compile Include="Reader\ParameterReaderTests.cs" />
     <Compile Include="Reader\MetadataDocumentReaderErrorTests.cs" />
     <Compile Include="Reader\MetadataDocumentReaderTests.cs" />
-    <Compile Include="Reader\OperationReaderTests.cs" />
     <Compile Include="Reader\ReaderContentTypeTests.cs" />
     <Compile Include="RemoveAtomMetadataFromPayloadElementVisitor.cs" />
     <Compile Include="RemoveCollectionNameFromCollectionPayloadElementVisitor.cs" />

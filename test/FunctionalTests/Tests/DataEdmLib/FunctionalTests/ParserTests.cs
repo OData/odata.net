@@ -60,30 +60,6 @@ namespace EdmLibTests.FunctionalTests
             Assert.IsTrue(NullableStringUnbounded.IsUnicode == false, "The parser failed to process the value of the unicode facet");
         }
 
-        [Ignore] // Ignored during FI
-        [TestMethod]
-        public void ParserTestComplexTypeWithBaseType()
-        {
-            IEnumerable<XElement> csdlElements = ModelBuilder.ComplexTypeWithBaseType(this.EdmVersion);
-            IEdmModel resultEdmModel = this.GetParserResult(csdlElements);
-            // This test case manually validates the result since the Taupo does not support the using statements cross-referrenced in multiple schemas. 
-
-            // FindMethodsTestModelBuilder.MultipleSchemasWithDerivedTypes.third.VALIDeCOMPLEXtYPE1's base type == FindMethodsTestModelBuilder.MultipleSchemasWithDerivedTypes.second.ValidComplexType2
-            var schemaElements = resultEdmModel.SchemaElements.Where(n => n.Name == "VALIDeCOMPLEXtYPE1" && n.Namespace == "FindMethodsTestModelBuilder.MultipleSchemasWithDerivedTypes.third");
-            Assert.AreEqual(schemaElements.Count(), 1, "EdmModel.SchemaElements returns more than expected");
-            var baseComplexType = (schemaElements.Single() as IEdmComplexType).BaseType as IEdmComplexType;
-            Assert.AreEqual(baseComplexType.Namespace, "FindMethodsTestModelBuilder.MultipleSchemasWithDerivedTypes.second", "The result namespace value is not correct.");
-            Assert.AreEqual(baseComplexType.Name, "ValidComplexType2", "The result type name is not correct.");
-
-            // FindMethodsTestModelBuilder.MultipleSchemasWithDerivedTypes.second.ValidComplexType2's base type == FindMethodsTestModelBuilder.MultipleSchemasWithDerivedTypes.first.validComplexType1
-            resultEdmModel = this.GetParserResult(csdlElements);
-            schemaElements = resultEdmModel.SchemaElements.Where(n => n.Name == "ValidComplexType2" && n.Namespace == "FindMethodsTestModelBuilder.MultipleSchemasWithDerivedTypes.second");
-            Assert.AreEqual(schemaElements.Count(), 1, "EdmModel.SchemaElements returns more than expected");
-            baseComplexType = (schemaElements.Single() as IEdmComplexType).BaseType as IEdmComplexType;
-            Assert.AreEqual(baseComplexType.Namespace, "FindMethodsTestModelBuilder.MultipleSchemasWithDerivedTypes.first", "The result namespace value is not correct.");
-            Assert.AreEqual(baseComplexType.Name, "validComplexType1", "The result type name is not correct.");
-        }
-
         [TestMethod]
         public void ParserTestSimpleAllPrimitiveTypesDefaultValueCheck()
         {
