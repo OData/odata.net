@@ -28,7 +28,7 @@ namespace Microsoft.OData.Tests.UriParser.Visitors
             IsCollectionTranslator translator = new IsCollectionTranslator();
             var segment = new NavigationPropertySegment(HardCodedTestModel.GetPersonMyDogNavProp(), null);
 
-            translator.Translate(segment).Should().Be(false);
+            translator.Translate(segment).Should().BeFalse();
         }
 
         [Fact]
@@ -37,7 +37,7 @@ namespace Microsoft.OData.Tests.UriParser.Visitors
             IsCollectionTranslator translator = new IsCollectionTranslator();
             var segment = new EntitySetSegment(HardCodedTestModel.GetPeopleSet());
 
-            translator.Translate(segment).Should().Be(true);
+            translator.Translate(segment).Should().BeTrue();
         }
 
         [Fact]
@@ -49,7 +49,7 @@ namespace Microsoft.OData.Tests.UriParser.Visitors
                     ModelBuildingHelpers.BuildValidEntityType(),
                     null);
 
-            translator.Translate(segment).Should().Be(false);
+            translator.Translate(segment).Should().BeFalse();
         }
 
         [Fact]
@@ -58,7 +58,7 @@ namespace Microsoft.OData.Tests.UriParser.Visitors
             IsCollectionTranslator translator = new IsCollectionTranslator();
             var segment = new PropertySegment(HardCodedTestModel.GetDogColorProp());
 
-            translator.Translate(segment).Should().Be(false);
+            translator.Translate(segment).Should().BeFalse();
         }
 
         [Fact]
@@ -67,7 +67,7 @@ namespace Microsoft.OData.Tests.UriParser.Visitors
             IsCollectionTranslator translator = new IsCollectionTranslator();
             var segment = new DynamicPathSegment("test");
 
-            translator.Translate(segment).Should().Be(false);
+            translator.Translate(segment).Should().BeFalse();
         }
 
         [Fact]
@@ -76,7 +76,7 @@ namespace Microsoft.OData.Tests.UriParser.Visitors
             IsCollectionTranslator translator = new IsCollectionTranslator();
             var segment = CountSegment.Instance;
 
-            translator.Translate(segment).Should().Be(false);
+            translator.Translate(segment).Should().BeFalse();
         }
 
         [Fact]
@@ -85,7 +85,7 @@ namespace Microsoft.OData.Tests.UriParser.Visitors
             IsCollectionTranslator translator = new IsCollectionTranslator();
             var segment = new NavigationPropertyLinkSegment(HardCodedTestModel.GetPersonMyDogNavProp(), null);
 
-            translator.Translate(segment).Should().Be(false);
+            translator.Translate(segment).Should().BeFalse();
         }
 
         [Fact]
@@ -94,7 +94,7 @@ namespace Microsoft.OData.Tests.UriParser.Visitors
             IsCollectionTranslator translator = new IsCollectionTranslator();
             var segment = BatchSegment.Instance;
 
-            translator.Translate(segment).Should().Be(false);
+            translator.Translate(segment).Should().BeFalse();
         }
 
         [Fact]
@@ -104,7 +104,7 @@ namespace Microsoft.OData.Tests.UriParser.Visitors
             var segment = new BatchReferenceSegment(
                 "$0", HardCodedTestModel.GetDogType(), HardCodedTestModel.GetDogsSet());
 
-            translator.Translate(segment).Should().Be(false);
+            translator.Translate(segment).Should().BeFalse();
         }
 
         [Fact]
@@ -124,7 +124,7 @@ namespace Microsoft.OData.Tests.UriParser.Visitors
             IsCollectionTranslator translator = new IsCollectionTranslator();
             var segment = MetadataSegment.Instance;
 
-            translator.Translate(segment).Should().Be(false);
+            translator.Translate(segment).Should().BeFalse();
         }
     }
 }

@@ -266,34 +266,34 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         [Fact]
         public void IsCharHexDigitTest()
         {
-            UriParserHelper.IsCharHexDigit(' ').Should().Be(false);
-            UriParserHelper.IsCharHexDigit('0').Should().Be(true);
-            UriParserHelper.IsCharHexDigit('1').Should().Be(true);
-            UriParserHelper.IsCharHexDigit('9').Should().Be(true);
-            UriParserHelper.IsCharHexDigit(':').Should().Be(false);
-            UriParserHelper.IsCharHexDigit('A').Should().Be(true);
-            UriParserHelper.IsCharHexDigit('B').Should().Be(true);
-            UriParserHelper.IsCharHexDigit('F').Should().Be(true);
-            UriParserHelper.IsCharHexDigit('G').Should().Be(false);
-            UriParserHelper.IsCharHexDigit('a').Should().Be(true);
-            UriParserHelper.IsCharHexDigit('b').Should().Be(true);
-            UriParserHelper.IsCharHexDigit('f').Should().Be(true);
-            UriParserHelper.IsCharHexDigit('g').Should().Be(false);
+            UriParserHelper.IsCharHexDigit(' ').Should().BeFalse();
+            UriParserHelper.IsCharHexDigit('0').Should().BeTrue();
+            UriParserHelper.IsCharHexDigit('1').Should().BeTrue();
+            UriParserHelper.IsCharHexDigit('9').Should().BeTrue();
+            UriParserHelper.IsCharHexDigit(':').Should().BeFalse();
+            UriParserHelper.IsCharHexDigit('A').Should().BeTrue();
+            UriParserHelper.IsCharHexDigit('B').Should().BeTrue();
+            UriParserHelper.IsCharHexDigit('F').Should().BeTrue();
+            UriParserHelper.IsCharHexDigit('G').Should().BeFalse();
+            UriParserHelper.IsCharHexDigit('a').Should().BeTrue();
+            UriParserHelper.IsCharHexDigit('b').Should().BeTrue();
+            UriParserHelper.IsCharHexDigit('f').Should().BeTrue();
+            UriParserHelper.IsCharHexDigit('g').Should().BeFalse();
         }
 
         [Fact]
         public void TryRemoveQuotesTest()
         {
             string test = "' '";
-            UriParserHelper.TryRemoveQuotes(ref test).Should().Be(true);
+            UriParserHelper.TryRemoveQuotes(ref test).Should().BeTrue();
             test.Should().Be(" ");
 
             test = "invalid";
-            UriParserHelper.TryRemoveQuotes(ref test).Should().Be(false);
+            UriParserHelper.TryRemoveQuotes(ref test).Should().BeFalse();
             test.Should().Be("invalid");
 
             test = "'invalid";
-            UriParserHelper.TryRemoveQuotes(ref test).Should().Be(false);
+            UriParserHelper.TryRemoveQuotes(ref test).Should().BeFalse();
             test.Should().Be("'invalid");
         }
 

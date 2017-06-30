@@ -67,10 +67,10 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
 
             DummySegment segment2 = new DummySegment(segment);
             segment2.Identifier.Should().Be("blah");
-            segment.Equals(segment).Should().Be(true);
+            segment.Equals(segment).Should().BeTrue();
 
             segment2.Identifier = "different";
-            segment.Equals(segment2).Should().Be(false);
+            segment.Equals(segment2).Should().BeFalse();
         }
 
         [Fact]

@@ -56,7 +56,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             var segment = MetadataSegment.Instance;
             ODataPath odataPath = new ODataPath(segment);
             var result = UriEdmHelpers.GetMostDerivedTypeFromPath(odataPath, null);
-            result.Should().Be(null);
+            result.Should().BeNull();
         }
 
         [Fact]
@@ -65,7 +65,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             var segment = new TypeSegment(HardCodedTestModel.GetHomeAddressType(), null);
             ODataPath odataPath = new ODataPath(segment);
             var result = UriEdmHelpers.GetMostDerivedTypeFromPath(odataPath, null);
-            result.Should().Be(null);
+            result.Should().BeNull();
         }
 
         [Fact]

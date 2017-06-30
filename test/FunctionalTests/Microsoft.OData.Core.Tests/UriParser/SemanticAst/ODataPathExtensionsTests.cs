@@ -53,7 +53,7 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
                 new EntitySetSegment(entitySet)
             });
 
-            path.IsCollection().Should().Be(true);
+            path.IsCollection().Should().BeTrue();
         }
 
         [Fact]
@@ -65,7 +65,7 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
                 new PropertySegment(property)
             });
 
-            path.IsCollection().Should().Be(false);
+            path.IsCollection().Should().BeFalse();
         }
 
         [Fact]

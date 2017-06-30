@@ -88,13 +88,13 @@ namespace Microsoft.OData.Tests.UriParser
         [Fact]
         public void CommaTokenIsKeyValueShouldReturnFalse()
         {
-            CommaToken.IsKeyValueToken.Should().Be(false);
+            CommaToken.IsKeyValueToken.Should().BeFalse();
         }
 
         [Fact]
         public void CommaTokenIsFunctionParameterTokenShouldReturnFalse()
         {
-            CommaToken.IsFunctionParameterToken.Should().Be(false);
+            CommaToken.IsFunctionParameterToken.Should().BeFalse();
         }
 
         // internal static bool IsInfinityOrNaNDouble(string tokenText)
