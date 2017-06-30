@@ -210,7 +210,7 @@ namespace Microsoft.OData.Tests
             referencelinks.InstanceAnnotations.Add(new ODataInstanceAnnotation("TestNamespace.name", new ODataPrimitiveValue(321)));
             referencelinks.InstanceAnnotations.Add(new ODataInstanceAnnotation("custom.name", new ODataPrimitiveValue(654)));
             string payload = "{\"@odata.context\":\"http://odata.org/test/$metadata#Collection($ref)\",\"@TestNamespace.name\":321,\"value\":[{\"@odata.id\":\"http://host/Customers(1)\",\"@Is.New\":true},{\"@odata.id\":\"http://host/Customers(2)\",\"@TestNamespace.unknown\":123,\"@custom.annotation\":456}],\"@custom.name\":654}";
-   
+
             var deserializer = this.CreateJsonLightEntryAndFeedDeserializer(payload);
             ODataEntityReferenceLinks links = deserializer.ReadEntityReferenceLinks();
             SameEntityReferenceLinks(referencelinks, links);
@@ -300,6 +300,45 @@ namespace Microsoft.OData.Tests
         }
 
         [Fact]
+        public void ShouldReadEntityReferenceCountAnnotationValue()
+        {
+            string payload = @"{
+                ""@odata.count"":2,
+                ""@odata.context"":""http://odata.org/test/$metadata#Collection($ref)"",
+                ""@TestNamespace.name"":321,
+                ""@custom.name"":654,
+                ""value"":[
+                    {""@odata.id"":""http://host/Customers(1)"",""@Is.New"":true},
+                    {""@odata.id"":""http://host/Customers(2)"",""@TestNamespace.unknown"":123,""@custom.annotation"":456}
+                ]
+            }";
+
+            ODataJsonLightEntityReferenceLinkDeserializer deserializer =
+                this.CreateJsonLightEntryAndFeedDeserializer(payload);
+
+            ODataEntityReferenceLinks links = deserializer.ReadEntityReferenceLinks();
+            links.Count.Should().Be(2);
+        }
+
+        [Fact]
+        public void ShouldReadEntityReferenceNextLinkAnnotationValue()
+        {
+            string payload = @"{
+                ""@odata.context"":""http://odata.org/test/$metadata#Collection($ref)"",
+                ""@odata.nextLink"":""http://odata.org/nextpage"",
+                ""@TestNamespace.name"":321,
+                ""@custom.name"":654,
+                ""value"":[]
+            }";
+
+            ODataJsonLightEntityReferenceLinkDeserializer deserializer =
+                this.CreateJsonLightEntryAndFeedDeserializer(payload);
+
+            ODataEntityReferenceLinks links = deserializer.ReadEntityReferenceLinks();
+            links.NextPageLink.Should().Be("http://odata.org/nextpage");
+        }
+
+        [Fact]
         public void ShouldWriteAndReadForEntityReferenceLinksWithReferenceLinksAnnotation()
         {
             ODataEntityReferenceLink link1 = new ODataEntityReferenceLink
@@ -321,7 +360,7 @@ namespace Microsoft.OData.Tests
 
             referencelinks.InstanceAnnotations.Add(new ODataInstanceAnnotation("TestNamespace.name", new ODataPrimitiveValue(321)));
             referencelinks.InstanceAnnotations.Add(new ODataInstanceAnnotation("custom.name", new ODataPrimitiveValue(654)));
-            
+
             string midplayoad = WriteToString(referencelinks, writingResponse: false);
             var deserializer = this.CreateJsonLightEntryAndFeedDeserializer(midplayoad);
             ODataEntityReferenceLinks links = deserializer.ReadEntityReferenceLinks();
