@@ -308,37 +308,6 @@ namespace AstoriaUnitTests.Tests
             }
         }
 
-        /// <summary>Verifies that cache-control is set to no-cache by default.</summary>
-        [TestCategory("Partition2"), TestMethod]
-        [Ignore]
-        public void AtomSerializerCacheControlTest()
-        {
-            CombinatorialEngine engine = CombinatorialEngine.FromDimensions(
-                new Dimension("WebServerLocation", new object[] { WebServerLocation.InProcess, WebServerLocation.InProcessWcf, WebServerLocation.Local }));
-            TestUtil.RunCombinatorialEngineFail(engine, delegate(Hashtable values)
-            {
-                WebServerLocation location = (WebServerLocation)values["WebServerLocation"];
-                using (TestWebRequest request = TestWebRequest.CreateForLocation(location))
-                {
-                    request.DataServiceType = typeof(CustomDataContext);
-                    request.RequestUriString = "/Customers";
-                    request.SendRequest();
-                    using (StreamReader reader = new StreamReader(request.GetResponseStream()))
-                    {
-                        string text = reader.ReadToEnd();
-                        if (request.ResponseStatusCode == 304)
-                        {
-                            AstoriaTestLog.IsNull(request.ResponseCacheControl);  
-                        }
-                        else
-                        {
-                            AstoriaTestLog.AreEqual("no-cache", request.ResponseCacheControl);  
-                        }   
-                    }
-                }
-            });
-        }
-
         /// <summary>Verifies that all serializers return correct date values.</summary>
         [Ignore] // Remove Atom
         [TestCategory("Partition2"), TestMethod]

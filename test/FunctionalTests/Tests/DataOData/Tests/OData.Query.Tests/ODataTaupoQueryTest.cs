@@ -103,23 +103,5 @@ namespace Microsoft.Test.Taupo.OData.Query.Tests
             container.RegisterInstance(container);
             container.InjectDependenciesInto(this);
         }
-
-        /// <summary>
-        /// Sample test to ensure query test infrastructure is not broken
-        /// </summary>
-        [Ignore] // Not fixing later as this whole test suite is deprecated. 
-        [TestMethod, Variation]
-        public void TaupoQueryTest()
-        {
-            var entitySet = this.Workspace.ConceptualModel.EntityContainers.First().EntitySets.SingleOrDefault(e => e.Name == "Customer");
-            var root = CommonQueryBuilder.Root(entitySet);
-            var query = root.Where(c => c.Property("CustomerId").EqualTo(CommonQueryBuilder.Constant(1)));
-            this.Verifier.Verify(query);
-
-            entitySet = this.Workspace.ConceptualModel.EntityContainers.First().EntitySets.SingleOrDefault(e => e.Name == "Customer");
-            root = CommonQueryBuilder.Root(entitySet);
-            query = root.OrderBy(cust => cust.Property("CustomerId"));
-            this.Verifier.Verify(query);
-        }
     }
 }

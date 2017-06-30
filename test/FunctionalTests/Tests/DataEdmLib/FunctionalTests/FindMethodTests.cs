@@ -152,13 +152,6 @@ namespace EdmLibTests.FunctionalTests
             this.BasicFindMethodsTest(ModelBuilder.ComplexTypeAttributesEdm());
         }
 
-        [Ignore] // Failed in FI
-        [TestMethod]
-        public void FindMethodTestComplexTypeWithBaseType()
-        {
-            this.BasicFindMethodsTest(ModelBuilder.ComplexTypeWithBaseType(this.EdmVersion));
-        }
-
         [TestMethod]
         public void FindMethodTestEntityContainerAttributes()
         {

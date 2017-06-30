@@ -1734,41 +1734,6 @@ namespace AstoriaUnitTests.Tests
             #endregion Stream Provider API Tests
 
             #region Cross Feature Tests
-            
-            [TestMethod]
-            [Ignore]
-                public void NamedStreamReflectionBasicScenarioBatchingTest()
-            {
-                string batchRequestsDirectory = Path.Combine(TestUtil.ServerUnitTestSamples, @"tests\BatchRequests");
-                string requestFilename = Path.Combine(batchRequestsDirectory, "NamedStreamRequest.txt");
-                string responseFilename = Path.Combine(batchRequestsDirectory, "NamedStreamResponse.txt");
-                string requestTxt = File.ReadAllText(requestFilename);
-
-                using (TestUtil.RestoreStaticValueOnDispose(typeof(TypedCustomDataContext<MyEntityWithNamedStreams>), "PreserveChanges"))
-                using (TestUtil.RestoreStaticValueOnDispose(typeof(OpenWebDataServiceHelper), "ForceVerboseErrors"))
-                using (OpenWebDataServiceHelper.GetServiceCustomizer.Restore())
-                using (TestUtil.MetadataCacheCleaner())
-                {
-                    OpenWebDataServiceHelper.ForceVerboseErrors = true;
-                    TypedCustomDataContext<MyEntityWithNamedStreams>.ClearHandlers();
-                    TypedCustomDataContext<MyEntityWithNamedStreams>.ClearValues();
-                    TypedCustomDataContext<MyEntityWithNamedStreams>.PreserveChanges = true;
-
-                    DSPMediaResourceStorage storage = new DSPMediaResourceStorage();
-                    OpenWebDataServiceHelper.GetServiceCustomizer.Value = (t) =>
-                    {
-                        if (t == typeof(providers.IDataServiceStreamProvider2))
-                        {
-                            return new TypedCustomStreamProvider2<MyEntityWithNamedStreams>(storage);
-                        }
-
-                        return null;
-                    };
-
-                    string actualResponse = BatchTestUtil.GetResponse(requestTxt, typeof(TypedCustomDataContext<MyEntityWithNamedStreams>), WebServerLocation.InProcess);
-                    BatchTestUtil.CompareBatchResponse(responseFilename, actualResponse);
-                }
-            }
 
             [NamedStream("Stream1")]
             [NamedStream("Stream2")]

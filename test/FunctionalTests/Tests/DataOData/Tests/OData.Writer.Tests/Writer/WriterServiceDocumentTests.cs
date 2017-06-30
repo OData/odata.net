@@ -62,12 +62,10 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 });
         }
 
-        [Ignore] // Remove Atom
         [TestMethod, Variation(Description = "Tests the behavior of the Name property on a resource collection.")]
         public void ResourceCollectionNamePropertyTests()
         {
             // The behavior of the Name property depends on the format.
-            // ATOM: We use it to populate the <title> element if no title has been specified on the ATOM metadata annotation. If there is both a title annotation and a Name property, they must match or else we'll fail.
             // JSON Light: The Name property is required and written to the "name" property in the format.
 
             IList<CollectionInfo> interestingCollections =

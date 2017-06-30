@@ -313,50 +313,6 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
                 });
         }
 
-
-        [Ignore] // Remove Atom
-        [TestMethod, TestCategory("Reader.PrimitiveValues"), Variation(Description = "Verifies correct reading of spatial properties when type conversion is disabled.")]
-        public void SpatialPropertyWithDisabledPrimitiveTypeConversionTest()
-        {
-            IEdmModel testModel = TestModels.BuildTestModel();
-
-            var testValues = new object[]
-                {
-                    GeographyFactory.Point(10, 20).Build(),
-                    GeometryFactory.Point(10, 20).Build()
-                };
-
-            IEnumerable<PayloadReaderTestDescriptor> testDescriptors =
-                TestValues.PrimitiveTypes.SelectMany(primitiveTypes => testValues.Select(testValue =>
-                {
-                    PrimitiveDataType targetType = EntityModelUtils.GetPrimitiveEdmType(primitiveTypes);
-                    ODataPayloadElement payloadElement = PayloadBuilder
-                        .Property(null, PayloadBuilder.PrimitiveValue(testValue))
-                        .ExpectedPropertyType(targetType);
-                    return new PayloadReaderTestDescriptor(this.Settings)
-                    {
-                        PayloadElement = payloadElement,
-                        PayloadEdmModel = testModel
-                    };
-                }));
-
-            // TODO: Task 1429690:Fix places where we've lost JsonVerbose coverage to add JsonLight
-            this.CombinatorialEngineProvider.RunCombinations(
-                testDescriptors,
-                new bool[] { false, true },
-                this.ReaderTestConfigurationProvider.ExplicitFormatConfigurations.Where(tc => false),
-                (testDescriptor, disableStrictValidation, testConfig) =>
-                {
-                    testConfig = new ReaderTestConfiguration(testConfig);
-                    testConfig.MessageReaderSettings.EnablePrimitiveTypeConversion = false;
-                    if (disableStrictValidation)
-                    {
-                        testConfig = testConfig.CloneAndApplyBehavior(TestODataBehaviorKind.WcfDataServicesServer);
-                    }
-                    testDescriptor.RunTest(testConfig);
-                });
-        }
-
         /// <summary>
         /// Computes the content type header for a primitive value based on its type.
         /// </summary>

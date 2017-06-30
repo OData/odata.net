@@ -38,8 +38,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="MultiBindingModel.cs" />
-    <Compile Include="StreamingReadWriteTests.cs" />
-    <Compile Include="StreamingWriteReadTests.cs" />
     <Compile Include="Streaming\ObjectModelReadWriteStreamer.cs" />
     <Compile Include="Streaming\ObjectModelWriteReadStreamer.cs" />
     <Compile Include="Streaming\ODataStreamingTestCase.cs" />

@@ -64,7 +64,6 @@ namespace AstoriaUnitTests
             VerifyTestCategoryAttributes("Microsoft.Data.ServerUnitTests2.UnitTests.dll", new[] { "Partition1", "Partition2" });
         }
 
-        [Ignore] // Remove Atom
         [TestMethod]
         public void VerifyWebClientUnitTestsCategories()
         {

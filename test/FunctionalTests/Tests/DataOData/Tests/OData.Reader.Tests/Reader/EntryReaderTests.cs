@@ -296,78 +296,6 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
                 });
         }
 
-        [Ignore] // remove undeclared/untyped property case
-        [TestMethod, TestCategory("Reader.Entries"), Variation(Description = "Verifies error cases of undeclared properties in closed entity types with metadata.")]
-        public void UndeclaredClosedPropertyTest()
-        {
-            EdmModel model = new EdmModel();
-            var entityType = new EdmEntityType("TestModel", "ClosedEntityType");
-            entityType.AddKeys(entityType.AddStructuralProperty("ID", EdmCoreModel.Instance.GetInt32(false)));
-            model.AddElement(entityType);
-            var complexType = new EdmComplexType("TestModel", "DeclaredComplexType");
-            complexType.AddStructuralProperty("foo", EdmCoreModel.Instance.GetString(true));
-            model.AddElement(complexType);
-            var container = new EdmEntityContainer("TestModel", "DefaultContainer");
-            container.AddEntitySet("ClosedEntitySet", entityType);
-            model.AddElement(container);
-
-            string propertyName = "UndeclaredProperty";
-
-            // Test various types of properties, all of which are undeclared in metadata.
-            IEnumerable<PropertyInstance> testCases = new PropertyInstance[]
-            {
-                // Primitive property
-                PayloadBuilder.PrimitiveProperty(propertyName, 15),
-                // Complex property
-                PayloadBuilder.Property(propertyName,
-                    PayloadBuilder.ComplexValue("TestModel.DeclaredComplexType").PrimitiveProperty("foo", "bar")),
-                // Stream property
-                PayloadBuilder.StreamProperty(propertyName, "http://odata.org/readlink"),
-                // Collection property (over primitive type)
-                PayloadBuilder.Property(propertyName,
-                    PayloadBuilder.PrimitiveMultiValue(EntityModelUtils.GetCollectionTypeName("Edm.Boolean"))),
-                // Collection property (over declared complex type)
-                PayloadBuilder.Property(propertyName,
-                    PayloadBuilder.ComplexMultiValue(EntityModelUtils.GetCollectionTypeName("TestModel.DeclaredComplexType"))),
-                // Collection property (over undeclared complex type)
-                PayloadBuilder.Property(propertyName,
-                    PayloadBuilder.ComplexMultiValue(EntityModelUtils.GetCollectionTypeName("TestModel.UndeclaredComplexType"))),
-                // Navigation property
-                PayloadBuilder.NavigationProperty(propertyName, "http://odata.org/navlink"),
-            };
-
-            IEnumerable<PayloadReaderTestDescriptor> testDescriptors = testCases.Select(testCase =>
-            {
-                return new PayloadReaderTestDescriptor(this.Settings)
-                {
-                    PayloadElement = PayloadBuilder.Entity("TestModel.ClosedEntityType")
-                        .PrimitiveProperty("ID", 42)
-                        .Property(testCase),
-                    PayloadEdmModel = model,
-                    ExpectedResultCallback =
-                        (tc) => new PayloadReaderTestExpectedResult(this.Settings.ExpectedResultSettings)
-                        {
-                            ExpectedException = (tc.Format == ODataFormat.Json && testCase is NavigationPropertyInstance)
-                                ? tc.IsRequest
-                                    ? ODataExpectedExceptions.ODataException("ODataJsonLightResourceDeserializer_PropertyWithoutValueWithUnknownType", propertyName)
-                                    : ODataExpectedExceptions.ODataException("ValidationUtils_PropertyDoesNotExistOnType", propertyName, "TestModel.ClosedEntityType")
-                                : ODataExpectedExceptions.ODataException("ValidationUtils_PropertyDoesNotExistOnType", propertyName, "TestModel.ClosedEntityType"),
-                        },
-                    SkipTestConfiguration = tc => testCase is NamedStreamInstance && tc.IsRequest
-                };
-            });
-
-            testDescriptors = testDescriptors.SelectMany(td => this.PayloadGenerator.GenerateReaderPayloads(td));
-
-            this.CombinatorialEngineProvider.RunCombinations(
-                testDescriptors,
-                this.ReaderTestConfigurationProvider.ExplicitFormatConfigurations,
-                (testDescriptor, testConfiguration) =>
-                {
-                    testDescriptor.RunTest(testConfiguration);
-                });
-        }
-
         [TestMethod, TestCategory("Reader.Entries"), Variation(Description = "Verifies duplicate property name checking on entries.")]
         public void DuplicatePropertyNamesTest()
         {
@@ -1289,33 +1217,6 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
                 PayloadBuilder.ExpandedNavigationProperty("UndeclaredProperty", PayloadBuilder.EntitySet(), null, "http://odata.org/associationLink"),
             };
 
-        [Ignore] // remove undeclared/untyped property case
-        [TestMethod, TestCategory("Reader.Entries"), Variation(Description = "Verifies that UndeclaredPropertyBehaviorKinds setting behaves correctly.")]
-        public void UndeclaredPropertyJsonLightTest()
-        {
-            this.CombinatorialEngineProvider.RunCombinations(
-                new[] { false, true },
-                throwOnUndeclaredPropertyForNonOpenType =>
-                {
-                    var testDescriptors = CreateUndeclaredPropertyTestDescriptors(throwOnUndeclaredPropertyForNonOpenType, this.JsonLightSettings);
-
-                    // Expanded links behave differently between ATOM and JSON so their tests are in the respective format places.
-                    this.CombinatorialEngineProvider.RunCombinations(
-                        testDescriptors,
-                        this.ReaderTestConfigurationProvider.JsonLightFormatConfigurations.Where(tc => !tc.IsRequest),
-                        (testDescriptor, testConfiguration) =>
-                        {
-                            testConfiguration = new ReaderTestConfiguration(testConfiguration);
-                            if (!throwOnUndeclaredPropertyForNonOpenType)
-                            {
-                                testConfiguration.MessageReaderSettings.Validations &= ~ValidationKinds.ThrowOnUndeclaredPropertyForNonOpenType;
-                            }
-
-                            testDescriptor.RunTest(testConfiguration);
-                        });
-                });
-        }
-
         private IEnumerable<PayloadReaderTestDescriptor> CreateUndeclaredPropertyTestDescriptors(bool throwOnUndeclaredPropertyForNonOpenType, PayloadReaderTestDescriptor.Settings settings)
         {
             IEdmModel model = TestModels.BuildTestModel();
@@ -1468,39 +1369,6 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
                         descriptor.RunTest(testConfiguration);
                     }
                 });
-        }
-
-        [Ignore] // remove undeclared/untyped property case
-        [TestMethod, TestCategory("Reader.Entries"), Variation(Description = "Verifies that UndeclaredPropertyBehavior setting behaves correctly when combined with open type.")]
-        public void UndeclaredPropertyOnOpenTypeTest()
-        {
-            var propertiesWhichSucceed = new[]
-            {
-                PayloadBuilder.PrimitiveProperty("UndeclaredProperty", "test"),
-                PayloadBuilder.PrimitiveProperty("UndeclaredProperty", GeographyFactory.Point(0, 32).Build()),
-                PayloadBuilder.Property("UndeclaredProperty", PayloadBuilder.ComplexValue("TestModel.ComplexType")),
-            };
-
-            var testCases = propertiesWhichSucceed.Select(
-                undeclaredProperty => new PayloadReaderTestDescriptor(this.Settings)
-                {
-                    PayloadElement = PayloadBuilder.Entity("TestModel.EntityType").PrimitiveProperty("Id", 42).Property(undeclaredProperty),
-                });
-
-            var propertiesWhichFailDueToUnrecognizedComplexType = new[]
-            {
-                PayloadBuilder.Property("UndeclaredProperty", PayloadBuilder.ComplexValue("TestModel.Wrong").PrimitiveProperty("NonExistant", "First")),
-                PayloadBuilder.Property("UndeclaredProperty", PayloadBuilder.ComplexMultiValue("Collection(TestModel.Wrong)").Item(PayloadBuilder.ComplexValue("TestModel.Wrong"))),
-            };
-
-            testCases = testCases.Concat(propertiesWhichFailDueToUnrecognizedComplexType.Select(
-                undeclaredProperty => new PayloadReaderTestDescriptor(this.Settings)
-                {
-                    PayloadElement = PayloadBuilder.Entity("TestModel.EntityType").PrimitiveProperty("Id", 42).Property(undeclaredProperty),
-                    ExpectedException = ODataExpectedExceptions.ODataException("ValidationUtils_UnrecognizedTypeName", undeclaredProperty is ComplexProperty ? "TestModel.Wrong" : "Collection(TestModel.Wrong)"),
-                }));
-
-            RunCombinationsForUndeclaredPropertyBehavior(testCases, false);
         }
 
         [TestMethod, TestCategory("Reader.Entries"), Variation(Description = "Verifies that UndeclaredPropertyBehavior setting behaves correctly when combined with open type.")]
