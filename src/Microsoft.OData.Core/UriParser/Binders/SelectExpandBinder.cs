@@ -166,7 +166,7 @@ namespace Microsoft.OData.UriParser
         /// Build a expand clause for a nested expand.
         /// </summary>
         /// <returns>A new SelectExpandClause.</returns>
-        private SelectExpandClause BuildDefaultSubExpand()
+        private static SelectExpandClause BuildDefaultSubExpand()
         {
             return new SelectExpandClause(new Collection<SelectItem>(), true);
         }
@@ -295,7 +295,7 @@ namespace Microsoft.OData.UriParser
 
             subSelectExpand = this.DecorateExpandWithSelect(subSelectExpand, currentNavProp, tokenIn.SelectOption);
 
-            LevelsClause levelsOption = this.ParseLevels(tokenIn.LevelsOption, currentLevelEntityType, currentNavProp);
+            LevelsClause levelsOption = ParseLevels(tokenIn.LevelsOption, currentLevelEntityType, currentNavProp);
             return new ExpandedNavigationSelectItem(pathToNavProp, targetNavigationSource, subSelectExpand, filterOption, orderbyOption, tokenIn.TopOption, tokenIn.SkipOption, tokenIn.CountQueryOption, searchOption, levelsOption, computeOption);
         }
 
@@ -360,7 +360,7 @@ namespace Microsoft.OData.UriParser
         /// <param name="sourceType">The type of current level navigation source.</param>
         /// <param name="property">Navigation property for current expand.</param>
         /// <returns>The LevelsClause parsed, null if levelsOption is null</returns>
-        private LevelsClause ParseLevels(long? levelsOption, IEdmType sourceType, IEdmNavigationProperty property)
+        private static LevelsClause ParseLevels(long? levelsOption, IEdmType sourceType, IEdmNavigationProperty property)
         {
             if (!levelsOption.HasValue)
             {

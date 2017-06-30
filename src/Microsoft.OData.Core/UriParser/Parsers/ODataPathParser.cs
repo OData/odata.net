@@ -336,7 +336,7 @@ namespace Microsoft.OData.UriParser
 
             if (this.parsedSegments.Count > 0)
             {
-                this.ThrowIfMustBeLeafSegment(this.parsedSegments[this.parsedSegments.Count - 1]);
+                ThrowIfMustBeLeafSegment(this.parsedSegments[this.parsedSegments.Count - 1]);
             }
 
             return true;
@@ -375,7 +375,7 @@ namespace Microsoft.OData.UriParser
         /// Throws if the given segment must be a leaf, as a later segment is being created.
         /// </summary>
         /// <param name="previous">The previous segment which may need to be a leaf.</param>
-        private void ThrowIfMustBeLeafSegment(ODataPathSegment previous)
+        private static void ThrowIfMustBeLeafSegment(ODataPathSegment previous)
         {
             OperationImportSegment operationImportSegment = previous as OperationImportSegment;
             if (operationImportSegment != null)
@@ -828,7 +828,7 @@ namespace Microsoft.OData.UriParser
                 // The parameters in the parathesis is a key segment.
                 if (this.TryBindKeyFromParentheses(parenthesisExpression))
                 {
-                    this.ThrowIfMustBeLeafSegment(segment);
+                    ThrowIfMustBeLeafSegment(segment);
                 }
             }
         }

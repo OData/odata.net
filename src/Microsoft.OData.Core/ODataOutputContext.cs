@@ -368,9 +368,9 @@ namespace Microsoft.OData
         /// <summary>
         /// Writes an <see cref="ODataProperty"/> as message payload.
         /// </summary>
-        /// <param name="property">The property to write.</param>
+        /// <param name="odataProperty">The OData property to write.</param>
         /// <remarks>It is the responsibility of this method to flush the output before the method returns.</remarks>
-        public virtual void WriteProperty(ODataProperty property)
+        public virtual void WriteProperty(ODataProperty odataProperty)
         {
             throw this.CreatePayloadKindNotSupportedException(ODataPayloadKind.Property);
         }
@@ -379,10 +379,10 @@ namespace Microsoft.OData
         /// <summary>
         /// Asynchronously writes an <see cref="ODataProperty"/> as message payload.
         /// </summary>
-        /// <param name="property">The property to write</param>
-        /// <returns>A task representing the asynchronous operation of writing the property.</returns>
+        /// <param name="odataProperty">The OData property to write</param>
+        /// <returns>A task representing the asynchronous operation of writing the OData property.</returns>
         /// <remarks>It is the responsibility of this method to flush the output before the task finishes.</remarks>
-        public virtual Task WritePropertyAsync(ODataProperty property)
+        public virtual Task WritePropertyAsync(ODataProperty odataProperty)
         {
             throw this.CreatePayloadKindNotSupportedException(ODataPayloadKind.Property);
         }
@@ -391,13 +391,13 @@ namespace Microsoft.OData
         /// <summary>
         /// Writes an <see cref="ODataError"/> as the message payload.
         /// </summary>
-        /// <param name="error">The error to write.</param>
+        /// <param name="odataError">The OData error to write.</param>
         /// <param name="includeDebugInformation">
-        /// A flag indicating whether debug information (e.g., the inner error from the <paramref name="error"/>) should
+        /// A flag indicating whether debug information (e.g., the inner error from the <paramref name="odataError"/>) should
         /// be included in the payload. This should only be used in debug scenarios.
         /// </param>
         /// <remarks>It is the responsibility of this method to flush the output before the method returns.</remarks>
-        public virtual void WriteError(ODataError error, bool includeDebugInformation)
+        public virtual void WriteError(ODataError odataError, bool includeDebugInformation)
         {
             throw this.CreatePayloadKindNotSupportedException(ODataPayloadKind.Error);
         }
@@ -406,14 +406,14 @@ namespace Microsoft.OData
         /// <summary>
         /// Asynchronously writes an <see cref="ODataError"/> as the message payload.
         /// </summary>
-        /// <param name="error">The error to write.</param>
+        /// <param name="odataError">The error to write.</param>
         /// <param name="includeDebugInformation">
-        /// A flag indicating whether debug information (e.g., the inner error from the <paramref name="error"/>) should
+        /// A flag indicating whether debug information (e.g., the inner error from the <paramref name="odataError"/>) should
         /// be included in the payload. This should only be used in debug scenarios.
         /// </param>
         /// <returns>A task representing the asynchronous operation of writing the error.</returns>
         /// <remarks>It is the responsibility of this method to flush the output before the task finishes.</remarks>
-        public virtual Task WriteErrorAsync(ODataError error, bool includeDebugInformation)
+        public virtual Task WriteErrorAsync(ODataError odataError, bool includeDebugInformation)
         {
             throw this.CreatePayloadKindNotSupportedException(ODataPayloadKind.Error);
         }
