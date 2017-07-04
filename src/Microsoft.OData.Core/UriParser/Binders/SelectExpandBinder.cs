@@ -382,7 +382,6 @@ namespace Microsoft.OData.UriParser
         /// </summary>
         /// <param name="targetNavigationSource">The navigation source being expanded.</param>
         /// <returns>A new MetadataBinder ready to bind a Filter or Orderby clause.</returns>
-        [SuppressMessage("DataWeb.Usage", "AC0003:MethodCallNotAllowed", Justification = "Rule only applies to ODataLib Serialization code.")]
         private MetadataBinder BuildNewMetadataBinder(IEdmNavigationSource targetNavigationSource)
         {
             BindingState state = new BindingState(this.configuration)

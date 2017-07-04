@@ -56,7 +56,6 @@ namespace Microsoft.OData.Metadata
         /// </summary>
         /// <param name="operationImport">The operation import to get the return type from.</param>
         /// <returns>The <see cref="IEdmType"/> representing the return type fo the <paramref name="operationImport"/>.</returns>
-        [SuppressMessage("DataWeb.Usage", "AC0003:MethodCallNotAllowed", Justification = "operationImport.ReturnType is allowed here and the reader code paths should call this method to get to the ReturnType of a operation import.")]
         internal override IEdmTypeReference GetReturnType(IEdmOperationImport operationImport)
         {
             if (operationImport != null && operationImport.Operation.ReturnType != null)
@@ -94,7 +93,6 @@ namespace Microsoft.OData.Metadata
         /// </summary>
         /// <param name="operationParameter">The operation parameter to resolve the type for.</param>
         /// <returns>The <see cref="IEdmTypeReference"/> representing the type on the operation parameter; or null if no such type could be found.</returns>
-        [SuppressMessage("DataWeb.Usage", "AC0003:MethodCallNotAllowed", Justification = "operationParameter.Type is allowed here and the reader code paths should call this method to get to the Type of a operation parameter.")]
         internal override IEdmTypeReference GetParameterType(IEdmOperationParameter operationParameter)
         {
             return operationParameter == null ? null : this.ResolveTypeReference(operationParameter.Type);

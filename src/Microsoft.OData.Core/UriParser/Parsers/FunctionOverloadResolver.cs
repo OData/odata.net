@@ -29,7 +29,6 @@ namespace Microsoft.OData.UriParser
         /// <param name="matchingOperationImport">The single matching function found.</param>
         /// <param name="resolver">Resolver to be used.</param>
         /// <returns>True if a function was matched, false otherwise. Will throw if the model has illegal operation imports.</returns>
-        [SuppressMessage("DataWeb.Usage", "AC0014:DoNotHandleProhibitedExceptionsRule", Justification = "ExceptionUtils.IsCatchableExceptionType is being used correctly")]
         internal static bool ResolveOperationImportFromList(string identifier, IList<string> parameterNames, IEdmModel model, out IEdmOperationImport matchingOperationImport, ODataUriResolver resolver)
         {
             IList<IEdmOperationImport> candidateMatchingOperationImports = null;
@@ -118,7 +117,6 @@ namespace Microsoft.OData.UriParser
         /// <param name="matchingOperation">The single matching function found.</param>
         /// <param name="resolver">Resolver to be used.</param>
         /// <returns>True if a function was matched, false otherwise. Will throw if the model has illegal operation imports.</returns>
-        [SuppressMessage("DataWeb.Usage", "AC0014:DoNotHandleProhibitedExceptionsRule", Justification = "ExceptionUtils.IsCatchableExceptionType is being used correctly")]
         internal static bool ResolveOperationFromList(string identifier, IEnumerable<string> parameterNames, IEdmType bindingType, IEdmModel model, out IEdmOperation matchingOperation, ODataUriResolver resolver)
         {
             // TODO: update code that is duplicate between operation and operation import, add more tests.

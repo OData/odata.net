@@ -359,7 +359,6 @@ namespace Microsoft.OData
         /// </summary>
         /// <param name="serviceDocumentElement">The element in service document to validate.</param>
         /// <param name="format">Format that is being validated.</param>
-        [SuppressMessage("DataWeb.Usage", "AC0010", Justification = "Usage of ToString is safe in this context")]
         internal static void ValidateServiceDocumentElement(ODataServiceDocumentElement serviceDocumentElement, ODataFormat format)
         {
             if (serviceDocumentElement == null)

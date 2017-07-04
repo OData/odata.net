@@ -183,8 +183,6 @@ namespace Microsoft.OData.Metadata
         /// <param name="operations">The operations.</param>
         /// <param name="bindingType">Type of the binding.</param>
         /// <returns>The closest Bound Operations to the specified binding type.</returns>
-        [SuppressMessage("DataWeb.Usage", "AC0003:MethodCallNotAllowed",
-            Justification = "Parameter type is needed to get binding type.")]
         internal static IEnumerable<IEdmOperation> FilterBoundOperationsWithSameTypeHierarchyToTypeClosestToBindingType(this IEnumerable<IEdmOperation> operations, IEdmType bindingType)
         {
             Debug.Assert(operations != null, "operations");
@@ -1700,8 +1698,6 @@ namespace Microsoft.OData.Metadata
         /// </summary>
         /// <param name="operation">Operation in question.</param>
         /// <returns>Comma separated operation parameter types enclosed in parantheses.</returns>
-        [SuppressMessage("DataWeb.Usage", "AC0003:MethodCallNotAllowed",
-            Justification = "This method is used for matching the name of the operation to something written by the server. So using the name is safe without resolving the type from the client.")]
         private static string ParameterTypesToString(this IEdmOperation operation)
         {
             // TODO: Resolve duplication of operationImport and operation
@@ -1770,8 +1766,6 @@ namespace Microsoft.OData.Metadata
         /// </summary>
         /// <param name="operationImport">Function import in question.</param>
         /// <returns>Comma separated operation import parameter types enclosed in parantheses.</returns>
-        [SuppressMessage("DataWeb.Usage", "AC0003:MethodCallNotAllowed",
-            Justification = "This method is used for matching the name of the operation import to something written by the server. So using the name is safe without resolving the type from the client.")]
         private static string ParameterTypesToString(this IEdmOperationImport operationImport)
         {
             // TODO: Resolve duplication of operationImport and operation

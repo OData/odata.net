@@ -534,7 +534,6 @@ namespace Microsoft.OData.JsonLight
         /// <param name="messageStream">The stream to read data from.</param>
         /// <param name="encoding">The encoding to use to read the input.</param>
         /// <returns>The newly created text reader.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("DataWeb.Usage", "AC0014", Justification = "Throws every time")]
         private static TextReader CreateTextReader(Stream messageStream, Encoding encoding)
         {
             Debug.Assert(messageStream != null, "messageStream != null");

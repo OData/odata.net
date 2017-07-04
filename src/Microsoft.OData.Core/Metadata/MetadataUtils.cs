@@ -90,7 +90,6 @@ namespace Microsoft.OData.Metadata
         /// even if the method returns null, for example for Collection types with item types which are not recognized.</param>
         /// <returns>The <see cref="IEdmType"/> representing the type specified by the <paramref name="typeName"/>;
         /// or null if no such type could be found.</returns>
-        [SuppressMessage("DataWeb.Usage", "AC0003:MethodCallNotAllowed", Justification = "IEdmModel.FindType is allowed here and all other places should call this method to get to the type.")]
         internal static IEdmType ResolveTypeName(
             IEdmModel model,
             IEdmType expectedType,
@@ -153,7 +152,6 @@ namespace Microsoft.OData.Metadata
         /// <param name="model">The model to search for operations.</param>
         /// <param name="edmTypeResolver">The edm type resolver to get the parameter type.</param>
         /// <returns>An enumeration of operations that are always bindable to the given type.</returns>
-        [SuppressMessage("DataWeb.Usage", "AC0014:DoNotHandleProhibitedExceptionsRule", Justification = "ExceptionUtils.IsCatchableExceptionType is being used correctly")]
         internal static IEdmOperation[] CalculateBindableOperationsForType(IEdmType bindingType, IEdmModel model, EdmTypeResolver edmTypeResolver)
         {
             Debug.Assert(model != null, "model != null");

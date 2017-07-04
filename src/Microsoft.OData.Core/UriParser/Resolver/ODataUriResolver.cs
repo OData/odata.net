@@ -134,7 +134,6 @@ namespace Microsoft.OData.UriParser
         /// <param name="model">The model to be used.</param>
         /// <param name="typeName">The type name to be resolved.</param>
         /// <returns>Resolved type.</returns>
-        [SuppressMessage("DataWeb.Usage", "AC0003:MethodCallNotAllowed", Justification = "IEdmModel.FindType is allowed here and all other places should call this method to get to the type.")]
         public virtual IEdmSchemaType ResolveType(IEdmModel model, string typeName)
         {
             if (EnableCaseInsensitive)

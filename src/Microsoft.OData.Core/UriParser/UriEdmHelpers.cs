@@ -25,7 +25,6 @@ namespace Microsoft.OData.UriParser
         /// <param name="qualifiedName">The qualified name of the type to find within the model.</param>
         /// <param name="resolver">Resolver for this func.</param>
         /// <returns>The requested type, or null if no such type exists.</returns>
-        [SuppressMessage("DataWeb.Usage", "AC0003:MethodCallNotAllowed", Justification = "Uri Parser does not need to go through the ODL behavior knob.")]
         public static IEdmSchemaType FindTypeFromModel(IEdmModel model, string qualifiedName, ODataUriResolver resolver)
         {
             return resolver.ResolveType(model, qualifiedName);
