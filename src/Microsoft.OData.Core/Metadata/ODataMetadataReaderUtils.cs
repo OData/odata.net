@@ -27,7 +27,6 @@ namespace Microsoft.OData.Metadata
         /// <param name="encoding">The encoding to use to read the input.</param>
         /// <param name="messageReaderSettings">The OData message reader settings used to control the settings of the Xml reader.</param>
         /// <returns>An <see cref="XmlReader"/> instance configured with the provided settings.</returns>
-        [SuppressMessage("Microsoft.Security.Xml", "CA3053", Justification = "The XmlResolver property no longer exists in .NET portable framework.")]
         internal static XmlReader CreateXmlReader(Stream stream, Encoding encoding, ODataMessageReaderSettings messageReaderSettings)
         {
             Debug.Assert(stream != null, "stream != null");
