@@ -160,6 +160,14 @@ namespace Microsoft.OData.Tests.UriParser.Binders
         }
 
         [Fact]
+        public void BindAsOperationWithWildcardInPathTokenAndBindingParameterTypeThrows()
+        {
+            var model = new FindOperationsByBindingParameterTypeHierarchyThrowingCatchableExceptionEdmModel();
+            IEdmEntityType entityType = new EdmEntityType("n", "EntityType");
+            ODataPathSegment foundPathSegment = null;
+            SelectPathSegmentTokenBinder.TryBindAsOperation(new SystemToken("f*oo", null), model, entityType, out foundPathSegment).Should().BeFalse();
+        }
+
         public void ValidateNonCatchableExceptionsThrowInFindOperationsByBindingParameterTypeHierarchyExceptionAndSurfaces()
         {
             var model = new FindOperationsByBindingParameterTypeHierarchyThrowingNonCatchableExceptionEdmModel();

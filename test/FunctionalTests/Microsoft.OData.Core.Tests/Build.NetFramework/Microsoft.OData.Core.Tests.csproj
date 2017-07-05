@@ -249,6 +249,7 @@
     <Compile Include="..\ScenarioTests\UriParser\TopAndSkipFunctionalTests.cs" />
     <Compile Include="..\ScenarioTests\UriParser\VerificationHelpers.cs" />
     <Compile Include="..\ScenarioTests\Writer\JsonLight\WriteFeedWithoutNavigationSourceTests.cs" />
+    <Compile Include="..\UriParser\Binders\MetadataBindingTests.cs" />
     <Compile Include="..\UriParser\Binders\MetadataBindingUtilsTests.cs" />
     <Compile Include="..\UriParser\EntitySetNode.cs" />
     <Compile Include="..\UriParser\ExpressionLexerTests.cs" />
@@ -356,6 +357,7 @@
     <Compile Include="..\UriParser\SemanticAst\ODataPathExtensionsTests.cs" />
     <Compile Include="..\UriParser\SemanticAst\ODataPathTests.cs" />
     <Compile Include="..\UriParser\SemanticAst\ODataSelectPathTests.cs" />
+    <Compile Include="..\UriParser\SemanticAst\ODataUnresolvedFunctionParameterAliasTests.cs" />
     <Compile Include="..\UriParser\SemanticAst\DynamicPathSegmentTests.cs" />
     <Compile Include="..\UriParser\SemanticAst\OperationImportSegmentTests.cs" />
     <Compile Include="..\UriParser\SemanticAst\PathSelectItemTests.cs" />
@@ -383,6 +385,7 @@
     <Compile Include="..\UriParser\Parsers\UriTemplateParserTests.cs" />
     <Compile Include="..\UriParser\TreeNodeKinds\QueryNodeKindTests.cs" />
     <Compile Include="..\UriParser\TypePromotionUtilsTests.cs" />
+    <Compile Include="..\UriParser\UriEdmHelpersTests.cs" />
     <Compile Include="..\UriParser\Visitors\PathSegmentTokenEqualityComparerTests.cs" />
     <Compile Include="..\UriParser\Parsers\SegmentArgumentParserTests.cs" />
     <Compile Include="..\UriParser\Binders\SelectBinderTests.cs" />
@@ -404,6 +407,7 @@
     <Compile Include="..\UriParser\ODataUriParserInjectionTests.cs" />
     <Compile Include="..\UriParser\ODataUrlKeyDelimiterTests.cs" />
     <Compile Include="..\UriParser\SegmentAssertions.cs" />
+    <Compile Include="..\UriParser\Visitors\IsCollectionTranslatorTests.cs" />
     <Compile Include="..\UriParser\Visitors\QueryNodeVisitorTests.cs" />
     <Compile Include="..\UriParser\Visitors\SyntacticTreeVisitorTests.cs" />
     <Compile Include="..\ValidationUtilsTests.cs" />

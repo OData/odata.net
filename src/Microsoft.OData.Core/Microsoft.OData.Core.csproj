@@ -429,7 +429,6 @@
     <Compile Include="UriParser\Parsers\NodeFactory.cs" />
     <Compile Include="UriParser\Parsers\ODataPathFactory.cs" />
     <Compile Include="UriParser\Parsers\ODataPathParser.cs" />
-    <Compile Include="UriParser\Parsers\OpenTypeMethods.cs" />
     <Compile Include="UriParser\Parsers\PathReverser.cs" />
     <Compile Include="UriParser\Parsers\SearchParser.cs" />
     <Compile Include="UriParser\Parsers\SegmentArgumentParser.cs" />

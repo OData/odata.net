@@ -31,6 +31,8 @@ namespace Microsoft.OData.UriParser
         /// This is an at-your-own-risk constructor, since you must provide valid initial state.
         /// </summary>
         /// <param name="initialState">The initialState to use for binding.</param>
+        /// <exception cref="System.ArgumentNullException">Throws if initial state is null.</exception>
+        /// <exception cref="System.ArgumentNullException">Throws if initialState.Model is null.</exception>
         internal MetadataBinder(BindingState initialState)
         {
             ExceptionUtils.CheckArgumentNotNull(initialState, "initialState");
@@ -68,6 +70,7 @@ namespace Microsoft.OData.UriParser
         /// </summary>
         /// <param name="skip">The skip amount or null if none was specified.</param>
         /// <returns> the skip clause </returns>
+        /// <exception cref="ODataException">Throws if skip is less than 0.</exception>
         public static long? ProcessSkip(long? skip)
         {
             if (skip.HasValue)
@@ -88,6 +91,7 @@ namespace Microsoft.OData.UriParser
         /// </summary>
         /// <param name="top">The top amount or null if none was specified.</param>
         /// <returns> the top clause </returns>
+        /// <exception cref="ODataException">Throws if top is less than 0.</exception>
         public static long? ProcessTop(long? top)
         {
             if (top.HasValue)
@@ -110,9 +114,22 @@ namespace Microsoft.OData.UriParser
         /// <param name="bindingState">the current state of the binding algorithm.</param>
         /// <param name="bindMethod">pointer to a binder method.</param>
         /// <returns>The list of <see cref="QueryNode"/> instances after binding.</returns>
+        /// <exception cref="ODataException">Throws if bindingState is null.</exception>
+        /// <exception cref="ODataException">Throws if bindMethod is null.</exception>
         public static List<QueryNode> ProcessQueryOptions(BindingState bindingState, MetadataBinder.QueryTokenVisitor bindMethod)
         {
+            if (bindingState == null || bindingState.QueryOptions == null)
+            {
+                throw new ODataException(ODataErrorStrings.MetadataBinder_QueryOptionsBindStateCannotBeNull);
+            }
+
+            if (bindMethod == null)
+            {
+                throw new ODataException(ODataErrorStrings.MetadataBinder_QueryOptionsBindMethodCannotBeNull);
+            }
+
             List<QueryNode> customQueryOptionNodes = new List<QueryNode>();
+
             foreach (CustomQueryOptionToken queryToken in bindingState.QueryOptions)
             {
                 QueryNode customQueryOptionNode = bindMethod(queryToken);

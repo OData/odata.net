@@ -88,11 +88,11 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
                    OperationSegmentParameter p = oDataPath.LastSegment.ShouldBeOperationImportSegment(HardCodedTestModel.GetFunctionImportForGetPetCount()).And.Parameters.First();
                    p.Name.Should().Be("colorPattern");
                    p.Value.As<ParameterAliasNode>().Alias.Should().Be("@p1");
-                   p.Value.As<ParameterAliasNode>().TypeReference.IsEnum().Should().Be(true);
+                   p.Value.As<ParameterAliasNode>().TypeReference.IsEnum().Should().BeTrue();
                    p.Value.As<ParameterAliasNode>().TypeReference.Definition.FullTypeName().ShouldBeEquivalentTo("Fully.Qualified.Namespace.ColorPattern");
                    aliasNodes["@p1"].As<ConstantNode>().Value.As<ODataEnumValue>().TypeName.Should().Be("Fully.Qualified.Namespace.ColorPattern");
                    aliasNodes["@p1"].As<ConstantNode>().Value.As<ODataEnumValue>().Value.Should().Be("22");
-                   aliasNodes["@p1"].TypeReference.IsEnum().Should().Be(true);
+                   aliasNodes["@p1"].TypeReference.IsEnum().Should().BeTrue();
                });
         }
 
@@ -224,11 +224,11 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
                 {
                     NamedFunctionParameterNode p = filterClause.Expression.As<BinaryOperatorNode>().Right.As<SingleResourceFunctionCallNode>().Parameters.First().As<NamedFunctionParameterNode>();
                     p.Value.As<ParameterAliasNode>().Alias.ShouldBeEquivalentTo("@p1");
-                    p.Value.As<ParameterAliasNode>().TypeReference.IsEnum().Should().Be(true);
+                    p.Value.As<ParameterAliasNode>().TypeReference.IsEnum().Should().BeTrue();
                     p.Value.As<ParameterAliasNode>().TypeReference.Definition.FullTypeName().ShouldBeEquivalentTo("Fully.Qualified.Namespace.ColorPattern");
                     aliasNodes["@p1"].As<ConstantNode>().Value.As<ODataEnumValue>().TypeName.Should().Be("Fully.Qualified.Namespace.ColorPattern");
                     aliasNodes["@p1"].As<ConstantNode>().Value.As<ODataEnumValue>().Value.Should().Be("22");
-                    aliasNodes["@p1"].TypeReference.IsEnum().Should().Be(true);
+                    aliasNodes["@p1"].TypeReference.IsEnum().Should().BeTrue();
                 });
         }
 
@@ -241,11 +241,11 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
                 {
                     NamedFunctionParameterNode p = filterClause.Expression.As<BinaryOperatorNode>().Right.As<SingleResourceFunctionCallNode>().Parameters.First().As<NamedFunctionParameterNode>();
                     p.Value.As<ParameterAliasNode>().Alias.ShouldBeEquivalentTo("@p1");
-                    p.Value.As<ParameterAliasNode>().TypeReference.IsEnum().Should().Be(true);
+                    p.Value.As<ParameterAliasNode>().TypeReference.IsEnum().Should().BeTrue();
                     p.Value.As<ParameterAliasNode>().TypeReference.Definition.FullTypeName().ShouldBeEquivalentTo("Fully.Qualified.Namespace.ColorPattern");
                     aliasNodes["@p1"].As<ConstantNode>().Value.As<ODataEnumValue>().TypeName.Should().Be("Fully.Qualified.Namespace.ColorPattern");
                     aliasNodes["@p1"].As<ConstantNode>().Value.As<ODataEnumValue>().Value.Should().Be("238563");
-                    aliasNodes["@p1"].TypeReference.IsEnum().Should().Be(true);
+                    aliasNodes["@p1"].TypeReference.IsEnum().Should().BeTrue();
                 });
         }
 

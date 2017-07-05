@@ -11,6 +11,7 @@ using Microsoft.OData.Metadata;
 using Microsoft.OData.UriParser;
 using Xunit;
 using mbh = Microsoft.OData.Tests.UriParser.ModelBuildingHelpers;
+using ODataErrorStrings = Microsoft.OData.Strings;
 
 namespace Microsoft.OData.Tests.UriParser.SemanticAst
 {
@@ -41,6 +42,62 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
             });
 
             path.NavigationSource().Should().BeSameAs(entitySet);
+        }
+
+        [Fact]
+        public void PathExtensionsIsCollectionWithEntitySetReturnsTrue()
+        {
+            var entitySet = mbh.BuildValidEntitySet();
+            var path = new ODataPath(new ODataPathSegment[]
+            {
+                new EntitySetSegment(entitySet)
+            });
+
+            path.IsCollection().Should().BeTrue();
+        }
+
+        [Fact]
+        public void PathExtensionsIsCollectionWithPropertyReturnsFalse()
+        {
+            var property = mbh.BuildValidPrimitiveProperty();
+            var path = new ODataPath(new ODataPathSegment[]
+            {
+                new PropertySegment(property)
+            });
+
+            path.IsCollection().Should().BeFalse();
+        }
+
+        [Fact]
+        public void PathExtensionsToExpandPathWithNonNavigationPropertyThrows()
+        {
+            var property = mbh.BuildValidPrimitiveProperty();
+            ODataSelectPath path = new ODataSelectPath(
+                new ODataPathSegment[]
+                {
+                    new PropertySegment(HardCodedTestModel.GetPersonNameProp())
+                }
+            );
+
+            Action expandPathAction = () => path.ToExpandPath();
+            expandPathAction.ShouldThrow<ODataException>().WithMessage(
+                ODataErrorStrings.ODataExpandPath_OnlyLastSegmentMustBeNavigationProperty);
+        }
+
+        [Fact]
+        public void PathExtensionsToExpandPathWithNavigationPropertyReturnsExpandedPath()
+        {
+            var property = mbh.BuildValidPrimitiveProperty();
+            ODataSelectPath path = new ODataSelectPath(
+                new ODataPathSegment[]
+                {
+                    new NavigationPropertySegment(
+                        HardCodedTestModel.GetPersonMyDogNavProp(), HardCodedTestModel.GetDogsSet())
+                }
+            );
+
+            path.ToExpandPath().Count.Should().Be(1);
+            path.ToExpandPath().FirstSegment.Identifier.Should().Be("MyDog");
         }
 
         [Fact]
