@@ -251,7 +251,7 @@ namespace AstoriaUnitTests.Stubs.DataServiceProvider
                     {
                         if (providerKind == DSPDataProviderKind.EF && IsPropertyKind(property, ResourcePropertyKind.Key))
                         {
-                            stringBuilder.AppendLine("[System.ComponentModel.DataAnnotations.DatabaseGenerated(System.ComponentModel.DataAnnotations.DatabaseGeneratedOption.None)]");
+                            stringBuilder.AppendLine("[System.ComponentModel.DataAnnotations.Schema.DatabaseGenerated(System.ComponentModel.DataAnnotations.Schema.DatabaseGeneratedOption.None)]");
                         }
 
                         // Entity Framework's spatial types are not currently the same as the type we use, so we need to use their type for the entity property
@@ -290,7 +290,14 @@ namespace AstoriaUnitTests.Stubs.DataServiceProvider
             }
 
             // compile the assembly
-            test.TestUtil.GenerateAssembly(stringBuilder.ToString(), assemblyFullPath, new string[] { Path.Combine(test.TestUtil.GreenBitsReferenceAssembliesDirectory, "System.ComponentModel.DataAnnotations.dll"), "EntityFramework.dll" });
+            string path = Path.GetDirectoryName(typeof(System.Data.Test.Astoria.TestUtil).Assembly.Location);
+            string[] dependentAssemblies = new string[]
+            {
+                    Path.Combine(test.TestUtil.GreenBitsReferenceAssembliesDirectory, "System.ComponentModel.DataAnnotations.dll"),
+                    Path.Combine(path,"EntityFramework.dll")
+            };
+
+            test.TestUtil.GenerateAssembly(stringBuilder.ToString(), assemblyFullPath, dependentAssemblies);
 
             Assembly assembly = Assembly.LoadFrom(assemblyFullPath);
             return assembly.GetType(contextTypeName);

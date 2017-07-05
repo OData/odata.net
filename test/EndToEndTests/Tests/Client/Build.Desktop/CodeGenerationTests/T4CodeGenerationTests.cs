@@ -34,7 +34,7 @@ namespace Microsoft.Test.OData.Tests.Client.CodeGenerationTests
     [DeploymentItem(@"VBDSCReferences\", "VBDSCReferences")]
     [DeploymentItem(@"VBReferences\", "VBReferences")]
 #if !WIN8 && !WINDOWSPHONE
-    [DeploymentItem(@"EntityFramework.5.0.0\lib\net40\EntityFramework.dll")]
+    [DeploymentItem(@"EntityFramework.dll")]
 #endif
     [TestClass]
     public class T4CodeGenerationTests
