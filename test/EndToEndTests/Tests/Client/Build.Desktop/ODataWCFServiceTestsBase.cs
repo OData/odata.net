@@ -24,7 +24,7 @@ namespace Microsoft.Test.OData.Tests.Client
     /// Base class for tests that use the service implemented using ODataLib and EDMLib.
     /// </summary>
 #if !WIN8 && !WINDOWSPHONE
-    [DeploymentItem(@"EntityFramework.5.0.0\lib\net40\EntityFramework.dll")]
+    [DeploymentItem(@"EntityFramework.dll")]
 #endif
 #if !PORTABLELIB
     [DeploymentItem(@"Microsoft.VisualStudio.QualityTools.Common.dll")]

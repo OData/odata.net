@@ -9,7 +9,7 @@
     <RootNamespace>Microsoft.Test.OData.Services.Astoria</RootNamespace>
     <AssemblyName>Microsoft.Test.OData.Services.Astoria</AssemblyName>
     <DefineConstants>$(DefineConstants);TEST_ODATA_SERVICES_ASTORIA</DefineConstants>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <UseIISExpress>true</UseIISExpress>
     <AssemblyAttributeClsCompliant>false</AssemblyAttributeClsCompliant>
     <IISExpressSSLPort />
@@ -40,7 +40,7 @@
     <Reference Include="System.Web.Extensions" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Xml.Linq" />
-    <Reference Include="$(NugetPack)\EntityFramework.5.0.0\lib\net40\EntityFramework.dll" />
+    <Reference Include="$(NugetPack)\EntityFramework.4.3.1\lib\net40\EntityFramework.dll" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="$(EnlistmentRoot)\src\Microsoft.OData.Core\Microsoft.OData.Core.csproj">
