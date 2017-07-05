@@ -9,7 +9,6 @@ using Microsoft.OData.UriParser;
 using System;
 using System.Collections.Generic;
 using Xunit;
-
 using ODataErrorStrings = Microsoft.OData.Strings;
 
 namespace Microsoft.OData.Tests.UriParser.Binders
@@ -20,10 +19,6 @@ namespace Microsoft.OData.Tests.UriParser.Binders
     public class MetadataBindingTests
     {
         private static readonly ODataUriParserConfiguration configuration = new ODataUriParserConfiguration(HardCodedTestModel.TestModel);
-
-        public MetadataBindingTests()
-        {
-        }
 
         #region Tests
         [Fact]
@@ -97,7 +92,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
         }
 
         [Fact]
-        public void MetadataBinderProcessQueryOptionsWithBindMethodReturnNullShouldReturnEmptyList()
+        public void MetadataBinderProcessQueryOptionsWithBindMethodThatReturnsNullShouldReturnEmptyList()
         {
             List<CustomQueryOptionToken> queryOptions = new List<CustomQueryOptionToken>();
             queryOptions.Add(new CustomQueryOptionToken(null, string.Empty));
@@ -109,7 +104,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
         }
 
         [Fact]
-        public void MetadataBinderProcessQueryOptionsWithBindMethodReturnNodeShouldReturnList()
+        public void MetadataBinderProcessQueryOptionsWithBindMethodThatReturnsNodeShouldReturnList()
         {
             List<CustomQueryOptionToken> queryOptions = new List<CustomQueryOptionToken>();
             queryOptions.Add(new CustomQueryOptionToken(null, string.Empty));
