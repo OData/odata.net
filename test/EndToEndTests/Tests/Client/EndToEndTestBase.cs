@@ -34,7 +34,7 @@ namespace Microsoft.Test.OData.Tests.Client
     /// </summary>
     [TestClass]
 #if !WIN8 && !WINDOWSPHONE
-    [DeploymentItem(@"EntityFramework.5.0.0\lib\net40\EntityFramework.dll")]
+    [DeploymentItem(@"EntityFramework.dll")]
 #endif
 #if !PORTABLELIB
     [DeploymentItem(@"Microsoft.VisualStudio.QualityTools.Common.dll")]

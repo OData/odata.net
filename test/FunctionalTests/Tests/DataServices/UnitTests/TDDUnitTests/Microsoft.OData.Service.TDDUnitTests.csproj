@@ -33,7 +33,7 @@
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.Linq" />
     <Reference Include="$(NugetPack)\FluentAssertions.2.0.0.1\lib\net40\FluentAssertions.dll" />
-    <Reference Include="$(NugetPack)\EntityFramework.4.3.1\lib\net40\EntityFramework.dll" />
+    <Reference Include="$(NugetPack)\EntityFramework.5.0.0\lib\net45\EntityFramework.dll" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="$(EnlistmentRoot)\test\FunctionalTests\Service\Microsoft.OData.Service.csproj">

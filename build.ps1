@@ -297,12 +297,6 @@ Function RunBuild ($sln, $vsToolVersion)
     }
 }
 
-Function RestoringFile ($file , $target)
-{
-    Write-Host "Restoring $file"
-    Copy-Item -Path $file -Destination $target -Force
-}
-
 Function FailedTestLog ($playlist , $reruncmd , $failedtest1 ,$failedtest2)
 {    
     Write-Output "<Playlist Version=`"1.0`">" | Out-File $playlist
@@ -338,8 +332,6 @@ Function FailedTestLog ($playlist , $reruncmd , $failedtest1 ,$failedtest2)
     if ($failedtest1.count -gt 0)
     {
         $rerun += " " + $XUNITADAPTER
-        Write-Output "copy /y $NUGETPACK\EntityFramework.4.3.1\lib\net40\EntityFramework.dll ." | Out-File -Append `
-            -Encoding ascii $reruncmd
         Write-Output $rerun | Out-File -Append -Encoding ascii $reruncmd
     }
     $rerun = "`"$VSTEST`""
@@ -361,8 +353,6 @@ Function FailedTestLog ($playlist , $reruncmd , $failedtest1 ,$failedtest2)
     # build the command only if failed tests exist
     if ($failedtest2.count -gt 0)
     {
-        Write-Output "copy /y $NUGETPACK\EntityFramework.5.0.0\lib\net40\EntityFramework.dll ." | Out-File -Append `
-            -Encoding ascii $reruncmd
         Write-Output $rerun | Out-File -Append -Encoding ascii $reruncmd
     }
     Write-Output "cd $LOGDIR" | Out-File -Append -Encoding ascii $reruncmd
@@ -527,7 +517,6 @@ Function TestProcess
     }
     $script:TEST_START_TIME = Get-Date
     cd $TESTDIR
-    RestoringFile -file "$NUGETPACK\EntityFramework.4.3.1\lib\net40\EntityFramework.dll" -target $TESTDIR
     if ($TestType -eq 'Nightly')
     {
         RunTest -title 'NightlyTests' -testdir $NightlyTestSuite
@@ -546,7 +535,6 @@ Function TestProcess
         Cleanup
         exit
     }
-    RestoringFile -file "$NUGETPACK\EntityFramework.5.0.0\lib\net40\EntityFramework.dll" -target $TESTDIR
     RunTest -title 'E2ETests' -testdir $E2eTestSuite
     Write-Host "Test Done" -ForegroundColor $Success
     TestSummary
