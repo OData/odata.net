@@ -90,14 +90,24 @@ Each solution contains some test projects. Please open it, build it and run all 
 
 ### 3.2 One-click build and test script in command line
 
-Open Command Line Window with "**Run as administrator**", `cd` to the root folder and run following command: `build.cmd`.
+Open Command Line Window with "**Run as administrator**", `cd` to the root folder and run following command:
 
-The build and test will take about 15 minutes. Here are some other usages:
+    `build.cmd`
 
-- `build.cmd Nightly`. Build and run all nightly test suites.
-- `build.cmd Rolling`. Build and run all rolling test suites (with less legacy tests thus faster).
-- `build.cmd SkipStrongName`. Configure strong name skip of OData libraries on your machine and build (no test run).
-- `build.cmd DisableSkipStrongName`. Disable strong name skip of OData libraries on your machine and build (no test run).
+This will build the full product and run all tests. It will take about 60 minutes. Use the to ensure your change compiles and passes tests before submitting a pull request.
+
+Optionally, you can run following command:
+
+    `build.cmd quick`
+
+This will build a single set of product Dlls and run unit tests. It will take about 5 minutes. Use this for quickly testing a change.
+
+Here are some other usages or `build.cmd`:
+
+- `build.cmd` or `build.cmd Nightly` - Build and run all nightly test suites.
+- `build.cmd Quick` or `build.cmd -q` - Build and run all unit test suites (with less legacy tests thus faster).
+- `build.cmd EnableSkipStrongName` - Configure strong name skip of OData libraries on your machine and build (no test run).
+- `build.cmd DisableSkipStrongName` - Disable strong name skip of OData libraries on your machine and build (no test run).
 
 Notes: If there is build error with message "build.ps1 cannot be loaded", right click "build.ps1" -> Properties -> "Unlock".
 

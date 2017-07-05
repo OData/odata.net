@@ -52,8 +52,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Commander.Common", "..\test
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KoKoMo", "..\tools\KoKoMo\KoKoMo.csproj", "{EB4C9641-0452-4E7F-AA38-3EBD871914A3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestCategoryAttributeCheck.UnitTest", "..\test\FunctionalTests\Tests\DataServices\UnitTests\TestCategoryAttributeCheck\TestCategoryAttributeCheck.UnitTest.csproj", "{10F2E291-BCCC-488B-8788-6EF6451DAC98}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.Data.MetadataObjectModel.UnitTests", "..\test\FunctionalTests\Tests\DataServices\UnitTests\MetadataObjectModelTests\Microsoft.Data.MetadataObjectModel.UnitTests.csproj", "{69A5EB3B-5AE5-49AD-B4F3-025D087A4647}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.Data.Web.UnitTests", "..\test\FunctionalTests\Tests\DataServices\UnitTests\ServerUnitTests\Microsoft.Data.Web.UnitTests.csproj", "{BB7D22CB-7003-4AF6-9035-B369B00EA95E}"
@@ -567,24 +565,6 @@ Global
 		{EB4C9641-0452-4E7F-AA38-3EBD871914A3}.Release|x64.Build.0 = Release|x64
 		{EB4C9641-0452-4E7F-AA38-3EBD871914A3}.Release|x86.ActiveCfg = Release|x86
 		{EB4C9641-0452-4E7F-AA38-3EBD871914A3}.Release|x86.Build.0 = Release|x86
-		{10F2E291-BCCC-488B-8788-6EF6451DAC98}.Cover|Any CPU.ActiveCfg = Cover|Any CPU
-		{10F2E291-BCCC-488B-8788-6EF6451DAC98}.Cover|Any CPU.Build.0 = Cover|Any CPU
-		{10F2E291-BCCC-488B-8788-6EF6451DAC98}.Cover|x64.ActiveCfg = Cover|x64
-		{10F2E291-BCCC-488B-8788-6EF6451DAC98}.Cover|x64.Build.0 = Cover|x64
-		{10F2E291-BCCC-488B-8788-6EF6451DAC98}.Cover|x86.ActiveCfg = Cover|x86
-		{10F2E291-BCCC-488B-8788-6EF6451DAC98}.Cover|x86.Build.0 = Cover|x86
-		{10F2E291-BCCC-488B-8788-6EF6451DAC98}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{10F2E291-BCCC-488B-8788-6EF6451DAC98}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{10F2E291-BCCC-488B-8788-6EF6451DAC98}.Debug|x64.ActiveCfg = Debug|x64
-		{10F2E291-BCCC-488B-8788-6EF6451DAC98}.Debug|x64.Build.0 = Debug|x64
-		{10F2E291-BCCC-488B-8788-6EF6451DAC98}.Debug|x86.ActiveCfg = Debug|x86
-		{10F2E291-BCCC-488B-8788-6EF6451DAC98}.Debug|x86.Build.0 = Debug|x86
-		{10F2E291-BCCC-488B-8788-6EF6451DAC98}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{10F2E291-BCCC-488B-8788-6EF6451DAC98}.Release|Any CPU.Build.0 = Release|Any CPU
-		{10F2E291-BCCC-488B-8788-6EF6451DAC98}.Release|x64.ActiveCfg = Release|x64
-		{10F2E291-BCCC-488B-8788-6EF6451DAC98}.Release|x64.Build.0 = Release|x64
-		{10F2E291-BCCC-488B-8788-6EF6451DAC98}.Release|x86.ActiveCfg = Release|x86
-		{10F2E291-BCCC-488B-8788-6EF6451DAC98}.Release|x86.Build.0 = Release|x86
 		{69A5EB3B-5AE5-49AD-B4F3-025D087A4647}.Cover|Any CPU.ActiveCfg = Cover|Any CPU
 		{69A5EB3B-5AE5-49AD-B4F3-025D087A4647}.Cover|Any CPU.Build.0 = Cover|Any CPU
 		{69A5EB3B-5AE5-49AD-B4F3-025D087A4647}.Cover|x64.ActiveCfg = Cover|x64
