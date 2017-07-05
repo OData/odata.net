@@ -321,7 +321,14 @@ namespace AstoriaUnitTests.Stubs.DataServiceProvider
             }
 
             // compile the assembly
-            test.TestUtil.GenerateAssembly(stringBuilder.ToString(), assemblyFullPath, new string[] { Path.Combine(test.TestUtil.GreenBitsReferenceAssembliesDirectory, "System.ComponentModel.DataAnnotations.dll"), "EntityFramework.dll" });
+            string path = Path.GetDirectoryName(typeof(System.Data.Test.Astoria.TestUtil).Assembly.Location);
+            string[] dependentAssemblies = new string[]
+            {
+                    Path.Combine(test.TestUtil.GreenBitsReferenceAssembliesDirectory, "System.ComponentModel.DataAnnotations.dll"),
+                    Path.Combine(path,"EntityFramework.dll")
+            };
+
+            test.TestUtil.GenerateAssembly(stringBuilder.ToString(), assemblyFullPath, dependentAssemblies);
 
             Assembly assembly = Assembly.LoadFrom(assemblyFullPath);
             return assembly.GetType(contextTypeName);
