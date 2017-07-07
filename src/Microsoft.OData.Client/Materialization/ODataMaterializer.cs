@@ -186,7 +186,6 @@ namespace Microsoft.OData.Client.Materialization
         /// <param name="payloadKind">expected payload kind.</param>
         /// <returns>A materializer specialized for the given response.</returns>
         [SuppressMessage("Microsoft.Reliability", "CA2000", Justification = "ODataMaterializer is disposed by the caller.")]
-        [SuppressMessage("DataWeb.Usage", "AC0014", Justification = "Throws every time")]
         public static ODataMaterializer CreateMaterializerForMessage(
             IODataResponseMessage responseMessage,
             ResponseInfo responseInfo,

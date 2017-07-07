@@ -122,7 +122,6 @@ namespace Microsoft.Spatial
         /// <param name="handlerReset">The handler reset.</param>
         /// <param name="delegation">what the rest of the pipeline should do</param>
         /// <param name="delegationReset">The delegation reset.</param>
-        [SuppressMessage("DataWeb.Usage", "AC0014:DoNotHandleProhibitedExceptionsRule", Justification = "We're calling this correctly")]
         private static void DoAction(Action handler, Action handlerReset, Action delegation, Action delegationReset)
         {
             try
@@ -164,7 +163,6 @@ namespace Microsoft.Spatial
         /// <param name="delegation">what the rest of the pipeline should do</param>
         /// <param name="delegationReset">The delegation reset.</param>
         /// <param name="argument">The argument to pass to both this node and the rest of the pipeline</param>
-        [SuppressMessage("DataWeb.Usage", "AC0014:DoNotHandleProhibitedExceptionsRule", Justification = "We're calling this correctly")]
         private static void DoAction<T>(Action<T> handler, Action handlerReset, Action<T> delegation, Action delegationReset, T argument)
         {
             try

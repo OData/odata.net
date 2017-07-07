@@ -102,7 +102,6 @@ namespace Microsoft.OData.Client
         }
 
         /// <summary>initial the async batch save changeset</summary>
-        [SuppressMessage("DataWeb.Usage", "AC0014", Justification = "Throws every time")]
         internal void BatchBeginRequest()
         {
             PerRequest pereq = null;

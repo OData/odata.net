@@ -431,7 +431,6 @@ namespace Microsoft.OData.Client
         /// <summary>handle request.BeginGetResponse with request.EndGetResponse and then copy response stream</summary>
         /// <param name="asyncResult">async result</param>
         [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes", Justification = "required for this feature")]
-        [SuppressMessage("DataWeb.Usage", "AC0014", Justification = "Throws every time")]
         protected override void AsyncEndGetResponse(IAsyncResult asyncResult)
         {
             Debug.Assert(asyncResult != null && asyncResult.IsCompleted, "asyncResult.IsCompleted");
@@ -1056,8 +1055,6 @@ namespace Microsoft.OData.Client
         /// <param name="binding">The binding.</param>
         /// <param name="targetResource">The target's entity descriptor.</param>
         /// <returns>The original link uri or one with the target entity key appended.</returns>
-        [SuppressMessage("DataWeb.Usage", "AC0011:EntityDescriptorPublicPropertiesRule",
-             Justification = "This property has been limited by get/set")]
         private static Uri AppendTargetEntityKeyIfNeeded(Uri linkUri, LinkDescriptor binding, EntityDescriptor targetResource)
         {
             // To delete from a collection, we need to append the key.
@@ -1296,7 +1293,6 @@ namespace Microsoft.OData.Client
         /// <summary>handle responseStream.BeginRead with responseStream.EndRead</summary>
         /// <param name="asyncResult">async result</param>
         [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes", Justification = "required for this feature")]
-        [SuppressMessage("DataWeb.Usage", "AC0014", Justification = "Throws every time")]
         private void AsyncEndRead(IAsyncResult asyncResult)
 #endif
         {

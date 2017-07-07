@@ -71,7 +71,6 @@ namespace Microsoft.OData.Client
         /// Build a new escaped string
         /// </summary>
         /// <returns>The escaped string</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("DataWeb.Usage", "AC0018:SystemUriEscapeDataStringRule", Justification = "Method explicitly only escapes specific characters that we know need escaping.")]
         private string Build()
         {
             Debug.Assert(this.index == 0, "Expected this.index to be 0, because Build can only be called once for an instance of DataStringEscapeBuilder.");
@@ -101,7 +100,6 @@ namespace Microsoft.OData.Client
         /// Read quoted string
         /// </summary>
         /// <param name="quoteStart">The character that started the quote</param>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("DataWeb.Usage", "AC0018:SystemUriEscapeDataStringRule", Justification = "Method explicitly only escapes values inside the single quotes.")]
         private void ReadQuotedString(char quoteStart)
         {
             if (this.quotedDataBuilder == null)

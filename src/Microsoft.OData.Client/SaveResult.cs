@@ -846,7 +846,6 @@ namespace Microsoft.OData.Client
         /// </summary>
         /// <param name="responseMsg">httpwebresponse instance.</param>
         /// <param name="responseStream">stream containing the response payload.</param>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("DataWeb.Usage", "AC0014", Justification = "Throws every time")]
         private void HandleOperationResponseData(IODataResponseMessage responseMsg, Stream responseStream)
         {
             Debug.Assert(this.entryIndex >= 0 && this.entryIndex < this.ChangedEntries.Count(), string.Format(System.Globalization.CultureInfo.InvariantCulture, "this.entryIndex = '{0}', this.ChangedEntries.Count() = '{1}'", this.entryIndex, this.ChangedEntries.Count()));

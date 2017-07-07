@@ -96,7 +96,6 @@ namespace Microsoft.OData.Client
         /// <param name="entityDescriptorFromMaterializer">entityDescriptor that is returned by the materializer</param>
         /// <param name="mergeInfo">if true, we will need to merge all entity descriptor info, otherwise not.</param>
         /// <param name="mergeOption">merge option depending on which etag information needs to be merged.</param>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("DataWeb.Performance", "AC0008", Justification = "This self link call is intentional")]
         internal static void MergeEntityDescriptorInfo(EntityDescriptor trackedEntityDescriptor, EntityDescriptor entityDescriptorFromMaterializer, bool mergeInfo, MergeOption mergeOption)
         {
             Debug.Assert(trackedEntityDescriptor != null, "trackedEntityDescriptor != null");

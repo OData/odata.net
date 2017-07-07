@@ -230,7 +230,6 @@ namespace Microsoft.OData.Edm.Csdl
         /// </summary>
         /// <param name="uri">The value to convert.</param>
         /// <returns>A string representation of the Uri.</returns>
-        [SuppressMessage("DataWeb.Usage", "AC0010", Justification = "Usage of OriginalString is safe in this context")]
         internal static string UriAsXml(Uri uri)
         {
             Debug.Assert(uri != null, "uri != null");
