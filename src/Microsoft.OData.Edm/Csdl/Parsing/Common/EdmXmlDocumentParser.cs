@@ -44,7 +44,6 @@ namespace Microsoft.OData.Edm.Csdl.Parsing.Common
             return attr;
         }
 
-        [SuppressMessage("Microsoft.Security.Xml", "CA3053", Justification = "The XmlResolver property no longer exists in .NET portable framework.")]
         protected override XmlReader InitializeReader(XmlReader reader)
         {
             XmlReaderSettings readerSettings = new XmlReaderSettings

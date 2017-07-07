@@ -20,7 +20,6 @@ namespace Microsoft.OData.UriParser
         /// <summary>
         /// Instance for <see cref="ODataUriResolver"/>.
         /// </summary>
-        [SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes", Justification = "Resolver is immutable")]
         private static readonly ODataUriResolver Default = new ODataUriResolver();
 
         /// <summary>
