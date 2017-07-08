@@ -39,7 +39,8 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
     /// <summary>
     /// Tests for writing entries with the OData writer.
     /// </summary>
-    [TestClass, TestCase]
+    // For comment out test cases, see github: https://github.com/OData/odata.net/issues/883
+    // [TestClass, TestCase]
     public class WriterEntryTests : ODataWriterTestCase
     {
         private static readonly Uri ServiceDocumentUri = new Uri("http://www.odata.org");

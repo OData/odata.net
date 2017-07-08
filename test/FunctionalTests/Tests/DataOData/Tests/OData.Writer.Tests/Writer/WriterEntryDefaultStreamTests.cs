@@ -37,8 +37,9 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 JsonConstants.ODataMetadataMediaETagPropertyName
             };
 
+        // For comment out test cases, see github: https://github.com/OData/odata.net/issues/883
         [Ignore] // Remove Atom
-        [TestMethod, Variation(Description = "Validates the payloads for various default streams.")]
+        // [TestMethod, Variation(Description = "Validates the payloads for various default streams.")]
         public void EntryDefaultStreamTest()
         {
             string readLink = "http://odata.org/read";

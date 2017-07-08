@@ -478,8 +478,9 @@ namespace AstoriaUnitTests.Tests
             });
         }
 
-        [Ignore] // Remove Atom
-        [TestMethod]
+        // For comment out test cases, see github: https://github.com/OData/odata.net/issues/877
+            [Ignore] // Remove Atom
+        // [TestMethod]
         public void HttpContextServiceHostRequestNameTest()
         {
             CombinatorialEngine engine = CombinatorialEngine.FromDimensions(
@@ -771,8 +772,9 @@ namespace AstoriaUnitTests.Tests
             TestUtil.AssertExceptionExpected(exception, true);
         }
 
-        [Ignore] // Remove Atom
-        [TestMethod]
+        // For comment out test cases, see github: https://github.com/OData/odata.net/issues/877
+            [Ignore] // Remove Atom
+        // [TestMethod]
         public void IncomingMessagePropertiesTest()
         {
             var testCases = new[]

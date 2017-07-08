@@ -19,6 +19,7 @@ namespace AstoriaUnitTests.Tests.DerivedProperty
     using Microsoft.VisualStudio.TestTools.UnitTesting;
     using t = System.Data.Test.Astoria;
 
+    // For comment out test cases, see github: https://github.com/OData/odata.net/issues/881
     [TestClass]
     public class DerivedPropertyClientTests
     {
@@ -29,7 +30,7 @@ namespace AstoriaUnitTests.Tests.DerivedProperty
         #region TypeFilter tests
 
         [Ignore] // Remove Atom
-        [TestMethod]
+        // [TestMethod]
         public void TypeFilterTests()
         {
             SendRequestAndVerifyUriAndContext(ModelWithDerivedNavigationProperties(), GetTypeFilterTests);
@@ -287,7 +288,7 @@ namespace AstoriaUnitTests.Tests.DerivedProperty
         #region OrderBy tests
 
         [Ignore] // Remove Atom
-        [TestMethod]
+        // [TestMethod]
         public void OrderByTests()
         {
             SendRequestAndVerifyUriAndContext(ModelWithDerivedNavigationProperties(), GetOrderByTests);
@@ -500,7 +501,7 @@ namespace AstoriaUnitTests.Tests.DerivedProperty
 
         #region Filter tests
         [Ignore] // Remove Atom
-        [TestMethod]
+        // [TestMethod]
         public void FilterTests()
         {
             SendRequestAndVerifyUriAndContext(ModelWithDerivedNavigationProperties(), GetFilterTests);
@@ -621,7 +622,7 @@ namespace AstoriaUnitTests.Tests.DerivedProperty
 
         #region Expand tests
         [Ignore] // Remove Atom
-        [TestMethod]
+        // [TestMethod]
         public void ExpandTests()
         {
             SendRequestAndVerifyUriAndContext(ModelWithDerivedNavigationProperties(), GetExpandTests);
@@ -708,7 +709,7 @@ namespace AstoriaUnitTests.Tests.DerivedProperty
         #endregion Expand tests
 
         [Ignore] // Remove Atom
-        [TestMethod]
+        // [TestMethod]
         public void ProjectionTests()
         {
             SendRequestAndVerifyUriAndContext(ModelWithDerivedNavigationProperties(), GetEntityProjectionTests);
@@ -1491,7 +1492,7 @@ namespace AstoriaUnitTests.Tests.DerivedProperty
         }
 
         [Ignore] // Remove Atom
-        [TestMethod]
+        // [TestMethod]
         public void NegativeQueryTestsForMissingProperty_JsonTracking()
         {
             VerifyNegativeQueryErrorMessage(
@@ -1504,8 +1505,7 @@ namespace AstoriaUnitTests.Tests.DerivedProperty
                 });
         }
 
-        [Ignore] // Remove Atom
-        [TestMethod]
+        // [TestMethod]
         public void NegativeQueryTestsForMissingProperty_JsonNoTracking()
         {
             VerifyNegativeQueryErrorMessage(
@@ -2103,7 +2103,7 @@ namespace AstoriaUnitTests.Tests.DerivedProperty
 
         #region AddLink
         [Ignore] // Remove Atom
-        [TestMethod]
+        // [TestMethod]
         public void AddLinkTests()
         {
             SendSaveChangesAndVerifyContext(GetAddLinkTests());
@@ -2322,7 +2322,7 @@ namespace AstoriaUnitTests.Tests.DerivedProperty
 
         #region SetLink
         [Ignore] // Remove Atom
-        [TestMethod]
+        // [TestMethod]
         public void SetLinkTests()
         {
             SendSaveChangesAndVerifyContext(GetSetLinkTests());
@@ -2567,7 +2567,7 @@ namespace AstoriaUnitTests.Tests.DerivedProperty
 
         #region DeleteLink
         [Ignore] // Remove Atom
-        [TestMethod]
+        // [TestMethod]
         public void DeleteLinkTests()
         {
             SendSaveChangesAndVerifyContext(GetDeleteLinkTests());
@@ -2684,7 +2684,7 @@ namespace AstoriaUnitTests.Tests.DerivedProperty
 
         #region AddRelatedObject
         [Ignore] // Remove Atom
-        [TestMethod]
+        // [TestMethod]
         public void AddRelatedObjectTests()
         {
             SendSaveChangesAndVerifyContext(GetAddRelatedObjectTests());
@@ -2819,7 +2819,7 @@ namespace AstoriaUnitTests.Tests.DerivedProperty
 
         #region LoadProperty
         [Ignore] // Remove Atom
-        [TestMethod]
+        // [TestMethod]
         public void LoadPropertyTests()
         {
             SendSaveChangesAndVerifyContext(GetLoadPropertyTests());
@@ -2890,7 +2890,7 @@ namespace AstoriaUnitTests.Tests.DerivedProperty
 
         #region NamedStreams
         [Ignore] // Remove Atom
-        [TestMethod]
+        // [TestMethod]
         public void NamedStreamTests()
         {
             // NamedStreams operations are not supported in batch

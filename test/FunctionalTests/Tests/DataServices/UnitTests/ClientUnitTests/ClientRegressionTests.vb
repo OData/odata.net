@@ -31,6 +31,7 @@ Imports <xmlns:atom="http://www.w3.org/2005/Atom">
 Imports <xmlns:d="http://docs.oasis-open.org/odata/ns/data">
 Imports <xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
 
+' For comment out test cases, see github: https://github.com/OData/odata.net/issues/887
 <TestClass()> Public Class ClientRegressionTests
     Inherits AstoriaTestCase
 
@@ -156,7 +157,7 @@ Imports <xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
         Next
     End Sub
     'Remove Atom
-    <Ignore> <TestCategory("Partition1")> <TestMethod(), Variation("Expanding with no links could result in ArgumentException thrown by LINQ Except method call")>
+    ' <TestCategory("Partition1")> <TestMethod(), Variation("Expanding with no links could result in ArgumentException thrown by LINQ Except method call")>
     Public Sub ExpandWithOverwriteChanges()
         Me.ctx.MergeOption = MergeOption.OverwriteChanges
         Dim q = From c In ctx.CreateQuery(Of northwindClient.Employees)("Employees").Expand("Employees1") Select c
@@ -172,7 +173,8 @@ Imports <xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
         End Try
     End Sub
     'Remove Atom
-    <Ignore> <TestCategory("Partition1")> <TestMethod()> Public Sub TestBatchWithSingleChangeset()
+    ' <TestCategory("Partition1")> <TestMethod()>
+    Public Sub TestBatchWithSingleChangeset()
         Dim c1 = Me.ctx.Execute(Of northwindClient.Customers)(New Uri("Customers", UriKind.Relative)).First()
         Me.ctx.UpdateObject(c1)
 
@@ -205,19 +207,6 @@ Imports <xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
                 Assert.AreEqual(0, results.Count(), "Customer 0 doesn't have a best friend, so the result collection should be empty.")
             End Using
         End Using
-    End Sub
-
-    <Ignore()>
-    <TestCategory("Partition2")> <TestMethod(), Variation("Check if TypeResolver is called for Expanded or Obtained through LoadProperty ResourceSets with and without Inheritance")>
-    Public Sub TypeResolverWithExpandsOrLoadProperty()
-        TestUtil.RunCombinatorialEngineFail(CombinatorialEngine.FromDimensions(
-                                            New Dimension("ExpandMethod", New Action(Of DataServiceContext)() {
-                                                    AddressOf PerformExpand,
-                                                    AddressOf PerformLoadProperty}),
-                                            New Dimension("UseInheritance", New Boolean() {
-                                                    True,
-                                                    False})),
-                                            AddressOf TestTypeResolverWithExpandOrLoadProperty)
     End Sub
 
     Public Class InheritedOrder
@@ -321,7 +310,7 @@ Imports <xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
 
 #Region "AssertWhenLoadNullProperty"
     'Remove Atom
-    <Ignore> <TestCategory("Partition1")> <TestMethod()>
+    ' <TestCategory("Partition1")> <TestMethod()>
     Public Sub AssertWhenLoadNullProperty()
         ' EF 
         Dim employee = (From e In ctx.Employees Where e.EmployeeID = 2).FirstOrDefault
@@ -412,7 +401,7 @@ Imports <xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
         End Sub
     End Class
     'Remove Atom
-    <Ignore> <TestCategory("Partition1")> <TestMethod()>
+    ' <TestCategory("Partition1")> <TestMethod()>
     Public Sub TestDatetimeOffset()
         Using request = TestWebRequest.CreateForLocal
             request.DataServiceType = GetType(TestCtx)
@@ -480,7 +469,8 @@ Imports <xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
 
         End Sub
         'Remove Atom
-        <Ignore> <TestCategory("Partition2")> <TestMethod()> Public Sub IncorrectLinkOnAdd_Existing()
+        ' <TestCategory("Partition2")> <TestMethod()>
+        Public Sub IncorrectLinkOnAdd_Existing()
             Dim custs = New Customer() With {.ID = 0}
 
             ctx.AttachTo("Customers", custs)
@@ -549,7 +539,7 @@ Imports <xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
 
 #Region "Test DisposeAsyncWaitHandle"
     'Remove Atom
-    <Ignore> <TestCategory("Partition1")> <TestMethod()>
+    ' <TestCategory("Partition1")> <TestMethod()>
     Public Sub DisposeAsyncWaitHandle1()
         Using CustomDataContext.CreateChangeScope()
             Using request = TestWebRequest.CreateForLocal
@@ -574,7 +564,7 @@ Imports <xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
         End Using
     End Sub
     'Remove Atom
-    <Ignore> <TestCategory("Partition1")> <TestMethod()>
+    ' <TestCategory("Partition1")> <TestMethod()>
     Public Sub DisposeAsyncWaitHandle2()
         Using CustomDataContext.CreateChangeScope()
             Using request = TestWebRequest.CreateForLocal
@@ -600,7 +590,7 @@ Imports <xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
         End Using
     End Sub
     'Remove Atom
-    <Ignore> <TestCategory("Partition1")> <TestMethod()>
+    ' <TestCategory("Partition1")> <TestMethod()>
     Public Sub TestSelectSubQueryOfNavigationProperty()
         Using request = TestWebRequest.CreateForLocal
             request.DataServiceType = GetType(NorthwindContext)
@@ -625,7 +615,7 @@ Imports <xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
 
 #Region "Fuzzing: Response header OData-Version value validation issues"
     'Remove Atom
-    <Ignore> <TestCategory("Partition1")> <TestMethod(), Variation("Fuzzing: Response header OData-Version value validation issues")>
+    ' <TestCategory("Partition1")> <TestMethod(), Variation("Fuzzing: Response header OData-Version value validation issues")>
     Public Sub ValidateODataVersionResponseHeader()
 
         Dim serviceVersions() As String = {Nothing, String.Empty, "abc;", "0.0;", "0.123456;", "1;", "1.0;", "1.2;", "1.5;", "2.0;", "2.5;", "4.0",
@@ -688,7 +678,7 @@ Imports <xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
 
 #Region "client does not add If-Match header when the etag is only available from the response header."
     'Remove Atom
-    <Ignore> <TestCategory("Partition1")> <TestMethod(), Variation("client does not add If-Match header when the etag is only available from the response header.")>
+    ' <TestCategory("Partition1")> <TestMethod(), Variation("client does not add If-Match header when the etag is only available from the response header.")>
     Public Sub NonBatchRequest()
         Using request = TestWebRequest.CreateForInProcessWcf
             Using PlaybackService.OverridingPlayback.Restore()
@@ -738,7 +728,7 @@ Imports <xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
         End Using
     End Sub
     'Remove Atom
-    <Ignore> <TestCategory("Partition1")> <TestMethod(), Variation("client does not add If-Match header when the etag is only available from the response header.")>
+    ' <TestCategory("Partition1")> <TestMethod(), Variation("client does not add If-Match header when the etag is only available from the response header.")>
     Public Sub BatchRequest()
         Using CustomDataContext.CreateChangeScope()
             Using PlaybackService.OverridingPlayback.Restore
@@ -876,7 +866,7 @@ Imports <xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
 
 #Region "Client Projections : AddQueryOption(""$select"") doesn't work"
     'Remove Atom
-    <Ignore> <TestCategory("Partition1")> <TestMethod()>
+    ' <TestCategory("Partition1")> <TestMethod()>
     Public Sub AddQueryOptionSelect()
         Dim q = From c In ctx.CreateQuery(Of northwindClient.Customers)("Customers").AddQueryOption("$select", "ContactName") Select c
         Assert.IsTrue(q.ToString().Contains("$select=ContactName"))
@@ -905,7 +895,8 @@ Imports <xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
         Public Property Related As TestEntity3
     End Class
     'Remove Atom
-    <Ignore> <TestCategory("Partition1")> <TestMethod()> Public Sub TypeConvert()
+    ' <TestCategory("Partition1")> <TestMethod()>
+    Public Sub TypeConvert()
         Dim entity = New TestEntity3() With {.ID = "0:0", .Uri = New System.Uri("http://uri/entities(escaped%3AID)")}
         Dim related = New TestEntity3() With {.ID = "1:1", .Uri = New System.Uri("http://uri/entities(escaped%3AID2)")}
 
@@ -1077,7 +1068,7 @@ Imports <xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
         End Try
     End Sub
     'Remove Atom
-    <Ignore> <TestCategory("Partition1")> <TestMethod(), Variation("Type casting in LINQ queries")>
+    ' <TestCategory("Partition1")> <TestMethod(), Variation("Type casting in LINQ queries")>
     Public Sub SelectManyWithTypeCast()
 
         ' NOTE: This is the VB version of LinqTests.LinqCast
@@ -1327,7 +1318,7 @@ Imports <xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
         Public TestQuery As IQueryable
     End Class
     'Remove Atom
-    <Ignore> <TestCategory("Partition1")> <TestMethod(), Variation("Verify behavior when adding items to a DataServiceCollection that has tracking option set during construction")>
+    ' <TestCategory("Partition1")> <TestMethod(), Variation("Verify behavior when adding items to a DataServiceCollection that has tracking option set during construction")>
     Public Sub ItemsAddedToDataServiceCollectionAfterExceptionsOccurred_ImmediateTrackingDuringConstruction()
 
         Using host As TestWebRequest = TestWebRequest.CreateForInProcessWcf()
@@ -1421,7 +1412,7 @@ Imports <xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
 
     End Sub
     'Remove Atom
-    <Ignore> <TestCategory("Partition1")> <TestMethod(), Variation("Verify behavior when adding items to a DataServiceCollection that turns tracking on during Load")>
+    ' <TestCategory("Partition1")> <TestMethod(), Variation("Verify behavior when adding items to a DataServiceCollection that turns tracking on during Load")>
     Public Sub ItemsAddedToDataServiceCollectionAfterExceptionsOccurred_DeferringTrackingDuringLoad()
 
         Using host As TestWebRequest = TestWebRequest.CreateForInProcessWcf()
@@ -1580,7 +1571,7 @@ Imports <xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
 
     End Sub
     'Remove Atom
-    <Ignore> <TestCategory("Partition1")> <TestMethod(), Variation("Having a closing element for the nextpage link element causes all the rest of the elements below it at that level to be ignored")>
+    ' <TestCategory("Partition1")> <TestMethod(), Variation("Having a closing element for the nextpage link element causes all the rest of the elements below it at that level to be ignored")>
     Public Sub ShouldNotIgnoreElementsLeftIfHaveClosingElementForNextPageLink()
         OpenWebDataServiceHelper.ForceVerboseErrors = True
         Using request = TestWebRequest.CreateForInProcessWcf()
@@ -1667,7 +1658,7 @@ Imports <xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
         End Using
     End Sub
     'Remove Atom
-    <Ignore> <TestCategory("Partition1")> <TestMethod(), Variation("Null collection property in content and other value outside of content")>
+    ' <TestCategory("Partition1")> <TestMethod(), Variation("Null collection property in content and other value outside of content")>
     Public Sub AssertWithEPMCollectionNullInContent()
 
         Using host As TestWebRequest = TestWebRequest.CreateForInProcessWcf()
@@ -1730,8 +1721,8 @@ Imports <xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
         End Property
     End Class
     'Remove Atom
-    <Ignore> <TestCategory("Partition1")>
-    <TestMethod()>
+    ' <TestCategory("Partition1")>
+    ' <TestMethod()>
     Public Sub NamedStream_DuplicatedEditLinkShouldFail()
         Using host As TestWebRequest = TestWebRequest.CreateForInProcessWcf()
             Using PlaybackService.OverridingPlayback.Restore()
@@ -1778,8 +1769,8 @@ Imports <xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
     End Sub
 
     'Remove Atom
-    <Ignore> <TestCategory("Partition1")>
-    <TestMethod()>
+    ' <TestCategory("Partition1")>
+    ' <TestMethod()>
     Public Sub NamedStream_DuplicatedReadLinkShouldFail()
         Using host As TestWebRequest = TestWebRequest.CreateForInProcessWcf()
             Using PlaybackService.OverridingPlayback.Restore()
@@ -1830,7 +1821,7 @@ Imports <xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
         Property Tags As List(Of String)
     End Class
     'Remove Atom
-    <Ignore> <TestCategory("Partition1")> <TestMethod(), Variation("Client Projections : ArgumentException on casting collection to IEnumerable inside a projection")>
+    ' <TestCategory("Partition1")> <TestMethod(), Variation("Client Projections : ArgumentException on casting collection to IEnumerable inside a projection")>
     Public Sub CastingCollectionToIEnumerableShouldWork()
         Using request = TestWebRequest.CreateForLocal
             request.DataServiceType = GetType(NorthwindContext)

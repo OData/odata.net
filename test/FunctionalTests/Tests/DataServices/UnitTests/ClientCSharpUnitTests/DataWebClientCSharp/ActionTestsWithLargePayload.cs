@@ -24,8 +24,9 @@ namespace AstoriaUnitTests
     /// <summary>
     /// End-to-end test for actions with large number of parameters or advertisement of large number of actions.
     /// </summary>
+    // For comment out test cases, see github: https://github.com/OData/odata.net/issues/881
     [Ignore] // Remove Atom
-    [TestClass]
+    // [TestClass]
     public class ActionTestsWithLargePayload
     {
         #region Initialize Class

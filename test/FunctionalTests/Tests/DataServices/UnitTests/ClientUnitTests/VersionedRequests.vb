@@ -55,7 +55,7 @@ Partial Public Class ClientModule
             Me.ctx = Nothing
         End Sub
         'Remove Atom
-        <Ignore> <TestCategory("Partition2")> <TestMethod()>
+        ' <TestCategory("Partition2")> <TestMethod()>
         Public Sub AtomRequestsAreValid()
             Dim se As New SimpleEntity()
             se.ID = "the id"
@@ -72,7 +72,7 @@ Partial Public Class ClientModule
             TestUtil.AssertContains(payload, "<id />")
         End Sub
         'Remove Atom
-        <Ignore> <TestCategory("Partition2")> <TestMethod()>
+        ' <TestCategory("Partition2")> <TestMethod()>
         Public Sub ALinqShouldUseTypeResolverForCastAndTypeIs()
             ' ALinq should use typeresolver for cast and typeis
             ctx.ResolveName = AddressOf ResolveNameCallback
@@ -250,7 +250,7 @@ Partial Public Class ClientModule
             TestUtil.AssertContains(lines(0), "SimpleEntityWithLong(1)")
         End Sub
         'Remove Atom
-        <Ignore> <TestCategory("Partition2")> <TestMethod()>
+        ' <TestCategory("Partition2")> <TestMethod()>
         Public Sub TranslationShouldBeCorrectInFilterPredicate()
             ' ALinq: incorrect translation in query with traversal+key lookup in filter predicate
             Dim typedContext = New SimpleContext(web.ServiceRoot)
@@ -345,7 +345,8 @@ Partial Public Class ClientModule
 
 #Region "EntryHasInstreamError"
         'Remove Atom
-        <Ignore> <TestCategory("Partition2")> <TestMethod()> Public Sub EntryHasInstreamError()
+        ' <TestCategory("Partition2")> <TestMethod()>
+        Public Sub EntryHasInstreamError()
             Using PlaybackService.OverridingPlayback.Restore
                 PlaybackService.OverridingPlayback.Value =
                 "HTTP/1.1 200 OK" & vbCrLf &
@@ -373,14 +374,14 @@ Partial Public Class ClientModule
         End Sub
 #End Region
         'Remove Atom
-        <Ignore> <TestCategory("Partition2")> <TestMethod()>
+        ' <TestCategory("Partition2")> <TestMethod()>
         Public Sub VersionSentOnGet()
             Dim q = ctx.CreateQuery(Of SimpleEntity)("/Blah")
             Dim payload = ExtractPlayback(q)
             TestUtil.AssertContains(payload, "OData-Version: 4.0")
         End Sub
         'Remove Atom
-        <Ignore> <TestCategory("Partition2")> <TestMethod()>
+        ' <TestCategory("Partition2")> <TestMethod()>
         Public Sub VersionSentOnUpdates()
             Dim e = New SimpleEntity()
             e.ID = "123"

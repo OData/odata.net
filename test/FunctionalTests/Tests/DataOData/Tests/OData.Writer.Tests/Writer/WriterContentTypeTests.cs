@@ -31,6 +31,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
     /// <summary>
     /// Tests for writing different OData payloads with a variety of accept headers.
     /// </summary>
+    // For comment out test cases, see github: https://github.com/OData/odata.net/issues/883
     [TestClass, TestCase]
     public class WriterContentTypeTests : ODataWriterTestCase
     {
@@ -99,7 +100,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
         // ToDo: For this file, take a look at history to find out exactly what to translate.
 
         [Ignore] // Remove Atom
-        [TestMethod, Variation(Description = "Test response content types when writing entries.")]
+        // [TestMethod, Variation(Description = "Test response content types when writing entries.")]
         public void EntryContentTypeTests()
         {
             var model = new EdmModel();
@@ -150,7 +151,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
         }
 
         [Ignore] // Remove Atom
-        [TestMethod, Variation(Description = "Test response content types when writing feeds.")]
+        // [TestMethod, Variation(Description = "Test response content types when writing feeds.")]
         public void FeedContentTypeTests()
         {
             var model = new EdmModel();
@@ -204,7 +205,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
         }
 
         [Ignore] // Remove Atom
-        [TestMethod, Variation(Description = "Test response content types when writing properties.")]
+        // [TestMethod, Variation(Description = "Test response content types when writing properties.")]
         public void PropertyContentTypeTests()
         {
             ODataProperty property = new ODataProperty() { Name = "Age", Value = 42 };
@@ -387,7 +388,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
         }
 
         [Ignore] // Remove Atom
-        [TestMethod, Variation(Description = "Test response content types when writing a collection of primitive values.")]
+        // [TestMethod, Variation(Description = "Test response content types when writing a collection of primitive values.")]
         public void PrimitiveCollectionContentTypeTests()
         {
             object[] values = new object[] { 41, 42, 43 };
@@ -420,7 +421,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
         }
 
         [Ignore] // Remove Atom
-        [TestMethod, Variation(Description = "Test response content types when writing a collection of complex values.")]
+        // [TestMethod, Variation(Description = "Test response content types when writing a collection of complex values.")]
         public void ComplexCollectionContentTypeTests()
         {
             ODataComplexValue item1 = new ODataComplexValue()
@@ -472,7 +473,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
         }
 
         [Ignore] // Remove Atom
-        [TestMethod, Variation(Description = "Test response content types when writing a service document.")]
+        // [TestMethod, Variation(Description = "Test response content types when writing a service document.")]
         public void ServiceDocumentContentTypeTests()
         {
             ODataServiceDocument serviceDocument = ObjectModelUtils.CreateDefaultWorkspace();
@@ -507,7 +508,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
         }
 
         [Ignore] // Remove Atom
-        [TestMethod, Variation(Description = "Test response content types when writing an error.")]
+        // [TestMethod, Variation(Description = "Test response content types when writing an error.")]
         public void ErrorContentTypeTests()
         {
             ODataError error = new ODataError()
@@ -623,7 +624,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
         }
 
         [Ignore] // Remove Atom
-        [TestMethod, Variation(Description = "Encoding content types variation")]
+        // [TestMethod, Variation(Description = "Encoding content types variation")]
         public void EncodingContentTypeTests()
         {
             // TODO: this is a first, reasonable set of encoding tests. More are needed for full coverage.
@@ -717,7 +718,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
         }
 
         [Ignore] // Remove Atom
-        [TestMethod, Variation(Description = "Verifies that each payload kind which can be serialized in V1-V3 deals with 'application/json' and its variants in a version appropriate way")]
+        // [TestMethod, Variation(Description = "Verifies that each payload kind which can be serialized in V1-V3 deals with 'application/json' and its variants in a version appropriate way")]
         public void AppJsonContentTypeVersioningTest()
         {
             EdmModel model = this.GenerateAppJsonContentTypeModel();
@@ -771,7 +772,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
         /// Since this test is supposed to be testing JSON payload, this need to be changed to work with JSON.
         /// </summary>
         [Ignore] // Remove Atom
-        [TestMethod]
+        // [TestMethod]
         public void AppJsonContentTypeVersioningEntityReferenceLinksTest()
         {
             EdmModel model = this.GenerateAppJsonContentTypeModel();
@@ -799,7 +800,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
         }
 
         [Ignore] // Remove Atom
-        [TestMethod, Variation(Description = "Verifies that each payload Primitive kind which can be serialized in V1-V3 deals with 'application/json' and its variants in a version appropriate way")]
+        // [TestMethod, Variation(Description = "Verifies that each payload Primitive kind which can be serialized in V1-V3 deals with 'application/json' and its variants in a version appropriate way")]
         public void AppJsonContentTypeVersioningEntryTest()
         {
             EdmModel model = this.GenerateAppJsonContentTypeModel();
@@ -814,7 +815,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
         }
 
         [Ignore] // Remove Atom
-        [TestMethod, Variation(Description = "Verifies that each payload Primitive kind which can be serialized in V1-V3 deals with 'application/json' and its variants in a version appropriate way")]
+        // [TestMethod, Variation(Description = "Verifies that each payload Primitive kind which can be serialized in V1-V3 deals with 'application/json' and its variants in a version appropriate way")]
         public void AppJsonContentTypeVersioningFeedTest()
         {
             EdmModel model = this.GenerateAppJsonContentTypeModel();
@@ -829,7 +830,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
         }
 
         [Ignore] // Remove Atom
-        [TestMethod, Variation(Description = "Verifies that each payload Primitive kind which can be serialized in V1-V3 deals with 'application/json' and its variants in a version appropriate way")]
+        // [TestMethod, Variation(Description = "Verifies that each payload Primitive kind which can be serialized in V1-V3 deals with 'application/json' and its variants in a version appropriate way")]
         public void AppJsonContentComplexTypeVersioningTest()
         {
             EdmModel model = this.GenerateAppJsonContentTypeModel();
@@ -861,7 +862,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
         }
 
         [Ignore] // Remove Atom
-        [TestMethod, Variation(Description = "Verifies that each payload Primitive kind which can be serialized in V1-V3 deals with 'application/json' and its variants in a version appropriate way")]
+        // [TestMethod, Variation(Description = "Verifies that each payload Primitive kind which can be serialized in V1-V3 deals with 'application/json' and its variants in a version appropriate way")]
         public void AppJsonContentPrimitivetTypeVersioningTest()
         {
             EdmModel model = this.GenerateAppJsonContentTypeModel();

@@ -32,6 +32,7 @@ namespace AstoriaUnitTests.Tests
     using provider = Microsoft.OData.Service.Providers;
     using Microsoft.OData.Client;
 
+    // For comment out test cases, see github: https://github.com/OData/odata.net/issues/868
     /// <summary>This class contains inner classes that can run as LTM tests.</summary>
     [TestModule]
     public partial class UnitTestModule1 : AstoriaTestModule
@@ -43,7 +44,7 @@ namespace AstoriaUnitTests.Tests
         {
             #region Insert/Post Tests
             [Ignore] // Remove Atom
-            [TestCategory("Partition1"), TestMethod, Variation]
+            // [TestCategory("Partition1"), TestMethod, Variation]
             public void UpdatePostError_SpecifyNullPayload()
             {
                 string jsonPayLoad = "{ }";
@@ -56,7 +57,7 @@ namespace AstoriaUnitTests.Tests
                 VerifyInvalidRequestForVariousProviders(atomPayload, "/Customers", UnitTestsUtil.AtomFormat, "POST", 400);
             }
             [Ignore] // Remove Atom
-            [TestCategory("Partition1"), TestMethod, Variation]
+            // [TestCategory("Partition1"), TestMethod, Variation]
             public void UpdateDeepPostWithInvalidLinkTypeValue()
             {
                 string customerFullName = typeof(Customer).FullName;
@@ -203,7 +204,7 @@ namespace AstoriaUnitTests.Tests
                 return instance;
             }
             [Ignore] // Remove Atom
-            [TestCategory("Partition1"), TestMethod, Variation]
+            // [TestCategory("Partition1"), TestMethod, Variation]
             public void UpdatePostSimple()
             {
                 #region Payload
@@ -235,7 +236,7 @@ namespace AstoriaUnitTests.Tests
                 DoInsertsForVariousProviders("/Customers", UnitTestsUtil.JsonLightMimeType, payloadGenerator, jsonLiteXPaths);
             }
             [Ignore] // Remove Atom
-            [TestCategory("Partition1"), TestMethod, Variation]
+            // [TestCategory("Partition1"), TestMethod, Variation]
             public void UpdatePostInsertAndBindReferenceResource()
             {
                 #region Payload
@@ -274,7 +275,7 @@ namespace AstoriaUnitTests.Tests
                 UnitTestsUtil.DoInsertsForVariousProviders("/Customers", UnitTestsUtil.JsonLightMimeType, payloadGenerator, new KeyValuePair<string, string[]>[] { jsonLiteXPaths1, jsonLiteXPaths2 }, true/*verifyETag*/);
             }
             [Ignore] // Remove Atom
-            [TestCategory("Partition1"), TestMethod, Variation]
+            // [TestCategory("Partition1"), TestMethod, Variation]
             public void UpdatePostDeepInsert()
             {
                 string customerFullName = typeof(Customer).FullName;
@@ -390,7 +391,7 @@ namespace AstoriaUnitTests.Tests
                 UnitTestsUtil.DoInsertsForVariousProviders("/Customers", UnitTestsUtil.JsonLightMimeType, payloadGenerator, new KeyValuePair<string, string[]>[] { jsonLiteXPaths1, jsonLiteXPaths2, jsonLiteXPaths3, jsonLiteXPaths4, jsonLiteXPaths5 }, true/*verifyETag*/);
             }
             [Ignore] // Remove Atom
-            [TestCategory("Partition1"), TestMethod, Variation]
+            // [TestCategory("Partition1"), TestMethod, Variation]
             public void UpdatePostInsertResourceToCollection()
             {
                 #region Payload
@@ -425,7 +426,7 @@ namespace AstoriaUnitTests.Tests
             }
 
             [Ignore]
-            [TestCategory("Partition1"), TestMethod, Variation]
+            // [TestCategory("Partition1"), TestMethod, Variation]
             // ToDo: Fix places where we've lost JsonVerbose coverage to add JsonLight
             public void UpdatePostInsertResourceToCollectionRepeated()
             {
@@ -555,14 +556,14 @@ namespace AstoriaUnitTests.Tests
 
             #region Delete Tests
             [Ignore] // Remove Atom
-            [TestCategory("Partition1"), TestMethod, Variation]
+            // [TestCategory("Partition1"), TestMethod, Variation]
             public void UpdateTopLevelDelete()
             {
                 PerformDeletesForVariousProvider("/Customers(1)",
                     new KeyValuePair<string, int>[] { new KeyValuePair<string, int>("/Customers", 1) }, true /*verifyETagScenarios*/);
             }
             [Ignore] // Remove Atom
-            [TestCategory("Partition1"), TestMethod, Variation]
+            // [TestCategory("Partition1"), TestMethod, Variation]
             public void UpdateDeleteResourceFromCollection()
             {
                 string uri = "/Customers(1)/Orders(1)";
@@ -575,7 +576,7 @@ namespace AstoriaUnitTests.Tests
                 PerformDeletesForVariousProvider(uri, verifyObjectCountForUris, false /*verifyETagScenarios*/);
             }
             [Ignore] // Remove Atom
-            [TestCategory("Partition1"), TestMethod, Variation]
+            // [TestCategory("Partition1"), TestMethod, Variation]
             public void UpdateDeleteResourceFromReference()
             {
                 string uri = "/Customers(1)/BestFriend";
@@ -588,7 +589,7 @@ namespace AstoriaUnitTests.Tests
                 PerformDeletesForVariousProvider(uri, verifyObjectCountForUris, true /*verifyETagScenarios*/);
             }
             [Ignore] // Remove Atom
-            [TestCategory("Partition1"), TestMethod, Variation]
+            // [TestCategory("Partition1"), TestMethod, Variation]
             public void UpdateDeepDelete()
             {
                 string uri = "/Customers(1)/BestFriend/Orders(0)";
@@ -786,7 +787,7 @@ namespace AstoriaUnitTests.Tests
 
             #region Update/Put Tests
             [Ignore] // Remove Atom
-            [TestCategory("Partition1"), TestMethod, Variation]
+            // [TestCategory("Partition1"), TestMethod, Variation]
             public void UpdatePutError_SpecifyNullPayloadInUpdate()
             {
                 string payLoad = "{" +
@@ -856,7 +857,7 @@ namespace AstoriaUnitTests.Tests
                 VerifyInvalidRequestForVariousProviders(atomPayload, "/Customers", UnitTestsUtil.AtomFormat, "PUT", 405);
             }
             [Ignore] // Remove Atom
-            [TestCategory("Partition1"), TestMethod, Variation]
+            // [TestCategory("Partition1"), TestMethod, Variation]
             public void UpdatePutError_ErrorInEntityPayload()
             {
                 string jsonPayload = "{" +
@@ -916,7 +917,7 @@ namespace AstoriaUnitTests.Tests
                 VerifyInvalidRequestForVariousProviders(atomPayload, "/Customers", UnitTestsUtil.AtomFormat, "PUT", 405);
             }
             [Ignore] // Remove Atom
-            [TestCategory("Partition1"), TestMethod, Variation]
+            // [TestCategory("Partition1"), TestMethod, Variation]
             public void UpdatePutTopLevelResourceDirectly()
             {
                 PayloadBuilder payloadBuilder =
@@ -939,7 +940,7 @@ namespace AstoriaUnitTests.Tests
                 DoUpdatesForVariousProviders("PATCH", "/Customers(1)", UnitTestsUtil.JsonLightMimeType, payloadBuilder, jsonLiteXPath, true/*verifyETag*/);
             }
             [Ignore] // Remove Atom
-            [TestCategory("Partition1"), TestMethod, Variation]
+            // [TestCategory("Partition1"), TestMethod, Variation]
             public void UpdatePutTopLevelResourceDirectlyWithoutMetadataInformation()
             {
                 PayloadBuilder payloadBuilder =
@@ -956,7 +957,7 @@ namespace AstoriaUnitTests.Tests
                 DoUpdatesForVariousProviders("PATCH", "/Orders(1)", UnitTestsUtil.JsonLightMimeType, payloadBuilder, jsonLiteXPath, false);
             }
             [Ignore] // Remove Atom
-            [TestCategory("Partition1"), TestMethod, Variation]
+            // [TestCategory("Partition1"), TestMethod, Variation]
             public void UpdatePutDeepReferencePropertyUpdate()
             {
                 PayloadBuilder payloadBuilder =
@@ -973,7 +974,7 @@ namespace AstoriaUnitTests.Tests
                 VerifyInvalidRequestForVariousProviders1(payloadBuilder, "/Customers(1)", UnitTestsUtil.JsonLightMimeType, "PUT", 400);
             }
             [Ignore] // Remove Atom
-            [TestCategory("Partition1"), TestMethod, Variation]
+            // [TestCategory("Partition1"), TestMethod, Variation]
             public void UpdatePut_ChangeReferenceRelationshipInPayload()
             {
                 string customerFullName = typeof(Customer).FullName;
@@ -1003,7 +1004,7 @@ namespace AstoriaUnitTests.Tests
                 DoUpdatesForVariousProviders("PATCH", "/Customers(2)", UnitTestsUtil.JsonLightMimeType, payloadBuilder, jsonLiteUriAndXPath1, true, true /*verifyUpdateResponse*/);
             }
             [Ignore] // Remove Atom
-            [TestCategory("Partition1"), TestMethod, Variation]
+            // [TestCategory("Partition1"), TestMethod, Variation]
             public void UpdatePut_ChangeReferenceSetRelationshipInPayload()
             {
                 PayloadBuilder payloadBuilder = new PayloadBuilder() { TypeName = typeof(Customer).FullName }
@@ -1035,7 +1036,7 @@ namespace AstoriaUnitTests.Tests
                 DoUpdatesForVariousProviders("PATCH", "/Customers(2)", UnitTestsUtil.JsonLightMimeType, payloadBuilder, jsonLiteUriAndXPath1, true, true /*verifyUpdateResponse*/);
             }
             [Ignore] // Remove Atom
-            [TestCategory("Partition1"), TestMethod, Variation]
+            // [TestCategory("Partition1"), TestMethod, Variation]
             public void UpdatePutDeepResourceSetPropertyUpdate()
             {
                 string jsonPayload = "{" +
@@ -1086,7 +1087,7 @@ namespace AstoriaUnitTests.Tests
                 VerifyInvalidRequestForVariousProviders(atomPayload, "/Customers(1)", UnitTestsUtil.AtomFormat, "PUT", 400);
             }
             [Ignore] // Remove Atom
-            [TestCategory("Partition1"), TestMethod, Variation]
+            // [TestCategory("Partition1"), TestMethod, Variation]
             public void UpdatePutDeepResourceReferencePropertyToNull()
             {
                 var payloadBuilder = new PayloadBuilder() { TypeName = typeof(CustomerWithBirthday).FullName }
@@ -1486,7 +1487,7 @@ namespace AstoriaUnitTests.Tests
                 }
             }
             [Ignore] // Remove Atom
-            [TestCategory("Partition1"), TestMethod, Variation]
+            // [TestCategory("Partition1"), TestMethod, Variation]
             public void UpdatePutContentTypeTest()
             {
                 var targets = new[]
@@ -1804,7 +1805,7 @@ namespace AstoriaUnitTests.Tests
                 VerifyInvalidRequestForVariousProviders(atomPayload, "/Customers(1)/BestFriend/Orders", UnitTestsUtil.AtomFormat, "PUT", 405);
             }
             [Ignore] // Remove Atom
-            [TestCategory("Partition1"), TestMethod, Variation]
+            // [TestCategory("Partition1"), TestMethod, Variation]
             public void UpdateMergeReferencePropertyUpdate()
             {
                 PayloadBuilder payloadBuilder = new PayloadBuilder()
@@ -1832,7 +1833,7 @@ namespace AstoriaUnitTests.Tests
                 DoUpdatesForVariousProviders("PATCH", "/Customers(1)/BestFriend", UnitTestsUtil.JsonLightMimeType, payloadBuilder, new KeyValuePair<string, string[]>[] { jsonLiteUriAndXPath1, jsonLiteUriAndXPath2 }, true, true /*verifyUpdateResponse*/);
             }
             [Ignore] // Remove Atom
-            [TestCategory("Partition1"), TestMethod]
+            // [TestCategory("Partition1"), TestMethod]
             public void UpdatRequiresNoTypeExplicitlyFromIDSP()
             {
                 using (TestUtil.RestoreStaticValueOnDispose(typeof(CustomDataServiceProvider), "InvocationTraceCallback"))
@@ -1869,7 +1870,7 @@ namespace AstoriaUnitTests.Tests
                 }
             }
             [Ignore] // Remove Atom
-            [TestCategory("Partition1"), TestMethod, Variation("setting a reference property to null via a uri that refers to null should work")]
+            // [TestCategory("Partition1"), TestMethod, Variation("setting a reference property to null via a uri that refers to null should work")]
             public void UpdateSetReferencePropertyToNullViaAValidUri()
             {
                 string uri = "/Customers(1)";
@@ -2143,7 +2144,7 @@ namespace AstoriaUnitTests.Tests
 
             #region Update/Replace Tests
             [Ignore] // Remove Atom
-            [TestCategory("Partition1"), TestMethod, Variation]
+            // [TestCategory("Partition1"), TestMethod, Variation]
             public void UpdateReplaceTopLevelResourceDirectly()
             {
                 string uri = "/Customers(1)";
@@ -2340,7 +2341,7 @@ namespace AstoriaUnitTests.Tests
                 }
             }
             [Ignore] // Remove Atom
-            [TestCategory("Partition1"), TestMethod()]
+            // [TestCategory("Partition1"), TestMethod()]
             public void PreferHeader_Server()
             {
                 DSPMetadata metadata = PreferHeader_CreateMetadata();
@@ -2461,7 +2462,7 @@ namespace AstoriaUnitTests.Tests
                 }
             }
             [Ignore] // Remove Atom
-            [TestCategory("Partition1"), TestMethod(), Variation("Verifies that Prefer header works as expected with ProcessingPipeline, Configuration, Interceptors and access rights.")]
+            // [TestCategory("Partition1"), TestMethod(), Variation("Verifies that Prefer header works as expected with ProcessingPipeline, Configuration, Interceptors and access rights.")]
             public void PreferHeader_CrossFeature()
             {
                 DSPMetadata metadata = PreferHeader_CreateMetadata();
@@ -2586,7 +2587,7 @@ namespace AstoriaUnitTests.Tests
                 });
             }
             [Ignore] // Remove Atom
-            [TestCategory("Partition1"), TestMethod(), Variation("Verifies that Prefer header has no effect on requests it should not have.")]
+            // [TestCategory("Partition1"), TestMethod(), Variation("Verifies that Prefer header has no effect on requests it should not have.")]
             public void PreferHeader_UnrelatedRequests()
             {
                 DSPMetadata metadata = PreferHeader_CreateMetadata();
@@ -2920,7 +2921,7 @@ namespace AstoriaUnitTests.Tests
 
             #endregion Prefer header
             [Ignore] // Remove Atom
-            [TestCategory("Partition1"), TestMethod()]
+            // [TestCategory("Partition1"), TestMethod()]
             public void AllTypesTest()
             {
                 Dictionary<Type, PropertyInfo> typeToPropertyMap = new Dictionary<Type, PropertyInfo>();
@@ -2976,7 +2977,7 @@ namespace AstoriaUnitTests.Tests
 
             // ODataLib was fixed and reports missing type name as an annotation.
             [Ignore] // Remove Atom
-            [TestCategory("Partition1"), TestMethod]
+            // [TestCategory("Partition1"), TestMethod]
             public void UpdateAtomCategoryTest()
             {
                 string[] schemes = new string[]
@@ -3044,7 +3045,7 @@ namespace AstoriaUnitTests.Tests
                 });
             }
             [Ignore] // Remove Atom
-            [TestCategory("Partition1"), TestMethod]
+            // [TestCategory("Partition1"), TestMethod]
             public void RoundTrippingTests()
             {
                 string atomPayload = "<?xml version=\"1.0\" encoding=\"utf-8\" standalone=\"yes\"?>" +

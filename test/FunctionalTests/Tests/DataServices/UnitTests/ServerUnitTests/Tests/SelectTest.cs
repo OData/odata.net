@@ -128,8 +128,9 @@ namespace AstoriaUnitTests.Tests
     [TestModule]
     public partial class UnitTestModule : AstoriaTestModule
     {
+        // For comment out test cases, see github: https://github.com/OData/odata.net/issues/877
         [Ignore] // Remove Atom
-        [TestClass, TestCase]
+        // [TestClass, TestCase]
         public class SelectTest : AstoriaTestCase
         {
             [TestMethod, Variation]
@@ -1777,50 +1778,6 @@ namespace AstoriaUnitTests.Tests
                             UnitTestsUtil.VerifyNoContentResponse(request, "/Customers(0)/BestFriend?$select=Name", format);
                         }
                     });
-                }
-            }
-
-            // Open complex property being mapped out, and value is null
-            [Ignore]
-            [TestMethod, Variation]
-            public void Projections_OpenEpmProperties()
-            {
-                using (TestUtil.MetadataCacheCleaner())
-                using (CustomRowBasedOpenTypesContext.CreateChangeScope())
-                using (OpenWebDataServiceHelper.EnableFriendlyFeeds.Restore())
-                {
-                    OpenWebDataServiceHelper.EnableFriendlyFeeds.Value = true;
-
-                    XmlDocument response;
-                    using (TestUtil.MetadataCacheCleaner())
-                    using (TestWebRequest request = TestWebRequest.CreateForInProcessWcf())
-                    {
-                        request.DataServiceType = typeof(CustomRowBasedOpenTypesContext);
-                        request.RequestMaxVersion = "2.0;";
-                        response = UnitTestsUtil.GetResponseAsAtom(request, "/Customers?$select=ID", UnitTestsUtil.AtomFormat);
-                    }
-
-                    // Birthday is an open property which is non-null only for customer 1. It is also mapped through Epm
-                    //   to the atom:published element but only for CustomerWithBirthday type (that is customer 1).
-                    // Verify that the property is not projected at all (Even if null) for types which
-                    //   don't have it as Epm and that it is projected through Epm for the type which does have it.
-                    // Verify that customer 0 (which doesn't have the Birthday open property and no Epm) doesn't have
-                    //   the Epm defined published value.
-                    UnitTestsUtil.VerifyXPathDoesntExist(response,
-                        "//atom:entry[.//c:id='0']/atom:published");
-                    // Verify that customer 1 (which does have the Birthday and its mapping through Epm) does get the published value.
-                    UnitTestsUtil.VerifyXPathExists(response,
-                        "//atom:entry[.//c:id='1']/atom:published");
-
-                    // Address is an open property which is non-null on customer 0 and null on customer 1. It is mapped through Epm
-                    //   to a custom ad:address element for the base Customer type (so for all customers)
-                    // Verify that even is it's not projected, it is present in properties if it's null, and not there otherwise.
-                    // Verify that the customer 0 doesn't have the address listed in properties as it is not null and not projected
-                    UnitTestsUtil.VerifyXPathDoesntExist(response,
-                        "//atom:entry[.//c:id='0']//ads:Address");
-                    // Verify that the customer 1 has the address property and it's null
-                    UnitTestsUtil.VerifyXPathExists(response,
-                        "//atom:entry[.//c:id='1']//ads:Address[@adsm:null='true']");
                 }
             }
 

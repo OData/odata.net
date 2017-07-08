@@ -24,8 +24,9 @@ namespace AstoriaUnitTests.Tests
     [TestClass]
     public class InternalTestHookTests
     {
+        // For comment out test cases, see github: https://github.com/OData/odata.net/issues/881
         [Ignore] // Remove Atom
-        [TestMethod]
+        // [TestMethod]
         public void ResponseHeadersAndStreamExceptionTest()
         {
             // Execute a query using a variety of methods (including sync, async, batch) and verify the response headers and payloads
@@ -81,8 +82,9 @@ namespace AstoriaUnitTests.Tests
             }
         }
 
-        [Ignore] // [Lianw] Remove Atom
-        [TestMethod]
+        // For comment out test cases, see github: https://github.com/OData/odata.net/issues/881
+        [Ignore] // Remove Atom
+        // [TestMethod]
         public void RequestHeadersAndStreamTest()
         {
             // SaveChanges with multiple changes, using a variety of configurations (including sync, async, batch) and verify the request headers and payloads

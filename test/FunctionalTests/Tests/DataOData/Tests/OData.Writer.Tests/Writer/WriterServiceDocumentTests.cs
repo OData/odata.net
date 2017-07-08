@@ -22,6 +22,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
     using Microsoft.Test.Taupo.OData.Writer.Tests.Common;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
+    // For comment out test cases, see github: https://github.com/OData/odata.net/issues/883
     /// <summary>
     /// Tests for writing service documents using the ODataMessageWriter.
     /// </summary>
@@ -38,7 +39,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
         private static readonly ODataMessageWriterSettings settingsWithBaseUri = new ODataMessageWriterSettings { BaseUri = new Uri(baseUri) };
 
         [Ignore] // Remove Atom
-        [TestMethod, Variation(Description = "Test different combinations of service document writing.")]
+        // [TestMethod, Variation(Description = "Test different combinations of service document writing.")]
         public void WorkspaceNamesTests()
         {
             string[] workspaceNames = new string[] { null, string.Empty, "MyWorkspaceName" };
@@ -130,7 +131,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
         }
 
         [Ignore] // Remove Atom
-        [TestMethod, Variation(Description = "Test different combinations of writing service documents with resource collections and serviceDocument names.")]
+        // [TestMethod, Variation(Description = "Test different combinations of writing service documents with resource collections and serviceDocument names.")]
         public void WorkspaceNamesAndResourceCollectionTests()
         {
             const string baseUri = "http://odata.org/";
@@ -216,7 +217,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
         }
 
         [Ignore] // Remove Atom
-        [TestMethod, Variation(Description = "Test different combinations of writing service documents with resource collections.")]
+        // [TestMethod, Variation(Description = "Test different combinations of writing service documents with resource collections.")]
         public void ResourceCollectionTests()
         {
             const string baseUri = "http://odata.org/";
@@ -279,7 +280,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
         }
 
         [Ignore] // Remove Atom
-        [TestMethod, Variation(Description = "Test different combinations of writing service documents with singletons.")]
+        // [TestMethod, Variation(Description = "Test different combinations of writing service documents with singletons.")]
         public void SingletonTests()
         {
             const string baseUri = "http://odata.org/";
@@ -342,7 +343,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
         }
 
         [Ignore] // Remove Atom
-        [TestMethod, Variation(Description = "Test different combinations of writing service documents with resource collections.")]
+        // [TestMethod, Variation(Description = "Test different combinations of writing service documents with resource collections.")]
         public void AdditionalResourceCollectionTests()
         {
             IEdmModel model = this.CreateMetadata(new[] { new CollectionInfo { Url = "EntitySet1" }, new CollectionInfo { Url = "EntitySet2" } });
@@ -401,7 +402,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
         }
 
         [Ignore] // Remove Atom
-        [TestMethod, Variation(Description = "Test different error conditions writing service documents.")]
+        // [TestMethod, Variation(Description = "Test different error conditions writing service documents.")]
         public void ServiceDocumentErrorTests()
         {
             IEdmModel model = this.CreateMetadata(new[] { new CollectionInfo() { Url = "EntitySet1" }, new CollectionInfo() { Url = "EntitySet2" } });

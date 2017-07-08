@@ -17,10 +17,11 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
     using Microsoft.Test.Taupo.OData.Writer.Tests.Common;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
+    // For comment out test cases, see github: https://github.com/OData/odata.net/issues/883
     /// <summary>
     /// Tests to verify writer correctly validates input
     /// </summary>
-    [TestClass, TestCase]
+    // [TestClass, TestCase]
     public class WriterInputValidationTests : ODataWriterTestCase
     {
         private static readonly Uri ServiceDocumentUri = new Uri("http://odata.org/");
@@ -31,7 +32,6 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
             NavigationSourceName = "MySet",
             ExpectedTypeName = "Null"
         };
-
 
         [InjectDependency(IsRequired = true)]
         public PayloadWriterTestDescriptor.Settings Settings { get; set; }

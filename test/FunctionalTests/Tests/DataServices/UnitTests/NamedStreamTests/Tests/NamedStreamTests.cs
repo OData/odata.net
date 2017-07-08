@@ -34,6 +34,7 @@ namespace AstoriaUnitTests.Tests
     [TestModule]
     public class NamedStreamUnitTestModule : AstoriaTestModule
     {
+        // For comment out test cases, see github: https://github.com/OData/odata.net/issues/867
         [TestClass()]
         public class NamedStreamTests
         {
@@ -70,7 +71,7 @@ namespace AstoriaUnitTests.Tests
 
             #region IDSP Metadata Tests
             [Ignore] // Remove Atom
-            [TestMethod]
+            // [TestMethod]
             public void NamedStreamIDSPNamedStreamsOnDerivedTypes()
             {
                 DSPMetadata metadata = new DSPMetadata("NamedStreamIDSPContainer", "NamedStreamTest");
@@ -285,7 +286,7 @@ namespace AstoriaUnitTests.Tests
                 }
             }
             [Ignore] // Remove Atom
-            [TestMethod]
+            // [TestMethod]
             public void NamedStreamIDSPMetadataStreamProviderValidationTest()
             {
                 TestUtil.RunCombinations(BooleanValues, BooleanValues, BooleanValues, BooleanValues, BooleanValues, ProtocolVersions,
@@ -427,7 +428,7 @@ namespace AstoriaUnitTests.Tests
                 }
             }
             [Ignore] // Remove Atom
-            [TestMethod]
+            // [TestMethod]
             public void NamedStreamEFMetadataStreamProviderValidationTest()
             {
                 TestUtil.RunCombinations(BooleanValues, BooleanValues, (containsMediaResource, containsNamedStream) =>
@@ -585,7 +586,7 @@ namespace AstoriaUnitTests.Tests
                 }
             }
             [Ignore] // Remove Atom
-            [TestMethod]
+            // [TestMethod]
             public void NamedStreamReflectionNamedStreamOnDerivedTypes()
             {
                 using (TestUtil.RestoreStaticValueOnDispose(typeof(TypedCustomDataContext<Base2EntityWithNoNamedStream>), "PreserveChanges"))
@@ -815,7 +816,7 @@ namespace AstoriaUnitTests.Tests
                 public int ID { get; set; }
             }
             [Ignore] // Remove Atom
-            [TestMethod]
+            // [TestMethod]
             public void NamedStreamReflectionMetadataStreamProviderValidationTest()
             {
                 TestUtil.RunCombinations(BooleanValues, BooleanValues, BooleanValues, BooleanValues, BooleanValues, ProtocolVersions,
@@ -924,7 +925,7 @@ namespace AstoriaUnitTests.Tests
 
             #region Uri Parsing Tests
             [Ignore] // Remove Atom
-            [TestMethod]
+            // [TestMethod]
             public void NamedStreamUriNegativeTest()
             {
                 DSPMetadata metadata = new DSPMetadata("NamedStreamIDSPBasicScenariosTest", "NamedStreamTests");
@@ -1029,7 +1030,7 @@ namespace AstoriaUnitTests.Tests
 
             #region IDSP Main Scenario Functional Tests
             [Ignore] // Remove Atom
-            [TestMethod]
+            // [TestMethod]
             public void NamedStreamIDSPPostEntityTest()
             {
                 IDSPBasicScenariosCombinations(IDSPPostNamedStreamEntity);
@@ -1158,7 +1159,7 @@ namespace AstoriaUnitTests.Tests
                 }
             }
             [Ignore] // Remove Atom
-            [TestMethod]
+            // [TestMethod]
             public void NamedStreamIDSPGetAndPutDefaultStreamTest()
             {
                 IDSPBasicScenariosCombinations(IDSPGetAndPutDefaultStream);
@@ -1360,7 +1361,7 @@ namespace AstoriaUnitTests.Tests
                 }
             }
             [Ignore] // Remove Atom
-            [TestMethod]
+            // [TestMethod]
             public void NamedStreamIDSPGetDeleteEntityTest()
             {
                 IDSPBasicScenariosCombinations(IDSPGetDeleteEntity);
@@ -1634,7 +1635,7 @@ namespace AstoriaUnitTests.Tests
 
             #region Stream Provider API Tests
             [Ignore] // Remove Atom
-            [TestMethod]
+            // [TestMethod]
             public void NamedStreamIDSSP2ApiTest()
             {
                 TestUtil.RunCombinations(UnitTestsUtil.ResponseFormats, (accept) =>
@@ -2029,7 +2030,7 @@ namespace AstoriaUnitTests.Tests
                 return xpaths;
             }
             [Ignore] // Remove Atom
-            [TestMethod]
+            // [TestMethod]
             public void NamedStreamProjectExpandSDPTest()
             {
                 DSPServiceDefinition service = SetupDSPService();

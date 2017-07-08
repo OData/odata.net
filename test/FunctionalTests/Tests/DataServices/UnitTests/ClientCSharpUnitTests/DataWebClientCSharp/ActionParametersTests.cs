@@ -27,8 +27,9 @@ namespace AstoriaUnitTests
     /// <summary>
     /// Test the serialization of action parameters from the client.
     /// </summary>
+    // For comment out test cases, see github: https://github.com/OData/odata.net/issues/881
     [Ignore] // Remove Atom
-    [TestClass]
+    // [TestClass]
     public class ActionParametersTests
     {
         #region  Properties
