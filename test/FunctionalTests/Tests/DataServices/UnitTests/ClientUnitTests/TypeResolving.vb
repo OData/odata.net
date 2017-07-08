@@ -33,8 +33,10 @@ Imports Microsoft.VisualStudio.TestTools.UnitTesting
 Imports NorthwindModel
 
 Partial Public Class ClientModule
+    ' For comment out test cases, see github: https://github.com/OData/odata.net/issues/887
     'Remove Atom
-    <Ignore> <TestClass()> Public Class TypeResolving
+    ' <TestClass()>
+    Public Class TypeResolving
 
 #Region "ClassInitialize, ClassCleanup, TestInitialize, TestCleanup"
         Private Shared web As TestWebRequest = Nothing
@@ -1291,27 +1293,6 @@ Partial Public Class ClientModule
         End Sub
 #End Region
 
-        <Ignore()>
-        <TestCategory("Partition2")> <ExpectedException(GetType(InvalidOperationException))>
-        <TestMethod()> Public Sub ZeroBatchQueryFailure()
-            Dim response = ctx.ExecuteBatch(
-                ctx.CreateQuery(Of Client.VBAllType)("ListAllType"),
-                ctx.CreateQuery(Of Client.VBSimpleType)("ListSimpleType"))
-
-            BatchZeroFailure(response)
-        End Sub
-
-        <Ignore()>
-        <TestCategory("Partition2")> <ExpectedException(GetType(InvalidOperationException))>
-        <TestMethod()> Public Sub ZeroBatchAsyncQueryFailure()
-            Dim result = ctx.BeginExecuteBatch(Nothing, Nothing,
-                ctx.CreateQuery(Of Client.VBAllType)("ListAllType"),
-                ctx.CreateQuery(Of Client.VBSimpleType)("ListSimpleType"))
-            Dim response = ctx.EndExecuteBatch(result)
-
-            BatchZeroFailure(response)
-        End Sub
-
         Private Sub BatchZeroFailure(ByVal response As DataServiceResponse)
             For Each x As QueryOperationResponse In response
                 Try
@@ -1324,25 +1305,10 @@ Partial Public Class ClientModule
             Next
         End Sub
 
-        <Ignore()>
-        <TestCategory("Partition2")> <ExpectedException(GetType(DataServiceRequestException))>
-        <TestMethod()> Public Sub ZeroBatchSaveFailure()
-            Dim j = New OtherClient.VBSimpleType_Foo()
-            j.PInt32 = 333
-            ctx.AddObject("ListSimpleType", j)
-
-            Try
-                Util.SaveChanges(ctx, SaveChangesOptions.BatchWithSingleChangeset)
-                Assert.Fail("Expected DataServiceRequestException")
-            Catch ex As DataServiceRequestException
-                Assert.IsInstanceOfType(ex.InnerException, GetType(DataServiceClientException))
-                Assert.IsTrue(ex.InnerException.Message.Contains("The batch request exceeds the maximum 0 operations per request."))
-                Throw
-            End Try
-        End Sub
     End Class
 
-    <TestClass()>
+    ' For comment out test cases, see github: https://github.com/OData/odata.net/issues/887
+    ' <TestClass()>
     Public Class ProjectionRoundTrippingTests
 
 #Region "ClassInitialize, ClassCleanup, TestInitialize, TestCleanup"

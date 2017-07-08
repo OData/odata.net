@@ -52,15 +52,17 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
             public Func<WriterTestConfiguration, bool> SkipForTestConfiguration { get; set; }
         }
 
+        // For comment out test cases, see github: https://github.com/OData/odata.net/issues/883
         [Ignore] // Remove Atom
-        [TestMethod, Variation(Description = "Validates correct checking of states in ODataWriter for Feed implementations.")]
+        // [TestMethod, Variation(Description = "Validates correct checking of states in ODataWriter for Feed implementations.")]
         public void FeedWriterStatesTest()
         {
             WriterStatesTestImplementation(true);
         }
 
+        // For comment out test cases, see github: https://github.com/OData/odata.net/issues/883
         [Ignore] // Remove Atom
-        [TestMethod, Variation(Description = "Validates correct checking of states in ODataWriter for Entry implementations.")]
+        // [TestMethod, Variation(Description = "Validates correct checking of states in ODataWriter for Entry implementations.")]
         public void EntryWriterStatesTest()
         {
             WriterStatesTestImplementation(false);

@@ -28,10 +28,11 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
     using Microsoft.Test.Taupo.OData.Writer.Tests.JsonLight;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
+    // For comment out test cases, see github: https://github.com/OData/odata.net/issues/883
     /// <summary>
     /// Tests for writing expanded links with the OData writer.
     /// </summary>
-    [TestClass, TestCase]
+    // [TestClass, TestCase]
     public class WriterNavigationLinkTests : ODataWriterTestCase
     {
         private static readonly Uri ServiceDocumentUri = new Uri("http://odata.org/");

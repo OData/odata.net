@@ -21,9 +21,10 @@ namespace AstoriaUnitTests.Tests.Server
     using Microsoft.OData;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
     using AstoriaTest = System.Data.Test.Astoria;
-    
+
     #endregion Namespaces
 
+    // For comment out test cases, see github: https://github.com/OData/odata.net/issues/868
     /// <summary>This is a test class for Advertising service operations.</summary>
     [TestClass()]
     public class AdvertisingServiceActionsTests
@@ -319,7 +320,7 @@ namespace AstoriaUnitTests.Tests.Server
         {
         }
         [Ignore] // Remove Atom
-        [TestCategory("Partition1"), TestMethod, Description("Test that actions and functions are correctly advertised in the payload")]
+        // [TestCategory("Partition1"), TestMethod, Description("Test that actions and functions are correctly advertised in the payload")]
         public void AdvertiseOperationsInPayload()
         {
             DSPMetadata metadata = this.CreateMetadata();
@@ -379,7 +380,7 @@ namespace AstoriaUnitTests.Tests.Server
             }
         }
         [Ignore] // Remove Atom
-        [TestCategory("Partition1"), TestMethod, Description("JsonLight should return relative uris for a default action, for atom and json verbose output is always absolute")]
+        // [TestCategory("Partition1"), TestMethod, Description("JsonLight should return relative uris for a default action, for atom and json verbose output is always absolute")]
         public void ValidateJsonLightRelativeOtherFormatsNot()
         {
             DSPMetadata metadata = this.CreateMetadata();
@@ -513,7 +514,7 @@ namespace AstoriaUnitTests.Tests.Server
                         return sos;
                     });
         [Ignore] // Remove Atom
-        [TestCategory("Partition1"), TestMethod, Description("Test that actions and functions are correctly advertised in the payload")]
+        // [TestCategory("Partition1"), TestMethod, Description("Test that actions and functions are correctly advertised in the payload")]
         public void AdvertiseOperationsInPayload2()
         {
             DSPMetadata metadata =  this.CreateMetadata();
@@ -858,7 +859,7 @@ namespace AstoriaUnitTests.Tests.Server
             }
         }
         [Ignore] // Remove Atom
-        [TestCategory("Partition1"), TestMethod, Description("Test that actions are correctly advertised in the payload with property name collision")]
+        // [TestCategory("Partition1"), TestMethod, Description("Test that actions are correctly advertised in the payload with property name collision")]
         public void AdvertiseOperationsWithPropertyNameCollision()
         {
             DSPMetadata metadata = this.CreateMetadata();
@@ -1164,7 +1165,7 @@ namespace AstoriaUnitTests.Tests.Server
         }
 
         [Ignore]
-        [TestCategory("Partition1"), TestMethod, Description("Test the resourceInstanceInFeed parameter of the AdvertiseServiceAction method.")]
+        // [TestCategory("Partition1"), TestMethod, Description("Test the resourceInstanceInFeed parameter of the AdvertiseServiceAction method.")]
         public void AdvertiseServiceActionInFeedTest()
         {
             var testCases = new[]
@@ -1315,7 +1316,7 @@ namespace AstoriaUnitTests.Tests.Server
             }
         }
         [Ignore] // Remove Atom
-        [TestCategory("Partition1"), TestMethod]
+        // [TestCategory("Partition1"), TestMethod]
         public void MultipleOverloadsShouldSerializeInEntry()
         {
             var service = this.CreateServiceWithActionOverloads();
@@ -1333,7 +1334,7 @@ namespace AstoriaUnitTests.Tests.Server
             }
         }
         [Ignore] // Remove Atom
-        [TestCategory("Partition1"), TestMethod]
+        // [TestCategory("Partition1"), TestMethod]
         public void SingleOverloadsShouldSerializeInEntryWithNormalLinks()
         {
             var service = this.CreateServiceWithActionOverloads();
@@ -1348,7 +1349,7 @@ namespace AstoriaUnitTests.Tests.Server
             }
         }
         [Ignore] // Remove Atom
-        [TestCategory("Partition1"), TestMethod]
+        // [TestCategory("Partition1"), TestMethod]
         public void CorrectOverloadShouldBeInvoked()
         {
             var service = this.CreateServiceWithActionOverloads();
@@ -1361,7 +1362,7 @@ namespace AstoriaUnitTests.Tests.Server
             RunActionInvokeTest(service, "/Customers/TestNamespace.ChildCustomer/TestNamespace.ActionWithOverload()", "BoundToChildCollection");
         }
         [Ignore] // Remove Atom
-        [TestCategory("Partition1"), TestMethod]
+        // [TestCategory("Partition1"), TestMethod]
         public void CorrectOverloadShouldBeSelected()
         {
             var service = this.CreateServiceWithActionOverloads();
@@ -1375,7 +1376,7 @@ namespace AstoriaUnitTests.Tests.Server
             RunActionSelectTest(service, "/Customers(1)?$select=TestNamespace.ChildCustomer/TestNamespace.ActionWithOverload");
         }
         [Ignore] // Remove Atom
-        [TestCategory("Partition1"), TestMethod]
+        // [TestCategory("Partition1"), TestMethod]
         public void OnlyOverloadsForSpecificTypeShouldBeSelected()
         {
             var service = this.CreateServiceWithActionOverloads();

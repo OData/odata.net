@@ -26,8 +26,9 @@ namespace AstoriaUnitTests.DataWebClientCSharp
     /// We set up a server that always adds a custom header to the responses, and then try to read it
     /// in ReceivingResponse on the client in each of the various code paths.
     /// </summary>
+    // For comment out test cases, see github: https://github.com/OData/odata.net/issues/880
     [Ignore] // Remove Atom
-    [TestClass]
+    // [TestClass]
     public class ReceivingResponseFunctionalTests
     {
         private int receivingResponseHitCount = 0;
@@ -55,7 +56,6 @@ namespace AstoriaUnitTests.DataWebClientCSharp
             }
         }
 
-        [Ignore] // Remove Atom
         [TestMethod]
         public void InsertShouldCallReceivingResponse()
         {
@@ -578,7 +578,6 @@ namespace AstoriaUnitTests.DataWebClientCSharp
             }
         }
 
-
         [TestMethod]
         public void BatchWithIndependentOperationsDeletesShouldCallReceivingResponse()
         {
@@ -790,24 +789,6 @@ namespace AstoriaUnitTests.DataWebClientCSharp
             }
         }
 
-        // TODO: need more investigation for service operation
-        [Ignore]
-        [TestMethod]
-        public void ExecuteServiceOperationShouldCallReceivingResponse()
-        {
-            using (TestWebRequest request = TestWebRequest.CreateForInProcessWcf())
-            {
-                var ctx = GetContextForCustomHeaderResponseService(request);
-                //ctx.Format.UseAtom();
-
-                AddReceivingResponseValidationListener(ctx, AssertDescriptorIsNull);
-
-                ctx.Execute(new Uri(request.ServiceRoot + "/VoidPostServiceOperation()"), "POST", new UriOperationParameter("key", "val&ue"));
-
-                this.receivingResponseHitCount.Should().Be(1);
-            }
-        }
-
         [Ignore] // Remove Atom
         [TestMethod]
         public void DifferntResponseTypeShouldCallReceivingResponse()
@@ -858,31 +839,6 @@ namespace AstoriaUnitTests.DataWebClientCSharp
                 result.Wait(10000).Should().BeTrue();
 
                 this.receivingResponseHitCount.Should().Be(1);
-            }
-        }
-
-        // TODO: need more investigation for service operation
-        [Ignore]
-        [TestMethod]
-        public void AsyncExecuteServiceOperationShouldCallReceivingResponse()
-        {
-            using (TestWebRequest request = TestWebRequest.CreateForInProcessWcf())
-            {
-                var ctx = GetContextForCustomHeaderResponseService(request);
-                //ctx.Format.UseAtom();
-                AddReceivingResponseValidationListener(ctx, AssertDescriptorIsNull);
-
-                var taskFactory = new TaskFactory();
-                IAsyncResult beginExecute = ctx.BeginExecute(new Uri(request.ServiceRoot + "/VoidPostServiceOperation()"), null, null, "POST", new UriOperationParameter("key", "val&ue"));
-                Action<IAsyncResult> endExecute = (result) =>
-                {
-                    this.receivingResponseHitCount.Should().Be(1);
-                    ctx.EndExecute(result);
-                };
-
-                var finalResult = taskFactory.FromAsync(beginExecute, endExecute, TaskCreationOptions.None);
-
-                finalResult.Wait(10000).Should().BeTrue();
             }
         }
 

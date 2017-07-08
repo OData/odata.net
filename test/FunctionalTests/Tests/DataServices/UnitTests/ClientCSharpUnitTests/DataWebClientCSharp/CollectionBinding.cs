@@ -20,6 +20,7 @@ namespace AstoriaUnitTests.DataWebClientCSharp
     using AstoriaUnitTests.Stubs;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
+    // For comment out test cases, see github: https://github.com/OData/odata.net/issues/881
     /// <summary>
     /// Tests class for databinding of collection properties on the client
     /// </summary>
@@ -169,7 +170,7 @@ namespace AstoriaUnitTests.DataWebClientCSharp
 
         #region Test cases
         [Ignore] // Remove Atom
-        [TestMethod]
+        // [TestMethod]
         public void CollectionMembershipChanged()
         {
             // Modify membership on collection property
@@ -177,7 +178,7 @@ namespace AstoriaUnitTests.DataWebClientCSharp
         }
 
         [Ignore] // Remove Atom
-        [TestMethod]
+        // [TestMethod]
         public void ComplexTypePropertyChanges()
         {
             // Modify properties on complex objects in collection
@@ -187,7 +188,7 @@ namespace AstoriaUnitTests.DataWebClientCSharp
         }
 
         [Ignore] // Remove Atom
-        [TestMethod]
+        // [TestMethod]
         public void ErrorOnMultipleReferencesToSameCollection()
         {
             // Negative: Multiple references to same collection in binding graph
@@ -220,7 +221,7 @@ namespace AstoriaUnitTests.DataWebClientCSharp
         }
 
         [Ignore] // Remove Atom
-        [TestMethod]
+        // [TestMethod]
         public void ErrorOnCollectionDoesntImplementINotifyCollectionChanged()
         {
             // Negative: Collection type doesn't implement ICollectionChanged
@@ -261,7 +262,7 @@ namespace AstoriaUnitTests.DataWebClientCSharp
         }
 
         [Ignore] // Remove Atom
-        [TestMethod]
+        // [TestMethod]
         public void ErrorOnComplexTypeDoesntImplementINotifyPropertyChanged()
         {
             // Negative: Complex type doesn't implement INotifyPropertyChanged
@@ -289,7 +290,7 @@ namespace AstoriaUnitTests.DataWebClientCSharp
         }
 
         [Ignore] // The case is incorrect that it always add ComplexTypeWithNestedComplexType, but this property may not exist in some type.
-        [TestMethod]
+        // [TestMethod]
         public void ErrorOnInvalidItemsInCollection()
         {
             // Negative: Invalid items in collection
@@ -299,7 +300,7 @@ namespace AstoriaUnitTests.DataWebClientCSharp
         }
 
         [Ignore] // Remove Atom
-        [TestMethod]
+        // [TestMethod]
         public void ErrorOnCollectionChangedWithNullArgs()
         {
             // Negative: CollectionChanged with null arguments

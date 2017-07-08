@@ -157,8 +157,9 @@ namespace AstoriaUnitTests
             {GeographyPoint.Create(CoordinateSystem.DefaultGeography, 2, 2, null, null), GeometryPoint.Create(CoordinateSystem.DefaultGeography, 2, 2, null, null)},
         };
 
+        // For comment out test cases, see github: https://github.com/OData/odata.net/issues/881
         [Ignore] // Remove Atom
-        [TestMethod]
+        // [TestMethod]
         public void NullServerPropertyShouldMaterializeIntoAnyType()
         {
             foreach (var format in new[] { UnitTestsUtil.AtomFormat, UnitTestsUtil.JsonLightMimeType })
@@ -182,8 +183,9 @@ namespace AstoriaUnitTests
             }
         }
 
+        // For comment out test cases, see github: https://github.com/OData/odata.net/issues/881
         [Ignore] // Remove Atom
-        [TestMethod]
+        // [TestMethod]
         public void StringValueShouldMaterializeIntoAnyTypeIfValueCanBeConverted()
         {
             this.InvokeForAll(this.conversionsFromString, UnitTestsUtil.JsonLightMimeType);

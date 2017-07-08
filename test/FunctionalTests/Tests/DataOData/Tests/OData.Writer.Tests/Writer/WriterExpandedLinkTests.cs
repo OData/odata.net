@@ -32,8 +32,9 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
         [InjectDependency(IsRequired = true)]
         public PayloadWriterTestDescriptor.Settings Settings { get; set; }
 
+        // For comment out test cases, see github: https://github.com/OData/odata.net/issues/883
         [Ignore] // Remove Atom
-        [TestMethod, Variation(Description = "Test that we cannot write an expanded link with incorrect multiplicity or content (entry vs. feed).")]
+        // [TestMethod, Variation(Description = "Test that we cannot write an expanded link with incorrect multiplicity or content (entry vs. feed).")]
         public void ExpandedLinkWithMultiplicityTests()
         {
             ODataNestedResourceInfo expandedEntryLink = ObjectModelUtils.CreateDefaultCollectionLink();
@@ -312,8 +313,9 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 });
         }
 
+        // For comment out test cases, see github: https://github.com/OData/odata.net/issues/883
         [Ignore] // Remove Atom
-        [TestMethod, Variation(Description = "Test that we can write an expanded link with a null navigation entry.")]
+        // [TestMethod, Variation(Description = "Test that we can write an expanded link with a null navigation entry.")]
         public void ExpandedLinkWithNullNavigationTests()
         {
             ODataNestedResourceInfo expandedEntryLink = ObjectModelUtils.CreateDefaultCollectionLink();

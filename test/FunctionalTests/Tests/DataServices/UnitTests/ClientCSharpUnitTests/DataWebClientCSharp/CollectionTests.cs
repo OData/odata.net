@@ -268,6 +268,7 @@ namespace AstoriaUnitTests.DataWebClientCSharp
 
     #endregion
 
+    // For comment out test cases, see github: https://github.com/OData/odata.net/issues/881
     /// <summary>
     /// Tests class for collection on the client
     /// </summary>
@@ -959,7 +960,7 @@ namespace AstoriaUnitTests.DataWebClientCSharp
 
         #endregion
         [Ignore] // Remove Atom
-        [TestMethod]
+        // [TestMethod]
         public void MaterializationOfCollection()
         {
             Type[] collectionGenericTypes = {
@@ -1159,28 +1160,28 @@ namespace AstoriaUnitTests.DataWebClientCSharp
 
         #region LoadProperty
         [Ignore] // Remove Atom
-        [TestMethod]
+        // [TestMethod]
         public void LoadPropertyNonErrorTestsAsync()
         {
             LoadPropertyTests(testCasesWithoutExceptions, true);
         }
 
         [Ignore] // Remove Atom
-        [TestMethod]
+        // [TestMethod]
         public void LoadPropertyNonErrorTestsSync()
         {
             LoadPropertyTests(testCasesWithoutExceptions, false);
         }
 
         [Ignore] // Remove Atom
-        [TestMethod]
+        // [TestMethod]
         public void LoadPropertyErrorTestsAsync()
         {
             LoadPropertyTests(testCasesWithExceptions, true);
         }
 
         [Ignore] // Remove Atom
-        [TestMethod]
+        // [TestMethod]
         public void LoadPropertyErrorTestsSync()
         {
             LoadPropertyTests(testCasesWithExceptions, false);
@@ -1321,7 +1322,7 @@ X-Powered-By: ASP.NET
         #region Serialization
 
         [Ignore] // Remove Atom
-        [TestMethod]
+        // [TestMethod]
         public void SerializationOfCollection()
         {
             Type[] collectionGenericTypes = new Type[]
@@ -1576,7 +1577,7 @@ X-Powered-By: ASP.NET
         }
 
         [Ignore] // Remove Atom
-        [TestMethod]
+        // [TestMethod]
         public void InvalidItemsInCollection()
         {
             // Negative tests for collection that contain items of a type that is not compatible with the collection type.
@@ -1661,7 +1662,7 @@ X-Powered-By: ASP.NET
         }
 
         [Ignore] // Remove Atom
-        [TestMethod]
+        // [TestMethod]
         public void SerializationOfEntityWithDictionary()
         {
             // Validates that IDictionary (can be used as a storage for open property key/value pairs) is not treated as a collection.
@@ -1842,7 +1843,7 @@ X-Powered-By: ASP.NET
         }
 
         [Ignore] // Remove Atom
-        [TestMethod]
+        // [TestMethod]
         public void Collection_SupportedClientLINQQueries()
         {
             // Test supported client LINQ queries.
@@ -2442,7 +2443,7 @@ X-Powered-By: ASP.NET
         }
 
         [Ignore] // Remove Atom
-        [TestMethod]
+        // [TestMethod]
         public void Collection_NotSupportedClientLINQQueries()
         {
             // Test not supported client LINQ queries.
@@ -2533,7 +2534,7 @@ X-Powered-By: ASP.NET
         }
 
         [Ignore] // Remove Atom
-        [TestMethod]
+        // [TestMethod]
         public void ClientShouldWriteComplexTypesWithOnlyCollectionProperties()
         {
             // Collection Client: Client does not write complex types that have only collection properties.
@@ -2643,7 +2644,7 @@ X-Powered-By: ASP.NET
         }
 
         [Ignore] // Remove Atom
-        [TestMethod]
+        // [TestMethod]
         public void Collection_CollectionTypeRecognition()
         {
             // Verifies that certain types are recognized as collection or are not recognized as collection.
