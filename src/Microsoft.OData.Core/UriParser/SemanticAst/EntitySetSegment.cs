@@ -29,7 +29,6 @@ namespace Microsoft.OData.UriParser
         /// </summary>
         /// <param name="entitySet">The entity set represented by this segment.</param>
         /// <exception cref="System.ArgumentNullException">Throws if the input entitySet is null.</exception>
-        [SuppressMessage("DataWeb.Usage", "AC0003:MethodCallNotAllowed", Justification = "Rule only applies to ODataLib Serialization code.")]
         public EntitySetSegment(IEdmEntitySet entitySet)
         {
             ExceptionUtils.CheckArgumentNotNull(entitySet, "entitySet");
@@ -57,7 +56,6 @@ namespace Microsoft.OData.UriParser
         /// Gets the <see cref="IEdmType"/> of this <see cref="EntitySetSegment"/>.
         /// This will always be an <see cref="IEdmCollectionType"/> for the <see cref="IEdmEntityType"/> that this set contains.
         /// </summary>
-        [SuppressMessage("DataWeb.Usage", "AC0003:MethodCallNotAllowed", Justification = "Rule only applies to ODataLib Serialization code.")]
         public override IEdmType EdmType
         {
             get { return this.type; }

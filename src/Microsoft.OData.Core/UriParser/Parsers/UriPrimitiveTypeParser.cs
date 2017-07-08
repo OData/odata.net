@@ -20,6 +20,7 @@ namespace Microsoft.OData.UriParser
     /// <summary>
     /// Parser which consumes the URI format of primitive types and converts it to primitive types.
     /// </summary>
+    [System.Runtime.InteropServices.Guid("A77303D9-3A04-4829-BDDE-3B4D43E21CFC")]
     internal sealed class UriPrimitiveTypeParser : IUriLiteralParser
     {
         #region Singletons
@@ -75,7 +76,6 @@ namespace Microsoft.OData.UriParser
         /// <returns>true if the value was converted; false otherwise.</returns>
         /// <remarks>Copy of the WebConvert.TryKeyStringToPrimitive</remarks>
         [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity", Justification = "Complexity is not too high; handling all the cases in one method is preferable to refactoring.")]
-        [SuppressMessage("DataWeb.Usage", "AC0014:DoNotHandleProhibitedExceptionsRule", Justification = "We're calling this correctly")]
         private bool TryUriStringToPrimitive(string text, IEdmTypeReference targetType, out object targetValue, out UriLiteralParsingException exception)
         {
             Debug.Assert(text != null, "text != null");

@@ -797,7 +797,6 @@ namespace Microsoft.OData
         /// <typeparam name="T">The type of the result returned from the <paramref name="action"/>.</typeparam>
         /// <param name="action">The action to execute.</param>
         /// <returns>The result of the <paramref name="action"/>.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("DataWeb.Usage", "AC0014", Justification = "Throws every time")]
         private T InterceptException<T>(Func<T> action)
         {
             try

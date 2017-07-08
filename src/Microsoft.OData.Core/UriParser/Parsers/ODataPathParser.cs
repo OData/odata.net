@@ -336,7 +336,7 @@ namespace Microsoft.OData.UriParser
 
             if (this.parsedSegments.Count > 0)
             {
-                this.ThrowIfMustBeLeafSegment(this.parsedSegments[this.parsedSegments.Count - 1]);
+                ThrowIfMustBeLeafSegment(this.parsedSegments[this.parsedSegments.Count - 1]);
             }
 
             return true;
@@ -375,7 +375,7 @@ namespace Microsoft.OData.UriParser
         /// Throws if the given segment must be a leaf, as a later segment is being created.
         /// </summary>
         /// <param name="previous">The previous segment which may need to be a leaf.</param>
-        private void ThrowIfMustBeLeafSegment(ODataPathSegment previous)
+        private static void ThrowIfMustBeLeafSegment(ODataPathSegment previous)
         {
             OperationImportSegment operationImportSegment = previous as OperationImportSegment;
             if (operationImportSegment != null)
@@ -679,7 +679,6 @@ namespace Microsoft.OData.UriParser
 
         /// <summary>Creates the first <see cref="ODataPathSegment"/> for a request.</summary>
         /// <param name="segmentText">The text of the segment.</param>
-        [SuppressMessage("DataWeb.Usage", "AC0003:MethodCallNotAllowed", Justification = "Uri parsing does not go through the same resolvers/settings that payload reading/writing does.")]
         private void CreateFirstSegment(string segmentText)
         {
             string identifier;
@@ -786,7 +785,6 @@ namespace Microsoft.OData.UriParser
         /// <returns>Whether or not the identifier referred to an action.</returns>
         [SuppressMessage("Microsoft.Globalization", "CA1305:Do not use string.format", Justification = "Will be removed when string freeze is over.")]
         [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "IEdmModel", Justification = "The spelling is correct.")]
-        [SuppressMessage("DataWeb.Usage", "AC0003:MethodCallNotAllowed", Justification = "Uri parsing does not go through the same resolvers/settings that payload reading/writing does.")]
         private bool TryCreateSegmentForOperationImport(string identifier, string parenthesisExpression)
         {
             ICollection<OperationSegmentParameter> resolvedParameters;
@@ -828,7 +826,7 @@ namespace Microsoft.OData.UriParser
                 // The parameters in the parathesis is a key segment.
                 if (this.TryBindKeyFromParentheses(parenthesisExpression))
                 {
-                    this.ThrowIfMustBeLeafSegment(segment);
+                    ThrowIfMustBeLeafSegment(segment);
                 }
             }
         }
@@ -842,7 +840,6 @@ namespace Microsoft.OData.UriParser
         /// <returns>Whether or not the identifier referred to an action.</returns>
         [SuppressMessage("Microsoft.Globalization", "CA1305:Do not use string.format", Justification = "Will be removed when string freeze is over.")]
         [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "IEdmModel", Justification = "The spelling is correct.")]
-        [SuppressMessage("DataWeb.Usage", "AC0003:MethodCallNotAllowed", Justification = "Uri parsing does not go through the same resolvers/settings that payload reading/writing does.")]
         private bool TryCreateSegmentForOperation(ODataPathSegment previousSegment, string identifier, string parenthesisExpression)
         {
             // Parse Arguments syntactically
@@ -1036,7 +1033,6 @@ namespace Microsoft.OData.UriParser
         /// <param name="identifier">The current raw segment identifier being interpreted.</param>
         /// <param name="parenthesisExpression">Parenthesis expression of this segment.</param>
         /// <returns>Whether or not a type segment was created for the identifier.</returns>
-        [SuppressMessage("DataWeb.Usage", "AC0003:MethodCallNotAllowed", Justification = "Uri parsing does not go through the same resolvers/settings that payload reading/writing does.")]
         private bool TryCreateTypeNameSegment(ODataPathSegment previous, string identifier, string parenthesisExpression)
         {
             IEdmType targetEdmType;

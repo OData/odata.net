@@ -301,7 +301,6 @@ namespace Microsoft.OData.UriParser
         /// <param name="state">the current state of the binding algorithm</param>
         /// <param name="boundFunction">a single value function call node representing this function call, if we found one.</param>
         /// <returns>true if we found a function for this token.</returns>
-        [SuppressMessage("DataWeb.Usage", "AC0003:MethodCallNotAllowed", Justification = "Uri Parser does not need to go through the ODL behavior knob.")]
         private bool TryBindIdentifier(string identifier, IEnumerable<FunctionParameterToken> arguments, QueryNode parent, BindingState state, out QueryNode boundFunction)
         {
             boundFunction = null;
@@ -404,8 +403,6 @@ namespace Microsoft.OData.UriParser
         /// <param name="functionOrOpertion">The function or operation.</param>
         /// <param name="segmentParameterTokens">The parameter tokens to be binded.</param>
         /// <returns>The binded semantic nodes.</returns>
-        [SuppressMessage("DataWeb.Usage", "AC0003:MethodCallNotAllowed",
-             Justification = "Parameter type is needed here to check whether can be convert from source")]
         internal static List<OperationSegmentParameter> BindSegmentParameters(ODataUriParserConfiguration configuration, IEdmOperation functionOrOpertion, ICollection<FunctionParameterToken> segmentParameterTokens)
         {
             // TODO: HandleComplexOrCollectionParameterValueIfExists is temp work around for single copmlex or colleciton type, it can't handle nested complex or collection value.
@@ -534,8 +531,6 @@ namespace Microsoft.OData.UriParser
         /// <param name="enableCaseInsensitive">Whether to enable case-insensitive when resolving parameter name.</param>
         /// <param name="enableUriTemplateParsing">Whether Uri template parsing is enabled.</param>
         /// <returns>The FunctionParameterTokens with complex or collection values converted from string like "{...}", or "[..,..,..]".</returns>
-        [SuppressMessage("DataWeb.Usage", "AC0003:MethodCallNotAllowed",
-             Justification = "Parameter type is needed to convert from uri literal.")]
         private static ICollection<FunctionParameterToken> HandleComplexOrCollectionParameterValueIfExists(IEdmModel model, IEdmOperation operation, ICollection<FunctionParameterToken> parameterTokens, bool enableCaseInsensitive, bool enableUriTemplateParsing = false)
         {
             ICollection<FunctionParameterToken> partiallyParsedParametersWithComplexOrCollection = new Collection<FunctionParameterToken>();

@@ -115,7 +115,6 @@ namespace Microsoft.OData.Evaluation
         /// </summary>
         /// <param name="result">The result to escape.</param>
         /// <returns>The escaped string.</returns>
-        [SuppressMessage("DataWeb.Usage", "AC0018:SystemUriEscapeDataStringRule", Justification = "Values are correctly being escaped before the literal delimiters are added.")]
         protected virtual string EscapeResultForUri(string result)
         {
             // required for strings as data, DateTime for ':', numbers for '+'
@@ -126,7 +125,6 @@ namespace Microsoft.OData.Evaluation
         /// <summary>Converts the given byte[] into string.</summary>
         /// <param name="byteArray">byte[] that needs to be converted.</param>
         /// <returns>String containing hex values representing the byte[].</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("DataWeb.Usage", "AC0018:SystemUriEscapeDataStringRule", Justification = "Usage is in Debug.Assert only")]
         private static string ConvertByteArrayToKeyString(byte[] byteArray)
         {
             Debug.Assert(byteArray != null, "byteArray != null");

@@ -37,8 +37,11 @@ namespace Microsoft.OData
             {
                 ODataPathSegment segment = parsedSegments[segmentIndex];
 
+                // Cache the cast result to avoid CA1800:DoNotCastUnnecessarily.
+                bool segmentIsNavigationPropertySegment = segment is NavigationPropertySegment;
+
                 // Containment navigation property or complex property in binding path.
-                if (segment is PropertySegment || (segment is NavigationPropertySegment && segment.TargetEdmNavigationSource is IEdmContainedEntitySet))
+                if (segment is PropertySegment || (segmentIsNavigationPropertySegment && segment.TargetEdmNavigationSource is IEdmContainedEntitySet))
                 {
                     if (pathIndex < 0 || string.CompareOrdinal(paths[pathIndex], segment.Identifier) != 0)
                     {
@@ -62,7 +65,7 @@ namespace Microsoft.OData
                 }
                 else if (segment is EntitySetSegment
                       || segment is SingletonSegment
-                      || segment is NavigationPropertySegment)
+                      || segmentIsNavigationPropertySegment)
                 {
                     // Containment navigation property in first if statement for NavigationPropertySegment.
                     break;

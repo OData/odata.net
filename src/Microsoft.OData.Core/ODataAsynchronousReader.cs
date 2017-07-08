@@ -147,7 +147,8 @@ namespace Microsoft.OData
         {
             string responseLine = this.ReadFirstNonEmptyLine();
 
-            statusCode = this.ParseResponseLine(responseLine);
+            Debug.Assert(this.rawInputContext.ReadingResponse, "Must only be called for responses.");
+            statusCode = ParseResponseLine(responseLine);
             headers = this.ReadHeaders();
         }
 
@@ -172,10 +173,8 @@ namespace Microsoft.OData
         /// </summary>
         /// <param name="responseLine">The response line as a string.</param>
         /// <returns>The parsed status code from the response line.</returns>
-        private int ParseResponseLine(string responseLine)
+        private static int ParseResponseLine(string responseLine)
         {
-            Debug.Assert(this.rawInputContext.ReadingResponse, "Must only be called for responses.");
-
             // Async Response: HTTP/1.1 200 Ok
             // Since the http status code strings have spaces in them, we cannot use the same
             // logic. We need to check for the second space and anything after that is the error

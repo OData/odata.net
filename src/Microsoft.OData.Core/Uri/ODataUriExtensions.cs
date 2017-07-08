@@ -20,7 +20,6 @@ namespace Microsoft.OData
         /// <param name="odataUri">ODataUri which will be build to relative url</param>
         /// <param name="urlKeyDelimiter">Value from ODataUrlKeyDelimiter</param>
         /// <returns>Uri of the semantic tree</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("DataWeb.Usage", "AC0018:SystemUriEscapeDataStringRule", Justification = "Values passed to this method are model elements like property names or keywords.")]
         public static Uri BuildUri(this ODataUri odataUri, ODataUrlKeyDelimiter urlKeyDelimiter)
         {
             NodeToStringBuilder nodeToStringBuilder = new NodeToStringBuilder();
