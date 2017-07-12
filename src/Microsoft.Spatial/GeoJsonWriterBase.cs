@@ -447,15 +447,8 @@ namespace Microsoft.Spatial
         /// <summary>
         /// Writes the coordinate reference system footer for the GeoJson object.
         /// </summary>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "Microsoft.Spatial.JsonWriter.WriteQuotedString(System.String)", Justification = "Values have no localized content.")]
         private void WriteCrs()
         {
-            // "crs": {
-            //      "type": "name",
-            //      "properties": {
-            //          "name": "EPSG:4326"
-            //      }
-            // }
             this.AddPropertyName(GeoJsonConstants.CrsMemberName);
             this.StartObjectScope();
             this.AddPropertyName(GeoJsonConstants.TypeMemberName);

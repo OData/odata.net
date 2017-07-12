@@ -2322,7 +2322,6 @@ namespace Microsoft.OData.Client
         [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "ChangeState", Justification = "Method name, will be removed when string is added to resources.")]
         [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "AddObject", Justification = "Method name, will be removed when string is added to resources.")]
         [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "AddRelatedObject", Justification = "Method name, will be removed when string is added to resources.")]
-        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "Microsoft.OData.Client.Error.NotSupported(System.String)", Justification = "Will be moved to resources in the next release. String freeze has already passed.")]
         public void ChangeState(object entity, EntityStates state)
         {
             switch (state)
@@ -3373,7 +3372,6 @@ namespace Microsoft.OData.Client
         /// <exception cref="ArgumentNullException">if entity is null</exception>
         /// <exception cref="ArgumentException">if entity is detached</exception>
         /// <exception cref="InvalidOperationException">if entity is not unchanged or modified and <paramref name="failIfNotUnchanged"/> is true.</exception>
-        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "Microsoft.OData.Client.Error.InvalidOperation(System.String)", Justification = "Will be moved to resources in the next release. String freeze has already passed.")]
         private void UpdateObjectInternal(object entity, bool failIfNotUnchanged)
         {
             Util.CheckArgumentNull(entity, "entity");
@@ -3413,7 +3411,6 @@ namespace Microsoft.OData.Client
         /// <remarks>
         /// Existings objects in the Added state become detached if <paramref name="failIfInAddedState"/> is false.
         /// </remarks>
-        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "Microsoft.OData.Client.Error.InvalidOperation(System.String)", Justification = "Will be moved to resources in the next release. String freeze has already passed.")]
         private void DeleteObjectInternal(object entity, bool failIfInAddedState)
         {
             Util.CheckArgumentNull(entity, "entity");
@@ -3447,7 +3444,6 @@ namespace Microsoft.OData.Client
         /// Sets the entity's state to unchanged.
         /// </summary>
         /// <param name="entity">The entity to set back to unchanged.</param>
-        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "Microsoft.OData.Client.Error.InvalidOperation(System.String)", Justification = "Will be moved to resources in the next release. String freeze has already passed.")]
         private void SetStateToUnchanged(object entity)
         {
             Util.CheckArgumentNull(entity, "entity");

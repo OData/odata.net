@@ -783,7 +783,6 @@ namespace Microsoft.OData.UriParser
         /// <param name="identifier">The name of the segment</param>
         /// <param name="parenthesisExpression">The query portion</param>
         /// <returns>Whether or not the identifier referred to an action.</returns>
-        [SuppressMessage("Microsoft.Globalization", "CA1305:Do not use string.format", Justification = "Will be removed when string freeze is over.")]
         [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "IEdmModel", Justification = "The spelling is correct.")]
         private bool TryCreateSegmentForOperationImport(string identifier, string parenthesisExpression)
         {
@@ -838,7 +837,6 @@ namespace Microsoft.OData.UriParser
         /// <param name="identifier">The name of the segment</param>
         /// <param name="parenthesisExpression">The query portion</param>
         /// <returns>Whether or not the identifier referred to an action.</returns>
-        [SuppressMessage("Microsoft.Globalization", "CA1305:Do not use string.format", Justification = "Will be removed when string freeze is over.")]
         [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "IEdmModel", Justification = "The spelling is correct.")]
         private bool TryCreateSegmentForOperation(ODataPathSegment previousSegment, string identifier, string parenthesisExpression)
         {
@@ -1103,7 +1101,6 @@ namespace Microsoft.OData.UriParser
         /// <param name="previous">previous segment info.</param>
         /// <param name="property">property to create the segment for.</param>
         /// <param name="queryPortion">query portion for this segment, if specified.</param>
-        [SuppressMessage("Microsoft.Globalization", "CA1305:Do not use string.format", Justification = "Will be removed when string freeze is over.")]
         [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "IEdmModel", Justification = "The spelling is correct.")]
         private void CreatePropertySegment(ODataPathSegment previous, IEdmProperty property, string queryPortion)
         {
