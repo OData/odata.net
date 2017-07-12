@@ -13,6 +13,7 @@ using Microsoft.OData.Edm.Csdl.Parsing.Ast;
 using Microsoft.OData.Edm.Csdl.Parsing.Common;
 using Microsoft.OData.Edm.Validation;
 using Microsoft.OData.Edm.Vocabularies;
+using Microsoft.OData.Edm.Vocabularies.V1;
 
 namespace Microsoft.OData.Edm.Csdl.Parsing
 {
@@ -361,7 +362,9 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
                             //// <CollectionType/>
                             collectionTypeParser,
                             //// <ReferenceType/>
-                            referenceTypeParser),
+                            referenceTypeParser,
+                            //// <Annotation/>
+                            annotationParser),
                         //// </ReturnType>
 
                         //// <Annotation/>
@@ -391,7 +394,9 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
                         //// <CollectionType/>
                         collectionTypeParser,
                         //// <ReferenceType/>
-                        referenceTypeParser),
+                        referenceTypeParser,
+                        //// <Annotation/>
+                        annotationParser),
                     //// </ReturnType>
 
                     //// <Annotation/>
@@ -1133,9 +1138,41 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
         {
             string name = Required(CsdlConstants.Attribute_Name);
             string typeName = OptionalType(CsdlConstants.Attribute_Type);
+            string defaultValue = null;
+            bool isOptional = false;
+
             CsdlTypeReference type = this.ParseTypeReference(typeName, childValues, element.Location, Optionality.Required);
 
-            return new CsdlOperationParameter(name, type, Documentation(childValues), element.Location);
+            // TODO (Issue #855): handle out-of-line annotations
+            XmlElementValue optionalAnnotationValue = childValues.Where(c =>
+                c is XmlElementValue<CsdlAnnotation> &&
+                    (c.ValueAs<CsdlAnnotation>().Term == CoreVocabularyModel.OptionalParameterTerm.ShortQualifiedName() ||
+                     c.ValueAs<CsdlAnnotation>().Term == CoreVocabularyModel.OptionalParameterTerm.FullName())
+            ).FirstOrDefault();
+
+            if (optionalAnnotationValue != null)
+            {
+                isOptional = true;
+                CsdlRecordExpression optionalValueExpression = optionalAnnotationValue.ValueAs<CsdlAnnotation>().Expression as CsdlRecordExpression;
+                if (optionalValueExpression != null)
+                {
+                    foreach (CsdlPropertyValue property in optionalValueExpression.PropertyValues)
+                    {
+                        CsdlConstantExpression propertyValue = property.Expression as CsdlConstantExpression;
+                        if (propertyValue != null)
+                        {
+                            if (property.Property == CsdlConstants.Attribute_DefaultValue)
+                            {
+                                defaultValue = propertyValue.Value;
+                            }
+                        }
+                    }
+                }
+
+                childValues.Remove(optionalAnnotationValue);
+            }
+
+            return new CsdlOperationParameter(name, type, Documentation(childValues), element.Location, isOptional, defaultValue);
         }
 
         private CsdlActionImport OnActionImportElement(XmlElementInfo element, XmlElementValueCollection childValues)

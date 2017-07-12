@@ -13,6 +13,7 @@ using System.Xml;
 using Microsoft.OData.Edm.Csdl.CsdlSemantics;
 using Microsoft.OData.Edm.Csdl.Parsing.Ast;
 using Microsoft.OData.Edm.Vocabularies;
+using Microsoft.OData.Edm.Vocabularies.V1;
 
 namespace Microsoft.OData.Edm.Csdl.Serialization
 {
@@ -400,6 +401,30 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
             }
         }
 
+        internal void WriteOperationParameterEndElement(IEdmOperationParameter parameter)
+        {
+            IEdmOptionalParameter optionalParameter = parameter as IEdmOptionalParameter;
+            if (optionalParameter != null && !(optionalParameter.VocabularyAnnotations(this.model).Any(a => a.Term == CoreVocabularyModel.OptionalParameterTerm)))
+            {
+                string defaultValue = optionalParameter.DefaultValueString;
+                EdmRecordExpression optionalValue = new EdmRecordExpression();
+
+                this.WriteVocabularyAnnotationElementHeader(new EdmVocabularyAnnotation(parameter, CoreVocabularyModel.OptionalParameterTerm, optionalValue), false);
+                if (!String.IsNullOrEmpty(defaultValue))
+                {
+                    EdmPropertyConstructor property = new EdmPropertyConstructor(CsdlConstants.Attribute_DefaultValue, new EdmStringConstant(defaultValue));
+                    this.WriteRecordExpressionElementHeader(optionalValue);
+                    this.WritePropertyValueElementHeader(property, true);
+                    this.WriteEndElement();
+                    this.WriteEndElement();
+                }
+
+                this.WriteEndElement();
+            }
+
+            this.WriteEndElement();
+        }
+
         internal void WriteCollectionTypeElementHeader(IEdmCollectionType collectionType, bool inlineType)
         {
             this.xmlWriter.WriteStartElement(CsdlConstants.Element_CollectionType);
@@ -472,10 +497,10 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
             }
         }
 
-        internal void WritePropertyValueElementHeader(IEdmPropertyValueBinding value, bool isInline)
+        internal void WritePropertyValueElementHeader(IEdmPropertyConstructor value, bool isInline)
         {
             this.xmlWriter.WriteStartElement(CsdlConstants.Element_PropertyValue);
-            this.WriteRequiredAttribute(CsdlConstants.Attribute_Property, value.BoundProperty.Name, EdmValueWriter.StringAsXml);
+            this.WriteRequiredAttribute(CsdlConstants.Attribute_Property, value.Name, EdmValueWriter.StringAsXml);
             if (isInline)
             {
                 this.WriteInlineExpression(value.Value);

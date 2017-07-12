@@ -308,6 +308,48 @@ namespace Microsoft.OData.Edm.Tests.Csdl
         }
 
         [Fact]
+        public void ParsingOptionalParametersShouldSucceed()
+        {
+            string csdl =
+        "<edmx:Edmx xmlns:edmx=\"http://docs.oasis-open.org/odata/ns/edmx\" Version=\"4.0\">" +
+          "<edmx:DataServices>" +
+            "<Schema xmlns=\"http://docs.oasis-open.org/odata/ns/edm\" Namespace=\"test\">" +
+              "<Function Name=\"TestFunction\">" +
+                "<Parameter Name = \"requiredParam\" Type=\"Edm.String\"/>" +
+                "<Parameter Name = \"optionalParam\" Type=\"Edm.String\">" +
+                    "<Annotation Term=\"Org.OData.Core.V1.OptionalParameter\"/>" +
+                "</Parameter>" +
+                "<Parameter Name = \"optionalParamWithDefault\" Type=\"Edm.String\">" +
+                    "<Annotation Term=\"Org.OData.Core.V1.OptionalParameter\">" +
+                      "<Record>" +
+                        "<PropertyValue Property=\"DefaultValue\" String=\"Smith\"/>" +
+                      "</Record>" +
+                    "</Annotation>" +
+                "</Parameter>" +
+                "<ReturnType Type=\"Edm.Boolean\"/>" +
+              "</Function>" +
+              "<EntityContainer Name=\"Default\">" +
+                "<FunctionImport Name=\"TestFunction\" Function=\"test.TestFunction\"/>" +
+              "</EntityContainer>" +
+            "</Schema>" +
+          "</edmx:DataServices>" +
+        "</edmx:Edmx>";
+
+            var model = CsdlReader.Parse(XElement.Parse(csdl).CreateReader());
+            var function = model.FindDeclaredOperations("test.TestFunction").FirstOrDefault();
+            Assert.NotNull(function);
+            var requiredParam = function.Parameters.Where(p => p.Name == "requiredParam").FirstOrDefault();
+            Assert.NotNull(requiredParam);
+            Assert.Null(requiredParam as IEdmOptionalParameter);
+            IEdmOptionalParameter optionalParam = function.Parameters.Where(p => p.Name == "optionalParam").FirstOrDefault() as IEdmOptionalParameter;
+            Assert.NotNull(optionalParam);
+            Assert.True(String.IsNullOrEmpty(optionalParam.DefaultValueString));
+            IEdmOptionalParameter optionalParamWithDefault = function.Parameters.Where(p => p.Name == "optionalParamWithDefault").FirstOrDefault() as IEdmOptionalParameter;
+            Assert.NotNull(optionalParamWithDefault);
+            Assert.Equal(optionalParamWithDefault.DefaultValueString, "Smith");
+        }
+
+        [Fact]
         public void ParsingValidXmlWithOneReferencesShouldSucceed()
         {
             this.RunValidTest(r => CsdlReader.Parse(r, EdmCoreModel.Instance));

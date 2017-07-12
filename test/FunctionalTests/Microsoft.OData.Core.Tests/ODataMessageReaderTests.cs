@@ -127,9 +127,9 @@ namespace Microsoft.OData.Tests
 <edmx:Edmx xmlns:edmx=""http://docs.oasis-open.org/odata/ns/edmx"" Version=""4.0"">
   <edmx:DataServices>
     <Schema xmlns=""http://docs.oasis-open.org/odata/ns/edm"" Namespace=""Org.OData.Core.V1"" Alias=""Core"">
-      <Annotation Term=""Core.Description"">
+      <Invalid Term=""Core.Description"">
         <String>Core terms needed to write vocabularies</String>
-      </Annotation>
+      </Invalid>
     </Schema>
   </edmx:DataServices>
 </edmx:Edmx>"));
@@ -140,7 +140,7 @@ namespace Microsoft.OData.Tests
 
             const string expectedErrorMessage =
                 "The metadata document could not be read from the message content.\r\n" +
-                "UnexpectedXmlElement : The schema element 'Annotation' was not expected in the given context. : (6, 8)\r\n";
+                "UnexpectedXmlElement : The schema element 'Invalid' was not expected in the given context. : (6, 8)\r\n";
 
             Action test = () => reader.ReadMetadataDocument();
             test.ShouldThrow<ODataException>().Where(e => e.Message.Equals(expectedErrorMessage));
@@ -155,9 +155,9 @@ namespace Microsoft.OData.Tests
                 "<edmx:Edmx xmlns:edmx=\"http://docs.oasis-open.org/odata/ns/edmx\" Version=\"4.0\">" +
                 "<edmx:DataServices>" +
                 "<Schema xmlns=\"http://docs.oasis-open.org/odata/ns/edm\" Namespace=\"Org.OData.Core.V1\" Alias=\"Core\">" +
-                "<Annotation Term=\"Core.Description\">" +
+                "<Invalid Term=\"Core.Description\">" +
                 "<String>Core terms needed to write vocabularies</String>" +
-                "</Annotation>" +
+                "</Invalid>" +
                 "</Schema>" +
                 "</edmx:DataServices>" +
                 "</edmx:Edmx>"));
@@ -168,7 +168,7 @@ namespace Microsoft.OData.Tests
 
             const string expectedErrorMessage =
                 "The metadata document could not be read from the message content.\r\n" +
-                "UnexpectedXmlElement : The schema element 'Annotation' was not expected in the given context. : (1, 250)\r\n";
+                "UnexpectedXmlElement : The schema element 'Invalid' was not expected in the given context. : (1, 250)\r\n";
 
             Action test = () => reader.ReadMetadataDocument();
             test.ShouldThrow<ODataException>().Where(e => e.Message.Equals(expectedErrorMessage));

@@ -89,6 +89,12 @@ namespace Microsoft.OData.Edm.Vocabularies.V1
         public static readonly IEdmTerm ComputedTerm;
 
         /// <summary>
+        /// The Optional Parameter term.
+        /// </summary>
+        [SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes", Justification = "Resolver is immutable")]
+        public static readonly IEdmTerm OptionalParameterTerm;
+
+        /// <summary>
         /// The IsURL term.
         /// </summary>
         [SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes", Justification = "EdmTerm is immutable")]
@@ -153,6 +159,7 @@ namespace Microsoft.OData.Edm.Vocabularies.V1
             IsURLTerm = Instance.FindDeclaredTerm(CoreVocabularyConstants.IsURL);
             LongDescriptionTerm = Instance.FindDeclaredTerm(CoreVocabularyConstants.LongDescription);
             MediaTypeTerm = Instance.FindDeclaredTerm(CoreVocabularyConstants.MediaType);
+            OptionalParameterTerm = Instance.FindDeclaredTerm(CoreVocabularyConstants.OptionalParameter);
             RequiresTypeTerm = Instance.FindDeclaredTerm(CoreVocabularyConstants.RequiresType);
             ResourcePathTerm = Instance.FindDeclaredTerm(CoreVocabularyConstants.ResourcePath);
             PermissionsTerm = Instance.FindDeclaredTerm(CoreVocabularyConstants.Permissions);
