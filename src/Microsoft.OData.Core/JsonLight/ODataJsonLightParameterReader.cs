@@ -89,7 +89,6 @@ namespace Microsoft.OData.JsonLight
         ///                 When the new state is Resource, the reader is positioned at the starting '{' of the resource payload.
         ///                 When the new state is Resource Set or Collection, the reader is positioned at the starting '[' of the resource set or collection payload.
         /// </remarks>
-        [SuppressMessage("Microsoft.MSInternal", "CA908:AvoidTypesThatRequireJitCompilationInPrecompiledAssemblies", Justification = "API design calls for a bool being returned from the task here.")]
         protected override Task<bool> ReadAtStartImplementationAsync()
         {
             Debug.Assert(this.State == ODataParameterReaderState.Start, "this.State == ODataParameterReaderState.Start");
@@ -137,7 +136,6 @@ namespace Microsoft.OData.JsonLight
         ///                 When the new state is Resource, the reader is positioned at the starting '{' of the resource payload.
         ///                 When the new state is Resource Set or Collection, the reader is positioned at the starting '[' of the resource set or collection payload.
         /// </remarks>
-        [SuppressMessage("Microsoft.MSInternal", "CA908:AvoidTypesThatRequireJitCompilationInPrecompiledAssemblies", Justification = "API design calls for a bool being returned from the task here.")]
         protected override Task<bool> ReadNextParameterImplementationAsync()
         {
             return TaskUtils.GetTaskForSynchronousOperation<bool>(this.ReadNextParameterImplementationSynchronously);
@@ -160,7 +158,6 @@ namespace Microsoft.OData.JsonLight
         /// </summary>
         /// <param name="expectedResourceType">Expected entity type to read.</param>
         /// <returns>An <see cref="ODataReader"/> to read the resource value of type <paramref name="expectedResourceType"/>.</returns>
-        [SuppressMessage("Microsoft.MSInternal", "CA908:AvoidTypesThatRequireJitCompilationInPrecompiledAssemblies", Justification = "API design calls for a bool being returned from the task here.")]
         protected override Task<ODataReader> CreateResourceReaderAsync(IEdmStructuredType expectedResourceType)
         {
             return TaskUtils.GetTaskForSynchronousOperation<ODataReader>(() => this.CreateResourceReaderSynchronously(expectedResourceType));
@@ -183,7 +180,6 @@ namespace Microsoft.OData.JsonLight
         /// </summary>
         /// <param name="expectedResourceType">Expected resource set element type to read.</param>
         /// <returns>An <see cref="ODataReader"/> to read the resource set value of type <paramref name="expectedResourceType"/>.</returns>
-        [SuppressMessage("Microsoft.MSInternal", "CA908:AvoidTypesThatRequireJitCompilationInPrecompiledAssemblies", Justification = "API design calls for a bool being returned from the task here.")]
         protected override Task<ODataReader> CreateResourceSetReaderAsync(IEdmStructuredType expectedResourceType)
         {
             return TaskUtils.GetTaskForSynchronousOperation<ODataReader>(() => this.CreateResourceSetReaderSynchronously(expectedResourceType));
@@ -216,7 +212,6 @@ namespace Microsoft.OData.JsonLight
         /// Post-Condition: Any:    the reader should be on the start array node of the collection value; if it is not we let the collection reader fail.
         /// NOTE: this method does not move the reader.
         /// </remarks>
-        [SuppressMessage("Microsoft.MSInternal", "CA908:AvoidTypesThatRequireJitCompilationInPrecompiledAssemblies", Justification = "API design calls for a bool being returned from the task here.")]
         protected override Task<ODataCollectionReader> CreateCollectionReaderAsync(IEdmTypeReference expectedItemTypeReference)
         {
             return TaskUtils.GetTaskForSynchronousOperation<ODataCollectionReader>(() => this.CreateCollectionReaderSynchronously(expectedItemTypeReference));

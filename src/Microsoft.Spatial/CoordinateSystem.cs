@@ -42,7 +42,6 @@ namespace Microsoft.Spatial
 
         /// <summary>Initializes a static instance of the <see cref="T:Microsoft.Spatial.CoordinateSystem" /> class.</summary>
         [SuppressMessage("Microsoft.Performance", "CA1810", Justification = "Static Constructor required")]
-        [SuppressMessage("Microsoft.MSInternal", "CA908", Justification = "generic of int required")]
         static CoordinateSystem()
         {
             References = new Dictionary<CompositeKey<int, Topology>, CoordinateSystem>(EqualityComparer<CompositeKey<int, Topology>>.Default);

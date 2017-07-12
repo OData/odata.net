@@ -471,7 +471,6 @@ namespace Microsoft.OData.Client
         /// </summary>
         /// <param name="method">Method to identify.</param>
         /// <returns>Canonical description of method (suitable for lookup)</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.MSInternal", "CA908:AvoidTypesThatRequireJitCompilationInPrecompiledAssemblies")]
         internal static string GetCanonicalMethodDescription(MethodInfo method)
         {
             // retrieve all generic type arguments and assign them numbers based on order

@@ -172,8 +172,6 @@ namespace Microsoft.OData.JsonLight
         ///                 when reading a resource:  the first node of the first nested resource info value, null for a null expanded link or an end object
         ///                                         node if there are no navigation links.
         /// </remarks>
-        [SuppressMessage("Microsoft.MSInternal", "CA908:AvoidTypesThatRequireJitCompilationInPrecompiledAssemblies",
-            Justification = "API design calls for a bool being returned from the task here.")]
         protected override Task<bool> ReadAtStartImplementationAsync()
         {
             Debug.Assert(this.State == ODataReaderState.Start, "this.State == ODataReaderState.Start");
@@ -226,8 +224,6 @@ namespace Microsoft.OData.JsonLight
         /// Post-Condition: The reader is positioned over the StartObject node of the first resource in the resource set or
         ///                 on the node following the resource set end in case of an empty resource set
         /// </remarks>
-        [SuppressMessage("Microsoft.MSInternal", "CA908:AvoidTypesThatRequireJitCompilationInPrecompiledAssemblies",
-            Justification = "API design calls for a bool being returned from the task here.")]
         protected override Task<bool> ReadAtResourceSetStartImplementationAsync()
         {
             return TaskUtils.GetTaskForSynchronousOperation<bool>(this.ReadAtResourceSetStartImplementationSynchronously);
@@ -266,8 +262,6 @@ namespace Microsoft.OData.JsonLight
         ///                 JsonNodeType.EndArray       end of expanded link in request, in this case the resource set doesn't actually own the array object and it won't read it.
         ///                 Any                         in case of expanded resource set in request, this might be the next item in the expanded array, which is not a resource
         /// </remarks>
-        [SuppressMessage("Microsoft.MSInternal", "CA908:AvoidTypesThatRequireJitCompilationInPrecompiledAssemblies",
-            Justification = "API design calls for a bool being returned from the task here.")]
         protected override Task<bool> ReadAtResourceSetEndImplementationAsync()
         {
             return TaskUtils.GetTaskForSynchronousOperation<bool>(this.ReadAtResourceSetEndImplementationSynchronously);
@@ -312,8 +306,6 @@ namespace Microsoft.OData.JsonLight
         ///                 JsonNodeType.Property               The next property after a deferred link or entity reference link
         ///                 JsonNodeType.EndObject              If no (more) properties exist in the resource's content
         /// </remarks>
-        [SuppressMessage("Microsoft.MSInternal", "CA908:AvoidTypesThatRequireJitCompilationInPrecompiledAssemblies",
-            Justification = "API design calls for a bool being returned from the task here.")]
         protected override Task<bool> ReadAtResourceStartImplementationAsync()
         {
             return TaskUtils.GetTaskForSynchronousOperation<bool>(this.ReadAtResourceStartImplementationSynchronously);
@@ -344,8 +336,6 @@ namespace Microsoft.OData.JsonLight
         ///                 JsonNodeType.PrimitiveValue (null)  end of null expanded resource
         /// Post-Condition: The reader is positioned on the first node after the resource's end-object node
         /// </remarks>
-        [SuppressMessage("Microsoft.MSInternal", "CA908:AvoidTypesThatRequireJitCompilationInPrecompiledAssemblies",
-            Justification = "API design calls for a bool being returned from the task here.")]
         protected override Task<bool> ReadAtResourceEndImplementationAsync()
         {
             return TaskUtils.GetTaskForSynchronousOperation<bool>(this.ReadAtResourceEndImplementationSynchronously);
@@ -390,8 +380,6 @@ namespace Microsoft.OData.JsonLight
         ///                 JsonNodeType.Property               deferred link with more properties in owning resource
         ///                 JsonNodeType.EndObject              deferred link as last property of the owning resource
         /// </remarks>
-        [SuppressMessage("Microsoft.MSInternal", "CA908:AvoidTypesThatRequireJitCompilationInPrecompiledAssemblies",
-            Justification = "API design calls for a bool being returned from the task here.")]
         protected override Task<bool> ReadAtNestedResourceInfoStartImplementationAsync()
         {
             return
@@ -432,8 +420,6 @@ namespace Microsoft.OData.JsonLight
         ///                 JsonNoteType.Property           property after deferred link or entity reference link
         ///                 JsonNodeType.EndObject          end of the parent resource
         /// </remarks>
-        [SuppressMessage("Microsoft.MSInternal", "CA908:AvoidTypesThatRequireJitCompilationInPrecompiledAssemblies",
-            Justification = "API design calls for a bool being returned from the task here.")]
         protected override Task<bool> ReadAtNestedResourceInfoEndImplementationAsync()
         {
             return
@@ -474,8 +460,6 @@ namespace Microsoft.OData.JsonLight
         ///                 JsonNodeType.Property:          there are more properties after the expanded link property in the owning resource
         ///                 Any:                            expanded collection link - the node after the entity reference link.
         /// </remarks>
-        [SuppressMessage("Microsoft.MSInternal", "CA908:AvoidTypesThatRequireJitCompilationInPrecompiledAssemblies",
-            Justification = "API design calls for a bool being returned from the task here.")]
         protected override Task<bool> ReadAtEntityReferenceLinkAsync()
         {
             return TaskUtils.GetTaskForSynchronousOperation<bool>(this.ReadAtEntityReferenceLinkSynchronously);
