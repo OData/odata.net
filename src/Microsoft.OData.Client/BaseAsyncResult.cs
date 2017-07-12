@@ -117,7 +117,6 @@ namespace Microsoft.OData.Client
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public System.Threading.WaitHandle AsyncWaitHandle
         {
-            [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope", Justification = "WaitHandle is disposed during EndXXX(IAsyncResult) method")]
             get
             {
                 if (null == this.asyncWait)

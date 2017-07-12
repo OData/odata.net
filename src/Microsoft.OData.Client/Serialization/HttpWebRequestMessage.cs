@@ -565,7 +565,6 @@ namespace Microsoft.OData.Client
         /// </summary>
         /// <param name="webException">WebException instance.</param>
         /// <returns>an instance of DataServiceWebException that abstracts the WebException.</returns>
-        [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope", Justification = "Caller will dispose the message later.")]
         private static DataServiceTransportException ConvertToDataServiceWebException(WebException webException)
         {
             HttpWebResponseMessage errorResponseMessage = null;

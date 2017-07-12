@@ -62,7 +62,6 @@ namespace Microsoft.OData.Client
         /// <param name="message">the message</param>
         /// <param name="expectedPayloadKind">expected payload kind.</param>
         /// <returns>atom materializer</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope", Justification = "Returning MaterializeAtom, caller will dispose")]
         internal static MaterializeAtom Materialize(
             ResponseInfo responseInfo,
             QueryComponents queryComponents,

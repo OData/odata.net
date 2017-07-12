@@ -1259,7 +1259,6 @@ namespace Microsoft.OData
         /// <param name="payloadKind">The payload kind to write.</param>
         /// <param name="writeAsyncAction">The write operation to invoke on the output.</param>
         /// <returns>Task which represents the pending write operation.</returns>
-        [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope", Justification = "The output context is disposed by Dispose on the writer.")]
         private Task WriteToOutputAsync(ODataPayloadKind payloadKind, Func<ODataOutputContext, Task> writeAsyncAction)
         {
             // Set the content type header here since all headers have to be set before getting the stream
@@ -1286,7 +1285,6 @@ namespace Microsoft.OData
         /// <param name="payloadKind">The payload kind to write.</param>
         /// <param name="writeFunc">The write operation to invoke on the output.</param>
         /// <returns>Task which represents the pending write operation.</returns>
-        [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope", Justification = "The output context is disposed by Dispose on the writer.")]
         private Task<TResult> WriteToOutputAsync<TResult>(ODataPayloadKind payloadKind, Func<ODataOutputContext, Task<TResult>> writeFunc)
         {
             // Set the content type header here since all headers have to be set before getting the stream
