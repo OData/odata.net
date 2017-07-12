@@ -169,7 +169,6 @@ namespace Microsoft.OData.Client
         }
 
         /// <summary>start the asynchronous request</summary>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("DataWeb.Usage", "AC0014", Justification = "Throws every time")]
         internal void BeginExecuteQuery()
         {
             IAsyncResult asyncResult = null;
@@ -216,7 +215,6 @@ namespace Microsoft.OData.Client
 
 #if !PORTABLELIB
         /// <summary>Synchronous web request</summary>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("DataWeb.Usage", "AC0014", Justification = "Throws every time")]
         internal void ExecuteQuery()
         {
             try
@@ -506,7 +504,6 @@ namespace Microsoft.OData.Client
         /// <summary>handle request.BeginGetResponse with request.EndGetResponse and then copy response stream</summary>
         /// <param name="asyncResult">async result</param>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes", Justification = "required for this feature")]
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("DataWeb.Usage", "AC0014", Justification = "Throws every time")]
         protected override void AsyncEndGetResponse(IAsyncResult asyncResult)
         {
             Debug.Assert(asyncResult != null && asyncResult.IsCompleted, "asyncResult.IsCompleted");
@@ -639,7 +636,6 @@ namespace Microsoft.OData.Client
         /// <summary>handle responseStream.BeginRead with responseStream.EndRead</summary>
         /// <param name="asyncResult">async result</param>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes", Justification = "required for this feature")]
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("DataWeb.Usage", "AC0014", Justification = "Throws every time")]
         private void AsyncEndRead(IAsyncResult asyncResult)
 #endif
         {

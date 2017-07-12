@@ -103,7 +103,6 @@ namespace Microsoft.OData.Client
 
         /// <summary>Returns the next link URI as a string.</summary>
         /// <returns>A string representation of the next link URI.  </returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("DataWeb.Usage", "AC0010", Justification = "ToString for display purpose is OK")]
         public override string ToString()
         {
             return this.NextLinkUri.ToString();
@@ -150,7 +149,6 @@ namespace Microsoft.OData.Client
         /// <summary>Initializes a new typed instance.</summary>
         /// <param name="nextLinkUri">URI to next page of data.</param>
         /// <param name="plan">Projection plan for results of next page.</param>
-        [SuppressMessage("DataWeb.Usage", "AC0003", Justification = "MethodCallNotAllowed: The constructor of DataServiceQueryContinuation<T> is the only place where we can call the constructor of DataServiceQueryContinuation.")]
         internal DataServiceQueryContinuation(Uri nextLinkUri, ProjectionPlan plan)
             : base(nextLinkUri, plan)
         {

@@ -248,7 +248,6 @@ namespace Microsoft.OData.Service
         /// <param name="text">Text to read.</param>
         /// <param name="result">Parsed version and trailing text.</param>
         /// <returns>true if the version was read successfully; false otherwise.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("DataWeb.Usage", "AC0014", Justification = "Throws every time")]
         internal static bool TryReadVersion(string text, out KeyValuePair<Version, string> result)
         {
             Debug.Assert(text != null, "text != null");

@@ -29,11 +29,6 @@ using System.Diagnostics.CodeAnalysis;
 [module: SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Scope = "member", Target = "Microsoft.OData.Client.Strings.#ODataMetadataBuilder_MissingSegmentForEntitySetUriSuffix(System.Object,System.Object)")]
 [module: SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Scope = "member", Target = "Microsoft.OData.Client.Strings.#ODataMetadataBuilder_MissingEntityInstanceUri(System.Object)")]
 
-[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("DataWeb.Performance", "AC0002:HashSetCtorRule", Scope = "member", Target = "Microsoft.OData.Client.DataServiceCollection`1.#Microsoft.OData.Client.ICollectionSerializationAppendix.GetAppendix()")]
-[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("DataWeb.Performance", "AC0002:HashSetCtorRule", Scope = "member", Target = "Microsoft.OData.Client.DataServiceSerializationScope.#.cctor()")]
-[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("DataWeb.Performance", "AC0002:HashSetCtorRule", Scope = "member", Target = "Microsoft.OData.Client.KnownTypeTable.#.ctor()")]
-[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("DataWeb.Performance", "AC0002:HashSetCtorRule", Scope = "member", Target = "Microsoft.OData.Client.DataServiceSerializationAppendice.#.ctor(Microsoft.OData.Client.DataServiceContext,System.Collections.Generic.IEnumerable`1<System.Object>)")]
-
 // Since DataServiceClientRequestMessage is already a public API, suppress this issue until we decide to make breaking changes.
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1012:AbstractTypesShouldNotHaveConstructors", Scope = "type", Target = "Microsoft.OData.Client.DataServiceClientRequestMessage")]
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1034:NestedTypesShouldNotBeVisible", Scope = "type", Target = "Microsoft.OData.Client.DataServiceQuery`1+DataServiceOrderedQuery")]
