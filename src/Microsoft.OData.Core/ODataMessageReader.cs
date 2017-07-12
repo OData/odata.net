@@ -1423,7 +1423,6 @@ namespace Microsoft.OData
         /// <param name="readFunc">The read function which will be called over the created input context.</param>
         /// <param name="payloadKinds">All possible kinds of payload to read.</param>
         /// <returns>A task which when completed return the read value from the input.</returns>
-        [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope", Justification = "Disposed by the caller.")]
         private Task<T> ReadFromInputAsync<T>(Func<ODataInputContext, Task<T>> readFunc, params ODataPayloadKind[] payloadKinds) where T : class
         {
             this.ProcessContentType(payloadKinds);

@@ -232,7 +232,6 @@ namespace Microsoft.OData.Client
         /// <param name="statusCode">status code</param>
         /// <returns>text</returns>
         [SuppressMessage("Microsoft.Design", "CA1031", Justification = "Cache exception so user can examine it later")]
-        [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope", Justification = "underlying stream is disposed so wrapping StreamReader doesn't need to be disposed")]
         internal static DataServiceClientException GetResponseText(Func<Stream> getResponseStream, HttpStatusCode statusCode)
         {
             string message = null;
