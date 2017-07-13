@@ -128,8 +128,8 @@ namespace Microsoft.Test.OData.Tests.Client.KeyAsSegmentTests
             Assert.AreEqual(3, person.PersonMetadata.Count, "person.PersonMetadata.Count == 3");
         }
 
-        [Ignore] // Issue: #623
-        [TestMethod]
+        // [Ignore] // Issue: #623: Support DI in OData Client
+        // [TestMethod] // github issuse: #896
         public void ContextReferencesTest()
         {
             var contextWrapper = this.CreateWrappedContext();

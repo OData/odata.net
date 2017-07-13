@@ -226,8 +226,8 @@ namespace Microsoft.Test.OData.Tests.Client.ActionOverloadingTests
             }
         }
 
-        //Inconsistent behavior when selecting namespace.* and action name
-        [TestMethod, Ignore]
+        // Inconsistent behavior when selecting namespace.* and action name
+        // [TestMethod] // github issuse: #896
         public void BaseDerivedTypeOverloadedActionsProjection()
         {
             string actionName = "UpdatePersonInfo";
