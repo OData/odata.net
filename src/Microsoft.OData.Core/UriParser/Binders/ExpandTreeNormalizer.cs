@@ -50,8 +50,7 @@ namespace Microsoft.OData.UriParser
                 SelectToken newSelectToken = term.SelectOption;
                 if (term.SelectOption != null)
                 {
-                    SelectTreeNormalizer selectTreeNormalizer = new SelectTreeNormalizer();
-                    newSelectToken = selectTreeNormalizer.NormalizeSelectTree(term.SelectOption);
+                    newSelectToken = SelectTreeNormalizer.NormalizeSelectTree(term.SelectOption);
                 }
 
                 ExpandToken subExpandTree;

@@ -1343,9 +1343,6 @@ namespace Microsoft.OData.Metadata
         /// </summary>
         /// <param name="containerElement">The container element to get the full name for.</param>
         /// <returns>The full name of the owning entity container, slash, name of the container element.</returns>
-#if ODATA_CLIENT
-        [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Justification = "Will be used in a later change")]
-#endif
         internal static string FullName(this IEdmEntityContainerElement containerElement)
         {
             Debug.Assert(containerElement != null, "containerElement != null");

@@ -20,7 +20,7 @@ namespace Microsoft.OData.UriParser
         /// </summary>
         /// <param name="treeToNormalize">The select token to normalize</param>
         /// <returns>Normalized SelectToken</returns>
-        public SelectToken NormalizeSelectTree(SelectToken treeToNormalize)
+        public static SelectToken NormalizeSelectTree(SelectToken treeToNormalize)
         {
             PathReverser pathReverser = new PathReverser();
             List<PathSegmentToken> invertedPaths = (from property in treeToNormalize.Properties
