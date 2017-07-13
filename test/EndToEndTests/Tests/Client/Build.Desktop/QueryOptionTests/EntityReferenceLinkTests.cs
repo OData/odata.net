@@ -85,9 +85,8 @@ namespace Microsoft.Test.OData.Tests.Client.ContainmentTest
             }
         }
 
-        // TODO GitHub#346 - Support writting instance annotations for expanded feed 
-        [Ignore]
-        [TestMethod]
+        // TODO GitHub#346 - Support writting instance annotations for expanded feed
+        // [TestMethod] // github issuse: #896
         public void ODataEntryWithAnnotationInReferenceLinksShouldWork()
         {
             foreach (var mimeType in mimeTypes)

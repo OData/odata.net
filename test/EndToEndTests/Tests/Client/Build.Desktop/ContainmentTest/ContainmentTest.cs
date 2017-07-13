@@ -1284,8 +1284,7 @@ namespace Microsoft.Test.OData.Tests.Client.ContainmentTest
             Assert.AreEqual("Michael's first PI", piResult.FriendlyName);
         }
 
-        [TestMethod]
-        [Ignore]
+        // [TestMethod] // github issuse: #896
         public void CreateContainedEntityFromODataClientUsingAddRelatedObjectUsingBatchRequest()
         {
             TestClientContext.Format.UseJson(Model);

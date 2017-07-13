@@ -83,8 +83,8 @@ namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
         /// <summary>
         /// Execute actions with parameter ( Primitive, complex, collection, multiple ) Parms
         /// </summary>
-        [Ignore] // TODO: Need to add back.
-        [TestMethod, Asynchronous]
+        // github issuse: #896
+        // [TestMethod, Asynchronous]
         public void ActionTestsParams()
         {
             var context = this.CreateWrappedContext<DefaultContainer>().Context;
