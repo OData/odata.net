@@ -483,7 +483,7 @@ namespace AstoriaUnitTests.Tests
         {
             CombinatorialEngine engine = CombinatorialEngine.FromDimensions(
                 new Dimension("WebServerLocation", new WebServerLocation[] { WebServerLocation.InProcessWcf }),
-                new Dimension("LocalHostName", new string[] { "127.0.0.1" }));
+                new Dimension("LocalHostName", new string[] { "localhost" }));
             TestUtil.RunCombinatorialEngineFail(engine, delegate(Hashtable values)
             {
                 WebServerLocation location = (WebServerLocation)values["WebServerLocation"];
