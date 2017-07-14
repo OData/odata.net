@@ -25,7 +25,6 @@ namespace Microsoft.OData.Client
         /// <param name="key">The key to find/add.</param>
         /// <param name="createValue">A callback to create a new value if one is not found.</param>
         /// <returns>The new or found value.</returns>
-        [SuppressMessage("Microsoft.Performance", "CA1811:'DictionaryExtensions.FindOrAdd<TKey, TValue>(this IDictionary<TKey, TValue>, TKey, Func<TValue>)' appears to have no upstream public or protected callers.", Justification = "Callers removed, but a useful helper method to have.")]
         internal static TValue FindOrAdd<TKey, TValue>(this IDictionary<TKey, TValue> dictionary, TKey key, Func<TValue> createValue)
         {
             Debug.Assert(dictionary != null, "dictionary != null");

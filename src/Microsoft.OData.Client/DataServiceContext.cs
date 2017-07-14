@@ -137,26 +137,26 @@ namespace Microsoft.OData.Client
 #pragma warning disable 0169, 0649
         /// <summary>
         /// Test hook which gets called after the HttpWebRequest has been created and all headers have been set.
+        /// Never set by product code.
         /// </summary>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1823", Justification = "Test hook, never set by product code, only consumed by it.")]
         private Action<object> sendRequest;
 
         /// <summary>
         /// Test hook which gets called after we call HttpWebRequest.GetRequestStream, so that the test code can wrap the stream and see what gets written to it.
+        /// Never set by product code.
         /// </summary>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1823", Justification = "Test hook, never set by product code, only consumed by it.")]
         private Func<Stream, Stream> getRequestWrappingStream;
 
         /// <summary>
         /// Test hook which gets called after the HttpWebResponse is received.
+        /// Never set by product code.
         /// </summary>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1823", Justification = "Test hook, never set by product code, only consumed by it.")]
         private Action<object> sendResponse;
 
         /// <summary>
         /// Test hook which gets called after we call HttpWebRequest.GetResponseStream, so that the test code can wrap the stream and see what gets read from it.
+        /// Never set by product code.
         /// </summary>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1823", Justification = "Test hook, never set by product code, only consumed by it.")]
         private Func<Stream, Stream> getResponseWrappingStream;
 #pragma warning restore 0169, 0649
 
@@ -3463,29 +3463,7 @@ namespace Microsoft.OData.Client
         {
             /// <summary>A cache that maps a data service protocol version to its corresponding <see cref="ClientEdmModel"/>.</summary>
             /// <remarks>Note that it is initialized in a static ctor and must not be changed later to avoid threading issues.</remarks>
-            private static readonly Dictionary<ODataProtocolVersion, ClientEdmModel> modelCache =
-                new Dictionary<ODataProtocolVersion, ClientEdmModel>(EqualityComparer<ODataProtocolVersion>.Default);
-
-            /// <summary>
-            /// Static constructor used to initialize modelCache.
-            /// </summary>
-            [SuppressMessage("Microsoft.Performance", "CA1810:InitializeReferenceTypeStaticFieldsInline", Justification = "Need to use the static constructor.")]
-            static ClientEdmModelCache()
-            {
-                IEnumerable<ODataProtocolVersion> protocolVersions =
-#if PORTABLELIB // Portable lib does not support Enum.GetValues()
- typeof(ODataProtocolVersion).GetFields().Where(f => f.IsLiteral).Select(f => f.GetValue(typeof(ODataProtocolVersion))).Cast<ODataProtocolVersion>();
-#else
- Enum.GetValues(typeof(ODataProtocolVersion)).Cast<ODataProtocolVersion>();
-#endif
-
-                foreach (var protocolVersion in protocolVersions)
-                {
-                    ClientEdmModel model = new ClientEdmModel(protocolVersion);
-                    model.SetEdmVersion(protocolVersion.ToVersion());
-                    modelCache.Add(protocolVersion, model);
-                }
-            }
+            private static readonly Dictionary<ODataProtocolVersion, ClientEdmModel> modelCache = CreateClientEdmModelCache();
 
             /// <summary>
             /// Get the cached model for the specified max protocol version.
@@ -3498,6 +3476,31 @@ namespace Microsoft.OData.Client
                 Debug.Assert(modelCache.ContainsKey(maxProtocolVersion), "modelCache should be pre-initialized");
 
                 return modelCache[maxProtocolVersion];
+            }
+
+            /// <summary>
+            /// Initialize modelCache.
+            /// </summary>
+            /// <returns>The model cache built.</returns>
+            private static Dictionary<ODataProtocolVersion, ClientEdmModel> CreateClientEdmModelCache()
+            {
+                Dictionary<ODataProtocolVersion, ClientEdmModel> cache =
+                new Dictionary<ODataProtocolVersion, ClientEdmModel>(EqualityComparer<ODataProtocolVersion>.Default);
+
+                IEnumerable<ODataProtocolVersion> protocolVersions =
+#if PORTABLELIB // Portable lib does not support Enum.GetValues()
+ typeof(ODataProtocolVersion).GetFields().Where(f => f.IsLiteral).Select(f => f.GetValue(typeof(ODataProtocolVersion))).Cast<ODataProtocolVersion>();
+#else
+ Enum.GetValues(typeof(ODataProtocolVersion)).Cast<ODataProtocolVersion>();
+#endif
+
+                foreach (var protocolVersion in protocolVersions)
+                {
+                    ClientEdmModel model = new ClientEdmModel(protocolVersion);
+                    model.SetEdmVersion(protocolVersion.ToVersion());
+                    cache.Add(protocolVersion, model);
+                }
+                return cache;
             }
         }
     }
