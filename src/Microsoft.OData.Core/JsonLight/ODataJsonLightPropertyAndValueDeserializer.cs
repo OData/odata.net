@@ -793,7 +793,7 @@ namespace Microsoft.OData.JsonLight
                 }
             }
 
-            //Debug.Assert(property.InstanceAnnotations.GroupBy(s => s.Name).Where(s => s.Count() > 1).Count() <= 0,
+            // Debug.Assert(property.InstanceAnnotations.GroupBy(s => s.Name).Where(s => s.Count() > 1).Count() <= 0,
             //    "No annotation name should have been added into the InstanceAnnotations collection twice.");
             resourceState.PropertyAndAnnotationCollector.CheckForDuplicatePropertyNames(property);
             ODataResource resource = resourceState.Resource;
