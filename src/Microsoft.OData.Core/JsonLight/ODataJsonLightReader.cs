@@ -740,6 +740,7 @@ namespace Microsoft.OData.JsonLight
                 // Debug.Assert(this.IsExpandedLinkContent || this.CurrentResourceType.IsODataComplexTypeKind(),
                 //    "null resource can only be reported in an expanded link or in collection of complex instance.");
                 this.jsonLightResourceDeserializer.AssertJsonCondition(JsonNodeType.PrimitiveValue);
+
                 // Debug.Assert(this.jsonLightResourceDeserializer.JsonReader.Value == null,
                 //    "The null resource should be represented as null value.");
 

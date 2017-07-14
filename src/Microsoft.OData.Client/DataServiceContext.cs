@@ -3500,6 +3500,7 @@ namespace Microsoft.OData.Client
                     model.SetEdmVersion(protocolVersion.ToVersion());
                     cache.Add(protocolVersion, model);
                 }
+
                 return cache;
             }
         }
