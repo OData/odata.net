@@ -41,8 +41,8 @@ using System.Diagnostics.CodeAnalysis;
 
 // By design.
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1800:DoNotCastUnnecessarily", Scope = "member", Target = "Microsoft.OData.JsonLight.ODataJsonLightDeltaWriter.#StartDeltaLink(Microsoft.OData.ODataDeltaLinkBase)")]
-[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Scope = "member", Target = "Microsoft.OData.JsonLight.ODataJsonLightDeltaReader.#IsTopLevel")]
-[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Scope = "member", Target = "Microsoft.OData.JsonLight.ODataJsonLightDeltaWriter.#IsTopLevel")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Scope = "member", Target = "Microsoft.OData.JsonLight.ODataJsonLightDeltaReader.#IsTopLevel", Justification = "Used in debug builds in assertions.")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Scope = "member", Target = "Microsoft.OData.JsonLight.ODataJsonLightDeltaWriter.#IsTopLevel", Justification = "Used in debug builds in assertions.")]
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays", Scope = "member", Target = "Microsoft.OData.UriParser.FunctionSignatureWithReturnType.#ArgumentTypes")]
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes", Scope = "member", Target = "Microsoft.OData.UriParser.UriPrimitiveTypeParser.#TryUriStringToPrimitive(System.String,Microsoft.OData.Edm.IEdmTypeReference,System.Object&,Microsoft.OData.UriParser.UriLiteralParsingException&)")]
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1004:GenericMethodsShouldProvideTypeParameter", Scope = "member", Target = "Microsoft.OData.ContainerBuilderExtensions.#AddService`2(Microsoft.OData.IContainerBuilder,Microsoft.OData.ServiceLifetime)")]

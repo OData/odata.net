@@ -1197,7 +1197,6 @@ namespace Microsoft.OData.Client
         /// </summary>
         /// <param name="descriptor">descriptor, whose response is getting handled.</param>
         /// <param name="responseHeaders">response headers.</param>
-        [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "instance is used in Assert")]
         private void HandleResponsePut(Descriptor descriptor, HeaderCollection responseHeaders)
         {
             Debug.Assert(descriptor != null, "descriptor != null");
