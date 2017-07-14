@@ -46,11 +46,6 @@ namespace Microsoft.OData.Edm
             get { return this.type.GetValue(this, ComputeTypeFunc, null); }
         }
 
-        public string DefaultValueString
-        {
-            get { return null; }
-        }
-
         public EdmPropertyKind PropertyKind
         {
             get { return EdmPropertyKind.None; }
