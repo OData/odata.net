@@ -16,9 +16,9 @@
 OData .NET library is open source at http://github.com/OData/odata.net</description>
   </metadata>
   <files>
-    <file src="Net35\Microsoft.Spatial.NetFX35.dll" target="lib\net35" />
-    <file src="Net35\Microsoft.Spatial.NetFX35.pdb" target="lib\net35" />
-    <file src="Net35\Microsoft.Spatial.NetFX35.xml" target="lib\net35" />
+    <file src="$ProductRoot$\Net35\Microsoft.Spatial.NetFX35.dll" target="lib\net35" />
+    <file src="$ProductRoot$\Net35\Microsoft.Spatial.NetFX35.pdb" target="lib\net35" />
+    <file src="$ProductRoot$\Net35\Microsoft.Spatial.NetFX35.xml" target="lib\net35" />
     <file src="$SourcesRoot$\src\Microsoft.Spatial\**\*.cs" target="src\Microsoft.Spatial" />
     <file src="$SourcesRoot$\src\PlatformHelper.cs" target="src\PlatformHelper.cs" />
     <file src="$SourcesRoot$\src\AssemblyInfo\AssemblyMetadataAttribute.cs" target="src\AssemblyMetadataAttribute.cs" />
