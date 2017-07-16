@@ -61,19 +61,9 @@ namespace Microsoft.OData.Client
 
             if (serviceModel != null && clientEdmModel != null)
             {
-                if (clientEdmModel.EdmStructuredSchemaElements == null)
+                foreach (var element in serviceModel.SchemaElements.Where(se => se is IEdmStructuredType))
                 {
-                    clientEdmModel.EdmStructuredSchemaElements = serviceModel.SchemaElements.Where(se => se is IEdmStructuredType).ToList();
-                }
-                else
-                {
-                    foreach (var element in serviceModel.SchemaElements.Where(se => se is IEdmStructuredType))
-                    {
-                        if (!clientEdmModel.EdmStructuredSchemaElements.Contains(element))
-                        {
-                            clientEdmModel.EdmStructuredSchemaElements.Add(element);
-                        }
-                    }
+                    clientEdmModel.EdmStructuredSchemaElements.TryAdd(element.Name, element);
                 }
             }
         }
