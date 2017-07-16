@@ -24,6 +24,7 @@ namespace Microsoft.OData.Client
     using Microsoft.OData.Edm.Library.Annotations;
     using Microsoft.OData.Edm.Library.Values;
     using c = Microsoft.OData.Client;
+    using System.Collections.Concurrent;
 
     #endregion Namespaces.
 
@@ -109,13 +110,12 @@ namespace Microsoft.OData.Client
         }
 
         /// <summary>
-        /// Gets the state of whether the edm structured schema elements have been set.
+        /// Gets the state of edm structured schema elements keyed by their Name.
         /// </summary>
-        internal List<IEdmSchemaElement> EdmStructuredSchemaElements
+        internal ConcurrentDictionary<string, IEdmSchemaElement> EdmStructuredSchemaElements
         {
-            get;
-            set;
-        }
+            get; 
+        } = new ConcurrentDictionary<string, IEdmSchemaElement>();
 
         /// <summary>
         /// Gets the max protocol version of the model.
@@ -411,11 +411,10 @@ namespace Microsoft.OData.Client
             {
                 Type collectionType;
                 bool isOpen = false;
-                if (EdmStructuredSchemaElements != null && EdmStructuredSchemaElements.Any())
+                IEdmSchemaElement edmSchemaElement = null;
+                if (EdmStructuredSchemaElements.TryGetValue(ClientTypeUtil.GetServerDefinedTypeName(type), out edmSchemaElement))
                 {
-                    IEdmStructuredType edmStructuredType =
-                        EdmStructuredSchemaElements.FirstOrDefault(
-                            et => (et != null && et.Name == ClientTypeUtil.GetServerDefinedTypeName(type))) as IEdmStructuredType;
+                    var edmStructuredType = edmSchemaElement as IEdmStructuredType;
                     if (edmStructuredType != null)
                     {
                         isOpen = edmStructuredType.IsOpen;
